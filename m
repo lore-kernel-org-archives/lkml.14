@@ -1,148 +1,173 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6E7442F
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 13:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0E81E863;
+	Wed, 22 May 2024 13:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716384569; cv=none; b=k+AafUcKH3u9+Lu0aNgyGaQY54Bt1ooauZfyKD1wD6XuX7CqpbyJin5e7aqYd0OpbgQdo0+m/oNbdROemRHCJ/i4ZoDYlRoUDH+mR1w9AeDDjaEgsR8Fi8AUaPJJfAACUMAOoxcXNnOHq5mFmWkXP+hfIwDS5QNUstJTJQdk7GE=
+	t=1716384685; cv=none; b=EXL9Pk2R+dGw4FxQY8S0PRlu3AoHqidtjkl6rdg4Nrdn0GGGiOvVFjln6lmU4ICcsCTP9lyZcDA6qVcoY4rGpkSdaiLq+3MhhHlvtxwOLCD18iqU6/BbGNgFsK114b379haw5GkEYl+hLmnxsL1rlKioCDqQQRXw3Xlah9hFr6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716384569; c=relaxed/simple;
-	bh=arHIVvnbSRrU4vMozfw5OQz+OVU7DQz+OL8bfqqQtO4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bGWSPAktqI+Hh7b7u+rgRjDFjYenmTITj4NlDyP4UKxDrwSduuZvrkI22UG4XlhU7P97MH6i5K4fmre95d4PKvh5IEFN21kRwDGHda7XJPjK1MjrKlkyI63Y3C2Hy0HXyBQvZTXtBfmG9UcFBorH51/9KTRDKK3IUvTEQ3LLEIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iKkEl3ce; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716384685; c=relaxed/simple;
+	bh=1dqu49KIhHX03dY2eY4sz5bfwjB0DUIJyZNap3tF754=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uNmWEmXO5zJPC4qvsvxTGN71j2r1VBWRkV4cXIeh+mNRd6PLdRKLFGH1IHzzgA0a9S5NjY42BivDEvhyGG95F+ZNX3TD+xhIDEiEqiAgNOxUB6jAQ2NP37I5lFECPz977yqoh+4RQTrZleFODcAXz1Tr3qlKl3cGw+IqU/xRjX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DSCrCvCF; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iKkEl3ce"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-354df3ee1a9so484425f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 06:29:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSCrCvCF"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4202cea98daso7639425e9.0;
+        Wed, 22 May 2024 06:31:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716384566; x=1716989366; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3YEaU2P9V6kAMeHKPOK/rk+673wWJfJ54FeEoR6SSi8=;
-        b=iKkEl3cet2V6hs9n19yJ+5c9IEAampuI91D+a6NkK71S2NlAsatZGYd4Oe5THVJ8EE
-         sixTs81m3QQLw39xCBZZe62FCnUx8hJf+creO1O5asAs7xPfo0HZFnEPW5XI6pb7TwGi
-         oF7mw9CGCPw8HrAfN8O86fdSLBULMkrnXnvAFTm72Sikt9Fej18KMjMHNRairaHQK9nC
-         88sFDcXiQ/f1o0JBcD6xruN/rOkHdnSWBSLMLaWGOwg7+/82aJ8oVQvhLoUUy/jg3Oqi
-         itlv94B1k6Ans24NboP0t+uCY66jau/tWcS8CFlh9tD3OSZP/aiYKRmmNxDJhT3Y530b
-         cqAQ==
+        d=gmail.com; s=20230601; t=1716384682; x=1716989482; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1dqu49KIhHX03dY2eY4sz5bfwjB0DUIJyZNap3tF754=;
+        b=DSCrCvCF4wZaXlGTORjaonaKLTxXwcZ6Xg4C1ZnqJ6M0c0Nba8cccbeIEJycSaJ8pQ
+         LvqdEgPeyn6M5kC4ZyxspChXHwpu/3xS66Y/PWs83arTlazGsquXYAaxLeG5xQySJ149
+         vofr23C/u5v0ctFZnXfKiHGQ7MSFinYl57ck0kZ1gR38gyoiu5REkWcOapU7puABSuon
+         +knhzx2BqjUb5m6BuFKiD3Mg7KnIaftrW/ccuU1QwR1UXwCfe7ktdCnVoK4CYGQpr4ez
+         PHlIhgeqriPOQp6XsH4OvdBCRmQF1hoBh+rCom+Y1p/EkOMcRDadCqFT/NiHKINsXik7
+         HSHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716384566; x=1716989366;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3YEaU2P9V6kAMeHKPOK/rk+673wWJfJ54FeEoR6SSi8=;
-        b=Hsb4LZ5vAlfPO6IOBmOQBHbTwM4lBS8wUsF4EFLKOwTqIXTPx2KW5zn5FJiX4WlsBk
-         n+5uTC8NkEtG4gjU/3V+VsXoSwpyWsVbqNCmvG2V2f0o82pOLzjtSzqk9ixh0NRI/kJr
-         gusNs5/NQVQpZmcZ798bZembRDegqEIUAXwOqWp/WYRfvxXM76FdO/Ex0WpgrBcdT7P1
-         xpY3CLF9T5nuzgVpOMZiwIr+1LKD3Sc8VQKrd5aRhYO/oEs0NIR+rdyQjeV4Xlv4J9kO
-         wNfQhoAi3ssuCf9VOKV+3AWxYcuXkOIimZuiFugucwVREFTE/Sdd7A3II+82kuOt38dp
-         7mrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWByN51MVhd9XlUs6dJqnVi8YQirGQtAMbuhI2KAmpOZ/OfgTSwefEER/0ZAEE1rC/FQjOL8etVaIA307UGM2TWCyH1nlx5UDKK9VMg
-X-Gm-Message-State: AOJu0YwwU1s1vG71Uw1XEtHn+6RmiqQO3NrECCjI0izRD7U750CU/pCd
-	lodL1fuquEdcKCvIr5sKV1VNHGYoX9s1vsQ3SLMroMO+f1Hx7rw/TCOZ1hGc2z0=
-X-Google-Smtp-Source: AGHT+IERBVmiYPz0eY8gY7FQeAxdwHFOP34oTC5lvQ7QWK3cucB0a75XWYHifF9EAZ+3fi2fdNykDA==
-X-Received: by 2002:a05:6000:c01:b0:346:bc1b:4efa with SMTP id ffacd0b85a97d-354d8d16ef9mr1522819f8f.32.1716384566191;
-        Wed, 22 May 2024 06:29:26 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baad058sm34242934f8f.66.2024.05.22.06.29.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 06:29:25 -0700 (PDT)
-Message-ID: <eeaaf991-0441-409f-b8d2-dcd704d21fd3@linaro.org>
-Date: Wed, 22 May 2024 15:29:23 +0200
+        d=1e100.net; s=20230601; t=1716384682; x=1716989482;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1dqu49KIhHX03dY2eY4sz5bfwjB0DUIJyZNap3tF754=;
+        b=e/RykAo6H+CHROz1BYeucCjVG1TzPNJTdkj7tN2rNsa7uhPsRzcT4kP4O27ixxGrLH
+         XUkZv59+gDkAGiTtnkMIOD0l4RFjXARyEEts+aCBUxwsDlgXNPBYbBmwptVEfy/URn/7
+         R5W7oMR6Z8Uocb+FjKZimZFye1HCkYdZqVAA4EvHQrM+xOEkbltn/PikJRUCL5DpE0x+
+         sj3HEkgPNMTOfwdoOaQKUrd2IADcaGNhnEtCeh9BIdA/fnrqy7qtCFVRPKC6ZgHra0Wn
+         sRUJ1M6zBxmH+zHsBf5GlK9KLpoOX8LqcOOmlXhmCRykvsvOSzKLivWSkdXFceVVQtuI
+         a1rg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5dgUk3SzZj+UqOGCfsDFIxmYd5b9ylCi/F9YBH/7r9yehZd9+1+At41s9us3lmEhbWzoHOstxCywN+B7dultrtazfGrm/MZ5udQnMFzt3qSctOUp6Wj45ILiPVAyGWWWT3aWaHldoT9OWIm4HzgKj1pKA/H5gIkYRodn5X7gWFEG+wbK7weICTn63sOxQUCvly3/N
+X-Gm-Message-State: AOJu0YxChrKncCT8g2foW84HmEoSaMYCHlZ8wo+R3Nx74OqHWh5LlQjj
+	LMBlzQ7SnoFjYSPXJuy7TgGCnI/kMK/38hYuV2pzXJ9wS4TJthy2
+X-Google-Smtp-Source: AGHT+IHvDjyB71F/5YoiFEt7yx1RM6sBzbPAZJyZJH6vwMhYIl3p7lksTQbf9pFsBUP4SzZArROpsQ==
+X-Received: by 2002:a5d:6383:0:b0:34d:e598:b716 with SMTP id ffacd0b85a97d-354dababedbmr1388018f8f.67.1716384682226;
+        Wed, 22 May 2024 06:31:22 -0700 (PDT)
+Received: from ?IPv6:2001:8a0:e622:f700:597:127d:3af6:7529? ([2001:8a0:e622:f700:597:127d:3af6:7529])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502bbbbe43sm34226615f8f.99.2024.05.22.06.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 06:31:21 -0700 (PDT)
+Message-ID: <9098d5912a87cbfaaf0de2fdd041d0c5ac1af1fa.camel@gmail.com>
+Subject: Re: [PATCH 1/3] tpm: Disable TCG_TPM2_HMAC by default
+From: Vitor Soares <ivitro@gmail.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>, James Bottomley
+	 <James.Bottomley@HansenPartnership.com>, linux-integrity@vger.kernel.org
+Cc: keyrings@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Mimi Zohar <zohar@linux.ibm.com>, David Howells
+ <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Date: Wed, 22 May 2024 14:31:20 +0100
+In-Reply-To: <56e52200bd9ede6bcdcc907d24bd4a3e0dddd24f.camel@gmail.com>
+References: <20240519235122.3380-1-jarkko@kernel.org>
+	 <20240519235122.3380-2-jarkko@kernel.org>
+	 <850862655008f84ef0b6ecd99750e8dc395304d1.camel@gmail.com>
+	 <D1F4V8NMSUNZ.2VCTEKHZZ0LB@kernel.org>
+	 <17dc838120b56ce342c34611596c7b46dcd9ab5a.camel@HansenPartnership.com>
+	 <2dd8d49516ec9c7cb8c1182b5b8537b1e82d7067.camel@gmail.com>
+	 <D1G5O2Z86E4W.2DHG4QZE2W2JG@kernel.org>
+	 <56e52200bd9ede6bcdcc907d24bd4a3e0dddd24f.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] regulator: dt-bindings: rtq2208: Add specified fixed
- LDO VOUT property
-To: Mark Brown <broonie@kernel.org>
-Cc: Alina Yu <alina_yu@richtek.com>, lgirdwood@gmail.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- cy_huang@richtek.com
-References: <cover.1715846612.git.alina_yu@richtek.com>
- <9c1bbe4b38a4ee5650d888478f1ce2cec2733669.1715846612.git.alina_yu@richtek.com>
- <5d26b19c-7679-4dba-a9ba-a7368d39b474@linaro.org>
- <20240522090302.GA19548@linuxcarl2.richtek.com>
- <b094ce68-9ce2-411d-99f2-1f143e4c3347@linaro.org>
- <05843386-92f4-4246-a633-315c3178d86f@sirena.org.uk>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <05843386-92f4-4246-a633-315c3178d86f@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 22/05/2024 13:35, Mark Brown wrote:
-> On Wed, May 22, 2024 at 11:27:06AM +0200, Krzysztof Kozlowski wrote:
->> On 22/05/2024 11:03, Alina Yu wrote:
-> 
->>> Due to the fixed LDO VOUT being outside the range of the adjustable one,
->>> a special-use property has been added to avoid overusing the constraints.
-> 
->> Hm, why exactly this is not a bool property? What are the benefits?
-> 
-> It avoids confusion between invalid constraints specified on the
-> variable voltage regulator and allows us to validate any constraints
-> that happen to be specified (though it'd be pointless to specify
-> constraints).  The fact that the regulator could also be variable
-> voltage is asking for confusion if we use boolean.
+On Wed, 2024-05-22 at 14:17 +0100, Vitor Soares wrote:
+> On Wed, 2024-05-22 at 15:01 +0300, Jarkko Sakkinen wrote:
+> > On Wed May 22, 2024 at 11:18 AM EEST, Vitor Soares wrote:
+> > > On Tue, 2024-05-21 at 08:33 -0400, James Bottomley wrote:
+> > > > On Tue, 2024-05-21 at 10:10 +0300, Jarkko Sakkinen wrote:
+> > > > > This benchmark could be done in user space using /dev/tpm0.
+> > > >=20
+> > > > Let's actually try that.=C2=A0 If you have the ibmtss installed, th=
+e command
+> > > > to time primary key generation from userspace on your tpm is
+> > > >=20
+> > > > time tsscreateprimary -hi n -ecc nistp256
+> > > >=20
+> > > >=20
+> > > > And just for chuckles and grins, try it in the owner hierarchy as w=
+ell
+> > > > (sometimes slow TPMs cache this)
+> > > >=20
+> > > > time tsscreateprimary -hi o -ecc nistp256
+> > > >=20
+> > > > And if you have tpm2 tools, the above commands should be:
+> > > >=20
+> > > > time tpm2_createprimary -C n -G ecc256
+> > > > time tpm2_createprimary -C o -G ecc256
+> > > >=20
+> > > > James
+> > > >=20
+> > > >=20
+> > >=20
+> > > Testing on an arm64 platform I get the following results.
+> >=20
+> > OK, appreciate these results. I try to get mine this week, if I can
+> > allocate some bandwidth but latest early next week. The Intel CPU
+> > I'll be testing is Intel Celeron J4025:
+> >=20
+> > https://www.intel.com/content/www/us/en/products/sku/197307/intel-celer=
+on-processor-j4025-4m-cache-up-to-2-90-ghz/specifications.html
+> >=20
+> > So if things work reasonably fast with this, then I think we can
+> > enable the feature at least on X86_64 by default, and make it
+> > opt-in for other arch's.
+> >=20
+> > I sent already this patch but holding with PR up until rc1 is
+> > out so that there is some window to act:
+> >=20
+> > https://lore.kernel.org/linux-integrity/20240521130921.15028-1-jarkko@k=
+ernel.org/
+> >=20
+> > If I need to send an updated patch ("default X86_64") and rip
+> > transcrip from below results.
+> >=20
+> > But to do that correctly I'd need to know at least:
+> >=20
+> > 1. What is the aarch64 platform you are using?
+>=20
+> I was testing this on the Toradex Verdin iMX8MM SoM.
+>=20
+> > 2. What kind of TPM you are using and how is it connect?
+>=20
+> TPM device is the ATTPM20P connect through the SPI at speed of 36 MHz.
+> The bus is shared with a CAN controller (MCP251xFD), so both mues work
+> together.
+>=20
+> The dts looks like:
+> tpm1: tpm@1 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "atmel,attpm20p=
+", "tcg,tpm_tis-spi";
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupts-extended =3D <&gpio=
+1 7 IRQ_TYPE_LEVEL_LOW>;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&pinctrl_can2_i=
+nt>;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <1>;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spi-max-frequency =3D <3600000=
+0>;
+> };
+>=20
+> Regards,
+> Vitor Soares
 
+For the sake of clarity, the timing tests were done without CAN enabled.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+>=20
+> >=20
+> > Obviously if I make this decision, I'll put you as "Reported-by".
+> >=20
+> >=20
+>=20
 
