@@ -1,100 +1,71 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D941757FD;
-	Wed, 22 May 2024 11:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E74757FD
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716378802; cv=none; b=Wr/BVbEFikonvjSrLUxlHzmvwp3fDYi/JAeoFZpaoGDmc6+RzkI8FPPPdGbdomInwM5wdDw3gqzVrSmH3ZGj0vxmeqb2HzPlYG17MsiRowRTAH/0NL9KfvYUZlYGRl7IAcNhGk+xz1oLvSkR8jLL4MxJFweEeE2TvSRGhV1ihMM=
+	t=1716378966; cv=none; b=iuNHc1I/w22ssZxB73NyWaic89lFjT1x2jiAZbdMVU1Lzb9R6bDyrX7csYFFqRC4zl4F4i4CUyhA3T7f7IABZkW4MkhqnLI0L02E2/WBh+bfnH6967UVUhjtTw3u0vLYxUuGj0BwYZwHssOvwwIEqLhw0ptMjMKCyc+wiXY2HpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716378802; c=relaxed/simple;
-	bh=nHaKxWnZ7ZoVioz3cSGjqK/WJoTRjQS4uony9gE9rbU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fICwNtH4YfzZKBh17Gqb19MMZOf8Ij6km/9Bpm6szvtzaaJdy6r3Ryr/YP524fzUNybQCIHh/ffTREwKxz5m+fjd5wN2ow2kSUPWoWzqngBCZfldphvFSbEYb87y1U/0RK+9LwDXcb/AHCNZaGZ/auXTepIDEIwGpOnNafPYiO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-627788ce780so7722677b3.0;
-        Wed, 22 May 2024 04:53:20 -0700 (PDT)
+	s=arc-20240116; t=1716378966; c=relaxed/simple;
+	bh=/uxNzhuEpEuNDt2jpdc27me5iRGt1/3VuDrhzDVcBoI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=MB+xLNe+6sNrqulTxO4OUZQoVIs66kGyCNG0hTzJK9oKivYE3asRFLKI6rc/YkneIm5D5KySMHdQXjUlhxkCHrUIku7ARmFHq82TTzFMbh2prxXsOu9upnxm+qTReav2uP5eDSCWDIz6uJmBNogy1xmYOiARF0UaGfnXXep8HEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7dabc125bddso16754839f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 04:56:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716378798; x=1716983598;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y+wJPAvX2rvsN9POIfJJaJwUowjV47uuTkOe0U9Ejy4=;
-        b=hgRJUGry7SOTbNwryRU+B4vdRHY8FGA+LQXzaz/5sdvyNIR0qqruYorcodd+5Phov6
-         9qemsfLd+0hDLaCwPbwFgqMOzoJeILedm8j7dCUs7DYwaRR9U9VhUQ4Ug3efgHJx6yso
-         Y7yufAvCSVJfgX94wZm129KaFIoMu1Ebh+V7jLlGYP+FhFQk+ulFvP2uaNDwFYxXqlOw
-         DyV/AzqQjFcXpnPxCDJDfBBrQ3wNJVyZXY5aX9Th+VWCyuaexrkygnkqyYN6OP5Dogf7
-         sU0ao/x0kcFHGehPlgUHAoGa6H1Obn8ys4h4/HhDe3tLr+UdcakHV5BUJtKjBNk+yYZ3
-         mb5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUQpofwDLBpNmGJe171tfbpR6x4YIqOm2yjkvWjnUZEH5tI61k5yAB0Hwj5rrUd2ka0odbRPBshZeg+nRh0cxoCDQrD0B9zxIlX3wuf9N0gE5LAArhycrnYSij6/DfnLdEeDEoPcx9eRGVBJrgKJn5xCkMpwgUZQuTp6BCzQg7crJZEqqIy7o9OMNVblEAwf7NN2tP0H/dOpJP1/ptb3Pwu1eF/6WRLlA==
-X-Gm-Message-State: AOJu0Yw/r4p2X9emcXqwDtgKA9GzM0K+cwOAoF9BiI7J1e9HXqOg3OWs
-	togA+K8IaVegx5ujX/oMo5B+7FAOhbqsNXNYZQeXql34uOO98QHmdIqFAuue
-X-Google-Smtp-Source: AGHT+IE0RZMH1KfJO8H325240c4UyqBaNkwq90qYh92/9hVBO2k+ZuhA+0/TpOjVmoYNzwx3ohWFnw==
-X-Received: by 2002:a81:ab4b:0:b0:618:8e3e:8675 with SMTP id 00721157ae682-627e46d4287mr18084767b3.22.1716378798541;
-        Wed, 22 May 2024 04:53:18 -0700 (PDT)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62784541f41sm22600387b3.143.2024.05.22.04.53.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 04:53:17 -0700 (PDT)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-627788ce780so7722367b3.0;
-        Wed, 22 May 2024 04:53:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXIhnsbaPzsGbShUoJ7cNjDHvC9hzo87Uf5SVt4mNySJyHpxkyBpV9KoiNrvbTIl6x6YgmU9YFRDPARGXjFwyCn4tX9BVZT7Bzeqi696GTaNm1ndcoiTpH3Cm4B8V2EAkz0af90HFrvGCyqfoYP3Ngvt9nNIZ7f/tUaXWdtTWi+qtj64GLAzfIB6BS5DCiXyJXImy/YuyHyu7tsp/hpgeRV2VYDzggZ8Q==
-X-Received: by 2002:a81:92cc:0:b0:617:d49f:d5b9 with SMTP id
- 00721157ae682-627e46b248cmr18936437b3.14.1716378796782; Wed, 22 May 2024
- 04:53:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716378964; x=1716983764;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SGSGt5zkHSQc1VjNVftzodvlANt3bWCgcnLgMe4H7pg=;
+        b=aj6cG1Zlv1Hidx7R6DLo53hjjQDrZpUR9nO/qe9RPXzmFwNt6ZL5I8stTIMvDexPx1
+         lIJz4Wyj/q0FkbAHrRsUz7JXoIopINRyUPT8F0RzOJ0U4VNOboK0dgnMByWfPdIVXvlh
+         pILPq4XTlFwWx/2LwD53q4yO63eG5wLLXNRfr++Fj+eWbYWDUmkHQ6RRlC4lfZLCxIaA
+         GNebwIqYTHvkjQPf3ESjFqzDBFeXEu+2EXV/RHp8/XABmrdFKc+zJ45suxWSnII1j8v3
+         2sYJl9xbK2sP8vISv1L4PhLrfadI4kJ7/OjHszLTlRDw9weM+NeROa6+4yc7SD/aJP+z
+         ACKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZCZUt1OOQxNFrrZlKHMfDX7D9GwvTL76gvT1Dhs+314XyMHE/a0qi8QZkut4ytVCRCesWPS8KeCTPPWNZ3PThBlkvb/LoYFZJpNuX
+X-Gm-Message-State: AOJu0YwCL5h24Z7qUjeOV7CbOhzA8rpWJEGbhOlzNESL1zkx/iw1MA8w
+	uFohNWjjeD3N196kfcc7tzT5WlxyXJx++PZ56rfiXmxMb9OCDqGlJXXDatTrbn/s5nzW/YLcNNa
+	3+0El2oTatV//rAU+VirY9l6eMf98/CVia4A/Rm3pEevHhOCUMFmRPF4=
+X-Google-Smtp-Source: AGHT+IFaQR/wwwjXbBcPunurewHyTe2Ekd6xHwwWmKJKFeUo5uMbGdlyh35IOS3lAzg8WzKW5qfXqTcnk2nIT5Tm0aLNAO/iYIoN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240423175900.702640-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240423175900.702640-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 May 2024 13:53:04 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXhkWgy1bJtfzFXWNUXHLJfMA-tXcMRYtR7GfaejoD+ig@mail.gmail.com>
-Message-ID: <CAMuHMdXhkWgy1bJtfzFXWNUXHLJfMA-tXcMRYtR7GfaejoD+ig@mail.gmail.com>
-Subject: Re: [PATCH v2 05/13] pinctrl: renesas: pinctrl-rzg2l: Validate power
- registers for SD and ETH
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Received: by 2002:a05:6602:3f87:b0:7e2:2c72:c60f with SMTP id
+ ca18e2360f4ac-7e39df9d37cmr6970039f.3.1716378963666; Wed, 22 May 2024
+ 04:56:03 -0700 (PDT)
+Date: Wed, 22 May 2024 04:56:03 -0700
+In-Reply-To: <tencent_7BA1330A9E431B2B4B071B6B2518BA37BB08@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006df71c0619099e75@google.com>
+Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
+From: syzbot <syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> On RZ/V2H(P) SoC, the power registers for SD and ETH do not exist,
-> resulting in invalid register offsets. Ensure that the register offsets
-> are valid before any read/write operations are performed. If the power
-> registers are not available, both SD and ETH will be set to '0'.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> RFC->v2
-> - Update check to !=3D 0 instead of -EINVAL
+Hello,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Gr{oetje,eeting}s,
+Reported-and-tested-by: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
 
-                        Geert
+Tested on:
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+commit:         33e02dc6 Merge tag 'sound-6.10-rc1' of git://git.kerne..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=15025ca4980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=25544a2faf4bae65
+dashboard link: https://syzkaller.appspot.com/bug?extid=d2125fcb6aa8c4276fd2
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10592b58980000
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Note: testing is done by a robot and is best-effort only.
