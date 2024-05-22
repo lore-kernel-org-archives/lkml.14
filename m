@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F244E146D53
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F248B1487C6;
+	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716421908; cv=none; b=KENkNG7QdhzM5sF+FBDeOT6dv4H4aHGb/bTh6hbZTI9Oq9/ZKLltPFoRV26eG2I1yfvivXGY80Mga6icoyvw0XvlWMxxhGkzk0eCEvvyMU6W11soegmUJu2wmbd2Xo5j78Byr7QimnKt9OUeKzaDdFbzJvwV0GBz0Nga82cBfLs=
+	t=1716421908; cv=none; b=stxfW22OsGUW5eQXn3pRk3yjJFgJmOWvs3kMV5ovG6csMrPXJ+fnlHXjbZ7mHn1hE2rjdlgxrxraUhz/+0Wnz5e2tU3cBVVND0MDmssYi70vIbQzdCYbpYbv8zXcYSmCjHfcF9l/IcB2CfTZJyhsVaw5oegXLygfVTmCQ/UUSU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716421908; c=relaxed/simple;
-	bh=ioi6hVc2nEfWRbNZ3lg5Z200sbO2gZVHrpry3fbgHJk=;
+	bh=TDaB1nKc+MxBvpO+Za9PJH0cIp+1S891erTFOL0RME0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=JAhWL5UQT7ToXkjMfQCLUQZ2A+eK3O3AahFGupJ/AWzMiOTOWfbSDZMep5lDr1Dp3AZVRWPRaZLj3X1bTuVsPQNg08f+NCCHt44iHTxF7A0+TvMx4GrDdmjPTucOaOsND8kStnghFwgusmxL9JR9YicB/r5yXSZ1dFxNkRJpfK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BELPVch4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=RqWHCvB2kvGEgwlRJ4piX6agLm0G/Mg0q9fBU/staB0DK9fRFvznxBaNS/W7/2uscKTTwL0b4KVLYckR9E+C7hhCDDowY0TwwiYsbrBw7MsDZb25oB71Wv/xyeZD1Bj+zNSM8EedG9kqNRv0BGqVRRsFlWFnPWnN8zIGgENNhrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+rwHtvC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BELPVch4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AC5CCC4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+rwHtvC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B399FC4AF08;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716421907;
-	bh=ioi6hVc2nEfWRbNZ3lg5Z200sbO2gZVHrpry3fbgHJk=;
+	bh=TDaB1nKc+MxBvpO+Za9PJH0cIp+1S891erTFOL0RME0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BELPVch4tSn7j38Q2vYR5hdVashLpRM9ExSHZwKcvf+4TrFUXuGVQQA3u7OS8dL98
-	 cdroRK3JWQ2fBJQVqW75Xh0O5ouemy0W/xE0UFGLTri+QYoq6qfkOMA7ittCLgNDVN
-	 Q3owqXjqHykWiXEIffm6vqHHZzd5jhafjeODEk+uuC7HCAd+RwkJZn7i7E7T0LCGZa
-	 3WCgMob95z7L2h1HdT8xzNmpeSjzdvx9x/FhEvzqbarfReRyq+2g0hD2myMV8tNY4K
-	 aHsDOqkNvqSwrS7d+wQLm2CnFZynaCXg6UwJO6mDW09ELVBtriIZhmrRSIEuAqHE31
-	 zxujMedqGoANw==
+	b=D+rwHtvCdJh9jv2oAUness9TQVv+cysyk/nNly+t/EoeeHAhLstDeY5ELWWJunzbS
+	 bT9X8seWwsieQw4inJczsbHHHT9Aap9ZpIj3KmsqVSAVvrwUXFnw+v7ZOQ4Ln3swYL
+	 qs/pJrd4YZmqgkwi3HiTe7C/8FgDu57XnSfKI6gFkrGOrp16Qg0geYm15wMcq5FMVL
+	 YAtvpxmxDMYFF3FBPpwPuCumgaZJaJwKqjllc5pC//MdgqsPZEviF00iP5WFoBriSv
+	 P/fTgnI4SwXytPaA8cW5bfQqFaz43YtIBhG+ucoVqCYe4C0T4h1j+3rGasi5o+wi99
+	 UwldgHMC+O42Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 94D65C43638;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A1C43C43619;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,43 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 0/2] riscv: Extension parsing fixes
+Subject: Re: [PATCH] riscv: selftests: Add signal handling vector tests
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171642190760.9409.9505694012625639228.git-patchwork-notify@kernel.org>
+ <171642190765.9409.15264560939296767259.git-patchwork-notify@kernel.org>
 Date: Wed, 22 May 2024 23:51:47 +0000
-References: <20240502-cpufeature_fixes-v4-0-b3d1a088722d@rivosinc.com>
-In-Reply-To: <20240502-cpufeature_fixes-v4-0-b3d1a088722d@rivosinc.com>
+References: <20240403-vector_sigreturn_tests-v1-1-2e68b7a3b8d7@rivosinc.com>
+In-Reply-To: <20240403-vector_sigreturn_tests-v1-1-2e68b7a3b8d7@rivosinc.com>
 To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, guoren@kernel.org,
- conor@kernel.org, conor.dooley@microchip.com, cleger@rivosinc.com,
- evan@rivosinc.com, palmer@rivosinc.com, linux-kernel@vger.kernel.org,
- alexghiti@rivosinc.com, ajones@ventanamicro.com
+Cc: linux-riscv@lists.infradead.org, shuah@kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ andy.chiu@sifive.com, bjorn@kernel.org, vineetg@rivosinc.com,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Thu, 02 May 2024 21:50:49 -0700 you wrote:
-> This series contains two minor fixes for the extension parsing in
-> cpufeature.c.
+On Wed, 03 Apr 2024 16:50:29 -0700 you wrote:
+> Add two tests to check vector save/restore when a signal is received
+> during a vector routine. One test ensures that a value is not clobbered
+> during signal handling. The other verifies that vector registers
+> modified in the signal handler are properly reflected when the signal
+> handling is complete.
 > 
-> Some T-Head boards without vector 1.0 support report "v" in the isa
-> string in their DT which will cause the kernel to run vector code. The
-> code to blacklist "v" from these boards was doing so by using
-> riscv_cached_mvendorid() which has not been populated at the time of
-> extension parsing. This fix instead greedily reads the mvendorid CSR of
-> the boot hart to determine if the cpu is from T-Head.
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,1/2] riscv: cpufeature: Fix thead vector hwcap removal
-    https://git.kernel.org/riscv/c/e482eab4d1eb
-  - [v4,2/2] riscv: cpufeature: Fix extension subset checking
-    https://git.kernel.org/riscv/c/e67e98ee8952
+  - riscv: selftests: Add signal handling vector tests
+    https://git.kernel.org/riscv/c/b2a2e892cdbc
 
 You are awesome, thank you!
 -- 
