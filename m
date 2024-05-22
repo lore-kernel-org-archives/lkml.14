@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8EC2E631
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE96C146D4D
 	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716421908; cv=none; b=nzIchyBKgjJAsvxnfMXSnuomvKxK1JiGJf/XGJ0SlXuEKV19zHF4AZTP3YPVpijzIHpl3T0yGT5Qy5CEzRReij5NY9ajSNAT/cyvZEW41WumP5rpzsPL9MSTNjVdYqn6JwiNjFf8wv8ykor47/IxkYac9qjGA3Nu2ZzcQVEYoVE=
+	t=1716421908; cv=none; b=siybXCgFW0+7nijls1pp+RWkyBFvwakarwCdaQoignREKDQXZ8WGa4PgPQz9olqHAVcXeCJUjGE6DLen6mnjYKabuJ3/GtzJzeTSnFRAUiExbXwv6f5dzDEHjE9S0KZy9E/OowtGqSy2zw1OrDnEGjRLTWxxG6J06aLhMPp1fqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716421908; c=relaxed/simple;
-	bh=wwQWVyKo3s0RyZje7mPn2Az2NQ1iII2+E9jwjUkfzqA=;
+	bh=Wz6FwdvgNhDesiVH6dQghRM42TWv9+GR59lUb5hn/E4=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=A4iJMiUOghAyrLPT/njOgDx/VgspV9fQO3Vgeqa6Hvz4Me6d7NE+XEtJ8hoI8a7UOARaT8YhTPNfngzNaoxnaNiNOw6AJ5e90hzasm4W6bgvd7denVzDRq7DNUdw0/59tPEqkWN62ke4rX+/a8Ql/76M4V60jWHr5C+AkCl7mSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q5eVrd1Z; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=X9zSqQl5jirqf1B617yfJwtdrJA3mcdEBCWtJWMeCgg2x1xHTq0RBh39kiU1w2U06jZcGmTy8JTUFO/RlaR6bg4c+XLnEtMibokhSrf024guaF/5fCZjMShob6lr7DSjqgtMdOd/EEhiqNdIqhQXKa5hzjOtaM7wwxy2UljFfkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gdnzibck; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q5eVrd1Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9E109C32782;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gdnzibck"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9AF56C3277B;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716421907;
-	bh=wwQWVyKo3s0RyZje7mPn2Az2NQ1iII2+E9jwjUkfzqA=;
+	bh=Wz6FwdvgNhDesiVH6dQghRM42TWv9+GR59lUb5hn/E4=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Q5eVrd1Zbaldkiu9+ZY2Mvu/D1XeC3lfRkJD2v8uGBoroEyY/DCJ+LZEYWLmylfI+
-	 Ok19CtMyehWfQJE1+lDg4ns/xY/Epjz/mrwm7W3zWFyivwpUKRXnPlRhym+wI+QAqb
-	 ScrV4Mn3/RfTt9XGtVX0UEll0Hb6gqkDtDzl+eR3MsletdHP1mtsp24VfwS9l9wiPy
-	 4pvogjk/2ZcI8HeO/EYG4IvPGfmThluAWlA6PxEZalYH5rW7Criujx+DIp5C+kX4Sl
-	 LHqPdVgNJ2gLsQEEIwC7CfldPQAor7Sg66o7ytWQAfZJAM0SKmpNs7KY2qgncdOwrA
-	 jI5Kyf7g180Wg==
+	b=Gdnzibckaz5cwwTCArZbF5NHieAhZNuBW55C4Js2e7xiejIwL1qDzPUSCJRA4neAJ
+	 R08Kl7qzp/aMwumDYHWADsnV8sFbMKL2utt/IIN9SvaZBQUDDzAuJZJifx1iMAa7lb
+	 OTyv2Mq5oKDHRbPaEru6GeIswqmkq+AY/hSGT260paQ6aCExrNfGryanLlU6WpMXRm
+	 pEiU5H76wmMz/sSi2UBS6xN0g/vNjklDR8ZLGCNfniWGvLWVnHUOrfbkY0bxQQSB3b
+	 W7IAGQzqvYTYLyZ6fnCfqo0rx3QvB4ROYjNYfvIZF31Pzf7bAfou3CRVq98rsM9p2d
+	 ced3spMHDRqmg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8C540C54BA0;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 837C7C43618;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,44 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/2] riscv: fix debug_pagealloc
+Subject: Re: [GIT PULL] RISC-V Patches for the 6.10 Merge Window, Part 1
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171642190757.9409.1091588685660821042.git-patchwork-notify@kernel.org>
+ <171642190753.9409.11050201174881713187.git-patchwork-notify@kernel.org>
 Date: Wed, 22 May 2024 23:51:47 +0000
-References: <cover.1715750938.git.namcao@linutronix.de>
-In-Reply-To: <cover.1715750938.git.namcao@linutronix.de>
-To: Nam Cao <namcao@linutronix.de>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alexghiti@rivosinc.com,
+References: <mhng-e73e59bf-92fc-4122-9f9e-a329d20eba55@palmer-ri-x1c9>
+In-Reply-To: <mhng-e73e59bf-92fc-4122-9f9e-a329d20eba55@palmer-ri-x1c9>
+To: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
  linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+This pull request was applied to riscv/linux.git (for-next)
+by Linus Torvalds <torvalds@linux-foundation.org>:
 
-On Wed, 15 May 2024 07:50:38 +0200 you wrote:
-> The debug_pagealloc feature is not functional on RISCV. With this feature
-> enabled (CONFIG_DEBUG_PAGEALLOC=y and debug_pagealloc=on), kernel crashes
-> early during boot.
+On Wed, 22 May 2024 09:13:28 -0700 (PDT) you wrote:
+> The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 > 
-> QEMU command that can reproduce this problem:
->    qemu-system-riscv64 -machine virt \
->    -kernel Image \
->    -append "console=ttyS0 root=/dev/vda debug_pagealloc=on" \
->    -nographic \
->    -drive "file=root.img,format=raw,id=hd0" \
->    -device virtio-blk-device,drive=hd0 \
->    -m 4G \
+>   Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.10-mw1
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/2] riscv: force PAGE_SIZE linear mapping if debug_pagealloc is enabled
-    https://git.kernel.org/riscv/c/c67ddf59ac44
-  - [2/2] riscv: rewrite __kernel_map_pages() to fix sleeping in invalid context
-    https://git.kernel.org/riscv/c/fb1cf0878328
+  - [GIT,PULL] RISC-V Patches for the 6.10 Merge Window, Part 1
+    https://git.kernel.org/riscv/c/0bfbc914d943
 
 You are awesome, thank you!
 -- 
