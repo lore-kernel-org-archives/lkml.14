@@ -1,150 +1,133 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC847E0F1;
-	Wed, 22 May 2024 20:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBE155C3E
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 20:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716411413; cv=none; b=ibPsVqiAIwriwhLO8ijkOtK4ekOGN8qCWtqG1eD7BwGD8cVtxaco4k1rRtvUKr1FvDz8ACW3KOeVxvhbR/wj8jqdqdJwhyKJz/pcnlKn7gsgsB0chf7pLHA4RoweOJRGcPRLRXV1gpa2p6jozzk9iR2sMxrO+Rwp8bY3rqvUAJA=
+	t=1716411434; cv=none; b=apVAJAc+0jqbQHi3RBIL2b+pYTy6OrB9reQK7NROsNBWTLeGJDeJYPQbKkO1q5jmKMxzez6RDeD8C1egRiJ21HJI0g+e0vTHvrUj60vCJLwgukKUrdTVyElQ84/aDcg5yeAop4bnjJZycHuXLkaA2+n1RDCbmRvd8hpvBLLhWAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716411413; c=relaxed/simple;
-	bh=CDru5RNCnrD435X8yZjpHnl2oifzzplfUwfJRcr7NLw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=H8sfGQ3HIAcY3RaDcZhERbDf1A6m8N115dMLgjFPrXUOe/uO5GqI8sgXQL+Wgt1/lyRStcmhCHOzPI0Rdzm3GYgCGsDwXbSjPSoUFwwGev7oPZ5af+WzxEQ2zpquHkqctcutycWRpyUZkgZcwJQfaMrEAKs8DWvtkHmRZAvHQYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I592I46A; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716411434; c=relaxed/simple;
+	bh=M2j5s0xIcd8XGs8P/xlFsZ6Gfu7HT+TtpmwO1MUK7pk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FDiQwyQzveGb3IG3G75YWmf0JzHiBKTkjf7vYfQGXX1QY4AZ5c+65CIixWlriLewtKIaQieUlua/eq0YGLw17R8MUlE4k7cS5aBXZsgdGdq+FlTM5JsiUgdG9mD8f1zTXIUTmKF3Ghr1lzK9Ji0o6IEsOqVZ2xhm6udaM7TYBk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bqTuloCq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4nprBEog; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bqTuloCq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4nprBEog; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I592I46A"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44MKAiJW008151;
-	Wed, 22 May 2024 20:56:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=r/fw1P+sA7m/FDWZOd/GkBDRf+ShgMI5plIwfLbxwfA=; b=I5
-	92I46AaMoJiTKNDwNAGEKN2L/5hDd8QTWmMd1pDS4HcTSH8CteLMjA7geT/4JZu4
-	dftID2bYicANdxAjU3OrIrejDrKB1VlaDUyLGQ61fAvGZVB8cTJ+MWxDXJOYIEkp
-	o1RQtdfGaZxdUO87MxVXyforXgsIkhCyaodNoQPdKsh/gB817AlFvcBua0bMy7sT
-	IqLfCUbGQNlU0K8pGnMnoWLPVslq5UOUz+E5GTJX1aZtp7fHq9EC/uMlRkZdDRXW
-	/RSaOeOERtBSJiQM/qlcjRd/McNvUa5awY2wPQ0APWzFpKu/GheKHm/yZzj6eXVz
-	rin3nHtiTLDTazQ+JJug==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pqc9ryy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 20:56:32 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44MKuVMH028961
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 20:56:31 GMT
-Received: from [192.168.143.77] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 22 May
- 2024 13:56:30 -0700
-Message-ID: <f9595b82-66f9-dce2-7fba-c42b1eacf962@quicinc.com>
-Date: Wed, 22 May 2024 13:56:30 -0700
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bqTuloCq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4nprBEog";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bqTuloCq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4nprBEog"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6E64121B47;
+	Wed, 22 May 2024 20:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716411430; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IwKif20iR1XbQYDKzMIquMFCCIEXEwcy1cEYBeyrq7c=;
+	b=bqTuloCqjWVwMGLoVKn1xJfVK5fqub1uLAr4TuMwoq86GAzCimfE0qgSB46AOPm8Vp1Y+r
+	+PqPz9W2bvlpq5jgp7NpaTI1xg22I5lRzgaAogwmAzQZNs4eil7MNaDB9XKo+oxiz5ROJv
+	glV6FnbSL9WY2SYWackSTM4NAwbrDxo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716411430;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IwKif20iR1XbQYDKzMIquMFCCIEXEwcy1cEYBeyrq7c=;
+	b=4nprBEoggeOIerkHbZ0EK0EWj6Vemv12qvuPLlRbdRBW+DzVGfr2jwSMzK6M/GJeEVHWlO
+	vMFbDbVUaJ4sJoBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716411430; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IwKif20iR1XbQYDKzMIquMFCCIEXEwcy1cEYBeyrq7c=;
+	b=bqTuloCqjWVwMGLoVKn1xJfVK5fqub1uLAr4TuMwoq86GAzCimfE0qgSB46AOPm8Vp1Y+r
+	+PqPz9W2bvlpq5jgp7NpaTI1xg22I5lRzgaAogwmAzQZNs4eil7MNaDB9XKo+oxiz5ROJv
+	glV6FnbSL9WY2SYWackSTM4NAwbrDxo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716411430;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IwKif20iR1XbQYDKzMIquMFCCIEXEwcy1cEYBeyrq7c=;
+	b=4nprBEoggeOIerkHbZ0EK0EWj6Vemv12qvuPLlRbdRBW+DzVGfr2jwSMzK6M/GJeEVHWlO
+	vMFbDbVUaJ4sJoBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0CF6313A6B;
+	Wed, 22 May 2024 20:57:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id y/o1ACZcTmYHagAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 22 May 2024 20:57:09 +0000
+Date: Wed, 22 May 2024 22:57:08 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Jane Chu <jane.chu@oracle.com>
+Cc: linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+	akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] mm/memory-failure: send SIGBUS in the event of
+ thp split fail
+Message-ID: <Zk5cJJTFek9yzDh5@localhost.localdomain>
+References: <20240521235429.2368017-1-jane.chu@oracle.com>
+ <20240521235429.2368017-6-jane.chu@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v1 2/2] scsi: ufs: qcom: Update the UIC Command Timeout
-Content-Language: en-US
-To: Bart Van Assche <bvanassche@acm.org>, <quic_cang@quicinc.com>,
-        <quic_nitirawa@quicinc.com>, <avri.altman@wdc.com>,
-        <beanhuo@micron.com>, <adrian.hunter@intel.com>,
-        <martin.petersen@oracle.com>
-CC: <linux-scsi@vger.kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley"
-	<jejb@linux.ibm.com>,
-        "open list:ARM/QUALCOMM SUPPORT"
-	<linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <cover.1716359578.git.quic_nguyenb@quicinc.com>
- <8e5593feaac75660ff132d67ee5d9130e628fefb.1716359578.git.quic_nguyenb@quicinc.com>
- <2ec8a7a6-c2cd-4861-9a43-8a4652e0f116@acm.org>
-From: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>
-In-Reply-To: <2ec8a7a6-c2cd-4861-9a43-8a4652e0f116@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: sIFRUJzm8_g5ah0xumuRXY5KkB1c4ukd
-X-Proofpoint-GUID: sIFRUJzm8_g5ah0xumuRXY5KkB1c4ukd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-22_12,2024-05-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 spamscore=0 suspectscore=0 mlxscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405220145
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240521235429.2368017-6-jane.chu@oracle.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[huawei.com,gmail.com,linux-foundation.org,kvack.org,vger.kernel.org];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,oracle.com:email]
 
-On 5/22/2024 11:18 AM, Bart Van Assche wrote:
-> On 5/22/24 00:01, Bao D. Nguyen wrote:
->> Change the UIC command timeout to 2 seconds.
->> This extra time is to allow the uart occasionally print long
->> debug messages and logging from different modules during
->> product development. With the default hardcoded 500ms timeout,
->> the uart printing with interrupt disabled may cause the UIC command
->> interrupt get starved, resulting in a UIC command timeout and
->> eventually a watchdog timeout.
->> When a product development completes, the vendors may
->> select a different UIC command timeout as desired.
->>
->> Signed-off-by: Bao D. Nguyen <quic_nguyenb@quicinc.com>
->> ---
->>   drivers/ufs/host/ufs-qcom.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
->> index 79f8cb3..4649e0f 100644
->> --- a/drivers/ufs/host/ufs-qcom.c
->> +++ b/drivers/ufs/host/ufs-qcom.c
->> @@ -49,6 +49,7 @@ enum {
->>   #define QCOM_UFS_MAX_GEAR 4
->>   #define QCOM_UFS_MAX_LANE 2
->> +#define QCOM_UIC_CMD_TIMEOUT_MS 2000
->>   enum {
->>       MODE_MIN,
->> @@ -1111,6 +1112,8 @@ static int ufs_qcom_init(struct ufs_hba *hba)
->>           dev_warn(dev, "%s: failed to configure the testbus %d\n",
->>                   __func__, err);
->> +    hba->uic_cmd_timeout = QCOM_UIC_CMD_TIMEOUT_MS;
->> +
->>       return 0;
->>   out_variant_clear:
+On Tue, May 21, 2024 at 05:54:29PM -0600, Jane Chu wrote:
+> While handling hwpoison in a THP page, it is possible that
+> try_to_split_thp_page() fails. For example, when the THP page has
+> been RDMA pinned. At this point, the kernel cannot isolate the
+> poisoned THP page, all it could do is to send a SIGBUS to the user
+> process with meaningful payload to give user-level recovery a chance.
 > 
-> Given the description of patch 1, the addressed issue is not specific to
-> a single vendor. Is that correct?
+> Signed-off-by: Jane Chu <jane.chu@oracle.com>
 
-The issue we are trying to address is not specific to a single vendor.
-Any vendor would have a freedom to choose the UIC command timeout. At 
-different times during their product development, they can choose 
-different UIC command timeout, or use the default 500ms. It's the 
-flexibility we would like to give to vendors.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-> 
-> Since the described issue is only encountered during development, why to
-> modify the UIC command timeout unconditionally?
 
-The vendors can enjoy the default 500ms UIC timeout if they prefer.
-As long as they don't write to hba->uic_cmd_timeout in the vendor's 
-initialization routine, the default value of 500ms will be used.
-
-Thanks,
-Bao
-
-> 
-> Thanks,
-> 
-> Bart.
-
+-- 
+Oscar Salvador
+SUSE Labs
