@@ -1,68 +1,75 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2082.outbound.protection.outlook.com [40.107.94.82])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A8C224E8;
-	Wed, 22 May 2024 16:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743ED199B0;
+	Wed, 22 May 2024 16:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716396410; cv=fail; b=Qpm05J1BQq+qR4pdXdQrtzhabdZZcqyS/YAYl6zihI6GDdg0HoqNP0gVqwuMoDJXCmL8iTZpG/6gWYYY5c1elX3Z+UH2QuyBg71ueqqxF+NeTFRfvMe2LSBcJXqZZuz5QC9+RSpUTnGuUPuBZzVZ34yh13Tn1p3o0IwPpWfJR28=
+	t=1716396506; cv=fail; b=sECHbPvNRc2r6wg9DGitss0RwLrcPHOOHhZ/qNZkGBipT7Pj0kJx9dvnSRk27EjeXodlIPQj81QeA9wWsaltdlfYkPXKYceceApszZowt6EhcCyqqaNSQYUVZj3n5GG3W5SfY9KtvA3ki0GHT7S0DRNTE2OOq+h8ApbDET98Q6E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716396410; c=relaxed/simple;
-	bh=0JeFAAiPE/K1Yx44TxqohrWnGI/ra4G5bsdGDatUyQ8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=D3HL14TqjWBEOcuKvHmA7Gh0nDBci4sBeF2u2NgmVmvo879+7NFAb2fiOv5KpXGVj4ZBWTOm4OFrEggE/1hz5eaqrK5ufPxafDzENYwAw/r+/M5udJ8KCtL6QcoJD1sS+sPps2I97rgic7lE2SReFO+tG4RIxSXrMWV2aDs29jU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bEtTwAuP; arc=fail smtp.client-ip=40.107.94.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1716396506; c=relaxed/simple;
+	bh=EU49AnnWVn8BVyO7/8tqKNhu/JjtyqQWPIZxUXXQANc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=a8HFSfTQrarBn7eSg4HYR8eGK/oFrxDbtfFLhTAn7ARIzjVLwWqtRhXkekK6ju153x9C30MyUjbE/i/M8GNCKeBbj9Ljd42ypztGN5HYuCv7FmkXTfq2YIo4rZWPSEgbp5/rPkCHuHC1/FQVXSHvkDLOStNR2nD/j3AniqiYeG8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Anvz1tSK; arc=fail smtp.client-ip=40.107.243.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bEtTwAuP"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Anvz1tSK"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mw88zR1ujaPiyufctSlJ4jK4b0LlV2UCeugYQtb5ub+UGf56Kq5/kVTU2Otb7wyq4oznhB+vjF2dzmE6SHTavsbDPkXi6EDZ8zduFuwlBXdJ6NbyTn49pZEFeONcCoey0QgsvFf1oVRBzCvhkKhe4Q1z2J4WTB+7hgxoJ536LAoSPMYkse0F+TynQSpi8oCxyFN3rXW00EMBquPAGd8rIQlnAnZbNHIpp4IampA2hmVf7gQ1zD6ZrVLMUGQXHqvDYuuOduHx9lv44Qnu4NIJx1oo9EC0flZeqaKqyEphtCYugAL4qOl0KnXI7L5tc9c18nY+dxMAWIhVrPm7XzMBhg==
+ b=TNMbztvMedKgJmv4puPY8qdQTcj/3PjM48u+2egatdLiMUL6QN/HTVoRcpginMHstZpJigk5dnuXzhOI5gyiDe/P87vX3ZMBCKWo8sWRg1nnVer5jbGMg5R67QoCGV15UsP2yKT4V+tdjXRBMUkdp/behWXLFID0Fh4sQXc0TNj1zWQRvRYo/DasGuveeXJONH3GSxLAPONTEaep6/OfLgReFqeAwZcCKjqczoibxoBcbZEQPmn+tQFaN8hJIirjnVYuzKiPU8+dwc3exMVF3jMzmmfDA9TrhoipsPF+FOSx7SkFQJfNN3exKltV8v3K5//S23srbD/EbLMpptZr+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e/5TRZoH0Eu995ZUzQPFuM+hl7c/vvkF00Ey9p03/+U=;
- b=AyvwnKLHSSvkhLK5Yl686krUMjTYf4ntBMD+KI9Cya3kGuhIP5eOzPYCrR0ovRemIhklL3qzeRVeeOhoNfbJaIB7xqCy1ahfYc1i50JHglIVPmWnRounln3gc7HqrR4Y5hSGgT055excS5DWGtPmXmSRpPCE8iy1fcdCX+7xO6cKSegcDopxaYs5k340JEEg1tUNByMb93rkm2AcLnR1x3Dk7vX2RrjBbCm9pmiTHT5ZPzkFVn/Uf5O1YRgRRjiuISl79gZasBKaiVr+XfUQR0KfyoKpssu2Fpb6DqFdPhoewceoxxlUVWfVWmPKvAMCenp4AUGl+Myj1xQk7Wya9A==
+ bh=kjYxnXO92hKV5ulLAd5n7xBXvqpCXtz3bzbEpH+N4Bo=;
+ b=fnp8UHufAgdQYJzepXAzORKTU/0R9mr1hgtnCemG53JvhF4AqgW8pIoXG4C9ijlE6XJ3fB/ej/ND0NmKUgUvRSH0CVgFnnvVdh4Wk3Os9nAd2ZmlWl/nsUNUpIw6rOuqrOZ+1eb38qrgxgvajU54SLlLA/ff5HwUDdznzVETVOUsc6trUrWLkgLMAMqxhrZRKyarIrQlX0RlPIuehxsJ+ldIMMCcGEJX7tQGennBXuPQQO6YpFt/wjWpBecUnejb/6KLUN8kzxYyPBSbAPYdVoRIubj8Qeb2UCWWymSuv+Sr906h+oVIUL75rXq/9DlgrglSQPaUdvIic8T8DMmQ6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e/5TRZoH0Eu995ZUzQPFuM+hl7c/vvkF00Ey9p03/+U=;
- b=bEtTwAuPRUo/SXVBJmFAExmKWZiMu65/48b6r8qS0StkcMu36/hor6bkcwpB32yxnB/HFFz65svKxWUv/P8PCILYWSs/yJBXHbvPZkpLDfxWV3JAxmgHpTAixCPL7JsRaztZZbb9hi+DfUgdqg8FeABkUAO4c5iPNjZwB9/dTCQ=
+ bh=kjYxnXO92hKV5ulLAd5n7xBXvqpCXtz3bzbEpH+N4Bo=;
+ b=Anvz1tSKOFPktAPsHHumt38zN3P6HPTUxZGtxYIFm+7wsK0bmUE7drGTXBqm4QHoOIt9MYH84Bod7o+dBE9AkkZiccq+z7KfBzsj/HM+zFtOEUf+xIvGs3MaZ3fcMO9G2706NZMF0BZOFdvuFGhlDdkG9gfAlSZfb12POls3jL2ovp8yYxYWjDO8hqfmmE7YVMw81+tDKBf99rI/BSXoMz1NAGZHK9bX2cvC2aDs0t3rMUvX2ABPSNX6Vvh+RyidZC00yJ8GL1+o2r//OcHh5Rb6fse0WZRPH9QMJlWTrnp+/qjxx7a9EtB93MHKhC5VD6I7Ae6RZzmJBZeE+tKtvQ==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BL3PR12MB6428.namprd12.prod.outlook.com (2603:10b6:208:3b7::19) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by BY5PR12MB4307.namprd12.prod.outlook.com (2603:10b6:a03:20c::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Wed, 22 May
- 2024 16:46:43 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7587.035; Wed, 22 May 2024
- 16:46:43 +0000
-Message-ID: <7407f7e8-d7e9-42cf-8ab1-b002a88c2436@amd.com>
-Date: Wed, 22 May 2024 11:46:40 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] cpufreq: amd-pstate: change cpu freq transition delay
- for some models
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, daniel.sneddon@linux.intel.com,
- jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com,
- sandipan.das@amd.com, kai.huang@intel.com, perry.yuan@amd.com,
- x86@kernel.org, ray.huang@amd.com, Xiaojian Du <Xiaojian.Du@amd.com>,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20240429070322.999500-1-Xiaojian.Du@amd.com>
- <20240429070322.999500-2-Xiaojian.Du@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240429070322.999500-2-Xiaojian.Du@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR02CA0022.namprd02.prod.outlook.com
- (2603:10b6:806:2cf::29) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19; Wed, 22 May
+ 2024 16:48:20 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7587.035; Wed, 22 May 2024
+ 16:48:20 +0000
+Date: Wed, 22 May 2024 13:48:18 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+	"Liu, Yi L" <yi.l.liu@intel.com>,
+	"eric.auger@redhat.com" <eric.auger@redhat.com>,
+	"vasant.hegde@amd.com" <vasant.hegde@amd.com>,
+	"jon.grimm@amd.com" <jon.grimm@amd.com>,
+	"santosh.shukla@amd.com" <santosh.shukla@amd.com>,
+	"Dhaval.Giani@amd.com" <Dhaval.Giani@amd.com>,
+	"shameerali.kolothum.thodi@huawei.com" <shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH RFCv1 00/14] Add Tegra241 (Grace) CMDQV Support (part 2/2)
+Message-ID: <20240522164818.GB20229@nvidia.com>
+References: <cover.1712978212.git.nicolinc@nvidia.com>
+ <BN9PR11MB527641C15DD88FB0C44323D08CEB2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB527641C15DD88FB0C44323D08CEB2@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-ClientProxiedBy: BL1PR13CA0386.namprd13.prod.outlook.com
+ (2603:10b6:208:2c0::31) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,208 +77,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BL3PR12MB6428:EE_
-X-MS-Office365-Filtering-Correlation-Id: afad7d92-19de-4fc4-f510-08dc7a7ec2eb
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|BY5PR12MB4307:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b87ef55-fc5c-4afe-ab45-08dc7a7efcde
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007|7416005;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WmdkbGZUTkx5ZlJKdXpOQXRlR20zeFN0cDZZL3M3M3hRRkNNanRTMEtFYlE2?=
- =?utf-8?B?VVI4R01POFV4bVpUUzZQcUxhMDVqRFBmM3kvQitVWmw1NExTbHloV1U2SWh5?=
- =?utf-8?B?eDdGQTcrUzY1UitORGZjZUExenAyZGlFb3lKMUpGQkRiZjBieE5sUmVhQWxn?=
- =?utf-8?B?Tk9SV0NURlhRQ1pXRkE2UUN2eHBnUkxPZDY3T0wzai9oVDg4bmQycVgrMDRV?=
- =?utf-8?B?cEhFQ01HK0plWlFCamhUdDNBVmRPRU9BbWxnK0NCS3pTUGZvTTJRajZ4TjhB?=
- =?utf-8?B?ZC9xNllzMTNISytxbWlRQ0pwNVQ2SFRnMnBzT2tpdnZwQ3RiNWc5NEV6WFBN?=
- =?utf-8?B?NythM0VIcnFnTU9ncnZvdWxyTUZzcnJyN2lvdUVqQXdJZWs5eEJVcHAyTU1E?=
- =?utf-8?B?UnlpSTFiTDVGTk9JMXFDR3EyRWV0MkJ0MWFBQ2JSUnZDV0JWZGpKVCtuMWFj?=
- =?utf-8?B?WjFyVFduZ3VhcEViMTRNWWUvaC9xRTdFSHAweGs2RzRjbGI2MGw5amhrazdO?=
- =?utf-8?B?d3VCclRvVnJrdStqRzdVc05Wdkt4VTVBMk9wSWtEVTVHWTg3bnVZNCtmMStu?=
- =?utf-8?B?ZWxhVDJ4ZkxGOTZmS3VpMEFwVUF1d2NHN2ZHS29EWk83R0VDa0FDdWtrRWRP?=
- =?utf-8?B?enpMTDJidWZjRFpYODY1RmRXVUIrSWtJM1pFbmdZK3h5MHkvMXUxOFRZcS9E?=
- =?utf-8?B?Ly8zYmZvNFV3eEhiN1BRczFVOXdibVJqZ2pBek9nR2lES3p3Z0E1cE1nV0Vl?=
- =?utf-8?B?RzZZaVhIUm5tRCtDWUJGZFp5Y3ArVjcwaHdDbyszN0g4RFMramFxQS9QMW9q?=
- =?utf-8?B?ZVNvYU5Ya21nekJBK29ISVJJVjVCcTdrOTNpRG4xY1dtQlBnMGxZM0hNWlBH?=
- =?utf-8?B?UXhOQ2hZeURGQVdJODRTeWx3WUV3Y1c5a0ZpcDQ2ZGVweXVIR1hYdzhBeW5C?=
- =?utf-8?B?L0IwN0VHSkhwK1RUYVhPM3FuVzI4b2xTbWRtVU0ybjlLb1h4ejhxb0RSY3Rw?=
- =?utf-8?B?bDhSTTZrQlJNSllUNEdHR2crdVpYQitOZy9DNUVBTlR6dit6WGdNY09rZlJp?=
- =?utf-8?B?OWdQMnZIdjdMUjRLWmVhK0xlU01vTlJXMW1EWnR2aDdVVWV4RldlbVMvZVhT?=
- =?utf-8?B?WmZ5ZFJBNGFqNGRsaHhXVW0xRUEvWFdsSUJMYWFXOU9BbGFTZ0syc01qWFpK?=
- =?utf-8?B?SkhDeUc1ZEp0bndYcHRLT29aVkxDNSthN0RPNktYM3RQclV0QkJUS0lWZXcx?=
- =?utf-8?B?Q3NXNUk4R0k3NVMybTZkRUZCcERvSld6YnVpQzNlR2hlb0N1eG5DOEJZZjVX?=
- =?utf-8?B?ODRaNzBNaWpuVUVaOUhzTkZNMVRTZXh3QURHNmZ3aFQzYllXYTE0K1VDNXVT?=
- =?utf-8?B?eEc5cXg4Ty80VklPc04yZ1UxSjdlaUZpQ0RMZTczWEJKaWRhb3JadXcrMktV?=
- =?utf-8?B?WTVtYkNTYjAzUlhySGlUa1I3emlXTnI5aFV0Uy9NeFJhNURSVHYvM2tpR253?=
- =?utf-8?B?NzVFdDZUVlYyTzlmMmltWlVQMXFjdzJLMEhYZ1hIbGlkS3VyRlN1WnRGSFpx?=
- =?utf-8?B?bzRvcGZHaEhXMVJ2bUYvOXp2MWpiN1FCc0ZIdnBBMVNGMTgvazlCUFdtM01y?=
- =?utf-8?B?dGh1MFFoZ1NxQWswSUxEVGR6eklTbzIvR3pDeDd6Qko3RXJnOUtzMW1vZXVx?=
- =?utf-8?B?UFR3d2VyY2hrUG4zbWIraVllcmZxaVM4K0FlVkU2VW4vcWtScEdEdDhRPT0=?=
+	=?us-ascii?Q?rjUsYkWTZ4y/OdKyYV7TIWHwHjOVmyOrfUWcNKZ0vRsO8/rWOysWcyqpzZYU?=
+ =?us-ascii?Q?K5jYl/BNpp9VeZT3DN3aejwDnwNvlbqCQcmxrogQMdEB2bqfP4mKfvFtHvmE?=
+ =?us-ascii?Q?RPuOBnntw/nXhxxMWiKJV1ap9+yQ65rRDn8Ei7+fwY79S/a73ekcc1ZwW96a?=
+ =?us-ascii?Q?7+LBi+6yWNQKUbFQDE249i7QSviP8qoAHd7WZNaLZKYv+qpK9XKEhrDc3v/y?=
+ =?us-ascii?Q?ZFQiS+sVoXD/5wBl5gwiJSVbSqDIljjkWjoQMVZ1ntw3ob855guo4WKrfPKD?=
+ =?us-ascii?Q?NsxdzubPF0FmmVTMspC6Ape/zfCYPxJ0TLbzVMqFfr/mG6qqbNR9oAFZ7b1D?=
+ =?us-ascii?Q?fNThKk7WpRzVZDzxQXM9KGBsNtutHvlf1Cu7FmGMcxlYoVLrD+FD0te0HVvs?=
+ =?us-ascii?Q?cwNrLsy2hEy9kd+RtnbdaY2ShBzEDbmEfxFfngMwl+MR+/d2IxE05cdRXhTB?=
+ =?us-ascii?Q?7ZWx8ClQ16aQ3TDMfl3f7QoRG14PHJvcgvt4//5CzJXl4Ctoq560PjOQqmsf?=
+ =?us-ascii?Q?eyxUb4Gd8s9GgRx+2O96Mm3dNZEVqad9/O6im8fzOOKTAbNCQ5Xs9KdkbI5P?=
+ =?us-ascii?Q?qNF2Qi/foh2JeWiO4KzUvYtQTFmdIBVpAwhBSnlcmdvjmqGgIQZdFUMkwnFs?=
+ =?us-ascii?Q?KpeGQuPJJGQwXx/t3kGml2zF/oRYZBeFLGED7WcjyIrYURXHwm2RLk3mlnQa?=
+ =?us-ascii?Q?k3+LuLkQgGH8w/VTIlI4MNlawoymjEaOgufpx0tyL6H2PdcaUvZeLAN1dOR/?=
+ =?us-ascii?Q?GhALodanzEbxPeTvBC0XnlznFRLnmHUcvH1wf+mf8WdNglpUpF9rm4L+tYzs?=
+ =?us-ascii?Q?KuWP4aGJy9iZTI1JgfaYOpOj/YjRC8UwaKi5CJOBcII9KScJ1mwTHqdEnl00?=
+ =?us-ascii?Q?0EewD2m3vsv+yPysgsUO6tt0f3+ldxnm66fEktASmmjUjuiQB5vtsWhcxcqw?=
+ =?us-ascii?Q?bu7xLuxDrnCDZkVcFUaI+dCMbAQUs/ThZgdpTQ14ISIXqWIPKplvGbMni/RR?=
+ =?us-ascii?Q?9nkxmzG80tNAyR8zKSJ012SB4B3vdBrW9CdOM9BBZkYRYC3hBKRFSt0Ck8aS?=
+ =?us-ascii?Q?eNTWaLAoMXzdxcHmbLiZ/NXYwrpHPdaJEvONWTU0qFnnzvDsNQZ8aj4ygbH8?=
+ =?us-ascii?Q?tRPG+I+WkQS0pz4DI0tFAKysifKlil9NPa57/eSZUUB9P0yHareanCl8JRtH?=
+ =?us-ascii?Q?FygUdKyluo7JSdA5RMW3+tmHT0f5FKPP1D7SDEP+pQCh6s6yP/Z9WnrLXFx+?=
+ =?us-ascii?Q?U/msBKsHBYcHRmj6Qj9NYUq+EmundkHvzJA8oee6zQ=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(7416005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RXA5WktaK0NmNXFEOWpYMnJxMWZYcVVxYTN3clJ6WGQwU2VTN0VvVXI3YWtB?=
- =?utf-8?B?VGlDRys1Qm1aRWVHdVI2TWM1cXM2a1ZHRXlvK3o0Tit2T3JtN1hJc3lCVVFP?=
- =?utf-8?B?dXpTZ0pJTS9ITEZvZFMrZjFLYkVGRVRVbml5NXNmdExTVzRlYkVwank5VDZY?=
- =?utf-8?B?VHo3REp4TFBvMXE0UWJ0NnFMVUR2NnJlaWhaSWlNNDlyWjBiQ3ovZTF5Ty9K?=
- =?utf-8?B?L1lxb1c4dFBab1dLUFYvUEZhVWlCTWplaXVqbEtpVjB3UUpvemYxNGh2QjlZ?=
- =?utf-8?B?Wi9uMTRtTW8wMGxQcmxSRkVFR1NacE9wRnE4RmJZMkh3SlRMQ0UzWmJlZ1VE?=
- =?utf-8?B?UXdpNDYxdlZuUTRDTllzTVhJRUdvOE42MWRSOWgzelJiU3IxN09VWEtVdU1Y?=
- =?utf-8?B?WlR2MlVQbDg3dW1WS3hCZ0d6L0FBUVUxL0l2WlF0NG1KMGZyZGs3SzJTZ29B?=
- =?utf-8?B?cDVFR25aSG1SQTBxaWRYVEZvUFNLZHgyMmFxTlp4bU1NY1pMQUlGS3pmUFBm?=
- =?utf-8?B?K0REbW5CK2dzb2tXOEcreFFuVlFlVHdibHFJZk9JdEp1aC9LQ0d5QU9YeTJa?=
- =?utf-8?B?WndjaWxZN0NXZlg2L0xjRW1qYzdDMVR2b1JEc3ppQ1lucVZ0M0FiY0hEKzhu?=
- =?utf-8?B?TXJ2SWxWTzg3MlpHaDg3Rk9VTXBGRWNQYnFreWJuaE44bW8yc2lNdWNtT0hi?=
- =?utf-8?B?L2hHTHJQZDd6a3lnS2MwNFEzOTZ1ai91MzNCU1Azc05XZnRZZS9taGRiT3NE?=
- =?utf-8?B?N2xuZEJpUkhmb1huK21MSVJiVlpPYUY1TDhHNSt0U0h3MkxMNDV3MytjenlB?=
- =?utf-8?B?QjJsRUFxK2lqTHVQZmYxVFNZZ0V2NnJjbVFhK3YxeVYwZlcvUWN0OWwyZXNp?=
- =?utf-8?B?U1RQclpZZitSTjFLK3NDanNoeXJXZmhFZTM0TnB4S0ZRY3FGU29hNGNXU2kw?=
- =?utf-8?B?UlZ2SXRPZFBjNVJNazhKbENLNksxQ09pQnhQc2QwSi9lYnB3QnBUSHE0MFVI?=
- =?utf-8?B?eFVvZ0xhb0p3VThld3Z0dEsra2pKbFBHL3YwWnlNdHBsKzd6Qk9ncUh3eXhG?=
- =?utf-8?B?Sy9HNWxKUEs1aGhaaEJWcjZNV093VElpOFBUNWdHVUIwTktGMlFCRHhSTHVr?=
- =?utf-8?B?L25sQm1JOXdNbzZHdlFVN0xJWjJCeFpwRmZOb1o3OENYTG9Ya1ZQUzc2ZWkv?=
- =?utf-8?B?Y2FPSWRUaW5OaHczTmJDS0dEZGtLSHlSU1lRbktIVGt5TFZVMlN2bEdNclRF?=
- =?utf-8?B?RW56UU1kbUVOSWFPdkt1ek1yclViYTN1bEhsWTk1ck11cm9sTzRyenluR1Ay?=
- =?utf-8?B?eEVmNTBCRzZwS1Vvc1lyUlNKcGswYW11VjMxSFBLUVBNazdBd00yNlErNTVl?=
- =?utf-8?B?Rm5pd2VPUXVCUDN5NkdMWDhwblMwckdHNFdLNEo1M1Y4OXNFVmxoYldlVzJp?=
- =?utf-8?B?b1hyOWRtcS9QVGlqRTlkTmdEZlVJaXJrb0daMXJLeXRrUEViVU1xek9IbHFT?=
- =?utf-8?B?Q2paLzRVWkhvMTI0SDdydVFiOWlwQ1FDN2d2Z04zbDkwODgzUEZHN2xxV1JU?=
- =?utf-8?B?Z3ZIdUdZSS93WVFIWGVzV1JEV25QZi9ZcmdRdjB0dk5UYmFjYWxkcGNZRDJ5?=
- =?utf-8?B?dHlSRTVucklnaTdBbEV5TVNXZmZCek81TWdva0EzcFBVSDdUbTFmQUR6cmhV?=
- =?utf-8?B?a09HUmROZmJpRXZsY09nTkJBTXlEbzZMSzFCbkdxaVVxU2lrc2ZIVEY2M1dm?=
- =?utf-8?B?RjhBczNOeVk4Z2N0YlBlYXllaWxKcEI0ZmF3UndRQUZmY2JPdk5tV1IwY1No?=
- =?utf-8?B?UGxqS0hJdE84eDhqYlhJZkZTTEtpa3NOWTRON3VIOExiKzVQM00rdFh6enZU?=
- =?utf-8?B?MjNkN1RkbGhuOSs1QVpnVVo1OHBkTHQxQ2lybExPbkZWSnhtaC9abW4ra1Vr?=
- =?utf-8?B?WVpXaFhyazdnWWU0TVg0cVY1UjVJR3gzTUhZTmZaRW9RZXJYTG0xa3N2VzNW?=
- =?utf-8?B?aGg0R0YvMThtV2lKbWNWVjhJUEl4aGhpYVlqYWRvcUNEeWtPMDhKRC96MUtz?=
- =?utf-8?B?T2dVSDFZSGVWU3d5dHRnZ3czU0pLblUyTVlUU0FndlN3MkJObmhaV1c3NUpv?=
- =?utf-8?Q?EwjENuAjVgUT+ATFlaIrkuE9F?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afad7d92-19de-4fc4-f510-08dc7a7ec2eb
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+	=?us-ascii?Q?xpmic/1U6haKO26vPmwLJFgbnsxdG+dt247By8h2KPOgfimlr1Kkz0Q69Vk1?=
+ =?us-ascii?Q?7r22YK4nzrqjMMTIZENBf53xCMTS0a45wuVmmQEoKAGjvpOGtXOgvZG+milO?=
+ =?us-ascii?Q?5idUfqCzETYUaYcpYTE7SKSVgzG5ggXr3zsmh4B17KWfbVKVSVb6HEaSq3l3?=
+ =?us-ascii?Q?hWtXnNI22+ggbChZ37kbgQS3Y4su19J4NvoVuvBQptbQvjLtqKIUDxYA/sln?=
+ =?us-ascii?Q?sD67GwRSSvKmafGbTIy5py10LJTQfH8yytPanAI6hIDs2hr6isx0Fu1WO1vw?=
+ =?us-ascii?Q?BD0J+5qPJjKC0kdRYVphiqpzgguKuXBKISoL0rb5SkhMKewZuw/f55DrWZaV?=
+ =?us-ascii?Q?dsOTeRSplBCsMf9ovIHpCDVaqUfljmg1f7RdEP16tmxAKY5A3K415lCigyl/?=
+ =?us-ascii?Q?K/WIPOuHVvk7HqoJMUuJugeGOg6mDXOhpz+mG+rwo9YEYuygng0ygSgtwDVL?=
+ =?us-ascii?Q?8RUzwdeasHILopNjnD6UnW5qIwXzPft9b0+Vsqi4PZduqhfj+2ZIU+cenC5R?=
+ =?us-ascii?Q?RAvZ4KvACd9PbpvR7BYSff9mLl2bStc4cNCmj/t/knbjhF+Bj4SydoSSERux?=
+ =?us-ascii?Q?TA4IXpfkXyb/1c6MI8e60++ycRHAbn02/Ovjnza+FGBogilUhgyRDfsWDQ5+?=
+ =?us-ascii?Q?k64gaJCT9NUbPCfoCmQmnTo2dVw3UMXPUNO5UHiKHzds8NOQP0lmlGdj2Pfp?=
+ =?us-ascii?Q?4pcvnsovz9Ypy+qb9ehG39v7H5vdfu06Ikcwaz6+zQ8qOEAffZH8NsizYphO?=
+ =?us-ascii?Q?C8SlTxiPc4RAhct9OV9oMr67zgOoszWMDjZUP2xNcAcJrXXS1BOLpS6XWTnt?=
+ =?us-ascii?Q?ph2gK0WZcukjpIcm/8bqHzeWTHzwtPaTXyottiC8KRjgfOD9hirLeZyIqHiT?=
+ =?us-ascii?Q?OEFMGfLvIu8FVZzQM3mg6d8gavEZevlHdxX0fCmDJjPV30HWRsSFE3aRsuVs?=
+ =?us-ascii?Q?H7B8ghawLBrUoZWk6l+ZC0Q7Q3ieE4UbQqDiZWzId2e5pEpucWkPUsyzLvb/?=
+ =?us-ascii?Q?jA1RRfOps4jW0lR7XYZ4XKFn5rGEtNm6Ik855aJ6mBeg+doC2RQZJMtUufTC?=
+ =?us-ascii?Q?q2QEAS8HFKnI7oZ/yor4hcvd9If2+UcAs8+WbHfTdD7xmYNgk+3SSVvmMY+b?=
+ =?us-ascii?Q?9AcUDUfQZtOGUrEbYKvxHfEhc+XqF7c1tlWU5MSpHdlyzypYssgIkp+unpbI?=
+ =?us-ascii?Q?rfkgsoK1lJYUr3XAbX1V/kpe5JBlhSZnDbdOgwkq0xS0iINF7ZESrydaCBJz?=
+ =?us-ascii?Q?vaIW0YfA/CzRhQfCt/vAmsohKxDLYLzi2WmWRoYO7nb/BK8GJdSo++WeA7wQ?=
+ =?us-ascii?Q?0vYVgo3Jf7Ue1WiGkN8KFbvaa1GenJEfc0a3y8gmt6DIVDDgwDIM+wSdumCh?=
+ =?us-ascii?Q?M8HU6ls5EkbxP+HaKuSEx00ksnjx9t5qwEmuEqLkGu2RkovHQ9S3IRURXpz0?=
+ =?us-ascii?Q?bjfhMbU3zo73hASWEw4maxsJzRbejw7WJN99waAjSzjFcI0Y0oWfsS6rAeIz?=
+ =?us-ascii?Q?80XhV9fJBSQfvq9Q8RHQ0RVmJKYo/9dxqFYwfZhShymmQlW7r2u78x5AUGkc?=
+ =?us-ascii?Q?moZhCjwjmjUv4yYH4zo=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b87ef55-fc5c-4afe-ab45-08dc7a7efcde
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 16:46:43.6290
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 16:48:20.7954
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Nt5JK/duOBmImJjLA43OuW8pi/y1UZUgQZGpOBfDrnxLVYecsk1hXD27eSnVSIS/260dOaWVIWu4v9NeO49uMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6428
+X-MS-Exchange-CrossTenant-UserPrincipalName: cK5MTYaGRQ0eoiNmWgDXuPuoyapJasXqX9FAYO9ZgpNJrUWoL5v2Y0A6rQHTt7Eu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4307
 
-On 4/29/2024 02:03, Xiaojian Du wrote:
-> Some of AMD ZEN4 APU/CPU have support for adjusting the CPU core
-> clock more quickly and presicely according to CPU work loading.
-> This is advertised by the Fast CPPC x86 feature.
-> This change will only be effective in the *passive mode* of
-> AMD pstate driver. From the test results of different
-> transition delay values, 600us is chosen to make a balance
-> between performance and power consumption.
+On Wed, May 22, 2024 at 08:40:00AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Saturday, April 13, 2024 11:47 AM
+> > 
+> > This is an experimental RFC series for VIOMMU infrastructure, using NVIDIA
+> > Tegra241 (Grace) CMDQV as a test instance.
+> > 
+> > VIOMMU obj is used to represent a virtual interface (iommu) backed by an
+> > underlying IOMMU's HW-accelerated feature for virtualizaion: for example,
+> > NVIDIA's VINTF (v-interface for CMDQV) and AMD"s vIOMMU.
+> > 
+> > VQUEUE obj is used to represent a virtual command queue (buffer) backed
+> > by
+> > an underlying IOMMU command queue to passthrough for VMs to use
+> > directly:
+> > for example, NVIDIA's Virtual Command Queue and AMD's Command Buffer.
+> > 
 > 
-> Some test results on AMD Ryzen 7840HS(Phoenix) APU:
-> 
-> 1. Tbench
-> (Energy less is better, Throughput more is better,
-> PPW--Performance per Watt more is better)
-> ============= =================== ============== =============== ============== =============== ============== =============== ===============
->   Trans Delay   Tbench              governor:schedutil, 3-iterations average
-> ============= =================== ============== =============== ============== =============== ============== =============== ===============
->   1000us        Clients             1              2               4              8              12             16              32
->                 Energy/Joules       2010           2804            8768           17171          16170          15132           15027
->                 Throughput/(MB/s)   114            259             1041           3010           3135           4851            4605
->                 PPW                 0.0567         0.0923          0.1187         0.1752         0.1938         0.3205          0.3064
->   600us         Clients             1              2               4              8              12             16              32
->                 Energy/Joules       2115  (5.22%)  2388  (-14.84%) 10700(22.03%)  16716 (-2.65%) 15939 (-1.43%) 15053 (-0.52%)  15083 (0.37% )
->                 Throughput/(MB/s)   122   (7.02%)  234   (-9.65% ) 1188 (14.12%)  3003  (-0.23%) 3143  (0.26% ) 4842  (-0.19%)  4603  (-0.04%)
->                 PPW                 0.0576(1.59%)  0.0979(6.07%  ) 0.111(-6.49%)  0.1796(2.51% ) 0.1971(1.70% ) 0.3216(0.34% )  0.3051(-0.42%)
-> ============= =================== ============== ================ ============= =============== ============== =============== ===============
-> 
-> 2.Dbench
-> (Energy less is better, Throughput more is better,
-> PPW--Performance per Watt more is better)
-> ============= =================== ============== =============== ============== =============== ============== =============== ===============
->   Trans Delay   Dbench              governor:schedutil, 3-iterations average
-> ============= =================== ============== =============== ============== =============== ============== =============== ===============
->   1000us        Clients             1             2               4              8               12             16              32
->                 Energy/Joules       4890          3779            3567           5157            5611           6500            8163
->                 Throughput/(MB/s)   327           167             220            577             775            938             1397
->                 PPW                 0.0668        0.0441          0.0616         0.1118          0.1381         0.1443          0.1711
->   600us         Clients             1             2               4              8               12             16              32
->                 Energy/Joules       4915  (0.51%) 4912  (29.98%)  3506  (-1.71%) 4907  (-4.85% ) 5011 (-10.69%) 5672  (-12.74%) 8141  (-0.27%)
->                 Throughput/(MB/s)   348   (6.42%) 284   (70.06%)  220   (0.00% ) 518   (-10.23%) 712  (-8.13% ) 854   (-8.96% ) 1475  (5.58% )
->                 PPW                 0.0708(5.99%) 0.0578(31.07%)  0.0627(1.79% ) 0.1055(-5.64% ) 0.142(2.82%  ) 0.1505(4.30%  ) 0.1811(5.84% )
-> ============= =================== ============== =============== ============== =============== ============== =============== ===============
-> 
-> 3.Hackbench(less time is better)
-> ============= =========================== ==========================
->    hackbench     governor:schedutil
-> ============= =========================== ==========================
->    Trans Delay   Process Mode Ave time(s)  Thread Mode Ave time(s)
->    1000us        14.484                      14.484
->    600us         14.418(-0.46%)              15.41(+6.39%)
-> ============= =========================== ==========================
-> 
-> 4.Perf_sched_bench(less time is better)
-> ============= =================== ============== ============== ============== =============== =============== =============
->   Trans Delay  perf_sched_bench    governor:schedutil
-> ============= =================== ============== ============== ============== =============== =============== =============
->    1000us        Groups             1             2              4              8               12              24
->                  AveTime(s)        1.64          2.851          5.878          11.636          16.093          26.395
->    600us         Groups             1             2              4              8               12              24
->                  AveTime(s)        1.69(3.05%)   2.845(-0.21%)  5.843(-0.60%)  11.576(-0.52%)  16.092(-0.01%)  26.32(-0.28%)
-> ============= ================== ============== ============== ============== =============== =============== ==============
-> 
-> 5.Sysbench(higher is better)
-> ============= ================== ============== ================= ============== ================ =============== =================
->    Sysbench    governor:schedutil
-> ============= ================== ============== ================= ============== ================ =============== =================
->    1000us      Thread             1               2                4              8                12               24
->                Ave events         6020.98         12273.39         24119.82       46171.57         47074.37         47831.72
->    600us       Thread             1               2                4              8                12               24
->                Ave events         6154.82(2.22%)  12271.63(-0.01%) 24392.5(1.13%) 46117.64(-0.12%) 46852.19(-0.47%) 47678.92(-0.32%)
-> ============= ================== ============== ================= ============== ================ =============== =================
-> 
-> In conclusion, a shorter transition delay
-> of cpu clock will make a quite positive effect to improve PPW on Dbench test,
-> in the meanwhile , keep stable performance on Tbench,
-> Hackbench, Perf_sched_bench and Sysbench.
-> 
-> Signed-off-by: Xiaojian Du <Xiaojian.Du@amd.com>
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> is VCMDQ more accurate? AMD also supports fault queue passthrough
+> then VQUEUE sounds broader than a cmd queue...
 
-Rafael,
+Is there a reason VQUEUE couldn't handle the fault/etc queues too? The
+only difference is direction, there is still a doorbell/etc.
 
-You can swap my R-b for an A-b for when you pick this up after merge window.
-
-Thx!
-
-Acked-by: Mario Limonciello <mario.limonciello@amd.com>
-
-> ---
->   drivers/cpufreq/amd-pstate.c | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 2015c9fcc3c9..8c8594f67af6 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -50,6 +50,7 @@
->   
->   #define AMD_PSTATE_TRANSITION_LATENCY	20000
->   #define AMD_PSTATE_TRANSITION_DELAY	1000
-> +#define AMD_PSTATE_FAST_CPPC_TRANSITION_DELAY	600
->   #define AMD_PSTATE_PREFCORE_THRESHOLD	166
->   
->   /*
-> @@ -868,7 +869,11 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->   	}
->   
->   	policy->cpuinfo.transition_latency = AMD_PSTATE_TRANSITION_LATENCY;
-> -	policy->transition_delay_us = AMD_PSTATE_TRANSITION_DELAY;
-> +
-> +	if (cpu_feature_enabled(X86_FEATURE_FAST_CPPC))
-> +		policy->transition_delay_us = AMD_PSTATE_FAST_CPPC_TRANSITION_DELAY;
-> +	else
-> +		policy->transition_delay_us = AMD_PSTATE_TRANSITION_DELAY;
->   
->   	policy->min = min_freq;
->   	policy->max = max_freq;
-
+Jason
