@@ -1,137 +1,197 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6238248D;
-	Wed, 22 May 2024 10:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D681C811FB;
+	Wed, 22 May 2024 10:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716375441; cv=none; b=qPCtyYuvcL0keZEYDH0rFczz/Gt1GxTS3JIYXzVrdbPyN6LQeLMAmDBRJJ+Ex6fh4Nb/5b3u0QAgm4reEMjZKO6FzvVALMUE0xcrrotG3/TLBWiZ6ecC44PCop/MpnSkwbX49Wop8Oky3r1CCuymmoRAPKvnCRDs5JW/LmUy2Xg=
+	t=1716375593; cv=none; b=XddNN+Ib6sgLfkobDkNEGrn8PRhoweRmhGIaRL6X75SzdWWzjZbI4jx3qWjY0AOqY6K1NxutHSKhx+lly+K/K5+tRhRVLj5qBJu1LNLUgzgbwBUJIbloKWP2hdaVlbY5oqt1u4OG0vYGQrQmasmTYR9YiyrL+qlAuydVPK/QL/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716375441; c=relaxed/simple;
-	bh=SylLlKY5CBoxLppHNyLoIhvEyhdTimOFUf/M84mucLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G3PN2U3M+8WGfOu+0RRF2SRrwRo3AvINXO9XxTMqfMs3F+vNT/c3e9S2PD0wisfCN2AfjKX7luOXWa4Gy6ryHEkvJ/vkqF+AJ0yRRf7bYz17Ig/+7+DI9gM4vYvmWAkbQLosiNQ3LKL8Y4jCUzm5seZXfAByVDJwfBEvIbK36ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eqDl9zPY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716375593; c=relaxed/simple;
+	bh=XaYc48nWQB8aUx5U/Gx056TfLX/HyLCwVB+Go/sd0LU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ms318d4mQ/ElncX/FXSGoHpFJfQe6Aol8BzDQNCea2D474jC7K8DrL7ugpX4oK/UL/DEv7G+OOuL8bEUqifIaeuLmHB+cc43vX5B5GSzouYt8iBJSjUPyLpIEmrMkd40Dqu7qpgB7im1HXNzVW+41GJI4ypoQYTiUJ4Gd69WGQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfCayVRX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eqDl9zPY"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44M2YgKA031245;
-	Wed, 22 May 2024 10:56:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=HPyJZ+IQWOZKRRpHGYSzS507Ci7ZQ9SHHNkKp70iD0A=; b=eq
-	Dl9zPYMhkKVBMLcM5+Sxn7XDoMlwFv4Yr0pgD3VMFxx4MUnXqSGRludUaxOsREvV
-	n/AIPeN9yIDQzZBFiBKOdOT4fcdTsFwsqVVr8SwXzHS0d85CjpHrCiKP4Nn7nS2P
-	gIFGWA0DHhsx8QTSKkzAjGuWEfuxFw7otgrp1Rl7IPMywDd9Ym2AdRSpsTuSS5Sb
-	fEdb9DmkLX48ukfuGAqsWUe86mxn6RBXaeSZt6D7d7U38cUZuT64Qvyn0mOGHQJi
-	GhW1AoB54qYL+VESORRaz1lSSofc5QtKbxN9bejSkTjaOtB+aPaRk/4qiVFM6Ou/
-	kXhMPmJPGNArSecYuWoQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pr2rn0v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 10:56:50 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44MAunkF002918
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 10:56:49 GMT
-Received: from [10.216.17.165] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 22 May
- 2024 03:56:45 -0700
-Message-ID: <40594542-ac60-0ff7-8474-a93f678a99be@quicinc.com>
-Date: Wed, 22 May 2024 16:26:41 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfCayVRX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C89C2BD11;
+	Wed, 22 May 2024 10:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716375592;
+	bh=XaYc48nWQB8aUx5U/Gx056TfLX/HyLCwVB+Go/sd0LU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rfCayVRXLu7f1ARZtR4PKS7x50GnD3g4npuB1isGy4VpvuQyXQk+E4kkFKZESF42S
+	 cwkfrPSlpZvX8oQEDMDqZwzs1wPgQo1RbXKXCRTvKhMPATgKhYNgBopZYq1C5DcQZT
+	 6uWb2Kqova43fqDiJ2MVj9Chw+M/Lm1r2hTWGB6KmhN9JgRnf817QWWtIuh0/VEMlq
+	 +O4xTxeJDugSw46UEwtdmrPdAGII9yuub6sGt6+rrspIIqIkIXZS+zcqoPU63g1BIg
+	 K6bKhfvN4Ujuc8fGNoTpbLgmRrHSFrT/MDvj8ZGvODJwcvkT/GGGHZAdweUj+TXV5j
+	 YvMM1ZveMv+pQ==
+Date: Wed, 22 May 2024 12:59:46 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
+Subject: Re: [PATCHv6 9/9] man2: Add uretprobe syscall page
+Message-ID: <vqw4ibum2hfnxjkfp7io5ugmwaeok4tynchi3utmzp6xnsmjig@fbjxwmm6u6v3>
+References: <20240521104825.1060966-1-jolsa@kernel.org>
+ <20240521104825.1060966-10-jolsa@kernel.org>
+ <j6qxudmvwccpqnle4evabxbswdygmx35bgqwhemuzsjs5iuydv@fk2iumwucifx>
+ <ZkyKKwfhNZxrGWsa@krava>
+ <Zk0C_vm3T2L79-_W@krava>
+ <o5pkz3eenii6p6sm7dl2fsgy4fqqaq2qbn2rbxddhkvaarvwgm@dkjjknb44qp2>
+ <Zk2k0ttdR7abKSuv@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v4 2/7] ASoC: codecs: wcd937x-sdw: add SoundWire driver
-Content-Language: en-US
-To: Mark Brown <broonie@kernel.org>
-CC: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Banajit Goswami
-	<bgoswami@quicinc.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai
-	<tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_rohkumar@quicinc.com>, <quic_pkumpatl@quicinc.com>
-References: <20240516044801.1061838-1-quic_mohs@quicinc.com>
- <20240516044801.1061838-3-quic_mohs@quicinc.com>
- <91f581ef-58ea-4b98-80e2-dd9b14a61c60@sirena.org.uk>
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-In-Reply-To: <91f581ef-58ea-4b98-80e2-dd9b14a61c60@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: oEa4VcuMEe6-HxUvq2uT8Hl8_qXlruDv
-X-Proofpoint-GUID: oEa4VcuMEe6-HxUvq2uT8Hl8_qXlruDv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-22_05,2024-05-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 spamscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405220074
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="q46npir5oijusqfi"
+Content-Disposition: inline
+In-Reply-To: <Zk2k0ttdR7abKSuv@krava>
 
-On 5/16/2024 5:17 PM, Mark Brown wrote:
-> On Thu, May 16, 2024 at 10:17:56AM +0530, Mohammad Rafi Shaik wrote:
-> 
->> +static const struct reg_default wcd937x_defaults[] = {
-> 
->> +	{ WCD937X_DIGITAL_EFUSE_REG_0,				0x00 },
->> +	{ WCD937X_DIGITAL_EFUSE_REG_1,				0xff },
->> +	{ WCD937X_DIGITAL_EFUSE_REG_2,				0xff },
->> +	{ WCD937X_DIGITAL_EFUSE_REG_3,				0xff },
-> 
-> Given the name I'd expect these to vary per device so not have default
-> values.  In general ID, status or volatile registers probably shouldn't
-> have defaults since they should be read from the device.
-> 
 
-Thanks for the review,
+--q46npir5oijusqfi
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
+Subject: Re: [PATCHv6 9/9] man2: Add uretprobe syscall page
+References: <20240521104825.1060966-1-jolsa@kernel.org>
+ <20240521104825.1060966-10-jolsa@kernel.org>
+ <j6qxudmvwccpqnle4evabxbswdygmx35bgqwhemuzsjs5iuydv@fk2iumwucifx>
+ <ZkyKKwfhNZxrGWsa@krava>
+ <Zk0C_vm3T2L79-_W@krava>
+ <o5pkz3eenii6p6sm7dl2fsgy4fqqaq2qbn2rbxddhkvaarvwgm@dkjjknb44qp2>
+ <Zk2k0ttdR7abKSuv@krava>
+MIME-Version: 1.0
+In-Reply-To: <Zk2k0ttdR7abKSuv@krava>
 
-Will cleanup those.
->> +static bool wcd937x_readonly_register(struct device *dev, unsigned int reg)
->> +{
->> +	switch (reg) {
-> 
->> +	case WCD937X_DIGITAL_CHIP_ID0:
->> +	case WCD937X_DIGITAL_CHIP_ID1:
->> +	case WCD937X_DIGITAL_CHIP_ID2:
->> +	case WCD937X_DIGITAL_CHIP_ID3:
-> 
->> +	case WCD937X_DIGITAL_EFUSE_REG_0:
->> +	case WCD937X_DIGITAL_EFUSE_REG_1:
->> +	case WCD937X_DIGITAL_EFUSE_REG_2:
-> 
->> +	.readable_reg = wcd937x_readable_register,
->> +	.writeable_reg = wcd937x_rdwr_register,
->> +	.volatile_reg = wcd937x_readonly_register,
-> 
-> It's not a bug per se since things will work but you should probably
-> have separate volatile and read only checks, things like the ID and
-> efuse registers are read only but they shouldn't vary at runtime so
-> could be cached and not volatile.
+Hi Jirka,
 
-ACK,
+On Wed, May 22, 2024 at 09:54:58AM GMT, Jiri Olsa wrote:
+> ok, thanks
+>=20
+> jirka
+>=20
+>=20
+> ---
+> diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
+> new file mode 100644
+> index 000000000000..5b5f340b59b6
+> --- /dev/null
+> +++ b/man/man2/uretprobe.2
+> @@ -0,0 +1,56 @@
+> +.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
+> +.\"
+> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
+> +.\"
+> +.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
+> +.SH NAME
+> +uretprobe \- execute pending return uprobes
+> +.SH SYNOPSIS
+> +.nf
+> +.B int uretprobe(void)
+> +.fi
+> +.SH DESCRIPTION
+> +The
+> +.BR uretprobe ()
+> +system call is an alternative to breakpoint instructions for triggering =
+return
+> +uprobe consumers.
+> +.P
+> +Calls to
+> +.BR uretprobe ()
+> +system call are only made from the user-space trampoline provided by the=
+ kernel.
+> +Calls from any other place result in a
+> +.BR SIGILL .
+> +.SH RETURN VALUE
+> +The
+> +.BR uretprobe ()
+> +system call return value is architecture-specific.
+> +.SH ERRORS
+> +.TP
+> +.B SIGILL
+> +The
+> +.BR uretprobe ()
+> +system call was called by user.
 
-Will cleanup and improve.
+Maybe 'a user-space program'?
+Anyway, LGTM.  Thanks!
 
-Thanks & Regards,
-Rafi.
+	Reviewed-by: Alejandro Colomar <alx@kernel.org>
+
+Have a lovely day!
+Alex
+
+> +.SH VERSIONS
+> +Details of the
+> +.BR uretprobe ()
+> +system call behavior vary across systems.
+> +.SH STANDARDS
+> +None.
+> +.SH HISTORY
+> +TBD
+> +.SH NOTES
+> +The
+> +.BR uretprobe ()
+> +system call was initially introduced for the x86_64 architecture
+> +where it was shown to be faster than breakpoint traps.
+> +It might be extended to other architectures.
+> +.P
+> +The
+> +.BR uretprobe ()
+> +system call exists only to allow the invocation of return uprobe consume=
+rs.
+> +It should
+> +.B never
+> +be called directly.
+> +Details of the arguments (if any) passed to
+> +.BR uretprobe ()
+> +and the return value are architecture-specific.
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--q46npir5oijusqfi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmZN0BwACgkQnowa+77/
+2zK38w/9FtV+ULMKrpnQryO/Z1ZIRX+42KpBbiPHaiHHSyuos+4ywVOTOXGd26C2
+a/u972Scjw0DfwezA/t7sRKALOzBHD2L2+Y3U6HfD9AlEWQ2PY8AfcMB260c46jf
+opjOZRsBLQMtcJY6RBzXNH7eiACs5XO+IpD7BCj8EJ+HbLD53Ogk722A6C4kcD8o
+N4id9bgR9Z4RG28TFkP+rsq+LmQqTrWDkdHzC6cd+CLnu4wb7wszCiuTubRzBfsw
+Mm85aU3fCl9BKaKJCblneLhB4/FU1VkDIFscx//fT8VIEUKPh3Pepv0HFVyHrpFP
+8hsUo/DyhJyfWllz0ubmmf9VODKoMHtVYP4HGl/JVPYGdhHc+YCjUsV/IaIUnElC
+XOpCQHsN6GDYboebdCb+QhiD0CsVlhiTzAz1jbeJA/eY76sW4z44I5PQAouICbI5
+G8W4xjDa2SVqJVlzGmfdnfOote6pzyvep++igKI06UYPT8LJ2pRDRQZ1/DFLQWc5
+tnwu3XlQCRG7lSMKi9qPI7AEOvmnxilnYPhVXrvnjjYMwHVs36n8efsBB16K62hv
+nDjVWWoV6FxDdQjsYI9kSfB4zTrERIQzP0H64xqr4f6pgtZVnmkNPU+c84QMhv6E
+UWiI7K5BeWmloEQ8uuyqW4RLwCWF3891HxXTH6baw3WdpFYsdpU=
+=uEkW
+-----END PGP SIGNATURE-----
+
+--q46npir5oijusqfi--
