@@ -1,57 +1,57 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB6B7FBA3
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 12:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EC7823B5
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 12:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716382642; cv=none; b=uThq0IEg72gihWnHfFKVXyDCNCqVX0BlALor2vNjxx5vRm2Jhox58CBBwEU4Ec2I0ExtYQKbisQVB+RMyGdtxzpg3In6kCpeL4DCr4foPG+9Ane/T0iiWbtolXU8zfXXvF3ZtpmfHrZxBEjn4gkeZoepr6C7NSU9BkB2MTnycyI=
+	t=1716382644; cv=none; b=iMhmNLUf6v2PdliJUhNz6Jo+5sqxQ74p2QTnMoSE3bjofI9f6n3vfjoDtOUojGCHAUEFcN7bfluqUpruhPfIQnzi8QvywqybI5b0XglrkPB5W17qc2aFbt2YAGL0hL8nHGjfvJCAod04PFeqADz5e+jReqr2BytAykreXhDDOyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716382642; c=relaxed/simple;
-	bh=xBud25eM4yR11aN5HGQxiH9+Sx2L4j+qJ0ynZTg8Wyg=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=Y0220i60SW/guwBJAYBWBVHeVbTqkIdMX60uWUGf1/h0sRmEtXl9EjPEdlZnR02MbJFn7la/9Ah0cWy0oHiGWmh78NxZydnBr5C8simHnh0f3hbgRm7TQuNV7ZQszhPSCjdyoSaejFoN6BcvxjvzNzln7teK0/VDVeX5rOAYtQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=pKayUhcT; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1716382644; c=relaxed/simple;
+	bh=bA0s7EecaF7la6hYVu8pE+N0G/qaj4dmjE+cTiBRqD0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hVeJ8bLcyrv7587PEs3yicjZ/ug7LVhsxwD/0t+DmsWDzcOJCDvRT7Q3kSX0vBJdooSKXO7jetJADp7ng2t5GbqGUiB9LCoT7uoEE0kmR9sjsJsvOEKT91VvqGYsYjlklSe5MOAtmApt3RwVzkxl1KaFeGsGUuqwuupnSz5/h0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DBubBgGh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="pKayUhcT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1716382635; bh=5MvkZN3RDGcPo83rc0nLy9YS2nGjPGU9i1zaRaoeixo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=pKayUhcTjS4MN+9LeqgzveeOf1raDDx2hZbClL81MqpRzg7KY/ylImNfEsBR0hy89
-	 G3D7n1C5UVVhXI8MYS1BqU+XfqXw8SwR2KfvLe2bnQnTL5xqmAQyn8PJZ+fZEfEYBG
-	 dUPKSzqL8XKB/h/yOPYdjOCbFleM0vhSeqR8ncps=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
-	id C42BA47A; Wed, 22 May 2024 20:49:02 +0800
-X-QQ-mid: xmsmtpt1716382142tp2mrrr5d
-Message-ID: <tencent_7BF20C9927C0C6D292CCC64BC994EEF92E06@qq.com>
-X-QQ-XMAILINFO: Nfm/+M6ONQ57+EFywhSWNnLM+Js8SQ7R0Hanc8fKUO1LMjiwWxSYiL+CqMCihG
-	 +512fUG6xrfsYSXQclBFKX3ZJob928gQSnYvnWvJxvzgq00SiEFaSI6TigDnb+eLbmHUaGzYJoj1
-	 zh2+c4R2Nl1cIU2+tjIKppGdMopbuwa7jievTglZmWtfR3z1+KUajLJfRlqNaq3mSl3Vu7I6uK0V
-	 BpTourEm1Srtf7jxrrrqL3qO35LfVz1e6VynpEBwUtNLciB53MkKQ9k0lSJz9Xf4j9bwxjqgFXi8
-	 50Xrk0WTfnUsodHtFrb3TzUIcXfiW0v+RcOw9FViHZTcdNVoMCT9CjhFF5BOCQS2d8pbFXU2sze+
-	 H6RmSxKExdXoGzdVFYkHCAPU3SJT2dlq6Y3wpodbYng3NddnvyPEF4G1pcJIq7RRh/+L2X/wgF+B
-	 Y3pp80ZhAZVYO/lA00Qd+42HlEcml3qjexXH6TAxlxHxCaDchQIYSCWQ9jDhVDuTJZwyDrMa7Iew
-	 VvlTmPT4ZSJ7kCy3EnkBhN5tIKS+C+gKjdx5pGvQ1otLHrU51+u9bgEAOXfZWFeVH9OXcib+Mlva
-	 Ogy6coltYll/U1CbuWOqUpNPLS6yNYHyAbQccy25Vfe8nkeavRPYMuwyRapNzIplF9fwqFObaZR7
-	 gMt9iLAJ7I+dh+uCY5X8zHeLhKdNpu9KTD0s9EFxD1ULH+GWtUb6bZrJdqynYphoW0rry2na5659
-	 KR+2aWHIsJh8I1DF380xpbStreZKBZz7gNQPNL6NNQO7XmH9nFO/4cKGvPyPqc84EM9pi+jQfziK
-	 TnF/ETyqfoEUlr6GJIIkNxS5i3w9D3u14whuvdFo1tFBc0PhkzeQZ6SqfNlo8G2bx8bn4EFuycrq
-	 T3qt9clTnlYESF4n5miAYKAd9lOzLSB8nTU+9CJELl2jETYOIytMK7F5pUb+UIYUIlxapfK2ERTF
-	 4y9B1iG08=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
-Date: Wed, 22 May 2024 20:49:03 +0800
-X-OQ-MSGID: <20240522124902.2296647-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000002fd2de0618de2e65@google.com>
-References: <0000000000002fd2de0618de2e65@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DBubBgGh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716382641;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7dtAZKM4MiVSYLDB4Q4XKxWFHe1658DI6+IaEJTZmd0=;
+	b=DBubBgGhln9CUy8Eimv2Iuda+Oe39DoVvoBl+iTBGXqd2fe6Zj6e2DuXpMXNcg5zrBnsgR
+	ZjzzlPZzkgMXhjwqUQJGUUaHsyDs5olRCdVhY1sMLnOX4IMl0u4Z5stgyHN0RMU6pGHYW3
+	UIAYwH7dxTlK8UuXEMuXtJ43pn5vsFI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-318-xc9_3YTpP6ObsEwyO8otuw-1; Wed, 22 May 2024 08:57:17 -0400
+X-MC-Unique: xc9_3YTpP6ObsEwyO8otuw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B83DF8058D5;
+	Wed, 22 May 2024 12:57:16 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.195.53])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 93E1040C6CB6;
+	Wed, 22 May 2024 12:57:15 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH v2 1/3] mm/memory: move page_count() check into validate_page_before_insert()
+Date: Wed, 22 May 2024 14:57:11 +0200
+Message-ID: <20240522125713.775114-2-david@redhat.com>
+In-Reply-To: <20240522125713.775114-1-david@redhat.com>
+References: <20240522125713.775114-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,48 +59,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-please test null ptr in iter_file_splice_write
+We'll now also cover the case where insert_page() is called from
+__vm_insert_mixed(), which sounds like the right thing to do.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 33e02dc69afb
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/memory.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/splice.c b/fs/splice.c
-index 60aed8de21f8..8ec408c40755 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -715,6 +715,7 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
+diff --git a/mm/memory.c b/mm/memory.c
+index b5453b86ec4b..a3aad7e58914 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1987,6 +1987,8 @@ static int validate_page_before_insert(struct page *page)
+ {
+ 	struct folio *folio = page_folio(page);
  
- 		/* build the vector */
- 		left = sd.total_len;
-+		printk("total len: %lu, %s\n", left, __func__);
- 		for (n = 0; !pipe_empty(head, tail) && left && n < nbufs; tail++) {
- 			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
- 			size_t this_len = buf->len;
-@@ -751,9 +752,16 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
++	if (!folio_ref_count(folio))
++		return -EINVAL;
+ 	if (folio_test_anon(folio) || folio_test_slab(folio) ||
+ 	    page_has_type(page))
+ 		return -EINVAL;
+@@ -2041,8 +2043,6 @@ static int insert_page_in_batch_locked(struct vm_area_struct *vma, pte_t *pte,
+ {
+ 	int err;
  
- 		/* dismiss the fully eaten buffers, adjust the partial one */
- 		tail = pipe->tail;
--		while (ret) {
-+		printk("ret: %ld, nbufs: %d, %s\n", ret, nbufs, __func__);
-+		n = 0;
-+		while (ret > 0 && n < nbufs) {
- 			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
--			if (ret >= buf->len) {
-+			if (!buf->len) {
-+				tail++;
-+				continue;
-+			}
-+			printk("buf len: %lu, %s\n", buf->len, __func__);
-+			if (ret >= (ssize_t)buf->len) {
- 				ret -= buf->len;
- 				buf->len = 0;
- 				pipe_buf_release(pipe, buf);
-@@ -766,6 +774,7 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
- 				buf->len -= ret;
- 				ret = 0;
- 			}
-+			n++;
- 		}
- 	}
- done:
+-	if (!page_count(page))
+-		return -EINVAL;
+ 	err = validate_page_before_insert(page);
+ 	if (err)
+ 		return err;
+@@ -2176,8 +2176,6 @@ int vm_insert_page(struct vm_area_struct *vma, unsigned long addr,
+ {
+ 	if (addr < vma->vm_start || addr >= vma->vm_end)
+ 		return -EFAULT;
+-	if (!page_count(page))
+-		return -EINVAL;
+ 	if (!(vma->vm_flags & VM_MIXEDMAP)) {
+ 		BUG_ON(mmap_read_trylock(vma->vm_mm));
+ 		BUG_ON(vma->vm_flags & VM_PFNMAP);
+-- 
+2.45.0
 
