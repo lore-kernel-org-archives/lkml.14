@@ -1,40 +1,35 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAAA524D7;
-	Wed, 22 May 2024 08:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603A17F7C6;
+	Wed, 22 May 2024 08:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716366008; cv=none; b=WnA8eopRnmozFoKNGWieHG4Q0CIczyU1+onNXe0O65btowEpACc9EC1zg3xrrAj7t0tpjx02ngSCk8pgSm/cRSRnjYKSGJxe2esCuKenAmBWUMTaXVbCrJleyFOrhF9WbwrqfntSACN4MUPE3DxnVLTEMQ2lfc0GqxoMpsE6+to=
+	t=1716366029; cv=none; b=uQpkkm4fJcTu3s79Br6Ovl3EYosmx7lDUBd8qDGwQoSGEUrq475N7+q7glUY0+LRc9DqVcgGIouJg9ZTdczYKO84t/hUDdi8hQloqSLWfE2zRkE/KLdTmHiKdeEc1j9os19fjBE863iD4HurC00KDfjhTZzhR1YuVcSgLpVCuR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716366008; c=relaxed/simple;
-	bh=O9Sp924WkGSr0BtgRunOXnOH4VOLkaCkXQizxmQia+g=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PllNhzFB5aQm/99x/9KWx0Hb5FPJbPrOD6BmuJdLcWh6thWBKCGPIaK5xs7lQpCNmW7eiLN8zg2lCDV30grqZvt4b1FbtcpT3KwqUhaLU2PzMkn5KipGCLsO3zqTduCv8vI3Yq7CpHJl7eVSpQfgW8bXM6lYZyMnw8dOBXN5GqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
-	by SHSQR01.spreadtrum.com with ESMTP id 44M7n0Jw013913;
-	Wed, 22 May 2024 15:49:00 +0800 (+08)
-	(envelope-from Yunlong.Xing@unisoc.com)
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 44M7maIC012784;
-	Wed, 22 May 2024 15:48:36 +0800 (+08)
-	(envelope-from Yunlong.Xing@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Vkjy76cltz2Pp6xc;
-	Wed, 22 May 2024 15:45:03 +0800 (CST)
-Received: from tj10379pcu.spreadtrum.com (10.5.32.15) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 22 May 2024 15:48:34 +0800
-From: Yunlong Xing <yunlong.xing@unisoc.com>
-To: <axboe@kernel.dk>, <yunlongxing23@gmail.com>, <niuzhiguo84@gmail.com>,
-        <Hao_hao.Wang@unisoc.com>
-CC: <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] loop: inherit the ioprio in loop woker thread
-Date: Wed, 22 May 2024 15:48:29 +0800
-Message-ID: <20240522074829.1750204-1-yunlong.xing@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1716366029; c=relaxed/simple;
+	bh=mbOIJA/yKaWRIVC2lCO/kmVMoRBB+nzAeKm5m98EUQo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=FmweMF2jFEiwXuMdh26wdpFPd5pv5ybCyTqeL1CznSglb5PlRlpdQ/rthR20grG4IgDlBmV2wUZo11Heh/1GxVoXEXeikcjN/YrptQP1nsMxD7TbmTDPLbrb7S3zbEwZA/di6dB+FLKIxQgxJUpV5o33CEHLN5Z5mik5gwHUoZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYHZM/YC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYHZM/YC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1EDA2C32781;
+	Wed, 22 May 2024 08:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716366029;
+	bh=mbOIJA/yKaWRIVC2lCO/kmVMoRBB+nzAeKm5m98EUQo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=TYHZM/YCIMfGcitP68G/bHayfPgavQUB2ZjU+nX4y8Zz5x8KluuUAUqdXaUaLbfYs
+	 H4TAObGMtQMTxzUUhcsi9e7lXQH12Du4WdxGj5cJz8bFnq+o4kfJGXqRZHas7bL5Wa
+	 XzBPPcYVmLNRGHiKs9Fze9pisC2yGX4MWslJ3Luv3bumvZVr5dHpRWAbxLqEh5PSBp
+	 PKvsBSIIfHl7Djq1uiiL5LwDhWtmGwwlGzyzBelmBLvtMvG6KntKO3BItmBZ/ZCosG
+	 4HcnyR/brFuQH3rHNrvNvvNQAK/6wnAvq5ejqfDj0up09Xz55iNbLfp1osuPoPcGiU
+	 e8drS3ur1sZzQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0FE2FC4361C;
+	Wed, 22 May 2024 08:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,74 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 44M7maIC012784
+Subject: Re: [PATCH net v2] net: lan966x: Remove ptp traps in case the ptp is not
+ enabled.
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171636602904.18841.14437220048685954330.git-patchwork-notify@kernel.org>
+Date: Wed, 22 May 2024 08:20:29 +0000
+References: <20240517135808.3025435-1-horatiu.vultur@microchip.com>
+In-Reply-To: <20240517135808.3025435-1-horatiu.vultur@microchip.com>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, richardcochran@gmail.com, vladimir.oltean@nxp.com,
+ jacob.e.keller@intel.com, UNGLinuxDriver@microchip.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-The loop worker thread only inherit the blkcg of original request,
-but does not inherit it's ioprio. So, when a task with the high
-ioprio but in root blkcg accesses the loop device, the worker
-thread handle this cmd with a normal ioprio. This results in the
-request of high ioprio task doesn't be prioritized.
+Hello:
 
-Signed-off-by: Yunlong Xing <yunlong.xing@unisoc.com>
----
- drivers/block/loop.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 28a95fd366fe..404ac113c71b 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -442,7 +442,6 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
- 	cmd->iocb.ki_filp = file;
- 	cmd->iocb.ki_complete = lo_rw_aio_complete;
- 	cmd->iocb.ki_flags = IOCB_DIRECT;
--	cmd->iocb.ki_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
- 
- 	if (rw == ITER_SOURCE)
- 		ret = call_write_iter(file, &cmd->iocb, &iter);
-@@ -1856,6 +1855,9 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
- 		break;
- 	}
- 
-+	/* get request's ioprio */
-+	cmd->iocb.ki_ioprio = rq->ioprio;
-+
- 	/* always use the first bio's css */
- 	cmd->blkcg_css = NULL;
- 	cmd->memcg_css = NULL;
-@@ -1886,12 +1888,18 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
- 	int ret = 0;
- 	struct mem_cgroup *old_memcg = NULL;
- 	const bool use_aio = cmd->use_aio;
-+	int ori_ioprio = 0;
-+	int cmd_ioprio = cmd->iocb.ki_ioprio;
- 
- 	if (write && (lo->lo_flags & LO_FLAGS_READ_ONLY)) {
- 		ret = -EIO;
- 		goto failed;
- 	}
- 
-+	ori_ioprio = get_current_ioprio();
-+	if (ori_ioprio != cmd_ioprio)
-+		set_task_ioprio(current, cmd_ioprio);
-+
- 	if (cmd_blkcg_css)
- 		kthread_associate_blkcg(cmd_blkcg_css);
- 	if (cmd_memcg_css)
-@@ -1913,6 +1921,10 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
- 		set_active_memcg(old_memcg);
- 		css_put(cmd_memcg_css);
- 	}
-+
-+	if (ori_ioprio != cmd_ioprio)
-+		set_task_ioprio(current, ori_ioprio);
-+
-  failed:
- 	/* complete non-aio request */
- 	if (!use_aio || ret) {
+On Fri, 17 May 2024 15:58:08 +0200 you wrote:
+> Lan966x is adding ptp traps to redirect the ptp frames to the CPU such
+> that the HW will not forward these frames anywhere. The issue is that in
+> case ptp is not enabled and the timestamping source is et to
+> HWTSTAMP_SOURCE_NETDEV then these traps would not be removed on the
+> error path.
+> Fix this by removing the traps in this case as they are not needed.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v2] net: lan966x: Remove ptp traps in case the ptp is not enabled.
+    https://git.kernel.org/netdev/net/c/eda40be3a5ff
+
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
