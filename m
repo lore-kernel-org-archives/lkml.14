@@ -1,386 +1,256 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD67413E031;
-	Wed, 22 May 2024 12:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DED13D636
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 12:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716381645; cv=none; b=MNqFXalKlvBJq6Cn8sCx3jc/GoKyzg2jLuDKDKp4R/l+Hr1uluEclQtvAeEPhj35os1GU4Smwi5YFeN8nZSP03BAlRC1V202WF6fKZg3zgOcod50ey7vBnWkX7fL3DamfNht2/2hOEJYducr2+EHvwcAw55E1iT98TEJrcH9Nos=
+	t=1716381750; cv=none; b=A4hVLRXjXimcpaHmIFdniRzgK+OT8i6X+IDXWO9fNCad+xyrmOQHvM2ENRnHxrvUB7Rw5pPJ3ms0EC9FGshKHff/B/ZwddFTyip3MYPGWl++/UeKU7oALGP2Q1skk9PDskF3M5kd7CKXgF56dWVKypYSfb0A2L0lmzq3et9FRZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716381645; c=relaxed/simple;
-	bh=7vkFt0/Es8eM9NpOoGJklRPQA1fts2tNghOMr5lXFgI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hOamYs/7qWvFSp05iAsATNfyXibF64HkPjTl9j80Y46psHcjsSzVieF6wxpHJAN86DlQJ0AgZLl/3nYCRE4bK16ma43w+GG04er15ZrrLtQilpLJlL+xOIBRobkC9yR7Y8OmCs04keuschgKnMAGlOAVFkJG4JVNXvI/gxVWE0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=MJMg4/AE; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1716381750; c=relaxed/simple;
+	bh=7wiXa/iWDYflvFRo8c5DidPTf7zKXEj/6WnLlAc9P70=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mf/zlPHNj3fTX0dZhFndorYO+jW/cfI4aTJ/hCQPndaANUaETuM3km6Q9svQvinB+VnsDcav7qKwwADs5LY0xcU8vLMsibafKdcCASVVxcFunzd4ynRZfIs2Ufa7SG9GQdNiFG4TphytLWv71miPcb61HyQD2izxTspGiO/Lwn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E3BTuPI0; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="MJMg4/AE"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44MC5WkT011821;
-	Wed, 22 May 2024 08:40:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=DKIM;
-	 bh=OHKGS8+XN26OG5c7BXLOon/rMIiAQs5YVbHPwWDNZWg=; b=MJMg4/AEUctR
-	752+fPxjUx31aWGacu8H7AAfbT1lL6m1G9rWT3LLaDzD7oNNZLsumcPmbhPI1fZY
-	7F5mCwI5cGfFoCE7nWhr5q9pruJyh8PLe/axrVGvbJ4gCJ/8w+As1WsUhLanhKJU
-	fNc3IiWwoKy2ZfOYRJBQ2uzCfN9KOFvDDFh85yR2bUfFFpo0luvXneXXZr/cZJKp
-	D5MrFSGOKD/Bt/Zm2rH/CkBbum6FtSuutmIbo5V5R0lTPx5rimoX3Gw2Oorc+wp3
-	Lt1+e7ABXdqO2bN+1Vahq8vEJLW0hoq/5cYe7AnUdl683cUjhNy48BSWSmxhyBX8
-	KcTL6foXGw==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3y87pwh4dw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 08:40:30 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 44MCeTpu013953
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 22 May 2024 08:40:29 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 22 May 2024 08:40:28 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 22 May 2024 08:40:28 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 22 May 2024 08:40:28 -0400
-Received: from radu.ad.analog.com ([10.48.65.150])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 44MCe7Ic005879;
-	Wed, 22 May 2024 08:40:22 -0400
-From: Radu Sabau <radu.sabau@analog.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-hwmon@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Radu Sabau <radu.sabau@analog.com>
-Subject: [PATCH 2/2] drivers: hwmon: max31827: Add debugfs support
-Date: Wed, 22 May 2024 15:39:23 +0300
-Message-ID: <20240522123923.22320-3-radu.sabau@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240522123923.22320-1-radu.sabau@analog.com>
-References: <20240522123923.22320-1-radu.sabau@analog.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E3BTuPI0"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-574d1a1c36aso9931468a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 05:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716381747; x=1716986547; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3cwBpBrNlg7bYd5+wIqoNBCJCZKw3R87piqG048jZ3k=;
+        b=E3BTuPI0Je9gmniVxelXrM3oXdmA6DnC0rnFXmmFiHG8H65lAgx2qAAhccyZi2Lx8E
+         KpUbyde3/jsgHIEucuodqgn5FiR8G+z93StdsOCWAc1M0nqD4ix+swc34eFFiA6LHbX0
+         BHBSH1MCXp3N89rHjfaMrRHuqLNce0QZcxpV4L+Yj2wgtF2CJv3lUDzgHdkULwemXCRr
+         hThxotb8EDNhkyYKqxg340OJR/FPo/YVSgRyzrRBrDvJbAz1pQQQintrRIuM4Ijqwluv
+         AtnxSKeD58Gp4glZJLEhu+oVXMsvYiVICzGrTLRAoWy/DVrzuwRqJwh3Vk5URC8oiYsM
+         9l/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716381747; x=1716986547;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3cwBpBrNlg7bYd5+wIqoNBCJCZKw3R87piqG048jZ3k=;
+        b=DXfmZ7taKEEhUx9DBMvEBsaclV4Cc0liIN5BrCVjDNH+sDTnmucuftyvYZHj+RCUat
+         VDw3wCY/Y+hS6wbo3jQqctpXilHDnMiIuNSi/DvNCl98Af3Bsz3czN/kI4xqMCAUYfjZ
+         kiiGnK0g9H7nD4hCwchtAbYkxKguP4t3gS6T/LXQSeN2n+MyG5QraRxeiX8iWomjp/AQ
+         0SjC0LgsFgd6aEfCr1tdIlNKAi4paAEIB2dUTLmSjjsUSV2Yfa69uV7YVWQ9n6kpl3q8
+         j4T8kwCjAGKFt3EByx6Acc/W7Rc1G/abvEldm2lW5SVTFiuGpMr/BDzahAK535kN3Xq9
+         2oDA==
+X-Forwarded-Encrypted: i=1; AJvYcCW4xp3GmGQA5TeR/ORlWsu29pqq2nvYtKNQOjxG1x11A/0SaPM+DFX54W9HtYxNlWJBF32wvRHKZnwBHkICTeiLr9enUjxIKYvjn6Nh
+X-Gm-Message-State: AOJu0YxssoVkvQXmIGdLAoevOKPbM+7cNGqEsNeoMu6XQP4WzpJ/ahxX
+	L4fSzOBWe3+y1Qshv6AlEB1/VleRfZ8lUcDLtpT1FVA2r2HMQ7TaUUcREonwp1I=
+X-Google-Smtp-Source: AGHT+IE5Tnokc7QdDplSczZ+cKv9LxnraYIxNIAltSdB9dqDye8mcBSttNmQnCIsVVqHNgSPb3W/yw==
+X-Received: by 2002:a50:8d4d:0:b0:56e:232b:95cd with SMTP id 4fb4d7f45d1cf-57832c8a6f8mr987724a12.41.1716381746888;
+        Wed, 22 May 2024 05:42:26 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:8b9d:52bd:4757:6b10? ([2a01:e0a:982:cbb0:8b9d:52bd:4757:6b10])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c323866sm18286039a12.87.2024.05.22.05.42.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 05:42:26 -0700 (PDT)
+Message-ID: <e89c3270-e51f-4d5b-87db-09ff8f0961e6@linaro.org>
+Date: Wed, 22 May 2024 14:42:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: Tj0zzfQgAWtB2qbzwPx6sE8vcBJsKnrj
-X-Proofpoint-GUID: Tj0zzfQgAWtB2qbzwPx6sE8vcBJsKnrj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-22_05,2024-05-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 malwarescore=0 clxscore=1015 spamscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405220085
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 1/5] dt-bindings: remoteproc: qcom,sm8550-pas: Document
+ the SA8775p ADSP, CDSP and GPDSP
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Tengfei Fan <quic_tengfan@quicinc.com>,
+ Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+ Alex Elder <elder@kernel.org>
+References: <20240522-topic-lemans-iot-remoteproc-v1-0-af9fab7b27f0@linaro.org>
+ <20240522-topic-lemans-iot-remoteproc-v1-1-af9fab7b27f0@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240522-topic-lemans-iot-remoteproc-v1-1-af9fab7b27f0@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add debugfs support by creating directory in sys-fs which includes
-debugfs specific files used for configuring the device by
-preference.
+On 22/05/2024 14:08, Bartosz Golaszewski wrote:
+> From: Tengfei Fan <quic_tengfan@quicinc.com>
+> 
+> Document the compatibles for the components used to boot the ADSP, CDSP0,
+> CDSP1, GPDSP0 and GPDSP1 on the SA8775p SoC.
+> 
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> Co-developed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>   .../bindings/remoteproc/qcom,sm8550-pas.yaml       | 76 +++++++++++++++++++++-
+>   1 file changed, 75 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
+> index 73fda7565cd1..9d3a862c39e1 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
+> @@ -16,6 +16,11 @@ description:
+>   properties:
+>     compatible:
+>       enum:
+> +      - qcom,sa8775p-adsp-pas
+> +      - qcom,sa8775p-cdsp0-pas
+> +      - qcom,sa8775p-cdsp1-pas
+> +      - qcom,sa8775p-gpdsp0-pas
+> +      - qcom,sa8775p-gpdsp1-pas
+>         - qcom,sm8550-adsp-pas
+>         - qcom,sm8550-cdsp-pas
+>         - qcom,sm8550-mpss-pas
+> @@ -44,12 +49,13 @@ properties:
+>   
+>     firmware-name:
+>       $ref: /schemas/types.yaml#/definitions/string-array
+> +    minItems: 1
 
-Signed-off-b: Radu Sabau <radu.sabau@analog.com>
----
- Documentation/hwmon/max31827.rst |  25 ++++
- drivers/hwmon/max31827.c         | 202 ++++++++++++++++++++++++++++++-
- 2 files changed, 225 insertions(+), 2 deletions(-)
+This will allow a single firmware name for all compatible,
+which is wrong
 
-diff --git a/Documentation/hwmon/max31827.rst b/Documentation/hwmon/max31827.rst
-index 9c11a9518c67..940310be6075 100644
---- a/Documentation/hwmon/max31827.rst
-+++ b/Documentation/hwmon/max31827.rst
-@@ -142,3 +142,28 @@ usage (+33% for both write and reads) in normal conditions.
- Since this operation implies there will be an extra delay to each
- transaction, PEC can be disabled or enabled through sysfs.
- Just write 1  to the "pec" file for enabling PEC and 0 for disabling it.
-+
-+DebugFs entries
-+---------------
-+
-+The chip also has a configuration register where each bit stands for a specific
-+functionality to be configured. Hence as one would like to have access to these
-+features, we give access to them in debugfs.
-+
-+.. warning:: The debugfs interface is subject to change without notice
-+             and is only available when the kernel is compiled with
-+             ``CONFIG_DEBUG_FS`` defined.
-+
-+``/sys/kernel/debug/max31827/``
-+contains the following attributes:
-+
-+==============  ===============================================================
-+alarm_polarity  Write 1 for ALARM pin active state is low, 0 otherwise
-+comp_int        Set to 1 if OT and UT status bits are in interrupt mode
-+fault_queue     Number of consecutive temperature faults until OT and UT faults
-+                are indicated in status bits
-+pec_error       Set to 1 if PEC Enable bit is set, 0 otherwise
-+resolution      2-bit value that select the conversion resolution, please see
-+                datasheet for corresponding values
-+timeout         Write 1 do disable bus timeout, 0 otherwise
-+==============  ===============================================================
-diff --git a/drivers/hwmon/max31827.c b/drivers/hwmon/max31827.c
-index 16a1524413db..1303ea81250d 100644
---- a/drivers/hwmon/max31827.c
-+++ b/drivers/hwmon/max31827.c
-@@ -13,8 +13,19 @@
- #include <linux/mutex.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/debugfs.h>
- #include <linux/of_device.h>
- 
-+enum {
-+	MAX31827_DEBUGFS_TIMEOUT = 0,
-+	MAX31827_DEBUGFS_RESOLUTION,
-+	MAX31827_DEBUGFS_ALARM_POLARITY,
-+	MAX31827_DEBUGFS_COMP_INT,
-+	MAX31827_DEBUGFS_FAULT_QUEUE,
-+	MAX31827_DEBUGFS_PEC_ERROR,
-+	MAX31827_DEBUGFS_NUM_ENTRIES
-+};
-+
- #define MAX31827_T_REG	0x0
- #define MAX31827_CONFIGURATION_REG	0x2
- #define MAX31827_TH_REG	0x4
-@@ -30,6 +41,7 @@
- #define MAX31827_CONFIGURATION_ALRM_POL_MASK	BIT(8)
- #define MAX31827_CONFIGURATION_COMP_INT_MASK	BIT(9)
- #define MAX31827_CONFIGURATION_FLT_Q_MASK	GENMASK(11, 10)
-+#define MAX31827_CONFIGURATION_PEC_ERR_MASK	BIT(13)
- #define MAX31827_CONFIGURATION_U_TEMP_STAT_MASK	BIT(14)
- #define MAX31827_CONFIGURATION_O_TEMP_STAT_MASK	BIT(15)
- 
-@@ -92,12 +104,17 @@ static const u16 max31827_conv_times[] = {
- 	[MAX31827_RES_12_BIT] = MAX31827_12_BIT_CNV_TIME,
- };
- 
-+struct max31827_debugfs_data {
-+	int debugfs_entries[MAX31827_DEBUGFS_NUM_ENTRIES];
-+};
-+
- struct max31827_state {
- 	/*
- 	 * Prevent simultaneous access to the i2c client.
- 	 */
- 	struct mutex lock;
- 	struct regmap *regmap;
-+	struct max31827_debugfs_data psu;
- 	bool enable;
- 	unsigned int resolution;
- 	unsigned int update_interval;
-@@ -552,7 +569,6 @@ static int max31827_init_client(struct max31827_state *st,
- 	int ret;
- 
- 	fwnode = dev_fwnode(dev);
--
- 	st->enable = true;
- 	res |= MAX31827_DEVICE_ENABLE(1);
- 
-@@ -655,6 +671,182 @@ static const struct hwmon_chip_info max31827_chip_info = {
- 	.info = max31827_info,
- };
- 
-+#ifdef CONFIG_DEBUG_FS
-+static ssize_t max31827_debugfs_read(struct file *file, char __user *buf,
-+				     size_t count, loff_t *ppos)
-+{
-+	char tbuf[DEBUG_FS_DATA_MAX] = { 0 };
-+	struct max31827_debugfs_data *psu;
-+	struct max31827_state *st;
-+	int *attrp = file_inode(file)->i_private;
-+	int attr = *attrp;
-+	unsigned int uval;
-+	int ret, len;
-+
-+	psu = container_of(attrp, struct max31827_debugfs_data, debugfs_entries[attr]);
-+	st = container_of(psu, struct max31827_state, psu);
-+
-+	ret = regmap_read(st->regmap, MAX31827_CONFIGURATION_REG, &uval);
-+	if (ret)
-+		return ret;
-+
-+	switch (attr) {
-+	case MAX31827_DEBUGFS_TIMEOUT:
-+		uval = FIELD_GET(MAX31827_CONFIGURATION_TIMEOUT_MASK, uval);
-+		len = scnprintf(tbuf, DEBUG_FS_DATA_MAX, "%d\n", uval);
-+		break;
-+	case MAX31827_DEBUGFS_RESOLUTION:
-+		uval = FIELD_GET(MAX31827_CONFIGURATION_RESOLUTION_MASK, uval);
-+		len = scnprintf(tbuf, DEBUG_FS_DATA_MAX, "%d\n", uval);
-+		break;
-+	case MAX31827_DEBUGFS_ALARM_POLARITY:
-+		uval = FIELD_GET(MAX31827_CONFIGURATION_ALRM_POL_MASK, uval);
-+		len = scnprintf(tbuf, DEBUG_FS_DATA_MAX, "%d\n", uval);
-+		break;
-+	case MAX31827_DEBUGFS_COMP_INT:
-+		uval = FIELD_GET(MAX31827_CONFIGURATION_COMP_INT_MASK, uval);
-+		len = scnprintf(tbuf, DEBUG_FS_DATA_MAX, "%d\n", uval);
-+		break;
-+	case MAX31827_DEBUGFS_FAULT_QUEUE:
-+		uval = FIELD_GET(MAX31827_CONFIGURATION_FLT_Q_MASK, uval);
-+		len = scnprintf(tbuf, DEBUG_FS_DATA_MAX, "%d\n", uval);
-+		break;
-+	case MAX31827_DEBUGFS_PEC_ERROR:
-+		uval = FIELD_GET(MAX31827_CONFIGURATION_PEC_ERR_MASK, uval);
-+		len = scnprintf(tbuf, DEBUG_FS_DATA_MAX, "%d\n", uval);
-+		break;
-+	default:
-+		len = strscpy(tbuf, "Invalid\n", DEBUG_FS_DATA_MAX);
-+	}
-+
-+	return simple_read_from_buffer(buf, count, ppos, tbuf, len);
-+}
-+
-+static ssize_t max31827_debugfs_write(struct file *file, const char __user *buf,
-+				      size_t count, loff_t *ppos)
-+{
-+	char tbuf[DEBUG_FS_DATA_MAX] = { 0 };
-+	struct max31827_debugfs_data *psu;
-+	struct max31827_state *st;
-+	int *attrp = file_inode(file)->i_private;
-+	int attr = *attrp;
-+	u16 uval;
-+	int ret;
-+
-+	pr_info("attr = %d\n", attr);
-+	psu = container_of(attrp, struct max31827_debugfs_data, debugfs_entries[attr]);
-+	pr_info("First container ok.\n");
-+	st = container_of(psu, struct max31827_state, psu);
-+
-+	ret = kstrtou16_from_user(buf, count, 0, &uval);
-+	if (ret)
-+		return ret;
-+
-+	pr_info("uval = %s\n", tbuf);
-+
-+	switch (attr) {
-+	case MAX31827_DEBUGFS_TIMEOUT:
-+		uval = FIELD_PREP(MAX31827_CONFIGURATION_TIMEOUT_MASK, uval);
-+		ret = regmap_update_bits(st->regmap,
-+					 MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_TIMEOUT_MASK,
-+					 uval);
-+		break;
-+	case MAX31827_DEBUGFS_RESOLUTION:
-+		uval = FIELD_PREP(MAX31827_CONFIGURATION_RESOLUTION_MASK, uval);
-+		ret = regmap_update_bits(st->regmap,
-+					 MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_RESOLUTION_MASK,
-+					 uval);
-+		break;
-+	case MAX31827_DEBUGFS_ALARM_POLARITY:
-+		uval = FIELD_PREP(MAX31827_CONFIGURATION_ALRM_POL_MASK, uval);
-+		ret = regmap_update_bits(st->regmap,
-+					 MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_ALRM_POL_MASK,
-+					 uval);
-+		break;
-+	case MAX31827_DEBUGFS_COMP_INT:
-+		uval = FIELD_PREP(MAX31827_CONFIGURATION_COMP_INT_MASK, uval);
-+		ret = regmap_update_bits(st->regmap,
-+					 MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_COMP_INT_MASK,
-+					 uval);
-+		break;
-+	case MAX31827_DEBUGFS_FAULT_QUEUE:
-+		uval = FIELD_PREP(MAX31827_CONFIGURATION_FLT_Q_MASK, uval);
-+		ret = regmap_update_bits(st->regmap,
-+					 MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_FLT_Q_MASK,
-+					 uval);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static const struct file_operations max31827_fops = {
-+	.read = max31827_debugfs_read,
-+	.write = max31827_debugfs_write,
-+};
-+
-+static void max31827_debugfs_remove(void *dir)
-+{
-+	debugfs_remove_recursive(dir);
-+}
-+
-+static int max31827_init_debugfs(struct max31827_state *st,
-+				 struct i2c_client *client)
-+{
-+	struct dentry *debugfs;
-+	int ret, i;
-+
-+	debugfs = debugfs_create_dir(client->name, NULL);
-+	if (!debugfs)
-+		return -ENOENT;
-+
-+	for (i = 0; i < MAX31827_DEBUGFS_NUM_ENTRIES; ++i)
-+		st->psu.debugfs_entries[i] = i;
-+
-+	ret = devm_add_action_or_reset(&client->dev, max31827_debugfs_remove,
-+				       debugfs);
-+	if (ret)
-+		return ret;
-+
-+	debugfs_create_file("timeout", 0644, debugfs,
-+			    &st->psu.debugfs_entries[MAX31827_DEBUGFS_TIMEOUT],
-+			    &max31827_fops);
-+	debugfs_create_file("resolution", 0644, debugfs,
-+			    &st->psu.debugfs_entries[MAX31827_DEBUGFS_RESOLUTION],
-+			    &max31827_fops);
-+	debugfs_create_file("alarm_polarity", 0644, debugfs,
-+			    &st->psu.debugfs_entries[MAX31827_DEBUGFS_ALARM_POLARITY],
-+			    &max31827_fops);
-+	debugfs_create_file("comp_int", 0644, debugfs,
-+			    &st->psu.debugfs_entries[MAX31827_DEBUGFS_COMP_INT],
-+			    &max31827_fops);
-+	debugfs_create_file("fault_queue", 0644, debugfs,
-+			    &st->psu.debugfs_entries[MAX31827_DEBUGFS_FAULT_QUEUE],
-+			    &max31827_fops);
-+	debugfs_create_file("pec_error", 0444, debugfs,
-+			    &st->psu.debugfs_entries[MAX31827_DEBUGFS_PEC_ERROR],
-+			    &max31827_fops);
-+
-+	return 0;
-+}
-+#else
-+static int max31827_init_debugfs(struct max31827_state *st,
-+				 struct i2c_client *client)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_DEBUG_FS */
-+
- static int max31827_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
-@@ -698,7 +890,13 @@ static int max31827_probe(struct i2c_client *client)
- 							 &max31827_chip_info,
- 							 max31827_groups);
- 
--	return PTR_ERR_OR_ZERO(hwmon_dev);
-+	if (IS_ERR(hwmon_dev))
-+		return dev_err_probe(dev, PTR_ERR(hwmon_dev),
-+				     "Failed to register device");
-+
-+	max31827_init_debugfs(st, client);
-+
-+	return 0;
- }
- 
- static const struct of_device_id max31827_of_match[] = {
--- 
-2.34.1
+>       items:
+>         - description: Firmware name of the Hexagon core
+>         - description: Firmware name of the Hexagon Devicetree
+>   
+>     memory-region:
+> -    minItems: 2
+> +    minItems: 1
+
+Same here
+
+>       items:
+>         - description: Memory region for main Firmware authentication
+>         - description: Memory region for Devicetree Firmware authentication
+> @@ -81,6 +87,21 @@ allOf:
+>             maxItems: 5
+>           memory-region:
+>             maxItems: 2
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - qcom,sa8775p-adsp-pas
+> +            - qcom,sa8775p-cdsp0-pas
+> +            - qcom,sa8775p-cdsp1-pas
+> +            - qcom,sa8775p-gpdsp0-pas
+> +            - qcom,sa8775p-gpdsp1-pas
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 5
+> +        interrupt-names:
+> +          maxItems: 5
+>     - if:
+>         properties:
+>           compatible:
+> @@ -128,6 +149,7 @@ allOf:
+>         properties:
+>           compatible:
+>             enum:
+> +            - qcom,sa8775p-adsp-pas
+>               - qcom,sm8550-adsp-pas
+>               - qcom,sm8650-adsp-pas
+>               - qcom,x1e80100-adsp-pas
+> @@ -177,6 +199,58 @@ allOf:
+>               - const: cx
+>               - const: mxc
+>               - const: nsp
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - qcom,sa8775p-cdsp-pas
+> +    then:
+> +      properties:
+> +        power-domains:
+> +          items:
+> +            - description: CX power domain
+> +            - description: MXC power domain
+> +            - description: NSP0 power domain
+> +        power-domain-names:
+> +          items:
+> +            - const: cx
+> +            - const: mxc
+> +            - const: nsp0
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - qcom,sa8775p-cdsp1-pas
+> +    then:
+> +      properties:
+> +        power-domains:
+> +          items:
+> +            - description: CX power domain
+> +            - description: MXC power domain
+> +            - description: NSP1 power domain
+> +        power-domain-names:
+> +          items:
+> +            - const: cx
+> +            - const: mxc
+> +            - const: nsp1
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - qcom,sa8775p-gpdsp0-pas
+> +            - qcom,sa8775p-gpdsp1-pas
+> +    then:
+> +      properties:
+> +        power-domains:
+> +          items:
+> +            - description: CX power domain
+> +            - description: MXC power domain
+> +        power-domain-names:
+> +          items:
+> +            - const: cx
+> +            - const: mxc
+>   
+>   unevaluatedProperties: false
+>   
+> 
 
