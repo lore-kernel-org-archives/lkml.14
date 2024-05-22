@@ -1,142 +1,127 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877968289A;
-	Wed, 22 May 2024 11:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A207BB17
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716376962; cv=none; b=BowvoyVYBTD7O3T5Vkcbi14LvQVQ9uRkX+yF4VCR/prWT5MeSj56L1AyhkAG9vfA01mC2/TmllHnXxPR6anEK84oBpNrF5D6z7UvYWTI1CPq5/Om52nNi5/wax89vG/qceo1SFEDbSb+W9OaDipeKyIUCWQhukfr3G2RNukcshU=
+	t=1716377016; cv=none; b=B/MNhsv0Rbc2psPUgEfC+/DsG0xuyl/tzZMvxEmTUeAS/owegD8Vgjve9xGW6xplQS/qzBZv8A3QtFYYUZa2xnekgdO6XP4SWYMVkEuIi/Yp1NdAwfSNXB/HjTjwR8KqFTtluC9jfPWEkWsp2QwKUYpf8BQcFGBN+29H9XMg8IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716376962; c=relaxed/simple;
-	bh=F+eLMP7vomG4vgGnf2QTGMnK4y1oDm374YCutBXL7wU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mZStDywAVhFGYMF4ff7lXLFDjIOhRQEaYw9S3dUVJplgBPYajMu/K05U4HaCUDdrqPaf/MJ/enrA2wj44FJsPK7EwCUMvYmdfMCaBGHQqo7WJtfSFCzOyDKWHbPYDiLkt8ga7EC5V7RfDk1a1KClnFfBLOKOuTp7QRoK8213ths=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E86A61BF207;
-	Wed, 22 May 2024 11:22:32 +0000 (UTC)
-Message-ID: <fd2100a8-a17c-460c-a8e8-b5cede3d51c1@ghiti.fr>
-Date: Wed, 22 May 2024 13:22:31 +0200
+	s=arc-20240116; t=1716377016; c=relaxed/simple;
+	bh=xMqBa0qO7yxY+IoZTzgWjyfsHmyDhPeia1tKmU4o354=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ih85KzglI8Y9GFNKu+XEHoYIWrhY9AHGNxkABf+NpU+Vu8HtzbhUNcM9Ym7VeVvOAMsTgm1ueuyAGUtlnrEKUKhfzBJ/APGgcafxkdoOeIWWHvh+wTkeFMgFI9FY5JF4Cm7vPjfvOdVyF5oo3z+4dzpfsjoPYeHtuCLproyuVOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BW3RMo/i; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BW3RMo/i"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56e1f3462caso10596908a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 04:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716377013; x=1716981813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CKvW/e/4RnItdVLQb65PoHq6f+Hy9fq9cA+PAi3QsG8=;
+        b=BW3RMo/irakj0tIKxB82tmQomMO3P2cB/NkOUiylsUe2tzengD8Qu2NBmur0La86cu
+         J/dg6VL4Wj0L8HmnRQvP82h1WECBZtbq0lru5SC1hTWYYzOP6ZgqxDeEoVP2HgNuV6NT
+         4Lr4U77RqAriUFSjV9ts5tiWTZ9lELSa53EExldfHsoQT0oxNMqfNYFwHO0mvpIHDf5G
+         uGp8Gvk66ag7nqAICmVI/rtpkBAuxx8QIPivWQ0NkncLc6J8IbQkZeJvr3jlIxkplyhZ
+         1nPSTiV4BA3q9oMT0Af0ZiWucgtq2GGkByKqpM8xP7OSwRxxwQ7253NKbXIndsTKn1rf
+         VVQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716377013; x=1716981813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CKvW/e/4RnItdVLQb65PoHq6f+Hy9fq9cA+PAi3QsG8=;
+        b=Rsdi2CmvByno6H3dICiOaN54U8kaZgmS2CywcViGIqPm7LXkdTjrHRhF0uXDshtEts
+         c2wCoNNnMmCbCcqWKS3PXQNA/cQFd3rfQjnrmzLZNLSj/9O0QVmI68rg0yCMZCH3UREK
+         O/BEjX1Xg3FxzHgs9OfhtTmdFPkPFYLqYwNrFwDyjvxIzA0pu5bU2Cyg3D/SEABg/e60
+         KegLxHRNePw6FbleS5yCEtKaaHEIpTs6a4BaRpmMuHODK2w6wAbNZghUWw1RoknZjNU+
+         8t42RZkzeb8vjA284Y5y6j96F/Btd7A8Swg0icUE2lL3yYbb+nbuLzl1CQgqXNVeKZU3
+         /ktg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhctqcUaveHIPIqE2C/748379lDEoyt+GsYcZ8wnfnmefHqgRd5q6LqOzYL8wmAfytEKlKOzbL82UfYUbK1H0nlUdwwbe3R6hRXI20
+X-Gm-Message-State: AOJu0Yy8J9XoOpEbWNrVdFrK9YN/vZmdXHHBmtPtA8WNrnlp9xKka5I8
+	xCyD0MM5BmlA8weASKq/B4mWAwIHN+VKopXl+Us0ZIVFS10gfQhrXTlkkNSdyko4+Ass/crdHDF
+	taqMs2gADn4zyhwv2vTmsCvqcmQg=
+X-Google-Smtp-Source: AGHT+IGr7qe/8BHMcSxEWmeTPmWJu59chEoX9tRLp2zcpEeslci+7hANSI/7DUiWuVLayDwYem1YGsNP8+m9V8E6Ha0=
+X-Received: by 2002:a50:c05a:0:b0:572:9d24:257a with SMTP id
+ 4fb4d7f45d1cf-57832a807e6mr1148057a12.23.1716377013349; Wed, 22 May 2024
+ 04:23:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] riscv: rewrite __kernel_map_pages() to fix sleeping
- in invalid context
-Content-Language: en-US
-To: Nam Cao <namcao@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alexghiti@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <cover.1715750938.git.namcao@linutronix.de>
- <1289ecba9606a19917bc12b6c27da8aa23e1e5ae.1715750938.git.namcao@linutronix.de>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <1289ecba9606a19917bc12b6c27da8aa23e1e5ae.1715750938.git.namcao@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+References: <20240521-mm-hotplug-sync-v1-0-6d53706c1ba8@google.com>
+ <20240521-mm-hotplug-sync-v1-2-6d53706c1ba8@google.com> <CABzRoyZXq3u4DYxO39Fcezo56HAbkNh6xLuK9jnuiNK5gVmV1w@mail.gmail.com>
+ <Zk2vDeQ3feZ3hsf0@google.com> <CAK1f24=fNFPyGCh+sxsq-Gg6BkD5qH=z+Ur2UD8+4CRZYoZc6g@mail.gmail.com>
+ <Zk3EoLOvRhSO9ScG@google.com>
+In-Reply-To: <Zk3EoLOvRhSO9ScG@google.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Wed, 22 May 2024 19:23:20 +0800
+Message-ID: <CAK1f24mmL16BxKnzZ7mF2WwAfjTpM1CP+dYEQ_AHvH2Q-mwAog@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm,memory_hotplug: {READ,WRITE}_ONCE unsynchronized
+ zone data
+To: Brendan Jackman <jackmanb@google.com>
+Cc: David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
+	Michal Hocko <mhocko@suse.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 15/05/2024 07:50, Nam Cao wrote:
-> __kernel_map_pages() is a debug function which clears the valid bit in page
-> table entry for deallocated pages to detect illegal memory accesses to
-> freed pages.
+On Wed, May 22, 2024 at 6:10=E2=80=AFPM Brendan Jackman <jackmanb@google.co=
+m> wrote:
 >
-> This function set/clear the valid bit using __set_memory(). __set_memory()
-> acquires init_mm's semaphore, and this operation may sleep. This is
-> problematic, because  __kernel_map_pages() can be called in atomic context,
-> and thus is illegal to sleep. An example warning that this causes:
+> On Wed, May 22, 2024 at 05:20:08PM +0800, Lance Yang wrote:
+> > On Wed, May 22, 2024 at 4:38=E2=80=AFPM Brendan Jackman <jackmanb@googl=
+e.com> wrote:
+> > >
+> > > Hi Lance, thanks for taking a look.
+> > >
+> > > On Wed, May 22, 2024 at 12:25:30PM +0800, Lance Yang wrote:
+> > > > Hi Brendan,
+> > > >
+> > > > On Tue, May 21, 2024 at 8:57=E2=80=AFPM Brendan Jackman <jackmanb@g=
+oogle.com> wrote:
+> > > > > @@ -1077,7 +1081,7 @@ void adjust_present_page_count(struct page =
+*page, struct memory_group *group,
+> > > > >          */
+> > > > >         if (early_section(__pfn_to_section(page_to_pfn(page))))
+> > > > >                 zone->present_early_pages +=3D nr_pages;
+> > > > > -       zone->present_pages +=3D nr_pages;
+> > > > > +       WRITE_ONCE(zone->present_pages, zone->present_pages + nr_=
+pages);
+> > > >
+> > > > I'm not sure that using the WRITE_ONCE() wrapper would prevent load=
+ tearing
+> > > > on 'zone->present_pages', but it's probably just me overthinking it=
+ :)
+> > >
+> > > Hmm.. this isn't for load-tearing, it's for store-tearing. I have a
+> > > feeling I might be missing your pont here though, can you elaborate?
+> >
+> > Sorry, my explanation wasn't clear :(
+> >
+> > I'm a bit confused about whether 'WRITE_ONCE(zone->present_pages,
+> > zone->present_pages + nr_pages);'
+> > is equivalent to the following:
+> >
+> > 1 a =3D zone->present_pages + nr_pages;
+> > 2 WRITE_ONCE(zone->present_pages, a);
+> >
+> > If so, is there any possibility of load tearing on
+> > 'zone->present_pages' in line 1?
 >
-> BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:1578
-> in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 2, name: kthreadd
-> preempt_count: 2, expected: 0
-> CPU: 0 PID: 2 Comm: kthreadd Not tainted 6.9.0-g1d4c6d784ef6 #37
-> Hardware name: riscv-virtio,qemu (DT)
-> Call Trace:
-> [<ffffffff800060dc>] dump_backtrace+0x1c/0x24
-> [<ffffffff8091ef6e>] show_stack+0x2c/0x38
-> [<ffffffff8092baf8>] dump_stack_lvl+0x5a/0x72
-> [<ffffffff8092bb24>] dump_stack+0x14/0x1c
-> [<ffffffff8003b7ac>] __might_resched+0x104/0x10e
-> [<ffffffff8003b7f4>] __might_sleep+0x3e/0x62
-> [<ffffffff8093276a>] down_write+0x20/0x72
-> [<ffffffff8000cf00>] __set_memory+0x82/0x2fa
-> [<ffffffff8000d324>] __kernel_map_pages+0x5a/0xd4
-> [<ffffffff80196cca>] __alloc_pages_bulk+0x3b2/0x43a
-> [<ffffffff8018ee82>] __vmalloc_node_range+0x196/0x6ba
-> [<ffffffff80011904>] copy_process+0x72c/0x17ec
-> [<ffffffff80012ab4>] kernel_clone+0x60/0x2fe
-> [<ffffffff80012f62>] kernel_thread+0x82/0xa0
-> [<ffffffff8003552c>] kthreadd+0x14a/0x1be
-> [<ffffffff809357de>] ret_from_fork+0xe/0x1c
->
-> Rewrite this function with apply_to_existing_page_range(). It is fine to
-> not have any locking, because __kernel_map_pages() works with pages being
-> allocated/deallocated and those pages are not changed by anyone else in the
-> meantime.
->
-> Fixes: 5fde3db5eb02 ("riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support")
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: stable@vger.kernel.org
-> ---
->   arch/riscv/mm/pageattr.c | 28 ++++++++++++++++++++++------
->   1 file changed, 22 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-> index 410056a50aa9..271d01a5ba4d 100644
-> --- a/arch/riscv/mm/pageattr.c
-> +++ b/arch/riscv/mm/pageattr.c
-> @@ -387,17 +387,33 @@ int set_direct_map_default_noflush(struct page *page)
->   }
->   
->   #ifdef CONFIG_DEBUG_PAGEALLOC
-> +static int debug_pagealloc_set_page(pte_t *pte, unsigned long addr, void *data)
-> +{
-> +	int enable = *(int *)data;
-> +
-> +	unsigned long val = pte_val(ptep_get(pte));
-> +
-> +	if (enable)
-> +		val |= _PAGE_PRESENT;
-> +	else
-> +		val &= ~_PAGE_PRESENT;
-> +
-> +	set_pte(pte, __pte(val));
-> +
-> +	return 0;
-> +}
-> +
->   void __kernel_map_pages(struct page *page, int numpages, int enable)
->   {
->   	if (!debug_pagealloc_enabled())
->   		return;
->   
-> -	if (enable)
-> -		__set_memory((unsigned long)page_address(page), numpages,
-> -			     __pgprot(_PAGE_PRESENT), __pgprot(0));
-> -	else
-> -		__set_memory((unsigned long)page_address(page), numpages,
-> -			     __pgprot(0), __pgprot(_PAGE_PRESENT));
-> +	unsigned long start = (unsigned long)page_address(page);
-> +	unsigned long size = PAGE_SIZE * numpages;
-> +
-> +	apply_to_existing_page_range(&init_mm, start, size, debug_pagealloc_set_page, &enable);
-> +
-> +	flush_tlb_kernel_range(start, start + size);
->   }
->   #endif
->   
+> Ah gotcha, thanks for clarifying. Loads are protected by
+> mem_hotplug_lock here, so it's fine for them to get split up (because
+> the value can't change between loads). This is what I was referring to
+> in the bit of the commit message about not needing READ_ONCE.
 
-
-And you can add:
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-Thanks!
-
-Alex
-
+I see, thanks again for clarifying!
+Lance
