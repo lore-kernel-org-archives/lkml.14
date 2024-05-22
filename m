@@ -1,184 +1,102 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4BF76048;
-	Wed, 22 May 2024 17:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0389776048
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716399715; cv=none; b=clcpr2Iwa02Qhnpwtw241hxoCrq0hU1OnY5DyNdzd7wDVvP9Fb6b1+E7lKcdv3H3N0GJGG7dfENGM8j50rg+Ug/I1qgngEuLPhH5JvCHRjta5fhe/MRayTIRYZSO8dBSpYfBYOkqIgsQ028+yNdpzWsk7j/qm7KkuLBfa+SVODM=
+	t=1716399895; cv=none; b=WtrdPFADn+7zdazIZALyIxbp/rJqSpX7XI+na+PiqwORh55iKmt6NP/VsN1+dTkVYjXFTxZDnvwJ9Aa6cSEBlFmQ1hHzpeqarKhRQxO6sp0/dJEl7agpUYKeas4aYkEmf0tcm2GPwOKbYBuhCcc7wewO2hJ10kpVxqCixYZKG80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716399715; c=relaxed/simple;
-	bh=uvL6c0sQzUn4EQXHgyUdZShzqtxsUfQBgxL0hnuw5Qs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=M1CXFCILScbl0N7ja4bBkLHJgbMo29S8Z8j6OKH8URbC2BrW2ZuzJHUMzeRzmmDq/TCpC8X3jER0E0OarVulRIMVC2mqpLkEVgCFWRMrIyS0i36fXlV79nvBycjnBJiQNoWbY+lTXNMV5RImtS7Y/K5sQeXtARFUb6Ovj+4m+kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=NBKw/BeO; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+	s=arc-20240116; t=1716399895; c=relaxed/simple;
+	bh=ISa/9A9sTfOrlUnAeGnim+Gt5o4gpr/3BuYQQpAPN2E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AHCOdOJ98nlIwAK8uETBsWNc6KncZbbAicBvWfCuYh6DoBfbxyxEPGOdCGijpqj3b0LOMCyrQtrQ0QqSbviLWWQ5x2aA+/Qq7BiLFq8AW8Njb6w/cmgkfKJk19GemDHgKUmmmhDWY+1GyqzRt6rthlCJs6YVfjua4Ydp5EyAgQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clnf1PVx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="NBKw/BeO"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 2FBAE120011;
-	Wed, 22 May 2024 20:41:46 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 2FBAE120011
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1716399706;
-	bh=ORccFiShbmiAytq5SHZC9Z2mGFe7Gewrl8C0g5tV60s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=NBKw/BeORAvdvC8MqaROXAc1l0DIcDjtIVTtItU5G1ZbPpME7C/gZReDQ3QE+Kr3/
-	 e22NzJmm1DYClHQ/vpQ/VzP3eFpf/sljJpjf9SNiqW4n/tdBRxvoI2/UoR5V9rXPQw
-	 os+0XDe9M2L9Qyh0kxAYS1WICIbiuTjDSzww+FC2oopTeNtt5owTPgSJ0cjwyDvIMm
-	 7rpSOvEgbLaLDhjka7BoQB/I3tsj40PfXzaovQxP15PPFadoUfkRtltIXelfyJjJVw
-	 wFZ7xJ0N7vIhKf5KzdU2Tcww46u8RkFviq8Ik/t37q/ZbUq2e44jVd0T56tJ9eE5FM
-	 CbI9Ylythhw0w==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 22 May 2024 20:41:45 +0300 (MSK)
-Received: from [172.28.128.189] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 22 May 2024 20:41:45 +0300
-Message-ID: <edc6241b-195f-4188-b802-24706ebc9541@salutedevices.com>
-Date: Wed, 22 May 2024 20:40:40 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clnf1PVx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1172C2BBFC;
+	Wed, 22 May 2024 17:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716399894;
+	bh=ISa/9A9sTfOrlUnAeGnim+Gt5o4gpr/3BuYQQpAPN2E=;
+	h=From:Date:Subject:To:Cc:From;
+	b=clnf1PVx5pjEIBXXPLoZHu7Wc9+wp7wYokdhCiFEUIWQksZfqGuAtYCxEf8OGiZS8
+	 bCvXCk39ABvG925EuhFZ35B2nOruJKwf8T9istziSOsn4Fa5ConD+srCCQuD9iL/Ew
+	 WETLZinMfQQ6uecsxLhY2mQAgr7NO7ughzPcsrKZJY3m/XD5jsT1NyhbJ0k9LAAU2K
+	 7vCMi3/t/Kql0Q3b5imC0a4ec4fTDNdNhvqMhhk67X2BxTNYgynYXNkjj5oMDJe1jU
+	 joIGQLta4OMjKbVteqr3L0EWJyQnuL4pXDqQtBtkS5Fc2E2TSLnuqEo6ga8Cz0zZ0C
+	 4ckwKiNAhKGpQ==
+From: Mark Brown <broonie@kernel.org>
+Date: Wed, 22 May 2024 18:44:41 +0100
+Subject: [PATCH] clocksource: sp804: Make user selectable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Introduce initial support of Amlogic AC200 board
-Content-Language: en-US
-To: "Rob Herring (Arm)" <robh@kernel.org>
-CC: Jerome Brunet <jbrunet@baylibre.com>, Xianwei Zhao
-	<xianwei.zhao@amlogic.com>, Lucas Tanure <tanure@linux.com>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Dmitry Rokosov
-	<ddrokosov@sberdevices.ru>, Conor Dooley <conor+dt@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>
-References: <20240521222155.28094-1-jan.dakinevich@salutedevices.com>
- <171638551693.3169786.7201121718393921307.robh@kernel.org>
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <171638551693.3169786.7201121718393921307.robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185427 [May 22 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;devicetree.org:7.1.1;salutedevices.com:7.1.1;sberdevices.ru:7.1.1,5.0.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/05/22 13:13:00
-X-KSMG-LinksScanning: Clean, bases: 2024/05/22 16:46:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/22 16:29:00 #25238160
-X-KSMG-AntiVirus-Status: Clean, skipped
+Message-Id: <20240522-arm64-vexpress-sp804-v1-1-0344cd42eb77@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAgvTmYC/x2MSQqAMAwAvyI5G6i11uUr4kHbqDm40EARin+3e
+ ByGmQRCgUlgKBIEiix8nRmqsgC3z+dGyD4zaKWNarTGORzWYKTnDiSCcnfKYG0bb/u6W1TrIKf
+ Zrfz823F63w9Kr0K/ZgAAAA==
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ David Abdurachmanov <david.abdurachmanov@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Ross Burton <ross.burton@arm.com>, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev-621fa
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1729; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=ISa/9A9sTfOrlUnAeGnim+Gt5o4gpr/3BuYQQpAPN2E=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmTi8TQANlzhzfGOBFS1jd6/1jJABcH9JyDpWkLZOO
+ ikTKWJqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZk4vEwAKCRAk1otyXVSH0OBCB/
+ 0aZpC6NKdXSpgQyq9v0fvqYE9FhffOVFgF6tT3x8iUzVJk0Ie5DmJK0S7qx7o2xU7iRq6PRlSGsAgR
+ njHkxfVrWetShIZ7Paq4PxA4pB8yti98rw8FsxOuICJjtMeErJj+lx4/NLEgbrpzm7DTHZcgMrX/SI
+ OChKJZ3TkgNaIy872LmoIejlK9QRZ1Mf8aNGzUJi5fleIAi2V1i1yT6IIcmpKbb/gN/b04tEQfaBbM
+ T8j/ouOAbEbiu/7cy744tPe+8h+mKl6byuSrD7dNYKfbela270OLBGH4On9X1h+Cj9IZ1YuYKFFgrP
+ Uu0wAhxV9aX0poip0AqR6v5YHbzFXv
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On 5/22/24 16:46, Rob Herring (Arm) wrote:
-> 
-> On Wed, 22 May 2024 01:21:52 +0300, Jan Dakinevich wrote:
->>  - Make some cosmetics in existing device tree files;
->>
->>  - Add the board.
->>
->> Jan Dakinevich (3):
->>   arch/arm64: dts: ac2xx: make common the sound card
->>   dt-bindings: arm: amlogic: document AC200 support
->>   arch/arm64: dts: ac200: introduce initial support of the board
->>
->>  .../devicetree/bindings/arm/amlogic.yaml      |  1 +
->>  .../dts/amlogic/meson-sm1-a95xf3-air-gbit.dts | 87 -------------------
->>  .../boot/dts/amlogic/meson-sm1-a95xf3-air.dts | 87 -------------------
->>  .../boot/dts/amlogic/meson-sm1-ac200.dts      | 22 +++++
->>  .../boot/dts/amlogic/meson-sm1-ac2xx.dtsi     | 87 +++++++++++++++++++
->>  .../boot/dts/amlogic/meson-sm1-h96-max.dts    | 87 -------------------
->>  .../dts/amlogic/meson-sm1-x96-air-gbit.dts    | 87 -------------------
->>  .../boot/dts/amlogic/meson-sm1-x96-air.dts    | 87 -------------------
->>  8 files changed, 110 insertions(+), 435 deletions(-)
->>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dts
->>
->> --
->> 2.34.1
->>
->>
->>
-> 
-> 
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
-> 
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
-> 
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
-> 
->   pip3 install dtschema --upgrade
-> 
-> 
-> New warnings running 'make CHECK_DTBS=y amlogic/meson-sm1-a95xf3-air-gbit.dtb amlogic/meson-sm1-a95xf3-air.dtb amlogic/meson-sm1-ac200.dtb amlogic/meson-sm1-h96-max.dtb amlogic/meson-sm1-x96-air-gbit.dtb amlogic/meson-sm1-x96-air.dtb' for 20240521222155.28094-1-jan.dakinevich@salutedevices.com:
-> 
-> arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-gbit.dtb: audio-controller@380: compatible: ['amlogic,sm1-tdmin', 'amlogic,axg-tdmin'] is too long
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-formatters.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: /soc/bus@ff600000/bus@60000/clock-controller@0: failed to match any schema with compatible: ['amlogic,sm1-audio-clkc']
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller@300: compatible: ['amlogic,sm1-tdmin', 'amlogic,axg-tdmin'] is too long
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-formatters.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller@340: compatible: ['amlogic,sm1-tdmin', 'amlogic,axg-tdmin'] is too long
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-formatters.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller@380: compatible: ['amlogic,sm1-tdmin', 'amlogic,axg-tdmin'] is too long
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-formatters.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller@3c0: compatible: ['amlogic,sm1-tdmin', 'amlogic,axg-tdmin'] is too long
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-formatters.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: /soc/bus@ff600000/bus@60000/audio-controller@744: failed to match any schema with compatible: ['amlogic,sm1-tohdmitx', 'amlogic,g12a-tohdmitx']
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: /soc/bus@ff600000/bus@60000/audio-controller@744: failed to match any schema with compatible: ['amlogic,sm1-tohdmitx', 'amlogic,g12a-tohdmitx']
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: sys-ctrl@0: '#address-cells', '#size-cells', 'ranges' do not match any of the regexes: 'pinctrl-[0-9]+'
-> 	from schema $id: http://devicetree.org/schemas/soc/amlogic/amlogic,meson-gx-hhi-sysctrl.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-0: clock-names:0: 'sclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-0: clock-names:1: 'lrclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-0: clock-names:2: 'mclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-1: clock-names:0: 'sclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-1: clock-names:1: 'lrclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-1: clock-names:2: 'mclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-1: Unevaluated properties are not allowed ('clock-names' was unexpected)
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-2: clock-names:0: 'sclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-2: clock-names:1: 'lrclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: audio-controller-2: clock-names:2: 'mclk' was expected
-> 	from schema $id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dtb: sound: 'anyOf' conditional failed, one must be fixed:
-> 	'clocks' is a required property
-> 	'#clock-cells' is a required property
-> 	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
-> 
-> 
-> 
-> 
-> 
+The sp804 is currently only user selectable if COMPILE_TEST, this was
+done by commit dfc82faad725 ("clocksource/drivers/sp804: Add
+COMPILE_TEST to CONFIG_ARM_TIMER_SP804") in order to avoid it being
+spuriously offered on platforms that won't have the hardware since it's
+generally only seen on Arm based platforms.  This config is overly
+restrictive, while platforms that rely on the SP804 do select it in
+their Kconfig there are others such as the Arm fast models which have a
+SP804 available but currently unused by Linux.  Relax the dependency to
+allow it to be user selectable on arm and arm64 to avoid surprises and
+in case someone comes up with a use for extra timer hardware.
 
-These errors were here before my modifications, and they require extra
-efforts to rework generic 'meson-sm1.dtsi' etc. But it is not the goal
-of this series. Should I do anything about this right now?
+Fixes: dfc82faad725 ("clocksource/drivers/sp804: Add COMPILE_TEST to CONFIG_ARM_TIMER_SP804")
+Reported-by: Ross Burton <ross.burton@arm.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/clocksource/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 34faa0320ece..ca6045f90000 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -390,7 +390,8 @@ config ARM_GT_INITIAL_PRESCALER_VAL
+ 	  This affects CPU_FREQ max delta from the initial frequency.
+ 
+ config ARM_TIMER_SP804
+-	bool "Support for Dual Timer SP804 module" if COMPILE_TEST
++	bool "Support for Dual Timer SP804 module"
++	depends on ARM || ARM64 || COMPILE_TEST
+ 	depends on GENERIC_SCHED_CLOCK && HAVE_CLK
+ 	select CLKSRC_MMIO
+ 	select TIMER_OF if OF
+
+---
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+change-id: 20240522-arm64-vexpress-sp804-365d6938b07c
+
+Best regards,
 -- 
-Best regards
-Jan Dakinevich
+Mark Brown <broonie@kernel.org>
+
