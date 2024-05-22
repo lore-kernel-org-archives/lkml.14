@@ -1,143 +1,132 @@
-Received: from mailout04.t-online.de (mailout04.t-online.de [194.25.134.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071BA145B1D;
-	Wed, 22 May 2024 18:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.25.134.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070D7145B34;
+	Wed, 22 May 2024 18:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716403132; cv=none; b=K8eeR1VN55t1m0EWNwFvJBjATVqmFFt2Tm6mmgcdqMjIrfnXDN23Q1c6Lh8vux8ZiwtfyXArCt5gH4KjixQlHU1tItZWUCHidEnFGfhgSxr6V19/7an+PTH40HHjgMwx2bomPvlKI2WzJs0Zoy+5TKbSx7aQC4ZcmF04ILfE9uY=
+	t=1716403150; cv=none; b=ldKu7JkjRV6Syxnb8U2f0DdJ9YV96GtkjhhFQCCFF3u8oM4OVwID2aO/XoeDBBUwXCgcAUQ0jznaxxEzZp7xHqvgNSL7iInyVPlBkCDekik+S6uok8sx4XN6T4WpkHAVt4loLQpNUbd0+Iv3z3ro85ZSB04r0weNOz4m+87I6Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716403132; c=relaxed/simple;
-	bh=GgTdux9gYeqRKqacAiPHtF3+mAjRSMmb0GCGIwvLtfY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=taMaHdibzxWze1h9LOADiNIWm7Oz1ph/ffAcOr/D57E5Rl0GncZusbyJ0xaLY3qPauaaOj9WJ9DIjo3dMEdtwuA/agTHbEw2kAk6twLrCtpawr1imDb+lLa4aT6NVJP3KuZB3Or7gu68ETo3IWdo29aLCYCj2HQWYFlxf1MqV1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de; spf=pass smtp.mailfrom=t-online.de; arc=none smtp.client-ip=194.25.134.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-online.de
-Received: from fwd85.aul.t-online.de (fwd85.aul.t-online.de [10.223.144.111])
-	by mailout04.t-online.de (Postfix) with SMTP id 8226B84B3;
-	Wed, 22 May 2024 20:29:13 +0200 (CEST)
-Received: from dino2.dhome ([77.47.123.226]) by fwd85.t-online.de
-	with (TLSv1.3:TLS_AES_256_GCM_SHA384 encrypted)
-	esmtp id 1s9qi6-0rGXNR0; Wed, 22 May 2024 20:29:10 +0200
-From: Alois Fertl <a.fertl@t-online.de>
-To: a.zummo@towertech.it
-Cc: alexandre.belloni@bootlin.com,
-	wens@csie.org,
-	jernej.skrabec@gmail.com,
-	samuel@sholland.org,
-	linux-rtc@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	andre.przywara@arm.com,
-	Alois Fertl <a.fertl@t-online.de>
-Subject: [PATCH v4 1/1] drivers/rtc: rtc-sun6i: AutoCal Internal OSC
-Date: Wed, 22 May 2024 20:28:26 +0200
-Message-Id: <20240522182826.6824-1-a.fertl@t-online.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1716403150; c=relaxed/simple;
+	bh=zBORLGfwEDM1w4TyfaRsoNqVkhOG4wegvCBhB3v3QGo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AaybZYiN3GXMshjhwx5OaDg4At17eram2VtTnNRdbEvi+zVXRssxj3todNV6J65eypOkE2vw2x3CAmz4Ix9rjXkARNwgzKydRc6XRhMpZxSLnm+/0pEXJl27LMnGjDBb/eLF1clB5SR2G6wk+3OsWCH3cqLNak/1aA5F2Qf6PzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Py7Ap97+; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Py7Ap97+"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e724bc46bfso45183011fa.3;
+        Wed, 22 May 2024 11:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716403147; x=1717007947; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WowmymhSQgb7aeMuyb2EmWdDvfH/2EO855oEziB1Qzg=;
+        b=Py7Ap97+5kTm2tq7a99i5soGS+TB56wo2SQIhxd5jkDOA6P72rhYbY1PY5O48OxcMp
+         DPPVqa6TJXrvp4DEMcXJs9cAkExczRcGwdifou6Eyu6Q4dVYWoOHa9K35OjwGJTZj/B+
+         RDDRMWhTHfNv6FtQIPyZqO8u6exSu2Q7A3IedrLtZTHFHlaCy0CQxVkHQGg8fHBX4dny
+         rpd8iie1KdAF472aBS0eO1po0nAVC9ZB2lwZ1IvpTOVfvZ0oKaYocRD/Dacb3/aFbkOB
+         CVa0atbH8c2hqurRBG+rp2b1yD71McidKL4oZkEJjN1c85ZLDjsIx+xgECpCd7dRWISG
+         aTQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716403147; x=1717007947;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WowmymhSQgb7aeMuyb2EmWdDvfH/2EO855oEziB1Qzg=;
+        b=oKxGgJncXWpEdGRVVWifFhCX/rA8OaCDWo2mE5DwGE6y/O3dN36Rn+WU96Si9yqJS7
+         7Ey4OkjH6lcX8zsSfeQnNL3setCg5b1X4hiqDWADIthxJjQkx7A52yCw1XAFtBbi4/ve
+         kgLn/EhTf+cpg68g9zmGmSJkBXR5Vjo/mdMTlAhgUYOglyk8wSj3RLJKC7+INL+Lp5OJ
+         bmanHhqq/f/41JgIJoicsKFxrLbjrAb8KMWQnLBQIEh0UMvZ8yVdElQTHX6atdZMmaP4
+         4Wnbl4QBj/ozbcdGgJQ8sivgidUPucKSce351VJq4z69f0gXmyOpuoN49GZjfnA06edz
+         UieA==
+X-Forwarded-Encrypted: i=1; AJvYcCWvQeENFCi8aPOknVV5E0oEE/CCwcajIE/mpIOkSg6pLTZ/b2Xlc4ztBkp5YYrBg/5msYwlQ8V7A5fMD7Fzjpmzm5pblH0M2coNyiNOp7HNFvV+TtZJKF0ZdG55tvyLQlxzPm5ssXhr544PBPn9L3vDC/7GpCgJL2Rb8A8NSxl6Ao6nvVmb
+X-Gm-Message-State: AOJu0Yxm+mWIxAPJsqvEf89HLVqoO+M7cGdsuYmk+OGjVLF3nwi96QTa
+	ky+dTEBmyhW2a1SperwtEccfrm+nuQgNF29TxDtZEYTTLG3Pgixj
+X-Google-Smtp-Source: AGHT+IG4RBP0BkzL05EFItPmMq+sTkT5KD18CXqpi+UCTb8LIu1W9femaNsd+zD6c7pzhoWEn3+j7Q==
+X-Received: by 2002:ac2:47fb:0:b0:523:ab19:954b with SMTP id 2adb3069b0e04-526bdd47d37mr1714892e87.17.1716403146853;
+        Wed, 22 May 2024 11:39:06 -0700 (PDT)
+Received: from [10.0.0.100] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-523aa2645c7sm2535372e87.167.2024.05.22.11.39.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 11:39:06 -0700 (PDT)
+Message-ID: <2d2b0047-ae08-4a76-bada-6bc92f443544@gmail.com>
+Date: Wed, 22 May 2024 21:39:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+To: Krzysztof Kozlowski <krzk@kernel.org>, Mithil <bavishimithil@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lopez Cruz <misael.lopez@ti.com>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240522075245.388-1-bavishimithil@gmail.com>
+ <0594944d-c158-4840-8724-b3f2edaab1ca@gmail.com>
+ <4f722e53-011f-4176-b6af-080522165007@kernel.org>
+ <bb44d588-9316-4509-b545-9bbaa2d240cb@gmail.com>
+ <3c6c5be1-fb8e-4bf0-9f58-cfb09672e8c1@kernel.org>
+ <d999bc26-9bb1-44a8-92a3-bcbe14c5a1c3@gmail.com>
+ <58ada5ce-5c02-4ff5-8bdd-d6556c9d141f@kernel.org>
+ <CAGzNGRm5i8zvnXiPzMg5=+tr9oyBcRA8LFvnmgGzE=MzSNTXug@mail.gmail.com>
+ <e384272a-4dfe-4653-8983-6426f8803c84@kernel.org>
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Content-Language: en-US
+In-Reply-To: <e384272a-4dfe-4653-8983-6426f8803c84@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TOI-EXPURGATEID: 150726::1716402550-F28FED0F-6FFADA25/0/0 CLEAN NORMAL
-X-TOI-MSGID: 45263082-cff6-49c7-a496-925ce572f1eb
 
-I have a M98-8K PLUS Magcubic TV-Box based on the Allwinner H618 SOC.
-On board is a Sp6330 wifi/bt module that requires a 32kHz clock to
-operate correctly. Without this change the clock from the SOC is
-~29kHz and BT module does not start up. The patch enables the Internal
-OSC Clock Auto Calibration of the H616/H618 which than provides the
-necessary 32kHz and the BT module initializes successfully.
-Add a flag and set it for H6.
-Also the code is developed on the H618 board it only modifies the H6 as
-there is no support for H616/H618 in the current code.
 
-Signed-off-by: Alois Fertl <a.fertl@t-online.de>
----
 
-v1->v2
-- add flag and activate for H6 AND H616
+On 22/05/2024 20:07, Krzysztof Kozlowski wrote:
+> On 22/05/2024 19:02, Mithil wrote:
+>>> Yep. And testing DTS should clearly show that conversion leads to
+>>> incomplete binding.
+>>>
+>>>>
+>>>>> I assume the DTS was validated with the binding. Isn't the case here?
+>>>
+>>> Mithil Bavishi,
+>>> Are you sure you tested the DTS?
+>>
+>> dt_binding_check did not give me any errors. Yeah the example is
+>> different from how it is implemented in the kernel ie board specific
+>> (omap4, omap5 etc). Should the example be changed according to that
+>> dtsi then?
+> 
+> Binding needs to be adapted to match DTS or DTS has to be fixed to match
+> binding, depending which one is correct.
 
-v2->v3
-- correct findings from review
+Normally the DTS is written based on the binding document and the driver
+is written also to follow the binding document.
+However in this case we have a broken/inaccurate binding document and
+the existing DTS files and binaries in wild have deviated (there are
+boards out there using qnx or BSD and use this binding), or to be
+precise the binding document was not updated.
 
-v3->v4
-- adjust to mainline tree
+The existing DTS files are the ABI, so we cannot deviate from them,
+unfortunately.
 
-I have also tried to test this using the new driver in sunxi-ng
-manually injecting the reverted patch
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=60d9f050da63b
-The code in drivers/clk/sunxi-ng/ccu-sun6i-rtc.c is being called and it
-initializes the relevant registers to the same values as the old driver,
-but the change ends up with a system that often hangs during booting and
-only ocasionally reaches the login state (one out of 10).
-The main difference I see adhoc is that the old drivers init is done
-using CLK_OF_DECLARE_DRIVER so initialization is done very early.
-The new driver does the initialisation via probe which is quite some
-time later.
-Can't tell if this is the cause for the problems.
+In this case the DTS / driver needs to be reverse engineered to create a
+binding document.
 
----
- drivers/rtc/rtc-sun6i.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+To note: I'm also guilty of not updating the .txt file.
 
-diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-index 8e0c66906..57aa52d3b 100644
---- a/drivers/rtc/rtc-sun6i.c
-+++ b/drivers/rtc/rtc-sun6i.c
-@@ -42,6 +42,11 @@
- 
- #define SUN6I_LOSC_CLK_PRESCAL			0x0008
- 
-+#define SUN6I_LOSC_CLK_AUTO_CAL			0x000c
-+#define SUN6I_LOSC_CLK_AUTO_CAL_16MS		BIT(2)
-+#define SUN6I_LOSC_CLK_AUTO_CAL_ENABLE		BIT(1)
-+#define SUN6I_LOSC_CLK_AUTO_CAL_SEL_CAL		BIT(0)
-+
- /* RTC */
- #define SUN6I_RTC_YMD				0x0010
- #define SUN6I_RTC_HMS				0x0014
-@@ -126,7 +131,6 @@
-  *     registers (R40, H6)
-  *   - SYS power domain controls (R40)
-  *   - DCXO controls (H6)
-- *   - RC oscillator calibration (H6)
-  *
-  * These functions are not covered by this driver.
-  */
-@@ -137,6 +141,7 @@ struct sun6i_rtc_clk_data {
- 	unsigned int has_out_clk : 1;
- 	unsigned int has_losc_en : 1;
- 	unsigned int has_auto_swt : 1;
-+	unsigned int has_auto_cal : 1;
- };
- 
- #define RTC_LINEAR_DAY	BIT(0)
-@@ -267,6 +272,14 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
- 	}
- 	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
- 
-+	if (rtc->data->has_auto_cal) {
-+		/* Enable internal OSC clock auto calibration */
-+		reg = SUN6I_LOSC_CLK_AUTO_CAL_16MS |
-+			SUN6I_LOSC_CLK_AUTO_CAL_ENABLE |
-+			SUN6I_LOSC_CLK_AUTO_CAL_SEL_CAL;
-+		writel(reg, rtc->base + SUN6I_LOSC_CLK_AUTO_CAL);
-+	}
-+
- 	/* Yes, I know, this is ugly. */
- 	sun6i_rtc = rtc;
- 
-@@ -374,6 +387,7 @@ static const struct sun6i_rtc_clk_data sun50i_h6_rtc_data = {
- 	.has_out_clk = 1,
- 	.has_losc_en = 1,
- 	.has_auto_swt = 1,
-+	.has_auto_cal = 1,
- };
- 
- static void __init sun50i_h6_rtc_clk_init(struct device_node *node)
+> Mention any changes done in the
+> binding which deviate from pure conversion of TXT->DT schema.
+> 
+> https://social.kernel.org/notice/Ai9hYRUKo8suzX3zNY
+> 
+> Best regards,
+> Krzysztof
+> 
+
 -- 
-2.39.2
-
+Péter
