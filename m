@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDB114D29C
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:51:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294D214D283;
+	Wed, 22 May 2024 23:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716421908; cv=none; b=ufkVBH/xH6EfaoK8GIZCk1Yzn9pMjXF0gtBYUzC8/LjOYYGA3DkSzfcH0azdCGPhl7JOR5blxEecTNvnLQkamDKkazFCWOh5mEgpv+kp1JIwT850mzUzqKp7fz+UPcNajxeblYNFx78RPivOvKgXZO8KEFm0FxcgGV9zca91In8=
+	t=1716421908; cv=none; b=kBX7x633QyWe5WKJlfQVNy/Sb2Mn0TikYd6+3jF1uyjMvg8cn30Ldr3Q+gLsINCfAyXbligt1kknMHIO/ctte8OUBqtA7JfCHgzk7CDgnwg7LP6d6ttU1XmnmLjb6dVuh4IIeNb4eg6t0lbTllZOfaQQnPqkYBT3FVytLUY8vLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716421908; c=relaxed/simple;
-	bh=Nty+d0O2k+tcTQfotqrEHDSwCA3ilUGE7inQCe2W3o8=;
+	bh=crYCel4T6v30YoWlgBUMmOcR90sSWioAG7Sjj6wBSyA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UrJImT7N9eZ/OMN3qtftOBmgRZiStfPzY06v3VcanRxDbapfn5foFfNLSEpwzw9h4t4pNUCBI8mVUlqrt1f9beNenKoBKtcxc5dp7iwKqU20Vk87MKosTlvg+GKpV0y3xiOGaiIi2Ey9jz2k2WKuPDUGxJvwhh2a6OTIevyj+4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJ6yeDJp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=CyIkU1b1K4sKRHclUcd3SyPfbJTjJljfh1S6BYwSC+owq4aWz3K0y5ZD/IS18CffDKV+26ENEZckbK5cd5ZTZSiWGHUL6W8kqX7XSnZx1LpMZDJU9vJiM+Vg0fq5CssniMkSKQ8VO4jtt85Iw22qzkgGH1jTEasC5uqE+biRHPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rY+EvH/v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJ6yeDJp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C7C00C4AF0C;
-	Wed, 22 May 2024 23:51:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rY+EvH/v"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 036FEC4AF13;
+	Wed, 22 May 2024 23:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716421907;
-	bh=Nty+d0O2k+tcTQfotqrEHDSwCA3ilUGE7inQCe2W3o8=;
+	s=k20201202; t=1716421908;
+	bh=crYCel4T6v30YoWlgBUMmOcR90sSWioAG7Sjj6wBSyA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=eJ6yeDJpb7x/wkFNd67nxJKK7wx+jMvay4iawRRiXNsVYNj970j+MzX2xuGFszMqW
-	 1O0K4M9HvcWxvoSaHBSt+ojD8yVfNKiNim163ETs9khkxu45zF7R3AuHD+CDdvrf+h
-	 NeXBi2k9LKvuxIyS9E7ie/ALv2xe5Ch/1aNaVCcUAIA+BLe3bSlggJDmDJ3VnSRE52
-	 e3Kr37DsFP3a51mEEY3nvzQXTW/2LKZUizTBPNOlIghfpdPLrjcsNV4poUmxN+rwmL
-	 W/aWZd4FdHnoTrr5FUF/P93yy9WvcRbksmc3D+2DpXIcNRP8v5KULbee2tn+qav5kr
-	 /2Jse6KsKlVgQ==
+	b=rY+EvH/vLojwdYlLZD3p+/oCLF1WAVA778rZPE9k37JyisSH/9qkiM3+mBvJBiPwY
+	 yeWsAwUqfvBosNWRaQL0fZDd721/pw8N5NuC1Y4eq7Vl2/ZqMWRFOAoz2KCdJnK1LN
+	 JHLJQf5tfxcR7UGHA8mR7G1ccY5mSPhF9TXjdMesCgQIYoi22+X6yld9BiMSYIXmaA
+	 eu9c1ws2tbV5Yxwkr0gSqPtHk5aIgIQqviqV/Dq7iV0LsAVNs864QUlxoY8HkRLG74
+	 8J6WcVcjKPvVY3R7SflQmkQ6j4n3i5e1UHGDOn3hOnhqHhm9p0dcLLZxtuPI0KW7eH
+	 8rHeHRnzS9wvQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B99FEC43618;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EA49FC43618;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: uaccess: Relax the threshold for fast path
+Subject: Re: [PATCH] ftrace: riscv: move from REGS to ARGS
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171642190775.9409.16917538511707082083.git-patchwork-notify@kernel.org>
+ <171642190795.9409.3531878731027938184.git-patchwork-notify@kernel.org>
 Date: Wed, 22 May 2024 23:51:47 +0000
-References: <20240313091929.4029960-1-xiao.w.wang@intel.com>
-In-Reply-To: <20240313091929.4029960-1-xiao.w.wang@intel.com>
-To: Xiao Wang <xiao.w.wang@intel.com>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, jerry.shih@sifive.com,
- nick.knight@sifive.com, ajones@ventanamicro.com, bjorn@rivosinc.com,
- andy.chiu@sifive.com, viro@zeniv.linux.org.uk, cleger@rivosinc.com,
- alexghiti@rivosinc.com, haicheng.li@intel.com, linux-kernel@vger.kernel.org
+References: <20240405142453.4187-1-puranjay@kernel.org>
+In-Reply-To: <20240405142453.4187-1-puranjay@kernel.org>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: linux-riscv@lists.infradead.org, alexghiti@rivosinc.com,
+ andy.chiu@sifive.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, rostedt@goodmis.org, mhiramat@kernel.org,
+ mark.rutland@arm.com, samitolvanen@google.com, guoren@kernel.org,
+ leyfoon.tan@starfivetech.com, debug@rivosinc.com,
+ jeeheng.sia@starfivetech.com, suagrfillet@gmail.com, bjorn@rivosinc.com,
+ cleger@rivosinc.com, viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, puranjay12@gmail.com
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed, 13 Mar 2024 17:19:29 +0800 you wrote:
-> The bytes copy for unaligned head would cover at most SZREG-1 bytes, so
-> it's better to set the threshold as >= (SZREG-1 + word_copy stride size)
-> which equals to 9*SZREG-1.
+On Fri,  5 Apr 2024 14:24:53 +0000 you wrote:
+> This commit replaces riscv's support for FTRACE_WITH_REGS with support
+> for FTRACE_WITH_ARGS. This is required for the ongoing effort to stop
+> relying on stop_machine() for RISCV's implementation of ftrace.
 > 
-> Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
-> ---
->  arch/riscv/lib/uaccess.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The main relevant benefit that this change will bring for the above
+> use-case is that now we don't have separate ftrace_caller and
+> ftrace_regs_caller trampolines. This will allow the callsite to call
+> ftrace_caller by modifying a single instruction. Now the callsite can
+> do something similar to:
+> 
+> [...]
 
 Here is the summary with links:
-  - riscv: uaccess: Relax the threshold for fast path
-    https://git.kernel.org/riscv/c/e8c7995ea148
+  - ftrace: riscv: move from REGS to ARGS
+    https://git.kernel.org/riscv/c/aa4cc1761cca
 
 You are awesome, thank you!
 -- 
