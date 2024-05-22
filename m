@@ -1,139 +1,90 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7201130ADA;
-	Wed, 22 May 2024 12:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147C4130A53;
+	Wed, 22 May 2024 12:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716381227; cv=none; b=oBTs4QPAufLageBITOrUlyMKzPuomALtQU4ai3yvKW8CphWmv9DDkzNSJbcYJ1rgM4GLkGejfI9DoJXEs+RACnfNCoIQCPr71zSsrJqDRzz7IZhH4OsEM07suNtwWvY66nFC5q+fnF9tP5a3Fk11pJLQWqFy8QCwAiqhCUuZYQQ=
+	t=1716381284; cv=none; b=Xn38/skKspc9MR9F3fEU1YFcwBw8U5wN85CMXw+lnwGz5ihKTCmIjSvIhiXN39YGfI/gnbT012T68jrntaC9Sf9J2cQcjeI3YIDBEbXaxsV2B7P0stZ+F1h+NFQrGC9ao7eYeCKlNumEfTvKCtCP7CZFJ1rCOMXlTIIxqDLKj+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716381227; c=relaxed/simple;
-	bh=5z6JDhPeVf+NpkLHFAEa4TTEsdRdiZSdwwEWmaMXlDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h6RGbIbEG+F5fcC4CLydS4gAol5uKQrZoIXM5nl5exf4HvaDwI36AWFre3bxRAGgfxST1LvPcQY0IRvzz0dU62Vhfj02kKRaBzg8rLrQlTgNf9zuobWyq22Jzt0rckgEshZ0bCkEyOShrk71sNGoNmf8kpgLThv4gOxuisBLBnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bosc.ac.cn; spf=pass smtp.mailfrom=bosc.ac.cn; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bosc.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bosc.ac.cn
-Received: from [172.38.8.164] (unknown [219.141.235.82])
-	by mail (Coremail) with SMTP id AQAAfwD3yiD15U1mzP2uAA--.51920S2;
-	Wed, 22 May 2024 20:32:54 +0800 (CST)
-Message-ID: <eca4d113-ba59-45aa-9224-22235fb09ddc@bosc.ac.cn>
-Date: Wed, 22 May 2024 20:32:53 +0800
+	s=arc-20240116; t=1716381284; c=relaxed/simple;
+	bh=0+wBh2A6G9cbB+lHeDN9Taxufokix63LGAyMizCEq8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xxs0FkPjMrZFOyglnUUqAQgMHSXAfMxHoPkiv+pwbfOgkdm2Q+gMz9yUBQphCd9Qhq9H2i1lkp39PKdz6LrAe5Ozf78ErsuRrYCBmvkd5UEB+cbqCJrywpCYIYkwNs7z7DSEgmHeS8y4/ApG3+dXr6sLpgxHI7HNEGPiJgymmCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=m7N2oHez; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m7N2oHez"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A4E0C2BD11;
+	Wed, 22 May 2024 12:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716381283;
+	bh=0+wBh2A6G9cbB+lHeDN9Taxufokix63LGAyMizCEq8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m7N2oHezajdS5VUWHtxQrfyLA+ApwbYaBzm0zTXpqrGJJl361XOdOTwef1kFzLv+A
+	 Z7JYmd4CZozqN0HGbMB49I67imUj5xiKJokGGgnamkARxGo5QtpktkfcsOpNJpJyIp
+	 XAAOXJIHGJBV2Hbdl9fp+s3pJWMta+Xjn+eFm6aU=
+Date: Wed, 22 May 2024 14:34:41 +0200
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Siddh Raman Pant <siddh.raman.pant@oracle.com>
+Cc: "cve@kernel.org" <cve@kernel.org>,
+	"linux-cve-announce@vger.kernel.org" <linux-cve-announce@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: CVE-2024-27410: wifi: nl80211: reject iftype change with mesh ID
+ change
+Message-ID: <2024052231-entity-peculiar-0087@gregkh>
+References: <2024051701-CVE-2024-27410-874a@gregkh>
+ <42c2fa68c360d05dcf798bc783078270e8fe8314.camel@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v5,3/3] drm/mediatek: Implement OF graphs support for display
- paths
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- chunkuang.hu@kernel.org
-Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- matthias.bgg@gmail.com, shawn.sung@mediatek.com, yu-chang.lee@mediatek.com,
- ck.hu@mediatek.com, jitao.shi@mediatek.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- wenst@chromium.org, kernel@collabora.com,
- Alexandre Mergnat <amergnat@baylibre.com>
-References: <20240521075717.50330-4-angelogioacchino.delregno@collabora.com>
-Content-Language: en-US, en-AU
-From: Sui Jingfeng <suijingfeng@bosc.ac.cn>
-Organization: bosc
-In-Reply-To: <20240521075717.50330-4-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAfwD3yiD15U1mzP2uAA--.51920S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFW3Cw15GF1UJw4DKryrCrg_yoW8Wr4rpa
-	yUuFWrZrZ7Jrs7W3y0vr4DCrZYkr10yF9xXw1fGF10yrsIqr9aka1kKrWjvrsIkryDurn2
-	qw48Kaya9ws5AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-	c2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
-	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU0wL05UUUUU==
-X-CM-SenderInfo: xvxlyxpqjiv03j6e02nfoduhdfq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42c2fa68c360d05dcf798bc783078270e8fe8314.camel@oracle.com>
 
-Hi,
+On Wed, May 22, 2024 at 12:28:59PM +0000, Siddh Raman Pant wrote:
+> On Fri, 17 May 2024 13:52:02 +0200, Greg Kroah-Hartman wrote:
+> > In the Linux kernel, the following vulnerability has been resolved:
+> > 
+> > wifi: nl80211: reject iftype change with mesh ID change
+> > 
+> > It's currently possible to change the mesh ID when the
+> > interface isn't yet in mesh mode, at the same time as
+> > changing it into mesh mode. This leads to an overwrite
+> > of data in the wdev->u union for the interface type it
+> > currently has, causing cfg80211_change_iface() to do
+> > wrong things when switching.
+> > 
+> > [...]
+> > 
+> > The Linux kernel CVE team has assigned CVE-2024-27410 to this issue.
+> 
+> This does not apply to versions below 6.0, as the union was not backported.
+> The fix commit mentioned is incorrect, it should be 7b0a0e3c3a88.
 
+Changelogs should be written a bit more careful then :)
 
-On 5/21/24 15:57, AngeloGioacchino Del Regno wrote:
-> +static int mtk_drm_of_ddp_path_build(struct device *dev, struct device_node *node,
-> +				     struct mtk_mmsys_driver_data *data)
-> +{
-> +	struct device_node *ep_node;
-> +	struct of_endpoint of_ep;
-> +	bool output_present[MAX_CRTC] = { false };
-> +	int ret;
-> +
-> +	for_each_endpoint_of_node(node, ep_node) {
-> +		ret = of_graph_parse_endpoint(ep_node, &of_ep);
-> +		of_node_put(ep_node);
+Note, that commit was backported to 5.19.2, so 6.0 is not correct...
 
-There is going to *double* decline the reference counter, as the 
-__of_get_next_child() will decrease the reference counter for us
-on the next iteration.
+I'll go update the cve and push out a json update to cve.org with this
+information, thanks for letting us know!
 
+Also, this commit was backported to the older kernels, so this is going
+to look strange, here's the new text:
 
-> +		if (ret) {
-> +			dev_err_probe(dev, ret, "Cannot parse endpoint\n");
-> +			break;
-> +		}
++       Issue introduced in 6.0 with commit 7b0a0e3c3a88 and fixed in 4.19.309 with commit d38d31bbbb9d
++       Issue introduced in 6.0 with commit 7b0a0e3c3a88 and fixed in 5.4.271 with commit 0cfbb26ee5e7
++       Issue introduced in 6.0 with commit 7b0a0e3c3a88 and fixed in 5.10.212 with commit 99eb2159680a
++       Issue introduced in 6.0 with commit 7b0a0e3c3a88 and fixed in 5.15.151 with commit 063715c33b4c
++       Issue introduced in 6.0 with commit 7b0a0e3c3a88 and fixed in 6.1.81 with commit 930e826962d9
++       Issue introduced in 6.0 with commit 7b0a0e3c3a88 and fixed in 6.6.21 with commit 177d574be4b5
++       Issue introduced in 6.0 with commit 7b0a0e3c3a88 and fixed in 6.7.9 with commit a2add961a5ed
++       Issue introduced in 6.0 with commit 7b0a0e3c3a88 and fixed in 6.8 with commit f78c1375339a
 
-Move the 'of_node_put(ep_node)' into brace '{}' here, if we really cares
-about the reference count.
+Hopefully people's json parsers can handle that well :)
 
-> +
-> +		if (of_ep.id >= MAX_CRTC) {
+thanks,
 
-ditto ?
-
-> +			ret = dev_err_probe(dev, -EINVAL,
-> +					    "Invalid endpoint%u number\n", of_ep.port);
-> +			break;
-> +		}
-> +
-> +		output_present[of_ep.id] = true;
-> +	}
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (output_present[CRTC_MAIN]) {
-> +		ret = mtk_drm_of_ddp_path_build_one(dev, CRTC_MAIN,
-> +						    &data->main_path, &data->main_len);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	if (output_present[CRTC_EXT]) {
-> +		ret = mtk_drm_of_ddp_path_build_one(dev, CRTC_EXT,
-> +						    &data->ext_path, &data->ext_len);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	if (output_present[CRTC_THIRD]) {
-> +		ret = mtk_drm_of_ddp_path_build_one(dev, CRTC_THIRD,
-> +						    &data->third_path, &data->third_len);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
--- 
-Best regards
-Sui Jingfeng
-
+greg k-h
