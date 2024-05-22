@@ -1,344 +1,81 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B2D8287C;
-	Wed, 22 May 2024 12:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE848287C;
+	Wed, 22 May 2024 12:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716380573; cv=none; b=IAAVxkdqAhN+8HkBLH/1k1FVyJYH6k+2TLACSVGs+JvrCAbc24GlGpoUQMfESxlV/EU+hRRuvVQlbYLw5KHUBC3EMHH9niQ+RHGtH+YXynV/vA4AhxDGUw8ktE1hahg/0BxcmE6IWGDa0wPz8RPNbvbHU4aUD2EXzZrQIQ9+afc=
+	t=1716380612; cv=none; b=rPuQYA3v+OTb6xypA81jgooJGiYfACcxDBbNTety5Ee91xBpFL9OBZ+AvG4siAg9nCE8hjim3zjlGtpzukxGHMuFaYsXVu8MaCvJQ40FXbdMv7sMz0mt6ZPjiQuP5ZK4QRPu5L4WnaM8AszgKdE3ty2F45dANsJGS21MLO852CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716380573; c=relaxed/simple;
-	bh=vKUjD5xrRJdZFC5xAW6BnnX0ntsGfgm6htxmrXd0/7s=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=GTk/nwB+wiHZyYGv8TDqT5sInu+HwuakvwVd5257TgPXN4ai/EilFMS8hMUGJqOEI3l7r74dmzB9vPg6nYSSGOPIYGd7FVw7wY9ekB6KJvylRXsHdOuconY/1gGHXk4Z0UMgK7s5qu2PGpEVuaSYTJ+dW1Lf5oPzC8Kr2514LmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=D2ofusLh; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716380612; c=relaxed/simple;
+	bh=FjqCLCPKNxX5x8NRyIF9DPo+K51w7Xt7vSUtZB+xj68=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G9mUZjBAFqmOTCowzD9uQ4W6qgeaRhkJhtA4xs0VJVeCuEWEJSR4tFiwmj8WSlpJ/OVaoWme75bTt/Nye20hNIkUOz6nUUD2E0QmxBT0/WiFSrQgtff450jArGPMaBr63ob17nSKXxq9/DBnStEY+HUhPQVdPW3eZNz2ZfJJczA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=N8k7kLlj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D2ofusLh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716380570;
-	bh=vKUjD5xrRJdZFC5xAW6BnnX0ntsGfgm6htxmrXd0/7s=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=D2ofusLhxYBOEir31iQ2umipbVEPo6fh0sgDg6bZmcVx3pOMaktNnIdzFqPwu3jTa
-	 xeoe/tfYL05M9OotJCqA4My1h1o1cyAukpzL5OuQaFOKvETmcy1SgSqW50xmFJq5Iz
-	 ObpM/Epzm1tHgTkVVScYy7eJkuGNDH0Rql4N39nQ9ue0vvj11PZxai8z4d6NP4qnRB
-	 rnMOIKsyvULmW1H5Ok52lEY8rNhCU+K14HyfBYyhbCiQIQEQwq01bMFqhRInSXowIo
-	 3k8U0XAVyOPmLJH9SBUNWpQLvESrM+VVsSR9CG4piNcwtCjHE3PtLtGlr1U20O1f6+
-	 +O3yrO+6h1zbw==
-Received: from [100.95.196.182] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: andrzej.p)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A8DD937821A0;
-	Wed, 22 May 2024 12:22:48 +0000 (UTC)
-Message-ID: <00128c79-9a27-4410-88d5-d1cd9a6460c0@collabora.com>
-Date: Wed, 22 May 2024 14:22:48 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="N8k7kLlj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C7FC2BD11;
+	Wed, 22 May 2024 12:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716380611;
+	bh=FjqCLCPKNxX5x8NRyIF9DPo+K51w7Xt7vSUtZB+xj68=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N8k7kLlj1hYg741ysC4LYoD/zhAf5kFI9bAdIU3Pns090H6ENIR6lyzfmKrqZ/QaJ
+	 U4mlikxDjUJUeERh0s1cS35dAwHZtUaSR4lPg8IlcyWUI7DevZ0OwDkZ9qZbwDFZMX
+	 eSfq2tm/tsBL4ueyyeCTVKmjpIkQVnIv1419eFBM=
+Date: Wed, 22 May 2024 14:23:28 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Xingui Yang <yangxingui@huawei.com>
+Cc: rafael@kernel.org, linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+	prime.zeng@hisilicon.com, liyihang9@huawei.com,
+	kangfenglong@huawei.com
+Subject: Re: [PATCH] driver core: Add log when devtmpfs create node failed
+Message-ID: <2024052221-pulverize-worrisome-37fb@gregkh>
+References: <20240522114346.42951-1-yangxingui@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: Re: [PATCH v6,10/24] media: mediatek: vcodec: send share memory data
- to optee
-To: Yunfei Dong <yunfei.dong@mediatek.com>,
- Jeffrey Kardatzke <jkardatzke@google.com>,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- Nathan Hebert <nhebert@chromium.org>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Sebastian Fricke <sebastian.fricke@collabora.com>,
- Tomasz Figa <tfiga@chromium.org>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
- Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
- Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
- Sumit Semwal <sumit.semwal@linaro.org>, Brian Starkey
- <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- "T . J . Mercier" <tjmercier@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
- <20240516122102.16379-11-yunfei.dong@mediatek.com>
-Content-Language: en-US
-In-Reply-To: <20240516122102.16379-11-yunfei.dong@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522114346.42951-1-yangxingui@huawei.com>
 
-Hi Yunfei & Jeffrey,
+On Wed, May 22, 2024 at 11:43:46AM +0000, Xingui Yang wrote:
+> Currently, no exception information is output when devtmpfs create node
+> failed, so add log info for it.
 
-W dniu 16.05.2024 o 14:20, Yunfei Dong pisze:
-> Setting msg and vsi information to shared buffer, then call tee invoke
-> function to send it to optee-os.
+Why?  Who is going to do something with this?
+
 > 
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+> Signed-off-by: Xingui Yang <yangxingui@huawei.com>
 > ---
->   .../vcodec/decoder/mtk_vcodec_dec_optee.c     | 140 ++++++++++++++++++
->   .../vcodec/decoder/mtk_vcodec_dec_optee.h     |  51 +++++++
->   2 files changed, 191 insertions(+)
+>  drivers/base/core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
-> index 611fb0e56480..f29a8d143fee 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
-> @@ -241,3 +241,143 @@ void mtk_vcodec_dec_optee_release(struct mtk_vdec_optee_private *optee_private)
->   	mutex_unlock(&optee_private->tee_mutex);
->   }
->   EXPORT_SYMBOL_GPL(mtk_vcodec_dec_optee_release);
-> +
-> +static int mtk_vcodec_dec_optee_fill_shm(struct tee_param *command_params,
-> +					 struct mtk_vdec_optee_shm_memref *shm_memref,
-> +					 struct mtk_vdec_optee_data_to_shm *data,
-> +					 int index, struct device *dev)
-> +{
-> +	if (!data->msg_buf_size[index] || !data->msg_buf[index]) {
-> +		pr_err(MTK_DBG_VCODEC_STR "tee invalid buf param: %d.\n", index);
-> +		return -EINVAL;
-> +	}
-> +
-> +	*command_params = (struct tee_param) {
-> +		.attr = shm_memref->param_type,
-> +		.u.memref = {
-> +			.shm = shm_memref->msg_shm,
-> +			.size = data->msg_buf_size[index],
-> +			.shm_offs = 0,
-> +		},
-> +	};
-> +
-> +	if (!shm_memref->copy_to_ta) {
-> +		dev_dbg(dev, MTK_DBG_VCODEC_STR "share memref data: 0x%x param_type:%llu.\n",
-> +			*((unsigned int *)shm_memref->msg_shm_ca_buf), shm_memref->param_type);
-> +		return 0;
-> +	}
-> +
-> +	memset(shm_memref->msg_shm_ca_buf, 0, shm_memref->msg_shm_size);
-> +	memcpy(shm_memref->msg_shm_ca_buf, data->msg_buf[index], data->msg_buf_size[index]);
-> +
-> +	dev_dbg(dev, MTK_DBG_VCODEC_STR "share memref data => msg id:0x%x 0x%x param_type:%llu.\n",
-> +		*((unsigned int *)data->msg_buf[index]),
-> +		*((unsigned int *)shm_memref->msg_shm_ca_buf),
-> +		shm_memref->param_type);
-> +
-> +	return 0;
-> +}
-> +
-> +void mtk_vcodec_dec_optee_set_data(struct mtk_vdec_optee_data_to_shm *data,
-> +				   void *buf, int buf_size,
-> +				   enum mtk_vdec_optee_data_index index)
-> +{
-> +	data->msg_buf[index] = buf;
-> +	data->msg_buf_size[index] = buf_size;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_vcodec_dec_optee_set_data);
-> +
-> +int mtk_vcodec_dec_optee_invokd_cmd(struct mtk_vdec_optee_private *optee_private,
-> +				    enum mtk_vdec_hw_id hw_id,
-> +				    struct mtk_vdec_optee_data_to_shm *data)
-> +{
-> +	struct device *dev = &optee_private->vcodec_dev->plat_dev->dev;
-> +	struct tee_ioctl_invoke_arg trans_args;
-> +	struct tee_param command_params[MTK_OPTEE_MAX_TEE_PARAMS];
-> +	struct mtk_vdec_optee_ca_info *ca_info;
-> +	struct mtk_vdec_optee_shm_memref *shm_memref;
-> +	int ret, index;
-> +
-> +	if (hw_id == MTK_VDEC_LAT0)
-> +		ca_info = &optee_private->lat_ca;
-> +	else
-> +		ca_info = &optee_private->core_ca;
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 5f4e03336e68..32a41e0472b2 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3691,7 +3691,10 @@ int device_add(struct device *dev)
+>  		if (error)
+>  			goto SysEntryError;
+>  
+> -		devtmpfs_create_node(dev);
+> +		error = devtmpfs_create_node(dev);
+> +		if (error)
+> +			pr_info("devtmpfs create node for %s failed: %d\n",
+> +				dev_name(dev), error);
 
-You seem to be using this in several places. Maybe create a helper?
+Why is an error message pr_info()?
 
-static inline struct mtk_vdec_optee_ca_info *get_ca_info(
-	struct mtk_vdec_optee_private *optee_private,
-	enum mtk_vdec_hw_id hw_id)
-{
-	return hw_id == MTK_VDEC_LAT0 ?
-		&optee_private->lat_ca : &optee_private->core_ca;
-}
+And again, why is this needed?  If this needs to be checked, why are you
+now checking it but ignoring the error?
 
-(you want to clean up the line breaks in this suggested function)
+What would this help with?
 
-and then
+thanks,
 
-	ca_info = get_ca_info(optee_private, hw_id);
-
-> +
-> +	memset(&trans_args, 0, sizeof(trans_args));
-> +	memset(command_params, 0, sizeof(command_params));
-> +
-> +	trans_args = (struct tee_ioctl_invoke_arg) {
-> +		.func = ca_info->vdec_session_func,
-> +		.session = ca_info->vdec_session_id,
-> +		.num_params = MTK_OPTEE_MAX_TEE_PARAMS,
-> +	};
-> +
-> +	/* Fill msg command parameters */
-> +	for (index = 0; index < MTK_OPTEE_MAX_TEE_PARAMS; index++) {
-> +		shm_memref = &ca_info->shm_memref[index];
-> +
-> +		if (shm_memref->param_type == TEE_IOCTL_PARAM_ATTR_TYPE_NONE ||
-> +		    data->msg_buf_size[index] == 0)
-> +			continue;
-> +
-> +		dev_dbg(dev, MTK_DBG_VCODEC_STR "tee share memory data size: %d -> %d.\n",
-> +			data->msg_buf_size[index], shm_memref->msg_shm_size);
-> +
-> +		if (data->msg_buf_size[index] > shm_memref->msg_shm_size) {
-> +			dev_err(dev, MTK_DBG_VCODEC_STR "tee buf size big than shm (%d -> %d).\n",
-
-s/big/bigger ? Or s/big/greater ?
-
-> +				data->msg_buf_size[index], shm_memref->msg_shm_size);
-> +			return -EINVAL;
-> +		}
-> +
-> +		ret = mtk_vcodec_dec_optee_fill_shm(&command_params[index], shm_memref,
-> +						    data, index, dev);
-> +		if (ret)
-> +			return ret;
-
-So if any of the iterations of this loop fails, then the data has been
-potentially copied to several shm_memref->msg_shm_ca_buf and remains there until
-next call to mtk_vcodec_dec_optee_fill_shm() for a corresponding ca_buf.
-In other words, mtk_vcodec_dec_optee_fill_shm() has maybe filled several
-ca_bufs, but if we return with error from this loop the tee function is not
-invoked but the data prepared for its invocation remains in the buffers.
-Don't know if this is a problem or not, but given we're dealing with restricted
-aka secure memory you might want to think about it.
-
-> +	}
-> +
-> +	ret = tee_client_invoke_func(optee_private->tee_vdec_ctx, &trans_args, command_params);
-> +	if (ret < 0 || trans_args.ret != 0) {
-> +		dev_err(dev, MTK_DBG_VCODEC_STR "tee submit command fail: 0x%x 0x%x.\n",
-> +			trans_args.ret, ret);
-> +		return (ret < 0) ? ret : trans_args.ret;
-> +	}
-> +
-> +	/* clear all attrs, set all command param to unused */
-> +	for (index = 0; index < MTK_OPTEE_MAX_TEE_PARAMS; index++) {
-> +		data->msg_buf[index] = NULL;
-> +		data->msg_buf_size[index] = 0;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_vcodec_dec_optee_invokd_cmd);
-> +
-> +void *mtk_vcodec_dec_get_shm_buffer_va(struct mtk_vdec_optee_private *optee_private,
-> +				       enum mtk_vdec_hw_id hw_id,
-> +				       enum mtk_vdec_optee_data_index data_index)
-> +{
-> +	struct mtk_vdec_optee_ca_info *ca_info;
-> +
-> +	if (hw_id == MTK_VDEC_LAT0)
-> +		ca_info = &optee_private->lat_ca;
-> +	else
-> +		ca_info = &optee_private->core_ca;
-> +
-> +	return ca_info->shm_memref[data_index].msg_shm_ca_buf;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_vcodec_dec_get_shm_buffer_va);
-> +
-> +int mtk_vcodec_dec_get_shm_buffer_size(struct mtk_vdec_optee_private *optee_private,
-> +				       enum mtk_vdec_hw_id hw_id,
-> +				       enum mtk_vdec_optee_data_index data_index)
-> +{
-> +	struct mtk_vdec_optee_ca_info *ca_info;
-> +
-> +	if (hw_id == MTK_VDEC_LAT0)
-> +		ca_info = &optee_private->lat_ca;
-> +	else
-> +		ca_info = &optee_private->core_ca;
-> +
-> +	return ca_info->shm_memref[data_index].msg_shm_size;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_vcodec_dec_get_shm_buffer_size);
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
-> index 24aa63af9887..c24a567ec877 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
-> @@ -62,6 +62,16 @@ enum mtk_vdec_optee_data_index {
->   	OPTEE_MAX_INDEX,
->   };
->   
-> +/**
-> + * struct mtk_vdec_optee_data_to_shm - shm data used for TA
-> + * @msg_buf:     msg information to TA.
-> + * @msg_buf_len: length of msg information.
-> + */
-> +struct mtk_vdec_optee_data_to_shm {
-> +	void *msg_buf[MTK_OPTEE_MAX_TEE_PARAMS];
-> +	int msg_buf_size[MTK_OPTEE_MAX_TEE_PARAMS];
-> +};
-> +
->   /**
->    * struct mtk_vdec_optee_private - optee private data
->    * @vcodec_dev:     pointer to the mtk_vcodec_dev of the device
-> @@ -102,4 +112,45 @@ int mtk_vcodec_dec_optee_private_init(struct mtk_vcodec_dec_dev *vcodec_dev);
->    */
->   void mtk_vcodec_dec_optee_release(struct mtk_vdec_optee_private *optee_private);
->   
-> +/**
-> + * mtk_vcodec_dec_optee_set_data - set buffer to share memref.
-> + * @vcodec_dev: normal world data used to init optee share memory
-> + * @buf: normal world buffer address
-> + * @buf_size: buf size
-> + * @data_index: indentify each share memory informaiton
-> + */
-> +void mtk_vcodec_dec_optee_set_data(struct mtk_vdec_optee_data_to_shm *data,
-> +				   void *buf, int buf_size,
-> +				   enum mtk_vdec_optee_data_index data_index);
-> +
-> +/**
-> + * mtk_vcodec_dec_optee_invokd_cmd - send share memory data to optee .
-> + * @optee_private: optee private context
-> + * @hw_id: hardware index
-> + * @data: normal world data used to init optee share memory
-> + */
-> +int mtk_vcodec_dec_optee_invokd_cmd(struct mtk_vdec_optee_private *optee_private,
-> +				    enum mtk_vdec_hw_id hw_id,
-> +				    struct mtk_vdec_optee_data_to_shm *data);
-> +
-> +/**
-> + * mtk_vcodec_dec_get_shm_buffer_va - close the communication channels with TA.
-
-This comment is most likely incorrect.
-
-> + * @optee_private: optee private context
-> + * @hw_id:         hardware index
-> + * @@data_index: indentify each share memory informaiton
-> + */
-> +void *mtk_vcodec_dec_get_shm_buffer_va(struct mtk_vdec_optee_private *optee_private,
-> +				       enum mtk_vdec_hw_id hw_id,
-> +				       enum mtk_vdec_optee_data_index data_index);
-> +
-> +/**
-> + * mtk_vcodec_dec_get_shm_buffer_size - close the communication channels with TA.
-
-And so is this one.
-
-Regards,
-
-Andrzej
-
-> + * @optee_private: optee private context
-> + * @hw_id:         hardware index
-> + * @@data_index: indentify each share memory informaiton
-> + */
-> +int mtk_vcodec_dec_get_shm_buffer_size(struct mtk_vdec_optee_private *optee_private,
-> +				       enum mtk_vdec_hw_id hw_id,
-> +				       enum mtk_vdec_optee_data_index data_index);
-> +
->   #endif /* _MTK_VCODEC_FW_OPTEE_H_ */
-
+greg k-h
