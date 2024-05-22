@@ -1,145 +1,108 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4467B6AB9;
-	Wed, 22 May 2024 14:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8BA6AB9;
+	Wed, 22 May 2024 14:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716386580; cv=none; b=CHLhs1Z1sx4JQUnY9zAk5/SXwJzUxCT4RRxexy8DCuV8W3ex12rNi3RbT6KlgWcZlIrIyuo0eXxUUdJRQT+ZvgQ74aBByGIOt5FkqedpptGU14xBLF1YOFWxkxzknPYxfJInP47Y8Z5KxyLdzmyTvMNWbVVVvlD/99CIGYvIlkU=
+	t=1716386718; cv=none; b=OdJG4E9tizSeHNjeAZ+NBZy6VXH6b/2xfUZZjIRUk6PxJe7RCrAp2pbxUL+Dyotmngi8FZnKfS4b+vUBSBSqZNgcJRYCL8/jEpNs2WL9TH84zFGU1ilpF1PB1w1p+IiC1p9hZx5ISi/djrCPi2RoMlSuOnDDXNEMffuf56g1r7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716386580; c=relaxed/simple;
-	bh=7kTG5ts3OQOCh1/2XvqX0aVjJCkbUUXFDVmo08IThCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RN9i224W7/nO0zPkOONx4qcvOQfzCY0Pk+9rg7BnU8hXlz3Ud+6oPEYf4Rd8Rlv4MMzZqL2TtKpCDJCSx7IFlCa7ARMFsgRXZZrUqscDu5sZYtk+bwhqfEA/u6QA1/FUeo733IHTlT3RI5DZcrFPIvsCtBHUqE2wFC9qg8PqORM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RzWT3O3N; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RzWT3O3N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716386575;
-	bh=7kTG5ts3OQOCh1/2XvqX0aVjJCkbUUXFDVmo08IThCA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RzWT3O3NZ1dwV9M2JHbVSngE4q1VPMGXCXBpUQq11qZ2XeiDQmS47vXNKh45ByruT
-	 Cm7JT6sfDFXS8Fa1W3bTnt3tZ9zNI/4VVsOPEWAheGA84yHB0+QR9/vD8ZNCY2muQ/
-	 v20AlPXWqnAAZMWBoRd+unQh0zXE48VBkyjei/Zf3ZYkSL3XFlGcPWwHE8Ok//AO6Q
-	 EPl3BQhtDjJXhDQI8sWI8BAIxBLQHJBirIfmH+vA9Mkyzu/ded0oeTF8nT7FYY4Trp
-	 PMDbOHmF6JipmDBsBTOZtMmW4ktp9wbt35v3TgXmqkNsRi9LocM4J3Mc0RmJzFxtxt
-	 SKCoSTO0+zKlA==
-Received: from [100.90.194.27] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ehristev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4991137821B3;
-	Wed, 22 May 2024 14:02:54 +0000 (UTC)
-Message-ID: <9afebadd-765f-42f3-a80b-366dd749bf48@collabora.com>
-Date: Wed, 22 May 2024 17:02:53 +0300
+	s=arc-20240116; t=1716386718; c=relaxed/simple;
+	bh=8e71njZJWwY8ETmCINBrNexR+jgS6wvIDFiP1CyeUi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m5PfghoIIjUqDKCmHIpAKK7qPWYDcvmkgetvu1oHxDg/tRvS+ltX6+vvydqDo1qGyBr/FtWs4Oj5oSCO5Ng6l0PrSzrOwSj23BWtqgB+cW2wG9LeVoBLLa7qcn3jEh8mpQ8Oho8Byv7Z8mMKpk8wud7iezupC+9RRGb1g6RFxnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3C9C2BBFC;
+	Wed, 22 May 2024 14:05:14 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.10
+Date: Wed, 22 May 2024 22:05:04 +0800
+Message-ID: <20240522140504.4071402-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 3/9] libfs: Introduce case-insensitive string
- comparison helper
-To: Gabriel Krisman Bertazi <krisman@suse.de>,
- Eric Biggers <ebiggers@kernel.org>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
- jaegeuk@kernel.org, chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
- jack@suse.cz, Gabriel Krisman Bertazi <krisman@collabora.com>
-References: <20240405121332.689228-1-eugen.hristev@collabora.com>
- <20240405121332.689228-4-eugen.hristev@collabora.com>
- <20240510013330.GI1110919@google.com> <875xviyb3f.fsf@mailhost.krisman.be>
-Content-Language: en-US
-From: Eugen Hristev <eugen.hristev@collabora.com>
-In-Reply-To: <875xviyb3f.fsf@mailhost.krisman.be>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/13/24 00:27, Gabriel Krisman Bertazi wrote:
-> Eric Biggers <ebiggers@kernel.org> writes:
-> 
->> On Fri, Apr 05, 2024 at 03:13:26PM +0300, Eugen Hristev wrote:
-> 
->>> +		if (WARN_ON_ONCE(!fscrypt_has_encryption_key(parent)))
->>> +			return -EINVAL;
->>> +
->>> +		decrypted_name.name = kmalloc(de_name_len, GFP_KERNEL);
->>> +		if (!decrypted_name.name)
->>> +			return -ENOMEM;
->>> +		res = fscrypt_fname_disk_to_usr(parent, 0, 0, &encrypted_name,
->>> +						&decrypted_name);
->>> +		if (res < 0)
->>> +			goto out;
->>
->> If fscrypt_fname_disk_to_usr() returns an error and !sb_has_strict_encoding(sb),
->> then this function returns 0 (indicating no match) instead of the error code
->> (indicating an error).  Is that the correct behavior?  I would think that
->> strict_encoding should only have an effect on the actual name
->> comparison.
-> 
-> No. we *want* this return code to be propagated back to f2fs.  In ext4 it
-> wouldn't matter since the error is not visible outside of ext4_match,
-> but f2fs does the right thing and stops the lookup.
+The following changes since commit a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6:
 
-In the previous version which I sent, you told me that the error should be
-propagated only in strict_mode, and if !strict_mode, it should just return no match.
-Originally I did not understand that this should be done only for utf8_strncasecmp
-errors, and not for all the errors. I will change it here to fix that.
+  Linux 6.9 (2024-05-12 14:12:29 -0700)
 
-> 
-> Thinking about it, there is a second problem with this series.
-> Currently, if we are on strict_mode, f2fs_match_ci_name does not
-> propagate unicode errors back to f2fs. So, once a utf8 invalid sequence
-> is found during lookup, it will be considered not-a-match but the lookup
-> will continue.  This allows some lookups to succeed even in a corrupted
-> directory.  With this patch, we will abort the lookup on the first
-> error, breaking existing semantics.  Note that these are different from
-> memory allocation failure and fscrypt_fname_disk_to_usr. For those, it
-> makes sense to abort.
+are available in the Git repository at:
 
-So , in the case of f2fs , we must not propagate utf8 errors ? It should just
-return no match even in strict mode ?
-If this helper is common for both f2fs and ext4, we have to do the same for ext4 ?
-Or we are no longer able to commonize the code altogether ?
-> 
-> Also, once patch 6 and 7 are added, if fscrypt fails with -EINVAL for
-> any reason unrelated to unicode (like in the WARN_ON above), we will
-> incorrectly print the error message saying there is a bad UTF8 string.
-> 
-> My suggestion would be to keep the current behavior.  Make
-> generic_ci_match only propagate non-unicode related errors back to the
-> filesystem.  This means that we need to move the error messages in patch
-> 6 and 7 into this function, so they only trigger when utf8_strncasecmp*
-> itself fails.
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.10
 
-So basically unicode errors stop here, and print the error message here in that case.
-Am I understanding it correctly ?
->>> +	/*
->>> +	 * Attempt a case-sensitive match first. It is cheaper and
->>> +	 * should cover most lookups, including all the sane
->>> +	 * applications that expect a case-sensitive filesystem.
->>> +	 */
->>> +	if (folded_name->name) {
->>> +		if (dirent.len == folded_name->len &&
->>> +		    !memcmp(folded_name->name, dirent.name, dirent.len))
->>> +			goto out;
->>> +		res = utf8_strncasecmp_folded(um, folded_name, &dirent);
->>
->> Shouldn't the memcmp be done with the original user-specified name, not the
->> casefolded name?  I would think that the user-specified name is the one that's
->> more likely to match the on-disk name, because of case preservation.  In most
->> cases users will specify the same case on both file creation and later access.
-> 
-> Yes.
-> 
-so the utf8_strncasecmp_folded call here must use name->name instead of folded_name ?
+for you to fetch changes up to 9cc1df421f00453afdcaf78b105d8e7fd03cce78:
 
-Thanks for the review
-Eugen
+  LoongArch: Update Loongson-3 default config file (2024-05-19 22:18:56 +0800)
 
+----------------------------------------------------------------
+LoongArch changes for v6.10
+
+1, Select some options in Kconfig;
+2, Give a chance to build with !CONFIG_SMP;
+3, Switch to use built-in rustc target;
+4, Add new supported device nodes to dts;
+5, Some bug fixes and other small changes;
+6, Update the default config file.
+
+Note: There is a conflict in arch/loongarch/kernel/irq.c, but can be
+simply fixed by dropping the modification in this file (because that
+section is removed by the kvm tree).
+
+----------------------------------------------------------------
+Binbin Zhou (3):
+      LoongArch: dts: Remove "disabled" state of clock controller node
+      LoongArch: dts: Add new supported device nodes to Loongson-2K0500
+      LoongArch: dts: Add new supported device nodes to Loongson-2K2000
+
+Huacai Chen (4):
+      LoongArch: Select ARCH_WANT_DEFAULT_BPF_JIT
+      LoongArch: Select THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
+      LoongArch: Fix callchain parse error with kernel tracepoint events again
+      LoongArch: Update Loongson-3 default config file
+
+Tiezhu Yang (1):
+      LoongArch: Give a chance to build with !CONFIG_SMP
+
+WANG Rui (1):
+      LoongArch: rust: Switch to use built-in rustc target
+
+Xi Ruoyao (2):
+      LoongArch: Select ARCH_HAS_FAST_MULTIPLIER
+      LoongArch: Select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+
+ arch/loongarch/Kconfig                          |  6 +-
+ arch/loongarch/Makefile                         |  2 +-
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi    | 86 ++++++++++++++++++++++++-
+ arch/loongarch/boot/dts/loongson-2k1000-ref.dts |  4 --
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi    |  1 -
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi    | 49 ++++++++++++--
+ arch/loongarch/configs/loongson3_defconfig      | 24 +++++++
+ arch/loongarch/include/asm/acpi.h               |  1 +
+ arch/loongarch/include/asm/asm-prototypes.h     |  6 ++
+ arch/loongarch/include/asm/perf_event.h         |  3 +-
+ arch/loongarch/include/asm/smp.h                |  6 ++
+ arch/loongarch/kernel/irq.c                     |  2 +
+ arch/loongarch/kernel/machine_kexec.c           |  2 +-
+ arch/loongarch/lib/Makefile                     |  2 +
+ arch/loongarch/lib/tishift.S                    | 56 ++++++++++++++++
+ arch/loongarch/mm/tlbex.S                       |  9 ++-
+ arch/loongarch/power/suspend.c                  |  4 +-
+ rust/Makefile                                   |  2 +-
+ scripts/Makefile                                |  2 +-
+ scripts/generate_rust_target.rs                 |  7 +-
+ 20 files changed, 245 insertions(+), 29 deletions(-)
+ create mode 100644 arch/loongarch/lib/tishift.S
