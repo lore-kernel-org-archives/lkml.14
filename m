@@ -1,124 +1,120 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2D4282E2
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 09:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C19282E2;
+	Wed, 22 May 2024 09:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716369446; cv=none; b=tBZ/RqOnrr/9rG7syKwH4SAQOhVT/uRF49MMyn5rNnS6xRxy4SCo/obZBBLpYSI8MnP9B+OPU/YR8U59bSdU+RKMtneNqOHrsX9T2nDyYE+wKYnP0m+s8xEDHzIR2vU1Xi8YNET9FlBt2VT5A/c2BVAVvg7Pg6nqpztFYDX0Zug=
+	t=1716369497; cv=none; b=H8M+iPau1mGG1EtYAQyUiC2HzKQKSsLVNPQ4iVPMewEsLKEHPX4VHq0E/5tLATGXbz9CxAERR11DAGGkVAT+z66IXM8WkIOWnjp9YXU7hZPWmlwsI9FJkZoBHPS1GbHVMv1gWUC6z669KXsQP3b9L362yuqh9Kw7hhV9jhpVDeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716369446; c=relaxed/simple;
-	bh=a9rZwqydI1aQAaaRK5TAty9KhRdJBcpy2zVgXfiWn90=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AjzpGkJNlTLhez2UjwpD0ycvjnqieUQ8gTpnKLEVTewwwkg7cKb0YlDPMi+nqJFhi9OZdDHZEmpVjf6Z7b3ewDpb216MDwwWVX6mtJo3rzOj4zLYKvj2P4sTx64bvB+UWbLfu2c+XV7d9q+LgwuadGsIp0nnC2ABNUmuew54+T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vkm0V2ghZz4f3jkd
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:17:14 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 2CAD51A017F
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:17:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxAeuE1mwmtsNQ--.57500S4;
-	Wed, 22 May 2024 17:17:19 +0800 (CST)
-From: linan666@huaweicloud.com
-To: richard@nod.at,
-	miquel.raynal@bootlin.com,
-	vigneshr@ti.com,
-	chaitanya.kulkarni@wdc.com,
-	axboe@kernel.dk
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	chengzhihao1@huawei.com,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v3] ubi: block: fix null-pointer-dereference in ubiblock_create()
-Date: Thu, 23 May 2024 01:10:35 +0800
-Message-Id: <20240522171035.3776026-1-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1716369497; c=relaxed/simple;
+	bh=Qr6USar02b6JYI0XqhLNAvs2zSTmqw+SpOFyKARZyC0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=k8GlyRuWFHiChms8wxzErDy96pwDDSgW+fNZ3ltzGGz7DdQOyL0aiOWK5+UATdSB5ySyTioWwAkJjFjK+F4YiSszOg2ARauk3nDbySwYRGsEIlCA8wsdOMPtoE7GVG4acq0US4tA9bGGcR2WX7/yu0dKRbXHN2XfFQw1P+cUMAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l5Dlvz+f; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5Dlvz+f"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a59b81d087aso917513266b.3;
+        Wed, 22 May 2024 02:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716369494; x=1716974294; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=epqJO+ERpctNPXshaXqEX2wabNsS9uehY5up2W7EJXM=;
+        b=l5Dlvz+fH33aWy94tUx/IHFrD50CHNRnNtC4+g74kdkZtuXpOvAH25C3MH2pyuaqDq
+         MPgfgMgojnW0BPstFJVB9c4gtpv/VpSOj6eM9qdTtKzRibZ6Plzqne16skhoFJR43mhk
+         PHG7sO5UCmQdFr0WTJS+FiI1fVhlnppvfvyl8r2WxFS9MZUDLRIKVlWjpcT1ZBYkezdE
+         A1EBa5Fa875/c3jtsqzaqUYqUP0a3qlTI7ZtqoN5vwk+zx8uMyAfbbHhjcPntkZxNOLO
+         FzL/UUqKK/kRr/TbqpI+omteT4eoLvSyXp6YT64vSVNifhcGH3TncN7yaVukestzOJKE
+         3w0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716369494; x=1716974294;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=epqJO+ERpctNPXshaXqEX2wabNsS9uehY5up2W7EJXM=;
+        b=vxFAse96NaELpxaOizPBKMzH1YSBa5JbMyaXPISPsLdnmHSxcGbxGEStKjQCj2KhIS
+         ER/mr/uJ9ejNp78QxGP7yCfa3r2GAQL3U5NW7dQBtwG4uBDM6l0FWIfLxnj3QMRvujTi
+         dqMcWOV4KO3OS4ljQtWG//MUGg63vY+npi8t+VxRWo8WXj011lfLo39A2XwW917eYuK1
+         tgDo7dupkpISo7kHwKy+IOzTVbpzmZLtVnM7qlokw6fPtRwGQQo2tpYixzD9J6rq2R8n
+         KdLjfcsTUNGgWcyFLuIxQGzvahVhijY/wJmsX4tZkBKozJWS9qPVXxRwZ3OmtfAPJkca
+         cHuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTg3gn/Mw7DcmTAbbnlxXUOs81lGhjM+sIYbb3wpYUlCHqQEQkwh01d6jD3gJ8xKaprNWC58Lc6VsTXD2PUxgOSjaPpuzQ+LRLIifJBGYHtvjV6DTZftVeS9OE/vGLQM50gu0yjR4jtYE=
+X-Gm-Message-State: AOJu0Yz3/tCLH7La5uea1NbOkI5S9qzZrzBU5ztsVkAdy7Vd5mPB+s18
+	AaSy+za5COy+PSuK4BBFDrIykzdInm9KUDCoZtDhp8fRdHJEeE2b
+X-Google-Smtp-Source: AGHT+IFHKz6NYWtpbZOxJZ2dVbmmDeU/KEXReIfxPv3+43K7ZjjdiDJ1Ck9ql7NsX8Lk5E5mKdnTHA==
+X-Received: by 2002:a17:906:c34d:b0:a59:ba2b:5915 with SMTP id a640c23a62f3a-a62281e11d5mr143893266b.50.1716369494032;
+        Wed, 22 May 2024 02:18:14 -0700 (PDT)
+Received: from [127.0.1.1] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5cec3d9b5csm836678066b.16.2024.05.22.02.18.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 02:18:13 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH 0/2] device property: introduce
+ fwnode_for_each_available_child_node_scoped()
+Date: Wed, 22 May 2024 11:18:06 +0200
+Message-Id: <20240522-fwnode_for_each_available_child_node_scoped-v1-0-1188b0da12dc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxAeuE1mwmtsNQ--.57500S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr18uw48Gr4kWrW7Kr18uFg_yoW8ZFW3pa
-	yvg3yYy3ykGFyqgF4DXa1kCFy5Xw18W34rGF47uw4SvryrJryIkrs0qry5JF4IyF97JanI
-	qFn5GFW8C3WxC3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
-	0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
-	wIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2
-	x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI
-	0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7s
-	REiiSDUUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE64TWYC/x2N0QrDIAwAf6XkeYLaDbb9yhiSxWQGRItCNyj99
+ 0ofj4O7DTo35Q7PaYPGq3atZYC7TEAJy5eNxsHgrb/am3dGfqVGDlJbYKQUcEXN+MkcKGmO4bS
+ d6sLR3MWJfcQZnSUYxaWx6P+8vd77fgDv54G6fQAAAA==
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Daniel Scally <djrscally@gmail.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Antoniu Miclaus <antoniu.miclaus@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716369492; l=1324;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=Qr6USar02b6JYI0XqhLNAvs2zSTmqw+SpOFyKARZyC0=;
+ b=skBC7zUYZmBdaCrkmOdXDTE2PXaZlyW5JfOQ1Hg+XTKbj89cB73pX1/WLeRvLF9XxGkP6ksJt
+ l5P3CeIJplEDwPzIAUgDjPQvFfDXwvnqeKjyZpRX5uhwDc/nFvebP9g
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-From: Li Nan <linan122@huawei.com>
+The _scoped() version of the fwnode_for_each_available_child_node()
+follows the approach recently taken for other loops that handle child
+nodes like for_each_child_of_node_scoped() or
+device_for_each_child_node_scoped(), which are based on the __free()
+auto cleanup handler to remove the need for fwnode_handle_put() on
+early loop exits.
 
-Similar to commit adbf4c4954e3 ("ubi: block: fix memleak in
-ubiblock_create()"), 'dev->gd' is not assigned but dereferenced if
-blk_mq_alloc_tag_set() fails, and leading to a null-pointer-dereference.
-Fix it by using pr_err() and variable 'dev' to print error log.
+This new variant has been tested with the LTC2992, which currently uses
+the non-scoped variant. There is one error path that does not decrement
+the refcount of the child node, which can be fixed by using the new
+macro. The bug was introduced in a later modification of the loop, which
+shows how useful an automatic cleanup solution can be in many uses of
+the non-scoped version.
 
-Additionally, the log in the error handle path of idr_alloc() has
-been improved by using pr_err(), too. Before initializing device
-name, using dev_err() will print error log with 'null' instead of
-the actual device name, like this:
-  block (null): ...
-        ~~~~~~
-It is unclear. Using pr_err() can print more details of the device.
-The improved log is:
-  ubiblock0_0: ...
-
-Fixes: 77567b25ab9f ("ubi: use blk_mq_alloc_disk and blk_cleanup_disk")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Li Nan <linan122@huawei.com>
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 ---
-v3: spliting this patch into two in v2 is not a good idea. This version
-is consistent with v1, but only optimizes the commit message.
+Javier Carrasco (2):
+      device property: introduce fwnode_for_each_available_child_node_scoped()
+      hwmon: (ltc2992) use fwnode_for_each_available_child_node_scoped()
 
- drivers/mtd/ubi/block.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/hwmon/ltc2992.c  | 11 +++--------
+ include/linux/property.h |  5 +++++
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+---
+base-commit: 124cfbcd6d185d4f50be02d5f5afe61578916773
+change-id: 20240521-fwnode_for_each_available_child_node_scoped-8f1f09d3a10c
 
-diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
-index f82e3423acb9..bf7308e8ec2f 100644
---- a/drivers/mtd/ubi/block.c
-+++ b/drivers/mtd/ubi/block.c
-@@ -390,7 +390,8 @@ int ubiblock_create(struct ubi_volume_info *vi)
- 
- 	ret = blk_mq_alloc_tag_set(&dev->tag_set);
- 	if (ret) {
--		dev_err(disk_to_dev(dev->gd), "blk_mq_alloc_tag_set failed");
-+		pr_err("ubiblock%d_%d: blk_mq_alloc_tag_set failed\n",
-+			dev->ubi_num, dev->vol_id);
- 		goto out_free_dev;
- 	}
- 
-@@ -407,8 +408,8 @@ int ubiblock_create(struct ubi_volume_info *vi)
- 	gd->minors = 1;
- 	gd->first_minor = idr_alloc(&ubiblock_minor_idr, dev, 0, 0, GFP_KERNEL);
- 	if (gd->first_minor < 0) {
--		dev_err(disk_to_dev(gd),
--			"block: dynamic minor allocation failed");
-+		pr_err("ubiblock%d_%d: block: dynamic minor allocation failed\n",
-+			dev->ubi_num, dev->vol_id);
- 		ret = -ENODEV;
- 		goto out_cleanup_disk;
- 	}
+Best regards,
 -- 
-2.39.2
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
