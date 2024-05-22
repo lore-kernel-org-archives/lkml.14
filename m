@@ -1,194 +1,167 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2044.outbound.protection.outlook.com [40.107.244.44])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC2114D704;
-	Wed, 22 May 2024 23:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716420522; cv=fail; b=mwXjx37f8zYhYyPKiFpuprlRlgdRXEDOy1F1zXLag5FH57NLti06850w/GUPUM1InHeybd6ikf6m28MK6/qHB+LPIoDrTAwcKPio1+eT/enfYyHX0+mEh5pxG/g2Af9Kn0E1uC1y1A/b0UsS21x1byUdQAc/llSkV35eO8N0AuA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716420522; c=relaxed/simple;
-	bh=0vOcqcGpLREjsMYp9gYRRzCGX4Dg0fmhRIi6PZPz+fA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=MnhLm1m/9lbIJJwp4NYtjISheOCS82ARX+iRZNR5YaRlSwo0kBSq+A5KlJRUuYVyIIx4vTQcN6KWkHVKl5xGO79vWjprW3zThGV7c/P9EZdZlcZupVcKzKSetoS7I8zycAUAr6vMkv4waqFsesjLXxqYpQS6d+fMx7qgI1UGFZM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=erirl1cq; arc=fail smtp.client-ip=40.107.244.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD198060B
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716420631; cv=none; b=A743rbqn9Q0czaliyaHO1DNW/wdhBTytHBnA60qzmEv7Ufz5zdUDRBZKVLDXah+DR/ux8Gn2rD5AGuPIAYlmofvtaXxl2cXKFvuSLq48ELZqelr2kR/zfDn2XNn6Hsfoi8R7ELk3px0u/egVZOInZ8/+H7VXq7VSDgQVBvCtYSI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716420631; c=relaxed/simple;
+	bh=XLd3SbLQ0lWIQ0tSS2Op5+yhUjRp7AmE74qu5m+PuKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DX4hJsWVvAZK/UDuKk/YcIgdasy6JQWoWT4nIOTtCQr+TA5viFU4E5vHsbEwxuJpTOgDEZOCb36OcFWvXUCU+1bTnJSjAs0yEqcqUFsleb34WnumwO+ZUtVf0dC+d3HQBO4k9QJ6jojmstUBDnUKvQG25z27kLWNaR62nb45b9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Za3N3c3Q; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="erirl1cq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hHwHhMmh4JVhKHjtmBjLa1XwbRHfQMhWmb/+MhUuXlrX7/d0CZaDZXAhTbzfEx9/Gq/0BRoYvfo1PiGDPkXwB9///bZKjAz9IFzVuMp7wC/ylxPGy3ulD7x7cd093bWziuPLmpGs9e82i9nnlGJDifG0H3KVtDeyLoIc4mcB0/0B2TnoIWuSpcpUszo+i4Xl0X8nFjp9atk6I7egk63I6wfscz8FA2E4PPqJIfM1e8M+e/IGi3Bqmnl5UeHPNStHeJdtNvmSdfwxLMFs2HmRnrtq9S6uaqYByiH/Scl98qqvHNL1jzWumecq1iOiRRv1adIurOGrxL0iICtiZHyt0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1udZ5NNAS9vwnHXJArrbBPapjSK6nmVddrlinSDwpsk=;
- b=nz39hbYPSwwwxGb6Ri0spHNl6IPFIoIGnRr0Eg6hRgpQFkyBHcAhlR+GUSDaAabokukmiGFHxxBQut5fn6KSU83YQ92lS6K/voxYPhuX9doFX3QwtHoVJrvCRjjtQ/oBE2Jmm/Ts7Ec2r65cMW/xHRA7zHfx0lJVxi+cS5b8qDGQ7gJ5dYet4NsDf0f2YS95Q581PodnJ/Hp6VQDS/sJ5iDaIJ7yx9i/jSAr1TkdIc3vHh+agqDS/yKRvcjPv0vZ0fX5atgLK2ucU9qm9xGOfjask5aUR63ARSVMsfhqtvUukJaW6D9HfZdCJOPux1SqacF+0ZzI6zQoMeSYVTaEbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1udZ5NNAS9vwnHXJArrbBPapjSK6nmVddrlinSDwpsk=;
- b=erirl1cqnZrOaa4ZBbppthOlzxnTa86AsqVaqTLSovVYJjTUd0Ax3pPKJQZbRYLxywD8TKfSmnh8zOrA3/OgvaoVN6zk/K8wSYkfdbF4nEgLOmKwSaxR2AcMuz+DWm3mxQAUiwFCYeMmS9oxqUrX87f4MgPXqAUNKDKd3IFGT5QEf49FqRJbBJGR9J2hCPSvlrpvkqt4fUDhf2vW9cIDN2mlPCuc8Xiq+OMJoDrd6sbrN/7RmaSUKH3lOCwcHh0+wNj5ZreT/cgq99zlRc79ajVoqRAwukDWfJnWcfZzRCljy8XhSmp6858Cn1zeF5lf8H/a/jNmlsLR+SkHbAuyIQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by SN7PR12MB8102.namprd12.prod.outlook.com (2603:10b6:806:359::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.34; Wed, 22 May
- 2024 23:28:36 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7587.035; Wed, 22 May 2024
- 23:28:36 +0000
-Date: Wed, 22 May 2024 20:28:33 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-	"Liu, Yi L" <yi.l.liu@intel.com>,
-	"eric.auger@redhat.com" <eric.auger@redhat.com>,
-	"vasant.hegde@amd.com" <vasant.hegde@amd.com>,
-	"jon.grimm@amd.com" <jon.grimm@amd.com>,
-	"santosh.shukla@amd.com" <santosh.shukla@amd.com>,
-	"Dhaval.Giani@amd.com" <Dhaval.Giani@amd.com>,
-	"shameerali.kolothum.thodi@huawei.com" <shameerali.kolothum.thodi@huawei.com>
-Subject: Re: [PATCH RFCv1 00/14] Add Tegra241 (Grace) CMDQV Support (part 2/2)
-Message-ID: <20240522232833.GH20229@nvidia.com>
-References: <cover.1712978212.git.nicolinc@nvidia.com>
- <BN9PR11MB527641C15DD88FB0C44323D08CEB2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20240522164818.GB20229@nvidia.com>
- <Zk5Lx7IqvnE2q7a7@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zk5Lx7IqvnE2q7a7@nvidia.com>
-X-ClientProxiedBy: BL0PR02CA0012.namprd02.prod.outlook.com
- (2603:10b6:207:3c::25) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Za3N3c3Q"
+X-Envelope-To: syzbot+4e41a25632658c77b441@syzkaller.appspotmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716420625;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nPuXLIY7XZzSLBQnb52zbrT42R3ZWYR0floV/T1S5ic=;
+	b=Za3N3c3QN2KhMhE/LKJFq6+QvYLHjkR4lF/peSK3CGsNNibzsBsNoF5NtkuSChWjj6b1N5
+	LETyXT8hmXTgBD5MEpYi7JTOVvX4dJYn97SG1ilZezpuFddnLSzXSrOUhXdtyAM10Fx6xV
+	lhL9iFGUDWVj6FPlf8JCyorqgguKI1w=
+X-Envelope-To: bfoster@redhat.com
+X-Envelope-To: linux-bcachefs@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: syzkaller-bugs@googlegroups.com
+X-Envelope-To: dvyukov@google.com
+Date: Wed, 22 May 2024 19:30:20 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: syzbot <syzbot+4e41a25632658c77b441@syzkaller.appspotmail.com>
+Cc: bfoster@redhat.com, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [syzbot] [bcachefs?] WARNING in bch2_prt_printf
+Message-ID: <cbrsfcpxeo25yek6cyfvkrg4vu5bkkj4tof74vtcqinksehpq4@zae42zpzd3d3>
+References: <00000000000090ebe40618212a25@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|SN7PR12MB8102:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f9df21d-6f2f-4ea6-1ed4-08dc7ab6e70b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?l/H/cDh0m/Acva96a8e6mMogpOdxkJcOm0q197qu7mg8AWHSHZ8LNZlpYozD?=
- =?us-ascii?Q?PPOD027zz2Kyh2qsFUq9YLN7uKJERr7klJQRo1/FRt+JgooYXflqc4HBObUv?=
- =?us-ascii?Q?K50l943kOWf+XBgkPlHkxz7Vm5+G5PfXOtUsp1t7181lP6TyfVbQITr3pTF6?=
- =?us-ascii?Q?EwYXZ+YzVwLhPV8P8XqSiIfrcpLTh4x8B52fO6nfu9AOZSc63Z4/b8i8r6QT?=
- =?us-ascii?Q?5EQqoMEo3vbgtNmDqA9mCi6dW/1BV3ZCArPK+hGPqR6v2WTQYhzFZmAQOEQP?=
- =?us-ascii?Q?DnSoVL37qZkKOj3t/9nuWQtaX04REkV/cpVhy22FX3Fik/2yLUdpjmSsuvnz?=
- =?us-ascii?Q?DDVfdQs4KL6FGorzQcXq01rV3n948/7EiFlXnlZ8q/I/dAHqfmBjjLc2hWXQ?=
- =?us-ascii?Q?Z6ggRBZbrvwfoyH6pkdOM11RpCatQ5rHrR8YNY5cYnf4Zulcvtpm1H6Uvjuq?=
- =?us-ascii?Q?kztfGKmCs+Q4cglrwnopz/grI72eivh7J9PjZYVR9xIf2Zqd0IyZEeTXQr2/?=
- =?us-ascii?Q?QzRkUrcJENo2xW/Q+gvFJXcxhfsFGbw0RFaNfWR6+fgtpg8GN7C8OVxOxZuO?=
- =?us-ascii?Q?mj59svNWy1Yonx8XV9wUVzRWLbAAUQS2APB+yG96n+abWQBOWGDVbKh8griu?=
- =?us-ascii?Q?965rIVO4n2H7QHxYu0PpPtBsW3moiNCrcqWJ/fQu3+a4lam4+gL64SfRyT2J?=
- =?us-ascii?Q?rhpfsb9MPN+iwZVz+Bj49kqDiTwlIaZoU8zTLjDbhth7reNIGkr+Y9JYbZmy?=
- =?us-ascii?Q?zlH4CYJg0K1to8UNF7nN8KtJhsdx+uXWTzNI2j3Q/ZNI0jLM4tRoOCl5MI7c?=
- =?us-ascii?Q?3nRsLGi03HLS49Y/UmzmXzC85tudWnjSE74qhQEZIJfxvOHjTZGWZ9G06237?=
- =?us-ascii?Q?E9HXukRSjtfhszLxHMNUEw+PBURRCOBEzRTZb+onCxTQ/QGJbu/PxvbiBsfV?=
- =?us-ascii?Q?ZXfq998Sal/bgQJZqXRht884+KXxdt1XSG7WlY/C9Ipc3+sMEzJmMS6lu1Cl?=
- =?us-ascii?Q?/3gneg8/sNvrgPO5JcL0jJNjNn27oa3IlUkpGE6qHMMhnl7AIIk9QJJKoCXX?=
- =?us-ascii?Q?7O+7f5LCpNDhKnbRz0YliGZ49lLpG/NLoSRpmEoC9/wmw33OwtbR5YXbKStK?=
- =?us-ascii?Q?oS8GYmPA2pkLOdizJuSv+UM7YMaLVY/JNb03/azwZGh7fjw4vRvILvRurM+N?=
- =?us-ascii?Q?oGj5B6+zoDJP64er90FfZHnQD5fDdOBhoI93GtZXFkly92+MBg6Jlg9fmKzH?=
- =?us-ascii?Q?D5ujopOeO7zvrmJ24CQDPJCDh1ZALudJ9cFV5LplVg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?a6vw5+LWVbxnYmTqGVRmUC+KIMv4XKVSXTmMMjYJl4wzZXMZUB0ZNRMyK+ax?=
- =?us-ascii?Q?L9X4ZOIa9v7CdHN/YVEH7sPoNlFl1EOJl1nQoJXPaC+dHUZaW89HujA41PSD?=
- =?us-ascii?Q?J1wAfq5gs8bA5XwqgcSOPE7H2A+J00mwkdIesaGQnB2cA79VdllflsQ0U/5b?=
- =?us-ascii?Q?kfmbkIJqbOXbzmW0ASZ30UScmDFoYNgh6AxFSjq81Yt8MlV8XRmq+XLosk2j?=
- =?us-ascii?Q?rXdiHScbqinUkEbBRz8H+qH4++pP1xomZeAAjC5nUndEmUldYRSSMAH1U3KC?=
- =?us-ascii?Q?u+U3/r0v4uTCuKUEhvIxQ1SWopfXnd9fV5T2MNv8E1tKhTayZ07UdgWYML5W?=
- =?us-ascii?Q?CG94lRXEhXSh9wokA0nZOXJ7tVhCzS+3GUAEnbDB3ijLGtwKEoyEepdoR9Gl?=
- =?us-ascii?Q?gXORE77y7TuZzNgI8ZwX2rPAibz/QS22dbH0t+Ac5eqOBggYXmH2bkuq3Wu5?=
- =?us-ascii?Q?Cc+V8ZO14/RTCtGyrxVEMokR1sTvQYZCm7QdXWq5jHW4yyNNXyC3EnTkpBT+?=
- =?us-ascii?Q?KHJOdry38REwXlinhRuJ31ySog5q9TCJF6qSqKSuosJ4Ugh3AwBtcH0756mN?=
- =?us-ascii?Q?x6N8iy/qx6FiWwougKc4lalPce3reCSUHTN91XxObJGylNp8haVXWtd7VtWK?=
- =?us-ascii?Q?mYwa9weO7vzAGGcjbQ7OFPrzxZUjhU4seBBvN3Uy536ird/G5gSwUZtnZT9s?=
- =?us-ascii?Q?/DVi3PPpxaGB9xrFgYDQPIlDoMLqgh1qLifjRsQqpvA3HxI6HF8mHkieY5A7?=
- =?us-ascii?Q?tkefe9Arr1HgPuxT6dbdajvE23Jz69RBljAwpC8G40Hh9Y4tE8uIEIXzevxK?=
- =?us-ascii?Q?4PosBDe2v6Vi0aswkg7gsO9DNPJML9yGGiYfsmtvJS8ZLQ+0tv6H3hVjbg8s?=
- =?us-ascii?Q?8vBa/JbjEgMYz06EAyST3z7YgbjjuojE6eIA6nMy/nDD+uyQq5fsTpfr9+zp?=
- =?us-ascii?Q?L9gAD5jnOqVzwgLCD0+oSNIrL27MjIzMs8jPhsX516nIl4Y4bq16U9dibTzL?=
- =?us-ascii?Q?Sub1GCMLHhl5hsLDoqHpq0UsbscW2IP2h56Vn7q8abwv4TEQQbc0D1lVnMat?=
- =?us-ascii?Q?/jaaokFKzFbFuWBIltVKZQ9CiYj4GVx9JfrSBNepSZtKCvSy+6NzPdxJk71P?=
- =?us-ascii?Q?bvbu7w1puM48ReIJUldArN4hdmr4phfHkrsetkqXnWbxPn4Fj6xdM+PCsa/h?=
- =?us-ascii?Q?qH5Np1/NUmiPS9wLW7V+DerKpuDvmbeh9veiGdoCx9IMzNhCVixbbIr8o6V5?=
- =?us-ascii?Q?+OR4OKpVxlzNCGVYQX9bPplCSQQPeYe7C0JWhFy5lMb9vR8NRoxRP9OcPgvQ?=
- =?us-ascii?Q?mGoigBB6XTsmOxwDbGB17RWm3sxkJYeWpHbtZR0Et7nEwjwSH/xjBbYeEgHn?=
- =?us-ascii?Q?uNuTwov9ekhQbN5d6yLk+8aKFdV+cLoQYeITspoPnwqp82uTdD+4oUlKD9C0?=
- =?us-ascii?Q?g3pT32VohSiSHxN4ZAIQoE4rhV9WmlUDfWt9H7Gm6IG3Mj37QoTTgF7vdF5z?=
- =?us-ascii?Q?R+Y4ArAM9z19EDiUBOZ3OgbbJ9Mcuo9F2Rj7UA+dHilAMrTHE+8XXL4pQF8R?=
- =?us-ascii?Q?i3+Ztc+7rbQfqbox8XI=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f9df21d-6f2f-4ea6-1ed4-08dc7ab6e70b
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 23:28:36.0633
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 06s5UPDxkPAJ38p79YjtLL64IGdmpgedwzNIiCH1AmMU9+0iwNV/Gp6xBaKnb9eB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8102
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000090ebe40618212a25@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 22, 2024 at 12:47:19PM -0700, Nicolin Chen wrote:
-> On Wed, May 22, 2024 at 01:48:18PM -0300, Jason Gunthorpe wrote:
-> > On Wed, May 22, 2024 at 08:40:00AM +0000, Tian, Kevin wrote:
-> > > > From: Nicolin Chen <nicolinc@nvidia.com>
-> > > > Sent: Saturday, April 13, 2024 11:47 AM
-> > > > 
-> > > > This is an experimental RFC series for VIOMMU infrastructure, using NVIDIA
-> > > > Tegra241 (Grace) CMDQV as a test instance.
-> > > > 
-> > > > VIOMMU obj is used to represent a virtual interface (iommu) backed by an
-> > > > underlying IOMMU's HW-accelerated feature for virtualizaion: for example,
-> > > > NVIDIA's VINTF (v-interface for CMDQV) and AMD"s vIOMMU.
-> > > > 
-> > > > VQUEUE obj is used to represent a virtual command queue (buffer) backed
-> > > > by
-> > > > an underlying IOMMU command queue to passthrough for VMs to use
-> > > > directly:
-> > > > for example, NVIDIA's Virtual Command Queue and AMD's Command Buffer.
-> > > > 
-> > > 
-> > > is VCMDQ more accurate? AMD also supports fault queue passthrough
-> > > then VQUEUE sounds broader than a cmd queue...
-> > 
-> > Is there a reason VQUEUE couldn't handle the fault/etc queues too? The
-> > only difference is direction, there is still a doorbell/etc.
+Dmitry, I can't do anything with this one because you're using panic on
+warn; if it had finished printing the buffer I could see what went
+haywire.
+
+Any chance you could change syzbot to just check for warnings/oopses
+after the test finishes, like fstests does it?
+
+On Fri, May 10, 2024 at 03:36:27PM -0700, syzbot wrote:
+> Hello,
 > 
-> Yea, SMMU also has Event Queue and PRI queue. Though I haven't
-> got time to sit down to look at Baolu's work closely, the uAPI
-> seems to be a unified one for all IOMMUs. And though I have no
-> intention to be against that design, yet maybe there could be
-> an alternative in a somewhat HW specific language as we do for
-> invalidation? Or not worth it?
-
-I was thinking not worth it, I expect a gain here is to do as AMD has
-done and make the HW dma the queues directly to guest memory.
-
-IMHO the primary issue with the queues is DOS, as having any shared
-queue across VMs is dangerous in that way. Allowing each VIOMMU to
-have its own private queue and own flow control helps with that.
-
-Jason
+> syzbot found the following issue on:
+> 
+> HEAD commit:    75fa778d74b7 Add linux-next specific files for 20240510
+> git tree:       linux-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=13cb8b04980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ccdd3ebd6715749a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4e41a25632658c77b441
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f5ec3f180000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=126cdfc0980000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/ad9391835bcf/disk-75fa778d.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/d827b3da9a26/vmlinux-75fa778d.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/8f32f0182388/bzImage-75fa778d.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/244f301e9090/mount_0.gz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+4e41a25632658c77b441@syzkaller.appspotmail.com
+> 
+> loop0: detected capacity change from 0 to 32768
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 5100 at mm/page_alloc.c:4672 __alloc_pages_noprof+0x36a/0x6c0 mm/page_alloc.c:4672
+> Modules linked in:
+> CPU: 1 PID: 5100 Comm: syz-executor185 Not tainted 6.9.0-rc7-next-20240510-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+> RIP: 0010:__alloc_pages_noprof+0x36a/0x6c0 mm/page_alloc.c:4672
+> Code: a9 00 00 08 00 0f 85 12 01 00 00 44 89 e9 81 e1 7f ff ff ff a9 00 00 04 00 44 0f 45 e9 e9 02 01 00 00 c6 05 c3 c3 a8 0d 01 90 <0f> 0b 90 83 fb 0a 0f 86 6c fd ff ff 45 31 ed 48 c7 44 24 20 0e 36
+> RSP: 0018:ffffc90002dd6940 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: 000000000000000b RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90002dd69c8
+> RBP: ffffc90002dd6a48 R08: ffffc90002dd69c7 R09: 0000000000000000
+> R10: ffffc90002dd69a0 R11: fffff520005bad39 R12: 1ffff920005bad30
+> R13: 0000000000040cc0 R14: dffffc0000000000 R15: 1ffff920005bad2c
+> FS:  0000555573a66380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055f740571f40 CR3: 0000000022430000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
+>  alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
+>  __kmalloc_large_node+0x91/0x1f0 mm/slub.c:4066
+>  __do_kmalloc_node mm/slub.c:4109 [inline]
+>  kmalloc_node_track_caller_noprof+0x2d2/0x450 mm/slub.c:4141
+>  __do_krealloc mm/slab_common.c:1183 [inline]
+>  krealloc_noprof+0x7d/0x120 mm/slab_common.c:1216
+>  bch2_printbuf_make_room fs/bcachefs/printbuf.c:52 [inline]
+>  bch2_prt_printf+0x41e/0xa10 fs/bcachefs/printbuf.c:179
+>  bch2_bkey_to_text+0x124/0x330 fs/bcachefs/bkey_methods.c:288
+>  bch2_bkey_val_to_text+0x35/0x160 fs/bcachefs/bkey_methods.c:312
+>  journal_entry_btree_keys_to_text+0x1d7/0x390 fs/bcachefs/journal_io.c:437
+>  bch2_sb_clean_to_text+0x138/0x240 fs/bcachefs/sb-clean.c:313
+>  bch2_sb_field_validate+0x201/0x2e0 fs/bcachefs/super-io.c:1234
+>  bch2_sb_validate+0xa69/0xe00 fs/bcachefs/super-io.c:468
+>  __bch2_read_super+0xc9a/0x1460 fs/bcachefs/super-io.c:822
+>  bch2_fs_open+0x246/0xdf0 fs/bcachefs/super.c:2070
+>  bch2_mount+0x71d/0x1320 fs/bcachefs/fs.c:1917
+>  legacy_get_tree+0xee/0x190 fs/fs_context.c:662
+>  vfs_get_tree+0x90/0x2a0 fs/super.c:1780
+>  do_new_mount+0x2be/0xb40 fs/namespace.c:3352
+>  do_mount fs/namespace.c:3692 [inline]
+>  __do_sys_mount fs/namespace.c:3898 [inline]
+>  __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7fce02323b3a
+> Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007fffc866b068 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+> RAX: ffffffffffffffda RBX: 00007fffc866b080 RCX: 00007fce02323b3a
+> RDX: 0000000020000000 RSI: 0000000020011a40 RDI: 00007fffc866b080
+> RBP: 0000000000000004 R08: 00007fffc866b0c0 R09: 00000000000119f4
+> R10: 0000000001200014 R11: 0000000000000282 R12: 0000000001200014
+> R13: 00007fffc866b0c0 R14: 0000000000000003 R15: 0000000001000000
+>  </TASK>
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
