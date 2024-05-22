@@ -1,120 +1,70 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3989C59164;
-	Wed, 22 May 2024 03:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693917483;
+	Wed, 22 May 2024 03:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716348787; cv=none; b=oA6FFUjRkiURa2BEtkKnpZ94/S+oHr8gJJnsBcEran90+F/QoaSGg2WXlxzPQxyZGSOHM/CPqBxCXKia6b3ncjnSeRd1/1A+UJm1eh/vL9KWwb4uOt35qPyZY05Y0s7hvn8XuHYwgDfMAq3c4/VWESp27LcLDgVJYjrrwPbVhVE=
+	t=1716348805; cv=none; b=XhoEh1mSLmFmMdd6p2bB0t+Bap1hDe6apDbb0Lr059sQcFvXOw466LlCBHW1BJXE3Us+q1kp4cRCYrBZNVHWyURG7DPt/QC73hxnPQgKmGlNNhuT6FxIe3N1vVq9FAqvz6OCwG2ncv1jrMofE5yhj2l4u4sVzu+Syc3xmJ0SYyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716348787; c=relaxed/simple;
-	bh=iuuZJXrFrNKqeeoRTHs82WCLhFbK1VJJiwtPlqfft7U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p9I9c3Q2g//Zgstf5J7/g7Ip8XKiitngMGKSL90GS9OM/M8uLaqRV8TDBhokCqMqaXBDIs3W+zltP/PAu7CaEzUv7cMaJnZ6Kv5nZ7595PDc1pk8g1HfJInkRX8H3/TAjl147ecx5DMRtN9eohb9ucc33+JbX7TVjH4r93Ccso8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=C6ufm12+; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C6ufm12+"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44LJi8lG025719;
-	Wed, 22 May 2024 03:33:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-11-20;
- bh=WXPQXG3ga8mm2ljb+JMmK7k5okNCYKOKStlDO844RHc=;
- b=C6ufm12+pROTeAsLmzp35q1lVe26N9VgV48KjcCSBLBfOymqIPnKDIeZER/kColLbyD4
- bKR0qiGPZVJigjmCwD0kSdPAM8ZWaObvDseVp9/ub3hUZqrBNYEUP3OSvB20+UFCfgGZ
- 4oCGPWy1/l4aS4lP2n2dqojeWJEZz/IKApYx6EfW9JdAOwLrvEsEGe1tdgO9sOS2vElY
- 8xDMx02J8XhuMGmCf4An0moFRb/mBnuucc23z2L3Eu2KYYvqXoO+vgKMrsGTaoyQCqqJ
- /wTw91sfHL2fn+R6dThdNl0dyf4BxroLQNAqlYFEfWLrw9Gw+aja5aW3aH4Zd1NjwUwB Xg== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y6k466sgt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 May 2024 03:33:03 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44M1mWu3038361;
-	Wed, 22 May 2024 03:33:03 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y6jsem89u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 May 2024 03:33:03 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44M3Txaj038463;
-	Wed, 22 May 2024 03:33:02 GMT
-Received: from aakhoje-ol.in.oracle.com (dhcp-10-76-55-136.vpn.oracle.com [10.76.55.136])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3y6jsem88e-2;
-	Wed, 22 May 2024 03:33:02 +0000
-From: Anand Khoje <anand.a.khoje@oracle.com>
-To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: anand.a.khoje@oracle.com, rama.nichanamatlu@oracle.com,
-        manjunath.b.patil@oracle.com
-Subject: [PATCH 1/1] RDMA/mlx5: Release CPU for other processes in mlx5_free_cmd_msg()
-Date: Wed, 22 May 2024 09:02:56 +0530
-Message-Id: <20240522033256.11960-2-anand.a.khoje@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240522033256.11960-1-anand.a.khoje@oracle.com>
-References: <20240522033256.11960-1-anand.a.khoje@oracle.com>
+	s=arc-20240116; t=1716348805; c=relaxed/simple;
+	bh=qDJ3Rq11DxABpJzaKs8tcvplDGGzzrro/h06hy+ZUcM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Svn4yr4mqWwt1fXPm67yh5Lm+gS7Q41+PD6jW5/BEH2+gNYGJ1GkkUGsWxAezu/6sgz8MT0EA60WEi39izYf1YRpSKd2GSbag2vQbVTv9M4UWTq0bKnFH799fOUuvXRvr0rZnQTsNlaex92R4wrrc0jCnA2orQaGBPgB7JjwCDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1s9ciD-000mdM-0o;
+	Wed, 22 May 2024 11:32:22 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 22 May 2024 11:32:22 +0800
+Date: Wed, 22 May 2024 11:32:22 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Tony Luck <tony.luck@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Mateusz Guzik <mjguzik@gmail.com>,
+	Thomas Renninger <trenn@suse.de>, Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v6 01/49] crypto: x86/aes-xts - Switch to new Intel CPU
+ model defines
+Message-ID: <Zk1nRlPLeqeNn6X5@gondor.apana.org.au>
+References: <20240520224620.9480-1-tony.luck@intel.com>
+ <20240520224620.9480-2-tony.luck@intel.com>
+ <20240521172202.GFZkzYOh0pET7B1SFW@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-22_01,2024-05-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 bulkscore=0 spamscore=0 malwarescore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405220024
-X-Proofpoint-ORIG-GUID: PMZWDmO3h572zzxDYir1mFSCitkE0IfX
-X-Proofpoint-GUID: PMZWDmO3h572zzxDYir1mFSCitkE0IfX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240521172202.GFZkzYOh0pET7B1SFW@fat_crate.local>
 
-In non FLR context, at times CX-5 requests release of ~8 million device pages.
-This needs humongous number of cmd mailboxes, which to be released once
-the pages are reclaimed. Release of humongous number of cmd mailboxes
-consuming cpu time running into many secs, with non preemptable kernels
-is leading to critical process starving on that cpu’s RQ. To alleviate
-this, this patch relinquishes cpu periodically but conditionally.
+On Tue, May 21, 2024 at 07:22:02PM +0200, Borislav Petkov wrote:
+> + Herbert as an FYI that I'll pick up this one and the next for 6.10 as
+> it is a fix for a regression that got discovered.
 
-Orabug: 36275016
+Thanks.
 
-Signed-off-by: Anand Khoje <anand.a.khoje@oracle.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> On Mon, May 20, 2024 at 03:45:32PM -0700, Tony Luck wrote:
+> > New CPU #defines encode vendor and family as well as model.
+> > 
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >  arch/x86/crypto/aesni-intel_glue.c | 16 ++++++++--------
+> >  1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-index 9c21bce..9fbf25d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -1336,16 +1336,23 @@ static struct mlx5_cmd_msg *mlx5_alloc_cmd_msg(struct mlx5_core_dev *dev,
- 	return ERR_PTR(err);
- }
- 
-+#define RESCHED_MSEC 2
- static void mlx5_free_cmd_msg(struct mlx5_core_dev *dev,
- 			      struct mlx5_cmd_msg *msg)
- {
- 	struct mlx5_cmd_mailbox *head = msg->next;
- 	struct mlx5_cmd_mailbox *next;
-+	unsigned long start_time = jiffies;
- 
- 	while (head) {
- 		next = head->next;
- 		free_cmd_box(dev, head);
- 		head = next;
-+		if (time_after(jiffies, start_time + msecs_to_jiffies(RESCHED_MSEC))) {
-+			mlx5_core_warn_rl(dev, "Spent more than %d msecs, yielding CPU\n", RESCHED_MSEC);
-+			cond_resched();
-+			start_time = jiffies;
-+		}
- 	}
- 	kfree(msg);
- }
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 -- 
-1.8.3.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
