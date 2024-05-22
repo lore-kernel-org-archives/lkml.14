@@ -1,309 +1,320 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C01F12DDBF;
-	Wed, 22 May 2024 11:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDC912DDBF
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716378111; cv=none; b=SEkxLtbvyjiWhTCx4CPZ7k84HRxdSEmfjg10H+9rKC6DJV6krDbDGEij6p/jdbVP+/4BIDgkA4F1Q1AUDDt1nbWzNtC0guvnUwJc6wO6pyDgEtxyV2OnIzYUFKwt/aNRt8YvmWvjDtXyb2TAig7JIRs6rbz5ctZQbUPwzqtBKtE=
+	t=1716378195; cv=none; b=lRsafQMPhZyNA7gc56Yr5rLPSDOcmc2a7iBNJH9gS3JsVPz8AQ2j0uwX9IgO0sQliRtUWci/A5ww/OBpCNEkX4QWyDD8lsJgkl3iOqPRTv4/BXP/KOzxJLKLQW5bs5SF5Yt1i0TpvKgTquEATD3XKau8coU5omSnwNNlNx4LTlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716378111; c=relaxed/simple;
-	bh=6kOScnqq1f3Lup96PmP+FiM2VqT68vsjDqx1Kl8E/3Y=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To:
-	 Content-Type; b=uXmwp4ngkFNtsa0qHqXnGTH3nsoBYgkPvrjlg1+iZtyooX7pOBV+LhoTDC1e1QwcRzxZzFnBXKqIpjfAhO97ylN4f94L+z3LB25VVfzu6gh8K36DEgEpcvWdYLqQKfcLbsKeuL2dB6pM2HIELUuLbyJFvc+v75XldQ0zYhdV+XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WCDiwaJp; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1716378195; c=relaxed/simple;
+	bh=m06XhZprW9svXJ9Gx6BgklYLMT59WlO68E3+jw99O3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwyGTl2YKoRSIBK1GwRk1Ey5Olhsz/ZLssxql8xC9QVxNuOkbZ30zsFJhcMsnGzWQd8OrZQJ2jGy7RdxPK8Eeu1aLl3DJ9wNziYETejR9hVCugwIw0ag5qP38gjGRxynWW9F0Rp/7XqpsiAVrluiPwNe2yThZ5PyZieifq7RKv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xb7q+M//; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WCDiwaJp"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716378104; h=Message-ID:Subject:Date:From:To:Content-Type;
-	bh=G7AvbOTwQvGlz5AgqSfZcaQhKwQJQMPhSdT/huU+DmE=;
-	b=WCDiwaJpGnhtWV4/CeEpd0yEAMbxXitpXiOSZb3EnCquOKfxchdECp8R07hVxtPbgu07GwoSOURjWt2QRBQho/IzvAEOQBeFiTPbhRBpXEh4ksSdukcsQ9YijXE58ldUxe6uMyRF6DshQ4Zo7zivkkwiHuVgIwQHWRO0F42U65c=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=32;SR=0;TI=SMTPD_---0W7.TVQP_1716378101;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W7.TVQP_1716378101)
-          by smtp.aliyun-inc.com;
-          Wed, 22 May 2024 19:41:42 +0800
-Message-ID: <1716377965.6866436-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [GIT PULL] virtio: features, fixes, cleanups
-Date: Wed, 22 May 2024 19:39:25 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: kvm@vger.kernel.org,
- virtualization@lists.linux-foundation.org,
- netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- anton.yakovlev@opensynergy.com,
- bartosz.golaszewski@linaro.org,
- christophe.jaillet@wanadoo.fr,
- dave.jiang@intel.com,
- david@redhat.com,
- eperezma@redhat.com,
- herbert@gondor.apana.org.au,
- jasowang@redhat.com,
- jiri@nvidia.com,
- jiri@resnulli.us,
- johannes@sipsolutions.net,
- krzysztof.kozlowski@linaro.org,
- lingshan.zhu@intel.com,
- linus.walleij@linaro.org,
- lizhijian@fujitsu.com,
- martin.petersen@oracle.com,
- maxime.coquelin@redhat.com,
- michael.christie@oracle.com,
- sgarzare@redhat.com,
- stevensd@chromium.org,
- sudeep.holla@arm.com,
- syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com,
- u.kleine-koenig@pengutronix.de,
- viresh.kumar@linaro.org,
- yuxue.liu@jaguarmicro.com,
- Srujana Challa <schalla@marvell.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,Jason Wang <jasowang@redhat.com>
-References: <20240522060301-mutt-send-email-mst@kernel.org>
- <1716373365.1499481-1-xuanzhuo@linux.alibaba.com>
- <20240522073727-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240522073727-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xb7q+M//"
+X-Envelope-To: vbabka@suse.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716378190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XxS87BGxX1olD+7CSOfjFsEFgitx6Qy9iXmHFao31+4=;
+	b=xb7q+M//MYQx0auGzyEOp4hI02NeK7/Qz4bjmTyklWHGQ2ikFLQ8gIBDqv/vX+Qi0yhxau
+	ujx6kCUAurrCfVxq/eqPkeJsOXWNrMVs7oKlqGSMso5V+RglUVxbAerbPyJ2JBrHSRDPzn
+	JTT/nNWrKC5o3JEJiHDpiEAJ0EF1vSA=
+X-Envelope-To: cl@linux.com
+X-Envelope-To: rientjes@google.com
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: roman.gushchin@linux.dev
+X-Envelope-To: 42.hyeyoo@gmail.com
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: surenb@google.com
+X-Envelope-To: keescook@chromium.org
+Date: Wed, 22 May 2024 07:43:07 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Suren Baghdasaryan <surenb@google.com>, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] mm, slab: don't wrap internal functions with
+ alloc_hooks()
+Message-ID: <pspuuwcloal4tzpfqkkofjhl3wzbuymurnwxlhsen3xfvtdjw5@lahobrxhbb7h>
+References: <20240522095037.13958-1-vbabka@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522095037.13958-1-vbabka@suse.cz>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 22 May 2024 07:38:01 -0400, "Michael S. Tsirkin" <mst@redhat.com> w=
-rote:
-> On Wed, May 22, 2024 at 06:22:45PM +0800, Xuan Zhuo wrote:
-> > On Wed, 22 May 2024 06:03:01 -0400, "Michael S. Tsirkin" <mst@redhat.co=
-m> wrote:
-> > > Things to note here:
-> > >
-> > > - the new Marvell OCTEON DPU driver is not here: latest v4 keeps caus=
-ing
-> > >   build failures on mips. I deferred the pull hoping to get it in
-> > >   and I might merge a new version post rc1
-> > >   (supposed to be ok for new drivers as they can't cause regressions),
-> > >   but we'll see.
-> > > - there are also a couple bugfixes under review, to be merged after r=
-c1
-> > > - I merged a trivial patch (removing a comment) that also got
-> > >   merged through net.
-> > >   git handles this just fine and it did not seem worth it
-> > >   rebasing to drop it.
-> > > - there is a trivial conflict in the header file. Shouldn't be any
-> > >   trouble to resolve, but fyi the resolution by Stephen is here
-> > > 	diff --cc drivers/virtio/virtio_mem.c
-> > > 	index e8355f55a8f7,6d4dfbc53a66..000000000000
-> > > 	--- a/drivers/virtio/virtio_mem.c
-> > > 	+++ b/drivers/virtio/virtio_mem.c
-> > > 	@@@ -21,7 -21,7 +21,8 @@@
-> > > 	  #include <linux/bitmap.h>
-> > > 	  #include <linux/lockdep.h>
-> > > 	  #include <linux/log2.h>
-> > > 	 +#include <linux/vmalloc.h>
-> > > 	+ #include <linux/suspend.h>
-> > >   Also see it here:
-> > >   https://lore.kernel.org/all/20240423145947.142171f6@canb.auug.org.a=
-u/
-> > >
-> > >
-> > >
-> > > The following changes since commit 18daea77cca626f590fb140fc11e3a43c5=
-d41354:
-> > >
-> > >   Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm =
-(2024-04-30 12:40:41 -0700)
-> > >
-> > > are available in the Git repository at:
-> > >
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/=
-for_linus
-> > >
-> > > for you to fetch changes up to 0b8dbbdcf2e42273fbac9b752919e2e5b2abac=
-21:
-> > >
-> > >   Merge tag 'for_linus' into vhost (2024-05-12 08:15:28 -0400)
-> > >
-> > > ----------------------------------------------------------------
-> > > virtio: features, fixes, cleanups
-> > >
-> > > Several new features here:
-> > >
-> > > - virtio-net is finally supported in vduse.
-> > >
-> > > - Virtio (balloon and mem) interaction with suspend is improved
-> > >
-> > > - vhost-scsi now handles signals better/faster.
-> > >
-> > > - virtio-net now supports premapped mode by default,
-> > >   opening the door for all kind of zero copy tricks.
-> > >
-> > > Fixes, cleanups all over the place.
-> > >
-> > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > >
-> > > ----------------------------------------------------------------
-> > > Christophe JAILLET (1):
-> > >       vhost-vdpa: Remove usage of the deprecated ida_simple_xx() API
-> > >
-> > > David Hildenbrand (1):
-> > >       virtio-mem: support suspend+resume
-> > >
-> > > David Stevens (2):
-> > >       virtio_balloon: Give the balloon its own wakeup source
-> > >       virtio_balloon: Treat stats requests as wakeup events
-> > >
-> > > Eugenio P=E9=96=9Eez (2):
-> > >       MAINTAINERS: add Eugenio P=E9=96=9Eez as reviewer
-> > >       MAINTAINERS: add Eugenio P=E9=96=9Eez as reviewer
-> > >
-> > > Jiri Pirko (1):
-> > >       virtio: delete vq in vp_find_vqs_msix() when request_irq() fails
-> > >
-> > > Krzysztof Kozlowski (24):
-> > >       virtio: balloon: drop owner assignment
-> > >       virtio: input: drop owner assignment
-> > >       virtio: mem: drop owner assignment
-> > >       um: virt-pci: drop owner assignment
-> > >       virtio_blk: drop owner assignment
-> > >       bluetooth: virtio: drop owner assignment
-> > >       hwrng: virtio: drop owner assignment
-> > >       virtio_console: drop owner assignment
-> > >       crypto: virtio - drop owner assignment
-> > >       firmware: arm_scmi: virtio: drop owner assignment
-> > >       gpio: virtio: drop owner assignment
-> > >       drm/virtio: drop owner assignment
-> > >       iommu: virtio: drop owner assignment
-> > >       misc: nsm: drop owner assignment
-> > >       net: caif: virtio: drop owner assignment
-> > >       net: virtio: drop owner assignment
-> > >       net: 9p: virtio: drop owner assignment
-> > >       vsock/virtio: drop owner assignment
-> > >       wifi: mac80211_hwsim: drop owner assignment
-> > >       nvdimm: virtio_pmem: drop owner assignment
-> > >       rpmsg: virtio: drop owner assignment
-> > >       scsi: virtio: drop owner assignment
-> > >       fuse: virtio: drop owner assignment
-> > >       sound: virtio: drop owner assignment
-> > >
-> > > Li Zhijian (1):
-> > >       vdpa: Convert sprintf/snprintf to sysfs_emit
-> > >
-> > > Maxime Coquelin (6):
-> > >       vduse: validate block features only with block devices
-> > >       vduse: Temporarily fail if control queue feature requested
-> > >       vduse: enable Virtio-net device type
-> > >       vduse: validate block features only with block devices
-> > >       vduse: Temporarily fail if control queue feature requested
-> > >       vduse: enable Virtio-net device type
-> > >
-> > > Michael S. Tsirkin (2):
-> > >       Merge tag 'stable/vduse-virtio-net' into vhost
-> > >       Merge tag 'for_linus' into vhost
-> > >
-> > > Mike Christie (9):
-> > >       vhost-scsi: Handle vhost_vq_work_queue failures for events
-> > >       vhost-scsi: Handle vhost_vq_work_queue failures for cmds
-> > >       vhost-scsi: Use system wq to flush dev for TMFs
-> > >       vhost: Remove vhost_vq_flush
-> > >       vhost_scsi: Handle vhost_vq_work_queue failures for TMFs
-> > >       vhost: Use virtqueue mutex for swapping worker
-> > >       vhost: Release worker mutex during flushes
-> > >       vhost_task: Handle SIGKILL by flushing work and exiting
-> > >       kernel: Remove signal hacks for vhost_tasks
-> > >
-> > > Uwe Kleine-K=E9=B0=8Aig (1):
-> > >       virtio-mmio: Convert to platform remove callback returning void
-> > >
-> > > Xuan Zhuo (7):
-> > >       virtio_ring: introduce dma map api for page
-> > >       virtio_ring: enable premapped mode whatever use_dma_api
-> > >       virtio_net: replace private by pp struct inside page
-> > >       virtio_net: big mode support premapped
-> > >       virtio_net: enable premapped by default
-> > >       virtio_net: rx remove premapped failover code
-> > >       virtio_net: remove the misleading comment
-> >
-> > Hi Michael,
-> >
-> > As we discussed here:
-> >
-> > 	http://lore.kernel.org/all/CACGkMEuyeJ9mMgYnnB42=3Dhw6umNuo=3Dagn7VBqB=
-qYPd7GN=3D+39Q@mail.gmail.com
-> >
-> > This patch set has been abandoned.
->
-> You mean I should drop it? OK.
+On Wed, May 22, 2024 at 11:50:37AM +0200, Vlastimil Babka wrote:
+> The functions __kmalloc_noprof(), kmalloc_large_noprof(),
+> kmalloc_trace_noprof() and their _node variants are all internal to the
+> implementations of kmalloc_noprof() and kmalloc_node_noprof() and are
+> only declared in the "public" slab.h and exported so that those
+> implementations can be static inline and distinguish the build-time
+> constant size variants. The only other users for some of the internal
+> functions are slub_kunit and fortify_kunit tests which make very
+> short-lived allocations.
+> 
+> Therefore we can stop wrapping them with the alloc_hooks() macro and
+> drop the _noprof suffix. Instead add a __prefix where missing and a
+> comment documenting these are internal. Also rename __kmalloc_trace() to
+> __kmalloc_cache() which is more descriptive - it is a variant of
+> __kmalloc() where the exact kmalloc cache has been already determined.
 
-YES. As I discussed with Jason.
+I agree with dropping the alloc_hooks() wrappers - but can we keep them
+with the _noprof() suffix? I find it makes the code easier to read,
+since there are internal slab allocations which we _do_ want accounted
+locally and thus call non _noprof() functions.
 
->
-> > And you miss
-> >
-> > 	https://lore.kernel.org/all/20240424091533.86949-1-xuanzhuo@linux.alib=
-aba.com/
-
-And this.
-
-Thanks.
-
-
-> >
-> > Thanks.
-> >
-> > >
-> > > Yuxue Liu (2):
-> > >       vp_vdpa: Fix return value check vp_vdpa_request_irq
-> > >       vp_vdpa: don't allocate unused msix vectors
-> > >
-> > > Zhu Lingshan (1):
-> > >       MAINTAINERS: apply maintainer role of Intel vDPA driver
-> > >
-> > >  MAINTAINERS                                   |  10 +-
-> > >  arch/um/drivers/virt-pci.c                    |   1 -
-> > >  drivers/block/virtio_blk.c                    |   1 -
-> > >  drivers/bluetooth/virtio_bt.c                 |   1 -
-> > >  drivers/char/hw_random/virtio-rng.c           |   1 -
-> > >  drivers/char/virtio_console.c                 |   2 -
-> > >  drivers/crypto/virtio/virtio_crypto_core.c    |   1 -
-> > >  drivers/firmware/arm_scmi/virtio.c            |   1 -
-> > >  drivers/gpio/gpio-virtio.c                    |   1 -
-> > >  drivers/gpu/drm/virtio/virtgpu_drv.c          |   1 -
-> > >  drivers/iommu/virtio-iommu.c                  |   1 -
-> > >  drivers/misc/nsm.c                            |   1 -
-> > >  drivers/net/caif/caif_virtio.c                |   1 -
-> > >  drivers/net/virtio_net.c                      | 248 ++++++++++++++++=
-+---------
-> > >  drivers/net/wireless/virtual/mac80211_hwsim.c |   1 -
-> > >  drivers/nvdimm/virtio_pmem.c                  |   1 -
-> > >  drivers/rpmsg/virtio_rpmsg_bus.c              |   1 -
-> > >  drivers/scsi/virtio_scsi.c                    |   1 -
-> > >  drivers/vdpa/vdpa.c                           |   2 +-
-> > >  drivers/vdpa/vdpa_user/vduse_dev.c            |  24 ++-
-> > >  drivers/vdpa/virtio_pci/vp_vdpa.c             |  27 ++-
-> > >  drivers/vhost/scsi.c                          |  70 +++++---
-> > >  drivers/vhost/vdpa.c                          |   6 +-
-> > >  drivers/vhost/vhost.c                         | 130 ++++++++++----
-> > >  drivers/vhost/vhost.h                         |   3 +-
-> > >  drivers/virtio/virtio_balloon.c               |  85 +++++----
-> > >  drivers/virtio/virtio_input.c                 |   1 -
-> > >  drivers/virtio/virtio_mem.c                   |  69 ++++++-
-> > >  drivers/virtio/virtio_mmio.c                  |   6 +-
-> > >  drivers/virtio/virtio_pci_common.c            |   4 +-
-> > >  drivers/virtio/virtio_ring.c                  |  59 +++++-
-> > >  fs/coredump.c                                 |   4 +-
-> > >  fs/fuse/virtio_fs.c                           |   1 -
-> > >  include/linux/sched/vhost_task.h              |   3 +-
-> > >  include/linux/virtio.h                        |   7 +
-> > >  include/uapi/linux/virtio_mem.h               |   2 +
-> > >  kernel/exit.c                                 |   5 +-
-> > >  kernel/signal.c                               |   4 +-
-> > >  kernel/vhost_task.c                           |  53 ++++--
-> > >  net/9p/trans_virtio.c                         |   1 -
-> > >  net/vmw_vsock/virtio_transport.c              |   1 -
-> > >  sound/virtio/virtio_card.c                    |   1 -
-> > >  42 files changed, 578 insertions(+), 265 deletions(-)
-> > >
->
+> 
+> Reported-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+> The intention is to use the slab tree after rc1 if no big conflicts with
+> mm.
+> 
+>  include/linux/slab.h | 53 ++++++++++++++++++++++----------------------
+>  lib/slub_kunit.c     |  2 +-
+>  mm/slub.c            | 32 +++++++++++++-------------
+>  3 files changed, 43 insertions(+), 44 deletions(-)
+> 
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 7247e217e21b..5ce84ffd0423 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -528,9 +528,6 @@ static_assert(PAGE_SHIFT <= 20);
+>  
+>  #include <linux/alloc_tag.h>
+>  
+> -void *__kmalloc_noprof(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
+> -#define __kmalloc(...)				alloc_hooks(__kmalloc_noprof(__VA_ARGS__))
+> -
+>  /**
+>   * kmem_cache_alloc - Allocate an object
+>   * @cachep: The cache to allocate from.
+> @@ -568,31 +565,33 @@ static __always_inline void kfree_bulk(size_t size, void **p)
+>  	kmem_cache_free_bulk(NULL, size, p);
+>  }
+>  
+> -void *__kmalloc_node_noprof(size_t size, gfp_t flags, int node) __assume_kmalloc_alignment
+> -							 __alloc_size(1);
+> -#define __kmalloc_node(...)			alloc_hooks(__kmalloc_node_noprof(__VA_ARGS__))
+> -
+>  void *kmem_cache_alloc_node_noprof(struct kmem_cache *s, gfp_t flags,
+>  				   int node) __assume_slab_alignment __malloc;
+>  #define kmem_cache_alloc_node(...)	alloc_hooks(kmem_cache_alloc_node_noprof(__VA_ARGS__))
+>  
+> -void *kmalloc_trace_noprof(struct kmem_cache *s, gfp_t flags, size_t size)
+> -		    __assume_kmalloc_alignment __alloc_size(3);
+> +/*
+> + * The following functions are not to be used directly and are intended only for
+> + * internal use from kmalloc() and kmalloc_node(), with the exception of kunit
+> + * tests.
+> + */
+> +void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment
+> +					  __alloc_size(1);
+> +
+> +void *__kmalloc_node(size_t size, gfp_t flags, int node)
+> +			__assume_kmalloc_alignment __alloc_size(1);
+>  
+> -void *kmalloc_node_trace_noprof(struct kmem_cache *s, gfp_t gfpflags,
+> -		int node, size_t size) __assume_kmalloc_alignment
+> -						__alloc_size(4);
+> -#define kmalloc_trace(...)			alloc_hooks(kmalloc_trace_noprof(__VA_ARGS__))
+> +void *__kmalloc_cache(struct kmem_cache *s, gfp_t flags, size_t size)
+> +			__assume_kmalloc_alignment __alloc_size(3);
+>  
+> -#define kmalloc_node_trace(...)			alloc_hooks(kmalloc_node_trace_noprof(__VA_ARGS__))
+> +void *__kmalloc_cache_node(struct kmem_cache *s, gfp_t gfpflags, int node,
+> +			   size_t size)	__assume_kmalloc_alignment
+> +				__alloc_size(4);
+>  
+> -void *kmalloc_large_noprof(size_t size, gfp_t flags) __assume_page_alignment
+> -					      __alloc_size(1);
+> -#define kmalloc_large(...)			alloc_hooks(kmalloc_large_noprof(__VA_ARGS__))
+> +void *__kmalloc_large(size_t size, gfp_t flags)	__assume_page_alignment
+> +			__alloc_size(1);
+>  
+> -void *kmalloc_large_node_noprof(size_t size, gfp_t flags, int node) __assume_page_alignment
+> -							     __alloc_size(1);
+> -#define kmalloc_large_node(...)			alloc_hooks(kmalloc_large_node_noprof(__VA_ARGS__))
+> +void *__kmalloc_large_node(size_t size, gfp_t flags, int node)
+> +				__assume_page_alignment __alloc_size(1);
+>  
+>  /**
+>   * kmalloc - allocate kernel memory
+> @@ -654,14 +653,14 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
+>  		unsigned int index;
+>  
+>  		if (size > KMALLOC_MAX_CACHE_SIZE)
+> -			return kmalloc_large_noprof(size, flags);
+> +			return __kmalloc_large(size, flags);
+>  
+>  		index = kmalloc_index(size);
+> -		return kmalloc_trace_noprof(
+> +		return __kmalloc_cache(
+>  				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+>  				flags, size);
+>  	}
+> -	return __kmalloc_noprof(size, flags);
+> +	return __kmalloc(size, flags);
+>  }
+>  #define kmalloc(...)				alloc_hooks(kmalloc_noprof(__VA_ARGS__))
+>  
+> @@ -671,14 +670,14 @@ static __always_inline __alloc_size(1) void *kmalloc_node_noprof(size_t size, gf
+>  		unsigned int index;
+>  
+>  		if (size > KMALLOC_MAX_CACHE_SIZE)
+> -			return kmalloc_large_node_noprof(size, flags, node);
+> +			return __kmalloc_large_node(size, flags, node);
+>  
+>  		index = kmalloc_index(size);
+> -		return kmalloc_node_trace_noprof(
+> +		return __kmalloc_cache_node(
+>  				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+>  				flags, node, size);
+>  	}
+> -	return __kmalloc_node_noprof(size, flags, node);
+> +	return __kmalloc_node(size, flags, node);
+>  }
+>  #define kmalloc_node(...)			alloc_hooks(kmalloc_node_noprof(__VA_ARGS__))
+>  
+> @@ -756,7 +755,7 @@ static inline __alloc_size(1, 2) void *kmalloc_array_node_noprof(size_t n, size_
+>  		return NULL;
+>  	if (__builtin_constant_p(n) && __builtin_constant_p(size))
+>  		return kmalloc_node_noprof(bytes, flags, node);
+> -	return __kmalloc_node_noprof(bytes, flags, node);
+> +	return __kmalloc_node(bytes, flags, node);
+>  }
+>  #define kmalloc_array_node(...)			alloc_hooks(kmalloc_array_node_noprof(__VA_ARGS__))
+>  
+> diff --git a/lib/slub_kunit.c b/lib/slub_kunit.c
+> index 4ce960438806..3b5fea45b8fe 100644
+> --- a/lib/slub_kunit.c
+> +++ b/lib/slub_kunit.c
+> @@ -140,7 +140,7 @@ static void test_kmalloc_redzone_access(struct kunit *test)
+>  {
+>  	struct kmem_cache *s = test_kmem_cache_create("TestSlub_RZ_kmalloc", 32,
+>  				SLAB_KMALLOC|SLAB_STORE_USER|SLAB_RED_ZONE);
+> -	u8 *p = kmalloc_trace(s, GFP_KERNEL, 18);
+> +	u8 *p = __kmalloc_cache(s, GFP_KERNEL, 18);
+>  
+>  	kasan_disable_current();
+>  
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 0809760cf789..31c25e0ebed8 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4053,7 +4053,7 @@ EXPORT_SYMBOL(kmem_cache_alloc_node_noprof);
+>   * directly to the page allocator. We use __GFP_COMP, because we will need to
+>   * know the allocation order to free the pages properly in kfree.
+>   */
+> -static void *__kmalloc_large_node(size_t size, gfp_t flags, int node)
+> +static void *___kmalloc_large_node(size_t size, gfp_t flags, int node)
+>  {
+>  	struct folio *folio;
+>  	void *ptr = NULL;
+> @@ -4078,25 +4078,25 @@ static void *__kmalloc_large_node(size_t size, gfp_t flags, int node)
+>  	return ptr;
+>  }
+>  
+> -void *kmalloc_large_noprof(size_t size, gfp_t flags)
+> +void *__kmalloc_large(size_t size, gfp_t flags)
+>  {
+> -	void *ret = __kmalloc_large_node(size, flags, NUMA_NO_NODE);
+> +	void *ret = ___kmalloc_large_node(size, flags, NUMA_NO_NODE);
+>  
+>  	trace_kmalloc(_RET_IP_, ret, size, PAGE_SIZE << get_order(size),
+>  		      flags, NUMA_NO_NODE);
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL(kmalloc_large_noprof);
+> +EXPORT_SYMBOL(__kmalloc_large);
+>  
+> -void *kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
+> +void *__kmalloc_large_node(size_t size, gfp_t flags, int node)
+>  {
+> -	void *ret = __kmalloc_large_node(size, flags, node);
+> +	void *ret = ___kmalloc_large_node(size, flags, node);
+>  
+>  	trace_kmalloc(_RET_IP_, ret, size, PAGE_SIZE << get_order(size),
+>  		      flags, node);
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL(kmalloc_large_node_noprof);
+> +EXPORT_SYMBOL(__kmalloc_large_node);
+>  
+>  static __always_inline
+>  void *__do_kmalloc_node(size_t size, gfp_t flags, int node,
+> @@ -4123,17 +4123,17 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node,
+>  	return ret;
+>  }
+>  
+> -void *__kmalloc_node_noprof(size_t size, gfp_t flags, int node)
+> +void *__kmalloc_node(size_t size, gfp_t flags, int node)
+>  {
+>  	return __do_kmalloc_node(size, flags, node, _RET_IP_);
+>  }
+> -EXPORT_SYMBOL(__kmalloc_node_noprof);
+> +EXPORT_SYMBOL(__kmalloc_node);
+>  
+> -void *__kmalloc_noprof(size_t size, gfp_t flags)
+> +void *__kmalloc(size_t size, gfp_t flags)
+>  {
+>  	return __do_kmalloc_node(size, flags, NUMA_NO_NODE, _RET_IP_);
+>  }
+> -EXPORT_SYMBOL(__kmalloc_noprof);
+> +EXPORT_SYMBOL(__kmalloc);
+>  
+>  void *kmalloc_node_track_caller_noprof(size_t size, gfp_t flags,
+>  				       int node, unsigned long caller)
+> @@ -4142,7 +4142,7 @@ void *kmalloc_node_track_caller_noprof(size_t size, gfp_t flags,
+>  }
+>  EXPORT_SYMBOL(kmalloc_node_track_caller_noprof);
+>  
+> -void *kmalloc_trace_noprof(struct kmem_cache *s, gfp_t gfpflags, size_t size)
+> +void *__kmalloc_cache(struct kmem_cache *s, gfp_t gfpflags, size_t size)
+>  {
+>  	void *ret = slab_alloc_node(s, NULL, gfpflags, NUMA_NO_NODE,
+>  					    _RET_IP_, size);
+> @@ -4152,10 +4152,10 @@ void *kmalloc_trace_noprof(struct kmem_cache *s, gfp_t gfpflags, size_t size)
+>  	ret = kasan_kmalloc(s, ret, size, gfpflags);
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL(kmalloc_trace_noprof);
+> +EXPORT_SYMBOL(__kmalloc_cache);
+>  
+> -void *kmalloc_node_trace_noprof(struct kmem_cache *s, gfp_t gfpflags,
+> -			 int node, size_t size)
+> +void *__kmalloc_cache_node(struct kmem_cache *s, gfp_t gfpflags, int node,
+> +			   size_t size)
+>  {
+>  	void *ret = slab_alloc_node(s, NULL, gfpflags, node, _RET_IP_, size);
+>  
+> @@ -4164,7 +4164,7 @@ void *kmalloc_node_trace_noprof(struct kmem_cache *s, gfp_t gfpflags,
+>  	ret = kasan_kmalloc(s, ret, size, gfpflags);
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL(kmalloc_node_trace_noprof);
+> +EXPORT_SYMBOL(__kmalloc_cache_node);
+>  
+>  static noinline void free_to_partial_list(
+>  	struct kmem_cache *s, struct slab *slab,
+> -- 
+> 2.45.1
+> 
