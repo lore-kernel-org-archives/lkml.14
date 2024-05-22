@@ -1,109 +1,115 @@
-Received: from mail-m17224.xmail.ntesmail.com (mail-m17224.xmail.ntesmail.com [45.195.17.224])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87082D047;
-	Wed, 22 May 2024 09:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936412D047
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 09:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716369776; cv=none; b=Avy070/wz7rrgsgmrKH6GA+dPUVb3jgRlVdAeFROf8appbmk38iYb+5Fy5qPcpKZTochADR2GbTU5FDh5OVGotjXaUtuTi2373Shyf/3K/lpb/9iIoCqb3c5IZ6sT0DaM3uUhEfeWjHrewRKo2We+NPTL2loZ5K/eEXwRaC2/18=
+	t=1716369815; cv=none; b=JbRqGbh6dkGFr+0mjL6wkM6fqWNkdDxPFKMYl44gPsgxMo3kbYdrMuapY/9lIBngCtLN6+R2ndt2wryjllaHFCNA34XKIanQ9s/+TA843D6D4kS/pjUuB2nyMM0gJBu+KWocfWtdmJrF7dg49QDaRP1Lm2fIpH07AHIKTGs+1Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716369776; c=relaxed/simple;
-	bh=WmJQo640ZQb8OrummdMPWB3IkXWYN23+eVltn+PnS9g=;
-	h=From:Subject:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Fj8dfTYuyzo2fI+xLdzn1BCv+8isZSUbf6s5DkHsKzPqiQOWpUg67shEHI9YGlUH8o6F+yi3m/SP5hq813IfuZm9X+OmNywcq2I/3ZqQ0BgybbduAzLm9RfUQolxPJJLFyetnQXCIul7vqAhdqPGtc7Rjn22/FrZRSSRToWNm/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.224
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 536F18602E0;
-	Wed, 22 May 2024 14:17:39 +0800 (CST)
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-To: Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: John Groves <John@groves.net>, Gregory Price
- <gregory.price@memverge.com>, axboe@kernel.dk, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev
-References: <8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
- <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
- <20240503105245.00003676@Huawei.com>
- <5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
- <20240508131125.00003d2b@Huawei.com>
- <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
- <20240508164417.00006c69@Huawei.com>
- <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
- <20240509132134.00000ae9@Huawei.com>
- <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
- <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Message-ID: <8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
-Date: Wed, 22 May 2024 14:17:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1716369815; c=relaxed/simple;
+	bh=odJ0hFWlcsFxkYUX+bZg9URH7tzJA0vJ1p8L+ANWKgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NgSKtGinW3vcn0fg9PQX6wJoU1on0vL7nNwM0rVnvqIxLZwnPTdLEkneE/gFCJHbTRHQDGqx78VweaoFTsKm/EbN23maF13cEPryIM8JON0quZGadZRdy6rP/6zifQhqBFk5DJPKepMPVoKxLKKemHfKaM1ZIPaee8+GzbT7yYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fBNLWLEN; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fBNLWLEN"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-420180b59b7so5011045e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 02:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716369812; x=1716974612; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JRjtoycu6QiYQPIcHAZ506CIemzizife0bP7oo/LEUE=;
+        b=fBNLWLENnPD+OTB14sTkFC/WdeeoMsiib9nbKmGOXQFrZcAkUHDs7pxZSlodulPr4Q
+         KzN/WgjC3vOAES0wQGQGJy4ukvGNu/3w2n7vF6dGafLJYynaGQ9CMOp9fFcR4wBSNGtW
+         hLuPDCmvC2oE1ul/Eh1WCBU8ah7APy7s7fiiQVh8/0ikHTYS8yrW+qjwQ2V7gshQ3dMK
+         f6GPgzlYQwssPYMm/0QQa82tA0w+G0SpDdVB7hqYJgtc6AS9lmajf32N8s/8z31NKmPh
+         f5JFOFMkd/tfkNmEHNruKR8EzfkO175c8dEOZBRZMoBQhsDzKPLqN+Co58U5OvvF0BnT
+         iXLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716369812; x=1716974612;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JRjtoycu6QiYQPIcHAZ506CIemzizife0bP7oo/LEUE=;
+        b=kWnL9h53C/4hlbaDWLI2edviaCKc9gBi4FOXpUZBNsraJtv2CUCDhRx1J2L/ISqmQt
+         u3AekpUlMAdTeiOd+5Jl+AaP7Rm0lA2nFPN0YQwdI1zUn3PDHtanpqAnGgPikaYSp6Rc
+         Z+pVaVBXluzGQfIr0pXdbW5pjrN89vs9m6Y6jquwd0cTjI1Ge1od0h9eWV8q0RRUQvU8
+         7YsWmgmqxcCaxCGjeQQgXsz8jZGDA1vib7mfHJ7XvzqDSMcy0hYfZ7Hm2UTqGeRYH9J6
+         ys+KMa7RU25MbxzbpwVH2h8Zlj63SmIYh0orMwx1nHhT1uH/zV8P6IrzUTVqCs6z81ma
+         kIFg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8InNAkFBcTiKcZUGoSURRzXI5a5f6nRUZiCCOcU4FavP8xRtH0vmKy4wGNHgcvxjueENj7NmNluOdx1oKsTiHWhVjewNmJhZ7fl4q
+X-Gm-Message-State: AOJu0YzLxSdBeom45Dqm5p3G1/bundTzqYbai5zthqqaH2F5rSE8hZMo
+	rCKzZxedk9dtnRItl3KYrWfASSvWFr9SoeApv0FsInpDFHfYxhUFFsBdWyA79HI=
+X-Google-Smtp-Source: AGHT+IGBRKl5DCZ+kljNpjZnc9YzdCw1hs2bWkudIcHS/AaEdVRmj8bHA3gNsPb+/c/8i/lsYuEbJQ==
+X-Received: by 2002:a05:600c:ac1:b0:41b:f359:2b53 with SMTP id 5b1f17b1804b1-420fd37f2f5mr9924295e9.37.1716369811860;
+        Wed, 22 May 2024 02:23:31 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42011d91edfsm402874715e9.44.2024.05.22.02.23.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 02:23:31 -0700 (PDT)
+Message-ID: <e9b8a423-9ee3-4f5d-a0a2-374603762127@baylibre.com>
+Date: Wed, 22 May 2024 11:23:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/16] ASoC: mediatek: mt8365: Add ADDA DAI support
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Lee Jones <lee@kernel.org>,
+ Flora Fu <flora.fu@mediatek.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20240226-audio-i350-v4-0-082b22186d4c@baylibre.com>
+ <20240226-audio-i350-v4-7-082b22186d4c@baylibre.com>
+ <a693b696-92cf-48cf-8c9d-17aa7f182d98@collabora.com>
+Content-Language: en-US
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <a693b696-92cf-48cf-8c9d-17aa7f182d98@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGkoYVk5ITE1ITR5MSEJPHlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f9ef2be66023ckunm536f18602e0
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OS46PRw6GDctHDMrDRoLDBoQ
-	OTMKC0JVSlVKTEpNSE5DTU1LS0hPVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT0JPSjcG
 
 
 
-在 2024/5/22 星期三 上午 2:41, Dan Williams 写道:
-> Dongsheng Yang wrote:
->> 在 2024/5/9 星期四 下午 8:21, Jonathan Cameron 写道:
-> [..]
->>>> If we check and find that the "No clean writeback" bit in both CSDS and
->>>> DVSEC is set, can we then assume that software cache-coherency is
->>>> feasible, as outlined below:
->>>>
->>>> (1) Both the writer and reader ensure cache flushes. Since there are no
->>>> clean writebacks, there will be no background data writes.
->>>>
->>>> (2) The writer writes data to shared memory and then executes a cache
->>>> flush. If we trust the "No clean writeback" bit, we can assume that the
->>>> data in shared memory is coherent.
->>>>
->>>> (3) Before reading the data, the reader performs cache invalidation.
->>>> Since there are no clean writebacks, this invalidation operation will
->>>> not destroy the data written by the writer. Therefore, the data read by
->>>> the reader should be the data written by the writer, and since the
->>>> writer's cache is clean, it will not write data to shared memory during
->>>> the reader's reading process. Additionally, data integrity can be ensured.
+On 20/05/2024 12:27, AngeloGioacchino Del Regno wrote:
+>> +int mt8365_dai_disable_adda_on(struct mtk_base_afe *afe)
+>> +{
+>> +    unsigned long flags;
+>> +    struct mt8365_afe_private *afe_priv = afe->platform_priv;
+>> +
+>> +    spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
+>> +
+>> +    adda_afe_on_ref_cnt--;
+>> +    if (adda_afe_on_ref_cnt == 0)
+>> +        regmap_update_bits(afe->regmap, AFE_ADDA_UL_DL_CON0,
+>> +                   AFE_ADDA_UL_DL_ADDA_AFE_ON,
+>> +                   ~AFE_ADDA_UL_DL_ADDA_AFE_ON);
+>> +    else if (adda_afe_on_ref_cnt < 0)
+>> +        adda_afe_on_ref_cnt = 0;
 > 
-> What guarantees this property? How does the reader know that its local
-> cache invalidation is sufficient for reading data that has only reached
-> global visibility on the remote peer? As far as I can see, there is
-> nothing that guarantees that local global visibility translates to
-> remote visibility. In fact, the GPF feature is counter-evidence of the
-> fact that writes can be pending in buffers that are only flushed on a
-> GPF event.
+> Should we dev_warn() here? The refcount should never be less than zero - if it is,
+> then there's some issue somewhere that must be solved.
 
-Sounds correct. From what I learned from GPF, ADR, and eADR, there would 
-still be data in WPQ even though we perform a CPU cache line flush in 
-the OS.
+Ok to add dev_warn, but I also want to keep "adda_afe_on_ref_cnt = 0;" for robustness, even if it 
+shouldn't reach this case.
 
-This means we don't have a explicit method to make data puncture all 
-caches and land in the media after writing. also it seems there isn't a 
-explicit method to invalidate all caches along the entire path.
-
-> 
-> I remain skeptical that a software managed inter-host cache-coherency
-> scheme can be made reliable with current CXL defined mechanisms.
-
-
-I got your point now, acorrding current CXL Spec, it seems software 
-managed cache-coherency for inter-host shared memory is not working. 
-Will the next version of CXL spec consider it?
-> 
+-- 
+Regards,
+Alexandre
