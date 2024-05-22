@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7FE14D28E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB8514D28F;
 	Wed, 22 May 2024 23:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716420744; cv=none; b=psLAZIa8wxnewWIRt+MVHcSrR+0vyOv0mThixE0sYKlBiuFZnAcy8MLpvMI5q0IE+vDF1MTcIwVS+j9PG5Smw1qIIyYXUFV6O4xfcg/cemSHqTZqgPvIKGj/tphEsokNNgXEMCZHnx5ndC7Xu1EcKlADUf09XzKDwvdOI8dO3UI=
+	t=1716420744; cv=none; b=R5/7VNllVlyp5+ooavWK7JJVn1klz0jfwb7V1S973Ul7l66KCzqGHtvO4PZklHTOhZ0eH7Y8GxROisYH9qITiWKMq/oseJkJFZ7kBDPVuN+R+W79RK7oAylPG8Xu/DWiynBMkAZKwRNF5ufIHR15jeEri5o602LUr8XXHsxZpRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716420744; c=relaxed/simple;
-	bh=sFivK456BiubdJX56tlNdVWZafvyAwixp16zhXxqH70=;
+	bh=tosxLgQ5SdcOjgbZkL48MhTf4v8vVX+91AKf+bXS8Yg=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lPQEtbFzLt3yKP1nhPJUoCg8Hd1dLuGEXIalwCS2QqIyW/Gw25ne1y3QgxD9obgT4M0AnfdWucSVxvmkYAg7kuUsF5Tum22lFRwvnQeJzEbYlt7vLh+hoYvAI1jYaPLxoqubdO39LBU+kJZuI1phcxkTNtEirZYUAxZb4gUeWiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvxrjXYy; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=taafBUmcZsMLBxDgKfBKidMv+kb3YhDfFb1tVg/fW7hjeL981p0ps2SZ97VvZWupB79ZXN1+GV6tNg8lQJnkilANJHejaCLlc0jDMEdppbHFPiS9krh1pPAgss4/07rNB7G5i3B0DCrjz2JF+TSq/roX7C/SQohavLC7+Z/dRqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmSKxxId; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvxrjXYy"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BD809C4AF15;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmSKxxId"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B07E5C4AF0F;
 	Wed, 22 May 2024 23:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716420743;
-	bh=sFivK456BiubdJX56tlNdVWZafvyAwixp16zhXxqH70=;
+	bh=tosxLgQ5SdcOjgbZkL48MhTf4v8vVX+91AKf+bXS8Yg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MvxrjXYyWgudMCjnBPVn9CXPVvpZNtaSUZ1gyq7PTmVmsLPKSp4NYpwhcGJcgtsps
-	 ZQigp0aoMd337dNepQtlG7ONduRS6voeXw8G++uWdKEk6y7kzjYZuq96XJ7/yQN19U
-	 IqJrWt8Rxg0xye2QS6uRQncojNKYhA9QElzTRMJox85W4T2sCbklby0gjCZU9wjUxM
-	 bIKgDpuY3lMTzfOOvE5ZE3aYgr4zJsDNOJcBlqDMfSjVhfax54WnjBVe7xoJmcD286
-	 HTXTNilxLy9lspwts50EVF1udoz+PVsPXjAxFdPOlmfSbHjPLqMQ0/3xuRViW2cwUe
-	 cVQfWD+cD2/eg==
+	b=lmSKxxId/1JDIS/pIUh39SLARWDNTIraiJv2B8C2tP3dj5k4zGWEWWCRkFPznjxrq
+	 D2Oljqkfc2CzhIk4vdu3VYIx13ENJk4soXXsvw0NtddUwDhXYme/eh4U3BOrlHRNYr
+	 oSuoKD9vxM5n4S3tHC1HroNYzJr57Q3qrSk8G2nrnp8JK5maIfwL36vdJHaPqLxtEF
+	 /cofq7X+/ZZlATsXKU5713282G7aGVSEcLYbOWy/9n9yDhE5VlYMSiY1YljfzyuUYw
+	 A9wX0p0BtUAUtxvxbNIKEHG1TAZbUtmFuyb3//u7B8HeieeoGo0LZHJkOsiBAJJaQC
+	 Qs7fCErwH6vew==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AF297C43618;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A403CC43619;
 	Wed, 22 May 2024 23:32:23 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,40 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] KVM: selftest: Define _GNU_SOURCE for all selftests code
+Subject: Re: [PATCH] kbuild: simplify generic vdso installation code
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171642074371.9409.16238055569874422523.git-patchwork-notify@kernel.org>
+ <171642074366.9409.2372059946348882116.git-patchwork-notify@kernel.org>
 Date: Wed, 22 May 2024 23:32:23 +0000
-References: <20240423190308.2883084-1-seanjc@google.com>
-In-Reply-To: <20240423190308.2883084-1-seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-riscv@lists.infradead.org, pbonzini@redhat.com, maz@kernel.org,
- oliver.upton@linux.dev, anup@brainfault.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, borntraeger@linux.ibm.com,
- frankja@linux.ibm.com, imbrenda@linux.ibm.com, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- usama.anjum@collabora.com
+References: <20240429150754.3178262-1-masahiroy@kernel.org>
+In-Reply-To: <20240429150754.3178262-1-masahiroy@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-riscv@lists.infradead.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, nathan@kernel.org,
+ nicolas@fjasle.eu, palmer@dabbelt.com, paul.walmsley@sifive.com
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
-by Sean Christopherson <seanjc@google.com>:
+by Masahiro Yamada <masahiroy@kernel.org>:
 
-On Tue, 23 Apr 2024 12:03:08 -0700 you wrote:
-> Define _GNU_SOURCE is the base CFLAGS instead of relying on selftests to
-> manually #define _GNU_SOURCE, which is repetitive and error prone.  E.g.
-> kselftest_harness.h requires _GNU_SOURCE for asprintf(), but if a selftest
-> includes kvm_test_harness.h after stdio.h, the include guards result in
-> the effective version of stdio.h consumed by kvm_test_harness.h not
-> defining asprintf():
+On Tue, 30 Apr 2024 00:07:54 +0900 you wrote:
+> With commit 4b0bf9a01270 ("riscv: compat_vdso: install compat_vdso.so.dbg
+> to /lib/modules/*/vdso/") applied, all debug VDSO files are installed in
+> $(MODLIB)/vdso/.
+> 
+> Simplify the installation rule.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > 
 > [...]
 
 Here is the summary with links:
-  - KVM: selftest: Define _GNU_SOURCE for all selftests code
-    https://git.kernel.org/riscv/c/730cfa45b5f4
+  - kbuild: simplify generic vdso installation code
+    https://git.kernel.org/riscv/c/1c369b6c9492
 
 You are awesome, thank you!
 -- 
