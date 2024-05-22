@@ -1,115 +1,95 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0EC322A
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 02:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8662868D;
+	Wed, 22 May 2024 02:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716345095; cv=none; b=HEWx42afyW4/iGQKuW0lPtqmeyZm+cqJYiqcV+icQA5Nje08u5ww9yi34/MARlgdqGk1rOnr/emWRBMZD8OPOFzdv9qd5JcUw3aBrAgQcR0JZ2iRNuKVrLiP/752pKyKrq47/yB1L6CeAKilo8WRAFtLxhS4VWa+vhQXjH/MO/U=
+	t=1716345566; cv=none; b=YLK0/MpNvI3jwDvBQTyhFqG+dHsdd4AXy6EXMLNPVGmks+RZmDGM6779QUzGbFt4Gcj17bVA+koWMmtIH8O8v6smOG3b9xj7B6tc3Z9InvuO+Vs/JaFXFlortmyfZynM8vTy4vcaWKNQLiyT3l9pdFLDkL8LfUlsTF8hiAzwS5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716345095; c=relaxed/simple;
-	bh=tak0JNHXgiWiJt06m1Iot07uFQvw2SbXkoQiZzW0bo0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WDkvFleUUYfUTeGvqI1+4WNcIU/MfuCvlGJ5s5064gxiYshq0RwTwxdjgWsJph0eKce0UV+bKttxUIhaUhwbClskIUSe+2bT0KLkLsW2DFRP832f1p4WX4Bh+elIWx2QtsUEsNYIOu6flvTRn0DKQO1sKKUJunLyaUfQSBKoCtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dqVtVC50; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1716345566; c=relaxed/simple;
+	bh=h2HgAoSFoJiHImBeydoLp/n4ksxfUd81iZib2AUe7so=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dpDuT33WJpGZ2ez7OVz6U1VWpIsxfx22ejP9dqHzeTy0iULOr7xrBkHOQwTvvqJQwB6G99QIZZ+gUSh8q//Fi8fBz8llXp0lTY6wRcHuo6Lpl3t10XCJkVoVfZ5J9zmbbxcLEFppTSCvGgoCczYezCF9mbmYWSq8OPM3s30sjOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HYsJSkFL; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dqVtVC50"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bea0c36bbso264545777b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 19:31:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYsJSkFL"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ba068e59f7so137173a91.3;
+        Tue, 21 May 2024 19:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716345093; x=1716949893; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gOYDdieEO0SMEqqI4rHYaS0F69dZml7a9rO/mRwE3Yc=;
-        b=dqVtVC50iSxq4VQELbM6nAHkP/Wh8cRQb2jyNF5baHhYXcyIol18qtJr7X8aYGHl7O
-         VtsY3Fz72yDBUgukYlkgglcCPLa2DuwtWisjGZh7Cxbu+094x6Q0PCe+ar/V4A49RizW
-         RpwpuHccV2+ly66d8lYDk1tL4jD2qQT5kplPwhdL/cR1aD01ibv7kbuUMAFe3+fmkkh+
-         na7MwqH4PGi4F8kgvBMsUHoGdYkXXJONBLvYEOWjnICF33dBlfCjtskp3sWVZEawBpYb
-         7ca3xx9JRt+SGrYBYOgoPWPoHe0R8pb8OFy9apmgI6umWH3pozocHkN60i2hzv3ailpu
-         fnNA==
+        d=gmail.com; s=20230601; t=1716345565; x=1716950365; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c0Cc6f8Wxbw9qk7J6AWYBvS+QsWTsyrW1OOHPqmY5vc=;
+        b=HYsJSkFLqpbOA6SV9hkK6ikuI1fjO22UhBb7pulXytyyAcE8iK0jTScNozUs3RBM0f
+         l/m1r67CSiDrRDQf1NsZo245cjMGb4soUx11O98jmm+QQszZ+Q78k9EgrqI1CdHfrXL0
+         yVZORQu66/dZjG/JzpRYahpJsJbVPMxLUajWYiWakiWXbYwJTJhKKzcLqCMmN9Npy8Ca
+         +vwD63WZ4ScsA6t1EjwLl0ujXSnF+IvbSmSKxvggaaIPnoRB+1DKOFeZhJ9FdQTMWPOl
+         em9cyD50y4cIuNjwYlMRbC+Ruu2BcuCCUJoiPcdml8d2dva3af9hhKXlmDD+ipDSzdeO
+         boQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716345093; x=1716949893;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gOYDdieEO0SMEqqI4rHYaS0F69dZml7a9rO/mRwE3Yc=;
-        b=EvvUZdpl1Jcu7/9ZoHTRLYaM7TNV2PCUlxdSv11awcRCas0t311Z0pDaU3OqHqPOsP
-         GnBvBFiQKujE6Ux/sCilmoZDYoI/JFqBnEOCHdkaahYmR0KhmTZ2Ix9sPSaVWIFok7tr
-         OCvJkHZOH9Nglhul2OjMJPN7a3oAv4XwKbIgpzJmxwBlCAtNT3p/6E3N+XXPaMqKdUln
-         nHI7TZ2RqSftOjpf3+0y7PEfwEnYaPYmaibgOE9OUl4WHY16+nehvFA7Y7fZg8S8BnJu
-         LWbvGMDshagL3xU1I216GSabMaNS6mGO9ipHz21QTdmU09rzYEfvKb88u1baODLTJKsq
-         ICYA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6gF7XzlQOFXIdt9XRxx/HF7pWWYtT8qgHBMASEip/Xc99Blym5uxYe0yPXCFX9OTPmsEHMduQLIwciy+6Q5WHt+M6QD/kiAirk/5z
-X-Gm-Message-State: AOJu0Yw4GZUFuAaBLvpV1LOswLBe3NuYOhPZ687qekGck/H/r8uxDz97
-	NEZy1VcZnuEWz3rBpCv2AI/gqI7SacJ0wsE3YidW5YxIgvmg97YuOegXHo1/AlE6jLInyubhdww
-	FvA==
-X-Google-Smtp-Source: AGHT+IGmJ0SvbLnKDHz/DAYY+qVuk91HRc2JW9lRvffWDQUBufCfe/OdwsfiVcHXEKW1MXdrv4UbappAeDQ=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:aad4:0:b0:de5:8427:d66e with SMTP id
- 3f1490d57ef6-df4e0dbb481mr238843276.11.1716345093234; Tue, 21 May 2024
- 19:31:33 -0700 (PDT)
-Date: Tue, 21 May 2024 19:31:31 -0700
-In-Reply-To: <Zk1KZDStu/+CR0i4@yzhao56-desk.sh.intel.com>
+        d=1e100.net; s=20230601; t=1716345565; x=1716950365;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c0Cc6f8Wxbw9qk7J6AWYBvS+QsWTsyrW1OOHPqmY5vc=;
+        b=Z9joSt1998DrlYBqMhgXHQsP5ptDbebHqQY7s3X/YLaFW/6LfpAcRKvnI1/U93ssbD
+         SIWgo5RdycebuUj0l6RHsgcvEPOSe8qCdYkYEMVdNCbbNRIGcppp3cG49nm9HbXnzYHo
+         jl6iP80JXZAN5GIpG04J/yTuCrVeIth6ZeCaDRDN1QTdC20T1OVH8j1xzl/xUgwqDUhy
+         L5H9BcHFI8GRQlsizikj1KYQA5DgQhNdEsxuwOnHhsvXfqhK/af92AWSC/RIlFt283TE
+         9Q4MILc27G3Umy3GqGEJSQegci553lKK6pZCyPyaE7d/khbOrklnS/8vxnEBEAuZYEgo
+         VoJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2+KCJgLri7pT/L6tFB04k1iaj5AEpLCns1g11eLqvDgLS483uCk9WA2wBJcf7YAxmkxmMXs4sC6MZ6iw3gI+ppm4aigF4yBQhEj0y
+X-Gm-Message-State: AOJu0YwxfVKgjrjAAxNum7Bww7JdWun2XkKvThOQ7G8kzUqGnb1pfzdI
+	ORd/aedZ1afqQ9G53gyGVmzwA1Pr70DDkxpICaQe3Nv0Oooxr6aSdokodRyr
+X-Google-Smtp-Source: AGHT+IH/kX3lRWAD201VbcdYkNrmRRoPW15d/qI3S5WKDwdT5C7Y4Y2iKk6oF0TWC2T+dABWxCju6Q==
+X-Received: by 2002:a17:90a:f492:b0:2b4:329e:eac5 with SMTP id 98e67ed59e1d1-2bd9f5a179dmr849427a91.2.1716345564724;
+        Tue, 21 May 2024 19:39:24 -0700 (PDT)
+Received: from localhost.localdomain (122-117-151-175.hinet-ip.hinet.net. [122.117.151.175])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b973234901sm14593157a91.19.2024.05.21.19.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 19:39:24 -0700 (PDT)
+From: Kuangyi Chiang <ki.chiang65@gmail.com>
+To: mathias.nyman@intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ki.chiang65@gmail.com
+Subject: [PATCH 2/2] xhci: Apply broken streams quirk to Etron EJ188 xHCI host
+Date: Wed, 22 May 2024 10:39:17 +0800
+Message-Id: <20240522023918.7613-1-ki.chiang65@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <b89385e5c7f4c3e5bc97045ec909455c33652fb1.camel@intel.com>
- <ZkUIMKxhhYbrvS8I@google.com> <1257b7b43472fad6287b648ec96fc27a89766eb9.camel@intel.com>
- <ZkUVcjYhgVpVcGAV@google.com> <ac5cab4a25d3a1e022a6a1892e59e670e5fff560.camel@intel.com>
- <ZkU7dl3BDXpwYwza@google.com> <175989e7-2275-4775-9ad8-65c4134184dd@intel.com>
- <ZkVDIkgj3lWKymfR@google.com> <7df9032d-83e4-46a1-ab29-6c7973a2ab0b@redhat.com>
- <Zk1KZDStu/+CR0i4@yzhao56-desk.sh.intel.com>
-Message-ID: <Zk1ZA-u9yYq0i15-@google.com>
-Subject: Re: [PATCH 02/16] KVM: x86/mmu: Introduce a slot flag to zap only
- slot leafs on slot deletion
-From: Sean Christopherson <seanjc@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Kai Huang <kai.huang@intel.com>, 
-	Rick P Edgecombe <rick.p.edgecombe@intel.com>, "dmatlack@google.com" <dmatlack@google.com>, 
-	"sagis@google.com" <sagis@google.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 22, 2024, Yan Zhao wrote:
-> On Fri, May 17, 2024 at 05:30:50PM +0200, Paolo Bonzini wrote:
-> > On 5/16/24 01:20, Sean Christopherson wrote:
-> > > Hmm, a quirk isn't a bad idea.  It suffers the same problems as a mem=
-slot flag,
-> > > i.e. who knows when it's safe to disable the quirk, but I would hope =
-userspace
-> > > would be much, much cautious about disabling a quirk that comes with =
-a massive
-> > > disclaimer.
-> > >=20
-> > > Though I suspect Paolo will shoot this down too =F0=9F=98=89
-> >=20
-> > Not really, it's probably the least bad option.  Not as safe as keying =
-it
-> > off the new machine types, but less ugly.
-> A concern about the quirk is that before identifying the root cause of th=
-e
-> issue, we don't know which one is a quirk, fast zapping all TDPs or slow =
-zapping
-> within memslot range.
+As described in commit 8f873c1ff4ca ("xhci: Blacklist using streams on the
+Etron EJ168 controller"), EJ188 have the same issue as EJ168, where Streams
+do not work reliable on EJ188. So apply XHCI_BROKEN_STREAMS quirk to EJ188
+as well.
 
-The quirk is specifically that KVM zaps SPTEs that aren't related to the me=
-mslot
-being deleted/moved.  E.g. the issue went away if KVM zapped a rather arbit=
-rary
-set of SPTEs.  IIRC, there was a specific gfn range that was "problematic",=
- but
-we never figured out the correlation between the problematic range and the =
-memslot
-being deleted.
+Signed-off-by: Kuangyi Chiang <ki.chiang65@gmail.com>
+---
+ drivers/usb/host/xhci-pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Disabling the quirk would allow KVM to choose between a slow/precise/partia=
-l zap,
-and full/fast zap.
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index a0beb41..5591e6d 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -242,6 +242,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	if (pdev->vendor == PCI_VENDOR_ID_ETRON &&
+ 			pdev->device == PCI_DEVICE_ID_EJ188) {
+ 		xhci->quirks |= XHCI_RESET_ON_RESUME;
++		xhci->quirks |= XHCI_BROKEN_STREAMS;
+ 	}
+ 	if (pdev->vendor == PCI_VENDOR_ID_RENESAS &&
+ 	    pdev->device == 0x0014) {
+-- 
+2.25.1
+
