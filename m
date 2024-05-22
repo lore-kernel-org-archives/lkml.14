@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1E41EA91;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8957F146A79;
 	Wed, 22 May 2024 19:38:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716406697; cv=none; b=YRtkDFs9crvED1qNajHjm/+adP2o1dQXkJaBoHAgJsAcke9juEeBqGW95kT2/UVkC1L3CBoIGlM85WNyA2pChpaThAnVuLQCnxBq5c/GhLa7dv1WrWC7pzyI9+KuYEiQ4TpbGISdad/qBXfXc4WwlpiOqgoH6r5WPNU7Zacoi88=
+	t=1716406697; cv=none; b=QKlyp6fEG6C0RdhPqqjpI1za1k5xYdbFgP7riFWIxF34bqqm82N7tqRRgXeCRl3NfgQtvfNYmRhrD0dEE7/tIKzxbYSsB38Y0hRYTdyWoKA4yvVeCl4geZrnHRAm+EOlm5yh+PQa3XI58BF0ljD/xKcidhNjL81rrdAroEXPe1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716406697; c=relaxed/simple;
-	bh=+q04VDyueMNnk7eppuB9IefJxJkgFumoFTP8FXOvEaQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Sz5fms81lS70JRMHAo0qqye3X5K3wBcGVNcaY266oYXPPHeytL1HWiZ/jtM52RrC/jioKDBURsR1i9h0F+x1VwhA6gN5Hky2mrh49WUtYbDzFbCrnwOWHOhoTuE/ZN7uH2XkizfLZfPSQelnnDGGZhtc/A8MqJPAtHkhgTkARvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HewN2SXq; arc=none smtp.client-ip=10.30.226.201
+	bh=fHXvx8CL2UwVPwAeZnP3j3Tm0Kp3Ebtfy1/hNZlqxqo=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QgOK472TWyWkpr0oclMI2I8Z+rDBAuVJpf67fikEp4xTlAujCI5HeZuDRVw9KNbJ80f+KVqVqsczFH9gJ1UiVwODg7vvL5kaMNEKQ/QliE0lTIEK+zbJZ8DRzPuZMnakkMPFcMIw+SDLaXNj+g6nGtKSuc7R6gNB53OoK6JhVck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwDVtKZz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HewN2SXq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3DDF3C2BBFC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwDVtKZz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C37FC3277B;
 	Wed, 22 May 2024 19:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716406697;
-	bh=+q04VDyueMNnk7eppuB9IefJxJkgFumoFTP8FXOvEaQ=;
+	bh=fHXvx8CL2UwVPwAeZnP3j3Tm0Kp3Ebtfy1/hNZlqxqo=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=HewN2SXqECBmUZObKmhtgRwq+2w+rIyuW1yfs2iIkpj6ekAd4MenH3JHbg5ro6A+V
-	 JlNVvSk9oK2JYawho4GfjFnHob08oCs/VojEbcMbwVHnNQmpohI8FIxqwzC76q9uXX
-	 UmQ4oq+wiM3177Ip0PEVbbKQKYbKavBAVI9OXR3nznqaMPEwQtcVYmWfnoYxz8QCap
-	 LmTdHMMJu5f1vBncOXBxuWdarZ8/bTxQPQ6M5QMtgI+jtBovD7Q3OIF5XOKdA/JxUm
-	 UiRpv5yOUWEAnpVLQkbo7hosktUTNIBSuVWvtKI9ozi1KfKAhBni4dMKl8/HNbWonU
-	 Z9g4H4tie+/+Q==
+	b=TwDVtKZziCv47dYKYHRWCNp0zBVaQ6O1DqjV+hgJsOXUGt6NMk/qhE4Nx41F4nJ9F
+	 inGjahNpIh/wPRkBiLYT6YODeVlGzJXBjlyv9DR3bZoOoSsRG0s6MnI0uBQMg8wNaA
+	 NyGiIuVDuUjC7iF8lrFNaKNYaS1K7ymkw0NwEioyLcRV8kfDZqhrQv4UtGpomqqzlG
+	 AOXyzgpOtCzrdo4PeJZcw6Gm3RQkrJBDZw99TjnHE1Ez3ceAdTzO9z0EA7wX39EcU4
+	 88lPISxHRc6mwCDoozL3PR/qMVeXXgmDBcXHQoXIRPHSEo3j4Aok7Pxz3gGjXz5KUv
+	 2Ealq/jOr65eQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 34EA0C43618;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 659CFC43618;
 	Wed, 22 May 2024 19:38:17 +0000 (UTC)
-Subject: Re: [GIT PULL] USB/Thunderbolt driver changes for 6.10-rc1
+Subject: Re: [GIT PULL] Staging driver changes for 6.10-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <Zk4GCA9FcWdWtjnt@kroah.com>
-References: <Zk4GCA9FcWdWtjnt@kroah.com>
+In-Reply-To: <Zk4GPfBsYwVvk2H1@kroah.com>
+References: <Zk4GPfBsYwVvk2H1@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Zk4GCA9FcWdWtjnt@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.10-rc1
-X-PR-Tracked-Commit-Id: 51474ab44abf907023a8a875e799b07de461e466
+X-PR-Tracked-Message-Id: <Zk4GPfBsYwVvk2H1@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-6.10-rc1
+X-PR-Tracked-Commit-Id: eb563dc752d33b0a5d4952964af15ca892f59524
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 89601f675b008ed0fd66c060fb23354a106436bb
-Message-Id: <171640669721.20241.7085398688933869887.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: be81389c82e2c1ed0997629cb3d910f584666e33
+Message-Id: <171640669741.20241.18116329327209924009.pr-tracker-bot@kernel.org>
 Date: Wed, 22 May 2024 19:38:17 +0000
 To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 22 May 2024 16:49:44 +0200:
+The pull request you sent on Wed, 22 May 2024 16:50:37 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.10-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-6.10-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/89601f675b008ed0fd66c060fb23354a106436bb
+https://git.kernel.org/torvalds/c/be81389c82e2c1ed0997629cb3d910f584666e33
 
 Thank you!
 
