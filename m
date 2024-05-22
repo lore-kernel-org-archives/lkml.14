@@ -1,282 +1,233 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C031E517
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 16:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716394222; cv=none; b=Pc0r++ZyvIcxsbfiej5B1nWalQoutPDVi457OBYeXl1UidKMCdlaeDTKfCb0a27A/ye/ULhighDF0Cnx7BRGPzbdBBsMKDez98wMEURkyGBDf0Mb8SpIGwSj6yXPJh/5+7saHE5SrvD8MOTs4IVyeW50XvL7IQTKKltzgd/FJsc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716394222; c=relaxed/simple;
-	bh=vIA3o5CDNg2W1Q7Es/uuPPV0r3thdTYoBWXCd12Z1w8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ivHfkTI9BOoaa0ooi8O7iLuBvYhfS1IzmNK7kXj8XZVpAx2IUHSqBtkGTPzzRS+vSeY4UbGjWQY45n5+ZTyg5MbfrHRhDPHIkb4qcuDt+IhSHLh6CFtF57Jkhh7GIQOUDCBcckSm7lKUwBucnWRupU9k1Y4jpWKTptMi6NWv3QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6a0ffaa079dso7391716d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 09:10:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716394219; x=1716999019;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pnUnYOodm15w+vcbjW3XrSJhRreyDxJQSwZnRb8cVP0=;
-        b=HEsZWQKWoSqFMHyZZB/AgeFY2DKzTviOfgryJdwUJbXtI1pcS+d5sqTmu+rjKxUuJm
-         5sS7LJhDdXza3GFNgNdRbseix7iNCAh40J8eIEMaTsrF3IsGk00qJ9IFuRt+Qos34ajD
-         zBNb+vpoKP9dgpf+FTarQ3BkB0aoK7y14snpmYNcga+5n7uQN3kR3Fa1QKIrRjBZUoxL
-         u6/WBJE7ebut+oL+yj6n+o7ZISh3xt8Ui2ksvD61HxadYwLSi9DjmCRXi0Ga3VDaXwZs
-         PAwKlqh3DBX03Twy83cAfcrIehx6GXdnNXVeAm0FN3ZfjiG43wc07s4Ziq+wedxRP+we
-         P4/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWBkNMo8672xlH07+WFdVEPEZJLBarNfmaZP2u6Bkkl+3DSJ59VHNZVxoS4fQk2w5Xw475bhrbLeP0q0vCs54iQmj7XSrV57LJXBuuw
-X-Gm-Message-State: AOJu0YypS6NevOmfJFvqoFzTlihT4QK9ijwke5ENTyRRm+RLFLxygIfz
-	mftSQMwrswS0DrEJsyRZ5dsiPWPk4Ab+7Q7iGNq6cfTRd59okgX6f6gdnkAtg1Y=
-X-Google-Smtp-Source: AGHT+IGvT/RPF8joSYz7Z55ErMWVmiFrPIpbi5XcMJQVWlYahMVe5C7vSV9FYIsjR9dcEoJU1BrTDA==
-X-Received: by 2002:ad4:5942:0:b0:6ab:7b2a:c922 with SMTP id 6a1803df08f44-6ab7b2acc9bmr58159796d6.7.1716394218527;
-        Wed, 22 May 2024 09:10:18 -0700 (PDT)
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7930b43aaccsm642907585a.114.2024.05.22.09.10.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 09:10:18 -0700 (PDT)
-Date: Wed, 22 May 2024 12:10:16 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Benjamin Marzinski <bmarzins@redhat.com>,
-	Yang Yang <yang.yang@vivo.com>, Alasdair Kergon <agk@redhat.com>,
-	dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: dm: optimize flushes
-Message-ID: <Zk4Y6DMgK71UuoKd@kernel.org>
-References: <20240514090445.2847-1-yang.yang@vivo.com>
- <20240514090445.2847-4-yang.yang@vivo.com>
- <ZkTXzG1yrPmW64Z6@redhat.com>
- <60bd4b9-8edd-7e22-ce8b-e5d0e43da195@redhat.com>
- <90f4beb-2e15-3f9-4bc2-0d13872e8ea@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A9B20DF4;
+	Wed, 22 May 2024 16:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716394239; cv=fail; b=ZZoxb0aVUHdMDtFLlOXETWrxKc8PwIb6HEFGt2vBd+muf6MXWTsMY9Z90Nuu78OpVUy4o4HVILHldkAuBlDLBrfgiGpUtk4TJzXbq1DDS22VUCj4cYjHkXdr9hnVseJM1RI0oTNSPekbqhetn5U2AiL1GSwqL+ujWvaR5qLd08M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716394239; c=relaxed/simple;
+	bh=qXjoAOPwh54I+hGu834fp4ZXRWu/gKP9/4ZzEN63040=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JsPWn9jzgtrvW4oLZ6s24toMNKJsmZ+L6CqaIsH5ptEevpNmn2gekJMSx8QlLbqxa9da5rRAzdsdAd3lDMwHOeO0TkOwuoVFup+fq+vvvhQ9PiZWgsu+vDe1Ph5BeSDhen1QfcqU1LF+wM+zOoGPg3Khomi3XSs2F9tbs7koIS8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=FpOJKYc8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=zFTp+i0x; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FpOJKYc8";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="zFTp+i0x"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44MEnxE5019056;
+	Wed, 22 May 2024 16:09:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=leGMrjFQFhZi2UeryAlxCPIf36I7arJ1Bvp+OIv0hKQ=;
+ b=FpOJKYc8YleglvJ9ZHwu7KVsVoTScyyBejJdWmIYAjQ5zM83jx0qRdZf1E1rc38rGPhe
+ qgmF9HoWJ9wJGSPbsBgVNZ//DU1ZR8BtKQf0eepxo9LVnf+S9ZwwHYppk7xoHyhTSxcH
+ wvc8z1MA1PdDY8Qd2LHjUCHkb0zZXqKI8VnuMSV4AnQ04SoFaM2/C+RSv/A98Z9lupQy
+ W3bog+uQo8CPntsAuzXeo/OdANIsFO/f4cXaBkx5IZ8PyngLo4hZI1GCFtg8GIOGGk/X
+ WmKTyGYgOZ+u8inaevyvHToXuwHiEB8GEhjp7hbc3w3hkmnw+3PkMzWVtCeBWmaHkTxq OA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y6k8d83sv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 May 2024 16:09:45 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44MEtktc019507;
+	Wed, 22 May 2024 16:09:33 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y6js9esw1-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 May 2024 16:09:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SObeb0DswY9syYUUIc4GfWlK0YDgAfX+hKgmNOlFslWUBKazHzXRDKK2eTv7BtcWN+vlt8i+vhf57kJtYolph7zhUst2r2pSIP+h5EaLV9bWl9LxsLIjKRFSQcdL4IADwcizFex5AVEQk+FQm0U++awKbgchWCZE6lkYayF5DxRVS85iLbmonCnLenU7NCKrhawcwvZ8U+3EqX6PhUiNKxi6BdCjQBno00evLIQOLPO/j9JlH5ni6f0wocX/SkbYqXEDflQC0ueFVJgX7Y9qDWZ987AnCKaIGQLtKuKY+YP7gIjL4ycU/3mR/VKtVA2uMerZUA5Prnm/WUIb4mAsLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=leGMrjFQFhZi2UeryAlxCPIf36I7arJ1Bvp+OIv0hKQ=;
+ b=CS+c2u4VsouwMFTbELc24+N2dHm60yYbqe5Gcw2BV6Mrt8SIyVfFkkrRJd7ytTGVNA1923RFWKY5mYRrmeoiU8/F4L2XxHTnNKVjReYia0jELvGB/nijdkEqyN7xZhlCDc8b9uOd8xEYhLXTPoA0XcMvvfvXMED08z5S2zuGiAiqf+fbFyuBv7+RU1smHV6UAFUqSfn57GWiHK20ohDXvRY0Uk6k3tBJbxssXtL3mNFaNlxS9FrAO1EIRmEVCl0cPQ+e9toc0A7yqtnoMrV4/4w8l1aeX7Pfc7lwiaipHvKi3ec1XhZOMX6r2Vf+IGdGtkvatcbJ0EoycrPgwtc+pA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=leGMrjFQFhZi2UeryAlxCPIf36I7arJ1Bvp+OIv0hKQ=;
+ b=zFTp+i0xC0NtgqfrHj4aOZW1A7z2Zf1FvQhMngZiFjwwUd4M1MkASOQQFcev+uJ4BJ/CEdttjGhbab9q7T0XdGhBNB+zy46Q4fyTji1S+CPsXgF9Koecc+rrGSxjqnDUSSJW5utJkwtaXJnJ0jHpeKINEqk8Px/3i/6XbjM3K/Q=
+Received: from PH0PR10MB5893.namprd10.prod.outlook.com (2603:10b6:510:149::11)
+ by IA1PR10MB7357.namprd10.prod.outlook.com (2603:10b6:208:3ff::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Wed, 22 May
+ 2024 16:09:30 +0000
+Received: from PH0PR10MB5893.namprd10.prod.outlook.com
+ ([fe80::79f1:d24f:94ea:2b53]) by PH0PR10MB5893.namprd10.prod.outlook.com
+ ([fe80::79f1:d24f:94ea:2b53%4]) with mapi id 15.20.7611.016; Wed, 22 May 2024
+ 16:09:30 +0000
+Message-ID: <3f72519e-bf82-458f-a066-0c296a7d655f@oracle.com>
+Date: Wed, 22 May 2024 17:09:20 +0100
+Subject: Re: [PATCH 4/9] cpuidle-haltpoll: define arch_haltpoll_supported()
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        rafael@kernel.org, daniel.lezcano@linaro.org, peterz@infradead.org,
+        arnd@arndb.de, lenb@kernel.org, mark.rutland@arm.com,
+        harisokn@amazon.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20240430183730.561960-1-ankur.a.arora@oracle.com>
+ <20240430183730.561960-5-ankur.a.arora@oracle.com>
+Content-Language: en-US
+From: Joao Martins <joao.m.martins@oracle.com>
+In-Reply-To: <20240430183730.561960-5-ankur.a.arora@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AS4P192CA0023.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5e1::9) To PH0PR10MB5893.namprd10.prod.outlook.com
+ (2603:10b6:510:149::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <90f4beb-2e15-3f9-4bc2-0d13872e8ea@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5893:EE_|IA1PR10MB7357:EE_
+X-MS-Office365-Filtering-Correlation-Id: e3e83bc6-5280-4202-703e-08dc7a798f70
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?SjN3Q3VuUGNua1pvZmVuTkowQmRRTERyaFMrMU4xOWovbzVpbGlMQXRsNUdz?=
+ =?utf-8?B?QkN4UzZ0TDJyamlKbUhaZklqS3p4WGFGUXBwZGoxMzI3L2RDdG1TUk5xOGRV?=
+ =?utf-8?B?TG5semYyYlgzMGRnZFRSa1ZlL2liNjhPclk3SFZ3RU1sQUdoS0p3UVVYMTNG?=
+ =?utf-8?B?cEhabkxNaXFXYzhMOVJHc3BWUTEyUW1URXdYY092UFd0MmllZjBHeDkyT3NV?=
+ =?utf-8?B?YUtKSksxRU9rbG5GQ2huQWFQTHk4bFo4Q0dGTGVjdExyTys5QlkyQU9xMWNz?=
+ =?utf-8?B?L2FHZHRYQnFwZCtLOEkydXBEd1I1K2p1ejJ5NWoxVUpJbjdzbVlXVUsrY3Q2?=
+ =?utf-8?B?dkxXWmU1ZFFGSjNqYjBtdkpmNkZNMC9yUmNHUndQd3g2RkpLWU52elZjdVBC?=
+ =?utf-8?B?MFlKT2VLb3dtazkwYkJnU3p0NE11Z2VnK0E3ZkpZU2R3cjhFUlhzS1lZcDBK?=
+ =?utf-8?B?SUNqTk1kYWlIN3lQTjhNU2xlT3VEdVp3NThaUHdxMEFWZkhSeHJzcnFJSlgz?=
+ =?utf-8?B?UWg5aHUwTEVQRE5LOUttUElNaGFNelREK1YrTllkdStLNjZMMk9BSysxZzZC?=
+ =?utf-8?B?cXE3MTZLaUszMkl4SXhURHFKNndiYjZFRGMzY0M4Zi9GOUJvcTI4UlYxc0hV?=
+ =?utf-8?B?YnpPejdFTDZiRjFtQjJkM3E5MEF3bFFKMlZSYWhPWFpmbHZZTS9neXc2Rjk0?=
+ =?utf-8?B?aHZhcUlWUlhNZ2NxRkZHM1ZYN2t3MmVOTEJGSFBaSEpaa1FVVmhtYTh5MElk?=
+ =?utf-8?B?di9zc1ZlRU1oVUpmVGtHckY1NGJVb1Nna1BzQ1IraTFMZjVZQmkzbmtVbnR5?=
+ =?utf-8?B?SU9OVXJvbTBLamV4L2IzN2NFck0yMHd1R0Uzc1h4SFppTVdXcFo4R0xhUnMr?=
+ =?utf-8?B?dzBzYTNPZDVCNVZXTVR0TVI5M2w5ZGs4OVRTdnpxRTNGVjhQKzFKUGxQNkVX?=
+ =?utf-8?B?VG9SRmVsTW03OW5kdk1mRk1KYktjYy9qdFh2QVVIMlZrM2JlalVBSVo2OXFM?=
+ =?utf-8?B?OGpKTk5RU1lzeDJQUDlqazFhN3g0ZUhydjVIMEErbkZ4RVV1ZTQzRm91ZG5C?=
+ =?utf-8?B?WExoMHVUNVpGZGZsRHJyUm91N0ZTakJWdGxSTDY3SGJ1d3I3SkFQbGU0UVBz?=
+ =?utf-8?B?UXJScWZVSGFWc0k4V2x4M3ZBaW5FREkyM05KY05VU3MxSHh1S3FuQWNzd1ZK?=
+ =?utf-8?B?THZzYnljakVMclFVc3NKZEFxV1IzOEtDUU9QUnRwSHdSSThNS3BkYmttVFJZ?=
+ =?utf-8?B?WXgycjBIUmVQbU9hRTE0aDl4TDlxR21GMnFybWE4UkRGUlRqbklGVHJkNjA3?=
+ =?utf-8?B?ZkY4aTlmbW5iNlRjRlpWYzVteEhYZG0vZWhkbmV1U2tFdWovVVVYMElvbmth?=
+ =?utf-8?B?VjVDd1IveXhEYTFtTEdOWFRmOVdjbndPTjQrSG5pWDJnYjRsZ3NCOXNLbUho?=
+ =?utf-8?B?aDZ5VlVEOHlXNEYrUzlWUDRubWcrNVJtTythd2NVaHpKbmd4ZXU5MVk2REw3?=
+ =?utf-8?B?SVdqRWNUamlzais1LzdoUHpDVDNKVHgrNG1TOEYyRm13VFVNSmxXTDdSYnVS?=
+ =?utf-8?B?ZjRUci93N0RFaEk3ZWx0ejJQdm93azRLc3JMazRSTHllWnVYTHorM3JFMThW?=
+ =?utf-8?B?VHJ0dE5xK1U1MmFQL1NhTGhRR1QwQStxL1ZlY3BHaXNvK0cyRkNnVGN4S1Mw?=
+ =?utf-8?B?UE5QUVRuM3VsaWE3M0RVYnlRV2RwWFhwZitwS3dlN0V6ODVxaFJ2cENRPT0=?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5893.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?TVpuS2JRdDNrc0ZJbHZJMGE3NGIrS2dRaWM2R0ZyMzZKSnMzbjlVamZiZUlI?=
+ =?utf-8?B?aUJpVlpJY1l0b05IdngxY3hQNVl5cVU0Nmx5SFpiQ3UwMEJmY1BrQXZpbmtx?=
+ =?utf-8?B?VkN1L2RDR3I0eUQvbEh2aTlZQWhzbDZSRWVhWENQUXN5elRKZU1LcnRxR0My?=
+ =?utf-8?B?ZG9XeHppK2ZoN3dYOWNTbnhCSm1RaCtocmZIem9QNm8wTEFoU3k0bFRGRjR5?=
+ =?utf-8?B?bFdvV2QzM1k4Q1k2dGFGUlFzWjJydVZoaVVMVExyMHpTaHcwT0J1SW1uUnZ5?=
+ =?utf-8?B?aWdJck91Nys4RkdEMWVZeE5oZGEwODhFOGZOMGlVSENaaW9RTHlWUmgveXF6?=
+ =?utf-8?B?RURVaDdVMmR5ckxiZk5KZ1ZtQnJSeld6SGY4TlM5WFlwV3F2N0tRTFhmODd4?=
+ =?utf-8?B?UVF1bDRJVDJ4TkoweWM4UGdJOWRxS0c0WTV3c1lzdFNUYm1nNnZ3eEQrVWRv?=
+ =?utf-8?B?YkV2V1hKS0p3eElxUmFiMEY3c3RON1F1OFNFNmI4aTVBZlJvc250NmJ0eG05?=
+ =?utf-8?B?bVBDczd1U2hvTGVQc3hZVUtiMTJobmp6WEhyZ1lGZzdWS1B0aW1OdytZZWJJ?=
+ =?utf-8?B?aXpFVHhiTXdZYms2alpNbEEzRjZjMTVqM0xVdE1LbDc2U1JCdDJmRlRWa3RX?=
+ =?utf-8?B?bk95OHdXZ2lseFZxY29tNFYrd08rR3BhM3N4ZU54aWdOSk1BZVlpakR3NXVN?=
+ =?utf-8?B?Q0dOQkt5VXpMbHRVd1BiUnpKZ0FKaHlnQ1c4dHAxZW5LdFUwUVQwb3ovT0Mz?=
+ =?utf-8?B?OEJnZGFsRkFMTktGczlrMDVkS3NnUEZpRG5yNHBoTHRUWTh3dWNzN1l1cktJ?=
+ =?utf-8?B?eVVWdGh3RFU3aVZ0M3NSenNWbzJQTmJOVHhtMkQ1bzYyU2JJYlhJL1lhK2J0?=
+ =?utf-8?B?OU9EWUZoRkRVQWVUN2JhWkl3emlocGxzck1LejVTMlNHSlEycE5FS0xSM3FR?=
+ =?utf-8?B?K2NiMDRydE9yWmV4Q2NjMjZWY1NFYTV4VFBkTWxQNHFuSEhELzk0U1dvNVJi?=
+ =?utf-8?B?bEQzYVZlZG03VDMzR2FvY1BmazJzNE9KUEpMbDAxbFFUZFZFdkdDWjVWMWg2?=
+ =?utf-8?B?aVNDdkQvbEoyc3BETjBkN3l0NHNFZzhsb1lmRWsrdkp3SU5KZWVMeTVYRHA1?=
+ =?utf-8?B?NlVpZnEwYWZQdk5vS3htV24yZWFSZ053anN1bDlzOEpKMEtzdE9Ucmh4ekZ2?=
+ =?utf-8?B?VGUxeXpZRnJzbXg1S24vZ250UnJJeUxSb1dMN2FKWTZBVmUrOGEvVXRBbUJB?=
+ =?utf-8?B?NEZZREJPSTZlZk5IODM0YjUreWhpbUJKWTlkNmJoU25qV2dQejNRZFBGcnJ2?=
+ =?utf-8?B?UUFubFhYeE1wTXhyTXV6UlBYMVFvckNxSUJNOVYxdGg4WjZUeXVXZ0Y0dTd5?=
+ =?utf-8?B?WWRDM0g5aUJHMVp1VlppR3Y5SThtaWdkRThPQzVDU2NtdVk3NXJNaVBPVUsy?=
+ =?utf-8?B?RzMyZVdhcGRhSEdzZ0FBektMbW9NY2RMYVdOcGEvaEo4Rkg4dHVtOVA2aHZp?=
+ =?utf-8?B?Yjh1NGpIMm9ldWhDdUlNV2FnMk5TcVFaMVB3ZnZ5cWJ2emFyN0FQVW03NTVy?=
+ =?utf-8?B?bEpFVGtJWmtiaTluNVpiTktuVTVtWWNyOWQ3Z01vdDVPKzZBUHpveHhyTGZH?=
+ =?utf-8?B?RFRFT2dyRXVZby9BNGpCank5cS9VYXdObitsc0lwckx6V2twdnh1aHhGZm0w?=
+ =?utf-8?B?d0xXZ0ZuUEYyU0E2MklHTjhzSC9tUjBXYm1JREZRS21JQTRTQXQ2VmpsbHZl?=
+ =?utf-8?B?ZmxnY3NIUE1nQjNzNVZRV1M0bE9ZaC8xQlFzUFhtWGpERVZ2d3hDT0drOVpT?=
+ =?utf-8?B?K0ZlOHd2ME5iTmR3dTRGbTUwczFHQkVVaU83T051TWdnMU1xSUF2TG1tenhZ?=
+ =?utf-8?B?ZzZMaWRvbmxlWVo3citwTXkxYi8wV3dEbjBHckx3RG9nbmdseS9HdmYyMnN1?=
+ =?utf-8?B?b1diS0dMci95Z3VqdURHSXlMVEl4VTRhdlE1Q2hGUElwbWttbmIzeTY1bGFr?=
+ =?utf-8?B?U3ZGUzNiMEdzUUwyWDh2OVRFYlFyS3BvTU5jMkdiSlo0VlE1RlFBcXJwdURj?=
+ =?utf-8?B?RnFSSkYrYU5RUkRiYSszSGJ6TnVUbGhXdzU1UnNHZHRhekxOZFBWMklyNkxu?=
+ =?utf-8?B?VkVjQ1JxcUVwWWtxcVRkUjZiUnBPYzUrcUdnaTRVbXR3OXhTWk5tZHN2Q0FY?=
+ =?utf-8?B?d2c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	5kwBDkwEgaIeu0yD17GmY27cAX45im1faJjrJwk4aomS9Tyg2NYCW73LbDqJDRXsTP2hGU/JTAABGUvJcUaiqQZTUpjXhcsVLu2GyOZiCTY/x9bQtLvI3ZXm7Q5vX3+YEsDjc9HNAZpG8QvZdStUvHVsS2BvbJOhxsUzYQWA4Pa6VyTygmwdcHDSuoQE798bkVJBfId4mbBm2sdicU2HR+rcpLJSYbVSIfsWCoswpQD9E9mZc2WOzC5nYiDOKiQeba2mbs4o0v90xy1rB7iA4Ogu7RQ8OWh8zf0uAOrkGhlM4CUU41a9PlnP+JP0/Ra7eBrJtrpJhkuwcsrWaPmQhQ1j+w6mSdJN8qtUycMt3GCTpR6ymeZ7JGMsP0YFnvhwZpV1/ZxhIe53fGyGAjVylkd+qvlzGbPYj3U/gGnRjcM8IGU+NfO8EtNXHwk7XHbjM8CaS/Np4ReEZJWD+rmNMrbldC6HgEWqZwgf57PCdz8GvEWAp2XhWAqWSfjbedPV3GB4SjFSFpvPJ4vCveLOMVcZaqEalbzRSsr1MAoKevlWoAgXo3LAlPAfB6JPitCkXFKCbhN87UYbHqp2DnghuRquBw44cmStNuEpdjj7bZQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3e83bc6-5280-4202-703e-08dc7a798f70
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5893.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 16:09:29.8549
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o1KVmT/fT1DXrY+PsYXvb31bQ7hojf1xtnuiAU4ZxOhY+uZaRda0UXqCFCj+AAdlxo2mpyKGryyI+oqLF4EK7+mC9APEDbTJMNga7qX3Jb0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7357
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_08,2024-05-22_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
+ adultscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405220110
+X-Proofpoint-GUID: T1LtFMseGCqNIGRtjdFBg12D8stPD2G1
+X-Proofpoint-ORIG-GUID: T1LtFMseGCqNIGRtjdFBg12D8stPD2G1
 
-On Thu, May 16, 2024 at 10:49:55PM +0200, Mikulas Patocka wrote:
-> Device mapper sends flush bios to all the targets and the targets send it
-> to the underlying device. That may be inefficient, for example if a table
-> contains 10 linear targets pointing to the same physical device, then
-> device mapper would send 10 flush bios to that device - despite the fact
-> that only one bio would be sufficient.
+On 30/04/2024 19:37, Ankur Arora wrote:
+> From: Joao Martins <joao.m.martins@oracle.com>
 > 
-> This commit optimizes the flush behavior. It introduces a per-target
-> variable flush_pass_around - it is set when the target supports flush
-> optimization - currently, the dm-linear and dm-stripe targets support it.
-> When all the targets in a table have flush_pass_around, flush_pass_around
-> on the table is set. __send_empty_flush tests if the table has
-> flush_pass_around - and if it has, no flush bios are sent to the targets
-> and the list dm_table->devices is iterated and the flush bios are sent to
-> each member of the list.
-
-What does "pass around" mean?  Seems like an awkward name for this.
-(Naming can be hard, I don't have better suggestions at the moment.)
-
-> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> Reported-by: Yang Yang <yang.yang@vivo.com>
+> Right now kvm_para_has_hint(KVM_HINTS_REALTIME) is x86 only. In
+> pursuit of making cpuidle-haltpoll architecture independent, define
+> arch_haltpoll_supported() which handles the architectural check for
+> enabling haltpoll.
+> 
+> Move the (kvm_para_available() && kvm_para_has_hint(KVM_HINTS_REALTIME))
+> check to the x86 specific arch_haltpoll_supported().
+> 
+> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+> Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
+> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 > 
 > ---
->  drivers/md/dm-core.h          |    4 ++-
->  drivers/md/dm-linear.c        |    1 
->  drivers/md/dm-stripe.c        |    1 
->  drivers/md/dm-table.c         |    4 +++
->  drivers/md/dm.c               |   47 +++++++++++++++++++++++++++++-------------
->  include/linux/device-mapper.h |    5 ++++
->  6 files changed, 47 insertions(+), 15 deletions(-)
+> Changelog:
 > 
-> Index: linux-2.6/drivers/md/dm-core.h
-> ===================================================================
-> --- linux-2.6.orig/drivers/md/dm-core.h	2024-05-15 16:56:49.000000000 +0200
-> +++ linux-2.6/drivers/md/dm-core.h	2024-05-15 16:56:49.000000000 +0200
-> @@ -206,7 +206,9 @@ struct dm_table {
->  
->  	bool integrity_supported:1;
->  	bool singleton:1;
-> -	unsigned integrity_added:1;
-> +	bool integrity_added:1;
-> +	/* set if all the targets in the table have "flush_pass_around" set */
-> +	bool flush_pass_around:1;
->  
->  	/*
->  	 * Indicates the rw permissions for the new logical device.  This
-> Index: linux-2.6/drivers/md/dm-linear.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/md/dm-linear.c	2024-05-15 16:56:49.000000000 +0200
-> +++ linux-2.6/drivers/md/dm-linear.c	2024-05-15 16:56:49.000000000 +0200
-> @@ -62,6 +62,7 @@ static int linear_ctr(struct dm_target *
->  	ti->num_discard_bios = 1;
->  	ti->num_secure_erase_bios = 1;
->  	ti->num_write_zeroes_bios = 1;
-> +	ti->flush_pass_around = true;
->  	ti->private = lc;
->  	return 0;
->  
-> Index: linux-2.6/drivers/md/dm-stripe.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/md/dm-stripe.c	2024-05-15 16:56:49.000000000 +0200
-> +++ linux-2.6/drivers/md/dm-stripe.c	2024-05-15 16:56:49.000000000 +0200
-> @@ -157,6 +157,7 @@ static int stripe_ctr(struct dm_target *
->  	ti->num_discard_bios = stripes;
->  	ti->num_secure_erase_bios = stripes;
->  	ti->num_write_zeroes_bios = stripes;
-> +	ti->flush_pass_around = true;
->  
->  	sc->chunk_size = chunk_size;
->  	if (chunk_size & (chunk_size - 1))
-> Index: linux-2.6/drivers/md/dm-table.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/md/dm-table.c	2024-05-15 16:56:49.000000000 +0200
-> +++ linux-2.6/drivers/md/dm-table.c	2024-05-15 16:56:49.000000000 +0200
-> @@ -160,6 +160,7 @@ int dm_table_create(struct dm_table **re
->  	t->type = DM_TYPE_NONE;
->  	t->mode = mode;
->  	t->md = md;
-> +	t->flush_pass_around = 1;
->  	*result = t;
->  	return 0;
->  }
+>   - s/arch_haltpoll_want/arch_haltpoll_supported/
 
-Should be: t->flush_pass_around = true;
 
-> @@ -738,6 +739,9 @@ int dm_table_add_target(struct dm_table
->  	if (ti->limit_swap_bios && !static_key_enabled(&swap_bios_enabled.key))
->  		static_branch_enable(&swap_bios_enabled);
->  
-> +	if (!ti->flush_pass_around)
-> +		t->flush_pass_around = false;
-> +
->  	return 0;
->  
->   bad:
-> Index: linux-2.6/include/linux/device-mapper.h
-> ===================================================================
-> --- linux-2.6.orig/include/linux/device-mapper.h	2024-05-15 16:56:49.000000000 +0200
-> +++ linux-2.6/include/linux/device-mapper.h	2024-05-15 16:56:49.000000000 +0200
-> @@ -397,6 +397,11 @@ struct dm_target {
->  	 * bio_set_dev(). NOTE: ideally a target should _not_ need this.
->  	 */
->  	bool needs_bio_set_dev:1;
-> +
-> +	/*
-> +	 * Set if the target supports flush optimization
-> +	 */
-> +	bool flush_pass_around:1;
->  };
+I am not sure it's correct to call supported() considering that it's supposed to
+always supported (via WFE or cpu_relax()) and it's not exactly what it is doing.
+The function you were changing is more about whether it's default enabled or
+not. So I think the old name in v4 is more appropriate i.e. arch_haltpoll_want()
 
-How does a developer _know_ if a target can set this flag?  Please
-elaborate on the requirements in this code comment.
+Alternatively you could have it called arch_haltpoll_default_enabled() though
+it's longer/verbose.
 
->  
->  void *dm_per_bio_data(struct bio *bio, size_t data_size);
-> Index: linux-2.6/drivers/md/dm.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/md/dm.c	2024-05-15 16:56:49.000000000 +0200
-> +++ linux-2.6/drivers/md/dm.c	2024-05-16 20:06:32.000000000 +0200
-> @@ -645,7 +645,7 @@ static struct bio *alloc_tio(struct clon
->  
->  	/* Set default bdev, but target must bio_set_dev() before issuing IO */
->  	clone->bi_bdev = md->disk->part0;
-> -	if (unlikely(ti->needs_bio_set_dev))
-> +	if (likely(ti != NULL) && unlikely(ti->needs_bio_set_dev))
->  		bio_set_dev(clone, md->disk->part0);
->  
->  	if (len) {
-> @@ -1107,7 +1107,7 @@ static void clone_endio(struct bio *bio)
->  	blk_status_t error = bio->bi_status;
->  	struct dm_target_io *tio = clone_to_tio(bio);
->  	struct dm_target *ti = tio->ti;
-> -	dm_endio_fn endio = ti->type->end_io;
-> +	dm_endio_fn endio = likely(ti != NULL) ? ti->type->end_io : NULL;
->  	struct dm_io *io = tio->io;
->  	struct mapped_device *md = io->md;
->  
-> @@ -1154,7 +1154,7 @@ static void clone_endio(struct bio *bio)
->  	}
->  
->  	if (static_branch_unlikely(&swap_bios_enabled) &&
-> -	    unlikely(swap_bios_limit(ti, bio)))
-> +	    likely(ti != NULL) && unlikely(swap_bios_limit(ti, bio)))
->  		up(&md->swap_bios_semaphore);
->  
->  	free_tio(bio);
+Though if you want a true supported() arch helper *I think* you need to make a
+bigger change into introducing arch_haltpoll_supported() separate from
+arch_haltpoll_want() where the former would ignore the .force=y modparam and
+never be able to load if a given feature wasn't present e.g. prevent arm64
+haltpoll loading be conditioned to arch_timer_evtstrm_available() being present.
+Though I don't think that you want this AIUI
 
-What is it about this commit that makes it important to verify ti
-isn't NULL in the above 3 hunks?
-
-Should these NULL checks be factored out as a separate fix?
-
-Or can these hunks be dropped?
-
-> @@ -1566,17 +1566,36 @@ static void __send_empty_flush(struct cl
->  	ci->sector_count = 0;
->  	ci->io->tio.clone.bi_iter.bi_size = 0;
->  
-> -	for (unsigned int i = 0; i < t->num_targets; i++) {
-> -		unsigned int bios;
-> -		struct dm_target *ti = dm_table_get_target(t, i);
-> -
-> -		if (unlikely(ti->num_flush_bios == 0))
-> -			continue;
-> -
-> -		atomic_add(ti->num_flush_bios, &ci->io->io_count);
-> -		bios = __send_duplicate_bios(ci, ti, ti->num_flush_bios,
-> -					     NULL, GFP_NOWAIT);
-> -		atomic_sub(ti->num_flush_bios - bios, &ci->io->io_count);
-> +	if (!t->flush_pass_around) {
-> +		for (unsigned int i = 0; i < t->num_targets; i++) {
-> +			unsigned int bios;
-> +			struct dm_target *ti = dm_table_get_target(t, i);
-> +
-> +			if (unlikely(ti->num_flush_bios == 0))
-> +				continue;
-> +
-> +			atomic_add(ti->num_flush_bios, &ci->io->io_count);
-> +			bios = __send_duplicate_bios(ci, ti, ti->num_flush_bios,
-> +						     NULL, GFP_NOWAIT);
-> +			atomic_sub(ti->num_flush_bios - bios, &ci->io->io_count);
-> +		}
-> +	} else {
-> +		/*
-> +		 * Note that there's no need to grab t->devices_lock here
-> +		 * because the targets that support flush pass-around don't
-> +		 * modify the list of devices.
-> +		 */
-> +		struct list_head *devices = dm_table_get_devices(t);
-> +		unsigned int len = 0;
-> +		struct dm_dev_internal *dd;
-> +		list_for_each_entry(dd, devices, list) {
-> +			struct bio *clone;
-> +			clone = alloc_tio(ci, NULL, 0, &len, GFP_NOIO);
-> +			atomic_add(1, &ci->io->io_count);
-> +			bio_set_dev(clone, dd->dm_dev->bdev);
-> +			clone->bi_end_io = clone_endio;
-> +			dm_submit_bio_remap(clone, NULL);
-> +		}
->  	}
->  
->  	/*
-> 
-> 
-
-Still missing what "pass-around" is meant to convey given that you
-aren't passing around the same flush... you're cloning a new flush and
-issuing one per device.  Probably worth explaining that's what you
-mean by "flush_pass_around" (both in commit header and elaborate in
-code)?
-
-Also, you're issuing a flush to _all_ devices in a table. Not just
-the data devices.  .iterate_devices returns only the data devices.
-If/when there is a need to extend this feature to targets that have
-metadata devices (e.g. dm-thin, cache, etc): would it make sense to
-filter out non-data devices (by stepping through each target in the
-table and using iterate_devices)?
-
-Mike
+	Joao
