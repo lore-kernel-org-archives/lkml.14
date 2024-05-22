@@ -1,222 +1,141 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839C613D628
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 12:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E2913D602
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 12:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716379907; cv=none; b=tXxhMDKY/19tUpNw64PGgn4rtjxbtesQgy+rXi6rEIi1p0xBC5/Fy8HqNF1LvY73GMK/ALBU9pXlFMLBzm5/xBhqsLJsXQW5PsbLxmyBD4ZQriNvkZkGHtnJbKEWqqCyJeAKRE69RPtQVujeYuF1IFEOkct+wdNSn7DJoLtdMk0=
+	t=1716379951; cv=none; b=jBrL9eS9IAtuzOicjKEaHvzs7RklL1Z5Cs3qjY/PyZbqEFMl/cfcUBInO+7QKdqcAvFw/2oaBX3qJ+2TK+ia8WqvUvBexvJNLOL+kocamcimfhCjqq7NwOqi6nEeUzAIz9/v9+tTGxqihyLt64ta8m/pAuuuorf3nMh5vNaedn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716379907; c=relaxed/simple;
-	bh=0ffb1noRUwPFeM8oQh9ctOYinLBaFo/O+lJlNNwiZR0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ao1Vu1wAb1/BXDn2kH1wR/DeZXJbqsRhUr/PgHaTv6HZy5LnNaR3ukuVuUikVmcW2USori1v4YgXj15zghMpO2JyLOo+wUDK3LtZsHCaCJlR6j+HEvlDU2YMFNedHstQFQcgXUcAMD7qIWdkJbc8gkTNFaLl/tjilhjSH502vGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFavppLv; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716379951; c=relaxed/simple;
+	bh=BAof/JIscvcZciVQ5PJ0YJMLhfMx6ELaTY2iwZ39ljM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ptPkkk0vxXkdl/eoDQKSaf5MSpxV4w5cqZbXTm6ga02UyWgNpcsBjOdRQtdmOaY7tBMD0lgxQLb6D1w3vfcmZEmt3QvlhWjYZVIJoyB63oY+RFAmpwBjueMtka7CC74RSvhnz7Ddhtv2ISPaAIiTtzHfgnVREAfIoltpAD7a1rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=ElQAy4iY; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFavppLv"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7fb42630cc2so49948241.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 05:11:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ElQAy4iY"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5708d8beec6so10221616a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 05:12:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716379904; x=1716984704; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TrO1EgX+XFaaM20QiGf+71AFWvOpo9n0VTGIHy7U0I0=;
-        b=LFavppLvXt6AHpNKqMDWmgLLHsc2YWW3vGs9ODlSyXoU4W7NACuxrwe1HpfXX7wAxo
-         /fYUrr2XYBkSHca8+uC1Z8Vb5B/xmzFxEbJ9m1MO1lynYwCqdNBaMBhcmlnSOSVJmRhD
-         XPbFwY9BsOFDyZvAkOp+w4iagQkMKjoLLsSx4zfmysy4oJcdIcxo+DWEgp9QwGCg9exu
-         wWPqf1Di0oZczv8GzjB79PaCamfjIY8DDgV5awk8U3E/cuovR3kSgvIoBKlSppWQ7LAW
-         rSGUI/fBneyNjJXbwjiqRVXsnJjtsehBAqbIccjddjdzs3VNMoM2LvD52k9gDuJKlS8f
-         BmmQ==
+        d=cloudflare.com; s=google09082023; t=1716379948; x=1716984748; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m6v7R8Jn9mrQ1jFO6WJT02ZXqZgLEi4/5o5xTGHxv3M=;
+        b=ElQAy4iY1/S73PMf/h42QJYpiGWta2zoymcoqag3dRdQ+ILO4SsNimJt0GIfpcUFCn
+         450820enbCk7ybR/ycCyvh98RDjiTWRPnSi9WTabn/kXJpnjFC2+vn81EZrqRfGhe/4V
+         FIcFRxcmBMJzZNXfMhHQdnq6/GvBEnyHtOaI6dVWK8R3jGVngpXw8A5i61NKz2Zxa/kJ
+         YiMFjRdtj+W0v/pbnqVLaUxaIarkrfC4EKn+BajuuQv13rItjiu7q04oYdeZHB1PciaS
+         5CXoCCPeOrM3DfOWJBsVmAYBmDpHNRxkCnYnF430jSaVbhuMJUMjNdoLn5hOkGo18Bi3
+         PFMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716379904; x=1716984704;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TrO1EgX+XFaaM20QiGf+71AFWvOpo9n0VTGIHy7U0I0=;
-        b=rWOH6eHZnHlrzCwZwNHDrxWw/hY5Hyk1lfEHkrqNSR89mLpCuAeYdtc2803VZJXC/x
-         OMsDE2CH8M+FHhwEbT/mfIR5q9KdbT2W1BZuwV28Suftw0KQLyywebhK1tGwM4gI46sy
-         mn+oWbN2AP0hOqB44p84aHhdFKvp3Re+LMgewcXORQULX7ctzkbJgxzf4T5sV+d61SLO
-         jELMaq3BOZ3cVFBl9uiH2eZy8hXje/Nnd0IMi5qDPanfKASuykMFB8zlH0PoC9azuJy3
-         V2pE1VyigvESB4szjpsdFtybrMGbeuFCoWhC/nU3puOTiDUQ2S5laOODf9RDzYvZFJcF
-         iXbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNDSk05DwYW2NVLdw/bwD5g0x70cSbsKVY6uWeVJjPOnyk/PrZNzgjBVmJYBTkUAqz8djvhI8JtYmuMTwEvXqCzl399ieqC2sYqglO
-X-Gm-Message-State: AOJu0Yxw/e5XcswP3UA1Zeuu9WiiBCmH8M0JyKoLlispmTba8ElFzytR
-	147fXPn5j5QwSSrPOiHWJIbYgKF+m1w0Ns9wgS3l/tPdx6m7gsWkIj9ylxv+l9/SGuEIp6AiwAT
-	UGQiMLnXkdTTrt4tfdjUPRJi4YxU=
-X-Google-Smtp-Source: AGHT+IFwO+ZoDXwLARMyHWVQfAb49OZrvN7wRZnNt57AXwV3QQdIvuaXg335YcKEA1Hg4A9r1bBfhh+16vSn8iO/z3c=
-X-Received: by 2002:a05:6122:2b9:b0:4da:9aa1:dd6d with SMTP id
- 71dfb90a1353d-4e218599ef0mr1763982e0c.1.1716379904260; Wed, 22 May 2024
- 05:11:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716379948; x=1716984748;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m6v7R8Jn9mrQ1jFO6WJT02ZXqZgLEi4/5o5xTGHxv3M=;
+        b=m5C7xSBBBEYJiM1sfTyYsEG6mFRKk0CMjL4c7fRk44GYMyuEuTN9xN8EXu8IDCe8FG
+         VWVBvz8APrJ4hQbrfp6gxvzD8b+FVX3KGEvVRYDkd3CcbRQbYGkmRLSVDNxaRZDjyL7P
+         YHPOINeYjFit/lmyc2SE0922Ghz1ORZSQK5FS3zYa8oJ28wK7Zu09OL98UdxgWhzY3UY
+         hFCrxS3SX/Ai4UwsN2tZjB+s4KwJCC7vR4gjHzmqOzRM1IiA78pkQN3YG9x5wEK3gz9w
+         YgCVeLcAuDu2OSuiAtppJDj+KDwJGeV9NJLAiTQk6VRyQEL5C8EV3CuPzlaMH/ntOACi
+         TIhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsuulf5k/2sohEJF1xrblk99RNFl3vBnZOh0kzE8mUY+2KN8UjwoevNicq6S9N2HO9iGYV1A1mVg5a3rQn1von1J3Lfvr+xbDSUuZz
+X-Gm-Message-State: AOJu0Yxuv3cbkP2RiwmrmocqKpNiAZc2LnH78gLrwrtPdqmPxgRqQI0R
+	RgOEJMljg9BAFhCPnrkh0bL/PMObNUWygo4iHmbbtFZVM9/KiJkUrzhgWLzP7g0=
+X-Google-Smtp-Source: AGHT+IHqMWNSPjdTuLfdDab2oJ2USR+dOiil+nWG5c+2IEvTLY6ujL/dfbfMxSzfrvvGaDq69eQqlw==
+X-Received: by 2002:a50:ab4b:0:b0:574:ecc4:6b54 with SMTP id 4fb4d7f45d1cf-578329c7ca3mr1731751a12.9.1716379948503;
+        Wed, 22 May 2024 05:12:28 -0700 (PDT)
+Received: from cloudflare.com ([2a09:bac5:5063:2dc::49:b7])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733bed000esm18281624a12.54.2024.05.22.05.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 05:12:27 -0700 (PDT)
+From: Jakub Sitnicki <jakub@cloudflare.com>
+To: Hillf Danton <hdanton@sina.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,  Tetsuo Handa
+ <penguin-kernel@i-love.sakura.ne.jp>,  Eric Dumazet <edumazet@google.com>,
+  Linus Torvalds <torvalds@linux-foundation.org>,  bpf
+ <bpf@vger.kernel.org>,  LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bpf, sockmap: defer sk_psock_free_link() using RCU
+In-Reply-To: <20240522113349.2202-1-hdanton@sina.com> (Hillf Danton's message
+	of "Wed, 22 May 2024 19:33:49 +0800")
+References: <838e7959-a360-4ac1-b36a-a3469236129b@I-love.SAKURA.ne.jp>
+	<20240521225918.2147-1-hdanton@sina.com>
+	<20240522113349.2202-1-hdanton@sina.com>
+User-Agent: mu4e 1.12.4; emacs 29.1
+Date: Wed, 22 May 2024 14:12:26 +0200
+Message-ID: <87o78yvydx.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0e2a6f232e7579a2e4407ecf075531980d97f286.1716367360.git.baolin.wang@linux.alibaba.com>
- <22ac01a3-ddbb-4114-88cd-ad1a31982dad@redhat.com> <51ba1fc1-fd77-4601-8d27-459162fd008c@linux.alibaba.com>
- <CAGsJ_4zSuOTPi+zkS_kvS5T0MsdMBR+2gpXukJt0aMPrEnCDZg@mail.gmail.com> <c55648d4-cec2-48ca-9ca9-c8fc2aecc741@linux.alibaba.com>
-In-Reply-To: <c55648d4-cec2-48ca-9ca9-c8fc2aecc741@linux.alibaba.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Wed, 22 May 2024 20:11:33 +0800
-Message-ID: <CABzRoyYqCSZafj2wmdgaYutOZtNAL2hozZV24mMjYrgf_BpJmQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: drop the 'anon_' prefix for swap-out mTHP counters
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Barry Song <21cnbao@gmail.com>, David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org, 
-	willy@infradead.org, ying.huang@intel.com, ryan.roberts@arm.com, 
-	ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Baolin,
+On Wed, May 22, 2024 at 07:33 PM +08, Hillf Danton wrote:
+> On Wed, 22 May 2024 11:50:49 +0200 Jakub Sitnicki <jakub@cloudflare.com>
+> On Wed, May 22, 2024 at 06:59 AM +08, Hillf Danton wrote:
+>> > On Tue, 21 May 2024 08:38:52 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>> >> On Sun, May 12, 2024 at 12:22=E2=80=AFAM Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+>> >> > --- a/net/core/sock_map.c
+>> >> > +++ b/net/core/sock_map.c
+>> >> > @@ -142,6 +142,7 @@ static void sock_map_del_link(struct sock *sk,
+>> >> >         bool strp_stop =3D false, verdict_stop =3D false;
+>> >> >         struct sk_psock_link *link, *tmp;
+>> >> >
+>> >> > +       rcu_read_lock();
+>> >> >         spin_lock_bh(&psock->link_lock);
+>> >> 
+>> >> I think this is incorrect.
+>> >> spin_lock_bh may sleep in RT and it won't be safe to do in rcu cs.
+>> >
+>> > Could you specify why it won't be safe in rcu cs if you are right?
+>> > What does rcu look like in RT if not nothing?
+>> 
+>> RCU readers can't block, while spinlock RT doesn't disable preemption.
+>> 
+>> https://docs.kernel.org/RCU/rcu.html
+>> https://docs.kernel.org/locking/locktypes.html#spinlock-t-and-preempt-rt
+>> 
+>> I've finally gotten around to testing proposed fix that just disallows
+>> map_delete_elem on sockmap/sockhash from BPF tracing progs
+>> completely. This should put an end to this saga of syzkaller reports.
+>> 
+>> https://lore.kernel.org/all/87jzjnxaqf.fsf@cloudflare.com/
+>> 
+> The locking info syzbot reported [2] suggests a known issue that like Alexei
+> you hit the send button earlier than expected.
+>
+> 4 locks held by syz-executor361/5090:
+>  #0: ffffffff8e334d20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+>  #0: ffffffff8e334d20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+>  #0: ffffffff8e334d20 (rcu_read_lock){....}-{1:2}, at: map_delete_elem+0x388/0x5e0 kernel/bpf/syscall.c:1695
+>  #1: ffff88807b2af8f8 (&htab->buckets[i].lock){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+>  #1: ffff88807b2af8f8 (&htab->buckets[i].lock){+...}-{2:2}, at: sock_hash_delete_elem+0x17c/0x400 net/core/sock_map.c:945
+>  #2: ffff88801c2a4290 (&psock->link_lock){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+>  #2: ffff88801c2a4290 (&psock->link_lock){+...}-{2:2}, at: sock_map_del_link net/core/sock_map.c:145 [inline]
+>  #2: ffff88801c2a4290 (&psock->link_lock){+...}-{2:2}, at: sock_map_unref+0xcc/0x5e0 net/core/sock_map.c:180
+>  #3: ffffffff8e334d20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+>  #3: ffffffff8e334d20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+>  #3: ffffffff8e334d20 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
+>  #3: ffffffff8e334d20 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run2+0x114/0x420 kernel/trace/bpf_trace.c:2420
+>
+> [2] https://lore.kernel.org/all/000000000000d0b87206170dd88f@google.com/
+>
+>
+> If CONFIG_PREEMPT_RCU=y rcu_read_lock() does not disable
+> preemption. This is even true for !RT kernels with CONFIG_PREEMPT=y
+>
+> [3] Subject: Re: [patch 30/63] locking/spinlock: Provide RT variant
+> https://lore.kernel.org/all/874kc6rizr.ffs@tglx/
 
-On Wed, May 22, 2024 at 7:24=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
->
->
-> On 2024/5/22 18:40, Barry Song wrote:
-> > On Wed, May 22, 2024 at 9:38=E2=80=AFPM Baolin Wang
-> > <baolin.wang@linux.alibaba.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2024/5/22 16:58, David Hildenbrand wrote:
-> >>> On 22.05.24 10:51, Baolin Wang wrote:
-> >>>> The mTHP swap related counters: 'anon_swpout' and
-> >>>> 'anon_swpout_fallback' are
-> >>>> confusing with an 'anon_' prefix, since the shmem can swap out
-> >>>> non-anonymous
-> >>>> pages. So drop the 'anon_' prefix to keep consistent with the old sw=
-ap
-> >>>> counter
-> >>>> names.
-> >>>>
-> >>>> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
-> >>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> >>>> ---
-> >>>
-> >>> Am I daydreaming or did we add the anon_ for a reason and discussed t=
-he
-> >>> interaction with shmem? At least I remember some discussion around th=
-at.
-> >>
-> >> Do you mean the shmem mTHP allocation counters in previous
-> >> discussion[1]? But for 'anon_swpout' and 'anon_swpout_fallback', I can
-> >> not find previous discussions that provided a reason for adding the
-> >> =E2=80=98anon_=E2=80=99 prefix. Barry, any comments? Thanks.
-> >
-> > HI Baolin,
-> > We had tons of emails discussing about namin and I found this email,
-> >
-> > https://lore.kernel.org/all/bca6d142-15fd-4af5-9f71-821f891e8305@redhat=
-.com/
-> >
-> > David had this comment,
-> > "I'm wondering if these should be ANON specific for now. We might want =
-to
-> > add others (shmem, file) in the future."
-> >
-> > This is likely how the 'anon_' prefix started being added, although it
-> > wasn't specifically
-> > targeting swapout.
->
-> That's what I missed before. Thanks Barry.
->
-> > I sense your patch slightly alters the behavior of thp_swpout_fallback
-> > in /proc/vmstat.
-> > Previously, we didn't classify them as THP_SWPOUT_FALLBACK, even though=
- we
-> > always split them.
->
-> Sorry I did not get you here. I just re-name the mTHP swpout_fallback,
-> how can this patch change the THP_SWPOUT_FALLBACK statistic counted by
-> count_vm_event()?
+That locking issue is related to my earlier, as it turned out -
+incomplete, fix:
 
-Currently, PMD-mapped shmem folios are not accounted for in
-THP_SWPOUT and related counters.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ff91059932401894e6c86341915615c5eb0eca48
 
-So, IMO, if we intend to account for them in those counters in the
-future, removing
-the 'anon_' prefix from the mTHP swap counters would be reasonable :)
-
-Thanks,
-Lance
-
->
-> >                  if (folio_test_anon(folio) && folio_test_swapbacked(fo=
-lio)) {
-> >                          ...
-> >                                  if (!add_to_swap(folio)) {
-> >                                          int __maybe_unused order =3D
-> > folio_order(folio);
-> >
-> >                                          if (!folio_test_large(folio))
-> >                                                  goto activate_locked_s=
-plit;
-> >                                          /* Fallback to swap normal pag=
-es */
-> >                                          if (split_folio_to_list(folio,
-> > folio_list))
-> >                                                  goto activate_locked;
-> > #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> >                                          if (nr_pages >=3D HPAGE_PMD_NR=
-) {
-> >                                                  count_memcg_folio_even=
-ts(folio,
-> >                                                          THP_SWPOUT_FAL=
-LBACK, 1);
-> >
-> > count_vm_event(THP_SWPOUT_FALLBACK);
-> >                                          }
-> >                                          count_mthp_stat(order,
-> > MTHP_STAT_ANON_SWPOUT_FALLBACK);
-> > #endif
-> >                                          if (!add_to_swap(folio))
-> >                                                  goto activate_locked_s=
-plit;
-> >                                  }
-> >                          }
-> >                  } else if (folio_test_swapbacked(folio) &&
-> >                             folio_test_large(folio)) {
-> >                          /* Split shmem folio */
-> >                          if (split_folio_to_list(folio, folio_list))
-> >                                  goto keep_locked;
-> >                  }
-> >
-> >
-> >
-> > If the goal is to incorporate pmd-mapped shmem under thp_swpout* in
-> > /proc/vmstat,
-> > and if there is consistency between /proc/vmstat and sys regarding
-> > their definitions,
-> > then I have no objection to this patch.
->
-> I think this is the goal, moreover shmem will support large folio (not
-> only THP) in future, so swpout related counters should be defined as
-> clear as possible.
->
-> However, shmem_swpout and shmem_swpout_*
-> > appear more intuitive, given that thp_swpout_* in /proc/vmstat has
-> > never shown any
-> > increments for shmem until now - we have been always splitting shmem in=
- vmscan.
->
-> This is somewhat similar to our previous discussion on the naming of the
-> shmem's mTHP counter[1], as David suggested, we should keep counter name
-> consistency for now and add more in the future as needed.
->
-> [1]
-> https://lore.kernel.org/all/ce6be451-7c5a-402f-8340-be40699829c2@redhat.c=
-om/
-> >
-> > By the way, if this patch is accepted, it must be included in version
-> > 6.10 to maintain
-> > ABI compatibility. Additionally, documentation must be updated accordin=
-gly.
->
-> Sure. I missed update the documentation, and will do in next version.
->
+We don't expect map_delete_elem to be called from map_update_elem for
+sockmap/sockhash, but that is what syzkaller started doing by attaching
+BPF tracing progs which call map_delete_elem.
