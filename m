@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02859146001
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:05:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33295146013;
+	Wed, 22 May 2024 18:05:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716401120; cv=none; b=gTFvyFJntc6EB2+4GaSRyye9B5SCRNztp8Y75be4NHYAZS6YuvT+sPyGuRLxgk86SwXIvV5NVft+rfPmFmHEtuLnYf6/7Xv89EOcuTESzlHNDV8tByVPtk0R1F9uu7WTEaNmZKaQMu2Odex6x+bz+luuaTAGj4tvB97cFoAHA2E=
+	t=1716401120; cv=none; b=iuiNJ3jexchV96IXcfyz6xTOqGhe214yZG2+wgW4rtdGdHB20GS6gO7Eyeh7tfra6DcSzbc2U9E+cSGQt36DOEnjrDEgzb3w4wL0vIjpP99zikObUch4QfNVBLe/3fLSqfOJE3jUrt5wH7of2jxj3aMSgdE468QKQXegDVzPYVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716401120; c=relaxed/simple;
-	bh=s+rE9oZB7j+i0qizmmQzYoWhm/5IaI39Xax9F+yfQAU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=M+ek+AIUzkQczaXE8v3WMm/PZyWa0owKVJdtO0/RtseYdczadXOCNu9la3zlChB6gpSnbJKRm7754Dg/bn+N1PXRoDckUqYMJLl9/ML7N7RYB6LVd+VPHdJ/t0C918Oqfk80ko7zv6wjGJ4f6a36ZoKaDMAPbpN4mxTo/0P3SAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTUB9WyF; arc=none smtp.client-ip=10.30.226.201
+	bh=1lacsQyR4j52HqJr1m92NS6XwhJgS7D/XuViCf53rlg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=L8UCDwuhNI/G1Z+AhdmWQ5PUEUinU0MvQYhvIxVeGgUZ/s7zfzH0+4o5uRC7AB/9h4BlR8MZimWgZwzCbSlexwAeDTgALlxtzSz8DMG1+t90C4KVuYuHLkUuxj8c352IBorq8dcVdteMaqEVsd7AE4XgJ1bLkFU1R1usmfWPBdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNPy/Ezx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTUB9WyF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 96571C32782;
-	Wed, 22 May 2024 18:05:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNPy/Ezx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0FD74C4AF09;
+	Wed, 22 May 2024 18:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716401119;
-	bh=s+rE9oZB7j+i0qizmmQzYoWhm/5IaI39Xax9F+yfQAU=;
+	s=k20201202; t=1716401120;
+	bh=1lacsQyR4j52HqJr1m92NS6XwhJgS7D/XuViCf53rlg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=JTUB9WyFMy9/+A+cfqGcX+Tto06g32mJFALLU40EHlc5mZbJZrVGVayAiNIcMURnw
-	 tCeeUVuAUcftYkZsZd83zIQYNd2lfGposJPZ0hPNRtiTB5RsaD7BFKWZ3354QCsXiK
-	 Dm6vd3b0CoISMHX86wvodzfMuy7uW2u45EPnCGXap41eHIv5sWaJnYxjBis37jdkV4
-	 f7+MvL/hq2JEbiQMn42bOQGXXJCoA9bXZ+xR/Wfc7KxKLPmnNlx41HvB5KUkDkUp3N
-	 GKLBoxoqi4MyfW/pvgAEOwzjQsyh8ERFdtOoO/Dkxu9XT3J/UK7HusD7l1+x7QsFI4
-	 zqA2J4cfCowNQ==
+	b=BNPy/Ezxnt3QnV0BmepnFcupEqdqiGMyCPS74It1z3+xLV/jjAw/njPXHKX4/5gS1
+	 edwYzcTPP4kpbFJj3cbSVzqHqIqSh02iEKDYlMGyU0E9mOmkX4zr1Qzr0+j3BUhf+V
+	 HlySS1PeS9oGUNnxStKVuiePi/VpDp0Wz7OIfMzv8UspR70+eAjsG0KIVRsenr9L//
+	 Y5Udf3FzAoyTKHeZ0yIYGsHT0SRoNlGXa42ntw8tIt7jXsqM+aPIN0VAUGqNMbwPfw
+	 FSyFTLwRp+WADrG0Osks/0ccORswJgOUx774EnyLBJCyz+w6eyArNyb1AY87knOBtd
+	 pfc7tMqoqIajQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8B40FC43618;
-	Wed, 22 May 2024 18:05:19 +0000 (UTC)
-Subject: Re: [GIT PULL] Backlight for v6.10
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 066E8C43618;
+	Wed, 22 May 2024 18:05:20 +0000 (UTC)
+Subject: Re: [GIT PULL] fuse update for 6.10
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240522100423.GC6035@google.com>
-References: <20240522100423.GC6035@google.com>
+In-Reply-To: <CAJfpegs9w+yNAvFCj9Ne54H6WMCJ9T16CrNDO-NRJwb9V5ieTw@mail.gmail.com>
+References: <CAJfpegs9w+yNAvFCj9Ne54H6WMCJ9T16CrNDO-NRJwb9V5ieTw@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240522100423.GC6035@google.com>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/backlight tags/backlight-next-6.10
-X-PR-Tracked-Commit-Id: 1fd949f653ee1a3c1776ef8a5295ae072c9b67f2
+X-PR-Tracked-Message-Id: <CAJfpegs9w+yNAvFCj9Ne54H6WMCJ9T16CrNDO-NRJwb9V5ieTw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-update-6.10
+X-PR-Tracked-Commit-Id: 529395d2ae6456c556405016ea0c43081fe607f3
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7eae27cd12a2d305ffad41a8e10cff3bb8c0dcb0
-Message-Id: <171640111956.25247.10661715366359239844.pr-tracker-bot@kernel.org>
-Date: Wed, 22 May 2024 18:05:19 +0000
-To: Lee Jones <lee@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>
+X-PR-Merge-Commit-Id: 4f2d34b65b40937b43c38ba34ece5aa3bc210e0d
+Message-Id: <171640112001.25247.15882612239209450060.pr-tracker-bot@kernel.org>
+Date: Wed, 22 May 2024 18:05:20 +0000
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 22 May 2024 11:04:23 +0100:
+The pull request you sent on Wed, 22 May 2024 12:07:06 +0200:
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/backlight tags/backlight-next-6.10
+> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-update-6.10
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7eae27cd12a2d305ffad41a8e10cff3bb8c0dcb0
+https://git.kernel.org/torvalds/c/4f2d34b65b40937b43c38ba34ece5aa3bc210e0d
 
 Thank you!
 
