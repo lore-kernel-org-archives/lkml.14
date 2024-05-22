@@ -1,107 +1,109 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E92F1BF2A
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id A694B1BF2A
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716404168; cv=none; b=bx1ue7ztAKSrAVbPzxU0Ah/21qK1UAQgETg9Jm5BdxU/bgMcK486xfbl626O6RoDhas2iBAjItyJtwHLc1NgG5fPCTRpF7WwHw1eKrqbEVYuluxGFJbUYvtPWpqOgwim4NKVFmRp3qgnVk7tRIuabhye91A29g9Nrzs9TVZ78NY=
+	t=1716404305; cv=none; b=GAlJWmY8mSFZSSC+IV0xfk86loHwHWyj8+neSdhtgxPQuMY4JHZjUKgiACaJV77d4KZMOSWJuLJlJFHNAQvpGHXSmFomUV15YaXVf4rpI4F7cEmYQmXKRkP0Xur8mpwj75uJekirsEgtTaFRzC+PZUWvV2ldShRVUGK8z8+OQnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716404168; c=relaxed/simple;
-	bh=xSNNEFl/Or2oWrm6xKX/wFgWrfyMQSIVuBPLnP2I2FY=;
-	h=Subject:Date:Message-ID:MIME-Version:Cc:From:To; b=Yatdi8TQLRLIjl/qZyeS0JpsCWgSbtSX4yv6eHXoxIGn0qf63uF5KVdQ7ofjPceUQ0MLsiG/uRyRN+RrGRfNF5Q6aBd3s1cHlR8oYJn8QjrKekSckEvXgd2//IjppxR8fndsrR4dOFp6g751ZcaDLFjtJx/vlFxWuFcUiGqHoXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=DNbBbZK2; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="DNbBbZK2"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2b4a7671abaso1416972a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716404165; x=1717008965; darn=vger.kernel.org;
-        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=dnzy+P27CG9g1SjT29AHyztBT8s8Vr6GnIB5bhcdo10=;
-        b=DNbBbZK2fAtW/apXXzUe8erLqW49i2mF9hILN2Lw4ZI7QzhLVnXz7yhy4/IL+kgA0A
-         CTyplxgsnnIugM6frU4+cKo1ZKBUVURg1z+4IDmZcNFfcldagqfDZhVKMh7ZllS7LEgl
-         oYt6ZD+GnejFctU4gaXJNWP3CCiqGQI2UsNPd2Iq+GElpRtxNmjcWrYm7L5cOpwZKBAK
-         uJlwgVHdL88dLnLVklZHx8zs+EKpzv7hAbQz6GpfMtnu9udj7AvxFNokh+OkLRHSY52A
-         xXMxv57Ro4YMVyvz2sH/EBoA/X16e7Pj4vAIuJ+vC20zkVAMABOv5WTjFQNMPLEdbnr+
-         XYhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716404165; x=1717008965;
-        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
-         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dnzy+P27CG9g1SjT29AHyztBT8s8Vr6GnIB5bhcdo10=;
-        b=M9CCYGjc4J/3L0VWiruAbqV5Zx9NeESW7RKd5B0VZaoIqKh8sTSY4ffyR7UnoxOoOl
-         wqg1mj5tKjS/A+iyctOcxEyWc1y1M8+DraIphZk0ntT0LcPZ4GTP6is+113++ICbBs9e
-         cuyuTSNT4yr+vHeaj8Dpsgt8OKZzW5U3nCox6p702eAeD6MavziwBIv9R5k0jxuyQQ2n
-         8jnH/jqUt4dBPUXNfgy6wBVm7BSoV57PwZMycpogTWqRDAz1R9hB6lCNobFbO12P4UVN
-         u37B5LcMu5wIuM46pk7AqwbxDcTVCoDeiTffbYWquyuIhIm/Mf5YkN4D1zQyzPjelFuE
-         0dFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEe1o0rqortM6DqdFyeQNPdAlFl5EwOGWfuS6pbtYVSzJx9MUaVtEn7KrHvbNokXpssrV51hukvECmPSYY0k41AQ1Qh8aDMUVmI2co
-X-Gm-Message-State: AOJu0YzM6EVqzI1D9D3ZWzylGLSEMfYQWQBCGCs5jhZe6HW9E0CGrSU4
-	jazzOlB0aapY2chjjNmGA+C0lFZko3i3UxduJg+t/RLmI9fFJk2gkTsAQc/mcck=
-X-Google-Smtp-Source: AGHT+IGu2YOuF8nlRehcHho+rj9d+wag8HDJWVH5TjU1gb3maLVKxYpE3+bvJ1t/Oj/1dk5a004niQ==
-X-Received: by 2002:a17:90a:4315:b0:2bd:4759:46dd with SMTP id 98e67ed59e1d1-2bd9f59ec18mr3032141a91.37.1716404165448;
-        Wed, 22 May 2024 11:56:05 -0700 (PDT)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bdd9ed3812sm115120a91.11.2024.05.22.11.56.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 11:56:04 -0700 (PDT)
-Subject: [PATCH] irqchip: riscv-imsic: Fixup riscv_ipi_set_virq_range() conflict
-Date: Wed, 22 May 2024 11:49:55 -0700
-Message-ID: <20240522184953.28531-3-palmer@rivosinc.com>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1716404305; c=relaxed/simple;
+	bh=Tqi1FXFAW4fmx/FjDROKrxdWvdWa0RciI+q8Yszu5Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qE1nkbb/S9pfGrB5O3xMquNhHT8aPgs13VabVieL2uJWXTHzEvyb+uUAGwGdJ63TX4GkpEsbQ09fLIN5iw5jwr9W82+czz7xk4yj1pEXLat31lw7rytuKlZhXugAtNRfiPCw3FXWtaQddw9y+8466HafD/SIF02glUpF5Uje4+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 509435 invoked by uid 1000); 22 May 2024 14:58:22 -0400
+Date: Wed, 22 May 2024 14:58:22 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Michael Grzeschik <mgr@pengutronix.de>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+  Avichal Rakesh <arakesh@google.com>,
+  Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+  Daniel Scally <dan.scally@ideasonboard.com>,
+  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+  Jayant Chowdhary <jchowdhary@google.com>,
+  "etalvala@google.com" <etalvala@google.com>,
+  Michael Riesch <michael.riesch@wolfvision.net>,
+  "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] usb: gadget: uvc: allocate requests based on frame
+ interval length and buffersize
+Message-ID: <e39e8340-0c99-4fc4-8e40-fcf052614020@rowland.harvard.edu>
+References: <ZifEvUi9-E8M4dp8@pengutronix.de>
+ <17192e0f-7f18-49ae-96fc-71054d46f74a@google.com>
+ <20240424022806.uo73nwpeg63vexiv@synopsys.com>
+ <ZkE-O0yJ33T9hWa0@pengutronix.de>
+ <20240517014359.p2s44ypl4bix4odm@synopsys.com>
+ <Zk03Ys1rA0I5yiZy@pengutronix.de>
+ <20240522014132.xlf7azgq2urfff2d@synopsys.com>
+ <3f404a27-50e8-42c5-a497-b46751154613@rowland.harvard.edu>
+ <20240522171640.iuol4672rnklc35g@synopsys.com>
+ <Zk4td_0RR0cMJKro@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc: anup@brainfault.org, tglx@linutronix.de,
-  Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, aou@eecs.berkeley.edu,
-  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-  Tomasz Jeznach <tjeznach@rivosinc.com>
-From: Palmer Dabbelt <palmer@rivosinc.com>
-To: tglx@linutronix.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zk4td_0RR0cMJKro@pengutronix.de>
 
-From: Palmer Dabbelt <palmer@rivosinc.com>
+On Wed, May 22, 2024 at 07:37:59PM +0200, Michael Grzeschik wrote:
+> On Wed, May 22, 2024 at 05:17:02PM +0000, Thinh Nguyen wrote:
+> > I agree. The dwc3 driver has this workaround to somewhat work with the
+> > UVC. This behavior is not something the controller expected, and this
+> > workaround should not be a common behavior for different function
+> > driver/protocol. Since this behavior was added a long time ago, it will
+> > remain the default behavior in dwc3 to avoid regression with UVC (at
+> > least until the UVC is changed). However, it would be nice for UVC to
+> > not rely on this.
+> 
+> With "this" you mean exactly the following commit, right?
+> 
+> (f5e46aa4 usb: dwc3: gadget: when the started list is empty stop the active xfer)
+> 
+> When we start questioning this, then lets dig deeper here.
+> 
+> With the fast datarate of at least usb superspeed shouldn't they not all
+> completely work asynchronous with their in flight trbs?
+> 
+> In my understanding this validates that, with at least superspeed we are
+> unlikely to react fast enough to maintain a steady isoc dataflow, since
+> the driver above has to react to errors in the processing context.
+> 
+> This runs the above patch (f5e46aa4) a gadget independent solution
+> which has nothing to do with uvc in particular IMHO.
+> 
+> How do other controllers and their drivers work?
 
-There was a semantic conflict between 21a8f8a0eb35 ("irqchip: Add RISC-V
-incoming MSI controller early driver") and dc892fb44322 ("riscv: Use
-IPIs for remote cache/TLB flushes by default") due to an API change.
-This manifests as a build failure post-merge.
+You should think of isochronous transfer requests as a pipeline flowing 
+from the function driver to the UDC driver.  As long as the pipeline 
+never becomes empty, transfers will occur with the desired timing: one 
+packet (ignoring high-bandwidth issues) per isochronous interval.
 
-Reported-by: Tomasz Jeznach <tjeznach@rivosinc.com>
-Link: https://lore.kernel.org/all/mhng-10b71228-cf3e-42ca-9abf-5464b15093f1@palmer-ri-x1c9/
-Fixes: 0bfbc914d943 ("Merge tag 'riscv-for-linus-6.10-mw1' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux")
-Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
----
-Sorry I wasn't clear about this one, but looks like it got dropped as
-part of the merge.  I'm happy to pick this up via the RISC-V tree if
-folks want, but I'll keep it stashed off to the side for now as it's
-just touching irqchip.  I'm planning on sending some more stuff on
-Friday morning, so just LMK.
----
- drivers/irqchip/irq-riscv-imsic-early.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But if the pipeline does become empty, because the function driver 
+doesn't submit requests to the UDC driver quickly enough, the behavior 
+is undetermined.  Obviously no data can be sent before the next request 
+is submitted.  And even if the next request is submitted before the next 
+time interval expires, the UDC driver might delay transferring the 
+request's data until a later time interval.  Or it might not.  In short, 
+when the function driver does submit its next request, there's no way to 
+know in which interval its data will get sent to the host.  Furthermore, 
+there's no way in the gadget framework for the function driver to ask 
+that the request be sent in a particular transfer window.
 
-diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
-index 886418ec06cb..4fbb37074d29 100644
---- a/drivers/irqchip/irq-riscv-imsic-early.c
-+++ b/drivers/irqchip/irq-riscv-imsic-early.c
-@@ -49,7 +49,7 @@ static int __init imsic_ipi_domain_init(void)
- 		return virq < 0 ? virq : -ENOMEM;
- 
- 	/* Set vIRQ range */
--	riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
-+	riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI);
- 
- 	/* Announce that IMSIC is providing IPIs */
- 	pr_info("%pfwP: providing IPIs using interrupt %d\n", imsic->fwnode, IMSIC_IPI_ID);
--- 
-2.45.0
+This means that function drivers should do their best to make sure the 
+pipeline never becomes empty, that there always is at least one request 
+in progress at all times.  Even if this requires submitting zero-length 
+requests because the necessary data isn't available yet.
 
+Remember, isochronous transfers are meant only to be a best-effort 
+attempt at low-latency data delivery, without guarantees (other than a 
+reserved amount of bandwidth).  If a packet gets lost or dropped from 
+time to time, whether because of transmission errors or because the data 
+source was unable to keep up, it shouldn't matter very much in the end.
+The receiver (i.e., the host) should be able to recover, resynchronize, 
+and move on.
+
+Alan Stern
