@@ -1,327 +1,123 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7507710C
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 05:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB726F067;
+	Wed, 22 May 2024 05:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716356419; cv=none; b=SRo4hvQ1E/a+FJzuhlNe7OUsniK78S+3kCBcklDioK5ZuXb6eRluBZsr9rqjnf5vmACzFiO8JZejOxjdbrJ+rNe5BHmpl3Nw4X8eJWeHEct0V0jPzJFnRKbgTPDi1rNTA2eJNXUeg0tA4qnuHJV3iRZsU8CeUVY2Nv3cH81J2CY=
+	t=1716356521; cv=none; b=VtxjhhGNKuyZDLnvJ60BX5FPboGUSnxFhYG1f1DWYKEpUOfu2RhUpwEON0MtMggxIAFYOQpFMc7HvXi+Rsd9tdJtXWHE5q3xYXtCDztd4mwTcajqOmUkrh1xCAgCwuWVf9yR6Puu90TPmKE4wtlwMDfLyNayvGkHkm2WQn5sabY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716356419; c=relaxed/simple;
-	bh=7BAnbozBUGliEkFA2yy81ruk4ikDMyqp7A70k41kDBQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WyKWaPBOOTkzp6Yv3LB8rHqkuvmDnZwEnwTozCE2o9lIccWOh4V8/4vYwuq4jIIi8LhwIXOCVRUCmuJukCTRXah/cMdRUJ4E04runymX4rjdPJ33z/6LJAA9JDdZLB2XnVapQ+8+ZsSlWX9I3RfD4Razk1BgZsZh5BpjyTfnYrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1s9ehj-0003dZ-JJ; Wed, 22 May 2024 07:39:59 +0200
-Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1s9ehg-002U0s-OJ; Wed, 22 May 2024 07:39:56 +0200
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1s9ehg-00Dqu2-26;
-	Wed, 22 May 2024 07:39:56 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Wed, 22 May 2024 07:39:51 +0200
-Subject: [PATCH v4 1/3] mtd: nand: mxc_nand: separate page read from ecc
- calc
+	s=arc-20240116; t=1716356521; c=relaxed/simple;
+	bh=DNOmOODdlXynNw2098gR2o08KbJJt+rlhW8xtv8itE8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gGCW4Igyt+GhQ/pNCa9mDLkZ0rMC6Cq/1uZNCxfL2baT5UqschOBz0txwR6F9C/ONJ7ay9h6aIZpk7URMeJyTnCwQCI7Kas+FrT4a2tn3HGQ0ITjyIGLi9b7X2ysLqXrfrveM2AgQbLU6dni1auo8/bWqjEjT7wGwjwOSIU3xCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQ3HWlPd; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQ3HWlPd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716356519; x=1747892519;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DNOmOODdlXynNw2098gR2o08KbJJt+rlhW8xtv8itE8=;
+  b=FQ3HWlPdyxJTbTchvKnNfCMPaf2vSTWPaaGE4b2Ah8KIDYC7xd5FzPDf
+   2WPEVpIMdoZX4cYJHxHc0Q3VVFZXFNeeFMIUTGTh9gHrhiocmLqeXWfhJ
+   unGpbIG8+N6JlyTl9ehFp9vVyhUXqv3xKVglptmn+CytLcfjZiP2Oz0oS
+   HWMLLXJtS28J/go/CQKck2BqQjd3hfwIcWinOWuI8qpCt+7Ch+2/mSasz
+   ZXlBKx/G3M9mRNA1Jvd07WVeaBTf+Jy80UG2YAuThyndNBRGGFYKSzUnb
+   1J6ha+Q9dsWv50Nt6rrpbwpfF5BSOiLOShRNPu4R4MJXlGbUpKz4azetr
+   w==;
+X-CSE-ConnectionGUID: 9NssqFZyQGK3E6IhAgUfSA==
+X-CSE-MsgGUID: 0ZqYTFTiSg+ChrA3oDz/Sg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="23990822"
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="23990822"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 22:41:58 -0700
+X-CSE-ConnectionGUID: 2Q1tF3BvQ9S+lXXvTMhpug==
+X-CSE-MsgGUID: ms7XDvyHTui40I7vtTbvbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="37922008"
+Received: from xiao-desktop.sh.intel.com ([10.239.46.158])
+  by orviesa003.jf.intel.com with ESMTP; 21 May 2024 22:41:53 -0700
+From: Xiao Wang <xiao.w.wang@intel.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	luke.r.nels@gmail.com,
+	xi.wang@gmail.com,
+	bjorn@kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	pulehui@huawei.com,
+	haicheng.li@intel.com,
+	Xiao Wang <xiao.w.wang@intel.com>
+Subject: [PATCH] riscv, bpf: Use STACK_ALIGN macro for size rounding up
+Date: Wed, 22 May 2024 13:45:07 +0800
+Message-Id: <20240522054507.3941595-1-xiao.w.wang@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240522-mtd-nand-mxc-nand-exec-op-v4-1-75b611e0ac44@pengutronix.de>
-References: <20240522-mtd-nand-mxc-nand-exec-op-v4-0-75b611e0ac44@pengutronix.de>
-In-Reply-To: <20240522-mtd-nand-mxc-nand-exec-op-v4-0-75b611e0ac44@pengutronix.de>
-To: Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Sascha Hauer <s.hauer@pengutronix.de>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716356396; l=7729;
- i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=7BAnbozBUGliEkFA2yy81ruk4ikDMyqp7A70k41kDBQ=;
- b=k1rA42IW50j9pVIJPSjaiDAHAQE1zGNksRYIP7CwGs6nq0J0uHy3JeKS6N09Eughvq/6o4Cy1
- AzOIdp7zcvbDKDwbiVqBKpxOhgdKtD2YZiJcTiv97zbGwlhmdf8T4Es
-X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
- pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
-Our read_page hook currently reads out a page and also counts and
-returns the number of bitflips. In upcoming exec_op conversion we'll
-need to read the page data in exec_op, but the bitflip information
-will be needed in mxc_nand_read_page(). To ease exec_op conversion
-separate the page read out from the bitflip evaluation.
+Use the macro STACK_ALIGN that is defined in asm/processor.h for stack size
+rounding up, just like bpf_jit_comp32.c does.
 
-For the v2/v3 controllers we can leave the bitflip information in the
-status register for later evaluation. For the v1 controller this is
-not possible, because the status register is overwritten with each
-subpage read. We therefore store the bitflip information in the private
-data.
-
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
 ---
- drivers/mtd/nand/raw/mxc_nand.c | 140 ++++++++++++++++++++++++----------------
- 1 file changed, 86 insertions(+), 54 deletions(-)
+ arch/riscv/net/bpf_jit_comp64.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw/mxc_nand.c
-index 003008355b3c2..3fe0b471f4a2d 100644
---- a/drivers/mtd/nand/raw/mxc_nand.c
-+++ b/drivers/mtd/nand/raw/mxc_nand.c
-@@ -20,6 +20,7 @@
- #include <linux/irq.h>
- #include <linux/completion.h>
- #include <linux/of.h>
-+#include <linux/bitfield.h>
+diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_comp64.c
+index 39149ad002da..bd869d41612f 100644
+--- a/arch/riscv/net/bpf_jit_comp64.c
++++ b/arch/riscv/net/bpf_jit_comp64.c
+@@ -858,7 +858,7 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im,
+ 	stack_size += 8;
+ 	sreg_off = stack_size;
  
- #define DRIVER_NAME "mxc_nand"
+-	stack_size = round_up(stack_size, 16);
++	stack_size = round_up(stack_size, STACK_ALIGN);
  
-@@ -47,6 +48,8 @@
- #define NFC_V1_V2_CONFIG1		(host->regs + 0x1a)
- #define NFC_V1_V2_CONFIG2		(host->regs + 0x1c)
- 
-+#define NFC_V1_V2_ECC_STATUS_RESULT_ERM GENMASK(3, 2)
-+
- #define NFC_V2_CONFIG1_ECC_MODE_4	(1 << 0)
- #define NFC_V1_V2_CONFIG1_SP_EN		(1 << 2)
- #define NFC_V1_V2_CONFIG1_ECC_EN	(1 << 3)
-@@ -132,7 +135,7 @@ struct mxc_nand_devtype_data {
- 	uint16_t (*get_dev_status)(struct mxc_nand_host *);
- 	int (*check_int)(struct mxc_nand_host *);
- 	void (*irq_control)(struct mxc_nand_host *, int);
--	u32 (*get_ecc_status)(struct mxc_nand_host *);
-+	u32 (*get_ecc_status)(struct nand_chip *);
- 	const struct mtd_ooblayout_ops *ooblayout;
- 	void (*select_chip)(struct nand_chip *chip, int cs);
- 	int (*setup_interface)(struct nand_chip *chip, int csline,
-@@ -175,6 +178,7 @@ struct mxc_nand_host {
- 	int			eccsize;
- 	int			used_oobsize;
- 	int			active_cs;
-+	unsigned int		ecc_stats_v1;
- 
- 	struct completion	op_completion;
- 
-@@ -406,19 +410,81 @@ static void irq_control(struct mxc_nand_host *host, int activate)
- 	}
- }
- 
--static u32 get_ecc_status_v1(struct mxc_nand_host *host)
-+static u32 get_ecc_status_v1(struct nand_chip *chip)
+ 	if (!is_struct_ops) {
+ 		/* For the trampoline called from function entry,
+@@ -1723,7 +1723,7 @@ void bpf_jit_build_prologue(struct rv_jit_context *ctx, bool is_subprog)
  {
--	return readw(NFC_V1_V2_ECC_STATUS_RESULT);
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+	unsigned int ecc_stats, max_bitflips = 0;
-+	int no_subpages, i;
-+
-+	no_subpages = mtd->writesize >> 9;
-+
-+	ecc_stats = host->ecc_stats_v1;
-+
-+	for (i = 0; i < no_subpages; i++) {
-+		switch (ecc_stats & 0x3) {
-+		case 0:
-+		default:
-+			break;
-+		case 1:
-+			mtd->ecc_stats.corrected++;
-+			max_bitflips = 1;
-+			break;
-+		case 2:
-+			mtd->ecc_stats.failed++;
-+			break;
-+		}
-+
-+		ecc_stats >>= 2;
-+	}
-+
-+	return max_bitflips;
- }
+ 	int i, stack_adjust = 0, store_offset, bpf_stack_adjust;
  
--static u32 get_ecc_status_v2(struct mxc_nand_host *host)
-+static u32 get_ecc_status_v2_v3(struct nand_chip *chip, unsigned int ecc_stat)
- {
--	return readl(NFC_V1_V2_ECC_STATUS_RESULT);
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+	u8 ecc_bit_mask, err_limit;
-+	unsigned int max_bitflips = 0;
-+	int no_subpages, err;
-+
-+	ecc_bit_mask = (host->eccsize == 4) ? 0x7 : 0xf;
-+	err_limit = (host->eccsize == 4) ? 0x4 : 0x8;
-+
-+	no_subpages = mtd->writesize >> 9;
-+
-+	do {
-+		err = ecc_stat & ecc_bit_mask;
-+		if (err > err_limit) {
-+			mtd->ecc_stats.failed++;
-+		} else {
-+			mtd->ecc_stats.corrected += err;
-+			max_bitflips = max_t(unsigned int, max_bitflips, err);
-+		}
-+
-+		ecc_stat >>= 4;
-+	} while (--no_subpages);
-+
-+	return max_bitflips;
- }
+-	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
++	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, STACK_ALIGN);
+ 	if (bpf_stack_adjust)
+ 		mark_fp(ctx);
  
--static u32 get_ecc_status_v3(struct mxc_nand_host *host)
-+static u32 get_ecc_status_v2(struct nand_chip *chip)
- {
--	return readl(NFC_V3_ECC_STATUS_RESULT);
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+
-+	u32 ecc_stat = readl(NFC_V1_V2_ECC_STATUS_RESULT);
-+
-+	return get_ecc_status_v2_v3(chip, ecc_stat);
-+}
-+
-+static u32 get_ecc_status_v3(struct nand_chip *chip)
-+{
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+
-+	u32 ecc_stat = readl(NFC_V3_ECC_STATUS_RESULT);
-+
-+	return get_ecc_status_v2_v3(chip, ecc_stat);
- }
+@@ -1743,7 +1743,7 @@ void bpf_jit_build_prologue(struct rv_jit_context *ctx, bool is_subprog)
+ 	if (seen_reg(RV_REG_S6, ctx))
+ 		stack_adjust += 8;
  
- static irqreturn_t mxc_nfc_irq(int irq, void *dev_id)
-@@ -712,9 +778,9 @@ static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
--	unsigned int bitflips_corrected = 0;
- 	int no_subpages;
- 	int i;
-+	unsigned int ecc_stats = 0;
+-	stack_adjust = round_up(stack_adjust, 16);
++	stack_adjust = round_up(stack_adjust, STACK_ALIGN);
+ 	stack_adjust += bpf_stack_adjust;
  
- 	host->devtype_data->enable_hwecc(chip, ecc);
- 
-@@ -727,8 +793,6 @@ static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
- 	no_subpages = mtd->writesize >> 9;
- 
- 	for (i = 0; i < no_subpages; i++) {
--		uint16_t ecc_stats;
--
- 		/* NANDFC buffer 0 is used for page read/write */
- 		writew((host->active_cs << 4) | i, NFC_V1_V2_BUF_ADDR);
- 
-@@ -737,32 +801,18 @@ static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
- 		/* Wait for operation to complete */
- 		wait_op_done(host, true);
- 
--		ecc_stats = get_ecc_status_v1(host);
--
--		ecc_stats >>= 2;
--
--		if (buf && ecc) {
--			switch (ecc_stats & 0x3) {
--			case 0:
--			default:
--				break;
--			case 1:
--				mtd->ecc_stats.corrected++;
--				bitflips_corrected = 1;
--				break;
--			case 2:
--				mtd->ecc_stats.failed++;
--				break;
--			}
--		}
-+		ecc_stats |= FIELD_GET(NFC_V1_V2_ECC_STATUS_RESULT_ERM,
-+				       readw(NFC_V1_V2_ECC_STATUS_RESULT)) << i * 2;
- 	}
- 
-+	host->ecc_stats_v1 = ecc_stats;
-+
- 	if (buf)
- 		memcpy32_fromio(buf, host->main_area0, mtd->writesize);
- 	if (oob)
- 		copy_spare(mtd, true, oob);
- 
--	return bitflips_corrected;
-+	return 0;
- }
- 
- static int mxc_nand_read_page_v2_v3(struct nand_chip *chip, void *buf,
-@@ -770,10 +820,6 @@ static int mxc_nand_read_page_v2_v3(struct nand_chip *chip, void *buf,
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
--	unsigned int max_bitflips = 0;
--	u32 ecc_stat, err;
--	int no_subpages;
--	u8 ecc_bit_mask, err_limit;
- 
- 	host->devtype_data->enable_hwecc(chip, ecc);
- 
-@@ -791,26 +837,7 @@ static int mxc_nand_read_page_v2_v3(struct nand_chip *chip, void *buf,
- 	if (oob)
- 		copy_spare(mtd, true, oob);
- 
--	ecc_bit_mask = (host->eccsize == 4) ? 0x7 : 0xf;
--	err_limit = (host->eccsize == 4) ? 0x4 : 0x8;
--
--	no_subpages = mtd->writesize >> 9;
--
--	ecc_stat = host->devtype_data->get_ecc_status(host);
--
--	do {
--		err = ecc_stat & ecc_bit_mask;
--		if (err > err_limit) {
--			mtd->ecc_stats.failed++;
--		} else {
--			mtd->ecc_stats.corrected += err;
--			max_bitflips = max_t(unsigned int, max_bitflips, err);
--		}
--
--		ecc_stat >>= 4;
--	} while (--no_subpages);
--
--	return max_bitflips;
-+	return 0;
- }
- 
- static int mxc_nand_read_page(struct nand_chip *chip, uint8_t *buf,
-@@ -818,13 +845,18 @@ static int mxc_nand_read_page(struct nand_chip *chip, uint8_t *buf,
- {
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
- 	void *oob_buf;
-+	int ret;
- 
- 	if (oob_required)
- 		oob_buf = chip->oob_poi;
- 	else
- 		oob_buf = NULL;
- 
--	return host->devtype_data->read_page(chip, buf, oob_buf, 1, page);
-+	ret = host->devtype_data->read_page(chip, buf, oob_buf, 1, page);
-+	if (ret)
-+		return ret;
-+
-+	return host->devtype_data->get_ecc_status(chip);
- }
- 
- static int mxc_nand_read_page_raw(struct nand_chip *chip, uint8_t *buf,
-
+ 	store_offset = stack_adjust - 8;
 -- 
-2.39.2
+2.25.1
 
