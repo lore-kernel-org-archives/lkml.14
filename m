@@ -1,89 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D51C13D8AA
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 16:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1979913E05B
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 16:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716395384; cv=none; b=D0BP7kw7h0km1BGTqhq2vmR25hrFJFPzmyrD4vEVLcO0lHI/ewlP2WZuzZ6pwP/nZGQw82ww2GOOmmDvF141zP8aQNU4O6CaDU+FLkvXrIriLqBhchogfaGp9iaCZN8isWwB+um3Oi5Pejm5R+m1k98DPWMBW9dq2oU4Ius5oMM=
+	t=1716395709; cv=none; b=kMUsFzTeLobSj9gCgVhgdVVdU6eDXiPXHo//D4arFsoszJX+Mru2ESWth6tayBcx2MPfIkbeuomR+caJUySK/WS5S2zcAmkVadT2jzaW3KCOONd0tZ47bFM9LIUiFE0LlyvW/s0ozed8+Fc8gonfG0awajSmCjJQbg43jxA6JQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716395384; c=relaxed/simple;
-	bh=JUtNNJy/nHM4nKkU6sDEme4IkoVcVSX2db5+h1zO+ac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KG3ovxWIuS5l3awB5k523NQwamidtmlJKzA5E1CxCYKr0scayNJqUE4N8ZhVYCARKcOd/bYsyJUpHmrtVM3CWY7DGrlKsFUq4jJ9SJES7j9DPVIXti2ulkmahbPo+3R14isB0Lf2OyTHuTW0g8WtGXyV3FAtwxCOoR+RdMNifDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qf3wgycv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716395709; c=relaxed/simple;
+	bh=wow702hEWO/XsKIRiOeK7H7iVtAxQpkaiyuys0HINig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dD6hbAO3Sf9TVv9mqU9o6Qst97iy0MCaIDBrylkCKv5UweDApAOjrYZQ00WOrLAJ2UIA31zf2HpPGqs/ekMSSIlA0CQoAVhpnvRFLnzWA0QDurxnO6B4VuiNmom6UoDBhqlqFJ4+bsr2iUrOJTtQ6OyrMQq2MW6pgSfa17/sBuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b1W5D3q2; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qf3wgycv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3A1C2BBFC;
-	Wed, 22 May 2024 16:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716395384;
-	bh=JUtNNJy/nHM4nKkU6sDEme4IkoVcVSX2db5+h1zO+ac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qf3wgycv0vGY1lvXnKMRNqMJUZL34+i6jciTl+/h2OitcbI7fSBAfLJ4bsWwxDMyp
-	 SxUgE79/uzg3gdbuS1OCa3tK44ftrHsrL8tIsH5KJQUIQHEqR8fpgAgDbDDfTTodIi
-	 jQQ6Mk0/T0Wc9EtESMSelBkiW+DnB5zn2nzS7b3jYB3IaYMa4joL+31qGVJXjZ6SIB
-	 8u20pzIMLtrO1UxrMD9+Bb4j9JbMgdefFMaI2lDceBrYCBhgjB/e/RJCn5YkmiyyBL
-	 9qu+2ZsoTI37O7zfnnOzaHE9hpnmG9/CZd8o5QBrDLS4caN0HNQWyDjpu7/FVt5ENm
-	 nxv5xGzprRVjA==
-Date: Wed, 22 May 2024 10:29:40 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: John Meneghini <jmeneghi@redhat.com>
-Cc: hch@lst.de, sagi@grimberg.me, emilne@redhat.com,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-	jrani@purestorage.com, randyj@purestorage.com, hare@kernel.org
-Subject: Re: [PATCH v4 1/1] nvme: multipath: Implemented new iopolicy
- "queue-depth"
-Message-ID: <Zk4ddPmottdOJND1@kbusch-mbp.dhcp.thefacebook.com>
-References: <20240522154212.643572-1-jmeneghi@redhat.com>
- <20240522154212.643572-2-jmeneghi@redhat.com>
- <Zk4VtiCjeqkBKCBA@kbusch-mbp.dhcp.thefacebook.com>
- <cef5a764-ffab-495c-bea2-e4c6a7c76944@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b1W5D3q2"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5ac4470de3bso367592eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 09:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1716395707; x=1717000507; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FF30FLh4FVIj5wgbcXLnpEEb1c/d7E6kmTu0z50oYHg=;
+        b=b1W5D3q2beJtX3N9HzvoDuQ7BBtVhni8fHJ1kkFxClZdRBBrPwN11W+d/L45GTTpam
+         TwaV+CD33Hjdo5YBrAIZySOKgdLuyNNYxRJz0GMKwaAhpxCkAXENKgGf4kLlwGHkKtfX
+         L6QaLdyGvfMmd0q7a0i2j9/SbepGGDlun2SNs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716395707; x=1717000507;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FF30FLh4FVIj5wgbcXLnpEEb1c/d7E6kmTu0z50oYHg=;
+        b=r9ZWDKUcwm7hKjFzxhBdGZxD46K0BfZ3Lzql679ngDNij4BL/UWP2vTsC4EBa7OhHE
+         SauMPYpw+hTeEdkv9GuLDrGl8OJKz/vnlzUGmSSdOVKL5M4m+THzD2UOYHc0S8FSf8o6
+         lLcNmKaqhkFiPo0yWffuSzrG+JSAofPtblJvyu0/apZ+OM/rnsEw+GLu6TjUG+qDzjtk
+         wDr87JKQsQoQKsPUGyu4ELV4VHf56MJiyAblh6NULcAO74V3HWpJCh0/iBQnxRBAWtZ/
+         XrPmYF4/m7ln69DzJ3yN8wdsfHqT+5B0PFLJH54GU8EWmQymda8Oel8giXE+2m8kyAiw
+         aEHw==
+X-Gm-Message-State: AOJu0YxCuvBFUNF0QI/1cAM3dHert36sNoApj54Rznl02vBElQ8j5u17
+	ySPwYpXxfcHN1z+HN8R/Ejv4/XmErYPXP1Xd+Hhu00lfqD/Ia4wf/YU3BcsOmSM=
+X-Google-Smtp-Source: AGHT+IGHfAC3qkCN6OulIhZiaDBbxXmwg5VKYB936DJVaSdhJlQGCxL++LW2UUdg3/EuZDRuVOh0Ug==
+X-Received: by 2002:a05:6820:2585:b0:5b2:7d9f:e708 with SMTP id 006d021491bc7-5b6a2df34f2mr2891522eaf.1.1716395707090;
+        Wed, 22 May 2024 09:35:07 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b31b52263fsm2644126eaf.21.2024.05.22.09.35.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 09:35:06 -0700 (PDT)
+Message-ID: <25596b05-205a-471d-884f-289db262c485@linuxfoundation.org>
+Date: Wed, 22 May 2024 10:35:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cef5a764-ffab-495c-bea2-e4c6a7c76944@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 00/68] Define _GNU_SOURCE for sources using
+To: Paolo Abeni <pabeni@redhat.com>, Edward Liaw <edliaw@google.com>,
+ shuah@kernel.org, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+ Christian Brauner <brauner@kernel.org>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kernel-team@android.com, linux-security-module@vger.kernel.org,
+ netdev@vger.kernel.org, linux-riscv@lists.infradead.org,
+ bpf@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240522005913.3540131-1-edliaw@google.com>
+ <b5e333368d9e69efc6325187a23cef4f4337c738.camel@redhat.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <b5e333368d9e69efc6325187a23cef4f4337c738.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 22, 2024 at 12:23:51PM -0400, John Meneghini wrote:
-> On 5/22/24 11:56, Keith Busch wrote:
-> > On Wed, May 22, 2024 at 11:42:12AM -0400, John Meneghini wrote:
-> > > +static void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy)
-> > > +{
-> > > +	struct nvme_ctrl *ctrl;
-> > > +	int old_iopolicy = READ_ONCE(subsys->iopolicy);
-> > > +
-> > > +	WRITE_ONCE(subsys->iopolicy, iopolicy);
-> > > +
-> > > +	/* iopolicy changes reset the counters and clear the mpath by design */
-> > > +	mutex_lock(&nvme_subsystems_lock);
-> > > +	list_for_each_entry(ctrl, &subsys->ctrls, subsys_entry) {
-> > > +		atomic_set(&ctrl->nr_active, 0);
-> > 
-> > Can you me understand why this is a desirable feature? Unless you
-> > quiesce everything at some point, you'll always have more unaccounted
-> > requests on whichever path has higher latency. That sounds like it
-> > defeats the goals of this io policy.
+On 5/22/24 01:42, Paolo Abeni wrote:
+> On Wed, 2024-05-22 at 00:56 +0000, Edward Liaw wrote:
+>> Centralizes the definition of _GNU_SOURCE into KHDR_INCLUDES and removes
+>> redefinitions of _GNU_SOURCE from source code.
+>>
+>> 809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
+>> asprintf into kselftest_harness.h, which is a GNU extension and needs
+>> _GNU_SOURCE to either be defined prior to including headers or with the
+>> -D_GNU_SOURCE flag passed to the compiler.
 > 
-> This is true. And as a matter of practice I never change the IO policy when IOs are in flight.  I always stop the IO first.
-> But we can't stop any user from changing the IO policy again and again.  So I'm not sure what to do.
+> I'm sorry for the late question, but what is the merge plan here?
 > 
-> If you'd like I add the 'if (old_iopolicy == iopolicy) return;' here, but
-> that's not going to solve the problem of inaccurate counters when users
-> start flipping io policies around. with IO inflight. There is no
-> synchronization between io submission across controllers and changing the
-> policy so I expect changing between round-robin and queue-depth with IO
-> inflight suffers from the same problem... though not as badly.
-> 
-> I'd rather take this patch now and figure out how to fix the problem with
-> another patch in the future.  Maybe we can check the io stats and refuse to
-> change the policy of they are not zero....
 
-The idea of tagging the nvme_req()->flags on submission means the
-completion handling the nr_active counter is symmetric with the
-submission side: you don't ever need to reset nr_active because
-everything is accounted for.
+
+I have asked Edward Liaw explore options to localize the fix to the
+problem introduced by the following commit
+
+809216233555 ("selftests/harness: remove use of LINE_MAX")
+
+I am not happy with the churn. I don't plan to merge this series
+as it for sure.
+
+If and when this problem gets fixed, I plan to merge the change and
+take it through kselftest.
+
+thanks,
+-- Shuah
