@@ -1,119 +1,191 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398EC7CF39
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 15:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D60E21362
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 15:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716390178; cv=none; b=YI6qnyD/UpTlmg5clKASWCFhQT+nJPFa21BlWYNBx5hDED9S0MdOFW1wldoVly8Sq4FAwIdSJHGfX/3tY1NOD8bk/+XkNc1QDo0XqeVkix0uhBqA09+QDhICZuxAT9HxovBKfQNNHZBhCiYSro7Wa1nRLo/9PHHiTUsa5hbZrKI=
+	t=1716390385; cv=none; b=WaJKawzcLcPxtmEl766BhkGh+XA8+il96UG1z27xS3+OZ2Ba+xbVWYskshxMkF4MRwjvmwcdxvskr1d+xZo0YQYkYUMGR4bGRP+uJWLlKpGC71bVpQKjkoGNpI/BNCFRZXkkJsyYTWoFO1roehvb0Ak/ttigNgnl07X5Ny5uk1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716390178; c=relaxed/simple;
-	bh=pVh87fVqPqfQKJqqcDbSMFn+FcTBzRpmEsaCLIFq0AA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mV+Pk7wvbM5jcg2XEIGc+EtZ0L6Uon6nDsnKp1sNghxeNikfNjOk03y/FIMJc6eQVMwaI9GlE7f6vw7n6qY5cF2MLdi3IuXn5YLvwYw5NoZPeKd0L2Fj3Ag/J0q5I/63ywynJGEL0oard60Xh5b1bc3tPOKg+k/MtouF6248+ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=J6Z3qU5V; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1716390385; c=relaxed/simple;
+	bh=qv0FoQjoCwEfgMkQVSH/WXa2+aVacXHUSQDy3m2KIU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FXHqPi/16QUgAZd7rkxmYLPNpl6M0YLTisINTecxvTVfgs/ATSynYM6Id4XrZUQowpWDkVcPu+98wB48pwx3obVgK+2cUoWEyQ/Sxe2+TwKh+u86uaMX1HBSemG8q1uVENLDZIUlJ/MXDozH6QZ8qywJwf4ePDYw6+zLyLh+zCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n2euVCne; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="J6Z3qU5V"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e3b1b6e9d1so78074691fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 08:02:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716390175; x=1716994975; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3jsqIIhfmiwTRQW5T/GGVz9A/caM/qGXeRU8xHOLSg0=;
-        b=J6Z3qU5VeCfmizfMpuuKDk8Tr+51wldm0CshacVsxrmUiCdjjraP71SQfvnwiQaykq
-         N1t2RjOw6OAXKyezl6O8kKGI5kuwzBfvKV2F773FvlFrv8Fn5h07WfGn7wgrzRDTkQde
-         k9cPYPNNcCaqsLwLxb7rAtf9RPj73ofxdZr1wXNqySPud0l6Cp4JAHrwZhDnYZpfT0v8
-         lIkGjCxd6BPSp/G9NIar5ZcMN7DH2+wzgVlCy0eE0Gpk+w1P9DHEGUZGFs+B+L96RJed
-         qxXlhV73fYCT/WfEZtqJwvEPMR7R/uweuulx9ZheyjhKQzvkAt38GL8E+7AI48YOs7TH
-         pTdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716390175; x=1716994975;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3jsqIIhfmiwTRQW5T/GGVz9A/caM/qGXeRU8xHOLSg0=;
-        b=Q5tNUncjbXeJXkxuyNObeBhvDo4bHySeKdVeKknTIKJaF/6YaCyVZD2UgOgaO1IDIR
-         UtLGPWP4qCydzJe+OW6f+ynMcxwBuDVip095wazSBMM4lkZmB5wPz/+x1ApvawqFd8Fc
-         M/HLEMegiSrXKoJLAqNxiQIL1lJiFSPRUIq/w51g+9yCA7zt6+tnZ8UYjiOeEKPuPgdC
-         GaGpCKM9ITHFrGHiDcnLGhY9jTEnrZlAAqItA+g10BYjXs8uaIUt7dqxUEy1xmHOHoMX
-         w/15sUgHIzUeKuCnCkFTSfhsqZWCOnMxbma8t9mJ1OtlX0yVoQiRdz0Y9Ont+KYjh3iR
-         MQFg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6ApLGstDoyW6fxZz241AIn9vlDxiBtGbhdGLkNrUuYEpMc7fUWnmfxpVZhLhPo3knK/ITOgPsmqXVyRAZkqduDUTbM7XYSli6XWUa
-X-Gm-Message-State: AOJu0Yz4IPEvP9Rs16hNFFdOS3lEF5FZ2Crh/w3B/ha0FS+5ChPVhOml
-	5S9D5yp+twd4ZXeysCefUYnjMbaAteg98wg1Pe0CjFkMnYy54Fa+nDL7VOkROQY=
-X-Google-Smtp-Source: AGHT+IFO99+pk7LErl0507i4+6glcqOJj5k3VvjWUKfZyuG4ISlN/d5VATvuxSfbiyh00Qg47KZK8Q==
-X-Received: by 2002:a2e:9d02:0:b0:2e4:7996:f9f0 with SMTP id 38308e7fff4ca-2e94946d417mr14305091fa.17.1716390175584;
-        Wed, 22 May 2024 08:02:55 -0700 (PDT)
-Received: from localhost.localdomain (host-79-16-6-145.retail.telecomitalia.it. [79.16.6.145])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fa90e93absm531370515e9.9.2024.05.22.08.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 08:02:55 -0700 (PDT)
-From: Angelo Dureghello <adureghello@baylibre.com>
-X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-To: jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: nuno.sa@analog.com,
-	lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Angelo Dureghello <adureghello@baylibre.com>
-Subject: [PATCH v2 6/6] iio: dac: ad3552r: uniform structure names
-Date: Wed, 22 May 2024 17:01:41 +0200
-Message-ID: <20240522150141.1776196-7-adureghello@baylibre.org>
-X-Mailer: git-send-email 2.45.0.rc1
-In-Reply-To: <20240522150141.1776196-1-adureghello@baylibre.org>
-References: <20240522150141.1776196-1-adureghello@baylibre.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n2euVCne"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716390383; x=1747926383;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=qv0FoQjoCwEfgMkQVSH/WXa2+aVacXHUSQDy3m2KIU4=;
+  b=n2euVCneJmklC4ipVnZXkxTfD2sWatcE3/RKZBcNSie2vwoOWGGoLljX
+   YOfI6uz6+UQbAy+gX9nWq5YGruSHuLAHWSzqSMH5gGA1+vcDE+ROYsWPs
+   3q4qTjMZKUdVkX8EXvllVQj00lU307z6EGdvaIwEFyhNb9+Vk6JRJntbq
+   rKtj8Jg//3DWa26VvrtHpGZRm42mo+XSXEvPwdFv9IaFEJQ3y7kMNGNFt
+   IdPQrEOSvBFNB2iQE2xuOgziRTSW1cRWVS7pKkq6MLecymtVyVTDZ1p2v
+   MPsiZ+TfTXhq0dSR2BKiqHJTJzMkdbOUwpZ3Hax5koK5kWskAbNyumaIG
+   g==;
+X-CSE-ConnectionGUID: KTC6k19uTEWvvGjHH71+vw==
+X-CSE-MsgGUID: V1hSigpFRey1NaTUGfDRsQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="11647657"
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="11647657"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 08:06:22 -0700
+X-CSE-ConnectionGUID: byC7jGm3Tqi5b1v82Ld6Xg==
+X-CSE-MsgGUID: ARlKyOfxQUiWaKr6PoEzyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="37797515"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 22 May 2024 08:06:20 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s9nXe-0001fV-1f;
+	Wed, 22 May 2024 15:06:12 +0000
+Date: Wed, 22 May 2024 23:05:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shahab Vahedi <shahab@synopsys.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	Alexei Starovoitov <ast@kernel.org>
+Subject: arch/arc/net/bpf_jit.h:42:15: sparse: sparse: marked inline, but
+ without a definition
+Message-ID: <202405222314.UG5F2NHn-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Angelo Dureghello <adureghello@baylibre.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   29c73fc794c83505066ee6db893b2a83ac5fac63
+commit: f122668ddcce450c2585f0be4bf4478d6fd6176b ARC: Add eBPF JIT support
+date:   10 days ago
+config: arc-randconfig-r133-20240522 (https://download.01.org/0day-ci/archive/20240522/202405222314.UG5F2NHn-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20240522/202405222314.UG5F2NHn-lkp@intel.com/reproduce)
 
-Use same driver file name (ad3552r) for structure names used
-for all variants.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405222314.UG5F2NHn-lkp@intel.com/
 
-Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
----
-Changes for v2:
-- patch added in v2
----
- drivers/iio/dac/ad3552r.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+sparse warnings: (new ones prefixed by >>)
+   arch/arc/net/bpf_jit_core.c: note: in included file:
+>> arch/arc/net/bpf_jit.h:42:15: sparse: sparse: marked inline, but without a definition
+--
+>> arch/arc/net/bpf_jit_arcv2.c:2238:17: sparse: sparse: statement expected after case label
+   arch/arc/net/bpf_jit_arcv2.c:2256:17: sparse: sparse: statement expected after case label
+   arch/arc/net/bpf_jit_arcv2.c:2872:9: sparse: sparse: statement expected after case label
+>> arch/arc/net/bpf_jit_arcv2.c:65:10: sparse: sparse: symbol 'bpf2arc' was not declared. Should it be static?
+>> arch/arc/net/bpf_jit_arcv2.c:2536:3: sparse: sparse: symbol 'arcv2_64_jccs' was not declared. Should it be static?
+>> arch/arc/net/bpf_jit_arcv2.c:2886:10: sparse: sparse: symbol 'arcv2_32_jmps' was not declared. Should it be static?
 
-diff --git a/drivers/iio/dac/ad3552r.c b/drivers/iio/dac/ad3552r.c
-index b8bdbfed22e3..b060cdbc715d 100644
---- a/drivers/iio/dac/ad3552r.c
-+++ b/drivers/iio/dac/ad3552r.c
-@@ -139,7 +139,7 @@ enum ad3552r_ch_vref_select {
- 	AD3552R_EXTERNAL_VREF_PIN_INPUT
- };
- 
--enum ad3542r_id {
-+enum ad3552r_id {
- 	AD3541R_ID = 0x400b,
- 	AD3542R_ID = 0x4009,
- 	AD3551R_ID = 0x400a,
-@@ -265,7 +265,7 @@ struct ad3552r_ch_data {
- 
- struct ad3552r_model_data {
- 	const char *model_name;
--	enum ad3542r_id chip_id;
-+	enum ad3552r_id chip_id;
- 	unsigned int num_hw_channels;
- 	const s32 (*ranges_table)[2];
- 	int num_ranges;
+vim +42 arch/arc/net/bpf_jit.h
+
+    39	
+    40	/************** Functions that the back-end must provide **************/
+    41	/* Extension for 32-bit operations. */
+  > 42	inline u8 zext(u8 *buf, u8 rd);
+    43	/***** Moves *****/
+    44	u8 mov_r32(u8 *buf, u8 rd, u8 rs, u8 sign_ext);
+    45	u8 mov_r32_i32(u8 *buf, u8 reg, s32 imm);
+    46	u8 mov_r64(u8 *buf, u8 rd, u8 rs, u8 sign_ext);
+    47	u8 mov_r64_i32(u8 *buf, u8 reg, s32 imm);
+    48	u8 mov_r64_i64(u8 *buf, u8 reg, u32 lo, u32 hi);
+    49	/***** Loads and stores *****/
+    50	u8 load_r(u8 *buf, u8 rd, u8 rs, s16 off, u8 size, bool sign_ext);
+    51	u8 store_r(u8 *buf, u8 rd, u8 rs, s16 off, u8 size);
+    52	u8 store_i(u8 *buf, s32 imm, u8 rd, s16 off, u8 size);
+    53	/***** Addition *****/
+    54	u8 add_r32(u8 *buf, u8 rd, u8 rs);
+    55	u8 add_r32_i32(u8 *buf, u8 rd, s32 imm);
+    56	u8 add_r64(u8 *buf, u8 rd, u8 rs);
+    57	u8 add_r64_i32(u8 *buf, u8 rd, s32 imm);
+    58	/***** Subtraction *****/
+    59	u8 sub_r32(u8 *buf, u8 rd, u8 rs);
+    60	u8 sub_r32_i32(u8 *buf, u8 rd, s32 imm);
+    61	u8 sub_r64(u8 *buf, u8 rd, u8 rs);
+    62	u8 sub_r64_i32(u8 *buf, u8 rd, s32 imm);
+    63	/***** Multiplication *****/
+    64	u8 mul_r32(u8 *buf, u8 rd, u8 rs);
+    65	u8 mul_r32_i32(u8 *buf, u8 rd, s32 imm);
+    66	u8 mul_r64(u8 *buf, u8 rd, u8 rs);
+    67	u8 mul_r64_i32(u8 *buf, u8 rd, s32 imm);
+    68	/***** Division *****/
+    69	u8 div_r32(u8 *buf, u8 rd, u8 rs, bool sign_ext);
+    70	u8 div_r32_i32(u8 *buf, u8 rd, s32 imm, bool sign_ext);
+    71	/***** Remainder *****/
+    72	u8 mod_r32(u8 *buf, u8 rd, u8 rs, bool sign_ext);
+    73	u8 mod_r32_i32(u8 *buf, u8 rd, s32 imm, bool sign_ext);
+    74	/***** Bitwise AND *****/
+    75	u8 and_r32(u8 *buf, u8 rd, u8 rs);
+    76	u8 and_r32_i32(u8 *buf, u8 rd, s32 imm);
+    77	u8 and_r64(u8 *buf, u8 rd, u8 rs);
+    78	u8 and_r64_i32(u8 *buf, u8 rd, s32 imm);
+    79	/***** Bitwise OR *****/
+    80	u8 or_r32(u8 *buf, u8 rd, u8 rs);
+    81	u8 or_r32_i32(u8 *buf, u8 rd, s32 imm);
+    82	u8 or_r64(u8 *buf, u8 rd, u8 rs);
+    83	u8 or_r64_i32(u8 *buf, u8 rd, s32 imm);
+    84	/***** Bitwise XOR *****/
+    85	u8 xor_r32(u8 *buf, u8 rd, u8 rs);
+    86	u8 xor_r32_i32(u8 *buf, u8 rd, s32 imm);
+    87	u8 xor_r64(u8 *buf, u8 rd, u8 rs);
+    88	u8 xor_r64_i32(u8 *buf, u8 rd, s32 imm);
+    89	/***** Bitwise Negate *****/
+    90	u8 neg_r32(u8 *buf, u8 r);
+    91	u8 neg_r64(u8 *buf, u8 r);
+    92	/***** Bitwise left shift *****/
+    93	u8 lsh_r32(u8 *buf, u8 rd, u8 rs);
+    94	u8 lsh_r32_i32(u8 *buf, u8 rd, u8 imm);
+    95	u8 lsh_r64(u8 *buf, u8 rd, u8 rs);
+    96	u8 lsh_r64_i32(u8 *buf, u8 rd, s32 imm);
+    97	/***** Bitwise right shift (logical) *****/
+    98	u8 rsh_r32(u8 *buf, u8 rd, u8 rs);
+    99	u8 rsh_r32_i32(u8 *buf, u8 rd, u8 imm);
+   100	u8 rsh_r64(u8 *buf, u8 rd, u8 rs);
+   101	u8 rsh_r64_i32(u8 *buf, u8 rd, s32 imm);
+   102	/***** Bitwise right shift (arithmetic) *****/
+   103	u8 arsh_r32(u8 *buf, u8 rd, u8 rs);
+   104	u8 arsh_r32_i32(u8 *buf, u8 rd, u8 imm);
+   105	u8 arsh_r64(u8 *buf, u8 rd, u8 rs);
+   106	u8 arsh_r64_i32(u8 *buf, u8 rd, s32 imm);
+   107	/***** Frame related *****/
+   108	u32 mask_for_used_regs(u8 bpf_reg, bool is_call);
+   109	u8 arc_prologue(u8 *buf, u32 usage, u16 frame_size);
+   110	u8 arc_epilogue(u8 *buf, u32 usage, u16 frame_size);
+   111	/***** Jumps *****/
+   112	/*
+   113	 * Different sorts of conditions (ARC enum as opposed to BPF_*).
+   114	 *
+   115	 * Do not change the order of enums here. ARC_CC_SLE+1 is used
+   116	 * to determine the number of JCCs.
+   117	 */
+   118	enum ARC_CC {
+   119		ARC_CC_UGT = 0,		/* unsigned >  */
+   120		ARC_CC_UGE,		/* unsigned >= */
+   121		ARC_CC_ULT,		/* unsigned <  */
+   122		ARC_CC_ULE,		/* unsigned <= */
+   123		ARC_CC_SGT,		/*   signed >  */
+   124		ARC_CC_SGE,		/*   signed >= */
+   125		ARC_CC_SLT,		/*   signed <  */
+   126		ARC_CC_SLE,		/*   signed <= */
+   127		ARC_CC_AL,		/* always      */
+   128		ARC_CC_EQ,		/*          == */
+   129		ARC_CC_NE,		/*          != */
+   130		ARC_CC_SET,		/* test        */
+   131		ARC_CC_LAST
+   132	};
+   133	
+
 -- 
-2.45.0.rc1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
