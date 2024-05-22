@@ -1,153 +1,184 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F16B79B96
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 05:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1177922086;
+	Wed, 22 May 2024 05:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716354118; cv=none; b=ai8jDMViD/zgt3pL5+J+y22lOvWiDVr8uvrzXi7hJ5rqGoUTguvaaNNZW6hFxEP9eH7JaKeTdjFJ8HZ3PaXWr/96xs8hxUED3BpyEDXqX0kLWW3FGxKvt65tYMaCN+JKxNCuZQEtqomTEhpy7/0+aMSb++IhKHK8Oe9DBabXk40=
+	t=1716354572; cv=none; b=uMhKTgQHtntSfub3O6TBgCppZVh5VeJxwqaM6SkKZTx96jG+JEi2oUnEO+ODt+aSJDFOlLHh9vTYyRnw1JZAqBUp7qPOI01RoT3MIIDfmq8bZAg35g4r16PwsnoTREzXlE1FbSGBnEdmYaPK/VigVA/89ga5IHcdApuO8Y7zw4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716354118; c=relaxed/simple;
-	bh=v+UZFDGcIplCeWgyOKOk7LUl/tgd1hVNH/BQuH7kVhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=eOSguS9mdJE97Qrn73bQLnzd9ClZN2BxRbSKTY059GGiGG9N9fzv9UANLGqcV+btg1mWXA3loeWXYqw/9RIXSYTPwYC9w81oJHpq+hNh/b5HOxeUB4lfhiiUjeXhcAyemoMZeO03ilxjsZ8flo5F+zTWAzj3n9kAhi0donakQ7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bIGEBkUr; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1716354572; c=relaxed/simple;
+	bh=5yMQt29GiX4QLWSZnaoUlqn2FUv+SMQYFbAoLq8shn0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gGYWc3YqQBgPqQ8fgmVyu/pezDrJzG/76yXoVYMkiW1x67Ow8nbyjloU3WwuW5hbs2swo5WeWlIRn9LgEQLnRoQf4stylz4W2bO+C+Rv+xmZl7CU1b+jn2mwygid7Faii1FZY/xiC6aMqY6LY3tgJMElzdCh1Gy/VxZnmbaUEyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jrOTd2kX; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bIGEBkUr"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240522050154epoutp044770cfec8f2809e8a74227aa2167b5ba~RtvlOYBmq1458914589epoutp04E
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 05:01:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240522050154epoutp044770cfec8f2809e8a74227aa2167b5ba~RtvlOYBmq1458914589epoutp04E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716354114;
-	bh=v+UZFDGcIplCeWgyOKOk7LUl/tgd1hVNH/BQuH7kVhM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bIGEBkUrTINXnyvIkKFop6jbt0P5KHa++22msGRYVEie0tGoOFaivH4E435CCl+qQ
-	 Zj5Olfmm5M8sW3N9fYsFSNXs0F08ad1IjMplZ8NTj1n6o3lfSQbGnupYuKtQjakOmt
-	 apiVSG5uBi2SRMh94ChbmA3fspJYBX7kagibTrZM=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240522050153epcas5p4c49060d71c380fd1a311b8ef4f7dc111~RtvkWJubf0799007990epcas5p4K;
-	Wed, 22 May 2024 05:01:53 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4VkfKr2wQcz4x9QH; Wed, 22 May
-	2024 05:01:52 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	DB.81.08600.E3C7D466; Wed, 22 May 2024 14:01:50 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240521145521epcas5p3085c3982fb14dab0709d493d3e1b941b~RiMcb82eq2206322063epcas5p3P;
-	Tue, 21 May 2024 14:55:21 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240521145521epsmtrp1967b56785c8cc04ff0efd8e503c27f9c~RiMcZUDzh2227322273epsmtrp1W;
-	Tue, 21 May 2024 14:55:21 +0000 (GMT)
-X-AuditID: b6c32a44-6c3ff70000002198-e8-664d7c3e8a2b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3E.1C.08924.9D5BC466; Tue, 21 May 2024 23:55:21 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240521145517epsmtip26cc224d597e605d820abffa401131a56~RiMY8JjcX2617526175epsmtip2_;
-	Tue, 21 May 2024 14:55:17 +0000 (GMT)
-Date: Tue, 21 May 2024 20:18:19 +0530
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
-	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
-	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
-	<hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
-	<kch@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
-	Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	martin.petersen@oracle.com, david@fromorbit.com, hare@suse.de,
-	damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
-	nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v20 10/12] dm: Enable copy offload for dm-linear target
-Message-ID: <20240521144819.nm25c4txfhwggfae@green245>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jrOTd2kX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716354571; x=1747890571;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5yMQt29GiX4QLWSZnaoUlqn2FUv+SMQYFbAoLq8shn0=;
+  b=jrOTd2kX7GFx6g2coWXlwSQ2OPXHxTwhCjzeumaBMR2KBWifyFFtWqBe
+   CwypoKValDJxrS/wgJOKptL0fkgSkzfmTbycSGZFE9qK3yNRq4tie0m7y
+   YqTpNvk6eU/UujvxZOvuZZ0xocXtWUvmlNSdgQh1vKmD70m5O2JRWtCu2
+   dZKErSP25gnd39/M7ShhZMbSkluECns9k3aylO7REqS8sqoKINe0rRUwF
+   Egjj5u1C7b4Tacy8V/2qD6zoO1824MwWuOconE3E1b8ZVC8/OS010mdqd
+   LmppXdzEYeMQk7VU6BYL8FS1qGWaal8loyjeycEUUIH7+oaRziw+TPy7y
+   Q==;
+X-CSE-ConnectionGUID: bMrLr6YrRD+nicZcZFVnLQ==
+X-CSE-MsgGUID: Uv03fCIWSJaDjIUTheu02g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="12696599"
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="12696599"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 22:09:30 -0700
+X-CSE-ConnectionGUID: SPXqoh8cTNyio1ipcb/jnQ==
+X-CSE-MsgGUID: NV0A7hRJTH++l9KJcLFJQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="33080563"
+Received: from unknown (HELO [10.238.8.173]) ([10.238.8.173])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 22:09:27 -0700
+Message-ID: <18f52be4-6449-4761-a178-1ca87124c28d@linux.intel.com>
+Date: Wed, 22 May 2024 13:09:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <017a9853-6e42-4250-9cfa-1d6ad5786556@acm.org>
-User-Agent: NeoMutt/20171215
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TeVATdxTH+9vdbDZMocuh/gQ7pam2AoKJTfCHcmildR3KDDN2pjO1iClZ
-	gSGETBLqRStCsQgTQNFSYpVTLq1UQGsQxeEQxFJsI3c5tIk90IajUJGCjdnQ8b/P+773fu+a
-	H4W71PHdqTilllUrZQoh6UBcafFa6xucHL5X1Dfqg2o6b+EoNXcBR+eHc0g03jIF0FcTczgy
-	3fwSoPmubhzV3xoBqKjkDIEGbhow1FhyAkNV59swdDo/DUNtzx6T6ERzL0DmHj2Grg/6oOKj
-	ZQRqvH6bQMaGb0hUWG7mo4r2RQwdz+jB0FXTEYAujlsI1DHogboX2nlbPBjjvTCmswQyBv0w
-	n+keuUQwxq4kprb6GMnUlR1mfq8rAMy1gRSSKc3O4zG6tL9IxpA+ymMmzYMEY7nRQzLZ9dWA
-	+aGolR/h+lF8YCwrk7NqT1YZnSiPU8YECcN2Rm2LkvqLxL7iALRR6KmUJbBBwtD3I3zfi1NY
-	lyP0/FSmSLJKETKNRrg+OFCdmKRlPWMTNdogIauSK1QSlZ9GlqBJUsb4KVntJrFItEFqDdwT
-	H/tTxkm+qpW3/1pFDpECHhKZQEBBWgIf6Br4mcCBcqGvAdh0egxwxhSAj4oLSc6YBbBtbBYs
-	paQ0XiY4x3UAz347iHHGQwCNDeW2KIJeA8+Xf2dliiJpH3jnGfVcdqPXwtmxClsyTheT8Jf+
-	J/hzhysdBmuzDbamHGl/2PHjBMaxM7xdYLLpAnozzDfk2/Rl9Cr49bkZnOuoVwANjRTHofDK
-	v/Ukx67wz/Z6Psfu8I+co3beB6tOVtpGg/QXAOr79PbRQmB6Z47tUZyOhd3jc/aEV+GpzosY
-	pztB3bwJ43RHePXsEr8BL9QU2QuvhL3/HLEzA1NT79o3ZAEwrdKA5YLX9C8Mp3+hHseb4LGJ
-	VJ7eujyc9oAVixSHXrCmYX0R4FWDlaxKkxDDRktVYiW77/+TRycm1ALb7/EOvQr6Cxf9mgFG
-	gWYAKVzo5lhbv2Ovi6NcduAgq06MUicpWE0zkFqPdRx3XxadaP1+Sm2UWBIgkvj7+0sC3vYX
-	C1c4jqefkbvQMTItG8+yKla9lIdRAvcUjNxpFBTg9JNMGPgYNza5FokUFpMgq9hl6MN1TYJR
-	b/OVOXPZSPieJwc6V8W3qp29Dh9yUyTfSqgIz5rJnLmctGv51OPW8r9PObW92TSWXhZ5aM32
-	36TavsiIlruX3EMidYTwaQjhta11wkHk/FYbNdn+uXnxg64gv6frGF3VjZaMHZW7f97tNBtw
-	Q7e1yWICv95xvMBbeOeEa+n9Z7tSzBFZ8xcH80HfZNr38YPTnuDdRxvah85tqVw9nyPx+exe
-	yPZXVMm5H2dMNxwsrs57XXbUqH7JdFm9TV4aPDDsfd+3b/XG5bXTK0pmpUPt3g6fqHa+bPHq
-	zwtUdFCbJaKmB0PB+9cJCU2sTOyNqzWy/wA12b2dxgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUzMcRzHfX+/X7/7lZ39Kulbx8wRPRBt4rtpZlrz5fIwMyzzcOl3XXQ5
-	d/I4ykXprCTmrhNOD5dqSlceTnW48lC5TksoU0xNip4sj6vobsZ/n31e74d9tg9Dun2hvJmY
-	uH2cIk4cK6RdqFs1wunzWm+GSxY0qmaj0vpHJFJljJCo+M0ZGvXWDAF0YeAHiTrvpwD0y2oj
-	UcWjdoD0OZco1HrfRKCqnEwCFRY/JNBFTRKBHo59plGm5QVAXS06AlW3BaCryXkUqqquo1Dz
-	3WwaXTF08VDB41ECnT3VQqA7nccBKuntp9CTNgGyjTx2WibAzc9FuD4HYpPuDQ/b2sso3GyN
-	x8aiVBqX5yXg7vIsgCtbE2mcm37OCacl9dHYdLLDCQ92tVG439xC4/SKIoCf6mt569wjXEKi
-	uNiY/Zxi/tIdLtITP7D8K3Ewu1JLJwIjoQbODGQXwsSqm5QauDBubCWAVwxllAN4QcNILemY
-	3WHh6AeeQ9QJ4LfqfjugWB9YbLgB1IBhaDYANowx4+vJrC/8+rbAHkqy+TRsuveLNw7cWRE0
-	ppvsBXx2EXzSOEA4QvsB1Dy1AAdwhXVZnXYR+Ud0ufwdOV5AsgJYMGovcGaXQI1JY7/Ag50K
-	tfnDZAZw1f3n1v3n1v1z6wFZBLw4uVIWLVMGyYPiuAOBSrFMGR8XHbhzj8wI7H/h73cH3C4a
-	CLQAggEWABlSOJlvrFgpceNHiQ8d5hR7tiviYzmlBQgYSujJ9+xOi3Jjo8X7uN0cJ+cUfynB
-	OHsnEodUG9abpJsCzouGbZlp3LEQ/cwt+jBrfEKP/9oO3KpNkAfPfdY3Z3vwvfklW1Wfzpf5
-	+e2uyPoeOiFVsNGzg2v3SpIsqbMOiQJyaY8Ugr9gzWBEN1np+jJl7HVt2EqbMCVP7nlaN2to
-	4WBoRmNI4a4Xhoj05b7+cxte1U80XF99/f0qjynFx3dqws09+Wd7fDMj98pym35+xNcmLJar
-	GyLDlaWTNn96mbxi7zO8wSt5ZHZvaGpa0yT10W20Odj1mI9MUpptvWw+fUB6ZGlI+4c1tTM9
-	gmYM1ZOryl6FCcrDp62PzJaIzLuk2pLkqBrV4S0+fUe0w7ZF3g+q6rS3N44OxggppVQc5E8q
-	lOLfWU2MeoYDAAA=
-X-CMS-MailID: 20240521145521epcas5p3085c3982fb14dab0709d493d3e1b941b
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_161fe_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240520103016epcas5p31b9a0f3637959626d49763609ebda6ef
-References: <20240520102033.9361-1-nj.shetty@samsung.com>
-	<CGME20240520103016epcas5p31b9a0f3637959626d49763609ebda6ef@epcas5p3.samsung.com>
-	<20240520102033.9361-11-nj.shetty@samsung.com>
-	<017a9853-6e42-4250-9cfa-1d6ad5786556@acm.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/49] KVM: x86: Reject disabling of MWAIT/HLT
+ interception when not allowed
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Hou Wenlong <houwenlong.hwl@antgroup.com>, Kechen Lu <kechenl@nvidia.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Maxim Levitsky <mlevitsk@redhat.com>,
+ Yang Weijiang <weijiang.yang@intel.com>,
+ Robert Hoo <robert.hoo.linux@gmail.com>
+References: <20240517173926.965351-1-seanjc@google.com>
+ <20240517173926.965351-13-seanjc@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20240517173926.965351-13-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_161fe_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
 
-On 20/05/24 04:25PM, Bart Van Assche wrote:
->On 5/20/24 03:20, Nitesh Shetty wrote:
->>Setting copy_offload_supported flag to enable offload.
+
+On 5/18/2024 1:38 AM, Sean Christopherson wrote:
+> Reject KVM_CAP_X86_DISABLE_EXITS if userspace attempts to disable MWAIT or
+> HLT exits and KVM previously reported (via KVM_CHECK_EXTENSION) that
+> disabling the exit(s) is not allowed.  E.g. because MWAIT isn't supported
+> or the CPU doesn't have an aways-running APIC timer, or because KVM is
+
+aways-running -> always-running
+
+> configured to mitigate cross-thread vulnerabilities.
 >
->I think that the description of this patch should explain why it is safe
->to set the 'copy_offload_supported' flag for the dm-linear driver.
+> Cc: Kechen Lu <kechenl@nvidia.com>
+> Fixes: 4d5422cea3b6 ("KVM: X86: Provide a capability to disable MWAIT intercepts")
+> Fixes: 6f0f2d5ef895 ("KVM: x86: Mitigate the cross-thread return address predictions bug")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/x86.c | 54 ++++++++++++++++++++++++----------------------
+>   1 file changed, 28 insertions(+), 26 deletions(-)
 >
-Acked, will add more description in next version.
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 4cb0c150a2f8..c729227c6501 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4590,6 +4590,20 @@ static inline bool kvm_can_mwait_in_guest(void)
+>   		boot_cpu_has(X86_FEATURE_ARAT);
+>   }
+>   
+> +static u64 kvm_get_allowed_disable_exits(void)
+> +{
+> +	u64 r = KVM_X86_DISABLE_EXITS_PAUSE;
+> +
+> +	if (!mitigate_smt_rsb) {
+> +		r |= KVM_X86_DISABLE_EXITS_HLT |
+> +			KVM_X86_DISABLE_EXITS_CSTATE;
+> +
+> +		if (kvm_can_mwait_in_guest())
+> +			r |= KVM_X86_DISABLE_EXITS_MWAIT;
+> +	}
+> +	return r;
+> +}
+> +
+>   #ifdef CONFIG_KVM_HYPERV
+>   static int kvm_ioctl_get_supported_hv_cpuid(struct kvm_vcpu *vcpu,
+>   					    struct kvm_cpuid2 __user *cpuid_arg)
+> @@ -4726,15 +4740,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>   		r = KVM_CLOCK_VALID_FLAGS;
+>   		break;
+>   	case KVM_CAP_X86_DISABLE_EXITS:
+> -		r = KVM_X86_DISABLE_EXITS_PAUSE;
+> -
+> -		if (!mitigate_smt_rsb) {
+> -			r |= KVM_X86_DISABLE_EXITS_HLT |
+> -			     KVM_X86_DISABLE_EXITS_CSTATE;
+> -
+> -			if (kvm_can_mwait_in_guest())
+> -				r |= KVM_X86_DISABLE_EXITS_MWAIT;
+> -		}
+> +		r |= kvm_get_allowed_disable_exits();
 
-Thank You,
-Nitesh Shetty
+Nit: Just use "=".
 
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_161fe_
-Content-Type: text/plain; charset="utf-8"
+>   		break;
+>   	case KVM_CAP_X86_SMM:
+>   		if (!IS_ENABLED(CONFIG_KVM_SMM))
+> @@ -6565,33 +6571,29 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+>   		break;
+>   	case KVM_CAP_X86_DISABLE_EXITS:
+>   		r = -EINVAL;
+> -		if (cap->args[0] & ~KVM_X86_DISABLE_VALID_EXITS)
+> +		if (cap->args[0] & ~kvm_get_allowed_disable_exits())
+>   			break;
+>   
+>   		mutex_lock(&kvm->lock);
+>   		if (kvm->created_vcpus)
+>   			goto disable_exits_unlock;
+>   
+> -		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
+> -			kvm->arch.pause_in_guest = true;
+> -
+>   #define SMT_RSB_MSG "This processor is affected by the Cross-Thread Return Predictions vulnerability. " \
+>   		    "KVM_CAP_X86_DISABLE_EXITS should only be used with SMT disabled or trusted guests."
+>   
+> -		if (!mitigate_smt_rsb) {
+> -			if (boot_cpu_has_bug(X86_BUG_SMT_RSB) && cpu_smt_possible() &&
+> -			    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
+> -				pr_warn_once(SMT_RSB_MSG);
+> -
+> -			if ((cap->args[0] & KVM_X86_DISABLE_EXITS_MWAIT) &&
+> -			    kvm_can_mwait_in_guest())
+> -				kvm->arch.mwait_in_guest = true;
+> -			if (cap->args[0] & KVM_X86_DISABLE_EXITS_HLT)
+> -				kvm->arch.hlt_in_guest = true;
+> -			if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
+> -				kvm->arch.cstate_in_guest = true;
+> -		}
+> +		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
+> +		    cpu_smt_possible() &&
+> +		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
+> +			pr_warn_once(SMT_RSB_MSG);
+>   
+> +		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
+> +			kvm->arch.pause_in_guest = true;
+> +		if (cap->args[0] & KVM_X86_DISABLE_EXITS_MWAIT)
+> +			kvm->arch.mwait_in_guest = true;
+> +		if (cap->args[0] & KVM_X86_DISABLE_EXITS_HLT)
+> +			kvm->arch.hlt_in_guest = true;
+> +		if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
+> +			kvm->arch.cstate_in_guest = true;
+>   		r = 0;
+>   disable_exits_unlock:
+>   		mutex_unlock(&kvm->lock);
 
-
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_161fe_--
