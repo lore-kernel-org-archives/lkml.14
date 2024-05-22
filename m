@@ -1,423 +1,192 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A798E7C081
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 07:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5026B7C0B7
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 07:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716364092; cv=none; b=uPTDFu0tJF6aEEdozcrftfPQi4/rdhQ0WRXcEb+itKneCSHjp4A24mFWc4gF4ZgpRyZTi0ted1e/rQNcPhyw1A/PeB2IfSIiLub5hGs9enbC59i4l24wgX/vRW0ky/NOTvmMslBUl/f8NNSqx6bldIYoiBSWN4Rpk165qGu3N8U=
+	t=1716364138; cv=none; b=EnPj2dosqrYKsRkt8Fesk2l+9lex+IVsfs1Wi8aUTexiNmUmFvrXb19h1fWrxyf7ZrM0mQewC5f5NwFMPFphJ6focgqna1AfjyVZclkURp+N8WYo4cTVJabxTO3DMB90yPX0PqmTm9tT4VOtfmsnb4+5LS2hvzRqAoZuGt9JbnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716364092; c=relaxed/simple;
-	bh=UFileiIY+FcdENlfmaHs7dMmW4+IrMZlQd00Hn5+Gt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sd5QQbS7l7BnD8mm+HdJa1kUXBAeNigwW67yVvIYkAGPLbtzxeLzaxxQ6FVHErUptZDZCKFOY5dlpvCfIs3an8OZgjB5yn/+1WF1Hj1H7Qwwdbdn2maMidXnPefXibwlGb+AArtJ6mHmCuxkZK2W7itT3nO+evgOqhFtVTAsMjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1s9ghS-00081G-2A; Wed, 22 May 2024 09:47:50 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1s9ghP-002Uky-JB; Wed, 22 May 2024 09:47:47 +0200
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 50A9C2D520D;
-	Tue, 21 May 2024 12:27:11 +0000 (UTC)
-Date: Tue, 21 May 2024 14:27:10 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Pankaj Gupta <pankaj.gupta@nxp.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: RE: RE: [EXT] Re: [PATCH 4/4] firmware: imx: add driver for NXP
- EdgeLock Enclave
-Message-ID: <20240521-handsome-hairy-bullfrog-d2faba-mkl@pengutronix.de>
-References: <20240510-imx-se-if-v1-0-27c5a674916d@nxp.com>
- <20240510-imx-se-if-v1-4-27c5a674916d@nxp.com>
- <20240513-pretty-quartz-lemming-14d9ea-mkl@pengutronix.de>
- <AM9PR04MB86044FBF697375EB2C8D285B95EE2@AM9PR04MB8604.eurprd04.prod.outlook.com>
- <20240520-accurate-intrepid-kestrel-8eb361-mkl@pengutronix.de>
- <AM9PR04MB86045BD682A0362A7D463C5A95EA2@AM9PR04MB8604.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1716364138; c=relaxed/simple;
+	bh=ZulaAJosEsE4SXPulE9oF463+8VOyiF9FHt9hn1enaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H3IrFuzni7hXZJHCHewi4xvcGiGdWOj0+wpL5nATtXQwLJkPeN/TRZe50F7ZnTbZAL8fCHo8KV+MQD+rQ4Ppg/yu/a8KLVdoHXHe9Eo7WPyIDUdpO3+3M6rIjituTQI7ej/B35viS0jYDybyp76hQUyKIz8G1Xv8hqV8BDm0C3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IjriuPmk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IjriuPmk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716364136;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=phV0a9Yi5QmyXuhVqbX1nibkB5NQY4qscA3tdGeagZo=;
+	b=IjriuPmkJV5BEDpBC3a4l2kIhvKVLkOlEesnfpmg08Hejq07ouVzgeX4H5KFPtKFGIEgb0
+	4h53TKVwCwCBuwTVLB951lCsODNpOArtsKAVlKPlp4aBnz7CIyss2O3QS5J1oVjsbAf0d0
+	z/UeDmr1q33WZyCBKRuwD3+GwxhFiHM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-523-vkQLifxFPTGeTM7o8On25w-1; Wed, 22 May 2024 03:48:54 -0400
+X-MC-Unique: vkQLifxFPTGeTM7o8On25w-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-354c00c01b0so2196635f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 00:48:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716364133; x=1716968933;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=phV0a9Yi5QmyXuhVqbX1nibkB5NQY4qscA3tdGeagZo=;
+        b=XLSfkH93LRYzhwIoje0gAbAPjdM5vzgLjBOfY2/tIBKUG9vSjiepKkXJDvFWVY4yXO
+         PUguASpgd1hXUojYZGszu+avmD2p4Bx5vKeevbKDk90nJDzlztyqez+iDrJQh8swrcBU
+         sdLZu8XQgs8j2RY42dqJtNfwNpNQR6fsQxKO6p8SGYtb3DwA31Kxerbb5p/ln2uIo1Xi
+         EzL4Q5RpwOpWxDIZuwFPEyqH8Yipf8rNvZ3Uuo7GVAgFatenOlBa7Wm5iYOW7FPaGmau
+         kYpHnciFxMkyUeTYbU6m2iy5a2QNjOyzP9ZDe0rAXP/dP77NWUh1lV5VpuZwnei/t3md
+         BxzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXXWjLxCVrOHu7NGT5RTnmqGGa6/OJAPwIVc7UMhOIis42KfWdEC5remgk/19Q/guKche5gEbS/i12eyyev78HoEXjYJ7Udu7RonIwx
+X-Gm-Message-State: AOJu0YzBcSM+/ASqdVlcF+192od9ZWz8HSyRIKvV/tfiUzXj3PuvHvYs
+	nagUf0JsPi3jZcJjm7rkisxLgC6+El+P5gSlJf6hvY4VNGdqxri+alElWvEkKjw4jzdtVW5+qo7
+	TFQ8DM6IUfaRw4BQgz4lwvBYi1zDqFHLErRuY+YykXhnqbWjW+c5nAe/64T9/Hg==
+X-Received: by 2002:a5d:69c7:0:b0:354:f16a:3b1a with SMTP id ffacd0b85a97d-354f16a3d80mr179823f8f.39.1716364133106;
+        Wed, 22 May 2024 00:48:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF/i8LxpSaeeGUAgY1y0rGEESeV3Xdj0J8pTf+jaNoxxM4TqxHTlKSWivb1a38H13XeqPDaeQ==
+X-Received: by 2002:a5d:69c7:0:b0:354:f16a:3b1a with SMTP id ffacd0b85a97d-354f16a3d80mr179803f8f.39.1716364132604;
+        Wed, 22 May 2024 00:48:52 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c709:d500:4044:6d4c:f060:f677? (p200300cbc709d50040446d4cf060f677.dip0.t-ipconnect.de. [2003:cb:c709:d500:4044:6d4c:f060:f677])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-354df9b51f7sm622003f8f.59.2024.05.22.00.48.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 00:48:52 -0700 (PDT)
+Message-ID: <a3d54407-87aa-4f59-adac-c9b79fe1ecef@redhat.com>
+Date: Wed, 22 May 2024 09:48:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7yk6pkmeqxyudczq"
-Content-Disposition: inline
-In-Reply-To: <AM9PR04MB86045BD682A0362A7D463C5A95EA2@AM9PR04MB8604.eurprd04.prod.outlook.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.10/bisected/regression - commit 8430557fc584 cause warning at
+ mm/page_table_check.c:198 __page_table_check_ptes_set+0x306
+To: Peter Xu <peterx@redhat.com>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>, axelrasmussen@google.com,
+ nadav.amit@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <CABXGCsMB9A8-X+Np_Q+fWLURYL_0t3Y-MdoNabDM-Lzk58-DGA@mail.gmail.com>
+ <Zk0HxVODITGKqYCw@x1n>
+ <CABXGCsNbcMn0Z0RudFrBW78rZPE+cDY+f9r+yKf_AZwJZUOrQg@mail.gmail.com>
+ <Zk0UA6wABOB9X_Dx@x1n>
+ <CABXGCsOZnxrSHd0y6QrFhzAiY-uTJiRSmo__C_P8Y2qjFV6bRA@mail.gmail.com>
+ <Zk0h0V8kvZRKu6F4@x1n>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Zk0h0V8kvZRKu6F4@x1n>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 22.05.24 00:36, Peter Xu wrote:
+> On Wed, May 22, 2024 at 03:21:04AM +0500, Mikhail Gavrilov wrote:
+>> On Wed, May 22, 2024 at 2:37 AM Peter Xu <peterx@redhat.com> wrote:
+>>> Hmm I still cannot reproduce.  Weird.
+>>>
+>>> Would it be possible for you to identify which line in debug_vm_pgtable.c
+>>> triggered that issue?
+>>>
+>>> I think it should be some set_pte_at() but I'm not sure, as there aren't a
+>>> lot and all of them look benign so far.  It could be that I missed
+>>> something important.
+>>
+>> I hope it's helps:
+> 
+> Thanks for offering this, it's just that it doesn't look coherent with what
+> was reported for some reason.
+> 
+>>
+>>> sh /usr/src/kernels/(uname -r)/scripts/faddr2line /lib/debug/lib/modules/(uname -r)/vmlinux debug_vm_pgtable+0x1c04
+>> debug_vm_pgtable+0x1c04/0x3360:
+>> native_ptep_get_and_clear at arch/x86/include/asm/pgtable_64.h:94
+>> (inlined by) ptep_get_and_clear at arch/x86/include/asm/pgtable.h:1262
+>> (inlined by) ptep_clear at include/linux/pgtable.h:509
+> 
+> This is a pte_clear(), and pte_clear() shouldn't even do the set() checks,
+> and shouldn't stumble over what I added.
+> 
+> IOW, it doesn't match with the real stack dump previously:
+> 
+> [    5.581003]  ? __page_table_check_ptes_set+0x306/0x3c0
+> [    5.581274]  ? __pfx___page_table_check_ptes_set+0x10/0x10
+> [    5.581544]  ? __pfx_check_pgprot+0x10/0x10
+> [    5.581806]  set_ptes.constprop.0+0x66/0xd0
+> [    5.582072]  ? __pfx_set_ptes.constprop.0+0x10/0x10
+> [    5.582333]  ? __pfx_pte_val+0x10/0x10
+> [    5.582595]  debug_vm_pgtable+0x1c04/0x3360
+> 
 
---7yk6pkmeqxyudczq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Staring at pte_clear_tests():
 
-On 21.05.2024 11:57:04, Pankaj Gupta wrote:
-> > > > > +
-> > > > > +	memset(s_info, 0x0, sizeof(*s_info));
-> > > > > +
-> > > > > +	if (priv->mem_pool_name)
-> > > > > +		get_info_data =3D get_phy_buf_mem_pool(dev,
-> > > > > +						     priv->mem_pool_name,
-> > > > > +						     &get_info_addr,
-> > > > > +						     ELE_GET_INFO_BUFF_SZ);
-> > > > > +	else
-> > > > > +		get_info_data =3D dmam_alloc_coherent(dev,
-> > > > > +						    ELE_GET_INFO_BUFF_SZ,
-> > > > > +						    &get_info_addr,
-> > > > > +						    GFP_KERNEL);
-> > > >
-> > > > It's better style to move the init of the dma memory into the probe
-> > > > function.
-> > >
-> > > It is not DMA init. It is DMA allocation.
-> >=20
-> > It's better style to move the allocation of the dma memory into the pro=
-be
-> > function.
-> >=20
-> The buffer 'get_info_data', is allocated and freed within this function.
-> This API is called multiple times:
-> - as part of probe.
-> - as part of suspend/resume.
->=20
-> Why to keep the memory retained?
+#ifndef CONFIG_RISCV
+	pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
+#endif
+	set_pte_at(args->mm, args->vaddr, args->ptep, pte);
 
-I see. Then why do you allocate with dmam_alloc_coherent()?
+So we set random PTE bits, probably setting the present, uffd and write 
+bit at the same time. That doesn't make too much sense when we want to 
+perform that such combinations cannot exist.
 
-[...]
+In pmd_clear_tests() and friends we use WRITE_ONCE() instead, so there 
+we don't run into trouble.
 
-> > > > > +int imx_ele_msg_send(struct se_if_priv *priv, void *mssg) {
-> > > > > +	bool is_cmd_lock_tobe_taken =3D false;
-> > > > > +	int err;
-> > > > > +
-> > > > > +	if (!priv->waiting_rsp_dev || priv->no_dev_ctx_used) {
-> > > > > +		is_cmd_lock_tobe_taken =3D true;
-> > > > > +		mutex_lock(&priv->se_if_cmd_lock);
-> > > > > +	}
-> > > > > +	scoped_guard(mutex, &priv->se_if_lock);
-> > > > > +
-> > > > > +	err =3D mbox_send_message(priv->tx_chan, mssg);
-> > > > > +	if (err < 0) {
-> > > > > +		dev_err(priv->dev, "Error: mbox_send_message failure.\n");
-> > > > > +		if (is_cmd_lock_tobe_taken)
-> > > > > +			mutex_unlock(&priv->se_if_cmd_lock);
-> > > >
-> > > > Only dropping the lock in case of failure doesn't look right to me.
-> > >
-> > > The callers of this function, takes the execution flow to aborting the
-> > > operation on getting return code < 0. No next action is expected under
-> > > this aborted operation. Unlocking the lock here is not an issue
-> > >
-> > > > It seems you should better move the lock to the callers of this fun=
-ction.
-> > >
-> > > Accepted, and moved to the caller of the function for:
-> > >    - locking
-> > >    - unlocking in case of error.
-> > >
-> > > Unlocking in the read API, once response is successfully received and
-> > > read.
-> >=20
-> > A better design would be: imx_ele_msg_rcv() imx_ele_msg_send() are
-> > expected to be called locked. Add lockdep_assert_held() to these functi=
-on to
-> > document/check this.
-> >=20
-> > The callers of imx_ele_msg_rcv() and imx_ele_msg_send() have to take ca=
-re
-> > of the locking.
-> >=20
-> > [...]
-> >=20
-> The locking/unlocking of se_if_cmd_lock, is taken care by the callers onl=
-y:
-> - imx_ele_msg_send_rcv calls both the functions:
->   --imx_ele_msg_send.
->   --imx_ele_msg_rcv.
->=20
-> But the lockdep_assert_held, cannot be added to imx_ele_msg_send, as
-> its another caller function imx_ele_miscdev_msg_send calls if for
-> sending:
->  --- command (here command lock is taken).
->  --- response to a command (here command lock is not taken).
+-- 
+Cheers,
 
-miscdev is another patch.
+David / dhildenb
 
-But why can't you use the same lock in imx_ele_miscdev_msg_send()?
-
-
-> > > > > +static const struct imx_se_node_info_list imx93_info =3D {
-> > > > > +	.num_mu =3D 1,
-> > > > > +	.soc_id =3D SOC_ID_OF_IMX93,
-> > > > > +	.info =3D {
-> > > > > +			{
-> > > > > +				.se_if_id =3D 2,
-> > > > > +				.se_if_did =3D 3,
-> > > > > +				.max_dev_ctx =3D 4,
-> > > > > +				.cmd_tag =3D 0x17,
-> > > > > +				.rsp_tag =3D 0xe1,
-> > > > > +				.success_tag =3D 0xd6,
-> > > > > +				.base_api_ver =3D MESSAGING_VERSION_6,
-> > > > > +				.fw_api_ver =3D MESSAGING_VERSION_7,
-> > > > > +				.se_name =3D "hsm1",
-> > > > > +				.mbox_tx_name =3D "tx",
-> > > > > +				.mbox_rx_name =3D "rx",
-> > > > > +				.reserved_dma_ranges =3D true,
-> > > > > +				.imem_mgmt =3D true,
-> > > > > +				.soc_register =3D true,
-> > > > > +			},
-> > > > > +	},
-> > > >
-> > > >
-> > > > Some (most?) members of these structs are the same. Why do you have
-> > > > this abstraction if it's not needed right now?
-> > >
-> > > It is needed as the values is different for different NXP SoC
-> > > compatible. It will be needed for NXP i.MX95 platform, whose code will
-> > > be next in pipeline.
-> >=20
-> > How does the imx95 .info look like?
-> >=20
-> Copied from the internal repo.
-> static const struct imx_info_list imx95_info =3D {
->         .num_mu =3D 4,
->         .soc_id =3D SOC_ID_OF_IMX95,
->         .info =3D {
->                         {
->                                 .socdev =3D false,
->                                 .mu_id =3D 2,
->                                 .mu_did =3D 3,
->                                 .max_dev_ctx =3D 4,
->                                 .cmd_tag =3D 0x17,
->                                 .rsp_tag =3D 0xe1,
->                                 .success_tag =3D 0xd6,
->                                 .base_api_ver =3D MESSAGING_VERSION_6,
->                                 .fw_api_ver =3D MESSAGING_VERSION_7,
->                                 .se_name =3D "hsm1",
->                                 .mbox_tx_name =3D "tx",
->                                 .mbox_rx_name =3D "rx",
->                                 .pool_name =3D NULL,
->                                 .reserved_dma_ranges =3D false,
->                                 .init_fw =3D true,
->                                 .v2x_state_check =3D true,
->                                 .start_rng =3D ele_start_rng,
->                                 .enable_ele_trng =3D true,
->                                 .imem_mgmt =3D false,
->                                 .mu_buff_size =3D 0,
->                                 .fw_name_in_rfs =3D NULL,
->                         },
->                         {
->                                 .socdev =3D false,
->                                 .mu_id =3D 0,
->                                 .mu_did =3D 0,
->                                 .max_dev_ctx =3D 0,
->                                 .cmd_tag =3D 0x17,
->                                 .rsp_tag =3D 0xe1,
->                                 .success_tag =3D 0xd6,
->                                 .base_api_ver =3D 0x2,
->                                 .fw_api_ver =3D 0x2,
->                                 .se_name =3D "v2x_dbg",
->                                 .pool_name =3D NULL,
->                                 .mbox_tx_name =3D "tx",
->                                 .mbox_rx_name =3D "rx",
->                                 .reserved_dma_ranges =3D false,
->                                 .init_fw =3D false,
->                                 .v2x_state_check =3D true,
->                                 .start_rng =3D v2x_start_rng,
->                                 .enable_ele_trng =3D false,
->                                 .imem_mgmt =3D false,
->                                 .mu_buff_size =3D 0,
->                                 .fw_name_in_rfs =3D NULL,
->                         },
->                         {
->                                 .socdev =3D false,
->                                 .mu_id =3D 4,
->                                 .mu_did =3D 0,
->                                 .max_dev_ctx =3D 4,
->                                 .cmd_tag =3D 0x18,
->                                 .rsp_tag =3D 0xe2,
->                                 .success_tag =3D 0xd6,
->                                 .base_api_ver =3D 0x2,
->                                 .fw_api_ver =3D 0x2,
->                                 .se_name =3D "v2x_sv0",
->                                 .pool_name =3D NULL,
->                                 .mbox_tx_name =3D "tx",
->                                 .mbox_rx_name =3D "rx",
->                                 .reserved_dma_ranges =3D false,
->                                 .init_fw =3D false,
->                                 .v2x_state_check =3D true,
->                                 .start_rng =3D NULL,
->                                 .enable_ele_trng =3D false,
->                                 .imem_mgmt =3D false,
->                                 .mu_buff_size =3D 16,
->                                 .fw_name_in_rfs =3D NULL,
->                         },
->                         {
->                                 .socdev =3D false,
->                                 .mu_id =3D 6,
->                                 .mu_did =3D 0,
->                                 .max_dev_ctx =3D 4,
->                                 .cmd_tag =3D 0x1a,
->                                 .rsp_tag =3D 0xe4,
->                                 .success_tag =3D 0xd6,
->                                 .base_api_ver =3D 0x2,
->                                 .fw_api_ver =3D 0x2,
->                                 .se_name =3D "v2x_she",
->                                 .pool_name =3D NULL,
->                                 .mbox_tx_name =3D "tx",
-> 		   .mbox_rx_name =3D "rx",
->                                 .reserved_dma_ranges =3D false,
->                                 .init_fw =3D false,
->                                 .v2x_state_check =3D true,
->                                 .start_rng =3D NULL,
->                                 .enable_ele_trng =3D false,
->                                 .imem_mgmt =3D false,
->                                 .mu_buff_size =3D 16,
->                                 .fw_name_in_rfs =3D NULL,
->                         },
->                         {
->                                 .socdev =3D false,
->                                 .mu_id =3D 6,
->                                 .mu_did =3D 0,
->                                 .max_dev_ctx =3D 4,
->                                 .cmd_tag =3D 0x1a,
->                                 .rsp_tag =3D 0xe4,
->                                 .success_tag =3D 0xd6,
->                                 .base_api_ver =3D 0x2,
->                                 .fw_api_ver =3D 0x2,
->                                 .se_name =3D "v2x_she",
->                                 .pool_name =3D NULL,
->                                 .mbox_tx_name =3D "tx",
->                                 .mbox_rx_name =3D "rx",
->                                 .reserved_dma_ranges =3D false,
->                                 .init_fw =3D false,
->                                 .v2x_state_check =3D true,
->                                 .start_rng =3D NULL,
->                                 .enable_ele_trng =3D false,
->                                 .imem_mgmt =3D false,
->                                 .mu_buff_size =3D 256,
->                                 .fw_name_in_rfs =3D NULL,
->                         },
->         }
-> };
-
-Just looking at _some_, the .cmd_tag, .rsp_tag and .success_tag look the
-same for all SoCs.
-
-[...]
-
-> Created a static variable g_soc_rev in the se_ctrl.c.
-> Accepted and will correct it in v2.
->=20
-> >=20
-> > > > > +	if (info_list->soc_rev)
-> > > > > +		return err;
-> > > >
-> Will change the above condition to g_soc_rev.
-
-"g_" as is global? Don't do that. Use your priv!
-
-[...]
-
-> > > > > +
-> > > > > +	info_list->soc_rev =3D s_info.soc_rev;
-> > > > > +
-> > > > > +	if (!info->soc_register)
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	attr =3D devm_kzalloc(dev, sizeof(*attr), GFP_KERNEL);
-> > > > > +	if (!attr)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	if (s_info.minor_ver)
-> > > > > +		attr->revision =3D devm_kasprintf(dev, GFP_KERNEL, "%x.%x",
-> > > > > +					   s_info.major_ver,
-> > > > > +					   s_info.minor_ver);
-> > > > > +	else
-> > > > > +		attr->revision =3D devm_kasprintf(dev, GFP_KERNEL, "%x",
-> > > > > +					   s_info.major_ver);
-> > > > > +
-> > > > > +	switch (s_info.soc_id) {
-> > > > > +	case SOC_ID_OF_IMX8ULP:
-> > > > > +		attr->soc_id =3D devm_kasprintf(dev, GFP_KERNEL,
-> > > > > +					      "i.MX8ULP");
-> > > > > +		break;
-> > > > > +	case SOC_ID_OF_IMX93:
-> > > > > +		attr->soc_id =3D devm_kasprintf(dev, GFP_KERNEL,
-> > > > > +					      "i.MX93");
-> > > > > +		break;
-> > > > > +	}
-> > > > > +
-> > > > > +	err =3D of_property_read_string(of_root, "model",
-> > > > > +				      &attr->machine);
-> > > > > +	if (err) {
-> > > > > +		devm_kfree(dev, attr);
-> > > >
-> > > > Why do you do a manual cleanup of devm managed resources? Same
-> > > > applies to the other devm managed resources, too.
-> > > >
-> > > Used devm managed memory, as this function is called as part probe.
-> > > Post device registration, this devm managed memory is un-necessarily
-> > > blocked. It is better to release it as part of clean-up, under this
-> > > function only.
-> >=20
-> > Why do you allocate the memory with devm in the first place, if it's not
-> > needed after probe?
->=20
-> Sorry to confuse you. Actually the devm_memory will be needed for the cas=
-e of soc_registration.
-> Meaning, memory with devm, will be needed post probing as well.
->=20
-> If this function fails, the probing will fail too. It will be auto cleane=
-d.
->=20
-> Accepted, will remove the devm_free in v2.
-
-If you don't need the memory past probe() allocate with kzalloc() and
-use kfree(). Only used managed resources for lifetimes beyond the probe
-function.
-
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---7yk6pkmeqxyudczq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmZMkxsACgkQKDiiPnot
-vG+Z/Af/WMnqhWM48LnZtU6kUIbY7cRacggeGQv2jj71QpNxkSQ62f9qkFrUh3rS
-Zmnt+uZAOghpnCADbwdGszNnOMR8saS83xmewg528L/7StvqR2/2N92ZGAfVC7Q1
-BEn0/fwyAGSWnvNLgmeSGi0gDd+LxVQVfrkhqxSPSYvLCcZMJh0Q0VBiHlv2ikqt
-Sf8hGPnZ5cyeNWzHucZ0luAWy2ilrU2fA9VUiuhrczVRJL4Rb6Tudswv7Dmb2DX2
-jHSD3/RViGgDHR4xUVQnV2BW43sS220cKg8xQ5xeHgtOlxo/PvVfMPbCyrpZZJ11
-Weuh3GM0jY/KBh4rxcm2VBE8FJOfgw==
-=R/M7
------END PGP SIGNATURE-----
-
---7yk6pkmeqxyudczq--
