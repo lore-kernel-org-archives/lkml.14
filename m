@@ -1,292 +1,142 @@
-Received: from SINPR02CU002.outbound.protection.outlook.com (mail-southeastasiaazon11021007.outbound.protection.outlook.com [52.101.133.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBA3360;
-	Wed, 22 May 2024 06:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.133.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716357770; cv=fail; b=ZcnvlCemgfBT/S53aNtMsU1Wac3WFUbXbJVFKDw8HjF3jMOubgpndsQaHQVUpf5mnWeKQ6dkYfhFFhC/A3mcQrxrRJ860On/r90UlRPRAm3JTKWenbZnig5JmxRMFGLbSt+GwkJleozDwZ+SrxCrNXpkLKHs9Ow6xoD8OZSNxDs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716357770; c=relaxed/simple;
-	bh=MoGUUatNV5L8nk3dyhA1zAV+ydPMsUr8x39yW0oKpco=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mg2LHThTvN1TxST31Ps1YHa+IYqyquwGKuDLtOts0j7IvkaruqdSj08nCh6IF2BVsgtJy0GSgiSLgtuco5cXKQJ5itwqUpAxx/0vVJFVqgdIyOB8wl0aE9VwUwvLJokJGQGy7OZINct1woG92h4N+KqBoj0jhHiWuchkcRjSR88=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=UCY6ZJPh; arc=fail smtp.client-ip=52.101.133.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19FF1C6B4;
+	Wed, 22 May 2024 06:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716358167; cv=none; b=KGWyssh+xrx/zpx2FOj9yLJAzS12kTEOY1FMjuY1uSud8VAqvTfg8xzuxwnaKzN4OYCZ8Ykhiw8yZxeqJVaOvWYrKPvJxyIwS2wsGFGv3nfkSXj8D5E7gEZHgoHf550YnP94ASm051b2qsQnSKOGzKH3WGlc5+N/RXeUt034V2c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716358167; c=relaxed/simple;
+	bh=RHJzBZKBYDregnPcMEAoO1XuZcME3KtgeKMDPxPVhZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iiImxYZ64UhYfBWuwh3SoiasYGo0Qn+OloElUwO3+yJtcu1UiK3i43yoVGwA7lrIoJpBy/+RXbd4OBndUOLcbTzfs7PDqq41UCMKW6rZSc4K/xmNJJmxTZKYOfvDZKyddKrRju6MYOASGCl1sydyvT9tpUNYeCOQoblwj31G0Zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VfcFxf9c; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="UCY6ZJPh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W7l6jHua6bmXSeXb9Yb+RpsnxDiPZxRhi+8u8kjXvCtNvGqZ08eoaI4+X1YxnqRDrcYWFX6lbHgScMgDbyj/+obhnH7WU1mXWPopEiiwN5tCcdtXnvCinHNaoZoujMKAG9/PM9bCOhl9c7R4VVhsDPEGI2aoCLBCCAtSqZbVHSFxAhR+vB4LHgBcRamNO3k3gOVJ/x6NrSLNydD3Qon/TnVWrS+c+rOFEMhDJWF3aCGPMfqcQyTF26yc4DCFLn+NDnIVNJF6jEQx/NmMAXEP65sOOhci8fRRQQ3EcjPODavPH307XH0/tFoMR1Z6Z6ZbmzMeqR7FIoNXHoPv8fYS4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4NdsCMUFEMUP0t/WCjrjOlu4+egumM9O4MZe0kqf+jc=;
- b=TN7+2Zv6fSX1EIISRh1J2B3imXxbm/MTBMMybwagt6gtsEQnmapkRIM7lwkcgp6hKeIqAcPIf1P/mHF1S2OQAHKhruNiUoBNLcfTK//oSwYpvxr5cjzRfOqmani/SmE7juFENSb34F5k+EFEzHbTMMqY/916LndvoP8ATnLAkSjHR+YPcX8gayNPcsSL1nX2DOVusVTdxRPLGaPXSprrpHITMYHZ8V7ksAC+y+WXiQT92mdM/6EJTjCeKLLtkNge67+m2ebBMkgxBRAuJ6pvZuEUwa5OXSG7CyaD4KuZa9y3NoIEBlFwlIH1AHIDSPECwJpvptkQpfeAUyUIhUv1yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4NdsCMUFEMUP0t/WCjrjOlu4+egumM9O4MZe0kqf+jc=;
- b=UCY6ZJPhKB+ML7r+SXs+Ban/qHzPnVTvAi+kvJUmrSxJfU+udnPwdUGP3xvNo1VS+4+qa4zfM8UUvmzdVBUw7mLaXN9e2AXOMmNCM3GYMHNgM6qAdc1yxJcFUpW+qImrlRoCDJvTLSBYtzHmO4x/jFmTtEkS/y9h1COlnavXxl/z2YwnpkT2I0PhVXcr4BP6kewvLHDnP6eAAeawAbS49ke8Uuwwgd+yUSP62vIQRDtVMULt8mbZ4obuEEw7v2gRoZmYMSdUgFQ3YPc+3j494iJHsFs53cxMs/tNOMq5nDgDgOdse14mQ5S41y/UZNklD2Cu5mpUrgtICF/nklK5lA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from TYZPR03MB5743.apcprd03.prod.outlook.com (2603:1096:400:74::7)
- by KL1PR03MB6899.apcprd03.prod.outlook.com (2603:1096:820:9e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.16; Wed, 22 May
- 2024 06:02:43 +0000
-Received: from TYZPR03MB5743.apcprd03.prod.outlook.com
- ([fe80::340d:421c:7221:56e6]) by TYZPR03MB5743.apcprd03.prod.outlook.com
- ([fe80::340d:421c:7221:56e6%7]) with mapi id 15.20.7611.016; Wed, 22 May 2024
- 06:02:42 +0000
-Message-ID: <7e8d7140-b119-4d12-a10c-216c1426c40c@amlogic.com>
-Date: Wed, 22 May 2024 14:02:37 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [DMARC error][DKIM error] [PATCH v5 1/2] pwm: meson: Add support
- for Amlogic S4 PWM
-Content-Language: en-GB
-To: George Stark <gnstark@salutedevices.com>, kelvin.zhang@amlogic.com,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org,
- "kernel@salutedevices.com" <kernel@salutedevices.com>
-References: <20240521-s4-pwm-v5-0-0c91f5fa32cd@amlogic.com>
- <20240521-s4-pwm-v5-1-0c91f5fa32cd@amlogic.com>
- <4fd9fe90-1da0-4b8c-8bc4-18b7a4dc38ab@salutedevices.com>
-From: Junyi Zhao <junyi.zhao@amlogic.com>
-In-Reply-To: <4fd9fe90-1da0-4b8c-8bc4-18b7a4dc38ab@salutedevices.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2P153CA0040.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::9)
- To TYZPR03MB5743.apcprd03.prod.outlook.com (2603:1096:400:74::7)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VfcFxf9c"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44LNaRHs019181;
+	Wed, 22 May 2024 06:08:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=76X18h8ZdxGj97syQ3G8X16mJAi6U8JWctpGW0mNnGM=; b=Vf
+	cFxf9cRRjiPYJwdfkeRQkRxSwgXWdNCY0Wwdh+iQhCGEXlUEdMXe6DNkBTRLEGFw
+	GLqAKJed9gNHi7Jlqn+rWm2qu70L955pYwSaNK7E7w1+Gn5Kc/IkC9fNO0XRxeZ7
+	cFFeQ5SXKQD+23ibg0D8s3UJR0QcCYlgRM+lg3PqAB1Wl9UF4MO0LedTYPDv6E/k
+	GWVDc0DUsrtFCLqf0s9Uv7tS8Q7wzQUNN6omCr9LVPF4lr14F7oIdyg4hYLHrAqL
+	7/mh/8Co35rimFPifRFmpjU355JYMVG4OH5glBdq1ByV5eGIuadp2UppMVGmmTfb
+	4K+yiTfP5GBLaYbh2NlA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6n4gfyeh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 06:08:54 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44M68rYs023009
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 06:08:53 GMT
+Received: from [10.216.52.184] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 21 May
+ 2024 23:08:48 -0700
+Message-ID: <1eaa6f78-07d8-25e7-2e00-1284dd37f761@quicinc.com>
+Date: Wed, 22 May 2024 11:38:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB5743:EE_|KL1PR03MB6899:EE_
-X-MS-Office365-Filtering-Correlation-Id: 926daccc-b809-419e-9cb5-08dc7a24cb34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|1800799015|7416005|376005|921011;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ckdieXh5MzBPR1p1ell1MDYrMFVSRWNJcGlGNDU2L0l3V3JWRUlYYXc4ZDZZ?=
- =?utf-8?B?M0IvZVFlMWYrNDNWbVJ0eU5oRDR2dU5rbzJ5aVNzNEhpR0laMXFWQ1NsempC?=
- =?utf-8?B?V3dlYlY4WlI4Zm81bUFrbk1YNHltbUFUcXV3WittRVlxMVdFenZKTmR0cllo?=
- =?utf-8?B?bjBDWUhqR2V6Y3BycEJ1Ui80S1NMKzdTM0hlOWRzTTExeFgydXprcnViNWNZ?=
- =?utf-8?B?eVUxNmxVWHhKMHpzSkV5TjBKSFV4NkdqWTM5Z2NoSGhQRUdVZ29ndTZqdWdU?=
- =?utf-8?B?VVBkdWJsWFplenlwdHpzTVArMGlEN05WcWw0YVoybzNvZ0l5cXZYV0hjcjRR?=
- =?utf-8?B?T0pLZGtMd1VCb0hsQXk1VjRGcnVyTW5pTER0Y2ZKZXhaVWdxQldubjdNYWRi?=
- =?utf-8?B?QUdNakhPajFUZEsvTm1xcVZZd1c3K1VJb3AzK2txc1FOalBubHpVY1hNRG1j?=
- =?utf-8?B?dDBUenJ3WWVIczQrb0JoZEI5cEFFQ2hvcDJUSEZNeE5NZnF1UGpwc1pySWlv?=
- =?utf-8?B?MkZDTTZNbDc2VjExLzBhSjkxVkdHYnNEai92dm44QkV2dUFKNlNNaE93OElF?=
- =?utf-8?B?MzA1OTl3ajEvUDdSR2ROZ3lQblJUdzJ5K3JVNXcxeG9IUVh1Tkt3cUZ6NmpV?=
- =?utf-8?B?WTFoZHlOeGJkU0xuclRFR2V0U3hDSTNxYjY5R3ZFaHl4bWwrbWFwTmxzc3NE?=
- =?utf-8?B?SmtqU0YrOEdqeExJNkptRUg0Wm11ZXd4Z1QzcSt5NHFmMHhtdk00N2JZSWRQ?=
- =?utf-8?B?R0p6Mjd2WlUvNE1COU5qKytjWUkvYy9iSnA4cFFCN2VXd1NKQ0tFbEQwSzNM?=
- =?utf-8?B?NVpsb0pPUDBWSGZ2L20wZW5WSDJkZGtwYmNWV3N5WGNBYlVjZVhVK0xoZktN?=
- =?utf-8?B?N0pxY0Q0aTlrL3RmQ1BtQm9MYy9jMHdZbmFiOW5teXlEVUkvaGJFS0RRTzFG?=
- =?utf-8?B?UXAwdEQ0OWExR2ZKcWxwY25jQVJBTXFRaDlYcG5zZUE4UzNjNVRxbk5FRk9l?=
- =?utf-8?B?TTlweTNPMmlEUkJQdmpJcmNIOUI2Z2pvVVMzWkd4WW9ZaVdUR0h3bzc5Zkd6?=
- =?utf-8?B?VThiditxUUJHcm5zQ1JEZHBWcTVvYnB6cmJqRHQyQ25oY2pDV2dZV1M3WUFE?=
- =?utf-8?B?SldHeitWU1NmaGVBSmk4eE5Wci9ZSUlQY1FodTNONjcvNVEyNWY2bDY4SkN1?=
- =?utf-8?B?c3pXTWJyR0ZCL3hkcTJ5WTErdjQyQVZPVDRiNHZDaWFaZmVUVU9IbHFsLzgx?=
- =?utf-8?B?Rmk3bTVJZzQ0Nll4dXVlUGtIVlhXT0xGUkJrcUNpWWkvVmxobkxFK1Rma0tD?=
- =?utf-8?B?czNTSUtMaEFSWjJGamlHVjF1bHdNVWl5YTdQbHF4cnNmeHZWQXFxaFl3ZXdF?=
- =?utf-8?B?OG4wcVRJM3NCN3Z3V3RhQ2dhQVkxRkUzU3o4WlRScXhpWmduOWg0MXMwMWFx?=
- =?utf-8?B?UFRtR0ZuZHlLeCtacW9xS2lqL3l1Q0xNYzd2OGplV0NTMUlUeVhqT0p1RWFQ?=
- =?utf-8?B?UG5TdzljWHRnRzZ1SnJSaHBsVVU2WS9YNjJwMUhRTW40WFpvR2hoV0NqUHZQ?=
- =?utf-8?B?TVpiRTBzbHVEdE5TZktPNkMwLzBvVXVUU2tMRjlKbWxCdGt1Wld5azUyU0xy?=
- =?utf-8?B?RmNYTTh2Skl4SzhkeVZtdjZNTzQwOVVEdWNjd0YwTldzRVhJWXFaamYySTN3?=
- =?utf-8?B?TjVCQlk5K01tMEMzTzJ3bHByVHRGQ0s1eElBZmw5bjBORm1Fa3ZCQVNRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB5743.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005)(921011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aTIxREp4RXM3ZGtUUjNpQVNXSisrT0Qra2todzRIalo2dDZpWThjYW9TVEJt?=
- =?utf-8?B?TUlVWnJXYU85V1F4VWlxUS9ISGxJN09TMjBaa0p2blB2eEFKcUs1cCtpRHMv?=
- =?utf-8?B?alRrSCtESjlrakovbXR1Y0NCTnZyNFljYUV3QnRzY3dGN2pWcHZnUlBEMVl1?=
- =?utf-8?B?aU02YUJoQlNBZFpuaUhsUjc4bTlxZjJDanI4TnltYkFpbG1IaWNqSnlDbldQ?=
- =?utf-8?B?TFVFL2NWdnpRdGtTYnQ0cHBrc2E5c0J6alFtcFlqUS9KV2sySXlwU1ZWY1li?=
- =?utf-8?B?OVZUWldUWCtxMHZEZHVYYzZVUzlBRllGUDFRc1V1emY3WldncnR5b0VwM0xm?=
- =?utf-8?B?ZG9sV3cyNytDVmpZSXN0bi9tM1JDd05UOWNSbjdvTmhrTkdXbng3MUNxdTJx?=
- =?utf-8?B?cUU3dzZRYytrNFVwUXRTQm1pS3FwTXJjc3NrSzRSVTBjMk1WbnJYTmJaMEcr?=
- =?utf-8?B?Nzg1b1ZhZFdMeVpUb3VZd3dTWDRPZ09hdGo2L2EyaHVkZ3JIdi8wTmNKTmZB?=
- =?utf-8?B?Z3U4dmJhdXZpdDY0UDkxdUNneHMyclhzc2ExRUFLT3Q4ZWRneFlOQUxJRFVI?=
- =?utf-8?B?NndhZ0lsb1U5ZnRxZVc1b29HY2JXYnVNaSt4Y1M1WVlEcUhJZzVVL1NtdEVB?=
- =?utf-8?B?KzV4S2Y5aFpQVVhtN0J2Z1JUY3BudzdKVmgrZWFUUTkxVE4rQTU3R015RUpR?=
- =?utf-8?B?eXk5TjRxbEdhQmIveDN6dXBCUTZiUW5EenlCZGIvWjl2RVJQR2J3U0prRHNG?=
- =?utf-8?B?RzBkYS82RTNtd1JoUThlTGYvL3orZlVsbEtVWk9kWHVsWDVTL1J5aVFDV0VT?=
- =?utf-8?B?ZWpSS2tVNmNoRjlnUG9XaUxDeXNYM2JUUTR1eWhWWUI4Rk5SUFlNTUV6aEJO?=
- =?utf-8?B?eGxjSzFTcWtCVkxuT1V1TVVPSjNnTHJ1TWc3aVQyZTVFOFdONGR0UVVmV0pP?=
- =?utf-8?B?UDk4RFhKdnhVWFkzcjBURnJZemtDcnZLNWJCcStHWEcvQmkzMDE2TlV4M2Fm?=
- =?utf-8?B?bjVQYjI5Z25xR3JpOHEvT1M1WWpoR1FrNXd2ZURHdjFHSDJnS290RjFFZC9M?=
- =?utf-8?B?SjlOYXVSZGszT0YydmNaZ3UyNDVFZ3dGaUxtU0M3NnRkSTdiWXM3WS9iT3Rw?=
- =?utf-8?B?WjN6bHZBN1Y2V0ZhcXd3bk16K3VDWlhTOUpYRXpsZERUTFVydlFBeS9DNFAv?=
- =?utf-8?B?QUtoSGxDaUJWS1llNmlVUDVJcHV5WnZCZ2UvdmszaUdsZy96cldEcnJHT2Uw?=
- =?utf-8?B?bUlUSTJvLytBV2liSVJ6L2xHZlpLWHpwS0NmK203R0c4d0V6VDFLbUphZlA0?=
- =?utf-8?B?Y2JoZ1pKWDNSUXMwbVNSbWhCTGRRN2pIVjZGQjc5NDcvTys5Um5lQTgzQmVm?=
- =?utf-8?B?N3EycVZja2M0K0Nwa1ZOVjhCWHhLZGhxekcrUTNmRHRJeHdac3ZFSnJ1SHdv?=
- =?utf-8?B?ckdndTc2SzVDRWxraG13SEE3aXNjSVRrMUpTUDRVcVNaRzhPZ01IR1JyM0tx?=
- =?utf-8?B?TGo0enFMczdMR3lnbTZTVzZNYmRTZnhvdDhPVVJXQTgzdGFFMWMzNFZWWUUr?=
- =?utf-8?B?aStsdjRiQlZVM1Ztby9SSTZzZlhzQ0FWZUhCNnBnMmtJSCtCZU0vM2hhVi9K?=
- =?utf-8?B?Q1FodVM3dGwzSkZ3V25jaUw3L1F2bUw4bVJsNys0OWRoZm9KZjNpbUtyemdy?=
- =?utf-8?B?eXBGQjZmNWZITTlkczVBUXRuLzNRNlUxZGdHSG8vK1RCQUdUR0FsQTZvTGlh?=
- =?utf-8?B?T09pMXlqQmlJK1A5VUphTVZmUmVRdVBNeFlwR3RpM1U4dUFyTElKS3F5VHVq?=
- =?utf-8?B?K0NmR0x6ZzJ6ci9rNXh3SlVpRjMrOFltU2lLZHB1TE5zb3lIcURaalNrc0dX?=
- =?utf-8?B?amxUUmUydExDTjNoZk8zdTVEL0tXY2dCZVZRSC9GclJsbFo4Z29KcVJ2dGt0?=
- =?utf-8?B?WWpvQTdtOTNyM2VEZzJ3MWQrbDhYUC9LVEp5Y2ltWVF6cStSS1VVTklWbHFD?=
- =?utf-8?B?TDNSdlZvcGRiOVVQSVJLQXY1R1BrdDRQdDUzTXZpYS9RR2k4Nm13UWh2K0xR?=
- =?utf-8?B?MERETUkrQVhCWStOUXhvU1VYaHpwTkl5djJWTTRGUlpHaHZ1T2IvK1RiaGZk?=
- =?utf-8?Q?8iwd9ntLjkkeJ/fPYTrlpk0+B?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 926daccc-b809-419e-9cb5-08dc7a24cb34
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB5743.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 06:02:42.8776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SGQ8lV4Oqamdmqp5pRNsbIHGI4GZUW7H0CRWVICF0GChnaX6J3hOaC7YujwFXELCgFqQy1EkpTLaAm2jugWSbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB6899
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v6 4/8] drivers: mtd: nand: Add qpic_common API file
+Content-Language: en-US
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+CC: <broonie@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <richard@nod.at>, <vigneshr@ti.com>,
+        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
+References: <20240521105532.1537845-1-quic_mdalam@quicinc.com>
+ <20240521105532.1537845-5-quic_mdalam@quicinc.com>
+ <20240521145140.5cb49946@xps-13>
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <20240521145140.5cb49946@xps-13>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aUN5v4k1sl7V4N9StjvzU3eaRECy46JR
+X-Proofpoint-ORIG-GUID: aUN5v4k1sl7V4N9StjvzU3eaRECy46JR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_02,2024-05-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405220043
 
 
 
-On 2024/5/22 2:50, George Stark wrote:
-> [ EXTERNAL EMAIL ]
+On 5/21/2024 6:21 PM, Miquel Raynal wrote:
+> Hi,
 > 
-> Hello Kelvin, Junyi
-> 
-> On 5/21/24 11:31, Kelvin Zhang via B4 Relay wrote:
->> From: Junyi Zhao <junyi.zhao@amlogic.com>
+>>   drivers/mtd/nand/Makefile            |    4 +-
+>>   drivers/mtd/nand/qpic_common.c       |  740 +++++++++++++++++
+>>   drivers/mtd/nand/raw/qcom_nandc.c    | 1090 +-------------------------
+>>   include/linux/mtd/nand-qpic-common.h |  467 +++++++++++
+>>   4 files changed, 1222 insertions(+), 1079 deletions(-)
+>>   create mode 100644 drivers/mtd/nand/qpic_common.c
+>>   create mode 100644 include/linux/mtd/nand-qpic-common.h
 >>
->> This patch adds support for Amlogic S4 PWM.
+>> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+>> index 19e1291ac4d5..e59106e0a3af 100644
+>> --- a/drivers/mtd/nand/Makefile
+>> +++ b/drivers/mtd/nand/Makefile
+>> @@ -3,7 +3,9 @@
+>>   nandcore-objs := core.o bbt.o
+>>   obj-$(CONFIG_MTD_NAND_CORE) += nandcore.o
+>>   obj-$(CONFIG_MTD_NAND_ECC_MEDIATEK) += ecc-mtk.o
+>> -
+>> +ifeq ($(CONFIG_MTD_NAND_QCOM),y)
+>> +obj-y	+= qpic_common.o
+>> +endif
 > 
-> Please take a look at
-> https://www.kernel.org/doc/html/v6.9/process/submitting-patches.html#describe-your-changes
+> Breaks if you set CONFIG_MTD_NAND_QCOM = m
+  Ok , will fix in next patch.
 > 
-> It should be something like
-> Add support for Amlogic S4 PWM.
+>>   obj-y	+= onenand/
+>>   obj-y	+= raw/
+>>   obj-y	+= spi/
+>> diff --git a/drivers/mtd/nand/qpic_common.c b/drivers/mtd/nand/qpic_common.c
+>> new file mode 100644
+>> index 000000000000..dfbbb5f626b6
+>> --- /dev/null
+>> +++ b/drivers/mtd/nand/qpic_common.c
+>> @@ -0,0 +1,740 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+>> + */
+>> +#include <linux/bitops.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/dmaengine.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/dma/qcom_adm.h>
+>> +#include <linux/dma/qcom_bam_dma.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mtd/partitions.h>
 > 
+> Didn't you say you would remove that include?
+  Sorry, missed it , will fix in next patch.
 > 
->>
->> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
->> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
->> ---
->>   drivers/pwm/pwm-meson.c | 53 
->> +++++++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 53 insertions(+)
->>
->> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
->> index b2f97dfb01bb..9fea28a51921 100644
->> --- a/drivers/pwm/pwm-meson.c
->> +++ b/drivers/pwm/pwm-meson.c
->> @@ -460,6 +460,51 @@ static int 
->> meson_pwm_init_channels_meson8b_v2(struct pwm_chip *chip)
->>       return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
->>   }
->>
->> +static void meson_pwm_s4_put_clk(void *data)
->> +{
->> +     int i;
->> +     struct meson_pwm *meson;
->> +     struct meson_pwm_channel *channel;
->> +
->> +     meson = (struct meson_pwm *)data;
-> You can initialize meson variable along with declaration; type casting
-> is not needed
-> 
->> +     for (i = 0; i < MESON_NUM_PWMS; i++) {
->> +             channel = &meson->channels[i];
->> +             clk_put(channel->clk);
->> +     }
-> you can save 3 lines just by using clk_put(meson->channels[i].clk);
-> 
->> +}
->> +
->> +static int meson_pwm_init_channels_meson_s4(struct pwm_chip *chip)
->> +{
->> +     int i, ret;
->> +     struct device *dev = pwmchip_parent(chip);
->> +     struct device_node *np = dev->of_node;
->> +     struct meson_pwm *meson = to_meson_pwm(chip);
->> +     struct meson_pwm_channel *channel;
->> +
->> +     for (i = 0; i < MESON_NUM_PWMS; i++) {
->> +             channel = &meson->channels[i];
->> +             channel->clk = of_clk_get(np, i);
->> +             if (IS_ERR(channel->clk)) {
->> +                     ret = PTR_ERR(channel->clk);
->> +                     dev_err_probe(dev, ret, "Failed to get clk\n");
->> +                     goto err;
->> +             }
->> +     }
->> +     ret = devm_add_action_or_reset(dev, meson_pwm_s4_put_clk, meson);
->> +     if (ret)
->> +             return ret;
->> +
->> +     return 0;
->> +
->> +err:
->> +     while (--i >= 0) {
->> +             channel = &meson->channels[i];
->> +             clk_put(channel->clk);
->> +     }
->> +
->> +     return ret;
->> +}
->> +
->>   static const struct meson_pwm_data pwm_meson8b_data = {
->>       .parent_names = { "xtal", NULL, "fclk_div4", "fclk_div3" },
->>       .channels_init = meson_pwm_init_channels_meson8b_legacy,
->> @@ -498,6 +543,10 @@ static const struct meson_pwm_data 
->> pwm_meson8_v2_data = {
->>       .channels_init = meson_pwm_init_channels_meson8b_v2,
->>   };
->>
->> +static const struct meson_pwm_data pwm_meson_s4_data = {
->> +     .channels_init = meson_pwm_init_channels_meson_s4,
->> +};
->> +
-> according to already existing soc-specific named vars and functions
-> new names should be
-> static const struct meson_pwm_data pwm_s4_data
-> and
-> static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
-> 
->>   static const struct of_device_id meson_pwm_matches[] = {
->>       {
->>               .compatible = "amlogic,meson8-pwm-v2",
->> @@ -536,6 +585,10 @@ static const struct of_device_id 
->> meson_pwm_matches[] = {
->>               .compatible = "amlogic,meson-g12a-ao-pwm-cd",
->>               .data = &pwm_g12a_ao_cd_data
->>       },
->> +     {
->> +             .compatible = "amlogic,meson-s4-pwm",
->> +             .data = &pwm_meson_s4_data
->> +     },
->>       {},
->>   };
->>   MODULE_DEVICE_TABLE(of, meson_pwm_matches);
->>
-> 
-> -- 
-> Best regards
-> George
-Thks for your suggestion. i will check it.
---
-Junyi
+> Thanks,
+> Miquèl
