@@ -1,104 +1,153 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A372B80C07;
-	Wed, 22 May 2024 11:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1D27A715;
+	Wed, 22 May 2024 11:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716376137; cv=none; b=e+ssxXaxd0zbp+lDaJyuN+Xce+UqZC1TwjfdCHc9H9sYGWsM9jJOgUr/XcmUGutrx2zueWs0dH1xjRr0n9DbQLRpO8LgCMNyaHLobG7XF+TUIDTzzfUDpN1SDDsKIn/cunjte/a/sYaWckC+2vGsVJNQs1gfOJOv8xFd3fmp0NE=
+	t=1716376164; cv=none; b=csBSbXpZfTB9/OzV+TuMa3VCUfEbgQ2aYAyKB59wvekh1dJ13JEgbLXoEe7EDTMSHYG3MSOgTNUAFpOClv0KD/bfTGZR0o+naKO9XULc+M4jOQV2FhTx5ohByFBOMCLam+bmfNWpBv+xul69SCujjQ2AMcMRDc7pAyVJSaESjjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716376137; c=relaxed/simple;
-	bh=EUVi8pXNqTfD4bu+3/Opg1n7iWHcwxR9KxjT1HjrgnM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DNFKAPzaaivsgRKxA0A4njsOff9VyLkHuW94ThhndGBwCYOpgrWIvatIxPo4vU0fZSYDDGLXO55Yp7nUCYrR2ORFJLLiMGNchmUoP0nEybn8ez7lSpGFeDjDhYlt7frPj7gDlfMuv47TB2vY3mJpUEgzXOYXfxmGIemoTuHQ2Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SFOc5bTb; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1716376164; c=relaxed/simple;
+	bh=IQAZUlNPZoWpHJGkIKUhv6elpxjgoL6OEDDw8Puqvbs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uQkKYh+Kyy4Q7tXJx0+7NySw4+l0gJebjF6CXrw1BTsDQzIiWP4GmoNgq5JREN0ww5oC7jjGUMGjiZtWMipnI2z88DFe5S85eYeWSdUzw591Bu09VFc6FPlUywbXeeoAEp9ILzeNQjEy6zzdUyHom27L7bktT507gffCkDuk/NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+3hBrQc; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFOc5bTb"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4200ee78e56so6014655e9.3;
-        Wed, 22 May 2024 04:08:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+3hBrQc"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f693306b7cso1657093b3a.1;
+        Wed, 22 May 2024 04:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716376134; x=1716980934; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HTA7LnXUVCxdmoKd3vWVKbpmE3D6UHlWv/BKj3RwnS8=;
-        b=SFOc5bTbYDBQArSXa3eFaLKP051TESeu3UMCbYjN09H526TLIglRgC/XfR/MK1F5Kr
-         6e/xfgo6qAV08TpTnrztXAHNcMTgAValA7aGj9qKqUIufU13VnKUilQDitaOE0T01HFA
-         U/7WWGbedORSevrG2g8PrCdy+ZGU6DpuljXU+ntqArMosYVmRDb5PWBVwocCskZyW43L
-         rwDYQmjAFZpU08ZZuPDrtQlkZg3TKkUvvwgQUvd9rugBZOzbTVJZ0ao1LFSujBgwYldK
-         yYpE3iuhobuXraU7Utt2SmSd8V2llpssGlCOG7KwG78tdH5/SOGW8rkz7unoqJivldxv
-         gZog==
+        d=gmail.com; s=20230601; t=1716376162; x=1716980962; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=21XTRS6Hwv0Mc2USbIbApfyvP84+Xjin/dyUCVlMQQw=;
+        b=g+3hBrQc8J/I156PDyvSF0HWiVYce2yIVaHp0ybJI96XE8kPy5u1i1mSiooyUZGtVO
+         2W1PakKCxHMr5+t/vtb1w0fvFcEh9juvAMNmcbod8FBSboPRwuF+YN/yEqentmpOCB0j
+         8frD2znnao+pKExvHeas28UB7NAxu6cdrkjdxI1lPaiBH+Sa8N8Gl4Da/hqSr3GWwI88
+         8jpUo8R776CZg8TNi+46n+RJcXHw9t+OnRUxGcIHCA08SkPT0IqNvyFBzHuXdfM6DCOh
+         RK7O1AW9Aa0AVNfeQo0nQEFFo7b0CwCX0BJ/ncNrfYlSZNGrI310LE2eaEYILPWLMT+4
+         Xbdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716376134; x=1716980934;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HTA7LnXUVCxdmoKd3vWVKbpmE3D6UHlWv/BKj3RwnS8=;
-        b=qBN3+DKwEmZ25VRwywHIolF+BCS7EMwebZlC0O6IrOK26G4jnzW2EiGBqXo6PEUBt2
-         CJ2tsJe1/GMHkDIwm+Pz8XNCHQgRM6MM5hG9gPyOZee35VK/+HQlGOb/k92wf/cYPup9
-         SzQLcm1vYrHjAJMWPC6QX1D5Fjd+kFyVKYuIoCw0XJ9RI9naJiXg5UPWIxVVVUXKTCmp
-         fs5HNoix4I2gEXb8QxerYtgnTM1i9vMcTlETEhu6dbn1j04npqTkk2i/mRXSpaNoMr+j
-         gM488iGmiISI0V9S6sHHLH/rMx9KxrNX3BZdqanaGHUfDm6ZEFnMhoxaL1MNVIe4xWjX
-         lkyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXG3lNHnoi4smm3uqrHoW/G0noErrcIZjyWJh6RhzyDysb3rehqXpBGTaWr+vrDjnizHKlMWJZ0F6jjIrh6KS+r5XeJyvcjL9sJr+7/mtCK06h452CdJkPom3ZfmlxD8rk2VpZ3
-X-Gm-Message-State: AOJu0YyzbrMlPnaYFOTZ61hQQMS9IqqgNFf/7Lg43AQ0fN37gVKge5NC
-	ziWVPoLOBgzIu8kaUfD6EokekFDwH0v9DcJsjAI+MpZ3ParV3l7l
-X-Google-Smtp-Source: AGHT+IHzSwBwOk+aDPnk13PzYrPuoXchlVw/Y8U96+cttyLLSHQJ1BDt2/OzxMjtW076hS73tWCuPw==
-X-Received: by 2002:adf:f504:0:b0:34a:687a:8f66 with SMTP id ffacd0b85a97d-354d8d7b3dcmr1026586f8f.45.1716376133551;
-        Wed, 22 May 2024 04:08:53 -0700 (PDT)
-Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baacff4sm34208278f8f.79.2024.05.22.04.08.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 04:08:53 -0700 (PDT)
-Subject: Re: cpu performance drop between 4.18 and 5.10 kernel?
-To: mengkanglai <mengkanglai2@huawei.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jiri Pirko <jiri@resnulli.us>, Simon Horman <horms@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-Cc: "Fengtao (fengtao, Euler)" <fengtao40@huawei.com>,
- "Yanan (Euler)" <yanan@huawei.com>
-References: <9fd382fb581e47a291ed31bfe091112c@huawei.com>
-From: Edward Cree <ecree.xilinx@gmail.com>
-Message-ID: <0826f183-5402-5529-c935-e933b817bd74@gmail.com>
-Date: Wed, 22 May 2024 12:08:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        d=1e100.net; s=20230601; t=1716376162; x=1716980962;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=21XTRS6Hwv0Mc2USbIbApfyvP84+Xjin/dyUCVlMQQw=;
+        b=ck6iu2YIos4bUg/1uovaBp3V8HwWQ53DbuqbzAluFtOQFfJK0DD9tnwjRc7UsfOSwe
+         prVk0IWIA0vKk3j1QgIg2aduTcsYCCxb3AV9BsxxKwKU4GudxPvXn/zfGyLFi2s8tKyl
+         K6i0QPJBqowClV9qU0PIXQrQW/Z54N16aRgYOWaFoHBvXi6mm+ulzsqHf6J+0goKbING
+         1TsvNq9MBL4Dml2Jmi8TXw/gnzGPgYwUW3yB3ayLv7bvcmpj80GVs/6jTt6oQSGtMSqx
+         +YLfI5qXd0NMY7jEgE2K10AirZlpqjQdB36yNIsQSMmrOmQPWKfW2rMWI4jZWQZSzi1g
+         B0Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUi8/1c+CbRLpeqHFaOfGDrlWZ0haqpgCEerOb0FG2cF6KCVf/rBEKWVPxT3+WxN6hR2ADX761c6QXycVyh5XRwzN4eTsE6tPxLSJ0X
+X-Gm-Message-State: AOJu0YyHCE4h0Yx70uFwWZKhvV8T8a7Lgk2mNNUl/KmF2SVxncprjWGV
+	h4Rf+q4Q1vgnFvxd+yhyB3ZZPGeo9WMY5vjFDS2gtHaWmUYwNu15
+X-Google-Smtp-Source: AGHT+IEl4M8hAFt3MbxsMiYNiuggdtQXuPE1wTndzkGVSbE3Yj2ugHn2eSyaf/NFhdLu90WxmT76Rg==
+X-Received: by 2002:a05:6a00:2d10:b0:6ea:afcb:1b4a with SMTP id d2e1a72fcca58-6f6d60430f0mr1709135b3a.8.1716376162294;
+        Wed, 22 May 2024 04:09:22 -0700 (PDT)
+Received: from localhost.localdomain (2001-b400-e283-0474-753d-295c-237e-167b.emome-ip6.hinet.net. [2001:b400:e283:474:753d:295c:237e:167b])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2a98sm22223760b3a.169.2024.05.22.04.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 04:09:22 -0700 (PDT)
+From: Victor Shih <victorshihgli@gmail.com>
+To: ulf.hansson@linaro.org,
+	adrian.hunter@intel.com
+Cc: linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	benchuanggli@gmail.com,
+	HL.Liu@genesyslogic.com.tw,
+	Greg.tu@genesyslogic.com.tw,
+	takahiro.akashi@linaro.org,
+	dlunev@chromium.org,
+	Victor Shih <victorshihgli@gmail.com>
+Subject: [PATCH V16 01/23] mmc: core: Cleanup printing of speed mode at card insertion
+Date: Wed, 22 May 2024 19:08:47 +0800
+Message-Id: <20240522110909.10060-2-victorshihgli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240522110909.10060-1-victorshihgli@gmail.com>
+References: <20240522110909.10060-1-victorshihgli@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <9fd382fb581e47a291ed31bfe091112c@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 
-On 22/05/2024 08:44, mengkanglai wrote:
-> Dear maintainers:
-> I updated my VM kernel from 4.18 to 5.10, and found that the CPU SI usage was higher under the 5.10 kernel for the same udp service.
-> I captured the flame graph and compared the two versions of kernels. 
-> Kernel 5.10 compared to 4.18 napi_complete_done function added gro_normal_list call (ommit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
-> skbs") Introduced), I removed gro_normal_list from napi_complete_done in 5.10 kernel, CPU SI usages was same as 4.18.
-> I don't know much about GRO, so I'm not sure if it can be modified in this way, and the consequences of such a modification?
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-No, you can't just remove that call, else network RX packets will
- be delayed for arbitrarily long times, and potentially leaked if
- the netdev is ifdowned.  The delay may also lead to other bugs
- from code that assumes the RX processing happens within a single
- NAPI cycle.
-You could revert the commit, and if that improves performance for
- you then more data would potentially be interesting.
-You can also try altering sysctl net.core.gro_normal_batch;
- setting it to 0 (or 1) should prevent any batching and in theory
- give the same performance as reverting 323ebb61e32b4 — if it
- doesn't then that's also a significant datum.
+The current print of the bus speed mode in mmc_add_card() has grown over
+the years and is now difficult to parse. Let's clean up the code and also
+take the opportunity to properly announce "DDR" for eMMCs as
+"high speed DDR", which is according to the eMMC spec.
 
--ed
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ drivers/mmc/core/bus.c | 36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
+index 0ddaee0eae54..6731b46e855f 100644
+--- a/drivers/mmc/core/bus.c
++++ b/drivers/mmc/core/bus.c
+@@ -299,6 +299,7 @@ int mmc_add_card(struct mmc_card *card)
+ {
+ 	int ret;
+ 	const char *type;
++	const char *speed_mode = "";
+ 	const char *uhs_bus_speed_mode = "";
+ 	static const char *const uhs_speeds[] = {
+ 		[UHS_SDR12_BUS_SPEED] = "SDR12 ",
+@@ -340,27 +341,30 @@ int mmc_add_card(struct mmc_card *card)
+ 		break;
+ 	}
+ 
++	if (mmc_card_hs(card))
++		speed_mode = "high speed ";
++	else if (mmc_card_uhs(card))
++		speed_mode = "ultra high speed ";
++	else if	(mmc_card_ddr52(card))
++		speed_mode = "high speed DDR ";
++	else if (mmc_card_hs200(card))
++		speed_mode = "HS200 ";
++	else if (mmc_card_hs400es(card))
++		speed_mode = "HS400 Enhanced strobe ";
++	else if (mmc_card_hs400(card))
++		speed_mode = "HS400 ";
++
+ 	if (mmc_card_uhs(card) &&
+ 		(card->sd_bus_speed < ARRAY_SIZE(uhs_speeds)))
+ 		uhs_bus_speed_mode = uhs_speeds[card->sd_bus_speed];
+ 
+-	if (mmc_host_is_spi(card->host)) {
+-		pr_info("%s: new %s%s%s card on SPI\n",
+-			mmc_hostname(card->host),
+-			mmc_card_hs(card) ? "high speed " : "",
+-			mmc_card_ddr52(card) ? "DDR " : "",
+-			type);
+-	} else {
+-		pr_info("%s: new %s%s%s%s%s%s card at address %04x\n",
+-			mmc_hostname(card->host),
+-			mmc_card_uhs(card) ? "ultra high speed " :
+-			(mmc_card_hs(card) ? "high speed " : ""),
+-			mmc_card_hs400(card) ? "HS400 " :
+-			(mmc_card_hs200(card) ? "HS200 " : ""),
+-			mmc_card_hs400es(card) ? "Enhanced strobe " : "",
+-			mmc_card_ddr52(card) ? "DDR " : "",
++	if (mmc_host_is_spi(card->host))
++		pr_info("%s: new %s%s card on SPI\n",
++			mmc_hostname(card->host), speed_mode, type);
++	else
++		pr_info("%s: new %s%s%s card at address %04x\n",
++			mmc_hostname(card->host), speed_mode,
+ 			uhs_bus_speed_mode, type, card->rca);
+-	}
+ 
+ 	mmc_add_card_debugfs(card);
+ 	card->dev.of_node = mmc_of_find_child_device(card->host, 0);
+-- 
+2.25.1
+
