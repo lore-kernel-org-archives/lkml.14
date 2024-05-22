@@ -1,138 +1,103 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BE97FBC4;
-	Wed, 22 May 2024 09:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A95811E0
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 09:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716371436; cv=none; b=c2FI+tTRX0WLFUAP+b3qz6+ahONdT5sJqNXdUXzET+89+v0iPm686TajRGh1CcuwA2h8CD+2SlZZW909IAIWZkwuc4kS7hid8U4i9XG5iUaa6CjFSWsRK0zdV0xubJEHjG+mbvY9HV1mOg4MREaMN8IkpiPC0ohqIQpgATKOuQ0=
+	t=1716371454; cv=none; b=ZcD+dqqBIuakZMr4ZlaDK4+jDQ5Yztf4t6LeQOp+/CC2MzrGULJzm955nxrcO375/7FshhZBIA8DQWYsrU0Up17rPoUAd7cS5wLadh1NkMY9IENFT3tTZ25d+eMteX1a0gXbK9FYkEs+MqCWs0O7d3Wb8+J+9aQgzi0wrmbZkbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716371436; c=relaxed/simple;
-	bh=s38cFtVzJD6qbysyN3bZJfC0joEZb1eAw1TbBF8E06c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IUflpmycExCbYiQ5cMceQKskJF3Y5PcbV3waztVNn+uESdlLnwA4cChp2eW1uL8oRGxodh9X3RQKw2HSrg1+KJoQEHtwv+hKWTJzAywKz59X1GKV27pofmBjaqGOZOrmoNGMh9fCkQCsJvNUCfwR7g13IPt6V14Umuzm22Utcy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cr99sXcE; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716371454; c=relaxed/simple;
+	bh=z43IRORribiar+crAULWZYDN90oM49HFlRGZRltN8G0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dhQSHSl2hdKTLEX+sw0Jpz3n7152HMdXSURnnDGcop7183cL9Ej4sOqai4SbemrBi0ddt+jeOQe2u2B2tqLijMfG6fExnG0gOfqotbZgbLpAZ3phg9a8lTgSPlfNdbadLGQaUgPkPYjkzBhn+/0mKM2Z/2wLp3A5EJroZCSYdvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=WAtc0UB1; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cr99sXcE"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a59cdd185b9so144962666b.1;
-        Wed, 22 May 2024 02:50:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="WAtc0UB1"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57822392a0dso2424453a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 02:50:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716371433; x=1716976233; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IT1jn5XZVlHhaOOAiUsTvpY+rK0Oxoh6SbeLRw0834s=;
-        b=cr99sXcEphIyP/MTjF/CTcx+pMFNhC/iFE3N2tyt11iMyBq1XhxdHauVaLbSu6RJqC
-         +BcPS5S65DevNE+I7s3kQSN/SMmBhaCBFODOfBj3OF4F9dfizJaqBGAwe9KYrkdh4C+8
-         nChX/BTVmGlStuaQ69LBQ0cOyuifgb9MFLQkXzvYqaTklVYnPvbZYV4d+tswGW5bHGSH
-         qPhvy/KqIHbeQcU60u6b+Qac5z06ceRXvMbj32VVRSITP5x2FciVylv9XgH9eNTosNAD
-         ofcm3xagOpQgee58w9tomCoRI0ZfPN3Yjhtmp8JR2Ss2YiGSDJ2T0O/0LNyXYQAPVLSV
-         Yhxw==
+        d=cloudflare.com; s=google09082023; t=1716371451; x=1716976251; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Ex3aZZm4D5w1Bed0krlBVY2vwDtVuYFV3j7+qw0Xbw=;
+        b=WAtc0UB1D3Hd742ZwdnqYpr6O0lvNl1gqruHB38kJy923OBTpHm/5br0k71CoIhEt9
+         uNTMn+YXSMpskc4SNk+PDCkLS4xboE3clGiD9eklRIoP0+/o6ksmpNS11z/lNJ7sK7Ag
+         oNGwkzrH3f1TveO5UEQ4BqH8dBGF7nIdqUy/iZIGrvUSfX7uNSAv6T91gcUj7emGlVzg
+         UJEI1/fIrXi9Zrgig+s97RPgFPgEggzPvDaavwFjsCsKLmlsV/Jt/QuiVnyBgJ84E28J
+         LFzM4J6ArPz/9aLm2EVhVA5JCPq98vuwuh6BqPpKyBn0QR6nsLXaBKEp/7/3uLRrqmUs
+         P32A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716371433; x=1716976233;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IT1jn5XZVlHhaOOAiUsTvpY+rK0Oxoh6SbeLRw0834s=;
-        b=LafiPZ8dJ54avgeTorhlEWC2gByG1CaI1YJN7tqdu1yjGh2gMcz0VOD6CMWbJXPdGS
-         tpu8DJrgQ7jze5yWDk5lm8WbDZnLRxEhNVI/2LRrv64nwiSuFNPtYR7ViPH3GdC5I7Nm
-         QG/FUFr7AU0oKnAVuie4UyrLr3x5h65DHDPZekuPWtzB3epj2ZVKheXn9a7BmYq6XHaj
-         ccN8MWsZaBfipQCekMmp+g91Sfxnz1oRZBI/gI5s/pLUrPhW8Cpj/2F1AsfQfOMErCYO
-         NTF4/eeqmPFBu15wtDU3zGQX8SToX84P6uyD0BvDQ6l+0TDAayna2xiDkaz12vVdxT+4
-         ovPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjI2IrT3C2WUMp6hbkYMn0DCaZVaGw2LppZwWq1mtcCtistObT+PDVR415n11KOpQybfsVWUuLe9GR0x0sCVJj/Mn/62jOVhV1sbVhuP3YJcFLVLSYyCTs7MuqL4NPO+ChKa512fate8XmrhlmiyW7uz1ED93OT70FjB5tJVVetK8qYw==
-X-Gm-Message-State: AOJu0Ywciicw1Iba5IRDAHRAj/psjBmReHESJm3dIo4b2m12cSDUv9FY
-	Wkw/Fl3OVgC65WQYPLBRLJ+HQgTgWWmc+daoTIGozF/uVc/krE4f
-X-Google-Smtp-Source: AGHT+IHSdIB34GezXsnYJdQRlu4R1+I4JK0TPdgS+Fbz5G5y04tAFR/jtDPbSfrE9LMiPyK4ZSum8g==
-X-Received: by 2002:a17:906:3c54:b0:a59:c3a1:23f9 with SMTP id a640c23a62f3a-a5d58e495b3mr1005218966b.7.1716371432490;
-        Wed, 22 May 2024 02:50:32 -0700 (PDT)
-Received: from spiri.. ([5.14.134.210])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1787c686sm1745589166b.47.2024.05.22.02.50.29
+        d=1e100.net; s=20230601; t=1716371451; x=1716976251;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Ex3aZZm4D5w1Bed0krlBVY2vwDtVuYFV3j7+qw0Xbw=;
+        b=P4c06Gn/jkVcu32yk4c/Of2vJaBQXeKaGnLfvrwhVUO4F0mvEDE/YZdbBsMRK8lsfq
+         N82GwW10uQWBFC3TXZb1SfT+Lgcc9aHNU8rnpJyb5k+2ENmD1nQTuP5XTFhL0aV5uXZR
+         XI6/woUa6A/1Yl02DDBEPcL/1cBRJ64GCjU8CKr34v7kCwte0xSmiH/2wSLJxkg1/+8J
+         CCNTeAVpzZJvvV/s8IA8jx6tyLJOm2EmyM0Ztpr9xTEAYb3170nOFpbJ/hk8ERqcfdm/
+         ZpO3nX+b6GgXnfZKssu+/HUAOTGdQjLK0rm3MGZ6rqY2sd5q5tguy6VSSpnnF8pMnAFh
+         KEMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqxBX2PSIQWO9Io5UF7cfEtVS2ZqEkfl7Kfp12CkTZ4UqQJgBZnKDJHxg/+SwUy+lm3tMGhTTwQZ2Eb3AxBkidro9q5kDSXg5JHG21
+X-Gm-Message-State: AOJu0Yw/vXveu16LsSz2tVMmimabOP9rXpWZhOSz1XZhX1nDR5aWmYNB
+	KqxL25j6dreGSYS8YbgwvVnZBCm2sPLc7adXP6xDVJN5xWwOsvFQ7hHw9igds2w=
+X-Google-Smtp-Source: AGHT+IFLQ42GWSxj9rsp3TwgQQW8TBhyqtoMwkS/OgPeeXi9ZNzYopUkWWXHbVb297fqpZltZcpo7g==
+X-Received: by 2002:a50:9fe7:0:b0:572:1589:eb98 with SMTP id 4fb4d7f45d1cf-57832a4c441mr778308a12.12.1716371451466;
+        Wed, 22 May 2024 02:50:51 -0700 (PDT)
+Received: from cloudflare.com ([2a09:bac5:5063:2dc::49:b7])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c2cb54csm17950603a12.60.2024.05.22.02.50.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 02:50:32 -0700 (PDT)
-From: Alisa-Dariana Roman <alisadariana@gmail.com>
-X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
-To: andy@kernel.org
-Cc: Jonathan.Cameron@huawei.com,
-	alisa.roman@analog.com,
-	alisadariana@gmail.com,
-	bigunclemax@gmail.com,
-	broonie@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dlechner@baylibre.com,
-	fr0st61te@gmail.com,
-	jic23@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	lars@metafoo.de,
-	lgirdwood@gmail.com,
-	liambeguin@gmail.com,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	marcelo.schmitt@analog.com,
-	marcus.folkesson@gmail.com,
-	michael.hennerich@analog.com,
-	nuno.sa@analog.com,
-	okan.sahin@analog.com,
-	robh@kernel.org,
-	schnelle@linux.ibm.com
-Subject: [PATCH] fix
-Date: Wed, 22 May 2024 12:50:23 +0300
-Message-Id: <20240522095023.35189-1-alisa.roman@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZktB5Ex5oQ2E45QR@smile.fi.intel.com>
-References: <ZktB5Ex5oQ2E45QR@smile.fi.intel.com>
+        Wed, 22 May 2024 02:50:50 -0700 (PDT)
+From: Jakub Sitnicki <jakub@cloudflare.com>
+To: Hillf Danton <hdanton@sina.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,  Tetsuo Handa
+ <penguin-kernel@i-love.sakura.ne.jp>,  Eric Dumazet <edumazet@google.com>,
+  Linus Torvalds <torvalds@linux-foundation.org>,  bpf
+ <bpf@vger.kernel.org>,  LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bpf, sockmap: defer sk_psock_free_link() using RCU
+In-Reply-To: <20240521225918.2147-1-hdanton@sina.com> (Hillf Danton's message
+	of "Wed, 22 May 2024 06:59:18 +0800")
+References: <838e7959-a360-4ac1-b36a-a3469236129b@I-love.SAKURA.ne.jp>
+	<20240521225918.2147-1-hdanton@sina.com>
+User-Agent: mu4e 1.12.4; emacs 29.1
+Date: Wed, 22 May 2024 11:50:49 +0200
+Message-ID: <877cfmxjie.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
----
+On Wed, May 22, 2024 at 06:59 AM +08, Hillf Danton wrote:
+> On Tue, 21 May 2024 08:38:52 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>> On Sun, May 12, 2024 at 12:22=E2=80=AFAM Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+>> > --- a/net/core/sock_map.c
+>> > +++ b/net/core/sock_map.c
+>> > @@ -142,6 +142,7 @@ static void sock_map_del_link(struct sock *sk,
+>> >         bool strp_stop =3D false, verdict_stop =3D false;
+>> >         struct sk_psock_link *link, *tmp;
+>> >
+>> > +       rcu_read_lock();
+>> >         spin_lock_bh(&psock->link_lock);
+>> 
+>> I think this is incorrect.
+>> spin_lock_bh may sleep in RT and it won't be safe to do in rcu cs.
+>
+> Could you specify why it won't be safe in rcu cs if you are right?
+> What does rcu look like in RT if not nothing?
 
-Would this fix be alright, since writing something like if(!ret) may be
-confusing?
+RCU readers can't block, while spinlock RT doesn't disable preemption.
 
-And regarding the comment, my bad, there is nothing wrong there.
+https://docs.kernel.org/RCU/rcu.html
+https://docs.kernel.org/locking/locktypes.html#spinlock-t-and-preempt-rt
 
- drivers/iio/adc/ad7192.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+I've finally gotten around to testing proposed fix that just disallows
+map_delete_elem on sockmap/sockhash from BPF tracing progs
+completely. This should put an end to this saga of syzkaller reports.
 
-diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-index 101afce49378..0789121236d6 100644
---- a/drivers/iio/adc/ad7192.c
-+++ b/drivers/iio/adc/ad7192.c
-@@ -1101,14 +1101,12 @@ static int ad7194_parse_channels(struct iio_dev *indio_dev)
- 		ret = fwnode_property_read_u32_array(child, "diff-channels",
- 						     ain, ARRAY_SIZE(ain));
- 		if (ret == 0) {
--			ret = ad7194_validate_ain_channel(dev, ain[0]);
--			if (ret)
-+			if (!ad7194_validate_ain_channel(dev, ain[0]))
- 				return dev_err_probe(dev, -EINVAL,
- 						     "Invalid AIN channel: %u\n",
- 						     ain[0]);
- 
--			ret = ad7194_validate_ain_channel(dev, ain[1]);
--			if (ret)
-+			if (!ad7194_validate_ain_channel(dev, ain[1]))
- 				return dev_err_probe(dev, -EINVAL,
- 						     "Invalid AIN channel: %u\n",
- 						     ain[1]);
-@@ -1125,8 +1123,7 @@ static int ad7194_parse_channels(struct iio_dev *indio_dev)
- 				return dev_err_probe(dev, ret,
- 						     "Missing channel property\n");
- 
--			ret = ad7194_validate_ain_channel(dev, ain[0]);
--			if (ret)
-+			if (!ad7194_validate_ain_channel(dev, ain[0]))
- 				return dev_err_probe(dev, -EINVAL,
- 						     "Invalid AIN channel: %u\n",
- 						     ain[0]);
--- 
-2.34.1
-
+https://lore.kernel.org/all/87jzjnxaqf.fsf@cloudflare.com/
