@@ -1,154 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B1C7E578
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 22:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629AB23CB
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 22:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716415420; cv=none; b=O4k3ncsn3+XeWVO56BeVIo+8AXo2ALunbox66km+Kv7dmmkHJ7FqaiK0HrN7a0XOLi6ps3bEnVePrW0JUnykDv5KDlbTY0EUaqwwiNpSVO0Ff5ogiy+z18IcyhO7PclL6WJVOcKDZtI6ulezxCm7Bu2XXGRLN3s7wr6HhoGqhXg=
+	t=1716415626; cv=none; b=u7elO1Njfd/yDT6Nm+udXXAzKdc3Vk6wZ1R2wXub+NpxeWROQRUXdiy3fod71mEblA+MkcR2apJAlHIV3ZrrhgO/GT9ptp4V/Q3S6paEAjXzruo8mkW+4S6d/kw8H2tOsjJM9+Kl3gnfi9vrvZpLxe3/oHMadA/y/JJXhNxet9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716415420; c=relaxed/simple;
-	bh=V/OjKPxD4m8dljSxcrsuVphlD92neLpCIPnWiQftobo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aK0ml1YRnC57zgJb0vZiCWsF+T0HzGXqwXrLnDA0uLUYSCdYNAk9/UzzhmIA9U+rI+VaTQNaUV0fLt+uHzB8SK55o1w4W3xD2+fqOnuxUaSArfJe/wi9rJOeb9r0NeZNH7MZZAKvbV8mgTn58gJev/YCxm5yYsb/8+8IHUq7pV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EyAZPkbn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716415626; c=relaxed/simple;
+	bh=P3nfzAeDzHWCF/hR3Be4Vs0HK32RB+1TM1u0f2LLKPY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=R8bEazU/27BtIaNkeV4ez0tLa4/M3731AwAj8UuqCPxi2VlQZXUQJnwZMc5haqgbVsEyGs5oKTRIus9sjEV45UYUsZKwlAx3VrBtl8u4vBvMtoEkoHZX+UXvq20X57vQ7zU980/3jOi1DCRltM1FS0o+FenIEnqjXgkR5LMlVMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I9+HAIlw; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyAZPkbn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716415417;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B4hXJ6JIsSVK9s0rSIg6c+3f6ReWIevwF2URwvf4CAk=;
-	b=EyAZPkbnwMMpLVdIhZR0oiTg/LhyUJYXcBgHQ83BhVmYfhsmkkhhFdnS6S9e4egjl0epml
-	a0p/hv5qpxY4cyNTjEBJwS9qHVBSU4mRYEw5c43+PnrNIboCA7TcP68VzzXI4LJGMfdULd
-	XSnKqL/Czf4tdvZPyStYYIoqcKOogEE=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-38-N-yJpwBfNaOQBpE50FpuEg-1; Wed, 22 May 2024 18:03:36 -0400
-X-MC-Unique: N-yJpwBfNaOQBpE50FpuEg-1
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-5b212b26f3fso168696eaf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 15:03:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I9+HAIlw"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e45c0a8360so60965441fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 15:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716415622; x=1717020422; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kvx6yeinoVDUi5Zfkw33aV+5YjT78WJ1rv7O0iicX/w=;
+        b=I9+HAIlw9pEnXo5t4kRROo3E1BJMnvrCDNps9bOMlBXmp/GRPgBToOEpGYt7n0aCKT
+         znSHysLcJoDif5uCbJ3UaF1VwD1gO7DgJtvlMkULEHfjC1vclQS5GcukHaq5CEw3GQin
+         h3C4FBsTfDFZFR0WOzhsbNn5QhlMoB5wJDrK7q+D8O3hy9BXUR5TquYDV8Hmni4bJiw4
+         hrKZq95fGoOdOh27Yio5Ju/2uXe+vfG2f6ynUm8U+Nh6+5tjdsNebdEHcA2ggPq1/eeF
+         Da8AyG4dmA5ZsaPzFKFUMjEKBuZ92Zjlep3yFyUzZURe/lsVbUP4feBbp86WPHWESO4G
+         6dZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716415415; x=1717020215;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B4hXJ6JIsSVK9s0rSIg6c+3f6ReWIevwF2URwvf4CAk=;
-        b=sswel6+0Tcr+zgBBw6BSjjeg/DssyneF/sbjzEbzTSmP7dr5ptS7VLZuSVTChUPwWz
-         3Xa+yKGmsPrfAeOpm+zhBfSiZRo35k6yqLlubi5b+nIg0Y+yHhtLj1BvWkc7Su8He7MH
-         fqUM+hSHnpalDezfJCuCGzMPQhkfCgojWiUD1N4b5z6v/h0Kipj3s3Z6PvG5e5vTQPYd
-         QQQQ3MY66+xjUuGG7X9gSpnNtWUybvBSgG3vixnXz5Z7Oamtsviclb0Na7oj5Bjc4bGo
-         qmXVWaUmgwf1SjOrKqbaRHzACwMScBr4MKMud8eFuCBzsO7bjSV5ocQ85a739lVVpFeh
-         3LiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCg5uYjQYETp0MP6HdjEi7wkWedmDvGbY5jNjiINmpulKD3+7kzOHLQBiUOGi0B32tPm3fGgK3z8oMAQVeSQxlAwSfYM/8eeXh+gY5
-X-Gm-Message-State: AOJu0Yz7Gutk0Xi9qKse0oHLp+OrsE2UrQpZvJ5VRRkkeKA9QkOemylM
-	DOCwb1kCupQOhTJgRpbgepwkYUd4rVxmB3haO+JPNB+cEYQnFup2KvwpN2G3OQYVh1FsyDNYPNB
-	sPI/ukO3V4B5j5pERc2sjI3DqJCXXuVzSbLP/ao79lfxb6ruyrUsZrom4MjPIew==
-X-Received: by 2002:a05:6358:998a:b0:190:f30c:3856 with SMTP id e5c5f4694b2df-1979215b528mr285579355d.2.1716415415122;
-        Wed, 22 May 2024 15:03:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHlZSZyKnZdnEG0+pNanazMyIfCqIlp5QZYYe1QG8gY0ave2/OHUyQlsME1+uHDBoxePLQG5g==
-X-Received: by 2002:a05:6358:998a:b0:190:f30c:3856 with SMTP id e5c5f4694b2df-1979215b528mr285573755d.2.1716415414181;
-        Wed, 22 May 2024 15:03:34 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1cd266sm136937796d6.80.2024.05.22.15.03.32
+        d=1e100.net; s=20230601; t=1716415622; x=1717020422;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kvx6yeinoVDUi5Zfkw33aV+5YjT78WJ1rv7O0iicX/w=;
+        b=Ggqo7PycRyTvvyzU3vEZk8174hOg4rQ/mfjGLZ7plQUhPF9/L5xQcgaHl1aOmmFwkn
+         DkGSo+94wolexwR7gscLn5d5oBhBjsTY+KFMM2EDakTfIeWlNOotLV7aKLnbS26gCyAU
+         cOspeSMOweSkbnq5q17XO+CTSgQrIH8S1wz9AFBcAcTcCMeIqwljMilKSULSzeT17r4t
+         SxzuutPx/cprdB+noOP40MfZT8bVfAZpht4+e7mAnjwdKssaBNkx3xEn3qQQZ/qwON8p
+         vozpUvjPQXhDVACyPPoBnFgWRIP5yLo0BuP6zN3v4ZcpLaRgoCMwBg3Inj7VnzkUODLY
+         I3CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJEJZlfAFPFMu4PE/otkciObgwWx/FtDHKor4LtcMyGy7xwI6SaI5OekVhF3pBF1o5YP7re/YEgvGdn/FmhW6mNJ/imSwOr0UpmCvB
+X-Gm-Message-State: AOJu0Ywn+fEkeSXJJN/YMXpEIxhkj45ROQ/KITx/76IZlwsV41V6cjmW
+	5UkapyXjAvyoH/FdblQOjeFoov0m2m3fXHI4bk/xWmDmEaXu2kD4/PJoHQ3WUdU=
+X-Google-Smtp-Source: AGHT+IHvvy96Pg+GUU/MU5q+kBLk9kzzZb38y4KNjSyfaRuJK/MxIVMkE4HTw90jn1n1wg6XsU8azw==
+X-Received: by 2002:a2e:a444:0:b0:2e5:2c7e:257 with SMTP id 38308e7fff4ca-2e94949dfa2mr20306221fa.30.1716415622393;
+        Wed, 22 May 2024 15:07:02 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95289b4fdsm295021fa.29.2024.05.22.15.07.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 15:03:33 -0700 (PDT)
-Date: Wed, 22 May 2024 18:03:30 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Axel Rasmussen <axelrasmussen@google.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Helge Deller <deller@gmx.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Liu Shixin <liushixin2@huawei.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v2 1/1] arch/fault: don't print logs for pte marker
- poison errors
-Message-ID: <Zk5rsvMs6qVPAw52@x1n>
-References: <20240510182926.763131-1-axelrasmussen@google.com>
- <20240510182926.763131-2-axelrasmussen@google.com>
- <20240515104142.GBZkSRZsa3cxJ3DKVy@fat_crate.local>
- <ZkSUaVx3uCIPkpkJ@localhost.localdomain>
- <CAJHvVchGGJkEX=qroW=+N-RJDMDGuxM4xoGe7iOtRu9YcfxEEw@mail.gmail.com>
- <20240515183222.GCZkT_tvEffgYtah4T@fat_crate.local>
- <CAJHvVcj+YBpLbjLy+M+b8K7fj0XvFSZLpsuY-RbCCn9ouV1WjQ@mail.gmail.com>
- <20240515201831.GDZkUYlybfejSh79ix@fat_crate.local>
+        Wed, 22 May 2024 15:07:01 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 23 May 2024 01:07:00 +0300
+Subject: [PATCH RFC] drm/panel-edp: add fat warning against adding new
+ panel compatibles
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240515201831.GDZkUYlybfejSh79ix@fat_crate.local>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240523-edp-panel-drop-v1-1-045d62511d09@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAINsTmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDUyNj3dSUAt2CxLzUHN2UovwCXQODxEQjY8sk42SzJCWgpoKi1LTMCrC
+ B0UpBbs5KsbW1AGgtl7RlAAAA
+To: Douglas Anderson <dianders@chromium.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2251;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=P3nfzAeDzHWCF/hR3Be4Vs0HK32RB+1TM1u0f2LLKPY=;
+ b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ5pfTouUqvqtluq5hwJiZh++eFaho04xvyOfc84Jx5Liz
+ DrGidadjMYsDIxcDLJiiiw+BS1TYzYlh33YMbUeZhArE8gUBi5OAZhI8g8Ohn6dWValqa4re1j8
+ LjjfWDWP95XCSolzv3rCNb2XLhP/56J7UfVNnMTMD0xrHJIEGveo/6xsyosOm16eZOvUr+krm5P
+ sHlNjUOZj48JUIXxtwatvCiGHNe6c+H1xVvvVWYYv/1xeoDfXxS9V7FeEq07ipUrfj1PjTghl6e
+ Q8Z+bQq7e0PXVYdvXrqPslUryPJWfY8Qr09iRXWomxc/HE7GLb/bPnex/jU73oiTVb2i+4a/ueE
+ RY0/D5frPFFnbjI/0cBVUvyTBRUo3+bLI90qHp+49uKM2d/5y1Sm5ArOPF+tZjx2y2O7513bTZ5
+ 41Pt+mSDzAS5jLS1Sz/r+lSFaO58VrjoVuz942qBPTIA
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Wed, May 15, 2024 at 10:18:31PM +0200, Borislav Petkov wrote:
-> So if I were to design this, I'd do it this way:
-> 
-> 0. guest gets hw poison injected
-> 
-> 1. it runs memory_failure() and it kills the processes using the page.
-> 
-> 2. page is marked poisoned on the host so no other guest gets it.
-> 
-> That's it. No second accesses whatsoever. At least this is how it works
-> on baremetal.
-> 
-> This hw poisoning emulation is just silly and unnecessary.
+Add a fat warning against adding new panel compatibles to the panel-edp
+driver. All new users of the eDP panels are supposed to use the generic
+"edp-panel" compatible device on the AUX bus. The remaining compatibles
+are either used by the existing DT or were used previously and are
+retained for backwards compatibility.
 
-We (QEMU) haven't yet consumed this.. but I think it makes sense to have
-such emulation, as it's slightly different from a real hwpoison.
+Suggested-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+The following compatibles were never used by the devices supported by
+the upstream kernel and are a subject to possible removal:
 
-I think the important bit that's missing in this picture is migration, that
-the VM can migrate from one host to another, carrying that poisoned PFN.
+- auo,b133han05
+- auo,b140han06
+- ivo,m133nwf4-r0
+- lg,lp097qx1-spa1
+- lg,lp129qe
+- samsung,lsn122dl01-c01
+- samsung,ltn140at29-301
+- sharp,ld-d5116z01b
+- sharp,lq140m1jw46
+- starry,kr122ea0sra
 
-Let's assume we have two hosts: src and dst.  Currently VM runs on src
-host.
+I'm considering dropping them, unless there is a good reason not to do
+so.
+---
+ drivers/gpu/drm/panel/panel-edp.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-Before migration, there is a real PFN that is bad, MCE injected. When
-accesssed by either guest vcpu or host cpu / hypervisor, VM gets killed.
-This is so far the same to any process that has a bad page.
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index 6db277efcbb7..95b25ec67168 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -1776,7 +1776,23 @@ static const struct of_device_id platform_of_match[] = {
+ 	{
+ 		/* Must be first */
+ 		.compatible = "edp-panel",
+-	}, {
++	},
++	/*
++	 * Do not add panels to the list below unless they cannot be handled by
++	 * the generic edp-panel compatible.
++	 *
++	 * The only two valid reasons are:
++	 * - because of the panel issues (e.g. broken EDID or broken
++	 *   identification),
++	 * - because the platform which uses the panel didn't wire up the AUX
++	 *   bus properly.
++	 *
++	 * In all other cases the platform should use the aux-bus and declare
++	 * the panel using the 'edp-panel' compatible as a device on the AUX
++	 * bus. The lack of the aux-bus support is not a valid case. Platforms
++	 * are urged to be converted to declaring panels in a proper way.
++	 */
++	{
+ 		.compatible = "auo,b101ean01",
+ 		.data = &auo_b101ean01,
+ 	}, {
 
-However it's possible a VM got migrated _before_ that bad PFN accessed, in
-this case the VM is still legal to run, the hypervisor will not migrate
-that bad PFN data knowing that its data is invalid.  What it does is it'll
-tell dst that "this guest PFN is bad, if guest access it let's crash it".
-Then what dst host needs is a way to describe "this guest PFN is bad": the
-easiest way is to describe "this VA of the process is bad", meanwhile
-there'll be no real page backing that VA anyway, and also no real poisoned
-pages.  We want to poison a VA only. That's why an emulation is needed.
-Besides that we want to get exactly whatever we'll get for a real hwpoison,
-e.g. SIGBUS with the address encoded, then KVM work naturally with that
-just like a real MCE.
+---
+base-commit: 8314289a8d50a4e05d8ece1ae0445a3b57bb4d3b
+change-id: 20240523-edp-panel-drop-00aa239b3c6b
 
-One other thing we can do is to inject-poison to the VA together with the
-page backing it, but that'll pollute a PFN on dst host to be a real bad PFN
-and won't be able to be used by the dst OS anymore, so it's less optimal.
-
-Thanks,
-
+Best regards,
 -- 
-Peter Xu
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
