@@ -1,126 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC021F17B;
-	Wed, 22 May 2024 17:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523431F17B;
+	Wed, 22 May 2024 17:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716397660; cv=none; b=GdCNSZqpIMdG+r/Vb2UwA2BRAhwZ/TGeg5xMLonaa06XbnjsOlv7aDYs7Gm4pb7aMYAEBbZ18xcSIw5IcDCrKme0bJlFHCOoHJqBon9LEYHyw4+kz9JNfuZRijFs7mHDars73Sr/dl6I1uknfhvaeVgAlb5HRuUWQqxJceoc5sM=
+	t=1716397666; cv=none; b=otKL69xQy5NdnKNIVakdXpSWy+GJFHmjE90ZLKTFJiz6BUynueVRmxRuQbzx4gf4a/L2mXlols/ebnKNT8tJv981gjc7+4GUr8LRlhDxamg3nzQRvgtQ3GRGDHXEkB2aLKi/Cc0vOxFdU3cr7crtgad3s2l6OEK0arn8MTKlgFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716397660; c=relaxed/simple;
-	bh=HenhG+Oc3Lxw5WKGJE5cc8HEMU/ziSTPrElk+m/xfEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bTqa6tOnYCOnqEupUVe33BNYmzuNPRSM+EbSJYz7Nc9xSSYAbzSuJ3Xz00BqoJD4pfyjakdQGKTcXDGP4rOPJs7/APQBk71bp711STarAjX//wULu0EtyK/iUSBZae9QYUYcbzsIGo2cBPyQfVI4DykJmH/Hko6mHvb45bd/Ojk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir/RtNKh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716397666; c=relaxed/simple;
+	bh=/kt+NqBwmu9PAbUDYn6qhBk39YQggcMNamNlMPFBDJ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ivL1iUTlqYMFURB3AQ1tLqrP9NUnPAeLQ02zT+uLweVbQ0xyZ1okBuQyL7b995YtrlH/xo6Z//7fXg1cy26qo6kIhqfOfvkR0TLY15C1Ab5U/8jCoIxjC3j7h2la5YyTm4rRpTO9mBCiURGwo/7v3bF5hqDlrOWDx6RjvUIq1S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HBnV2ChT; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir/RtNKh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F5ADC2BBFC;
-	Wed, 22 May 2024 17:07:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716397660;
-	bh=HenhG+Oc3Lxw5WKGJE5cc8HEMU/ziSTPrElk+m/xfEI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ir/RtNKhq2gletHf2LYZevDOHNdKb1zl0ZsybuwL4pb/GG1gGHLUwDh6suq3msR7j
-	 zpM00kHdAftkVwD9HrLJkw+PjvDwcyX/1jU5ifsK8+XrFkMbV4EhOKMPA+cwa3bYe3
-	 Mdh+91wNOctdi0acClx4ivb8GdpF++unoa3sUEkCLW9MgMkNDf/mBwAEYswATe5iPx
-	 1fSJxHbME07L6FjfxjuTreUn8vIrmuT79ZBFbaG8VaIRdkcnxcM7gxVdTcKtvooO5V
-	 2bOtC2R8g6qDuXbNgG0HJ0f5QV0TD5n4pMT10D6NYqEI98fh9fQ5hrH4/Vt20Dl6dt
-	 EzsjqOucptsaA==
-Message-ID: <e384272a-4dfe-4653-8983-6426f8803c84@kernel.org>
-Date: Wed, 22 May 2024 19:07:34 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HBnV2ChT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716397662;
+	bh=/kt+NqBwmu9PAbUDYn6qhBk39YQggcMNamNlMPFBDJ8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HBnV2ChTSuVUyx1gZvBatJ3jZWQU8fvjLE2KcRbYDhn8hhepV235/Cq8ZYf+3h6QX
+	 mTA/uphi+W1KwQInP/Kf/q/DfuyiuAUk8ujcIjiRT2xVTqfcnqAkcrBMqLjVCpxb8u
+	 4nKXqcm7doHJt6YOaMB7ZSKhd19yFdg/bKk6Z1SeGMC6d8jI2qpNr7wyoRKyVpekMY
+	 afHlWY+lGqgK5rpzQdYuw4YmujEDQSE92aP8c4e5vdNnqYkdC/jEKpn6lLxsIjmxhS
+	 3pA2xoJqWukhfUy2zGxPkVFaqH2qVkVnPaCGZeC///JSG19LHrqkrEotPuOCLuj52q
+	 g/eNV/Ifjortg==
+Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B2A82378216B;
+	Wed, 22 May 2024 17:07:40 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Shuah Khan <shuah@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: kernel@collabora.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] selftests/thermel/intel: conform the test to TAP output
+Date: Wed, 22 May 2024 10:06:48 -0700
+Message-Id: <20240522170655.2879712-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
-To: Mithil <bavishimithil@gmail.com>
-Cc: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lopez Cruz <misael.lopez@ti.com>,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240522075245.388-1-bavishimithil@gmail.com>
- <0594944d-c158-4840-8724-b3f2edaab1ca@gmail.com>
- <4f722e53-011f-4176-b6af-080522165007@kernel.org>
- <bb44d588-9316-4509-b545-9bbaa2d240cb@gmail.com>
- <3c6c5be1-fb8e-4bf0-9f58-cfb09672e8c1@kernel.org>
- <d999bc26-9bb1-44a8-92a3-bcbe14c5a1c3@gmail.com>
- <58ada5ce-5c02-4ff5-8bdd-d6556c9d141f@kernel.org>
- <CAGzNGRm5i8zvnXiPzMg5=+tr9oyBcRA8LFvnmgGzE=MzSNTXug@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAGzNGRm5i8zvnXiPzMg5=+tr9oyBcRA8LFvnmgGzE=MzSNTXug@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 22/05/2024 19:02, Mithil wrote:
->> Yep. And testing DTS should clearly show that conversion leads to
->> incomplete binding.
->>
->>>
->>>> I assume the DTS was validated with the binding. Isn't the case here?
->>
->> Mithil Bavishi,
->> Are you sure you tested the DTS?
-> 
-> dt_binding_check did not give me any errors. Yeah the example is
-> different from how it is implemented in the kernel ie board specific
-> (omap4, omap5 etc). Should the example be changed according to that
-> dtsi then?
+Conform the layout, informational and status messages to TAP. No
+functional change is intended other than the layout of output messages.
 
-Binding needs to be adapted to match DTS or DTS has to be fixed to match
-binding, depending which one is correct. Mention any changes done in the
-binding which deviate from pure conversion of TXT->DT schema.
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+ .../intel/workload_hint/workload_hint_test.c  | 98 ++++++++-----------
+ 1 file changed, 39 insertions(+), 59 deletions(-)
 
-https://social.kernel.org/notice/Ai9hYRUKo8suzX3zNY
-
-Best regards,
-Krzysztof
+diff --git a/tools/testing/selftests/thermal/intel/workload_hint/workload_hint_test.c b/tools/testing/selftests/thermal/intel/workload_hint/workload_hint_test.c
+index 217c3a641c537..d107c2d6f3a22 100644
+--- a/tools/testing/selftests/thermal/intel/workload_hint/workload_hint_test.c
++++ b/tools/testing/selftests/thermal/intel/workload_hint/workload_hint_test.c
+@@ -9,6 +9,7 @@
+ #include <fcntl.h>
+ #include <poll.h>
+ #include <signal.h>
++#include "../../../kselftest.h"
+ 
+ #define WORKLOAD_NOTIFICATION_DELAY_ATTRIBUTE "/sys/bus/pci/devices/0000:00:04.0/workload_hint/notification_delay_ms"
+ #define WORKLOAD_ENABLE_ATTRIBUTE "/sys/bus/pci/devices/0000:00:04.0/workload_hint/workload_hint_enable"
+@@ -31,17 +32,13 @@ void workload_hint_exit(int signum)
+ 	/* Disable feature via sysfs knob */
+ 
+ 	fd = open(WORKLOAD_ENABLE_ATTRIBUTE, O_RDWR);
+-	if (fd < 0) {
+-		perror("Unable to open workload type feature enable file\n");
+-		exit(1);
+-	}
++	if (fd < 0)
++		ksft_exit_fail_perror("Unable to open workload type feature enable file");
+ 
+-	if (write(fd, "0\n", 2) < 0) {
+-		perror("Can' disable workload hints\n");
+-		exit(1);
+-	}
++	if (write(fd, "0\n", 2) < 0)
++		ksft_exit_fail_perror("Can' disable workload hints");
+ 
+-	printf("Disabled workload type prediction\n");
++	ksft_print_msg("Disabled workload type prediction\n");
+ 
+ 	close(fd);
+ }
+@@ -54,32 +51,27 @@ int main(int argc, char **argv)
+ 	char delay_str[64];
+ 	int delay = 0;
+ 
+-	printf("Usage: workload_hint_test [notification delay in milli seconds]\n");
++	ksft_print_header();
++	ksft_set_plan(1);
++
++	ksft_print_msg("Usage: workload_hint_test [notification delay in milli seconds]\n");
+ 
+ 	if (argc > 1) {
+ 		ret = sscanf(argv[1], "%d", &delay);
+-		if (ret < 0) {
+-			printf("Invalid delay\n");
+-			exit(1);
+-		}
++		if (ret < 0)
++			ksft_exit_fail_perror("Invalid delay");
+ 
+-		printf("Setting notification delay to %d ms\n", delay);
++		ksft_print_msg("Setting notification delay to %d ms\n", delay);
+ 		if (delay < 0)
+-			exit(1);
+-
+-		sprintf(delay_str, "%s\n", argv[1]);
++			ksft_exit_fail_msg("delay can never be negative\n");
+ 
+ 		sprintf(delay_str, "%s\n", argv[1]);
+ 		fd = open(WORKLOAD_NOTIFICATION_DELAY_ATTRIBUTE, O_RDWR);
+-		if (fd < 0) {
+-			perror("Unable to open workload notification delay\n");
+-			exit(1);
+-		}
++		if (fd < 0)
++			ksft_exit_fail_perror("Unable to open workload notification delay");
+ 
+-		if (write(fd, delay_str, strlen(delay_str)) < 0) {
+-			perror("Can't set delay\n");
+-			exit(1);
+-		}
++		if (write(fd, delay_str, strlen(delay_str)) < 0)
++			ksft_exit_fail_perror("Can't set delay");
+ 
+ 		close(fd);
+ 	}
+@@ -93,63 +85,51 @@ int main(int argc, char **argv)
+ 
+ 	/* Enable feature via sysfs knob */
+ 	fd = open(WORKLOAD_ENABLE_ATTRIBUTE, O_RDWR);
+-	if (fd < 0) {
+-		perror("Unable to open workload type feature enable file\n");
+-		exit(1);
+-	}
++	if (fd < 0)
++		ksft_exit_fail_perror("Unable to open workload type feature enable file");
+ 
+-	if (write(fd, "1\n", 2) < 0) {
+-		perror("Can' enable workload hints\n");
+-		exit(1);
+-	}
++	if (write(fd, "1\n", 2) < 0)
++		ksft_exit_fail_perror("Can' enable workload hints");
+ 
+ 	close(fd);
+ 
+-	printf("Enabled workload type prediction\n");
++	ksft_print_msg("Enabled workload type prediction\n");
+ 
+ 	while (1) {
+ 		fd = open(WORKLOAD_TYPE_INDEX_ATTRIBUTE, O_RDONLY);
+-		if (fd < 0) {
+-			perror("Unable to open workload type file\n");
+-			exit(1);
+-		}
++		if (fd < 0)
++			ksft_exit_fail_perror("Unable to open workload type file");
+ 
+-		if ((lseek(fd, 0L, SEEK_SET)) < 0) {
+-			fprintf(stderr, "Failed to set pointer to beginning\n");
+-			exit(1);
+-		}
++		if ((lseek(fd, 0L, SEEK_SET)) < 0)
++			ksft_exit_fail_perror("Failed to set pointer to beginning");
+ 
+-		if (read(fd, index_str, sizeof(index_str)) < 0) {
+-			fprintf(stderr, "Failed to read from:%s\n",
+-			WORKLOAD_TYPE_INDEX_ATTRIBUTE);
+-			exit(1);
+-		}
++		if (read(fd, index_str, sizeof(index_str)) < 0)
++			ksft_exit_fail_perror("Failed to read from: workload_type_index");
+ 
+ 		ufd.fd = fd;
+ 		ufd.events = POLLPRI;
+ 
+ 		ret = poll(&ufd, 1, -1);
+ 		if (ret < 0) {
+-			perror("poll error");
+-			exit(1);
++			ksft_exit_fail_perror("poll error");
+ 		} else if (ret == 0) {
+-			printf("Poll Timeout\n");
++			ksft_print_msg("Poll Timeout\n");
+ 		} else {
+-			if ((lseek(fd, 0L, SEEK_SET)) < 0) {
+-				fprintf(stderr, "Failed to set pointer to beginning\n");
+-				exit(1);
+-			}
++			if ((lseek(fd, 0L, SEEK_SET)) < 0)
++				ksft_exit_fail_perror("Failed to set pointer to beginning");
+ 
+-			if (read(fd, index_str, sizeof(index_str)) < 0)
+-				exit(0);
++			if (read(fd, index_str, sizeof(index_str)) < 0) {
++				ksft_test_result_pass("Successfully read\n");
++				ksft_finished();
++			}
+ 
+ 			ret = sscanf(index_str, "%d", &index);
+ 			if (ret < 0)
+ 				break;
+ 			if (index > WORKLOAD_TYPE_MAX_INDEX)
+-				printf("Invalid workload type index\n");
++				ksft_print_msg("Invalid workload type index\n");
+ 			else
+-				printf("workload type:%s\n", workload_types[index]);
++				ksft_print_msg("workload type:%s\n", workload_types[index]);
+ 		}
+ 
+ 		close(fd);
+-- 
+2.39.2
 
