@@ -1,99 +1,72 @@
-Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C8B1422A5
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 14:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BF143AAB;
+	Wed, 22 May 2024 14:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716387091; cv=none; b=MnJr1rZX60AeYaJHwvlxp0/9Qc/YSvHrzapHXuiw9u4ScgBycH8VFdmTWCxtMvJ4t6yXIqlMtGy+BZ7QmVVL6kEqxOW3jm1GJWEj+uP1oSJSziUqgvpbAUNET6uG4zaGcN3yYZFnqzWsM1MUqe0XMx+k0F7JmWRTozQU6p7Ma9I=
+	t=1716387129; cv=none; b=agXqB6KSZ3i4SGZiCpPEuNmjE8UOVeyhBuTsbReiatQ6odt8FJk3mzEKpd1zkdFcYAAaGlIGGlD2eAQlRDlWrmqmqTzwLtXKexE/3fuSoQSJYCVfeGtjExynTnqQc22BbPvqfALz3BPLoQ8aVrgLTNjEEo9NalBs0SX6R52rq5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716387091; c=relaxed/simple;
-	bh=NN3bGfD5HUdZVm9jelXlObF+mJFT5hj3fmxuh8giNFs=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=qyqHIstvJJBBHBcUJ1CItlh5fKcuyyDZxKGJMjJlInW8xgFLPDKU772RF3AUG90qZCEOaEMNwgEPMf81KApW6HN99CTkU+f7bHuz2CKxlP6eVC5vyBldibZi2C45yyKFvY3YxkBYQWf6vt9qobuysZIBcD1G1CTyOV+xTrLT/hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=tT/4bmVd; arc=none smtp.client-ip=203.205.221.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1716387129; c=relaxed/simple;
+	bh=DDbjOB44ewZWIRltYmOU003Ll0k98hPAJ99V/6Z7rjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fFud3ziE6eA+pf20YxHIt/PKg/ot2r/RGEsTWvIlTaaZ1cXU756H6Zrv+RpBPp7P0mutUzPlhQnrTTy03XaaUsyooq/PHEVOuY5MaRkSHORgZiPp+Q+h8YvApejwWYMmFEzc/26dNAtPEgP1FYQ7Qd0227NzAcEPFMAGaFAqpyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uEqWCsrX; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tT/4bmVd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1716387081; bh=uRU8T4+XNtOKOsNn+AMyx5lkYAGIGFMDmfGPdOTBEns=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=tT/4bmVdTEtPObKfC9BeaFOa2xucNsH1aI374QM0NmnL/vty9skU1hHYPt4ifpp2/
-	 4t25I0Rw+dKC3aNsYBvjpUEZOFEcdztaezZkvbZ5rD41oamd2gBDCAvPEtAP5yplRI
-	 c/NB9Ll9ChLYFWWuYGv9NUt7jUb9xyfCKppIDjjA=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszc19-0.qq.com (NewEsmtp) with SMTP
-	id 149A4881; Wed, 22 May 2024 22:05:09 +0800
-X-QQ-mid: xmsmtpt1716386709ti7wb44jx
-Message-ID: <tencent_DD0A3C9B37F697D637C04A3A7509762F6609@qq.com>
-X-QQ-XMAILINFO: M3L8BpKHwdnKWUUxNVKzJZ2FMNBk/gajo5UZHciuJPHqIFhWjgpNFcpj4mmTk+
-	 q83bn8QcqcyKllvRgBZj+yRdED9XCiw2I65F/bzErf0svFg54l3Kyrsn6EQBDAuIDe3QR4f53L7H
-	 Xmz6tqM5onJDqANXLaT7SyO0lKiX9PPs9f7/lR1PoK7/niXadJxCMBGYKISrrPtRp/41Lg7nri9F
-	 B5l53d9+bBvlVp80sKmJ+DdeOKihbncRC/nLoKOUcNzJqQCfPK8+K8razRvMSRkfDKbmPTDQxBfL
-	 EQqgx3xa5xSzrAova6mnB0+gKM4YMeIlgnHT/q4dUGt9NWzRURYgp7K2L2cbIJL8taOU6oyU41kk
-	 l8Hx7A9gJLYpKLrBKtHXjLWGFNBV4DvB8T4+Hq5YEoWGXbJ1zziHcSHtlR0eiDgaCM9ds9y+86oU
-	 kuNbg4Zsd1ie5fKMUhUTg7pKgeiSRS1unTkFeuCzMbiFkCswiELPqATdMdZNBoCO5Vd4E61Bhm1l
-	 vBempRXkXzIOV7Xw+ZKBFN6yDrvrTNWXFVW/jY061ggkPI8CS86ZbpcRoDdjoKwO43Rh8J3UjSir
-	 YUP2wi3gCOBjrspT6DpPRepb6RUDAsTLbWeUpWoQbd1yfmErqnXEcEx3sBa9BvW3kafEAkFmK8nS
-	 geOLO1wqWuewVfp0jI6vJyjPwdJe64kHLFqTJxC1pXjVpJJFsNQvI5CHIReAll6Excw4seg6T6HT
-	 GhsMEh5Ib4sF3Qga4bKVihYGofXyMFmCpFomwTUfGd/4ZCcnm+Qti08Ap31F9SHAR2lkWZJZ8gk6
-	 6sxSvIqvDdHfcGioA5SxG+qvX2jgB2WxpXCRmgYT255tFY5Zi2Y1ysJrLp6voiScxl5Gyv+HumIP
-	 OvCIrhPuRhuNBj7HIyBO1JNfyqAsG71bqKsM7Ia6ashKk6iIm7u2DJlC4gd66Fx/DgMxIIODUt8n
-	 CXWWlqwlhAHAa+WpzHvS0My/4T1Fnu
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
-Date: Wed, 22 May 2024 22:05:10 +0800
-X-OQ-MSGID: <20240522140509.2406912-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000002fd2de0618de2e65@google.com>
-References: <0000000000002fd2de0618de2e65@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uEqWCsrX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DDbjOB44ewZWIRltYmOU003Ll0k98hPAJ99V/6Z7rjA=; b=uEqWCsrXiGnYASDuZAU5ot6tQN
+	XjK1e6Gll8ojSe+3yON3pJfsrV/kkCYvTRBFnNjTzHHovDzW76TQ9M7XXcZxJl+XUGSqoBlf16Z3/
+	ws/+xgLky5OQhAsn3kwnQvcJk+AupZuZZKMGcHUQ05G2fM4NbUT1MU27yCBL9e5yt9wzfYdeqEd7f
+	5SIqFwucxPtY6LnnqhJj2qtrW01//jNhVTzviw0Z1MPuZJaUsj5V0MODpVAWb0q6O41TT4558Mtr5
+	UpW6InBw16BU72NmZLAcfB3Yne9fkNbuFw5e8QnUXbXOmcXrCJHk0h3tgJGNj8infSgJrpr7NDIjU
+	ASpsxliw==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s9mgx-00000000iS5-2uBa;
+	Wed, 22 May 2024 14:11:43 +0000
+Date: Wed, 22 May 2024 15:11:43 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Sukrit Bhatnagar <Sukrit.Bhatnagar@sony.com>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Improve dump_page() output for slab pages
+Message-ID: <Zk39H2C_wxnbAvvU@casper.infradead.org>
+References: <20240522074629.2420423-1-Sukrit.Bhatnagar@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522074629.2420423-1-Sukrit.Bhatnagar@sony.com>
 
-please test null ptr in iter_file_splice_write
+On Wed, May 22, 2024 at 04:46:27PM +0900, Sukrit Bhatnagar wrote:
+> On the other hand, the struct slab has kmem_cache which maintains another set
+> of flags. It would be nice to have these flags added as a part of the debug
+> output, and to have a convenient way to print them.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 33e02dc69afb
-
-diff --git a/fs/splice.c b/fs/splice.c
-index 60aed8de21f8..a6b44c10b08c 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -751,16 +751,25 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
- 
- 		/* dismiss the fully eaten buffers, adjust the partial one */
- 		tail = pipe->tail;
--		while (ret) {
-+		n = 0;
-+		while (ret > 0 && n < nbufs) {
- 			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
--			if (ret >= buf->len) {
-+			printk("ret: %d, nbufs: %d,  buf len: %lu, n: %d, %s\n", ret, nbufs, buf->len, n,  __func__);
-+			n++;
-+			if (!buf->len) {
-+				tail++;
-+				continue;
-+			}
-+			if (ret >= (ssize_t)buf->len) {
- 				ret -= buf->len;
-+				printk("ret: %d, nbufs: %d,  buf len: %lu, n: %d, %s\n", ret, nbufs, buf->len, n,  __func__);
- 				buf->len = 0;
- 				pipe_buf_release(pipe, buf);
- 				tail++;
- 				pipe->tail = tail;
- 				if (pipe->files)
- 					sd.need_wakeup = true;
-+				BUG_ON(1);
- 			} else {
- 				buf->offset += ret;
- 				buf->len -= ret;
-
+I don't understand why the slab cache flags are the interesting thing.
+Seems to me it'd be more useful to print slab->slab_cache->name and
+then you'd be able to look up the flags from that, as well as get a lot
+more information.
