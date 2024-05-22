@@ -1,103 +1,123 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350374A1A;
-	Wed, 22 May 2024 00:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716338503; cv=none; b=QiZwrFaIQ4PyMac4rzGEoJXJauWpM6WBCY2TVq15xsd/gQzc2F0qZSpcD1EvBGhk5trJOzi15YyxHvZvPIurdYSg2LsQzcxGKzYQPyR/EGv66rEpGna5hkdnGyBR6TwqH9GMa568FBaOQ7zlFT7FuCWwoF+VJV4WOlyD4wN3chs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716338503; c=relaxed/simple;
-	bh=ubOPwgCZQJRKkhB6lSOWH0LKLjv/DMsJveX97eiEkmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ToX240loklqZq9EtX0JuwfqozDx6sWkpAuFhK7KmS191QdqpEckhHpdmBx4jwFgo9t68/8uioSqRYYq4NjBCBuXWDT9zNfemrsE0Op9Rl1CingALyRyvUzshiZj1c+T8XTWoe4BH8cD3LS2AQcZdr2OP6qay/gjeEd0JA0WwvXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=foGXNJfB; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B05515C0;
+	Wed, 22 May 2024 00:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716338926; cv=pass; b=jgzncA0S05WP714EIOm5wSDN+LWpP4r0WhTMgeokpe56pADk5y2AA7JUCTcBWlAXiqyYj2edbmtuCKKUxXlRA4DvXBIWI1x4Ye04gHd53vRqhlOcDRsRNKVtEoLpqelnRF52e8b0a2iCokJ+4GzXs11P3qktYdtSzQL1EnKwDfA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716338926; c=relaxed/simple;
+	bh=7dVJE5o5Y50vlv+ZlyLWEjCQ1Rjrwu1Ejbl9Boq49kw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=brE2P6Ms/0Md2Jf+G8mNAK1rf992fE6BsM/esuMi2lxCi1ZAKF3eTnUfaqtsYvtFniVjchYLfhLC0QP6UzssgpaHwTJsUcbm9abcIoNtBStjy20RSLzB+T963QClRke690tG2P/INN5sui1ZcZkMAxfI5zo+4GY0U9FrbzdmTkU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=DX62oxei; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="foGXNJfB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1716338491;
-	bh=DyOP+CLKYFUURZSMnI/DpX36phSujZAYeK9P7+3tcuU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=foGXNJfBQRht25hDMNlWXANOtOM5LRdhI5TorkrHqXUN1NcWxxDradFQJmiTXKCCn
-	 4x+zzWPBtyHS5gXx/g/4xF7fFyGZT98DDsNZS0YW0yLyOjKu59VdsKo2MNm4h2zKrQ
-	 Rh2nzQ4cYoyKQmdSBUbfpyd0lmvvOxecqk2UZgrNQjMG3lvv+DVaW/HQ/V/g8Pxf1U
-	 FhfT0dfC498e5dm6n0MjGduzcsmQeqWyEqFT0bneq8m3ujW2SnOuZHEn+X9JexTaM2
-	 D2OktBjS+WR703Ch2X+ZlgjYD6eKtyHUmyeBZA7uWaIKAzTU7guE6DXczX3NI6EyUt
-	 +9g/Jny7WnpEg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VkXYR3BhCz4x20;
-	Wed, 22 May 2024 10:41:31 +1000 (AEST)
-Date: Wed, 22 May 2024 10:41:28 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>, Kenneth Feng
- <kenneth.feng@amd.com>, Likun Gao <Likun.Gao@amd.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the i2c-host tree
-Message-ID: <20240522104128.37c646af@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="DX62oxei"
+ARC-Seal: i=1; a=rsa-sha256; t=1716338895; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bjyhdEApydfOQZNKvtqtyxJzL+QP7Rbq3gVLTnkjZsM+I0BJp4WZrjZaagpQUjPAlbw15zIbDxInNylo4O1nvg+t7HdFvYgXVq90ZU1R/clT3YlfTBGrT/cq5egpwWLEGxybx0tdBY4mSHFyhIQWvAsB8WrE4q7hDZr+M0ZZtZU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1716338895; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=7dVJE5o5Y50vlv+ZlyLWEjCQ1Rjrwu1Ejbl9Boq49kw=; 
+	b=gFmEqBcNnxnkNzEL5yP0XgFQSdoWHl5hujNTQ4HKecgU5qpPQKhRNhNVMbSXA0oz+1/K+xImy4pifMhkjTDDMAR7Hd6hjBQsOQoDsDACFLqbUxJrhs4v80C3XTgmx5vRq34tRvVunQmv4q7XECzRa3JjR64uqz48bw9yX0IhUOU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1716338895;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=7dVJE5o5Y50vlv+ZlyLWEjCQ1Rjrwu1Ejbl9Boq49kw=;
+	b=DX62oxeiLF9kjeNh/2hiVWLvOVvXjq0I78eDC+v9gEeQ6R463XInmJ2wjYL4UxM0
+	23Ojqlz4DPB6w8FSUNf/gaRpiJG+0+YcYNfBwzZtqEzGcniAcHygEeJHzuGH9RiIbdc
+	f1s8I7p4uB4T4H3IKO3bKReSh1XCEVl0V98YKfPCCtBFViuM+N+Tk0JBTu0QPlvVkMZ
+	4QQSHlom50+TDhmIAG+nKXy7URXoXr9d8dvcTeKJqbFjLI+INkTWQRBH+5DM2pjP6j1
+	s4eZDCT5atO4twcNJcNOqvdn9B/bYi4bN3qBawaVp+vvlBVtNd/F+nd/Npd/02lQQnC
+	tfJF5x4+7Q==
+Received: by mx.zohomail.com with SMTPS id 1716338894658976.2921534766582;
+	Tue, 21 May 2024 17:48:14 -0700 (PDT)
+Message-ID: <057b4a5504656bb7455ead39768d9e7167fb724b.camel@icenowy.me>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: sunxi: Correct the descriptions
+ for Pine64 boards
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Dragan Simic <dsimic@manjaro.org>, linux-sunxi@lists.linux.dev
+Cc: wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-kernel@vger.kernel.org, didi.debian@cknow.org, Marek Kraus
+	 <gamiee@pine64.org>
+Date: Wed, 22 May 2024 08:48:09 +0800
+In-Reply-To: <d2943d9f4c99a239f86188eaf45a73972685c255.1713833436.git.dsimic@manjaro.org>
+References: 
+	<d2943d9f4c99a239f86188eaf45a73972685c255.1713833436.git.dsimic@manjaro.org>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aksbunurMrU4D=R+0N+AwSn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-ZohoMailClient: External
+X-ZohoMail-Owner: <057b4a5504656bb7455ead39768d9e7167fb724b.camel@icenowy.me>+zmo_0_uwu@icenowy.me
 
---Sig_/aksbunurMrU4D=R+0N+AwSn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+5ZyoIDIwMjQtMDQtMjPmmJ/mnJ/kuoznmoQgMDM6MDAgKzAyMDDvvIxEcmFnYW4gU2ltaWPlhpnp
+gZPvvJoKPiBDb3JyZWN0IHRoZSBkZXNjcmlwdGlvbnMgb2YgYSBmZXcgUGluZTY0IGJvYXJkcyBh
+bmQgZGV2aWNlcywKPiBhY2NvcmRpbmcKPiB0byB0aGVpciBvZmZpY2lhbCBuYW1lcyB1c2VkIG9u
+IHRoZSBQaW5lNjQgd2lraS7CoCBUaGlzIGVuc3VyZXMKPiBjb25zaXN0ZW5jeQo+IGJldHdlZW4g
+dGhlIG9mZmljaWFsbHkgdXNlZCBuYW1lcyBhbmQgdGhlIG5hbWVzIGluIHRoZSBzb3VyY2UgY29k
+ZS4KPiAKPiBDYzogTWFyZWsgS3JhdXMgPGdhbWllZUBwaW5lNjQub3JnPgo+IFNpZ25lZC1vZmYt
+Ynk6IERyYWdhbiBTaW1pYyA8ZHNpbWljQG1hbmphcm8ub3JnPgo+IC0tLQo+IAo+IE5vdGVzOgo+
+IMKgwqDCoCBUaGlzIGNvbXBsZXRlcyB0aGUgY29ycmVjdGlvbiBvZiB0aGUgZGVzY3JpcHRpb25z
+IG9mIHRoZSBQaW5lNjQKPiBib2FyZHMKPiDCoMKgwqAgYW5kIGRldmljZXMsIHdoaWNoIHdhcyBz
+dGFydGVkIHdpdGggdGhlIFBpbmU2NCBib2FyZHMgYW5kIGRldmljZXMKPiBiYXNlZAo+IMKgwqDC
+oCBvbiBSb2NrY2hpcCBTb0NzLiBbMV0KPiDCoMKgwqAgCj4gwqDCoMKgIFsxXQo+IGh0dHBzOi8v
+bG9yZS5rZXJuZWwub3JnL2xpbnV4LXJvY2tjaGlwL2VjMTI0ZGFiMmIxYTg3NzZhYTM5MTc3ZWNj
+ZTM0YmFiY2EzYTUwZTIuMTcxMzgzMjc5MC5naXQuZHNpbWljQG1hbmphcm8ub3JnLwo+IAo+IMKg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zdW54aS55YW1sIHwgMTIgKysr
+KysrLS0tLS0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9u
+cygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL3N1bnhpLnlhbWwKPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
+c3VueGkueWFtbAo+IGluZGV4IDA5ZDgzNWRiNmRiNS4uYjY2ODczYWUyZDcxIDEwMDY0NAo+IC0t
+LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc3VueGkueWFtbAo+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc3VueGkueWFtbAo+IEBA
+IC03MDksMTcgKzcwOSwxNyBAQCBwcm9wZXJ0aWVzOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIC0g
+Y29uc3Q6IHNvY2hpcCxzMwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIC0gY29uc3Q6IGFsbHdpbm5l
+cixzdW44aS12Mwo+IMKgCj4gLcKgwqDCoMKgwqAgLSBkZXNjcmlwdGlvbjogUGluZTY0IFBpbmVI
+NjQgbW9kZWwgQQo+ICvCoMKgwqDCoMKgIC0gZGVzY3JpcHRpb246IFBpbmU2NCBINjQgTW9kZWwg
+QQo+IMKgwqDCoMKgwqDCoMKgwqAgaXRlbXM6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgLSBjb25z
+dDogcGluZTY0LHBpbmUtaDY0Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgLSBjb25zdDogYWxsd2lu
+bmVyLHN1bjUwaS1oNgo+IMKgCj4gLcKgwqDCoMKgwqAgLSBkZXNjcmlwdGlvbjogUGluZTY0IFBp
+bmVINjQgbW9kZWwgQgo+ICvCoMKgwqDCoMKgIC0gZGVzY3JpcHRpb246IFBpbmU2NCBINjQgTW9k
+ZWwgQgoKU29ycnkgZm9yIHJlcGx5aW5nIHNvIGxhdGUsIGJ1dCBJIGRvbid0IHRoaW5rIHRoZXJl
+IGlzIGEgUGluZTY0IEg2NApib2FyZC4gVGhlIFBpbmU2NCB3aWtpIGNhbGxzIGl0IFBpbmUgSDY0
+LiBbMV0KClsxXSBodHRwczovL3dpa2kucGluZTY0Lm9yZy93aWtpL1BJTkVfSDY0Cgo+IMKgwqDC
+oMKgwqDCoMKgwqAgaXRlbXM6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgLSBjb25zdDogcGluZTY0
+LHBpbmUtaDY0LW1vZGVsLWIKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtIGNvbnN0OiBhbGx3aW5u
+ZXIsc3VuNTBpLWg2Cj4gwqAKPiAtwqDCoMKgwqDCoCAtIGRlc2NyaXB0aW9uOiBQaW5lNjQgTFRT
+Cj4gK8KgwqDCoMKgwqAgLSBkZXNjcmlwdGlvbjogUGluZTY0IEE2NCBMVFMKPiDCoMKgwqDCoMKg
+wqDCoMKgIGl0ZW1zOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIC0gY29uc3Q6IHBpbmU2NCxwaW5l
+NjQtbHRzCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgLSBjb25zdDogYWxsd2lubmVyLHN1bjUwaS1y
+MTgKPiBAQCAtNzQ4LDE3ICs3NDgsMTcgQEAgcHJvcGVydGllczoKPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCAtIGNvbnN0OiBwaW5lNjQscGluZXBob25lCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgLSBj
+b25zdDogYWxsd2lubmVyLHN1bjUwaS1hNjQKPiDCoAo+IC3CoMKgwqDCoMKgIC0gZGVzY3JpcHRp
+b246IFBpbmU2NCBQaW5lVGFiLCBEZXZlbG9wbWVudCBTYW1wbGUKPiArwqDCoMKgwqDCoCAtIGRl
+c2NyaXB0aW9uOiBQaW5lNjQgUGluZVRhYiBEZXZlbG9wZXIgU2FtcGxlCj4gwqDCoMKgwqDCoMKg
+wqDCoCBpdGVtczoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtIGNvbnN0OiBwaW5lNjQscGluZXRh
+Ygo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIC0gY29uc3Q6IGFsbHdpbm5lcixzdW41MGktYTY0Cj4g
+wqAKPiAtwqDCoMKgwqDCoCAtIGRlc2NyaXB0aW9uOiBQaW5lNjQgUGluZVRhYiwgRWFybHkgQWRv
+cHRlcidzIGJhdGNoIChhbmQKPiBtYXliZSBsYXRlciBvbmVzKQo+ICvCoMKgwqDCoMKgIC0gZGVz
+Y3JpcHRpb246IFBpbmU2NCBQaW5lVGFiIEVhcmx5IEFkb3B0ZXIKPiDCoMKgwqDCoMKgwqDCoMKg
+IGl0ZW1zOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIC0gY29uc3Q6IHBpbmU2NCxwaW5ldGFiLWVh
+cmx5LWFkb3B0ZXIKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtIGNvbnN0OiBhbGx3aW5uZXIsc3Vu
+NTBpLWE2NAo+IMKgCj4gLcKgwqDCoMKgwqAgLSBkZXNjcmlwdGlvbjogUGluZTY0IFNvUGluZSBC
+YXNlYm9hcmQKPiArwqDCoMKgwqDCoCAtIGRlc2NyaXB0aW9uOiBQaW5lNjQgU09QaW5lCj4gwqDC
+oMKgwqDCoMKgwqDCoCBpdGVtczoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtIGNvbnN0OiBwaW5l
+NjQsc29waW5lLWJhc2Vib2FyZAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIC0gY29uc3Q6IHBpbmU2
+NCxzb3BpbmUKPiAKCg==
 
-Hi all,
-
-After merging the i2c-host tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu14/smu_v14_0_2_ppt.c: In function=
- 'smu_v14_0_2_i2c_control_init':
-drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu14/smu_v14_0_2_ppt.c:1565:34: err=
-or: 'I2C_CLASS_SPD' undeclared (first use in this function); did you mean '=
-I2C_CLASS_HWMON'?
- 1565 |                 control->class =3D I2C_CLASS_SPD;
-      |                                  ^~~~~~~~~~~~~
-      |                                  I2C_CLASS_HWMON
-
-Caused by commit
-
-  49b33f4b3a9e ("i2c: Remove I2C_CLASS_SPD")
-
-interacting with commit
-
-  3e55845c3983 ("drm/amd/swsmu: add smu v14_0_2 support")
-
-from Linus' tree (in the current merge window).
-
-I have used the i2c-host tree from next-20240521 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/aksbunurMrU4D=R+0N+AwSn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZNPzgACgkQAVBC80lX
-0Gw8LAf9GUZwtATiqvITuG5LZGSQhoSinU9LzOqeNsJB0HViSI/Jq1/iWX1UGWIX
-tMCQX2keqkVkiwQ3np7cBOvZ1ckmD0n4Laud8o7LyvAS6xeZkuLERL+p61cfVxJd
-B9Vj7TSbt+0JLxQP1mwMlOycqokibAG6sy1kZnsup9uiS7z4iq5TIPiyhx6PTpXE
-pCCToXS6o9iBA1eEyLyJ/NsLq9e43lLK513Y/FmO9SogWtip//HrjkTPOWYJC9ru
-iAZHzZ0gJIt0sjicOj5dWg1Q72DsoaIrTLbBvkXVIDCBtHI2hsB+VmPIIYLQnosJ
-zVWIBxr1ToDewHvONqDS9RaQebRMIA==
-=8H6u
------END PGP SIGNATURE-----
-
---Sig_/aksbunurMrU4D=R+0N+AwSn--
