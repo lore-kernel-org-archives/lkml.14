@@ -1,213 +1,291 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2062.outbound.protection.outlook.com [40.107.244.62])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00E213F44F;
-	Wed, 22 May 2024 13:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716386176; cv=fail; b=Ra8HbKH68auAbgmY5+O/8Jvl26XEehjC1rSDKMMfaCCopUl5UH5zJtE1J65Mo2BLfzjRxXbx+r281I2jv3HRmOR0e/JxblOlHd7R7usDm/CBCvWO0CyBqjzhfbzh/p8T+qBGf6gIh+O/a4io4Fve8pjtjBC7ac1x+/yfeqqGgUg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716386176; c=relaxed/simple;
-	bh=NZNBD6dj6GZ4NeL49e4hYTVGalturaOLqDxPTmdMrVU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZHWzXnYdjiVvdg4+pfftuDKBMLz1taHWJOPXgxzGIuoHOb43bjFlYkR8jdqJHygKf4fP3ZRijRIp1/JmDi0u2IctqTfoE4WtynJ6dtBdFMhQKkEov/tFchdt/VZCKHrHrQ4XPuBP8VEzIjTA+u6Mh1NyGjmEuvduX43z/gD4sSY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gQu+F8Pb; arc=fail smtp.client-ip=40.107.244.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3570413DBBD;
+	Wed, 22 May 2024 13:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716386342; cv=none; b=qhZNTTpubamiV8cdfPUeSHgNPabQdq8TY0gDt81AbqMhuInqclhpZtaqtAhc4w/iEvTtMULcuDoyKT5l/XUZZJQq1sNIY/CwzkCh8VmrLYwWIXoaV82cVWQBXEeBAL1eEB/gq1fDNJMUZW/yzWUVeqfWL5HktSzfyPPbQk4cf7c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716386342; c=relaxed/simple;
+	bh=RAF+fDJD2gJKn9LhD0AWd6OtY8lyYdzDCeVqZEqxhcA=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=Im81mBPNcD2BLcbx2jP6zdZowIYD+lKHd6CU1fOzT81DtU/CT3uI54NGCsH+msuvFloquffcSHduGBF3bYtZ3naB3wtLr7NdPNKxs4aBK0FIpFrdm66g1Mb0KK/Zs0IFqEdoj/LWer+aiY7qGONRe73+xsg15BOenHXroLtAF+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iVCIMDAn; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gQu+F8Pb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Avs0IzqAgt1pDA+PzRgGcxElcJl2iG57PHo2MlX5ksu1OVcdsGU/j3X3UrYpFadmQR9bNVAbAdagx6Q1YJM5+YhNzCjT/Q+hG+m6RZPUAE87AiMZPaLBj58ZWmZgOyyPxxD0g9DS5T4l5BpyoHCqOpNsrEAzvtoJ4oEuk+paCaDF9eb/UQI0vRd2wpiQ+xUEt+ChxKFBVRDZZFsO6x0faEvubP5Lmc0Z2tOAkGjEowE1JCrRzb8x/lq7wVHLKHpZOoQ8dq4jW512Ad2+pR1EVT9f8neeZVz9MUd8879zKnNBcPWMsJjXUvKu1wtiKuj3epAU7OdZCQevCYAA0bdjUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NZNBD6dj6GZ4NeL49e4hYTVGalturaOLqDxPTmdMrVU=;
- b=NjTzsacB1wkF/+JqrIcifjCEiGHfUmvENodal/V74pHqmocQXYVqd6uGM/M+b3djg/nD6C+FWJizENw9GoDXKT1PPmuwiz93QxWjxDCr9ndMlZiE8DiTujOfYD793JYpelqMy5A2t3gYoHa+ZK4FR6lrRYrlwa+yyohAQZ+aY2OTSH1BfL7aMNOS8UZh7v67MFoqUAxKXYMOH1zJFi2ASOVbd1+p+yjyG4otgbqZyX0VXYM9BdW19z5nlRCLhfiIq6vsLACrEir7eq5qBwXggOuMtx0ovzrchA5UBkIw2N8AqoaFuyGEp/TjwpdgT2mAWFNgexbNXq6DXsKXhjN8wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NZNBD6dj6GZ4NeL49e4hYTVGalturaOLqDxPTmdMrVU=;
- b=gQu+F8PbxVLMqL+BdnT7b3c5B6hDH6FRUD/pH9GB8bHwPKduAZMKVbbB92ezTfWqETvpk7oMvIkxlcp0dpJHJNroF4HtL2R523yNpWW6h7vhbRld+y+/9fELrvMVHyxHFdmRaA3Pk/XCBIXkkiWzuZCvdzAzprAd94q21Q/NRjau5sPdVLIYo6RbHoeWc17GiT6Rfm3bVHBGgZUCc8/UTLH+lxJBrC9bbULhWAJDxrd3eSyRiumrpl+blLSxjJ89IksoUpCkLp0OYXdi4ilq/5ZIhmVfP19yp6vfqnlTybNOe8DQpDcrnUxYFRD4qbNel566/a5mM3YHDyP+DwCixA==
-Received: from DM6PR12MB4516.namprd12.prod.outlook.com (2603:10b6:5:2ac::20)
- by DM6PR12MB4058.namprd12.prod.outlook.com (2603:10b6:5:21d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Wed, 22 May
- 2024 13:56:12 +0000
-Received: from DM6PR12MB4516.namprd12.prod.outlook.com
- ([fe80::43e9:7b19:9e11:d6bd]) by DM6PR12MB4516.namprd12.prod.outlook.com
- ([fe80::43e9:7b19:9e11:d6bd%4]) with mapi id 15.20.7611.016; Wed, 22 May 2024
- 13:56:11 +0000
-From: Danielle Ratson <danieller@nvidia.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Ido Schimmel <idosch@nvidia.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com"
-	<pabeni@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>, "sdf@google.com"
-	<sdf@google.com>, "kory.maincent@bootlin.com" <kory.maincent@bootlin.com>,
-	"maxime.chevallier@bootlin.com" <maxime.chevallier@bootlin.com>,
-	"vladimir.oltean@nxp.com" <vladimir.oltean@nxp.com>,
-	"przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>,
-	"ahmed.zaki@intel.com" <ahmed.zaki@intel.com>, "richardcochran@gmail.com"
-	<richardcochran@gmail.com>, "shayagr@amazon.com" <shayagr@amazon.com>,
-	"paul.greenwalt@intel.com" <paul.greenwalt@intel.com>, "jiri@resnulli.us"
-	<jiri@resnulli.us>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mlxsw
-	<mlxsw@nvidia.com>, Petr Machata <petrm@nvidia.com>
-Subject: RE: [PATCH net-next v5 04/10] ethtool: Add flashing transceiver
- modules' firmware notifications ability
-Thread-Topic: [PATCH net-next v5 04/10] ethtool: Add flashing transceiver
- modules' firmware notifications ability
-Thread-Index:
- AQHalku5+CuUOiSJUkSAUJYGzVV2UbGAK5kAgAD6ZCCAACA7AIAAxpYAgABw7ACAIJB2MIAAYcqAgAAA/6A=
-Date: Wed, 22 May 2024 13:56:11 +0000
-Message-ID:
- <DM6PR12MB451677DBA41EA8A622D3D446D8EB2@DM6PR12MB4516.namprd12.prod.outlook.com>
-References: <20240424133023.4150624-1-danieller@nvidia.com>
-	<20240424133023.4150624-5-danieller@nvidia.com>
-	<20240429201130.5fad6d05@kernel.org>
-	<DM6PR12MB45168DC7D9D9D7A5AE3E2B2DD81A2@DM6PR12MB4516.namprd12.prod.outlook.com>
-	<20240430130302.235d612d@kernel.org>	<ZjH1DCu0rJTL_RYz@shredder>
-	<20240501073758.3da76601@kernel.org>
-	<DM6PR12MB451687C3C54323473716621ED8EB2@DM6PR12MB4516.namprd12.prod.outlook.com>
- <20240522064519.3e980390@kernel.org>
-In-Reply-To: <20240522064519.3e980390@kernel.org>
-Accept-Language: he-IL, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR12MB4516:EE_|DM6PR12MB4058:EE_
-x-ms-office365-filtering-correlation-id: bb74d0d2-267b-45b6-8c39-08dc7a66f073
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230031|1800799015|366007|7416005|376005|38070700009;
-x-microsoft-antispam-message-info:
- =?utf-8?B?b0tOaElPWkk1bFArd3M4NWExaGNlbXNoTUlaQXZwL0drcUFiMy9sZ2c5cFQ1?=
- =?utf-8?B?TDdDWGtnelhON1dacVl4TnU2Z3AvN3pDRnhVYVV1RlYzREVVcTR5MGxFN0Z2?=
- =?utf-8?B?ZmpLMUxYQUI0S2FKbE5aK3F1UDNEMmNMdzhTSERlaGtRRGZaNUNkSHRiL0tG?=
- =?utf-8?B?SEs1ZWx5dVQwQ0ZMMkltcEROU0JEczFsS3VlSHZhNW9kOC9ncy83cm43SmtS?=
- =?utf-8?B?Q2VGSlY1aGdtMlVRUlBobEdSZnFRWEplWWJJcENUS3dFNytjVDcvOUdjcGtv?=
- =?utf-8?B?L3dha0FscEo4aHdPZmJab1NJTmhHYmpxMnFKd1QwL2taTDVGMVVmU2U5c1Jq?=
- =?utf-8?B?bVRLQ3E2R1NZc0hoMkJHaC9DbUcrZnZDdDVNK0E5eTdvWDZRL3hZZmUyaUtv?=
- =?utf-8?B?MEJGU2ZEemdWajJ0dUlVaWRnUnlHaUF6MVozanM0STZRbk9oVFdBc0FqSHlI?=
- =?utf-8?B?MkN4NytrdXNMK0tNR1EwWFhMWnFFeHkvMURQZFQrdXhydlNYSWZjOG1FMWg2?=
- =?utf-8?B?bFd6SkhOaW1WSnhBVVUwbnE3VmhBeFZNWTdEdkFUMTJOMXpGQ0NwTkFCMDJ5?=
- =?utf-8?B?R1NWV1l4Q1o4UzdrREpMVjhNUnB5VFBsYXRVNXQ4cERyOXlKTFhxNWVQWElR?=
- =?utf-8?B?b2dmUHNIOTB5c3JaU0JmRlJ6RUhLNTZsWmlyc2J2Rm9WcGJjTUxENHJMTlRh?=
- =?utf-8?B?aWcxbW4vNnppL2VUNVM0L3JkU0UxQXNob1pIL3pFVWRYV2ZyMnZob1VWMi85?=
- =?utf-8?B?Z0d6SUdIa2s5YTNEQkVKcUtYSE1xNDRtTHJybTR4Y2lFUTU1OWxHcmdib2lr?=
- =?utf-8?B?QVBUc3ZOOTlvNDZiZStXUE1FWlM5U1lGRXFYbFNtNXZJQkNqODNITnpLdzkx?=
- =?utf-8?B?cXdGVkR3YS9XRWxxL0dRZGw3dGJ4UkVzQ1MrT3ZBZ1F2dkFPY1piZC9mQ29H?=
- =?utf-8?B?UTE1aUM4NlZ0cjM3YUxMUEVKQS9BOFQ1aGtwVTVVN3UzVWJUYlVQUmxQYm5T?=
- =?utf-8?B?blhsbzU5MzNoT1ltUDIrV1QwMEZjODBPMWdwTGJFdjZpQ2pkcHo4MlhLWlU4?=
- =?utf-8?B?d0ExVy9lL3MxZURCME9Yd3F4Vmt3LzVXM3ExdzFHU1dwR1Z1amtWOWtvUXVz?=
- =?utf-8?B?RS9icXlMUnBKeWpEUVJ5ZmdXaVpTMnp3aGc3b1g2YzR2c3JFcEVpcXB3SUUy?=
- =?utf-8?B?U2swOVMyWmxML0ovZU45cTBleEtCaFl0QlpKME9yc3hEWjhHMmtLOFlGdnlD?=
- =?utf-8?B?SC9OSFp6ODFIVTFLZ2RJaThtMXdyQUhndDBWWVk2ZE04b1g5djQzU1pjcGgw?=
- =?utf-8?B?dFEvUUZTQ29kY3V5U01FTysvTVVxZVU2SEk5TWtzYlZveEJKTEI3U2gyTmtN?=
- =?utf-8?B?aWZpSjdnbTNOUHZjeGw4SVlJV3A1Mk90ZUZNdE9GVnZQUk1qb3YvblcrRklD?=
- =?utf-8?B?SGVVdzJDczZzT2E5cGtmcHFLMEViWWl0b0N2NmErM1JtenpmelU3azZldmVo?=
- =?utf-8?B?M2k3K2VwbTlYUUErc1FqQVF2ZmZjM01Qb24xSSs4MnczNFZVUWpVbERmYWV5?=
- =?utf-8?B?bXpiZVZNbW9xTW1weVExQXhYS2tWL3d2VWlGZms5UlB1L1NQcXZtejdmbnBO?=
- =?utf-8?B?cDZta3lOek16VS9kRC92a3F4VW9wbzVUQlhwMXpqVTNTSGJoVWllbWRHajNB?=
- =?utf-8?B?dnRaaEd4N1ZvckRHSVZSRldWV3VybTlVNWVTMTJ1TVN4V3lQVzAzYzhMc1ov?=
- =?utf-8?B?ZmZwRmYyU0J1T2RHeVBJOXVoT3F5UUpzS1RtWkhyY3czR2UyNkJGeG1KalEx?=
- =?utf-8?B?d05ncmpGRlY0S1F1Nk5XZz09?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4516.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NmVxTVpsWjFBNlFFU1l2cnl6ai9mL2ZoU21aL1VkUlk5WDhLQUd6WXVjOG9P?=
- =?utf-8?B?Q0tJQnluSVEwMklNR1pwSnFIRyt2aGZ1R1R4S05aRGNUamFwUlo5OVMxZDhS?=
- =?utf-8?B?REh5em43dXQ1ZWNjUSs0U1liM2JBMllpVlN0dDN4Ti9PZU1YM2dYTlJZbVk0?=
- =?utf-8?B?SmdYV2tMY1JEaG1uZGpoMHNzUlA4dXVnT21EYUJkT0hQVkE2QWgvcGdacm52?=
- =?utf-8?B?S1ZsdDZvVUs5VXpkbURYNks2MHJncWFEdnY3MmQyTWRNWklka2F6a05keXhr?=
- =?utf-8?B?ZWdjNmdkaHR5WE5PRnFlZDEwZVhLZjg0WlNNWU5LSlg1YWttSWNtU09aOFdS?=
- =?utf-8?B?dlU5V0RwNUlLMXVNYWZpS2J0TnBrTjBmYkxqdVNLYWJtNW1Venh5S0gxaHBS?=
- =?utf-8?B?NCsvdmprd3czbFY4aCtlM2tSL0xlenMvQWhNME1UT2ZOeHUxNnhYU3pvWVlQ?=
- =?utf-8?B?dEtONFN4bjBKYkJSaWlqdExtMFJLTGpXdzVvQ2Y1OUs2OEd6eVRwcUJPakFO?=
- =?utf-8?B?a1ZXbWw5ek5EaVowUnBQQXc4U29adDlBUXNPWU5rNTRrT25FOUgwUkFiZmVm?=
- =?utf-8?B?STFpeU4wSENmL3BrczJSMnFjNXcrTGwrdlllR1dhMlV2LzY1dk5LYU95VVl3?=
- =?utf-8?B?UVVRcTg1VkRsT2ppTllscHBzdHd6TXlpY0xNMUZtbVJuK2FaVjFnMEVBaHNC?=
- =?utf-8?B?WDdCMDRNSkFPUm8xL0RJZFpOOURyN1ZicFlCMDk1SGJFcHA3d3haNjFPdHZn?=
- =?utf-8?B?WWlVM1ozc003ZkI5dGhlSjBHMkx4aTNvbEloSHJnTjdXbFhvVkduT3c5SnpZ?=
- =?utf-8?B?VTI5dDBRdk1ENE02TGpiOVBSUzNQM2NWSERkWnBTM3U4c2UrZFlSZXkwSjVi?=
- =?utf-8?B?U0FwdVRwejRWa3dJSTFXS1lCdk1wRVVMZ2IxTSsvYkcySFhPbXdGdVhuQktH?=
- =?utf-8?B?RWtCWjJzMDhrRTBRT0l0cE9rOWN2WW5IU2xjYmlNZ2Zpd09MYVl5UjlsT1BP?=
- =?utf-8?B?RDdBUkZFK3pNWGRnNG54eFlSclA2MWxFRXhobTNKZExKVlgrNDdNZFpxaDVS?=
- =?utf-8?B?R0RMT3hYVVYvc0ZrRStHR3ZJeGp0bmxNSVpBSk9pZjZQVzJrTG9MdU45bkdo?=
- =?utf-8?B?emRMWFpZeDBUek5lZ2dpdkg3OCt5NmdiK29JeXY1YmdrTERoQmpDY25LN3F5?=
- =?utf-8?B?OWRoTit3TWZneEl1WlUrSStyaUowa2VzVnZMa1JiMURCV2RhbCt5LzkydUlH?=
- =?utf-8?B?dWxFaHIwV2wxQ25UK2phWTI2SCt0Z2xVT1loMm9HQmY1WmRHV2daUEduamZE?=
- =?utf-8?B?d3BPZVFqWDVNVmRkMVNKOHdZNjQvQ2RkNzh0OHpLblB0cDRDMHdsYkhCa0hR?=
- =?utf-8?B?bVE1dFFBUzFTTXV2M0xxdHRvUFZsZGxtV3Z2eFZwY2owR1RZOW5ja1lKVlB3?=
- =?utf-8?B?OUxOYzV3cGtsRTJ0NDQzUjZlTUdmWXlsbklNeGNsTnpOK1A4SXdZWG1PZ0Y1?=
- =?utf-8?B?c3BsTWowdldpRDJYb1Uzc1EvT2l0MHVpUGsxdEVsdUZ3WU11bzhVdEVNdlZy?=
- =?utf-8?B?YkJtOFFkS1JiMkF6dS9jdE9FVnpQMS9weEVsRmN0TXNNTTduWk1MM2FCSnNS?=
- =?utf-8?B?KzRZTlAvcUNMV0FzcVNtaE9BRURxSHh1Yy9yTzE0SWxxU1dzR1FDZG9ZR0dT?=
- =?utf-8?B?RXdkOWJnaGkxZm1HeEJhTldJNGV2ODcvckVONEErR21yWGpyODVhWHBKSmNu?=
- =?utf-8?B?d21BaHFqWUxSWnZDWG12dXdNV2x2Q0Yycmh4emhKb1ZyMTU5ODArR2NHMUJt?=
- =?utf-8?B?aUtjVGNNZktMOUIzLzNOQ3ErTnQwWDJaZjVuN3MvVC9hN0lKR1FPN3Boemdo?=
- =?utf-8?B?SmJZWnBFMFhRa0tRcnpHaC93YWI2eHFIK3dlRUc5eFkrWUxadlAxc241dWhw?=
- =?utf-8?B?L094UEVOUVA4azRFYWRKdVM0ZjFwZ2FORThRMWE1NEtKUG5hbkNCMUhlU1ls?=
- =?utf-8?B?bUJhTUZqd2toRmNVZXNyZU81bXdhTjZkZXRUR3hXTXlQbHRTL3ZPdldxTVBj?=
- =?utf-8?B?eGtUVXcrVmtKWk1hU0xpS2t6RklJUStpRzg2UGE4M0MwNU5DZFNtWlRjeFky?=
- =?utf-8?Q?aVw7paIVFJv268FMhcxBFNXEo?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iVCIMDAn"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44MDpU1R003290;
+	Wed, 22 May 2024 13:58:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=NlHpFkO2XzyQYTgQjwRf1r6z1Yjofq48OQhaKBG4X9E=;
+ b=iVCIMDAnRghT3ya5Qa8lZZyyEYKhYZgqVasVevYFl42l/RSqi8/TZR8RwZAgO/lCvE2R
+ j3tpl1X2WYTdO4DMhbSs06Lja5dVpjSdl1JFmXuM9BsgwjVpZUAFQcCAnbTTjMjwVDPc
+ Fa/wWk77E8b++xDbI7lq8BWBXTmo4tO40AZIyO7+hl77DO17Vo4mlQr5EZL/owJoxkUY
+ ybCi3J7Lot0lXZdSGfDImYuU+oG6u0ukIZmtmm1QldHNmViIbhpq0JF49fp1kWkKN8wb
+ /ZHt7u/FukEhKDN8wO6RUQYziYW33kxXJTYSIQUWS6Ub0soVrUSgT5ywWgKsP/csknyn OQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9hrm82de-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 13:58:43 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44MDwhNq015403;
+	Wed, 22 May 2024 13:58:43 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9hrm82da-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 13:58:43 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44MCAGMt008090;
+	Wed, 22 May 2024 13:58:42 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y79c33un5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 13:58:42 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44MDwaH727656788
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 May 2024 13:58:38 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7EF2420043;
+	Wed, 22 May 2024 13:58:36 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9605220040;
+	Wed, 22 May 2024 13:58:33 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.69.167])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 22 May 2024 13:58:33 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH V2 4/9] tools/perf: Add support to capture and parse raw
+ instruction in objdump
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <Zj4ujanupo0eKyby@x1>
+Date: Wed, 22 May 2024 19:28:21 +0530
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Ian Rogers <irogers@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "segher@kernel.crashing.org" <segher@kernel.crashing.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "disgoel@linux.vnet.ibm.com" <disgoel@linux.vnet.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akanksha@linux.ibm.com" <akanksha@linux.ibm.com>
+Message-Id: <476EE92D-D9B6-466F-A827-5BB8A1276D3A@linux.vnet.ibm.com>
+References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
+ <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com>
+ <f2efdb9d-e636-4678-b492-83d3a28d8134@csgroup.eu>
+ <E21FF3FD-1080-4A6C-99B0-7239AD831532@linux.vnet.ibm.com>
+ <Zj4ujanupo0eKyby@x1>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TsX9NSCmu8Ggaz0XVdQBGN6J6VyNI3tF
+X-Proofpoint-GUID: zOeTV4_tiX1rJjrHub1teADWsZmC57Mh
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4516.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb74d0d2-267b-45b6-8c39-08dc7a66f073
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2024 13:56:11.8983
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w4HlrOvraUvKhVoyrj4ZrMLruW2GSSqdTkxXofEjI8L5ztIu8DsaB8LuGvuKYCWm2MX2l1FzegLQpayfuGbCMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4058
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_07,2024-05-22_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ adultscore=0 clxscore=1011 spamscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 phishscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405220093
 
-PiA+IDEuIEFkZCBhIG5ldyB1bmljYXN0IGZ1bmN0aW9uIHRvIG5ldGxpbmsuYzoNCj4gPiB2b2lk
-ICpldGhubF91bmljYXN0X3B1dChzdHJ1Y3Qgc2tfYnVmZiAqc2tiLCB1MzIgcG9ydGlkLCB1MzIg
-c2VxLCB1OA0KPiA+IGNtZCkNCj4gPg0KPiA+IDIuIFVzZSBpdCBpbiB0aGUgbm90aWZpY2F0aW9u
-IGZ1bmN0aW9uIGluc3RlYWQgb2YgdGhlIG11bHRpY2FzdCBwcmV2aW91c2x5IHVzZWQNCj4gYWxv
-bmcgd2l0aCBnZW5sbXNnX3VuaWNhc3QoKS4NCj4gPiAncG9ydGlkJyBhbmQgJ3NlcScgdGFrZW4g
-ZnJvbSBnZW5sX2luZm8oKSwgYXJlIGFkZGVkIHRvIHRoZSBzdHJ1Y3QNCj4gZXRodG9vbF9tb2R1
-bGVfZndfZmxhc2gsIHdoaWNoIGlzIGFjY2Vzc2libGUgZnJvbSB0aGUgd29yayBpdGVtLg0KPiA+
-DQo+ID4gMy4gQ3JlYXRlIGEgZ2xvYmFsIGxpc3QgdGhhdCBob2xkcyBub2RlcyBmcm9tIHR5cGUg
-c3RydWN0DQo+IGV0aHRvb2xfbW9kdWxlX2Z3X2ZsYXNoKCkgYW5kIGFkZCBpdCBhcyBhIGZpZWxk
-IGluIHRoZSBzdHJ1Y3QNCj4gZXRodG9vbF9tb2R1bGVfZndfZmxhc2guDQo+ID4gQmVmb3JlIHNj
-aGVkdWxpbmcgYSB3b3JrLCBhIG5ldyBub2RlIGlzIGFkZGVkIHRvIHRoZSBsaXN0Lg0KPiANCj4g
-TWFrZXMgc2Vuc2UuDQo+IA0KPiA+IDQuIEFkZCBhIG5ldyBuZXRsaW5rIG5vdGlmaWVyIHRoYXQg
-d2hlbiB0aGUgcmVsZXZhbnQgZXZlbnQgdGFrZXMgcGxhY2UsDQo+IGRlbGV0ZXMgdGhlIG5vZGUg
-ZnJvbSB0aGUgbGlzdCwgd2FpdCB1bnRpbCB0aGUgZW5kIG9mIHRoZSB3b3JrIGl0ZW0sIHdpdGgN
-Cj4gY2FuY2VsX3dvcmtfc3luYygpIGFuZCBmcmVlIGFsbG9jYXRpb25zLg0KPiANCj4gV2hhdCdz
-IHRoZSAicmVsZXZhbnQgZXZlbnQiIGluIHRoaXMgY2FzZT8gQ2xvc2luZyBvZiB0aGUgc29ja2V0
-IHRoYXQgdXNlciBoYWQNCj4gaXNzdWVkIHRoZSBjb21tYW5kIG9uPw0KDQpUaGUgZXZlbnQgc2hv
-dWxkIG1hdGNoIHRoZSBiZWxvdzoNCmV2ZW50ID09IE5FVExJTktfVVJFTEVBU0UgJiYgbm90aWZ5
-LT5wcm90b2NvbCA9PSBORVRMSU5LX0dFTkVSSUMNCg0KVGhlbiBpdGVyYXRlIG92ZXIgdGhlIGxp
-c3QgdG8gbG9vayBmb3Igd29yayB0aGF0IG1hdGNoZXMgdGhlIGRldiBhbmQgcG9ydGlkLg0KVGhl
-IHNvY2tldCBkb2VzbuKAmXQgY2xvc2UgdW50aWwgdGhlIHdvcmsgaXMgZG9uZSBpbiB0aGF0IGNh
-c2UuIA0KDQo+IA0KPiBFYXNpZXN0IHdheSB0byAibm90aWNlIiB0aGUgc29ja2V0IGdvdCBjbG9z
-ZWQgd291bGQgcHJvYmFibHkgYmUgdG8gYWRkIHNvbWUNCj4gaW5mbyB0byBnZW5sX3NrX3ByaXZf
-KigpLiAtPnNvY2tfcHJpdl9kZXN0cm95KCkgd2lsbCBnZXQgY2FsbGVkLiBCdXQgeW91IGNhbiBh
-bHNvDQo+IGdldCBhIGNsb3NlIG5vdGlmaWNhdGlvbiBpbiB0aGUgZmFtaWx5DQo+IC0+dW5iaW5k
-IGNhbGxiYWNrLg0KPiANCj4gSSdtIG9uIHRoZSBmZW5jZSB3aGV0aGVyIHdlIHNob3VsZCBjYW5j
-ZWwgdGhlIHdvcmsuIFdlIGNvdWxkIGp1c3QgbWFyayB0aGUNCj4gY29tbWFuZCBhcyAnbm8gc29j
-a2V0IHByZXNlbnQnIGFuZCBzdG9wIHNlbmRpbmcgbm90aWZpY2F0aW9ucy4NCj4gTm90IHN1cmUg
-d2hpY2ggaXMgYmV0dGVyLi4NCg0KSXMgdGhlcmUgYSBzY2VuYXJpbyB0aGF0IHdlIGhpdCB0aGlz
-IGV2ZW50IGFuZCB3b24ndCBpbnRlbmQgdG8gY2FuY2VsIHRoZSB3b3JrPyANCg0KVGhhbmtzLA0K
-RGFuaWVsbGUNCg==
+
+
+> On 10 May 2024, at 7:56=E2=80=AFPM, Arnaldo Carvalho de Melo <acme@kernel=
+.org> wrote:
+>=20
+> On Thu, May 09, 2024 at 10:56:23PM +0530, Athira Rajeev wrote:
+>>=20
+>>=20
+>>> On 7 May 2024, at 3:05=E2=80=AFPM, Christophe Leroy <christophe.leroy@c=
+sgroup.eu> wrote:
+>>>=20
+>>>=20
+>>>=20
+>>> Le 06/05/2024 =C3=A0 14:19, Athira Rajeev a =C3=A9crit :
+>>>> Add support to capture and parse raw instruction in objdump.
+>>>=20
+>>> What's the purpose of using 'objdump' for reading raw instructions ?=20
+>>> Can't they be read directly without invoking 'objdump' ? It looks odd t=
+o=20
+>>> me to use objdump to provide readable text and then parse it back.
+>>=20
+>> Hi Christophe,
+>>=20
+>> Thanks for your review comments.
+>>=20
+>> Current implementation for data type profiling on X86 uses "objdump" too=
+l to get the disassembled code.
+>=20
+> commit 6d17edc113de1e21fc66afa76be475a4f7c91826
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Date:   Fri Mar 29 14:58:11 2024 -0700
+>=20
+>    perf annotate: Use libcapstone to disassemble
+>=20
+>    Now it can use the capstone library to disassemble the instructions.
+>    Let's use that (if available) for perf annotate to speed up.  Currently
+>    it only supports x86 architecture.  With this change I can see ~3x spe=
+ed
+>    up in data type profiling.
+>=20
+>    But note that capstone cannot give the source file and line number inf=
+o.
+>    For now, users should use the external objdump for that by specifying
+>    the --objdump option explicitly.
+>=20
+>    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>    Tested-by: Ian Rogers <irogers@google.com>
+>    Cc: Adrian Hunter <adrian.hunter@intel.com>
+>    Cc: Changbin Du <changbin.du@huawei.com>
+>    Cc: Ingo Molnar <mingo@kernel.org>
+>    Cc: Jiri Olsa <jolsa@kernel.org>
+>    Cc: Kan Liang <kan.liang@linux.intel.com>
+>    Cc: Peter Zijlstra <peterz@infradead.org>
+>    Link: https://lore.kernel.org/r/20240329215812.537846-5-namhyung@kerne=
+l.org
+>    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> From a quick look at http://www.capstone-engine.org/compile.html it
+> seems PowerPC is supported.
+>=20
+> But since we did it first with objdump output parsing, its good to have
+> it as an alternative and sometimes a fallback:
+
+Hi Arnaldo, Namhyung
+
+Thanks for the suggestions. libcapstone is a good option and it is faster t=
+oo.
+I will address these changes in V3.
+
+Thanks
+Athira
+>=20
+> commit f35847de2a65137e011e559f38a3de5902a5463f
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Date:   Wed Apr 24 17:51:56 2024 -0700
+>=20
+>    perf annotate: Fallback disassemble to objdump when capstone fails
+>=20
+>    I found some cases that capstone failed to disassemble.  Probably my
+>    capstone is an old version but anyway there's a chance it can fail.  A=
+nd
+>    then it silently stopped in the middle.  In my case, it didn't
+>    understand "RDPKRU" instruction.
+>=20
+>    Let's check if the capstone disassemble reached the end of the function
+>    and fallback to objdump if not
+>=20
+> ---------------
+>=20
+> - Arnaldo
+>=20
+>> And then the objdump result lines are parsed to get the instruction
+>> name and register fields. The initial patchset I posted to enable the
+>> data type profiling feature in powerpc was using the same way by
+>> getting disassembled code from objdump and parsing the disassembled
+>> lines. But in V2, we are introducing change for powerpc to use "raw
+>> instruction" and fetch opcode, reg fields from the raw instruction.
+>=20
+>> I tried to explain below that current objdump uses option
+>> "--no-show-raw-insn" which doesn't capture raw instruction.  So to
+>> capture raw instruction, V2 patchset has changes to use default option
+>> "--show-raw-insn" and get the raw instruction [ for powerpc ] along
+>> with human readable annotation [ which is used by other archs ]. Since
+>> perf tool already has objdump implementation in place, I went in the
+>> direction to enhance it to use "--show-raw-insn" for powerpc purpose.
+>=20
+>> But as you mentioned, we can directly read raw instruction without
+>> using "objdump" tool.  perf has support to read object code. The dso
+>> open/read utilities and helper functions are already present in
+>> "util/dso.c" And "dso__data_read_offset" function reads data from dso
+>> file offset. We can use these functions and I can make changes to
+>> directly read binary instruction without using objdump.
+>=20
+>> Namhyung, Arnaldo, Christophe
+>> Looking for your valuable feedback on this approach. Please suggest if t=
+his approach looks fine
+>>=20
+>>=20
+>> Thanks
+>> Athira
+>>>=20
+>>>> Currently, the perf tool infrastructure uses "--no-show-raw-insn" opti=
+on
+>>>> with "objdump" while disassemble. Example from powerpc with this option
+>>>> for an instruction address is:
+>>>=20
+>>> Yes and that makes sense because the purpose of objdump is to provide=20
+>>> human readable annotations, not to perform automated analysis. Am I=20
+>>> missing something ?
+>>>=20
+>>>>=20
+>>>> Snippet from:
+>>>> objdump  --start-address=3D<address> --stop-address=3D<address>  -d --=
+no-show-raw-insn -C <vmlinux>
+>>>>=20
+>>>> c0000000010224b4: lwz     r10,0(r9)
+>>>>=20
+>>>> This line "lwz r10,0(r9)" is parsed to extract instruction name,
+>>>> registers names and offset. Also to find whether there is a memory
+>>>> reference in the operands, "memory_ref_char" field of objdump is used.
+>>>> For x86, "(" is used as memory_ref_char to tackle instructions of the
+>>>> form "mov  (%rax), %rcx".
+>>>>=20
+>>>> In case of powerpc, not all instructions using "(" are the only memory
+>>>> instructions. Example, above instruction can also be of extended form =
+(X
+>>>> form) "lwzx r10,0,r19". Inorder to easy identify the instruction categ=
+ory
+>>>> and extract the source/target registers, patch adds support to use raw
+>>>> instruction. With raw instruction, macros are added to extract opcode
+>>>> and register fields.
+>>>>=20
+>>>> "struct ins_operands" and "struct ins" is updated to carry opcode and
+>>>> raw instruction binary code (raw_insn). Function "disasm_line__parse"
+>>>> is updated to fill the raw instruction hex value and opcode in newly
+>>>> added fields. There is no changes in existing code paths, which parses
+>>>> the disassembled code. The architecture using the instruction name and
+>>>> present approach is not altered. Since this approach targets powerpc,
+>>>> the macro implementation is added for powerpc as of now.
+>>>>=20
+>>>> Example:
+>>>> representation using --show-raw-insn in objdump gives result:
+>>>>=20
+>>>> 38 01 81 e8     ld      r4,312(r1)
+>>>>=20
+>>>> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+>>>> this translates to instruction form: "ld RT,DS(RA)" and binary code
+>>>> as:
+>>>> _____________________________________
+>>>> | 58 |  RT  |  RA |      DS       | |
+>>>> -------------------------------------
+>>>> 0    6     11    16              30 31
+>>>>=20
+>>>> Function "disasm_line__parse" is updated to capture:
+>>>>=20
+>>>> line:    38 01 81 e8     ld      r4,312(r1)
+>>>> opcode and raw instruction "38 01 81 e8"
+>>>> Raw instruction is used later to extract the reg/offset fields.
+>>>>=20
+>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>>> ---
+
+
