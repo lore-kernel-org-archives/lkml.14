@@ -1,70 +1,173 @@
-Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com [209.85.221.197])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72D613D240
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 09:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E549513D24C
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 09:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716455181; cv=none; b=N85HZAbMjv5+Oa0yfLa/uYxxc18z8P1rOyiN1l/4twQ9jtASYlwZOmHLnOakOGX1Kxh2wsL6frYRPc0cSLI3sYQ88yy1QagRCElB32GJaIqTUcjTp8tQs6c0RMQXGyw+tiPuHV+dgfJqI4VHGw42UrKgtB7CvDXFicp4xY7zX3g=
+	t=1716455203; cv=none; b=U6Lgx0f/vgRZwXuz17N3i1UnZiLZH0Z5J3EUGhUebqmyTJ/7hkY5mAngiArhwTX/M7rLihBkxoj7tL0bUza8McF1pyG/sTJC2qPVcAtEWyvqJCBfzagtsFfvmiVDu1FgxlHV9thMIsDtN55PvK4KqoCRI5xxkwiFTT9+m3I3Frs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716455181; c=relaxed/simple;
-	bh=OdtdJzYAd+u/w7dWIA7qTe3r8kOCrHwkEaugXhg4x3M=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=RFzY1xTF+Vkf2IcaAdcZ109h22SfVmyKcN5wUzJ0Acw//jk95/Yhexm1NsCUl6PgGEmkyvT3tK//8TYvrrAkj1yBGShMyL5XYX8sp3+AWqyWax3iCv9z6KquDgi/e8/P3LfFS9tKD9SdR3i1LWoInYuqMW8Cws1D4sHWdDkVqDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.221.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-vk1-f197.google.com with SMTP id 71dfb90a1353d-4df94adb21fso8171928e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:06:19 -0700 (PDT)
+	s=arc-20240116; t=1716455203; c=relaxed/simple;
+	bh=q+vWQ0wSq5VGqQvuf6ip+bl2B+qPr7a4L/s2DMEIKhc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cr+8+UeHwEQpZ3ibI14DnOAcJX9661tnvuzVEyUf2nZ1uw2aq04uCOufUC0C+UW3YUwI8xUgD+DJUfx7uZ+2/rK6eP1xrwRwlvQsftAi/i4jQXPDok4sOlZkHj0uii4aWMondND8DIAjWr3dIbeD3GeroLb/sC1xEjEaQ1pje1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yX0NSgue; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yX0NSgue"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a5d67064885so663079566b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716455200; x=1717060000; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KeTryMhYF8Bv+Eu9Cw5VgyH5Tkq4hHi6Ok4bLDS0p0g=;
+        b=yX0NSgue9VfB+w6TtG9dYlRpBMwq1cKYr24Wp/U5oMTiBvTTYhiJ8sbiu2xghwGuU1
+         7N/64ZIYKWjjCZUTuGX08iY4pa+11pgkLuj2vMewle6wQ0a2HuzhFCU5Tz8Jl/JBjsKU
+         5hnLoDDO4S7UinCziHZSiChCI0EB8baaQcSni4loGHeV1uLePI2y4L/jbRhuUe5qB2qE
+         BbZRQmGn05o429jG3McSIYOvGqUD0Q0pFMOD2UaKe5zpsVwoqdoNqbMWm/66Z7AkYm3c
+         4n1S4QzHXBYjnkQGnS7Nd4oFYclNFd6rqfZ0Xvx2kQtvl+GqrcMIjiQTqlL7Sg0O9EDq
+         WIxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716455179; x=1717059979;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vt9OxSenwNMjUZTwsENcm967tzGPQ6ORh01FGIrbvJY=;
-        b=VdbXlNk6fxAQj+Zw1/uwjCVJYERpTwafTOT3xxsapbgmkqYX3ybrxv8FpdqenuIRrQ
-         SEaPjsQMZXxTQHwnR+ebf0WxkvtoTCgTdVZc0qfjk31Tg+KEAv2hdshTa5wyeZo6SdLB
-         T4/3945PIOIPTrxEJPv+92RCGE9f5TtvKF2e0gmSREpTXasNKcwU7Ylavs4eDdv/i8hM
-         ZmcofAYrMOeU3YfTlmh/wULIMsEpWpWLlgpOPwWt2DDjRiXniBfJEQ5MRQk4asMfifd5
-         AYJ7iDVFZ2FYYzIzQtF4ajpwDGmAxAfN4mdlZjTXGQmwiYqe1VhIhqeqlkv/WP5PrWpk
-         yntQ==
-X-Gm-Message-State: AOJu0YxjfVQ27fubwOJfm3aCvt/nhlf++UdqPf/h3a+psjZHpy1jCuzy
-	P6DwQju0/V/vUYUXrU3Aa1hyLA0nm34bm8uXjrehfNnMVk4rU2PIYPBiszh1FIkhVL8bMB1FaiT
-	r8SUrjxUceAhy/LiiRrlsSX876hSJqqdhac4k8nNxfkPAjHgwI3M5eCc=
-X-Google-Smtp-Source: AGHT+IG3ZeB4Al3FXr3rW+0fVUTT0GZl85iR0ZJk1ujBdS7m/Pr2Tn0LebZXAr+dGO3sNXsjnGA2xmVE9HXNldwDvrLZUux9keD4
+        d=1e100.net; s=20230601; t=1716455200; x=1717060000;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KeTryMhYF8Bv+Eu9Cw5VgyH5Tkq4hHi6Ok4bLDS0p0g=;
+        b=XAlreaZfn+NW+DBJ4Z6J9aS+v0PXABlQx9W3r1o0/L4syruzmY+c0Gc0oYF54JeHJ/
+         XdfwwIdY6JQKuuxmRZGMrGbBLltu3mt5KyN+cDAzJyaCfzK0tAA/dOkP0iVe/F7ttXcM
+         niQnQPzlvkze0b9ivnl1F4Kj/rLe/MORI4gkRyFq+G2hohkzTO8CBbpZdtyO91HDVK4G
+         Ksuy5FnKzyctq+508kuiJ1pEOdG5F0YSM+bKScPinAA8cw2hhLAFBFkOJvZrtNNoKzFx
+         u4nZDKue9/IuYzLzL3Uymnjj5bEfr74f20hFMVKu/8ah+Da4ps2kP2NSfu6eW0Lg+DB+
+         Aq8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWLZpPbZTRMmrTMXdpJciBNOtgJmWuBJ3z6pSRQbC6OlpuDY3iRxB/ZeLEl8acWgODS83CdrHLUDtv1V6OK9nBpiaVywbhMXAYFE2jj
+X-Gm-Message-State: AOJu0YwIA31buksCnhd2ORkSI3BCxZG02QO/fPVmldmzeyHbju/Z0KzC
+	N0NqJY/kI/zaQDBfoDWv5Eu/qfgQUO+VnOyPjsxzIkeHC7NnX2wBC0D4mIwMGbI=
+X-Google-Smtp-Source: AGHT+IEs1c5xO8f7f8eqHoNwr3xE5DYwUOIKsTj7els7FbsktBhUyhhk9D0XSIWDR3Tha3n4T/gYAg==
+X-Received: by 2002:a17:906:1593:b0:a59:c2c3:bb4c with SMTP id a640c23a62f3a-a622820a6abmr368800266b.70.1716455199946;
+        Thu, 23 May 2024 02:06:39 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:825d:600a:c16:a973? ([2a01:e0a:982:cbb0:825d:600a:c16:a973])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d2dcsm1904867366b.44.2024.05.23.02.06.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 May 2024 02:06:39 -0700 (PDT)
+Message-ID: <cbc8a2c6-0047-4345-8c93-afdba9c2bd10@linaro.org>
+Date: Thu, 23 May 2024 11:06:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20eb:b0:36d:e026:88f9 with SMTP id
- e9e14a558f8ab-371fa9746d9mr3751495ab.4.1716454683388; Thu, 23 May 2024
- 01:58:03 -0700 (PDT)
-Date: Thu, 23 May 2024 01:58:03 -0700
-In-Reply-To: <20240523083332.761304-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ad3d1306191b3fd3@google.com>
-Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
-From: syzbot <syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH RFT 0/7] arm64: qcom: allow up to 4 lanes for the Type-C
+ DisplayPort Altmode
+To: Luca Weiss <luca.weiss@fairphone.com>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-0-07e24a231840@linaro.org>
+ <CZUHV429NTF7.1GW9TN9NXB4J1@fairphone.com>
+ <7a7aa05f-9ae6-4ca0-a423-224fc78fbd0c@linaro.org>
+ <liah4xvkfattlen7s2zi3vt2bl5pbbxqgig3k5ljqpveoao656@iacnommxkjkt>
+ <236a104c-fc16-4b3d-9a00-e16517c00e3a@linaro.org>
+ <D064242SMIVM.1GUC1I9GE9IGC@fairphone.com>
+ <963b60e5-6ab7-4d9f-885a-ba744c2b7991@linaro.org>
+ <D0C42YR1270X.23P9WCWWNB8XF@fairphone.com>
+ <f2d96f99-d8ac-4ff1-83fa-742e541565e4@linaro.org>
+ <864063fb-eeae-4eb7-9089-0d98011a0343@linaro.org>
+ <D15RKEU49B4G.1B6A2MYB4LH3X@fairphone.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <D15RKEU49B4G.1B6A2MYB4LH3X@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Lucas,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+On 10/05/2024 08:51, Luca Weiss wrote:
+> On Tue Apr 23, 2024 at 4:08 PM CEST,  wrote:
+>> On 23/04/2024 15:03, Konrad Dybcio wrote:
+>>>
+>>>
+>>> On 4/5/24 12:19, Luca Weiss wrote:
 
-Reported-and-tested-by: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
+<snip>
 
-Tested on:
+> 
+> Next, with DP 4 lane (not working on mainline but still plugged into a
+> screen) the diff is quite a bit bigger.
+> 
+> See attachments for the full files:
+> * usb_1_qmpphy_20240503_151052_android_4lane.txt
+> * usb_1_qmpphy_20240503_122443_mainline_4lane.txt
+> 
+> Not attaching the diff because it's quite a lot
+> $ diff --ignore-case -U0 usb_1_qmpphy_20240503_151052_android_4lane.txt usb_1_qmpphy_20240503_122443_mainline_4lane.txt
+> 
+> Not sure this is helpful to anyone, but at least wanted to share what
+> I've done so far here.
 
-commit:         33e02dc6 Merge tag 'sound-6.10-rc1' of git://git.kerne..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=12096df0980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=25544a2faf4bae65
-dashboard link: https://syzkaller.appspot.com/bug?extid=d2125fcb6aa8c4276fd2
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10f9903c980000
+Thanks a lot for the traces, it founds out the QPHY_V3_DP_COM_PHY_MODE_CTRL stays at 0x3,
+which means the mode doesn't get broadcasted to the phy because.... the retimer only broadcasts
+the orientation and not the mode... and it works on the HDKs and the X13s because they don't have retimers.
 
-Note: testing is done by a robot and is best-effort only.
+So I made the changes in nb7vpq904m and ptn36502 drivers to get the next mux and broadcast the typec mode,
+if you find time could you test it ?
+
+Bjorn could you also test on the rb3gen2 ?
+
+The changes:
+https://git.codelinaro.org/neil.armstrong/linux/-/commit/a61fb3b816ecbe28a12480367d9e09b700ec09e1
+https://git.codelinaro.org/neil.armstrong/linux/-/commit/f6f976ff692bad430cd945f02b835e355f19632b
+
+Thanks,
+Neil
+
+> 
+> Regards
+> Luca
+> 
+>>
+>> Neil
+>>
+>>>
+>>> Konrad
+> 
+> 
+
