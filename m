@@ -1,131 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA32F84A4A
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 21:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27090127E37;
+	Thu, 23 May 2024 21:23:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716499400; cv=none; b=Yy6j/n9CZ+MzjbKntosrcyc4/Hosj030rXd3vyGgDe3jA7lbFwjqHyxyJlDisSXIE/wkgfW9j5vzlqV3k1HbLlbzsxLnxdSr6DpMQHl6ojp7s5Ht47GrUTiocPRMjwQEkFlPo3pM3iton3tOpALi/Nr75sZY9B6PKw/TCNHrz5U=
+	t=1716499401; cv=none; b=UVvCbmKpv9HGpNK80uJZ6bKAYGoSBaMVHBYNXlj4IAq1+qPszqNllQ8QZaVDDAd4GgarCPjlyXO4fV/n3bNkYb1hc/7jjrTXo+q/L2GsP+VeGXb9fIaKpY+zuuhVsKbfVHnGyziN9S2aNk/8wu5j1b7m0sE/HaIUAN9NYLcqaGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716499400; c=relaxed/simple;
-	bh=eCaK6AOtypjDuj8nL8hZhpELyVdnXnC1G45BHVX2z3c=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=CU9F0ICmMQcIZ59VJpQ8xnfQ/b9Ggy3ho8QJ5l71qX4Dz07Jubm9ID6wD6pL0XicIT1ap/ac5qaIN42KK8+mWp8c7UU329BeRjh8SsZ3jdFYr/judtJeyx42rNzl4Hxql1Kc1jG+mNGM4HgT03a5VYcMp21znANWck8i9cVmx1Q=
+	s=arc-20240116; t=1716499401; c=relaxed/simple;
+	bh=bJ2R3MSjdttfi5d4JxJUeNoOGiEyHkNCTslsz8LEmK0=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=kIo3MBB8g4dAPlOLjidyk7HIgWnKDDNF8fhqXBWyska+Urph6wBUfFY36tOLxNKnFXoeonEL+DvRsfkR5afjLpLPiwRimTN8eVyw7zXy6MZHxxTjW+5JWP8bhbWHEefyAmvAASIZKOwke8hwVRRJdbXiDjZByQZKW/SSKTI37sI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71975C2BD10;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7BD2C4AF0A;
 	Thu, 23 May 2024 21:23:20 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sAFuw-00000006l7j-0Ha2;
+	id 1sAFuw-00000006l9D-2KmT;
 	Thu, 23 May 2024 17:24:06 -0400
-Message-ID: <20240523212258.883756004@goodmis.org>
+Message-ID: <20240523212406.414851880@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 23 May 2024 17:22:58 -0400
+Date: Thu, 23 May 2024 17:23:01 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>
-Subject: [for-linus][PATCH 0/8] tracefs/eventfs: Fixes and cleanups for v6.10
+ Masahiro Yamada <masahiroy@kernel.org>,
+ stable@vger.kernel.org
+Subject: [for-linus][PATCH 3/8] eventfs: Update all the eventfs_inodes from the events descriptor
+References: <20240523212258.883756004@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+
+The change to update the permissions of the eventfs_inode had the
+misconception that using the tracefs_inode would find all the
+eventfs_inodes that have been updated and reset them on remount.
+The problem with this approach is that the eventfs_inodes are freed when
+they are no longer used (basically the reason the eventfs system exists).
+When they are freed, the updated eventfs_inodes are not reset on a remount
+because their tracefs_inodes have been freed.
+
+Instead, since the events directory eventfs_inode always has a
+tracefs_inode pointing to it (it is not freed when finished), and the
+events directory has a link to all its children, have the
+eventfs_remount() function only operate on the events eventfs_inode and
+have it descend into its children updating their uid and gids.
+
+Link: https://lore.kernel.org/all/CAK7LNARXgaWw3kH9JgrnH4vK6fr8LDkNKf3wq8NhMWJrVwJyVQ@mail.gmail.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20240523051539.754424703@goodmis.org
+
+Cc: stable@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Fixes: baa23a8d4360d ("tracefs: Reset permissions on remount if permissions are options")
+Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 44 ++++++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 13 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 5dfb1ccd56ea..129d0f54ba62 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -305,27 +305,27 @@ static const struct file_operations eventfs_file_operations = {
+ 	.llseek		= generic_file_llseek,
+ };
+ 
+-/*
+- * On a remount of tracefs, if UID or GID options are set, then
+- * the mount point inode permissions should be used.
+- * Reset the saved permission flags appropriately.
+- */
+-void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
++static void eventfs_set_attrs(struct eventfs_inode *ei, bool update_uid, kuid_t uid,
++			      bool update_gid, kgid_t gid, int level)
+ {
+-	struct eventfs_inode *ei = ti->private;
++	struct eventfs_inode *ei_child;
+ 
+-	if (!ei)
++	/* Update events/<system>/<event> */
++	if (WARN_ON_ONCE(level > 3))
+ 		return;
+ 
+ 	if (update_uid) {
+ 		ei->attr.mode &= ~EVENTFS_SAVE_UID;
+-		ei->attr.uid = ti->vfs_inode.i_uid;
++		ei->attr.uid = uid;
+ 	}
+ 
+-
+ 	if (update_gid) {
+ 		ei->attr.mode &= ~EVENTFS_SAVE_GID;
+-		ei->attr.gid = ti->vfs_inode.i_gid;
++		ei->attr.gid = gid;
++	}
++
++	list_for_each_entry(ei_child, &ei->children, list) {
++		eventfs_set_attrs(ei_child, update_uid, uid, update_gid, gid, level + 1);
+ 	}
+ 
+ 	if (!ei->entry_attrs)
+@@ -334,13 +334,31 @@ void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
+ 	for (int i = 0; i < ei->nr_entries; i++) {
+ 		if (update_uid) {
+ 			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_UID;
+-			ei->entry_attrs[i].uid = ti->vfs_inode.i_uid;
++			ei->entry_attrs[i].uid = uid;
+ 		}
+ 		if (update_gid) {
+ 			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_GID;
+-			ei->entry_attrs[i].gid = ti->vfs_inode.i_gid;
++			ei->entry_attrs[i].gid = gid;
+ 		}
+ 	}
++
++}
++
++/*
++ * On a remount of tracefs, if UID or GID options are set, then
++ * the mount point inode permissions should be used.
++ * Reset the saved permission flags appropriately.
++ */
++void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
++{
++	struct eventfs_inode *ei = ti->private;
++
++	/* Only the events directory does the updates */
++	if (!ei || !ei->is_events || ei->is_freed)
++		return;
++
++	eventfs_set_attrs(ei, update_uid, ti->vfs_inode.i_uid,
++			  update_gid, ti->vfs_inode.i_gid, 0);
+ }
+ 
+ /* Return the evenfs_inode of the "events" directory */
+-- 
+2.43.0
 
 
-tracefs/eventfs fixes and updates for v6.10:
-
-Bug fixes:
-
-- The eventfs directories need to have unique inode numbers. Make sure that
-  they do not get the default file inode number.
-
-- Update the inode uid and gid fields on remount.
-  When a remount happens where a uid and/or gid is specified, all the tracefs
-  files and directories should get the specified uid and/or gid. But this
-  can be sporadic when some uids were assigned already. There's already
-  a list of inodes that are allocated. Just update their uid and gid fields
-  at the time of remount.
-
-- Update the eventfs_inodes on remount from the top level "events" descriptor.
-  There was a bug where not all the eventfs files or directories where
-  getting updated on remount. One fix was to clear the SAVED_UID/GID
-  flags from the inode list during the iteration of the inodes during
-  the remount. But because the eventfs inodes can be freed when the last
-  referenced is released, not all the eventfs_inodes were being updated.
-  This lead to the ownership selftest to fail if it was run a second
-  time (the first time would leave eventfs_inodes with no corresponding
-  tracefs_inode).
-
-  Instead, for eventfs_inodes, only process the "events" eventfs_inode
-  from the list iteration, as it is guaranteed to have a tracefs_inode
-  (it's never freed while the "events" directory exists). As it has
-  a list of its children, and the children have a list of their children,
-  just iterate all the eventfs_inodes from the "events" descriptor and
-  it is guaranteed to get all of them.
-
-- Clear the EVENT_INODE flag from the tracefs_drop_inode() callback.
-  Currently the EVENTFS_INODE FLAG is cleared in the tracefs_d_iput()
-  callback. But this is the wrong location. The iput() callback is
-  called when the last reference to the dentry inode is hit. There could
-  be a case where two dentry's have the same inode, and the flag will
-  be cleared prematurely. The flag needs to be cleared when the last
-  reference of the inode is dropped and that happens in the inode's
-  drop_inode() callback handler.
-
-Clean ups:
-
-- Consolidate the creation of a tracefs_inode for an eventfs_inode
-  A tracefs_inode is created for both files and directories of the
-  eventfs system. It is open coded. Instead, consolidate it into a
-  single eventfs_get_inode() function call.
-
-- Remove the eventfs getattr and permission callbacks.
-  The permissions for the eventfs files and directories are updated
-  when the inodes are created, on remount, and when the user sets
-  them (via setattr). The inodes hold the current permissions so
-  there is no need to have custom getattr or permissions callbacks
-  as they will more likely cause them to be incorrect. The inode's
-  permissions are updated when they should be updated. Remove the
-  getattr and permissions inode callbacks.
-
-- Do not update eventfs_inode attributes on creation of inodes.
-  The eventfs_inodes attribute field is used to store the permissions
-  of the directories and files for when their corresponding inodes
-  are freed and are created again. But when the creation of the inodes
-  happen, the eventfs_inode attributes are recalculated. The
-  recalculation should only happen when the permissions change for
-  a given file or directory. Currently, the attribute changes are
-  just being set to their current files so this is not a bug, but
-  it's unnecessary and error prone. Stop doing that.
-
-- The events directory inode is created once when the events directory
-  is created and deleted when it is deleted. It is now updated on
-  remount and when the user changes the permissions. There's no need
-  to use the eventfs_inode of the events directory to store the
-  events directory permissions. But using it to store the default
-  permissions for the files within the directory that have not been
-  updated by the user can simplify the code.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-eventfs/urgent
-
-Head SHA1: 2dd00ac1d38afba1b59e439abc300a9b0ce696bf
-
-
-Steven Rostedt (Google) (8):
-      eventfs: Keep the directories from having the same inode number as files
-      tracefs: Update inode permissions on remount
-      eventfs: Update all the eventfs_inodes from the events descriptor
-      tracefs: Clear EVENT_INODE flag in tracefs_drop_inode()
-      eventfs: Consolidate the eventfs_inode update in eventfs_get_inode()
-      eventfs: Remove getattr and permission callbacks
-      eventfs: Cleanup permissions in creation of inodes
-      eventfs: Do not use attributes for events directory
-
-----
- fs/tracefs/event_inode.c | 223 ++++++++++++++++++-----------------------------
- fs/tracefs/inode.c       |  48 ++++++----
- 2 files changed, 116 insertions(+), 155 deletions(-)
