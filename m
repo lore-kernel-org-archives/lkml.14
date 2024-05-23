@@ -1,152 +1,111 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DD26FCC;
-	Thu, 23 May 2024 02:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379861879
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716430539; cv=none; b=ly/TEDHx+uqkHGl04kJdSzPxmg5xlGIXOfi0xyTNR3m5T4Wu+HINCjPViyhnu6lvXFAZdyKnRn4FrIhDvTpBAonUqzfov/ZUu9UK16GX0S6Ovz+1zpCPuVn8IINQKJeLcA19kIksIoSxiojNF8Rh5e/zyHiut0xJltQ6ul7Y70Q=
+	t=1716430827; cv=none; b=ZvbK+6wSiV0QxyaPL6gu77rYwVWpeiszBVaqIk1gKKUt33oT/9jY0uGW8d8wQjR8Fa93ZavBGgFirEFFi4h1nD2zVp5fnbSMBgUmjcZYpF5jOPoPrd4M4azO9N6s0TS1ePCxDpZ10E9aNULRvEXflLmLHP9Zmgm++h/4kk8WU28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716430539; c=relaxed/simple;
-	bh=Rz/pzibnlbL3tWRpV3ly6iHU47rBqQBAtbvLNaBhy9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YpaR5tCSb3bQIFjSEUI1K3aZVsTWpnYYnLVY/hOd/R1Z5NThxkCal/EyvXWX8P47qPyQGJqVpr/4LSbkWoIEip3FQ22pdGIyqBFH326OiN2g3NMQk3qtHcDZjMpoypzaSOwDUyFxtO/PxMSeonxXOm6G3FjtxM9R7xs5aVHxG08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bWgRLIhW; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716430827; c=relaxed/simple;
+	bh=NJXcidCTRToYs0IwR46zej5GAyPnVh2cP1Z9J0t//Yc=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HxcTjF0G0B8Nj5TIgxk7FeH8Sc7PDcjRONG85OI39VStWtrYKfWcMzC9K5wTVmBlbyb7mTOZJTo48n1uMJ6szQumEdsQrVyJBOdIK7z8e3oP5Za7wtElcyiUQeGKDfQwBeag9EUWuBjz+TcVU/iRvrq6sksNPIqwlLQLxds8ZHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=lCQztU9y reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWgRLIhW"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5b277a61f6fso637969eaf.1;
-        Wed, 22 May 2024 19:15:37 -0700 (PDT)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="lCQztU9y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716430536; x=1717035336; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uavZbL9YXxvdslM8FaHJLyH+/Wb+KYBkn+bR0P0W3V8=;
-        b=bWgRLIhWZfSOt7eUwQnhuO+ZAyuQKsZUHhpolRZPFRv/X/AcAln1xSlgO/qZqZXwQm
-         mEze6AFbuULyBFdpaS3HEzWK5i0nA3LUAKwKOe/92Gn2OoLO0Nh+aizEMsr/oH2aqBN4
-         Wf3HXCWwrFIqryIV7RmLTWGfrFqPvaFnOwbbxirNtBIfOR5D7Ux9fmfhVv+WQACg6yXi
-         ZalZd0y3mveP13TD2Pdp1B9JIuMA8vGldxAQaUAx0eqCBKZlen/5WXxT+53Kkl4cQ+NV
-         KP35sXhsbB/sbmupzsyQu2nCMlAU9z5cLb8L5HwEJZTB/OQQvT893qaPpWho4gKtA//y
-         +0Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716430536; x=1717035336;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uavZbL9YXxvdslM8FaHJLyH+/Wb+KYBkn+bR0P0W3V8=;
-        b=ZX7YJ/UnbqijggmYVZgbgyhNCzjbj50Eg15XQ+N2zKpughLq7Mg0Xvc61JsK4I1h4C
-         DEXS/Ph6r+g1a7w5qm3/owVlu8ZcZnIxm/rsZfYc0VLYSe894cUwDbozl4kfqBGDoZEo
-         Dqx8iI/hfNOR9XBY8tlnwdSUggylyOV9rflhKN6Vptje2NdJ/omLpZKpvFMwTMpgWPYn
-         bUw7JZNSOvz41aS6PjQa28zI7r1I3SbDVXJYzmjHIiONMv+sVMNiqAUmjclrNytB0SVT
-         r4fES60fb5FbGkxSqM3wOEsrFLzOsZtvQELq98ghkD4MdG4ZAl2SVLrAS6fYMGlg3v9c
-         u5bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJKOqOQl6tSxS9PpDykX3KY6jHa7WGCZ+WJns0zf+wyGmetBJSv5TEoCKs3z2PKuJBoJY50hI2Mq7NEv8h3CHDpOAptJKoJWiC6xRpS6IxizMXN4NQBErwwgsjH2+K1ICWtFtZgMfWCN4=
-X-Gm-Message-State: AOJu0Ywp64yiYmCSYaQnwHkBydL9QGzMLqibMyNeidaijLfft5L7w7u9
-	EM2qt3DpsM8HHpVEhE6Le1WRfcuEOfMQZYy0n1Zl4/haFo9ASTD4BeEz3cD5bRB04/jPBveoUcV
-	s/T2IJ9w1kJGpmWvM5/gYqtNJsd8=
-X-Google-Smtp-Source: AGHT+IEj8CnFH5Ic4JJaIct67WmH5WU7V6wZU2RRtKRP2jz7hXvaccMyG9BQ9l1ZwIP0HkaKwmH78wp9Pgax2XYPdIA=
-X-Received: by 2002:a4a:d81a:0:b0:5b5:1b3f:e5f6 with SMTP id
- 006d021491bc7-5b7fe7a68b3mr508224eaf.3.1716430536471; Wed, 22 May 2024
- 19:15:36 -0700 (PDT)
+  d=ite.com.tw; s=dkim;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=NJXcidCTRToYs0IwR46zej5GAyPnVh2cP1Z9J0t//Yc=;
+  b=lCQztU9yDc7R3zhJli+6sXgEcCATROeRrD/Fm075bdPUqYJb0jZg4bqB
+   3y9RKECjRPU+IsR5E8QN0U+EvfwNy0lHxS6heYJhy907p4bBmcNyrQt1Z
+   ResmkNZ937deTVIGWCcq7Rok1lJZdWklhE9hcF8c8fgz4kkdutAhQvWXW
+   HyQUJHaGYmpWMoTfATOuDBJFwKDrKGLVuCYVFy3C4641h4E+bCJJcV1A4
+   ulk2la+/NZTyNhZJgN4OEvyOCv0/2dr5K9CZeICzzGmLD//YJsXlY6mgz
+   rQNg1UGtKUPGlHOpE7ImAfaUQ39+GyyRyegJMVr3734DqC1CzysnMbtmP
+   g==;
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 23 May 2024 10:20:16 +0800
+Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
+	by mse.ite.com.tw with ESMTP id 44N2KBir068194;
+	Thu, 23 May 2024 10:20:11 +0800 (GMT-8)
+	(envelope-from kuro.chung@ite.com.tw)
+Received: from CSBMAIL1.internal.ite.com.tw (192.168.65.58) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 23 May 2024 10:20:10 +0800
+Received: from CSBMAIL1.internal.ite.com.tw ([fe80::c9da:6689:2b22:a2d6]) by
+ CSBMAIL1.internal.ite.com.tw ([fe80::c9da:6689:2b22:a2d6%3]) with mapi id
+ 15.01.2507.035; Thu, 23 May 2024 10:20:10 +0800
+From: <kuro.chung@ite.com.tw>
+To: <rfoss@kernel.org>, <mripard@kernel.org>, <tzimmermann@suse.de>,
+        <jonas@kwiboo.se>, <daniel@ffwll.ch>,
+        <angelogioacchino.delregno@collabora.com>, <allen.chen@ite.com.tw>,
+        <neil.armstrong@linaro.org>, <Laurent.pinchart@ideasonboard.com>,
+        <maarten.lankhorst@linux.intel.com>, <airlied@gmail.com>,
+        <Kenneth.Hung@ite.com.tw>, <dri-devel@lists.freedesktop.org>,
+        <treapking@chromium.org>, <andrzej.hajda@intel.com>,
+        <jernej.skrabec@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <Hermes.Wu@ite.com.tw>
+Subject: RE: [PATCH v13] drm/bridge: it6505: fix hibernate to resume no
+ display issue
+Thread-Topic: [PATCH v13] drm/bridge: it6505: fix hibernate to resume no
+ display issue
+Thread-Index: AQHarEF1RyVNwB74Y0uCe4AHqbJSWrGkFYQA
+Date: Thu, 23 May 2024 02:20:10 +0000
+Message-ID: <39420a7df0884000b993dea89c124b57@ite.com.tw>
+References: <20240522065528.1053439-1-kuro.chung@ite.com.tw>
+ <171637999486.1598011.4983921044000498146.b4-ty@kernel.org>
+In-Reply-To: <171637999486.1598011.4983921044000498146.b4-ty@kernel.org>
+Accept-Language: en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tm-snts-smtp: 3E144EBE72A89DF0D9F0957737E552CFF494FD81F32C04417334BFC8901874A42002:8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522074829.1750204-1-yunlong.xing@unisoc.com>
- <5166bc31-1fd9-4f7f-bc51-f1f50d9d5483@acm.org> <68cfbc08-6d39-4bc6-854d-5df0c94dbfd4@kernel.dk>
- <f6d3e1f2-e004-49bb-b6c1-969915ccab37@acm.org> <d9795483-ef64-4fd6-be71-a3946ae8fb3e@kernel.dk>
-In-Reply-To: <d9795483-ef64-4fd6-be71-a3946ae8fb3e@kernel.dk>
-From: yunlong xing <yunlongxing23@gmail.com>
-Date: Thu, 23 May 2024 10:15:25 +0800
-Message-ID: <CA+3AYtTpCC3g+31NDPFt4F58h_a43C+tTAXPTrFV5C_rmw=PYw@mail.gmail.com>
-Subject: Re: [PATCH] loop: inherit the ioprio in loop woker thread
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Bart Van Assche <bvanassche@acm.org>, Yunlong Xing <yunlong.xing@unisoc.com>, niuzhiguo84@gmail.com, 
-	Hao_hao.Wang@unisoc.com, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MAIL:mse.ite.com.tw 44N2KBir068194
 
-On Thu, May 23, 2024 at 2:13=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 5/22/24 12:12 PM, Bart Van Assche wrote:
-> > On 5/22/24 10:57, Jens Axboe wrote:
-> >> On 5/22/24 11:38 AM, Bart Van Assche wrote:
-> >>> On 5/22/24 00:48, Yunlong Xing wrote:
-> >>>> @@ -1913,6 +1921,10 @@ static void loop_handle_cmd(struct loop_cmd *=
-cmd)
-> >>>>            set_active_memcg(old_memcg);
-> >>>>            css_put(cmd_memcg_css);
-> >>>>        }
-> >>>> +
-> >>>> +    if (ori_ioprio !=3D cmd_ioprio)
-> >>>> +        set_task_ioprio(current, ori_ioprio);
-> >>>> +
-> >>>>     failed:
-> >>>>        /* complete non-aio request */
-> >>>>        if (!use_aio || ret) {
-> >>>
-> >>> Does adding this call in the hot path have a measurable performance i=
-mpact?
-> >>
-> >> It's loop, I would not be concerned with overhead. But it does look pr=
-etty
-> >> bogus to modify the task ioprio from here.
-> >
-> > Hi Jens,
-> >
-> > Maybe Yunlong uses that call to pass the I/O priority to the I/O submit=
-ter?
-> >
-> > I think that it is easy to pass the I/O priority to the kiocb submitted=
- by
-> > lo_rw_aio() without calling set_task_ioprio().
->
-> Yeah that was my point, it's both the completely wrong way to do it, nor
-> is it a sane way to do it. If the current stack off that doesn't allow
-> priority to be passed, then that work would need to be done first.
->
-> --
-> Jens Axboe
->
-Hi jens and bart=EF=BC=8C
-
-Please let me explain the problem I'm having. There are many system service
-processes in the Android system that access loop devices. The tasks of thes=
-e
-system services themselves have high IO priorities.
-
-In the I/O stress tests such as filling disks, some disk devices like
-emmc will cause
-serious slowdowns. So now the disk speed is very slow, and there are still =
-many
-requests that need to be processed. I/O requests from system service taskes=
- with
-high I/O priority should be prioritized over filling disk task with
-low I/O priority. The
-purpose is that the I/O requests of the system service process are processe=
-d as
-quickly as possible, without causing some stability problems due to being i=
-n the
-ioschdule state for a long time. However, these system service taskes acces=
-s the
-loop device. If the priority cannot be passed, the I/O requests
-submitted to the real
-disk device through the loop kwoker cannot be prioritized over the I/O
-requests of
-the filling disk task. Then the complete process of system process accessin=
-g the
-loop device will take a very long time.
-
-So the purpose of what I do is to let the I/O priority of the task
-accessing the loop
-device pass to the kworker process that submit i/o to the real disk
-device. Do you
-think the io priority of the task accessing the loop device should not
-be passed to
-the kwoker task? Do you have any suggestions for my above-mentioned questio=
-ns?
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBSb2JlcnQgRm9zcyA8cmZvc3NA
+a2VybmVsLm9yZz4gDQpTZW50OiBXZWRuZXNkYXksIE1heSAyMiwgMjAyNCA4OjEzIFBNDQpUbzog
+TWF4aW1lIFJpcGFyZCA8bXJpcGFyZEBrZXJuZWwub3JnPjsgVGhvbWFzIFppbW1lcm1hbm4gPHR6
+aW1tZXJtYW5uQHN1c2UuZGU+OyBKb25hcyBLYXJsbWFuIDxqb25hc0Brd2lib28uc2U+OyBEYW5p
+ZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+OyBBbmdlbG9HaW9hY2NoaW5vIERlbCBSZWdubyA8
+YW5nZWxvZ2lvYWNjaGluby5kZWxyZWdub0Bjb2xsYWJvcmEuY29tPjsgQWxsZW4gQ2hlbiA8YWxs
+ZW4uY2hlbkBpdGUuY29tLnR3PjsgTmVpbCBBcm1zdHJvbmcgPG5laWwuYXJtc3Ryb25nQGxpbmFy
+by5vcmc+OyBMYXVyZW50IFBpbmNoYXJ0IDxMYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5j
+b20+OyBNYWFydGVuIExhbmtob3JzdCA8bWFhcnRlbi5sYW5raG9yc3RAbGludXguaW50ZWwuY29t
+PjsgRGF2aWQgQWlybGllIDxhaXJsaWVkQGdtYWlsLmNvbT47IEt1cm8gQ2h1bmcgKOmQmOS7leW7
+tykgPGt1cm8uY2h1bmdAaXRlLmNvbS50dz47IEtlbm5ldGggSHVuZyAo5rSq5a625YCrKSA8S2Vu
+bmV0aC5IdW5nQGl0ZS5jb20udHc+OyBvcGVuIGxpc3Q6RFJNIERSSVZFUlMgPGRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmc+OyBQaW4teWVuIExpbiA8dHJlYXBraW5nQGNocm9taXVtLm9y
+Zz47IEFuZHJ6ZWogSGFqZGEgPGFuZHJ6ZWouaGFqZGFAaW50ZWwuY29tPjsgSmVybmVqIFNrcmFi
+ZWMgPGplcm5lai5za3JhYmVjQGdtYWlsLmNvbT47IG9wZW4gbGlzdCA8bGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZz47IEhlcm1lcyBXdSAo5ZCz5L2z5a6PKSA8SGVybWVzLld1QGl0ZS5jb20u
+dHc+DQpTdWJqZWN0OiBSZTogW1BBVENIIHYxM10gZHJtL2JyaWRnZTogaXQ2NTA1OiBmaXggaGli
+ZXJuYXRlIHRvIHJlc3VtZSBubyBkaXNwbGF5IGlzc3VlDQoNCk9uIFdlZCwgMjIgTWF5IDIwMjQg
+MTQ6NTU6MjggKzA4MDAsIGt1cm8gd3JvdGU6DQo+IEZyb206IEt1cm8gQ2h1bmcgPGt1cm8uY2h1
+bmdAaXRlLmNvbS50dz4NCj4gDQo+IFdoZW4gdGhlIHN5c3RlbSBwb3dlciByZXN1bWVzLCB0aGUg
+VFRMIGlucHV0IG9mIElUNjUwNSBtYXkgZXhwZXJpZW5jZSANCj4gc29tZSBub2lzZSBiZWZvcmUg
+dGhlIHZpZGVvIHNpZ25hbCBzdGFiaWxpemVzLCBuZWNlc3NpdGF0aW5nIGEgdmlkZW8gDQo+IHJl
+c2V0LiBUaGlzIHBhdGNoIGlzIGltcGxlbWVudGVkIHRvIHByZXZlbnQgYSBsb29wIG9mIHZpZGVv
+IGVycm9yIA0KPiBpbnRlcnJ1cHRzLCB3aGljaCBjYW4gb2NjdXIgd2hlbiBhIHZpZGVvIHJlc2V0
+IGluIHRoZSB2aWRlbyBGSUZPIGVycm9yIA0KPiBpbnRlcnJ1cHQgdHJpZ2dlcnMgYW5vdGhlciBz
+dWNoIGludGVycnVwdC4gVGhlIHBhdGNoIHByb2Nlc3NlcyB0aGUgDQo+IFNDRFQgYW5kIEZJRk8g
+ZXJyb3IgaW50ZXJydXB0cyBzaW11bHRhbmVvdXNseSBhbmQgaWdub3JlcyBhbnkgdmlkZW8gDQo+
+IEZJRk8gZXJyb3IgaW50ZXJydXB0cyBjYXVzZWQgYnkgYSB2aWRlbyByZXNldC4NCj4gDQo+IFsu
+Li5dDQoNCkFwcGxpZWQsIHRoYW5rcyENCj4gdGhhbmtzIGV2ZXJ5b25lIGZvciB5b3VyIGhlbHAh
+LCBJIHJlYWxseSBhcHByZWNpYXRlIGl0Lg0KDQpbMS8xXSBkcm0vYnJpZGdlOiBpdDY1MDU6IGZp
+eCBoaWJlcm5hdGUgdG8gcmVzdW1lIG5vIGRpc3BsYXkgaXNzdWUNCiAgICAgIGh0dHBzOi8vY2dp
+dC5mcmVlZGVza3RvcC5vcmcvZHJtL2RybS1taXNjL2NvbW1pdC8/aWQ9NDg0NDM2ZWM1YzJiDQoN
+Cg0KDQpSb2INCg0K
