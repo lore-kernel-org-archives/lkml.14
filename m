@@ -1,230 +1,115 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A4417EF;
-	Thu, 23 May 2024 01:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067E11852
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 01:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716426799; cv=none; b=slX7gEce0tzWVNfNafvCJmReDQx5KLEUQ0D9PkdjzW2iOlhCSMBt3ML/qguw2Vi9fm4tvgu5m9b2Gor7iy7iJmOsGx/CCGePgXc4xk9le9psmXsVNldLeC0KoMXLc0kcCKTrX0abx8l06/VvBabilAkYwj/l/Rfoe0azRJP/4xU=
+	t=1716426890; cv=none; b=hzfJ00bBb11bzK1jJm8UjXbBEG8ddIiAT6xaAx9F9CrwYfT823w+qHazjNJiKII5VWkiyc64S5+S5zc0seh5dCBA1WINBZ/N+n0YVSffB/6kLxM3DbIcGWRqjqXHicvquPg0gEfn6YSYZ/RvYKtX4i4phGstw0SASXa2aCNLn2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716426799; c=relaxed/simple;
-	bh=uk0dhUH7Tl+BGR0/TQ3xckwGBxB5edtNoSpUztM1za0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Kp6Zy971Lv54ZrcaBOckfO7gorN9nCYrrKiHxQMKLH1jALoQV62UUYO2eXF5rF6QS6/JmeDsRWl8PhFnUg+MtC25pcjWpyt8cWJXJlyN+10b4nJVlhYVBulk7dneSxy9X8GKLaaC77eQn4VxT+Vekpk8mOTp32OjKFqslZlnjxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vl9CP5c5zz4f3jLf;
-	Thu, 23 May 2024 09:13:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 967D41A0BF7;
-	Thu, 23 May 2024 09:13:11 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g4lmE5m+VCqNQ--.42702S3;
-	Thu, 23 May 2024 09:13:11 +0800 (CST)
-Subject: Re: [PATCH V2 for-6.10/block 1/2] loop: Fix a race between loop
- detach and loop open
-To: Gulam Mohamed <gulam.mohamed@oracle.com>,
- Yu Kuai <yukuai1@huaweicloud.com>, Jens Axboe <axboe@kernel.dk>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "shinichiro.kawasaki@wdc.com" <shinichiro.kawasaki@wdc.com>,
- "chaitanyak@nvidia.com" <chaitanyak@nvidia.com>, "hch@lst.de" <hch@lst.de>,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240521224249.7389-1-gulam.mohamed@oracle.com>
- <dcd2dac3-07d2-4ee8-addf-b9266a84f7fd@kernel.dk>
- <c7eb562c-97ae-455a-3859-0ed28ebdf7ae@huaweicloud.com>
- <IA1PR10MB7240AB2157B46F325669859D98EB2@IA1PR10MB7240.namprd10.prod.outlook.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <3c1c654b-a80c-c257-4a36-863c4b148615@huaweicloud.com>
-Date: Thu, 23 May 2024 09:13:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1716426890; c=relaxed/simple;
+	bh=F6aTYxhT26oFwWZ67Ld502s2Po3+Xcgbu+9VvbthueI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m94yH7+87/E1BW0amzRR4c80fHJGsLEQyV0DmzZcxczGQu2MbcndKh8GqZWquY5HjPEQfrTenbJ6k3RyxmcQ8BAuMRct5pAq0yjHU2gRqd4pA7APOROZUtuHwjZalI9DAwpcTMjNk5Qr+GPp+DLe/ZP/yrvyKe+8tgmmk4T+pTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=AGc+tg3U; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="AGc+tg3U"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2b9702e05easo2647994a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1716426888; x=1717031688; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ggg+vU4NzAtpKME671SbzqiVssDUIpzqRXRtZ78AP3g=;
+        b=AGc+tg3UybDOW3aXsoS6q+WCEN4SAEaK82cy4MdraW193bOI8rCfEdGhcIUHhKVMkj
+         UnMfbQMetndoJgNnacpamn53zETSm6/ADa6Z15VSLjLx0IZFh/yQE/92fdNYUN7GbRLN
+         qj431krkIukCq7krtanCX6aysNuGJJ7IbktPhaDWn4VFhVFdQkzAX4XgcO4LxgY6s1OS
+         m9lVQLcg5R2of4AGoRU0iss9GFD6kGlTxb/ug7plz0nMKyokTwCwoeMdqGpfpOP8G+4f
+         KAA0xFIKV/t3dFAP0ThDbXnuYwnYhu/2f3ds3bd+JhezYRLXXK+FYp+gFvSNHug/kLMP
+         VcLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716426888; x=1717031688;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ggg+vU4NzAtpKME671SbzqiVssDUIpzqRXRtZ78AP3g=;
+        b=LRi6gAjDbwSt2TYispYveHru96i1c+crURiNL/DG/1KKeGiV7A7bNo3VbBXv0teRTv
+         KLW6uTqqBJex2FjBZHou3B+35PciQVVxMnnyLGp+IkeH/2EBdbzeKok9GgC3pBz9crBu
+         CI55qtlIkvAzdZ5ssngXWl3nFhyIevhJnvuZhUbJBY24hcJsD0Qfr1+wvUfTjZi3X9Xd
+         TCRYbOrgpnZQhs8MlQ3HLdvyB1vSebLRMoDskju87hUDO2ujp1axrxi0TFxOF3sGAE/m
+         XiSSEOPkkpajKd2JaGl/XJl7uj1pSNZkkLX5zPR6pMVZInrPP2pbZumWYRNQs9tWDt6m
+         9FVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJnsUAynT8WXrcyM8mgG4F/8lah5TS3/fte/P/CjHKskmQpEn55tdgt72QGqD9nicPOOdZthcuhhCx3CclunbNfeN+84ECJsOKm/bK
+X-Gm-Message-State: AOJu0Yy80EjNPr9OLyVhE0TbJiYbPRDWzhIK9vbUub2UN0QqqeVkmdT7
+	u77Ieiwtb3qAklLvW39FD4wYBbCXQ5tPZoeRfTFfPinmipRgn1tIXpMSwNC0JVI=
+X-Google-Smtp-Source: AGHT+IGrhJ7h989jjAjSMtYNfzU+Yi3+mZLiquC92tnMfDp+of2ZtyY0LfEoupYObDtgvUJLtg9k7A==
+X-Received: by 2002:a17:90a:d706:b0:2ae:b8df:89e7 with SMTP id 98e67ed59e1d1-2bd9f5a2611mr3687386a91.38.1716426888226;
+        Wed, 22 May 2024 18:14:48 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bdd9f0adfdsm413976a91.34.2024.05.22.18.14.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 18:14:47 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1s9x2a-0077HZ-2j;
+	Thu, 23 May 2024 11:14:44 +1000
+Date: Thu, 23 May 2024 11:14:44 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-ext4@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
+	chandanbabu@kernel.org, jack@suse.cz, yi.zhang@huawei.com,
+	chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [PATCH v3 3/3] xfs: correct the zeroing truncate range
+Message-ID: <Zk6YhF/DsbOy66EZ@dread.disaster.area>
+References: <20240517111355.233085-1-yi.zhang@huaweicloud.com>
+ <20240517111355.233085-4-yi.zhang@huaweicloud.com>
+ <ZkwJJuFCV+WQLl40@dread.disaster.area>
+ <20240522030020.GU25518@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <IA1PR10MB7240AB2157B46F325669859D98EB2@IA1PR10MB7240.namprd10.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g4lmE5m+VCqNQ--.42702S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZw45ArWrKF45XF4xKryrXrb_yoWrKw4xpF
-	Z3WF42krWDKFsxCw12q3Wkuw1Sq3ZFqr48Wrn7G34fCr1qyFnIqFy2qryY9FyjgrW8Aa1j
-	vr1UXrW3u34UArUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UU
-	UUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522030020.GU25518@frogsfrogsfrogs>
 
-Hi,
-
-在 2024/05/23 3:12, Gulam Mohamed 写道:
-> Hi Kuai,
+On Tue, May 21, 2024 at 08:00:20PM -0700, Darrick J. Wong wrote:
+> On Tue, May 21, 2024 at 12:38:30PM +1000, Dave Chinner wrote:
+> > [RFC] iomap: zeroing needs to be pagecache aware
+> > 
+> > From: Dave Chinner <dchinner@redhat.com>
+> > 
+> > Unwritten extents can have page cache data over the range being
+> > zeroed so we can't just skip them entirely. Fix this by checking for
+> > an existing dirty folio over the unwritten range we are zeroing
+> > and only performing zeroing if the folio is already dirty.
+> > 
+> > XXX: how do we detect a iomap containing a cow mapping over a hole
+> > in iomap_zero_iter()? The XFS code implies this case also needs to
+> > zero the page cache if there is data present, so trigger for page
+> > cache lookup only in iomap_zero_iter() needs to handle this case as
+> > well.
 > 
->> -----Original Message-----
->> From: Yu Kuai <yukuai1@huaweicloud.com>
->> Sent: Wednesday, May 22, 2024 8:01 AM
->> To: Jens Axboe <axboe@kernel.dk>; Gulam Mohamed
->> <gulam.mohamed@oracle.com>; linux-block@vger.kernel.org; linux-
->> kernel@vger.kernel.org
->> Cc: shinichiro.kawasaki@wdc.com; chaitanyak@nvidia.com; hch@lst.de;
->> yukuai (C) <yukuai3@huawei.com>
->> Subject: Re: [PATCH V2 for-6.10/block 1/2] loop: Fix a race between loop
->> detach and loop open
->>
->> Hi,
->>
->> 在 2024/05/22 9:39, Jens Axboe 写道:
->>> On 5/21/24 4:42 PM, Gulam Mohamed wrote:
->>>> Description
->>>> ===========
->>>>
->>>> 1. Userspace sends the command "losetup -d" which uses the open() call
->>>>      to open the device
->>>> 2. Kernel receives the ioctl command "LOOP_CLR_FD" which calls the
->>>>      function loop_clr_fd()
->>>> 3. If LOOP_CLR_FD is the first command received at the time, then the
->>>>      AUTOCLEAR flag is not set and deletion of the
->>>>      loop device proceeds ahead and scans the partitions (drop/add
->>>>      partitions)
->>>>
->>>> 	if (disk_openers(lo->lo_disk) > 1) {
->>>> 		lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
->>>> 		loop_global_unlock(lo, true);
->>>> 		return 0;
->>>> 	}
->>>>
->>>>    4. Before scanning partitions, it will check to see if any partition of
->>>>       the loop device is currently opened
->>>>    5. If any partition is opened, then it will return EBUSY:
->>>>
->>>>       if (disk->open_partitions)
->>>> 		return -EBUSY;
->>>>    6. So, after receiving the "LOOP_CLR_FD" command and just before the
->> above
->>>>       check for open_partitions, if any other command
->>>>       (like blkid) opens any partition of the loop device, then the partition
->>>>       scan will not proceed and EBUSY is returned as shown in above code
->>>>    7. But in "__loop_clr_fd()", this EBUSY error is not propagated
->>>>    8. We have noticed that this is causing the partitions of the loop to
->>>>       remain stale even after the loop device is detached resulting in the
->>>>       IO errors on the partitions
->>>>
->>>> Fix
->>>> ---
->>>> Re-introduce the lo_open() call to restrict any process to open the
->>>> loop device when its being detached
->>>>
->>>> Test case
->>>> =========
->>>> Test case involves the following two scripts:
->>>>
->>>> script1.sh
->>>> ----------
->>>> while [ 1 ];
->>>> do
->>>> 	losetup -P -f /home/opt/looptest/test10.img
->>>> 	blkid /dev/loop0p1
->>>> done
->>>>
->>>> script2.sh
->>>> ----------
->>>> while [ 1 ];
->>>> do
->>>> 	losetup -d /dev/loop0
->>>> done
->>>>
->>>> Without fix, the following IO errors have been observed:
->>>>
->>>> kernel: __loop_clr_fd: partition scan of loop0 failed (rc=-16)
->>>> kernel: I/O error, dev loop0, sector 20971392 op 0x0:(READ) flags 0x80700
->>>>           phys_seg 1 prio class 0
->>>> kernel: I/O error, dev loop0, sector 108868 op 0x0:(READ) flags 0x0
->>>>           phys_seg 1 prio class 0
->>>> kernel: Buffer I/O error on dev loop0p1, logical block 27201, async page
->>>>           read
->>>>
->>>> V1->V2:
->>>> 	Added a test case, 010, in blktests in tests/loop/
->>>> Signed-off-by: Gulam Mohamed <gulam.mohamed@oracle.com>
->>>> ---
->>>>    drivers/block/loop.c | 19 +++++++++++++++++++
->>>>    1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/drivers/block/loop.c b/drivers/block/loop.c index
->>>> 28a95fd366fe..9a235d8c062d 100644
->>>> --- a/drivers/block/loop.c
->>>> +++ b/drivers/block/loop.c
->>>> @@ -1717,6 +1717,24 @@ static int lo_compat_ioctl(struct block_device
->> *bdev, blk_mode_t mode,
->>>>    }
->>>>    #endif
->>>>
->>>> +static int lo_open(struct gendisk *disk, blk_mode_t mode) {
->>>> +        struct loop_device *lo = disk->private_data;
->>>> +        int err;
->>>> +
->>>> +        if (!lo)
->>>> +                return -ENXIO;
->>>> +
->>>> +        err = mutex_lock_killable(&lo->lo_mutex);
->>>> +        if (err)
->>>> +                return err;
->>>> +
->>>> +        if (lo->lo_state == Lo_rundown)
->>>> +                err = -ENXIO;
->>>> +        mutex_unlock(&lo->lo_mutex);
->>
->> This doesn't fix the problem completely, there is still a race window.
->>
->> lo_release
->>    if (disk_openers(disk) > 0)
->>     reutrn
->>     -> no openers now
->> 		lo_open
->> 		 if (lo->lo_state == Lo_rundown)
->> 		 -> no set yet
->> 		 open succeed
->>    mutex_lock(lo_mutex)
->>    lo->lo_state = Lo_rundown
->>    mutex_unlock(lo_mutex)
->>    __loop_clr_fd
-> We have noticed that, at block layer, both open() and release() are protected by gendisk->open_mutex.
-> So, this race may not happen. Can you please let me know if I understand correctly?
+> Hmm.  If memory serves, we probably need to adapt the
+> xfs_buffered/direct_write_iomap_begin functions to return the hole in
+> srcmap and the cow mapping in the iomap.  RN I think it just returns the
+> hole.
 
-Yes, __loop_clr_fd from lo_release can't concurrent with lo_open.
->>
->> And with the respect, loop_clr_fd() has the same problem.
+Yes, that is what I was thinking we need to do -
+xfs_buffered_write_iomap_begin() doesn't even check for COW mappings
+if IOMAP_ZERO is set, so there's a bunch of refactoring work needed
+to let iomap know that there is a COW mapping over the hole so it
+can do the same page cache lookup stuff that I added for unwritten
+extents....
 
-Did you check __loop_clr_fd from lo_ioctl?
+-Dave.
 
-Thanks,
-Kuai
-
->>
->> I think probably loop need a open counter for itself.
-> We are looking to see how to handle this case
->>
->> Thanks,
->> Kuai
->>
->>>> +	return err;
->>>> +}
->>>
->>> Most of this function uses spaces rather than tabs.
->>>
-> 
-
+-- 
+Dave Chinner
+david@fromorbit.com
