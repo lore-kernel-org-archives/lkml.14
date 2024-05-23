@@ -1,192 +1,240 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BA620DF7
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 04:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5226320DF7;
+	Thu, 23 May 2024 04:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716438999; cv=none; b=OkIn1NgI0zX+eZzUa2G8ayQlDnTXYSm79GxQUufN63Og7Y4XFNX0iO3Ag6izwQ5ZsTgqO8sUMFdFf0sJ0cy59JcpIW3wfO3qMXP/n6AsR1QQ7UXEd+AxpcyRWf9QnI/Pa/ffqddMe2p1lF6crYq0tH+KviFnekiQc8LpXHvzXvE=
+	t=1716439085; cv=none; b=nxlZM4fRxSVHYTrYuUjSL7A86jxjfmvkY+URV6flwQomlBigxvpRx8MEz2icAwkiTvtarDsyrjDiRy2E78CxxR1ct9sHTm6lwGFTe4gTFyZlP842Jd1/LQmzBi8RQPkAXFzTrdIs7DQUiOpFLX6QqEFUfTeoIy6F/vLSzG9zJzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716438999; c=relaxed/simple;
-	bh=eHvoAfHG2xGz9eY4zHLjeanhH4uGlmzPu8XUrx2qTIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nJa8IlSTrhhDZnUZx0JFBbT9NMvv+Kn062xSqnl4OzBdEEKe1Ap+pHMiJ3BL5S+RyqZxxy6HvzdvJYhDbKnV7Rw2hKjc3e31ZGngVcOp26RQLKHxYcHBBLN6ajJug4Cw5zTqRzSPCJNMPW1z2FyzQpl0afytfaR62ie7llec9Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0jWhyIpF; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716439085; c=relaxed/simple;
+	bh=Zb53/ycD+rQozQIXsykjBaWlJ41ME07FtWQn9Xg2uc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKyWKUh/6gOnWirBArvroSV6zW2XO+kz0fM0c0ejr8RRhgFyTxKk7B3V64wI7kXTjk7N6rD+/VW664431e0C3gakwHdEyITaZDipFfGuKQepKkkxLR/ML/IY1nlm4XcVZh8bjrasjbvru8QWLm9oYVcSIZRrsingdzTzjx7GBPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=liIPBVxt; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0jWhyIpF"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a620a28e95cso340223666b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 21:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716438995; x=1717043795; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T8VUWfVL8PhvcfZC2Me8qhrGsq05o4Pd2dAFMPy1yHI=;
-        b=0jWhyIpFn9/9dFmfOrY/KDbr32bmxel9eMeNdCw/1nQKqNR29u+X1lY40dFWk+db/I
-         iPiZzAZg3veDXp3rSlPYsNpX4q8QZxpfGXQix2jkWx/5DPSaafU/KljrtLgup4mYn2l3
-         NlrAE6gwRNhFh5/D4gFc1UmV1CEjf+SzHTiEyGqpWXfVHFSW9AhIJMV519Jmhkxg+Tne
-         4THz/OJp5am3yoCzaC1oYzqA4YswMzPK13MHERCMzzV4wsRy/KwObpyadgowRfGd1Bmd
-         vJmWG54MQQVFcNPFPvNPfhHH+oW30R9ANoUh8X0CRAa4XxZV4Q71dXXORIaqikgJkxM7
-         WPyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716438995; x=1717043795;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T8VUWfVL8PhvcfZC2Me8qhrGsq05o4Pd2dAFMPy1yHI=;
-        b=vSj2s2scu7pAh8KTIFWMfIx6OXluOHHXUq2skTgWfQvDIKfwZbv0JO+BJADQevmcu4
-         70cJFBknk8Qrt77dGu73kYQBae2KmA6aTNdPDU0xcdvSTG/3Rx8+9vc9RmzkYKAAPJL1
-         LalBg6Rl9oH5zr1x+2oq6u6Gp8Fsbfr7qCxUwIxj4ph6rRKShH19uL8pFP4UJH+i0ryY
-         tG/pskfrVmQUgyg7v6kH/2o9FTt+H1s8RvmsWhD/EuVAHRjLaI0oTb2MLUGn1GdwWpJO
-         TF+qRpKqIUO9W8LPD7mDgrm6yaj6INCvuWXu0iZTuuj5s+EBY12x95ZX4LQiS/XhjHf0
-         Op1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWbLRl9IU0G08EbPyX9XrKWDYLUApkDTIPhi7HO0dSGyHB03K+66Qebnbeygcm4OY/dVu254n1DQBbB8Vbnx0FEIPjBx9pHk0iaNHfN
-X-Gm-Message-State: AOJu0Ywq+0Et2vrWPpzq8b+3b8IYFvXXsqnAt/bRLHKzNtfd3IJtpOig
-	/fuB5tWA/6eyPRoGg9qrWzQx/aLm//LA77Mi9Glue6ShEhtugfhlnz/cSMaHtQ3cSpWUvY42XQr
-	t3RnQ0EkPY1ai2wR6THtsbvbXpp1vy6lLbn5R
-X-Google-Smtp-Source: AGHT+IHWV+3Dho0vc85opVqlQ8AvB8hTnKlFzG4tNs7U0+6OlilQoHDG8ftHGifzquFyG3EHQW0C9/DfXRx8MBRZuPI=
-X-Received: by 2002:a17:907:30d0:b0:a58:a0b8:2a64 with SMTP id
- a640c23a62f3a-a6228029215mr209555566b.5.1716438995175; Wed, 22 May 2024
- 21:36:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="liIPBVxt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716439083; x=1747975083;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Zb53/ycD+rQozQIXsykjBaWlJ41ME07FtWQn9Xg2uc8=;
+  b=liIPBVxtTr9XpiiAoCfuuZesQyaYcsYuIZyiOTY5hMwnMFgYhvl7zl8Z
+   yhNUfxxfHNFBEp0QsuL4g2da3X9S+xt8tdXHV1oHTJ3AKATvkBBsvtB90
+   7juW1cPfJdutO0TOa+Vw/t9rbwuaNso63qXCY5i8ZYgbSHPVbId1dQ8Y6
+   h1CqajDedD0P/Twhn8w2u0I/VlScDQBd0/3aJa8WZwbru9onIlRtSPVby
+   vbZy6aWy3Az8zsOhZ7dsV36ZnyO+65mS82xEtBecgU9f8v04k+qZuF1hY
+   fUcyyfW+LtyljKOjfnrPYciSqTQNWFptkEnLSCQ5wfc+iZtMnTr6LgIyL
+   g==;
+X-CSE-ConnectionGUID: ZrJc9BLIRNS21YbtEHUFFA==
+X-CSE-MsgGUID: d/NcOA83SPil0DGTLk6xnA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="23299349"
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="23299349"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 21:38:02 -0700
+X-CSE-ConnectionGUID: 06AurqnZSRqg7Mv0OH4uLA==
+X-CSE-MsgGUID: E69/rulbSYaiL4pCyJ4UNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="38502052"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.255.230.167])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 21:38:02 -0700
+Date: Wed, 22 May 2024 21:38:01 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Bowman Terry <terry.bowman@amd.com>
+Subject: Re: [PATCH 3/4] acpi/ghes, cxl/pci: Trace FW-First CXL Protocol
+ Errors
+Message-ID: <Zk7IKYklBHPQief+@aschofie-mobl2>
+References: <20240522150839.27578-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20240522150839.27578-4-Smita.KoralahalliChannabasappa@amd.com>
+ <7dc64418-6821-49c2-b9af-ee4ab148ba9f@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240523034824.1255719-1-shakeel.butt@linux.dev>
-In-Reply-To: <20240523034824.1255719-1-shakeel.butt@linux.dev>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 22 May 2024 21:35:57 -0700
-Message-ID: <CAJD7tkaaEn+2G46taRD1V1W=okBfZtPPOFFyj5A+MVfGzqPDqw@mail.gmail.com>
-Subject: Re: [PATCH] memcg: rearrage fields of mem_cgroup_per_node
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, ying.huang@intel.com, feng.tang@intel.com, 
-	fengwei.yin@intel.com, oliver.sang@intel.com, kernel-team@meta.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7dc64418-6821-49c2-b9af-ee4ab148ba9f@intel.com>
 
-On Wed, May 22, 2024 at 8:48=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
-v> wrote:
->
-> Kernel test robot reported [1] performance regression for will-it-scale
-> test suite's page_fault2 test case for the commit 70a64b7919cb ("memcg:
-> dynamically allocate lruvec_stats"). After inspection it seems like the
-> commit has unintentionally introduced false cache sharing.
->
-> After the commit the fields of mem_cgroup_per_node which get read on the
-> performance critical path share the cacheline with the fields which
-> get updated often on LRU page allocations or deallocations. This has
-> caused contention on that cacheline and the workloads which manipulates
-> a lot of LRU pages are regressed as reported by the test report.
->
-> The solution is to rearrange the fields of mem_cgroup_per_node such that
-> the false sharing is eliminated. Let's move all the read only pointers
-> at the start of the struct, followed by memcg-v1 only fields and at the
-> end fields which get updated often.
->
-> Experiment setup: Ran fallocate1, fallocate2, page_fault1, page_fault2
-> and page_fault3 from the will-it-scale test suite inside a three level
-> memcg with /tmp mounted as tmpfs on two different machines, one a single
-> numa node and the other one, two node machine.
->
->  $ ./[testcase]_processes -t $NR_CPUS -s 50
->
-> Results for single node, 52 CPU machine:
->
-> Testcase        base        with-patch
->
-> fallocate1      1031081     1431291  (38.80 %)
-> fallocate2      1029993     1421421  (38.00 %)
-> page_fault1     2269440     3405788  (50.07 %)
-> page_fault2     2375799     3572868  (50.30 %)
-> page_fault3     28641143    28673950 ( 0.11 %)
->
-> Results for dual node, 80 CPU machine:
->
-> Testcase        base        with-patch
->
-> fallocate1      2976288     3641185  (22.33 %)
-> fallocate2      2979366     3638181  (22.11 %)
-> page_fault1     6221790     7748245  (24.53 %)
-> page_fault2     6482854     7847698  (21.05 %)
-> page_fault3     28804324    28991870 ( 0.65 %)
+On Wed, May 22, 2024 at 11:05:49AM -0700, Dave Jiang wrote:
+> 
+> 
+> On 5/22/24 8:08 AM, Smita Koralahalli wrote:
+> > When PCIe AER is in FW-First, OS should process CXL Protocol errors from
+> > CPER records.
+> > 
+> > Reuse the existing work queue cxl_cper_work registered with GHES to notify
+> > the CXL subsystem on a Protocol error.
+> > 
+> > The defined trace events cxl_aer_uncorrectable_error and
+> > cxl_aer_correctable_error currently trace native CXL AER errors. Reuse
+> > them to trace FW-First Protocol Errors.
+> > 
+> > Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> > ---
+> >  drivers/acpi/apei/ghes.c  | 14 ++++++++++++++
+> >  drivers/cxl/core/pci.c    | 24 ++++++++++++++++++++++++
+> >  drivers/cxl/cxlpci.h      |  3 +++
+> >  drivers/cxl/pci.c         | 34 ++++++++++++++++++++++++++++++++--
+> >  include/linux/cxl-event.h |  1 +
+> >  5 files changed, 74 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> > index 1a58032770ee..a31bd91e9475 100644
+> > --- a/drivers/acpi/apei/ghes.c
+> > +++ b/drivers/acpi/apei/ghes.c
+> > @@ -723,6 +723,20 @@ static void cxl_cper_handle_prot_err(struct acpi_hest_generic_data *gdata)
+> >  
+> >  	if (cxl_cper_handle_prot_err_info(gdata, &wd.p_err))
+> >  		return;
+> > +
+> > +	guard(spinlock_irqsave)(&cxl_cper_work_lock);
+> > +
+> > +	if (!cxl_cper_work)
+> > +		return;
+> > +
+> > +	wd.event_type = CXL_CPER_EVENT_PROT_ERR;
+> > +
+> > +	if (!kfifo_put(&cxl_cper_fifo, wd)) {
+> > +		pr_err_ratelimited("CXL CPER kfifo overflow\n");
+> > +		return;
+> > +	}
+> > +
+> > +	schedule_work(cxl_cper_work);
+> >  }
+> >  
+> >  int cxl_cper_register_work(struct work_struct *work)
+> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> > index 0df09bd79408..ef9438cb1dd6 100644
+> > --- a/drivers/cxl/core/pci.c
+> > +++ b/drivers/cxl/core/pci.c
+> > @@ -686,6 +686,30 @@ void read_cdat_data(struct cxl_port *port)
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+> >  
+> > +void cxl_trace_prot_err(struct cxl_dev_state *cxlds,
+> > +			struct cxl_cper_prot_err *p_err)
+> > +{
+> > +	u32 status, fe;
+> > +
+> > +	if (p_err->severity == CXL_AER_CORRECTABLE) {
+> > +		status = p_err->cxl_ras.cor_status & ~p_err->cxl_ras.cor_mask;
+> > +
+> > +		trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
+> > +	} else {
+> > +		status = p_err->cxl_ras.uncor_status & ~p_err->cxl_ras.uncor_mask;
+> > +
+> > +		if (hweight32(status) > 1)
+> > +			fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK,
+> > +					   p_err->cxl_ras.cap_control));
+> > +		else
+> > +			fe = status;
+> > +
+> > +		trace_cxl_aer_uncorrectable_error(cxlds->cxlmd, status, fe,
+> > +						  p_err->cxl_ras.header_log);
+> > +	}
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_trace_prot_err, CXL);
+> > +
+> >  static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
+> >  				 void __iomem *ras_base)
+> >  {
+> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> > index 93992a1c8eec..0ba3215786e1 100644
+> > --- a/drivers/cxl/cxlpci.h
+> > +++ b/drivers/cxl/cxlpci.h
+> > @@ -130,4 +130,7 @@ void read_cdat_data(struct cxl_port *port);
+> >  void cxl_cor_error_detected(struct pci_dev *pdev);
+> >  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+> >  				    pci_channel_state_t state);
+> > +struct cxl_cper_prot_err;
+> > +void cxl_trace_prot_err(struct cxl_dev_state *cxlds,
+> > +			struct cxl_cper_prot_err *p_err);
+> >  #endif /* __CXL_PCI_H__ */
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 74876c9835e8..3e3c36983686 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -1011,12 +1011,42 @@ static void cxl_handle_cper_event(enum cxl_event_type ev_type,
+> >  			       &uuid_null, &rec->event);
+> >  }
+> >  
+> > +static void cxl_handle_prot_err(struct cxl_cper_prot_err *p_err)
+> > +{
+> > +	struct pci_dev *pdev __free(pci_dev_put) = NULL;
+> > +	struct cxl_dev_state *cxlds;
+> > +	unsigned int devfn;
+> > +
+> > +	devfn = PCI_DEVFN(p_err->device, p_err->function);
+> > +	pdev = pci_get_domain_bus_and_slot(p_err->segment,
+> > +					   p_err->bus, devfn);
+> > +	if (!pdev)
+> > +		return;
+> > +
+> > +	guard(device)(&pdev->dev);
+> > +	if (pdev->driver != &cxl_pci_driver)
+> > +		return;
+> > +
+> > +	cxlds = pci_get_drvdata(pdev);
+> > +	if (!cxlds)
+> > +		return;
+> > +
+> > +	if (((u64)p_err->upper_dw << 32 | p_err->lower_dw) != cxlds->serial)
+> > +		pr_warn("CPER-reported device serial number does not match expected value\n");
+> 
+> Given that we are operating on a device, perhaps dev_warn(&pdev->dev, ...) may be better served.
+> 
+> DJ
 
-Great analysis :)
+Good point. Providing the dev lets the user look up the serial number,
+meaning this message doesn't need to include an 'expected' but not found
+value.
 
->
-> Fixes: 70a64b7919cb ("memcg: dynamically allocate lruvec_stats")
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202405171353.b56b845-oliver.sang@i=
-ntel.com
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> ---
->  include/linux/memcontrol.h | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
->
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 030d34e9d117..16efd9737be9 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -96,23 +96,25 @@ struct mem_cgroup_reclaim_iter {
->   * per-node information in memory controller.
->   */
->  struct mem_cgroup_per_node {
-> -       struct lruvec           lruvec;
-> +       /* Keep the read-only fields at the start */
-> +       struct mem_cgroup       *memcg;         /* Back pointer, we canno=
-t */
-> +                                               /* use container_of      =
-  */
->
->         struct lruvec_stats_percpu __percpu     *lruvec_stats_percpu;
->         struct lruvec_stats                     *lruvec_stats;
-> -
-> -       unsigned long           lru_zone_size[MAX_NR_ZONES][NR_LRU_LISTS]=
-;
-> -
-> -       struct mem_cgroup_reclaim_iter  iter;
-> -
->         struct shrinker_info __rcu      *shrinker_info;
->
-> +       /* memcg-v1 only stuff in middle */
-> +
->         struct rb_node          tree_node;      /* RB tree node */
->         unsigned long           usage_in_excess;/* Set to the value by wh=
-ich */
->                                                 /* the soft limit is exce=
-eded*/
->         bool                    on_tree;
-> -       struct mem_cgroup       *memcg;         /* Back pointer, we canno=
-t */
-> -                                               /* use container_of      =
-  */
+-- Alison
 
-Do we need CACHELINE_PADDING() here (or maybe make struct lruvec
-cache-aligned) to make sure the false cacheline sharing doesn't happen
-again with the fields below, or is the idea that the fields that get
-read in hot paths (memcg, lruvec_stats_percpu, lruvec_stats) are far
-at the top, and the memcg v1 elements in the middle act as a buffer?
-
-IOW, is sharing between the fields below and memcg v1 fields okay
-because they are not read in the hot path? If yes, I believe it's
-worth a comment. It can be easily missed if the memcg v1 soft limit is
-removed later for example.
-
-> +
-> +       /* Fields which get updated often at the end. */
-> +       struct lruvec           lruvec;
-> +       unsigned long           lru_zone_size[MAX_NR_ZONES][NR_LRU_LISTS]=
-;
-> +       struct mem_cgroup_reclaim_iter  iter;
->  };
->
->  struct mem_cgroup_threshold {
-> --
-> 2.43.0
->
+> > +
+> > +	cxl_trace_prot_err(cxlds, p_err);
+> > +}
+> > +
+> >  static void cxl_cper_work_fn(struct work_struct *work)
+> >  {
+> >  	struct cxl_cper_work_data wd;
+> >  
+> > -	while (cxl_cper_kfifo_get(&wd))
+> > -		cxl_handle_cper_event(wd.event_type, &wd.rec);
+> > +	while (cxl_cper_kfifo_get(&wd)) {
+> > +		if (wd.event_type == CXL_CPER_EVENT_PROT_ERR)
+> > +			cxl_handle_prot_err(&wd.p_err);
+> > +		else
+> > +			cxl_handle_cper_event(wd.event_type, &wd.rec);
+> > +	}
+> >  }
+> >  static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
+> >  
+> > diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+> > index 9c7b69e076a0..5562844df850 100644
+> > --- a/include/linux/cxl-event.h
+> > +++ b/include/linux/cxl-event.h
+> > @@ -122,6 +122,7 @@ struct cxl_event_record_raw {
+> >  } __packed;
+> >  
+> >  enum cxl_event_type {
+> > +	CXL_CPER_EVENT_PROT_ERR,
+> >  	CXL_CPER_EVENT_GENERIC,
+> >  	CXL_CPER_EVENT_GEN_MEDIA,
+> >  	CXL_CPER_EVENT_DRAM,
