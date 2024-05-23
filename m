@@ -1,104 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C791E535;
-	Thu, 23 May 2024 07:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7FA13CA87
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 07:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716448537; cv=none; b=TTo2fL8fdyNj3AFRHGrMi5D6Jw4vKHqHzvphwEoRfR70SpOsuOgLgVXlTY7h2QUuKGH7xQfAVIyA5xw52wMm/DmZ+kXnWVhBzrE6iAUHgIJlhceAEjCnCGT7bvNuqiZ5/pYnn+Ua3VJ9zNS6lX5C0bVBz8aWYwpCvKwva7RujlY=
+	t=1716448541; cv=none; b=cDRriTv2Ng08NmZIfyCQLzVPj0kEi+ffvyqmwrioYZk4s1Lmosz/uY+F/+GdCjAJwouMkBEXobK3zu1iKggVj4lovIHe0i/hJ1f/rUjvRHDehMzBxTJNGTtUsGdU6Eu0k/drJ9xMe7amvJ0ZlTDvNGL8dNw4H/8pf03zavOZgZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716448537; c=relaxed/simple;
-	bh=pEQWtK3bCrqEX/gNjxkAEOCoAJCQsEno4zkmSpPLoZw=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=b5v5IaufMa4zc3KZ3GieN8e9mSTbn0b0/8dbxZ0Twn1lbxyqFON2xtb+6DAEfRJWa3awq5NUWh7qMmRiJaadrvwaf75m02oTzRoOMBHHGfVIDgmMrSXZcq90JYlZDzW9Uo11HmQLtxmEDyQdr2Qcdr2FyqJ2GYzT1cHCcx0aNzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AacDWEb3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AacDWEb3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6541FC2BD10;
-	Thu, 23 May 2024 07:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716448537;
-	bh=pEQWtK3bCrqEX/gNjxkAEOCoAJCQsEno4zkmSpPLoZw=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=AacDWEb3OQIMF3pc/zEkwhcbeCvJjNVAUtTeV/QGcyT5FQG1au493A6b0+ouQVaXU
-	 yjKVgieoGIRXZ5QSG/jnfO5LUQwnY0h9NncRDNPxsidzpvYA8qdlHogyLKdPi6Qtqg
-	 oWgJthhSixz6YvWGflmgROZx4rDbxE8PD2hFRL0PHPJCMzJTC8fVn0//0Hmcn3Fg89
-	 A1VlG0u28q+XxLN2tWC0OQd6ZGoDCI2ZmeuQOqtESHjHeRemlHsAxELaW1RAMVPfKA
-	 w8Y76zdqahAkxW77ncJscaDGrVwAd8BetQZCdu7PXy4+4xajYbFJoPzKlMfkMPCmfY
-	 bLLU/I2CIpxAw==
-From: Kalle Valo <kvalo@kernel.org>
-To: <michael.nemanov@ti.com>
-Cc: Johannes Berg <johannes.berg@intel.com>,  Breno Leitao
- <leitao@debian.org>,  Justin Stitt <justinstitt@google.com>,  Kees Cook
- <keescook@chromium.org>,  <linux-wireless@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  Sabeeh Khan <sabeeh-khan@ti.com>
-Subject: Re: [PATCH 00/17] wifi: cc33xx: Add driver for new TI CC33xx
- wireless device family
-References: <20240521171841.884576-1-michael.nemanov@ti.com>
-Date: Thu, 23 May 2024 10:15:33 +0300
-In-Reply-To: <20240521171841.884576-1-michael.nemanov@ti.com> (michael
-	nemanov's message of "Tue, 21 May 2024 20:18:24 +0300")
-Message-ID: <87msohatii.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1716448541; c=relaxed/simple;
+	bh=icFbe+41nokulSDX6x9J5QKXATNdRAzI4brjx50UQVA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ak3gbE5yHmY+8E5vsFeavPwGznF83lSuxQyPzlb9eLyfdry5DguCm395MLy8uFfsBr2MVYJoe6IxdNi3pNem5YTXt8CYT3mB6m6ecNNCIyVHOZi/b6rszImgwqJgDP+6C9G7O6P4LpYNLVhwH1dnRS7ITadpEfillg2T8OWGIZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VlK9X54Y1z2CjPG;
+	Thu, 23 May 2024 15:12:00 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7132918005F;
+	Thu, 23 May 2024 15:15:30 +0800 (CST)
+Received: from huawei.com (10.173.135.154) by canpemm500002.china.huawei.com
+ (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 23 May
+ 2024 15:15:29 +0800
+From: Miaohe Lin <linmiaohe@huawei.com>
+To: <akpm@linux-foundation.org>
+CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm/memory-failure: fix handling of dissolved but not taken off from buddy pages
+Date: Thu, 23 May 2024 15:12:17 +0800
+Message-ID: <20240523071217.1696196-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-<michael.nemanov@ti.com> writes:
+When I did memory failure tests recently, below panic occurs:
 
-> From: Michael Nemanov <michael.nemanov@ti.com>
->
-> Hello everyone,
->
-> This series adds support for CC33xx which is a new family of WLAN
-> IEEE802.11 a/b/g/n/ax and BLE 5.4 transceivers by Texas Instruments.
-> These devices are 20MHz single spatial stream enabling STA
-> (IEEE802.11ax) and AP (IEEE802.11n only) roles as well as both roles
-> simultaneously. Communication to the CC33xx is done via 4-bit SDIO
-> with two extra GPIOs: Enable and Interrupt.
->
-> Data sheet: https://www.ti.com/lit/gpn/cc3301
->
-> This driver's architecture is a soft-MAC and derivative of existing
-> wl18xx + wlcore code [1]. It has been tested with the AM335x, AM625x,
-> and i.MX8-MP evaluation kits.
->
-> All code passes sparse and checkpatch with very few pragmatic exceptions.
->
-> Known gaps to be addressed in following patches:
-> 1. BLE support
->
-> Test log:
-> https://0x0.st/XPUd.log
->
-> Change log:
-> v1:
-> * Added dt-bindings
-> * Removed debugfs to ease review
-> * Fix build issue with CONFIG_CFG80211_CERTIFICATION_ONUS
-> * Fix multiple build warnings found with Clang 18 and W=12
->
-> RFC: https://lore.kernel.org/linux-wireless/20240512183247.2190242-1-michael.nemanov@ti.com/
->
->
-> [1] It was considered implementing CC33xx as another user of wlcore
-> but The differences in HW, host interface, IRQ functionality, Rx/Tx
-> behavior and supported features were too significant so this was
-> abandoned.
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x8cee00
+flags: 0x6fffe0000000000(node=1|zone=2|lastcpupid=0x7fff)
+raw: 06fffe0000000000 dead000000000100 dead000000000122 0000000000000000
+raw: 0000000000000000 0000000000000009 00000000ffffffff 0000000000000000
+page dumped because: VM_BUG_ON_PAGE(!PageBuddy(page))
+------------[ cut here ]------------
+kernel BUG at include/linux/page-flags.h:1009!
+invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+RIP: 0010:__del_page_from_free_list+0x151/0x180
+RSP: 0018:ffffa49c90437998 EFLAGS: 00000046
+RAX: 0000000000000035 RBX: 0000000000000009 RCX: ffff8dd8dfd1c9c8
+RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff8dd8dfd1c9c0
+RBP: ffffd901233b8000 R08: ffffffffab5511f8 R09: 0000000000008c69
+R10: 0000000000003c15 R11: ffffffffab5511f8 R12: ffff8dd8fffc0c80
+R13: 0000000000000001 R14: ffff8dd8fffc0c80 R15: 0000000000000009
+FS:  00007ff916304740(0000) GS:ffff8dd8dfd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055eae50124c8 CR3: 00000008479e0000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+ __rmqueue_pcplist+0x23b/0x520
+ get_page_from_freelist+0x26b/0xe40
+ __alloc_pages_noprof+0x113/0x1120
+ __folio_alloc_noprof+0x11/0xb0
+ alloc_buddy_hugetlb_folio.isra.0+0x5a/0x130
+ __alloc_fresh_hugetlb_folio+0xe7/0x140
+ alloc_pool_huge_folio+0x68/0x100
+ set_max_huge_pages+0x13d/0x340
+ hugetlb_sysctl_handler_common+0xe8/0x110
+ proc_sys_call_handler+0x194/0x280
+ vfs_write+0x387/0x550
+ ksys_write+0x64/0xe0
+ do_syscall_64+0xc2/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff916114887
+RSP: 002b:00007ffec8a2fd78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 000055eae500e350 RCX: 00007ff916114887
+RDX: 0000000000000004 RSI: 000055eae500e390 RDI: 0000000000000003
+RBP: 000055eae50104c0 R08: 0000000000000000 R09: 000055eae50104c0
+R10: 0000000000000077 R11: 0000000000000246 R12: 0000000000000004
+R13: 0000000000000004 R14: 00007ff916216b80 R15: 00007ff916216a00
+ </TASK>
+Modules linked in: mce_inject hwpoison_inject
+---[ end trace 0000000000000000 ]---
 
-The community (myself included) has been frustrated that TI has dropped
-the ball on their existing wireless drivers:
+And before the panic, there had an warning about bad page state:
 
-https://docs.kernel.org/process/maintainers.html#ti-wilink-wireless-drivers
+BUG: Bad page state in process page-types  pfn:8cee00
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x8cee00
+flags: 0x6fffe0000000000(node=1|zone=2|lastcpupid=0x7fff)
+page_type: 0xffffff7f(buddy)
+raw: 06fffe0000000000 ffffd901241c0008 ffffd901240f8008 0000000000000000
+raw: 0000000000000000 0000000000000009 00000000ffffff7f 0000000000000000
+page dumped because: nonzero mapcount
+Modules linked in: mce_inject hwpoison_inject
+CPU: 8 PID: 154211 Comm: page-types Not tainted 6.9.0-rc4-00499-g5544ec3178e2-dirty #22
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x83/0xa0
+ bad_page+0x63/0xf0
+ free_unref_page+0x36e/0x5c0
+ unpoison_memory+0x50b/0x630
+ simple_attr_write_xsigned.constprop.0.isra.0+0xb3/0x110
+ debugfs_attr_write+0x42/0x60
+ full_proxy_write+0x5b/0x80
+ vfs_write+0xcd/0x550
+ ksys_write+0x64/0xe0
+ do_syscall_64+0xc2/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f189a514887
+RSP: 002b:00007ffdcd899718 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f189a514887
+RDX: 0000000000000009 RSI: 00007ffdcd899730 RDI: 0000000000000003
+RBP: 00007ffdcd8997a0 R08: 0000000000000000 R09: 00007ffdcd8994b2
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffdcda199a8
+R13: 0000000000404af1 R14: 000000000040ad78 R15: 00007f189a7a5040
+ </TASK>
 
-This kind of behaviour is not exactly building trust. So how is this
-driver going to be any different?
+The root cause should be the below race:
 
+ memory_failure
+  try_memory_failure_hugetlb
+   me_huge_page
+    __page_handle_poison
+     dissolve_free_hugetlb_folio
+     drain_all_pages -- Buddy page can be isolated e.g. for compaction.
+     take_page_off_buddy -- Failed as page is not in the buddy list.
+	     -- Page can be putback into buddy after compaction.
+    page_ref_inc -- Leads to buddy page with refcnt = 1.
+
+Then unpoison_memory() can unpoison the page and send the buddy page back
+into buddy list again leading to the above bad page state warning. And
+bad_page() will call page_mapcount_reset() to remove PageBuddy from buddy
+page leading to later VM_BUG_ON_PAGE(!PageBuddy(page)) when trying to
+allocate this page.
+
+Fix this issue by only treating __page_handle_poison() as successful when
+it returns 1.
+
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Fixes: ceaf8fbea79a ("mm, hwpoison: skip raw hwpoison page in freeing 1GB hugepage")
+Cc: <stable@vger.kernel.org>
+---
+ mm/memory-failure.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index a3958150cbf2..8962c0d314b0 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1239,7 +1239,7 @@ static int me_huge_page(struct page_state *ps, struct page *p)
+ 		 * subpages.
+ 		 */
+ 		folio_put(folio);
+-		if (__page_handle_poison(p) >= 0) {
++		if (__page_handle_poison(p) > 0) {
+ 			page_ref_inc(p);
+ 			res = MF_RECOVERED;
+ 		} else {
+@@ -2116,7 +2116,7 @@ static int try_memory_failure_hugetlb(unsigned long pfn, int flags, int *hugetlb
+ 	 */
+ 	if (res == 0) {
+ 		folio_unlock(folio);
+-		if (__page_handle_poison(p) >= 0) {
++		if (__page_handle_poison(p) > 0) {
+ 			page_ref_inc(p);
+ 			res = MF_RECOVERED;
+ 		} else {
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.33.0
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
