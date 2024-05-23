@@ -1,96 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06EE14A4D9
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 13:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4D013C80E;
+	Thu, 23 May 2024 13:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716471403; cv=none; b=DP3e3f9VT53+VAWLjS0wjWB1/BpxRVcItTl4KEhXNlRTFkCkCeZQdkn/vV++e/Me4MIY2ovtXLw5oyXJbLS8t3pJnBoI8YKriNl7+tCwtPLsXlUB3AW11dlPq08pq1MCI4x1m0loyBQrnYalKnPNFWSNC80HCeb4XIyjh7GBGGA=
+	t=1716471416; cv=none; b=FUEX4tVM63V3nqq8NAWgSSnSM3iKLtjWh8c4L+APQb8T7qOaVHhLfRu8SnM8D9wHxlUTXv7XESPlRY6noeiLrj0+JL5kREGAUdjxWSX3P7gfJZKc1tfpY7s+p7GLEjnbMi+3FW0jLBdBA4UH5X1rI/JKp+EMSJ+Jy5NGQAUZ7P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716471403; c=relaxed/simple;
-	bh=CM8wHWsQhb6nBkI5sT6VghNmVLSsK1SRVpym/X9/WnE=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=jgKJAbVZpFL0S1824foEzcD3XNDqVWIdpouQaaWrW/+xcqoCQJyBLuT6/902uTjCjPRvk5UVvNrrLsb5Ue0BZ0mQM2AlBcj/4CIlzt5gEe/oKmSgRlGsKaiHL/baOq8enqAhhK/6OkQ1RO8W24/4wNCWjflovYQvudXGsg17uZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gDIedIMu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716471416; c=relaxed/simple;
+	bh=kRSxtYfvGaEYm+Suf72IVaC4RooK0ePrcIkOVCA7lR4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=C9EK4E1AJ7wXvf1Ru874ZlcsOlRXT2IjjCrrb/qAv5aTlMc+B9MrvJHQwnA/rYSfs8/sy9YclSY1tWeY1J+A4tpQO/5beBM4+z7MMylYqTng8Yk1JH09ct93VNyY2p+4+jNCw6Yipk4AKyzKNwBCLGSkeFCCtP1KXQKnngkEXNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNKRsfqs; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gDIedIMu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716471400;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vXxBSHmoAMy4p5FvXFciFTuZOZzNT/zIajI6dPFeaA8=;
-	b=gDIedIMunF38FLqoEGUzYXnsm3KiOib71KwBhg2KTP9S7i8kFmuYfLhSBAfuWk4ej6koam
-	W6JWpqglYUOcQpp9QWwFuSZ/bZydkpelD5JUT6iqu4psNiGAHH95wd0zY2q2hIRqu140yx
-	B11QIh6KhtBB0VXVLhYNjvbcmv9hJes=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-512-9ybZC16bMV-pSc_RjrjyHA-1; Thu,
- 23 May 2024 09:36:33 -0400
-X-MC-Unique: 9ybZC16bMV-pSc_RjrjyHA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D6903801EC7;
-	Thu, 23 May 2024 13:36:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D52C51C0654B;
-	Thu, 23 May 2024 13:36:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240523132341.32092-1-jarkko@kernel.org>
-References: <20240523132341.32092-1-jarkko@kernel.org>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: dhowells@redhat.com, linux-integrity@vger.kernel.org,
-    keyrings@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
-    Eric Biggers <ebiggers@kernel.org>,
-    James Bottomley <James.Bottomley@hansenpartnership.com>,
-    Herbert Xu <herbert@gondor.apana.org.au>,
-    "David S. Miller" <davem@davemloft.net>,
-    Andrew Morton <akpm@linux-foundation.org>,
-    Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
-    James Morris <jmorris@namei.org>,
-    "Serge E. Hallyn" <serge@hallyn.com>,
-    linux-crypto@vger.kernel.org (open list:CRYPTO
-                         API),
-    linux-kernel@vger.kernel.org (open list),
-    linux-security-module@vger.kernel.org (open
-                         list:SECURITY SUBSYSTEM)
-Subject: Re: [PATCH v2] KEYS: trusted: Use ASN.1 encoded OID
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNKRsfqs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716471415; x=1748007415;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=kRSxtYfvGaEYm+Suf72IVaC4RooK0ePrcIkOVCA7lR4=;
+  b=hNKRsfqsypAyw1ZtwRK40RY0CzwxJMuhX6ebmAkghDtdMnFyBv3eBHvN
+   7cfQ5H1K8dJOjO9u3Cczzi/6xMXlPdDgETwcOvYn75nKSW1tTX4JRyRFC
+   /FVz1oNaTUdgBrJizRenhXVd7bSm2DlbCdBHuNZU5NeqewQI42BzeGvh/
+   AJe5EKNG63B8u/CgzwPyZULHx8IHTnRB+SwfJr6Iv6YkwxDQQDGNQ+5Ba
+   mDOCUUpmbix1D6wuV24Ztm7VMVGG7YaNMckp0DQSwQXgo124jo1ipYeex
+   2aEtlUqSrtgjDgyC+Vz0pdo+tyYPEeibhxDOtT4j0DYlUnEiM4utCq7Tl
+   g==;
+X-CSE-ConnectionGUID: HegFF0DFQGGqhNni9Nh9yw==
+X-CSE-MsgGUID: i6UiiKdzQFa4VwvC/LUfXw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="30289874"
+X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
+   d="scan'208";a="30289874"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 06:36:54 -0700
+X-CSE-ConnectionGUID: v5Ok4vCWR9WOxxSbY9f7ow==
+X-CSE-MsgGUID: KFwLKT1YSkC01sfJMEv1Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
+   d="scan'208";a="33515993"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by orviesa010.jf.intel.com with ESMTP; 23 May 2024 06:36:53 -0700
+Message-ID: <b936df07-47cc-9921-0550-469fbbb6b49f@linux.intel.com>
+Date: Thu, 23 May 2024 16:38:48 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <575952.1716471389.1@warthog.procyon.org.uk>
-Date: Thu, 23 May 2024 14:36:29 +0100
-Message-ID: <575953.1716471389@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Content-Language: en-US
+To: Jung Daehwan <dh10.jung@samsung.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+References: <CGME20240522010409epcas2p457b2fcb4f423f2500305053f44ae3199@epcas2p4.samsung.com>
+ <1716339839-44022-1-git-send-email-dh10.jung@samsung.com>
+ <6a4767b5-1e2f-dbec-58ca-c44eb0fca6f1@linux.intel.com>
+ <20240523044314.GA58326@ubuntu>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [RFC] usb: host: xhci-mem: Write high first on erst base of
+ secondary interrupter
+In-Reply-To: <20240523044314.GA58326@ubuntu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Jarkko Sakkinen <jarkko@kernel.org> wrote:
-
-> There's no reason to encode OID_TPMSealedData at run-time, as it never
-> changes.
+On 23.5.2024 7.43, Jung Daehwan wrote:
+> On Wed, May 22, 2024 at 04:40:56PM +0300, Mathias Nyman wrote:
+>> On 22.5.2024 4.03, Daehwan Jung wrote:
+>>> ERSTBA_HI should be written first on secondary interrupter.
+>>> That's why secondary interrupter could be set while Host Controller
+>>> is already running.
+>>>
+>>> [Synopsys]- The host controller was design to support ERST setting
+>>> during the RUN state. But since there is a limitation in controller
+>>> in supporting separate ERSTBA_HI and ERSTBA_LO programming,
+>>> It is supported when the ERSTBA is programmed in 64bit,
+>>> or in 32 bit mode ERSTBA_HI before ERSTBA_LO
+>>
+>> xHCI specification 5.1 "Register Conventions "states that 64 bit
+>> registers should be written in low-high order
+>>
+>>>
+>>> [Synopsys]- The internal initialization of event ring fetches
+>>> the "Event Ring Segment Table Entry" based on the indication of
+>>> ERSTBA_LO written.
+>>>
+>>
+>> Any idea if this is a common issue with this host?
+>> Should other 64 bit registers also be written in reverse order.
+>>
+>>> Signed-off-by: Daehwan Jung <dh10.jung@samsung.com>
+>>> ---
+>>>   drivers/usb/host/xhci-mem.c | 5 ++++-
+>>>   drivers/usb/host/xhci.h     | 6 ++++++
+>>>   2 files changed, 10 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+>>> index 3100219..36ee704 100644
+>>> --- a/drivers/usb/host/xhci-mem.c
+>>> +++ b/drivers/usb/host/xhci-mem.c
+>>> @@ -2325,7 +2325,10 @@ xhci_add_interrupter(struct xhci_hcd *xhci, struct xhci_interrupter *ir,
+>>>   	erst_base = xhci_read_64(xhci, &ir->ir_set->erst_base);
+>>>   	erst_base &= ERST_BASE_RSVDP;
+>>>   	erst_base |= ir->erst.erst_dma_addr & ~ERST_BASE_RSVDP;
+>>> -	xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
+>>> +	if (intr_num == 0)
+>>> +		xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
+>>> +	else
+>>> +		xhci_write_64_r(xhci, erst_base, &ir->ir_set->erst_base);
+>>
+>> This may cause issues with other hosts expecting low-high order as stated
+>> in the specification.
+>>
+>> If all 64 bit registers should be written in high-low order for this host then
+>> maybe set a quirk flag and change xhci_write_64()instead.
+>>
+>> xhci_write_64(...)
+>> {
+>> 	if (xhci->quirks & XHCI_WRITE_64_HI_LO)
+>> 		hi_lo_writeq(val, regs);
+>> 	else
+>> 		lo_hi_writeq(val, regs);
+>> }
+>>
 > 
-> Replace it with the encoded version, which has exactly the same size:
+> Mathias, Thanks for the comment.
 > 
-> 	67 81 05 0A 01 05
+> I've seen this issue only writing the base address of ERST.
+> It's better to use a quirk flag as you said.
+> How about using the quirk only in xhci_add_interrupter?
 > 
-> Include OBJECT IDENTIFIER (0x06) tag and length as the epilogue so that
-> the OID can be simply copied to the blob.
+> @@ -2325,7 +2325,10 @@ xhci_add_interrupter(struct xhci_hcd *xhci, struct xhci_interrupter *ir,
+>    	erst_base = xhci_read_64(xhci, &ir->ir_set->erst_base);
+>    	erst_base &= ERST_BASE_RSVDP;
+>    	erst_base |= ir->erst.erst_dma_addr & ~ERST_BASE_RSVDP;
+> 	xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
+>   	if (xhci->quirks & XHCI_WRITE_64_HI_LO)
+> 		xhci_write_64_r(xhci, erst_base, &ir->ir_set->erst_base);
+> 	else
+> 		xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
+> 
 
-This seems reasonable.  We have a limited set of OIDs we can generate
-(currently 1).  Better to store the BER-encoded form and copy that in rather
-than trying to turn a pretty-printed OID into the BER encoding unless we
-absolutely have to.
+This works.
+Maybe even skip the xhci_write_64_r() helper and just use hi_lo_writeq() directly.
 
-David
+Thanks
+Mathias
+
 
