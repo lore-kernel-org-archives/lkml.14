@@ -1,157 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4D013C80E;
-	Thu, 23 May 2024 13:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778341E495;
+	Thu, 23 May 2024 13:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716471416; cv=none; b=FUEX4tVM63V3nqq8NAWgSSnSM3iKLtjWh8c4L+APQb8T7qOaVHhLfRu8SnM8D9wHxlUTXv7XESPlRY6noeiLrj0+JL5kREGAUdjxWSX3P7gfJZKc1tfpY7s+p7GLEjnbMi+3FW0jLBdBA4UH5X1rI/JKp+EMSJ+Jy5NGQAUZ7P0=
+	t=1716471502; cv=none; b=iXzcrdiJ11z7aETz2JsL/KDjOsVaEYFj46yBzQjAz+hpfOk6zIm8Qz1TTu6wvxXEluvS+WZQgS2w/fVr97ngdD2xK6VzmYJz/KIFUK3+7i+ynLkZ8QTQGLDmaQV77P7kv3b9GYaxqVwzmwyEa872B5PJa6WQ/+mr76O4s0Bdc3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716471416; c=relaxed/simple;
-	bh=kRSxtYfvGaEYm+Suf72IVaC4RooK0ePrcIkOVCA7lR4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=C9EK4E1AJ7wXvf1Ru874ZlcsOlRXT2IjjCrrb/qAv5aTlMc+B9MrvJHQwnA/rYSfs8/sy9YclSY1tWeY1J+A4tpQO/5beBM4+z7MMylYqTng8Yk1JH09ct93VNyY2p+4+jNCw6Yipk4AKyzKNwBCLGSkeFCCtP1KXQKnngkEXNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNKRsfqs; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716471502; c=relaxed/simple;
+	bh=yxeerQdioJk9V45wxxQErrDchwYU+2o4GL3bADlnbvY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QGmuevmS5j8Tp5VHueq9LHS42jBbTKsItKEO76eMbv5ZcE220I0rg0AGXlSn6m3SI3t65sVHsIT1A6jXXd/EkPfJ260k211nxl6PCD7oN3cX9MycJxhGx0lvn3eAl5svKwlmxPxETbVKUa8HNW3ZxQhxu7kTe8alSKTKcvrPSWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=PlRblVbw; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=koDbLc6B; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNKRsfqs"
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="PlRblVbw";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="koDbLc6B"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716471415; x=1748007415;
-  h=message-id:date:mime-version:to:cc:references:from:
-   subject:in-reply-to:content-transfer-encoding;
-  bh=kRSxtYfvGaEYm+Suf72IVaC4RooK0ePrcIkOVCA7lR4=;
-  b=hNKRsfqsypAyw1ZtwRK40RY0CzwxJMuhX6ebmAkghDtdMnFyBv3eBHvN
-   7cfQ5H1K8dJOjO9u3Cczzi/6xMXlPdDgETwcOvYn75nKSW1tTX4JRyRFC
-   /FVz1oNaTUdgBrJizRenhXVd7bSm2DlbCdBHuNZU5NeqewQI42BzeGvh/
-   AJe5EKNG63B8u/CgzwPyZULHx8IHTnRB+SwfJr6Iv6YkwxDQQDGNQ+5Ba
-   mDOCUUpmbix1D6wuV24Ztm7VMVGG7YaNMckp0DQSwQXgo124jo1ipYeex
-   2aEtlUqSrtgjDgyC+Vz0pdo+tyYPEeibhxDOtT4j0DYlUnEiM4utCq7Tl
-   g==;
-X-CSE-ConnectionGUID: HegFF0DFQGGqhNni9Nh9yw==
-X-CSE-MsgGUID: i6UiiKdzQFa4VwvC/LUfXw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="30289874"
-X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
-   d="scan'208";a="30289874"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 06:36:54 -0700
-X-CSE-ConnectionGUID: v5Ok4vCWR9WOxxSbY9f7ow==
-X-CSE-MsgGUID: KFwLKT1YSkC01sfJMEv1Dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
-   d="scan'208";a="33515993"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
-  by orviesa010.jf.intel.com with ESMTP; 23 May 2024 06:36:53 -0700
-Message-ID: <b936df07-47cc-9921-0550-469fbbb6b49f@linux.intel.com>
-Date: Thu, 23 May 2024 16:38:48 +0300
+	d=hansenpartnership.com; s=20151216; t=1716471497;
+	bh=yxeerQdioJk9V45wxxQErrDchwYU+2o4GL3bADlnbvY=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=PlRblVbwvzEcJ2HxYGVj3/x80J/ZhHjLfCQkomzbGgkzlUX6SAAp4aOEUvveSpvuK
+	 9YzeeoYKDg4l+w3W2alRAzoxdeulCwBvTEZtnacooAbjn/XwBSD2BUASvF48gADibt
+	 oI84yLePkWDKbenhtjUqmDfadt4456n2YLqcS4p0=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 308AC12872E9;
+	Thu, 23 May 2024 09:38:17 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id 5gC9RbkyaTpL; Thu, 23 May 2024 09:38:17 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1716471496;
+	bh=yxeerQdioJk9V45wxxQErrDchwYU+2o4GL3bADlnbvY=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=koDbLc6BQBs4n/SOxXAS9PnErUds63F3s/2AZ42YlfFP1eWxrDmO4kn1Gyr+v5MYJ
+	 UlFBL6AMru9SxfaeBXokp077sHiOePvg5xOeaaiFWl0JolRrwEhiebHS0pivFwaxXq
+	 +/gNtR/TOwY+lQCWKbGRkRu/lSOYK/vrbeLLc+74=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id A5FEB1280300;
+	Thu, 23 May 2024 09:38:15 -0400 (EDT)
+Message-ID: <9c96f39ed2161dd7f0c3a7964cba2de3169fae3b.camel@HansenPartnership.com>
+Subject: Re: [PATCH RESEND] KEYS: trusted: Use ASN.1 encoded OID
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org
+Cc: keyrings@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Eric
+ Biggers <ebiggers@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, Andrew Morton
+ <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.ibm.com>, David
+ Howells <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>, James
+ Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, "open
+ list:CRYPTO API" <linux-crypto@vger.kernel.org>,  open list
+ <linux-kernel@vger.kernel.org>, "open list:SECURITY SUBSYSTEM"
+ <linux-security-module@vger.kernel.org>
+Date: Thu, 23 May 2024 09:38:13 -0400
+In-Reply-To: <20240523131931.22350-1-jarkko@kernel.org>
+References: <20240523131931.22350-1-jarkko@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Content-Language: en-US
-To: Jung Daehwan <dh10.jung@samsung.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-References: <CGME20240522010409epcas2p457b2fcb4f423f2500305053f44ae3199@epcas2p4.samsung.com>
- <1716339839-44022-1-git-send-email-dh10.jung@samsung.com>
- <6a4767b5-1e2f-dbec-58ca-c44eb0fca6f1@linux.intel.com>
- <20240523044314.GA58326@ubuntu>
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [RFC] usb: host: xhci-mem: Write high first on erst base of
- secondary interrupter
-In-Reply-To: <20240523044314.GA58326@ubuntu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 23.5.2024 7.43, Jung Daehwan wrote:
-> On Wed, May 22, 2024 at 04:40:56PM +0300, Mathias Nyman wrote:
->> On 22.5.2024 4.03, Daehwan Jung wrote:
->>> ERSTBA_HI should be written first on secondary interrupter.
->>> That's why secondary interrupter could be set while Host Controller
->>> is already running.
->>>
->>> [Synopsys]- The host controller was design to support ERST setting
->>> during the RUN state. But since there is a limitation in controller
->>> in supporting separate ERSTBA_HI and ERSTBA_LO programming,
->>> It is supported when the ERSTBA is programmed in 64bit,
->>> or in 32 bit mode ERSTBA_HI before ERSTBA_LO
->>
->> xHCI specification 5.1 "Register Conventions "states that 64 bit
->> registers should be written in low-high order
->>
->>>
->>> [Synopsys]- The internal initialization of event ring fetches
->>> the "Event Ring Segment Table Entry" based on the indication of
->>> ERSTBA_LO written.
->>>
->>
->> Any idea if this is a common issue with this host?
->> Should other 64 bit registers also be written in reverse order.
->>
->>> Signed-off-by: Daehwan Jung <dh10.jung@samsung.com>
->>> ---
->>>   drivers/usb/host/xhci-mem.c | 5 ++++-
->>>   drivers/usb/host/xhci.h     | 6 ++++++
->>>   2 files changed, 10 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
->>> index 3100219..36ee704 100644
->>> --- a/drivers/usb/host/xhci-mem.c
->>> +++ b/drivers/usb/host/xhci-mem.c
->>> @@ -2325,7 +2325,10 @@ xhci_add_interrupter(struct xhci_hcd *xhci, struct xhci_interrupter *ir,
->>>   	erst_base = xhci_read_64(xhci, &ir->ir_set->erst_base);
->>>   	erst_base &= ERST_BASE_RSVDP;
->>>   	erst_base |= ir->erst.erst_dma_addr & ~ERST_BASE_RSVDP;
->>> -	xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
->>> +	if (intr_num == 0)
->>> +		xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
->>> +	else
->>> +		xhci_write_64_r(xhci, erst_base, &ir->ir_set->erst_base);
->>
->> This may cause issues with other hosts expecting low-high order as stated
->> in the specification.
->>
->> If all 64 bit registers should be written in high-low order for this host then
->> maybe set a quirk flag and change xhci_write_64()instead.
->>
->> xhci_write_64(...)
->> {
->> 	if (xhci->quirks & XHCI_WRITE_64_HI_LO)
->> 		hi_lo_writeq(val, regs);
->> 	else
->> 		lo_hi_writeq(val, regs);
->> }
->>
+On Thu, 2024-05-23 at 16:19 +0300, Jarkko Sakkinen wrote:
+> There's no reason to encode OID_TPMSealedData at run-time, as it
+> never changes.
 > 
-> Mathias, Thanks for the comment.
+> Replace it with the encoded version, which has exactly the same size:
 > 
-> I've seen this issue only writing the base address of ERST.
-> It's better to use a quirk flag as you said.
-> How about using the quirk only in xhci_add_interrupter?
+>         67 81 05 0A 01 05
 > 
-> @@ -2325,7 +2325,10 @@ xhci_add_interrupter(struct xhci_hcd *xhci, struct xhci_interrupter *ir,
->    	erst_base = xhci_read_64(xhci, &ir->ir_set->erst_base);
->    	erst_base &= ERST_BASE_RSVDP;
->    	erst_base |= ir->erst.erst_dma_addr & ~ERST_BASE_RSVDP;
-> 	xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
->   	if (xhci->quirks & XHCI_WRITE_64_HI_LO)
-> 		xhci_write_64_r(xhci, erst_base, &ir->ir_set->erst_base);
-> 	else
-> 		xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
-> 
+> Include OBJECT IDENTIFIER (0x06) tag and length as the epilogue so
+> that the OID can be simply copied to the blob.
 
-This works.
-Maybe even skip the xhci_write_64_r() helper and just use hi_lo_writeq() directly.
+This is true, but if we're going to do this, we should expand the OID
+registry functions (in lib/oid_registry.c) to do something like
+encode_OID.  The registry already contains the hex above minus the two
+prefixes (which are easy to add).
 
-Thanks
-Mathias
+I also note:
 
+> @ -51,8 +52,8 @@ static int tpm2_key_encode(struct
+> trusted_key_payload *payload,
+>         if (!scratch)
+>                 return -ENOMEM;
+>  
+> -       work = asn1_encode_oid(work, end_work, tpm2key_oid,
+> -                              asn1_oid_len(tpm2key_oid));
+> +       work = memcpy(work, OID_TPMSealedData_ASN1,
+> sizeof(OID_TPMSealedData_ASN1));
+> +       work += sizeof(OID_TPMSealedData_ASN1);
+
+You lost the actually fits check.  This is somewhat irrelevant for TPM
+keys because the OID is first in the structure and thus will never
+overflow, but it might matter for other uses.
+
+James
 
