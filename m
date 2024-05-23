@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307E314532F;
-	Thu, 23 May 2024 12:37:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203FD13B7AB
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 12:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716467841; cv=none; b=S4fMVWAsXA8OyuIoegjMynLaJixQnIYM/8QSNi4QI1dRyYTl8NSxVA9jifSXLqlwig6rb2+7BgQZP5ifcieS22aemiSSR3Zy8VzQkPlCd8dM/njKULisvn91DUPvj9Yo5AqXL9OO4///TunKOTaAOg5LTxF9Jy7g+F8FjN/uKeA=
+	t=1716467927; cv=none; b=Cx8ZxFlYkS36lNe0v7TqnlOIgZtp0iQ8AEPX/k2gk8lAz72D9+ygVheP+rGgifu5n1iM6ZX7ac+9fle5lld4OOZMUtMhrZ0yBmLwdC9x31EGQVMZN+UybVkJVn2YR9wC/HUpYtAA6CEQvLHnU0XRYM/aU5qwHEF2wSjLNmevc7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716467841; c=relaxed/simple;
-	bh=o+cIsFagOQT2Q33MTrnnLdxWh5QXIRSFcQAPjiLDD0E=;
+	s=arc-20240116; t=1716467927; c=relaxed/simple;
+	bh=m00Q3ogbphRbhlXUK4PkU1xACqq/hZrQhWigS4xsD7A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UzdDESExPY4S4RtqG6tbnGwJiCdC+/Hz3G7Lv9o7MS6heRzS8Lc85e413ztpzoLOGofZbs1PQOHsQ+YNpkYpRVy5OgShM91S0arCBwPUDMi8MEd/TTC7eRarD2gjC6d25x/eK1LEv2zzylQ1PXsbJnDrbc2NvKo0LfKfXuuOFao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KcGE+YTA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6dkJmse71yYoyeifQ3ccGvEDooZjK22EzzJJYC1jH78LAnD+mGEavXnjm8raD89TaMnU4rwNpobM/T4GZCZBSJ3ECqB5rlM0ZRHR+zddV8VycOctGam6pL8fDSa5Vs0nwPvdDoDtJaR6zkLoBdh6r0qwS8nNznzumcEEu5Wcn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yvy4Ocf6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KcGE+YTA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B9ECC2BD10;
-	Thu, 23 May 2024 12:37:20 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yvy4Ocf6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53ECEC2BD10;
+	Thu, 23 May 2024 12:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716467840;
-	bh=o+cIsFagOQT2Q33MTrnnLdxWh5QXIRSFcQAPjiLDD0E=;
+	s=korg; t=1716467926;
+	bh=m00Q3ogbphRbhlXUK4PkU1xACqq/hZrQhWigS4xsD7A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KcGE+YTAH4DiNSX1KL56t0ozxuwvELpqo4VkZZaTeDQBO44KZfSn0Q979gtVmbVFB
-	 NX73obibt80jeLyvLB7MieFgC+hOKMDeVdIEPZd6OKaC8T2G18B9m4/nutHTNsjLy8
-	 12xmviuwtED6AiOFESaXpBnHJmPScUqT6uI5hUCk=
-Date: Thu, 23 May 2024 14:37:18 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: shichao lai <shichaorai@gmail.com>
-Cc: oneukum@suse.com, stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-	usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
-	xingwei lee <xrivendell7@gmail.com>,
-	yue sun <samsun1006219@gmail.com>
-Subject: Re: [PATCH v2] usb-storage: Check whether divisor is non-zero before
- division
-Message-ID: <2024052354-snorkel-drainer-d328@gregkh>
-References: <20240523113410.983875-1-shichaorai@gmail.com>
- <2024052351-demote-gangly-74b0@gregkh>
- <CACjpba7k2+GS3c+NGgOeP=9=DU8Mh1DFEGUB_WAkX_VFKBBtrA@mail.gmail.com>
+	b=yvy4Ocf6rkI7K5TOcE8CiQ99FdXJqCnLKq3ijRr7nMDPtbT2LMkffHL6Emc0w6T3Y
+	 h9ZHet2yJlfPLdazLAI5NIT5hcwa4eNt0/wX6NIBqWOdK986cYIUP79aCJu21lzRAV
+	 Dz/omRVcYG18yk+nI5ezmNwUQzk2bNo3t+kJN2x8=
+Date: Thu, 23 May 2024 14:38:44 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CVE-2024-35802: x86/sev: Fix position dependent variable
+ references in startup code
+Message-ID: <2024052327-cider-finance-d040@gregkh>
+References: <2024051738-CVE-2024-35802-959d@gregkh>
+ <b3a6ea47-8628-4edc-aee5-e5051955124a@suse.com>
+ <2024052334-cable-serotonin-fa2b@gregkh>
+ <5ea91ae6-091d-4378-950b-833561eef48c@suse.com>
+ <2024052310-undermost-cramp-5d81@gregkh>
+ <d6981cc9-ea89-47fb-9084-267eba05c7a1@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,68 +45,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACjpba7k2+GS3c+NGgOeP=9=DU8Mh1DFEGUB_WAkX_VFKBBtrA@mail.gmail.com>
+In-Reply-To: <d6981cc9-ea89-47fb-9084-267eba05c7a1@suse.com>
 
-On Thu, May 23, 2024 at 08:23:57PM +0800, shichao lai wrote:
-> On Thu, May 23, 2024 at 7:47 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, May 23, 2024 at 07:34:10PM +0800, Shichao Lai wrote:
-> > > Since uzonesize may be zero, so judgements for non-zero
-> > > are necessary in both place.
-> > >
-> > > Changes since v1:
-> > > - Add one more check in alauda_write_lba().
-> > > - Move check ahead of loop in alauda_read_data().
-> >
-> > Nit, this changes list should go below the --- line, as the
-> > documentation asks for.
+On Thu, May 23, 2024 at 03:21:05PM +0300, Nikolay Borisov wrote:
 > 
-> Sorry for my inexperience. I have read the document and found some
-> examples but I am still a little confused about this.
-> I guess this is what you mean?
 > 
-> Since uzonesize may be zero ... (context)
+> On 23.05.24 г. 15:17 ч., Greg Kroah-Hartman wrote:
+> > On Thu, May 23, 2024 at 03:01:56PM +0300, Nikolay Borisov wrote:
+> > > 
+> > > 
+> > > On 23.05.24 г. 14:21 ч., Greg Kroah-Hartman wrote:
+> > > > Isn't crashing SEV guests a problem with "availability"?  That term
+> > > > comes from the CVE definition of what we need to mark as a CVE, which is
+> > > > why this one was picked.
+> > > 
+> > > But availability has never been one of the tenets of CoCo, in fact in
+> > > sev-snp/tdx the VMM is explicitly considered outside of the TCB so
+> > > availability cannot be guaranteed.
+> > 
+> > This has nothing to do with CoCo (but really, ability of the host to
+> > crash the guest seems like it should be as I would assume that CoCo
+> > guests would want to be able to be run...)
+> > 
+> > Official CVE definition of vulnerability from cve.org:
+> > 	An instance of one or more weaknesses in a Product that can be
+> > 	exploited, causing a negative impact to confidentiality, integrity, or
 > 
-> Reported-by: xingwei lee <xrivendell7@gmail.com>
-> Reported-by: yue sun <samsun1006219@gmail.com>
-> Signed-off-by: Shichao Lai <shichaorai@gmail.com>
-> ---
-> Changes since v1:
-> - Add one more check in alauda_write_lba().
-> - Move check ahead of loop in alauda_read_data().
+> I don't see how this is exactly "explotaible" i.e if a guest is run and it
+> crashes during bootup it simply won't run. Can this be considered active
+> exploitation of an issue?
 
-Yes.
+Isn't preventing a guest from running something that causes a lack of
+avaiability?  Again, that's why we picked this commit, it keeps the
+system from working properly as expected.
 
-> 
->  drivers/usb/storage/alauda.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> ...
-> 
-> 
-> 
-> > Check after the list of variables please, not in the middle of them.  I
-> > think checkpatch will complain about this, right?
-> 
-> In fact this script doesn't warn about these problems, but I will
-> adjust my code style later.
-> But the check in alauda_write_lba() is due to some variable like
-> lba_offset and zone will perform modulo and divide operations,
-> which may throw divide errors when uzonesize is 0.
-> So I think I prefer to adjust the order of the variable list later.
-> Changes like this.
-> ```c
-> unsigned int uzonesize = MEDIA_INFO(us).uzonesize;
-> unsigned int zonesize = MEDIA_INFO(us).zonesize;
-> unsigned int pagesize = MEDIA_INFO(us).pagesize;
-> unsigned int blocksize = MEDIA_INFO(us).blocksize;
-> unsigned int new_pba_offset;
-> if (!uzonesize)
->     return USB_STOR_TRANSPORT_ERROR;
-> unsigned int lba_offset = lba % uzonesize;
-> unsigned int zone = lba / uzonesize;
-> ```
-> If it's ok, I will post the patch v3 soon.
-
-That works, thanks!
+thanks,
 
 greg k-h
