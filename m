@@ -1,115 +1,61 @@
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0C78174C;
-	Thu, 23 May 2024 12:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E4A14A4E7;
+	Thu, 23 May 2024 12:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716469140; cv=none; b=s5KqFV5a82WfVwBCKKZgcyVjUc1anM1xRN7jQ937uuou0FVrUDsbCNV9gb2I+0/QphELZupY26jHvUlAlHWF1W84uNhhl3mxxlnM8uKxR50snidYO0jnLbmBxfPORf/gGvn6A9XkK3ewL9x0MtDm2zVO2watoc309cFM+26IjpI=
+	t=1716469145; cv=none; b=rLXx1pnFe/LYoc+SSo2MwRxmjK/uxaWs5pgudgV9QBus0nxEe7FzjAOOo2nGr3NOG5cxpHaFNnWo8bjREfQP3LBDSBfLabhy6LIi5eSJgK3oJNGKODglioldgpchp2eL0BB+o4lJTmW//fBL8Fb3TnzIwfV3jehVcbGQ2IxOzG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716469140; c=relaxed/simple;
-	bh=weEYl6VBPgDFrEHa6UzdQDJyfa30XR8+4PkfKpY9u+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kqF0xs11iffxenFmYZg+/0HNY3jQSKxv0x1Y5uDm5WdEbuq64natcwWxgi6SU81jWCvf7tK+ZTpoR0EHuX2lFCmN8awXuQw342NN6+cRE5FZF17HkH1xPIEsYz3KifOGukxC8Gl10gCDznQzEvRypZJRQdr9E5qZJRYa24QmSLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=dlhGgJir; arc=none smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1716469145; c=relaxed/simple;
+	bh=hcftNYsddadnCv048GeLawzgKXG7zWe4Ir3rA4XXvNE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=CF5byKLDo7bFN5Zj4SGme9BoZaqF+MgA2I5Etfb/czT61WQ2ZMtTiSioXoPbR7/2CW+hhxqINEVnvtrvL/RZIO8JeZwPji/5zjriHyQEdKnKuLTpjM8BVAamoHs4yVR+mZ8KljmPFUp+lkmZcR5/Thmx+M8KEDNhzWXCJzsM0To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hchj5BtQ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dlhGgJir"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1716469137; x=1748005137;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=weEYl6VBPgDFrEHa6UzdQDJyfa30XR8+4PkfKpY9u+Q=;
-  b=dlhGgJir30MMqZGucwod16iet5uuatM0YBu8BU41w0PZaQn0pqFjprX8
-   rckK2gntWx9WFOsQQn771LHZ66KyVcvt1IX85Oc5hPQLj3nJm6inkjuLw
-   4o2kQFhcDML3aNSRi7kboT4WgJLvHB5JMWbt4hMVn32ddMZ1xQe6xM4Tu
-   BRJ0mWbjokdpGIwSCu2YRBTVxJjqqZtSxO0MewdUO3e0AU/SdCzydB6lV
-   nTWOGwtbK/Cv4GaL34COaqjCtDju2+lyZsjfAEjCjOHCp21NqgKH+KTyj
-   pyG+29jsTP+ubf5HJnPn9uA+LDQvSgFthF/ptWfgn8N2YJkpvYVNmbLY3
-   g==;
-X-CSE-ConnectionGUID: 391sdrR/TUygf+bO//3dvg==
-X-CSE-MsgGUID: sRq+viBRSWafHCaIG9zgkQ==
-X-IronPort-AV: E=Sophos;i="6.08,182,1712592000"; 
-   d="scan'208";a="17902276"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 23 May 2024 20:58:55 +0800
-IronPort-SDR: 664f2ff3_NdXhDMeSlIPBASy7p/qsdtaNZyUM2ng44C2/ImtxQRtTm5N
- cdJMbeNYFw7yU9s85/iU6z0A6fWqTSlo96v/IgA==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 May 2024 05:00:51 -0700
-WDCIronportException: Internal
-Received: from bxygm33.ad.shared ([10.45.31.229])
-  by uls-op-cesaip02.wdc.com with ESMTP; 23 May 2024 05:58:54 -0700
-From: Avri Altman <avri.altman@wdc.com>
-To: "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Bean Huo <beanhuo@micron.com>,
-	Peter Wang <peter.wang@mediatek.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH v5 2/3] scsi: ufs: Allow platform vendors to set rtt
-Date: Thu, 23 May 2024 15:58:25 +0300
-Message-ID: <20240523125827.818-3-avri.altman@wdc.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240523125827.818-1-avri.altman@wdc.com>
-References: <20240523125827.818-1-avri.altman@wdc.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hchj5BtQ"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 7A63C20B915B;
+	Thu, 23 May 2024 05:59:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A63C20B915B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1716469143;
+	bh=AZEYm5GuhW1ZsBqFWlHzvoubnwpJ3VMSyRQiDDS9XOM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hchj5BtQg1EZf2QFbV0PSfyyssMZRES/bDhzFQIbX/mZxc2amHrqU5ksn4oexkAGq
+	 CePgfLtoMmgXCDegUq3L/+XIzpN8/NCRQIirm+BJphjg+NOXT2NndaOrJI0unJmm/F
+	 /FFLytXWLoNN8bCZ1IOKbKTY/przN2yMKGFiDqJI=
+From: Konstantin Taranov <kotaranov@linux.microsoft.com>
+To: kotaranov@microsoft.com,
+	sharmaajay@microsoft.com,
+	longli@microsoft.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH rdma-next 0/2] Fill in capabilities and guid
+Date: Thu, 23 May 2024 05:58:55 -0700
+Message-Id: <1716469137-16844-1-git-send-email-kotaranov@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Allow platform vendors to take precedence having their own rtt
-negotiation mechanism.  This makes sense because the host controller's
-nortt characteristic may vary among vendors.
+From: Konstantin Taranov <kotaranov@microsoft.com>
 
-Signed-off-by: Avri Altman <avri.altman@wdc.com>
----
- drivers/ufs/core/ufshcd.c | 5 ++++-
- include/ufs/ufshcd.h      | 2 ++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+This patch series fills in GUID and device properties.
+Most of these properties are required for CM.
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 7df8bcacbe7e..d8e0e80d66a5 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -8542,7 +8542,10 @@ static int ufshcd_device_params_init(struct ufs_hba *hba)
- 		goto out;
- 	}
- 
--	ufshcd_set_rtt(hba);
-+	if (hba->vops && hba->vops->set_rtt)
-+		hba->vops->set_rtt(hba);
-+	else
-+		ufshcd_set_rtt(hba);
- 
- 	ufshcd_get_ref_clk_gating_wait(hba);
- 
-diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-index d74bd2d67b06..495b50a72f9f 100644
---- a/include/ufs/ufshcd.h
-+++ b/include/ufs/ufshcd.h
-@@ -329,6 +329,7 @@ struct ufs_pwr_mode_info {
-  * @get_outstanding_cqs: called to get outstanding completion queues
-  * @config_esi: called to config Event Specific Interrupt
-  * @config_scsi_dev: called to configure SCSI device parameters
-+ * @set_rtt: negotiate rtt
-  */
- struct ufs_hba_variant_ops {
- 	const char *name;
-@@ -374,6 +375,7 @@ struct ufs_hba_variant_ops {
- 	int	(*get_outstanding_cqs)(struct ufs_hba *hba,
- 				       unsigned long *ocqs);
- 	int	(*config_esi)(struct ufs_hba *hba);
-+	void	(*set_rtt)(struct ufs_hba *hba);
- };
- 
- /* clock gating state  */
+Konstantin Taranov (2):
+  RDMA/mana_ib: set node_guid
+  RDMA/mana_ib: extend query device
+
+ drivers/infiniband/hw/mana/device.c  |  2 ++
+ drivers/infiniband/hw/mana/main.c    | 19 ++++++++++++++++---
+ drivers/infiniband/hw/mana/mana_ib.h |  5 +++++
+ 3 files changed, 23 insertions(+), 3 deletions(-)
+
 -- 
-2.34.1
+2.43.0
 
