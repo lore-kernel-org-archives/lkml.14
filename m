@@ -1,177 +1,199 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2057.outbound.protection.outlook.com [40.107.241.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7FA13CA87
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 07:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716448541; cv=none; b=cDRriTv2Ng08NmZIfyCQLzVPj0kEi+ffvyqmwrioYZk4s1Lmosz/uY+F/+GdCjAJwouMkBEXobK3zu1iKggVj4lovIHe0i/hJ1f/rUjvRHDehMzBxTJNGTtUsGdU6Eu0k/drJ9xMe7amvJ0ZlTDvNGL8dNw4H/8pf03zavOZgZk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716448541; c=relaxed/simple;
-	bh=icFbe+41nokulSDX6x9J5QKXATNdRAzI4brjx50UQVA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ak3gbE5yHmY+8E5vsFeavPwGznF83lSuxQyPzlb9eLyfdry5DguCm395MLy8uFfsBr2MVYJoe6IxdNi3pNem5YTXt8CYT3mB6m6ecNNCIyVHOZi/b6rszImgwqJgDP+6C9G7O6P4LpYNLVhwH1dnRS7ITadpEfillg2T8OWGIZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VlK9X54Y1z2CjPG;
-	Thu, 23 May 2024 15:12:00 +0800 (CST)
-Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7132918005F;
-	Thu, 23 May 2024 15:15:30 +0800 (CST)
-Received: from huawei.com (10.173.135.154) by canpemm500002.china.huawei.com
- (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 23 May
- 2024 15:15:29 +0800
-From: Miaohe Lin <linmiaohe@huawei.com>
-To: <akpm@linux-foundation.org>
-CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] mm/memory-failure: fix handling of dissolved but not taken off from buddy pages
-Date: Thu, 23 May 2024 15:12:17 +0800
-Message-ID: <20240523071217.1696196-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004123B29D
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 07:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716448626; cv=fail; b=gQmyQzlz19hZuvY+M/62dcaqzucnG9atAP1gDyy2o2s9OZaTlR0uaTEyLmGvYtDPe5uYztah5V1tLs6BEwwjsoR8nDD8g/Ev6L1MQGq0wLfWNZ+qGorM860MCGjpQRsMxO3djY2DaEGSE3NJYt/7PijT2oiL+F85xGJkUUJgAa4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716448626; c=relaxed/simple;
+	bh=7IP7aIpoGgzeVSXZmkvl91soFOkGpLycu1KYFH18dsg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=W6LJ6wgqKZHll/+WZtbTnNKv3jNuD5N3FJjoTKYj03t+WdpU+SjRx/d7rnaA4tCRzKGhd2Q7MlNxb7jfgPpP3INLVWu7wcN0oe0VqSrS7GqGe+puivjgLWQgqCVvB1hl1WElGVtClG4OTuu8XWBndf2YhYR0zxmhMCBCpLk6b8c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=Eh0MnQ0g; arc=fail smtp.client-ip=40.107.241.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prevas.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="Eh0MnQ0g"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hsqc8DU/xEC28Zm13H4Gm3gj9g0cIPn0UNVzrat7OdzLdqU2d7L/pNIPqopH/nXM5Je8z+vptBEiHYIAbhYq2DMISO+B9Aad/9RrZ0g613KClrbdAbs1ar1lWGJGryneT1qj+MEGM8JzBZvq1TA2ZZwczmW477wRRM+W9MIxyaZ9e3CWORYNBwdU0jToUfnZcgWZjaR3vxcte1e/mngKUTLbQ7d7IiYvVNftLDS87Ek5cNAYqGkm+bxvnUm7yZX0jyg7lLUehX37I1JeP06vAL8dIumeVpyAa+/QTSOkehLx2ShIC9V5Qs0Y5OH0joLx11J6Xd+TlzaZhDy/c9RyLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y5g6l5Zk5g7VcXTUBT/+ZtB80eliemEGPyr+Q/GC/yk=;
+ b=RvOyFGkjrR8RWI2M1ycqBqEJCzmkn6Xfk71do/mBpVYBBTzTuL1yoJSBw6wXVyO4JS6zwk8o1n2K/R6rqee0aQyvkZQgj5EkhLimeMN/x5H/Q1iyVFhInkrYINHtaOq81hfDddyy1kklVK45MmgVlH/jZq5wIISC+Ay6Xa3wfvSmbJBcBiXr9Xc83JnWAoJLNPHNPJxbL99DOHml6pe7Djs8dB++sYJI+O++tIq+KcFRdP01bZ6AvJsXxZMBDu4HSmorvaZjtWlhdeWmnKuf3qtRoMpCWoSDDXS2oqPNvWfaArEvRL1zq+VjC4mSP4a+EzRTiXE5OICrEbA1JOJmMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y5g6l5Zk5g7VcXTUBT/+ZtB80eliemEGPyr+Q/GC/yk=;
+ b=Eh0MnQ0gMDrGAEkEN1weJjyS189pGvpPDYeP10lasAC8LX93jwclNNrH8sy9RXXRonWbsScH0qR2+AJX1jh/fmbMvpqkm6+/dv8tblT6ZOZ2HoYkHrBzFdcUZD79FRvN/ZBClCs117sKXNjaHNUqtq8EWJmQqISIo9zzMhP6iGY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=prevas.dk;
+Received: from DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:45a::14)
+ by PAXPR10MB7951.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:23e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Thu, 23 May
+ 2024 07:16:55 +0000
+Received: from DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9fcc:5df3:197:6691]) by DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9fcc:5df3:197:6691%3]) with mapi id 15.20.7611.016; Thu, 23 May 2024
+ 07:16:54 +0000
+Message-ID: <d225dac2-501b-40de-b9d9-305a9ebfff51@prevas.dk>
+Date: Thu, 23 May 2024 09:16:49 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH workqueue/for-6.10-fixes] workqueue: Refactor worker ID
+ formatting and make wq_worker_comm() use full ID string
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Yafang Shao <laoar.shao@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Jan Engelhardt <jengelh@inai.de>,
+ Craig Small <csmall@enc.com.au>, linux-kernel@vger.kernel.org,
+ Lai Jiangshan <jiangshanlai@gmail.com>
+References: <o89373n4-3oq5-25qr-op7n-55p9657r96o8@vanv.qr>
+ <CAHk-=wjxdtkFMB8BPYpU3JedjAsva3XXuzwxtzKoMwQ2e8zRzw@mail.gmail.com>
+ <ZkvO-h7AsWnj4gaZ@slm.duckdns.org>
+ <CALOAHbCYpV1ubO3Z3hjMWCQnSmGd9-KYARY29p9OnZxMhXKs4g@mail.gmail.com>
+ <CAHk-=wj9gFa31JiMhwN6aw7gtwpkbAJ76fYvT5wLL_tMfRF77g@mail.gmail.com>
+Content-Language: en-US, da
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+In-Reply-To: <CAHk-=wj9gFa31JiMhwN6aw7gtwpkbAJ76fYvT5wLL_tMfRF77g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MM0P280CA0104.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:190:9::21) To DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:45a::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500002.china.huawei.com (7.192.104.244)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR10MB7100:EE_|PAXPR10MB7951:EE_
+X-MS-Office365-Filtering-Correlation-Id: f52dbf51-6563-47a4-c628-08dc7af851df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U0grUTZDZ1NJUzZPVmYrald0c2p2dU1iMWlxS1Fra2pTSnNkN0RiQkNGaEww?=
+ =?utf-8?B?SmU5UjFjZ0JMdXVrMDR1ckF1SndTRUdEOGwzMWZQTWNzaWJDV2pwcWtUeWRp?=
+ =?utf-8?B?eDFWb3h6cFZHMXBMaDFSQncvek1IOUJZNUNNNXVWWmZRZHdNbmpPUlNCSXcv?=
+ =?utf-8?B?a2VIZjZsUzRJNTBpTXlIL1BIejkyNzhLMVFaekRxS3UzWVNxOHJvY2VacHdR?=
+ =?utf-8?B?TlcrNFZzRldnTUg0VTMvYU1YS3hRdnpjZUUzSkxHWko1TS80b2dseHdCWm1W?=
+ =?utf-8?B?TDdDZWpwSTJRN3dxdEdHRnBGNzU4YzNVbHR2RnltNVZyQ0szMW4yQnV4M1A1?=
+ =?utf-8?B?TlZ4eUx4R25CVFJXbEdBWGV6QzZKK0RTTDNBNHlibDBocTBCKzhTYzAvaXVS?=
+ =?utf-8?B?dk1ZQkZtQ3dkenEvNEQxY3JDNVN4aVh4S3BlWmtQTUUwUGY3M01YZjlhZ0ti?=
+ =?utf-8?B?U1N0dTcvNlFqWldRUlp4YjUvSm55TmxWWTNCWThSaVVzT29ISFZVeWREMXVW?=
+ =?utf-8?B?bDF3NWxlVWdIWm42dzc1Q3Y5OXJ5aXNLVHp4VFR6RHFXUlh0OW1HT2ZwcEFP?=
+ =?utf-8?B?cGtOeFBuVUZWNDdoYXQyckEwckFpUnZuM0U1QnBjMGZqejRlZWsrbFpwUnRB?=
+ =?utf-8?B?TDZUNk52dENDcCtFekovUWlQZmVEN0JBWVFsV2FpSDR1cGl3UGVNVzFoOWFU?=
+ =?utf-8?B?QVZleEVDR0dzV05nUjM3VkZYL0RWcDJBeVNHTXpvMWtDQUtWTWY2M0NQWi94?=
+ =?utf-8?B?R041eHpOeUNPU0pSV2t0T0YwdnZlOW03VjFaM29TSEpjeUxOTDMramVSRmN3?=
+ =?utf-8?B?eTk3ckUrdnFnemc0YmtpRENtV3JWNlBHNDhtbHgxWTEyZUtNMVZYbVpSNkdj?=
+ =?utf-8?B?eTh1YUh1STdTWWp0MXQzOWtCRkdQMGVZR1cwaTZEa2phWnVITHNDY2lkbGxy?=
+ =?utf-8?B?ems5Q01BUzdnc3M0bzNYWFJXZXk0azVscHZZeHNxM0MvQUl1bFlHckMzdWJG?=
+ =?utf-8?B?eCtTaXhheWZMVFRaVXVlTkU1RkRqL1VLU0FLQTY5M0FGSWZlaXRBSUxqK29U?=
+ =?utf-8?B?OHNwY0VhZjJDS05SMGFtSE9mb0pVYUgzZlA5S3EyZndSK2wyTlZib3Y4b2Yy?=
+ =?utf-8?B?VlUxNDJ0Nnpub3h3Um1YQ1pIVFBTS1U4aW9rc1Jza0RheGRNYXV1YzJ3WWtW?=
+ =?utf-8?B?eUl5cG1NNjdadkJZMWgrYTJmL1hNeU9DYlF6aUF0cHFybmI3WW1LeU5kZVlH?=
+ =?utf-8?B?U0VpMEJ3TWxMT3hDLzdFaG91VWt4SXhkbC9aMjBrZllKbzVpWldxWVg4ZVcw?=
+ =?utf-8?B?bWpWa1FmelhPSDg2SEN5NlZENFIvYUErZ0NzbisyVW1TWlNQamR2cmpkditx?=
+ =?utf-8?B?cFpiQUZPczU2bTNYN2dNZ0QzQjFqWkt3N2ZuYTdCRXdQSmJaenVnN1VITjVl?=
+ =?utf-8?B?Z1FqQ3NIYTJRTTczSjNGOGUvZXpYMEpLK0tkdGhjQjk5ZWlaSWZ5dTdpS1Rq?=
+ =?utf-8?B?a3RKZlRqVkIyS3JOKzVTUngrdityYWcrOENVOVN4TEhqN1kxeUxKUzA1Yito?=
+ =?utf-8?B?T2dCb2wralZqOE9qc2o0M2tGcG0yU2pUUkdJbzhab1ZaOVVSb0NkWkx5OU1K?=
+ =?utf-8?B?eVd1Yi9PN0FWYldodEtjdU4ra0VzaVBHc21sMXNOclo3RFpaVzViQUNPb3BR?=
+ =?utf-8?B?dHlOZVlYQWFiV0xoNVFtTEp6WGM5VTNwS2NOTUlsakZCUFNvQy9DcTVRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S1ozS2s3OW1XMHByVHpSN0drUVIweEpaaS9sWlE3My9NV2NpOHV2UnplQysr?=
+ =?utf-8?B?Vk9SVFlPWUwrMWJBZlM0YXV2QnlXc2ZzTjN3aE0zeitIdXprbnU1QzlTY0tI?=
+ =?utf-8?B?V29xQ0hRb3pXcHVsckYwVzNEOGdYdEFPWDl2UlNRWVNmVm1aWnI2WURUT2sw?=
+ =?utf-8?B?aFRQU09aODRJY2NQRk1xQWpnS01lR2dNbzBkY1AwVDlaNlMyUG14WFFwQU5k?=
+ =?utf-8?B?cDg0Z0xNN3d3dE1UeTlveEMvd2pKcWFXeEEwZzRpNjlMRmNYWnZhOE9MaGR0?=
+ =?utf-8?B?c3BIL0EySlU0dWJlNisvWDRFNnFLWktLczBnVTlhMWplcXM1dGVVMllWYVFh?=
+ =?utf-8?B?QldJd1JKOHgzby9kdjRHZjhMZlN2cU1oTGZkUHU4Qm1NWHNvZ21LQXZ0ZlJu?=
+ =?utf-8?B?Tm1UWENXZW11b3ZybTF5NTJXWnFodHlZMXBpOWVxNlRpTTQrV09FWTZFd0pr?=
+ =?utf-8?B?aWtIdmJVT3FMb2JtYTd4ZGF1RmZxNWR4djBuWXBxSHc1T1NCOGh1akFtQ1Na?=
+ =?utf-8?B?THEvOTN3UU1VKzdJNXR4b25jeWFFcjZab3dPZ0c1S1ZiSVhhUVEzdCs0YUFy?=
+ =?utf-8?B?dmxMbzlWbmx3L1g1b0duYU1hdWVtZkVMNEVUOVlWVlFZQ1JxTVlxZFNZT1U2?=
+ =?utf-8?B?SFhsVjZGenpSM1BQaU5XcWUwNlphVERYR0VrMzlBcjhHKzE3SUQxdnVoZmFJ?=
+ =?utf-8?B?R2V0cDVOV1U4VTd4d05mRGhaQUd0clcyTGZpb1NINE9SUzFWR0hjUjhUdW5M?=
+ =?utf-8?B?WCtTKzc5bVF2Y3d5ZUlrVXVwTHR0NGkyZVh4MklwbjZOcmZSc3o4eFRRTDhE?=
+ =?utf-8?B?RUE0OFQyN3lTajNsaFNwS0NYcTc1RmlrU2svVGZ4SGZDZXYraVR4SUtkSklY?=
+ =?utf-8?B?dG95Z2RRR1VUbzdJTmRmU0I0Vk9hUnFDZDhCYUZjaEUyWjh2UW9zLzd5Q0xU?=
+ =?utf-8?B?aSs0T2NFM21FM1lFWHBzdGhjREk2aDhQYXlhS3FNaFVxSnpla0pqdkgza2xH?=
+ =?utf-8?B?dFhHS05DcnRtWER0Nkl4dkJMeHFQNHhtRnBMWEVIcCtHRWFaS3ZPOXJKTkJT?=
+ =?utf-8?B?TmhSRElaZzZpMFZyVUdTY2kvdzFZb2Q2NUNwY2JUcWdJSXN3TmJVd2M3aFg1?=
+ =?utf-8?B?Mnk0ZU9TaWxRaHNHOXZoSzlseHNIUXFVVmhYYzg0NlNCNHdWbUxpZWhlRWJk?=
+ =?utf-8?B?dkJWWTZaQTNVVVhXVnpnYUN1eStGaXJBcTdRSXdKNXoraU9PSzJRMUgrTk5u?=
+ =?utf-8?B?STVqSDQ5Q1RFTDhRbFBWOHRNTXpKQ3BvSGg2aENRanM3U0ZBS0RNdnVWWkhG?=
+ =?utf-8?B?dVlJTHZlalgyampTZ2hVVlhGZGFLcGJuSGJTTHJia1B6SHJwY2JwdlZxWHg4?=
+ =?utf-8?B?N3REYzJCVFhmVGlkZmhuOUtoRmo3cnJsWTFLRkpPcFFjbFBZS2ZjTjRLY0Jx?=
+ =?utf-8?B?cnhnd3Z1b0EwSUJXUzBnTFIwN24xOHZzZTM2NkNZYS9pLzN0Lzlmd2oyYmpy?=
+ =?utf-8?B?dDJQdXQzYmhMSkpPT3ZVMkdWNkVvUUtyamREWHhraGFEVkJqQ3lwWjNKeEFX?=
+ =?utf-8?B?MWlKWHlNOTNJVTdkUTNJbDJqODlYdG9KM1VUQ2ZIOGovcXJuWTNocWdVRmVk?=
+ =?utf-8?B?STBUNTZBNDEzeVlPRGREL1ZaVk16em9hTEFuU204NzA4M1UwV3dhTEp2R09m?=
+ =?utf-8?B?K1VPMGhwakZiREY1aVN4QzkwcmV3Q0N1T0xrYi9KeWtsZ3o4Q0RLYXRFa3Fv?=
+ =?utf-8?B?VjBrNVdkWW1TaDBaQWJETjVoeEtJZGFJdUhrOTNWc3psRlY5a2Vsci9QSXc4?=
+ =?utf-8?B?ZlFuZW1hdkIvdkxwSzExMW83NkdYdVpXYlhJNEZPcUppSGV0RUZZeE5OQkJ2?=
+ =?utf-8?B?NFlvd0IvcWkzUmlQMWZ5NW5sT1R3QWpzTEFiUVZxalY4ZlVYMkt2QlpHNXZY?=
+ =?utf-8?B?ZHFkK3lJTkFRUEZCa3I1OHpTRTJ3RFpRRTd0NEsrcW83T01IRkNNYTZ6MkFn?=
+ =?utf-8?B?UUtkTGt4emtiY1puMFFvWlhCZ2puRnNMK1BSazRIajYxNGszKzlaUzdnYXV5?=
+ =?utf-8?B?OEl0S052WXBNSnB1SFdublE5SUc3YlZaMkhJUHg2WjA2NVQ1TmVBbnpOWkFw?=
+ =?utf-8?B?UXM3Q3l0K1k0ckNtcE12RFk3clI4aU9JREZzdElQb21Kc1NJMEJkcURuNFRU?=
+ =?utf-8?B?akE9PQ==?=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: f52dbf51-6563-47a4-c628-08dc7af851df
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2024 07:16:53.4832
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oQ2jF0mvUcnC8846LtBqvcA8Z7XtCNWi8E7rKs5q2vdkPPfEVMcpDdiMNCPDSF6okZTAh7NJWJLCvHf4i/3KV+Isl6+fPApeUgnPeZ2et9s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR10MB7951
 
-When I did memory failure tests recently, below panic occurs:
+On 21/05/2024 20.05, Linus Torvalds wrote:
+> On Mon, 20 May 2024 at 19:34, Yafang Shao <laoar.shao@gmail.com> wrote:
+>>
+>> We discussed extending it to 24 characters several years ago [0], but
+>> some userspace tools might break.
+> 
+> Well, the fact that we already expose names longer than 16 bytes in
+> /proc means that at least *that* side of it could use an extended
+> comm[] array.
+> 
+> Yes, some other interfaces might want to still use a 16-byte limit as
+> the length for the buffers they use (tracing?) but I suspect we could
+> make the comm[] array easily bigger.
+> 
+> But what I suspect we should do *first* is to try to get rid of a lot
+> of the "current->comm" users. One of the most common uses is purely
+> for printing, and we could actually just add a new '%p' pointer for
+> printing the current name. That would allow our vsprintf() code to not
+> just use tsk->comm, but to use the full_name for threads etc.
+> 
+> So instead of
+> 
+>    printf("%s ..", tsk->comm..);
+> 
+> we could have something like
+> 
+>    printf("%pc ..", tsk);
 
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x8cee00
-flags: 0x6fffe0000000000(node=1|zone=2|lastcpupid=0x7fff)
-raw: 06fffe0000000000 dead000000000100 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000000000009 00000000ffffffff 0000000000000000
-page dumped because: VM_BUG_ON_PAGE(!PageBuddy(page))
-------------[ cut here ]------------
-kernel BUG at include/linux/page-flags.h:1009!
-invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-RIP: 0010:__del_page_from_free_list+0x151/0x180
-RSP: 0018:ffffa49c90437998 EFLAGS: 00000046
-RAX: 0000000000000035 RBX: 0000000000000009 RCX: ffff8dd8dfd1c9c8
-RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff8dd8dfd1c9c0
-RBP: ffffd901233b8000 R08: ffffffffab5511f8 R09: 0000000000008c69
-R10: 0000000000003c15 R11: ffffffffab5511f8 R12: ffff8dd8fffc0c80
-R13: 0000000000000001 R14: ffff8dd8fffc0c80 R15: 0000000000000009
-FS:  00007ff916304740(0000) GS:ffff8dd8dfd00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055eae50124c8 CR3: 00000008479e0000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- __rmqueue_pcplist+0x23b/0x520
- get_page_from_freelist+0x26b/0xe40
- __alloc_pages_noprof+0x113/0x1120
- __folio_alloc_noprof+0x11/0xb0
- alloc_buddy_hugetlb_folio.isra.0+0x5a/0x130
- __alloc_fresh_hugetlb_folio+0xe7/0x140
- alloc_pool_huge_folio+0x68/0x100
- set_max_huge_pages+0x13d/0x340
- hugetlb_sysctl_handler_common+0xe8/0x110
- proc_sys_call_handler+0x194/0x280
- vfs_write+0x387/0x550
- ksys_write+0x64/0xe0
- do_syscall_64+0xc2/0x1d0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7ff916114887
-RSP: 002b:00007ffec8a2fd78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 000055eae500e350 RCX: 00007ff916114887
-RDX: 0000000000000004 RSI: 000055eae500e390 RDI: 0000000000000003
-RBP: 000055eae50104c0 R08: 0000000000000000 R09: 000055eae50104c0
-R10: 0000000000000077 R11: 0000000000000246 R12: 0000000000000004
-R13: 0000000000000004 R14: 00007ff916216b80 R15: 00007ff916216a00
- </TASK>
-Modules linked in: mce_inject hwpoison_inject
----[ end trace 0000000000000000 ]---
+The alphabet is running out of letters, so if somebody goes and
+implement this, I'd suggest making this %pc thing take extra modifiers,
+so one could also get the pid or whatever else one might want to print
+from a task. I.e. %pcN, %pcP, ... We could of course have %pc with no
+following letter mean ->comm (or "real name" for kernel threads) if that
+is the most common thing, which it very well might be.
 
-And before the panic, there had an warning about bad page state:
-
-BUG: Bad page state in process page-types  pfn:8cee00
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x8cee00
-flags: 0x6fffe0000000000(node=1|zone=2|lastcpupid=0x7fff)
-page_type: 0xffffff7f(buddy)
-raw: 06fffe0000000000 ffffd901241c0008 ffffd901240f8008 0000000000000000
-raw: 0000000000000000 0000000000000009 00000000ffffff7f 0000000000000000
-page dumped because: nonzero mapcount
-Modules linked in: mce_inject hwpoison_inject
-CPU: 8 PID: 154211 Comm: page-types Not tainted 6.9.0-rc4-00499-g5544ec3178e2-dirty #22
-Call Trace:
- <TASK>
- dump_stack_lvl+0x83/0xa0
- bad_page+0x63/0xf0
- free_unref_page+0x36e/0x5c0
- unpoison_memory+0x50b/0x630
- simple_attr_write_xsigned.constprop.0.isra.0+0xb3/0x110
- debugfs_attr_write+0x42/0x60
- full_proxy_write+0x5b/0x80
- vfs_write+0xcd/0x550
- ksys_write+0x64/0xe0
- do_syscall_64+0xc2/0x1d0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f189a514887
-RSP: 002b:00007ffdcd899718 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f189a514887
-RDX: 0000000000000009 RSI: 00007ffdcd899730 RDI: 0000000000000003
-RBP: 00007ffdcd8997a0 R08: 0000000000000000 R09: 00007ffdcd8994b2
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffdcda199a8
-R13: 0000000000404af1 R14: 000000000040ad78 R15: 00007f189a7a5040
- </TASK>
-
-The root cause should be the below race:
-
- memory_failure
-  try_memory_failure_hugetlb
-   me_huge_page
-    __page_handle_poison
-     dissolve_free_hugetlb_folio
-     drain_all_pages -- Buddy page can be isolated e.g. for compaction.
-     take_page_off_buddy -- Failed as page is not in the buddy list.
-	     -- Page can be putback into buddy after compaction.
-    page_ref_inc -- Leads to buddy page with refcnt = 1.
-
-Then unpoison_memory() can unpoison the page and send the buddy page back
-into buddy list again leading to the above bad page state warning. And
-bad_page() will call page_mapcount_reset() to remove PageBuddy from buddy
-page leading to later VM_BUG_ON_PAGE(!PageBuddy(page)) when trying to
-allocate this page.
-
-Fix this issue by only treating __page_handle_poison() as successful when
-it returns 1.
-
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Fixes: ceaf8fbea79a ("mm, hwpoison: skip raw hwpoison page in freeing 1GB hugepage")
-Cc: <stable@vger.kernel.org>
----
- mm/memory-failure.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index a3958150cbf2..8962c0d314b0 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1239,7 +1239,7 @@ static int me_huge_page(struct page_state *ps, struct page *p)
- 		 * subpages.
- 		 */
- 		folio_put(folio);
--		if (__page_handle_poison(p) >= 0) {
-+		if (__page_handle_poison(p) > 0) {
- 			page_ref_inc(p);
- 			res = MF_RECOVERED;
- 		} else {
-@@ -2116,7 +2116,7 @@ static int try_memory_failure_hugetlb(unsigned long pfn, int flags, int *hugetlb
- 	 */
- 	if (res == 0) {
- 		folio_unlock(folio);
--		if (__page_handle_poison(p) >= 0) {
-+		if (__page_handle_poison(p) > 0) {
- 			page_ref_inc(p);
- 			res = MF_RECOVERED;
- 		} else {
--- 
-2.33.0
+Rasmus
 
