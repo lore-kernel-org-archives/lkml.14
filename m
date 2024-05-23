@@ -1,100 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FD713CABA
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 10:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DA913CABA
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 10:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716458945; cv=none; b=dy/UZrXzBlpPFzKu9AhSF7OHrCC8VnMsSDi/eLx3bZEJnOMLM+y8nfCcYhtfpLwkOImC3xEf2GFMqGjF68GJV9EvTe22pKCFqXrdPuvlpzIAQaeLv5K4hUaLlO1hH7pb1aYoaCMIncI8KfciUl1o3vBBW57y4Owd5YC7snYLC1o=
+	t=1716458968; cv=none; b=QmtmgFvteJFd42Iujmtq9KSD79tbi12KnFvIk+3Iq9H78VEWa2vPFGozdTLupP/iS3C2JydYMSG3unV56mq+R0ci34xtCup+Bae+cf9znhNndqvComEtNAvXGwDGp9NcNzZQgr9gjHaLqUEKh20YaRcyYZqAF1kRgvdKnsDQ8bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716458945; c=relaxed/simple;
-	bh=cRvgnopSvHuyo7S5+mFu2V6jpNbioLHzrbU88U4unFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tPcfd4SLvgYAFkylMXmbg8D3nWBQ+Sgvvee3e6pRQcJayNZn0DD03MdPuyZi90Xw1hZFe5hYAf2Q7g4CTUxEIeJWRjYS5bGfftGpMjh2B0zl+sTSWiViErhedww7DxpwVGFk/EZNaQIIxJ6r3sqgGOsREWxrlgWT+cG6VtGHDgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mEsy0Dfj; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mEsy0Dfj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716458943; x=1747994943;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cRvgnopSvHuyo7S5+mFu2V6jpNbioLHzrbU88U4unFs=;
-  b=mEsy0DfjQq4qxrtzf6yku1G7ZXVFhZknXdWU8UV4vx4UAs8pKtzEzhSK
-   hnF6YiC4FJp+lVeE/iF5GdJx6B2fBsN26t6K9AXEADwdLwxVS4puyjkf3
-   KnNJkm5gOp1Kjj7OwbXd9alyfjJBXLc8Pg0bYEF6mmb2W0es/446wsV2j
-   kJn/26yEzjGsRgn1MbLx1VGzgamuXItPQ8PQehcmrYlItuKRUG8S+H8I3
-   r3czuIPY5SyNgB1BqG7NZXJQ9/CuKjqJubhfh9QQA/LvmL7YFXu1+v7fM
-   4i/xBGTIrpYnx81IqN2a3UfqlOiceT4EN6naJGT2LdDb/GO9jghH5IZSI
-   Q==;
-X-CSE-ConnectionGUID: 9etgbAfQSPicMoRgVJbkyg==
-X-CSE-MsgGUID: LvFA7i0iRM2Ji8C38c5MTQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="23898282"
-X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
-   d="scan'208";a="23898282"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 03:09:02 -0700
-X-CSE-ConnectionGUID: IZoTNUtTT4SFHHy+k+cOIA==
-X-CSE-MsgGUID: ZVz69UgRQIqFH6xkJgYH4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
-   d="scan'208";a="38011553"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 23 May 2024 03:09:01 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sA5Na-0002hh-2j;
-	Thu, 23 May 2024 10:08:58 +0000
-Date: Thu, 23 May 2024 18:07:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Barry Song <v-songbaohua@oppo.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: include/linux/huge_mm.h:285:undefined reference to `mthp_stats'
-Message-ID: <202405231728.tCAogiSI-lkp@intel.com>
+	s=arc-20240116; t=1716458968; c=relaxed/simple;
+	bh=leIna1Saims9f0MJ61i/z8223fXhgYAjFrM+TRHR1rM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=V/MG4nuHSinMuiBBSuTOLlnsCzMf5IEAJO41Ee4TD6cpE0Sr9Xtsz+BlUX6zwwLHke2eUyvFGE2bgGSsy0aksdRluq+FMi8UxsdJJJ4gcFWStuFVuhTxPscPqpCngQ368I9G7/mtbqhwwMP13ymPG6hnNgwzGSmIuX/yGxNe1eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-36c5ff9964fso14641035ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 03:09:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716458966; x=1717063766;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QCqCCElupnhUJXA4EpZyUcc/f0DGtU0UeYDsUY02AB8=;
+        b=mfDQlwodLoC8m1Pp6D4vAszKC5kt8ZaDG9toBPfNx4ke3g6XGDj0zU+Wi374tF+igm
+         L+65ZQkXEQ3YKfTCLoNT2jtyV78c1iHRY84o0rUYdOOJTTv6ko1Ch9PhonmCor/pyaQb
+         6S4EyrPaFKEytc3Oljz55mlbSGNwGcrDwUgAcvVf9/W08QlPJtYvU5/DRH2/baaFApyb
+         N4MG29pqmKCNS/Brs7DfKir3F89zXBiast54s7qopY2hFzhQWewafO+2C5DT9UwNggyJ
+         I5BXFNAz4Hg6ycnu1UkIHyEhnPjJwGyH9q3HSbt3wZOJBqJKpx/GA5vfKixnJJzcRwna
+         UMmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoDGqWt/KPQpgIH74Zz+B6lImfN52g0Z2/NuxtwF8IXp9A9DLrsh4bhAad/CcGqP0SadKYZFaSYLHyt86HVbTCFs4sSTWa0xZaE9me
+X-Gm-Message-State: AOJu0Yysixm98s9bXb4qxhO0SPMihjSBUMPjLcE4E8pV9r6O+dzcHnTr
+	dwLdgCdr2TXAYtSdNbyYAi+p+hd+Oyryc57Sosov6C8gcpxt28CnSTvzU5jeURKox7NrkhXRfHd
+	tGSD9kHuF0l82ffq8e9ihnA+NdRv4Atg22LAIpJNjBegiebej4FIZ/xg=
+X-Google-Smtp-Source: AGHT+IHU78f9v5ktH4xFXr2K10+J6jztEmGBuNK7W2k1ERjgdEEOToGlFkpOBOaWjP9HahGhxnh4PkfEt1isRbp1KZaCcvU2luAW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Received: by 2002:a05:6e02:2188:b0:36d:cccb:6842 with SMTP id
+ e9e14a558f8ab-371f3e40d12mr3977105ab.0.1716458966380; Thu, 23 May 2024
+ 03:09:26 -0700 (PDT)
+Date: Thu, 23 May 2024 03:09:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f6865106191c3e58@google.com>
+Subject: [syzbot] [btrfs?] [overlayfs?] possible deadlock in ovl_copy_up_flags
+From: syzbot <syzbot+85e58cdf5b3136471d4b@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, brauner@kernel.org, clm@fb.com, dsterba@suse.com, 
+	jack@suse.cz, josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, miklos@szeredi.hu, mszeredi@redhat.com, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   c760b3725e52403dc1b28644fb09c47a83cacea6
-commit: ec33687c674934dfefd782a8ffd58370b080b503 mm: add per-order mTHP anon_fault_alloc and anon_fault_fallback counters
-date:   2 weeks ago
-config: s390-randconfig-r005-20230226 (https://download.01.org/0day-ci/archive/20240523/202405231728.tCAogiSI-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240523/202405231728.tCAogiSI-lkp@intel.com/reproduce)
+Hello,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405231728.tCAogiSI-lkp@intel.com/
+syzbot found the following issue on:
 
-All errors (new ones prefixed by >>):
+HEAD commit:    c75962170e49 Add linux-next specific files for 20240517
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1438a5cc980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fba88766130220e8
+dashboard link: https://syzkaller.appspot.com/bug?extid=85e58cdf5b3136471d4b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115f3e58980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14f4c97c980000
 
-   s390-linux-ld: mm/memory.o: in function `count_mthp_stat':
->> include/linux/huge_mm.h:285:(.text+0x191c): undefined reference to `mthp_stats'
-   s390-linux-ld: mm/huge_memory.o:(.rodata+0x10): undefined reference to `mthp_stats'
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/21696f8048a3/disk-c7596217.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b8c71f928633/vmlinux-c7596217.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/350bfc6c0a6a/bzImage-c7596217.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/7f6a8434331c/mount_0.gz
+
+The issue was bisected to:
+
+commit 9a87907de3597a339cc129229d1a20bc7365ea5f
+Author: Miklos Szeredi <mszeredi@redhat.com>
+Date:   Thu May 2 18:35:57 2024 +0000
+
+    ovl: implement tmpfile
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=120f89cc980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=110f89cc980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=160f89cc980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+85e58cdf5b3136471d4b@syzkaller.appspotmail.com
+Fixes: 9a87907de359 ("ovl: implement tmpfile")
+
+============================================
+WARNING: possible recursive locking detected
+6.9.0-next-20240517-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor489/5091 is trying to acquire lock:
+ffff88802f7f2420 (sb_writers#4){.+.+}-{0:0}, at: ovl_do_copy_up fs/overlayfs/copy_up.c:967 [inline]
+ffff88802f7f2420 (sb_writers#4){.+.+}-{0:0}, at: ovl_copy_up_one fs/overlayfs/copy_up.c:1168 [inline]
+ffff88802f7f2420 (sb_writers#4){.+.+}-{0:0}, at: ovl_copy_up_flags+0x1110/0x4470 fs/overlayfs/copy_up.c:1223
+
+but task is already holding lock:
+ffff88802f7f2420 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:409
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(sb_writers#4);
+  lock(sb_writers#4);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+3 locks held by syz-executor489/5091:
+ #0: ffff8880241fe420 (sb_writers#9){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:409
+ #1: ffff88802f7f2420 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:409
+ #2: ffff88807f0ea808 (&ovl_i_lock_key[depth]){+.+.}-{3:3}, at: ovl_inode_lock_interruptible fs/overlayfs/overlayfs.h:657 [inline]
+ #2: ffff88807f0ea808 (&ovl_i_lock_key[depth]){+.+.}-{3:3}, at: ovl_copy_up_start+0x53/0x310 fs/overlayfs/util.c:719
+
+stack backtrace:
+CPU: 1 PID: 5091 Comm: syz-executor489 Not tainted 6.9.0-next-20240517-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ check_deadlock kernel/locking/lockdep.c:3062 [inline]
+ validate_chain+0x15c1/0x58e0 kernel/locking/lockdep.c:3856
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+ percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
+ __sb_start_write include/linux/fs.h:1655 [inline]
+ sb_start_write include/linux/fs.h:1791 [inline]
+ ovl_start_write+0x11d/0x290 fs/overlayfs/util.c:31
+ ovl_do_copy_up fs/overlayfs/copy_up.c:967 [inline]
+ ovl_copy_up_one fs/overlayfs/copy_up.c:1168 [inline]
+ ovl_copy_up_flags+0x1110/0x4470 fs/overlayfs/copy_up.c:1223
+ ovl_create_tmpfile fs/overlayfs/dir.c:1317 [inline]
+ ovl_tmpfile+0x262/0x6d0 fs/overlayfs/dir.c:1373
+ vfs_tmpfile+0x396/0x510 fs/namei.c:3701
+ do_tmpfile+0x156/0x340 fs/namei.c:3764
+ path_openat+0x2ab8/0x3280 fs/namei.c:3798
+ do_filp_open+0x235/0x490 fs/namei.c:3834
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
+ do_sys_open fs/open.c:1420 [inline]
+ __do_sys_open fs/open.c:1428 [inline]
+ __se_sys_open fs/open.c:1424 [inline]
+ __x64_sys_open+0x225/0x270 fs/open.c:1424
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fab92feaba9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd714aed18 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 00007fab92feaba9
+RDX: 0000000000000000 RSI: 0000000000410202 RDI: 0000000020000040
+RBP: 00007fab930635f0 R08: 000055557e7894c0 R09: 000055557e7894c0
+R10: 000055557e7894c0 R11: 0000000000000246 R12: 00007ffd714aed40
+R13: 00007ffd714aef68 R14: 431bde82d7b634db R15: 00007fab9303303b
+ </TASK>
 
 
-vim +285 include/linux/huge_mm.h
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-   279	
-   280	static inline void count_mthp_stat(int order, enum mthp_stat_item item)
-   281	{
-   282		if (order <= 0 || order > PMD_ORDER)
-   283			return;
-   284	
- > 285		this_cpu_inc(mthp_stats.stats[order][item]);
-   286	}
-   287	
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
