@@ -1,151 +1,109 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F6C31A67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5F34F602
 	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716489386; cv=none; b=QuFSOpgFcUqjuh106GGYvTLBeT5QSKIQZq3NKf+VRIjP6vdgcqXc4A4p4wxhaF8G+uMzlVAfZTqaKoTZQizGQZc+5ucldqreyj1hqt+0pce8SCKXWCRY4urWxJ+dMnZXuu4cfSfAksZWndqojL9sPC5ArOAqZKHKD5C5Y0SBjZk=
+	t=1716489387; cv=none; b=Oc2mo0gItCJpSLiCHt38emwjCdlzo2V0VdLb8lu0gMC9/zfQxJwGt2RpRC1IyAWrGt01MGLXzGMjKou3XNa0Mw3LvbnLntJv7m/PgUlNePlJ01FIBQRlvFmsFd/b/frBxvdi1ZO9MquS7znfFCRk2ELd9tApd2x2gCAS+gXCdik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716489386; c=relaxed/simple;
-	bh=5RUAp8ZjGFL4XRjmweHbAxKTYu3FMUhMMQO7Zf2Hno4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l2Zkox3bZKfvLUtUIbxe73EhBBqBAqhLM870c2Pnq6fWi1aH6zRQU/bhDb1v474eGGr9ar22BnKc/Q9K9qtinqxiTraqfsb3AiWdA/FJPHSnrW0ozQM3SMdlbcobZ2uoPdUD/EG7Fq06S7JsMo3XYLV6u+YmCqoiphqfZG8yU/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sADIG-0005dy-Sc; Thu, 23 May 2024 20:36:00 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sADIF-002hBH-U5; Thu, 23 May 2024 20:35:59 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sADIF-009tpb-2g;
-	Thu, 23 May 2024 20:35:59 +0200
-Date: Thu, 23 May 2024 20:35:59 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Pankaj Gupta <pankaj.gupta@nxp.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH v2 4/5] firmware: imx: add driver for NXP
- EdgeLock Enclave
-Message-ID: <Zk-Mj43f43YFrf50@pengutronix.de>
-References: <20240523-imx-se-if-v2-0-5a6fd189a539@nxp.com>
- <20240523-imx-se-if-v2-4-5a6fd189a539@nxp.com>
- <Zk9DV6Ko-KO0kym_@pengutronix.de>
- <AM9PR04MB86047218A243EEB5BA79F69D95F42@AM9PR04MB8604.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1716489387; c=relaxed/simple;
+	bh=OgXMrbQw5esj3pNjQhcGzhpumWC39Xp2gTHLG8/BMdE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fwvKB74pSOVzkifVCZ3CPpPd3r4HjSoHJwNvoKWYlZjHj7XBdyPO0XKvCwpYVYY+4hz6kudqBTAGDjNGgkCclTldM61Be32wIQUC/rOc8yOk1nQuPI0C2kDLerMoMWOKPc87v4c4dxKOlE48riLMjHVS/auIEcv8TY1EpsiQ4N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=FSVBIdPu; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="FSVBIdPu"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f8f34cb0beso3272b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 11:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1716489384; x=1717094184; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qz+q3u/Fp0102KdTBvg4J3ovItadDXTAdO5aV1qWmSo=;
+        b=FSVBIdPuRIIL4vrbmVyp1D/Mb9Jh1aH/4h4pDNRlKAHY+OqlEZmsg4a869XIhDS0yz
+         Vhkm5mHaBgBDKjMMCShDO5ONlZY0cIvoD4+RFXHAT8wOgb0gI5xEE86ZjXDTiJgOAYJq
+         FTG6Ncp4tC6LbOs5ql361CqAWIyy1wjeuxS3ZcalgOF67z+wjnb1gHKWw6C6/8UmZhwV
+         u8xUWlEW/3CdtEjaR5GPKu0Hc8r1BjEnE2btsz7Y8+OIwpCde3cYq0qbFjfnHMZnRicK
+         9BgxPqoFBF1XBmE1L/LHFxjMX40ZLZ47FXDdjVui/OJa+nZTutkYkQlW7DPQzFw5UjmB
+         hbSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716489384; x=1717094184;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qz+q3u/Fp0102KdTBvg4J3ovItadDXTAdO5aV1qWmSo=;
+        b=JONM0BWaH3L6e94UbhPde5dn+K3jvUcTPMu4nI1rKXYPtfoX7qXs+fDI425FCNaQH/
+         66cA2fn40/Qx8epXahUGR79vEh+WVkAO3GnUNCrP3EKq12ykCQw6cY65VwbQzYv9GkX6
+         9a2kpIUwAMVDeFEvuLFNrG5fwI3aFx+srgKY6U9wsJd3tbXNohEUMt65H+zneMWgGBbJ
+         TPAcGCQOVb3liqwZ6Zvj7uBZ3PGaJquaMiTKS37qlBAF4swgGigkjhqBPii7BRUa2Kwc
+         iVWGCRA/wIFaKUvILKETRwZ/AXo7yhImeKEx4pJR3QYKqnFTPeUXfH24XiFwXy2UabsA
+         UlCg==
+X-Gm-Message-State: AOJu0Yy+hLdE+O6tXNAYp/RLiK0yWz+Nzvap1aTUeK6NkTAm/2PoRmJC
+	mq9AiqY0RtXxm0oZ3MFqgwBE/zMGqh5CGXnPHt5er5lE37gBfXM2Zu4ypHjW84s=
+X-Google-Smtp-Source: AGHT+IFUTsvXDTrQxXlh03uhTPfPZ/be+kqFgGy/t90jRL6U9LRtWnJ8XOVcA+NlDeCpNMF8onOypQ==
+X-Received: by 2002:a17:902:6505:b0:1f3:2f9c:bb72 with SMTP id d9443c01a7336-1f448125a9bmr3155455ad.5.1716489384110;
+        Thu, 23 May 2024 11:36:24 -0700 (PDT)
+Received: from dev-yzhong.dev.purestorage.com ([208.88.159.129])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f303b062e5sm71161015ad.219.2024.05.23.11.36.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 11:36:23 -0700 (PDT)
+From: Yuanyuan Zhong <yzhong@purestorage.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Yuanyuan Zhong <yzhong@purestorage.com>,
+	Mohamed Khalfella <mkhalfella@purestorage.com>
+Subject: [PATCH] mm: /proc/pid/smaps_rollup: avoid skipping vma after getting mmap_lock again
+Date: Thu, 23 May 2024 12:35:31 -0600
+Message-Id: <20240523183531.2535436-1-yzhong@purestorage.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM9PR04MB86047218A243EEB5BA79F69D95F42@AM9PR04MB8604.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 23, 2024 at 01:43:46PM +0000, Pankaj Gupta wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > Sent: Thursday, May 23, 2024 6:54 PM
-> > To: Pankaj Gupta <pankaj.gupta@nxp.com>
-> > Cc: Jonathan Corbet <corbet@lwn.net>; Rob Herring <robh+dt@kernel.org>;
-> > Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley
-> > <conor+dt@kernel.org>; Shawn Guo <shawnguo@kernel.org>; Pengutronix
-> > Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> > <festevam@gmail.com>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
-> > <krzk+dt@kernel.org>; linux-doc@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; devicetree@vger.kernel.org; imx@lists.linux.dev;
-> > linux-arm-kernel@lists.infradead.org
-> > Subject: [EXT] Re: [PATCH v2 4/5] firmware: imx: add driver for NXP EdgeLock
-> > Enclave
-> >
-> > Caution: This is an external email. Please take care when clicking links or
-> > opening attachments. When in doubt, report the message using the 'Report
-> > this email' button
-> >
-> >
-> > On Thu, May 23, 2024 at 04:19:35PM +0530, Pankaj Gupta wrote:
-> > > NXP hardware IP(s) for secure-enclaves like Edgelock Enclave(ELE), are
-> > > embedded in the SoC to support the features like HSM, SHE & V2X, using
-> > > message based communication interface.
-> > >
-> > > The secure enclave FW communicates on a dedicated messaging unit(MU)
-> > > based interface(s) with application core, where kernel is running.
-> > > It exists on specific i.MX processors. e.g. i.MX8ULP, i.MX93.
-> > >
-> > > This patch adds the driver for communication interface to
-> > > secure-enclave, for exchanging messages with NXP secure enclave HW
-> > > IP(s) like EdgeLock Enclave (ELE) from Kernel-space, used by kernel
-> > > management layers like
-> > > - DM-Crypt.
-> > >
-> > > Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
-> > > ---
-> > >  drivers/firmware/imx/Kconfig        |  12 +
-> > >  drivers/firmware/imx/Makefile       |   2 +
-> > >  drivers/firmware/imx/ele_base_msg.c | 286 +++++++++++++++++++
-> > > drivers/firmware/imx/ele_base_msg.h |  92 +++++++
-> > >  drivers/firmware/imx/ele_common.c   | 239 ++++++++++++++++
-> > >  drivers/firmware/imx/ele_common.h   |  43 +++
-> > >  drivers/firmware/imx/se_ctrl.c      | 531
-> > ++++++++++++++++++++++++++++++++++++
-> > >  drivers/firmware/imx/se_ctrl.h      |  99 +++++++
-> > >  include/linux/firmware/imx/se_api.h |  14 +
-> > >  9 files changed, 1318 insertions(+)
-> >
-> > [...]
-> >
-> > >
-> > > +int imx_ele_msg_send(struct se_if_priv *priv, void *tx_msg) {
-> > > +     struct se_msg_hdr *header;
-> > > +     int err;
-> > > +
-> > > +     header = (struct se_msg_hdr *) tx_msg;
-> > > +
-> > > +     if (header->tag == priv->cmd_tag)
-> > > +             lockdep_assert_held(&priv->se_if_cmd_lock);
-> > > +
-> > > +     scoped_guard(mutex, &priv->se_if_lock);
-> >
-> > scoped_guard() with an empty block doesn't make much sense. Either use
-> > scope_guard() { /* do something locked */ }; or guard().
-> >
-> Need to allow send more than one message at a time. Hence, done it after taking the lock.
-> Once message sent, scope of lock is over.
+After switching smaps_rollup to use VMA iterator, searching for next
+entry is part of the condition expression of the do-while loop. So the
+current VMA needs to be addressed before the continue statement.
 
-You take the lock and release it immediately afterwards. There's nothing
-locked with this. Please have a look how scoped_guard() works.
+Fixes: c4c84f06285e ("fs/proc/task_mmu: stop using linked list and highest_vm_end")
+Signed-off-by: Yuanyuan Zhong <yzhong@purestorage.com>
+Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+---
+ fs/proc/task_mmu.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Sascha
-
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index e5a5f015ff03..f8d35f993fe5 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -970,12 +970,17 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
+ 				break;
+ 
+ 			/* Case 1 and 2 above */
+-			if (vma->vm_start >= last_vma_end)
++			if (vma->vm_start >= last_vma_end) {
++				smap_gather_stats(vma, &mss, 0);
++				last_vma_end = vma->vm_end;
+ 				continue;
++			}
+ 
+ 			/* Case 4 above */
+-			if (vma->vm_end > last_vma_end)
++			if (vma->vm_end > last_vma_end) {
+ 				smap_gather_stats(vma, &mss, last_vma_end);
++				last_vma_end = vma->vm_end;
++			}
+ 		}
+ 	} for_each_vma(vmi, vma);
+ 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.34.1
+
