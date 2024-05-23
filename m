@@ -1,112 +1,104 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9E2823AF
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 20:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824B284E01
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 20:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716495535; cv=none; b=CH7So7+0fV5bUJDSo0Ij13TpoiZuE0FAzo4oZQetYahScFpYhaE8+oB2ZZBIgpNUOcRvQ6FW8IXTpT242i2mYPePp4sJlPo5eIv+1hjPXBZ6MyYvceP9JJ+2X4XP6XPhA+Ef87nbakGA/WUNdZecIRF7WmRxUhjrwK7YJONgpm8=
+	t=1716495540; cv=none; b=ibtli38vIXuZObi5b4+2BlZk841goINuBEZ7qKjJGlR8lPpQY5+S/544rAyNmahnF0/4D42/oFzSaXBC0s6WJjP7fN9td0OQ0x+hTwJPfTz5Y596RduyeR0HfBSmnusO7W4rGYgjdYLvdQSmTwbAuRTzibOT2kusxnZz2ppERUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716495535; c=relaxed/simple;
-	bh=/MnKLO3shXWEZFBIMAsNwFyC317yrwWObfqwNCUloow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hNLKkNdhijCEkyPhE8cPJquB0dmP4LaY5p8EoQWN6wDLhvADjG81vMJgOVSF3Y/jnKhdcaFyArh3a47NeXS/hXqOEwZnFrlzHYsURTg1aYUTvitlP64swVenhmrb98vlQZ/a//aucNLSQdz0kn6JJwyjXnX+uydJjDHu2WjKNRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gaTRJS5V; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716495540; c=relaxed/simple;
+	bh=EqX0fwckcV+vODDRFZpFypCtRAExNDQJsFxAVlnHGI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=glzP32gVYwORgR8JXRe6eYSHdqM9FJU9Vp/kwlginbZCOPUZ3Q8WG43jUPI1l08zC1zFGtOWDZwnxTndqO3Igo05g5CAkebZVd0FlTa8WYieS36v/4GyMFBWl+MmqEBgUyOj/PasakkgL0cK8GO44Afz8ozXE+5hx46y7DCHuPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=J6p+jnnQ; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gaTRJS5V"
-X-Envelope-To: markus.elfring@web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716495529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b6Wt/yr5KVLoM5TaMmIZdJgpIFHqeGyswfXtkHFJYik=;
-	b=gaTRJS5V2i8CsvTKTxwRH7Eml035EyZJldaxir3Sy+sotgCbBJPtXmN/qy9ArbajrCZDTT
-	JOBGcTzNEuizdoJjis4+R4rfFC2+2MVjzOGuQokAaLayUNBE4c+kNtnozpyW7q24rOveS4
-	lOld6QJrNva6uNYLTJQSyuQdjTJv25g=
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-pci@vger.kernel.org
-X-Envelope-To: kw@linux.com
-X-Envelope-To: lpieralisi@kernel.org
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: bharat.kumar.gogada@xilinx.com
-X-Envelope-To: bhelgaas@google.com
-X-Envelope-To: lorenzo.pieralisi@arm.com
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: michal.simek@xilinx.com
-X-Envelope-To: thippeswamy.havalige@amd.com
-Message-ID: <f42151e1-d62e-4346-9acc-0aa10ca52ba9@linux.dev>
-Date: Thu, 23 May 2024 16:18:42 -0400
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="J6p+jnnQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=EqX0
+	fwckcV+vODDRFZpFypCtRAExNDQJsFxAVlnHGI8=; b=J6p+jnnQDHChwUiaypq2
+	xg+gUXDmKWKtP2qPG8dolMc9S2qSAyMpTe5PNZr8g280Et1DR8Q+kUmi0gH1qyl6
+	FGZ6Fh9g9KqUzotSqYPbqWJPCwk/GJR2PydEYbVczRIyLqyuiNEoSdi3Y8i0XIvV
+	DJ4+8oFSc32snttcYv0XIwH3sgEP/ZwYBeqBP+1sr9CgNhmsyL5gVn6BQWLm7wLx
+	FD0YUX5SkoOKTTJh0evE/irVw8jYcIY9R4gGzGOz1bFPRTlH9FqbXUTalmvMGYBR
+	ghMIwrBiq0hssWdAYPEQkU9ajVPGz6ggFPR/2OFPeHWe0+9HahftMgd5dCUYeqlh
+	ZQ==
+Received: (qmail 1235559 invoked from network); 23 May 2024 22:18:51 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 May 2024 22:18:51 +0200
+X-UD-Smtp-Session: l3s3148p1@BaZiwiQZwOAujntm
+Date: Thu, 23 May 2024 22:18:50 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Wolfram Sang <wsa@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [GIT PULL] i2c-host changes for v6.10 - pt. 2
+Message-ID: <20240523201850.yl253jum4sqnykji@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+	linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+References: <2qtn3bk6pat2xkw7qz34pjpgh6zariuz6zjxhmuuo2jcddfpi4@xn6aqqppl3hi>
+ <20240523154820.vza7xbdkgqyyth6w@ninjato>
+ <fnznf6fb6vzk72b42lkir3jbopb6cog6mmjjr3f44o5ejmyelj@ehkhoevbn6dr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 5/7] PCI: xilinx-nwl: Clean up clock on probe
- failure/removal
-To: Markus Elfring <Markus.Elfring@web.de>,
- linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Michal Simek <michal.simek@amd.com>, Michal Simek <michal.simek@xilinx.com>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-References: <20240520145402.2526481-6-sean.anderson@linux.dev>
- <4a43cda4-dfa4-4156-b616-75e740f6fd64@web.de>
- <bb9e239f-902b-4f52-a5e9-98c29b360418@linux.dev>
- <f541195e-7963-4970-9a1d-a3298226cdd5@web.de>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <f541195e-7963-4970-9a1d-a3298226cdd5@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r2krkfc3eoaxxbco"
+Content-Disposition: inline
+In-Reply-To: <fnznf6fb6vzk72b42lkir3jbopb6cog6mmjjr3f44o5ejmyelj@ehkhoevbn6dr>
 
-On 5/23/24 16:11, Markus Elfring wrote:
->>> …
->>>> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
->>> …
->>>> @@ -817,11 +818,23 @@ static int nwl_pcie_probe(struct platform_device *pdev)
->>>>  		err = nwl_pcie_enable_msi(pcie);
->>>>  		if (err < 0) {
->>>>  			dev_err(dev, "failed to enable MSI support: %d\n", err);
->>>> -			return err;
->>>> +			goto err_clk;
->>>>  		}
->>>>  	}
->>>>
->>>> -	return pci_host_probe(bridge);
->>>> +	err = pci_host_probe(bridge);
->>>> +
->>>> +err_clk:
->>>> +	if (err)
->>>> +		clk_disable_unprepare(pcie->clk);
->>>
->>> I suggest to use the label “disable_unprepare_clock” directly before this function call
->>> (in the if branch) so that a duplicate check would be avoided after some error cases.
->>
->> Well if you want to avoid a check, we can just do
->>
->> err = pci_host_probe(bridge);
->> if (!err)
->> 	return 0;
->>
->> err_clk:
->> 	...
-> 
-> This design variant can also be reasonable.
-> 
-> Do any preferences matter here for label name selections?
 
-Personally, I prefer to use labels named after what they're cleaning up and not what they're doing.
+--r2krkfc3eoaxxbco
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---Sean
+
+> > Pulled, but I can't send out to Linus because
+> > e22e0e483b2c76728ccd119fdcfea81eb176b3a5 (drm/amd/pm: remove deprecated
+> > I2C_CLASS_SPD support from newly added SMU_14_0_2) is not in his tree
+> > yet, only in next.
+>=20
+> argh! Good catch! I don't have drm amd in my config.
+
+Me neither, I just checked with 'git grep I2C_CLASS_SPD' :)
+
+> OK that needs to shift to the 6.11 pull request.
+
+Hmm, that gives too much time for new users to appear IMO. If you don't
+mind, I'll take over and I'll ping them to apply the drm patch soonish,
+so I can apply the removal. Doesn't matter if it becomes rc2 or rc3.
+
+
+--r2krkfc3eoaxxbco
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZPpKYACgkQFA3kzBSg
+KbY2bg/+PjyiD4KkdUfvnFmpqinthqrUIuxD/GrwXC2jZzkujeevg85t6HtA8w76
+C64QwmoduyB0s8dG5d5oEypAFiozv44084E0AHZvRQrKc6ijyj3LSmA2gGsVP/qo
+Q+mOKulbbfCvGLy0y/w/AV5JyZfLIxtMKtHGDoAK5lcHv+PN9lRujhMvkjmJeLao
++gmszDWpCLJ6PlTymjP6FWqG4wYCD2WqW9dnNAeyLg5eRtPASyqVZgAvPPF7t3z5
+JmOx0M1vi5cNcMCrlgI8vDzupLi/rrfVcy+aBIURLMoXJ+UHxsyyAsua1DRi50Kv
+TuqGwhpifdm0UMqybQhpWF0zZMPVmTfKTe++yXEl9f8K4ad8KXYzfMUYCXcDil7O
+czQuOMXjoa9ft2K6faW4jO8GHCc/YB4u8tuxyQdj0kIp/I1Q6X6Pvlp+UG6tCC8z
+JreYz+SdNVAUGaF/LoLlkWHunO/u0He80ghV2kiW++ceTju2+1zMPu9zDGPAC5fl
+CINF2qqukq9ndt8RGk4XdAtLgynr3WFrEntViY8hBkw3ZpPZ5hbbBa9UASbtGV6D
+e87s6qCimOD3fjLokzAi8MJaRBje6CU8y9q1t0FmUV5PVY9hY7s1XGEqV2UfgLRX
+nWG4qEzjPt+AYfmRSzVhqQB2UVFpmcd9+979UUP0C7m4YmnuNsc=
+=eWC/
+-----END PGP SIGNATURE-----
+
+--r2krkfc3eoaxxbco--
