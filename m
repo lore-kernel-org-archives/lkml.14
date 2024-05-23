@@ -1,28 +1,28 @@
-Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11010000.outbound.protection.outlook.com [52.101.128.0])
+Received: from SINPR02CU002.outbound.protection.outlook.com (mail-southeastasiaazon11011005.outbound.protection.outlook.com [52.101.133.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD97B13CF9F;
-	Thu, 23 May 2024 08:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE3913CFB2;
+	Thu, 23 May 2024 08:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.133.5
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716451441; cv=fail; b=tCmQNS1X7CKSTv4hjHyHPgCx7HqUL9poJUxhJOG9peqP9dp5FZu1W4GPMOJ7AFskaZLE3TUVOq8W09mCEA6+r5sjnCtJ2WoAX6g7rEZjxnUiwToMTOCAj/La2R+BdQdv+qifWu3UfaJZ+ZeKHWd+8E+Z7/uQ6PK2b8GUqLDUmXI=
+	t=1716451446; cv=fail; b=R90VZ/qq7zNWl7k1m3vshNhPZ+joVFfzgIhSDlg61ReTPYNmgJ8xYLrUrwcsuSa+VcwXqj+7yr3xNHwmJl9qX+Ww20ICygtqBcJ24c4rfuhRslOrFcEO7oUhc6z8+rkBtCAbmcsUtqHmQ9BniQTxAXv0JkMNHnqTnkMlPgBIg34=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716451441; c=relaxed/simple;
-	bh=qye1+odmSLvcZWpLGZXShZcJWroDKnJ7ydMvngFvmyI=;
+	s=arc-20240116; t=1716451446; c=relaxed/simple;
+	bh=btgdBgFxtTzunG2/lrrBUYJ1QxP+cTltq/6I9W7+wPg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G0QaTzr2D/TjVOcHWusgjOO3BJyLgVUNa1epyo/h25VxkUMRLaAFk9YgeN/8KATe5kYq6X2fDKWc1Td2uG6xyMy5QhhLSLIsHJx+pbb2Ead5a+GPmZNPBjvkzZrfWbKYuAoJovn2heEqFu5VCm8YoG2a6BKFAljmEb/9che3g2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=NklGK4U/; arc=fail smtp.client-ip=52.101.128.0
+	 MIME-Version:Content-Type; b=oG3AWvNboibFP+Z6ttz1k1OV1lExShRF5grF9pSOx36r5ZkWlHcxTiXQUq2n+n1k0cO6pbT6DTIf+mA+tzMR97LZEkwsm6ti7Pdk6kBCqkIZmf6nnHKZFfh54dk/Kd9Gu70MOMhXeVsPAm71rfLHnWRNqo71hv0pcz2jX9zjotY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=BMXoBpfo; arc=fail smtp.client-ip=52.101.133.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="NklGK4U/"
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="BMXoBpfo"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E/8HWgf5Yo8a0Qaoml/v3ixUIEVp3gnf1P05ygKgmlp4PNEWEIkgbQEoKslo94O4pS9wv0IDH94cTY90TB5yIC5XHOjrmRv0ct0s3msOsJa+p5QJozhXbCQD6UACZ9kZ8ed2zr72RdMkxPNAOm1vZjrZI1fOYPSBvTUgXKtcwiFmTTlv8kOLpaDCMbhqryguslZ/uhCkAa41D1FuH2/D0ONgfSbYITjlR7M8J6P3xh/8b50nD8lzXMIVpE9tXj387i8SybWQVui6pRoylkTbw7ePGcvkdjXJllub7Vetu56GhZ1djfEtHcoDrDii6zoD54j+zISu3TBtcvdwLyQGjA==
+ b=hZg0Un3dLiTguHut3vKE19ZD/RBCzwNoqyDAFVPSxthR9M56l5PEG5LlJUCMffLGIQj0NSC28EXm8nZsh3ta+uKwlHTvW5DY8wszqmDj17l6lwYlmoVcvlaNI2Thn/4l7Ap3zo8UfaIW6DrRwCCtXOP0j2r6UmSj7jQ1oRpMxTpEYvMW3fUzgOaEBle3NyjuNnvzgeEZS8SqPIlD82v1nUl571YFqovcdQ8iWMQz4TaPzLzUr7M43/vy6Cw2Nf5XI1AbYZ+31szDwlUpW2xWukFmqG+U9yQB9XilsmKSMqxh8ok9F3Ax6i0hZZBWmTrX67mk3Slq7N3oKTxLAu264g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vF4Vr+mnAo6sL4NqnPknKFu4wSGhcaCxskXcr5n8QwA=;
- b=V82DGAiUeq+G14tiMLvNY/8iht4IXhbqCBzY+C6jWBGK5b5ghsMs1DB/qKW636efl4shUhs38MmO6GYUKC5Vr5j3BPSKjoiK0PNRUU7o13q5Ou/yitqD6nvIuC2krlHa+lvKoIginEg18hizRKwkacFxKm6c4NRWvU4PsCdvXkw/5ijy+H9qkitoMyOI2oubNzA9QxBtAGkTahm/S/xECip/knskvuGcdNvcyKTPmCNNgr55PJe2FxfoIA47dAgOx+GtdYEIQdx2f5g2XGY/NoMHa0Q/urquYYpDTSUV0EHNbZblblXF3T7lUde/xUMbxIyFyXZnrcGzssv29VEr1A==
+ bh=CsZr14PNPmBXIPZ1202IghyP5Yyu1YMx3BAbXzof8TE=;
+ b=R8tz7vKMwsBGgPnkJLsL8NbvwY/zfurYTAuMC00NJME+CpxghsHslvlP9jICx8LqaaoguNg+s+QLDwzIEHjyU6g3qu5mk7cnOlBTXhaLhQuPHOXeDY0T+qSnXPR0qaOeJ46sKds2sp1k8mL0P068kMue3d9vy/Kr3Yu1QvfEk8y3UnFYNpbk40S/FnBs37+quCDSqR3O2FObk4ieiZEz4MahdwkycqT8zuD2R5JHHaREj1oW1JVoHDZRmKuJ1TIgjCTGrlDXHJ/8loNWOTYg2fKnv8bhhNOe5sRWJAshpMuJmOPSNcaOGWlcV8WFuvpT9maeIN8kKyPjGJp79alcqw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
  211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
  (p=quarantine sp=quarantine pct=100) action=quarantine
@@ -30,17 +30,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vF4Vr+mnAo6sL4NqnPknKFu4wSGhcaCxskXcr5n8QwA=;
- b=NklGK4U/knsSN+2Clqd12/vu6xBn//i+vojTl0vXkeRBuANyWJL0NOKnfqaZ7g+YYFmIxFuFY+2Xlj89k6C44quEyZ8tkAPiOT0Kfk5upz/Dx7RwOYo7WmAKH9foTOGX6XwDdQBcyKPiDRSagX1qLMeTuLdMkp6HjSfqL1pVsYPjmpUfeOcVgHenW8iTMmI/kVw6RKQDPkSY1Ja7oeq2mxuneGM9vx4NADjhcsPNbi7YLMUpa5XlVXgE8roTcP22P1NBnxyFJI68YJl1fsqnk3geK/klV3E7toiW4bBcuZkuqUF/DwKYjdQYyV36Ps0krc3+FWLS8h0GXXgOpg1otQ==
-Received: from SG2PR04CA0167.apcprd04.prod.outlook.com (2603:1096:4::29) by
- JH0PR04MB7250.apcprd04.prod.outlook.com (2603:1096:990:3e::14) with Microsoft
+ bh=CsZr14PNPmBXIPZ1202IghyP5Yyu1YMx3BAbXzof8TE=;
+ b=BMXoBpfoXM7y6oe2EvSY7ynGT+Y76Hgw86cTaScLSozPx9zMYsKCs6aO8VLOjGYpfPWuRY+KDlAlMVcxv5ZW+Fb25N30sOru++pqUN9H2N7wuOwobHlykrRnEgsfXRuGgk63/F5077LhDf8nwKKXmjblSydtwTSOaxG4LVEMFVR08Zx/V8T92vKv43lHi5Y3aL+QmZEsA8l779nHEpfjvST9WedLChEvgmZH2Y+pBsvl9f5jbq0e9PA7ZISMY2qKcJgpq/tZZTeTNbvWvJm69DHRzH5vWpDH4nbPNAa49jmgaim/G+yj/O0GqZExv1BawuLf5BDHKU33xUnCBs0OTw==
+Received: from SG2PR04CA0165.apcprd04.prod.outlook.com (2603:1096:4::27) by
+ OS8PR04MB8162.apcprd04.prod.outlook.com (2603:1096:604:289::6) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7587.36; Thu, 23 May 2024 08:03:55 +0000
+ 15.20.7611.22; Thu, 23 May 2024 08:03:59 +0000
 Received: from SG2PEPF000B66CB.apcprd03.prod.outlook.com
- (2603:1096:4:0:cafe::84) by SG2PR04CA0167.outlook.office365.com
- (2603:1096:4::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22 via Frontend
- Transport; Thu, 23 May 2024 08:03:55 +0000
+ (2603:1096:4:0:cafe::8a) by SG2PR04CA0165.outlook.office365.com
+ (2603:1096:4::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.20 via Frontend
+ Transport; Thu, 23 May 2024 08:03:58 +0000
 X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
  smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
@@ -50,7 +50,7 @@ Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
 Received: from localhost.localdomain (211.20.1.79) by
  SG2PEPF000B66CB.mail.protection.outlook.com (10.167.240.24) with Microsoft
  SMTP Server id 15.20.7611.14 via Frontend Transport; Thu, 23 May 2024
- 08:03:55 +0000
+ 08:03:58 +0000
 From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
 To: patrick@stwcx.xyz,
 	Rob Herring <robh@kernel.org>,
@@ -63,9 +63,9 @@ Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-aspeed@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 01/23] ARM: dts: aspeed: yosemite4: Revise i2c-mux devices
-Date: Thu, 23 May 2024 16:03:06 +0800
-Message-Id: <20240523080330.1860074-2-Delphine_CC_Chiu@wiwynn.com>
+Subject: [PATCH v8 02/23] ARM: dts: aspeed: yosemite4: Enable adc15
+Date: Thu, 23 May 2024 16:03:07 +0800
+Message-Id: <20240523080330.1860074-3-Delphine_CC_Chiu@wiwynn.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240523080330.1860074-1-Delphine_CC_Chiu@wiwynn.com>
 References: <20240523080330.1860074-1-Delphine_CC_Chiu@wiwynn.com>
@@ -78,558 +78,85 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CB:EE_|JH0PR04MB7250:EE_
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CB:EE_|OS8PR04MB8162:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: f0ce14ad-864c-4390-3ef7-08dc7afee4d0
+X-MS-Office365-Filtering-Correlation-Id: a550532b-892f-4b87-0395-08dc7afee69a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|1800799015|7416005|376005|36860700004;
+	BCL:0;ARA:13230031|82310400017|7416005|1800799015|376005|36860700004;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?khR6qEITg0UXIbH+ai+WiL+TmNwjGXLzDIOebQ/yzSgS+k3hAff+jq39ucK8?=
- =?us-ascii?Q?GYjOX2R450NoPEeGZ1mI+w+e8CrSSxI7u6z7n55tx3ad9UsG3cT2vq0cx9h/?=
- =?us-ascii?Q?Mbys6wqKpAAMF19eOyEI+mUStlFjentOD5xtzsd8n3XnkgX4XvUC6GLus0+G?=
- =?us-ascii?Q?BVDvwuoc1ZP+Pq2EJXOFjfPZghx+TdRngYW6Rs0CSLQtEfwJ0kfHy3d5uGyv?=
- =?us-ascii?Q?Noj0uU7p4b3YgaVabjASGhbXPppa7NFlrIRvvztkb9z9eN/oAGnYe5zJPZpu?=
- =?us-ascii?Q?3ifzvwOjlltz+nvwIJwHK+TA4cfNM561T9zvAr8Hhj/V9wceY1PN9umCtBtD?=
- =?us-ascii?Q?bnNFSXp0ZAvSTzHjs8D4xyjWSc8mm3JNknlaJk4/ygmpzViWzISjNcvC8UML?=
- =?us-ascii?Q?+IEcjQ6mNMl7vB9BwSBoIrKaoUstVaW9q/wJkAtdCjgaPCLv4P1GQ3AUTFJh?=
- =?us-ascii?Q?qHQj5u4yoL0DS6VzNr23sY+Ijfryj1jMKA356zhXPi769laDUb2ga32escYo?=
- =?us-ascii?Q?Z86tfq7timePXzHI7UKRz0VWrK2Ebskeoim+YSt+exf1uIbdy1OomqlNiSmV?=
- =?us-ascii?Q?pQS8ez+9GTxq8J3/xfGYX6o7etwu+aO59pt3czHRHjpEj4U/nYU5LyYtPadw?=
- =?us-ascii?Q?fTxtiU8vqnBTp/xwzOKTca11oYAG0fZoIoWTgPYTLMQ6tZXglkXFYlbORjpv?=
- =?us-ascii?Q?fE04jzlTJydYdI9V/ndtviJCwQy5ao/arQcg1MwkSz+RaezBM9ONN8iFpGA7?=
- =?us-ascii?Q?ewB7C9TnRNY2U53JVWAE7AahLoIq0oFr7B2FfM9ZWl0qFFv4uJp0iaGRqoTP?=
- =?us-ascii?Q?vJf9mMVpS/XHmH246EIooU60tqbkMP+5K/63XwS/juyTWQxCtHRru+hJCC1J?=
- =?us-ascii?Q?Ss7QFs9PWGAFWTIwqlj/wDZldveIogXbx9QlcY2bFrsXEmBkDvj92FDeSprA?=
- =?us-ascii?Q?y2Elh6f+6K+FDpkkwVE84z640dw+Jpf8xBNAqYu7RkuKPp1UTJBHJtrHT7iG?=
- =?us-ascii?Q?H3lnpUYkVp79pWQ7Qlt4sTxwCNBt8rH8GC/SO/Fzq7tCCPQk7FoSVS/mVEQS?=
- =?us-ascii?Q?l0MmsdubCqiKjZlBPNTwIG5yn3l9v1oE3fa/P5kd94Uy325eXgso2zq7k3ZB?=
- =?us-ascii?Q?v/Np+BvFNc/dbs2vLE5ycne23dRKlW8564c9MqmL9rIGLDgh6BVM5Lx/j0Lq?=
- =?us-ascii?Q?4JFuDDyOFmaRNhQaetO8cAGrV6qThotn/OnraHfqf9ol+GfPPsE8QIfOAKir?=
- =?us-ascii?Q?ur3pWqMClKJ5SHL/MQjcHHh2yA7m+7rlK+lJ8nw8iFK0d6gcnr64oODf+sYP?=
- =?us-ascii?Q?2g3xVjfzDI0rmX67NpvNojUeAmtDIVNjE2jaqO4VDTBhpUNsei7plyol6EeH?=
- =?us-ascii?Q?fQ5gf7I=3D?=
+	=?us-ascii?Q?yBg5lFGQ5t1Nnagy7DNlS6K/1o97lDgT9syF7VKGT8GOajcprqcgtitGtQed?=
+ =?us-ascii?Q?gf0FuUQOFHmPTuLf6EvNJ5dYDNAVrO55B3a3BVRYKeIOs8Gqs4RGU3gxwWmZ?=
+ =?us-ascii?Q?ZlFMR0SIABBJv10eG/ZdNjXHpTLoSS5/sZZHjgaDIICWJTZGvfRAj+ZJPSyy?=
+ =?us-ascii?Q?6ue0AK3hJv2ZAJAJKpy0EbgM1cUzatlqIkAoHY8Dn8AvkuqqrSCEssdfSmGa?=
+ =?us-ascii?Q?4QZXI3L9kjHi6v+jUBnS9r6gbeTeVDYOKrsNDex+qKcv+5+eOjklUsJ8Z4uv?=
+ =?us-ascii?Q?ofRJpim6ZstGh1e1+7njdv5jc+38q3Wm0FXYzU9h/pGSSnfVVzvLMzxQhhXj?=
+ =?us-ascii?Q?MOoj+dBOV/muYqYQ4qawfpVG9a8EWBz4XCOR7lX6jqd7y5tNil02XBn8Ass2?=
+ =?us-ascii?Q?vjCdQU6hHrx4bvy1PzMOlINbYFLguAJK9Rcw7Ww3av3lwSlOF6VzFJmFBM17?=
+ =?us-ascii?Q?CXodzemCQVcJ+pT54UmuIPESTsYYmYCTg0GRVodRQUWeQClXRhC7rM+GoTgM?=
+ =?us-ascii?Q?ntyQb5JiMu9ziAnoCMCs298aIdIsH/3v77FCcgJePgXAD03cIJzhQiEBuO4J?=
+ =?us-ascii?Q?JDkTfoniNwG10bRV+u2mc/DQHSL77ZUNvIKnf7IPU3qAHUamnknHOQGvFs3j?=
+ =?us-ascii?Q?soppdF9v3G7a6vSIIw2ep2STHErYhFi8vCP2DTGOQMKr+yEppZytblDlBYx0?=
+ =?us-ascii?Q?2q3jmIrVMB0/MFppv6vnqacswCtWgd04Z0KPhBIBLH0Iw/b867s1UkmXZkC4?=
+ =?us-ascii?Q?3gNsgU9jNna+2Vv0DA8frV6sQpagX6/wn/mWdTfiq9Snlo8ymISluefHyW2L?=
+ =?us-ascii?Q?vVxKQf6lacHVTXg7FU17hYMuUapDK0Uo/dmW9XXqGO6WZJqDhlEGCKDaFru4?=
+ =?us-ascii?Q?uaBhadlc5DDwwvRm7ZysOwGDpqmFV6c0NBaWnOmsWM8aa63J5xktCN7ZC7bC?=
+ =?us-ascii?Q?9uV72cHntRNByeLD55MB6C71bD9YY37mf+38WHXGUb2RTtEdDKYHgWiEpPU/?=
+ =?us-ascii?Q?YhFNScyDq9PuDP/UVhKiR3xSPffVfzbcN8nZ5UDEBVIYx/qFzRCsk20EcDYZ?=
+ =?us-ascii?Q?B+8EKUUsnKjwHh/3x8MmJvgOl2Lrj6umM5edsQsXUlkG7HJz9aUNkURiTzKU?=
+ =?us-ascii?Q?6GtJesa8BzooXWzzf+kIExXWlNqYvCBiG0Kh0sp2tkPs/7c8xaEoCTizosX7?=
+ =?us-ascii?Q?7OcHn+MM6nI7sJLYYdFoteeGu5y+Sos4PB4mApcL9M6/UOis5knLiYr8qejL?=
+ =?us-ascii?Q?Y8eNonrVFXAGn0cLTjwBftzyIMq5Jy6J8SbyZjvELmpzvjVpkZTLdWTizv63?=
+ =?us-ascii?Q?SrlYVV/74OwJLQGpOcvo0Eo9WY4cTsHbZPsVgrdhgTc/9zqOczn9pOfHv6Rj?=
+ =?us-ascii?Q?43VPq2k=3D?=
 X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(82310400017)(1800799015)(7416005)(376005)(36860700004);DIR:OUT;SFP:1101;
+	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(82310400017)(7416005)(1800799015)(376005)(36860700004);DIR:OUT;SFP:1101;
 X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2024 08:03:55.2339
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2024 08:03:58.1558
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0ce14ad-864c-4390-3ef7-08dc7afee4d0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a550532b-892f-4b87-0395-08dc7afee69a
 X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SG2PEPF000B66CB.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR04MB7250
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS8PR04MB8162
 
-Revise Yosemite 4 devicetree for devices behind i2c-mux
-- Add gpio and eeprom behind i2c-mux
-- Remove redundant idle-state setting for i2c-mux
+Enable Yosemite 4 adc15 config
 
 Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
 ---
- .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 381 ++++++++++++++++--
- 1 file changed, 347 insertions(+), 34 deletions(-)
+ arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-index 98477792aa00..66855efa0b4b 100644
+index 66855efa0b4b..dd88be47d1c8 100644
 --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
 +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-@@ -17,6 +17,25 @@ aliases {
- 		serial6 = &uart7;
- 		serial7 = &uart8;
- 		serial8 = &uart9;
-+
-+		i2c16 = &imux16;
-+		i2c17 = &imux17;
-+		i2c18 = &imux18;
-+		i2c19 = &imux19;
-+		i2c20 = &imux20;
-+		i2c21 = &imux21;
-+		i2c22 = &imux22;
-+		i2c23 = &imux23;
-+		i2c24 = &imux24;
-+		i2c25 = &imux25;
-+		i2c26 = &imux26;
-+		i2c27 = &imux27;
-+		i2c28 = &imux28;
-+		i2c29 = &imux29;
-+		i2c30 = &imux30;
-+		i2c31 = &imux31;
-+		i2c32 = &imux32;
-+		i2c33 = &imux33;
- 	};
- 
- 	chosen {
-@@ -259,9 +278,109 @@ &i2c8 {
- 	bus-frequency = <400000>;
- 	i2c-mux@70 {
- 		compatible = "nxp,pca9544";
--		idle-state = <0>;
- 		i2c-mux-idle-disconnect;
- 		reg = <0x70>;
-+
-+		imux16: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			gpio@49 {
-+				compatible = "nxp,pca9537";
-+				reg = <0x49>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
-+
-+			eeprom@51 {
-+				compatible = "atmel,24c128";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@54 {
-+				compatible = "atmel,24c128";
-+				reg = <0x54>;
-+			};
-+		};
-+
-+		imux17: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+			gpio@49 {
-+				compatible = "nxp,pca9537";
-+				reg = <0x49>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
-+
-+			eeprom@51 {
-+				compatible = "atmel,24c128";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@54 {
-+				compatible = "atmel,24c128";
-+				reg = <0x54>;
-+			};
-+		};
-+
-+		imux18: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+			gpio@49 {
-+				compatible = "nxp,pca9537";
-+				reg = <0x49>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
-+
-+			eeprom@51 {
-+				compatible = "atmel,24c128";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@54 {
-+				compatible = "atmel,24c128";
-+				reg = <0x54>;
-+			};
-+		};
-+
-+		imux19: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+			gpio@49 {
-+				compatible = "nxp,pca9537";
-+				reg = <0x49>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
-+
-+			eeprom@51 {
-+				compatible = "atmel,24c128";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@54 {
-+				compatible = "atmel,24c128";
-+				reg = <0x54>;
-+			};
-+		};
+@@ -51,7 +51,7 @@ iio-hwmon {
+ 		compatible = "iio-hwmon";
+ 		io-channels = <&adc0 0>, <&adc0 1>, <&adc0 2>, <&adc0 3>,
+ 				<&adc0 4>, <&adc0 5>, <&adc0 6>, <&adc0 7>,
+-				<&adc1 0>, <&adc1 1>;
++				<&adc1 0>, <&adc1 1>, <&adc1 7>;
  	};
  };
  
-@@ -270,15 +389,174 @@ &i2c9 {
- 	bus-frequency = <400000>;
- 	i2c-mux@71 {
- 		compatible = "nxp,pca9544";
--		idle-state = <0>;
- 		i2c-mux-idle-disconnect;
- 		reg = <0x71>;
-+
-+		imux20: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+			gpio@49 {
-+				compatible = "nxp,pca9537";
-+				reg = <0x49>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
-+
-+			eeprom@51 {
-+				compatible = "atmel,24c128";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@54 {
-+				compatible = "atmel,24c128";
-+				reg = <0x54>;
-+			};
-+		};
-+
-+		imux21: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+			gpio@49 {
-+				compatible = "nxp,pca9537";
-+				reg = <0x49>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
-+
-+			eeprom@51 {
-+				compatible = "atmel,24c128";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@54 {
-+				compatible = "atmel,24c128";
-+				reg = <0x54>;
-+			};
-+		};
-+
-+		imux22: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+			gpio@49 {
-+				compatible = "nxp,pca9537";
-+				reg = <0x49>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
-+
-+			eeprom@51 {
-+				compatible = "atmel,24c128";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@54 {
-+				compatible = "atmel,24c128";
-+				reg = <0x54>;
-+			};
-+		};
-+
-+		imux23: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+
-+			gpio@49 {
-+				compatible = "nxp,pca9537";
-+				reg = <0x49>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
-+
-+			eeprom@51 {
-+				compatible = "atmel,24c128";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@54 {
-+				compatible = "atmel,24c128";
-+				reg = <0x54>;
-+			};
-+		};
- 	};
- };
+@@ -925,10 +925,10 @@ &pinctrl_adc4_default &pinctrl_adc5_default
  
- &i2c10 {
+ &adc1 {
  	status = "okay";
- 	bus-frequency = <400000>;
-+	i2c-mux@74 {
-+		compatible = "nxp,pca9544";
-+		i2c-mux-idle-disconnect;
-+		reg = <0x74>;
-+
-+		imux28: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			gpio@20 {
-+				compatible = "nxp,pca9506";
-+				reg = <0x20>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+
-+			gpio@21 {
-+				compatible = "nxp,pca9506";
-+				reg = <0x21>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+
-+			gpio@22 {
-+				compatible = "nxp,pca9506";
-+				reg = <0x22>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+
-+			gpio@23 {
-+				compatible = "nxp,pca9506";
-+				reg = <0x23>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+
-+			gpio@24 {
-+				compatible = "nxp,pca9506";
-+				reg = <0x24>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio-line-names =
-+				"","","","",
-+				"NIC0-MAIN-PWR-EN","NIC1-MAIN-PWR-EN",
-+				"NIC2-MAIN-PWR-EN","NIC3-MAIN-PWR-EN",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
-+			};
-+		};
-+
-+		imux29: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+	};
+-	pinctrl-0 = <&pinctrl_adc8_default &pinctrl_adc9_default>;
++	pinctrl-0 = <&pinctrl_adc8_default &pinctrl_adc9_default>
++			&pinctrl_adc15_default>;
  };
  
- &i2c11 {
-@@ -440,16 +718,14 @@ eeprom@51 {
- 		reg = <0x51>;
- 	};
- 
--	i2c-mux@71 {
--		compatible = "nxp,pca9846";
-+	i2c-mux@74 {
-+		compatible = "nxp,pca9546";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
 -
--		idle-state = <0>;
- 		i2c-mux-idle-disconnect;
--		reg = <0x71>;
-+		reg = <0x74>;
- 
--		i2c@0 {
-+		imux30: i2c@0 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0>;
-@@ -457,26 +733,26 @@ i2c@0 {
- 			adc@1f {
- 				compatible = "ti,adc128d818";
- 				reg = <0x1f>;
--				ti,mode = /bits/ 8 <2>;
-+				ti,mode = /bits/ 8 <1>;
- 			};
- 
- 			pwm@20{
--				compatible = "max31790";
-+				compatible = "maxim,max31790";
-+				pwm-as-tach = <4 5>;
- 				reg = <0x20>;
--				#address-cells = <1>;
--				#size-cells = <0>;
- 			};
- 
- 			gpio@22{
- 				compatible = "ti,tca6424";
- 				reg = <0x22>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
- 			};
- 
--			pwm@23{
--				compatible = "max31790";
--				reg = <0x23>;
--				#address-cells = <1>;
--				#size-cells = <0>;
-+			pwm@2f{
-+				compatible = "maxim,max31790";
-+				pwm-as-tach = <4 5>;
-+				reg = <0x2f>;
- 			};
- 
- 			adc@33 {
-@@ -499,34 +775,34 @@ gpio@61 {
- 			};
- 		};
- 
--		i2c@1 {
-+		imux31: i2c@1 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--			reg = <0>;
-+			reg = <1>;
- 
- 			adc@1f {
- 				compatible = "ti,adc128d818";
- 				reg = <0x1f>;
--				ti,mode = /bits/ 8 <2>;
-+				ti,mode = /bits/ 8 <1>;
- 			};
- 
- 			pwm@20{
--				compatible = "max31790";
-+				compatible = "maxim,max31790";
-+				pwm-as-tach = <4 5>;
- 				reg = <0x20>;
--				#address-cells = <1>;
--				#size-cells = <0>;
- 			};
- 
- 			gpio@22{
- 				compatible = "ti,tca6424";
- 				reg = <0x22>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
- 			};
- 
--			pwm@23{
--				compatible = "max31790";
--				reg = <0x23>;
--				#address-cells = <1>;
--				#size-cells = <0>;
-+			pwm@2f{
-+				compatible = "maxim,max31790";
-+				pwm-as-tach = <4 5>;
-+				reg = <0x2f>;
- 			};
- 
- 			adc@33 {
-@@ -554,12 +830,10 @@ i2c-mux@73 {
- 		compatible = "nxp,pca9544";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--
--		idle-state = <0>;
- 		i2c-mux-idle-disconnect;
- 		reg = <0x73>;
- 
--		i2c@0 {
-+		imux32: i2c@0 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0>;
-@@ -570,10 +844,10 @@ adc@35 {
- 			};
- 		};
- 
--		i2c@1 {
-+		imux33: i2c@1 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--			reg = <0>;
-+			reg = <1>;
- 
- 			adc@35 {
- 				compatible = "maxim,max11617";
-@@ -596,9 +870,48 @@ mctp@10 {
- 
- 	i2c-mux@72 {
- 		compatible = "nxp,pca9544";
--		idle-state = <0>;
- 		i2c-mux-idle-disconnect;
- 		reg = <0x72>;
-+
-+		imux24: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+			temperature-sensor@1f {
-+				compatible = "ti,tmp421";
-+				reg = <0x1f>;
-+			};
-+		};
-+
-+		imux25: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+			temperature-sensor@1f {
-+				compatible = "ti,tmp421";
-+				reg = <0x1f>;
-+			};
-+		};
-+
-+		imux26: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+			temperature-sensor@1f {
-+				compatible = "ti,tmp421";
-+				reg = <0x1f>;
-+			};
-+		};
-+
-+		imux27: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+			temperature-sensor@1f {
-+				compatible = "ti,tmp421";
-+				reg = <0x1f>;
-+			};
-+		};
- 	};
+ &ehci0 {
+ 	status = "okay";
  };
- 
 -- 
 2.25.1
 
