@@ -1,111 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0882C6B6;
-	Thu, 23 May 2024 16:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F22517BD9;
+	Thu, 23 May 2024 16:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716482698; cv=none; b=aGGY4gtKE2BsPs0yOjE2Zsie3DDjubwofm3VmEQYzdfCgUD1CFiNNFPkGKw1FgX9ro1C4o/Mg+f9CTiXXxji8Q/ByMucbZwwEXNs+XfR1cP0/vY+g25Bk1L1ukKPqKT9qrovfvGyryDDgvkBKfE4A7ED3KLTN+jN58HncCKsumo=
+	t=1716482731; cv=none; b=kTt/Vnk4oFou5kyFS/6Nqe0p7n9feZWUmVadMqwsD9mBn9WGUfmum22t06nqBWlrICN0hG/yvNnOPYSBdrCkv4JBG/HNpPUx9GxI/GQrymZP0aSzyK8N66OhKsyHjorzrVZgUx6QdeqvId7Z1BuWMT9pzk2+4PEYW8Lm+lNuu3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716482698; c=relaxed/simple;
-	bh=0tqQovrxEuibLPAzpAH/w232rjaoPyNb6yIOFTFXaY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=O2MCZwGXKF1jS7cASbNTYKcZMIOGLuxLV3Zy95RDFlD/PMDRc6QelCcLSU16ToloIgirQDm0mvQ1JhtVVkTUOddoyTymEmxmNQalAi99QoNVgNxhY0iCAVrHP7OHjMT9rcttFzruXgLkV7z0mtXf3Y8L790ELy+Rtxe+RUH5AV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDC2C32782;
-	Thu, 23 May 2024 16:44:56 +0000 (UTC)
-Date: Thu, 23 May 2024 12:45:41 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Ali Zahraee <ahzahraee@gmail.com>, Shuah
- Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kselftest@vger.kernel.org, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: [PATCH] tracing/selftests: Run the ownership test twice
-Message-ID: <20240523124541.7dd4cca9@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1716482731; c=relaxed/simple;
+	bh=Qp2cK468rwwqNdV1hrKOlsM51j4WX1baGTX5Xh/9+QY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PzLETVXmQbH6mRzLYoOa91DfKvQPGfdOVAVksK+pF6QkkiN7rXMjRAdcnxnXMeOPW61FTERhfpvJ4Yb2ZDrgJUQeuECGw8gWvBdtCtU+N5TOfCjKXDtNAS3RFGH2B7ZDpCmm/46mWZibpoaUqbgpu18KGe0gbHAvT1d68jPHtj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRqcliRi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRqcliRi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54197C2BD10;
+	Thu, 23 May 2024 16:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716482731;
+	bh=Qp2cK468rwwqNdV1hrKOlsM51j4WX1baGTX5Xh/9+QY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dRqcliRiuLMx4OZ3+vAz+rn96k7hHfMVewUnMViITYeJkJYH3TXmpEv9CwPWcJqDW
+	 2/4Vlp9Gn9unaoGaXkF2ygBF1Gg0CUyt9kTwaiTKgwIOP5AqM60RWBHRlk4pQXzR6h
+	 AgfIWT+tUrv41Et6qZLseQDJ/vUKpzLGqOKIK+mu1cgC1KNe9peVA/Oqyl4aVyXSs9
+	 LHVrGYj4arYo3jh0DxcKwTG9YlFCDit5jtYicUzPInHsx1D5TgrqctxvO1S0+1kDQg
+	 mP5NH7/8JvL5DGLH9dHv+D1u+EYRM1FKDSK7LR8KiSa6zy9ZZjGmlnfYIYXSGDOi1P
+	 GWgeTLFl6oFmg==
+Received: by pali.im (Postfix)
+	id 5643B820; Thu, 23 May 2024 18:45:28 +0200 (CEST)
+Date: Thu, 23 May 2024 18:45:28 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (dell-smm) Add Dell G15 5511 to fan control
+ whitelist
+Message-ID: <20240523164528.xrq56r4m3snweofl@pali>
+References: <20240522210809.294488-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240522210809.294488-1-W_Armin@gmx.de>
+User-Agent: NeoMutt/20180716
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wednesday 22 May 2024 23:08:09 Armin Wolf wrote:
+> A user reported that he needs to disable BIOS fan control on his
+> Dell G15 5511 in order to be able to control the fans.
+> 
+> Closes: https://github.com/Wer-Wolf/i8kutils/issues/5
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/hwmon/dell-smm-hwmon.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+> index 48a81c64f00d..942526bd4775 100644
+> --- a/drivers/hwmon/dell-smm-hwmon.c
+> +++ b/drivers/hwmon/dell-smm-hwmon.c
+> @@ -1545,6 +1545,14 @@ static const struct dmi_system_id i8k_whitelist_fan_control[] __initconst = {
+>  		},
+>  		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_30A3_31A3],
+>  	},
+> +	{
+> +		.ident = "Dell G15 5511",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Dell G15 5511"),
+> +		},
+> +		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_30A3_31A3],
+> +	},
+>  	{ }
+>  };
+> 
+> --
+> 2.39.2
+> 
 
-A regression happened where running the ownership test passes on the first
-iteration but fails running it a second time. This was caught and fixed,
-but a later change brought it back. The regression was missed because the
-automated tests only run the tests once per boot.
+Looks good,
 
-Change the ownership test to iterate through the tests twice, as this will
-catch the regression with a single run.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../ftrace/test.d/00basic/test_ownership.tc   | 34 +++++++++++--------
- 1 file changed, 20 insertions(+), 14 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-index c45094d1e1d2..71e43a92352a 100644
---- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-@@ -83,32 +83,38 @@ run_tests() {
- 	done
- }
- 
--mount -o remount,"$new_options" .
-+# Run the tests twice as leftovers can cause issues
-+for loop in 1 2 ; do
- 
--run_tests
-+	echo "Running iteration $loop"
- 
--mount -o remount,"$mount_options" .
-+	mount -o remount,"$new_options" .
- 
--for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
--	test "$d" $original_group
--done
-+	run_tests
-+
-+	mount -o remount,"$mount_options" .
-+
-+	for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
-+		test "$d" $original_group
-+	done
- 
- # check instances as well
- 
--chgrp $other_group instances
-+	chgrp $other_group instances
- 
--instance="$(mktemp -u test-XXXXXX)"
-+	instance="$(mktemp -u test-XXXXXX)"
- 
--mkdir instances/$instance
-+	mkdir instances/$instance
- 
--cd instances/$instance
-+	cd instances/$instance
- 
--run_tests
-+	run_tests
- 
--cd ../..
-+	cd ../..
- 
--rmdir instances/$instance
-+	rmdir instances/$instance
- 
--chgrp $original_group instances
-+	chgrp $original_group instances
-+done
- 
- exit 0
--- 
-2.43.0
-
+Acked-by: Pali Rohár <pali@kernel.org>
