@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFB713B5B4;
-	Thu, 23 May 2024 06:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D5D187F;
+	Thu, 23 May 2024 06:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716445091; cv=none; b=LILyC8qw8GKUPQ7vJMdQ8HcaaK+FA94RYl4rFpSE0BabKGLqArwiWffrjU83UW3l03J8RGqAq1mASEOpfL3/fiDhkfF5bZ9SKT/K2M9otXkEmT0wOCkf1vw7UOh1v2EoPqRL4scmsqWOoKMjCBH8r597gjXiIqtWA8CZjJE5NN0=
+	t=1716445158; cv=none; b=GVJnkHZkoQ82/iwotY91ux1uSw2qPeqwAhsoYv2klmxlz7x9oMPvXNYmFzAPz24c+1C1QSQWpF904b5M/ZVxEx5EVTMTRK2DXE6aA8NS7YvStXjRcET1J29/p82aCipYB5TAwNhgS+wt+SmsYvGxAsNEzqfn4CTtXALHk/bLyok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716445091; c=relaxed/simple;
-	bh=OTVberI1BuWIOdkUJoRqDYrgj07Ee4OnvLviPQ6WZyA=;
+	s=arc-20240116; t=1716445158; c=relaxed/simple;
+	bh=8zHA0HU2AbRI7s7cejYhTpjhS07bLPkgGzXqxwDglsw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zufap+hg9pJjTT7oCgei8pMmKcIdNBiFtxieXu6a9v8KldgICMMPuPn5UnzO68Mw5y6Y528gJrJrDQL6ua6mua7HojOGyMrK1jiFp6IH/CVa6qbdBkSFw/L8oYNWmcEk6tYHTTIh1nCBKhQdrZPfaQo89xf1z0qm10j2mgH+BiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1iBK16J; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AKsistQhql/D2Rou56c2hY7+DKuYbNk5bv0r1X2+o0w4GWzftFcuTz6ZvuvpieWP4iHcC1IgcR03RoQFE8f6z9guAH8vDkuCWPBoi5uwVp4Vh7snxfcW0C4fgE28jsiFQkK779BnGC5wezT+9a+6fq9QAm6T+HnTHL8yiwxPmuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G84jSHXZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1iBK16J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 685D6C2BD10;
-	Thu, 23 May 2024 06:18:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G84jSHXZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5C20C2BD10;
+	Thu, 23 May 2024 06:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716445091;
-	bh=OTVberI1BuWIOdkUJoRqDYrgj07Ee4OnvLviPQ6WZyA=;
+	s=k20201202; t=1716445157;
+	bh=8zHA0HU2AbRI7s7cejYhTpjhS07bLPkgGzXqxwDglsw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=D1iBK16JsfklLNDCeR2CthstsTpZqlPFXA4X1zV+lmD26PIYA5DbMSLdsk5XHlgYd
-	 Gfz0cUTb478dCKnZ9Ip1SDKs9qi2dHCiyp+G6K9te5xeEX97Sa7xk51zCtH0CVSpDd
-	 /8jzGZA3j9n2hg7gxa/iCO5wb3es6PygQ0qxmv4hwvdGRJgb/KkVgqJRIj2XOEnyeq
-	 3MXwOEaBmMYSEDtM/z09EYgC5nMrq68ihui4j9cFY49iYPFcfM+TLrl7ELCLr9OtXn
-	 9kutEJ+CeySg6OcDj1576zPJSfoGrkkFFFUWS1onHGYSH+R2W2cNsqs3f8KDAHyyIu
-	 Z3eMQFvXGznxA==
-Message-ID: <6635cbee-be58-4c84-9caf-309866f1002b@kernel.org>
-Date: Thu, 23 May 2024 08:18:06 +0200
+	b=G84jSHXZsPZbgtATo0PIlB91aprBi3Lig4z09Esp9z+lXtr9fLABITgYa8z38bGnX
+	 q/eujJXu9dXdZAs3CajrXjzOFboP3p/29NBDnNfEkszkUcU9PfaRrri78EIRhc23tV
+	 /g1jxjHBcZCDWOQjWVBcuTLXwiQkemvlPh4ZA64R9KxW8DaNAuy3IEIasFKWx8shzF
+	 ZDYlsUo+upflB9MryCVxJqHCBSh32iGi7mgAIxLVU9B9z/Ph/hqJ5mFpQgLk47BUzu
+	 0X5lPhI4Y/CZR/WOUxa6Xg7vlqVbkXXqkBPcaUVL2p4k6BNrNZdPMkE/5m0JSoKCMd
+	 CBFsWctBcouBA==
+Message-ID: <e4579702-089e-48cb-bf06-f8e4fb618050@kernel.org>
+Date: Thu, 23 May 2024 08:19:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: input: document Novatek NVT touchscreen
- controller
-To: Joel Selvaraj <joelselvaraj.oss@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+Subject: Re: [PATCH RFC 1/2] dt-bindings: soc: qcom,smsm: Allow specifying
+ mboxes instead of qcom,ipc
+To: Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20240521-nvt-ts-devicetree-regulator-support-v1-0-8d766c639dca@gmail.com>
- <20240521-nvt-ts-devicetree-regulator-support-v1-1-8d766c639dca@gmail.com>
- <6f22e42d-8a06-4c24-93bd-25b6ac141cea@kernel.org>
- <7d84912f-7bc4-4376-9f13-31fae16013f4@gmail.com>
+References: <20240424-smsm-mbox-v1-0-555f3f442841@z3ntu.xyz>
+ <6253429.lOV4Wx5bFT@g550jk> <aced3d43-5f79-4b57-8663-5762db1ad2f6@linaro.org>
+ <5099926.GXAFRqVoOG@g550jk>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,86 +94,115 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <7d84912f-7bc4-4376-9f13-31fae16013f4@gmail.com>
+In-Reply-To: <5099926.GXAFRqVoOG@g550jk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/05/2024 16:00, Joel Selvaraj wrote:
-> Hi Krzysztof Kozlowski,
-> 
-> On 5/21/24 11:48, Krzysztof Kozlowski wrote:
->> On 21/05/2024 14:09, Joel Selvaraj via B4 Relay wrote:
->>> From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
+On 23/05/2024 08:16, Luca Weiss wrote:
+> On Donnerstag, 23. Mai 2024 08:02:13 MESZ Krzysztof Kozlowski wrote:
+>> On 22/05/2024 19:34, Luca Weiss wrote:
+>>> On Mittwoch, 22. Mai 2024 08:49:43 MESZ Krzysztof Kozlowski wrote:
+>>>> On 21/05/2024 22:35, Luca Weiss wrote:
+>>>>> On Dienstag, 21. Mai 2024 10:58:07 MESZ Krzysztof Kozlowski wrote:
+>>>>>> On 20/05/2024 17:11, Luca Weiss wrote:
+>>>>>>> Hi Krzysztof
+>>>>>>>
+>>>>>>> Ack, sounds good.
+>>>>>>>
+>>>>>>> Maybe also from you, any opinion between these two binding styles?
+>>>>>>>
+>>>>>>> So first using index of mboxes for the numbering, where for the known
+>>>>>>> usages the first element (and sometimes the 3rd - ipc-2) are empty <>.
+>>>>>>>
+>>>>>>> The second variant is using mbox-names to get the correct channel-mbox
+>>>>>>> mapping.
+>>>>>>>
+>>>>>>> -               qcom,ipc-1 = <&apcs 8 13>;
+>>>>>>> -               qcom,ipc-2 = <&apcs 8 9>;
+>>>>>>> -               qcom,ipc-3 = <&apcs 8 19>;
+>>>>>>> +               mboxes = <0>, <&apcs 13>, <&apcs 9>, <&apcs 19>;
+>>>>>>>
+>>>>>>> vs.
+>>>>>>>
+>>>>>>> -               qcom,ipc-1 = <&apcs 8 13>;
+>>>>>>> -               qcom,ipc-2 = <&apcs 8 9>;
+>>>>>>> -               qcom,ipc-3 = <&apcs 8 19>;
+>>>>>>> +               mboxes = <&apcs 13>, <&apcs 9>, <&apcs 19>;
+>>>>>>> +               mbox-names = "ipc-1", "ipc-2", "ipc-3";
+>>>>>>
+>>>>>> Sorry, don't get, ipc-1 is the first mailbox, so why would there be <0>
+>>>>>> in first case?
+>>>>>
+>>>>> Actually not, ipc-0 would be permissible by the driver, used for the 0th host
+>>>>>
+>>>>> e.g. from:
+>>>>>
+>>>>> 	/* Iterate over all hosts to check whom wants a kick */
+>>>>> 	for (host = 0; host < smsm->num_hosts; host++) {
+>>>>> 		hostp = &smsm->hosts[host];
+>>>>>
+>>>>> Even though no mailbox is specified in any upstream dts for this 0th host I
+>>>>> didn't want the bindings to restrict that, that's why in the first example
+>>>>> there's an empty element (<0>) for the 0th smsm host
+>>>>>
+>>>>>> Anyway, the question is if you need to know that some
+>>>>>> mailbox is missing. But then it is weird to name them "ipc-1" etc.
+>>>>>
+>>>>> In either case we'd just query the mbox (either by name or index) and then
+>>>>> see if it's there? Not quite sure I understand the sentence..
+>>>>> Pretty sure either binding would work the same way.
+>>>>
+>>>> The question is: does the driver care only about having some mailboxes
+>>>> or the driver cares about each specific mailbox? IOW, is skipping ipc-0
+>>>> important for the driver?
 >>>
->>> Document the Novatek NVT touchscreen driver which is used in devices like
->>
->> driver? or device?
-> 
-> touchscreen "controller" would be correct I think. I will fix it in v2.
-> 
->>> the Xiaomi Poco F1 [1]. Also, include the devictree binding file in the
->>> MAINTAINERS file.
+>>> There's nothing special from driver side about any mailbox. Some SoCs have
+>>> a mailbox for e.g. hosts 1&2&3, some have only 1&3, and apq8064 even has
+>>> 1&2&3&4.
 >>>
->>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-tianma.dts?h=v6.9
+>>> And if the driver doesn't find a mailbox for a host, it just ignores it
+>>> but then of course it can't 'ring' the mailbox for that host when necessary.
 >>>
->>> Signed-off-by: Joel Selvaraj <joelselvaraj.oss@gmail.com>
->>> ---
->>>   .../bindings/input/touchscreen/novatek,nvt-ts.yaml | 62 ++++++++++++++++++++++
->>>   MAINTAINERS                                        |  1 +
->>>   2 files changed, 63 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/novatek,nvt-ts.yaml b/Documentation/devicetree/bindings/input/touchscreen/novatek,nvt-ts.yaml
->>> new file mode 100644
->>> index 0000000000000..7839c6a028e4a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/input/touchscreen/novatek,nvt-ts.yaml
->>> @@ -0,0 +1,62 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/input/touchscreen/novatek,nvt-ts.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Novatek NVT Touchscreen Controller
->>> +
->>> +maintainers:
->>> +  - Hans de Goede <hdegoede@redhat.com>
->>> +
->>> +allOf:
->>> +  - $ref: touchscreen.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - novatek,nvt-ts
+>>> Not sure how much more I can add here, to be fair I barely understand what
+>>> this driver is doing myself apart from the obvious.
 >>
->> That's too generic. Looking at your driver change, it is not even needed.
->>
->>> +      - novatek,nt36672a-ts
->>
->> Eh, we have already panel. Why there is a need for touchscreen binding
->> (binding, not driver)?
+>> From what you said, it looks like it is enough to just list mailboxes,
+>> e.g. for ipc-1, ipc-2 and ipc-4 (so no ipc-0 and ipc-3):
 > 
-> I am not sure I understand this correctly. Help me a bit here. For 
-> context, in mainline there is an existing driver for the novatek nvt 
-> touchscreen controller. The driver did not have devicetree support. It 
-> only had a i2c_device_id "NVT-ts". I don't know what is the variant of 
+> No, for sure we need also the possibility to list ipc-3.
 
-I just got a bit confused that you add another binding for the same
-device, but now I see these are different interfaces - DSI and I2C.
+? You can list it, what's the problem>
 
-> that Novatek touchscreen controller. To use the driver in Xiaomi Poco 
-> F1, I introduced a devicetree compatible for it "novatek,nvt-ts". The 
-> However, the Novatek touchscreen controller present in Xiaomi Poco F1 is 
-> "NT36672A" which has a different chip id than the one in existing 
-> driver. So I created a separate compatible for this touchscreen 
-> controller variant "novatek,nt36672a-ts". I used compatible data to 
-> differentiate the two variants. Since there are two variants, I am 
-> mentioning both here.
+> 
+> And my point is that I'm not sure if any platform will ever need ipc-0, but
+> the code to use that if it ever exists is there - the driver always
+> tries getting an mbox (currently just syscon of course) for every host
+> from 0 to n.
+> 
+> These are the current (non-mbox-API) mboxes provided to smsm:
+> 
+> $ git grep qcom,ipc- arch/
+> arch/arm/boot/dts/qcom/qcom-apq8064.dtsi:               qcom,ipc-1 = <&l2cc 8 4>;
+> arch/arm/boot/dts/qcom/qcom-apq8064.dtsi:               qcom,ipc-2 = <&l2cc 8 14>;
+> arch/arm/boot/dts/qcom/qcom-apq8064.dtsi:               qcom,ipc-3 = <&l2cc 8 23>;
+> arch/arm/boot/dts/qcom/qcom-apq8064.dtsi:               qcom,ipc-4 = <&sps_sic_non_secure 0x4094 0>;
+> arch/arm/boot/dts/qcom/qcom-msm8974.dtsi:               qcom,ipc-1 = <&apcs 8 13>;
+> arch/arm/boot/dts/qcom/qcom-msm8974.dtsi:               qcom,ipc-2 = <&apcs 8 9>;
+> arch/arm/boot/dts/qcom/qcom-msm8974.dtsi:               qcom,ipc-3 = <&apcs 8 19>;
+> arch/arm64/boot/dts/qcom/msm8916.dtsi:          qcom,ipc-1 = <&apcs 8 13>;
+> arch/arm64/boot/dts/qcom/msm8916.dtsi:          qcom,ipc-3 = <&apcs 8 19>;
+> arch/arm64/boot/dts/qcom/msm8939.dtsi:          qcom,ipc-1 = <&apcs1_mbox 8 13>;
+> arch/arm64/boot/dts/qcom/msm8939.dtsi:          qcom,ipc-3 = <&apcs1_mbox 8 19>;
+> arch/arm64/boot/dts/qcom/msm8953.dtsi:          qcom,ipc-1 = <&apcs 8 13>;
+> arch/arm64/boot/dts/qcom/msm8953.dtsi:          qcom,ipc-3 = <&apcs 8 19>;
+> arch/arm64/boot/dts/qcom/msm8976.dtsi:          qcom,ipc-1 = <&apcs 8 13>;
+> arch/arm64/boot/dts/qcom/msm8976.dtsi:          qcom,ipc-2 = <&apcs 8 9>;
+> arch/arm64/boot/dts/qcom/msm8976.dtsi:          qcom,ipc-3 = <&apcs 8 19>;
+> 
+>>
+>> mboxes = <&apcs 13>, <&apcs 9>, <&apcs 19>;
 
-Just to be clear, I don't care about driver here but hardware. You have
-two separate interfaces on this hardware - DSI virtual channel and I2C?
-
+So which case is not covered?
 
 Best regards,
 Krzysztof
