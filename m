@@ -1,207 +1,140 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF252B645
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7F66FB9;
+	Thu, 23 May 2024 15:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716476385; cv=none; b=CdWJdc1mh0uZmgCClXHyz6tNax9DMpLDUt5/5VFHQhKpxqsRyNDIhpa1IVgC4E+uOfd+ceAqp0VGafOULyGKNVu7Y0J7Yeuapl6mvHfK+6SFsXgIga7NjX+yTLt5OkwmQsrrx9MIxV3DH6D84kw45GVOUQwhe91cBnxVPhMt6rM=
+	t=1716476403; cv=none; b=ZXEDd1k4tVF1HnKCFaKSKkBPx+Y6U6c/QEiiH9W/TsPKYXtNgy+lH3+5W1m3De3VCTk92cygLy4aDMt+0UOxkH4VSHBfu+mtJWkY6xCnHPHA8gr+bvLa8BbKe5ZleBUjMvRE2Ladbh0XNGpCTYXp6nfxdp7jO5tPJAV+/jPjyz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716476385; c=relaxed/simple;
-	bh=2Dr0p6+Vq88UVDiwU5c+6Vvwt3ZIg69MAge1qiiRneo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a+T0HowcIy4ZG4dvjqus65yGIpvc8C+WVFQkm1Hfx5dkScdKgfnOa0miUquzubTkyJ5keU1J5KekiilijsWoHM/bpA7E4WKz+GiMr6oONnRCX0jofDoahZcK64oScqbK1+fENNZdTYiXr94rUd8ospLRuECaJY+LLHl9qIpWS34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=xQoQE/L0; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1716476403; c=relaxed/simple;
+	bh=SAOCWyE5winR3sfCd14gHp7mco0EGetdVtps2eCt62I=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=cwoqXEnTathjcPL8KoAYu8NusMayplHLvnGtOrNyDkqcrpLBCveO6WoGGw6j4Bwphc5xzMlQ1vC8/wB+xq2p8cR0FmeYj9GSaS3sllLk4soWsIH21orUO9M7Glj3KTm8Kr/BJdsT9/aRYcUF5pVzpctzmc8cYmmrl6QYq805kCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+aH0G6d; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="xQoQE/L0"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a621cb07d8fso289635166b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 07:59:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+aH0G6d"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-df4e81e0b22so1939625276.3;
+        Thu, 23 May 2024 08:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716476381; x=1717081181; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1716476400; x=1717081200; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fJf8nECqEBzmEqcVWslv5AXViIlFFnTcWLmUE5Gi6ig=;
-        b=xQoQE/L0Ez07vhPcph3w2XDmhCXg9FR9r/yBEEx01f7bvRE6pNFesxXXnDrdLmFamj
-         XesPRyxF3OHasOAK/iaqcdv5zoFZiomaPpVt/7E4fOjuNVbIcP+IVNR1aRNCWOg2s/CV
-         wNIPFgPrvBs//5V83fAGcIfl1s9HG428CpnOlP1KUV/EgsHYy7nXz2byAAfjZoVzqIJ/
-         4xxfq8TBcEeS5aPfLZHDavEDlvF6DaPfCmBNddYxvyQNtpg9nRenN5LTqVvay59CM9k8
-         kqKo9wAvaLz/hqLfSOkB1qrMIrQ9HhsrCVBnZC+NVoiOwUKDm8szA65B8x5NQ7W1NwI6
-         PY8w==
+        bh=2pzvpZz45nT1lL1/WYOVJvhpVhqZ+zX2th+ykDS47iw=;
+        b=E+aH0G6d+xzpc+LKTNxursx2/AhEsiZOjRu2NXSXSayVWfjdtyK8NqbIAmUsrGrxE/
+         2vF6ciAocDLh5p1LyrBWxxJPKBPCr6OD9DCvs4d1shrpt/M5NtdwoLnUor4Hq8SLKiz2
+         bzEHbs2yXAwFmMgJMUo0Jm2PTc1Ns5vz3lCV6CLnEnsrIanzHXdDidfz7XlNmjoHom3L
+         2tsUh5AWtZRIaPD4ykYEDc6WMS7Fn5VL6pUAgjzhM7RtOaOVCmgsw7gv0JxvO/zizPHJ
+         DD0p4h57x4qkYrTGkSe3zBZp/Px/OYBWPYtvqlSkZ9hecyRDbBWRL34I0MA6E3Bou0xg
+         0DhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716476381; x=1717081181;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fJf8nECqEBzmEqcVWslv5AXViIlFFnTcWLmUE5Gi6ig=;
-        b=aABQ8V6+UddqFmcEM9dWE7WZ396zl6XyXciOGrRxM9NuLtEuF8lBP3/uWIchuOd2HV
-         XDC6jzGt6Io3zcgqjDh8PkNCAIU/bMaeBGASC2Tvwnr9nuDcSL5QefuVx3MVCXfd+vDa
-         w5wWiX6Urr3HpJwr2rcGytkAFSsW5/zbOmON6daoUpSyv5lVxHLXnxUFjffPmZZEfZZm
-         SaF0TwyuLi9k76/kN6CHlBgsedzrijv5Fe9r0BzAVBHPcOSNxmcda7fRwrkas/qz7DsI
-         0H8YxEG/7g3UwL6LXRubDSAq/s6ix62S6fZbk46kfXIYBMuGJaLHEtaHl+jQI7I508DC
-         no6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUJZHsCktJo3UGo7vzaFhLcPRPe8/Np9EB4RgebyU6QpUhg9Ome77Xe9lvkAt0EtGMjD97EdmZRZuJ7EJauKSqBZSWWDV+GEoQrH/vb
-X-Gm-Message-State: AOJu0Yy8sHhF6I61rVQuIeRKuGmSUpI9EFIa+/bsTFcu3VzJqhMvF3Tw
-	wF1m4G7fdOp40bv44ZjyVpAE6XjdxN/77xSuWdFu4f3LRJluQ/eAPWdwgMM41QUWzhGyFAZmZQL
-	sSgap9FSzxPwh9qxDt3lP0rnpm70P2BMwoD9w/A==
-X-Google-Smtp-Source: AGHT+IH96ZBYqe4cc+1wFeLH7NX/PsHsWO2WigAasUwgg3Elfr20rtzmvQZZHOI45ry8NHHXFtdf/BIf5ZeuawftPVg=
-X-Received: by 2002:a17:906:5296:b0:a5a:5c0b:ff77 with SMTP id
- a640c23a62f3a-a622806c0camr321589066b.19.1716476381026; Thu, 23 May 2024
- 07:59:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716476400; x=1717081200;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2pzvpZz45nT1lL1/WYOVJvhpVhqZ+zX2th+ykDS47iw=;
+        b=WoOVVTx4FFXdJYMmGy7/Oq2USnTITUQCOQH1Xmg2EUHfp7PB7f07ewutrmaD7HZAgF
+         XX7kednpDuTAZAi3Nq/hBgVg8Svk3cBaiVbquJbUnMuIvRBhqzs8zeW38wwK2ZO33mT/
+         N1C+jFa/E0f/yx16kUBChgfj/6xsQEGqVqetWah9utSbGOVewbvdYvorSpHziWqF+E6X
+         oH0MFcrAuOauALU31YVMqRaCn+0keVZPE1PTADLkeQnLsjOJlrEwE4gws9e2dvSv1Lkp
+         tMlPNqPAGNMz8iwnI9cp4/gc0DDV8SuM3UAGhrkoQmc6eAFJTRQA8R7QespknEzW58yZ
+         5gfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcde5K76dFgKPNAOHRXoa6othsNKMTk6M9Tvu6oo/RObLVpaukya3npxRc5PrG8c4Sm8pc9webswT+zC9M64IWCT/dPsG7
+X-Gm-Message-State: AOJu0YyzUsd8/VM6M1DzGjhbLXbApbnHL6z6CNF+Mb/aTv6XazLtzRPQ
+	d+wc86H3an9q17uaa5LanzVzLlf4oCkOo5UJmDCBMSekSudd59WeC8UDtA==
+X-Google-Smtp-Source: AGHT+IF0s0+xHBS8iHKnTWrDlRyAwmj/nJRi3prOJDDqcze2NocDRfUC22GnS69mlHtKPLHdp7ulLw==
+X-Received: by 2002:a05:6902:2211:b0:de5:6a82:49dd with SMTP id 3f1490d57ef6-df4e0a760eemr6165214276.13.1716476400389;
+        Thu, 23 May 2024 08:00:00 -0700 (PDT)
+Received: from localhost (112.49.199.35.bc.googleusercontent.com. [35.199.49.112])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ab8be59ba7sm11024876d6.24.2024.05.23.07.59.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 07:59:59 -0700 (PDT)
+Date: Thu, 23 May 2024 10:59:58 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ =?UTF-8?B?TGVuYSBXYW5nICjnjovlqJwp?= <Lena.Wang@mediatek.com>, 
+ "kuba@kernel.org" <kuba@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+ =?UTF-8?B?U2hpbWluZyBDaGVuZyAo5oiQ6K+X5piOKQ==?= <Shiming.Cheng@mediatek.com>, 
+ "pabeni@redhat.com" <pabeni@redhat.com>, 
+ "edumazet@google.com" <edumazet@google.com>, 
+ "willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>, 
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, 
+ "davem@davemloft.net" <davem@davemloft.net>
+Message-ID: <664f59eedbee7_1b5d24294ef@willemb.c.googlers.com.notmuch>
+In-Reply-To: <664f3aa1847cc_1a64412944f@willemb.c.googlers.com.notmuch>
+References: <20240428142913.18666-1-shiming.cheng@mediatek.com>
+ <20240429064209.5ce59350@kernel.org>
+ <bc69f8cc4aed8b16daba17c0ca0199fe6d7d24a8.camel@mediatek.com>
+ <20240516081110.362cbb51@kernel.org>
+ <15675c6e0facd64b1cdc2ec0ded32b84a4e5744b.camel@mediatek.com>
+ <664f3aa1847cc_1a64412944f@willemb.c.googlers.com.notmuch>
+Subject: Re: [PATCH net] net: prevent pulling SKB_GSO_FRAGLIST skb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240403234054.2020347-1-debug@rivosinc.com> <20240403234054.2020347-14-debug@rivosinc.com>
- <276fa17b-cd62-433d-b0ec-fa98c65a46ca@ghiti.fr> <ZkJOs6ENmDHFsq/U@debug.ba.rivosinc.com>
-In-Reply-To: <ZkJOs6ENmDHFsq/U@debug.ba.rivosinc.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Thu, 23 May 2024 16:59:30 +0200
-Message-ID: <CAHVXubhS3CJ87DxC+9+8z6CiWDV1bQ8nK+iOZUDvMiT7vszFLA@mail.gmail.com>
-Subject: Re: [PATCH v3 13/29] riscv mmu: write protect and shadow stack
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, paul.walmsley@sifive.com, rick.p.edgecombe@intel.com, 
-	broonie@kernel.org, Szabolcs.Nagy@arm.com, kito.cheng@sifive.com, 
-	keescook@chromium.org, ajones@ventanamicro.com, conor.dooley@microchip.com, 
-	cleger@rivosinc.com, atishp@atishpatra.org, bjorn@rivosinc.com, 
-	samuel.holland@sifive.com, conor@kernel.org, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	oleg@redhat.com, akpm@linux-foundation.org, arnd@arndb.de, 
-	ebiederm@xmission.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	lstoakes@gmail.com, shuah@kernel.org, brauner@kernel.org, 
-	andy.chiu@sifive.com, jerry.shih@sifive.com, hankuan.chen@sifive.com, 
-	greentime.hu@sifive.com, evan@rivosinc.com, xiao.w.wang@intel.com, 
-	charlie@rivosinc.com, apatel@ventanamicro.com, mchitale@ventanamicro.com, 
-	dbarboza@ventanamicro.com, sameo@rivosinc.com, shikemeng@huaweicloud.com, 
-	willy@infradead.org, vincent.chen@sifive.com, guoren@kernel.org, 
-	samitolvanen@google.com, songshuaishuai@tinylab.org, gerg@kernel.org, 
-	heiko@sntech.de, bhe@redhat.com, jeeheng.sia@starfivetech.com, 
-	cyy@cyyself.name, maskray@google.com, ancientmodern4@gmail.com, 
-	mathis.salmen@matsal.de, cuiyunhui@bytedance.com, bgray@linux.ibm.com, 
-	mpe@ellerman.id.au, baruch@tkos.co.il, alx@kernel.org, david@redhat.com, 
-	catalin.marinas@arm.com, revest@chromium.org, josh@joshtriplett.org, 
-	shr@devkernel.io, deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org, 
-	jhubbard@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Hi Deepak,
+Willem de Bruijn wrote:
+> > The problem now is the ethtool in ubuntu can't support "rx-gro-list"
+> > and "rx-udp-gro-forwarding" although it is updated to version 6.7 from 
+> > https://mirrors.edge.kernel.org/pub/software/network/ethtool. 
+> > 
+> > There is another verison in 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/net/ethtool.
+> >  We download the sourcecode but don't know how to compile for ubuntu as
+> > no ./configure there.
+> > 
+> > Is it the one we should use?  If yes, could you please show me how to
+> > compile and install this ethtool?
+> 
+> https://git.kernel.org/pub/scm/network/ethtool/ethtool.git is the
+> upstream ethtool repo.
+> 
+> Since you are testing a custom built kernel, there are other hacky
+> ways to configure a feature if you lack a userspace component:
+> 
+> - just hardcode on or off and reboot
+> - use YNL ethtool (but features is not implemented yet?)
+> - write your own netlink helper
+> - abuse some existing kernel API to toggle it, like a rarely uses systl
 
-On Mon, May 13, 2024 at 7:32=E2=80=AFPM Deepak Gupta <debug@rivosinc.com> w=
-rote:
->
-> On Sun, May 12, 2024 at 06:31:24PM +0200, Alexandre Ghiti wrote:
-> >On 04/04/2024 01:35, Deepak Gupta wrote:
-> >>`fork` implements copy on write (COW) by making pages readonly in child
-> >>and parent both.
-> >>
-> >>ptep_set_wrprotect and pte_wrprotect clears _PAGE_WRITE in PTE.
-> >>Assumption is that page is readable and on fault copy on write happens.
-> >>
-> >>To implement COW on such pages,
-> >
-> >
-> >I guess you mean "shadow stack pages" here.
->
-> Yes I meant shadow stack pages. Will fix the message.
->
-> >
-> >
-> >>  clearing up W bit makes them XWR =3D 000.
-> >>This will result in wrong PTE setting which says no perms but V=3D1 and=
- PFN
-> >>field pointing to final page. Instead desired behavior is to turn it in=
-to
-> >>a readable page, take an access (load/store) fault on sspush/sspop
-> >>(shadow stack) and then perform COW on such pages.
-> >>This way regular reads
-> >>would still be allowed and not lead to COW maintaining current behavior
-> >>of COW on non-shadow stack but writeable memory.
-> >>
-> >>On the other hand it doesn't interfere with existing COW for read-write
-> >>memory. Assumption is always that _PAGE_READ must have been set and thu=
-s
-> >>setting _PAGE_READ is harmless.
-> >>
-> >>Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> >>---
-> >>  arch/riscv/include/asm/pgtable.h | 12 ++++++++++--
-> >>  1 file changed, 10 insertions(+), 2 deletions(-)
-> >>
-> >>diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/=
-pgtable.h
-> >>index 9b837239d3e8..7a1c2a98d272 100644
-> >>--- a/arch/riscv/include/asm/pgtable.h
-> >>+++ b/arch/riscv/include/asm/pgtable.h
-> >>@@ -398,7 +398,7 @@ static inline int pte_special(pte_t pte)
-> >>  static inline pte_t pte_wrprotect(pte_t pte)
-> >>  {
-> >>-     return __pte(pte_val(pte) & ~(_PAGE_WRITE));
-> >>+     return __pte((pte_val(pte) & ~(_PAGE_WRITE)) | (_PAGE_READ));
-> >>  }
-> >>  /* static inline pte_t pte_mkread(pte_t pte) */
-> >>@@ -581,7 +581,15 @@ static inline pte_t ptep_get_and_clear(struct mm_s=
-truct *mm,
-> >>  static inline void ptep_set_wrprotect(struct mm_struct *mm,
-> >>                                    unsigned long address, pte_t *ptep)
-> >>  {
-> >>-     atomic_long_and(~(unsigned long)_PAGE_WRITE, (atomic_long_t *)pte=
-p);
-> >>+     volatile pte_t read_pte =3D *ptep;
+And as shared off-line, virtme-ng (vng) can be a good option for
+working on tools/testing/selftests too.
 
-Sorry I missed this ^. You need to use ptep_get() to get the value of
-a pte. And why do you need the volatile here?
+Ideally
 
-> >>+     /*
-> >>+      * ptep_set_wrprotect can be called for shadow stack ranges too.
-> >>+      * shadow stack memory is XWR =3D 010 and thus clearing _PAGE_WRI=
-TE will lead to
-> >>+      * encoding 000b which is wrong encoding with V =3D 1. This shoul=
-d lead to page fault
-> >>+      * but we dont want this wrong configuration to be set in page ta=
-bles.
-> >>+      */
-> >>+     atomic_long_set((atomic_long_t *)ptep,
-> >>+                     ((pte_val(read_pte) & ~(unsigned long)_PAGE_WRITE=
-) | _PAGE_READ));
-> >>  }
-> >>  #define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
-> >
-> >
-> >Doesn't making the shadow stack page readable allow "normal" loads to
-> >access the page? If it does, isn't that an issue (security-wise)?
->
-> When shadow stack permissions are there (i.e. R=3D0, W=3D1, X=3D0), then =
-also shadow stack is
-> readable through "normal" loads. So nothing changes when it converts into=
- a readonly page
-> from page permissions perspective.
->
-> Security-wise it's not a concern because from threat modeling perspective=
-, if attacker had
-> read-write primitives (via some bug in program) available to read and wri=
-te address space
-> of process/task; then they would have availiblity of return addresses on =
-normal stack. It's
-> the write primitive that is concerning and to be protected against. And t=
-hat's why shadow stack
-> is not writeable using "normal" stores.
->
-> >
+```
+vng -v -b -f tools/testing/selftests/net
+make headers
+make -C tools/testing/selftests/net
 
-Thanks for the explanation!
+vng -v -r arch/x86/boot/bzImage --user root
+# inside the VM
+make -C tools/testing/selftests TARGETS=net run_tests
+```
 
-With the use of ptep_get(), you can add:
+Though last time I tried I had to use a slightly more roundabout
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+```
+make defconfig; make kvm_guest.config
+./scripts/kconfig/merge_config.sh -m .config tools/testing/selftests/net/config
+make olddefconfig
+make -j $(nproc) bzImage
+make headers
+make -C tools/testing/selftests/net
 
-Thanks,
+vng -v -r arch/x86/boot/bzImage --user root
+```
 
-Alex
+
+https://lpc.events/event/17/contributions/1506/attachments/1143/2441/virtme-ng.pdf
