@@ -1,59 +1,57 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A752913B7A6;
-	Thu, 23 May 2024 12:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC26F13B7A6;
+	Thu, 23 May 2024 12:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716466309; cv=none; b=MYjUiaSxoJudhl1ZGbCqbzWjoFJ7OaLvt7o+Fwl6Rmt0U2fd8ZDI54Juybfr2kN5R2m1iVtY0bfT6O79PBPqWrT3hFVKXa8OpZae8Ki5Kjkd4Y0F5lk4YSnzRMxnQIccwYzBvdMPBvB8dnYUtPa/04DsXbI8qdRDew0EcGaVWaQ=
+	t=1716466317; cv=none; b=Bscr/JhCuOEaCoUxHZcfUChjIj6hK+6q4DeRM8V5CXySF4bfQDWEvo8Ru4rZVRZpuuwyr5UoY4Uj/qNPTVdCXX5caBJZjr9GF6+zyIjMuMyWz+nfiTKDYh0uDqxW0/8+TsE/8pk2wJR5FwOOMgonfdLdbpNIBz7Rh3c0J+KmvZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716466309; c=relaxed/simple;
-	bh=vALmUqA5Wog+zqLtOkN/QaJNWqWwzNf0U+orGc33tQU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EXXXCSSf6o3bQ5nmEpYYtco/I2s/Qaizrw0wido3EAoDe6euGg3emrpX1psCyVbNVAHUWq3ks9a2WBQxE8NW2WzXOhCs8/89XoBC2l82oY9YwsxwnCGZOKxIh65oaxSPZaVpZ44C/WoItuF4/B9xnr4p+TgISo7cJEFbEx6kANE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=bqSOLSqC; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1716466317; c=relaxed/simple;
+	bh=xhLp6+5V0xlmhrqkFX+elbSl9+y8oMbSY1GFvmjPOMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mR6Xq8AH3eigeuDqdR8+D2bIG3I8nB+GyzDwYhZJpcL7g2sj8b+hw8bbOAMQToIIp4kt1IiQ2pGMqR5ga05/d8T6HrneZBzEBd/J0gUibc1J1WwvuNpo8ONCL95n+M2H6cZfQyFr7eYGLfWU+AcEpoE47TG51yvPmmIcfYWoUuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjDMZ+X8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="bqSOLSqC"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NA1Zhg011307;
-	Thu, 23 May 2024 08:11:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=EdFbmO6SN0AAHhccZL9llajYuxh
-	Q6Qu7Stq9Fo0o8LI=; b=bqSOLSqCwZLDDbX8JoO7RBW97SCn8XuOxI+27TcJokM
-	KLZUG350eSX14K4wx79ihiNf5eW4YWaLmJ6YcfzHHIFDztXbS7krYkOrsvCMx2a2
-	v0R4N9RLY1KrsUShFhQsmtLXmk7bcKQswvR1sJgNs+Nwtj8IQg9jo32a5Gmxcqfi
-	B3UfprmhdtVLWHuTK/fWQby5z9RQFJkyhV6UYZBhPPhB8aqqpsEk9xGuYdK/6m82
-	X7V2sAunikz7si4j+nEwV0RXdBBWMDXJyJQ6PKoUbn47b1tSD3QsLPX3el6qsiRW
-	mjrceCRoa0rE9+CX+sYOMMeCeu+04S7bCIb590gqUUw==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3y9xwuhgt0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 08:11:28 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 44NCBR1k024808
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 23 May 2024 08:11:27 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 23 May
- 2024 08:11:26 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 23 May 2024 08:11:26 -0400
-Received: from radu.ad.analog.com ([10.48.65.189])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 44NCBF7Y029999;
-	Thu, 23 May 2024 08:11:18 -0400
-From: Radu Sabau <radu.sabau@analog.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-hwmon@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Radu Sabau <radu.sabau@analog.com>
-Subject: [PATCH v2] drivers: hwmon: max31827: Add PEC support
-Date: Thu, 23 May 2024 15:10:56 +0300
-Message-ID: <20240523121057.5689-1-radu.sabau@analog.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjDMZ+X8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93E38C2BD10;
+	Thu, 23 May 2024 12:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716466316;
+	bh=xhLp6+5V0xlmhrqkFX+elbSl9+y8oMbSY1GFvmjPOMM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rjDMZ+X8rvVLbvGmOLGESPv2flNWTO5uiEF4aVPrnYqcBEI40idTkjYkjpLmJ8AxP
+	 yMNtzRML1akYobzaUUvzgijEo2WH1aqc2yNH4SJqAC4ka51mpDkaOxMlvP/bnXUJOY
+	 86gt6pBJwVyX10PeTvqkKHh0rA99MckpFA9Nf27Nk646PpZXh2LXYlSai6snQzzfQq
+	 qmhKbO70BftIwXFOa7E9kpKdX5PY70PJRs9UF063WEJvWQwycNMk+1ZfoUhrD3JwU1
+	 q4dHGphCD7bVVvIBq2fqOnW+TfHUdnEDlYiesTyFL3isB/WDPxjlIniUq25YXketjy
+	 xI8i4Yd5taK2A==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org,
+	x86@kernel.org,
+	bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>
+Subject: [PATCHv7 bpf-next 0/9] uprobe: uretprobe speed up
+Date: Thu, 23 May 2024 14:11:40 +0200
+Message-ID: <20240523121149.575616-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,146 +59,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: h9Tr9HCB91KG15ivkVUtZyfpR07p5NaD
-X-Proofpoint-ORIG-GUID: h9Tr9HCB91KG15ivkVUtZyfpR07p5NaD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-23_07,2024-05-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 spamscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405230083
 
-Add support for PEC by attaching PEC attribute to the i2c device.
-Add pec_store and pec_show function for accesing the "pec" file.
+hi,
+as part of the effort on speeding up the uprobes [0] coming with
+return uprobe optimization by using syscall instead of the trap
+on the uretprobe trampoline.
 
-Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+The speed up depends on instruction type that uprobe is installed
+and depends on specific HW type, please check patch 1 for details.
+
+Patches 1-8 are based on bpf-next/master, but patch 2 and 3 are
+apply-able on linux-trace.git tree probes/for-next branch.
+Patch 9 is based on man-pages master.
+
+v7 changes:
+- fixes in man page [Alejandro Colomar]
+- fixed patch #1 fixes tag [Oleg]
+
+Also available at:
+  https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  uretprobe_syscall
+
+thanks,
+jirka
+
+
+Notes to check list items in Documentation/process/adding-syscalls.rst:
+
+- System Call Alternatives
+  New syscall seems like the best way in here, because we need
+  just to quickly enter kernel with no extra arguments processing,
+  which we'd need to do if we decided to use another syscall.
+
+- Designing the API: Planning for Extension
+  The uretprobe syscall is very specific and most likely won't be
+  extended in the future.
+
+  At the moment it does not take any arguments and even if it does
+  in future, it's allowed to be called only from trampoline prepared
+  by kernel, so there'll be no broken user.
+
+- Designing the API: Other Considerations
+  N/A because uretprobe syscall does not return reference to kernel
+  object.
+
+- Proposing the API
+  Wiring up of the uretprobe system call is in separate change,
+  selftests and man page changes are part of the patchset.
+
+- Generic System Call Implementation
+  There's no CONFIG option for the new functionality because it
+  keeps the same behaviour from the user POV.
+
+- x86 System Call Implementation
+  It's 64-bit syscall only.
+
+- Compatibility System Calls (Generic)
+  N/A uretprobe syscall has no arguments and is not supported
+  for compat processes.
+
+- Compatibility System Calls (x86)
+  N/A uretprobe syscall is not supported for compat processes.
+
+- System Calls Returning Elsewhere
+  N/A.
+
+- Other Details
+  N/A.
+
+- Testing
+  Adding new bpf selftests and ran ltp on top of this change.
+
+- Man Page
+  Attached.
+
+- Do not call System Calls in the Kernel
+  N/A.
+
+
+[0] https://lore.kernel.org/bpf/ZeCXHKJ--iYYbmLj@krava/
 ---
- Documentation/hwmon/max31827.rst | 13 +++++--
- drivers/hwmon/max31827.c         | 64 ++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+), 3 deletions(-)
+Jiri Olsa (8):
+      x86/shstk: Make return uprobe work with shadow stack
+      uprobe: Wire up uretprobe system call
+      uprobe: Add uretprobe syscall to speed up return probe
+      selftests/x86: Add return uprobe shadow stack test
+      selftests/bpf: Add uretprobe syscall test for regs integrity
+      selftests/bpf: Add uretprobe syscall test for regs changes
+      selftests/bpf: Add uretprobe syscall call from user space test
+      selftests/bpf: Add uretprobe shadow stack test
 
-diff --git a/Documentation/hwmon/max31827.rst b/Documentation/hwmon/max31827.rst
-index 44ab9dc064cb..9c11a9518c67 100644
---- a/Documentation/hwmon/max31827.rst
-+++ b/Documentation/hwmon/max31827.rst
-@@ -131,7 +131,14 @@ The Fault Queue bits select how many consecutive temperature faults must occur
- before overtemperature or undertemperature faults are indicated in the
- corresponding status bits.
- 
--Notes
-------
-+PEC Support
-+-----------
-+
-+When reading a register value, the PEC byte is computed and sent by the chip.
-+
-+PEC on word data transaction respresents a signifcant increase in bandwitdh
-+usage (+33% for both write and reads) in normal conditions.
- 
--PEC is not implemented.
-+Since this operation implies there will be an extra delay to each
-+transaction, PEC can be disabled or enabled through sysfs.
-+Just write 1  to the "pec" file for enabling PEC and 0 for disabling it.
-diff --git a/drivers/hwmon/max31827.c b/drivers/hwmon/max31827.c
-index f8a13b30f100..e86f8890ee72 100644
---- a/drivers/hwmon/max31827.c
-+++ b/drivers/hwmon/max31827.c
-@@ -24,6 +24,7 @@
- 
- #define MAX31827_CONFIGURATION_1SHOT_MASK	BIT(0)
- #define MAX31827_CONFIGURATION_CNV_RATE_MASK	GENMASK(3, 1)
-+#define MAX31827_CONFIGURATION_PEC_EN_MASK	BIT(4)
- #define MAX31827_CONFIGURATION_TIMEOUT_MASK	BIT(5)
- #define MAX31827_CONFIGURATION_RESOLUTION_MASK	GENMASK(7, 6)
- #define MAX31827_CONFIGURATION_ALRM_POL_MASK	BIT(8)
-@@ -475,6 +476,54 @@ static ssize_t temp1_resolution_store(struct device *dev,
- 
- static DEVICE_ATTR_RW(temp1_resolution);
- 
-+static ssize_t pec_show(struct device *dev, struct device_attribute *devattr,
-+			char *buf)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", !!(client->flags & I2C_CLIENT_PEC));
-+}
-+
-+static ssize_t pec_store(struct device *dev, struct device_attribute *devattr,
-+			 const char *buf, size_t count)
-+{
-+	struct max31827_state *st = dev_get_drvdata(dev);
-+	struct i2c_client *client = to_i2c_client(dev);
-+	unsigned int val;
-+	int err;
-+
-+	err = kstrtouint(buf, 10, &val);
-+	if (err < 0)
-+		return err;
-+
-+	switch (val) {
-+	case 0:
-+		err = regmap_update_bits(st->regmap, MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_PEC_EN_MASK,
-+					 val);
-+		if (err)
-+			return err;
-+
-+		client->flags &= ~I2C_CLIENT_PEC;
-+		break;
-+	case 1:
-+		err = regmap_update_bits(st->regmap, MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_PEC_EN_MASK,
-+					 val);
-+		if (err)
-+			return err;
-+
-+		client->flags |= I2C_CLIENT_PEC;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(pec);
-+
- static struct attribute *max31827_attrs[] = {
- 	&dev_attr_temp1_resolution.attr,
- 	NULL
-@@ -578,6 +627,11 @@ static int max31827_init_client(struct max31827_state *st,
- 	return regmap_write(st->regmap, MAX31827_CONFIGURATION_REG, res);
- }
- 
-+static void max31827_remove_pec(void *dev)
-+{
-+	device_remove_file(dev, &dev_attr_pec);
-+}
-+
- static const struct hwmon_channel_info *max31827_info[] = {
- 	HWMON_CHANNEL_INFO(temp, HWMON_T_ENABLE | HWMON_T_INPUT | HWMON_T_MIN |
- 					 HWMON_T_MIN_HYST | HWMON_T_MIN_ALARM |
-@@ -627,6 +681,16 @@ static int max31827_probe(struct i2c_client *client)
- 	if (err)
- 		return err;
- 
-+	if (i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_PEC)) {
-+		err = device_create_file(dev, &dev_attr_pec);
-+		if (err)
-+			return err;
-+
-+		err = devm_add_action_or_reset(dev, max31827_remove_pec, dev);
-+		if (err)
-+			return err;
-+	}
-+
- 	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name, st,
- 							 &max31827_chip_info,
- 							 max31827_groups);
--- 
-2.34.1
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/include/asm/shstk.h                                |   4 +
+ arch/x86/kernel/shstk.c                                     |  16 ++++
+ arch/x86/kernel/uprobes.c                                   | 124 ++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |   3 +
+ include/uapi/asm-generic/unistd.h                           |   5 +-
+ kernel/events/uprobes.c                                     |  24 ++++--
+ kernel/sys_ni.c                                             |   2 +
+ tools/include/linux/compiler.h                              |   4 +
+ tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c       | 123 ++++++++++++++++++++++++++++-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 385 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_syscall.c          |  15 ++++
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  17 ++++
+ tools/testing/selftests/x86/test_shadow_stack.c             | 145 ++++++++++++++++++++++++++++++++++
+ 15 files changed, 860 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c
 
+Jiri Olsa (1):
+      man2: Add uretprobe syscall page
+
+ man/man2/uretprobe.2 | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 man/man2/uretprobe.2
