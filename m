@@ -1,154 +1,104 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2110.outbound.protection.partner.outlook.cn [139.219.146.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D254687;
-	Thu, 23 May 2024 02:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.110
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716429919; cv=fail; b=hLwcU45tAq8dkdjkSH/Cl2jkO3wkRoKKGZ4aSjJQ4SqIkcRZ9M+U0NH6o12e0adk3q2dCt5FxNTvGBHe3gxhi/attpCPRXxH8EypJ30DAscERtui3S1/muBWKkr0AP1q+WcAmED0tuFIUAlIZ5jzMtzK44J2xJkN1u9tZ/T1td0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716429919; c=relaxed/simple;
-	bh=Fus6Ppe/8Bf+Q/12no8+yQP5kmLXaP6K3RGALkfKOBo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UXzWS2KHDSxR1ijTmRRBT7fjH80gf6YE13GLsJok66qd4Qij/A2YH3Z4aFQYrUXwkTzixP6Kt9qnXwBz7Yw5gNXQpQY7Q/KeW/1pWGdL6AqpvWkU9HBDB3dhi6iU/6tvTHdgX4F2wJY1HjEH6E8g2UvleGPQrfT42RbKIueGzzo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vu0V0PIp6YOzWPqpMY7VZfhgwplPeA714hjtPv47rObQFZs0lLO/ZjwOMJCbRMshVzTJOHe0AcTFfoKuLjz/W2L4xd9CBUkgvIeb6F/VjcCgEaElfNFhbmzEyX6Fm3ivbjweUaW+C6lWEYbXpU9q+c7f7cx3LucQsNuE1d8zSN5aBhT5Y0vIPvN4aT6TjIO9NDr1kXvq8bOU3TFAuAaJiqltwPl8ulUeaZ8+eW0D0dYLsZcdQNKYrQmc0L7hdzizsys0FUEHCdDyV8d9Z8gDBqg2lS3qpW/KGWSg0OEh/hd88ueu3r56K41r5TN46C8w/TJvn3S/hBuURvMejTV0Qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vf46/6kYIW3uUV4UPQjL9QVmPC/ACK517YtWT495oXA=;
- b=EBKusfD0dPSkajewqwix3t7L8OVPLpxqX8gcEJhMxYeuB1Eb5C458vzvIf32o1TEArmySG3ekHJtppcdrbNYhJ7zEbOO1fE9/wT2CJEk8k6BFXmzA89vwXLy/wsADtj9bHPw4GVLclSjgU3ovdLrOQzu90ngN+N/y5/xTsCW4IooO4e1q2Y/2zgQQ4WQkar953spVZfZicDM4UGMjPbuYDSSc1KNAags57qXtjr26qo53o0jt87GRAb4Gm1bc4wo/0w2h/OYRzPktWyqb1wA3g5ZNhoc5YHwFRd+MCMnv4DnM5menXoWhNgNnp/hUOHUJx6vnncMnSNIIE7A+fsS7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10) by NTZPR01MB1099.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:1::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.37; Thu, 23 May
- 2024 01:48:57 +0000
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- ([fe80::e903:99a6:10b7:304d]) by
- NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn ([fe80::e903:99a6:10b7:304d%6])
- with mapi id 15.20.7472.044; Thu, 23 May 2024 01:48:57 +0000
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-To: Mark Brown <broonie@kernel.org>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Walker Chen
-	<walker.chen@starfivetech.com>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org"
-	<alsa-devel@alsa-project.org>, "linux-sound@vger.kernel.org"
-	<linux-sound@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela
-	<perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: RE: [PATCH v2 2/2] ASoC: starfive: Add PDM controller support
-Thread-Topic: [PATCH v2 2/2] ASoC: starfive: Add PDM controller support
-Thread-Index: AQHalVkIdRsOCKK/U0GRbtz/T/P037GiqLtwgAChPwCAAOjtUA==
-Date: Thu, 23 May 2024 01:48:56 +0000
-Message-ID:
- <NTZPR01MB0956E13D4D327B76682E51279FF42@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
-References: <20240423083405.263912-1-xingyu.wu@starfivetech.com>
- <20240423083405.263912-3-xingyu.wu@starfivetech.com>
- <NTZPR01MB0956BAFCBF0EA32824C3350A9FEB2@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
- <297b2034-4e2e-47a7-97bf-53991a102db7@sirena.org.uk>
-In-Reply-To: <297b2034-4e2e-47a7-97bf-53991a102db7@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: NTZPR01MB0956:EE_|NTZPR01MB1099:EE_
-x-ms-office365-filtering-correlation-id: 3d4412f9-93d2-444e-98d8-08dc7aca8269
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230031|7416005|1800799015|41320700004|366007|38070700009;
-x-microsoft-antispam-message-info:
- ETwNtop60IaaWvwXslC9h+OK7apdTxt/va+4w3Kr50bIgQcBqqNdPT5wwP4AE1xKGHZeNniO0v+o77In/GI1xdFUt9ipKuHmkp2876TgKKAMHFOPgE818kUEeclbFCbxOWS2U0sAzILw3N7CM4NeJaLVaKq07BdeHSP8hefn+rkHBhjsV419SRLTwjZQZ4Ice//g7p/CzYHrY29yIESETrMNJliy0H6Lhirj8mXhmEUCQ/tzjR6hMQx153a+sAiSy4aYQoy8sndW3yMnUqZ9ulgLDks8D9xNtWiqqXEPGdWpgqGHi9fHfhENfWs8IOhNky9L7O6PP7hEbLwTgr7KcT+hJBEgb0ppFuqeDclW067oukB9Ok2di2xpMucSeOSRiZwXHUhqi9T0/w+req+dLtpgocF+8uwdn5OjZGtwXMbm+9ErPLcJBSP0z/ZFGT9QKD7zhySu1RrQkBEKrqf3sQ+3TpYk7l5zbYmn0UsbOOiPQXrhvivLkdHCKhaBwks1se38/ihaeWCPiYIuVtvUV8VYsnwHuAkQ1OADooW9SD+gd1wj9YndqO67KNlpDze8KggLTDMsNbMOQqyA7KO3LSebENllaz+7c+dWxbXTZYe6J9tOSwhlxzBGGl3jhVpl
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(41320700004)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?oPyko5St/rcgjisQUS5cESLxOnDtGs5bbLJMjluHTn2gHn7vDe1LqjO/WRdC?=
- =?us-ascii?Q?f0fZ6q0qksyGURG8zTEiXTW2dWTlqxzwOXi6Hg0UaxqtdpiE/drKdQGuMFYo?=
- =?us-ascii?Q?mlJrgxL7WUiuAHDFLrcVUrwFBK7dGVz2IZvKD128WcojK4XFZbHi3zw/cdVQ?=
- =?us-ascii?Q?0nZ+Oa9pZvyTFrRH1PiNPh9F3PxIeK4h6cRLgvOB8dmT5DN/HFuMfh13i5Hi?=
- =?us-ascii?Q?fsI6B6yUZymHQvnfrLMH8PsXDc1moo6f4jW6d0KWITfAl3Y8r8UkTEE+rhpA?=
- =?us-ascii?Q?Nir5/S6Xofo3QYGaifw0h6ABKw25SnOmlAFea4rnO16stsVIHCZY+E74nLCv?=
- =?us-ascii?Q?ACp58hrU+ANy7i2j9wxAG52Zgvk7fl/iqsVqCITLMHVhm1MQftFqzbUv9GzT?=
- =?us-ascii?Q?RNIKmAHQ9Izki6yo4mwubircpGRVB6vIBquyVSsZJQiYDf8u/yfO9LlZ61Zo?=
- =?us-ascii?Q?QuhfG+lzXwXGphhPSKVevLCzA8mzXralkwDBQrpAFmlLj/UnUN37PlBloFT5?=
- =?us-ascii?Q?JoToKzbOCkeErZXvfQqGJPy2YB+CKlFpSJWIAqK2mRTWgGN3U6Cp7RMjK8yF?=
- =?us-ascii?Q?IfIL9dycyDNjQaBGPTCESihAQcbILRAjXwsWT+8fk60Ik3zySTbzohC523OU?=
- =?us-ascii?Q?aWtmMcFGrospgJ7xfofP0LK+jNiuReMUvy8gr63cqEN4lTgUBsn3UXGnmYSa?=
- =?us-ascii?Q?lDQfjbWQnH5QsaxNZCJxkshRtXSQUyNDd+N6BZkZ2swqrzmPmNfQrPliMI4j?=
- =?us-ascii?Q?wNBAU0TmpHKXjvk47FsgISoAoppkxcDk/BBwRFdR03khGpPqFlzsVwK71W8X?=
- =?us-ascii?Q?pHYZM87/N4msHZxgqG6D1lgev0qC1J4DmxBhvLRCTLS9bvlk8WRLeGFmSU9q?=
- =?us-ascii?Q?c3D+BmF5cTsHJ5YO4LaxcD0NX9vopssjl0ij93RZq2M0WyWdiNsD1zK9/gmP?=
- =?us-ascii?Q?tgaYVM5rs8TSWTcU7OvcBWr4/nVfvfQu6XXso/cRzWX3PrbHnQeVrKXETibA?=
- =?us-ascii?Q?4DNsvPMYRqQK9XEiEurQIAt+mKDp0waC5XuRcHHZBG+043m2ywESoSgvLgFM?=
- =?us-ascii?Q?gmtefmsyBtE9h15nedH9n3dQiPfl+ZhEsgwYYOjAUu70gm7NOymqA/17mYKJ?=
- =?us-ascii?Q?NOOdGFUxMb6GWGxwbpNLBBPT1ZkfO+loo4u6OXjTkc/evq0Zx14Z4Z4A83vz?=
- =?us-ascii?Q?gzAq/wKR/19OsQRjGLR2C6VZ+Ue6EIToC8phnlBKG12p3Qzmg1QG14V4VUsZ?=
- =?us-ascii?Q?q7blnWPIdsKvY7F1GBc6clxCQo/wUAqCC4m1UV4LL8hKmUtcHYrUJ3CMjm40?=
- =?us-ascii?Q?HhdACNYQMwFzmV+wAN73O6dgbfgTcH78Mbn0W10We42veML6v4LHRFkeWTXK?=
- =?us-ascii?Q?YJS7N281JCQDhm5saGlVP5lZtIt4v8FQyivALkZ7Q0crsg52NpH/ILYNVOc2?=
- =?us-ascii?Q?jUZbYpVfnfGu/wECe5Uhg1XiAngAbsAExghpCv2erm7D+x2D6rnVM8Mk5hSb?=
- =?us-ascii?Q?xQDYWk3UM35P5XeWBt1fNd8brvb/2+vpFBL4Ex98xkNmnPjHbhaRTiTqRHVb?=
- =?us-ascii?Q?kuG1AR1B/dXfwE93HvvTc4nKptgO+12KNmf03Ms3?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CD64C8C
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716429953; cv=none; b=T6j6YdQqRoyxJ7Yw3NkSzmMTu/6ClucjyxdqpE+Y5pFZSYqHFSM+NPDNLzUPbhTHj6jjxIXzfO3gXM6HvgyQNWT+qwNCELCwCamgznOdkyzyDZK1nkyotm/kldl7bZVmO+EIKAKddgMg1TjPdC6emJb1ukFhcEAKOar0JINryAI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716429953; c=relaxed/simple;
+	bh=F0zJvS8EDjOOjkiSmJbJ0GSUuxIY/vMkpLOBll5ON2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l8UziikQzbRtqb5yG2s0cFo8cP73D3nvMz1Kw7LFQsstX8EPIHbspdWLfg/M2Qr5hbJXxYvuFk4Tnmyjpz1JRPTKUjnHMqnNn7AcRpL6toZnYgQMprJSMFORoRFja924y7y7ebYZ0wRu1DLJWT7jfx1qUgbOr0BceRyhyN3ruiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-71-664ea4793e2c
+Date: Thu, 23 May 2024 11:05:39 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, ying.huang@intel.com, vernhao@tencent.com,
+	mgorman@techsingularity.net, hughd@google.com, willy@infradead.org,
+	david@redhat.com, peterz@infradead.org, luto@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [RESEND PATCH v10 00/12] LUF(Lazy Unmap Flush) reducing tlb
+ numbers over 90%
+Message-ID: <20240523020539.GA21061@system.software.com>
+References: <20240520021734.21527-1-byungchul@sk.com>
+ <20240522155641.a726c5cd3b25aa23e861045d@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d4412f9-93d2-444e-98d8-08dc7aca8269
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2024 01:48:56.9676
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: E6+2hJ5hWmCxhQQ4Tg686XWAXRydqDgA0RThNB3T95lWiouuFiqXxctLnJBgi3R+IkOYlI1Fa9NFZ3+/lJ5YIKwZ89mu9QQErP6cEb1Wgw8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1099
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522155641.a726c5cd3b25aa23e861045d@linux-foundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNIsWRmVeSWpSXmKPExsXC9ZZnkW7lEr80g9/PhS3mrF/DZvF5wz82
+	ixcb2hktvq7/xWzx9FMfi8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
+	bN40ldni+JSpjBa/fwAVn5w1mcVBwON7ax+Lx85Zd9k9Fmwq9di8Qstj8Z6XTB6bVnWyeWz6
+	NInd4925c+weJ2b8ZvGYdzLQ4/2+q2weW3/ZeTROvcbm8XmTXABfFJdNSmpOZllqkb5dAlfG
+	j+tHWAu6+Sp6l2Q0ME7i7mLk5JAQMJHYcOo3M4z9recySxcjBweLgKrElquBIGE2AXWJGzd+
+	gpWICOhKrHq+C8jm4mAWeMQksfzjKjaQhLBAtMTD689ZQWxeAQuJrSvugsWFBMokHsw4ywIR
+	F5Q4OfMJmM0soCVx499LJpBdzALSEsv/cYCEOQW8JV7Ma2cEsUUFlCUObDvOBLJLQmAVu8SH
+	Dbeg7pSUOLjiBssERoFZSMbOQjJ2FsLYBYzMqxiFMvPKchMzc0z0MirzMiv0kvNzNzECo3BZ
+	7Z/oHYyfLgQfYhTgYFTi4e2Q9UsTYk0sK67MPcQowcGsJMIbvdI3TYg3JbGyKrUoP76oNCe1
+	+BCjNAeLkjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVAPj+vyZRfpVOQFM01NmFimulm8/E3FL
+	1tNiofG/5uMcvjcyt/Lmvt3yujHxd9ktMabteeJ/XvyI/Dy7oEh5k4pyySwpma6eL/ZRgWeu
+	/67nT3H9IrjwhZrl5EP+U157hXRE9AgF3/KNOCzA2Pxc7g+HxVvzCd/DTX8+aH+d/XNL36yD
+	NRnPxKYrsRRnJBpqMRcVJwIAR89vRL4CAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsXC5WfdrFu5xC/N4OJbVos569ewWXze8I/N
+	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfHeA0wW
+	8+99ZrPYvGkqs8XxKVMZLX7/ACo+OWsyi4Ogx/fWPhaPnbPusnss2FTqsXmFlsfiPS+ZPDat
+	6mTz2PRpErvHu3Pn2D1OzPjN4jHvZKDH+31X2TwWv/jA5LH1l51H49RrbB6fN8kF8Edx2aSk
+	5mSWpRbp2yVwZfy4foS1oJuvondJRgPjJO4uRk4OCQETiW89l1m6GDk4WARUJbZcDQQJswmo
+	S9y48ZMZxBYR0JVY9XwXkM3FwSzwiEli+cdVbCAJYYFoiYfXn7OC2LwCFhJbV9wFiwsJlEk8
+	mHGWBSIuKHFy5hMwm1lAS+LGv5dMILuYBaQllv/jAAlzCnhLvJjXzghiiwooSxzYdpxpAiPv
+	LCTds5B0z0LoXsDIvIpRJDOvLDcxM8dUrzg7ozIvs0IvOT93EyMwppbV/pm4g/HLZfdDjAIc
+	jEo8vAm/fNOEWBPLiitzDzFKcDArifBGrwQK8aYkVlalFuXHF5XmpBYfYpTmYFES5/UKT00Q
+	EkhPLEnNTk0tSC2CyTJxcEo1MJp/DVIM+/81U2q92knPRetnnz10Py323pKOP1zeC5XNZdgj
+	m+Jnhr/8r3ts110nZ2PBk77x//0Y/Ru/f3zeX6Bic1mORZV/STOHwHTeUqeoG0XBjc2pK08t
+	6fo69Z+m5oqzb28ur1eN6U891Grr9PSDpatbdXbMrD8WK2e/zlFbcJTn3P2tXUosxRmJhlrM
+	RcWJAFm7ha6lAgAA
+X-CFilter-Loop: Reflected
 
-On 22/05/2024 19:23, Mark Brown wrote:
->=20
-> On Wed, May 22, 2024 at 02:11:55AM +0000, Xingyu Wu wrote:
->=20
-> > Could you please help to review and give your comment about this PDM dr=
-iver?
->=20
-> Please don't send content free pings and please allow a reasonable time f=
-or
-> review.  People get busy, go on holiday, attend conferences and so on so =
-unless
-> there is some reason for urgency (like critical bug fixes) please allow a=
-t least a
-> couple of weeks for review.  If there have been review comments then peop=
-le
-> may be waiting for those to be addressed.
->=20
-> Sending content free pings adds to the mail volume (if they are seen at
-> all) which is often the problem and since they can't be reviewed directly=
- if
-> something has gone wrong you'll have to resend the patches anyway, so sen=
-ding
-> again is generally a better approach though there are some other maintain=
-ers
-> who like them - if in doubt look at how patches for the subsystem are nor=
-mally
-> handled.
+On Wed, May 22, 2024 at 03:56:41PM -0700, Andrew Morton wrote:
+> On Mon, 20 May 2024 11:17:22 +0900 Byungchul Park <byungchul@sk.com> wrote:
+> 
+> > While I'm working with a tiered memory system e.g. CXL memory, I have
+> > been facing migration overhead esp. tlb shootdown on promotion or
+> > demotion between different tiers.  Yeah..  most tlb shootdowns on
+> > migration through hinting fault can be avoided thanks to Huang Ying's
+> > work, commit 4d4b6d66db ("mm,unmap: avoid flushing tlb in batch if PTE
+> > is inaccessible").  See the following link for more information:
+> > 
+> > https://lore.kernel.org/lkml/20231115025755.GA29979@system.software.com/
+> > 
+> > However, it's only for migration through hinting fault.  I thought it'd
+> > be much better if we have a general mechanism to reduce all the tlb
+> > numbers that we can apply to any unmap code, that we normally believe
+> > tlb flush should be followed.
+> > 
+> > I'm suggesting a new mechanism, LUF(Lazy Unmap Flush), defers tlb flush
+> > until folios that have been unmapped and freed, eventually get allocated
+> > again.  It's safe for folios that had been mapped read-only and were
+> > unmapped, since the contents of the folios don't change while staying in
+> > pcp or buddy so we can still read the data through the stale tlb entries.
+> 
+> Version 10 and no reviewed-by's or acked-by's.  Reviewing the review
+> history isn't helped by the change in the naming of the patch series.
+> 
+> Seems that you're measuring a ~5% overall speedup in a realistic
+> workload?  That's nice.
+> 
+> I'll defer this for a week or so to see what reviewers have to say.  If
+> "nothing", please poke me and I guess I'll merge it up to see what
 
-Sorry, you can do it when you have free time. Don't mind.
+I will poke you and will be ready for that ;)
 
-Thanks,
-Xingyu Wu
+	Byungchul
+
+> happens ;)
