@@ -1,89 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D042823A6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9E2823AF
 	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 20:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716495532; cv=none; b=oIsvlUwKmUjjBCngWnTTx5PRj1Ixv7Yi6TjFUDilxrpRxXvH0txeUOMZ/Tfs8GXzl1y+dqiJNAYdMN5PtmqG1zwpwgpQNHMNa3FddlJPYGACuyLydo8tKZPkUHDxoXkYCqOQpo6DF25gVPGg8weRAsObSr4LT004ASdwjXW8/IM=
+	t=1716495535; cv=none; b=CH7So7+0fV5bUJDSo0Ij13TpoiZuE0FAzo4oZQetYahScFpYhaE8+oB2ZZBIgpNUOcRvQ6FW8IXTpT242i2mYPePp4sJlPo5eIv+1hjPXBZ6MyYvceP9JJ+2X4XP6XPhA+Ef87nbakGA/WUNdZecIRF7WmRxUhjrwK7YJONgpm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716495532; c=relaxed/simple;
-	bh=pFrk/e9ZenCkRGxBC5gy7aNXEiMaxXfw/iJ+zRd/V6w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WCChKmxwX6491AqPAFq0DDxmz6eSwKNAxJWvQnu/HrXBgD/nKdi0QLy5fo6TLsmUgIrVQGSXtgQVWvgvsHnodpjk1gR5j3+pWegyX5+5+rVAD9oT/EDkKrlTdt9CGc3Jo4No3jWrkHVYv4K3gBcx9don9nYN/RyEbs6eeokV3K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UdjsGFh0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YjLzd07d; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716495535; c=relaxed/simple;
+	bh=/MnKLO3shXWEZFBIMAsNwFyC317yrwWObfqwNCUloow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hNLKkNdhijCEkyPhE8cPJquB0dmP4LaY5p8EoQWN6wDLhvADjG81vMJgOVSF3Y/jnKhdcaFyArh3a47NeXS/hXqOEwZnFrlzHYsURTg1aYUTvitlP64swVenhmrb98vlQZ/a//aucNLSQdz0kn6JJwyjXnX+uydJjDHu2WjKNRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gaTRJS5V; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UdjsGFh0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YjLzd07d"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716495529;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gaTRJS5V"
+X-Envelope-To: markus.elfring@web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716495529;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jn0mBBuJ+t7z7OPDYUBM+zHO5zskNhmia64sN0syVIk=;
-	b=UdjsGFh0WvjjAqbwMzZj5ZSmau2LzhFkQQWcjDjOQluRaZLbnfrimeEz0bNqiPyyBDgrqC
-	JmDtek6NfJgfKPRg5W6D17MY+vikK+smn9cLVWd4ugXUBk9Z5AaLgyG/qytYzCtpOGmEMW
-	8rFwOEPZxGsylimh/Yulo+29wB0iX/JKS900m/s24CwG9ZzAX+G0pzRa3X96WD9jiOAZlF
-	NoGdolw1nLF5fYPn+lVqOpMyYU/+MTmOQSxAabBrzwc6F62Lp5qjy76qziOkd221G6hEaR
-	CLf/1T5pSRfx6MZG8PgmvNHyEmQ/V4cTSkk51xbL1t817LzeX4c7zudvQzJHqQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716495529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jn0mBBuJ+t7z7OPDYUBM+zHO5zskNhmia64sN0syVIk=;
-	b=YjLzd07d57EutgWQ1I3NC/drnwrHpZ26unJ31+HhLmjlupowo/vXDVtFk0QnApXJH7A+o3
-	zz/gYcQJGDuI0CDw==
-To: Mukesh Ojha <quic_mojha@quicinc.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] genirq/chip: Fix the warn for non-SMP system
-In-Reply-To: <1715887825-1031-1-git-send-email-quic_mojha@quicinc.com>
-References: <1715887825-1031-1-git-send-email-quic_mojha@quicinc.com>
-Date: Thu, 23 May 2024 22:18:49 +0200
-Message-ID: <877cfkffiu.ffs@tglx>
+	bh=b6Wt/yr5KVLoM5TaMmIZdJgpIFHqeGyswfXtkHFJYik=;
+	b=gaTRJS5V2i8CsvTKTxwRH7Eml035EyZJldaxir3Sy+sotgCbBJPtXmN/qy9ArbajrCZDTT
+	JOBGcTzNEuizdoJjis4+R4rfFC2+2MVjzOGuQokAaLayUNBE4c+kNtnozpyW7q24rOveS4
+	lOld6QJrNva6uNYLTJQSyuQdjTJv25g=
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-pci@vger.kernel.org
+X-Envelope-To: kw@linux.com
+X-Envelope-To: lpieralisi@kernel.org
+X-Envelope-To: robh@kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: bharat.kumar.gogada@xilinx.com
+X-Envelope-To: bhelgaas@google.com
+X-Envelope-To: lorenzo.pieralisi@arm.com
+X-Envelope-To: michal.simek@amd.com
+X-Envelope-To: michal.simek@xilinx.com
+X-Envelope-To: thippeswamy.havalige@amd.com
+Message-ID: <f42151e1-d62e-4346-9acc-0aa10ca52ba9@linux.dev>
+Date: Thu, 23 May 2024 16:18:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH v3 5/7] PCI: xilinx-nwl: Clean up clock on probe
+ failure/removal
+To: Markus Elfring <Markus.Elfring@web.de>,
+ linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Michal Simek <michal.simek@amd.com>, Michal Simek <michal.simek@xilinx.com>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+References: <20240520145402.2526481-6-sean.anderson@linux.dev>
+ <4a43cda4-dfa4-4156-b616-75e740f6fd64@web.de>
+ <bb9e239f-902b-4f52-a5e9-98c29b360418@linux.dev>
+ <f541195e-7963-4970-9a1d-a3298226cdd5@web.de>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <f541195e-7963-4970-9a1d-a3298226cdd5@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, May 17 2024 at 01:00, Mukesh Ojha wrote:
+On 5/23/24 16:11, Markus Elfring wrote:
+>>> …
+>>>> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+>>> …
+>>>> @@ -817,11 +818,23 @@ static int nwl_pcie_probe(struct platform_device *pdev)
+>>>>  		err = nwl_pcie_enable_msi(pcie);
+>>>>  		if (err < 0) {
+>>>>  			dev_err(dev, "failed to enable MSI support: %d\n", err);
+>>>> -			return err;
+>>>> +			goto err_clk;
+>>>>  		}
+>>>>  	}
+>>>>
+>>>> -	return pci_host_probe(bridge);
+>>>> +	err = pci_host_probe(bridge);
+>>>> +
+>>>> +err_clk:
+>>>> +	if (err)
+>>>> +		clk_disable_unprepare(pcie->clk);
+>>>
+>>> I suggest to use the label “disable_unprepare_clock” directly before this function call
+>>> (in the if branch) so that a duplicate check would be avoided after some error cases.
+>>
+>> Well if you want to avoid a check, we can just do
+>>
+>> err = pci_host_probe(bridge);
+>> if (!err)
+>> 	return 0;
+>>
+>> err_clk:
+>> 	...
+> 
+> This design variant can also be reasonable.
+> 
+> Do any preferences matter here for label name selections?
 
-We don't fix warnings. We fix the underlying problem.
+Personally, I prefer to use labels named after what they're cleaning up and not what they're doing.
 
-> __irq_startup_managed() for !SMP system returns IRQ_STARTUP_NORMAL
-> which may result in a WARNING during enablement of an irq i.e.,
-> starting a irq while it is not activated.
->
-> Fix this by appropriately returning IRQ_STARTUP_MANAGED.
-
-What does that fix?
-
-Absolutely nothing because both cases at the call site invoke
-__irq_startup() which warns if the interrupt has not been activated yet.
-
-It's not magically activated when __irq_startup_managed() returns
-IRQ_STARTUP_MANAGED.
-
-Also if you look at the SMP variant of that function then you might
-notice that IRQ_STARTUP_MANAGED is not returned unconditionally. That
-function can return IRQ_STARTUP_NORMAL too.
-
-Just for the record. There are no managed interrupts on SMP=n. The code
-which can initialize them is not even compiled in.
-
-So I have no idea why you think that this has anything to do with
-managed interrupts.
-
-What's worse is that this does not even build on UP because
-irq_do_set_affinity() does not exists for SMP=n. It builds today because
-the IRQ_STARTUP_MANAGED case is optimized out by the compiler.
-
-Sigh,
-
-        tglx
+--Sean
