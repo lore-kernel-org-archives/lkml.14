@@ -1,64 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FD813BAEF
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 11:48:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781261D6AA
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 11:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716464899; cv=none; b=Z6jpI+u2bNYrnvQDw6oEhJ14c48WiDxDOgqcvw8pVTASw52U4IKjk5NhOmtOewf3cW1IgiNXwo4sLVghJCxvsbb+aS3XBC55rw5Kts+/UutOUy/RlLxT8piaxZ0FUX5v7yxvKkaKmLp8rupy5dO4R0UCQ4topbdfHw78duN/yuE=
+	t=1716464917; cv=none; b=KK8bA8Qb2b2aUaeEW+kFUM6Wg5Cqw7EdmfMcQ+25doYPvG9wlOwf0u6etLcLu10mN06jxE0H1VOHVhaOUZdQAQ9II0LFYBsYxppT22sE1Sbk9SgB3fSF0ZKJG3GB7hCoKnPPBZkCbcfh+luKaWPvTq9SDs1F8YlYdgyjsRnQTYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716464899; c=relaxed/simple;
-	bh=GdEfHQwd9UthVQYdbuGOINTzIHonWFAafApvVNK+jJQ=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=YYiPlquI64hds21XTGMzH+f3qSSMuBb3wI9s0EPoneAyNimZ09VjzGWS8VTsjs9efAb1ni9aXxUPJYF5E/WDXxcGOc0YF8tv/othP4Lazhc5hw6kn/IxxSP23dk5j5Pidv8yNBSXojxHOvQu/LG7qzude/jD3CXCMagkaoT4X4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pykEbYQN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716464917; c=relaxed/simple;
+	bh=9RfAy/uwi35SvVSDtdvgzu2Xj2egb9k/oBLfQ8zseAI=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=sf08CwGa9FGdO6bJL28OMo8UDpbHdWLsZWam2lJU5zshVuRd5b7WzEsRM91nBiBhgyREL/se0/MDyyFEKTRkSwDg0U7p4+/RqYBqKpL9Kbbo7lohsYkH9TUdB8Qyi2xbG5oIfrqSs79lXiYX7EKprLNs2G+EqZ+TDW7dZTIjmBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWKOsFVD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pykEbYQN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C13C4AF07;
-	Thu, 23 May 2024 11:48:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWKOsFVD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D699DC2BD10;
+	Thu, 23 May 2024 11:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716464898;
-	bh=GdEfHQwd9UthVQYdbuGOINTzIHonWFAafApvVNK+jJQ=;
+	s=k20201202; t=1716464917;
+	bh=9RfAy/uwi35SvVSDtdvgzu2Xj2egb9k/oBLfQ8zseAI=;
 	h=From:To:Cc:Subject:Date:From;
-	b=pykEbYQNcZBaA9bC2vflH5VRpMklFtL4krDfUASsn45ovi8BUXgqSGofgKcl05XLZ
-	 S1vh0eRI3Ui9jcMyiaPqY911bHxpqDZLwgHwzB1hnD4fVZAXafOmRE6EOlCtXCv2mb
-	 swp9OWBJbAr6VgrqPF+azl9eerFAaal2xY+I30GJyVqXOdt9yNSo7UP68eGx1+SnQb
-	 17WAH3Sd11/nMYB9XRCeWJonebZHJi9B3WIKMMO78uQOso9smZp3vnffAFHyONSAzW
-	 46IXpzgOr5SKmyyZcGceo7keccmNkg4wgsC6vG1XvcR2RG4V9A/ZCbsRXelWS0+97V
-	 0p4ExBvEI1lFA==
-Message-ID: <e6cfc0e5425a26caf92012a9021e6a47.broonie@kernel.org>
+	b=BWKOsFVDu4Fhe9gWSCkQqYxjGZFwtj3hOzLkfftc8NZkGs4EMesmbUZpE4+N4Yr9k
+	 mytardbkCqXfXfwegI8292b7EtsM4NoestPaLXMW1phuV4HeZTnLK+UiOfHcE4rxeq
+	 f2T9CKjDp7i+9Tqjd3Dnxw6hGG2W6mH9U98Gwsvxm8wsHz8yuMZMbhCqrWWfbjYylN
+	 bn1hchHaCNTBcWY0q+GEXmi/hRSsJ3cCzCOW8iD246+o9EemkogfdJLkA9gxRKKv24
+	 rXrBp0I5c8Ft9ujilimXC7Ckm6kkeTHy457Ze7wjma5O2hey58BOSkVkXUnuMW2sb/
+	 jAM4lmZHEJQhA==
+Message-ID: <e6c886a96dc7945fa3a03d37d73a9392.broonie@kernel.org>
 From: Mark Brown <broonie@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] regmap fixes for v6.10-merge-window
-Date: Thu, 23 May 2024 12:47:59 +0100
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regulator fixes for v6.10-merge-window
+Date: Thu, 23 May 2024 12:48:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The following changes since commit 9b1fe0510494c989ab6a131ce8b97cdd02a1c869:
+The following changes since commit 4e70b26c873dfff317039458a6ea66314bbdce99:
 
-  regmap: Reorder fields in 'struct regmap_config' to save some memory (2024-05-07 10:31:42 +0900)
+  regulator: sun20i: Add Allwinner D1 LDOs driver (2024-05-09 17:44:01 +0200)
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-fix-v6.10-merge-window
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.10-merge-window
 
-for you to fetch changes up to 7ba822189e6060a8a2833b721d430f833bf0db43:
+for you to fetch changes up to 74b38cd77d3eb63c6d0ad9cf2ae59812ae54d3ee:
 
-  regmap: kunit: Fix array overflow in stride() test (2024-05-17 18:23:12 +0100)
-
-----------------------------------------------------------------
-regmap: Fix for v6.10
-
-Guenter ran with memory sanitisers and found an issue in the new KUnit
-tests that Richard added where an assumption in older test code was
-exposed, this was fixed quickly by Richard.
+  regulator: tps6594-regulator: Correct multi-phase configuration (2024-05-21 12:27:36 +0100)
 
 ----------------------------------------------------------------
-Richard Fitzgerald (1):
-      regmap: kunit: Fix array overflow in stride() test
+regulator: Fixes for v6.10
 
- drivers/base/regmap/regmap-kunit.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+A bunch of fixes that came in during the merge window, Matti found
+several issues with some of the more complexly configured Rohm
+regulators and the helpers they use and there were some errors in the
+specification of tps6594 when regulators are grouped together.
+
+----------------------------------------------------------------
+Matti Vaittinen (4):
+      regulator: bd71828: Don't overwrite runtime voltages
+      regulator: rohm-regulator: warn if unsupported voltage is set
+      regulator: pickable ranges: don't always cache vsel
+      regulator: tps6287x: Force writing VSEL bit
+
+Neha Malcom Francis (1):
+      regulator: tps6594-regulator: Correct multi-phase configuration
+
+ drivers/regulator/bd71828-regulator.c  | 58 ++--------------------------------
+ drivers/regulator/helpers.c            | 43 +++++++++++++++++--------
+ drivers/regulator/rohm-regulator.c     |  4 +++
+ drivers/regulator/tps6287x-regulator.c |  1 +
+ drivers/regulator/tps6594-regulator.c  | 16 +++++-----
+ include/linux/regulator/driver.h       |  3 ++
+ 6 files changed, 48 insertions(+), 77 deletions(-)
