@@ -1,283 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0321813BAC3;
-	Thu, 23 May 2024 13:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1C91D545
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 13:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716470453; cv=none; b=EgSpY1JNbY+13AFINBZ6wz+MSiaNT85xY0EwfJNW7phGzvAuUBfVftqlUHoSFagwqOZimC+JnV3+uM/RKoZrgRAm4yVSXpH1rVctom/pJxBiiQOmt5lwX3nq+N3QzeGlyRYU3oy8FEqyeXVOE1pWjtjVd7bqwMsAZRy21qxA/s0=
+	t=1716470508; cv=none; b=dYBRRPV4u6csHMrCuy8xFToZPm9BkcPSsWEzkSjt+9Yd93UGO1J0ckdn4AvQBqxX5blAn0j4meJR7otrBzSL+VY9FOmjlOT22hf4GrBY7xe5U7xtRSqBItPFijWMbn1H2aH+nkDpiK/UG/NuTBalN6xNhII0swEioMuOhs2V5zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716470453; c=relaxed/simple;
-	bh=ar6qY6T96THmaK4PF+VaWr6N1OIeuEpfrHMygoEs2Zo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EIBZJal2t7JVsc+sQ2JjCNKQ/5cp5zKcNTGrJQvA55T+DNx4ozRimwzbE1gIPp/e4kjzT9uCtkAJPSANuM5mD9/59Mma3JolRhsP+LtVs1TSh+58FPCFyTDbdDg/+Ed8M6YZH7+QRm5WnebjAK8JRxjZfXdCWikAtUvliTUstPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QEvt5MrH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716470508; c=relaxed/simple;
+	bh=frsFIBZZBUMfVTrWwRd+78dd0v5HtpDdTLozyRbWWVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u6UuVl32wzenFGVcqE1NLDhc0pNuZ72RmZxYmask2BJT+1aljZcMIr6JFJgbgYjmjdAowDktpnHr/pgvO9328miNj1QeSKYj3a/yO4tJC8XogHCoPaQw/V1H9hUOVw82ljqwaFE9PzsFpviv/+6aqza7uaXghS0Eu6MIUPb7BWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KvwdCDvn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QEvt5MrH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06851C2BD10;
-	Thu, 23 May 2024 13:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716470452;
-	bh=ar6qY6T96THmaK4PF+VaWr6N1OIeuEpfrHMygoEs2Zo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QEvt5MrHT6ukSpbUXSx8wDujylPunhQ+jC96x4IW+Alr8JAg5k2r/I1HB/R6hCSDO
-	 okAX1Z2Qa8mdEmmtFsF26b8wJN+IhmcklXpjzPYram0QvPrB9KjunzSQjs70MmtkPc
-	 4AcC0BS+Uf0i6yXW5X9rX70HOSJRcrOFHHhA9LUU=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 6.1 00/45] 6.1.92-rc1 review
-Date: Thu, 23 May 2024 15:12:51 +0200
-Message-ID: <20240523130332.496202557@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KvwdCDvn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716470505;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VsbXcm1sxFBR27e0f5ft9IivKoeATBdnB7W0mM8QHqU=;
+	b=KvwdCDvnC7xoKKpk/1JNdiSl4hUUeA9CUCEViy+XgtZyl371U5X8D7HrdRpzXrAHeJqL5G
+	OW1ZHsLnXfMV3lxPuMEgqvVf43r66RO0J3LPE3iTpbP/pOrolXh+rX+RWYq0un7N01aYma
+	uVvHf67fcpU1wqvLtBOou02cQeT/KfI=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-479-XgJ3Avr8MliUEkl5KO_9_g-1; Thu, 23 May 2024 09:21:43 -0400
+X-MC-Unique: XgJ3Avr8MliUEkl5KO_9_g-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6ab89f69cd8so459276d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 06:21:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716470503; x=1717075303;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VsbXcm1sxFBR27e0f5ft9IivKoeATBdnB7W0mM8QHqU=;
+        b=DQUGMs/FqDLAKr7c3VwHxPDnXfYWrfpB6d1Kf7b43MDyRq1k2qMrKBUsvS+3wPJICs
+         k5hNxI3qOdeLnsM505x+nLHEIPFbdu8pHwUkat2bplw54uMvv7anTb6gfqiNCbc6OzRI
+         j4qzHVb1yKOwYDUoh0q4D50DWQTOUVjT+/+wChR38Zzliq3hhBni87I6lVM7sRhGazWF
+         adPB31Anqnimr84RpCZsKU8ul9GJKMVLIAqjCTiKkzR4fvNFeQsXdkaOHh2sJxyteKqJ
+         yAPUzUkmVF8cgE409MZC4n4rTpNQEOE73Xha8fT0RzutBvQ28mlm2EeLxqZPUZlWUPXC
+         RdgA==
+X-Gm-Message-State: AOJu0Yzbs9Rd5aWrJgeFxmyQ6XhbuSzaOmeqaQ372CnFHaIxIUZ9OQQN
+	wmp1i/6B5SbaR9j9mh9hdIdVOGNv+puLpA3hYHYgnCpk7SGe9u52zywdqmKJ3FeqDfIktRlbTVo
+	XPSe/Gri0TA8BmFfEUa0tx48voM3zvGj8hCyUPAb9lqJSIrSPdQVK0aK3MGv6IR0Ls5nPN/j1eh
+	9soxzpA8WqSVHNzUhIilNR24Kgc3Bifi9a/M384Sx8Rho=
+X-Received: by 2002:a05:6214:20ca:b0:6a0:cd60:cd3b with SMTP id 6a1803df08f44-6ab808f7119mr50153026d6.3.1716470502443;
+        Thu, 23 May 2024 06:21:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG7NO9vVltJj/+QkjBYp5MEJF3IkhEATQaB+o8Vu0R5dHDKGWSJnhD6+0WyJTsI/P7Ex3Q1fg==
+X-Received: by 2002:a05:6214:20ca:b0:6a0:cd60:cd3b with SMTP id 6a1803df08f44-6ab808f7119mr50152616d6.3.1716470501696;
+        Thu, 23 May 2024 06:21:41 -0700 (PDT)
+Received: from x1n.redhat.com (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ab873f7108sm13713156d6.125.2024.05.23.06.21.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 06:21:41 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	peterx@redhat.com,
+	David Hildenbrand <david@redhat.com>,
+	Pavel Tatashin <pasha.tatashin@soleen.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Subject: [PATCH] mm/debug_vm_pgtable: Drop RANDOM_ORVALUE trick
+Date: Thu, 23 May 2024 09:21:39 -0400
+Message-ID: <20240523132139.289719-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.92-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.1.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.1.92-rc1
-X-KernelTest-Deadline: 2024-05-25T13:03+00:00
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This is the start of the stable review cycle for the 6.1.92 release.
-There are 45 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+Macro RANDOM_ORVALUE was used to make sure the pgtable entry will be
+populated with !none data in clear tests.
 
-Responses should be made by Sat, 25 May 2024 13:03:15 +0000.
-Anything received after that time might be too late.
+The RANDOM_ORVALUE tried to cover mostly all the bits in a pgtable entry,
+even if there's no discussion on whether all the bits will be vaild.  Both
+S390 and PPC64 have their own masks to avoid touching some bits.  Now it's
+the turn for x86_64.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.92-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-and the diffstat can be found below.
+The issue is there's a recent report from Mikhail Gavrilov showing that
+this can cause a warning with the newly added pte set check in commit
+8430557fc5 on writable v.s. userfaultfd-wp bit, even though the check
+itself was valid, the random pte is not.  We can choose to mask more bits
+out.
 
-thanks,
+However the need to have such random bits setup is questionable, as now
+it's already guaranteed to be true on below:
 
-greg k-h
+  - For pte level, the pgtable entry will be installed with value from
+    pfn_pte(), where pfn points to a valid page.  Hence the pte will be
+    !none already if populated with pfn_pte().
 
--------------
-Pseudo-Shortlog of commits:
+  - For upper-than-pte level, the pgtable entry should contain a directory
+    entry always, which is also !none.
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.1.92-rc1
+All the cases look like good enough to test a pxx_clear() helper.  Instead
+of extending the bitmask, drop the "set random bits" trick completely.  Add
+some warning guards to make sure the entries will be !none before clear().
 
-Akira Yokosawa <akiyks@gmail.com>
-    docs: kernel_include.py: Cope with docutils 0.21
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Gavin Shan <gshan@redhat.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Link: https://lore.kernel.org/r/CABXGCsMB9A8-X+Np_Q+fWLURYL_0t3Y-MdoNabDM-Lzk58-DGA@mail.gmail.com
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/debug_vm_pgtable.c | 31 +++++--------------------------
+ 1 file changed, 5 insertions(+), 26 deletions(-)
 
-Thomas Weißschuh <linux@weissschuh.net>
-    admin-guide/hw-vuln/core-scheduling: fix return type of PR_SCHED_CORE_GET
-
-Jarkko Sakkinen <jarkko@kernel.org>
-    KEYS: trusted: Do not use WARN when encode fails
-
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-    remoteproc: mediatek: Make sure IPI buffer fits in L2TCM
-
-Daniel Thompson <daniel.thompson@linaro.org>
-    serial: kgdboc: Fix NMI-safety problems from keyboard reset code
-
-Javier Carrasco <javier.carrasco@wolfvision.net>
-    usb: typec: tipd: fix event checking for tps6598x
-
-Heikki Krogerus <heikki.krogerus@linux.intel.com>
-    usb: typec: ucsi: displayport: Fix potential deadlock
-
-Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-    net: usb: ax88179_178a: fix link status when link is set to down/up
-
-Prashanth K <quic_prashk@quicinc.com>
-    usb: dwc3: Wait unconditionally after issuing EndXfer command
-
-Carlos Llamas <cmllamas@google.com>
-    binder: fix max_thread type inconsistency
-
-Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-    drm/amdgpu: Fix possible NULL dereference in amdgpu_ras_query_error_status_helper()
-
-Mark Rutland <mark.rutland@arm.com>
-    arm64: atomics: lse: remove stale dependency on JUMP_LABEL
-
-Eric Sandeen <sandeen@redhat.com>
-    xfs: short circuit xfs_growfs_data_private() if delta is zero
-
-Hironori Shiina <shiina.hironori@gmail.com>
-    xfs: get root inode correctly at bulkstat
-
-Darrick J. Wong <djwong@kernel.org>
-    xfs: fix log recovery when unknown rocompat bits are set
-
-Darrick J. Wong <djwong@kernel.org>
-    xfs: allow inode inactivation during a ro mount log recovery
-
-Darrick J. Wong <djwong@kernel.org>
-    xfs: invalidate xfs_bufs when allocating cow extents
-
-Darrick J. Wong <djwong@kernel.org>
-    xfs: estimate post-merge refcounts correctly
-
-Darrick J. Wong <djwong@kernel.org>
-    xfs: hoist refcount record merge predicates
-
-Guo Xuenan <guoxuenan@huawei.com>
-    xfs: fix super block buf log item UAF during force shutdown
-
-Guo Xuenan <guoxuenan@huawei.com>
-    xfs: wait iclog complete before tearing down AIL
-
-Darrick J. Wong <djwong@kernel.org>
-    xfs: attach dquots to inode before reading data/cow fork mappings
-
-Darrick J. Wong <djwong@kernel.org>
-    xfs: invalidate block device page cache during unmount
-
-Long Li <leo.lilong@huawei.com>
-    xfs: fix incorrect i_nlink caused by inode racing
-
-Long Li <leo.lilong@huawei.com>
-    xfs: fix sb write verify for lazysbcount
-
-Darrick J. Wong <djwong@kernel.org>
-    xfs: fix incorrect error-out in xfs_remove
-
-Dave Chinner <dchinner@redhat.com>
-    xfs: fix off-by-one-block in xfs_discard_folio()
-
-Dave Chinner <dchinner@redhat.com>
-    xfs: drop write error injection is unfixable, remove it
-
-Dave Chinner <dchinner@redhat.com>
-    xfs: use iomap_valid method to detect stale cached iomaps
-
-Dave Chinner <dchinner@redhat.com>
-    iomap: write iomap validity checks
-
-Dave Chinner <dchinner@redhat.com>
-    xfs: xfs_bmap_punch_delalloc_range() should take a byte range
-
-Dave Chinner <dchinner@redhat.com>
-    iomap: buffered write failure should not truncate the page cache
-
-Dave Chinner <dchinner@redhat.com>
-    xfs,iomap: move delalloc punching to iomap
-
-Dave Chinner <dchinner@redhat.com>
-    xfs: use byte ranges for write cleanup ranges
-
-Dave Chinner <dchinner@redhat.com>
-    xfs: punching delalloc extents on write failure is racy
-
-Dave Chinner <dchinner@redhat.com>
-    xfs: write page faults in iomap are not buffered writes
-
-Mengqi Zhang <mengqi.zhang@mediatek.com>
-    mmc: core: Add HS400 tuning in HS400es initialization
-
-Jarkko Sakkinen <jarkko@kernel.org>
-    KEYS: trusted: Fix memory leak in tpm2_key_encode()
-
-NeilBrown <neilb@suse.de>
-    nfsd: don't allow nfsd threads to be signalled.
-
-Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-    mfd: stpmic1: Fix swapped mask/unmask in irq chip
-
-Sergey Shtylyov <s.shtylyov@omp.ru>
-    pinctrl: core: handle radix_tree_insert() errors in pinctrl_register_one_pin()
-
-Jacob Keller <jacob.e.keller@intel.com>
-    ice: remove unnecessary duplicate checks for VF VSI ID
-
-Jacob Keller <jacob.e.keller@intel.com>
-    ice: pass VSI pointer into ice_vc_isvalid_q_id
-
-Ronald Wahl <ronald.wahl@raritan.com>
-    net: ks8851: Fix another TX stall caused by wrong ISR flag handling
-
-Jose Fernandez <josef@netflix.com>
-    drm/amd/display: Fix division by zero in setup_dsc_config
-
-
--------------
-
-Diffstat:
-
- .../admin-guide/hw-vuln/core-scheduling.rst        |   4 +-
- Documentation/sphinx/kernel_include.py             |   1 -
- Makefile                                           |   4 +-
- arch/arm64/Kconfig                                 |   1 -
- arch/arm64/include/asm/lse.h                       |   1 -
- drivers/android/binder.c                           |   2 +-
- drivers/android/binder_internal.h                  |   2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |   3 +
- drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c        |   7 +-
- drivers/mfd/stpmic1.c                              |   5 +-
- drivers/mmc/core/mmc.c                             |   9 +-
- drivers/net/ethernet/intel/ice/ice_virtchnl.c      |  22 +-
- drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c |   3 -
- drivers/net/ethernet/micrel/ks8851_common.c        |  18 +-
- drivers/net/usb/ax88179_178a.c                     |  37 ++-
- drivers/pinctrl/core.c                             |  14 +-
- drivers/remoteproc/mtk_scp.c                       |  10 +-
- drivers/tty/serial/kgdboc.c                        |  30 ++-
- drivers/usb/dwc3/gadget.c                          |   4 +-
- drivers/usb/typec/tipd/core.c                      |  45 ++--
- drivers/usb/typec/tipd/tps6598x.h                  |  11 +
- drivers/usb/typec/ucsi/displayport.c               |   4 -
- fs/iomap/buffered-io.c                             | 254 ++++++++++++++++++++-
- fs/iomap/iter.c                                    |  19 +-
- fs/nfs/callback.c                                  |   9 +-
- fs/nfsd/nfs4proc.c                                 |   5 +-
- fs/nfsd/nfssvc.c                                   |  12 -
- fs/xfs/libxfs/xfs_bmap.c                           |   8 +-
- fs/xfs/libxfs/xfs_errortag.h                       |  12 +-
- fs/xfs/libxfs/xfs_refcount.c                       | 146 ++++++++++--
- fs/xfs/libxfs/xfs_sb.c                             |   7 +-
- fs/xfs/xfs_aops.c                                  |  37 +--
- fs/xfs/xfs_bmap_util.c                             |  10 +-
- fs/xfs/xfs_bmap_util.h                             |   2 +-
- fs/xfs/xfs_buf.c                                   |   1 +
- fs/xfs/xfs_buf_item.c                              |   2 +
- fs/xfs/xfs_error.c                                 |  27 ++-
- fs/xfs/xfs_file.c                                  |   2 +-
- fs/xfs/xfs_fsops.c                                 |   4 +
- fs/xfs/xfs_icache.c                                |   6 +
- fs/xfs/xfs_inode.c                                 |  16 +-
- fs/xfs/xfs_ioctl.c                                 |   4 +-
- fs/xfs/xfs_iomap.c                                 | 177 ++++++++------
- fs/xfs/xfs_iomap.h                                 |   6 +-
- fs/xfs/xfs_log.c                                   |  53 ++---
- fs/xfs/xfs_mount.c                                 |  15 ++
- fs/xfs/xfs_pnfs.c                                  |   6 +-
- include/linux/iomap.h                              |  47 +++-
- net/sunrpc/svc_xprt.c                              |  16 +-
- security/keys/trusted-keys/trusted_tpm2.c          |  25 +-
- 50 files changed, 866 insertions(+), 299 deletions(-)
-
+diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+index f1c9a2c5abc0..866eddb6cfda 100644
+--- a/mm/debug_vm_pgtable.c
++++ b/mm/debug_vm_pgtable.c
+@@ -40,22 +40,7 @@
+  * Please refer Documentation/mm/arch_pgtable_helpers.rst for the semantics
+  * expectations that are being validated here. All future changes in here
+  * or the documentation need to be in sync.
+- *
+- * On s390 platform, the lower 4 bits are used to identify given page table
+- * entry type. But these bits might affect the ability to clear entries with
+- * pxx_clear() because of how dynamic page table folding works on s390. So
+- * while loading up the entries do not change the lower 4 bits. It does not
+- * have affect any other platform. Also avoid the 62nd bit on ppc64 that is
+- * used to mark a pte entry.
+  */
+-#define S390_SKIP_MASK		GENMASK(3, 0)
+-#if __BITS_PER_LONG == 64
+-#define PPC64_SKIP_MASK		GENMASK(62, 62)
+-#else
+-#define PPC64_SKIP_MASK		0x0
+-#endif
+-#define ARCH_SKIP_MASK (S390_SKIP_MASK | PPC64_SKIP_MASK)
+-#define RANDOM_ORVALUE (GENMASK(BITS_PER_LONG - 1, 0) & ~ARCH_SKIP_MASK)
+ #define RANDOM_NZVALUE	GENMASK(7, 0)
+ 
+ struct pgtable_debug_args {
+@@ -511,8 +496,7 @@ static void __init pud_clear_tests(struct pgtable_debug_args *args)
+ 		return;
+ 
+ 	pr_debug("Validating PUD clear\n");
+-	pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
+-	WRITE_ONCE(*args->pudp, pud);
++	WARN_ON(pud_none(pud));
+ 	pud_clear(args->pudp);
+ 	pud = READ_ONCE(*args->pudp);
+ 	WARN_ON(!pud_none(pud));
+@@ -548,8 +532,7 @@ static void __init p4d_clear_tests(struct pgtable_debug_args *args)
+ 		return;
+ 
+ 	pr_debug("Validating P4D clear\n");
+-	p4d = __p4d(p4d_val(p4d) | RANDOM_ORVALUE);
+-	WRITE_ONCE(*args->p4dp, p4d);
++	WARN_ON(p4d_none(p4d));
+ 	p4d_clear(args->p4dp);
+ 	p4d = READ_ONCE(*args->p4dp);
+ 	WARN_ON(!p4d_none(p4d));
+@@ -582,8 +565,7 @@ static void __init pgd_clear_tests(struct pgtable_debug_args *args)
+ 		return;
+ 
+ 	pr_debug("Validating PGD clear\n");
+-	pgd = __pgd(pgd_val(pgd) | RANDOM_ORVALUE);
+-	WRITE_ONCE(*args->pgdp, pgd);
++	WARN_ON(pgd_none(pgd));
+ 	pgd_clear(args->pgdp);
+ 	pgd = READ_ONCE(*args->pgdp);
+ 	WARN_ON(!pgd_none(pgd));
+@@ -634,10 +616,8 @@ static void __init pte_clear_tests(struct pgtable_debug_args *args)
+ 	if (WARN_ON(!args->ptep))
+ 		return;
+ 
+-#ifndef CONFIG_RISCV
+-	pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
+-#endif
+ 	set_pte_at(args->mm, args->vaddr, args->ptep, pte);
++	WARN_ON(pte_none(pte));
+ 	flush_dcache_page(page);
+ 	barrier();
+ 	ptep_clear(args->mm, args->vaddr, args->ptep);
+@@ -650,8 +630,7 @@ static void __init pmd_clear_tests(struct pgtable_debug_args *args)
+ 	pmd_t pmd = READ_ONCE(*args->pmdp);
+ 
+ 	pr_debug("Validating PMD clear\n");
+-	pmd = __pmd(pmd_val(pmd) | RANDOM_ORVALUE);
+-	WRITE_ONCE(*args->pmdp, pmd);
++	WARN_ON(pmd_none(pmd));
+ 	pmd_clear(args->pmdp);
+ 	pmd = READ_ONCE(*args->pmdp);
+ 	WARN_ON(!pmd_none(pmd));
+-- 
+2.45.0
 
