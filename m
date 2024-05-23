@@ -1,124 +1,90 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33082AD2C;
-	Thu, 23 May 2024 21:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF8C12837E;
+	Thu, 23 May 2024 21:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716501170; cv=none; b=cUxPNBP4TvRFe4akH4XskHadFb3nUUcHuIdZ0M31cl3uIiZSvFjB18yjTIYnIcm9ac8pPC2JZpmYGiPT92erC7SeL9kUdwOrgXDVf2XeaAN/XRWSn9WQGtohNB5UNUaePpkOvytwdin4vt4Dc0qbjp2b5Tkx/JgkjW2XaouzGiI=
+	t=1716501170; cv=none; b=hFSBNKEO26RG6YRlWi6qG6LetlNMkdjd0aYROhOmojf6nKdJIz5XLus/Q4VgeGdR36v0Jzojl92ZUjUL1QUTXuoQiBcRku3AABZJNpNgMcADehCNRe9B3WsKqLwy2uoINVYndQsGeek5o6FdyI5UsRCL8xSuf9VARoe6nJmbixw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716501170; c=relaxed/simple;
-	bh=+eikmCjYdDu6H3MgfTHvENYmy2Ei3dxKeO83qfE20cQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ij1oiYfinV6PKEEBaJpQ0S7qrbysHYSbUrkp2O1FBIysXQmBwyTUfD6kSIVAjU8Bmil/6gDWpkouCZ3Rldre03/i3cEHfs5/ZevUbh2BfESmZ/BJZC31P/toASDMUBzfpM+IieIZSCU7w79WxqhoXFtD1ieYbLMw2xWEHAeDZWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hGJjOX8n; arc=none smtp.client-ip=192.19.144.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	bh=qVXCdb9gwnJoKTwqTDhw5JHJWQVhusvlDAvTSUdAPNA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=QDsmSkrBASVtwvMBlJD+pBoRH/dM1AFPB3FdHsJcuHUs1qBhf9V436ch2VJlTmcA4OI995yY/n3i1P1Qe9UFbn4eSirb8vSMeuc30zYZhhRJ9CSa0584lWsEB2Jtcw8ZdUcVl8b6GRAZEaXNx7bO0nTnw0EkORm6ugDzBy+Kr8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+QTRAc1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hGJjOX8n"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 862F7C0000E7;
-	Thu, 23 May 2024 14:45:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 862F7C0000E7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1716500728;
-	bh=+eikmCjYdDu6H3MgfTHvENYmy2Ei3dxKeO83qfE20cQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hGJjOX8nsxvJcqH6sVhtNhf8hHk35XYTKDCgXgGXfRxkOnp4BW/ije/nvz/wuOo1+
-	 3q4SdGYckjqLv1c7qnG4WtSDCkWI/XoG/ynRu1EFVW6xV++cabZRtqXg5JPwJ+dDWz
-	 AM/L7cNmTbGkUUHOOIbZgtZnqLmS8d9HuHuL1l0c=
-Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 7CFAF18041CAC8;
-	Thu, 23 May 2024 14:45:26 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: stable@vger.kernel.org
-Cc: Jorge Ramirez-Ortiz <jorge@foundries.io>,
-	Avri Altman <avri.altman@wdc.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-mmc@vger.kernel.org (open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND...),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH stable 5.4] mmc: core: Do not force a retune before RPMB switch
-Date: Thu, 23 May 2024 14:45:23 -0700
-Message-Id: <20240523214525.200347-4-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240523214525.200347-1-florian.fainelli@broadcom.com>
-References: <20240523214525.200347-1-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+QTRAc1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 540A5C3277B;
+	Thu, 23 May 2024 21:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716501169;
+	bh=qVXCdb9gwnJoKTwqTDhw5JHJWQVhusvlDAvTSUdAPNA=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=N+QTRAc1vqCf6bb6jlX8pcoBnHH0ZHS4WSWeqk4QWQAbwlSXP4+QRTxc6DyZdyhYo
+	 UhElfJ7/a+UnL1Lg9fNdl64D/D7sEe33fXbTqPfqJwsRF9k/9/i+A6NvL+k3evJZ5a
+	 1nPSzcCYcOst0tpv65+/Hvdm/ixRjvMtSBR48gLJkGTrRzxE7Z4Pc/Q9U7VVhSeARZ
+	 F+wCkyi5wTjH8kAO1/ecrDmA7SJrgEklcQhRxw+O6mNHxlkhg2eJjL3OvPmRg9q/Jj
+	 pHagKMt5mAtvokwNGR26zi0LUYHn4Ah04hxRmxFutXXoJjdJuQXttpZ+coHS3F6hsT
+	 UaG2G6+jm2KrA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 24 May 2024 00:52:44 +0300
+Message-Id: <D1HCVOZ1IN7S.1SUZ75QRE8QUZ@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Herbert Xu"
+ <herbert@gondor.apana.org.au>
+Cc: <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
+ <Andreas.Fuchs@infineon.com>, "James Prestwood" <prestwoj@gmail.com>,
+ "David Woodhouse" <dwmw2@infradead.org>, "Eric Biggers"
+ <ebiggers@kernel.org>, "James Bottomley"
+ <James.Bottomley@hansenpartnership.com>, <linux-crypto@vger.kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, "open list"
+ <linux-kernel@vger.kernel.org>, "David Howells" <dhowells@redhat.com>,
+ "James Bottomley" <James.Bottomley@HansenPartnership.com>, "Stefan Berger"
+ <stefanb@linux.ibm.com>, "Ard Biesheuvel" <ardb@kernel.org>, "Mario
+ Limonciello" <mario.limonciello@amd.com>
+Subject: Re: [PATCH v5 5/5] keys: asymmetric:
+ ASYMMETRIC_TPM2_KEY_RSA_SUBTYPE
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240523212515.4875-1-jarkko@kernel.org>
+ <20240523212515.4875-6-jarkko@kernel.org>
+ <D1HCLFMAEXX5.17QYXMTZQCRYE@kernel.org>
+In-Reply-To: <D1HCLFMAEXX5.17QYXMTZQCRYE@kernel.org>
 
-From: Jorge Ramirez-Ortiz <jorge@foundries.io>
+On Fri May 24, 2024 at 12:39 AM EEST, Jarkko Sakkinen wrote:
+> On Fri May 24, 2024 at 12:25 AM EEST, Jarkko Sakkinen wrote:
+> > +	/*
+> > +	 * ABI requires this according include/crypto/akcipher.h, which says
+> > +	 * that there is epilogue with algorithm OID and parameters length.
+> > +	 * Neither size nor semantics is documented *anywhere*, and there's n=
+o
+> > +	 * struct to hold them.
+> > +	 *
+> > +	 * So zeroing out the last eight bytes after the key blob seems like =
+the
+> > +	 * best bet, given no better (or any) information. The size of the
+> > +	 * parameters (two u32's) was found from crypto/asymmetric/public_key=
+.c.
+> > +	 */
+> > +	memset(work, 0, 8);
+>
+> This is a mystery (or nightmare).
 
-commit 67380251e8bbd3302c64fea07f95c31971b91c22 upstream
+This is from akchiper_alg documentation:
 
-Requesting a retune before switching to the RPMB partition has been
-observed to cause CRC errors on the RPMB reads (-EILSEQ).
+ * @set_pub_key: Function invokes the algorithm specific set public key
+ *		function, which knows how to decode and interpret
+ *		the BER encoded public key and parameters
 
-Since RPMB reads can not be retried, the clients would be directly
-affected by the errors.
+No struct, no size information and no description what they are used for.
 
-This commit disables the retune request prior to switching to the RPMB
-partition: mmc_retune_pause() no longer triggers a retune before the
-pause period begins.
+Can we get these properly documented? My documentation at the moment
+is grep and kprobes, literally.
 
-This was verified with the sdhci-of-arasan driver (ZynqMP) configured
-for HS200 using two separate eMMC cards (DG4064 and 064GB2). In both
-cases, the error was easy to reproduce triggering every few tenths of
-reads.
-
-With this commit, systems that were utilizing OP-TEE to access RPMB
-variables will experience an enhanced performance. Specifically, when
-OP-TEE is configured to employ RPMB as a secure storage solution, it not
-only writes the data but also the secure filesystem within the
-partition. As a result, retrieving any variable involves multiple RPMB
-reads, typically around five.
-
-For context, on ZynqMP, each retune request consumed approximately
-8ms. Consequently, reading any RPMB variable used to take at the very
-minimum 40ms.
-
-After droping the need to retune before switching to the RPMB partition,
-this is no longer the case.
-
-Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
-Acked-by: Avri Altman <avri.altman@wdc.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20240103112911.2954632-1-jorge@foundries.io
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- drivers/mmc/core/host.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 2d63c0f188e1..c4b40c06de22 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -111,13 +111,12 @@ void mmc_retune_enable(struct mmc_host *host)
- 
- /*
-  * Pause re-tuning for a small set of operations.  The pause begins after the
-- * next command and after first doing re-tuning.
-+ * next command.
-  */
- void mmc_retune_pause(struct mmc_host *host)
- {
- 	if (!host->retune_paused) {
- 		host->retune_paused = 1;
--		mmc_retune_needed(host);
- 		mmc_retune_hold(host);
- 	}
- }
--- 
-2.34.1
-
+BR, Jarkko
