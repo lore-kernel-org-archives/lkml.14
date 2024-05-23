@@ -1,124 +1,89 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D37535D4;
-	Thu, 23 May 2024 20:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D042823A6
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 20:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716495113; cv=none; b=ZWDk8WSpVfCmImBffSxqy6R3qGSrMnbPr1DBMTJt6nd96lLjHgJ1CVpuvDPW+NvUekso4JYyjkxTNzYc9s3qWy5/8aAKiAn8w99W0RN1EPinXloDIBX5w35KLTk2Z4k9ywWNN4npLaHFpMz4IR4eeHHelx6A1doDnyRE8ZAzcrE=
+	t=1716495532; cv=none; b=oIsvlUwKmUjjBCngWnTTx5PRj1Ixv7Yi6TjFUDilxrpRxXvH0txeUOMZ/Tfs8GXzl1y+dqiJNAYdMN5PtmqG1zwpwgpQNHMNa3FddlJPYGACuyLydo8tKZPkUHDxoXkYCqOQpo6DF25gVPGg8weRAsObSr4LT004ASdwjXW8/IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716495113; c=relaxed/simple;
-	bh=L5ewnBm0au4zZRec8wsDmkwZlTUy33ekVhMp0k9H0PI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y2ZqMJe+JdPZYFQorkQ0W9nFVTGTtGn/NtJMxs+VQgHXjtQqjBaHRyv+ciA84a9Hm/Cq0pVWfYr3KlNwMdYH/JU6XpOxzHGjILgm1HDuGf5i/D/Wc5ugh+uAChQhYELFZG3LPYtvTHy72iMhknDQGXayONyQgYjBKWWzWKNGc7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=nnLPKUm3; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716495532; c=relaxed/simple;
+	bh=pFrk/e9ZenCkRGxBC5gy7aNXEiMaxXfw/iJ+zRd/V6w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WCChKmxwX6491AqPAFq0DDxmz6eSwKNAxJWvQnu/HrXBgD/nKdi0QLy5fo6TLsmUgIrVQGSXtgQVWvgvsHnodpjk1gR5j3+pWegyX5+5+rVAD9oT/EDkKrlTdt9CGc3Jo4No3jWrkHVYv4K3gBcx9don9nYN/RyEbs6eeokV3K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UdjsGFh0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YjLzd07d; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="nnLPKUm3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716495082; x=1717099882; i=markus.elfring@web.de;
-	bh=pRrt2wpGj4VAOvQxf86gbLUKPEBUjoc/oQDX1mcPMrM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=nnLPKUm3Vpg1qLjBxzKs6SigfIsLW45WZfv7tTykVIbZJZxpRxmD57UIc+8apu2Q
-	 GWV92ch6xSylxKrwvbWOQ+IR4UgH6+4PBxlYnNccYINYlklchd+8d0ZYrp7Q/9/mu
-	 LVhXqP3N4Qxeo+xZY0LX6VNOa15KDq3PvY6Xj9ayi3oqcM0wVfmSNxaTtzkfEdpNY
-	 ROdJk1wAhDAWKg7nup7ueR8ogHP71e7eaxmQXBiQi/Nw/eT6GT8K9cFigtLwjLB3R
-	 BvsUiugkaxu3Zm1N2Z+N43k7skalpHsoFsGvwkcVeQtRHOItMjGiwmSTW+ii2gq7h
-	 /K3PI6Lu251O5e1/Jg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MqIB7-1sveY51FAJ-00nOnm; Thu, 23
- May 2024 22:11:22 +0200
-Message-ID: <f541195e-7963-4970-9a1d-a3298226cdd5@web.de>
-Date: Thu, 23 May 2024 22:11:20 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UdjsGFh0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YjLzd07d"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716495529;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jn0mBBuJ+t7z7OPDYUBM+zHO5zskNhmia64sN0syVIk=;
+	b=UdjsGFh0WvjjAqbwMzZj5ZSmau2LzhFkQQWcjDjOQluRaZLbnfrimeEz0bNqiPyyBDgrqC
+	JmDtek6NfJgfKPRg5W6D17MY+vikK+smn9cLVWd4ugXUBk9Z5AaLgyG/qytYzCtpOGmEMW
+	8rFwOEPZxGsylimh/Yulo+29wB0iX/JKS900m/s24CwG9ZzAX+G0pzRa3X96WD9jiOAZlF
+	NoGdolw1nLF5fYPn+lVqOpMyYU/+MTmOQSxAabBrzwc6F62Lp5qjy76qziOkd221G6hEaR
+	CLf/1T5pSRfx6MZG8PgmvNHyEmQ/V4cTSkk51xbL1t817LzeX4c7zudvQzJHqQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716495529;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jn0mBBuJ+t7z7OPDYUBM+zHO5zskNhmia64sN0syVIk=;
+	b=YjLzd07d57EutgWQ1I3NC/drnwrHpZ26unJ31+HhLmjlupowo/vXDVtFk0QnApXJH7A+o3
+	zz/gYcQJGDuI0CDw==
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] genirq/chip: Fix the warn for non-SMP system
+In-Reply-To: <1715887825-1031-1-git-send-email-quic_mojha@quicinc.com>
+References: <1715887825-1031-1-git-send-email-quic_mojha@quicinc.com>
+Date: Thu, 23 May 2024 22:18:49 +0200
+Message-ID: <877cfkffiu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/7] PCI: xilinx-nwl: Clean up clock on probe
- failure/removal
-To: Sean Anderson <sean.anderson@linux.dev>,
- linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Michal Simek <michal.simek@amd.com>, Michal Simek <michal.simek@xilinx.com>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-References: <20240520145402.2526481-6-sean.anderson@linux.dev>
- <4a43cda4-dfa4-4156-b616-75e740f6fd64@web.de>
- <bb9e239f-902b-4f52-a5e9-98c29b360418@linux.dev>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <bb9e239f-902b-4f52-a5e9-98c29b360418@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZfN0L4J/We1nysj/Tw4/FcDusZldTB3WhkeTmZfE668DhHbNZkY
- HOoeea/+aF1NKZetF41Uc9H+RW7VLFjgc7x7o6UUkCopGRHsnpbeznyyfJUbr3TXUM8MJ/z
- A8NenrGIAYjkotL14h15DYSBzFEtS3lpiEbPCZl2CHXS10ckSR7/C2wVxAeE4eMxytSx6tk
- ZywcrqoJnql1tcrThId1Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ylFft9ZDubI=;jo1fRE94B8Xtowztpq0sPRbsVf8
- 1cr8nbdQN6GH688tqhMolPOOrpbgXQ59MikyI8c8RC5vdyJKqXsJ7EoLxLg+9DtQOxcmA8MvV
- wXtxqQ3m7Bzf8U1VXtn76lzcqOVUyUXMiHYHh3pn3KjksRDD8FgR9/apQgyZNifYO7FfHJ0My
- exLJzCmoFnWgCRpajwcFOOo0BXbXEGKEVZtLEo0d5rORAFirrXB1yHdohIFD+d9oSMCWYD5pO
- 9YlBRRG6Y4HvgN9lkNA8yH4UUirUks/OEXaf2SPos8GCHRClQdiotaTUsK5j1FC4woB0Nkrnx
- PeIAVkuaJFqBdg69iRoAnk0aaDOkju03tjUQEw7s0LDPEMnwD1SjXgsK4D5qOdEOIUtFUBRoS
- sqVkKSHmeP6gWoN52EaYWPlsTFD0tTZkxaNBh7k5ltiIYKrXJiZENcPFzAGhaDs5qlxjINA90
- WMNhhJCJxSoCtTasXjN7Ia00uVC1FJXwSzQdfKqYnU/Lh5Xe8L2PyS2oEcN24+By7bkz5z87B
- EU/TRHkzH9joFtEk3YENeO6UobvGZOpEWsoJgTXCvfsAs4bP0KgAkFnNrckdPDq3KB18HLsCQ
- Pf5RhlqzaAjjkRp2OHtaNvg9qsDAMA90BTmnyo1t6y2xxEOYP+5qLhtR8w8FdI/FyajmLiNtb
- Q2oqlY1FeuycdXtU0J9OCtheAVL7aKijHsytMFt2fJZJAQK6wNnUVhKAFSCXmGdHqaV6NYGPr
- xaXARvKzsAQSTtwxmwllV8yHT4H2lmRHjs7+RTQRIdEG9Ojn9WvYsBY5J29ojiKJ6HpT3hj01
- UvWotxE2nBivOnnbCVgM4D8I5v60M2mP7XPhLqiMHZoe8=
+Content-Type: text/plain
 
->> =E2=80=A6
->>> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
->> =E2=80=A6
->>> @@ -817,11 +818,23 @@ static int nwl_pcie_probe(struct platform_device=
- *pdev)
->>>  		err =3D nwl_pcie_enable_msi(pcie);
->>>  		if (err < 0) {
->>>  			dev_err(dev, "failed to enable MSI support: %d\n", err);
->>> -			return err;
->>> +			goto err_clk;
->>>  		}
->>>  	}
->>>
->>> -	return pci_host_probe(bridge);
->>> +	err =3D pci_host_probe(bridge);
->>> +
->>> +err_clk:
->>> +	if (err)
->>> +		clk_disable_unprepare(pcie->clk);
->>
->> I suggest to use the label =E2=80=9Cdisable_unprepare_clock=E2=80=9D di=
-rectly before this function call
->> (in the if branch) so that a duplicate check would be avoided after som=
-e error cases.
+On Fri, May 17 2024 at 01:00, Mukesh Ojha wrote:
+
+We don't fix warnings. We fix the underlying problem.
+
+> __irq_startup_managed() for !SMP system returns IRQ_STARTUP_NORMAL
+> which may result in a WARNING during enablement of an irq i.e.,
+> starting a irq while it is not activated.
 >
-> Well if you want to avoid a check, we can just do
->
-> err =3D pci_host_probe(bridge);
-> if (!err)
-> 	return 0;
->
-> err_clk:
-> 	...
+> Fix this by appropriately returning IRQ_STARTUP_MANAGED.
 
-This design variant can also be reasonable.
+What does that fix?
 
-Do any preferences matter here for label name selections?
+Absolutely nothing because both cases at the call site invoke
+__irq_startup() which warns if the interrupt has not been activated yet.
 
-Regards,
-Markus
+It's not magically activated when __irq_startup_managed() returns
+IRQ_STARTUP_MANAGED.
+
+Also if you look at the SMP variant of that function then you might
+notice that IRQ_STARTUP_MANAGED is not returned unconditionally. That
+function can return IRQ_STARTUP_NORMAL too.
+
+Just for the record. There are no managed interrupts on SMP=n. The code
+which can initialize them is not even compiled in.
+
+So I have no idea why you think that this has anything to do with
+managed interrupts.
+
+What's worse is that this does not even build on UP because
+irq_do_set_affinity() does not exists for SMP=n. It builds today because
+the IRQ_STARTUP_MANAGED case is optimized out by the compiler.
+
+Sigh,
+
+        tglx
