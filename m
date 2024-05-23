@@ -1,127 +1,173 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A82D144D0E;
-	Thu, 23 May 2024 11:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C30A146D57
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 11:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716462886; cv=none; b=bzJ5iqoeH0r9/WpjLByq9x+qxe8wTTqqJXRePkOTKiQBFbDFhQhzrpOZv1aVUDU2j1CzG/8bd9K4F5Qr4SzFeIcRB7XD6ugHbj6OAJavWGo65/sfV7bhOms19MJ9cjDAHihqitHRukp+XPA1LStc/rGASvv80jgsl519uVpUtU4=
+	t=1716462903; cv=none; b=FGAQGHxiHNRdssdkN4E03fM+hvbc5Y6pwA55r6Js5hGER9rgWHyyucqPv67aMwSinGJ/7LNouCHqn+iuGc2u7MTWRacoZdRisSOrC0dw14zlcqnfm8Wtlea5uX58/8hLsUa/e3X61Tiogr584LfcMKQx57J8LzWE18cC5q2STec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716462886; c=relaxed/simple;
-	bh=8n6nu/lTr7f8BK8EmXMpV/7Mr500bB6UmP2ECf0sGLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DBfoGH5/VgorvzReg5jPYJ/DVvN/Af7OR+6XNMUTyaelfMUekaMDe45mzRAeT0gZEhLs1iIlx+ttFC5uw4REm5R9KTq4sjJ+zVPa+pPMf36nQW8kit23OQoiuKoyfERf93YH0eUWxn6dpc+rdLbrsfhujuqlHUnkpNuYhpPaGSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J6lCag6+; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716462903; c=relaxed/simple;
+	bh=MjVo/eyrnuH6STcT0XBgYYwy3sYTeprnDpyicAGfwZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tX0hgaUNGSJ2mpsop1EVPACA27cOEWNTOhWnK0uupqlJgAK0r3VXlVgLvj6Q97f4/GrtW/ay6q7JeD9ItyOFHQVRD7EUVz/f/yAePjON5+1u6Gej5b2CCOaozSZfwo1vBVeSTwwnoIgb1XaAvlNnrdvOrLAVQywKXSQsMtKrodA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EXzYVgM2; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6lCag6+"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-574b3d6c0f3so12477319a12.0;
-        Thu, 23 May 2024 04:14:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EXzYVgM2"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59b49162aeso1081876166b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 04:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716462883; x=1717067683; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CPc6oaYLUIIGqFx5m3Yc4i8wcC4CESeJfJvk9pDUTzs=;
-        b=J6lCag6+rl+22jYeYNGrX6kj35ZhAQ9ZnmnKoeUMKXJUsoZm81cGHwiUohclbQ7UH5
-         GiWtIe5e0upq2/8GBs4t2uFZiFciSO47/JJ1hB/BalPOxdS/1PwIDYl+fzwFcRi3gTk4
-         TsYJobP/gA8KwUtrw9J5ChszVySGoDMgySNgRz27X3SxnnWzN5FlSArXABN2B0KekNVY
-         R82UtkmY15pS3EesRVt7ycrEIZvUbp/CTYywsUH/Y+BhQlVCplhXtCxfnIGKGanpajUE
-         +Vk/qI+KNJPBKjkubxFNMiwAnbDee4R8RNa76J6P5WBDXJ4tssbG2o+Nfy/cvSBnL4hT
-         fcDA==
+        d=suse.com; s=google; t=1716462899; x=1717067699; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NtKXA649o7axDsK/ROjvUoC2ReIR2cQm65oTtJ1nt2A=;
+        b=EXzYVgM2AoXZws4fe2uG+zS+0H62SYbKKo1mmAzO5+IplutbKvWfziRoJdZSKrrmBY
+         mCJBErmlAt9noj/xs4uKWMxJ/vCDcsXfQzkWOz25z9pRwDL29jb9yOFOv2QvUbkwvlQ3
+         4b4Kxc0qfxed9KelVY/KqJSAbZCyp7hyE0uDR1Lh9ntJ3r66bbtyncXnNjXkzxSHV9W9
+         8miDz68o5jQCprw4C7RO6xAsR/fQa6U1mBI9L5RzaTMHvSyAGhnM+CJM+sn+UNZFJ9MG
+         Fucpo+73rDwNu/sRWmzDZbbGgBJM0LOq7ntiROYxVODZqeImj5HP29l+b2IAOOJuN2At
+         aRCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716462883; x=1717067683;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CPc6oaYLUIIGqFx5m3Yc4i8wcC4CESeJfJvk9pDUTzs=;
-        b=KFfGPl7tiBqk4WxPDtjzRKepnKIJmFBzJnka8zAREHtAbsKNPmqDvE0gNwIbtTQYNd
-         Xy707gZkFjfNbKclVKIVoGLJsTPMEl4z2+wqbz2ggxuylkLKEzN8mp0uTRh84WKdN9Ng
-         Rk3v5W9y2/c7zE13LvvCwuT06CnV7Q6Wm6neETIQcevN/87ppsPVQW0tbfNyCuTuKxGf
-         VzcsELhnv3aheDbKaA5TI6LbNcZwHzGGQjhNoFXIcHFR0nL+4MqSTV1L8kTO/9Ro49R1
-         gc0lxAoNuglvEd4MF2Kon0X9QuZxfFmIeEKxIzdSRKefNZjdR+hSqa+IYlJUiwMz4Jr/
-         urTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTDzqPK/b7qnv4TlhvEAHOdftfG6C549bb6spJvOowDISyt025vJMdvYs36Yxw4aH7VYKeRTIGp9ZnRRP2ap0DrL4cm7cgv1JyJfT23X1eSJ7+UHslthJHSUIkH5TjuK/IGyHygM1b
-X-Gm-Message-State: AOJu0YwROEwg7A9A+BfroosLVVobZr4R98Dqo25m0rEwpqr7vqzEGokq
-	Zbvl1LoCZDZkBW5TAcu618n0p7XXX4WiadjpB1wc1MP/8x2o8n97
-X-Google-Smtp-Source: AGHT+IH4WazQgFCrLINa6YVkA20c3EBt/5RUNd6fAmHu1NvenP/fjy1zrgd/5ZMDPuq042lL4tH/eA==
-X-Received: by 2002:a17:907:75c6:b0:a59:c833:d275 with SMTP id a640c23a62f3a-a622807c913mr270829066b.30.1716462883107;
-        Thu, 23 May 2024 04:14:43 -0700 (PDT)
-Received: from debian ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a69148b97sm1463925566b.114.2024.05.23.04.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 04:14:41 -0700 (PDT)
-Date: Thu, 23 May 2024 13:14:39 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Andrew Hepp <andrew.hepp@ahepp.dev>,
-	Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: temperature: mcp9600: add threshold events
- support
-Message-ID: <20240523111439.GA513807@debian>
-References: <20240517081050.168698-1-dima.fedrau@gmail.com>
- <20240517081050.168698-3-dima.fedrau@gmail.com>
- <20240519174248.69f00448@jic23-huawei>
- <20240519210036.GB10322@debian>
- <20240520131850.00003430@Huawei.com>
+        d=1e100.net; s=20230601; t=1716462899; x=1717067699;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NtKXA649o7axDsK/ROjvUoC2ReIR2cQm65oTtJ1nt2A=;
+        b=NTcEAn4N8hK+XMuWmprrUFEvRYwHFgCYg+RCXHPKaHK5AH4yW8FFvZqHfOLQzxXwzS
+         gSNuHOUi/JTn3LoQSxNKLRnaapBF/QdBlgwXf0bOaatbcqdgYO8GE++P1eJ6CdvhovYc
+         1BXaqbHKo6BP2k3KDFViLNz99Y3Ci5VOejhAlnevFlSq9bmAQ4hXnU3VVXaQ2YzT2lXV
+         aPlvfZxbmwDOemvoj/3LrvgyUi2PocAqo3eo4IzMwDzGfacfMyKLcAjOpPm07yUSnsn9
+         T7fNMgQoH/z3QQVG7FzmiimeNtuLoyYvkHElVktj1HKaEPksRW/AACHVOqebRxJ4Byrf
+         zCNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqm7eJHXWFWsMdh6+PDXVMzqHUj9RnPzsSeVplkWP9kRzZnYZ8yIFDoBJp4bySPXU4TD3LzMMR3lhFfLDNBbM334be6hElOCKSmrdX
+X-Gm-Message-State: AOJu0YzsE3sbaW4p9L4qo8xipSdnyL/0rvYEiFnZvIpMYJWqbRbUJTtg
+	ne2Cc6vWVXhif8xKdlxpeNe0VHJLbbPu0jL7qpU+tdW12N5wzm0jTyxS37gu5/A=
+X-Google-Smtp-Source: AGHT+IH8kFY8rnlFGYmC1IyNleX9IUJz34fSkhfP4YLpOOf86I+4CNUwuE5ftnmPQ5fKbfnvGIn0mA==
+X-Received: by 2002:a17:906:815:b0:a5c:d67a:1e17 with SMTP id a640c23a62f3a-a6228069387mr282410766b.15.1716462899500;
+        Thu, 23 May 2024 04:14:59 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7315:e681:bab5:4646:cf21? ([2a10:bac0:b000:7315:e681:bab5:4646:cf21])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7f78sm1911564766b.133.2024.05.23.04.14.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 May 2024 04:14:59 -0700 (PDT)
+Message-ID: <b3a6ea47-8628-4edc-aee5-e5051955124a@suse.com>
+Date: Thu, 23 May 2024 14:14:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240520131850.00003430@Huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: CVE-2024-35802: x86/sev: Fix position dependent variable
+ references in startup code
+To: cve@kernel.org, linux-kernel@vger.kernel.org,
+ linux-cve-announce@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <2024051738-CVE-2024-35802-959d@gregkh>
+Content-Language: en-US
+From: Nikolay Borisov <nik.borisov@suse.com>
+In-Reply-To: <2024051738-CVE-2024-35802-959d@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Am Mon, May 20, 2024 at 01:18:50PM +0100 schrieb Jonathan Cameron:
-> On Sun, 19 May 2024 23:00:36 +0200
-> Dimitri Fedrau <dima.fedrau@gmail.com> wrote:
-> 
-> > Am Sun, May 19, 2024 at 05:42:48PM +0100 schrieb Jonathan Cameron:
-> > > On Fri, 17 May 2024 10:10:50 +0200
-> > > Dimitri Fedrau <dima.fedrau@gmail.com> wrote:
-> > >   
-> > > > The device has four programmable temperature alert outputs which can be
-> > > > used to monitor hot or cold-junction temperatures and detect falling and
-> > > > rising temperatures. It supports up to 255 degree celsius programmable
-> > > > hysteresis. Each alert can be individually configured by setting following
-> > > > options in the associated alert configuration register:
-> > > > - monitor hot or cold junction temperature
-> > > > - monitor rising or falling temperature
-> > > > - set comparator or interrupt mode
-> > > > - set output polarity
-> > > > - enable alert
-> > > > 
-> > > > This patch binds alert outputs to iio events:
-> > > > - alert1: hot junction, rising temperature
-> > > > - alert2: hot junction, falling temperature
-> > > > - alert3: cold junction, rising temperature
-> > > > - alert4: cold junction, falling temperature
-> > > > 
-> > > > All outputs are set in comparator mode and polarity depends on interrupt
-> > > > configuration.
-> > > > 
-> > > > Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>  
-> > > Hi Dmitri  
-> > 
-> > Hi Jonathan,
-> > 
-> > > Please make sure to address all questions in earlier reviews, either by
-> > > changing the code, or directly answering the question.
-> > >  
-> > I did, see: https://lore.kernel.org/linux-iio/20240509204559.GB3614@debian/T/#u
-> > or did I miss anything ? I'm a little bit confused.
-> 
-> I think some emails went astray :( Sorry I didn't check the archive.
-> 
-> Anyhow, thanks for providing the links.
->
-Just thought you were to busy to reply and that's because I had send a new
-version of the series.
 
-> Jonathan
+
+On 17.05.24 г. 16:23 ч., Greg Kroah-Hartman wrote:
+> Description
+> ===========
 > 
+> In the Linux kernel, the following vulnerability has been resolved:
+> 
+> x86/sev: Fix position dependent variable references in startup code
+> 
+> The early startup code executes from a 1:1 mapping of memory, which
+> differs from the mapping that the code was linked and/or relocated to
+> run at. The latter mapping is not active yet at this point, and so
+> symbol references that rely on it will fault.
+> 
+> Given that the core kernel is built without -fPIC, symbol references are
+> typically emitted as absolute, and so any such references occuring in
+> the early startup code will therefore crash the kernel.
+> 
+> While an attempt was made to work around this for the early SEV/SME
+> startup code, by forcing RIP-relative addressing for certain global
+> SEV/SME variables via inline assembly (see snp_cpuid_get_table() for
+> example), RIP-relative addressing must be pervasively enforced for
+> SEV/SME global variables when accessed prior to page table fixups.
+> 
+> __startup_64() already handles this issue for select non-SEV/SME global
+> variables using fixup_pointer(), which adjusts the pointer relative to a
+> `physaddr` argument. To avoid having to pass around this `physaddr`
+> argument across all functions needing to apply pointer fixups, introduce
+> a macro RIP_RELATIVE_REF() which generates a RIP-relative reference to
+> a given global variable. It is used where necessary to force
+> RIP-relative accesses to global variables.
+> 
+> For backporting purposes, this patch makes no attempt at cleaning up
+> other occurrences of this pattern, involving either inline asm or
+> fixup_pointer(). Those will be addressed later.
+> 
+>    [ bp: Call it "rip_rel_ref" everywhere like other code shortens
+>      "rIP-relative reference" and make the asm wrapper __always_inline. ]
+> 
+> The Linux kernel CVE team has assigned CVE-2024-35802 to this issue.
+
+
+I'd like to dispute this CVE since it doesn't constitute a security 
+related bug. Sure, it might crash a SEV guest during boot but it doesn't 
+constitute a security issue per-se.
+
+
+
+> 
+> 
+> Affected and fixed versions
+> ===========================
+> 
+> 	Fixed in 6.1.84 with commit fe272b61506b
+> 	Fixed in 6.6.24 with commit 0982fd6bf0b8
+> 	Fixed in 6.7.12 with commit 66fa3fcb474b
+> 	Fixed in 6.8.3 with commit 954a4a878144
+> 	Fixed in 6.9 with commit 1c811d403afd
+> 
+> Please see https://www.kernel.org for a full list of currently supported
+> kernel versions by the kernel community.
+> 
+> Unaffected versions might change over time as fixes are backported to
+> older supported kernel versions.  The official CVE entry at
+> 	https://cve.org/CVERecord/?id=CVE-2024-35802
+> will be updated if fixes are backported, please check that for the most
+> up to date information about this issue.
+> 
+> 
+> Affected files
+> ==============
+> 
+> The file(s) affected by this issue are:
+> 	arch/x86/coco/core.c
+> 	arch/x86/include/asm/asm.h
+> 	arch/x86/include/asm/coco.h
+> 	arch/x86/include/asm/mem_encrypt.h
+> 	arch/x86/kernel/sev-shared.c
+> 	arch/x86/kernel/sev.c
+> 	arch/x86/mm/mem_encrypt_identity.c
+> 
+> 
+> Mitigation
+> ==========
+> 
+> The Linux kernel CVE team recommends that you update to the latest
+> stable kernel version for this, and many other bugfixes.  Individual
+> changes are never tested alone, but rather are part of a larger kernel
+> release.  Cherry-picking individual commits is not recommended or
+> supported by the Linux kernel community at all.  If however, updating to
+> the latest release is impossible, the individual changes to resolve this
+> issue can be found at these commits:
+> 	https://git.kernel.org/stable/c/fe272b61506bb1534922ef07aa165fd3c37a6a90
+> 	https://git.kernel.org/stable/c/0982fd6bf0b822876f2e93ec782c4c28a3f85535
+> 	https://git.kernel.org/stable/c/66fa3fcb474b2b892fe42d455a6f7ec5aaa98fb9
+> 	https://git.kernel.org/stable/c/954a4a87814465ad61cc97c1cd3de1525baaaf07
+> 	https://git.kernel.org/stable/c/1c811d403afd73f04bde82b83b24c754011bd0e8
