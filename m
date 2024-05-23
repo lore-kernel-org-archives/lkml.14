@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501E1128365;
-	Thu, 23 May 2024 21:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EB912836E
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 21:23:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716499401; cv=none; b=mUjoUCtOZarZHbpKbwfLR9cNLK8/gL600VtBexyZxhFzn9f8aOtIGaEhbiD4YaVIY/sialBMk4fNpDwd2ipEzM9nTzzWFX1bTTQHJ7SASQnSss6tFEHHWb1ziQw8vYRMUVjCivshXzl7HNGiFPipT7G9VT/7wGJFbzDPiK/f7JI=
+	t=1716499401; cv=none; b=aRQu8WE64kNUyYbX5gzS7OOvefXSlXYZMnJzaKQmLkwPbMrqW/HcMOoreILZDVGn6npAndndF+QnJATANr53QB+E1qjJ7lGYy1zOvb61SkfMsHPqjACTfWEVLaY+gvhve/doGjgcMEnkVJeZ/5ZlMbmE+PdC2tMLHWPuUVYBFUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716499401; c=relaxed/simple;
-	bh=1Wy8rfVh+tcDx6TeVrWroMHMwycF9RAXCxOu1SCaAl4=;
+	bh=b2rFVhUNdELSgple//yRUVKiuIFpt3ZKpCvrhw8yifE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=eE3HlPPlD3S0DoFqHij/xvwEQoZc6fTJQfo7Es2hRlWC3B79KaCn73rWiwW38yBkPqFuj+hCv6V/nzaWYk9iRUpxJMiGbiMjvngRIjyBURQLyuOe7nrv12oSwQCL+zrz0OpdRXaHbmqzez23NF8FfrOawrq0C9JdqmmrrPnybe4=
+	 Content-Type; b=tKqqqBcj5HIRxK3dwxnYciAYDpOhMu3WKeAdhdpiopfvDpVP3w6h5cUKBrM3wKbBqDq4chXRDhCFNYp5Txe7gIopMfRVm2l1WEfPqN9tCKKmMX5KJFOIyeCPxs83c77Q3MH/vWiQntH6BagdHwYxrju7WzIp3Zwn6rH8axFcr4E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8211C2BD10;
-	Thu, 23 May 2024 21:23:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47848C4AF1D;
+	Thu, 23 May 2024 21:23:21 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sAFuw-00000006l9h-308p;
-	Thu, 23 May 2024 17:24:06 -0400
-Message-ID: <20240523212406.575903016@goodmis.org>
+	id 1sAFux-00000006lB9-0nme;
+	Thu, 23 May 2024 17:24:07 -0400
+Message-ID: <20240523212407.052080067@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 23 May 2024 17:23:02 -0400
+Date: Thu, 23 May 2024 17:23:05 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -28,8 +28,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Masahiro Yamada <masahiroy@kernel.org>,
- stable@vger.kernel.org
-Subject: [for-linus][PATCH 4/8] tracefs: Clear EVENT_INODE flag in tracefs_drop_inode()
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [for-linus][PATCH 7/8] eventfs: Cleanup permissions in creation of inodes
 References: <20240523212258.883756004@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,93 +41,181 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-When the inode is being dropped from the dentry, the TRACEFS_EVENT_INODE
-flag needs to be cleared to prevent a remount from calling
-eventfs_remount() on the tracefs_inode private data. There's a race
-between the inode is dropped (and the dentry freed) to where the inode is
-actually freed. If a remount happens between the two, the eventfs_inode
-could be accessed after it is freed (only the dentry keeps a ref count on
-it).
+The permissions being set during the creation of the inodes was updating
+eventfs_inode attributes as well. Those attributes should only be touched
+by the setattr or remount operations, not during the creation of inodes.
+The eventfs_inode attributes should only be used to set the inodes and
+should not be modified during the inode creation.
 
-Currently the TRACEFS_EVENT_INODE flag is cleared from the dentry iput()
-function. But this is incorrect, as it is possible that the inode has
-another reference to it. The flag should only be cleared when the inode is
-really being dropped and has no more references. That happens in the
-drop_inode callback of the inode, as that gets called when the last
-reference of the inode is released.
+Simplify the code and fix the situation by:
 
-Remove the tracefs_d_iput() function and move its logic to the more
-appropriate tracefs_drop_inode() callback function.
+ 1) Removing the eventfs_find_events() and doing a simple lookup for
+    the events descriptor in eventfs_get_inode()
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240523051539.908205106@goodmis.org
+ 2) Remove update_events_attr() as the attributes should only be used
+    to update the inode and should not be modified here.
 
-Cc: stable@vger.kernel.org
+ 3) Add update_inode_attr() that uses the attributes to determine what
+    the inode permissions should be.
+
+ 4) As the parent_inode of the eventfs_root_inode structure is no longer
+    needed, remove it.
+
+Now on creation, the inode gets the proper permissions without causing
+side effects to the ei->attr field.
+
+Link: https://lore.kernel.org/lkml/20240522165031.944088388@goodmis.org
+
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Fixes: baa23a8d4360d ("tracefs: Reset permissions on remount if permissions are options")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/inode.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+ fs/tracefs/event_inode.c | 90 ++++++++++------------------------------
+ 1 file changed, 23 insertions(+), 67 deletions(-)
 
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 9252e0d78ea2..7c29f4afc23d 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -426,10 +426,26 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
- 	return 0;
- }
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index f32c6f7eb29f..320e49056d3a 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -37,7 +37,6 @@ static DEFINE_MUTEX(eventfs_mutex);
  
-+static int tracefs_drop_inode(struct inode *inode)
-+{
-+	struct tracefs_inode *ti = get_tracefs(inode);
-+
-+	/*
-+	 * This inode is being freed and cannot be used for
-+	 * eventfs. Clear the flag so that it doesn't call into
-+	 * eventfs during the remount flag updates. The eventfs_inode
-+	 * gets freed after an RCU cycle, so the content will still
-+	 * be safe if the iteration is going on now.
-+	 */
-+	ti->flags &= ~TRACEFS_EVENT_INODE;
-+
-+	return 1;
-+}
-+
- static const struct super_operations tracefs_super_operations = {
- 	.alloc_inode    = tracefs_alloc_inode,
- 	.free_inode     = tracefs_free_inode,
--	.drop_inode     = generic_delete_inode,
-+	.drop_inode     = tracefs_drop_inode,
- 	.statfs		= simple_statfs,
- 	.show_options	= tracefs_show_options,
+ struct eventfs_root_inode {
+ 	struct eventfs_inode		ei;
+-	struct inode			*parent_inode;
+ 	struct dentry			*events_dir;
  };
-@@ -455,22 +471,7 @@ static int tracefs_d_revalidate(struct dentry *dentry, unsigned int flags)
- 	return !(ei && ei->is_freed);
+ 
+@@ -229,27 +228,6 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	return ret;
  }
  
--static void tracefs_d_iput(struct dentry *dentry, struct inode *inode)
+-static void update_events_attr(struct eventfs_inode *ei, struct super_block *sb)
 -{
--	struct tracefs_inode *ti = get_tracefs(inode);
+-	struct eventfs_root_inode *rei;
+-	struct inode *parent;
 -
--	/*
--	 * This inode is being freed and cannot be used for
--	 * eventfs. Clear the flag so that it doesn't call into
--	 * eventfs during the remount flag updates. The eventfs_inode
--	 * gets freed after an RCU cycle, so the content will still
--	 * be safe if the iteration is going on now.
--	 */
--	ti->flags &= ~TRACEFS_EVENT_INODE;
+-	rei = get_root_inode(ei);
+-
+-	/* Use the parent inode permissions unless root set its permissions */
+-	parent = rei->parent_inode;
+-
+-	if (rei->ei.attr.mode & EVENTFS_SAVE_UID)
+-		ei->attr.uid = rei->ei.attr.uid;
+-	else
+-		ei->attr.uid = parent->i_uid;
+-
+-	if (rei->ei.attr.mode & EVENTFS_SAVE_GID)
+-		ei->attr.gid = rei->ei.attr.gid;
+-	else
+-		ei->attr.gid = parent->i_gid;
 -}
 -
- static const struct dentry_operations tracefs_dentry_operations = {
--	.d_iput = tracefs_d_iput,
- 	.d_revalidate = tracefs_d_revalidate,
- 	.d_release = tracefs_d_release,
- };
+ static const struct inode_operations eventfs_dir_inode_operations = {
+ 	.lookup		= eventfs_root_lookup,
+ 	.setattr	= eventfs_set_attr,
+@@ -321,60 +299,30 @@ void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
+ 			  update_gid, ti->vfs_inode.i_gid, 0);
+ }
+ 
+-/* Return the evenfs_inode of the "events" directory */
+-static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
++static void update_inode_attr(struct inode *inode, umode_t mode,
++			      struct eventfs_attr *attr, struct eventfs_root_inode *rei)
+ {
+-	struct eventfs_inode *ei;
+-
+-	do {
+-		// The parent is stable because we do not do renames
+-		dentry = dentry->d_parent;
+-		// ... and directories always have d_fsdata
+-		ei = dentry->d_fsdata;
+-
+-		/*
+-		 * If the ei is being freed, the ownership of the children
+-		 * doesn't matter.
+-		 */
+-		if (ei->is_freed)
+-			return NULL;
+-
+-		// Walk upwards until you find the events inode
+-	} while (!ei->is_events);
+-
+-	update_events_attr(ei, dentry->d_sb);
+-
+-	return ei;
+-}
+-
+-static void update_inode_attr(struct dentry *dentry, struct inode *inode,
+-			      struct eventfs_attr *attr, umode_t mode)
+-{
+-	struct eventfs_inode *events_ei = eventfs_find_events(dentry);
+-
+-	if (!events_ei)
+-		return;
+-
+-	inode->i_mode = mode;
+-	inode->i_uid = events_ei->attr.uid;
+-	inode->i_gid = events_ei->attr.gid;
+-
+-	if (!attr)
+-		return;
+-
+-	if (attr->mode & EVENTFS_SAVE_MODE)
++	if (attr && attr->mode & EVENTFS_SAVE_MODE)
+ 		inode->i_mode = attr->mode & EVENTFS_MODE_MASK;
++	else
++		inode->i_mode = mode;
+ 
+-	if (attr->mode & EVENTFS_SAVE_UID)
++	if (attr && attr->mode & EVENTFS_SAVE_UID)
+ 		inode->i_uid = attr->uid;
++	else
++		inode->i_uid = rei->ei.attr.uid;
+ 
+-	if (attr->mode & EVENTFS_SAVE_GID)
++	if (attr && attr->mode & EVENTFS_SAVE_GID)
+ 		inode->i_gid = attr->gid;
++	else
++		inode->i_gid = rei->ei.attr.gid;
+ }
+ 
+ static struct inode *eventfs_get_inode(struct dentry *dentry, struct eventfs_attr *attr,
+ 				       umode_t mode,  struct eventfs_inode *ei)
+ {
++	struct eventfs_root_inode *rei;
++	struct eventfs_inode *pei;
+ 	struct tracefs_inode *ti;
+ 	struct inode *inode;
+ 
+@@ -386,7 +334,16 @@ static struct inode *eventfs_get_inode(struct dentry *dentry, struct eventfs_att
+ 	ti->private = ei;
+ 	ti->flags |= TRACEFS_EVENT_INODE;
+ 
+-	update_inode_attr(dentry, inode, attr, mode);
++	/* Find the top dentry that holds the "events" directory */
++	do {
++		dentry = dentry->d_parent;
++		/* Directories always have d_fsdata */
++		pei = dentry->d_fsdata;
++	} while (!pei->is_events);
++
++	rei = get_root_inode(pei);
++
++	update_inode_attr(inode, mode, attr, rei);
+ 
+ 	return inode;
+ }
+@@ -823,7 +780,6 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	// Note: we have a ref to the dentry from tracefs_start_creating()
+ 	rei = get_root_inode(ei);
+ 	rei->events_dir = dentry;
+-	rei->parent_inode = d_inode(dentry->d_sb->s_root);
+ 
+ 	ei->entries = entries;
+ 	ei->nr_entries = size;
 -- 
 2.43.0
 
