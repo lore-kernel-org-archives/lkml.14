@@ -1,317 +1,145 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15F413B590
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 06:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D9D13B590
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 06:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716445712; cv=none; b=LRQd8wp3P7o9GejfrDCf7KLQGSNpCF7nWsiHRxukljI6Ti83W8BVnOlqGuNFUjyDvV1DwubGBuxYlKSl/kCL/EKx9d+yXvNzYZODfLodRPmdAuVMLb3iFhXT79jHzCwoshMKwP3udeMZvdRZIqo0wWmkaC+Xa2Aen44D4fel8bQ=
+	t=1716445767; cv=none; b=rMghx61RuoRMZfOM85Tyu7Q9E+zuf8Ge8N/dNltcBmno6LTJAm7t93kjv8a4u9Uh5XTRSF2SMW6FkTuZCyJZIupr4zYraVwBMgoK0jcgSDe1vM4m5MynahCyAakaIFTaTzQw0MoErwSPWx+sMaGpJSR66Bs59HFixk9yys1pIEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716445712; c=relaxed/simple;
-	bh=KIxzpIFnRKcTzqQElwlPHmL8mo3UZagxzLSKBFfp4bI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GYtMZnz46s+4PHaDHkQmZjAi4b5HkD98I3VIINnVhxC+QlDz4NcBBu+0c533M/SzjqOR6xKuby5r9+D8jY/RWHAf9EjsszAoVCxI8C1U3mW1nd7jYwS20GgNed4nQslo8czBRzG23maTkHHLmE7Fr+w7Ki9ngPCz+uYKg1IheHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yF0+EBx1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XgXcXCrB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yF0+EBx1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XgXcXCrB; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yF0+EBx1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XgXcXCrB";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yF0+EBx1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XgXcXCrB"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A278E221D3;
-	Thu, 23 May 2024 06:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716445708; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fRA7qudfidtdFLBOO+aiAH8e3TprfZSLlGsNWUXprk=;
-	b=yF0+EBx1wURqRhSPSctGLXxt9H6M+3mnkghA/pWP7OQ4UKfBk31g/qOFqYD6NDYYnN4qTl
-	DR6FRAT2CWcaJ4e3cAVaICp7QyR5MbQfR9RQYf7X+Iwc3P+RD3FaFb+7p0kxsqZdvLRLWm
-	22Syho+eZo+O/AEvalcb2XZIXTnA7UA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716445708;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fRA7qudfidtdFLBOO+aiAH8e3TprfZSLlGsNWUXprk=;
-	b=XgXcXCrBNHUOgHko9wtgsxiQos1Q+lG4t2Yv7YrC1fEEWNmHBirvYWZN9qGLbzbgrazmL+
-	NM+5zwWQRBG/0JDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yF0+EBx1;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=XgXcXCrB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716445708; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fRA7qudfidtdFLBOO+aiAH8e3TprfZSLlGsNWUXprk=;
-	b=yF0+EBx1wURqRhSPSctGLXxt9H6M+3mnkghA/pWP7OQ4UKfBk31g/qOFqYD6NDYYnN4qTl
-	DR6FRAT2CWcaJ4e3cAVaICp7QyR5MbQfR9RQYf7X+Iwc3P+RD3FaFb+7p0kxsqZdvLRLWm
-	22Syho+eZo+O/AEvalcb2XZIXTnA7UA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716445708;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fRA7qudfidtdFLBOO+aiAH8e3TprfZSLlGsNWUXprk=;
-	b=XgXcXCrBNHUOgHko9wtgsxiQos1Q+lG4t2Yv7YrC1fEEWNmHBirvYWZN9qGLbzbgrazmL+
-	NM+5zwWQRBG/0JDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 38BAB13A6B;
-	Thu, 23 May 2024 06:28:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 3Y3UAQziTmZZLAAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 23 May 2024 06:28:28 +0000
-Message-ID: <60758e4d-4bdc-4a99-a151-a9009a8a460f@suse.de>
-Date: Thu, 23 May 2024 08:28:27 +0200
+	s=arc-20240116; t=1716445767; c=relaxed/simple;
+	bh=J5ZpVyVAUpg4pyUCflJLXJxbcwWcZMn/drjfnI+AD/g=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HHsDW7S9xxZECKlcnIEkqQr3U7SJmW3pClTWDzRqQ6NvDTkR+/dFcZLlcaTUb3HAqT5DLIN73wykv/8bnFXi0eaTF66dWjVw89m/mTYrgHhwyeyY6q2HDFT3+ZZbrtemxUYNuxWdv0kFwzq/S/JQaLuqvO5Jgtyg7IQQViqoV5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-36d98ad0c7eso16395765ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:29:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716445765; x=1717050565;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n8NprSr1ChIB9sOY5kSoYkl/O9cUSM9fplRC4s3tYng=;
+        b=gCj1xIuDM3WjQIZnB/UrM0XtX5Urso7kkaHHctwdf/fIFuq3y10pRq5MAZeJPUweMZ
+         VGU3/zFkAIAPnASlvci2kI0vRBcTu559hpt0aZ+/nBiGVDLoeMCrq1WzSYCEfNlUfnCx
+         KLkv9QlOZ+oA7u0UHawqyEunNoV0Wl0Qr0JaJItXXNHvcbVFcBs6ibbnk/73/+7bWLFt
+         iLIb/OpYjCCe/8DZWq6l1+/pMr+WIOSy64Gx5AoYD72eGiUY/S+8VMpJFF8bKPJaih5+
+         8FTvbIPMsczcWIxfs5z0TazClfsxL8t3hCq14YgQ6rMJcpPVeUqFrmGRV7macglmmRse
+         1uYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCpJXyrKStJfpmA+ULJQYRZUnBBF+/kNbbNc7CTDFf4rVk8TRvbipEL9nXMSYZGWGhYmK54wr1zL0XSLr9NkBPQhHggpHdo7i2tA/C
+X-Gm-Message-State: AOJu0YzfXCFLsfHnmCCMkt4Z2ip9ZJgF/Tv0eLGgIivN24QSlxRV60XI
+	Xur4HYJJQLZ+MJb3T04qi95OJlTKv3DmR67BJdjeEa6P5VRnO/2orXMSny0flEHxrmiCAioNoBo
+	nLHheoCDl3e2LB5tQDW6KVCKD9CLEuqUtL6y57nMyw4ab1ivdEeNt50E=
+X-Google-Smtp-Source: AGHT+IHN2y3KnTn3x8xNNPvRVm6HbPg02D7Zv4zP0a7ndXO9ZLfhjbbhLqpnCoZk2d+jCz3iQrBEgNnjqhB9GQli9lr+icrLbTqa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] nvme: multipath: Implemented new iopolicy
- "queue-depth"
-Content-Language: en-US
-To: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
- John Meneghini <jmeneghi@redhat.com>, "emilne@redhat.com" <emilne@redhat.com>
-Cc: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- "hch@lst.de" <hch@lst.de>, "sagi@grimberg.me" <sagi@grimberg.me>,
- "kbusch@kernel.org" <kbusch@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "jrani@purestorage.com" <jrani@purestorage.com>,
- "randyj@purestorage.com" <randyj@purestorage.com>,
- "hare@kernel.org" <hare@kernel.org>
-References: <20240522165406.702362-1-jmeneghi@redhat.com>
- <935f7e10-ccb4-4891-8f29-84909c061e7a@nvidia.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <935f7e10-ccb4-4891-8f29-84909c061e7a@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.50
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: A278E221D3
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
+X-Received: by 2002:a05:6e02:1d19:b0:36f:4a03:6406 with SMTP id
+ e9e14a558f8ab-371faf4c83bmr3593655ab.5.1716445765033; Wed, 22 May 2024
+ 23:29:25 -0700 (PDT)
+Date: Wed, 22 May 2024 23:29:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000019f4c00619192c05@google.com>
+Subject: [syzbot] [ext4?] WARNING in __fortify_report
+From: syzbot <syzbot+50835f73143cc2905b9e@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/23/24 06:29, Chaitanya Kulkarni wrote:
-> On 5/22/24 09:54, John Meneghini wrote:
->> From: "Ewan D. Milne" <emilne@redhat.com>
->>
->> The round-robin path selector is inefficient in cases where there is a
->> difference in latency between paths.  In the presence of one or more
->> high latency paths the round-robin selector continues to use the high
->> latency path equally. This results in a bias towards the highest latency
->> path and can cause a significant decrease in overall performance as IOs
->> pile on the highest latency path. This problem is acute with NVMe-oF
->> controllers.
->>
->> The queue-depth policy instead sends I/O requests down the path with the
->> least amount of requests in its request queue. Paths with lower latency
->> will clear requests more quickly and have less requests in their queues
->> compared to higher latency paths. The goal of this path selector is to
->> make more use of lower latency paths which will bring down overall IO
->> latency and increase throughput and performance.
->>
->> Signed-off-by: Thomas Song <tsong@purestorage.com>
->> [emilne: patch developed by Thomas Song @ Pure Storage, fixed whitespace
->>         and compilation warnings, updated MODULE_PARM description, and
->>         fixed potential issue with ->current_path[] being used]
->> Signed-off-by: Ewan D. Milne <emilne@redhat.com>
->> [jmeneghi: vairious changes and improvements, addressed review comments]
->> Signed-off-by: John Meneghini <jmeneghi@redhat.com>
->> Link: https://lore.kernel.org/linux-nvme/20240509202929.831680-1-jmeneghi@redhat.com/
->> Tested-by: Marco Patalano <mpatalan@redhat.com>
->> Reviewed-by: Randy Jennings <randyj@purestorage.com>
->> Tested-by: Jyoti Rani <jrani@purestorage.com>
->> ---
-> 
-> [...]
-> 
->> +static struct nvme_ns *nvme_queue_depth_path(struct nvme_ns_head *head)
->> +{
->> +	struct nvme_ns *best_opt = NULL, *best_nonopt = NULL, *ns;
->> +	unsigned int min_depth_opt = UINT_MAX, min_depth_nonopt = UINT_MAX;
->> +	unsigned int depth;
->> +
->> +	list_for_each_entry_rcu(ns, &head->list, siblings) {
->> +		if (nvme_path_is_disabled(ns))
->> +			continue;
->> +
->> +		depth = atomic_read(&ns->ctrl->nr_active);
->> +
->> +		switch (ns->ana_state) {
->> +		case NVME_ANA_OPTIMIZED:
->> +			if (depth < min_depth_opt) {
->> +				min_depth_opt = depth;
->> +				best_opt = ns;
->> +			}
->> +			break;
->> +
-> 
-> nit:- no need to add white line needed after break above ?
-> 
->> +		case NVME_ANA_NONOPTIMIZED:
->> +			if (depth < min_depth_nonopt) {
->> +				min_depth_nonopt = depth;
->> +				best_nonopt = ns;
->> +			}
->> +			break;
->> +		default:
->> +			break;
->> +		}
->> +
->> +		if (min_depth_opt == 0)
->> +			return best_opt;
->> +	}
->> +
->> +	return best_opt ? best_opt : best_nonopt;
->> +}
->> +
->>    
-> 
-> [...]
-> 
->> @@ -800,6 +860,29 @@ static ssize_t nvme_subsys_iopolicy_show(struct device *dev,
->>    			  nvme_iopolicy_names[READ_ONCE(subsys->iopolicy)]);
->>    }
->>    
->> +static void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy)
-> 
-> nit:- overly long line, as rest of the file is < 80 char par line ?
-> 
->> +{
->> +	struct nvme_ctrl *ctrl;
->> +	int old_iopolicy = READ_ONCE(subsys->iopolicy);
->> +
->> +	if (old_iopolicy == iopolicy)
->> +		return;
->> +
->> +	WRITE_ONCE(subsys->iopolicy, iopolicy);
->> +
->> +	/* iopolicy changes reset the counters and clear the mpath by design */
->> +	mutex_lock(&nvme_subsystems_lock);
->> +	list_for_each_entry(ctrl, &subsys->ctrls, subsys_entry) {
->> +		atomic_set(&ctrl->nr_active, 0);
->> +		nvme_mpath_clear_ctrl_paths(ctrl);
->> +	}
->> +	mutex_unlock(&nvme_subsystems_lock);
->> +
->> +	pr_notice("%s: changed from %s to %s for subsysnqn %s\n", __func__,
->> +			nvme_iopolicy_names[old_iopolicy], nvme_iopolicy_names[iopolicy],
-> 
-> nit: overly long line above as rest of the file is < 80 char ...
-> 
-> As far as I remember, most of the nvme code uses pr_info(), but if
-> decision has been made to use pr_notice() for a specific reason then
-> please ignore this comment.
-> 
->> +			subsys->subnqn);
->> +}
->> +
-> 
-> [...]
-> 
->> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
->> index fc31bd340a63..fa3833d88a85 100644
->> --- a/drivers/nvme/host/nvme.h
->> +++ b/drivers/nvme/host/nvme.h
->> @@ -50,6 +50,8 @@ extern struct workqueue_struct *nvme_wq;
->>    extern struct workqueue_struct *nvme_reset_wq;
->>    extern struct workqueue_struct *nvme_delete_wq;
->>    
->> +extern struct mutex nvme_subsystems_lock;
->> +
->>    /*
->>     * List of workarounds for devices that required behavior not specified in
->>     * the standard.
->> @@ -195,6 +197,7 @@ enum {
->>    	NVME_REQ_CANCELLED		= (1 << 0),
->>    	NVME_REQ_USERCMD		= (1 << 1),
->>    	NVME_MPATH_IO_STATS		= (1 << 2),
->> +	NVME_MPATH_CNT_ACTIVE	= (1 << 3),
-> 
-> nit:- I think we need to align above line to rest of the members in
->         this enum ...
-> 
->>    };
->>    
->>    static inline struct nvme_request *nvme_req(struct request *req)
->> @@ -359,6 +362,7 @@ struct nvme_ctrl {
->>    	size_t ana_log_size;
->>    	struct timer_list anatt_timer;
->>    	struct work_struct ana_work;
->> +	atomic_t nr_active;
->>    #endif
->>    
->>    #ifdef CONFIG_NVME_HOST_AUTH
->> @@ -407,6 +411,7 @@ static inline enum nvme_ctrl_state nvme_ctrl_state(struct nvme_ctrl *ctrl)
->>    enum nvme_iopolicy {
->>    	NVME_IOPOLICY_NUMA,
->>    	NVME_IOPOLICY_RR,
->> +	NVME_IOPOLICY_QD,
->>    };
->>    
->>    struct nvme_subsystem {
-> 
-> apart from the few nits patch does looks good to me.
-> 
-> Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-> 
-> not a blocker to merge this patch, but we need a blktests for this code
-> in nvme
-> category ...
-> 
-As presented at LSF by Daniel; ALUA support (and, with that, multipath 
-support) is one of the topics to be implemented for blktests.
-And without that we can't have a meaningful QD test.
+Hello,
 
-Cheers,
+syzbot found the following issue on:
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+HEAD commit:    0450d2083be6 Merge tag '6.10-rc-smb-fix' of git://git.samb..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=152aa7d0980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=769d2e801ee872cc
+dashboard link: https://syzkaller.appspot.com/bug?extid=50835f73143cc2905b9e
+compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103cb2a4980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16502844980000
 
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/8ead8862021c/non_bootable_disk-0450d208.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/11a51fed42ca/vmlinux-0450d208.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1df7cb920c72/zImage-0450d208.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+50835f73143cc2905b9e@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 3004 at lib/string_helpers.c:1029 __fortify_report+0x6c/0x74 lib/string_helpers.c:1029
+strnlen: detected buffer overflow: 17 byte read of buffer size 16
+Modules linked in:
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+CPU: 0 PID: 3004 Comm: syz-executor296 Not tainted 6.9.0-syzkaller #0
+Hardware name: ARM-Versatile Express
+Call trace: 
+[<818df678>] (dump_backtrace) from [<818df774>] (show_stack+0x18/0x1c arch/arm/kernel/traps.c:256)
+ r7:00000000 r6:82622e04 r5:00000000 r4:81fe2534
+[<818df75c>] (show_stack) from [<818fcdd8>] (__dump_stack lib/dump_stack.c:88 [inline])
+[<818df75c>] (show_stack) from [<818fcdd8>] (dump_stack_lvl+0x54/0x7c lib/dump_stack.c:114)
+[<818fcd84>] (dump_stack_lvl) from [<818fce18>] (dump_stack+0x18/0x1c lib/dump_stack.c:123)
+ r5:00000000 r4:82860d18
+[<818fce00>] (dump_stack) from [<818e021c>] (panic+0x120/0x358 kernel/panic.c:347)
+[<818e00fc>] (panic) from [<80243d54>] (check_panic_on_warn kernel/panic.c:240 [inline])
+[<818e00fc>] (panic) from [<80243d54>] (print_tainted+0x0/0xa0 kernel/panic.c:235)
+ r3:8260c5c4 r2:00000001 r1:81fcb130 r0:81fd2d44
+ r7:8080fe7c
+[<80243ce0>] (check_panic_on_warn) from [<80243f48>] (__warn+0x7c/0x180 kernel/panic.c:693)
+[<80243ecc>] (__warn) from [<80244234>] (warn_slowpath_fmt+0x1e8/0x1f4 kernel/panic.c:726)
+ r8:00000009 r7:8202fe0c r6:df969db4 r5:836e6c00 r4:00000000
+[<80244050>] (warn_slowpath_fmt) from [<8080fe7c>] (__fortify_report+0x6c/0x74 lib/string_helpers.c:1029)
+ r10:8271c1c8 r9:00000005 r8:df969ec3 r7:8372e000 r6:00000000 r5:836be478
+ r4:82e27000
+[<8080fe10>] (__fortify_report) from [<818e9a40>] (__fortify_panic+0x10/0x14 lib/string_helpers.c:1036)
+[<818e9a30>] (__fortify_panic) from [<8062a3b0>] (strnlen include/linux/fortify-string.h:221 [inline])
+[<818e9a30>] (__fortify_panic) from [<8062a3b0>] (sized_strscpy include/linux/fortify-string.h:295 [inline])
+[<818e9a30>] (__fortify_panic) from [<8062a3b0>] (ext4_ioctl_getlabel fs/ext4/ioctl.c:1154 [inline])
+[<818e9a30>] (__fortify_panic) from [<8062a3b0>] (ext4_fileattr_get+0x0/0x78 fs/ext4/ioctl.c:1609)
+[<8062829c>] (__ext4_ioctl) from [<8062aaac>] (ext4_ioctl+0x10/0x14 fs/ext4/ioctl.c:1626)
+ r10:836e6c00 r9:00000005 r8:845e7900 r7:00000000 r6:845e7900 r5:00000000
+ r4:81009431
+[<8062aa9c>] (ext4_ioctl) from [<80518930>] (vfs_ioctl fs/ioctl.c:51 [inline])
+[<8062aa9c>] (ext4_ioctl) from [<80518930>] (do_vfs_ioctl fs/ioctl.c:861 [inline])
+[<8062aa9c>] (ext4_ioctl) from [<80518930>] (__do_sys_ioctl fs/ioctl.c:905 [inline])
+[<8062aa9c>] (ext4_ioctl) from [<80518930>] (sys_ioctl+0x134/0xda4 fs/ioctl.c:893)
+[<805187fc>] (sys_ioctl) from [<80200060>] (ret_fast_syscall+0x0/0x1c arch/arm/mm/proc-v7.S:67)
+Exception stack(0xdf969fa8 to 0xdf969ff0)
+9fa0:                   00000000 00000000 00000005 81009431 00000000 00000000
+9fc0: 00000000 00000000 0008e060 00000036 000f4240 00000000 00000001 00003a97
+9fe0: 7e98ac70 7e98ac60 00010764 0002e8c0
+ r10:00000036 r9:836e6c00 r8:8020029c r7:00000036 r6:0008e060 r5:00000000
+ r4:00000000
+Rebooting in 86400 seconds..
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
