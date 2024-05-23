@@ -1,123 +1,342 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97947128370;
-	Thu, 23 May 2024 23:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE629128813;
+	Thu, 23 May 2024 23:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716506193; cv=none; b=dmMPfyHO9TLYjl+tQe2b3strH5kzmIL09/l/wGLBW1cnmabb3baUXFUxX+MKaSUzzTL2zVpS3PEWr3fZd+yR8zSlSE1koPMSG/cAAiLWQaYBy7VuOQ9kka9iR/lqetvaNGFBFNK9J9Dfk/TklCTMwkkNHJJoVxhV/q3HPnIFZY4=
+	t=1716506215; cv=none; b=Nx9G17DRqfme55CxuCNy7aD0Houk54d3+UDU/eoWB4fDnisI3qk5U0gi7UgJhmuJ7n5Pu5R3UVGA7m7MsLhAnXrUub9IEZZg3fIcoKs7jA8VqfjSSCiNOg5mlNrC/uWQgdLSr24Z2uUCbwtq2WQXkUFGNary7SeIynWqzOZp3/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716506193; c=relaxed/simple;
-	bh=XeQr2Hm1vQXQNmSyZLKyMm3uuO5KI7MBdaPWr1RnyvI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nbHbwhhWSy/8B5t2GtjCWcgpCcO0dpm2wF+Z0adx1C+nPBAx/NVt3IZJ+0SiBAvSLrqLKRfqeILNljzu2ANgYEPk+DE9pugdIYBtU1pxFVqLDSX+dkPScS3pB7hOzeSPoTjmrZwAiSN4kIXn03ECWcNFycndg1JV3jH9MKZUE1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZZrh/A84; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1716506215; c=relaxed/simple;
+	bh=iInzZtl5DmousXS3xfA+CEeE4VY23v6nxCWdWAghjLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPRuqoVMHajyfTDfrSlKQtDj2a+sjTLmoWr2iOo2jUOqKMic3u8YzQdZ3X53QZ9sPmjf9jRVNzFQNB8PQQh2J6o3/1nh59z9jp8BlYZGUUzwx/3LAshi020ZaTXSprh5MjCCuXISsML21edgxK9HYaIYZBJQzxhJi0DOXeTvm1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=VmDDgdVI; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZZrh/A84"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44NNFGa8035338;
-	Thu, 23 May 2024 18:15:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716506117;
-	bh=gk/P2ZbNHP1gliAkrbJNYYJwl8NuEUMORCCZtnysE3k=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ZZrh/A84RvLcLdlprQXphcrnvLM2tkkaR7ASo5Jz8jJhDUsaO0dkj0B52eFvbNSEC
-	 4IF2HPub0K4U3hIiBfeqioIG3iP5A/kuq8QFcgbgdprkQVMVDhnvpc2i2t8V3Ppdjc
-	 VzRk9z6TiVnHqi2ZB4n8yL1yaDE4bHvNFibpb/P8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44NNFGw3116658
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 23 May 2024 18:15:16 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 23
- May 2024 18:15:16 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 23 May 2024 18:15:16 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44NNFGqO008143;
-	Thu, 23 May 2024 18:15:16 -0500
-From: Judith Mendez <jm@ti.com>
-To: Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        William Breathitt Gray <william.gray@linaro.org>
-CC: David Lechner <david@lechnology.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Nishanth Menon
-	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v2 4/8] arm64: dts: ti: k3-am62a-main: Add eQEP nodes
-Date: Thu, 23 May 2024 18:15:12 -0500
-Message-ID: <20240523231516.545085-5-jm@ti.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240523231516.545085-1-jm@ti.com>
-References: <20240523231516.545085-1-jm@ti.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VmDDgdVI"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DC702471;
+	Fri, 24 May 2024 01:16:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1716506198;
+	bh=iInzZtl5DmousXS3xfA+CEeE4VY23v6nxCWdWAghjLs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VmDDgdVINI1OzSfvVRBAj+7MKw8O2pZNA/G1BjXxXPYXulqs1Gn03nWyVOudTCSb1
+	 69Fc4rR6HHybg3Ve5sspfutGtklPfdKGq211nFCHiDL0ExiiDQ4R8SJW0QccMoGmeO
+	 8cDtTD59Cy8kOMye0NR/FgLODYwKH6B8QG8wS6oY=
+Date: Fri, 24 May 2024 02:16:41 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Alexandru Ardelean <alexandru.ardelean@analog.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: Add bindings for the Analog Devices
+ ADP5585
+Message-ID: <20240523231641.GJ6640@pendragon.ideasonboard.com>
+References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
+ <20240520195942.11582-3-laurent.pinchart@ideasonboard.com>
+ <11a383f3-a6db-4de7-a5f8-2938c69e98fc@kernel.org>
+ <20240521194309.GA8863@pendragon.ideasonboard.com>
+ <075f5a03-f288-4dfb-a293-3a6c0675881b@kernel.org>
+ <20240522072224.GC8863@pendragon.ideasonboard.com>
+ <92e85dff-ad02-4673-a625-2248b249c262@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <92e85dff-ad02-4673-a625-2248b249c262@kernel.org>
 
-Add eQEP device tree nodes 0-2 for AM62A7 SoC.
+Hi Krzysztof,
 
-Signed-off-by: Judith Mendez <jm@ti.com>
----
-Changes since v1:
-- Fix eQEP DT node to use new ti,am62-eqep compatible
----
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 27 +++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+(There's a question for the GPIO and PWM maintainers below)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-index aa1e057082f08..4537417faa2d4 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-@@ -905,6 +905,33 @@ ecap2: pwm@23120000 {
- 		status = "disabled";
- 	};
- 
-+	eqep0: counter@23200000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23200000 0x00 0x100>;
-+		power-domains = <&k3_pds 59 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 59 0>;
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
+On Wed, May 22, 2024 at 09:40:02AM +0200, Krzysztof Kozlowski wrote:
+> On 22/05/2024 09:22, Laurent Pinchart wrote:
+> > On Wed, May 22, 2024 at 08:57:56AM +0200, Krzysztof Kozlowski wrote:
+> >> On 21/05/2024 21:43, Laurent Pinchart wrote:
+> >>> On Tue, May 21, 2024 at 09:05:50PM +0200, Krzysztof Kozlowski wrote:
+> >>>> On 20/05/2024 21:59, Laurent Pinchart wrote:
+> >>>>> The ADP5585 is a 10/11 input/output port expander with a built in keypad
+> >>>>> matrix decoder, programmable logic, reset generator, and PWM generator.
+> >>>>> These bindings model the device as an MFD, and support the GPIO expander
+> >>>>> and PWM functions.
+> >>>>>
+> >>>>> These bindings support the GPIO and PWM functions.
+> >>>>>
+> >>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>>>> ---
+> >>>>> I've limited the bindings to GPIO and PWM as I lack hardware to design,
+> >>>>> implement and test the rest of the features the chip supports.
+> >>>>> ---
+> >>>>>  .../bindings/gpio/adi,adp5585-gpio.yaml       |  36 ++++++
+> >>>>>  .../devicetree/bindings/mfd/adi,adp5585.yaml  | 117 ++++++++++++++++++
+> >>>>>  .../bindings/pwm/adi,adp5585-pwm.yaml         |  35 ++++++
+> >>>>>  MAINTAINERS                                   |   7 ++
+> >>>>>  4 files changed, 195 insertions(+)
+> >>>>>  create mode 100644 Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+> >>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> >>>>>  create mode 100644 Documentation/devicetree/bindings/pwm/adi,adp5585-pwm.yaml
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+> >>>>> new file mode 100644
+> >>>>> index 000000000000..210e4d53e764
+> >>>>> --- /dev/null
+> >>>>> +++ b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+> >>>>> @@ -0,0 +1,36 @@
+> >>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>>>> +%YAML 1.2
+> >>>>> +---
+> >>>>> +$id: http://devicetree.org/schemas/gpio/adi,adp5585-gpio.yaml#
+> >>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>>> +
+> >>>>> +title: Analog Devices ADP5585 GPIO Expander
+> >>>>> +
+> >>>>> +maintainers:
+> >>>>> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>>>> +
+> >>>>> +description: |
+> >>>>> +  The Analog Devices ADP5585 has up to 11 GPIOs represented by a "gpio" child
+> >>>>> +  node of the parent MFD device. See
+> >>>>> +  Documentation/devicetree/bindings/mfd/adi,adp5585.yaml for further details as
+> >>>>> +  well as an example.
+> >>>>> +
+> >>>>> +properties:
+> >>>>> +  compatible:
+> >>>>> +    const: adi,adp5585-gpio
+> >>>>> +
+> >>>>> +  gpio-controller: true
+> >>>>> +
+> >>>>> +  '#gpio-cells':
+> >>>>> +    const: 2
+> >>>>> +
+> >>>>> +  gpio-reserved-ranges: true
+> >>>>
+> >>>> There are no resources here, so new compatible is not really warranted.
+> >>>> Squash the node into parent.
+> >>>
+> >>> Child nodes seem (to me) to be the standard way to model functions in
+> >>> MFD devices. Looking at mfd_add_device(), for OF-based systems, the
+> >>> function iterates over child nodes. I don't mind going a different
+> >>
+> >> Only to assign of node, which could be skipped as well.
+> > 
+> > It has to be assigned somehow, otherwise the GPIO and PWM lookups won't
+> > work. That doesn't have to be done in mfd_add_device() though, it can
+> > also be done manually by the driver. Looking at the example you gave,
+> > cs42l43_pin_probe() handles that assignment. I would have considered
+> > that a bit of a hack, but if that's your preferred approach, I'm fine
+> > with it. Could you confirm you're OK with that ?
+> 
+> I am fine with the drivers doing that. It's not a hack, for all
+> sub-devices (e.g. also auxiliary bus) you won't have automatic of_node
+> assignment.
+
+I gave this a try, and here's what I came up with to drop the compatible
+string. Please ignore for a moment the fact that the child nodes are
+still there, that's an orthogonal question which I can address
+separately. What I would like is feedback on how the OF nodes are
+handled.
+
+diff --git a/drivers/gpio/gpio-adp5585.c b/drivers/gpio/gpio-adp5585.c
+index 9696a4cdcfc1..8480ceef05ce 100644
+--- a/drivers/gpio/gpio-adp5585.c
++++ b/drivers/gpio/gpio-adp5585.c
+@@ -174,6 +174,7 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
+ 	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
+ 	struct adp5585_gpio_dev *adp5585_gpio;
+ 	struct device *dev = &pdev->dev;
++	struct device_node *node;
+ 	struct gpio_chip *gc;
+ 	int ret;
+
+@@ -187,6 +188,13 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
+
+ 	mutex_init(&adp5585_gpio->lock);
+
++	node = of_get_child_by_name(dev->parent->of_node, "gpio");
++	if (!node)
++		return dev_err_probe(dev, -ENXIO, "'gpio' child node not found\n");
 +
-+	eqep1: counter@23210000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23210000 0x00 0x100>;
-+		power-domains = <&k3_pds 60 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 60 0>;
-+		interrupts = <GIC_SPI 117 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
++	dev->of_node = node;
++	dev->fwnode = &node->fwnode;
 +
-+	eqep2: counter@23220000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23220000 0x00 0x100>;
-+		power-domains = <&k3_pds 62 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 62 0>;
-+		interrupts = <GIC_SPI 118 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
+ 	gc = &adp5585_gpio->gpio_chip;
+ 	gc->parent = dev;
+ 	gc->direction_input = adp5585_gpio_direction_input;
+@@ -204,6 +212,9 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
+ 	ret = devm_gpiochip_add_data(&pdev->dev, &adp5585_gpio->gpio_chip,
+ 				     adp5585_gpio);
+ 	if (ret) {
++		of_node_put(dev->of_node);
++		dev->of_node = NULL;
++		dev->fwnode = NULL;
+ 		mutex_destroy(&adp5585_gpio->lock);
+ 		return dev_err_probe(&pdev->dev, ret, "failed to add GPIO chip\n");
+ 	}
+@@ -215,6 +226,10 @@ static void adp5585_gpio_remove(struct platform_device *pdev)
+ {
+ 	struct adp5585_gpio_dev *adp5585_gpio = platform_get_drvdata(pdev);
+
++	of_node_put(pdev->dev.of_node);
++	pdev->dev.of_node = NULL;
++	pdev->dev.fwnode = NULL;
 +
- 	mcasp0: audio-controller@2b00000 {
- 		compatible = "ti,am33xx-mcasp-audio";
- 		reg = <0x00 0x02b00000 0x00 0x2000>,
+ 	mutex_destroy(&adp5585_gpio->lock);
+ }
+
+diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
+index e39a6ea5f794..3b190567ea0b 100644
+--- a/drivers/pwm/pwm-adp5585.c
++++ b/drivers/pwm/pwm-adp5585.c
+@@ -146,6 +146,8 @@ static const struct pwm_ops adp5585_pwm_ops = {
+ static int adp5585_pwm_probe(struct platform_device *pdev)
+ {
+ 	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
++	struct device *dev = &pdev->dev;
++	struct device_node *node;
+ 	struct pwm_chip *chip;
+ 	int ret;
+
+@@ -153,16 +155,34 @@ static int adp5585_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+
++	node = of_get_child_by_name(dev->parent->of_node, "pwm");
++	if (!node)
++		return dev_err_probe(dev, -ENXIO, "'pwm' child node not found\n");
++
++	dev->of_node = node;
++	dev->fwnode = &node->fwnode;
++
+ 	pwmchip_set_drvdata(chip, adp5585->regmap);
+ 	chip->ops = &adp5585_pwm_ops;
+
+ 	ret = devm_pwmchip_add(&pdev->dev, chip);
+-	if (ret)
++	if (ret) {
++		of_node_put(dev->of_node);
++		dev->of_node = NULL;
++		dev->fwnode = NULL;
+ 		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
++	}
+
+ 	return 0;
+ }
+
++static void adp5585_pwm_remove(struct platform_device *pdev)
++{
++	of_node_put(pdev->dev.of_node);
++	pdev->dev.of_node = NULL;
++	pdev->dev.fwnode = NULL;
++}
++
+ static struct platform_driver adp5585_pwm_driver = {
+ 	.driver	= {
+ 		.name = "adp5585-pwm",
+
+Is this acceptable ? I'm a bit concerned about poking the internals of
+struct device directly from drivers.
+
+I have also refrained from setting fnode->dev to point back to the
+device as fone by cs42l43_pin_probe(), as a comment in struct
+fwnode_handle indicates that the dev field is for device links only and
+shouldn't be touched by anything else. I'm not sure if I should set it.
+
+> >>> routes, could you indicate what you have in mind, perhaps pointing to an
+> >>> existing driver as an example ?
+> >>
+> >> Most of them? OK, let's take the last added driver in MFD directory:
+> >> cirrus,cs42l43
+> >> It has three children and only two nodes, because only these two devices
+> >> actually need/use/benefit the subnodes.
+> > 
+> > Still trying to understand what bothers you here, is it the child nodes,
+> > or the fact that they have a compatible string and are documented in a
+> > separate binding ? Looking at the cirrus,cs42l43 bindings and the
+> 
+> What bothers me (and as expressed in many reviews by us) is representing
+> driver structure directly in DT. People model DT based how their Linux
+> drivers are represented. I don't care about driver stuff here, but DT/DTS.
+
+DT models the hardware as seen from a software point of view. It
+shouldn't reflect the structure of Linux drivers, but it has to be
+usable by drivers.
+
+> > corresponding drivers, the pinctrl child node serves the purpose of
+> > grouping properties related to the pinctrl function, and allows
+> > referencing pinctrl entries from other DT nodes. All those properties
+> 
+> If you have sub-subnodes, it warrants for me such child. Why? Because it
+> makes DTS easier to read.
+> 
+> > could have been placed in the parent node. Are you fine with the
+> > adi,adp5585 having gpio and pwm child nodes, as long as they don't have
+> > compatible strings, and are documented in a single binding ?
+> 
+> As well not, because then you have even less reasons to have them as
+> separate nodes. With compatible, one could at least try to argue that
+> sub-devices are re-usable across families.
+
+I'll reuse your argument, I think the child nodes make the DTS easier to
+read :-)
+
+> >>>>> +required:
+> >>>>> +  - compatible
+> >>>>> +  - reg
+> >>>>> +  - gpio
+> >>>>> +  - pwm
+> >>>>> +
+> >>>>> +allOf:
+> >>>>> +  - if:
+> >>>>> +      properties:
+> >>>>> +        compatible:
+> >>>>> +          contains:
+> >>>>> +            const: adi,adp5585-01
+> >>>>> +    then:
+> >>>>> +      properties:
+> >>>>> +        gpio:
+> >>>>> +          properties:
+> >>>>> +            gpio-reserved-ranges: false
+> >>>>
+> >>>> This also points to fact your child node is pointless. It does not stand
+> >>>> on its own...
+> >>>
+> >>> That doesn't make the child pointless just for that reason. There are
+> >>> numerous examples of child nodes that don't stand on their own.
+> >>
+> >> No, your if-then must be in the schema defining it. This is just
+> >> unmaintianable code. It proves that child's compatible means nothing. If
+> >> you cannot use child's compatible to make any meaningful choices, then
+> >> it is useless.
+> > 
+> > The compatible string may not be very useful. The child nodes have a
+> > use.
+> 
+> What is their use? Grouping few properties? As mentioned above -
+> grouping subnodes like pinctrl does, is argument on its own for code
+> readability. Grouping few properties, which in many other devices are in
+> top-node (see last 100 reviews of new drivers doing exactly the same),
+> is not that argument.
+> 
+> OTOH, my first, main argument was:
+> 
+> They do not have any resources on their own. Otherwise please point me -
+> which property represents their resource, like clock, reset, gpio,
+> suppy, IO address?
+
 -- 
-2.45.1
+Regards,
 
+Laurent Pinchart
