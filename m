@@ -1,154 +1,188 @@
-Received: from wfhigh3-smtp.messagingengine.com (wfhigh3-smtp.messagingengine.com [64.147.123.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF1413CFB7;
-	Thu, 23 May 2024 08:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F400751016;
+	Thu, 23 May 2024 08:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716452686; cv=none; b=WR+Q6kyd8etbRAaddKsSOhvLntgLkSduhjKNJ8jBdDELY7bYzq+C11EttiC+X+JShfF6Wqrrrzx7gOhj7QCjfIYAMvQ3ZHE97HYP2jWpfWOdLQ3/wCuBgGae0RaMfioD4Fwxr4jvSdAyhguN3OsPvjAVY7nDjKyj6Sky8Wls36s=
+	t=1716452820; cv=none; b=QcRc4BwACxo6DX2JqPA9LYEoTrMcPu7Zu3HWfIaVQugeh9jpy0xNGhjyqc9V15RSV/Wb6B3cmqvuOMA98qyJt7DiM4Ui+9IzjIwtA51h7dl+SINRtjc3fMFrrTP/ZcjlrsWyGai7Sw32VMMVgYAf6NVe5qRbSlDy+kqLbPQc7bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716452686; c=relaxed/simple;
-	bh=xP59lqobFIBfQ9MOhx/Wcx58biVRgohQI2O/XYsPjxc=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=pCvGJl64b7JM8zDmW0S3zSGbzhUYG7uVLkbaRPcEOBFulKclbTkENUE4/I7poGjGglpk095hXvUKgNhevQxW3FpGzo41pbsMJPvVxiRR7BVlYVHAYiNhHE++hFfaD6pCjgOQ6EQ3uHlno24CXWZmFWxzK2loaDLBvMvwqqmst9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readahead.eu; spf=pass smtp.mailfrom=readahead.eu; dkim=pass (2048-bit key) header.d=readahead.eu header.i=@readahead.eu header.b=bbi9wCEX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IrVVz1iY; arc=none smtp.client-ip=64.147.123.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readahead.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=readahead.eu
+	s=arc-20240116; t=1716452820; c=relaxed/simple;
+	bh=VhB+yYvGxyujM6LANiWsS9TSSh5BC2CXd2CWptZ2K4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uy6gEZApBYEGAr4wn7JxJpV98IkgViqXjgZpSb7BnPKrB3HBOeBowWg+3iPKnZUUQcsvo/xXbQJ1YjG12/AsBgllbUMbldr1LsDyhZ9mEW6x9fX6UTLuGt/A+WAOa6m8yP8OO1COHipb/O7/KQoi19ODIaVM6nWUKlQiqy13Xzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=tptmEJHz; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=tptmEJHz; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=readahead.eu header.i=@readahead.eu header.b="bbi9wCEX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IrVVz1iY"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfhigh.west.internal (Postfix) with ESMTP id CEE1718000C3;
-	Thu, 23 May 2024 04:24:40 -0400 (EDT)
-Received: from imap50 ([10.202.2.100])
-  by compute6.internal (MEProxy); Thu, 23 May 2024 04:24:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=readahead.eu; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1716452680;
-	 x=1716539080; bh=uQ1XIZZzVzDnVHgFVVR9WB3UmecDQC4WcoxUGP3/pSA=; b=
-	bbi9wCEXusq1PCAmAYxC4BiT27Y40Ap08kAkdhBLZgdMw/bGbiv2m8vsxcFVgmru
-	q1OKDPeRBpEmFr9Cux8fOA0Av7QX/pUbN56fvGRN/GQ3Yq3+4uCieiqqF9VrX/ey
-	B+RX/qDbkSBDH9dILn59EbowqykCzjPEExmQxTMNk8r5HlV7752kVMwqN3I83ZVl
-	rrdP3OOhATAc+/OiEq7j9stxIgCA37KIB+ELIm7YnWK93kLM2SLBHZmlGUoDnOc4
-	e5TXMv56KeOVl4RoJitRzb72QYevGQ4n0yqQpO6ae1Qwvambj+iSimpMjcuQqbb2
-	s83XtM7ZZ7b6w6echlAw6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716452680; x=
-	1716539080; bh=uQ1XIZZzVzDnVHgFVVR9WB3UmecDQC4WcoxUGP3/pSA=; b=I
-	rVVz1iYth6Czg8j1qlzSei4KHsHk6i+iAIZb4h97+FiMw3x2pC1Wx8pjym0Y2czl
-	PFYMs18JfaAGDc3KXI+uViAvvsi2a+OWbTUeyMX4JzMmW8pYVy+aabMwvk+O1t0j
-	cFsoE0nhI6EMqrwcvF+vjkskxERjNkO4DG2VRh7aSm1GlttBA9EOUFRISMvIe/Ds
-	SNEXzqJ+1twWXspR4etxVWREVenq7W6wRzr3OwswSNFVFgAQ+O3WComfcxo3QA+W
-	GM4uNOKBx77LmoBwx6tG7FqCy1pYoASliHS+fJFT7VMvpPYiUtz8xaGpgPRuxGB3
-	0Y6ab0XbWd3sMsnygt6tg==
-X-ME-Sender: <xms:SP1OZp23Z6lyzNyhkGuoc2_RiEJwcR3eXBFXARD6DAvZZlV0o3BRmA>
-    <xme:SP1OZgFY0gJZvgIkAtLu9GzYQk8Jiv6zbtkneqGrLD_7AB9yiNlG4QYhyG9K8rd8Y
-    XGHvv2p9aLSv0TTJ6M>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeiiedgtdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdff
-    rghvihguucfthhgvihhnshgsvghrghdfuceouggrvhhiugesrhgvrggurghhvggrugdrvg
-    huqeenucggtffrrghtthgvrhhnpefgleejleduiedvfeevjeevieduledvjeeljeelvedt
-    uedvgeejjefhvdefhffgieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggrvhhiugesrhgv
-    rggurghhvggrugdrvghu
-X-ME-Proxy: <xmx:SP1OZp627CQUZWumLRL_y-qFCF8hLB3I_CJJ-288c8wJL0uEyoEHaw>
-    <xmx:SP1OZm0hZweVYJ7PfqXhwrHOtjDgYYL_IHV1P1epwocPM5W6oS8L5g>
-    <xmx:SP1OZsHtsGGbu5IdrbmPdtYaN6EYt1XaXNXdkZnlty2tM7HQISjwpw>
-    <xmx:SP1OZn89w5r0T-DPR_WTli6ZgQDYgM40w60wq8SsHpcCqi_kBvVgVQ>
-    <xmx:SP1OZv-tL447aLQolAZ5j1fj4aFENRlMnunOutk3TL8Ah6wvvVC3ket9>
-Feedback-ID: id2994666:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 0828D1700093; Thu, 23 May 2024 04:24:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-480-g515a2f54a-fm-20240515.001-g515a2f54
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tptmEJHz";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tptmEJHz"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2357022382;
+	Thu, 23 May 2024 08:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1716452817; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mBH6EPW7Vz1SRmvs2kbmV+ndU39ouWoBblqvWLNfICg=;
+	b=tptmEJHz9zEALDU9iRoFlsmKqRlatBwzIs3fowOQPnQqAuj/nF88zIl+RmXxUghaYPC0FX
+	8g6u80bSY8M71vfU8N7KUVKHfyiFe/hVH79GJUkVsppWbDbnpwfEemm6r1faKqeXGJC1Gz
+	T/PWsWFKCqXuNYlzvc6LR0UTHCSWFec=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=tptmEJHz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1716452817; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mBH6EPW7Vz1SRmvs2kbmV+ndU39ouWoBblqvWLNfICg=;
+	b=tptmEJHz9zEALDU9iRoFlsmKqRlatBwzIs3fowOQPnQqAuj/nF88zIl+RmXxUghaYPC0FX
+	8g6u80bSY8M71vfU8N7KUVKHfyiFe/hVH79GJUkVsppWbDbnpwfEemm6r1faKqeXGJC1Gz
+	T/PWsWFKCqXuNYlzvc6LR0UTHCSWFec=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 093C413A6B;
+	Thu, 23 May 2024 08:26:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2CnXOtD9TmbNZgAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Thu, 23 May 2024 08:26:56 +0000
+Date: Thu, 23 May 2024 10:26:56 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2024-35906: drm/amd/display: Send DTBCLK disable message on
+ first commit
+Message-ID: <Zk790Afi1sfwgrZi@tiehlicka>
+References: <2024051954-CVE-2024-35906-1c6f@gregkh>
+ <ZkxbObACcnUMZ3LA@tiehlicka>
+ <2024052136-cubbyhole-ecologist-5b68@gregkh>
+ <ZkzREEA5_N_xfqED@tiehlicka>
+ <2024052110-grasp-liking-22c0@gregkh>
+ <ZkzgZoxF_RD50PdW@tiehlicka>
+ <2024052243-napping-coastal-3306@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <08450f80-4c33-40db-886f-fee18e531545@app.fastmail.com>
-In-Reply-To: 
- <1KDsEBw8g7ymBVpGJZp9NRH1HmCBsQ_jjQ_jKOg90gLUFhW5W6lcG-bI4-5OPkrD24RiG7G83VoZL4SXPQjfldsNFDg7bFnFFgrVZWwSWXQ=@protonmail.com>
-References: <20240513191544.94754-1-pobrn@protonmail.com>
- <CALmYWFt7MYbWrCDVEKH4DrMQGxaXA2kK8qth-JVxzkvMd6Ohtg@mail.gmail.com>
- <20240522162324.0aeba086228eddd8aff4f628@linux-foundation.org>
- <1KDsEBw8g7ymBVpGJZp9NRH1HmCBsQ_jjQ_jKOg90gLUFhW5W6lcG-bI4-5OPkrD24RiG7G83VoZL4SXPQjfldsNFDg7bFnFFgrVZWwSWXQ=@protonmail.com>
-Date: Thu, 23 May 2024 10:24:19 +0200
-From: "David Rheinsberg" <david@readahead.eu>
-To: =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
- "Andrew Morton" <akpm@linux-foundation.org>
-Cc: "Jeff Xu" <jeffxu@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- dmitry.torokhov@gmail.com, "Daniel Verkamp" <dverkamp@chromium.org>,
- hughd@google.com, jorgelo@chromium.org, skhan@linuxfoundation.org,
- "Kees Cook" <keescook@chromium.org>
-Subject: Re: [PATCH v1] memfd: `MFD_NOEXEC_SEAL` should not imply `MFD_ALLOW_SEALING`
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024052243-napping-coastal-3306@gregkh>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-6.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 2357022382
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -6.01
 
-Hi
+On Wed 22-05-24 05:57:38, Greg KH wrote:
+[...]
+> > I completely do get why you do not care about that downstream
+> > engineering cost but generating bogus CVEs on top of a huge pile of
+> > dubious ones is less than useful, don't you think?
+> 
+> How is this a "bogus" CVE on their own?
 
-On Thu, May 23, 2024, at 4:25 AM, Barnab=C3=A1s P=C5=91cze wrote:
-> 2024. m=C3=A1jus 23., cs=C3=BCt=C3=B6rt=C3=B6k 1:23 keltez=C3=A9ssel, =
-Andrew Morton=20
-> <akpm@linux-foundation.org> =C3=ADrta:
->> It's a change to a userspace API, yes?  Please let's have a detailed
->> description of why this is OK.  Why it won't affect any existing user=
-s.
->
-> Yes, it is a uAPI change. To trigger user visible change, a program ha=
-s to
->
->  - create a memfd
->    - with MFD_NOEXEC_SEAL,
->    - without MFD_ALLOW_SEALING;
->  - try to add seals / check the seals.
->
-> This change in essence reverts the kernel's behaviour to that of Linux=20
-> <6.3, where
-> only `MFD_ALLOW_SEALING` enabled sealing. If a program works correctly=20
-> on those
-> kernels, it will likely work correctly after this change.
->
-> I have looked through Debian Code Search and GitHub, searching for=20
-> `MFD_NOEXEC_SEAL`.
-> And I could find only a single breakage that this change would case:=20
-> dbus-broker
-> has its own memfd_create() wrapper that is aware of this implicit=20
-> `MFD_ALLOW_SEALING`
-> behaviour[0], and tries to work around it. This workaround will break.=20
-> Luckily,
-> however, as far as I could tell this only affects the test suite of=20
-> dbus-broker,
-> not its normal operations, so I believe it should be fine. I have=20
-> prepared a PR
-> with a fix[1].
+I suspect you haven't looked at those commits. This is a boot time
+suboptimal HW configuration. There is no way any user can exploit that I
+can see. Not to mention it cases system boot hangs!
 
-We asked for exactly this fix before, so I very much support this. Our t=
-est-suite in `dbus-broker` merely verifies what the current kernel behav=
-ior is (just like the kernel selftests). I am certainly ok if the kernel=
- breaks it. I will gladly adapt the test-suite.
+[...]
+> > Seriously, we can disagree whether something is a security threat that
+> > is worth marking by a CVE. But making the CVE generation process mostly
+> > unattended script driven process without any _serious_ review in place
+> > is burning a lot of man power that could be used in a much more
+> > productive way. This is not the way how to convince people to use stable
+> > kernels.
+> 
+> To think that any of this is an "unattended script without any _serious_
+> review" is slandering all of the people who put in their free time to do
+> this work for you and the community.  This is ANYTHING BUT an unattended
+> script.
 
-Previous discussion was in:
+This is a perception one can easily draw by watching the stream of
+incoming flow. Sorry if that is not the case but there is about zero
+transparency about the process except for Documentation/process/cve.rst
+and let me quote
+"
+As part of the normal stable release process, kernel changes that are
+potentially security issues are identified by the developers responsible
+for CVE number assignments and have CVE numbers automatically assigned
+to them.
+"
 
-    [PATCH] memfd: support MFD_NOEXEC alongside MFD_EXEC
-    https://lore.kernel.org/lkml/20230714114753.170814-1-david@readahead=
-.eu/
+There is no mention about criteria, review process. Who is involve in
+the assignment and who is doing the review. The vulns.git tree doesn't
+contain Sign-off-by of those involved parties except for the submitter.
 
-Note that this fix is particularly important in combination with `vm.mem=
-fd_noexec=3D2`, since this breaks existing user-space by enabling sealin=
-g on all memfds unconditionally. I also encourage backporting to stable =
-kernels.
+> Also, this is work ostensibly that you are also already doing for your
+> day-job, right?
 
-Reviewed-by: David Rheinsberg <david@readahead.eu>
+We, like stable trees, rely on Fixes tag and those (including other
+commits that might be this tag) are reviewed by domain experts.
 
-Thanks
-David
+[...]
+
+> I appreciate your reviews so far of "hey, this shouldn't really be a
+> CVE, right?"  That's a lot of help and is making things better, but to
+> insinuate that somehow we don't know what the hell we are doing, or that
+> we are doing nothing other than a simple "assign everything!" process
+> here is extremely insulting to me and to the other developers here
+> working on this.
+
+I am sorry if you feel that way but I haven't said anything like that.
+
+I have raised a concern based on observed CVE flow that the current
+process is automated without a proper review as I can see very dubious
+CVEs being assigned (splats resembling oops/warnings coming from lockdep,
+data_race fixes as they resemble race condition fixes, READ_ONCE fixes
+which do not fix anything discussed in other thread and others).
+
+I have tried to dispute quite some but quickly learned that many of them
+have been dismissed because "no usecases are assumed". It is a very
+broad category that could indeed make any fix a CVE.
+
+If you really want to build a trust around the CVE process then make it
+more transparent. I would start by adding reason why something has been
+marked CVE. You are saying there is peer review process going on then
+why not add Reviewed-by: to make it explicit and visible.
+
+Thanks!
+
+-- 
+Michal Hocko
+SUSE Labs
