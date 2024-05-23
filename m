@@ -1,186 +1,98 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA4A13D29C
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 09:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7748813BAD9
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 09:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716455705; cv=none; b=MZDkDnTC0Q4nlwTqsnA7E8VMxqkkD7eeahoczHNx/VQvLzCP1q2pra7gxV0ZqMzYxDpo0naBRh59N3AuXVfxnNJSjnkQIPdSTlKwzIuquDy0WBYwopNU7mC+hSvtURc0zofK8GepOLKV8f/0g+R8Xi1rnIbpCoW2E9E9LOrSK18=
+	t=1716455735; cv=none; b=Rxk9fcI9yb48aqEWWyPKdgYiTCaD0MIUUKlvgrA1IDVHAq5DvoIYTDTuf+F/oGmH3H8gmhP09kjhsPGhkAxWN++kHxS5zTZrv788wynlUTkfAQDT1F/WTxl+kRpnN+CxBwI5UmP43VRQFMYZ1EJK0KqGwWI1dyvuCjjNQWHiHTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716455705; c=relaxed/simple;
-	bh=+HnSm28nck3VHTqGDjmFRzfJxYg/Ohuag17riecvzUk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=K3+NCW5B+G5x0DM48Wcby+bUtP6dn9ZRN3f1hFr+DuAckW7KY/5JyM3iv5nCkHxi5o3r3Zmcv8dawTTYbQB+dtRBIKCu6JOupy9jOZN2mbacqpOsplHZLdwf8BSD7w8F5w54JW8K90K+Wjf4+kMNjblqUUy9Cx0IZujkkKY+kRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hu3E3NmJ; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1716455735; c=relaxed/simple;
+	bh=b4/uOiVZm6dCYuLpPsVUE3k95DUxAU5znaBJSv5JF1k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oiPJiT/68jmvxw49OruZS4HZQj/ZsFP/iZNLKQgOenpd0U2OBDhsYlnNay5Kff6FLkc4mu7rRltgoO0J8FZPLYNOKt4s58xOgCR1xqq0mxQqbHzgW7W0kZma9qKt6uC0SBKyyFBqpslrGu1uUtjicdEGziCv9+Gs1C0izb+2b+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LOTqYI2J; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hu3E3NmJ"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-420eed123a2so25203885e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:15:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LOTqYI2J"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e1bbdb362so9169598a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:15:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716455701; x=1717060501; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jk02q1xwaAjXdhW1L0zkxXMpbJH4jmKA0Vi9iubvVTQ=;
-        b=Hu3E3NmJhTw6viN2yRhRLFouEozrZV61ZWjzLpAOuJqNui7GJZ92KM7FbGtWO4ji2d
-         f4uo3OvxR3dR/+iZGVyqTfUVgFeN+WlPbigiAjbx6NS0vvDfbIqw3CMTSH/va1KpKFNJ
-         31NqYHp6jv/burC3DURPdwiGbRne0RyKXcdKCmCltaUVETC5mPnwcBuqe7/UdJrt1HpA
-         AvvpEdJ+BZctuA4uPYRn/cMturmlXviAXffmTPHsvH5zXqyUvL7bPVLij9tbKk6BUjeU
-         4jDZLeW+YYecmuxrfrKyi9bgivvRxmj3LVEGttN9XoYaWKEYLX6O9oA6BJYwX8g2xfGL
-         SIiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716455701; x=1717060501;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=suse.com; s=google; t=1716455732; x=1717060532; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=jk02q1xwaAjXdhW1L0zkxXMpbJH4jmKA0Vi9iubvVTQ=;
-        b=v29bJHqGOvP6gHNzoOnQL05Jge4l6usXlsLIC93Eict2jfMEeYxsL64oHHpb0azk0Y
-         bDma4WjFBGb99U5u4cQU0c9J9c6A51EkdmKO0IH1OeX+flo3PFW8cKl2gbXWRuOEYsdz
-         aV3eavv86+b5F9xX3a5njoDvGZ8LpxRM0U/HNBLZyUt7N7Hgk+6U8U9OJp3emUEQAZO2
-         /YDuSdaqHuFOdfQ+G5BLAHF5llwxslNRPwa/KRObokqJgN7uHGL2KzIX+SiTbbeCdRvC
-         h4QtekxKMtSWvF/dsI7GXJIjFtrNNFCQ8qJTDN2wu4kNjCC60WyWntDkGUrtSpN4CFrG
-         +TKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWa6k8MYoz2I4SVGyBgP+NrhsRp2ecog86R3LjNp9OUn54rwAylPtjxyPl9RbyMTBocMI6pZ9u2muSrJ1Uuz5XYKGu570geLPMcght4
-X-Gm-Message-State: AOJu0YwD6AkYKEX6o9fm/7gWpBZnRz3dde6QwKZep/CtrPppCF5nBcSL
-	RzZGLIGxcyVFxCNJ+u/5OkzLc5DSoqEB+0NVJUwimVB/UZ5CtB//1mSiizSoPKmCwRg29sV1o7E
-	oPszYapl9K9y2+TcvZQ==
-X-Google-Smtp-Source: AGHT+IFg0ElFrdX/ypixxrO8pVGQT9ah/+snHJKoSVpE1zD3SXtCvnzIsIEBrtrrVICcmdjEFsitmkmwny5oAyA5
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:5127:b0:420:217f:4f7 with SMTP
- id 5b1f17b1804b1-420fd3894d4mr185815e9.6.1716455700542; Thu, 23 May 2024
- 02:15:00 -0700 (PDT)
-Date: Thu, 23 May 2024 10:14:45 +0100
+        bh=b6yzAgRpwuvzYwVR75MaBk20iyXv6xLY4no1ggHk/Gg=;
+        b=LOTqYI2JY/DJyD2p6dH7RrMUUmaTEE/UwQbd3ZdNd9II3SQa+fnUoI9k+qGQYRU6mv
+         FCI365zh2X14z5HSLDX/c7xYwUmtWVC7vaTzDhwiSFh7Ztu42/hfMJPOtzluWevk1hJ1
+         9K0FSNmr6SKnj2JP5UFeaor+MsgPuDHXFnsEWi7ItGDwTwjKifVCGTKhhWSd3sk68Ffl
+         vWzT7M3ScLz6/NLE1ZKveLRedJkvIesGb9dysPtZiSCw7yJg03KfJtODTPEyvwUU9B3L
+         bKzJfLTd5j/iD69ROllj2XGmPhYUIoOxxpNDX3FZ1S44CHexEuColIIgjlXZc4CmNj8Z
+         sEew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716455732; x=1717060532;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b6yzAgRpwuvzYwVR75MaBk20iyXv6xLY4no1ggHk/Gg=;
+        b=VqSYryO9vYYXTvQfTL7NVy4QLhEBweVjgdN88l2eYxDkwcgySgDEi7pnfW5xXHcfiH
+         f7Zb0bu35o5+hz2GKkqwjCZYkyG2S2RUlEJRMSxkT5M79VQCbKsnY/riojjaq6MQ7kAv
+         GmanLoFn4MYvhXjm8vyTeYKlAEzralBhseJ4Mxne5Aujxvzqd79MD/CBEogQ5ZEcteiw
+         aZN/Ktnuyifc/YZTGVKFdfjKIqFeHG3867AYVFREJkIpOVm/fqSjNreXZRjeFsVG5/3Y
+         spmYCDBFx49fc0sCde2NIA9Uyiw2aJYDxea5h9ihRqIJklDXf917yzJVmwR/9q1XadI9
+         s3fw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ5ikMWQ2m2D0Lj0vLuVyuJefCg7eeP4/igz7dRR7/l4B883VH8MAkqIIifJtbICr2uVr9KjmoEJKQr/kTnZQHZYTKVa3fB7NH+W5w
+X-Gm-Message-State: AOJu0Yznc+Yo5z+28IoSXJbeiAKkcJpkelIVvWndDaBvDZHwKqNuGmD/
+	QXih5+WLryhC4i5niy5q77Cfom4I9vk78L5J4fq31MBedU2HL4tV+L5AqocEq8M=
+X-Google-Smtp-Source: AGHT+IFlK6BPcmpQgb/RasDDa8Kay+SC0dzEgMGYxnkZxxnwGN1c9iB1Q9yynHrqPd1XTTXnWvtzDw==
+X-Received: by 2002:a17:906:81d5:b0:a5c:e031:faf2 with SMTP id a640c23a62f3a-a622820be32mr341298966b.77.1716455731708;
+        Thu, 23 May 2024 02:15:31 -0700 (PDT)
+Received: from ?IPV6:2001:a61:139b:bf01:e8eb:4d8f:8770:df82? ([2001:a61:139b:bf01:e8eb:4d8f:8770:df82])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b17754sm1888859766b.192.2024.05.23.02.15.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 May 2024 02:15:31 -0700 (PDT)
+Message-ID: <feb574d6-54fb-4ad5-97f2-435e2636c07f@suse.com>
+Date: Thu, 23 May 2024 11:15:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240523091445.2568208-1-vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Align meta-page to sub-buffers for improved TLB usage
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, david@redhat.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Check whether divisor is non-zero before division
+To: shichao lai <shichaorai@gmail.com>, Oliver Neukum <oneukum@suse.com>,
+ stern@rowland.harvard.edu, gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+ linux-kernel@vger.kernel.org, xingwei lee <xrivendell7@gmail.com>,
+ yue sun <samsun1006219@gmail.com>
+References: <20240523072242.787164-1-shichaorai@gmail.com>
+ <a218cac3-9d9d-4ac9-8ea3-0ea9822b2261@suse.com>
+ <CACjpba7yh5Soe_Pr7D3SeTjjqzQB9q=nThaYRGAZu+EvaLfxfw@mail.gmail.com>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <CACjpba7yh5Soe_Pr7D3SeTjjqzQB9q=nThaYRGAZu+EvaLfxfw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Previously, the mapped ring-buffer layout caused misalignment between
-the meta-page and sub-buffers when the sub-buffer size was not a
-multiple of PAGE_SIZE. This prevented hardware with larger TLB entries
-from utilizing them effectively.
 
-Add a padding with the zero-page between the meta-page and sub-buffers.
-Also update the ring-buffer map_test to verify that padding.
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+On 23.05.24 11:12, shichao lai wrote:
 
--- 
+> Thanks for the helpful tip!
+> I reviewed the code. Your suggestions can actually avoid repeated checks.
+> And there is also such a problem in alauda_write_lba().
+> I am a beginner at making patches. May I commit a patch again which
+> fixes both issues you mentioned?
 
-This is based on the mm-unstable branch [1] as it depends on David's work [2]
-for allowing the zero-page in vm_insert_page().
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git
-[2] https://lore.kernel.org/all/20240522125713.775114-1-david@redhat.com
+Hi,
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7345a8b625fb..acaab4d4288f 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6148,10 +6148,10 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 	/* install subbuf ID to kern VA translation */
- 	cpu_buffer->subbuf_ids = subbuf_ids;
- 
--	meta->meta_page_size = PAGE_SIZE;
- 	meta->meta_struct_len = sizeof(*meta);
- 	meta->nr_subbufs = nr_subbufs;
- 	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-+	meta->meta_page_size = meta->subbuf_size;
- 
- 	rb_update_meta_page(cpu_buffer);
- }
-@@ -6238,6 +6238,12 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	    !(vma->vm_flags & VM_MAYSHARE))
- 		return -EPERM;
- 
-+	subbuf_order = cpu_buffer->buffer->subbuf_order;
-+	subbuf_pages = 1 << subbuf_order;
-+
-+	if (subbuf_order && pgoff % subbuf_pages)
-+		return -EINVAL;
-+
- 	/*
- 	 * Make sure the mapping cannot become writable later. Also tell the VM
- 	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND).
-@@ -6247,11 +6253,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	lockdep_assert_held(&cpu_buffer->mapping_lock);
- 
--	subbuf_order = cpu_buffer->buffer->subbuf_order;
--	subbuf_pages = 1 << subbuf_order;
--
- 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
--	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
-+	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
- 
- 	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
- 	if (!vma_pages || vma_pages > nr_pages)
-@@ -6264,20 +6267,20 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 		return -ENOMEM;
- 
- 	if (!pgoff) {
-+		unsigned long meta_page_padding;
-+
- 		pages[p++] = virt_to_page(cpu_buffer->meta_page);
- 
- 		/*
--		 * TODO: Align sub-buffers on their size, once
--		 * vm_insert_pages() supports the zero-page.
-+		 * Pad with the zero-page to align the meta-page with the
-+		 * sub-buffers.
- 		 */
-+		meta_page_padding = subbuf_pages - 1;
-+		while (meta_page_padding-- && p < nr_pages)
-+			pages[p++] = ZERO_PAGE(vma->vm_start + (PAGE_SIZE * p));
- 	} else {
- 		/* Skip the meta-page */
--		pgoff--;
--
--		if (pgoff % subbuf_pages) {
--			err = -EINVAL;
--			goto out;
--		}
-+		pgoff -= subbuf_pages;
- 
- 		s += pgoff / subbuf_pages;
- 	}
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-index a9006fa7097e..4bb0192e43f3 100644
---- a/tools/testing/selftests/ring-buffer/map_test.c
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -228,6 +228,20 @@ TEST_F(map, data_mmap)
- 	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
- 		    desc->cpu_fd, meta_len);
- 	ASSERT_EQ(data, MAP_FAILED);
-+
-+	/* Verify meta-page padding */
-+	if (desc->meta->meta_page_size > getpagesize()) {
-+		void *addr;
-+
-+		data_len = desc->meta->meta_page_size;
-+		data = mmap(NULL, data_len,
-+			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+		ASSERT_NE(data, MAP_FAILED);
-+
-+		addr = (void *)((unsigned long)data + getpagesize());
-+		ASSERT_EQ(*((int *)addr), 0);
-+		munmap(data, data_len);
-+	}
- }
- 
- FIXTURE(snapshot) {
+yes, you usually are supposed to change the "[PATCH]" in the
+subject line to "[PATCHv2]" and add a line in the log describing
+the difference between the first and second version.
 
-base-commit: c65920c76a977c2b73c3a8b03b4c0c00cc1285ed
--- 
-2.45.1.288.g0e0cd299f1-goog
+	HTH
+		Oliver
 
