@@ -1,109 +1,106 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C305C6AAD;
-	Thu, 23 May 2024 15:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C89101F7
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 15:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716477505; cv=none; b=KLfWPv5TM7HTDk7NCIttZ3eFhOOlWlcFEaM1Rjv4WlfG0OoVZFQxS+73ulLl8tRiIe1x9eS8/AG/VXKRDeiKEV7r5GU8F5j7DATcyqqinLeLWysp9j6aLlFHIK88ODCliw/gPpH/wJmkb9t5zyPNUM4aoeGJbnihd4PpjonVdK0=
+	t=1716477576; cv=none; b=iH+nXl4TMdjAdSbzr8D69BnBaBmlJn6EcGmYLy00kh7UD2exFnud2HukTmcmUNni2Irkr01ooyd1z2dCh6vpvGEsg4/wcqyqKGJx+7ZN/EWbVB9S3vQPFi/X6e1NywSu7ylXvr18zWn9hhJZ7GQyOmyKU8dLbMOXX1JGCm880z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716477505; c=relaxed/simple;
-	bh=xeys8kwM2Yd7eLEDP6aElZ2oybv4CKT9JTxVGbsleIA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=X6NvAFmVR/wErunqyRxiU15Rd6NcSN2tN7K7uaM4fNw63yW2zidGlc9BFVl6DzzSbD90gR1DJJmlnzjSGLsLJ36slEkgpHh8++SoSIKb46ZkIEV3xKH/zQFWPoxnPCZt1Ghfl6n5b3kg/3C4jVZH6ElixIJIqeNK1DZ0oSXSw0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LB1z0fgb; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716477576; c=relaxed/simple;
+	bh=rZEd8LdQ6Zv26yckL/PfuFMPfamA+s3S+lytwF/58SU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LhtipP6NY2BUKAu8Es0L6KaBYru4RwOBoT/ITP8kM5G/ujCU6zrs91iLz4bDbMETLAWQnRp6fjDCJ3uZNEpAVvcZkJE0XLVqRWinU9WUX/69eZa10XvWswanus265CO6X11HzBEWvl753+/PnZsA8pV74/QT2//6y2cZfi8BQ+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=QxvdT3f0; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LB1z0fgb"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NE1F1F010800;
-	Thu, 23 May 2024 15:18:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=SuFhiB3i6/49OtoZgs7gd8
-	xku5X1qyrwkV9WA7KzUCk=; b=LB1z0fgbbviTMuB9LnzYGWeuemY4up2oO2GTEK
-	yp7Bd0gvKMRlQDexAn3ihqgYoZCtEDnm3aPvfugYiTLZcG24302f2UCTYGsCy3Oc
-	1nf7PZ5OrWtGKOIKWXM5jPYwFHI+iCuhwdusPS2HYyeK66kou1YgrB9lq2enaN4f
-	u9A0tZIbyIiLaUH3YtLv9a7mWBMR4ShATLrHj8WGQt0/I71P2b6jHmV/X8mW47+z
-	zywOwFe7tpQ3p5Kly/Qt+3OxUbVTCkkLRIW2LxZr0thYaqtwVHrOeXHjJUBeI0Fa
-	zHoB5YbjOshgqiSLxopoqiSh7R+SZrz5erNBB9u2Mla5TCCQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y9xxk1hq4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 15:18:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44NFI7la018639
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 15:18:07 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 23 May
- 2024 08:18:06 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 23 May 2024 08:18:05 -0700
-Subject: [PATCH] wifi: ath12k: Fix devmem address prefix when logging
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QxvdT3f0"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6ab8e759adbso9876966d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 08:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1716477573; x=1717082373; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C5GM0ixhavCb3lJsnHYS4J/lZEUFFylRa25YYAO3lZY=;
+        b=QxvdT3f0OetY2YBgbq6kFihQldxVsBO9P8xWNY7pPU1opsjoRdBtIAJH03jsjk/+Mx
+         QI3VQLVd/ISyg5POOJtiJS0QTnytupG4yeRC4GCRHUKF+NO3JcPjGgdAqiY9ZJgDWA+5
+         rtVh8Mz4ZW20YZyImMKToYbHqFO6ubmkVyMrklD54ycbWPxwVRMM992VmbzcTTXtYC36
+         RpJQK0M8QDVgd0KqJTwk71cP+/dwV6znZSyC3I3deNNVvHbpkRZpMXafujmO7WyN2+hQ
+         wcQOtKzY73J0JSYWUpbQW2MY9bVUxtJ/aPoyhpNaGkur/p0ayvx9VUIiwEQ6pHJNa4kW
+         NB4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716477573; x=1717082373;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C5GM0ixhavCb3lJsnHYS4J/lZEUFFylRa25YYAO3lZY=;
+        b=iYxk7MfcllyetNEirICd5mGlhloqkA1bqLeXe+Em7fgedIcKUuq3xnDYEFX0Kw8rBa
+         whdzW0JSDhZqL53yistt18QBkNfI4NFwOwdNN14j/izFkI4JZZizBUK/b5bWDi6Xzh4G
+         9Tx9I3leeQt7AnI+Sqv2avPuoGw4+2atbZKIgYvfr4pw3aYqQ+BITyR6q2V7MgWSGkCd
+         zDS5jfoveHNdjCLQaUL4dbi0mgUd7Ly/oGG1UTZIV8kES3HeUtntKJ8w2+4rxE1gjTl4
+         oEtulhwb0DHa/lO5+x8Wovfyuf9dBmGWtdM1jlGKGr/iV8JI+GNGUsSQMbj4b0P5rk+3
+         i9zA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2Rd1w8BMvcQL9+K2wQVrkh7mg2hIjN+kwPBzokZfyolZJOeoqOaE8t3cAaq1zln9AngcZCuYOPdy5LtUeYzM0MEVCTPXNXiUHsbhH
+X-Gm-Message-State: AOJu0YyPHV7bOhjaglUCxRMAE7K/a3sI8Vk3z5QaAog4d8V/21C6L2Mj
+	FlgZyUgrjW0ToWEE+LYZ46YxQWg5DglOXMkBUB8wWKdzfRsgOz7gvBNCztbtK8U=
+X-Google-Smtp-Source: AGHT+IFmPxDsj9nLUxgy/gv2BFbjFqLJH4yge1yEpFnhep0gZXO8FyvVSlATXLi0pQDD5PxbIp3m/w==
+X-Received: by 2002:a05:6214:3d07:b0:6a0:e690:2f96 with SMTP id 6a1803df08f44-6ab8f5f3c9amr57165256d6.21.1716477573044;
+        Thu, 23 May 2024 08:19:33 -0700 (PDT)
+Received: from ziepe.ca ([128.77.69.89])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ab818288f0sm16704726d6.146.2024.05.23.08.19.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 08:19:32 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sAAE7-00Fqd0-BJ;
+	Thu, 23 May 2024 12:19:31 -0300
+Date: Thu, 23 May 2024 12:19:31 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Gerd Bayer <gbayer@linux.ibm.com>,
+	Matthew Rosato <mjrosato@linux.ibm.com>, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] vfio/pci: Enable PCI resource mmap() on s390 and
+ remove VFIO_PCI_MMAP
+Message-ID: <20240523151931.GK69273@ziepe.ca>
+References: <20240523-vfio_pci_mmap-v2-0-0dc6c139a4f1@linux.ibm.com>
+ <20240523-vfio_pci_mmap-v2-3-0dc6c139a4f1@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240523-ox-v1-1-112ae7350059@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIACxeT2YC/1WNyw6CMBBFf4XM2ppOi/Gx8j8MizIMMom02gLBE
- P7dws7lSc49d4HEUTjBrVgg8iRJgs+AhwKoc/7JSprMYLQp9cmgCrMic651WTaorYEsviO3Mu+
- RR5W5dolVHZ2nbpu+xI+z6l0aOG56J2kI8btfTriN/uoTKlT20jprrqTR2vtnFBJPRwo9VOu6/
- gC+ic5otQAAAA==
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: frjVlzPF3NT8Ll-dIWl5aK_3ZQdrOUD8
-X-Proofpoint-GUID: frjVlzPF3NT8Ll-dIWl5aK_3ZQdrOUD8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-23_09,2024-05-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 mlxlogscore=934 phishscore=0
- clxscore=1015 priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405230104
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523-vfio_pci_mmap-v2-3-0dc6c139a4f1@linux.ibm.com>
 
-Currently when ath12k QMI logging is enabled, messages such as the
-following can be logged:
+On Thu, May 23, 2024 at 01:10:16PM +0200, Niklas Schnelle wrote:
+> With the introduction of memory I/O (MIO) instructions enbaled in commit
+> 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions") s390
+> gained support for direct user-space access to mapped PCI resources.
+> Even without those however user-space can access mapped PCI resources
+> via the s390 specific MMIO syscalls. Thus mmap() can and should be
+> supported on all s390 systems with native PCI. Since VFIO_PCI_MMAP
+> enablement for s390 would make it unconditionally true and thus
+> pointless just remove it entirely.
+> 
+> Link: https://lore.kernel.org/all/c5ba134a1d4f4465b5956027e6a4ea6f6beff969.camel@linux.ibm.com/
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  drivers/vfio/pci/Kconfig         | 4 ----
+>  drivers/vfio/pci/vfio_pci_core.c | 3 ---
+>  2 files changed, 7 deletions(-)
 
-ath12k_pci 0000:03:00.0: devmem [0] start ox113000 size 20480
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Replace ox% with 0x% to get a proper hex address prefix:
-
-ath12k_pci 0000:03:00.0: devmem [0] start 0x113000 size 20480
-
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/net/wireless/ath/ath12k/qmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
-index 5484112859a6..e37c963b6903 100644
---- a/drivers/net/wireless/ath/ath12k/qmi.c
-+++ b/drivers/net/wireless/ath/ath12k/qmi.c
-@@ -2503,7 +2503,7 @@ static int ath12k_qmi_request_target_cap(struct ath12k_base *ab)
- 			ab->qmi.dev_mem[i].size =
- 				resp.dev_mem[i].size;
- 			ath12k_dbg(ab, ATH12K_DBG_QMI,
--				   "devmem [%d] start ox%llx size %llu\n", i,
-+				   "devmem [%d] start 0x%llx size %llu\n", i,
- 				   ab->qmi.dev_mem[i].start,
- 				   ab->qmi.dev_mem[i].size);
- 		}
-
----
-base-commit: 29c73fc794c83505066ee6db893b2a83ac5fac63
-change-id: 20240521-ox-c27b044d1032
-
+Jason
