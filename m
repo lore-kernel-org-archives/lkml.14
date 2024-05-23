@@ -1,333 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD25B140391;
-	Thu, 23 May 2024 12:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84CD149E08;
+	Thu, 23 May 2024 12:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716466390; cv=none; b=DB8VgeVF+Vkc7aKMACiWAJGG8KrJ2eGrMnDloQ9tgsrd1QluXVOdu4kRxdzJAlHqtL+3VTlucnJcYx7DTHdEyWp3g0TOW6tL/ak/RQ7aHhQx3rxYFVaR5/DOn6KJZSkjDdDBAuUvet61FsYWYEh3orFH3TOlxG7x9nosizkZpOs=
+	t=1716466396; cv=none; b=SIib0OWi2eBukFHvGpOJjhXM69MFIfOF0OLTeMc8SfoTinW8AE2O2ee4JCIvJ7SQDXy0FyerRDLbjYI7pet+S9nGRRAFnvX4FELWqDnEm1mSi85mtLxJL99JUXb9nwbqO/kwflGzZ3Jl2c+ftXjBBCyyMmptBsKw9fY9OIwe0eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716466390; c=relaxed/simple;
-	bh=PCd+uns259ZIoHD8kvaWSJiVlpchxK5rKJsCMqsu/iE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FwX0FhHxqJa0ZpGNjMdsOwnDJvA2Qs6h4mQ86kLvMLzorYa4uR+pVtecDprw8u6k+SXgq6GuMeBmjGGf/Cpakr4QnHzqCr1XAJXb+5PTcc8Y3WEnF6MdRUQljZzpbK9MvkEtvbqmkL6PSFGwbqG73W/T8ttW24RcAwdwC9bsG4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxvRg43k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716466396; c=relaxed/simple;
+	bh=133f/ppm7e5WBFptxyFQbVG8EMvUy33o+cg2kVvmScs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q45WOyzfEXYSlw+YG3d1bMsNEWRFSetw5HgAWuCgMS38yyAHUV5wSLSKNTbTrAks84N7VXRd0NrlZRRTo/lDGf9u1xX10TXCc5Sbigh14nW+6wJrRlhKLRBtcIxWNb6pHh526b4ujDGxCahv8oMQqc4d1/OosR66U15F841Ftu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LsRnHD7U; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxvRg43k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 819D1C2BD10;
-	Thu, 23 May 2024 12:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716466390;
-	bh=PCd+uns259ZIoHD8kvaWSJiVlpchxK5rKJsCMqsu/iE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QxvRg43k1LGpeRWgek2lXz+dRR6dc63G7shia7w/fIcxWmpDLyI4ai0tn+AIUYbbX
-	 XWepu5AARPeIORp+KmiAKnZw9jOzzQfqe9YIljkPb9C0XPKDOUaPEo1u2YgSgs1eje
-	 0AZtDwZZMFWZR+2QvTrxA+aOAc0+Q6n9/jyehdHdtuyGMA3h2zqqvz3/X/4jezWFY/
-	 EeHQke4KE7gLhvV6DFOztz7YKQ3obsCUY3AGa4htuSKKO8t6I18Z/lUqy/g16ZWOb7
-	 uuwMZ0gUs5l/4c2g0UPyWJNWPsSsKZMTgrfU0G3xj6AqM5QP+IWo2SIpCSRv4bPKao
-	 z752mcZyVxaWw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>
-Subject: [PATCHv7 bpf-next 6/9] selftests/bpf: Add uretprobe syscall test for regs changes
-Date: Thu, 23 May 2024 14:11:46 +0200
-Message-ID: <20240523121149.575616-7-jolsa@kernel.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240523121149.575616-1-jolsa@kernel.org>
-References: <20240523121149.575616-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LsRnHD7U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716466392;
+	bh=133f/ppm7e5WBFptxyFQbVG8EMvUy33o+cg2kVvmScs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LsRnHD7Uog2ITakq18wy7ygWug9EUT5qq3HeLJPOLkNCEWXIWvV3jEGvKsSXitW+L
+	 +Q0s/o0GlcJv03qWXltfU4ZIym4/y+4S6bo/4euqa865crfewK2SsJTDcIg7cnnHtw
+	 2pqgNAqpF3qEH0uZ00g9b0ouzJcI+qPVx613LpkpINUCHcAjq2h51ZXh9ZbPIWKGhD
+	 aTK9hMQYrG0cJKzQopG+cFrea36aO3ueov7NiMz3A2uRovuGwfbVuNCcWbvu0fqsnk
+	 utNHZm4Aio+FkPH03/08V8ZwbzBhDvAmIbOvJ8M5hGHwQQDLPMowTlweFEkRqhLxrT
+	 c1Evhc1QMnppQ==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E5B303782039;
+	Thu, 23 May 2024 12:13:11 +0000 (UTC)
+Date: Thu, 23 May 2024 14:13:10 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Steven Price <steven.price@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Dmitry Osipenko
+ <dmitry.osipenko@collabora.com>, Zack Rusin <zack.rusin@broadcom.com>,
+ kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v4 1/3] drm/panfrost: Fix dma_resv deadlock at drm
+ object pin time
+Message-ID: <20240523141310.0b12c83c@collabora.com>
+In-Reply-To: <20240523113236.432585-2-adrian.larumbe@collabora.com>
+References: <20240523113236.432585-1-adrian.larumbe@collabora.com>
+	<20240523113236.432585-2-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Adding test that creates uprobe consumer on uretprobe which changes some
-of the registers. Making sure the changed registers are propagated to the
-user space when the ureptobe syscall trampoline is used on x86_64.
+On Thu, 23 May 2024 12:32:17 +0100
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-To be able to do this, adding support to bpf_testmod to create uprobe via
-new attribute file:
-  /sys/kernel/bpf_testmod_uprobe
+> When Panfrost must pin an object that is being prepared a dma-buf
+> attachment for on behalf of another driver, the core drm gem object pinni=
+ng
+> code already takes a lock on the object's dma reservation.
+>=20
+> However, Panfrost GEM object's pinning callback would eventually try taki=
+ng
+> the lock on the same dma reservation when delegating pinning of the object
+> onto the shmem subsystem, which led to a deadlock.
+>=20
+> This can be shown by enabling CONFIG_DEBUG_WW_MUTEX_SLOWPATH, which throws
+> the following recursive locking situation:
+>=20
+> weston/3440 is trying to acquire lock:
+> ffff000000e235a0 (reservation_ww_class_mutex){+.+.}-{3:3}, at: drm_gem_sh=
+mem_pin+0x34/0xb8 [drm_shmem_helper]
+> but task is already holding lock:
+> ffff000000e235a0 (reservation_ww_class_mutex){+.+.}-{3:3}, at: drm_gem_pi=
+n+0x2c/0x80 [drm]
+>=20
+> Fix it by replacing drm_gem_shmem_pin with its locked version, as the lock
+> had already been taken by drm_gem_pin().
+>=20
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> Cc: Boris Brezillon <boris.brezillon@collabora.com>
+> Cc: Steven Price <steven.price@arm.com>
+> Fixes: a78027847226 ("drm/gem: Acquire reservation lock in drm_gem_{pin/u=
+npin}()")
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
 
-This file is expecting file offset and creates related uprobe on current
-process exe file and removes existing uprobe if offset is 0. The can be
-only single uprobe at any time.
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-The uprobe has specific consumer that changes registers used in ureprobe
-syscall trampoline and which are later checked in the test.
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/bpf_testmod/bpf_testmod.c   | 123 +++++++++++++++++-
- .../selftests/bpf/prog_tests/uprobe_syscall.c |  67 ++++++++++
- 2 files changed, 189 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-index 2a18bd320e92..b0132a342bb5 100644
---- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-@@ -18,6 +18,7 @@
- #include <linux/in6.h>
- #include <linux/un.h>
- #include <net/sock.h>
-+#include <linux/namei.h>
- #include "bpf_testmod.h"
- #include "bpf_testmod_kfunc.h"
- 
-@@ -358,6 +359,119 @@ static struct bin_attribute bin_attr_bpf_testmod_file __ro_after_init = {
- 	.write = bpf_testmod_test_write,
- };
- 
-+/* bpf_testmod_uprobe sysfs attribute is so far enabled for x86_64 only,
-+ * please see test_uretprobe_regs_change test
-+ */
-+#ifdef __x86_64__
-+
-+static int
-+uprobe_ret_handler(struct uprobe_consumer *self, unsigned long func,
-+		   struct pt_regs *regs)
-+
-+{
-+	regs->ax  = 0x12345678deadbeef;
-+	regs->cx  = 0x87654321feebdaed;
-+	regs->r11 = (u64) -1;
-+	return true;
-+}
-+
-+struct testmod_uprobe {
-+	struct path path;
-+	loff_t offset;
-+	struct uprobe_consumer consumer;
-+};
-+
-+static DEFINE_MUTEX(testmod_uprobe_mutex);
-+
-+static struct testmod_uprobe uprobe = {
-+	.consumer.ret_handler = uprobe_ret_handler,
-+};
-+
-+static int testmod_register_uprobe(loff_t offset)
-+{
-+	int err = -EBUSY;
-+
-+	if (uprobe.offset)
-+		return -EBUSY;
-+
-+	mutex_lock(&testmod_uprobe_mutex);
-+
-+	if (uprobe.offset)
-+		goto out;
-+
-+	err = kern_path("/proc/self/exe", LOOKUP_FOLLOW, &uprobe.path);
-+	if (err)
-+		goto out;
-+
-+	err = uprobe_register_refctr(d_real_inode(uprobe.path.dentry),
-+				     offset, 0, &uprobe.consumer);
-+	if (err)
-+		path_put(&uprobe.path);
-+	else
-+		uprobe.offset = offset;
-+
-+out:
-+	mutex_unlock(&testmod_uprobe_mutex);
-+	return err;
-+}
-+
-+static void testmod_unregister_uprobe(void)
-+{
-+	mutex_lock(&testmod_uprobe_mutex);
-+
-+	if (uprobe.offset) {
-+		uprobe_unregister(d_real_inode(uprobe.path.dentry),
-+				  uprobe.offset, &uprobe.consumer);
-+		uprobe.offset = 0;
-+	}
-+
-+	mutex_unlock(&testmod_uprobe_mutex);
-+}
-+
-+static ssize_t
-+bpf_testmod_uprobe_write(struct file *file, struct kobject *kobj,
-+			 struct bin_attribute *bin_attr,
-+			 char *buf, loff_t off, size_t len)
-+{
-+	unsigned long offset = 0;
-+	int err = 0;
-+
-+	if (kstrtoul(buf, 0, &offset))
-+		return -EINVAL;
-+
-+	if (offset)
-+		err = testmod_register_uprobe(offset);
-+	else
-+		testmod_unregister_uprobe();
-+
-+	return err ?: strlen(buf);
-+}
-+
-+static struct bin_attribute bin_attr_bpf_testmod_uprobe_file __ro_after_init = {
-+	.attr = { .name = "bpf_testmod_uprobe", .mode = 0666, },
-+	.write = bpf_testmod_uprobe_write,
-+};
-+
-+static int register_bpf_testmod_uprobe(void)
-+{
-+	return sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_uprobe_file);
-+}
-+
-+static void unregister_bpf_testmod_uprobe(void)
-+{
-+	testmod_unregister_uprobe();
-+	sysfs_remove_bin_file(kernel_kobj, &bin_attr_bpf_testmod_uprobe_file);
-+}
-+
-+#else
-+static int register_bpf_testmod_uprobe(void)
-+{
-+	return 0;
-+}
-+
-+static void unregister_bpf_testmod_uprobe(void) { }
-+#endif
-+
- BTF_KFUNCS_START(bpf_testmod_common_kfunc_ids)
- BTF_ID_FLAGS(func, bpf_iter_testmod_seq_new, KF_ITER_NEW)
- BTF_ID_FLAGS(func, bpf_iter_testmod_seq_next, KF_ITER_NEXT | KF_RET_NULL)
-@@ -912,7 +1026,13 @@ static int bpf_testmod_init(void)
- 		return -EINVAL;
- 	sock = NULL;
- 	mutex_init(&sock_lock);
--	return sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
-+	ret = sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
-+	if (ret < 0)
-+		return ret;
-+	ret = register_bpf_testmod_uprobe();
-+	if (ret < 0)
-+		return ret;
-+	return 0;
- }
- 
- static void bpf_testmod_exit(void)
-@@ -927,6 +1047,7 @@ static void bpf_testmod_exit(void)
- 
- 	bpf_kfunc_close_sock();
- 	sysfs_remove_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
-+	unregister_bpf_testmod_uprobe();
- }
- 
- module_init(bpf_testmod_init);
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index 311ac19d8992..1a50cd35205d 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -149,15 +149,82 @@ static void test_uretprobe_regs_equal(void)
- cleanup:
- 	uprobe_syscall__destroy(skel);
- }
-+
-+#define BPF_TESTMOD_UPROBE_TEST_FILE "/sys/kernel/bpf_testmod_uprobe"
-+
-+static int write_bpf_testmod_uprobe(unsigned long offset)
-+{
-+	size_t n, ret;
-+	char buf[30];
-+	int fd;
-+
-+	n = sprintf(buf, "%lu", offset);
-+
-+	fd = open(BPF_TESTMOD_UPROBE_TEST_FILE, O_WRONLY);
-+	if (fd < 0)
-+		return -errno;
-+
-+	ret = write(fd, buf, n);
-+	close(fd);
-+	return ret != n ? (int) ret : 0;
-+}
-+
-+static void test_uretprobe_regs_change(void)
-+{
-+	struct pt_regs before = {}, after = {};
-+	unsigned long *pb = (unsigned long *) &before;
-+	unsigned long *pa = (unsigned long *) &after;
-+	unsigned long cnt = sizeof(before)/sizeof(*pb);
-+	unsigned int i, err, offset;
-+
-+	offset = get_uprobe_offset(uretprobe_regs_trigger);
-+
-+	err = write_bpf_testmod_uprobe(offset);
-+	if (!ASSERT_OK(err, "register_uprobe"))
-+		return;
-+
-+	uretprobe_regs(&before, &after);
-+
-+	err = write_bpf_testmod_uprobe(0);
-+	if (!ASSERT_OK(err, "unregister_uprobe"))
-+		return;
-+
-+	for (i = 0; i < cnt; i++) {
-+		unsigned int offset = i * sizeof(unsigned long);
-+
-+		switch (offset) {
-+		case offsetof(struct pt_regs, rax):
-+			ASSERT_EQ(pa[i], 0x12345678deadbeef, "rax");
-+			break;
-+		case offsetof(struct pt_regs, rcx):
-+			ASSERT_EQ(pa[i], 0x87654321feebdaed, "rcx");
-+			break;
-+		case offsetof(struct pt_regs, r11):
-+			ASSERT_EQ(pa[i], (__u64) -1, "r11");
-+			break;
-+		default:
-+			if (!ASSERT_EQ(pa[i], pb[i], "register before-after value check"))
-+				fprintf(stdout, "failed register offset %u\n", offset);
-+		}
-+	}
-+}
-+
- #else
- static void test_uretprobe_regs_equal(void)
- {
- 	test__skip();
- }
-+
-+static void test_uretprobe_regs_change(void)
-+{
-+	test__skip();
-+}
- #endif
- 
- void test_uprobe_syscall(void)
- {
- 	if (test__start_subtest("uretprobe_regs_equal"))
- 		test_uretprobe_regs_equal();
-+	if (test__start_subtest("uretprobe_regs_change"))
-+		test_uretprobe_regs_change();
- }
--- 
-2.45.1
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_gem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/pa=
+nfrost/panfrost_gem.c
+> index d47b40b82b0b..8e0ff3efede7 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+> @@ -192,7 +192,7 @@ static int panfrost_gem_pin(struct drm_gem_object *ob=
+j)
+>  	if (bo->is_heap)
+>  		return -EINVAL;
+> =20
+> -	return drm_gem_shmem_pin(&bo->base);
+> +	return drm_gem_shmem_pin_locked(&bo->base);
+>  }
+> =20
+>  static enum drm_gem_object_status panfrost_gem_status(struct drm_gem_obj=
+ect *obj)
 
