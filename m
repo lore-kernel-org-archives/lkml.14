@@ -1,177 +1,198 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44F014B089
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 13:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835D41E497;
+	Thu, 23 May 2024 13:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716470525; cv=none; b=fNe9YSeYR2hcsgAjYAbED7YOnulcC541wzwpNepilHCEczwEEndxFH66/R1ojuef6T7Lu8vKQzL5omPA3mEvs18vB+dQ+gifZTkN5sOleR4M894Jp/Zf0UCkDI/B3gJrrDT8Rwhnfo1TDq4XDVBGP1S4UXijmz48VW5aza++rlM=
+	t=1716470547; cv=none; b=aaVL6FpKs0MnzG9JESbJaWmzPnON4BAE9cH+tMDk2uu+Ipmi9enT1mVTKk0IJFgDatWzRi+z4T6OPPRXoJX/Dlro13u31DRfgUtVQuL90X/RXIfhkF9dgTbJIfK5tbm1JoKzOkIQesNnKysHHqiJIpyEV6c6I+0mNWDQzHxkahs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716470525; c=relaxed/simple;
-	bh=NH24LVGdDYeMPuYOJqA4c6ioraAkWYckArYfePkuphA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GqqRyu19Mu8s529FS4kXgir6odY4oDZdTeWhgbeCJrmCJm6SZqk9+GI6zgj/8C6WMpTgmJEoZED4j0JVo9L8v0cFUKinjsBaTqBxcRjVNBJXJA5qFXcWGmprpRVh2twkRzoOg3M1RxPdab/LI2dQvr26Z16LmxzPOL4ehsN2ABc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=TBlNJTYW; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1716470547; c=relaxed/simple;
+	bh=cAMqcshjNY7oZ9DZf6rf0+n+26VChVTtA6o+CUumKfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GH79jmQIgjdvCSWRdFOkoeJ43aw5Rq8mThmjiI+GJCPSGtAXCujlx/SLsWUmuyzTxvk16W3WCxhtSFoabBs7rc5jrR+jm4ftZgOaOZzdNNRTLFm0mcIQvZ+aGA6WF/5+6kLCcholRmv1iSblBkUn48GJmqeKz3OEOKlP0s6SlJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WG2+xg8z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TBlNJTYW"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a5a8bd02e8eso81559766b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 06:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1716470522; x=1717075322; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=On9r6HMkgaTSzrnf05gbFZryZJM5WajSuUMiqmrGLOk=;
-        b=TBlNJTYWU5SqMAL9bKhXyayirD1yhqkc9Qc7vZCj4acOA+YcYMkcCISYlrUUyXV6Ju
-         iA2HnaV5ir6Km+ylNGX16uFtxfY6pYaoHJxnQwKM/cwduGhHje83HsUNxbL3AOoyEz1+
-         jxJUzd4LNUJ+gQWglyS4APohz500Gzr9Tb3ds=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716470522; x=1717075322;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=On9r6HMkgaTSzrnf05gbFZryZJM5WajSuUMiqmrGLOk=;
-        b=VauV/XTuBDwIV2a7ztwJ4plYCBhdjWgwly3cBcXM/WglRD4k5gXspFowcosyEOywPL
-         z01PBE8AicrW5gBKYQXebBkHRQe5GUPdNq/lzLp/o99/I9j3Xl19ujmyZjrIW2BUrFDU
-         3QL/Ro4Gb1RuFc4c3EfA7eYmENsKVlEGn+6g19g3edQ+fEsIk2vJjPrDTZx3HH0zU6Xa
-         I8Iw4oX0OEW+Xk5+/BZZBjpAOmmNCX9O5bsqLdtD4v2HwxghKtBQdKBLi3yKvQ3wA2Xk
-         jBt43e4BHXjssVDqzVLlq3u0BYVVc/Q7RMBHigS4X3oLlgkfXWvpfsQFp8eoO4xJCmqR
-         cPDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrQTRoOENwcB6i7hJW410gepJZwqBfiZqW6LZlwFMv4S2TkMmNBAHVnF+gm8wiGye7Ez2AT/JaHaUMMO2733iNHM1t8L+pKLiKD32x
-X-Gm-Message-State: AOJu0YypmtAh9uZwA6REmicjVKfeaLhc5u6THupQbIbSVAPlUNlCU693
-	wgqf8myv0sp16N/f+eP4YxpTg2oFgIhu5B4+j9/f7ZoDAmHjW7itJDuxoV2wVjY=
-X-Google-Smtp-Source: AGHT+IGR0y2bdIOAPy2UsVNakF0nkcO1SJLtEWKLN+I3EqK+AagX4rPCgY602MbsaeBciZNK5T/aag==
-X-Received: by 2002:a17:906:64b:b0:a5c:e20c:8255 with SMTP id a640c23a62f3a-a622814aefamr315661266b.4.1716470521180;
-        Thu, 23 May 2024 06:22:01 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d350sm1934790766b.23.2024.05.23.06.22.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 06:22:00 -0700 (PDT)
-Date: Thu, 23 May 2024 15:21:58 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Helen Koike <helen.koike@collabora.com>
-Cc: Linus Torvalds <torvalds@linuxfoundation.org>,
-	Nikolai Kondrashov <spbnick@gmail.com>,
-	Maxime Ripard <mripard@kernel.org>, linuxtv-ci@linuxtv.org,
-	dave.pigott@collabora.com, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kselftest@vger.kernel.org,
-	gustavo.padovan@collabora.com, pawiecz@collabora.com,
-	tales.aparecida@gmail.com, workflows@vger.kernel.org,
-	kernelci@lists.linux.dev, skhan@linuxfoundation.org,
-	kunit-dev@googlegroups.com, nfraprado@collabora.com,
-	davidgow@google.com, cocci@inria.fr, Julia.Lawall@inria.fr,
-	laura.nao@collabora.com, ricardo.canuelo@collabora.com,
-	kernel@collabora.com, gregkh@linuxfoundation.org
-Subject: Re: [PATCH 1/3] kci-gitlab: Introducing GitLab-CI Pipeline for
- Kernel Testing
-Message-ID: <Zk9C9mCj15hVWUyL@phenom.ffwll.local>
-Mail-Followup-To: Helen Koike <helen.koike@collabora.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Nikolai Kondrashov <spbnick@gmail.com>,
-	Maxime Ripard <mripard@kernel.org>, linuxtv-ci@linuxtv.org,
-	dave.pigott@collabora.com, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kselftest@vger.kernel.org,
-	gustavo.padovan@collabora.com, pawiecz@collabora.com,
-	tales.aparecida@gmail.com, workflows@vger.kernel.org,
-	kernelci@lists.linux.dev, skhan@linuxfoundation.org,
-	kunit-dev@googlegroups.com, nfraprado@collabora.com,
-	davidgow@google.com, cocci@inria.fr, Julia.Lawall@inria.fr,
-	laura.nao@collabora.com, ricardo.canuelo@collabora.com,
-	kernel@collabora.com, gregkh@linuxfoundation.org
-References: <20240228225527.1052240-1-helen.koike@collabora.com>
- <20240228225527.1052240-2-helen.koike@collabora.com>
- <20240229-dancing-laughing-groundhog-d85161@houat>
- <5d7ed81b-37f9-48e9-ab7e-484b74ca886c@gmail.com>
- <CAHk-=wixVy3WYvjbt43ZSrCqPDsS76QJQSkXFbbPsAOs1MCSAQ@mail.gmail.com>
- <44ae0339-daf1-4bb9-a12d-e3d2e79b889e@gmail.com>
- <CAHk-=wiccniE=iZDC_e7T+J8iPVQbh1Wi5BaVee9COfy+ZaYKg@mail.gmail.com>
- <17341b96-5050-4528-867a-9f628434e4e6@collabora.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WG2+xg8z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD395C3277B;
+	Thu, 23 May 2024 13:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716470547;
+	bh=cAMqcshjNY7oZ9DZf6rf0+n+26VChVTtA6o+CUumKfU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WG2+xg8z0tKbQBMIbvIaZrKyc0jfVSfwwUGLyu+MJnR6PJJpcn02jZbAvukxh33gi
+	 DNGRVPr1C03ajhy3YlUeh4esjC0XYK+0SeQE9wTmynOlj2vQc5UJuNPiE26H2vaeIJ
+	 SeUIVEyfd08MqzSFI4UTBlMI/XRnFHVgqLeI3IYE=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com,
+	broonie@kernel.org
+Subject: [PATCH 6.8 00/23] 6.8.11-rc1 review
+Date: Thu, 23 May 2024 15:13:27 +0200
+Message-ID: <20240523130329.745905823@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17341b96-5050-4528-867a-9f628434e4e6@collabora.com>
-X-Operating-System: Linux phenom 6.8.9-amd64 
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.11-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.8.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.8.11-rc1
+X-KernelTest-Deadline: 2024-05-25T13:03+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 04, 2024 at 06:45:33PM -0300, Helen Koike wrote:
-> Hi Linus,
-> 
-> Thank you for your reply and valuable inputs.
-> 
-> On 01/03/2024 17:10, Linus Torvalds wrote:
-> > On Fri, 1 Mar 2024 at 02:27, Nikolai Kondrashov <spbnick@gmail.com> wrote:
-> > > 
-> > > I agree, it's hard to imagine even a simple majority agreeing on how GitLab CI
-> > > should be done. Still, we would like to help people, who are interested in
-> > > this kind of thing, to set it up. How about we reframe this contribution as a
-> > > sort of template, or a reference for people to start their setup with,
-> > > assuming that most maintainers would want to tweak it? We would also be glad
-> > > to stand by for questions and help, as people try to use it.
-> > 
-> > Ack. I think seeing it as a library for various gitlab CI models would
-> > be a lot more palatable. Particularly if you can then show that yes,
-> > it is also relevant to our currently existing drm case.
-> 
-> Having it as a library would certainly make my work as the DRM-CI maintainer
-> easier and  also simplify the process whenever we consider integrating tests
-> into other subsystems.
+This is the start of the stable review cycle for the 6.8.11 release.
+There are 23 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Kinda ignored this thread, just wanted to throw my +1 in here.
+Responses should be made by Sat, 25 May 2024 13:03:15 +0000.
+Anything received after that time might be too late.
 
-To spin it positively, the kernel CI space is wide open (more negatively,
-it's a fractured mess). And I think there's just no way to force top-down
-unification. Imo the only way is to land subsystem CI support in upstream,
-figure out what exactly that should look like (I sketched a lot of open
-questions in the DRM CI PR around what should and should not be in
-upstream).
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.11-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
+and the diffstat can be found below.
 
-Then, once we have a few of those, extract common scripts and tools into
-tools/ci/ or scripts/ci or whatever.
+thanks,
 
-And only then, best case years down the road, dare to have some common
-top-level CI, once it's clear what the actual common pieces and test
-stages even are.
+greg k-h
 
-> > So I'm not objecting to having (for example) some kind of CI helper
-> > templates - I think a logical place would be in tools/ci/ which is
-> > kind of alongside our tools/testing subdirectory.
-> 
-> Works for me.
-> 
-> We  can skip having a default .gitlab-ci.yml in the root directory and
-> instead include clear instructions in our documentation for using these
-> templates.
+-------------
+Pseudo-Shortlog of commits:
 
-I'd go a few steps more back and start with trying to get more subsystem
-CI into upstream. And then once that dust has settled, figure out what the
-common pieces actually are. Because I'm pretty sure that what we have for
-drm ci or kernelci right now won't be it, but likely just a local optimum.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.8.11-rc1
 
-Cheers, Sima
+Christoph Hellwig <hch@lst.de>
+    block: add a partscan sysfs attribute for disks
 
-> 
-> Thanks,
-> Helen Koike
-> 
-> > 
-> > (And then perhaps have a 'gitlab' directory under that. I'm not sure
-> > whether - and how much - commonality there might be between the
-> > different CI models of different hosts).
-> > 
-> > Just to clarify: when I say "a logical place", I very much want to
-> > emphasize the "a" - maybe there are better places, and I'm not saying
-> > that is the only possible place. But it sounds more logical to me than
-> > some.
-> > 
-> >              Linus
+Christoph Hellwig <hch@lst.de>
+    block: add a disk_has_partscan helper
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+SeongJae Park <sj@kernel.org>
+    Docs/admin-guide/mm/damon/usage: fix wrong example of DAMOS filter matching sysfs file
+
+Akira Yokosawa <akiyks@gmail.com>
+    docs: kernel_include.py: Cope with docutils 0.21
+
+Thomas Weißschuh <linux@weissschuh.net>
+    admin-guide/hw-vuln/core-scheduling: fix return type of PR_SCHED_CORE_GET
+
+Jarkko Sakkinen <jarkko@kernel.org>
+    KEYS: trusted: Do not use WARN when encode fails
+
+AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+    remoteproc: mediatek: Make sure IPI buffer fits in L2TCM
+
+Daniel Thompson <daniel.thompson@linaro.org>
+    serial: kgdboc: Fix NMI-safety problems from keyboard reset code
+
+Javier Carrasco <javier.carrasco@wolfvision.net>
+    usb: typec: tipd: fix event checking for tps6598x
+
+Javier Carrasco <javier.carrasco@wolfvision.net>
+    usb: typec: tipd: fix event checking for tps25750
+
+Heikki Krogerus <heikki.krogerus@linux.intel.com>
+    usb: typec: ucsi: displayport: Fix potential deadlock
+
+Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+    net: usb: ax88179_178a: fix link status when link is set to down/up
+
+Prashanth K <quic_prashk@quicinc.com>
+    usb: dwc3: Wait unconditionally after issuing EndXfer command
+
+Carlos Llamas <cmllamas@google.com>
+    binder: fix max_thread type inconsistency
+
+Christian Brauner <brauner@kernel.org>
+    erofs: reliably distinguish block based and fscache mode
+
+Baokun Li <libaokun1@huawei.com>
+    erofs: get rid of erofs_fs_context
+
+Jarkko Sakkinen <jarkko@kernel.org>
+    KEYS: trusted: Fix memory leak in tpm2_key_encode()
+
+Sungwoo Kim <iam@sung-woo.kim>
+    Bluetooth: L2CAP: Fix div-by-zero in l2cap_le_flowctl_init()
+
+Sungwoo Kim <iam@sung-woo.kim>
+    Bluetooth: L2CAP: Fix slab-use-after-free in l2cap_connect()
+
+Jacob Keller <jacob.e.keller@intel.com>
+    ice: remove unnecessary duplicate checks for VF VSI ID
+
+Jacob Keller <jacob.e.keller@intel.com>
+    ice: pass VSI pointer into ice_vc_isvalid_q_id
+
+Ronald Wahl <ronald.wahl@raritan.com>
+    net: ks8851: Fix another TX stall caused by wrong ISR flag handling
+
+Jose Fernandez <josef@netflix.com>
+    drm/amd/display: Fix division by zero in setup_dsc_config
+
+
+-------------
+
+Diffstat:
+
+ Documentation/ABI/stable/sysfs-block               |  10 ++
+ .../admin-guide/hw-vuln/core-scheduling.rst        |   4 +-
+ Documentation/admin-guide/mm/damon/usage.rst       |   2 +-
+ Documentation/sphinx/kernel_include.py             |   1 -
+ Makefile                                           |   4 +-
+ block/genhd.c                                      |  15 ++-
+ block/partitions/core.c                            |   5 +-
+ drivers/android/binder.c                           |   2 +-
+ drivers/android/binder_internal.h                  |   2 +-
+ drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c        |   7 +-
+ drivers/net/ethernet/intel/ice/ice_virtchnl.c      |  22 ++--
+ drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c |   3 -
+ drivers/net/ethernet/micrel/ks8851_common.c        |  18 +--
+ drivers/net/usb/ax88179_178a.c                     |  37 ++++--
+ drivers/remoteproc/mtk_scp.c                       |  10 +-
+ drivers/tty/serial/kgdboc.c                        |  30 ++++-
+ drivers/usb/dwc3/gadget.c                          |   4 +-
+ drivers/usb/typec/tipd/core.c                      |  51 ++++++---
+ drivers/usb/typec/tipd/tps6598x.h                  |  11 ++
+ drivers/usb/typec/ucsi/displayport.c               |   4 -
+ fs/erofs/internal.h                                |   7 --
+ fs/erofs/super.c                                   | 124 +++++++++------------
+ include/linux/blkdev.h                             |  13 +++
+ include/net/bluetooth/hci.h                        |   9 ++
+ include/net/bluetooth/hci_core.h                   |   1 +
+ net/bluetooth/hci_conn.c                           |  71 ++++++++----
+ net/bluetooth/hci_event.c                          |  31 ++++--
+ net/bluetooth/iso.c                                |   2 +-
+ net/bluetooth/l2cap_core.c                         |  38 +++----
+ net/bluetooth/sco.c                                |   6 +-
+ security/keys/trusted-keys/trusted_tpm2.c          |  25 ++++-
+ 31 files changed, 339 insertions(+), 230 deletions(-)
+
+
