@@ -1,40 +1,59 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AC7762FF;
-	Thu, 23 May 2024 18:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62654AEE9;
+	Thu, 23 May 2024 18:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716490176; cv=none; b=QDww97ZiH6RxDHZHJnQ39wdk50RVV7tg+gnXi/50nyzUt/wx17c40yHh+frRbqAgy+hXv1ui2OowQd1BFgRBDk7nKRSNW+bLOb0UfYESoeZIQeEVXy1BCiUSmO1ahsget5h7cRou5VxMN4srJg7wbNz/ZQwpmX1g0ePv9zniM50=
+	t=1716490216; cv=none; b=K037nrAhbQ26O5NWgcjqzX71IYFIpgLngXCDtF467alAN6KDa6+v7gi8vg5bjZpngcRR9xAXIIlVTt5lwjPhZoEB3e5beAesdnZNKRiB1jHBg9aKoMMr5IVjSqKRBpH3pI7JsPJM327nN+iZgYJaBs93IbNjlkFQU8K2d35nIq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716490176; c=relaxed/simple;
-	bh=1/DkOOQ4p76I7N1cOX3SyNy1SPrQRKac+fkgkHwVk6M=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=WvseADdqDr2CdmgpuNrSDKvZIniusKQ0Eu++ZyXJbakPWfPbrsmWaWNUQ+0TExI86jxnqOsmvQGFSOCNI+mSdwoxaoGaWG8H76tAGrjpSsKxEF0gTc9d68Uy7hcEekktnI/SGIkMzRY/0VrUvBBvbE7XbdfvOORcTCy1u1JbO0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=s1eVKv++; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716490216; c=relaxed/simple;
+	bh=kyE+MwN/uIjHh3K6ejdqz58qWZ5WZfIAknWZx2NbxUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Aw5oDjCVqGZYBBWT2U/BDImY3QU3lJvsa6ymaSgSRhxZbeQqES3vcuo7RwXVVGSnlTP1L/9/q3DgxblovJcmy9XbDCFn4+Oc/7Y/andmutEUBG6SZIxnOIzWBukdqM8PM22YPkngucKqzDKaG5nteQ83RE8m4ZSj2yk/cASSotQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8Z76W0b; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="s1eVKv++"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716489931; x=1717094731; i=markus.elfring@web.de;
-	bh=1/DkOOQ4p76I7N1cOX3SyNy1SPrQRKac+fkgkHwVk6M=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=s1eVKv++fc+IwvW54Uw73nfZWda+mNvKUummXp8coUqwW9HDA6CvuZL5IAnNZ+AJ
-	 D/1fHo4aRuomZP55p09D/XTF4P8O1uSlPRPcCFXfiFc/D7DDTSvuXtZUdRQWcEU/d
-	 S6xzi7iwAL9cK/9jSybRzQ7B/4or2+N2w88SeOU4rTiXcboJNBLpjvefMT0OT475u
-	 +YQRGC+HLbLHrqquIFKo/rDH0FYkxq1qA7L2bkh9MqDytIy4RhFkSx/rARwW6y0bj
-	 LDb0yqDcYR0z/Pk1ByRUDPZHbRUt3iSsnzR38onSuqBo/ILmSCbp8/DaCbCOpEY8V
-	 jGk8mnLSW8uaOKN+hQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MnG2Q-1sr0O70paW-00jHkR; Thu, 23
- May 2024 20:45:31 +0200
-Message-ID: <2fe45df6-01a2-488b-99fb-5ee20491554c@web.de>
-Date: Thu, 23 May 2024 20:45:28 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8Z76W0b"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ee5235f5c9so122955415ad.2;
+        Thu, 23 May 2024 11:50:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716490214; x=1717095014; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T5jWOQ5e4KuXtG3+BV+nC19AzmmlYRZIw5wGYbugR1o=;
+        b=L8Z76W0bkIvF0JdeaS+QqGRE3E6HOrRf+YTUMY2mB1EgHA8H3gU0LIMrgpQmbwYaX/
+         dOBstVDGBT81Z1cuIuWcOSt6gQTloooRcnycY1wiBLeljRcI+P3zUT/W151gMfOPyBee
+         p3YLiSBHBWu6IuWtSQdL797stP35tRlhXTRk+eup3A7ekThjoovAHPHuT2tpLLR7vMxa
+         Z8ekDntQjUKttr22XCveALbbtsjDI0xVOpRP2TsW3RovN3PVYR31y59OeDpTEny6Df4A
+         qicgs2l93YMvZ6vH/pnJpNqBrK7EpH8Coyf0Nsvj3v6dd7mHFTjW0kg1699S7afsDCqs
+         FgNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716490214; x=1717095014;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T5jWOQ5e4KuXtG3+BV+nC19AzmmlYRZIw5wGYbugR1o=;
+        b=oXCCqHyuhi4YD3MlSjxJWgQMLywuCDxIA/BG9TIUY6/j/YyzBAA7f8Kmd+U50tHE47
+         zIbOUro2K8VorCY+WOt5ppbjWoOIcAiBpOOL3PkV2kgIMiyIjlLink06WHzm93k+9Z6j
+         bFCQTsM7i6HImFc2F9WDHNRzeBzJrjnBA6lH1ZAFQMX0QL11TqXw+vIiYLpR87H3ocf2
+         Xsn6OMcSips67+Io3x+w9AR1+2U+cXfFj5M2252pr41dWBpiavJjA4ffTo868XZNc1T8
+         zKAQ2C6a89/4e3HtC/unCG9aPQYEvswmdug2w2zj+bk9Q/IQuY0VTWueMbFj46pUrEAT
+         jRWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVC3s0lObWE15Hjl4O00rkDVAjVokXA4GA0rNU5J+7GF7XnWCqqaUD2gRDUi2iiKi1iwsOFvK4iCjPYgOqha04s+rTZwSxdiYsbwicseTU6kRD4v38gAha65FpLCWD8agKoIaC0
+X-Gm-Message-State: AOJu0YzutcEaVAtGjqhYrQE/jVGKQk+HnjanH5+E69yfjuOAX0Xo6EnW
+	UaAEWueVMrdUQ3edFSTW9wapzJz+gd+eq3i6W6Eh5fRmnSqy41nl
+X-Google-Smtp-Source: AGHT+IH8TfXPmp+k2+6BFrZp7D5q+d4zjU2H10O3j9gFv9PYr2beC6QHykVOAGJXFo/xesXdoPw53Q==
+X-Received: by 2002:a17:902:f987:b0:1e6:7700:1698 with SMTP id d9443c01a7336-1f448c266e3mr1967485ad.35.1716490214038;
+        Thu, 23 May 2024 11:50:14 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0bbde9d7sm266512825ad.106.2024.05.23.11.50.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 May 2024 11:50:13 -0700 (PDT)
+Message-ID: <19753311-98f5-40af-8e53-173e12e83503@gmail.com>
+Date: Thu, 23 May 2024 11:50:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,45 +61,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org,
- linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Lakshmi Yadlapati <lakshmiy@us.ibm.com>, Mark Brown <broonie@kernel.org>,
- Ninad Palsule <ninad@linux.ibm.com>, Rob Herring <robh@kernel.org>
-References: <20240522192524.3286237-18-eajames@linux.ibm.com>
-Subject: Re: [PATCH v6 17/20] ARM: dts: aspeed: Add IBM Huygens BMC system
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240522192524.3286237-18-eajames@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 5.15 00/23] 5.15.160-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+References: <20240523130327.956341021@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240523130327.956341021@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:FTGLkl+0enI/p1XJo7ZYK9LDrqNcg7b95/RXLCF0nXZ68DUQmlS
- iC7OTWqBrdhVzfK8t14Oai0zRoXTIqXjxUBLL0eq4ajmSllyoBqEhyia4p55PZZJiJEZr9b
- 05Py2bbsvv3gqPowLi4lkqommtD0oK3RaiC38w0vQvuWe2qrfZBxVPJ3afDNWacBxveWpyr
- T4QGfXQX8Ybt5JAQobbRA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1VX0rS2Imqo=;0iFIBxOIEJruT1gIhSJRlAUIV2o
- tFYgI/LeHVdXNXLpS24mCZL0a+GLOzMLP1NsCnoO507izamlEG9b3D75OJMOA3ZHeAWAEban5
- niWzLmdAA5GQeIyrkeKI3MCisB+uDDMKbLxqTovcD6YI6+jnPh5ZgdfTbte6YZwAnHZrZWsmy
- 972frGfk2DJF7Kr9yADERe9ti59Zu+hbb0J4a4h05C5eFahLvbJVQT+oC0jqdLfQZryowssxU
- QNa/MjQQdOqXkX7S4um1Jn/xyK9X5AQtANyGm9Mr+YhZiJ2mfJ9S6fGfU+PPFbqch0JQGIT/d
- XQR957FHDLbcd0gyn2iwi0uAYB2MDBMAJ27/Q9gzMoIVUYouOtU1XpP9tqhnyJdWRi9IKiR2V
- +ANocfPHhJ7CEj4ehQxta/AZZK+NEpbTh2p2IeuIliEwKyJNGsdS/jq98XVKEVy+H0H5c1wyP
- Fe3Ye9vA21R3MemhzSENqAfN6HyHb94oWcrNPviMgUt2EDZ2qX8GV/WXfRHZtZOCQKv00ZEVs
- aeev7JpQyLyi850aQC/t9kKi6RzwRFoM9Mdj3MAZYXoBb5+e7g4EvDJn2U4TNDqgvedn/rLL9
- yPg6sukD554R6FHhNkbXMoZ8KTUj7t49/QAhuBAhHivl3+bV961bacwJmAmmADdkIHaV0nXjn
- lWlgKQNaP4lm0SA5SZS04WP6L3Qz4Wpwuq70ukfdeOOqLIKwmQK/e+YA/1O2NmTtG7azMzp59
- Y8yFCRDTyr7eSWxWpKOHeE1M+M8f/GC1QWYUf7CL5RL0pPMwLCSlzqXxTl7c0QXalNDJ5gQEi
- B/y1EGEUwBLSbTNuEpZbHDRkG+y09LFLmiJDBTvtFahlI=
 
-> The Huygens is a Rainier with modifed FSI wiring.
+On 5/23/24 06:12, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.160 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 25 May 2024 13:03:15 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.160-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Will imperative wordings become helpful for a better commit message here?
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Regards,
-Markus
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
+
