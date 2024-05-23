@@ -1,118 +1,153 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4CF17BA6;
-	Thu, 23 May 2024 15:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC3511711
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 15:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716478253; cv=none; b=B83q2uG7U7oLI067W6Hhl1ZkXNCYZsw+k06w0JxBT64Bpr6PJhH0LHHHagA+IbLafODOCPz0eNfEMKAv2i38CQ0O8IgTyXpOY9oMlDOB5l+t9GWfbD5PVXq3rf/gWEub0KCkwuHs7jjdYLEkDokRt6GufF3zoPXVZLTK1sbeKTM=
+	t=1716478454; cv=none; b=k6Kw3C8eR3nQrhqKLnZAK7B/UhR6p96kagL1U3dLPiIhKTJ30+WBR98xUB0yLe1HuaOHQeTyQlfz6R7SR8Ni+8idyQe6G1+pTgH5OJoaeDFVQoGHb7/oL5bKRM8p+k6atFbJR1uCVEV8t5f4iBA0qHtipoRnxkJCy6LpjDW2Kzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716478253; c=relaxed/simple;
-	bh=eRv++RtTMbGGKt3sM0Qg0vdSeba5nbe3+wVeKfd8zio=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TxHl+mV5AgsM/DJEzW6+BBz/bL++7ZZZVsPOgSC77LoblJIqRJFnmQ0T38QHI2eWbPvDQMTAcqZuVjmW2tp6YjHEnmXtJvffDQcCshp+Ngkg5m9HzPcjnsCSDlq8P0YSLx6s2G4SMg2xCo9xvpNcUoQV9W/TyZ0WojTQ5MCJmbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=g43oAHcT; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=qbWJ2rO4; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1716478454; c=relaxed/simple;
+	bh=OMal/ed/lGH3bPNe6acjKpomMrRdM5MAjqoN2jZ1j04=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hpakc7HdXheRLmFIeaL7BihMPgZBXF4klUaMitfbLk4fzIkIJ7U0WNfTboGiB/hO0ciK6H0ZKLdks2jaWuiJVjAef6LRU7BVKqu6ufeShmEieWH/kqsqg6GZYLSveGr+pr6Xuzdk5Ey/tGIFIZlgPik7qc2kh7l7CZ8zAGiIfMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=oC/stCBm; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="g43oAHcT";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="qbWJ2rO4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1716478251;
-	bh=eRv++RtTMbGGKt3sM0Qg0vdSeba5nbe3+wVeKfd8zio=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=g43oAHcTcvfMrhAvQOkxeUKtwoHt3NN8Nc+/EQlAa72XQl7BpkFjR1uN36q9zeAbC
-	 a/hJlF58ii8yi1g1dFRtTHIS/pcHYwDmDQlw2RNDz15o6YC7eqndPdyNABEF4QOaDc
-	 bfW8eBZvYwlYUuSg6aPG0q1kc3Ou6KqyMi00/NXI=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 1AB811286D83;
-	Thu, 23 May 2024 11:30:51 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id U16E3k5rrxQQ; Thu, 23 May 2024 11:30:51 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1716478250;
-	bh=eRv++RtTMbGGKt3sM0Qg0vdSeba5nbe3+wVeKfd8zio=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=qbWJ2rO4zA9JMpnSR2fBDKZhC7Ip/YnRTlLDUOztgsxh6L7fNhZf+1GJAHX2Zn6Vv
-	 ceib3sMdsbSH2G4shd9g6boLBsIBKv2ohYC2ey7N7sZ5d/zo+eDwaoZBfVulI16RiB
-	 kI0fUinUOLMQMt1PaEAFptlzseYD2CJkcdZZlo18=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id A5F2E1286C23;
-	Thu, 23 May 2024 11:30:49 -0400 (EDT)
-Message-ID: <9dfeb6e3d568452ab1227484405b1fc221bd25c1.camel@HansenPartnership.com>
-Subject: Re: [PATCH RESEND] KEYS: trusted: Use ASN.1 encoded OID
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org
-Cc: keyrings@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Eric
- Biggers <ebiggers@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>, Andrew Morton
- <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.ibm.com>, David
- Howells <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>, James
- Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, "open
- list:CRYPTO API" <linux-crypto@vger.kernel.org>,  open list
- <linux-kernel@vger.kernel.org>, "open list:SECURITY SUBSYSTEM"
- <linux-security-module@vger.kernel.org>
-Date: Thu, 23 May 2024 11:30:47 -0400
-In-Reply-To: <D1H2P674GFY0.3O8WYK2P1GZ2K@kernel.org>
-References: <20240523131931.22350-1-jarkko@kernel.org>
-	 <9c96f39ed2161dd7f0c3a7964cba2de3169fae3b.camel@HansenPartnership.com>
-	 <D1H2P674GFY0.3O8WYK2P1GZ2K@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="oC/stCBm"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59b49162aeso1116073266b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 08:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1716478451; x=1717083251; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=OMal/ed/lGH3bPNe6acjKpomMrRdM5MAjqoN2jZ1j04=;
+        b=oC/stCBmvA7lx8xr8E+VOt6Mgw2D4aTRqpoQk3I+Ki2j+RTQczlfsNz4ttTXBZyQbB
+         j1ybV6bJknPlFJiJjOtL6aGdwKZk8QuZT6I6lvsaMnQl3Wimtjojgq5g6KoIKyP/4COT
+         r+UVL9EiW6k/k8bZR4+qg4FQ20/G/mrWHbVl0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716478451; x=1717083251;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OMal/ed/lGH3bPNe6acjKpomMrRdM5MAjqoN2jZ1j04=;
+        b=LQ9dLqoy9h7JdlboFl/lGIfgV8zfekaIkI6Gxfvq9+7tJWASR5ZMdarso7BSHMdG3x
+         lpMi2g+o6iQqheD0kD3EF5g/yZwMp5zq/Jd3q5guhi4fYEOXCpEk8zoGwSGbtfKUGul8
+         1baqCxNpZXetnGT0MCxLcAr4AZ2289ej7aVm2ndN2nqyD0j5hyMtGIln7Tr/nE0oobPa
+         1TDNJR8F14CRNvgHGkly6aydU7I3Bam8R9HPSoCSoAjGcHMxZYho//PxcnzzK75jVt3Q
+         3m4NfQrqYE1Od2eWre7V6fYiZelCj9RMIXAr66k92J4omXnX5e+ldr0wPDSWXTWUP8XC
+         EK7A==
+X-Gm-Message-State: AOJu0YxbbfRaY+0aV3c6rI8AeL2cNEryKdm4z/tmaIobwv2v/Lb3IpCu
+	CfzxQX4q/odQz+gxe+D0dA7haUpfuo2llhRzUsRvKSQWO34W/pH8FAOVQdkz844=
+X-Google-Smtp-Source: AGHT+IGUIe8BnbhMl6MI4v9lEdkVrwoQMcaDxqEJpPKDCq1/FQgOPAuTqkr3BftbxLNAmXDNNF8nZw==
+X-Received: by 2002:a17:906:231a:b0:a62:2cef:95e6 with SMTP id a640c23a62f3a-a622cef97b9mr332133266b.14.1716478451515;
+        Thu, 23 May 2024 08:34:11 -0700 (PDT)
+Received: from [10.125.231.30] ([217.156.233.157])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5df00490cfsm794685866b.159.2024.05.23.08.34.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 May 2024 08:34:11 -0700 (PDT)
+Message-ID: <d592b997-54f6-4119-bcf1-ff180713d6be@citrix.com>
+Date: Thu, 23 May 2024 16:34:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/bhi: BHI mitigation can trigger warning in #DB
+ handler
+To: Alexandre Chartre <alexandre.chartre@oracle.com>,
+ Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, daniel.sneddon@linux.intel.com,
+ pawan.kumar.gupta@linux.intel.com, tglx@linutronix.de,
+ konrad.wilk@oracle.com, peterz@infradead.org, gregkh@linuxfoundation.org,
+ seanjc@google.com, dave.hansen@linux.intel.com, nik.borisov@suse.com,
+ kpsingh@kernel.org, longman@redhat.com, bp@alien8.de, pbonzini@redhat.com
+References: <20240523123322.3326690-1-alexandre.chartre@oracle.com>
+ <a04d82be-a0d6-4e53-b47c-dba8402199e7@intel.com>
+ <1c69f62e-0dee-4caa-9cbe-f43d8efd597b@oracle.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <1c69f62e-0dee-4caa-9cbe-f43d8efd597b@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Thu, 2024-05-23 at 16:54 +0300, Jarkko Sakkinen wrote:
-> On Thu May 23, 2024 at 4:38 PM EEST, James Bottomley wrote:
-> > On Thu, 2024-05-23 at 16:19 +0300, Jarkko Sakkinen wrote:
-> > > There's no reason to encode OID_TPMSealedData at run-time, as it
-> > > never changes.
-> > > 
-> > > Replace it with the encoded version, which has exactly the same
-> > > size:
-> > > 
-> > >         67 81 05 0A 01 05
-> > > 
-> > > Include OBJECT IDENTIFIER (0x06) tag and length as the epilogue
-> > > so
-> > > that the OID can be simply copied to the blob.
-> > 
-> > This is true, but if we're going to do this, we should expand the
-> > OID
-> > registry functions (in lib/oid_registry.c) to do something like
-> > encode_OID.  The registry already contains the hex above minus the
-> > two
-> > prefixes (which are easy to add).
-> 
-> Yes, I do agree with this idea, and I named variable the I named
-> it to make it obvious that generation is possible.
-> 
-> It would be best to have a single source, which could be just
-> a CSV file with entries like:
-> 
-> <Name>,<OID number>
-> 
-> And then in scripts/ there should be a script that takes this
-> source and generates oid_registry.gen.{h,c}. The existing
-> oid_registry.h should really just include oid_registry.gen.h
-> then to make this transparent change.
-> 
-> And then in the series where OID's are encoded per-subsystem
-> patch that takes pre-encoded OID into use.
-> 
-> Happy to review such patch set if it is pushed forward.
+On 23/05/2024 3:52 pm, Alexandre Chartre wrote:
+>
+> On 5/23/24 16:28, Dave Hansen wrote:
+>> On 5/23/24 05:33, Alexandre Chartre wrote:
+>>> The problem can be reproduced with the following sequence:
+>>>
+>>>   $ cat sysenter_step.c
+>>>   int main()
+>>>   { asm("pushf; pop %ax; bts $8,%ax; push %ax; popf; sysenter"); }
+>>>
+>>>   $ gcc -o sysenter_step sysenter_step.c
+>>>
+>>>   $ ./sysenter_step
+>>>   Segmentation fault (core dumped)
+>>>
+>>> The program is expected to crash, and the #DB handler will issue a
+>>> warning.
+>>
+>> Should we wrap up this gem and put it with the other entry selftests?
+>
+> It looks like tools/testing/selftests/x86/single_step_syscall.c tests
+> sysenter with TF set but it doesn't check if the kernel issues any
+> warning.
 
-Heh, OK, since I'm the one who thinks it's quite easy, I'll give it a
-go.
+But shouldn't the SIGSEGV still cause the selftest to notice?
 
-James
+Also, there should be a selftest for NT.  (mis)handling of that will
+take the entire kernel down.
 
+AC for good measure too, as that's the other flag handled specially.
+
+~Andrew
