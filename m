@@ -1,131 +1,177 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACD1A34
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 03:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83927EF;
+	Thu, 23 May 2024 03:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716433546; cv=none; b=pXrI66OF4arZl5IThBS2ymk1b36erzkgU7YRH7a76uHGkLI8RZ4jfUvtXgKCDmKYH2wB5ZXFR+aFWRPHJQ+KsbNn9yLImUBzkdxKXEh7QJvxhjZFy/mKurhXCYRePrg215dGVv2m1dFwTlnfXQuU8TSV2FwCZ4psvoAmhRCfqn8=
+	t=1716433720; cv=none; b=Ahyg6PsdmKOYu9XLL9G68SsgposTnjZ8tLfI6LM46VpPGTvE7nRcK4mmZSsa9MUD6m6RNhZTpfoAK0wnwhOkE77sm2fC5KthMfRC04jcM16+gs3AdVWFSdbGdILD0jRziKxU0iFF8050tc9bkbuDAjeT+qrkgXChj71nCXNDpdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716433546; c=relaxed/simple;
-	bh=7DaPTZBGkttvXDB8AfLhqx6sF7jNWK9QRVpfv2fzxfA=;
+	s=arc-20240116; t=1716433720; c=relaxed/simple;
+	bh=395EtBMeKvhaqcyJa2SJSdImD3drPDcuSCs8TeGMsS4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NOrPmzXGZUyHTic+kRNBD4nJ5wr1fdIza1S/9PH9SO+ySX2YgNm7pB+UccZpUz2Ej/S/iPwQz7bFG8A2THomKFOBynPliWU0Jboom+lLnNCD8lrx+3tWTwU6v/TVT6duLtcJAMUb843f26V6I9rh2amRKbtUbKvzOxi/u4u2dq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=FhxcBbdS; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=GWw4OAO+QuT/BXvg6EFQ2B5IuDgk6MDCwhtErIN34KZ03sFO1TFblbr6vbzu5GkctgZygAuxMYSHZC5VImRBjqFxmr0/uoMZzhfpAam9MctXyIu8Cr13dNGESTItSZC5ndXfAugsqvktjsQTYB9v1BTl7r/119fIlq3iOb7o/yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YcGnkarf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8seKvAx3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xo8J9aYV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nN513p3S; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="FhxcBbdS"
-X-Envelope-To: kikuchan98@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
-	t=1716433542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YcGnkarf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8seKvAx3";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xo8J9aYV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nN513p3S"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EDE2C1FDCE;
+	Thu, 23 May 2024 03:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716433716; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5pCVOTMBUtF61UbWtvu2nKJhMTtTjKGnydb/Jdcjr8w=;
-	b=FhxcBbdSQ46OFbvgAWdxQJA7GZW9tW+Rqg67JJJviT54ZJTH6ulBW8YIa9jNvxyuDsNw2f
-	2M/1OGKt48ujYuqKtg2WOKVbf9LUj5QLVbw/xYFNEUyfmwF6cxVDatxWTSgeHR7Hpj3lwo
-	p4TZSrMq25uv13sjXX7HUuRJ+wBZu1717d/7y3dAv8crxXQdQAn4NIQ2pxyxbdK73ytwhD
-	CnU1avWfaB1loIYCZTer/ek+TfsfD6DdW2iZ7ZFrVwJf8eiQ0i9voPBMW9Fv0CpU0s6OfJ
-	NzE/w7FHeZbUlwG2pXmyhTBWO+UfBPnwD4Mq+W+09cbkaS04YQFNocDyVfIOOg==
-X-Envelope-To: privatesub2@gmail.com
-X-Envelope-To: aou@eecs.berkeley.edu
-X-Envelope-To: bigunclemax@gmail.com
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: fusibrandon13@gmail.com
-X-Envelope-To: jernej.skrabec@gmail.com
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-pwm@vger.kernel.org
-X-Envelope-To: linux-riscv@lists.infradead.org
-X-Envelope-To: linux-sunxi@lists.linux.dev
-X-Envelope-To: mkl@pengutronix.de
-X-Envelope-To: p.zabel@pengutronix.de
-X-Envelope-To: palmer@dabbelt.com
-X-Envelope-To: paul.walmsley@sifive.com
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: samuel@sholland.org
-X-Envelope-To: ukleinek@kernel.org
-X-Envelope-To: wens@csie.org
-Date: Thu, 23 May 2024 13:04:11 +1000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: John Watts <contact@jookia.org>
-To: =?utf-8?B?44GN44GP44Gh44KD44KT44GV44KT?= <kikuchan98@gmail.com>
-Cc: privatesub2@gmail.com, aou@eecs.berkeley.edu, bigunclemax@gmail.com,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	fusibrandon13@gmail.com, jernej.skrabec@gmail.com,
-	krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	mkl@pengutronix.de, p.zabel@pengutronix.de, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, robh@kernel.org, samuel@sholland.org,
-	ukleinek@kernel.org, wens@csie.org
-Subject: Re: [PATCH v9 0/3] Add support for Allwinner PWM on D1/T113s/R329
- SoCs
-Message-ID: <Zk6yK3U9tgxOxcBb@titan>
-References: <CAG40kxGMu-TSchNezkcC_A97hzPnWU3KxeL-X-hJfPhjr_COyQ@mail.gmail.com>
+	bh=V0N0S6r8IeovFdxww9RN8WulP8rYDdid/w2zv2NcHlY=;
+	b=YcGnkarfP7rAwvhiOINxsKMbHpbeoO5PLcP2+nhBTfDiy176wv+VbDX11CO6faQrg2kZ6B
+	xmEWJFNLm4TqJ8NB5pQi4TQ4HlbCqxki0PZnYqRfn/1PGf2sp5uIgzPHi8DO5YYkntL13s
+	/PoGuujuJZycBq23rlOpbta8wOEdouU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716433716;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V0N0S6r8IeovFdxww9RN8WulP8rYDdid/w2zv2NcHlY=;
+	b=8seKvAx34N9zbAbSXvZmX90nlXbI+J0lTECHG1ywHskkNPLTJeU0OCKKXM714nxIgCjOPv
+	cAqnqxCS4rF9SjAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xo8J9aYV;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=nN513p3S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716433715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V0N0S6r8IeovFdxww9RN8WulP8rYDdid/w2zv2NcHlY=;
+	b=xo8J9aYV2HvLfM1cXOQxHP9mc8VPZLhgd60GR2simJH6IFQTHl2BisCBQ80uUL+up4OfDt
+	IKTrH+tCZw22ujA2Fz5M+WpPbZ4dxsWOe2MMd5DqaEBJJMod50MovReFjtWnyfWYgNWUhU
+	Kp8Uhrbt/BtvEopATR1oY6dRnd4z+VU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716433715;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V0N0S6r8IeovFdxww9RN8WulP8rYDdid/w2zv2NcHlY=;
+	b=nN513p3S5maKAmTkBL5gb+fzrqAqgWdB+u8EK73ofQkChx9IgR8Rg6R7AxhnOx1vhmHiHn
+	oIj72gUreXnNf5Bg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 948A813A6B;
+	Thu, 23 May 2024 03:08:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id x4UfITKzTmZrEAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 23 May 2024 03:08:34 +0000
+Date: Thu, 23 May 2024 05:08:29 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Peter Xu <peterx@redhat.com>
+Cc: Axel Rasmussen <axelrasmussen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Helge Deller <deller@gmx.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Liu Shixin <liushixin2@huawei.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Subject: Re: [PATCH v2 1/1] arch/fault: don't print logs for pte marker
+ poison errors
+Message-ID: <Zk6zLRimo6Q6ZrwM@localhost.localdomain>
+References: <20240510182926.763131-1-axelrasmussen@google.com>
+ <20240510182926.763131-2-axelrasmussen@google.com>
+ <Zj51rEwZeSK4Vr1G@x1n>
+ <ZkPJCc5N1Eotpa4u@localhost.localdomain>
+ <ZkPY4CSnZWZnxjTa@x1n>
+ <ZkSMv31Cwx080no7@localhost.localdomain>
+ <Zk5noUEYI4lknyJy@x1n>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG40kxGMu-TSchNezkcC_A97hzPnWU3KxeL-X-hJfPhjr_COyQ@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <Zk5noUEYI4lknyJy@x1n>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[google.com,linux-foundation.org,kernel.org,alien8.de,csgroup.eu,linux.intel.com,redhat.com,zytor.com,gmx.de,hansenpartnership.com,nvidia.com,huawei.com,infradead.org,ellerman.id.au,linux.dev,linux.ibm.com,gmail.com,linutronix.de,vger.kernel.org,kvack.org,lists.ozlabs.org];
+	R_RATELIMIT(0.00)[to_ip_from(RLeqp5gkuwhygrjzi4zhnnr4iu)];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: EDE2C1FDCE
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
 
-On Thu, May 23, 2024 at 11:26:07AM +0900, きくちゃんさん wrote:
-> Hello Aleksandr,
+On Wed, May 22, 2024 at 05:46:09PM -0400, Peter Xu wrote:
+> > Now, ProcessB still has the page mapped, so upon re-accessing it,
+> > it will trigger a new MCE event. memory-failure code will see that this
 > 
-> I had coincidentally developed a PWM driver for the device.
-> Based on my experience, I find that dynamically changing the coupled
-> DIV_M value is quite complex.
-> The current approach has limitations, especially with resolution
-> changes, which can be unpredictable for users. For example:
-> 
->   1. Enabling channel A automatically selects DIV_M.
->   2. Enabling coupled channel B with a specific period may result in
-> poor resolution for channel B, as the DIV_M value depends on the
-> period of channel A.
->   3. If channel B is enabled first, channel A may not be enabled if
-> its period doesn't fit the DIV_M range selected by channel B.
-> 
-> Additionally, using APB as a clock source for the channels would
-> further complicate the process.
-> 
-> To simplify this, I suggest (maybe for the future) specifying these
-> values directly in the Device Tree like this:
-> ```
-> allwinner,pwm-coupled-channel-clock-sources="hosc", "apb", "hosc";
-> allwinner,pwm-coupled-channel-clock-prescales=<0>, <3>, <8>;
-> ```
-> This would delegate the complexity to the DT, making the resolution
-> predictable for users.
-> As a bonus, it introduces a way to select clock sources for each
-> coupled channels.
-> 
-> For the meantime, I think it is enough to use fixed "hosc" and <0> for
-> regular use.
-> 
-> Looking forward to your thoughts.
-> 
-> Best regards,
-> kikuchan.
+> The question is why accessing that hwpoison entry from ProcB triggers an
+> MCE.  Logically that's a swap entry and it should generate a page fault
+> rather than MCE.  Then in the pgfault hanlder we don't need that encoded
+> pfn as we have vmf->address.
 
-I have a somewhat opposite opinion. I've developed a driver too and posted it
-on the u-boot mailing list that is deterministic and handles both channels:
+It would be a swap entry if we reach try_to_umap_one() without trouble.
+Then we have the code that converts it:
 
-https://lore.kernel.org/all/20240518-pwm_d1-v1-0-311fc5fe2248@jookia.org/
+ ...
+ if (PageHWPoison(p))
+         pteval = swp_entry_to_pte(make_hwpoison_entry(subpage));
+	 set_{huge_}pte_at
+ ...
 
-It does this by remembering the settings for channels and disabling then
-setting both channels at once whenever there's an update.
+But maybe we could only do that for ProcA, while ProcB failed to do that,
+which means that for ProcA that is a hwpoisoned-swap-entry, but ProcB still
+has this page mapped as usual, so if ProcB re-access it, that will not
+trigger a fault (because the page is still mapped in its pagetables).
 
-I think this is a decent enough solution to the problem and just works
-automatically without people having to micromanage the controller.
 
-John.
+-- 
+Oscar Salvador
+SUSE Labs
