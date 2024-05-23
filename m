@@ -1,101 +1,57 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0F6849C
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744C0171A5;
+	Thu, 23 May 2024 18:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716490271; cv=none; b=opIOB1X/hA17N5OuF0bqSlIRzTot2vRYB59uxIDqLkUAgQKPjmcFqc3osbIA6vdGAexqDotYVLp7jh25qL2RykXcdDEr4jE6KPLuduTisKcLAA5Qg6xp4a6kmpe76b0+5R0hzSxb8XNpCzSa+v+nl6uFEya9Cw0b8C0zH4ImwWU=
+	t=1716490587; cv=none; b=RrEezAFNo0zO6hVKuNp0GTRbpb6vroDgFPaYsFunMLH4bK7VJdPQry1znkmLz0qe8CNYdct2XzfZ3M6KHay1gGja/2M3s03RB6qWz8hKJoGekWMK9Q8N8EWY+7SgSoszYaZs5wHAX1M7F2yLJ5QyHicQXWX9FuCRfr6S6hZWm+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716490271; c=relaxed/simple;
-	bh=O69u3F2Eb1LeRS151raa2cfdzD4uRhaGK6UM3e8yASk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mds/dA/G7KXQ5o8Yzp4WB2kC9z22tzPXzgbuughLzlE1EQmQbMcJZ0PqjusnRkO/asDWzECwUfk4vQHV0HQUdKDun0DpzEBzNTC5clozO/UvQj5J4w1DAwBClu+5DqiTlnLu9Kqb15ialdVCMjOBf7K/ohlDgkTVYRy1Uf0Ku7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com; spf=pass smtp.mailfrom=jubnut.com; dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b=kEtSnsGq; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jubnut.com
+	s=arc-20240116; t=1716490587; c=relaxed/simple;
+	bh=GMvp4ZUa5auyWW48u3nDaI5JWsfDmBZz1W/ehEXgqs8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bcizJ6YmYfZ6Q1p5eqPDeF50Ns4ppP+tBP77Qk0CjlRH+VzbP5xe1ixwvHKUZkywtPDl5o0xp6weVtPwQo+llFkIPzYJKDYwGKcgxv9yqY19qURPWgaDtf9RSwdAo8AA9gzw1xGXxb04AZTMl64tnp42Gw2Q5c+jujBpCJge7A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=J2Nraw2g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b="kEtSnsGq"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4VlcTl6D2Lz9skk;
-	Thu, 23 May 2024 20:42:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jubnut.com; s=MBO0001;
-	t=1716489723;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O6sPCZS/YXpZlRbF7103nFwMsqEkLQgp0M11gQENI/E=;
-	b=kEtSnsGqACAU3LbLA5VT8wELu43AbLtFiHoWZ19oMgtiEE69VPXf+DiPBBh9wcI1MlQX46
-	2LcMrh6gLG5N18HhoVnFo+GFcxW3psbrO6nyZoM0iFbGBEanqBMqO8E7E7qqk5Dy4xrLd7
-	X6NQE2zfdFHyv1QelV6vn2qvxVarvo7kRbBsjobR/de4Xz1Uwx+SwDcx6FTpV2uIQQwP+z
-	uTLavDc44yN4rPb6Odn+VRcI+PiWwq+212aIPqj7v7p7MaeZjOi9wqHk4tsnaCazfQgMqq
-	cjoQiArx2iR0JQx+8EeUyMkh+iOlJ84/PqagYqe6Z8WMAWkOFsPv0sX0E7czLw==
-From: Ben Walsh <ben@jubnut.com>
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
- "Dustin L. Howett" <dustin@howett.net>, Kieran Levin <ktl@frame.work>,
- Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Mario Limonciello
- <mario.limonciello@amd.com>, chrome-platform@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] platform/chrome: cros_ec_lpc: Correct ACPI name for
- Framework Laptop
-In-Reply-To: <ZkscFnmHeWWma7Nb@google.com>
-References: <20240515055631.5775-1-ben@jubnut.com>
- <20240515055631.5775-6-ben@jubnut.com> <ZkscFnmHeWWma7Nb@google.com>
-Date: Thu, 23 May 2024 19:42:00 +0100
-Message-ID: <87jzjk1ibr.fsf@jubnut.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="J2Nraw2g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD8BC2BD10;
+	Thu, 23 May 2024 18:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1716490586;
+	bh=GMvp4ZUa5auyWW48u3nDaI5JWsfDmBZz1W/ehEXgqs8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J2Nraw2gaH6n3MhgobyWRQcVgP6jAWECBzB95SjfoVBQJmBDmSNJZDtSOjFJ4JlAt
+	 F4W6jfmG+4pH2rfoHIiPlrLeKyO9ulz746Hu/tTOEZGDO51VthSHB81abHQHqj2vKY
+	 OI3ineFKsxEaxMgE/dRhUP0goHVQ7NaCG+OwWmGI=
+Date: Thu, 23 May 2024 11:56:24 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yuanyuan Zhong <yzhong@purestorage.com>
+Cc: David Hildenbrand <david@redhat.com>, Matthew Wilcox
+ <willy@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, Mohamed Khalfella
+ <mkhalfella@purestorage.com>
+Subject: Re: [PATCH] mm: /proc/pid/smaps_rollup: avoid skipping vma after
+ getting mmap_lock again
+Message-Id: <20240523115624.d068dfb43afc067ed9307cfe@linux-foundation.org>
+In-Reply-To: <20240523183531.2535436-1-yzhong@purestorage.com>
+References: <20240523183531.2535436-1-yzhong@purestorage.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Rspamd-Queue-Id: 4VlcTl6D2Lz9skk
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Tzung-Bi Shih <tzungbi@kernel.org> writes:
+On Thu, 23 May 2024 12:35:31 -0600 Yuanyuan Zhong <yzhong@purestorage.com> wrote:
 
-> On Wed, May 15, 2024 at 06:56:30AM +0100, Ben Walsh wrote:
->> Framework Laptops' ACPI exposes the EC as name "PNP0C09". Use this to
->> find the device. This makes it easy to find the AML mutex via the
->> ACPI_COMPANION device.
->>
->> The name "PNP0C09" is part of the ACPI standard, not Chrome-specific,
->> so only recognise the device if the DMI data is recognised too.
->
-> I don't quite understand the statement.  Why it needs DMI data?
+> After switching smaps_rollup to use VMA iterator, searching for next
+> entry is part of the condition expression of the do-while loop. So the
+> current VMA needs to be addressed before the continue statement.
 
-There are lots of computers with EC chips with ACPI name "PNP0C09"
-because it's part of the ACPI standard (for example I have an Intel NUC
-with one of these). Most of them don't support the cros_ec protocol, so
-the cros_ec driver should ignore these chips. The Framework EC is
-unusual in that it's called "PNP0C09" and supports the cros_ec protocol.
+Please describe the userspace-visible runtime effects of this bug. 
+This aids others in deciding which kernel version(s) need the patch.
 
-Before these patches, the cros_ec code just ignored PNP0C09 because it
-wasn't in the match table. The cros_ec_lpc_init logic looked like:
-
-  * dmi_match => ok
-  * acpi_name == "GOOG0004" => ok
-  * otherwise fail.
-
-After the patch, cros_ec_lpc_init still has this behaviour. We have
-"PNP0C09" in the match table so the driver gets hooked up correctly
-with the right "ACPI_COMPANION" device, but we don't allow the match
-to proceed unless we have the DMI data indicating it's a Framework EC.
-
->> -	} else if (!cros_ec_lpc_acpi_device_found) {
->> +	} else if (cros_ec_lpc_acpi_device_found <= 0) {
->> +		/* Standard EC "PNP0C09" not supported without DMI data */
->
-> Also the way is a bit confusing as "PNP0C09" must be at index 0 in the
-> acpi_device_id.
-
-I need some way of saying "will we match PNP0C09?" The table index seems
-a simple way of doing it. I could use a strcmp on the table match
-instead?
-
-Regarding your other emails, I agree with all your suggestions. Thanks
-for reviewing!
+Thanks.
