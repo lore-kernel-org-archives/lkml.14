@@ -1,138 +1,183 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4134A34
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 03:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F83A34;
+	Thu, 23 May 2024 03:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716433367; cv=none; b=rhAbOejAETH2guGjubBbTVKfmsextg852DGB1BcAkY7NdGD9VewNpIMQm1raMbmfSBKRqorpU7+foxXQVkqrz4ar/LacaIQUwcmM+yY4WhByPj9Yk164MGw05wnZUV15hvq9beK7Y5fy4yeM6/2W9I7oePbM0Uu40FJ1Oxr+8tE=
+	t=1716433529; cv=none; b=YqXRbcHeGBhuDzoT9RYdKICJv8NLMMd7caB6qnDVGh7qjssJNI+BO8zkG7Nq+gkaF3v5Fymo8r19uj0GwrTbawk8d/LvJbBfopEQ7xC2Q07kAq2l5aDi+l10Zopsngf3jr+lqxO3SEBxekDfLe23zSazcBqE3CyLnB7JFuc0mgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716433367; c=relaxed/simple;
-	bh=puZNZp2QdH8s3Zbw8ku3b7fKBDToV2EptNwEa/K/S7k=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZekijpIjUON8+cbbTqNYJdAmfeqVsgibf9D9um4oV4QmEJbYXMYegJM9fxZCfBT5cGgyxCx7b5GP0IPw1ngOy/O0Z7MBQaEZIsoqQDezOFov00BNIsYVPxdjpLgmMr/EqDr/yuQ8NHhaWEJz8IKVCbx+0H1MR/+XfWA6r5way9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VlCYp2DrYz1ltYt;
-	Thu, 23 May 2024 10:59:10 +0800 (CST)
-Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id AD6B41400D3;
-	Thu, 23 May 2024 11:02:39 +0800 (CST)
-Received: from [10.173.135.154] (10.173.135.154) by
- canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+	s=arc-20240116; t=1716433529; c=relaxed/simple;
+	bh=1vrrouj2B9h5XoTvPjkuIgqi3Fy8+yw106GjxM1Xwjk=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BsTCIwfQGvHGDcOs3NqOeGzhXjf9F5O1GJtX0CipoitplgjJIyPs/Gu0j3z9U2UK1HSib6tuTtiGynI5mS67LlnXynyMUJi4YKDxoCwu9zfgAx6Wz7AGxqc3DgYDC2DrA03rpGqTEsSLgCQarWvuxyYck0pOvdcWZK9SEmEqX+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 44N35Di24423723, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 44N35Di24423723
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 May 2024 11:05:13 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 23 May 2024 11:02:39 +0800
-Subject: Re: [PATCH v3 5/5] mm/memory-failure: send SIGBUS in the event of thp
- split fail
-To: Jane Chu <jane.chu@oracle.com>, <nao.horiguchi@gmail.com>,
-	<akpm@linux-foundation.org>, <osalvador@suse.de>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240521235429.2368017-1-jane.chu@oracle.com>
- <20240521235429.2368017-6-jane.chu@oracle.com>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <c95a0336-6755-03a4-5c09-273d538e139e@huawei.com>
-Date: Thu, 23 May 2024 11:02:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+ 15.1.2507.39; Thu, 23 May 2024 11:05:14 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 23 May 2024 11:05:13 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
+ RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
+ 15.01.2507.035; Thu, 23 May 2024 11:05:13 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Shichao Lai <phyhac@gmail.com>, Kalle Valo <kvalo@kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "syzkaller@googlegroups.com" <syzkaller@googlegroups.com>
+Subject: RE: INFO: trying to register non-static key in skb_dequeue
+Thread-Topic: INFO: trying to register non-static key in skb_dequeue
+Thread-Index: AQHarBxzMJWY0Vu27kehlktUAsNdF7GkIKig
+Date: Thu, 23 May 2024 03:05:13 +0000
+Message-ID: <54dbdd605bca48a68ae9a7423b4c994f@realtek.com>
+References: <CAEk6kZuuezkH1dVRJf3EAVZK-83=OpTz62qCugkpTkswj8JF6w@mail.gmail.com>
+In-Reply-To: <CAEk6kZuuezkH1dVRJf3EAVZK-83=OpTz62qCugkpTkswj8JF6w@mail.gmail.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+X-MS-Has-Attach: yes
+Content-Type: multipart/mixed;
+	boundary="_002_54dbdd605bca48a68ae9a7423b4c994frealtekcom_"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240521235429.2368017-6-jane.chu@oracle.com>
+
+--_002_54dbdd605bca48a68ae9a7423b4c994frealtekcom_
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500002.china.huawei.com (7.192.104.244)
+Content-Transfer-Encoding: base64
 
-On 2024/5/22 7:54, Jane Chu wrote:
-> While handling hwpoison in a THP page, it is possible that
-> try_to_split_thp_page() fails. For example, when the THP page has
-> been RDMA pinned. At this point, the kernel cannot isolate the
-> poisoned THP page, all it could do is to send a SIGBUS to the user
-> process with meaningful payload to give user-level recovery a chance.
-> 
+U2hpY2hhbyBMYWkgPHBoeWhhY0BnbWFpbC5jb20+ICB3cm90ZToNCj4gSGVsbG8gRGVhciBtYWlu
+dGFpbmVyIQ0KPiBBIG5ldyBidWcgd2FzIGZvdW5kIGJ5IG91ciBtb2RpZmllZCBzeXprYWxsZXIu
+DQo+IA0KPiBLZXJuZWwgdmVyc2lvbjogdjYuOS1yYzcNCj4gQ29tcGlsZXI6IGdjYyAxMS40LjAN
+Cj4gUmVwcm9kdWNlciAmIEtlcm5lbDogYXR0YWNobWVudCANCj4gDQo+ID09PT09PT09PT09PT0g
+DQo+IHVzYiAyLTE6IFVTQiBkaXNjb25uZWN0LCBkZXZpY2UgbnVtYmVyIDc2DQo+IElORk86IHRy
+eWluZyB0byByZWdpc3RlciBub24tc3RhdGljIGtleS4NCj4gVGhlIGNvZGUgaXMgZmluZSBidXQg
+bmVlZHMgbG9ja2RlcCBhbm5vdGF0aW9uLCBvciBtYXliZQ0KPiB5b3UgZGlkbid0IGluaXRpYWxp
+emUgdGhpcyBvYmplY3QgYmVmb3JlIHVzZT8NCj4gdHVybmluZyBvZmYgdGhlIGxvY2tpbmcgY29y
+cmVjdG5lc3MgdmFsaWRhdG9yLg0KDQpJJ20gbm90IGZhbWlsaWFyIHdpdGggc3l6a2FsbGVyLCB3
+aGljaCBzZWVtcyBsaWtlIHRvIGdlbmVyYXRlIGEgVVNCIHBhdHRlcm4NCnRvIHRyaWdnZXIgZHJp
+dmVyIHByb2JlLCBub3QgYSByZWFsIGhhcmR3YXJlLiBJZiBteSB0aG91Z2h0IGlzIGNvcnJlY3Qs
+DQphdHRhY2htZW50IGNvdWxkIGJlIGEgZml4IHRoYXQgY2F1c2VzIGZhaWxlZCB0byBwcm9iZSBk
+ZXZpY2UsIGFuZCB0aGVuDQpub3QgZXhlY3V0ZSBVU0IgZGlzY29ubmVjdGlvbi4gDQoNCkkgdXNl
+ZCB5b3VyIGF0dGFjaGVkIGxpbnV4LXY2LjlfdXNiX2NvbmZpZyB0byBidWlsZCBhIGtlcm5lbCwg
+YnV0IGZhaWxlZA0KdG8gcnVuIG9uIGEgcmVhbCBOQi4gU28gaXMgaXQgcG9zc2libGUgdG8gaGVs
+cCB0ZXN0IG15IGF0dGFjaGVkIHBhdGNoPw0KT3IsIGNhbiBJIHVzZSBhICIgI3N5eiB0ZXN0OiIg
+Y29tbWFuZCB0byB0cmlnZ2VyIHJvYm90IGxpa2UgWzFdPw0KDQpbMV0gaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvbGludXgtcmRtYS8zY2M5ZjEyYS1kNjgwLWUwNWMtNzJjNi1kNGNiNTU5ZmU1ZWVA
+bGludXguZGV2L1QvI20yZDM3NDk0OWQ2MmIwMTcwNzQ1NDVjMmYyYTFkZjkyNTFlMGJkZTMyDQoN
+ClBpbmctS2UNCg0K
 
-Thanks for your patch.
+--_002_54dbdd605bca48a68ae9a7423b4c994frealtekcom_
+Content-Type: application/octet-stream;
+	name="0001-wifi-rtlwifi-handle-return-value-of-usb-init-TX-RX.patch"
+Content-Description: 0001-wifi-rtlwifi-handle-return-value-of-usb-init-TX-RX.patch
+Content-Disposition: attachment;
+	filename="0001-wifi-rtlwifi-handle-return-value-of-usb-init-TX-RX.patch";
+	size=5123; creation-date="Thu, 23 May 2024 02:53:04 GMT";
+	modification-date="Thu, 23 May 2024 02:53:02 GMT"
+Content-Transfer-Encoding: base64
 
-> Signed-off-by: Jane Chu <jane.chu@oracle.com>
-> ---
->  mm/memory-failure.c | 35 ++++++++++++++++++++++++++++++-----
->  1 file changed, 30 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 794196951a04..a14d56e66902 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1706,7 +1706,12 @@ static int identify_page_state(unsigned long pfn, struct page *p,
->  	return page_action(ps, p, pfn);
->  }
->  
-> -static int try_to_split_thp_page(struct page *page)
-> +/*
-> + * When 'release' is 'false', it means that if thp split has failed,
-> + * there is still more to do, hence the page refcount we took earlier
-> + * is still needed.
-> + */
-> +static int try_to_split_thp_page(struct page *page, bool release)
->  {
->  	int ret;
->  
-> @@ -1714,7 +1719,7 @@ static int try_to_split_thp_page(struct page *page)
->  	ret = split_huge_page(page);
->  	unlock_page(page);
->  
-> -	if (unlikely(ret))
-> +	if (ret && release)
->  		put_page(page);
+RnJvbSAwMWRmZTIxZjg0ZGJhMWQzMjY1NTNhZTlkZGI2Y2FiMmUyN2Q5ZjQzIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBQaW5nLUtlIFNoaWggPHBrc2hpaEByZWFsdGVrLmNvbT4KRGF0
+ZTogVGh1LCAyMyBNYXkgMjAyNCAxMDo0NTowNyArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIHdpZmk6
+IHJ0bHdpZmk6IGhhbmRsZSByZXR1cm4gdmFsdWUgb2YgdXNiIGluaXQgVFgvUlgKCkhhbmRsZSBl
+cnJvciBjb2RlIHRvIGNhdXNlIFVTQiBwcm9iZSBmYWlsdXJlIFVTQiBFUCBudW1iZXIgaXMgdW5l
+eHBlY3RlZCwKb3RoZXJ3aXNlIHdoZW4gVVNCIGRpc2Nvbm5lY3Qgc2tiX2RlcXVldWUoKSBhbiB1
+bml0aWFsaXplZCBza2IgbGlzdCBhbmQKY2F1c2Ugd2FybmluZ3MgYmVsb3cuCgpDb21waWxlIHRl
+c3RlZCBvbmx5LgoKdXNiIDItMTogVVNCIGRpc2Nvbm5lY3QsIGRldmljZSBudW1iZXIgNzYKSU5G
+TzogdHJ5aW5nIHRvIHJlZ2lzdGVyIG5vbi1zdGF0aWMga2V5LgpUaGUgY29kZSBpcyBmaW5lIGJ1
+dCBuZWVkcyBsb2NrZGVwIGFubm90YXRpb24sIG9yIG1heWJlCnlvdSBkaWRuJ3QgaW5pdGlhbGl6
+ZSB0aGlzIG9iamVjdCBiZWZvcmUgdXNlPwp0dXJuaW5nIG9mZiB0aGUgbG9ja2luZyBjb3JyZWN0
+bmVzcyB2YWxpZGF0b3IuCkNQVTogMCBQSUQ6IDU0MDYwIENvbW06IGt3b3JrZXIvMDoxIE5vdCB0
+YWludGVkIDYuOS4wLXJjNyAjMQpIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQw
+RlggKyBQSUlYLCAxOTk2KSwgQklPUyByZWwtMS4xNi4yLTAtZ2VhMWI3YTA3MzM5MC1wcmVidWls
+dC5xZW11Lm9yZyAwNC8wMS8yMDE0CldvcmtxdWV1ZTogdXNiX2h1Yl93cSBodWJfZXZlbnQKQ2Fs
+bCBUcmFjZToKIDxUQVNLPgogX19kdW1wX3N0YWNrIGxpYi9kdW1wX3N0YWNrLmM6ODggW2lubGlu
+ZV0KIGR1bXBfc3RhY2tfbHZsKzB4MTE2LzB4MWIwIGxpYi9kdW1wX3N0YWNrLmM6MTE0CiBhc3Np
+Z25fbG9ja19rZXkga2VybmVsL2xvY2tpbmcvbG9ja2RlcC5jOjk3NiBbaW5saW5lXQogcmVnaXN0
+ZXJfbG9ja19jbGFzcysweGMxOC8weGZhMCBrZXJuZWwvbG9ja2luZy9sb2NrZGVwLmM6MTI4OQog
+X19sb2NrX2FjcXVpcmUrMHgxMDgvMHgzYmMwIGtlcm5lbC9sb2NraW5nL2xvY2tkZXAuYzo1MDE0
+CiBsb2NrX2FjcXVpcmUga2VybmVsL2xvY2tpbmcvbG9ja2RlcC5jOjU3NTQgW2lubGluZV0KIGxv
+Y2tfYWNxdWlyZSsweDFiMC8weDU1MCBrZXJuZWwvbG9ja2luZy9sb2NrZGVwLmM6NTcxOQogX19y
+YXdfc3Bpbl9sb2NrX2lycXNhdmUgaW5jbHVkZS9saW51eC9zcGlubG9ja19hcGlfc21wLmg6MTEw
+IFtpbmxpbmVdCiBfcmF3X3NwaW5fbG9ja19pcnFzYXZlKzB4M2QvMHg2MCBrZXJuZWwvbG9ja2lu
+Zy9zcGlubG9jay5jOjE2Mgogc2tiX2RlcXVldWUrMHgyMC8weDE4MCBuZXQvY29yZS9za2J1ZmYu
+YzozODQ2CiBydGxfdXNiX2NsZWFudXAgZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3
+aWZpL3VzYi5jOjcwNiBbaW5saW5lXQogcnRsX3VzYl9kZWluaXQgZHJpdmVycy9uZXQvd2lyZWxl
+c3MvcmVhbHRlay9ydGx3aWZpL3VzYi5jOjcyMSBbaW5saW5lXQogcnRsX3VzYl9kaXNjb25uZWN0
+KzB4NGE0LzB4ODUwIGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnRsd2lmaS91c2IuYzox
+MDUxCiB1c2JfdW5iaW5kX2ludGVyZmFjZSsweDFlOC8weDk4MCBkcml2ZXJzL3VzYi9jb3JlL2Ry
+aXZlci5jOjQ2MQogZGV2aWNlX3JlbW92ZSBkcml2ZXJzL2Jhc2UvZGQuYzo1NjggW2lubGluZV0K
+IGRldmljZV9yZW1vdmUrMHgxMjIvMHgxNzAgZHJpdmVycy9iYXNlL2RkLmM6NTYwCiBfX2Rldmlj
+ZV9yZWxlYXNlX2RyaXZlciBkcml2ZXJzL2Jhc2UvZGQuYzoxMjcwIFtpbmxpbmVdCiBkZXZpY2Vf
+cmVsZWFzZV9kcml2ZXJfaW50ZXJuYWwrMHg0NDMvMHg2MjAgZHJpdmVycy9iYXNlL2RkLmM6MTI5
+MwogYnVzX3JlbW92ZV9kZXZpY2UrMHgyMmYvMHg0MjAgZHJpdmVycy9iYXNlL2J1cy5jOjU3NAog
+ZGV2aWNlX2RlbCsweDM5NS8weDlmMCBkcml2ZXJzL2Jhc2UvY29yZS5jOjM5MDkKIHVzYl9kaXNh
+YmxlX2RldmljZSsweDM2MC8weDdiMCBkcml2ZXJzL3VzYi9jb3JlL21lc3NhZ2UuYzoxNDE4CiB1
+c2JfZGlzY29ubmVjdCsweDJkYi8weDkzMCBkcml2ZXJzL3VzYi9jb3JlL2h1Yi5jOjIzMDUKIGh1
+Yl9wb3J0X2Nvbm5lY3QgZHJpdmVycy91c2IvY29yZS9odWIuYzo1MzYyIFtpbmxpbmVdCiBodWJf
+cG9ydF9jb25uZWN0X2NoYW5nZSBkcml2ZXJzL3VzYi9jb3JlL2h1Yi5jOjU2NjIgW2lubGluZV0K
+IHBvcnRfZXZlbnQgZHJpdmVycy91c2IvY29yZS9odWIuYzo1ODIyIFtpbmxpbmVdCiBodWJfZXZl
+bnQrMHgxZTM5LzB4NGNlMCBkcml2ZXJzL3VzYi9jb3JlL2h1Yi5jOjU5MDQKIHByb2Nlc3Nfb25l
+X3dvcmsrMHg5N2IvMHgxYTkwIGtlcm5lbC93b3JrcXVldWUuYzozMjY3CiBwcm9jZXNzX3NjaGVk
+dWxlZF93b3JrcyBrZXJuZWwvd29ya3F1ZXVlLmM6MzM0OCBbaW5saW5lXQogd29ya2VyX3RocmVh
+ZCsweDY4MC8weGYwMCBrZXJuZWwvd29ya3F1ZXVlLmM6MzQyOQoga3RocmVhZCsweDJjNy8weDNi
+MCBrZXJuZWwva3RocmVhZC5jOjM4OAogcmV0X2Zyb21fZm9yaysweDQ1LzB4ODAgYXJjaC94ODYv
+a2VybmVsL3Byb2Nlc3MuYzoxNDcKIHJldF9mcm9tX2ZvcmtfYXNtKzB4MWEvMHgzMCBhcmNoL3g4
+Ni9lbnRyeS9lbnRyeV82NC5TOjI0NAogPC9UQVNLPgoKTGluazogaHR0cHM6Ly9sb3JlLmtlcm5l
+bC5vcmcvbGludXgtd2lyZWxlc3MvQ0FFazZrWnV1ZXprSDFkVlJKZjNFQVZaSy04Mz1PcFR6NjJx
+Q3Vna3BUa3N3ajhKRjZ3QG1haWwuZ21haWwuY29tL1QvI3UKU2lnbmVkLW9mZi1ieTogUGluZy1L
+ZSBTaGloIDxwa3NoaWhAcmVhbHRlay5jb20+Ci0tLQogZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVh
+bHRlay9ydGx3aWZpL3VzYi5jIHwgMzEgKysrKysrKysrKysrKysrKy0tLS0tLQogMSBmaWxlIGNo
+YW5nZWQsIDIzIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3VzYi5jIGIvZHJpdmVycy9uZXQvd2ly
+ZWxlc3MvcmVhbHRlay9ydGx3aWZpL3VzYi5jCmluZGV4IDJlYTcyZDllMzk1Ny4uNTI1YTkwNzQx
+ZGZiIDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvdXNi
+LmMKKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3VzYi5jCkBAIC0y
+Myw2ICsyMyw4IEBAIE1PRFVMRV9ERVNDUklQVElPTigiVVNCIGJhc2ljIGRyaXZlciBmb3IgcnRs
+d2lmaSIpOwogCiAjZGVmaW5lIE1BWF9VU0JDVFJMX1ZFTkRPUlJFUV9USU1FUwkJMTAKIAorc3Rh
+dGljIHZvaWQgX3J0bF91c2JfY2xlYW51cF90eChzdHJ1Y3QgaWVlZTgwMjExX2h3ICpodyk7CisK
+IHN0YXRpYyB2b2lkIF91c2JjdHJsX3ZlbmRvcnJlcV9zeW5jKHN0cnVjdCB1c2JfZGV2aWNlICp1
+ZGV2LCB1OCByZXF0eXBlLAogCQkJCSAgIHUxNiB2YWx1ZSwgdm9pZCAqcGRhdGEsIHUxNiBsZW4p
+CiB7CkBAIC0yODUsOSArMjg3LDIwIEBAIHN0YXRpYyBpbnQgX3J0bF91c2JfaW5pdChzdHJ1Y3Qg
+aWVlZTgwMjExX2h3ICpodykKIAl9CiAJLyogdXNiIGVuZHBvaW50IG1hcHBpbmcgKi8KIAllcnIg
+PSBydGxwcml2LT5jZmctPnVzYl9pbnRlcmZhY2VfY2ZnLT51c2JfZW5kcG9pbnRfbWFwcGluZyho
+dyk7Ci0JcnRsdXNiLT51c2JfbXFfdG9faHdxID0gIHJ0bHByaXYtPmNmZy0+dXNiX2ludGVyZmFj
+ZV9jZmctPnVzYl9tcV90b19od3E7Ci0JX3J0bF91c2JfaW5pdF90eChodyk7Ci0JX3J0bF91c2Jf
+aW5pdF9yeChodyk7CisJaWYgKGVycikKKwkJcmV0dXJuIGVycjsKKwlydGx1c2ItPnVzYl9tcV90
+b19od3EgPSBydGxwcml2LT5jZmctPnVzYl9pbnRlcmZhY2VfY2ZnLT51c2JfbXFfdG9faHdxOwor
+CWVyciA9IF9ydGxfdXNiX2luaXRfdHgoaHcpOworCWlmIChlcnIpCisJCXJldHVybiBlcnI7CisJ
+ZXJyID0gX3J0bF91c2JfaW5pdF9yeChodyk7CisJaWYgKGVycikKKwkJZ290byBlcnJfb3V0Owor
+CisJcmV0dXJuIDA7CisKK2Vycl9vdXQ6CisJX3J0bF91c2JfY2xlYW51cF90eChodyk7CiAJcmV0
+dXJuIGVycjsKIH0KIApAQCAtNjkxLDE3ICs3MDQsMTMgQEAgc3RhdGljIGludCBydGxfdXNiX3N0
+YXJ0KHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3KQogfQogCiAvKj09PT09PT09PT09PT09PT09PT09
+PT09ICB0eCA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSovCi1zdGF0
+aWMgdm9pZCBydGxfdXNiX2NsZWFudXAoc3RydWN0IGllZWU4MDIxMV9odyAqaHcpCitzdGF0aWMg
+dm9pZCBfcnRsX3VzYl9jbGVhbnVwX3R4KHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3KQogewogCXUz
+MiBpOwogCXN0cnVjdCBza19idWZmICpfc2tiOwogCXN0cnVjdCBydGxfdXNiICpydGx1c2IgPSBy
+dGxfdXNiZGV2KHJ0bF91c2Jwcml2KGh3KSk7CiAJc3RydWN0IGllZWU4MDIxMV90eF9pbmZvICp0
+eGluZm87CiAKLQkvKiBjbGVhbiB1cCByeCBzdHVmZi4gKi8KLQlfcnRsX3VzYl9jbGVhbnVwX3J4
+KGh3KTsKLQotCS8qIGNsZWFuIHVwIHR4IHN0dWZmICovCiAJZm9yIChpID0gMDsgaSA8IFJUTF9V
+U0JfTUFYX0VQX05VTTsgaSsrKSB7CiAJCXdoaWxlICgoX3NrYiA9IHNrYl9kZXF1ZXVlKCZydGx1
+c2ItPnR4X3NrYl9xdWV1ZVtpXSkpKSB7CiAJCQlydGx1c2ItPnVzYl90eF9jbGVhbnVwKGh3LCBf
+c2tiKTsKQEAgLTcxNSw2ICs3MjQsMTIgQEAgc3RhdGljIHZvaWQgcnRsX3VzYl9jbGVhbnVwKHN0
+cnVjdCBpZWVlODAyMTFfaHcgKmh3KQogCXVzYl9raWxsX2FuY2hvcmVkX3VyYnMoJnJ0bHVzYi0+
+dHhfc3VibWl0dGVkKTsKIH0KIAorc3RhdGljIHZvaWQgcnRsX3VzYl9jbGVhbnVwKHN0cnVjdCBp
+ZWVlODAyMTFfaHcgKmh3KQoreworCV9ydGxfdXNiX2NsZWFudXBfcngoaHcpOworCV9ydGxfdXNi
+X2NsZWFudXBfdHgoaHcpOworfQorCiAvKiBXZSBtYXkgYWRkIHNvbWUgc3RydWN0IGludG8gc3Ry
+dWN0IHJ0bF91c2IgbGF0ZXIuIERvIGRlaW5pdCBoZXJlLiAgKi8KIHN0YXRpYyB2b2lkIHJ0bF91
+c2JfZGVpbml0KHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3KQogewotLSAKMi4yNS4xCgo=
 
-Is "unlikely" still needed?
-
->  
->  	return ret;
-> @@ -2187,6 +2192,24 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
->  	return rc;
->  }
->  
-> +/*
-> + * The calling condition is as such: thp split failed, page might have
-> + * been RDMA pinned, not much can be done for recovery.
-> + * But a SIGBUS should be delivered with vaddr provided so that the user
-> + * application has a chance to recover. Also, application processes'
-> + * election for MCE early killed will be honored.
-> + */
-> +static int kill_procs_now(struct page *p, unsigned long pfn, int flags,
-> +				struct folio *folio)
-> +{
-> +	LIST_HEAD(tokill);
-> +
-> +	collect_procs(folio, p, &tokill, flags & MF_ACTION_REQUIRED);
-> +	kill_procs(&tokill, true, pfn, flags);
-> +
-> +	return -EHWPOISON;
-> +}
-> +
->  /**
->   * memory_failure - Handle memory failure of a page.
->   * @pfn: Page Number of the corrupted page
-> @@ -2328,8 +2351,10 @@ int memory_failure(unsigned long pfn, int flags)
->  		 * page is a valid handlable page.
->  		 */
->  		folio_set_has_hwpoisoned(folio);
-> -		if (try_to_split_thp_page(p) < 0) {
-> -			res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
-> +		if (try_to_split_thp_page(p, false) < 0) {
-> +			res = kill_procs_now(p, pfn, flags, folio);
-
-No strong opinion but we might remove the return value of kill_procs_now as
-it always return -EHWPOISON? We could simply set res to -EHWPOISON here.
-
-Besides from above possible nits, this patch looks good to me.
-Acked-by: Miaohe Lin <linmiaohe@huawei.com>
-Thanks.
-.
-
+--_002_54dbdd605bca48a68ae9a7423b4c994frealtekcom_--
