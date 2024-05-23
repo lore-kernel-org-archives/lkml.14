@@ -1,102 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5611C12B16E
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B06F12B16E
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716475002; cv=none; b=K0FD8BdqfDlBlpZX3nGbaxvSgp9SGueOWBTsogILGOKr1QCUGQ+5Hiz7OruCvwJSWFwL/3SzJdfOIQDSx4pF37JK2QLeZjbNbFm0hoZo/byDFZh3YEjbzBRRm1pkckQRj2KlawiHcw1X5aae2arKg++gjXy0w6/xV/uMGU5eays=
+	t=1716475024; cv=none; b=oXULS5qAXl1cJ4j10RAZW8jag/dDuN01i6NLNQcQGJZ1V+MrzQ88p47py2MEivI2AqBDyG0t4MEs9e1sTGEpNDhpMHGazC10yT/G2vI87EevcwTYS82ZgqT/uv5fS/MX6rqUo66Nkz0CYR6OC7QmYOqyvUtUy7npAJS1WVzrW3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716475002; c=relaxed/simple;
-	bh=D7ccP66lbly9TPuHTgEPpEZGApPtncrxRWXRsKA8lMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kmc03K6RmU05pIqotVNMWDQUEt/cxvCTCV++3doOv95d7+WzmUYyt4fnGCfU31oGSRceXZYr0ke1Qqrsl7vxYXjAm/oT0dOVBMO+HOofnp8fllG+dyO6FLDnQ78LlQymSZGbPPeWHo4aj8HOXYtjWLyOGHsZP4QXkY2IPOtCq0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2Yf1EJs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2Yf1EJs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84952C4AF0A;
-	Thu, 23 May 2024 14:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716475001;
-	bh=D7ccP66lbly9TPuHTgEPpEZGApPtncrxRWXRsKA8lMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V2Yf1EJsH2yyQVH3Q9SWtWkogyrRYBQ5rjxoO5OMmKaWQgNYdjxOgON6K/qm/jnxX
-	 PsuVkcSv546+oFSMlSCeAfxdMC/vDp66cXvGagmBxUmwjL64wADEnkHWNwJIMbwv/m
-	 +wv7wNcztLxSeOKTEH5R2KV/JD8Pwy8hp65TGd99tMW2AWdLdtigxDWdL+SW2+Tp2S
-	 FG5LVL3+2fb2DOhJaChxyAAjnbZicPn7VrAZQT2toxg1D5LZRSmVaD5FFZgt3WFoMJ
-	 XbgX4CpqBgzjEDZhwlIbsSfGSq7I7TeciS4bZ3eaA7ZAahW1bPXCSHb5oB6IGEK0J2
-	 YszQBYY3Ydb/w==
-Date: Thu, 23 May 2024 17:34:50 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Jaewon Kim <jaewon31.kim@samsung.com>
-Cc: "vbabka@suse.cz" <vbabka@suse.cz>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>,
-	"tkjos@google.com" <tkjos@google.com>
-Subject: Re: (2) [RESEND PATCH 00/10] memblock: introduce memsize showing
- reserved memory
-Message-ID: <Zk9UCsZdizqC1_36@kernel.org>
-References: <ZkxN0yQ7Fb0X26hT@kernel.org>
- <20240521023957.2587005-1-jaewon31.kim@samsung.com>
- <20240521025329epcms1p6ce11064c0f0608a0156d82fda7ef285c@epcms1p6>
- <CGME20240521024009epcas1p10ed9f9b929203183a29f79508e79bb76@epcms1p5>
- <20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1@epcms1p5>
+	s=arc-20240116; t=1716475024; c=relaxed/simple;
+	bh=hkyqb1KtaEJRszTUHF/OZdndMMYaH1IiLizrIUSb+x8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=tBVKCLIvpOHdXbBNE3PwHAmGsMiBGCIbpiUIt4jaEsSaeApJX92qLILuLe0q/WQ2+y7FnhlRFuo0IftRK6ZrmGGY68js7hbTo7+2CB8BbKw+cOmKjoqkg7odoZarnef8IsErAye1QyQkbvTYa5utmLPtblgSEjwTFKQAzZdTIVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7e1d3e81a00so179587339f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 07:37:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716475022; x=1717079822;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MSF2rMoyFhvPssdMHr5CKyA5VqEOM0OBvG4P+AVEF48=;
+        b=TAgKOPeCHFjtwENQy7NH2ANflYPpeYMCJ1o/uteWa/Fag0W2QrqGioNsaJLLUw6NWi
+         lH50vuRzyROUGBVL5Febtq6L8BPHL2VNUfJhIIl65S5+RsuRlkDYlTdHOtNDI4GCpksa
+         6J1o6xvcXjNxQ7NuYEGhWvreVywiIo77D8XTpGORMwVwDXzycHNOGXugk5rxJpbN2ILE
+         RHeop5Saj2sbnh4AgWs16P3f2j0RGOUrfkcHdgzUY3M8cTyXRhMs0PvLbO0+5gDWAAF1
+         dh7YJT+OBEfcOr+ikCY8ansRxnkd/7AMItdsokyOwy38vyrJxyl36hki7nZAop9loql/
+         GjiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIBNj3PZnNOT02mJgLg3c2nf5iGV4U/BQOnM065KnxRz5KOWIpdZK3ZY3jniLrAk1aYHe1XG67UiNOSbLICLjYnlsP3+VdFMdi94bz
+X-Gm-Message-State: AOJu0YxH7ysyZbMJqtNFoMJntcsZnG6nMZzEU7m9zsitbgJPLWjfuHf4
+	ldiXyCQjd1n5zIb+jFmV8X0dsOPk4bzFDD6BDTtn0lWeZzR2zr0V62f2HW51pZAeUiwB+BoiNue
+	+pJxXAH4L5zJYXTQyC4tnDobK4RTFzKttlNTKLRcu9n5oaHuq1HnoBXQ=
+X-Google-Smtp-Source: AGHT+IHneQ+JH3RhgMARMRirmHLCymoMydPR6lp95ASQqZ7JNHiou3yHeQ1AAvYCLcRuUl8lRrjw3PiES/KNBce/8C/Pe2FDlFpB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1@epcms1p5>
+X-Received: by 2002:a05:6602:6c04:b0:7de:e0de:bafb with SMTP id
+ ca18e2360f4ac-7e38afe7cb6mr10069539f.2.1716475022424; Thu, 23 May 2024
+ 07:37:02 -0700 (PDT)
+Date: Thu, 23 May 2024 07:37:02 -0700
+In-Reply-To: <tencent_CAE2ED8ECCF07BB66D902CB16CA894F8EA0A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fa4c6106191ffb84@google.com>
+Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
+From: syzbot <syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 21, 2024 at 07:17:53PM +0900, Jaewon Kim wrote:
-> >On Tue, May 21, 2024 at 11:53:29AM +0900, Jaewon Kim wrote:
-> >> >--------- Original Message ---------
-> >> >Sender : 김재원 <jaewon31.kim@samsung.com>System Performance Lab.(MX)/삼성전자
-> >> >Date   : 2024-05-21 11:40 (GMT+9)
-> >> >Title  : [RESEND PATCH 00/10] memblock: introduce memsize showing reserved memory
-> >> >?
-> >> >Some of memory regions can be reserved for a specific purpose. They are
-> >> >usually defined through reserved-memory in device tree. If only size
-> >> >without address is specified in device tree, the address of the region
-> >> >will be determined at boot time.
-> >> >
-> >> >We may find the address of the memory regions through booting log, but
-> >> >it does not show all. And it could be hard to catch the very beginning
-> >> >log. The memblock_dump_all shows all memblock status but it does not
-> >> >show region name and its information is difficult to summarize.
-> >> >
-> >> >This patch introduce a debugfs node, memblock/memsize, to see reserved
-> >> >memory easily.
-> >> 
-> >> This is actually RESEND as it was introduced 2 years ago.
-> >> Please refer to https://lore.kernel.org/linux-mm/YkQB6Ah603yPR3qf@kernel.org/#t
-> >> 
-> >> > But you never provided details about *why* you want this information exposed.
-> >> 
-> >> For your question, I'd like to say ;
-> >> We can see the same format and exact information between different version of kernel status.
-> >> 
-> >> 1) Internally we can check if the reserved memory changes.
-> >> 2) Externally we can communicate between chipset vendors and OEM, with a same format.
-> >
-> >Why the existing debugfs interface is not sufficient?
-> 
-> debugfs/memblock/memory & debugfs/memblock/reserved have changed its
-> format but still does not show name, reusable, kernel size.  If memory is
-> reserved from memblock, and did not freed back to memblock. Memblock does
-> not know even after the memory is freed to system.  I think a simple
-> debug interface is needed to easily communicate with others or compare
-> different SW releases.
+Hello,
 
-I still don't understand what problem are you trying to solve with these
-patches. 
- 
--- 
-Sincerely yours,
-Mike.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-and-tested-by: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         33e02dc6 Merge tag 'sound-6.10-rc1' of git://git.kerne..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=17ccd634980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=25544a2faf4bae65
+dashboard link: https://syzkaller.appspot.com/bug?extid=d2125fcb6aa8c4276fd2
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=13fec2b2980000
+
+Note: testing is done by a robot and is best-effort only.
