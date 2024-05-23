@@ -1,66 +1,175 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9850C4690
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D294C8C
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716430359; cv=none; b=adkeJGlurdNd2hgLb5410dzb9l0SR5KBj8VfVkWdY1PCOJRXOabegQ49L4yI6nouQqfUMh+0bMsWY8HSvIodhapXv4EZDwPg1d4K+587WH43P4ZNXNUFvdb3gYveQdDxzBwgLi8gyyOiOXZnpfAR19SBawLTk6Uy+2/mbcbN5Vk=
+	t=1716430384; cv=none; b=JFY2X01SQxulr+iuZEm2bHyq0cAXJQsmf9QtHiAxyu2vk16ZUpNHGgL16MzJPyL1suGD9FGh1/HF9Bq+r4/hO06C5ZDdR2rRzX2OgSZaPWWfPqu0lYGAiQUlY0NmB+BdLe0pmAiy/Qlg5c+NhrdhDifc2ST8dU9+ZTEGKCK85ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716430359; c=relaxed/simple;
-	bh=95FrxY0on97XhfBNOOoiOqvSNWba/sx2apqOtIcLBbM=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=fLLeI8P57pHA2ZKuBBUkmJ7qSrL2I7yzeO4QljSu0rQjIv6WH60gwdM20B5ehalMQmGif2sH4SvulrkzwL13prvUHvwR69OP/PM4YTGV/HnMAj/DOFyS1n49gqUJZzGpi+mxiJ7A7LmOZWe53fH7p6k7vMRFzKJz7RnHb8O+ulE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VlB3d4Js1z1S5dX;
-	Thu, 23 May 2024 09:51:25 +0800 (CST)
-Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 79A9C1A0188;
-	Thu, 23 May 2024 09:54:55 +0800 (CST)
-Received: from [10.173.135.154] (10.173.135.154) by
- canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 23 May 2024 09:54:55 +0800
-Subject: Re: [PATCH v3 2/5] mm/madvise: Add MF_ACTION_REQUIRED to
- madvise(MADV_HWPOISON)
-To: Jane Chu <jane.chu@oracle.com>, <nao.horiguchi@gmail.com>,
-	<akpm@linux-foundation.org>, <osalvador@suse.de>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240521235429.2368017-1-jane.chu@oracle.com>
- <20240521235429.2368017-3-jane.chu@oracle.com>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <9a0d8716-a33b-8b11-9de6-9791aef6fb7b@huawei.com>
-Date: Thu, 23 May 2024 09:54:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1716430384; c=relaxed/simple;
+	bh=Ztd03uGOTEtX6qI8i5/IfRp+ZjhZu3fhnFwlMDr/pOk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P6mrjggL/VupURN8gNFW4J4QKWqwqEbvJnyG+fJdUvQMPmbBbwtu9Nx+TNLA7x/PyxjPiZ9V+UjRkaMpnXqR+3A3wj6q2SUsoPLOcJTuzdotSgfvwp0Tf2yjYgB8XTry/aVJER2VHRkQBtaOwTGeZgHmbrjwI4vneyaTaBT7BrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FWCjd5qB; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWCjd5qB"
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-481e9c27378so553569137.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 19:13:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716430382; x=1717035182; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X1lMe0BW3zdhy3z9O2IXydLXD1KWR4YUlXDc/mEdmhI=;
+        b=FWCjd5qB7yquVlCDkZa4zZ1kRBbvfqyzFlJc+oxiv35f3lzxdmUtD15uk+G+/CrD7m
+         kXsDdxL8K6leRrQy7oaUA2aOZrhfG+Jv67W4U4vpn4IwTeb2rUsMfB9FRBrvym1/2dxk
+         FRhMPOg901JHWaCNUoMfPVfCvloh8KBeYK9ZS1O6qN9tAtz7oMg0xw+aZ7Y/HQ4HmjyZ
+         1/hKyy12571ws0rAyQfPPhDOlJbpfFvrwb7LbhvdjIOTdGhD2cJs31PDTcRi/gB/9fLN
+         5b6OAG9tuRuw7hJg0HC4Puqi9noRAGMN9QbGzUcD59Dh8VRWnkBFVGBGNxbpBRyGROH5
+         GfTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716430382; x=1717035182;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X1lMe0BW3zdhy3z9O2IXydLXD1KWR4YUlXDc/mEdmhI=;
+        b=ews3nmIW7uI2Q7KuMYRImvIbWDBeFsXdyCShhp0UM7ruU3WazdbjsmW2UJPHqCggp+
+         TCgchKwEaTaW92/ncp/ECipQ4KGTc2fbdPcJGpVYQknjMpWSbkpCijiMrMFu7xk6g/SG
+         qGZPKBgy99N/tyGk18SI91JXMDSBbdLIW3UPfwSltI0VcVbqS3odcBgtwPayMcs6NjyR
+         WjDfZXYaOo/HNNRdUJbeQkjl+sLDKhbgpD/AxT3TCBvF86foCyA+A2bq4q24GPERI3+M
+         Uh+ZMyygxJBeoQEpmagt3V1LPfG0CSNmiHQZh5Dnk7WH4t3f5ChereoZAqo9vyOQFnYs
+         XFKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXV/khl+Y/j08OE8Z/xXsS+W6vUKjil4KNTDozsjjHWbx8k5vLHk1x6BDaqZDPy+11JuHKNcLGyTBX4CPVyotd9uidOkH2Ubsp019L7
+X-Gm-Message-State: AOJu0YyvRBq5FkjOnRAByhDvCCBNBVhDKtdl/L6P+aMiYi+h/L3wORe+
+	xBUfrRGpRxDc5MWKCgCitaO7AOgEHEbjcYXEjTKppsjL+tYHGD/KPliKBx/rKr+y2AIdHjlWY+u
+	EQKzBMUBfXjKxn/v++gxOA6KoTzE=
+X-Google-Smtp-Source: AGHT+IErkUXRES85a2bRgpqDt3Wexpr/W6CJgPc1CpxJihpy/ZFuGZkfSevk7hBeUKzryVCzkej6/WFM5RoE96X3i6o=
+X-Received: by 2002:a05:6102:3f44:b0:47e:f2ea:f673 with SMTP id
+ ada2fe7eead31-4890a275124mr4493024137.23.1716430381785; Wed, 22 May 2024
+ 19:13:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240521235429.2368017-3-jane.chu@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500002.china.huawei.com (7.192.104.244)
+References: <0e2a6f232e7579a2e4407ecf075531980d97f286.1716367360.git.baolin.wang@linux.alibaba.com>
+ <22ac01a3-ddbb-4114-88cd-ad1a31982dad@redhat.com> <51ba1fc1-fd77-4601-8d27-459162fd008c@linux.alibaba.com>
+ <CAGsJ_4zSuOTPi+zkS_kvS5T0MsdMBR+2gpXukJt0aMPrEnCDZg@mail.gmail.com>
+ <875xv5ba8t.fsf@yhuang6-desk2.ccr.corp.intel.com> <18aa865a-6d4a-4dcf-99ce-bcfbc0c92f19@linux.alibaba.com>
+In-Reply-To: <18aa865a-6d4a-4dcf-99ce-bcfbc0c92f19@linux.alibaba.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Thu, 23 May 2024 14:12:50 +1200
+Message-ID: <CAGsJ_4xeuLS9L=ayUSor4kXs8B1c2bY01cGZYrR7QjdwQWu7Lg@mail.gmail.com>
+Subject: Re: [PATCH] mm: drop the 'anon_' prefix for swap-out mTHP counters
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org, 
+	willy@infradead.org, ryan.roberts@arm.com, ziy@nvidia.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/5/22 7:54, Jane Chu wrote:
-> The soft hwpoison injector via madvise(MADV_HWPOISON) operates in
-> a synchrous way in a sense, the injector is also a process under
-> test, and should it have the poisoned page mapped in its address
-> space, it should get killed as much as in a real UE situation.
-> Doing so align with what the madvise(2) man page says: "
-> "This operation may result in the calling process receiving a SIGBUS
-> and the page being unmapped."
-> 
-> Signed-off-by: Jane Chu <jane.chu@oracle.com>
-> Reviewed-by: Oscar Salvador <oalvador@suse.de>
+On Thu, May 23, 2024 at 1:38=E2=80=AFPM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
+>
+>
+>
+> On 2024/5/23 09:14, Huang, Ying wrote:
+> > Barry Song <21cnbao@gmail.com> writes:
+> >
+> >> On Wed, May 22, 2024 at 9:38=E2=80=AFPM Baolin Wang
+> >> <baolin.wang@linux.alibaba.com> wrote:
+> >>>
+> >>>
+> >>>
+> >>> On 2024/5/22 16:58, David Hildenbrand wrote:
+> >>>> On 22.05.24 10:51, Baolin Wang wrote:
+> >>>>> The mTHP swap related counters: 'anon_swpout' and
+> >>>>> 'anon_swpout_fallback' are
+> >>>>> confusing with an 'anon_' prefix, since the shmem can swap out
+> >>>>> non-anonymous
+> >>>>> pages. So drop the 'anon_' prefix to keep consistent with the old s=
+wap
+> >>>>> counter
+> >>>>> names.
+> >>>>>
+> >>>>> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
+> >>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> >>>>> ---
+> >>>>
+> >>>> Am I daydreaming or did we add the anon_ for a reason and discussed =
+the
+> >>>> interaction with shmem? At least I remember some discussion around t=
+hat.
+> >>>
+> >>> Do you mean the shmem mTHP allocation counters in previous
+> >>> discussion[1]? But for 'anon_swpout' and 'anon_swpout_fallback', I ca=
+n
+> >>> not find previous discussions that provided a reason for adding the
+> >>> =E2=80=98anon_=E2=80=99 prefix. Barry, any comments? Thanks.
+> >>
+> >> HI Baolin,
+> >> We had tons of emails discussing about namin and I found this email,
+> >>
+> >> https://lore.kernel.org/all/bca6d142-15fd-4af5-9f71-821f891e8305@redha=
+t.com/
+> >>
+> >> David had this comment,
+> >> "I'm wondering if these should be ANON specific for now. We might want=
+ to
+> >> add others (shmem, file) in the future."
+> >>
+> >> This is likely how the 'anon_' prefix started being added, although it
+> >> wasn't specifically
+> >> targeting swapout.
+> >>
+> >> I sense your patch slightly alters the behavior of thp_swpout_fallback
+> >> in /proc/vmstat.
+> >> Previously, we didn't classify them as THP_SWPOUT_FALLBACK, even thoug=
+h we
+> >> always split them.
+> >
+> > IIUC, "fallback" means you try to do something, but fail, so try
+> > something else as fallback.  If so, then we don't need to count
+> > splitting shmem large folio as fallback.
+>
+> Agree. In additon, IIUC we have never counted splitting shmem large
+> folio as THP_SWPOUT_FALLBACK before or after this patch.
 
-Acked-by: Miaohe Lin <linmiaohe@huawei.com>
-Thanks.
-.
+Hi Baolin,
+
+My point is that THP_SWPOUT* has been dedicated to anonymous memory for yea=
+rs
+because we have not had the capability to perform THP_SWPOUT for shared mem=
+ory
+before. This is the historical context of thp_swpout* in /proc/vmstat,
+even though it is
+not ideal. Therefore, placing shmem sysfs entries in
+/sys/kernel/mm/transparent_hugepage/hugepages-2048kB/stats
+allows us to monitor SWPOUT and SWPOUT FALLBACK for shmem without altering
+the tradition of /proc/vmstat.
+
+But I am not firm on this because I don't see the necessity to
+differentiate shmem's
+swpout from anon's swpout. They basically seem the same while anon mTHP
+faults might be significantly different from file mTHP faults, in which cas=
+e we
+must distinguish them. So please send version 2 with the updated documentat=
+ion.
+I believe it should target v6.10-rc rather than v6.11 to avoid ABI
+conflicts if it is
+accepted.
+
+>
+> > For example, before commit 5ed890ce5147 ("mm: vmscan: avoid split durin=
+g
+> > shrink_folio_list()"), if folio_entire_mapcount() =3D=3D 0, we will spl=
+it
+> > the THP.  But we will not count it as "fallback" because we haven't
+> > tried to swap it out as a whole.
+
+Thanks
+Barry
