@@ -1,90 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B763F18643
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 16:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0882C6B6;
+	Thu, 23 May 2024 16:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716482671; cv=none; b=pBKhBrTSNfhWCWeLyyZCyYrnKTTDOv9Gc/yGSiQGOJDGTuAJTQ5ZHDMNvz4vTi483F0xiPjAPSgKsle+WjjwHIYl2oDHyoj0xWoskowQo3s9bbrLTVaFcnX3BfazOfj12DU3LJG7mQjAnAaiQnsAMIpC6pgKuc5Z8IRuQ/+yZsM=
+	t=1716482698; cv=none; b=aGGY4gtKE2BsPs0yOjE2Zsie3DDjubwofm3VmEQYzdfCgUD1CFiNNFPkGKw1FgX9ro1C4o/Mg+f9CTiXXxji8Q/ByMucbZwwEXNs+XfR1cP0/vY+g25Bk1L1ukKPqKT9qrovfvGyryDDgvkBKfE4A7ED3KLTN+jN58HncCKsumo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716482671; c=relaxed/simple;
-	bh=HPT2RRVWhwMnX33TN37zfYv6LrIgtDsgNFtTyyUEQ3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NbgDwlMR6X5w+xqmEDCE8GboPbqpPWu+T9n9USM7qPIXc5JFP53UceWec8ShFuSWwivqDX3woPGDFS0Yfh39veLm8/W+QxLFI24NE4DNGJcjLdN6zBv9o54tUuk2OFspzeYFaAntsxTiLkzOITmWeDDl6+BAhD3bdj9olhWwu5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dHdg/qDv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHdg/qDv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716482668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HPT2RRVWhwMnX33TN37zfYv6LrIgtDsgNFtTyyUEQ3Q=;
-	b=dHdg/qDv5LneIbfnYG0O9Y6i/J9CIU7wMyvuuQBxVS5wDdcIilJAd/iBfpY95In32IbskY
-	o4aTnlF4i0VLV4gOlX/++qV36vAKZ5NtyAaxLCiSfPmfbdi6sDIfv1kpdGkZFmAQkzSrXs
-	WxoirvSnleJiJtmmMBMLmyvEjrDSGTQ=
-Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com
- [209.85.221.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-669-zwYzcuCRO_SQsKK7r55CMQ-1; Thu, 23 May 2024 12:44:27 -0400
-X-MC-Unique: zwYzcuCRO_SQsKK7r55CMQ-1
-Received: by mail-vk1-f198.google.com with SMTP id 71dfb90a1353d-4df9026ad34so136219e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 09:44:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716482666; x=1717087466;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HPT2RRVWhwMnX33TN37zfYv6LrIgtDsgNFtTyyUEQ3Q=;
-        b=uP0VX3X+aajPz49ypegxYUfOukDnJ+5oeMi/QbYXTGZ4NOfCenSF9FF8oodW1lnOho
-         /NK70oIV09lUMKuUL7UMtaEcImwrdmIyqWFvskeB6Rc5Ky5P9f8+12lPtXZVmhouY5eP
-         ZrnnK2irv8TRl7qh12lrT2vn+d95PWhSimvCo7YDalj5PV/PJPXOYxMQhHxi4DiL+gJA
-         ATOeNTxz05GYDc/WHcikrlF9G2rxyGKLbE3eL+SJ8llAE/po4SrDmGwEuVzw6oy2S1nn
-         Q7BIpJFQiaaGys+boydsVZTENfBIxYtR+Ge/AaLH2UBcu8re+gXISy0P0kVqXxLgCIzB
-         BTMA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1S4N8psc8bTcjsIPnteCGkxRdk3uX9VawmYiZ6fno1X6csoaTC/O4Fb5so5ypQMFvgVYEJaGgpLygcj07loLRndhav4DxuRas8QAe
-X-Gm-Message-State: AOJu0Ywdqslg7q3IKRNB3Xw7+f61joCEELqKH7a9h4/sbulL48I+JAfL
-	Ow0MIJdP33XfX4w6JkBOgDQ0tRd5SRD9y1yNyYdkcMZsdq5Tibz6P33rwyhnhzFl3vB4EP0/C19
-	pGitkk//DGfqAmLnnF89raAmzX7vgxklmRZNq1/XqV1lplK4NB2rcY9zrxyLShg==
-X-Received: by 2002:a05:6122:3122:b0:4e4:ee6b:1783 with SMTP id 71dfb90a1353d-4e4ee6b196bmr530994e0c.5.1716482666421;
-        Thu, 23 May 2024 09:44:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFLBwTV5zswphEdhcg5dwd3Tg7XgWPeJ+Fd7A2WYQ8yqdldsjVOD91qLK0HSFYF757vHRP9lQ==
-X-Received: by 2002:a05:6122:3122:b0:4e4:ee6b:1783 with SMTP id 71dfb90a1353d-4e4ee6b196bmr530936e0c.5.1716482665365;
-        Thu, 23 May 2024 09:44:25 -0700 (PDT)
-Received: from x1gen2nano ([2600:1700:1ff0:d0e0::13])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ab8ca20630sm11394766d6.92.2024.05.23.09.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 09:44:25 -0700 (PDT)
-Date: Thu, 23 May 2024 11:44:22 -0500
-From: Andrew Halaney <ahalaney@redhat.com>
-To: Ravi Gunasekaran <r-gunasekaran@ti.com>
-Cc: nm@ti.com, vigneshr@ti.com, kristo@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, srk@ti.com, rogerq@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Add USB 3.0 support for J784S4
-Message-ID: <4rtzlvbfkvkomdteic2intesanf3udwfqg56vtzrghe2h46qrd@udzkjofpndqe>
-References: <20240507095545.8210-1-r-gunasekaran@ti.com>
+	s=arc-20240116; t=1716482698; c=relaxed/simple;
+	bh=0tqQovrxEuibLPAzpAH/w232rjaoPyNb6yIOFTFXaY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=O2MCZwGXKF1jS7cASbNTYKcZMIOGLuxLV3Zy95RDFlD/PMDRc6QelCcLSU16ToloIgirQDm0mvQ1JhtVVkTUOddoyTymEmxmNQalAi99QoNVgNxhY0iCAVrHP7OHjMT9rcttFzruXgLkV7z0mtXf3Y8L790ELy+Rtxe+RUH5AV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDC2C32782;
+	Thu, 23 May 2024 16:44:56 +0000 (UTC)
+Date: Thu, 23 May 2024 12:45:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ali Zahraee <ahzahraee@gmail.com>, Shuah
+ Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kselftest@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: [PATCH] tracing/selftests: Run the ownership test twice
+Message-ID: <20240523124541.7dd4cca9@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507095545.8210-1-r-gunasekaran@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 07, 2024 at 03:25:43PM GMT, Ravi Gunasekaran wrote:
-> J784S4 has one USB sub system.
-> This series adds and enables support for USB 3.0 for
-> J784S4 EVM.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-For the series:
+A regression happened where running the ownership test passes on the first
+iteration but fails running it a second time. This was caught and fixed,
+but a later change brought it back. The regression was missed because the
+automated tests only run the tests once per boot.
 
-Tested-by: Andrew Halaney <ahalaney@redhat.com> # k3-j784s4-evm
+Change the ownership test to iterate through the tests twice, as this will
+catch the regression with a single run.
 
-Thanks for the patches!
-Andrew
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ .../ftrace/test.d/00basic/test_ownership.tc   | 34 +++++++++++--------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+index c45094d1e1d2..71e43a92352a 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+@@ -83,32 +83,38 @@ run_tests() {
+ 	done
+ }
+ 
+-mount -o remount,"$new_options" .
++# Run the tests twice as leftovers can cause issues
++for loop in 1 2 ; do
+ 
+-run_tests
++	echo "Running iteration $loop"
+ 
+-mount -o remount,"$mount_options" .
++	mount -o remount,"$new_options" .
+ 
+-for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
+-	test "$d" $original_group
+-done
++	run_tests
++
++	mount -o remount,"$mount_options" .
++
++	for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
++		test "$d" $original_group
++	done
+ 
+ # check instances as well
+ 
+-chgrp $other_group instances
++	chgrp $other_group instances
+ 
+-instance="$(mktemp -u test-XXXXXX)"
++	instance="$(mktemp -u test-XXXXXX)"
+ 
+-mkdir instances/$instance
++	mkdir instances/$instance
+ 
+-cd instances/$instance
++	cd instances/$instance
+ 
+-run_tests
++	run_tests
+ 
+-cd ../..
++	cd ../..
+ 
+-rmdir instances/$instance
++	rmdir instances/$instance
+ 
+-chgrp $original_group instances
++	chgrp $original_group instances
++done
+ 
+ exit 0
+-- 
+2.43.0
 
