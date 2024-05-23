@@ -1,88 +1,82 @@
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 388D14F8BB;
-	Thu, 23 May 2024 09:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C067E574;
+	Thu, 23 May 2024 09:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716456475; cv=none; b=VHEIUXirJjsQBJFTm7pUDcYyiBfH5ybVdkQPOW95Rm4uLRofx5C1gyF0wfGUBzCi7je160KL/cbLabtkgNVIlbEkLN/l2myh+iadE5G2u6T28EbaEAkN1PnudEc1WLp/4uUIICID8Z481jBmt2IMBaUefGI5Qu5MR1QkzJTzPAQ=
+	t=1716456565; cv=none; b=WTq/RblvU0YKZcmcO+H3iRBCCVBhIP8Rml7XrQn+ThCBSa5TImGJKBbgxZ5P9KgjI9MGuQ0OjSeYcy1hgUYEwaUn90WyAuzwwTksp4LtL1NNWhOzWCGUljrpDxU3WweF136weZ4X4SXPaRUWnVddX8TwTRmrGdeymQUIRj/8wxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716456475; c=relaxed/simple;
-	bh=dWtO02lqbwVZmnSVu5btIru4KS2lGopOAT6JAykDeXI=;
+	s=arc-20240116; t=1716456565; c=relaxed/simple;
+	bh=NBBL5XBTVaUwnuRPH2nURfseFPd5SUWepkfKnqcbEIE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XyL9w9wfIuL6HVUqL5iAIzhZEzwJqDpra4p3tkY43GO4AuOK/sgbqgEMQ2Z1C6/uV9XCps9zkuGxPTf7shrCXHy1gjDeqyaFS8j1B8boCgs+umFCRtXJ0G11IaDQA3gjlb5Xqh8uFfwBDolQ2oJy8/V9li0Ycnzha6rko1Nxlys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=Kigr3+qM; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iq2qTivG2fV0/IE7Stu6X1wlTPfyJOxB5Qouzh2Jk/pqtnI9Q3Yel2Oma6EtXDRDbs60kkrnQ6b8beBtrkV/Hs2lO+oZVIeP3ol7+BWijXM96sX3Hg3YdMNMY48bZ5WxJ7N/PT9UO1NYW5Fb14UILk8SgZf4sH5GE+MJSaDUWkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSxGarIu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="Kigr3+qM"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 2E26A14C2DB;
-	Thu, 23 May 2024 11:27:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1716456469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DrZlTviE644M9ThwmAq1xAzcas38uFQOXVc3W+d/Maw=;
-	b=Kigr3+qMahYfNoPNTSeO+bBCgRLWiQdMuJhplL9xfcbxmtX0M5lawm8vWSKd/1tAoZkqqc
-	xfvmxOzk1QmgkmAJcFpVVySLjXJhHnD3QKNZqOGwbXJL/i1SnQRtJfmYtfuJ5ULsBOOkVq
-	jrOr3mv7KI+YftxrMNd5IC2TgzwRnPPzxq5byMR7hS+xCd1F0fGjnW4Bl95iZ8TGcsstev
-	pn9jaFApDIvN5RG/7urttUU+EqpaVayXodTOM6DvQZar7Ic1BYTdzxdjvFA7wql6iSmYP+
-	CP3DTj9rs8orbPbosV859eHJOxTv6i8hM223DIf9iRyseYiGb/OwLAGVSo3heA==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 3649b515;
-	Thu, 23 May 2024 09:27:43 +0000 (UTC)
-Date: Thu, 23 May 2024 18:27:28 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Christian Schoenebeck <linux_oss@crudebyte.com>
-Cc: Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>, Greg Kurz <groug@kaod.org>,
-	Jianyong Wu <jianyong.wu@arm.com>, stable@vger.kernel.org,
-	Eric Van Hensbergen <ericvh@gmail.com>, v9fs@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSxGarIu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DEFCC3277B;
+	Thu, 23 May 2024 09:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716456565;
+	bh=NBBL5XBTVaUwnuRPH2nURfseFPd5SUWepkfKnqcbEIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nSxGarIuanJFxjGG8dz4TmH2fag2/jgM+Ou9sp+kE1CgrfwzHGEavKVmRs8H8j2ID
+	 uTtvdEwJ/lmwoh821zsaPF4HCG9uMunndQaC/rprgkVePYWwiXSkdD3LVfow0JYFfp
+	 dRuG2H/Sx8kvekjYEcVD5Hntzo9ltPIRTpUmRQw//x3pd2PwlbE3POiKfxicGMqrBO
+	 ovQ4HUwpd5uThxRkevXnzh6crnnMMr8ZxCEX5G0BghrK4N3CihMA/BheXWnsYP2BxL
+	 2JWMxwtOr/b9DhRwfwdqM/L4BWAFeuFUIc1/0umJ3jqLPFGBRQcbEgGwwJV3YBWuNt
+	 m0aXXAsJ1D3lg==
+Date: Thu, 23 May 2024 11:29:20 +0200
+From: Alexey Gladkov <legion@kernel.org>
+To: "Dmitry V. Levin" <ldv@strace.io>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-api@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] 9p: add missing locking around taking dentry fid list
-Message-ID: <Zk8MAFAWIUPlhGFe@codewreck.org>
-References: <20240521122947.1080227-1-asmadeus@codewreck.org>
- <1738699.kjPCCGL2iY@silver>
- <Zk4qcmtot6WEC1Xx@codewreck.org>
- <3116644.1xDzT5uuKM@silver>
+Subject: Re: [PATCH] uapi: linux/kd.h: include missing header
+Message-ID: <Zk8McCtAhKtMTt2n@example.org>
+References: <20240523092310.GA31777@altlinux.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3116644.1xDzT5uuKM@silver>
+In-Reply-To: <20240523092310.GA31777@altlinux.org>
 
-Christian Schoenebeck wrote on Thu, May 23, 2024 at 10:34:14AM +0200:
-> > The comment still works -- if detry->d_fsdata is NULL then
-> > hlist_for_each_entry will stop short and not iterate over anything (it
-> > won't bug out), so that part is fine in my opinion.
+On Thu, May 23, 2024 at 12:23:10PM +0300, Dmitry V. Levin wrote:
+> Given that linux/kd.h now uses macros defined in linux/ioctl.h,
+> do not rely on that header being already included by linux/kd.h users
+> and include linux/ioctl.h explicitly.
 > 
-> I meant the opposite: dentry->d_fsdata not being NULL.
+> This bug was found by strace CI.
+> 
+> Fixes: 8c467f330059 ("VT: Use macros to define ioctls")
+> Signed-off-by: Dmitry V. Levin <ldv@strace.io>
 
-I also meant that in the d_fsdata not being NULL branch, if d_fsdata
-turns out to be NULL when it is read under lock later.
+Acked-by: Alexey Gladkov <legion@kernel.org>
 
-> In this case v9fs_fid_find() takes a local copy of the list head
-> pointer as `h` without taking a lock before.
+> ---
+>  include/uapi/linux/kd.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/uapi/linux/kd.h b/include/uapi/linux/kd.h
+> index 8ddb2219a84b..8fcce939ba25 100644
+> --- a/include/uapi/linux/kd.h
+> +++ b/include/uapi/linux/kd.h
+> @@ -3,6 +3,7 @@
+>  #define _UAPI_LINUX_KD_H
+>  #include <linux/types.h>
+>  #include <linux/compiler.h>
+> +#include <linux/ioctl.h>
+>  
+>  /* 0x4B is 'K', to avoid collision with termios and vt */
+>  #define KD_IOCTL_BASE	'K'
+> -- 
+> ldv
+> 
 
-It doesn't, it takes &dentry->d_fsdata so the address of d_fsdata before
-the lock, but that address cannot change here (another thread cannot
-change the address of the dentry) ...(continuing below)
-
-> Then v9fs_fid_find() takes the lock to run hlist_for_each_entry(), but at this
-> point `h` could already point at garbage.
-
-... so *h (in practice, head->first in hlist_for_each_entry()) will
-properly contain the first node of the list under lock: either NULL if
-we just cleared it (at which point the loop won't iterate anything), or
-a new list if other items have been added meanwhile.
-
-
-I really think it's safe, but I do agree that it's hard to read, happy
-to move the `h = &dentry->d_fsdata` inside the lock if you prefer -- it
-compiles to the same code for me (x86_64/gcc 13.2.0)
 -- 
-Dominique Martinet | Asmadeus
+Rgrds, legion
+
