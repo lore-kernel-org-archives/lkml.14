@@ -1,157 +1,118 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FB7148824;
-	Thu, 23 May 2024 12:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22011E4A0
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 12:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716467635; cv=none; b=d4h+cgqlyrfjSm+m0ezkbBM8r7ywH4gLr4U6BD7prrDtTUfI/M2NajJoOkVpWnDejcF/JlMP39uKJlcb0PSUs+lMRdCggGRM4Qg1eyP8TlPkL1Zh09OMNvJtfmXm2b8EX1CuxLktWNUdZVSxC3NhMuvTFEQ6gQVGeKY7+2o9//M=
+	t=1716467782; cv=none; b=T7CWI0h2YdNShO671AJ32MXSQZLC6/aI2yL027pcBTeAjNb2V/szZ2dPTCQr2XWYLV2gloKdfCzt5EsSss8kkdtpkFKqo/WcY+iOoMojDJ7+Qfplash6cjDUKYXXqPPPGtKus+KedYr9tRnWCDK5IDJyMr44tj8teyrvptN17QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716467635; c=relaxed/simple;
-	bh=smrF2fUmUHA7xyyomoTkTTinVqiDpVSE9fy64YqQQIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ADwMS0kk6/gkUQEPEWE0neV/58Ja9NsmFd9+FeeJDK/wbVYx8sJXWimIS5GlA5LrkOiP2YQ51GSZkicx24f8H+8jDZeYdYBhFE3qkAnEq0qj7bnNzTfzsKVqB3z17PdyaOePoOmDLKkHaWsppxzWEk1YbeCHlkFoE8NgcUbOT5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Qt/z69XK; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1716467782; c=relaxed/simple;
+	bh=m6UgnpbMbTrWQXZDKtHkcHfxNFrx8RIBUE5CV8NUdwQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=j4qZDEopgnDLdJOKUFQnC2SObvbcfA+ldsjBDUlGPnQqQzO7mhDQWG3t1HvFA1/ckiRemLYAUIIsKJrjsbdA3bdZJ+DRD6v3dwuJ73Qfl/VsMGh8bKVJNKFzCDkQZR/jAQBwOjXKbGftjaB4Oz8m+08LJgIWchlqIaCfZtmBCQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nho/kuZV; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qt/z69XK"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44N4xBDA032362;
-	Thu, 23 May 2024 12:33:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=TG9RpsRGFzzFo4NixL4rHOJgwqr4kHslcW8q4P+LGVM=;
- b=Qt/z69XKEHsvrxyNZ+5fmHvUp118mNkGvV5fLuAKclnXE3MxnaMOg+gkfZFos4YJtAoU
- hA98aC0FtfmRYMvRgADAw8zbRUPEz+X+nX5mxyis5SoEKGHaNdyAt/9gftEouPgHCWM1
- RCob7mwm8HQrurZqD7/8TXBqHLk1yLtqWhDzFDZp3StI1BEUCDWD3ScHe65nTH/NEt+5
- 8jSbI3/OkDDDxGWrg7LpoO8d3koMxMx+Gf2A9ftHwzGMQfAIOUDEgcqX+8jw2p9PA2jr
- oC6rhj5uvxTyHZi7bL6Zo5e5pCBWI9hG2rnhOeLC81Bj3Gphm8A6GQmExN5gpDqs76IY Kw== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y6kxva1g8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 May 2024 12:33:26 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44NCC6o5019515;
-	Thu, 23 May 2024 12:33:26 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y6jsahjg1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 May 2024 12:33:26 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44NCXP6F016719;
-	Thu, 23 May 2024 12:33:25 GMT
-Received: from laptop-dell-latitude7430.nl.oracle.com (dhcp-10-175-24-91.vpn.oracle.com [10.175.24.91])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3y6jsahje8-1;
-	Thu, 23 May 2024 12:33:25 +0000
-From: Alexandre Chartre <alexandre.chartre@oracle.com>
-To: x86@kernel.org, kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, daniel.sneddon@linux.intel.com,
-        pawan.kumar.gupta@linux.intel.com, tglx@linutronix.de,
-        konrad.wilk@oracle.com, peterz@infradead.org,
-        gregkh@linuxfoundation.org, seanjc@google.com,
-        andrew.cooper3@citrix.com, dave.hansen@linux.intel.com,
-        nik.borisov@suse.com, kpsingh@kernel.org, longman@redhat.com,
-        bp@alien8.de, pbonzini@redhat.com, alexandre.chartre@oracle.com
-Subject: [PATCH] x86/bhi: BHI mitigation can trigger warning in #DB handler
-Date: Thu, 23 May 2024 14:33:22 +0200
-Message-Id: <20240523123322.3326690-1-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nho/kuZV"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51fc01b6fe7so6646485e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 05:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716467779; x=1717072579; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K8lRq3lXsKaaPmtAV1QU0P9el+kdsmzCNC+w8uH7qfk=;
+        b=Nho/kuZVCueIRFvS5mYOvkIpRwRZlavQL01TI2hNjavZRDAhnUQwJ0P/wCZN7AeFQJ
+         T10PrUfKxcKbTwjh4MuacTy0gFFAuWbw8A1grJVypC4RY35idwwyEFy0DYd5NsxHz31K
+         /f/EeQGwPOxmdZADZXmAq9TkAVCPVXELej/pc8/OkBisZA7d93TSpq0BA3JMW+s5EEL1
+         0LOYaKN0rYrU6QuxpSgxvZfxQXsVPDGqp8S5hT8D9tR8EUzt8U9rcbX4bIJKjHrHsMso
+         CUhUNIvVtl8bqQmqyi2i/37iGjb/Pijnz1xxgLzSWbll61a2RibPvwIxmtV5ZH3CBJou
+         TOXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716467779; x=1717072579;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K8lRq3lXsKaaPmtAV1QU0P9el+kdsmzCNC+w8uH7qfk=;
+        b=JFsgGTwXG5NSr95z4sUbqXyQn1taLo43G7SFsDihV4VU4s9gFyIoE8FDS0BYVevJwl
+         yhP3UDDiORCeujnPz9L1aK5jP9YyvibITyxqdojFqmmlyPt5/CM0jLTqxaV+Atck39CF
+         4lZowevynn76EtwvP5NGiaAk0uz49MGKIKJmui64Q19OVJXazptefilutTtEHXskDpkc
+         SyNczmy2/6g7Qm8sjY9xJXyAE8Jk+mRBpyT/bRGb0bG65Wf5HhFK8Zl31djLx6mrcJNE
+         /VNwZ+E43qkg87ZXxr1WZYlZJzanQLbUJSUj31jBkzyPsOZr8JzvNkPnjr6vSD3YZWKr
+         RoRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnwGdUx42DKHJk7svRfamREHO/HDV9kCt6HDm5izaTevnyFa96eT8rFQuEHttxzUbspAeamL3Vc0sOKMW7xd9Wjd8pkFPCBCcAqIMh
+X-Gm-Message-State: AOJu0Yw4701Kk6YaQu/lKJxrllktMYyO5WE4VFMs76HCg71VXOMCo2ta
+	axRRMB7ebgHZEFDp4IlHkz7MoVaXTTWtTOhIgXptwblA5QrvT6km
+X-Google-Smtp-Source: AGHT+IGTi2EkzmV53tv/VPuEYvVAiRUh6FoyVlq2SqgaxVOnc556D9mbr1HGWrV7XXHBopeoqrkJ/g==
+X-Received: by 2002:a19:7511:0:b0:523:e756:2838 with SMTP id 2adb3069b0e04-526bdc5255fmr2777702e87.39.1716467778569;
+        Thu, 23 May 2024 05:36:18 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-578366176e9sm2388421a12.74.2024.05.23.05.36.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2024 05:36:18 -0700 (PDT)
+From: Wei Yang <richard.weiyang@gmail.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wei Yang <richard.weiyang@gmail.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Steve Wahl <steve.wahl@hpe.com>
+Subject: [Patch v3] x86/head/64: remove redundant check on level2_kernel_pgt's _PAGE_PRESENT bit
+Date: Thu, 23 May 2024 12:35:39 +0000
+Message-Id: <20240523123539.14260-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-23_07,2024-05-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
- adultscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405230086
-X-Proofpoint-GUID: dVpr_7H5SXUK8Sw610ASeh_7ItQhnjVO
-X-Proofpoint-ORIG-GUID: dVpr_7H5SXUK8Sw610ASeh_7ItQhnjVO
 
-When BHI mitigation is enabled, if sysenter is invoked with the TF flag
-set then entry_SYSENTER_compat uses CLEAR_BRANCH_HISTORY and calls the
-clear_bhb_loop() before the TF flag is cleared. This causes the #DB
-handler (exc_debug_kernel) to issue a warning because single-step is
-used outside the entry_SYSENTER_compat function.
+Remove a redundant check on kernel code's PMD _PAGE_PRESENT attribute
+before fix up.
 
-To address this issue, entry_SYSENTER_compat() should use
-CLEAR_BRANCH_HISTORY after making sure flag the TF flag is cleared.
+Current process looks like this:
 
-The problem can be reproduced with the following sequence:
+    pmd in [0, _text)
+        unset _PAGE_PRESENT
+    pmd in [_text, _end]
+        if (_PAGE_PRESENT)
+            fix up delta
+    pmd in (_end, 512)
+        unset _PAGE_PRESENT
 
- $ cat sysenter_step.c
- int main()
- { asm("pushf; pop %ax; bts $8,%ax; push %ax; popf; sysenter"); }
+level2_kernel_pgt compiled with _PAGE_PRESENT set. The check is
+redundant
 
- $ gcc -o sysenter_step sysenter_step.c
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+CC: Ingo Molnar <mingo@kernel.org>
+CC: Steve Wahl <steve.wahl@hpe.com>
 
- $ ./sysenter_step
- Segmentation fault (core dumped)
-
-The program is expected to crash, and the #DB handler will issue a warning.
-
-Kernel log:
-
-  WARNING: CPU: 27 PID: 7000 at arch/x86/kernel/traps.c:1009 exc_debug_kernel+0xd2/0x160
-  ...
-  RIP: 0010:exc_debug_kernel+0xd2/0x160
-  ...
-  Call Trace:
-  <#DB>
-   ? show_regs+0x68/0x80
-   ? __warn+0x8c/0x140
-   ? exc_debug_kernel+0xd2/0x160
-   ? report_bug+0x175/0x1a0
-   ? handle_bug+0x44/0x90
-   ? exc_invalid_op+0x1c/0x70
-   ? asm_exc_invalid_op+0x1f/0x30
-   ? exc_debug_kernel+0xd2/0x160
-   exc_debug+0x43/0x50
-   asm_exc_debug+0x1e/0x40
-  RIP: 0010:clear_bhb_loop+0x0/0xb0
-  ...
-  </#DB>
-  <TASK>
-   ? entry_SYSENTER_compat_after_hwframe+0x6e/0x8d
-  </TASK>
-
-Fixes: 7390db8aea0d ("x86/bhi: Add support for clearing branch history at syscall entry")
-Reported-by: Suman Maity <suman.m.maity@oracle.com>
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/entry/entry_64_compat.S | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+v3: refine the change log per kirill's comment
+v2: adjust the change log to emphasize the redundant check
+---
+ arch/x86/kernel/head64.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/entry/entry_64_compat.S b/arch/x86/entry/entry_64_compat.S
-index 11c9b8efdc4c..7fa04edc87e9 100644
---- a/arch/x86/entry/entry_64_compat.S
-+++ b/arch/x86/entry/entry_64_compat.S
-@@ -91,7 +91,6 @@ SYM_INNER_LABEL(entry_SYSENTER_compat_after_hwframe, SYM_L_GLOBAL)
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index a817ed0724d1..bac33ec19aa2 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -260,8 +260,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
  
- 	IBRS_ENTER
- 	UNTRAIN_RET
--	CLEAR_BRANCH_HISTORY
+ 	/* fixup pages that are part of the kernel image */
+ 	for (; i <= pmd_index((unsigned long)_end); i++)
+-		if (pmd[i] & _PAGE_PRESENT)
+-			pmd[i] += load_delta;
++		pmd[i] += load_delta;
  
- 	/*
- 	 * SYSENTER doesn't filter flags, so we need to clear NT and AC
-@@ -116,6 +115,12 @@ SYM_INNER_LABEL(entry_SYSENTER_compat_after_hwframe, SYM_L_GLOBAL)
- 	jnz	.Lsysenter_fix_flags
- .Lsysenter_flags_fixed:
- 
-+	/*
-+	 * CLEAR_BRANCH_HISTORY can call other functions. It should be invoked
-+	 * after making sure TF is cleared because single-step is ignored only
-+	 * for instructions inside the entry_SYSENTER_compat function.
-+	 */
-+	CLEAR_BRANCH_HISTORY
- 	movq	%rsp, %rdi
- 	call	do_SYSENTER_32
- 	jmp	sysret32_from_system_call
+ 	/* invalidate pages after the kernel image */
+ 	for (; i < PTRS_PER_PMD; i++)
 -- 
-2.39.3
+2.34.1
 
