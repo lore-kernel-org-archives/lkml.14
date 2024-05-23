@@ -1,159 +1,147 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00427BA42
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 03:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F4A3BBEB
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 03:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716521909; cv=none; b=lbzBKEeHfYqXr+ax3iFz6uOwYSvZMFfC+FM/cjNf+/tuDEDO3KdmA7pePcxgdhRrxC+dQdnIcQFfXHFyUAjfj4DLk96ZXqHmpW/USTEKe9kDnW+1RnCou/i7Hvr6IB1qOBV4kVAcsglY5vsg1t100jzRX+GP/LGT1x7OijcwQMQ=
+	t=1716521927; cv=none; b=h7TNHENGv7ZTCmhdJcF4OSHtvPULWdnOzwUTyV+/SWYaIBTxR7CUd3pGuqjlw7UUSI+Mpn7Ah8X3/Bl7PYM7OmkmWutPi2ahThuHIjeVqhmkNRDBd1BL8jbjDTWql9vjPKx1UuWy3XW5YYC0ArOjR2Z0iQAwzdg99eafV4gMit4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716521909; c=relaxed/simple;
-	bh=cAL6u5NSV/FtIQTkgLiXildPvmom+465OK2uCEULmo4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aMsJxb6N0imvSho0/QFJnECp1tdzPmEp5BEyFI+GavVIvygBts+9ERmEIe/SaziQEv7hq8bfdus/vP3pNiZJ3lCocg7shRD2tHQdD5mUCq/sviNVFH3Si2cFKRkmGUTAoVrym8XsFInRRjz0ldu9KGwXxeD4SYleDZltIpvc0P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qhOuXtqI; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+	s=arc-20240116; t=1716521927; c=relaxed/simple;
+	bh=wW8O7z9qSta8iJBZz+Yf7/g2CiXdzTnbWPgH1S5yp8w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=d3hfcs1Sg8dfnGochee6EPAx1Lg4OMQKUbfoOc7STToljsnoXX1A46lqK1ZHghmbT0hwHh4YSQB5Pvz5BZePfEkmrwVZfXHVG9DhEH2kGwSdi2aD8OFixDzdSPgenuCK11rBw0uFm+YbASBlGKNCEentyZF0O9X6DbCDXWc4QaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=KHoiGwQs; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhOuXtqI"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df777ba71e2so157356276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 20:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716521907; x=1717126707; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4rjLaqux6n3a7+R/7FlUB+W5AeNaAqDsKuPO95aKmjo=;
-        b=qhOuXtqIkXv1Ey0OCLcje7kk97gRZn/yRyrI3GmUoq7mbOYhF6m3UjFPNwaL2Ipl0P
-         7OUJ1bNuWpMzwsV0MG6fLgcSmBeuTNM+BFtaKiqAkxK+48up+XOquQPyZFK0VJTbWn1Y
-         xFTU7Z6yeMdIvx8iLMbLvnO3zJEJJmw2wV5rDh5DIlvVByNqCW00mDna2seYCFzzNyhH
-         frmPMHqPrL0zjjOP99x9Fpy9qHE5nKqQ21fUhdtzhrTA1+IESpOdNQY24Y72CWNkJ0sr
-         JEKL48E9OGdp84fNDJk5CCh/46jS8kJVa0g7Cy2TFflOMOZxl0F4Ts+tpETfi1KY5za/
-         WDrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716521907; x=1717126707;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4rjLaqux6n3a7+R/7FlUB+W5AeNaAqDsKuPO95aKmjo=;
-        b=s7uEo81pHqLakpSDnHj7LG5VYrTbF5hPt3St2ZHdnK4jM+Stco39matzBAKo5+h4og
-         eOY5Lug6LNbpkd+W6I9wOOkYCZ3/T/sBnQi5R8bpj4rhjiUhvVAvAuEHtc0qbqolPkWv
-         J4ULdl79znbeQiUY/B9rdPRbtGWf2a9tVCxC+VfCWNxNcE5EvsdiOIz30+X+X1W/47WN
-         BH9r/k7cTWOqvbd9hYCdjheGRoYzCbWOw4usjqBk0ACDbqNMsZOkm+W3BtnAtHqwb1/V
-         jBgbdqAYoujhw6K20JtQ2rp8uDhPGRj+tkLWnqCmQrckUkUBfRQYxoxT7lZlpILHdp4D
-         lPGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcxIwdLoeHhfSb4Ob+rDhuWAgG+Ck9mqGYG3jDdrChkt6Q6phKQUj0/pzLLBUews3B5C//ixxchZQ+5ztm9NVvwL7ka6Rl/lI/c9XK
-X-Gm-Message-State: AOJu0YxXo2F92GA2ImsvQ0TsPv1m9PaP0dWNrfl4E2a2hT6p96AfUJyZ
-	tKRSI0sQstUgUXVjqjB8fNBTcYee0vA8G9ozVEXNofj6GJIGPa0I+PHLk/uA+t4H5wFl8F7Heh8
-	tFo2rnpPiAgx1ntqpuQ==
-X-Google-Smtp-Source: AGHT+IFjyBiedP4yQeSnv9T+OmD26CtUHgQCt5FkCWaEvXFDvir0hBHjpfuYbfRsKpcdcsuSG+tax+f1009tpb2V
-X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
- (user=yosryahmed job=sendgmr) by 2002:a05:6902:2b03:b0:de4:5ce2:7d2 with SMTP
- id 3f1490d57ef6-df7721dc43cmr300341276.4.1716521907001; Thu, 23 May 2024
- 20:38:27 -0700 (PDT)
-Date: Fri, 24 May 2024 03:38:18 +0000
-In-Reply-To: <20240524033819.1953587-1-yosryahmed@google.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KHoiGwQs"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240524033842epoutp02b0de6370dea53f16d0c2077b821a1724~ST5fyXvj-1999019990epoutp02M
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 03:38:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240524033842epoutp02b0de6370dea53f16d0c2077b821a1724~ST5fyXvj-1999019990epoutp02M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716521922;
+	bh=XsRGoW8s9vJOipXIlr8NX6JmpQmQL952tUCYOjgPQ3A=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=KHoiGwQs3VPYiAx7kQd1vgtHl/tSoTQLaFbILNrszd6veU0xOhBQbsT7poK3bREPW
+	 xIGqhtbp4ixLfFbdZgXV2LOqwlrTiDEq1UHp7TL+dP7U8dEd6a+iUowKOFVaGeR/NH
+	 RQIap1dvDrY2hG7kEsf7uMil9FRjXOtm8e2AokqA=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240524033841epcas5p2ea91080a8473a302b9f70ff390e17dc8~ST5e_7jEZ1803418034epcas5p2A;
+	Fri, 24 May 2024 03:38:41 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4VlrNv2m7Cz4x9Pw; Fri, 24 May
+	2024 03:38:39 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	09.D1.09688.FBB00566; Fri, 24 May 2024 12:38:39 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240523113915epcas5p32626cec7fb138355e74415534a3ece36~SGzzKUYrE3035030350epcas5p3G;
+	Thu, 23 May 2024 11:39:15 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240523113915epsmtrp2d6392fc0f682cae0dda45327d97e8922~SGzzJNpo40362203622epsmtrp2f;
+	Thu, 23 May 2024 11:39:15 +0000 (GMT)
+X-AuditID: b6c32a4a-837fa700000025d8-95-66500bbf5cde
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	C8.82.19234.3EA2F466; Thu, 23 May 2024 20:39:15 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240523113913epsmtip167f1d1e2c0aaccfa58070d62138619a4~SGzxXxFlK0320903209epsmtip1m;
+	Thu, 23 May 2024 11:39:13 +0000 (GMT)
+From: Kundan Kumar <kundan.kumar@samsung.com>
+To: axboe@kernel.dk, hch@lst.de, kbusch@kernel.org, sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+	joshi.k@samsung.com, anuj20.g@samsung.com, nj.shetty@samsung.com,
+	c.gameti@samsung.com, gost.dev@samsung.com, Kundan Kumar
+	<kundan.kumar@samsung.com>
+Subject: [PATCH] nvme: adjust multiples of NVME_CTRL_PAGE_SIZE in offset
+Date: Thu, 23 May 2024 17:01:49 +0530
+Message-Id: <20240523113149.29174-1-kundan.kumar@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240524033819.1953587-1-yosryahmed@google.com>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240524033819.1953587-4-yosryahmed@google.com>
-Subject: [PATCH 3/3] mm: zswap: make same_filled functions folio-friendly
-From: Yosry Ahmed <yosryahmed@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmhu5+7oA0g/49ghZNE/4yW6y+289m
+	8X17H4vFzQM7mSxWrj7KZHH0/1s2i0mHrjFabP3yldXi8q45bBbzlz1lt9j2ez6zxbrX71kc
+	eDzO39vI4nH5bKnHplWdbB6bl9R77L7ZwObRt2UVo8fnTXIB7FHZNhmpiSmpRQqpecn5KZl5
+	6bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+AbpumTlAdyoplCXmlAKFAhKLi5X07WyK8ktL
+	UhUy8otLbJVSC1JyCkwK9IoTc4tL89L18lJLrAwNDIxMgQoTsjOmLHnFVjCbs+LRJKEGxmPs
+	XYycHBICJhKrjr9k7GLk4hAS2M0o8bxxHhOE84lR4u+5j4xwztQlb9i6GDnAWk6tsoCI72SU
+	OLJnP1THZ0aJP6u+sIAUsQnoSvxoCgVZISLgInFp5Tc2EJtZ4C6jxMtPWiAlwgIeEo2PakDC
+	LAKqEhdegFzBwcErYCuxdoswxHHyEjMvfQc7lFdAUOLkzCcsEFPkJZq3zmYG2Soh0Mghcbn9
+	K9Q3LhL7HpxhhrCFJV4d3wIVl5L4/G4vG4SdLXGocQMThF0isfNIA1SNvUTrqX5mkBuYBTQl
+	1u/ShwjLSkw9tY4JYi+fRO/vJ1CtvBI75sHYahJz3k1lgbBlJBZemgEV95C4dHM32HghgViJ
+	dVtnME1glJ+F5J1ZSN6ZhbB5ASPzKkbJ1ILi3PTUYtMCo7zUcnikJufnbmIEJ1Utrx2MDx98
+	0DvEyMTBeIhRgoNZSYQ3eqVvmhBvSmJlVWpRfnxRaU5q8SFGU2AQT2SWEk3OB6b1vJJ4QxNL
+	AxMzMzMTS2MzQyVx3tetc1OEBNITS1KzU1MLUotg+pg4OKUamLh2SBzQehljY3aKsWXijPdp
+	gbt+Zfitu+h8V/xdjeuEqV18piU+3/7+t3Ep7tqp3XfTmit+13FH1v07L6icuhT/1u/FNpsD
+	TfbNL7/tXbK0Q0hQUrd818zTrzy/7H8z+8HzuHl7H73kzjRc1Xd2+/fF79ZN6Li3bOX1f78S
+	jk4W3hBRr5I/TetwxXHn58ks5+5/M6z3OvVdd87t9HMvyv/GbTjO015kr317AW+4qMqHSbdu
+	578V/Nl26qrCwar1t/7c/imRvGKO0jPH8NY+1dWbtuWWbEypmDCbUzV4bUqN3yaufZ8CC/xy
+	IhWktRfWn3wwXTM5Ve+X7T+O6faG3xRefJvhdChp75/cF/nF0af+K7EUZyQaajEXFScCANYt
+	7vAzBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSnO5jLf80g69H9SyaJvxltlh9t5/N
+	4vv2PhaLmwd2MlmsXH2UyeLo/7dsFpMOXWO02PrlK6vF5V1z2CzmL3vKbrHt93xmi3Wv37M4
+	8Hicv7eRxePy2VKPTas62Tw2L6n32H2zgc2jb8sqRo/Pm+QC2KO4bFJSczLLUov07RK4MqYs
+	ecVWMJuz4tEkoQbGY+xdjBwcEgImEqdWWXQxcnEICWxnlDi8cQJjFyMnUFxGYvfdnawQtrDE
+	yn/P2SGKPjJKPNo6jQ2kmU1AV+JHUyhIjYiAl8SZPa+YQWqYBZ4ySryb0c8KUiMs4CHR+KgG
+	pIZFQFXiwouXjCBhXgFbibVbhCHGy0vMvPSdHcTmFRCUODnzCQuIzQwUb946m3kCI98sJKlZ
+	SFILGJlWMYqmFhTnpucmFxjqFSfmFpfmpesl5+duYgQHtlbQDsZl6//qHWJk4mA8xCjBwawk
+	whu90jdNiDclsbIqtSg/vqg0J7X4EKM0B4uSOK9yTmeKkEB6YklqdmpqQWoRTJaJg1Oqgamx
+	9LyUX/gkmxt7WgVmfXp0IWq74dUHkx/uqf/xJydxkmnwNuHE47ecPY/Pnm8wd7n4x4xXr8wl
+	O+YYTzLz+nL0kNuXvXMXVPZmng6qyhSYLsVsXJ7BfPPTw5lX/22w6l0fyb7dbbbBr63hS20M
+	ir7UHO/9oJf6wOx885pX1/quzeu+7lMVEVZ0gqFGpmGed6pAhOHp/YuO+W09leL3xk2xsOrz
+	wTc5IuUqSVpNE75bTRPOuydYc7FRwURJ1/ud1ZJMFcl+ntUuHp0p/Td4eKM/vW0MPGtRuPTY
+	n0kvt0zYsTn+q4Pvxxdx7ncjbvkanzmYM9eU46aCwc9TN9zlPj5ZW3QxYuv03j3qd36+LzRQ
+	YinOSDTUYi4qTgQA2FO3pNsCAAA=
+X-CMS-MailID: 20240523113915epcas5p32626cec7fb138355e74415534a3ece36
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240523113915epcas5p32626cec7fb138355e74415534a3ece36
+References: <CGME20240523113915epcas5p32626cec7fb138355e74415534a3ece36@epcas5p3.samsung.com>
 
-A variable name 'page' is used in zswap_is_folio_same_filled() and
-zswap_fill_page() to point at the kmapped data in a folio. Use 'data'
-instead to avoid confusion and stop it from showing up when searching
-for 'page' references in mm/zswap.c.
+bio_vec start offset may be relatively large particularly when large
+folio gets added to the bio. A bigger offset will result in avoiding the
+single-segment mapping optimization and end up using expensive
+mempool_alloc further.
 
-While we are at it, move the kmap/kunmap calls into zswap_fill_page(),
-make it take in a folio, and rename it to zswap_fill_folio().
+Rather than using absolute value, adjust bv_offset by
+NVME_CTRL_PAGE_SIZE while checking if segment can be fitted into one/two
+PRP entries.
 
-Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Kundan Kumar <kundan.kumar@samsung.com>
 ---
- mm/zswap.c | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+ drivers/nvme/host/pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index bac66991fb14e..b9b35ef86d9be 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -1375,35 +1375,35 @@ static void shrink_worker(struct work_struct *w)
- **********************************/
- static bool zswap_is_folio_same_filled(struct folio *folio, unsigned long *value)
- {
--	unsigned long *page;
-+	unsigned long *data;
- 	unsigned long val;
--	unsigned int pos, last_pos = PAGE_SIZE / sizeof(*page) - 1;
-+	unsigned int pos, last_pos = PAGE_SIZE / sizeof(*data) - 1;
- 	bool ret = false;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 710043086dff..102a9fb0c65f 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -778,7 +778,8 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
+ 		struct bio_vec bv = req_bvec(req);
  
--	page = kmap_local_folio(folio, 0);
--	val = page[0];
-+	data = kmap_local_folio(folio, 0);
-+	val = data[0];
+ 		if (!is_pci_p2pdma_page(bv.bv_page)) {
+-			if (bv.bv_offset + bv.bv_len <= NVME_CTRL_PAGE_SIZE * 2)
++			if ((bv.bv_offset & (NVME_CTRL_PAGE_SIZE - 1)) +
++			     bv.bv_len <= NVME_CTRL_PAGE_SIZE * 2)
+ 				return nvme_setup_prp_simple(dev, req,
+ 							     &cmnd->rw, &bv);
  
--	if (val != page[last_pos])
-+	if (val != data[last_pos])
- 		goto out;
- 
- 	for (pos = 1; pos < last_pos; pos++) {
--		if (val != page[pos])
-+		if (val != data[pos])
- 			goto out;
- 	}
- 
- 	*value = val;
- 	ret = true;
- out:
--	kunmap_local(page);
-+	kunmap_local(data);
- 	return ret;
- }
- 
--static void zswap_fill_page(void *ptr, unsigned long value)
-+static void zswap_fill_folio(struct folio *folio, unsigned long value)
- {
--	unsigned long *page;
-+	unsigned long *data = kmap_local_folio(folio, 0);
- 
--	page = (unsigned long *)ptr;
--	memset_l(page, value, PAGE_SIZE / sizeof(unsigned long));
-+	memset_l(data, value, PAGE_SIZE / sizeof(unsigned long));
-+	kunmap_local(data);
- }
- 
- /*********************************
-@@ -1554,7 +1554,6 @@ bool zswap_load(struct folio *folio)
- 	bool swapcache = folio_test_swapcache(folio);
- 	struct xarray *tree = swap_zswap_tree(swp);
- 	struct zswap_entry *entry;
--	u8 *dst;
- 
- 	VM_WARN_ON_ONCE(!folio_test_locked(folio));
- 
-@@ -1580,11 +1579,8 @@ bool zswap_load(struct folio *folio)
- 
- 	if (entry->length)
- 		zswap_decompress(entry, folio);
--	else {
--		dst = kmap_local_folio(folio, 0);
--		zswap_fill_page(dst, entry->value);
--		kunmap_local(dst);
--	}
-+	else
-+		zswap_fill_folio(folio, entry->value);
- 
- 	count_vm_event(ZSWPIN);
- 	if (entry->objcg)
 -- 
-2.45.1.288.g0e0cd299f1-goog
+2.25.1
 
