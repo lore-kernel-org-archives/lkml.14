@@ -1,329 +1,78 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18856145A19;
-	Thu, 23 May 2024 10:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447EB140387;
+	Thu, 23 May 2024 10:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716459616; cv=none; b=q2c9O5ZIyDf8/11iabt5Ud06FuBAY6ExkHEmMfHL+OWHh8oUCBJ1CAuYJUUwXiVoa186m+XSFyTY7D+9HOBOMr9fEEL+julmx3ZYb37LLGUyxWokaKSEiUk6NuZYUhac+t9TOF5TwLv83PYijH9MMK84225U6pKYhAMoO8Z/xCI=
+	t=1716459629; cv=none; b=Lz6txtCBosWcCfLVtimZNaOOb34jZPCavi474C5FzbGAMpd2KrKPcrG5Gekjg19eJLIwWJJDQO0NqjxhUabP/w/33AaihciYKwXaVHetLh0RPtAjKL5bbLsrfQtwBiBGfb34Y25EvWZK6bSiOJ75MPtFfHc0eBShPoRtaxwN26w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716459616; c=relaxed/simple;
-	bh=wt/GOZnaThkPLOIPNRYvzJYeVZnDF+uBQkfl7eOAiV0=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=oBqt3tkoGLIsQVV/ImQtL8TRW3wrVJNSSgqTZUvOBZzdnioDL8iIgKcwj0HXK47S7jSADauGHDi+lbKAAUxOXECjL2PaoLz6NzzwJ989po8g055XbOhQAJb7XkZZ7UfFroSpEcminOhAfkZ2UxRyXjpiecFreOKf0kPAw7un8cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F07FF1A1269;
-	Thu, 23 May 2024 12:20:06 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 68CB51A11A5;
-	Thu, 23 May 2024 12:20:06 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 97D42183AC0C;
-	Thu, 23 May 2024 18:20:04 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	marex@denx.de,
-	linux-clk@vger.kernel.org,
-	imx@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de,
-	shengjiu.wang@gmail.com
-Subject: [PATCH v5 3/5] reset: imx-aux: Add i.MX auxiliary reset driver
-Date: Thu, 23 May 2024 17:59:48 +0800
-Message-Id: <1716458390-20120-4-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1716458390-20120-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1716458390-20120-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1716459629; c=relaxed/simple;
+	bh=wWjox4AoY2ZWFzxB18FF5+2OZbBxYaXqr1ceABbeUdQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=mrY3mJZ00mLSFjiKpS6A53tzs+NZZcnr+yrCnfnprPK9sFvnKmZWZe+giQ2DwAV44HFzcIqdadQKjBVDUCDw/yVSv6dzxiv7FiamPdCTiiPHe5p3mmSh2tzhpQwczHhl+DTJsDaCqhBZJWWm17gpyJdzjGllJDvUsEjb6qSZOfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mfi5+rIr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mfi5+rIr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D3F39C32782;
+	Thu, 23 May 2024 10:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716459628;
+	bh=wWjox4AoY2ZWFzxB18FF5+2OZbBxYaXqr1ceABbeUdQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Mfi5+rIrJ29bYs/NKSxoVc2DkLdoYu0qiWgF9bxDANV43hgNSGBkjvEdDX1i700D3
+	 IrsFfYPGlNi8AIZBqebNsdCP3/3vORLUQ8bXvykIaE+oUV6SiJnQ99rYhFms/pDPX7
+	 Q3RbxdZuIljgTkkE36XyOPgtpLTRaDhsyrkkXwn9bzQV0ydVa5AusEN1lE0YNVhd68
+	 RBQBbML+A5PVgYn1B5SuvxSrOrqtDfnCSh5aIr6EinN6XGA7IeRoiXv1Inu3dbzrV9
+	 KvxpQUlRd/f9QxInwNuvtD3Hn9Dx6t2zFjKBwvIv8y4ZqfDlgdUfTCgnMbDYzTzNvO
+	 GhWyUwIMT/6GQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BB806C54BB2;
+	Thu, 23 May 2024 10:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: ti: icssg_prueth: Fix NULL pointer dereference in
+ prueth_probe()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171645962876.19239.16570750086853802691.git-patchwork-notify@kernel.org>
+Date: Thu, 23 May 2024 10:20:28 +0000
+References: <20240521-icssg-prueth-fix-v1-1-b4b17b1433e9@bootlin.com>
+In-Reply-To: <20240521-icssg-prueth-fix-v1-1-b4b17b1433e9@bootlin.com>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: danishanwar@ti.com, rogerq@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
-Add support for the resets on i.MX8MP Audio Block Control module.
-The reset controller is created using the auxiliary device framework
-and set up in the clock driver.
+Hello:
 
-The EARC PHY software reset and EARC controller software
-reset can be supported.
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- drivers/reset/Kconfig         |   8 ++
- drivers/reset/Makefile        |   1 +
- drivers/reset/reset-imx-aux.c | 217 ++++++++++++++++++++++++++++++++++
- 3 files changed, 226 insertions(+)
- create mode 100644 drivers/reset/reset-imx-aux.c
+On Tue, 21 May 2024 14:44:11 +0200 you wrote:
+> In the prueth_probe() function, if one of the calls to emac_phy_connect()
+> fails due to of_phy_connect() returning NULL, then the subsequent call to
+> phy_attached_info() will dereference a NULL pointer.
+> 
+> Check the return code of emac_phy_connect and fail cleanly if there is an
+> error.
+> 
+> [...]
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 7112f5932609..38fdf05b326b 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -91,6 +91,14 @@ config RESET_IMX7
- 	help
- 	  This enables the reset controller driver for i.MX7 SoCs.
- 
-+config RESET_IMX_AUX
-+	tristate "i.MX Auxiliary Reset Driver"
-+	depends on CLK_IMX8MP
-+	select AUXILIARY_BUS
-+	default CLK_IMX8MP
-+	help
-+	  This enables the auxiliary reset controller driver for i.MX.
-+
- config RESET_INTEL_GW
- 	bool "Intel Reset Controller Driver"
- 	depends on X86 || COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index fd8b49fa46fc..f078da14c327 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
- obj-$(CONFIG_RESET_GPIO) += reset-gpio.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-+obj-$(CONFIG_RESET_IMX_AUX) += reset-imx-aux.o
- obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
- obj-$(CONFIG_RESET_K210) += reset-k210.o
- obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
-diff --git a/drivers/reset/reset-imx-aux.c b/drivers/reset/reset-imx-aux.c
-new file mode 100644
-index 000000000000..61c353abc84e
---- /dev/null
-+++ b/drivers/reset/reset-imx-aux.c
-@@ -0,0 +1,217 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright 2024 NXP
-+ */
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+/*
-+ * The reset does not support the feature and corresponding
-+ * values are not valid
-+ */
-+#define ASSERT_NONE     BIT(0)
-+#define DEASSERT_NONE   BIT(1)
-+#define STATUS_NONE     BIT(2)
-+
-+/* When set this function is activated by setting(vs clearing) this bit */
-+#define ASSERT_SET      BIT(3)
-+#define DEASSERT_SET    BIT(4)
-+#define STATUS_SET      BIT(5)
-+
-+/* The following are the inverse of the above and are added for consistency */
-+#define ASSERT_CLEAR    (0 << 3)
-+#define DEASSERT_CLEAR  (0 << 4)
-+#define STATUS_CLEAR    (0 << 5)
-+
-+/**
-+ * struct imx_reset_ctrl - reset control structure
-+ * @assert_offset: reset assert control register offset
-+ * @assert_bit: reset assert bit in the reset assert control register
-+ * @deassert_offset: reset deassert control register offset
-+ * @deassert_bit: reset deassert bit in the reset deassert control register
-+ * @status_offset: reset status register offset
-+ * @status_bit: reset status bit in the reset status register
-+ * @flags: reset flag indicating how the (de)assert and status are handled
-+ */
-+struct imx_reset_ctrl {
-+	u32 assert_offset;
-+	u32 assert_bit;
-+	u32 deassert_offset;
-+	u32 deassert_bit;
-+	u32 status_offset;
-+	u32 status_bit;
-+	u32 flags;
-+};
-+
-+struct imx_reset_data {
-+	const struct imx_reset_ctrl *rst_ctrl;
-+	size_t rst_ctrl_num;
-+};
-+
-+struct imx_aux_reset_priv {
-+	struct reset_controller_dev rcdev;
-+	void __iomem *base;
-+	const struct imx_reset_data *data;
-+};
-+
-+static int imx_aux_reset_assert(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	struct imx_aux_reset_priv *priv = container_of(rcdev,
-+					struct imx_aux_reset_priv, rcdev);
-+	const struct imx_reset_data *data = priv->data;
-+	void __iomem *reg_addr = priv->base;
-+	const struct imx_reset_ctrl *ctrl;
-+	unsigned int mask, value, reg;
-+
-+	if (id >= data->rst_ctrl_num)
-+		return -EINVAL;
-+
-+	ctrl = &data->rst_ctrl[id];
-+
-+	/* assert not supported for this reset */
-+	if (ctrl->flags & ASSERT_NONE)
-+		return -EOPNOTSUPP;
-+
-+	mask = BIT(ctrl->assert_bit);
-+	value = (ctrl->flags & ASSERT_SET) ? mask : 0x0;
-+
-+	reg = readl(reg_addr + ctrl->assert_offset);
-+	writel(reg | value, reg_addr + ctrl->assert_offset);
-+
-+	return 0;
-+}
-+
-+static int imx_aux_reset_deassert(struct reset_controller_dev *rcdev,
-+				  unsigned long id)
-+{
-+	struct imx_aux_reset_priv *priv = container_of(rcdev,
-+					struct imx_aux_reset_priv, rcdev);
-+	const struct imx_reset_data *data = priv->data;
-+	void __iomem *reg_addr = priv->base;
-+	const struct imx_reset_ctrl *ctrl;
-+	unsigned int mask, value, reg;
-+
-+	if (id >= data->rst_ctrl_num)
-+		return -EINVAL;
-+
-+	ctrl = &data->rst_ctrl[id];
-+
-+	/* deassert not supported for this reset */
-+	if (ctrl->flags & DEASSERT_NONE)
-+		return -EOPNOTSUPP;
-+
-+	mask = BIT(ctrl->deassert_bit);
-+	value = (ctrl->flags & DEASSERT_SET) ? mask : 0x0;
-+
-+	reg = readl(reg_addr + ctrl->deassert_offset);
-+	writel(reg | value, reg_addr + ctrl->deassert_offset);
-+
-+	return 0;
-+}
-+
-+static int imx_aux_reset_status(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	struct imx_aux_reset_priv *priv = container_of(rcdev,
-+					struct imx_aux_reset_priv, rcdev);
-+	const struct imx_reset_data *data = priv->data;
-+	void __iomem *reg_addr = priv->base;
-+	const struct imx_reset_ctrl *ctrl;
-+	unsigned int reset_state;
-+
-+	if (id >= data->rst_ctrl_num)
-+		return -EINVAL;
-+
-+	ctrl = &data->rst_ctrl[id];
-+
-+	/* status not supported for this reset */
-+	if (ctrl->flags & STATUS_NONE)
-+		return -EOPNOTSUPP;
-+
-+	reset_state = readl(reg_addr + ctrl->status_offset);
-+
-+	return !(reset_state & BIT(ctrl->status_bit)) ==
-+		!(ctrl->flags & STATUS_SET);
-+}
-+
-+static const struct reset_control_ops imx_aux_reset_ops = {
-+	.assert   = imx_aux_reset_assert,
-+	.deassert = imx_aux_reset_deassert,
-+	.status	  = imx_aux_reset_status,
-+};
-+
-+static int imx_aux_reset_probe(struct auxiliary_device *adev,
-+			       const struct auxiliary_device_id *id)
-+{
-+	struct imx_reset_data *data = (struct imx_reset_data *)(id->driver_data);
-+	struct imx_aux_reset_priv *priv;
-+	struct device *dev = &adev->dev;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->rcdev.owner     = THIS_MODULE;
-+	priv->rcdev.nr_resets = data->rst_ctrl_num;
-+	priv->rcdev.ops       = &imx_aux_reset_ops;
-+	priv->rcdev.of_node   = dev->parent->of_node;
-+	priv->rcdev.dev	      = dev;
-+	priv->rcdev.of_reset_n_cells = 1;
-+	priv->base            = of_iomap(dev->parent->of_node, 0);
-+	priv->data            = data;
-+
-+	return devm_reset_controller_register(dev, &priv->rcdev);
-+}
-+
-+#define EARC  0x200
-+
-+static const struct imx_reset_ctrl imx8mp_audiomix_rst_ctrl[] = {
-+	{
-+		.assert_offset = EARC,
-+		.assert_bit = 0,
-+		.deassert_offset = EARC,
-+		.deassert_bit = 0,
-+		.flags  = ASSERT_CLEAR | DEASSERT_SET | STATUS_NONE,
-+	},
-+	{
-+		.assert_offset = EARC,
-+		.assert_bit = 1,
-+		.deassert_offset = EARC,
-+		.deassert_bit = 1,
-+		.flags  = ASSERT_CLEAR | DEASSERT_SET | STATUS_NONE,
-+	},
-+};
-+
-+static const struct imx_reset_data imx8mp_audiomix_rst_data = {
-+	.rst_ctrl = imx8mp_audiomix_rst_ctrl,
-+	.rst_ctrl_num = ARRAY_SIZE(imx8mp_audiomix_rst_ctrl),
-+};
-+
-+static const struct auxiliary_device_id imx_aux_reset_ids[] = {
-+	{
-+		.name = "clk_imx8mp_audiomix.reset",
-+		.driver_data = (kernel_ulong_t)&imx8mp_audiomix_rst_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(auxiliary, imx_aux_reset_ids);
-+
-+static struct auxiliary_driver imx_aux_reset_driver = {
-+	.probe		= imx_aux_reset_probe,
-+	.id_table	= imx_aux_reset_ids,
-+};
-+
-+module_auxiliary_driver(imx_aux_reset_driver);
-+
-+MODULE_AUTHOR("Shengjiu Wang <shengjiu.wang@nxp.com>");
-+MODULE_DESCRIPTION("Freescale i.MX auxiliary reset driver");
-+MODULE_LICENSE("GPL");
+Here is the summary with links:
+  - [net] net: ti: icssg_prueth: Fix NULL pointer dereference in prueth_probe()
+    https://git.kernel.org/netdev/net/c/b31c7e780861
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
