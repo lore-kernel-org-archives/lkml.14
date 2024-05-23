@@ -1,85 +1,108 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC771D52C
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 00:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78883EDF;
+	Fri, 24 May 2024 00:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716509661; cv=none; b=efp7zVP8z7syTv8EVdmsfOsvH95SnhsarJLnKC2JoDAaoXHP+nqWXa9uNhRfWg2sZsfliUAHp58BiahGIpBoeEnuGMUzXsHi/QmPGKw2cnhiC/rSM0mQw3+Bw5Bc39Aizto1jjYqvvm4ZdbWQk4m4louARUXk1avoHscz7wHZN8=
+	t=1716509780; cv=none; b=bQE7LtQ4QHt904vhWb3DS+jIgMwQURDbTidJxREScEWIQp3gHwdXLBm6o8GCBErUmJuruebCzliEJdcd1cPo436Ho64EKjKZZ8rsneyft41EOe73DYDCbjzMrkrFxV3sBt+qPv6Cqcz7B51WAh+ct79c1Ckhvo1Ey5IYSPJeGW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716509661; c=relaxed/simple;
-	bh=CPKlspD/ZSfWixUM8SglUnOrdGxitKBWwWP9lEY6reA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=u3QAPRMduHUsLzWPc+fWM/eSwgUgVb69NCmTcoqMa5t2nzuJuzOWJme9fvCDOo5eYtOqzWeTpDpes5HpziH3fWfuWPjD9QCYcNyz5SIZcW1Yocv5zK43LoQpnfctVY3PH0wTa47LYsrTK8uDDhFdAG+http2sRb1P05yzWAWAjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7e6ff0120a5so235112239f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 17:14:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716509659; x=1717114459;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CPKlspD/ZSfWixUM8SglUnOrdGxitKBWwWP9lEY6reA=;
-        b=Jtsq6Jf1sOl6L0rwFSdCvslyQqvS2TeV0Yl2nG1r3NiLLsIGLyihx0YOoCgbeUVwAW
-         XzJJ3duA2LNGR055l8689sTYjVEM7bEMp1z1R9LeHRt7437dqgqGQfXv0NGFt8dZp0kw
-         7YR0DVGGDxNXFX0Nmg/d9vinOuWGytfQEQkpXz3y5th79Op8EdsxpfWqV5CUhaS20Vae
-         gKwr6WnzTvRHr5hJilYm9XvEX9ZFpJPD0m3jGQ3MgyUzqHhR2O9Z4Q3vCMfVtmgTlhBb
-         5I0i4tljKFb7EZxCD5RO9MixQ8R/oLHfWXsSg8HANEWAuBAapjmFZ8j2kV0k2XtoVNIJ
-         OZkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQwx0gqWW0UuflSOJlKu73lCtpgKT8uznb4ZD3pzWV4XPry8NjBf0QNXz0BD6qATmYDoXDoMh84VvFXpNm2S84MCWJyZspa3hjX5NL
-X-Gm-Message-State: AOJu0YzfbkHncnvBSAIVSlhYe4BCE2w3Vyq9haP2m4qRttxEd1F3x6ib
-	YFRaXcdMeSE3EAm6a9VoufNcdlmzY4eFVs40JOe9wcEX2JFfU6aX8BoCj/1tARUs641wRYLw51M
-	5cf8liI5gnUOiG4ujCQKPj7aXKje82+lkOYbOmD+vLTaOsBo0XlHXvGo=
-X-Google-Smtp-Source: AGHT+IHbMNv4QrOVDaPbt0DMHRVnsIeb7pwVv/vXpXSR1EvGYuLgqGIPPSr+J8t+usGOEUQRDrWUJM7L3Ss9ZVQi6jn3N8DgkSy+
+	s=arc-20240116; t=1716509780; c=relaxed/simple;
+	bh=An7QDABjUyeXMgQPlCNFAn0hOnKqKCWC8bpn8L7lUmc=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=X5dhUfCinmUJ5tPYh8ty0TjGVJ5tifXR3PIK6PbLmD/psIu1ulxs9yMPBLDMv8OeCoPiM7kqy0//81mUYYg9D9NPvMWliPUpeio9XQh3WdeeqdnL4PTa5Nl/W9adGbVOdNki56Skm/kwzcpUQpdDaP7cAFOdxvCcmgWjNOJQwvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=UU7k9q7j; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="UU7k9q7j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=bsNx66CWNPzOVgmvYU9g1FX7pZwySMGx2SwEOaCqt18=; b=UU7k9q7jSmaQO8GSp3Mn4dAN7M
+	ewoGgkcMukvFbu9FfUURLiQmeDOrlLsy/PjXUB71FI/+AcXQtwLMqxTawoLTs0ShmkSVj9CZblR9J
+	H5iJaeQoztwlFxbMiCkVNKXBITVm0tviDm7Hn02FXtVdlHSvSO4WlQo7wzQFZ9VBR4GE=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:40780 helo=debian-acer)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1sAIIM-00054Q-1x; Thu, 23 May 2024 19:56:26 -0400
+Date: Thu, 23 May 2024 19:56:25 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, gregkh@linuxfoundation.org,
+ jirislaby@kernel.org, peterz@infradead.org, mingo@kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>
+Message-Id: <20240523195625.fa40049802a43a76dbc2a96d@hugovil.com>
+In-Reply-To: <CAMuHMdX2rrncANhCVf5bo+Md5bpMOeacYAu+Sgiy7noo55PYew@mail.gmail.com>
+References: <20240409154253.3043822-1-hugo@hugovil.com>
+	<20240409154253.3043822-4-hugo@hugovil.com>
+	<CAMuHMdVq=rf-6o485KiA+zcwJPHMe5STKUtSWtFPs2nmvshu-A@mail.gmail.com>
+	<CAHp75Vfi2YjE0wzwABURxXhcWLozAf9Cdj_pT+DL_tm8E_zm4Q@mail.gmail.com>
+	<CAMuHMdXqc9tZkd7YzX56QRroDhjbweQAUj+th68DU8oFxpp+jg@mail.gmail.com>
+	<CAMuHMdX2rrncANhCVf5bo+Md5bpMOeacYAu+Sgiy7noo55PYew@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a02:cd0a:0:b0:488:f465:f4cd with SMTP id
- 8926c6da1cb9f-4b03f520d78mr13470173.1.1716509659531; Thu, 23 May 2024
- 17:14:19 -0700 (PDT)
-Date: Thu, 23 May 2024 17:14:19 -0700
-In-Reply-To: <0000000000006fd14305f00bdc84@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000829fbc0619280c85@google.com>
-Subject: Re: [syzbot] kernel BUG in ext4_do_writepages
-From: syzbot <syzbot+d1da16f03614058fdc48@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -1.2 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH v4 3/5] serial: sc16is7xx: split into core and I2C/SPI
+ parts (core)
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-This bug is marked as fixed by commit:
-ext4: fix race condition between buffer write and page_mkwrite
+On Thu, 23 May 2024 09:33:36 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-But I can't find it in the tested trees[1] for more than 90 days.
-Is it a correct commit? Please update it by replying:
+> On Tue, Apr 23, 2024 at 3:11 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Apr 23, 2024 at 12:37 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, Apr 23, 2024 at 1:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Tue, Apr 9, 2024 at 5:48 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> >
+> > > > > -config SERIAL_SC16IS7XX
+> > > > > -       tristate "SC16IS7xx serial support"
+> > > > > +       tristate "NXP SC16IS7xx UART support"
+> > > >
+> > > > Hence this replaces SERIAL_SC16IS7XX_CORE by SERIAL_SC16IS7XX,
+> > > > so arch/mips/configs/cu1??0-neo_defconfig needs to updated.
+> > >
+> > >         select SERIAL_CORE
+> > > -       depends on (SPI_MASTER && !I2C) || I2C
+> > > +       select SERIAL_SC16IS7XX_SPI if SPI_MASTER
+> > > +       select SERIAL_SC16IS7XX_I2C if I2C
+> > >
+> > > > So if SPI_MASTER or I2C is enabled, the corresponding SERIAL_SC16IS7XX_*
+> > > > subdriver can no longer be disabled?  According to
+> > > > https://lore.kernel.org/all/20240403123501.8ef5c99f65a40ca2c10f635a@hugovil.com/
+> > > > you did want to support that?
+> > >
+> > > I believe it has been taken from one of the IIO drivers as an example.
+> >
+> > Looks like a bad example to follow:
+> >   1. The driver question now pops up if both I2C and SPI_MASTER
+> >      are disabled,
+> >   2. What if SERIAL_SC16IS7XX_CORE is builtin, but I2C and/or
+> >      SPI_MASTER are modular?
+> >
+> > I believe the only way to fix that is by letting the sub-drivers select the
+> > core driver, like before.
+> 
+> FTR, this issue is now upstream.
 
-#syz fix: exact-commit-title
+Hi Geert,
+I replied to you and Andy a few weeks ago about this (multiple emails with suggestions/explanations), and I even asked if you were satisfied with what I proposed, but never got anything from you, so I am still waiting on feedback to send a patch to fix this:
 
-Until then the bug is still considered open and new crashes with
-the same signature are ignored.
+https://lore.kernel.org/all/20240430090333.5c5f029553cabcdf699310cb@hugovil.com/
 
-Kernel: Linux
-Dashboard link: https://syzkaller.appspot.com/bug?extid=d1da16f03614058fdc48
-
----
-[1] I expect the commit to be present in:
-
-1. for-kernelci branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
-
-2. master branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
-
-3. master branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
-
-4. main branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
-
-The full list of 9 trees can be found at
-https://syzkaller.appspot.com/upstream/repos
+Hugo.
