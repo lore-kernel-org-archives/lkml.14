@@ -1,112 +1,192 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF98713A897;
-	Thu, 23 May 2024 13:17:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA9913C66A;
+	Thu, 23 May 2024 13:18:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716470267; cv=none; b=Sx4ad3eBHzjrwJYlShq/Guss6XVqZFfKdlhamt9BBfxLsT8Xt1wrbAVDUDjYVaOMnmetq8MGzSVneDmSaimqRWsQOjlhqiEnujom3z/ORx0IqP8Oh3H+n3llqeV0eU4vyitLc+HRLhOiokT7js4RMgtPM5p9NbFg+z7lJ4J1tAI=
+	t=1716470331; cv=none; b=sh2fYVPYbdCXzl4Qtk5qpw5gXzQd3M1WPhowEYvxO8++Dtt1Yxb2Kc25DS0zyULcmOrbmCm2cs/eOkZy5qRVqS92DPa0EjOZKCred9VJmS8RjAko0XvmuJHa2EBdCk4365CxCdZ5aI5MArZyHh3daVggPb8b/m66zhw+UYqqs/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716470267; c=relaxed/simple;
-	bh=YjxDl1qQvJLbI7CoFRNnlkwjjIbQpYwYvmdsXfobHJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LSGumkf3m3wyT9Skc6y6rH3IxyRpy9MXmaExe735VazthbDpnlMupm1N4aKispMV4YKLCFC2zvg4UL0sdA04/6o05C5LgSP68lV4VvLHJFV3oMi7fv3TiH/ie8s18UuPwTByZuOYIAxyeLo1/FzDqh/QEL2uurtpt9XJFxoGiws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaKmJTU/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716470331; c=relaxed/simple;
+	bh=rf0H/0zXq6MWa/jgcYccnJNhQhS7/5+iqtLrcPg9K8o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IckVHZCY5sHN+tRWR/NPHYPDYFWfMN5IDEgpLzAkJiR7jGoMDWBzNlXfm3kyyeRIpo8yTDLV8gmW7d0lBw2y3tAoLFP5Bpd3AsNTO0rYy9kS5iDhWrmiFFtEx5i3vTrkgkWkiDY9xSggMoXQYBbpjoJ+KtWKBO588DQzc97AChU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FwzfM1vP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaKmJTU/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6053C32786;
-	Thu, 23 May 2024 13:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716470266;
-	bh=YjxDl1qQvJLbI7CoFRNnlkwjjIbQpYwYvmdsXfobHJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MaKmJTU/iS0pIIfN8usqIyj8MvyBtIJ16dcfxAzoYDE0uFLhzjM60MKbiXIDM7EFj
-	 FomaG3mM96YmzQe/dYg7/9hcwYBK21wX37GoqhD0lbnFP4du30TlKfWC7HgqkQ0Tia
-	 CQVmKwE2wfblNqTHnw2Ks/zf35Y7NDYwAkGEmmr6KgFhZNTSNljRCxbd/7qtITt7MX
-	 OVSI/5vZf6/hDGRM6V/Hf1XA17l6Ec/f1Uy5gGS66/cxZ6IWk+9KWCcjcEfJpVIikC
-	 rXgnUk6h/lC7+aDZxaGHZwm1bKASAjWvovD9GaHn1yVGzsO43TKkZXVdzFIFlsoBDS
-	 054pHjsu/3IPw==
-Date: Thu, 23 May 2024 14:17:41 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ying Hsu <yinghsu@chromium.org>
-Cc: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com,
-	pmenzel@molgen.mpg.de, chromeos-bluetooth-upstreaming@chromium.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v2] Bluetooth: Add vendor-specific packet classification
- for ISO data
-Message-ID: <20240523131741.GN883722@kernel.org>
-References: <20240523060934.2883716-1-yinghsu@chromium.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FwzfM1vP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E10CC32781;
+	Thu, 23 May 2024 13:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716470331;
+	bh=rf0H/0zXq6MWa/jgcYccnJNhQhS7/5+iqtLrcPg9K8o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FwzfM1vPePs3kcDanivbTCC+jQ91ERA+HhmErhRZ8HTF819qlBabg7Th2RNAPUoE1
+	 P+Govhe/c303VXcaEkDma0yk908l+3nf0AWUuCrEwqykEdx6mDw0b0RTZ510njfKmD
+	 YPzioB+spGi4l2rMvOntLBB3JThZXPK6pKlhoOzA=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com,
+	broonie@kernel.org
+Subject: [PATCH 5.15 00/23] 5.15.160-rc1 review
+Date: Thu, 23 May 2024 15:12:56 +0200
+Message-ID: <20240523130327.956341021@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240523060934.2883716-1-yinghsu@chromium.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.160-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.15.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.15.160-rc1
+X-KernelTest-Deadline: 2024-05-25T13:03+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 23, 2024 at 06:09:31AM +0000, Ying Hsu wrote:
-> When HCI raw sockets are opened, the Bluetooth kernel module doesn't
-> track CIS/BIS connections. User-space applications have to identify
-> ISO data by maintaining connection information and look up the mapping
-> for each ACL data packet received. Besides, btsnoop log captured in
-> kernel couldn't tell ISO data from ACL data in this case.
-> 
-> To avoid additional lookups, this patch introduces vendor-specific
-> packet classification for Intel BT controllers to distinguish
-> ISO data packets from ACL data packets.
-> 
-> Signed-off-by: Ying Hsu <yinghsu@chromium.org>
-> ---
-> Tested LE audio unicast recording on a ChromeOS device with Intel AX211
-> 
-> Changes in v2:
-> - Adds vendor-specific packet classificaton in hci_dev.
-> - Keeps reclassification in hci_recv_frame.
-> 
->  drivers/bluetooth/btusb.c        | 19 +++++++++++++++++++
->  include/net/bluetooth/hci_core.h |  1 +
->  net/bluetooth/hci_core.c         | 16 ++++++++++++++++
->  3 files changed, 36 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 79aefdb3324d..75561e749c50 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -966,6 +966,24 @@ static void btusb_intel_cmd_timeout(struct hci_dev *hdev)
->  	gpiod_set_value_cansleep(reset_gpio, 0);
->  }
->  
-> +#define BT_USB_INTEL_ISODATA_HANDLE_BASE 0x900
-> +
-> +static u8 btusb_intel_classify_pkt_type(struct hci_dev *hdev, struct sk_buff *skb)
-> +{
-> +	/*
-> +	 * Distinguish ISO data packets form ACL data packets
-> +	 * based on their conneciton handle value range.
+This is the start of the stable review cycle for the 5.15.160 release.
+There are 23 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-nit: connection
+Responses should be made by Sat, 25 May 2024 13:03:15 +0000.
+Anything received after that time might be too late.
 
-> +	 */
-> +	if (hci_skb_pkt_type(skb) == HCI_ACLDATA_PKT) {
-> +		__u16 handle = __le16_to_cpu(hci_acl_hdr(skb)->handle);
-> +
-> +		if (hci_handle(handle) >= BT_USB_INTEL_ISODATA_HANDLE_BASE)
-> +			return HCI_ISODATA_PKT;
-> +	}
-> +
-> +	return hci_skb_pkt_type(skb);
-> +}
-> +
->  #define RTK_DEVCOREDUMP_CODE_MEMDUMP		0x01
->  #define RTK_DEVCOREDUMP_CODE_HW_ERR		0x02
->  #define RTK_DEVCOREDUMP_CODE_CMD_TIMEOUT	0x03
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.160-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+and the diffstat can be found below.
 
-...
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.15.160-rc1
+
+Akira Yokosawa <akiyks@gmail.com>
+    docs: kernel_include.py: Cope with docutils 0.21
+
+Thomas Weißschuh <linux@weissschuh.net>
+    admin-guide/hw-vuln/core-scheduling: fix return type of PR_SCHED_CORE_GET
+
+Jarkko Sakkinen <jarkko@kernel.org>
+    KEYS: trusted: Do not use WARN when encode fails
+
+AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+    remoteproc: mediatek: Make sure IPI buffer fits in L2TCM
+
+Daniel Thompson <daniel.thompson@linaro.org>
+    serial: kgdboc: Fix NMI-safety problems from keyboard reset code
+
+Heikki Krogerus <heikki.krogerus@linux.intel.com>
+    usb: typec: ucsi: displayport: Fix potential deadlock
+
+Carlos Llamas <cmllamas@google.com>
+    binder: fix max_thread type inconsistency
+
+Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+    drm/amdgpu: Fix possible NULL dereference in amdgpu_ras_query_error_status_helper()
+
+Sean Christopherson <seanjc@google.com>
+    KVM: x86: Clear "has_error_code", not "error_code", for RM exception injection
+
+Eric Dumazet <edumazet@google.com>
+    netlink: annotate data-races around sk->sk_err
+
+Eric Dumazet <edumazet@google.com>
+    netlink: annotate lockless accesses to nlk->max_recvmsg_len
+
+Jakub Kicinski <kuba@kernel.org>
+    net: tls: handle backlogging of crypto requests
+
+Jakub Kicinski <kuba@kernel.org>
+    tls: fix race between async notify and socket close
+
+Jakub Kicinski <kuba@kernel.org>
+    net: tls: factor out tls_*crypt_async_wait()
+
+Sabrina Dubroca <sd@queasysnail.net>
+    tls: extract context alloc/initialization out of tls_set_sw_offload
+
+Jakub Kicinski <kuba@kernel.org>
+    tls: rx: simplify async wait
+
+Doug Berger <opendmb@gmail.com>
+    net: bcmgenet: synchronize UMAC_CMD access
+
+Doug Berger <opendmb@gmail.com>
+    net: bcmgenet: synchronize EXT_RGMII_OOB_CTRL access
+
+Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+    Revert "selftests: mm: fix map_hugetlb failure on 64K page size systems"
+
+Jarkko Sakkinen <jarkko@kernel.org>
+    KEYS: trusted: Fix memory leak in tpm2_key_encode()
+
+NeilBrown <neilb@suse.de>
+    nfsd: don't allow nfsd threads to be signalled.
+
+Sergey Shtylyov <s.shtylyov@omp.ru>
+    pinctrl: core: handle radix_tree_insert() errors in pinctrl_register_one_pin()
+
+Jose Fernandez <josef@netflix.com>
+    drm/amd/display: Fix division by zero in setup_dsc_config
+
+
+-------------
+
+Diffstat:
+
+ .../admin-guide/hw-vuln/core-scheduling.rst        |   4 +-
+ Documentation/sphinx/kernel_include.py             |   1 -
+ Makefile                                           |   4 +-
+ arch/x86/kvm/x86.c                                 |  11 +-
+ drivers/android/binder.c                           |   2 +-
+ drivers/android/binder_internal.h                  |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |   3 +
+ drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c        |   7 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     |  12 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h     |   2 +
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |   6 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c       |   4 +
+ drivers/pinctrl/core.c                             |  14 +-
+ drivers/remoteproc/mtk_scp.c                       |  10 +-
+ drivers/tty/serial/kgdboc.c                        |  30 +++-
+ drivers/usb/typec/ucsi/displayport.c               |   4 -
+ fs/nfs/callback.c                                  |   9 +-
+ fs/nfsd/nfs4proc.c                                 |   5 +-
+ fs/nfsd/nfssvc.c                                   |  12 --
+ include/net/tls.h                                  |   6 -
+ net/netlink/af_netlink.c                           |  23 +--
+ net/sunrpc/svc_xprt.c                              |  16 +-
+ net/tls/tls_sw.c                                   | 199 +++++++++++----------
+ security/keys/trusted-keys/trusted_tpm2.c          |  25 ++-
+ tools/testing/selftests/vm/map_hugetlb.c           |   7 -
+ 25 files changed, 243 insertions(+), 175 deletions(-)
+
+
