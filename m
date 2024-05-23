@@ -1,176 +1,127 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8CF1474BC;
-	Thu, 23 May 2024 12:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D7514A0AB
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 12:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716468560; cv=none; b=BVhj+2wHwWxWGE1GmYZEEaXGxAiS86lAlsrY9hiUwFo/Tpgyk6a8++AJMut2vBYhWfoBDIVjauXfYrgOhnfv4JiF5g9lsjxiEqCpF0AV0pQ8msmFewxHeAhHsP1Z+FdsMNcNOLjAJ5CrgMnbEKDMZfmtfn/Kg7nuCNwX1uU7pd0=
+	t=1716468569; cv=none; b=cVTj1XiIqotpD28xVQPRSjLhka1Y9caaJPI7PDEg6ygEa2/rtnMtkVKx62W6csyGXc331aBq0fzmIvtl3lQtlYad6MeAmFADE5prU2C17Ds3Kckd15SL+GsTMYZGXfclZ1MK1SGXLMsrhLGebqY138/RrUVlTQO7wd+tdGVI5uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716468560; c=relaxed/simple;
-	bh=HdmW1gOgpWUDWXSdqbqOwIQZrjfbTqeyJE7qb78fOkE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=Cv4O9OxWxdPrLKUI4scVgkudCLGFcSA4MaG9fWx7w/qOPUQG9Ur6lZFgIAe5+KtQ0Fa9EC0/SfF3D9YSCx7UGm17HV3CbQueSKFDMS829FhGAi3BEW5y0ERU/4Auaaf30NCwMnetnpXimErCKu+KMYl9sfXqrTc2LjViHcoJsy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gn0SHxIG; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716468569; c=relaxed/simple;
+	bh=rYGWQnXPl7e+8ZR2q/kPCuviQpIOkOcbGurCO7CSNDc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PckoISSyhyiAG1+PEIdM5PqQsowpDVdC++6oPtuEgW75QPhtNAHZ8QEY9xbIulqcG1Gh7bvmA2eD/bLl5WwzaYd9f7OhFq/4qMvUl0k/zMZrdTJmELPrP7bgauhCHnavH+8b4I/SB8/PaUHstHD+foSP/y5bjTeRBdT9VGpcpFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Hg0cjJnF; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gn0SHxIG"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2bdd8968dabso666487a91.3;
-        Thu, 23 May 2024 05:49:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Hg0cjJnF"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-351d309bbcfso1319963f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 05:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716468558; x=1717073358; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3aeBmKgrOnO4yEhVnrO4wtVoPhNU9lhbqrAJNJKcN4g=;
-        b=Gn0SHxIG9B41DRs4CovVh48WlIsbsMqO7NS/rvI9INhLZfaHRKKFuOcpkgCdiHZDwX
-         UtWuQ08Aif27+9YQ13KO5uq+3JiZqxKKFzl/3/nXOjL4xv6PUB+Mn7iNiRy3WSKqRGbt
-         LWovoJOPI+mlUr71F5+QgM2s7vg9Hy+4luEe8fE1bEG0VOjt6bgR/+mA4OAEFwVMNeys
-         kHn99tUxR6PXVUQP22PPfHxy2J/+aGyVgVALdDzJO/lrgSkmHl5lsA81re5SqdfQChKp
-         IQLPkunzIz3rfQDhaRNgdfPoD0dZJ+kRIiHb4GXznxo6vCfEcFqj/QHB0nD4n3fxnZaf
-         l1YA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716468566; x=1717073366; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NDc5dZ2G0NhI2V2Vx4EMLzhVv0NLoW/2hnjkjc8WSGo=;
+        b=Hg0cjJnFvE9lMBjA4bFAb8xIk037l7smad1/X2CxAASrTB16+mf+2BwyA/baigDAlP
+         qjYk5RhEdqcVgL7V1BcPJ3aqlRAJrB/GsFOJ51Gx7YDw1TT9BRv2jB1mRckdpkhdxZxm
+         d5gGujReO2cgTWImtiaLxY4qzHoEMBeGsikvhGQtpQhFccqVN4p1qjTxpFjVEWxZoIGS
+         ZKIxP8IYpO8VQL6cx0NZTtmUE56MfgDhKxaKt+FwGtJ5iUdavjZ4vDgWz4V/y5a4JO9p
+         VlxKFMTLegXw6uPEXaJQxLAVF51i77IZBh4MGS6D65oJnbuqrrjoqAPbDItXNoVHhM3j
+         dUmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716468558; x=1717073358;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3aeBmKgrOnO4yEhVnrO4wtVoPhNU9lhbqrAJNJKcN4g=;
-        b=VpsSG463LZCTgzggkuR3a217deA3UiZHTSa5tJINH0Gd4/VOhq9lXRIZICkF2oK4tA
-         VnVTn0asXaCAqNPcfAsKzHmQsU9H6gmRY8wvzAnn+B5aPcUypbNBQ41D51zKoAYMscrk
-         jDnD3y6CSm1xnMachN8YaDm9GeU3JdMim3n1JKLpoPxN9kA0v0AX6PpR97H30kjJulpO
-         6RQ9VPIpMwpn3lx9Nk2NvMlUm08AkwpFJuMzWL+K/zhtvj1oSGO/rnGmakoK51rxZe8U
-         nnYcl3A4O+QGpAQIBvVI7lUWvGXpOesGzppLA8/qJcrzQzGG5uJNsGY6+7vlI8CunYfU
-         t7lw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVSFQAkdYCOuAOt10B+PKyTrdSWYmGRWZToblFzjdNb90EDiWTQ/jwcp+dfVK1YEo0IP1pV2JzqS9pBAVb+n9OFLlydCmTymiCVXGZYcXQ3TwbgMlOlMgVAih1pN7P3iWZ98faLU2lqQ==
-X-Gm-Message-State: AOJu0YxwZn6YJybJDcs83RFbidcZhmy5RB2R0VatEioe+Vk5TiLcUbyO
-	1gW1IbVxX7lnKw85oz7SnGMPntu60B9/ZSEyJ0Wh/slaA+s7B4H+
-X-Google-Smtp-Source: AGHT+IFyZ9tLOMxbFXyWyRzA8fBN8CQ9Ox4w0qSotXEjlrcRyj3tjW1eGMS/TfOEWCgDutX2ppOMcQ==
-X-Received: by 2002:a17:90a:d389:b0:2bd:90fc:6631 with SMTP id 98e67ed59e1d1-2bd9f5b8a77mr4926122a91.33.1716468557954;
-        Thu, 23 May 2024 05:49:17 -0700 (PDT)
-Received: from dw-tp ([171.76.81.79])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bdd9ef83c1sm1485328a91.22.2024.05.23.05.49.12
+        d=1e100.net; s=20230601; t=1716468566; x=1717073366;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NDc5dZ2G0NhI2V2Vx4EMLzhVv0NLoW/2hnjkjc8WSGo=;
+        b=xCM9OZ4DrXv01tRWtaHcZqFaAn3LrQyOx+sQY2AAoH2aHy55dc7/x3eoIs63YQP8K4
+         6l7ZILB8M5GN+408kzQsYL9cH13FwUtEG8xoRuUGb5yUFc6Cd45LTXysUaHYVTRUHA+s
+         Tlv24cD9E7Mj/0j+0zOcbH3xMx7CAQokOrSRqHshLz+C5PqNSIWI1qeakWdMGEADEDts
+         CCgty1m093Y7f+3uFAVDjAyOOz7fkjIXIv824JVcz9d6BKbrmS/j8jiPJY76jgpIdwZ+
+         JlHT7/NbRvsk0dviZhmuku+PSkOViCj519WI8DF4pTZ224/+S9PrgVy5GQGQArapmpIa
+         /Bdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXGJYt0XYMjxIfTtArXXYHs9krwzPxDzAO27SDs0DO8HemDTfLMrKBPIRAqZ0Fte3gRFVu9Zb9TVPlqDHkoE71L6XZWAjYtqMwnngEi
+X-Gm-Message-State: AOJu0YzJ/rTBuiUryj1GpBUNIxwqq2FWvqx2mCy2UDYz0sWQ/P6lymwP
+	Yf2fsUwxo5mzFK3zTpKJ87CzVLdrO355vYa26gREfyq22k/IQR0JxbK85/kS05c=
+X-Google-Smtp-Source: AGHT+IH8/w/D/ym66Jp2uFgYUse59/CTDw+EvixC5vITkP0BBwv3oWzuRnk1t8GSb3ZKNNdCd/k3Bg==
+X-Received: by 2002:adf:efca:0:b0:354:f500:51c4 with SMTP id ffacd0b85a97d-354f5005628mr2531090f8f.23.1716468566458;
+        Thu, 23 May 2024 05:49:26 -0700 (PDT)
+Received: from [127.0.1.1] ([93.5.22.158])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-354faf3fa68sm1259611f8f.116.2024.05.23.05.49.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 05:49:17 -0700 (PDT)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Zhang Yi <yi.zhang@huaweicloud.com>, linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, yi.zhang@huawei.com, yi.zhang@huaweicloud.com, chengzhihao1@huawei.com, yukuai3@huawei.com
-Subject: Re: [PATCH v2] jbd2: speed up jbd2_transaction_committed()
-In-Reply-To: <20240520131831.2910790-1-yi.zhang@huaweicloud.com>
-Date: Thu, 23 May 2024 18:00:53 +0530
-Message-ID: <87ttiosoaq.fsf@gmail.com>
-References: <20240520131831.2910790-1-yi.zhang@huaweicloud.com>
+        Thu, 23 May 2024 05:49:26 -0700 (PDT)
+From: Alexandre Mergnat <amergnat@baylibre.com>
+Date: Thu, 23 May 2024 14:49:14 +0200
+Subject: [PATCH v4 01/15] dt-bindings: display: mediatek: aal: add
+ compatible for MT8365 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231023-display-support-v4-1-ed82eb168fb1@baylibre.com>
+References: <20231023-display-support-v4-0-ed82eb168fb1@baylibre.com>
+In-Reply-To: <20231023-display-support-v4-0-ed82eb168fb1@baylibre.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Alexandre Mergnat <amergnat@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1032; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=rYGWQnXPl7e+8ZR2q/kPCuviQpIOkOcbGurCO7CSNDc=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBmTztTHJzX/pP0aymwYIu7QjbfH/1r3N3y2tzTEGvp
+ Qh+njumJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZk87UwAKCRArRkmdfjHURW/LD/
+ 0ZN8rHNVNvvNKuViGWaqPBEkwuwXd1VhlMXVPSXv1j7GbVtwNjsJbNXSXZenNBqXVnAUqKwSbFl1km
+ 7jYjqzscujGwOt05W3nhbgW2S8onp1G8X+JZkbkyjju/doC/uymiO1LuVXSeY22VGZFkcZwAVXEklV
+ CIsGYSmmcg187TLVBBIFf/XagsIYbphmgzMdlNTVf7f/BP7qHMWQHdWfxCwm3IYTx2PqFa/jjHZD22
+ ZQDg2MW7Xcx/pmsOxNr9esxW37O8eg6Ckh86y32Sn5KfsNfQeKMWNud9NEsDhdHirwWLFUBCm6p5XE
+ aI+DSCwoCFKtBnJy9DeiRLun2nFtszXfTgfP518hMF7h36vCQCMPbZDDZp2HCfJ/B0BLStYwzgn1X+
+ 6hyzyDJgTHatE6cXE3V3Ut17QmZryJrFkgHs5/WkinIyT8SURQXURvewEv8v95T3LZrbOo9tnwb+Zq
+ QYXKlf1k0GgpNGt6DWLMGbQrvsXb6qQN/IVVmUc7Q8W950Q1mPs1iktinGiS8AccGGOUaNSviWP458
+ xJph6E9/jrH7ObFUK4BA+Pl429CwQnFjd0g5tVL4MrN+/tvmGOxEBb9M03ekQKA9XcfuCm0Oh0kv5z
+ Fr1Qrt/7xTf8hqiexLhXY+5v3Y/ZKqgQgvHPsW9VsDt2wf8uiXTfG8+PqYuQ==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
-Zhang Yi <yi.zhang@huaweicloud.com> writes:
+Document the display Adaptive Ambient Light on MT8365, which is compatible
+with that of the MT8183.
 
-> From: Zhang Yi <yi.zhang@huawei.com>
->
-> jbd2_transaction_committed() is used to check whether a transaction with
-> the given tid has already committed, it holds j_state_lock in read mode
-> and check the tid of current running transaction and committing
-> transaction, but holding the j_state_lock is expensive.
->
-> We have already stored the sequence number of the most recently
-> committed transaction in journal t->j_commit_sequence, we could do this
-> check by comparing it with the given tid instead. If the given tid isn't
-> smaller than j_commit_sequence, we can ensure that the given transaction
-> has been committed. That way we could drop the expensive lock and
-> achieve about 10% ~ 20% performance gains in concurrent DIOs on may
-> virtual machine with 100G ramdisk.
->
-> fio -filename=/mnt/foo -direct=1 -iodepth=10 -rw=$rw -ioengine=libaio \
->     -bs=4k -size=10G -numjobs=10 -runtime=60 -overwrite=1 -name=test \
->     -group_reporting
->
-> Before:
->   overwrite       IOPS=88.2k, BW=344MiB/s
->   read            IOPS=95.7k, BW=374MiB/s
->   rand overwrite  IOPS=98.7k, BW=386MiB/s
->   randread        IOPS=102k, BW=397MiB/s
->
-> After:
->   overwrite       IOPS=105k, BW=410MiB/s
->   read            IOPS=112k, BW=436MiB/s
->   rand overwrite  IOPS=104k, BW=404MiB/s
->   randread        IOPS=111k, BW=432MiB/s
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+---
+ Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-I was surprised to see that even the read and randread performance
-is improved with this patch which should theoritically only impact write
-workloads given based on such checks we are just setting IOMAP_F_DIRTY
-flag to report to iomap. 
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
+index 623cf7e37fe3..47ddba5c41af 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
+@@ -36,6 +36,7 @@ properties:
+               - mediatek,mt8188-disp-aal
+               - mediatek,mt8192-disp-aal
+               - mediatek,mt8195-disp-aal
++              - mediatek,mt8365-disp-aal
+           - const: mediatek,mt8183-disp-aal
+ 
+   reg:
 
-But then I came across these two patches [1] [2]. It seems the change
-[1] to set IOMAP_F_DIRTY was initially only done for IOMAP_WRITE path.
-But patch [2] moved some logic to fs-dax core and filesystems were left
-to always just reports if there is any dirty metadata, irrespective of
-reads or writes.
+-- 
+2.25.1
 
-[1]: https://lore.kernel.org/all/20171101153648.30166-17-jack@suse.cz/
-[2]: https://lore.kernel.org/all/151062258598.8554.8157038002895095232.stgit@dwillia2-desk3.amr.corp.intel.com/
-
-
-Ohh - could this patch be that reason of peformance regression when ext4
-DIO moved to iomap? Should we CC: stable to when ext4 DIO was moved to
-iomap atleast - which I believe was v5.5?
-
-Looks good to me.
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-
->
-> CC: Dave Chinner <david@fromorbit.com>
-> Suggested-by: Dave Chinner <david@fromorbit.com>
-> Link: https://lore.kernel.org/linux-ext4/ZjILCPNZRHeazSqV@dread.disaster.area/
-
-aah. This link is helpful too to understand the context. Thanks!
-
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> ---
-> v1->v2:
->  - Add READ_ONCE and WRITE_ONCE to access ->j_commit_sequence
->    concurrently.
->  - Keep the jbd2_transaction_committed() helper.
->
->  fs/jbd2/commit.c  |  2 +-
->  fs/jbd2/journal.c | 12 +-----------
->  2 files changed, 2 insertions(+), 12 deletions(-)
->
-> diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-> index 5e122586e06e..8244cab17688 100644
-> --- a/fs/jbd2/commit.c
-> +++ b/fs/jbd2/commit.c
-> @@ -1108,7 +1108,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
->  
->  	commit_transaction->t_state = T_COMMIT_CALLBACK;
->  	J_ASSERT(commit_transaction == journal->j_committing_transaction);
-> -	journal->j_commit_sequence = commit_transaction->t_tid;
-> +	WRITE_ONCE(journal->j_commit_sequence, commit_transaction->t_tid);
->  	journal->j_committing_transaction = NULL;
->  	commit_time = ktime_to_ns(ktime_sub(ktime_get(), start_time));
->  
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index b6c114c11b97..cc586e3c4ee1 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -789,17 +789,7 @@ EXPORT_SYMBOL(jbd2_fc_end_commit_fallback);
->  /* Return 1 when transaction with given tid has already committed. */
->  int jbd2_transaction_committed(journal_t *journal, tid_t tid)
->  {
-> -	int ret = 1;
-> -
-> -	read_lock(&journal->j_state_lock);
-> -	if (journal->j_running_transaction &&
-> -	    journal->j_running_transaction->t_tid == tid)
-> -		ret = 0;
-> -	if (journal->j_committing_transaction &&
-> -	    journal->j_committing_transaction->t_tid == tid)
-> -		ret = 0;
-> -	read_unlock(&journal->j_state_lock);
-> -	return ret;
-> +	return tid_geq(READ_ONCE(journal->j_commit_sequence), tid);
->  }
->  EXPORT_SYMBOL(jbd2_transaction_committed);
->  
-> -- 
-> 2.39.2
