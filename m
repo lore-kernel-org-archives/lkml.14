@@ -1,196 +1,421 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40B02746F;
-	Thu, 23 May 2024 11:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2592746F;
+	Thu, 23 May 2024 11:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716463312; cv=none; b=l1tdSIlfoG/+2pRgg9Qp4H4ry5J2K3tAyWj7N18MTZUziko4S5X85FMGhWmCbgCwGTVgMFrLNvEQilWut8v8TwCIj9Sy7/Oi2uOjrDCx9W17TKzg/Dsue/5rv8W6/hC67uJ9A06CH/mz5x0zJwGjQIBMU+JD4xu8/u7vp7xeXFA=
+	t=1716463496; cv=none; b=dHm0IK6hDdHKs82LGXaPgM7iycq+cQ3Pu3xU+NuLcxPq07InSqGi6ukGEy7Vu0H/+dDANgIQPadowWXSz3vBqKylEH2cMdMEOSPUf+/I6lGuD4nBSqQXANCJjnem4UHOzSYyxAE3KBm7slvMOULv9+NFGkCuuTO2lA4+s5Bw78o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716463312; c=relaxed/simple;
-	bh=eNlIxiqDzedCnOeX0xoj9OjpK35zUFeGYBak2boMgzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZ/t85Tfd7YNQ6ZM98AtXIvYzNzKOsinjyUU8VSFtwbs/7wWgS11pRerdsyqqDDiRiSBOiPCAmQYkk1JnSebnC2YgcgfRKFIfdEjxL2bHTOJxqNJcvsegXJHq30Ioy7TnQE5XKGPM+SFYzEZAS0VQjdW6k5jjxRUR0QbV/QrfyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dlmcoavo; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dlmcoavo"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e576057c2bso111158351fa.1;
-        Thu, 23 May 2024 04:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716463309; x=1717068109; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=asqwjj/YdEsrYXQGdSoC0a/xfkjKBOz+Tei0ANsb2Oo=;
-        b=DlmcoavoIP87jmLMNeSvCLRE0cJrQmj7cqNALOm83UpbUgZQ+hSGeze0v+Yl5Hm+Rb
-         bCU7/Q3LHGsGtunDAnuUSz0pkjnyT9zsp9/7Jay2s2PY9zX5sy7g/O8L+CnJXwLklTlB
-         3BlcMuOR8BdlL/tgKfroG2rENfEhBYBKSjbLvbvbAzXn98uYBpExmEtebaYidk5PI+lp
-         zKNEJt3+HmG0bErx/Boxe22S513JaEFZ8e5BXsI8eIqdgme6dgFk+mEbW4/MfYnIm23q
-         bJ+FgrYWMbthJC/aw5d24UfwvW6dkPcxv1TuJ7eYpKChXLHfVVagPfmLE7jHKSIQvesY
-         uaqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716463309; x=1717068109;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=asqwjj/YdEsrYXQGdSoC0a/xfkjKBOz+Tei0ANsb2Oo=;
-        b=QUYfNxcEXAMeQSpdcCKRWzhTP/zrTh/L8oyCtyeaTNFgObysOi5B7UTRngz1+G9Bwu
-         Avr9g5OS4McLT1MRc4TJOCMPIn6G77np/c/UjfteGO7ZVqnBavtU9EYfiaz2KuZfSsxe
-         ZIysvfhroSYvswrhqktd4N4hiGfpZE2vLcXXBPT0cy5EYfR+zsaMrN5caFhAWLteuv9Z
-         lNi9NOGqd207GWYNkp9A2AZGZYwoiznugkHWbcumR2mi2f2Ox0ZtfDO281D1hJPv3POz
-         7uQwhc2e3tieswg9F6Q4lE8hxuVgC6QUI7OOLYtC0uSYGKWZ5KoG3EDYUc2SMixrQVYo
-         71VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTDtn+ZQ8pw5Uoq+OEiMaQUFEMXcMTfAmfzV13uyHYkb9n4DQzrnfUBj5v9lFsqDZqotWjyblw7id100G2ovHu1wPgF2RjOKQA6QvJyCS1D0wl3MX8202r35k+t7NzH3YKgT6DHaRw
-X-Gm-Message-State: AOJu0YwHSlvpJ+YceeE+B8JUxEVp8zGzC/Zxx9Vl4n/Zj94jFAm3H+nT
-	+Xv77b9M9bjLa4Ir6ZF8UldKerVS5SZBrc+FswcfJcev4DvYKWlY
-X-Google-Smtp-Source: AGHT+IGM0g3nsTRP7Ys88GWXMtA5nlv5SymajA2Gk9zudU0Qveo6rp3T5jqP/JjGaQHLkUG+t2U+ig==
-X-Received: by 2002:a05:651c:10a7:b0:2e9:485d:45a4 with SMTP id 38308e7fff4ca-2e949466b84mr35709191fa.16.1716463308741;
-        Thu, 23 May 2024 04:21:48 -0700 (PDT)
-Received: from debian ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7dd4sm1920033566b.139.2024.05.23.04.21.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 04:21:48 -0700 (PDT)
-Date: Thu, 23 May 2024 13:21:46 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Andrew Hepp <andrew.hepp@ahepp.dev>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>
-Subject: Re: [PATCH v2 1/2] iio: temperature: mcp9600: Provide index for both
- channels
-Message-ID: <20240523112146.GB513807@debian>
-References: <20240517081050.168698-1-dima.fedrau@gmail.com>
- <20240517081050.168698-2-dima.fedrau@gmail.com>
- <20240519171438.08810789@jic23-huawei>
- <23efcf4c-b5b2-d245-931f-0420e61701fe@ahepp.dev>
+	s=arc-20240116; t=1716463496; c=relaxed/simple;
+	bh=9oCPnoEK0F8amf19mXgQv1N9aGSecQA0Fcp9B4vLagg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WPELTQpRZgFp3ZVtErJdsuWFR08wQUFiRHoqyEK3c2dSI73Rdq75fzP8q6cCNyM+ekd6c4oqfbOVOqxgbvm1xFValsQd8VQ02vY+z5dcFASk6YGJlBGppU3wnmhofQJlV5vZY6FSOUTH0yWKolpoGNED1IzZ0JrV7qMM9BhW6Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VlQmG4JD6z6K9Qj;
+	Thu, 23 May 2024 19:23:58 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id DE21B1408F9;
+	Thu, 23 May 2024 19:24:49 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 23 May
+ 2024 12:24:49 +0100
+Date: Thu, 23 May 2024 12:24:48 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Alistair Francis <alistair23@gmail.com>
+CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <lukas@wunner.de>,
+	<alex.williamson@redhat.com>, <christian.koenig@amd.com>, <kch@nvidia.com>,
+	<gregkh@linuxfoundation.org>, <logang@deltatee.com>,
+	<linux-kernel@vger.kernel.org>, <chaitanyak@nvidia.com>,
+	<rdunlap@infradead.org>, Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH v10 3/4] PCI/DOE: Expose the DOE features via sysfs
+Message-ID: <20240523122448.0000799f@Huawei.com>
+In-Reply-To: <20240522101142.559733-3-alistair.francis@wdc.com>
+References: <20240522101142.559733-1-alistair.francis@wdc.com>
+	<20240522101142.559733-3-alistair.francis@wdc.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <23efcf4c-b5b2-d245-931f-0420e61701fe@ahepp.dev>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Am Mon, May 20, 2024 at 10:28:10PM -0400 schrieb Andrew Hepp:
-> Hi all,
-> 
-> I attempted to send this yesterday, but I guess I leaked some HTML into the
-> message and it was rejected from the lists. I am resending it now as plain
-> text. Apologies for any inconvenience or confusion.
-> 
-> On 5/19/24 12:14 PM, Jonathan Cameron wrote:
-> > On Fri, 17 May 2024 10:10:49 +0200
-> > Dimitri Fedrau <dima.fedrau@gmail.com> wrote:
-> > 
-> > > The mapping from cold junction to ambient temperature is inaccurate. We
-> > > provide an index for hot and cold junction temperatures.
-> > > 
-> > > Suggested-by: Jonathan Cameron <jic23@kernel.org>
-> > > Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
-> > Hi Dmitri,
-> >
-> > I'm not sure you replied to the question in previous review of what
-> > sysfs files exist for this device.  Whilst I am at least a little
-> > open to changing the ABI, I'd like to fully understand what
-> > is currently presented and why iio_info is having trouble with it.
-> > 
-> > I also want an ack from Andrew on this one given might break it existing
-> > usage.
-> 
-> I’m not actively using the cold junction temperature reading, so I would be
-> happy to see any deficiencies in the ABI corrected.
-> 
-> > 
-> > The current interface is perhaps less than ideal, but I don't think it
-> > is wrong as such. Whilst I wasn't particularly keen on the cold junction
-> > == ambient I'm not sure moving to just indexed is an improvement.
-> > Hence looking for input from Andrew. +CC Nuno as someone who is both
-> > active in IIO and has written thermocouple front end drivers in
-> > the past.
-> 
-> The ABI docs state
-> 
->     The ambient and object modifiers distinguish between ambient (reference)
-> and distant temperatures for contactless measurements
-> Reading more of the Linux Driver API docs, those say that .modified is "used
-> to indicate a physically unique characteristic of the channel”, and that
-> .indexed is "simply another instance”.
-> 
-> I’m not sure whether measuring temperature at a different location meets the
-> bar of a “physically unique characteristic”. Maybe it does. But I don’t
-> think of the cold junction temperature as “simply another instance”. Perhaps
-> that’s a mistake on my behalf.
-> 
-> Reviewing temperature drivers using IIO_MOD_TEMP_AMBIENT, they all seem to
-> be reporting die temperatures. Some are IR sensors, but there are a couple
-> other thermocouples like the MCP9600.
-> 
-> Reviewing drivers using “.indexed”, one is an IR sensor and one is a
-> thermocouple. In both cases, the indexed channels seem to represent a “full
-> featured” channel. The IR sensor also reports IIO_MOD_TEMP_AMBIENT, so they
-> chose not to make it an additional index.
-> 
-> It seems to me that using IIO_MOD_TEMP_AMBIENT is more in line with what has
-> been done in the past. But I may be misunderstanding something and I am not
-> opposed to using and index if it’s determined that is more correct.
->
+On Wed, 22 May 2024 20:11:41 +1000
+Alistair Francis <alistair23@gmail.com> wrote:
 
-Thanks for the explanation and the effort, must have taken some time. I
-think you are right. I will remove the patch from the series, so that no
-ABI change takes place.
-
-Best regards,
-Dimitri
-
-> Thanks,
-> Andrew
+> The PCIe 6 specification added support for the Data Object
+> Exchange (DOE).
+> When DOE is supported the DOE Discovery Feature must be implemented per
+> PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
+> information about the other DOE features supported by the device.
 > 
-> > 
-> > Jonathan
-> > 
-> > 
-> > > ---
-> > >   drivers/iio/temperature/mcp9600.c | 9 +++++++--
-> > >   1 file changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/temperature/mcp9600.c b/drivers/iio/temperature/mcp9600.c
-> > > index 46845804292b..22451d1d9e1f 100644
-> > > --- a/drivers/iio/temperature/mcp9600.c
-> > > +++ b/drivers/iio/temperature/mcp9600.c
-> > > @@ -14,6 +14,9 @@
-> > >   #include <linux/iio/iio.h>
-> > > +#define MCP9600_CHAN_HOT_JUNCTION	0
-> > > +#define MCP9600_CHAN_COLD_JUNCTION	1
-> > > +
-> > >   /* MCP9600 registers */
-> > >   #define MCP9600_HOT_JUNCTION 0x0
-> > >   #define MCP9600_COLD_JUNCTION 0x2
-> > > @@ -25,17 +28,19 @@
-> > >   static const struct iio_chan_spec mcp9600_channels[] = {
-> > >   	{
-> > >   		.type = IIO_TEMP,
-> > > +		.channel = MCP9600_CHAN_HOT_JUNCTION,
-> > >   		.address = MCP9600_HOT_JUNCTION,
-> > >   		.info_mask_separate =
-> > >   			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> > > +		.indexed = 1,
-> > >   	},
-> > >   	{
-> > >   		.type = IIO_TEMP,
-> > > +		.channel = MCP9600_CHAN_COLD_JUNCTION,
-> > >   		.address = MCP9600_COLD_JUNCTION,
-> > > -		.channel2 = IIO_MOD_TEMP_AMBIENT,
-> > > -		.modified = 1,
-> > >   		.info_mask_separate =
-> > >   			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> > > +		.indexed = 1,
-> > >   	},
-> > >   };
-> > 
+> The kernel is already querying the DOE features supported and cacheing
+> the values. Expose the values in sysfs to allow user space to
+> determine which DOE features are supported by the PCIe device.
+> 
+> By exposing the information to userspace tools like lspci can relay the
+> information to users. By listing all of the supported features we can
+> allow userspace to parse the list, which might include
+> vendor specific features as well as yet to be supported features.
+> 
+> As the DOE Discovery feature must always be supported we treat it as a
+> special named attribute case. This allows the usual PCI attribute_group
+> handling to correctly create the doe_features directory when registering
+> pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
+> will seg fault).
+> 
+> After this patch is supported you can see something like this when
+> attaching a DOE device
+> 
+> $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
+> 0001:01        0001:02        doe_discovery
+> 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+
+What happens if multiple DOE which support the same protocol?
+(IIRC that's allowed).  You probably need to paper over repeat
+sysfs attributes and make sure they don't get double freed etc.
+
+Otherwise some minor things inline.
+
+Jonathan
+
+
+> ---
+> v10:
+>  - Rebase to use DEFINE_SYSFS_GROUP_VISIBLE and remove
+>    special setup function
+> v9:
+>  - Add a teardown function
+>  - Rename functions to be clearer
+>  - Tidy up the commit message
+>  - Remove #ifdef from header
+> v8:
+>  - Inlucde an example in the docs
+>  - Fixup removing a file that wasn't added
+>  - Remove a blank line
+> v7:
+>  - Fixup the #ifdefs to keep the test robot happy
+> v6:
+>  - Use "feature" instead of protocol
+>  - Don't use any devm_* functions
+>  - Add two more patches to the series
+> v5:
+>  - Return the file name as the file contents
+>  - Code cleanups and simplifications
+> v4:
+>  - Fixup typos in the documentation
+>  - Make it clear that the file names contain the information
+>  - Small code cleanups
+>  - Remove most #ifdefs
+>  - Remove extra NULL assignment
+> v3:
+>  - Expose each DOE feature as a separate file
+> v2:
+>  - Add documentation
+>  - Code cleanups
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci |  28 ++++
+>  drivers/pci/doe.c                       | 175 ++++++++++++++++++++++++
+>  drivers/pci/pci-sysfs.c                 |  13 ++
+>  drivers/pci/pci.h                       |  10 ++
+>  4 files changed, 226 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index ecf47559f495..65a3238ab701 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -500,3 +500,31 @@ Description:
+>  		console drivers from the device.  Raw users of pci-sysfs
+>  		resourceN attributes must be terminated prior to resizing.
+>  		Success of the resizing operation is not guaranteed.
+> +
+> +What:		/sys/bus/pci/devices/.../doe_features
+> +Date:		May 2024
+> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+> +Description:
+> +		This directory contains a list of the supported
+> +		Data Object Exchange (DOE) features. The features are
+> +		the file name. The contents of each file is the raw vendor id and
+> +		data object feature values.
+> +
+> +		The value comes from the device and specifies the vendor and
+> +		data object type supported. The lower (RHS of the colon) is
+> +		the data object type in hex. The upper (LHS of the colon)
+> +		is the vendor ID.
+> +
+> +		As all DOE devices must support the DOE discovery protocol, if
+> +		DOE is supported you will at least see the doe_discovery file, with
+> +		this contents
+> +
+> +		# cat doe_features/doe_discovery
+> +		0001:00
+> +
+> +		If the device supports other protocols you will see other files
+> +		as well. For example is CMA/SPDM and secure CMA/SPDM are supported
+> +		the doe_features directory will look like this
+> +
+> +		# ls doe_features
+> +		0001:01        0001:02        doe_discovery
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index defc4be81bd4..7a20a257df5a 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -47,6 +47,7 @@
+>   * @wq: Wait queue for work item
+>   * @work_queue: Queue of pci_doe_work items
+>   * @flags: Bit array of PCI_DOE_FLAG_* flags
+> + * @sysfs_attrs: Array of sysfs device attributes
+>   */
+>  struct pci_doe_mb {
+>  	struct pci_dev *pdev;
+> @@ -56,6 +57,10 @@ struct pci_doe_mb {
+>  	wait_queue_head_t wq;
+>  	struct workqueue_struct *work_queue;
+>  	unsigned long flags;
+> +
+> +#ifdef CONFIG_SYSFS
+> +	struct device_attribute *sysfs_attrs;
+> +#endif
+>  };
+>  
+>  struct pci_doe_feature {
+> @@ -92,6 +97,176 @@ struct pci_doe_task {
+>  	struct pci_doe_mb *doe_mb;
+>  };
+>  
+> +#ifdef CONFIG_SYSFS
+> +static ssize_t doe_discovery_show(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  char *buf)
+> +{
+> +	return sysfs_emit(buf, "0001:00\n");
+> +}
+> +DEVICE_ATTR_RO(doe_discovery);
+> +
+> +static struct attribute *pci_doe_sysfs_feature_attrs[] = {
+> +	&dev_attr_doe_discovery.attr,
+> +	NULL,
+
+No comma needed on the null terminator as we'll never add anything after
+it.
+
+> +};
+> +
+> +static umode_t pci_doe_sysfs_attr_visible(struct kobject *kobj,
+> +					  struct attribute *a, int n)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index, j;
+> +	unsigned long vid, type;
+> +	void *entry;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
+> +		xa_for_each(&doe_mb->feats, j, entry) {
+> +			vid = xa_to_value(entry) >> 8;
+> +			type = xa_to_value(entry) & 0xFF;
+> +
+> +			if (vid == 0x01 && type == 0x00) {
+> +				/* This is the DOE discovery protocol
+local comment syntax is the 
+				/*
+				 * This is the 
+form so stick to that.
+
+
+Shouldn't this also return a->mode for any case where the particular attribute
+matches?  I guess is_visible() isn't called for late registered sysfs attributes
+though I think it probably should be!
+
+> +				 * Every DOE instance must support this, so we
+> +				 * give it a useful name.
+> +				 */
+> +				return a->mode;
+> +			}
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static bool pci_doe_sysfs_group_visible(struct kobject *kobj)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index, j;
+> +	void *entry;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
+> +		xa_for_each(&doe_mb->feats, j, entry)
+Is this simpler as
+		if (!xa_empty(&doe_mb->feats))
+			return true;
+
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +DEFINE_SYSFS_GROUP_VISIBLE(pci_doe_sysfs)
+> +
+> +const struct attribute_group pci_doe_sysfs_group = {
+> +	.name	    = "doe_features",
+> +	.attrs	    = pci_doe_sysfs_feature_attrs,
+> +	.is_visible = SYSFS_GROUP_VISIBLE(pci_doe_sysfs),
+> +};
+> +
+> +static ssize_t pci_doe_sysfs_feature_show(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  char *buf)
+> +{
+> +	return sysfs_emit(buf, "%s\n", attr->attr.name);
+> +}
+> +
+> +static void pci_doe_sysfs_feature_remove(struct pci_dev *pdev,
+> +					 struct pci_doe_mb *doe_mb)
+> +{
+> +	struct device_attribute *attrs = doe_mb->sysfs_attrs;
+> +	struct device *dev = &pdev->dev;
+> +	unsigned long i;
+> +	void *entry;
+> +
+> +	if (!attrs)
+> +		return;
+> +
+> +	doe_mb->sysfs_attrs = NULL;
+> +	xa_for_each(&doe_mb->feats, i, entry) {
+
+I'm not particularly keen on using an index over the xa
+just to get the number of elements for the loop limit.
+Maybe just store that when you allocate attrs?
+
+> +		if (attrs[i].show)
+> +			sysfs_remove_file_from_group(&dev->kobj, &attrs[i].attr,
+> +						     pci_doe_sysfs_group.name);
+> +		kfree(attrs[i].attr.name);
+> +	}
+> +	kfree(attrs);
+> +}
+> +
+> +static int pci_doe_sysfs_feature_populate(struct pci_dev *pdev,
+> +					  struct pci_doe_mb *doe_mb)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_attribute *attrs;
+> +	unsigned long num_features = 0;
+> +	unsigned long vid, type;
+> +	unsigned long i;
+> +	void *entry;
+> +	int ret;
+> +
+> +	xa_for_each(&doe_mb->feats, i, entry)
+> +		num_features++;
+> +
+> +	attrs = kcalloc(num_features, sizeof(*attrs), GFP_KERNEL);
+> +	if (!attrs)
+> +		return -ENOMEM;
+> +
+> +	doe_mb->sysfs_attrs = attrs;
+> +	xa_for_each(&doe_mb->feats, i, entry) {
+> +		sysfs_attr_init(&attrs[i].attr);
+> +		vid = xa_to_value(entry) >> 8;
+> +		type = xa_to_value(entry) & 0xFF;
+> +
+> +		if (vid == 0x01 && type == 0x00) {
+> +			// DOE Discovery, manually displayed by `dev_attr_doe_discovery`
+
+/* */ syntax.
+
+> +			continue;
+> +		}
+> +
+> +		attrs[i].attr.name = kasprintf(GFP_KERNEL,
+> +					       "%04lx:%02lx", vid, type);
+> +		if (!attrs[i].attr.name) {
+> +			ret = -ENOMEM;
+> +			goto fail;
+> +		}
+> +
+> +		attrs[i].attr.mode = 0444;
+> +		attrs[i].show = pci_doe_sysfs_feature_show;
+> +
+> +		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
+> +					      pci_doe_sysfs_group.name);
+> +		if (ret) {
+> +			attrs[i].show = NULL;
+> +			goto fail;
+
+Repeated DOE 'features' on different DOE instances may cause this to fail.
+
+
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +fail:
+> +	pci_doe_sysfs_feature_remove(pdev, doe_mb);
+> +	return ret;
+> +}
+
+>  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
+>  {
+>  	if (wait_event_timeout(doe_mb->wq,
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 40cfa716392f..b5db191cb29f 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/stat.h>
+>  #include <linux/export.h>
+>  #include <linux/topology.h>
+> @@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
+>  {
+>  	int i;
+>  
+> +	if (IS_ENABLED(CONFIG_PCI_DOE))
+> +		pci_doe_sysfs_teardown(pdev);
+> +
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		struct bin_attribute *res_attr;
+>  
+> @@ -1227,6 +1231,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+>  	int i;
+>  	int retval;
+>  
+> +	if (IS_ENABLED(CONFIG_PCI_DOE)) {
+> +		retval = pci_doe_sysfs_init(pdev);
+> +		if (retval)
+> +			return retval;
+> +	}
+> +
+>  	/* Expose the PCI resources from this device as files */
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  
+> @@ -1661,6 +1671,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+>  #endif
+>  #ifdef CONFIG_PCIEASPM
+>  	&aspm_ctrl_attr_group,
+> +#endif
+> +#ifdef CONFIG_PCI_DOE
+> +	&pci_doe_sysfs_group,
+>  #endif
+>  	NULL,
+>  };
+
+
