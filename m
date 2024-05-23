@@ -1,102 +1,158 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957FA14AD2B
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 13:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D112614B086;
+	Thu, 23 May 2024 13:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716472729; cv=none; b=X/nn5XwFMzx66sqVQhUxSBf4sdZObbCe0+X2mxnnTSCowa7cH/AXQVPO1OzvDiXRnnHxFDM5sQBaCojEZ/1sK3Eq0nWTsqNRJFxIQFAI+E4IlvzdiUyzi3MVGSq/Dw9llorYRkVL9DTKzBiufXnqnGGpM5sw1rAIbY1N6QW1VP8=
+	t=1716472732; cv=none; b=hA/YHIFxQ2MjcbG1Jhc01To6XlneXQD+xr8zbEuXRvcId1YpLf3fEQyvmcm4PcPPl21TFGVt+1sn5MjbuvK5xxHmF4RRAhiS7aNPtgAe4yskRGzW9nDE/6Qx1wt8xBsMCPgbZJNh6EWU2J9xMuSD4WQw2rYTfs86/YhKEyr4cqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716472729; c=relaxed/simple;
-	bh=K8S/RH5xbSFWbYcSj/xEygnrg6Y4m/tKjga93P359e8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QZubh4Ff/oallNR9mCrTSLUMxDto1ihh6fN1/I/YGhTmOnK4TgtZ14+RFzhG10Ox3dFIlcK29E/CVEHdyv22JbS7fvyLpiycu4anFr7HyMFeCYsIjPsHrYaS4XFKTAmg9A2aJbXzi+9RnXDhCA0fKhYmS7W5PneP1AVUJAtwyKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=B9WduptF; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1716472732; c=relaxed/simple;
+	bh=+5b/7/vlgnWskESZPuOiLWvPeN5STcQY2D4Rv6HUuUc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=TR9DoZjzjtnciQi3C8+DWvJ4XECxzlUDefOAcp3/mhuBgcu8DwlvoO99y3BQKox6UrMIUXUbVJFV2MB6hxs/Q65cASbKeis+5ZU83uPZcFO0ADqB01Fj19zq1TdWMRdjl2wKWvgX5fUqTjfrX8+Jp97EUyzG0Z4zJYkUn445eC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BOHcS9wb; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="B9WduptF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References; bh=Wi7mrKqXXrJP2C7bbxhuWiixIqln+QxOIIfqxzOJhsE=; b=B9
-	WduptFYpkNFUY/yOKcu7PUOWulGWckQ9s1eiukQWg6xDcHopsS022VdxwN1bH/ThCTNwbCM1jl18+
-	T7ggZulEdyzPcVbENgxE2TwYeMMFq8FhWWIS3wV7z0D2B+eM0Xtj2fdfrWYkmOqOW84X+NjA44u4K
-	1sf2ELgpGCqTHPXYQAN9dQhz8SZoAftMhcLxjqs9uRN0ibqmXxhVIhDJhErrHSjM+z3VM3iTVok5B
-	TvjkFe++Swfbln71vwWLlWEAmUh3Ys52OxzGN6pzyNXP9GfLKCjFBjpULSZGV7pyM8tKtNJxRrbjN
-	6fECV2DI7ohHDtw1dUthqERwIQEf7T5w==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sA8xm-0009t7-4N; Thu, 23 May 2024 15:58:34 +0200
-Received: from [185.17.218.86] (helo=localhost)
-	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sA8xl-0003xo-1I;
-	Thu, 23 May 2024 15:58:33 +0200
-From: Esben Haabendal <esben@geanix.com>
-Date: Thu, 23 May 2024 15:58:22 +0200
-Subject: [PATCH] memory: fsl_ifc: Make FSL_IFC config visible and
- selectable
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BOHcS9wb"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44NDsIEY010126;
+	Thu, 23 May 2024 13:58:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=UufEkCm+NcuUDCmXknl+quFIU0IZuPd7dYdYaodiizE=;
+ b=BOHcS9wb2PiaLoez9C/u1NgGDRCCRnZVEsdcePWxv6KzLbbAemqkym3AwsgyHS3IfBwc
+ KpTnQshsvntarkbVVrlfFggYTyGLQ365GQAc8JILzM6m7DiWZx4W8ABTCQQtb4S4Hw+R
+ jek2kKdliqr3raM8YOw4owntmiZsLxLgh/0DaRkesMu27Mm6vhdP5XmA5bGVFjbWsQDf
+ gbvFIaR43eKHRBBB97sU1PLJxPd/A9tPYSlqSopLiHLGmPwJRp+SSGTXeEhAk8QnqBom
+ Iwha60wwe5mveMneATzfzAQKWDiAY9lbF9jkAwPDJpHQu7llC02WCPJzCeyBKRBNjAqg xg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ya73700jj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 13:58:39 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44NDwdqu016364;
+	Thu, 23 May 2024 13:58:39 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ya73700jg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 13:58:39 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44NAu9bj023498;
+	Thu, 23 May 2024 13:58:38 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y77npjbqx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 13:58:38 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44NDwWUM52166938
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 May 2024 13:58:34 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 959F92004B;
+	Thu, 23 May 2024 13:58:32 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2107A20049;
+	Thu, 23 May 2024 13:58:30 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.97.166])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 23 May 2024 13:58:29 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240523-fsl-ifc-config-v1-1-6eff73bdc7e6@geanix.com>
-X-B4-Tracking: v=1; b=H4sIAH1LT2YC/x3MQQqAIBBA0avErBuwqTC7SrQoG20gLBQikO6et
- HyL/zMkjsIJxipD5FuSnKGgqSuw+xI8o2zFQIo61VOLLh0ozqI9gxOPdtDaKFrJaIYSXZGdPP9
- wmt/3A7VDsm1gAAAA
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
- Esben Haabendal <esben@geanix.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716472713; l=1025;
- i=esben@geanix.com; s=20240523; h=from:subject:message-id;
- bh=K8S/RH5xbSFWbYcSj/xEygnrg6Y4m/tKjga93P359e8=;
- b=qMuktJFS7Ku96n3tugCChtvnkI020HZp6LQY2vjkxJtjzq5YyGqp4QT7ihudxDbqvvFJ7p5kc
- 4dXzuNWAZPCDV4wHDnPRFHVKrCOskNIYCrfGHJ5Tah+LRPszD0Z6MmS
-X-Developer-Key: i=esben@geanix.com; a=ed25519;
- pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27284/Thu May 23 10:32:30 2024)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH V2 6/9] tools/perf: Update instruction tracking for
+ powerpc
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <d26d353b-2f89-42fc-a247-4c0a072990de@csgroup.eu>
+Date: Thu, 23 May 2024 19:28:18 +0530
+Cc: "acme@kernel.org" <acme@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "irogers@google.com" <irogers@google.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "segher@kernel.crashing.org" <segher@kernel.crashing.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "disgoel@linux.vnet.ibm.com" <disgoel@linux.vnet.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akanksha@linux.ibm.com" <akanksha@linux.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <43537D0D-0D89-404C-B0E0-E9182E2BD97B@linux.vnet.ibm.com>
+References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
+ <20240506121906.76639-7-atrajeev@linux.vnet.ibm.com>
+ <d26d353b-2f89-42fc-a247-4c0a072990de@csgroup.eu>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: YDo3MDOfpyN7BBGSvY6R6122bKgCNngr
+X-Proofpoint-GUID: i-vL49ysoqgSzyDgtgqc6DKLB_ldx-WL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-23_08,2024-05-23_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2405010000 definitions=main-2405230096
 
-While use of fsl_ifc driver with NAND flash is fine, as the fsl_ifc_nand
-driver selects FSL_IFC automatically, we need the option to be selectable
-for platforms using fsl_ifc with NOR flash.
 
-Fixes: ea0c0ad6b6eb ("memory: Enable compile testing for most of the drivers")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/memory/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-index 8efdd1f97139..c82d8d8a16ea 100644
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@ -167,7 +167,7 @@ config FSL_CORENET_CF
- 	  represents a coherency violation.
- 
- config FSL_IFC
--	bool "Freescale IFC driver" if COMPILE_TEST
-+	bool "Freescale IFC driver"
- 	depends on FSL_SOC || ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST
- 	depends on HAS_IOMEM
- 
+> On 7 May 2024, at 3:22=E2=80=AFPM, Christophe Leroy =
+<christophe.leroy@csgroup.eu> wrote:
+>=20
+>=20
+>=20
+> Le 06/05/2024 =C3=A0 14:19, Athira Rajeev a =C3=A9crit :
+>> Add instruction tracking function "update_insn_state_powerpc" for
+>> powerpc. Example sequence in powerpc:
+>>=20
+>> ld      r10,264(r3)
+>> mr      r31,r3
+>> <<after some sequence>
+>> ld      r9,312(r31)
+>=20
+> Your approach looks fragile.
+>=20
+> mr is a simplified instruction which in fact is  "or r31, r3, r3"
+>=20
+> By the way, the compiler sometimes does it different, like below:
+>=20
+> lwz r10,264(r3)
+> addi r31, r3, 312
+> lwz r9, 0(r31)
+>=20
+> And what about sequences with lwzu ?
+Hi Christophe,
 
----
-base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-change-id: 20240523-fsl-ifc-config-c877902b297e
+This patch added =E2=80=9Cmr=E2=80=9D. In next patch in same series, add =
+instruction also is added to instruction tracking.
+I will be posting a V3 with some changes to the logic for annotating add =
+instructions.
 
-Best regards,
--- 
-Esben Haabendal <esben@geanix.com>
+Thanks
+Athira
+>=20
+>>=20
+>> Consider ithe sample is pointing to: "ld r9,312(r31)".
+>> Here the memory reference is hit at "312(r31)" where 312 is the =
+offset
+>> and r31 is the source register. Previous instruction sequence shows =
+that
+>> register state of r3 is moved to r31. So to identify the data type =
+for r31
+>> access, the previous instruction ("mr") needs to be tracked and the
+>> state type entry has to be updated. Current instruction tracking =
+support
+>> in perf tools infrastructure is specific to x86. Patch adds this for
+>> powerpc and adds "mr" instruction to be tracked.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
