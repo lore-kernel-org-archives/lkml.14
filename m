@@ -1,39 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCC53307B;
-	Thu, 23 May 2024 11:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF823307B
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 11:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716464864; cv=none; b=WlQWxvgjoX8D6iNN37flF+LoHUJHFtUMVk2VWgkgvVgqvM0nDz3Kz7w79rqts5q/vqzpU3OPfSo7zyVj8lJp+/gPWiH6+ycefUnn0/Svm2Aj83UNklam4qt/4SgFg16PEUn4M1MIDhUGVbPhn9HY+E2GC9pTFByAymizkF+cNL8=
+	t=1716464889; cv=none; b=uVSw09UaVlcfwkkAMbST77/hnR9EbR6t3rpnuL7XIWBCE2+UN/E784rfeX4uWR3e+/DZmgh/kZpQUZ/YFHWoJXxodwnM/Y3IvYygI04TBCMbJyLAsadWowsv7rRMRTEG2rbAubiWO8Sto9AhZP0xFuSQ38b5OCiTncJ4Z/SG+Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716464864; c=relaxed/simple;
-	bh=3xbtnJwok+zrcbye3vysIdYFag8LyyseDL1qlml8khc=;
+	s=arc-20240116; t=1716464889; c=relaxed/simple;
+	bh=6V+8CtsowbR+5woKWil3/uTefTydyG91roAsOsQIUwQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qIubNPDHFHKP+dN338Ws6GeTGiP43apyoskXmDKvEw/1mnTBLeaM70P9x8JD0xKbM8+qmaGgVqegpbf/SZvuaJRp+B3ftmvkWq1Cq8NPKmFLxesmiKVwchoYSyO7Vcb4VJn44gsHOEH5k6M06MfKBRneJIPR+MF1Wwg/JzZ8qNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NMmYC3WZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dAitaW8a0THMhXA+SmflZY8Vq9UjxPAdo/CGxYZI/qhEqQp7GquGwwTWJxWl7XrT7XnihJGF+csb5t4tzPi7s6tASysYYW0rmoOPt4QYFLa/JzNvwcAi9r0DKgPUkc3XF04Mv8kao8A8qqUPni5aZ8/qIz7wFYyIQFAy0N0FCDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eu2MPfML; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NMmYC3WZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F219C3277B;
-	Thu, 23 May 2024 11:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716464864;
-	bh=3xbtnJwok+zrcbye3vysIdYFag8LyyseDL1qlml8khc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NMmYC3WZAWpmW6xYQmR70bKA5gQiFRjQyPCYC3hNWsRwhWemQneADLGWG0c/O7ZLq
-	 EtmwpAOJOpIC7h1ykeAIMpXpflbVEEijS4DXHeqym8XVN8Q9x/2MXiAzp6QYoq199R
-	 3s7kWsSuLjpvRTOmBHpCnilH3S5zeBzaGchiW/oU=
-Date: Thu, 23 May 2024 13:47:42 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Shichao Lai <shichaorai@gmail.com>
-Cc: stern@rowland.harvard.edu, oneukum@suse.com, linux-usb@vger.kernel.org,
-	usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
-	xingwei lee <xrivendell7@gmail.com>,
-	yue sun <samsun1006219@gmail.com>
-Subject: Re: [PATCH v2] usb-storage: Check whether divisor is non-zero before
- division
-Message-ID: <2024052351-demote-gangly-74b0@gregkh>
-References: <20240523113410.983875-1-shichaorai@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eu2MPfML"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51fcb7dc722so1787834e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 04:48:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716464886; x=1717069686; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6E61Jxzxjq7f22HqS8A7YYLGqKHl4SecZqgeLR9j6N4=;
+        b=eu2MPfML45bIbUkFG9ND0l32+AcC1mGrmcpzDDPaGNeIJBK1SaBEBWaP4r93sVEEMU
+         q6Qb9n3kziLw5Sol37PE/WmpDh61TfDG71RL3jHfK/fmaAPYVyw18mn9OtVYFVM9WIww
+         oHBWW7mZNOCNDzT1zFdi7uxz+1RbObBB4NG2CSZzRMuvMLfGYvGiR7ep3QGpZABOH/vy
+         MvGI3hW+AWwXlBix6M9RUF5apPzISk7LdGNaeMBtmFEvUD6EL3LCOTiDAQhaG7J5XOQM
+         GGHwQwFv1ZctJBjHqvkTlcJYOXyFZyU+MzeRhAHmQ1LmNQDCTrFuqPpDq48+jxe98ADc
+         wjEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716464886; x=1717069686;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6E61Jxzxjq7f22HqS8A7YYLGqKHl4SecZqgeLR9j6N4=;
+        b=f3/TDF16rNg8jtmnpj/mBVgpPW+z68CnOSUKK1lLciN0tHIQPqosTPkC1fBAGpmVkH
+         oWsrhXl1e6bOa/2Y75QMEMlXstlokBmrfEmtOagXm2HxKPCI9AmhQx8qHMWoqpc0yX8A
+         PvChxkbRVoQSXQsupPfsIdG2PJib8yPBiTGMon7BQRs6Rj8DfYm+IXaImIsBLwVXQYaO
+         cKp7WataQamb0fdJBzeFi2x0mZld1m47mp+gqMnowDFkmXF9V+YlMjnY6Oh1jFJSwFoW
+         kJTfclzQeJ47vPeOufRs25iQTl7d7vqnLoI8YTzMjwpgeORC2/sqUv0wXkmrLkk6uzKU
+         mcqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVo7++n1vtK23sYhN1T6t8Sj+GbfXJNqGEiSAsVvOno+fMaNVm8KbRUTsH0dWcTp/WIlsAWDJm0VSzQ+pJgsQfnOl3dzioAHeXCojvr
+X-Gm-Message-State: AOJu0Ywy4bVGuJI9iFcP/RE8IvKxoN2XwRZKTSA1zniOkgY5TNydpWeE
+	jj3ub0r38/6lnqf4zRdszDb4i1DfUeNVMo6t3q8X9Uc3Z0nGCCOpxgO1Z8+EIBs=
+X-Google-Smtp-Source: AGHT+IEyzI18nfzrDPezUD9GxCNOdOCNYajNRn6pfAF677xU9i/D+vNI4ocAHpHkdn63Af8sVdouJw==
+X-Received: by 2002:a19:2d45:0:b0:51f:30dd:f35f with SMTP id 2adb3069b0e04-527ef9d932bmr566891e87.14.1716464886556;
+        Thu, 23 May 2024 04:48:06 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-528ce560b22sm42924e87.238.2024.05.23.04.48.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 04:48:06 -0700 (PDT)
+Date: Thu, 23 May 2024 14:48:04 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+	Sandy Huang <hjc@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Wick <sebastian.wick@redhat.com>, 
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, dri-devel@lists.freedesktop.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v14 23/28] drm/connector: hdmi: Create Infoframe DebugFS
+ entries
+Message-ID: <dflaec5kcwlo2y23txb5susqimiohuvf5uox5kecmbrcs4wnox@dq7xak3vcazm>
+References: <20240521-kms-hdmi-connector-state-v14-0-51950db4fedb@kernel.org>
+ <20240521-kms-hdmi-connector-state-v14-23-51950db4fedb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,55 +77,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240523113410.983875-1-shichaorai@gmail.com>
+In-Reply-To: <20240521-kms-hdmi-connector-state-v14-23-51950db4fedb@kernel.org>
 
-On Thu, May 23, 2024 at 07:34:10PM +0800, Shichao Lai wrote:
-> Since uzonesize may be zero, so judgements for non-zero
-> are nessesary in both place.
+On Tue, May 21, 2024 at 12:13:56PM +0200, Maxime Ripard wrote:
+> There has been some discussions recently about the infoframes sent by
+> drivers and if they were properly generated.
 > 
-> Changes since v1:
-> - Add one more check in alauda_write_lba().
-> - Move check ahead of loop in alauda_read_data().
-
-Nit, this changes list should go below the --- line, as the
-documentation asks for.
-
-
+> In parallel, there's been some interest in creating an infoframe-decode
+> tool similar to edid-decode.
 > 
-> Reported-by: xingwei lee <xrivendell7@gmail.com>
-> Reported-by: yue sun <samsun1006219@gmail.com>
-> Signed-off-by: Shichao Lai <shichaorai@gmail.com>
+> Both would be much easier if we were to expose the infoframes programmed
+> in the hardware. It won't be perfect since we have no guarantee that
+> it's actually what goes through the wire, but it's the best we can do.
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
 > ---
->  drivers/usb/storage/alauda.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/gpu/drm/drm_debugfs.c | 152 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 152 insertions(+)
 > 
-> diff --git a/drivers/usb/storage/alauda.c b/drivers/usb/storage/alauda.c
-> index 115f05a6201a..17c73acd3b02 100644
-> --- a/drivers/usb/storage/alauda.c
-> +++ b/drivers/usb/storage/alauda.c
-> @@ -813,6 +813,8 @@ static int alauda_write_lba(struct us_data *us, u16 lba,
->  	unsigned char ecc[3];
->  	int i, result;
->  	unsigned int uzonesize = MEDIA_INFO(us).uzonesize;
-> +	if (!uzonesize)
-> +		return USB_STOR_TRANSPORT_ERROR;
 
-Check after the list of variables please, not in the middle of them.  I
-think checkpatch will complain about this, right?
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 
->  	unsigned int zonesize = MEDIA_INFO(us).zonesize;
->  	unsigned int pagesize = MEDIA_INFO(us).pagesize;
->  	unsigned int blocksize = MEDIA_INFO(us).blocksize;
-> @@ -921,6 +923,8 @@ static int alauda_read_data(struct us_data *us, unsigned long address,
->  	unsigned int blocksize = MEDIA_INFO(us).blocksize;
->  	unsigned int pagesize = MEDIA_INFO(us).pagesize;
->  	unsigned int uzonesize = MEDIA_INFO(us).uzonesize;
-> +	if (!uzonesize)
-> +		return USB_STOR_TRANSPORT_ERROR;
-
-Same here, at the end of the variable list please.
-
-thanks,
-
-greg k-h
+-- 
+With best wishes
+Dmitry
