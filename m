@@ -1,104 +1,101 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62654AEE9;
-	Thu, 23 May 2024 18:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0F6849C
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716490216; cv=none; b=K037nrAhbQ26O5NWgcjqzX71IYFIpgLngXCDtF467alAN6KDa6+v7gi8vg5bjZpngcRR9xAXIIlVTt5lwjPhZoEB3e5beAesdnZNKRiB1jHBg9aKoMMr5IVjSqKRBpH3pI7JsPJM327nN+iZgYJaBs93IbNjlkFQU8K2d35nIq8=
+	t=1716490271; cv=none; b=opIOB1X/hA17N5OuF0bqSlIRzTot2vRYB59uxIDqLkUAgQKPjmcFqc3osbIA6vdGAexqDotYVLp7jh25qL2RykXcdDEr4jE6KPLuduTisKcLAA5Qg6xp4a6kmpe76b0+5R0hzSxb8XNpCzSa+v+nl6uFEya9Cw0b8C0zH4ImwWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716490216; c=relaxed/simple;
-	bh=kyE+MwN/uIjHh3K6ejdqz58qWZ5WZfIAknWZx2NbxUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Aw5oDjCVqGZYBBWT2U/BDImY3QU3lJvsa6ymaSgSRhxZbeQqES3vcuo7RwXVVGSnlTP1L/9/q3DgxblovJcmy9XbDCFn4+Oc/7Y/andmutEUBG6SZIxnOIzWBukdqM8PM22YPkngucKqzDKaG5nteQ83RE8m4ZSj2yk/cASSotQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8Z76W0b; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716490271; c=relaxed/simple;
+	bh=O69u3F2Eb1LeRS151raa2cfdzD4uRhaGK6UM3e8yASk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mds/dA/G7KXQ5o8Yzp4WB2kC9z22tzPXzgbuughLzlE1EQmQbMcJZ0PqjusnRkO/asDWzECwUfk4vQHV0HQUdKDun0DpzEBzNTC5clozO/UvQj5J4w1DAwBClu+5DqiTlnLu9Kqb15ialdVCMjOBf7K/ohlDgkTVYRy1Uf0Ku7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com; spf=pass smtp.mailfrom=jubnut.com; dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b=kEtSnsGq; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jubnut.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8Z76W0b"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ee5235f5c9so122955415ad.2;
-        Thu, 23 May 2024 11:50:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716490214; x=1717095014; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T5jWOQ5e4KuXtG3+BV+nC19AzmmlYRZIw5wGYbugR1o=;
-        b=L8Z76W0bkIvF0JdeaS+QqGRE3E6HOrRf+YTUMY2mB1EgHA8H3gU0LIMrgpQmbwYaX/
-         dOBstVDGBT81Z1cuIuWcOSt6gQTloooRcnycY1wiBLeljRcI+P3zUT/W151gMfOPyBee
-         p3YLiSBHBWu6IuWtSQdL797stP35tRlhXTRk+eup3A7ekThjoovAHPHuT2tpLLR7vMxa
-         Z8ekDntQjUKttr22XCveALbbtsjDI0xVOpRP2TsW3RovN3PVYR31y59OeDpTEny6Df4A
-         qicgs2l93YMvZ6vH/pnJpNqBrK7EpH8Coyf0Nsvj3v6dd7mHFTjW0kg1699S7afsDCqs
-         FgNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716490214; x=1717095014;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T5jWOQ5e4KuXtG3+BV+nC19AzmmlYRZIw5wGYbugR1o=;
-        b=oXCCqHyuhi4YD3MlSjxJWgQMLywuCDxIA/BG9TIUY6/j/YyzBAA7f8Kmd+U50tHE47
-         zIbOUro2K8VorCY+WOt5ppbjWoOIcAiBpOOL3PkV2kgIMiyIjlLink06WHzm93k+9Z6j
-         bFCQTsM7i6HImFc2F9WDHNRzeBzJrjnBA6lH1ZAFQMX0QL11TqXw+vIiYLpR87H3ocf2
-         Xsn6OMcSips67+Io3x+w9AR1+2U+cXfFj5M2252pr41dWBpiavJjA4ffTo868XZNc1T8
-         zKAQ2C6a89/4e3HtC/unCG9aPQYEvswmdug2w2zj+bk9Q/IQuY0VTWueMbFj46pUrEAT
-         jRWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVC3s0lObWE15Hjl4O00rkDVAjVokXA4GA0rNU5J+7GF7XnWCqqaUD2gRDUi2iiKi1iwsOFvK4iCjPYgOqha04s+rTZwSxdiYsbwicseTU6kRD4v38gAha65FpLCWD8agKoIaC0
-X-Gm-Message-State: AOJu0YzutcEaVAtGjqhYrQE/jVGKQk+HnjanH5+E69yfjuOAX0Xo6EnW
-	UaAEWueVMrdUQ3edFSTW9wapzJz+gd+eq3i6W6Eh5fRmnSqy41nl
-X-Google-Smtp-Source: AGHT+IH8TfXPmp+k2+6BFrZp7D5q+d4zjU2H10O3j9gFv9PYr2beC6QHykVOAGJXFo/xesXdoPw53Q==
-X-Received: by 2002:a17:902:f987:b0:1e6:7700:1698 with SMTP id d9443c01a7336-1f448c266e3mr1967485ad.35.1716490214038;
-        Thu, 23 May 2024 11:50:14 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0bbde9d7sm266512825ad.106.2024.05.23.11.50.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 May 2024 11:50:13 -0700 (PDT)
-Message-ID: <19753311-98f5-40af-8e53-173e12e83503@gmail.com>
-Date: Thu, 23 May 2024 11:50:11 -0700
+	dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b="kEtSnsGq"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4VlcTl6D2Lz9skk;
+	Thu, 23 May 2024 20:42:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jubnut.com; s=MBO0001;
+	t=1716489723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O6sPCZS/YXpZlRbF7103nFwMsqEkLQgp0M11gQENI/E=;
+	b=kEtSnsGqACAU3LbLA5VT8wELu43AbLtFiHoWZ19oMgtiEE69VPXf+DiPBBh9wcI1MlQX46
+	2LcMrh6gLG5N18HhoVnFo+GFcxW3psbrO6nyZoM0iFbGBEanqBMqO8E7E7qqk5Dy4xrLd7
+	X6NQE2zfdFHyv1QelV6vn2qvxVarvo7kRbBsjobR/de4Xz1Uwx+SwDcx6FTpV2uIQQwP+z
+	uTLavDc44yN4rPb6Odn+VRcI+PiWwq+212aIPqj7v7p7MaeZjOi9wqHk4tsnaCazfQgMqq
+	cjoQiArx2iR0JQx+8EeUyMkh+iOlJ84/PqagYqe6Z8WMAWkOFsPv0sX0E7czLw==
+From: Ben Walsh <ben@jubnut.com>
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+ "Dustin L. Howett" <dustin@howett.net>, Kieran Levin <ktl@frame.work>,
+ Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Mario Limonciello
+ <mario.limonciello@amd.com>, chrome-platform@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] platform/chrome: cros_ec_lpc: Correct ACPI name for
+ Framework Laptop
+In-Reply-To: <ZkscFnmHeWWma7Nb@google.com>
+References: <20240515055631.5775-1-ben@jubnut.com>
+ <20240515055631.5775-6-ben@jubnut.com> <ZkscFnmHeWWma7Nb@google.com>
+Date: Thu, 23 May 2024 19:42:00 +0100
+Message-ID: <87jzjk1ibr.fsf@jubnut.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 00/23] 5.15.160-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240523130327.956341021@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240523130327.956341021@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Rspamd-Queue-Id: 4VlcTl6D2Lz9skk
 
-On 5/23/24 06:12, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.160 release.
-> There are 23 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 25 May 2024 13:03:15 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.160-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Tzung-Bi Shih <tzungbi@kernel.org> writes:
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+> On Wed, May 15, 2024 at 06:56:30AM +0100, Ben Walsh wrote:
+>> Framework Laptops' ACPI exposes the EC as name "PNP0C09". Use this to
+>> find the device. This makes it easy to find the AML mutex via the
+>> ACPI_COMPANION device.
+>>
+>> The name "PNP0C09" is part of the ACPI standard, not Chrome-specific,
+>> so only recognise the device if the DMI data is recognised too.
+>
+> I don't quite understand the statement.  Why it needs DMI data?
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+There are lots of computers with EC chips with ACPI name "PNP0C09"
+because it's part of the ACPI standard (for example I have an Intel NUC
+with one of these). Most of them don't support the cros_ec protocol, so
+the cros_ec driver should ignore these chips. The Framework EC is
+unusual in that it's called "PNP0C09" and supports the cros_ec protocol.
 
+Before these patches, the cros_ec code just ignored PNP0C09 because it
+wasn't in the match table. The cros_ec_lpc_init logic looked like:
+
+  * dmi_match => ok
+  * acpi_name == "GOOG0004" => ok
+  * otherwise fail.
+
+After the patch, cros_ec_lpc_init still has this behaviour. We have
+"PNP0C09" in the match table so the driver gets hooked up correctly
+with the right "ACPI_COMPANION" device, but we don't allow the match
+to proceed unless we have the DMI data indicating it's a Framework EC.
+
+>> -	} else if (!cros_ec_lpc_acpi_device_found) {
+>> +	} else if (cros_ec_lpc_acpi_device_found <= 0) {
+>> +		/* Standard EC "PNP0C09" not supported without DMI data */
+>
+> Also the way is a bit confusing as "PNP0C09" must be at index 0 in the
+> acpi_device_id.
+
+I need some way of saying "will we match PNP0C09?" The table index seems
+a simple way of doing it. I could use a strcmp on the table match
+instead?
+
+Regarding your other emails, I agree with all your suggestions. Thanks
+for reviewing!
