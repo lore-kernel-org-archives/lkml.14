@@ -1,64 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488D1AD24
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 01:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A811860
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 01:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716426247; cv=none; b=eLuv4tlLTuEUaiLqHK4lZbXmrUvXpIRGE2ws7bO8zDKWNQlNG6W8ks9aMo5gwQTPzMUDrJxI1iKAWkxb6ojyPCsoGA12QNqKx8ZAHSPiNtOjL51D58KzSQ7O2eKm7KQXXFFUHkWLjrBFUEH2kxbpDXn7dy+qLFEeJwl7ubqWFto=
+	t=1716426261; cv=none; b=Nv2NefxRQrahS67J9wy907kJNRbz59IKk/Jtybmpovf944ShEnGZ787PHNM7UuSzBF+qoB0tigw0xaVvkXaJ1qELHgobQ/XL6bm8D9vUCrvV4WTezG7wTDNc0oqdVPnU5kGVwHAd5QG4/ELc06aZ0iexQv2/lib/yyIdpExg994=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716426247; c=relaxed/simple;
-	bh=xuVimXmATg4JcE4J/zHQiQR6R8dLYbJIHSZrB0l2/6c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dTfalPLtX5it2Ghdzvxo7ymJojank93A3kaMl3n6cPuIGcpV4QcqAwqV5zKvGwKaJHJQ/4aj8Qpr5ZetmrQVHcb9+Re5aVyFVx1Pfb2Xtej7fIfWREIzfnuewGGNlKEO/Yq/KgVANdUDzkARIWZOUNdwXPXSDwL+ydfcuZYU57M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGrJD8NY; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716426261; c=relaxed/simple;
+	bh=PPEphpiHUb+mxbfxkpXQ2Qlmv+jiT6+TrpdG4yvSjbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPz2bwgTxkq2rqIqphsbZoSguVY2zYw4erqVFaIxnUDTb396vaofSxi8NgK3sK/exi83UYL4FfYDIffPs9Mu6Uw22ebMDyjUu13LWlpZCqCgPy/bYBEZCdMHHoT3/pea5OKtLEbuVADeky0Y1YSqWGCNv9dYkCInzuImPVGwF2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l3quUulc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGrJD8NY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716426245; x=1747962245;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=xuVimXmATg4JcE4J/zHQiQR6R8dLYbJIHSZrB0l2/6c=;
-  b=eGrJD8NYRuvS1EEPTOnOnK1ToVVY9+ozVHG/KQGe/AgScTg0L0wm+fmf
-   hJ8vepKBtR6mj7takRH1rcId5wm/N6WZ7a62NRWr7uT2ZOPwcQc9So07z
-   3D2yoHa1gAazor+SwGU5o8aaW3PePXr3TwxU4tfsCMYvAlHA0NKFjRsO6
-   o9YTCeRkqr2wDlilxc2kfp+TwD2kmNzQMUQj64Ci0aH2EBFO4QIvgb546
-   d0IJd176ASM3Zc4SZUCGjIJxxMV7XwDA93Nacd4dfwWIRPsXtagB4BbS/
-   SfDU2KK8TBfh7cQDCr2b12MgK3k+7qy1LiItrqIZKl0pVFPldc+DOjnMl
-   w==;
-X-CSE-ConnectionGUID: eqsKvP+AR3Cmx02luT3xLQ==
-X-CSE-MsgGUID: BJsco8VYTs6oOb/av4KA4A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="12590217"
-X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="12590217"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 18:04:05 -0700
-X-CSE-ConnectionGUID: AsK3JofGRmuXrtneQVWPmw==
-X-CSE-MsgGUID: UHc51AbVReeemWx1TNt4tg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="33546735"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 18:04:02 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, Barry Song <21cnbao@gmail.com>
-Cc: David Hildenbrand <david@redhat.com>,  <akpm@linux-foundation.org>,
-  <willy@infradead.org>,  <ryan.roberts@arm.com>,  <ziy@nvidia.com>,
-  <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: drop the 'anon_' prefix for swap-out mTHP counters
-In-Reply-To: <c55648d4-cec2-48ca-9ca9-c8fc2aecc741@linux.alibaba.com> (Baolin
-	Wang's message of "Wed, 22 May 2024 19:24:45 +0800")
-References: <0e2a6f232e7579a2e4407ecf075531980d97f286.1716367360.git.baolin.wang@linux.alibaba.com>
-	<22ac01a3-ddbb-4114-88cd-ad1a31982dad@redhat.com>
-	<51ba1fc1-fd77-4601-8d27-459162fd008c@linux.alibaba.com>
-	<CAGsJ_4zSuOTPi+zkS_kvS5T0MsdMBR+2gpXukJt0aMPrEnCDZg@mail.gmail.com>
-	<c55648d4-cec2-48ca-9ca9-c8fc2aecc741@linux.alibaba.com>
-Date: Thu, 23 May 2024 09:02:10 +0800
-Message-ID: <87a5khbast.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l3quUulc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB46C2BBFC;
+	Thu, 23 May 2024 01:04:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716426261;
+	bh=PPEphpiHUb+mxbfxkpXQ2Qlmv+jiT6+TrpdG4yvSjbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l3quUulcT6OeHqaWvIVQggt8dc447MJ34BYn6OG3wK4ii5LmJPScBLSxxvIK4Ceh5
+	 DEC4T5KuCaHvIHig0hhMFAuakJRoWJaVyPme/bkRKy4knHkgeXAM9nnhQ/rNPifoAR
+	 Lfjv8b0LVCq2QqgUrkn9QnCBDEuFJxwUhxSWvI7q0KSgI3m37O/0xyoBjM6rhNwZD5
+	 8l2AMuQWZCdPSlYs+c+wJ+Xo7emQl5Ea1mVczjVWT7/FHdRjX8LVhoasbGELJmEhpn
+	 XpWrd/Sy0d2EYBEENMC/1oP3txMhX0yUgGnSFiwt7tRlD7/P4A3etLgyanA3m/osKr
+	 ZVVQt/aWL8FbA==
+Date: Wed, 22 May 2024 18:04:18 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Maksim Davydov <davydov-max@yandex-team.ru>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v5 3/3] x86/bugs: Add 'spectre_bhi=vmexit' cmdline option
+Message-ID: <20240523010418.gi3mrtzlguxg2znd@treble>
+References: <cover.1715059256.git.jpoimboe@kernel.org>
+ <66327dcf87284a09ed17ac24227695ea3ba1f287.1715059256.git.jpoimboe@kernel.org>
+ <17ab995a-cdc0-43ce-884c-48a263f219c3@yandex-team.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,136 +56,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <17ab995a-cdc0-43ce-884c-48a263f219c3@yandex-team.ru>
 
-Baolin Wang <baolin.wang@linux.alibaba.com> writes:
+On Mon, May 20, 2024 at 04:12:58PM +0300, Maksim Davydov wrote:
+> Hi!
+> What is the current status of the series?
 
-> On 2024/5/22 18:40, Barry Song wrote:
->> On Wed, May 22, 2024 at 9:38=E2=80=AFPM Baolin Wang
->> <baolin.wang@linux.alibaba.com> wrote:
->>>
->>>
->>>
->>> On 2024/5/22 16:58, David Hildenbrand wrote:
->>>> On 22.05.24 10:51, Baolin Wang wrote:
->>>>> The mTHP swap related counters: 'anon_swpout' and
->>>>> 'anon_swpout_fallback' are
->>>>> confusing with an 'anon_' prefix, since the shmem can swap out
->>>>> non-anonymous
->>>>> pages. So drop the 'anon_' prefix to keep consistent with the old swap
->>>>> counter
->>>>> names.
->>>>>
->>>>> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
->>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>>>> ---
->>>>
->>>> Am I daydreaming or did we add the anon_ for a reason and discussed the
->>>> interaction with shmem? At least I remember some discussion around tha=
-t.
->>>
->>> Do you mean the shmem mTHP allocation counters in previous
->>> discussion[1]? But for 'anon_swpout' and 'anon_swpout_fallback', I can
->>> not find previous discussions that provided a reason for adding the
->>> =E2=80=98anon_=E2=80=99 prefix. Barry, any comments? Thanks.
->> HI Baolin,
->> We had tons of emails discussing about namin and I found this email,
->> https://lore.kernel.org/all/bca6d142-15fd-4af5-9f71-821f891e8305@redhat.=
-com/
->> David had this comment,
->> "I'm wondering if these should be ANON specific for now. We might want to
->> add others (shmem, file) in the future."
->> This is likely how the 'anon_' prefix started being added, although
->> it
->> wasn't specifically
->> targeting swapout.
->
-> That's what I missed before. Thanks Barry.
->
->> I sense your patch slightly alters the behavior of thp_swpout_fallback
->> in /proc/vmstat.
->> Previously, we didn't classify them as THP_SWPOUT_FALLBACK, even though =
-we
->> always split them.
->
-> Sorry I did not get you here. I just re-name the mTHP swpout_fallback,
-> how can this patch change the THP_SWPOUT_FALLBACK statistic counted by
-> count_vm_event()?
->
->>                  if (folio_test_anon(folio) && folio_test_swapbacked(fol=
-io)) {
->>                          ...
->>                                  if (!add_to_swap(folio)) {
->>                                          int __maybe_unused order =3D
->> folio_order(folio);
->>                                          if
->> (!folio_test_large(folio))
->>                                                  goto activate_locked_sp=
-lit;
->>                                          /* Fallback to swap normal page=
-s */
->>                                          if (split_folio_to_list(folio,
->> folio_list))
->>                                                  goto activate_locked;
->> #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>                                          if (nr_pages >=3D HPAGE_PMD_NR)=
- {
->>                                                  count_memcg_folio_event=
-s(folio,
->>                                                          THP_SWPOUT_FALL=
-BACK, 1);
->> count_vm_event(THP_SWPOUT_FALLBACK);
->>                                          }
->>                                          count_mthp_stat(order,
->> MTHP_STAT_ANON_SWPOUT_FALLBACK);
->> #endif
->>                                          if (!add_to_swap(folio))
->>                                                  goto activate_locked_sp=
-lit;
->>                                  }
->>                          }
->>                  } else if (folio_test_swapbacked(folio) &&
->>                             folio_test_large(folio)) {
->>                          /* Split shmem folio */
->>                          if (split_folio_to_list(folio, folio_list))
->>                                  goto keep_locked;
->>                  }
->> If the goal is to incorporate pmd-mapped shmem under thp_swpout* in
->> /proc/vmstat,
->> and if there is consistency between /proc/vmstat and sys regarding
->> their definitions,
->> then I have no objection to this patch.=20
->
-> I think this is the goal, moreover shmem will support large folio (not
-> only THP) in future, so swpout related counters should be defined as
-> clear as possible.
->
-> However, shmem_swpout and shmem_swpout_*
->> appear more intuitive, given that thp_swpout_* in /proc/vmstat has
->> never shown any
->> increments for shmem until now - we have been always splitting shmem in =
-vmscan.
->
-> This is somewhat similar to our previous discussion on the naming of
-> the shmem's mTHP counter[1], as David suggested, we should keep
-> counter name consistency for now and add more in the future as needed.
->
-> [1]
-> https://lore.kernel.org/all/ce6be451-7c5a-402f-8340-be40699829c2@redhat.c=
-om/
+Looks like it didn't make the merge window.  I can post a new version of
+the series next week (with the minor documentation fix in patch 2).
 
-Yes.  I don't find that it's necessary to distinguish anonymous and
-shmem mTHP swap-out now.  If we need it in the future, we can add that
-at that time.
-
->> By the way, if this patch is accepted, it must be included in
->> version
->> 6.10 to maintain
->> ABI compatibility. Additionally, documentation must be updated according=
-ly.
->
-> Sure. I missed update the documentation, and will do in next version.
-
---
-Best Regards,
-Huang, Ying
+-- 
+Josh
