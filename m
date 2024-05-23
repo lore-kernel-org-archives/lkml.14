@@ -1,99 +1,95 @@
-Received: from mail03.siengine.com (mail03.siengine.com [43.240.192.165])
+Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8CA54FA9;
-	Thu, 23 May 2024 10:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.240.192.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F58654FA9;
+	Thu, 23 May 2024 10:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716458729; cv=none; b=HyaaV70CIqHtlqjc71L4YQgsetfytkEEk+h29XHieJXHMBTjU+4KpU6v5krJBAxTIkiZg/J9jljwa3Nxngn1K3ci25hqOmuAKtLqEkpYVGyrRedyDvl1ErB7CAzFoY5XryT/fXt0tZllRbQgXrpenvICf2oTp9ftgu0249zASgo=
+	t=1716458767; cv=none; b=lREXmyNzv/CJa378ZnBy3C1KPx414oy8V5BoG3oV9fX4dkWFiiWjCN46T2XP/rlFhkkivF7L5+qrOrQUD+cqlRbyKF3S3qxlaAw4GaApq4chLHC+Hn2rvF1WVOQUeD5VlvslFqGFEz3BqkhXxQNOC8Z4K0DjrnE6TjH2WP/Q7RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716458729; c=relaxed/simple;
-	bh=TVULNsPOp0MUxGLrhYYex7VZrXDsn6a1Lrdw1F8dmQA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ll3o/ynoTF8c7ZY7KxkhyAnFbjoIJOf+Yf2jAChHFz/16VuJvp8xWXaqsK9DlJfEaMQgOdZ+y3TtUuUIFhYpmVNRvIRgS9bQm7uCo+ugJcNxXRPblMgCTKm6WsdHVcE3Ix1mNTzKp7DlzSGRcaimbbRYPhzJKVPSraNOr7ev318=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siengine.com; spf=pass smtp.mailfrom=siengine.com; arc=none smtp.client-ip=43.240.192.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siengine.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siengine.com
-Received: from mail03.siengine.com (localhost [127.0.0.2] (may be forged))
-	by mail03.siengine.com with ESMTP id 44NA3ffa073193;
-	Thu, 23 May 2024 18:03:41 +0800 (+08)
-	(envelope-from hongchi.peng@siengine.com)
-Received: from dsgsiengine01 ([10.8.1.61])
-	by mail03.siengine.com with ESMTPS id 44NA3HPr073142
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 23 May 2024 18:03:17 +0800 (+08)
-	(envelope-from hongchi.peng@siengine.com)
-Received: from SEEXMB04-2019.siengine.com (SEEXMB04-2019.siengine.com [10.8.1.34])
-	by dsgsiengine01 (SkyGuard) with ESMTPS id 4VlNz801Cvz7ZMhX;
-	Thu, 23 May 2024 18:03:15 +0800 (CST)
-Received: from SEEXMB03-2019.siengine.com (10.8.1.33) by
- SEEXMB04-2019.siengine.com (10.8.1.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1544.11; Thu, 23 May 2024 18:03:15 +0800
-Received: from localhost (10.12.10.38) by SEEXMB03-2019.siengine.com
- (10.8.1.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.2.1544.11 via Frontend
- Transport; Thu, 23 May 2024 18:03:15 +0800
-From: Peng Hongchi <hongchi.peng@siengine.com>
-To: <hminas@synopsys.com>
-CC: <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <hongchi.peng@siengine.com>
-Subject: [PATCH] usb: dwc2: gadget: Don't write invalid mapped sg entries into dma_desc with iommu enabled
-Date: Thu, 23 May 2024 18:03:15 +0800
-Message-ID: <20240523100315.7226-1-hongchi.peng@siengine.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1716458767; c=relaxed/simple;
+	bh=6hZfU/vZlrz4/bVBw0R53ZF51GPkuNffAAaPgUYgJMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dett5vARAR1lZPlSHBh8o9e60PRY+b2CKJr8DNhuk9/sUhwSgmlTfMf/j8D0HvaHK5avA0IGskPclNQlcIdP3a0IVove6yImYBb9qeP8ZPkStiBf/r2FiFHbxVikTrDBUAl9HMAIBRgNaEq5dqwcLsWMR5X74G1+exQFffwfJ1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=o8PXcoLF; arc=none smtp.client-ip=5.189.157.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="o8PXcoLF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Content-ID:Content-Description;
+	bh=f8jC17nCt232w/3lqbKjfEROHlbH51l5S8kUPNZoSNw=; b=o8PXcoLFtZFkuMCBmDWq+qpc+k
+	Z1muJ0pfMgOzZJ6+41nkyh0+fyRmX27rfctbCLX4Pe2SH7oVYsR6RUifgKykHr3prBkVOD8cVKWae
+	jOsAbsLdpKwjbHD/LCCk9eoVOF9avnwEk/9FyPaRfIVZEj+q1qjimPCJio7KYuCt4GcKCw0DIjOk5
+	Gf7sKHCppxAE+qQJ3ETeBcr4m+9v+klRmLiSOiNswLvzVjISMCnW+GDLRJATaHLp4QEB9KxLnkVGy
+	MLMgq+2YzSsBMMNJ7ipirr+zYb/5haXrY5XUO08JWTH40ldZJTsDrZU9JvbF1wjrynDQWNnrHQsvY
+	2gXfa7Z+xV6INwNd8bjats2GjC+ZCXKMBN4TWir1r9fkgEgfeaODFRmPe4wsjDdVR5/Kcw39zwjLn
+	ytAUyuVRlmJZsEi36i8/kNm1Po9NQHo8yqGu4I6BSRSdau9eYkQh5Z6dPxkanT8bf1XhFO16yW+WA
+	Q1FcCWKz9WL8p7DJm+sQeKHCjlT6dkw3B76soDP8JbrKP9o5xTBthhEIm2EtbCLBaxSf3O3YwDcPt
+	foSkcm9qYyOWwpeR+NAVjBfeMaTlD3n2SeUCQRLLKjdFxnhA0Fz8tHYq3OzVEvaEMjnExWGjwzPhz
+	u2+lq7c0KNPraDlCrd8qwBZw68g/RqLL6AeKfI+qs=;
+From: Christian Schoenebeck <linux_oss@crudebyte.com>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>, Greg Kurz <groug@kaod.org>,
+ Jianyong Wu <jianyong.wu@arm.com>, stable@vger.kernel.org,
+ Eric Van Hensbergen <ericvh@gmail.com>, v9fs@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] 9p: add missing locking around taking dentry fid list
+Date: Thu, 23 May 2024 12:05:44 +0200
+Message-ID: <2675095.dNBKFZOyUv@silver>
+In-Reply-To: <Zk8MAFAWIUPlhGFe@codewreck.org>
+References:
+ <20240521122947.1080227-1-asmadeus@codewreck.org> <3116644.1xDzT5uuKM@silver>
+ <Zk8MAFAWIUPlhGFe@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-DKIM-Results: [10.8.1.61]; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:mail03.siengine.com 44NA3ffa073193
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-When using dma_map_sg() to map the scatterlist with iommu enabled,
-the entries in the scatterlist can be mergerd into less but longer
-entries in the function __finalise_sg(). So that the number of
-valid mapped entries is actually smaller than ureq->num_reqs,and
-there are still some invalid entries in the scatterlist with
-dma_addr=0xffffffff and len=0. Writing these invalid sg entries
-into the dma_desc can cause a data transmission error.
+On Thursday, May 23, 2024 11:27:28 AM CEST Dominique Martinet wrote:
+> Christian Schoenebeck wrote on Thu, May 23, 2024 at 10:34:14AM +0200:
+> > > The comment still works -- if detry->d_fsdata is NULL then
+> > > hlist_for_each_entry will stop short and not iterate over anything (it
+> > > won't bug out), so that part is fine in my opinion.
+> > 
+> > I meant the opposite: dentry->d_fsdata not being NULL.
+> 
+> I also meant that in the d_fsdata not being NULL branch, if d_fsdata
+> turns out to be NULL when it is read under lock later.
+> 
+> > In this case v9fs_fid_find() takes a local copy of the list head
+> > pointer as `h` without taking a lock before.
+> 
+> It doesn't, it takes &dentry->d_fsdata so the address of d_fsdata before
+> the lock, but that address cannot change here (another thread cannot
+> change the address of the dentry) ...(continuing below)
 
-The function dma_map_sg() returns the number of valid map entries
-and the return value is assigned to usb_request::num_mapped_sgs in
-function usb_gadget_map_request_by_dev(). So that just write valid
-mapped entries into dma_desc according to the usb_request::num_mapped_sgs,
-and set the IOC bit if it's the last valid mapped entry.
+Aaah right, I was missing the `&`, my bad!
 
-This patch poses no risk to no-iommu situation, cause
-ureq->num_mapped_sgs equals ureq->num_sgs while using dma_direct_map_sg()
-to map the scatterlist whith iommu disabled.
+> > Then v9fs_fid_find() takes the lock to run hlist_for_each_entry(), but at this
+> > point `h` could already point at garbage.
+> 
+> ... so *h (in practice, head->first in hlist_for_each_entry()) will
+> properly contain the first node of the list under lock: either NULL if
+> we just cleared it (at which point the loop won't iterate anything), or
+> a new list if other items have been added meanwhile.
 
-Signed-off-by: Peng Hongchi <hongchi.peng@siengine.com>
----
- drivers/usb/dwc2/gadget.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yeah, looks fine to me.
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 74ac79abd8f3..e7bf9cc635be 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -885,10 +885,10 @@ static void dwc2_gadget_config_nonisoc_xfer_ddma(struct dwc2_hsotg_ep *hs_ep,
- 	}
- 
- 	/* DMA sg buffer */
--	for_each_sg(ureq->sg, sg, ureq->num_sgs, i) {
-+	for_each_sg(ureq->sg, sg, ureq->num_mapped_sgs, i) {
- 		dwc2_gadget_fill_nonisoc_xfer_ddma_one(hs_ep, &desc,
- 			sg_dma_address(sg) + sg->offset, sg_dma_len(sg),
--			sg_is_last(sg));
-+			(i == (ureq->num_mapped_sgs - 1)));
- 		desc_count += hs_ep->desc_count;
- 	}
- 
--- 
-2.34.1
+> I really think it's safe, but I do agree that it's hard to read, happy
+> to move the `h = &dentry->d_fsdata` inside the lock if you prefer -- it
+> compiles to the same code for me (x86_64/gcc 13.2.0)
+
+No need, you can add my RB. Thanks for the clarification!
+
+Reviewed-by: Christian Schoenebeck <linux_oss@crudebyte.com>
+
+
 
