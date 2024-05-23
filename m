@@ -1,120 +1,150 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1729E13CF93;
-	Thu, 23 May 2024 09:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6F413C9BD
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 09:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716455571; cv=none; b=KrfhIgr8A9JLd/qx3pdQeMdkV/VZhLMc9RQObEh+1xQYapoEW2eahtUx/k0OIOKZcUN2qCpTNiI19vb8f+XEJ/a5lzPbizNAw1qMYaHaY1f0PNaTldPHdz1kCSLR7lOIMjePKZ+D4o8lqyTvIVpA/Hi9lNi3Wgw9ucv8YtUZcGY=
+	t=1716455701; cv=none; b=dFUuBExOP1i2y2Yp3V3pw0B4b0eGFdmiOihcrONuyO2ufxcTdVM3FSZ7pzfDXx/117yaFxVTQoVrDU+wdEJEGsGlq4Ticjut9SCSpY96MnLqJB2Wbjp6a2KVty85KKm3eYLvyXnbgmASrD5FUDk4a7mZhRJWB8sRQf6H7wFI7qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716455571; c=relaxed/simple;
-	bh=CmM379iT6QmJIK52Alxpvhf750M/onC2w2pw28yidDY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GKpQKG/DMq+4YeheAumdAv/AqwEyYfVmAGoeorqEnUwthX3O/C2Qv/6NU2l5ybf0/42AjjDmqN1a959t5StymArRWCAEbu1yMw/y+Vrf6o0oBXcHYFQevlHcgvslKaInU57EDnd0ywMS1KrD2ASt98fGcl1IwgzRJRuIjAQqs6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CszefRik; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716455701; c=relaxed/simple;
+	bh=/lMyxSjqLAl6OgWHts/xND+IPoIxTxQRqei4HueBex0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mp5BBN0r7L54rC0YRjC6jn+nFDw0aTT334EbFxHeeOVEOjvLOg/2t0jAkPXsxY20XCI2G+yCBI/XhOqd9L6lyQ+bnGTXh7HH2rqu2bvL37fkZa3OCGRl3Ixiab0hGUjwbPV4WnXw2aqvlBFzG8dtfSZRccjnIo7fdnHfSQeYYf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kh11Bsrr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CszefRik"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-8030e16bb10so635323241.1;
-        Thu, 23 May 2024 02:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716455569; x=1717060369; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hTaMDQBBtugLbt3IOXjZ4RX64GEhtWIXoKX3TZUNq7g=;
-        b=CszefRikETnkMSkV2do8Y9vSP3bSsIAvjVAiVl9duM5No50Bye9ZGu+sSPN/ac6flo
-         f7KC1ezJYE9glOMFPSvb4THb8oQULdyc8r4X/d+mgVK0WFStQ7CCm0FlpcRMLCMkeICF
-         BqjfxqCofihyF+AU4iXhk4w1OdNRC1pomTbe7C49mvql2dKFd8W8Qtqbq2eIWXal9+BG
-         3Z8YQWGrQlk0+Q4BZBBzTsbWgdnXbqoXZ9J9FbYLvY5CqGwWC29oU2TgM9o7vYTojkCa
-         cOWOvl17j8jny0DQWPM6AM+J6Fa9v3edfv/lXvbbtbAqlYg2FFWsDQ8JnEiDddAutUtG
-         p6Ww==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kh11Bsrr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716455698;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Z1PA5QvJHm8ykHTiGZm5aAca1OGkhXqgReaXY3/hb/k=;
+	b=Kh11BsrrmgaMTLw/6ARNc5JgGaol1+oPbNrllapKjK25kVDOTB3cm7fkIEN8/8CqyWfdZu
+	vv2bv0lhefQvoSSj1hLzkFkHAZxu7IPOHObQcmGptZt7n2iu7JO8Y/AGT34Z7ksh2BS4fW
+	Zl4/qT8pQWyF4byAukr1P8jSvSMuOCE=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-TjxlTzgzPIK9PwYT7HGNkg-1; Thu, 23 May 2024 05:14:57 -0400
+X-MC-Unique: TjxlTzgzPIK9PwYT7HGNkg-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-792c88ab364so26946285a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:14:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716455569; x=1717060369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hTaMDQBBtugLbt3IOXjZ4RX64GEhtWIXoKX3TZUNq7g=;
-        b=sA3nvphmZNvdtFXVi0gLxOfvlvqMJo8GfFrqAEyI5CFbeNqm3cyovv54kSTKp9MnZf
-         zhriE48wC2n/BeO6MTp33nhBk5jW19gXTmqOFdiQJ6+JVtYkKcdc8KiC5aKQXFHE3PHt
-         B146eq0C7YsY7rKKVy7RaMxkq5qvML3+sRMIv+GFparzUMOA21NvUylm/F+LkMXHCY5f
-         aZObrrGhI2CJ6IUWr1QVbNIal8YddBRBoZKt0/AI6uPM1ADPM+qEbhi9+3heSBjYcHUl
-         fODgIwmrbZuftTDxwT2sEvLj8ZsIhr0yW8mupc7ofBAH6oiPo3dVII4epSECfR5mlAtM
-         H/0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX9bbU/qlgA3/bL0BQwdE4h3an/k6RNKzrhibYbPxGqcAggM5waYA5/aOvXDMuMgyERJdd61AO83swp3MiTbDza2JO90rok1G/NfQ3V
-X-Gm-Message-State: AOJu0Yy/G/sd9ZNigrx8Vxfzjmeaw75VMzihR6OYLSoOBvfkw71Wqkwz
-	rWf/uF0clCWRmbwL0++FY4QBDLE+r8Z9lTqWAnUfKw/irhNSEyB+TourpB19JoNNEYopdBIYPDs
-	MW6ZigUCWwJUlaLHdirkNr3QjkQ8=
-X-Google-Smtp-Source: AGHT+IE3ivSd13B0hkeFuHZR7TYjUowEAjXA0nUEzps5FCZwqLNqY9+FsH3MUv+jtFz2YQrc7Fys876K5Zxrn14LeXs=
-X-Received: by 2002:a05:6102:c01:b0:47e:f147:ca71 with SMTP id
- ada2fe7eead31-4890a2c6a3cmr4831374137.19.1716455567392; Thu, 23 May 2024
- 02:12:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716455696; x=1717060496;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z1PA5QvJHm8ykHTiGZm5aAca1OGkhXqgReaXY3/hb/k=;
+        b=pQ/KVqUOLDXFrvhtb3cNoQ08ag2o4WIvnFZw0JOsBwfH2HlduzAvqQWVv/sDrCOCDM
+         iieekJ6Aaw0np80dvhmNQJdkbuc/VloNJXPpXH8hAJ0hWrdjot0vOA4dUeYmcaOyv18Z
+         pCDcjj6lvYLdyhfOnkyqk33wh3CoQwpBaeXks4yZVD+7f2o4dckDb6ew2bEQas5mH1kb
+         wxwonqxkQzXxOyaHhClp/my8wqswPuhgN+V66sB6kq6OunYjUzaKTIPyorJY90SomiPq
+         FWM8KsAVW9Cc6w3Tire/23/xVEVVEJKFb58l5YEVAoTEZn0CAALPr6zhQSFUw9rmmNB+
+         tWlQ==
+X-Gm-Message-State: AOJu0Yz0eNp2QKSxPtsPvynEsnWp+0UTbH0pJsWAGZ7QZIyuMMUat/EB
+	qXjrkRTOQfpQgG/OL4aMmKYU7+zQEciBY7i3KMdGUs3IW6VJPZQG5lsHzNAADTZ6ZIpiQXRyW6r
+	68fkOfbHjQ9omU2wNq1o3n2P9Jp86KwYxDXt4alz58wszDz34+MAPsxSENk5Dqw==
+X-Received: by 2002:a05:622a:1a27:b0:437:ca6d:13f1 with SMTP id d75a77b69052e-43f9e0b65e2mr43549961cf.2.1716455696360;
+        Thu, 23 May 2024 02:14:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IElwc+jZj9lrO25a2CjKzzWCgMw9ch4Fg63jKPkRB/jxh+xOlJFXYNQENPC+6K3Ua0ypfW6GQ==
+X-Received: by 2002:a05:622a:1a27:b0:437:ca6d:13f1 with SMTP id d75a77b69052e-43f9e0b65e2mr43549701cf.2.1716455695822;
+        Thu, 23 May 2024 02:14:55 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3341:b094:ab10:29ae:cdc:4db4:a22a])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e09f7862asm156096621cf.91.2024.05.23.02.14.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 02:14:55 -0700 (PDT)
+Message-ID: <e21fa14dd33ddac7dcdd08a50fcad3f87a8f76aa.camel@redhat.com>
+Subject: Re: [PATCH v2 net] net: fec: avoid lock evasion when reading
+ pps_enable
+From: Paolo Abeni <pabeni@redhat.com>
+To: Wei Fang <wei.fang@nxp.com>, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, shenwei.wang@nxp.com, xiaoning.wang@nxp.com, 
+	richardcochran@gmail.com, andrew@lunn.ch, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Date: Thu, 23 May 2024 11:14:52 +0200
+In-Reply-To: <20240521023800.17102-1-wei.fang@nxp.com>
+References: <20240521023800.17102-1-wei.fang@nxp.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=mQINBGISiDUBEAC5uMdJicjm3ZlWQJG4u2EU1EhWUSx8IZLUTmEE8zmjPJFSYDcjtfGcbzLPb63BvX7FADmTOkO7gwtDgm501XnQaZgBUnCOUT8qv5MkKsFH20h1XJyqjPeGM55YFAXc+a4WD0YyO5M0+KhDeRLoildeRna1ey944VlZ6Inf67zMYw9vfE5XozBtytFIrRyGEWkQwkjaYhr1cGM8ia24QQVQid3P7SPkR78kJmrT32sGk+TdR4YnZzBvVaojX4AroZrrAQVdOLQWR+w4w1mONfJvahNdjq73tKv51nIpu4SAC1Zmnm3x4u9r22mbMDr0uWqDqwhsvkanYmn4umDKc1ZkBnDIbbumd40x9CKgG6ogVlLYeJa9WyfVMOHDF6f0wRjFjxVoPO6p/ZDkuEa67KCpJnXNYipLJ3MYhdKWBZw0xc3LKiKc+nMfQlo76T/qHMDfRMaMhk+L8gWc3ZlRQFG0/Pd1pdQEiRuvfM5DUXDo/YOZLV0NfRFU9SmtIPhbdm9cV8Hf8mUwubihiJB/9zPvVq8xfiVbdT0sPzBtxW0fXwrbFxYAOFvT0UC2MjlIsukjmXOUJtdZqBE3v3Jf7VnjNVj9P58+MOx9iYo8jl3fNd7biyQWdPDfYk9ncK8km4skfZQIoUVqrWqGDJjHO1W9CQLAxkfOeHrmG29PK9tHIwARAQABtB9QYW9sbyBBYmVuaSA8cGFiZW5pQHJlZGhhdC5jb20+iQJSBBMBCAA8FiEEg1AjqC77wbdLX2LbKSR5jcyPE6QFAmISiDUCGwMFCwkIBwIDIgIBBhUKCQgLAgQWAgMBAh4HAheAAAoJECkkeY3MjxOkJSYQAJcc6MTsuFxYdYZkeWjW//zbD3ApRHzpNlHLVSuJqHr9/aDS+tyszgS8jj9MiqALzgq4iZbg
+ 7ZxN9ZsDL38qVIuFkSpgMZCiUHdxBC11J8nbBSLlpnc924UAyr5XrGA99 6Wl5I4Km3128GY6iAkH54pZpOmpoUyBjcxbJWHstzmvyiXrjA2sMzYjt3Xkqp0cJfIEekOi75wnNPofEEJg28XPcFrpkMUFFvB4Aqrdc2yyR8Y36rbw18sIX3dJdomIP3dL7LoJi9mfUKOnr86Z0xltgcLPGYoCiUZMlXyWgB2IPmmcMP2jLJrusICjZxLYJJLofEjznAJSUEwB/3rlvFrSYvkKkVmfnfro5XEr5nStVTECxfy7RTtltwih85LlZEHP8eJWMUDj3P4Q9CWNgz2pWr1t68QuPHWaA+PrXyasDlcRpRXHZCOcvsKhAaCOG8TzCrutOZ5NxdfXTe3f1jVIEab7lNgr+7HiNVS+UPRzmvBc73DAyToKQBn9kC4jh9HoWyYTepjdcxnio0crmara+/HEyRZDQeOzSexf85I4dwxcdPKXv0fmLtxrN57Ae82bHuRlfeTuDG3x3vl/Bjx4O7Lb+oN2BLTmgpYq7V1WJPUwikZg8M+nvDNcsOoWGbU417PbHHn3N7yS0lLGoCCWyrK1OY0QM4EVsL3TjOfUtCNQYW9sbyBBYmVuaSA8cGFvbG8uYWJlbmlAZ21haWwuY29tPokCUgQTAQgAPBYhBINQI6gu+8G3S19i2ykkeY3MjxOkBQJiEoitAhsDBQsJCAcCAyICAQYVCgkICwIEFgIDAQIeBwIXgAAKCRApJHmNzI8TpBzHD/45pUctaCnhee1vkQnmStAYvHmwrWwIEH1lzDMDCpJQHTUQOOJWDAZOFnE/67bxSS81Wie0OKW2jvg1ylmpBA0gPpnzIExQmfP72cQ1TBoeVColVT6Io35BINn+ymM7c0Bn8RvngSEpr3jBtqvvWXjvtnJ5/HbOVQCg62NC6ewosoKJPWpGXMJ9SKsVIOUHsmoWK60spzeiJoSmAwm3zTJQnM5kRh2q
+ iWjoCy8L35zPqR5TV+f5WR5hTVCqmLHSgm1jxwKhPg9L+GfuE4d0SWd84y GeOB3sSxlhWsuTj1K6K3MO9srD9hr0puqjO9sAizd0BJP8ucf/AACfrgmzIqZXCfVS7jJ/M+0ic+j1Si3yY8wYPEi3dvbVC0zsoGj9n1R7B7L9c3g1pZ4L9ui428vnPiMnDN3jh9OsdaXeWLvSvTylYvw9q0DEXVQTv4/OkcoMrfEkfbXbtZ3PRlAiddSZA5BDEkkm6P9KA2YAuooi1OD9d4MW8LFAeEicvHG+TPO6jtKTacdXDRe611EfRwTjBs19HmabSUfFcumL6BlVyceIoSqXFe5jOfGpbBevTZtg4kTSHqymGb6ra6sKs+/9aJiONs5NXY7iacZ55qG3Ib1cpQTps9bQILnqpwL2VTaH9TPGWwMY3Nc2VEc08zsLrXnA/yZKqZ1YzSY9MGXWYLkCDQRiEog1ARAAyXMKL+x1lDvLZVQjSUIVlaWswc0nV5y2EzBdbdZZCP3ysGC+s+n7xtq0o1wOvSvaG9h5q7sYZs+AKbuUbeZPu0bPWKoO02i00yVoSgWnEqDbyNeiSW+vI+VdiXITV83lG6pS+pAoTZlRROkpb5xo0gQ5ZeYok8MrkEmJbsPjdoKUJDBFTwrRnaDOfb+Qx1D22PlAZpdKiNtwbNZWiwEQFm6mHkIVSTUe2zSemoqYX4QQRvbmuMyPIbwbdNWlItukjHsffuPivLF/XsI1gDV67S1cVnQbBgrpFDxN62USwewXkNl+ndwa+15wgJFyq4Sd+RSMTPDzDQPFovyDfA/jxN2SK1Lizam6o+LBmvhIxwZOfdYH8bdYCoSpqcKLJVG3qVcTwbhGJr3kpRcBRz39Ml6iZhJyI3pEoX3bJTlR5Pr1Kjpx13qGydSMos94CIYWAKhegI06aTdvvuiigBwjngo/Rk5S+iEGR5KmTqGyp27o6YxZy6D4NIc6PKUzhIUxfvuHNvfu
+ sD2W1U7eyLdm/jCgticGDsRtweytsgCSYfbz0gdgUuL3EBYN3JLbAU+UZpy v/fyD4cHDWaizNy/KmOI6FFjvVh4LRCpGTGDVPHsQXaqvzUybaMb7HSfmBBzZqqfVbq9n5FqPjAgD2lJ0rkzb9XnVXHgr6bmMRlaTlBMAEQEAAYkCNgQYAQgAIBYhBINQI6gu+8G3S19i2ykkeY3MjxOkBQJiEog1AhsMAAoJECkkeY3MjxOkY1YQAKdGjHyIdOWSjM8DPLdGJaPgJdugHZowaoyCxffilMGXqc8axBtmYjUIoXurpl+f+a7S0tQhXjGUt09zKlNXxGcebL5TEPFqgJTHN/77ayLslMTtZVYHE2FiIxkvW48yDjZUlefmphGpfpoXe4nRBNto1mMB9Pb9vR47EjNBZCtWWbwJTIEUwHP2Z5fV9nMx9Zw2BhwrfnODnzI8xRWVqk7/5R+FJvl7s3nY4F+svKGD9QHYmxfd8Gx42PZc/qkeCjUORaOf1fsYyChTtJI4iNm6iWbD9HK5LTMzwl0n0lL7CEsBsCJ97i2swm1DQiY1ZJ95G2Nz5PjNRSiymIw9/neTvUT8VJJhzRl3Nb/EmO/qeahfiG7zTpqSn2dEl+AwbcwQrbAhTPzuHIcoLZYV0xDWzAibUnn7pSrQKja+b8kHD9WF+m7dPlRVY7soqEYXylyCOXr5516upH8vVBmqweCIxXSWqPAhQq8d3hB/Ww2A0H0PBTN1REVw8pRLNApEA7C2nX6RW0XmA53PIQvAP0EAakWsqHoKZ5WdpeOcH9iVlUQhRgemQSkhfNaP9LqR1XKujlTuUTpoyT3xwAzkmSxN1nABoutHEO/N87fpIbpbZaIdinF7b9srwUvDOKsywfs5HMiUZhLKoZzCcU/AEFjQsPTATACGsWf3JYPnWxL9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240523072242.787164-1-shichaorai@gmail.com> <a218cac3-9d9d-4ac9-8ea3-0ea9822b2261@suse.com>
-In-Reply-To: <a218cac3-9d9d-4ac9-8ea3-0ea9822b2261@suse.com>
-From: shichao lai <shichaorai@gmail.com>
-Date: Thu, 23 May 2024 17:12:36 +0800
-Message-ID: <CACjpba7yh5Soe_Pr7D3SeTjjqzQB9q=nThaYRGAZu+EvaLfxfw@mail.gmail.com>
-Subject: Re: [PATCH] Check whether divisor is non-zero before division
-To: Oliver Neukum <oneukum@suse.com>, stern@rowland.harvard.edu, gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net, 
-	linux-kernel@vger.kernel.org, xingwei lee <xrivendell7@gmail.com>, 
-	yue sun <samsun1006219@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 23, 2024 at 4:18=E2=80=AFPM Oliver Neukum <oneukum@suse.com> wr=
-ote:
->
-> On 23.05.24 09:22, Shichao Lai wrote:
->
-> Hi,
->
-> > Since uzonesize may be zero, so a judgement for non-zero is nessesary.
-> >
-> > Reported-by: xingwei lee <xrivendell7@gmail.com>
-> > Reported-by: yue sun <samsun1006219@gmail.com>
-> > Signed-off-by: Shichao Lai <shichaorai@gmail.com>
-> > ---
-> >   drivers/usb/storage/alauda.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/usb/storage/alauda.c b/drivers/usb/storage/alauda.=
-c
-> > index 115f05a6201a..db075a8c03cb 100644
-> > --- a/drivers/usb/storage/alauda.c
-> > +++ b/drivers/usb/storage/alauda.c
-> > @@ -947,6 +947,8 @@ static int alauda_read_data(struct us_data *us, uns=
-igned long address,
-> >       sg =3D NULL;
-> >
-> >       while (sectors > 0) {
-> > +             if (!uzonesize)
-> > +                     return USB_STOR_TRANSPORT_ERROR;
->
-> May I point out that uzonesize does not change in this function?
-> There is no need to retest within the loop.
->
-> >               unsigned int zone =3D lba / uzonesize; /* integer divisio=
-n */
-> >               unsigned int lba_offset =3D lba - (zone * uzonesize);
-> >               unsigned int pages;
->
-> Secondly, alauda_write_lba() has the same issue.
-> You also need to check in alauda_write_data().
->
->         Regards
->                 Oliver
+On Tue, 2024-05-21 at 10:38 +0800, Wei Fang wrote:
+> The assignment of pps_enable is protected by tmreg_lock, but the read
+> operation of pps_enable is not. So the Coverity tool reports a lock
+> evasion warning which may cause data race to occur when running in a
+> multithread environment. Although this issue is almost impossible to
+> occur, we'd better fix it, at least it seems more logically reasonable,
+> and it also prevents Coverity from continuing to issue warnings.
+>=20
+> Fixes: 278d24047891 ("net: fec: ptp: Enable PPS output based on ptp clock=
+")
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> ---
+> V2 changes:
+> Moved the assignment positions of pps_channel and reload_period.
+> ---
+>  drivers/net/ethernet/freescale/fec_ptp.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ether=
+net/freescale/fec_ptp.c
+> index 181d9bfbee22..e32f6724f568 100644
+> --- a/drivers/net/ethernet/freescale/fec_ptp.c
+> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+> @@ -104,14 +104,13 @@ static int fec_ptp_enable_pps(struct fec_enet_priva=
+te *fep, uint enable)
+>  	struct timespec64 ts;
+>  	u64 ns;
+> =20
+> -	if (fep->pps_enable =3D=3D enable)
+> -		return 0;
+> -
+> -	fep->pps_channel =3D DEFAULT_PPS_CHANNEL;
+> -	fep->reload_period =3D PPS_OUPUT_RELOAD_PERIOD;
+> -
+>  	spin_lock_irqsave(&fep->tmreg_lock, flags);
+> =20
+> +	if (fep->pps_enable =3D=3D enable) {
+> +		spin_unlock_irqrestore(&fep->tmreg_lock, flags);
+> +		return 0;
+> +	}
+> +
+>  	if (enable) {
+>  		/* clear capture or output compare interrupt status if have.
+>  		 */
+> @@ -532,6 +531,9 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
+>  	int ret =3D 0;
+> =20
+>  	if (rq->type =3D=3D PTP_CLK_REQ_PPS) {
+> +		fep->pps_channel =3D DEFAULT_PPS_CHANNEL;
+> +		fep->reload_period =3D PPS_OUPUT_RELOAD_PERIOD;
+> +
 
+I think this does not address Eric's concern on V1, the initialization
+still basically happens in the same scope.
 
-Thanks for the helpful tip!
-I reviewed the code. Your suggestions can actually avoid repeated checks.
-And there is also such a problem in alauda_write_lba().
-I am a beginner at making patches. May I commit a patch again which
-fixes both issues you mentioned?
+On the flip side, quickly skimming over the ptp core code, it looks
+like that the ptp core will always call this function under ptp-
+>pincfg_mux mutex protection or at device unregistration time.
+
+AFAICS that makes pps_channel and reload_period update safe, so overall
+patch LGTM and I'll apply it soon.
+
+Thanks,
+
+Paolo
+
