@@ -1,117 +1,182 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BC6149C60;
-	Thu, 23 May 2024 12:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC8B1494D4
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 12:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716468159; cv=none; b=O1238CzgD4M2UY/brwAzDZNgun53wyEQHtXzlmlTzAXjb3XtAij0LXLb5rDgxjaHJwYCmpI7Ci8YxKuJRmJq0f1kWGMpx2mRcK8ebaPzwnvlAMPAB3F/XjBEYq4X3i4Gr/PwVBnFOjrEwXH/JtFh63jCqH+NJtubaxf7qSP4pcY=
+	t=1716468187; cv=none; b=YvqFVd/TR0E/PN8EfEWwZfo1Xb7dlOBXWpZTfNvG+RW4+4VtPFLFaWEu6rPAZc/fgnIDmTUM6qPcyTHZZgljWmPv28e39eWlgNtbwtMEjg9VfCgpj5+ZY/Xwe+QgqKlxDSXNh7K0jNum3DRHOy+WJ9X4NvVdoKC46DJkLz+dE8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716468159; c=relaxed/simple;
-	bh=Esn6qQ80MM0mLfU5d1BTrg+JdFQ+xC7owVO0xXFpm5g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pHVy4UgsNcwGRT57PMeqBoFtwcmkl3nuDknCLB9PDpSi0K6YGgB2vj57oTMCFVNMrf/bPbtws+IzSYmK3oFvC7mEBrV3hxRAYEG9RhMHw74YTpV7/lhrAkjYaxgTilxjqQBFpp5ofyB+SOaqznxIuxpP9BGvbFQo26MktKC3yjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MMFxKz/d; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716468187; c=relaxed/simple;
+	bh=Am+Z4BgUvZ2qQnjnokwdPyDri0O7L7+cK6gxhAv0Who=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fg4tuFrP4xaxDvNzYk92lEMMR38ljVC60KQ1OB7sFSKv9gFrIBIpmsfkqRDWwticq4Zx0XCDBYG84jVLhejfrvab8eUXzA9rEb5vS19BNivHhtrLcYpF+fTwQ+Vziud2fAXG6zBSck4yhJoh+uSSz/AVjdhoHP+driz/sReYsWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WvTbsINx; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMFxKz/d"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f3421564d2so3733685ad.1;
-        Thu, 23 May 2024 05:42:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WvTbsINx"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-572e48f91e9so12652887a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 05:43:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716468157; x=1717072957; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JbQU7x0E7jnDIOH/Jd+2ktPiOpulnhjgxogsGpGe1YM=;
-        b=MMFxKz/dE1eB4dveiEfY66N0Ee/0xDGJA15ij0boUttVZ/qbiIAnp6ycmtd4KYZo3b
-         6oHF02DYEzYsMYANe8ElMkNAmXOINDXUHl/iR0idp7eUooZW1X3ZfNQode0XB4el3d7v
-         LZmR/DGNqTaGsyp5c+MmKRUV52gY92ReOzWRNfVwegAuU+PTJK91CTJXiDoRsEjK8vHx
-         rgSALMstVI1FJcGNjD8F44O4QioOVsYQiqf2wtRZLgKbGJynuWnrMmFbvPD1dFM2nw16
-         CfpEsiaLatuKmIpQItFs7RfMfxYD088nXBXOO+156v1yIG+fqns8qSXPpo7Gf5CCVVGW
-         IH3A==
+        d=suse.com; s=google; t=1716468184; x=1717072984; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N4cX+NTv9hpMdDSkxc+a//k9Hm9InRM+7YR84Sm8/H0=;
+        b=WvTbsINxRB+pCOQJOmP61IBHU0l0ie5ZSiepH9VKBmd7hClyvlBNkXh2BapKwZ0iKi
+         P6dE2nFDw1pJh0M1906QnFRe4VWCYG1o9+Iq5vorsKD4x9//VA0xZqrSQ7SZIODlqDbF
+         lE0GWW0+9Pccc8qEmQ2vZU18StbIuEY3G4ZsIE40je0EpGq4AyC+YQs4OifSgtr0ULF8
+         C9GpKv6FCN07tK3WoRWSLhPeibGQvW2+x7jphFftDY8Zut/QgxjtmNXVUsArTDd+apJa
+         TL3XocZ4y/7/87nT7WcRlHK29xVygV0GUJwh22X8X5OK8qGtFErSR+cZAiBvdtLe9mnG
+         brkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716468157; x=1717072957;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JbQU7x0E7jnDIOH/Jd+2ktPiOpulnhjgxogsGpGe1YM=;
-        b=YSaeVtdvbZsvR4dJXEPjkL8xu4sqY7mTH5kM+HOwLMNehEjHR2youy04ERfhQY7cCo
-         gmTIgiOtHCLsLc7vMie0Pqc/CbYGLfkEPdefu8g5AqN6a1lb0Tw6fcXdUJnA61XBPor3
-         JdhZv0ZjUGKpjmKhsO1SSys8FRMIILQSor8U2xqXUEcNdpdAr9MQFLow+CdQJwcKstUZ
-         cNL7PL4CxrSJD9r9PGXyzNAJs8v76KRMOhjld5sclvRviY5LviIcLSe6FdD/RM3QDbdZ
-         k54+ef8FWNWP5P+/BThSeHGDgBvqVmgZyJhEbeokH0TX/JEWZh652gUYDhb0f+OlRGuo
-         r4tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwwry0ttZNrj1J3t1Qik02h4w9Xkcn/4TyrepPLKSfZCAJGsiw5xrwg9aPXgYRoBS3QaohRS39enAHCSesyCgYZe10P+nMPw3UonS+
-X-Gm-Message-State: AOJu0YwPqaPkjjNerWAFWWLuqa69efPCS+n94ttcxShI5s3xJJPyy3mz
-	cGiKHwGML+UU7Bz31I+tFv4A7duHhQUfdMel0Cr8M2o1OT9YgUvp
-X-Google-Smtp-Source: AGHT+IHHPyrRvRC2l+E6UFyavRMYRZSN6jN9PPSwZRIP/D9hU2lokfItTC/nJ06Qfuu9ehKREjLc1g==
-X-Received: by 2002:a17:902:f550:b0:1f2:f9c1:770b with SMTP id d9443c01a7336-1f339f0bc9amr34931695ad.15.1716468156978;
-        Thu, 23 May 2024 05:42:36 -0700 (PDT)
-Received: from velvet.. ([111.42.148.111])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b1b1d13sm255739035ad.0.2024.05.23.05.42.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 05:42:36 -0700 (PDT)
-From: Shichao Lai <shichaorai@gmail.com>
-To: stern@rowland.harvard.edu,
-	gregkh@linuxfoundation.org,
-	oneukum@suse.com
-Cc: linux-usb@vger.kernel.org,
-	usb-storage@lists.one-eyed-alien.net,
-	linux-kernel@vger.kernel.org,
-	Shichao Lai <shichaorai@gmail.com>,
-	xingwei lee <xrivendell7@gmail.com>,
-	yue sun <samsun1006219@gmail.com>
-Subject: [PATCH v3] usb-storage: Check whether divisors are non-zero
-Date: Thu, 23 May 2024 20:42:23 +0800
-Message-Id: <20240523124223.1035964-1-shichaorai@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1716468184; x=1717072984;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N4cX+NTv9hpMdDSkxc+a//k9Hm9InRM+7YR84Sm8/H0=;
+        b=rzOuULqL7xEXk/acChtcZQ9PwYN6hXNSahSNoosj9+WN/OHbUO2OKdgAA+Bdt7MA8Y
+         Hs5BLlis9vXzdxmrGSSIqLIhY+Lgn6MG9Oyf7pJePogJ7Uuj97dJgWsGWkKVs5ga0IGZ
+         04Zcy5/Z7eHGlWqcMrHvxLAPTn+5TMPd+bbQ5PROGkBWdhSmjJfgYG/Hf2iqVxsU9WG3
+         VEBAlA7FlCJX2SkDKFJJejqSzgDA+csq2O7N6oiiPs+yPbVIVV1wElQeXi6U6KUtYvB1
+         AzP0IrXv5eEDSh65hXOOd2F2NT/X1DC0/Q6Ctz77SuRWsa3x5lZA7HW+vGSdXypbUamU
+         XHxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDPedcjRzPlg0ZKPVTtSVUnKtSoI2BDZ9g/w7SO1lgu8naPThnZ0RAlB4OVSoHdYovy1XC7P4m9ioqPZi5orRoqLgvLZ/v8ldeQQqC
+X-Gm-Message-State: AOJu0YyhyW/8ZvlU9u8u9Hhj8019TXZZ5aKz9wc6JcFb+uSA2zMDzfKk
+	EdmVfNDGn0qpi1RJF8IDUijV7zd5S2qzzqLD5899K75Clwm9mlzflJ1S+6q5TjI=
+X-Google-Smtp-Source: AGHT+IFh3XoMLCvilNnePHUX22KFCQNmvjCO79hk0WdRgczhXvKlImFUhKZRuYLhATjWm2zA97zqPQ==
+X-Received: by 2002:a05:6402:348f:b0:578:36f4:cb30 with SMTP id 4fb4d7f45d1cf-57836f4cbdbmr3357155a12.9.1716468183961;
+        Thu, 23 May 2024 05:43:03 -0700 (PDT)
+Received: from ?IPV6:2003:e5:8729:4000:29eb:6d9d:3214:39d2? (p200300e58729400029eb6d9d321439d2.dip0.t-ipconnect.de. [2003:e5:8729:4000:29eb:6d9d:3214:39d2])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-574f26d1574sm12297087a12.36.2024.05.23.05.43.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 May 2024 05:43:03 -0700 (PDT)
+Message-ID: <c188878d-ff67-45da-a963-e643bfb927a8@suse.com>
+Date: Thu, 23 May 2024 14:43:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/kvm/tdx: Save %rbp in TDX_MODULE_CALL
+To: "Huang, Kai" <kai.huang@intel.com>,
+ "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+ "Hansen, Dave" <dave.hansen@intel.com>
+Cc: "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "x86@kernel.org"
+ <x86@kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>,
+ "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
+References: <20240517121450.20420-1-jgross@suse.com>
+ <ohvjbokpaxagc26kxmlrujab7cw3bekgi5ln7dt46cbsaxcqqh@crvqeohfazmf>
+ <f63e1217-3dbe-458d-8c14-7880811d30ba@suse.com>
+ <2a2guben2ysyeb43rzg6zelzpa57o24ufai3mi6ocewwvgu63l@c7dle47q7hzw>
+ <03d27b6a-be96-44d7-b4ea-aa00ccab4cc5@suse.com>
+ <fc0e8ab7-86d4-4428-be31-82e1ece6dd21@intel.com>
+ <c0067319-2653-4cbd-8fee-1ccf21b1e646@suse.com>
+ <6df4fb48-9947-46ec-af5a-66fa06d6a83b@intel.com>
+ <86ca805d-7ed7-47dd-8228-5e19fbade53f@suse.com>
+ <f7edef9c-5eb5-4664-a193-3bb063674742@intel.com>
+ <f02d9ebb-a2b3-4cb3-871b-34324d374d01@suse.com>
+ <4b3adb59-50ea-419e-ad02-e19e8ca20dee@intel.com>
+ <c7319c0614c9a644fa1f9b349bf654834b615543.camel@intel.com>
+ <e2d844ad-182a-4fc0-a06a-d609c9cbef74@suse.com>
+ <2e07ebc774bf176ebfab40e6ba8bc14ae6a94e0c.camel@intel.com>
+ <a9bbb31e6660343e95d3351febc6e3b9661a7944.camel@intel.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+In-Reply-To: <a9bbb31e6660343e95d3351febc6e3b9661a7944.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Since uzonesize may be zero, so checks for non-zero
-are necessary in two places of alauda.c.
+On 23.05.24 14:26, Huang, Kai wrote:
+> On Thu, 2024-05-23 at 10:30 +0000, Huang, Kai wrote:
+>> On Thu, 2024-05-23 at 07:56 +0200, Jürgen Groß wrote:
+>>> On 20.05.24 13:54, Huang, Kai wrote:
+>>>> On Fri, 2024-05-17 at 09:48 -0700, Dave Hansen wrote:
+>>>>> On 5/17/24 08:58, Juergen Gross wrote:
+>>>>>> On 17.05.24 17:52, Dave Hansen wrote:
+>>>>> ..
+>>>>>>> Once we have the specific TDX module version, we can go ask the folks
+>>>>>>> who write it if there were any RBP clobbering bugs.
+>>>>>>
+>>>>>> Okay, how to get the TDX module version?
+>>>>>
+>>>>> You need something like this:
+>>>>>
+>>>>>> https://lore.kernel.org/all/20231012134136.1310650-1-yi.sun@intel.com/
+>>>>
+>>>> This one prints TDX version info in the TDX guest, but not host.
+>>>>
+>>>> The attached diff prints the TDX version (something like below) during
+>>>> module initialization, and should meet Juergen's needs for temporary use:
+>>>>
+>>>> [  113.543538] virt/tdx: module verson: major 1, minor 5, internal 0
+>>>>
+>>>>>
+>>>>> .. and yeah, this needs to be upstream.
+>>>>>
+>>>>
+>>>>   From this thread I think it makes sense to add code to the TDX host code
+>>>> to print the TDX version during module initialization.  I'll start to work
+>>>> on this.
+>>>>
+>>>> One thing is from the spec TDX has "4 versions": major, minor, update,
+>>>> internal.  They are all 16-bit, and the overall version can be written in:
+>>>>
+>>>> 	<Major>.<Minor>.<Update>.<Internal>, e.g., 1.5.05.01
+>>>>
+>>>> (see TDX module 1.5 API spec, section 3.3.2 "TDX Module Version".)
+>>>>
+>>>> The attached diff only prints major, minor and internal, but leaves the
+>>>> update out because I believe it is for module runtime update (yet to
+>>>> confirm).
+>>>>
+>>>> Given there are 4 versions, I think it makes sense to implement reading
+>>>> them based on this patchset ...
+>>>>
+>>>> https://lore.kernel.org/kvm/6940c326-bfca-4c67-badf-ab5c086bf492@intel.com/T/
+>>>>
+>>>> ... which extends the global metadata reading code to support any
+>>>> arbitrary struct and all element sizes (although all 4 versions are 16-
+>>>> bit)?
+>>>
+>>> With that I got:
+>>>
+>>> [   29.328484] virt/tdx: module verson: major 1, minor 5, internal 0
+>>>
+>>>
+>>
+>> Let me check TDX module guys on this and get back to you.
+> 
+> Hi Jurgen,
+> 
+> I was told the module starting with "1.5.06." has NO_RBP_MOD support.
+> 
+> And I think I was wrong about the <update> part of the version, and we
+> need that to determine the third part of the module version.
+> 
+> I was also told the 1.5.06 module hasn't been released to public yet, so I
+> guess your module doesn't support it.
+> 
+> I did another patch (attached) to check NO_RBP_MOD and reject module
+> initialization if it is not supported, and print out module version:
+> 
+> [  146.566641] virt/tdx: NO_RBP_MOD feature is not supported
+> [  146.572797] virt/tdx: module verson: 1.5.0.0
+> [  146.577731] virt/tdx: module initialization failed (-22)
+> 
+> You can have another try to verify at your side, if that helps.
+> 
 
-Reported-by: xingwei lee <xrivendell7@gmail.com>
-Reported-by: yue sun <samsun1006219@gmail.com>
-Signed-off-by: Shichao Lai <shichaorai@gmail.com>
----
-Changes since v1:
-- Add one more check in alauda_write_lba().
-- Move check ahead of loop in alauda_read_data().
-- Change the order of variable list in alauda_write_lba().
+[   29.362806] virt/tdx: 4071192 KB allocated for PAMT
+[   29.362828] virt/tdx: module verson: 1.5.1.0
+[   29.362830] virt/tdx: module initialized
 
- drivers/usb/storage/alauda.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/storage/alauda.c b/drivers/usb/storage/alauda.c
-index 115f05a6201a..ebef1a8a7ca4 100644
---- a/drivers/usb/storage/alauda.c
-+++ b/drivers/usb/storage/alauda.c
-@@ -816,8 +816,10 @@ static int alauda_write_lba(struct us_data *us, u16 lba,
- 	unsigned int zonesize = MEDIA_INFO(us).zonesize;
- 	unsigned int pagesize = MEDIA_INFO(us).pagesize;
- 	unsigned int blocksize = MEDIA_INFO(us).blocksize;
--	unsigned int lba_offset = lba % uzonesize;
- 	unsigned int new_pba_offset;
-+	if (!uzonesize)
-+		return USB_STOR_TRANSPORT_ERROR;
-+	unsigned int lba_offset = lba % uzonesize;
- 	unsigned int zone = lba / uzonesize;
- 
- 	alauda_ensure_map_for_zone(us, zone);
-@@ -923,6 +925,8 @@ static int alauda_read_data(struct us_data *us, unsigned long address,
- 	unsigned int uzonesize = MEDIA_INFO(us).uzonesize;
- 	struct scatterlist *sg;
- 	int result;
-+	if (!uzonesize)
-+		return USB_STOR_TRANSPORT_ERROR;
- 
- 	/*
- 	 * Since we only read in one block at a time, we have to create
--- 
-2.34.1
-
+Juergen
