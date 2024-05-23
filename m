@@ -1,104 +1,79 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F1614AD17;
-	Thu, 23 May 2024 13:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id F209714C584
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 13:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716472699; cv=none; b=Gn0sFqLhcQQXayVZKmKWRnKuIVFFvJF7GHMHEJQo+DkgP8utYgUBhMcFbepORCoeqc8aGIC/+XHDYyIlWb/xM9rGHEwyXn4CvkLoamjBidVuTT45Gsuzf4qUAcr5L8Tbed+sN6UdfSr3FFAdZRGm5YPNku3Cvcvqm5/5OEUDXXY=
+	t=1716472704; cv=none; b=HNQEniKt/4ORxTCDDpktr72ELx68siu22gx7uszD5Vl6w7yR939jGFqdiL4fUevpu63Pcr3epfTrab3DvIDleIYgjERWYNlecajD94D6QhGtVXjME8ANt6nf4UDFIgSPqGoChagaWkYGN/PHFI8WGDSVnhQ2lFZxzULuxgMuWTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716472699; c=relaxed/simple;
-	bh=YPfQzZYPkBwZc3FLAffaI2QalYlcnxIGXbskf7Lt0V8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=CtR0tJJv1vHRs0bVeO5nRg6zsau9Am9ywLdo+QUedLHTzt5U0T0qq4abL5jLotDHfl6hUBiwhs9s9Lcxy0hR5rX9e1ZDpg5hfPZJvlL7inz2qqYPWrArJLm+CJh1p+Bs6kV2K+ElzZf1YAbcVtt7rqaI+/yQsa33dvjcCFcUBj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Qx88CsH6; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Qx88CsH6"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NCs08d012860;
-	Thu, 23 May 2024 13:58:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=WeLFUlJqNSyS7HG9uH4T8X
-	0EVSX5fdcaflLT4csqs4I=; b=Qx88CsH6UQxCdjUK3QJO1FoXtMCoM+jXXmYJGK
-	FGMhrcY47RFLKFGgFffFPWs5GOlRPwVtmq9HmTwpYCPPmkMRJh3KJIU8ftAXLAvG
-	GH2imnCnG15sQDPkCbrNrsKyyKaERJVwRcR5+LFqp/KxK9n0n3p1o/6pcQX6/6P2
-	gQE8beXQFNIj+MyJLIQul5RlySzI2pfg9pSq+2kP6wSL6JM6ict4DLiM3YBs3eUs
-	xob0Rl/CoCq213EUEET9SAeo5uvxnG+QoFyHnUOCGn4c4LmPaQwBAxcC9Njh9Zuo
-	WcfOwoaA9p/nQZHy+g4ma/FiBmbh8HkSlg82dL3HE6OVWcgw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y9y2019jj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 13:58:07 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44NDw61J023670
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 13:58:06 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 23 May
- 2024 06:58:05 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 23 May 2024 06:58:01 -0700
-Subject: [PATCH] fs/adfs: add MODULE_DESCRIPTION
+	s=arc-20240116; t=1716472704; c=relaxed/simple;
+	bh=ZxJY/vy8dQ5OzcdO9I/EsiKfnNp0n7gwTw3kEMSmU70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MSwwekpbwctO7bLH+g1wmsHc33lv9rdrU0dX6F8ShGMV0ILgklb8Ceh/k3vhwKEj/Wc1FhFXV5evcBqYLVT5Zc1ewzq4Y0qd4rZNPH29iFKOhxC8oYtY/S/88o1x6m/x88QWZ4981xxK8u0yY3jaOYWCvw4PAHsllZ7P5h3QWbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 538957 invoked by uid 1000); 23 May 2024 09:58:21 -0400
+Date: Thu, 23 May 2024 09:58:21 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Shichao Lai <shichaorai@gmail.com>
+Cc: gregkh@linuxfoundation.org, oneukum@suse.com, linux-usb@vger.kernel.org,
+  usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+  xingwei lee <xrivendell7@gmail.com>, yue sun <samsun1006219@gmail.com>
+Subject: Re: [PATCHv2] Check whether divisor is non-zero before division
+Message-ID: <a0afa88b-f84c-4b45-a265-2e6bcbb84b35@rowland.harvard.edu>
+References: <20240523092608.874986-1-shichaorai@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240523-md-adfs-v1-1-364268e38370@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGhLT2YC/x3M0QrCMAyF4VcZuTbQlYrTVxEv0jZ1AVdHMmUy9
- u5WLz/4z9nAWIUNLt0Gym8xedaG/tBBGqneGSU3g3c+uKP3OGWkXAzDMJxcSSHSuYdWz8pF1v/
- T9dYcyRijUk3jb/+Q+lpxIltYcf60FPb9Cyi1UrF+AAAA
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner
-	<brauner@kernel.org>, Jan Kara <jack@suse.cz>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 79gAgrbAqP8qnLRjvLTO4tSCXgsLNQyg
-X-Proofpoint-GUID: 79gAgrbAqP8qnLRjvLTO4tSCXgsLNQyg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-23_08,2024-05-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- adultscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=955 suspectscore=0
- spamscore=0 bulkscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
- definitions=main-2405230096
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523092608.874986-1-shichaorai@gmail.com>
 
-Fix the 'make W=1' issue:
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/adfs/adfs.o
+On Thu, May 23, 2024 at 05:26:08PM +0800, Shichao Lai wrote:
+> Since uzonesize may be zero, so judgements for non-zero are nessesary in both place.
+> Previous check is moved out of loop, and one more check is added in alauda_write_lba.
+> 
+> Reported-by: xingwei lee <xrivendell7@gmail.com>
+> Reported-by: yue sun <samsun1006219@gmail.com>
+> Signed-off-by: Shichao Lai <shichaorai@gmail.com>
+> ---
+>  drivers/usb/storage/alauda.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/usb/storage/alauda.c b/drivers/usb/storage/alauda.c
+> index 115f05a6201a..a6e60ef5cb0d 100644
+> --- a/drivers/usb/storage/alauda.c
+> +++ b/drivers/usb/storage/alauda.c
+> @@ -818,6 +818,8 @@ static int alauda_write_lba(struct us_data *us, u16 lba,
+>  	unsigned int blocksize = MEDIA_INFO(us).blocksize;
+>  	unsigned int lba_offset = lba % uzonesize;
+>  	unsigned int new_pba_offset;
+> +	if (!uzonesize)
+> +		return USB_STOR_TRANSPORT_ERROR;
+>  	unsigned int zone = lba / uzonesize;
+>  
+>  	alauda_ensure_map_for_zone(us, zone);
+> @@ -923,6 +925,8 @@ static int alauda_read_data(struct us_data *us, unsigned long address,
+>  	unsigned int uzonesize = MEDIA_INFO(us).uzonesize;
+>  	struct scatterlist *sg;
+>  	int result;
+> +	if (!uzonesize)
+> +		return USB_STOR_TRANSPORT_ERROR;
+>  
+>  	/*
+>  	 * Since we only read in one block at a time, we have to create
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-fs/adfs has no MAINTAINERS entry so falling back to the entry for
-FILESYSTEMS (VFS and infrastructure)
----
- fs/adfs/super.c | 1 +
- 1 file changed, 1 insertion(+)
+This is definitely NOT the right way to fix the bug!
 
-diff --git a/fs/adfs/super.c b/fs/adfs/super.c
-index 9354b14bbfe3..f0b999a4961b 100644
---- a/fs/adfs/super.c
-+++ b/fs/adfs/super.c
-@@ -491,4 +491,5 @@ static void __exit exit_adfs_fs(void)
- 
- module_init(init_adfs_fs)
- module_exit(exit_adfs_fs)
-+MODULE_DESCRIPTION("Acorn Disc Filing System");
- MODULE_LICENSE("GPL");
+uzonesize is set once, when the device is probed, in 
+alauda_init_media().  That is where the check belongs; if uzonesize is 0 
+then the function should print a warning and return 
+USB_STOR_TRANSPORT_ERROR, because the device is unusable.
 
----
-base-commit: 5c4069234f68372e80e4edfcce260e81fd9da007
-change-id: 20240522-md-adfs-48870fc4ba91
+It's probably a good idea to check pagesize, blocksize, and zonesize at 
+the same time, even though none of them are used for any divisions.
 
+Alan Stern
