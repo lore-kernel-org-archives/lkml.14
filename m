@@ -1,81 +1,77 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CE81DDEE
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB07514BF8F;
+	Thu, 23 May 2024 14:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716474727; cv=none; b=CslzIm4ojm2hElmzkC7M/Cq++quSGQ7laNoowZBKVL9LPQ9mtfq9vFUzFT6GPf1Favt5W3gOJv2/tILrC7hF8AXkZdTF9lpiCjy8khP7sLQAg5ZWHnD45oHs3/txiM+RIa+Ds79EAnQ+QWpewxEovqk756z8PplCRSCfvfwVI+8=
+	t=1716474757; cv=none; b=JqMg1y02CPmXz05s7Y/EQZodgH8HLJzEx3Fn1x6/AXmsx8DKw5YbZtUkAfTAFeyVnFzzePgGgOJHUlrBZ/2ecByhP6Kze7qBMIzrJHZ+Rt2YOuJT+QxY11WIXBLIWd2+bL6RgzxhsOsCIHh5ZwwMUVkWcQJBYCUOtVyQl515jEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716474727; c=relaxed/simple;
-	bh=BgtQCP6BWnj0hRmGehM9bywN+sdsudwiKyVkchOsOcE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kPAMw+3+Sj/10DYR3qJgr+Q2SIo6NJ/za0IMZHq3cnrmeYbuXfb2dhQV0llT0eAfdzhuVrYzfhYPzg3uf5oRvnx7bLgut35bfw2hN6hl9xi5HroU8dTJmQ+fZAEU+XrXRCeMF9dNF6BLDTCBOS6lgUH8CX7jTJo4Xouk01U+ZYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=w4xREilk; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1716474757; c=relaxed/simple;
+	bh=nOBwnAUrG3XTArYtlV00zl2oa7x6KdWXnkghya/eAH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ug0LmgICpZR2AkObBjxBbx14N/13zeQUVD7NgOBvpj9/E1nGkDKxBhkneJy5DUjxHySERYqDKPl9vE3XZqKiCL+mvi+r0iUCt2UpboFuhb0ZqTc7tNVOy4kgUMB3QUYvzt8H2esYDX/peATvmfm+MhgPZ1gww6i/03pkalTOScg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NdMTbwhM; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="w4xREilk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=BgtQCP6BWnj0hRmGehM9bywN+sdsudwiKyVkchOsOcE=; b=w4xREilkyEQQd0NwD/AflGGIMg
-	7OJ6VqBJ01JHn+GLQJXsH9U8HZ1hrOYGWv46vofTf9uYokTE67ZpgU9ASXFsN4MMnUsDuruGp5dCQ
-	wcf/gNi/kS3jaoGMbJAsTB55QITEdL703+ck/zu26irY54bst09AR/wF5SULbetN1pyp3ayi8akq+
-	BtTSIXUXCNkpsuZQhOb4wp5qN7neMFAVSIZm8jTwS8uWKtjtxq+zuQbx4qJiTfO5YnjsR6Juxp8kn
-	fuL0PqIM+ujJ+kCTCYGLcam0t+GfO6nPligH28OmMMCHPFslorQvYcnWjLmvUg7sda/VqLwxP3tFM
-	wn4GRwig==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sA9UA-000FCg-Po; Thu, 23 May 2024 16:32:02 +0200
-Received: from [185.17.218.86] (helo=localhost)
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sA9UA-000NG2-27;
-	Thu, 23 May 2024 16:32:02 +0200
-From: Esben Haabendal <esben@geanix.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
- <pratyush@kernel.org>,  Michael Walle <mwalle@kernel.org>,
-  linux-kernel@vger.kernel.org,  linux-mtd@lists.infradead.org
-Subject: Re: [PATCH] memory: fsl_ifc: Make FSL_IFC config visible and
- selectable
-In-Reply-To: <979fd913-050b-445d-9ca8-0ec6906ce3ea@kernel.org> (Krzysztof
-	Kozlowski's message of "Thu, 23 May 2024 16:01:49 +0200")
-References: <20240523-fsl-ifc-config-v1-1-6eff73bdc7e6@geanix.com>
-	<979fd913-050b-445d-9ca8-0ec6906ce3ea@kernel.org>
-Date: Thu, 23 May 2024 16:32:01 +0200
-Message-ID: <87cypc38gu.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NdMTbwhM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=OyLpAbqIcm49EN50aC4QtDsFYC5RZ7HoWFou/ezE01w=; b=NdMTbwhMtQM5CICpSwky5B6+xe
+	Q6oL9/6VkX2WUudrsBMz1qzwMyI8G0btA9E6QpTOvf20Y/xhGRVOO6hJl9E1BU4Ey9nQZEel4e3lM
+	l/d3Ov2KO/AWTORCqiWLeSmGqjvbuQLgTkQLtVXKIgNnuAVNJViOms12LLjNQO/uw4yY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sA9UY-00Ftog-T6; Thu, 23 May 2024 16:32:26 +0200
+Date: Thu, 23 May 2024 16:32:26 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: micrel: Fix lan8841_config_intr after getting
+ out of sleep mode
+Message-ID: <f73778fe-ef01-44b4-9a8d-cd2a978c1a3d@lunn.ch>
+References: <20240523074226.3540332-1-horatiu.vultur@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27284/Thu May 23 10:32:30 2024)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523074226.3540332-1-horatiu.vultur@microchip.com>
 
-Krzysztof Kozlowski <krzk@kernel.org> writes:
+On Thu, May 23, 2024 at 09:42:26AM +0200, Horatiu Vultur wrote:
+> When the interrupt is enabled, the function lan8841_config_intr tries to
+> clear any pending interrupts by reading the interrupt status, then
+> checks the return value for errors and then continue to enable the
+> interrupt. It has been seen that once the system gets out of sleep mode,
+> the interrupt status has the value 0x400 meaning that the PHY detected
+> that the link was in low power. That is correct value but the problem is
+> that the check is wrong.  We try to check for errors but we return an
+> error also in this case which is not an error. Therefore fix this by
+> returning only when there is an error.
 
-> On 23/05/2024 15:58, Esben Haabendal wrote:
->> While use of fsl_ifc driver with NAND flash is fine, as the fsl_ifc_nand
->> driver selects FSL_IFC automatically, we need the option to be selectable
->> for platforms using fsl_ifc with NOR flash.
->
-> Which driver is that?
+Is the second case also broken in the same way?
 
-This is drivers/memory/fsl_ifc.o driver. It is for Integrated Flash
-Controller (IFC) from NXP. It is used in various Layerscape socs.
+	} else {
+		err = phy_write(phydev, LAN8814_INTC, 0);
+		if (err)
+			return err;
 
-> Which DTS?
+		err = phy_read(phydev, LAN8814_INTS);
+	}
 
-It is for "fsl,ifc" compatible devices.
+	return err;
 
-/Esben
+e.g. there was an outstanding interrupt as interrupts are
+disabled. This will cause the return value of the function to be not
+0?
+
+	Andrew
