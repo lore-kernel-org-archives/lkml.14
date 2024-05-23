@@ -1,81 +1,131 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38F52C684;
-	Thu, 23 May 2024 16:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B139B175A5;
+	Thu, 23 May 2024 16:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716480293; cv=none; b=Q2vX0W/ssKpY1JaC0VFbBNyHMnkWxyyyWDKHUMk25hFdkfcdmJIRLl+u+C8Mb9CMRRdScBXLiz05ik/dFuneh+1Xb3yMXJVXdxL52ZbEWRZ5z+U2Nc5Gl3Pxv5X/Jg2U9Ku34tnJW1lTzrSZCxKQKnoLjTopNgkXqXUDfEShEfY=
+	t=1716480320; cv=none; b=OCEUJpPcL4XIrRgyvfeH+CX9FhGzY7kDq8mnZlKBzn4e2sk/b/8eEaeh4NzdI/VPqtufrgUD/n/ZO7/CV8YQ69LoV8MByV8znKSKIUnEJC08swt9XfZggYua30bH8/92W0vhciDsbRqQweMPXjZz61svGRz+/p/pCc0sLDf89PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716480293; c=relaxed/simple;
-	bh=HZ9RonlrBTgQKUksO/V8zol27bXAiWM7tEzfNGOp3Zk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GkWu5lAndr0vb5051fF2kpzQwSkM7T616O387t+9QytTXqgKEtYELLNLoD4pMltrbjPuIN8V/OnqBlxc3zobuMimOu6g8j3H+SCsrTMRlyQJh8acM63JcoWHuImMUtQ//UDi6fUH5vgYQN6iE0H/0hcwGk8mRfCeLl/ns3LzbSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fnmmv6dj; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716480320; c=relaxed/simple;
+	bh=yh2D7SxRwoIh2Kxy8xBKW938ZUwbvuYiqDLDYBdxkIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R7gfvh5UKpLHmF75jEGDCTBKQ/AAGRLg8wH4/bkN6O+dviBM5KfuqaQjMfz5n9hNRovQivu+mum5h2ik3AkxM7EVvzWyThn2WdgsDa1Oj3o2trdHt1ZGiddg7zoG6V18u9eIIhpCaKlUfgnqOtWroWO6gmPycEynKPoI0ur+UiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=SklltD+Z; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnmmv6dj"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-1f32448e8fbso15183875ad.1;
-        Thu, 23 May 2024 09:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716480292; x=1717085092; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HZ9RonlrBTgQKUksO/V8zol27bXAiWM7tEzfNGOp3Zk=;
-        b=Fnmmv6djqxgeBwhbOaVy2qS7HMHs5DWbVK4MEHhXgCSYm1gi72WBGRbVSih7uyT5Cp
-         Xc3dGrefFcuRZkvsJChbAuk/Sh/njln6V8RSOrWZStqS3LbzTtMN/649YDOi4kA44EW2
-         uwWZW15DAwkZ0lyEBlKGFg/1hIGF+f/j2wNo9EKe7xfR/KlMOXKpXOZkNfG+un9YC6IC
-         hayRLh10wg7itU93l/G1z/wyWOA28kHMfZOE7hZ/AoH3Udd8UiUHJ7xTRrpcpHWqPVHZ
-         U0RNAN0HyaqBGFbtWvP83AX+55tAHmqXPlmN4YREjbOAjNfCe4+0ZdhCJ5Nf5L+6IXOY
-         F8IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716480292; x=1717085092;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HZ9RonlrBTgQKUksO/V8zol27bXAiWM7tEzfNGOp3Zk=;
-        b=wL9XKOUscVLC8TWc15tyU+zFynI3srpdQhEvNgbsTZQiUKPcrvU35UuYkFO9Eh9yh+
-         EN8MplRfBnYN2v6dGc8jspqUue6p6G13Q83A38CWugyQqGFgMWZQwevkRA4FHYjyHgnN
-         rzRl6vvA2p9kAn3iMBl2u3KZG1669+YOOpOhSiFrEXG8Uas0YCb9oNQR+jlljHrjw+rw
-         aG34mK6Q8cmjWcBR6oAKUuGRcSZbZO6PAEPqqK0v6SlzDhf23jye7PwVQ223DJkJ3U0i
-         ebDvemM3z7GJXauC4eMbruYIWvJrPfC7FXhvpaRQT9+fbreNF/ibKGwaxFdWWSIQMrQX
-         5T9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVs/1wfkLN81TPbC2iw2S6+rdOAN+apnnSaJeelN/wmJafik3ZqChAYu7ox+Ow/JNhGsOJeDtQ75FQNM0ctES/467oBtMKn8QFGfAQFunPEgB1lU4hYDtorHRRqus7btk8uOddE4JiTiJqe8Sw=
-X-Gm-Message-State: AOJu0Yy50/JC8gAd6Erf3le3mGuptY9CzM2DcNd8YLMJoXEYSdKgKp0S
-	/19uB0D8mbCjytyfY/FXN1sVmJCO6t9ks8AKphcHhhQP8b1uoi8TBW0ePZRB
-X-Google-Smtp-Source: AGHT+IFnmgQnffQWlozSlFnHpvCn9HYz0suB5yGves8e6JydYfSSoqwXqttah3ztzfXPm41ybSfsdg==
-X-Received: by 2002:a17:902:db07:b0:1f3:3d07:d6e3 with SMTP id d9443c01a7336-1f33d07d86cmr25200585ad.34.1716480291813;
-        Thu, 23 May 2024 09:04:51 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f32695c45fsm31086895ad.92.2024.05.23.09.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 09:04:51 -0700 (PDT)
-From: xu xin <xu.xin.sc@gmail.com>
-X-Google-Original-From: xu xin <xu.xin16@zte.com.cn>
-To: xu.xin16@zte.com.cn
-Cc: bigeasy@linutronix.de,
-	john.ogness@linutronix.de,
-	linux-kernel@vger.kernel.org,
-	linux-rt-users@vger.kernel.org,
-	liu.chun2@zte.com.cn,
-	rostedt@goodmis.org,
-	si.hao@zte.com.cn,
-	yang.yang29@zte.com.cn,
-	zhang.yunkai@zte.com.cn
-Subject: Re:[PATCH  5.15-rt] printk: ignore that console preempted by irq/softirq.
-Date: Thu, 23 May 2024 16:04:47 +0000
-Message-Id: <20240523160447.740955-1-xu.xin16@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240523235401355RFqSAGtIPwMKV39mUulN1@zte.com.cn>
-References: <20240523235401355RFqSAGtIPwMKV39mUulN1@zte.com.cn>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="SklltD+Z"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.1.0)
+ id b64d348b3109eca7; Thu, 23 May 2024 18:05:11 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 16A3A6A4927;
+	Thu, 23 May 2024 18:05:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1716480311;
+	bh=yh2D7SxRwoIh2Kxy8xBKW938ZUwbvuYiqDLDYBdxkIg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=SklltD+ZV5/GSClo6qnpgcbSIfHqgwvfNidTyR+CJ8kFEcVmoKhseAnmPhxi3DW80
+	 Xi0OPrfM3PlKXw/WpHQa1ltca1XhGjKNM690YVaEy8EVG+2LhqywBvTOkOPtstAISo
+	 n/ttj+KNV7xjiQxOw9L2hrRlY7i71vh+ftrimpYruyG/M83hsQEsC91RmXmsJ9LMRu
+	 wpsmfV4Ir1zu/3vMR3WwIBDHegW9YQhbasF1kvs7nT+WmimOPIloGSiLo0O6D5kqBA
+	 oAUMcWUzk+EE60ljsQY6gMxJbZJlKEBGlVX7dPGOSwW74Noc9a5m5AnUZU2CCh2IVF
+	 1xAO+NAUHp2CA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH v1 3/4] thermal: core: Introduce thermal_trip_crossed()
+Date: Thu, 23 May 2024 18:00:14 +0200
+Message-ID: <1884854.tdWV9SEqCh@kreacher>
+In-Reply-To: <12438941.O9o76ZdvQC@kreacher>
+References: <12438941.O9o76ZdvQC@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdeiiedgleehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
-Sorry, this is wrong subject. ignore this, it should have been to 5.10-rt
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Add a helper function called thermal_trip_crossed() to be invoked by
+__thermal_zone_device_update() in order to notify user space, the
+thermal debug code and the zone governor about trip crossing.
+
+Subsequently, this will also be used in the case when a trip point
+becomes invalid after being crossed on the way up.
+
+No intentional functional impact.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/thermal/thermal_core.c |   29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
+
+Index: linux-pm/drivers/thermal/thermal_core.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/thermal_core.c
++++ linux-pm/drivers/thermal/thermal_core.c
+@@ -467,6 +467,21 @@ static void thermal_governor_trip_crosse
+ 		governor->trip_crossed(tz, trip, crossed_up);
+ }
+ 
++static void thermal_trip_crossed(struct thermal_zone_device *tz,
++				 const struct thermal_trip *trip,
++				 struct thermal_governor *governor,
++				 bool crossed_up)
++{
++	if (crossed_up) {
++		thermal_notify_tz_trip_up(tz, trip);
++		thermal_debug_tz_trip_up(tz, trip);
++	} else {
++		thermal_notify_tz_trip_down(tz, trip);
++		thermal_debug_tz_trip_down(tz, trip);
++	}
++	thermal_governor_trip_crossed(governor, tz, trip, crossed_up);
++}
++
+ static int thermal_trip_notify_cmp(void *ascending, const struct list_head *a,
+ 				   const struct list_head *b)
+ {
+@@ -506,18 +521,12 @@ void __thermal_zone_device_update(struct
+ 		handle_thermal_trip(tz, td, &way_up_list, &way_down_list);
+ 
+ 	list_sort(&way_up_list, &way_up_list, thermal_trip_notify_cmp);
+-	list_for_each_entry(td, &way_up_list, notify_list_node) {
+-		thermal_notify_tz_trip_up(tz, &td->trip);
+-		thermal_debug_tz_trip_up(tz, &td->trip);
+-		thermal_governor_trip_crossed(governor, tz, &td->trip, true);
+-	}
++	list_for_each_entry(td, &way_up_list, notify_list_node)
++		thermal_trip_crossed(tz, &td->trip, governor, true);
+ 
+ 	list_sort(NULL, &way_down_list, thermal_trip_notify_cmp);
+-	list_for_each_entry(td, &way_down_list, notify_list_node) {
+-		thermal_notify_tz_trip_down(tz, &td->trip);
+-		thermal_debug_tz_trip_down(tz, &td->trip);
+-		thermal_governor_trip_crossed(governor, tz, &td->trip, false);
+-	}
++	list_for_each_entry(td, &way_down_list, notify_list_node)
++		thermal_trip_crossed(tz, &td->trip, governor, false);
+ 
+ 	if (governor->manage)
+ 		governor->manage(tz);
+
+
+
