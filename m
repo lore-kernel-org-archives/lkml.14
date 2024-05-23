@@ -1,75 +1,69 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D227D78C8B;
-	Thu, 23 May 2024 09:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B0E13D260
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 09:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716456957; cv=none; b=sLqAxP5KHhe9HEXz/ZDWhlsNF+gUnk5VVDaYaO4wa4ym0eFCsJMzJTEYPjlIScnrS0Usqxv+Q+lqHfVaSnjJ7zA7gIbkeT+9q+eXFRAfKsxFswww2lLxjg3FbkUClSwS9UYU6qZRzi+cZblw6OyxDbucL+rQLxEb0cgwmrVYykQ=
+	t=1716456966; cv=none; b=CoKRxOrMQxwP2T5m7uzUl3x5AQtHiwn4ktN+bwwyOJRFIqX1R2tmu5cLb9Elkg3pycAI54enTfHqKz5/v4VC8+9KRmjEdrCcSgLK3GfiUszu17X6TlUHu2/lI/WG9ep38o7C1UZ2v8phjXPKUuytXWW/YGUU52WUyDUubErGL00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716456957; c=relaxed/simple;
-	bh=Ej4YT5rpVB1ypIhlhK6rTDQom/xOPRyn2nshuXUXznk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tAhC7x1P6Pqh6S6b7vjy3W/fc16d48FpPSVSFMdQCHm7dRBEYLHcMs7Ckdb0AX1NLX6QUPX7Vd0O8P9e0vLhM7qBF3Iy4oM0AlzA6KU67jyB0BBCcClf9o3Cn6A+8GdTN9IzVVKMNJWlET5fgd+zgYKcyYikMSwKDFRGWLYHqQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=hgobShxP; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="hgobShxP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Ej4YT5rpVB1ypIhlhK6rTDQom/xOPRyn2nshuXUXznk=;
-	t=1716456954; x=1717666554; b=hgobShxP6k60ykh8Bkf7EUm35b9QlQRKb+oKT19ZO1CSHfU
-	FSISCcR0sLIM5wLMjLLuOtBEA+IHkAPdRFeRiyQ380yAqcSb1tZrDHGp7/63sDRfJV9Quedw4DW8x
-	hxT8IxJA0H1byj3vUzbr80FD3RplvVkdL9zMgU6kL/mGGwKxSAWOZC0Ubhl1h/sUEr4FfIArVgQ47
-	wCj21XqotL28cBDIt8N7MCLRITZ3540dUMPD25EWY9Nzfaj5PiUCnJUwNVL6d2IshihOXqQTmy6Ns
-	Wo593ps4vqC+tYtG9t1zxjSAKfBVDPzZgsF7B8jDHMhujatcT748BFj3Z4YvV+jQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sA4rL-00000005t78-0pdJ;
-	Thu, 23 May 2024 11:35:39 +0200
-Message-ID: <9fca4c0d496eb731f571cd8eacd409b9a9e61dae.camel@sipsolutions.net>
-Subject: Re: [PATCH v2] wifi: mac80211: Avoid address calculations via out
- of bounds array indexing
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Simon Horman <horms@kernel.org>, Kenton Groombridge <concord@gentoo.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com,  linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Kees Cook
- <keescook@chromium.org>
-Date: Thu, 23 May 2024 11:35:37 +0200
-In-Reply-To: <20240517204532.GC475595@kernel.org>
-References: <20240517145420.8891-1-concord@gentoo.org>
-	 <20240517204532.GC475595@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1716456966; c=relaxed/simple;
+	bh=sAy9KDLJjy8l/XObHRC74k4b3Iv4z0NNrI1xYigUmaY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=P7R/YmapDWytfsYLGAh0NDcguGioR01GkQRCP2TbYgTxWZEA6xIcRD0tS9bZTRduyLuh+bh+ZPpH032QUSS2LhU3KvneW+3+KZnKrzM3Slpu6oF9FvLi5/sdhtRXxV/LlnTkVKAJACJpeTaLcJH8nMHr5w0BdjgcWo1mucG8fYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7e1d3928fd4so136989339f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:36:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716456964; x=1717061764;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4LY/Fc5dxnacD2OPmHzoGAJ57Psli24OWbbcR8OaQAM=;
+        b=YqY0gs2QziE+BoV4C4w4LlF+LTKdIejwPIL37GoWcG6eY0yRFn44ulGGTvLATKop5o
+         ZqToJsWYrh5K93JLjnJRe0FKEsYZYM5QQaXsA+aKpljQJdfWm5Z13ZLVwpanodZE6H/i
+         9UPiw4BbRFQt2tsIgZPAZSlzjS0G0sJheeXBYEEaVVmVBH/KZHP97UImycN06PDyzpYq
+         SiYpdHGEiOV58oVb+Olvja1fEVTgM8zqOAN1t3N6GHiQ2S0PfeI9autYz3zRFmX0s6Gz
+         Qe47q47aOJ9RUjjTHmBQiG6QPtnhb+a6tPOz1jiF3CbZKvBinodfUqUGLoVXXuwXNux+
+         ZxYA==
+X-Gm-Message-State: AOJu0Yywx5afxOQ49vlMXMQZn3SObogxZGFpbk6cwsLHS6SidQcOlHW9
+	GoOnMwlfDp0mI3Z6ZLDRI68sIQdMYU1Gz2dnU9pyLYcM7T8sBxEifgJbPtHR4lmvr7dNlNRN/w5
+	n0G+duy4psCUgkP6vse0Qvk8XHHB8QwaXM9Lm9uM8xlUFfnV/uywYSnY=
+X-Google-Smtp-Source: AGHT+IHgIGSAdz150wvrhr2nFUpFCKPE/aMuNcytMdCuI6S7taRUJPsYciZkoG1jMWg1DoQEEJAlhfj7DMAsP48rjFOwVKXvqgiF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+X-Received: by 2002:a05:6602:3424:b0:7d6:5f6:831b with SMTP id
+ ca18e2360f4ac-7e36f131faemr11004339f.1.1716456964646; Thu, 23 May 2024
+ 02:36:04 -0700 (PDT)
+Date: Thu, 23 May 2024 02:36:04 -0700
+In-Reply-To: <20240523092352.1279292-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a679a106191bc722@google.com>
+Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
+From: syzbot <syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2024-05-17 at 21:45 +0100, Simon Horman wrote:
->=20
-> FWWIW, it seems unfortunate to me that the __counted_by field (n_channels=
-)
-> is set some distance away from the allocation of the flex-array (channels=
-)
-> whose bounds it checks. It seems it would be pretty easy for a bug in the
-> code being updated here to result in an overrun.
->=20
+Hello,
 
-In a way, this is a more general problem, this allocates the max we know
-we might need, but then filter it down. It'd have to iterate twice to
-actually allocate the "correct" size, but then you could still have bugs
-by having different filter conditions in the two loops ...
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Don't see any good solutions to this kind of code?
+./include/linux/build_bug.h:16:51: error: negative width in bit-field '<anonymous>'
 
-johannes
+
+Tested on:
+
+commit:         33e02dc6 Merge tag 'sound-6.10-rc1' of git://git.kerne..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=25544a2faf4bae65
+dashboard link: https://syzkaller.appspot.com/bug?extid=d2125fcb6aa8c4276fd2
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16f52fa2980000
+
