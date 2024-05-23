@@ -1,92 +1,157 @@
-Received: from out203-205-251-66.mail.qq.com (out203-205-251-66.mail.qq.com [203.205.251.66])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4DE1DFF0
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325F21DFF0;
+	Thu, 23 May 2024 14:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716474081; cv=none; b=TPVUDtmT5Ayexkmluy0SaRBJRellmLpmTHwDmO5s6pHqiZoOf9UUDHn/7D3xizWsuDeFtZNpFOvnL5NwmZToGJODce0TpkVOwO/z5gKDiAZVc/YXNuOQxFGeY3WGqzHycbU+gGyRe7pIMn+t9Zex7TCpAZ9u0MxUFc/lxXbWnMA=
+	t=1716474094; cv=none; b=Kq0mAuB8h/p5D5O4tU80IH7C/Wp1D9qCfgJdJOod12JiAacnnL5oQY7ao4epuIvdHzwRzh12WWugUuqFkaVcHzuxas0hDRRuCt6/WP0vCQN0Kdn9Ang+qqy0qR15VDOagvt3J3yhg9FspyPS41IQaNPtq+OCGHLNXvQc0iMX5Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716474081; c=relaxed/simple;
-	bh=4qCvEiqdJkRLC7gxPX8duRxnncXR16Z/mdnMWYsPF20=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=ldAyceuN1vRVvkrpnsMacM0s2I0uBUi/D3qyyTENAm0jGhDyYHtUEQWr+gWY58d5cjqyRhIKmX7GXdgiHOkzbezWVSXmoe6HBGgpyQNyimFZcFzQTpPrdPbX9WQqt/o71zagB6TSPBBpTwDt7XfyBfaBx75+DXnfF9ASetJ7gxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Lmb/2VhK; arc=none smtp.client-ip=203.205.251.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1716474094; c=relaxed/simple;
+	bh=FThYKozjn//4H2MpuuNRgDAHcvOBXsbMlqwA0ybup00=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B6m+AJMXqjbfYz2A1xb14fS8Ce3uhM6WN1+phfa8LzvIGQE28NaPtdewxThgNjbn0OBEpf3YPWKScC7XmlxxwD72vDCkmuFrdXOTxByykuEnsFnAsR/B4qy8SgGSPJGgf8hF7sUsDyKCNdYuzNOVbQciLRaiopC+aJ8wFijpBZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=oFTNxQVK; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Lmb/2VhK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1716474070; bh=FplW16AZk2WF+I4r+9I943Mw1CLOL+ZAA7jbZ8gsepM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Lmb/2VhKOfDBMPWAqRjs9AH1rIiuvfq3V3f8Zs2lV5hUcJaJlJpsFItnhfT9X+gJP
-	 PRdxQnIeTjTL++Ly0lMSLaSWG+Ikyv6YdRjOPSsSebrQ6rgvIni2IecWb4HZIetKQM
-	 SbKO1BTmvHxoDO/IKqomi2ua0KKdXhaNPnuD/5Qc=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 33BB6A37; Thu, 23 May 2024 22:12:59 +0800
-X-QQ-mid: xmsmtpt1716473579thd68e5lf
-Message-ID: <tencent_CAE2ED8ECCF07BB66D902CB16CA894F8EA0A@qq.com>
-X-QQ-XMAILINFO: NonMLXQbqcUbSg032T6j9wNsj8KOVM3cvwClygZnLpwzjLVvIuHMwdPElPqT8K
-	 XCFu+tALeI4rAEDiT35RsnUikAT25Wn8pbLC8N0CjcVmpTRVDHDk1HLFEdZlkAf0KZeIQ5uDqD85
-	 qaN2Aq8UO4LEajS2+p10MRdSOFxSOU8XTiKfgCxpM4oVp+tVBeb93XpWcp5v3obfNGyClnqzUOrV
-	 216Ok10yZfE3clnEK38SXnOnomcsVPeFl5K31pHf82IvckR1gPW8F4KX7g56dB5k0HR7xeADYP7M
-	 iTVR0fsNfQm98hLNkS6bMZ6BNdB+nZPcEut9Hv0/VLq4fMj+VqubOXHRSDtjOO84yDcVDEqDUdGX
-	 1Nwzri9qpWbRfr+hKARAo9r5UT1DL22YIqy1O4X/lwYvgE6tYuN6J0Opp+q5dvacoL5u8S9vpEE0
-	 kATAapp9XfnKc72BeHquYjrPItW//r51gXfTeqLg6XAa0ZdXiUaDqRNCcKqKy8mF+7kLLDf5dqMr
-	 ET7pN5hao3l1C2p+fD3zTtNxCjlJnl5zJFDsah/YkHTNhzw0S6airuO9CQwMXCUR55oNt5zmECB1
-	 6hGDNQ+xDL9R19F5pGdlzQJIAXavRcrBI3yzV0k4oEedUTxiLJaNVQ7UB/aEpjApwRDA+OHc1UDK
-	 rP292nvKSNu62bU5yder31VH+HposSV98o4SnpQrlPM2ExF/wlibkOCGz36UiLF6GHtcQtrnrF6v
-	 Lg8b8h0TWeJIb4fniW+Fl/uM/iDv6WHYydZpLe5x9ODCHt1XhAwAdpqr/yGlEGQh9xDO3LiQpedv
-	 ECnDSiB1KaP9/jATwXG7K9H/zLT/84RA9OpxurF8G/5e5RcLeHFDIeVPzlPa38bKKzsDDSXq+tOQ
-	 LdbQI/Z7htSYj20/ZeweK52ueMtDvUn+D9Pzqz/ZK5KocO56TLl6+QRo5mnGyFZA6H8N39sit91K
-	 eUSSboF2IKGjSAOQ1VR+DFvn3gRyphrjIGHXmNLrE=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
-Date: Thu, 23 May 2024 22:13:00 +0800
-X-OQ-MSGID: <20240523141259.2708676-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000002fd2de0618de2e65@google.com>
-References: <0000000000002fd2de0618de2e65@google.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="oFTNxQVK"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1716474088; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=P7HnNkBnQuCqmu8zTIccJJaTZgTQr1fKN1BShJAXcUA=;
+	b=oFTNxQVKXbIitYgvQgV4eyRK+sreKUySjtNe67CyaLI+yH5EDpimOIdC0/LommVVFVR9gRXYRyoV4WCpKm0TH7RskaIyEYu1AOFjktlmqP/x43q8AJGFh1yLlIZQ43e8v5TIfPXiROVqEPYqEdv0Dzs8xZ6PwmPj0cf5vh8bWR4=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W739MMQ_1716474086;
+Received: from 30.39.171.189(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W739MMQ_1716474086)
+          by smtp.aliyun-inc.com;
+          Thu, 23 May 2024 22:21:27 +0800
+Message-ID: <9945b390-3572-4808-b08f-56af9cd3918e@linux.alibaba.com>
+Date: Thu, 23 May 2024 22:21:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/12] cachefiles: remove err_put_fd label in
+ cachefiles_ondemand_daemon_read()
+To: libaokun@huaweicloud.com, netfs@lists.linux.dev, dhowells@redhat.com,
+ jlayton@kernel.org
+Cc: hsiangkao@linux.alibaba.com, zhujia.zj@bytedance.com,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com,
+ yukuai3@huawei.com, wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>
+References: <20240522114308.2402121-1-libaokun@huaweicloud.com>
+ <20240522114308.2402121-6-libaokun@huaweicloud.com>
+Content-Language: en-US
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20240522114308.2402121-6-libaokun@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-please test null ptr in iter_file_splice_write
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 33e02dc69afb
 
-diff --git a/fs/splice.c b/fs/splice.c
-index 60aed8de21f8..2881e9a7e491 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -751,10 +751,19 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
- 
- 		/* dismiss the fully eaten buffers, adjust the partial one */
- 		tail = pipe->tail;
--		while (ret) {
-+		n = 0;
-+		while (ret > 0 && n < nbufs) {
- 			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
-+			n++;
-+			if (!buf->len) {
-+				tail++;
-+				continue;
-+			}
- 			if (ret >= buf->len) {
-+				printk("ret: %ld, nbufs: %d, buf:%p, buf len: %u, m: %u, t: %u,ring size: %u, t&m: %u, n:%d, %s\n", 
-+					ret, nbufs, buf, buf->len, mask, tail, pipe->ring_size, tail & mask, n, __func__);
- 				ret -= buf->len;
-+				printk("ret: %ld, %s\n", ret, __func__);
- 				buf->len = 0;
- 				pipe_buf_release(pipe, buf);
- 				tail++;
+On 5/22/24 7:43 PM, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
+> 
+> The err_put_fd label is only used once, so remove it to make the code
+> more readable. In addition, the logic for deleting error request and
+> CLOSE request is merged to simplify the code.
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> Acked-by: Jeff Layton <jlayton@kernel.org>
+> Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
+LGTM.
+
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+
+
+> ---
+>  fs/cachefiles/ondemand.c | 45 ++++++++++++++--------------------------
+>  1 file changed, 16 insertions(+), 29 deletions(-)
+> 
+> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+> index 3dd002108a87..bb94ef6a6f61 100644
+> --- a/fs/cachefiles/ondemand.c
+> +++ b/fs/cachefiles/ondemand.c
+> @@ -305,7 +305,6 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>  {
+>  	struct cachefiles_req *req;
+>  	struct cachefiles_msg *msg;
+> -	unsigned long id = 0;
+>  	size_t n;
+>  	int ret = 0;
+>  	XA_STATE(xas, &cache->reqs, cache->req_id_next);
+> @@ -340,49 +339,37 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>  	cachefiles_grab_object(req->object, cachefiles_obj_get_read_req);
+>  	xa_unlock(&cache->reqs);
+>  
+> -	id = xas.xa_index;
+> -
+>  	if (msg->opcode == CACHEFILES_OP_OPEN) {
+>  		ret = cachefiles_ondemand_get_fd(req);
+>  		if (ret) {
+>  			cachefiles_ondemand_set_object_close(req->object);
+> -			goto error;
+> +			goto out;
+>  		}
+>  	}
+>  
+> -	msg->msg_id = id;
+> +	msg->msg_id = xas.xa_index;
+>  	msg->object_id = req->object->ondemand->ondemand_id;
+>  
+>  	if (copy_to_user(_buffer, msg, n) != 0) {
+>  		ret = -EFAULT;
+> -		goto err_put_fd;
+> -	}
+> -
+> -	cachefiles_put_object(req->object, cachefiles_obj_put_read_req);
+> -	/* CLOSE request has no reply */
+> -	if (msg->opcode == CACHEFILES_OP_CLOSE) {
+> -		xa_erase(&cache->reqs, id);
+> -		complete(&req->done);
+> +		if (msg->opcode == CACHEFILES_OP_OPEN)
+> +			close_fd(((struct cachefiles_open *)msg->data)->fd);
+>  	}
+> -
+> -	cachefiles_req_put(req);
+> -	return n;
+> -
+> -err_put_fd:
+> -	if (msg->opcode == CACHEFILES_OP_OPEN)
+> -		close_fd(((struct cachefiles_open *)msg->data)->fd);
+> -error:
+> +out:
+>  	cachefiles_put_object(req->object, cachefiles_obj_put_read_req);
+> -	xas_reset(&xas);
+> -	xas_lock(&xas);
+> -	if (xas_load(&xas) == req) {
+> -		req->error = ret;
+> -		complete(&req->done);
+> -		xas_store(&xas, NULL);
+> +	/* Remove error request and CLOSE request has no reply */
+> +	if (ret || msg->opcode == CACHEFILES_OP_CLOSE) {
+> +		xas_reset(&xas);
+> +		xas_lock(&xas);
+> +		if (xas_load(&xas) == req) {
+> +			req->error = ret;
+> +			complete(&req->done);
+> +			xas_store(&xas, NULL);
+> +		}
+> +		xas_unlock(&xas);
+>  	}
+> -	xas_unlock(&xas);
+>  	cachefiles_req_put(req);
+> -	return ret;
+> +	return ret ? ret : n;
+>  }
+>  
+>  typedef int (*init_req_fn)(struct cachefiles_req *req, void *private);
+
+-- 
+Thanks,
+Jingbo
