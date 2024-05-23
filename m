@@ -1,49 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E0FE107A8
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 15:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F4010A0A;
+	Thu, 23 May 2024 15:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716476508; cv=none; b=C0wF6SlSaU6qQvMKMehojxALSNSQIjlOnNXKSE7GBgFyh82FeVdng2r6PejqFAH6ikKRUGGLrs5HS3WGGDM9OjHDONESPrfBs1/r0EvR69fKQUeohNAk/pmUwu8cvi9qVhv7cjTJs2m9O7iyVtVydUhHFqFzj6Vy8SCf67YDHno=
+	t=1716476512; cv=none; b=A3aLifEI60OW7BB2fMxao1Qn6HAlnPeO9TefqgtC6WwHykVJpupVtRoUr8cuaxFNgh86WzTL4nF4j1R/qUi4yUWowBeRnwcJpkHtAyqG5W3aQmzOQMAGLYfmEuP882pSr0nNoKCQkj2/nNUfMWJPyknjdDTyQHzdlqdvRYad1ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716476508; c=relaxed/simple;
-	bh=pGu1Eg2HkyDlVkfDSpRwnf0H0hscN2Wt8GnmLWgSAgY=;
+	s=arc-20240116; t=1716476512; c=relaxed/simple;
+	bh=vjt+cmVcTd/Pb33Pdy5i3IcyArhpy6Hbpole/X6gRcQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NihzRTCCbiy5zzOeG/GXwIzOYVvFkENaLh+xkjuv53Ax5anhix70H0FSrrgwmx2YLY/Pwq28qvEJlx0f7Ie9KECr8plTKSptk3JiNqssMo9riGHUU592omWpYqYk1wKJnF4hndVECcDYg6IAOU8yjNxTo37DYfENt2gOYpWeyqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97DC8339;
-	Thu, 23 May 2024 08:02:07 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BEA2A3F766;
-	Thu, 23 May 2024 08:01:40 -0700 (PDT)
-Date: Thu, 23 May 2024 16:01:38 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	James Morse <james.morse@arm.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=YgV6kfpsSazIojmbs7X8TYBcK4XVRSYFhWDZjyBU3Wdhcy2XNb6wB/BpJL5s8Fyb85HIUXG9TjEQLwFk81UnMW917VtVKKDa6OPhLCHbk90RhhV1DKsiEXylD4tkfLr0gLSfe+C0Tj/KWOzfyRnvuaOQT/XJ97Plfu48O1evD64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dsR/erEG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dsR/erEG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F92C32781;
+	Thu, 23 May 2024 15:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716476511;
+	bh=vjt+cmVcTd/Pb33Pdy5i3IcyArhpy6Hbpole/X6gRcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dsR/erEGWqTrpUYgBr8bhaGLVokjd8cGzstRgXhQ2zvCED20LY5mA0MnJl4aB4HJc
+	 La4XclaMTB3PLF5t0NJgcHpcBikZatrx9W4WY9ygCpu1jkJvp4V89pXQqDXr566CAL
+	 gTkjCgb0GVECIIBAC7rE9Vcc1BNWnE1kQBSn89vMljOj6PktOdWsJ4kFOSyrO2FQOr
+	 YJRZELiVBmkHdkK9xYQW0SBB5IY9tYW95xCXMJLE7tBB8hjy9m3a/szl7vBydpvJgo
+	 1cI8r/UjUvpLRpRRJc65nGhaaJ0KJTCyhyGWqb4hhOTwLwf4mJQ8SN2F9cBm49eRrj
+	 334Kp8GdszKmQ==
+Date: Thu, 23 May 2024 17:59:57 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Eric Chanudet <echanude@redhat.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com,
-	"Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	Peter Newman <peternewman@google.com>, dfustini@baylibre.com,
-	amitsinght@marvell.com, David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: Re: [PATCH v2 00/35] x86/resctrl: Move the resctrl filesystem code
- to /fs/resctrl
-Message-ID: <Zk9aUtGmeMN04+nD@e133380.arm.com>
-References: <20240426150537.8094-1-Dave.Martin@arm.com>
- <b60aa6cc-7396-42c5-9a42-db8d6e8bfef6@intel.com>
- <ZkOAhH6tm1NXpre2@e133380.arm.com>
- <64113803-e4b8-49a2-a217-e1be790872fe@intel.com>
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nick Piggin <npiggin@gmail.com>, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2] mm/mm_init: use node's number of cpus in
+ deferred_page_init_max_threads
+Message-ID: <Zk9Z7S_wbumOekP6@kernel.org>
+References: <20240522203758.626932-4-echanude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,50 +53,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <64113803-e4b8-49a2-a217-e1be790872fe@intel.com>
+In-Reply-To: <20240522203758.626932-4-echanude@redhat.com>
 
-Hi Reinette,
-
-Apologies for the slow response...
-
-On Tue, May 14, 2024 at 08:56:41AM -0700, Reinette Chatre wrote:
-> Hi Dave,
+On Wed, May 22, 2024 at 04:38:01PM -0400, Eric Chanudet wrote:
+> x86_64 is already using the node's cpu as maximum threads. Make that the
+> default for all archs setting DEFERRED_STRUCT_PAGE_INIT.
 > 
-> On 5/14/2024 8:17 AM, Dave Martin wrote:
-> > On Wed, May 08, 2024 at 08:41:37AM -0700, Reinette Chatre wrote:
-> >> On 4/26/2024 8:05 AM, Dave Martin wrote:
-> >>> This is a respin of the resctrl refactoring series described below,
-> >>> addressing review feedback.  Many thanks to those to responded with
-> >>> feedback on the v1 series [2].
-> >>>
-> >>> See Notes and FYIs in the individual patches for details on the changes
-> >>> and outstanding issues.
-> >>
-> >> What are your expectations regarding this series while considering [1] and [2]?
-> >>
-> >> Reinette
-> >>
-> >> [1] https://lore.kernel.org/lkml/ZiE8%2foXyjBef2qTy@e133380.arm.com/
-> >> [2] https://lore.kernel.org/lkml/acce93e6-4c8e-472d-a2bc-5cbad2950661@intel.com/
-> >>
-> > 
-> > I plan to propose a reworked version of the fflags and string parser
-> > stuff, and take a look at the other more minor outstanding issues.
-> > 
-> > The series does need rebasing, but otherwise I don't anticipate much
-> > change to the code from the Arm side unless there are further review
-> > comments.
-> > 
-> > Do you have a preference on how this series should proceed?
+> This returns to the behavior prior making the function arch-specific
+> with commit ecd096506922 ("mm: make deferred init's max threads
+> arch-specific").
 > 
-> I believe that I already answered this question in [2], hence my confusion
-> about this posting. 
+> Signed-off-by: Eric Chanudet <echanude@redhat.com>
 > 
-> Reinette
+> ---
+> Setting DEFERRED_STRUCT_PAGE_INIT and testing on a few arm64 platforms
+> shows faster deferred_init_memmap completions:
+> 
+> |         | x13s        | SA8775p-ride | Ampere R137-P31 | Ampere HR330 |
+> |         | Metal, 32GB | VM, 36GB     | VM, 58GB        | Metal, 128GB |
+> |         | 8cpus       | 8cpus        | 8cpus           | 32cpus       |
+> |---------|-------------|--------------|-----------------|--------------|
+> | threads |  ms     (%) | ms       (%) |  ms         (%) |  ms      (%) |
+> |---------|-------------|--------------|-----------------|--------------|
+> | 1       | 108    (0%) | 72      (0%) | 224        (0%) | 324     (0%) |
+> | cpus    |  24  (-77%) | 36    (-50%) |  40      (-82%) |  56   (-82%) |
+> 
+> - v1: https://lore.kernel.org/linux-arm-kernel/20240520231555.395979-5-echanude@redhat.com
+> - Changes since v1:
+>  - Make the generic function return the number of cpus of the node as
+>    max threads limit instead overriding it for arm64.
+> - Drop Baoquan He's R-b on v1 since the logic changed.
+> - Add CCs according to patch changes (ppc and s390 set
+>   DEFERRED_STRUCT_PAGE_INIT by default).
+> 
+>  arch/x86/mm/init_64.c | 12 ------------
+>  mm/mm_init.c          |  2 +-
+>  2 files changed, 1 insertion(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index 7e177856ee4f..adec42928ec1 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -1354,18 +1354,6 @@ void __init mem_init(void)
+>  	preallocate_vmalloc_pages();
+>  }
+>  
+> -#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+> -int __init deferred_page_init_max_threads(const struct cpumask *node_cpumask)
+> -{
+> -	/*
+> -	 * More CPUs always led to greater speedups on tested systems, up to
+> -	 * all the nodes' CPUs.  Use all since the system is otherwise idle
+> -	 * now.
+> -	 */
+> -	return max_t(int, cpumask_weight(node_cpumask), 1);
+> -}
+> -#endif
+> -
+>  int kernel_set_to_readonly;
+>  
+>  void mark_rodata_ro(void)
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index f72b852bd5b8..e0023aa68555 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -2126,7 +2126,7 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
+>  __weak int __init
 
-I guess James and I need to tidy up the loose ends and repost this.
+If s390 folks confirm there's no regression for them I think we can make
+this static.
 
-I'm hoping we can get a v3 out over the next few weeks or so.
+>  deferred_page_init_max_threads(const struct cpumask *node_cpumask)
+>  {
+> -	return 1;
+> +	return max_t(int, cpumask_weight(node_cpumask), 1);
+>  }
+>  
+>  /* Initialise remaining memory on a node */
+> -- 
+> 2.44.0
+> 
 
-Cheers
----Dave
+-- 
+Sincerely yours,
+Mike.
