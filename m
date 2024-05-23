@@ -1,120 +1,86 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAF31852
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 00:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7035515A8
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 01:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716425968; cv=none; b=FnhGfvj4CGQmwFxlIchdg5GqfV9NR9HYhbpTof5ty4Lt4ktnCzBiXpY8u+9pAGPCmswlRAnIdSSvdCefdZ+AI2UVgjsyVu42gRZs/9DlidKo54cgOFs7KtzCTjjbNNymx/lqlSIBFagDKUyHx3ZX+mrKO0r4Wj9NfkhXM4d0DtE=
+	t=1716426217; cv=none; b=h+JE6sEclWwmXyLsARrFtnn5VDCog61UpX9grfx/IWdHojkpigeUNljbibjihQNRZIdeN/Ncnj5OcYApPIMmDZ5hTgJhB/WZUK9DfwzJRqbM3BzgQWil/Cbbk4vhI1S9W8ZH5h9aDC8YN/QqKT+s9ZYNqftFK1TP3d+J2U0Ly8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716425968; c=relaxed/simple;
-	bh=CpuEU8gkiJ0/5ye3tcoFuX+/jEymMXGuXdXJUZl0AJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIGfx1PrORFOI/R5iXs9xaUK49UpfKoGPN6f1raFcq9iG21F4fa+q9STPx+52vSISf3XSvU1WbBfdmBKhTFXGrCh9c9v8bFbtmXvr5m+nyAPYqb7TtAoeq9JoGhe97aoBzykA4HQmbYNfi7u75l/7IPiSmsrGBj8l7uT6IH+rCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GC/q9BJc; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1716426217; c=relaxed/simple;
+	bh=uFhi1LYbiYEkxVyuLVKDEOWdqFUYbBtlQuarySVBmoI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j6UuBz3+dYeLQbDbSMxcNG/cFtH/gY3fweo/MRY5m7KREzClcSxXXNmjg4FIzyMvsCgtj7D1phyxdpCDyyOTc74LutnRWX0axwGnigsCCFIEXnGPba+noEJLeizbaaiIIuFyTwBn4JH2p7ywqxamygy1mY/PAhovr5u2dQACd6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0JSkKx0; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GC/q9BJc"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-657a07878easo1696832a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:59:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0JSkKx0"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f304533064so11087905ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716425966; x=1717030766; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CX8DBRwx1fNr/jRR54U+s7BTveofzSBxZ53Z/OKneyc=;
-        b=GC/q9BJcPUOxeD1PI/um9ZKzVulLIHFKYZqy/RIEvk1BdOJTzH8mRHO3iCm3opE/Lb
-         JnFa1TahhI5Elfq7PXWlmJJ5iDXlsZlUC8NlGCh5OuKf0EQOy3rpe8ixiPHeKKFOu0BY
-         DPbjEU0xQbHWGXS3nNDb0qaJIzyXyLywgCdMA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716425966; x=1717030766;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1716426216; x=1717031016; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CX8DBRwx1fNr/jRR54U+s7BTveofzSBxZ53Z/OKneyc=;
-        b=srNtlabVUIJIayUEFvE2Xheys0WCVFThjibV0vwV7qBf0pD0omyLsLH7E4MQH94EJC
-         FfqJG7CRMnJ5r6yFKzWruSs5Fk5Gr4ApIT9wefTRlhQ5vVwY44IVDASrX3RQtfR8kjnJ
-         R3RI3VkQGQ1qikvmlUVHIi47XYh6Py1qhnGucZxzr+mz6rrya4FDDrfMlCZbn9rnWs7p
-         anH6TAbSlTFbIZixElVT20piAT16ZlVMb4k3VPfW95GTDEoOZqLra9siBN6SqK0AkeDE
-         8Hppmhv+bDEfSk3jdiOXkWweOGUJJMM3CyQTH5hfIXLprUiNldRabvAaR1WBCftS6NVc
-         mbzg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6Cs7chPE/mqwUDlTNLONbl6fgpQ4hgVxXPleRFYQj+QTgvIhVG6EnOGXmkkZ9QBwoPDtarSv4Ly+41sF7p9bws01Wx951+6SKiSEZ
-X-Gm-Message-State: AOJu0YzXN7G17ZzK9Vgd3Bj6abS2wYxv1Nww8Tw6x7ocaS+QD2AxPwD+
-	GkkFyeeeyaEFD01Lu7tmDC1NML6oBBueFfAarE121ddWU4M0/YfOqRAQxx8iKG53ky8BSvlPC+Q
-	A/A==
-X-Google-Smtp-Source: AGHT+IF1kq0qc68Ti7q1/FxLfV3UPXpGc8WblBZGdDgOdUFW4QXyJFtxHjX5YhmqDbo6ItY/3CUtUQ==
-X-Received: by 2002:a17:902:c409:b0:1e4:3909:47c0 with SMTP id d9443c01a7336-1f31c9f7048mr51825565ad.62.1716425966480;
-        Wed, 22 May 2024 17:59:26 -0700 (PDT)
-Received: from localhost ([2620:15c:9d:2:3a97:1cc8:ab6c:8d0f])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1f30fe572f2sm35823005ad.131.2024.05.22.17.59.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 17:59:26 -0700 (PDT)
-Date: Wed, 22 May 2024 17:59:24 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: David Lin <yu-hao.lin@nxp.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvalo@kernel.org, francesco@dolcini.it, tsung-hsien.hsieh@nxp.com,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH v10 2/2] wifi: mwifiex: add host mlme for AP mode
-Message-ID: <Zk6U7CYW2bP-DVTM@google.com>
-References: <20240418060626.431202-1-yu-hao.lin@nxp.com>
- <20240418060626.431202-3-yu-hao.lin@nxp.com>
+        bh=h6HItl0WzyFaHz5B2bjTt/96lgu0ggjCZjX8eItprb0=;
+        b=h0JSkKx0XrtLAMdt010F4ZDSGAqwi+VBkYwxjHgnTMpd5iEhByWip382HkOcVPAxmq
+         WwI845t5fKu4HZu6WcsUQRMpBQeJPGmR2r17AJLbblP69VrW16cRmeK5QZXiFSnWoQcu
+         wAETD7x9nF+MBA1Gabq0TqatGlFrEjRygLm+vWNsAkHe+X+8ZMHmzBJSeTLJ5oEBCGBO
+         bYWJRoVu/jf586EJbZY5lk8xmkAzlzBeaLw/Kn2AcFuAUZXdUqt/HuNh579ig86GR8Qo
+         OIWxR7h9DCFUE6a2R8EqXVxZ57FTmBEkAlkb0s7S00FcwJ2PuhoHzKqGISoE8Sxj5d8q
+         2JKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716426216; x=1717031016;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h6HItl0WzyFaHz5B2bjTt/96lgu0ggjCZjX8eItprb0=;
+        b=FthuLsOU3vR4KWFG592FMS9LJjMjrYkQyk5CXYKLPR5B7vLk4VNTURmSdXHO8HDhLE
+         1KArK5wGNWnFTeeGUibwQtdLWng03fubtneKIXmx5N+kqVb7cja055n+Jp+6ObqzbC1K
+         0eZTdOSTBdEfy+u//ZWT2PJD5nIhGCcckhaxcbLY0ZAM6U023PeucgDyZy8O2NQuZuQQ
+         gpVyvMhk29ODDIcF548564tSDW00iR9VW/Nqb2ThbNNV3LoAc9F5LzLBlDUODFkuIpIZ
+         cRndX48Olc/UIuv9za24AP22lB2UuYFAfC9Gc8KFx4gce4jEFkLRfoV9aZjyiVNeoh+h
+         p9XQ==
+X-Gm-Message-State: AOJu0Yz0L3eBHKP0RHcbliRST9WCC0gUJpSbw2aGzLU0ql7LJf/XDk89
+	VqFRtxAmSpjgoLKc2h7WzhEjhk64WXmyrSNr4AnZ+A0n14Y6Ibu5
+X-Google-Smtp-Source: AGHT+IGy68VMWFIl6vJbvB9D7qEuijxTlLO8QZZrW8K97/AYyT505JHESS/Io/dx60OHGWweQC/HjA==
+X-Received: by 2002:a17:902:e552:b0:1f3:2451:8de8 with SMTP id d9443c01a7336-1f339ef4886mr12683535ad.7.1716426215652;
+        Wed, 22 May 2024 18:03:35 -0700 (PDT)
+Received: from localhost.localdomain ([111.196.74.188])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0b9d4828sm244348265ad.20.2024.05.22.18.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 18:03:35 -0700 (PDT)
+From: Xiong Nandi <xndchn@gmail.com>
+To: akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	quic_bjorande@quicinc.com,
+	cmllamas@google.com,
+	quic_eberman@quicinc.com,
+	Xiong Nandi <xndchn@gmail.com>
+Subject: [PATCH v2 0/2] scripts/decode_stacktrace.sh: better support to ARM32
+Date: Thu, 23 May 2024 09:03:16 +0800
+Message-Id: <20240523010318.12934-1-xndchn@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240521194010043-0700.eberman@hu-eberman-lv.qualcomm.com>
+References: <20240521194010043-0700.eberman@hu-eberman-lv.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418060626.431202-3-yu-hao.lin@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+v2:
+ - Split the patch into two.
 
-Hopefully-last comment for patch 2:
+Xiong Nandi (2):
+  scripts/decode_stacktrace.sh: better support to ARM32 module stack trace
+  scripts/decode_stacktrace.sh: wrap nm with UTIL_PREFIX and UTIL_SUFFIX
 
-On Thu, Apr 18, 2024 at 02:06:26PM +0800, David Lin wrote:
-> --- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+ scripts/decode_stacktrace.sh | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+-- 
+2.25.1
 
-> @@ -1712,7 +1735,7 @@ static const u32 mwifiex_cipher_suites[] = {
->  };
->  
->  /* Supported mgmt frame types to be advertised to cfg80211 */
-> -static const struct ieee80211_txrx_stypes
-> +static struct ieee80211_txrx_stypes
->  mwifiex_mgmt_stypes[NUM_NL80211_IFTYPES] = {
->  	[NL80211_IFTYPE_STATION] = {
->  		.tx = BIT(IEEE80211_STYPE_ACTION >> 4) |
-...
-> +	if (adapter->host_mlme_enabled) {
-> +		mwifiex_mgmt_stypes[NL80211_IFTYPE_AP].tx = 0xffff;
-> +		mwifiex_mgmt_stypes[NL80211_IFTYPE_AP].rx =
-> +			BIT(IEEE80211_STYPE_ASSOC_REQ >> 4) |
-> +			BIT(IEEE80211_STYPE_REASSOC_REQ >> 4) |
-> +			BIT(IEEE80211_STYPE_PROBE_REQ >> 4) |
-> +			BIT(IEEE80211_STYPE_DISASSOC >> 4) |
-> +			BIT(IEEE80211_STYPE_AUTH >> 4) |
-> +			BIT(IEEE80211_STYPE_DEAUTH >> 4) |
-> +			BIT(IEEE80211_STYPE_ACTION >> 4);
-> +	}
-
-This doesn't look like a sound approach. I think you should keep
-'mwifiex_mgmt_stypes' const, because if you're making modifications to
-it, then you may break multi-adapter situations. Consider someone loads
-this driver with host_mlme_enabled==true, and then later registers a
-device with host_mlme_enabled==false. The second adapter will get the
-wrong values.
-
-I think 'mwifiex_mgmt_stypes' is small enough you might as well just
-make a second copy with the MLME-enabled values, rather than fiddling
-with modifying a single copy.
-
-Aside from that:
-
-Acked-by: Brian Norris <briannorris@chromium.org>
-
-(Feel free to carry that to a v11, since my only remaining substantial
-concerns are with patch 1 I think.)
-
-Brian
