@@ -1,94 +1,63 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C199529AB;
-	Thu, 23 May 2024 02:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6761879;
+	Thu, 23 May 2024 02:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716430438; cv=none; b=jmTQpuZM0jFIJmvU7BYvwPpgG7S1xZCBy98O9/u4SA6w3Z3ByZsfJbP3vqTTs070/5k80rmsDfK3IEQUwHuLMFDDG/uZOkKHYyveDw1O9Hmj8vZhSXhzdVzSNad69gKysFb+ZO8YVnKhlkN6wPdZuYYTKBuVXHY0gzhzuw0/Yiw=
+	t=1716430536; cv=none; b=SdrQYPyjIWbAU3Ef/ioSOTGGcF3s3vRh/fYh1B/H4lz6l2wBWDeyYcJOsgsomMNeqiYZmmy4DjBw8a+6g3lleFOdLmp/tqqVBA3ARRF3ziIJ+7HNy0LHcRInDe32iZVLLgjWKfiHE8FB7HQezSdmxgIjBlROh+/CPDBtRHR9zNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716430438; c=relaxed/simple;
-	bh=JjfbM2SI2LLXpy0ta+dthuEvJcDGyZY7PJLCvNklKio=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q02X+NjDrwPvuKKcU2lvVTY8p3nIAqzezJq9aMHgKQUyTBSCr81I57HnLl/fC4BJNDh8/gaXtMP7hOvanuCi84sWxQA4CgncMVWXepxHq45JJHnKQFFnkdNvZEUPoMsJkq0prUjInXZY6jdzVGu3UNQkqvjDO4ODyeVqy2MemcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [121.237.92.18])
-	by APP-05 (Coremail) with SMTP id zQCowAA3PeVQpk5msp_mDA--.32642S2;
-	Thu, 23 May 2024 10:13:37 +0800 (CST)
-From: zhouquan@iscas.ac.cn
-To: anup@brainfault.org,
-	atishp@atishpatra.org
-Cc: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Quan Zhou <zhouquan@iscas.ac.cn>
-Subject: [PATCH] RISC-V: KVM: Fix incorrect reg_subtype labels in kvm_riscv_vcpu_set_reg_isa_ext function
-Date: Thu, 23 May 2024 10:13:34 +0800
-Message-Id: <ff1c6771a67d660db94372ac9aaa40f51e5e0090.1716429371.git.zhouquan@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1716430536; c=relaxed/simple;
+	bh=qVQggCqRhbUcbFurc9+D/oAt708hE2ehLytBDP3BHWc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jnT1iOYt1ewWooIpVaFBA5Lm8fC5IRezF7vQUxWZ+rg4cvbzsFWLhDXjEJlTJ62+pGayeuY93DE2Opt0GQx6Wdk+WG9QUlJNRoJet7D0aCaK+g5CTwKON4ftlXAkjO8InBeOPx0uFovgNr0Fu2y6aXYsu9CeFtMKhfhg+ST3pAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Inlv9gKK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Inlv9gKK"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 799ABC2BBFC;
+	Thu, 23 May 2024 02:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716430536;
+	bh=qVQggCqRhbUcbFurc9+D/oAt708hE2ehLytBDP3BHWc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Inlv9gKKfmuWBMgUgJHUS3qQcwQrSUr+CjpKgxCKu8QnERGkt/9tbMLBFPvz23Hoq
+	 KCxHh+u8tk3mDtqoNLRTXnglCva8G8H57+El8rTfsx+eRkl1emn7EpMi22AB9MQTkx
+	 kSyGgFjlrnuB0PjsBifnIHAtW5DjQtzuVuwC70w7npmJlXa9P2q1IT6AAehJFusamd
+	 3F64hZ2aB7l1Op1XU/42BTqgqci066u5quf7KG2bjweEMUrI8bf77oI8dbSlKko0fb
+	 xodpAnYepP8W1q0Y7Bt/XpD/ubMqxHLyhmeM/q8V0Tlehcw9pDVud1Omeyi+4oRgCf
+	 /8lyXidIuoxpg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 70F2DC4332E;
+	Thu, 23 May 2024 02:15:36 +0000 (UTC)
+Subject: Re: [GIT PULL] additional MM updates for 6.10-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240522172431.d2aa8775d7a48999afbc29b4@linux-foundation.org>
+References: <20240522172431.d2aa8775d7a48999afbc29b4@linux-foundation.org>
+X-PR-Tracked-List-Id: <mm-commits.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240522172431.d2aa8775d7a48999afbc29b4@linux-foundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-stable-2024-05-22-17-22
+X-PR-Tracked-Commit-Id: 99b80ac45f7ec351c2d1c9fbfec702213dcae566
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5c6f4d68e2aca67e425b7227369ec9fde8adfb6d
+Message-Id: <171643053645.23672.3041718607921419995.pr-tracker-bot@kernel.org>
+Date: Thu, 23 May 2024 02:15:36 +0000
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org, mm-commits@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAA3PeVQpk5msp_mDA--.32642S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7try8WrykGryrtr15CrWkCrg_yoW8GF48pr
-	4DCrsYyrs5CFZ7Ca97ZrZ5Wr4Y9rs0gws5C3yI93yrJr45trWrXF1rtay7WF98GFyxXrWS
-	9FW8tF1FvF4Yva7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
-	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
-	xVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkIecxEwVAFwVW8JwCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU9Z2fUUUUU
-	=
-X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiBg0GBmZOWhzPuQABsS
 
-From: Quan Zhou <zhouquan@iscas.ac.cn>
+The pull request you sent on Wed, 22 May 2024 17:24:31 -0700:
 
-In the function kvm_riscv_vcpu_set_reg_isa_ext, the original code
-used incorrect reg_subtype labels KVM_REG_RISCV_SBI_MULTI_EN/DIS.
-These have been corrected to KVM_REG_RISCV_ISA_MULTI_EN/DIS respectively.
-Although they are numerically equivalent, the actual processing
-will not result in errors, but it may lead to ambiguous code semantics.
+> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-stable-2024-05-22-17-22
 
-Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
----
- arch/riscv/kvm/vcpu_onereg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5c6f4d68e2aca67e425b7227369ec9fde8adfb6d
 
-diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
-index c676275ea0a0..62874fbca29f 100644
---- a/arch/riscv/kvm/vcpu_onereg.c
-+++ b/arch/riscv/kvm/vcpu_onereg.c
-@@ -724,9 +724,9 @@ static int kvm_riscv_vcpu_set_reg_isa_ext(struct kvm_vcpu *vcpu,
- 	switch (reg_subtype) {
- 	case KVM_REG_RISCV_ISA_SINGLE:
- 		return riscv_vcpu_set_isa_ext_single(vcpu, reg_num, reg_val);
--	case KVM_REG_RISCV_SBI_MULTI_EN:
-+	case KVM_REG_RISCV_ISA_MULTI_EN:
- 		return riscv_vcpu_set_isa_ext_multi(vcpu, reg_num, reg_val, true);
--	case KVM_REG_RISCV_SBI_MULTI_DIS:
-+	case KVM_REG_RISCV_ISA_MULTI_DIS:
- 		return riscv_vcpu_set_isa_ext_multi(vcpu, reg_num, reg_val, false);
- 	default:
- 		return -ENOENT;
+Thank you!
 
-base-commit: 29c73fc794c83505066ee6db893b2a83ac5fac63
 -- 
-2.34.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
