@@ -1,127 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B458618E11;
-	Thu, 23 May 2024 03:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F2618E11
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 03:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716434133; cv=none; b=Z5tod9Ub2Hs0t5zeTBqFD3QA3g0mMM++/d2XZPLiYbFQfvmQBIIXdIYL8byKTf734g53MeJuTTGmpj6W9VwUELPTLmkAYcW5x9ziiJ8btzTE/xthZr0Es2md6s3FxuxioEPSVnd64MFiJMCiKDXaguTvMykF5o6s9b2M9lO5kk4=
+	t=1716434238; cv=none; b=tsE+VRZsH2k52wbkks6ddQUvyS+5XESy7KZi0j98eHFQuP0O+B8CenkSsoXOJnwUJgMnAc0zhbgfvvOdghgPSVvi3ah5hbmnvWbqbciqpKFkh9q6ZEY/93ac1FOEsIuiPS/sQ8j8y7Z5wz8zV+GDs9j/JJPIW+GPgoJzj95zX8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716434133; c=relaxed/simple;
-	bh=mnc3vPUa53ZuitOW/W9PdnOeYFxVvgU0shbAspLPL5Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i5ZUMwl8MN2pRaorjipROnDRniXl/1xggcIw89zyR0nCXbIvcyJ2EQmQ6hbzM603pP98QHgf2mVDx+scRI8kuUv+8ojm5jrxhiGHePiGF8EFR+NbrquqNk61T6SlCloPVULjlPBO1jHtNi1hvK9t+b5NGHNOTPmLGdyzIi3tmKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IRZhpxJW; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716434238; c=relaxed/simple;
+	bh=mmip/Fmtcp8q2RqKrZFvswuRwnbSMGnRUk9BvaM36LA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EVkz9NqwdwfreLCNqzJZZu9MH+A49nfpCInU7KZtkbaa4iMavr4bPr44Ffz2S/82JdftM15umy5A8tx1a9+Lc8Nh3dCV+ayFCFpN79qoD6P1v0MmbDGbl+Cs4TwEDDsQybCW0hGzpG9iK7NgTfwlZTBxCv4nTeTnS8Ionun64po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=fW+SsOKt; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IRZhpxJW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716434132; x=1747970132;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mnc3vPUa53ZuitOW/W9PdnOeYFxVvgU0shbAspLPL5Y=;
-  b=IRZhpxJWo3xQUYEsy0g7XPyU5lovhZJVkeYNqYukeRKL5col0Vio3nPR
-   P755f5N3YftpmrmtW2m9o39xeEVuj0Qn6yUmz6uhoj5BT3L1wTqO9tSRa
-   dAvuQgYtkIW+2b0rUZWLteWXipNcIsUgdy5B0dtLTge+0O5U4oK83W7B/
-   UGoAV8DXiU58p0uk3bib6mNR3JEnCusuzWSED78ggRpaPEY65zaKHk96L
-   igw63KdA8CANzMRb9QN14Armi47XL21dSkWYIjGrQwosDNE63tKAa4CH9
-   +lIzYiKPry//RDms21y0lcGcEX+hwPMLMqdJshOyANiOsJhFG/4frtidQ
-   Q==;
-X-CSE-ConnectionGUID: lxc6ThHLSlGQuTAGTDhDhQ==
-X-CSE-MsgGUID: l1bhAR7mRVShYfiYwupXxw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="16514486"
-X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="16514486"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 20:15:30 -0700
-X-CSE-ConnectionGUID: BBZrUNMUQzqvWJRz7huJ/w==
-X-CSE-MsgGUID: eBTIAcpCRK2wCOLPuCcgWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="34056639"
-Received: from xiao-desktop.sh.intel.com ([10.239.46.158])
-  by orviesa008.jf.intel.com with ESMTP; 22 May 2024 20:15:24 -0700
-From: Xiao Wang <xiao.w.wang@intel.com>
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	luke.r.nels@gmail.com,
-	xi.wang@gmail.com,
-	bjorn@kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@google.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	pulehui@huawei.com,
-	haicheng.li@intel.com,
-	Xiao Wang <xiao.w.wang@intel.com>
-Subject: [PATCH v2] riscv, bpf: Use STACK_ALIGN macro for size rounding up
-Date: Thu, 23 May 2024 11:18:35 +0800
-Message-Id: <20240523031835.3977713-1-xiao.w.wang@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="fW+SsOKt"
+X-Envelope-To: privatesub2@gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
+	t=1716434233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GlkXcThfgU+Weh7FowP8bX9amJyy2rYrJoLZLZdXl6E=;
+	b=fW+SsOKt1InGER2nyZUsklau+h6jfkQZ6d5LAt/sqdexUzzua6yvkOvOnSykAiKTc325OD
+	kEdRSQq5hd2cfoB9gzlCtXGBudBH507ioOA6tHjMyHkx+NTw8tlqC1Sy93ZX+C4lmVXxMr
+	0ZsYWliPNAHffDofoyE0ljhFoY19tC627zytcfs/6bKJfgFwm2umSWPeo5RkoqUvv9DBBa
+	SHL+/EcFzSWM/vdtzOit88gEE5yuZItNIBbkeTm2sdzWS4c9Yd9ezVCgwqNGPhfvWKNdk2
+	y3jUKiIhQjshWHNwp28gkaUnzMw6+cBeX3lridRy7+aDOoIxC5Vbp6OCzh62Kg==
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: fusibrandon13@gmail.com
+X-Envelope-To: ukleinek@kernel.org
+X-Envelope-To: robh@kernel.org
+X-Envelope-To: krzk+dt@kernel.org
+X-Envelope-To: conor+dt@kernel.org
+X-Envelope-To: wens@csie.org
+X-Envelope-To: jernej.skrabec@gmail.com
+X-Envelope-To: samuel@sholland.org
+X-Envelope-To: paul.walmsley@sifive.com
+X-Envelope-To: palmer@dabbelt.com
+X-Envelope-To: aou@eecs.berkeley.edu
+X-Envelope-To: p.zabel@pengutronix.de
+X-Envelope-To: mkl@pengutronix.de
+X-Envelope-To: bigunclemax@gmail.com
+X-Envelope-To: linux-pwm@vger.kernel.org
+X-Envelope-To: devicetree@vger.kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-sunxi@lists.linux.dev
+X-Envelope-To: linux-riscv@lists.infradead.org
+Date: Thu, 23 May 2024 13:16:47 +1000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: John Watts <contact@jookia.org>
+To: Aleksandr Shubin <privatesub2@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	Brandon Cheo Fusi <fusibrandon13@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Maksim Kiselev <bigunclemax@gmail.com>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v9 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
+ support
+Message-ID: <Zk61H05-BTVUarFV@titan>
+References: <20240520184227.120956-1-privatesub2@gmail.com>
+ <20240520184227.120956-3-privatesub2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240520184227.120956-3-privatesub2@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Use the macro STACK_ALIGN that is defined in asm/processor.h for stack size
-rounding up, just like bpf_jit_comp32.c does.
+Hi,
 
-Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
-Reviewed-by: Pu Lehui <pulehui@huawei.com>
----
-v2:
-* The patch targets bpf-next tree, rather than riscv-next. (Lehui)
----
- arch/riscv/net/bpf_jit_comp64.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Here's a quick review based on the experience of me writing my own driver.
 
-diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_comp64.c
-index 79a001d5533e..c21a0ff23415 100644
---- a/arch/riscv/net/bpf_jit_comp64.c
-+++ b/arch/riscv/net/bpf_jit_comp64.c
-@@ -868,7 +868,7 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im,
- 	stack_size += 8;
- 	sreg_off = stack_size;
- 
--	stack_size = round_up(stack_size, 16);
-+	stack_size = round_up(stack_size, STACK_ALIGN);
- 
- 	if (!is_struct_ops) {
- 		/* For the trampoline called from function entry,
-@@ -1960,7 +1960,7 @@ void bpf_jit_build_prologue(struct rv_jit_context *ctx, bool is_subprog)
- {
- 	int i, stack_adjust = 0, store_offset, bpf_stack_adjust;
- 
--	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
-+	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, STACK_ALIGN);
- 	if (bpf_stack_adjust)
- 		mark_fp(ctx);
- 
-@@ -1982,7 +1982,7 @@ void bpf_jit_build_prologue(struct rv_jit_context *ctx, bool is_subprog)
- 	if (ctx->arena_vm_start)
- 		stack_adjust += 8;
- 
--	stack_adjust = round_up(stack_adjust, 16);
-+	stack_adjust = round_up(stack_adjust, STACK_ALIGN);
- 	stack_adjust += bpf_stack_adjust;
- 
- 	store_offset = stack_adjust - 8;
--- 
-2.25.1
+On Mon, May 20, 2024 at 09:42:20PM +0300, Aleksandr Shubin wrote:
+> +	act_cycle = FIELD_GET(SUN20I_PWM_PERIOD_ACT_CYCLE, val);
+> +	ent_cycle = FIELD_GET(SUN20I_PWM_PERIOD_ENTIRE_CYCLE, val);
+> +
+> +	/*
+> +	 * The duration of the active phase should not be longer
+> +	 * than the duration of the period
+> +	 */
+> +	if (act_cycle > ent_cycle)
+> +		act_cycle = ent_cycle;
+> +
+> +	/*
+> +	 * We have act_cycle <= ent_cycle <= 0xffff, prescale_k <= 0x100,
+> +	 * div_m <= 8. So the multiplication fits into an u64 without
+> +	 * overflow.
+> +	 */
+> +	tmp = ((u64)(act_cycle) * prescale_k << div_m) * NSEC_PER_SEC;
+> +	state->duty_cycle = DIV_ROUND_UP_ULL(tmp, clk_rate);
+> +	tmp = ((u64)(ent_cycle) * prescale_k << div_m) * NSEC_PER_SEC;
+> +	state->period = DIV_ROUND_UP_ULL(tmp, clk_rate);
 
+Doesn't ent_cycle require a + 1 here?
+Shouldn't act_cycle be > ent_cycle on 0% duty cycles?
+
+> +			/* if the neighbor channel is enable, check period only */
+> +			use_bus_clk = FIELD_GET(SUN20I_PWM_CLK_CFG_SRC, clk_cfg) != 0;
+> +			val = mul_u64_u64_div_u64(state->period,
+> +						  (use_bus_clk ? bus_rate : hosc_rate),
+> +						  NSEC_PER_SEC);
+
+It would be nice if it reclocked both channels.
+
+> +		/* calculate prescale_k, PWM entire cycle */
+> +		ent_cycle = val >> div_m;
+> +		prescale_k = DIV_ROUND_DOWN_ULL(ent_cycle, 65537);
+> +		if (prescale_k > SUN20I_PWM_CTL_PRESCAL_K_MAX)
+> +			prescale_k = SUN20I_PWM_CTL_PRESCAL_K_MAX;
+> +
+> +		do_div(ent_cycle, prescale_k + 1);
+> +
+> +		/* for N cycles, PPRx.PWM_ENTIRE_CYCLE = (N-1) */
+> +		reg_period = FIELD_PREP(SUN20I_PWM_PERIOD_ENTIRE_CYCLE, ent_cycle - 1);
+> +
+> +		/* set duty cycle */
+> +		val = mul_u64_u64_div_u64(state->duty_cycle,
+> +					  (use_bus_clk ? bus_rate : hosc_rate),
+> +					  NSEC_PER_SEC);
+> +		act_cycle = val >> div_m;
+> +		do_div(act_cycle, prescale_k + 1);
+
+I'm not sure about this code. I don't quite get where the 65537 comes from or
+what's really happening here.
+
+To my understanding you either want to limit PWM_ENTIRE_CYCLE to 0xFFFE so and
+scale PWM_ACTIVE_CYCLE from 0 to 65535 so it can be 0x0 at 100% duty cycles and
+0xFFFF at 0% duty cycles, OR you want to scale it from 0 to 65536 and check if
+the value is 65536, and if it is wrap it around to 0 and flip the polarity.
+
+Thanks,
+John.
