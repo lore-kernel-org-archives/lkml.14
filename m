@@ -1,121 +1,264 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2061.outbound.protection.outlook.com [40.107.247.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD7113BAD5
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 12:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716467441; cv=none; b=ZGZ8mINrLzkVfySuBFYMHsZBhKULrH+zCAiZmDSvtjAKCKrqhIlO+iM9DEmduPdVdt9ibdMPqCN/Fnlc5DYVePij3yF8ZvvoI+EKCVNt9LMZPLnzNf18vBk/f0fU60X6m0mzhQPw2GW+arnfGddu42eKZQ3R0v5g7aUkNc4gZ6E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716467441; c=relaxed/simple;
-	bh=Bjz/ig/gLbIXoRDfEEu5wQSlFToKNYmRgh2HDGqS07I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nqDdNRLV4CMl8xOHRKdOyOKdVX6kOmdgXhUKCtTu8cJ+juUHEgewmlSvKuX7nJ1oNAE6QKPKO1kmKLwtr/7qdQSHrFHKnA7IkSyxA3LTq2xk78Vc9aQvrt5IlsM4pGf4wLaBVa34oqlI8wwPGDE1Q7yodTSnRLPG+iHWTwkb8Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PXmD2pVG; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C4E13BAD5;
+	Thu, 23 May 2024 12:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716467464; cv=fail; b=QEcu1hpekwKd18Juww4FkJpst7ia30nAC06/XXu3GNqK9d7l53bFl2Nt86QHn+Q3phydaQOCbp9RKoWv3JN7/4PvOZKaUsB1uGkC09KeF9wZZo7Shi9JXPtaI6r2AXZhgxfN5velMvqanQUVVrN7mD2wzRXtVInn6xkBkxdkRjs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716467464; c=relaxed/simple;
+	bh=k1fh+pRxP1lRUc3PmAAU27wqu9cU17dyXMgAO0fyx/w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PiAFcKkz5AHc4uDXvxdtC0GnnsCRpeuLx4ttGu/8pVEJwjs6kXvs1/wYh/8vzm8VFV27dT5EWQCn6qXqGT6EiTqFxKyC2xqUB5KQ9M8c2uiLddzbFDl+mBc9ycdgaqbldlqBhBES9bDf1fVvIS6dXx2SbJ5U5Gen50U0aiHopSc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Jd4EfRRU; arc=fail smtp.client-ip=40.107.247.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PXmD2pVG"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4200ee47de7so53036135e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 05:30:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716467437; x=1717072237; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sxpjAXqiH/+EfsCOuAq8y02ih0xRop+9c4sjd7YvDrY=;
-        b=PXmD2pVGq1u/U5yQD5U8MGlRv5v9/c/YXUoU8aYPNTZHaESyyjpWm8pWGMzNfx8TDF
-         wm4xWy2OK/i0ACrUvljVg3xlyMcz2oekQctCdt9ZqrbvRn0Q0uQBxeJ1fNSXEvJQwcjx
-         Hrc1pnBn0jqkecuVtw78uRvvClHU2OOrvRTXolxVvMe01/gdSLSxv0yEZSTk4Ip3FHzC
-         gQ9xWKsq7m32CI8CSy1SZRj39+tvzAqHsXy18GrCdPnOC6y90I3sbnMzfkxB9H9lQGoi
-         6hFXnQAtC3Mo5ZH8xdG32/FFuqxjSWEHj4Dhewb1rG10gR/eBLpAjwvUWBN7H31ixm0t
-         27Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716467437; x=1717072237;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sxpjAXqiH/+EfsCOuAq8y02ih0xRop+9c4sjd7YvDrY=;
-        b=ZwhApsvCd0mZ7nhRUCTdleUzlAlFhy6uQ/utrhViY4FCgBy322a9/XFwi99l4xSgNM
-         j4xyywCYI9XPPD16RVLp0/GR8jdJHH9SeRCuI7vI2WIQsEONyQ1v0RRh2s0DMjK/qpUC
-         HKTQwhr1xrtyZwRB9wOXoMK1Xjmi8g/mMr5xFqmqcJkWPl+PeecPMUEPeYW9d3Nk1aPP
-         AwUMYnIbAu1TGVl015uLAMEClWTnVIGnw/ihJ01RjZ1e4TdDZqyZLKKjB930N8B5dDCV
-         /fnsmQpDyLzTLkEM5F9eU7O1o9/exTjPsqPpcQKOpWYdDVJJxCakmkjhmv4h/7VgOA9U
-         1ZwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXvIY9alG/d0dOUOKV65yst5mJ45tgyglTSCFLn1k8pvfbgN+plZTgcyWP8yrMk4TewBvaiaRXtnkEJK31fnZeAvrzTA+r/DE6kDrN
-X-Gm-Message-State: AOJu0YyIiqhlWUpxAgx5oxGrh5PAZBSwHjfJ2Zu+QU2yfzEA2+2ENCm0
-	404aEXn6tdfbre18yD8fcuRagRIOdojuicJhzyu/ctbFJ4Q9aO0ZX8x0XvyCBw4=
-X-Google-Smtp-Source: AGHT+IHsPYPK5nLhbLq8ov1G8vIMZXbft1sDAvZ24WiHuV5r2ypulRQGNKivfF6NhXredx7u8RAeDg==
-X-Received: by 2002:a05:600c:1c15:b0:418:5ed2:5aa6 with SMTP id 5b1f17b1804b1-420fd34d36bmr38811025e9.31.1716467436686;
-        Thu, 23 May 2024 05:30:36 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100f7c047sm24088605e9.26.2024.05.23.05.30.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 05:30:36 -0700 (PDT)
-Date: Thu, 23 May 2024 15:30:32 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Kiran K <kiran.k@intel.com>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-	Chandrashekar <chandrashekar.devegowda@intel.com>
-Subject: drivers/bluetooth/btintel_pcie.c:386 btintel_pcie_recv_frame() warn:
- variable dereferenced before check 'data' (see line 380)
-Message-ID: <7446b314-53f8-4ec7-9ff7-ae47defc43fb@moroto.mountain>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jd4EfRRU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZbQMl8ogVJqZvT5mnw6GaS6oplDsSj8mEQC0ESMSLnGxDRWYgHOUrwvy0ip1espbvbVLAMPigttZOVA920PP6HJn6pnbZEIMOSiQGQuLOIeuHAhqd9EH0jr7DnyMgIzaBwApe/Wb65cGln5gg1h+ChHyuGpjhEuPDT13j6Ke5wbJw+W3ZG962Qke8uCGLqVta6yPwqhy4O99YeSMEPvvbg0Zl5kkjAh8rsLw03g7DIIEA6PoWjk9Ve4wHq6g5Y9Vlqng9cKDhQaiTv5uF50s+myYqhC9/170J4UbU71kZEDnWkVsV/cF9C3sK2fTY+7nejrR7MqkyanTMG3bNS53Pw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/WhhBEG9+XEVsMS8zJpTanS63MRD1KudmLKoScDpNoA=;
+ b=IyKDG9V664XiAMCuL/zJrdizQrIPQ9VzHQG/lMK0BtLbnX4sWnnPdE3X2yaRwK4Z0NWNb21ICmXXOykovv4czLbVH9QoDkfFzQaDSspD5weQHzmOuiNT+RnTV4Vl0PyCOTFkg/LQEpBDyfhTHDo0lkRaJR6rFOXp8sdKPPoOu+Y88rf5SmrfccUtlPQKiLthg3g7U0LO3ji4beabVWEKhUj+//ibm3kfnp7TTlmTiKOHDlmfWyCgLWAMvBD/FroPY5IXevODuiKaQ9Ik5493byaIEz4ofwae1k1SUj5gIgSZIS+8rJVrD/TjVU9Qek18VqIx2k8ouaVyhchwrjhlkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/WhhBEG9+XEVsMS8zJpTanS63MRD1KudmLKoScDpNoA=;
+ b=Jd4EfRRUNevT8/MVybN1XDT1b/5Fcy405mlS9urbdoZQvkt0kfm1ZgHZsqtkD2vwwo1Nj2fsuqBKgi7ljqhkQu0s8Cle57EwZ4g4RMSLd3EJ9IDsdoQA3uaVJ64NaoVYCpqe1cTBubosNoBnpnhzeqpp6NmipcLoUJL0kH5THCM=
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
+ by VI0PR04MB11069.eurprd04.prod.outlook.com (2603:10a6:800:266::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19; Thu, 23 May
+ 2024 12:30:59 +0000
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::e751:223e:aa3d:5827]) by AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::e751:223e:aa3d:5827%4]) with mapi id 15.20.7587.035; Thu, 23 May 2024
+ 12:30:59 +0000
+From: Pankaj Gupta <pankaj.gupta@nxp.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+CC: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, Shawn Guo <shawnguo@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>
+Subject: RE: [EXT] Re: [PATCH v2 2/5] dt-bindings: arm: fsl: add imx-se-fw
+ binding doc
+Thread-Topic: [EXT] Re: [PATCH v2 2/5] dt-bindings: arm: fsl: add imx-se-fw
+ binding doc
+Thread-Index: AQHarP9S3VQaTkhgFEm8Z/1nPFfSbrGkvpeAgAAA2TA=
+Date: Thu, 23 May 2024 12:30:59 +0000
+Message-ID:
+ <AM9PR04MB86042A999B5A346B011FD97595F42@AM9PR04MB8604.eurprd04.prod.outlook.com>
+References: <20240523-imx-se-if-v2-0-5a6fd189a539@nxp.com>
+ <20240523-imx-se-if-v2-2-5a6fd189a539@nxp.com>
+ <171646712724.2026308.5404698488082776575.robh@kernel.org>
+In-Reply-To: <171646712724.2026308.5404698488082776575.robh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM9PR04MB8604:EE_|VI0PR04MB11069:EE_
+x-ms-office365-filtering-correlation-id: 6faff1aa-b2c6-4540-12ee-08dc7b243364
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|7416005|366007|1800799015|376005|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Xcwcv9RWDCMuC78S0dT7MvGDEptxjaX8V2oMQMUxT8qk4Jfx9AHLSuSscylQ?=
+ =?us-ascii?Q?kmZIIfPoaVYNo4889/BZN21aE95/1LA9soqBlvB5ojjVMjrbDDR/x0vi23u8?=
+ =?us-ascii?Q?XAa88CiK6XRJOmwUnt7C95HeBMLrZcguXMXnhEICXXmWEi7jeptc6naFb7Bw?=
+ =?us-ascii?Q?5m6eG0Q8NhjRWkps7Wv6VAJ3S3vqt13xDGyjpTcr79ZONJCX+GYRTKYIdm/8?=
+ =?us-ascii?Q?fDZ/GxsW/8UtwGkd1JOV9SVdvSuqdBvbRehDoH/tWZl14Jk6xhv23yKfd/lu?=
+ =?us-ascii?Q?uvqYM2kVh8TcQpnevBBa7lmx+diDbprg5JZmY8q7/P+v9R2PSLYvNHKgINy4?=
+ =?us-ascii?Q?cLiiU/JwH8S2wSb9S/eBg1Z7eu7rAXBMBMIfE4OxliAYsenoA6JIJdzBhSQR?=
+ =?us-ascii?Q?j7F5+F+PDC1nlXVOh5wsZq9xOR/TCFGovZneNl0/jDV7zHrLkEy5lnGjijAi?=
+ =?us-ascii?Q?AcR3TVP5PLzpy7g/XhHenZRjDG2/5/xLFY1oxXXEx0wdSv0yu0NJneowi6CX?=
+ =?us-ascii?Q?SoUdyfQOuQaTTAv4vp2a7Wk1u5iMmK8qKevwEGpikB48NLutNGLBS77C2tVw?=
+ =?us-ascii?Q?V4L5QgfiZXx2KdXf0lhQWf9jbeLTtdoNsAXqeDxG2SdQveFdJkUyDkLeN5/D?=
+ =?us-ascii?Q?mrtpZ4nhJtzJ20HdUfVI07zEOCbfZwUbnY/0YP6lV5g5jEJTCR5SOAezNS0i?=
+ =?us-ascii?Q?BD2Y8BWWhSP0KxmmOUA91FKCYk8KOaAfTLEDH80xwagAiWY/02CP9gvyKDjG?=
+ =?us-ascii?Q?4zACyLxi3SJ/+C0cm96TfE8BxuGktY+zjN9h04d+81YgPsfwQ+XJMQBtqUsU?=
+ =?us-ascii?Q?mPDGCtzGg2/jvbolFrsOIZGiJLPsSG6dlfXO8wPTahAj7rGsWDJPJ8KimG6y?=
+ =?us-ascii?Q?JQh1j78eAoRqtJLxzkqV4lOhm+rUbPiiiViNKIigNnscIzYyR4ARCg/vntbO?=
+ =?us-ascii?Q?Mm9upsWbbnbx3920wleIcsMrmkvCOZ9mAbW0dJ0P81Xb7eIviX+sVeyq7xNz?=
+ =?us-ascii?Q?uEchgJfs+VK8QqODsaK2v5GJuuJmc4X2dSad8AV3VepO72FOWjS3a7py6oO0?=
+ =?us-ascii?Q?ODUgF6Pr1dtZuIJ1FBYqWAkqlDUNmP7kNviRdF81QBnDPo7PJPW0K7VCSV3D?=
+ =?us-ascii?Q?WC0Pg5G/zkDFEfgNvrCpbhZ34xwIB0PtC+wAjpIInd2velqChv+eh52qDiLK?=
+ =?us-ascii?Q?aswIyG+FgZBefBTvv5H/kvppcZRh9AAf/0kzL6LzDf63br4mE8kpeHYoirgX?=
+ =?us-ascii?Q?58VmyzhbIBIWgg6tnCorNn3UvtKtJOJzy9ZzoDLFIITof2MlfIBxYsyeijq6?=
+ =?us-ascii?Q?t1WN9KntSGlqu1HZnRexfRBSYmbcDBeSfCKWS1VUuw+wzQ=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8604.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?bM+STiQXbGEXbBH6uqor/nIvaeQqGvez/fxzOJFhZY5A37eZwo2PFnIZmq0b?=
+ =?us-ascii?Q?aba7z9kMGIj5v97CanS/CHjCTY+6m8PPgVasG2DGuEdLJfs+1WWkgTgiiBF7?=
+ =?us-ascii?Q?g5GF4RxLlHpbxfSJJcq8Gt5l6iZdxu1pqglWt25/OFB966ymsYMCQnM6FD04?=
+ =?us-ascii?Q?ygXJ6n3U8ghQzKenYX11w9nviy1oNr4SCgbLm5UdRP1pjfWbZvJ18UdapgWy?=
+ =?us-ascii?Q?ZXEhk5dZ3fqKNW/K7gUstrBxByN0xyZab5+jkCg4o/R8XBtlIraxUSjJAnSj?=
+ =?us-ascii?Q?HYtLhuYs4fb9RlfrLiOl8S7Lk5S1yWylHxgDqxnfUo5QmyyCu57Z28CLWNxF?=
+ =?us-ascii?Q?i0PdpUfGFJkYoVUGgtPk3fkSuEWRbSFOPjsy8IInfcalNgCdmSuMD4SZpNZ5?=
+ =?us-ascii?Q?/LDjGjmHDFexSGUasTZXkBYYwJa8F0DKVSJYHMMMpu3fUN72QgmabdOOloPr?=
+ =?us-ascii?Q?utJTxO37yFgiF3W2/V9wmOWPN3fV18wa6XGfqdOByfoYdTT/8ybhOGjlujbA?=
+ =?us-ascii?Q?/6ONnj8TKMH4wcQk6M4OctF1eACZuDTePHFjLkmZkWtvRzi3PM5HAIz0yvhv?=
+ =?us-ascii?Q?OQucFVMCOnHTG7aDXaT+q2CaRoFfwVTEnNC0OUaJHvBpmX2NwfuzF3xlVreD?=
+ =?us-ascii?Q?FUqRyx3iQiSrCPIo8fdYr2BuAHv4Y6YgohPwmbtxP4xIbrJGlEPb4bGRJJjS?=
+ =?us-ascii?Q?EM1Q9Hdt/ZeNFyUsAOvU/UlKT79TvacxrN1L1epCET6DPYoDTHMDnvmFSai8?=
+ =?us-ascii?Q?pw9jEkNRujx+AFGX/0MRPG2aSAllYtGdCfTKGG8sp0Uy7U0A/RAz4qQSRJLA?=
+ =?us-ascii?Q?qvh5Ohy37cmc6Tvdi9IbJBxA1JCW6k7N4NRYdIZD0QnDVAvCDtJhPhCWlVQv?=
+ =?us-ascii?Q?JawuBm+suF3cdepzfVrviX8RIucm1Iwqau3s0w9d7oT2luANrkqidGcJqTCQ?=
+ =?us-ascii?Q?k1ec2GHIve0OhVtHX8hdjxxhiLr1Zdf66I7eQVUEDy7KIPdNEm9o2OnvgaRo?=
+ =?us-ascii?Q?AXxm34yRirvlwGWwTfA09ddcnFIemNxSOZiasQocpQfQUyDvXSIwVF9C4FK6?=
+ =?us-ascii?Q?KeRNODYS6NleveLPHzBSiFqwmcrOqkdnHXY4zHDZfoGIJR8PxOlBFqRxg4P7?=
+ =?us-ascii?Q?ORj9zdOUhDLxCHNEH3bzCcOdgpcF+m308Iv8vwVMhi6NGOmDdsIrtX3Zroz5?=
+ =?us-ascii?Q?n12oyeYHV5c4KFeW6e3OMHqJT+gdqs7GaU4uGuTihhLhFSUzIiPGcz2y/HP8?=
+ =?us-ascii?Q?PYvc1UacFpgrLyu/Nzj0SBB75wAIyWWBO5ReoRvKxhZX4aybBghes6m0Mbx4?=
+ =?us-ascii?Q?yU5O15Cleaca0a+GOrVbZptwvU1IjKE6Qn1gQhfAXNLEv5h1zQiC1GbVDwL1?=
+ =?us-ascii?Q?wgNSCaub/dJGmZkTUGnmO/x/rBRT1uzcNX7TOby1+m/8fytoapuMwuc6llPk?=
+ =?us-ascii?Q?1iudA1QBPkjpLNwA29vOjXkzcTCa2oIDRZ71XdaDEPG4aGmcqavY+lvKx2jE?=
+ =?us-ascii?Q?Ltb/raWxRZt/tk72Cu7tt54IN87w7+kpk8I/19+VR/s/j4k3cBqvscFku+xC?=
+ =?us-ascii?Q?6QDQ8yiwt3vgRD7UsgZpN/CNPBFO0bM7NqYcGR3e?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8604.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6faff1aa-b2c6-4540-12ee-08dc7b243364
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2024 12:30:59.0475
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: E7neWHGEzMM1VQnBlAZAenXdJjWoDR0himAGBscsnBUPnIaDZ3dfPT+WA8hn1ioU3SH5Kz5UmfMr6P8LhEOc9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB11069
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ea5f6ad9ad9645733b72ab53a98e719b460d36a6
-commit: 6e65a09f927566f257322358d429b267548473eb Bluetooth: btintel_pcie: Add *setup* function to download firmware
-config: alpha-randconfig-r081-20240516 (https://download.01.org/0day-ci/archive/20240517/202405170424.97VIwnBn-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202405170424.97VIwnBn-lkp@intel.com/
 
-smatch warnings:
-drivers/bluetooth/btintel_pcie.c:386 btintel_pcie_recv_frame() warn: variable dereferenced before check 'data' (see line 380)
+> -----Original Message-----
+> From: Rob Herring (Arm) <robh@kernel.org>
+> Sent: Thursday, May 23, 2024 5:55 PM
+> To: Pankaj Gupta <pankaj.gupta@nxp.com>
+> Cc: linux-doc@vger.kernel.org; Jonathan Corbet <corbet@lwn.net>; Krzyszto=
+f
+> Kozlowski <krzk+dt@kernel.org>; imx@lists.linux.dev; Shawn Guo
+> <shawnguo@kernel.org>; Fabio Estevam <festevam@gmail.com>; linux-
+> kernel@vger.kernel.org; Sascha Hauer <s.hauer@pengutronix.de>; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; Rob Herring
+> <robh+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Krzysztof
+> Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Pengutronix Kernel Team
+> <kernel@pengutronix.de>
+> Subject: [EXT] Re: [PATCH v2 2/5] dt-bindings: arm: fsl: add imx-se-fw bi=
+nding
+> doc
+>=20
+> Caution: This is an external email. Please take care when clicking links =
+or
+> opening attachments. When in doubt, report the message using the 'Report
+> this email' button
+>=20
+>=20
+> On Thu, 23 May 2024 16:19:33 +0530, Pankaj Gupta wrote:
+> > The NXP security hardware IP(s) like: i.MX EdgeLock Enclave, V2X etc.,
+> > creates an embedded secure enclave within the SoC boundary to enable
+> > features like:
+> > - HSM
+> > - SHE
+> > - V2X
+> >
+> > Secure-Enclave(s) communication interface are typically via message
+> > unit, i.e., based on mailbox linux kernel driver. This driver enables
+> > communication ensuring well defined message sequence protocol between
+> > Application Core and enclave's firmware.
+> >
+> > Driver configures multiple misc-device on the MU, for multiple
+> > user-space applications, to be able to communicate over single MU.
+> >
+> > It exists on some i.MX processors. e.g. i.MX8ULP, i.MX93 etc.
+> >
+> > Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
+> > ---
+> >  .../devicetree/bindings/firmware/fsl,imx-se.yaml   | 154
+> +++++++++++++++++++++
+> >  1 file changed, 154 insertions(+)
+> >
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> yamllint warnings/errors:
+>=20
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/firmware/fsl,imx-se.example.dtb:
+> /example-2/firmware/v2x-if@0: failed to match any schema with compatible:
+> ['fsl,imx95-v2x']
+> Documentation/devicetree/bindings/firmware/fsl,imx-se.example.dtb:
+> /example-2/firmware/v2x-if@1: failed to match any schema with compatible:
+> ['fsl,imx95-v2x']
+> Documentation/devicetree/bindings/firmware/fsl,imx-se.example.dtb:
+> /example-2/firmware/v2x-if@2: failed to match any schema with compatible:
+> ['fsl,imx95-v2x']
+>=20
+> doc reference errors (make refcheckdocs):
+>=20
+> See
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
+w
+> ork.ozlabs.org%2Fproject%2Fdevicetree-bindings%2Fpatch%2F20240523-
+> imx-se-if-v2-2-
+> 5a6fd189a539%40nxp.com&data=3D05%7C02%7Cpankaj.gupta%40nxp.com%7
+> C102225d4215b49f9e1e308dc7b2370cd%7C686ea1d3bc2b4c6fa92cd99c5c3
+> 01635%7C0%7C0%7C638520639343681926%7CUnknown%7CTWFpbGZsb3d
+> 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%
+> 3D%7C0%7C%7C%7C&sdata=3DBO%2FhtixA%2ByKfjN2UZdas2VzEj9Aoq1I%2F%
+> 2FH7m5pLAqPc%3D&reserved=3D0
+>=20
+> The base for the series is generally the latest rc1. A different dependen=
+cy
+> should be noted in *this* patch.
+>=20
+> If you already ran 'make dt_binding_check' and didn't see the above error=
+(s),
+> then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+>=20
+> pip3 install dtschema --upgrade
 
-vim +/data +386 drivers/bluetooth/btintel_pcie.c
+I have updated this. But still not able to see the above error.
 
-6e65a09f927566 Kiran K          2024-05-07  371  static int btintel_pcie_recv_frame(struct btintel_pcie_data *data,
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  372  				       struct sk_buff *skb)
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  373  {
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  374  	int ret;
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  375  	u8 pkt_type;
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  376  	u16 plen;
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  377  	u32 pcie_pkt_type;
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  378  	struct sk_buff *new_skb;
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  379  	void *pdata;
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07 @380  	struct hci_dev *hdev = data->hdev;
-                                                                               ^^^^^^^^^^
-data dereferenced
+But, I know why it coming. Following change will fix it.
 
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  381  
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  382  	spin_lock(&data->hci_rx_lock);
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  383  
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  384  	/* The first 4 bytes indicates the Intel PCIe specific packet type */
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  385  	pdata = skb_pull_data(skb, BTINTEL_PCIE_HCI_TYPE_LEN);
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07 @386  	if (!data) {
-                                                            ^^^^^
-Presumably this was supposed to check "pdata".
+In the compatible properties:
++  compatible:
++    enum:
++      - fsl,imx8ulp-ele
++      - fsl,imx93-ele
+-      - fsl,imx95-ele
++      - fsl,imx95-v2x
 
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  387  		bt_dev_err(hdev, "Corrupted packet received");
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  388  		ret = -EILSEQ;
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  389  		goto exit_error;
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  390  	}
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  391  
-c2b636b3f788d1 Tedd Ho-Jeong An 2024-05-07  392  	pcie_pkt_type = get_unaligned_le32(pdata);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Will correct in v3.
+>=20
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your
+> schema.
 
