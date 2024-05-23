@@ -1,60 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C94144D26
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 12:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADC01E4B3
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 12:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716467945; cv=none; b=R2zCmQINFmho/OKQCDpypGxs4h9+s6b+qdAFUfwQ+GGonSEbglXETVFAIIk7iyEkB/A2d1Sd+nTH+aZb33cQlUpQkMNnUoDbLQxpqp6Oa02lH7080rbfMMgyl4spQohQ5AmFDNJqjShTPyMAoaMyl9Mli/r5PQW947JMTWWHeuU=
+	t=1716468063; cv=none; b=svUf4/YRUUrQKLZhCz+3mB2PHnKRKacmrE0t/lbQf5W8474VzGK8aRxIT6618mD8XIFhDrHEI7ah7F9IhEAVzxSdLctrS6+hEcyF9eLhJ3sVB161ztRXpvg5VDkjmQW+hLA5h/Vyo+C3vOPuCrnnGp7Q34cjHzN/WBFghgLEgG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716467945; c=relaxed/simple;
-	bh=NxNHmDTyf45u7ZHwoFE+CVEyUDmnNLkRf5O6kktNz0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mxotuHflejPK6XhaQ0rU0Ohp8LK8QdtL6FEYXtwVD2RhIdT0FRrsmmHrbqPgrvYWJOW5/CanFxFBS2FbPhZJHJb8S5xSMHXRV11z7/gLde+kQkIxPWS5bC4f08yBcDKB2BGlarjmIrhepIbisJlG+Em9SCMyQxg0+n4Yyf05srM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eee3lRyj; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716468063; c=relaxed/simple;
+	bh=TACJdT4OuSHZHHTmCDOU5pephYt4f6iNsHPpUY1BkX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uFJWSmbM6n8tqrPl4ZdJ5f/PcO3n4hpX1z4CypUOWXhr71qDl1PhVF1TvlVUuSwqGI9IV7e/wzP5HqmMA/gVF+cRTw5WOVkIOiB71JJLtE/HWWB3KD0N3vgOM0JTvraPMcB75WUaBZ5B9ywWqRouOp/mDXGpv3qp4iPFZBMyM2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fuS+e5JH; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eee3lRyj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fuS+e5JH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716467944; x=1748003944;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=NxNHmDTyf45u7ZHwoFE+CVEyUDmnNLkRf5O6kktNz0o=;
-  b=Eee3lRyj6avt/C0fPRvx5vtvtyF02rNEsdZrHIfcSjo5gJzPaHtND2E8
-   3jK2gTcpKYll8QtiKd6dq4SWN/fyzg/JiBZXr1WRDCYFEExCi9hcnIgc/
-   +IzDEfUGvlDfCEJDdtZnqw5Isd5LZeyHBnuH/tR7vBSSwRfVtlJo+9jzu
-   JNpePGs5yGxT5rOI4BNxEI7WvjS9Y1F9mSHhBhzeMq3PSxoHT6KiY4oIX
-   9MDiRGfT/plUv0ThACLrS0m5hpnXbKo6Q0bi2F1QiwRrrbNhLh73K0HRT
-   OCOw51jle0byOlfud16M0tKN8ol3cbpTK3jxaHvUbRGWx3iKq+0In2a1Q
-   Q==;
-X-CSE-ConnectionGUID: +smcLB/qThyh3uAfZ+BpmA==
-X-CSE-MsgGUID: 5JyL0qPmTCqxnas0Za+A6Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="16608181"
+  t=1716468060; x=1748004060;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TACJdT4OuSHZHHTmCDOU5pephYt4f6iNsHPpUY1BkX0=;
+  b=fuS+e5JHvi3d+yVlpEY6oZuRBzoqGd9gWyRQxXBsrDrJcoUj6btrq4KC
+   YQ2XsRLi4INOgvPRzRbmRS5uFSXearIBOErEJQZcSyO+RPTPR6Lcl0Exq
+   PZEQwH4LuFfAqsrnirr63KlEOSuvEOg3x1oitI6webXITmChMrCOo8Fi3
+   aqWSY1bZa0bgZtSr2BastHup6mL9c7/m8G9usWcnQJH8x8IQqa8ONfTF4
+   NA74F9N04ny1QrbJRjMoeZd97EahASC3prWuqViDPNchgDnCxKlUU+cMX
+   8SKHdRSFv8i/W5UmbmzFgpovpO7rX7ByZuTn33Bs30XiONat0A+TSHQHP
+   w==;
+X-CSE-ConnectionGUID: BetmY28SShKMU8D8jRIMCw==
+X-CSE-MsgGUID: 7Nggqdh+TUqNAfPUoRrrmA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="24191185"
 X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
-   d="scan'208";a="16608181"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 05:39:03 -0700
-X-CSE-ConnectionGUID: N0+VvKRtTvKSyJ7zisdmkw==
-X-CSE-MsgGUID: yNXd5J9JSsKM+zgpr7BRxQ==
+   d="scan'208";a="24191185"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 05:40:59 -0700
+X-CSE-ConnectionGUID: 09+nUypJTuqZaMuj77Scsw==
+X-CSE-MsgGUID: 3oFoL+ayQF+Oxc1jncHy0Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
-   d="scan'208";a="33666838"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 23 May 2024 05:39:00 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sA7il-0002q4-1Y;
-	Thu, 23 May 2024 12:38:59 +0000
-Date: Thu, 23 May 2024 20:38:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shahab Vahedi <shahab@synopsys.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	Alexei Starovoitov <ast@kernel.org>
-Subject: arch/arc/net/bpf_jit_core.c:170:47-52: WARNING: conversion to bool
- not needed here
-Message-ID: <202405232036.Xqoc3b0J-lkp@intel.com>
+   d="scan'208";a="71067955"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 23 May 2024 05:40:59 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id CD271E7; Thu, 23 May 2024 15:40:57 +0300 (EEST)
+Date: Thu, 23 May 2024 15:40:57 +0300
+From: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Steve Wahl <steve.wahl@hpe.com>
+Subject: Re: [Patch v3] x86/head/64: remove redundant check on
+ level2_kernel_pgt's _PAGE_PRESENT bit
+Message-ID: <wwmqtzeukfrzriysxe3b5ueo5iehqnaf55puaok33cbu56pemb@rzq2m7naja4q>
+References: <20240523123539.14260-1-richard.weiyang@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,52 +63,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240523123539.14260-1-richard.weiyang@gmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   c760b3725e52403dc1b28644fb09c47a83cacea6
-commit: f122668ddcce450c2585f0be4bf4478d6fd6176b ARC: Add eBPF JIT support
-date:   11 days ago
-config: arc-randconfig-r062-20240523 (https://download.01.org/0day-ci/archive/20240523/202405232036.Xqoc3b0J-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 13.2.0
+On Thu, May 23, 2024 at 12:35:39PM +0000, Wei Yang wrote:
+> Remove a redundant check on kernel code's PMD _PAGE_PRESENT attribute
+> before fix up.
+> 
+> Current process looks like this:
+> 
+>     pmd in [0, _text)
+>         unset _PAGE_PRESENT
+>     pmd in [_text, _end]
+>         if (_PAGE_PRESENT)
+>             fix up delta
+>     pmd in (_end, 512)
+>         unset _PAGE_PRESENT
+> 
+> level2_kernel_pgt compiled with _PAGE_PRESENT set. The check is
+> redundant
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> CC: Thomas Gleixner <tglx@linutronix.de>
+> CC: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> CC: Ingo Molnar <mingo@kernel.org>
+> CC: Steve Wahl <steve.wahl@hpe.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405232036.Xqoc3b0J-lkp@intel.com/
-
-cocci warnings: (new ones prefixed by >>)
->> arch/arc/net/bpf_jit_core.c:170:47-52: WARNING: conversion to bool not needed here
---
->> arch/arc/net/bpf_jit_core.c:162:16-22: ERROR: application of sizeof to pointer
---
->> arch/arc/net/bpf_jit_core.c:586:5-8: Unneeded variable: "ret". Return "0" on line 638
-
-vim +170 arch/arc/net/bpf_jit_core.c
-
-   158	
-   159	/* Initialise the context so there's no garbage. */
-   160	static int jit_ctx_init(struct jit_context *ctx, struct bpf_prog *prog)
-   161	{
- > 162		memset(ctx, 0, sizeof(ctx));
-   163	
-   164		ctx->orig_prog = prog;
-   165	
-   166		/* If constant blinding was requested but failed, scram. */
-   167		ctx->prog = bpf_jit_blind_constants(prog);
-   168		if (IS_ERR(ctx->prog))
-   169			return PTR_ERR(ctx->prog);
- > 170		ctx->blinded = (ctx->prog == ctx->orig_prog ? false : true);
-   171	
-   172		/* If the verifier doesn't zero-extend, then we have to do it. */
-   173		ctx->do_zext = !ctx->prog->aux->verifier_zext;
-   174	
-   175		ctx->is_extra_pass = ctx->prog->jited;
-   176		ctx->user_bpf_prog = ctx->prog->is_func;
-   177	
-   178		return 0;
-   179	}
-   180	
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Kiryl Shutsemau / Kirill A. Shutemov
