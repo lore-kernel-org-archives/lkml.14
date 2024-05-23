@@ -1,44 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B4A5227;
-	Thu, 23 May 2024 14:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE01E6FA8;
+	Thu, 23 May 2024 14:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716475867; cv=none; b=raDJjMWl3i7mgg87azCBeQbIA3hJcI8EXvkcB+ngkxbwApyUkNpUe+D6ZdNMr1c5gM8pAJBTn0L0Np5FVaSazZWiVcX/gVSsSJwXxjeFGsiF3ezjSQiCpEtXKD+iKM3xJZV2qWVdenf9QGPKL88hUznTgGoCyMFU8kttCRB3rGU=
+	t=1716475925; cv=none; b=tZNxR+Dg2bwiPEFbhWdlbxSI7X75FLKEylszY2ZnaHXHOHRhNETwrRl5eSM0XKDgLbfY0ZyiPzlU5wMrxtpP+t1takRMsInCId/yZzePfCHgmo4wd9bRHAFj+WwAedHP/rSWiWv4HzIxhxs9ddh6jlSycWYfEcJ14/e5xi418As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716475867; c=relaxed/simple;
-	bh=KXr+O49jgY3DWM6OLjKqbbwipuCBHbRBENFht4rZ6iY=;
+	s=arc-20240116; t=1716475925; c=relaxed/simple;
+	bh=0n5OH0k+GRei5q9zpND2pbMT2lTvBmQGE4laZAvKQMo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iTOwgts3cU22oOzgGq8i36AAQqBXal2ukaZSnIBEQavy0kbt8TpezXdBzQN6oc0zvy+BIopqF//hnYRPMJHzGhpiRm5PS4stv6LfeE6Z2s8r02E+HmICZ5W7zFIMTXUuCUKFLDSyin7Km+NlLEHW+l7qov9xqxhMB3gFbx4AVWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cELGUhTJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IsbbLTcLvJ7KxkwLzrw2mltA3tFGCevR/JLO5A61tycvjvMEBk+Oomvt+UzSXRj2BSAoTbyMhciu+YEVRdLOqASY6Q5ylEl2t0u+PZcl3ZEkRf/1DKNEBJ58ug5fUP5cq14NVimkf6jW+cqwVh9lu5NHmamhrassRtg7zEK3j10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5KooSen; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cELGUhTJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5D7C2BD10;
-	Thu, 23 May 2024 14:51:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5KooSen"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47D0EC32781;
+	Thu, 23 May 2024 14:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716475867;
-	bh=KXr+O49jgY3DWM6OLjKqbbwipuCBHbRBENFht4rZ6iY=;
+	s=k20201202; t=1716475924;
+	bh=0n5OH0k+GRei5q9zpND2pbMT2lTvBmQGE4laZAvKQMo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cELGUhTJByfteAzCn7jYhjQ9L+H2tm2L98G08fQVHP5rZuDBlapct1p2yKI0bgnCu
-	 LjQKuvZd9RVrMx9JqMxlU/ttymX2Uh54hnQoGTFqGjVlUUgRHd4AMbJvnDwFDfJtml
-	 /M8LxC8oap72j60cMJnypX77k/xK7pCK1SdWD8e/+b6pzjgxMT9yHfEieRf2ufH9M/
-	 kpikBeA3Jvcc+jSOfgtA2IEG6NuyHNzcGuWcEup8MDx789FfnnYCOdsyzEcwgwWfTE
-	 JTQrHC+4fZuSD1BTtrbBidV3jxga4TGuTOQ6cMsPX6JEGl9ktqhNCK/9A8oBKeiQhQ
-	 VqyuYEmNPnnOw==
-Date: Thu, 23 May 2024 15:51:01 +0100
+	b=J5KooSenMd9y77wOzWwd6Ck6YbUB2Z01Il0y3de4MXrjywybDW42k9Cq3Su8fsMMF
+	 +u4jh+nwcK1orQSTRR+HA94GzWNvLBC2yoBehb9/NNGDt+1+LG6sKxoGADspETrzP+
+	 CCgledNtbdNFb1qGcjZPy8FARa75nPs6cNnr1ULmrl7x1DDNta6V4YvmiQHJZOqM3A
+	 8umaZlquBRrWw1C7CsMjIzWg0idNdqvuoBZFXOd0RDw9j95UDK/eVi1FjM54i1eoHk
+	 9+dD92MQeP2chxN5Xk9QwicVGUSLAQINvu2+DUpe41UV2PBjHA5s3tfsDeNQcpkMNY
+	 QRZgpgD8pRo6w==
+Date: Thu, 23 May 2024 15:51:58 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Oleh Kuzhylnyi <kuzhylol@gmail.com>
-Cc: linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
-	jeff@labundy.com, neil.armstrong@linaro.org, schnelle@linux.ibm.com,
-	arnd@kernel.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org,
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	artur.serhiienko@gmail.com, igor.opaniuk@gmail.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: input: touchscreen: add Hynitron
- CST816X
-Message-ID: <20240523-hulk-sake-da52a7545ab5@spud>
-References: <20240522203347.2263425-1-kuzhylol@gmail.com>
+To: Detlev Casanova <detlev.casanova@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Sandy Huang <hjc@rock-chips.com>,
+	Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] dt-bindings: display: vop2: Add VP clock resets
+Message-ID: <20240523-climate-cattail-e5e1fc8ff0a3@spud>
+References: <20240522185924.461742-1-detlev.casanova@collabora.com>
+ <20240522185924.461742-4-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,74 +59,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0lfDBifo+k1uqAPQ"
+	protocol="application/pgp-signature"; boundary="jgeG1HuZXzpfSjmQ"
 Content-Disposition: inline
-In-Reply-To: <20240522203347.2263425-1-kuzhylol@gmail.com>
+In-Reply-To: <20240522185924.461742-4-detlev.casanova@collabora.com>
 
 
---0lfDBifo+k1uqAPQ
+--jgeG1HuZXzpfSjmQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 22, 2024 at 05:33:46PM -0300, Oleh Kuzhylnyi wrote:
-> Add documentation for the Hynitron CST816X touchscreen bindings.
->=20
-> Signed-off-by: Oleh Kuzhylnyi <kuzhylol@gmail.com>
-> ---
->=20
-> Changes in v2:
->  - Apply pin definitions and DT headers
->  - Use generic name for DT node
->  - Drop status field
->=20
->  .../input/touchscreen/hynitron,cst816x.yaml   | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/h=
-ynitron,cst816x.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/hynitron=
-,cst816x.yaml b/Documentation/devicetree/bindings/input/touchscreen/hynitro=
-n,cst816x.yaml
-> new file mode 100644
-> index 000000000000..22bd145db5ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/hynitron,cst816=
-x.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/touchscreen/hynitron,cst816x.ya=
-ml#
+On Wed, May 22, 2024 at 02:57:50PM -0400, Detlev Casanova wrote:
+> Add the documentation for VOP2 video ports reset clocks.
+> One reset can be set per video port.
 
-Filename matching compatible please, so s/cst816x/cst816s/.
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Hynitron CST816X series touchscreen controller
-> +
-> +description: |
-
-The | here is not needed & you can drop the "Bindings for" below.
-
-Maybe add a link to a datasheet if you don't want title =3D=3D description.
-
-Otherwise,
 Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
 Cheers,
 Conor.
 
---0lfDBifo+k1uqAPQ
+--jgeG1HuZXzpfSjmQ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZk9X1QAKCRB4tDGHoIJi
-0iLcAQCd9wA6lC/r6uoaFfC4d+Rr6zRitp2mhqDJZ9AH+SEkrQEAoNlgRPmKtt1o
-BhQXnP0f3PcfwbvBrmiadI8uHUh8BwE=
-=eJC5
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZk9YDgAKCRB4tDGHoIJi
+0j0rAP0VlFrFaDu+/KLFAsK956xCJey9qaStyOOlXTICQTGV6wEA/N9OOl/tmZru
+MK6sP4YDord/71YqPTb6mQhi9OnMlAk=
+=t2FA
 -----END PGP SIGNATURE-----
 
---0lfDBifo+k1uqAPQ--
+--jgeG1HuZXzpfSjmQ--
