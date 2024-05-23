@@ -1,225 +1,208 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD14013B58C
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 06:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8364713B584
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 06:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716444143; cv=none; b=X2UTl6sj+dJ/QOwq2++iDfDVysi49jJGYDwd4ySFHObSz0ioDUG9LqaHBo2cKf4nZT76xscDSyTUrB/UNtoYvKy85jm9g7807zCrpYZnVrJ6C6B7B9rZpcBWHoJFVlCvq/RslQoj7pbxXYnq2oAMdWXf/PQCFpblouwF/s5WTc4=
+	t=1716444179; cv=none; b=sPA2ZlJZtSnHK4VGQJ8taMQwrVFEQ/GMLBiQqckbxPZCrhHWFm/vektR7OGvFh2wnVGKMKW5h7Fvym7q6LWv1lhKl5RT7YhEE5iQUriBxqC2AzKJPJYNlnf8A3HRjVamcg1Mwo5ZRxaX+mgMlwa8q1WX7Nnqqv7WFRWCmtpkXss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716444143; c=relaxed/simple;
-	bh=GiC1/29g+riWl9jigqmNj06ehPx8Mc9F/yQNF8jHzww=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FkALySKOVElo9bd+V9gqHeMus3rcy2iEjlFCx7cRXdctI6gyRkKRV5GNqigUESgHEL82L5RLcQvU+/y/SqGZ2+jVzR7LG1p/kozHcyNax1sJPUbKaorIPrmYfdju1bJmaMWEi6EM36mFzL0oQdQv4qnlIOLxWVgeM9fUoSIS0WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=UBEdAASG; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1716444179; c=relaxed/simple;
+	bh=B9lGrOwbzZ9cwWP1ohGSBcMGMvcXioUh06F1RRqtc5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jM0HTGJFuHxLDILqG6vxnYpLrWKxizAHXINGJr06vMZAONVcUOV8F75egbUz1212nCG9tzBMvf+K+lLsCRmL4JvCHAvaJ58nATnjdTKXMNbiGSi/92Voht2KcqyZH0O0WuzEJflwsKVC1m2nb70QaE9njkm04FQ9DgJZ4vV0g7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=Uz2AHfik; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UBEdAASG"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44N610ce017771;
-	Thu, 23 May 2024 01:01:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716444060;
-	bh=flB9YyX59B3W/vLZiFwnfLNmPjVnTHkd549ZfjsYUhQ=;
-	h=From:To:CC:Subject:Date;
-	b=UBEdAASGRmSJymRWCTcTsHh+sUcR5/imTpFhN2+zWzM8TBo6NQWBjFDiC2KRIJBY0
-	 +RGOYsPXYrOoLvmyk9+3RGw48yOcCoa6Yz1dk+Hl92Z6vSyDNkhNsL6kEtbboEnd1E
-	 7mtYObwvSL+qytkYnS2mn+oXJDND/Kw2iKaIkoxo=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44N610aL110322
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 23 May 2024 01:01:00 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 23
- May 2024 01:01:00 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 23 May 2024 01:01:00 -0500
-Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.138])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44N60p8t109680;
-	Thu, 23 May 2024 01:00:52 -0500
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <broonie@kernel.org>
-CC: <andriy.shevchenko@linux.intel.com>, <lgirdwood@gmail.com>,
-        <perex@perex.cz>, <pierre-louis.bossart@linux.intel.com>,
-        <13916275206@139.com>, <judyhsiao@google.com>,
-        <alsa-devel@alsa-project.org>, <i-salazar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <j-chadha@ti.com>,
-        <liam.r.girdwood@intel.com>, <bard.liao@intel.com>,
-        <yung-chuan.liao@linux.intel.com>, <dipa@ti.com>, <kevin-lu@ti.com>,
-        <yuhsuan@google.com>, <tiwai@suse.de>, <baojun.xu@ti.com>,
-        <soyer@irl.hu>, <Baojun.Xu@fpt.com>, <navada@ti.com>,
-        <cujomalainey@google.com>, <aanya@ti.com>, <nayeem.mahmud@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v1] ASoc: tas2781: Support still work when only RCA binary loading well without dsp firmware loading.
-Date: Thu, 23 May 2024 14:00:46 +0800
-Message-ID: <20240523060047.934-1-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="Uz2AHfik"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7e238fa7b10so211807839f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1716444176; x=1717048976; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=txOSv1K2CA1USg0Ze10vD1qMyJxbEs9Mfk9GiCoI090=;
+        b=Uz2AHfikahhuUowwWHZ/rUV3mnPgvxCUBUVLy75Ni4QVr3Zm8DMJc7X+YPT/ZlueFf
+         fM09t2fSBt5pPpQRo2M2zZC0pkRmdXI9FCcScF4/EKN/cySBOR/qDzA5ekE4ILkpPwpy
+         5mKNJ6bHDg+TEheZbQ3IkCrHP/NZCEn3hQOxoKAsaSNFqq1PjKOo0dSQD72z4WdrL11T
+         SDuOkvOaGOZFmfxRTdXg/vfbkBY5oBXpiOFGPI2dN03MwRCRVp7zTktF7l5JeFQL9kbh
+         gj4aNjvikrd9qQBAiO+5XOkySFNkgVh2QVR/GkOax5g1Q2KM/PsKBO5u3BVjXDevfa5r
+         Zpcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716444176; x=1717048976;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=txOSv1K2CA1USg0Ze10vD1qMyJxbEs9Mfk9GiCoI090=;
+        b=ccqJ5l18T89jk1xnP3gMCnRwKSwCUCF153iOumsyVX613WUjrr8JMikMmSqd8ZhEBh
+         PT/M2as9WpiAviSKCNxw6k02pQI9oyXkfU11KELfD6NEgWU/Weqr4S0fUxXvD+ly8BsD
+         858hy4+PX0lkTUaqDPkRK0zAqRu1sId1uymf2DR8p6TLlTOphCRGfqTb/gCxAf/MpnhL
+         cx+2Ie9FWSIa2V37TvrhFZrDO5rMqkfMWNn0VQpG1UTZmqzsBpwNflK1RlgExDkV0PRJ
+         AyOJUv3KA0ZGfMvg77izfieGuoZAn9BEvF5ydjPIZ5OGZwTfqpkB+e1/Z9WULdsy/Kaj
+         k1QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWllCG32P1Q/aYC7LWIqhxfhElSBirZTVyDgBz3HxrguywHup16wiz/xJAry8uCBrYMb2KO55aNUz9l6l/oRaUid8Cbldre1g3p+GSP
+X-Gm-Message-State: AOJu0Yz9BwfHZ3V8H4HC4XTcQwVChSeDzVMUnnw63B0E/XAe4I8BDhRE
+	YgTUOYe3gajM5s4VMoGO7mXkFWiFeZxJkDHgfZbYmqsq6IyQ3Nwj+fH/N1D/7SwanmCMpkQNNp9
+	t5Os=
+X-Google-Smtp-Source: AGHT+IEHlOqXvdbfYiugVF0TXgIiftVk0fEr87owHTsVUKSpnXRyU8iozPM5JlvqTh0LUpuxvOHGhg==
+X-Received: by 2002:a05:6e02:1447:b0:36c:7f3d:59a with SMTP id e9e14a558f8ab-371f7c80fe6mr48056835ab.4.1716444176327;
+        Wed, 22 May 2024 23:02:56 -0700 (PDT)
+Received: from [192.168.1.16] (174-21-188-197.tukw.qwest.net. [174.21.188.197])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-634117190absm23448503a12.87.2024.05.22.23.02.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 23:02:55 -0700 (PDT)
+Message-ID: <9097e78d-0e7d-43bd-bafd-e53a4872a4d1@davidwei.uk>
+Date: Wed, 22 May 2024 23:02:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9 11/14] tcp: RX path for devmem TCP
+Content-Language: en-GB
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
+ <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20240510232128.1105145-1-almasrymina@google.com>
+ <20240510232128.1105145-12-almasrymina@google.com>
+From: David Wei <dw@davidwei.uk>
+In-Reply-To: <20240510232128.1105145-12-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In only RCA binary loading case, only default dsp program will be work
-inside the chip.
+On 2024-05-10 16:21, Mina Almasry wrote:
+> +/* On error, returns the -errno. On success, returns number of bytes sent to the
+> + * user. May not consume all of @remaining_len.
+> + */
+> +static int tcp_recvmsg_dmabuf(struct sock *sk, const struct sk_buff *skb,
+> +			      unsigned int offset, struct msghdr *msg,
+> +			      int remaining_len)
+> +{
+> +	struct dmabuf_cmsg dmabuf_cmsg = { 0 };
+> +	struct tcp_xa_pool tcp_xa_pool;
+> +	unsigned int start;
+> +	int i, copy, n;
+> +	int sent = 0;
+> +	int err = 0;
+> +
+> +	tcp_xa_pool.max = 0;
+> +	tcp_xa_pool.idx = 0;
+> +	do {
+> +		start = skb_headlen(skb);
+> +
+> +		if (skb_frags_readable(skb)) {
+> +			err = -ENODEV;
+> +			goto out;
+> +		}
+> +
+> +		/* Copy header. */
+> +		copy = start - offset;
+> +		if (copy > 0) {
+> +			copy = min(copy, remaining_len);
+> +
+> +			n = copy_to_iter(skb->data + offset, copy,
+> +					 &msg->msg_iter);
+> +			if (n != copy) {
+> +				err = -EFAULT;
+> +				goto out;
+> +			}
+> +
+> +			offset += copy;
+> +			remaining_len -= copy;
+> +
+> +			/* First a dmabuf_cmsg for # bytes copied to user
+> +			 * buffer.
+> +			 */
+> +			memset(&dmabuf_cmsg, 0, sizeof(dmabuf_cmsg));
+> +			dmabuf_cmsg.frag_size = copy;
+> +			err = put_cmsg(msg, SOL_SOCKET, SO_DEVMEM_LINEAR,
+> +				       sizeof(dmabuf_cmsg), &dmabuf_cmsg);
+> +			if (err || msg->msg_flags & MSG_CTRUNC) {
+> +				msg->msg_flags &= ~MSG_CTRUNC;
+> +				if (!err)
+> +					err = -ETOOSMALL;
+> +				goto out;
+> +			}
+> +
+> +			sent += copy;
+> +
+> +			if (remaining_len == 0)
+> +				goto out;
+> +		}
+> +
+> +		/* after that, send information of dmabuf pages through a
+> +		 * sequence of cmsg
+> +		 */
+> +		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
+> +			skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
+> +			struct net_iov *niov;
+> +			u64 frag_offset;
+> +			int end;
+> +
+> +			/* !skb_frags_readable() should indicate that ALL the
+> +			 * frags in this skb are dmabuf net_iovs. We're checking
+> +			 * for that flag above, but also check individual frags
+> +			 * here. If the tcp stack is not setting
+> +			 * skb_frags_readable() correctly, we still don't want
+> +			 * to crash here.
+> +			 */
+> +			if (!skb_frag_net_iov(frag)) {
+> +				net_err_ratelimited("Found non-dmabuf skb with net_iov");
+> +				err = -ENODEV;
+> +				goto out;
+> +			}
+> +
+> +			niov = skb_frag_net_iov(frag);
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+Sorry if we've already discussed this.
 
----
-v1:
- - Split out the different logical changes into different patches.
- - rename tasdevice_dsp_fw_state -> tasdevice_fw_state, the fw are not
-   only dsp fw, but also RCA(Reconfigurable data, such as acoustic data
-   and register setting, etc).
- - Add TASDEVICE_RCA_FW_OK in tasdevice_fw_state to identify the state
-   that only RCA binary file has been download successfully, but dsp fw
-   is not loaded or loading failure.
- - Add the this strategy into tasdevice_tuning_switch.
- - If one side of the if/else has a braces both should in
-   tasdevice_tuning_switch.
- - Identify whehter both RCA and DSP have been loaded or only RCA has
-   been loaded in tasdevice_fw_ready.
- - Add check fw load status in tasdevice_startup.
- - remove ret in tasdevice_startup to make th code neater.
----
- include/sound/tas2781-dsp.h       |  3 ++-
- sound/soc/codecs/tas2781-fmwlib.c | 14 ++++++++++----
- sound/soc/codecs/tas2781-i2c.c    | 30 ++++++++++++++++++------------
- 3 files changed, 30 insertions(+), 17 deletions(-)
+We have this additional hunk:
 
-diff --git a/include/sound/tas2781-dsp.h b/include/sound/tas2781-dsp.h
-index 7fba7ea26a4b..92d68ca5eafb 100644
---- a/include/sound/tas2781-dsp.h
-+++ b/include/sound/tas2781-dsp.h
-@@ -117,10 +117,11 @@ struct tasdevice_fw {
- 	struct device *dev;
- };
- 
--enum tasdevice_dsp_fw_state {
-+enum tasdevice_fw_state {
- 	TASDEVICE_DSP_FW_NONE = 0,
- 	TASDEVICE_DSP_FW_PENDING,
- 	TASDEVICE_DSP_FW_FAIL,
-+	TASDEVICE_RCA_FW_OK,
- 	TASDEVICE_DSP_FW_ALL_OK,
- };
- 
-diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
-index 265a8ca25cbb..cfa022ef4a59 100644
---- a/sound/soc/codecs/tas2781-fmwlib.c
-+++ b/sound/soc/codecs/tas2781-fmwlib.c
-@@ -2324,13 +2324,18 @@ void tasdevice_tuning_switch(void *context, int state)
- 	struct tasdevice_fw *tas_fmw = tas_priv->fmw;
- 	int profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
- 
--	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
--		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
-+	/*
-+	 * Only RCA file loaded can still work with default dsp program inside
-+	 * the chip?
-+	 */
-+	if (!(tas_priv->fw_state == TASDEVICE_RCA_FW_OK ||
-+		tas_priv->fw_state == TASDEVICE_DSP_FW_ALL_OK)) {
-+		dev_err(tas_priv->dev, "No firmware loaded\n");
- 		return;
- 	}
- 
- 	if (state == 0) {
--		if (tas_priv->cur_prog < tas_fmw->nr_programs) {
-+		if (tas_fmw && tas_priv->cur_prog < tas_fmw->nr_programs) {
- 			/*dsp mode or tuning mode*/
- 			profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
- 			tasdevice_select_tuningprm_cfg(tas_priv,
-@@ -2340,9 +2345,10 @@ void tasdevice_tuning_switch(void *context, int state)
- 
- 		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
- 			TASDEVICE_BIN_BLK_PRE_POWER_UP);
--	} else
-+	} else {
- 		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
- 			TASDEVICE_BIN_BLK_PRE_SHUTDOWN);
-+	}
- }
- EXPORT_SYMBOL_NS_GPL(tasdevice_tuning_switch,
- 	SND_SOC_TAS2781_FMWLIB);
-diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
-index 9350972dfefe..ccb9313ada9b 100644
---- a/sound/soc/codecs/tas2781-i2c.c
-+++ b/sound/soc/codecs/tas2781-i2c.c
-@@ -380,23 +380,30 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
- 	mutex_lock(&tas_priv->codec_lock);
- 
- 	ret = tasdevice_rca_parser(tas_priv, fmw);
--	if (ret)
-+	if (ret) {
-+		tasdevice_config_info_remove(tas_priv);
- 		goto out;
-+	}
- 	tasdevice_create_control(tas_priv);
- 
- 	tasdevice_dsp_remove(tas_priv);
- 	tasdevice_calbin_remove(tas_priv);
--	tas_priv->fw_state = TASDEVICE_DSP_FW_PENDING;
-+	tas_priv->fw_state = TASDEVICE_RCA_FW_OK;
- 	scnprintf(tas_priv->coef_binaryname, 64, "%s_coef.bin",
- 		tas_priv->dev_name);
-+
- 	ret = tasdevice_dsp_parser(tas_priv);
- 	if (ret) {
- 		dev_err(tas_priv->dev, "dspfw load %s error\n",
- 			tas_priv->coef_binaryname);
--		tas_priv->fw_state = TASDEVICE_DSP_FW_FAIL;
- 		goto out;
- 	}
--	tasdevice_dsp_create_ctrls(tas_priv);
-+
-+	ret = tasdevice_dsp_create_ctrls(tas_priv);
-+	if (ret) {
-+		dev_err(tas_priv->dev, "dsp controls error\n");
-+		goto out;
-+	}
- 
- 	tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
- 
-@@ -417,9 +424,8 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
- 	tasdevice_prmg_load(tas_priv, 0);
- 	tas_priv->cur_prog = 0;
- out:
--	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
--		/*If DSP FW fail, kcontrol won't be created */
--		tasdevice_config_info_remove(tas_priv);
-+	if (tas_priv->fw_state == TASDEVICE_RCA_FW_OK) {
-+		/*If DSP FW fail, DSP kcontrol won't be created */
- 		tasdevice_dsp_remove(tas_priv);
- 	}
- 	mutex_unlock(&tas_priv->codec_lock);
-@@ -466,14 +472,14 @@ static int tasdevice_startup(struct snd_pcm_substream *substream,
- {
- 	struct snd_soc_component *codec = dai->component;
- 	struct tasdevice_priv *tas_priv = snd_soc_component_get_drvdata(codec);
--	int ret = 0;
- 
--	if (tas_priv->fw_state != TASDEVICE_DSP_FW_ALL_OK) {
--		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
--		ret = -EINVAL;
-+	if (!(tas_priv->fw_state == TASDEVICE_DSP_FW_ALL_OK ||
-+		tas_priv->fw_state == TASDEVICE_RCA_FW_OK)) {
-+		dev_err(tas_priv->dev, "Bin file not loaded\n");
-+		return -EINVAL;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static int tasdevice_hw_params(struct snd_pcm_substream *substream,
--- 
-2.34.1
++ if (niov->pp->mp_ops != &dmabuf_devmem_ops) {
++ 	err = -ENODEV;
++ 	goto out;
++ }
 
+In case one of our skbs end up here, skb_frag_is_net_iov() and
+!skb_frags_readable(). Does this even matter? And if so then is there a
+better way to distinguish between our two types of net_iovs?
