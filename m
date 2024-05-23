@@ -1,118 +1,108 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED1513ACC;
-	Thu, 23 May 2024 15:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A613F125C9;
+	Thu, 23 May 2024 15:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716478632; cv=none; b=ZDZgYGW3ZK0VTZQ0/2q5yQS1bMD8AGoWvaWbfUGyKkZ5EQ5mzQzuNRlrdT+uhVAtt5ur//4EbLzInkUlGeOp7cvTCWH8y95cQwxusdVMubymRLglOCngBOUNqDhVhUXxu3Ss70SvpQqCvgrobaqsichhRdz3JgMFesrgBxoz3uA=
+	t=1716478676; cv=none; b=Qaq8nw+JDAJt3OXISTzsDHn5iQIBHFGTweBhpp8PJDqf0+8+apbqxK0hq8JAnnvIXFophoKPmZXPGQ0epuJ/PcH0/EwcanN2Fff7OMncap2rFwhqYvTvf9pmCVnb2YVt7uds3nkszlr1zqH7YX/YAJKxy2lQr47m6rheBAlehhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716478632; c=relaxed/simple;
-	bh=DAu0j9XaO+BHc2+KymxPQHl8SlC0N0yHcL/u9tksZGw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sjdt7yUUuI5J7GexX32X5owZZbcZikCOKtFxFAEfgusfHcbckTNSQoqEFRwj4/7kWVq7sduMgLX8O1MRR7zmaAD3Xs3TWQq8OElwKMObaJ7cRsf5YB+mpEw+RaZ3mDPgAPSey+yUU4IiPOAMLOsTFpJLKZEHAl5vdGTYORM/V8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jYTA96l2; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716478676; c=relaxed/simple;
+	bh=3oAjIlkP7/L4zMK25MNZgmLkv0DGvWKMHVkhOywzgkc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=rWVeGmS4D2QjZN3TlB3IlVjNWqQJQgNIHmRo3wyIzwRX6Fordp1kG/FCXDbK5t+2YGaSyAQGf0XZndjWjLsWiTC1sDMlJFBjE4D1DiPQLaUQpkSjt/yWEIMMhqVpbDnpA7sx4onHHndqZ5hyOcJZM5CLKnxa7OzTwwW/Lz9XToI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUb2iX3o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYTA96l2"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4201986d60aso18318045e9.3;
-        Thu, 23 May 2024 08:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716478629; x=1717083429; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qDb430+CIQ85u0Ej/5d34NhAAWYKYgLxz+dFZEGGm10=;
-        b=jYTA96l2T/CxGeiVP1luTiCFNwk45Vqz7q+tFrNc6AqzKmYqdgMNgva6O7C4nxer2p
-         hE3xUw2bvlzh61xNyyI5T/dM+ZpUSL5vLbcMzI9559/P/FMJyKQ7yEGIayZFyfG6SQLO
-         z5uoAfAqwfJQfFrxh7SS52B6yo6tW6DzIdb1Cxxtdn2CYNcMXW2x/57SBJ6O6ozC5vfR
-         m/3IJ8uTskLv9JPo1HtBXeTivZU7gUOE9RFKQQBuFj4J6krHa6Splex0KxWqVVwFdhtL
-         26SLr+MvwSM9yzfglSBNrt5GqfGHb1+aa7vl82bZaAJfHYC9K9nlkmtkl4AZ1HGzxh63
-         3kiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716478629; x=1717083429;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qDb430+CIQ85u0Ej/5d34NhAAWYKYgLxz+dFZEGGm10=;
-        b=lQABQIc+byIcBwUOc016iHuP1ns4SrcR0337n1algVcYYjpniwJbwBAhHxytqkMhwx
-         d1WJ4Qe+zMMzBxabxxlKlxB+CpltNirPSqWfPqx8PLQ+cMquHSBvWnD7Z7+QcBtQCVKC
-         LoW0uGqOIO/jif93g3HEglHYQUXjREioZfmF/PnTQ7irOsSZsflHtVQBDULAhkuJ0gcG
-         EfMMdzmUMD7g5C1EggdRH3MmsC7w+58EL5YmUDvsgU4dEoPwjx9MT4i8stSnvOEy1d74
-         vIIXfQpTQ7NX5z1Mlj3YPN4A/BEkWb0Zom3wgxho3U700DFASaoQDkDtsZUi7y5m2shQ
-         1GpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXi0ECp2TYrkM+OkoHMaENfpTwWa7Kj16PivVUGPqmrnG0bJjOmhQ/CryUqsOf6RkIuKONuY/RUZRYhLRUifvuYdEfUGyQ0ZDxrnJXWjlRGW1pmuml9Tqff21dZ3elyBmTBeX0HIV6i/U1mdK7OMJ8JTV+0LF6Yf6PlZ/QCFgzf73GIiLgBEBhBYmKDUbUf11LzntENpXhJZDO0s3y17N2ylW4
-X-Gm-Message-State: AOJu0Yz/y/EDXK3tDQL6aQe2auORCn3YWfKrWARBta6HjPM7m1Zb8wOW
-	V8HaCs428eI1JyF/JFyDHZh2iOwzdvudXhJLkWLK3aQVugVFTdRb
-X-Google-Smtp-Source: AGHT+IEUIVMFkaS08BYTq3/iyXcLgSdVBbrFOs8cO1ObYD0tOhF3B7ZYgZC33WVK4gteyLMmSMe+TA==
-X-Received: by 2002:a05:600c:35c3:b0:41f:dae4:e9b7 with SMTP id 5b1f17b1804b1-420fd349963mr31813365e9.40.1716478628647;
-        Thu, 23 May 2024 08:37:08 -0700 (PDT)
-Received: from [192.168.0.101] (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-42100fb7fe1sm28045695e9.45.2024.05.23.08.37.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 May 2024 08:37:08 -0700 (PDT)
-Message-ID: <637ed8cb-4503-40eb-9731-eb56e6b1cd93@gmail.com>
-Date: Thu, 23 May 2024 16:37:07 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUb2iX3o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E80E8C2BD10;
+	Thu, 23 May 2024 15:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716478676;
+	bh=3oAjIlkP7/L4zMK25MNZgmLkv0DGvWKMHVkhOywzgkc=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=GUb2iX3opnNDNylUyIPZiqg9aeN2XWexSm+KGpy+z0kDFp1iaWJjmnaf9lMLXv3W/
+	 JG/6KcHtndYh6MSlkpZW5jK++7hQLalbGNuNBpXbTxGgoxyKJbcahz4SGxsjfBimeu
+	 9IzSjiG/NJFULpv32Zo1/znQ+7xBAkMxyMmBxjmmWTYYhMfKMkLFe7pnUXBzDL+gst
+	 NnMMVBOGbar4b2xJ8r6k/awsvltVaPjHmZukwXx88EXONXR1vkeq4ymBTQD3uAVKSK
+	 ECraJF7aVPEIcCQagzG2E0MtJjBtJncBJSAaf5WiRMmR3ioPitT2SXUR8+bcecyjj9
+	 53UbAGJU4/j1w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] selftests: kvm: fix shift of 32 bit unsigned int
- more than 32 bits
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240523113802.2195703-1-colin.i.king@gmail.com>
- <da8581c8-3d56-454b-bddb-e523a983cb44@moroto.mountain>
-Content-Language: en-US
-From: "Colin King (gmail)" <colin.i.king@gmail.com>
-In-Reply-To: <da8581c8-3d56-454b-bddb-e523a983cb44@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 23 May 2024 18:37:51 +0300
+Message-Id: <D1H4WNKWCB5K.2HJG7RMX7L33V@kernel.org>
+Cc: <keyrings@vger.kernel.org>, "David Woodhouse" <dwmw2@infradead.org>,
+ "Eric Biggers" <ebiggers@kernel.org>, "Herbert Xu"
+ <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
+ "Andrew Morton" <akpm@linux-foundation.org>, "Mimi Zohar"
+ <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
+ Hallyn" <serge@hallyn.com>, "open list:CRYPTO API"
+ <linux-crypto@vger.kernel.org>, "open list" <linux-kernel@vger.kernel.org>,
+ "open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH RESEND] KEYS: trusted: Use ASN.1 encoded OID
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "James Bottomley" <James.Bottomley@HansenPartnership.com>,
+ <linux-integrity@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240523131931.22350-1-jarkko@kernel.org>
+ <9c96f39ed2161dd7f0c3a7964cba2de3169fae3b.camel@HansenPartnership.com>
+ <D1H2P674GFY0.3O8WYK2P1GZ2K@kernel.org>
+ <9dfeb6e3d568452ab1227484405b1fc221bd25c1.camel@HansenPartnership.com>
+In-Reply-To: <9dfeb6e3d568452ab1227484405b1fc221bd25c1.camel@HansenPartnership.com>
 
-On 23/05/2024 16:35, Dan Carpenter wrote:
-> On Thu, May 23, 2024 at 12:38:02PM +0100, Colin Ian King wrote:
->> Currrentl a 32 bit 1u value is being shifted more than 32 bits causing
->> overflow and incorrect checking of bits 32-63. Fix this by using the
->> BIT_ULL macro for shifting bits.
->>
->> Detected by cppcheck:
->> sev_init2_tests.c:108:34: error: Shifting 32-bit value by 63 bits is
->> undefined behaviour [shiftTooManyBits]
->>
->> Fixes: dfc083a181ba ("selftests: kvm: add tests for KVM_SEV_INIT2")
->> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
->> ---
->>   tools/testing/selftests/kvm/x86_64/sev_init2_tests.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c b/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
->> index 7a4a61be119b..ea09f7a06aa4 100644
->> --- a/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
->> +++ b/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
->> @@ -105,11 +105,11 @@ void test_features(uint32_t vm_type, uint64_t supported_features)
->>   	int i;
->>   
->>   	for (i = 0; i < 64; i++) {
->> -		if (!(supported_features & (1u << i)))
->> +		if (!(supported_features & BIT_ULL(i)))
->>   			test_init2_invalid(vm_type,
->>   				&(struct kvm_sev_init){ .vmsa_features = BIT_ULL(i) },
->>   				"unknown feature");
->> -		else if (KNOWN_FEATURES & (1u << i))
->> +		else if (KNOWN_FEATURES & BIT_ULL(u))
->                                                    ^
-> Should be i.  How does this build?  :P
+On Thu May 23, 2024 at 6:30 PM EEST, James Bottomley wrote:
+> On Thu, 2024-05-23 at 16:54 +0300, Jarkko Sakkinen wrote:
+> > On Thu May 23, 2024 at 4:38 PM EEST, James Bottomley wrote:
+> > > On Thu, 2024-05-23 at 16:19 +0300, Jarkko Sakkinen wrote:
+> > > > There's no reason to encode OID_TPMSealedData at run-time, as it
+> > > > never changes.
+> > > >=20
+> > > > Replace it with the encoded version, which has exactly the same
+> > > > size:
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A067 81 05 0A 01 05
+> > > >=20
+> > > > Include OBJECT IDENTIFIER (0x06) tag and length as the epilogue
+> > > > so
+> > > > that the OID can be simply copied to the blob.
+> > >=20
+> > > This is true, but if we're going to do this, we should expand the
+> > > OID
+> > > registry functions (in lib/oid_registry.c) to do something like
+> > > encode_OID.=C2=A0 The registry already contains the hex above minus t=
+he
+> > > two
+> > > prefixes (which are easy to add).
+> >=20
+> > Yes, I do agree with this idea, and I named variable the I named
+> > it to make it obvious that generation is possible.
+> >=20
+> > It would be best to have a single source, which could be just
+> > a CSV file with entries like:
+> >=20
+> > <Name>,<OID number>
+> >=20
+> > And then in scripts/ there should be a script that takes this
+> > source and generates oid_registry.gen.{h,c}. The existing
+> > oid_registry.h should really just include oid_registry.gen.h
+> > then to make this transparent change.
+> >=20
+> > And then in the series where OID's are encoded per-subsystem
+> > patch that takes pre-encoded OID into use.
+> >=20
+> > Happy to review such patch set if it is pushed forward.
+>
+> Heh, OK, since I'm the one who thinks it's quite easy, I'll give it a
+> go.
 
-good catch, I sent the wrong one :-(
-> 
-> regards,
-> dan carpenter
-> 
+I guess if it cleaned up multiple sites in kernel then it could
+be considered useful. I'd guess that there is at least a few
+locations that also encode OID.
 
+BR, Jarkko
