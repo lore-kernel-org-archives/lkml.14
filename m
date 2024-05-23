@@ -1,97 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9FA13C68A;
-	Thu, 23 May 2024 14:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id D846D14AD36
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716473635; cv=none; b=kAbxvXKtpTP8wH5liEfJQY10wL9ENg5fv8Gb6xsrQ8N1ZFp84R7ASj+O4NyMWZoM2NXgtvh6SCcN8UjIp40ANXylazjPEQsH15AY1bKVtqwLflVdjaCCfxXOkwsARu86csbLDDN3mBlnABZjxmsBgHCBnaHn2NGlhO8hLwKMh8w=
+	t=1716473719; cv=none; b=ThGqknLyErSfNJEJE5+qsnquSmkxFXkHoy35JNG5aD/Lz9ua2BOAnBkIELZql0fBfweQ2pkr2WLfHa+vmlI7bCFhqxHPN11UbsHjy4in3DqU9l9FPhWJdg3furAqT8Qq8MxxH5Iaz4mVUHKk+hm6s6VFTdwYslDJOpmeBoCu3+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716473635; c=relaxed/simple;
-	bh=wHmf0+7f1PdiR6STtU5I6IdOk8lZ3B3cslxc5ZQ4saA=;
+	s=arc-20240116; t=1716473719; c=relaxed/simple;
+	bh=5IUf0+zG4fFL42YLfBx8BZeqPX1R//xyjwcl6cKW7dI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvsIzqGUZJNP5A1LapgeiReH5vl3PtByHfeRM9CaHGyA4Xit1gtBCD694Bpg4ggPkfzz+yjpTHNdvtGUXhAMvffLAtJi/cvtyPDT4soYbzVgZeHRJ10tdH9gFPg8KKRfDd9Mi8G2Vo3yifMX1kv6i0MeXUDeqCoxgO6b3ZA5PdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pG3FZUZc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pG3FZUZc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ADDFC32786;
-	Thu, 23 May 2024 14:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716473634;
-	bh=wHmf0+7f1PdiR6STtU5I6IdOk8lZ3B3cslxc5ZQ4saA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pG3FZUZcHCWWmWQj87cDsg9x+aCOqkZg0AY/fdChUJM8p14lzvEzizpRKuHjSb8v1
-	 mr+V8Ar+hMyMvXJziq18S8UPfLVnpcIvZsWW5T2uP27KPi1k4NhK+fm21bFRgmpwvD
-	 iKz3+ZbnSCTKVeisPwev02H1OBWy6vHmdlNXoxLIl+J1DkliIbkDmsFJZc8/ZFIBTr
-	 AnnjzBUEoeE7dGoU2XYLpqbf35+nxElqLJKaNgpqgJcOJNivCrs03H5PQG0dpt3qJq
-	 C7SS8H0HmRti2jEqD+pEBRyNA77lNi3BCtjTnSsHnD1HiI3y9UAyLNSt8J6chiHXne
-	 cETsF6OVa7ZmQ==
-Date: Thu, 23 May 2024 15:13:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
-Message-ID: <20240523-showcase-helpful-4cc84fe2f1d5@spud>
-References: <20240523115134.70380-1-alexghiti@rivosinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yeb+9BkK9+AkJGS4snkARQyNh7PvGM/MhNWWx0Ob+Qs/fzc5Rdr2wbdxA21C2XGNNXQqg01EB4tuN0n/zeRVwTOwEnxbvoGm0H20+dz8QCa+V+tcVURFBlQcSdSCKmdB4W96YIopa0c77axZiG8DyzjT9mOcwDXiV/aZ2v5a0wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 539510 invoked by uid 1000); 23 May 2024 10:15:17 -0400
+Date: Thu, 23 May 2024 10:15:17 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Shichao Lai <shichaorai@gmail.com>
+Cc: gregkh@linuxfoundation.org, oneukum@suse.com, linux-usb@vger.kernel.org,
+  usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+  xingwei lee <xrivendell7@gmail.com>, yue sun <samsun1006219@gmail.com>
+Subject: Re: [PATCHv2] Check whether divisor is non-zero before division
+Message-ID: <bb581989-4ac5-4ffe-9f80-01b5f993146f@rowland.harvard.edu>
+References: <20240523092608.874986-1-shichaorai@gmail.com>
+ <a0afa88b-f84c-4b45-a265-2e6bcbb84b35@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2HITYodwdCyzzdtT"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240523115134.70380-1-alexghiti@rivosinc.com>
+In-Reply-To: <a0afa88b-f84c-4b45-a265-2e6bcbb84b35@rowland.harvard.edu>
 
+On Thu, May 23, 2024 at 09:58:21AM -0400, Alan Stern wrote:
+> On Thu, May 23, 2024 at 05:26:08PM +0800, Shichao Lai wrote:
+> > Since uzonesize may be zero, so judgements for non-zero are nessesary in both place.
+> > Previous check is moved out of loop, and one more check is added in alauda_write_lba.
+> > 
+> > Reported-by: xingwei lee <xrivendell7@gmail.com>
+> > Reported-by: yue sun <samsun1006219@gmail.com>
+> > Signed-off-by: Shichao Lai <shichaorai@gmail.com>
+> > ---
+> >  drivers/usb/storage/alauda.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/usb/storage/alauda.c b/drivers/usb/storage/alauda.c
+> > index 115f05a6201a..a6e60ef5cb0d 100644
+> > --- a/drivers/usb/storage/alauda.c
+> > +++ b/drivers/usb/storage/alauda.c
+> > @@ -818,6 +818,8 @@ static int alauda_write_lba(struct us_data *us, u16 lba,
+> >  	unsigned int blocksize = MEDIA_INFO(us).blocksize;
+> >  	unsigned int lba_offset = lba % uzonesize;
+> >  	unsigned int new_pba_offset;
+> > +	if (!uzonesize)
+> > +		return USB_STOR_TRANSPORT_ERROR;
+> >  	unsigned int zone = lba / uzonesize;
+> >  
+> >  	alauda_ensure_map_for_zone(us, zone);
+> > @@ -923,6 +925,8 @@ static int alauda_read_data(struct us_data *us, unsigned long address,
+> >  	unsigned int uzonesize = MEDIA_INFO(us).uzonesize;
+> >  	struct scatterlist *sg;
+> >  	int result;
+> > +	if (!uzonesize)
+> > +		return USB_STOR_TRANSPORT_ERROR;
+> >  
+> >  	/*
+> >  	 * Since we only read in one block at a time, we have to create
+> 
+> This is definitely NOT the right way to fix the bug!
+> 
+> uzonesize is set once, when the device is probed, in 
+> alauda_init_media().  That is where the check belongs; if uzonesize is 0 
+> then the function should print a warning and return 
+> USB_STOR_TRANSPORT_ERROR, because the device is unusable.
+> 
+> It's probably a good idea to check pagesize, blocksize, and zonesize at 
+> the same time, even though none of them are used for any divisions.
 
---2HITYodwdCyzzdtT
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Wait a minute.  I just went through the code more carefully.  It should 
+not be possible for uzonesize to be 0, because it is defined by:
 
-On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
-> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
-> converted ftrace_make_nop() to use patch_insn_write() which does not
-> emit any icache flush relying entirely on __ftrace_modify_code() to do
-> that.
->=20
-> But we missed that ftrace_make_nop() was called very early directly when
-> converting mcount calls into nops (actually on riscv it converts 2B nops
-> emitted by the compiler into 4B nops).
->=20
-> This caused crashes on multiple HW as reported by Conor and Bj=F6rn since
-> the booting core could have half-patched instructions in its icache
-> which would trigger an illegal instruction trap: fix this by emitting a
-> local flush icache when early patching nops.
->=20
-> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+	MEDIA_INFO(us).uzonesize = ((1 << media_info->zoneshift) / 128) * 125;
 
-Reported-by: Conor Dooley <conor.dooley@microchip.com>
-Tested-by: Conor Dooley <conor.dooley@microchip.com>
+where media_info->zoneshift is always a value between 8 and 12.
 
-Thanks for the quick fix Alex :)
+So the whole idea behind this patch is misguided.  The real problem is 
+to find out why uzonesize ended up being 0.
 
---2HITYodwdCyzzdtT
-Content-Type: application/pgp-signature; name="signature.asc"
+(And it's not necessary to check pagesize, blocksize, or zonesize, 
+because none of them can ever be 0 either.)
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZk9PHQAKCRB4tDGHoIJi
-0qjYAQCZbnkVecKQA29bgEC+XPR/AW8H6mGRAzkYf8O1XZA2AQEAoILUgAjaGIaK
-gWxhQLnUJzhG8w4SK9oCaJ0aLEtWgAI=
-=2ZE4
------END PGP SIGNATURE-----
-
---2HITYodwdCyzzdtT--
+Alan Stern
