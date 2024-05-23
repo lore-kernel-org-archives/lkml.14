@@ -1,294 +1,219 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9B02D05E;
-	Thu, 23 May 2024 06:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716446388; cv=none; b=kb3e7iz4Fqf7XX74vxLO0KXQJvI/jMXFYfjR14xEUSG8z2PmVD1rGdz873IHQJy00p3KBEVaozgw+n5Ysz22Ss1a/6DwCDNX7tHGILrlwvy4qXy5br+m7TkW1lkHKpP4D7yllqiFHx3XjOHzuPR6NZNjtp1erZfoBt2v2h6mIu4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716446388; c=relaxed/simple;
-	bh=1SHWak6NpxZvRy4JJY7ngfTdxhrfgQj+uET7woZ0lUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y8o8Dhg5clCgzv1LhPHrMp1L6Ev3cfkPPtjv0+PHI+kuocyZlOTxW6uU+eRU9TxkP5j+U3vHOxQKB0R6BaFXd31iK6spzfYtGa7CfzATmlXL4XI+/yzTY9B1UI2d08oe6+ITi5pT0sS6Z0GBMwMg2j8pm/EG0YIjNt5db644Yac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hDXU5vDA; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24D013C677;
+	Thu, 23 May 2024 06:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716446582; cv=fail; b=Kt8DKHk9ZRt/FA7htgipZxIQ1X5dvAsjrh20shqruKvJ9d0KzGV2+F1XOa3bSyZMk8G+xfbkrQz1bR7OX/l3QK5Evbj3PJm1vrZybyzgV8X3vcyuws6dviEyXTm0WCizDYas9EViqCa/uJbkPx8KmO5GS1TAVdKYS4Pohk6fZ9k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716446582; c=relaxed/simple;
+	bh=dHFG+6woMwkOZQOwUT3Whwvazsvg4ov+NBNC7tw0FZ0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZcruAfk9Ra07KA2h7TmKIdWVDa8/rmSIgHOfSkFJ4tyqwOU8854AN/o84kohkUDkZLWMEdsv5W2eTNNlXHCJVeVyuqTxNwuE6DB3KdpVpwRgQkKA2k1hO4mFc19iYqoBD2yY+WZqHVd7/y3wTh+Q6qpq9GTnQmofNFkPnqWLET0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l4A33cgZ; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hDXU5vDA"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44N6QAUW010835;
-	Thu, 23 May 2024 06:39:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=Thk8rNquzcEN0pZulHeg/jOPCh54cDBsgkzDBaidssc=;
- b=hDXU5vDApGo1eYJiPQrJtS7JssTTZjCq1eKlkRpj/r4lgmFfWveBdzYxCwkmc7sw/hlZ
- NgTpD+DKBHa53xNQAAF0Ofr7ejiNmWLp3fkkQXVro9G9GZ1foZXsQ8IB94wok2S1RGS8
- Z4phB8djBAYn/Y+dX3rxfE7KX0DQxuae6J2FUxxwEy8nrq3f3U+o9rvzLfQamcrkuctk
- /eEV4ZtgWbcSZga3VForJpBSYnHOjlRYyMINRuUfiutKTC9J7V5lYM6v/RVmcF+ABoq4
- HPTvIt2PxY8HFCHB/syCVPiEG7mwr6tzFD/reuhsILxZseUjIa7FpJWYUZ0sATNj3YSQ ew== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ya03r03cs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 06:39:13 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44N6dC0W002051;
-	Thu, 23 May 2024 06:39:12 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ya03r03cp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 06:39:12 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44N6Tecm022086;
-	Thu, 23 May 2024 06:39:11 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y76nu0r1f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 06:39:11 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44N6d7QA51315030
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 May 2024 06:39:09 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A5C8A20043;
-	Thu, 23 May 2024 06:39:07 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D923A20040;
-	Thu, 23 May 2024 06:39:05 +0000 (GMT)
-Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.53.171.174])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 23 May 2024 06:39:05 +0000 (GMT)
-From: Donet Tom <donettom@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tony Battersby <tonyb@cybernetics.com>
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ritesh Harjani <ritesh.list@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Muchun Song <songmuchun@bytedance.com>,
-        David Hildenbrand <david@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH] selftest: mm: Test if hugepage does not get leaked during __bio_release_pages()
-Date: Thu, 23 May 2024 01:39:05 -0500
-Message-Id: <20240523063905.3173-1-donettom@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l4A33cgZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716446581; x=1747982581;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=dHFG+6woMwkOZQOwUT3Whwvazsvg4ov+NBNC7tw0FZ0=;
+  b=l4A33cgZaGfHUqd+kScpuNt0C7O0cjPhXbSyhPV2vJ5kt4mlhVKc+CO/
+   wjOGT0myQEle2EmUk4b2bmTijEupOdU2+V9/XCED72YCzhWEt6ojJrTXW
+   Fjaw4hNKDjF2zDg6YCA+8miaPTBldpUQ+Rs4JOpkC34Cdmnmt8vK96lLG
+   jzUaEqNZMinksdKR83uLEPbj8Kc7hnaAC7EKkDVFtC2urZ5RCNxKRaPps
+   m1LcXWACtN0k06oQb3NQ1G3Nhl+Mipqej6SR/86lW+ejcF4jZMqRsAw5a
+   H+y2g9iCTfM05+EnkONuIjh1GSgLnnLAN8NgQigBfmiswfh7bKvd4zGwK
+   g==;
+X-CSE-ConnectionGUID: BMDv4qi0RFKLwb09ZniLvA==
+X-CSE-MsgGUID: UkTPpqnWS/WHubHFB0guiQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="12919242"
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="12919242"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 23:43:00 -0700
+X-CSE-ConnectionGUID: lpTD6138TaaUaa0cU2613g==
+X-CSE-MsgGUID: 6wfgNWSpTB+bDiz42CSxuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="33669117"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 May 2024 23:43:00 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 22 May 2024 23:42:59 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 22 May 2024 23:42:59 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 22 May 2024 23:42:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VOUBqWYfKBcC5RFEG7EZQQ9Y1XA/AOnOVBIF3suNTZC7pKKThrILpMggYRyWZtLbFWZdo0MtI4Kwxc/dMTJrxMQU1HUJIFlEQuDCtKBavjdcI8yeSW4xrDaP39baSh+YIWfuQEMTP0JGbva387ryi6ddurJ+iJcwVBQI7uwF2eYz48YkK32DkHWDVbq/Fwd5yV+osTCpB/gtgHjZZPve+J5Z+msbCbElpgFgWy3rkon7WNI2qj07b6eqraKzm+l+N9MyyRg7UkJiNonyW+SXvEI7iyOXAdsQqTu5x45WAgxKWh0MRy0cR/VMSR9fAtJRjxVmTkg3Dqibs8xg0xfI/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G7mLJeBtWL9JNWbgK2GGTe5FQJoDznHCQ+l2eM2H5ws=;
+ b=I8QQ4i3PbWYdNBr9cTqUNIdLGj137NWnl149Sw5OqfSlS7osENCDpxsmUiLv1NLRuvhqvY4K74TCR2PMZap5IdTC9wDOZN+cttXsFwHRmRNcyMhIr74jol4mDk9hHFo9ELr6XivO8+a5OLRqtZa2/WwrB80sAh9Q7V04AtvEK4UeE//rU/e8qDTPXXt408dglQo2pA7i37XGQsxZylBfJRdYA/+j6MBQoCkvV46wNHYh0lG1xzR3+XbmBVAxrbbaWEbEIqRpVLL0efi8AcuIuj8HptCGjD2ZEevK4/Wg4IjXmv6fqh3FlrjAE93+N4pcLuFv2JBKhCnxDGFXhtZLiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by DS0PR11MB7443.namprd11.prod.outlook.com (2603:10b6:8:148::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.54; Thu, 23 May
+ 2024 06:42:56 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%5]) with mapi id 15.20.7611.016; Thu, 23 May 2024
+ 06:42:56 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "jgg@nvidia.com"
+	<jgg@nvidia.com>, "suravee.suthikulpanit@amd.com"
+	<suravee.suthikulpanit@amd.com>
+CC: "joro@8bytes.org" <joro@8bytes.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"eric.auger@redhat.com" <eric.auger@redhat.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "jon.grimm@amd.com" <jon.grimm@amd.com>,
+	"santosh.shukla@amd.com" <santosh.shukla@amd.com>, "Dhaval.Giani@amd.com"
+	<Dhaval.Giani@amd.com>, "shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [PATCH RFCv1 08/14] iommufd: Add IOMMU_VIOMMU_SET_DEV_ID ioctl
+Thread-Topic: [PATCH RFCv1 08/14] iommufd: Add IOMMU_VIOMMU_SET_DEV_ID ioctl
+Thread-Index: AQHajVVl26WkVBqVE0qDV+tml8yTY7Gkmr6A
+Date: Thu, 23 May 2024 06:42:56 +0000
+Message-ID: <BN9PR11MB5276A897A5386DFAC9A35F9D8CF42@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <cover.1712978212.git.nicolinc@nvidia.com>
+ <c97a98a72ee3498c587e5898d6b899553ccd9b27.1712978212.git.nicolinc@nvidia.com>
+In-Reply-To: <c97a98a72ee3498c587e5898d6b899553ccd9b27.1712978212.git.nicolinc@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|DS0PR11MB7443:EE_
+x-ms-office365-filtering-correlation-id: 98a88f43-52ce-4e15-b863-08dc7af3948f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|366007|7416005|376005|38070700009;
+x-microsoft-antispam-message-info: =?us-ascii?Q?CCkGEdfbQrBfzL5Z6UFFwhgG5a7fIKhWFEZoWNpqzhd0KLAAdiHYIxV5+D+l?=
+ =?us-ascii?Q?XmLFR3aqvksdVrIxl0Nt6IPy/s9cSRA2HPDILud4IJEkXLnDiRjIMCg4+/Kh?=
+ =?us-ascii?Q?pBlqr05PDXLvNdr5RjpFgeyJr794qhzPWt3QIoFs67CD/Jym29N86Ztoc7Hb?=
+ =?us-ascii?Q?avp6ZyGSBBEEoGhTWx1buzyrI5arj/YSFgJlHHzTp8QBC01A4PQOHs1VhNNK?=
+ =?us-ascii?Q?4rfbl4zvoCGnau7tIWjwlertazW11S5qoYIIftGByomIFf3IfY13G0UKPuUk?=
+ =?us-ascii?Q?MWWt3Yi4jGIEnF9WTe/Mcnm42m7WbBfdy/PUsaBAIoIK3Z1Dx8HFnWwyvul1?=
+ =?us-ascii?Q?65L7bdKuImPm+yKicL17SZoVryNk1bp3slkmXOjdKQsAucTMnEbFmH+owoAX?=
+ =?us-ascii?Q?BGmERHTfgRvtz7JBUak8b2IOiK70BIzbtXL2/nQImLkxkhHLDlAMndRlOK3H?=
+ =?us-ascii?Q?MZbsCJAZ7k/AzENwEMZmj1jTWMg1N4SM+AjwnezmXYQ+QfXkN2GP2amGyEOn?=
+ =?us-ascii?Q?e3nlF2tpYujx7GPQ/gB6ImpzA9mk2SlnUhIYzGNda6T8+NC/n9MOdif4bPcp?=
+ =?us-ascii?Q?E8IQzPNDNm3W96Q0WlyYWG3KI1O7m39ycYUy8fXI6gByMOukQBV18B8SEpn8?=
+ =?us-ascii?Q?fb0/4yeo4KAaZCWU1pQVypXjZ6e5DHaumvDBH2Sx8AmmhUQTOuMBW5Y7C+Z5?=
+ =?us-ascii?Q?AHhZqXefIt38aAUxVtbtbe+cBok3QkniasYZttZERx82G7nLau9194TQ5iBM?=
+ =?us-ascii?Q?1XGVoiGsA6DKJjNCpS1EDH7/HNCNxE7/z9YttJUvo2DXOgrlK1i7TYrK8Xdn?=
+ =?us-ascii?Q?OZULLJQUNtHsdMrOEeUVCOw/74KtTOOIE69Cxo+Q88J7xhpDIKY3pASWZV+M?=
+ =?us-ascii?Q?gMG4YT5+DdhpYKxGdG+i+1sJwSr/QQYchnqVAKJBtMYG6F2UeSAKYIFPrJ2q?=
+ =?us-ascii?Q?LUDrosYDnlGX3/QuEj1FYBwtg55WDnIJFmCQwZSFWpwAzUo1YMhF6mEjnZeW?=
+ =?us-ascii?Q?vjRawgyVrcOhKMq7a9Plqe1Yh6SZoHtxNNjhESYuRBTnTtLVObEQRw+iPq1k?=
+ =?us-ascii?Q?gyVFSvvEqcnllU9Fw2EuqX2OhbWvOPmIadTtc5jfqQX0mad/9z4qrDbeaP+B?=
+ =?us-ascii?Q?Ojz7Yy28R5B3F8FjA8IYAE7dIBX3okN/wASfIntsSoaCdZkkLt+RKaHrbvID?=
+ =?us-ascii?Q?4/A5LYFJzW+WAsGqJgydEJsP3uPCrDkWA4LcRhT6yI9sL2j0BDBQL4AxvXEi?=
+ =?us-ascii?Q?GANRWQjCw+gb8ve7mYyL2rS3XZ5WkexJNaab0lHT+YwjJbQc9G6qgIWlNnUR?=
+ =?us-ascii?Q?28bNFiODw69tFEl0vBUl/FR1H+p9VXAkoP7QVgGpI/5dqQ=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xh8sWaHJ8gEf7KJqMIBRdIUZkwck5c0EhoSYlTtflvH2hia33lw5UPxfRVAp?=
+ =?us-ascii?Q?Zxd0pKmP9T9fnBNKxbK4AjLIcLSPai3atHfOMWwYXhLWbqsbixevEXUzYcy8?=
+ =?us-ascii?Q?Q7BTYgw67OdtS2FkXzGrAw8GAc7TQYPBaFmm+IRoR3GBztjntxdmfQ0k4hsU?=
+ =?us-ascii?Q?gW01R/TP6g8HZnSQw3mg/ey31F1yo2rPDnXKUu1XCL3uU/h8Gv0Xi0F2sAc0?=
+ =?us-ascii?Q?uFaE3ud5uRk5na3ZPTfsgioRxSoW49d2mfCzaDTdfynpogB5NwbdIa78xcUz?=
+ =?us-ascii?Q?dV/vcty2ZM/8klOTmDjJmdzCF/AyN+XNzkwuSCXFOjzD8Ml+K6PbeGDVbmGi?=
+ =?us-ascii?Q?46wVXHcsZLGoeqtoqHk4R/oQfh34WdQg0DkmfrjInSvTR3IJLB/TUpMDuAdC?=
+ =?us-ascii?Q?DuLtIUQpUmP/oDG7fXuUSiyUNt8bGhp21mgLC50gpxZ9ZbAb3w7WHaSPns1N?=
+ =?us-ascii?Q?1JwWS3+s6keK6fNZmO3S8qGA0QRX8eQmU5hDlgMRFufELr7m9PNe9dLSW6C8?=
+ =?us-ascii?Q?daRnQadCcqomH6pDzi+t4e8zSDu7rAjc3zIv+iDe/FDQkC89ZPKzb6sOePVF?=
+ =?us-ascii?Q?m63+eyR/BrSCOzDRNrX6/0EuM/KwhBEIVGSBrYU3y1XqeV8dXg6EYMqpcL+d?=
+ =?us-ascii?Q?TgdMYvQO2VMfrQQfnbtOA2gEYRTUyo22VKPyFmgCJKjjqceWTzNqnLED5E8n?=
+ =?us-ascii?Q?0jlZOi1wXQJnEWphtU9mZob2etVg7Yf8pEUx7a+GT8YZwTYUCAcUD9lMYlJ3?=
+ =?us-ascii?Q?1w5lKaGKORXui+sohIIV6Ybn6iNK1ZTmWhyhZ16PJjr3tCQ5gy/9W3+FXRrT?=
+ =?us-ascii?Q?D7O2l/4zprOFZTYkXxup0/fI1Vd1ukL7R6zCh9noaeWCj4E1u2LwpgE4FCbe?=
+ =?us-ascii?Q?9cgNYAH4OAnpbzD+UgUfjTpjhHCaYkJseC4cT9WQJhVUufav33H61Ed9tcN6?=
+ =?us-ascii?Q?8vnmvepy+7bKfdnGqQQ6lZpNGTbhCl7xtd/zSg7E6/lVHU24IvXgDMAj7xlS?=
+ =?us-ascii?Q?m+7gPb+q8md2I3IREOSuCXN9WYCOkO12R6PesaylxH2jzpgXOp6iR3CnXcHg?=
+ =?us-ascii?Q?k9GukL7r+jQVJ8LDiWVThQZImfCKpnWhvhPsfyngyuVh+DDbsPNc1UCC2cRb?=
+ =?us-ascii?Q?wOtmezP654ui/P4hR25oFMIkpEMKpZNE8Pu7UH2V6lTqzELnGvm+DNeFniy+?=
+ =?us-ascii?Q?lFZRO7rTTTVDXumX6kc+ydO+visN5/aQp0eAVxy7uUuSBTvQTHyxeLG7irQP?=
+ =?us-ascii?Q?4R0r2bIFYFiDx4uJVmIj5VcvVBrT4pd81x/1/ev5wCEcdpHCWKA9TIDjY0Av?=
+ =?us-ascii?Q?+otUsbPmHdmN1dz6rVOzgfQxGMabq72HKWOHiu+7KlU4/s3mmj4aQ5eQmQXk?=
+ =?us-ascii?Q?4Wzu6kTPkO/9u2vG2GN1rnIqm4oIszfPqkbxJ/Yz6tuDqhYtt/aXQPQIK0jv?=
+ =?us-ascii?Q?tDH3j5C00xTc++lDcH0yAN+L9s4PmGN/cddMSzVK4dMEE19OClJDatkui0P8?=
+ =?us-ascii?Q?AzoMFCbIGdodNN72FF3kI+cLVztjQLW09CHMXM83ecAz3G4tdlVD4nlQV+ri?=
+ =?us-ascii?Q?Bn9gMhbBS7Y4Yhxs3yfWrceReEIL3NzHWBY2HATr?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: w3bomp1Ygh6fVGcOAxb--U1SDV0WWeHP
-X-Proofpoint-ORIG-GUID: 7yDoZyQskpGg9ex2I-WMIaZwP8-soNWj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-23_03,2024-05-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 clxscore=1011
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405230043
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98a88f43-52ce-4e15-b863-08dc7af3948f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2024 06:42:56.7644
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eFKbI1VvUj3TaNZuw0bPxMFin/rX7/7ZGksHRQndwIACUDzvx5T6UDnm6pKHT0yn04RIbCCZb8RekOfB7xbUYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7443
+X-OriginatorOrg: intel.com
 
-Commit 1b151e2435fc ("block: Remove special-casing of compound
-pages") caused a change in behaviour when releasing the pages
-if the buffer does not start at the beginning of the page. This
-was because the calculation of the number of pages to release
-was incorrect.
-This was fixed by commit 38b43539d64b ("block: Fix page refcounts
-for unaligned buffers in __bio_release_pages()").
+> From: Nicolin Chen <nicolinc@nvidia.com>
+> Sent: Saturday, April 13, 2024 11:47 AM
+>=20
+> Introduce a new ioctl to set a per-viommu device virtual id that should b=
+e
+> linked to the physical device id (or just a struct device pointer).
+>=20
+> Since a viommu (user space IOMMU instance) can have multiple devices
 
-We pin the user buffer during direct I/O writes. If this buffer is a
-hugepage, bio_release_page() will unpin it and decrement all references
-and pin counts at ->bi_end_io. However, if any references to the hugepage
-remain post-I/O, the hugepage will not be freed upon unmap, leading
-to a memory leak.
+this is true...
 
-This patch verifies that a hugepage, used as a user buffer for DIO
-operations, is correctly freed upon unmapping, regardless of whether
-the offsets are aligned or unaligned w.r.t page boundary.
+> while
+> it's not ideal to confine a device to one single user space IOMMU instanc=
+e
+> either, these two shouldn't just do a 1:1 mapping. Add two xarrays in=20
 
-Test Result  Fail Scenario (Without the fix)
---------------------------------------------------------
-[]# ./hugetlb_dio
-TAP version 13
-1..4
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 1 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 2 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 3 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 6
-not ok 4 : Huge pages not freed!
-Totals: pass:3 fail:1 xfail:0 xpass:0 skip:0 error:0
+...but why would one device link to multiple viommu instances?
 
-Test Result  PASS Scenario (With the fix)
----------------------------------------------------------
-[]#./hugetlb_dio
-TAP version 13
-1..4
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 1 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 2 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 3 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 4 : Huge pages freed successfully !
-Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
+Or is it referring to Tegra194 as arm-smmu-nvidia.c tries to support?
 
-Signed-off-by: Donet Tom <donettom@linux.ibm.com>
-Signed-off-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
----
- tools/testing/selftests/mm/Makefile      |   1 +
- tools/testing/selftests/mm/hugetlb_dio.c | 118 +++++++++++++++++++++++
- 2 files changed, 119 insertions(+)
- create mode 100644 tools/testing/selftests/mm/hugetlb_dio.c
+In any case a real example might be useful as this may not be a given
+knowledge to all folks.
 
-diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-index eb5f39a2668b..87d8130b3376 100644
---- a/tools/testing/selftests/mm/Makefile
-+++ b/tools/testing/selftests/mm/Makefile
-@@ -71,6 +71,7 @@ TEST_GEN_FILES += ksm_functional_tests
- TEST_GEN_FILES += mdwe_test
- TEST_GEN_FILES += hugetlb_fault_after_madv
- TEST_GEN_FILES += hugetlb_madv_vs_map
-+TEST_GEN_FILES += hugetlb_dio
- 
- ifneq ($(ARCH),arm64)
- TEST_GEN_FILES += soft-dirty
-diff --git a/tools/testing/selftests/mm/hugetlb_dio.c b/tools/testing/selftests/mm/hugetlb_dio.c
-new file mode 100644
-index 000000000000..6f6587c7913c
---- /dev/null
-+++ b/tools/testing/selftests/mm/hugetlb_dio.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * This program tests for hugepage leaks after DIO writes to a file using a
-+ * hugepage as the user buffer. During DIO, the user buffer is pinned and
-+ * should be properly unpinned upon completion. This patch verifies that the
-+ * kernel correctly unpins the buffer at DIO completion for both aligned and
-+ * unaligned user buffer offsets (w.r.t page boundary), ensuring the hugepage
-+ * is freed upon unmapping.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <sys/stat.h>
-+#include <stdlib.h>
-+#include <fcntl.h>
-+#include <stdint.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <sys/mman.h>
-+#include "vm_util.h"
-+#include "../kselftest.h"
-+
-+void run_dio_using_hugetlb(unsigned int start_off, unsigned int end_off)
-+{
-+	int fd;
-+	char *buffer =  NULL;
-+	char *orig_buffer = NULL;
-+	size_t h_pagesize = 0;
-+	size_t writesize;
-+	int free_hpage_b = 0;
-+	int free_hpage_a = 0;
-+
-+	writesize = end_off - start_off;
-+
-+	/* Get the default huge page size */
-+	h_pagesize = default_huge_page_size();
-+	if (!h_pagesize)
-+		ksft_exit_fail_msg("Unable to determine huge page size\n");
-+
-+	/* Open the file to DIO */
-+	fd = open("/tmp", O_TMPFILE | O_RDWR | O_DIRECT);
-+	if (fd < 0)
-+		ksft_exit_fail_msg("Error opening file");
-+
-+	/* Get the free huge pages before allocation */
-+	free_hpage_b = get_free_hugepages();
-+	if (free_hpage_b == 0) {
-+		close(fd);
-+		ksft_exit_skip("No free hugepage, exiting!\n");
+btw there is a check in the following code:
+
++	if (viommu->iommu_dev !=3D idev->dev->iommu->iommu_dev) {
++		rc =3D -EINVAL;
++		goto out_put_viommu;
 +	}
-+
-+	/* Allocate a hugetlb page */
-+	orig_buffer = mmap(NULL, h_pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE
-+			| MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
-+	if (orig_buffer == MAP_FAILED) {
-+		close(fd);
-+		ksft_exit_fail_msg("Error mapping memory");
-+	}
-+	buffer = orig_buffer;
-+	buffer += start_off;
-+
-+	memset(buffer, 'A', writesize);
-+
-+	/* Write the buffer to the file */
-+	if (write(fd, buffer, writesize) != (writesize)) {
-+		munmap(orig_buffer, h_pagesize);
-+		close(fd);
-+		ksft_exit_fail_msg("Error writing to file");
-+	}
-+
-+	/* unmap the huge page */
-+	munmap(orig_buffer, h_pagesize);
-+	close(fd);
-+
-+	/* Get the free huge pages after unmap*/
-+	free_hpage_a = get_free_hugepages();
-+
-+	/*
-+	 * If the no. of free hugepages before allocation and after unmap does
-+	 * not match - that means there could still be a page which is pinned.
-+	 */
-+	if (free_hpage_a != free_hpage_b) {
-+		printf("No. Free pages before allocation : %d\n", free_hpage_b);
-+		printf("No. Free pages after munmap : %d\n", free_hpage_a);
-+		ksft_test_result_fail(": Huge pages not freed!\n");
-+	} else {
-+		printf("No. Free pages before allocation : %d\n", free_hpage_b);
-+		printf("No. Free pages after munmap : %d\n", free_hpage_a);
-+		ksft_test_result_pass(": Huge pages freed successfully !\n");
-+	}
-+}
-+
-+int main(void)
-+{
-+	size_t pagesize = 0;
-+
-+	ksft_print_header();
-+	ksft_set_plan(4);
-+
-+	/* Get base page size */
-+	pagesize  = psize();
-+
-+	/* start and end is aligned to pagesize */
-+	run_dio_using_hugetlb(0, (pagesize * 3));
-+
-+	/* start is aligned but end is not aligned */
-+	run_dio_using_hugetlb(0, (pagesize * 3) - (pagesize / 2));
-+
-+	/* start is unaligned and end is aligned */
-+	run_dio_using_hugetlb(pagesize / 2, (pagesize * 3));
-+
-+	/* both start and end are unaligned */
-+	run_dio_using_hugetlb(pagesize / 2, (pagesize * 3) + (pagesize / 2));
-+
-+	ksft_finished();
-+	return 0;
-+}
-+
--- 
-2.39.3
 
+I vaguely remember an earlier discussion about multiple vSMMU instances
+following the physical SMMU topology, but don't quite recall the exact
+reason.
+
+What is the actual technical obstacle prohibiting one to put multiple
+VCMDQ's from different SMMU's into one vIOMMU instance?
