@@ -1,98 +1,166 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B90A13CF97;
-	Thu, 23 May 2024 10:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212B346AF;
+	Thu, 23 May 2024 11:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716461767; cv=none; b=ZBELFOLfsLT7HKvI2Yp5YEE24TKyZG5gf+ai87qmCHT0YHclyday6KWdJFr2iP5pdVAV29V0V4xOZulYOndy/fdrslWQLAajIHHgV8IC2U73xFHlkvvWxN105mKbVU/CYcc+ie237zV9UCXwUzk+Oksy3Vx1Ztprt/k2YqQGuQ4=
+	t=1716462110; cv=none; b=lIEn/WKcAZS3Trx7pFpL2tGuB+5JycrxiErq1alVM7BAdlgPzNRP/eFPe5BXbSqvmAmvKLrRxrN54ephjtuEsg+vuj5WbTfjkrpFCPBZ7mBZEqF7VLE4tk94wRw2acmGHOf1wcwJiKo14voBYoFia+9F2pzc4O+qHBEem84BKF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716461767; c=relaxed/simple;
-	bh=Xby4AOkuwTi84uYWbUJ8qz1B1ZgJbm2U5BkC6NizKEE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=DY3HZD1h9rMsx7AC1xdw/fA7xZWDky5f6lWZosWcswKNaQgOt6eVFbEOSmURvm+STqjYgyYepSK2aB241AfE3UQOMERKd2K0whUPLBn8fRMKnVN7BVMC6RFMIY6PUuttkeMh2RsP7Y38AlIDM5QlrgubMPnFW7pTSQMVZ6udhBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIP+zrvP; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIP+zrvP"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4202dd90dcfso17814475e9.0;
-        Thu, 23 May 2024 03:56:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716461764; x=1717066564; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/YD8vs9t8a8JAFA2KhTs0rGuAGNmwdgDD+wjYjMsOps=;
-        b=HIP+zrvPocazfq7vv/rWwgOe97L3Caw3dofJ+8s0HyTO8ciuw5Ic+cIcAGQEu88ZLZ
-         m7i3iMWOzj8jJhUhw0no685pi29pHEsdlt8vUVII60YDyz+n33JSYuxpgmD8T/L76u2v
-         dAeuysfbe8gnKGCgie8p/t57tAqSJeNF3wDOiN7po++9vMqxm7p6vGnlZrWh4R0wPoeH
-         63/g96gSNDUG8xKtnbgd9K5ynsmKW9lC6/av6AsL9YqDGfIDGhX8s3KV1C5+EcFjPflR
-         ES8AgI+Q15khhhbD2sFlooUB0vikgsuBlX1hhin4Q2H9MMzaS38cq/sll66s+mWQZBpz
-         YVbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716461764; x=1717066564;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/YD8vs9t8a8JAFA2KhTs0rGuAGNmwdgDD+wjYjMsOps=;
-        b=teL4XHZIKBt146snN1Yvtr2tPEyhmuQqcMKBD/4q7L/ILqIEBarPB3s6lEe3CIY/5i
-         C8bICq/nWcx8p7FekLeTkODHtSITA21CKzCTsodQIZffgNVpLon0TYDRa5cIb208qEeN
-         n/dExv5z0CDmyNfxx9aGRRJ9ukT1urVUxE4alVSQX0KaPFjzXbB4ZRs/QEo2aTAUDKs/
-         iJDxS+EW9ocVQRFjXJrkV5n8POcuuPUk8vLqWhW7Gznuy1gPgG0itNRIqMAaPt0X5k63
-         D3BRCArT0/4kreI0yXII5ffyfhSQyMXDBfbbjJRztVLsEimH0hRJzhXp/ZLH1Bqr6f0l
-         wr/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUuLWIiY45P4f0y3T/1oFff+eKJnrCOwHFIBTISvNRVB+XVTMwXoBEPP08C6sVwQoRbeh0lFamgBatUeSuQDh4GZokOyr0xqvki0ksZgp0PsoAq+MZuO/OeiErro2/i5600XeCeZuFz5aOMXVsd
-X-Gm-Message-State: AOJu0YxOQUGy26C831uc2e/v4/AScwJIdwosmv5gpbOUM0uDmiMBv8ZC
-	bhkqrVTrl1yFGMNr3h0TTh6XSxhLcMxSZemCoA9KOzq6+QwrRKSN
-X-Google-Smtp-Source: AGHT+IH1RsI1HShio5nUIsG1rLG0BCsefwAyqPvGf0octJxxxdyE+POCgFEjgFI5+SFFziKTjm0m/Q==
-X-Received: by 2002:a05:600c:3781:b0:419:f630:57c2 with SMTP id 5b1f17b1804b1-420fd37502emr38518755e9.37.1716461764323;
-        Thu, 23 May 2024 03:56:04 -0700 (PDT)
-Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421010b9f45sm21527275e9.48.2024.05.23.03.56.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 03:56:03 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] selftests: mqueue: initialize array buf before using it
-Date: Thu, 23 May 2024 11:56:03 +0100
-Message-Id: <20240523105603.2183460-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1716462110; c=relaxed/simple;
+	bh=4u59vjcCwefd5WAf6c0pCJI3+Xi+nJGFKnocFAIqYX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NGqmOLdORbD9LwqhMb138lk2hZGHQUQXkaLl4oJv5xRokeUjt/PckC30YJdUeRSneHcBGunNIBh1kcuVqghC2CL8+FMioDqnBtZzLSoB79VKnnV60gKMneecev8gX3A8z3f43Es+VrWftndNnDAS1P7jowDB5g0/teROFzU8WLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VlQBG0pl8zxQKf;
+	Thu, 23 May 2024 18:57:58 +0800 (CST)
+Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id A51FB180060;
+	Thu, 23 May 2024 19:01:40 +0800 (CST)
+Received: from [10.67.120.108] (10.67.120.108) by
+ dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 23 May 2024 19:01:40 +0800
+Message-ID: <8e959699-0f74-2fc2-4e24-467b485838a1@huawei.com>
+Date: Thu, 23 May 2024 19:01:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH] driver core: Add log when devtmpfs create node failed
+Content-Language: en-CA
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: <rafael@kernel.org>, <linux-scsi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<prime.zeng@hisilicon.com>, <liyihang9@huawei.com>, <kangfenglong@huawei.com>
+References: <20240522114346.42951-1-yangxingui@huawei.com>
+ <2024052221-pulverize-worrisome-37fb@gregkh>
+ <794b5fa3-0135-80cc-4b55-f48a430a58ca@huawei.com>
+ <2024052316-confused-payback-5658@gregkh>
+ <68b110da-ea20-fa03-be26-49dd3a04f835@huawei.com>
+ <2024052354-legibly-willow-7134@gregkh>
+From: yangxingui <yangxingui@huawei.com>
+In-Reply-To: <2024052354-legibly-willow-7134@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggpemm100018.china.huawei.com (7.185.36.206) To
+ dggpemd100001.china.huawei.com (7.185.36.94)
 
-Currently array buf is not being initialized and so garbage values
-on the stack are being used in the mq_send calls. Initialize the
-values in the array to zero.
 
-Cleans up cppcheck warning:
-mq_perf_tests.c:334:25: error: Uninitialized variable: buff [uninitvar]
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/testing/selftests/mqueue/mq_perf_tests.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2024/5/23 17:35, Greg KH wrote:
+> On Thu, May 23, 2024 at 05:23:07PM +0800, yangxingui wrote:
+>> Hi Greg,
+>>
+>> On 2024/5/23 15:25, Greg KH wrote:
+>>> On Thu, May 23, 2024 at 09:50:09AM +0800, yangxingui wrote:
+>>>> Hi, Greg
+>>>>
+>>>> On 2024/5/22 20:23, Greg KH wrote:
+>>>>> On Wed, May 22, 2024 at 11:43:46AM +0000, Xingui Yang wrote:
+>>>>>> Currently, no exception information is output when devtmpfs create node
+>>>>>> failed, so add log info for it.
+>>>>>
+>>>>> Why?  Who is going to do something with this?
+>>>> We execute the lsscsi command after the disk is connected, we occasionally
+>>>> find that some disks do not have dev nodes and these disks cannot be used.
+>>>
+>>> Ok, but why do you think that devtmpfs create failed?
+>> I found that lsscsi will traverse the dev node and obtain device major and
+>> min. If no matching dev node is found, it will display "-       ".
+>>>
+>>>> However, there is no abnormal log output during disk scanning. We analyze
+>>>> that it may be caused by the failure of devtmpfs create dev node, so the log
+>>>> is added here.
+>>>
+>>> But is that the case?  Why is devtmpfs failing?  Shouldn't we fix that
+>>> instead?
+>> My subsequent reply touches on these points.
+>>>
+>>>> The lscsi command query results and kernel logs as follows:
+>>>>
+>>>> [root@localhost]# lsscsi
+>>>> [9:0:4:0]	disk	ATA	ST10000NM0086-2A SN05	-
+>>>>
+>>>> kernel: [586669.541218] hisi_sas_v3_hw 0000:b4:04.0: phyup: phy0
+>>>> link_rate=10(sata)
+>>>> kernel: [586669.541341] sas: phy-9:0 added to port-9:0, phy_mask:0x1
+>>>> (5000000000000900)
+>>>> kernel: [586669.541511] sas: DOING DISCOVERY on port 0, pid:2330731
+>>>> kernel: [586669.541518] hisi_sas_v3_hw 0000:b4:04.0: dev[4:5] found
+>>>> kernel: [586669.630816] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
+>>>> kernel: [586669.665960] hisi_sas_v3_hw 0000:b4:04.0: phydown: phy0
+>>>> phy_state=0xe
+>>>> kernel: [586669.665964] hisi_sas_v3_hw 0000:b4:04.0: ignore flutter phy0
+>>>> down
+>>>> kernel: [586669.863360] hisi_sas_v3_hw 0000:b4:04.0: phyup: phy0
+>>>> link_rate=10(sata)
+>>>> kernel: [586670.024482] ata19.00: ATA-10: ST10000NM0086-2AA101, SN05, max
+>>>> UDMA/133
+>>>> kernel: [586670.024487] ata19.00: 19532873728 sectors, multi 16: LBA48 NCQ
+>>>> (depth 32), AA
+>>>> kernel: [586670.027471] ata19.00: configured for UDMA/133
+>>>> kernel: [586670.027490] sas: --- Exit sas_scsi_recover_host: busy: 0 failed:
+>>>> 0 tries: 1
+>>>> kernel: [586670.037541] sas: ata19: end_device-9:0:
+>>>> model:ST10000NM0086-2AA101 serial:            ZA2B3PR2
+>>>> kernel: [586670.100856] scsi 9:0:4:0: Direct-Access     ATA ST10000NM0086-2A
+>>>> SN05 PQ: 0 ANSI: 5
+>>>> kernel: [586670.101114] sd 9:0:4:0: [sdk] 19532873728 512-byte logical
+>>>> blocks: (10.0 TB/9.10 TiB)
+>>>> kernel: [586670.101116] sd 9:0:4:0: [sdk] 4096-byte physical blocks
+>>>> kernel: [586670.101125] sd 9:0:4:0: [sdk] Write Protect is off
+>>>> kernel: [586670.101137] sd 9:0:4:0: [sdk] Write cache: enabled, read cache:
+>>>> enabled, doesn't support DPO or FUA
+>>>> kernel: [586670.101620] sd 9:0:4:0: Attached scsi generic sg10 type 0
+>>>> kernel: [586670.101714] sas: DONE DISCOVERY on port 0, pid:2330731, result:0
+>>>> kernel: [586670.101731] sas: sas_form_port: phy0 belongs to port0
+>>>> already(1)!
+>>>> kernel: [586670.152512] sd 9:0:4:0: [sdk] Attached SCSI disk
+>>>
+>>> Looks like sdk was found properly, what's the problem?
+>>
+>> Yes, this problem occurs occasionally. There is no exception log when
+>> scanning the disk, but the disk cannot be used. It has been confirmed that
+>> it is related to fio testing. When the dev node does not exist, fio may
+>> actively create this file.
+> 
+> So that's a userspace issue.  If a device node is to be created, and the
+> file is already present with that name, yes, we will fail to create it
+> as obviously userspace did not want us to do so.
+> 
+> It's not the kernel's job to protect userspace from doing foolish things
+> itself, right?  :)
+Yes.
+> 
+>> If we want to solve this problem, should we delete the existing files first
+>> when creating a dev node?
+> 
+> No.
+Ok.
+> 
+>> Or just print a prompt indicating that the dev node creation failed.
+> 
+> We can do that, but will that cause error messages to be printed out for
+> normal situations today where userspace does this on purpose?
+> 
+> Again, this isn't fixing the root problem here (which is userspace doing
+> something it shouldn't be doing), adding kernel log messages might be
+> just noise at this point in time given that it has been operating this
+> way for many years, if not decades.
+Yes, there is currently no fix for the problem, and it doesn't usually 
+happen. Once it occurs, the device will be unavailable and difficult to 
+locate. In addition, there are many possibilities for the failure of 
+devtmpfs to create a dev node, including currently recognized scenarios 
+and memory allocation failures, etc.
 
-diff --git a/tools/testing/selftests/mqueue/mq_perf_tests.c b/tools/testing/selftests/mqueue/mq_perf_tests.c
-index 5c16159d0bcd..bd561dc785d8 100644
---- a/tools/testing/selftests/mqueue/mq_perf_tests.c
-+++ b/tools/testing/selftests/mqueue/mq_perf_tests.c
-@@ -322,7 +322,7 @@ void *fake_cont_thread(void *arg)
- 
- void *cont_thread(void *arg)
- {
--	char buff[MSG_SIZE];
-+	char buff[MSG_SIZE] = { };
- 	int i, priority;
- 
- 	for (i = 0; i < num_cpus_to_pin; i++)
--- 
-2.39.2
-
+Thanks,
+Xingui
+.
