@@ -1,314 +1,212 @@
-Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11010001.outbound.protection.outlook.com [52.101.128.1])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114BF150990;
-	Thu, 23 May 2024 09:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716455978; cv=fail; b=YJyQ8z6KVg2mFwP0fsW43lQOlHUibRAc6iRABFbXOTj9Tmnqi7naqVX5qPe3MoCegniCKWdcJbldArfd8GAmoeEOuKRntfNSq799h+cunp22hJmlfASeONBBthuRj1PNpU0vx9ZEndgDx+Y5FCQLh5NDUW0QN42KYCAWqMmLB+4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716455978; c=relaxed/simple;
-	bh=tJI+cvMH06IzP+7yRCYlxf6+HolpNLWHXcUzE2JZf+Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T9oRpozSCxFQisp0+sbZ7RMAU0HdC+aeQQPROO/QtsoyaQIW2axGx9pX9pGkx4OCtOfivqN5xioZP8MgP1tZtKn5HiVBJAU0MnPSc2eYyj3snHVc/KrHCOjdUCaBFCcZfN1L676M4RjYaYgPDVtLIY8lemeXU726cqcNZ6KyAiM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=IM4qHXcL; arc=fail smtp.client-ip=52.101.128.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="IM4qHXcL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O8S4BGC3UVcEdQUsItsXemDqyvN1E8ubamKruyY/Wui06flMteExlXx0QX45ow5Dyqta6d+IUEjpfyG/QbnJ0oC4LCpJXpJ/Hq5RgJ/uwHWfJCNiG3pGxHm64RQF+0jESrnfWVdFF27i46NcJBVWmSs1jugKWo/0YMWjEmJ9jmIAO20/WrYC/kkRb8aqQO71yV5abOGcrEjnSzkdJwJ8d3yXxqqAzY/cfcl8AD4v9TsEUxGLo5rbAx6b8LQHrvd3LLQEyy5V+D6LsaFSK/aM0f1L4MTQTcorgcFGMk7uc8pv9GmwjPcDcQ04d6sD9hD12uUJ8caq3oJY2ZpvDp1A9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pycQ4ax5A44iPL+OokI9fmS5xofqcN1wFPCwCzTXGbQ=;
- b=ZRNoEtDrlUJFkpLhYtg+zdDjcoLEcjNh4WILK/a0D2oTIA9Z8JSuJunJ54doazvJ8NqhmQgcIlSaqaoKnMNREQQiAhFn5pNjCznzJWWbemucdMzNjvnoUR5vkQH3aQZmTNfPmCwVFp57LPdI8XidS83nffVY2I3KNZ2cqEp9fOZ3gSJTPwiflYoMyYEW02PXzcyzFqg4ykIOsEmGH7gUW8jVmI8t57q2JC3RjRwGkkV4lLRAXqF8UXq/uOk1Xja4qvEjzYrF4w78Jyw7ddFQTMl6xyJV3K5EsOdk1dNhyN+edgyZdRPv5FhInlarMkTyRO7ER0+LjrkLkilydyi1+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pycQ4ax5A44iPL+OokI9fmS5xofqcN1wFPCwCzTXGbQ=;
- b=IM4qHXcL2sAihIRjmAPf4J9vlZWZKMI3Qp0WVPVV+FeRGU/gl9x49jA9rnq6+UQKFLuT95MB9Fqfd3QX0PH3mjQ5scvrpEDsMY7xCryoMMyagNY7ld0t9pPVcJSPvsgfhP8q8tDcHWejmIPRkDiC6NegY9pxllWms0MoX+cr8w6HtjOefIqi4L+q4VUv4/Uk2xUFTq7CXMl4RpKA4tGumQWh8bCktgIhU5LCZvnjHvSrkcVEVDICMU8Oas+sIFnTfnJZdMJXv8RixjwpOeI2Ke5gazn8PHku7qkyATag9wWG+8NtdpQFIB76+Jh7cJ/vKKbh+XCQwjCBszavyYcj2A==
-Received: from PS2PR03CA0001.apcprd03.prod.outlook.com (2603:1096:300:5b::13)
- by SEZPR04MB6455.apcprd04.prod.outlook.com (2603:1096:101:9f::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Thu, 23 May
- 2024 09:19:30 +0000
-Received: from HK3PEPF0000021E.apcprd03.prod.outlook.com
- (2603:1096:300:5b:cafe::35) by PS2PR03CA0001.outlook.office365.com
- (2603:1096:300:5b::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19 via Frontend
- Transport; Thu, 23 May 2024 09:19:30 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK3PEPF0000021E.mail.protection.outlook.com (10.167.8.40) with Microsoft SMTP
- Server id 15.20.7611.14 via Frontend Transport; Thu, 23 May 2024 09:19:29
- +0000
-From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 23/23] ARM: dts: aspeed: yosemite4: add fan led config
-Date: Thu, 23 May 2024 17:18:10 +0800
-Message-Id: <20240523091812.2032933-24-Delphine_CC_Chiu@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240523091812.2032933-1-Delphine_CC_Chiu@wiwynn.com>
-References: <20240523091812.2032933-1-Delphine_CC_Chiu@wiwynn.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9AB13CFBC;
+	Thu, 23 May 2024 09:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716456193; cv=none; b=QWj43K0Ku7rGZL9h6tGbiFM10S4AQ5Uigd4ZNvIFhYbl/0CFLHmjgLWVO7agM6u3gsRZW3LQiVSqdln1tAN34byemWFnaphORg30N+UpuoIMfgsrUqnzJbLfd5Nm8DsUZm8hKYqx2dVf/s46VAkPpQZIw/rA4RXwC4RXtr6DhYs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716456193; c=relaxed/simple;
+	bh=ysClPfh+4m3zmyrA1kSayaJMvEkINX4yLhO1vkLHXNc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nu9hCIxU7qxMmBoRCkVG/29+p9+fyvNsbsTqVrQcaChWqRpLa3bcWVsC4tztqWmiahcd5ndhekSsNs8y53nLJ3vUi0FaflsDomoEJlkwF/nq0hBl5aoRKYniBgsJkRPiIlZ/2tuxPhcxTn6qQkxIySKTW3jbDNtqBboiWRvl0Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VlN0c3jcjz1S7Td;
+	Thu, 23 May 2024 17:19:28 +0800 (CST)
+Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id C97D01401E9;
+	Thu, 23 May 2024 17:23:07 +0800 (CST)
+Received: from [10.67.120.108] (10.67.120.108) by
+ dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 23 May 2024 17:23:07 +0800
+Message-ID: <68b110da-ea20-fa03-be26-49dd3a04f835@huawei.com>
+Date: Thu, 23 May 2024 17:23:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK3PEPF0000021E:EE_|SEZPR04MB6455:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 28c74036-1f35-44ea-b115-08dc7b097379
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|376005|36860700004|7416005|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jqOOOYTHQoj42yn1v2xkiEUTOpcSreTvC4m89m+KhQp+CeQh40pL3fP9f+2K?=
- =?us-ascii?Q?c4moz2bhmZPZhntw96FPmoruKZ+ua3t9Pd49/Rdzn5DmlrVuO3BL0ZnX6z3g?=
- =?us-ascii?Q?l2CdmL2eOhtcFZqahGRX6M+lGdtkcAno8XSirJgqxkY8R+N2HpiOSzo9jrwv?=
- =?us-ascii?Q?mAKV7qLrI5PLtzloUdkxonEVbAr5tO0A8P3Dyr9nQhO+uwoSrESCI/89H02t?=
- =?us-ascii?Q?jEHYrPEQsXNd3nuz2yEh+TaWIYNOcELzqXoHmEu+aGY5iVAMA4KVFfzeMcfR?=
- =?us-ascii?Q?tnz21gzLbBUMXf+8nG/LYIHcpRYqCfJL8pHgjwQgSvStqd78Qmi/IqhOgtBe?=
- =?us-ascii?Q?zDU4sYQwnoOU6WOxKo/xZdZurHHE5VdJ14m77yzdRYpI9Wm9VpkNyJy1WdQJ?=
- =?us-ascii?Q?lcnxsQrlMloBpYlnfohYQ1phzdwIqD5rZOrKgfAS4kA4V5FGkSKqM7Qfn8oG?=
- =?us-ascii?Q?/4TbA+ACZ9OuRzgGwX5OeT/0dcFia28TmRXHQkBAgQ10+RRyVotrnYQEjpsr?=
- =?us-ascii?Q?RYNvSaAcaXnUvb1EVwX/31YitpNPH0NqShNHfGdd10zAdwwLLAThEzt/6RlH?=
- =?us-ascii?Q?Ge2Z0vcOvlQEPu+qbYfdu2g5rLHnvRSr50mOpuQQLpe8++3oKd7LjaZypb3K?=
- =?us-ascii?Q?huJhoi0JIsMu8Bb0Jncce6DtRwzZnyutvGDUbJ3Kxsk8zKpEwhNZBS25Sx38?=
- =?us-ascii?Q?7DNPSndckqd5Mdj3lhb6EugO/Y3quzONgmRiFJC5TecvLsxXcs2dN+sAFlGu?=
- =?us-ascii?Q?s9MtqjotMUShd43NTvUaV5oF8feMtEDuCBoQ/MSGEZZD5QqePbXy1Uc+51RP?=
- =?us-ascii?Q?2D5YLRr9pqozvnnK0l54YuYCE6/QypWQr344A7cWjHq3g38Mn5EEyPiB5HK3?=
- =?us-ascii?Q?QqzwSFur+rVbMvb7G7LxjkXIzt9P/OOTgZ/QPXGcMajzjyODtjFNTIxL8Ot9?=
- =?us-ascii?Q?+DQ8hEWQCylG9x6wRtAm+QvTeIIU65Rz3fB0UBKHu56oA1IlGiVxBBQ8qKDO?=
- =?us-ascii?Q?+rdHYQPyry6JB67f1ofA5emg+V+BjHBk80DlBU097po/Z3vVYMpGhrhCKuHW?=
- =?us-ascii?Q?nnTztvGlshjQoVUruqZe0au/o161cB+wGMrvdTH/Ze0IudhdQ9if79DB5Mnp?=
- =?us-ascii?Q?zj766C/t7pu1+tzpXsaqhq0ISevXPx/AuH5Wg8YlxVDoQvhj/Bj1wKN8zI2g?=
- =?us-ascii?Q?ybf/EzAMaZ12Tmg83w6dQxJrOhF4Ow4Jc+ja8P+GPAlEWMgDUtOlFw7j9khY?=
- =?us-ascii?Q?zwcf3muLD28akZsanojOIaa4m/vvcr7LhBHWhhZYQrlXWxl6hIKyLGeFnDTj?=
- =?us-ascii?Q?Yn/WIHDID0fhW8Bise21zxn1bWDY/1AtefllaFXjZbJjDoMdAQ5VOdNcNip0?=
- =?us-ascii?Q?gXWwffs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(82310400017)(376005)(36860700004)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2024 09:19:29.9857
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28c74036-1f35-44ea-b115-08dc7b097379
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK3PEPF0000021E.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR04MB6455
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH] driver core: Add log when devtmpfs create node failed
+Content-Language: en-CA
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: <rafael@kernel.org>, <linux-scsi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<prime.zeng@hisilicon.com>, <liyihang9@huawei.com>, <kangfenglong@huawei.com>
+References: <20240522114346.42951-1-yangxingui@huawei.com>
+ <2024052221-pulverize-worrisome-37fb@gregkh>
+ <794b5fa3-0135-80cc-4b55-f48a430a58ca@huawei.com>
+ <2024052316-confused-payback-5658@gregkh>
+From: yangxingui <yangxingui@huawei.com>
+In-Reply-To: <2024052316-confused-payback-5658@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggpemm100022.china.huawei.com (7.185.36.132) To
+ dggpemd100001.china.huawei.com (7.185.36.94)
 
-Set fan led config in yosemite4 DTS.
+Hi Greg,
 
-Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
----
- .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 152 +++++++++++++++++-
- 1 file changed, 150 insertions(+), 2 deletions(-)
+On 2024/5/23 15:25, Greg KH wrote:
+> On Thu, May 23, 2024 at 09:50:09AM +0800, yangxingui wrote:
+>> Hi, Greg
+>>
+>> On 2024/5/22 20:23, Greg KH wrote:
+>>> On Wed, May 22, 2024 at 11:43:46AM +0000, Xingui Yang wrote:
+>>>> Currently, no exception information is output when devtmpfs create node
+>>>> failed, so add log info for it.
+>>>
+>>> Why?  Who is going to do something with this?
+>> We execute the lsscsi command after the disk is connected, we occasionally
+>> find that some disks do not have dev nodes and these disks cannot be used.
+> 
+> Ok, but why do you think that devtmpfs create failed?
+I found that lsscsi will traverse the dev node and obtain device major 
+and min. If no matching dev node is found, it will display "-       ".
+> 
+>> However, there is no abnormal log output during disk scanning. We analyze
+>> that it may be caused by the failure of devtmpfs create dev node, so the log
+>> is added here.
+> 
+> But is that the case?  Why is devtmpfs failing?  Shouldn't we fix that
+> instead?
+My subsequent reply touches on these points.
+> 
+>> The lscsi command query results and kernel logs as follows:
+>>
+>> [root@localhost]# lsscsi
+>> [9:0:4:0]	disk	ATA	ST10000NM0086-2A SN05	-
+>>
+>> kernel: [586669.541218] hisi_sas_v3_hw 0000:b4:04.0: phyup: phy0
+>> link_rate=10(sata)
+>> kernel: [586669.541341] sas: phy-9:0 added to port-9:0, phy_mask:0x1
+>> (5000000000000900)
+>> kernel: [586669.541511] sas: DOING DISCOVERY on port 0, pid:2330731
+>> kernel: [586669.541518] hisi_sas_v3_hw 0000:b4:04.0: dev[4:5] found
+>> kernel: [586669.630816] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
+>> kernel: [586669.665960] hisi_sas_v3_hw 0000:b4:04.0: phydown: phy0
+>> phy_state=0xe
+>> kernel: [586669.665964] hisi_sas_v3_hw 0000:b4:04.0: ignore flutter phy0
+>> down
+>> kernel: [586669.863360] hisi_sas_v3_hw 0000:b4:04.0: phyup: phy0
+>> link_rate=10(sata)
+>> kernel: [586670.024482] ata19.00: ATA-10: ST10000NM0086-2AA101, SN05, max
+>> UDMA/133
+>> kernel: [586670.024487] ata19.00: 19532873728 sectors, multi 16: LBA48 NCQ
+>> (depth 32), AA
+>> kernel: [586670.027471] ata19.00: configured for UDMA/133
+>> kernel: [586670.027490] sas: --- Exit sas_scsi_recover_host: busy: 0 failed:
+>> 0 tries: 1
+>> kernel: [586670.037541] sas: ata19: end_device-9:0:
+>> model:ST10000NM0086-2AA101 serial:            ZA2B3PR2
+>> kernel: [586670.100856] scsi 9:0:4:0: Direct-Access     ATA ST10000NM0086-2A
+>> SN05 PQ: 0 ANSI: 5
+>> kernel: [586670.101114] sd 9:0:4:0: [sdk] 19532873728 512-byte logical
+>> blocks: (10.0 TB/9.10 TiB)
+>> kernel: [586670.101116] sd 9:0:4:0: [sdk] 4096-byte physical blocks
+>> kernel: [586670.101125] sd 9:0:4:0: [sdk] Write Protect is off
+>> kernel: [586670.101137] sd 9:0:4:0: [sdk] Write cache: enabled, read cache:
+>> enabled, doesn't support DPO or FUA
+>> kernel: [586670.101620] sd 9:0:4:0: Attached scsi generic sg10 type 0
+>> kernel: [586670.101714] sas: DONE DISCOVERY on port 0, pid:2330731, result:0
+>> kernel: [586670.101731] sas: sas_form_port: phy0 belongs to port0
+>> already(1)!
+>> kernel: [586670.152512] sd 9:0:4:0: [sdk] Attached SCSI disk
+> 
+> Looks like sdk was found properly, what's the problem?
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-index 21ca22281ef8..2cbb210ed53e 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-@@ -75,6 +75,154 @@ tpmdev@0 {
- 			reg = <0>;
- 		};
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		fan0_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio0 4 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan0_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio0 5 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan1_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio0 10 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan1_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio0 11 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan2_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio1 4 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan2_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio1 5 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan3_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio1 10 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan3_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio1 11 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan4_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio0 2 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan4_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio0 3 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan5_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio0 8 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan5_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio0 9 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan6_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio1 2 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan6_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio1 3 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan7_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio1 8 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan7_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio1 9 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan8_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio0 0 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan8_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio0 1 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan9_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio0 6 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan9_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio0 7 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan10_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio1 0 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan10_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio1 1 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan11_blue {
-+			retain-state-shutdown;
-+			default-state = "on";
-+			gpios = <&led_gpio1 6 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		fan11_amber {
-+			retain-state-shutdown;
-+			default-state = "off";
-+			gpios = <&led_gpio1 7 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
- };
- 
- &uart1 {
-@@ -1198,7 +1346,7 @@ eeprom@52 {
- 				reg = <0x52>;
- 			};
- 
--			gpio@61 {
-+			led_gpio0: gpio@61 {
- 				compatible = "nxp,pca9552";
- 				reg = <0x61>;
- 				#address-cells = <1>;
-@@ -1268,7 +1416,7 @@ eeprom@52 {
- 				reg = <0x52>;
- 			};
- 
--			gpio@61 {
-+			led_gpio1: gpio@61 {
- 				compatible = "nxp,pca9552";
- 				reg = <0x61>;
- 				#address-cells = <1>;
--- 
-2.25.1
+Yes, this problem occurs occasionally. There is no exception log when 
+scanning the disk, but the disk cannot be used. It has been confirmed 
+that it is related to fio testing. When the dev node does not exist, fio 
+may actively create this file.
 
+> 
+>>
+>>>
+>>>>
+>>>> Signed-off-by: Xingui Yang <yangxingui@huawei.com>
+>>>> ---
+>>>>    drivers/base/core.c | 5 ++++-
+>>>>    1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>>> index 5f4e03336e68..32a41e0472b2 100644
+>>>> --- a/drivers/base/core.c
+>>>> +++ b/drivers/base/core.c
+>>>> @@ -3691,7 +3691,10 @@ int device_add(struct device *dev)
+>>>>    		if (error)
+>>>>    			goto SysEntryError;
+>>>> -		devtmpfs_create_node(dev);
+>>>> +		error = devtmpfs_create_node(dev);
+>>>> +		if (error)
+>>>> +			pr_info("devtmpfs create node for %s failed: %d\n",
+>>>> +				dev_name(dev), error);
+>>>
+>>> Why is an error message pr_info()?
+>> Do you recommend using pr_err()?
+> 
+> Do not print errors at the information level :)
+Ok.
+> 
+>>> And again, why is this needed?  If this needs to be checked, why are you
+>>> now checking it but ignoring the error?
+>>>
+>>> What would this help with?
+>> As above, we want to get the error info when the dev node fails to be
+>> created. We currently haven't figured out how to handle this exception well.
+>> But judging from the problems we are currently encountering, some may be
+>> because the corresponding dev node already exists, causing the creation to
+>> fail, but the node information is incorrect and the device cannot be used.
+>> as follows:
+>> [root@localhost]# ll /dev/sdk
+>> -rw-------. 1 root root 5368709120 Jul 8 09:51 /dev/sdk
+> 
+> Looks like the device node is created to me.  What is incorrect about
+> it, the values?  What is 'll' an alias for?  And are you sure that other
+> tools aren't getting the device node creation uevent and doing something
+> with it in userspace?  How do you know this is the kernel failing?
+> 
+> Wait, is /dev/sdk really a device node and not a file?  Perhaps
+> something else wrote to it first, before it was created?  And that's why
+> devtmpfs couldn't create it.  That sounds like a userspace error,
+> nothing the kernel can do about it.
+Yes, /dev/sdk is a file that may create by fio. and I tried to do the 
+same and could reproduce the problem, and after adding the log, it shows 
+that the file already exists.
+
+# ll /dev/sdc
+-rw-------. 1 root root 5 Jul 22 00:04 /dev/sdc
+
+[  366.306045] sas: ata8: end_device-4:1: model:ST2000NM0055-1V4104 
+serial:            ZC21FDJ3
+[  366.306991] scsi 4:0:8:0: Direct-Access     ATA      ST2000NM0055-1V4 
+TN05 PQ: 0 ANSI: 5
+[  366.307204] sd 4:0:8:0: [sdc] 3907029168 512-byte logical blocks: 
+(2.00 TB/1.82 TiB)
+[  366.307212] sd 4:0:8:0: [sdc] Write Protect is off
+[  366.307213] sd 4:0:8:0: [sdc] Mode Sense: 00 3a 00 00
+[  366.307222] sd 4:0:8:0: [sdc] Write cache: enabled, read cache: 
+enabled, doesn't support DPO or FUA
+[  366.307308] sd 4:0:8:0: Attached scsi generic sg2 type 0
+[  366.307354] sas: DONE DISCOVERY on port 1, pid:8, result:0
+[  366.307364] sas: sas_form_port: phy1 belongs to port1 already(1)!
+[  366.307384] devtmpfs create node for sdc failed: -17
+[  366.307880] sd 4:0:8:0: [sdc] Attached SCSI disk
+
+# lsscsi
+[4:0:8:0]    disk    ATA      ST2000NM0055-1V4 TN05  -
+
+
+If we want to solve this problem, should we delete the existing files 
+first when creating a dev node? Or just print a prompt indicating that 
+the dev node creation failed.
+
+Thanks,
+Xingui
+.
