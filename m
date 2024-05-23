@@ -1,100 +1,253 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B0C1862C
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 15:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025BF22F0F;
+	Thu, 23 May 2024 15:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716479314; cv=none; b=p+HAIoEGoISWvOHDVsoxz7O3aYjyOeLqMz29J65oijtA+ACv90Dr3Joux16N2qF2lms03uulMAL+j5nF8V+Zn67eCI94FAXfaAAW11PysB9nWDcJS8pV3NwxgLb7981GS3AMHJuKToJnHQd7Pu84dVQY2QDreBibWuUF3Yd44Xc=
+	t=1716479329; cv=none; b=JUtQk5rQ+CWS9dk3rdzpnqlz5rGUR4GAKKHMrE9WpEQc4wE9YJ5jU59vv7N4OdTHYK9t80qov/R8jDhJz8Aa0LPyX4UasCwK4ATsLc0FX8tZCxCgvv6sD74yO/r3rwDRJaK7AYNF8IHmhJChuHiXUwo1pYxoGbzEewqWzi8KyN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716479314; c=relaxed/simple;
-	bh=joRVzwdZMfiuRYTp/LAgcznS1tEIbKXziY5L8is3Xrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jaCdK3M0nGRZjrm7mqRWiw9aL1kk4F+t9wSDg1eUFfS84lObZV4D0B99RJ3hyBpnKyXqcf66imZqAqz14vgjHPfNhbvyVKlLs9o5U9abQy8+luF69D/Dy6q3BsCyO4OxgcVkJnzaIjiU1UsJVlqEDWnuPqOUDQkCMJtOTNAU+rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=XpK4HD6z; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1716479329; c=relaxed/simple;
+	bh=9s4uLEz3Z2HAXjF2nw4rka7qpb0kF/nf6XzKyCpq25A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AFOLtEoY24/PdoTD1rzMipOltUCI/Nw4rgP0TRCs1f3Li+61hX6UoNY+IVMpYx0DdnGHQazdIjaMcFYwtnyVAednc/1btHQwiL7gHEHlghdFiht1IOVqit2k2nzuUs9hSrqc9Q2jP6Rg3qkRbxik5wdvFlum2dks17G5C2utBzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MPDzdWsC; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="XpK4HD6z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=GMCX
-	jeQr/kc1haogBJ6sSOcdurhMSQkjSfFlJEVXoZo=; b=XpK4HD6zv+jNRT551lE6
-	xjYMyvu+GOUxa/57m2+S0DqornBlPEC8ZG/zmaQTDrO2ssAmi/KCwU2SX6H33rKH
-	JhDvu1eHYyq8YrxP+qzcQ/aZf2OqAY97YwSuBU5V8Vi+sTzNWhtSjXCGRNfP6tvY
-	DTtV5V9xIqNqWRPSjwAoHDDHoNdWSP1XJFc4iPg0A5ehPicRuMdgICPYnS1zv24c
-	5WjXphKW7364gyFfZoM3qGALSi9iH+NF7QD2gvJjo1Aeufnvv5rMnLk2HgLSbE2d
-	6DF8aLUbTsyxCEHkbyK3XIV3W5t8qVa1LtWM4nQyEv/3sIGtzYheN1nyqzcuZTib
-	iQ==
-Received: (qmail 1173772 invoked from network); 23 May 2024 17:48:21 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 May 2024 17:48:21 +0200
-X-UD-Smtp-Session: l3s3148p1@dycF+yAZ1pQujntm
-Date: Thu, 23 May 2024 17:48:20 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Wolfram Sang <wsa@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [GIT PULL] i2c-host changes for v6.10 - pt. 2
-Message-ID: <20240523154820.vza7xbdkgqyyth6w@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-	linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-References: <2qtn3bk6pat2xkw7qz34pjpgh6zariuz6zjxhmuuo2jcddfpi4@xn6aqqppl3hi>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPDzdWsC"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f34b5f1964so4496315ad.2;
+        Thu, 23 May 2024 08:48:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716479327; x=1717084127; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7BhK75bXFq9QXiZkl3Cdcd/j/Js9FIe4nw/sI4pfEyc=;
+        b=MPDzdWsCbqWuawBMGHpEk55qCN7ls4Ar+TPXbr0qN04oO1jLdRB+lP199CUpT3286m
+         raIj3AcxFF7RVCJFnMOJfJcL5SPaDrxxkyAY+kAiMKf3Qy6SMsc21lKtEKufbDuaDLLq
+         uslCVLCcZ3QEMd/vFaANf6zRJAzF/pcKGpXuZpoN505CpbkKE1hQK5im0qUdDCb2SyVH
+         2TjObEUJPOaiAGve0Hdd/0UIazHa1yKjR42lcNBGRHGk7yts0IyYlxcgsO2lukBxq2wK
+         sVhgi5JFhkuZMt4tna8hKU6/1Cic/hh06I0T168YWpDhgTo90jQvhYsMlp3ElftsZDlx
+         Qdhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716479327; x=1717084127;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7BhK75bXFq9QXiZkl3Cdcd/j/Js9FIe4nw/sI4pfEyc=;
+        b=OmGhduL+ig4c0cWCeo0dBOalChfXW7Acqsps2DxQEyxdXHNsuQqg2oWrzz0241quEP
+         XYaJqBk0JnQr/zD61/ZLblRcOa9bo8Y+1Qnx0NPEjbxT4Mqy/I+AbsBO51kOSOCAhTRp
+         arUK1X/TovbOGvB6g0ikxebpg9kdn5yWr+m8apD6o+R2YK2MZTjr3XT8SaolPQ2AN7OZ
+         Fh74chPOEc9/JWuX0QkrJ61fWdHv0AMyX5T8HXxbiRFdKkYWiM0+0jyICCNrulL08lrP
+         TdYse2npiEbuLOyt4NEy4aH4Cnr/4WBtDCZCq+dxhEF+bsSTPJ4mZoYyd+DnDt0ejtts
+         fecQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5YSjVBgCbX3v6mG3nO0xj9yXbvmyqES6HEiBXinDZQVS8HtMvRJaJ6s6MJ/Rt9fBfMw0kUxYIdMu9I5KDEbE/VyMrVpA+/iENur1arX79/i6BlYW0ohcyFXksequs/h60YRNQuGHsvg==
+X-Gm-Message-State: AOJu0Yz5bn8HhMpdV8Kos9UrJOpWRqarRYBlzOoAHNb38vmcOGP43gDl
+	FTq2+TVnAXYgedxjjuh3GUTKy7l8Q/ykQe63LAa5y0RhAGW35nyV
+X-Google-Smtp-Source: AGHT+IGMrkF69XcX/hXDLGXVQARSXHzwB0jz+sHvRGlqseKuvh+dumXN7fxyMa+ckV+c6mzDbqoY3A==
+X-Received: by 2002:a17:902:e5c5:b0:1e4:4ade:f504 with SMTP id d9443c01a7336-1f31c9e48d3mr57360905ad.46.1716479327137;
+        Thu, 23 May 2024 08:48:47 -0700 (PDT)
+Received: from localhost.localdomain ([223.178.81.93])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f3361a6678sm18321085ad.178.2024.05.23.08.48.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 08:48:46 -0700 (PDT)
+From: Kanak Shilledar <kanakshilledar@gmail.com>
+X-Google-Original-From: Kanak Shilledar <kanakshilledar111@protonmail.com>
+To: 
+Cc: Kanak Shilledar <kanakshilledar111@protonmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [RESEND v3 1/2] dt-bindings: interrupt-controller: riscv,cpu-intc: convert to dtschema
+Date: Thu, 23 May 2024 21:17:48 +0530
+Message-Id: <20240523154748.22670-2-kanakshilledar111@protonmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240523154748.22670-1-kanakshilledar111@protonmail.com>
+References: <20240523154748.22670-1-kanakshilledar111@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="k276mwu3dvz5qa7m"
-Content-Disposition: inline
-In-Reply-To: <2qtn3bk6pat2xkw7qz34pjpgh6zariuz6zjxhmuuo2jcddfpi4@xn6aqqppl3hi>
+Content-Transfer-Encoding: 8bit
 
+Convert the RISC-V Hart-Level Interrupt Controller (HLIC) to newer
+DT schema, Created DT schema based on the .txt file which had
+`compatible`, `#interrupt-cells` and `interrupt-controller` as
+required properties.
+Changes made with respect to original file:
+- Changed the example to just use interrupt-controller instead of
+using the whole cpu block
+- Changed the example compatible string.
 
---k276mwu3dvz5qa7m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Kanak Shilledar <kanakshilledar111@protonmail.com>
+---
+Changes in v3:
+- Remove reference to `interrupt-controller` in `riscv/cpus.yaml`.
+Changes in v2:
+- Update the maintainers list.
+- Add reference to `interrupt-controller` in `riscv/cpus.yaml`.
+- Update compatible property with the reference in `cpus.yaml`.
+- Include description for '#interrupt-cells' property.
+- Change '#interrupt-cells' property to have `const: 1` as per the
+text binding.
+- Fixed the warning thrown by `/renesas/r9a07g043f01-smarc.dtb`.
+---
+ .../interrupt-controller/riscv,cpu-intc.txt   | 52 -------------
+ .../interrupt-controller/riscv,cpu-intc.yaml  | 73 +++++++++++++++++++
+ 2 files changed, 73 insertions(+), 52 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.yaml
 
-Hi Andi,
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+deleted file mode 100644
+index 265b223cd978..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
++++ /dev/null
+@@ -1,52 +0,0 @@
+-RISC-V Hart-Level Interrupt Controller (HLIC)
+----------------------------------------------
+-
+-RISC-V cores include Control Status Registers (CSRs) which are local to each
+-CPU core (HART in RISC-V terminology) and can be read or written by software.
+-Some of these CSRs are used to control local interrupts connected to the core.
+-Every interrupt is ultimately routed through a hart's HLIC before it
+-interrupts that hart.
+-
+-The RISC-V supervisor ISA manual specifies three interrupt sources that are
+-attached to every HLIC: software interrupts, the timer interrupt, and external
+-interrupts.  Software interrupts are used to send IPIs between cores.  The
+-timer interrupt comes from an architecturally mandated real-time timer that is
+-controlled via Supervisor Binary Interface (SBI) calls and CSR reads.  External
+-interrupts connect all other device interrupts to the HLIC, which are routed
+-via the platform-level interrupt controller (PLIC).
+-
+-All RISC-V systems that conform to the supervisor ISA specification are
+-required to have a HLIC with these three interrupt sources present.  Since the
+-interrupt map is defined by the ISA it's not listed in the HLIC's device tree
+-entry, though external interrupt controllers (like the PLIC, for example) will
+-need to define how their interrupts map to the relevant HLICs.  This means
+-a PLIC interrupt property will typically list the HLICs for all present HARTs
+-in the system.
+-
+-Required properties:
+-- compatible : "riscv,cpu-intc"
+-- #interrupt-cells : should be <1>.  The interrupt sources are defined by the
+-  RISC-V supervisor ISA manual, with only the following three interrupts being
+-  defined for supervisor mode:
+-    - Source 1 is the supervisor software interrupt, which can be sent by an SBI
+-      call and is reserved for use by software.
+-    - Source 5 is the supervisor timer interrupt, which can be configured by
+-      SBI calls and implements a one-shot timer.
+-    - Source 9 is the supervisor external interrupt, which chains to all other
+-      device interrupts.
+-- interrupt-controller : Identifies the node as an interrupt controller
+-
+-Furthermore, this interrupt-controller MUST be embedded inside the cpu
+-definition of the hart whose CSRs control these local interrupts.
+-
+-An example device tree entry for a HLIC is show below.
+-
+-	cpu1: cpu@1 {
+-		compatible = "riscv";
+-		...
+-		cpu1-intc: interrupt-controller {
+-			#interrupt-cells = <1>;
+-			compatible = "sifive,fu540-c000-cpu-intc", "riscv,cpu-intc";
+-			interrupt-controller;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.yaml
+new file mode 100644
+index 000000000000..c9c79e0870ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/riscv,cpu-intc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: RISC-V Hart-Level Interrupt Controller (HLIC)
++
++description:
++  RISC-V cores include Control Status Registers (CSRs) which are local to
++  each CPU core (HART in RISC-V terminology) and can be read or written by
++  software. Some of these CSRs are used to control local interrupts connected
++  to the core. Every interrupt is ultimately routed through a hart's HLIC
++  before it interrupts that hart.
++
++  The RISC-V supervisor ISA manual specifies three interrupt sources that are
++  attached to every HLIC namely software interrupts, the timer interrupt, and
++  external interrupts. Software interrupts are used to send IPIs between
++  cores.  The timer interrupt comes from an architecturally mandated real-
++  time timer that is controlled via Supervisor Binary Interface (SBI) calls
++  and CSR reads. External interrupts connect all other device interrupts to
++  the HLIC, which are routed via the platform-level interrupt controller
++  (PLIC).
++
++  All RISC-V systems that conform to the supervisor ISA specification are
++  required to have a HLIC with these three interrupt sources present.  Since
++  the interrupt map is defined by the ISA it's not listed in the HLIC's device
++  tree entry, though external interrupt controllers (like the PLIC, for
++  example) will need to define how their interrupts map to the relevant HLICs.
++  This means a PLIC interrupt property will typically list the HLICs for all
++  present HARTs in the system.
++
++maintainers:
++  - Palmer Dabbelt <palmer@dabbelt.com>
++  - Paul Walmsley <paul.walmsley@sifive.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - const: andestech,cpu-intc
++          - const: riscv,cpu-intc
++      - const: riscv,cpu-intc
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 1
++    description: |
++      The interrupt sources are defined by the RISC-V supervisor ISA manual,
++      with only the following three interrupts being defined for
++      supervisor mode:
++        - Source 1 is the supervisor software interrupt, which can be sent by
++          an SBI call and is reserved for use by software.
++        - Source 5 is the supervisor timer interrupt, which can be configured
++          by SBI calls and implements a one-shot timer.
++        - Source 9 is the supervisor external interrupt, which chains to all
++          other device interrupts.
++
++required:
++  - compatible
++  - '#interrupt-cells'
++  - interrupt-controller
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller {
++        #interrupt-cells = <1>;
++        compatible = "riscv,cpu-intc";
++        interrupt-controller;
++    };
+-- 
+2.34.1
 
-> now that the dependencies are fixed and no error report has been
-> sent on these two patches, I can finally send the second part of
-> the i2c pull request.
-
-Pulled, but I can't send out to Linus because
-e22e0e483b2c76728ccd119fdcfea81eb176b3a5 (drm/amd/pm: remove deprecated
-I2C_CLASS_SPD support from newly added SMU_14_0_2) is not in his tree
-yet, only in next.
-
-Happy hacking,
-
-   Wolfram
-
-
---k276mwu3dvz5qa7m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZPZT8ACgkQFA3kzBSg
-KbZRtw/8CoUEMB+quI3WY1PWm+RUzwTzLqJxc6N+nWbNyg4RY3riARW2skQeyF00
-t+yM46bZxg3YQUm19IH95XTxaN+BbX5F79RhYFO8vKI9ELPLZyeInxWulxg+nWGf
-ifP2Mgk6wlJG6RLce1pNfmD1WnYzpDI36KOzyDFYK2If4XWeg2siLjnv5XnObmcf
-trjr0pohqmSOPu74XNLnCGQ9toQofqObta+VbLlQ/F12oyRqoH+a07pQDy1u04BB
-qKyxmgm9Z+1hSwLWbooK/jGPAMupk+bz0QewN8d6n57zcnNfDeeeXOtmYfU+EwSg
-C7Njekt0LHCXiBBgo7dH6ifg153YxBLu8hYH4abBtk0lXx0HfsVx9IfxzlZokELI
-24izDi7BnbhE5vMwqK89zRTumvsTbwh8fFFAIvdYm0BHdqrcWZmb6lq7leqp/3rJ
-97ybh9ccZ3R2OBB5TfVSbpie1rnKQa4NDeR6LrpmLiaeV7UtLAwT/mTab2P2rUyF
-L7v6mfq/GkmiPxaSHV7LxZnzN14aSUwuSePt8scumZkPrAAAEwFDGtEvOYdmVvv1
-eG3NWIvPoIhhz98g8cnKq6cqQ2yDmWtXWoUIP18aKY6trrQFnsZShdXGUjeGAyIb
-LD22iRIJaSxAV9e5bV0Ys8mDteGD6WioGH+H8tNOPFOx7wQNTnI=
-=Xl9G
------END PGP SIGNATURE-----
-
---k276mwu3dvz5qa7m--
