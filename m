@@ -1,141 +1,102 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6782912B16E;
-	Thu, 23 May 2024 14:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5611C12B16E
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716474996; cv=none; b=aVodoD1xb6O3S9rRbrwQARSZD0vbqqy/wifAsU0w9V9HZAVBUcHzhbysbPdf8StVqiXxiQinMV/bJ8qZoxGF2pQ7xnKY6urgYnnwgi3X1QIdAAyOT6oKiHNB0OwY0ahLrbP51cuFEeq9++vGNzbHRj3eor03w1cR7MSs0Y1EzJM=
+	t=1716475002; cv=none; b=K0FD8BdqfDlBlpZX3nGbaxvSgp9SGueOWBTsogILGOKr1QCUGQ+5Hiz7OruCvwJSWFwL/3SzJdfOIQDSx4pF37JK2QLeZjbNbFm0hoZo/byDFZh3YEjbzBRRm1pkckQRj2KlawiHcw1X5aae2arKg++gjXy0w6/xV/uMGU5eays=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716474996; c=relaxed/simple;
-	bh=9sS78x2ZdckMIB2ktWRxsrmJpPyzQYRCURWv7oKVTdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oPob9SngPjArAsJnwlwgScGam11T9eXedjQKm9tqNBWYudoRR5NFGwMD71H8zyvDy1Ulv858PWdZO3UpokIvrgU34BKfoyzmFX3+r6orTOBWxDR5gGm4/GN3Gpgfzv5YBegAugUjfgTycjVTObTBHPNZs9Fj4h4f3wGUBZIZLOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=uNwBYL7e; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716475002; c=relaxed/simple;
+	bh=D7ccP66lbly9TPuHTgEPpEZGApPtncrxRWXRsKA8lMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kmc03K6RmU05pIqotVNMWDQUEt/cxvCTCV++3doOv95d7+WzmUYyt4fnGCfU31oGSRceXZYr0ke1Qqrsl7vxYXjAm/oT0dOVBMO+HOofnp8fllG+dyO6FLDnQ78LlQymSZGbPPeWHo4aj8HOXYtjWLyOGHsZP4QXkY2IPOtCq0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2Yf1EJs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uNwBYL7e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716474992;
-	bh=9sS78x2ZdckMIB2ktWRxsrmJpPyzQYRCURWv7oKVTdE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uNwBYL7eeBCRiwhJoArAWBijyr722eWCnaXDG72gHvyA0Ao3uvd9iqn0XvIygcB47
-	 XWldqcAS/CLL5wX0Yh3O9yVI2WQ0u3vowpL3mr8M69+0Vx/4Y4BHpYh8c7k00cn06d
-	 ysm4kXfzZh2zKimil0ZGPPFqOsoPEgM/rH3uu+xgsdoGTxav3jtwye14fHUGHAHLjx
-	 DP5olZUQaRVi0kyYeEfdUsnCLpawtkGX2vmkut/pvpiuRyTpQx8qz+iNsOd+ys/i+X
-	 5fGZoX/sQ+P+gpQ3bn/pZWUv4mo5eZXSSiU8PdvjKeQt/YZLNCv8J/BVJLQC10INrz
-	 Ebs1cM7S6Rydw==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BC5F637820FA;
-	Thu, 23 May 2024 14:36:31 +0000 (UTC)
-Date: Thu, 23 May 2024 16:36:30 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Ashish Mhetre <amhetre@nvidia.com>, will@kernel.org, joro@8bytes.org,
- linux-arm-kernel@lists.infradead.org, Rob Clark <robdclark@gmail.com>,
- vdumpa@nvidia.com, linux-tegra@vger.kernel.org, treding@nvidia.com,
- jonathanh@nvidia.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] iommu: Optimize IOMMU UnMap
-Message-ID: <20240523163630.24992c28@collabora.com>
-In-Reply-To: <6b707eb4-5cf3-4b66-8152-5ba252f5df39@arm.com>
-References: <20240523031935.90856-1-amhetre@nvidia.com>
-	<6b707eb4-5cf3-4b66-8152-5ba252f5df39@arm.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2Yf1EJs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84952C4AF0A;
+	Thu, 23 May 2024 14:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716475001;
+	bh=D7ccP66lbly9TPuHTgEPpEZGApPtncrxRWXRsKA8lMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V2Yf1EJsH2yyQVH3Q9SWtWkogyrRYBQ5rjxoO5OMmKaWQgNYdjxOgON6K/qm/jnxX
+	 PsuVkcSv546+oFSMlSCeAfxdMC/vDp66cXvGagmBxUmwjL64wADEnkHWNwJIMbwv/m
+	 +wv7wNcztLxSeOKTEH5R2KV/JD8Pwy8hp65TGd99tMW2AWdLdtigxDWdL+SW2+Tp2S
+	 FG5LVL3+2fb2DOhJaChxyAAjnbZicPn7VrAZQT2toxg1D5LZRSmVaD5FFZgt3WFoMJ
+	 XbgX4CpqBgzjEDZhwlIbsSfGSq7I7TeciS4bZ3eaA7ZAahW1bPXCSHb5oB6IGEK0J2
+	 YszQBYY3Ydb/w==
+Date: Thu, 23 May 2024 17:34:50 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Jaewon Kim <jaewon31.kim@samsung.com>
+Cc: "vbabka@suse.cz" <vbabka@suse.cz>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>,
+	"tkjos@google.com" <tkjos@google.com>
+Subject: Re: (2) [RESEND PATCH 00/10] memblock: introduce memsize showing
+ reserved memory
+Message-ID: <Zk9UCsZdizqC1_36@kernel.org>
+References: <ZkxN0yQ7Fb0X26hT@kernel.org>
+ <20240521023957.2587005-1-jaewon31.kim@samsung.com>
+ <20240521025329epcms1p6ce11064c0f0608a0156d82fda7ef285c@epcms1p6>
+ <CGME20240521024009epcas1p10ed9f9b929203183a29f79508e79bb76@epcms1p5>
+ <20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1@epcms1p5>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1@epcms1p5>
 
-On Thu, 23 May 2024 14:41:12 +0100
-Robin Murphy <robin.murphy@arm.com> wrote:
+On Tue, May 21, 2024 at 07:17:53PM +0900, Jaewon Kim wrote:
+> >On Tue, May 21, 2024 at 11:53:29AM +0900, Jaewon Kim wrote:
+> >> >--------- Original Message ---------
+> >> >Sender : 김재원 <jaewon31.kim@samsung.com>System Performance Lab.(MX)/삼성전자
+> >> >Date   : 2024-05-21 11:40 (GMT+9)
+> >> >Title  : [RESEND PATCH 00/10] memblock: introduce memsize showing reserved memory
+> >> >?
+> >> >Some of memory regions can be reserved for a specific purpose. They are
+> >> >usually defined through reserved-memory in device tree. If only size
+> >> >without address is specified in device tree, the address of the region
+> >> >will be determined at boot time.
+> >> >
+> >> >We may find the address of the memory regions through booting log, but
+> >> >it does not show all. And it could be hard to catch the very beginning
+> >> >log. The memblock_dump_all shows all memblock status but it does not
+> >> >show region name and its information is difficult to summarize.
+> >> >
+> >> >This patch introduce a debugfs node, memblock/memsize, to see reserved
+> >> >memory easily.
+> >> 
+> >> This is actually RESEND as it was introduced 2 years ago.
+> >> Please refer to https://lore.kernel.org/linux-mm/YkQB6Ah603yPR3qf@kernel.org/#t
+> >> 
+> >> > But you never provided details about *why* you want this information exposed.
+> >> 
+> >> For your question, I'd like to say ;
+> >> We can see the same format and exact information between different version of kernel status.
+> >> 
+> >> 1) Internally we can check if the reserved memory changes.
+> >> 2) Externally we can communicate between chipset vendors and OEM, with a same format.
+> >
+> >Why the existing debugfs interface is not sufficient?
+> 
+> debugfs/memblock/memory & debugfs/memblock/reserved have changed its
+> format but still does not show name, reusable, kernel size.  If memory is
+> reserved from memblock, and did not freed back to memblock. Memblock does
+> not know even after the memory is freed to system.  I think a simple
+> debug interface is needed to easily communicate with others or compare
+> different SW releases.
 
-> On 23/05/2024 4:19 am, Ashish Mhetre wrote:
-> > The current __arm_lpae_unmap() function calls dma_sync() on individual
-> > PTEs after clearing them. By updating the __arm_lpae_unmap() to call
-> > dma_sync() once for all cleared PTEs, the overall performance can be
-> > improved 25% for large buffer sizes.
-> > Below is detailed analysis of average unmap latency(in us) with and
-> > without this optimization obtained by running dma_map_benchmark for
-> > different buffer sizes.
-> > 
-> > Size	Time W/O	Time With	% Improvement
-> > 	Optimization	Optimization
-> > 	(us)		(us)
-> > 
-> > 4KB	3.0		3.1		-3.33
-> > 1MB	250.3		187.9		24.93  
-> 
-> This seems highly suspect - the smallest possible block size is 2MB so a 
-> 1MB unmap should not be affected by this path at all.
-> 
-> > 2MB	493.7		368.7		25.32
-> > 4MB	974.7		723.4		25.78  
-> 
-> I'm guessing this is on Tegra with the workaround to force everything to 
-> PAGE_SIZE? In the normal case a 2MB unmap should be nominally *faster* 
-> than 4KB, since it would also be a single PTE, but with one fewer level 
-> of table to walk to reach it. The 25% figure is rather misleading if 
-> it's only a mitigation of an existing erratum workaround, and the actual 
-> impact on the majority of non-broken systems is unmeasured.
-> 
-> (As an aside, I think that workaround itself is a bit broken, since at 
-> least on Tegra234 with Cortex-A78, PAGE_SIZE could be 16KB which MMU-500 
-> doesn't support.)
-> 
-> > Signed-off-by: Ashish Mhetre <amhetre@nvidia.com>
-> > ---
-> >   drivers/iommu/io-pgtable-arm.c | 34 +++++++++++++++++++++++++---------
-> >   1 file changed, 25 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> > index 3d23b924cec1..94094b711cba 100644
-> > --- a/drivers/iommu/io-pgtable-arm.c
-> > +++ b/drivers/iommu/io-pgtable-arm.c
-> > @@ -256,13 +256,15 @@ static void __arm_lpae_sync_pte(arm_lpae_iopte *ptep, int num_entries,
-> >   				   sizeof(*ptep) * num_entries, DMA_TO_DEVICE);
-> >   }
-> >   
-> > -static void __arm_lpae_clear_pte(arm_lpae_iopte *ptep, struct io_pgtable_cfg *cfg)
-> > +static void __arm_lpae_clear_pte(arm_lpae_iopte *ptep, struct io_pgtable_cfg *cfg, int num_entries)
-> >   {
-> > +	int i;
-> >   
-> > -	*ptep = 0;
-> > +	for (i = 0; i < num_entries; i++)
-> > +		ptep[i] = 0;
-> >   
-> >   	if (!cfg->coherent_walk)
-> > -		__arm_lpae_sync_pte(ptep, 1, cfg);
-> > +		__arm_lpae_sync_pte(ptep, num_entries, cfg);
-> >   }
-> >   
-> >   static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
-> > @@ -633,13 +635,25 @@ static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
-> >   	if (size == ARM_LPAE_BLOCK_SIZE(lvl, data)) {
-> >   		max_entries = ARM_LPAE_PTES_PER_TABLE(data) - unmap_idx_start;
-> >   		num_entries = min_t(int, pgcount, max_entries);
-> > -
-> > -		while (i < num_entries) {
-> > -			pte = READ_ONCE(*ptep);
-> > +		arm_lpae_iopte *pte_flush;
-> > +		int j = 0;
-> > +
-> > +		pte_flush = kvcalloc(num_entries, sizeof(*pte_flush), GFP_ATOMIC);  
-> 
-> kvmalloc() with GFP_ATOMIC isn't valid. However, I'm not sure if there 
-> isn't a more fundamental problem here - Rob, Boris; was it just the map 
-> path, or would any allocation on unmap risk the GPU reclaim deadlock 
-> thing as well?
-
-Unmap as well, because of the 'split huge page into small pages'
-logic when the unmap region is not aligned on 2MB.
+I still don't understand what problem are you trying to solve with these
+patches. 
+ 
+-- 
+Sincerely yours,
+Mike.
