@@ -1,132 +1,112 @@
-Received: from smtp88.iad3a.emailsrvr.com (smtp88.iad3a.emailsrvr.com [173.203.187.88])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D721E4A0
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 12:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.203.187.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307E314532F;
+	Thu, 23 May 2024 12:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716467810; cv=none; b=tKOyzZYMxjyY+3zh8sho/jDLOD3w1nvlQePzBj7HprG3e7YZPo8Eb6NAqu/VB8jDDdKBBzFtEeOAzpsVP4MSc1QyjSVLFEPXN32Tb0HlLcBtd6efCjC5+x/BpcmkCqJa8/T5bgojU3MEYW6f7JS36SLuKCx48D+P8fIsOxCIcbU=
+	t=1716467841; cv=none; b=S4fMVWAsXA8OyuIoegjMynLaJixQnIYM/8QSNi4QI1dRyYTl8NSxVA9jifSXLqlwig6rb2+7BgQZP5ifcieS22aemiSSR3Zy8VzQkPlCd8dM/njKULisvn91DUPvj9Yo5AqXL9OO4///TunKOTaAOg5LTxF9Jy7g+F8FjN/uKeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716467810; c=relaxed/simple;
-	bh=D+9CyojCG0QsdHiaLTmHpkJ9/iJKbWZ7oDwEFE14eHE=;
+	s=arc-20240116; t=1716467841; c=relaxed/simple;
+	bh=o+cIsFagOQT2Q33MTrnnLdxWh5QXIRSFcQAPjiLDD0E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1Sez2K/NULomgfgY43dFq3z/LWWEgUxCXxcCtt+O4XMEEAQkDMm05J4BTAQ3bBp1CKcbxZtWU+WLSrLZ9c+XdVIc8qYIBKQnEH4e969na7X2AWo9Y8yh5+UjtR8hn1sH8tINOGnlSWYYb4irb7Hl/KiYHq+u2yeR248fDpPZ/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oddbit.com; spf=pass smtp.mailfrom=oddbit.com; dkim=pass (1024-bit key) header.d=oddbit.com header.i=@oddbit.com header.b=KZGqXl3D; arc=none smtp.client-ip=173.203.187.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oddbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oddbit.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzdDESExPY4S4RtqG6tbnGwJiCdC+/Hz3G7Lv9o7MS6heRzS8Lc85e413ztpzoLOGofZbs1PQOHsQ+YNpkYpRVy5OgShM91S0arCBwPUDMi8MEd/TTC7eRarD2gjC6d25x/eK1LEv2zzylQ1PXsbJnDrbc2NvKo0LfKfXuuOFao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KcGE+YTA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=oddbit.com header.i=@oddbit.com header.b="KZGqXl3D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=oddbit.com;
-	s=20180920-g2b7aziw; t=1716467431;
-	bh=D+9CyojCG0QsdHiaLTmHpkJ9/iJKbWZ7oDwEFE14eHE=;
-	h=Date:From:To:Subject:From;
-	b=KZGqXl3DYdYsQiRvMuirfdkI+85PAnGgWDiuOxM2lkZEPchN8opaMhXO9maTzqrsf
-	 xd/9+TtwhcUY+0UTFGnjPDtikudW20T7w11S7WFtCiOnUcBQhbcYcGl91Y/qTHUCYz
-	 8DybFiqqApc/aTJa9MYvD+hgSDBXf+OHdCKOD/y8=
-X-Auth-ID: lars@oddbit.com
-Received: by smtp28.relay.iad3a.emailsrvr.com (Authenticated sender: lars-AT-oddbit.com) with ESMTPSA id 5276651D3;
-	Thu, 23 May 2024 08:30:31 -0400 (EDT)
-Date: Thu, 23 May 2024 08:30:31 -0400
-From: Lars Kellogg-Stedman <lars@oddbit.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Duoming Zhou <duoming@zju.edu.cn>, linux-hams@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com, kuba@kernel.org, 
-	edumazet@google.com, davem@davemloft.net, jreuter@yaina.de
-Subject: Re: [PATCH net] ax25: Fix refcount leak issues of ax25_dev
-Message-ID: <lglyhi7ptj6oeiqkd263dxb6pvvqpjipfu7mvs4tgsexk5fmoc@ekcfnsavpipe>
-References: <20240501060218.32898-1-duoming@zju.edu.cn>
- <my4l7ljo35dnwxl33maqhyvw7666dmuwtduwtyhnzdlb6bbf5m@5sbp4tvg246f>
- <78ae8aa0-eac5-4ade-8e85-0479a22e98a3@moroto.mountain>
- <ekgwuycs3hioz6vve57e6z7igovpls6s644rvdxpxqqr7v7is6@u5lqegkuwcex>
- <1e14f4f1-29dd-4fe5-8010-de7df0866e93@moroto.mountain>
- <movur4qy7wwavdyw2ugwfsz6kvshrqlvx32ym3fyx5gg66llge@citxuw5ztgwc>
- <eb5oil2exor2bq5n3pn62575phxjdex6wdjwwjxjd3pd4je55o@4k4iu2xobel5>
- <79dc1067-76dc-43b2-9413-7754f96fe08e@moroto.mountain>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KcGE+YTA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B9ECC2BD10;
+	Thu, 23 May 2024 12:37:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716467840;
+	bh=o+cIsFagOQT2Q33MTrnnLdxWh5QXIRSFcQAPjiLDD0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KcGE+YTAH4DiNSX1KL56t0ozxuwvELpqo4VkZZaTeDQBO44KZfSn0Q979gtVmbVFB
+	 NX73obibt80jeLyvLB7MieFgC+hOKMDeVdIEPZd6OKaC8T2G18B9m4/nutHTNsjLy8
+	 12xmviuwtED6AiOFESaXpBnHJmPScUqT6uI5hUCk=
+Date: Thu, 23 May 2024 14:37:18 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: shichao lai <shichaorai@gmail.com>
+Cc: oneukum@suse.com, stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+	xingwei lee <xrivendell7@gmail.com>,
+	yue sun <samsun1006219@gmail.com>
+Subject: Re: [PATCH v2] usb-storage: Check whether divisor is non-zero before
+ division
+Message-ID: <2024052354-snorkel-drainer-d328@gregkh>
+References: <20240523113410.983875-1-shichaorai@gmail.com>
+ <2024052351-demote-gangly-74b0@gregkh>
+ <CACjpba7k2+GS3c+NGgOeP=9=DU8Mh1DFEGUB_WAkX_VFKBBtrA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <79dc1067-76dc-43b2-9413-7754f96fe08e@moroto.mountain>
-X-Classification-ID: dbc2286a-f004-44d5-96b8-3fbf2be9d2c4-1-1
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACjpba7k2+GS3c+NGgOeP=9=DU8Mh1DFEGUB_WAkX_VFKBBtrA@mail.gmail.com>
 
-Dan,
+On Thu, May 23, 2024 at 08:23:57PM +0800, shichao lai wrote:
+> On Thu, May 23, 2024 at 7:47 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, May 23, 2024 at 07:34:10PM +0800, Shichao Lai wrote:
+> > > Since uzonesize may be zero, so judgements for non-zero
+> > > are necessary in both place.
+> > >
+> > > Changes since v1:
+> > > - Add one more check in alauda_write_lba().
+> > > - Move check ahead of loop in alauda_read_data().
+> >
+> > Nit, this changes list should go below the --- line, as the
+> > documentation asks for.
+> 
+> Sorry for my inexperience. I have read the document and found some
+> examples but I am still a little confused about this.
+> I guess this is what you mean?
+> 
+> Since uzonesize may be zero ... (context)
+> 
+> Reported-by: xingwei lee <xrivendell7@gmail.com>
+> Reported-by: yue sun <samsun1006219@gmail.com>
+> Signed-off-by: Shichao Lai <shichaorai@gmail.com>
+> ---
+> Changes since v1:
+> - Add one more check in alauda_write_lba().
+> - Move check ahead of loop in alauda_read_data().
 
-Apologies, I missed the patch when you first posted it. Thanks for the
-pointer.
+Yes.
 
-On Tue, May 07, 2024 at 11:08:14AM GMT, Dan Carpenter wrote:
-> This patch might not work because of the netdev_hold/put() thing...
+> 
+>  drivers/usb/storage/alauda.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> ...
+> 
+> 
+> 
+> > Check after the list of variables please, not in the middle of them.  I
+> > think checkpatch will complain about this, right?
+> 
+> In fact this script doesn't warn about these problems, but I will
+> adjust my code style later.
+> But the check in alauda_write_lba() is due to some variable like
+> lba_offset and zone will perform modulo and divide operations,
+> which may throw divide errors when uzonesize is 0.
+> So I think I prefer to adjust the order of the variable list later.
+> Changes like this.
+> ```c
+> unsigned int uzonesize = MEDIA_INFO(us).uzonesize;
+> unsigned int zonesize = MEDIA_INFO(us).zonesize;
+> unsigned int pagesize = MEDIA_INFO(us).pagesize;
+> unsigned int blocksize = MEDIA_INFO(us).blocksize;
+> unsigned int new_pba_offset;
+> if (!uzonesize)
+>     return USB_STOR_TRANSPORT_ERROR;
+> unsigned int lba_offset = lba % uzonesize;
+> unsigned int zone = lba / uzonesize;
+> ```
+> If it's ok, I will post the patch v3 soon.
 
-I think that's the case. It's the netdev_hold/netdev_put imbalance that
-is causing the kernel issues; with your patch applied, we still see a
-failure in ax25_release:
+That works, thanks!
 
-    refcount_t: decrement hit 0; leaking memory.
-
-The patch I've posted resolves this issue and runs without any errors.
-
-The complete trace is:
-
-------------[ cut here ]------------
-refcount_t: decrement hit 0; leaking memory.
-WARNING: CPU: 1 PID: 88 at lib/refcount.c:31 refcount_warn_saturate+0x109/0x120
-
-CPU: 1 PID: 88 Comm: axwrapper Not tainted 6.9.0-ax25-09869-g6d35085a1f38 #140
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40 04/01/2014
-RIP: 0010:refcount_warn_saturate+0x109/0x120
-Code: f2 33 82 c6 05 34 62 f2 00 01 e8 22 14 9d ff 0f 0b 5d c3 cc cc cc cc 48 c7 c7 58 f2 33 82 c6 05 17 62 f2 00 01 e8 07 14 9d ff <0f> 0b 5d c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40
-RSP: 0018:ffffc90000447d00 EFLAGS: 00010292
-RAX: 000000000000002c RBX: ffff888101142510 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffc90000447b88 RDI: 00000000ffffefff
-The system is gRBP: ffffc90000447d00 R08: 00000000ffffefff R09: ffffffff824a4b88
-R10: ffffffff8244cbe0 R11: ffffc90000447ad8 R12: 0000000000000000
-oing down NOW!R13: ffffc90000447d18 R14: ffff888101142000 R15: ffff88810222a0c0
-
-FS:  0000000000000000(0000) GS:ffff88813bd00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Sent SIGTERM toCR2: 000055d73c5f5040 CR3: 000000000242c000 CR4: 00000000000006b0
-Call Trace:
- all processes <TASK>
-
- ? show_regs.part.0+0x22/0x30
- ? show_regs.cold+0x8/0xd
- ? refcount_warn_saturate+0x109/0x120
- ? __warn.cold+0x97/0xd5
- ? refcount_warn_saturate+0x109/0x120
- ? report_bug+0x114/0x160
- ? console_unlock+0x55/0xd0
- ? handle_bug+0x42/0x80
- ? exc_invalid_op+0x1c/0x70
- ? asm_exc_invalid_op+0x1f/0x30
- ? refcount_warn_saturate+0x109/0x120
- ref_tracker_free+0x163/0x170
- ax25_release+0x129/0x3c0
- sock_close+0x45/0xb0
- __fput+0x94/0x2a0
- ____fput+0x12/0x20
- task_work_run+0x61/0x90
- do_exit+0x2f5/0x9f0
- ? handle_mm_fault+0x197/0x300
- do_group_exit+0x38/0x90
- __x64_sys_exit_group+0x1c/0x20
- x64_sys_call+0x1269/0x1d00
- do_syscall_64+0x55/0x120
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x7f8e7711abce
-Code: Unable to access opcode bytes at 0x7f8e7711aba4.
-RSP: 002b:00007ffed9c905d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f8e7711abce
-RDX: 00007f8e7711ae66 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 00007ffed9c90628 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000055d73c5f2030
-R13: 00007ffed9c90658 R14: 0000000000000000 R15: 00007ffed9c90620
- </TASK>
----[ end trace 0000000000000000 ]---
-
--- 
-Lars Kellogg-Stedman <lars@oddbit.com> | larsks @ {irc,twitter,github}
-http://blog.oddbit.com/                | N1LKS
+greg k-h
