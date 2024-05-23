@@ -1,133 +1,83 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0ED13BC0C
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 11:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C9913C3C4;
+	Thu, 23 May 2024 11:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716465100; cv=none; b=ldt3TZuu0bImD+4TKiNacDmbO7GdTkKjNT+7ni1tBQXhK9mCQn3Nbh50cl5IpOz1OqjuD+hXIgjZp2mUuCUfLBOjwViOxiuLhl9+pTQpYyV8EXp7Os8xCOlmwO0+6UJR57gsPI2O9UaVPSYPpomOHcWrJXJxi9Ie/MeVzc9vWzw=
+	t=1716465391; cv=none; b=Vq0kg60BcE83nQ/Bld0VeDCvE6ZtAydWf37RDJEm1ZzSy6Yt8uMyGmxVY8ys+U3pnLPplvbjlkaDkmniTmj2HugBkYuh9jPkFhJmPLspsjB5KEvBBEgtZW7muhsU6pvkH/F77tlB+CEMjUc1M1Zh3H6ltZzrxvXo6df+nPOzkLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716465100; c=relaxed/simple;
-	bh=g8C5XN3fHUDfWkVvbozC29jrfrsP8txwTiSzj5n44vQ=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dw8sxahudX7B5fAdWOAOHoffp9AFbGa9jBmKbJ2SCDTJmQBrk4ujQjc/yVpFsiJ1Pk4nSLlAHYkae7nX01jp/lD024XvYNPfsnJNE5iqh/ipDJXQpS2Q8rWq9nilu40p95rWy1rb0ZBNtzWCMgYBqvj5g0Tr4YaMNlPMqWY4CF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ldRzBvOO; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1716465391; c=relaxed/simple;
+	bh=uw8xC9pXxF1eGRimce3uwPFF5cBihp03zIdk4OAmmkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GRos2JubMGCTtSf8MKw50ivPV3GUv3INGxyMXMfM5ZdM5BSwSJTpGYXbsrfov6iafpgogsP3KvF/4E6+ycq98caAZj1hn21o675yEmRT/qsXV59NqiPepowSQ1OpAZJDHiRqp4/bVh5kbm5x+dtnmGKfAJ9Y/QCSbq/B8wUiFPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goG7MfuI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ldRzBvOO"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-354f69934feso490995f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 04:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716465096; x=1717069896; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tomuose927MUcTT3sGm0eYQ4ZHc9XHuBgI6ykSWqNcI=;
-        b=ldRzBvOOyhLWZB5cN+Mc1fYrzAAfcIFBtYE8H2WURHrSTqL/fGzKNajnh9DiGfO/JL
-         H+Tyau9BrFjNv1zc2gKrUCsLAqk3t1cMg1KN0+7vdssta0qAC6i3yP1N+RVwxU3hEHVX
-         zsIpL1pTEYWywVQNjJ2liCN/TPSor/yMFpODh25/k8HOIqKKVfn4m8WAK5vVPbwmnEA8
-         RO3ACFuuOljt2SYpSdRlm+sSqWuST1v27Xs/g936TkKJDNJi7WENH0Q8NzS19TF1Uboe
-         PQF1J/dsxnEzl4upJ1mgCa8jiO9U4I3JxS9W2IPFv9X1K//R/VMhRb8C6pKMJN1rtoqJ
-         xAFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716465096; x=1717069896;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tomuose927MUcTT3sGm0eYQ4ZHc9XHuBgI6ykSWqNcI=;
-        b=USexjasS/m76grH7Yuzjw3UBKIq0Pv2bjqTQFsIeEzCRNyxMV0Wb+ITy6PDfvYKz7i
-         3nwEmpVOqGqmmCvlh4YrrVoQ/UwolD7+7QY1qUXIA9LcgmTVxH6GDvhgPtSrE/6MwnEk
-         A3df3Z1x0ExEM71OYJBoizCkWzqlkqpI6yoC9lyVThVJED/QPvTPAwNV8qdVFLU3ge8D
-         Jug9Jo+BlNyr7tIrv/gAjajF78XAzQ4E1IORockfF2zm6A/hVIGxaW0qOc6g4AlJus92
-         vK4Ea/CGm0++OZz2gfd4Nxhn8s9y3g4q5SNwu1FQY/5JGRIEa9zWlMBLtOfYkmLQa+9c
-         2Ibg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3HS+bbhjJ69UWTJM8ane5KNYB7SBP2KpglB8K5ijhRdUgBXdOQCUlB4KT56uqm8XuSgbT04faic8bQbjD1Yz8YEKMuzA8gIsFWJht
-X-Gm-Message-State: AOJu0Yx2fYgKevB98mbCYhjCP5mi5jZSza9hDi8EnQEXOsbuW2rFz/wz
-	dvmtcSsTRv9JAEcdz9V0KA5elpcpaPAHpEsHrm6fnXAmZU2QRE3ukWvtlDAbQXY=
-X-Google-Smtp-Source: AGHT+IFe90bcCCk3DsNh1uSEukvSAXaPs6XHlXPOkfTOcX5gFcR6LlB//XRU3ng08XrqXVcAz3+1YQ==
-X-Received: by 2002:adf:fd04:0:b0:34d:ce05:29ef with SMTP id ffacd0b85a97d-354f75216eamr2192712f8f.17.1716465096610;
-        Thu, 23 May 2024 04:51:36 -0700 (PDT)
-Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-354e03420b4sm3414511f8f.24.2024.05.23.04.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 04:51:36 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] riscv: Fix early ftrace nop patching
-Date: Thu, 23 May 2024 13:51:34 +0200
-Message-Id: <20240523115134.70380-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goG7MfuI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F274FC2BD10;
+	Thu, 23 May 2024 11:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716465390;
+	bh=uw8xC9pXxF1eGRimce3uwPFF5cBihp03zIdk4OAmmkQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=goG7MfuIRrVZOKIpVWXt6sIMZuG3t0eOUnEVVoDvRqv6GAOCp7XUt3Ri2KUNdZRJS
+	 aZfo8q46UIIoVIVzODo71DZp1HSP/UyxC+oUCVw43C+B/k7WtVDw+3KQ06ctWQFz+z
+	 4kkK/BUjB6bI27gdQb/BoT2ET+UypqpAhWEBpklzplWs2ndmHBgT8nJXttp8v2gP42
+	 wPeGoXFk5UTUEmZPj5kHxmIafxlGy2Tk2WXrC39RaCc09Uhm5XrYqslbY2gamGDXom
+	 n1cVWwW1dep+EJsQl9S6KCWETG3aerFSrAN7WAx2T+mTjyenUhlBJ1HRT2VCIb7988
+	 41VoDOZ7+9knw==
+Date: Thu, 23 May 2024 13:56:26 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa@kernel.org>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, 
+	lkml <linux-kernel@vger.kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Andi Shyti <andi.shyti@kernel.org>
+Subject: [GIT PULL] i2c-host changes for v6.10 - pt. 2
+Message-ID: <2qtn3bk6pat2xkw7qz34pjpgh6zariuz6zjxhmuuo2jcddfpi4@xn6aqqppl3hi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
-converted ftrace_make_nop() to use patch_insn_write() which does not
-emit any icache flush relying entirely on __ftrace_modify_code() to do
-that.
+Hi Wolfram,
 
-But we missed that ftrace_make_nop() was called very early directly when
-converting mcount calls into nops (actually on riscv it converts 2B nops
-emitted by the compiler into 4B nops).
+now that the dependencies are fixed and no error report has been
+sent on these two patches, I can finally send the second part of
+the i2c pull request.
 
-This caused crashes on multiple HW as reported by Conor and Björn since
-the booting core could have half-patched instructions in its icache
-which would trigger an illegal instruction trap: fix this by emitting a
-local flush icache when early patching nops.
+Thanks,
+Andi
 
-Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/cacheflush.h | 6 ++++++
- arch/riscv/kernel/ftrace.c          | 3 +++
- 2 files changed, 9 insertions(+)
+The following changes since commit c760b3725e52403dc1b28644fb09c47a83cacea6:
 
-diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-index dd8d07146116..ce79c558a4c8 100644
---- a/arch/riscv/include/asm/cacheflush.h
-+++ b/arch/riscv/include/asm/cacheflush.h
-@@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
- 	asm volatile ("fence.i" ::: "memory");
- }
- 
-+static inline void local_flush_icache_range(unsigned long start,
-+					    unsigned long end)
-+{
-+	local_flush_icache_all();
-+}
-+
- #define PG_dcache_clean PG_arch_1
- 
- static inline void flush_dcache_folio(struct folio *folio)
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index 4f4987a6d83d..32e7c401dfb4 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
- 	out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
- 	mutex_unlock(&text_mutex);
- 
-+	if (!mod)
-+		local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
-+
- 	return out;
- }
- 
--- 
-2.39.2
+  Merge tag 'mm-nonmm-stable-2024-05-22-17-30' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm (2024-05-22 18:59:29 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags/i2c-host-6.10-pt2
+
+for you to fetch changes up to e61bcf42d290e73025bab38e0e55a5586c2d8ad5:
+
+  i2c: Remove I2C_CLASS_SPD (2024-05-23 13:38:15 +0200)
+
+----------------------------------------------------------------
+Removed the SPD class of i2c devices from the device core.
+
+Additionally, a cleanup in the Synquacer code removes the pclk
+from the global structure, as it is used only in the probe.
+Therefore, it is now declared locally.
+
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      i2c: synquacer: Remove a clk reference from struct synquacer_i2c
+
+Heiner Kallweit (1):
+      i2c: Remove I2C_CLASS_SPD
+
+ drivers/i2c/busses/i2c-synquacer.c | 11 +++++------
+ include/linux/i2c.h                |  1 -
+ 2 files changed, 5 insertions(+), 7 deletions(-)
