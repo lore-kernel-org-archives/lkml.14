@@ -1,288 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 032B57E572
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37332F9F5
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716487469; cv=none; b=gFmp7BkcpeWdi4aRf3AQLFUtXsCT9mhvpNxnwM8dZfbUm0W0YZOrlP5UNfaRPFY4oaoDF4HPEzHcCyih96263zPjiNx6K4MQBXb4J1TNud/RWciwGlwn/fIs5kcB7BgN3KfErR6syvO97201h9Yk6lNOMKMpVSUOC76jzdJbue8=
+	t=1716487550; cv=none; b=EIJsZ09IpMGtbSuZe4c8eRn1mlClvxu2U9F7e8UK2Ac85Y/EYctW6f1ANlb6N8wSdq0zcLT579lAZZC6eS1ff39D0b1QNolE6pkaZQn2/qmli8S0ibWDVrsSb0F3UwqWPpvv/KbCimjnNEE0aWrFMFF2fnNAS+HCmaC/CvdkVqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716487469; c=relaxed/simple;
-	bh=VArtKFADycTBtUc2k1p191hfe6fEx4bvXMBA3xP4wgc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fiwrG9bvuZ81x99up1Rcdsaujrlzhb8N0n75qqqJtThbEcCp6+ODjG+dIXkGYfSAln/2fqXieW/UIWLtlnpEt+rLX8YmQE0f7C6NUoKpi9UB6Y4K7KKhaqA8vk7d/Z9kXUzz8XX9vVsLkeFcHh1qyDOhMSEe+YSPNv9H1VqKDeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD37C339;
-	Thu, 23 May 2024 11:04:49 -0700 (PDT)
-Received: from [10.1.196.28] (eglon.cambridge.arm.com [10.1.196.28])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BC3E3F762;
-	Thu, 23 May 2024 11:04:22 -0700 (PDT)
-Message-ID: <acefb432-6388-44ed-b444-1e52335c6c3d@arm.com>
-Date: Thu, 23 May 2024 19:04:21 +0100
+	s=arc-20240116; t=1716487550; c=relaxed/simple;
+	bh=KB8ZPj7qGCmYVVnyX8xsYlo2d1oCfPT81GQMWTChos8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fSAH+dxIlZgLwfbXMm/tcYkm2ov+2eiyEV1KL9mqeCsc1EsM6d57FMxHbSKI9Rr32qbjbfCpmk2RUZvvZ7vLm6HQAO81TCq6Yp6fXDXTsdKV3bHSJxa9xbOIEVWyfbFKG3AWwqWzGeteHSeU754ktZvXc1YDMuR8F10oZeOSmvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=NOfJKFwR; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="NOfJKFwR"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NHUP3x007181;
+	Thu, 23 May 2024 20:05:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	8EXwyohCc219RSXlxVFLCGJqw0He7msBPhrXvYeZ5H8=; b=NOfJKFwRNV2bDNOg
+	O83z0bJ2q0K8fgIORwY3cKRIrw18a4zhnCsT74MuNvCHGZDqn6NdDVv1hwQZMYsE
+	zPHG+XWAvBIG8VVrrH42VnuJM0nUAij2g+6RxSHP5bA4WnUwjEiEgla5wFlhmQ7y
+	f1pEXhviSV1JmSQYgqV9jAMoOl1K9JB0dtLBkKYCeokaiyepNzgV16afR1lqbfW2
+	UBKWJ3N/fkSaXO7RJItQ+Md2cJ67nuscdvuRjzebsGi4PBnlYyajyGGt4jXpJKMd
+	fIr0b7VejlN84KcpbZ7tOq30pv9Jy1qKtZLdMvv6nyOF4xgbdYZJ1SHs38msEBxm
+	RbJwnA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yaa8t02cq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 20:05:16 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0324B4002D;
+	Thu, 23 May 2024 20:05:09 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A9A32232FEE;
+	Thu, 23 May 2024 20:04:40 +0200 (CEST)
+Received: from localhost (10.48.87.205) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 23 May
+ 2024 20:04:40 +0200
+From: Patrick Delaunay <patrick.delaunay@foss.st.com>
+To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>
+CC: Marek Vasut <marex@denx.de>,
+        Patrick Delaunay
+	<patrick.delaunay@foss.st.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v4 2/2] regulator: stm32-pwr: add support of STM32MP13
+Date: Thu, 23 May 2024 20:04:34 +0200
+Message-ID: <20240523200353.v4.2.I04ec53442753147c35efad1307b6ec133f53b471@changeid>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240523180435.583257-1-patrick.delaunay@foss.st.com>
+References: <20240523180435.583257-1-patrick.delaunay@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/31] x86/resctrl: Move ctrlval string parsing policy
- away from the arch code
-Content-Language: en-GB
-To: Reinette Chatre <reinette.chatre@intel.com>,
- Dave Martin <Dave.Martin@arm.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
- Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
- shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-4-james.morse@arm.com>
- <e85e7786-7995-42d5-a5ac-1e08a84492fe@intel.com>
- <ZhleZ2q60ysIRapv@e133380.arm.com>
- <9daa5c12-c43d-4069-b2a6-c505217e2387@intel.com>
- <Zh6kRMkqVpu0Km4l@e133380.arm.com>
- <b2595743-c7dc-4946-884f-ff159bc4865e@intel.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <b2595743-c7dc-4946-884f-ff159bc4865e@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-23_11,2024-05-23_01,2024-05-17_01
 
-Hi Reinette, Dave,
+Add support of the new compatible "st,stm32mp13-pwr-reg" for STM32MP13.
 
-On 18/04/2024 06:34, Reinette Chatre wrote:
-> On 4/16/2024 9:16 AM, Dave Martin wrote:
->> On Mon, Apr 15, 2024 at 10:44:34AM -0700, Reinette Chatre wrote:
->>> On 4/12/2024 9:16 AM, Dave Martin wrote:
->>>> On Mon, Apr 08, 2024 at 08:14:47PM -0700, Reinette Chatre wrote:
->>>>> On 3/21/2024 9:50 AM, James Morse wrote:
->>>
->>>>>> @@ -195,6 +204,14 @@ int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
->>>>>>  	return 0;
->>>>>>  }
->>>>>>  
->>>>>> +static ctrlval_parser_t *get_parser(struct rdt_resource *res)
->>>>>> +{
->>>>>> +	if (res->fflags & RFTYPE_RES_CACHE)
->>>>>> +		return &parse_cbm;
->>>>>> +	else
->>>>>> +		return &parse_bw;
->>>>>> +}
->>>>>
->>>>> This is borderline ... at minimum it expands what fflags means and how it
->>>>> is intended to be used and that needs to be documented because it reads:
->>>>>
->>>>> 	* @fflags:		flags to choose base and info files
+Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
+---
 
-Hmm, true this is used to day to select which groups of files appear.
+(no changes since v2)
 
+Changes in v2:
+- Add new compatible for STM32MP13 and change title after Rob remarks
+  V1: "ARM: st: use a correct pwr compatible for stm32mp15"
 
->>>>> I am curious why you picked fflags instead of an explicit check against
->>>>> rid?
+ drivers/regulator/stm32-pwr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Simply because it would need to match both L2 and L3 to parse_cbm, I didn't think that
-would scale if other cache resources get added. However, with an enum of types we can get
-the compiler to bark if an entry is needed here, which is probably good enough.
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+index 85b0102fb9b1..b7aeef6e09e7 100644
+--- a/drivers/regulator/stm32-pwr.c
++++ b/drivers/regulator/stm32-pwr.c
+@@ -166,6 +166,7 @@ static int stm32_pwr_regulator_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id __maybe_unused stm32_pwr_of_match[] = {
+ 	{ .compatible = "st,stm32mp1,pwr-reg", },
++	{ .compatible = "st,stm32mp13-pwr-reg", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, stm32_pwr_of_match);
+-- 
+2.25.1
 
-more background: {
-	In the arm world the cache hierarchy isn't something we can reason about. We
-	have funny names for where different things converge, (Point of Coherency,
-	Point of Unification etc), but its up to the platform designer if/where the
-	L2/L3 or even L9 live. The cache topology is fed to the kernel via an ACPI
-	table.
-
-	I anticipate a 'System Cache' resource and schema eventually being added to
-	resctrl as it looks to be a popular hardware design. These system-cache live
-	after the L3 (if there is one).
-}
-
-
->>>> Is fflags already somewhat overloaded?  There seem to be a mix of things
->>>> that are independent Boolean flags, while other things seem mutually
->>>> exclusive or enum-like.
->>>>
->>>> Do we expect RFTYPE_RES_CACHE | RFTYPE_RES_MB ever to make sense,
->>>> as David points out?
->>>>
->>>>
->>>> With MPAM, we could in theory have cache population control and egress
->>>> memory bandwidth controls on a single interconnect component.
->>>>
->>>> If that would always be represented through resctrl as two components
->>>> with the MB controls considered one level out from the CACHE controls,
->>>> then I guess these control types remain mutually exclusive from
->>>> resctrl's point of view.
->>>>
->>>> Allowing a single rdt_resource to sprout multiple control types looks
->>>> more invasive in the code, even if it logically makes sense in terms of
->>>> the hardware.
-
-MPAM allows this, but it doesn't fit with resctrl. The MPAM drivers resctrl glue code has
-a load of stuff to present these as separate resources to resctrl, even if they are the
-same piece of hardware underneath.
-
-So far it looks possible to hide this, I don't think its worth changing resctrl's
-behaviour to try and cover this.
-
-RFTYPE_RES_CACHE and RFTYPE_RES_MB would remain mutually-exclusive.
-
-
->>>> Anyway, for this patch, there seem to be a couple of assumptions:
->>>>
->>>> a) get_parser() doesn't get called except for rdt_resources that
->>>> represent resource controls (so, fflags = RFTYPE_RES_foo for some "foo",
->>>> with no other flags set), and
->>>>
->>>> b) there are exactly two kinds of "foo", so whatever isn't a CACHE is
->>>> a BW.
->>>>
->>>> These assumptions seem to hold today (?)
->>>
->>> (c) the parser for user provided data is based on the resource type.
->>>
->>> As I understand (c) may not be true for MPAM that supports different
->>> partitioning controls for a single resource. For example, for a cache
->>> MPAM supports portion as well as maximum capacity controls that
->>> I expect would need different parsers (perhaps mapping to different
->>> schemata entries?) from user space but will be used to control the
->>> same resource.
-
-Exactly - to maintain compatibility with existing software the driver has to present it as
-a totally new thing. I guess it will look something like this:
-| L3:0=0xffff;1=0xffff;
-| L3_CAP:0=1048576;1=;1048576
-
-Where existing software knows about 'L3', and should ignore 'L3_CAP'.
-
-
->>> I do now know if the goal is to support this MPAM capability via
->>> resctrl but do accomplish this I wonder if it may not be more appropriate
->>> to associate the parser with the schema entry that is presented to user space.
-
-Even better.
-
-For Tony's resctrl2 I had mused on exposing to user-space whether the controls were a
-bitmap/percentage/MBps-value/raw-number. As there is a parser for the first two (or three)
-today I think keying these from something in the schemata makes the most sense.
-
-
->>>> But the semantics of fflags already look a bit complicated, so I can
->>>> see why it might be best to avoid anything that may add more
->>>> complexity.
->>>
->>> ack.
->>>
->>>> If the main aim is to avoid silly copy-paste errors when coding up
->>>> resources for a new arch, would it make sense to go for a more low-
->>>> tech approach and just bundle up related fields in a macro?
->>>
->>> I understand this as more than avoiding copy-paste errors. I understand
->>> the goal is to prevent architectures from having architecture specific
->>> parsers.
-
-[...]
-
->>> You do highlight another point though, shouldn't the fs code own the
->>> format_str also? I do not think we want arch code to control the
->>> print format, this is also something that should be consistent between
->>> all archs and owned by fs code, again perhaps more appropriate for
->>> a schema entry.
-
-Good point ... I've still got that as a "TODO: kill these properties off as they are
-derivatives" in the MPAM code.
-
-I agree they should live together. We can also pull in data_width too, as it is calculated
-based on the format used here.
-
-Moving default_ctrl is tricky as on AMD platforms the {S,}MBA default value is discovered
-from cpuid. But it only makes sense for an architecture to provides this for MBps controls
-- bitmaps and percentages have an obvious maximum/default value. Putting that in  struct
-resctrl_membw as 'max_bw' makes bw_validate()s use of it clearer.
-
-bw_validate() has always caught me out as it doesn't just parse percentages, but AMDs MBps
-values. I don't think this needs changing, but having MBps as a control type will make
-this less surprising.
-
-Finally, core.c will end up keeping default_ctrl as an arch-specific thing as its
-convenient for the init and reset code.
-
-[...]
-
-> What I was thinking about was something like below that uses the
-> enum you introduce later and lets the RF flags stay internal to fs code:
-> 
-> rdtgroup_create_info_dir()
-> {
-> 
-> 	...
-> 	list_for_each_entry(s, &resctrl_schema_all, list) {
-> 		r = s->res;
-> 		if (r->res_type == RRESTYPE_CACHE)
-> 			fflags = RFTYPE_RES_CACHE;
-> 		else if (r->res_type == RRESTYPE_MB)
-> 			fflags = RFTYPE_RES_MB;
-> 		else /* fail */
-> 		
-> 		fflags |= RFTYPE_CTRL_INFO;
-> 
-> 		...
-> 	}
-> 	/* same idea for monitor info files */
-
-Good point, that would let us remove fflags from the arch code too.
-
-
-> For this patch the resource type can be used to initialize the schema
-> entry.
-> 
->>
->>
->> /* In include/linux/resctrl_types.h */
->>
->> +#define RFTYPE_RES			BIT(8)
->> -#define RFTYPE_RES_CACHE		BIT(8)
->> -#define RFTYPE_RES_MB			BIT(9)
-> 
-> The goal is to not have to expose any of the RFTYPE flags internals to
-> the architecture. RFTYPE_RES_CACHE and RFTYPE_RES_MB stays, but is
-> not exposed to arch code. I do not see need for RFTYPE_RES.
-> All the RFTYPE flags can be defined in fs/resctrl/internal.h
-
-Yup, these should stay in internal.h - they got swept up as there are #defines either side
-that are needed for MPAM to build.
-
-
->> /* For RFTYPE_RES: */
->> enum resctrl_resource_type {
->> 	RRESTYPE_INVALID,
->> 	RRESTYPE_MB,
->> 	RRESTYPE_CACHE,
->> };
-> 
-> (I find naming hard ... note the names changed from the beginning of
-> pseudo code to here where RESTYPE changing to RRESTYPE)
-
-Before I saw this my attempt has:
-| enum resctrl_schema_fmt {
-| 	RESCTRL_SCHEMA_BITMAP,
-| 	RESCTRL_SCHEMA_PERCENTAGE,
-| 	RESCTRL_SCHEMA_MBPS,
-| };
-
-Invalid as value '0' would catch the arch code missing this - but means any switch over
-this enum has to handle it... I'd prefer to leave that out so the compiler can bark about
-any place that needs updating when a new control scheme is added.
-
-
-
-Thanks,
-
-James
