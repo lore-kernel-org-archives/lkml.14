@@ -1,60 +1,42 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4CE17F6
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 09:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED4278C8B;
+	Thu, 23 May 2024 09:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716456911; cv=none; b=tkJnuxPiPM12/9yO/QpaPCP/ENNhCu7LZucdMeAa4GYAvNDS9PLslVsI0/e/eh6oSCKFPsAUgn7hU7aBGo7Dd5b+cgpcPCVWKlcV1yPevTyPKdmzRQvP5gWrbm34eZU3tNTYp5cHuUFIUI+crgq++HzWwQeqGsGhLscospBR/s4=
+	t=1716456945; cv=none; b=rB/zrQLSEk3O7BYaCMDV77NbVq1W/6un419j8eK6qJXJ2idObyXCy7E2FnFdC5yjHkg6V9HlkolZ+Ud1ccv3mHjkJK3V0/5bwes6UGDWCJpSsQPw04fP4p5Vv6JVnyWf8F7oiY2lQ4Ys0pz4VM9RT6z+4Y9YfCY72knfow7clC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716456911; c=relaxed/simple;
-	bh=3RdzRMF61KiMbeEgHAOewoeGsgX0t3vtk/NZFBB30OQ=;
+	s=arc-20240116; t=1716456945; c=relaxed/simple;
+	bh=gUFYD+H6fjG94sAYR9rMeCjL/q0ruoo74U+lISGMCMQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NIQf/EEl8HSidoyZRvBIvN7LRYjTxkmi/3WAIfN/65SC7C5++9kPIcUpnrfPv0amIP79xmh4S6RA5sTVfwMjpJoi5lmiGkFGTX5b2HyOH3+81cFKHwUhlTFzJZwBsaWPPCVzfQVE+3RnXb0gOK5y9gtdYLVzijmz7f5NGcULjd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fpbygn7/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AUGy+2Ypb58QAfshUGgr+CXqki3FGiRVtX9lKv3JQvYy+jnA8WRUAqhcK/JWmbxKZrUyLyIkB/CNnbKrE1GdxoaLYOV6u0WJRSMrVQMrf9IXGwZY9XwlsZiWvPRci1xjrirCBDLAsbnoKq/esrseKQOmQ889IUp8JQQbxKZGEso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=p0i+HBp7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fpbygn7/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716456909;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lfk0mvv6ZfCRNrrlaQ0pNTuzMUrG6EPTfySp33FAHbY=;
-	b=Fpbygn7/VPkA0d+7PBn6AbIb+uKLhRYizrZxRZfnrkykFSGUgOTGB5enyGKn43n4r1HaIm
-	tUOjU/a1qyOac+dq/F6zdbzQECLDzSr32j9DXSVg8BrimNu57CD9JW38CWYKBBk159PHGu
-	/MmqCLUGLp97rTEXoZlWtJDYa4TpSAs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-135-h6UX6NhuNf2mmpSngUDQ-Q-1; Thu, 23 May 2024 05:35:05 -0400
-X-MC-Unique: h6UX6NhuNf2mmpSngUDQ-Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D4304800281;
-	Thu, 23 May 2024 09:35:04 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.7])
-	by smtp.corp.redhat.com (Postfix) with SMTP id E3CDE200A790;
-	Thu, 23 May 2024 09:35:02 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 23 May 2024 11:33:37 +0200 (CEST)
-Date: Thu, 23 May 2024 11:33:35 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrei Vagin <avagin@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Tycho Andersen <tandersen@netflix.com>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 0/3 v2] seccomp: improve handling of
- SECCOMP_IOCTL_NOTIF_RECV
-Message-ID: <20240523093334.GD15163@redhat.com>
-References: <20240523014540.372255-1-avagin@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="p0i+HBp7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E77DC3277B;
+	Thu, 23 May 2024 09:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716456944;
+	bh=gUFYD+H6fjG94sAYR9rMeCjL/q0ruoo74U+lISGMCMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p0i+HBp7xrV8/YlymDXIf/TUrqbmRJ32NK0OgPTE+pqffTAkoGV5+dDGAqOwK5Hzr
+	 7JNeffpuZshUweYnrZC1q7Ssis8f+OSfm8wtTJyv0qLZFn9D78MGRPFJPXhnAFrnJF
+	 pCLUy60d/0F/FCuWsw1lFwGbmcufs4+4pW0HY6OI=
+Date: Thu, 23 May 2024 11:35:42 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: yangxingui <yangxingui@huawei.com>
+Cc: rafael@kernel.org, linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+	prime.zeng@hisilicon.com, liyihang9@huawei.com,
+	kangfenglong@huawei.com
+Subject: Re: [PATCH] driver core: Add log when devtmpfs create node failed
+Message-ID: <2024052354-legibly-willow-7134@gregkh>
+References: <20240522114346.42951-1-yangxingui@huawei.com>
+ <2024052221-pulverize-worrisome-37fb@gregkh>
+ <794b5fa3-0135-80cc-4b55-f48a430a58ca@huawei.com>
+ <2024052316-confused-payback-5658@gregkh>
+ <68b110da-ea20-fa03-be26-49dd3a04f835@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,30 +45,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240523014540.372255-1-avagin@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+In-Reply-To: <68b110da-ea20-fa03-be26-49dd3a04f835@huawei.com>
 
-On 05/23, Andrei Vagin wrote:
->
-> This patch set addresses two problems with the SECCOMP_IOCTL_NOTIF_RECV
-> ioctl:
-> * it doesn't return when the seccomp filter becomes unused (all tasks
->   have exited).
-> * EPOLLHUP is triggered not when a task exits, but rather when its zombie
->   is collected.
+On Thu, May 23, 2024 at 05:23:07PM +0800, yangxingui wrote:
+> Hi Greg,
+> 
+> On 2024/5/23 15:25, Greg KH wrote:
+> > On Thu, May 23, 2024 at 09:50:09AM +0800, yangxingui wrote:
+> > > Hi, Greg
+> > > 
+> > > On 2024/5/22 20:23, Greg KH wrote:
+> > > > On Wed, May 22, 2024 at 11:43:46AM +0000, Xingui Yang wrote:
+> > > > > Currently, no exception information is output when devtmpfs create node
+> > > > > failed, so add log info for it.
+> > > > 
+> > > > Why?  Who is going to do something with this?
+> > > We execute the lsscsi command after the disk is connected, we occasionally
+> > > find that some disks do not have dev nodes and these disks cannot be used.
+> > 
+> > Ok, but why do you think that devtmpfs create failed?
+> I found that lsscsi will traverse the dev node and obtain device major and
+> min. If no matching dev node is found, it will display "-       ".
+> > 
+> > > However, there is no abnormal log output during disk scanning. We analyze
+> > > that it may be caused by the failure of devtmpfs create dev node, so the log
+> > > is added here.
+> > 
+> > But is that the case?  Why is devtmpfs failing?  Shouldn't we fix that
+> > instead?
+> My subsequent reply touches on these points.
+> > 
+> > > The lscsi command query results and kernel logs as follows:
+> > > 
+> > > [root@localhost]# lsscsi
+> > > [9:0:4:0]	disk	ATA	ST10000NM0086-2A SN05	-
+> > > 
+> > > kernel: [586669.541218] hisi_sas_v3_hw 0000:b4:04.0: phyup: phy0
+> > > link_rate=10(sata)
+> > > kernel: [586669.541341] sas: phy-9:0 added to port-9:0, phy_mask:0x1
+> > > (5000000000000900)
+> > > kernel: [586669.541511] sas: DOING DISCOVERY on port 0, pid:2330731
+> > > kernel: [586669.541518] hisi_sas_v3_hw 0000:b4:04.0: dev[4:5] found
+> > > kernel: [586669.630816] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
+> > > kernel: [586669.665960] hisi_sas_v3_hw 0000:b4:04.0: phydown: phy0
+> > > phy_state=0xe
+> > > kernel: [586669.665964] hisi_sas_v3_hw 0000:b4:04.0: ignore flutter phy0
+> > > down
+> > > kernel: [586669.863360] hisi_sas_v3_hw 0000:b4:04.0: phyup: phy0
+> > > link_rate=10(sata)
+> > > kernel: [586670.024482] ata19.00: ATA-10: ST10000NM0086-2AA101, SN05, max
+> > > UDMA/133
+> > > kernel: [586670.024487] ata19.00: 19532873728 sectors, multi 16: LBA48 NCQ
+> > > (depth 32), AA
+> > > kernel: [586670.027471] ata19.00: configured for UDMA/133
+> > > kernel: [586670.027490] sas: --- Exit sas_scsi_recover_host: busy: 0 failed:
+> > > 0 tries: 1
+> > > kernel: [586670.037541] sas: ata19: end_device-9:0:
+> > > model:ST10000NM0086-2AA101 serial:            ZA2B3PR2
+> > > kernel: [586670.100856] scsi 9:0:4:0: Direct-Access     ATA ST10000NM0086-2A
+> > > SN05 PQ: 0 ANSI: 5
+> > > kernel: [586670.101114] sd 9:0:4:0: [sdk] 19532873728 512-byte logical
+> > > blocks: (10.0 TB/9.10 TiB)
+> > > kernel: [586670.101116] sd 9:0:4:0: [sdk] 4096-byte physical blocks
+> > > kernel: [586670.101125] sd 9:0:4:0: [sdk] Write Protect is off
+> > > kernel: [586670.101137] sd 9:0:4:0: [sdk] Write cache: enabled, read cache:
+> > > enabled, doesn't support DPO or FUA
+> > > kernel: [586670.101620] sd 9:0:4:0: Attached scsi generic sg10 type 0
+> > > kernel: [586670.101714] sas: DONE DISCOVERY on port 0, pid:2330731, result:0
+> > > kernel: [586670.101731] sas: sas_form_port: phy0 belongs to port0
+> > > already(1)!
+> > > kernel: [586670.152512] sd 9:0:4:0: [sdk] Attached SCSI disk
+> > 
+> > Looks like sdk was found properly, what's the problem?
+> 
+> Yes, this problem occurs occasionally. There is no exception log when
+> scanning the disk, but the disk cannot be used. It has been confirmed that
+> it is related to fio testing. When the dev node does not exist, fio may
+> actively create this file.
 
-It seems that 2/3 also fixes another minor problem.
+So that's a userspace issue.  If a device node is to be created, and the
+file is already present with that name, yes, we will fail to create it
+as obviously userspace did not want us to do so.
 
-Suppose that a group leader installs the new filter without
-SECCOMP_FILTER_FLAG_TSYNC, exits, and becomes a zombie. It can't be
-released until all its sub-threads exit.
+It's not the kernel's job to protect userspace from doing foolish things
+itself, right?  :)
 
-After that, without 2/3, SECCOMP_FILTER_FLAG_TSYNC from any other thread
-can never succeed, seccomp_can_sync_threads() will check a zombie leader
-and is_ancestor() will fail.
+> If we want to solve this problem, should we delete the existing files first
+> when creating a dev node?
 
-Right?
+No.
 
-Oleg.
+> Or just print a prompt indicating that the dev node creation failed.
 
+We can do that, but will that cause error messages to be printed out for
+normal situations today where userspace does this on purpose?
+
+Again, this isn't fixing the root problem here (which is userspace doing
+something it shouldn't be doing), adding kernel log messages might be
+just noise at this point in time given that it has been operating this
+way for many years, if not decades.
+
+thanks,
+
+greg k-h
