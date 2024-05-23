@@ -1,209 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62CC14A62D;
-	Thu, 23 May 2024 13:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF98713A897;
+	Thu, 23 May 2024 13:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716470252; cv=none; b=GDKb1H0j3T7l86619y9FvulhtgGa7xMCAEwa8IgNFr0JVYh7PmXy13yH0TUnkJi/bIAazRHw92Uo48cLSCfw3hT/88hTI7VlfCLJfBeHeAZF3IfODK2P1Yek+ggxVPl1N8wUXaxPxEEqsHtcPeDyfp26Q0r9FcRFwFU1UELtGiQ=
+	t=1716470267; cv=none; b=Sx4ad3eBHzjrwJYlShq/Guss6XVqZFfKdlhamt9BBfxLsT8Xt1wrbAVDUDjYVaOMnmetq8MGzSVneDmSaimqRWsQOjlhqiEnujom3z/ORx0IqP8Oh3H+n3llqeV0eU4vyitLc+HRLhOiokT7js4RMgtPM5p9NbFg+z7lJ4J1tAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716470252; c=relaxed/simple;
-	bh=/4a/xj7cfRIZDCnPtNaV7cN+oIvMYqd0ViXOU/2Moz4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IVXN+XCEX5oIcfkX6Fe5Yy+P5ksYJ7H6O3KcL+p3VEOLByQvYc9Zrc3LPpbFskeqt9wqXabs+vwNOdGZ6UVwyl9jUO39/VOltl5blpkST88/wsQOz9XTvN287ao1MbId4Z+mFv+6RsNXu0J/8Ao6qpRXao0zLGuRYY+0R2R4zpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QVJU7Nmr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716470267; c=relaxed/simple;
+	bh=YjxDl1qQvJLbI7CoFRNnlkwjjIbQpYwYvmdsXfobHJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LSGumkf3m3wyT9Skc6y6rH3IxyRpy9MXmaExe735VazthbDpnlMupm1N4aKispMV4YKLCFC2zvg4UL0sdA04/6o05C5LgSP68lV4VvLHJFV3oMi7fv3TiH/ie8s18UuPwTByZuOYIAxyeLo1/FzDqh/QEL2uurtpt9XJFxoGiws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaKmJTU/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QVJU7Nmr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F06C2BD10;
-	Thu, 23 May 2024 13:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716470251;
-	bh=/4a/xj7cfRIZDCnPtNaV7cN+oIvMYqd0ViXOU/2Moz4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QVJU7NmrrdI6MAaUJzDIiO8XRmKm+T4mMIvoj6UTrJHXfh6dfpQIjcvRlZQy5xZCT
-	 Y7FNDfTtOum7zzevN7ATi4TQnYH9Xx3TNOl9OuKXpggLXiXN5B9+SUNbB/lnNcn4ht
-	 N4LWp5mAioQ9ejDUKoWxPtH0UxSMzZ8QAPZMkIEI=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 6.9 00/25] 6.9.2-rc1 review
-Date: Thu, 23 May 2024 15:12:45 +0200
-Message-ID: <20240523130330.386580714@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaKmJTU/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6053C32786;
+	Thu, 23 May 2024 13:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716470266;
+	bh=YjxDl1qQvJLbI7CoFRNnlkwjjIbQpYwYvmdsXfobHJg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MaKmJTU/iS0pIIfN8usqIyj8MvyBtIJ16dcfxAzoYDE0uFLhzjM60MKbiXIDM7EFj
+	 FomaG3mM96YmzQe/dYg7/9hcwYBK21wX37GoqhD0lbnFP4du30TlKfWC7HgqkQ0Tia
+	 CQVmKwE2wfblNqTHnw2Ks/zf35Y7NDYwAkGEmmr6KgFhZNTSNljRCxbd/7qtITt7MX
+	 OVSI/5vZf6/hDGRM6V/Hf1XA17l6Ec/f1Uy5gGS66/cxZ6IWk+9KWCcjcEfJpVIikC
+	 rXgnUk6h/lC7+aDZxaGHZwm1bKASAjWvovD9GaHn1yVGzsO43TKkZXVdzFIFlsoBDS
+	 054pHjsu/3IPw==
+Date: Thu, 23 May 2024 14:17:41 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ying Hsu <yinghsu@chromium.org>
+Cc: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com,
+	pmenzel@molgen.mpg.de, chromeos-bluetooth-upstreaming@chromium.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v2] Bluetooth: Add vendor-specific packet classification
+ for ISO data
+Message-ID: <20240523131741.GN883722@kernel.org>
+References: <20240523060934.2883716-1-yinghsu@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.2-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.9.2-rc1
-X-KernelTest-Deadline: 2024-05-25T13:03+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523060934.2883716-1-yinghsu@chromium.org>
 
-This is the start of the stable review cycle for the 6.9.2 release.
-There are 25 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+On Thu, May 23, 2024 at 06:09:31AM +0000, Ying Hsu wrote:
+> When HCI raw sockets are opened, the Bluetooth kernel module doesn't
+> track CIS/BIS connections. User-space applications have to identify
+> ISO data by maintaining connection information and look up the mapping
+> for each ACL data packet received. Besides, btsnoop log captured in
+> kernel couldn't tell ISO data from ACL data in this case.
+> 
+> To avoid additional lookups, this patch introduces vendor-specific
+> packet classification for Intel BT controllers to distinguish
+> ISO data packets from ACL data packets.
+> 
+> Signed-off-by: Ying Hsu <yinghsu@chromium.org>
+> ---
+> Tested LE audio unicast recording on a ChromeOS device with Intel AX211
+> 
+> Changes in v2:
+> - Adds vendor-specific packet classificaton in hci_dev.
+> - Keeps reclassification in hci_recv_frame.
+> 
+>  drivers/bluetooth/btusb.c        | 19 +++++++++++++++++++
+>  include/net/bluetooth/hci_core.h |  1 +
+>  net/bluetooth/hci_core.c         | 16 ++++++++++++++++
+>  3 files changed, 36 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 79aefdb3324d..75561e749c50 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -966,6 +966,24 @@ static void btusb_intel_cmd_timeout(struct hci_dev *hdev)
+>  	gpiod_set_value_cansleep(reset_gpio, 0);
+>  }
+>  
+> +#define BT_USB_INTEL_ISODATA_HANDLE_BASE 0x900
+> +
+> +static u8 btusb_intel_classify_pkt_type(struct hci_dev *hdev, struct sk_buff *skb)
+> +{
+> +	/*
+> +	 * Distinguish ISO data packets form ACL data packets
+> +	 * based on their conneciton handle value range.
 
-Responses should be made by Sat, 25 May 2024 13:03:15 +0000.
-Anything received after that time might be too late.
+nit: connection
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.2-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
-and the diffstat can be found below.
+> +	 */
+> +	if (hci_skb_pkt_type(skb) == HCI_ACLDATA_PKT) {
+> +		__u16 handle = __le16_to_cpu(hci_acl_hdr(skb)->handle);
+> +
+> +		if (hci_handle(handle) >= BT_USB_INTEL_ISODATA_HANDLE_BASE)
+> +			return HCI_ISODATA_PKT;
+> +	}
+> +
+> +	return hci_skb_pkt_type(skb);
+> +}
+> +
+>  #define RTK_DEVCOREDUMP_CODE_MEMDUMP		0x01
+>  #define RTK_DEVCOREDUMP_CODE_HW_ERR		0x02
+>  #define RTK_DEVCOREDUMP_CODE_CMD_TIMEOUT	0x03
 
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.9.2-rc1
-
-Christoph Hellwig <hch@lst.de>
-    block: add a partscan sysfs attribute for disks
-
-Christoph Hellwig <hch@lst.de>
-    block: add a disk_has_partscan helper
-
-SeongJae Park <sj@kernel.org>
-    Docs/admin-guide/mm/damon/usage: fix wrong schemes effective quota update command
-
-SeongJae Park <sj@kernel.org>
-    Docs/admin-guide/mm/damon/usage: fix wrong example of DAMOS filter matching sysfs file
-
-Akira Yokosawa <akiyks@gmail.com>
-    docs: kernel_include.py: Cope with docutils 0.21
-
-Thomas Weißschuh <linux@weissschuh.net>
-    admin-guide/hw-vuln/core-scheduling: fix return type of PR_SCHED_CORE_GET
-
-Jarkko Sakkinen <jarkko@kernel.org>
-    KEYS: trusted: Do not use WARN when encode fails
-
-Hans Verkuil <hverkuil-cisco@xs4all.nl>
-    Revert "media: v4l2-ctrls: show all owned controls in log_status"
-
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-    remoteproc: mediatek: Make sure IPI buffer fits in L2TCM
-
-Daniel Thompson <daniel.thompson@linaro.org>
-    serial: kgdboc: Fix NMI-safety problems from keyboard reset code
-
-Javier Carrasco <javier.carrasco@wolfvision.net>
-    usb: typec: tipd: fix event checking for tps6598x
-
-Javier Carrasco <javier.carrasco@wolfvision.net>
-    usb: typec: tipd: fix event checking for tps25750
-
-Heikki Krogerus <heikki.krogerus@linux.intel.com>
-    usb: typec: ucsi: displayport: Fix potential deadlock
-
-Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-    net: usb: ax88179_178a: fix link status when link is set to down/up
-
-Prashanth K <quic_prashk@quicinc.com>
-    usb: dwc3: Wait unconditionally after issuing EndXfer command
-
-Carlos Llamas <cmllamas@google.com>
-    binder: fix max_thread type inconsistency
-
-Bard Liao <yung-chuan.liao@linux.intel.com>
-    ASoC: Intel: sof_sdw: use generic rtd_init function for Realtek SDW DMICs
-
-Jarkko Sakkinen <jarkko@kernel.org>
-    KEYS: trusted: Fix memory leak in tpm2_key_encode()
-
-Sungwoo Kim <iam@sung-woo.kim>
-    Bluetooth: L2CAP: Fix div-by-zero in l2cap_le_flowctl_init()
-
-Uros Bizjak <ubizjak@gmail.com>
-    x86/percpu: Use __force to cast from __percpu address space
-
-Ronald Wahl <ronald.wahl@raritan.com>
-    net: ks8851: Fix another TX stall caused by wrong ISR flag handling
-
-Jose Fernandez <josef@netflix.com>
-    drm/amd/display: Fix division by zero in setup_dsc_config
-
-Perry Yuan <perry.yuan@amd.com>
-    cpufreq: amd-pstate: fix the highest frequency issue which limits performance
-
-Ben Greear <greearb@candelatech.com>
-    wifi: iwlwifi: Use request_module_nowait
-
-Peter Tsao <peter.tsao@mediatek.com>
-    Bluetooth: btusb: Fix the patch for MT7920 the affected to MT7921
-
-
--------------
-
-Diffstat:
-
- Documentation/ABI/stable/sysfs-block               | 10 +++
- .../admin-guide/hw-vuln/core-scheduling.rst        |  4 +-
- Documentation/admin-guide/mm/damon/usage.rst       |  6 +-
- Documentation/sphinx/kernel_include.py             |  1 -
- Makefile                                           |  4 +-
- arch/x86/include/asm/percpu.h                      |  6 +-
- block/genhd.c                                      | 15 +++--
- block/partitions/core.c                            |  5 +-
- drivers/android/binder.c                           |  2 +-
- drivers/android/binder_internal.h                  |  2 +-
- drivers/bluetooth/btusb.c                          |  1 +
- drivers/cpufreq/amd-pstate.c                       | 22 ++++++-
- drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c        |  7 +-
- drivers/media/v4l2-core/v4l2-ctrls-core.c          | 18 ++----
- drivers/net/ethernet/micrel/ks8851_common.c        | 18 +-----
- drivers/net/usb/ax88179_178a.c                     | 37 +++++++----
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c       | 10 +--
- drivers/remoteproc/mtk_scp.c                       | 10 ++-
- drivers/tty/serial/kgdboc.c                        | 30 ++++++++-
- drivers/usb/dwc3/gadget.c                          |  4 +-
- drivers/usb/typec/tipd/core.c                      | 51 ++++++++++-----
- drivers/usb/typec/tipd/tps6598x.h                  | 11 ++++
- drivers/usb/typec/ucsi/displayport.c               |  4 --
- include/linux/blkdev.h                             | 13 ++++
- include/net/bluetooth/hci.h                        |  9 +++
- include/net/bluetooth/hci_core.h                   |  1 +
- net/bluetooth/hci_conn.c                           | 75 +++++++++++++++-------
- net/bluetooth/hci_event.c                          | 31 +++++----
- net/bluetooth/iso.c                                |  2 +-
- net/bluetooth/l2cap_core.c                         | 17 +----
- net/bluetooth/sco.c                                |  6 +-
- security/keys/trusted-keys/trusted_tpm2.c          | 25 ++++++--
- sound/soc/intel/boards/Makefile                    |  1 +
- sound/soc/intel/boards/sof_sdw.c                   | 12 ++--
- sound/soc/intel/boards/sof_sdw_common.h            |  1 +
- sound/soc/intel/boards/sof_sdw_rt_dmic.c           | 52 +++++++++++++++
- 36 files changed, 357 insertions(+), 166 deletions(-)
-
-
+...
