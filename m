@@ -1,105 +1,201 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B278475
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 01:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488D1AD24
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 01:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716426227; cv=none; b=n8mQu/dYVpHdSKco573N7T9gORisvg+MjX0IWF7gLnNvONnxn8hVAXeauZIWyO5h7PpwFTVyG1x1NAxJc15NewNxQZfpV/A0maO/vRbqHcvQynQcgC3/RTqwDR/RrTGw8HCzpS1fQaarnmHts6uS/d4s9KFZEdixUziWO/PtsCU=
+	t=1716426247; cv=none; b=eLuv4tlLTuEUaiLqHK4lZbXmrUvXpIRGE2ws7bO8zDKWNQlNG6W8ks9aMo5gwQTPzMUDrJxI1iKAWkxb6ojyPCsoGA12QNqKx8ZAHSPiNtOjL51D58KzSQ7O2eKm7KQXXFFUHkWLjrBFUEH2kxbpDXn7dy+qLFEeJwl7ubqWFto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716426227; c=relaxed/simple;
-	bh=oRLFCvmflvwBww972OTFC19rqZZLX6S+rVQ/YdgGPpY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fsPEEB0+CXO9MNVRofp6jJpMs0dq7TzOo9wVdAhoGsTyWK5jeQwHZQD5VLH+DI5RuUkGdRCQiyyMN3kQrNGk/WwwT/f9k7cuE3ioGpX0Ye67Qf60UKDt0o5TJ82ktpPGm5yPgu3+ZmfOSl6aBlEzoSaeTC2IvfK7heYZL4hdY+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NOdGwzxn; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716426247; c=relaxed/simple;
+	bh=xuVimXmATg4JcE4J/zHQiQR6R8dLYbJIHSZrB0l2/6c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dTfalPLtX5it2Ghdzvxo7ymJojank93A3kaMl3n6cPuIGcpV4QcqAwqV5zKvGwKaJHJQ/4aj8Qpr5ZetmrQVHcb9+Re5aVyFVx1Pfb2Xtej7fIfWREIzfnuewGGNlKEO/Yq/KgVANdUDzkARIWZOUNdwXPXSDwL+ydfcuZYU57M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGrJD8NY; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOdGwzxn"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6f472d550cbso2798887b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716426225; x=1717031025; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gs+GelHIEijGi4ASLZuiiYf2bpnmCXxrjtSTxKMeS2w=;
-        b=NOdGwzxnib2kvRoVVHQ9XpTgibhM6H68Hfis6Yur3Ea8RmOEjasEp25+Eq7HKRsfh3
-         uaBXbBdPM3uH/huytSVyJQCS0jUVj3gOqM+97sb3VvcxafegFw25cY7KKgy3/AeHtuXE
-         43qq3BuGAJ5LjDfcolZzeP/hz4ipCbd+CgKipDZMzijj9xXUAUFzlETZY0UI4jBTK4BY
-         TRztcrxZ/a2cdIQ60Kfyi7zpttQ+T88o21l/jhLCN/f2BrCIxuOaPHjiz+SmvCkucUrW
-         xYcZYbE4W08RosUSIBx/nddUcvpnD44x1GWx5B3JXLE9CyOP0VBqOFEjvdWcUi2g6e84
-         Lmsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716426225; x=1717031025;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gs+GelHIEijGi4ASLZuiiYf2bpnmCXxrjtSTxKMeS2w=;
-        b=CwrqA5VcxAga3IUDVvu0Clq6fFgUYgi6tAYkEgWw1G2jjVg4mdAwJx2DEkTuETPrrs
-         JfVqm0bcBzxD6/n1bApd/hgW00S8Xd2CJghYF04xEf9Z4qSjvti3wlsDR0kxoTXOqRcO
-         Wxwxldu6vd0rmuu5B/w4fC1y3m8bssNNRh0HgBlglysVi0biM/CFx5Z//KY6tNHm1l8o
-         vzbs+L3oE7kM4rNqgU6MrnBk0Er+sz7lZFARUkfFPcXPJpW/4EBb6yo+2SmHikizXkNq
-         lux/igwlbp0l0p7QgRCYXZ09NpWTaRoeQd0fIR5TrUXiznz6fJIrjBrXMCNUwx2sGxxR
-         ukrQ==
-X-Gm-Message-State: AOJu0YxDpIEMSRyp+RlvUBWtsGKyhDnt2VXpknHbui9qtebnDDNmvUjU
-	7ic7A/rwG9kvzu/FFTqNjNiLHsq4Ihy/54mz9Bfd3wInt/5BoCTbuWWoKOZBmMc=
-X-Google-Smtp-Source: AGHT+IHzcSzrJQ58UIebX/BC+P9BTbbI9t8qhP7hIV00n0wXMGOYcyc2bRo97KfomeOSa09dxJSQrA==
-X-Received: by 2002:a05:6a21:498e:b0:1b1:c745:ea2c with SMTP id adf61e73a8af0-1b1f8a84b60mr4048645637.56.1716426225093;
-        Wed, 22 May 2024 18:03:45 -0700 (PDT)
-Received: from localhost.localdomain ([111.196.74.188])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0b9d4828sm244348265ad.20.2024.05.22.18.03.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 18:03:44 -0700 (PDT)
-From: Xiong Nandi <xndchn@gmail.com>
-To: akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	quic_bjorande@quicinc.com,
-	cmllamas@google.com,
-	quic_eberman@quicinc.com,
-	Xiong Nandi <xndchn@gmail.com>
-Subject: [PATCH v2 2/2] scripts/decode_stacktrace.sh: better support to ARM32 module stack trace
-Date: Thu, 23 May 2024 09:03:18 +0800
-Message-Id: <20240523010318.12934-3-xndchn@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240523010318.12934-1-xndchn@gmail.com>
-References: <20240521194010043-0700.eberman@hu-eberman-lv.qualcomm.com>
- <20240523010318.12934-1-xndchn@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGrJD8NY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716426245; x=1747962245;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=xuVimXmATg4JcE4J/zHQiQR6R8dLYbJIHSZrB0l2/6c=;
+  b=eGrJD8NYRuvS1EEPTOnOnK1ToVVY9+ozVHG/KQGe/AgScTg0L0wm+fmf
+   hJ8vepKBtR6mj7takRH1rcId5wm/N6WZ7a62NRWr7uT2ZOPwcQc9So07z
+   3D2yoHa1gAazor+SwGU5o8aaW3PePXr3TwxU4tfsCMYvAlHA0NKFjRsO6
+   o9YTCeRkqr2wDlilxc2kfp+TwD2kmNzQMUQj64Ci0aH2EBFO4QIvgb546
+   d0IJd176ASM3Zc4SZUCGjIJxxMV7XwDA93Nacd4dfwWIRPsXtagB4BbS/
+   SfDU2KK8TBfh7cQDCr2b12MgK3k+7qy1LiItrqIZKl0pVFPldc+DOjnMl
+   w==;
+X-CSE-ConnectionGUID: eqsKvP+AR3Cmx02luT3xLQ==
+X-CSE-MsgGUID: BJsco8VYTs6oOb/av4KA4A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="12590217"
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="12590217"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 18:04:05 -0700
+X-CSE-ConnectionGUID: AsK3JofGRmuXrtneQVWPmw==
+X-CSE-MsgGUID: UHc51AbVReeemWx1TNt4tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="33546735"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 18:04:02 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, Barry Song <21cnbao@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>,  <akpm@linux-foundation.org>,
+  <willy@infradead.org>,  <ryan.roberts@arm.com>,  <ziy@nvidia.com>,
+  <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: drop the 'anon_' prefix for swap-out mTHP counters
+In-Reply-To: <c55648d4-cec2-48ca-9ca9-c8fc2aecc741@linux.alibaba.com> (Baolin
+	Wang's message of "Wed, 22 May 2024 19:24:45 +0800")
+References: <0e2a6f232e7579a2e4407ecf075531980d97f286.1716367360.git.baolin.wang@linux.alibaba.com>
+	<22ac01a3-ddbb-4114-88cd-ad1a31982dad@redhat.com>
+	<51ba1fc1-fd77-4601-8d27-459162fd008c@linux.alibaba.com>
+	<CAGsJ_4zSuOTPi+zkS_kvS5T0MsdMBR+2gpXukJt0aMPrEnCDZg@mail.gmail.com>
+	<c55648d4-cec2-48ca-9ca9-c8fc2aecc741@linux.alibaba.com>
+Date: Thu, 23 May 2024 09:02:10 +0800
+Message-ID: <87a5khbast.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Sometimes there is special characters around module name in stack trace,
-such as ARM32 with BACKTRACE_VERBOSE in "(%pS)" format, such as:
-[<806e4845>] (dump_stack_lvl) from [<7f806013>] (hello_init+0x13/0x1000 [test])
+Baolin Wang <baolin.wang@linux.alibaba.com> writes:
 
-After stripping other characters around "[module]", it can be finally decoded:
-(dump_stack_lvl) from hello_init (/foo/test.c:10) test
+> On 2024/5/22 18:40, Barry Song wrote:
+>> On Wed, May 22, 2024 at 9:38=E2=80=AFPM Baolin Wang
+>> <baolin.wang@linux.alibaba.com> wrote:
+>>>
+>>>
+>>>
+>>> On 2024/5/22 16:58, David Hildenbrand wrote:
+>>>> On 22.05.24 10:51, Baolin Wang wrote:
+>>>>> The mTHP swap related counters: 'anon_swpout' and
+>>>>> 'anon_swpout_fallback' are
+>>>>> confusing with an 'anon_' prefix, since the shmem can swap out
+>>>>> non-anonymous
+>>>>> pages. So drop the 'anon_' prefix to keep consistent with the old swap
+>>>>> counter
+>>>>> names.
+>>>>>
+>>>>> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
+>>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>>> ---
+>>>>
+>>>> Am I daydreaming or did we add the anon_ for a reason and discussed the
+>>>> interaction with shmem? At least I remember some discussion around tha=
+t.
+>>>
+>>> Do you mean the shmem mTHP allocation counters in previous
+>>> discussion[1]? But for 'anon_swpout' and 'anon_swpout_fallback', I can
+>>> not find previous discussions that provided a reason for adding the
+>>> =E2=80=98anon_=E2=80=99 prefix. Barry, any comments? Thanks.
+>> HI Baolin,
+>> We had tons of emails discussing about namin and I found this email,
+>> https://lore.kernel.org/all/bca6d142-15fd-4af5-9f71-821f891e8305@redhat.=
+com/
+>> David had this comment,
+>> "I'm wondering if these should be ANON specific for now. We might want to
+>> add others (shmem, file) in the future."
+>> This is likely how the 'anon_' prefix started being added, although
+>> it
+>> wasn't specifically
+>> targeting swapout.
+>
+> That's what I missed before. Thanks Barry.
+>
+>> I sense your patch slightly alters the behavior of thp_swpout_fallback
+>> in /proc/vmstat.
+>> Previously, we didn't classify them as THP_SWPOUT_FALLBACK, even though =
+we
+>> always split them.
+>
+> Sorry I did not get you here. I just re-name the mTHP swpout_fallback,
+> how can this patch change the THP_SWPOUT_FALLBACK statistic counted by
+> count_vm_event()?
+>
+>>                  if (folio_test_anon(folio) && folio_test_swapbacked(fol=
+io)) {
+>>                          ...
+>>                                  if (!add_to_swap(folio)) {
+>>                                          int __maybe_unused order =3D
+>> folio_order(folio);
+>>                                          if
+>> (!folio_test_large(folio))
+>>                                                  goto activate_locked_sp=
+lit;
+>>                                          /* Fallback to swap normal page=
+s */
+>>                                          if (split_folio_to_list(folio,
+>> folio_list))
+>>                                                  goto activate_locked;
+>> #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>                                          if (nr_pages >=3D HPAGE_PMD_NR)=
+ {
+>>                                                  count_memcg_folio_event=
+s(folio,
+>>                                                          THP_SWPOUT_FALL=
+BACK, 1);
+>> count_vm_event(THP_SWPOUT_FALLBACK);
+>>                                          }
+>>                                          count_mthp_stat(order,
+>> MTHP_STAT_ANON_SWPOUT_FALLBACK);
+>> #endif
+>>                                          if (!add_to_swap(folio))
+>>                                                  goto activate_locked_sp=
+lit;
+>>                                  }
+>>                          }
+>>                  } else if (folio_test_swapbacked(folio) &&
+>>                             folio_test_large(folio)) {
+>>                          /* Split shmem folio */
+>>                          if (split_folio_to_list(folio, folio_list))
+>>                                  goto keep_locked;
+>>                  }
+>> If the goal is to incorporate pmd-mapped shmem under thp_swpout* in
+>> /proc/vmstat,
+>> and if there is consistency between /proc/vmstat and sys regarding
+>> their definitions,
+>> then I have no objection to this patch.=20
+>
+> I think this is the goal, moreover shmem will support large folio (not
+> only THP) in future, so swpout related counters should be defined as
+> clear as possible.
+>
+> However, shmem_swpout and shmem_swpout_*
+>> appear more intuitive, given that thp_swpout_* in /proc/vmstat has
+>> never shown any
+>> increments for shmem until now - we have been always splitting shmem in =
+vmscan.
+>
+> This is somewhat similar to our previous discussion on the naming of
+> the shmem's mTHP counter[1], as David suggested, we should keep
+> counter name consistency for now and add more in the future as needed.
+>
+> [1]
+> https://lore.kernel.org/all/ce6be451-7c5a-402f-8340-be40699829c2@redhat.c=
+om/
 
-Signed-off-by: Xiong Nandi <xndchn@gmail.com>
----
- scripts/decode_stacktrace.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yes.  I don't find that it's necessary to distinguish anonymous and
+shmem mTHP swap-out now.  If we need it in the future, we can add that
+at that time.
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index 2bc3a54ffba5..324e4a6c260a 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -283,8 +283,8 @@ handle_line() {
- 
- 	if [[ ${words[$last]} =~ \[([^]]+)\] ]]; then
- 		module=${words[$last]}
--		module=${module#\[}
--		module=${module%\]}
-+		module=${module#*\[}
-+		module=${module%\]*}
- 		modbuildid=${module#* }
- 		module=${module% *}
- 		if [[ $modbuildid == $module ]]; then
--- 
-2.25.1
+>> By the way, if this patch is accepted, it must be included in
+>> version
+>> 6.10 to maintain
+>> ABI compatibility. Additionally, documentation must be updated according=
+ly.
+>
+> Sure. I missed update the documentation, and will do in next version.
 
+--
+Best Regards,
+Huang, Ying
