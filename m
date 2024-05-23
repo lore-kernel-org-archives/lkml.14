@@ -1,104 +1,104 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4034437C;
-	Thu, 23 May 2024 04:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914141F5E6;
+	Thu, 23 May 2024 04:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716439150; cv=none; b=sM2qy5TApKrTLwL9Y5EI6ztOsPirc0ZJ6PEvu6+NhPRUVzhErhr8XWoBdcQYzjtGn5xjTozWwB9ezh17yuaOFrgBuOFjLRE7EKiKngjAgPpgr+0Ug2kQwVWHyzbzehKKPPF6yz1iyn3VEOuPnFoe7LxpVQ1H7/I/sRmjVzd859o=
+	t=1716439514; cv=none; b=KWZK57oO+11vhiqKy1Ou2uRbHvPpRdJH8n+HrhclptNQtlVgzwzBJ/Fupl+0WDj3Q5P1Nak9XD6mxJWJZZvMamdgo9DprojgF1IORTumpfQrMOGE95c1dD7pQJR4U6WtkGKACRUmmaPUOeRRCDxiWNTe14rG72nHET91ZU/VVoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716439150; c=relaxed/simple;
-	bh=ZgEDoaEgLaLqW3nAPYF9qKxB7KP0ycksaFQhIz4kCuQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rrpuob/zBxgUC7/Pz7W9ZKOntVnhmrTDlT/lIJf+y0owkwLx/kJp0I2IHd+t9KKNoeay/52DebYYFfYvIN6ed/Iy5bGwfI33qcba27nnYHFs1NuZowAo/dksahomnfX4lp6qGG3XuPjux7W64acXos93tqUspYmPRv1qAd4brek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso2343983a12.2;
-        Wed, 22 May 2024 21:39:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716439148; x=1717043948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rv4Spa7J+1d8S/LcjXFnrbLk7mSgRjPXbAy53MafDq0=;
-        b=PijBheWgTpXB0tcNZbUo7NXqW0ayFtWVEDwp7L8Xp8YIjR6IQexNKW+tFJjkjilDp5
-         E6i2TUN7P241R9nbUcxJ1UinDodPX4M8HERvsGH6nFuzvDinStbKygjcUApdFv9LCfks
-         C3gcRTfkjFo2S5/Vx5N2A3uQWHmM6E9RRHp/dFO0ibBetV1rD4orJ95t0VdwdcCLrONr
-         ax9j2onu039KGCLrJTlxpO+XT/DgLHBtx8tsWN8TlUg10M6qBPyvWnJvCC+/4c8vtuDH
-         qh0TFVHS4CRYU6DjZg58XR7LXDTZdC0N0ea54nWczlFbwJg5ucAWkvvpnsEFLGq7f2O5
-         p9Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCYBYgxIQOJvV5VnDXBkdinSrs5u0tajn6U1b/LmfKV+mRTPUKWEozUsjJiTfWTYhW3Q3tQ1X4NeCUqCE5jvlfHq7Yxc1szM06Dih/pvE/dS0S9JMVLRKjDoCQuq3FJTUCpmJDc7OGFCzad/g8PG8eYSNKK7/r1bJ7bSR0Hyc4f882yQ==
-X-Gm-Message-State: AOJu0YzvSnXaG5M0ajeOxSu/GpMwd/i4SrRxyjiSL5AXUvCoI5HYMkHf
-	f4+yVNRkSFEKnXqjFahvJH3Wjc+xPi6BF+ngWWq93Be99/TtKpFvijtaZPzr2MRXQilI7SpAY3P
-	ig5ZulBhTkgwZm89K+KchqH+0BLk=
-X-Google-Smtp-Source: AGHT+IGyxu4zpQIYFBOUiL3hGmai4PHmO6FSFeTJvn1XdtLU4H0XYTlVFI9f7RgGjY6eS1D0s0Rq7N6aZ6h3GDv7rec=
-X-Received: by 2002:a05:6a20:9683:b0:1a3:8e1d:16b8 with SMTP id
- adf61e73a8af0-1b1f87e0455mr3572608637.28.1716439148483; Wed, 22 May 2024
- 21:39:08 -0700 (PDT)
+	s=arc-20240116; t=1716439514; c=relaxed/simple;
+	bh=vCGKBBvs+CFNAlmNfTvta6ASZjdxorfckdKRcybznSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LYB3k5mWJIZFfNlUanpzI5u6uv3FZrLzHek2mdPr6lnhRfVAcSVCL8QcUrxXXqYKhQtZfUhGA2VGorXvzIcjDHbXLdqvAtFQQOJxPZ54f3EshjzuRBLzQo634ke0l+xOveUgrVXjdYkphBjJuKAtasMf5pksoWBOBz4LAZl09uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QF3ROHgA; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QF3ROHgA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716439513; x=1747975513;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vCGKBBvs+CFNAlmNfTvta6ASZjdxorfckdKRcybznSQ=;
+  b=QF3ROHgAewoBhWvOAJu5nDL9+dnGiZqJwxylXO12DjU0B049ogvLqpL4
+   VouFS39iu2vF7CUt9pjmKnRdsqZI7AT6pjravWfscF/TzyaUNg00gdXBJ
+   aga8Jx9E1Dn7aUCqOecv+8J1zRADmOF3Jqx6Th9DblneCtTtwD0YRa+v/
+   ANfSCsnVxy4fqhN87KJpe8AIYvE0GGzdECh0NB2CrIiFAwJTOCuc1U3av
+   7qYqxRvM/vMNVOG/ro2le8oowDYnqpa4BG25hwZ5O4Ed7bF6CHLILAGGn
+   E6jxI+m6Xly4BY9gr0OhfZQ/sHJbKESVlIqDYk5xidIBifHM8TNLmLuyC
+   Q==;
+X-CSE-ConnectionGUID: 3stSL6jqTMGpk2zd/QzSaA==
+X-CSE-MsgGUID: kVPSIKh3TL+e7iJDG5srhA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="12564657"
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="12564657"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 21:45:12 -0700
+X-CSE-ConnectionGUID: 5hDjUWs0SY++9FE1vCsMCw==
+X-CSE-MsgGUID: myyeBLecRpmyCN6Kh5ttQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="33427663"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 22 May 2024 21:45:09 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id DABA2E7; Thu, 23 May 2024 07:45:07 +0300 (EEST)
+Date: Thu, 23 May 2024 07:45:07 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Gia <giacomo.gio@gmail.com>, "S, Sanath" <Sanath.S@amd.com>,
+	Benjamin =?utf-8?Q?B=C3=B6hmke?= <benjamin@boehmke.net>,
+	Christian Heusel <christian@heusel.eu>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"kernel@micha.zone" <kernel@micha.zone>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: [REGRESSION][BISECTED] "xHCI host controller not responding,
+ assume dead" on stable kernel > 6.8.7
+Message-ID: <20240523044507.GX1421138@black.fi.intel.com>
+References: <20240520162100.GI1421138@black.fi.intel.com>
+ <5d-664b8000-d-70f82e80@161590144>
+ <CAHe5sWazL96zPa-v9S515ciE46JLZ1ROL7gmGikfn-vhUoDaZg@mail.gmail.com>
+ <20240521051151.GK1421138@black.fi.intel.com>
+ <CAHe5sWb7kHurBvu6JC6OgXZm9mSg5a2W2XK9L8gCygYaFZz7JQ@mail.gmail.com>
+ <20240521085926.GO1421138@black.fi.intel.com>
+ <CAHe5sWb=14MWvQc1xkyrkct2Y9jn=-dKgX55Cow_9VKEeapFwA@mail.gmail.com>
+ <20240521112654.GP1421138@black.fi.intel.com>
+ <CAHe5sWbAkgypzOA-JpBpwY5oFP1wXShKDNevmjLEu1kR1VOeRA@mail.gmail.com>
+ <79dfc0b9-94d4-4046-a3b9-185e53b4a192@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521010439.321264-1-irogers@google.com>
-In-Reply-To: <20240521010439.321264-1-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 22 May 2024 21:38:57 -0700
-Message-ID: <CAM9d7cibAi-Xnr5HTCT6HB0sat=w5qicDrr+pcMuUF0OfNQRPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Use BPF filters for a "perf top -u" workaround
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Changbin Du <changbin.du@huawei.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <79dfc0b9-94d4-4046-a3b9-185e53b4a192@amd.com>
 
-On Mon, May 20, 2024 at 6:04=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Allow uid and gid to be terms in BPF filters by first breaking the
-> connection between filter terms and PERF_SAMPLE_xx values. Calculate
-> the uid and gid using the bpf_get_current_uid_gid helper, rather than
-> from a value in the sample. Allow filters to be passed to perf top, this =
-allows:
->
-> $ perf top -e cycles:P --filter "uid =3D=3D $(id -u)"
->
-> to work as a "perf top -u" workaround, as "perf top -u" usually fails
-> due to processes/threads terminating between the /proc scan and the
-> perf_event_open.
->
-> v2. Allow PERF_SAMPLE_xx to be computed from the PBF_TERM_xx value
->     using a shift as requested by Namhyung.
->
-> Ian Rogers (3):
->   perf bpf filter: Give terms their own enum
->   perf bpf filter: Add uid and gid terms
->   perf top: Allow filters on events
+On Wed, May 22, 2024 at 10:19:51AM -0500, Mario Limonciello wrote:
+> On 5/22/2024 09:41, Gia wrote:
+> > Now this is odd...
+> > 
+> > I've tested another cable - a very short one used with a Gen3 nvme
+> > enclosure that I'm sure it's working - and I got Gen2 20 Gbps. I also
+> > have tested this on Windows 11 and I still just got a Gen2 connection.
+> > 
+> > I was almost sure it was caused by a bad USB4 implementation by the PC
+> > manufacturer, then I tried to connect a Thunderbolt 3 disk enclosure
+> > via daisy chain to the Caldigit dock and I got the full Gen3 40 Gbps
+> > connection! See the attached picture.
+> > 
+> 
+> I suspect you can't actually get Gen 3 performance in this configuration.
+> IIUC you should still be limited by the uplink to the host.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
->
->  tools/perf/Documentation/perf-record.txt     |  2 +-
->  tools/perf/Documentation/perf-top.txt        |  4 ++
->  tools/perf/builtin-top.c                     |  9 +++
->  tools/perf/util/bpf-filter.c                 | 33 ++++++----
->  tools/perf/util/bpf-filter.h                 |  5 +-
->  tools/perf/util/bpf-filter.l                 | 66 ++++++++++----------
->  tools/perf/util/bpf-filter.y                 |  7 ++-
->  tools/perf/util/bpf_skel/sample-filter.h     | 61 +++++++++++++++++-
->  tools/perf/util/bpf_skel/sample_filter.bpf.c | 54 +++++++++++-----
->  9 files changed, 171 insertions(+), 70 deletions(-)
->
-> --
-> 2.45.0.rc1.225.g2a3ae87e7f-goog
->
+One "explanation" could be that the distance from the SoC to the Type-C
+connector is relatively long which would require a retimer to get the
+Gen3 speeds.
