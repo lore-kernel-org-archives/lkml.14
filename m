@@ -1,148 +1,244 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6891412B171;
-	Thu, 23 May 2024 14:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AE012B171
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716475035; cv=none; b=ueMwAO+4XPGQqVoBRTZ0q6xse/Klhqi4kLTzkQbBjAb26JuvpGEQ7ijU9XDFFzxp5MIWk7qnrIydJOKg5tl344V0KnId1d2YG3thUYwYuuDbP8uIpi9FoJoz4/l710hKJcpngbb38N5e0PvaDL/vADv71EdIKHcSYlJ4CHkpOyk=
+	t=1716475066; cv=none; b=Eku9dGEGRkh+5FpcIhg0N7iPYPiAtBlbf1h14/g3x1w+LjUdSX89GhqucyWkiZtwBvZJP6q+29jO8MlbaLY484lyaO/nqir8eLQNXFFX7WmlRdmDxE6tXJWTbn+XfiVKSjWKwMh9lYUchK27Dg8Fu/rGXKGsPtZs9g/BbGzYflA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716475035; c=relaxed/simple;
-	bh=gbTUHrtXsQLEAfxPpyRzN9dLmybrI0g1EIZJvIeWbS4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OboPz89fREzqJr9FePsjhS9+spB0x+SqpQ/nLoK5ItKa8BfQu47iFk65GngdnYkRJXDFnZyTArH7xYX6X9jQFPYcJNnXe4Fii8lE7aHx7yz+WX/fTBASq11YBS1vKB2W1qsnjKnv1RfmxtwwAYNh1EwsAe5PnkKSjl7Ee9gA/Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VlVYq34Lbz9v7Js;
-	Thu, 23 May 2024 22:15:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 19CF8140665;
-	Thu, 23 May 2024 22:37:01 +0800 (CST)
-Received: from [10.206.134.102] (unknown [10.206.134.102])
-	by APP2 (Coremail) with SMTP id GxC2BwCn4CSDVE9mLzXACA--.32576S2;
-	Thu, 23 May 2024 15:37:00 +0100 (CET)
-Message-ID: <edc0665a-6301-428b-9611-f53d5f05eb69@huaweicloud.com>
-Date: Thu, 23 May 2024 16:36:48 +0200
+	s=arc-20240116; t=1716475066; c=relaxed/simple;
+	bh=A6mMmcoPKr86m5mBYWP/jKQWZ1PrDwi8ZbWMCjNEw7o=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=KTcI1RPNRw3RH9QDaSz87bq3Pkt3wh3j4fZIYZe+fO25qxaX26Rwj/Nc5U9qg1LP8h1aCFGqQfByXodEMqo7Ri0gXr7Eqx14TDj95yRjTj/54E6XRZW5uKiPWdqmuq4C6cGoT2nIY1Y1tCN3YxnFZebuLlzGTjHkcv2BC+7OG58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TwcqKbxS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TwcqKbxS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716475063;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EBuJR9sHioIkXS6kfIzX9SE7PWR4EN1ACo5UdtBVH3U=;
+	b=TwcqKbxSsS97nadoOJjtHoZKh/6LeEoaxU6UKmMmnaAJDs0cawVkOyenfuBZTuLXbs+pJy
+	DaNIMIdXfBHPuDltiw6FAoOLhwFAZrs/ZFPjHWYnbrqwY6ESnILOdrUsu4lpp8EBsBXULi
+	4N/hvNz3jLpNoPqjA4pvseMJEoIsvVM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-542-lnui4_8cM6GJK8e4lQxzRA-1; Thu, 23 May 2024 10:37:40 -0400
+X-MC-Unique: lnui4_8cM6GJK8e4lQxzRA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EAABF81227E;
+	Thu, 23 May 2024 14:37:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8D364200A35C;
+	Thu, 23 May 2024 14:37:38 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <00000000000092914806191382ac@google.com>
+References: <00000000000092914806191382ac@google.com>
+To: syzbot <syzbot+d7c7a495a5e466c031b6@syzkaller.appspotmail.com>
+Cc: dhowells@redhat.com, asmadeus@codewreck.org, brauner@kernel.org,
+    hdanton@sina.com, linux-kernel@vger.kernel.org,
+    syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [v9fs?] KASAN: slab-use-after-free Read in p9_fid_destroy
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: LKMM: Making RMW barriers explicit
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, kernel-team@meta.com, parri.andrea@gmail.com,
- boqun.feng@gmail.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
- Joel Fernandes <joel@joelfernandes.org>
-References: <72c804c8-2511-4349-a823-bc1de8bb729e@rowland.harvard.edu>
- <e030f7a4-97e7-4e91-bbae-230ee5c97763@huaweicloud.com>
- <a9bf972c-b5ee-f1c2-36bf-30ba62f419d7@huaweicloud.com>
- <2f20e7cf-7c67-4ad3-8a0c-3c1d01257ae4@rowland.harvard.edu>
- <0c309dd3-f8c1-4945-b8f1-154b2a775216@huaweicloud.com>
- <4286e5b2-5954-4c77-a815-c1c2735d9509@rowland.harvard.edu>
- <58042cf3-e515-4e5f-ab48-1d0d6123c9e9@huaweicloud.com>
- <6174fd09-b287-49ae-b117-c3a36ef3800a@rowland.harvard.edu>
- <7bd31eca-3cf3-4377-a747-ec224262bd2e@huaweicloud.com>
- <35b3fd07-fa85-4244-b9cb-50ea54d9de6a@rowland.harvard.edu>
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-In-Reply-To: <35b3fd07-fa85-4244-b9cb-50ea54d9de6a@rowland.harvard.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:GxC2BwCn4CSDVE9mLzXACA--.32576S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFy5Cr4DWw4kCw1UGw1DGFg_yoW8uF48p3
-	yfK3WrKF1ktFWI9ryUZw42ya4S93W0qFWUJrn5J3yayFs093WxtF48Jw4rCFy3Zrs3X3Wj
-	vFW0v34xAa98AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZa9
-	-UUUUU=
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <580958.1716475057.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 23 May 2024 15:37:38 +0100
+Message-ID: <580959.1716475058@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
 
+netfs, 9p: Fix race between umount and async request completion [v2]
 
-Am 5/23/2024 um 4:05 PM schrieb Alan Stern:
-> On Thu, May 23, 2024 at 02:54:05PM +0200, Jonas Oberhauser wrote:
->>
->>
->> Am 5/22/2024 um 4:20 PM schrieb Alan Stern:
->>> It would be better if there was a way to tell herd7 not to add the 'mb
->>> tag to failed instructions in the first place.  This approach is
->>> brittle; see below.
->>
->> Hernan told me that in fact that is actually currently the case in herd7.
->> Failing RMW get assigned the Once tag implicitly.
->> Another thing that I'd suggest to change.
-> 
-> Indeed.
-> 
->>> An alternative would be to have a way for the .cat file to remove the
->>> 'mb tag from a failed RMW instruction.  But I don't know if this is
->>> feasible.
->>
->> For Mb it's feasible, as there is no Mb read or Mb store.
->>
->> Mb = Mb & (~M | dom(rmw) | range(rmw))
->>
->> However one would want to do the same for Acq and Rel.
->>
->> For that one would need to distinguish e.g. between a read that comes from a
->> failed rmw instruction, and where the tag would disappear, or a normal
->> standalone read.
->>
->> For example, by using two different acquire tags, 'acquire and 'rmw-acquire,
->> and defining
->>
->> Acquire = Acquire | Rmw-acquire & (dom(rmw) | range(rmw))
->>
->> Anyways we can do this change independently. So for now, we don't need
->> RMW_MB.
-> 
-> Overall, it seems better to have herd7 assign the right tag, but change
-> the way the .def file works so that it can tell herd7 which tag to use
-> in each of the success and failure cases.
+There's a problem in 9p's interaction with netfslib whereby a crash occurs
+because the 9p_fid structs get forcibly destroyed during client teardown
+(without paying attention to their refcounts) before netfslib has finished
+with them.  However, it's not a simple case of deferring the clunking that
+p9_fid_put() does as that requires the client.
 
-Yes, that would be good.
-In principle herd should already support this kind of logic for e.g. C11 
-which also has distinct success and failure modes.
-But of course I don't know if there's syntax to make this change in 
-.def, let alone what it would look like.
+The problem is that netfslib has to unlock pages and clear the IN_PROGRESS
+flag before destroying the objects involved - including the pid - and, in
+any case, nothing checks to see if writeback completed barring looking at
+the page flags.
 
+Fix this by keeping a count of outstanding I/O requests (of any type) and
+waiting for it to quiesce during inode eviction.
 
-> But at least you
-> understood what I meant.
+Reported-by: syzbot+df038d463cca332e8414@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/all/0000000000005be0aa061846f8d6@google.com/
+Reported-by: syzbot+d7c7a495a5e466c031b6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/all/000000000000b86c5e06130da9c6@google.com/
+Reported-by: syzbot+1527696d41a634cc1819@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/all/000000000000041f960618206d7e@google.com/
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Eric Van Hensbergen <ericvh@kernel.org>
+cc: Latchesar Ionkov <lucho@ionkov.net>
+cc: Dominique Martinet <asmadeus@codewreck.org>
+cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Steve French <sfrench@samba.org>
+cc: Hillf Danton <hdanton@sina.com>
+cc: v9fs@lists.linux.dev
+cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
 
-I do try :) (: :)
+Notes:
+    Changes
+    =3D=3D=3D=3D=3D=3D=3D
+    ver #2)
+     - Wait for outstanding I/O before clobbering the pagecache.
 
-> 
->> We could do (with the assumption that Mb applies only to successful rmw):
->>
->>   	[M] ; po ; [Mb & R]
->>   	[Mb & W] ; po ; [M]
-> 
-> That works.
+---
+ fs/9p/vfs_inode.c      |    1 +
+ fs/afs/inode.c         |    1 +
+ fs/netfs/objects.c     |    5 +++++
+ fs/smb/client/cifsfs.c |    1 +
+ include/linux/netfs.h  |   18 ++++++++++++++++++
+ 5 files changed, 26 insertions(+)
 
-Ok, I'll prepare a patch for this and Andrea or anyone else can still 
-interject.
-I suppose the patch would not change the semantics at all with the 
-current herd7, since Mb does not appear on any reads and writes for the 
-time being.
+diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
+index 8c9a896d691e..effb3aa1f3ed 100644
+--- a/fs/9p/vfs_inode.c
++++ b/fs/9p/vfs_inode.c
+@@ -349,6 +349,7 @@ void v9fs_evict_inode(struct inode *inode)
+ 	__le32 __maybe_unused version;
+ =
 
-best wishes,
-   jonas
+ 	if (!is_bad_inode(inode)) {
++		netfs_wait_for_outstanding_io(inode);
+ 		truncate_inode_pages_final(&inode->i_data);
+ =
 
+ 		version =3D cpu_to_le32(v9inode->qid.version);
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index 94fc049aff58..15bb7989c387 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -648,6 +648,7 @@ void afs_evict_inode(struct inode *inode)
+ =
 
+ 	ASSERTCMP(inode->i_ino, =3D=3D, vnode->fid.vnode);
+ =
+
++	netfs_wait_for_outstanding_io(inode);
+ 	truncate_inode_pages_final(&inode->i_data);
+ =
+
+ 	afs_set_cache_aux(vnode, &aux);
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index c90d482b1650..f4a642727479 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -72,6 +72,7 @@ struct netfs_io_request *netfs_alloc_request(struct addr=
+ess_space *mapping,
+ 		}
+ 	}
+ =
+
++	atomic_inc(&ctx->io_count);
+ 	trace_netfs_rreq_ref(rreq->debug_id, 1, netfs_rreq_trace_new);
+ 	netfs_proc_add_rreq(rreq);
+ 	netfs_stat(&netfs_n_rh_rreq);
+@@ -124,6 +125,7 @@ static void netfs_free_request(struct work_struct *wor=
+k)
+ {
+ 	struct netfs_io_request *rreq =3D
+ 		container_of(work, struct netfs_io_request, work);
++	struct netfs_inode *ictx =3D netfs_inode(rreq->inode);
+ 	unsigned int i;
+ =
+
+ 	trace_netfs_rreq(rreq, netfs_rreq_trace_free);
+@@ -142,6 +144,9 @@ static void netfs_free_request(struct work_struct *wor=
+k)
+ 		}
+ 		kvfree(rreq->direct_bv);
+ 	}
++
++	if (atomic_dec_and_test(&ictx->io_count))
++		wake_up_var(&ictx->io_count);
+ 	call_rcu(&rreq->rcu, netfs_free_request_rcu);
+ }
+ =
+
+diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
+index ec5b639f421a..14810ffd15c8 100644
+--- a/fs/smb/client/cifsfs.c
++++ b/fs/smb/client/cifsfs.c
+@@ -431,6 +431,7 @@ cifs_free_inode(struct inode *inode)
+ static void
+ cifs_evict_inode(struct inode *inode)
+ {
++	netfs_wait_for_outstanding_io(inode);
+ 	truncate_inode_pages_final(&inode->i_data);
+ 	if (inode->i_state & I_PINNING_NETFS_WB)
+ 		cifs_fscache_unuse_inode_cookie(inode, true);
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index d2d291a9cdad..3ca3906bb8da 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -68,6 +68,7 @@ struct netfs_inode {
+ 	loff_t			remote_i_size;	/* Size of the remote file */
+ 	loff_t			zero_point;	/* Size after which we assume there's no data
+ 						 * on the server */
++	atomic_t		io_count;	/* Number of outstanding reqs */
+ 	unsigned long		flags;
+ #define NETFS_ICTX_ODIRECT	0		/* The file has DIO in progress */
+ #define NETFS_ICTX_UNBUFFERED	1		/* I/O should not use the pagecache */
+@@ -474,6 +475,7 @@ static inline void netfs_inode_init(struct netfs_inode=
+ *ctx,
+ 	ctx->remote_i_size =3D i_size_read(&ctx->inode);
+ 	ctx->zero_point =3D LLONG_MAX;
+ 	ctx->flags =3D 0;
++	atomic_set(&ctx->io_count, 0);
+ #if IS_ENABLED(CONFIG_FSCACHE)
+ 	ctx->cache =3D NULL;
+ #endif
+@@ -517,4 +519,20 @@ static inline struct fscache_cookie *netfs_i_cookie(s=
+truct netfs_inode *ctx)
+ #endif
+ }
+ =
+
++/**
++ * netfs_wait_for_outstanding_io - Wait for outstanding I/O to complete
++ * @ctx: The netfs inode to wait on
++ *
++ * Wait for outstanding I/O requests of any type to complete.  This is in=
+tended
++ * to be called from inode eviction routines.  This makes sure that any
++ * resources held by those requests are cleaned up before we let the inod=
+e get
++ * cleaned up.
++ */
++static inline void netfs_wait_for_outstanding_io(struct inode *inode)
++{
++	struct netfs_inode *ictx =3D netfs_inode(inode);
++
++	wait_var_event(&ictx->io_count, atomic_read(&ictx->io_count) =3D=3D 0);
++}
++
+ #endif /* _LINUX_NETFS_H */
 
