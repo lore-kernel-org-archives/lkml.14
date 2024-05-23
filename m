@@ -1,120 +1,71 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gentwo.org (gentwo.org [62.72.0.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6DC6E2BE
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A71243AB4
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716488003; cv=none; b=WqylUgZN4wsvf/SLgs6FvoOmTnQZ7tE3Gvh0mImS8Cpddp4LYNP18J5sgBgbxPbDjkYf98AW21Cg1qI5s63y0SSrMF7W3oOu1Axh8pWVna7aI/KGRdSjjxMLCioCn6QwA/FjXcNu4lYBTRm57O39E6ilsY7Xo+eBtdgulXv7ZIE=
+	t=1716488110; cv=none; b=eiWgkrSkPCTqzuJqQBfx/kZLHpwUoeO6pEpxD9YJ2X5/Ad/sdl2O8GnP9/3ecZgKdTdFdp4I1llqf5wrWslA3Rl4V3PVCYWp7V6ro4XJCPz8RJJgIj8x6E11M9Om61+FUg92yNbxtRxG8yDT7Ir9nNR4nC9JKaMZ7Ju0ruxNDSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716488003; c=relaxed/simple;
-	bh=zsnTKCdVkvI0k+jxRH2TuSi7PFifNDtiAicq3/1spJA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=grn8uc7HmWb7nxZ3be/Bd3UGXX5pgA40zAJ9iCmf1dCIxbr8HWVWKNtEQ1UUGEngCDGTb6jIBy+auWD/DtGM+Q09scxH4fMfm1LJUiB/hLThbZopBq9pnmvI75ToUMyUZvNhEbw7EbfyDCUgwpwt4MlFGHAimZlZ/dbU43DU8QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2X/9CXkz; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716488110; c=relaxed/simple;
+	bh=fX8mSppGZ/Zwq6LsvNMxN4PDNReI6QiaAxfOjSQuhzc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tdVhflWRVIfBfpWMH9Du8mV1CadfACZfxA/lynynFeAltFCwwkhXjczFk0Bv08nkqfj7cTUi8yMmvWSKu10qxcCanB11b+FCtvjcEb6iPIK4mGaq4PGlhoKjwVbtCX387tF3MF7MMDx7EtI8vfJlbzqvv+45UQ5M6E8YMulnktA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=MSu3ybZT; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2X/9CXkz"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso1237a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 11:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716488000; x=1717092800; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TmV9pjx2Z/cgyKoVK6PJ6k9Fa04AQ2nQf51yC2c36Uc=;
-        b=2X/9CXkzUa2XXZf7Pc6ONJBU1W/rvJ4wSpgHYq2AexrqD9KxQIdkteHQRvbnQ7Nu6i
-         7whqhSAEFey88amyy43L2nGMCCb0zl7EGVf/rhm5gJDBD/dh3BYxadgIe1Aqizu+n8eR
-         tNloqYgm7JQBR/3xPhVDvsIBPrEGgxdT5WXve8uf7mnGdFHCBRwPRG/xj1LdXVzGqImg
-         Nl9fVZJgYUt/kPF/b0R2I6DAMQh6feIwKOe08Y/wIoAnTySIUhOn9JwpKy5kHDhkEahl
-         WEgwfKhhrey4SacY6KSCQ+5jzUB+5lhy68+PkmDMEC/aFnI9Cp8ad69dRLJxTH6ybTeo
-         3r4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716488000; x=1717092800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TmV9pjx2Z/cgyKoVK6PJ6k9Fa04AQ2nQf51yC2c36Uc=;
-        b=Lji0uQVc0432+VNY2yJ2DW/mxS44hcuIjpc2DYHaO4Co9sY3LXVpOPMUBruK79VTtY
-         sm4Gvs5A3HD5x/G4byExN9oQNOLINu2aPXJ3IQQzDthdxyhy9vvNHfJ9jUCrPG6aY4xS
-         wPXnAceua9XTVTbS2VusUPBFd1aag9QuOlnmSRbMtJiRlnx6Br6mrxukN0d0GzyIlpyG
-         Cz0BK1NP4Q7yHIeYDMKwKVx262IFrp4VlgJ4gPbH2cNfSvOGjX1W+LtBBN6xm6YemIxD
-         6b33VLKymgn/BwR4nMdwl11yDLCFmx+emNWziLAsVHbSM9dcIpkx/73fm+9Krzchl45O
-         Xocw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ6x8BphH2eGN7WSyk5csLvIN+2HEP221fDo7ZI+smX9bWJLDhfVvKUOz9v5pTYN7Goh5p+fbO4s+65WbG/0woZTIlODy0cXaR8AbR
-X-Gm-Message-State: AOJu0Yx6wlY48EQYlDvCHxTxXSFtCNNLea1C/zDn3fYDeX3MVP/ueem4
-	jW0jVMjGDRiXoI9BgeLZLnJtm977O0KRmFfJHTA3GQlHGCAc3kL2qmvK+r6WFYNXNFlCHdeRSyq
-	yx+36wcoTjyn82cOWobcvdRIMqeIoQL9MTa40
-X-Google-Smtp-Source: AGHT+IH4XyN34wwdQO+LD1omzn19g4Z0hsO4LF5HJg6/COqxImkywXTVpGaksCMO62vMlBB+i2WN/mYDnRwwA5mbJXU=
-X-Received: by 2002:aa7:c941:0:b0:578:33c0:f00e with SMTP id
- 4fb4d7f45d1cf-578510d677dmr19276a12.0.1716487999947; Thu, 23 May 2024
- 11:13:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="MSu3ybZT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1716487751;
+	bh=fX8mSppGZ/Zwq6LsvNMxN4PDNReI6QiaAxfOjSQuhzc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=MSu3ybZTg8BMjTHiMSL7eit6fDs7/LYW1i0G7KLFbM2EeumOWXqT2XpXPASstv5At
+	 5jdP7kVkf/q9/6ljobGWGw5tzKtwfkemmMMMnJ9g5oluCZN1hEyfwGSqbOcI/f6Q0i
+	 KWcqyWkHwiTDi7aex6KKy8CuxXOPFVUjrj8Ng4AE=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 3A77340251; Thu, 23 May 2024 11:09:11 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 39BF5401F3;
+	Thu, 23 May 2024 11:09:11 -0700 (PDT)
+Date: Thu, 23 May 2024 11:09:11 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+cc: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org, 
+    anshuman.khandual@arm.com, scott@os.amperecomputing.com, 
+    linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] arm64: mm: force write fault for atomic RMW
+ instructions
+In-Reply-To: <Zk93vBqAD3LgmbGb@arm.com>
+Message-ID: <640f8606-2757-4e82-721f-9625d48ded65@gentwo.org>
+References: <20240520165636.802268-1-yang@os.amperecomputing.com> <Zk93vBqAD3LgmbGb@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522005913.3540131-1-edliaw@google.com> <20240522005913.3540131-3-edliaw@google.com>
- <94b73291-5b8a-480d-942d-cfc72971c2f5@sirena.org.uk> <CAG4es9WAASaSG+Xgp31-kLT3G8wpeT5vAqbCA4r=Z8G_zAF73w@mail.gmail.com>
- <9e2677ec-1d54-4969-907b-112b71ef8dd3@nvidia.com> <d5471e30-227d-4e6d-9bbd-90a74bd9006b@linuxfoundation.org>
-In-Reply-To: <d5471e30-227d-4e6d-9bbd-90a74bd9006b@linuxfoundation.org>
-From: Edward Liaw <edliaw@google.com>
-Date: Thu, 23 May 2024 11:12:52 -0700
-Message-ID: <CAG4es9XU2fMo7hBv81vpn1JGKFWt9gExOhyAyRtOc-5OR5eiLQ@mail.gmail.com>
-Subject: Re: [PATCH v5 02/68] kselftest: Desecalate reporting of missing _GNU_SOURCE
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>, Mark Brown <broonie@kernel.org>, shuah@kernel.org, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Christian Brauner <brauner@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Kees Cook <keescook@chromium.org>, 
-	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kernel-team@android.com, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, May 23, 2024 at 11:02=E2=80=AFAM Shuah Khan <skhan@linuxfoundation.=
-org> wrote:
->
-> On 5/22/24 20:28, John Hubbard wrote:
-> > On 5/22/24 10:46 AM, Edward Liaw wrote:
-> >> On Wed, May 22, 2024 at 4:21=E2=80=AFAM Mark Brown <broonie@kernel.org=
-> wrote:
-> >>> On Wed, May 22, 2024 at 12:56:48AM +0000, Edward Liaw wrote:
-> > ...
-> >>> You've not provided a Signed-off-by for this so people can't do anyth=
-ing
-> >>> with it, please see Documentation/process/submitting-patches.rst for
-> >>> details on what this is and why it's important.
-> >>
-> >> Sorry, my mistake, I forgot to add it after cherry-picking.  If added
-> >
-> > Adding this to your .gitconfig would cover you for cases like this, I t=
-hink
-> > it's pretty common to do this:
-> >
-> > [format]
-> >      signoff =3D true
-> >
-> >
+On Thu, 23 May 2024, Catalin Marinas wrote:
 
-Thanks Mark, I'll add that.
+> On Mon, May 20, 2024 at 09:56:36AM -0700, Yang Shi wrote:
+>> diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
+>> index db1aeacd4cd9..1cc73664fc55 100644
+>> --- a/arch/arm64/include/asm/insn.h
+>> +++ b/arch/arm64/include/asm/insn.h
+>> @@ -319,6 +319,7 @@ static __always_inline u32 aarch64_insn_get_##abbr##_value(void)	\
+>>   * "-" means "don't care"
+>>   */
+>>  __AARCH64_INSN_FUNCS(class_branch_sys,	0x1c000000, 0x14000000)
+>> +__AARCH64_INSN_FUNCS(class_atomic,	0x3b200c00, 0x38200000)
+>
+> While this class includes all atomics that currently require write
+> permission, there's some unallocated space in this range and we don't
+> know what future architecture versions may introduce. Unfortunately we
+> need to check each individual atomic op in this class (not sure what the
+> overhead will be).
 
->
-> Mark, Edward,
->
-> Is this patch still necessary of the series is dropped?
->
-> thanks,
-> -- Shuah
->
+Can you tell us which bits or pattern is not allocated? Maybe we can 
+exclude that from the pattern.
 
-No, it is not necessary anymore.
