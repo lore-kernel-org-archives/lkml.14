@@ -1,120 +1,133 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9799811711
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 15:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808DD7482;
+	Thu, 23 May 2024 15:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716478097; cv=none; b=oE8S2Yan4SJerUpKGFp2gX5Wsqye42hrrvqE7V70YsElFnr0dXD0gmr8JAsPRC6ND2FeOU1eZXscJaGZW13Swc6kDvrg9JhOs32gVRad4Jm/V6TgBkND9UpQ5Gd4T4N6TFXM82dRCpr5N32/FIaOSGdbNbc7oLwdtHojMyWbnIM=
+	t=1716478248; cv=none; b=YlRXlM0SBgs0RQwDyUafalta9J4Ut4Ua7otXiRmdtvin2llGr6QnzRmnP9yc6bf3YwVvJtpE0m2iZJmG1WMmi3y40j58B3Dj8o+ycBI3aTV1DHWL7qgrr4lJKv12yE/JPN6ukWPoH1brRQElNXU0hugIrA9kwhZgFxV6sl/7cC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716478097; c=relaxed/simple;
-	bh=lHxOGmWdlihXCTgHVfb+T5jI7AtAtZWCWZ88p7h5se0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tns0YyyedSbQ7eBhPpPtSGhxcUSqMn/m6CbbHuiCUcwGpkgoCqxmSXqsg6KZwE97FUZgJd4D1qybHg8YBj+MvkixeoGL8VasqUECpYIasIb9FZn7mT6h84YUQ7QNCYjzsFL91Ebuu9HPZB8iFMitQ6Qw1UkMNY1Ny6P6KJMc6RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=gSDqsHyG; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1716478248; c=relaxed/simple;
+	bh=+V3h8W+KJStcQS0bJvgI6ZikZdXVS5bHliBgARFsatM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SblTcHQEQhxGzgRlKrt9PmI4GHM+kU8t9muCa1zK/iW7xMDfkjbZXnBKJROkHA2GfswdkwhQnv8oxxdoRY2s0m14aHvFdWEVXrQgkN8mZtjO6x0oMOvfdNK3BJIXXu1A0SQCHCIkl0urCAnQphYBEkNGSqy/xH/3D19P0I4GyTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pu4I1US3; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gSDqsHyG"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-79305314956so168577685a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 08:28:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pu4I1US3"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5dca1efad59so2947021a12.2;
+        Thu, 23 May 2024 08:30:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1716478094; x=1717082894; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hmfyLYVCfyswQ3c7xb61Hr7O417fd5EFVF7yNKTH3w8=;
-        b=gSDqsHyGsOcsBt5SvjKR7sU1nSqFoxJueeACqx5yt/MllU2s416ZjOM9lrDCh53QDI
-         FFxmxXP0+D8KjGUd2EDlsNXBV7nqWQnBifaM39U6IBqXy20yAffFZ3I1qGPJP30xSacx
-         xe7C/3mEB2SkSRTUqbX84uQe015fxVKlT1NdobcTwbM+JD7tQgXJ7ZqCgfOiGyFPcJwD
-         iiYpFMjGd7WxGt/fzZZnn+aIdv2enMWPjI/Z8RlBL4/kRrC2L1ngQDoSNXwLGAG91sRK
-         svoZamPEk2fwm54unYH9UWDYWsk+RcJrTAJVLGk/BikofGjzWdVuwh2QcAXXH0nGMEWO
-         HicQ==
+        d=gmail.com; s=20230601; t=1716478247; x=1717083047; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+TJ/vg4jZgddhB/QmYZWS0itIk/bB/u3eDv8r97s2to=;
+        b=Pu4I1US3tWmAAWcVjpPxlGffdqLIBJ2ALOCahT761XleA1GHrrXgc3rA6FyK5TSYfI
+         CedOmEJMzobSsMyQ71FXl5KdRHqofoATZgTblh7R/lDyJFTvfZ+sB/dS8hq4LXqHcoTf
+         w8Yz/3xJS/b3+eO9+JJH2IomIPgfUg5egLpcFs5F1arzjB3spF5UcGTLBguiYgip+eSK
+         317gjGaGLuv9+Pxiv41mZFdhHnjWIMJ/RKvCqQGZTC3OPy6loy6JW62xJg1uTzs8cc2e
+         FL7E5A57UiCt4VacST6ZIi/aPw29a8ou2IHNF+XhurREalC1G/XZaa0kP2jrRIm9jRp3
+         QptQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716478094; x=1717082894;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1716478247; x=1717083047;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hmfyLYVCfyswQ3c7xb61Hr7O417fd5EFVF7yNKTH3w8=;
-        b=l+HcO3xcermjJxwG3An7qHjQq4qEL67qoaDeFvReC8ZCy32CdDFwUkxQowBk/umkIZ
-         7M2pxs5DcaMe6TUEAbEqZnRny2QdZKdzbvztAuntDCNbqbqAnCQ6xj4v1S0le3SJAf93
-         Z8eMaY909BLNGMgtBjkIJKEq8pyVRfLMVo0NFWO9lERwtq+QoAE1n/2WiORbx8qXa7/u
-         BgFbrHfKPz+82IRikJ0DBBqV/hhWO270cOP17dRDFeVDynPWgGagx5hPJzbFUOgXdBdF
-         oZzJJla5ikM38nI8Nh1fQm83rgDYI48d4wDWiD7vZQ1CicnBsyqntNn3/7Cle6uTmkwp
-         22qw==
-X-Forwarded-Encrypted: i=1; AJvYcCXoWf3EFY6CwJO+h+VYv3D6hnYDdHQhWGYUH5LoMSzemH3XD8LVSH0Iw/9l9LKic/B4Jy+miE+bkas2N/23eZurrvrKU0q/Hsa+bt3N
-X-Gm-Message-State: AOJu0YxiPAz/EB5OZOLSzSsJ2MmMIPCb4V1f9fIz/zPv2W0a6Psp5Bm0
-	PUBNA9bjsAVj8wtdKUnJuqUuWssn1VHZ+IHI+4/VdLMBHmr+kqVYFGFwPFUbTMI=
-X-Google-Smtp-Source: AGHT+IHTBzzwi4PjhcyoMTsLG+C6xPlPNq6v4XQ9szwtINNcWYZzWlV7kEZtWT8wPy12nifAJzgm5Q==
-X-Received: by 2002:a0c:f593:0:b0:6ab:8cbb:79f4 with SMTP id 6a1803df08f44-6ab8cbb7b85mr30572656d6.56.1716478094519;
-        Thu, 23 May 2024 08:28:14 -0700 (PDT)
-Received: from ziepe.ca ([128.77.69.89])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ab84cd6d93sm15777036d6.127.2024.05.23.08.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 08:28:12 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sAAMU-00Frqn-OL;
-	Thu, 23 May 2024 12:28:10 -0300
-Date: Thu, 23 May 2024 12:28:10 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Anup Patel <apatel@ventanamicro.com>, devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux@rivosinc.com,
-	linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-	Sebastien Boeuf <seb@rivosinc.com>, iommu@lists.linux.dev,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Nick Kossifidis <mick@ics.forth.gr>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v5 7/7] iommu/riscv: Paging domain support
-Message-ID: <20240523152810.GL69273@ziepe.ca>
-References: <cover.1715708679.git.tjeznach@rivosinc.com>
- <1ddb50a47c86d384157a979a7475b45f807ba81e.1715708679.git.tjeznach@rivosinc.com>
- <20240522-b25680db03b547123f1cd59a@orel>
+        bh=+TJ/vg4jZgddhB/QmYZWS0itIk/bB/u3eDv8r97s2to=;
+        b=N7R1nasLBrK45dE2KKHHlcBgE9Hziq0NoswvOPfCWoLB6aViKnSLjEFvssfTsVWh6p
+         LiAcijYhVTafBuafOjFqpPHkQPDUWxvLGDd3l57nPY1LdkzLKrlDjodz1N0BOV0NMTzL
+         0bCVn543e9l3jI4VLwPTeQD0zarzRJQwUhDmFhBmELVud+/t40WDG2jNSsaUFHSq2+iu
+         G41mOfuVUVy7oYXUwh7zrDdmIspMQ1y8u+5SHgDSTQt+6boc/fK6g0RH8wSg9ipIhiv9
+         M0CERnUGdCzMGccDuRVUiMSMEHUMk0c+CXVvJj6Oi7/I1vf0z7eRzqDMxls7tcRPW9b1
+         1NWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGeFQOS+rLk2I1c38v0wuBwdT4R0uIDVY8pDBAgbOFuf4kUUhp+/HS4DW/LJAUDH07xblHgtclbCcDE/1c7hM2QJjXPpN27kJC7smw
+X-Gm-Message-State: AOJu0Yx9DyeQuTS5nLNS5sDbPyc0iIvOwiYZMnoRcJKdJmzsSkTIfMK+
+	3Eh3RFXPDRrn22IapfpzrEZKIMQDTaDektj+8ZpXw1bkWTD3IFY9Z6sGUUGk
+X-Google-Smtp-Source: AGHT+IHJrh81xzTofpC0t+3Be/hM4LaYvb7jB+O2cq/ubsGUArSBEkaGGRYh8xm1XWtp/wIeJLmZ/w==
+X-Received: by 2002:a17:90a:8b04:b0:2bd:9bd4:359c with SMTP id 98e67ed59e1d1-2bd9f5bda81mr5246508a91.40.1716478246701;
+        Thu, 23 May 2024 08:30:46 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a804792315sm58076726d6.91.2024.05.23.08.30.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 May 2024 08:30:46 -0700 (PDT)
+Message-ID: <1da4f523-aa96-40fe-9c08-06d5743a3f27@gmail.com>
+Date: Thu, 23 May 2024 08:30:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522-b25680db03b547123f1cd59a@orel>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: phy: micrel: set soft_reset callback to
+ genphy_soft_reset for KSZ8061
+To: Mathieu Othacehe <othacehe@gnu.org>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Karim Ben Houcine <karim.benhoucine@landisgyr.com>
+References: <20240521065406.4233-1-othacehe@gnu.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ HGuUuzv+GKZ6nsysJw==
+In-Reply-To: <20240521065406.4233-1-othacehe@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 22, 2024 at 10:07:14AM +0200, Andrew Jones wrote:
-> On Tue, May 14, 2024 at 11:16:19AM GMT, Tomasz Jeznach wrote:
-> ...
-> > +static int riscv_iommu_bond_link(struct riscv_iommu_domain *domain,
-> > +				 struct device *dev)
-> > +{
-> > +	struct riscv_iommu_device *iommu = dev_to_iommu(dev);
-> > +	struct riscv_iommu_bond *bond;
-> > +	struct list_head *bonds;
-> > +
-> > +	bond = kzalloc(sizeof(*bond), GFP_KERNEL);
-> > +	if (!bond)
-> > +		return -ENOMEM;
-> > +	bond->dev = dev;
-> > +
-> > +	/*
-> > +	 * List of devices attached to the domain is arranged based on
-> > +	 * managed IOMMU device.
-> > +	 */
-> > +
-> > +	spin_lock(&domain->lock);
-> > +	list_for_each_rcu(bonds, &domain->bonds)
-> > +		if (dev_to_iommu(list_entry(bonds, struct riscv_iommu_bond, list)->dev) == iommu)
-> > +			break;
+
+
+On 5/20/2024 11:54 PM, Mathieu Othacehe wrote:
+> Following a similar reinstate for the KSZ8081 and KSZ9031.
 > 
-> We should wrap this list_for_each_rcu() in rcu_read_lock() and
-> rcu_read_unlock().
+> Older kernels would use the genphy_soft_reset if the PHY did not implement
+> a .soft_reset.
+> 
+> The KSZ8061 errata described here:
+> https://ww1.microchip.com/downloads/en/DeviceDoc/KSZ8061-Errata-DS80000688B.pdf
+> and worked around with 232ba3a51c ("net: phy: Micrel KSZ8061: link failure after cable connect")
+> is back again without this soft reset.
+> 
+> Fixes: 6e2d85ec0559 ("net: phy: Stop with excessive soft reset")
+> Tested-by: Karim Ben Houcine <karim.benhoucine@landisgyr.com>
+> Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
 
-Not quite this is the write side, it is holding the spinlock so it
-doesn't need RCU. It should just call the normal list_for_each_entry()
-
-Jason
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
