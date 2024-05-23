@@ -1,80 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8C8AD2C;
-	Thu, 23 May 2024 21:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFE0AD2C;
+	Thu, 23 May 2024 21:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716501014; cv=none; b=eGHvncvUr3Lxe0VmSAZBZLLX5vuKvzaAbUY9M4yfUeV3so90ZfTEc2cvfdP7NCYHJojS5IkqfzPWRU04VCthQqccGpQePQemAAtqiMpkHNzaEDHT9rXULxkow/8egDWxTvjYT9tOENRlWYzMcF/rZAqE498UHXd/D/sJzAIZmJs=
+	t=1716501045; cv=none; b=SGeRRlMw/1OFOxPvTHQJkUk1O5xMYHUBKhsi/8wxdvcT141YxqoCPhGweKp/T46oRG2cKu/3awthuaDn4guoPNL3PFSnzBmPUDq5udIxRKYmcG5bQWNNqVKHrsjFvfeiH/orCcEYNeO5OPLdHyvellFtcjaChvgVklAI2ibrb0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716501014; c=relaxed/simple;
-	bh=y9jUjPCs66IgzlFQvFQEovD3bg4Oymvy7fROCylRCcM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=T9GK2mjXopyensH+IbPKrg5XaTmOUth44sBxHYDR/Ye7K61HzjAvILFSgZvaw11ADlWRVEg7ftp7amPmT/Gar+ryMGutQnLxzSj5yas6jAtbl4wd488vkxlTkJTJ999d5MoZcKEL9/6/qI7l1lF2g9+VRWQWWe67Um1XS8wopu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKqDxAPB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716501045; c=relaxed/simple;
+	bh=QY5gAbZY+4cKbXsw0bbAcrIJOcFMAssBPba5NZSvh8M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LeXbYYY+vRjcCwd44eVYJFoczZW9JaGn0rmouL2Vbwu4QUjXqW+9p6M0BFuZEYwbc+NiBlvCTRXhn8capHcxpihOtIFO3eZAscVi75tRloKd65R37qV2Zw9wBQUQViFnS1Ubt1uOi81lhvgucL/HujBls3+iDXrPhKC8rt0t6fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WIzkQ0oV; arc=none smtp.client-ip=192.19.144.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKqDxAPB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81A0EC2BD10;
-	Thu, 23 May 2024 21:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716501014;
-	bh=y9jUjPCs66IgzlFQvFQEovD3bg4Oymvy7fROCylRCcM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=OKqDxAPBy1ziNNj6ifJ7gfV590aAM6KC4phZguv9zawj+RBBaEwdBc3FCrG7vAXCn
-	 vO2bO6HhLJuak/8de72bVQbZxVkek5fDw0CWxQsxi1m1ovRDSwxDS4chOHQemRL3A2
-	 bbfuzZWek/33mvTaZB1h5vnE5AlSIoVM53aVrTiCOE8r6Yf3oVzjGcMPDkLVYf9eY/
-	 RbdbrSnK9pvQIyuC0/of/Kn5kMSheBJQQm35RvVIilMvgYaziOzYKANjiDTpBopfS1
-	 czt6um27o8dpEEPT/pbhsAMKWbfEoDfpOe/1BuNz+alc6wzzJTiGMNRp40sBftMcOL
-	 33npukBoYGTKQ==
-Date: Thu, 23 May 2024 23:50:10 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Wolfram Sang <wsa@kernel.org>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-	Andi Shyti <andi.shyti@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [GIT PULL v2] i2c-host changes for v6.10 - pt. 2
-Message-ID: <3dthoxafgruyxkndp6kws7ejoetd52xedofu32aapmja54epvb@mbdgcvnx2dit>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WIzkQ0oV"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id A0AF4C0000D4;
+	Thu, 23 May 2024 14:45:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com A0AF4C0000D4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1716500728;
+	bh=QY5gAbZY+4cKbXsw0bbAcrIJOcFMAssBPba5NZSvh8M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WIzkQ0oV+HCEkZwGQp1hF/3DIzIgPL+r4Fwo1mTbB/vXHY/1aGny5pH1of350/urs
+	 8snlxB6oALA8zr+L3QwbgMyljHZe4rb99Pa5BtdupsMvBzTfUxDIRk0dNo7LmrImLl
+	 l23JQ/xg7gJcB2fQu0Huw+y6ZBqOA4QMNcfoCgFc=
+Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id A039418041CAC4;
+	Thu, 23 May 2024 14:45:26 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: stable@vger.kernel.org
+Cc: Jorge Ramirez-Ortiz <jorge@foundries.io>,
+	Avri Altman <avri.altman@wdc.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-mmc@vger.kernel.org (open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND...),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH stable 6.1] mmc: core: Do not force a retune before RPMB switch
+Date: Thu, 23 May 2024 14:45:24 -0700
+Message-Id: <20240523214525.200347-5-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240523214525.200347-1-florian.fainelli@broadcom.com>
+References: <20240523214525.200347-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Wolfram,
+From: Jorge Ramirez-Ortiz <jorge@foundries.io>
 
-I removed Heiner's commit from the pull request because, as you
-found out, there is still one remaining usage of the
-I2C_CLASS_SPD macro.
+commit 67380251e8bbd3302c64fea07f95c31971b91c22 upstream
 
-Only Christophe's cleanup is included here, and its description
-is in the git tag.
+Requesting a retune before switching to the RPMB partition has been
+observed to cause CRC errors on the RPMB reads (-EILSEQ).
 
-Thanks, and sorry for the inconvenience that brought to this v2.
-Andi
+Since RPMB reads can not be retried, the clients would be directly
+affected by the errors.
 
-The following changes since commit 6d69b6c12fce479fde7bc06f686212451688a102:
+This commit disables the retune request prior to switching to the RPMB
+partition: mmc_retune_pause() no longer triggers a retune before the
+pause period begins.
 
-  Merge tag 'nfs-for-6.10-1' of git://git.linux-nfs.org/projects/trondmy/linux-nfs (2024-05-23 13:51:09 -0700)
+This was verified with the sdhci-of-arasan driver (ZynqMP) configured
+for HS200 using two separate eMMC cards (DG4064 and 064GB2). In both
+cases, the error was easy to reproduce triggering every few tenths of
+reads.
 
-are available in the Git repository at:
+With this commit, systems that were utilizing OP-TEE to access RPMB
+variables will experience an enhanced performance. Specifically, when
+OP-TEE is configured to employ RPMB as a secure storage solution, it not
+only writes the data but also the secure filesystem within the
+partition. As a result, retrieving any variable involves multiple RPMB
+reads, typically around five.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags/i2c-host-6.10-pt2-v2
+For context, on ZynqMP, each retune request consumed approximately
+8ms. Consequently, reading any RPMB variable used to take at the very
+minimum 40ms.
 
-for you to fetch changes up to a6b250149c79ce75cbc9a791ae482f0ce31b8dd7:
+After droping the need to retune before switching to the RPMB partition,
+this is no longer the case.
 
-  i2c: synquacer: Remove a clk reference from struct synquacer_i2c (2024-05-23 23:34:04 +0200)
+Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+Acked-by: Avri Altman <avri.altman@wdc.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20240103112911.2954632-1-jorge@foundries.io
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ drivers/mmc/core/host.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-----------------------------------------------------------------
-a cleanup in the Synquacer code removes the pclk from the global
-structure, as it is used only in the probe. Therefore, it is now
-declared locally.
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 25c152ef5d60..67230d486c28 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -119,13 +119,12 @@ void mmc_retune_enable(struct mmc_host *host)
+ 
+ /*
+  * Pause re-tuning for a small set of operations.  The pause begins after the
+- * next command and after first doing re-tuning.
++ * next command.
+  */
+ void mmc_retune_pause(struct mmc_host *host)
+ {
+ 	if (!host->retune_paused) {
+ 		host->retune_paused = 1;
+-		mmc_retune_needed(host);
+ 		mmc_retune_hold(host);
+ 	}
+ }
+-- 
+2.34.1
 
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      i2c: synquacer: Remove a clk reference from struct synquacer_i2c
-
- drivers/i2c/busses/i2c-synquacer.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
