@@ -1,90 +1,66 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EE55EC7;
-	Thu, 23 May 2024 02:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9850C4690
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 02:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716430287; cv=none; b=faMU8aNDhfMnAyfQjyuKiaiWDpjVI5bzLepqdyZZ9H/C2+FmUJIL5wMOpWIYvJRuCBbYAV1dfqcFgss0lq5KiiLOdyVrp0A48zpL/Ra6mKBmu2gfW/cPrwzbpA01j+iwwfCRkf7a19g7ldw1xf3PUrCSHXmr0xaONW2RpkWltU8=
+	t=1716430359; cv=none; b=adkeJGlurdNd2hgLb5410dzb9l0SR5KBj8VfVkWdY1PCOJRXOabegQ49L4yI6nouQqfUMh+0bMsWY8HSvIodhapXv4EZDwPg1d4K+587WH43P4ZNXNUFvdb3gYveQdDxzBwgLi8gyyOiOXZnpfAR19SBawLTk6Uy+2/mbcbN5Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716430287; c=relaxed/simple;
-	bh=TGRqQ/gBYwVifINfQhz4oRdkJ1y9DO83Qzc6NF7fdg8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mIBiFpNBOtJ5WIrDyoeBC6ZUo7a1UUyf/sMGJp9mhsEdc4PEv68fysHfCd1yZ9OoXvYVWTZdiC5e4pBtrubJSG9LOnE5GVc+vuHBI4T90IjYC/oVpofIA/shuKl1/kxARAxRmfTmNqFhpkmRcTHtckK7p0L0e9hnrilSeCy6zgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id D2C2992009C; Thu, 23 May 2024 04:11:16 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id C191192009B;
-	Thu, 23 May 2024 03:11:16 +0100 (BST)
-Date: Thu, 23 May 2024 03:11:16 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, 
-    =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    linux-serial@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>, 
-    Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] tty: serial: handle HAS_IOPORT dependencies
-In-Reply-To: <20240405152924.252598-2-schnelle@linux.ibm.com>
-Message-ID: <alpine.DEB.2.21.2405230244140.1257@angie.orcam.me.uk>
-References: <20240405152924.252598-1-schnelle@linux.ibm.com> <20240405152924.252598-2-schnelle@linux.ibm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1716430359; c=relaxed/simple;
+	bh=95FrxY0on97XhfBNOOoiOqvSNWba/sx2apqOtIcLBbM=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fLLeI8P57pHA2ZKuBBUkmJ7qSrL2I7yzeO4QljSu0rQjIv6WH60gwdM20B5ehalMQmGif2sH4SvulrkzwL13prvUHvwR69OP/PM4YTGV/HnMAj/DOFyS1n49gqUJZzGpi+mxiJ7A7LmOZWe53fH7p6k7vMRFzKJz7RnHb8O+ulE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VlB3d4Js1z1S5dX;
+	Thu, 23 May 2024 09:51:25 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 79A9C1A0188;
+	Thu, 23 May 2024 09:54:55 +0800 (CST)
+Received: from [10.173.135.154] (10.173.135.154) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 23 May 2024 09:54:55 +0800
+Subject: Re: [PATCH v3 2/5] mm/madvise: Add MF_ACTION_REQUIRED to
+ madvise(MADV_HWPOISON)
+To: Jane Chu <jane.chu@oracle.com>, <nao.horiguchi@gmail.com>,
+	<akpm@linux-foundation.org>, <osalvador@suse.de>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240521235429.2368017-1-jane.chu@oracle.com>
+ <20240521235429.2368017-3-jane.chu@oracle.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <9a0d8716-a33b-8b11-9de6-9791aef6fb7b@huawei.com>
+Date: Thu, 23 May 2024 09:54:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20240521235429.2368017-3-jane.chu@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-On Fri, 5 Apr 2024, Niklas Schnelle wrote:
+On 2024/5/22 7:54, Jane Chu wrote:
+> The soft hwpoison injector via madvise(MADV_HWPOISON) operates in
+> a synchrous way in a sense, the injector is also a process under
+> test, and should it have the poisoned page mapped in its address
+> space, it should get killed as much as in a real UE situation.
+> Doing so align with what the madvise(2) man page says: "
+> "This operation may result in the calling process receiving a SIGBUS
+> and the page being unmapped."
+> 
+> Signed-off-by: Jane Chu <jane.chu@oracle.com>
+> Reviewed-by: Oscar Salvador <oalvador@suse.de>
 
-> diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-> index 0d35c77fad9e..38ac5236d2ea 100644
-> --- a/drivers/tty/serial/8250/8250_pci.c
-> +++ b/drivers/tty/serial/8250/8250_pci.c
-> @@ -928,6 +928,7 @@ static int pci_netmos_init(struct pci_dev *dev)
->  	return num_serial;
->  }
->  
-> +#ifdef CONFIG_HAS_IOPORT
->  /*
->   * These chips are available with optionally one parallel port and up to
->   * two serial ports. Unfortunately they all have the same product id.
-[...]
-> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-> index 47ff50763c04..54bf98869abf 100644
-> --- a/drivers/tty/serial/8250/Kconfig
-> +++ b/drivers/tty/serial/8250/Kconfig
-> @@ -136,7 +135,7 @@ config SERIAL_8250_PCILIB
->  
->  config SERIAL_8250_PCI
->  	tristate "8250/16550 PCI device support"
-> -	depends on SERIAL_8250 && PCI
-> +	depends on SERIAL_8250 && PCI && HAS_IOPORT
->  	select SERIAL_8250_PCILIB
->  	default SERIAL_8250
->  	help
-
- This is clearly wrong, there is PCIe 8250 serial hardware that does MMIO 
-only, so the option has to stay possible to enable.  I have such hardware 
-as shown in this log:
-
-Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
-serial 0001:01:00.0: enabling device (0140 -> 0142)
-serial 0001:01:00.0: detected caps 00000700 should be 00000500
-0001:01:00.0: ttyS0 at MMIO 0x600c080401000 (irq = 40, base_baud = 15625000) is a 16C950/954
-serial 0001:01:00.0: detected caps 00000700 should be 00000500
-0001:01:00.0: ttyS1 at MMIO 0x600c080401200 (irq = 40, base_baud = 15625000) is a 16C950/954
-
-which is from a POWER9 system.  Which as you may know has no PCI port I/O 
-support in hardware, so it is quite relevant here.  I'd like to keep this 
-PCIe serial option functional with my system.
-
- Also your change itself modifies 8250_pci.c (cited above for reference), 
-which would make no sense if SERIAL_8250_PCI was permanently disabled for 
-!HAS_IOPORT.  Shall I take it than that the Kconfig change I question has 
-been made merely by mistake?
-
-  Maciej
+Acked-by: Miaohe Lin <linmiaohe@huawei.com>
+Thanks.
+.
