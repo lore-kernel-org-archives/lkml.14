@@ -1,52 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5864D14BF87;
-	Thu, 23 May 2024 13:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0321813BAC3;
+	Thu, 23 May 2024 13:20:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716470379; cv=none; b=ueeUPrxcwKbnSmKJsDb+0q3DciLTBs7aKzEPkT0v/whC8PS0RnkwkucBvIX8Ts0hCCdybT77r6lKGKZbgAa+Sk4qyubZbebhcrXdKV6JBbZnMnOJvBJhlHqc0GmCqFPx3Nl0uMKQy+DPnNL1tzpNYAnnpF3Yyzg9ps4Mc9UuaK4=
+	t=1716470453; cv=none; b=EgSpY1JNbY+13AFINBZ6wz+MSiaNT85xY0EwfJNW7phGzvAuUBfVftqlUHoSFagwqOZimC+JnV3+uM/RKoZrgRAm4yVSXpH1rVctom/pJxBiiQOmt5lwX3nq+N3QzeGlyRYU3oy8FEqyeXVOE1pWjtjVd7bqwMsAZRy21qxA/s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716470379; c=relaxed/simple;
-	bh=zZ3XjVEYiN/8uyKfpWtkHMKyalnuSZD3ionATMomS90=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EK4O1fYOZe0MfNVRVWBTiUm012195Ih0ah908IH9S0BBoat09uAhzo8Q6jYDT8SNwPuWHdb1xAk6QypAmu57npt3EkUaFOGBFeabUxBUEFPZ7xIw0W9Z8mGJcqMHXWX41A4mk+DktBheAGgiJB9jNehVWOUEzddqIu6way1dLow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXqoJMS+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716470453; c=relaxed/simple;
+	bh=ar6qY6T96THmaK4PF+VaWr6N1OIeuEpfrHMygoEs2Zo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EIBZJal2t7JVsc+sQ2JjCNKQ/5cp5zKcNTGrJQvA55T+DNx4ozRimwzbE1gIPp/e4kjzT9uCtkAJPSANuM5mD9/59Mma3JolRhsP+LtVs1TSh+58FPCFyTDbdDg/+Ed8M6YZH7+QRm5WnebjAK8JRxjZfXdCWikAtUvliTUstPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QEvt5MrH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXqoJMS+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8764C32786;
-	Thu, 23 May 2024 13:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716470379;
-	bh=zZ3XjVEYiN/8uyKfpWtkHMKyalnuSZD3ionATMomS90=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QEvt5MrH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06851C2BD10;
+	Thu, 23 May 2024 13:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716470452;
+	bh=ar6qY6T96THmaK4PF+VaWr6N1OIeuEpfrHMygoEs2Zo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=lXqoJMS+rfZT5J2CHvzN5HBbOj7EuXxR9om2KmZf/FtJL4ibhUzh4WX+hIfuifODW
-	 lPmbyasC2Xkp0RluUUZ1Mhn1oTLaD0YkDtIxEsWL2jV7kMhmHKRVyiyk8Ww1uG80pB
-	 HgEvCkH0SzCHppeCG7kRu3YP0Hn5R5eIN8L5R94XrxjtmptjMDrGAAsLDwLWt1Yobq
-	 Y3+zGWgImT7HbkFP26r2/Pku4+mFL4UbqWga8Tq68fZgP/pd9VClncuwuqYrrZ4Xg1
-	 yvknr5OTjD9QmQt8Ko3Ft1luFBqylPJYEGajybbAc1QoYY668+sUC9GaugilKS2waq
-	 j6ryROqOAs+Ig==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-integrity@vger.kernel.org
-Cc: keyrings@vger.kernel.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-crypto@vger.kernel.org (open list:CRYPTO API),
-	linux-kernel@vger.kernel.org (open list),
-	linux-security-module@vger.kernel.org (open list:SECURITY SUBSYSTEM)
-Subject: [PATCH RESEND] KEYS: trusted: Use ASN.1 encoded OID
-Date: Thu, 23 May 2024 16:19:26 +0300
-Message-ID: <20240523131931.22350-1-jarkko@kernel.org>
+	b=QEvt5MrHT6ukSpbUXSx8wDujylPunhQ+jC96x4IW+Alr8JAg5k2r/I1HB/R6hCSDO
+	 okAX1Z2Qa8mdEmmtFsF26b8wJN+IhmcklXpjzPYram0QvPrB9KjunzSQjs70MmtkPc
+	 4AcC0BS+Uf0i6yXW5X9rX70HOSJRcrOFHHhA9LUU=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com,
+	broonie@kernel.org
+Subject: [PATCH 6.1 00/45] 6.1.92-rc1 review
+Date: Thu, 23 May 2024 15:12:51 +0200
+Message-ID: <20240523130332.496202557@linuxfoundation.org>
 X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,181 +52,232 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.92-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.1.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.1.92-rc1
+X-KernelTest-Deadline: 2024-05-25T13:03+00:00
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-There's no reason to encode OID_TPMSealedData at run-time, as it never
-changes.
+This is the start of the stable review cycle for the 6.1.92 release.
+There are 45 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Replace it with the encoded version, which has exactly the same size:
+Responses should be made by Sat, 25 May 2024 13:03:15 +0000.
+Anything received after that time might be too late.
 
-	67 81 05 0A 01 05
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.92-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+and the diffstat can be found below.
 
-Include OBJECT IDENTIFIER (0x06) tag and length as the epilogue so that
-the OID can be simply copied to the blob.
+thanks,
 
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
- include/linux/asn1_encoder.h              |  4 -
- lib/asn1_encoder.c                        | 91 -----------------------
- security/keys/trusted-keys/trusted_tpm2.c | 10 ++-
- 3 files changed, 7 insertions(+), 98 deletions(-)
+greg k-h
 
-diff --git a/include/linux/asn1_encoder.h b/include/linux/asn1_encoder.h
-index 08cd0c2ad34f..afeefdfe2525 100644
---- a/include/linux/asn1_encoder.h
-+++ b/include/linux/asn1_encoder.h
-@@ -8,14 +8,10 @@
- #include <linux/asn1_ber_bytecode.h>
- #include <linux/bug.h>
- 
--#define asn1_oid_len(oid) (sizeof(oid)/sizeof(u32))
- unsigned char *
- asn1_encode_integer(unsigned char *data, const unsigned char *end_data,
- 		    s64 integer);
- unsigned char *
--asn1_encode_oid(unsigned char *data, const unsigned char *end_data,
--		u32 oid[], int oid_len);
--unsigned char *
- asn1_encode_tag(unsigned char *data, const unsigned char *end_data,
- 		u32 tag, const unsigned char *string, int len);
- unsigned char *
-diff --git a/lib/asn1_encoder.c b/lib/asn1_encoder.c
-index 0fd3c454a468..c0db3cbebe89 100644
---- a/lib/asn1_encoder.c
-+++ b/lib/asn1_encoder.c
-@@ -85,97 +85,6 @@ asn1_encode_integer(unsigned char *data, const unsigned char *end_data,
- }
- EXPORT_SYMBOL_GPL(asn1_encode_integer);
- 
--/* calculate the base 128 digit values setting the top bit of the first octet */
--static int asn1_encode_oid_digit(unsigned char **_data, int *data_len, u32 oid)
--{
--	unsigned char *data = *_data;
--	int start = 7 + 7 + 7 + 7;
--	int ret = 0;
--
--	if (*data_len < 1)
--		return -EINVAL;
--
--	/* quick case */
--	if (oid == 0) {
--		*data++ = 0x80;
--		(*data_len)--;
--		goto out;
--	}
--
--	while (oid >> start == 0)
--		start -= 7;
--
--	while (start > 0 && *data_len > 0) {
--		u8 byte;
--
--		byte = oid >> start;
--		oid = oid - (byte << start);
--		start -= 7;
--		byte |= 0x80;
--		*data++ = byte;
--		(*data_len)--;
--	}
--
--	if (*data_len > 0) {
--		*data++ = oid;
--		(*data_len)--;
--	} else {
--		ret = -EINVAL;
--	}
--
-- out:
--	*_data = data;
--	return ret;
--}
--
--/**
-- * asn1_encode_oid() - encode an oid to ASN.1
-- * @data:	position to begin encoding at
-- * @end_data:	end of data pointer, points one beyond last usable byte in @data
-- * @oid:	array of oids
-- * @oid_len:	length of oid array
-- *
-- * this encodes an OID up to ASN.1 when presented as an array of OID values
-- */
--unsigned char *
--asn1_encode_oid(unsigned char *data, const unsigned char *end_data,
--		u32 oid[], int oid_len)
--{
--	int data_len = end_data - data;
--	unsigned char *d = data + 2;
--	int i, ret;
--
--	if (WARN(oid_len < 2, "OID must have at least two elements"))
--		return ERR_PTR(-EINVAL);
--
--	if (WARN(oid_len > 32, "OID is too large"))
--		return ERR_PTR(-EINVAL);
--
--	if (IS_ERR(data))
--		return data;
--
--
--	/* need at least 3 bytes for tag, length and OID encoding */
--	if (data_len < 3)
--		return ERR_PTR(-EINVAL);
--
--	data[0] = _tag(UNIV, PRIM, OID);
--	*d++ = oid[0] * 40 + oid[1];
--
--	data_len -= 3;
--
--	for (i = 2; i < oid_len; i++) {
--		ret = asn1_encode_oid_digit(&d, &data_len, oid[i]);
--		if (ret < 0)
--			return ERR_PTR(ret);
--	}
--
--	data[1] = d - data - 2;
--
--	return d;
--}
--EXPORT_SYMBOL_GPL(asn1_encode_oid);
--
- /**
-  * asn1_encode_length() - encode a length to follow an ASN.1 tag
-  * @data: pointer to encode at
-diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
-index 8b7dd73d94c1..f732e01a9dc6 100644
---- a/security/keys/trusted-keys/trusted_tpm2.c
-+++ b/security/keys/trusted-keys/trusted_tpm2.c
-@@ -26,7 +26,8 @@ static struct tpm2_hash tpm2_hash_map[] = {
- 	{HASH_ALGO_SM3_256, TPM_ALG_SM3_256},
- };
- 
--static u32 tpm2key_oid[] = { 2, 23, 133, 10, 1, 5 };
-+/* Encoded OID_TPMSealedData. */
-+static u8 OID_TPMSealedData_ASN1[] = {0x06, 0x06, 0x67, 0x81, 0x05, 0x0a, 0x01, 0x05};
- 
- static int tpm2_key_encode(struct trusted_key_payload *payload,
- 			   struct trusted_key_options *options,
-@@ -51,8 +52,8 @@ static int tpm2_key_encode(struct trusted_key_payload *payload,
- 	if (!scratch)
- 		return -ENOMEM;
- 
--	work = asn1_encode_oid(work, end_work, tpm2key_oid,
--			       asn1_oid_len(tpm2key_oid));
-+	work = memcpy(work, OID_TPMSealedData_ASN1, sizeof(OID_TPMSealedData_ASN1));
-+	work += sizeof(OID_TPMSealedData_ASN1);
- 
- 	if (options->blobauth_len == 0) {
- 		unsigned char bool[3], *w = bool;
-@@ -90,6 +91,9 @@ static int tpm2_key_encode(struct trusted_key_payload *payload,
- 		goto err;
- 	}
- 
-+	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_NONE, 16, 1,
-+		       payload->blob, work1 - payload->blob, 0);
-+
- 	kfree(scratch);
- 	return work1 - payload->blob;
- 
--- 
-2.45.1
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.1.92-rc1
+
+Akira Yokosawa <akiyks@gmail.com>
+    docs: kernel_include.py: Cope with docutils 0.21
+
+Thomas Weißschuh <linux@weissschuh.net>
+    admin-guide/hw-vuln/core-scheduling: fix return type of PR_SCHED_CORE_GET
+
+Jarkko Sakkinen <jarkko@kernel.org>
+    KEYS: trusted: Do not use WARN when encode fails
+
+AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+    remoteproc: mediatek: Make sure IPI buffer fits in L2TCM
+
+Daniel Thompson <daniel.thompson@linaro.org>
+    serial: kgdboc: Fix NMI-safety problems from keyboard reset code
+
+Javier Carrasco <javier.carrasco@wolfvision.net>
+    usb: typec: tipd: fix event checking for tps6598x
+
+Heikki Krogerus <heikki.krogerus@linux.intel.com>
+    usb: typec: ucsi: displayport: Fix potential deadlock
+
+Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+    net: usb: ax88179_178a: fix link status when link is set to down/up
+
+Prashanth K <quic_prashk@quicinc.com>
+    usb: dwc3: Wait unconditionally after issuing EndXfer command
+
+Carlos Llamas <cmllamas@google.com>
+    binder: fix max_thread type inconsistency
+
+Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+    drm/amdgpu: Fix possible NULL dereference in amdgpu_ras_query_error_status_helper()
+
+Mark Rutland <mark.rutland@arm.com>
+    arm64: atomics: lse: remove stale dependency on JUMP_LABEL
+
+Eric Sandeen <sandeen@redhat.com>
+    xfs: short circuit xfs_growfs_data_private() if delta is zero
+
+Hironori Shiina <shiina.hironori@gmail.com>
+    xfs: get root inode correctly at bulkstat
+
+Darrick J. Wong <djwong@kernel.org>
+    xfs: fix log recovery when unknown rocompat bits are set
+
+Darrick J. Wong <djwong@kernel.org>
+    xfs: allow inode inactivation during a ro mount log recovery
+
+Darrick J. Wong <djwong@kernel.org>
+    xfs: invalidate xfs_bufs when allocating cow extents
+
+Darrick J. Wong <djwong@kernel.org>
+    xfs: estimate post-merge refcounts correctly
+
+Darrick J. Wong <djwong@kernel.org>
+    xfs: hoist refcount record merge predicates
+
+Guo Xuenan <guoxuenan@huawei.com>
+    xfs: fix super block buf log item UAF during force shutdown
+
+Guo Xuenan <guoxuenan@huawei.com>
+    xfs: wait iclog complete before tearing down AIL
+
+Darrick J. Wong <djwong@kernel.org>
+    xfs: attach dquots to inode before reading data/cow fork mappings
+
+Darrick J. Wong <djwong@kernel.org>
+    xfs: invalidate block device page cache during unmount
+
+Long Li <leo.lilong@huawei.com>
+    xfs: fix incorrect i_nlink caused by inode racing
+
+Long Li <leo.lilong@huawei.com>
+    xfs: fix sb write verify for lazysbcount
+
+Darrick J. Wong <djwong@kernel.org>
+    xfs: fix incorrect error-out in xfs_remove
+
+Dave Chinner <dchinner@redhat.com>
+    xfs: fix off-by-one-block in xfs_discard_folio()
+
+Dave Chinner <dchinner@redhat.com>
+    xfs: drop write error injection is unfixable, remove it
+
+Dave Chinner <dchinner@redhat.com>
+    xfs: use iomap_valid method to detect stale cached iomaps
+
+Dave Chinner <dchinner@redhat.com>
+    iomap: write iomap validity checks
+
+Dave Chinner <dchinner@redhat.com>
+    xfs: xfs_bmap_punch_delalloc_range() should take a byte range
+
+Dave Chinner <dchinner@redhat.com>
+    iomap: buffered write failure should not truncate the page cache
+
+Dave Chinner <dchinner@redhat.com>
+    xfs,iomap: move delalloc punching to iomap
+
+Dave Chinner <dchinner@redhat.com>
+    xfs: use byte ranges for write cleanup ranges
+
+Dave Chinner <dchinner@redhat.com>
+    xfs: punching delalloc extents on write failure is racy
+
+Dave Chinner <dchinner@redhat.com>
+    xfs: write page faults in iomap are not buffered writes
+
+Mengqi Zhang <mengqi.zhang@mediatek.com>
+    mmc: core: Add HS400 tuning in HS400es initialization
+
+Jarkko Sakkinen <jarkko@kernel.org>
+    KEYS: trusted: Fix memory leak in tpm2_key_encode()
+
+NeilBrown <neilb@suse.de>
+    nfsd: don't allow nfsd threads to be signalled.
+
+Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+    mfd: stpmic1: Fix swapped mask/unmask in irq chip
+
+Sergey Shtylyov <s.shtylyov@omp.ru>
+    pinctrl: core: handle radix_tree_insert() errors in pinctrl_register_one_pin()
+
+Jacob Keller <jacob.e.keller@intel.com>
+    ice: remove unnecessary duplicate checks for VF VSI ID
+
+Jacob Keller <jacob.e.keller@intel.com>
+    ice: pass VSI pointer into ice_vc_isvalid_q_id
+
+Ronald Wahl <ronald.wahl@raritan.com>
+    net: ks8851: Fix another TX stall caused by wrong ISR flag handling
+
+Jose Fernandez <josef@netflix.com>
+    drm/amd/display: Fix division by zero in setup_dsc_config
+
+
+-------------
+
+Diffstat:
+
+ .../admin-guide/hw-vuln/core-scheduling.rst        |   4 +-
+ Documentation/sphinx/kernel_include.py             |   1 -
+ Makefile                                           |   4 +-
+ arch/arm64/Kconfig                                 |   1 -
+ arch/arm64/include/asm/lse.h                       |   1 -
+ drivers/android/binder.c                           |   2 +-
+ drivers/android/binder_internal.h                  |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |   3 +
+ drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c        |   7 +-
+ drivers/mfd/stpmic1.c                              |   5 +-
+ drivers/mmc/core/mmc.c                             |   9 +-
+ drivers/net/ethernet/intel/ice/ice_virtchnl.c      |  22 +-
+ drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c |   3 -
+ drivers/net/ethernet/micrel/ks8851_common.c        |  18 +-
+ drivers/net/usb/ax88179_178a.c                     |  37 ++-
+ drivers/pinctrl/core.c                             |  14 +-
+ drivers/remoteproc/mtk_scp.c                       |  10 +-
+ drivers/tty/serial/kgdboc.c                        |  30 ++-
+ drivers/usb/dwc3/gadget.c                          |   4 +-
+ drivers/usb/typec/tipd/core.c                      |  45 ++--
+ drivers/usb/typec/tipd/tps6598x.h                  |  11 +
+ drivers/usb/typec/ucsi/displayport.c               |   4 -
+ fs/iomap/buffered-io.c                             | 254 ++++++++++++++++++++-
+ fs/iomap/iter.c                                    |  19 +-
+ fs/nfs/callback.c                                  |   9 +-
+ fs/nfsd/nfs4proc.c                                 |   5 +-
+ fs/nfsd/nfssvc.c                                   |  12 -
+ fs/xfs/libxfs/xfs_bmap.c                           |   8 +-
+ fs/xfs/libxfs/xfs_errortag.h                       |  12 +-
+ fs/xfs/libxfs/xfs_refcount.c                       | 146 ++++++++++--
+ fs/xfs/libxfs/xfs_sb.c                             |   7 +-
+ fs/xfs/xfs_aops.c                                  |  37 +--
+ fs/xfs/xfs_bmap_util.c                             |  10 +-
+ fs/xfs/xfs_bmap_util.h                             |   2 +-
+ fs/xfs/xfs_buf.c                                   |   1 +
+ fs/xfs/xfs_buf_item.c                              |   2 +
+ fs/xfs/xfs_error.c                                 |  27 ++-
+ fs/xfs/xfs_file.c                                  |   2 +-
+ fs/xfs/xfs_fsops.c                                 |   4 +
+ fs/xfs/xfs_icache.c                                |   6 +
+ fs/xfs/xfs_inode.c                                 |  16 +-
+ fs/xfs/xfs_ioctl.c                                 |   4 +-
+ fs/xfs/xfs_iomap.c                                 | 177 ++++++++------
+ fs/xfs/xfs_iomap.h                                 |   6 +-
+ fs/xfs/xfs_log.c                                   |  53 ++---
+ fs/xfs/xfs_mount.c                                 |  15 ++
+ fs/xfs/xfs_pnfs.c                                  |   6 +-
+ include/linux/iomap.h                              |  47 +++-
+ net/sunrpc/svc_xprt.c                              |  16 +-
+ security/keys/trusted-keys/trusted_tpm2.c          |  25 +-
+ 50 files changed, 866 insertions(+), 299 deletions(-)
+
 
