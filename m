@@ -1,177 +1,117 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4556E18643;
-	Thu, 23 May 2024 16:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716482179; cv=fail; b=KTvEfjocCKS6qVw/FIO8tn2ZfgPZdIVrAzJ1Kq72eB8k6NKEgsP5OggUz2v3l2tFPwZtLYr3S8Cup63/FkntVUofXXPr/5XxGOI258DAdF2fRAAabKU/iR6eEKDROKyk5Ox/S5KS1cifwsYq4MQ1ZseajyHx1ppQOZjBZn624lY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716482179; c=relaxed/simple;
-	bh=HLA3/bIg9SmEUIpIYcgixz9dc0e03C+7VkYP4o0r/IA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ByduiFJSgi5gByFM3m2q49nWUZJb/bxgGSCLjSTBsy9VARCHvbshFcvN+Y6mErCPMrGgGZpdOJnb62R/gkDl1cLd15012AZac+imtZFFjJcP8Xap0RIi3yjNnuqpp1mv0vjbvMx+ZL7GqjsjXF2qQajMxaZqoG/bU83xx2hzJOI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=syqnMX1r; arc=fail smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="syqnMX1r"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NG3ACG004520;
-	Thu, 23 May 2024 09:35:57 -0700
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3y9xy7tcsj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 May 2024 09:35:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aWipO7k9GzVgZbEpyrbiDhqI4bFCBz9XjCJOwX3SKO2/r8M5t2DV1TXBOSfoaeQst8zeDgYYQFtsNTWsB/EBEkBWQG9zQek+IBJV0V0jb6Bq4Kl0jGNZe7ob5dnU8fWvIprsxOzAm6VN/Fp3lKkqLyFHidrgrQEp8YAP2YZT4teDs5fEkW1kA78X3EcdGceEsk8RgQTdHDTzPgEkEz4sP1lRQnDtq93HOSpUT8epMENdEUB5udPK/yv4RGLDz72lpK5EeSKRLPbOYyHkU+0C++08rM1HfqUZEndpbFck6iFSjwJM1i+eT0IgPdngp5ihMpKPH6SpFK4Ht9QeGWqeuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Uo++/ZwhY/TaX2WKuVp6O2BUWTMUthltJHG/wRZfxHQ=;
- b=lzmwnIeyXQV/zaM/GIVSuQfNmp7zZj9FRQN4vnT5o1+ijrGC4Frsfrw60Rp7gWSTKp2/L4f6VAGGn0PpYH8ZgtNiNsqJte4dg/97el1bgpbjhW0CHEWXCUAsnZeIa9aqv1Hl/OoVyrd2O+CX51GGI4iWDyzsY489tYst1EdNHGMECzk5c6KloI1MAusRPCbN67ZmJH347/bMBsWE25p3yB/mE5rRV9Cl0mcQSDGzskr7jhRwor03AWYRjbpnMZPGDV/XkULU6KoXE+Nx5HVgEcbHE17zJsAsKApvVDELuU8ejei3IfLVjUXzNoLGZzgp2QxCo7CFceo9h1JT0on+dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uo++/ZwhY/TaX2WKuVp6O2BUWTMUthltJHG/wRZfxHQ=;
- b=syqnMX1rfyjgmx7iQmmqWlOe5zz0WFAbeazfRvUK0EOoG8gdE8c+w7WXI7FYXiK6Zj2Lesqp1FrT8VtjcpFDZ6UrAhUBfflm7skUJX3QUrMTNuVe2dIpaLtnHdamvW06JyFjo3KPF95RGCMUIXp2y7adFeOSisuGK5Cy0w2iR3g=
-Received: from SJ0PR18MB5216.namprd18.prod.outlook.com (2603:10b6:a03:430::6)
- by DS1PR18MB6147.namprd18.prod.outlook.com (2603:10b6:8:1f0::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Thu, 23 May
- 2024 16:35:52 +0000
-Received: from SJ0PR18MB5216.namprd18.prod.outlook.com
- ([fe80::2bf5:960a:a348:fad1]) by SJ0PR18MB5216.namprd18.prod.outlook.com
- ([fe80::2bf5:960a:a348:fad1%5]) with mapi id 15.20.7611.016; Thu, 23 May 2024
- 16:35:51 +0000
-From: Suman Ghosh <sumang@marvell.com>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>,
-        "andrew@lunn.ch"
-	<andrew@lunn.ch>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXTERNAL] [PATCH net] net: micrel: Fix lan8841_config_intr after
- getting out of sleep mode
-Thread-Topic: [EXTERNAL] [PATCH net] net: micrel: Fix lan8841_config_intr
- after getting out of sleep mode
-Thread-Index: AQHarOT3UyOxKcfaoUSXaQoYOaBJMbGlBGjw
-Date: Thu, 23 May 2024 16:35:51 +0000
-Message-ID: 
- <SJ0PR18MB52169D42D6D26244E003BCC8DBF42@SJ0PR18MB5216.namprd18.prod.outlook.com>
-References: <20240523074226.3540332-1-horatiu.vultur@microchip.com>
-In-Reply-To: <20240523074226.3540332-1-horatiu.vultur@microchip.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ0PR18MB5216:EE_|DS1PR18MB6147:EE_
-x-ms-office365-filtering-correlation-id: 3ee369ca-9ea4-4021-b89a-08dc7b4668e0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230031|7416005|1800799015|366007|376005|38070700009;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?l4sJLEWtCNEp0nUpZZoB8uK4YiB5xrWeDEmnzTevTLNfZDwgLxGE/SxzHHcj?=
- =?us-ascii?Q?z9bUsu8k6E9rgppzLT/Bq2lRGDP5rsyXZyBJJQyXDqCawGRlhDJBBT9E7lWv?=
- =?us-ascii?Q?Oe7G2wmTfQc9i6Cc404qBxabT6mk9WhMamPme7VRNtYVg084QxR5WJn8IzhA?=
- =?us-ascii?Q?XwdOTHybvoc7t2WbUCeQxjGk0fQiNeWZnr5XvjlokCqr3P5CAYFm0gLFAXcP?=
- =?us-ascii?Q?sS3MIQoTWJozixycWNMzN97DMU8HjEtgZH7A1QyxsF9e2Dw6+/Y2GY/SABeq?=
- =?us-ascii?Q?P0vg0v1CtWDik4DikY9lhPSpYJ/pZV+oYlyYUzeFGnN3uf5mNAt0XiXVyZ3X?=
- =?us-ascii?Q?djmlmfRva/VKkPFo33tcUHvlEfKaM1ZXrmai8fZo5a4SMFZOzhWZyV948+53?=
- =?us-ascii?Q?cgIJXMUJMKZNNHYBqA2+OpmNyg5pogeDYEPQipLwp7lbNoo/pbHptYkp87on?=
- =?us-ascii?Q?vri7pdYdHeVfOCwVxlM/Ng2/AuUVXdOEW7fB1J9BejnS136slconQUc8YZWR?=
- =?us-ascii?Q?Iy4K51ZB8GaRaZRlh7JBscZxq8CN90Y2QwSdIdP6xNPBG1CVjrkeEwhsiVqr?=
- =?us-ascii?Q?CEGkjWs7Ea8Mm6tAHzDn+840J4Gmk97NVWsXrsiDBkxzEzSFHznBJdhZUOHV?=
- =?us-ascii?Q?Q/DHiL7zIDaK84Z9aO//dymAKE3Km7KFqKtyiHddJ2cxli7NS54cxCzs720F?=
- =?us-ascii?Q?R9kdih7ciRhyH804xMykuRlQS8LLx5bI1hfh7PDpvahqoZKSaVUeluOm3BtQ?=
- =?us-ascii?Q?SBE8f7B/eJDZIfhUryLFR57VK32Kk2YmSUekH2hVHeSdzn9+fgfFV1Dbilqi?=
- =?us-ascii?Q?KQmVfbhCp5UUz5CrHcCK7LwQBP05S/7p+gQBLqPeTCBfKqvd3TLoPsdN+Efb?=
- =?us-ascii?Q?99g93ug2yYawMg8hYO4WKpLbRl1PyXOeC76fnX3ZB95TWpsaSUUtUD8yBtrk?=
- =?us-ascii?Q?hDmU0n3ElLFIYAb0VmL3Y/eCLnMzzfQmK/uW6et/bBtf4PSWZQyNuV7Vu4lG?=
- =?us-ascii?Q?aegFyezjv3UdIWCPGfc3d/dTThv0fd+0nsJq7wdFQD+qUk/gkaPwlNKcmvcm?=
- =?us-ascii?Q?TvNNWi0KmEEhAF13LNR1oJ+wqPpS2g1D+yhD2EGXjp4NaIBSzLKTecq9k8t/?=
- =?us-ascii?Q?/PITx+e78uvHBEezioaM23aJ5b/7abI25OV6pDiSiudeTRENeoGgPOEkO7R3?=
- =?us-ascii?Q?00IH3Emyick1QbLyCZ1PmAuUESDGGUPzmbH3aDRGgChaYzXVgcnV074RMYnd?=
- =?us-ascii?Q?XpFdp2vI/4WxWlfzcf8cxuTpqbiaDf9wb4ggc1PjoJl7NoR6wFeOErFHXX5x?=
- =?us-ascii?Q?tOEub2iM9g1a4YxIA4AYG0KmF2PZTZf9sQoX/5wAJv28SQ=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR18MB5216.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?qIcxO1n4uCvVdQbvSqylrgZr/FWe5wENwCPr9Kpy360nSZKQeh180wi6HgFB?=
- =?us-ascii?Q?8gjhFN5vLU6IEIrriS+UucFpP8ys6dr/OrcTWUIg6g3FwgLv1ReN333yO6xl?=
- =?us-ascii?Q?JrNRGa5Ypvh7qtMa+4M5Hl1vn3AF1Ut3xCkVSRvW3doEg/uUAzpEvA3E5gEk?=
- =?us-ascii?Q?WAei/dj0QBvROCacfZHu3ImoRaUkruvsqXJsekkpWBTFiiCQe284vDKFfBtI?=
- =?us-ascii?Q?d0UJBRCsqyux1fXnwUbg6gL1s5espW2ohO2k/SO5w1SCVFJ91TBAOkf0BTZk?=
- =?us-ascii?Q?RyRjpvrACqqAAcI8t4wo0ElcwAAvOI1y2dxG/pF11MziGzCBn34GZ89dNGh6?=
- =?us-ascii?Q?WpMHfo6HzHmHZbommnuoUwCXFCyTTEHlx/9hlsxPPZNX61UbpatVxDVcR9P7?=
- =?us-ascii?Q?ya2mvWTXsmLUapVfgoYH+PtWlg6YHVKtwTmeA9GLlB48yFH+Hz723emiABXJ?=
- =?us-ascii?Q?SpLbMVQEouQ4tIGyxPI+8FfuNdBicqKnRTnMssKO+pxfccWYdXP7kTXWwj4m?=
- =?us-ascii?Q?vQdzqyc2U4caURP/3we8t5u9jbu4BzOWLtUle0ErN2XAFWngvkoTppArEDQS?=
- =?us-ascii?Q?ZkWG8HzYAKUn8kkzPemslxoiP2X6uqo3bkT4WJntzdFUrPMm5cM940lFd2dH?=
- =?us-ascii?Q?Ac9wi7FCPoTaLXy3FbYmLlUqG2JLP8J8/1r82RGpCVvJiyGNmCjB5iT7NhP2?=
- =?us-ascii?Q?EDCSBZhbxxTArkPHH80n1wRFqnonQUg34/KVGl5XYzCzXL+wJ7qe0Milz//u?=
- =?us-ascii?Q?DC1Hd3n5EY7+GUXiABT5j+YPeAnsvhXt3UVMPxr5915Zt4/IwTRxmNNQi2N8?=
- =?us-ascii?Q?DvWMyzPTcCZrae0LQc+jXCGhkzDG44Fgm8VMZRVm2wsiIrlE2bZn31wFot55?=
- =?us-ascii?Q?fQJsS6+Vl1NPrVAqDsxlWbepqqkvTmCk2BiQ2cYQomRfJsn6TXWTAfkxO1ch?=
- =?us-ascii?Q?VkgLPhOaPWcVuZ4E70Cdqq0Y78YNn+VsFPK/XKnO2cVTqg65lnKWFuGUYCmq?=
- =?us-ascii?Q?oE+9lvzhepuxL7P7mBQdxxN409lZiHVWRV4BqV77UBw/jTfqF8BBZ+JyATA5?=
- =?us-ascii?Q?m40N2jYOwwcTW89ULNfWMJR2rVmrx2Pn1u61bTv8kJuE0wEjOCnFnQywNLcb?=
- =?us-ascii?Q?DZIOfSzU27OsvD192Go9FjSFCCs6lqsotOZXUODQz6uqE/zNRQKo9Cvtf4wV?=
- =?us-ascii?Q?fShVq23L83maKFhRs/kZmD5pjYqhBD5N2Um0EixcC+34ly189ud4Y1zswWdy?=
- =?us-ascii?Q?dRv4dEaxoidB6KVW//NAPOK7QbWZjelK+73Y+O/T0Nh7OqOrsN5EuxtWLxAV?=
- =?us-ascii?Q?AG2ZiakgTDvM/Bb5/L4/lcCjgajt9WNLqnSJvDw6ZgesVnvhw+usSxMyQb9m?=
- =?us-ascii?Q?wfOmeo7IngIm5QUQmW3bb3k6YMkoa2nORtoxpHBeqGCh1NekFcpEiDTTJtgx?=
- =?us-ascii?Q?UuLh7N13C8EjL4l3n/OdsM+S3Pyj4vEYXDu4h9GM0J1n67FEsoGynlX/ASwF?=
- =?us-ascii?Q?D10XVeNHwQrbRVdcTg1xkHml36WFckjfLIsLfh71tuAvn8ebwlp6Il4svE2T?=
- =?us-ascii?Q?xfqxTM+BIG52csi/VmoXQD8/ZAfBuWDqx/RScgYM?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19999D304;
+	Thu, 23 May 2024 16:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716482256; cv=none; b=aGzO9Ywm5owY/bMiVYb0+CYrXXnGVU0/vgfGJ/gZSU8KBco3tgod0atU/TkM5FIK/zSiFocJ8va7FgruWxfYdbYSR1Rl4bo8urtNaZ3pK3rpSQ+dggFpT48QuI2p3W9KbjWPuOUqI6RTGbCm/7Iv7SEsw0flmrTqXDU6upmHs6M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716482256; c=relaxed/simple;
+	bh=qgkGDIjpEJfoA4a2AkMyyAveyC2iOGefHU0U1EkSN+k=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UUIfvDcBstNOeEs6fwkZZxKTvYI58kQDnt58R3M7sOi1If1jQg+0EVK6BtjXfSHQepmKQHo34hvqvk97PZk8PDjdf4p823+DNwlGXfyj2FAoXyA1RaKiXNAQypIPCxJwvb9JqdLBpY9dLsXPQGU9GPLsWuyxgtdp5puoSn9bdm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VlYj14d1vz6K9XP;
+	Fri, 24 May 2024 00:36:37 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 443F5140B3C;
+	Fri, 24 May 2024 00:37:29 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 23 May
+ 2024 17:37:28 +0100
+Date: Thu, 23 May 2024 17:37:27 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Gradinariu, Ramona" <Ramona.Gradinariu@analog.com>
+CC: Jonathan Cameron <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?=
+	<noname.nuno@gmail.com>, Ramona Gradinariu <ramona.bolboaca13@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "corbet@lwn.net"
+	<corbet@lwn.net>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>, "Sa, Nuno" <Nuno.Sa@analog.com>
+Subject: Re: [PATCH 4/5] iio: adis16480: add support for adis16545/7
+ families
+Message-ID: <20240523173727.000040ea@Huawei.com>
+In-Reply-To: <BL1PR03MB5992653C0A426BAC69D7033197EB2@BL1PR03MB5992.namprd03.prod.outlook.com>
+References: <20240423084210.191987-1-ramona.gradinariu@analog.com>
+	<20240423084210.191987-5-ramona.gradinariu@analog.com>
+	<20240428162555.3ddf31ea@jic23-huawei>
+	<e62f8df4b06abc371b1e9fe3232cb593e468d54c.camel@gmail.com>
+	<BL1PR03MB5992DEBF82C0DB7BDC5EA0FF971B2@BL1PR03MB5992.namprd03.prod.outlook.com>
+	<20240429204027.3e47074a@jic23-huawei>
+	<BL1PR03MB5992653C0A426BAC69D7033197EB2@BL1PR03MB5992.namprd03.prod.outlook.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR18MB5216.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ee369ca-9ea4-4021-b89a-08dc7b4668e0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2024 16:35:51.7064
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: H0wyflwBrAV3r2+LnHqSfdki23qI/cBQJt+kymgBE9UHGW7li/S4heUPeWL3QeMYUveFeP20gK0/LCbpwv9bpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS1PR18MB6147
-X-Proofpoint-ORIG-GUID: qHt802B7hr6AFEscS8AHbHNbXqP9uxoQ
-X-Proofpoint-GUID: qHt802B7hr6AFEscS8AHbHNbXqP9uxoQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-23_09,2024-05-23_01,2024-05-17_01
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-> 	if (phydev->interrupts =3D=3D PHY_INTERRUPT_ENABLED) {
-> 		err =3D phy_read(phydev, LAN8814_INTS);
->-		if (err)
->+		if (err < 0)
-[Suman] Hi Horatiu,
-Should we modify this check for phy_write() as well?
-> 			return err;
->
-> 		/* Enable / disable interrupts. It is OK to enable PTP
->interrupt
->--
->2.34.1
->
+On Wed, 22 May 2024 12:01:21 +0000
+"Gradinariu, Ramona" <Ramona.Gradinariu@analog.com> wrote:
+
+> > 
+> > If you are using bursts, the data is getting read anyway - which is the main
+> > cost here. The real question becomes what are you actually saving by supporting all
+> > the combinations of the the two subsets of channels in the pollfunc?
+> > Currently you have to pick the channels out and repack them, if pushing them all
+> > looks to me like a mempcy and a single value being set (unconditionally).  
+> 
+> I did not get a chance to look at this again until now. Unfortunately, a
+> memcpy will not work.
+> The current implementation is as follows:
+> /* The lower register data is sequenced first */
+> st->data[i++] = buffer[2 * bit + offset + 3];
+> st->data[i++] = buffer[2 * bit + offset + 2];
+
+Ah. That's horrible... :(
+Thanks for pointing that out!
+
+> 
+> The device first sends the 16LSB, then the next 16MSB in big endian
+> format.
+> 
+> So then I wonder, can we keep the same implementation logic? The code
+> is implemented in the same manner for adis16475 driver which uses the
+> same channels data packing approach.
+
+Not much choice and given the need to handle a mixed endian stream
+you might as well do the packing here as well.  So sure, keep the
+code as you have it.
+
+> 
+> > 
+> > Then it's a question of what the overhead of the channel demux in the core is.
+> > What you pass out of the driver via iio_push_to_buffers*()
+> > is not what ends up in the buffer if you allow the IIO core to do data demuxing
+> > for you - that is enabled by providing available_scan_masks.  At buffer
+> > start up the demux code computes a fairly optimal set of copies to repack
+> > the incoming data to match with what channels the consumer (here probably
+> > the kfifo on the way to userspace) is expecting.
+> > 
+> > That demux adds a small overhead but it should be small as long
+> > as the channels wanted aren't pathological (i.e. every other one).
+> > 
+> > Advantage is the driver ends up simpler and in the common case of turn
+> > on all the channels (why else did you buy a device with those measurements
+> > if you didn't want them!) the demux is zerocopy so effectively free which
+> > is not going to be the case for the bitmap walk and element copy in the
+> > driver.
+> > 
+> > Jonathan
+> >   
+> 
 
