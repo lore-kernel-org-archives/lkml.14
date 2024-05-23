@@ -1,236 +1,173 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0997411720;
-	Thu, 23 May 2024 16:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD93EAD31
+	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 16:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716482080; cv=none; b=Adqyu749NtI8j4tos49KBFTrctfMK0zDhLRc50Qio4SLvzl8tf9LJlXklIMFUjamIcgwBZKRyDCB2WKYJXlXXg+kdlhWFMOcJN6KmL6vgy427MEb8tdJJc4rw++cgoS/fVxyyXh9khQMqcz8unFz9QMLf/FpvF2kkHB6YU8/XhQ=
+	t=1716482157; cv=none; b=Fd+WZIKTxncAikG5G+0Y5RkmM8ySCrAptEquCyd7a9KXc649sgw/UF20NC/0whxTuKO9dNZ3tT9GBDv3GtD64l1cB3rStAjtYSFuD5oqXCLQXnXzEV5gxyFCg2t84GyGDCZXjMw4/q42xbZCDEBQ7JK7XHzb6Q9cLZtYpg6zdAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716482080; c=relaxed/simple;
-	bh=L78QcW1WN+AWEud7mRm7LZni1MC/yOU7IM66UMmp1TQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tS+xsTX1wyoQowveLXdLHqgOkSVsjkPnTwbgwPp+SrGkh3regIzjBBaKapnhtuQAQmyfm5s+w6riQTlj4g0aYlut0uMYmf1T2mZWwupqpjUc3If/1VzhuFKDLuAxyZF71ffqBSShGDfGGCkVHs18oBMPf1i+SaPgjP36maAkZv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MblfHEwQ; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MblfHEwQ"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-df4ea041bd7so1918408276.2;
-        Thu, 23 May 2024 09:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716482078; x=1717086878; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RF564b7ceuJtJUxskBv60/ls7oKCNIrLuMPsIluNfCk=;
-        b=MblfHEwQ76SIJUIQ7PVoLN/BWIYKOPutHZVSe8i1M5+S8TbOmsh4t0eph6ECzKWijW
-         fy3boPxPv3+/whLoeWXZxkB82SMs9vPi9YxmUMAtSwjI7Ca8RGVhzMjClQnIGOy35RDQ
-         R/wIBxs1nhREJ+3BVNWMi55lHBK/semTRBXWReEfdWuJ3CXrQzb0m14RiTq5+Egq6ZPP
-         bP5chayeBV+FvW7eKQTba22JMAOAuNNnKTHoZZr+rKzhFG7GkGaKH2UBWxuOduekw8HO
-         WPTt89QndswvlNTXYgax4+o+WG0NCvjFX/KqBzQZS8qe/WXloLyW5Axd/iilnC5bAct6
-         /j/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716482078; x=1717086878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RF564b7ceuJtJUxskBv60/ls7oKCNIrLuMPsIluNfCk=;
-        b=AAwlUxkOTjVvtId8cnWdC33Js0yDAhBT3HsMBwy79ZCcDFDohcapZcYksDTwPP9k8f
-         ATmvqmdRBsl1MLtkLlzYVkmqeS6sxJ/XTh5ixjdCW8O4Fn+aQ9ueQxG0zbxRA63CyX9h
-         hBHQZCTNNEAeXgjvuTdGeeBWujBWWxrX3i5sbVrmIa9XVU/uJUyBA4H7UQHm7eiuQGwe
-         Md0r7xrdOPwCuOBOssrOMA+cs1C2HV8DIpDlzs9q3Q8fIS+3xtk9CzqMwYxCtt0ZGQA8
-         VIUzj5a9YkJyKigM9BLfiPdmuTMvkQBDbT2+fijbJMiw76TKfHvXZqqCGPq2Z/vQlcMk
-         bokA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0UI26IKG/Yaps6YAp+XvZvxZsQXTmtNXqe6zEQt7udy7oYTQQKwdNkaT6wsp307nKJtk5AEi7AYLzAqYSZ3kvwK7nbPvQUzadFrt8p/VctKVpffFKQ5WwEaV2YaBkVHRozSPZ0+14Z0SBOMVqu/kO3+Keg5wyxVMqOvQlSVIbMT2PtQ==
-X-Gm-Message-State: AOJu0Yy6XL6fyPMRu2yoXzNCVxdxGoeUr48neyETGADxRjKlzBumSJGc
-	N6MUZBljm53bmXqUcPOkcan+DbH2i0IlxxwVNR/dxbM5gTIHtafSVgpbYn9UcWlSY29WqjZgFG+
-	eu45fAeUgYzOlU7Dp+MLAOqHscNY=
-X-Google-Smtp-Source: AGHT+IGHMycQCXAXdn9GPA0HqIe63sdLvbaqaA8StclYtMKe9+LaaPGxeDpnBD2iYljhDYWbHNS1PnIpcZzKN/PQrdU=
-X-Received: by 2002:a25:2c3:0:b0:df4:978c:3794 with SMTP id
- 3f1490d57ef6-df4e0bcb476mr7516169276.1.1716482077767; Thu, 23 May 2024
- 09:34:37 -0700 (PDT)
+	s=arc-20240116; t=1716482157; c=relaxed/simple;
+	bh=fCiXq2+boRzKiYqs6J/tR0g4gcJzzHcCC9A+1uj9Xh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=tOHBl3hDohuOgR8Ioe8zvCqd4wCJCsTYdvualo2/vHDKg9FvTp/3LmH+Pk3ouzq26L9xb1IJq1EsZkOpGIaZmk4lsb5oNfrNC7GWMQ/vQmf+69GpNj0KeHTwzq2qWi5v74lKn/Jrht98+zi2v+7+rt30okHmIv3SDfOer6uXZoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6351CC2BD10;
+	Thu, 23 May 2024 16:35:56 +0000 (UTC)
+Date: Thu, 23 May 2024 12:36:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>, Petr Pavlu <petr.pavlu@suse.com>,
+ Yang Li <yang.lee@linux.alibaba.com>
+Subject: [GIT PULL] tracing: Small last minute fixes
+Message-ID: <20240523123640.0316a063@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424024805.144759-1-howardchu95@gmail.com>
- <CAM9d7chOdrPyeGk=O+7Hxzdm5ziBXLES8PLbpNJvA7_DMrrGHA@mail.gmail.com>
- <Zil1ZKc7mibs6ONQ@x1> <CAP-5=fVYHjUk8OyidXbutBvZMPxf48LW7v-N3zvHBe5QME1vVQ@mail.gmail.com>
- <CAM9d7cggak7qZcX7tFZvJ69H3cwEnWvNOnBsQrkFQkQVf+bUjQ@mail.gmail.com>
- <CAH0uvohPg7LtSOLDNaPwnC5ePwjwg0NtKzLZ_oJcAz7zOwdwdw@mail.gmail.com>
- <CAP-5=fUzD8VZRnsxEBNPK_7PAGzdFjzmBAupA-eh=7VCDHBkbA@mail.gmail.com> <CAM9d7cgqr0Op5UuTcV2q8-Ju3yB7cYPvG7=Nrb4K=oW4Lt4Lcg@mail.gmail.com>
-In-Reply-To: <CAM9d7cgqr0Op5UuTcV2q8-Ju3yB7cYPvG7=Nrb4K=oW4Lt4Lcg@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 24 May 2024 00:34:27 +0800
-Message-ID: <CAH0uvojme5j0scQTztiCWxSichhPdAokWy1Lw_D9cFx-SWfHFA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Dump off-cpu samples directly
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	zegao2021@gmail.com, leo.yan@linux.dev, ravi.bangoria@amd.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Thu, May 23, 2024 at 12:34=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> Hello,
->
-> On Wed, May 15, 2024 at 9:56=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Wed, May 15, 2024 at 9:24=E2=80=AFPM Howard Chu <howardchu95@gmail.c=
-om> wrote:
-> > >
-> > > Hello,
-> > >
-> > > Here is a little update on --off-cpu.
-> > >
-> > > > > It would be nice to start landing this work so I'm wondering what=
- the
-> > > > > minimal way to do that is. It seems putting behavior behind a fla=
-g is
-> > > > > a first step.
-> > >
-> > > The flag to determine output threshold of off-cpu has been implemente=
-d.
-> > > If the accumulated off-cpu time exceeds this threshold, output the sa=
-mple
-> > > directly; otherwise, save it later for off_cpu_write.
-> > >
-> > > But adding an extra pass to handle off-cpu samples introduces perform=
-ance
-> > > issues, here's the processing rate of --off-cpu sampling(with the
-> > > extra pass to extract raw
-> > > sample data) and without. The --off-cpu-threshold is in nanoseconds.
-> > >
-> > > +-----------------------------------------------------+--------------=
--------------------------+----------------------+
-> > > | comm                                                | type
-> > >                        | process rate         |
-> > > +-----------------------------------------------------+--------------=
--------------------------+----------------------+
-> > > | -F 4999 -a                                          | regular
-> > > samples (w/o extra pass)      | 13128.675 samples/ms |
-> > > +-----------------------------------------------------+--------------=
--------------------------+----------------------+
-> > > | -F 1 -a --off-cpu --off-cpu-threshold 100           | offcpu sample=
-s
-> > > (extra pass)           |  2843.247 samples/ms |
-> > > +-----------------------------------------------------+--------------=
--------------------------+----------------------+
-> > > | -F 4999 -a --off-cpu --off-cpu-threshold 100        | offcpu &
-> > > regular samples (extra pass) |  3910.686 samples/ms |
-> > > +-----------------------------------------------------+--------------=
--------------------------+----------------------+
-> > > | -F 4999 -a --off-cpu --off-cpu-threshold 1000000000 | few offcpu &
-> > > regular (extra pass)     |  4661.229 samples/ms |
-> > > +-----------------------------------------------------+--------------=
--------------------------+----------------------+
->
-> What does the process rate mean?  Is the sample for the
-> off-cpu event or other (cpu-cycles)?  Is it from a single CPU
-> or system-wide or per-task?
+Linus,
 
-Process rate is just a silly name for the time record__pushfn() takes
-to write data from the ring buffer.
-record__pushfn() is where I added the extra pass to strip the off-cpu
-samples from the original raw
-samples that eBPF's perf_output collected.
+tracing: Minor last minute fixes
 
-With -a option it runs on all cpu, system-wide. Sorry that I only
-tested on extreme cases.
+- Fix a very tight race between the ring buffer readers and resizing
+  the ring buffer.
 
-I ran perf record on `-F 4999 -a `, `-F 1 -a --off-cpu
---off-cpu-threshold 100`, `-F 4999 -a --off-cpu
---off-cpu-threshold 100`, and `-F 4999 -a --off-cpu
---off-cpu-threshold 1000000000`.
-`-F 4999 -a` is only cpu-cycles samples which is the fastest(13128.675
-samples/ms)
-when it comes to writing samples to perf.data, because there's no
-extra pass for stripping
-extra data from BPF's raw samples.
+- Correct some stale comments in the ring buffer code.
 
-`-F 1 -a --off-cpu --off-cpu-threshold 100` is mostly off-cpu samples,
-which requires considerably
-more time to strip the data, being the slowest(2843.247 samples/ms).
+- Fix kernel-doc in the rv code.
 
- `-F 4999 -a --off-cpu --off-cpu-threshold 100` is half and half, lots
-of cpu-cycle samples so
-a little faster than the former one(3910.686 samples/ms). Because for cpu-c=
-ycles
-samples, there's no extra handling(but there's still cost on copying
-memory back and forth).
+- Add a MODULE_DESCRIPTION to preemptirq_delay_test
 
-`-F 4999 -a --off-cpu --off-cpu-threshold 1000000000` is a blend of a
-large amount of cpu-cycles
-samples and only a couple of off-cpu samples. It is the
-fastest(4661.229 samples/ms) but still
-nowhere near the original one, which doesn't have the extra pass of
-off_cpu_strip().
 
-What I'm trying to say is just, stripping/handling off-cpu samples at
-runtime is a bad idea, the extra
-pass of off_cpu_strip() should be reconsidered. Reading events one by
-one, put together samples,
-and checking sample_id and stuff introduces lots of overhead. It
-should be done at save time.
+Please pull the latest trace-fixes-v6.10 tree, which can be found at:
 
-By the way, the default off_cpu_write() is perfectly fine.
 
-Sorry about the horrible data table and explanation; they will be more
-readable next time.
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-fixes-v6.10
 
->
-> > >
-> > > It's not ideal. I will find a way to reduce overhead. For example
-> > > process them samples
-> > > at save time as Ian mentioned.
-> > >
-> > > > > To turn the bpf-output samples into off-cpu events there is a pas=
-s
-> > > > > added to the saving. I wonder if that can be more generic, like a=
- save
-> > > > > time perf inject.
-> > >
-> > > And I will find a default value for such a threshold based on perform=
-ance
-> > > and common use cases.
-> > >
-> > > > Sounds good.  We might add an option to specify the threshold to
-> > > > determine whether to dump the data or to save it for later.  But id=
-eally
-> > > > it should be able to find a good default.
-> > >
-> > > These will be done before the GSoC kick-off on May 27.
-> >
-> > This all sounds good. 100ns seems like quite a low threshold and 1s
-> > extremely high, shame such a high threshold is marginal for the
+Tag SHA1: 53ad9da2f490bc02e45f44bc2a33d4c3b6b78c6b
+Head SHA1: 1e8b7b3dbb3103d577a586ca72bc329f7b67120b
 
-> > context switch performance change. I wonder 100 microseconds may be a
-> > more sensible threshold. It's 100 times larger than the cost of 1
-> > context switch but considerably less than a frame redraw at 60FPS (16
-> > milliseconds).
->
-> I don't know what's the sensible default.  But 1 msec could be
-> another candidate for the similar reason. :)
 
-Sure, I'll give them all a test and see the overhead they cause.
+Jeff Johnson (1):
+      tracing: Add MODULE_DESCRIPTION() to preemptirq_delay_test
 
-I understand that all I'm talking about is optimization, and that premature
-optimization is the root of all evil. However, being almost three times
-slower for only a few dozen direct off-CPU samples sounds weird to me.
+Petr Pavlu (2):
+      ring-buffer: Correct stale comments related to non-consuming readers
+      ring-buffer: Fix a race between readers and resize checks
 
-Thanks,
-Howard
->
-> Thanks,
-> Namhyung
+Yang Li (1):
+      rv: Update rv_en(dis)able_monitor doc to match kernel-doc
+
+----
+ kernel/trace/preemptirq_delay_test.c |  1 +
+ kernel/trace/ring_buffer.c           | 25 ++++++++++++-------------
+ kernel/trace/rv/rv.c                 |  2 ++
+ 3 files changed, 15 insertions(+), 13 deletions(-)
+---------------------------
+diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
+index 8c4ffd076162..cb0871fbdb07 100644
+--- a/kernel/trace/preemptirq_delay_test.c
++++ b/kernel/trace/preemptirq_delay_test.c
+@@ -215,4 +215,5 @@ static void __exit preemptirq_delay_exit(void)
+ 
+ module_init(preemptirq_delay_init)
+ module_exit(preemptirq_delay_exit)
++MODULE_DESCRIPTION("Preempt / IRQ disable delay thread to test latency tracers");
+ MODULE_LICENSE("GPL v2");
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 7345a8b625fb..28853966aa9a 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1460,6 +1460,11 @@ static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+  *
+  * As a safety measure we check to make sure the data pages have not
+  * been corrupted.
++ *
++ * Callers of this function need to guarantee that the list of pages doesn't get
++ * modified during the check. In particular, if it's possible that the function
++ * is invoked with concurrent readers which can swap in a new reader page then
++ * the caller should take cpu_buffer->reader_lock.
+  */
+ static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+@@ -2210,8 +2215,12 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 		 */
+ 		synchronize_rcu();
+ 		for_each_buffer_cpu(buffer, cpu) {
++			unsigned long flags;
++
+ 			cpu_buffer = buffer->buffers[cpu];
++			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 			rb_check_pages(cpu_buffer);
++			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 		}
+ 		atomic_dec(&buffer->record_disabled);
+ 	}
+@@ -5046,13 +5055,9 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * @flags: gfp flags to use for memory allocation
+  *
+  * This performs the initial preparations necessary to iterate
+- * through the buffer.  Memory is allocated, buffer recording
++ * through the buffer.  Memory is allocated, buffer resizing
+  * is disabled, and the iterator pointer is returned to the caller.
+  *
+- * Disabling buffer recording prevents the reading from being
+- * corrupted. This is not a consuming read, so a producer is not
+- * expected.
+- *
+  * After a sequence of ring_buffer_read_prepare calls, the user is
+  * expected to make at least one call to ring_buffer_read_prepare_sync.
+  * Afterwards, ring_buffer_read_start is invoked to get things going
+@@ -5139,8 +5144,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_read_start);
+  * ring_buffer_read_finish - finish reading the iterator of the buffer
+  * @iter: The iterator retrieved by ring_buffer_start
+  *
+- * This re-enables the recording to the buffer, and frees the
+- * iterator.
++ * This re-enables resizing of the buffer, and frees the iterator.
+  */
+ void
+ ring_buffer_read_finish(struct ring_buffer_iter *iter)
+@@ -5148,12 +5152,7 @@ ring_buffer_read_finish(struct ring_buffer_iter *iter)
+ 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
+ 	unsigned long flags;
+ 
+-	/*
+-	 * Ring buffer is disabled from recording, here's a good place
+-	 * to check the integrity of the ring buffer.
+-	 * Must prevent readers from trying to read, as the check
+-	 * clears the HEAD page and readers require it.
+-	 */
++	/* Use this opportunity to check the integrity of the ring buffer. */
+ 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 	rb_check_pages(cpu_buffer);
+ 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index 2f68e93fff0b..df0745a42a3f 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -245,6 +245,7 @@ static int __rv_disable_monitor(struct rv_monitor_def *mdef, bool sync)
+ 
+ /**
+  * rv_disable_monitor - disable a given runtime monitor
++ * @mdef: Pointer to the monitor definition structure.
+  *
+  * Returns 0 on success.
+  */
+@@ -256,6 +257,7 @@ int rv_disable_monitor(struct rv_monitor_def *mdef)
+ 
+ /**
+  * rv_enable_monitor - enable a given runtime monitor
++ * @mdef: Pointer to the monitor definition structure.
+  *
+  * Returns 0 on success, error otherwise.
+  */
