@@ -1,163 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7463B1D555;
-	Thu, 23 May 2024 13:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B79114A60C;
+	Thu, 23 May 2024 13:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716470151; cv=none; b=Ey4ZDb4S1vEpLmmaWTXbXXgdPriamnkG6VLoroh3QKNHvx1iEpreR7ztqEYJYXBHd/sR8kDxTZbmlDgwYgrJFb7rO97KeDf2y+DCyWzTy44uAr8iZwvTje9PT6MHfblsIZIP6yf0+kzANZsc4HQvh02oJ6c18iFGPUR8ZQrXKnY=
+	t=1716470155; cv=none; b=BmEtGfAKzHrshPoDdADCeo78bLkvEA51CXNYrOOQCPTSuSk9Hv2oEUlhmcK0M4hgHg1VL6Iz8x2qo78+fW/aN/5gFeLtS8BZyYT1+a+Bu10rHs+MoO9e6okAKFqxYt0eCb/Ot9pY86vG/ZbMCsegu9893ZDcwaFJKkUbcp7rQC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716470151; c=relaxed/simple;
-	bh=Mt40WalPBV+6m7xYF/DZKqbqaHNN2wWWKrpvMV5GrIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GX9hxNsoUEncWC1XMCD94hdHoDqJVsmYUu2l3KvYlVz0C5tKI9lQbiB6errJwlP0WLBFo3tSHMT2etHZqd2lTf9xhkQPOB42scjC8fySI2Tss+Nj/7ht1pQwa4mHvQZioZ8fSZ+pzsak7xLZP2z/tDYELKA9QQJlk+BednClhCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=K1W4KnvL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716470155; c=relaxed/simple;
+	bh=Ux+x518pl7/uep26zN3pHNo6TJlFmAenHd5rKrgkXkY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AOkwLfuiurkTLQBafkYVTFDkREYbm9ohyCxaszhKJObgR3iULV7nOD7N0no0Fqlmz+HML7JUaRXcRJp7lAGzrdUOqhs24G6xunPOGTUxMsRMbpQHmklKfiQsVG2eUK3/lC8fMGjgrhre3YtNwWlgRHH4/vSuqHmy0K+wNBVaIs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CsPp0LI5; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="K1W4KnvL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C696AC2BD10;
-	Thu, 23 May 2024 13:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716470151;
-	bh=Mt40WalPBV+6m7xYF/DZKqbqaHNN2wWWKrpvMV5GrIo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=K1W4KnvLB1q5vUNfDnYpvTWbCb+y5ivuSeZNcekXiskPWMaOtBF9BJW7+dVQxxm+G
-	 NbAs49Y+pWBDtymn9t5KR5SIKgC3wcrgdsEiunWRbEWStGn14qgFBeItxVhfcJSzNN
-	 D46RtkeO34QZEfusnRwygI81vzpkEyU44hlGKBk8=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 5.4 00/16] 5.4.277-rc1 review
-Date: Thu, 23 May 2024 15:12:33 +0200
-Message-ID: <20240523130325.743454852@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CsPp0LI5"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NCjM4H016562;
+	Thu, 23 May 2024 13:15:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=10591ahE1WkTed7Dc8TeF5
+	gdlCW9JVXi5D/o2l11h90=; b=CsPp0LI5+qMyZ4K5+GQK5NKFak0EpHZG2nLXY7
+	pAcKldGi0g8WXpRvRVcnG9ZGAg9X70c1T3FLcSfANZjAvXB/xyRjE+AXEW+18wId
+	Mp3u+w03MtNQKW0zkuzfkLMldOTrnIm+nobd3ycEwL6aM840iWTTvW6Hjthsd1ib
+	fw0EaUF5xAeQvo0v3KQIF5+sbQKudEuwe+NW/2UsXtDFe8PDPXptpAQV5tincWqT
+	b9JR3XrlLsale48LbTSYyy20wUotfAzgySYOnmTSxCoM6i8sDmBLtZXlrFVPeyiR
+	z4KZMUzFJ3tzlhNtGZe4QLcNTTWjCtn4sNim8h8QJPE7O0QQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y9y04s5vp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 13:15:46 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44NDFj2o004185
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 13:15:45 GMT
+Received: from hu-uchheda-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 23 May 2024 06:15:41 -0700
+From: Umang Chheda <quic_uchheda@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <quic_uchheda@quicinc.com>, <quic_kamalw@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] arm64: dts: qcom: qcs6490-rb3gen2: Enable PMK8350 RTC module
+Date: Thu, 23 May 2024 18:45:28 +0530
+Message-ID: <20240523131528.3454431-1-quic_uchheda@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.277-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.277-rc1
-X-KernelTest-Deadline: 2024-05-25T13:03+00:00
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: YI5QQNDMSc4tyFl8BLXQeBJ73NLUh6a7
+X-Proofpoint-ORIG-GUID: YI5QQNDMSc4tyFl8BLXQeBJ73NLUh6a7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-23_08,2024-05-23_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 phishscore=0 clxscore=1011 malwarescore=0
+ mlxlogscore=676 impostorscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405230091
 
-This is the start of the stable review cycle for the 5.4.277 release.
-There are 16 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+Enable PMK8350 RTC module that is found on qcs6490-rb3gen2.
 
-Responses should be made by Sat, 25 May 2024 13:03:15 +0000.
-Anything received after that time might be too late.
+Signed-off-by: Umang Chheda <quic_uchheda@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.277-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.277-rc1
-
-Akira Yokosawa <akiyks@gmail.com>
-    docs: kernel_include.py: Cope with docutils 0.21
-
-Daniel Thompson <daniel.thompson@linaro.org>
-    serial: kgdboc: Fix NMI-safety problems from keyboard reset code
-
-Heikki Krogerus <heikki.krogerus@linux.intel.com>
-    usb: typec: ucsi: displayport: Fix potential deadlock
-
-Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-    drm/amdgpu: Fix possible NULL dereference in amdgpu_ras_query_error_status_helper()
-
-Dominique Martinet <dominique.martinet@atmark-techno.com>
-    btrfs: add missing mutex_unlock in btrfs_relocate_sys_chunks()
-
-Rob Herring <robh@kernel.org>
-    arm64: dts: qcom: Fix 'interrupt-map' parent address cells
-
-Cristian Marussi <cristian.marussi@arm.com>
-    firmware: arm_scmi: Harden accesses to the reset domains
-
-Paulo Alcantara <pc@manguebit.com>
-    smb: client: fix potential OOBs in smb2_parse_contexts()
-
-Doug Berger <opendmb@gmail.com>
-    net: bcmgenet: synchronize UMAC_CMD access
-
-Doug Berger <opendmb@gmail.com>
-    net: bcmgenet: synchronize use of bcmgenet_set_rx_mode()
-
-Doug Berger <opendmb@gmail.com>
-    net: bcmgenet: synchronize EXT_RGMII_OOB_CTRL access
-
-Doug Berger <opendmb@gmail.com>
-    net: bcmgenet: keep MAC in reset until PHY is up
-
-Doug Berger <opendmb@gmail.com>
-    Revert "net: bcmgenet: use RGMII loopback for MAC reset"
-
-Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-    Revert "selftests: mm: fix map_hugetlb failure on 64K page size systems"
-
-Baokun Li <libaokun1@huawei.com>
-    ext4: fix bug_on in __es_tree_search
-
-Sergey Shtylyov <s.shtylyov@omp.ru>
-    pinctrl: core: handle radix_tree_insert() errors in pinctrl_register_one_pin()
-
-
--------------
-
-Diffstat:
-
- Documentation/sphinx/kernel_include.py             |  1 -
- Makefile                                           |  4 +-
- arch/arm64/boot/dts/qcom/msm8998.dtsi              |  8 +--
- drivers/firmware/arm_scmi/reset.c                  |  6 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |  3 +
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 22 ++++--
- drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  2 +
- drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c | 12 +++-
- drivers/net/ethernet/broadcom/genet/bcmmii.c       | 43 +++---------
- drivers/pinctrl/core.c                             | 14 +++-
- drivers/tty/serial/kgdboc.c                        | 30 +++++++-
- drivers/usb/typec/ucsi/displayport.c               |  4 --
- fs/btrfs/volumes.c                                 |  1 +
- fs/cifs/smb2ops.c                                  |  4 +-
- fs/cifs/smb2pdu.c                                  | 79 ++++++++++++++--------
- fs/cifs/smb2proto.h                                | 10 +--
- fs/ext4/extents.c                                  | 10 +--
- tools/testing/selftests/vm/map_hugetlb.c           |  7 --
- 18 files changed, 161 insertions(+), 99 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+index a085ff5b5fb2..5cc259c5b262 100644
+--- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
++++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+@@ -602,6 +602,10 @@ &mdss_edp_phy {
+ 	status = "okay";
+ };
+ 
++&pmk8350_rtc {
++	status = "okay";
++};
++
+ &qupv3_id_0 {
+ 	status = "okay";
+ };
+-- 
+2.25.1
 
