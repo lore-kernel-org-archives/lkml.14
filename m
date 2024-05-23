@@ -1,103 +1,88 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01261126F27
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 23:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1291292D9;
+	Thu, 23 May 2024 23:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716505948; cv=none; b=sjCszK44r3jfVZoCur9BagpNnSegM0iewbrbdZkv6JJ4yaiVOf1mYyEO5BzjL8IwIKR+osityoM14sRZEo1GcG76Yr23+QRgrH2Be6MRpVOfDjYP7aEH7xgCipMz0E9+XX2COYDhRjNflnPJL35ZNGC0Y+gZow3W2nLCJxQfMJ8=
+	t=1716506056; cv=none; b=BSQ1t+YT0K1ls14JBAZGV1uwReF2ik4kKDgRjUajkOTlo2KOs7ntsRDx5hFXvHlDQGWnGkRXnAqFOJxScW5gFmT0D/eLiWTaZaWkm73eSo0/ROw6xxfaHkEb52Y/B6SOSu27uQ5r0HrThO3+Z7ZTLXbIhU5BtrDQnJQgf8u3aCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716505948; c=relaxed/simple;
-	bh=Pr5fclf/NyQdxEw21anVvy8WtHKkbRAUyx9Gl02m/X8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t8G+QMtVd1SDXNX0hRGZfY0uoRtLWz/5t8PMHBoDAkK4amrFRDNAt4h7ZEIiF8zVCRJbPjkbcOgVs87Y6q9znhswvI3ZAY5kLwIjgEXIrW42uIbkisTNq/j6nQR/FBTowYtPtB/AGMZ4eESYpL6N1eyyxHFA5VS0mHPYeSxjtz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ItsY1AO8; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ItsY1AO8"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f6a045d476so2708373b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 16:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716505946; x=1717110746; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5mMbC5KBXhHkDvBNusLgJck71yWRaMS5suGXHx+nBss=;
-        b=ItsY1AO8e5s3tqCj4FAx7kY7vbd0B8OHNnQn2JiNWjhMliCkYCt488plqHZXasqnbO
-         sQxddStA6+8XOggXVsmLs7iKeFAp15gRXDgicqUYf65gJgGyyObQR4jU3cd7SEoQm74o
-         KCZwCcSe9j/7Bq0+RvXzFaIFyn65EqyQUO9JE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716505946; x=1717110746;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5mMbC5KBXhHkDvBNusLgJck71yWRaMS5suGXHx+nBss=;
-        b=qGtEPhOACpSwA3eh8Ykj4g0wD+L11aHd54zcpytHz87/bZ74XDVBrDCBZgCrzkumhT
-         TO+a6zl8KnlON1eAGnc15hS9FVHa6ywvu+x6DnBNlpg/67Vic5kmyB7aXQWrydyDFZtt
-         6LylAONYMJLCzvfAQcIko0+5Ie5PTj1gdr456LvhzgyKXIpJURnA1gJfZV1TSDydlXvr
-         w93wXe8tM3vXZxmwyy2t65fe7IrOaKHUX/Wryt69gp0DL/8cfKAlb8aPKkFoKRDfF5l9
-         NMpe1BF6lyG246qh515QbxX2dcnIg9WEzW+FFZZDnGYfO9nxK50YgILuX9iQHSBaJb8O
-         HR1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVTpNESjQhg5ZO7HFQVa7RPSq5ZlQznVo2TulP/YNm/RiitPozN6Fv/IEBex64Ys/KG8TV9PDIUEQ9A5MK/jwPVuXjcKx4tiOY4fiQc
-X-Gm-Message-State: AOJu0Yy3EliNWhF866ZY69B9vs0LcP5OhqfqXya5x8IDronwxEMxIO/2
-	gORyQfrZ4mIgGvzGG/n4sF+RJr7K8jkIO95i93FVW9Npn5/RNbXsx0TDo2jD8A==
-X-Google-Smtp-Source: AGHT+IFbXrTeUCq7J46GiJ/p3IWwvb8fOgFDb0trMNcBbD+UJjL4KOevqFmzptXng6JsupSTGMLaXg==
-X-Received: by 2002:a17:903:1d0:b0:1eb:73c2:6b4a with SMTP id d9443c01a7336-1f4486e5e10mr8167325ad.8.1716505946250;
-        Thu, 23 May 2024 16:12:26 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c9b2e88sm1125295ad.253.2024.05.23.16.12.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 16:12:25 -0700 (PDT)
-Date: Thu, 23 May 2024 16:12:25 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, patches@lists.linux.dev,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] x86/boot: Address clang -Wimplicit-fallthrough in
- vsprintf()
-Message-ID: <202405231603.2E810E3FC@keescook>
-References: <20240516-x86-boot-fix-clang-implicit-fallthrough-v1-1-04dc320ca07c@kernel.org>
- <20240517095110.GAZkcojmJQoY_zU-OT@fat_crate.local>
- <20240517151833.GB3660288@thelio-3990X>
- <20240523115734.GAZk8vLgzOzD8Tv9pq@fat_crate.local>
+	s=arc-20240116; t=1716506056; c=relaxed/simple;
+	bh=EC4mMstx3GoDVOr94WNVc788fgZGZZasw7u9LmyR0Sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VQNfKcLIooKZPfodgBZWZaaTFbNgWk3dtG6veOczl6y2+9/Uc/wEKGfJcVMqjEbYXYHDA2FxvPngsH/ZwChKdGaqxD5fYWK8d/LjV7eTL/p+ZgpRUQINAVLBG9DpCgbnwpjGvuk/MpkPHFmSmTgb0hbciQxQ6SbGu1ZN3Aaw9fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E45F5C32789;
+	Thu, 23 May 2024 23:14:13 +0000 (UTC)
+Date: Thu, 23 May 2024 19:14:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v10 03/36] x86: tracing: Add ftrace_regs definition in
+ the header
+Message-ID: <20240523191459.3858aecf@gandalf.local.home>
+In-Reply-To: <171509091569.162236.17928081833857878443.stgit@devnote2>
+References: <171509088006.162236.7227326999861366050.stgit@devnote2>
+	<171509091569.162236.17928081833857878443.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240523115734.GAZk8vLgzOzD8Tv9pq@fat_crate.local>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 23, 2024 at 01:57:34PM +0200, Borislav Petkov wrote:
-> On Fri, May 17, 2024 at 08:18:33AM -0700, Nathan Chancellor wrote:
-> > There was a patch to make Clang match GCC's behavior a few years ago but
-> > I think Kees made a good argument that GCC's behavior leaves potential
-> > bugs on the table, so that was not pursued further.
-> > 
-> > https://reviews.llvm.org/D91895#2417170
+On Tue,  7 May 2024 23:08:35 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Really? Maybe I'm being dense but I don't see real bugs there... I see
-> readability issues. :-)
+> Add ftrace_regs definition for x86_64 in the ftrace header to
+> clarify what register will be accessible from ftrace_regs.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>   - Add rip to be saved.
+>  Changes in v2:
+>   - Newly added.
+> ---
+>  arch/x86/include/asm/ftrace.h |    6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+> index cf88cc8cc74d..c88bf47f46da 100644
+> --- a/arch/x86/include/asm/ftrace.h
+> +++ b/arch/x86/include/asm/ftrace.h
+> @@ -36,6 +36,12 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
+>  
+>  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+>  struct ftrace_regs {
+> +	/*
+> +	 * On the x86_64, the ftrace_regs saves;
+> +	 * rax, rcx, rdx, rdi, rsi, r8, r9, rbp, rip and rsp.
+> +	 * Also orig_ax is used for passing direct trampoline address.
+> +	 * x86_32 doesn't support ftrace_regs.
 
-There isn't a bug _here_, but this is about making the code unambiguous
-everywhere in the kernel. We've already done the work to get rid of
-all these warnings; this one is newly introduced, so let's get it fixed.
+Should add a comment that if fregs->regs.cs is set, then all of the pt_regs
+is valid. And x86_32 does support ftrace_regs, it just doesn't support
+having a subset of it.
 
-We don't want to have the same flow-control statement reachable from two
-different "case"s where the resulting behaviors are different. Otherwise
-we can't determine if a "fallthrough" is missing or intentional.
+-- Steve
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
 
--Kees
+> +	 */
+>  	struct pt_regs		regs;
+>  };
+>  
 
--- 
-Kees Cook
