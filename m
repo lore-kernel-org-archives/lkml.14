@@ -1,90 +1,132 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B78101E2
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 22:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E4C7E766;
+	Thu, 23 May 2024 22:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716503569; cv=none; b=N5Uis7dQGV2J/TQAOwxMD8USKJueo5rkYI9XLL2K6qyYbAj6ozj8nvDzzTaVPswEEoBlVUIDi7eQbjaGhd2VKsf3zxF4qm7je+j12b896FhNMjQpbP0mkknEoKUttWx/nOACg2sxuPh1/GKBkLWH/TN8ogV9Kcm/zoBP3IJ7X8M=
+	t=1716503709; cv=none; b=UE3gdNlkkiNdHN4UkwG5qTks9ucCCYnEpqhUzJ6A02T5K1wQW1GZaE2yH3bdifkQij7iddHJu9LAHWpZkcdm6iRjzoct6casEQ/xdEn6iakfJde5w3i5xOvjla9SspwCA0dtOCWMJcqmNIhlsjwXtW3OcMn7loZxFwZXcX3ob7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716503569; c=relaxed/simple;
-	bh=w0yAmaXElVRuUzavPH0AzyMtrbdonziNp5Tcb9MGaHY=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=m5cevW5jTQhl2ehtQBnggm3vF2h7HtAj4zQ5t6cmtvp9zJeIk3Hla1Kj5niUqC9EZAIYh1SV/WZNZQDQYMJQ1ixYD3uaOsS9mTPkf9W+r1aCAhW4wnluXH8vgW93/igwp1lM9dU3I0CeMp0rynVnYreS3UsqIMWIwfc6/GsLieo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gq3kyfpz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m0EJq6Q3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716503709; c=relaxed/simple;
+	bh=ZQptd+OO0ItLP5kvR5qOd72R0dOqNNH+K7BlscVW4Vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tk3THvj5JzJU36fGctzP1xX2aqY0+tSaCDb9X+UJrA7K48V3LB53LhvhckeZiwAHKibXwtQqPVZRK7Y//8duEmOG5btWRdrIksuWOuD4V4L3rs5P8Rhb61id4DajiuomotHU9ngtLa+3YYuEXxNpFvY9d+3TpsmNVDOSnrK8yiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oGbr5+uS; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gq3kyfpz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m0EJq6Q3"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716503566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gcwhKwWiYkkvnly8C5LXaEQL7Q16QzdORDIjhnOhuyM=;
-	b=gq3kyfpzkAMxNlWrSXHiO/lJ0kdC4Wi4ESKWucqD/5LEu5xs+wMsAZtX8mLDA9pfBJNGZy
-	a2mRjuKBHte7t8StGqHF9Fk+kPTY7r8I3Cf0dFjcL/FUjRD9xjXqj6N0FDOIw3IFb4EsTt
-	N2T26nbNuYx7iKRIDnGteZDvRkl2duANvHAVsoTTHRDkW4bl+adzkQwFEd0/+i2DA2swn9
-	0o+V4UgstK2eMM2DDBYIutQeltqqS9keNW5DONP42RqIIIwhRzkJEt/Nvx1uKDp+MKhh3G
-	n9Q11MNbx/rtJ0lEwzwkJy9HVmjTa20j62/586hAVX/qJ3Wn1wPxBm6emGokVQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716503566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gcwhKwWiYkkvnly8C5LXaEQL7Q16QzdORDIjhnOhuyM=;
-	b=m0EJq6Q3Bv+wtnC9MmrXKCodOcybz7kUd9Oz53glx+aoR1LP39QA2EAtMmnXBwuSIjXCtm
-	AiCAbqN8xkwFAtAA==
-To: Vlastimil Babka <vbabka@suse.cz>, syzbot
- <syzbot+50e25cfa4f917d41749f@syzkaller.appspotmail.com>, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
- mingo@redhat.com, syzkaller-bugs@googlegroups.com, x86@kernel.org,
- linux-mm@kvack.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [syzbot] [kernel?] WARNING in flush_cpu_slab
-In-Reply-To: <2149ee23-5321-4422-808f-e6a9046662fc@suse.cz>
-References: <0000000000008c9d27061915ca9c@google.com> <87v834g6hn.ffs@tglx>
- <2149ee23-5321-4422-808f-e6a9046662fc@suse.cz>
-Date: Fri, 24 May 2024 00:32:45 +0200
-Message-ID: <87r0dsdur6.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oGbr5+uS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716503708; x=1748039708;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZQptd+OO0ItLP5kvR5qOd72R0dOqNNH+K7BlscVW4Vw=;
+  b=oGbr5+uSYAoxc22LWRgt4sXM1lSZMK7UW+4W7TCOYojFvApXFHax0F9w
+   kkq5TPJNzryIl20sQ7xqWnPZkOdpConNFi86Z/tbM1S6kHxS2jzpoGi7w
+   SPsYFsRuONmyWZgPB2I/mP10YFOnQCNcxMTCR/n1ZC3qC6xL4UOy2f1zn
+   iCy/d5UQbC3qonOZzedj4AZgUvcPwlqyEvsvyKBpEB23Gwd+L3Oqt6/OS
+   R1XMMAS0mGYas7E+pATKGPg3LpKEkI+wylu0D0awa0yr1xnWoliGtCQb+
+   EYmbyGjOyNIGtCpYGZDO1t5HYFfR5n3OHSxrh+phVe4wGCW4DU9FVJX9p
+   A==;
+X-CSE-ConnectionGUID: 7y608XeVRO2QehalQQB9pA==
+X-CSE-MsgGUID: PSsN2TLqQYu41+y0xtjPBg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="35375205"
+X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
+   d="scan'208";a="35375205"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 15:35:07 -0700
+X-CSE-ConnectionGUID: mZlFUw8eRuuilkVNQYWBhg==
+X-CSE-MsgGUID: +amaWa7gTOC4OsjWndT2Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
+   d="scan'208";a="34311784"
+Received: from jbalogun-mobl.amr.corp.intel.com (HELO desk) ([10.212.227.156])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 15:35:07 -0700
+Date: Thu, 23 May 2024 15:35:01 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Xiaojian Du <Xiaojian.Du@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-pm@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com,
+	daniel.sneddon@linux.intel.com, jpoimboe@kernel.org,
+	sandipan.das@amd.com, kai.huang@intel.com, ray.huang@amd.com,
+	rafael@kernel.org, Perry.Yuan@amd.com, gautham.shenoy@amd.com,
+	Borislav.Petkov@amd.com, mario.limonciello@amd.com
+Subject: Re: [PATCH v3 1/2] x86/cpufeatures: Add AMD FAST CPPC feature flag
+Message-ID: <20240523223501.k2bcmvmfbvbxiuf6@desk>
+References: <691ec6cf79788e6db919965f787505434b072fac.1716444920.git.Xiaojian.Du@amd.com>
+ <691ec6cf79788e6db919965f787505434b072fac.1716444920.git.Xiaojian.Du@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <691ec6cf79788e6db919965f787505434b072fac.1716444920.git.Xiaojian.Du@amd.com>
 
-On Thu, May 23 2024 at 23:03, Vlastimil Babka wrote:
-> On 5/23/24 12:36 PM, Thomas Gleixner wrote:
->>> ------------[ cut here ]------------
->>> DEBUG_LOCKS_WARN_ON(l->owner)
->>> WARNING: CPU: 3 PID: 5221 at include/linux/local_lock_internal.h:30 local_lock_acquire include/linux/local_lock_internal.h:30 [inline]
->>> WARNING: CPU: 3 PID: 5221 at include/linux/local_lock_internal.h:30 flush_slab mm/slub.c:3088 [inline]
->>> WARNING: CPU: 3 PID: 5221 at include/linux/local_lock_internal.h:30 flush_cpu_slab+0x37f/0x410 mm/slub.c:3146
->
-> I'm puzzled by this. We use local_lock_irqsave() on !PREEMPT_RT everywhere.
-> IIUC this warning says we did the irqsave() and then found out somebody else
-> already set the owner? But that means they also did that irqsave() and set
-> themselves as l->owner. Does that mey there would be a spurious irq enable
-> that didn't go through local_unlock_irqrestore()?
->
-> Also this particular stack is from the work, which is scheduled by
-> queue_work_on() in flush_all_cpus_locked(), which also has a
-> lockdep_assert_cpus_held() so it should fullfill the "the caller must ensure
-> the cpu doesn't go away" property. But I think even if this ended up on the
-> wrong cpu (for the full duration or migrated while processing the work item)
-> somehow, it wouldn't be able to cause such warning, but rather corrupt
-> something else
+On Thu, May 23, 2024 at 02:16:59PM +0800, Xiaojian Du wrote:
+> From: Perry Yuan <perry.yuan@amd.com>
+> 
+> Some AMD Zen 4 processors support a new feature FAST CPPC which
+> allows for a faster CPPC loop due to internal architectual
+> enhancements. The goal of this faster loop is higher performance
+> at the same power consumption.
+> 
+> Reference:
+> See the page 99 of PPR for AMD Family 19h Model 61h rev.B1, docID 56713
+> 
+> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+> Signed-off-by: Xiaojian Du <Xiaojian.Du@amd.com>
+> Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+> ---
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  arch/x86/kernel/cpu/scattered.c    | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 3c7434329661..6c128d463a14 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -470,6 +470,7 @@
+>  #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* "" BHI_DIS_S HW control available */
+>  #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* "" BHI_DIS_S HW control enabled */
+>  #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* "" Clear branch history at vmexit using SW loop */
+> +#define X86_FEATURE_FAST_CPPC		(21*32 + 5) /* "" AMD Fast CPPC */
+>  
+>  /*
+>   * BUG word(s)
+> diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+> index af5aa2c754c2..9c273c231f56 100644
+> --- a/arch/x86/kernel/cpu/scattered.c
+> +++ b/arch/x86/kernel/cpu/scattered.c
+> @@ -51,6 +51,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+>  	{ X86_FEATURE_PERFMON_V2,	CPUID_EAX,  0, 0x80000022, 0 },
+>  	{ X86_FEATURE_AMD_LBR_V2,	CPUID_EAX,  1, 0x80000022, 0 },
+>  	{ X86_FEATURE_AMD_LBR_PMC_FREEZE,	CPUID_EAX,  2, 0x80000022, 0 },
+> +	{ X86_FEATURE_FAST_CPPC,	CPUID_EDX,  15, 0x80000007, 0 },
 
-Indeed. There is another report which makes no sense either:
+This list is sorted by the leaf level, so position of this entry should be
+higher:
 
- https://lore.kernel.org/lkml/000000000000fa09d906191c3ee5@google.com
+diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+index af5aa2c754c2..09e0e40dce6c 100644
+--- a/arch/x86/kernel/cpu/scattered.c
++++ b/arch/x86/kernel/cpu/scattered.c
+@@ -45,6 +45,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+ 	{ X86_FEATURE_HW_PSTATE,	CPUID_EDX,  7, 0x80000007, 0 },
+ 	{ X86_FEATURE_CPB,		CPUID_EDX,  9, 0x80000007, 0 },
+ 	{ X86_FEATURE_PROC_FEEDBACK,    CPUID_EDX, 11, 0x80000007, 0 },
++	{ X86_FEATURE_FAST_CPPC,	CPUID_EDX, 15, 0x80000007, 0 },
+ 	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
+ 	{ X86_FEATURE_SMBA,		CPUID_EBX,  2, 0x80000020, 0 },
+ 	{ X86_FEATURE_BMEC,		CPUID_EBX,  3, 0x80000020, 0 },
 
-Both look like data corropution issues caused by whatever...
-
-Thanks,
-
-        tglx
+>  	{ 0, 0, 0, 0, 0 }
+>  };
+>  
+> -- 
+> 2.34.1
+> 
