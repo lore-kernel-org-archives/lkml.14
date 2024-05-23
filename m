@@ -1,231 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BE4625
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 14:31:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62E01EA6F;
+	Thu, 23 May 2024 14:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716474681; cv=none; b=Ut/uQ91DzSUTuYVb31YDrm2L2L11TW/U27TtadrKS9qtduJr3FMWV5b/oWiy0kDA5qaMhUCgVcaaNks+AZYAadI9DuAFMHQ1+hP+MHYrQzkFUq5vUceumiYD+WhrFcR8PfeuRoCKwzC17HxWNYTADHavgrpy4qSZwHpD4HPnEHc=
+	t=1716474717; cv=none; b=sXyxwp+XzcFy7PzETKcZY3WqBnzY57lzocU4+N0cUHDJms5yO13+LmiuYM4ExgdAJ1ociC9Jw0hefnAC8Gfj8jL1TLTYB42kLiVX1vQ034ainz0Us1h4DAuqTrrJQOrTcxbYz4N515yCaaoQkZqN4c10ezgtjoNdFzZ0UT1SEa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716474681; c=relaxed/simple;
-	bh=5wxjxXYY5M16SJq11haOqbaKduxIuftNrA11V5+B2/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=r3B3erXbNz9DnJL9thg5e6VfYx5Pp4bw7tVkG3uiLK7EwOdcvaxdJAn3Hn8MeJB+Kb0353nsitOh3ls1vW95GBTpbbBrAjPUqbM+0NPcj9+QRFLeR0DQemFIQLj1q/+PaWvfkYjLh/ZcZipWGOuMTTO42GicJQzLHx4mFwvc00U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EDCFC32782;
-	Thu, 23 May 2024 14:31:20 +0000 (UTC)
-Date: Thu, 23 May 2024 10:32:04 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [GIT PULL] tracing/treewide: Remove second parameter of
- __assign_str()
-Message-ID: <20240523103204.7c50b070@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1716474717; c=relaxed/simple;
+	bh=z+/P8L5KjNx907uaz+/G1K7pVGEzXZy7/dsMvxUblY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G0vfeOP9Xz0L8CdxCJWj60JPrkRVwhKISv6APake2XvJ+NHMWGEKC0duKF4m6hT+EC4NHtD5h0IPHRjuGCS1MtcnDz1kZhRdHa/HQ5xezFbDDHNVZIZGoDd2wusOyjkns7+7hFWVeRI9ZLBQpMUQh+oJXXAXUHrjvKCC5wvxbfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLo2wGmT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLo2wGmT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282C6C2BD10;
+	Thu, 23 May 2024 14:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716474717;
+	bh=z+/P8L5KjNx907uaz+/G1K7pVGEzXZy7/dsMvxUblY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fLo2wGmTg6txQgIoshiVsLwUvoY7/xKWZMSxVOYB3O85VZCq5alt62eezKWuas3px
+	 DjCVEcadDbuUC89D7N5lCnTjD8Dyh/UVvqiwu75V9SwiRFZfxHkPAlnlNLt4O012lj
+	 poL3iHuakngtyKHf+2CqGsOfomtvn/AJRECZsWBOGP26Dw8DAlXzUqV7OanHBQ0K/3
+	 4zjzrTbgKJmHWaEdIZYperJDQR3g4Q1JcEz0E/JyjvAWkJPEyMd3OaSM1AyFVlMj3K
+	 7XD5I8cNhK1z7ufAVZF0OgkPDxbsTwXjmCmLrHwABC+sFdVRSdhVMx9/qtQGIjI/GL
+	 kZenvq60TQETQ==
+Date: Thu, 23 May 2024 15:31:52 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Jander <david@protonic.nl>,
+	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH RFC v2 1/8] spi: dt-bindings: spi-peripheral-props: add
+ spi-offloads property
+Message-ID: <20240523-divided-herbicide-11396549e05f@spud>
+References: <20240513-headsman-hacking-d51fcc811695@spud>
+ <CAMknhBE5XJzhdJ=PQUXiubw_CiCLcn1jihiscnQZUzDWMASPKw@mail.gmail.com>
+ <20240514-aspire-ascension-449556da3615@spud>
+ <CAMknhBFFpEGcMoLo5gsC11Syv+CwUM0mnq1yDMUzL1uutUtB+Q@mail.gmail.com>
+ <20240516-rudder-reburial-dcf300504c0a@spud>
+ <CAMknhBF_s0btus4yqPe-T=F3z7Asi9KkRGsGr7FHDFi=k4EQjw@mail.gmail.com>
+ <20240519-abreast-haziness-096a57ef57d3@spud>
+ <CAMknhBHvEse2FyDoBXR1PvymGpSGq8dotKfm+8XH+0+k+xKtQw@mail.gmail.com>
+ <20240522-gullible-ibuprofen-cf9111c25f6f@spud>
+ <5ad0b5782434eaf4cf565cffb0e4c14b7414ae38.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gf9CS1NJgXAMKbNH"
+Content-Disposition: inline
+In-Reply-To: <5ad0b5782434eaf4cf565cffb0e4c14b7414ae38.camel@gmail.com>
 
 
+--gf9CS1NJgXAMKbNH
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+On Thu, May 23, 2024 at 02:15:35PM +0200, Nuno S=C3=A1 wrote:
+> On Wed, 2024-05-22 at 19:24 +0100, Conor Dooley wrote:
+> > On Tue, May 21, 2024 at 09:54:39AM -0500, David Lechner wrote:
+> > > On Sun, May 19, 2024 at 7:53=E2=80=AFAM Conor Dooley <conor@kernel.or=
+g> wrote:
+> > > >=20
+> > > > On Fri, May 17, 2024 at 11:51:58AM -0500, David Lechner wrote:
+> > > > > On Thu, May 16, 2024 at 4:32=E2=80=AFPM Conor Dooley <conor@kerne=
+l.org> wrote:
+> > > > > > On Tue, May 14, 2024 at 05:56:47PM -0500, David Lechner wrote:
+> > > >=20
+> > I think you're right something like that is a stretch to say that that
+> > is a feature of the SPI controller - but I still don't believe that
+> > modelling it as part of the ADC is correct. I don't fully understand the
+> > io-backends and how they work yet, but the features you describe there
+> > seem like something that should/could be modelled as one, with its own
+> > node and compatible etc. Describing custom RTL stuff ain't always
+> > strightforward, but the stuff from Analog is versioned and documented
+> > etc so it shouldn't be quite that hard.
+> >=20
+>=20
+> Putting this in io-backends is likely a stretch but one thing to add is t=
+hat the
+> peripheral is always (I think) kind of the consumer of the resources. Tak=
+ing the
+> trigger (PWM) as an example and even when it is directly connected with t=
+he offload
+> block, the peripheral still needs to know about it. Think of sampling fre=
+quency...
+> The period of the trigger signal is strictly connected with the sampling =
+frequency of
+> the peripheral for example. So I see 2 things:
 
-[
-  I'm sending this now, near the end of the merge window. As it touches over
-  140 files and makes over 700 updates, adding it before -rc1 would help
-  prevent conflicts. I did a diff between the commit I based this off of and
-  linux-next and I don't see any new __assign_str()s added. I'm doing an
-  allmodconfig build of this merged with linux-next just to make sure.
-]
+Cherry picking this one thing to reply to cos I'm not sure if it was
+understood as I intended. When I talked about io-backends I was not
+suggesting that we drop the spi-offload idea, I was suggesting that if
+something has a dedicated register region & resources that handles both
+offloading and some usecase specific data processing that it should be a
+device of its own, acting as a provider of both spi-offloads and
+io-backends.
+I'll look at the rest of the mail soonTM.
 
-tracing: Remove second argument of __assign_str()
+--gf9CS1NJgXAMKbNH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The __assign_str() macro logic of the TRACE_EVENT() macro was optimized so
-that it no longer needs the second argument. The __assign_str() is always
-matched with __string() field that takes a field name and the source for
-that field:
+-----BEGIN PGP SIGNATURE-----
 
-  __string(field, source)
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZk9TVwAKCRB4tDGHoIJi
+0hN/APsFPaTQxDK3YqRUJgT5J20VxUY1KBTNxCCt0kwkMu/iygD9EE5MiES4Ipue
+iL0dC3Lu3LuqcZ78q0lv9bkm/bhYLAk=
+=gfAt
+-----END PGP SIGNATURE-----
 
-The TRACE_EVENT() macro logic will save off the source value and then use
-that value to copy into the ring buffer via the __assign_str(). Before
-commit c1fa617caeb0 ("tracing: Rework __assign_str() and __string() to not
-duplicate getting the string"), the __assign_str() needed the second
-argument which would perform the same logic as the __string() source
-parameter did. Not only would this add overhead, but it was error prone as
-if the __assign_str() source produced something different, it may not have
-allocated enough for the string in the ring buffer (as the __string()
-source was used to determine how much to allocate)
-
-Now that the __assign_str() just uses the same string that was used in
-__string() it no longer needs the source parameter. It can now be removed.
-
-
-Please pull the latest trace-assign-str-v6.10 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-assign-str-v6.10
-
-Tag SHA1: a4a3570b492898d2bcff5e578856895681d93458
-Head SHA1: 2c92ca849fcc6ee7d0c358e9959abc9f58661aea
-
-
-Steven Rostedt (Google) (1):
-      tracing/treewide: Remove second parameter of __assign_str()
-
-----
- arch/arm64/kernel/trace-events-emulation.h         |   2 +-
- arch/powerpc/include/asm/trace.h                   |   4 +-
- arch/x86/kvm/trace.h                               |   2 +-
- drivers/base/regmap/trace.h                        |  18 ++--
- drivers/base/trace.h                               |   2 +-
- drivers/block/rnbd/rnbd-srv-trace.h                |  12 +--
- drivers/bus/mhi/host/trace.h                       |  12 +--
- drivers/cxl/core/trace.h                           |  32 +++---
- drivers/dma-buf/sync_trace.h                       |   2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h          |  16 +--
- .../drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h    |   2 +-
- drivers/gpu/drm/i915/display/intel_display_trace.h |  56 +++++-----
- drivers/gpu/drm/lima/lima_trace.h                  |   2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h          |  12 +--
- drivers/gpu/drm/scheduler/gpu_scheduler_trace.h    |   4 +-
- drivers/gpu/drm/virtio/virtgpu_trace.h             |   2 +-
- drivers/infiniband/core/cma_trace.h                |   4 +-
- drivers/infiniband/hw/hfi1/hfi.h                   |   2 +-
- drivers/infiniband/hw/hfi1/trace_dbg.h             |   2 +-
- drivers/infiniband/hw/hfi1/trace_rx.h              |   2 +-
- drivers/infiniband/hw/hfi1/trace_tid.h             |   4 +-
- drivers/infiniband/hw/hfi1/trace_tx.h              |   4 +-
- drivers/infiniband/sw/rdmavt/trace.h               |   2 +-
- drivers/infiniband/sw/rdmavt/trace_rvt.h           |   2 +-
- drivers/interconnect/trace.h                       |  10 +-
- drivers/iommu/intel/trace.h                        |  14 +--
- drivers/media/platform/nvidia/tegra-vde/trace.h    |   2 +-
- drivers/misc/mei/mei-trace.h                       |   6 +-
- drivers/net/dsa/mv88e6xxx/trace.h                  |   4 +-
- .../net/ethernet/freescale/dpaa/dpaa_eth_trace.h   |   2 +-
- .../net/ethernet/freescale/dpaa2/dpaa2-eth-trace.h |   4 +-
- .../net/ethernet/fungible/funeth/funeth_trace.h    |   6 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_trace.h   |   4 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_trace.h   |  12 +--
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h |  10 +-
- drivers/net/ethernet/intel/i40e/i40e_trace.h       |  10 +-
- drivers/net/ethernet/intel/iavf/iavf_trace.h       |   6 +-
- drivers/net/ethernet/intel/ice/ice_trace.h         |  12 +--
- .../net/ethernet/marvell/octeontx2/af/rvu_trace.h  |  12 +--
- .../mellanox/mlx5/core/diag/cmd_tracepoint.h       |   4 +-
- .../mellanox/mlx5/core/diag/en_rep_tracepoint.h    |   2 +-
- .../mellanox/mlx5/core/diag/en_tc_tracepoint.h     |   2 +-
- .../mellanox/mlx5/core/diag/fw_tracer_tracepoint.h |   5 +-
- .../mellanox/mlx5/core/esw/diag/qos_tracepoint.h   |   8 +-
- .../mlx5/core/sf/dev/diag/dev_tracepoint.h         |   2 +-
- .../mellanox/mlx5/core/sf/diag/sf_tracepoint.h     |  14 +--
- .../mellanox/mlx5/core/sf/diag/vhca_tracepoint.h   |   2 +-
- drivers/net/fjes/fjes_trace.h                      |  10 +-
- drivers/net/hyperv/netvsc_trace.h                  |   8 +-
- drivers/net/wireless/ath/ath10k/trace.h            |  64 +++++------
- drivers/net/wireless/ath/ath11k/trace.h            |  44 ++++----
- drivers/net/wireless/ath/ath12k/trace.h            |  16 +--
- drivers/net/wireless/ath/ath6kl/trace.h            |   4 +-
- drivers/net/wireless/ath/trace.h                   |   4 +-
- .../broadcom/brcm80211/brcmfmac/tracepoint.h       |   4 +-
- .../brcm80211/brcmsmac/brcms_trace_brcmsmac.h      |   2 +-
- .../brcm80211/brcmsmac/brcms_trace_brcmsmac_msg.h  |   2 +-
- .../brcm80211/brcmsmac/brcms_trace_brcmsmac_tx.h   |   6 +-
- .../net/wireless/intel/iwlwifi/iwl-devtrace-msg.h  |   2 +-
- drivers/net/wireless/intel/iwlwifi/iwl-devtrace.h  |   2 +-
- drivers/soc/qcom/pmic_pdcharger_ulog.h             |   2 +-
- drivers/soc/qcom/trace-aoss.h                      |   4 +-
- drivers/soc/qcom/trace-rpmh.h                      |   4 +-
- drivers/thermal/thermal_trace.h                    |  10 +-
- drivers/usb/cdns3/cdns3-trace.h                    |  26 ++---
- drivers/usb/cdns3/cdnsp-trace.h                    |  10 +-
- drivers/usb/chipidea/trace.h                       |   4 +-
- drivers/usb/dwc3/trace.h                           |   8 +-
- drivers/usb/gadget/udc/cdns2/cdns2-trace.h         |  22 ++--
- drivers/usb/gadget/udc/trace.h                     |   4 +-
- drivers/usb/mtu3/mtu3_trace.h                      |   8 +-
- drivers/usb/musb/musb_trace.h                      |  12 +--
- fs/bcachefs/trace.h                                |   6 +-
- fs/nfs/nfs4trace.h                                 |  42 ++++----
- fs/nfs/nfstrace.h                                  |  41 ++++---
- fs/nfsd/trace.h                                    |  40 +++----
- fs/ocfs2/ocfs2_trace.h                             |  60 +++++------
- fs/smb/client/trace.h                              |  18 ++--
- fs/xfs/scrub/trace.h                               |  10 +-
- fs/xfs/xfs_trace.h                                 |  28 ++---
- include/ras/ras_event.h                            |  12 +--
- include/trace/events/asoc.h                        |  22 ++--
- include/trace/events/avc.h                         |   6 +-
- include/trace/events/bridge.h                      |  16 +--
- include/trace/events/btrfs.h                       |   6 +-
- include/trace/events/cgroup.h                      |  10 +-
- include/trace/events/clk.h                         |  18 ++--
- include/trace/events/cma.h                         |   8 +-
- include/trace/events/devfreq.h                     |   4 +-
- include/trace/events/devlink.h                     |  50 ++++-----
- include/trace/events/dma_fence.h                   |   4 +-
- include/trace/events/erofs.h                       |   2 +-
- include/trace/events/f2fs.h                        |  20 ++--
- include/trace/events/habanalabs.h                  |  10 +-
- include/trace/events/huge_memory.h                 |   4 +-
- include/trace/events/hwmon.h                       |   6 +-
- include/trace/events/initcall.h                    |   2 +-
- include/trace/events/intel_ish.h                   |   2 +-
- include/trace/events/io_uring.h                    |  14 +--
- include/trace/events/iocost.h                      |  14 +--
- include/trace/events/iommu.h                       |   8 +-
- include/trace/events/irq.h                         |   2 +-
- include/trace/events/iscsi.h                       |   2 +-
- include/trace/events/kmem.h                        |   2 +-
- include/trace/events/lock.h                        |   4 +-
- include/trace/events/mmap_lock.h                   |   4 +-
- include/trace/events/mmc.h                         |   4 +-
- include/trace/events/module.h                      |   8 +-
- include/trace/events/napi.h                        |   2 +-
- include/trace/events/neigh.h                       |   6 +-
- include/trace/events/net.h                         |  12 +--
- include/trace/events/netlink.h                     |   2 +-
- include/trace/events/oom.h                         |   2 +-
- include/trace/events/osnoise.h                     |   2 +-
- include/trace/events/power.h                       |  23 ++--
- include/trace/events/pwc.h                         |   4 +-
- include/trace/events/qdisc.h                       |  12 +--
- include/trace/events/qla.h                         |   2 +-
- include/trace/events/qrtr.h                        |   2 +-
- include/trace/events/regulator.h                   |   6 +-
- include/trace/events/rpcgss.h                      |  20 ++--
- include/trace/events/rpcrdma.h                     |  52 ++++-----
- include/trace/events/rpm.h                         |   6 +-
- include/trace/events/sched.h                       |   8 +-
- include/trace/events/sof.h                         |  12 +--
- include/trace/events/sof_intel.h                   |  16 +--
- include/trace/events/sunrpc.h                      | 118 ++++++++++-----------
- include/trace/events/swiotlb.h                     |   2 +-
- include/trace/events/target.h                      |   4 +-
- include/trace/events/tegra_apb_dma.h               |   6 +-
- include/trace/events/ufs.h                         |  24 ++---
- include/trace/events/workqueue.h                   |   2 +-
- include/trace/events/xdp.h                         |   2 +-
- include/trace/stages/stage6_event_callback.h       |   4 +-
- kernel/trace/bpf_trace.h                           |   2 +-
- net/batman-adv/trace.h                             |   4 +-
- net/dsa/trace.h                                    |  34 +++---
- net/ieee802154/trace.h                             |   2 +-
- net/mac80211/trace.h                               |   2 +-
- net/openvswitch/openvswitch_trace.h                |   8 +-
- net/smc/smc_tracepoint.h                           |   4 +-
- net/tipc/trace.h                                   |  16 +--
- net/wireless/trace.h                               |   2 +-
- samples/trace_events/trace-events-sample.h         |  19 ++--
- sound/core/pcm_trace.h                             |   2 +-
- sound/hda/trace.h                                  |   6 +-
- sound/soc/intel/avs/trace.h                        |   4 +-
- 147 files changed, 794 insertions(+), 808 deletions(-)
----------------------------
+--gf9CS1NJgXAMKbNH--
