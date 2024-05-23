@@ -1,93 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1219314A4D9
-	for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 13:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D7F1E495;
+	Thu, 23 May 2024 13:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716471551; cv=none; b=iIXnwQSLfdc6zwmX7N/3DUeobF/FFTyhSCJU5KF1qPVbJP2eaGu/APJHi3Kjzy8pdNIfB9QcLTF3gaK7Pmsen71cB6f0Fe4UlBSEEZj4sJ9B0ZKn5rq/lTrnj9In9zIB+LJLKeuLJucok4vIfOuX9BBaJy91II4EdJUcvO6MHxg=
+	t=1716471624; cv=none; b=jtQ+BinNaxNqEbYqB9/voHwLwEzbNuAeq84DP7Xm+3g7t0gVN7g8F8qdCySyKFW6dbjMTA21nf4Dep8pJXKMgW+cgcN4rLWDbNZRj26KkjfojJspLKn6S6e8TCUM/Zmnhuyh8qbIILMqWQF8ptWVRNrc3przfKHCasCaRQkqhRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716471551; c=relaxed/simple;
-	bh=f7qsf6uHpQj1b7EvGifYNKn62b0z3n3sNaoF30buF0Q=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=Y6SemuJ5AtZvZGfEeZmtuJUsVwYk4PHX9kQxQOZg2/yRuuLRcqL0rzZLPRMTrLmq7ouBSQZErU6VIIOcAduQ+iloakDtMYm7KeNviMAg1woQK7br2fvPHmqZvAH+3SBC1hDHS9I15lAX2PRbwSPqOv868O1ZX07a6S1+AX1NG/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qie4aePa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716471624; c=relaxed/simple;
+	bh=eYAHQBTLuS0nAWdW8Q2PeqwvoBoaWkUHPFim7U0bnT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nlaAsqb8r6Fo3MOFY7IYSLsDUJj6kF4YseeGwPffgveItI2zkeJZ+6/ES/QsOyJEDkYaOpvJPr+ocgAy6SKFRK/D1A45l6Yrlb0ACd+t1EttzmbYVt6mjlgtLizYVNs35ZFzBxwuQtM3QHUadGIIXRQ4PgjcbIeSQ+j9VxKBe+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NbVM5iVJ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qie4aePa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716471548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ujjJR49aI7BZarO+naEDlUutu9JDS8SgDMMORQQ2PcM=;
-	b=Qie4aePaXtTIDSGrETpMvMIlsRAiQV0Il3i0CcxX6v8m5q51JqpmSk/Y0aLGQWbZglEKKb
-	T7KoA9FHpcuU090PoyEUlhZ/j2LEHfv3Agk31pmmfdbjH3FnVbJYaifBzkAiGiy5SBzzgC
-	pKoQZAeKclR34kl7n+ECygaYrMmrJ9Y=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-390-Cw0F39TlPQyVN010Jn0Oww-1; Thu, 23 May 2024 09:39:06 -0400
-X-MC-Unique: Cw0F39TlPQyVN010Jn0Oww-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6A962812296;
-	Thu, 23 May 2024 13:39:05 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 487A87414;
-	Thu, 23 May 2024 13:39:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240523132341.32092-1-jarkko@kernel.org>
-References: <20240523132341.32092-1-jarkko@kernel.org>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: dhowells@redhat.com, linux-integrity@vger.kernel.org,
-    keyrings@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
-    Eric Biggers <ebiggers@kernel.org>,
-    James Bottomley <James.Bottomley@hansenpartnership.com>,
-    Herbert Xu <herbert@gondor.apana.org.au>,
-    "David S. Miller" <davem@davemloft.net>,
-    Andrew Morton <akpm@linux-foundation.org>,
-    Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
-    James Morris <jmorris@namei.org>,
-    "Serge E. Hallyn" <serge@hallyn.com>,
-    linux-crypto@vger.kernel.org (open list:CRYPTO
-                         API),
-    linux-kernel@vger.kernel.org (open list),
-    linux-security-module@vger.kernel.org (open
-                         list:SECURITY SUBSYSTEM)
-Subject: Re: [PATCH v2] KEYS: trusted: Use ASN.1 encoded OID
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NbVM5iVJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716471622; x=1748007622;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eYAHQBTLuS0nAWdW8Q2PeqwvoBoaWkUHPFim7U0bnT8=;
+  b=NbVM5iVJ21Cn7uvEH/Q52QaPZsG2z2aN7gSNDoFPRGy/Yce9RApr3gTT
+   SI547g6nbyrC8rdsKSnnmH2YXYncgMdfL49V2EoOPVLutxbvq22ReXUt+
+   zaQ6LXwIxoqNyLEXUViIosrhq2LucNc6U7U1oIcmTCTxBuOHkT2YZCoy7
+   VYLgIlpq5o3qbT8zmAKDFLN7J8uoW8X0y4L5qgm69kADofNyqBQvbMQgd
+   uHBi7e3scN61vGQZzIwREPEMhI+J/OfRc4/zDHpiJcthzEuSGO0EOTJrQ
+   qmHOGeLyFGQf0gtUDEsnv6RlltkgDNafhpnhVj9fN9In7MqoqsCJcHaNR
+   Q==;
+X-CSE-ConnectionGUID: tdhyFOJYQvucsnR46v9GCQ==
+X-CSE-MsgGUID: d76Qtnz4ROaRtpbHFF6CZA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="23922490"
+X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
+   d="scan'208";a="23922490"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 06:40:20 -0700
+X-CSE-ConnectionGUID: 60SQMP+GThCQJ+N0T81BXA==
+X-CSE-MsgGUID: 2UzRAYvsQhem3VM7pfn3oA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
+   d="scan'208";a="33740010"
+Received: from wentongw-optiplex-8070.sh.intel.com ([10.239.154.12])
+  by fmviesa009.fm.intel.com with ESMTP; 23 May 2024 06:40:18 -0700
+From: Wentong Wu <wentong.wu@intel.com>
+To: sakari.ailus@linux.intel.com,
+	tomas.winkler@intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Wentong Wu <wentong.wu@intel.com>,
+	stable@vger.kernel.org,
+	Hao Yao <hao.yao@intel.com>,
+	Jason Chen <jason.z.chen@intel.com>
+Subject: [PATCH v2] mei: vsc: Don't stop/restart mei device during system suspend/resume
+Date: Thu, 23 May 2024 22:01:34 +0800
+Message-Id: <20240523140134.506033-1-wentong.wu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <576060.1716471541.1@warthog.procyon.org.uk>
-Date: Thu, 23 May 2024 14:39:01 +0100
-Message-ID: <576061.1716471541@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Transfer-Encoding: 8bit
 
-Jarkko Sakkinen <jarkko@kernel.org> wrote:
+The dynamically created mei client device (mei csi) is used as one V4L2
+sub device of the whole video pipeline, and the V4L2 connection graph is
+built by software node. The mei_stop() and mei_restart() will delete the
+old mei csi client device and create a new mei client device, which will
+cause the software node information saved in old mei csi device lost and
+the whole video pipeline will be broken.
 
-> There's no reason to encode OID_TPMSealedData at run-time, as it never
-> changes.
-> 
-> Replace it with the encoded version, which has exactly the same size:
-> 
-> 	67 81 05 0A 01 05
-> 
-> Include OBJECT IDENTIFIER (0x06) tag and length as the epilogue so that
-> the OID can be simply copied to the blob.
-> 
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+Removing mei_stop()/mei_restart() during system suspend/resume can fix
+the issue above and won't impact hardware actual power saving logic.
 
-Reviewed-by: David Howells <dhowells@redhat.com>
+Fixes: f6085a96c973 ("mei: vsc: Unregister interrupt handler for system suspend")
+Cc: stable@vger.kernel.org # for 6.8+
+Reported-by: Hao Yao <hao.yao@intel.com>
+Signed-off-by: Wentong Wu <wentong.wu@intel.com>
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Tested-by: Jason Chen <jason.z.chen@intel.com>
+Tested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/misc/mei/platform-vsc.c | 39 +++++++++++++--------------------
+ 1 file changed, 15 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/misc/mei/platform-vsc.c b/drivers/misc/mei/platform-vsc.c
+index b543e6b9f3cf..1ec65d87488a 100644
+--- a/drivers/misc/mei/platform-vsc.c
++++ b/drivers/misc/mei/platform-vsc.c
+@@ -399,41 +399,32 @@ static void mei_vsc_remove(struct platform_device *pdev)
+ 
+ static int mei_vsc_suspend(struct device *dev)
+ {
+-	struct mei_device *mei_dev = dev_get_drvdata(dev);
+-	struct mei_vsc_hw *hw = mei_dev_to_vsc_hw(mei_dev);
++	struct mei_device *mei_dev;
++	int ret = 0;
+ 
+-	mei_stop(mei_dev);
++	mei_dev = dev_get_drvdata(dev);
++	if (!mei_dev)
++		return -ENODEV;
+ 
+-	mei_disable_interrupts(mei_dev);
++	mutex_lock(&mei_dev->device_lock);
+ 
+-	vsc_tp_free_irq(hw->tp);
++	if (!mei_write_is_idle(mei_dev))
++		ret = -EAGAIN;
+ 
+-	return 0;
++	mutex_unlock(&mei_dev->device_lock);
++
++	return ret;
+ }
+ 
+ static int mei_vsc_resume(struct device *dev)
+ {
+-	struct mei_device *mei_dev = dev_get_drvdata(dev);
+-	struct mei_vsc_hw *hw = mei_dev_to_vsc_hw(mei_dev);
+-	int ret;
+-
+-	ret = vsc_tp_request_irq(hw->tp);
+-	if (ret)
+-		return ret;
+-
+-	ret = mei_restart(mei_dev);
+-	if (ret)
+-		goto err_free;
++	struct mei_device *mei_dev;
+ 
+-	/* start timer if stopped in suspend */
+-	schedule_delayed_work(&mei_dev->timer_work, HZ);
++	mei_dev = dev_get_drvdata(dev);
++	if (!mei_dev)
++		return -ENODEV;
+ 
+ 	return 0;
+-
+-err_free:
+-	vsc_tp_free_irq(hw->tp);
+-
+-	return ret;
+ }
+ 
+ static DEFINE_SIMPLE_DEV_PM_OPS(mei_vsc_pm_ops, mei_vsc_suspend, mei_vsc_resume);
+-- 
+2.34.1
 
