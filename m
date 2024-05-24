@@ -1,71 +1,65 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED953B791
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 04:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB32037708
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 04:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716526255; cv=none; b=CVqPSDBy5ad6PqCq84x2P72ksjMHXjQvs3XrR9z/vxxZ2YA1Z4uhBD++mP5350NPESfE05qIR5JpcMQH7p/762gM+OndzbJ2ZO8YeyNHDfiOajZibyxhJLbPoveUsFXp43d4OyQYqstHvDIFToL+Ddv+RjF2XqdM0tUjm+2+IpI=
+	t=1716526424; cv=none; b=k5+FQZcVckaUCF59SL+xy2/yXIjqR5i0dx45xQb6isHACMn0iziQBKEGNiDtKTxbBF6a+fMIjUMncRh9JzdJb9wDSZ56LHkb+nBuA3Vv7XKnrbk+X7/RDrwSL+v36vpzkhP59krD0UTAxa7xI6KgZzI0J4qnmzk5bLttJUbwp8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716526255; c=relaxed/simple;
-	bh=Mo66zv39Y2XRxVh5/cuJyu9quocjfx/HQ48qJAzK8d0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jon2AVLt3WePFL7CoC9Fdo6woc425sUoaqSV6ed2S98wXCWAJ89K3HsCrTG6xlRuYu+rAMfk8zK6oE0llPzPB0Zd88/F9vfF20uEAc2w2JjBCqGjwJekTxXHu2+oL/tfQdwScDDCdpQ+cTxUzDwIvT02gtqS1Pb8oF47jwIs/To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f9QO/47H; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1716526424; c=relaxed/simple;
+	bh=voLF+ZXHqCj1QIFeconlKZ65jI2E/0kvN+jDQHP0EQo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eoebDzJyLoVxDcS+n0VxQ6mHkCcywIOC1jwyeINl2rXG0BVud+NK3Ba0VMX1bI9bIsPXyB0ihB2adrk23T5VlnCB4VwtnEnRnM+2k0h3zXIw+HrDXtgq0/o+Jqe0gDzlgP5yQ+/Oxu4fgawPPx/TaO7AOPWb4n89fn1wOdY91lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O1ITdvpa; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f9QO/47H"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6f8ec7e054bso465825b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 21:50:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1ITdvpa"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5b31f2c6e52so2962269eaf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 21:53:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716526253; x=1717131053; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716526422; x=1717131222; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XEzNN+g5GiUGjks7UogaHkGOkvg142fxmAHb/cav82s=;
-        b=f9QO/47HlcSdbNsYqPeJfj4HYj58/eCdKKrbydnGSJ5CJWpc3bHjzZA4S/6An09tmy
-         Bfp7WQzUFz5owZo8Tqz3LSy2nTx7m4wpmYlN7h4etP2KPLubAO96DBl0l4BnZvHJHI+u
-         mrOXvorhfSnOJqiJoGOKE6unEdn5OP7Wnl9s4=
+        bh=yuSgxuqm7a09+65zoh059DBu0U354ci0mLOJDafuJUI=;
+        b=O1ITdvpaGDwEMBgTJ4iBkkvTDiTPjv83fPkhCE2ChLWryo5e1dLcvJo4IYwDEf5OCO
+         C+Wta/SSieTepFt1JUOCgeEU2Xea9yVDVS7cRgImhGJ3G6XL+xM4k38oxtGVrZEHqV7a
+         rMS27SjdvOatI7t5UBw0Gm6wgcQLxn0vk9aA6vp22UjPvHS6la/Ame48sxRjzp2x60AB
+         1SDNldcAC0bdGVp4OFOntkPWVbZZQjJ4ZqZNurmfFdUrVMRxl9NtunktfyfR3dqTbThE
+         mSi1kRodlMInj7o7BYKPHSbv+FjVszwzFZPa6IH7nIaJ7FwFAzkHV1ivg1ieW08d45bF
+         bhzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716526253; x=1717131053;
+        d=1e100.net; s=20230601; t=1716526422; x=1717131222;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XEzNN+g5GiUGjks7UogaHkGOkvg142fxmAHb/cav82s=;
-        b=ZrOyaJqfTTwiN2yWrYy5KKPS9j02EUWNWCnaxnLlEO8KV24La7JL98NihVE+KP0+B7
-         ZoJ2zmfUqimrw88XIaXmRtm8Kpn9zSJM7qnQif9zLYt6mcy3DY3EZJipL5RvmxNUZohQ
-         5j+Nk/PCBPbNvrZrQASeZ7uvbfVKlH1ETUSKPSVXE1FMZ6XVjpnUGPi995e7tKc4qcw6
-         kDRpUSXStFyzxvO4A3YYkL6QclRnL6qbtN8+17xBU/WvhWLBzzhSKKjdL+MxbztFXym7
-         JZn/uYZ6tukPWLGe9bk52Jf3C3LKfDzJtrD0Php1FYSwedN4LXFisme2W8mAQIR4FX/I
-         7+qw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbhN2kHgApL3RLtI2mg8qAIuCsgKl9qoTOk3MtW6U4QAPVZQ+uqPwfEDP/EyNB0a5BEN3nIsp7rh1wcTXIxJRjDVDFmc2o/VwI35J1
-X-Gm-Message-State: AOJu0Yx8VqNSwvjmJjrg8jbptrUH46KS9DMdPQuCtmTz3se2S9iNSMOZ
-	wgNs1GfRy0b/w1Re1aNKeXzSy5SyOQU5j2rG8O97szO5I6QRHn+sCOTzOKjwLQ==
-X-Google-Smtp-Source: AGHT+IGfkmaKGVrr3ukrF0157TtE2Yy2BGn73LH8MTbHMB1w5QEj+skFkSENS8Jm055JMQodInkpRA==
-X-Received: by 2002:a05:6a21:99b:b0:1b0:66d:1596 with SMTP id adf61e73a8af0-1b212e500bamr1294052637.57.1716526253013;
-        Thu, 23 May 2024 21:50:53 -0700 (PDT)
-Received: from localhost (60.252.199.104.bc.googleusercontent.com. [104.199.252.60])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-6f8fc05ab4asm398063b3a.59.2024.05.23.21.50.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 May 2024 21:50:52 -0700 (PDT)
-From: Ying Hsu <yinghsu@chromium.org>
-To: linux-bluetooth@vger.kernel.org,
-	luiz.dentz@gmail.com,
-	pmenzel@molgen.mpg.de,
-	horms@kernel.org
-Cc: chromeos-bluetooth-upstreaming@chromium.org,
-	Ying Hsu <yinghsu@chromium.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v3] Bluetooth: Add vendor-specific packet classification for ISO data
-Date: Fri, 24 May 2024 04:50:43 +0000
-Message-ID: <20240524045045.3310641-1-yinghsu@chromium.org>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+        bh=yuSgxuqm7a09+65zoh059DBu0U354ci0mLOJDafuJUI=;
+        b=SVzAnTPMpq5B0LLxk65XyRhBtsw70z+2H+oAkdowYJ506ffDQBg1bwjSFeWRMeXagc
+         k4Sp/4x47jnNF2uKz8EtabltPGIesea2NxZL/fBikF/nYDzwi4Zwv+VuqdxEQYsu4qQb
+         tjGEeVfFa+5YxZooCQoecberYG1+HOXzYE0ZDh/cs/9JXsGt5x1Unz7icr2dyKO4ONdp
+         zAH0mjid0cAqz2qjbqa8QseegLoy++15iVT8Q06B8eMqks42M/Xw094vsc7HRXyA313N
+         NpJdMu8leoK2nJlhFtgrAUntNDg/6qP6LrhwBT5TrDnC6WoG2OE+42b/CqA4m9P6/Y5A
+         gvdA==
+X-Gm-Message-State: AOJu0YyFj0z1eeDiFyJyihg4NQjmLdvF8cfFqAW6ci0T0qbmcis46WTe
+	NsKLy8Wlbkft3RBCcw67B1akqzwnsU0FA5kPOwv1cP+I0QLqwG2LXOSqayb93NRzrQ==
+X-Google-Smtp-Source: AGHT+IEdJdoSp9sHJ/o4feaVr2xodPeZhTUgDk3Fvn5vAUljkZBSKZ1E9dOTzatQ9n+VT/ltu4EOpw==
+X-Received: by 2002:a05:6358:281a:b0:186:3c3:b40f with SMTP id e5c5f4694b2df-197e545bb55mr181246255d.20.1716526421704;
+        Thu, 23 May 2024 21:53:41 -0700 (PDT)
+Received: from localhost.localdomain ([223.104.43.17])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-682274ba9edsm362179a12.90.2024.05.23.21.53.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 21:53:41 -0700 (PDT)
+From: Xiong Nandi <xndchn@gmail.com>
+To: akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	quic_bjorande@quicinc.com,
+	cmllamas@google.com,
+	quic_eberman@quicinc.com,
+	Xiong Nandi <xndchn@gmail.com>
+Subject: [PATCH v3 0/2] scripts/decode_stacktrace.sh: better support to ARM32
+Date: Fri, 24 May 2024 12:25:58 +0800
+Message-Id: <20240524042600.14738-1-xndchn@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,146 +68,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When HCI raw sockets are opened, the Bluetooth kernel module doesn't
-track CIS/BIS connections. User-space applications have to identify
-ISO data by maintaining connection information and look up the mapping
-for each ACL data packet received. Besides, btsnoop log captured in
-kernel couldn't tell ISO data from ACL data in this case.
+v2 -> v3:
+ - Change to only strip the right parenthesis
 
-To avoid additional lookups, this patch introduces vendor-specific
-packet classification for Intel BT controllers to distinguish
-ISO data packets from ACL data packets.
+v1 -> v2:
+ - Split the patch into two.
 
-Signed-off-by: Ying Hsu <yinghsu@chromium.org>
----
-Tested LE audio unicast recording on a ChromeOS device with Intel AX211
+Xiong Nandi (2):
+  scripts/decode_stacktrace.sh: wrap nm with UTIL_PREFIX and UTIL_SUFFIX
+  scripts/decode_stacktrace.sh: better support to ARM32 module stack
+    trace
 
-Changes in v3:
-- Move Intel's classify_pkt_type implementation from btusb.c to btintel.c.
+ scripts/decode_stacktrace.sh | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- Adds vendor-specific packet classificaton in hci_dev.
-- Keeps reclassification in hci_recv_frame.
-
- drivers/bluetooth/btintel.c      | 19 +++++++++++++++++++
- drivers/bluetooth/btintel.h      |  6 ++++++
- drivers/bluetooth/btusb.c        |  1 +
- include/net/bluetooth/hci_core.h |  1 +
- net/bluetooth/hci_core.c         | 16 ++++++++++++++++
- 5 files changed, 43 insertions(+)
-
-diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
-index 27e03951e68b..bf1bd2b13c96 100644
---- a/drivers/bluetooth/btintel.c
-+++ b/drivers/bluetooth/btintel.c
-@@ -3187,6 +3187,25 @@ void btintel_secure_send_result(struct hci_dev *hdev,
- }
- EXPORT_SYMBOL_GPL(btintel_secure_send_result);
- 
-+#define BTINTEL_ISODATA_HANDLE_BASE 0x900
-+
-+u8 btintel_classify_pkt_type(struct hci_dev *hdev, struct sk_buff *skb)
-+{
-+	/*
-+	 * Distinguish ISO data packets form ACL data packets
-+	 * based on their connection handle value range.
-+	 */
-+	if (hci_skb_pkt_type(skb) == HCI_ACLDATA_PKT) {
-+		__u16 handle = __le16_to_cpu(hci_acl_hdr(skb)->handle);
-+
-+		if (hci_handle(handle) >= BTINTEL_ISODATA_HANDLE_BASE)
-+			return HCI_ISODATA_PKT;
-+	}
-+
-+	return hci_skb_pkt_type(skb);
-+}
-+EXPORT_SYMBOL_GPL(btintel_classify_pkt_type);
-+
- MODULE_AUTHOR("Marcel Holtmann <marcel@holtmann.org>");
- MODULE_DESCRIPTION("Bluetooth support for Intel devices ver " VERSION);
- MODULE_VERSION(VERSION);
-diff --git a/drivers/bluetooth/btintel.h b/drivers/bluetooth/btintel.h
-index 9dbad1a7c47c..4b77eb8d47a8 100644
---- a/drivers/bluetooth/btintel.h
-+++ b/drivers/bluetooth/btintel.h
-@@ -245,6 +245,7 @@ int btintel_bootloader_setup_tlv(struct hci_dev *hdev,
- int btintel_shutdown_combined(struct hci_dev *hdev);
- void btintel_hw_error(struct hci_dev *hdev, u8 code);
- void btintel_print_fseq_info(struct hci_dev *hdev);
-+u8 btintel_classify_pkt_type(struct hci_dev *hdev, struct sk_buff *skb);
- #else
- 
- static inline int btintel_check_bdaddr(struct hci_dev *hdev)
-@@ -378,4 +379,9 @@ static inline void btintel_hw_error(struct hci_dev *hdev, u8 code)
- static inline void btintel_print_fseq_info(struct hci_dev *hdev)
- {
- }
-+
-+static inline u8 btintel_classify_pkt_type(struct hci_dev *hdev, struct sk_buff *skb)
-+{
-+	return hci_skb_pkt_type(skb);
-+}
- #endif
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 79aefdb3324d..2ecc6d1140a5 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -4451,6 +4451,7 @@ static int btusb_probe(struct usb_interface *intf,
- 		/* Transport specific configuration */
- 		hdev->send = btusb_send_frame_intel;
- 		hdev->cmd_timeout = btusb_intel_cmd_timeout;
-+		hdev->classify_pkt_type = btintel_classify_pkt_type;
- 
- 		if (id->driver_info & BTUSB_INTEL_NO_WBS_SUPPORT)
- 			btintel_set_flag(hdev, INTEL_ROM_LEGACY_NO_WBS_SUPPORT);
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 9231396fe96f..7b7068a84ff7 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -649,6 +649,7 @@ struct hci_dev {
- 	int (*get_codec_config_data)(struct hci_dev *hdev, __u8 type,
- 				     struct bt_codec *codec, __u8 *vnd_len,
- 				     __u8 **vnd_data);
-+	u8 (*classify_pkt_type)(struct hci_dev *hdev, struct sk_buff *skb);
- };
- 
- #define HCI_PHY_HANDLE(handle)	(handle & 0xff)
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index b3ee9ff17624..8b817a99cefd 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -2941,15 +2941,31 @@ int hci_reset_dev(struct hci_dev *hdev)
- }
- EXPORT_SYMBOL(hci_reset_dev);
- 
-+static u8 hci_dev_classify_pkt_type(struct hci_dev *hdev, struct sk_buff *skb)
-+{
-+	if (hdev->classify_pkt_type)
-+		return hdev->classify_pkt_type(hdev, skb);
-+
-+	return hci_skb_pkt_type(skb);
-+}
-+
- /* Receive frame from HCI drivers */
- int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
- {
-+	u8 dev_pkt_type;
-+
- 	if (!hdev || (!test_bit(HCI_UP, &hdev->flags)
- 		      && !test_bit(HCI_INIT, &hdev->flags))) {
- 		kfree_skb(skb);
- 		return -ENXIO;
- 	}
- 
-+	/* Check if the driver agree with packet type classification */
-+	dev_pkt_type = hci_dev_classify_pkt_type(hdev, skb);
-+	if (hci_skb_pkt_type(skb) != dev_pkt_type) {
-+		hci_skb_pkt_type(skb) = dev_pkt_type;
-+	}
-+
- 	switch (hci_skb_pkt_type(skb)) {
- 	case HCI_EVENT_PKT:
- 		break;
 -- 
-2.45.1.288.g0e0cd299f1-goog
+2.34.1
 
