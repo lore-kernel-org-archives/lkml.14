@@ -1,148 +1,140 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2912C9A
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 00:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5155F19B;
+	Fri, 24 May 2024 00:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716509929; cv=none; b=eJf2ZN/wBRcaTr6n+IQdY8Uff+xOM8/jTNg8aLn+LrXxVtjcHILq8NRPZ+3zxvZb9h4lwKSDZaDEyyTSoohKVuWwcgcf0UMHxMZEqU1xal7SuFj3NTsA6u4iw3QlozWKD4sq/qPtMzTSQElQ2VSpxzfQEKH8BfMndWCa16bWs1s=
+	t=1716510011; cv=none; b=meslyr967TNy+zYKtFIFM2DKbNmDQnwQ8lHdDVMmtulxpQCbx2nqfNsWmVAqkC1iD6W5yxqf6tbJQmd/YBC0+eQRMJBh+KWHNbGR6mWS1afnVHyiTRAjPF5bvTUR7/ZO1PvzaDyXw4gT70p9Ga1VKD27kS3HDd9VtzaauRFkuG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716509929; c=relaxed/simple;
-	bh=/LHAMDUw9dxA/AqHsxp2TqEWaMowWilYcYA0HbO4XZw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=t4l0G9PSWFmMtgdhM6l5HPGXk7VSbGW8F67LY6WvwZs5QbklSFmerdZM0M6E8VBLCuhySFksc1yFf2pxUzuxyoElr2RkRsZH1VaG/oG6WJuCQ7t4TrEtgDmod0JiYQp3LF3UfewKmFjLLgZ5JUY3942QA8boOr6zh90AbdIE23k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qHUloJ+L; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1716510011; c=relaxed/simple;
+	bh=UISalHEbveHVG2/HSIHQqF9o5XaSlJzmRionrjBFrfw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=NDgUORIZ8ai0wuj9rk8+4tHDebMTTT5SYbdscX3SLLOEH7zP0X7Yp8YIB+R56tUHk8WcfR7i1TU/75OQF0Rcq8zJaGUV51YJ0omo3dMvmkYnUZ969ibYhTsCcgwx/BpAZEB54O5Wg7j1CcX4fcOJv+zELFoFk3AHFb2FJIInV3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PV21+wi8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qHUloJ+L"
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240524001844epoutp042283985bf0f33f0c8bf295a345f3fa79~SRK6YA3SE0536405364epoutp04C
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 00:18:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240524001844epoutp042283985bf0f33f0c8bf295a345f3fa79~SRK6YA3SE0536405364epoutp04C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716509924;
-	bh=DSC7gwpMSFmwZdZRot6AskcvnEqlG9tvIb88IW3wBJI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qHUloJ+Ltslw5mNSdlSwfQZ5n3rmTh5W26qvxzN5TaS+WCNiBXa6YUaucMXV30cv4
-	 4fKQpgMgeRC2Gxhrl5cbEJpJRnbPKblBoAA2Yh4kqz2OiSkHqcrw3BgGtxD9sOnjDc
-	 4lkzDRtjGQubbwIs8+1ShOtLcD6K8tJEbVlQuw+4=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240524001843epcas1p11e0bf5a73842f4d8e5e007a1b0bb18a6~SRK5gUgos0690206902epcas1p1G;
-	Fri, 24 May 2024 00:18:43 +0000 (GMT)
-Received: from epsmgec1p1.samsung.com (unknown [182.195.36.222]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4VllyC2PrYz4x9Pp; Fri, 24 May
-	2024 00:18:43 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-	epsmgec1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	80.25.09696.3ECDF466; Fri, 24 May 2024 09:18:43 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240524001842epcas1p3a66b301f7aad3a8da28869db634221d1~SRK4kXOKh3249332493epcas1p3g;
-	Fri, 24 May 2024 00:18:42 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240524001842epsmtrp111403e8bc3ceca40ba072cb985fd208d~SRK4joEF11318113181epsmtrp1v;
-	Fri, 24 May 2024 00:18:42 +0000 (GMT)
-X-AuditID: b6c32a36-7a9f9700000025e0-2d-664fdce3eeac
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	7F.55.09238.2ECDF466; Fri, 24 May 2024 09:18:42 +0900 (KST)
-Received: from lee.. (unknown [10.253.100.232]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240524001842epsmtip194f05718e7e4af5f9c0509df59c4baec~SRK4We5Tb3056830568epsmtip13;
-	Fri, 24 May 2024 00:18:42 +0000 (GMT)
-From: Chanwoo Lee <cw9316.lee@samsung.com>
-To: cw9316.lee@samsung.com
-Cc: James.Bottomley@HansenPartnership.com, alim.akhtar@samsung.com,
-	avri.altman@wdc.com, bvanassche@acm.org, linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-	powen.kao@mediatek.com, quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
-	stanley.chu@mediatek.com, yang.lee@linux.alibaba.com
-Subject: RE: [PATCH] ufs:mcq:Fixing Error Output for
- ufshcd_try_to_abort_task in ufshcd_mcq_abort
-Date: Fri, 24 May 2024 09:18:40 +0900
-Message-Id: <20240524001840.1104839-1-cw9316.lee@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240523002257.1068373-1-cw9316.lee@samsung.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PV21+wi8"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NNP0cp004106;
+	Fri, 24 May 2024 00:20:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ZeHxtkw586PaODVHgHJTtw
+	yVLvMA6RMOHdQGuTC/h/o=; b=PV21+wi8oEW6fWopGRU9nAhpuEmsn9Cgk8DdAo
+	aWR3dWoWfJ6KSCOivMUiTn2PNiWlCCjSCaEbnNPplgSS/ygHHE3cJDWzFq7X0VSJ
+	eQMvEH7afwhBT5iCZA2FBW+ozAGuJnodPi8c5z44jye6Gx32/RJ4AUPl9dflW4dj
+	rSWXtBrZ3YVV0+l0jIsUd/sxkzociNw7yhS90OKktOOLFtsWYpoKXCjTxbvZXcfM
+	v29oM8Cd5Ze/p0W6pDUCuGTRLTIE2T4mboAzHnKLqiQ6s6ivzus4JFyxePNETqCh
+	zNIDz66TkoHNEyjxVzBAP7LRrYdUbyXx3LI+3bIrE3Cl9O+g==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yaa8kgr8w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 May 2024 00:20:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44O0K7cQ019089
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 May 2024 00:20:07 GMT
+Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 23 May
+ 2024 17:20:06 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Thu, 23 May 2024 17:12:24 -0700
+Subject: [PATCH] vfio-mdev: add MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHJsWRmVeSWpSXmKPExsWy7bCmge7jO/5pBk+OCVg8mLeNzeLlz6ts
-	FtM+/GS2mHGqjdViYz+HxeVdc9gsuq/vYLNYfvwfk8Xbu/9ZLCZd28BmMfXFcXaLpVtvMlq8
-	azzM6MDrcfmKt8e0SafYPHY+tPRoObmfxePj01ssHhP31Hn0bVnF6PF5k5xH+4FupgDOqGyb
-	jNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKCjlRTKEnNK
-	gUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFZgV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGVtb
-	etkLnrFXvGzqZmtgnMvWxcjJISFgInF81yXWLkYuDiGBHYwSs79sZIFwPjFKTJ7UwAThfGOU
-	aDryFq5l/qSNzBCJvYwSh7bvZYRwnjBK/Ft7AaiFg4NNQEvi9jFvkAYRASmJ2Tvmgk1iFjjB
-	JLH6+1x2kISwQLLEpMYFLCA2i4CqRNenl4wgvbwCthIH3yhCLJOX2H/wLDOIzSlgJ7F+8QWw
-	Vl4BQYmTM5+AtTID1TRvnQ12kITASg6JmfMvs0I0u0i8aH0MdbWwxKvjW9ghbCmJl/1t7BAN
-	zYwSC98ch+qewCjx5eNtqA57iebWZjaQi5gFNCXW79KH2MYn8e5rDytIWEKAV6KjTQiiWkVi
-	Ttc5Npj5H288hirxkLhwIAUkLCQwkVHiw3/WCYzys5C8MAvJC7MQdi1gZF7FKJZaUJybnlps
-	WGAEj9Xk/NxNjOCEq2W2g3HS2w96hxiZOBgPMUpwMCuJ8Eav9E0T4k1JrKxKLcqPLyrNSS0+
-	xGgKDN+JzFKiyfnAlJ9XEm9oYmlgYmZkYmFsaWymJM575kpZqpBAemJJanZqakFqEUwfEwen
-	VANTwa/SmnuHxYrtS7Y+YFD5dei92tlk9acpKelPi9J8ZC6otZxZWXGFzfbLLoav54M36+Ud
-	3sldV5X8xcctbKd/4eGiE/t/3FtgtmDanov5dua396/1y3RdURxUmGq43JMvmW0240RWM973
-	WT1Ce0sY65ZUt0z7FW8UW25/6uHlPwFPJvnkZ76L2pXbKNp39so7yx9punpdyz7/mTzzyPFN
-	114IFD63Y3Kud/I8eHb9BdU837nPbT7P8+/YOEd4gtOvqL/mXRy3PlmrzpjwUeaQeXNs/Id1
-	kjpJ9YUha3JMAhc+4/n4i/u/ZZDeFK3bRhMtFeZkdWsFtWT1nb36raju5+zSumklVa7OhUU7
-	D4UrsRRnJBpqMRcVJwIAkrxGLEEEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsWy7bCSnO6jO/5pBgcPqFk8mLeNzeLlz6ts
-	FtM+/GS2mHGqjdViYz+HxeVdc9gsuq/vYLNYfvwfk8Xbu/9ZLCZd28BmMfXFcXaLpVtvMlq8
-	azzM6MDrcfmKt8e0SafYPHY+tPRoObmfxePj01ssHhP31Hn0bVnF6PF5k5xH+4FupgDOKC6b
-	lNSczLLUIn27BK6MrS297AXP2CteNnWzNTDOZeti5OSQEDCRmD9pIzOILSSwm1Hi3i8piLiU
-	xO7954FqOIBsYYnDh4u7GLmASh4xSnz9vYIRJM4moCVx+5g3SLkIUPnsHXOZQGqYBa4xSRyZ
-	NAusRlggUeJYbzRIDYuAqkTXp5dgYV4BW4mDbxQhNslL7D94FuwCTgE7ifWLL7BDXGMr8alx
-	BxOIzSsgKHFy5hMWEJsZqL5562zmCYwCs5CkZiFJLWBkWsUomVpQnJuem2xYYJiXWq5XnJhb
-	XJqXrpecn7uJERwrWho7GO/N/6d3iJGJg/EQowQHs5IIb/RK3zQh3pTEyqrUovz4otKc1OJD
-	jNIcLErivIYzZqcICaQnlqRmp6YWpBbBZJk4OKUamCaX72Zv3h6V2hTDNOnGpEL1Y+wCkm8u
-	PhJeoFbWtamZ0TDo9fGupn2KadKz0r5sNIqUmVX9oC06N1vv7rzDkh58zFk+SsY8N4//5an8
-	vP/m0wdzQzQNHq++PvHNxosbEvcFyG/xUks9++7+ww7fHh1z7xnhm6Q7JrQXMcnN/+N5LOZA
-	8Vu25eJ9fKozzF8pVc05uCWl9bqF9ul3guGx7+RXPsiyEJdjf/1bzOrFD975vbf/ry1ceShu
-	6WT3hAmRyRdOn25/fEdlJ6Osu4asAFOYeHXszSMztB2OzZNn9krzyBfoeBOWeFtju0h6huWX
-	Tyl6HnO67WZ1H52vbnz/drSyxivWBK25J7NO238zVWIpzkg01GIuKk4EAH0mfccEAwAA
-X-CMS-MailID: 20240524001842epcas1p3a66b301f7aad3a8da28869db634221d1
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240524001842epcas1p3a66b301f7aad3a8da28869db634221d1
-References: <20240523002257.1068373-1-cw9316.lee@samsung.com>
-	<CGME20240524001842epcas1p3a66b301f7aad3a8da28869db634221d1@epcas1p3.samsung.com>
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240523-md-vfio-mdev-v1-1-4676cd532b10@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAGjbT2YC/x2M0QqDMAxFf0XyvICtDmW/MvbQajoDs0riikP89
+ 2V7uhy45xygJEwKt+oAocLKSzZwlwqGKeQnIY/G4Gvf1lff4DxiSbzYUsGmd6lrY+q75MCUVSj
+ x/s/dH8YxKGGUkIfpF3lxfu84B91IcP3YFc7zC8L3u/qDAAAA
+To: Kirti Wankhede <kwankhede@nvidia.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: B-sDN7bfuIo3ZNOaHS6SqkLDMDa7EKL4
+X-Proofpoint-GUID: B-sDN7bfuIo3ZNOaHS6SqkLDMDa7EKL4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-23_13,2024-05-23_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ phishscore=0 priorityscore=1501 suspectscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405240000
 
-On 5/24/24 12:08, Bart Van Assche wrote:
->On 5/23/24 16:56, Chanwoo Lee wrote:
->> I thought this patch would be appropriate to "fix" the following log.
->>    * dev_err(hba->dev, "%s: device abort failed %d\n", __func__, err);
->> If "Fixing" is not appropriate, could you suggest another word?
->
->That's something I had not noticed. This is indeed a bug fix. Please add
->a "Fixes:" tag as is expected for bug fixes.
->
->BTW, I think that ufshcd_mcq_abort() can be improved significantly. How
->about reworking that function as follows before the bug reported in this
->patch is fixed?
->- Remove the local variable 'err' (and reintroduce that variable in your
->patch).
->- Change all 'goto out' statements into 'return FAILED'.
->- Add 'return SUCCESS' at the end.
->
->I expect that this change will make that function easier to read and to
->maintain.
->
->Thanks,
->
->Bart.
+Fix the 'make W=1' warnings:
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mtty.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mdpy.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mdpy-fb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mbochs.o
 
-Thank you for the good suggestion.
-I will create a new patch and reply with v2.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ samples/vfio-mdev/mbochs.c  | 1 +
+ samples/vfio-mdev/mdpy-fb.c | 1 +
+ samples/vfio-mdev/mdpy.c    | 1 +
+ samples/vfio-mdev/mtty.c    | 1 +
+ 4 files changed, 4 insertions(+)
 
-Thanks,
+diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
+index 9062598ea03d..836456837997 100644
+--- a/samples/vfio-mdev/mbochs.c
++++ b/samples/vfio-mdev/mbochs.c
+@@ -88,6 +88,7 @@
+ #define STORE_LE32(addr, val)	(*(u32 *)addr = val)
+ 
+ 
++MODULE_DESCRIPTION("Mediated virtual PCI display host device driver");
+ MODULE_LICENSE("GPL v2");
+ 
+ static int max_mbytes = 256;
+diff --git a/samples/vfio-mdev/mdpy-fb.c b/samples/vfio-mdev/mdpy-fb.c
+index 4598bc28acd9..149af7f598f8 100644
+--- a/samples/vfio-mdev/mdpy-fb.c
++++ b/samples/vfio-mdev/mdpy-fb.c
+@@ -229,4 +229,5 @@ static int __init mdpy_fb_init(void)
+ module_init(mdpy_fb_init);
+ 
+ MODULE_DEVICE_TABLE(pci, mdpy_fb_pci_table);
++MODULE_DESCRIPTION("Framebuffer driver for mdpy (mediated virtual pci display device)");
+ MODULE_LICENSE("GPL v2");
+diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
+index 27795501de6e..8104831ae125 100644
+--- a/samples/vfio-mdev/mdpy.c
++++ b/samples/vfio-mdev/mdpy.c
+@@ -40,6 +40,7 @@
+ #define STORE_LE32(addr, val)	(*(u32 *)addr = val)
+ 
+ 
++MODULE_DESCRIPTION("Mediated virtual PCI display host device driver");
+ MODULE_LICENSE("GPL v2");
+ 
+ #define MDPY_TYPE_1 "vga"
+diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+index 2284b3751240..40e7d154455e 100644
+--- a/samples/vfio-mdev/mtty.c
++++ b/samples/vfio-mdev/mtty.c
+@@ -2059,5 +2059,6 @@ module_exit(mtty_dev_exit)
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_INFO(supported, "Test driver that simulate serial port over PCI");
++MODULE_DESCRIPTION("Test driver that simulate serial port over PCI");
+ MODULE_VERSION(VERSION_STRING);
+ MODULE_AUTHOR(DRIVER_AUTHOR);
 
-Chanwoo Lee.
+---
+base-commit: 5c4069234f68372e80e4edfcce260e81fd9da007
+change-id: 20240523-md-vfio-mdev-381f74bf87f1
+
