@@ -1,97 +1,124 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from www316.your-server.de (www316.your-server.de [88.198.220.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8407A12E1C9
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 16:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4ED86251;
+	Fri, 24 May 2024 16:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.198.220.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716568822; cv=none; b=GDR/BL7QnccGCKy45osk3uJ5DQOU4ZDVDbDzkCiRlb1EO4adSvbvuOzQFwPAt2WjB0zBqtAMSV2ju3rzcKuo6c8WzYCOCcS4V2Cdmmh8a8hwTLsii69rCpY1PBG1l9jPovI+mQa1FD6oUNtmmrdLwx3qTH7UZ3r1ErYDLGLiFi8=
+	t=1716568976; cv=none; b=ZtYIn87ny7zW0iE0CPN1EmtaHoFEZ0paHqH7uORLaedBSW3alIZQV+LTZbYWnZg0kgVItLwuQCg+9LhTAOykyox/Gh9Qa5QL/3vtKqUjUxJL9xH6QMEte2sDpokwh1BNSIJ9pAC2mpYBdhrZHYNvL+dortE1IjwUbRLcTCzpP2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716568822; c=relaxed/simple;
-	bh=9mvpBAnKzNAyjIz4AaURNG6HUDlSprKVfsup9+Rsh3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WrncZLqQCThTvuQZyxcBVKDTxkQp+l/QVWdHfVtiaBaCRdpX8xtX4Xm+qXc7Gg/GFrCsSDv7IwseALsohXXxFwJdsObo3pLrtbGCW3fyEIZUxDcVbn9jcZtOFuMDg0yhy8yzcuYEFr+UZlhyf3rPtVLiFqZ2z6Lt56N4FC0zXYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=lSjyQV7C; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1716568976; c=relaxed/simple;
+	bh=t+YModx5IJ7i5mA14PTSUCfUZivYXk693ycSQhxzxdI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GicM9B1Ca+iZchxYcPS6Ux6iCJmkHKtYCrxB8s2ARRL5Y90ozG/nJArRzt3pU5hY0ZJNoMkt5CIoB/tSAYopqEXm2Sx3CQ1F993W3DR9Ny4VaG5acHHo/fb0Xsn4ni59tWzb72jv3OOCGVeCfoTuqBlJr2iKdAuTXLv0Ls34dTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dylanvanassche.be; spf=pass smtp.mailfrom=dylanvanassche.be; dkim=pass (2048-bit key) header.d=dylanvanassche.be header.i=@dylanvanassche.be header.b=cDnhqIZU; arc=none smtp.client-ip=88.198.220.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dylanvanassche.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dylanvanassche.be
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="lSjyQV7C"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 18F2240E02A8;
-	Fri, 24 May 2024 16:40:18 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tm43LEE-mE5d; Fri, 24 May 2024 16:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1716568813; bh=jiaxkAzz/Wg3+OBprXDh1+W9WaBImj/HoQGusdn/co4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lSjyQV7CoZXTb+RQFBdfy8SZiBa5FhP58xrEVOvOq5su45eeCbtV8uc8W5t0yGCE0
-	 GtcIJtgF3SWdypNdkTxX6o9IqvGoTE6F1eYoOYdiTHSRxBEJlBBWh15Kxzv8wXQPZE
-	 rlBOAEJZke50zWDCQEjDmsBwYm66EQBdooJEqoEnHCfJqmrDHgShcXAFIvcPiJ6Ucm
-	 ZievW5F/CVIfrDmVsWZyT985vBV8KaP01FZ0FEVCoD9Kq96WVm2Ku8ZublztRRToX+
-	 hq2ElrwRehd8uejyTPLYe+LBiW1fiWOcXWEsAbPSbcrCtpYvdjTtmILg+7GyNiA6iZ
-	 85Wy1/sSAUmNdfCiz+swD8hC3btor5aPpF5TlVhLMsqtP4htLUAW2fbDxaZ/zYLQIP
-	 Nxtzf4EZrCrQyE3JnoxHRMC7klma0PVLb27CIQKjJYBHwm0OxdJPiczv7P3bVdmyCV
-	 1NHG8f8h0Vb5T0q/U6irqgQrlQQGMZ6iey9aCIA0Cu4shRWUZPywyiy6jyLuy+g+Qm
-	 Wb5wySme+TjQ6VbR6bGpyYIeE4ZSyWv6IXYPlm+nycKRUnsQJxcsJoA/TrRkBME/5z
-	 CX71Fv5nuHWqxw/zvo0zZBu8hDRrn/0ZWkVIbAK/OL7CL7pePffHTwD46RO5Y+ZjvG
-	 bd0u23XM4fIc5GEqCVXkvcYo=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9C4BD40E016A;
-	Fri, 24 May 2024 16:40:01 +0000 (UTC)
-Date: Fri, 24 May 2024 18:39:56 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Kees Cook <keescook@chromium.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, patches@lists.linux.dev,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] x86/boot: Address clang -Wimplicit-fallthrough in
- vsprintf()
-Message-ID: <20240524163956.GBZlDC3DH_OqvAjSBC@fat_crate.local>
-References: <20240516-x86-boot-fix-clang-implicit-fallthrough-v1-1-04dc320ca07c@kernel.org>
- <20240517095110.GAZkcojmJQoY_zU-OT@fat_crate.local>
- <20240517151833.GB3660288@thelio-3990X>
- <20240523115734.GAZk8vLgzOzD8Tv9pq@fat_crate.local>
- <202405231603.2E810E3FC@keescook>
+	dkim=pass (2048-bit key) header.d=dylanvanassche.be header.i=@dylanvanassche.be header.b="cDnhqIZU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=dylanvanassche.be; s=default2306; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=YX9E6Ij88ACGoWd05mXkF/EXj7DNLDqMPEhMZaF6BOY=; b=cDnhqIZUl8o75/ULztpfX3e7co
+	QN1z9NuArUEBkXMMbiIGQrCaipczliltmNneysj2YPARx4Wi7aLskCcyn4f18ofd+hNsL+9Kl6nBW
+	Ia5xOEozXNZMcSrX4hUy/lCcchdXDewJF+SRSuT6kHi1kASReN1OgzqpoSgwptv1rI/hH85uAK62P
+	bygtri8LvYF1EOnWLfW+rUCvjClAskoi3wMJ9b2mkgibASap2uUMOOmpu6gnc77aGKxzn/BLOF6FK
+	n6Ct2dLY9gTcr2zfn1Dm7OO4lNk3ewRNu57CAyZ0cR8R4fowe0YNqLqiontBK7iZJvnmKi5xWQ0lf
+	qE8GVI/w==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www316.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <me@dylanvanassche.be>)
+	id 1sAXYq-000K0N-1r; Fri, 24 May 2024 18:14:28 +0200
+Received: from [169.150.196.25] (helo=desktop.telenet.be)
+	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <me@dylanvanassche.be>)
+	id 1sAXYp-0000gS-0N;
+	Fri, 24 May 2024 18:14:27 +0200
+From: Dylan Van Assche <me@dylanvanassche.be>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Amol Maheshwari <amahesh@qti.qualcomm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Caleb Connolly <caleb.connolly@linaro.org>,
+	phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Dylan Van Assche <me@dylanvanassche.be>
+Subject: [PATCH v5 0/2] misc: fastrpc: FastRPC reserved memory assignment for SDM845 SLPI
+Date: Fri, 24 May 2024 18:14:01 +0200
+Message-ID: <20240524161423.15392-1-me@dylanvanassche.be>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202405231603.2E810E3FC@keescook>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: me@dylanvanassche.be
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27285/Fri May 24 10:30:55 2024)
 
-On Thu, May 23, 2024 at 04:12:25PM -0700, Kees Cook wrote:
-> There isn't a bug _here_, but this is about making the code unambiguous
-> everywhere in the kernel. We've already done the work to get rid of
-> all these warnings; this one is newly introduced, so let's get it fixed.
+* About *
 
-Nah, it has been there since forever (forever == 2007 in this case). It
-fires because I enabled the warning in the decompressor.
+The Qualcomm SDM845 SoC has a separate SLPI (Sensor Low Power Island)
+DSP for sensors connected to the SoC which is responsible for exposing
+sensors to userspace, power saving, and other features. 
+While sensors are connected to GPIOs of the SoC, they cannot be used
+because the hypervisor blocks direct access to the sensors, thus the 
+DSP must be used to access any sensor on this SoC. The SLPI DSP uses a
+GLink edge (dsps) to communicate with the host and has a FastRPC interface
+to load files from the host filesystem such as sensor configuration files.
+The FastRPC interface does not use regular FastRPC Compute Banks
+but instead uses an allocated CMA region through which communication happens.
 
-> We don't want to have the same flow-control statement reachable from two
-> different "case"s where the resulting behaviors are different. Otherwise
-> we can't determine if a "fallthrough" is missing or intentional.
+* Changes *
 
-I'd agree if this warning wasn't enabled by default but were a W=123...
-diagnostic thing which does the additional checks. But right now clang
-is warning for a perfectly valid, albeit a bit confusing C.
+This patchseries add support to the FastRPC for assigning a coherent memory
+region to a DSP via the hypervisor with the correct permissions.
+This is necessary to support the SLPI found in the Qualcomm SDM845 SoC which
+does not have dedicated FastRPC Compute Banks, in contrast to newer SoCs,
+but uses a memory region instead when allocating buffers.
+
+* Related patches *
+
+1. Remoteproc changes to support the SLPI DSP in SDM845 (v3), needs to be applied:
+https://lore.kernel.org/linux-remoteproc/20230330164633.117335-1-me@dylanvanassche.be
+2. DTS changes (v5), already applied:
+https://lore.kernel.org/linux-devicetree/20230406173148.28309-1-me@dylanvanassche.be
+
+This serie does not depend on any serie, but all of them are necessary
+to enable the feature in the end.
+
+* Changelog *
+
+Changes in v5:
+- Adjusted to FastRPC driver changes in 6.9.X.
+
+Changes in v4:
+- Fixed possible memory leak when driver encounters an error during probing.
+
+Changes in v3:
+- Dropped debug prints.
+- Added Reviewed-By tags from v2.
+
+Changes in v2:
+
+- Removed double blank lines
+- Dropped dt-bindings property as it is not needed for driver behavior
+- Add additional patch to allocate buffers via CMA memory for DSPs
+  without dedicated FastRPC Compute Banks.
+
+Dylan Van Assche (2):
+  misc: fastrpc: support complete DMA pool access to the DSP
+  misc: fastrpc: use coherent pool for untranslated Compute Banks
+
+ drivers/misc/fastrpc.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.45.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
