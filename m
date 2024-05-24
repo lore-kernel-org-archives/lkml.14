@@ -1,76 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC33749C;
-	Fri, 24 May 2024 06:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532AE3D575;
+	Fri, 24 May 2024 06:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716533814; cv=none; b=jB7ItCyUCjbPrgrB1Flg7KYuSJa2KoA4WTEVtreFDD90IDqCY4Dps82+wrmMgpb9JVw+rabtF4Lu6YSvdP69Qe2FOsqea90HfzNfSnwD7DFZlE/dmVoifGyjytCpOY3fP/GxHXxqMdfSfpaM3wSkYR+ZWdxAzL3owcOv9T+ARhs=
+	t=1716533906; cv=none; b=FjjBN9Oa16pvNOQfgphpjcY86CM9F2jZG8yQSX3H6wNA6uo5QRE0mpkDVeCugDYVumtPmjY6rhGRhMmjx8ulnAoHNOsZXo0MsSE6n17m1EGeknJzKlDPygfBUWddVcA4YNSvBw7YE+fUWrDUZrar+gRi2361fCA/f8HkliicVJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716533814; c=relaxed/simple;
-	bh=5z848Ls1pEd41iTJdKJt2BFrLD45xDJ13Tui+Tq0r0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e6WctktF+c4n3uUaMdU4RgkymdJilTNEWI+RU5yWRIGGsJBZjM7T0UZh07hGZ8LNk+RbMbZv33jAW4BXyMpiFeUVAkaV8HAj2wuWXfSrPXiZJ8J2cB5nBixPbTG8tTt9bzVaSvSCwByM8ininIVWy+MpBI+OL43Ffm+bYI/tssc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KRPuDHBw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716533906; c=relaxed/simple;
+	bh=VHScqeC2fmLF26N/w+C050h4YTn2N+1Eu/SkdWLkdsk=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=lWJ6kPinW/mW5r9TKH8XK3YNtX37rYwly69Y5U1REuuowOYITf+UMiTIe2i9R6XD2teBKHZhtC/VOiNZFzeLA5KnSayIIvhj4Osjiekps58Y+TUPy+Dq/sY4gIjbo6xgsBLPWCwhL+lnQAXgBbIvHvPNQFrPW3lKmUxr503wS98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X2AEojRY; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KRPuDHBw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAEEBC2BBFC;
-	Fri, 24 May 2024 06:56:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716533813;
-	bh=5z848Ls1pEd41iTJdKJt2BFrLD45xDJ13Tui+Tq0r0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KRPuDHBwXigech8eZoaw93f16KRu1OHf+cB4uIOJ1B3SvBkaiNOZmbIisGTuo0MLq
-	 7mMpgfHwJpB745Jxx/MVYh9B6nmSi1GZp02xEA2JCu6b5FobVt2bz6WpY+btNIhId4
-	 2/hMIGR/PuoLldzFTn+w877uMEXmsElUizwRDLrc=
-Date: Fri, 24 May 2024 08:56:50 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: quic_zijuhu <quic_zijuhu@quicinc.com>
-Cc: rafael@kernel.org, akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] kobject_uevent: Fix OOB access within zap_modalias_env()
-Message-ID: <2024052458-unleash-atom-489b@gregkh>
-References: <1716524403-5415-1-git-send-email-quic_zijuhu@quicinc.com>
- <2024052418-casket-partition-c143@gregkh>
- <74465bf5-ca18-45f8-a881-e95561c59a02@quicinc.com>
- <2024052438-hesitate-chevron-dbd7@gregkh>
- <5acce173-0224-4a05-ae88-3eb1833fcb39@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2AEojRY"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-681907aebebso416175a12.1;
+        Thu, 23 May 2024 23:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716533904; x=1717138704; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WUxSDJgPVHpIgkdW/SJCU4zEFv1caSZKZZ1ujvSgGJk=;
+        b=X2AEojRYczbWEOe18ry1bGSu7rfhgqM0+YoYiTSCizR3McMQXGSSUqs8H1Hg4F54xg
+         m1EXvQkJdVZaAp1+aTcn+na/DqKqSwC+pStqWv6z1SGr2fcYU/DEIDoxOw6KFQ3ZEXBa
+         AnJJtbO5dBEATfdJBAxv7d15IuvHZjQDUfjwBG48kpPs0N2EzaRZEUP1Or6IfFn1F7BO
+         KadUyOhy7r1BQijTug9MXnnCPwaiCUinKOtub8G6pgGRVOpP++6I+FK8cJM2PoD/RF6d
+         d4O4m6R6LVgpsHJ+0H/7RgW/xSF/7lxsQW5bjcTXcJB6+QG1hz6N5WNiPDruaVvqC1S7
+         ij+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716533904; x=1717138704;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUxSDJgPVHpIgkdW/SJCU4zEFv1caSZKZZ1ujvSgGJk=;
+        b=ub1pXiLsTOhIOMkC9/b+dKytkbuK/uMcSGcrpGFxcw2MTj6QCdSYnkun2COHG1fvYr
+         oIW3EWg1KaCoc8ziqjLoFDst6xf9qOXqhBsBV8XBeyThJkAdD4fvbAleILmk66M7M+zZ
+         zrRAYEDf+9pacqcPxqMrcegCPfB13+eBnBz1XwWpZafgAbjJWZEalkpJkmhPKKayURC1
+         HkNqCE6PSIDIkBPGMdvl906cBRAvGnlqKzFhv4RkACR7OSKhx5GzPVZlKdfWT4y8Qg9W
+         juv59gBBG7szhY2DRBounRXf3cFKCrWW4H6FFQ6u4D0uczErL69F1zepyLLzxsVEyr/t
+         fO9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWCaelZ5YVcvCZZy3W6X+dYkRA3gPcQ4LoGPkMo5RfWFl+ZjVxc0/XJIDkBwuYSBRhvQOQCEVxZIWYLASG/T0VfKgT8hcZqLnUOYsNBKJl471rFcnXtJDppzwfnvQiWYnHzv0hw11XGb7vAw5Bq
+X-Gm-Message-State: AOJu0YwwKNNPnxzHB3bTcv48rV+m5/XnVsapy3LhC7eoGu8c7wAP4PLt
+	Nl1ZmfTXmB0mlvTmbpi3pEiKWbsNczjLZ6d2IY4mH6HIMU2IST6t
+X-Google-Smtp-Source: AGHT+IEyVxDn/tS3CPfkN4tv2etQTfMV97SvgDd69GnzXXAD79FVP1cAiZsDA/Dek/GUkxq0C6bqvA==
+X-Received: by 2002:a05:6a21:3e05:b0:1af:5d8e:c6c with SMTP id adf61e73a8af0-1b212d5df8emr1657909637.18.1716533904568;
+        Thu, 23 May 2024 23:58:24 -0700 (PDT)
+Received: from dw-tp ([129.41.58.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c7d1b46sm6763385ad.110.2024.05.23.23.58.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 23:58:23 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Donet Tom <donettom@linux.ibm.com>
+Cc: Shuah Khan <shuah@kernel.org>, Matthew Wilcox <willy@infradead.org>, Tony Battersby <tonyb@cybernetics.com>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>, Muchun Song <songmuchun@bytedance.com>
+Subject: Re: [PATCH] selftest: mm: Test if hugepage does not get leaked during __bio_release_pages()
+In-Reply-To: <d551d1cd-a02f-42aa-9de2-10ff7757224c@redhat.com>
+Date: Fri, 24 May 2024 12:23:15 +0530
+Message-ID: <87msofsntw.fsf@gmail.com>
+References: <20240523063905.3173-1-donettom@linux.ibm.com> <20240523121344.6a67a109e0af2ba70973b34b@linux-foundation.org> <d551d1cd-a02f-42aa-9de2-10ff7757224c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5acce173-0224-4a05-ae88-3eb1833fcb39@quicinc.com>
 
-On Fri, May 24, 2024 at 01:34:49PM +0800, quic_zijuhu wrote:
-> On 5/24/2024 1:21 PM, Greg KH wrote:
-> > On Fri, May 24, 2024 at 01:15:01PM +0800, quic_zijuhu wrote:
-> >> On 5/24/2024 12:33 PM, Greg KH wrote:
-> >>> On Fri, May 24, 2024 at 12:20:03PM +0800, Zijun Hu wrote:
-> >>>> zap_modalias_env() wrongly calculates size of memory block
-> >>>> to move, so maybe cause OOB memory access issue, fixed by
-> >>>> correcting size to memmove.
-> >>>
-> >>> "maybe" or "does"?  That's a big difference :)
-> >>>
-> >> i found this issue by reading code instead of really meeting this issue.
-> >> this issue should be prone to happen if there are more than 1 other
-> >> environment vars.
-> > 
-> > But does it?  Given that we have loads of memory checkers, and I haven't
-> > ever seen any report of any overrun, it would be nice to be sure.
-> > 
-> yes. if @env includes env vairable MODALIAS and  more than one other env
-> vairables. then (env->buflen - len) must be greater that actual size of
-> "target block" shown previously, so the OOB issue must happen.
 
-Then why are none of the tools that we have for catching out-of-bound
-issues triggered here?  Are the tools broken or is this really just not
-ever happening?  It would be good to figure that out...
+dropping stable email again.
 
-thanks,
+David Hildenbrand <david@redhat.com> writes:
 
-greg k-h
+> On 23.05.24 21:13, Andrew Morton wrote:
+>> On Thu, 23 May 2024 01:39:05 -0500 Donet Tom <donettom@linux.ibm.com> wrote:
+>> 
+>>> Commit 1b151e2435fc ("block: Remove special-casing of compound
+>>> pages") caused a change in behaviour when releasing the pages
+>>> if the buffer does not start at the beginning of the page. This
+>>> was because the calculation of the number of pages to release
+>>> was incorrect.
+>>> This was fixed by commit 38b43539d64b ("block: Fix page refcounts
+>>> for unaligned buffers in __bio_release_pages()").
+>>>
+>>> We pin the user buffer during direct I/O writes. If this buffer is a
+>>> hugepage, bio_release_page() will unpin it and decrement all references
+>>> and pin counts at ->bi_end_io. However, if any references to the hugepage
+>>> remain post-I/O, the hugepage will not be freed upon unmap, leading
+>>> to a memory leak.
+>>>
+>>> This patch verifies that a hugepage, used as a user buffer for DIO
+>>> operations, is correctly freed upon unmapping, regardless of whether
+>>> the offsets are aligned or unaligned w.r.t page boundary.
+>>>
+>> 
+>
+> Two SOF, is there a Co-developed-by: missing?
+>
+
+Sorry about that. Andrew, could you please add the tag (let me know if you
+would like me to send v2). Will take care of it next time.
+
+Co-developed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+
+-ritesh
