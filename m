@@ -1,169 +1,270 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2042.outbound.protection.outlook.com [40.107.20.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBD16116;
-	Fri, 24 May 2024 01:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716512763; cv=fail; b=YXTWJ7kYA0LUZXY/7heKscIJg4C/nL5pjsL8N8i5b+PidF9OVgWbMfMc3ANkVCaFZZyECkJRzx8t4ePwttunm3LSxJsM4lDfwkBukPyvm9PO6GD+EfuKIC0hQrTZfJN0tPXNVBUqolenPHfeFmusFI9B4iPueYe14mK+G6aL1jk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716512763; c=relaxed/simple;
-	bh=f2OUotSbRZxBU/62t5KXd6Uhy1mZcCieaTg1f2r53qs=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LG3cb+uD+Dh9E4CuuyPsZdIoMLw0oIeCQ81LeAn/9sAoU+NlVVtZd7KMASpj8nBB4tXvWHFtSUB2LSfpjAJmE1M08dZ4I+MkBwd/8fqLgrak2NytGI/rOae7xJFJsuc7riL1I8BeGFVY6V0Rk5Xnpcesy6+uiUSBxvtc+7ALZ1Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=RKcgIgQM; arc=fail smtp.client-ip=40.107.20.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513C136D
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 01:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716512945; cv=none; b=mTCsz5yjns9jW/SUVASAVNO3ftQYaFFztXnFguP8tejKGtI6oWZOU2j1NyjmYawlFoITlpCYsIkkf88JwGhbAk/3K7yn5mz4TG+w14XlQH7KGS1Jvp5kC2jfHwMcOPD2IzbMNho/5WvmVaxwgpiNkIn1lbeWlOFCrz7S00vaAsk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716512945; c=relaxed/simple;
+	bh=8XQWHJJcnaWQIBpyYzCHxp7AnnNYM9fdzlKNZ1TPWgI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R8JnF1yJ+hO5xZJ+sfH4x2yhGOmczi1KJiS9u+txTjg4PGpBIosHwDRVrgblIvoITvzNgGHUzS5SsFnFfO/00mPyB3fG8IaTLExBgXiz7b+hQgnZDhKNxuUetirGTEp+R1eStWCoqsjGygZIatLQafbEooiznBPE1nA4DU38PRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=20MK3HZS; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RKcgIgQM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QwycXW0dAYI+rNFSfjnC26A5ZV9vR908o7di1CbfqJJnWPfq9uzzlzbmQyUhUTXIsNeBmeJNJ6Dy3+4ieRyE6BkPbBKqQIqffJXo4y2yaL4swrY2fGO71z5MwbIi1mpMbdnnfl/xIcHk50etdnbhPqAqYcUKIWBTpZwM3bBbBKt7vn561ezABRnemrCkqdz+2PlyqoOaPBsIPdJiQ+8YlKNujbzFYZTMoWQV5GEFZT9AZF9PNsqMkLfcnWe74c1Q/k3M79rp9lq0hEmEAL2wIaUu0bKk3r1eCXmKVKAD3pK3aj90HzIx/1Mp3k8BJQzd0dfMMOGhULVuGOiP2607ZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f2OUotSbRZxBU/62t5KXd6Uhy1mZcCieaTg1f2r53qs=;
- b=Nlo3zwTTo9b4BMwn0EppUjSlpWXaMAOa2ahbRn81uVxO/oL+WdpdPtULcp8x3ZrIPmqUUiJ+iX0w6xcSQqJwDVwtAJ/haXMxVquIW3lAHvLAGJUG6McBXO9bTaDBmZWJsAU+ZLcjpEUcW/3zcJ1uf4CMJK0zNG2bY29LizcKBsfGNndu0tgpagds1jpeWu0d8osqpDlTewcstXRRl06Xf0I5FVijUXMkrSy8Cpf5+gJg2/SSubb2GELl+iJRHZcmMCq8bNhGhHosOFzDGIWzflDLCQ3YDer6Q5HOa7XpoqrMH9vU/Y/AgrGQHOPB0WVp+i08+wPL/4XDkWyFBr5yZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f2OUotSbRZxBU/62t5KXd6Uhy1mZcCieaTg1f2r53qs=;
- b=RKcgIgQM9eOANQaXaIZh/4MgVQFgCGDXQLEAlm1SD8kzjGMX7MmVyz/x2RQOWs5BH1cjm0NkMdf8Nl8IzUOrQYj8+j2R8q1lLOFMVbMaIH97nZ67uQH3GyFQDslQnvaWLvy85SKNI58pP4RhpM+IhNq0GhplU3LkMreWBd8jNyg=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by VI1PR04MB9786.eurprd04.prod.outlook.com (2603:10a6:800:1e1::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
- 2024 01:05:57 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::557f:6fcf:a5a7:981c]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::557f:6fcf:a5a7:981c%7]) with mapi id 15.20.7611.016; Fri, 24 May 2024
- 01:05:57 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: "S.J. Wang" <shengjiu.wang@nxp.com>, "abelvesa@kernel.org"
-	<abelvesa@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>,
-	"sboyd@kernel.org" <sboyd@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de"
-	<kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>,
-	"marex@denx.de" <marex@denx.de>, "linux-clk@vger.kernel.org"
-	<linux-clk@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "shengjiu.wang@gmail.com" <shengjiu.wang@gmail.com>
-Subject: RE: [PATCH v5 5/5] clk: imx: clk-audiomix: Corrent parent clock for
- earc_phy and audpll
-Thread-Topic: [PATCH v5 5/5] clk: imx: clk-audiomix: Corrent parent clock for
- earc_phy and audpll
-Thread-Index: AQHarPrLZnzBc9Ib/0SIM6sQKPG/EbGlkv3Q
-Date: Fri, 24 May 2024 01:05:57 +0000
-Message-ID:
- <DU0PR04MB941766059B38CCD517FDD27F88F52@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <1716458390-20120-1-git-send-email-shengjiu.wang@nxp.com>
- <1716458390-20120-6-git-send-email-shengjiu.wang@nxp.com>
-In-Reply-To: <1716458390-20120-6-git-send-email-shengjiu.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|VI1PR04MB9786:EE_
-x-ms-office365-filtering-correlation-id: 6f03d177-7a0b-4f90-8e49-08dc7b8dab45
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230031|7416005|1800799015|376005|366007|921011|38070700009;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?WXHwVrHaYCKAxrrc1bhUbWkXco+zclVuF7JtnZR+mC5v4mTDjzurNEmSPBMV?=
- =?us-ascii?Q?KwEM1a7vqrXDHA+hubac1rOszhCaYHfjiSII6h/MpxpqXNXYoE4G54sccn8V?=
- =?us-ascii?Q?5ymPNsS1sDRVMfZjwP2Vy4UoDJy38P35vHsoeJXSIPmXSew+Sxk/bABwAEok?=
- =?us-ascii?Q?iK+0XHjsPxn341HW9HrAH9HD0dhDzZfT0BZ9KEVEpHp4rLe6lPjrxX/Wd22/?=
- =?us-ascii?Q?TjsFbOHr15Ob6qAu6WRFiB3BXil7E2lr6vOs5zG7SJ3BlvUyrnt0vBaPYCJ7?=
- =?us-ascii?Q?7KgKkoZ4+aMDZ0rwKZgh2OIcCTO+C/lNixDQ9gWlOuPGslxsyMKK9u7vfpiQ?=
- =?us-ascii?Q?R1svj+iYWZPDffNKJxy6pj/TRoSkRhC9T/e4pyei5k95WMZt9l2btbQSno/W?=
- =?us-ascii?Q?A64xxYgCz8pVINI8kzjHiDTKwIVNirXallf4Xb52j7mhH/tax6FnK+ilY/AY?=
- =?us-ascii?Q?M6R/Olp+Bd+a5aUNf0DFVVYj9FdDas3zUady0hiSujG0M3R5IJV1SZyKkb27?=
- =?us-ascii?Q?UiucsLGnX4xWz4nosnslppB4lG9gfZJGUpmz3XByK3oMOZFDWqtaW3JF6y7J?=
- =?us-ascii?Q?La9HK6WwvfxfHzfWMqey++Hn3N+EcsmSrpLl8E1yvpvI+84SqcRD53I/oZeX?=
- =?us-ascii?Q?q8TSMoadNYylx6wVqCcD7ql0HqJjV3kPxjKUar4ileHWdxAFhxv7HIKUfrOS?=
- =?us-ascii?Q?UNnAOhlHrhfRixrdahPfgT7OmM3QDbkdtU5D8N7G1rB+foZTrg/rkXl9UMKs?=
- =?us-ascii?Q?G8AJTTb90Yfe5TmCeVgZtS5Rluh86b0PmNsT6MWbb+FiVV1Jr5w22y/hoYGS?=
- =?us-ascii?Q?uK3y/z809ocve6IoL09mBy+XeDEl60LQcfHVTub+9xFqRBRMjC8BOzb1Fprs?=
- =?us-ascii?Q?MdvKCSTyp1sehJz6TJ05CJA3UEwX8FSKkoDQXVoPrqlvX4g0zbAG63SSyOg+?=
- =?us-ascii?Q?C9mDqC0EJuu8U0lk1XiyQbA1T8/pCCQkDEi+NsGFzbOOpIe0OCtTOvA1aL82?=
- =?us-ascii?Q?GtFDUPPXCYU3Edr8dO9yHnE4D1lm9yF+TmKYknDF0BD3wCbrC0mtAxMY82f6?=
- =?us-ascii?Q?hEFYlB03wt+roY+aTCFPtaQiTXjPhAwfLUTNp55TK1pu8G++1NEcHMSaUo6u?=
- =?us-ascii?Q?gt7fKSJ7YWrl9QKxVHLoQXq0/q36naHLGJ2U5LGjL7AYdJlr7mTi9c6tn/+N?=
- =?us-ascii?Q?/14JfAFVFcJeIhOahkV6UWqgUrdP0yslkQ1fZqOzW7d51vMGeCeQNtG+C7/Y?=
- =?us-ascii?Q?j8ni2gvHzofPMUQ0pXJhIXIYvr7m/3mr4TtjbqX2cd1wrTfvSmqDW7ZFKx5J?=
- =?us-ascii?Q?7D7cGQcW5QI4WEbf4NkYYExjD/pDom0anYGrbaXFR1j3SJlx/J4L935ZeF0q?=
- =?us-ascii?Q?X/vS6S4=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007)(921011)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?r8ckciHohR2LAAdL4u3DJUZ2sgu6et2kIArAsc89QMDTLLvP4f0sAYz2w2Fs?=
- =?us-ascii?Q?FlTOv0IRzK7xc1ArJp1yqSMg50vUCacGHtovklU7LRl8BQ+ivFfvUFPb0Apu?=
- =?us-ascii?Q?pnTacIwTFeDdLyMFWjq1U2r9EaWHeeXe/PVHEB0Sxm3mmC2RSwkXAggJUs65?=
- =?us-ascii?Q?hWGGGdJgDwq9E4UxuQJHgpJAU8CFXxZ/cRNHrvF/gE0OIf2NCfUgpFQVEKPf?=
- =?us-ascii?Q?plpXsaBsIbErC3Jrkgm6bR3ysVDedHvAMXlNycClDk6RQej66QTdwmth4+nl?=
- =?us-ascii?Q?WqpEHG/grK3+OCIfj+2VERWiZK1YRdbKBS2XT3l1sc9r6vT66PEJ3fosH3kV?=
- =?us-ascii?Q?QvxEZAI6GDR0h8l3+BmEbtYt1ALe04JrFWdCMF6ioO/SX9eZBTXsjNFfy0kW?=
- =?us-ascii?Q?cg2TPHAzwbencAs4/afVyjU6ROR4NN19NeXJE8RSNjyNvqSV9twGQ64A2OZr?=
- =?us-ascii?Q?UuTYlAv6MjmOB1Jge+eCixMsLxd4JCVGVrBJSbwCTDbiIP1DtDWoHSPGuqtn?=
- =?us-ascii?Q?o+MmQvpL07Vyn05uVgyRAgVDAa5QyB8ldEWRgavQ9rqxN9/5VkFZwo0qTkwN?=
- =?us-ascii?Q?ABoO8tE/REAJEhJ6v7SmpApfHkxTblGsyjpsEx7zDcAhNWqJdaEwGMxUC+Ti?=
- =?us-ascii?Q?2GIOwWFd+su7IrR0GGZ5CB1Zh6y7BaxzcbwrtW8wwOzu5qkL/lbGe2IgDnZy?=
- =?us-ascii?Q?910LaIzaHQ3vZbzWGgdz6uwMaV1fvTF09Ekp6as8v1TJfMZFAN07FLyjX1P+?=
- =?us-ascii?Q?7ZaKOWTGnRnu3UdACEl8IUDAuN5PDxjBCbDYqkKYg+IHallaHsP90y1Xsbw/?=
- =?us-ascii?Q?2UO70zLD8CXNAjFU4N87D1Pr5HU+TAgS2Jt9PZwt7wNCRXPxgRzPjPUy6XEL?=
- =?us-ascii?Q?98+p8277Y9T1Kk7i3ue16iMzqQveWO1xbAAzD2dVBbYnCr8CloYsLW/BG5Xp?=
- =?us-ascii?Q?cWIFvWV6gEZXQ7qBYruZAIoWyBJAvuNwgqje0/Qpz45uvrmXld4mM86KrLDJ?=
- =?us-ascii?Q?RLtrh+qS+BUgu5S3qMyTfwwf6/xykBcNbtt3ShR+e7qYMp26+zkLYngQEYqt?=
- =?us-ascii?Q?OyW5G5b72tMs0lGXFjnMUkI2HG0/VuV5fSHvQv719ACcR0Xkj5CKEeFbHrZ4?=
- =?us-ascii?Q?punYjkOiXLo0u3+ynRxmuQYoz1yS5YMlUWZbIkWJ8S0Ws6seovUXr1cPlvjg?=
- =?us-ascii?Q?VDaC3CieeXfp1QLRT4toK5LCa4QfagX29TE1XC0urKqQJTB61aI2ZNe5W9ZD?=
- =?us-ascii?Q?qdBj/p3WC2yhiixCuNJi8DFwc6qTXPqUL1YQOz8C9pa3o/AFDJldU9ZpNv/O?=
- =?us-ascii?Q?It4/obpBEz5Vp9i3l9+dxb3ISy/o0lGjC0PYReoH1bj91Runbc5Qt8ZIa93m?=
- =?us-ascii?Q?fwllYzmngpsyVhIMUI0O7FaCjfbIEnqhV2IChLqTlZyYKm8z9ReM6pPkAJVe?=
- =?us-ascii?Q?vCKeq6454jK1YYUZKdclYdSs85B1BAN9kNauk+3dEVXW8wa3F+8B8RU5xclJ?=
- =?us-ascii?Q?k90+2kveTp+64KcM3rXqU1ZxxKyTl6dAinBQdu9T6YqbZASD5vm9gW1OSwqx?=
- =?us-ascii?Q?nspJk44pdTuPRpiyI0o=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="20MK3HZS"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6267778b3aso17663566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716512940; x=1717117740; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d5hsurXO4+PTmTC7t5rP+UCCiN2KRr+N0eUl4vfw5Qc=;
+        b=20MK3HZSy+YIlZd/bhTnx1+hm7PuAQRmtjxEUN3Kb0dVHLsQwDmuMQ9v7jxD9GDii3
+         9bdvlQt7S2vFrPXOFb7MTdnfe/ASwd1SZ1FeWs/DAFrDIzLaI08byIixqvcMllT5x3/E
+         BPdHNcUOKWYOUFHvDBI5vPyroC+E8+bmK1U+W4pDeXN9Cb37+1bAXWWmAzG+LZK6OwDT
+         IGXi031G8W58bknM+vZanomHLYL/dY7YCh7Ww46ljKREOJCH7tj012naZSntF1i96W7u
+         +epeQpIJbXmhEtuKWFM+Ojql+qpgEAl2TDfgbwX0k8ka+XrFG54g5RM6KqldbmWkYYJ9
+         ZfPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716512940; x=1717117740;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d5hsurXO4+PTmTC7t5rP+UCCiN2KRr+N0eUl4vfw5Qc=;
+        b=IxQ4YaCkUfTEOGIbqBi1AFr3ZzGl0hU00yXnFLcdJpi8ikFZwUsRJLFDPnW5YqCOTg
+         lcsA1fYyyv69n/Eap2EgxQHX/dEKvqaB240sycY6l/kCijI1euBemHOmevfT30gwyrI4
+         ixxzK9mu/kngiJJSYk7zTo3dKDwqdXoZ9nEA3qlQDnfrHIsbVvpINUVKBPhwBJ4s96fv
+         P6YdfbSZ/EypD9kFYrSk0Ne6WmUEcwB1EqYVImQew7Bg2Wn1tc6CwgskbbmIa0oqgR7P
+         LqUvnW/adiota/vLoWND3d6QwcPqgPHQGE8DhKMFkk+yZjuT0z5odDA8SMJKVXkhCEiI
+         vqhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV32XTi6/ByEw4is8v2OkbVKGUKprtgXr9cbQAtDmcapbD9wvwlE605rCyIpWwHenXuY6wOf9B9qM6NZm0Dzs3actjrJkcf/okFBcUF
+X-Gm-Message-State: AOJu0Yxv47skCc8x+47IOxdf3Nrb4HbWbmUKsth+LCEpQ4kHQwi428i1
+	KFduflhMgN4OvEVe3PKuMl0tChZ13AiVoI0/2RvfOYO1bAuVf6aOk2pT9+tbSkpvT8RnLS9E2aU
+	vTv6F1QrkCsGneXXPdW+gS5NxiuCWP8zS0405RA==
+X-Google-Smtp-Source: AGHT+IG3s/PxfkzALAwXOhQ3ekAOVPLqk+Nn0xM/k7lUsK1tJ7QFxgisyucTWB05LPZ17KPqpgslqJYxANclXkKxTGo=
+X-Received: by 2002:a17:907:3ac2:b0:a5a:2d30:b8c1 with SMTP id
+ a640c23a62f3a-a62641c78c3mr40064366b.14.1716512940597; Thu, 23 May 2024
+ 18:09:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f03d177-7a0b-4f90-8e49-08dc7b8dab45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2024 01:05:57.3815
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gF61N6Gkp+rSNdpsKGyS85FpKcng0iXWNxS5c6zEQhcXiWa2WLa0ZeDI9DBBn17mJYzKsvjJRs1YC/C1sk8iZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9786
+References: <tencent_9D721BDDF88C04DBB5151D57711D62524209@qq.com>
+ <tencent_338DF690631BAE788C4CC858233E9FBAE006@qq.com> <CALs-HssGcNso6vTfbcsiWX1h_46jgDDRcEWcfZCTpxXYnubcng@mail.gmail.com>
+ <20240522-d110bb16f54eebb725e943c2@orel> <Zk+ygkJXUcW+H7Rl@ghost>
+In-Reply-To: <Zk+ygkJXUcW+H7Rl@ghost>
+From: Evan Green <evan@rivosinc.com>
+Date: Thu, 23 May 2024 18:08:24 -0700
+Message-ID: <CALs-HssY+UOEcM=LhahK1Ngs+=oEocLTFYZ65-Kn7=bH3qYPOg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] docs: riscv: hwprobe: Clarify misaligned keys are
+ values not bitmasks
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Andrew Jones <ajones@ventanamicro.com>, Yangyu Chen <cyy@cyyself.name>, 
+	linux-riscv@lists.infradead.org, Elliott Hughes <enh@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Subject: [PATCH v5 5/5] clk: imx: clk-audiomix: Corrent parent clock for
-> earc_phy and audpll
->=20
-> According to Reference Manual of i.MX8MP The parent clock of "earc_phy" i=
-s
-> "sai_pll_out_div2", The parent clock of "audpll" is "osc_24m".
->=20
-> Add CLK_GATE_PARENT() macro for usage of specifying parent clock.
->=20
-> Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+On Thu, May 23, 2024 at 2:17=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
+>
+> On Wed, May 22, 2024 at 09:26:08AM +0200, Andrew Jones wrote:
+> > On Tue, May 21, 2024 at 11:36:06AM GMT, Evan Green wrote:
+> > > On Sat, May 18, 2024 at 9:00=E2=80=AFAM Yangyu Chen <cyy@cyyself.name=
+> wrote:
+> > > >
+> > > > The original documentation says hwprobe keys are bitmasks, but actu=
+ally,
+> > > > they are values. This patch clarifies this to avoid confusion.
+> > > >
+> > > > Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> > >
+> > > Hm, we also have this problem in the code, since
+> > > hwprobe_key_is_bitmask() returns true for KEY_CPUPERF_0. This results
+> > > in wrong information being returned for queries using the WHICH_CPU
+> > > flag. If usermode asked for the set of CPUs that was specifically SLO=
+W
+> > > or EMULATED, the returned cpuset would also include cpus that were
+> > > FAST. I believe all other queries are okay.
+> > >
+> > > The one-liner fix is to just not return true for that key in
+> > > hwprobe_key_is_bitmask(). But that's technically user-visible: if som=
+e
+> > > software relied on the buggy behavior of FAST cpus being swept up in
+> > > the query for SLOW or EMULATED cpus, this change would expose that.
+> > > The grownups-eat-their-vegetables thing to do would be to define a ne=
+w
+> > > key that returns this same value, but doesn't return true in
+> > > hwprobe_key_is_bitmask(). What do people think?
+> >
+> > Even though I actually enjoy eating vegetables, I think it's unlikely
+> > that we need to be so cautious for this. I feel like kernel updates
+> > provide a bit of freedom to change results of hardware query syscalls,
+> > even when run on the same hardware. Particularly the EMULATED query,
+> > which I guess could change with a firmware update. And, even the SLOW
+> > query could change if the probing was modified directly or indirectly.
+> > IOW, applications that use the which-cpus syscall shouldn't freak out
+> > if they don't get the same cpuset after a kernel update, which means
+> > we can drop the FAST cpus from the result.
+>
+> Dropping FAST does not really address the problem here. These keys are
+> being treated as a bitmap when they are in fact just values. Because
+> they are currently treated as bitmaps, it is semantically acceptable to
+> "or" two of the keys together and pass them into hwprobe. Dropping FAST
+> from the input of EMULATED | SLOW will make it appear to work, but it is
+> not reasonable to try to support or'ing of values that are not bitmaps. I=
+f a
+> key that maps to a value of 5 is ever introduced, then the input of
+> UNSUPPORTED | EMULATED will also return cpus that map to the new key.
+> If hwprobe recieves a value of 3 for CPUPERF_0 and or'ing is supported,
+> that could either be interpreted that the user is asking for cpus that ar=
+e
+> EMULATED or SLOW or FAST, or just FAST, or just EMULATED or SLOW. The
+> current implementation defines that only FAST will be returned because
+> or'ing values like this is nonsense.
 
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
+You're right that if usermode had taken the bitmask aspect to heart,
+they might try to ask for cpus that were SLOW | EMULATED, and expect
+to get the set of both. None of the other combinations make sense, so
+I think this is the only one worth worrying about. That case is super
+broken today as they'd get SLOW | EMULATED | FAST (basically all CPUs
+always). We have no way to distinguish whether they actually passed
+SLOW | EMULATED or FAST. I'm tempted to not worry about this case and
+assume anyone who passed 3 meant FAST, but you're right it's there.
+
+>
+> Allowing an input where keys are or'd together should not be supported
+> in CPUPERF_0 since it is what is causing this issue. However, the
+> original intent seems to be to allow an or'ing of keys. The verbosity of
+> using CPUPERF_0 will be greatly increased without the ability to or keys
+> together. If an application wants to know if misaligned accesses are
+> supported, it currently needs 3 separate hwprobe calls, one for each
+> EMULATED, SLOW, and FAST. Changing CPUPERF_0 to be a true bitmap would
+> require changing the values of each of the existing keys which is not an
+> acceptable API change.
+
+Specifying CPUPERF_0 as a bitmask was a mistake (mine) in the
+documentation that got translated to code when the WHICH_CPUS flag was
+introduced and hwprobe_key_is_bitmask() showed up. It was always
+supposed to be an enum, with EMULATED being a (significant) step worse
+than SLOW.
+
+My expectation is that most software will just ask "which cpus are
+FAST" and nothing else. It's not easy to write software that somehow
+takes advantage of the difference between EMULATED and SLOW, though it
+is nice to know for reporting/telemetry purposes.
+
+>
+> In my previous email I proposed a new key, which could be something like
+> RISCV_HWPROBE_KEY_CPUPERF_1, that is actually a bitmap. That way a query
+> of EMULATED | SLOW | FAST would be possible in a single hwprobe call,
+> which seems to be the original intent of CPUPERF_0.
+
+Agreed, it makes sense to me to have HWPROBE_MISALIGNED_* be the only
+value in CPUPERF_0, and add a new CPUPERF_1 key for true bitmap
+features. I currently don't have any bits to stuff into the newly
+proposed key, but when they do I agree it makes sense to put them in a
+new key.
+
+-Evan
+
+>
+> - Charlie
+>
+>
+> >
+> > Thanks,
+> > drew
+> >
+> > >
+> > > -Evan
+> > >
+> > > > ---
+> > > >  Documentation/arch/riscv/hwprobe.rst | 31 ++++++++++++++++--------=
+----
+> > > >  1 file changed, 18 insertions(+), 13 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/a=
+rch/riscv/hwprobe.rst
+> > > > index 239be63f5089..4abfa3f9fe44 100644
+> > > > --- a/Documentation/arch/riscv/hwprobe.rst
+> > > > +++ b/Documentation/arch/riscv/hwprobe.rst
+> > > > @@ -188,25 +188,30 @@ The following keys are defined:
+> > > >         manual starting from commit 95cf1f9 ("Add changes requested=
+ by Ved
+> > > >         during signoff")
+> > > >
+> > > > -* :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: A bitmask that contains =
+performance
+> > > > +* :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: A value that contains pe=
+rformance
+> > > >    information about the selected set of processors.
+> > > >
+> > > > -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNKNOWN`: The performance o=
+f misaligned
+> > > > -    scalar accesses is unknown.
+> > > > +  * :c:macro:`RISCV_HWPROBE_MISALIGNED_MASK`: The bitmask of the m=
+isaligned
+> > > > +    access performance field in the value of key `RISCV_HWPROBE_KE=
+Y_CPUPERF_0`.
+> > > >
+> > > > -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_EMULATED`: Misaligned scala=
+r accesses are
+> > > > -    emulated via software, either in or below the kernel.  These a=
+ccesses are
+> > > > -    always extremely slow.
+> > > > +    The following values (not bitmasks) in this field are defined:
+> > > >
+> > > > -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_SLOW`: Misaligned scalar ac=
+cesses are
+> > > > -    slower than equivalent byte accesses.  Misaligned accesses may=
+ be supported
+> > > > -    directly in hardware, or trapped and emulated by software.
+> > > > +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNKNOWN`: The performance=
+ of misaligned
+> > > > +      scalar accesses is unknown.
+> > > >
+> > > > -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_FAST`: Misaligned scalar ac=
+cesses are
+> > > > -    faster than equivalent byte accesses.
+> > > > +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_EMULATED`: Misaligned sca=
+lar accesses are
+> > > > +      emulated via software, either in or below the kernel.  These=
+ accesses are
+> > > > +      always extremely slow.
+> > > >
+> > > > -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNSUPPORTED`: Misaligned sc=
+alar accesses
+> > > > -    are not supported at all and will generate a misaligned addres=
+s fault.
+> > > > +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_SLOW`: Misaligned scalar =
+accesses are
+> > > > +      slower than equivalent byte accesses.  Misaligned accesses m=
+ay be supported
+> > > > +      directly in hardware, or trapped and emulated by software.
+> > > > +
+> > > > +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_FAST`: Misaligned scalar =
+accesses are
+> > > > +      faster than equivalent byte accesses.
+> > > > +
+> > > > +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNSUPPORTED`: Misaligned =
+scalar accesses
+> > > > +      are not supported at all and will generate a misaligned addr=
+ess fault.
+> > > >
+> > > >  * :c:macro:`RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE`: An unsigned int =
+which
+> > > >    represents the size of the Zicboz block in bytes.
+> > > > --
+> > > > 2.43.0
+> > > >
