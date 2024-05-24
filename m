@@ -1,181 +1,140 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay2-1.pub.mailoutpod2-cph3.one.com (mailrelay2-1.pub.mailoutpod2-cph3.one.com [46.30.211.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BD75B1F8
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 08:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2887433D0
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 08:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716538761; cv=none; b=P3RuIoEDXohEZg1vNbgo/RQxF4fAlSvq72WPLkBbpiySebOho1mXsn8JONYKR1Zi+ugg0Y51p58/AvjcIyd5o/TfbuOQxMScUflveFC+J1FjNW6MO/XdxLci9C6ZkTabbNdpGKt+rX0MldR4yzRK3C5GqRKWap248XtQmU2C8Dk=
+	t=1716538781; cv=none; b=o2TFkhMK2U4T0MmD3z3EjubGb85Gxc1qpOI3C27Noc67XL0kYJ0A3+r2+3/HWIo97pAsfW2C8oqExDhxyDTBTRw1m2VBRrkAEcalGT/qPcDj4YAOL8QRqqdVjXR/EKh5AEF78ut/EZDqZ1A5Mj7/joRsP74YQD4BPQCKY2FNZGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716538761; c=relaxed/simple;
-	bh=lIC8PATib4ECHZvoRaJcqvbW2iLxMzcGASLxpvYW2uc=;
+	s=arc-20240116; t=1716538781; c=relaxed/simple;
+	bh=2rSuMo11Bn/Dyzw3QcuMaSHQIVX7mjZ2J8bRZDnBbgI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W5P9oF++4XtfhpOdWJHG9KVuMaLX6JX/EkyCtaNwt7yIlmUByZuS8KNYvc11ZwcXNIEw+WcbDQNG303ZL3yKj4JHYSY0bjNIVylaqOxQz/aTkBfIiCyOE5SkvikSi3x06uRrOTUo9/6WAxLiPjJ2612HzcNw7n35Aqe0cU5+iSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bQPKLIu1; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VFyo+3Adc4QraYHCuX7TuYQDze8dMfupFCA/r2M/PLQYfN/WKK4shWVmbuf6cnhWpdSbdmMGvPcelnAVlfJ8xrPeSsumOE7s7GU4nwqUbBGaCLe3sgrLuEYL3ootkuXQrhV2iZJmuvFMgS5R4MTpxq00lh8fI2zz96EjfbWO98g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=QPc2lvSj; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=Oha+eVIq; arc=none smtp.client-ip=46.30.211.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQPKLIu1"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52962423ed8so615824e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 01:19:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="QPc2lvSj";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="Oha+eVIq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716538759; x=1717143559; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+oz6UCrdb1975kB7UeAyVPQIZ7iHx46ETbSo/v9u0/s=;
-        b=bQPKLIu1q7SirVMXU5v0Q6TCxZmzVaTyUxf+KcUpZO7pTuhVRQeU0R2CNNudUuRUr4
-         5PL+VeRFVOKHiMN4OXu6FPf1l/GakjPJsG85TSM2dhPYsXCeIja4bIArUwDhiFmqCljN
-         bVMfzycH1wXp2+VvI8VFWk8jLSSlVk0hTZ53sRCt7GYl3po9m5FV/SOM1rSmQM9l5KfA
-         6ftko0IDsunqi1r/Koq0uFN8jXT3NK49S4uPWdqFGleItDrj+aZX5TJtkadmngTbgoUX
-         NKg5TP6f1mlVnDqPznFCB0Jz5+2hZA0LP2DlceH0/jZn0Czz+UwKgmBMH4exJK/5yuam
-         RH0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716538759; x=1717143559;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+oz6UCrdb1975kB7UeAyVPQIZ7iHx46ETbSo/v9u0/s=;
-        b=ZEFwBgKqoOK1X8DFaSPCoNy1+27pNdFKKYv4/9dfOEgz4LDh+2QGSajunz2b0uOI+q
-         /zZQtlrOMb7BCG166H6yUDPyBiJpzGrnMImOf/R364fvGlfWYvOA+9nO3+MzGPxnnLRV
-         z+aEIEgOI/9sU2Ew/tobJ6ygUIWRRQiVdxVNpB+Np/6sw4kvVpTId40SIfyuRrOy9pgr
-         zEKXFpflw4bMQTSMEzXl18kRXFB7bvHatrcaqbXL7KckIJmIW9qvjFKdB0p1G4SkQoQ4
-         5iNg5E+09jtIJaSyi1kz+wbDSn7m4AkPy/GDSQfYzpnfugkXEmlKQruA4U6zcpaDxO2n
-         XdBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUD9RAaPcHYG6kYrMoexBHsa2YlmIDBJ+MV6v7ZC6pxvAR/AvhAKTxms/4rZTifrM+YS5eywZJhv0CHzaaXULO9lsP1NiunRRTH40pG
-X-Gm-Message-State: AOJu0Yyv05lH7HpLXSYqxp2TKJcuYry8PAz5pqgKeqT/+Bl+DLAMwo6a
-	QASRS7uCnGfVeYYS8K5QHayE75D2v9IHPyXPOL2mMowP6Il2ycmi
-X-Google-Smtp-Source: AGHT+IEJFrVeq18UsKFlMIEcK87TozQc7K6bpPAfxPt+DP3SYXQFqwhPBkrQFe/r4Qqiy6ZM8WtmXQ==
-X-Received: by 2002:ac2:47fc:0:b0:51f:5d0a:d716 with SMTP id 2adb3069b0e04-5296717ff6bmr737801e87.63.1716538758387;
-        Fri, 24 May 2024 01:19:18 -0700 (PDT)
-Received: from fedora ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5297066b21dsm129380e87.173.2024.05.24.01.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 01:19:17 -0700 (PDT)
-Date: Fri, 24 May 2024 11:19:13 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/10] regmap: Allow setting IRQ domain name suffix
-Message-ID: <dc2c1d972a5553ce13f8df5d82e65a5a8c099f0e.1716533790.git.mazziesaccount@gmail.com>
-References: <cover.1716533790.git.mazziesaccount@gmail.com>
+	d=ravnborg.org; s=rsa1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=WDsnsc5BF7LaWXnzxviI75o6u35R944PtHEiU+AMfa4=;
+	b=QPc2lvSjvTvdM3EZ82lwNLtg7w2CmIEfMPBxOJrRMFhDEqPbHJRGlJE1DLaVqEP0Vz/LLVy/YFj2Y
+	 +byA/49C0hSpmJqWDTLWYwnG2cXTQPh6adWaXvdhEV4mAfFcQAzUGQhqZ7/UVjMzopzH1LHE2Qi9f0
+	 2rWXyACTZh5kEvwu8ezDmZfB/csRMp9TVx8R8Y4shJX4zqoejaEZNQXtfL18/j/plZen2QchXfl34H
+	 Sd2PCC+OnU5K3mTBmJBITMSjQ3Tf92bYeL2h9JEjDtcI+ZDIkNZxToRtI5rW4pxjBsdhKYZHi4TNJA
+	 dqh5i8Y28aDjhqvZr7HNipFkm8huJag==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=WDsnsc5BF7LaWXnzxviI75o6u35R944PtHEiU+AMfa4=;
+	b=Oha+eVIqCjGc1bf3/x4uLgjogbGIpBgq47NGEZQuPvo3uIX3ttkciDviTBQ3792h0lIYiUgQmPpFg
+	 NLSRcORAw==
+X-HalOne-ID: 30760f29-19a6-11ef-a05e-2778176e2c98
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay2.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 30760f29-19a6-11ef-a05e-2778176e2c98;
+	Fri, 24 May 2024 08:18:26 +0000 (UTC)
+Date: Fri, 24 May 2024 10:18:24 +0200
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Jayesh Choudhary <j-choudhary@ti.com>
+Cc: linux-kernel@vger.kernel.org, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com, mripard@kernel.org,
+	dri-devel@lists.freedesktop.org, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+	a-bhatia1@ti.com
+Subject: Re: [PATCH v2 1/2] drm/bridge: sii902x: Fix mode_valid hook
+Message-ID: <20240524081824.GA615138@ravnborg.org>
+References: <20240524073305.107293-1-j-choudhary@ti.com>
+ <20240524073305.107293-2-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pvvwC7uEUQRemi+8"
-Content-Disposition: inline
-In-Reply-To: <cover.1716533790.git.mazziesaccount@gmail.com>
-
-
---pvvwC7uEUQRemi+8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240524073305.107293-2-j-choudhary@ti.com>
 
-When multiple IRQ domains are created from same device-tree node they
-will get same name based on the device-tree path. This will cause a
-naming collision in debugFS when IRQ domain specific entries are
-created.
+Hi Jayesh,
 
-The regmap-IRQ creates per instance IRQ domains. This will lead to the
-domain name conflict when a device which provides more than one physical
-IRQ uses the regmap-IRQ.
+On Fri, May 24, 2024 at 01:03:04PM +0530, Jayesh Choudhary wrote:
+> Currently, mode_valid hook returns all mode as valid and it is
+> defined only in drm_connector_helper_funcs. With the introduction of
+> 'DRM_BRIDGE_ATTACH_NO_CONNECTOR', connector is not initialized in
+> bridge_attach call for cases when the encoder has this flag enabled.
+> So add the mode_valid hook in drm_bridge_funcs as well with proper
+> clock checks for maximum and minimum pixel clock supported by the
+> bridge.
+> 
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+>  drivers/gpu/drm/bridge/sii902x.c | 38 ++++++++++++++++++++++++++++++--
+>  1 file changed, 36 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+> index 2fbeda9025bf..ef7c3ab3386c 100644
+> --- a/drivers/gpu/drm/bridge/sii902x.c
+> +++ b/drivers/gpu/drm/bridge/sii902x.c
+> @@ -163,6 +163,14 @@
+>  
+>  #define SII902X_AUDIO_PORT_INDEX		3
+>  
+> +/*
+> + * The maximum resolution supported by the HDMI bridge is 1080p@60Hz
+> + * and 1920x1200 requiring a pixel clock of 165MHz and the minimum
+> + * resolution supported is 480p@60Hz requiring a pixel clock of 25MHz
+> + */
+> +#define SII902X_MIN_PIXEL_CLOCK_KHZ		25000
+> +#define SII902X_MAX_PIXEL_CLOCK_KHZ		165000
+> +
+>  struct sii902x {
+>  	struct i2c_client *i2c;
+>  	struct regmap *regmap;
+> @@ -310,12 +318,26 @@ static int sii902x_get_modes(struct drm_connector *connector)
+>  	return num;
+>  }
+>  
+> +static enum
+> +drm_mode_status sii902x_validate(struct sii902x *sii902x,
+> +				 const struct drm_display_mode *mode)
+> +{
+> +	if (mode->clock < SII902X_MIN_PIXEL_CLOCK_KHZ)
+> +		return MODE_CLOCK_LOW;
+> +
+> +	if (mode->clock > SII902X_MAX_PIXEL_CLOCK_KHZ)
+> +		return MODE_CLOCK_HIGH;
+> +
+> +	return MODE_OK;
+> +}
+> +
+>  static enum drm_mode_status sii902x_mode_valid(struct drm_connector *connector,
+>  					       struct drm_display_mode *mode)
+>  {
+> -	/* TODO: check mode */
+> +	struct sii902x *sii902x = connector_to_sii902x(connector);
+> +	const struct drm_display_mode *mod = mode;
+>  
+> -	return MODE_OK;
+> +	return sii902x_validate(sii902x, mod);
+>  }
+>  
+>  static const struct drm_connector_helper_funcs sii902x_connector_helper_funcs = {
+> @@ -499,11 +521,22 @@ static int sii902x_bridge_atomic_check(struct drm_bridge *bridge,
+>  	 * There might be flags negotiation supported in future but
+>  	 * set the bus flags in atomic_check statically for now.
+>  	 */
+> +
+>  	bridge_state->input_bus_cfg.flags = bridge->timings->input_bus_flags;
 
-Add support for specifying an IRQ domain name suffix when creating a
-regmap-IRQ controller.
+If you spin a v2 then drop the above change as you delete the line again
+in the next patch.
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
----
- drivers/base/regmap/regmap-irq.c | 13 ++++++++-----
- include/linux/regmap.h           |  4 ++++
- 2 files changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-=
-irq.c
-index 45fd13ef13fc..e86964a9843b 100644
---- a/drivers/base/regmap/regmap-irq.c
-+++ b/drivers/base/regmap/regmap-irq.c
-@@ -857,12 +857,15 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *=
-fwnode,
- 	}
-=20
- 	if (irq_base)
--		d->domain =3D irq_domain_create_legacy(fwnode, chip->num_irqs,
--						     irq_base, 0,
--						     &regmap_domain_ops, d);
-+		d->domain =3D irq_domain_create_legacy_named(fwnode,
-+						chip->num_irqs,	irq_base, 0,
-+						&regmap_domain_ops, d,
-+						chip->domain_suffix);
- 	else
--		d->domain =3D irq_domain_create_linear(fwnode, chip->num_irqs,
--						     &regmap_domain_ops, d);
-+		d->domain =3D irq_domain_create_linear_named(fwnode,
-+						chip->num_irqs, &regmap_domain_ops,
-+						d, chip->domain_suffix);
-+
- 	if (!d->domain) {
- 		dev_err(map->dev, "Failed to create IRQ domain\n");
- 		ret =3D -ENOMEM;
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index b743241cfb7c..9df971986abb 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -1518,6 +1518,9 @@ struct regmap_irq_chip_data;
-  * struct regmap_irq_chip - Description of a generic regmap irq_chip.
-  *
-  * @name:        Descriptive name for IRQ controller.
-+ * @domain_suffix: Name suffix to be appended to end of IRQ domain name. N=
-eeded
-+ *		   when multiple regmap-IRQ controllers are created from same
-+ *		   device.
-  *
-  * @main_status: Base main status register address. For chips which have
-  *		 interrupts arranged in separate sub-irq blocks with own IRQ
-@@ -1603,6 +1606,7 @@ struct regmap_irq_chip_data;
-  */
- struct regmap_irq_chip {
- 	const char *name;
-+	const char *domain_suffix;
-=20
- 	unsigned int main_status;
- 	unsigned int num_main_status_bits;
---=20
-2.45.1
-
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---pvvwC7uEUQRemi+8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmZQTYAACgkQeFA3/03a
-ocWAcQgAyjYIua3DPCGfdB6p+8JV35kfPtGJAlFn2Y4JeUQ3S2Fcz9kxiBguPt7R
-cPTtUgbTM62Go5CvTu0d6dX3zpyiEqaAlUxurh3oc386IKSi4RrSONRaI6+baIVO
-J19Z0EgyyqY66oBgT3EPBcctGtL+7yyyneREeQyZDL9UJaQY+eb2RibCiTQPkEU6
-giGr/Lwo5otz/WtDQ4U9USZEn/K8hVipCINmsB0Tcamu8sVriayjnpdAk1c3O639
-TBnCrhD8th/vUoWVWDgzys7iWHpUBnn/NlENlDk7Lul22mAQgCqppOScWqU4rcR3
-rw+AMkXVexeEesDyl9/+535gDJYjlA==
-=LLTT
------END PGP SIGNATURE-----
-
---pvvwC7uEUQRemi+8--
+	Sam
