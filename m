@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285F812F59F;
-	Fri, 24 May 2024 16:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88909130483
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 16:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716569127; cv=none; b=cojHQiua4IIMMm6xZ6bYzeIXGpWYZz9EyKY0XhX7rz3quzd5Gig2j/uNIjEEWFQPDBRFhLUm7z3uoDyNO5R01/mFztnL7CU+E2dXqZbOoEswPvkeJpJsiTNkfW9NcNZ51GqY7F8YHC0z082PS6is/EF0M2q+HyfbhkIpQpYXTFg=
+	t=1716569127; cv=none; b=SQAh/IgJVlhwbOCszMyZ3Tgmg9QQwtu6TXPOsmb9zBhiXk7IeS/2jHUfVQcvx1XL5vEsX7fyTdnNxxbiD/6T716yJq75OC1q/LMkpdO5L80Ts2f1QG7DtBjqwzK0KIE64Tu/g/CVxXunowckGv2LVdpXwEQ7FEREyuDy4G94bjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716569127; c=relaxed/simple;
-	bh=68YxxV4pdXYdiWw/olzdV5vGd2q+J0mHRMXghc2Cqqo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=p9bEw+9DqW9UJxsG88KBRHeLZLMAM6m7I+sB9qKm3aydHD5dDyREDfSxI7c//9fKcArsVcde0X6G8X21P06XhvaZjcVmkKqnXqmJK4TLeuMyHEPvydmPcTEwhlS8HDeNiS/y5/bCgB88spAi7iByEM3U+c6smasbVrwloJn3QCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Av8leDsy; arc=none smtp.client-ip=10.30.226.201
+	bh=ozTP1Gzp6c9BpT25/+sBCPNKeJIm8Q21Qstys50GJCs=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=gOEreyYA1R0Q354tuU92oahyNyWwyv8dp/LJY0PbtJVZu9HxJtX3eNdnnGcZT3Qr5dkYYdGKpjE0eojzqz6fWOmUczFLWroD/uX6dPiJqIz7d3JkvYXjsnRvnAYYODWtHqpouozhWgMlE054zYJCoNbGiue70TfZnaHBW22WR7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STgF2q6O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Av8leDsy"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 023E7C2BD11;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STgF2q6O"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6A278C32789;
 	Fri, 24 May 2024 16:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716569127;
-	bh=68YxxV4pdXYdiWw/olzdV5vGd2q+J0mHRMXghc2Cqqo=;
+	bh=ozTP1Gzp6c9BpT25/+sBCPNKeJIm8Q21Qstys50GJCs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Av8leDsyXArM1r8YVRfG1a8L2N+hX/Mg53vgwC8ZbqxU7K9+iE6oa9XfvcujkbfLy
-	 PqZjNJ0xAvIhYQ2gvAs7Pi1gpSILDJPZhkVeRvj+3lANLWu3BD6wO/7BKURFrqgGVE
-	 8F8sSNuMrZ8T1SSp7nJWWbxI1AQnBoopwA1V1lyrAOeF2/krfK9Z7KA6zEJWUy7IAC
-	 wvJuclxIAC/0WUkBawkfwnn9U3PzNPSKI2nEFhMurv+E2FdUQtsrvlryYatruaZByx
-	 jtCK46QgPCjzA/3+WbMW+pBOBsuVhndWZzOw9ZukGKQbBQXZaxwOE13tgoM+i6CNjg
-	 8M3EazJKpM7gQ==
+	b=STgF2q6O6KFzjP9KG6Lkslrs3yQ119HQlsBpTVdMqvUWYrVrvDxL1mrmILCZxqh2k
+	 EZKsCWaNCzYIR/qZ+WmpXrx+2Wvn6HugHK/YPSe33XR1CMLyWGGhI4NP0jvzuiSi7W
+	 sOzRNGYxxPKoLd5QsUl0CcEdMi2JetiKvkMIysHSBQUqCDe8ArxIpNvq8DeabGNS6b
+	 ygUfDl3ez70nP9g2KiH4Kxq9laF+U5rhMlEm09xH1oiwHSvoWduXD88CDS2xpCqW4b
+	 titNqbmZEha7DsGn/9VNfdKXN5U8wfa4u4XONs2ZDgORou6HGK8eJ/EwPoHJMQuDB6
+	 mn3NGnGZUZUBA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DFAC5C4332E;
-	Fri, 24 May 2024 16:45:26 +0000 (UTC)
-Subject: Re: [GIT PULL] sound fixes for 6.10-rc1
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5CC56C4332E;
+	Fri, 24 May 2024 16:45:27 +0000 (UTC)
+Subject: Re: [GIT PULL] erofs more updates for 6.10-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <87ttin39vz.wl-tiwai@suse.de>
-References: <87ttin39vz.wl-tiwai@suse.de>
+In-Reply-To: <ZlCc2s0h0H1v16er@debian>
+References: <ZlCc2s0h0H1v16er@debian>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87ttin39vz.wl-tiwai@suse.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-6.10-rc1
-X-PR-Tracked-Commit-Id: d001e978c1c45b25d823489171151d13fd28ef4e
+X-PR-Tracked-Message-Id: <ZlCc2s0h0H1v16er@debian>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.10-rc1-2
+X-PR-Tracked-Commit-Id: 80eb4f62056d6ae709bdd0636ab96ce660f494b2
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 041c9f71a47b8b98f6bdbbf4c0312f9782ca9a70
-Message-Id: <171656912690.29701.5489205519619202548.pr-tracker-bot@kernel.org>
-Date: Fri, 24 May 2024 16:45:26 +0000
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: dcb9f48667824399e496113f2374d08e6aa59770
+Message-Id: <171656912737.29701.1703227778398439623.pr-tracker-bot@kernel.org>
+Date: Fri, 24 May 2024 16:45:27 +0000
+To: Gao Xiang <xiang@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org, Al Viro <viro@zeniv.linux.org.uk>, Hongzhen Luo <hongzhen@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, Chao Yu <chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 24 May 2024 10:13:36 +0200:
+The pull request you sent on Fri, 24 May 2024 21:57:46 +0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-6.10-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.10-rc1-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/041c9f71a47b8b98f6bdbbf4c0312f9782ca9a70
+https://git.kernel.org/torvalds/c/dcb9f48667824399e496113f2374d08e6aa59770
 
 Thank you!
 
