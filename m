@@ -1,148 +1,118 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D281292DE;
-	Fri, 24 May 2024 13:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7BD12BF25
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 13:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716556815; cv=none; b=YUzGUUUKX5QOsJag/UdwphEBj1C4tp19MrEVCPvDGmfteQoVCpRfjmSRUaRPu8dwdxua3zwYLYhmzGHS0AWxQ+3cDlK5Kg9vK10hUUIauk/kFtsZnqojfUv8+50Tb0C07QsJ68G/d4FWQwtKuz0bt+szH767PZVdXDsvNk7B73U=
+	t=1716556821; cv=none; b=IuPaLJcOplxaSfoJghsMRFO74dPC1xA8Wo+3A1ZVWjYKdeVdXGphBTdp9hSMIFl8ktLoBJNXb+E78jRSZjcQwLqC/fbJ5FQ35AWwB8Lp5FB+3Od02cJP+z9LGhKQjWD3WBUkCESsBOSKXya1uRjjUA2NjC1wR8f0t2HDdxnBMKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716556815; c=relaxed/simple;
-	bh=biZ7qAWdW7zPaeONCmHV0StXEtQawhsNoESZ/hmM5VA=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KUb3rlHnMRXgmNZ/Sr0omnOsh5Wcrb1ROJbbrbX52MZadIGQPhauFuQAMiBwaGpNIHJul1pf4VfyeEw8jv6EvyXEkzs7MGYYlS9GMRNiS+0gtsEKvfgtJ/naa+QWJ7VY9daeQMdMlrR2RLJbz6IwPDpvPe78lxIOSaisZAiyJTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QoI6gY+i; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716556821; c=relaxed/simple;
+	bh=OWccy+nICEZUKQPwByjtML13iQY9e7N6XueMvybRfeI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UOGKm9xEzmDFtqvwnBhKjVVUPp9GAcp33Gg8LBcx99VPRr1dqbTjNaTvaOtdsnfAbQ7tn/Q2FeLFTH8DuQAqQ1dFTLjVkbdpYWPL0Rd60XFBhfptZ7cryfObZ3rxGB4ufjWLUF5TweDwbj0R+4cqDHwUrgj3qttt2YiTfL77ybw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IU6OUHfl; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QoI6gY+i"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e6792ea67fso107285401fa.1;
-        Fri, 24 May 2024 06:20:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IU6OUHfl"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6f8f30712d3so467209b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 06:20:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716556811; x=1717161611; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XjUlSi6b7spXDtsoszPBRMpQom7fNDT5+VmBArxwsxM=;
-        b=QoI6gY+iDjh8A3//EEmlMY7tCiWrqFnS6/FkKTAjeU61oMayN8Q0qIMh2F4INsDEvu
-         yhRX5f/5hadhOsMTUuDJQPmVloQVfdnpVNrLTY8RR7xnGHHWVVUQli/C3YO7t6CUxJx1
-         rkvAiZ+ZVF8YKjiNchA370cLMcunCNdlKToBoJIupbXcNS+ZkK8x+Ky6tMBhhqmhvA1c
-         7SCW1jBP2g/CsLKKaRKEnmF8iWrPNiVJYrhoY1NGJUL+wi3LfPF+qihkAxrMOKD5kKIR
-         O4l5N8fNcm6NiFfZFlRZNl7x4gHH2pvtkvWVRbi2e26+BH2NnUi4qnaJWT/mguH+90PK
-         +jAQ==
+        d=linaro.org; s=google; t=1716556820; x=1717161620; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y7t4uYmRqlJLrpJDiHKBdOulRnB5HHZ6HHejKDBAJ1A=;
+        b=IU6OUHflzIQ3LfNWG+D/bimD1ibzNlg5vbkENyYCu7VHlHbOHRRHO+56AyE9NgAB/V
+         xo5e2KJC7hBIwrbnoo+v8WIxMq4po4ctp3cLrHpXtc8mBenItZMbem0Z23Vu0BJXu0wP
+         sQssISbCmrgdCOw3bJ8q387P63TlDeWi26icPSnwxjd/AH25VwumZh3GGKcn4Z0DqKFI
+         cv9riteRHBYsetWnnlo7m3Y0asSU32i9+kGfhFjPFD7Be6Q4Ku2+4aDowjzspS4YiDuT
+         Tem0EglvGkJFzlQ49/niUDtDQ9UM7a1NpLdeLGgJkeAbljc83KopoVGofRibhA0hNsbi
+         R/6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716556811; x=1717161611;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XjUlSi6b7spXDtsoszPBRMpQom7fNDT5+VmBArxwsxM=;
-        b=hk5j9jIbGPG/o9CWxxFYOwZFHcUmSVjCEx+lXKSL23o3OrDXjjj7sf31qYjg7/9UOh
-         3pAluYVFVjIJ//I9lMioBCafwWHQOm2GLrju9U4iIN2QMnPrrcK2E7qXovahV5IFUA74
-         JQlRrbC665QT9TX/gh5k1QLvrzL8Zdm5cW/FstxA9QtY1y/4LsR/wQ2TcWWtm5KOG7pb
-         5eTiwqcBpKPSYzoccEOr0RiD/aQO/z3Fv/SdBl4ILrOZXPpMDcOjKpjd6Skj+gM0tdU7
-         5mM20+D4pOZlOZ3GnIKRk+sqPmoJwR7BqHIB84MrHLweWf5AESeBKQ4qMTMkepcOTeMz
-         zhXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcaGKyFXwFaB5IYlLu+DQ3vS9KTF9zZM//nYTN1RMf7CDChH9zCKHYtLYUjeW7raVyQ0bCddywcf3ZNBIbWCqT0fCt43S5Uu/+APbJEPT7W8I9vYGnOBTgUAlJzAHiWqbXGBLmiLCvvlccDsHjdRhsEf37/D3NJt67koab
-X-Gm-Message-State: AOJu0YyQk1RdpVwlSdmvoMh4X9Y4i5XC1kfKzWMlaRSiVKn6vSEMaCDp
-	3LMZW9w3uHdpzS3RxrkHSQ+wVThhuLbZLPmXOo1I2dLWW/cWEYJ9
-X-Google-Smtp-Source: AGHT+IF7RpdA2xi0Lhf2AfbZme43FQtrch2j5C+6jRLDqFDj/U04J5HmragkJQIHB0bawHG5GcOJJg==
-X-Received: by 2002:a2e:bc08:0:b0:2e2:72a7:843c with SMTP id 38308e7fff4ca-2e95b24dea3mr17566441fa.36.1716556811361;
-        Fri, 24 May 2024 06:20:11 -0700 (PDT)
-Received: from [192.168.0.200] (54-240-197-234.amazon.com. [54.240.197.234])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100fb8f4asm53192065e9.41.2024.05.24.06.20.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 May 2024 06:20:11 -0700 (PDT)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <9255f42a-7549-4b4f-8654-e0bdc6c643b6@xen.org>
-Date: Fri, 24 May 2024 14:20:09 +0100
+        d=1e100.net; s=20230601; t=1716556820; x=1717161620;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y7t4uYmRqlJLrpJDiHKBdOulRnB5HHZ6HHejKDBAJ1A=;
+        b=BPSIgjq0HNMN8UcXA9g/y7RBr8UM3s4huwjHJMQxRJHXwTJPBAJlUggzWt8lyDiE2a
+         2JfUaoRFUp9CGE/SLaYkLQ77LzVR+IP6cQBES0xZ56XGch4xSjkgpnvAbW7MAtl34HNP
+         kH+BMFkA7/T49nluotDMn4uKkDk00ttIAqTh1XKkiS0vAih5mbNhLW7T9pdy0BNFSfDK
+         cUWkE17kW/o0bLcfA11SFeFiroDWZui9Q69scEeN86PczqqOqjx1NF3tv9zQdce3vCHx
+         bS0eC/lOWFKq6Q/2weHxq6OQ3cOBEF1kbTKnDsXRGKWugoVggFDGOV1zP8nRrase1PWJ
+         Zl8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXQZ05nZt/kuTdJntLT0QjBe8qYrHPna0V7mD/xhVUHEutujDPsJ+AADEzrnWmlpNzNH1ZZfH99F7FIFpbh2MmM53DqGSuD/4hfmEXb
+X-Gm-Message-State: AOJu0YzyizFdzTFdv6R0Bwmch+6YHYhFqQ4gg4B52aE9seRGO4EhzOlX
+	OOpr9yzYwDpFCa/y+7GV5VhoULHDlx0M5oqJXxgnRRlnO74wu5fVtTblmGqe3lQ=
+X-Google-Smtp-Source: AGHT+IHKqrriJSvWlSL2AXQz2HqI+Yiz7gfhITS8Gwwie2F6zWm4wV2V3P9tfoiHsWR5eUyC4vIFvQ==
+X-Received: by 2002:a05:6a21:3d86:b0:1af:8cc6:abc7 with SMTP id adf61e73a8af0-1b212d28770mr3034833637.15.1716556819791;
+        Fri, 24 May 2024 06:20:19 -0700 (PDT)
+Received: from [127.0.1.1] ([112.64.61.67])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fd2d492csm1117852b3a.179.2024.05.24.06.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 06:20:19 -0700 (PDT)
+From: Jun Nie <jun.nie@linaro.org>
+Date: Fri, 24 May 2024 21:18:25 +0800
+Subject: [PATCH v4 5/5] drm/msm/dsi: add a comment to explain pkt_per_line
+ encoding
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [RFC PATCH v3 09/21] KVM: x86: Fix KVM clock precision in
- __get_kvmclock()
-To: David Woodhouse <dwmw2@infradead.org>, kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
- Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, jalliste@amazon.co.uk, sveith@amazon.de,
- zide.chen@intel.com, Dongli Zhang <dongli.zhang@oracle.com>,
- Chenyi Qiang <chenyi.qiang@intel.com>
-References: <20240522001817.619072-1-dwmw2@infradead.org>
- <20240522001817.619072-10-dwmw2@infradead.org>
-Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20240522001817.619072-10-dwmw2@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240524-msm-drm-dsc-dsi-video-upstream-4-v4-5-e61c05b403df@linaro.org>
+References: <20240524-msm-drm-dsc-dsi-video-upstream-4-v4-0-e61c05b403df@linaro.org>
+In-Reply-To: <20240524-msm-drm-dsc-dsi-video-upstream-4-v4-0-e61c05b403df@linaro.org>
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Vinod Koul <vkoul@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Jun Nie <jun.nie@linaro.org>, Jonathan Marek <jonathan@marek.ca>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716556778; l=1190;
+ i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
+ bh=hsA6cTh9A+abQ7dtFiITzQof1AHhT8P4eUkFfENrPaA=;
+ b=rda5R/WGjjaZFeTS5BHxnspwaWD3dcdhQZQeU5xyj00vWyacOIsN9uG3MPOVi/pV68aZ9Wj2n
+ NWcHKDGTT4NCuaISuJLgNbItYGSL8mEmt1TuqxUTZkwhEHUl9RABCqe
+X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
+ pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-On 22/05/2024 01:17, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
-> 
-> When in 'master clock mode' (i.e. when host and guest TSCs are behaving
-> sanely and in sync), the KVM clock is defined in terms of the guest TSC.
-> 
-> When TSC scaling is used, calculating the KVM clock directly from *host*
-> TSC cycles leads to a systemic drift from the values calculated by the
-> guest from its TSC.
-> 
-> Commit 451a707813ae ("KVM: x86/xen: improve accuracy of Xen timers")
-> had a simple workaround for the specific case of Xen timers, as it had an
-> actual vCPU to hand and could use its scaling information. That commit
-> noted that it was broken for the general case of get_kvmclock_ns(), and
-> said "I'll come back to that".
-> 
-> Since __get_kvmclock() is invoked without a specific CPU, it needs to
-> be able to find or generate the scaling values required to perform the
-> correct calculation.
-> 
-> Thankfully, TSC scaling can only happen with X86_FEATURE_CONSTANT_TSC,
-> so it isn't as complex as it might have been.
-> 
-> In __kvm_synchronize_tsc(), note the current vCPU's scaling ratio in
-> kvm->arch.last_tsc_scaling_ratio. That is only protected by the
-> tsc_write_lock, so in pvclock_update_vm_gtod_copy(), copy it into a
-> separate kvm->arch.master_tsc_scaling_ratio so that it can be accessed
-> using the kvm->arch.pvclock_sc seqcount lock. Also generate the mul and
-> shift factors to convert to nanoseconds for the corresponding KVM clock,
-> just as kvm_guest_time_update() would.
-> 
-> In __get_kvmclock(), which runs within a seqcount retry loop, use those
-> values to convert host to guest TSC and then to nanoseconds. Only fall
-> back to using get_kvmclock_base_ns() when not in master clock mode.
-> 
-> There was previously a code path in __get_kvmclock() which looked like
-> it could set KVM_CLOCK_TSC_STABLE without KVM_CLOCK_REALTIME, perhaps
-> even on 32-bit hosts. In practice that could never happen as the
-> ka->use_master_clock flag couldn't be set on 32-bit, and even on 64-bit
-> hosts it would never be set when the system clock isn't TSC-based. So
-> that code path is now removed.
-> 
-> The kvm_get_wall_clock_epoch() function had the same problem; make it
-> just call get_kvmclock() and subtract kvmclock from wallclock, with
-> the same fallback as before.
-> 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->   arch/x86/include/asm/kvm_host.h |   4 +
->   arch/x86/kvm/x86.c              | 151 ++++++++++++++++----------------
->   2 files changed, 79 insertions(+), 76 deletions(-)
-> 
+From: Jonathan Marek <jonathan@marek.ca>
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+Make it clear why the pkt_per_line value is being "divided by 2".
+
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Jun Nie <jun.nie@linaro.org>
+---
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index 7252d36687e6..4768cff08381 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -885,7 +885,11 @@ static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mod
+ 	/* DSI_VIDEO_COMPRESSION_MODE & DSI_COMMAND_COMPRESSION_MODE
+ 	 * registers have similar offsets, so for below common code use
+ 	 * DSI_VIDEO_COMPRESSION_MODE_XXXX for setting bits
++	 *
++	 * pkt_per_line is log2 encoded, >>1 works for supported values (1,2,4)
+ 	 */
++	if (pkt_per_line > 4)
++		drm_warn_once(msm_host->dev, "pkt_per_line too big");
+ 	reg |= DSI_VIDEO_COMPRESSION_MODE_CTRL_PKT_PER_LINE(pkt_per_line >> 1);
+ 	reg |= DSI_VIDEO_COMPRESSION_MODE_CTRL_EOL_BYTE_NUM(eol_byte_num);
+ 	reg |= DSI_VIDEO_COMPRESSION_MODE_CTRL_EN;
+
+-- 
+2.34.1
 
