@@ -1,94 +1,116 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D333A29C
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 08:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8235B1F8;
+	Fri, 24 May 2024 08:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716539329; cv=none; b=mP6RVFoOCpAcBeAONutKcwFrua36kY/rOo+SCiB+uD+jCourf6JFd/bdJ9NPcfVyWbV0L0n+a2wfkqKK/zcj5VaEDoheZhXnH/iXKouHy9qb6uM93nEwyRXs/ITfT2kC8P373VNueM4KYG22EHLEsnkWKTyh16xgKst45CRqSyc=
+	t=1716539352; cv=none; b=HPY7gZhWfer2h/dPkfUB2ruxcIOkqD0PGZ8srOwcldpipoud9w0Q5CgrfqrziLdTubFI+os0D+J6PPgKdz+ywrrw+razx6vBeMiery9fHpFVzJ0eGRn7pmmIlIQ7SK8oNEuZ6puIt97LO1olzgpfpohIg7hnjMxxiS0qpTqk6iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716539329; c=relaxed/simple;
-	bh=q54jWehm6D0NKJU6RXOGEDssE+ymCHStnW0K2QTOJ1I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hYzi/qaHFqeI3g3O5LtQbz6a0nsKlYUGE6qKCfp92kqM9BcS+bQHkFD5SfX4Lg4bl2We8FXeHoJusm94qjBb8Ohctza99IMayY4tQgDFJhw0p4rhE+/coOMK+xlptmv3PemsDjPWElGBNrlD+hoX8EwQadHZg90+n0QlfW0armM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H+pJCFuf; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716539352; c=relaxed/simple;
+	bh=Gh6NlYPXprP3xGD7ZZUEg2JlAMSrlweXjgU9wuMJn5s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mf/YNCR6ECYvoCSF/0gOhTZXFe4a5uhRdfhFFxweZt+r4FLtq9NpePUykmWeDVG+DKruzJyGinphJLwtmEtdFUWquJS+I4cf/zsp3+sSnJ9dH7mVRfp0fP7muyMiQHeGJGCdw/IRsLlRkk4suY5FatqfJWJ7gBXQRq4pLl2w8c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Omg+KgOc; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H+pJCFuf"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6a919a4bb83so29434696d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 01:28:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Omg+KgOc"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f3423646b7so13153165ad.0;
+        Fri, 24 May 2024 01:29:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716539327; x=1717144127; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q54jWehm6D0NKJU6RXOGEDssE+ymCHStnW0K2QTOJ1I=;
-        b=H+pJCFufBaRt+7nosz/HQkpL8/vzmCgAdkDpzwqlVbK0EGBfbEUt3XgpW7U4HEaoS0
-         9YTP9TU4FuxFUC4F11dSn5meNEFz7g41/gObKLlYxHLgLvmvPYfAeMk5POsybnFzpxH4
-         FrCHjg6eXxFJi+eWc52L9kwZh7oAiwVYalwhg6r4UF4MJb4Ia7iVbhBUPn64gE+whTdK
-         yPkTwB1AZA8Spsl5FEqvgRKM8NmEv0j0G/bt47VUI0oSBYMoS8+w8Dkmp0XY5AHAHNqG
-         x4KjtMpuW8iuO2L9c5Zlfwm3uM3auwWHdS+O8tmJXc3V6T2BOcZav/ml+g4zs5PYf9Pd
-         UYYQ==
+        d=gmail.com; s=20230601; t=1716539350; x=1717144150; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tiZre0HC6g5xQkUkEEPwrvwt2kz5afaYH2z+fiQKH5k=;
+        b=Omg+KgOcZhA5HwuTpFhvwsnq8SdQp71mxp2syJbT+5AN5k/8iFM/L95W1dqnnc3bBi
+         PV77hcF2cH9Lvk52fm0jRrPaIMJzW9Pr7WpivepMWFgO7mhWxtyJ6ha1rLrfQDir2ZMe
+         Huey8DtS+Po0DcIss1xVOWZkIAwQkagjOcPxSPmA94cSgegpdvrGqlh581x6OroIhWN9
+         uxu+0dhHcKBwCxyWjfvnLOpj0TnouddiqiVSz+ZXU2Nc3olUwz2kGVllxLN7dZn56nA3
+         A9OamoXrlqCulNs9uJkdJk8HN+0Hfdwh449Y+peyO7Tob2ZLc0d60zKEaLli5cy9rMCQ
+         IdFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716539327; x=1717144127;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q54jWehm6D0NKJU6RXOGEDssE+ymCHStnW0K2QTOJ1I=;
-        b=fmmIE9A4MrCBNr7Fvk5bM3rEFDd3i7bRVy5QZAfyFtLorE6JpmDpsJZGSzVUqC4L3R
-         KJWkhzumuHes32hPDpF72IvjqVRhwVFlnrfqiikh5Ur39o2QQyCU//Xnw4g4yyk90wzU
-         OD/Y2n8ddN7Hl5LMeQrBHXLFLGKPqOlynDXfvLP2zBYHTKLc+DTcb/dOrQB3IM4QhC0w
-         AtL+aBDAeGF6zD3X8HqLxpnfHS7dMk45VzCmCZmLbhWhltJKhKNymca+XfLvMn0Zp78s
-         2HepFbfLoSqoTdJVVg6iRbtWtE86XHJILtMBJx7CSgDo1ydjsoOtQ0Mx+tUZSV0nIj0v
-         e5vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGdURuLPCC8qt9/jJo4sGu1v/5vywom9xrBPnCrAAMtH5Y6WATWZktQIb5VbkVZrwearsCyZsaCx+eaoebJXLc3bhoW8UyRuCrTUQc
-X-Gm-Message-State: AOJu0YzbhzPSEPqZt9oXwGu8C5MhUDQNOw9DmD/DoqqGM6T22NN1ztss
-	Ueb+oH+qWwX5dHC1fVMRP0Lrc47R2uCqLotXZM1WcDHo1UgL7mazkEm9kXDVYLcQHsBFC50OQeY
-	w1gQDPdlm6nF57BfPWIzA/EQhAelV+jFsNPDA
-X-Google-Smtp-Source: AGHT+IHFX6BLG6gStI5mGJe8kD5iHHOGF4/Un66b6V0pmO7shQqI26eQsamvdYGJ3CG+Ua8RPpXvkMXqkHnDAqYCv7M=
-X-Received: by 2002:a05:6214:4a86:b0:6ab:710a:d84a with SMTP id
- 6a1803df08f44-6abc3e88e06mr16373676d6.23.1716539326544; Fri, 24 May 2024
- 01:28:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716539350; x=1717144150;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tiZre0HC6g5xQkUkEEPwrvwt2kz5afaYH2z+fiQKH5k=;
+        b=kAEUn23g/mvNdXVf9rkpKGG7TtUjTEsjZc5UuT4O6DztzfC4AcLMJGQUOOX9JQ7Z7V
+         83mxFFNM2JqMAgrHnxBqM0acTnn3/kJuhktW15kMwPLvEj1olS0smbf2QbhKWKoQjNow
+         6kNqQJg3TH4M0TqLRQ9Noj2sWmRkpMDX0iQ3Uo1+0FR0fq+XNSI9/RXJbLPB6AJDtp1Y
+         ltk2wfWAnvAIiYWvISk8ON34DU+eIuQMB0inNw7aTdFswDfn1Q8j+r3yrjkLzj7/aelF
+         b7Gd+QdEQTJ1Z9lJYDyTCIUCZCcGncgqqI62RI2850JH7nOpIey2JOli7U8GY0Lvqhn7
+         ccwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzTFlFQaQVBbcVkusU9qaL649AjSbK1XyDoeOORqBNUJzShiJjgzZCD43tQmhguFzJ7EbgaqSII3Q2l7WfTAoN2NpmcwbFG9/BEx6saAjfl2qfoboS5/fDefdOP//Ecrmy2EnJyhPpiNB/0sL9IeUBAiUnaFTfTWKDvbuCMC3TTMCYpA==
+X-Gm-Message-State: AOJu0Yxaq+aqaJp/eJFxPmQk7n2UQgskRFe36IoB+s4WOcMVSABMA4YZ
+	UYUnEBy45f1tJ9vylZyTOHDmIeSc8ARkMjfWwTcA6I30SxufLaXI
+X-Google-Smtp-Source: AGHT+IHG1072pahpGeSGZ0ububXJmGaOpVjE9EfnrmCTcoQyErQfa6B3YwvGI2ql6Egx8Iesfmeihg==
+X-Received: by 2002:a17:902:c403:b0:1e4:4ade:f504 with SMTP id d9443c01a7336-1f449029c88mr15498605ad.46.1716539349864;
+        Fri, 24 May 2024 01:29:09 -0700 (PDT)
+Received: from prasmi.. ([2401:4900:1c07:bfcd:61e0:7fa9:84b8:25fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c9c6ea3sm8420325ad.277.2024.05.24.01.29.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 01:29:09 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/4] Add CPG support for RZ/V2H(P) SoC
+Date: Fri, 24 May 2024 09:27:56 +0100
+Message-Id: <20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240523215029.4160518-1-bjohannesmeyer@gmail.com>
-In-Reply-To: <20240523215029.4160518-1-bjohannesmeyer@gmail.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Fri, 24 May 2024 10:28:05 +0200
-Message-ID: <CAG_fn=XR6KVQ=DbKZW3kNXsCHgULm2J7i6GCm8CZUjpjuk-d2A@mail.gmail.com>
-Subject: Re: [PATCH] x86: kmsan: Fix hook for unaligned accesses
-To: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Cc: Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 23, 2024 at 11:50=E2=80=AFPM Brian Johannesmeyer
-<bjohannesmeyer@gmail.com> wrote:
->
-> When called with a 'from' that is not 4-byte-aligned,
-> string_memcpy_fromio() calls the movs() macro to copy the first few bytes=
-,
-> so that 'from' becomes 4-byte-aligned before calling rep_movs(). This
-> movs() macro modifies 'to', and the subsequent line modifies 'n'.
->
-> As a result, on unaligned accesses, kmsan_unpoison_memory() uses the
-> updated (aligned) values of 'to' and 'n'. Hence, it does not unpoison the
-> entire region.
->
-> This patch saves the original values of 'to' and 'n', and passes those to
-> kmsan_unpoison_memory(), so that the entire region is unpoisoned.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Nice catch! Does it fix any known bugs?
+Hi All,
 
-> Signed-off-by: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+This patch series aims to add the CPG support for the Renesas RZ/V2H(P) SoC.
+
+A separate CPG core driver is added as compared to the RZ/G2L as the
+RZ/V2H(P) SoC varies in terms of features and registers.
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (4):
+  dt-bindings: clock: renesas: Document RZ/V2H(P) SoC CPG driver
+  dt-bindings: clock: Add R9A09G057 CPG Clock and Reset Definitions
+  clk: renesas: Add RZ/V2H CPG core wrapper driver
+  clk: renesas: Add RZ/V2H(P) CPG helper driver
+
+ .../bindings/clock/renesas,rzv2h-cpg.yaml     |  78 ++
+ drivers/clk/renesas/Kconfig                   |   5 +
+ drivers/clk/renesas/Makefile                  |   1 +
+ drivers/clk/renesas/r9a09g057-cpg.c           | 112 +++
+ drivers/clk/renesas/rzv2h-cpg.c               | 677 ++++++++++++++++++
+ drivers/clk/renesas/rzv2h-cpg.h               | 151 ++++
+ include/dt-bindings/clock/r9a09g057-cpg.h     | 644 +++++++++++++++++
+ 7 files changed, 1668 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+ create mode 100644 drivers/clk/renesas/r9a09g057-cpg.c
+ create mode 100644 drivers/clk/renesas/rzv2h-cpg.c
+ create mode 100644 drivers/clk/renesas/rzv2h-cpg.h
+ create mode 100644 include/dt-bindings/clock/r9a09g057-cpg.h
+
+-- 
+2.34.1
+
