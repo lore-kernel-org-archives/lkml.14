@@ -1,56 +1,58 @@
-Received: from mail-wm1-f99.google.com (mail-wm1-f99.google.com [209.85.128.99])
+Received: from mail-wm1-f100.google.com (mail-wm1-f100.google.com [209.85.128.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A923BBED
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 18:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128963F8ED
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 18:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716575274; cv=none; b=tXELLLQScdPh5z5BaZtfy5HGbM3TDOrkgog1TAzWr+AtK1D4PSULpUrGQVGQoJM72eqxNLEu2u0+ybROAUcP5sPrX/PegdxSkGPZpjGh5F/QCNHxCfLbslbvSZ/efRDZUma2kwqdrvyvQg67YGwFeA22K2VcLOLKD1F9xvvRzMI=
+	t=1716575277; cv=none; b=HIMghIPxvGq6/MvlKOk3bpJGB8q1XRyKb8IEy0rmm1pl1l0smkgI8AdViJ/ae1EcldocGuMgQsS7Mfj057vZBFVeVbSOra1cPb2sx9ec5phBfjfv05GL38ERL7lz0yaWLlCRZHABwV25dTNGxeTohui8ZuWK1VAGI/Ci41GgCz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716575274; c=relaxed/simple;
-	bh=td/Vk7YkZYHrVt/nOdJ0BOQkIAcpR2c/B2eHAhBjQLk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VWSsC22KdWhMWdbpg4ekWf6oiwedfavqXfBLfEDKa3xqEteG4GDcuY2GEtJ47mPsMK2uHAqVXMEy2cyZ7ondZYyuVmNBziSu0W1DfIvbFsAJqt/7yQWinZUae2gtU3Blm1sDrxSnEWTbEjR6yFByZt8byd+fotZ6jTn5GEdCrRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=dxrqh2Dl; arc=none smtp.client-ip=209.85.128.99
+	s=arc-20240116; t=1716575277; c=relaxed/simple;
+	bh=t6EOXzX5NBCieefJXhaqEj/EuhQeMzBIdGFGnmyqFc4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lVAzbYbvwP0vRtW7kn+7Q0du6Nssr/5L8N2OrYZRKDpm8z8Do/f4KxSSQdY902ekMnQZldmv/T3vrLy/UI19hT8S2zHK7wHOJk8d10D0umOJtQU5TOmqSlccIyXVGVJeqe/eYoSSiMGQ/cBqRjuW4IsmdsovTtfYakikMyyibi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=tyumMzdp; arc=none smtp.client-ip=209.85.128.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="dxrqh2Dl"
-Received: by mail-wm1-f99.google.com with SMTP id 5b1f17b1804b1-42108822e3cso6206375e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 11:27:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="tyumMzdp"
+Received: by mail-wm1-f100.google.com with SMTP id 5b1f17b1804b1-42017f8de7aso68196265e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 11:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1716575271; x=1717180071; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xql1CWOkqvawpbosdHCKSvgqjnwNVKxpQqZxh7tM+T4=;
-        b=dxrqh2DlxIVia43NACZLda+CTXfnSS7U4U3G5ZWpxu5FyGVH2d39QrQv0aqklsfeEr
-         9IWlHdJyqSA/pPsrsx19+OvL+pg9kWdnARtf/lNOaXC5EzhRx2u46d6fbSS2kgfp+B4n
-         2P+3I/kfASS6IlWSQyVu0/akO8qupmHF97J4G8s3b3lPBDcqj0BmMqoLMQcpDq+PisnA
-         BAh4FhNuhj7gcDZh9V57WyF0bZXeKJLIQqJf8uPD4bci7Fp4QVVrO9gylpMYMon84cs5
-         VY8wYLrgrh4blrEh3cdnb3TFAePY1zWBoo15rfq9t2rpTwsM+j9XL1Lto+MXFkB1itAk
-         WH2Q==
+        d=raspberrypi.com; s=google; t=1716575272; x=1717180072; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MmjLsXIH2Amncxc11ehW4fWxMk13TiDZ+O44YXe6Wgk=;
+        b=tyumMzdp8FGH9YqbvdldjlPB0bjTiwCyYniuRFs67n7zZL41LXqMUi3apYcvJ/FTA5
+         M3kAX0WE4j8SDbpzjxwWCCKxbw1u57Nguq/v2FMPSS4uI6dtAxizOCGZ0eBMI+giPfLs
+         QvApk0fZcExSdaNCsei0Em4f1G/bHa02obSiWQYxPJYf2OTrcqNngtG7fqN92qpSMWd4
+         qD7ebj+Y4Dpe1rZl9wjNyKqKRINFSoYAGtTAXt2pntSVMA26ch4aqH5QiFZPeqmkseQA
+         K4fAR/cssGDV9rbvR/Vs87o/WpMpGCPjJua5UqgwybJZQDrXX7FDKs9zXG64mCd7eDD3
+         osvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716575271; x=1717180071;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xql1CWOkqvawpbosdHCKSvgqjnwNVKxpQqZxh7tM+T4=;
-        b=Tq+nx8N2kAU61rerxFvpNpExyL4duFVWnVVM3IqAe6C0VpMKEnpwqUC4caGv+l906l
-         PD7AV8/iqTjmFYzS2QoxYUpUetgOZwPy9ImByvtGL1ebBvKuLvKiKoLs8/7kyfrHtyqR
-         DII1fnD2wdWh1FAY4ZjHGjNr0HeXg9F6g/RI8NJZQmWa3Z1rliYGXMPk4qYoSD+YkLEN
-         IFzrXoaclnVBmnCnA3j9rH6MqFJBgyU9KXaTHNQpkVtmpx5rZ8nzI30tukM0ww+yBzaL
-         ejy6C8riD6yyeT1wS0Ff73B0wIc2e6BVJlxaGYvI7P5OP1uK1WlSxXOXi5jpnCPICd+7
-         eoiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjbW6wv8FEa20mIJmTWUqnX+2DSga11D/4jaCYxEOQir7bK4vzC7UOYg3GHgmloeczZeJIpIUaz/Hft4vfzMYOM/oAbyHVUcdjdSH3
-X-Gm-Message-State: AOJu0YxJo6ZFlJIUc5Yv2c5q8k3LwflE03vxc+Z/5ix8uQjhrXeE8voL
-	Sf0nuXdtG6DEs3YNP0p4Jnct9Ia9x6W/i5H/RYICl7/+ybhB08g2YzVMTj5evsbK8/0/EXftLd3
-	LVtAykE9KdVF3RpNwhZCP7hVuq5GULArI
-X-Google-Smtp-Source: AGHT+IEv4pOsw1zoXJUhXCDnkIg536hPcEoYyVLGKEBIg1WFslqr8Kj1DBgMYFhuBxYsZGvlD4sKieE6j1gT
-X-Received: by 2002:a05:6000:1753:b0:354:fce5:4cc3 with SMTP id ffacd0b85a97d-354fce54d2dmr4599736f8f.19.1716575271168;
-        Fri, 24 May 2024 11:27:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716575272; x=1717180072;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MmjLsXIH2Amncxc11ehW4fWxMk13TiDZ+O44YXe6Wgk=;
+        b=NmR2lqQWbpRXzTecug+3YtOJVqqke/XWo49jBX4BME9O8yYOHRILLIo9npYZWDQQ5D
+         jY2teyuqgvI4TaqU4Wsd+db5aARex6tMsmmEsXScgfBknqcTsveoyokDHcDLh/suiiUW
+         DIcCdKAzo399SzZ+w372Io5OG6QIPCxXvPjHBEJ9fFdvVEJltKUfc6N9sQmwIyToRNCd
+         ggHfL/nxpNvd+mce7cuz3mpXtLHVhH941zt0PCuOrw3W19pllx0hY2e9HWX82YLQRAiZ
+         QKqIW/8H2A8cEXTy9u4X4rZMSqZV9Qlrelo4wJ33lBUAJAnQs0+MfXLug15wGSZUdn8m
+         qIQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUs3smTb11oe8PIK1SV5SKnhBQkIDt1iuUv12I8pBQaq+wh+roH7oiVvbxpT7qtrPZcVc12MxgxNW+5AXOmTlgNzs1DelpUqoy41Mzj
+X-Gm-Message-State: AOJu0Yy2APSSCXYsJD8yamXo2dONJ+Sht+5EBn2AK88KxPQZgwQqgo0s
+	J4/+GgWoX4LFQ6fj7SC0OIXcjik4j3HsN3NQ3G2NUV2xAF/dPonEDNDbLftWyTroJRC2a5SRwOy
+	49iCESqN3215VoH7+pE/ipf8G0ElsNeYX
+X-Google-Smtp-Source: AGHT+IGfOa5XBgeYIs/cH5TAMCHbRBfIruDizHffdZ+UPyoZ3jK796PR+KziATsAgtd+BnPEgr+Se5nRlYpt
+X-Received: by 2002:a05:600c:3114:b0:420:2cbe:7ee8 with SMTP id 5b1f17b1804b1-421089f1394mr28435685e9.6.1716575272442;
+        Fri, 24 May 2024 11:27:52 -0700 (PDT)
 Received: from raspberrypi.com ([188.39.149.98])
-        by smtp-relay.gmail.com with ESMTPS id ffacd0b85a97d-35579d7b436sm63138f8f.14.2024.05.24.11.27.50
+        by smtp-relay.gmail.com with ESMTPS id ffacd0b85a97d-3557a1cd354sm56646f8f.101.2024.05.24.11.27.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 11:27:51 -0700 (PDT)
+        Fri, 24 May 2024 11:27:52 -0700 (PDT)
 X-Relaying-Domain: raspberrypi.com
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 To: Rob Herring <robh@kernel.org>,
@@ -88,11 +90,14 @@ Cc: devicetree@vger.kernel.org,
 	linux-spi@vger.kernel.org,
 	iommu@lists.linux.dev,
 	linux-sound@vger.kernel.org,
+	Stefan Wahren <stefan.wahren@i2se.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: [PATCH 00/18] BCM2835 DMA mapping cleanups and fixes
-Date: Fri, 24 May 2024 19:26:44 +0100
-Message-Id: <20240524182702.1317935-1-dave.stevenson@raspberrypi.com>
+Subject: [PATCH 02/18] dmaengine: bcm2835: Support common dma-channel-mask
+Date: Fri, 24 May 2024 19:26:46 +0100
+Message-Id: <20240524182702.1317935-3-dave.stevenson@raspberrypi.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240524182702.1317935-1-dave.stevenson@raspberrypi.com>
+References: <20240524182702.1317935-1-dave.stevenson@raspberrypi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -101,91 +106,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi All
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-This series initially cleans up the BCM2835 DMA driver in preparation for
-supporting the 40bit version. It then fixes up the incorrect mapping behaviour
-we've had to date.
+Nowadays there is a generic property for dma-channel-mask in the DMA
+controller binding. So prefer this one instead of the old vendor specific
+one. Print a warning in case the old one is used. Btw use the result of
+of_property_read_u32() as return code in error case.
 
-The cleanups are based on Stefan Wahren's RFC [1], with a couple of minor bugs
-fixed, but stopping before actually adding the 40bit support. If we can sort
-the mapping issue, it avoids having to have workarounds in the 40bit support.
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+---
+ drivers/dma/bcm2835-dma.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-The mapping issues were discussed in [2].
-Up until this point all DMA users have been passing in dma addresses rather than
-CPU physical addresses, and the DMA driver has been using those directly rather
-than using dma_map_resource() to map them.
-The DT has also been missing some of the required mappings in "dma-ranges", but
-they have been present in "ranges". I've therefore duplicated the minimum amount
-of of_dma_get_range and translate_phys_to_dma to be able to use "ranges" as 
-discussed in that thread. I'm assuming that sort of code is not desirable in the
-core code as it shouldn't be necessary, so keeping it contained within a driver
-is the better solution.
-
-When Andrea posted our downstream patches in [3], Robin Murphy stated that
-dma_map_resource is the correct API, but as it currently doesn't check the
-dma_range_map we need Sergey Semin's patch [4].
-There seemed to be no follow up over the implications of it. I've therefore
-included it in the series at least for discussion. If it's not acceptable then
-I'm not sure of the route forward in fixing this mapping issue.
-
-I'm expecting there to be some discussion, but also acknowledge that merging this
-will need to be phased with the patches 1-13 needing to be merged before any of
-14-17, and then 18 merged last to remove the workaround. I suspect that's the
-least of my worries though.
-
-
-I will apologise in advance if I don't respond immediately to comments - I'm
-out of the office for the next week, but do appreciate any feedback.
-
-Thanks
-  Dave
-
-[1] https://lore.kernel.org/linux-arm-kernel/13ec386b-2305-27da-9765-8fa3ad71146c@i2se.com/T/
-[2] https://lore.kernel.org/linux-arm-kernel/CAPY8ntBua=wPVUj+SM0WGcUL0fT56uEHo8YZUTMB8Z54X_aPRw@mail.gmail.com/T/
-[3] https://lore.kernel.org/lkml/cover.1706948717.git.andrea.porta@suse.com/T/
-[4] https://lore.kernel.org/linux-iommu/20220610080802.11147-1-Sergey.Semin@baikalelectronics.ru/
-
-Dave Stevenson (7):
-  ARM: dts: bcm283x: Update to use dma-channel-mask
-  dmaengine: bcm2835: Add function to handle DMA mapping
-  dmaengine: bcm2835: Add backwards compatible handling until clients
-    updated
-  dmaengine: bcm2835: Use dma_map_resource to map addresses
-  dmaengine: bcm2835: Read ranges if dma-ranges aren't mapped
-  arm: dt: Add dma-ranges to the bcm283x platforms
-  dmaengine: bcm2835: Revert the workaround for DMA addresses
-
-Phil Elwell (4):
-  mmc: bcm2835: Use phys addresses for slave DMA config
-  spi: bcm2835: Use phys addresses for slave DMA config
-  drm/vc4: Use phys addresses for slave DMA config
-  ASoC: bcm2835-i2s: Use phys addresses for DAI DMA
-
-Serge Semin (1):
-  dma-direct: take dma-ranges/offsets into account in resource mapping
-
-Stefan Wahren (6):
-  dmaengine: bcm2835: Support common dma-channel-mask
-  dmaengine: bcm2835: move CB info generation into separate function
-  dmaengine: bcm2835: move CB final extra info generation into function
-  dmaengine: bcm2835: make address increment platform independent
-  dmaengine: bcm2385: drop info parameters
-  dmaengine: bcm2835: pass dma_chan to generic functions
-
- arch/arm/boot/dts/broadcom/bcm2711.dtsi       |  14 +-
- .../arm/boot/dts/broadcom/bcm2835-common.dtsi |   2 +-
- arch/arm/boot/dts/broadcom/bcm2835.dtsi       |   3 +-
- arch/arm/boot/dts/broadcom/bcm2836.dtsi       |   3 +-
- arch/arm/boot/dts/broadcom/bcm2837.dtsi       |   3 +-
- drivers/dma/bcm2835-dma.c                     | 432 ++++++++++++++----
- drivers/gpu/drm/vc4/vc4_hdmi.c                |  15 +-
- drivers/mmc/host/bcm2835.c                    |  17 +-
- drivers/spi/spi-bcm2835.c                     |  23 +-
- kernel/dma/direct.c                           |   2 +-
- sound/soc/bcm/bcm2835-i2s.c                   |  18 +-
- 11 files changed, 383 insertions(+), 149 deletions(-)
-
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 9d74fe97452e..528c4593b45a 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -941,12 +941,19 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Request DMA channel mask from device tree */
+-	if (of_property_read_u32(pdev->dev.of_node,
+-			"brcm,dma-channel-mask",
+-			&chans_available)) {
+-		dev_err(&pdev->dev, "Failed to get channel mask\n");
+-		rc = -EINVAL;
+-		goto err_no_dma;
++	rc = of_property_read_u32(pdev->dev.of_node, "dma-channel-mask",
++				  &chans_available);
++
++	if (rc) {
++		/* Try deprecated property */
++		if (of_property_read_u32(pdev->dev.of_node,
++					 "brcm,dma-channel-mask",
++					 &chans_available)) {
++			dev_err(&pdev->dev, "Failed to get channel mask\n");
++			goto err_no_dma;
++		}
++
++		dev_warn(&pdev->dev, "brcm,dma-channel-mask deprecated - please update DT\n");
+ 	}
+ 
+ 	/* get irqs for each channel that we support */
 -- 
 2.34.1
 
