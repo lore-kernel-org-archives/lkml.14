@@ -1,88 +1,176 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E1212EBDF;
-	Fri, 24 May 2024 17:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B831173F
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 17:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716571207; cv=none; b=E31aXLi0VO4IDAgCrnLys4iwvYElB4EZOdXP1rHXVB4tRNn5V5a825E84RkMrPPmWN8cMk5nQUclnWjSt61P0jnDnHBv3E6Ewei1YYvN+q2gOerEmGiRFUvGX74STPsXeNafmJS+w5exxXyn0G150lcyNtYVr6vCL0hlb8TiYsE=
+	t=1716571817; cv=none; b=TFJdytdc7Xr3zqzQA3ObZRsNWuIgeAUTQwZIh7Szr5NWXvaKUDCGh06vTMYyb3HUXHUcELXIiSy9am5dGflVAEOAozWemcMUeUtaiI0t5FuLXepCIj95XwWYQpYGrEItcIpNaVe1l/vDNSz74SDzWbXMt/vAzwjpCAAKZTkjG2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716571207; c=relaxed/simple;
-	bh=eonL40+Pk3asZc+UKBPZuGT5B95x6t/3L/bXvfzRsao=;
+	s=arc-20240116; t=1716571817; c=relaxed/simple;
+	bh=8o+itX2K4X+tuNJsVLYSRal6B5j2GbNfwMKJzwHCszU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ATQJYRYEHtE44oLgn2ydgmc9cg+uwMy+HM8THzcggT6QlX3kevweB8Wq1d4Hql0C/IhO4/lPWvbzJivvTDzTnQuI8WnGF6OueX/lvgGb6idOmWq/TLWWQFXbDRbj8K/mFGGt+ARXc3RnFF06wP0LqzrdqedE8t60Z6wrVHSpIcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=bynRRlQz; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=gktP2MSomhdPmADEUhMxAYV0f4XunZYESwMFgsDUTmIi22F/7hWnuiF8M2cRRk3j9c4MOZb++/LXWUPvEBl71aVJLp157nKa0TCyC4/oDPdy21dBU7xwdnlJGiuda9Gk6eGRHdmrTkGWSsKOAKWV8ieQsC8FlE+e2g+KME43UeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KI0C2HNR; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="bynRRlQz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=nLHTgtbT8puPWoNapYpLARnpHQaGv88/tvf3aUFDQxA=; b=bynRRlQzkKmtw0bttGssCy2U+l
-	Bm0L74mjmqheDpnsoLrgz0DOazu57WjH47PWddaZikXF3hpqosQlGugW/FKvQzdCha830yxrHl8dM
-	r17yy8BLuLosi0Pn1ImHxDov0ob0ImIPnZavF+i39fhVd2bN3VlmU1zRSihLxXA0x9Az0XYD6c4Sf
-	UW1as9sIpw3RVcW+rgt5g+hn4/PBbVy66ppU9SQbXVoQSYjFE1IgU1cnjOdABRSjGw4NXXJAZg1XB
-	xr8nlrTcRBch2N+AkifTYImuSwxvMbXV+xrOYGa8Rn8cm5uqWkwFcpZI39oqWjurLxdiwhwIdC40F
-	K+aiNCeA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37100)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sAYa6-0005le-0A;
-	Fri, 24 May 2024 18:19:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sAYa6-00087r-GA; Fri, 24 May 2024 18:19:50 +0100
-Date: Fri, 24 May 2024 18:19:50 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Nicolas Pitre <npitre@baylibre.com>
-Cc: Julien Panis <jpanis@baylibre.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 0/6] Mediatek thermal sensor driver support for MT8186
- and MT8188
-Message-ID: <ZlDMNkdE2jmFgD8B@shell.armlinux.org.uk>
-References: <20240524-mtk-thermal-mt818x-dtsi-v5-0-56f8579820e7@baylibre.com>
- <238nnn48-0o7r-22q2-2rpo-s3n7n62pn2q4@onlyvoer.pbz>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KI0C2HNR"
+X-Envelope-To: mathieu.desnoyers@efficios.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716571813;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B4Nq0eB//d4i3EFi6pEowHgt0pasM4PkRAR32O+xErA=;
+	b=KI0C2HNRPc/3Bd2vfC42vI7mc+saav3UaeVAVul/9/tbke+Nd45V7NHjG48qyNeSO3OQGO
+	oAXo3KdJTpKtHqNdIIzuutkXLKlB0GwM7Czsc+0Z0RN+FPny8BEyXJ7ts4cegOLA+jNk4z
+	5so3BsHTLQsUhJ/hPTFPjaoBHqF47D8=
+X-Envelope-To: bfoster@redhat.com
+X-Envelope-To: keescook@chromium.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-bcachefs@vger.kernel.org
+X-Envelope-To: glider@google.com
+X-Envelope-To: elver@google.com
+X-Envelope-To: dvyukov@google.com
+X-Envelope-To: kasan-dev@googlegroups.com
+X-Envelope-To: nathan@kernel.org
+X-Envelope-To: ndesaulniers@google.com
+X-Envelope-To: morbo@google.com
+X-Envelope-To: justinstitt@google.com
+X-Envelope-To: llvm@lists.linux.dev
+Date: Fri, 24 May 2024 13:30:09 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Brian Foster <bfoster@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, linux-bcachefs@vger.kernel.org, 
+	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, llvm@lists.linux.dev
+Subject: Re: Use of zero-length arrays in bcachefs structures inner fields
+Message-ID: <jqj6do7lodrrvpjmk6vlhasdigs23jkyvznniudhebcizstsn7@6cetkluh4ehl>
+References: <986294ee-8bb1-4bf4-9f23-2bc25dbad561@efficios.com>
+ <vu7w6if47tv3kwnbbbsdchu3wpsbkqlvlkvewtvjx5hkq57fya@rgl6bp33eizt>
+ <944d79b5-177d-43ea-a130-25bd62fc787f@efficios.com>
+ <7236a148-c513-4053-9778-0bce6657e358@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <238nnn48-0o7r-22q2-2rpo-s3n7n62pn2q4@onlyvoer.pbz>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7236a148-c513-4053-9778-0bce6657e358@efficios.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, May 24, 2024 at 01:04:38PM -0400, Nicolas Pitre wrote:
-> On Fri, 24 May 2024, Julien Panis wrote:
+On Fri, May 24, 2024 at 12:04:11PM -0400, Mathieu Desnoyers wrote:
+> On 2024-05-24 11:35, Mathieu Desnoyers wrote:
+> > [ Adding clang/llvm and KMSAN maintainers/reviewers in CC. ]
+> > 
+> > On 2024-05-24 11:28, Kent Overstreet wrote:
+> > > On Thu, May 23, 2024 at 01:53:42PM -0400, Mathieu Desnoyers wrote:
+> > > > Hi Kent,
+> > > > 
+> > > > Looking around in the bcachefs code for possible causes of this KMSAN
+> > > > bug report:
+> > > > 
+> > > > https://lore.kernel.org/lkml/000000000000fd5e7006191f78dc@google.com/
+> > > > 
+> > > > I notice the following pattern in the bcachefs structures: zero-length
+> > > > arrays members are inserted in structures (not always at the end),
+> > > > seemingly to achieve a result similar to what could be done with a
+> > > > union:
+> > > > 
+> > > > fs/bcachefs/bcachefs_format.h:
+> > > > 
+> > > > struct bkey_packed {
+> > > >          __u64           _data[0];
+> > > > 
+> > > >          /* Size of combined key and value, in u64s */
+> > > >          __u8            u64s;
+> > > > [...]
+> > > > };
+> > > > 
+> > > > likewise:
+> > > > 
+> > > > struct bkey_i {
+> > > >          __u64                   _data[0];
+> > > > 
+> > > >          struct bkey     k;
+> > > >          struct bch_val  v;
+> > > > };
+> > > > 
+> > > > (and there are many more examples of this pattern in bcachefs)
+> > > > 
+> > > > AFAIK, the C11 standard states that array declarator constant expression
+> > > > 
+> > > > Effectively, we can verify that this code triggers an undefined behavior
+> > > > with:
+> > > > 
+> > > > #include <stdio.h>
+> > > > 
+> > > > struct z {
+> > > >          int x[0];
+> > > >          int y;
+> > > >          int z;
+> > > > } __attribute__((packed));
+> > > > 
+> > > > int main(void)
+> > > > {
+> > > >          struct z a;
+> > > > 
+> > > >          a.y = 1;
+> > > >          printf("%d\n", a.x[0]);
+> > > > }
+> > > > delimited by [ ] shall have a value greater than zero.
+> > > 
+> > > Yet another example of the C people going absolutely nutty with
+> > > everything being undefined. Look, this isn't ok, we need to get work
+> > > done, and I've already wasted entirely too much time on ZLA vs. flex
+> > > array member nonsense.
+> > > 
+> > > There's a bunch of legit uses for zero length arrays, and your example,
+> > > where we're not even _assigning_ to x, is just batshit. Someone needs to
+> > > get his head examined.
 > 
-> > [RFC] When PATCH 1/6 and 2/6 are squashed, checkpatch raises this WARNING:
-> > "DT binding docs and includes should be a separate patch." That's why I
-> > split them in this v5. The problem is that the driver can't be compiled
-> > any more at PATCH 1/6. It needs PATCH 2/6 to be compiled. Should the
-> > checkpatch warning be ignored here ? Should I finally squash PATCH 1/6
-> > and PATCH 2/6 ?
+> Notice how a.y is first set to 1, then a.x[0] is loaded, expecting to
+> alias with a.y.
 > 
-> IMHO it might be preferable to preserve successful compilation across 
-> bisection than to appeal to checkpatch in this case.
+> This is the same aliasing pattern found in bcachefs, for instance here:
+> 
+> bcachefs_format.h:
+> 
+> struct jset {
+> [...]
+>         __u8                    encrypted_start[0];
+> 
+>         __le16                  _read_clock; /* no longer used */
+>         __le16                  _write_clock;
+> 
+>         /* Sequence number of oldest dirty journal entry */
+>         __le64                  last_seq;
+> 
+> 
+>         struct jset_entry       start[0];
+>         __u64                   _data[];
+> } __packed __aligned(8);
+> 
+> where struct jset last_seq field is set by jset_validate():
+> 
+> 		jset->last_seq = jset->seq;
+> 
+> and where journal_read_bucket() uses the encrypted_start member as input:
+> 
+>                 ret = bch2_encrypt(c, JSET_CSUM_TYPE(j), journal_nonce(j),
+>                              j->encrypted_start,
+>                              vstruct_end(j) - (void *) j->encrypted_start);
 
-Or, patch 1 adds the new definitions, subsequent patches convert the
-users, and the last patch removes the old, now unused, definitions.
+Except we're just using it as a marker for an offset into the struct,
+the same "aliasing" issue would apply if we were just using offsetof()
+to calculate the offsets directly.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
