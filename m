@@ -1,123 +1,143 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D657F328DB;
-	Fri, 24 May 2024 07:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FBD33D0
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 07:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716536598; cv=none; b=LnFj04bdzmeGlEyLr6SmtZUtxT15YrbXJguGSUyATUJl2CBiyPDB26iHrX01dIo5cqQQxn92Hu85zFou5WzjaIkCVPh5wthebj6bZYAfvCmo/eEmS5YyiSNW2//w8h237rd5+dfbYa1L+4USHeZwB9QR5AlEbXrsupqrVjOwC0A=
+	t=1716536754; cv=none; b=eH39X/D7l57tzK3pT8cZaAU5JQCiy3nZ61SGZ+HD1LyZHavxcI7ggdTaAEmQSU2ZPp/qKRg3T7LB0Gq3h8AE/CfkEtEDmkux0SJqAYg0iv9/T/6SpWm3/U1fQ1+gp4NrDvfkU3mbj80h9j/5me0QIRA+t/gCzya2ExIzSGpUAtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716536598; c=relaxed/simple;
-	bh=EEAPAkvRWTP87ptJdkXmynH7J+7oWnWgXa8qzJjCnUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i/Wc6f80qsYvhNBpbkbY14AhuXil5ugeJ6m2cDxTVouITBhFrtnpt+4MCDx8f84T1K16z5qAtg/fcYetGIppUtZ2gOIgt6rkkNaFQUtkkH8t8WiSa9fpFwY/IpsRKPQQfkwZ0bPM3QWYBaJO0uKD6KPYrb0ssoimJL3rtzCppHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BgmhP/FF; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716536754; c=relaxed/simple;
+	bh=S/w8vuAudAzfzO1eQeYhP8GUDj4u+DfanX/jFOUwG2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YjYD8UxFkkuOnrFv2otjaGY9YuxeJcVV2HUMHQOzQytBKdSGSqjN8axNYNsFT3vu0WzymxtB8Su1QbjrV7sBRw0KOFDpU+NkmaMDwCGIn1KbNTfYKpZnUlimOPE6FpJN5tMJkpBfRGAT8WyOxrHUO+Ce3AgGlcuXPPX96IzVcHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gu6nNr1k; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgmhP/FF"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-62a082720f0so6218867b3.1;
-        Fri, 24 May 2024 00:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716536596; x=1717141396; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8+5o0jnvfHIMGelQ8b/lLWEj2CJxrw/Z+KD+l+PaAQk=;
-        b=BgmhP/FFu5vBHzEvhKmIZTVicCcbO0W0HGcuxoEkrYO9d+30s1cEVHBseD6seKN3Cc
-         g6gp1PShJXVxyA9HnEktWk8xvzpUIYAy/dIOXfTiQUuyrmV3WJXYjVT5pRZ1lvDMjrW3
-         aV80M/5ydSyPBJgvhwj6rZ8nJT7rY//lrr4lTTbIY+mCzQVTDiL/IEyHvzGVMHiXzdoT
-         5hghpe8eMLCMFH//xfVZXR5WH+PfM/uMHzzNm6tpcKUf1UgN5vGp08bSQ+5q9nFgY03Z
-         BRETdqqS+sf9hnDg0/xrGephcLjC3lhnDwaS6ZCO3myKNO/epwcdRmgFO90qz5ewSf1V
-         KEcQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gu6nNr1k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716536751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s3tXMXab6M77eKvUSzxZo4mXzYc0uhowQ0ZNcQeUMTs=;
+	b=gu6nNr1kx+B3X4stMXa6xEtD5m7XsE+ypPn0omv+lawmzWyg5qJIq1/vFoLP61FFTNEx40
+	jhkfk/uRfqCXj8/IMt6MOATmw4y4xCjo1vS/BFHwTElgi79gcYXdk/qSqgGvc2/ZLit4hG
+	LQZ4Ob1HLSTUKG5ylOFhjVXvJg/L1iQ=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-616-1-MaCgaDPGqKvH5ykDe42w-1; Fri, 24 May 2024 03:45:48 -0400
+X-MC-Unique: 1-MaCgaDPGqKvH5ykDe42w-1
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1f449f05eeaso4317165ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 00:45:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716536596; x=1717141396;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8+5o0jnvfHIMGelQ8b/lLWEj2CJxrw/Z+KD+l+PaAQk=;
-        b=o+kqHi57tR9RFV75p7Ojy2AL7LIRho3SAi3Y4USwRATTuKLg8fTBv/il4vjH/Fz++a
-         jE1pdlK8zJn0L/O06l+r+uZimDHOSJMJmiR5e4IAu1k4Io++hT3DX/SPmO8lDymkGUwx
-         WOQrOglKWn+WaGIpsjJVjltRDjOnn7eyG3DHi+rO2JfHQzkIKHR/mMoaHYJr8Csd7vcD
-         W5PFgcKyEnpAL7XljFiMUYU82cGkiHxYVFf0DgfsSgAU6W+z3wdrfs2EnzIhwuapQgkG
-         HdQCbtWWB6ovQodtcQHOAj4uQKnH3DsuDOPSylrUdc5ItpAZvnSIn4KH2x/fS5og6Oke
-         vN2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXJqqfjSDO9OVvZfi9f09AJN28/06Lpufndv+rQDMhfPgaJ0ouYHWInlwSHNH9Ey8LTlQdCuAB43/dTfXcveZflyPoafAsGmZQvMS+A
-X-Gm-Message-State: AOJu0YyvnBR1trdpRBBiU37w6OP1gQoEyx7CnWsXzlTaDJY0jeAXESHn
-	eEp6yS7s0hp5zCPvO/dtDyUVqKO0doUOAowN4IQelyogDquiLRASPCn+5P3cllCRfkDQ2w/Q2Af
-	6hmYKbJ439dCVNsKRL439znwf7SM=
-X-Google-Smtp-Source: AGHT+IFUF3ICaiQTE3zr4leR5Pkgem+HIQRPp295oMXpzO1jFJa/rHWdUCrzDilFW5dbZDoWbiLbuNViNj8R7nTRSAA=
-X-Received: by 2002:a0d:e8c4:0:b0:619:da17:87be with SMTP id
- 00721157ae682-62a08ee8ad9mr13994687b3.42.1716536595834; Fri, 24 May 2024
- 00:43:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716536747; x=1717141547;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s3tXMXab6M77eKvUSzxZo4mXzYc0uhowQ0ZNcQeUMTs=;
+        b=hUAF6N196WZ/RRx3fBwaGCRdwAvtTXlmQHGsKIxh7k9agOjKyi6VmkBJCnA06ObYQb
+         Qi+Ly3n1t9ye7bDfWWdkMvmRLxmx+K6JlpEpsYB+8rWUPDfUnpkp7PzNoLBwpskmqw7F
+         pH/yKMUA4XDxXo+WppxvhC0e2KezKlnsHr8W+j58DWhTB8/9jGONEFRaa8pGy9Firhnj
+         SjwSWHF40QDamUthygGxE+uUpeBWrBSROcSZty/G2WhSR8vQ54Z9NsZaozUJHuu19PAr
+         NdE3Vd/MfzpNBJJ2qfq2GdzLw8+wD+Q0FlTABfjdy4lIq4edy1Cm7FrSVTUzv9sMhrxY
+         0WOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUABOouwKVYqoRfOxtd38eT6bBK2ONWPloyGCq+jPUSVZeqSfVDm7R4hLc1JNGOK+Mg/I1uS3xX36Gw3tjx1WbT5H4QNLKEzwCeEXfo
+X-Gm-Message-State: AOJu0YxTzdPggw2e9dNwI3M7WkMjW3KY5jPeWjhoUHiIC4aXGgCVGl5W
+	5LkGuu4efYMrppTgAp1tnjRB+IgrhWqDoVya5QxQbYHbyqGFJnZ3CCp4hXmaWA23M/8HbmpcpiY
+	HvaSHdqLAsB2bNmjGTAYsmWCSZuU/syUMLawTpUD5+zaLigLsOHW8alyjAboO2Q==
+X-Received: by 2002:a17:903:2445:b0:1eb:5222:7b8e with SMTP id d9443c01a7336-1f448160c7amr23116665ad.17.1716536746798;
+        Fri, 24 May 2024 00:45:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH1aJYXjax+8GTKPwvYRs1B8LMFH0sILZ/bVMDAGOOSLXHhLZ7EJHda1gAWcPVxmY0C6kEKMw==
+X-Received: by 2002:a17:903:2445:b0:1eb:5222:7b8e with SMTP id d9443c01a7336-1f448160c7amr23116155ad.17.1716536745907;
+        Fri, 24 May 2024 00:45:45 -0700 (PDT)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c971012sm7604975ad.173.2024.05.24.00.45.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 00:45:45 -0700 (PDT)
+Date: Fri, 24 May 2024 15:40:27 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
+	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3 4/7] crash_dump: reuse saved dm crypt keys for
+ CPU/memory hot-plugging
+Message-ID: <c5xg5akvf5ikphio4osdbg2giclzvxu5dbsivrvtht6rxbgs52@hriqkr6kdui5>
+References: <20240425100434.198925-1-coxu@redhat.com>
+ <20240425100434.198925-5-coxu@redhat.com>
+ <ZkwZfcfTOL1UGKJb@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <o89373n4-3oq5-25qr-op7n-55p9657r96o8@vanv.qr> <CAHk-=wjxdtkFMB8BPYpU3JedjAsva3XXuzwxtzKoMwQ2e8zRzw@mail.gmail.com>
- <ZkvO-h7AsWnj4gaZ@slm.duckdns.org> <CALOAHbCYpV1ubO3Z3hjMWCQnSmGd9-KYARY29p9OnZxMhXKs4g@mail.gmail.com>
- <CAHk-=wj9gFa31JiMhwN6aw7gtwpkbAJ76fYvT5wLL_tMfRF77g@mail.gmail.com>
- <CALOAHbAmHTGxTLVuR5N+apSOA29k08hky5KH9zZDY8yg2SAG8Q@mail.gmail.com>
- <CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com>
- <CALOAHbAAAU9MTQFc56GYoYWR3TsLbkncp5QrrwHMbqJ9SECivw@mail.gmail.com> <CAHk-=whwtEFJnDVrkkMtb6SWcmBQMK8+qXGtqvBO+xH8y2i6nA@mail.gmail.com>
-In-Reply-To: <CAHk-=whwtEFJnDVrkkMtb6SWcmBQMK8+qXGtqvBO+xH8y2i6nA@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Fri, 24 May 2024 15:42:39 +0800
-Message-ID: <CALOAHbD0LdbQTWyvDiLcgGupcQJKmadzWhoZiUTj126Rqqn6fQ@mail.gmail.com>
-Subject: Re: [PATCH workqueue/for-6.10-fixes] workqueue: Refactor worker ID
- formatting and make wq_worker_comm() use full ID string
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: bpf <bpf@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Jan Engelhardt <jengelh@inai.de>, 
-	Craig Small <csmall@enc.com.au>, linux-kernel@vger.kernel.org, 
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ZkwZfcfTOL1UGKJb@MiWiFi-R3L-srv>
 
-On Thu, May 23, 2024 at 11:55=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, May 21, 2024 at 11:48:49AM +0800, Baoquan He wrote:
+>On 04/25/24 at 06:04pm, Coiby Xu wrote:
+>> When there is CPU/memory hot-plugging, the kdump kernel image and initrd
+>> will be reloaded. The user space can write the "reuse" command to
+>> /sys/kernel/crash_dm_crypt_key so the stored keys can be re-saved again.
+>>
+>> Note currently only x86 (commit ea53ad9cf73b ("x86/crash: add x86 crash
+>> hotplug support")) and ppc (WIP) supports the new infrastructure
+>> (commit 247262756121 ("crash: add generic infrastructure for crash
+>> hotplug support")). If the new infrastructure get extended to all arches,
+>> this patch can be dropped.
+>>
+>> Signed-off-by: Coiby Xu <coxu@redhat.com>
+>> ---
+>>  kernel/crash_dump_dm_crypt.c | 30 ++++++++++++++++++++++++++----
+>>  1 file changed, 26 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+>> index b9997fb53351..6ac1fabdb6cb 100644
+>> --- a/kernel/crash_dump_dm_crypt.c
+>> +++ b/kernel/crash_dump_dm_crypt.c
+>> @@ -10,12 +10,13 @@
+>>  // The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
+>>  #define KEY_DESC_LEN 48
+>>
+>> -static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
+>> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded", "reuse"};
+>>  enum STATE_ENUM {
+>>  	FRESH = 0,
+>>  	INITIALIZED,
+>>  	RECORDED,
+>>  	LOADED,
+>> +	REUSE,
+>>  } state;
+>>
+>>  static unsigned int key_count;
+>> @@ -90,12 +91,31 @@ static int record_key_desc(const char *buf, struct dm_crypt_key *dm_key)
+>>  	return 0;
+>>  }
+>>
+>> +static void get_keys_from_kdump_reserved_memory(void)
+>> +{
+>> +	struct keys_header *keys_header_loaded;
+>> +
+>> +	arch_kexec_unprotect_crashkres();
 >
-> On Thu, 23 May 2024 at 06:04, Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > If it's not urgent and no one else will handle it, I'll take care of
-> > it. However, I might not be able to complete it quickly.
->
-> It's not urgent. In fact, I'm not convinced we need to even increase
-> the current comm[] size, since for normal user programs the main way
-> 'ps' and friends get it is by just reading the full command line etc.
->
-> But I think it would be good to at least do the cleanup and walk away
-> from the bare hardcoded memcpy() so that we can move in that
-> direction.
+>I don't see the corresponging arch_kexec_protect_crashkres() in the
+>following flow. Aren't they a pair when used?
 
-Certainly, let's start with the cleanup.
+Thanks for raising the concern! The user space is supposed to load the
+kdump kernel as next step. But for code readability and security, it's
+better to add arch_kexec_protect_crashkres.
 
-Actually, there are already helpers for this: get_task_comm() and
-__get_task_comm(). We can simply replace the memcpy() with one of
-these. If the task_lock() in __get_task_comm() is a concern, we could
-consider adding a new __get_current_comm().
 
-It's important to note that people may continue to directly access
-task->comm in new code, even if we've added a comment to avoid that:
+-- 
+Best regards,
+Coiby
 
-    struct task_struct {
-        ...
-        /*
-         * executable name, excluding path.
-         *
-         * - normally initialized setup_new_exec()
-         * - access it with [gs]et_task_comm()
-         * - lock it with task_lock()
-         */
-        char                            comm[TASK_COMM_LEN];
-        ...
-    }
-
-We might add a rule in checkpatch.pl to warn against this, but that=E2=80=
-=99s
-not an ideal solution.
-
---=20
-Regards
-Yafang
