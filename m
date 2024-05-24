@@ -1,93 +1,132 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpcmd01-sp1.aruba.it (smtpcmd01-sp1.aruba.it [62.149.158.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F75986AFA;
-	Fri, 24 May 2024 07:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B519812A151
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 07:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716534655; cv=none; b=RldLPN6nLSGe+vMUSSan+z85ymJNAnCXFzACBmEMEsBMQbiuL+wSmCcg6hTMO+vMNyRkMM1sYFG4nM368qiLfAhOnRm4KOgKCxf95jAZwgdKLzeuJvGSX6NJmC/rg9M8pDqi126LwhLVP6Mvjv2uZhKZLR7aBk+Rgtapz0g52m8=
+	t=1716534664; cv=none; b=THKLEnmoH1gFAJFJ/SwzFxbABnBRNwcdzvf7by+TvntHuM7tl1kinMn+3IT+RNZf8FlfKbtyiIbkQEsVCirQYbHLoMBm+bHBVurBSOOb6Q4uiKQaxbkRbgxVkvW+LgHnkFkU+vMVZe/I7VzqWbp354V27U+vsOt4SBhomqg37XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716534655; c=relaxed/simple;
-	bh=yoH7HDIzCvy2OCMXmqXpl6iSu4XuuIUTXd0xzeGfedg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ss7syKBhn6C1JEIxpM+q4uui2WHpdgQ1ckuZ7MNLnPNZ4Avw7XoxPvwtDHz6T6ui6u+fqHggKOG5WZCEQqJQURLjGFICTNADaQGyZ56IoH3ekLR9/9YpL/MS9HtyOV2uQGB+Bv4b2IAI9kiEiBNppIWKVUaa5mQkIr/izu5IOVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=0k1QsmKy; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1716534664; c=relaxed/simple;
+	bh=lE2QS6lR1/Y/1hnhivmXubzt9g9a+xKOwCIxWr45d0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o6zIjFNqLrv3cSzbskPRQhsLBauiwE0uQSr34R6LKcEG1blAg0PTAstYvVWtS6dt1H3bMRTNoNhwno5PBbM3b8WUR72ec89F0I+laxBQnxtUlruwAXK+uadEwIIOUJj7XTVAmCs926wauSCqCsmkK187ssMj8F04SFEkt48EYCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=BZb0NWqP; arc=none smtp.client-ip=62.149.158.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="0k1QsmKy"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 8400B1F9F4;
-	Fri, 24 May 2024 09:10:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1716534649;
-	bh=E+eiGEXpFDBtOnSags/hbRRzOuPfaC9yiDVYuMURIKE=; h=From:To:Subject;
-	b=0k1QsmKyyyawhgK6mPG0YMcfmqol9ra56MShsur4YR1cISoGVrEsf6oy+G0BwS7tK
-	 MyWsOHKeZj0h0ZRkLNtP1ftuoD0kFCOlhaPOclrhrgWBvtlXSvvo80OAmDMNYjU+DZ
-	 wvggmPvsHno+DV8ZhB4WXn+Vtsy7atBBjqKIkmDA93Qh12CxIDzH8NqJGpG4GzwZHn
-	 aiks+KDfrGe9ykKumvzVErhMHLASDKMVjIHyCbQ1eJRgwFef5yN6/JeUc6W4qwjCcH
-	 05iIonnmgCTem2goFQWf2nLRdUeMDROLJ+xEYxnG2Ubt8BK0oT4ci3hDhYolA0Z/hI
-	 uMA50jT5K+3Xg==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v1 1/2] dt-bindings: usb: gpio-sbu-mux: Make 'enable-gpios' optional
-Date: Fri, 24 May 2024 09:10:33 +0200
-Message-Id: <20240524071034.4441-2-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240524071034.4441-1-francesco@dolcini.it>
-References: <20240524071034.4441-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="BZb0NWqP"
+Received: from engicam ([77.32.45.53])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id AP1rsMjiGwy3rAP1sszWGr; Fri, 24 May 2024 09:07:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1716534473; bh=lE2QS6lR1/Y/1hnhivmXubzt9g9a+xKOwCIxWr45d0I=;
+	h=Date:From:To:Subject:MIME-Version:Content-Type;
+	b=BZb0NWqPJHs43h+FHyFkz6zJPlLj/BtboAoBuPOE0uHO7KjXRg4tsDRzIUb3sGwSS
+	 lt/HjHUovGjrx2RfmTFrmTuEQ+PWZfHb/hSQyj3lAETbK3ZxyS9BMgYdzlDhuzn70U
+	 ROtREzR9nqn3kG1E/CPnFzfv14iJp6XSQygBToA7HQR0is7f2vvSoEcpKNxn1SSZPI
+	 iAbk3/ZTfl0VGcM1EWoqeFRLv+4lP1lApEnXP/ENH7RLBKNghhBT/1zXIRIZoO8f9x
+	 /81UF4RR25NFQ2YDpTkgSC8XqU2MuyCvX4An81kXl4yffqpTu1R+szEkP7xcROyH5k
+	 O3LxFu6aItzwQ==
+Date: Fri, 24 May 2024 09:07:51 +0200
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	matteo.lisi@engicam.com, mirko.ardinghi@engicam.com
+Subject: Re: [PATCH v8 0/3] arm64: dts: imx93: add i.Core MX93 EDIMM 2.0 board
+Message-ID: <ZlA8x9J0TBoRFbUb@engicam>
+References: <20240429093116.9346-1-fabio.aiuto@engicam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240429093116.9346-1-fabio.aiuto@engicam.com>
+X-CMAE-Envelope: MS4xfCoxL4upyb62o7G9vEw+NpXZSx3bhoYjW0ZwXhTiw3qa4q6LGiXuZiFuOTdQPv9IaX1YLVA8vEQBHFNwJy3EOow3hcNH4ChqnVhILLw+XNfFNAMb62IG
+ qgZiRKuBDca0Of3NdvDX+YHrKLrAx7YUDkeSoUZ2hio9N2Z8W4e9X1N5XXXoA09GDbydd8MUcQ13JaH+pkBEzAMVyBLvnzASPRY5BfzcoPvqekTdNNT1tSkQ
+ RICQNahyzhe71x+mKTkSXXXV3zrzu+IcXmG0NJqxrv3aYFrCDrU+Z+meleZOjSOGMbkI8HmMqb2kOvbBPJBa0zx2caLNbYgDWZ1c12RiEYaiwUCJblpQN8In
+ 0SAHdV1oF5LFpbLQPLRIIxqfgYvfusdn6LoXNZ39nbbfdRaPRjOsGNiwOevRE3XkFTSZf8GR2OGxm9JeYru4DBoJYzlvWwgzsT947HY3/Aoc0Q9cCCw46gac
+ fu4aJVkPyb3Mrf/UQYc0Taa0ozYhIBC3RXWs+AL7S3w9ouJfxYId25+XD4oKByadU4icU6VQheneqRh4JunEHE5nxmDCfDxjSxAf5A==
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
+Hello all,
 
-The enable gpio is not required when the SBU mux is used only for
-orientation, make enable-gpios required only for alternate mode
-switch use case.
+any news here?
 
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+kr,
 
-diff --git a/Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml b/Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml
-index 88e1607cf053..30edcce82f97 100644
---- a/Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml
-+++ b/Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml
-@@ -44,13 +44,18 @@ properties:
- 
- required:
-   - compatible
--  - enable-gpios
-   - select-gpios
-   - orientation-switch
-   - port
- 
- allOf:
-   - $ref: usb-switch.yaml#
-+  - if:
-+      required:
-+        - mode-switch
-+    then:
-+      required:
-+        - enable-gpios
- 
- additionalProperties: false
- 
--- 
-2.39.2
+fabio
 
+Il Mon, Apr 29, 2024 at 11:31:13AM +0200, Fabio Aiuto ha scritto:
+> Hello all,
+> 
+> this patchset adds support for i.Core MX93 EDIMM 2.0 Starter Kit,
+> a SoM + Evaluation Board combination from Engicam.
+> 
+> The number of patch has diminished to 3, for I dropped the
+> patch introducing a change in nxp,pca9450 binding which has
+> been already submitted in regulator tree.
+> 
+> (Dropped also regulator tree maintainers as recipients for
+> they aren't anymore involved in this patchset)
+> 
+> This patchset introduces just basic functionality for board.
+> 
+> Thanks in advance,
+> 
+> fabio
+> ---
+> v7 ---> v8:
+> 	- fixed tag name in commit message
+> v6 ---> v7:
+>         - removed max-frequency property in wifi node
+>         - removed pinctrl-{1,2} in usdhc3 node
+> v5 ---> v6:
+>         - added property in lpuart5 node
+>         - removed unused sai1 node
+> v4 ---> v5:
+>         - done some property reorder, indentation fixes,
+>           node rename, drop/add new-lines
+>         - fixed line wrap in 2nd patch commit log
+>         - added Reviewed-by tag
+> v3 ---> v4:
+>         - drop wl_reg_on regulator in favor of
+>           mmc-pwrseq-simple
+> v2 ---> v3:
+>         - fixed dtschema warnings
+>         - added Acked/Reviewed-by tags
+>         - removed regulator-always-on on
+>           bt_reg_on
+>         - fixed clock rate assignment on
+>           sgtl5000 node
+>         - added wdog_b-warm-reset; property in pmic
+>         - fixed indentation issue
+> v1 ---> v2:
+>         - dropped patch updating nxp,pca9450 binding
+>         - fixed indentation issue
+>         - fixed missing space issue
+>         - improved naming of regulator nodes
+>         - removed unneeded include
+>         - fixed email recipients
+> 
+> Fabio Aiuto (3):
+>   dt-bindings: arm: fsl: add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+>   arm64: dts: imx93: add Engicam i.Core MX93 SoM
+>   arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+> 
+>  .../devicetree/bindings/arm/fsl.yaml          |   7 +
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  .../dts/freescale/imx93-icore-mx93-edimm2.dts | 321 ++++++++++++++++++
+>  .../boot/dts/freescale/imx93-icore-mx93.dtsi  | 269 +++++++++++++++
+>  4 files changed, 598 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93.dtsi
+> 
+> -- 
+> 2.34.1
+> 
