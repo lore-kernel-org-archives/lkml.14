@@ -1,86 +1,105 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12FA29422
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 09:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5854E84E07;
+	Fri, 24 May 2024 09:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716542758; cv=none; b=ol4Rv8Cvz8fXrvPDA6K3pIG98RrsyR57QfFkk0oTWC24k3IJb7PAjPO47vPJoMJxPMUhKc3CV14kKvcQmGgJNfm4kvpd3OVYRz1aMJR5UGxs/yXqYSLhkXR+V70P8qNOKRRfcXQ0tW8qK4Rxmxi8klQwgcdJpgZZ0cOgKsOFx7c=
+	t=1716542779; cv=none; b=mwe/ccsfFxm9jNvsjpG7ANIHWG1tpzIJOZ2o78UvmfJIGG+J5XfqWBzFveVYVu//XLmgp8yQuFZdpjJtzKKlxlHw1P76OqRq74tLFI81LBS00SBCueASDVsGbR+g8UuOXqeKDkyqm9Ow/vVGovRdjfD9KMMGRZ+XA4MIJfU1bi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716542758; c=relaxed/simple;
-	bh=yn0UIRDXb/4FFzQvGAAS9y46o7z9CqbIGH2x0hW+WCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dJzXcTTpRePejV9gU1WQrKW6nNuyqQWDJfKxt1dQKr2/1d3+OwVxlBCuQJLEqJYyw5G9zXKzARLRghGNC9dn2cyGQzHWVtSVZR7yFvdOq1bWXF77/XhOilfOHKQblpNjbjauVyFJYQj8NVqIuUeZKLVfKUnbIEOLMxgyeMQVjrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <s.pueschel@pengutronix.de>)
-	id 1sARBB-0007SY-J8; Fri, 24 May 2024 11:25:37 +0200
-From: =?UTF-8?q?Sven=20P=C3=BCschel?= <s.pueschel@pengutronix.de>
-To: hjc@rock-chips.com,
-	heiko@sntech.de,
-	andy.yan@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de,
-	Michael Tretter <m.tretter@pengutronix.de>,
-	=?UTF-8?q?Sven=20P=C3=BCschel?= <s.pueschel@pengutronix.de>
-Subject: [PATCH] drm/rockchip: Set DMA max segment size
-Date: Fri, 24 May 2024 11:23:59 +0200
-Message-Id: <20240524092400.2019587-1-s.pueschel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1716542779; c=relaxed/simple;
+	bh=v0Pbzh1dn71qAhHL1x9syl/5TEsTx+Rf1bs3uhhMYOU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Wy9aLk24ZEmuqD0TZe+pzRgZLPaROHdVfLIi+9uhu3EdQxUeoNVZ0Iq8e+2sXZzPQEFcEufnDgo7JHrlv1j1/HFGQhpEnPyd+SVEOHYlWo2NAyoLvGRlz6oMwGkUVHroD5lCUIyA41en7kqlYeeSLqs6TDPDiR9WpPw3klq1nGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Vm0124JfXzVlG4;
+	Fri, 24 May 2024 17:21:58 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 82ABA180A9F;
+	Fri, 24 May 2024 17:26:13 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 24 May 2024 17:26:13 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>
+CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] cgroup/pids: replace can_attach and cancel_attach with attach hook
+Date: Fri, 24 May 2024 09:18:51 +0000
+Message-ID: <20240524091851.1539589-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::ac
-X-SA-Exim-Mail-From: s.pueschel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+Currently pids_can_attach() always returns 0 and never fails, so the
+can_attach() and cancel_attach() hooks can be replaced by attach(),
+since attach() is guaranteed to succeed and don't need to fallback.
 
-There is no reason to limit the DMA max segment size for the Rockchip
-VOP and VOP2. Set it to the maximum.
-
-This prevents the following warning when DMA API debugging is enabled
-with CONFIG_DMA_API_DEBUG_SG=y:
-
-	DMA-API: rockchip-drm display-subsystem: mapping sg segment longer than device claims to support [len=208896] [max=65536]
-
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Signed-off-by: Sven Püschel <s.pueschel@pengutronix.de>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/cgroup/pids.c | 25 ++-----------------------
+ 1 file changed, 2 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-index ab55d7132550..0f93efd1a8fa 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-@@ -67,6 +67,8 @@ int rockchip_drm_dma_attach_device(struct drm_device *drm_dev,
- 		}
- 	}
+diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
+index 0e5ec7d59b4d..86d06f709957 100644
+--- a/kernel/cgroup/pids.c
++++ b/kernel/cgroup/pids.c
+@@ -186,7 +186,7 @@ static int pids_try_charge(struct pids_cgroup *pids, int num)
+ 	return -EAGAIN;
+ }
  
-+	dma_set_max_seg_size(drm_dev->dev, UINT_MAX);
-+
- 	ret = iommu_attach_device(private->domain, dev);
- 	if (ret) {
- 		DRM_DEV_ERROR(dev, "Failed to attach iommu device\n");
-
-base-commit: 39bc27bd688066a63e56f7f64ad34fae03fbe3b8
+-static int pids_can_attach(struct cgroup_taskset *tset)
++static void pids_attach(struct cgroup_taskset *tset)
+ {
+ 	struct task_struct *task;
+ 	struct cgroup_subsys_state *dst_css;
+@@ -207,26 +207,6 @@ static int pids_can_attach(struct cgroup_taskset *tset)
+ 		pids_charge(pids, 1);
+ 		pids_uncharge(old_pids, 1);
+ 	}
+-
+-	return 0;
+-}
+-
+-static void pids_cancel_attach(struct cgroup_taskset *tset)
+-{
+-	struct task_struct *task;
+-	struct cgroup_subsys_state *dst_css;
+-
+-	cgroup_taskset_for_each(task, dst_css, tset) {
+-		struct pids_cgroup *pids = css_pids(dst_css);
+-		struct cgroup_subsys_state *old_css;
+-		struct pids_cgroup *old_pids;
+-
+-		old_css = task_css(task, pids_cgrp_id);
+-		old_pids = css_pids(old_css);
+-
+-		pids_charge(old_pids, 1);
+-		pids_uncharge(pids, 1);
+-	}
+ }
+ 
+ /*
+@@ -374,8 +354,7 @@ static struct cftype pids_files[] = {
+ struct cgroup_subsys pids_cgrp_subsys = {
+ 	.css_alloc	= pids_css_alloc,
+ 	.css_free	= pids_css_free,
+-	.can_attach 	= pids_can_attach,
+-	.cancel_attach 	= pids_cancel_attach,
++	.attach		= pids_attach,
+ 	.can_fork	= pids_can_fork,
+ 	.cancel_fork	= pids_cancel_fork,
+ 	.release	= pids_release,
 -- 
-2.39.2
+2.34.1
 
