@@ -1,406 +1,348 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0402255E73
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 10:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE6884E09
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 10:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716544945; cv=none; b=Zt/8qAXxzDmRsMMwqX/yd0yTu55m2kMci6HuaBX8hPdHvXfdt5BZaB9JOzITP98U2ZUUZ53HiBdtU2dofcKrlIv/nH0Q+a86HuZYfR+CYeWTeIqIKPaSvHymnKWhB5+r50JEgec0+dZTu1sNoHE6CzQrbGEZgzyzg08Hkwn8svc=
+	t=1716544973; cv=none; b=QzE9VLHH2xNGW2EFHOejjILGplyco3mcEyzpDMDiP5ApIqMUY5DSEydfIrep+W85Do+mKNzd/V6UYPEzeyI9B9sBWPBwg1xwGO2PiAIbjHahZuLXitNXRH+Bn9kh9YhkrV6VhEDw+NC7E4zxzFCsA3mHzDGZ52ylGaKhkAzwZaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716544945; c=relaxed/simple;
-	bh=g11p0HiaK4RrSltT5g7/QUOMagyBWzuTHLsjFleKL1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=guZ/jUcie/NbjPDbM6IH0NoQCDUKbcKIeSzNbQuiedVw9AVX/yJ8mnlqVT+Wt6bzNd45z51WTVp6smfg1WvYzxI4rImQKVgrC2r1+4L7aEonDG8r3pfyV23CqezjXzg2uD+TxXzTi3gvYGp71PQV4OiMUWZn9EFpmo1F9T87ZGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AezsDtp4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p2GbzN14; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AezsDtp4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p2GbzN14; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1716544973; c=relaxed/simple;
+	bh=VUu5Pay3EO3zPdwqRprm8VMWydnN34K4Iz8Y0oqkzmk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tiX2aWieJO6QZPRgv/RRECcQ4p81DhwGubSVc6iO5T1IpNzhvLTWAQGk21ge5aPkuIPadmsmVDIi70cdges9tnmPDIttvroxsw59ULGpZZFN/XcpXIApS9SdXiFr1hoyoObkFEHHBQde/ul79dtsA0lwupIRD8xZkPb/PLv7IqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P/YqjomP; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AezsDtp4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p2GbzN14";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AezsDtp4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p2GbzN14"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2A12520913;
-	Fri, 24 May 2024 10:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716544935; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xw1st+132+7cHCcLHCU/tSryVepFeMRD9GXc7kRHvs8=;
-	b=AezsDtp4nSh+oMxw4BDtIl8rUEG4B/dd5g0C+qTgkZ9UaqwK89pMiN8ZL4ghT+pIxCPh7a
-	aca/TuSYfLUggQx1tR/9iN48LoZc6xfKKAezrd9/sNhR0V+z1dW6ja0Bu5yDmg+Eiq55cn
-	CFTmBaVFynSV0riudVMXrWRh1gYOmvw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716544935;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xw1st+132+7cHCcLHCU/tSryVepFeMRD9GXc7kRHvs8=;
-	b=p2GbzN1460fVO19DD2/E4e+jfP7mmwuNtu3pPoX8XCQBKgVVZC3MlwEikoLvxOM/c5cDTF
-	L4awJK6sVy12VOAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716544935; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xw1st+132+7cHCcLHCU/tSryVepFeMRD9GXc7kRHvs8=;
-	b=AezsDtp4nSh+oMxw4BDtIl8rUEG4B/dd5g0C+qTgkZ9UaqwK89pMiN8ZL4ghT+pIxCPh7a
-	aca/TuSYfLUggQx1tR/9iN48LoZc6xfKKAezrd9/sNhR0V+z1dW6ja0Bu5yDmg+Eiq55cn
-	CFTmBaVFynSV0riudVMXrWRh1gYOmvw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716544935;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xw1st+132+7cHCcLHCU/tSryVepFeMRD9GXc7kRHvs8=;
-	b=p2GbzN1460fVO19DD2/E4e+jfP7mmwuNtu3pPoX8XCQBKgVVZC3MlwEikoLvxOM/c5cDTF
-	L4awJK6sVy12VOAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A427513A6B;
-	Fri, 24 May 2024 10:02:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id j/JnJaZlUGbvPgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 24 May 2024 10:02:14 +0000
-Date: Fri, 24 May 2024 12:02:09 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH v2 07/20] powerpc/8xx: Rework support for 8M pages
- using contiguous PTE entries
-Message-ID: <ZlBlob3qQYJyjLtU@localhost.localdomain>
-References: <cover.1715971869.git.christophe.leroy@csgroup.eu>
- <71017345495dadf0cb96839d261ffeb904dbfef8.1715971869.git.christophe.leroy@csgroup.eu>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P/YqjomP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716544970; x=1748080970;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VUu5Pay3EO3zPdwqRprm8VMWydnN34K4Iz8Y0oqkzmk=;
+  b=P/YqjomPTL6Rr4gHUe4lvKp4OTCa+THG3D+i5lmqACmAzSi8UkmSQbl4
+   ehZFUXpAZOiytTnZ2Eh7XJrWOK7I5N35WWfPVn3bQvp+mO9Bvnfu3TW9g
+   DhLi1KgWvZQfJVxow/jgx16LfmB82IUoxBEEKqf+9AivbpzzpHTDLt1s6
+   /QShxeiEtMvpwvoH7N9AVm02vdp+YWiEa4qKcI8TmOuerkW6rLgN70ugP
+   d2Lgpat98/rYNRnK5/fRyXf16qSROFId+MGxXgeS933vry0DFPFTC4TMy
+   4vmEznJOYHtGgry/OFnK7XZH2TlMfZDqRFzej8veRyyqu8c0pD8kjI3D3
+   Q==;
+X-CSE-ConnectionGUID: vjIWjvRkRmmb4JMt0rgf5A==
+X-CSE-MsgGUID: 6UgexX2NTH+wVicYRN+Hiw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="23523255"
+X-IronPort-AV: E=Sophos;i="6.08,185,1712646000"; 
+   d="scan'208";a="23523255"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 03:02:50 -0700
+X-CSE-ConnectionGUID: 9aLuoKRSQAGD6ECmK24pqA==
+X-CSE-MsgGUID: Syj9UzUwTkGRyAopLCNsMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,185,1712646000"; 
+   d="scan'208";a="38769660"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.48.38])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 03:02:48 -0700
+Message-ID: <85229f77-e5d1-498f-900a-e10b4de5f358@intel.com>
+Date: Fri, 24 May 2024 13:02:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71017345495dadf0cb96839d261ffeb904dbfef8.1715971869.git.christophe.leroy@csgroup.eu>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,nvidia.com,redhat.com,ellerman.id.au,gmail.com,vger.kernel.org,kvack.org,lists.ozlabs.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linus:master] [timekeeping] e84f43e34f:
+ BUG:KCSAN:data-race_in_timekeeping_advance/timekeeping_debug_get_ns
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <202405241607.d3fd7eb0-lkp@intel.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <202405241607.d3fd7eb0-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 17, 2024 at 09:00:01PM +0200, Christophe Leroy wrote:
-> In order to fit better with standard Linux page tables layout, add
-> support for 8M pages using contiguous PTE entries in a standard
-> page table. Page tables will then be populated with 1024 similar
-> entries and two PMD entries will point to that page table.
+On 24/05/24 11:36, kernel test robot wrote:
 > 
-> The PMD entries also get a flag to tell it is addressing an 8M page,
-> this is required for the HW tablewalk assistance.
+> hi Adrian Hunter,
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> we sent the similar report
+>   "[tip:timers/core] [timekeeping]  e84f43e34f: BUG:KCSAN:data-race_in_timekeeping_advance/timekeeping_debug_get_ns"
+> when this commit is in tip:timers/core [1]
+> 
+> we noticed you made some comments, but we don't have enough knowledge it there
+> will be or need some fix.
 
-I guess that this will slightly change if you remove patch#1 and patch#2
-as you said you will.
-So I will not comment on the overall design because I do not know how it will
-look afterwards, but just some things that caught my eye
+AFAICT, it is a false positive.
 
-> --- a/arch/powerpc/include/asm/hugetlb.h
-> +++ b/arch/powerpc/include/asm/hugetlb.h
-> @@ -41,7 +41,16 @@ void hugetlb_free_pgd_range(struct mmu_gather *tlb, unsigned long addr,
->  static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
->  					    unsigned long addr, pte_t *ptep)
->  {
-> -	return __pte(pte_update(mm, addr, ptep, ~0UL, 0, 1));
-> +	pmd_t *pmdp = (pmd_t *)ptep;
-> +	pte_t pte;
-> +
-> +	if (IS_ENABLED(CONFIG_PPC_8xx) && pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M))) {
+KCSAN requires annotation to know where a seqlock critical section
+is.  This annotation does not work if a seqlock is nested within
+another seqlock because KCSAN considers that the critical section
+finishes after the inner seqlock.
 
-There are quite some places where you do the "pmd_off" to check whether that
-is a 8MB entry.
-I think it would make somse sense to have some kind of macro/function to make
-more clear what we are checking against.
-e.g:
+Marco Elver was cc'ed because they introduced the annotations:
 
- #define pmd_is_SZ_8M(mm, addr, pmdp) (pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M)))
- (or whatever name you see fit)
- 
-then you would just need
+	commit 88ecd153be9519f259b87a9f6f4c8383a8b3bbf1
+	Author: Marco Elver <elver@google.com>
+	Date:   Thu Nov 14 19:02:59 2019 +0100
 
- if (IS_ENABLED(CONFIG_PPC_8xx && pmd_is_SZ_8M(mm, addr, pdmp))
+	    seqlock, kcsan: Add annotations for KCSAN
 
-Because I see that is also scaterred in 8xx code.
+But neither they nor Dmitry Vyukov <dvyukov@google.com> nor anyone
+on the kasan-dev@googlegroups.com, seem to have taken an interest.
 
+They should be the ones to know best how to fix the annotation.
 
-> +		pte = __pte(pte_update(mm, addr, pte_offset_kernel(pmdp, 0), ~0UL, 0, 1));
-> +		pte_update(mm, addr, pte_offset_kernel(pmdp + 1, 0), ~0UL, 0, 1);
+Would you be willing to follow this up?  Perhaps reply to
 
-I have this fresh one because I recently read about 8xx pagetables, but not sure
-how my memory will survive this, so maybe throw a little comment in there that
-we are pointing the two pmds to the area.
+	https://lore.kernel.org/all/cb8ae96c-12a6-4945-96ed-7f68f01d69aa@intel.com/
 
-Also, the way we pass the parameters here to pte_update() is a bit awkward.
-Ideally we should be using some meaningful names?
+and ask explicitly if they can help.
 
- clr_all_bits = ~0UL
- set_bits = 0
- bool is_huge = true
+> 
+> now the commit is in mainline now, we just report again FYI.
+> 
+> similar as mentioned in [1], we only observed the
+>   dmesg.BUG:KCSAN:data-race_in_timekeeping_advance/timekeeping_debug_get_ns
+> upon e84f43e34f at the ~50% rate.
+> 
+> but parent has other KCSAN issues (also ~50% rate) which doesn't happen on
+> e84f43e34f.
+> 
+> e8e9d21a5df655a6 e84f43e34faf85816587f805945
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>           9:20         -45%            :20    dmesg.BUG:KCSAN:data-race_in_ktime_get/timekeeping_advance
+>           9:20         -45%            :20    dmesg.BUG:KCSAN:data-race_in_ktime_get_update_offsets_now/timekeeping_advance
+>            :20          55%          11:20    dmesg.BUG:KCSAN:data-race_in_timekeeping_advance/timekeeping_debug_get_ns
+> 
+> 
+> [1] https://lore.kernel.org/all/202404161050.38f1c92e-lkp@intel.com/
+> 
+> 
+> below is the full report.
+> 
+> 
+> Hello,
+> 
+> kernel test robot noticed "BUG:KCSAN:data-race_in_timekeeping_advance/timekeeping_debug_get_ns" on:
+> 
+> commit: e84f43e34faf85816587f80594541ec978449d6e ("timekeeping: Consolidate timekeeping helpers")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linus/master      0450d2083be6bdcd18c9535ac50c55266499b2df]
+> [test failed on linux-next/master c75962170e49f24399141276ae119e6a879f36dc]
+> 
+> in testcase: boot
+> 
+> compiler: gcc-13
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202405241607.d3fd7eb0-lkp@intel.com
+> 
+> 
+> [  106.344081][    C0] BUG: KCSAN: data-race in timekeeping_advance / timekeeping_debug_get_ns
+> [  106.345565][    C0]
+> [  106.346110][    C0] write to 0xffffffff83dfe578 of 296 bytes by interrupt on cpu 1:
+> [ 106.347495][ C0] timekeeping_advance (kernel/time/timekeeping.c:2207 (discriminator 1)) 
+> [ 106.348455][ C0] update_wall_time (kernel/time/timekeeping.c:2222 (discriminator 1)) 
+> [ 106.349310][ C0] tick_do_update_jiffies64 (kernel/time/tick-sched.c:149) 
+> [ 106.350321][ C0] tick_nohz_lowres_handler (kernel/time/tick-sched.c:229 kernel/time/tick-sched.c:287 kernel/time/tick-sched.c:1492) 
+> [ 106.351343][ C0] __sysvec_apic_timer_interrupt (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/jump_label.h:260 include/linux/jump_label.h:270 arch/x86/include/asm/trace/irq_vectors.h:41 arch/x86/kernel/apic/apic.c:1050) 
+> [ 106.352397][ C0] sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1043 (discriminator 47) arch/x86/kernel/apic/apic.c:1043 (discriminator 47)) 
+> [ 106.353427][ C0] asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:702) 
+> [ 106.354479][ C0] _raw_spin_unlock_irqrestore (arch/x86/include/asm/preempt.h:94 (discriminator 1) include/linux/spinlock_api_smp.h:152 (discriminator 1) kernel/locking/spinlock.c:194 (discriminator 1)) 
+> [ 106.355503][ C0] get_partial_node+0xaf/0x300 
+> [ 106.356480][ C0] get_partial (mm/slub.c:2702) 
+> [ 106.357291][ C0] ___slab_alloc (mm/slub.c:3506) 
+> [ 106.358162][ C0] kmem_cache_alloc (mm/slub.c:3610 mm/slub.c:3663 mm/slub.c:3835 mm/slub.c:3852) 
+> [ 106.359084][ C0] getname_flags (fs/namei.c:140 (discriminator 1)) 
+> [ 106.359916][ C0] getname (fs/namei.c:219) 
+> [ 106.360669][ C0] do_sys_openat2 (fs/open.c:1400) 
+> [ 106.361540][ C0] __ia32_compat_sys_openat (fs/open.c:1479) 
+> [ 106.362526][ C0] __do_fast_syscall_32 (arch/x86/entry/common.c:165 (discriminator 1) arch/x86/entry/common.c:321 (discriminator 1)) 
+> [ 106.363487][ C0] do_fast_syscall_32 (arch/x86/entry/common.c:346 (discriminator 1)) 
+> [ 106.364392][ C0] do_SYSENTER_32 (arch/x86/entry/common.c:385) 
+> [ 106.365229][ C0] entry_SYSENTER_compat_after_hwframe (arch/x86/entry/entry_64_compat.S:121) 
+> [  106.366347][    C0]
+> [  106.366895][    C0] read to 0xffffffff83dfe598 of 8 bytes by interrupt on cpu 0:
+> [ 106.368257][ C0] timekeeping_debug_get_ns (kernel/time/timekeeping.c:373 kernel/time/timekeeping.c:383 kernel/time/timekeeping.c:280) 
+> [ 106.369256][ C0] ktime_get (kernel/time/timekeeping.c:394 kernel/time/timekeeping.c:838) 
+> [ 106.370061][ C0] tick_nohz_lowres_handler (kernel/time/tick-sched.c:220 kernel/time/tick-sched.c:287 kernel/time/tick-sched.c:1492) 
+> [ 106.371062][ C0] __sysvec_apic_timer_interrupt (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/jump_label.h:260 include/linux/jump_label.h:270 arch/x86/include/asm/trace/irq_vectors.h:41 arch/x86/kernel/apic/apic.c:1050) 
+> [ 106.372099][ C0] sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1043 (discriminator 47) arch/x86/kernel/apic/apic.c:1043 (discriminator 47)) 
+> [ 106.373091][ C0] asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:702) 
+> [ 106.374155][ C0] __tsan_read8 (kernel/kcsan/core.c:787 (discriminator 1) kernel/kcsan/core.c:1025 (discriminator 1)) 
+> [ 106.375033][ C0] __d_lookup_rcu (fs/dcache.c:2172) 
+> [ 106.375897][ C0] d_alloc_parallel (fs/dcache.c:2473) 
+> [ 106.376807][ C0] lookup_open+0x5f1/0x8a0 
+> [ 106.377759][ C0] open_last_lookups (fs/namei.c:3566) 
+> [ 106.378687][ C0] path_openat (fs/namei.c:3796) 
+> [ 106.379520][ C0] do_filp_open (fs/namei.c:3826) 
+> [ 106.380375][ C0] do_sys_openat2 (fs/open.c:1406) 
+> [ 106.381236][ C0] __ia32_compat_sys_openat (fs/open.c:1479) 
+> [ 106.382243][ C0] __do_fast_syscall_32 (arch/x86/entry/common.c:165 (discriminator 1) arch/x86/entry/common.c:321 (discriminator 1)) 
+> [ 106.388006][ C0] do_fast_syscall_32 (arch/x86/entry/common.c:346 (discriminator 1)) 
+> [ 106.388925][ C0] do_SYSENTER_32 (arch/x86/entry/common.c:385) 
+> [ 106.389787][ C0] entry_SYSENTER_compat_after_hwframe (arch/x86/entry/entry_64_compat.S:121) 
+> [  106.391298][    C0]
+> [  106.392364][    C0] value changed: 0x0014811664800000 -> 0x00149f9ae4800000
+> [  106.394806][    C0]
+> [  106.396026][    C0] Reported by Kernel Concurrency Sanitizer on:
+> [  106.398293][    C0] CPU: 0 PID: 126 Comm: (mount) Tainted: G            E    N 6.9.0-rc3-00015-ge84f43e34faf #1
+> [  106.401465][    C0] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> [  106.404332][    C0] ==================================================================
+> Mounting Kernel Configuration File System...
+> Starting Load/Save Random Seed...
+> Starting Apply Kernel Variables...
+> Starting Create System Users...
+> [  OK  ] Started Journal Service.
+> [  OK  ] Mounted FUSE Control File System.
+> [  OK  ] Mounted Kernel Configuration File System.
+> [  OK  ] Finished Load/Save Random Seed.
+> [  OK  ] Finished Apply Kernel Variables.
+> Starting Flush Journal to Persistent Storage...
+> [  OK  ] Finished Create System Users.
+> Starting Create Static Device Nodes in /dev...
+> [  OK  ] Finished Flush Journal to Persistent Storage.
+> [  OK  ] Finished Create Static Device Nodes in /dev.
+> [  OK  ] Reached target Local File Systems (Pre).
+> [  OK  ] Reached target Local File Systems.
+> Starting Preprocess NFS configuration...
+> Starting Create Volatile Files and Directories...
+> [  OK  ] Finished Preprocess NFS configuration.
+> [  OK  ] Started Rule-based Manager for Device Events and Files.
+> [  OK  ] Finished Create Volatile Files and Directories.
+> Starting RPC bind portmap service...
+> Starting Update UTMP about System Boot/Shutdown...
+> [  OK  ] Started RPC bind portmap service.
+> [  OK  ] Finished Update UTMP about System Boot/Shutdown.
+> [  OK  ] Reached target Remote File Systems (Pre).
+> [  OK  ] Reached target Remote File Systems.
+> [  OK  ] Reached target RPC Port Mapper.
+> [*     ] A start job is running for Coldplug All udev Devices (6s / no limit)
+> [  113.764048][  T153] parport_pc 00:03: reported by Plug and Play ACPI
+> [  113.776436][  T153] parport0: PC-style at 0x378, irq 7 [PCSPP(,...)]
+> [  113.952514][  T139] Linux agpgart interface v0.103
+> [  114.090513][    C1] ==================================================================
+> [  114.091583][    C1] BUG: KCSAN: data-race in timekeeping_advance / timekeeping_debug_get_ns
+> [  114.092597][    C1]
+> [  114.092970][    C1] write to 0xffffffff83dfe578 of 296 bytes by interrupt on cpu 0:
+> [ 114.093933][ C1] timekeeping_advance (kernel/time/timekeeping.c:2207 (discriminator 1)) 
+> [ 114.094583][ C1] update_wall_time (kernel/time/timekeeping.c:2222 (discriminator 1)) 
+> [ 114.095166][ C1] tick_do_update_jiffies64 (kernel/time/tick-sched.c:149) 
+> [ 114.095849][ C1] tick_nohz_lowres_handler (kernel/time/tick-sched.c:229 kernel/time/tick-sched.c:287 kernel/time/tick-sched.c:1492) 
+> [ 114.096537][ C1] __sysvec_apic_timer_interrupt (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/jump_label.h:260 include/linux/jump_label.h:270 arch/x86/include/asm/trace/irq_vectors.h:41 arch/x86/kernel/apic/apic.c:1050) 
+> [ 114.097280][ C1] sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1043 (discriminator 47) arch/x86/kernel/apic/apic.c:1043 (discriminator 47)) 
+> [ 114.097994][ C1] asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:702) 
+> [ 114.098736][ C1] __orc_find (arch/x86/kernel/unwind_orc.c:100 (discriminator 3)) 
+> [ 114.099285][ C1] unwind_next_frame (arch/x86/kernel/unwind_orc.c:494 (discriminator 4)) 
+> [ 114.099925][ C1] arch_stack_walk (arch/x86/kernel/stacktrace.c:24 (discriminator 1)) 
+> [ 114.100549][ C1] stack_trace_save (kernel/stacktrace.c:123) 
+> [ 114.101154][ C1] set_track_prepare (mm/slub.c:886) 
+> [ 114.101768][ C1] __alloc_object (mm/kmemleak.c:681 (discriminator 1)) 
+> [ 114.102377][ C1] __create_object (mm/kmemleak.c:750) 
+> [ 114.102967][ C1] __kmalloc_node (include/linux/kmemleak.h:42 mm/slub.c:3802 mm/slub.c:3845 mm/slub.c:3965 mm/slub.c:3973) 
+> [ 114.103566][ C1] kvmalloc_node (mm/util.c:662) 
+> [ 114.104150][ C1] seq_read_iter (fs/seq_file.c:210 (discriminator 1)) 
+> [ 114.104748][ C1] kernfs_fop_read_iter (fs/kernfs/file.c:281) 
+> [ 114.105388][ C1] vfs_read (include/linux/fs.h:2104 fs/read_write.c:395 fs/read_write.c:476) 
+> [ 114.105938][ C1] ksys_read (fs/read_write.c:619) 
+> [ 114.106485][ C1] __ia32_sys_read (fs/read_write.c:627) 
+> [ 114.107082][ C1] __do_fast_syscall_32 (arch/x86/entry/common.c:165 (discriminator 1) arch/x86/entry/common.c:321 (discriminator 1)) 
+> [ 114.107729][ C1] do_fast_syscall_32 (arch/x86/entry/common.c:346 (discriminator 1)) 
+> [ 114.108364][ C1] do_SYSENTER_32 (arch/x86/entry/common.c:385) 
+> [ 114.108943][ C1] entry_SYSENTER_compat_after_hwframe (arch/x86/entry/entry_64_compat.S:121) 
+> [  114.109697][    C1]
+> [  114.110062][    C1] read to 0xffffffff83dfe588 of 8 bytes by interrupt on cpu 1:
+> [ 114.110988][ C1] timekeeping_debug_get_ns (kernel/time/timekeeping_internal.h:21 kernel/time/timekeeping.c:381 kernel/time/timekeeping.c:280) 
+> [ 114.111685][ C1] ktime_get (kernel/time/timekeeping.c:394 kernel/time/timekeeping.c:838) 
+> [ 114.112236][ C1] tick_nohz_lowres_handler (kernel/time/tick-sched.c:220 kernel/time/tick-sched.c:287 kernel/time/tick-sched.c:1492) 
+> [ 114.112924][ C1] __sysvec_apic_timer_interrupt (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/jump_label.h:260 include/linux/jump_label.h:270 arch/x86/include/asm/trace/irq_vectors.h:41 arch/x86/kernel/apic/apic.c:1050) 
+> [ 114.113647][ C1] sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1043 (discriminator 47) arch/x86/kernel/apic/apic.c:1043 (discriminator 47)) 
+> [ 114.114332][ C1] asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:702) 
+> [ 114.115063][ C1] _raw_spin_unlock_irqrestore (arch/x86/include/asm/preempt.h:94 (discriminator 1) include/linux/spinlock_api_smp.h:152 (discriminator 1) kernel/locking/spinlock.c:194 (discriminator 1)) 
+> [ 114.115753][ C1] __create_object (mm/kmemleak.c:756) 
+> [ 114.116355][ C1] kmem_cache_alloc (include/linux/kmemleak.h:42 mm/slub.c:3802 mm/slub.c:3845 mm/slub.c:3852) 
+> [ 114.116993][ C1] skb_clone (net/core/skbuff.c:2063) 
+> [ 114.117535][ C1] do_one_broadcast (net/netlink/af_netlink.c:1466 (discriminator 1)) 
+> [ 114.118170][ C1] netlink_broadcast_filtered (net/netlink/af_netlink.c:1543 (discriminator 11)) 
+> [ 114.118883][ C1] netlink_broadcast (net/netlink/af_netlink.c:1568 (discriminator 1)) 
+> [ 114.119493][ C1] kobject_uevent_net_broadcast (lib/kobject_uevent.c:331 (discriminator 1) lib/kobject_uevent.c:410 (discriminator 1)) 
+> [ 114.120211][ C1] kobject_uevent_env (lib/kobject_uevent.c:593) 
+> [ 114.120844][ C1] kobject_uevent (lib/kobject_uevent.c:642) 
+> [ 114.121414][ C1] driver_register (drivers/base/driver.c:255) 
+> [ 114.122024][ C1] __parport_register_driver (drivers/parport/share.c:289) parport
+> [ 114.122833][ C1] ppdev_init (drivers/char/ppdev.c:811) ppdev
+> [ 114.123470][ C1] do_one_initcall (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/jump_label.h:260 include/linux/jump_label.h:270 include/trace/events/initcall.h:48 init/main.c:1239) 
+> [ 114.124079][ C1] do_init_module (kernel/module/main.c:2538) 
+> [ 114.124700][ C1] load_module (kernel/module/main.c:3001) 
+> [ 114.125281][ C1] init_module_from_file (kernel/module/main.c:3169) 
+> [ 114.125945][ C1] idempotent_init_module (kernel/module/main.c:3185) 
+> [ 114.126610][ C1] __ia32_sys_finit_module (include/linux/file.h:47 kernel/module/main.c:3207 kernel/module/main.c:3189 kernel/module/main.c:3189) 
+> [ 114.127271][ C1] __do_fast_syscall_32 (arch/x86/entry/common.c:165 (discriminator 1) arch/x86/entry/common.c:321 (discriminator 1)) 
+> [ 114.127912][ C1] do_fast_syscall_32 (arch/x86/entry/common.c:346 (discriminator 1)) 
+> [ 114.128530][ C1] do_SYSENTER_32 (arch/x86/entry/common.c:385) 
+> [ 114.129117][ C1] entry_SYSENTER_compat_after_hwframe (arch/x86/entry/entry_64_compat.S:121) 
+> [  114.129880][    C1]
+> [  114.130247][    C1] value changed: 0x0000001ac6927aaf -> 0x0000001ac6cf83af
+> [  114.131074][    C1]
+> [  114.131445][    C1] Reported by Kernel Concurrency Sanitizer on:
+> [  114.132179][    C1] CPU: 1 PID: 144 Comm: systemd-udevd Tainted: G            E    N 6.9.0-rc3-00015-ge84f43e34faf #1
+> [  114.133442][    C1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> [  114.134654][    C1] ==================================================================
+> [  114.141741][  T144] ppdev: user-space parallel port driver
+> [  114.556211][  T153] RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl timer
+> [  114.791100][   T95] input: ImExPS/2 Generic Explorer Mouse as /devices/platform/i8042/serio1/input/input4
+> [  114.842626][  T139] bochs-drm 0000:00:02.0: vgaarb: deactivate vga console
+> [  114.849602][  T139] Console: switching to colour dummy device 80x25
+> [  114.934666][  T139] [drm] Found bochs VGA, ID 0xb0c5.
+> [  114.934674][  T139] [drm] Framebuffer size 16384 kB @ 0xfd000000, mmio @ 0xfebf0000.
+> [  115.023240][  T139] [drm] Found EDID data blob.
+> [  115.104489][  T139] [drm] Initialized bochs-drm 1.0.0 20130925 for 0000:00:02.0 on minor 0
+> [  115.223445][  T158] mousedev: PS/2 mouse device common for all mice
+> [K[  OK  ] Reached target System Initialization.
+> [  OK  ] Started Daily apt download activities.
+> [  OK  ] Started Daily apt upgrade and clean activities.
+> [  OK  ] Started Discard unused blocks once a week.
+> [  OK  ] Started Daily rotation of log files.
+> [  OK  ] Started Daily Cleanup of Temporary Directories.
+> [  OK  ] Reached target Timers.
+> [  OK  ] Listening on D-Bus System Message Bus Socket.
+> [  OK  ] Reached target Sockets.
+> [  OK  ] Reached target Basic System.
+> [  OK  ] Started Regular background program processing daemon.
+> [  OK  ] Started D-Bus System Message Bus.
+> Starting Helper to synchronize boot up for ifupdown...
+> Starting LSB: OpenIPMI Driver init script...
+> Starting System Logging Service...
+> Starting User Login Management...
+> [  OK  ] Finished Helper to synchronize boot up for ifupdown.
+> Starting Raise network interfaces...
+> Starting LSB: Load kernel image with kexec...
+> [  120.559025][  T225] IPMI message handler: version 39.2
+> [  OK  ] Started LSB: Load kernel image with kexec.
+> [  120.991196][  T239] ipmi_si: IPMI System Interface driver
+> [  121.000344][  T239] ipmi_si: Unable to find any System Interface(s)
+> [  OK  ] Finished Raise network interfaces.
+> [  OK  ] Started User Login Management.
+> 
+> 
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20240524/202405241607.d3fd7eb0-lkp@intel.com
+> 
+> 
+> 
 
- pte_update(mm, addr, pte_offset_kernel(pmdp + 1, 0), clr_all_bits, set_bits, is_huge)
-
-or something along those lines
-
-> -static inline int check_and_get_huge_psize(int shift)
-> -{
-> -	return shift_to_mmu_psize(shift);
-> +	if (pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M)))
-
-Here you could also use the pmd_is_SZ_8M()
-
-> +		ptep = pte_offset_kernel(pmdp, 0);
-> +	return ptep_get(ptep);
->  }
->  
->  #define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
-> @@ -53,7 +33,14 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
->  static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
->  				  pte_t *ptep, unsigned long sz)
->  {
-> -	pte_update(mm, addr, ptep, ~0UL, 0, 1);
-> +	pmd_t *pmdp = (pmd_t *)ptep;
-> +
-> +	if (pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M))) {
-> +		pte_update(mm, addr, pte_offset_kernel(pmdp, 0), ~0UL, 0, 1);
-> +		pte_update(mm, addr, pte_offset_kernel(pmdp + 1, 0), ~0UL, 0, 1);
-> +	} else {
-> +		pte_update(mm, addr, ptep, ~0UL, 0, 1);
-> +	}
-
-Could we not leverage this in huge_ptep_get_and_clear()?
-AFAICS,
-
- huge_pet_get_and_clear(mm, addr, pte_t *p) 
- {
-      pte_t pte = pte_val(*p);
-
-      huge_pte_clear(mm, addr, p);
-      return pte;
- }
-
-Or maybe it is not that easy if different powerpc platforms provide their own.
-It might be worth checking though.
-
->  }
->  
->  #define __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
-> @@ -63,7 +50,14 @@ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  	unsigned long clr = ~pte_val(pte_wrprotect(__pte(~0)));
->  	unsigned long set = pte_val(pte_wrprotect(__pte(0)));
->  
-> -	pte_update(mm, addr, ptep, clr, set, 1);
-> +	pmd_t *pmdp = (pmd_t *)ptep;
-> +
-> +	if (pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M))) {
-> +		pte_update(mm, addr, pte_offset_kernel(pmdp, 0), clr, set, 1);
-> +		pte_update(mm, addr, pte_offset_kernel(pmdp + 1, 0), clr, set, 1);
-> +	} else {
-> +		pte_update(mm, addr, ptep, clr, set, 1);
-
-I would replace the "1" with "is_huge" or "huge", as being done in
-__ptep_set_access_flags , something that makes it more clear without the need
-to check pte_update().
-
-  
->  #endif /* _ASM_POWERPC_PGALLOC_32_H */
-> diff --git a/arch/powerpc/include/asm/nohash/32/pte-8xx.h b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-> index 07df6b664861..b05cc4f87713 100644
-> --- a/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-> +++ b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-...
-> - * For other page sizes, we have a single entry in the table.
-> + * For 8M pages, we have 1024 entries as if it was
-> + * 4M pages, but they are flagged as 8M pages for the hardware.
-
-Maybe drop a comment that a single PMD entry is worth 4MB, so
-
-> + * For 4k pages, we have a single entry in the table.
->   */
-> -static pmd_t *pmd_off(struct mm_struct *mm, unsigned long addr);
-> -static int hugepd_ok(hugepd_t hpd);
-> -
->  static inline int number_of_cells_per_pte(pmd_t *pmd, pte_basic_t val, int huge)
->  {
->  	if (!huge)
->  		return PAGE_SIZE / SZ_4K;
-> -	else if (hugepd_ok(*((hugepd_t *)pmd)))
-> -		return 1;
-> +	else if ((pmd_val(*pmd) & _PMD_PAGE_MASK) == _PMD_PAGE_8M)
-> +		return SZ_4M / SZ_4K;
-
-this becomes more intuitive.
-
-  
-> +static inline void pmd_populate_kernel_size(struct mm_struct *mm, pmd_t *pmdp,
-> +					    pte_t *pte, unsigned long sz)
-> +{
-> +	if (sz == SZ_8M)
-> +		*pmdp = __pmd(__pa(pte) | _PMD_PRESENT | _PMD_PAGE_8M);
-> +	else
-> +		*pmdp = __pmd(__pa(pte) | _PMD_PRESENT);
-> +}
-> +
-> +static inline void pmd_populate_size(struct mm_struct *mm, pmd_t *pmdp,
-> +				     pgtable_t pte_page, unsigned long sz)
-> +{
-> +	if (sz == SZ_8M)
-> +		*pmdp = __pmd(__pa(pte_page) | _PMD_USER | _PMD_PRESENT | _PMD_PAGE_8M);
-> +	else
-> +		*pmdp = __pmd(__pa(pte_page) | _PMD_USER | _PMD_PRESENT);
-> +}
-
-In patch#1 you mentioned this will change with the removal of patch#1
-and patch#2.
-
-> --- a/arch/powerpc/mm/hugetlbpage.c
-> +++ b/arch/powerpc/mm/hugetlbpage.c
-> @@ -183,9 +183,6 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
->  	if (!hpdp)
->  		return NULL;
->  
-> -	if (IS_ENABLED(CONFIG_PPC_8xx) && pshift < PMD_SHIFT)
-> -		return pte_alloc_huge(mm, (pmd_t *)hpdp, addr, sz);
-> -
->  	BUG_ON(!hugepd_none(*hpdp) && !hugepd_ok(*hpdp));
->  
->  	if (hugepd_none(*hpdp) && __hugepte_alloc(mm, hpdp, addr,
-> @@ -198,10 +195,18 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
->  pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
->  		      unsigned long addr, unsigned long sz)
->  {
-> +	pmd_t *pmd = pmd_off(mm, addr);
-> +
->  	if (sz < PMD_SIZE)
-> -		return pte_alloc_huge(mm, pmd_off(mm, addr), addr, sz);
-> +		return pte_alloc_huge(mm, pmd, addr, sz);
->  
-> -	return NULL;
-> +	if (sz != SZ_8M)
-> +		return NULL;
-> +	if (!pte_alloc_huge(mm, pmd, addr, sz))
-> +		return NULL;
-> +	if (!pte_alloc_huge(mm, pmd + 1, addr, sz))
-> +		return NULL;
-> +	return (pte_t *)pmd;
-
-I think that having the check for invalid huge page sizes upfront would
-make more sense, maybe just a matter of taste.
-
- /* Unsupported size */
- if (sz > PMD_SIZE && sz = SZ_8M)
-     return NULL;
-
- if (sz < PMD_SIZE)
-    ...
- /* 8MB huge pages */
- ...
-
- return (pte_t *) pmd;
-
-Also, I am not a big fan of the two separate pte_alloc_huge() for pmd#0+pmd#1,
-and I am thinking we might want to hide that within a function and drop a
-comment in there explaining why we are updatng both pmds.
- 
- 
-
-> diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-> index d93433e26ded..99f656b3f9f3 100644
-> --- a/arch/powerpc/mm/nohash/8xx.c
-> +++ b/arch/powerpc/mm/nohash/8xx.c
-> @@ -48,20 +48,6 @@ unsigned long p_block_mapped(phys_addr_t pa)
->  	return 0;
->  }
->  
-> -static pte_t __init *early_hugepd_alloc_kernel(hugepd_t *pmdp, unsigned long va)
-> -{
-> -	if (hpd_val(*pmdp) == 0) {
-> -		pte_t *ptep = memblock_alloc(sizeof(pte_basic_t), SZ_4K);
-> -
-> -		if (!ptep)
-> -			return NULL;
-> -
-> -		hugepd_populate_kernel((hugepd_t *)pmdp, ptep, PAGE_SHIFT_8M);
-> -		hugepd_populate_kernel((hugepd_t *)pmdp + 1, ptep, PAGE_SHIFT_8M);
-> -	}
-> -	return hugepte_offset(*(hugepd_t *)pmdp, va, PGDIR_SHIFT);
-> -}
-> -
->  static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
->  					     pgprot_t prot, int psize, bool new)
-
-Am I blind or do we never use the 'new' parameter?
-I checked the tree and it seems we always pass it 'true'.
-
-arch/powerpc/mm/nohash/8xx.c:		err = __early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
-arch/powerpc/mm/nohash/8xx.c:		err = __early_map_kernel_hugepage(v, p, prot, MMU_PAGE_8M, new);
-arch/powerpc/mm/nohash/8xx.c:		err = __early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
-arch/powerpc/mm/nohash/8xx.c:
-__early_map_kernel_hugepage(VIRT_IMMR_BASE, PHYS_IMMR_BASE, PAGE_KERNEL_NCG, MMU_PAGE_512K, true);
-
-I think we can drop the 'new' and the block code that tries to handle
-it?
-
-> diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-> index acdf64c9b93e..59f0d7706d2f 100644
-> --- a/arch/powerpc/mm/pgtable.c
-> +++ b/arch/powerpc/mm/pgtable.c
-
-> +void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
-> +		     pte_t pte, unsigned long sz)
-> +{
-> +	pmd_t *pmdp = pmd_off(mm, addr);
-> +
-> +	pte = set_pte_filter(pte, addr);
-> +
-> +	if (sz == SZ_8M) {
-> +		__set_huge_pte_at(pmdp, pte_offset_kernel(pmdp, 0), pte_val(pte));
-> +		__set_huge_pte_at(pmdp, pte_offset_kernel(pmdp + 1, 0), pte_val(pte) + SZ_4M);
-
-You also mentioned that this would slightly change after you drop
-patch#0 and patch#1.
-The only comment I have right know would be to add a little comment
-explaining the layout (the replication of 1024 entries), or just
-something like "see comment from number_of_cells_per_pte".
-
- 
-
--- 
-Oscar Salvador
-SUSE Labs
