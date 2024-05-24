@@ -1,158 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46FA82872;
-	Fri, 24 May 2024 08:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D6682D9E;
+	Fri, 24 May 2024 08:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716538222; cv=none; b=tfqCgNAaf/LsG3lAte9phgkdmQzpk+x317guJD24F/F0BR6C+qbq3nhAdYiklGa9eYrJjIdtT8ckDCpGGZQKHMYjyk/m6JAO6NI6dXlrzfQAPHmm963yE6ZT2UurXwuxiQAcfk8ywpE44lqaNKTfON7YO4GxJSfy6ThEQCAmgTU=
+	t=1716538395; cv=none; b=ovPj2E0dJecWhrX+evwIhGxcSr+oBz45imck0eksrb94nkFr9GkTd7eka6Z9Ekzq24n+jgRBIN5axDap+/JTrflxTqLkzq5s52PW5Jj9gylmPAmiB4XznZfJKGq5H26q/phtfp+Npe7X5/Mz8FhxaFS7T/6l+03u2OU8EWU+vh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716538222; c=relaxed/simple;
-	bh=KzZifyFunKdMl7mZy15PbBQXyBPtR28fDlzXAEBwRZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=drSyg7VUEAFCKNkaY4Lhr3KL4cf5xFk5/RpTfpKdliupFJZr5wGJqOjpUCM12Jnk+t+ZP3ThQ7vlas83//B9O/iU59YWyYGq9ZjdWR2NIVp/mIYN3TXTzhelSn2SIoBMYyOVfNyJSDPBE+5Y4Sh7P5cF/LNKf4n07uy0jrpPH4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTSmyPEV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716538395; c=relaxed/simple;
+	bh=fo/HifB1DQNO6ydXHHI68Oeno87uAoG3bcpgtwEUM38=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=N1gbRFrzPFZAe1cuQymy34D8RNyoQdyj2wzbcNO81NcMauyK3Z4EtJ5AG2+2bOoLxMGgEKgJAnA2AvDs82gil8l0b83hrjjZfCnjMhdKlpjdZWqakl+r/pQsQkSbvyonB7WZo4goIzrQDg189Ovp+3jhLMAQEMnoek3+nBfVmFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZKeI0QRq; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTSmyPEV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC38C2BBFC;
-	Fri, 24 May 2024 08:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716538222;
-	bh=KzZifyFunKdMl7mZy15PbBQXyBPtR28fDlzXAEBwRZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gTSmyPEVPbnVYsbqpii0XYle0nGrfAI9KJYQ9QQtMO99GDFwrEnqvqqW0CTH4UlBj
-	 tQBgvLjOBwnUJuGZxOGDTsX4L6RMbys6psDv8PUNuOdm/25RCKhlFkIYOfTrfRizEL
-	 zrfZAyySbpZgi58QD2ndnKtlklKpcj+BMsW0AxWTTYZlCxENaRkfJYFJS6v1kNMR14
-	 ga0qGrTXnaPwfBus+NEwyvGZfqJydhu3K7zoinPVPT9eMD//g3rIYeb7wY9RoPP5Ms
-	 FDn/3P7s7/hz1wCZKv6/dHdxX1x3mYjBNAZq5sA38FYcjenIX4A18VMWI60BLNmiRp
-	 OSh2FV9ePUR3g==
-Date: Fri, 24 May 2024 11:08:28 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-	aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, arnd@arndb.de,
-	anshuman.khandual@arm.com, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [Patch v2] mm/memblock: discard .text/.data if
- CONFIG_ARCH_KEEP_MEMBLOCK not set
-Message-ID: <ZlBK_PZ2ZivCFXCv@kernel.org>
-References: <20240510020422.8038-1-richard.weiyang@gmail.com>
- <ZkxLkK7vgzzaEvyw@kernel.org>
- <20240524014656.odw4yuvhgbu4dgf7@master>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKeI0QRq"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-681adefa33fso471140a12.3;
+        Fri, 24 May 2024 01:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716538393; x=1717143193; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fo/HifB1DQNO6ydXHHI68Oeno87uAoG3bcpgtwEUM38=;
+        b=ZKeI0QRqyqCTzZfLVZlzTX8ncE623VO8eFay1ruW3Iyaw4VjG8KorQdWGjBV6/dvWR
+         GA76/LZZedjebMllXPIyuyIurQ0RYlr0EzKUVLgJuUr09qGhrcDxTpR/f7noYmb7+p5I
+         KCIaZjanZSzsg/vWhhVJNYjl+uLCH6k/otvLSCzH2h8lluZ4KKUmRuPbY/YooYzSBG73
+         7gstky6hkEYl2tMhV2CZDVoDAGdZWYO2Q5TbV/mFceeGfSm8bO/Ecq5tocT2CFCMIuBk
+         U7dVup8yTBbI9CMfOXisxsLhX+h3prXUYiWmg77lVPvvybVSUzaNpQOJg/7gA65dxuRE
+         LMsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716538393; x=1717143193;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fo/HifB1DQNO6ydXHHI68Oeno87uAoG3bcpgtwEUM38=;
+        b=nZL+koACKzYpdCVFkQQSHnEDYV7p0DYLU+uyA0eCdWUN1WIBxVcgwekicLaB9dqplf
+         8/o0vpIW9FRXxjSjZ43GmwIui4EzypjpdyNniZ/2havVfEzOCb0xAp2v1X2pskE02wv6
+         xewFX9W9PyxQISBTWxi3/ygf7MGW3R10QvExuVdnuyI0lMJjb2iIw3mkfkrC2w8el90/
+         FjZuE3G44/uQzraiPnsi2oKlJAAMxfY5AAp9A1TxP8tEdW0eYjdgAfBcXd9c6OzHPfPN
+         sf78K92pxPZKLMPXQdPbvSB55aPPxT09Wxl0t/ZtoubOFlt8YTZS3H/IBj/rmMNkgZRQ
+         /mDA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6wNJrG1Y3ZsqnisaEWDpqymRVr/zOftfBQCIb3jWgdqA5sCJEPy7OU9b2JBM1ilQ1M7m0Ycz0ORgWyHi8+orQqEvrbzY17Z55S8e/D5BuWe7AcZMPjDPgpvlenqyvIyUVbpYyCn1XY3oOjw==
+X-Gm-Message-State: AOJu0Ywi2AXQmA/yIHR0vQ6sz0w+Ls5W2EPr28ZnCkkWaafDLuY240xD
+	gWTgMcaBHXYqNYP8Ae2yRe7GwPl2QYuLmiazLItnBMWR+YkKM8zQ
+X-Google-Smtp-Source: AGHT+IGbCexb9JcS2vxVXdyF9SCloZlJhV8n0Dyl9yNgd+ElrVUuh6fh4jCb/R72rcy16Ts1QFNnZA==
+X-Received: by 2002:a17:90a:be0b:b0:2b6:c4d7:fc31 with SMTP id 98e67ed59e1d1-2bf5f719ce5mr1726860a91.40.1716538393006;
+        Fri, 24 May 2024 01:13:13 -0700 (PDT)
+Received: from smtpclient.apple ([47.89.225.180])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bf5f30aa26sm848060a91.6.2024.05.24.01.13.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2024 01:13:12 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524014656.odw4yuvhgbu4dgf7@master>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH] livepatch: introduce klp_func called interface
+From: zhang warden <zhangwarden@gmail.com>
+In-Reply-To: <18994387-2d2f-41e5-9ef6-6541dd0015d2@moroto.mountain>
+Date: Fri, 24 May 2024 16:12:57 +0800
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Miroslav Benes <mbenes@suse.cz>,
+ Jiri Kosina <jikos@kernel.org>,
+ Petr Mladek <pmladek@suse.com>,
+ Joe Lawrence <joe.lawrence@redhat.com>,
+ live-patching@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9C317446-0259-445B-8AE7-D91E1E5ABF93@gmail.com>
+References: <20240519074343.5833-1-zhangwarden@gmail.com>
+ <18994387-2d2f-41e5-9ef6-6541dd0015d2@moroto.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-On Fri, May 24, 2024 at 01:46:56AM +0000, Wei Yang wrote:
-> On Tue, May 21, 2024 at 10:21:52AM +0300, Mike Rapoport wrote:
-> >Hi,
-> >
-> >On Fri, May 10, 2024 at 02:04:22AM +0000, Wei Yang wrote:
-> >> When CONFIG_ARCH_KEEP_MEMBLOCK not set, we expect to discard related
-> >> code and data. But it doesn't until CONFIG_MEMORY_HOTPLUG not set
-> >> neither.
-> >> 
-> >> This patch puts memblock's .text/.data into its own section, so that it
-> >> only depends on CONFIG_ARCH_KEEP_MEMBLOCK to discard related code and
-> >> data.
-> >> 
-> >> After this, from the log message in mem_init_print_info(), init size
-> >> increase from 2420K to 2432K on arch x86.
-> >> 
-> >> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> >> 
-> >> ---
-> >> v2: fix orphan section for powerpc
-> >> ---
-> >>  arch/powerpc/kernel/vmlinux.lds.S |  1 +
-> >>  include/asm-generic/vmlinux.lds.h | 14 +++++++++++++-
-> >>  include/linux/memblock.h          |  8 ++++----
-> >>  3 files changed, 18 insertions(+), 5 deletions(-)
-> >>  
-> >> +#define __init_memblock        __section(".mbinit.text") __cold notrace \
-> >> +						  __latent_entropy
-> >> +#define __initdata_memblock    __section(".mbinit.data")
-> >> +
-> >
-> >The new .mbinit.* sections should be added to scripts/mod/modpost.c
-> >alongside .meminit.* sections and then I expect modpost to report a bunch
-> >of section mismatches because many memblock functions are called on memory
-> >hotplug even on architectures that don't select ARCH_KEEP_MEMBLOCK.
-> >
-> 
-> I tried to add some code in modpost.c, "make all" looks good.
-> 
-> May I ask how can I trigger the "mismatch" warning?
-> 
-> BTW, if ARCH_KEEP_MEMBLOCK unset, we would discard memblock meta-data. If
-> hotplug would call memblock function, it would be dangerous?
-> 
-> The additional code I used is like below.
-> 
-> ---
->  scripts/mod/modpost.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 937294ff164f..c837e2882904 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -777,14 +777,14 @@ static void check_section(const char *modname, struct elf_info *elf,
->  
->  #define ALL_INIT_DATA_SECTIONS \
->  	".init.setup", ".init.rodata", ".meminit.rodata", \
-> -	".init.data", ".meminit.data"
-> +	".init.data", ".meminit.data", "mbinit.data"
 
-should be ".mbinit.data"
->  
->  #define ALL_PCI_INIT_SECTIONS	\
->  	".pci_fixup_early", ".pci_fixup_header", ".pci_fixup_final", \
->  	".pci_fixup_enable", ".pci_fixup_resume", \
->  	".pci_fixup_resume_early", ".pci_fixup_suspend"
->  
-> -#define ALL_XXXINIT_SECTIONS ".meminit.*"
-> +#define ALL_XXXINIT_SECTIONS ".meminit.*", "mbinit.*"
 
-and ".mbinit.*"
+> On May 23, 2024, at 22:22, Dan Carpenter <dan.carpenter@linaro.org> =
+wrote:
+>=20
+> Always run your patches through checkpatch.
+>=20
+> So this patch is so that testers can see if a function has been =
+called?
+> Can you not get the same information from gcov or ftrace?
+>=20
+> There are style issues with the patch, but it's not so important until
+> the design is agreed on.
+>=20
+> regards,
+> dan carpenter
 
-But regardless of typos, when ARCH_KEEP_MEMBLOCK=n the .mbinit is equivalent
-to .init and it should not be referenced from .meminit, so I don't think
-adding it here is correct.
+Hi, Dan.
 
-If I simply alias __init_memblock to __init then with
-CONFIG_MEMORY_HOTPLUG=y I get
+This patch have format issues as Markus said. A newer version of this =
+patch is sent which is checked by ./scripts/checkpatch.pl
 
-WARNING: modpost: vmlinux: section mismatch in reference: early_pfn_to_nid+0x42 (section: .meminit.text) -> memblock_search_pfn_nid (section: .init.text)
-WARNING: modpost: vmlinux: section mismatch in reference: memmap_init_range+0x142 (section: .meminit.text) -> mirrored_kernelcore (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: memmap_init_range+0x1e1 (section: .meminit.text) -> memblock (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: memmap_init_range+0x1e8 (section: .meminit.text) -> memblock (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: sparse_buffer_alloc+0x3b (section: .meminit.text) -> memblock_free (section: .init.text)
+Thanks for your suggestions.
 
->  #define ALL_INIT_SECTIONS INIT_SECTIONS, ALL_XXXINIT_SECTIONS
->  #define ALL_EXIT_SECTIONS ".exit.*"
-> @@ -799,7 +799,7 @@ static void check_section(const char *modname, struct elf_info *elf,
->  
->  #define INIT_SECTIONS      ".init.*"
->  
-> -#define ALL_TEXT_SECTIONS  ".init.text", ".meminit.text", ".exit.text", \
-> +#define ALL_TEXT_SECTIONS  ".init.text", ".meminit.text", ".mbinit.text", ".exit.text", \
->  		TEXT_SECTIONS, OTHER_TEXT_SECTIONS
->  
->  enum mismatch {
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
-> 
+Regards,
+Wardenjohn
 
--- 
-Sincerely yours,
-Mike.
