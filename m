@@ -1,31 +1,45 @@
-Received: from mail-m12776.qiye.163.com (mail-m12776.qiye.163.com [115.236.127.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1EA12DDA2;
-	Fri, 24 May 2024 15:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA3E12DDA4
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 15:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716564545; cv=none; b=SQWYhNGVLhOcGN4qEhQj+NF3ELG/Wps96OPq2W1w+ny0xqFDZMSpNygGPC1Tq60HLow7Lyz5zWOrBHuQElGIQwiTx0VHLVu6wDvSXWyLgeDdvUPSui9RIUeiS0BcGLs9FLSHgDMbsXERkrVtUHlqb6i80F22fcQ8VKE6jUWj+u8=
+	t=1716564596; cv=none; b=rhRdvYiUUCsqf33laXWjLVaAmRoaReE5te/91bhFriUP60AX1C8wJYX8a20QZdLzFuHHBi683rt5hd94fbP0LcxUujIwXiTxOIH2dNMwaeNqRt5Ghuzz6kEiiGfjiwqmwF2Vui+Dp+W5pbMl6mkVpLmpJjssP3ESNSDsvrgzHkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716564545; c=relaxed/simple;
-	bh=tQkcd34q1QaxaTpHWMI8oxRvSlHE+4YCiXIDNlF99hI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rnkBDmLf3KIyUS9fhZt2eR7AyivTD0GRhRpwInCiDjfu5lxtRgDm+sfoqTs4rr2jhiSIbOin4bTWqNlck6pjdhXfc2X+ZL/MmVLN+iwGA+QevoXVVL+T4ma9FlQm4Od0j4d/kz6x0L7Sq5tjNshZcnw4CubwF7x2++R15rSUB4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=GkfVqmOe; arc=none smtp.client-ip=115.236.127.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="GkfVqmOe"
-DKIM-Signature: a=rsa-sha256;
-	b=GkfVqmOeodjSsHUIq7QZo9oKtwtbKwTt1qnHgCTG7/yWGhv2yHi+u/CK66SOf+nx56G2fHNn+AAnB5zgRSEuWjsTBo7MLRQ4oNxI3lq9VLlgWAJc6ywdMRjS2vUfXHuxgqyIoQ9fOYEhpFMhZiu+gSqQmlvfR259P0J6HSLXrSY=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=vlYy6kfDRcuOHsQw1Qcrcg0CgVRI1V2ODtI9AvFKsJ4=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [172.16.12.141] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id ADE8E840B0B;
-	Fri, 24 May 2024 18:41:51 +0800 (CST)
-Message-ID: <5dec9bd2-88ed-46e6-bb8d-fa899b563fd3@rock-chips.com>
-Date: Fri, 24 May 2024 18:41:51 +0800
+	s=arc-20240116; t=1716564596; c=relaxed/simple;
+	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vwr82kz+5Q70DExOUUuG9s+yftbrmwAuOOmjBB0kTkZBGSoqp4UiZsym1Iz588Chtv6CcEeDUsX1/qhTC3x4Pb4InANm8jWyLHHROnTs6Y/znsrsKxHtbXbI+ebWXz/bChTuc+2NFhikcgSeQecCHm/W6XtiarApTg5sZcc4q5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-354f89a59b8so403981f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 08:29:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716564593; x=1717169393;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=io2ntrKI6k+8SeE+J3lx6/5ElZ5s1HwlUCO9v0KSWiymp+xf6joII3ySTKBQOxzH87
+         BvVaWtZTpZUNTxjDRfke7VDhswps6VZRM9xYMe3VCjzcq1GacveXzqSJp7hCrZg95WQC
+         pHYdwslgfoTvAvROXN2Q2I1aE/ElZqDtyd/9npjk4HMANm7UGZi03r6X7RXXKcRnA/Q8
+         i+j54VJth5fEfUAReW8vjXVMSFjmBkPvnagAj9VA5dFbdwDXiHQSAKqXuyJH7zB/uoU1
+         JO0juctINRullOQiWgD+sjA/pI6IEkmJAF0P/nA7KPl9lCP4T7c87F3OkaA6aw1HaonW
+         UfnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwjHUs9zQQGwCqSROjzYFwgM9BwoPqJ1oB8uAoJjFzrd5penq2/TZJbN+S+BLPlHVIOjzmljy0sGagozwcjo0m5Ba29NVGq0awM7zO
+X-Gm-Message-State: AOJu0YzEyqjt3cszeB//UQOSfITZwJN/zlaGuoM5tB82+72455UF1xAW
+	juQ8ayJKhLFQ6xBZ8G+MCzP3sJh7aeLpQEsvMpIqle+9Wg55lehK
+X-Google-Smtp-Source: AGHT+IGydm3KFFkEOm5Dej35cysCFu2y3Rn5joLTpDVvHql4Yqq2H6FRVzp7ujzne9BypYIC9Ekc0g==
+X-Received: by 2002:a5d:67cc:0:b0:355:3ec:c7e7 with SMTP id ffacd0b85a97d-35526c39f44mr1702503f8f.2.1716564592913;
+        Fri, 24 May 2024 08:29:52 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.193.189.dynamic.barak-online.net. [85.65.193.189])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3564afc3577sm1102707f8f.102.2024.05.24.08.29.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 May 2024 08:29:52 -0700 (PDT)
+Message-ID: <d492a0d3-5e3e-4f69-87e1-9d251ef604bf@grimberg.me>
+Date: Fri, 24 May 2024 18:29:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,75 +47,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v5 00/16] Add VOP2 support on rk3588
-From: Andy Yan <andy.yan@rock-chips.com>
-To: Heiko Stuebner <heiko@sntech.de>, Andy Yan <andyshrk@163.com>
-Cc: sebastian.reichel@collabora.com, krzysztof.kozlowski+dt@linaro.org,
- chris.obbard@collabora.com, robh+dt@kernel.org, devicetree@vger.kernel.org,
- kever.yang@rock-chips.com, linux-rockchip@lists.infradead.org,
- hjc@rock-chips.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20231211115547.1784587-1-andyshrk@163.com>
- <170247871959.753029.11166929824242336708.b4-ty@sntech.de>
- <7a20761b-4cec-4b65-b9fa-efce73ac4c83@rock-chips.com>
+Subject: Re: [PATCH] nvme: adjust multiples of NVME_CTRL_PAGE_SIZE in offset
+To: Kundan Kumar <kundan.kumar@samsung.com>, axboe@kernel.dk, hch@lst.de,
+ kbusch@kernel.org
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ joshi.k@samsung.com, anuj20.g@samsung.com, nj.shetty@samsung.com,
+ c.gameti@samsung.com, gost.dev@samsung.com
+References: <CGME20240523113915epcas5p32626cec7fb138355e74415534a3ece36@epcas5p3.samsung.com>
+ <20240523113149.29174-1-kundan.kumar@samsung.com>
 Content-Language: en-US
-In-Reply-To: <7a20761b-4cec-4b65-b9fa-efce73ac4c83@rock-chips.com>
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240523113149.29174-1-kundan.kumar@samsung.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkJOS1YdTExOHUoeTRlOTkhVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5JVUpLS1VKQl
-	kG
-X-HM-Tid: 0a8faa315ab403a4kunmade8e840b0b
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MRw6Kxw6QzNDMRcDFi5ISUMR
-	Gj8KCi5VSlVKTEpNTk9MSEpJTU5OVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
-	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBSEhCTTcG
+Content-Transfer-Encoding: 7bit
 
-Hi Heiko,
-
-On 12/14/23 14:46, Andy Yan wrote:
-> Hi Heiko:
-> 
-> On 12/13/23 22:46, Heiko Stuebner wrote:
->> On Mon, 11 Dec 2023 19:55:47 +0800, Andy Yan wrote:
->>> From: Andy Yan <andy.yan@rock-chips.com>
->>>
->>> This patch sets aims at enable the VOP2 support on rk3588.
->>>
->>> Main feature of VOP2 on rk3588:
->>> Four video ports:
->>> VP0 Max 4096x2160
->>> VP1 Max 4096x2160
->>> VP2 Max 4096x2160
->>> VP3 Max 2048x1080
->>>
->>> [...]
->>
->> Applied, thanks!
->>
->> [10/16] dt-bindings: display: vop2: Add rk3588 support
->>          commit: 4ccdc92c1fea732fac8f3438d6288719055fa141
->> [11/16] dt-bindings: rockchip,vop2: Add more endpoint definition
->>          commit: dc7226acacc6502291446f9e33cf96246ec49a30
->> [12/16] drm/rockchip: vop2: Add support for rk3588
->>          commit: 5a028e8f062fc862f051f8e62a0d5a1abac91955
->> [13/16] drm/rockchip: vop2: rename VOP_FEATURE_OUTPUT_10BIT to VOP2_VP_FEATURE_OUTPUT_10BIT
->>          commit: 9d7fe7704d534c2d043aff2987f10671a8b4373d
->> [16/16] MAINTAINERS: Add myself as a reviewer for rockchip drm
->>          commit: 6c3ab21f37a97a868193ccbeb8a492e51210ff31
->>
->>
->> I skipped the debugfs patch for now, as I need to look at that separately
->> and of course the dts patch as that needs to wait for iommu maintainers
->> to pick up the binding addition.
-> 
-> That's fine. Thanks for picking these series.
-
-Would you please take a look at the debugfs patch when it's convenient for you?
-It's really useful for development and bug hunting.
-
-> 
->>
->>
->> Best regards,
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
