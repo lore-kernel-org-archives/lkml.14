@@ -1,67 +1,174 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B1F12CD81;
-	Fri, 24 May 2024 15:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A056E5ED
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 15:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716566130; cv=none; b=GSW9WVK2ShJpknGwiUE63N72hPv6TFzxQFGI2z6Ww9Sn+6+OvTvGV8z2JXz5ceqVvP+5gV0JsOenD8ILxOtIfD8YgdHMmQ1OSgxcmpsvj47AGgWl2GMNv8g3yxip7kTmAVl07wPui131rvDfZ2RS0aYMAHQA8jmImH66mXHczlo=
+	t=1716566220; cv=none; b=phqUs816HQ6P/4435KU/fkgiqSmTtLEmP9mpIw5gEROVQKxYcKmd19qMuSV90CUvLwitfvEwdmCIqTI3uKRNRc/3K8n4SjdpRcA7BhZEJFaSdNRov2aBxd4kHfiWJd1yNQwH1ulViIUQFCAM+KuSXskJBp0GsmwkXtV2z08JYNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716566130; c=relaxed/simple;
-	bh=zbyfZX6Yga2Bf8bLCvb+bQFlpjWOy0MIq9OjBAmJOiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jR0HKR7BxNLYLMtX149MVduH0XZKVEjC5yhdBVAvck9JIjvQyAntv9jH0+s4KLfu6/sx5CuD1wVLwIyuLFTj35oNxKMCX4bXLPHyi76EsJBm4XMV0iM3ewgVq94GMgTkrLI10iy4ttXr+O5QRqW4AAky0+u152/1mZkCTHTm3/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=DmVUYB3H; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1716566220; c=relaxed/simple;
+	bh=f/jxpUwz/FQOHV/5vg4nxEyI+NJdfbQEy5Bdkdr5fys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qB1cmujnlbiDZqpnUzZGi+/7ENSOxqXCiSs85stiOIEzy2mYJGvWuVSja8FUNRhRFy7y6NxGyAGmm0Vx2pnVSmAQF5o/TFvVt7lV2qOT6aVvSXdP67WkZtMFnqA8bABOhVKshWNIp320VTh+Szfl1lVZYvhUkP4vB6jbR9ASAhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=S6kZt8fg; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DmVUYB3H"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=b0cNZSS7qsIL3jfLsIaauMYSwAyrlh2OnI7WJcM1lcs=; b=DmVUYB3HfEMWzTXJ4t9hv//EPh
-	YL1lLJZtGKm0xmM/7/bRtHTVS+pJP5ndOYairHHtl2VJpLQnLb2kkl4Ztn4+6Hv8hVx3DqtS7JpCD
-	neEgX4ADUmSOB8OgDt1FW/aALz7ffhWul/iZK1XknLbNvKeNEsAUPZLnuFxKgeN97Z64=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sAXGF-00FxoV-Cv; Fri, 24 May 2024 17:55:15 +0200
-Date: Fri, 24 May 2024 17:55:15 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	sumang@marvell.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] net: micrel: Fix lan8841_config_intr after
- getting out of sleep mode
-Message-ID: <ed816a87-f4f2-4eff-b4c1-1175251d9eb1@lunn.ch>
-References: <20240524085350.359812-1-horatiu.vultur@microchip.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="S6kZt8fg"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5b2ed25b337so4873390eaf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 08:56:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716566217; x=1717171017; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pAHpfkkCR92bCHuVeFb4Gd0c4Ft15svLHWynuFWFQ0Y=;
+        b=S6kZt8fgs8xTEX5bf8nZrzMLr59wmtxWO0bsiq+JoAjaMZBFU2MLZ9C9yqreLPla0r
+         QBG6c1tns8AN4wqjI8Fh+Io8Zx8fphvDAGyyfQ6nByL6LkXCp4x+M80fthzNqDtYsd+5
+         1UbMOf9XJAXOR+mgKQeSweJMoQRglxx4X1EPLs1I+y9XqEHleBdOQ+e9OYb6QO+D4hqg
+         JBK9vzumjlkjxWiMNjgFcTNXIQSoyKpargtO9uK3m1g/plMopiDqRU/BSlH2DMT23hOA
+         RnZSvHml85Se1N8eQRHA2dHw0xCsXCJbDLgwMThP+ndfUOsCwkHSkgmZNqgN/Ys8dQTY
+         oMWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716566217; x=1717171017;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pAHpfkkCR92bCHuVeFb4Gd0c4Ft15svLHWynuFWFQ0Y=;
+        b=M1wIXKt1TDOAgK31EFbWiX/uYsDGJkj4XMWbKaJ91sFAlCPgJIkzKM0Ps6TkI9so9J
+         itf4353dmcInwxjh9S+NIeQXXOxcy9w+ryg/fsqCMzQwTm1J6QSDKPCyRRNnN5MmNfRk
+         bA3jzAJa82sH80PcMegAy0+xEuzXfxrQ/NKwPHrOkHpppVw4spYMXXvmwYUCoYedh2x5
+         dM3ua2Uhy63hWEpcgCuw3ssPnLK3dUEHQabbB9qfEXVd7CvnDn5lzN4s90AOZTsxg+CJ
+         +dTg0AyIe2xKbWCKWAWOniUZ19VOep+dgOTzg+2jpJQnreMafFE2WsbKKuRb43PK+Xlw
+         ep/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWcHRD8NioKE6GaNsDDOF9ZhG3PpGAy83EWogeT0+sK/9B2nV9I0Bw+oxH6nuGo1fV1ZKrjbolDy4gFriQWBI1ZqZ0fYygITz8ZbHtK
+X-Gm-Message-State: AOJu0YwlAUF5AcijSvtrs6CGcXAxjxdmdLyLFktQeLXhDXnK54xtEyAK
+	/8THdu8h02I724YBoRNJYyGOnrqmuzLsJLb+tPTz36zVYS8SPLVR2AHsW+FUaxI=
+X-Google-Smtp-Source: AGHT+IFE4xFCp4W7Db3D88pPozUhIjZLpDcQGWfRPtJqKqzBQzuSuQ51HXr5tiQ4YwalghgOOYGSbQ==
+X-Received: by 2002:a05:6820:1606:b0:5b2:72e5:c12d with SMTP id 006d021491bc7-5b961b5dda1mr3688565eaf.5.1716566216830;
+        Fri, 24 May 2024 08:56:56 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b96c699953sm358875eaf.31.2024.05.24.08.56.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 May 2024 08:56:56 -0700 (PDT)
+Message-ID: <5cf036d5-1eb3-4f63-82f9-d01b79b7fe47@baylibre.com>
+Date: Fri, 24 May 2024 10:56:55 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524085350.359812-1-horatiu.vultur@microchip.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 3/4] iio: add support for multiple scan types per
+ channel
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Julien Stephan <jstephan@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240507-iio-add-support-for-multiple-scan-types-v1-0-95ac33ee51e9@baylibre.com>
+ <20240507-iio-add-support-for-multiple-scan-types-v1-3-95ac33ee51e9@baylibre.com>
+ <20240519201241.7c60abac@jic23-huawei>
+ <ebf18ed1-a82f-4c0a-9a63-2c428b5aee40@baylibre.com>
+ <20240520171205.000035b0@Huawei.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20240520171205.000035b0@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 24, 2024 at 10:53:50AM +0200, Horatiu Vultur wrote:
-> When the interrupt is enabled, the function lan8841_config_intr tries to
-> clear any pending interrupts by reading the interrupt status, then
-> checks the return value for errors and then continue to enable the
-> interrupt. It has been seen that once the system gets out of sleep mode,
-> the interrupt status has the value 0x400 meaning that the PHY detected
-> that the link was in low power. That is correct value but the problem is
-> that the check is wrong.  We try to check for errors but we return an
-> error also in this case which is not an error. Therefore fix this by
-> returning only when there is an error.
+On 5/20/24 11:12 AM, Jonathan Cameron wrote:
+> On Mon, 20 May 2024 08:51:52 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
 > 
-> Fixes: a8f1a19d27ef ("net: micrel: Add support for lan8841 PHY")
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+>> On 5/19/24 2:12 PM, Jonathan Cameron wrote:
+>>> On Tue,  7 May 2024 14:02:07 -0500
+>>> David Lechner <dlechner@baylibre.com> wrote:
+>>>   
+>>>> This adds new fields to the iio_channel structure to support multiple
+>>>> scan types per channel. This is useful for devices that support multiple
+>>>> resolution modes or other modes that require different data formats of
+>>>> the raw data.
+>>>>
+>>>> To make use of this, drivers can still use the old scan_type field for
+>>>> the "default" scan type and use the new scan_type_ext field for any
+>>>> additional scan types.  
+>>>
+>>> Comment inline says that you should commit scan_type if scan_type_ext
+>>> is provided.  That makes sense to me rather that a default no one reads.
+>>>
+>>> The example that follows in patch 4 uses both the scan_type and
+>>> the scan_type_ext which is even more confusing.
+>>>   
+>>>> And they must implement the new callback
+>>>> get_current_scan_type() to return the current scan type based on the
+>>>> current state of the device.
+>>>>
+>>>> The buffer code is the only code in the IIO core code that is using the
+>>>> scan_type field. This patch updates the buffer code to use the new
+>>>> iio_channel_validate_scan_type() function to ensure it is returning the
+>>>> correct scan type for the current state of the device when reading the
+>>>> sysfs attributes. The buffer validation code is also update to validate
+>>>> any additional scan types that are set in the scan_type_ext field. Part
+>>>> of that code is refactored to a new function to avoid duplication.
+>>>>
+>>>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>>>> ---  
+>>>   
+>>>> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+>>>> index 19de573a944a..66f0b4c68f53 100644
+>>>> --- a/include/linux/iio/iio.h
+>>>> +++ b/include/linux/iio/iio.h
+>>>> @@ -205,6 +205,9 @@ struct iio_scan_type {
+>>>>   * @scan_index:		Monotonic index to give ordering in scans when read
+>>>>   *			from a buffer.
+>>>>   * @scan_type:		struct describing the scan type
+>>>> + * @ext_scan_type:	Used in rare cases where there is more than one scan
+>>>> + *			format for a channel. When this is used, omit scan_type.  
+>>>
+>>> Here is the disagreement with the patch description.
+>>>   
+>>>> + * @num_ext_scan_type:	Number of elements in ext_scan_type.
+>>>>   * @info_mask_separate: What information is to be exported that is specific to
+>>>>   *			this channel.
+>>>>   * @info_mask_separate_available: What availability information is to be
+>>>> @@ -256,6 +259,8 @@ struct iio_chan_spec {
+>>>>  	unsigned long		address;
+>>>>  	int			scan_index;
+>>>>  	struct iio_scan_type scan_type;
+>>>> +	const struct iio_scan_type *ext_scan_type;
+>>>> +	unsigned int		num_ext_scan_type;  
+>>>
+>>> Let's make it explicit that you can't do both.
+>>>
+>>> 	union {
+>>> 		struct iio_scan_type scan_type;
+>>> 		struct {
+>>> 			const struct iio_scan_type *ext_scan_type;
+>>> 			unsigned int num_ext_scan_type;
+>>> 		};
+>>> 	};
+>>> should work for that I think.
+>>>
+>>> However this is I think only used for validation. If that's the case
+>>> do we care about values not in use?  Can we move the validation to
+>>> be runtime if the get_current_scan_type() callback is used.  
+>>
+>> I like the suggestion of the union to use one or the other. But I'm not
+>> sure I understand the comments about validation.
+>>
+>> If you are referring to iio_channel_validate_scan_type(), it only checks
+>> for programmer error of realbits > storagebits, so it seems better to
+>> keep it where it is to fail as early as possible.
+> 
+> That requires the possible scan masks to be listed here but there is
+> nothing enforcing the callback returning one from here.  Maybe make it
+> return an index instead?
+> 
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Sorry, still not understanding what we are trying to catch here. Why
+would the scan mask have any effect of checking if realbits > storagebits?
 
-    Andrew
