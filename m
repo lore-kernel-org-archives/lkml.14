@@ -1,48 +1,62 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BCA12C52E;
-	Fri, 24 May 2024 14:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4BC12C496;
+	Fri, 24 May 2024 14:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716560081; cv=none; b=H624D163D3I58NlltNaV0HqQtCFj3mt7IL4KT37pByVt/6vVR/TK2vTsyjb2N4svoOeRBzSXsDSKIryp+ELwpCBQV9zp1VWemWxRCvYrZrDT6p0XhKdmapaBDpmDT8FtKVLGc6rEU6YP1G8CS9JM8X1ILkPRPuQouznM1TwXKsk=
+	t=1716560084; cv=none; b=iDusGQAZBZZt4weOlSraxdJxY02+tHZ9tLuXYyXrqLujvct2ySr1Bj/ulgCFnFqxyLs8xBVuPZa1uwo+ATmMXcE/Mu5eJ9LwpOCv7bkwI3FeAs7PpRhAYBBzaQwiIN17Cp4bsWvCMiSHDG0mN4j2/IU4KD/GYW7mc+gDJqipeiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716560081; c=relaxed/simple;
-	bh=/iCSwYFpPpnWKrk7OTbEJ2X5LrFGQnqRxn/p12z43c4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NiLG12Zy+TDk75DZ4DuXVrLaAeRsf7Yx1okDL7569ldWxC0mKW7kw7Sa4DzwqLmERMKqRoq/3lrkYYldROL2iLIacLmWUHgVDeVN13VgBbXxw35npMl2cZGIFqFfFtocJK/c0GYQG72cgGa76n1pUic+e8NfxARCVG140O0803M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=a26KhZTH; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1716560084; c=relaxed/simple;
+	bh=MI4xf5CZRh3JkSQUXneg4YB/Rd6XH4dXyTAjqy7XGYE=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FDX2SVhr7PmpdHcaBNBorjHeyEnAEIE/UMMyLKvfNveN5T/Q/U5+17N3rNu7tklRPQOSMCECV3L/seGtf6NJVvMGfQTJTZTlyjzN/7w/Qdl1PQslUo7n6EGxyor5i8mtPC9v+9aUz8sGdvwlXNizLHUsDhmInlROlVLEVSasfag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THaFEYLz; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a26KhZTH"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44OEDgwW096179;
-	Fri, 24 May 2024 09:13:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716560022;
-	bh=JI2PXYUUtgJy4L/iAwhj/g1y9I44a0am6XbwNhHJQ7o=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=a26KhZTHL5qHOOYNEiH75TcYqpvWhZfY3PB+h1CC6ppZ1Fjxna4Yr5bfB8LWN0CHG
-	 aU+dNUzlXKNaehwkFkmhfG12qbK2R6CzjmwSNa/Rt5e+EspHOH7WgRNW7DXH3gj+ZB
-	 X+Lf6ivw1XPD4dmi0h8BDbtFE6uy1rpwTA9bajbc=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44OEDgn5026390
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 24 May 2024 09:13:42 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 24
- May 2024 09:13:41 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 24 May 2024 09:13:41 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44OEDfjc067963;
-	Fri, 24 May 2024 09:13:41 -0500
-Message-ID: <ddcab8c0-3772-4134-a3bb-27729e864627@ti.com>
-Date: Fri, 24 May 2024 09:13:41 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THaFEYLz"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4202dd90dcfso30200015e9.0;
+        Fri, 24 May 2024 07:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716560082; x=1717164882; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xEluKMmcJIBqWSHwgH41oln24FVPrkhhhNsUp8d02/0=;
+        b=THaFEYLzII4nH4qsOpGuJinHSJw1HCV5C6rHmDghWMhof43p4cy3+hdX9USqWNpbf0
+         JX6M1uS37iWK3wcLpkkzjzBrlESmql3kRWKQqDzz6BDsNZCg854d9gwL4mVVzmgS4GYf
+         mjtmMxqGU4sCbAY16WkXgU6wEshA0uql+z7YH5zlLSYnCeDT6O8fBZ91KSQyCrsf5g33
+         ZYr+xjwxYFonoDZXs5qfLwnbJTrd3jGujRbF6+1vk3WLKQmWkYstp1DVHz289/wehoFO
+         iGkUrlBo39MbhTPH+sAwcqkusRbJicbou2b7moWhG+YyOwxMgMBPQexi46shpF88p7DA
+         LAGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716560082; x=1717164882;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xEluKMmcJIBqWSHwgH41oln24FVPrkhhhNsUp8d02/0=;
+        b=iMSM5qL8h08XnR0ZinUelCqT2SUadTat6YBqoQoGE4QzpK2fLvfoWlSio98VY0UCJp
+         vn52aKHw9ztFnIlZQUC+bBup3GLk/W7C/HOqmn1CUmpW7P/PNXOdE5h89CnqUcHsHdAB
+         Ngbe85/iIYiYNopBEErvb9LN+oIYM8/U7dbZZbhEqtVRr++HGfchTq9KoEy4iiq34t2U
+         P9T2/uzEC0ZRLh06Kus7WIc5VRZLVs2ANDs6SPJTeQL041GJUbJRhY+7edcQCZgo6drJ
+         zpVhs3DowarfZXGbM5a3/tlrLx/7aFSnOj3way3MitWa8HCq7zaSGhXIdr1e1WvXdhcu
+         1a5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVvVNw/1QbZB7VHcrs+tyd2g0HPWKdFQg3pG6NJiJNOMmgSEvqepSp6RdiNXZOyghr+DkDb+UBJCkZB8o34/OrpisqsGiO+OD62O1pPb8sulmkzDmvfrie+0iBzQTlTU1Z/4vUb16sMroZV1N2y8JXxBHcOiBN4TuXN4rP6
+X-Gm-Message-State: AOJu0YyssVLE6MvHC4mM6AuuelFz1ijNAm+/beLILd6j+dEcamWAtYmg
+	BDlg5keV69DT/6s8NdJEnW8QPa8w3yGESnCZC4QdTviaGefWUsjU
+X-Google-Smtp-Source: AGHT+IHXRFsNK2wnj4sp/3fO9zgJ3Kk2UE7eYwFqdvn8zfF9+N46EqzzK+tUaYA7zWaNVbRzRusQGQ==
+X-Received: by 2002:a7b:cbd0:0:b0:420:1284:475 with SMTP id 5b1f17b1804b1-421089cd413mr20419145e9.12.1716560081669;
+        Fri, 24 May 2024 07:14:41 -0700 (PDT)
+Received: from [192.168.0.200] (54-240-197-234.amazon.com. [54.240.197.234])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421010b97c9sm54598375e9.45.2024.05.24.07.14.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 May 2024 07:14:41 -0700 (PDT)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <497d4ba9-5ba2-4e6c-b697-bdf7442b2488@xen.org>
+Date: Fri, 24 May 2024 15:14:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,68 +64,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/8] arm64: defconfig: Enable TI eQEP Driver
-To: Nishanth Menon <nm@ti.com>
-CC: Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        William Breathitt Gray <william.gray@linaro.org>,
-        David Lechner
-	<david@lechnology.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-References: <20240523231516.545085-1-jm@ti.com>
- <20240523231516.545085-9-jm@ti.com>
- <20240524055923.zyfthiwcsbwbjg5k@undecided>
+Reply-To: paul@xen.org
+Subject: Re: [RFC PATCH v3 17/21] KVM: x86: Avoid global clock update on
+ setting KVM clock MSR
+To: David Woodhouse <dwmw2@infradead.org>, kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, jalliste@amazon.co.uk, sveith@amazon.de,
+ zide.chen@intel.com, Dongli Zhang <dongli.zhang@oracle.com>,
+ Chenyi Qiang <chenyi.qiang@intel.com>
+References: <20240522001817.619072-1-dwmw2@infradead.org>
+ <20240522001817.619072-18-dwmw2@infradead.org>
 Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20240524055923.zyfthiwcsbwbjg5k@undecided>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Organization: Xen Project
+In-Reply-To: <20240522001817.619072-18-dwmw2@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Nishanth,
-
-On 5/24/24 12:59 AM, Nishanth Menon wrote:
-> On 18:15-20240523, Judith Mendez wrote:
->> TI K3 SoC's support eQEP hardware, so enable TI eQEP driver
->> to be built as a module.
+On 22/05/2024 01:17, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
 > 
-> All the nodes seem to be only in disabled mode, is there even a single
-> board that is actually using this? if so, why isn't it enabled?
-
-I will add pinmux and enable in the board level dts file.
-
-~ Judith
-
+> Commit 0061d53daf26 ("KVM: x86: limit difference between kvmclock updates")
+> introduced a KVM_REQ_GLOBAL_CLOCK_UPDATE when one vCPU set up its clock.
 > 
->>
->> Signed-off-by: Judith Mendez <jm@ti.com>
->> ---
->> Changes since v1:
->> - No change
->> ---
->>   arch/arm64/configs/defconfig | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->> index 2c30d617e1802..23d11a1b20195 100644
->> --- a/arch/arm64/configs/defconfig
->> +++ b/arch/arm64/configs/defconfig
->> @@ -1593,6 +1593,7 @@ CONFIG_INTERCONNECT_QCOM_SM8550=y
->>   CONFIG_INTERCONNECT_QCOM_SM8650=y
->>   CONFIG_INTERCONNECT_QCOM_X1E80100=y
->>   CONFIG_COUNTER=m
->> +CONFIG_TI_EQEP=m
->>   CONFIG_RZ_MTU3_CNT=m
->>   CONFIG_HTE=y
->>   CONFIG_HTE_TEGRA194=y
->> -- 
->> 2.45.1
->>
+> This was a workaround for the ever-drifting clocks which were based on the
+> host's CLOCK_MONOTONIC and thus subject to NTP skew. On booting or resuming
+> a guest, it just leads to running kvm_guest_time_update() twice for each
+> vCPU for now good reason.
 > 
+> Just use KVM_REQ_CLOCK_UPDATE on the vCPU itself, and only in the case
+> where the KVM clock is being set up, not turned off.
+> 
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>   arch/x86/kvm/x86.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+
+Reviewed-by: Paul Durrant <paul@xen.org>
 
