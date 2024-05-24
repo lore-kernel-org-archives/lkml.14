@@ -1,139 +1,75 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C1E3BBE8
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 20:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486B139ADB;
+	Fri, 24 May 2024 20:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716580813; cv=none; b=hCN7rEzN80d11fb4uJsdQ6BnLjh+B7ILVCpSC7lBOQq8Cfqj+qTU7lFKhwa/HSkyJbqA57gbSF2j+tLPCo3X0MIlpkJbxKHwHwVYwppH6l4qgiDZqCbdBp+KBQAnVSjBoxB57B1vOJeBmzvzPiqGg0JcWYpq9QKK2tvRgTmpHaM=
+	t=1716580830; cv=none; b=WvVRH5mMMaq2PtIMbFkyh3cZC1VU09ZLgz07JNgCImM9S8PvlsAojqLiQl+N71hCdHvE74bfgQy5FDDLjCwekh144zw1RV6tQikT2p26W2qknS/cvQzfaXijzVSGR2ItEw0FoQ3Za1IXyryrgRfyaJN3pX0HUTyL9mdKslXL3XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716580813; c=relaxed/simple;
-	bh=Gv43iCvXawnlGLRmctGhbdkb5WAxXv1tZ9waG3dYXuw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=m8OftY93OyuYh0PIW2pLLhKDCnUrThvt6VylI5GsF4JqfH6ga/eepwDQsQ39EB3GJl+aIs2SEKvBTZGqyDOoQwTmUe0sWdqPoLgkl44o1UYTybatopo5E92dVP+hSQOYdkb/CYxQTtnK5hoTNdJJBz2hiQFQCorv2Al2LUuUdFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=luY7Yz16; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716580830; c=relaxed/simple;
+	bh=pyAGi8octoMcFhKKOiNrCFOsbeRCbTUlZAwIwrRUJx0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=b2jhjEvsUBrVVbz5ftfOZqV05sHlitKmu0GZTMKxJzyVXey5Lg3oQ8GCn8YHR7Fv7sFPPileCRHwrhgHglYlKR6pBKQt7Wlf0mC2sb09ooE5koBVU/4VuM+9ubHVB9tzse0ovqlP4xje8voTTOJ611e8RCy+XjkigTHEvRecLys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1MAEQ6B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="luY7Yz16"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f337d0e382so33185ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 13:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716580810; x=1717185610; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J03u/azUiuyJ/7gPFey8suUIJZ5rc1p0eW52hXcyf1w=;
-        b=luY7Yz16J6LPMLhLqtyuR+ZV1IxJQv9r1b0wa+/3z1fQhLwtAOmyP8UGuyOQ5DNYcL
-         mX+KwRFwb0ojhQCxG7rZwyIXcBDc6sX2F815JmFgNbiNARUW2DgMCwyPpy15/mE2Ip65
-         ErBN2ch8jOg0QdzNQrNacUhZZ9IEwdrfHHks5icZPgtkyDzhPPXDkLlCyXjEkXvuAXrX
-         9kz1V8zR/66zL/w+W99dTrb/ynvjBpzfduy3+x0OV4jZeYud5LE4sIc1uvGPtnJlWWeM
-         tGEvla9idzN3dK4Ylaeu+D5b0ko1nTiJh7aRbxxb5tfCnGSlKYtHkv29nRNGy00o/Uv8
-         WboQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716580810; x=1717185610;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J03u/azUiuyJ/7gPFey8suUIJZ5rc1p0eW52hXcyf1w=;
-        b=o2UJPeeSBVmgqvnWtmIktDYVKQ1xGPMAo9bO5dUKeqtiFM3+mRwUfVcCiQ7k7a/Dks
-         7jy6VAVcEEGhkd3fhgAY2tRVPkkuoh6O7uUvvi/8afjwaUZSkq8g73oLidTLe3dePgo0
-         PrQAFdesgkKGMfjCaXJ8SBUNzi6McuqAtoet1EtSUDP6Iti6M3Chv7+BHax9KKEjk15s
-         DVMB/pwU76xNkQsSpcXnH1ceKgkzWPOha4C0ZAfopV8XiDb8YwNqAlTQXpj/xkFgEASc
-         RurSJ6+x1YA4p4A8Ay1TLSKBatCUhv3SdIcNpA2zKDXdVf6zVlHNIlh229JX7sEH6EFN
-         KcKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXaIkyiNn+mco9l0anYPHIROgRW8jmBoJ/dQtAJMwUslldhfQ93Q59fy1f5+kDeVVXQgNbRj3l1bY2YjS11XwLqIpeEUcRVgteOKeqR
-X-Gm-Message-State: AOJu0Yzk5HP4h/eavmTJ//kxU6Un9osgM0lEVSb9N2SSqnaKRtB5enJY
-	fi1O3y0zWGs46SQML0R8JsTTJv6A5WbNBXbpq25ZCSw5LLh/YAf57RrNjsCEBg==
-X-Google-Smtp-Source: AGHT+IGCIXQDdrO6BGUEBPI0rbMRLEFS1n4FDhL/LvduVdqztKRsVCv6w1yspdPe5J3ICBr0hoDTAg==
-X-Received: by 2002:a17:902:d902:b0:1f4:50b4:a50b with SMTP id d9443c01a7336-1f466ce2270mr381615ad.18.1716580808226;
-        Fri, 24 May 2024 13:00:08 -0700 (PDT)
-Received: from [2620:0:1008:15:c92f:57d0:1ea4:5439] ([2620:0:1008:15:c92f:57d0:1ea4:5439])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fc05e08bsm1456208b3a.52.2024.05.24.13.00.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 13:00:07 -0700 (PDT)
-Date: Fri, 24 May 2024 13:00:06 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: Sourav Panda <souravpanda@google.com>
-cc: corbet@lwn.net, gregkh@linuxfoundation.org, rafael@kernel.org, 
-    Andrew Morton <akpm@linux-foundation.org>, mike.kravetz@oracle.com, 
-    muchun.song@linux.dev, rppt@kernel.org, david@redhat.com, 
-    rdunlap@infradead.org, chenlinxuan@uniontech.com, yang.yang29@zte.com.cn, 
-    tomas.mudrunka@gmail.com, bhelgaas@google.com, ivan@cloudflare.com, 
-    pasha.tatashin@soleen.com, yosryahmed@google.com, hannes@cmpxchg.org, 
-    shakeelb@google.com, kirill.shutemov@linux.intel.com, 
-    wangkefeng.wang@huawei.com, adobriyan@gmail.com, 
-    Vlastimil Babka <vbabka@suse.cz>, 
-    "Liam R. Howlett" <Liam.Howlett@oracle.com>, surenb@google.com, 
-    linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-    linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-    Matthew Wilcox <willy@infradead.org>, weixugc@google.com
-Subject: Re: [PATCH v12] mm: report per-page metadata information
-In-Reply-To: <45fb4c94-dd77-94c3-f08f-81bf31e6d6d2@google.com>
-Message-ID: <1e1b89af-3b7a-7400-cfd7-d22a101955de@google.com>
-References: <20240512010611.290464-1-souravpanda@google.com> <45fb4c94-dd77-94c3-f08f-81bf31e6d6d2@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1MAEQ6B"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DD8D2C2BBFC;
+	Fri, 24 May 2024 20:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716580829;
+	bh=pyAGi8octoMcFhKKOiNrCFOsbeRCbTUlZAwIwrRUJx0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=T1MAEQ6BgEbJ0/8OMoz8FvtdPnuSPCSHHZYYBn1yhfp9t1+1xosA1Mcdvolb9nPpD
+	 qwo2X2HOXkJ1qeJJHdawSFS56Bn1IZWXaAyFzA3AMYlFJFgD6fovUeAqOKJVJyjUoR
+	 ETP1EoYmFdW8V+5Ai4Vcp0Cs4G3KW3dc0X5FtY2aoMYBiaOhD7vnhOhk66UOOpzDNz
+	 ImLIwsJcKG5Vr1vI0UY2kaXQ5TLKJBkkxMSGLY6Y5OsqTpSsbS7Jz3tqOQpr/XKzbR
+	 nM6s/E83iRmnGxJpiho5NhiPXm6TV+bTx32hfGGLB23jPE5S8Ir+djqPqxIggMlnMD
+	 ohm4n+qDgA+/A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C9926C4332E;
+	Fri, 24 May 2024 20:00:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] Bluetooth:  MGMT: Uninitialized variable in load_conn_param()
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <171658082982.8511.1384944537099920085.git-patchwork-notify@kernel.org>
+Date: Fri, 24 May 2024 20:00:29 +0000
+References: <819ed9b8-8790-4d15-b2a0-20929328d582@moroto.mountain>
+In-Reply-To: <819ed9b8-8790-4d15-b2a0-20929328d582@moroto.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: luiz.von.dentz@intel.com, marcel@holtmann.org, johan.hedberg@gmail.com,
+ luiz.dentz@gmail.com, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-On Sat, 18 May 2024, David Rientjes wrote:
+Hello:
 
-> On Sun, 12 May 2024, Sourav Panda wrote:
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+
+On Fri, 24 May 2024 13:14:02 +0300 you wrote:
+> The "update" variable needs to be initialized to false.
 > 
-> > Today, we do not have any observability of per-page metadata
-> > and how much it takes away from the machine capacity. Thus,
-> > we want to describe the amount of memory that is going towards
-> > per-page metadata, which can vary depending on build
-> > configuration, machine architecture, and system use.
-> > 
-> > This patch adds 2 fields to /proc/vmstat that can used as shown
-> > below:
-> > 
-> > Accounting per-page metadata allocated by boot-allocator:
-> > 	/proc/vmstat:nr_memmap_boot * PAGE_SIZE
-> > 
-> > Accounting per-page metadata allocated by buddy-allocator:
-> > 	/proc/vmstat:nr_memmap * PAGE_SIZE
-> > 
-> > Accounting total Perpage metadata allocated on the machine:
-> > 	(/proc/vmstat:nr_memmap_boot +
-> > 	 /proc/vmstat:nr_memmap) * PAGE_SIZE
-> > 
-> > Utility for userspace:
-> > 
-> > Observability: Describe the amount of memory overhead that is
-> > going to per-page metadata on the system at any given time since
-> > this overhead is not currently observable.
-> > 
-> > Debugging: Tracking the changes or absolute value in struct pages
-> > can help detect anomalies as they can be correlated with other
-> > metrics in the machine (e.g., memtotal, number of huge pages,
-> > etc).
-> > 
-> > page_ext overheads: Some kernel features such as page_owner
-> > page_table_check that use page_ext can be optionally enabled via
-> > kernel parameters. Having the total per-page metadata information
-> > helps users precisely measure impact. Furthermore, page-metadata
-> > metrics will reflect the amount of struct pages reliquished
-> > (or overhead reduced) when hugetlbfs pages are reserved which
-> > will vary depending on whether hugetlb vmemmap optimization is
-> > enabled or not.
-> > 
-> > For background and results see:
-> > lore.kernel.org/all/20240220214558.3377482-1-souravpanda@google.com
-> > 
-> > Signed-off-by: Sourav Panda <souravpanda@google.com>
-> > Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> 
-> Acked-by: David Rientjes <rientjes@google.com>
-> 
+> Fixes: 831be422f3bb ("Bluetooth: MGMT: Make MGMT_OP_LOAD_CONN_PARAM update existing connection")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  net/bluetooth/mgmt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-This would be a very useful extension to be able to provide observability 
-of per-page metadata overhead and the impact of things like HVO on the 
-overall footprint.  Today, we don't have observability for this memory 
-overhead.
+Here is the summary with links:
+  - Bluetooth: MGMT: Uninitialized variable in load_conn_param()
+    https://git.kernel.org/bluetooth/bluetooth-next/c/8e8f72ff2710
 
-Andrew, anything else that can be addressed before this is eligible for 
-staging in MM unstable?
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
