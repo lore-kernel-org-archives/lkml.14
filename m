@@ -1,105 +1,270 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EAB3BBD8
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 04:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9713A27B;
+	Fri, 24 May 2024 04:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716526437; cv=none; b=jXFBGh/kKf4q6L7l66zL3THDeBMH+4e+xgNVlaXqfC3fSjJg7EbIPISjERk/eqesqHaJOdmXbohyy8L+ofRShe8DgnFuSKsd3BaCuhD69s0Ivps1wsx2OmUeMf6oV2JILht17hJEVPv+MdqW4uxHhiMrNIVPbKuHvoeCsMyqPsI=
+	t=1716526714; cv=none; b=snFdQ/GZogDXhG9xCHx5TZgS14osTG1Dk1Bo3qlYERBaTF6xyg2ZIyFz8jc91tzeetKbkJdl7mi+FCfSx4Ai2kDHzG2Ft4L8tV2bsiHOPEdOicD88mj8qMAbLRaNBtLmugiu1TgLTggDiKq/+nC62aXRg9ZCTyHhgzTAn6YWaB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716526437; c=relaxed/simple;
-	bh=gvZu8w0rUyRAs6mCEAunAScGuNPqwLhrRY7xPvkQKvs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GoZIRm8TsQzlFaMbyjh0gg3FXlKa7j7iRQDXI9T/YfJr7jSrublc2ccYajAu3ibJLR/msnLtbnFPfe3LtZLtRi1xjfyKT0fCGt06CbftaQABJ7pKjVQHtmLO3xHSC2lI3g0Rdeb8YLdVFj8+kv58ChKbgR4s8hE/zf/dUlR+qQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SxrK9Imb; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1716526714; c=relaxed/simple;
+	bh=XNiUy9rDYeevLGiJZ9A/DHHrIjr9khy247wJmZzY+ds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rm2U+9+Uq6IqumCkK0I2fDo3pW/zJJyMQ0mcGQXeVtEoVCyLVyQbAyjxsYs2H/4gHZfYCKqrKwzbXcLFQIhghtXvyurMxpdKPioUgQ9Y190CjfXGMyvId8TXLEBJcZBg+5ohtO31ewHcpzUDXfN5VAhvoJku2WcxKmERVllNYxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bfNZZU/r; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxrK9Imb"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f4603237e0so1977791b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 21:53:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfNZZU/r"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-794ab20699cso27508685a.2;
+        Thu, 23 May 2024 21:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716526435; x=1717131235; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1716526710; x=1717131510; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SeZ2M4BqAFyvDn0M4gwVlrKswbQmxbPvIOPmTf6imKU=;
-        b=SxrK9Imb1hFo7IKnIPYyFvsECf6oCaV0GIRvXss7f03BLv6tstdV5JiNDpInnera72
-         ph2VuLP6vZHkyfkW5clDNcF6OklqVT8AwBAobVMP/huIUjEISDtOhzPEvRwTiQGFFbh/
-         mUV+B/DhbqSsKu1EiVAeG8RA9Duan4M3W7A6ma6cyk8uiQmqMiQzQMLnZdcsJHCHRamp
-         twQPozeZCVo2UyHRJRyGTm85Rb4U8HzXcaBzm7PXAsNWPPJRLfA3EAXvaa+iGu1J3vev
-         Y1QqgUTGBKgs4MH8SmQH4nQfGbEhpSjne36AwIt4Dnn26js6+g6ho5fAAOQ8BaBuMKdo
-         cKlQ==
+        bh=yk3w0+viSFtKKuzWbFP83UAoZOZ1q21d0XNuU6k+kPk=;
+        b=bfNZZU/r9RyOPWCWXT8C59J+0vknNpPXG60DaHrOQW4Y+v2TK5gY+xo6ZynezOb8Mf
+         lWpTfFsr+J2t95tcZFNHgefnMhI9EMEJU0OqiOvcWvv1kbOsVGpdaqaPmNSTaHT3FgfL
+         9c3pyO8XuE/PiwwoqkKgMl+yfNKvIeVTtdwXeTi3RV3dG5jbnDjnT3Sbb37j8hs56dgf
+         P4/snWGHOFj61ul7/UDjbqypeS26pj67RvgHm9+YQuKAmH+aC0nPJaIRd+QrXHCdtjFH
+         lHG7Dbu1eto2JxerKNBu4ntrVgnK1vRkWU4wy8G5sXe2qsBc8MNiboxWL3mSeP7y2ulL
+         PqWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716526435; x=1717131235;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716526710; x=1717131510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SeZ2M4BqAFyvDn0M4gwVlrKswbQmxbPvIOPmTf6imKU=;
-        b=GGkk3uDbvlojlEEtCvSs2S2oM0sLgnDknQ21ZECvXHfgv91InmWjVyKvbUNlMDEOz+
-         suOnKXU3kASS5qXbTwYLTAbUV2yCLt6gwR0WL2ZisZ0QH5JYRsWKVm84aSHO0/OJZ9y1
-         obu1A5qqbNDrDqWkEgPXGRkyfyuueB06tI8GLQnUKueUsBkg48Ds7p2fhLUtlTixBEEq
-         uCi2kA34wJdWbz4WkWjxorcIO68WNTzwwwL6xt+mB0O/bj4epifMOpKTzyTJDYjOucts
-         JC2Fu4rWcRsvJ3Cn22rsrBfc/uR7RsPkYgE5LVPV/1vtJUAD3nTvsQZxENsov4jXklA2
-         1pfA==
-X-Gm-Message-State: AOJu0Yw6J4gwn2TTBKFNLsFHiRUu7BJHUUizK74SCxeDHdHDDudIejUm
-	aqqaCMrN8AbMPZga9DGj11ROMWgHCelzIGuRx+DbpwwauLh8fTIF9dX/R+Zl3FAHQw==
-X-Google-Smtp-Source: AGHT+IGglxs725oP0CWuAhXr6pa0jMNX1dWN+lt79kz9rZEUDdOhAJT61rrzM4P7cUeSMq4Ns9h1KA==
-X-Received: by 2002:a05:6a21:3998:b0:1af:86e4:bc99 with SMTP id adf61e73a8af0-1b212cecbfemr1813196637.10.1716526435072;
-        Thu, 23 May 2024 21:53:55 -0700 (PDT)
-Received: from localhost.localdomain ([223.104.43.17])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-682274ba9edsm362179a12.90.2024.05.23.21.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 21:53:54 -0700 (PDT)
-From: Xiong Nandi <xndchn@gmail.com>
-To: akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	quic_bjorande@quicinc.com,
-	cmllamas@google.com,
-	quic_eberman@quicinc.com,
-	Xiong Nandi <xndchn@gmail.com>
-Subject: [PATCH v3 2/2] scripts/decode_stacktrace.sh: better support to ARM32 module stack trace
-Date: Fri, 24 May 2024 12:26:00 +0800
-Message-Id: <20240524042600.14738-3-xndchn@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240524042600.14738-1-xndchn@gmail.com>
-References: <20240524042600.14738-1-xndchn@gmail.com>
+        bh=yk3w0+viSFtKKuzWbFP83UAoZOZ1q21d0XNuU6k+kPk=;
+        b=K7sLZRNNSeJEk4UIVYOm91bTPKp8RtEs2eWqjx64QzqMx7Cd0qGaR4SrCxAc1Zqahl
+         jzaPJIqOkN+CMLWh8zflLx3a/zjRbJ+2UKO+PJdnXyElatvyJiKKaenmUMzcUfI7Suv6
+         0jPyAtI7vvKVgJhBMityFs7uhKkP4b0lLXSbHfEt1n80YpveLzfh+L4kIubXOnZ3FR6G
+         OfcN3dqV3q5G7QfySuVulTVZJ1xVdpdUkiF70tvWDyagotD2tM7nH/hhfBTc6htlASb8
+         x9SdGYeoRqE5hkd334qzXlBQW83W77w+aQIGuJR6unaagL1Rm2Ds/ng6YDvLqbdlJAh1
+         a88A==
+X-Forwarded-Encrypted: i=1; AJvYcCV6x3AWYhTwYhqVuOAKaVGdz5wwA+BvQu8W/Mjihf06KHnP+Mx8aZm+5SulHaPCozbkpfdfqaDCBnf2FKtAgag2C8nxLAKRsPEf0wsL7hWHBuXJmeh6RzR7ihWPp8WeDjlpvsftXuuePTPOQe6VQPGIUvGbfYa3DD+opP72mIksRsPMwj1Twin/36NbeFPMV5Ivx3F+NBqyxBvOzYQrgilG3Q==
+X-Gm-Message-State: AOJu0YzBqs2QeK/gyfDpLFb8fKdGpxkX+ze/ECRilvL4gq14xAROrLPG
+	bplaTQraw88b/9mFDPB/88j6nBr7DxdJENBOstP//F1Jh/cQb3pgDgx65jAAg8dP5JsdCgy7s+u
+	6OhXYwgYDqVLbLP8d2HZ7nWlB2e8=
+X-Google-Smtp-Source: AGHT+IHwxoEyC/CgfcoYNTuXoypW6cR/wpwLB7WDQ5aO6pnZBvqbeq9XfR3HiSKH17tsDXpgZ02lfQFnCyS+mBCcaM4=
+X-Received: by 2002:a05:620a:817:b0:794:9a23:4915 with SMTP id
+ af79cd13be357-794ab057904mr115843085a.8.1716526710061; Thu, 23 May 2024
+ 21:58:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+In-Reply-To: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 24 May 2024 07:58:18 +0300
+Message-ID: <CAOQ4uxhp0_HSre2LLStPVVsEJ3MqYDs1Ak9UAvB=o8Z7sVB=Mg@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to name_to_handle_at(2)
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sometimes there is special characters around module name in stack trace,
-such as ARM32 with BACKTRACE_VERBOSE in "(%pS)" format, such as:
-[<806e4845>] (dump_stack_lvl) from [<7f806013>] (hello_init+0x13/0x1000 [test])
+On Thu, May 23, 2024 at 11:57=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
+rote:
+>
+> Now that we provide a unique 64-bit mount ID interface in statx, we can
+> now provide a race-free way for name_to_handle_at(2) to provide a file
+> handle and corresponding mount without needing to worry about racing
+> with /proc/mountinfo parsing.
+>
+> While this is not necessary if you are using AT_EMPTY_PATH and don't
+> care about an extra statx(2) call, users that pass full paths into
+> name_to_handle_at(2) need to know which mount the file handle comes from
+> (to make sure they don't try to open_by_handle_at a file handle from a
+> different filesystem) and switching to AT_EMPTY_PATH would require
+> allocating a file for every name_to_handle_at(2) call, turning
+>
+>   err =3D name_to_handle_at(-EBADF, "/foo/bar/baz", &handle, &mntid,
+>                           AT_HANDLE_MNT_ID_UNIQUE);
+>
+> into
+>
+>   int fd =3D openat(-EBADF, "/foo/bar/baz", O_PATH | O_CLOEXEC);
+>   err1 =3D name_to_handle_at(fd, "", &handle, &unused_mntid, AT_EMPTY_PAT=
+H);
+>   err2 =3D statx(fd, "", AT_EMPTY_PATH, STATX_MNT_ID_UNIQUE, &statxbuf);
+>   mntid =3D statxbuf.stx_mnt_id;
+>   close(fd);
+>
+> Unlike AT_HANDLE_FID, as per Amir's suggestion, AT_HANDLE_MNT_ID_UNIQUE
+> uses a new AT_* bit from the historically-unused 0xFF range (which we
+> now define as being the "per-syscall" range for AT_* bits).
+>
 
-In this case, $module will be "[test])", the trace can be decoded by stripping
-the right parenthesis firstly:
-(dump_stack_lvl) from hello_init (/foo/test.c:10) test
+Sorry for nit picking, but I think that "Unlike AT_HANDLE_FID,..." is confu=
+sing
+in this statement.
+AT_HANDLE_FID is using a bit that was already effectively allocated for a
+"per-syscall" range.
+I don't think that mentioning AT_HANDLE_FID adds any clarity to the stateme=
+nt
+so better drop it?
 
-Signed-off-by: Xiong Nandi <xndchn@gmail.com>
-Suggested-by: Elliot Berman <quic_eberman@quicinc.com>
----
- scripts/decode_stacktrace.sh | 3 +++
- 1 file changed, 3 insertions(+)
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+> Changes in v2:
+> - Fixed a few minor compiler warnings and a buggy copy_to_user() check.
+> - Rename AT_HANDLE_UNIQUE_MOUNT_ID -> AT_HANDLE_MNT_ID_UNIQUE to match st=
+atx.
+> - Switched to using an AT_* bit from 0xFF and defining that range as
+>   being "per-syscall" for future usage.
+> - Sync tools/ copy of <linux/fcntl.h> to include changes.
+> - v1: <https://lore.kernel.org/r/20240520-exportfs-u64-mount-id-v1-1-f55f=
+d9215b8e@cyphar.com>
+> ---
+>  fs/fhandle.c                     | 29 ++++++++++++++++++++++-------
+>  include/linux/syscalls.h         |  2 +-
+>  include/uapi/linux/fcntl.h       | 28 +++++++++++++++++++++-------
+>  tools/include/uapi/linux/fcntl.h | 28 +++++++++++++++++++++-------
+>  4 files changed, 65 insertions(+), 22 deletions(-)
+>
+[...]
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index 2bc3a54ff..a0f50a5b4 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -283,6 +283,9 @@ handle_line() {
- 
- 	if [[ ${words[$last]} =~ \[([^]]+)\] ]]; then
- 		module=${words[$last]}
-+		# some traces format is "(%pS)", which like "(foo+0x0/0x1 [bar])"
-+		# so $module may like "[bar])". Strip the right parenthesis firstly
-+		module=${module%\)}
- 		module=${module#\[}
- 		module=${module%\]}
- 		modbuildid=${module#* }
--- 
-2.34.1
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index c0bcc185fa48..9ed9d65842c1 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -87,22 +87,24 @@
+>  #define DN_ATTRIB      0x00000020      /* File changed attibutes */
+>  #define DN_MULTISHOT   0x80000000      /* Don't remove notifier */
+>
+> +#define AT_FDCWD               -100    /* Special value used to indicate
+> +                                           openat should use the current
+> +                                           working directory. */
 
+(more nit picking)
+If you are changing this line, please at least add a new line,
+this is a different namespace :-/
+and perhaps change it to "Special value of dirfd argument..."
+
+Also, better leave a comment here to discourage allocation from this range:
+
++ /* Reserved for per-syscall flags              0xff   */
+
+> +#define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links. =
+ */
+> +
+>  /*
+> - * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EA=
+CCESS is
+> - * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only t=
+o
+> + * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EA=
+CCESS
+> + * is meaningful only to faccessat, while AT_REMOVEDIR is meaningful onl=
+y to
+>   * unlinkat.  The two functions do completely different things and there=
+fore,
+>   * the flags can be allowed to overlap.  For example, passing AT_REMOVED=
+IR to
+>   * faccessat would be undefined behavior and thus treating it equivalent=
+ to
+>   * AT_EACCESS is valid undefined behavior.
+>   */
+
+If you are going to add this churn in this patch, please do it otherwise.
+It does not make sense to have this long explanation about pre-syscall
+AT_* flags in a different location from the comment you added about
+"All new purely-syscall-specific AT_* flags.."
+if this explanation is needed at all, it should be after the new comment
+as an example.
+
+
+> -#define AT_FDCWD               -100    /* Special value used to indicate
+> -                                           openat should use the current
+> -                                           working directory. */
+> -#define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links. =
+ */
+>  #define AT_EACCESS             0x200   /* Test access permitted for
+>                                             effective IDs, not real IDs. =
+ */
+>  #define AT_REMOVEDIR           0x200   /* Remove directory instead of
+>                                             unlinking file.  */
+
+I really prefer to move those to the per-syscall section
+right next to AT_HANDLE_FID and leave a comment here:
+
+/* Reserved for per-syscall flags           0x200   */
+
+> +
+>  #define AT_SYMLINK_FOLLOW      0x400   /* Follow symbolic links.  */
+>  #define AT_NO_AUTOMOUNT                0x800   /* Suppress terminal auto=
+mount traversal */
+>  #define AT_EMPTY_PATH          0x1000  /* Allow empty relative pathname =
+*/
+> @@ -114,10 +116,22 @@
+>
+>  #define AT_RECURSIVE           0x8000  /* Apply to the entire subtree */
+>
+> -/* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits.=
+.. */
+> +/*
+> + * All new purely-syscall-specific AT_* flags should consider using bits=
+ from
+> + * 0xFF, but the bits used by RENAME_* (0x7) should be avoided in case u=
+sers
+> + * decide to pass AT_* flags to renameat2() by accident.
+
+Sorry, but I find the use of my renameat2() example a bit confusing
+in this sentence.
+If you mention it at all, please use "For example, the bits used by..."
+but I think it is more important to say "...should consider re-using bits
+already used by other per-syscalls flags".
+
+> These flag bits are
+> + * free for re-use by other syscall's syscall-specific flags without wor=
+ry.
+> + */
+> +
+> +/*
+> + * Flags for name_to_handle_at(2). To save AT_ flag space we re-use the
+> + * AT_EACCESS/AT_REMOVEDIR bit for AT_HANDLE_FID.
+> + */
+
+AT_EACCESS/AT_REMOVEDIR/AT_HANDLE_FID have exact same status,
+so instead of this asymmetric comment:
+
++/* Flags for faccessat(2) */
++#define AT_EACCESS             0x200   /* Test access permitted for
++                                           effective IDs, not real IDs.  *=
+/
++/* Flags for unlinkat(2) */
++#define AT_REMOVEDIR           0x200   /* Remove directory instead of
++                                           unlinking file.  */
++/* Flags for name_to_handle_at(2) */
++#define AT_HANDLE_FID          0x200   /* file handle is needed to
+                                        compare object identity and may not
+                                        be usable to open_by_handle_at(2) *=
+/
+
+> +#define AT_HANDLE_MNT_ID_UNIQUE        0x80    /* return the u64 unique =
+mount id */
+
+IDGI, I think we may have been miscommunicating :-/
+If 0x7 range is to be avoided for generic AT_ flags, then it *should* be us=
+ed
+for new per-syscall flags such as this one.
+
+The reservation of 0xff is not a strong guarantee.
+As long as people re-use new per-syscalls flags efficiently, we could
+decide to reclaim some of this space for generic AT_ flags in the future
+if it is needed.
+
+I know most of the mess was here before your patch, but I think
+it got to a point where we must put a little order before introducing
+the new per-syscall flag.
+
+Thanks,
+Amir.
