@@ -1,387 +1,290 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E16A12C49F
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 14:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDED38DC8
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 14:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716559706; cv=none; b=XVDiZevzjneGdjc/K52uyKt6t7R8vwfeW7cnJHSDd/+8evyzozcWec9SCjRD2rtaK4vDbupWu/xh2mQwj9K2LzBJ8YCizQw+8h/AzB4DX4BZGjX+4Zh6rvj9QvDEEHfAlT26JMEZ71yb9F2NoYlbFmNvzFFdIbbV45nuCQICZLE=
+	t=1716559814; cv=none; b=R8P1rxy7bE/MgjI5uymzfAHVDUkyiWf0aLko2j7EaZkrxoaAr1e3GlAIv1NF7wWtbv6sMltK4HGfb8ZDKaKarOUQDbVnIItS0vfc1/8IGwJ+lzLLR6j/Od30MmIUH+ataEpHi3xL/PLFKzXI7Mz06Yh6f1Bo1V74pHt1ZSiI2Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716559706; c=relaxed/simple;
-	bh=7OBEvpz5Q88pQOrflUx2/3L22kl2uVXTa0s3B2NDpl8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=av7wM9qJXXCBLlPjib+toaIPMksdo6oPerxdDPQupE5EMTAvb3jHaHp8/pCyS+c4nF3iUVTnbCJ/6JHV3o2reea6Na87SwOReZ5h7ApvhDpKWen5gmWl+hoRkwhqkRSbS+xY9eb5MmfEWBhUtaUf17vDcoXPHvQFjxCygbVUyb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ferroamp.se; spf=fail smtp.mailfrom=ferroamp.se; dkim=pass (2048-bit key) header.d=ferroamp-se.20230601.gappssmtp.com header.i=@ferroamp-se.20230601.gappssmtp.com header.b=F0YZxaoJ; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ferroamp.se
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=ferroamp.se
+	s=arc-20240116; t=1716559814; c=relaxed/simple;
+	bh=Iwc7nRQUKffCASqdr7kL/QpPOc2Tz7sHTYeJAlhiIi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ho4OCIGzDxqgPmAR9dCxN3N6ncv3jvRcjWnaDjK4Ut08M9KEIKRarsMiEB9wzVUwPPowrxiCZkIabj4EMeop45flyaloJ8uBwpJWsnt041OsHsqwFNH2mDProviIejuScXU/Ifk9tBOKDfypJzEEHCC2B9AaMWo7SC09eZbOgIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XwqHhGHd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nbeNsxxf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XwqHhGHd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nbeNsxxf; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ferroamp-se.20230601.gappssmtp.com header.i=@ferroamp-se.20230601.gappssmtp.com header.b="F0YZxaoJ"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5295bcb9bc1so766152e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 07:08:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ferroamp-se.20230601.gappssmtp.com; s=20230601; t=1716559702; x=1717164502; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jDE4KdJDPFFGuDWV9tGz0a/UMLuzw78uuyBOxXbpDBs=;
-        b=F0YZxaoJsZ/EPQFLVJjnKnbTx6I3sb/3UO9KMmceH3Y3dUHMMeBygqH75fPiDGAdOa
-         h2BnGTf07fpRRf3ECRzqG/awLsAa4newpoL3P2mPcp3lseed0NV7eNCT9dGrnlEgf6EK
-         1ZwKev0m9UXz4GKA2mcNsYdk2iPArjIHu0R7vqg27D0CBVgYdiG9LqLDinO6DSvddSTH
-         xI5M8oC8ldVUqyxFvKQGgcylceI1kkiLykuuIGwVu4DAKsCKEE7Z7aT1C//FhG1x4KI5
-         M0P8oFGl4/me3d00cgaMBID/BVPD1vVarCmQA1M8v3D0sPM8YitnxxZKAqv+Gy+29JUo
-         ipFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716559702; x=1717164502;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jDE4KdJDPFFGuDWV9tGz0a/UMLuzw78uuyBOxXbpDBs=;
-        b=YgZc7in/Lzg9+QsMpsHAnUZDmgJhZ1HK8FKo0GUCyZvCfjV1ZrRF0Sma5L0gr5vmmJ
-         evpGkREgqb8pf+0H1V1H2/7lPgGWaf5b01qLq+Pt/WE0gwofe2/mBPGOzR+0ECaqKn08
-         BXXqUc/QszzWnAVLIs/VLF5n9NAwbGlXp0hF2eAgGMMwoMAdstLWaEU6hVE1jJdW6Tpa
-         3ldJUyVkt9BTOXEWWqELaVzkr7N7DcRXkgZI07bECRz804ieR8/zsjQ88itC8yuTllrA
-         0BAcIcosED1ah4jC18EchcR7VkQEFN2y6/B8D1zQh6AjjljZjnUhiMvx9odRb6MAMqFL
-         MYgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUI2smPiXmjlNav3xvgeohwrAbnNeaZkfLCV3L0XGcm07Bv6SYsG4tzp82TWSmcELsQ4A2osA/oLLkl8m+Ue6FRQ/VF0yVkMu5dAL4T
-X-Gm-Message-State: AOJu0YwJWCBTaMwYiJYPpbckXyY/pHWbpfSlx+sLAqJ1X3KHs5DNDmSl
-	NSagVX/ST1ZnOZBPmoK3OA83xti2c5MQ4y4tWn9DuLmVbgiBh1FR0avof/bioomR86kKwyUKC6e
-	/
-X-Google-Smtp-Source: AGHT+IFu0aQYxgeXNPBjdFM51FaOoGQBrL3c/qdkD6x0M4ZdNKvD87xpWSgptuyjhQxgl7T4rSMP1A==
-X-Received: by 2002:a05:6512:3b8d:b0:520:85cf:db7f with SMTP id 2adb3069b0e04-52965479b50mr1991284e87.28.1716559702401;
-        Fri, 24 May 2024 07:08:22 -0700 (PDT)
-Received: from localhost.localdomain ([185.117.107.42])
-        by smtp.googlemail.com with ESMTPSA id 2adb3069b0e04-5296ee4a9cfsm185474e87.75.2024.05.24.07.08.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 07:08:22 -0700 (PDT)
-From: =?UTF-8?q?Ram=C3=B3n=20Nordin=20Rodriguez?= <ramon.nordin.rodriguez@ferroamp.se>
-To: andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	linux@armlinux.org.uk,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: parthiban.veerasooran@microchip.com,
-	=?UTF-8?q?Ram=C3=B3n=20Nordin=20Rodriguez?= <ramon.nordin.rodriguez@ferroamp.se>
-Subject: [PATCH 1/1] net: phy: microchip_t1s: enable lan865x revb1
-Date: Fri, 24 May 2024 16:07:06 +0200
-Message-ID: <20240524140706.359537-2-ramon.nordin.rodriguez@ferroamp.se>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240524140706.359537-1-ramon.nordin.rodriguez@ferroamp.se>
-References: <20240524140706.359537-1-ramon.nordin.rodriguez@ferroamp.se>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XwqHhGHd";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nbeNsxxf";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XwqHhGHd";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nbeNsxxf"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1225A33B4E;
+	Fri, 24 May 2024 14:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716559810; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=F26aKVHEn/HJrJC8s7hiOmU9ISqv2CdOYQdRJrNXvj8=;
+	b=XwqHhGHdUzYod8u0PTEKmFcHp+qU2dOjuU5VjoxIJtGEukkanafLhxb3iE+lM2qv/s7N7x
+	sBrLsOhG+Tl2RkzmwP6e2PXP5RYEUHlvGBo8+Jy7zRJBjei+PK5Ut4iF13CGj4ABuObEeT
+	6iU0Z6BsUplfnW4aHAffX6IggUD34kY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716559810;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=F26aKVHEn/HJrJC8s7hiOmU9ISqv2CdOYQdRJrNXvj8=;
+	b=nbeNsxxfR68jIe/QlMWUEW07uHFh8aae4yMwEvxcI1jSbKl1HdHN6KVSh+ZoqkRLt1VMVs
+	yEm7QJaoM6Cp7pDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=XwqHhGHd;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=nbeNsxxf
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716559810; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=F26aKVHEn/HJrJC8s7hiOmU9ISqv2CdOYQdRJrNXvj8=;
+	b=XwqHhGHdUzYod8u0PTEKmFcHp+qU2dOjuU5VjoxIJtGEukkanafLhxb3iE+lM2qv/s7N7x
+	sBrLsOhG+Tl2RkzmwP6e2PXP5RYEUHlvGBo8+Jy7zRJBjei+PK5Ut4iF13CGj4ABuObEeT
+	6iU0Z6BsUplfnW4aHAffX6IggUD34kY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716559810;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=F26aKVHEn/HJrJC8s7hiOmU9ISqv2CdOYQdRJrNXvj8=;
+	b=nbeNsxxfR68jIe/QlMWUEW07uHFh8aae4yMwEvxcI1jSbKl1HdHN6KVSh+ZoqkRLt1VMVs
+	yEm7QJaoM6Cp7pDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 035A713A6B;
+	Fri, 24 May 2024 14:10:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id s2cbO8GfUGaaGQAAD6G6ig
+	(envelope-from <chrubis@suse.cz>); Fri, 24 May 2024 14:10:09 +0000
+Date: Fri, 24 May 2024 16:10:10 +0200
+From: Cyril Hrubis <chrubis@suse.cz>
+To: ltp@lists.linux.it, linux-kernel@vger.kernel.org,
+	libc-alpha@sourceware.org
+Cc: lwn@lwn.net, akpm@linux-foundation.org, torvalds@linux-foundation.org
+Subject: [ANNOUNCE] The Linux Test Project has been released for MAY 2024
+Message-ID: <ZlCfwm2kzHqhjiWn@yuki>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 1225A33B4E
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
 
-The microchip_t1s module is extended with support for lan865x rev.b1,
-prior to this commit support for rev.b0 already exists.
+Good news everyone,
 
-Some of the operations performed in the hw probe and init of the phy
-require access to registers only accessible via the macphy spi
-interface (lan865x is an integrated phy), meaning the init call has
-to interop with layers above, namely via read/write_c45.
+the Linux Test Project test suite stable release for *May 2024* has been
+released.
 
-Signed-off-by: Ramón Nordin Rodriguez <ramon.nordin.rodriguez@ferroamp.se>
----
- drivers/net/phy/microchip_t1s.c | 189 ++++++++++++++++++++++++++++----
- 1 file changed, 166 insertions(+), 23 deletions(-)
+Since the last release 292 patches by 27 authors were merged.
 
-diff --git a/drivers/net/phy/microchip_t1s.c b/drivers/net/phy/microchip_t1s.c
-index 534ca7d1b061..3c5153aa5c7a 100644
---- a/drivers/net/phy/microchip_t1s.c
-+++ b/drivers/net/phy/microchip_t1s.c
-@@ -5,6 +5,7 @@
-  * Support: Microchip Phys:
-  *  lan8670/1/2 Rev.B1
-  *  lan8650/1 Rev.B0 Internal PHYs
-+ *  lan8650/1 Rev.B1 Internal PHYs
-  */
- 
- #include <linux/kernel.h>
-@@ -12,7 +13,7 @@
- #include <linux/phy.h>
- 
- #define PHY_ID_LAN867X_REVB1 0x0007C162
--#define PHY_ID_LAN865X_REVB0 0x0007C1B3
-+#define PHY_ID_LAN865X 0x0007C1B3
- 
- #define LAN867X_REG_STS2 0x0019
- 
-@@ -22,6 +23,7 @@
- #define LAN865X_REG_CFGPARAM_DATA 0x00D9
- #define LAN865X_REG_CFGPARAM_CTRL 0x00DA
- #define LAN865X_REG_STS2 0x0019
-+#define LAN865X_REG_DEVID 0x94
- 
- #define LAN865X_CFGPARAM_READ_ENABLE BIT(1)
- 
-@@ -84,6 +86,65 @@ static const u16 lan865x_revb0_fixup_cfg_regs[5] = {
- 	0x0084, 0x008A, 0x00AD, 0x00AE, 0x00AF
- };
- 
-+enum lan865x_revision {
-+	REV_B0 = 0x1,
-+	REV_B1 = 0x2,
-+};
-+
-+struct lan865x_revb1_fixup_op {
-+	u16 mms;
-+	u16 addr;
-+	u16 value;
-+};
-+
-+static const struct lan865x_revb1_fixup_op
-+lan865x_revb1_fixup_cfg[20] = {
-+	{.mms = 4, .addr = 0x00d0, .value = 0x3f31},
-+	{.mms = 4, .addr = 0x00e0, .value = 0xc000},
-+	{.mms = 4, .addr = 0x0084, .value = 0x0000},
-+	{.mms = 4, .addr = 0x008a, .value = 0x0000},
-+	{.mms = 4, .addr = 0x00e9, .value = 0x9e50},
-+	{.mms = 4, .addr = 0x00f5, .value = 0x1cf8},
-+	{.mms = 4, .addr = 0x00f4, .value = 0xc020},
-+	{.mms = 4, .addr = 0x00f8, .value = 0x9b00},
-+	{.mms = 4, .addr = 0x00f9, .value = 0x4e53},
-+	{.mms = 4, .addr = 0x0081, .value = 0x0080},
-+	{.mms = 4, .addr = 0x0091, .value = 0x9660},
-+	{.mms = 1, .addr = 0x0077, .value = 0x0028},
-+	{.mms = 4, .addr = 0x0043, .value = 0x00ff},
-+	{.mms = 4, .addr = 0x0044, .value = 0xffff},
-+	{.mms = 4, .addr = 0x0045, .value = 0x0000},
-+	{.mms = 4, .addr = 0x0053, .value = 0x00ff},
-+	{.mms = 4, .addr = 0x0054, .value = 0xffff},
-+	{.mms = 4, .addr = 0x0055, .value = 0x0000},
-+	{.mms = 4, .addr = 0x0040, .value = 0x0002},
-+	{.mms = 4, .addr = 0x0050, .value = 0x0002}
-+};
-+
-+/* this func is copy pasted from Parthibans ongoing work with oa_tc6
-+ * see https://lore.kernel.org/netdev/20240418125648.372526-7-Parthiban.Veerasooran@microchip.com/
-+ */
-+static int lan865x_phy_read_mmd(struct phy_device *phydev, int devnum,
-+				u16 regnum)
-+{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	int addr = phydev->mdio.addr;
-+
-+	return bus->read_c45(bus, addr, devnum, regnum);
-+}
-+
-+/* this func is copy pasted from Parthibans ongoing work with oa_tc6
-+ * see https://lore.kernel.org/netdev/20240418125648.372526-7-Parthiban.Veerasooran@microchip.com/
-+ */
-+static int lan865x_phy_write_mmd(struct phy_device *phydev, int devnum,
-+				 u16 regnum, u16 val)
-+{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	int addr = phydev->mdio.addr;
-+
-+	return bus->write_c45(bus, addr, devnum, regnum, val);
-+}
-+
- /* Pulled from AN1760 describing 'indirect read'
-  *
-  * write_register(0x4, 0x00D8, addr)
-@@ -112,7 +173,7 @@ static int lan865x_revb0_indirect_read(struct phy_device *phydev, u16 addr)
- /* This is pulled straight from AN1760 from 'calculation of offset 1' &
-  * 'calculation of offset 2'
-  */
--static int lan865x_generate_cfg_offsets(struct phy_device *phydev, s8 offsets[2])
-+static int lan865x_revb0_generate_cfg_offsets(struct phy_device *phydev, s8 offsets[2])
- {
- 	const u16 fixup_regs[2] = {0x0004, 0x0008};
- 	int ret;
-@@ -130,7 +191,41 @@ static int lan865x_generate_cfg_offsets(struct phy_device *phydev, s8 offsets[2]
- 	return 0;
- }
- 
--static int lan865x_read_cfg_params(struct phy_device *phydev, u16 cfg_params[])
-+static int lan865x_revb1_gen_cfgparams(struct phy_device *phydev, u16 params[2])
-+{
-+	const u16 fixup_regs[2] = {0x0004, 0x0008};
-+	int ret;
-+
-+	// this loop attempts to de-weirdify the method described in AN1760
-+	for (int i = 0; i < ARRAY_SIZE(fixup_regs); i++) {
-+		// only the lower 8 bits of the results here are used
-+		ret = lan865x_revb0_indirect_read(phydev, fixup_regs[i]);
-+		if (ret < 0)
-+			return ret;
-+		// The AN states that the readback value is in the range [-5, 15]
-+		// and that it uses 5 bits, bit wonky of a description, it really only
-+		// makes sense if the read is sign extended.
-+		// Since the regs are part of the reserved range there is no way
-+		// of telling how this really works though.
-+		if (ret & BIT(4))
-+			// The AN specifies 'ret - 0x20' which is again pretty weird
-+			// the addition here gives the same result on a s8 (with overflow)
-+			// the assignment here are downcasting to s8 for sign extension
-+			params[i] = (s8)(ret + 0xE0);
-+		else
-+			params[i] = (s8)ret;
-+	}
-+
-+	// And now for the really weird part, there's no explanation to what any of this
-+	// means, just that we need these results written to magic regs.
-+	// Since these ops shift a lot, the previous sign extension is probably meaningless.
-+	params[0] = (((params[0] + 9) & 0x3F) << 10) | ((params[0] + 14) & 0x3f) << 4 | 0x3;
-+	params[1] = ((params[1] + 40) & 0x3F) << 10;
-+
-+	return 0;
-+}
-+
-+static int lan865x_revb0_read_cfg_params(struct phy_device *phydev, u16 cfg_params[])
- {
- 	int ret;
- 
-@@ -145,7 +240,7 @@ static int lan865x_read_cfg_params(struct phy_device *phydev, u16 cfg_params[])
- 	return 0;
- }
- 
--static int lan865x_write_cfg_params(struct phy_device *phydev, u16 cfg_params[])
-+static int lan865x_revb0_write_cfg_params(struct phy_device *phydev, u16 cfg_params[])
- {
- 	int ret;
- 
-@@ -160,18 +255,29 @@ static int lan865x_write_cfg_params(struct phy_device *phydev, u16 cfg_params[])
- 	return 0;
- }
- 
--static int lan865x_setup_cfgparam(struct phy_device *phydev)
-+static int lan865x_revb0_setup_cfgparam(struct phy_device *phydev)
- {
- 	u16 cfg_params[ARRAY_SIZE(lan865x_revb0_fixup_cfg_regs)];
- 	u16 cfg_results[5];
- 	s8 offsets[2];
- 	int ret;
- 
--	ret = lan865x_generate_cfg_offsets(phydev, offsets);
-+	/* Reference to AN1760
-+	 * https://ww1.microchip.com/downloads/aemDocuments/documents/AIS/ProductDocuments/SupportingCollateral/AN-LAN8650-1-Configuration-60001760.pdf
-+	 */
-+	for (int i = 0; i < ARRAY_SIZE(lan865x_revb0_fixup_registers); i++) {
-+		ret = phy_write_mmd(phydev, MDIO_MMD_VEND2,
-+				    lan865x_revb0_fixup_registers[i],
-+				    lan865x_revb0_fixup_values[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = lan865x_revb0_generate_cfg_offsets(phydev, offsets);
- 	if (ret)
- 		return ret;
- 
--	ret = lan865x_read_cfg_params(phydev, cfg_params);
-+	ret = lan865x_revb0_read_cfg_params(phydev, cfg_params);
- 	if (ret)
- 		return ret;
- 
-@@ -190,27 +296,64 @@ static int lan865x_setup_cfgparam(struct phy_device *phydev)
- 			  FIELD_PREP(GENMASK(15, 8), 17 + offsets[0]) |
- 			  (22 + offsets[0]);
- 
--	return lan865x_write_cfg_params(phydev, cfg_results);
-+	return lan865x_revb0_write_cfg_params(phydev, cfg_results);
- }
- 
--static int lan865x_revb0_config_init(struct phy_device *phydev)
-+static int lan865x_revb1_setup_cfgparam(struct phy_device *phydev)
- {
-+	const struct lan865x_revb1_fixup_op *op;
-+	u16 generated_params[2];
-+	u16 fixup_val;
- 	int ret;
- 
--	/* Reference to AN1760
--	 * https://ww1.microchip.com/downloads/aemDocuments/documents/AIS/ProductDocuments/SupportingCollateral/AN-LAN8650-1-Configuration-60001760.pdf
--	 */
--	for (int i = 0; i < ARRAY_SIZE(lan865x_revb0_fixup_registers); i++) {
--		ret = phy_write_mmd(phydev, MDIO_MMD_VEND2,
--				    lan865x_revb0_fixup_registers[i],
--				    lan865x_revb0_fixup_values[i]);
-+	ret = lan865x_revb1_gen_cfgparams(phydev, generated_params);
-+	if (ret)
-+		return ret;
-+
-+	for (int i = 0; i < ARRAY_SIZE(lan865x_revb1_fixup_cfg); i++) {
-+		op = &lan865x_revb1_fixup_cfg[i];
-+		fixup_val = op->value;
-+		if (i == 2)
-+			fixup_val = generated_params[0];
-+		else if (i == 3)
-+			fixup_val = generated_params[1];
-+		/* All of the regs locatd in mms 4 could use phy_write_mmd as these are
-+		 * accessible via MDIO_MMD_VEND2, but mms 1 not 'indirect accessible'.
-+		 * Less conditionals are favored here by doing the set in just one way.
-+		 */
-+		ret = lan865x_phy_write_mmd(phydev, op->mms | BIT(31), op->addr, fixup_val);
- 		if (ret)
- 			return ret;
- 	}
--	/* Function to calculate and write the configuration parameters in the
--	 * 0x0084, 0x008A, 0x00AD, 0x00AE and 0x00AF registers (from AN1760)
-+	return 0;
-+}
-+
-+static int lan865x_config_init(struct phy_device *phydev)
-+{
-+	u32 rev_mask = GENMASK(1, 0);
-+	enum lan865x_revision rev;
-+	u32 mms10 = 10;
-+	u32 devid;
-+
-+	/* The standard reg OA_PHYID (mms 0, addr 0x1) does not contain any
-+	 * information that distinguishes hardware revisions.
-+	 * HW rev can be read from the vendor specific DEVID reg mms 10, addr 0x94
- 	 */
--	return lan865x_setup_cfgparam(phydev);
-+	devid = lan865x_phy_read_mmd(phydev, mms10 | BIT(31), LAN865X_REG_DEVID);
-+
-+	if (devid < 0)
-+		return devid;
-+
-+	rev = devid & rev_mask;
-+	switch (rev) {
-+	case REV_B0:
-+		return lan865x_revb0_setup_cfgparam(phydev);
-+	case REV_B1:
-+		return lan865x_revb1_setup_cfgparam(phydev);
-+	}
-+
-+	dev_err(&phydev->mdio.dev, "unsupported chip rev: 0x%x", rev);
-+	return -ENODEV;
- }
- 
- static int lan867x_revb1_config_init(struct phy_device *phydev)
-@@ -280,10 +423,10 @@ static struct phy_driver microchip_t1s_driver[] = {
- 		.get_plca_status    = genphy_c45_plca_get_status,
- 	},
- 	{
--		PHY_ID_MATCH_EXACT(PHY_ID_LAN865X_REVB0),
--		.name               = "LAN865X Rev.B0 Internal Phy",
-+		PHY_ID_MATCH_EXACT(PHY_ID_LAN865X),
-+		.name               = "LAN865X Rev.B0/1 Internal Phy",
- 		.features           = PHY_BASIC_T1S_P2MP_FEATURES,
--		.config_init        = lan865x_revb0_config_init,
-+		.config_init        = lan865x_config_init,
- 		.read_status        = lan86xx_read_status,
- 		.get_plca_cfg	    = genphy_c45_plca_get_cfg,
- 		.set_plca_cfg	    = genphy_c45_plca_set_cfg,
-@@ -295,7 +438,7 @@ module_phy_driver(microchip_t1s_driver);
- 
- static struct mdio_device_id __maybe_unused tbl[] = {
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_LAN867X_REVB1) },
--	{ PHY_ID_MATCH_EXACT(PHY_ID_LAN865X_REVB0) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_LAN865X) },
- 	{ }
- };
- 
+Patch review is what most of the projects struggle with and LTP is no
+different. If you can spare some effort helping with the patch review is more
+than welcomed.
+
+NOTABLE CHANGES
+===============
+
+* New tests
+
+  - mlock05 Test for pre-faulting locked memory
+  - kvm_svm04 Functional test for VMSAVE/VMLOAD instructions
+  - arch_prctl01 Test for ARCH_SET_CPUID and ARCH_GET_CPUID
+  - kallsyms A test to check that it's impossible to read kernel memory from userspace
+  - unlink09 Negative tests for unlink()
+  - getrandom05 Negative tests for getrandom()
+  - gethostname02 Negative tests for gethostname()
+  - splice08 Test for splicing from /dev/zero and /dev/full
+  - splice09 Test for splicing to /dev/zero and /dev/null
+  - shmat04 A regression test for fc0c8f9089c2
+           ("mm, mmap: fix vma_merge() case 7 with vma_ops->close")
+  - aslr01 Tests that hugepages, that cause addesses to be aligned to higher
+           order of 2, are not used for libraries when ASLR is enabled.
+
+* Increased coverage
+
+  - getsockname01 More negative testcases
+  - getsockopt01 More negative testcases
+  - bind01 More negative testcases
+  - swapon01 Runs on all supported filesystems now
+  - waitpid01 Tests all deadly signals now
+  - fanotify01 Tests setting two marks on different filesystems
+
+* Rewritten tests
+
+  - msgstress testcases were rewritten into a single msgstress01 test
+    this should finally fix the test to scale well from small embedded boards
+    towards big servers
+
+  - symlink01 has been split into several testcases, previously several different
+              testcases were build from the source based on different messy ifdefs
+
+* UCLINUX support was completely removed from LTP
+
+  It was unmaintained and partially broken and nobody stepped up to maintain
+  the support.
+
+* Small runtest files cleanup
+
+  - runtest/io was merged into ltp-aiodio.part4
+  - runtest/cap_bounds and runtest/filecaps were merged into single runtest file
+
+* 32 testcases were converted to the new test library
+
++ The usual amount of fixes and cleanups
+
+NOTABLE CHANGES IN NETWORK TESTS
+================================
+brought to you by Petr Vorel
+
+* New tests
+
+  - nfs09 Regression test for file truncation on NFS.
+
+* Increased coverage
+
+  - nfsstat01.sh: Add support for NFSv4*
+
+* Removed tests
+
+  - clockdiff01.sh Testing clockdiff is not relevant nowadays.
+  - telnet01.sh Testing telnet not make sense nowadays, remove it.
+  - xinetd_tests.sh Testing xinetd is not relevant nowadays.
+  - host01.sh The test does not work in all cases since testing host require
+              proper DNS setup or internet connection. Rather than fixing this
+	      it makes sense to remove the test.
+
+New documentation
+=================
+
+We have finally started working on a comprehensive documentation for LTP and
+it's test library, the current state can be seen at:
+
+https://linux-test-project.readthedocs.io/en/latest/
+
+DOWNLOAD AND LINKS
+==================
+
+The latest version of the test-suite contains 3000+ tests for the Linux
+and can be downloaded at:
+
+https://github.com/linux-test-project/ltp/releases/tag/20240524
+
+The project pages as well as GIT repository are hosted on GitHub:
+
+https://github.com/linux-test-project/ltp
+
+If you ever wondered how to write a LTP testcase, don't miss our developer
+documentation at:
+
+https://linux-test-project.readthedocs.io/en/latest/developers/test_case_tutorial.html
+
+And our library API documentation at:
+
+https://linux-test-project.readthedocs.io/en/latest/developers/api_c_tests.html
+
+Patches, new tests, bugs, comments or questions should go to to our mailing
+list at ltp@lists.linux.it.
+
+CREDITS
+=======
+
+Many thanks to the people contributing to this release:
+
+git shortlog -s -e -n 20240129..
+
+    140  Petr Vorel <pvorel@suse.cz>
+     22  Martin Doucha <mdoucha@suse.cz>
+     25  Yang Xu <xuyang2018.jy@fujitsu.com>
+     21  Li Wang <liwang@redhat.com>
+     16  Andrea Cervesato <andrea.cervesato@suse.com>
+     15  Andrea Manzini <andrea.manzini@suse.com>
+     14  Wei Gao <wegao@suse.com>
+     10  Cyril Hrubis <chrubis@suse.cz>
+      5  Avinesh Kumar <akumar@suse.de>
+      2  Detlef Riekenberg <wine.dev@web.de>
+      2  Edward Liaw <edliaw@google.com>
+      4  Hui Min Mina Chou <minachou@andestech.com>
+      2  lufei <lufei@uniontech.com>
+      1  Amir Goldstein <amir73il@gmail.com>
+      1  Dennis Brendel <dbrendel@redhat.com>
+      1  Filippo Storniolo <fstornio@redhat.com>
+      1  Jan Stancek <jstancek@redhat.com>
+      1  Khem Raj <raj.khem@gmail.com>
+      1  Mete Durlu <meted@linux.ibm.com>
+      1  Murphy Zhou <jencce.kernel@gmail.com>
+      1  Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+      1  Sebastian Chlad <sebastianchlad@gmail.com>
+      1  Sergey Ulanov via ltp <ltp@lists.linux.it>
+      1  Shiyang Ruan <ruansy.fnst@fujitsu.com>
+      1  Wenjie Xu <xuwenjie04@baidu.com>
+      1  Xiangyu Chen <xiangyu.chen@windriver.com>
+      1  yangfeng <yangfeng@kylinos.cn>
+
+And also thanks to patch reviewers:
+
+git log 20240129.. | grep -Ei '(reviewed|acked)-by:' | sed 's/.*by: //' | sort | uniq -c | sort -n -r
+
+    125 Petr Vorel <pvorel@suse.cz>
+     94 Cyril Hrubis <chrubis@suse.cz>
+     31 Li Wang <liwang@redhat.com>
+     15 Andrea Cervesato <andrea.cervesato@suse.com>
+     12 Martin Doucha <mdoucha@suse.cz>
+     11 Avinesh Kumar <akumar@suse.de>
+      7 Jan Stancek <jstancek@redhat.com>
+      3 Marius Kittler <mkittler@suse.de>
+      3 Jan Kara <jack@suse.cz>
+      2 Amir Goldstein <amir73il@gmail.com>
+      1 Wei Gao <wegao@suse.com>
+      1 Vlastimil Babka <vbabka@suse.cz>
+      1 Richard Palethorpe <rpalethorpe@suse.com>
+      1 Matt Bobrowski <mattbobrowski@google.com>
+      1 Kent Overstreet <kent.overstreet@linux.dev>
+      1 Joerg Vehlow <joerg.vehlow@aox.de>
+
 -- 
-2.43.0
-
+Cyril Hrubis
+chrubis@suse.cz
