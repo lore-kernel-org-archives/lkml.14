@@ -1,177 +1,141 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A540938DF9
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 03:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561B322F03
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 03:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716521943; cv=none; b=qJmUKYJDm5T+1AbuyT8P4IsfeowknPeJIbMMM8x6PyShQhYtLZKS5CPXvESCLSdESFCAJY6ilvyGEeqqRwtcjnKbYLtHhn8Ba0BXVH2pcDKWGUvxChBbkJR6R5U8RVogViSTQJnFpehYX68MOCJoTG7hoNd/z5REemF98C/cg6Y=
+	t=1716521984; cv=none; b=IIA2H6/F1t4cSKAIr69rTNI4O+acfGNgUY81n3bcH8he683i/b2YNaiPCynYjfblZMYRMM9yDqyd1Eg9FHt9RCTot3bGvxO/QNvTIE8UN70PcVxMyi5df+nKLp3QMIgV1ox1ZaoJWhk1w76V5eH+1Vk98XdDY1D8D2uE2aizOZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716521943; c=relaxed/simple;
-	bh=Rs8KfzPFWT1KO+9dMU8ukzxtSitXVwFhV5/HmJwGcis=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=hc+pvvZuAx8T+zTSWEFwXcRg58ZHJa7Rw2haSjv/G0aQAWOhNrmKZnkZdVvPW+/2SkCxtRwvFZKpplfq/2ouhqVOPgcPbBFl63dxfyLEvUBRGxSt0cracXLAP/MEMHoSP82srlf6lurMc/Xc5LipayHLC6rA8HWk5c0hX1CCx5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oO8pl/Rp; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1716521984; c=relaxed/simple;
+	bh=P8hmXNe9pVfxehRdEFph7gYxFMRHhtBZuM9VKZou2o0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GkEd2prHRYQZ0ROn3K1RwRledpaSEMQmjo7njlI4keX/cNgztEnZV4TPQAS2gaf18pbk/0aZgegwOSHiLKJHedETbkYVhCBeHCHK70oLLgKMd+TOPwHtCx8RjDZxt7j62toXGgGoe2Cu6IMm9PX91jSkS651aT8vJ8SuL22+Fes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U/W/eTrJ; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oO8pl/Rp"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240524033859epoutp02ad683c8eb91535bee4d49b89bc8d4aef~ST5wQLyNt1937719377epoutp02d
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 03:38:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240524033859epoutp02ad683c8eb91535bee4d49b89bc8d4aef~ST5wQLyNt1937719377epoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716521939;
-	bh=kEUNE5DDBugp0ptyOjlNvhJs+4yUfxAjHQz7sOYY5ZI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oO8pl/RpKAB+7hnb8+/HuUwu4GfoNyg9mfIlRSee1S4yn6MftXaxZVI9095j+T5Z7
-	 QYkRsH0CwLC2tlealGyxh9oldqrKWLLlRR/kOzKUC2lMEYqkIaJT3LWUrLvUfQlh9r
-	 q5nzNSzwGv/rvY9089VVkDawhsd5EJ79MaECwTLQ=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240524033859epcas5p3ab5fb4a491caf8ca91d3b7f32528fa36~ST5vooHaQ0531105311epcas5p3S;
-	Fri, 24 May 2024 03:38:59 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4VlrPF0SpVz4x9Pq; Fri, 24 May
-	2024 03:38:57 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	77.94.19431.0DB00566; Fri, 24 May 2024 12:38:56 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240523114201epcas5p35636ecdb5665cc3d792c120f43e67d96~SG2NGF_tW0305503055epcas5p30;
-	Thu, 23 May 2024 11:42:01 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240523114201epsmtrp18a825758bc171b7a412521bf53c949f7~SG2NE_PA90370403704epsmtrp1T;
-	Thu, 23 May 2024 11:42:01 +0000 (GMT)
-X-AuditID: b6c32a50-ccbff70000004be7-5d-66500bd0a7cf
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	33.F1.08924.98B2F466; Thu, 23 May 2024 20:42:01 +0900 (KST)
-Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240523114157epsmtip2db1c50506ea74d1d9e6f9373973e76e2~SG2JoFU973178131781epsmtip2B;
-	Thu, 23 May 2024 11:41:57 +0000 (GMT)
-Date: Thu, 23 May 2024 11:34:54 +0000
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
-	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
-	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
-	<hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
-	<kch@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
-	Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	martin.petersen@oracle.com, david@fromorbit.com, hare@suse.de,
-	damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
-	nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
- and request layer.
-Message-ID: <20240523113454.6mwg6xnrkscu6yps@nj.shetty@samsung.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U/W/eTrJ"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-657a07878easo2656839a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 20:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716521982; x=1717126782; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZM+C443YkAbqJrVfa7/d/V0qYnAraDfxHHb3nzF0+w=;
+        b=U/W/eTrJ7Ed6VUBIzN5zPDPOZz6RZvoLRrQHLJ03VSYFLfEHQx5dLddic6gvUSSoWY
+         VjwDP9OfGDToWqcKtf4LBNKI+M/8amM/Jc93Boy/q6Wf0vSbmMtiU20bIlxVL+5f210F
+         vxVlEnzN5YKJF+RNmPPoiRmYd7z7psp2e6Sag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716521982; x=1717126782;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZZM+C443YkAbqJrVfa7/d/V0qYnAraDfxHHb3nzF0+w=;
+        b=CdHr1Utqn4DH8fbE4vzGsU1h3+LyneB+0iHo+4uH4uclThgIuiRhbXhY9blW58jdzH
+         otMNILSq3N75nvffdZNnNzOBRpp7ua/NDckIxXB1ZoIx20plNeCBGTekwoU9s6kb5xTh
+         7MiSANzQEWw3sb0zVx9ITlChVzFajIglsj8CrlxO3Bck+3giiBFcFl7sUwbGsHAOqvhN
+         drW8IOAJvhq9A53VNhDpAUPAqUzl21tAjzu0SUaZMsTXksepw5PQJ7EPLFAhkQbe9maS
+         XKojPbA+zOfe0w+31k3qjz7mpWHovZ6eAtyrMkAx86hdUlOJtb6BPOgytp8EnfOhvU0N
+         yXAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvqqdFJs7x05V+F+PZpAVixvqZpjFjRFpaHw2pyctqqkCzzbG0re4DCiROkJ2caxrW1kaAXJcz0QdNTYeabNbJ4NHZmZWLqjfjoh1c
+X-Gm-Message-State: AOJu0YwEOm1mROeEMfRUaQKFoLjEtfIkx46ZDH28NPDg+nsFEqTojwej
+	efkVEkm71ukQMzI7zy10q8kMrKkHGDupF04+6Q4N3Zk/N+A6QYTaKKFJs3p7ag==
+X-Google-Smtp-Source: AGHT+IERupiu47qJljsmVu1JdjLbKzVfc9DMWEHXDw9WaIvbcwYeeqWAwGzBdeP97EVsJttoCi5QSg==
+X-Received: by 2002:a17:90a:d18b:b0:2bd:92b3:a18c with SMTP id 98e67ed59e1d1-2bf5e84acc5mr1266399a91.3.1716521982456;
+        Thu, 23 May 2024 20:39:42 -0700 (PDT)
+Received: from localhost (197.59.83.34.bc.googleusercontent.com. [34.83.59.197])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2bf5f61272fsm405503a91.27.2024.05.23.20.39.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 May 2024 20:39:42 -0700 (PDT)
+From: jeffxu@chromium.org
+To: jeffxu@google.com
+Cc: jeffxu@chromium.org,
+	akpm@linux-foundation.org,
+	cyphar@cyphar.com,
+	dmitry.torokhov@gmail.com,
+	dverkamp@chromium.org,
+	hughd@google.com,
+	jorgelo@chromium.org,
+	keescook@chromium.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	pobrn@protonmail.com,
+	skhan@linuxfoundation.org
+Subject: [PATCH v2 0/2] memfd: fix MFD_NOEXEC_SEAL to be non-sealable
+Date: Fri, 24 May 2024 03:39:29 +0000
+Message-ID: <20240524033933.135049-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <97966085-d7a4-4238-a413-4cdac77af8bd@acm.org>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHd+69vRQEcwfqDrANVtzC23YUdkBwCyLezC3pZuYSCasNvUAD
-	tF1bpjPZeIkKCyAoFKqM93gKExCBAZIiVqqMbTyGKNoZWCaMhxAVwmsthcX/Pr/H95zfIz82
-	blth4cCWSFWMQiqK5ZBWREuPm6vXbzsEkdyiov2oQX8bR8kX1nBUO55FoumeBYDy5pdxNNF9
-	DqCV/gEcNd9+BFBxaSGB7ne3YaijNAdD1bW9GLqsTsFQ78YMiXK0IwBNDmsw1DnmgUrOlhOo
-	o7OPQIPtV0hU9NOkBarUrWMo+/wwhlonkgCqn54j0J0xRzSwpmN95EgPDh2h9aWQbtOMW9AD
-	j64R9GB/PN1Yk0bSTeUJ9D9NBYD+5X4iSZdlXmTRGSmzJN2W+phFP5scI+i5rmGSzmyuAfS9
-	4lsWArvjMYHRjEjMKJwZaYRMLJFGBXGOHBUeFPr6cXlePH/0AcdZKopjgjghnwi8QiWxxuFw
-	nL8RxcYbXQKRUsnZdyBQIYtXMc7RMqUqiMPIxbFyvtxbKYpTxkujvKWMKoDH5b7va0w8EROt
-	Tu6ykK/sPLVa8xgkgkbrdGDJhhQfXlPPYia2pToAnBv1SQdWRl4AMOP875jZeAGgdkZrsa2o
-	6snGzYFOAKsbG4HZWATQ8EM/mQ7YbIJ6Fy5XuZqQpDzg3Q22SbuLcoUvDJWEKR2nSkj4cHQJ
-	NwXsqBNwRp/NMrENdRCOdDZt8euwr2CCML1jSe2HZdXeJi2kfrWELUlXcXNBIbBvKGeL7eCU
-	rnmrUAf4NOvsFp+E1ZeqSLP4DICaPzXAHPgQpuqzNsU4FQ3VN/O3HnoL5urrMbN/J8xYmcDM
-	fhvY+uM2u8C6hmLSzPZw5GXSZu+QouGDOifzTGYBbFheABfA25pX+tG88p2ZA2DafDJLY5Tj
-	lCOsXGeb0Q02tO8rBqwa4MDIlXFRTISvnOclZU7+v+QIWVwj2LwXd0ErqP15zVsLMDbQAsjG
-	Obtswqo/jbS1EYu+Pc0oZEJFfCyj1AJf436ycYfdETLjwUlVQh7fn8v38/Pj+/v48Thv2Eyn
-	FoptqSiRiolhGDmj2NZhbEuHREz2fRDKbedH5gsKNAkp34lOCz/7ePCer1NFl6WLRjwa0bRj
-	MF+x5+q6k7D7HUOq5Oszt8J1oZkuVVdiDO56Z4MTdmjBsuHO5Sd3XS+Fo7a8orFOn4oWu4Ki
-	ynMX1Q8VebqARY77tPdyvpXulL5ZObNiO+5oWLoZyG05+vde3bpV2vVpz9U3j/H7+Sp1tt3M
-	X32LY7rVYN0xNydB+wPn1/zL53enpQ3vfc5Kee+Ll/btxGpOcLjcvr421POrtLV/b7g9nRrv
-	qCsNOxydI2nJ9Esecv9jqkQaLDy84S8J8XxSkm+dB6xuJITtIaybrHI9Pa4Tnzv2HniWuzT5
-	/MvC41ENsjIOoYwW8dxxhVL0H2e3GjK4BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGc2em02kFHAHlQnFJY92IRQKYqyIQl2QSo7gkJi4JVjsgkVZs
-	pYhBpSqLFbFg3KoIgrIUNygqiwgCIqsEsC5EERSUCKWAxo20aG2Mvn0n3/+f83Io3PkD4UFF
-	yPezCrkkUkjyiXu1wpkLT3iFhC0qL+Sg2031ODqqteCo8M1pEg3WjgF0buQHjvqqkwAab23D
-	UUl9N0BZ2RkEelVdhqEH2ekYKih8jKFL549h6PGEiUTpNc8B6jfqMFTZ5YWuJl4j0IPKRgJ1
-	ll8mUWZuPxflPbFiKC3ZiKHSPjVAtwbNBGroEqA2yxNOsIDpfLaGacqGTJnuDZdp6y4imM7W
-	aKZYf4JkDNeOMAOGi4CpeBVPMjmpZzjMqWPDJFOW8JbDjPZ3EYz5oZFkUkv0gGnJquOud9nK
-	D5CykREqVuEduIO/e8CcQkTddDiQZjlPxgMrTwN4FKT9YH5tGq4BfMqZrgDw4btOzC7cYa6l
-	DrezCyywfuTaQ6MAZuYk/B4oiqBF8Ef+PBuStBdsnqBscVd6Hvzak0fY4jh9nYTtVeNcm3Ch
-	d0BTUxrHxo70Svi80sCx7xwGsOpjK2EXU2Djxb4/jNOL4RVDL247gNMCmGelbMijl8GcArEW
-	0Lr/Crr/Crp/hSyA64E7G6WUhcuUPlE+cjZGrJTIlNHycPGuvbJi8OcVFswvBff1I+IagFGg
-	BkAKF7o6bitYG+bsKJXEHmQVe0MV0ZGssgYIKELo5ug2cErqTIdL9rN7WDaKVfy1GMXziMdE
-	usmbzJ/N06wHeoMSUjwfreYHjQnmxqkPeXYH61SXQuLOjlqWjs8IMZY/UwXO8u3xvxL/s1L0
-	tLhEXWbJzwlZKOo++/JGwGL3oobcI++1a9GAdO6t9AumVDg81OipaR/+HpshS2px0/g2zY7e
-	5RehHfJ7EbpFl97b8dUhmO6Yrj/tyavQnPQKXGJQjVmSt08KytxZNxLzKUtlvrNH1OhW2kD5
-	D81ZJ94n6Q1OXNXitHlFs+Fo4UvlhtL13skz1C3H61MmFGpj82sn74qSqqldsaYhf2Oih5T4
-	/EW7MeDwi6TB7zuXhi3PiKuWR2TkZb53zd9w2XTX6Hsm8qrT9ZhvciQklLslPgtwhVLyCyPH
-	J1t5AwAA
-X-CMS-MailID: 20240523114201epcas5p35636ecdb5665cc3d792c120f43e67d96
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_20cab_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240520102842epcas5p4949334c2587a15b8adab2c913daa622f
-References: <20240520102033.9361-1-nj.shetty@samsung.com>
-	<CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
-	<20240520102033.9361-3-nj.shetty@samsung.com>
-	<97966085-d7a4-4238-a413-4cdac77af8bd@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_20cab_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+From: Jeff Xu <jeffxu@google.com>
 
-On 22/05/24 11:05AM, Bart Van Assche wrote:
->On 5/20/24 03:20, Nitesh Shetty wrote:
->>We add two new opcode REQ_OP_COPY_DST, REQ_OP_COPY_SRC.
->>Since copy is a composite operation involving src and dst sectors/lba,
->>each needs to be represented by a separate bio to make it compatible
->>with device mapper.
->>We expect caller to take a plug and send bio with destination information,
->>followed by bio with source information.
->>Once the dst bio arrives we form a request and wait for source
->>bio. Upon arrival of source bio we merge these two bio's and send
->>corresponding request down to device driver.
->>Merging non copy offload bio is avoided by checking for copy specific
->>opcodes in merge function.
->
->Plugs are per task. Can the following happen?
-We rely on per-context plugging to avoid this.
->* Task A calls blk_start_plug()
->* Task B calls blk_start_plug()
->* Task A submits a REQ_OP_COPY_DST bio and a REQ_OP_COPY_SRC bio.
-Lets say this forms request A and stored in plug A
->* Task B submits a REQ_OP_COPY_DST bio and a REQ_OP_COPY_SRC bio.
-Lets say this forms request B and stored in plug B
->* Task A calls blk_finish_plug()
->* Task B calls blk_finish_plug()
->* The REQ_OP_COPY_DST bio from task A and the REQ_OP_COPY_SRC bio from
->  task B are combined into a single request.
-Here task A picks plug A and hence request A
->* The REQ_OP_COPY_DST bio from task B and the REQ_OP_COPY_SRC bio from
->  task A are combined into a single request.
-same as above, request B
+By default, memfd_create() creates a non-sealable MFD, unless the
+MFD_ALLOW_SEALING flag is set.
 
-So we expect this case not to happen.
+When the MFD_NOEXEC_SEAL flag is initially introduced, the MFD created
+with that flag is sealable, even though MFD_ALLOW_SEALING is not set.
+This patch changes MFD_NOEXEC_SEAL to be non-sealable by default,
+unless MFD_ALLOW_SEALING is explicitly set.
 
-Thank you,
-Nitesh Shetty
+This is a non-backward compatible change. However, as MFD_NOEXEC_SEAL
+is new, we expect not many applications will rely on the nature of
+MFD_NOEXEC_SEAL being sealable. In most cases, the application already
+sets MFD_ALLOW_SEALING if they need a sealable MFD.
 
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_20cab_
-Content-Type: text/plain; charset="utf-8"
+Additionally, this enhances the useability of  pid namespace sysctl
+vm.memfd_noexec. When vm.memfd_noexec equals 1 or 2, the kernel will
+add MFD_NOEXEC_SEAL if mfd_create does not specify MFD_EXEC or
+MFD_NOEXEC_SEAL, and the addition of MFD_NOEXEC_SEAL enables the MFD
+to be sealable. This means, any application that does not desire this
+behavior will be unable to utilize vm.memfd_noexec = 1 or 2 to
+migrate/enforce non-executable MFD. This adjustment ensures that
+applications can anticipate that the sealable characteristic will
+remain unmodified by vm.memfd_noexec.
+
+This patch was initially developed by Barnabás Pőcze, and Barnabás
+used Debian Code Search and GitHub to try to find potential breakages
+and could only find a single one. Dbus-broker's memfd_create() wrapper
+is aware of this implicit `MFD_ALLOW_SEALING` behavior, and tries to
+work around it [1]. This workaround will break. Luckily, this only
+affects the test suite, it does not affect
+the normal operations of dbus-broker. There is a PR with a fix[2]. In
+addition, David Rheinsberg also raised similar fix in [3]
+
+[1]: https://github.com/bus1/dbus-broker/blob/9eb0b7e5826fc76cad7b025bc46f267d4a8784cb/src/util/misc.c#L114
+[2]: https://github.com/bus1/dbus-broker/pull/366
+[3]: https://lore.kernel.org/lkml/20230714114753.170814-1-david@readahead.eu/
 
 
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_20cab_--
+History
+======
+V2:
+  update commit message.
+  add testcase for vm.memfd_noexec
+  add documentation.
+
+V1:
+https://lore.kernel.org/lkml/20240513191544.94754-1-pobrn@protonmail.com/
+
+
+Jeff Xu (2):
+  memfd: fix MFD_NOEXEC_SEAL to be non-sealable by default
+  memfd:add MEMFD_NOEXEC_SEAL documentation
+
+ Documentation/userspace-api/index.rst      |  1 +
+ Documentation/userspace-api/mfd_noexec.rst | 90 ++++++++++++++++++++++
+ mm/memfd.c                                 |  9 +--
+ tools/testing/selftests/memfd/memfd_test.c | 26 ++++++-
+ 4 files changed, 120 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/userspace-api/mfd_noexec.rst
+
+-- 
+2.45.1.288.g0e0cd299f1-goog
+
