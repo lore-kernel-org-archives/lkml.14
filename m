@@ -1,171 +1,242 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2054.outbound.protection.outlook.com [40.107.101.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF368127E0B
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 12:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716553571; cv=none; b=qfHcgKJ3Gq4CI3LNLNyDt9izMmrQJ8V9SazntBdU5c4DUXf5/URzfpaCMTWv2mUKIlTcUpK5ow5B7qEdGBHAen3DhIuhzqnA0g9oRFwRsOhy692h3nuePgfbI5lt9f1rLkZ81mYO22xocww3tFqpJQScSeqxNd90tURtRBD+GJM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716553571; c=relaxed/simple;
-	bh=BR6wg9i/0mbzIcyzWHdONHm37dg16V5vztgEDpsM3jY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L3q+kKQkEtGnP/ovGRwmOxOZUMtSCfErqDxGR4huV4aM+cFUjyFbxASgGvXW39c53kK/3rZUb0uAeWeBvexhBBd1OnVcOHoykORcPJvxHVCZVMmgqPkh3oVngahCT2dl1fGZNVN77nPfroSNMgDM/nhowBDI7l5A6oKrhWYO2f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sATzb-0001Lx-DC; Fri, 24 May 2024 14:25:51 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sATza-002nB5-Jm; Fri, 24 May 2024 14:25:50 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sATza-00BiEV-1d;
-	Fri, 24 May 2024 14:25:50 +0200
-Date: Fri, 24 May 2024 14:25:50 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Pankaj Gupta <pankaj.gupta@nxp.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH v2 4/5] firmware: imx: add driver for NXP
- EdgeLock Enclave
-Message-ID: <ZlCHTqJ0Umgh3LCw@pengutronix.de>
-References: <20240523-imx-se-if-v2-0-5a6fd189a539@nxp.com>
- <20240523-imx-se-if-v2-4-5a6fd189a539@nxp.com>
- <ZlBtNSeh2VyZsVxq@pengutronix.de>
- <AM9PR04MB860424A71753DBB56D2CEF5895F52@AM9PR04MB8604.eurprd04.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463DB12BF21;
+	Fri, 24 May 2024 12:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716553574; cv=fail; b=Clk3BeL2Ik0EMPFyx/0Y4aeiVvikGeWIsDqVEi/hXKEOruDIDoI9Bd122ZVRiEkC9ay0ys3BmXGLIRepwMhZ/vsun28JIEMckWE7BfWfS7pPSCbq6JJCmDpu1ivcZFHTHYdrlIzYr1qSUF/oKiwFX8JsP8Y06dAe5IiBgi/b0zE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716553574; c=relaxed/simple;
+	bh=7pMpJPwYmQG3OUVaU+O9y2wkYIxvAd+uGjVgu0cCTvw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hi0cJPddS4fEjXn/KkVmTpBMIKTsS9a0LtJxU7SKg6YE2iXjkjM0LVTnG5x6E++IzEx5DJYB9/OcCnyHN31JOyseQIbGqD2aeMtBRcpITuYpIbMM21ti4+tVO8sb9wjoKRSjt1nhm+Y6LhWALTxPVRFgLjszdwTzcDk0HnMojlw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3wS4nzC5; arc=fail smtp.client-ip=40.107.101.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3wS4nzC5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i5ccaILi4ZWdUhmjNX0nM/kJwzyxra/oq7smuccedEHPxdAoXIvlq5psKrLrxPLlB3wDFkvjUt0gIEVwJQwV8sJU582arraU2HZinqZXJ8EkyV9WIS6RS+bhWqwF/FKkFynNUcUqLAE41MHxSRAQMyZ2VjUkRUWIvVRXRIaBFfx54y7YplSRzW5DCvtB2bPsFdTvOH4XLPAB8HBuaN16UkxoY+v0p5rMviWZBrS1haQQ1t2q9RhnBnuXyA9mNiBYayeXfABv3pimELbh6dMga3YXkpz4BBt2wro25xlL7KHxvWC09vIPSp6O21yopVHUZBLteoEzvnm3wFBtSCwszA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6jM0HK9qadAanc/hbgco/nwFz9NBWlxttnJE9nwpprQ=;
+ b=cFBgIQ7DPoyrhF3VxIdnQRQHEqfn/XbDIVokffAiNIr86aA11w+KQSBHp/NyjNB6aMSPzyalM3nRMvz/A000kF3aMMSJUKus7ismCDpjwSRZUX7vUPm5j4hKXaHRmNGRM3OfK+AmpDWXdI162xya7hje0yNpo+boCRt15ZleLC4xZDR75lvvCgJZ10RwFbl2laTYlVT154rFK2T5BzvMC2xN/kM087VDPVUEEWk+WTVYSS98yhzFs5KmqeGzHJ53RKoF8D+NizCZsnjxjf5TSm7jH9y/pOaH8BJDBLmgz1tgMk2gnsxt72Q/5LsuMtiwKgwJWW1av57dYNOYgUiigg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lwn.net smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6jM0HK9qadAanc/hbgco/nwFz9NBWlxttnJE9nwpprQ=;
+ b=3wS4nzC5JvVL1Zh1hlvT7BuhnO7aj921XK6caOfmFWaIhINEWzfo4WDgFoVh4wrP1as2qHwkpqDLtt+Ja1LxSEnGyl1Ri1NbSRLpL+5YjSGqL/cDl71XThn7TnDVpvtHGpps2pgx6wotkqyeseprtpuMPg0wn3+qHQ8CgLrjTEc=
+Received: from CH0PR08CA0014.namprd08.prod.outlook.com (2603:10b6:610:33::19)
+ by CY5PR12MB6432.namprd12.prod.outlook.com (2603:10b6:930:38::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
+ 2024 12:26:10 +0000
+Received: from CH2PEPF0000013F.namprd02.prod.outlook.com
+ (2603:10b6:610:33:cafe::98) by CH0PR08CA0014.outlook.office365.com
+ (2603:10b6:610:33::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22 via Frontend
+ Transport; Fri, 24 May 2024 12:26:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF0000013F.mail.protection.outlook.com (10.167.244.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7611.14 via Frontend Transport; Fri, 24 May 2024 12:26:09 +0000
+Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 24 May
+ 2024 07:26:08 -0500
+From: Babu Moger <babu.moger@amd.com>
+To: <corbet@lwn.net>, <fenghua.yu@intel.com>, <reinette.chatre@intel.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
+	<rdunlap@infradead.org>, <tj@kernel.org>, <peterz@infradead.org>,
+	<yanjiewtw@gmail.com>, <babu.moger@amd.com>, <kim.phillips@amd.com>,
+	<lukas.bulwahn@gmail.com>, <seanjc@google.com>, <jmattson@google.com>,
+	<leitao@debian.org>, <jpoimboe@kernel.org>, <rick.p.edgecombe@intel.com>,
+	<kirill.shutemov@linux.intel.com>, <jithu.joseph@intel.com>,
+	<kai.huang@intel.com>, <kan.liang@linux.intel.com>,
+	<daniel.sneddon@linux.intel.com>, <pbonzini@redhat.com>,
+	<sandipan.das@amd.com>, <ilpo.jarvinen@linux.intel.com>,
+	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<eranian@google.com>, <james.morse@arm.com>
+Subject: [PATCH v4 17/19] x86/resctrl: Introduce the interface switch between ABMC and mbm_legacy
+Date: Fri, 24 May 2024 07:23:36 -0500
+Message-ID: <0148e3317b0de3b5d1eaa58af37a2910783a69c9.1716552602.git.babu.moger@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1716552602.git.babu.moger@amd.com>
+References: <cover.1716552602.git.babu.moger@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM9PR04MB860424A71753DBB56D2CEF5895F52@AM9PR04MB8604.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000013F:EE_|CY5PR12MB6432:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60ec3c51-09ef-4dff-9e30-08dc7becb178
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|82310400017|7416005|376005|1800799015|36860700004;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zwL0Yxz+Io1vCE/gydVTwh4LAr71gQdKpqCOmjFMiLTo8c8oIL5z+d7Ox/84?=
+ =?us-ascii?Q?WTMXB6lVWwxAegASM9RNli9q4RuqmlQJ2RyP5PXaBFg6xt2LVoHD6uQdraJG?=
+ =?us-ascii?Q?ximyaRca94sBRfzoTjcAIKGFaoFBXfmzVTB/lvFz1CLHEOIGm7L1Wj43A+aH?=
+ =?us-ascii?Q?fX5OQ+Oa5pLxd+erl8EZYhxDIb1Z+GXBsqaQYMGiNDUHkZ0OdSdUGc9rm2PE?=
+ =?us-ascii?Q?jP7SVecdeQiHkcngGhB4UOY8AUQeUSzNkR4gh0/4eZvZydWb7j/CspYtP1li?=
+ =?us-ascii?Q?eNWSeItBcFPr3Ndeuj7cjyag0l/Iu5jF6jcswJo6cyKKJeDP7QT++Jp30IP3?=
+ =?us-ascii?Q?eyQeAW4rt+H+ARhKdKUPZQXguYzS9Teo4nW6S90qNjAeH1wLviIeTxRGgNuJ?=
+ =?us-ascii?Q?CQbAujkQEkbyWqpy62o1Z6OSWHuyUyYF3Od9Sx6HIr1oy9Nvl44YJsvZ3msH?=
+ =?us-ascii?Q?NBgWc0jLjU8bMR2GNC8ObO/pS7O5KKnhlyKWOvCOarQYiymUn99NxHR2Bi4E?=
+ =?us-ascii?Q?cGbDjn7bZY8Z7EemI9Chct+GKn4fFuh+6p+/DSZlBm9xS+1oZg14sqEzc4ud?=
+ =?us-ascii?Q?zmJD/ljaZBXWusIgsP3OaW79NTJHH0Zz9h9V20MnJK+2lGi7MyOJQQ6LHxED?=
+ =?us-ascii?Q?VYYkrnAvdgHGzsdWv0uxjbmOaW3UUksW5WAJSb0eLz9Emc46DhEnP6G7od/k?=
+ =?us-ascii?Q?4SaRXaH8Dhd6qr2JBGVwoogGC6FdRmrZQDXJQr0XLvOVzH7oQ/NOmxkPDeIv?=
+ =?us-ascii?Q?3qzGLSsrfZLH+rmSwiB2PkSOT5dpFtVyXDX7Jz4c5iyQU7c4/fyH2YF5rOTh?=
+ =?us-ascii?Q?GeWPjLfcTce2waIbmjzbCk6z+nOzdHSWQCiVPLPRLbefjLK8JQdHAgG31F+y?=
+ =?us-ascii?Q?m+geXgvOwF1ELsN/rEKtfSFcL74uASw8Nju9pa9zhuNDGFwK/30XGolyBKvn?=
+ =?us-ascii?Q?Y2QgzA1g2Ti6bjfl45S9cnXqFz/w6IZP6qRMM1yrhmXzAFWKXLS8bzSyILpY?=
+ =?us-ascii?Q?VkBJ5ok1iimBbNztHVAPwyuKxZdKkU5E30NuSQ3otIwQvLql4PdehNJZPjK6?=
+ =?us-ascii?Q?Z6L9GLV/92Y87VXoXd9poWUqITtAFn6Uxl/UtZdoiyXAFcHMS6hXDsukq+b6?=
+ =?us-ascii?Q?LhCL1XUIPF/oUQMpSntjNyAsMpW3cEf5p9vJ5AUE7AyI7cfXKezLv4jYyOeo?=
+ =?us-ascii?Q?7XvZGiQwW3DJynmYPKjjzbYhV0iC7nIINmmQYWZk+pnZMq8EhEph4jDOMQw+?=
+ =?us-ascii?Q?tYZ7Bw6oNi9KZz1mwOqYhkh5vB2AUWPTeNikWz3lrU2mFQmlQEUHTeXTyS+x?=
+ =?us-ascii?Q?kinH1lnt8wcArePpvb1dT3kBdAAlNw3aVyMN5PaOttJ0AwdkaeQOhQd2ikAO?=
+ =?us-ascii?Q?7jzvc0Pr6dPGk4szTMMOZz5uNLSe?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(7416005)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2024 12:26:09.8956
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60ec3c51-09ef-4dff-9e30-08dc7becb178
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000013F.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6432
 
-On Fri, May 24, 2024 at 12:08:14PM +0000, Pankaj Gupta wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > Sent: Friday, May 24, 2024 4:04 PM
-> > To: Pankaj Gupta <pankaj.gupta@nxp.com>
-> > Cc: Jonathan Corbet <corbet@lwn.net>; Rob Herring <robh+dt@kernel.org>;
-> > Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley
-> > <conor+dt@kernel.org>; Shawn Guo <shawnguo@kernel.org>; Pengutronix
-> > Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> > <festevam@gmail.com>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
-> > <krzk+dt@kernel.org>; linux-doc@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; devicetree@vger.kernel.org; imx@lists.linux.dev;
-> > linux-arm-kernel@lists.infradead.org
-> > Subject: [EXT] Re: [PATCH v2 4/5] firmware: imx: add driver for NXP EdgeLock
-> > Enclave
-> >
-> > Caution: This is an external email. Please take care when clicking links or
-> > opening attachments. When in doubt, report the message using the 'Report
-> > this email' button
-> >
-> >
-> > On Thu, May 23, 2024 at 04:19:35PM +0530, Pankaj Gupta wrote:
-> > > NXP hardware IP(s) for secure-enclaves like Edgelock Enclave(ELE), are
-> > > embedded in the SoC to support the features like HSM, SHE & V2X, using
-> > > message based communication interface.
-> > >
-> > > The secure enclave FW communicates on a dedicated messaging unit(MU)
-> > > based interface(s) with application core, where kernel is running.
-> > > It exists on specific i.MX processors. e.g. i.MX8ULP, i.MX93.
-> > >
-> > > This patch adds the driver for communication interface to
-> > > secure-enclave, for exchanging messages with NXP secure enclave HW
-> > > IP(s) like EdgeLock Enclave (ELE) from Kernel-space, used by kernel
-> > > management layers like
-> > > - DM-Crypt.
-> > >
-> > > Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
-> > > ---
-> > >  drivers/firmware/imx/Kconfig        |  12 +
-> > >  drivers/firmware/imx/Makefile       |   2 +
-> > >  drivers/firmware/imx/ele_base_msg.c | 286 +++++++++++++++++++
-> > > drivers/firmware/imx/ele_base_msg.h |  92 +++++++
-> > >  drivers/firmware/imx/ele_common.c   | 239 ++++++++++++++++
-> > >  drivers/firmware/imx/ele_common.h   |  43 +++
-> > >  drivers/firmware/imx/se_ctrl.c      | 531
-> > ++++++++++++++++++++++++++++++++++++
-> > >  drivers/firmware/imx/se_ctrl.h      |  99 +++++++
-> > >  include/linux/firmware/imx/se_api.h |  14 +
-> > >  9 files changed, 1318 insertions(+)
-> > >
-> >
-> > > +static int se_probe_if_cleanup(struct platform_device *pdev) {
-> > > +     struct device *dev = &pdev->dev;
-> > > +     struct se_if_priv *priv;
-> > > +     int ret = 0;
-> > > +
-> > > +     priv = dev_get_drvdata(dev);
-> > > +     if (!priv) {
-> > > +             ret = 0;
-> > > +             dev_dbg(dev, "SE-MU Priv data is NULL;");
-> > > +             return ret;
-> > > +     }
-> > > +
-> > > +     if (priv->tx_chan)
-> > > +             mbox_free_channel(priv->tx_chan);
-> > > +     if (priv->rx_chan)
-> > > +             mbox_free_channel(priv->rx_chan);
-> > > +
-> > > +     /* free the buffer in se remove, previously allocated
-> > > +      * in se probe to store encrypted IMEM
-> > > +      */
-> > > +     if (priv->imem.buf) {
-> > > +             dmam_free_coherent(dev,
-> > > +                                ELE_IMEM_SIZE,
-> > > +                                priv->imem.buf,
-> > > +                                priv->imem.phyaddr);
-> > > +             priv->imem.buf = NULL;
-> > > +     }
-> > > +
-> > > +     if (priv->flags & RESERVED_DMA_POOL) {
-> > > +             of_reserved_mem_device_release(dev);
-> >
-> > You can call this unconditionally, no need to keep track if you called
-> > of_reserved_mem_device_init() successfully.
-> 
-> But it will not be called for each SoC.
-> The memory is not reserved for i.MX95 platforms.
-> This is required.
+Introduce interface to switch between ABMC and legacy_mbm modes.
 
-Again: You can call this unconditionally. Look at the code,
-of_reserved_mem_device_release() won't do anything if you haven't called
-of_reserved_mem_device_init() before.
+By default ABMC is enabled on resctrl mount if the feature is available.
+However, user will have the option to go back to legacy_mbm if required.
 
-Sascha
+$ cat /sys/fs/resctrl/info/L3_MON/mbm_assign
+[abmc]
+mbm_legacy
 
+To enable the legacy monitoring feature:
+$ echo  "mbm_legacy" > /sys/fs/resctrl/info/L3_MON/mbm_assign
+
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+---
+v4: Minor commit text changes. Keep the default to ABMC when supported.
+
+v3: New patch to address the review comments from upstream.
+---
+ Documentation/arch/x86/resctrl.rst     | 10 +++++++
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 40 +++++++++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
+index ab3cde61a124..fd050d4d22cd 100644
+--- a/Documentation/arch/x86/resctrl.rst
++++ b/Documentation/arch/x86/resctrl.rst
+@@ -271,6 +271,16 @@ with the following files:
+ 	  [abmc]
+ 	  mbm_legacy
+ 
++	* To enable ABMC feature:
++	  ::
++
++	    # echo  "abmc" > /sys/fs/resctrl/info/L3_MON/mbm_assign
++
++	* To enable the legacy monitoring feature:
++	  ::
++
++	    # echo  "mbm_legacy" > /sys/fs/resctrl/info/L3_MON/mbm_assign
++
+ "max_threshold_occupancy":
+ 		Read/write file provides the largest value (in
+ 		bytes) at which a previously used LLC_occupancy
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index f452b6d9bb99..d77ff059269a 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -908,6 +908,43 @@ static int rdtgroup_mbm_assign_show(struct kernfs_open_file *of,
+ 	return 0;
+ }
+ 
++/*
++ * rdtgroup_mode_write - Modify the resource group's mode
++ */
++static ssize_t rdtgroup_mbm_assign_write(struct kernfs_open_file *of,
++					 char *buf, size_t nbytes,
++					 loff_t off)
++{
++	struct rdt_resource *r = of->kn->parent->priv;
++	int ret = 0;
++
++	if (!r->abmc_capable)
++		return -EINVAL;
++
++	/* Valid input requires a trailing newline */
++	if (nbytes == 0 || buf[nbytes - 1] != '\n')
++		return -EINVAL;
++
++	buf[nbytes - 1] = '\0';
++
++	cpus_read_lock();
++	mutex_lock(&rdtgroup_mutex);
++
++	rdt_last_cmd_clear();
++
++	if (!strcmp(buf, "mbm_legacy"))
++		resctrl_abmc_disable(RDT_RESOURCE_L3);
++	else if (!strcmp(buf, "abmc"))
++		ret = resctrl_abmc_enable(RDT_RESOURCE_L3);
++	else
++		ret = -EINVAL;
++
++	mutex_unlock(&rdtgroup_mutex);
++	cpus_read_unlock();
++
++	return ret ?: nbytes;
++}
++
+ #ifdef CONFIG_PROC_CPU_RESCTRL
+ 
+ /*
+@@ -2087,9 +2124,10 @@ static struct rftype res_common_files[] = {
+ 	},
+ 	{
+ 		.name		= "mbm_assign",
+-		.mode		= 0444,
++		.mode		= 0644,
+ 		.kf_ops		= &rdtgroup_kf_single_ops,
+ 		.seq_show	= rdtgroup_mbm_assign_show,
++		.write		= rdtgroup_mbm_assign_write,
+ 	},
+ 	{
+ 		.name		= "cpus",
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.34.1
+
