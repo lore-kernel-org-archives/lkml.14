@@ -1,89 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A431B36D
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 01:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A110053AC
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 01:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716513073; cv=none; b=b+52HBsGvgbKYASEHxKAP5qsj5Fb5ImoxkuA8abUWaf5M6+629lNPTKvlpkuJmOKVdoz8dtspUVKIDMx8tMMfbNNr4Cnpk1itFWd+psjUR2FWbX/94kPw6F0EhYGRCBfJNhx1cQ8H/aan8JSJz0kLwhFWTfy+Y8oivwjxBlCsjk=
+	t=1716513306; cv=none; b=WNEMr5cPk/7ecVhe1GMkWByb2HU968eRa3ubbqAZxbgGOkaLj4ihQB4fC98cZrylOmAyhZw/M6PM0vwBqNly8nllngpwvx1XgbSIKskndH1FAdKxE96ST17NJO4NUJsVqRbNWkP4npkDG7ThLW7Sfz30KSqye9meHvTa7zTPktM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716513073; c=relaxed/simple;
-	bh=7eD2UmuhPW/+ApwIW9GMlhMuZIHesbvVW8A7NKI8QOY=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jF8afSzPkskPTYaVUo1pWu1OnkWBwuaQZqwWuCP2wwtHbNWXDXeseR4eVhF0Syauj0qnPq4W0ZFt7/P7xjpUcXCumZZdZUgHkfXdbnXEjnKWJiY5ba4DgcG2JARpJERQgZEVgGAjohcPQozsFOADQaMO3UT0AaVXwCttV8se5Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nV1a2LlW; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nV1a2LlW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716513070; x=1748049070;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7eD2UmuhPW/+ApwIW9GMlhMuZIHesbvVW8A7NKI8QOY=;
-  b=nV1a2LlWGpJYj7L36YCtBK1+fxPjG5U+6d0zdM+CZtndyOwrnn7/VulQ
-   alkpc6BMrEpO607gRzVU5G9yAstkwBnsVVvsZtm+RylxgFWAq+5Svc89h
-   Nkj6jN16Pmf7EuNpGWi2rmZllMZebZTA9DQvmGiPDNcWR0QIhFCuqJJkW
-   9CexgF3f6iqHIikFqTMRMKbo5b5Jbo8rhdTqCgYnmhhId9JfPk3sM8otm
-   yRg+a4PB/we/Yx2NfVzyLleuN0q8G6py8JCraY2n5WBSPsVizOpLWil+F
-   CYenarS7ImJ5jnuyB+b49fsYZVgnEqNxaQV0+p2zHTwe43B3gfFfW4ly1
-   A==;
-X-CSE-ConnectionGUID: n6CurlpvSeS6SzWXDcQOBA==
-X-CSE-MsgGUID: NXz1JHeVQiigp/KvK30x7A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="16662317"
-X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
-   d="scan'208";a="16662317"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 18:11:10 -0700
-X-CSE-ConnectionGUID: TP+9MNGVSm+rgXGYip3/Yg==
-X-CSE-MsgGUID: eaiXLBj7TkqBRQcgNjeoGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
-   d="scan'208";a="65065360"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa001.fm.intel.com with ESMTP; 23 May 2024 18:11:08 -0700
-Message-ID: <44d4013d-5c25-40ba-a599-91eee6d50a8c@linux.intel.com>
-Date: Fri, 24 May 2024 09:09:11 +0800
+	s=arc-20240116; t=1716513306; c=relaxed/simple;
+	bh=bwX6iJD6AQ6OPeWQnwz9ta/bbDVNLWJ3UEllJ04H7RI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sO1+gJd3jSj5oCFCV1M0rUz/hoRsu0atiw/KI0QitFwbPBZUMT8VDuF20sE2MF5mzfCzZ6GKGlSL743rMFeu6izEi6jPbJJRpvWdLFBhrz7YYbOE6Xp2bIJrLUuLzqiTUzwCwduWBIpuHWmcDFJDI1bTZLhdJ4yI3W+O6A7YD90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7e1ea8608afso236253139f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 18:15:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716513304; x=1717118104;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f1GRo7Zw3z2bdnpABa5h4u4gai61SwkRqBg80el+K2g=;
+        b=dll0RORLXPHyBEEtoU7DzSUKLFzG8L8568/AXBTobSmZsH2fzqM3pA8qqLr/uzInIK
+         WTZwnqsgc5AqEllGpGZ+FoCqNZNYtCE9y97+vlGLPJd3oF9kHYrjUsnDK6IaR7aHG7FN
+         77KLCBAdbtqxrw3NIE0qLnsTPZDID9RbJcUC4MsQyE3MLMshda6XrokEBrxIJpJqP8i2
+         Xn1vBHAqDJF6Q7zj5JruKqUdbEgmeRuprPuIH4pIv1KVh5rBYCG+xFt9VKZUGIG/zo6Z
+         9aHTGPpoGEZNmYtygo3WN7oDthWIiV4RYhehEVjzH6mCAKgkplHXLLbsJ4CmYEjipO26
+         gOBA==
+X-Gm-Message-State: AOJu0Yy2h7KrLdUT+IICbTrA6fRehJ3RguAvwbOeoYYOqQjGGucn3bte
+	whQ69sacbODAZlqoWKxf5OuCmeoWk4CAq2AgLT9YXv28dqCuBkGju98c3ECs8ry6MVLvJ3Hyb0S
+	MMeBfpNTdi2AoV92Zf4NCsX0LYPmRFJN/MUbzVmTMP+LrnaEZZstQV6U=
+X-Google-Smtp-Source: AGHT+IENwPUdXL/MUi8EwaA3jQWowBwFqOYQ3M3rvRSEME4YVrgM1eyTAEK6gsvjvo3wRJ6vp7IYphiY6tFxI2LC6Pc5f98ZE7t4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 2/3] iommu/vt-d: Use try_cmpxchg64() in
- intel_pasid_get_entry()
-To: Uros Bizjak <ubizjak@gmail.com>, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240522082729.971123-1-ubizjak@gmail.com>
- <20240522082729.971123-2-ubizjak@gmail.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240522082729.971123-2-ubizjak@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:148e:b0:36d:cccb:6842 with SMTP id
+ e9e14a558f8ab-3737b1f362bmr381055ab.0.1716513303795; Thu, 23 May 2024
+ 18:15:03 -0700 (PDT)
+Date: Thu, 23 May 2024 18:15:03 -0700
+In-Reply-To: <20240524005225.2834298-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b9a61c061928e544@google.com>
+Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
+From: syzbot <syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/22/24 4:26 PM, Uros Bizjak wrote:
-> Use try_cmpxchg64() instead of cmpxchg64 (*ptr, old, new) != old in
-> intel_pasid_get_entry().  cmpxchg returns success in ZF flag, so
-> this change saves a compare after cmpxchg (and related move
-> instruction in front of cmpxchg).
-> 
-> Signed-off-by: Uros Bizjak<ubizjak@gmail.com>
-> Cc: David Woodhouse<dwmw2@infradead.org>
-> Cc: Lu Baolu<baolu.lu@linux.intel.com>
-> Cc: Joerg Roedel<joro@8bytes.org>
-> Cc: Will Deacon<will@kernel.org>
-> Cc: Robin Murphy<robin.murphy@arm.com>
-> ---
->   drivers/iommu/intel/pasid.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+Hello,
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Best regards,
-baolu
+Reported-and-tested-by: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         33e02dc6 Merge tag 'sound-6.10-rc1' of git://git.kerne..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=135ad634980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=25544a2faf4bae65
+dashboard link: https://syzkaller.appspot.com/bug?extid=d2125fcb6aa8c4276fd2
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=117d5142980000
+
+Note: testing is done by a robot and is best-effort only.
