@@ -1,199 +1,157 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2082.outbound.protection.outlook.com [40.107.6.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCD742067;
-	Fri, 24 May 2024 09:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716543968; cv=fail; b=hsK0DxotT/kcW3MXp1w268R6N2jcQxkEQ5xiHwfeYObHmt4QahEW0q3OvV138hLtdVxeCFf24C1tztLWRqTb/g4vPfGPClKXm2qLM+4Pw8gFvkGtDrERy/p6x9MYW2UYhW/TmO6Hz1qjv5mH4z4lgkv8qwjRssNU2huPFHfACwA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716543968; c=relaxed/simple;
-	bh=RDs7H3rbrQnIGMofi87btZA4zDs+Z5gLalpAzOR5e7M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rhfx8kHSyzil0+mxGfij/NTm98UmJY2t9r4ebeF70uCsVjtzZKQwNJ0JIS6Ngr0qNMTn1EWJLfKFe9DCBrNdl3XGl2mpHqrb2sgP7l0dNaOwA7Mre+OnY3axe4yjkjPTVq67vsYGEFybhFXAOM/dThH9wjJ3oK9iBp9XiY+lICs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=UDuSk15o; arc=fail smtp.client-ip=40.107.6.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5A984FDD
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 09:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716543991; cv=none; b=iYzotBoCvaMJdKDNFPmWPVc578YazGHZDuQPPxtEafWmAOi2E5OCnFmy2wDsn1NCNejW0j/SiRNoblysHWnuPgJE6kwSSUXfOsXFp15ntwY7VCBNgZLdSH2vmKlS58dhjsWUqeyC0qR5ABn9Y1jSac6l/XYFLgQgCtgRQVrH5Ug=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716543991; c=relaxed/simple;
+	bh=HDU6Ikis2reepBp7XonSWdeQ98AVdDz0nuzQ+64KYp8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jLpcxeGfo5SXXG8UN1tpCh+8TGU8/lK8viu/Lw739JgQqzkGL7eoy/9nVG96esN+gK4qPyJ3KFKJ97qne6GuEqVUM+Gr+5KQFuhKMTACMWxeGwB41/TMz0hA1Sd35otVhb76LF45w67Irzxj/rzNJOQHymw+zzppeMcLHKsbxME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Qvv+rTHr; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UDuSk15o"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X8m54QUD7peYI7dXxv477M4Wgsiy0T5BqOIyts8WeGlf0iMA2GNZ8llNp3v3s1hMkb3cy7YIqqNNaZwzZYQeACrXnrq4gULSARxI9ovkoQBAC7+mM1aftKsURstCdkWP667Bn0UJRfqYQUVSR54BHRaJIcbF8vMKehCt6QYQlNWZDG3DAs7AzbfEjJeH4Sj40fDSd31nPmn3yBVk4brqw3K7Bq6wbfKtZv4mofhKp7yclnf+hI2Cft8sa3chg1pcI1O5D0+VfpScuPzU/HeBPn3wE/lppHI3a6ppJNcpyhl18/V1/I3VzNG1hebyenqgMAJuWKinTyq8Fd4LBrbPNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/VPZi7Z7JstSE/MxOYzxNIVSLmDs92uwzaV9FfdICJ4=;
- b=WmhnHj7MqawNBhj9UpXtiSX51KtJkjC1WMvG2bYDyVAgmJHV/AsXMCGS5la6yRZLHy14/pCNLqWEixwG19Bml6biBElQuOR5P6SAyd5laiBCFGJ/U+BjH+Lw7BD6dSL7KragfYwLL419Q/UAkSyk250/vYEjluvlN/WcOj/++jyMI+E0RSsKEfdiYnegE09Ss0KHQDOZU2qgu4WmFh99NBwkJ5yJ3rgiyU+mLl0W7JfxDIxuwY72WC0zv4T+sV56+7A4llnOA6mQOKIc+gpF4A6Ls3zNjTHC+vvCBNvdmn4zFOub2WwhJ7RSq/0kL9+7cYk1EklmN+8G9W8SBxGjYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/VPZi7Z7JstSE/MxOYzxNIVSLmDs92uwzaV9FfdICJ4=;
- b=UDuSk15obF7rodTYBUf1DuumhiBJX54DgETTxDHv/pCUHAVA0BFBm2QpzO3CJ3bmdSSjQ2s74ceFK6FDZHczN+MfXfj65ubEK2UJTCIJ5s+GKyzQEgR6IBb+xDVLcoYuPecjNeiUanbrLGytusyckUc4Qg9juquTe7vd1TJHMZI=
-Received: from PA4PR04MB9638.eurprd04.prod.outlook.com (2603:10a6:102:273::20)
- by DU2PR04MB8597.eurprd04.prod.outlook.com (2603:10a6:10:2d8::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
- 2024 09:46:00 +0000
-Received: from PA4PR04MB9638.eurprd04.prod.outlook.com
- ([fe80::f950:3bb6:6848:2257]) by PA4PR04MB9638.eurprd04.prod.outlook.com
- ([fe80::f950:3bb6:6848:2257%4]) with mapi id 15.20.7611.016; Fri, 24 May 2024
- 09:46:00 +0000
-From: David Lin <yu-hao.lin@nxp.com>
-To: Brian Norris <briannorris@chromium.org>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvalo@kernel.org" <kvalo@kernel.org>, "francesco@dolcini.it"
-	<francesco@dolcini.it>, Pete Hsieh <tsung-hsien.hsieh@nxp.com>, Francesco
- Dolcini <francesco.dolcini@toradex.com>
-Subject: RE: [EXT] Re: [PATCH v10 1/2] wifi: mwifiex: add host mlme for client
- mode
-Thread-Topic: [EXT] Re: [PATCH v10 1/2] wifi: mwifiex: add host mlme for
- client mode
-Thread-Index: AQHakVadTJiKH7Fbwkii2Ljo0AqkAbGkNJ4AgAIC2FA=
-Date: Fri, 24 May 2024 09:46:00 +0000
-Message-ID:
- <PA4PR04MB9638DC958102D07A7B7084B6D1F52@PA4PR04MB9638.eurprd04.prod.outlook.com>
-References: <20240418060626.431202-1-yu-hao.lin@nxp.com>
- <20240418060626.431202-2-yu-hao.lin@nxp.com> <Zk6TklTIbxZxIWyb@google.com>
-In-Reply-To: <Zk6TklTIbxZxIWyb@google.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PA4PR04MB9638:EE_|DU2PR04MB8597:EE_
-x-ms-office365-filtering-correlation-id: 387c7a38-a729-4f67-6496-08dc7bd651ce
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|376005|1800799015|366007|38070700009;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?VaMVds4dwC6MBQMgKhcVFucXzhJiPyEDYRxSi3Zxb9yYbWZ0lTux1C87JS6W?=
- =?us-ascii?Q?/VGEwymslIuARWJ24ts5RAue3YrGq/8GbHocno5GXUFsMpNs5+XB+QAdkdGz?=
- =?us-ascii?Q?SLZRHSAtYiYpJ92YAKRVWs0T1DoHQ0znWz0Z0K3Jlb/eSoEvmGVZYwE7soHj?=
- =?us-ascii?Q?9yulAkoq+rBusYiQLfbliPvlK6T00JtFlmnp15/xlI9ZetGE/yQqbtJk/dnb?=
- =?us-ascii?Q?9iR+9/kPAwTaZl4MrwZmQxnVTK0trX1folG0jfIf0GF1zCMLB2l/fo7AJeYl?=
- =?us-ascii?Q?WuB44TlujIhV9/rC9KYrQeCjHxI70+F2+chlARAB9+sff8Sy/AhQUkJ8b8iS?=
- =?us-ascii?Q?eO+GInBvEY3A3yfk5R6k9Z/j70+o13eg7pfLEU4xPDz7zFXMSNv2TZ1z8ZH5?=
- =?us-ascii?Q?4Tay0tho/1vHPE6iP/2kvU4ssGVtMp8MWQ1B8oSY89N90zUwzIDiHQ1CElYa?=
- =?us-ascii?Q?EOj8ni/80ttkvAY57WTdlbO5Bv0fWumh/zv/nU0XtSNQv6U8ZNogeqC8fnEA?=
- =?us-ascii?Q?ffeSTT83eWGoamjEenUeL9gKC3PVdUHpNzrwBdD+rFUPrbjLd54em+bUQxJX?=
- =?us-ascii?Q?NDKSWb8pzwbXNYU1twXAx0mPR95DFWee6iX1K7Ve+ygJZBEm19HVKqpgGG22?=
- =?us-ascii?Q?RsQL9IZHuhIHdd+RT0E1rXOkQI8oOJVwpFfY0+KE1up2mWfwd3KmqFuEZB88?=
- =?us-ascii?Q?B/E/bKeBmJmWuUnkpBkChhDNDfBp47bztK16lxao3SCSznRx9GEJ+fy9MMr5?=
- =?us-ascii?Q?J8ycwisUUZlGfBPiw56RBrQV3QJWcUhFIoZXgg9qoSWAYFtw3gaoz3krbio4?=
- =?us-ascii?Q?/1ZmsbZUhlaoHZPKXOruVbIx87NTywB/cG0ERsojIdBQRkDfyzIrQlBng2L0?=
- =?us-ascii?Q?ar9j9m+dTIgxBI0XJwDbdyJ0VhJsWsazS1vyl9lHektdPE2VVdU89akVf3xL?=
- =?us-ascii?Q?VK5rxsLpX7eCg+VrhvfVQF/Vds8N/sJwqL/18mY62eXpXAVaxeNZGSmKy6jz?=
- =?us-ascii?Q?ESIKNwiH8mqy5hT6dUFe/sQOVohVvtSq2enHAt8D9RqicVfqhpXtkcC8GDYI?=
- =?us-ascii?Q?Cw9PDolvobJeZigNWSBzYvhiZ0zPt2RnCbQhVYxtb/mhJ68hz2pY4LOg5pu+?=
- =?us-ascii?Q?LaeMEVMpgEUzQbct91qUev0OOOsZtoTSglJhjrGE/F0c8+zvCRmPSiZ1M1UL?=
- =?us-ascii?Q?dQ5lA7RSFc4l8Rn+DPgwNc90p6tDblBGzhDW+K0QC2zbbijwlIVSKKn+Da+A?=
- =?us-ascii?Q?NTV6TO5o/57JHBzxdVKBWsEBCVd+oBw7210RBv3sYA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?8nj3fNGArDw9hqhlgN7IwIpKB+KN/l9dfRD1KVlVhe4bOusoGT83PjsHW3hf?=
- =?us-ascii?Q?KAx1RPqTcpWGv0SMyW+NSq40TMYua9HVnfMZspx1FpcnYPSmxRaTvebvAMRi?=
- =?us-ascii?Q?fsl993hlA7q8WWnOTyZFZFS8FBFXD3Pvx7/xpcUUr49CESuHY+iMvl9h4RnS?=
- =?us-ascii?Q?p6f/mzCYiWbx4YHnZ8N/VgbHy61U7atQLD0345ugycCTre9OOVH6ybQIUEOA?=
- =?us-ascii?Q?SUlLj8EYomNnl3nuGPvEah2hs8LkFRJSlzpO8YKG9lzlHLHX3TY3Z28lFnEp?=
- =?us-ascii?Q?8CCc3MsDF4fwp7nGYNTxU7EKFN0E5o4/ni4ga5FW9MhMQWya7fqFL0YWjQjJ?=
- =?us-ascii?Q?14b06E3Ukf5+YRiDHH5Q0QB6fLJ7iDf1H6C8xOgLKUnVTSgRozMbCDRfLrUZ?=
- =?us-ascii?Q?tIhmliWPVdFngCdWkmsNnBVx6ZnoWtGPzpKyulcLdGpyhQhb2qVnTRkysgfA?=
- =?us-ascii?Q?cleuDELyM7D/yWydzc+S6VNOc6ZMWpg8wLa5si9Wknu1mJyGaVMSD/GxfJHZ?=
- =?us-ascii?Q?Xg46ixHQRM1hSUE0rGpjLu2qnehkBrGZsbfEwGrDxYMnineRYamF6Iq+H95w?=
- =?us-ascii?Q?84SecN1hzAXxzgDJZZ2ap4uqxEySc/eRAb4W/ZbaeZ2joRimUCAphz7Le91v?=
- =?us-ascii?Q?7m3TvAHrQbH4y1yGkhyNWUBEZ23lXE9/u83WHL9eG31qcSphHen5jn13tqA3?=
- =?us-ascii?Q?EkznhPY1MeO3Xt39SLFfg4lovQc0Y0c4z+G1XD/1+V9ixobRfjBz+hilLpF5?=
- =?us-ascii?Q?MNsEEOKXg4p6KL+FAs04HDnXMw07UM0aM+cM8HI2yEQrxSxkDz9KGZ4h2knj?=
- =?us-ascii?Q?BEurCrfyVMPQAi8G5f2lxa1wmkmcoOeNWoCilaMOboQZRssYKJ3+MIDU+tlv?=
- =?us-ascii?Q?crgC+f3nYPid/DEGI96Q1syilUNnmonbDtiFeHfYorxFCFloX2/t+7s0bess?=
- =?us-ascii?Q?wpe5mNFmswAqU0uZeiQR4M0/q0YKA5lsuj7yyuSrnyfeBKBD1JPwoFJ1FQRh?=
- =?us-ascii?Q?7khwzyD/9IlsCiBiWAV6AnYicyosKVt14Q2PTSlLbmaRnTf8oL1VTi4H5ZMw?=
- =?us-ascii?Q?UoIQTLd5VLrQaGCwS9oFfzWHQsRMvtZ2PXib3b8rT24q1lLguFJOwvhU7aty?=
- =?us-ascii?Q?xhrOudXCcc8nEFcx7pnxzHBfHoU0cPkX0fg1cotB9+JSyEPuWUWHDW5Z33rQ?=
- =?us-ascii?Q?yJYHlJMClO07yL+OBYH7v9gTL9upjTZtOkohJ1Q1TfK5LhZJ/mhP+sBka4V+?=
- =?us-ascii?Q?Qd0pfch/hqbeuQ86ZG73qPQDiqPWPIwaZ4xabeuXMEyoArMMLvKKa3uArRyf?=
- =?us-ascii?Q?33nZ9zBE0IsR8YX/nDw8ELj7fUOM8Kvo4k2NFDwXyxCuRYSumT7nRgaZ34RA?=
- =?us-ascii?Q?S1W8wgnk/1mXX2uDWyVoVnih8drNR3SPSC2Gr51R6cvD6c3D55H3IbC8VfSs?=
- =?us-ascii?Q?msngB5RdEeJ7O06fxyxr7WnmW6AchlgUkdzjTidAK2dlsETaCpTWwqq/by7A?=
- =?us-ascii?Q?FcuHXpzsPCeDtTQHQlbzniwNpR9OwPzxMzu4WoERrKMmhSCz8Hdur14dZQkn?=
- =?us-ascii?Q?L3tgy6FWmhUq7QxMfMhHhyYb1id9c56u9tpR6X9U?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Qvv+rTHr"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-df4f05e5901so2666977276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 02:46:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1716543987; x=1717148787; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WjgMHPkdKke/sFW+wP3x/OWfAW3icjljhDceGb+T51c=;
+        b=Qvv+rTHrHM5G+L52LeF/Ukc57xiGL2/T+SEBVpyDFh0YPcFG22QFWnTay7BdzrZ3JP
+         hUQESM8tnI7oSt7hVKSGhj9+wW9szYPoHmD2M9QAApWzUHwgOWfaWPVbZ1VTYQq+fDJZ
+         Z5r0118dPBrruHGC83QnOfMaHkNBCEvPh2gJ8KpOXIllsXa2YTOxiIBl2J4Nv85Ccd4Y
+         IWjs40RXK78QI4z3tAFTn8diN+7XuYR/pxMgmzJJT3/jzKk++3dgxEaU1S+PBmbYngGA
+         RRBipfTPQbP7nPrqaMOPdkb3feB8K+rO7FA1QBUlY9nYY2FnYz9vcF5xArFebdzgv4cG
+         lx7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716543987; x=1717148787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WjgMHPkdKke/sFW+wP3x/OWfAW3icjljhDceGb+T51c=;
+        b=gMAO7TC+opWE14zTwAdYWzKQzJ1G/Y776yGMz9ZUxlFtmLIkn2CpMLKWHK8yhzCKVX
+         TU88G7mz96bt6HFeIVTWICgLTVvT1Omp07je/2ou5UfjUHYeb6Ujkndhh+5iCERFD5LR
+         KbH+0Pb7UcqD/ZVYxwdMFTeFt5w0x4lI4SRyiQjE70BQOFT90K2DjFLkHMS8ognogcz1
+         FwWZxKgxTVUTsxcgZN/lwyxBN2agEpnIxLarltl8kUd4zWsz/AhZAaDsgQLiViSFQJ80
+         ZqSFwCKfHp5nX4gRha4CUGg9SRQ+653SgviMCC9asZhIqXNxLj/x8NXLTSA4Zxtn/uAA
+         y/MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdBe/cHfiCxNsIAEDn4GkhiTmsyHRELh1U3kU918caPRFIMW5iYk7lAOBeT01PjA5JS1CC6M8hyCMjreg8GyfFZBnAZnbEB0iq1nYO
+X-Gm-Message-State: AOJu0Yy2hOTRTgPEYeKzfIOF6s1DSI8Xt5aTnNFuETitUIbP/U3GXeSx
+	EDinl9RG7mNoLwswgmDv28fL149w0PU937O44te10upVM+wEJEbD2nTGR5X0kiAHwws+DVmG36T
+	6PUSdhK6+KU71IDkS7vR30N/nJ1As14C7uW6H+Q==
+X-Google-Smtp-Source: AGHT+IElLw9ldbzBvHZ3/TQt52rrJpYv9UPwEZAezgFRSlhX7EDpAmWQFaSOD80MnXamfMqxd179zHrTOZ6XZB7bNkc=
+X-Received: by 2002:a25:ae1e:0:b0:df4:df14:61bc with SMTP id
+ 3f1490d57ef6-df7721b7236mr1844605276.29.1716543987537; Fri, 24 May 2024
+ 02:46:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 387c7a38-a729-4f67-6496-08dc7bd651ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2024 09:46:00.4925
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RFX7qDoJ/W/fDHAw93z8irJlwZdDIAhC1ezLsis+pyt418lkY/zLT4mbauAd3KeXyvdzX+3P4Vw87/Vx+z21Gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8597
+References: <20240403234054.2020347-1-debug@rivosinc.com> <20240403234054.2020347-23-debug@rivosinc.com>
+In-Reply-To: <20240403234054.2020347-23-debug@rivosinc.com>
+From: Andy Chiu <andy.chiu@sifive.com>
+Date: Fri, 24 May 2024 17:46:16 +0800
+Message-ID: <CABgGipW4ZTFLh1dkiRuWD0WP4RRkfhyFCc+RsUjCD2EkA5GhSQ@mail.gmail.com>
+Subject: Re: [PATCH v3 22/29] riscv sigcontext: adding cfi state field in sigcontext
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com, broonie@kernel.org, 
+	Szabolcs.Nagy@arm.com, kito.cheng@sifive.com, keescook@chromium.org, 
+	ajones@ventanamicro.com, conor.dooley@microchip.com, cleger@rivosinc.com, 
+	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com, 
+	alexghiti@rivosinc.com, samuel.holland@sifive.com, conor@kernel.org, 
+	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mm@kvack.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, corbet@lwn.net, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com, akpm@linux-foundation.org, 
+	arnd@arndb.de, ebiederm@xmission.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
+	lstoakes@gmail.com, shuah@kernel.org, brauner@kernel.org, 
+	jerry.shih@sifive.com, hankuan.chen@sifive.com, greentime.hu@sifive.com, 
+	evan@rivosinc.com, xiao.w.wang@intel.com, charlie@rivosinc.com, 
+	apatel@ventanamicro.com, mchitale@ventanamicro.com, dbarboza@ventanamicro.com, 
+	sameo@rivosinc.com, shikemeng@huaweicloud.com, willy@infradead.org, 
+	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com, 
+	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de, bhe@redhat.com, 
+	jeeheng.sia@starfivetech.com, cyy@cyyself.name, maskray@google.com, 
+	ancientmodern4@gmail.com, mathis.salmen@matsal.de, cuiyunhui@bytedance.com, 
+	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il, alx@kernel.org, 
+	david@redhat.com, catalin.marinas@arm.com, revest@chromium.org, 
+	josh@joshtriplett.org, shr@devkernel.io, deller@gmx.de, omosnace@redhat.com, 
+	ojeda@kernel.org, jhubbard@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Brian,
+Hi Deepak,
 
-> From: Brian Norris <briannorris@chromium.org>
-> Sent: Thursday, May 23, 2024 8:54 AM
-> To: David Lin <yu-hao.lin@nxp.com>
-> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
-> kvalo@kernel.org; francesco@dolcini.it; Pete Hsieh
-> <tsung-hsien.hsieh@nxp.com>; Francesco Dolcini
-> <francesco.dolcini@toradex.com>
-> Subject: [EXT] Re: [PATCH v10 1/2] wifi: mwifiex: add host mlme for clien=
-t
-> mode
+On Thu, Apr 4, 2024 at 7:42=E2=80=AFAM Deepak Gupta <debug@rivosinc.com> wr=
+ote:
 >
-> On Thu, Apr 18, 2024 at 02:06:25PM +0800, David Lin wrote:
-> > +static int
-> > +mwifiex_cfg80211_probe_client(struct wiphy *wiphy,
-> > +                           struct net_device *dev, const u8 *peer,
-> > +                           u64 *cookie) {
-> > +     return -EOPNOTSUPP;
-> > +}
-> > +
+> Shadow stack needs to be saved and restored on signal delivery and signal
+> return.
 >
-> > +             mwifiex_cfg80211_ops.probe_client =3D
-> > +                     mwifiex_cfg80211_probe_client;
+> sigcontext embedded in ucontext is extendible. Adding cfi state in there
+> which can be used to save cfi state before signal delivery and restore
+> cfi state on sigreturn
 >
-> For the record, I feel like this question was not adequately handled from=
- v8.
-> That thread is:
+> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+> ---
+>  arch/riscv/include/uapi/asm/sigcontext.h | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> https://lore.kern/
-> el.org%2Fall%2FCA%2BASDXM1PEMRyxRpBryJ7G6e7yzG8Ku%2Bg2_qpHN3g5d
-> jFpAWkw%40mail.gmail.com%2F&data=3D05%7C02%7Cyu-hao.lin%40nxp.com%
-> 7C0b65f7e4a5fc46c8bdbc08dc7ac2c9ff%7C686ea1d3bc2b4c6fa92cd99c5c301
-> 635%7C0%7C0%7C638520224227876720%7CUnknown%7CTWFpbGZsb3d8eyJ
-> WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7
-> C0%7C%7C%7C&sdata=3DMpqW1U4yTgDcM0g20DRSAxEnHkNNkd2hwsZrVAxg8p
-> w%3D&reserved=3D0
-> Re: [EXT] Re: [PATCH v8 1/2] wifi: mwifiex: add host mlme for client mode
+> diff --git a/arch/riscv/include/uapi/asm/sigcontext.h b/arch/riscv/includ=
+e/uapi/asm/sigcontext.h
+> index cd4f175dc837..5ccdd94a0855 100644
+> --- a/arch/riscv/include/uapi/asm/sigcontext.h
+> +++ b/arch/riscv/include/uapi/asm/sigcontext.h
+> @@ -21,6 +21,10 @@ struct __sc_riscv_v_state {
+>         struct __riscv_v_ext_state v_state;
+>  } __attribute__((aligned(16)));
 >
-> Brian
+> +struct __sc_riscv_cfi_state {
+> +       unsigned long ss_ptr;   /* shadow stack pointer */
+> +       unsigned long rsvd;             /* keeping another word reserved =
+in case we need it */
+> +};
+>  /*
+>   * Signal context structure
+>   *
+> @@ -29,6 +33,7 @@ struct __sc_riscv_v_state {
+>   */
+>  struct sigcontext {
+>         struct user_regs_struct sc_regs;
+> +       struct __sc_riscv_cfi_state sc_cfi_state;
 
-The difference with and without hooking probe_client() is that "poll_comman=
-d_supported" of hostapd will be set or not.
-If "poll_command_supported" is not set (won't hook probe_client), it will l=
-et hostapd to set "use_monitor" and client can't
-connect to AP.
+I am concerned about this change as this could potentially break uabi.
+Let's say there is a pre-CFI program running on this kernel. It
+receives a signal so the kernel lays out the sig-stack as presented in
+this structure. If the program accesses sc_fpregs, it would now get
+sc_cfi_state. As the offset has changed, and the pre-CFI program has
+not been re-compiled.
 
-Maybe I can put following comments:
+>         union {
+>                 union __riscv_fp_state sc_fpregs;
+>                 struct __riscv_extra_ext_header sc_extdesc;
+> --
+> 2.43.2
+>
 
-Hook probe_client to avoid hostapd to set "poll_command_supported" as 0 and=
- set "use_monitor" to 1.
+There may be two ways to deal with this. One is to use a different
+signal ABI for CFI-enabled programs. This may complicate the user
+space because new programs will have to determine whether it should
+use the CFI-ABI at run time. Another way is to follow what Vector does
+for signal stack. It adds a way to introduce new extensions on signal
+stack without impacting ABI.
 
-David
+Please let me know if I misunderstand anything, thanks.
+
+Cheers,
+Andy
