@@ -1,197 +1,125 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DC44A3C
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 01:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225BBA21
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 02:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716515953; cv=none; b=q0Mh3ogGpmrsZa5oBTPlnRASa+Iln4JhICd/7KgCiiHq/ljE0W/6jXtE8p8yGRXIMHo/VMXaHZFfpq1N8JyjoCKIZ46ajqWIzQ9m4cNjfmXDayIuboTRwoedcXN16T4NYkn3r4AWMcd6yjcwfxl+4GgexQHzZwGNrUvr7DemJu4=
+	t=1716516443; cv=none; b=KgJTOKa6gTVcwThdw6Dxy2A0W3QX4/7LzXDL7SWlgxfqTqQneXCZmukf/dJ3421w+tCwJqi3BeH2a8imOL0/9HjxzsKZS0LwtEWnErMCMICCR7h63wXNtjpEU65fN3bW/ESlSxhu9JNf+aPk36CA28Q4pv7Zpb1hw9wDqWM65SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716515953; c=relaxed/simple;
-	bh=8HvXOKkqios4yzwlfe0hQTKvICnw8ZVW3mMRcplGCRQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=A4gTl4lvApbRITX1Vi45JA49NCl+0j+VK/FxC6aymsPi/i8nT3qwtAMGbZGtkObEQposj007QpYmzdwn7PR6fxn5LtNCVJyyZKLo+fKMBCDMWg6YWUrHwgetZ4eDABdLo1lMVaTVr5/uSeoopBB0/XyetCKqt+8bx3vBDxk4EhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eUGIU/x4; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eUGIU/x4"
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240524015908epoutp021cdf4345fee1d98cf712f937ff088ae9~SSikg2QAK2789727897epoutp02S
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 01:59:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240524015908epoutp021cdf4345fee1d98cf712f937ff088ae9~SSikg2QAK2789727897epoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716515948;
-	bh=Lc51D5b48Af/XQTwq2XFWVLT/g5JdkG0gRQi0KSFZYs=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=eUGIU/x4rpJ18TdxQtu955Ex+a4Ej/90jHUUIc6CjNxr3fQfAKDhRE7pi2DDIoCx+
-	 1Q9jyOXFkkvEMek2pJewtZNRZnv8SQ4LC+bvRBjXnJq75idkmaLdcb6uK5TCIZq5B8
-	 DJYDO6J+eWVeAc19KyQ8aOZTGdQWuY2uRLjSPWwM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-	20240524015908epcas1p466445ee52a12daa12ceffe0f86919b88~SSikMFJbf2205322053epcas1p4M;
-	Fri, 24 May 2024 01:59:08 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.38.249]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4VlpB35Vz3z4x9QK; Fri, 24 May
-	2024 01:59:07 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-	epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D2.9A.10158.B64FF466; Fri, 24 May 2024 10:59:07 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240524015907epcas1p2598a2ba8a81529b6639cff007fe9106b~SSijih1Oj0170501705epcas1p2T;
-	Fri, 24 May 2024 01:59:07 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240524015907epsmtrp26cd1de8f56036ec4a4f8df6a7014b87d~SSijh1hrc0720707207epsmtrp2K;
-	Fri, 24 May 2024 01:59:07 +0000 (GMT)
-X-AuditID: b6c32a38-8e1ff700000027ae-47-664ff46bb858
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D7.D6.08924.B64FF466; Fri, 24 May 2024 10:59:07 +0900 (KST)
-Received: from lee.. (unknown [10.253.100.232]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240524015907epsmtip1067e709a65e6b21fb946d5f0a5616f2d~SSijWM8Sg2280522805epsmtip1c;
-	Fri, 24 May 2024 01:59:07 +0000 (GMT)
-From: Chanwoo Lee <cw9316.lee@samsung.com>
-To: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
-	James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
-	quic_nguyenb@quicinc.com, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Chanwoo Lee <cw9316.lee@samsung.com>
-Subject: [PATCH v2] ufs:mcq:Fixing Error Output and cleanup for
- ufshcd_mcq_abort
-Date: Fri, 24 May 2024 10:59:04 +0900
-Message-Id: <20240524015904.1116005-1-cw9316.lee@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1716516443; c=relaxed/simple;
+	bh=MQ3gr4wLJPyqPsY72u8wT+GuL6maEnB+7O1Um7Rr6hM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sLzC6fctOjGFPWgDp6dCXkKvZ6PTzrHleS2r6pxRwaOMj8EaHphX/INic/cAXyLfE22KYAOjJjKEeOwOwDwDQS943lzEWc24M6WQ8eeN/B23CTQxYXejar4nN4sEm5/V+SGNG2Cd3pIOa7CCXhOhJt0uD3yjGuCFBtDUaAkgvC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7e613a3a0e6so235195839f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 19:07:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716516441; x=1717121241;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ctLSEuUVB/OTqTZOSOU++d9mlXqgnuzL2cILeiBiC7M=;
+        b=hDsx0MRYAPbwaTfJ1glrzhcweWzDWjTKC3ngrphnATgn5f6aAa4kDBnmD2L5rBS3IG
+         jevrFdlBOc/t1Om8446uvhMvG28TNJWl9LX5LsrqEm1rJfoDeL2grDU3tMFJ+MCbaMHc
+         RTt4osYxL0Cb3+H0oadw+y/rhwFVZsdS7aJVEaLhmNTLCFtT+WojtfSK3LInW6iDU79X
+         ctW2q3jAWvM3pNsJs8HYswYEkurwyYYkCR5NfL8/ih2FKaFgGGo/aGGLQBfjd6weCf6c
+         r0EmQAHPLdk6aboufd1jdjP3p3sY8ImvCp1ZDAzuI6pnPHljBNPc+fge369sMFgnfbHN
+         5WmQ==
+X-Gm-Message-State: AOJu0YzzqzBiVj9MbyHozfnpogqZCLc88fmMXraM0tUYq7y0Wdy7A6aD
+	HUjj5pIu3Sftd1+fQem0sMwu/oip3pKhqwIJSzVbTs4DeLv0HFOmdHntvyiK0HsBClQhsi8ZFdu
+	hKK4CGKmvhuwHqUZbRqsVgSIwlm58fa8VClB9ZERGMb2SOr0xZWRcMlI=
+X-Google-Smtp-Source: AGHT+IHCNx4AvsztoNy85YpSiaJneEb/0KvfP77lEvnBl211c6VvUmZz9Dw8fLkmV+32m298qT1VEtvvZyi4QEaMzcFzT9S8xV1q
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpik+LIzCtJLcpLzFFi42LZdljTQDf7i3+awftDGhYP5m1js3j58yqb
-	xbQPP5ktZpxqY7XY2M9hcXnXHDaL7us72CyWH//HZDH1xXF2B06Py1e8PaZNOsXm8fHpLRaP
-	iXvqPPq2rGL0+LxJzqP9QDdTAHtUtk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5
-	kkJeYm6qrZKLT4CuW2YO0F1KCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnAKzAr3i
-	xNzi0rx0vbzUEitDAwMjU6DChOyM6Q+WMRe8E664uc+ugfEPfxcjB4eEgInE933GXYycHEIC
-	OxglWl/7djFyAdmfGCWuP5/ADOF8Y5R4dreTEaQKpGHLus3sEIm9jBJX+k+xQ7Q/YZToWO4J
-	MpVNQEvi9jFvkLCIwENGif63gSA2s4CGxJ+2i2wgtrBAkET7hIVgrSwCqhLfTu8Cs3kFbCV+
-	HDvJDLFLXmL/wbPMEHFBiZMzn7BAzJGXaN46G+w4CYG37BLb726FanCROH31KguELSzx6vgW
-	dghbSuLzu71sEA3NjBIL3xyH6p7AKPHl4202iCp7iebWZjaQD5gFNCXW79KH2MYn8e5rDysk
-	uHglOtqEIKpVJOZ0nWODmf/xxmNWCNtD4tqdVlZImMRKtHR/Z5/AKDcLyQ+zkPwwC2HZAkbm
-	VYxiqQXFuempxYYFJvBoTM7P3cQIToxaFjsY5779oHeIkYmD8RCjBAezkghv9ErfNCHelMTK
-	qtSi/Pii0pzU4kOMpsBQncgsJZqcD0zNeSXxhiaWBiZmRiYWxpbGZkrivGeulKUKCaQnlqRm
-	p6YWpBbB9DFxcEo1MCny/Tox4WOq61lmd/sPJ9I0lq5Mufl2ne0Mloa7Sg9Od/XNkuAozt3w
-	MiEqPjDD6vOvW0vNr9/5wHt6T+XkH8uSWc2y5jG4n0iW/PClYs/9N/pTjvlGxH9aaqO6W5Hh
-	7b2yZ2sWTXq4YHL0/j/LxK8e33BenCv4xqZ703c9vToj71bqHIcuu7STqq75XY9evLvaHukg
-	Ezsn+sPnjZ7mW9ZLNhgFbVRtXq6iIrpqPlvCM42jLekLv9ycVWlcGvVPIN9n3sqLjQ6LNzwU
-	MuHZGFob586y+i6zzTM9hua7XitZz+3vit4ekbnC7osha0J/jI3TmhObPIssPk148bT9/0ou
-	68x5X1Zx3e+LjFdw/SCqxFKckWioxVxUnAgA5Xcm5xUEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLLMWRmVeSWpSXmKPExsWy7bCSnG72F/80gzPLRSwezNvGZvHy51U2
-	i2kffjJbzDjVxmqxsZ/D4vKuOWwW3dd3sFksP/6PyWLqi+PsDpwel694e0ybdIrN4+PTWywe
-	E/fUefRtWcXo8XmTnEf7gW6mAPYoLpuU1JzMstQifbsErozpD5YxF7wTrri5z66B8Q9/FyMn
-	h4SAicSWdZvZuxi5OIQEdjNK7FrVyw6RkJLYvf88WxcjB5AtLHH4cDFIWEjgEaPEoVnWIGE2
-	AS2J28e8QVpFBF4ySvy+t4gJpIZZQEPiT9tFNhBbWCBA4v3jRWA2i4CqxLfTu8DG8wrYSvw4
-	dpIZYpW8xP6DZ5kh4oISJ2c+YYGYIy/RvHU28wRGvllIUrOQpBYwMq1ilEwtKM5Nzy02LDDM
-	Sy3XK07MLS7NS9dLzs/dxAgOYS3NHYzbV33QO8TIxMF4iFGCg1lJhDd6pW+aEG9KYmVValF+
-	fFFpTmrxIUZpDhYlcV7xF70pQgLpiSWp2ampBalFMFkmDk6pBqbYa6clajfIhqzxCrzEr6nU
-	tIFjZZrg2ZnCXwJ/fRO5MX+pvng1d1fqw4XT5CMWbtrNfr5uQpWwJjPv25JlR2tfXDu/PHva
-	CpbzbTee/b0h8V58X9y2HVaME+12iM1xfzr30RpJZSeRtAVPFj4u679z6MRnoWv5cV+/vzNW
-	M0zxmXv0W4BC83vF5MJj4izXTHlD17FJ3glWfXA66s2feRoFSyat0WZfn9U2y/+qSKjs9j3/
-	4ren2+r3+5otXzL/cJ6yUu52tvjwbRcEi46yHezw3fpgdvDruEVqBqz6+pu/XmNZOuFHUWdh
-	9P7HnG/Onq4I7YxxSZ7ufH6x0fo/xzJ1mtZmtnasuzq15My0Be+FlViKMxINtZiLihMB94Vy
-	GtACAAA=
-X-CMS-MailID: 20240524015907epcas1p2598a2ba8a81529b6639cff007fe9106b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240524015907epcas1p2598a2ba8a81529b6639cff007fe9106b
-References: <CGME20240524015907epcas1p2598a2ba8a81529b6639cff007fe9106b@epcas1p2.samsung.com>
+X-Received: by 2002:a05:6638:2924:b0:488:59cc:eb5b with SMTP id
+ 8926c6da1cb9f-4b03faa6be6mr22751173.3.1716516441283; Thu, 23 May 2024
+ 19:07:21 -0700 (PDT)
+Date: Thu, 23 May 2024 19:07:21 -0700
+In-Reply-To: <0000000000002fd2de0618de2e65@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bbef9e061929a017@google.com>
+Subject: Re: [syzbot] [syzbot] [fs?] general protection fault in iter_file_splice_write
+From: syzbot <syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-An error unrelated to ufshcd_try_to_abort_task is being output and
-can cause confusion. So, I modified it to output the result of abort
-fail.
-  * dev_err(hba->dev, "%s: device abort failed %d\n", __func__, err);
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-And for readability,I modified it to return immediately instead of 'goto'.
+***
 
-Fixes: f1304d442077 ("scsi: ufs: mcq: Added ufshcd_mcq_abort()")
-Signed-off-by: Chanwoo Lee <cw9316.lee@samsung.com>
+Subject: [syzbot] [fs?] general protection fault in iter_file_splice_write
+Author: lizhi.xu@windriver.com
 
----
-v1->v2:
- - Change title and description
- - Change all 'goto out' statements into 'return FAILED'.
- - Add 'return SUCCESS' at the end.
-   v1 : https://patchwork.kernel.org/project/linux-scsi/patch/20240523002257.1068373-1-cw9316.lee@samsung.com/
----
- drivers/ufs/core/ufs-mcq.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 33e02dc69afb
 
-diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
-index 005d63ab1f44..8944548c30fa 100644
---- a/drivers/ufs/core/ufs-mcq.c
-+++ b/drivers/ufs/core/ufs-mcq.c
-@@ -634,20 +634,20 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
- 	struct ufshcd_lrb *lrbp = &hba->lrb[tag];
- 	struct ufs_hw_queue *hwq;
- 	unsigned long flags;
--	int err = FAILED;
-+	int err;
+diff --git a/fs/splice.c b/fs/splice.c
+index 60aed8de21f8..abf45d6184a5 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -745,14 +745,25 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
+ 		if (ret <= 0)
+ 			break;
  
- 	if (!ufshcd_cmd_inflight(lrbp->cmd)) {
- 		dev_err(hba->dev,
- 			"%s: skip abort. cmd at tag %d already completed.\n",
- 			__func__, tag);
--		goto out;
-+		return FAILED;
- 	}
++		printk("ret: %zd, total len: %zu, %s\n", ret, sd.total_len, __func__);
++		if (ret > sd.total_len) {
++			ret = -EINVAL;
++			goto done;
++		}
+ 		sd.num_spliced += ret;
+ 		sd.total_len -= ret;
+ 		*ppos = sd.pos;
  
- 	/* Skip task abort in case previous aborts failed and report failure */
- 	if (lrbp->req_abort_skip) {
- 		dev_err(hba->dev, "%s: skip abort. tag %d failed earlier\n",
- 			__func__, tag);
--		goto out;
-+		return FAILED;
- 	}
- 
- 	hwq = ufshcd_mcq_req_to_hwq(hba, scsi_cmd_to_rq(cmd));
-@@ -659,7 +659,7 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
- 		 */
- 		dev_err(hba->dev, "%s: cmd found in sq. hwq=%d, tag=%d\n",
- 			__func__, hwq->id, tag);
--		goto out;
-+		return FAILED;
- 	}
- 
- 	/*
-@@ -667,18 +667,17 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
- 	 * in the completion queue either. Query the device to see if
- 	 * the command is being processed in the device.
- 	 */
--	if (ufshcd_try_to_abort_task(hba, tag)) {
-+	err = ufshcd_try_to_abort_task(hba, tag);
-+	if (err) {
- 		dev_err(hba->dev, "%s: device abort failed %d\n", __func__, err);
- 		lrbp->req_abort_skip = true;
--		goto out;
-+		return FAILED;
- 	}
- 
--	err = SUCCESS;
- 	spin_lock_irqsave(&hwq->cq_lock, flags);
- 	if (ufshcd_cmd_inflight(lrbp->cmd))
- 		ufshcd_release_scsi_cmd(hba, lrbp);
- 	spin_unlock_irqrestore(&hwq->cq_lock, flags);
- 
--out:
--	return err;
-+	return SUCCESS;
+ 		/* dismiss the fully eaten buffers, adjust the partial one */
+ 		tail = pipe->tail;
+-		while (ret) {
++		n = 0;
++		while (ret > 0 && n < nbufs) {
+ 			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
++			n++;
++			if (!buf->len) {
++				tail++;
++				continue;
++			}
+ 			if (ret >= buf->len) {
+ 				ret -= buf->len;
+ 				buf->len = 0;
+diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
+index 1121601536d1..f7c32835b094 100644
+--- a/fs/netfs/buffered_write.c
++++ b/fs/netfs/buffered_write.c
+@@ -510,6 +510,7 @@ ssize_t netfs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	netfs_end_io_write(inode);
+ 	if (ret > 0)
+ 		ret = generic_write_sync(iocb, ret);
++	printk("ret: %ld, %s\n", ret, __func__);
+ 	return ret;
  }
--- 
-2.34.1
-
+ EXPORT_SYMBOL(netfs_file_write_iter);
+diff --git a/fs/netfs/direct_write.c b/fs/netfs/direct_write.c
+index 608ba6416919..ecd57c4d0ecb 100644
+--- a/fs/netfs/direct_write.c
++++ b/fs/netfs/direct_write.c
+@@ -69,6 +69,7 @@ static ssize_t netfs_unbuffered_write_iter_locked(struct kiocb *iocb, struct iov
+ 		 */
+ 		if (async || user_backed_iter(iter)) {
+ 			n = netfs_extract_user_iter(iter, len, &wreq->iter, 0);
++			printk("ret: %zd, %s\n", n, __func__);
+ 			if (n < 0) {
+ 				ret = n;
+ 				goto out;
+@@ -190,6 +191,7 @@ ssize_t netfs_unbuffered_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 			   FSCACHE_INVAL_DIO_WRITE);
+ 	ret = netfs_unbuffered_write_iter_locked(iocb, from, NULL);
+ out:
++	printk("ret: %zd, %s\n", ret, __func__);
+ 	netfs_end_io_direct(inode);
+ 	return ret;
+ }
