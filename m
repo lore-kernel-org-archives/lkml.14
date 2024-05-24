@@ -1,36 +1,36 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E720E129A9A;
-	Fri, 24 May 2024 07:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9AC9475;
+	Fri, 24 May 2024 07:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716536309; cv=none; b=H4edNRnA18jyt8pCx3J8D6Dz9IYhGY6IVMZs13mbVjEPWHJj6ej5oMDDPzkyY2enMPR24oxtgiwpTwAKCr8GIBYsVTqwCeSn4fYoxJ8q0pWWulzs5B4HOJxx99fRnOsjhEfIPyPI4h41jNhRZMSLAGoUrER2Ldziwlj9e0tbEXs=
+	t=1716536398; cv=none; b=qXBVkEeRAGJyPlmhYy5HBzhiVoLERKDTPI6GRbOfWyqNzpHbYxLZPtzhtTZZTnRtMQW0J7s7ZDTNoMb8nZaguwtKxiim5KrVPRHVDZNa/fdxT0MbQVJ//6DYCKpKPJWMFok1vIlmpQUYIG3zAEa6hdH4TAllhHJM+tvtaRC+krg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716536309; c=relaxed/simple;
-	bh=zg9rzX2CkzaH5NrTvRPMDSY7CUUk9rliAxQ0tkcFviA=;
+	s=arc-20240116; t=1716536398; c=relaxed/simple;
+	bh=q4ijQgKF32lB7PvxRzNvw/zlrLwTb9nj6LptN/ARhPM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e1tz/T3sWyl1YxdHO1Xa3P1Hmg7kZrODMg4xTsrnspxM0tlr8QzhNBpcre9Lm/lfFnhKYBUpFn4ytOaDglxbKjy/4JBmhBlKYubkCnzseDE5UeeOljEC8OS/pxdvUfk0qsf5Bk/Ls8HW9Q2m8rNDRS0q0wzpKirMQbb/FR3JG/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hmIrQbMf; arc=none smtp.client-ip=217.70.183.193
+	 MIME-Version:Content-Type; b=bzodiqZWjm6a4s3Ir0j/Wn0UWK6QUc2T8Opzt2UDef9OplXOLZNc7EDSdkOkBeZPPBpeKxVlB2QcJboRVhRqbcvEoqUxmCrkXPD2pJisOeVIw3b1nf3b2YGCy7iPAqO2DesV2FYcwGTSPJ/lXYe3NyNCptAr9ZKeChMVBMpfrFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c0MCuzvA; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hmIrQbMf"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 851E924000F;
-	Fri, 24 May 2024 07:38:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c0MCuzvA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 756A01C000A;
+	Fri, 24 May 2024 07:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716536299;
+	t=1716536394;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zg9rzX2CkzaH5NrTvRPMDSY7CUUk9rliAxQ0tkcFviA=;
-	b=hmIrQbMf2WedDiG8w5y6ouL4nF4XzbgCLUHbseSCnXfEhkjhKl89G3pSH9/QUXh1Zy6NSe
-	CBBS5uk3dgEBTQ2JbYeXJdH8APub0uNEk4siIPpLOLfuJsYGtK+S365vPHt4VKiGDh/Uk0
-	twVJldME00Z7DZ4Fm8ueYXS7QrSc/wPetqczVKJzy0Xu6rNghBjfxJjACeQIoPBrA3rnmU
-	gy753MtIfBUS1o9aLApJfaoGlsLx7hO64yN38iTxcmiu1zu+Qhv/MdUW0RA/yBBgFDHzCr
-	LhYUzmzcpqSsTS74DU9oIqRxpbn+r3FR5qdwDOPILURFxybN1lL7o6VZaKurxw==
-Date: Fri, 24 May 2024 09:38:15 +0200
+	bh=q4ijQgKF32lB7PvxRzNvw/zlrLwTb9nj6LptN/ARhPM=;
+	b=c0MCuzvAwcU+WR9XDDU7/TGIny3RJGUj3DtBLt3mku/6XvpWStzn1bZ9pkDTpQSawFGmrF
+	XmxrAwQIdwl4RsbpVvlGQsY8DsBc+mMjzjTqRmyGKHnyta7kqO6k/QcBgVEuUQUuo803Cq
+	in/TOIXjoDvssAXqskglduQLVlRWPRrwjM/BMjogIfBtrKGbF+xwOW7D0LnlMv7d7CcAGr
+	RVUpwLTlyag5CU9sGaNDDXi+2LcFGNWe6DRVQWUzYKjglK8RJkkn7PpkaKNI44K494DTqs
+	404gSPwRiLzoYTF0EvlNJtk5dEt+Drascx9WW1KlMKw+X9XgEZd4Nrh9GoRpNw==
+Date: Fri, 24 May 2024 09:39:50 +0200
 From: Kory Maincent <kory.maincent@bootlin.com>
 To: "Rob Herring (Arm)" <robh@kernel.org>
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "David S. Miller"
@@ -39,11 +39,11 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "David S. Miller"
  <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew Lunn
  <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] dt-bindings: net: pse-pd: microchip,pd692x0: Fix
- missing "additionalProperties" constraints
-Message-ID: <20240524093815.46e2432a@kmaincent-XPS-13-7390>
-In-Reply-To: <20240523171732.2836880-1-robh@kernel.org>
-References: <20240523171732.2836880-1-robh@kernel.org>
+Subject: Re: [PATCH net] dt-bindings: net: pse-pd: ti,tps23881: Fix missing
+ "additionalProperties" constraints
+Message-ID: <20240524093950.323b8c44@kmaincent-XPS-13-7390>
+In-Reply-To: <20240523171750.2837331-1-robh@kernel.org>
+References: <20240523171750.2837331-1-robh@kernel.org>
 Organization: bootlin
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
@@ -56,20 +56,14 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 X-GND-Sasl: kory.maincent@bootlin.com
 
-On Thu, 23 May 2024 12:17:31 -0500
+On Thu, 23 May 2024 12:17:50 -0500
 "Rob Herring (Arm)" <robh@kernel.org> wrote:
 
 > The child nodes are missing "additionalProperties" constraints which
 > means any undocumented properties or child nodes are allowed. Add the
-> constraints, and fix the fallout of wrong manager node regex and
-> missing properties.
+> constraints and all the undocumented properties exposed by the fix.
 
 Acked-by: Kory Maincent <kory.maincent@bootlin.com>
-
-Thanks for these fixes!
-Didn't know that "additionnalProperties" should be set on all child node, b=
-ut
-that makes sense.
 
 Regards,
 --=20
