@@ -1,36 +1,36 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2FE85C69;
-	Fri, 24 May 2024 09:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7A78626E;
+	Fri, 24 May 2024 09:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716542199; cv=none; b=JEfM6DGbu5Dtk2/4DRl59hkCXpK1MLdYiZIFGZosVFqoymD8OTFPIjDhOrwwz8m5R+pjXgbycD2ktLEYs+ETdVWrju+zVo8c4C2cHJJj+0x4MPkQgT4mS8G6RWtlzg2lD5Jucs6ePnKT+wsHaUD7wqRmHTci63BCnHoORgpSa9k=
+	t=1716542200; cv=none; b=YYs1QO7GM2pzyMEYzi62i9zftHzw9pr30WS3RkYGxRjpYOXdgXb+OxhHsR6bOrQVgKl5iR5wGk0EFIIbfMtBIQ5cUL5raYb3SJxwb7CO4/XU1HrBSZdkPZavC9Yb9T4/Hhl+ZUtyu413dAeVbyVNa+53cYzpHOX+rGh07/7aKEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716542199; c=relaxed/simple;
-	bh=2l/HnKNW7m8L+dYV3Z20Y12gb/3RrpQ7muKsdZwTe/4=;
+	s=arc-20240116; t=1716542200; c=relaxed/simple;
+	bh=er7HX24yFsOrH0ScrFR/OGLdgsJH/93guW1I8ORBqe8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PHniNEpJNFQpVfrFtEm/Dr7ZV5Ua48A4pZ/zPgxmYvn0W4unnJSzAMTWGskIaGPOFRmCko74Db5L2/dHm+zCaQzm0pANMit3hITtKRwHmZ+sZ/CYlb8LuKQ+XIoega6UPk+2DvUUYo4QpQquyk37qYGYkOTvbzcFptUYzmi3KZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=EAT0FpsaXp8yWqNow3JOmY9UFHnTh//SjFE+O9inQVkY1d/UrDceErEK2xaXAPCHjiF5sb8k2a0eDGIZ0XgzMTZVEIMV5V83T2J2pmFH89FU4bFFMzVeKvru/h55AgqmRcZo2hKDCfL5Wg3wlG5PgTFXdyzwoJRRH1wVT6mZJIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VlzpQ3LHqzsR5g;
-	Fri, 24 May 2024 17:12:46 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VlzqC226JzPmWX;
+	Fri, 24 May 2024 17:13:27 +0800 (CST)
 Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0AB32180A9C;
-	Fri, 24 May 2024 17:16:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7A7CC1400D1;
+	Fri, 24 May 2024 17:16:31 +0800 (CST)
 Received: from huawei.com (10.173.135.154) by canpemm500002.china.huawei.com
  (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 24 May
- 2024 17:16:29 +0800
+ 2024 17:16:30 +0800
 From: Miaohe Lin <linmiaohe@huawei.com>
 To: <akpm@linux-foundation.org>, <tony.luck@intel.com>, <bp@alien8.de>
 CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
 	<linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-Subject: [PATCH 08/13] mm/memory-failure: use helper macro task_pid_nr()
-Date: Fri, 24 May 2024 17:13:05 +0800
-Message-ID: <20240524091310.1430048-9-linmiaohe@huawei.com>
+Subject: [PATCH 11/13] mm/memory-failure: fix comment of get_hwpoison_page()
+Date: Fri, 24 May 2024 17:13:08 +0800
+Message-ID: <20240524091310.1430048-12-linmiaohe@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240524091310.1430048-1-linmiaohe@huawei.com>
 References: <20240524091310.1430048-1-linmiaohe@huawei.com>
@@ -45,54 +45,27 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  canpemm500002.china.huawei.com (7.192.104.244)
 
-Use helper macro task_pid_nr() to get the pid of a task. No functional
-change intended.
+When return value is 0, it could also means the page is free hugetlb
+page or free buddy page. Fix the corresponding comment.
 
 Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- mm/memory-failure.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ mm/memory-failure.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 2c3ecbfc2134..19d338e83e43 100644
+index e4252f297d41..705cd0bbb603 100644
 --- a/mm/memory-failure.c
 +++ b/mm/memory-failure.c
-@@ -338,7 +338,7 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
- 	int ret = 0;
- 
- 	pr_err("%#lx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
--			pfn, t->comm, t->pid);
-+			pfn, t->comm, task_pid_nr(t));
- 
- 	if ((flags & MF_ACTION_REQUIRED) && (t == current))
- 		ret = force_sig_mceerr(BUS_MCEERR_AR,
-@@ -356,7 +356,7 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
- 				      addr_lsb, t);
- 	if (ret < 0)
- 		pr_info("Error sending signal to %s:%d: %d\n",
--			t->comm, t->pid, ret);
-+			t->comm, task_pid_nr(t), ret);
- 	return ret;
- }
- 
-@@ -518,7 +518,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill,
- 		if (forcekill) {
- 			if (tk->addr == -EFAULT) {
- 				pr_err("%#lx: forcibly killing %s:%d because of failure to unmap corrupted page\n",
--				       pfn, tk->tsk->comm, tk->tsk->pid);
-+				       pfn, tk->tsk->comm, task_pid_nr(tk->tsk));
- 				do_send_sig_info(SIGKILL, SEND_SIG_PRIV,
- 						 tk->tsk, PIDTYPE_PID);
- 			}
-@@ -531,7 +531,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill,
- 			 */
- 			else if (kill_proc(tk, pfn, flags) < 0)
- 				pr_err("%#lx: Cannot send advisory machine check signal to %s:%d\n",
--				       pfn, tk->tsk->comm, tk->tsk->pid);
-+				       pfn, tk->tsk->comm, task_pid_nr(tk->tsk));
- 		}
- 		list_del(&tk->nd);
- 		put_task_struct(tk->tsk);
+@@ -1549,7 +1549,7 @@ static int __get_unpoison_page(struct page *page)
+  * the given page has PG_hwpoison. So it's never reused for other page
+  * allocations, and __get_unpoison_page() never races with them.
+  *
+- * Return: 0 on failure,
++ * Return: 0 on failure or free buddy (hugetlb) page,
+  *         1 on success for in-use pages in a well-defined state,
+  *         -EIO for pages on which we can not handle memory errors,
+  *         -EBUSY when get_hwpoison_page() has raced with page lifecycle
 -- 
 2.33.0
 
