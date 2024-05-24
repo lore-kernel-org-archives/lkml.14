@@ -1,971 +1,334 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D391292E6;
-	Fri, 24 May 2024 08:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716539366; cv=none; b=HRIlN9HMG4p3jjX0taMUknW9N3GBP3Uy4U+k3Jd+FCiq3uOtRs6kdtcvYh/SqcimSofhWgjQPtqdrbzqBjt0RlIMI1l6auc2C2tgIBC42lKHq1skHRVfNSIM49cIRV6xFBklDsBHtMX7eOCSUd83NkbL4CIzV2JPUYMkNyhupz8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716539366; c=relaxed/simple;
-	bh=VrG7DLlvfD2+1+P2k9OSigd8+aqIcyCiPteGxRosO4E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xugf9bVXzOM2JHWgVaI5Rlz3zyO48NiHFbqXUPVecEB/5YB+p3/qTjpkqkOLUYOiHlWLdnD4dchllHwFJMJWawcXN7fq7KBc8vBE92IxrGPuZvq3HTnTplVa9FR1o2k6sL64gq2rNbsKhUAz7AFzD9tfM/HQ9r7tWULpboExSck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLyVrgdX; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801B67494;
+	Fri, 24 May 2024 08:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.153.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716539481; cv=fail; b=F+n/GHFX1W4yBYiqahRY5O3o7Gpbmjf+mgmXJsAsz3/1UCHSsk42Io1mvIMK6Vok3X5okOqSUvFUc7uwfQNwzlNGGGIiFei7MbvAlTwJqzdJwG4/AyXzaFQGTdn2PU0Zf4y8gnqJ/oElpg8TRSHEAlSwtbnDioenDAAt9fENYqg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716539481; c=relaxed/simple;
+	bh=xvBZjgydUFjwmGwyOzZkcIbNGHlCSvxwG73eOuLeGvM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fxfmzQ2tlHYYGtMqqCyGvPE/90IbsatHJhDy3+b57sRyX03brBj//GLs56ofA2cRvhD28x2KaRYMeUi/hMqXmSME/B8zVffknDe6qfqPG/5EG9WUImO2eUyEz+czC1R1FcJ6OuLKmOHdehL7N35LrFCwKUDUb0JaFgdPpBN4t8Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=oscgMDjZ; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=f2fnddA9; arc=fail smtp.client-ip=216.71.153.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLyVrgdX"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f44b6f9363so4019395ad.3;
-        Fri, 24 May 2024 01:29:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oscgMDjZ";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="f2fnddA9"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1716539480; x=1748075480;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=xvBZjgydUFjwmGwyOzZkcIbNGHlCSvxwG73eOuLeGvM=;
+  b=oscgMDjZxEaqsWhPUCyCmwyrjjHKofOt7W1mlZuK1egFc+nOaJgCfTFc
+   tusjxvg6Rk8rk/aYChjFrGia8VpwpsOCSQxYAdMS9XG4VCy3zQoEc9CNo
+   UGRiRNVUtCPnL77r8u95HDJw2fOE0wzvYMux+sLfogD95+6PxScDAYD/v
+   halaQdIo3Ha9XEtsQwLP6cgVtyTAVmun+xQaV1ZzolPUvgwtFm6aJ864L
+   m+umlyLpVmkwdTWNsibho+V5zKZFuP+egis8GKkzjD3btIe1xBy9+U//8
+   ne0eQg4ghb1ia2NKv75BrLwZrmv349nm/x8yzg2eCHsvohNLO+3qZXWue
+   Q==;
+X-CSE-ConnectionGUID: LmcQBa2lRjCT4VSevgM3Qg==
+X-CSE-MsgGUID: D7hjr2RmT926TOGxSBgohw==
+X-IronPort-AV: E=Sophos;i="6.08,184,1712592000"; 
+   d="scan'208";a="16887054"
+Received: from mail-bn7nam10lp2100.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.100])
+  by ob1.hgst.iphmx.com with ESMTP; 24 May 2024 16:31:17 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MpivUoCWLe1sD1NUZ3Tv9q+phL+B64FHahOWew75rw6aF94zTwMd/VJuO5sSn5dyY3esSAabbmt/NtB16jW6ed5gdiZ0IsLCe5haRe614h0q1fYu2FzRtuBt1gUmCUJsDus5w0JgQ46xRxnddLwhTEOGQ/LH1zVectRo3XswUMeHaPu4EKHUL6+bKpe2RErG5eX4muV6GZ8hFbHXx+To63M1p56Rf8gn8Q49WxvnucpphJP7HQjCygBpghXS+VhwSukaTpIgq5WIxStWcUwY/Fvyv3kmsWHOknCmStgXLBt9ftTG0CceNFJqwF2Yl8QeouOYdMJWNXYCfCGA1UQajw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YoxnnY9iWjqaxCqPKzEQnbnsASw9jLRiYzgkolzN6mA=;
+ b=j2B9JwYoXN+cuUsjwjhsM7b2bx7UAo3IcAUBxsJulcfM9Sq9ojyN3U05Ufe5qX9ZAWypHSSgYluIIOm4ymQRzRMcjmF2AMxTfXKj2q4qYIcmAVMDZKu3lexWh6LcLdHy/LIfPeIaZSKOGCqG55z7IgJMePUswrtVFDepPmGW3GumfK7asHtOqJxaTKIA+v9MwvWGm7FX+zBUSeeAHy7YaaBPP9ukqk2z7eX95qjGo4MUJ8+YNXOyek0m/tAO4MtCfrW/9S3KC5jcEFWH1VTadxwrYPQ8wdFnaID9q8pCsfaUC2r7CKqHKuFFOc8ce7b/kDdtgNpqsrdF4fi3+4XmBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716539364; x=1717144164; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yjzcilTL0INsxNf0STvQEIzD+iCsrF8EvqMJvccQ0Sw=;
-        b=ZLyVrgdXs1MXxVBHBgtUrkfH3kMzpaJPAn7ExqMZm+uXSDOt3q+eQYYWjZqysfllrW
-         ZEKvbkBLQfnPWJAk6Dbk5S3Ne9q78gFTp7adv9NeTe70aRM4ymhIc7iNzGnzACYWOKV7
-         oJcLWvs1s3bg4S0N7T92tE9v+efzSNiNex7gS4bjPFqQcjelQ9gtDoz5sdszj+K0v7cp
-         scWmr/NxqAfRh0UXP6XN+zGEOPl5XVbEi3DrVWP5PqWNQS3qGE1j4YItq62Qf4DcdAMF
-         5ZMfjrXIyRKtZRyoynXrZ2IcXM6jhSPm5PxeoKLbmAeXA6m2mVn7rDXO9QaeQUPrMWAH
-         WHCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716539364; x=1717144164;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yjzcilTL0INsxNf0STvQEIzD+iCsrF8EvqMJvccQ0Sw=;
-        b=ZVfD10CVs5YyNzgQopTEPZIfUykF0K8c46g284k+WpgFz0rWB0Tvo/Qacx2mnAi6YJ
-         m4ZcueL9KgbaSmXxbpFErVy1OmT5gtZVTIENxUYz7y6eLohT9BxSoGgIU04bk9AKYw18
-         0S1nR/lHOQ/EBlQx8lgxo3/1dC5RbRars8XY+Tu8D608ChfpFJxuiacJLd+nVjJnY5p1
-         RVVaL5s0pthQeBjm6PKz1ar0FSXNVpBnQY+2rlhmjmacWWhX+56qnu8A7mX5tX09Q5+7
-         1b6p15Pe4Il2uBuED1gKtwAAeRryAEYmuhuJwGFUXVWinRoTcOXPTXnc1IsB/C/SOImM
-         X6Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7ELt+fJvY955eGMxfCCjAQRIYgGsOgikax53a3VRPyaaEzvUoC5kuafK8/jibyA6dlkKZeZihir7zXmVDQ8Jtu0tXOBsGKNdTNqxDDdJVNZjk2aphLPP/dYw1NSO6HksV+aDc3ZfYOb73mYsY7TE/gDOboCL2ktGXbCjQuV09ME/UuA==
-X-Gm-Message-State: AOJu0Yw7pQ4hk4Ccbm/0/Yz+KKIVcym6wV74aGyd4C/I3ALnz3/yrSyA
-	6xqXS3LyZd6N3fP+ZdTA/iQv9CZNHfJ5u6r0GEQGGgv+wVO7KozW
-X-Google-Smtp-Source: AGHT+IF7trHW3+qHNaDcX19d2AnnRVHbIW1HFWj1+yor80TE9DY67KkrWL/XAJSVD+D2IFp34Q0qVA==
-X-Received: by 2002:a17:902:e5cb:b0:1ec:77e5:2d6f with SMTP id d9443c01a7336-1f4497e15f8mr18971485ad.59.1716539363930;
-        Fri, 24 May 2024 01:29:23 -0700 (PDT)
-Received: from prasmi.. ([2401:4900:1c07:bfcd:61e0:7fa9:84b8:25fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c9c6ea3sm8420325ad.277.2024.05.24.01.29.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 01:29:23 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 3/4] clk: renesas: Add RZ/V2H CPG core wrapper driver
-Date: Fri, 24 May 2024 09:27:59 +0100
-Message-Id: <20240524082800.333991-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YoxnnY9iWjqaxCqPKzEQnbnsASw9jLRiYzgkolzN6mA=;
+ b=f2fnddA9kCQ+gI45modirqPkegqvCH1orB4vMD3UPN8PtmcuHQ/DAg6FA8lZeq3wmnKGhA1HbEzeK7lHjiEy3LN1tMGRvk+GsIjebw6b2o54OozXABtUkUV4kuEBbNIpHFxgMCrQaWyHoXRSG4ezgR/I4mOwwRG4OagMsvjM8EY=
+Received: from SJ0PR04MB7776.namprd04.prod.outlook.com (2603:10b6:a03:300::11)
+ by MN2PR04MB6655.namprd04.prod.outlook.com (2603:10b6:208:1eb::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
+ 2024 08:31:13 +0000
+Received: from SJ0PR04MB7776.namprd04.prod.outlook.com
+ ([fe80::5266:472:a4e5:a9c2]) by SJ0PR04MB7776.namprd04.prod.outlook.com
+ ([fe80::5266:472:a4e5:a9c2%6]) with mapi id 15.20.7611.016; Fri, 24 May 2024
+ 08:31:12 +0000
+From: Naohiro Aota <Naohiro.Aota@wdc.com>
+To: Johannes Thumshirn <jth@kernel.org>
+CC: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
+	<dsterba@suse.com>, Hans Holmberg <Hans.Holmberg@wdc.com>,
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Filipe Manana
+	<fdmanana@suse.com>, Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Subject: Re: [PATCH v4 1/2] btrfs: zoned: reserve relocation block-group on
+ mount
+Thread-Topic: [PATCH v4 1/2] btrfs: zoned: reserve relocation block-group on
+ mount
+Thread-Index: AQHarST8s0VALeEMs0+Cy/hlrfzHBrGmDyyA
+Date: Fri, 24 May 2024 08:31:12 +0000
+Message-ID: <z62yihzehelx5bbipfb7wjw65ygzkmzo6lagzwg2wqlcefvyaj@7vv6pc53cip4>
+References: <20240523-zoned-gc-v4-0-23ed9f61afa0@kernel.org>
+ <20240523-zoned-gc-v4-1-23ed9f61afa0@kernel.org>
+In-Reply-To: <20240523-zoned-gc-v4-1-23ed9f61afa0@kernel.org>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR04MB7776:EE_|MN2PR04MB6655:EE_
+x-ms-office365-filtering-correlation-id: a715c8a9-fa01-4ffb-6d42-08dc7bcbdefa
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|1800799015|376005|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?/FmQqqvqaR64zs39bXkzCFf4tCjFLClpA4Ijho3+DqnP7o8Cf93FdQEvNwp1?=
+ =?us-ascii?Q?5YOKczQF0JppJHEa/HLWPnr0ZCJv3wGecjgh4MmD0NeLtwufCdmcu0hFysMt?=
+ =?us-ascii?Q?n86iOpv8/3axfxNJrNjtkcDgdJbRbdVK/4CoMIzHJK1JL5kM+R829rT0vLCX?=
+ =?us-ascii?Q?WAHF9xyQiqdf9Xt0pos6h4KeErpSMUVmoTv0E2Lp0WuJ7Mx3/RSlfwyGxlDC?=
+ =?us-ascii?Q?k8o4W351ZqL5SxBuCZuIBXS4pGcsMF1mZPwme/Im3NwQL+5ypyIrHrMKPNQl?=
+ =?us-ascii?Q?tQTfUIQ4o2fgSwjMR55NCuW0z6av31EIcqOKLgPqIbu4VrFCMU3p1mGWuVQX?=
+ =?us-ascii?Q?brRtMiAP9WFtaG6xB/oNejesy2pkEeVTh8tgLYpgzZ5Ad2lTWl3zJ1ePpSAu?=
+ =?us-ascii?Q?7LFJZtf3586gsotyEzIohYnmhBav/rmT80KZ9XyPfoWCKU9fGObd2Zui+aex?=
+ =?us-ascii?Q?FROfc1vLQpydmnxMwn2xkRTUqRy+6iW+zQSGaQ+fATzHnb2RYHhDlpUOIJaJ?=
+ =?us-ascii?Q?WgYlfmIxqj/01XSPD9CxrMsPBt/gRWX9Dl0JWVQbi4A6Sgbadd/lbmO5z1fh?=
+ =?us-ascii?Q?9us7ITYG6bUk9vpU61x5FYV3aR9rakHiPhzr2ClO4V6C0oZYastyjG6wWrez?=
+ =?us-ascii?Q?0jTBcrKeuKN4IbHMlfK0HU4XFbevk/6WWnT7eJ2Qp4d3e+/WIP5G8OelNy8P?=
+ =?us-ascii?Q?pU+zOO6ihwpJgan7LP9BHOJg9xIm7SRPXii1NVg7oZ7ogx3zX8KSsWYjOl+w?=
+ =?us-ascii?Q?xml/HuZE949fxbTop0Wzrm5AjnL5eNq3k5yS5ALnMUc1bsbYxBlqO5IQIFr4?=
+ =?us-ascii?Q?/n2FgHiXGMgj6WWevnLi/hElufYhlEmB/B3EhnqmwOoQgk1C95a8MIuXK16e?=
+ =?us-ascii?Q?7eYIO3qQndYaao/fOEZXQwOWFd0nlneYAMjlZEfIj78ZlmatjFcwmYwe2Rre?=
+ =?us-ascii?Q?tYHdu8CiR5NjIiKz3kYykxNhEe7KsUcnQJB6dDx0Kl2GrgUZPrrfC3fSf9z+?=
+ =?us-ascii?Q?TvfkQ9Eq1nNUr2yuVAwKG6OFjl6kKUIy8w66kn0SFaXVnf4XpPGPXbA6x6WN?=
+ =?us-ascii?Q?HG8uGx5oefBhwXnaGjJieduziqljnQa+lki/w/nF8zldgLylSvpIizhUGg//?=
+ =?us-ascii?Q?WUjLK5W2ewSNxUVA0iaXkLxxftbPj3FxAzdOLz0+YqNoGZl5rZBcVFavQ0CG?=
+ =?us-ascii?Q?XVadzWIjcmjyA2hcyZ4kWJI4szjK73hukWAlFjex0F7EFJ83BxsT+k5304oK?=
+ =?us-ascii?Q?RnDaD//yljkj18WoKHKBGVhhmjNh2enrb/oJnBCSfCkESqUxslkNThr75Xjv?=
+ =?us-ascii?Q?tXeFt46Kju12/2e79N0Sk6FNe2EhJ73r2fS1ZctYBs9tYQ=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR04MB7776.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?U5cMYuEb4NVzIoU2cLXLGCO2NWy0xE3Q2TDO0iRRx6j3zYYTq91yQoHK0hxo?=
+ =?us-ascii?Q?YY0Ahq+JTwLjlkNuwcvrHyLuACzHJP5kEEFolOOIPAr72LlmjjUC4HfLOT8R?=
+ =?us-ascii?Q?oW9++0CCx3at2D9cpS2wJoZhTmRgcwCOCqqtN3s3WvrG/3TPAc9eTxRYU8ac?=
+ =?us-ascii?Q?cpe9D1shJcgltrN2eO5h9FxlXXAMkSNAejqhz8/U1OFE+mvWWQpsdTZ53xiz?=
+ =?us-ascii?Q?kDB7jpAjsejeJVfOZZ1+zhgyv4maiwrfCRyb84Zq/quDMs3i/ZVYkC2zZfKP?=
+ =?us-ascii?Q?5TBJkI3eN5GwVAH7PitndOiDgQHshBmi0uP3XvA2FsVHQ8AXirPw+kZtz7qD?=
+ =?us-ascii?Q?iuzD2Uv/RIlXnniyaqSsn8sRc7dyuwXZhcnGKqI1/JKgnpSWGhzAmZbJ5/BW?=
+ =?us-ascii?Q?7FTHNRsWTHYDs1lpaxY2RrpaxuQtWaM/Zs32UBcQ8E7u/rxaYA2H5XadrWoa?=
+ =?us-ascii?Q?+brZJiFTrah4Ecd1094NEMasQG47LbaOAj5YknrMTxuLRJdWzpxx8RSR0ha5?=
+ =?us-ascii?Q?uuIvEhuYpRQSbqegNQ/O87gPbhKK8iZ29hJTDF4d0r5yz2BNfxOkC2L1t8L0?=
+ =?us-ascii?Q?0fu7oqeFqQUFU6v6v4lRtu3LzArE2r6db1VfJtKG15dqAfE68+zhgR2gGmTu?=
+ =?us-ascii?Q?QytDQJXdw9mW+6USovMG3YfxTLaY/ne93WkHe+8mGd7wSjvXsURWZEPoPQNr?=
+ =?us-ascii?Q?FBpeGRRwAQcUT89t7q4lN0JXenSU8fZ4i88ZYn7OK7uo6Vhp28oaGLe5ap+C?=
+ =?us-ascii?Q?Ug6ZIC5sH8Gaxcr4Worsk+UIfy8Zt33TTEU2tnk7dYnZIa/ahuA6ofpdIwOJ?=
+ =?us-ascii?Q?PQVMFrR/Yhu1kOSkBT+xycFd0KkkqkUAwW4qC7jSk27k5Z1FPdmNx0iubzPY?=
+ =?us-ascii?Q?Dj6Nke+lGKne+bLU9XS3OlQFDdaE72DYXu3qOSYZtFN0cs8/b+EBz9CXcDoS?=
+ =?us-ascii?Q?qc4iLWuRZKXFC22AYqOf5jgskxatWjMnPKkj9412hr3S9tUAqYsTG6J8iC/v?=
+ =?us-ascii?Q?ZYfHSPCaTWxqaiTMc+IB5M/YZtCdjyuwaYKn3nTzU77YF3PCpP6POqCOMXYf?=
+ =?us-ascii?Q?ah/cWiGDs7qt/lhrYxtZmJTziwvEXfYjGjeNXDy1xcpDnNuYqQHWYOicMd7u?=
+ =?us-ascii?Q?9bFBOOMNlPuDA2YkjqVc4E0r4tsReyJBv5OQpzw0Y4GhDtnH6dLFiYJ05HU3?=
+ =?us-ascii?Q?1IsMBJJHau9feK6aFvY6JlqgVbdkw9rJqeHdd/GkFSl1NN3iW3f3KuLqJH7/?=
+ =?us-ascii?Q?78igZ+bGY5bLj7N26YCBksqjGjsrZ4eAbUnDZBFvemC2QMCppP18/z6mg43E?=
+ =?us-ascii?Q?mexUyCybB7A55v3nLLjJkQ5qf5hsxk74Mbc7y4xnXHpXaNFEHFz4eD6zSB8H?=
+ =?us-ascii?Q?PZ3almfiTCmZbXqB3PlWSTRuYbk7EK7T6rb3MdXcbo/pp7eur8fG+EUCc5h0?=
+ =?us-ascii?Q?I4Tv4skuJ3DJiNKp2z2z+Q8vfOXce96FShD+lSAxO9Nq0vdqjE0VmcBYm8n/?=
+ =?us-ascii?Q?mjbuhDiMi5nEN86jgVSsdjv9UUQseDF1txJB0p8hYRqVnWO2vbTIuOahjZtA?=
+ =?us-ascii?Q?1+Tzm3qXVvQWf279kivQ3FVU2jVEH75j0c5p7r2n1aa73FXYrS9up6U9xr+/?=
+ =?us-ascii?Q?PQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <65E9267D7815F341BE026E70E129CCF6@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	11xPKeddl8DQ3NzmseMLDAKUjka53hQVosEGzOUWn2FpWqQ+CSCvK3Yfi0l99MROHxHL1qVNQi9YsUmKkgPDlmid29IXMg1x1ydLvgHap18ZsO+DvVY+cdzM15R1+ly8fI3ctHdL1zKoNmqZCE+k/fsn3lwIUXQh7wbM5W9p11nS0CrgyOGGbRIUq54pHI96f4I012IbztpkFfl0dxn5xJ4sbOJ7C9JMcEQEBm4qq0GZ5JB5RUBunRjHZHOCuUHX5RBWd2pM0X1w8fxeqEEeMWMFTyHHsilMe5eO9fD+uSNnsf1xGeHDb3LoZneUh2Nqytc1T1IXNVMyxR+zMhrP0cRiNFv9t1tFuXJWhZCe1CExCBk9HYIg/WD04v52T0SAlX2EmTAGrUCiB3qq4Dm45MC7d4eUV9i4g5dyT8Uo5i9bkgY01l8tOWC9m5XBYnid0CL83RlYrRPPsR8QH6VPka1smpop7aVYgY4zQcLHjntrkYxd8hhGo41X1apxxIgwsJJyHhUwNy1vDGXkvnYfiOsGFNfFVWwJOYwWP4fzDSCWOkgP0RXCZ/J6z0jIEa+kC4ota2FSSy2TUOIPMqx2NzhitCnNoTaTvgHSdoBp3WdvtLvP357uKPcF9NvYEKpQ
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR04MB7776.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a715c8a9-fa01-4ffb-6d42-08dc7bcbdefa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2024 08:31:12.8750
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aAKu/Q7tTm4rFE57h9AaTmIkx3l+aDL6T1ldd+gMduiZ7buVqWgGh5iQJa53aB0gUwlEmLihR18OPS3IEtDKqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6655
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, May 23, 2024 at 05:21:58PM GMT, Johannes Thumshirn wrote:
+> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+>=20
+> Reserve one zone as a data relocation target on each mount. If we already
+> find one empty block group, there's no need to force a chunk allocation,
+> but we can use this empty data block group as our relocation target.
+>=20
+> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> ---
+>  fs/btrfs/block-group.c | 17 +++++++++++++
+>  fs/btrfs/disk-io.c     |  2 ++
+>  fs/btrfs/zoned.c       | 67 ++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  fs/btrfs/zoned.h       |  3 +++
+>  4 files changed, 89 insertions(+)
+>=20
+> diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+> index 9910bae89966..1195f6721c90 100644
+> --- a/fs/btrfs/block-group.c
+> +++ b/fs/btrfs/block-group.c
+> @@ -1500,6 +1500,15 @@ void btrfs_delete_unused_bgs(struct btrfs_fs_info =
+*fs_info)
+>  			btrfs_put_block_group(block_group);
+>  			continue;
+>  		}
+> +
+> +		spin_lock(&fs_info->relocation_bg_lock);
+> +		if (block_group->start =3D=3D fs_info->data_reloc_bg) {
+> +			btrfs_put_block_group(block_group);
+> +			spin_unlock(&fs_info->relocation_bg_lock);
+> +			continue;
+> +		}
+> +		spin_unlock(&fs_info->relocation_bg_lock);
+> +
+>  		spin_unlock(&fs_info->unused_bgs_lock);
+> =20
+>  		btrfs_discard_cancel_work(&fs_info->discard_ctl, block_group);
+> @@ -1835,6 +1844,14 @@ void btrfs_reclaim_bgs_work(struct work_struct *wo=
+rk)
+>  				      bg_list);
+>  		list_del_init(&bg->bg_list);
+> =20
+> +		spin_lock(&fs_info->relocation_bg_lock);
+> +		if (bg->start =3D=3D fs_info->data_reloc_bg) {
+> +			btrfs_put_block_group(bg);
+> +			spin_unlock(&fs_info->relocation_bg_lock);
+> +			continue;
+> +		}
+> +		spin_unlock(&fs_info->relocation_bg_lock);
+> +
+>  		space_info =3D bg->space_info;
+>  		spin_unlock(&fs_info->unused_bgs_lock);
+> =20
+> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+> index 78d3966232ae..16bb52bcb69e 100644
+> --- a/fs/btrfs/disk-io.c
+> +++ b/fs/btrfs/disk-io.c
+> @@ -3547,6 +3547,8 @@ int __cold open_ctree(struct super_block *sb, struc=
+t btrfs_fs_devices *fs_device
+>  	}
+>  	btrfs_discard_resume(fs_info);
+> =20
+> +	btrfs_reserve_relocation_bg(fs_info);
+> +
+>  	if (fs_info->uuid_root &&
+>  	    (btrfs_test_opt(fs_info, RESCAN_UUID_TREE) ||
+>  	     fs_info->generation !=3D btrfs_super_uuid_tree_generation(disk_sup=
+er))) {
+> diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
+> index c52a0063f7db..d291cf4f565e 100644
+> --- a/fs/btrfs/zoned.c
+> +++ b/fs/btrfs/zoned.c
+> @@ -17,6 +17,7 @@
+>  #include "fs.h"
+>  #include "accessors.h"
+>  #include "bio.h"
+> +#include "transaction.h"
+> =20
+>  /* Maximum number of zones to report per blkdev_report_zones() call */
+>  #define BTRFS_REPORT_NR_ZONES   4096
+> @@ -2637,3 +2638,69 @@ void btrfs_check_active_zone_reservation(struct bt=
+rfs_fs_info *fs_info)
+>  	}
+>  	spin_unlock(&fs_info->zone_active_bgs_lock);
+>  }
+> +
+> +static u64 find_empty_block_group(struct btrfs_space_info *sinfo, u64 fl=
+ags)
+> +{
+> +	struct btrfs_block_group *bg;
+> +
+> +	for (int i =3D 0; i < BTRFS_NR_RAID_TYPES; i++) {
+> +		list_for_each_entry(bg, &sinfo->block_groups[i], list) {
+> +			if (bg->flags !=3D flags)
+> +				continue;
+> +			if (bg->used =3D=3D 0)
+> +				return bg->start;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +void btrfs_reserve_relocation_bg(struct btrfs_fs_info *fs_info)
+> +{
+> +	struct btrfs_root *tree_root =3D fs_info->tree_root;
+> +	struct btrfs_space_info *sinfo =3D fs_info->data_sinfo;
+> +	struct btrfs_trans_handle *trans;
+> +	struct btrfs_block_group *bg;
+> +	u64 flags =3D btrfs_get_alloc_profile(fs_info, sinfo->flags);
+> +	u64 bytenr =3D 0;
+> +
+> +	lockdep_assert_not_held(&fs_info->relocation_bg_lock);
+> +
+> +	if (!btrfs_is_zoned(fs_info))
+> +		return;
+> +
+> +	if (fs_info->data_reloc_bg)
+> +		return;
+> +
+> +	bytenr =3D find_empty_block_group(sinfo, flags);
+> +	if (!bytenr) {
+> +		int ret;
+> +
+> +		trans =3D btrfs_join_transaction(tree_root);
+> +		if (IS_ERR(trans))
+> +			return;
+> +
+> +		ret =3D btrfs_chunk_alloc(trans, flags, CHUNK_ALLOC_FORCE);
+> +		btrfs_end_transaction(trans);
+> +		if (ret)
+> +			return;
+> +
+> +		bytenr =3D find_empty_block_group(sinfo, flags);
+> +		if (!bytenr)
+> +			return;
+> +
+> +	}
+> +
+> +	bg =3D btrfs_lookup_block_group(fs_info, bytenr);
+> +	if (!bg)
+> +		return;
+> +
+> +	if (!btrfs_zone_activate(bg))
+> +		bytenr =3D 0;
+> +
+> +	btrfs_put_block_group(bg);
+> +
+> +	spin_lock(&fs_info->relocation_bg_lock);
+> +	fs_info->data_reloc_bg =3D bytenr;
 
-Add CPG core helper wrapper driver for RZ/V2H SoC.
+Since the above check and the chunk allocation are outside of the lock, som=
+e
+other thread can already set new data_reloc_bg in the meantime. So, setting
+this under "if (!fs_info->data_reloc_bg)" would be safe.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/clk/renesas/Kconfig     |   5 +
- drivers/clk/renesas/Makefile    |   1 +
- drivers/clk/renesas/rzv2h-cpg.c | 673 ++++++++++++++++++++++++++++++++
- drivers/clk/renesas/rzv2h-cpg.h | 149 +++++++
- 4 files changed, 828 insertions(+)
- create mode 100644 drivers/clk/renesas/rzv2h-cpg.c
- create mode 100644 drivers/clk/renesas/rzv2h-cpg.h
+With that:
 
-diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
-index d252150402e8..254203c2cb2e 100644
---- a/drivers/clk/renesas/Kconfig
-+++ b/drivers/clk/renesas/Kconfig
-@@ -40,6 +40,7 @@ config CLK_RENESAS
- 	select CLK_R9A07G054 if ARCH_R9A07G054
- 	select CLK_R9A08G045 if ARCH_R9A08G045
- 	select CLK_R9A09G011 if ARCH_R9A09G011
-+	select CLK_R9A09G057 if ARCH_R9A09G057
- 	select CLK_SH73A0 if ARCH_SH73A0
- 
- if CLK_RENESAS
-@@ -193,6 +194,10 @@ config CLK_R9A09G011
- 	bool "RZ/V2M clock support" if COMPILE_TEST
- 	select CLK_RZG2L
- 
-+config CLK_R9A09G057
-+	bool "Renesas RZ/V2H(P) clock support" if COMPILE_TEST
-+	select RESET_CONTROLLER
-+
- config CLK_SH73A0
- 	bool "SH-Mobile AG5 clock support" if COMPILE_TEST
- 	select CLK_RENESAS_CPG_MSTP
-diff --git a/drivers/clk/renesas/Makefile b/drivers/clk/renesas/Makefile
-index f7e18679c3b8..79cc7c4d77c6 100644
---- a/drivers/clk/renesas/Makefile
-+++ b/drivers/clk/renesas/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_CLK_R9A07G044)		+= r9a07g044-cpg.o
- obj-$(CONFIG_CLK_R9A07G054)		+= r9a07g044-cpg.o
- obj-$(CONFIG_CLK_R9A08G045)		+= r9a08g045-cpg.o
- obj-$(CONFIG_CLK_R9A09G011)		+= r9a09g011-cpg.o
-+obj-$(CONFIG_CLK_R9A09G057)		+= rzv2h-cpg.o
- obj-$(CONFIG_CLK_SH73A0)		+= clk-sh73a0.o
- 
- # Family
-diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2h-cpg.c
-new file mode 100644
-index 000000000000..eb6b7ab86675
---- /dev/null
-+++ b/drivers/clk/renesas/rzv2h-cpg.c
-@@ -0,0 +1,673 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas RZ/V2H(P) Clock Pulse Generator
-+ *
-+ * Copyright (C) 2024 Renesas Electronics Corp.
-+ *
-+ * Based on rzg2l-cpg.c
-+ *
-+ * Copyright (C) 2015 Glider bvba
-+ * Copyright (C) 2013 Ideas On Board SPRL
-+ * Copyright (C) 2015 Renesas Electronics Corp.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/iopoll.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_clock.h>
-+#include <linux/pm_domain.h>
-+#include <linux/reset-controller.h>
-+
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+
-+#include "rzv2h-cpg.h"
-+
-+#ifdef DEBUG
-+#define WARN_DEBUG(x)		WARN_ON(x)
-+#else
-+#define WARN_DEBUG(x)		do { } while (0)
-+#endif
-+
-+#define KDIV(val)			((s16)FIELD_GET(GENMASK(31, 16), (val)))
-+#define MDIV(val)			FIELD_GET(GENMASK(15, 6), (val))
-+#define PDIV(val)			FIELD_GET(GENMASK(5, 0), (val))
-+#define SDIV(val)			FIELD_GET(GENMASK(2, 0), (val))
-+
-+/**
-+ * struct rzv2h_cpg_priv - Clock Pulse Generator Private Data
-+ *
-+ * @rcdev: Reset controller entity
-+ * @dev: CPG device
-+ * @base: CPG register block base address
-+ * @rmw_lock: protects register accesses
-+ * @clks: Array containing all Core and Module Clocks
-+ * @num_core_clks: Number of Core Clocks in clks[]
-+ * @num_mod_clks: Number of Module Clocks in clks[]
-+ * @num_resets: Number of Module Resets in info->resets[]
-+ * @info: Pointer to platform data
-+ */
-+struct rzv2h_cpg_priv {
-+	struct reset_controller_dev rcdev;
-+	struct device *dev;
-+	void __iomem *base;
-+	spinlock_t rmw_lock;
-+
-+	struct clk **clks;
-+	unsigned int num_core_clks;
-+	unsigned int num_mod_clks;
-+	unsigned int num_resets;
-+
-+	const struct rzv2h_cpg_info *info;
-+};
-+
-+struct pll_clk {
-+	struct clk_hw hw;
-+	unsigned int conf;
-+	unsigned int type;
-+	void __iomem *base;
-+	struct rzv2h_cpg_priv *priv;
-+};
-+
-+#define to_pll(_hw)	container_of(_hw, struct pll_clk, hw)
-+
-+static unsigned long rzv2h_cpg_pll_clk_recalc_rate(struct clk_hw *hw,
-+						   unsigned long parent_rate)
-+{
-+	struct pll_clk *pll_clk = to_pll(hw);
-+	struct rzv2h_cpg_priv *priv = pll_clk->priv;
-+	const struct rzv2h_cpg_info *info = priv->info;
-+	int clk1_off, clk2_off;
-+	unsigned int clk1, clk2;
-+	u64 rate;
-+
-+	clk1_off = info->pll_get_clk1_offset(pll_clk->conf);
-+	clk2_off = info->pll_get_clk2_offset(pll_clk->conf);
-+	if (clk1_off == -EINVAL || clk2_off == -EINVAL)
-+		return 0;
-+
-+	clk1 = readl(priv->base + clk1_off);
-+	clk2 = readl(priv->base + clk2_off);
-+
-+	rate = mul_u64_u32_shr(parent_rate, (MDIV(clk1) << 16) + KDIV(clk1),
-+			       16 + SDIV(clk2));
-+
-+	return DIV_ROUND_CLOSEST_ULL(rate, PDIV(clk1));
-+}
-+
-+static const struct clk_ops rzv2h_cpg_pll_ops = {
-+	.recalc_rate = rzv2h_cpg_pll_clk_recalc_rate,
-+};
-+
-+static struct clk * __init
-+rzv2h_cpg_pll_clk_register(const struct cpg_core_clk *core,
-+			   struct clk **clks,
-+			   void __iomem *base,
-+			   struct rzv2h_cpg_priv *priv,
-+			   const struct clk_ops *ops)
-+{
-+	struct device *dev = priv->dev;
-+	struct clk_init_data init;
-+	const struct clk *parent;
-+	const char *parent_name;
-+	struct pll_clk *pll_clk;
-+
-+	parent = clks[core->parent & 0xffff];
-+	if (IS_ERR(parent))
-+		return ERR_CAST(parent);
-+
-+	pll_clk = devm_kzalloc(dev, sizeof(*pll_clk), GFP_KERNEL);
-+	if (!pll_clk)
-+		return ERR_PTR(-ENOMEM);
-+
-+	parent_name = __clk_get_name(parent);
-+	init.name = core->name;
-+	init.ops = ops;
-+	init.flags = 0;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	pll_clk->hw.init = &init;
-+	pll_clk->conf = core->conf;
-+	pll_clk->base = base;
-+	pll_clk->priv = priv;
-+	pll_clk->type = core->type;
-+
-+	return clk_register(NULL, &pll_clk->hw);
-+}
-+
-+static struct clk
-+*rzv2h_cpg_clk_src_twocell_get(struct of_phandle_args *clkspec,
-+			       void *data)
-+{
-+	unsigned int clkidx = clkspec->args[1];
-+	struct rzv2h_cpg_priv *priv = data;
-+	struct device *dev = priv->dev;
-+	const char *type;
-+	struct clk *clk;
-+
-+	switch (clkspec->args[0]) {
-+	case CPG_CORE:
-+		type = "core";
-+		clk = priv->clks[clkidx];
-+		break;
-+
-+	case CPG_MOD:
-+		type = "module";
-+		if (clkidx >= priv->num_mod_clks) {
-+			dev_err(dev, "Invalid %s clock index %u\n", type,
-+				clkidx);
-+			return ERR_PTR(-EINVAL);
-+		}
-+		clk = priv->clks[priv->num_core_clks + clkidx];
-+		break;
-+
-+	default:
-+		dev_err(dev, "Invalid CPG clock type %u\n", clkspec->args[0]);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (IS_ERR(clk))
-+		dev_err(dev, "Cannot get %s clock %u: %ld", type, clkidx,
-+			PTR_ERR(clk));
-+	else
-+		dev_dbg(dev, "clock (%u, %u) is %pC at %lu Hz\n",
-+			clkspec->args[0], clkspec->args[1], clk,
-+			clk_get_rate(clk));
-+	return clk;
-+}
-+
-+static void __init
-+rzv2h_cpg_register_core_clk(const struct cpg_core_clk *core,
-+			    const struct rzv2h_cpg_info *info,
-+			    struct rzv2h_cpg_priv *priv)
-+{
-+	struct clk *clk = ERR_PTR(-EOPNOTSUPP), *parent;
-+	struct device *dev = priv->dev;
-+	unsigned int id = core->id, div = core->div;
-+	const char *parent_name;
-+
-+	WARN_DEBUG(id >= priv->num_core_clks);
-+	WARN_DEBUG(PTR_ERR(priv->clks[id]) != -ENOENT);
-+
-+	if (!core->name) {
-+		/* Skip NULLified clock */
-+		return;
-+	}
-+
-+	switch (core->type) {
-+	case CLK_TYPE_IN:
-+		clk = of_clk_get_by_name(priv->dev->of_node, core->name);
-+		break;
-+	case CLK_TYPE_FF:
-+		WARN_DEBUG(core->parent >= priv->num_core_clks);
-+		parent = priv->clks[core->parent];
-+		if (IS_ERR(parent)) {
-+			clk = parent;
-+			goto fail;
-+		}
-+
-+		parent_name = __clk_get_name(parent);
-+		clk = clk_register_fixed_factor(NULL, core->name,
-+						parent_name, CLK_SET_RATE_PARENT,
-+						core->mult, div);
-+		break;
-+	case CLK_TYPE_PLL:
-+		clk = rzv2h_cpg_pll_clk_register(core, priv->clks, priv->base, priv,
-+						 &rzv2h_cpg_pll_ops);
-+		break;
-+	default:
-+		goto fail;
-+	}
-+
-+	if (IS_ERR_OR_NULL(clk))
-+		goto fail;
-+
-+	dev_dbg(dev, "Core clock %pC at %lu Hz\n", clk, clk_get_rate(clk));
-+	priv->clks[id] = clk;
-+	return;
-+
-+fail:
-+	dev_err(dev, "Failed to register %s clock %s: %ld\n", "core",
-+		core->name, PTR_ERR(clk));
-+}
-+
-+/**
-+ * struct mstp_clock - MSTP gating clock
-+ *
-+ * @hw: handle between common and hardware-specific interfaces
-+ * @off: register offset
-+ * @bit: ON/MON bit
-+ * @monoff: monitor register offset
-+ * @monbit: montor bit
-+ * @priv: CPG/MSTP private data
-+ */
-+struct mstp_clock {
-+	struct clk_hw hw;
-+	u16 off;
-+	u8 bit;
-+	u16 monoff;
-+	u8 monbit;
-+	struct rzv2h_cpg_priv *priv;
-+};
-+
-+#define to_mod_clock(_hw) container_of(_hw, struct mstp_clock, hw)
-+
-+static int rzv2h_mod_clock_endisable(struct clk_hw *hw, bool enable)
-+{
-+	struct mstp_clock *clock = to_mod_clock(hw);
-+	struct rzv2h_cpg_priv *priv = clock->priv;
-+	unsigned int reg = clock->off;
-+	struct device *dev = priv->dev;
-+	u32 bitmask = BIT(clock->bit);
-+	u32 value;
-+	int error;
-+
-+	dev_dbg(dev, "CLK_ON 0x%x/%pC %s\n", reg, hw->clk,
-+		enable ? "ON" : "OFF");
-+
-+	value = bitmask << 16;
-+	if (enable)
-+		value |= bitmask;
-+
-+	writel(value, priv->base + reg);
-+
-+	if (!enable)
-+		return 0;
-+
-+	reg = clock->monoff;
-+	bitmask = BIT(clock->monbit);
-+	error = readl_poll_timeout_atomic(priv->base + reg, value,
-+					  value & bitmask, 0, 10);
-+	if (error)
-+		dev_err(dev, "Failed to enable CLK_ON %p\n",
-+			priv->base + reg);
-+
-+	return error;
-+}
-+
-+static int rzv2h_mod_clock_enable(struct clk_hw *hw)
-+{
-+	return rzv2h_mod_clock_endisable(hw, true);
-+}
-+
-+static void rzv2h_mod_clock_disable(struct clk_hw *hw)
-+{
-+	rzv2h_mod_clock_endisable(hw, false);
-+}
-+
-+static int rzv2h_mod_clock_is_enabled(struct clk_hw *hw)
-+{
-+	struct mstp_clock *clock = to_mod_clock(hw);
-+	struct rzv2h_cpg_priv *priv = clock->priv;
-+	u32 bitmask = BIT(clock->monbit);
-+
-+	return readl(priv->base + clock->monoff) & bitmask;
-+}
-+
-+static const struct clk_ops rzv2h_mod_clock_ops = {
-+	.enable = rzv2h_mod_clock_enable,
-+	.disable = rzv2h_mod_clock_disable,
-+	.is_enabled = rzv2h_mod_clock_is_enabled,
-+};
-+
-+static void __init
-+rzv2h_cpg_register_mod_clk(const struct rzv2h_mod_clk *mod,
-+			   const struct rzv2h_cpg_info *info,
-+			   struct rzv2h_cpg_priv *priv)
-+{
-+	struct mstp_clock *clock = NULL;
-+	struct device *dev = priv->dev;
-+	unsigned int id = mod->id;
-+	struct clk_init_data init;
-+	struct clk *parent, *clk;
-+	const char *parent_name;
-+	unsigned int i;
-+
-+	WARN_DEBUG(id < priv->num_core_clks);
-+	WARN_DEBUG(id >= priv->num_core_clks + priv->num_mod_clks);
-+	WARN_DEBUG(mod->parent >= priv->num_core_clks + priv->num_mod_clks);
-+	WARN_DEBUG(PTR_ERR(priv->clks[id]) != -ENOENT);
-+
-+	if (!mod->name) {
-+		/* Skip NULLified clock */
-+		return;
-+	}
-+
-+	parent = priv->clks[mod->parent];
-+	if (IS_ERR(parent)) {
-+		clk = parent;
-+		goto fail;
-+	}
-+
-+	clock = devm_kzalloc(dev, sizeof(*clock), GFP_KERNEL);
-+	if (!clock) {
-+		clk = ERR_PTR(-ENOMEM);
-+		goto fail;
-+	}
-+
-+	init.name = mod->name;
-+	init.ops = &rzv2h_mod_clock_ops;
-+	init.flags = CLK_SET_RATE_PARENT;
-+	for (i = 0; i < info->num_crit_mod_clks; i++)
-+		if (id == info->crit_mod_clks[i]) {
-+			dev_dbg(dev, "CPG %s setting CLK_IS_CRITICAL\n",
-+				mod->name);
-+			init.flags |= CLK_IS_CRITICAL;
-+			break;
-+		}
-+
-+	parent_name = __clk_get_name(parent);
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	clock->off = mod->off;
-+	clock->bit = mod->bit;
-+	clock->monoff = mod->monoff;
-+	clock->monbit = mod->monbit;
-+	clock->priv = priv;
-+	clock->hw.init = &init;
-+
-+	clk = clk_register(NULL, &clock->hw);
-+	if (IS_ERR(clk))
-+		goto fail;
-+
-+	dev_dbg(dev, "Module clock %pC at %lu Hz\n", clk, clk_get_rate(clk));
-+	priv->clks[id] = clk;
-+
-+	return;
-+
-+fail:
-+	dev_err(dev, "Failed to register %s clock %s: %ld\n", "module",
-+		mod->name, PTR_ERR(clk));
-+}
-+
-+#define rcdev_to_priv(x)	container_of(x, struct rzv2h_cpg_priv, rcdev)
-+
-+static int rzv2h_cpg_assert(struct reset_controller_dev *rcdev,
-+			    unsigned long id)
-+{
-+	struct rzv2h_cpg_priv *priv = rcdev_to_priv(rcdev);
-+	const struct rzv2h_cpg_info *info = priv->info;
-+	unsigned int reg = info->resets[id].resoff;
-+	u32 mask = BIT(info->resets[id].resbit);
-+	s8 monbit = info->resets[id].monbit;
-+	u32 value = mask << 16;
-+
-+	dev_dbg(rcdev->dev, "assert id:%ld offset:0x%x\n", id, reg);
-+
-+	writel(value, priv->base + reg);
-+
-+	reg = info->resets[id].monoff;
-+	mask = BIT(monbit);
-+
-+	return readl_poll_timeout_atomic(priv->base + reg, value,
-+					 value & mask, 10, 200);
-+}
-+
-+static int rzv2h_cpg_deassert(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct rzv2h_cpg_priv *priv = rcdev_to_priv(rcdev);
-+	const struct rzv2h_cpg_info *info = priv->info;
-+	unsigned int reg = info->resets[id].resoff;
-+	u32 mask = BIT(info->resets[id].resbit);
-+	s8 monbit = info->resets[id].monbit;
-+	u32 value = (mask << 16) | mask;
-+
-+	dev_dbg(rcdev->dev, "deassert id:%ld offset:0x%x\n", id, reg);
-+
-+	writel(value, priv->base + reg);
-+
-+	reg = info->resets[id].monoff;
-+	mask = BIT(monbit);
-+
-+	return readl_poll_timeout_atomic(priv->base + reg, value,
-+					 !(value & mask), 10, 200);
-+}
-+
-+static int rzv2h_cpg_reset(struct reset_controller_dev *rcdev,
-+			   unsigned long id)
-+{
-+	int ret;
-+
-+	ret = rzv2h_cpg_assert(rcdev, id);
-+	if (ret)
-+		return ret;
-+
-+	return rzv2h_cpg_deassert(rcdev, id);
-+}
-+
-+static int rzv2h_cpg_status(struct reset_controller_dev *rcdev,
-+			    unsigned long id)
-+{
-+	struct rzv2h_cpg_priv *priv = rcdev_to_priv(rcdev);
-+	const struct rzv2h_cpg_info *info = priv->info;
-+	unsigned int reg = info->resets[id].monoff;
-+	s8 monbit = info->resets[id].monbit;
-+	u32 bitmask = BIT(monbit);
-+
-+	return !!(readl(priv->base + reg) & bitmask);
-+}
-+
-+static const struct reset_control_ops rzv2h_cpg_reset_ops = {
-+	.reset = rzv2h_cpg_reset,
-+	.assert = rzv2h_cpg_assert,
-+	.deassert = rzv2h_cpg_deassert,
-+	.status = rzv2h_cpg_status,
-+};
-+
-+static int rzv2h_cpg_reset_xlate(struct reset_controller_dev *rcdev,
-+				 const struct of_phandle_args *reset_spec)
-+{
-+	struct rzv2h_cpg_priv *priv = rcdev_to_priv(rcdev);
-+	const struct rzv2h_cpg_info *info = priv->info;
-+	unsigned int id = reset_spec->args[0];
-+
-+	if (id >= rcdev->nr_resets || !info->resets[id].resoff) {
-+		dev_err(rcdev->dev, "Invalid reset index %u\n", id);
-+		return -EINVAL;
-+	}
-+
-+	return id;
-+}
-+
-+static int rzv2h_cpg_reset_controller_register(struct rzv2h_cpg_priv *priv)
-+{
-+	priv->rcdev.ops = &rzv2h_cpg_reset_ops;
-+	priv->rcdev.of_node = priv->dev->of_node;
-+	priv->rcdev.dev = priv->dev;
-+	priv->rcdev.of_reset_n_cells = 1;
-+	priv->rcdev.of_xlate = rzv2h_cpg_reset_xlate;
-+	priv->rcdev.nr_resets = priv->num_resets;
-+
-+	return devm_reset_controller_register(priv->dev, &priv->rcdev);
-+}
-+
-+/**
-+ * struct rzv2h_cpg_pd - RZ/V2H power domain data structure
-+ * @genpd: generic PM domain
-+ * @priv: pointer to CPG private data structure
-+ */
-+struct rzv2h_cpg_pd {
-+	struct generic_pm_domain genpd;
-+	struct rzv2h_cpg_priv *priv;
-+};
-+
-+static int rzv2h_cpg_attach_dev(struct generic_pm_domain *domain, struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct of_phandle_args clkspec;
-+	bool once = true;
-+	struct clk *clk;
-+	int error;
-+	int i = 0;
-+
-+	while (!of_parse_phandle_with_args(np, "clocks", "#clock-cells", i,
-+					   &clkspec)) {
-+		if (once) {
-+			once = false;
-+			error = pm_clk_create(dev);
-+			if (error) {
-+				of_node_put(clkspec.np);
-+				goto err;
-+			}
-+		}
-+		clk = of_clk_get_from_provider(&clkspec);
-+		of_node_put(clkspec.np);
-+		if (IS_ERR(clk)) {
-+			error = PTR_ERR(clk);
-+			goto fail_destroy;
-+		}
-+
-+		error = pm_clk_add_clk(dev, clk);
-+		if (error) {
-+			dev_err(dev, "pm_clk_add_clk failed %d\n",
-+				error);
-+			goto fail_put;
-+		}
-+		i++;
-+	}
-+
-+	return 0;
-+
-+fail_put:
-+	clk_put(clk);
-+
-+fail_destroy:
-+	pm_clk_destroy(dev);
-+err:
-+	return error;
-+}
-+
-+static void rzv2h_cpg_detach_dev(struct generic_pm_domain *unused, struct device *dev)
-+{
-+	if (!pm_clk_no_clocks(dev))
-+		pm_clk_destroy(dev);
-+}
-+
-+static void rzv2h_cpg_genpd_remove_simple(void *data)
-+{
-+	pm_genpd_remove(data);
-+}
-+
-+static int __init rzv2h_cpg_add_pm_domains(struct rzv2h_cpg_priv *priv)
-+{
-+	struct device *dev = priv->dev;
-+	struct device_node *np = dev->of_node;
-+	struct rzv2h_cpg_pd *pd;
-+	int ret;
-+
-+	pd = devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
-+	if (!pd)
-+		return -ENOMEM;
-+
-+	pd->genpd.name = np->name;
-+	pd->priv = priv;
-+	pd->genpd.flags |= GENPD_FLAG_ALWAYS_ON | GENPD_FLAG_PM_CLK | GENPD_FLAG_ACTIVE_WAKEUP;
-+	pd->genpd.attach_dev = rzv2h_cpg_attach_dev;
-+	pd->genpd.detach_dev = rzv2h_cpg_detach_dev;
-+	ret = pm_genpd_init(&pd->genpd, &pm_domain_always_on_gov, false);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, rzv2h_cpg_genpd_remove_simple, &pd->genpd);
-+	if (ret)
-+		return ret;
-+
-+	return of_genpd_add_provider_simple(np, &pd->genpd);
-+}
-+
-+static void rzv2h_cpg_del_clk_provider(void *data)
-+{
-+	of_clk_del_provider(data);
-+}
-+
-+static int __init rzv2h_cpg_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	const struct rzv2h_cpg_info *info;
-+	struct rzv2h_cpg_priv *priv;
-+	unsigned int nclks, i;
-+	struct clk **clks;
-+	int error;
-+
-+	info = of_device_get_match_data(dev);
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->info = info;
-+	spin_lock_init(&priv->rmw_lock);
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	nclks = info->num_total_core_clks + info->num_hw_mod_clks;
-+	clks = devm_kmalloc_array(dev, nclks, sizeof(*clks), GFP_KERNEL);
-+	if (!clks)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, priv);
-+	priv->clks = clks;
-+	priv->num_core_clks = info->num_total_core_clks;
-+	priv->num_mod_clks = info->num_hw_mod_clks;
-+	priv->num_resets = info->num_resets;
-+
-+	for (i = 0; i < nclks; i++)
-+		clks[i] = ERR_PTR(-ENOENT);
-+
-+	for (i = 0; i < info->num_core_clks; i++)
-+		rzv2h_cpg_register_core_clk(&info->core_clks[i], info, priv);
-+
-+	for (i = 0; i < info->num_mod_clks; i++)
-+		rzv2h_cpg_register_mod_clk(&info->mod_clks[i], info, priv);
-+
-+	error = of_clk_add_provider(np, rzv2h_cpg_clk_src_twocell_get, priv);
-+	if (error)
-+		return error;
-+
-+	error = devm_add_action_or_reset(dev, rzv2h_cpg_del_clk_provider, np);
-+	if (error)
-+		return error;
-+
-+	error = rzv2h_cpg_add_pm_domains(priv);
-+	if (error)
-+		return error;
-+
-+	error = rzv2h_cpg_reset_controller_register(priv);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rzv2h_cpg_match[] = {
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver rzv2h_cpg_driver = {
-+	.driver		= {
-+		.name	= "rzv2h-cpg",
-+		.of_match_table = rzv2h_cpg_match,
-+	},
-+};
-+
-+static int __init rzv2h_cpg_init(void)
-+{
-+	return platform_driver_probe(&rzv2h_cpg_driver, rzv2h_cpg_probe);
-+}
-+
-+subsys_initcall(rzv2h_cpg_init);
-+
-+MODULE_DESCRIPTION("Renesas RZ/V2H CPG Driver");
-diff --git a/drivers/clk/renesas/rzv2h-cpg.h b/drivers/clk/renesas/rzv2h-cpg.h
-new file mode 100644
-index 000000000000..689c123d01c5
---- /dev/null
-+++ b/drivers/clk/renesas/rzv2h-cpg.h
-@@ -0,0 +1,149 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Renesas RZ/V2H(P) Clock Pulse Generator
-+ *
-+ * Copyright (C) 2024 Renesas Electronics Corp.
-+ */
-+
-+#ifndef __RENESAS_RZV2H_CPG_H__
-+#define __RENESAS_RZV2H_CPG_H__
-+
-+/**
-+ * Definitions of CPG Core Clocks
-+ *
-+ * These include:
-+ *   - Clock outputs exported to DT
-+ *   - External input clocks
-+ *   - Internal CPG clocks
-+ */
-+struct cpg_core_clk {
-+	const char *name;
-+	unsigned int id;
-+	unsigned int parent;
-+	unsigned int div;
-+	unsigned int mult;
-+	unsigned int type;
-+	unsigned int conf;
-+};
-+
-+enum clk_types {
-+	/* Generic */
-+	CLK_TYPE_IN,		/* External Clock Input */
-+	CLK_TYPE_FF,		/* Fixed Factor Clock */
-+	CLK_TYPE_PLL,
-+};
-+
-+#define DEF_TYPE(_name, _id, _type...) \
-+	{ .name = _name, .id = _id, .type = _type }
-+#define DEF_BASE(_name, _id, _type, _parent...) \
-+	DEF_TYPE(_name, _id, _type, .parent = _parent)
-+#define DEF_PLL(_name, _id, _parent, _conf) \
-+	DEF_TYPE(_name, _id, CLK_TYPE_PLL, .parent = _parent, .conf = _conf)
-+#define DEF_INPUT(_name, _id) \
-+	DEF_TYPE(_name, _id, CLK_TYPE_IN)
-+#define DEF_FIXED(_name, _id, _parent, _mult, _div) \
-+	DEF_BASE(_name, _id, CLK_TYPE_FF, _parent, .div = _div, .mult = _mult)
-+
-+/**
-+ * struct rzv2h_mod_clk - Module Clocks definitions
-+ *
-+ * @name: handle between common and hardware-specific interfaces
-+ * @id: clock index in array containing all Core and Module Clocks
-+ * @parent: id of parent clock
-+ * @off: register offset
-+ * @bit: ON/MON bit
-+ * @monoff: monitor register offset
-+ * @monbit: monitor bit
-+ */
-+struct rzv2h_mod_clk {
-+	const char *name;
-+	unsigned int id;
-+	unsigned int parent;
-+	u16 off;
-+	u8 bit;
-+	u16 monoff;
-+	u8 monbit;
-+};
-+
-+#define DEF_MOD_BASE(_name, _id, _parent, _off, _bit, _monoff, _monbit)	\
-+	{ \
-+		.name = _name, \
-+		.id = MOD_CLK_BASE + (_id), \
-+		.parent = (_parent), \
-+		.off = (_off), \
-+		.bit = (_bit), \
-+		.monoff = (_monoff), \
-+		.monbit = (_monbit), \
-+	}
-+
-+#define DEF_MOD(_name, _id, _parent, _off, _bit, _monoff, _monbit)	\
-+	DEF_MOD_BASE(_name, _id, _parent, _off, _bit, _monoff, _monbit)
-+
-+/**
-+ * struct rzv2h_reset - Reset definitions
-+ *
-+ * @off: reset register offset
-+ * @bit: reset bit
-+ * @monoff: monitor register offset
-+ * @monbit: monitor bit
-+ */
-+struct rzv2h_reset {
-+	u16 resoff;
-+	u8 resbit;
-+	u16 monoff;
-+	u8 monbit;
-+};
-+
-+#define DEF_RST(_id, _resoff, _resbit, _monoff, _monbit)	\
-+	[_id] = { \
-+		.resoff = (_resoff), \
-+		.resbit = (_resbit), \
-+		.monoff = (_monoff), \
-+		.monbit = (_monbit) \
-+	}
-+
-+/**
-+ * struct rzv2h_cpg_info - SoC-specific CPG Description
-+ *
-+ * @core_clks: Array of Core Clock definitions
-+ * @num_core_clks: Number of entries in core_clks[]
-+ * @num_total_core_clks: Total number of Core Clocks (exported + internal)
-+ *
-+ * @mod_clks: Array of Module Clock definitions
-+ * @num_mod_clks: Number of entries in mod_clks[]
-+ * @num_hw_mod_clks: Number of Module Clocks supported by the hardware
-+ *
-+ * @resets: Array of Module Reset definitions
-+ * @num_resets: Number of entries in resets[]
-+ *
-+ * @crit_mod_clks: Array with Module Clock IDs of critical clocks that
-+ *                 should not be disabled without a knowledgeable driver
-+ * @num_crit_mod_clks: Number of entries in crit_mod_clks[]
-+ * @pll_get_clk1_offset: Function pointer to get PLL CLK1 offset
-+ * @pll_get_clk2_offset: Function pointer to get PLL CLK2 offset
-+ */
-+struct rzv2h_cpg_info {
-+	/* Core Clocks */
-+	const struct cpg_core_clk *core_clks;
-+	unsigned int num_core_clks;
-+	unsigned int num_total_core_clks;
-+
-+	/* Module Clocks */
-+	const struct rzv2h_mod_clk *mod_clks;
-+	unsigned int num_mod_clks;
-+	unsigned int num_hw_mod_clks;
-+
-+	/* Resets */
-+	const struct rzv2h_reset *resets;
-+	unsigned int num_resets;
-+
-+	/* Critical Module Clocks that should not be disabled */
-+	const unsigned int *crit_mod_clks;
-+	unsigned int num_crit_mod_clks;
-+
-+	/* function pointers for PLL information */
-+	int (*pll_get_clk1_offset)(int clk);
-+	int (*pll_get_clk2_offset)(int clk);
-+};
-+
-+#endif	/* __RENESAS_RZV2H_CPG_H__ */
--- 
-2.34.1
+Reviewed-by: Naohiro Aota <naohiro.aota@wdc.com>
 
+Regards,=
