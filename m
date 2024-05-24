@@ -1,83 +1,81 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D5B83CAE;
-	Fri, 24 May 2024 07:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3811617578;
+	Fri, 24 May 2024 08:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716537525; cv=none; b=nV8NyVvJBUm7ZUHuHFvlxbnRfqN5flK1UoYvQwCLBVmG/2XXgRPRcr11jG7ZEi/KZYwx/a86nEGvhe64p6DFc1bCfrhtOIWPLescUtAXS0MQ2wCY4UAp3mzGM0000POe2qhmsxNjnzJf/IkyghcGV7DCpEUqqFcp86IObFjCXVE=
+	t=1716537660; cv=none; b=rjcNAfFW+Jn3bRy92IOpUE2JygG+Fil91RAsU4tzMH8Vytm2x1aIRYiXA2IYvJaezQ3zD2LXj4qa2ZXkJdgBauPtLKdt71NdfMS78qLZ0RnUhvERK2Zb1zzTZXvbQO3ZypMzoi2u5qaaT+nph0hSb+EEChYJ3SD3siCduInEjdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716537525; c=relaxed/simple;
-	bh=bqyPMRt9wz028/U8fejcJ/EaS7Tt7i+3cUm/fCpxTb4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rwmoR5CHGskT4/QOZTBF3ttj5cSGvGoeFkFRCu2ovBgjvIK4n7DjCQO5CDHdQ7cooB+5OTefi9wzcNeo3PZQAF0Qt3AYE/v7QXGpLRzp1W8db97134aORueUmbX+NqYZRMoin73rsWiNLva2X0Eh9zTWKvfQqb1moyuRV88VPkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZJXtNVAI; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZJXtNVAI"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716537515; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=07/n6HPUGsrYONlCxyGegVdPDEuAAjDjEBGbwCI4jeE=;
-	b=ZJXtNVAIrEEXn4AWb8v3kCsGxVKYn1ezqcsNc5chOciWmdn1okKrDOLWYoeRFJnvCjTraShAMU31TFS/zL5Y0+pcPzukIavIj90TDxySm1fRxhAAGbNN4vR7cRna6OwNj3hijQPWRVgIgQcs8TtZVgJ7+FvlamRJ6HIGAfxYiSQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W75y.OR_1716537505;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W75y.OR_1716537505)
-          by smtp.aliyun-inc.com;
-          Fri, 24 May 2024 15:58:34 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: pkshih@realtek.com
-Cc: kvalo@kernel.org,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] wifi: rtw89: chan: Use swap() instead of open coding it
-Date: Fri, 24 May 2024 15:58:19 +0800
-Message-Id: <20240524075819.2789-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	s=arc-20240116; t=1716537660; c=relaxed/simple;
+	bh=DNGZeOxYDqy7RtdurPwzY4rLHbt20lsCtA68JHLwjSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LY8g2QaYI5oOyrnHFOaar4LNCtUBHP40z3fPrfuhTKYOpLaTRCHHfyQe59s245Gb8OuceWi1VnJsAzu2kMBrI0atlSt0XaB65irkaHlQkJe4Oa6/oFyCrltMN8Im4bNEw57f985eZnEmKQ2pjOgNFTDk/GC0zQAPvfp2cghQ1nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 87F7E100FC2B8;
+	Fri, 24 May 2024 09:53:49 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 37AB2541E49; Fri, 24 May 2024 09:53:49 +0200 (CEST)
+Date: Fri, 24 May 2024 09:53:49 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Bitao Hu <yaoma@linux.alibaba.com>
+Cc: bhelgaas@google.com, weirongguang@kylinos.cn, kanie@linux.alibaba.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: Use appropriate conditions to check the
+ hotplug controller status
+Message-ID: <ZlBHjbmjjSEnXCMp@wunner.de>
+References: <20240524063023.77148-1-yaoma@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240524063023.77148-1-yaoma@linux.alibaba.com>
 
-Swap is a function interface that provides exchange function. To avoid
-code duplication, we can use swap function.
+On Fri, May 24, 2024 at 02:30:23PM +0800, Bitao Hu wrote:
+> The values of 'present' and 'link_active' have similar meanings:
+> the value is %1 if the status is ready, and %0 if it is not. If the
+> hotplug controller itself is not available, the value should be
+> %-ENODEV. However, both %1 and %-ENODEV are considered true, which
+> obviously does not meet expectations. 'Slot(xx): Card present' and
+> 'Slot(xx): Link Up' should only be output when the value is %1.
+[...]
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -276,10 +276,10 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	case OFF_STATE:
+>  		ctrl->state = POWERON_STATE;
+>  		mutex_unlock(&ctrl->state_lock);
+> -		if (present)
+> +		if (present > 0)
+>  			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>  				  slot_name(ctrl));
+> -		if (link_active)
+> +		if (link_active > 0)
+>  			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>  				  slot_name(ctrl));
+>  		ctrl->request_result = pciehp_enable_slot(ctrl);
 
-./drivers/net/wireless/realtek/rtw89/chan.c:2336:32-33: WARNING opportunity for swap().
+We already handle the "<= 0" case immediately above this code excerpt:
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9174
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- drivers/net/wireless/realtek/rtw89/chan.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+	if (present <= 0 && link_active <= 0) {
+	...
+	}
 
-diff --git a/drivers/net/wireless/realtek/rtw89/chan.c b/drivers/net/wireless/realtek/rtw89/chan.c
-index 051a3cad6101..3b1997223cc5 100644
---- a/drivers/net/wireless/realtek/rtw89/chan.c
-+++ b/drivers/net/wireless/realtek/rtw89/chan.c
-@@ -2322,7 +2322,6 @@ static void rtw89_swap_sub_entity(struct rtw89_dev *rtwdev,
- 				  enum rtw89_sub_entity_idx idx2)
- {
- 	struct rtw89_hal *hal = &rtwdev->hal;
--	struct rtw89_sub_entity tmp;
- 	struct rtw89_vif *rtwvif;
- 	u8 cur;
- 
-@@ -2332,9 +2331,7 @@ static void rtw89_swap_sub_entity(struct rtw89_dev *rtwdev,
- 	hal->sub[idx1].cfg->idx = idx2;
- 	hal->sub[idx2].cfg->idx = idx1;
- 
--	tmp = hal->sub[idx1];
--	hal->sub[idx1] = hal->sub[idx2];
--	hal->sub[idx2] = tmp;
-+	swap(hal->sub[idx1], hal->sub[idx2]);
- 
- 	rtw89_for_each_rtwvif(rtwdev, rtwvif) {
- 		if (!rtwvif->chanctx_assigned)
--- 
-2.20.1.7.g153144c
+So neither "present" nor "link_active" can be < 0 at this point.
 
+Hence I don't quite understand what motivates the proposed code change?
+
+Thanks,
+
+Lukas
