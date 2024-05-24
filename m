@@ -1,86 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FAA83CAE;
-	Fri, 24 May 2024 09:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C5D84D02
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 09:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716542288; cv=none; b=M6aHf5pHaNOmqDil1hPhwsZPZk8vHQSquTKM11Rf87uc9e6hzosU7jgcayrC2YBh5pdymULOakclbQDFEWoOZ9YnZ5PTeTMs5rlu3joX5DXYwNFJkBNyOcJ1aZlaNsFWnMkPR9IvtDiyV/AOrj5XWXIApcKT1RQ3SDm06oj+Iqk=
+	t=1716542373; cv=none; b=f4NZJC9sK+yhZGLD6EvuHPk1Swe32jVh41khenGDY7YayOklaZMWMsXbF2vGPyTdaxjbbDFXgZdcDMQD1q1/zcLyFGKN07kyjNOOhRHq0v4IzPVme7enGaIZ5QZP5fLMfNLTz7YmB6Q0oE4WyWG+mAynKHKvyWe5Q3ZZz0HhFKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716542288; c=relaxed/simple;
-	bh=QXBDfBTQ6SvU3OzM7OF0LeXsDtpvLic3l/yHUSbrv1k=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=GlpqX4gMQv26qzvE60/EoOuO6z927TeQ4eHAGC5a7+YoyZEy6I82riRjA1qbrMm+V3JUuevz7t1auhaeveWU1FR684hAjPz4ZlF+GzuWrZXroNM78S8bzsUbvm6Bo5jNyDu7k2WUnBRM6DKYcGX06XpB05tjq95jrCT/Fc8axqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExULWq+D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716542373; c=relaxed/simple;
+	bh=S5WIHfo/GVVFuV2a8N3J3V/bskkP4vgyxo9cxv7VQAU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r/eUI/+l79cExrA/lQc/S+/V5oswL/jlvPsZj1UyqDhb1uc96a9LH1u5/+XqCRC9sutKcqNInpfcsbp0brfTb6F5ALXAQjobGFrDgvV/an0oggbhFRYBo93P9Hd9CucMe+2t19dpBjUT3hRwvV4FV73QOQE5RnJvC7TNKKXadPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AasbsFK8; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExULWq+D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3AB7C2BBFC;
-	Fri, 24 May 2024 09:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716542287;
-	bh=QXBDfBTQ6SvU3OzM7OF0LeXsDtpvLic3l/yHUSbrv1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ExULWq+DL7Ly/Ig2hnMERo7+ZkvZmbbWtBtxkrorvBTAEKfsu8yFcozaoFf9ijVK3
-	 bYEZoYytcdQ7vFGojzIAts9UoMaanm6d3EFvwiQPxbm9lwUNcJkxrDs5WIk8+i/c+l
-	 JGsaBiXRZZsyPjoZSKeIT2rcntP+i9rzApp7VXtnt8X7DMQ5sfYmAuNTQLHJbBDFKw
-	 fEDoXLyOMUBlJXLZ+FCRNs0vyNHLdi/Mdn5STjyhCJVVmwmxN9lnHynaHbsHahpjvh
-	 FSqeD1Ct+YkRkdZfPT/Q4vOihui6jGo7cK4pmKI0j2I1S52bO9LD7+DHntoSA0MO84
-	 y008KspEcz8eA==
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AasbsFK8"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-df7607785e9so1389091276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 02:19:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716542369; x=1717147169; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BFC/Wq6r2ZnocxgGVbxbRurbvlwJyoIDrYIsqw3lJqc=;
+        b=AasbsFK8Mt/PBkyaFq4wDhGGCDNTzpxMQ1Mwa29niqtT3epguk2PVIEfb9sc3EadZP
+         FklJq+xk0xVWrT4Oc7bdebK+3oHdLd0476OGs+6I9Tl6C+tslihGZZjAA8jurcuO7S0E
+         WPvda+m4XLP+XP4E9CGlLt2qTM6nthiWNjd8k4HVi/EnK7Ouf4dywmuElXhqbyHKgqgs
+         BUb67NX40RL9ApGWYisP4HvOAocfawqNpguvbSGYvgJerlevu1vlxKAUyD8qsV7wkU0E
+         jyrJoiGUNr/PyPc0Dqu6L/MXrvX11cdH3cpGY6Iigvu8GwMDeViM8r3Xf9bF9E8uIvGv
+         e7Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716542369; x=1717147169;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BFC/Wq6r2ZnocxgGVbxbRurbvlwJyoIDrYIsqw3lJqc=;
+        b=gs0OHz4TdSTygUcWAUs2AI6HaU/TIoTNaITkopRdlLsryWLP7Ow/on6u3Ck+B4kg++
+         /CC/EyIffURkInY/D2hxTGQ40A5TB0C4/MIS7AIRUH/WFHKnI5ToGFHTjOxeU8pUSKWs
+         7QgK9gvpGLybunPW9S9o91fVz1QV82Jq1lnN893LppRFQuE33wpQF/wAa0As8vjKhRr/
+         wvMuMEusm7CnJ/UXjB5NJw6YZPkMyRX+lOh6okejjbsAP57XQHE0Pf7+CTS/3/RuEf4H
+         DKhHW4onivzWOSrXII4dwmvQgYbFWnkiAGArBkrt1CGaMVS1VO4diLeEGlA3OwoS14p6
+         N7Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/UXX574iWld6sOVPVLLoEU2xaWBsxB9sDgKIQqzyblNajZ9H12ZiGGxg7PdmD4SON04zoxOI2krIWuX0Mk2reN3QfAzPfYi5fAxn4
+X-Gm-Message-State: AOJu0YyNgShhoTYXL6FIikimIKErcQgn+eCqPKBUMbsFrD3XTA6GH3O4
+	1ZW3A26+hKi6q8NIYCO1A63TNj8aY3vzMW/iloRE3bMKTkHhtcvIIBNhQ9l6cQXlkrqLSbrinD7
+	zrrRcwcATFFRQfqYXpPz9qAPwwJTNfS0+RhFcsg==
+X-Google-Smtp-Source: AGHT+IHQOGkX6tTv+H0dG9M4HcslJIDthMVJK/fTaxTSoTTh7UEYLllN3SvzcSDRZhpNnspLGW/VvYGgTEt21HlMSwo=
+X-Received: by 2002:a25:adc2:0:b0:df7:695a:1cee with SMTP id
+ 3f1490d57ef6-df77221c3b5mr1532190276.50.1716542369346; Fri, 24 May 2024
+ 02:19:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 24 May 2024 12:18:02 +0300
-Message-Id: <D1HRGEEB313K.NFAX1EFJKJPU@kernel.org>
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Herbert Xu"
- <herbert@gondor.apana.org.au>
-Cc: <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
- <Andreas.Fuchs@infineon.com>, "James Prestwood" <prestwoj@gmail.com>,
- "David Woodhouse" <dwmw2@infradead.org>, "Eric Biggers"
- <ebiggers@kernel.org>, "James Bottomley"
- <James.Bottomley@hansenpartnership.com>, <linux-crypto@vger.kernel.org>,
- "David S. Miller" <davem@davemloft.net>, "open list"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/5] KEYS: asymmetric: tpm2_key_rsa
-X-Mailer: aerc 0.17.0
-References: <20240523212515.4875-1-jarkko@kernel.org>
-In-Reply-To: <20240523212515.4875-1-jarkko@kernel.org>
+MIME-Version: 1.0
+References: <20240524035350.3118981-1-quic_mohs@quicinc.com> <865adb41-fd27-d303-5f0f-a68a814f41ab@quicinc.com>
+In-Reply-To: <865adb41-fd27-d303-5f0f-a68a814f41ab@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Fri, 24 May 2024 12:19:18 +0300
+Message-ID: <CAA8EJprDb0fk0G1wrzB99EG=HAm5tw1Mz=mSd5mDMptDOoUb2Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add support for QCM6490 and QCS6490
+To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami <bgoswami@quicinc.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, 
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	quic_rohkumar@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri May 24, 2024 at 12:25 AM EEST, Jarkko Sakkinen wrote:
-> ## Overview
+On Fri, 24 May 2024 at 07:06, Mohammad Rafi Shaik <quic_mohs@quicinc.com> wrote:
 >
-> Introduce tpm2_key_rsa module, which implements asymmetric TPM2 RSA key.
-> The feature can be enabled with the CONFIG_ASYMMETRIC_TPM2_KEY_RSA_SUBTYP=
-E=20
-> kconfig option. This feature allows the private key to be uploaded to
-> the TPM2 for signing, and software can use the public key to verify
-> the signatures.
+> On 5/24/2024 9:23 AM, Mohammad Rafi Shaik wrote:
+> > This patchset adds support for sound card on Qualcomm QCM6490 IDP and
+> > QCS6490 RB3Gen2 boards.
+>
+> Please ignore this abounded patch series. No need for review.
 
-Since barely v6.9 is out I wrote over night also tpm2_key_ecdsa i.e.
-ECC/ECDSA based module :-)
+In future please use a logical prefix for the cover letter too. This
+helps other developers to understand whether they are interested or
+not.
 
-It was a good idea. I realized e.g. actually documented in the API
-fact that I should return -EBADMSG as legit undetected. Also found
-a memory corruption bugs.
+>
+> Thanks,
+> Rafi.
+> >
+> > Changes since v1:
+> >       - Use existing sc8280xp machine driver instead of separate driver.
+> >       - Modify qcs6490 compatible name as qcs6490-rb3gen2.
+> >
+> > Mohammad Rafi Shaik (2):
+> >    ASoC: dt-bindings: qcom,sm8250: Add QCM6490 snd QCS6490 sound card
+> >    ASoC: qcom: sc8280xp: Add support for QCM6490 and QCS6490
+> >
+> >   Documentation/devicetree/bindings/sound/qcom,sm8250.yaml | 2 ++
+> >   sound/soc/qcom/sc8280xp.c                                | 2 ++
+> >   2 files changed, 4 insertions(+)
+> >
+>
+>
 
-I renamed extract_pub to probe because that made me sort of realized
-the role better too. Some of the code could later on put to up-level
-struct tpm2_key but it is not a functional requirement.
 
-I.e. top-level does raw parsing and then these modules check each
-that if this is for them (e.g. ECDSA) then eat it. Otherwise, pass
-over.
-
-I did do some rudimentary testing and it seems to be quite good, and
-my pattern seems to work. I.e. different modules for RSA and ECDSA
-fit well how asymmetric keys are probed and allows to do as a sysadmin
-appropriate configuration for the use case.
-
-My biggest concern is undocumented parameters API in akcipher.
-
-BR, Jarkko
+-- 
+With best wishes
+Dmitry
