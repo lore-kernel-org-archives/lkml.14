@@ -1,118 +1,86 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from mx0.infotecs.ru (mx0.infotecs.ru [91.244.183.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FC842078;
-	Fri, 24 May 2024 11:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA36385931;
+	Fri, 24 May 2024 11:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.244.183.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716548890; cv=none; b=SEmJMzYEPXiRnli6BLCjZ+7/Azj2TPfXfL500fMG9raA2KBnNyVXh7WRnsOpCleZsvdZXa/vIuLoSJ9ZAiNhNN3ma5W9cJrxKoS8e4wNmP2MtV7oTnTjC6qvjkASXq5WHX1nkmcfPMxOn18WKlhbCjJX3U4KKYo7uf22HZeV5mY=
+	t=1716548929; cv=none; b=uYSIQ8dmcEMwrWSquF8YtavAPNAidUkACxhyUHh69NOXDylyH5YUNgRkgL40gH7p3wo2mITy2vu6ufwPKmIFtoFgueAW42zYla3Yzjs2P+vtKBQJPE7FIV+CJqyhpT81zmR/f5uOKkPuU/ZSk7PrX0F7p/P29Ytfkb6dzs+zaI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716548890; c=relaxed/simple;
-	bh=F+uCQdV0aunttbQzzXVZNYHFs0YrsoqwUqhoLVcnC9M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HTpTdoA+yZsg2Qxcfy4xMRHnN9j4igjZ8wcdvEOwP3bfOrySPNufESlzmuvJER8xf1Zvg98NFtLarLv4cIKFiwEpgbN9QhlYdn4zACQhvkMrjxOpCximTmtdil0un6iq3oKvCFDacim8faLTty51lvCQjpI8YmnYdqxW25QKKpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=gOI3nfEu; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1716548929; c=relaxed/simple;
+	bh=v3x1Hr63ZlkyPq+bsb5kU2yJX1PC7tT3ck6zS7F56Xo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JEh9FARqwfRiadOornyya29tAeC+ucHHjCPDva3HyWQ6MAqY7ubRW2IHgdWcfUndZjVtIR4UAIUOhQQ+wncpKMPwXSm2YZbM6fgC9Xb7ceQGyabLNwJ/qRPKy+pSHAb9ybtqH7Nj34wxq3cibZPWY8NLDFprfIBp7DwBBTocazE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru; spf=pass smtp.mailfrom=infotecs.ru; dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b=e///wh0x; arc=none smtp.client-ip=91.244.183.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infotecs.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="gOI3nfEu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 23BC1601A40F;
-	Fri, 24 May 2024 11:59:59 +0100 (WEST)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id 4SPOHJ6UAWWl; Fri, 24 May 2024 11:59:56 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id D65FE600087F;
-	Fri, 24 May 2024 11:59:56 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1716548396;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7o+fFn7gbAlvwKqYJrJ0dZxZZJ/KAuKR0bymU0MdKuQ=;
-	b=gOI3nfEuvAJruhD/F3G0dI4EpjmmZNiJs2ecWhlKUmNsTIRJGfk0zAb4XkLHyIJjIhcZJg
-	9N1U42wbTgnS3jwR40mKqf9PGRCjsxoUmamDymK/SAhfRxvAYbfW7w4nlk4t3jih1i6/8y
-	DLNPvPEbGAXWe+LEqX90jwutZ+QZo3o=
-Received: from diogo-gram.. (unknown [136.226.215.14])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 75E963600C8;
-	Fri, 24 May 2024 11:59:55 +0100 (WEST)
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-To: heikki.krogerus@linux.intel.com,
-	gregkh@linuxfoundation.org,
-	dmitry.baryshkov@linaro.org,
-	jthies@google.com,
-	bleung@chromium.org,
-	abhishekpandit@chromium.org,
-	saranya.gopal@intel.com,
-	lk@c--e.de,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pmalani@chromium.org
-Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-Subject: [PATCH 2/2] usb: typec: ucsi: Enable UCSI v2.0 notifications
-Date: Fri, 24 May 2024 11:58:21 +0100
-Message-ID: <20240524105837.15342-3-diogo.ivo@tecnico.ulisboa.pt>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240524105837.15342-1-diogo.ivo@tecnico.ulisboa.pt>
-References: <20240524105837.15342-1-diogo.ivo@tecnico.ulisboa.pt>
+	dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b="e///wh0x"
+Received: from mx0.infotecs-nt (localhost [127.0.0.1])
+	by mx0.infotecs.ru (Postfix) with ESMTP id 4F211104679D;
+	Fri, 24 May 2024 13:59:04 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx0.infotecs.ru 4F211104679D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infotecs.ru; s=mx;
+	t=1716548344; bh=v3x1Hr63ZlkyPq+bsb5kU2yJX1PC7tT3ck6zS7F56Xo=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=e///wh0xtKwyN00jheU7ut6g2Ocp3Cv5q6trRvel7B+MljRQc0pUbA7qhmGtaJo3P
+	 ln4gLvIqx5i1hZt3PRMfhU663Wvu51XJrzqedODWY/zk9kkFBgXQ4KoHydxYkU7Oe9
+	 fJRaAl92GbrmPW0nB+1V3pg33DUNi2dVVBPmXth8=
+Received: from msk-exch-02.infotecs-nt (msk-exch-02.infotecs-nt [10.0.7.192])
+	by mx0.infotecs-nt (Postfix) with ESMTP id 4B9BB305EE18;
+	Fri, 24 May 2024 13:59:04 +0300 (MSK)
+From: Khannanov Lenar <Lenar.Khannanov@infotecs.ru>
+To: "naresh.kamboju@linaro.org" <naresh.kamboju@linaro.org>
+CC: "brauner@kernel.org" <brauner@kernel.org>, "fweimer@redhat.com"
+	<fweimer@redhat.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "lkft-triage@lists.linaro.org"
+	<lkft-triage@lists.linaro.org>, "shuah@kernel.org" <shuah@kernel.org>,
+	Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Subject: Re: selftests: clone3: clone3_cap_checkpoint_restore fails - Could
+ not set CAP_CHECKPOINT_RESTORE
+Thread-Topic: selftests: clone3: clone3_cap_checkpoint_restore fails - Could
+ not set CAP_CHECKPOINT_RESTORE
+Thread-Index: AQHarcljyzSqEdNYbUK4bASISxnLQQ==
+Date: Fri, 24 May 2024 10:59:03 +0000
+Message-ID: <3805f5f4-34c3-4c29-a03f-80ac2563cef3@infotecs.ru>
+References: <CA+G9fYsVnDSwudT=go0p__2Jas-JuT-8Y+9Jk1xPtA1h4Nmreg@mail.gmail.com>
+In-Reply-To: <CA+G9fYsVnDSwudT=go0p__2Jas-JuT-8Y+9Jk1xPtA1h4Nmreg@mail.gmail.com>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: 208ac3cd-1ed4-4982-a353-bdefac89ac0a
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <986D0C423F8752498E6A79AB6E0BA374@infotecs.ru>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-KLMS-Rule-ID: 5
+X-KLMS-Message-Action: clean
+X-KLMS-AntiSpam-Status: not scanned, disabled by settings
+X-KLMS-AntiSpam-Interceptor-Info: not scanned
+X-KLMS-AntiPhishing: Clean, bases: 2024/05/24 09:04:00
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2024/05/24 05:27:00 #25259167
+X-KLMS-AntiVirus-Status: Clean, skipped
 
-UCSI version 2.0 and above define new PPM notifications. Update the
-logic to determine which notifications to enable taking into account
-these changes.
-
-Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
----
- drivers/usb/typec/ucsi/ucsi.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index cb52e7b0a2c5..0cc1c49da4a0 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -1664,7 +1664,7 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
- 
- static u64 ucsi_get_supported_notifications(struct ucsi *ucsi)
- {
--	u8 features = ucsi->cap.features;
-+	u16 features = ucsi->cap.features;
- 	u64 ntfy = UCSI_ENABLE_NTFY_ALL;
- 
- 	if (!(features & UCSI_CAP_ALT_MODE_DETAILS))
-@@ -1680,6 +1680,23 @@ static u64 ucsi_get_supported_notifications(struct ucsi *ucsi)
- 	if (!(features & UCSI_CAP_PD_RESET))
- 		ntfy &= ~UCSI_ENABLE_NTFY_PD_RESET_COMPLETE;
- 
-+	if (ucsi->version <= UCSI_VERSION_1_2)
-+		return ntfy;
-+
-+	ntfy |= UCSI_ENABLE_NTFY_SINK_PATH_STS_CHANGE;
-+
-+	if (features & UCSI_CAP_GET_ATTENTION_VDO)
-+		ntfy |= UCSI_ENABLE_NTFY_ATTENTION;
-+
-+	if (features & UCSI_CAP_FW_UPDATE_REQUEST)
-+		ntfy |= UCSI_ENABLE_NTFY_LPM_FW_UPDATE_REQ;
-+
-+	if (features & UCSI_CAP_SECURITY_REQUEST)
-+		ntfy |= UCSI_ENABLE_NTFY_SECURITY_REQ_PARTNER;
-+
-+	if (features & UCSI_CAP_SET_RETIMER_MODE)
-+		ntfy |= UCSI_ENABLE_NTFY_SET_RETIMER_MODE;
-+
- 	return ntfy;
- }
- 
--- 
-2.45.1
-
+DQpJIHByZXN1bWUgdGhhdCB0ZXN0IGZhaWxzIGJlY2F1c2Ugb2YgdGhlIGRpZmZlcmVuY2UgYmV0
+d2VlbiBkZWZpbml0aW9uIG9mIHN0cnVjdCBfY2FwX3N0cnVjdCAoc3RydWN0IGxpYmNhcCBpbiB0
+ZXN0KS4gQ29tbWl0IGFjYTA3NjQ0MzU5MSAoTWFrZSBjYXBfdCBvcGVyYXRpb25zIHRocmVhZCBz
+YWZlLikgaW50cm9kdWNlcyBtdXRleCBmaWVsZCBhdCB0aGUgYmVnaW5uaW5nIG9mIHRoZSBzdHJ1
+Y3R1cmUuIFRlc3QgdXNlcyBvd24gZGVmaW5pdGlvbiB0byBzZXQgQ0FQX0NIRUNLUE9JTlRfUkVT
+VE9SRS4gQXMgZGF0YSBtZW1iZXIgb2YgdGhlc2UgdHdvIHZlcnNpb25zIG9mIHN0cnVjdHVyZXMg
+aXMgYXQgdGhlIGRpZmZlcmVudCBvZmZzZXRzLCBDQVBfQ0hFQ0tQT0lOVF9SRVNUT1JFIGlzIGxv
+c3QgYW5kIHRoYXQncyB3aHkgY2FwX3NldF9wcm9jIHJldHVybnMgRVBFUk0uDQoNCg0K0KEg0YPQ
+stCw0LbQtdC90LjQtdC8LA0K0JvQtdC90LDRgCDQpdCw0L3QvdCw0L3QvtCyDQrQn9GA0L7Qs9GA
+0LDQvNC80LjRgdGCDQrQntGC0LTQtdC7INGA0LDQt9GA0LDQsdC+0YLQutC4DQrQkNCeICLQmNC9
+0YTQvtCi0LXQmtChIiDQsiDQsy4g0KHQsNC90LrRgi3Qn9C10YLQtdGA0LHRg9GA0LMNCjE5MDAw
+MCwg0LMuINCh0LDQvdC60YIt0J/QtdGC0LXRgNCx0YPRgNCzLCDRg9C7LiDQkNGA0YLQuNC70LvQ
+tdGA0LjQudGB0LrQsNGPLCDQtC4gMSwg0LvQuNGC0LXRgCDQkCwg0JHQpiDCq9CV0LLRgNC+0L/Q
+sCDQpdCw0YPRgcK7DQpUOiArNyA0OTUgNzM3LTYxLTkyICgg0LTQvtCxLiA3MTk2KQ0K0KQ6ICs3
+IDQ5NSA3MzctNzItNzgNCg0KDQpMZW5hci5LaGFubmFub3ZAaW5mb3RlY3MucnUNCnd3dy5pbmZv
+dGVjcy5ydQ0KDQoNCg==
