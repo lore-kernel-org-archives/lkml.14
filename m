@@ -1,107 +1,100 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E9112CD8C
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 15:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+Received: from classfun.cn (unknown [129.204.178.38])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7629948CCC;
+	Fri, 24 May 2024 15:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.204.178.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716562994; cv=none; b=YE4zHsZEVVJR3kaeGodGI275r13/TIwXOPy1ygM3cEX29f4zmx20w5MugOvt/eG8UuDbniZwWVfauv++pWSt4eb8qZK10GDuWy0LCcled0dRZAN9dsQneVH7qh07hrF45it9sB0H59T8ivyl4HpYBypz7btMuvAmzeIH0XJreJk=
+	t=1716563114; cv=none; b=sCWoagOq3UbBnpuF+DjUxlxOMgXlmT1BubQvoB0VGMZLvGD8uuAJrcKvwmW10ftxdcB2SgXgoaAGYPvRcjjAj9yBJzJWOyZVyiA2OvujSVx8EFYdxuf+cD8dbA/Y66pF5y4i3IzrXAAc8heXzUJjv+6MAEJLhabuxKEbzQnGPl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716562994; c=relaxed/simple;
-	bh=CpUZTSZfj0nKfLtWsHuCSEpWRiKnvmgNyl6rkup5g5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SmUMoGLNs+JyiR9xJVXT3+OwfcwKAE49Txm9RG+vXmG7tkmF1nnvpOT2+NYfMYYyxDzpM5ACljSq7stqm7ZMBIZHelIBqk08tzO63NolASTxZaXBx7JicAIXiEUOb5f9sTjCiDFSb6TJuNnQ+9Gbgdz5I5EEq1Ekvyf+80mPxrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=f8qgCiBF; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716563114; c=relaxed/simple;
+	bh=W2qwYe5lYoI206gE8u1Jt6VhgkTCXZUz+nZbdVJdKmY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ajB1Q3+1eEkTFAr4fATrSQioslc5laiMo5nsZiE2GOXWPHplAAP0c3uY4jI/gljMOqmSUcMVJZBfCaA4J2GngEYJOaOqcnMKaODx7cNYB2TSwLVC7HBpuzc9El1iC/0WWB1H/pz8orJrQIgUWiF7s2JLiiZis2aBJFWtRywM81g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=classfun.cn; spf=pass smtp.mailfrom=classfun.cn; dkim=pass (1024-bit key) header.d=classfun.cn header.i=@classfun.cn header.b=BG3SH4f9; arc=none smtp.client-ip=129.204.178.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=classfun.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=classfun.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="f8qgCiBF"
-X-Envelope-To: dan.carpenter@linaro.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716562986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t9bLVr+GkFcIRkLEE2xi6Gq4uQdgtVR2m96QalOewfs=;
-	b=f8qgCiBFT0iKngbIh5yIVDsyEoWOcyhplL8DknaJjzEX7VyBJJGzwU+rjsKXIvx5V6tqZ/
-	mvzSvjZRBUad4tbniOCyKf9A3iSo49GZ1l1e9wvqCLucL1uvlpS/8W7wpQoZiR6Yoqwxgn
-	C2DMzuJ40deEHhdzGzxEAmH7xA8I5CA=
-X-Envelope-To: helgaas@kernel.org
-X-Envelope-To: lpieralisi@kernel.org
-X-Envelope-To: kw@linux.com
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: linux-pci@vger.kernel.org
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: thippeswamy.havalige@amd.com
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: bhelgaas@google.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: stable@vger.kernel.org
-X-Envelope-To: bharatku@xilinx.com
-Message-ID: <3e7a23ae-6423-4455-9ffb-4820ee2dc92d@linux.dev>
-Date: Fri, 24 May 2024 11:03:01 -0400
+	dkim=pass (1024-bit key) header.d=classfun.cn header.i=@classfun.cn header.b="BG3SH4f9"
+Received: from bigfoot-server-arm-node1.classfun.cn (unknown [124.72.161.66])
+	(Authenticated sender: bigfoot)
+	by classfun.cn (Postfix) with ESMTPSA id 2C6E27884E;
+	Fri, 24 May 2024 23:03:01 +0800 (CST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 classfun.cn 2C6E27884E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=classfun.cn;
+	s=default; t=1716562985;
+	bh=f1k1hDmw66DJaeViB0/rUpPvjFxDh3qw/IrEdAXHUpQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BG3SH4f9nod7nbps+0gOGya81zfuxAOL8ao1HwcTA9DCjBnz5O1R0ZRrqOw6kcgLQ
+	 BOnIZpETXOt4bDdqHXFElXuPNHbS8e5os6VgThwLlghfQCY+BoPDx5UIw1bZcMsFYf
+	 FZWm56Lc74R/rgWJd5HFJukCuYufoW28FdyNbjjU=
+From: Junhao Xie <bigfoot@classfun.cn>
+To: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Ryan McCann <quic_rmccann@quicinc.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jonathan Marek <jonathan@marek.ca>
+Cc: Junhao Xie <bigfoot@classfun.cn>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/msm/dpu: drop duplicate drm formats from wb2_formats arrays
+Date: Fri, 24 May 2024 23:01:12 +0800
+Message-ID: <20240524150128.1878297-2-bigfoot@classfun.cn>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/7] PCI: xilinx-nwl: Fix off-by-one in IRQ handler
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
- Michal Simek <michal.simek@amd.com>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- linux-arm-kernel@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Bharat Kumar Gogada <bharatku@xilinx.com>
-References: <20240522222834.GA101664@bhelgaas>
- <9299ee92-a32b-4b82-aa37-c7087a5c1376@linux.dev>
- <c2e1d87c-14e2-4efd-a5cd-f173b52dad35@moroto.mountain>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <c2e1d87c-14e2-4efd-a5cd-f173b52dad35@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 5/24/24 10:56, Dan Carpenter wrote:
-> On Thu, May 23, 2024 at 11:21:52AM -0400, Sean Anderson wrote:
->> On 5/22/24 18:28, Bjorn Helgaas wrote:
->> > On Mon, May 20, 2024 at 10:53:57AM -0400, Sean Anderson wrote:
->> >> MSGF_LEG_MASK is laid out with INTA in bit 0, INTB in bit 1, INTC in bit
->> >> 2, and INTD in bit 3. Hardware IRQ numbers start at 0, and we register
->> >> PCI_NUM_INTX irqs. So to enable INTA (aka hwirq 0) we should set bit 0.
->> >> Remove the subtraction of one. This fixes the following UBSAN error:
->> > 
->> > Thanks for these details!
->> > 
->> > I guess UBSAN == "undefined behavior sanitizer", right?  That sounds
->> > like an easy way to find this but not the way users are likely to find
->> > it.
->> 
->> It's pretty likely they will find it this way, since I found it this way
->> and no one else had ;)
->> 
->> > I assume users would notice spurious and missing interrupts, e.g.,
->> > a driver that tried to enable INTB would have actually enabled INTA,
->> > so we'd see spurious INTA interrupts and the driver would never see
->> > the INTB it expected.
->> > 
->> > And a driver that tried to enable INTA would never see that interrupt,
->> > and we might not set any bit in MSGF_LEG_MASK?
->> 
->> And yes, this would manifest as INTx interrupts being broken.
->> 
-> 
-> It's so weird that it's been broken for seven years and no one reported
-> it.  :/
+There are duplicate items in wb2_formats_rgb and wb2_formats_rgb_yuv,
+which cause weston assertions failed.
 
-If I had to guess it's because most PCIe hardware uses MSIs. Unless you
-plugged in a PCI bridge there's almost no reason to use INTx at all.
+weston: libweston/drm-formats.c:131: weston_drm_format_array_add_format:
+Assertion `!weston_drm_format_array_find_format(formats, format)' failed.
 
---Sean
+Signed-off-by: Junhao Xie <bigfoot@classfun.cn>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 47fd8baf53e6..3138e73c04f1 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -216,12 +216,9 @@ static const u32 wb2_formats_rgb[] = {
+ 	DRM_FORMAT_RGBA4444,
+ 	DRM_FORMAT_RGBX4444,
+ 	DRM_FORMAT_XRGB4444,
+-	DRM_FORMAT_BGR565,
+ 	DRM_FORMAT_BGR888,
+-	DRM_FORMAT_ABGR8888,
+ 	DRM_FORMAT_BGRA8888,
+ 	DRM_FORMAT_BGRX8888,
+-	DRM_FORMAT_XBGR8888,
+ 	DRM_FORMAT_ABGR1555,
+ 	DRM_FORMAT_BGRA5551,
+ 	DRM_FORMAT_XBGR1555,
+@@ -250,12 +247,9 @@ static const u32 wb2_formats_rgb_yuv[] = {
+ 	DRM_FORMAT_RGBA4444,
+ 	DRM_FORMAT_RGBX4444,
+ 	DRM_FORMAT_XRGB4444,
+-	DRM_FORMAT_BGR565,
+ 	DRM_FORMAT_BGR888,
+-	DRM_FORMAT_ABGR8888,
+ 	DRM_FORMAT_BGRA8888,
+ 	DRM_FORMAT_BGRX8888,
+-	DRM_FORMAT_XBGR8888,
+ 	DRM_FORMAT_ABGR1555,
+ 	DRM_FORMAT_BGRA5551,
+ 	DRM_FORMAT_XBGR1555,
+-- 
+2.44.0
+
