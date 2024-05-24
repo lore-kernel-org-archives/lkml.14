@@ -1,68 +1,79 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E6312CD81;
-	Fri, 24 May 2024 15:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9542D1E52C;
+	Fri, 24 May 2024 16:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716566393; cv=none; b=QSg0dnXHLebZAingScfPjdadzHxjXipW231jp5i6eissHGgb4XkuQgKpJ2Q7l8554Tz5Gper7E0XoD3+CuQbmK2U9v+FBAISw3hYoiBA7nn2/V5JeSBCE9jh8wFK05s6Hvh/J2MapERpif/34ygaEYn6OheQQJq/IicrsuRb2ms=
+	t=1716566430; cv=none; b=XWcRjAER98pqvUoFh7Y1jF7dGkZIg2e69chAtVr+1OToUgGEVozwPNQTnaZS4Tog2MhVYUEwZiysvRQ6CqFfmfSfUbsKIG3PM4N3yRz9WFey8J9yGEGreRhaymNltVgL52hsw+LpUMBuVgdI6UeSpVPLFFhIZeKi4pkMdfeOj/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716566393; c=relaxed/simple;
-	bh=j9GnoRnBxKAfJMniMK4+244GYKRDu3EYSWND1e65eu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XiI09nX77rrbrYz1w1rZxYLhagjot3WesG3AHf8O0uLeGjwrv0G4FlQrd1LmEW8AtoJCZ+FnklR6oyebYuDbwKC77v6AuaQzTDXZE3FyYFsRj/8GPQskhHKwYKZHNusM9NP5Jk+pihnHkepiH6+kRgmJfobXBqmX9jjswTTIiRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=11dueYCk; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1716566430; c=relaxed/simple;
+	bh=XsGFpt79JlV/4qc58Z4cW+QADzC3zecgEyG8wek/1Fk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PWZaKJEIV2PQREwLlNazqSM2mWMz0eGcDVkyAKJuS3l8arQj4CzvFoH2xosAAF4MaNM9lmy0avyqFUdQQwQSiSv/BAbfycFwvrvVyH1LIRyyD8Ud6F/MQkSlVE7nFGRSwvxnyrebPzSE2MVlEd2AU+NR9m2I5TKOAHyNZKf8kfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rH7AMcz2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="11dueYCk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=tsrTfcYlYoIi2ULwMP08t3DckkAKUuWgxb+N8QZWBaE=; b=11dueYCkrcEi9jIL+v4GRPpGqn
-	vlBk6bj7dhclDbDGGaCQJmVTpXhlte3CsJWNeVDUUa9nygCWlkyVum42FTOHlirzlJSrqZwTq3T0y
-	reFptUa8ntGRuEhix5xUEkOBKH9v7ZQP0lTfvfvaSiVWCFKiVRZbKNrma0mOCK+ulfFk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sAXKL-00Fxpn-An; Fri, 24 May 2024 17:59:29 +0200
-Date: Fri, 24 May 2024 17:59:29 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sneh Shah <quic_snehshah@quicinc.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Russell King <linux@armlinux.org.uk>, kernel@quicinc.com
-Subject: Re: [PATCH net-next 1/2] net: stmmac: Add support for multiple phy
- interface for integrated PCS
-Message-ID: <33339d78-9ca4-4e60-83c2-f6701b840928@lunn.ch>
-References: <20240524130653.30666-1-quic_snehshah@quicinc.com>
- <20240524130653.30666-2-quic_snehshah@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rH7AMcz2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 06A89C32782;
+	Fri, 24 May 2024 16:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716566430;
+	bh=XsGFpt79JlV/4qc58Z4cW+QADzC3zecgEyG8wek/1Fk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=rH7AMcz27ibPaJ5aNzbugBIXcJbkjUTZBnvAS+iRYM/Gysfkd1BnPmsMYfp9sQpMh
+	 QPNBNLaNXMgEJo5r/TtmWccbPKdpwDbQvf3HHarcsj0tvq4SQ6jDcinZ+OfnnYK4Br
+	 EFt1uTDqaytu2h/vtX3+qLqdWhM1Gv/HdKIm4580fK1r9Wo5CC8IHaHYg/KZ/ELlMC
+	 KrklBDEnE9NYAXxZZoUc9aJDxw6rkflk+0QDyP0oSxJW0ROT7L5/60KTGjSfshZjon
+	 l7f+q88L5ZSe1blk163GZBeHBBECMLofIqRcgw/zRFqUdH/9ITgHKfHnOo0ZdqWY7/
+	 6mgqgMBxrqmsA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E5A0DC54BB3;
+	Fri, 24 May 2024 16:00:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524130653.30666-2-quic_snehshah@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] bpf: constify member bpf_sysctl_kern::table
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171656642993.1905.17222357299734558059.git-patchwork-notify@kernel.org>
+Date: Fri, 24 May 2024 16:00:29 +0000
+References: <20240518-sysctl-const-handler-bpf-v1-1-f0d7186743c1@weissschuh.net>
+In-Reply-To: <20240518-sysctl-const-handler-bpf-v1-1-f0d7186743c1@weissschuh.net>
+To: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=3Clinux=40weissschuh=2Enet=3E?=@ci.codeaurora.org
+Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, kpsingh@kernel.org, sdf@google.com,
+ haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, j.granados@samsung.com, mcgrof@kernel.org
 
-On Fri, May 24, 2024 at 06:36:52PM +0530, Sneh Shah wrote:
-> In case of integrated PCS ethernet does't have external PCS driver.
-> Currently stmmac supports multiple phy interfaces if there is external PCS.
-> Add a function to support mupliple phy interfaces when PCS is integrated.
+Hello:
 
-s/mupliple/multiple.
+This patch was applied to bpf/bpf-next.git (master)
+by Daniel Borkmann <daniel@iogearbox.net>:
 
-	Andrew
+On Sat, 18 May 2024 16:58:47 +0200 you wrote:
+> The sysctl core is preparing to only expose instances of
+> struct ctl_table as "const".
+> This will also affect the ctl_table argument of sysctl handlers,
+> for which bpf_sysctl_kern::table is also used.
+> 
+> As the function prototype of all sysctl handlers throughout the tree
+> needs to stay consistent that change will be done in one commit.
+> 
+> [...]
+
+Here is the summary with links:
+  - bpf: constify member bpf_sysctl_kern::table
+    https://git.kernel.org/bpf/bpf-next/c/2c1713a8f1c9
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
