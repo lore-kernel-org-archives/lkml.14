@@ -1,54 +1,54 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2081.outbound.protection.outlook.com [40.107.21.81])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2087.outbound.protection.outlook.com [40.107.247.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673D01292D0;
-	Fri, 24 May 2024 08:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC351129A7C;
+	Fri, 24 May 2024 08:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716540499; cv=fail; b=cq1rYFr5J8skSPYwwMi8z+/xqviLger7Vj7hLdrvDN04fqRKowRq2MQdZ17hcfzqty6VGeuTGpK09bF4HFH8q1b0expZ+CfFcnUISXUIkdSqDuJywvCMEeu7ejkm4QH+2EHo4cHGOpJIvK7PWNOeeYYRtTYPXNP0cmOpf9Pt7QA=
+	t=1716540490; cv=fail; b=t9iru8GJLoc2sNAk16RENleqjhnAYWke4addVemSlyjXt87Ro3BuJbHvc2LlOWfUk2HHeNnViGdg+jCS2pTIaWYNUVRv0DpItgUgb0IJjm1JLnSbg88G+LjOwB25u2N7pJCzhFWRWOHnzWy5xX0QkN91i0Nrlq9HwKAfxxBk3+0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716540499; c=relaxed/simple;
-	bh=OcwkAzpACFTgLbGgtrLeYYIXMip8rieT8eRRolhkmx0=;
+	s=arc-20240116; t=1716540490; c=relaxed/simple;
+	bh=Pv6FbF/1tuFsRyFZD5XM1/4ygDzddXPKHOtYRpuQV1E=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=HGI5p5yH6By0/fDKNtG9a3rpKZsSGk74kLymERGhjlgzaiExw2i9QgftaIMxamIi2Ipft5TZtu05AZygrHRToz1Yd+UxvvTBAUVcnmwoLgxZXYRZ4rpxR/4FaDEsnotQ5a5lqAdB+yvFJP9p2i07xbXNpJcqbmJxtprXwsb3STE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=HEWofvCn; arc=fail smtp.client-ip=40.107.21.81
+	 To:Cc:MIME-Version; b=Px0P2hZgAZ0WzlDmfRU8Rz61JHmlUhMD9FChshtTbI1/Cvok8BQ5JLAl5gYR5YEqiWDFklPAYt8n6IKm8YoyKGUzSBerEnZaayOwOfJxGY6kTCGOD4IWsQGvrNvUvvrr6MtHlK/0OBto+yqOPMI622BBuHGuz6nfy0t2URAAEtk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=RmE0NcZo; arc=fail smtp.client-ip=40.107.247.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="HEWofvCn"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="RmE0NcZo"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=atJYFbZtcj7Ip+OHbTgR9iSvSg1Fn2SCgD+ARMfPdLSK6JA3uEYo7aWPJOxPsRqSY6soiNQQQZW/dTWcmNiHQmhw4SEpLvmExJH2P3rAclS0/gJaSPgIoe4xpEuTZsdFf/+6PxGzsppV3U0Yv7wS5epYzaS9RM0dYx8UQ6O69emQggFpCrOlIO/eaMwk0xyjhPbVNGs29JsAg+CQvWNLznDga5iWjoShLvUV+NQLFFMtxHEJW/5k4W8TygSymcNzWD1GUrTgwMP9NNu2Ul4AKUOuyk3JWy90UwszP96M1XerU5NU9DOmK0Gi32BYS/l7Q6U92wbdOyzjTzefaIxfVw==
+ b=ZhCYoO5GbmglYIBBqcbGjK8VTfyLFmxfjbsLPBJllwaNnOosLe7FngGVMdjLwjJJNhF4C0Koo2528rxmAn8lvpwJmlEulYbAxfHo7fwfFBvDWJe7Pf6jQJLNIW2UvLtciCMnt2+Sv7cLMj08N+MAp+luBMb5v+d3nZHtVTr+q+7jhfFWkrRE2LCBE9VLjv8C7/Sbzk/ru4pM/qwkA3oGdgSqnCj8FOK/2c6Xvb3If1sXPA7v3U0Z1xdRkdJzACfrOsPWv7dBYHi7OqxA3mKLK/lweOsUaxKsLsB0k5kw0JyIPdNIfjVQJkDzynlS/Tjg1vzSFT3U7UVKn0sNvOwifA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SDIiQ0WXldpS1c0zaz2zUEuRzwAAaQlxl5NUitHzIMk=;
- b=eL6E9puI65lFooGTxb4M/pJlkVeAcWGpm27vVGDdcYM+Xvwu5JjrGp+jiQgEJLvU0zf8d1+vTe0di/aD59aZWsKIuGy5WiVvxsX8/6tliEtRNFgkT5lbzal/Ua5oTroeXitb/Ao117N6DXsAqpxK2D8gCeqHCuvVPcuQ8z5b3RME39mZO32KoEwczgqdZnU8bOkx+e70CnfB+DoR9aMYDFNvFzXFNksxNmRgii90ns61oY5JQP6hWS35gsARwpKx9nLbAtEn6H39wUZGJgA27mgWwU1161OwsX4lTOy2zFedhJFSJHL2WzRSrF+CizSkf0ZwvU4aon9/eQTNuLavkg==
+ bh=a2gl1Sp6ayVBbajmw1IMfR+FqAfWlcMNAdiZatq5fI8=;
+ b=XTOGqsjUIROBv6+I1i2iMxboJyuAlrChAl9MTZdUzessDw3HLxaNe/+33jN4i0XIVFBkCR7jor7MZibnFeI5pWWV3UAfhNxLt/NHymTL0eHCyPdVVjVQlwl/h2dS0AMbzOFMWyTOuzEPH6fp1NN0O4TqVO//O/bdajOA9ZP4W1AbN6bg8mkXR+gbTU1YqzViytKTU+6GcvdMVmAv9AxudCZnH/vAgy4AqiBrcViytmF/6NfEwxjHJ6YYC1KILtgoPkRBcTtPXo+cNazIIMyKWZHMyIq64UmF3f/i3PrreertKbvUs6Sg/gNa3ui5L9Wrr9luC2Z6JW5G3P2EJONmqQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SDIiQ0WXldpS1c0zaz2zUEuRzwAAaQlxl5NUitHzIMk=;
- b=HEWofvCnWfEMLJyFvQZbHzsMvDS5g7m1xmCv79zSv1nar02QAw1wqpvEuwkSTLnIZTuHtMVXWFSMniF2HIXqVmVhBTkZJMcLmbx+IZpxRFQaDTF6pF/TVX2O7aCrSuQMJo5CNbxZKFLDONVlipJfQtJgkfbdJoKL2NuAIyxK8LA=
+ bh=a2gl1Sp6ayVBbajmw1IMfR+FqAfWlcMNAdiZatq5fI8=;
+ b=RmE0NcZo7GQkppAXwvZXXJPCV7aE/EdXwBEZTx17L5DNuT/Z73J7SnwuPfJycM1v85xDRjqi1dugpgTfK3Ntp0IRANu3hNwGZOsEm+Fb/WEwUDXiExW8kuzFTY59fNwHq0+hj3E83olzpKTHxixffLqCEPWxSvxWUo8bSJH0oc0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by VI1PR04MB7149.eurprd04.prod.outlook.com (2603:10a6:800:12e::22) with
+ by VI1PR04MB9931.eurprd04.prod.outlook.com (2603:10a6:800:1d4::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
- 2024 08:48:13 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.20; Fri, 24 May
+ 2024 08:48:02 +0000
 Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
  ([fe80::557f:6fcf:a5a7:981c]) by DU0PR04MB9417.eurprd04.prod.outlook.com
  ([fe80::557f:6fcf:a5a7:981c%7]) with mapi id 15.20.7611.016; Fri, 24 May 2024
- 08:48:13 +0000
+ 08:48:02 +0000
 From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Fri, 24 May 2024 16:56:45 +0800
-Subject: [PATCH v4 3/6] firmware: arm_scmi: add initial support for i.MX
- BBM protocol
+Date: Fri, 24 May 2024 16:56:43 +0800
+Subject: [PATCH v4 1/6] Documentation: firmware-guide: add NXP i.MX95 SCMI
+ documentation
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240524-imx95-bbm-misc-v2-v4-3-dc456995d590@nxp.com>
+Message-Id: <20240524-imx95-bbm-misc-v2-v4-1-dc456995d590@nxp.com>
 References: <20240524-imx95-bbm-misc-v2-v4-0-dc456995d590@nxp.com>
 In-Reply-To: <20240524-imx95-bbm-misc-v2-v4-0-dc456995d590@nxp.com>
 To: Jonathan Corbet <corbet@lwn.net>, Shawn Guo <shawnguo@kernel.org>, 
@@ -62,11 +62,11 @@ Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
  imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
  devicetree@vger.kernel.org
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716541024; l=13836;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716541024; l=55803;
  i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=LiEwtdf7o7H0ejhXmj7WnyGO4q5yLREiDmkzoa9AJTE=;
- b=ho5i5/6eHOq1JXzSaicvgEyzWSQvdVGwFnFMh8VIPGxFiwTrxqqY+HB+2lWSumhi+b6QoW81a
- YtOUyTRKpKNCS+qKNLV2iLuGxAIIJ8LGGB/P7IKhkooi2+/9NHFLiIf
+ bh=fyjiPW7i3Esi/kVBE11tRQYjEUzJGakaE7Z+lYybjKY=;
+ b=C8DEQaW9NtZMyOpCIaJeCieOu2aMJK9l333kusoGQ4OHfmkJWBQoD+aPO2WQ5Tbt+R8X8YjDo
+ lcc6meUC1WSB2GDByIlU+ng0HOIqAxgfyxRZ+XK+yp33AfqwjILr8Jt
 X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
  pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
 X-ClientProxiedBy: SI1PR02CA0023.apcprd02.prod.outlook.com
@@ -80,599 +80,1033 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|VI1PR04MB7149:EE_
-X-MS-Office365-Filtering-Correlation-Id: 543a458b-45ed-469e-8c27-08dc7bce3f5a
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|VI1PR04MB9931:EE_
+X-MS-Office365-Filtering-Correlation-Id: a969e505-e86b-4c4c-c4f4-08dc7bce3889
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|376005|7416005|52116005|1800799015|921011|38350700005;
+	BCL:0;ARA:13230031|1800799015|52116005|376005|7416005|366007|921011|38350700005;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QWtnRlV1Zjh4clpIc293c2JiMnFVdERMaHNhQ1MrTithZTlBLzhvbGJVOHJw?=
- =?utf-8?B?WTVpdXplWEFnSjNaeG9SS3FteFZ4bXVRSlhRa2FRREk1R2dXczZXNUpuSHEw?=
- =?utf-8?B?V2xteHBldkNBU0JGdEVUeWpEMXU3Vnd5RFdIUFc5MHBzTUdKZEhxVklnUU1N?=
- =?utf-8?B?L0l4SGoyQ3U4NVJkdG0zd3cyQ2RxZjZmY3RJZzNidmlmWDk4QnFndVhPdDUr?=
- =?utf-8?B?bjMzMnNwd0RiT3Z4MWQrK0tldzhpVXBHbytVNEVBTkM5TkFMUUtTR3A3SldU?=
- =?utf-8?B?b2xpQlpySXJFemJJRGZMNUxPbU1XQ1Fhc2tkcURsdE42T1dDNEt3bWo5WHZw?=
- =?utf-8?B?OW5DbUx3V0lkSTUzOUVwbUhqVjdRWXB4cHhSVGpCcWgra0RoNEU4d0ZSTUVo?=
- =?utf-8?B?U0JRYnNrYjY5eXV2UnNqdUcwYkpFYld4NEU4QXhWbWgvK0Z2YWx2bmdtNldO?=
- =?utf-8?B?T29yL0VWcnNTQVZ6S256M3VIRXgrSGlRdjhrQThyVGpvY0x1U3ZKbUlhVEs2?=
- =?utf-8?B?N2UweWkwbW8zMW1BY3N5Q2tMa3V0dmpQbm9WMlhzZmN4L2ttWHFkV3VNdTVC?=
- =?utf-8?B?UjdxMk9GL3hwblUvNDNrWVBieWd6aTJMajNSb1RsYlNIWkxCdnlvdkVDdTVz?=
- =?utf-8?B?VUpLZmEyOW9ucHkyak53cEttRmFSOHVYZW90V1hHZ0xGM3NhaGVIekpram8y?=
- =?utf-8?B?M2ZJRGo2aGhPYlA1WWY5Q04wMnpJeThUUEJZRjFKYUxWWkppaHEybVdRNEQz?=
- =?utf-8?B?dVJ2Z2NoQ1BVTGxFejI0cGMzWjZYTTJSWTY3VUdKWnBGaHFPNkRVR0NXNW1E?=
- =?utf-8?B?VnBCcTFkYTYxSVNKODdGVWNiUCsyanBqbXZBVURpSEFtWVU5NlFGWFc2T1Vv?=
- =?utf-8?B?T3pPQzloUDZqUFY1WjQzNFZObzJEUjd3S0lFY3djZ2NXMEpKdElqMGkwWjhT?=
- =?utf-8?B?VUlUSUdJVGdHNkJwOElMVllqQVl6SWNoRFNORGNrN2Z6bkxrRVllKzdLNHcv?=
- =?utf-8?B?YnBEblB4RndYVVBDemJjUTVMVE5lZDd4bXFkMy96Q01yYlp6dUxZTG5HZGhy?=
- =?utf-8?B?ZkNqNVdIU01DWHpVV2haM1hEaDVTbVB1bHhsZ2xwWGlTVG10N2FDM1lsK20w?=
- =?utf-8?B?VmhEcDBtSWpoSW1XS0kvWTFWM3B3SlVaR2FJYldqc21vcGdIMURHdEljSFZy?=
- =?utf-8?B?eloxdkVjT1MrbDRYTVlrNmdrWDk0elNUSXBJTVhONnpVcHhYaEVoTldOUzhh?=
- =?utf-8?B?YUpuZGNZOE9TUzQ4c1VaMzc3L0s4T2QrWE5XZzVMTm5kMi9tYWR6Ri91dW1V?=
- =?utf-8?B?a25nalNGN2t1NU9pVzk5K25hdDZqTkFPam0vQ1diTXg1N3NISlNQV1orYzZF?=
- =?utf-8?B?Yi9ERGZRYmRJYWZSMnViSThtTDhSSXVJamw2ZUx5L3RRSGcrOStoY1hCaGdx?=
- =?utf-8?B?MDNLbUkzdkZiMmlqVVdCbUdvQkUyQUFMMWxEcmFWMzNBcUJLRVQ1aHBPREN6?=
- =?utf-8?B?ZW5JR3NCYVdMWmNYYkRRbzR6b3psdU1uWGsrOVNvcjU2YnQ1a3hxV3hOQUZr?=
- =?utf-8?B?OFcvWlNKVStzcDBYTjJsZHdrWUkxNXBjVXRkVk11Nmd1NFFWVGtEeGJnK2Nv?=
- =?utf-8?B?TFJhekkweVJ2c3l6OVNJek1zUXpOOGVXWTRiM25Wd2xQYzFWZCtKL21SeVVx?=
- =?utf-8?B?U2R0TG9NeW1obVBNV1E3SFRDNDhWalpVaFk0RWUwaTRJNGlLTDU0d000Sysw?=
- =?utf-8?B?VEsrR3RwQ0I0VFd5WHgwYWVtNVJrbjFyMlZRTXVNU2dZWTBvMkZFa016YzYy?=
- =?utf-8?Q?D9ae++f4Xg14whKr0ubwUiFZMdxrjMUDXT/TE=3D?=
+	=?utf-8?B?UVlSVzFOUFUrU21kRVdtTHNoYUhBM1c0RHg5K1cwTERTUUhoeEkrcEZMVkt0?=
+ =?utf-8?B?SEJtSGd2c2V5ZEJkeXlmbERnbzBEcENaZlFNeGljS2ZNNUY2cWYrV2ZPS2Vv?=
+ =?utf-8?B?aDlRVjdEb1Jnc3hZUy9PeHQ0WVkwL2V0ZFVmT0ZUQ1FwWlBDMjZCdDZCQS9G?=
+ =?utf-8?B?aGpIaE8vK1NwNmVZcVM0YzlteFhhbmR2TWRabmJTQjUxcmtkMlhWSnJ6b1dl?=
+ =?utf-8?B?NUhINytrN2NITW9xdkV2KzBCTFR2R2tuM2UvRHR6VUo3MkgwekgzVFlQbkJ6?=
+ =?utf-8?B?YlV1TU9YOTVsOTNXeFBuQU5rNXNvSkROVXluMjZNNlR0cFpqeCtEZHBGam16?=
+ =?utf-8?B?VmFHSHo0UEE3bHBZdjlTdENwYzh4UUNJakNlcWhST2diR1pSTFVEN3owQzZN?=
+ =?utf-8?B?UDFmbTdpZXFDSDVQaDBsbjFaWklIeVdUSGgrbWI1YnpUYmRaVE5VTXlnYWgx?=
+ =?utf-8?B?alVMMmJwbW9sYlJCemtNU2ZDMlJ4MCtoUjYyek0zZWJPT1h5ZUVlWmlIc0l5?=
+ =?utf-8?B?MDEvbVVQc0FwdE5wUXR0SllWWkZmOTJqeHFYcmswRzZiZ2J4dlYxRmowcmJI?=
+ =?utf-8?B?YktrN0hKOElkNGN6MmtETkh5ajRKNnQ2dXd0UW5PV1VDVWx1ZGJDL3V0QWNs?=
+ =?utf-8?B?K2djTWFnd0Q2bUR3TFBDWVFMOUpOazZ6WDVTd3g4Qm40Nnlid1pRdjFtM3Js?=
+ =?utf-8?B?cStoREpRQkljQ21SOGNMTHBjdTYwaE5nb1NBS29aSVZvZEgza29tQTRHTWZ6?=
+ =?utf-8?B?UW5NUUZRbjNuWEQ5YzBLeDF5dSsvRk92TC9hWCtsdFgyTXBZVjlQVnNvcVRV?=
+ =?utf-8?B?QjB0bzYwandZdUh2M3lLckhEUTUyY2gzSElVQ0FvY2tBY0JRTWJIclFabWRP?=
+ =?utf-8?B?YTNOeGJuV3lWallDMDdwYkxaSEtGZTBKeEVBYTFGUnh3S3BnVFBnc3Nkd0Rv?=
+ =?utf-8?B?REVVMHRSYXFUdDBoSGdaUTA2OTR4Rm9mSXZJbDlvdHN0bnAzbnhmdDN1ajJx?=
+ =?utf-8?B?MzFra0JiUU1HeXFmRnpUWnpqSm1oSTZGRjBVSWNZK1FKbW5MOU9jVzMrU3J4?=
+ =?utf-8?B?ZHBLS0taSkY4OHBWcFU0alJYV280NnRCaCs2UXJkTit6NmROT0pTS3E5TlEz?=
+ =?utf-8?B?dkx3N3hlOUVRRkpXaTdRVC9wZHRUSGJUV1ZKSUF2dUdyZ1lEd01GcFpnT3FB?=
+ =?utf-8?B?U1MxR09PckhYWEhwYmRBU3c0NW5Ia0pXdGVlKzVHdVdxaUM5UU1MVExRRCtr?=
+ =?utf-8?B?djhwdUVld1czdlVpZE1meXRqQlp2WkZjVCtzK0xYTlI3YlNteFEvc2VBVVZo?=
+ =?utf-8?B?RHdYamFVT0RQNE92aVJIOWQ2M0VmUFJqMUZxRTNxakluSHdZY3l5UHlnZUI5?=
+ =?utf-8?B?TzJETWZqVjNJLzE3d1RtT29DODh1RnFudEFLTUJ4SmRYdU5MalFjd3NZOGQ5?=
+ =?utf-8?B?aGNlSEZYVFpGT28xRjlJamFoT1NSQitVUVhEcTRkTWlaMjN0blRlcTh1WjFR?=
+ =?utf-8?B?dGY1TGZCZWFxUnU1SzBORFYzRHlXM3l6TW55d0IxYVppT3ZuSUowTUJsdmR3?=
+ =?utf-8?B?bWZHTyt4YnZ5NXZoWUdzK09abklpd3pXaWdMVjV1WEZ4d1hQZHpTR0FFTGFF?=
+ =?utf-8?B?YmlnSkliaXN3REZMMUk5STZITFE0ODdvYm9OZ201R0xzYWRXcmJFMTJ3STJv?=
+ =?utf-8?B?TFZtMmZRQ2hlNXluYlBZczVMVGdzZitVS3huYzdPT05mRDZsQVpab1owWjBv?=
+ =?utf-8?B?d2ZEMkNLZVlWc2NhS3dGOU5mSDNIdnZtYWJrOVRoZVlWZ2JTY3FUcDN0V21Y?=
+ =?utf-8?Q?S3qFshTisJ42Ef7KnOkZOOjyTgG/TI5Dw/+LI=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(52116005)(1800799015)(921011)(38350700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(7416005)(366007)(921011)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UUFzbjFwY2tUUExzMnZ0TVZVWlF3eENaMjFaZytGN1NWMjRzVWxZbW1YREhP?=
- =?utf-8?B?aXgzQXNOemFEeVkyeDlsNC8rcTBnSmJFMUduTWhpd0Y5N0xyamhuWG1OSlNw?=
- =?utf-8?B?VXlNVUd0c1IyRmNxSi9IQlRPL3pGZmZlbThKSTliNXpScEk4Q24wc09Renlv?=
- =?utf-8?B?SUZQZnI1Y0pYWGlsMFRLQTF5REl6RGV2ZVZ4eXltQlV1SGZvWFYrVFVOc3Jk?=
- =?utf-8?B?Z0NxQVVJL1lFckJjOUFNUGlpSXc2UkllY2NqRnd1MTVEanpMU05ZMEx3dENi?=
- =?utf-8?B?SzMxWmFvSXlweUxHNGpJSEtJYTBZMWhBN29qbkRKSk5IeVJrTkZyYzRlODcx?=
- =?utf-8?B?Z1VmYXZCNWpPWE5hU2hmOGRYUzI5Nm0wR2xRREpJdlZFKy92a0V1ZVVyNjRh?=
- =?utf-8?B?VE5YNWFDYkxSVlVEYXQ4SjJNak5OS1RjMGNjdlo0bHMxNTN4eEJRT2xqbXcv?=
- =?utf-8?B?bnJVMXZqMHZmQ2UzeHZsK0lCOXo0WER3Yk55NlhkT1EwdWYwcy9RdlU3K0hv?=
- =?utf-8?B?OExyNkVBUENoSitINWdxZGJ3Uy9BUDZKZmtOb2VrM1VyeTNXVktQMm83UEpM?=
- =?utf-8?B?SEMvSzFwQVNTZlp6MWlxZ3ZhUHFQS2ZkUnpRaFAwRFJhVU5YanZOVmtOSW4r?=
- =?utf-8?B?amhwZkJHRTFUWXl0YjFySkFyTTRCQTYySU13L2hPZXNtUVBDQnp3VzRQZHBs?=
- =?utf-8?B?U0VnYWU1blBKQzR2QXhtV29iZ0xXeGJ6Rnc1bGxLamY0NVlFNlJJMWo1aTRu?=
- =?utf-8?B?M1E0dFZXemFKWkZPNHpnTGsxUkpSTmdESVdaV1pCMDFLZ0p6bFROeEZjMS9X?=
- =?utf-8?B?UHExNmF0R3c5ZjZzZFRMc1libFJUek1RZGhhaUpkbkN3NGZBdVdHb2dOWXI4?=
- =?utf-8?B?UnJYeEpSQmVLL3FPQi9YZkIwa0gybEk5TjEwd0d6aVdqdk1rb3VmTEluWEl2?=
- =?utf-8?B?c0w4cnBTVkY3bjRkMGFXdmJUWS9meXFBcTM1WXZMYTVMbUxac0c4VzJMdE5J?=
- =?utf-8?B?SFFsV3kzTk5LK1RCZWhDS1hjWUU3RE5FdHV4Z2hCL2VOQ2tDTTBLVzdBUTNU?=
- =?utf-8?B?ME51ZHc2dXllN3RrZ0orb2xRanBpb3ppODFjZVlCQzFMemcrVDZ6OWVMaWV6?=
- =?utf-8?B?Q1FYUmt2WjZkcEtQUEZ0RGR3TFB0MHVveVpVNE55Mjh6eWJQUWc4TnZhaGUy?=
- =?utf-8?B?RWZzajlMWG5ucFZXcTgrS29HWTBtVlhzWEJsQ0V2UU5mUEt1ZWw1QWZvdWwy?=
- =?utf-8?B?b1E4SmNZdE1kT3NyWUhPZmx6MDUydVk0Wk1VMjlqRFFOZ0VxYnB6d090bFVE?=
- =?utf-8?B?VFVMeittb2pzNWZDMThmSmE5U2YwemNxT1R6eE11dmFDbStIaUY5am43eW1K?=
- =?utf-8?B?bHVJUmFEV3BHMUdmcW1INmVYOVZLa1VJZUJaeEdBUDNiang1NS83NVFXU3F5?=
- =?utf-8?B?SDcvQXI5dndyT3AvaUhqWnNpU0lMMFBPSStZS0hPb2xQeUp3ZU02WVduRHJN?=
- =?utf-8?B?OW4vNFRkeEtySkJHbU12V00yVVY5bzZCcDFvQUFTTWs1dTlLSTVqRExBUWFm?=
- =?utf-8?B?ekdWdHp5RzJZaHRDUkxaNWswSVEzRXpjcUxGcjA4RkNkaDBqSXcxKy9yWkFr?=
- =?utf-8?B?VzVZYkh1Q0VEZEF6aVF5UDBwejJJNnZZK0FPd3orOVBpeHFYYjhUeHV2cU1Q?=
- =?utf-8?B?OVZEK0JMM3FkNnlzeGhQR0tEdXFIM3VSc3paRTdTUWZrbHQrelRVdVZyV0FL?=
- =?utf-8?B?Sm9xczlDcG5WZ2R6ZU1zT2owUUNhaHNkMWxPd3dpWnVpWm05bGthdzJpTVlE?=
- =?utf-8?B?b09EMVgrdzRHQ2F5L2NSRUlDbXhxLzFnbVlTMFNkUzRKMDRSVjJFb3JLZmxm?=
- =?utf-8?B?SjNtSSs5TTRjY3F0Wit4Vm05cW1PRFlEcXc5NzRWd1JkNTM5dmJ4amZ4NEdv?=
- =?utf-8?B?Q3FiVThiVU42Z2Z6MFZqbHA5VUdUWkRRY241QjJ1UndjZklhVDJaTXhzZDVB?=
- =?utf-8?B?TGp0QWdMTFhPUjM5bkxrK1UyMXpJMnUwU3c2QlpFNldlUnZucEY3Wk1DSlFZ?=
- =?utf-8?B?RTltMk1lYmcrZEdTQVE4dXFORmw1UTAyaGFEVEtET29wdFpRblB0Q2lTdHBz?=
- =?utf-8?Q?/mZ0JUKSXMKSaxUNpu0e6JCnC?=
+	=?utf-8?B?SWhxVGFhQy9lL2lDdExoRkFSaXlxL0FobVBhdFVKRE1lZ2dxR25ERVo0Qks2?=
+ =?utf-8?B?ZThXanBPNmVtR2JMektVV3lSRWxZNUtHMG9zdkRHeEVBM3FlT1pMMHNPSmoz?=
+ =?utf-8?B?U3RVSlh6amJwclNYWDRSTEJva2MxUm0xQkFhSmxTTTg0dUwzL0ZPWFBYMlVO?=
+ =?utf-8?B?WEdWVlJzTFI3c3RZT3BJczRHRGJYZytYRFB1K09pNk1sZldWQ01LQkcwRGx3?=
+ =?utf-8?B?K1p3SUhUNXZqbVJ0a1FaOG9NSDNJcVNrVVBzUXZIbjRDUmsvV2duc3REYTdD?=
+ =?utf-8?B?Z1dXSTBpMlkvNVFqVGpCWFpzZ0NXRW40Q00xbktKTVRNaExmVWV0d1VlaTl5?=
+ =?utf-8?B?dFRzTVZSUzJpeUU5a05CTUp3OHFZS3pWaDB0Mm9MUnMvYWxMNE9yQ1owSU0w?=
+ =?utf-8?B?MUVGWEU2WGZjcXhkTTJnRlRMamN3c01FYzhmVzNhVGU5OXcrQ3BubGpzY05H?=
+ =?utf-8?B?L1RuaXdsSkNJYkg1c01LUkMxZTFRVFBwQWxPb21ScmUrUUExMUg4U2YxRTFi?=
+ =?utf-8?B?eDBPclIzYTljcHRPNjV4M1NqVjZ0bFplaFVWZTlPUjZ0ejJFK09LcENwZERT?=
+ =?utf-8?B?UnNMMVhnUklLVHhIN2ZoUTVQSkxXYTJXV2pxNUk4WlJMRm5HR2pZVFhteFlU?=
+ =?utf-8?B?Qkd4UkpGTzJLN2l0WnV5UHJJQ1piVlVrcjlrZWdNYUdOWFhMc1hhTjJORkVF?=
+ =?utf-8?B?TytHYWZyS3dxcWcxczF4UEVtTU5qb2E0M3FSRDRybWZEZEdHUXhrNkltdGtv?=
+ =?utf-8?B?cUpZTEZ0Ly9kV2lUN0NodTJ0b3lKdUZsalFsKzdnM0lKOEREUFdYM081bmFY?=
+ =?utf-8?B?NllXemVTSlB4ZitCY2hRMlhKUG91d0EwSGhBbnBDNXdDbGJpNjg1am5UaGto?=
+ =?utf-8?B?cVJsWUMxYWgydFBjMHQ2VUxYc21wOUpGM2ZzSUlxb2dGTXNEbEhFdG1IY21i?=
+ =?utf-8?B?MkIveEtBMllUU09Gb29qTzFKV1ZlNXZWOWNtYytZZ1lkTkpNNmNpKzlOSEJ0?=
+ =?utf-8?B?ZlI4TnFERUFaeFpWKzdqSHdwOGlVS3hteUh1TXF6azhPc1NtM0ZKYzBUZE13?=
+ =?utf-8?B?eFhiWUg0eVhuMFdmcDJNMlIzY1JoOVQ0cUFMYjFtRlhNQ2M0NllPd014RDlC?=
+ =?utf-8?B?Sm5ZV2ZFT2Zsc2pib2x4dHMvUEhHaGFjVVBlZDRjQkRyRmFkUWU5QVJvbzdn?=
+ =?utf-8?B?bFRIaTJQcDJYemtFSXcwbWZwamhIWWFMM2RDanduNFhDNHpVUDFQQ29NQVF4?=
+ =?utf-8?B?Mkw0d3ZJaURibC9MQWVLc1J5TnAycmxkUXRrSVdFSWIrb3FieE50bzBBTHRQ?=
+ =?utf-8?B?ZHJLWFRNZ0NpVnl6YXBWTW9pTEdTSWhaWEsrV0ZqUXRrTjJMQ3pSMDlLWHBz?=
+ =?utf-8?B?bVM5Wmg0VE1DdFpJUE1leHhGNjJxRGJTSVQrNzhMRmJOakJNeVRScWpSZWo5?=
+ =?utf-8?B?Rkt0RWlyTUFBYnlqa1N6SUh0RnZsR3pPV0wyKzdXR2gvR3QzYmRITXJ4OU9z?=
+ =?utf-8?B?YVNNQ1lFOXVISkNhOWxXQWFWYXllc3VuVEltZnN3VExWdlRkMldpWW9taitV?=
+ =?utf-8?B?S3VTdWVLVVdSOWhpSmZwQ2F3WTRlNWRvcDB2OEZuL09sUWpIS1U0ZkZlUU9J?=
+ =?utf-8?B?SG1wSHptZCtXa3lsYXJQaFJMbnhjQklNYUV3VmRZTDdFNVBCRzZKNmJqSWdT?=
+ =?utf-8?B?M3NLYS8rOVI2OGo0a2lqcllTOVBDUWwySWcvK0h1TVNkNXJFUkREN20wTTZD?=
+ =?utf-8?B?QzBiNG12RFI5TWdCZkZ5R1BNZjQ0RUVENFJ0SmFQZjVuQUFoSVM0U2g4M0dh?=
+ =?utf-8?B?dWhFMHAxYVkxY2JneVhNbDh2Zi8xM3l0OXRSck9mTEZ2QUF2RjVvRTVnckRj?=
+ =?utf-8?B?V0xnK2ZCbmhJdjRKN3FxdFI5MUNkWlNQMDIySnk2TDZrUnlSQ0thQVNkb2NU?=
+ =?utf-8?B?cE1EaDJMRmhlUzJwWktPaDY4Mmk3c2d6azFZV0MzWWM4RUE2NjF1enA0bWZw?=
+ =?utf-8?B?QVQwWEVpdTEvcmRoWWpiVWFXV1JhQjJTVUJIdXlHcS84emRRNDgzQXJXc04y?=
+ =?utf-8?B?eXF4bWY0eE5pUXdGZVBpREx3RVZjS0VBRWoxd29EaDJCUURTcU5qT2RjOFh6?=
+ =?utf-8?Q?Yv/ola809Fm4VU8J+w3xjK7/X?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 543a458b-45ed-469e-8c27-08dc7bce3f5a
+X-MS-Exchange-CrossTenant-Network-Message-Id: a969e505-e86b-4c4c-c4f4-08dc7bce3889
 X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2024 08:48:13.6867
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2024 08:48:02.5001
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: H2OdhUjYpDKCItjwLmbDozUeHVIfneLaxXTxUCZWVE1MQGEC91hq/t7Mj3AJyIfN7X8yUFB5btKBj0sMQa9RuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7149
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2RF5vRBYTO6JKg+YMgEX/8CC3Ll4Nc6BbYBzZxtXecIJIus1EI9ZYo87XEA0MeQmMs4kjIWU41qyip3HX8O+Sg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9931
 
 From: Peng Fan <peng.fan@nxp.com>
 
-i.MX95 has a battery-backed module(BBM), which has persistent storage (GPR),
-an RTC, and the ON/OFF button. The System Manager(SM) firmware use SCMI vendor
-protocol(SCMI BBM) to let agent be able to use GPR, RTC and ON/OFF
-button.
+Add NXP i.MX95 System Control Management Interface(SCMI) vendor
+extensions protocol documentation.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/firmware/arm_scmi/Kconfig          |   2 +
- drivers/firmware/arm_scmi/Makefile         |   1 +
- drivers/firmware/arm_scmi/imx/Kconfig      |  14 ++
- drivers/firmware/arm_scmi/imx/Makefile     |   2 +
- drivers/firmware/arm_scmi/imx/imx-sm-bbm.c | 380 +++++++++++++++++++++++++++++
- include/linux/scmi_imx_protocol.h          |  42 ++++
- 6 files changed, 441 insertions(+)
+ Documentation/firmware-guide/index.rst          |  10 +
+ Documentation/firmware-guide/nxp/imx95-scmi.rst | 877 ++++++++++++++++++++++++
+ Documentation/firmware-guide/nxp/index.rst      |  10 +
+ 3 files changed, 897 insertions(+)
 
-diff --git a/drivers/firmware/arm_scmi/Kconfig b/drivers/firmware/arm_scmi/Kconfig
-index aa5842be19b2..79846cbaf71b 100644
---- a/drivers/firmware/arm_scmi/Kconfig
-+++ b/drivers/firmware/arm_scmi/Kconfig
-@@ -180,4 +180,6 @@ config ARM_SCMI_POWER_CONTROL
- 	  called scmi_power_control. Note this may needed early in boot to catch
- 	  early shutdown/reboot SCMI requests.
+diff --git a/Documentation/firmware-guide/index.rst b/Documentation/firmware-guide/index.rst
+index 5355784ca0a2..8f66ae31337e 100644
+--- a/Documentation/firmware-guide/index.rst
++++ b/Documentation/firmware-guide/index.rst
+@@ -4,6 +4,9 @@
+ The Linux kernel firmware guide
+ ===============================
  
-+source "drivers/firmware/arm_scmi/imx/Kconfig"
++ACPI subsystem
++==============
 +
- endmenu
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index fd59f58ce8a2..fb9407fef60c 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -16,6 +16,7 @@ scmi-module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
+ This section describes the ACPI subsystem in Linux from firmware perspective.
  
- obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
- obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-module.o
-+obj-$(CONFIG_ARM_SCMI_PROTOCOL) += imx/
+ .. toctree::
+@@ -11,3 +14,10 @@ This section describes the ACPI subsystem in Linux from firmware perspective.
  
- obj-$(CONFIG_ARM_SCMI_POWER_CONTROL) += scmi_power_control.o
+    acpi/index
  
-diff --git a/drivers/firmware/arm_scmi/imx/Kconfig b/drivers/firmware/arm_scmi/imx/Kconfig
++NXP firmware
++============
++
++.. toctree::
++   :maxdepth: 1
++
++   nxp/index
+diff --git a/Documentation/firmware-guide/nxp/imx95-scmi.rst b/Documentation/firmware-guide/nxp/imx95-scmi.rst
 new file mode 100644
-index 000000000000..4b6ac7febe8f
+index 000000000000..bd87a961e4a5
 --- /dev/null
-+++ b/drivers/firmware/arm_scmi/imx/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+menu "ARM SCMI NXP i.MX Vendor Protocols"
++++ b/Documentation/firmware-guide/nxp/imx95-scmi.rst
+@@ -0,0 +1,877 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
 +
-+config IMX_SCMI_BBM_EXT
-+	tristate "i.MX SCMI BBM EXTENSION"
-+	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
-+	default y if ARCH_MXC
-+	help
-+	  This enables i.MX System BBM control logic which supports RTC
-+	  and BUTTON.
++===============================================================================
++i.MX95 System Control and Management Interface(SCMI) Vendor Protocols Extension
++===============================================================================
 +
-+	  This driver can also be built as a module.
++:Copyright: |copy| 2024 NXP
 +
-+endmenu
-diff --git a/drivers/firmware/arm_scmi/imx/Makefile b/drivers/firmware/arm_scmi/imx/Makefile
++:Author: Peng Fan <peng.fan@nxp.com>
++
++The System Manager (SM) is a low-level system function which runs on a System
++Control Processor (SCP) to support isolation and management of power domains,
++clocks, resets, sensors, pins, etc. on complex application processors. It often
++runs on a Cortex-M processor and provides an abstraction to many of the
++underlying features of the hardware. The primary purpose of the SM is to allow
++isolation between software running on different cores in the SoC. It does this
++by having exclusive access to critical resources such as those controlling
++power, clocks, reset, PMIC, etc. and then providing an RPC interface to those
++clients. This allows the SM to provide access control, arbitration, and
++aggregation policies for those shared critical resources.
++
++This document covers all the information necessary to understand, maintain,
++port, and deploy the SM on supported processors.
++
++The SM implements an interface compliant with the Arm SCMI 3.2 Specification
++with vendor specific extensions.
++
++SCMI_BBM: System Control and Management Interface Driver (BBM)
++==============================================================
++
++This protocol is intended provide access to the battery-backed module. This
++contains persistent storage (GPR), an RTC, and the ON/OFF button. The protocol
++can also provide access to similar functions implemented via external board
++components. The BBM protocol provides functions to:
++
++- Describe the protocol version.
++- Discover implementation attributes.
++- Read/write GPR
++- Discover the RTCs available in the system.
++- Read/write the RTC time in seconds and ticks
++- Set an alarm (per LM) in seconds
++- Get notifications on RTC update, alarm, or rollover.
++- Get notification on ON/OFF button activity.
++
++For most SoC, there is one on-chip RTC (e.g. in BBNSM) and this is RTC ID 0.
++Board code can add additional GPR and RTC.
++
++GPR are not aggregated. The RTC time is also not aggregated. Setting these
++sets for all so normally exclusive access would be granted to one agent for
++each. However, RTC alarms are maintained for each LM and the hardware is
++programmed with the next nearest alarm time. So only one agent in an LM should
++be given access rights to set an RTC alarm.
++
++Commands:
++_________
++
++PROTOCOL_VERSION
++~~~~~~~~~~~~~~~~
++
++message_id: 0x0
++protocol_id: 0x81
++
+++---------------+--------------------------------------------------------------+
++|Return values                                                                 |
+++---------------+--------------------------------------------------------------+
++|Name           |Description                                                   |
+++---------------+--------------------------------------------------------------+
++|int32 status   | See ARM SCMI Specification v3.2 section 4.1.4 for status     |
++|               | code definitions.                                            |
+++---------------+--------------------------------------------------------------+
++|uint32 version | For this revision of the specification, this value must be   |
++|               | 0x10000.                                                     |
+++---------------+--------------------------------------------------------------+
++
++PROTOCOL_ATTRIBUTES
++~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x1
++protocol_id: 0x81
++
+++---------------+--------------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      | See ARM SCMI Specification v3.2 section 4.1.4 for status  |
++|                  | code definitions.                                         |
+++------------------+-----------------------------------------------------------+
++|uint32 attributes | Bits[31:8] Number of RTCs.                                |
++|                  | Bits[15:0] Number of persistent storage (GPR) words.      |
+++------------------+-----------------------------------------------------------+
++
++PROTOCOL_MESSAGE_ATTRIBUTES
++~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x2
++protocol_id: 0x81
++
+++---------------+--------------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: in case the message is implemented and available  |
++|                  |to use.                                                    |
++|                  |NOT_FOUND: if the message identified by message_id is      |
++|                  |invalid or not implemented                                 |
+++------------------+-----------------------------------------------------------+
++|uint32 attributes |Flags that are associated with a specific function in the  |
++|                  |protocol. For all functions in this protocol, this         |
++|                  |parameter has a value of 0                                 |
+++------------------+-----------------------------------------------------------+
++
++BBM_GPR_SET
++~~~~~~~~~~~
++
++message_id: 0x3
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of GPR to write                                      |
+++------------------+-----------------------------------------------------------+
++|uint32 value      |32-bit value to write to the GPR                           |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if the GPR was successfully written.              |
++|                  |NOT_FOUND: if the index is not valid.                      |
++|                  |DENIED: if the agent does not have permission to write     |
++|                  |the specified GPR                                          |
+++------------------+-----------------------------------------------------------+
++
++BBM_GPR_GET
++~~~~~~~~~~~
++
++message_id: 0x4
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of GPR to read                                       |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if the GPR was successfully written.              |
++|                  |NOT_FOUND: if the index is not valid.                      |
++|                  |DENIED: if the agent does not have permission to write     |
++|                  |the specified GPR.                                         |
+++------------------+-----------------------------------------------------------+
++|uint32 value      |32-bit value read from the GPR                             |
+++------------------+-----------------------------------------------------------+
++
++BBM_RTC_ATTRIBUTES
++~~~~~~~~~~~~~~~~~~
++
++message_id: 0x5
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of RTC                                               |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: returned the attributes.                          |
++|                  |NOT_FOUND: Index is invalid.                               |
+++------------------+-----------------------------------------------------------+
++|uint32 attributes |Bit[31:24] Bit width of RTC seconds.                       |
++|                  |Bit[23:16] Bit width of RTC ticks.                         |
++|                  |Bits[15:0] RTC ticks per second                            |
+++------------------+-----------------------------------------------------------+
++|uint8 name[16]    |Null-terminated ASCII string of up to 16 bytes in length   |
++|                  |describing the RTC name                                    |
+++------------------+-----------------------------------------------------------+
++
++BBM_RTC_TIME_SET
++~~~~~~~~~~~~~~~~
++
++message_id: 0x6
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of RTC                                               |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |Bits[31:1] Reserved, must be zero.                         |
++|                  |Bit[0] RTC time format:                                    |
++|                  |Set to 1 if the time is in ticks.                          |
++|                  |Set to 0 if the time is in seconds                         |
+++------------------+-----------------------------------------------------------+
++|uint32 time[2]    |Lower word: Lower 32 bits of the time in seconds/ticks.    |
++|                  |Upper word: Upper 32 bits of the time in seconds/ticks.    |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: RTC time was successfully set.                    |
++|                  |NOT_FOUND: rtcId pertains to a non-existent RTC.           |
++|                  |INVALID_PARAMETERS: time is not valid                      |
++|                  |(beyond the range of the RTC).                             |
++|                  |DENIED: the agent does not have permission to set the RTC. |
+++------------------+-----------------------------------------------------------+
++
++BBM_RTC_TIME_GET
++~~~~~~~~~~~~~~~~
++
++message_id: 0x7
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of RTC                                               |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |Bits[31:1] Reserved, must be zero.                         |
++|                  |Bit[0] RTC time format:                                    |
++|                  |Set to 1 if the time is in ticks.                          |
++|                  |Set to 0 if the time is in seconds                         |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: RTC time was successfully set.                    |
++|                  |NOT_FOUND: rtcId pertains to a non-existent RTC.           |
+++------------------+-----------------------------------------------------------+
++|uint32 time[2]    |Lower word: Lower 32 bits of the time in seconds/ticks.    |
++|                  |Upper word: Upper 32 bits of the time in seconds/ticks.    |
+++------------------+-----------------------------------------------------------+
++
++BBM_RTC_ALARM_SET
++~~~~~~~~~~~~~~~~~
++
++message_id: 0x8
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of RTC                                               |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |Bits[31:1] Reserved, must be zero.                         |
++|                  |Bit[0] RTC enable flag:                                    |
++|                  |Set to 1 if the RTC alarm should be enabled.               |
++|                  |Set to 0 if the RTC alarm should be disabled               |
+++------------------+-----------------------------------------------------------+
++|uint32 time[2]    |Lower word: Lower 32 bits of the time in seconds.          |
++|                  |Upper word: Upper 32 bits of the time in seconds.          |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: RTC time was successfully set.                    |
++|                  |NOT_FOUND: rtcId pertains to a non-existent RTC.           |
++|                  |INVALID_PARAMETERS: time is not valid                      |
++|                  |(beyond the range of the RTC).                             |
++|                  |DENIED: the agent does not have permission to set the RTC  |
++|                  |alarm                                                      |
+++------------------+-----------------------------------------------------------+
++
++BBM_BUTTON_GET
++~~~~~~~~~~~~~~
++
++message_id: 0x9
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if the button status was read.                    |
++|                  |Other value: ARM SCMI Specification v3.2 section 4.1.4.    |
+++------------------+-----------------------------------------------------------+
++|uint32 state      |State of the ON/OFF button                                 |
+++------------------+-----------------------------------------------------------+
++
++BBM_RTC_NOTIFY
++~~~~~~~~~~~~~~
++
++message_id: 0xA
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of RTC                                               |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |Notification flags                                         |
++|                  |Bits[31:3] Reserved, must be zero.                         |
++|                  |Bit[2] Update enable:                                      |
++|                  |Set to 1 to send notification.                             |
++|                  |Set to 0 if no notification.                               |
++|                  |Bit[1] Rollover enable:                                    |
++|                  |Set to 1 to send notification.                             |
++|                  |Set to 0 if no notification.                               |
++|                  |Bit[0] Alarm enable:                                       |
++|                  |Set to 1 to send notification.                             |
++|                  |Set to 0 if no notification                                |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: notification configuration was successfully       |
++|                  |updated.                                                   |
++|                  |NOT_FOUND: rtcId pertains to a non-existent RTC.           |
++|                  |DENIED: the agent does not have permission to request RTC  |
++|                  |notifications.                                             |
+++------------------+-----------------------------------------------------------+
++
++BBM_BUTTON_NOTIFY
++~~~~~~~~~~~~~~~~~
++
++message_id: 0xB
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |Notification flags                                         |
++|                  |Bits[31:1] Reserved, must be zero.                         |
++|                  |Bit[0] Enable button:                                      |
++|                  |Set to 1 to send notification.                             |
++|                  |Set to 0 if no notification                                |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: notification configuration was successfully       |
++|                  |updated.                                                   |
++|                  |DENIED: the agent does not have permission to request      |
++|                  |button notifications.                                      |
+++------------------+-----------------------------------------------------------+
++
++NEGOTIATE_PROTOCOL_VERSION
++~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x10
++protocol_id: 0x81
++
+++--------------------+---------------------------------------------------------+
++|Parameters                                                                    |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|uint32 version      |The negotiated protocol version the agent intends to use |
+++--------------------+---------------------------------------------------------+
++|Return values                                                                 |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|int32 status        |SUCCESS: if the negotiated protocol version is supported |
++|                    |by the platform. All commands, responses, and            |
++|                    |notifications post successful return of this command must|
++|                    |comply with the negotiated version.                      |
++|                    |NOT_SUPPORTED: if the protocol version is not supported. |
+++--------------------+---------------------------------------------------------+
++
++Notifications
++_____________
++
++BBM_RTC_EVENT
++~~~~~~~~~~~~~
++
++message_id: 0x0
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |RTC events:                                                |
++|                  |Bits[31:2] Reserved, must be zero.                         |
++|                  |Bit[1] RTC rollover notification:                          |
++|                  |1 RTC rollover detected.                                   |
++|                  |0 no RTC rollover detected.                                |
++|                  |Bit[0] RTC alarm notification:                             |
++|                  |1 RTC alarm generated.                                     |
++|                  |0 no RTC alarm generated.                                  |
+++------------------+-----------------------------------------------------------+
++
++BBM_BUTTON_EVENT
++~~~~~~~~~~~~~~~~
++
++message_id: 0x1
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |RTC events:                                                |
+++------------------+-----------------------------------------------------------+
++|                  |Button events:                                             |
++|                  |Bits[31:1] Reserved, must be zero.                         |
++|                  |Bit[0] Button notification:                                |
++|                  |1 button change detected.                                  |
++|                  |0 no button change detected.                               |
+++------------------+-----------------------------------------------------------+
++
++SCMI_MISC: System Control and Management Interface Driver (MISC)
++================================================================
++
++Provides misc. functions. This includes controls that are misc. settings/actions
++that must be exposed from the SM to agents. They are device specific and are
++usually define to access bit fields in various mix block control modules,
++IOMUX_GPR, and other GPR/CSR owned by the SM. This protocol supports the
++following functions:
++
++- Describe the protocol version.
++- Discover implementation attributes.
++- Set/Get a control.
++- Initiate an action on a control.
++- Obtain platform (i.e. SM) build information.
++- Obtain ROM passover data.
++- Read boot/shutdown/reset information for the LM or the system.
++
++Commands:
++_________
++
++PROTOCOL_VERSION
++~~~~~~~~~~~~~~~~
++
++message_id: 0x0
++protocol_id: 0x84
++
+++---------------+--------------------------------------------------------------+
++|Return values                                                                 |
+++---------------+--------------------------------------------------------------+
++|Name           |Description                                                   |
+++---------------+--------------------------------------------------------------+
++|int32 status   | See ARM SCMI Specification v3.2 section 4.1.4 for status     |
++|               | code definitions.                                            |
+++---------------+--------------------------------------------------------------+
++|uint32 version | For this revision of the specification, this value must be   |
++|               | 0x10000.                                                     |
+++---------------+--------------------------------------------------------------+
++
++PROTOCOL_ATTRIBUTES
++~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x1
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |See ARM SCMI Specification v3.2 section 4.1.4 for status   |
++|                  |code definitions.                                          |
+++------------------+-----------------------------------------------------------+
++|uint32 attributes |Protocol attributes:                                       |
++|                  |Bits[31:24] Reserved, must be zero.                        |
++|                  |Bits[23:16] Number of reasons.                             |
++|                  |Bits[15:0] Number of controls                              |
+++------------------+-----------------------------------------------------------+
++
++PROTOCOL_MESSAGE_ATTRIBUTES
++~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x2
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: in case the message is implemented and available  |
++|                  |to use.                                                    |
++|                  |NOT_FOUND: if the message identified by message_id is      |
++|                  |invalid or not implemented                                 |
+++------------------+-----------------------------------------------------------+
++|uint32 attributes |Flags that are associated with a specific function in the  |
++|                  |protocol. For all functions in this protocol, this         |
++|                  |parameter has a value of 0                                 |
+++------------------+-----------------------------------------------------------+
++
++MISC_CONTROL_SET
++~~~~~~~~~~~~~~~~
++
++message_id: 0x3
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of the control                                       |
+++------------------+-----------------------------------------------------------+
++|uint32 num        |Size of the value data in words                            |
+++------------------+-----------------------------------------------------------+
++|uint32 val[8]     |value data array                                           |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if the control was set successfully.              |
++|                  |NOT_FOUND: if the index is not valid.                      |
++|                  |DENIED: if the agent does not have permission to set the   |
++|                  |control                                                    |
+++------------------+-----------------------------------------------------------+
++
++MISC_CONTROL_GET
++~~~~~~~~~~~~~~~~
++
++message_id: 0x4
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of the control                                       |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if the control was set successfully.              |
++|                  |NOT_FOUND: if the index is not valid.                      |
++|                  |DENIED: if the agent does not have permission to get the   |
++|                  |control                                                    |
+++------------------+-----------------------------------------------------------+
++|uint32 num        |Size of the return data in words                           |
+++------------------+-----------------------------------------------------------+
++|uint32 val[8]     |value data array                                           |
+++------------------+-----------------------------------------------------------+
++
++MISC_CONTROL_ACTION
++~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x5
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of the control                                       |
+++------------------+-----------------------------------------------------------+
++|uint32 action	   |Action for the control                                     |
+++------------------+-----------------------------------------------------------+
++|uint32 numarg	   |Size of the argument data                                  |
+++------------------+-----------------------------------------------------------+
++|uint32 arg[8]	   |Argument data array                                        |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if the action was set successfully.               |
++|                  |NOT_FOUND: if the index is not valid.                      |
++|                  |DENIED: if the agent does not have permission to get the   |
++|                  |control                                                    |
+++------------------+-----------------------------------------------------------+
++|uint32 num        |Size of the return data in words                           |
+++------------------+-----------------------------------------------------------+
++|uint32 val[8]     |value data array                                           |
+++------------------+-----------------------------------------------------------+
++
++MISC_DISCOVER_BUILD_INFO
++~~~~~~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x6
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if the build info was got successfully.           |
++|                  |NOT_SUPPORTED: if the data is not available.               |
+++------------------+-----------------------------------------------------------+
++|uint32 buildnum   |Build number                                               |
+++------------------+-----------------------------------------------------------+
++|uint32 buildcommit|Most significant 32 bits of the git commit hash            |
+++------------------+-----------------------------------------------------------+
++|uint8 date[16]    |Date of build. Null terminated ASCII string of up to 16    |
++|                  |bytes in length                                            |
+++------------------+-----------------------------------------------------------+
++|uint8 time[16]    |Time of build. Null terminated ASCII string of up to 16    |
++|                  |bytes in length                                            |
+++------------------+-----------------------------------------------------------+
++
++MISC_ROM_PASSOVER_GET
++~~~~~~~~~~~~~~~~~~~~~
++
++This function is used to obtain the ROM passover data. The returned block of
++words is structured as defined in the ROM passover section in the SoC RM.
++
++message_id: 0x7
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if the data was got successfully.                 |
++|                  |NOT_SUPPORTED: if the data is not available.               |
+++------------------+-----------------------------------------------------------+
++|uint32 num        |Size of the passover data in words                         |
+++------------------+-----------------------------------------------------------+
++|uint32_t data[8]  |Passover data array                                        |
+++------------------+-----------------------------------------------------------+
++
++MISC_CONTROL_NOTIFY
++~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x8
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 index      |Index of control                                           |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |Notification flags, varies by control                      |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: notification configuration was successfully       |
++|                  |updated.                                                   |
++|                  |NOT_FOUND: control id not exists.                          |
++|                  |INVALID_PARAMETERS: if the input attributes flag specifies |
++|                  |unsupported or invalid configurations..                    |
++|                  |DENIED: if the calling agent is not permitted to request   |
++|                  |the notification.                                          |
+++------------------+-----------------------------------------------------------+
++
++MISC_REASON_ATTRIBUTES
++~~~~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x9
++protocol_id: 0x84
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 reasonid   |Identifier for the reason                                  |
+++------------------+-----------------------------------------------------------+
++|Return values                                                                 |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|int32 status      |SUCCESS: if valid reason attributes are returned           |
++|                  |NOT_FOUND: if reasonId pertains to a non-existent reason.  |
+++------------------+-----------------------------------------------------------+
++|uint32 attributes |Reason attributes. This parameter has the following        |
++|                  |format: Bits[31:0] Reserved, must be zero                  |
++|                  |Bits[15:0] Number of persistent storage (GPR) words.       |
+++------------------+-----------------------------------------------------------+
++|uint8 name[16]    |Null-terminated ASCII string of up to 16 bytes in length   |
++|                  |describing the reason                                      |
+++------------------+-----------------------------------------------------------+
++
++MISC_RESET_REASON
++~~~~~~~~~~~~~~~~~
++
++message_id: 0xA
++protocol_id: 0x84
++
+++--------------------+---------------------------------------------------------+
++|Parameters                                                                    |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|uint32 flags        |Reason flags. This parameter has the following format:   |
++|                    |Bits[31:1] Reserved, must be zero.                       |
++|                    |Bit[0] System:                                           |
++|                    |Set to 1 to return the system reason.                    |
++|                    |Set to 0 to return the LM reason                         |
+++--------------------+---------------------------------------------------------+
++|Return values                                                                 |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|int32 status        |SUCCESS: reset reason return                             |
+++--------------------+---------------------------------------------------------+
++|uint32 bootflags    |Boot reason flags. This parameter has the format:        |
++|                    |Bits[31] Valid.                                          |
++|                    |Set to 1 if the entire reason is valid.                  |
++|                    |Set to 0 if the entire reason is not valid.              |
++|                    |Bits[30:29] Reserved, must be zero.                      |
++|                    |Bit[28] Valid origin:                                    |
++|                    |Set to 1 if the origin field is valid.                   |
++|                    |Set to 0 if the origin field is not valid.               |
++|                    |Bits[27:24] Origin.                                      |
++|                    |Bit[23] Valid err ID:                                    |
++|                    |Set to 1 if the error ID field is valid.                 |
++|                    |Set to 0 if the error ID field is not valid.             |
++|                    |Bits[22:8] Error ID.                                     |
++|                    |Bit[7:0] Reason                                          |
+++--------------------+---------------------------------------------------------+
++|uint32 shutdownflags|Shutdown reason flags. This parameter has the format:    |
++|                    |Bits[31] Valid.                                          |
++|                    |Set to 1 if the entire reason is valid.                  |
++|                    |Set to 0 if the entire reason is not valid.              |
++|                    |Bits[30:29] Number of valid extended info words.         |
++|                    |Bit[28] Valid origin:                                    |
++|                    |Set to 1 if the origin field is valid.                   |
++|                    |Set to 0 if the origin field is not valid.               |
++|                    |Bits[27:24] Origin.                                      |
++|                    |Bit[23] Valid err ID:                                    |
++|                    |Set to 1 if the error ID field is valid.                 |
++|                    |Set to 0 if the error ID field is not valid.             |
++|                    |Bits[22:8] Error ID.                                     |
++|                    |Bit[7:0] Reason                                          |
+++--------------------+---------------------------------------------------------+
++|uint32 extinfo[8]   |Array of extended info words                             |
+++--------------------+---------------------------------------------------------+
++
++MISC_SI_INFO
++~~~~~~~~~~~~
++
++message_id: 0xB
++protocol_id: 0x84
++
+++--------------------+---------------------------------------------------------+
++|Return values                                                                 |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|int32 status        |SUCCESS: silicon info return                             |
+++--------------------+---------------------------------------------------------+
++|uint32 deviceid     |Silicon specific device ID                               |
+++--------------------+---------------------------------------------------------+
++|uint32 sirev        |Silicon specific revision                                |
+++--------------------+---------------------------------------------------------+
++|uint32 partnum      |Silicon specific part number                             |
+++--------------------+---------------------------------------------------------+
++|uint8 siname[16]    |Silicon name/revision. Null terminated ASCII string of up|
++|                    |to 16 bytes in length                                    |
+++--------------------+---------------------------------------------------------+
++
++MISC_CFG_INFO
++~~~~~~~~~~~~~
++
++message_id: 0xC
++protocol_id: 0x84
++
+++--------------------+---------------------------------------------------------+
++|Return values                                                                 |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|int32 status        |SUCCESS: config name return                              |
++|                    |NOT_SUPPORTED: name not available                        |
+++--------------------+---------------------------------------------------------+
++|uint32 msel         |Mode selector value                                      |
+++--------------------+---------------------------------------------------------+
++|uint8 cfgname[16]   |config file basename. Null terminated ASCII string of up |
++|                    |to 16 bytes in length                                    |
+++--------------------+---------------------------------------------------------+
++
++MISC_SYSLOG
++~~~~~~~~~~~
++
++message_id: 0xD
++protocol_id: 0x84
++
+++--------------------+---------------------------------------------------------+
++|Parameters                                                                    |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|uint32 flags        |Device specific flags that might impact the data returned|
++|                    |or clearing of the data                                  |
+++--------------------+---------------------------------------------------------+
++|uint32 logindex     |Index to the first log word. Will be the first element in|
++|                    |the return array                                         |
+++--------------------+---------------------------------------------------------+
++|Return values                                                                 |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|int32 status        |SUCCESS: reset reason return                             |
+++--------------------+---------------------------------------------------------+
++|uint32 numLogflags  |Descriptor for the log data returned by this call.       |
++|                    |Bits[31:20] Number of remaining log words.               |
++|                    |Bits[15:12] Reserved, must be zero.                      |
++|                    |Bits[11:0] Number of log words that are returned by this |
++|                    |call                                                     |
+++--------------------+---------------------------------------------------------+
++|uint32 syslog[16]   |Log data array                                           |
+++--------------------+---------------------------------------------------------+
++
++NEGOTIATE_PROTOCOL_VERSION
++~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++message_id: 0x10
++protocol_id: 0x84
++
+++--------------------+---------------------------------------------------------+
++|Parameters                                                                    |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|uint32 version      |The negotiated protocol version the agent intends to use |
+++--------------------+---------------------------------------------------------+
++|Return values                                                                 |
+++--------------------+---------------------------------------------------------+
++|Name                |Description                                              |
+++--------------------+---------------------------------------------------------+
++|int32 status        |SUCCESS: if the negotiated protocol version is supported |
++|                    |by the platform. All commands, responses, and            |
++|                    |notifications post successful return of this command must|
++|                    |comply with the negotiated version.                      |
++|                    |NOT_SUPPORTED: if the protocol version is not supported. |
+++--------------------+---------------------------------------------------------+
++
++Notifications
++_____________
++
++MISC_CONTROL_EVENT
++~~~~~~~~~~~~~~~~~~
++
++message_id: 0x0
++protocol_id: 0x81
++
+++------------------+-----------------------------------------------------------+
++|Parameters                                                                    |
+++------------------+-----------------------------------------------------------+
++|Name              |Description                                                |
+++------------------+-----------------------------------------------------------+
++|uint32 ctrlid     |Identifier for the control that caused the event.          |
+++------------------+-----------------------------------------------------------+
++|uint32 flags      |Event flags, varies by control.                            |
+++------------------+-----------------------------------------------------------+
++
+diff --git a/Documentation/firmware-guide/nxp/index.rst b/Documentation/firmware-guide/nxp/index.rst
 new file mode 100644
-index 000000000000..a7dbdd20dbb9
+index 000000000000..b38c980a50c6
 --- /dev/null
-+++ b/drivers/firmware/arm_scmi/imx/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+obj-$(CONFIG_IMX_SCMI_BBM_EXT) += imx-sm-bbm.o
-diff --git a/drivers/firmware/arm_scmi/imx/imx-sm-bbm.c b/drivers/firmware/arm_scmi/imx/imx-sm-bbm.c
-new file mode 100644
-index 000000000000..3f8321d247ae
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/imx/imx-sm-bbm.c
-@@ -0,0 +1,380 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * System Control and Management Interface (SCMI) NXP BBM Protocol
-+ *
-+ * Copyright 2024 NXP
-+ */
++++ b/Documentation/firmware-guide/nxp/index.rst
+@@ -0,0 +1,10 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+#define pr_fmt(fmt) "SCMI Notifications BBM - " fmt
++====================
++NXP Firmware Support
++====================
 +
-+#include <linux/bits.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/scmi_protocol.h>
-+#include <linux/scmi_imx_protocol.h>
++.. toctree::
++   :maxdepth: 1
 +
-+#include "../protocols.h"
-+#include "../notify.h"
-+
-+#define SCMI_PROTOCOL_SUPPORTED_VERSION		0x10000
-+
-+enum scmi_imx_bbm_protocol_cmd {
-+	IMX_BBM_GPR_SET = 0x3,
-+	IMX_BBM_GPR_GET = 0x4,
-+	IMX_BBM_RTC_ATTRIBUTES = 0x5,
-+	IMX_BBM_RTC_TIME_SET = 0x6,
-+	IMX_BBM_RTC_TIME_GET = 0x7,
-+	IMX_BBM_RTC_ALARM_SET = 0x8,
-+	IMX_BBM_BUTTON_GET = 0x9,
-+	IMX_BBM_RTC_NOTIFY = 0xA,
-+	IMX_BBM_BUTTON_NOTIFY = 0xB,
-+};
-+
-+#define GET_RTCS_NR(x)	le32_get_bits((x), GENMASK(23, 16))
-+#define GET_GPRS_NR(x)	le32_get_bits((x), GENMASK(15, 0))
-+
-+#define SCMI_IMX_BBM_NOTIFY_RTC_UPDATED		BIT(2)
-+#define SCMI_IMX_BBM_NOTIFY_RTC_ROLLOVER	BIT(1)
-+#define SCMI_IMX_BBM_NOTIFY_RTC_ALARM		BIT(0)
-+
-+#define SCMI_IMX_BBM_RTC_ALARM_ENABLE_FLAG	BIT(0)
-+
-+#define SCMI_IMX_BBM_NOTIFY_RTC_FLAG	\
-+	(SCMI_IMX_BBM_NOTIFY_RTC_UPDATED | SCMI_IMX_BBM_NOTIFY_RTC_ROLLOVER | \
-+	 SCMI_IMX_BBM_NOTIFY_RTC_ALARM)
-+
-+#define SCMI_IMX_BBM_EVENT_RTC_MASK		GENMASK(31, 24)
-+
-+struct scmi_imx_bbm_info {
-+	u32 version;
-+	int nr_rtc;
-+	int nr_gpr;
-+};
-+
-+struct scmi_msg_imx_bbm_protocol_attributes {
-+	__le32 attributes;
-+};
-+
-+struct scmi_imx_bbm_set_time {
-+	__le32 id;
-+	__le32 flags;
-+	__le32 value_low;
-+	__le32 value_high;
-+};
-+
-+struct scmi_imx_bbm_get_time {
-+	__le32 id;
-+	__le32 flags;
-+};
-+
-+struct scmi_imx_bbm_alarm_time {
-+	__le32 id;
-+	__le32 flags;
-+	__le32 value_low;
-+	__le32 value_high;
-+};
-+
-+struct scmi_msg_imx_bbm_rtc_notify {
-+	__le32 rtc_id;
-+	__le32 flags;
-+};
-+
-+struct scmi_msg_imx_bbm_button_notify {
-+	__le32 flags;
-+};
-+
-+struct scmi_imx_bbm_notify_payld {
-+	__le32 flags;
-+};
-+
-+static int scmi_imx_bbm_attributes_get(const struct scmi_protocol_handle *ph,
-+				       struct scmi_imx_bbm_info *pi)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+	struct scmi_msg_imx_bbm_protocol_attributes *attr;
-+
-+	ret = ph->xops->xfer_get_init(ph, PROTOCOL_ATTRIBUTES, 0, sizeof(*attr), &t);
-+	if (ret)
-+		return ret;
-+
-+	attr = t->rx.buf;
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+	if (!ret) {
-+		pi->nr_rtc = GET_RTCS_NR(attr->attributes);
-+		pi->nr_gpr = GET_GPRS_NR(attr->attributes);
-+	}
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static int scmi_imx_bbm_notify(const struct scmi_protocol_handle *ph,
-+			       u32 src_id, int message_id, bool enable)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+
-+	if (message_id == IMX_BBM_RTC_NOTIFY) {
-+		struct scmi_msg_imx_bbm_rtc_notify *rtc_notify;
-+
-+		ret = ph->xops->xfer_get_init(ph, message_id,
-+					      sizeof(*rtc_notify), 0, &t);
-+		if (ret)
-+			return ret;
-+
-+		rtc_notify = t->tx.buf;
-+		rtc_notify->rtc_id = cpu_to_le32(0);
-+		rtc_notify->flags =
-+			cpu_to_le32(enable ? SCMI_IMX_BBM_NOTIFY_RTC_FLAG : 0);
-+	} else if (message_id == IMX_BBM_BUTTON_NOTIFY) {
-+		struct scmi_msg_imx_bbm_button_notify *button_notify;
-+
-+		ret = ph->xops->xfer_get_init(ph, message_id,
-+					      sizeof(*button_notify), 0, &t);
-+		if (ret)
-+			return ret;
-+
-+		button_notify = t->tx.buf;
-+		button_notify->flags = cpu_to_le32(enable ? 1 : 0);
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+
-+	ph->xops->xfer_put(ph, t);
-+	return ret;
-+}
-+
-+static enum scmi_imx_bbm_protocol_cmd evt_2_cmd[] = {
-+	IMX_BBM_RTC_NOTIFY,
-+	IMX_BBM_BUTTON_NOTIFY
-+};
-+
-+static int scmi_imx_bbm_set_notify_enabled(const struct scmi_protocol_handle *ph,
-+					   u8 evt_id, u32 src_id, bool enable)
-+{
-+	int ret, cmd_id;
-+
-+	if (evt_id >= ARRAY_SIZE(evt_2_cmd))
-+		return -EINVAL;
-+
-+	cmd_id = evt_2_cmd[evt_id];
-+	ret = scmi_imx_bbm_notify(ph, src_id, cmd_id, enable);
-+	if (ret)
-+		pr_debug("FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
-+			 evt_id, src_id, ret);
-+
-+	return ret;
-+}
-+
-+static void *scmi_imx_bbm_fill_custom_report(const struct scmi_protocol_handle *ph,
-+					     u8 evt_id, ktime_t timestamp,
-+					     const void *payld, size_t payld_sz,
-+					     void *report, u32 *src_id)
-+{
-+	const struct scmi_imx_bbm_notify_payld *p = payld;
-+	struct scmi_imx_bbm_notif_report *r = report;
-+
-+	if (sizeof(*p) != payld_sz)
-+		return NULL;
-+
-+	if (evt_id == SCMI_EVENT_IMX_BBM_RTC) {
-+		r->is_rtc = true;
-+		r->is_button = false;
-+		r->timestamp = timestamp;
-+		r->rtc_id = le32_get_bits(p->flags, SCMI_IMX_BBM_EVENT_RTC_MASK);
-+		r->rtc_evt = le32_get_bits(p->flags, SCMI_IMX_BBM_NOTIFY_RTC_FLAG);
-+		dev_dbg(ph->dev, "RTC: %d evt: %x\n", r->rtc_id, r->rtc_evt);
-+		*src_id = r->rtc_evt;
-+	} else if (evt_id == SCMI_EVENT_IMX_BBM_BUTTON) {
-+		r->is_rtc = false;
-+		r->is_button = true;
-+		r->timestamp = timestamp;
-+		dev_dbg(ph->dev, "BBM Button\n");
-+		*src_id = 0;
-+	} else {
-+		WARN_ON_ONCE(1);
-+		return NULL;
-+	}
-+
-+	return r;
-+}
-+
-+static const struct scmi_event scmi_imx_bbm_events[] = {
-+	{
-+		.id = SCMI_EVENT_IMX_BBM_RTC,
-+		.max_payld_sz = sizeof(struct scmi_imx_bbm_notify_payld),
-+		.max_report_sz = sizeof(struct scmi_imx_bbm_notif_report),
-+	},
-+	{
-+		.id = SCMI_EVENT_IMX_BBM_BUTTON,
-+		.max_payld_sz = sizeof(struct scmi_imx_bbm_notify_payld),
-+		.max_report_sz = sizeof(struct scmi_imx_bbm_notif_report),
-+	},
-+};
-+
-+static const struct scmi_event_ops scmi_imx_bbm_event_ops = {
-+	.set_notify_enabled = scmi_imx_bbm_set_notify_enabled,
-+	.fill_custom_report = scmi_imx_bbm_fill_custom_report,
-+};
-+
-+static const struct scmi_protocol_events scmi_imx_bbm_protocol_events = {
-+	.queue_sz = SCMI_PROTO_QUEUE_SZ,
-+	.ops = &scmi_imx_bbm_event_ops,
-+	.evts = scmi_imx_bbm_events,
-+	.num_events = ARRAY_SIZE(scmi_imx_bbm_events),
-+	.num_sources = 1,
-+};
-+
-+static int scmi_imx_bbm_protocol_init(const struct scmi_protocol_handle *ph)
-+{
-+	u32 version;
-+	int ret;
-+	struct scmi_imx_bbm_info *binfo;
-+
-+	ret = ph->xops->version_get(ph, &version);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(ph->dev, "NXP SM BBM Version %d.%d\n",
-+		 PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
-+
-+	binfo = devm_kzalloc(ph->dev, sizeof(*binfo), GFP_KERNEL);
-+	if (!binfo)
-+		return -ENOMEM;
-+
-+	ret = scmi_imx_bbm_attributes_get(ph, binfo);
-+	if (ret)
-+		return ret;
-+
-+	return ph->set_priv(ph, binfo, version);
-+}
-+
-+static int scmi_imx_bbm_rtc_time_set(const struct scmi_protocol_handle *ph,
-+				     u32 rtc_id, u64 sec)
-+{
-+	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
-+	struct scmi_imx_bbm_set_time *cfg;
-+	struct scmi_xfer *t;
-+	int ret;
-+
-+	if (rtc_id >= pi->nr_rtc)
-+		return -EINVAL;
-+
-+	ret = ph->xops->xfer_get_init(ph, IMX_BBM_RTC_TIME_SET, sizeof(*cfg), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	cfg = t->tx.buf;
-+	cfg->id = cpu_to_le32(rtc_id);
-+	cfg->flags = 0;
-+	cfg->value_low = cpu_to_le32(lower_32_bits(sec));
-+	cfg->value_high = cpu_to_le32(upper_32_bits(sec));
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static int scmi_imx_bbm_rtc_time_get(const struct scmi_protocol_handle *ph,
-+				     u32 rtc_id, u64 *value)
-+{
-+	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
-+	struct scmi_imx_bbm_get_time *cfg;
-+	struct scmi_xfer *t;
-+	int ret;
-+
-+	if (rtc_id >= pi->nr_rtc)
-+		return -EINVAL;
-+
-+	ret = ph->xops->xfer_get_init(ph, IMX_BBM_RTC_TIME_GET, sizeof(*cfg),
-+				      sizeof(u64), &t);
-+	if (ret)
-+		return ret;
-+
-+	cfg = t->tx.buf;
-+	cfg->id = cpu_to_le32(rtc_id);
-+	cfg->flags = 0;
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+	if (!ret)
-+		*value = get_unaligned_le64(t->rx.buf);
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static int scmi_imx_bbm_rtc_alarm_set(const struct scmi_protocol_handle *ph,
-+				      u32 rtc_id, u64 sec)
-+{
-+	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
-+	struct scmi_imx_bbm_alarm_time *cfg;
-+	struct scmi_xfer *t;
-+	int ret;
-+
-+	if (rtc_id >= pi->nr_rtc)
-+		return -EINVAL;
-+
-+	ret = ph->xops->xfer_get_init(ph, IMX_BBM_RTC_ALARM_SET, sizeof(*cfg), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	cfg = t->tx.buf;
-+	cfg->id = cpu_to_le32(rtc_id);
-+	cfg->flags = SCMI_IMX_BBM_RTC_ALARM_ENABLE_FLAG;
-+	cfg->value_low = cpu_to_le32(lower_32_bits(sec));
-+	cfg->value_high = cpu_to_le32(upper_32_bits(sec));
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static int scmi_imx_bbm_button_get(const struct scmi_protocol_handle *ph, u32 *state)
-+{
-+	struct scmi_xfer *t;
-+	int ret;
-+
-+	ret = ph->xops->xfer_get_init(ph, IMX_BBM_BUTTON_GET, 0, sizeof(u32), &t);
-+	if (ret)
-+		return ret;
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+	if (!ret)
-+		*state = get_unaligned_le32(t->rx.buf);
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static const struct scmi_imx_bbm_proto_ops scmi_imx_bbm_proto_ops = {
-+	.rtc_time_get = scmi_imx_bbm_rtc_time_get,
-+	.rtc_time_set = scmi_imx_bbm_rtc_time_set,
-+	.rtc_alarm_set = scmi_imx_bbm_rtc_alarm_set,
-+	.button_get = scmi_imx_bbm_button_get,
-+};
-+
-+static const struct scmi_protocol scmi_imx_bbm = {
-+	.id = SCMI_PROTOCOL_IMX_BBM,
-+	.owner = THIS_MODULE,
-+	.instance_init = &scmi_imx_bbm_protocol_init,
-+	.ops = &scmi_imx_bbm_proto_ops,
-+	.events = &scmi_imx_bbm_protocol_events,
-+	.supported_version = SCMI_PROTOCOL_SUPPORTED_VERSION,
-+	.vendor_id = "NXP",
-+	.sub_vendor_id = "i.MX95 EVK",
-+};
-+
-+module_scmi_protocol(scmi_imx_bbm);
-diff --git a/include/linux/scmi_imx_protocol.h b/include/linux/scmi_imx_protocol.h
-new file mode 100644
-index 000000000000..e59aedaa4aec
---- /dev/null
-+++ b/include/linux/scmi_imx_protocol.h
-@@ -0,0 +1,42 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * SCMI Message Protocol driver NXP extension header
-+ *
-+ * Copyright 2024 NXP.
-+ */
-+
-+#ifndef _LINUX_SCMI_NXP_PROTOCOL_H
-+#define _LINUX_SCMI_NXP_PROTOCOL_H
-+
-+#include <linux/bitfield.h>
-+#include <linux/device.h>
-+#include <linux/notifier.h>
-+#include <linux/types.h>
-+
-+enum scmi_nxp_protocol {
-+	SCMI_PROTOCOL_IMX_BBM = 0x81,
-+};
-+
-+struct scmi_imx_bbm_proto_ops {
-+	int (*rtc_time_set)(const struct scmi_protocol_handle *ph, u32 id,
-+			    uint64_t sec);
-+	int (*rtc_time_get)(const struct scmi_protocol_handle *ph, u32 id,
-+			    u64 *val);
-+	int (*rtc_alarm_set)(const struct scmi_protocol_handle *ph, u32 id,
-+			     u64 sec);
-+	int (*button_get)(const struct scmi_protocol_handle *ph, u32 *state);
-+};
-+
-+enum scmi_nxp_notification_events {
-+	SCMI_EVENT_IMX_BBM_RTC = 0x0,
-+	SCMI_EVENT_IMX_BBM_BUTTON = 0x1,
-+};
-+
-+struct scmi_imx_bbm_notif_report {
-+	bool			is_rtc;
-+	bool			is_button;
-+	ktime_t			timestamp;
-+	unsigned int		rtc_id;
-+	unsigned int		rtc_evt;
-+};
-+#endif
++   imx95-scmi
 
 -- 
 2.37.1
