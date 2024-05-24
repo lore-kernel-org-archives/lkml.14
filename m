@@ -1,159 +1,128 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D305C11720
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 06:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4AC749C;
+	Fri, 24 May 2024 06:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716533507; cv=none; b=P53mHRcCzfwto2yEp1vraaZwaCG/Q8O9pEim78l7voG5e7XoV9eOHlrVCuUf/TDbGxvr++cnO8kEWNS13fn/FkA18u3T1N8teVIle9rsYoPO8II+bPyH5JI0dT/8yqBF7keQjSMDQZTjnrVenQvik79Qtgy801AsoKbQ1vDuzzE=
+	t=1716533577; cv=none; b=Pi/nnfP+fB/fw1npfSFeEveahTsj7J6045P71fI/ZpMzEyuHGqT0lW3bJrwpkJ8doGD65apxfssaUHww+ZsQx73OtMzAF4vYiyi+gCgj1bcGgaUyassI6YIBB466EYt8T0fkJMJSznjDJHyTm3681W6kqgmHq0qyJJwyAbmvYGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716533507; c=relaxed/simple;
-	bh=bQ0F2m4aBg8Va1VvxQeZ4hY5GUZdpIU111SIkEQdJR4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=NpT2pmxCdoeKiGq/8pnNJwhIWVqVrf+IacIHhwjBiAqmqVJKdGiYHy5OnZleQvI17WB1r00xTDNMFm6AARbLuXRREe1X/ebWjOSFKOFHJJsF2CZJ9niqSSPGnIULoXnIl8EZjmM2mXwvNp6BT1JvdBKJoOpJoM4AfKDyrFjZaEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=JPB3o/uY; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1716533577; c=relaxed/simple;
+	bh=IcA8areGBmtYySpKsN1vV7VjabAeCliqI9BnabnxYUw=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=Kr9XpFB8k+ek9S/yFC07R282KsgYBlLPKr9C9Z8Hcrw5N360txGZSXuwx7BubjAs1SmlCO4TKS2TdoqLuXZoMu/SaF+ajO72QbdICfW3o1d/H4iqFtj5tstes4dxAvVyyc/vth6qqPpF1ptlbmZZsd/Ss9tGUeRr3QdZaUpLIuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nUhZv0o6; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="JPB3o/uY"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5295a576702so581530e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 23:51:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUhZv0o6"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f8edff35a0so467509b3a.2;
+        Thu, 23 May 2024 23:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1716533503; x=1717138303; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8AM6VA18bFGFYY5kMPUR9rqKd9gSuqX5euarcCf0EZ4=;
-        b=JPB3o/uYSvuidL+Z6sDJghVko9dUg0T9Cc8e/HNqOXeaWgqYuqR6ySsCpxTKt85UAf
-         b99ytJ/vViHhqeTsPBe2Dtt8LSEHju/KuohBWjyHdyX8jXpQgJb7d87e/MJCkllseVf0
-         eq7NeiFRX7WI1bvbYa/EOdFiBZXL+zZqeA69wR9iFKFISoNFvP5ixiOKTWl+8FmGkYBw
-         Nzzb91bAkINUaNHfgREUGnOcAwU1dSM0y2M23E3uzgs6F8tgIUU+cAdJuyw62i3JRkY+
-         DTMe/8nWNTdzX60IrRX5feamnUPPIA9DY8a6fB2O1GaSi3BGLh66AY9YI2vDefU+GeK5
-         e7Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716533503; x=1717138303;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+        d=gmail.com; s=20230601; t=1716533575; x=1717138375; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8AM6VA18bFGFYY5kMPUR9rqKd9gSuqX5euarcCf0EZ4=;
-        b=mraNAZDt11ocgXZVbOswanaSLUyO8oinVkjtG+OPEs0/THp9939DB/j9rQF8S4ZmGY
-         G9478aWrnABk2E9x6HCEoLAxMckTOlx21Vo3+OGBJzKLp3yFYnywfl9Q+5sr8lXaSEpz
-         uhb2Zk2OMgmtroSM/ADVJ7ghLIGh5aXcPCJ2Z23myqOv0mjOzlCRgRPiy6ZuNRxIQx+8
-         F+fZovSooA31Ox0dmE1V9G7Llwghi4BLan1r76N9HO+KLmsHXZ8uBoPTTHwLbYlAAQ6z
-         BJEWxdAWwLNOSOaaJ+4Y1WKIVLDr+KcGeLjI8yQ5qHKJC9L9AMrgP/RigEC9txho2QmF
-         jPSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnpEU3YDa6416x2RS3SVCcd9XXl+XZhwVhWvNgMrr88M5Dx82Xp8G7GOyEcpbGbYDcO2LTUeIBreRJhgqL0kGBZu8aOSrnbHxomc6f
-X-Gm-Message-State: AOJu0YyRIR7EBX5Ha7phMrTS/vwtqBKNwWEPD7ue2LVLGynqUm4H+lBt
-	3G7NoTyB3HnYz1UfIq/XNucaFQHcht0X/W63HhyPG62e+4LwOq/12p9fvuWjKME=
-X-Google-Smtp-Source: AGHT+IFF5NGys5h91On8M/+eUNTfZssOWAGaxJkGIKXJhJWSzEy0HxwULqIkVug0I42xC4SkbqA2rg==
-X-Received: by 2002:ac2:5b12:0:b0:523:df53:93c2 with SMTP id 2adb3069b0e04-529666d81a6mr733669e87.51.1716533503025;
-        Thu, 23 May 2024 23:51:43 -0700 (PDT)
-Received: from localhost (2a02-a210-20ba-5a00-9ceb-707b-2d57-26f7.cable.dynamic.v6.ziggo.nl. [2a02:a210:20ba:5a00:9ceb:707b:2d57:26f7])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5297066ba0bsm109560e87.163.2024.05.23.23.51.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 May 2024 23:51:42 -0700 (PDT)
+        bh=ykVoCzYAXxgYfsHCRKZ4/jVPW0FI1w87SrBVTf97eqM=;
+        b=nUhZv0o6ncGQOriNb3/F9yu/80UgAqCL+KA625jf6q2izZyg8nYAgnfLMkoEpHnnda
+         RpEw8AlfkLzP/bLTG9jhaRaZmpgesUhG7Nf8PUMcEeOJ3yWJNce/kRSONrX1gt1SKdNF
+         fQ/3ZmTNl0OyLT8irj9tUsfYiCOQwmRqjxCW5vl3EgShfbXsyMDMntjE4lENm3owSqWV
+         fxsvArUPX9a4uoCTMOEauryrhRfeVchS/zLajs5xIw+v2qUdB3gtveG0K5aZCSNDhOjs
+         73QsbA7JB/RfZU3gi4GmbVMuUj/QVi+CfvXqHIFdQcxPB6pgillNbWaQgmsjTyBblwdc
+         rGOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716533575; x=1717138375;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ykVoCzYAXxgYfsHCRKZ4/jVPW0FI1w87SrBVTf97eqM=;
+        b=cnv4sfnH89PDtAxdZxiCO7MzvXPrnjX/v1ReGmY/tlukb911hhETdL0KokUswhTeZG
+         QMeCpQyYWH2WaoHxzfZFMFgL+2087us07Ns6rlH2vxvxOVh0qJu02dOvPVY2fFUrpuRu
+         pE094i7IEYkiZZXgjnr4cXOsnz+iNxv757Lk8GQOSjTkRSumCnzdzNXf1Q5TSfHSpbhy
+         KT9fDv2lkHvcFFPzEjUiX+ZPuiM2lIjHptYG0+65UU03u3gF+cEHEgC/tDwgTStbbx1f
+         fynUsvbnqB+61JfDnhjGmaLqXOZPe9eQR4+X35oDejTx51wPkXcwzj7O24OGkygIpzbE
+         XQ7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVFOIr1ZocP9CA/OYGCtfrMllj00sSXwrGYeuT+aFQJqqz4IT+eb+95XrLUUYznm26z3lYzJf6bD+/LgOsvqCWiYoA/SU/BLrr7f8b1W3k1yVVNPEG+utGkYHe6B0cfiI/bU7nRwbrEJCDXE4TU
+X-Gm-Message-State: AOJu0YwqDyhqTM0dhxsi6eN62Z9D6Y10Z4OMe4WYirf1yoNS95SSDKsF
+	f3TjT5w04QdaKA4MmC8PHizuKTDzNWYMpy/cKDK9oJqeVQU0AKC4
+X-Google-Smtp-Source: AGHT+IFeHmKmJv50+uxoFGpkU0wNY7hJ3X7HEEhI+59tWnSNxwwR2DeReAt6XXA5R0PCcd9vrR99RA==
+X-Received: by 2002:a05:6a00:418a:b0:6ea:df6a:39e7 with SMTP id d2e1a72fcca58-6f8f2d7247cmr1513112b3a.13.1716533575418;
+        Thu, 23 May 2024 23:52:55 -0700 (PDT)
+Received: from dw-tp ([129.41.58.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fc053bd6sm582396b3a.45.2024.05.23.23.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 23:52:54 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Donet Tom <donettom@linux.ibm.com>, Shuah Khan <shuah@kernel.org>, Matthew Wilcox <willy@infradead.org>, Tony Battersby <tonyb@cybernetics.com>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>, Muchun Song <songmuchun@bytedance.com>
+Subject: Re: [PATCH] selftest: mm: Test if hugepage does not get leaked during __bio_release_pages()
+In-Reply-To: <7792c8ba-39e6-47ee-9b43-108270325c15@redhat.com>
+Date: Fri, 24 May 2024 12:13:04 +0530
+Message-ID: <87o78vsoav.fsf@gmail.com>
+References: <20240523063905.3173-1-donettom@linux.ibm.com> <20240523121344.6a67a109e0af2ba70973b34b@linux-foundation.org> <d551d1cd-a02f-42aa-9de2-10ff7757224c@redhat.com> <20240523195734.bc03a8822a34b1a97880fb65@linux-foundation.org> <7792c8ba-39e6-47ee-9b43-108270325c15@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 24 May 2024 08:51:40 +0200
-Message-Id: <D1HOCBW6RG72.1B2RKGKW2Q5VC@fairphone.com>
-Cc: "Vinod Koul" <vkoul@kernel.org>, "Kishon Vijay Abraham I"
- <kishon@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Abhinav Kumar" <quic_abhinavk@quicinc.com>,
- <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFT 0/7] arm64: qcom: allow up to 4 lanes for the Type-C
- DisplayPort Altmode
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: <neil.armstrong@linaro.org>, "Konrad Dybcio" <konrad.dybcio@linaro.org>,
- "Bjorn Andersson" <andersson@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-0-07e24a231840@linaro.org> <CZUHV429NTF7.1GW9TN9NXB4J1@fairphone.com> <7a7aa05f-9ae6-4ca0-a423-224fc78fbd0c@linaro.org> <liah4xvkfattlen7s2zi3vt2bl5pbbxqgig3k5ljqpveoao656@iacnommxkjkt> <236a104c-fc16-4b3d-9a00-e16517c00e3a@linaro.org> <D064242SMIVM.1GUC1I9GE9IGC@fairphone.com> <963b60e5-6ab7-4d9f-885a-ba744c2b7991@linaro.org> <D0C42YR1270X.23P9WCWWNB8XF@fairphone.com> <f2d96f99-d8ac-4ff1-83fa-742e541565e4@linaro.org> <864063fb-eeae-4eb7-9089-0d98011a0343@linaro.org> <D15RKEU49B4G.1B6A2MYB4LH3X@fairphone.com> <cbc8a2c6-0047-4345-8c93-afdba9c2bd10@linaro.org>
-In-Reply-To: <cbc8a2c6-0047-4345-8c93-afdba9c2bd10@linaro.org>
 
-On Thu May 23, 2024 at 11:06 AM CEST,  wrote:
-> Hi Lucas,
+David Hildenbrand <david@redhat.com> writes:
+
+dropping stable@vger.kernel.org
+
+> On 24.05.24 04:57, Andrew Morton wrote:
+>> On Thu, 23 May 2024 22:40:25 +0200 David Hildenbrand <david@redhat.com> wrote:
+>> 
+>>>> You have stable@vger.kernel.org in the mail headers, so I assume you're
+>>>> proposing this for backporting.  When doing this, please include
+>>>>
+>>>> Cc: <stable@vger.kernel.org>
+>>>>
+>>>> in the changelog footers and also include a Fixes: target.  I'm
+>>>> assuming the suitable Fixes: target for this patch is 38b43539d64b?
+>>>
+>>> This adds a new selfest to make sure what was fixed (and backported to
+>>> stable) remains fixed.
+>> 
+>> Sure.  But we should provide -stable maintainers guidance for "how far
+>> back to go".  There isn't much point in backporting this into kernels
+>> where it's known to fail!
 >
-> On 10/05/2024 08:51, Luca Weiss wrote:
-> > On Tue Apr 23, 2024 at 4:08 PM CEST,  wrote:
-> >> On 23/04/2024 15:03, Konrad Dybcio wrote:
-> >>>
-> >>>
-> >>> On 4/5/24 12:19, Luca Weiss wrote:
+> I'm probably missing something important.
 >
-> <snip>
+> 1) It's a test that does not fall into the common stable kernels 
+> categories (see Documentation/process/stable-kernel-rules.rst).
 >
-> >=20
-> > Next, with DP 4 lane (not working on mainline but still plugged into a
-> > screen) the diff is quite a bit bigger.
-> >=20
-> > See attachments for the full files:
-> > * usb_1_qmpphy_20240503_151052_android_4lane.txt
-> > * usb_1_qmpphy_20240503_122443_mainline_4lane.txt
-> >=20
-> > Not attaching the diff because it's quite a lot
-> > $ diff --ignore-case -U0 usb_1_qmpphy_20240503_151052_android_4lane.txt=
- usb_1_qmpphy_20240503_122443_mainline_4lane.txt
-> >=20
-> > Not sure this is helpful to anyone, but at least wanted to share what
-> > I've done so far here.
+> 2) If it fails in a kernel *it achieved its goal* of highlighting that 
+> something serious is broken.
 >
-> Thanks a lot for the traces, it founds out the QPHY_V3_DP_COM_PHY_MODE_CT=
-RL stays at 0x3,
-> which means the mode doesn't get broadcasted to the phy because.... the r=
-etimer only broadcasts
-> the orientation and not the mode... and it works on the HDKs and the X13s=
- because they don't have retimers.
+>> 
+>> I'm still thinking that we want this in kernels which have 38b43539d64b?
+>
+> To hide that the other kernels are seriously broken and miss that fix?
+>
+> Really (1) this shouldn't be backported. I'm not even sure it should be 
+> a selftest (sounds more like a reproducer that we usually attach to 
+> commits, but that's too late). And if people care about backporting it, 
+> (2) you really want this test to succeed everywhere. Especially also to 
+> find kernels *without* 38b43539d64b
 
-Hi Neil,
 
-This was it!
+Sorry about the noise and cc'd to stable. I believe we don't need to
+backport this test. The idea of adding a selftests was "also" to catch any
+future bugs like this. 
+
+I am unaware of any functional test suite where we could add such tests
+like how filesystems have fstests. Hence the ideas was to add this in
+selftests. 
+
+So this begs the question which I also asked few people at LSFMM,
+Does mm has any mmfvt (mm functional verification tests)? Should we have
+something like this? Was it tried in past?
+
+(Sorry, mmtests name is already taken - "MMTests is a configurable test suite that runs performance tests against arbitrary workloads.")
+
+-ritesh
 
 >
-> So I made the changes in nb7vpq904m and ptn36502 drivers to get the next =
-mux and broadcast the typec mode,
-> if you find time could you test it ?
+> -- 
+> Cheers,
 >
-> Bjorn could you also test on the rb3gen2 ?
->
-> The changes:
-> https://git.codelinaro.org/neil.armstrong/linux/-/commit/a61fb3b816ecbe28=
-a12480367d9e09b700ec09e1
-
-With this ptn36502 patch on top, I can confirm that DP 4-lane seems to
-work on qcm6490-fairphone-fp5 smartphone with DP over USB-C!
-
-Tested with a USB-C dongle that only has a HDMI port on the other side
-(so no USB), and cat'ing dp_debug while connected showed num_lanes =3D 4
-
-So feel free to add my:
-
-Tested-by: Luca Weiss <luca.weiss@fairphone.com>
-
-Regards
-Luca
-
-> https://git.codelinaro.org/neil.armstrong/linux/-/commit/f6f976ff692bad43=
-0cd945f02b835e355f19632b
->
-> Thanks,
-> Neil
->
-> >=20
-> > Regards
-> > Luca
-> >=20
-> >>
-> >> Neil
-> >>
-> >>>
-> >>> Konrad
-> >=20
-> >=20
-
+> David / dhildenb
