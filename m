@@ -1,78 +1,91 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3F151FC4;
-	Fri, 24 May 2024 03:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D6211712
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 03:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716520532; cv=none; b=LmvG81NBGp4dOglTcLI2HCELdESI6xY1lE1wWcTrox/2+i6vJwpbmFAu97TM67NH0CZvvZ8Q4aPAQTqFBY0p/uJ0DG/0SJvmOEmADDDs1lgtAP4W03X3R5NEj5O9LyWAf8eyVzNlNDMZx19zCeNlXX522/GL60yltHoXr+9dnk0=
+	t=1716520662; cv=none; b=ONkieCtNWyfUrXggnbNpydJVD+TvQYppyiqqpNlvi92I/Z+8zpsMjVg/gdw31MzKtCFlB6Oc5eQzVkdOKpfCOaP27K8jnwUX2G+Rcq4YctvjoUM3xPqCiQPC1OIGbtaKw73vTdHagUffZ8clra8v9nAuClgMq+OpE+USQwHxfGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716520532; c=relaxed/simple;
-	bh=M0REdcJESOdI2zljW5iAkli8/MpFChjhCrUTmmi62x4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hTlKs3N9CmQq2T+I7LTDkUYAHtugj88U8Fxt+3ssvWt++mUXmx5GxbZ9GeLu/QM4ICifiCfiLXsH7UuslmKWs0P8iGogczT9QRJqeiMEu0puS5b6YtYjzdQOHaJxX0gqFSA1ZamxttEh1a0pS3L0DZc8OUQmhPudQAHFZKHU8ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Oo2uUXmX; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Oo2uUXmX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=M0REdcJESOdI2zljW5iAkli8/MpFChjhCrUTmmi62x4=;
-	b=Oo2uUXmXZgIIFfNSRpkP8IQ3zcRL42ooT0lDz5rym+iw35r9xBGR/XvjFFfnjw
-	StgBjm+NoBr3DoPWIU8Fw027RZFrHIUlQ3ZBgvu49UA4mT3ktosm1jbWuezdyeO7
-	S6/VZEpTmH1VloGvbMwBSgMIowKU+f+9EPYyfKN5k5t6E=
-Received: from [10.42.116.195] (unknown [111.48.58.10])
-	by gzga-smtp-mta-g1-1 (Coremail) with SMTP id _____wDnd2MWBlBmnhqhFg--.1290S2;
-	Fri, 24 May 2024 11:14:31 +0800 (CST)
-Message-ID: <6ce4c794-46c6-1485-2918-aae82b92a9e3@163.com>
-Date: Fri, 24 May 2024 11:14:30 +0800
+	s=arc-20240116; t=1716520662; c=relaxed/simple;
+	bh=KZCJ7YhijKwiZJ1xUJ2OGx9s+MymMCK9Uzsvp3M3spU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d4le+40qo+hcliqdXckMtnSnzxk3CJbRYjAyHjC75wf5CbcnoO2njdv0C/gIDU7M2MkdFcDhYHdUkdBq++aZsNrCzLDUoIig2h5sccyPJXUKYGx7isLkNgGvNE5aAkg2o//twTqCa5hjksubvkKG5qTYwQezugrPw4+tlD9xPwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowADX3eW9BlBmYwAXDQ--.41660S2;
+	Fri, 24 May 2024 11:17:18 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: kraxel@redhat.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch
+Cc: virtualization@lists.linux.dev,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] drm/bochs: Add check for drm_simple_display_pipe_init
+Date: Fri, 24 May 2024 11:06:05 +0800
+Message-Id: <20240524030605.2185210-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] HID: usbhid: enable remote wakeup for mouse
-Content-Language: en-US
-To: Oliver Neukum <oneukum@suse.com>, jikos@kernel.org, bentiss@kernel.org
-Cc: linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, huanglei <huanglei@kylinos.cn>
-References: <20240522092257.19373-1-huanglei814@163.com>
- <9d37e0b4-91fa-4239-b767-2eb17e78ea84@suse.com>
-From: huanglei <huanglei814@163.com>
-In-Reply-To: <9d37e0b4-91fa-4239-b767-2eb17e78ea84@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnd2MWBlBmnhqhFg--.1290S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZw1kGr18tFWDGryxXryfCrg_yoWxZFcEkF
-	sIv395u345Wwn7J3W3tFW7GFW3Ww1j9ryxJa18JFn7XryfZrs5Xr4DXw1qqa13ta9avr9F
-	gr1S9rs8tryj9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjt8n7UUUUU==
-X-CM-SenderInfo: xkxd0wxohlmiqu6rljoofrz/1tbisBjo9mV4JjF4kwAAsX
+X-CM-TRANSID:zQCowADX3eW9BlBmYwAXDQ--.41660S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw4kZF4ktw1kZr4kuFW3Jrb_yoWftFc_WF
+	15u3s5Xr9ru3srCFnxZFnYgrWS9a4vvF48Xry2qFZ3tFyfW3ZxJrW2qryfZw4UW3yUJF1k
+	C3y7GrZ5JF1xWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JU-miiUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Just wanted to support mouse  wake up.
+Add check for the return value of drm_simple_display_pipe_init() and
+return the error if it fails in order to catch the error.
 
-Set it in userspace will be a better choice， Now，canceled the patch.
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/gpu/drm/tiny/bochs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-
-
-在 2024/5/22 18:00, Oliver Neukum 写道:
-> On 22.05.24 11:22, huanglei814 wrote:
->> From: huanglei <huanglei@kylinos.cn>
->>
->> This patch enables remote wakeup by default for USB mouse
->> devices.  Mouse can used to be wakeup devices, but the correct
->> place to enable it depends on the device's bus; no single
->> approach will work for all mouse devices.  In particular, this
->> covers only USB mouse (and then only those supporting the boot
->> protocol).
->
-> Hi,
->
-> could you explain in the log why you want this to depend
-> on support for the boot protocol?
->
->     Regards
->         Oliver
+diff --git a/drivers/gpu/drm/tiny/bochs.c b/drivers/gpu/drm/tiny/bochs.c
+index c23c9f0cf49c..31ad2bc4ee22 100644
+--- a/drivers/gpu/drm/tiny/bochs.c
++++ b/drivers/gpu/drm/tiny/bochs.c
+@@ -550,13 +550,15 @@ static int bochs_kms_init(struct bochs_device *bochs)
+ 	bochs->dev->mode_config.funcs = &bochs_mode_funcs;
+ 
+ 	bochs_connector_init(bochs->dev);
+-	drm_simple_display_pipe_init(bochs->dev,
++	ret = drm_simple_display_pipe_init(bochs->dev,
+ 				     &bochs->pipe,
+ 				     &bochs_pipe_funcs,
+ 				     bochs_formats,
+ 				     ARRAY_SIZE(bochs_formats),
+ 				     NULL,
+ 				     &bochs->connector);
++	if (ret)
++		return ret;
+ 
+ 	drm_mode_config_reset(bochs->dev);
+ 
+-- 
+2.25.1
 
