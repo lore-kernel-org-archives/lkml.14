@@ -1,46 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CCB129A8D;
-	Fri, 24 May 2024 09:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A487129A8D;
+	Fri, 24 May 2024 09:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716541556; cv=none; b=irY5twGXizBdLDYLlhIKl8/zviVYVBZ0Ei39MmSmyIldg3+l+Y9fdrSNKTWwdSlIx5o9yRx2Y7nNHO7RVvZLZaBjJI3E4Id9cs0wTxeOzSgIclOJ8j3bVoFgb3DOwsU27RMdqvFFE71/Y4jb9KOU8OSsoNOlQY4yf9Q7j9H4mwo=
+	t=1716541562; cv=none; b=dCZ6iyvvrJYykkWyWagmlhPB/df3qDdT8BDkzMe8YV8b+NqJxrZkfB4P7peCkRNK9Cjh2cBVxzStFRkpTyZ2FJ06dq9ODoPQW+ZWBCzxjzgwLA3mfbc02YLSDg9DPbCamkPfLT719gQgGqFuF4vMCcs8JJ3EFcU+ETSx8M+/UUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716541556; c=relaxed/simple;
-	bh=2EMoTno8eRkSxtl30K/XtKaFJYEClw4InngOtpk/x2I=;
+	s=arc-20240116; t=1716541562; c=relaxed/simple;
+	bh=xZA4BkXOmae5sDVcBgar+n9txAQk3eLKOo8BzZvDjQw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dyNuzI1slDEA+UMhLuB8AzcVrsRZD8pE082HnZ7VDyURVPt1LJ3RGcrvPQQFXbP1SsP2JF28e6pW4GAZajWBKWr9Nw/53g6PZPyeCpGdeNPchuljU/nj1/sIBCuaH7GghUjH43rPUNTTus8jmERqd8WEVS/TSoYGtYdvLY4IOYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=StT5hHcV; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=dVsq0jLMTD72SIJgJXzmnRysfxW7iTwBPIsXCdYLlWjscAUv0jRsfPU+RAW48kkA4gKpjrfZd+VwnC5/9xoogZvHoYUJqcmUAE3iARBoC4jgCM2Ls45D2ys4wlgNYcPUKNqPmBDBlc+zJud4pR9vsAu669LnW1eIewMBZFQqsoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qORj5Z04; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="StT5hHcV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qORj5Z04"
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44O95Xeg030052;
-	Fri, 24 May 2024 04:05:33 -0500
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44O95one001503;
+	Fri, 24 May 2024 04:05:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716541533;
-	bh=7nPUZ0y+xEHt91JubFYtm2z9d4roGxqvsS9/LTZMSnY=;
+	s=ti-com-17Q1; t=1716541550;
+	bh=wc2dY3olrF19WzQwpC81iLuubWXUUGHsClDovydRv+Q=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=StT5hHcV4Aa5vzHX5iPNjAbJvh80vZFgv3+cYGChwhQ1jbxW5iBF88u17NrItasuk
-	 w+UNCp6IL3DsWBohrFOaAV3ZFsEI7XiQKj8sss759vK/R/UZ13j3l71hfMwXEUQN+e
-	 w4sDyI74ZW0OKtAX1Q/qe+YqAj0fZOuCP1yUhClY=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44O95XeN028836
+	b=qORj5Z04dneFzn3FQgVf9t0N/bd2S6sV/hcobafNt5zvPbk99kMyMWwN3gYlW3jOa
+	 w3/FR32Y3GdodpQN4OULuWAlxvMwD6+Ruu5d67s026MtO2EhzMkt9sTNiEWjZ1Nu0f
+	 RrU0SCzU7DNdq+o0pVkWg9pE10JRvMZBcBOulylU=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44O95ocA028968
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 24 May 2024 04:05:33 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 24 May 2024 04:05:50 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 24
- May 2024 04:05:33 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 04:05:50 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 24 May 2024 04:05:32 -0500
+ Frontend Transport; Fri, 24 May 2024 04:05:50 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44O95F7I017455;
-	Fri, 24 May 2024 04:05:28 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44O95F7M017455;
+	Fri, 24 May 2024 04:05:46 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <kristo@kernel.org>,
         <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
@@ -48,9 +48,9 @@ To: <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <kristo@kernel.org>,
 CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <u-kumar1@ti.com>,
         <danishanwar@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v3 3/7] arm64: dts: ti: k3-j722s-evm: Update USB0 and USB1
-Date: Fri, 24 May 2024 14:35:10 +0530
-Message-ID: <20240524090514.152727-4-s-vadapalli@ti.com>
+Subject: [PATCH v3 7/7] arm64: dts: ti: k3-j722s: Add support for PCIe0
+Date: Fri, 24 May 2024 14:35:14 +0530
+Message-ID: <20240524090514.152727-8-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240524090514.152727-1-s-vadapalli@ti.com>
 References: <20240524090514.152727-1-s-vadapalli@ti.com>
@@ -64,150 +64,109 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+The PCIe0 instance of PCIe on TI's J722S SoC is a Gen3 single lane PCIe
+controller. Add the device-tree nodes for it and enable it in Root Complex
+mode of operation using Lane 0 of the Serdes1 instance of Serdes.
 
-The GPIO expander on the EVM allows the USB selection for Type-C
-port to either USB0 or USB1 via USB hub. By default, let the Type-C
-port select USB0 via the GPIO expander port P05.
-
-Enable super-speed on USB1 by updating SerDes0 lane configuration.
-
-Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
-v2:
-https://lore.kernel.org/r/20240513114443.16350-4-r-gunasekaran@ti.com/
-Changes since v2:
-- Renamed serdes0_ln_ctrl to serdes_ln_ctrl corresponding to the change
-  made in patch 1.
-- Dropped Serdes1 idle-states since it has not yet been added in the
-  serdes_ln_ctrl node.
-- Dropped Serdes1 specific Lane-Muxing macros in "k3-serdes.h".
-- Added newline after /* J722S */ in "k3-serdes.h" following the file
-  convention.
+Current patch is v1. No changelog.
 
-v1:
-https://lore.kernel.org/r/20240429120932.11456-4-r-gunasekaran@ti.com/
-Changes since v1:
-- Removed USB aliases, line-name property for p05 GPIO hog.
-- Included k3-j722s-main.dtsi.
-
- arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 54 +++++++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j722s.dtsi    |  5 +++
- arch/arm64/boot/dts/ti/k3-serdes.h      |  5 +++
- 3 files changed, 64 insertions(+)
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts   | 17 +++++++++++
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 37 +++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-index bf3c246d13d1..a3bda39cc223 100644
+index 16c6ab8ee07e..d2d7de5cfe27 100644
 --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
 +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-@@ -9,7 +9,9 @@
- /dts-v1/;
- 
- #include <dt-bindings/net/ti-dp83867.h>
-+#include <dt-bindings/phy/phy.h>
- #include "k3-j722s.dtsi"
-+#include "k3-serdes.h"
- 
- / {
- 	compatible = "ti,j722s-evm", "ti,j722s";
-@@ -202,6 +204,12 @@ J722S_IOPAD(0x0130, PIN_OUTPUT, 0) /* (AG26) RGMII1_TXC */
- 			J722S_IOPAD(0x012c, PIN_OUTPUT, 0) /* (AF25) RGMII1_TX_CTL */
- 		>;
- 	};
-+
-+	main_usb1_pins_default: main-usb1-default-pins {
-+		pinctrl-single,pins = <
-+			J722S_IOPAD(0x0258, PIN_INPUT, 0) /* (B27) USB1_DRVVBUS */
-+		>;
-+	};
- };
- 
- &cpsw3g {
-@@ -301,6 +309,13 @@ exp1: gpio@23 {
- 				  "PCIe0_1L_RC_RSTz", "PCIe0_1L_PRSNT#",
- 				  "ENET1_EXP_SPARE2", "ENET1_EXP_PWRDN",
- 				  "PD_I2ENET1_I2CMUX_SELC_IRQ", "ENET1_EXP_RESETZ";
-+
-+		p05-hog {
-+			/* P05 - USB2.0_MUX_SEL */
-+			gpio-hog;
-+			gpios = <5 GPIO_ACTIVE_LOW>;
-+			output-high;
-+		};
+@@ -416,6 +416,16 @@ serdes0_usb_link: phy@0 {
  	};
  };
  
-@@ -384,3 +399,42 @@ &sdhci1 {
- 	status = "okay";
- 	bootph-all;
- };
-+
-+&serdes_ln_ctrl {
-+	idle-states = <J722S_SERDES0_LANE0_USB>;
-+};
-+
-+&serdes0 {
-+	status = "okay";
-+	serdes0_usb_link: phy@0 {
++&serdes1 {
++	serdes1_pcie_link: phy@0 {
 +		reg = <0>;
 +		cdns,num-lanes = <1>;
 +		#phy-cells = <0>;
-+		cdns,phy-type = <PHY_TYPE_USB3>;
-+		resets = <&serdes_wiz0 1>;
++		cdns,phy-type = <PHY_TYPE_PCIE>;
++		resets = <&serdes_wiz1 1>;
 +	};
 +};
 +
-+&usbss0 {
-+	ti,vbus-divider;
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	dr_mode = "otg";
-+	usb-role-switch;
-+};
-+
-+&usbss1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_usb1_pins_default>;
-+	ti,vbus-divider;
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	dr_mode = "host";
-+	maximum-speed = "super-speed";
-+	phys = <&serdes0_usb_link>;
-+	phy-names = "cdns3,usb3-phy";
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-j722s.dtsi b/arch/arm64/boot/dts/ti/k3-j722s.dtsi
-index c75744edb143..61b64fae1bf4 100644
---- a/arch/arm64/boot/dts/ti/k3-j722s.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j722s.dtsi
-@@ -87,3 +87,8 @@ &oc_sram {
- 	reg = <0x00 0x70000000 0x00 0x40000>;
- 	ranges = <0x00 0x00 0x70000000 0x40000>;
+ &usbss0 {
+ 	ti,vbus-divider;
+ 	status = "okay";
+@@ -439,3 +449,10 @@ &usb1 {
+ 	phys = <&serdes0_usb_link>;
+ 	phy-names = "cdns3,usb3-phy";
  };
 +
-+/* Include bus peripherals that are additionally
-+ * present in J722S
-+ */
-+ #include "k3-j722s-main.dtsi"
-diff --git a/arch/arm64/boot/dts/ti/k3-serdes.h b/arch/arm64/boot/dts/ti/k3-serdes.h
-index a011ad893b44..e6a036a4e70b 100644
---- a/arch/arm64/boot/dts/ti/k3-serdes.h
-+++ b/arch/arm64/boot/dts/ti/k3-serdes.h
-@@ -201,4 +201,9 @@
- #define J784S4_SERDES4_LANE3_USB		0x2
- #define J784S4_SERDES4_LANE3_IP4_UNUSED		0x3
++&pcie0_rc {
++	status = "okay";
++	reset-gpios = <&exp1 18 GPIO_ACTIVE_HIGH>;
++	phys = <&serdes1_pcie_link>;
++	phy-names = "pcie-phy";
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+index 19a7e8413ad2..0b32893eb75e 100644
+--- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
  
-+/* J722S */
++#include <dt-bindings/phy/phy-cadence.h>
+ #include <dt-bindings/phy/phy-ti.h>
+ 
+ /*
+@@ -96,6 +97,35 @@ serdes1: serdes@f010000 {
+ 		};
+ 	};
+ 
++	pcie0_rc: pcie@f102000 {
++		compatible = "ti,j722s-pcie-host", "ti,j721e-pcie-host";
++		reg = <0x00 0x0f102000 0x00 0x1000>,
++		      <0x00 0x0f100000 0x00 0x400>,
++		      <0x00 0x0d000000 0x00 0x00800000>,
++		      <0x00 0x68000000 0x00 0x00001000>;
++		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
++		ranges = <0x01000000 0x00 0x68001000  0x00 0x68001000  0x00 0x0010000>,
++			 <0x02000000 0x00 0x68011000  0x00 0x68011000  0x00 0x7fef000>;
++		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
++		interrupt-names = "link_state";
++		interrupts = <GIC_SPI 99 IRQ_TYPE_EDGE_RISING>;
++		device_type = "pci";
++		max-link-speed = <3>;
++		num-lanes = <1>;
++		power-domains = <&k3_pds 259 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 259 0>, <&serdes1 CDNS_TORRENT_REFCLK_DRIVER>;
++		clock-names = "fck", "pcie_refclk";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		bus-range = <0x0 0xff>;
++		vendor-id = <0x104c>;
++		device-id = <0xb010>;
++		cdns,no-bar-match-nbits = <64>;
++		ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
++		msi-map = <0x0 &gic_its 0x0 0x10000>;
++		status = "disabled";
++	};
 +
-+#define J722S_SERDES0_LANE0_USB			0x0
-+#define J722S_SERDES0_LANE0_QSGMII_LANE2	0x1
+ 	usbss1: usb@f920000 {
+ 		compatible = "ti,j721e-usb";
+ 		reg = <0x00 0x0f920000 0x00 0x100>;
+@@ -138,3 +168,10 @@ serdes_ln_ctrl: mux-controller@4080 {
+ 				<0x10 0x3>; /* SERDES1 lane0 select */
+ 	};
+ };
 +
- #endif /* DTS_ARM64_TI_K3_SERDES_H */
++&wkup_conf {
++	pcie0_ctrl: pcie0-ctrl@4070 {
++		compatible = "ti,j784s4-pcie-ctrl", "syscon";
++		reg = <0x4070 0x4>;
++	};
++};
 -- 
 2.40.1
 
