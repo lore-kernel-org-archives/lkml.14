@@ -1,47 +1,47 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0679979C2;
-	Fri, 24 May 2024 05:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF5A79C2;
+	Fri, 24 May 2024 05:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716530108; cv=none; b=CH9ly2rHMGdqUmGxIkLmLcAy6yigPSIUTXNfmmUSsd57+d6YHOMlLNvjrd2hd+ulZEMhHOmg0qyIb9Zw6oENJGXpJo0Q2h9zIOc1opUwzcU9WrgIx0CMBOkByUVMgBfAfk4aXbQXwca1HY3uW0U57+hyRCmRU0cb81S4AzXV6UM=
+	t=1716530293; cv=none; b=uZn8jpT8vX6w7bA6GlkMyHFjT1Kw3JctX74REnKbuF9IXxuqYrMZuGkJ562YZOvMU9csMiuiFt+PSk37Nfn4YrwWdeuylxBNHckVx+K6uiJCHjdU7KrTJFNAPPBZRE3veCObMFZ0MqzYs6Q3Tel6k6GRirMx1mc05Cty4L3nuYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716530108; c=relaxed/simple;
-	bh=nOjv0RsyBAiqO/7lUSqmFWeAydPEKUkSr5ta3qyru6s=;
+	s=arc-20240116; t=1716530293; c=relaxed/simple;
+	bh=zqmWyT5XwAhbtRngwyPiBMOXtotvPkloxXBZNoKMW+k=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nGmozexMq/tr3UE1sGpdJn+hYzIDYT247CsqXmYWFhPzNuxN323FdjPqJHzrqNYrtZRxS73Ymu0N95hs4vZoVKaViiZw4fRVFtVvWHaQa79k1wOU5c08y+zgOHhKtFZYy0Uypfg8X/fZoYTIUqNxNTyBEef8v51S/lebm2MT7UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RGKYB0rB; arc=none smtp.client-ip=198.47.23.248
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ko39eO1M1lkT3vWZZmpl0nrumlGxGSQ6ZA0beb5k5wn4mLSu73EelBcgxiWLTlNQRGmGHfgvrPxCn+6iVh56RKsdJfhhhuknwI56MKLlXpYNcTh1i+6Vz3pJ3KgK2y4999qyWHua1dsVNcU2zeE2t34CZGa7LTEcJGyTCmsYixA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KGp8tiQF; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RGKYB0rB"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44O5sw3K106505;
-	Fri, 24 May 2024 00:54:58 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KGp8tiQF"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44O5w4FF125439;
+	Fri, 24 May 2024 00:58:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716530098;
-	bh=nJwFVKVRvEeV0qgpK3HQpef65Lf7UTr73Q7joXlHsqY=;
+	s=ti-com-17Q1; t=1716530284;
+	bh=SkPy4urpmv3fU5kSZvDPITCR09Jyyd6rQyRybc5i+nA=;
 	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=RGKYB0rBdqKAUuL5yTnhNizOGTeMwKcqc2i3dwVXlBHI/QkrfFMsYjPDL4t6ac0yG
-	 KG3J30eKCWd3WMrEL9eOjkZDZApIifcpUPdPjcPI5vJzE28cU6uKfL8wCi0TPfp/6g
-	 xoDCdOdvhmiXAj0PBY6/1uuppXnxsMa+ESLlpFi8=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44O5sw9b040414
+	b=KGp8tiQFmR6UjMXUIyc6QUAQKiBUsvAXusRcDgwAlMld0uNpxiPf+xINmfgWUGzFU
+	 qE3Z/DDOYft8Zf9S3iu57Xj7UaVIjZmSPGY2vG9n+3JVJdvTLZZeujDmcIS9EmjQcT
+	 eD4Fxts2D2L5UKt2FySzXqriGAQ8FHGrNFTOee+0=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44O5w40P109055
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 24 May 2024 00:54:58 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 24 May 2024 00:58:04 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 24
- May 2024 00:54:58 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 00:58:03 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 24 May 2024 00:54:58 -0500
+ Frontend Transport; Fri, 24 May 2024 00:58:03 -0500
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44O5sw1i101495;
-	Fri, 24 May 2024 00:54:58 -0500
-Date: Fri, 24 May 2024 00:54:58 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44O5w3wB105880;
+	Fri, 24 May 2024 00:58:03 -0500
+Date: Fri, 24 May 2024 00:58:03 -0500
 From: Nishanth Menon <nm@ti.com>
 To: Markus Schneider-Pargmann <msp@baylibre.com>
 CC: Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
@@ -53,11 +53,10 @@ CC: Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
         Vibhore Vardhan <vibhore@ti.com>, Kevin Hilman <khilman@baylibre.com>,
         Dhruva Gole <d-gole@ti.com>, <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/6] arm64: dts: ti: k3-am62p: Add partial-io wakeup
- sources
-Message-ID: <20240524055458.bc7hwwifcurwt7oe@catty>
+Subject: Re: [PATCH 3/6] arm64: dts: ti: k3-pinctrl: Add WKUP_EN flag
+Message-ID: <20240524055803.dce33y47qzryveh4@napkin>
 References: <20240523080225.1288617-1-msp@baylibre.com>
- <20240523080225.1288617-7-msp@baylibre.com>
+ <20240523080225.1288617-4-msp@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,38 +65,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240523080225.1288617-7-msp@baylibre.com>
+In-Reply-To: <20240523080225.1288617-4-msp@baylibre.com>
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 On 10:02-20240523, Markus Schneider-Pargmann wrote:
-> From: Vibhore Vardhan <vibhore@ti.com>
+> WKUP_EN is a flag to enable pin wakeup. Any activity will wakeup the SoC
+> in that case.
 > 
-> In Partial-IO mode there are a number of possible wakeup sources. Add
-> the list of phandles to these wakeup sources. Based on the patch for
-> AM62a.
-> 
-> Signed-off-by: Vibhore Vardhan <vibhore@ti.com>
 > Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
 > ---
->  arch/arm64/boot/dts/ti/k3-am62p.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/arm64/boot/dts/ti/k3-pinctrl.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p.dtsi b/arch/arm64/boot/dts/ti/k3-am62p.dtsi
-> index 94babc412575..4d43cc972056 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p.dtsi
-> @@ -123,3 +123,7 @@ cbass_wakeup: bus@b00000 {
->  #include "k3-am62p-main.dtsi"
->  #include "k3-am62p-mcu.dtsi"
->  #include "k3-am62p-wakeup.dtsi"
+> diff --git a/arch/arm64/boot/dts/ti/k3-pinctrl.h b/arch/arm64/boot/dts/ti/k3-pinctrl.h
+> index 4cd2df467d0b..e36bce881f44 100644
+> --- a/arch/arm64/boot/dts/ti/k3-pinctrl.h
+> +++ b/arch/arm64/boot/dts/ti/k3-pinctrl.h
+> @@ -12,6 +12,7 @@
+>  #define PULLTYPESEL_SHIFT	(17)
+>  #define RXACTIVE_SHIFT		(18)
+>  #define DEBOUNCE_SHIFT		(11)
+> +#define WKUP_EN_SHIFT		(29)
+>  
+>  #define PULL_DISABLE		(1 << PULLUDEN_SHIFT)
+>  #define PULL_ENABLE		(0 << PULLUDEN_SHIFT)
+> @@ -38,6 +39,8 @@
+>  #define PIN_DEBOUNCE_CONF5	(5 << DEBOUNCE_SHIFT)
+>  #define PIN_DEBOUNCE_CONF6	(6 << DEBOUNCE_SHIFT)
+>  
+> +#define WKUP_EN			(1 << WKUP_EN_SHIFT)
 > +
-> +&dmsc {
-> +	ti,partial-io-wakeup-sources = <&mcu_mcan0>, <&mcu_mcan1>, <&mcu_uart0>, <&wkup_uart0>;
-> +};
+>  #define AM62AX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
+>  #define AM62AX_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
 
-NOTE: https://software-dl.ti.com/tisci/esd/latest/2_tisci_msgs/pm/lpm.html#supported-low-power-modes
-table of SoCs supported do not provide J722s or AM62p in
-the list. I suspect it is an oversight, but seems to be a mismatch atm.
+Could we do the due diligence in ensuring that there are no SoCs (like
+tda devices) that may vary from the above definition? Please provide
+that information in commit message.
 
 -- 
 Regards,
