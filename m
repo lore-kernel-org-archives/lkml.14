@@ -1,105 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f99.google.com (mail-wm1-f99.google.com [209.85.128.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D9E5103D;
-	Fri, 24 May 2024 18:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1483D3B8
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 18:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716575282; cv=none; b=BDHf0/+imDWsJdIVLFrNXUzEX5aDhHdIazfUyZKQMwg/H+xbubOGfBgLm3Ub1ekzlRkVGWokGTsGi0YDiLJIGKFJ0aIDfgI8HkYZpDOxDdw6S4jodmWy9ekuzhjE62C6ySWy/EJQRPt8CT2fCZeV/vJ4as5HZvpzeXUNPTvKumw=
+	t=1716575281; cv=none; b=Oym1dYqmw6jqUxkdoB6ii3DruSl22avzkvq0DQnIaPIFUAM6588B7CBqQQFcCBFTGrUtHh7bkY0H/a5DTQF5HoVFeeXpQv9lBB/GQBnCLvNEuAloQi4VO1LdGnDubSadAY8zOOaqx5ov4qfuAZMD98zLCJa0GLcz48p5Sfe7tm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716575282; c=relaxed/simple;
-	bh=iaUMhhMd54dtFhNkn184MRajR59ypgb42tdYKRQ0e/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TOC6wH03tIAXU0sN9nPr/CuFD/rxCBmLYRTUg80nUKEi+TohAEXoeDOUmg3pcgWEIMhkNCWaz9BQeZW3MZdQs8jo98Jpz06BJb/uNshcOzfTv0gRPyLBwpGCEeYjuauEGkhKW1pWcIc+I7lsTLDXYjqitSWZmPr2h7OIjjKqP+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZhUH4aW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716575281; c=relaxed/simple;
+	bh=nfU4i7o8p143//pVAQIuLJreZUHivVRGYWOYdCfqYIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qw5/SpWas7udHO2+p6xHCVeThaHeciV2igqreNYBbwf2QVWAi50tcC3aeZku+zzAxJ8g/ORJPGc9Vo/8J40i7hmM7LgMbV1RICQZllXRVEs15U5JBQHKjT6UVdo7t3Xw5fmrmzcv9jlwglz2Iv2KqZcu14ff2criT+Bal9tJKe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=eZ6RhjaH; arc=none smtp.client-ip=209.85.128.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZhUH4aW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0203C32782;
-	Fri, 24 May 2024 18:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716575280;
-	bh=iaUMhhMd54dtFhNkn184MRajR59ypgb42tdYKRQ0e/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SZhUH4aWWWqt0PgRmttC7fMf6OKQMKFQaHx8QA5i5qnWu8kaDHTUUXhD3PO6Sa7FJ
-	 Zx49qQ8UmPSZ+TrCFfZwqS9Afm00Up9R3z7rqsG5edO+A7m+BcF3A5xpYuCVlPfj8X
-	 Tcp8nU3vzO9CguXj3x6bEadMjMvPrDTzwVSMzeOQLrP/aDoLz+CwOT/DRrfTXsF7Fn
-	 d8CaonqaKTBjxLjSBo9Y1dimcwQfBV3dnS9abLxfTmV2d6M2+Rzqu9s780YXYuMfG1
-	 IDrcbU8MDHhzJU6qu6K/MgZPweJktjReCeIoP92+hVIMoOIwbQEB7zlQL89Iuzaw4y
-	 5P4YONSSIG1eA==
-Date: Fri, 24 May 2024 19:27:54 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Julien Panis <jpanis@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="eZ6RhjaH"
+Received: by mail-wm1-f99.google.com with SMTP id 5b1f17b1804b1-4202cea9a2fso33253405e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 11:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1716575274; x=1717180074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2dAf5h5XwHiWp+dmoS6JsUC+O9MVsTne143uCle/zUc=;
+        b=eZ6RhjaHWn7JAwBMH3CDTN9O3tUGAubZo3Q5rnemb2GnpUMXGD/J7rY/ho0nnrYRof
+         fKYmq97Yai6JC7D/2b6suH3E+kY21hQr0DRSR4FnWZ76bWUmz3f+VMfdKdnRCd1qK/mo
+         L9o2+IqFsf+9nRwq5s7lz3DpKsyaWJnpXl9rH1Zs+er9AFMTy7kwOhuDeb16qZAifCPj
+         WAJGlvHghsGMY7fSWf5shWzjliTfD4uvH4Q15g9O5q//ZCvpFZ/i32ODtqcogCbT8Vvq
+         JuhxQXUvIseKuZXb1pOpft7ohXUOW1Nn7NRCl5xkXtGQDJluYo0cCXHcXe3jsSqyllXy
+         qfpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716575274; x=1717180074;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2dAf5h5XwHiWp+dmoS6JsUC+O9MVsTne143uCle/zUc=;
+        b=SEUoJSZA1YgHFkCpLrGrARzSkExzFbEWPg7Dt4gz1vIP8epSLV+V3Ay6CH6qtr2sDx
+         vw/1xheS25apSUgJvhe8GNwvKWMBUg6D5A45JOIPX4ZUhdwjjRv+5RzBW9dkB5w6W04I
+         0Pz3mE2HlqsNuONnKUkpjARRuZQsSfXBIXh+tMaTekoUsx85p87n7KPOjzer2kkgmOZe
+         X0GUlCNXBw64sPsVwjgwNmG3X3IWFYhMXmIT+qsnT0s3vpvU0EQ4UNsFLvF32WKMM441
+         HwLVyuSIKauLpFUBlk9rl7eupGrWaHxmemWbQm67JBbKa4y9vHLYiNX1M/M/kXLKKYdE
+         TsKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYZBdFI13FX4i3SgrICkO0HvWA2cfmC795f3cwmiPOZgB6F4JEsZXkg9t4RI0Gy1ND6nCJ9CEL0LwrzFnkwb6vYUxD43c7gzlHi+eo
+X-Gm-Message-State: AOJu0YwHO1g5PujIvM7Qp8TGKZ80lfAXExLBWdKrAlNNVLUqA2C512XR
+	zzzLEJepcbhsIfpPm7IToYevJnC6orYqVzEZ/oDWXZF+EwO6Vd/ddS+7bF/+GABh4raj+mRG61M
+	cZRe04ritEB5QRBu4HtpYLcIIER3SsKgr
+X-Google-Smtp-Source: AGHT+IG7AwSKXGWwm3Jk0PS/jS/c6HEpbiqG3nmvQrlTW240Q10yveOxPP4at4VICqmuogqReFECxtmY3Gqc
+X-Received: by 2002:adf:f746:0:b0:34d:bab1:26eb with SMTP id ffacd0b85a97d-3552fe17476mr2052052f8f.68.1716575274538;
+        Fri, 24 May 2024 11:27:54 -0700 (PDT)
+Received: from raspberrypi.com ([188.39.149.98])
+        by smtp-relay.gmail.com with ESMTPS id ffacd0b85a97d-35579d7c6bfsm65665f8f.22.2024.05.24.11.27.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 11:27:54 -0700 (PDT)
+X-Relaying-Domain: raspberrypi.com
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Nicolas Pitre <npitre@baylibre.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Vladimir Murzin <vladimir.murzin@arm.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] dt-bindings: thermal: mediatek: Rename thermal
- zone definitions for MT8186 and MT8188
-Message-ID: <20240524-clatter-antivirus-b1939900ee58@spud>
-References: <20240524-mtk-thermal-mt818x-dtsi-v5-0-56f8579820e7@baylibre.com>
- <20240524-mtk-thermal-mt818x-dtsi-v5-1-56f8579820e7@baylibre.com>
- <20240524-concerned-fritter-262f5e16293e@spud>
+	linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-mmc@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-sound@vger.kernel.org,
+	Stefan Wahren <stefan.wahren@i2se.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: [PATCH 06/18] dmaengine: bcm2835: make address increment platform independent
+Date: Fri, 24 May 2024 19:26:50 +0100
+Message-Id: <20240524182702.1317935-7-dave.stevenson@raspberrypi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240524182702.1317935-1-dave.stevenson@raspberrypi.com>
+References: <20240524182702.1317935-1-dave.stevenson@raspberrypi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="joiORIfrHLDgKDZJ"
-Content-Disposition: inline
-In-Reply-To: <20240524-concerned-fritter-262f5e16293e@spud>
+Content-Transfer-Encoding: 8bit
 
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
---joiORIfrHLDgKDZJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Actually the criteria to increment source & destination address doesn't
+based on platform specific bits. It's just the DMA transfer direction which
+is translated into the info bits. So introduce two new helper functions
+and get the rid of these platform specifics.
 
-On Fri, May 24, 2024 at 07:24:47PM +0100, Conor Dooley wrote:
-> On Fri, May 24, 2024 at 11:04:34AM +0200, Julien Panis wrote:
-> > Use thermal zone names that make more sense.
-> >=20
-> > Signed-off-by: Julien Panis <jpanis@baylibre.com>
->=20
-> Removing the defines is an ABI break. If these are all the same devices,
-> but with more accurate naming, then keep the old defines and add new
-> ones. However, the GPU1 define changes in the course of this patch which
-> is more problematic.
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+---
+ drivers/dma/bcm2835-dma.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-> > [RFC] When PATCH 1/6 and 2/6 are squashed, checkpatch raises this WARNI=
-NG:
-> > "DT binding docs and includes should be a separate patch." That's why I
-> > split them in this v5. The problem is that the driver can't be compiled
-> > any more at PATCH 1/6. It needs PATCH 2/6 to be compiled. Should the
-> > checkpatch warning be ignored here ? Should I finally squash PATCH 1/6
-> > and PATCH 2/6 ?
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index ef452ebb3c15..d6c5a2762a46 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -252,6 +252,24 @@ static u32 bcm2835_dma_prepare_cb_extra(struct bcm2835_chan *c,
+ 	return result;
+ }
+ 
++static inline bool need_src_incr(enum dma_transfer_direction direction)
++{
++	return direction != DMA_DEV_TO_MEM;
++}
++
++static inline bool need_dst_incr(enum dma_transfer_direction direction)
++{
++	switch (direction) {
++	case DMA_MEM_TO_MEM:
++	case DMA_DEV_TO_MEM:
++		return true;
++	default:
++		break;
++	}
++
++	return false;
++}
++
+ static void bcm2835_dma_free_cb_chain(struct bcm2835_desc *desc)
+ {
+ 	size_t i;
+@@ -336,10 +354,8 @@ static inline size_t bcm2835_dma_count_frames_for_sg(
+  * @cyclic:         it is a cyclic transfer
+  * @info:           the default info bits to apply per controlblock
+  * @frames:         number of controlblocks to allocate
+- * @src:            the src address to assign (if the S_INC bit is set
+- *                  in @info, then it gets incremented)
+- * @dst:            the dst address to assign (if the D_INC bit is set
+- *                  in @info, then it gets incremented)
++ * @src:            the src address to assign
++ * @dst:            the dst address to assign
+  * @buf_len:        the full buffer length (may also be 0)
+  * @period_len:     the period length when to apply @finalextrainfo
+  *                  in addition to the last transfer
+@@ -408,9 +424,9 @@ static struct bcm2835_desc *bcm2835_dma_create_cb_chain(
+ 			d->cb_list[frame - 1].cb->next = cb_entry->paddr;
+ 
+ 		/* update src and dst and length */
+-		if (src && (info & BCM2835_DMA_S_INC))
++		if (src && need_src_incr(direction))
+ 			src += control_block->length;
+-		if (dst && (info & BCM2835_DMA_D_INC))
++		if (dst && need_dst_incr(direction))
+ 			dst += control_block->length;
+ 
+ 		/* Length of total transfer */
+-- 
+2.34.1
 
-Heh, and there's just one of the issues caused by your ABI break...
-
-> Why do these names even make more sense? Where did the old names come
-> from and where do the new?
-
-
-Thanks,
-Conor
-
---joiORIfrHLDgKDZJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlDcKgAKCRB4tDGHoIJi
-0utTAP9kxCXNzFNcl8MrqFN8BJtQIS/Kvm+fTRGjMzR4A9EE5QD/UeZmmXbOuHu7
-Gpb2kaTXJjMEecS77c+BSdgxlowavgM=
-=xYN6
------END PGP SIGNATURE-----
-
---joiORIfrHLDgKDZJ--
