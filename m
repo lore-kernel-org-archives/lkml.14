@@ -1,270 +1,458 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289DE21103
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 02:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716518500; cv=fail; b=OJGaafvJLmmxGr1o4pV/GKzhrdyBXRuiLX3qilt8pBXWDMQHh06QWTCOHRbTmFrnIotmmdgaPV9aciZhbdZdWJM1ZOgW24pQecEvZGnBoNE4p/SJqIwXzwFSJ/hWQlZH5oRv8cI+J21l08TtPMAHvwZkufetTGTn+fxlrZRl7tk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716518500; c=relaxed/simple;
-	bh=Hv9DT1vponEG9plaMDBhkRfSM2yPEry89O15Mti2kzY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LJtk7mOilRUnFBDLOYJCjhxR+aE2GIP42q9uVa9yYuIdZIAsW+ly8ZsNXXB4GvUgE/ySRoIx8s55PkjNIU24CuxO1vRdpxHvZ/P25nIeQnzdhJZV4qVX6wG1LD+kD/lfum7eq+VjrD9Q2YqkGpCM/oH1YdCr/p9ffw3Bwpr1B4s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f/We6DwQ; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFCB374FE
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 02:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716518516; cv=none; b=P3O7l2aClsEHddaH5At63YgafR1XcFXV86gaDA4swHw9NcL0Az0O8w3tOztfcCe649tvjKjLi+G8LjT+5NjYUnYpVpbIRe6zM+aAHqM4WjiNvGFmM8kiH0K6NKz2LgIOj4Ts1OxgNG6Z873olTUS7TxjTkYf4ZfjLs2wDLSG65I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716518516; c=relaxed/simple;
+	bh=Muh0sPUC/Lk4gJvxjKCTctk1m1G8krloPm0JSKYOW88=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NF9FrfFel0raXOw0OB88UOWz+x+XpJuhiZqTjeRGQxupiujZBa66XTFlVrgNlKTa7fj6cQvKiaRnxwDSfBafpcbDu/vAdOhpwg0iDKWo9mNfOl4Afp90KeMbqDpGaETZS+JyRCj93Cwsm1IYzpYzWhV5BzctnCFZucOsd6kPg6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lTnx1dpT; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f/We6DwQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716518498; x=1748054498;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Hv9DT1vponEG9plaMDBhkRfSM2yPEry89O15Mti2kzY=;
-  b=f/We6DwQvbmFSxoLlL7+YeaQUvnUGyLohpiZdqmi9hOWOAVEwpZsZc8F
-   x99MpZEqF18tsd8Q+fTMQ2SEsgs/CYMLu7sxlseOexRbsq8GKNC/g/rUd
-   0t0QG1Nd/Qz4iJhBytAoUr5hnZmL0B0GJvhEbcmDNC3QZsFfudqPrzK7B
-   ozK7JhrGZlANuD/ns6ZbYsMeXfYKpe6GWgSJBHxsmOoA9TH/6xRSTg+5W
-   cHXb6CbxakJoc3eoQmN0bNlGvXpjf6uMHkZnhLXOft6xsdbFlbybIqIUk
-   a+CQ7l+jGE0OJYf/q2EHDaeqCDJjQv8WFhExP4RaLPYhK6EXXjUcEEYFl
-   w==;
-X-CSE-ConnectionGUID: B5rETuKuTvi1pabgLsz4qw==
-X-CSE-MsgGUID: /fCkJ1PHR0u+SUDcT+Lspg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="35394632"
-X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
-   d="scan'208";a="35394632"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 19:41:37 -0700
-X-CSE-ConnectionGUID: DDtP/fIyTvqoYEWtsMJVYg==
-X-CSE-MsgGUID: qVYxJkQhT+GYn/ysduIipQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
-   d="scan'208";a="38286159"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 May 2024 19:41:37 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 23 May 2024 19:41:37 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 23 May 2024 19:41:37 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 23 May 2024 19:41:36 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F/yPmpeFqwEtuzQDbq55a9bAk0MY2JA/5ih3csB5pZL6gbPDd8kAmieBrE+Oe5V50xO96RtTqqvi0743Zlc2b9aBX1jqYPuujaPi/XIYYlTObVjUqv6kYD/AZxxEjRZxILqdSAyG6dQNUQMuIowVuWR74cBf1UznPaZgp/iRN+u8sPd7dmnuzEbmfKmGQK9ap6b3faPk/jmECkdmLwY3LoMaWuYjFwxciT9RmGXjE4DQnur7YYHz367d7LF1/gxi21/dCq6fMM7vWM622cM8QwZlBBG3Wm9pJl34fmUhDzZK7KXmLt3G9RF2Z4BdfZIBQ/d7xUzzc418rvBmfBA3Zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QfM+zfIDAvPHHy7v+iA9jJp9p+ZwzGQLusgHeStk1fM=;
- b=ciUw35yRfE0yUo6YdIXgp5Y6k2P6QLAq3/PDe2WClqB78mZRkN7Tp9i7XAFBHeLR2vqjQuOAFKwYMx+m7GVKGHvGpsQcLcsYO1Rr8PPqpUrMPfxUDrw7ZEPR9WvOk9ertNiRND3klpXSRLjWYd6F85PHjtRCSnbvhjwoKzUNhAbJ8k6a9usCzyF/9gwksUo9WGhrkhJZTwBILik3BYscXqLqFs5GPbIoUlxyAjFNhgxf6jkquR0k+j85C8D1cYTWgOCV1uI4Hf250yo4dX2KwBsGzHyoYDBRp4Xbc80O6CTxrg4ymyevHvezzwVNDTzX3u3oLmWwroTkLYr7z3CBnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB8393.namprd11.prod.outlook.com (2603:10b6:806:373::21)
- by SN7PR11MB7489.namprd11.prod.outlook.com (2603:10b6:806:342::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
- 2024 02:41:33 +0000
-Received: from SA1PR11MB8393.namprd11.prod.outlook.com
- ([fe80::1835:328e:6bb5:3a45]) by SA1PR11MB8393.namprd11.prod.outlook.com
- ([fe80::1835:328e:6bb5:3a45%6]) with mapi id 15.20.7611.016; Fri, 24 May 2024
- 02:41:33 +0000
-Date: Fri, 24 May 2024 10:33:15 +0800
-From: Yujie Liu <yujie.liu@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-CC: <lkp@intel.com>, <akpm@linux-foundation.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<oe-kbuild-all@lists.linux.dev>, <v-songbaohua@oppo.com>
-Subject: Re: include/linux/huge_mm.h:285:undefined reference to `mthp_stats'
-Message-ID: <Zk/8a9zllk2NPtjN@yujie-X299>
-References: <202405231728.tCAogiSI-lkp@intel.com>
- <20240523210045.40444-1-21cnbao@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240523210045.40444-1-21cnbao@gmail.com>
-X-ClientProxiedBy: SI2PR01CA0034.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::9) To SA1PR11MB8393.namprd11.prod.outlook.com
- (2603:10b6:806:373::21)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTnx1dpT"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57824fa0a8fso4288453a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 19:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716518513; x=1717123313; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FWYitP/mKok0KulkRpR08gHkHosJXhe6t/yNEPgAOq4=;
+        b=lTnx1dpT/QaitVdr20gdBT+6oZgYp2EQEQJcywlMz1jk02wBvu8udHIQ+USzuYV+EI
+         yb4nwaQUxMi3xhfnY4O9EKwEgdcF/ny4YjyBjfPOs9lKuvkjsB3Q3g+HkhJsS0wCbwrd
+         o7BQApt/7Ck4B1mZWt1MW0pnOtQlYoCO4gs8NGKfv3YwcG3BFjKVskZ+mTsFqqLWzw3k
+         Cm8VIaeOq4mkGw2YEhdt0dyvOu+/YtrsMCCxhLmG73x17SuxjnI30K+P9Lvc9LGubkPP
+         jIAdAqXMMQzILztxTKV4DbWmZEST03XX9BJoi3L/7fos8M95bqyy+T2/I0FyiS3w/qQk
+         LLUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716518513; x=1717123313;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FWYitP/mKok0KulkRpR08gHkHosJXhe6t/yNEPgAOq4=;
+        b=I1eAW5PkooIp0lzd83QdLkDFBSDx2JHDHiMO54Pn4K+uCvXiadGInGHTBJ0qKXK3rp
+         /sKNBCmZMMEYdwwKcIZxu+uVvjKxf8eUxxfs5Dp4xIxaqR9wYAZPc/6f2JxC2Q9lqXU9
+         Lk1xJzXUwn4gNO0kSDYdBJZmymCNlu1/SB0B61RuHmilahz32NSfgvPa+34d0BS6dNMz
+         BAJ1EIfvXCYTWNo3SsNfgacgzcqE/bbtKeSIKXXGYTtN3P14soyzeInkyTS1ZkYw61Ln
+         rcRIJvfJ4d4U03E30LpBK5z9rWNXYvb0yOuo59OWUyamQhQ37baX5D+/iOqKbEDMsfIL
+         6XkA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0NOAyWQAwXexYDYxLOjstEiCosCFAPZ23S9+m+XRaICndLmrdyZiNDr/sY+FWmj1zGinP0Jql6MhgTjK3AAQbNEWxgQ1kbxR2kSOv
+X-Gm-Message-State: AOJu0Yw1zBXxQAimh5rhO/8lNBEuA1NKYRIxidXUHdDQsH7D4ZnYkQia
+	+9BCcswjB04y7+aNKYs9llBx8ZJiZVohW7N3k0pb0A3Ozi6Kz9LR/75fv5Rdlcos+lZ+DWJOIBE
+	vOhrzyGD7gHkEd/E2krDFxIX06IE=
+X-Google-Smtp-Source: AGHT+IGxhUTktEkdPHHzD30YF7TkOm9Uh9zE6iPqyXCGxtrc7t2gCZb9swNURxyMBZ9Q9BZEbJhiJn7ShMYmSwlo4Rk=
+X-Received: by 2002:a50:8e17:0:b0:572:7b08:d497 with SMTP id
+ 4fb4d7f45d1cf-5785199cf06mr564442a12.17.1716518512599; Thu, 23 May 2024
+ 19:41:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB8393:EE_|SN7PR11MB7489:EE_
-X-MS-Office365-Filtering-Correlation-Id: bfec1c66-da7e-44ac-e612-08dc7b9b0666
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?D1HnzvWj5C4G4YxlK4gGsue86CIosUyx99MvmbNpbXOxwkW84Sd+0WKklFs6?=
- =?us-ascii?Q?ydS6kjl+zzdWtHHrUJx3FD1zkzt/tQxYVyHRgKOWgpzfTn4iGG69sKJ/s7y+?=
- =?us-ascii?Q?TkKhkxp4+QueTzETnuExPpp7KZUahdz0UeAAyWGZjP1XaFQH2O1r5J4hStFm?=
- =?us-ascii?Q?GiamErKG45j7nkjsVSt93DjmO7N89Y2GxzshGHvMlN5Ohg220piZMRcYrQvZ?=
- =?us-ascii?Q?ypNd4Dliw6YU9OXiuKe4vJ4Q6mdSXj3UMe1jtKErAWQdiqyH8kG1wVPHQBZQ?=
- =?us-ascii?Q?kKt/5b8pn2QGg9X6AVv4dBeppfQg7Jf2vS32pG+WWKCVLFzHjjHA59+wxsVJ?=
- =?us-ascii?Q?bWOkYM9rYOv296Z2zgN3jd3+Tzlw6vpZrHDSnwHEusoNg3Q+TCHMk7a68DjJ?=
- =?us-ascii?Q?ftFID+m+ZSwqv3dzS8gcIUnIf1rkaap6/3sB73PFNI11g7Mctw2Dr8afu3lZ?=
- =?us-ascii?Q?57wJANSrf3EacsuX7QY1CSstPZ+kjdZprnLf4kCU0X+3YkI+zUjLYoKJW68y?=
- =?us-ascii?Q?cZRJoLIwH9DsAQnuycbmV/IUgucJYJ7PSU1K7juW1QVJ0VNlXoE/KSRFQw1q?=
- =?us-ascii?Q?+tDfflwhOJX3COFNt+1rkO8jbR9Rx6+sGS4es1thJwUrozbzowfSL2McAtMz?=
- =?us-ascii?Q?n9J9CHBhEClFjKjCiPjEuL+DtcfnnNKPRvxpJCV39t0RJRSiHkRYYMWi4E9B?=
- =?us-ascii?Q?VjmoGYjtHAE1FlEtccQLFkq+7SeInHzqjxEkQxgdeBQdk0GlsUvUFJiXT5zc?=
- =?us-ascii?Q?nrE6eGjwt1wFepEpGDb3w6Ia2mp2fMo7tz0f1drmZdUxU5sVmoq3mbSRMDTF?=
- =?us-ascii?Q?VsMAUJ4tpaMX8K539+pqPnW9rRxgt+nVKHVlSdtOJLnezjheWyQCzalW43vX?=
- =?us-ascii?Q?VqEQs+5HPTFey3j9/JAt9QO+fiMBOHC+PvN/thhCXL6h4RRuCRmeFyP1K3jD?=
- =?us-ascii?Q?f26aY5gLPC5IvgeKaP9+FEHr8eC8MpZrCqXVUZVh/9KJTKrIffTV6gmtxA2t?=
- =?us-ascii?Q?u394ZmqPpjcZrKqwXVCaeef1DfoXsnUAFyNPGoc7+T8QeOV3OJISsSB/8l0D?=
- =?us-ascii?Q?ObU5iyag7e6LPEg2jap0Vw2oNa91Lavm+ANyAjL3i+yehtok308hIUYpFOvD?=
- =?us-ascii?Q?8EB5zF26Yk04rbNF0LLPpDVoW//OnIMLoWacBz90qBVAlBrHNw2rO+T+vFYS?=
- =?us-ascii?Q?WiqPhhIZWoUW39LSwCq53KluERs2zUytE5ZL++5QjVN1wSomqjpbw7FjUyk?=
- =?us-ascii?Q?=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8393.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?t+e01PzlEnbjYN1xW0JNrUmwfutdZa+JQEA5W9sE6zHEj28zGdc4kgWGn97g?=
- =?us-ascii?Q?ZflEpCCgUlhv9miD/GX/ohVWroDWvM0+7nvxdyUdLHV9+72ns4tvh9uo4uor?=
- =?us-ascii?Q?EKCXde/0cXXYgGC3raO/rXfkRFjKIrYuvrRmZLeQGOL1SW3SlPHvS8c3wgF/?=
- =?us-ascii?Q?lybLOrU2nFYEqlEW53hxOwyOxagcoGSleqnchnTGW/KOkf9DNcxWCiwc9+Ld?=
- =?us-ascii?Q?4j+3e9A5gaWqBgVkxEAZipXMPueWPftq6k5nMSjpMYz24JyghcXuEzacFLiB?=
- =?us-ascii?Q?OtqERB/3QJEC7/4MRZJ4mqjGHIGdnQgObdoa2VgTy8c1C4u/xDDn8hSCJ00A?=
- =?us-ascii?Q?zeGiy3r/I0SO74O1PRSSYj04b5s/4LnshfJVv1lOGKnnFHvcwo7zmkykzeNz?=
- =?us-ascii?Q?jNHIlGcOott9+7CenMxoBGLGLLP29/Ca7wZHam0VBLlImuBfbZMI0hpJLTbZ?=
- =?us-ascii?Q?Oe6/K9A25WG7p+2iFg0Ms2UrB+3T8uBRSZrYzwQwBxbtfQVBvqQc10fnjVnQ?=
- =?us-ascii?Q?OX86p59Mvt+bT1j3haxtjx4ARizILcKQVXEsG121jSi7ZaUk+0BmQNTYF7rw?=
- =?us-ascii?Q?bakkWCqaPMcydhorceiGR5P5fi8rTz8UP/jV5eXC5XL+Fe1pYJSYiNEp39Nv?=
- =?us-ascii?Q?dAQmIhumgs0N7RG/liHaGQMZtiTRAO2kANyMlMXkzXDejHv+evPjunuifXnu?=
- =?us-ascii?Q?F/2Y4tl7CGDDcIBBrpY9trSTS9VTbzQ0ulwHKCQLsDsoy7tc5AxX7OOAFe6p?=
- =?us-ascii?Q?sdUjmFrQ+DDvCEOwco/tW4K2bUBjOUuIyVItKflVPkmNyNU1LCVd6vm3fpS9?=
- =?us-ascii?Q?/IUdon1ERrHdaOJYnUcLQPB1w2TL0pioi5D9Aa/v1TrhPjfROH1y7KX6dIr+?=
- =?us-ascii?Q?k7lqkmiTg6/3sOYEhvJUcZObNeqOVh38VTMBmXp1GoQCE0b+u4B/hyoOR7nX?=
- =?us-ascii?Q?p4qrE474Onwtvltw36S4ksbAYg1coaccgPfFO9u06P45uSJIh8uMJQnczgaW?=
- =?us-ascii?Q?wXotJQmmRFM14dvdcxyTZ2wuaJ1asu5ovtQGYn+ZF4MdIwS0+cSb7Oseb1Zh?=
- =?us-ascii?Q?2wL+eY0nbvnUHgDDkm/dewZASP7BE5w65griR9tFS1Cms/sqhtnn+N6je7ZM?=
- =?us-ascii?Q?jZsClsJ2m2aLAry/cksOMr5bYr+sLTvyNHk4QdWNH5MYlEFKlhfQk66ko6+f?=
- =?us-ascii?Q?tQIdv5bNv8WU7gbjXCAnppdyMNOw8/pWsqHxL5QamKQRsCTsppk+YM849anH?=
- =?us-ascii?Q?tYP/TjeujSAdAwvC4P/x3arzkjS0H6qDPlyaF0vscL9dgwActD1mPmBOQFnj?=
- =?us-ascii?Q?QgziNZX4tjTXMPifl80IuUpqju13ARwxfpSwaukMTOdpbM4S5IzjNbRokffc?=
- =?us-ascii?Q?RSnTwm5o+PKY8vWDOHmILbbPPTfZxXuxpW2cQZ7eltdC2j4tls/8ZvnbC+cW?=
- =?us-ascii?Q?Gz7RGllpmF7zqpl8TUXINRFvyhAIcYyYkMgTa/JyUUP343CSzjukK5ok5YEs?=
- =?us-ascii?Q?A9CMSgiBYU94Y8JvzfcYwqxqGPPmS6G4Qk98SR7R9GXxdmvs3k4VAJ1nYHzK?=
- =?us-ascii?Q?S87J1cjBj/I/eMOKk/h14b7W7sJYSNL1k3PPr84V?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfec1c66-da7e-44ac-e612-08dc7b9b0666
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8393.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2024 02:41:33.8313
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SP9NxUvW1Ml4/HVql/0uA3gwi7rp5QZaUrXUkdkOrar5i8iQT4wwv28qSM1S/JZ0qqGBJD2xi9fvY8j2W19R+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7489
-X-OriginatorOrg: intel.com
+References: <20240418134435.6092-1-ioworker0@gmail.com> <20240418134435.6092-5-ioworker0@gmail.com>
+ <CAGsJ_4zjV31JvUyzoiKibYDjg+gQMvuBA3bDE1a1K_APcHozkg@mail.gmail.com>
+In-Reply-To: <CAGsJ_4zjV31JvUyzoiKibYDjg+gQMvuBA3bDE1a1K_APcHozkg@mail.gmail.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Fri, 24 May 2024 10:41:41 +0800
+Message-ID: <CAK1f24kX551pfJvbfkxOrraiNp1OqzTpOjCfhTAap+mgiPfgOg@mail.gmail.com>
+Subject: Re: [PATCH v10 4/4] mm/madvise: optimize lazyfreeing with mTHP in madvise_free
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, david@redhat.com, 
+	mhocko@suse.com, fengwei.yin@intel.com, zokeefe@google.com, 
+	shy828301@gmail.com, xiehuan09@gmail.com, wangkefeng.wang@huawei.com, 
+	songmuchun@bytedance.com, peterx@redhat.com, minchan@kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 09:00:45AM +1200, Barry Song wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   c760b3725e52403dc1b28644fb09c47a83cacea6
-> > commit: ec33687c674934dfefd782a8ffd58370b080b503 mm: add per-order mTHP anon_fault_alloc and anon_fault_fallback counters
-> > date:   2 weeks ago
-> > config: s390-randconfig-r005-20230226 (https://download.01.org/0day-ci/archive/20240523/202405231728.tCAogiSI-lkp@intel.com/config)
-> > compiler: s390-linux-gcc (GCC) 13.2.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240523/202405231728.tCAogiSI-lkp@intel.com/reproduce)
-> 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202405231728.tCAogiSI-lkp@intel.com/
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    s390-linux-ld: mm/memory.o: in function `count_mthp_stat':
-> >>> include/linux/huge_mm.h:285:(.text+0x191c): undefined reference to `mthp_stats'
-> >    s390-linux-ld: mm/huge_memory.o:(.rodata+0x10): undefined reference to `mthp_stats'
-> > 
-> > 
-> > vim +285 include/linux/huge_mm.h
-> > 
-> >    279	
-> >    280	static inline void count_mthp_stat(int order, enum mthp_stat_item item)
-> >    281	{
-> >    282		if (order <= 0 || order > PMD_ORDER)
-> >    283			return;
-> >    284	
-> >>   285		this_cpu_inc(mthp_stats.stats[order][item]);
-> >    286	}
-> >    287	
-> 
-> Thanks, would you please test if the below patch fixes the problem,
+Hi Barry,
 
-The patch below fixes the problem for me. Thanks.
+Thanks a lot for reporting!
 
-Tested-by: Yujie Liu <yujie.liu@intel.com>
+On Fri, May 24, 2024 at 6:20=E2=80=AFAM Barry Song <21cnbao@gmail.com> wrot=
+e:
+>
+> On Fri, Apr 19, 2024 at 1:44=E2=80=AFAM Lance Yang <ioworker0@gmail.com> =
+wrote:
+> >
+> > This patch optimizes lazyfreeing with PTE-mapped mTHP[1]
+> > (Inspired by David Hildenbrand[2]). We aim to avoid unnecessary folio
+> > splitting if the large folio is fully mapped within the target range.
+> >
+> > If a large folio is locked or shared, or if we fail to split it, we jus=
+t
+> > leave it in place and advance to the next PTE in the range. But note th=
+at
+> > the behavior is changed; previously, any failure of this sort would cau=
+se
+> > the entire operation to give up. As large folios become more common,
+> > sticking to the old way could result in wasted opportunities.
+> >
+> > On an Intel I5 CPU, lazyfreeing a 1GiB VMA backed by PTE-mapped folios =
+of
+> > the same size results in the following runtimes for madvise(MADV_FREE) =
+in
+> > seconds (shorter is better):
+> >
+> > Folio Size |   Old    |   New    | Change
+> > ------------------------------------------
+> >       4KiB | 0.590251 | 0.590259 |    0%
+> >      16KiB | 2.990447 | 0.185655 |  -94%
+> >      32KiB | 2.547831 | 0.104870 |  -95%
+> >      64KiB | 2.457796 | 0.052812 |  -97%
+> >     128KiB | 2.281034 | 0.032777 |  -99%
+> >     256KiB | 2.230387 | 0.017496 |  -99%
+> >     512KiB | 2.189106 | 0.010781 |  -99%
+> >    1024KiB | 2.183949 | 0.007753 |  -99%
+> >    2048KiB | 0.002799 | 0.002804 |    0%
+> >
+> > [1] https://lkml.kernel.org/r/20231207161211.2374093-5-ryan.roberts@arm=
+.com
+> > [2] https://lore.kernel.org/linux-mm/20240214204435.167852-1-david@redh=
+at.com
+> >
+> > Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> > Acked-by: David Hildenbrand <david@redhat.com>
+> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> > ---
+>
+> Hi Lance,
+> I am getting kernel panic with this patch,
 
-> 
-> From: Barry Song <v-songbaohua@oppo.com>
-> Date: Fri, 24 May 2024 08:50:48 +1200
-> Subject: [PATCH] mm: huge_mm: fix undefined reference to `mthp_stats' for
->  CONFIG_SYSFS=n
-> 
-> if CONFIG_SYSFS is not enabled in config, we get the below error,
-> 
-> All errors (new ones prefixed by >>):
-> 
->    s390-linux-ld: mm/memory.o: in function `count_mthp_stat':
-> >> include/linux/huge_mm.h:285:(.text+0x191c): undefined reference to `mthp_stats'
->    s390-linux-ld: mm/huge_memory.o:(.rodata+0x10): undefined reference to `mthp_stats'
-> 
-> vim +285 include/linux/huge_mm.h
-> 
->    279
->    280  static inline void count_mthp_stat(int order, enum mthp_stat_item item)
->    281  {
->    282          if (order <= 0 || order > PMD_ORDER)
->    283                  return;
->    284
->  > 285          this_cpu_inc(mthp_stats.stats[order][item]);
->    286  }
->    287
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202405231728.tCAogiSI-lkp@intel.com/
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> ---
->  include/linux/huge_mm.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index c8d3ec116e29..09c5744d9124 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -278,6 +278,7 @@ struct mthp_stat {
->  	unsigned long stats[ilog2(MAX_PTRS_PER_PTE) + 1][__MTHP_STAT_COUNT];
->  };
->  
-> +#ifdef CONFIG_SYSFS
->  DECLARE_PER_CPU(struct mthp_stat, mthp_stats);
->  
->  static inline void count_mthp_stat(int order, enum mthp_stat_item item)
-> @@ -287,6 +288,11 @@ static inline void count_mthp_stat(int order, enum mthp_stat_item item)
->  
->  	this_cpu_inc(mthp_stats.stats[order][item]);
->  }
-> +#else
-> +static inline void count_mthp_stat(int order, enum mthp_stat_item item)
-> +{
-> +}
-> +#endif
->  
->  #define transparent_hugepage_use_zero_page()				\
->  	(transparent_hugepage_flags &					\
-> -- 
-> 2.34.1
-> 
-> 
-> 
+Good spot!
+
+I just noticed that you posted a patch[1] to fix the bug introduced by the
+commit 89e86854fb0a (mm/arm64: override clear_young_dirty_ptes() batch help=
+er).
+
+Could you please try your patch and see if the kernel panic issue still occ=
+urs?
+
+[1] https://lore.kernel.org/all/20240524005444.135417-1-21cnbao@gmail.com/
+
+>
+> / # /home/barry/develop/linux/madvfree
+> [   78.345305] watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [madvfre=
+e:101]
+> [   78.345992] Modules linked in:
+> [   78.346942] irq event stamp: 0
+> [   78.347311] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+> [   78.348407] hardirqs last disabled at (0): [<ffff8000800add04>]
+> copy_process+0x654/0x19a8
+> [   78.349291] softirqs last  enabled at (0): [<ffff8000800add04>]
+> copy_process+0x654/0x19a8
+> [   78.349851] softirqs last disabled at (0): [<0000000000000000>] 0x0
+> [   78.350544] CPU: 3 PID: 101 Comm: madvfree Not tainted
+> 6.9.0-ge51ae633c861 #253
+> [   78.351200] Hardware name: linux,dummy-virt (DT)
+> [   78.351747] pstate: 01400005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYP=
+E=3D--)
+> [   78.352314] pc : queued_spin_lock_slowpath+0x5c/0x528
+> [   78.352772] lr : do_raw_spin_lock+0xc8/0x120
+> [   78.353245] sp : ffff8000863d3720
+> [   78.353657] x29: ffff8000863d3720 x28: ffff0000c45a8ff8 x27: 080000010=
+3b24003
+> [   78.354632] x26: ffff0000c3b26080 x25: fffffdffc0000000 x24: ffff80008=
+22c2d10
+> [   78.355446] x23: ffff80008403018f x22: ffff8000863d38e0 x21: 0000ffff7=
+f000000
+> [   78.356259] x20: ffff800082fbe008 x19: ffff0000c3b26080 x18: 000000000=
+0000000
+> [   78.357120] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000=
+0000000
+> [   78.357967] x14: 0000000000000000 x13: 0000000000000000 x12: 000000000=
+0000000
+> [   78.358878] x11: ff7ffffffffffbff x10: 0040000000000041 x9 : ffff80008=
+0143750
+> [   78.359818] x8 : ffff8000863d3708 x7 : 0000000000000000 x6 : ffff80008=
+03b34e8
+> [   78.360688] x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008=
+2fbe008
+> [   78.361602] x2 : ffff80012ac1f000 x1 : 0000000000000000 x0 : 000000000=
+0000080
+> [   78.362755] Call trace:
+> [   78.363132]  queued_spin_lock_slowpath+0x5c/0x528
+> [   78.363614]  do_raw_spin_lock+0xc8/0x120
+> [   78.364041]  _raw_spin_lock+0x58/0x70
+> [   78.364455]  __pte_offset_map_lock+0x98/0x210
+> [   78.364891]  madvise_free_pte_range+0x88/0xa58
+> [   78.365406]  walk_pgd_range+0x390/0x808
+> [   78.365829]  __walk_page_range+0x1e0/0x1f0
+> [   78.366256]  walk_page_range+0x1f0/0x2c8
+> [   78.366676]  madvise_free_single_vma+0x16c/0x308
+> [   78.367115]  madvise_vma_behavior+0x504/0xa20
+> [   78.367549]  madvise_walk_vmas+0xc0/0x128
+> [   78.367972]  do_madvise.part.0+0x110/0x558
+> [   78.368398]  __arm64_sys_madvise+0x68/0x88
+> [   78.368826]  invoke_syscall+0x50/0x128
+> [   78.369332]  el0_svc_common.constprop.0+0x48/0xf8
+> [   78.369778]  do_el0_svc+0x28/0x40
+> [   78.370184]  el0_svc+0x50/0x150
+> [   78.370583]  el0t_64_sync_handler+0x13c/0x158
+> [   78.371017]  el0t_64_sync+0x1a4/0x1a8
+> [  102.345217] watchdog: BUG: soft lockup - CPU#3 stuck for 45s! [madvfre=
+e:101]
+> [  102.345835] Modules linked in:
+> [  102.346290] irq event stamp: 0
+> [  102.346715] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+> [  102.347252] hardirqs last disabled at (0): [<ffff8000800add04>]
+> copy_process+0x654/0x19a8
+> [  102.347796] softirqs last  enabled at (0): [<ffff8000800add04>]
+> copy_process+0x654/0x19a8
+> [  102.348333] softirqs last disabled at (0): [<0000000000000000>] 0x0
+> [  102.348925] CPU: 3 PID: 101 Comm: madvfree Tainted: G             L
+>     6.9.0-ge51ae633c861 #253
+> [  102.349549] Hardware name: linux,dummy-virt (DT)
+> [  102.349988] pstate: 01400005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYP=
+E=3D--)
+> [  102.350535] pc : queued_spin_lock_slowpath+0x5c/0x528
+> [  102.351010] lr : do_raw_spin_lock+0xc8/0x120
+> [  102.351508] sp : ffff8000863d3720
+> [  102.351939] x29: ffff8000863d3720 x28: ffff0000c45a8ff8 x27: 080000010=
+3b24003
+> [  102.352811] x26: ffff0000c3b26080 x25: fffffdffc0000000 x24: ffff80008=
+22c2d10
+> [  102.353772] x23: ffff80008403018f x22: ffff8000863d38e0 x21: 0000ffff7=
+f000000
+> [  102.354625] x20: ffff800082fbe008 x19: ffff0000c3b26080 x18: 000000000=
+0000000
+> [  102.355495] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000=
+0000000
+> [  102.356370] x14: 0000000000000000 x13: 0000000000000000 x12: 000000000=
+0000000
+> [  102.357333] x11: ff7ffffffffffbff x10: 0040000000000041 x9 : ffff80008=
+0143750
+> [  102.358273] x8 : ffff8000863d3708 x7 : 0000000000000000 x6 : ffff80008=
+03b34e8
+> [  102.359112] x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008=
+2fbe008
+> [  102.360001] x2 : ffff80012ac1f000 x1 : 0000000000000000 x0 : 000000000=
+0000080
+> [  102.360887] Call trace:
+> [  102.361289]  queued_spin_lock_slowpath+0x5c/0x528
+> [  102.361768]  do_raw_spin_lock+0xc8/0x120
+> [  102.362294]  _raw_spin_lock+0x58/0x70
+> [  102.362825]  __pte_offset_map_lock+0x98/0x210
+> [  102.363299]  madvise_free_pte_range+0x88/0xa58
+> [  102.363771]  walk_pgd_range+0x390/0x808
+> [  102.364268]  __walk_page_range+0x1e0/0x1f0
+> [  102.364729]  walk_page_range+0x1f0/0x2c8
+> [  102.365263]  madvise_free_single_vma+0x16c/0x308
+> [  102.365786]  madvise_vma_behavior+0x504/0xa20
+> [  102.366315]  madvise_walk_vmas+0xc0/0x128
+> [  102.366779]  do_madvise.part.0+0x110/0x558
+> [  102.367269]  __arm64_sys_madvise+0x68/0x88
+> [  102.367714]  invoke_syscall+0x50/0x128
+> [  102.368110]  el0_svc_common.constprop.0+0x48/0xf8
+> [  102.368574]  do_el0_svc+0x28/0x40
+> [  102.369001]  el0_svc+0x50/0x150
+> [  102.369464]  el0t_64_sync_handler+0x13c/0x158
+> [  102.369916]  el0t_64_sync+0x1a4/0x1a8
+> [  126.345236] watchdog: BUG: soft lockup - CPU#3 stuck for 67s! [madvfre=
+e:101]
+>
+> the test code is as belows,
+>
+> #define MADV_PAGEOUT    21      /* reclaim these pages */
+>
+> #define DATA_SIZE (128UL * 1024 * 1024)
+> #define PAGE_SIZE (4UL * 1024)
+> #define LARGE_FOLIO_SIZE (64UL * 1024)
+>
+> static void *read_data(void *addr)
+> {
+>         unsigned long i;
+>
+>         for (i =3D 0; i < DATA_SIZE * 2; i +=3D PAGE_SIZE) {
+>                 if (*((char *)addr + i) !=3D (char)i) {
+>                 }
+>         }
+> }
+>
+> static void *lazyfree(void *addr)
+> {
+>         unsigned long i;
+>
+>         madvise(addr, DATA_SIZE * 2, MADV_FREE);
+> }
+>
+> int main(int argc, char **argv)
+> {
+>         void *addr =3D mmap(NULL, DATA_SIZE * 2, PROT_READ | PROT_WRITE,
+>                         MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+
+Could you please check the /sys/kernel/mm/transparent_hugepage/enabled?
+
+Is it set to 'always'?
+
+Also, what size of mTHP are you using here?
+
+>         memset(addr, 0x11, DATA_SIZE * 2);
+>         lazyfree(addr);
+>
+>         while(1) {
+>                 sleep(1);
+>                 read_data(addr);
+>         }
+>         return 0;
+> }
+
+Thanks again for reaching out!
+Lance
+>
+> >  mm/madvise.c | 85 +++++++++++++++++++++++++++-------------------------
+> >  1 file changed, 44 insertions(+), 41 deletions(-)
+> >
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 4597a3568e7e..ed125ad8a21e 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -643,6 +643,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsig=
+ned long addr,
+> >                                 unsigned long end, struct mm_walk *walk=
+)
+> >
+> >  {
+> > +       const cydp_t cydp_flags =3D CYDP_CLEAR_YOUNG | CYDP_CLEAR_DIRTY=
+;
+> >         struct mmu_gather *tlb =3D walk->private;
+> >         struct mm_struct *mm =3D tlb->mm;
+> >         struct vm_area_struct *vma =3D walk->vma;
+> > @@ -697,44 +698,57 @@ static int madvise_free_pte_range(pmd_t *pmd, uns=
+igned long addr,
+> >                         continue;
+> >
+> >                 /*
+> > -                * If pmd isn't transhuge but the folio is large and
+> > -                * is owned by only this process, split it and
+> > -                * deactivate all pages.
+> > +                * If we encounter a large folio, only split it if it i=
+s not
+> > +                * fully mapped within the range we are operating on. O=
+therwise
+> > +                * leave it as is so that it can be marked as lazyfree.=
+ If we
+> > +                * fail to split a folio, leave it in place and advance=
+ to the
+> > +                * next pte in the range.
+> >                  */
+> >                 if (folio_test_large(folio)) {
+> > -                       int err;
+> > +                       bool any_young, any_dirty;
+> >
+> > -                       if (folio_likely_mapped_shared(folio))
+> > -                               break;
+> > -                       if (!folio_trylock(folio))
+> > -                               break;
+> > -                       folio_get(folio);
+> > -                       arch_leave_lazy_mmu_mode();
+> > -                       pte_unmap_unlock(start_pte, ptl);
+> > -                       start_pte =3D NULL;
+> > -                       err =3D split_folio(folio);
+> > -                       folio_unlock(folio);
+> > -                       folio_put(folio);
+> > -                       if (err)
+> > -                               break;
+> > -                       start_pte =3D pte =3D
+> > -                               pte_offset_map_lock(mm, pmd, addr, &ptl=
+);
+> > -                       if (!start_pte)
+> > -                               break;
+> > -                       arch_enter_lazy_mmu_mode();
+> > -                       pte--;
+> > -                       addr -=3D PAGE_SIZE;
+> > -                       continue;
+> > +                       nr =3D madvise_folio_pte_batch(addr, end, folio=
+, pte,
+> > +                                                    ptent, &any_young,=
+ &any_dirty);
+> > +
+> > +                       if (nr < folio_nr_pages(folio)) {
+> > +                               int err;
+> > +
+> > +                               if (folio_likely_mapped_shared(folio))
+> > +                                       continue;
+> > +                               if (!folio_trylock(folio))
+> > +                                       continue;
+> > +                               folio_get(folio);
+> > +                               arch_leave_lazy_mmu_mode();
+> > +                               pte_unmap_unlock(start_pte, ptl);
+> > +                               start_pte =3D NULL;
+> > +                               err =3D split_folio(folio);
+> > +                               folio_unlock(folio);
+> > +                               folio_put(folio);
+> > +                               pte =3D pte_offset_map_lock(mm, pmd, ad=
+dr, &ptl);
+> > +                               start_pte =3D pte;
+> > +                               if (!start_pte)
+> > +                                       break;
+> > +                               arch_enter_lazy_mmu_mode();
+> > +                               if (!err)
+> > +                                       nr =3D 0;
+> > +                               continue;
+> > +                       }
+> > +
+> > +                       if (any_young)
+> > +                               ptent =3D pte_mkyoung(ptent);
+> > +                       if (any_dirty)
+> > +                               ptent =3D pte_mkdirty(ptent);
+> >                 }
+> >
+> >                 if (folio_test_swapcache(folio) || folio_test_dirty(fol=
+io)) {
+> >                         if (!folio_trylock(folio))
+> >                                 continue;
+> >                         /*
+> > -                        * If folio is shared with others, we mustn't c=
+lear
+> > -                        * the folio's dirty flag.
+> > +                        * If we have a large folio at this point, we k=
+now it is
+> > +                        * fully mapped so if its mapcount is the same =
+as its
+> > +                        * number of pages, it must be exclusive.
+> >                          */
+> > -                       if (folio_mapcount(folio) !=3D 1) {
+> > +                       if (folio_mapcount(folio) !=3D folio_nr_pages(f=
+olio)) {
+> >                                 folio_unlock(folio);
+> >                                 continue;
+> >                         }
+> > @@ -750,19 +764,8 @@ static int madvise_free_pte_range(pmd_t *pmd, unsi=
+gned long addr,
+> >                 }
+> >
+> >                 if (pte_young(ptent) || pte_dirty(ptent)) {
+> > -                       /*
+> > -                        * Some of architecture(ex, PPC) don't update T=
+LB
+> > -                        * with set_pte_at and tlb_remove_tlb_entry so =
+for
+> > -                        * the portability, remap the pte with old|clea=
+n
+> > -                        * after pte clearing.
+> > -                        */
+> > -                       ptent =3D ptep_get_and_clear_full(mm, addr, pte=
+,
+> > -                                                       tlb->fullmm);
+> > -
+> > -                       ptent =3D pte_mkold(ptent);
+> > -                       ptent =3D pte_mkclean(ptent);
+> > -                       set_pte_at(mm, addr, pte, ptent);
+> > -                       tlb_remove_tlb_entry(tlb, pte, addr);
+> > +                       clear_young_dirty_ptes(vma, addr, pte, nr, cydp=
+_flags);
+> > +                       tlb_remove_tlb_entries(tlb, pte, nr, addr);
+> >                 }
+> >                 folio_mark_lazyfree(folio);
+> >         }
+> > --
+> > 2.33.1
+> >
