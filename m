@@ -1,170 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F743126F36
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 13:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266EC127B54;
+	Fri, 24 May 2024 13:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716556747; cv=none; b=Z33TXA9dS8gCwK4yJSxBa7A3AVg9IVyYmw2OyCrhchk4BDffQvpwUeBeFiyZsV7ZDrY0duQM6uK94O9WWUlKGx/XLqmI2ZvwOL1kwMK0W6QCAW8ypuscYIRb84kG6QHBkbSEmC0LLg136IKU8qWKcu9c5TC8DOH/gvEcr/atxWA=
+	t=1716556748; cv=none; b=HaW7IkNirY4p3adUkIvubmxUCBjZDfZbCscyIb0AD/cwtye2jB02GBjqjU13bRKWNkVaEop7j51l9jJPjq9yGbh6mbKji9WYzFUCFzAre4zpVqKt3EChnUk83Fz7vMmTLId5gPxdpHKDxXEnQUKzAG5/Hmc/NMcsbkImoQcfK8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716556747; c=relaxed/simple;
-	bh=Q+wqz3GLDVTyBy+htHp9EFQVMzJAbwNTFykwjw54cWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QQc4VcWgzzCIG7Q6rSdkVmSX+kj8hrDmggCreSurYxqslfzAQaN4ofNdKmd1Mlof8KwzhfintzrdsK3ipypI09zdpG8JRNUDArZJTxVEXso9NAj5YMpEarz/P8hpNiTIx7E+pPhPz2GSO3Dnkp2eNVG8rWdSl2n6zsEGzjM9/sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yd9T+h1P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716556748; c=relaxed/simple;
+	bh=xwQy0LcwhNQIEn/aICdV8U22j7RyzTcdJa+zRxNK684=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pMbKOiqwtKmIEkvn6a2ywYMYcWfESfUTdfIQxjqR3hxhLRqzQmT+G9VyaKwuYVvpFUTkEihQQyD9o6quaRYC+GOFirDVTw1ccj4e2hgg6yLegUI7WiWjUbiH6dL+9zBszaTVhybtuP3wDWcXuIsdZpYznCjVgdiHahfUvg0ISoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eXddsbsC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yd9T+h1P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A26A3C2BBFC;
-	Fri, 24 May 2024 13:19:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716556746;
-	bh=Q+wqz3GLDVTyBy+htHp9EFQVMzJAbwNTFykwjw54cWo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yd9T+h1PmFDhQSmzfkJRhMKvFI/aSiL0wmPEIHAGBfyo28yxE0Hrun5NN1BL07ifY
-	 KY9P92Ank8ua64aNU8vlsVG4yhDioIqSBSVEpBEu+YsAK9iLflazRnL53fm6Vxx8om
-	 FLpqbUb5MJurSYBL8oo1UMBG1GylLm9QJm1WUt70HsoSOPpqNceK74elAu11VRWKYC
-	 5oRzWhOlQ2KX0gtS5718jXYnwLGsmEsapJRMqv4K9gOd6NpMeg2YeMbfYgWaVPN6zq
-	 fgpH7SVwhn/FMmFVJpU48jz/a43VZ4bkf519wK35X+7DrnilmX/PtcJeo4x6AGEfnM
-	 MphMnE26ZVk9w==
-Date: Fri, 24 May 2024 15:19:01 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: linux-kernel@vger.kernel.org, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, "Eric W . Biederman" <ebiederm@xmission.com>, 
-	javier@dowhile0.org, Andrew Morton <akpm@linux-foundation.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Petr Mladek <pmladek@suse.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Yoann Congal <yoann.congal@smile.fr>
-Subject: Re: [PATCH] userns: Default to 'yes' when CONFIG_MEMCG option is
- enabled
-Message-ID: <20240524-putzen-ablauf-12f514413be6@brauner>
-References: <20240524082434.657573-1-javierm@redhat.com>
- <20240524-beurkunden-kantig-101649d6b5cf@brauner>
- <874jangzjk.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eXddsbsC"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44OA0StU022320;
+	Fri, 24 May 2024 13:18:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=jtH39QGDRoyjguOfOrP8Vy
+	cq2ZjaqEmzTTqVJ1HQYuw=; b=eXddsbsCWPnBHR5Dtnzp9M2ZFycA/l2KA40Orb
+	hkN9u9LKNQjqn77z5+rH0jx4HJxSihZFZxYN4ncHHUn6mtAq0K+r7CFy6jbSp5mj
+	VdJYMbnAyHVW3cuXenJ2WftTxnhGviCLL5cRyNgRkgOYQj2mOxfYU9CAhSkk3VYV
+	yxuMLXdAhCGXxMYxEMGyd0oI5nb4GKwawR4ryd0Ma6hVcrivTI/J/cabT0L296Bg
+	gf3GbPBIsGcXEdZ0ZMQVA+p28gxURZFPYQNdSD0geiplUoCWNDGWtxr8oKmQh7lz
+	2p5J7y6zNgAa0u2/CC6cJF1jUSQR9kGKHMptY4z4IvhMdG+g==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yaa9u2h05-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 May 2024 13:18:31 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44ODITBd031502
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 May 2024 13:18:29 GMT
+Received: from hu-bibekkum-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 24 May 2024 06:18:24 -0700
+From: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+To: <robdclark@gmail.com>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <joro@8bytes.org>, <jgg@ziepe.ca>, <jsnitsel@redhat.com>,
+        <robh@kernel.org>, <krzysztof.kozlowski@linaro.org>,
+        <quic_c_gdjako@quicinc.com>, <dmitry.baryshkov@linaro.org>,
+        <konrad.dybcio@linaro.org>
+CC: <iommu@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        "Bibek Kumar Patro" <quic_bibekkum@quicinc.com>
+Subject: [PATCH v10 0/5] iommu/arm-smmu: introduction of ACTLR implementation for Qualcomm SoCs
+Date: Fri, 24 May 2024 18:47:55 +0530
+Message-ID: <20240524131800.2288259-1-quic_bibekkum@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <874jangzjk.fsf@minerva.mail-host-address-is-not-set>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: WEW9SrWi5Bh0D8Ag2IUTBnzz3YTog9xQ
+X-Proofpoint-ORIG-GUID: WEW9SrWi5Bh0D8Ag2IUTBnzz3YTog9xQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-24_04,2024-05-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 impostorscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405240091
 
-On Fri, May 24, 2024 at 02:33:19PM +0200, Javier Martinez Canillas wrote:
-> Christian Brauner <brauner@kernel.org> writes:
-> 
-> Hello Christian,
-> 
-> Thanks a lot for your feedback.
-> 
-> > On Fri, May 24, 2024 at 10:24:16AM +0200, Javier Martinez Canillas wrote:
-> >> The default value for the CONFIG_USER_NS Kconfig symbol changed over time.
-> >> 
-> >> When first was introduced by commit acce292c82d4 ("user namespace: add the
-> >> framework"), the default was 'no'. But then it was changed to 'yes' if the
-> >> CONFIG_NAMESPACES option was enabled, by commit 17a6d4411a4d ("namespaces:
-> >> default all the namespaces to 'yes' when CONFIG_NAMESPACES is selected").
-> >> 
-> >> Then, commit 5673a94c1457 ("userns: Add a Kconfig option to enforce strict
-> >> kuid and kgid type checks") changed the default to 'no' again and selected
-> >> the (now defunct) UIDGID_STRICT_TYPE_CHECKS option.
-> >> 
-> >> This selected option was removed by commit 261000a56b63 ("userns: Remove
-> >> UIDGID_STRICT_TYPE_CHECKS"), but CONFIG_USER_NS default was left to 'no'.
-> >> 
-> >> Finally, the commit e11f0ae388f2 ("userns: Recommend use of memory control
-> >> groups") added to the Kconfig symbol's help text a recommendation that the
-> >> memory control groups should be used, to limit the amount of memory that a
-> >> user who can create user namespaces can consume.
-> >> 
-> >> Looking at the changes' history, a default to 'yes' when the CONFIG_MEMCG
-> >> option is enabled seems like a sane thing to do. Specially since systemd
-> >> requires user namespaces support for services that use the PrivateUsers=
-> >> property in their unit files (e.g: the UPower daemon).
-> >
-> > Fyi, user namespaces are an entirely optional feature in systemd and it
-> > gracefully falls back if they are not available with PrivateUsers= set.
-> > If that isn't the case then it's a bug in systemd with PrivateUsers=
-> > handling and should be reported.
-> >
-> 
-> Interesting, it definitely failed for me:
-> 
-> $ systemctl status upower
-> ● upower.service - Daemon for power management
->      Loaded: loaded (/lib/systemd/system/upower.service; disabled; vendor preset: enabled)
->      Active: failed (Result: exit-code) since Fri 2024-05-24 12:23:49 UTC; 34s ago
->        Docs: man:upowerd(8)
->     Process: 390 ExecStart=/usr/libexec/upowerd (code=exited, status=217/USER)
->    Main PID: 390 (code=exited, status=217/USER)
->         CPU: 122ms
-> 
-> May 24 12:23:49 igep systemd[1]: upower.service: Scheduled restart job, restart counter is at 5.
-> May 24 12:23:49 igep systemd[1]: Stopped Daemon for power management.
-> May 24 12:23:49 igep systemd[1]: upower.service: Start request repeated too quickly.
-> May 24 12:23:49 igep systemd[1]: upower.service: Failed with result 'exit-code'.
-> May 24 12:23:49 igep systemd[1]: Failed to start Daemon for power management.
-> 
-> $ journalctl -u upower
-> May 24 12:23:49 igep systemd[1]: Starting Daemon for power management...
-> May 24 12:23:49 igep systemd[404]: upower.service: Failed to set up user namespacing: Invalid argument
-> May 24 12:23:49 igep systemd[404]: upower.service: Failed at step USER spawning /usr/libexec/upowerd: Invalid argument
-> May 24 12:23:49 igep systemd[1]: upower.service: Main process exited, code=exited, status=217/USER
-> May 24 12:23:49 igep systemd[1]: upower.service: Failed with result 'exit-code'.
-> May 24 12:23:49 igep systemd[1]: Failed to start Daemon for power management.
-> May 24 12:23:49 igep systemd[1]: upower.service: Scheduled restart job, restart counter is at 1.
-> May 24 12:23:49 igep systemd[1]: Stopped Daemon for power management.
-> 
-> That lead me to https://gitlab.freedesktop.org/upower/upower/-/issues/104
-> and finally to systemd's README:
-> 
-> https://github.com/systemd/systemd/blob/main/README#L89C22-L89C34 
-> 
-> But I'll investigate more if is upower or systemd to be blamed here...
-> 
-> > But specifically to you change, afair CONFIG_MEMCG and userns are
-> > unrelated so tying them together like this in the kconfig seems
-> > misguided.
-> >
-> 
-> Yes, but the config USER_NS help text already tieds them toghether:
-> 
-> 	help
-> 	  This allows containers, i.e. vservers, to use user namespaces
-> 	  to provide different user info for different servers.
-> 
-> 	  When user namespaces are enabled in the kernel it is
-> 	  recommended that the MEMCG option also be enabled and that
+This patch series consist of five parts and covers the following:
 
-But then the patch your patch is the wrong way around and you should
-make CONFIG_USER_NS select CONFIG_MEMCG. IOW, if you do userns, do memcg
-but _not_ if you do memcg, do userns.
+1. Re-enable context caching for Qualcomm SoCs to retain prefetcher
+   settings during reset and runtime suspend.
 
-> 	  user-space use the memory control groups to limit the amount
-> 	  of memory a memory unprivileged users can use.
-> 
-> And as mentioned in the commit message, it seems to be the reason why the
-> default for this Kconfig symbol is no. Maybe I misunderstood though or do
-> you think that could be switched unconditionally to 'default y' ?
+2. Remove cfg inside qcom_smmu structure and replace it with single
+   pointer to qcom_smmu_match_data avoiding replication of multiple
+   members from same.
 
-No, definitely not.
+3. Introduce intital set of driver changes to implement ACTLR register
+   for custom prefetcher settings in Qualcomm SoCs.
 
-> 
-> Or is there a reason to be the only namespace to be default to no instead
-> of yes? Specially since important system services are trying to use it.
+4. Add ACTLR data and implementation operations for SM8550.
 
-Yes, it has a lot more security implications than all of the other ones
-and makes them available to unprivileged users by default. So that
-definitely requires a conscious choice.
+5. Add ACTLR data and implementation operations for SC7280.
 
-> 
-> -- 
-> Best regards,
-> 
-> Javier Martinez Canillas
-> Core Platforms
-> Red Hat
-> 
+Changes in v10 from v9:
+ - Added reviewed-by tags 1/5,2/5,3/5.
+ Changes incorporated:
+ - Remove redundant PRR bit setting from gfx actlr table(patch 4/5,5/5)
+   as this bit needs special handling in the gfx driver along with
+   the associated register settings.
+ Link to discussion on PRR bit:
+ https://lore.kernel.org/all/f2222714-1e00-424e-946d-c314d55541b8@quicinc.com/
+ Link to v9:
+ https://lore.kernel.org/all/20240123144543.9405-1-quic_bibekkum@quicinc.com/
+
+Changes in v9 from v8:
+ Changes to incorporate suggestions from Konrad as follows:
+ - Re-wrap struct members of actlr_variant in patch 4/5,5/5
+   in a cleaner way.
+ - Move actlr_config members to the header.
+ Link to v8:
+ https://lore.kernel.org/all/20240116150411.23876-1-quic_bibekkum@quicinc.com/
+
+Changes in v8 from v7:
+ - Added reviewed-by tags on patch 1/5, 2/5.
+ Changes to incorporate suggestions from Pavan and Konrad:
+ - Remove non necessary extra lines.
+ - Use num_smmu and num_actlrcfg to store the array size and use the
+   same to traverse the table and save on sentinel space along with
+   indentation levels.
+ - Refactor blocks containing qcom_smmu_set_actlr to remove block
+   repetition in patch 3/5.
+ - Change copyright year from 2023 to 2022-2023 in patch 3/5.
+ - Modify qcom_smmu_match_data.actlrvar and actlr_variant.actlrcfg to
+   const pointer to a const resource.
+ - use C99 designated initializers and put the address first.
+ Link to v7:
+ https://lore.kernel.org/all/20240109114220.30243-1-quic_bibekkum@quicinc.com/
+
+Changes in v7 from v6:
+ Changes to incorporate suggestions from Dmitry as follows:
+ - Use io_start address instead of compatible string to identify the
+   correct instance by comparing with smmu start address and check for
+   which smmu the corresponding actlr table is to be picked.
+Link to v6:
+https://lore.kernel.org/all/20231220133808.5654-1-quic_bibekkum@quicinc.com/
+
+Changes in v6 from v5:
+ - Remove extra Suggested-by tags.
+ - Add return check for arm_mmu500_reset in 1/5 as discussed.
+Link to v5:
+https://lore.kernel.org/all/20231219135947.1623-1-quic_bibekkum@quicinc.com/
+
+Changes in v5 from v4:
+ New addition:
+ - Modify copyright year in arm-smmu-qcom.h to 2023 from 2022.
+ Changes to incorporate suggestions from Dmitry as follows:
+ - Modify the defines for prefetch in (foo << bar) format
+   as suggested.(FIELD_PREP could not be used in defines
+   is not inside any block/function)
+ Changes to incorporate suggestions from Konrad as follows:
+ - Shift context caching enablement patch as 1/5 instead of 5/5 to
+   be picked up as independent patch.
+ - Fix the codestyle to orient variables in reverse xmas tree format
+   for patch 1/5.
+ - Fix variable name in patch 1/5 as suggested.
+ Link to v4:
+https://lore.kernel.org/all/20231215101827.30549-1-quic_bibekkum@quicinc.com/
+
+Changes in v4 from v3:
+ New addition:
+ - Remove actlrcfg_size and use NULL end element instead to traverse
+   the actlr table, as this would be a cleaner approach by removing
+   redundancy of actlrcfg_size.
+ - Renaming of actlr set function to arm_smmu_qcom based proprietary
+   convention.
+ - break from loop once sid is found and ACTLR value is initialized
+   in qcom_smmu_set_actlr.
+ - Modify the GFX prefetch value separating into 2 sensible defines.
+ - Modify comments for prefetch defines as per SMMU-500 TRM.
+ Changes to incorporate suggestions from Konrad as follows:
+ - Use Reverse-Christmas-tree sorting wherever applicable.
+ - Pass arguments directly to arm_smmu_set_actlr instead of creating
+   duplicate variables.
+ - Use array indexing instead of direct pointer addressed by new
+   addition of eliminating actlrcfg_size.
+ - Switch the HEX value's case from upper to lower case in SC7280
+   actlrcfg table.
+ Changes to incorporate suggestions from Dmitry as follows:
+ - Separate changes not related to ACTLR support to different commit
+   with patch 5/5.
+ - Using pointer to struct for arguments in smr_is_subset().
+ Changes to incorporate suggestions from Bjorn as follows:
+ - fix the commit message for patch 2/5 to properly document the
+   value space to avoid confusion.
+ Fixed build issues reported by kernel test robot [1] for
+ arm64-allyesconfig [2].
+ [1]: https://lore.kernel.org/all/202312011750.Pwca3TWE-lkp@intel.com/
+ [2]:
+https://download.01.org/0day-ci/archive/20231201/202312011750.Pwca3TWE-lkp@intel.com/config
+ Link to v3:
+https://lore.kernel.org/all/20231127145412.3981-1-quic_bibekkum@quicinc.com/
+
+Changes in v3 from v2:
+ New addition:
+ - Include patch 3/4 for adding ACTLR support and data for SC7280.
+ - Add driver changes for actlr support in gpu smmu.
+ - Add target wise actlr data and implementation ops for gpu smmu.
+ Changes to incorporate suggestions from Robin as follows:
+ - Match the ACTLR values with individual corresponding SID instead
+   of assuming that any SMR will be programmed to match a superset of
+   the data.
+ - Instead of replicating each elements from qcom_smmu_match_data to
+   qcom_smmu structre during smmu device creation, replace the
+   replicated members with qcom_smmu_match_data structure inside
+   qcom_smmu structre and handle the dereference in places that
+   requires them.
+ Changes to incorporate suggestions from Dmitry and Konrad as follows:
+ - Maintain actlr table inside a single structure instead of
+   nested structure.
+ - Rename prefetch defines to more appropriately describe their
+   behavior.
+ - Remove SM8550 specific implementation ops and roll back to default
+   qcom_smmu_500_impl implementation ops.
+ - Add back the removed comments which are NAK.
+ - Fix commit description for patch 4/4.
+ Link to v2:
+https://lore.kernel.org/all/20231114135654.30475-1-quic_bibekkum@quicinc.com/
+
+Changes in v2 from v1:
+ - Incorporated suggestions on v1 from Dmitry,Konrad,Pratyush.
+ - Added defines for ACTLR values.
+ - Linked sm8550 implementation structure to corresponding
+   compatible string.
+ - Repackaged actlr value set implementation to separate function.
+ - Fixed indentation errors.
+ - Link to v1:
+https://lore.kernel.org/all/20231103215124.1095-1-quic_bibekkum@quicinc.com/
+
+Changes in v1 from RFC:
+ - Incorporated suggestion form Robin on RFC
+ - Moved the actlr data table into driver, instead of maintaining
+   it inside soc specific DT and piggybacking on exisiting iommus
+   property (iommu = <SID, MASK, ACTLR>) to set this value during
+   smmu probe.
+ - Link to RFC:
+https://lore.kernel.org/all/a01e7e60-6ead-4a9e-ba90-22a8a6bbd03f@quicinc.com/
+
+Bibek Kumar Patro (5):
+  iommu/arm-smmu: re-enable context caching in smmu reset operation
+  iommu/arm-smmu: refactor qcom_smmu structure to include single pointer
+  iommu/arm-smmu: introduction of ACTLR for custom prefetcher settings
+  iommu/arm-smmu: add ACTLR data and support for SM8550
+  iommu/arm-smmu: add ACTLR data and support for SC7280
+
+ .../iommu/arm/arm-smmu/arm-smmu-qcom-debug.c  |   2 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c    | 223 +++++++++++++++++-
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.h    |  18 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu.c         |   5 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu.h         |   5 +
+ 5 files changed, 243 insertions(+), 10 deletions(-)
+
+--
+2.34.1
+
