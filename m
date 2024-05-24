@@ -1,314 +1,639 @@
-Received: from mx0a-00183b01.pphosted.com (mx0a-00183b01.pphosted.com [67.231.149.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F194A01;
-	Fri, 24 May 2024 22:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716591428; cv=fail; b=U/I+q85885Kjy+7clc69e9Y8y5mtfePDJLus4wWzpgsgPxJmBU+k0HudWxzYETYGksluSIHvFD+PRQniviGyzDAXk6lvCYXcmMBelcRjcKLZv/rEzN9SjIdZMYgqn6OrFrrA+1nOEatWIiUF/2iGEM4NMLopuWvW3XgXwN05NqU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716591428; c=relaxed/simple;
-	bh=VrYj4DaK577NpMqZ7e3yA7xSOoLmY9kV3O9hmRNVzJQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=foXK0HwgZlDKHiayOVGHDgslPZs85ro2cWf6XOlMKaDXLJ/VtEna+AwmTfK6DN+WC6a7UjKN+XTBYBmWWNty/kz4h9ZbvB/aZ0GKs2jWaJF7Mu2R7G7bfBkTHouAZT8pFL0WEPeEZFjvLVBHhoXrwspaK7dO4RSV3bhEilabQpw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=onsemi.com; spf=pass smtp.mailfrom=onsemi.com; dkim=pass (2048-bit key) header.d=onsemi.com header.i=@onsemi.com header.b=JoTSNfDg; dkim=pass (1024-bit key) header.d=onsemi.onmicrosoft.com header.i=@onsemi.onmicrosoft.com header.b=DJujDXxX; arc=fail smtp.client-ip=67.231.149.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=onsemi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onsemi.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=onsemi.com header.i=@onsemi.com header.b="JoTSNfDg";
-	dkim=pass (1024-bit key) header.d=onsemi.onmicrosoft.com header.i=@onsemi.onmicrosoft.com header.b="DJujDXxX"
-Received: from pps.filterd (m0059812.ppops.net [127.0.0.1])
-	by m0059812.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 44O75TR7008275;
-	Fri, 24 May 2024 14:52:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onsemi.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	pphosted-onsemi; bh=VrYj4DaK577NpMqZ7e3yA7xSOoLmY9kV3O9hmRNVzJQ=; b=
-	JoTSNfDgRzjQECeo1sEJXD8OAYAQAAljPEmX0nJOZrXXtmpQLS29rH6An737lKtV
-	oS3HDfR/ZMev3ZDuFrVtcecD3L7uZ3EEUdGaJGE9GSJNARMT2Fm6rAbkQ3xXMoz6
-	QF4rqdpuY0/uZEo8G4YqzXqSK+uZHcz/f3Vt+bGIqy7i/14hGx8nbZItwGxlsARz
-	+cGkncG+BltJihE6UoBc0q5kP7mF8rTdX4lVGGBcyMwExl38SBsATdmHqPTLYEgZ
-	WtDKfN9SXowaqidCGmW53WZ2Q6UXrTzmeL4nd8EUQNX6wJ1thR/0Olixi5KwVVfP
-	sMawPdcBwx+3FQ2kSuY8iw==
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
-	by m0059812.ppops.net (PPS) with ESMTPS id 3yaa9stxjf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 May 2024 14:52:25 -0600 (MDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QqqtgMnZNYmJ3bTaDD4fvaV9oiy9brkiUmLJT0PlAtCeTSincVFZ9oYjneM7YQglQplPJRqx3Jz7gUIbL8rkE7WxlB1OdK5ehyUv0xTePLc/ssn50ItifWD+ndRJ5JAAvVhWiOEfKdWCRLm0XUQUqjIny2gCZDOgSvLqLWjGK1NRwZQ5Pinl2Qewuc8zuQBJZ6BRUS8iwbNB+G3NhcdHhXz4JK8TojQlwf0g7fSMWWrgNSDvDM1w34/156fLA0VmL3KBSBPqwtM8HPZ24Dv03GcQpN3TwjX8r860001EMt5zG4FvkHIgzla4ObZLQ//nzpbzTA45k117FWgwzyFn9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VrYj4DaK577NpMqZ7e3yA7xSOoLmY9kV3O9hmRNVzJQ=;
- b=VpUikCLu/Qmg6dNAjO0lfQV/m+WdQmhmUgk/7T2WE4E0S1yXmrzBdvXP4bapdAGCy9jTkpsnawhMV8DZMxFf5aod4rah//jJx5tKpEJzyLn2/leMK/2n3fW6dnUb7FomvLwivyehhJ1/8f0Fa0LFLX048T4w2tizumjp3k8b/Y9CP5cpgiC5nfqEKoHLkbDxg9XaXnPdNGi3H1/yWorII5Wdls0WsbYN88XBnaYtz3uQYYFC6VZXLfBEWa5tqBi7+eKbzaAUTQ89j4HQzVdRe/fd2VRvFa6BOStDosyCPQtv8jludIdc72RZaS7mXp4quX8bT4W+CxuzxWGVSJaDDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=onsemi.com; dmarc=pass action=none header.from=onsemi.com;
- dkim=pass header.d=onsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=onsemi.onmicrosoft.com; s=selector2-onsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VrYj4DaK577NpMqZ7e3yA7xSOoLmY9kV3O9hmRNVzJQ=;
- b=DJujDXxXzls0PthZ9CMl3RDKxF4w6ih9WFDXXVoHtK5m99sG0UkSJREKEWc/3M/WDGsK4p1cj4DKpznGGhfOEDeTrag95v9gv8k5w4hwBBN0BAxW+iUdJ7NNiaWC0vb+eoR3jFf1PD6c3gogs7GWwou50meNW/LsS+xiLiexABQ=
-Received: from BYAPR02MB5958.namprd02.prod.outlook.com (2603:10b6:a03:125::18)
- by SJ0PR02MB8547.namprd02.prod.outlook.com (2603:10b6:a03:3fd::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
- 2024 20:52:23 +0000
-Received: from BYAPR02MB5958.namprd02.prod.outlook.com
- ([fe80::9050:b9f2:336c:edaa]) by BYAPR02MB5958.namprd02.prod.outlook.com
- ([fe80::9050:b9f2:336c:edaa%3]) with mapi id 15.20.7611.016; Fri, 24 May 2024
- 20:52:23 +0000
-From: Selvamani Rajagopal <Selvamani.Rajagopal@onsemi.com>
-To: "Parthiban.Veerasooran@microchip.com"
-	<Parthiban.Veerasooran@microchip.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-CC: "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "horms@kernel.org"
-	<horms@kernel.org>,
-        "saeedm@nvidia.com" <saeedm@nvidia.com>,
-        "anthony.l.nguyen@intel.com" <anthony.l.nguyen@intel.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "Horatiu.Vultur@microchip.com"
-	<Horatiu.Vultur@microchip.com>,
-        "ruanjinjie@huawei.com"
-	<ruanjinjie@huawei.com>,
-        "Steen.Hegelund@microchip.com"
-	<Steen.Hegelund@microchip.com>,
-        "vladimir.oltean@nxp.com"
-	<vladimir.oltean@nxp.com>,
-        "UNGLinuxDriver@microchip.com"
-	<UNGLinuxDriver@microchip.com>,
-        "Thorsten.Kummermehr@microchip.com"
-	<Thorsten.Kummermehr@microchip.com>,
-        Piergiorgio Beruto
-	<Pier.Beruto@onsemi.com>,
-        "Nicolas.Ferre@microchip.com"
-	<Nicolas.Ferre@microchip.com>,
-        "benjamin.bigler@bernformulastudent.ch"
-	<benjamin.bigler@bernformulastudent.ch>
-Subject: RE: [PATCH net-next v4 00/12] Add support for OPEN Alliance
- 10BASE-T1x MACPHY Serial Interface
-Thread-Topic: [PATCH net-next v4 00/12] Add support for OPEN Alliance
- 10BASE-T1x MACPHY Serial Interface
-Thread-Index: 
- AQHakZAzTzY8uLDqjU+aLRkJ24TPX7F0voeAgAA2YYCAGHiwAIAAQuMAgAFPWgCAAH78AIAA9q2AgBaZtCA=
-Date: Fri, 24 May 2024 20:52:22 +0000
-Message-ID: 
- <BYAPR02MB5958A4D667D13071E023B18F83F52@BYAPR02MB5958.namprd02.prod.outlook.com>
-References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
- <5f73edc0-1a25-4d03-be21-5b1aa9e933b2@lunn.ch>
- <32160a96-c031-4e5a-bf32-fd5d4dee727e@lunn.ch>
- <2d9f523b-99b7-485d-a20a-80d071226ac9@microchip.com>
- <6ba7e1c8-5f89-4a0e-931f-3c117ccc7558@lunn.ch>
- <8b9f8c10-e6bf-47df-ad83-eaf2590d8625@microchip.com>
- <44cd0dc2-4b37-4e2f-be47-85f4c0e9f69c@lunn.ch>
- <b941aefd-dbc5-48ea-b9f4-30611354384d@microchip.com>
-In-Reply-To: <b941aefd-dbc5-48ea-b9f4-30611354384d@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR02MB5958:EE_|SJ0PR02MB8547:EE_
-x-ms-office365-filtering-correlation-id: 48a6513b-4aed-4139-c9c3-08dc7c33692e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230031|7416005|376005|1800799015|366007|38070700009;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?UE5EY1FVaHljVXZwaitZNnFlOVNTc3lhdTlUV1BEOW1VNVRhbzFKZTMvdU9G?=
- =?utf-8?B?TFlMNnVSWStnL09ReGU4Ynp3ZlA5TWZEL0ZjQ0dVWlNvRUJUc0hHS0NuaS84?=
- =?utf-8?B?SGRZQUg3TlByN1RUTldMMmIzeW1DdWpjV3dpVTZraXltcDhwUUF4VlNQWDE2?=
- =?utf-8?B?UkNpZHM0VllmdVBOU2FWdWRRYUljTFRhR0FnM0NPT3JZRllITnlLcXhsY3BI?=
- =?utf-8?B?OFhyWnBEK3VvWHhlMmI3NWE2aWlOUStHNXBrak5zSXRyTkh2UkVpdXZHSUlG?=
- =?utf-8?B?eEhoL2VONm1xYm9iNG1iai9kMEJuOUovdlBpb20yT0F3aGpWM2dIYW1vdDJj?=
- =?utf-8?B?SzNHT1VPamVMRFovSnlQRkZHbk1zR0JVOUN3ZFJnSFF5Z09LeFYvSEJBZFFM?=
- =?utf-8?B?dXJQVUtDcUk5MWZ4N0Z6YUdhQWJXUVl6VWVNbnJEa003UDUyU1I4MFB1MXVQ?=
- =?utf-8?B?VkFrN0ppU29heVF2SkxBMDZTRTdCSlZORkVBUUl6QjMvRzlWcVRuNXI2Vkw2?=
- =?utf-8?B?ak1hd01RZno3bUV0aHFZM1lPaGpmRUwyNmM4a0YwZko1UUorZHZnSUNlWHJX?=
- =?utf-8?B?cDJBOW9LdHJIZmZqZTFNNVdqSW9iSkc2UEJwUnpEV0NlNHhEMmVjKy9CdGF5?=
- =?utf-8?B?MU81MmcwUjhmOWh3M3d0b1pOY0VCRTJQQ2dLa1hGTnpNcXFMWWhtUjRsK2E4?=
- =?utf-8?B?dm9xVzE4cXc5aE5pQ20zL05ZVEtxSXlkK0JBdHQwYU9YYUEwRzdEaThlUVlM?=
- =?utf-8?B?QURkU0pRUllhKzBZTHJVZi9RZ1BaZi9ma3JydXZicFJ3SU01YXAzbndOU2tV?=
- =?utf-8?B?TS9YS28rMkVPcmp4bWhBaVJuWU1rNHVuR0l3dmtBYzI2VzBlY3JoYUJWcTN1?=
- =?utf-8?B?MitrcGpHemMyK3h2RVBRYU9oa3ZNWG5DQVNsbTRWRWpSNm4waDd6Q0ZFMlJP?=
- =?utf-8?B?Qk55RXk1RVdqQ0orNW9DZWRBeDhQdzBCb1U0dWtDVnhxWHB0M0hiMGNoSktQ?=
- =?utf-8?B?aFRJb3UvM2gxb252VUFnM3Y1SUpZNGN5eXd4cW9vTjJ2cUlMRUdsTk44bWg0?=
- =?utf-8?B?N2hZT3lTbVA5MmlUWVg5L1VhRU4vM055VkFLZkllRDlkUERMbDZEQ1dBRzMz?=
- =?utf-8?B?WWk1T09pYlNoTUNMVFFuYjE2V3hhVTBKcFBsdXJnL2sxdXZSYXN2SnBvN0dj?=
- =?utf-8?B?aDlKcHVxeEpuRXNnWEhNeFJxbTlDa0kwMUtzK1Rmc0FzRUFLU2gwN09aS0sv?=
- =?utf-8?B?eSs3YUQvWk5mVDhpQithc3FDSDQrM1VQNXV4cHBYbVhxYU1BYjYwYnRxSVpi?=
- =?utf-8?B?S1k3Rk1jSVM4SnhzZ09WdTBueEJVa0hhdWpZRGhHVTdTN1VuUUZOZEU2WEF1?=
- =?utf-8?B?VnpzeWhVWWlFQmk4aWRnWnRqWXBqRVZreWxlc3lzOUh5N2xJaXFRTkxxMk13?=
- =?utf-8?B?RkZ4SjUyWGJnK2hTTUpqTCtqcFNCTDVocVJVTDNhY01CcjZoQTZPS2hoOUUw?=
- =?utf-8?B?M1JoRmlnS1BQNDY1dnR5RkwwYXpBOUZMMDBNcWFyUHVsRU44MmJCa0RyS2VZ?=
- =?utf-8?B?RmpVOXBjQW1WM0puS2JUV1BnZjRaWFVQUURITyt1SXplakkyU0xBU04wSXF3?=
- =?utf-8?B?VjZyanpFNGl3UzBTQnRDckVQYmliWjhkZ2EyK2lrMGVrUCtBMThRbjB5OXBU?=
- =?utf-8?B?MDVma3g4OXFHbnBkUlQ1VGdzNXBadmxBcU9WbDcxcStQNEp5dDdSVktmbFdz?=
- =?utf-8?B?YmdtTEpOZTZjdVNadllxL1lxRndNRUFnNDhtNFlXeU0zdWJsckxxamFFRHRD?=
- =?utf-8?B?aTJrRXBHR005WWNTRDB2Zz09?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5958.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?aVRIYnA0bXJKOFdjZTFZR045bEFUb3d1MndmbFZhQzdpL1Z4eitGTEtDVmtu?=
- =?utf-8?B?TjREc0xtUnFkTFhuTkZBMTMzaGpqcEk1enR6VDdPcnFpQTRndHpmb1ZUMmgz?=
- =?utf-8?B?cXErbmtqRVhYWGhXUXMyaWVEYU5hVmtnaXNjaUxLY21qVldsOVd4ZENxUGEw?=
- =?utf-8?B?V2E1OE1ydG5BdDBhUWp3emZNd2hmdmlTMUZlc05XalkzUW5PaHd0ZWV6WXRT?=
- =?utf-8?B?UmRRSWNjNGFvM0hqTXNWQllHYU5ka0dYakYzQVJuODUyejdpcnE5RVI2ajdB?=
- =?utf-8?B?U0srKzFVN2JVSHYrWlQwbnhKaGhiUkNpSis1ZWpqUmUzSlcyb0FuTDNjb2dt?=
- =?utf-8?B?RE8rNEUwSk1zS2x3SWVwRC9KeGZGaG1EdDNod2FHZzViZzVrdlZOYzJ0OEgz?=
- =?utf-8?B?V21ZSFBvRlMrNzZMNWFFV3U5a2JNZno1ZWlTV3dTNmhubVBXMElJT3ZZUVE3?=
- =?utf-8?B?Tk8wWExTNlNPWXlPM3hqTEJONE5XVEl1eGdRYURrVGRhOVFmWjQ4QmtLS3FZ?=
- =?utf-8?B?L09xMTNwSSt2RTcyd0xKWmVtb3VPL2xqNElqeDlRNTJqb1RLRFRnMnlnT1BT?=
- =?utf-8?B?NHRYbnhSWTFpYTZIUnBBdnVBNnpTeVQ0QUJRcjdCYmlZcmRXcVFBVWc1VUFz?=
- =?utf-8?B?cTJ1bkVwTGtGKytGQnE1ZWtPUTEvNHhYU0M1K2g2dGFzbmFERFVaZ00zcGFQ?=
- =?utf-8?B?SUlzQmdyaFV4QlBTRktGZHlLQjU1ek9QMHV4QldydmlDRUFrVUVSSklhZG4r?=
- =?utf-8?B?REViWlR5Q25EU1cyeE4wcWhUaHF0aCtEYXBrcVEzQjFXWktjNFpPMGZpYTVx?=
- =?utf-8?B?RHp0WE0vUkcyVnZVWUlwQ0ducmhVb0JrZXVRcmlFNHk1MFhOZ1JCU0RBT21Y?=
- =?utf-8?B?eWZFdFJrVnVYOU9tWTRUV2JWdU5GMEc1MnBXV3BaOXhZd3k5WDAyUCtaL2Rv?=
- =?utf-8?B?Vm5TQmlOaFl6WTd3V3FvTjgvV1VCVFpsQUY3VWpUbStBd1FuOGxBUSt2a2Vq?=
- =?utf-8?B?d3lqN2VZdUYxWWlrMW01eTd1YXVzUExXazNnOHlDWHBrdnlTZUp5dDcxd3Vr?=
- =?utf-8?B?K0Yrb0hRU1JLRFNMb3d3aVo2eDFaSkNoeEs0VE9mTG5hdDEwSDBWc0FZZUtp?=
- =?utf-8?B?d3AyazlWejc4SjdDR3V0eU1kUi9LR2FyaGhqdHhDNk53dnN0bTlmdDEwdUlu?=
- =?utf-8?B?OWtPdmp0Z0xRdG9ZUytwaTV4a3VLN0hMNUZSZ2FyR0QwdUNJZ29WbFhPTkF5?=
- =?utf-8?B?WFRSTVNDQVpib05EUkV3dlBXQ29saEpiOFhjdXRtUW1OU3FXTlRhZkY1YmlX?=
- =?utf-8?B?dFlOS3Q3em9YYzZac25CWDVBQW1EZEZTVlhmRXUrVlo2QlFxS0hhMnUvd29v?=
- =?utf-8?B?aDBIM3N3bklLTGNQeGRnRHk1SlF0SGhHc0JrcndZd0NCSG5QZ2k0ckpqY2h4?=
- =?utf-8?B?dktUM0pDbWVudEErZFdHZ0RPb0V5bWVmb2d1REY4a01Ud0EyS0ZFWUVKdjF6?=
- =?utf-8?B?aHpIMTFlRDdqbkZuZTZ3T2VnTk0zL29tUEFzdXlCa1NRSGhqZDdPSWcvNlF5?=
- =?utf-8?B?dTk3alVZeDdDMWNHUkUzU1FaenJsV3QzSytwcTQ2VzMyNDFDUzFKVUpPY1c1?=
- =?utf-8?B?WmVzNWtrd0IvUVkxdVNIcStzdkk1VnlCTVZlUURNRFV2dmhJc2tzb3NaSjJ4?=
- =?utf-8?B?MzRzQWRLWTNqY3FYSVJVUE9MNlpVSnpwaVgxQjM2TlZJUVVYaXVJTm1vUXU1?=
- =?utf-8?B?L3JSUzlrVlVSemlTQ3lPc1pzSzZTOGRQMTdxUU5GVXlKUHpwQVZNS1pCTVk2?=
- =?utf-8?B?NkhydEdXK2RPZ3ZZRlhvWEtmOWNFN09OdWtPSXkwT1oxd2c0ekg1WHlWN2I4?=
- =?utf-8?B?akdXWUFEL1JyMW5aS21tNFdGdi9YZEtFb1QrcnllUHlBWVVWeGsvc2hZbVBh?=
- =?utf-8?B?bUhvb3FoTUxuOVF2MFJUamttZ2pSR0dkTy9QR3Y0azc4TlViVnJOcFk2bnUz?=
- =?utf-8?B?c1UvUWdqalI0RGVnNEg2S2REQkdBQzRCRGMydVV6V1RTV2VQMGxuUHlBL1Nu?=
- =?utf-8?B?TURTNStPRmdtTHFwOG1RWE5RZXhVZWlhNEpqbnYyRGl1d3lFaktyWktQSnBZ?=
- =?utf-8?B?Y2oyQWpMc0lhQUszMVRSQUhxRDNJaFFMbU9zaGt2aU1WUFNGWWtvWVJ5bk95?=
- =?utf-8?B?eEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC04F2CA5;
+	Fri, 24 May 2024 23:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716591736; cv=none; b=lX0jnSe5LtVsq+cxQl50XRQ/bPGGyOnuJeL42lS+HFp0eoTtPgywJrRs5n4rAA8/ASqwwDu8n6Sr0Ez1WsiQSTgVwH2T1pmFyhO0hNnuEpZoQLKTFgOVuT6Qr5xiRl86FBp1E9jFQhZk3tEY0wJRRMU1zRcAw9/uXGoXSjCwWY0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716591736; c=relaxed/simple;
+	bh=Gnn5Xv9Qcs364ddbudnym2g5GORqRyPIb/5Ysixtoto=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iAXk2JOwh79/T5WLcyyjIAHUtYL+4N+xmMw9xYOwxCKTAZYLoTN7J9mpQlKJ6A/fNROThcak6ixyj0QvsRwymZWvSZ+rlF8CcB5Cy/epdgO3pbnqZUp6H+7DnSkA7c1kTgsF/eDqnD+9350i5QgVosRJvPasU+pXUNIuDomJKE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2bf5bbab573so1177366a91.3;
+        Fri, 24 May 2024 16:02:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716591734; x=1717196534;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K7+ndk9pXytc1tQUM2OxGsjKo2Ys8ENhjStBvUT/bH8=;
+        b=QTjyUPVaWC9bqzLXZSEwvC3wWo0kaKeFo/N14+s8W4/b0v0uDkWhcre8rRbb0WJt//
+         Iosrwc+49R+0xXYOwjQYYh+7zk2jIrlb5D+zpachtSErILO7NRWES3XHgjygtnOcSVPt
+         v/oEDIXqsEMZcM9tAky3MtFRs+AO6T/QwJyiUR0NnQ9yXRNNuVp/mEOUaGOGbE39qwCQ
+         yE4/+T3U740O+vG/TimIQSMhcJgmjvkRLhPFWKi5WES6aqbK91lbnhIVYKZCmxhnY8Ux
+         Nkt3gA8jtwTzG9xjfLWtxjmPPVoWRB80ygziq8srdxApYpi7p0jOIthlb6J+kIqj4KZK
+         e9IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKC5PPbuD0c4rwEcyZX/CRPkaIh9Wt8SqVTcN5OkhzUudg8F1QihlI6MNqgVp1E3mPKynV/l5zhKg96Im0pN45CqJm3OQ0LLMppQHklOseURBvzSFtEE8CMDfpRClK9pHPBO1DcTPNMadlnNN2vw==
+X-Gm-Message-State: AOJu0YykF/UWoU2e3jnWdA1LUcucATDYyNx8QYncRWgnwL6xXigkpkOy
+	rBCbAYwrtzAjEUcnTJyKQpiNDOIwKmnXrvE5Dz365iTgEiqfMyp3wVxy1sjuwt/hpM9H32J958M
+	22UthFiJvTA6eXoXK15z70XF17BI=
+X-Google-Smtp-Source: AGHT+IH1Bd/WYYqteAimX60wPBuIN/yU1a8Qo+VDyx23mZ4FWyQqqtwduoHNDhy0EFS/I/ZdOa9IYFd27Ekbniw4mV4=
+X-Received: by 2002:a17:90a:d485:b0:2bd:7e38:798e with SMTP id
+ 98e67ed59e1d1-2bf5ee1ed82mr3221858a91.28.1716591733759; Fri, 24 May 2024
+ 16:02:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: onsemi.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB5958.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48a6513b-4aed-4139-c9c3-08dc7c33692e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2024 20:52:22.9170
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 04e1674b-7af5-4d13-a082-64fc6e42384c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UwmIOkaSnhYs01eW2P+/QI8B7OZVEHFxxc6l5pfojI50J+gKYEygLZXFvc8SJ5nHMcTb6CzlfqLS5GJ1aek9l0kip++ysQoigdbryqlEZWA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB8547
-X-Proofpoint-GUID: 1tiqI6_CKLURukxKtiEJeMMvO_4sU6tW
-X-Proofpoint-ORIG-GUID: 1tiqI6_CKLURukxKtiEJeMMvO_4sU6tW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-24_07,2024-05-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 impostorscore=0
- suspectscore=0 mlxscore=0 phishscore=0 adultscore=0 clxscore=1011
- malwarescore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2405240150
+References: <20240521173952.3397644-1-weilin.wang@intel.com> <20240521173952.3397644-4-weilin.wang@intel.com>
+In-Reply-To: <20240521173952.3397644-4-weilin.wang@intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 24 May 2024 16:02:02 -0700
+Message-ID: <CAM9d7cg5j486Bpanqdu9KeZ4oNt091q4bd7E7zWs27ncTCLrvQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v9 3/7] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: weilin.wang@intel.com
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-QW5kcmV3L1BhcnRoaWJhbiwNCg0KU29ycnkgSSBjb3VsZG4ndCBnZXQgYmFjayBlYXJsaWVyIG9u
-IHRoaXMgc3ViamVjdCBhcyBJIGp1c3QgaGFkIHRvIHRpbWUgcmV2aWV3IHRoZSBvcmdhbml6YXRp
-b24gb2YgdGhlIGNvZGUgd2l0aCByZXNwZWN0IHRvIG91ciBkZXZpY2UuIA0KSSBoYXZlIGEgcHJv
-cG9zYWwgZm9yIHRoZSB3YXkgTURJTyBBUElzIGFyZSBpbXBsZW1lbnRlZCBpbiBjb21tb24gY29k
-ZSAob2FfdGM2LmMpLg0KDQpBdCBwcmVzZW50LCBtaWlfYnVzIHN0cnVjdHVyZSBpcyBpbiBjb21t
-b24gY29kZSB3aXRob3V0IGFueSB2aXNpYmlsaXR5IHRvIHZlbmRvciBzcGVjaWZpYyBjb2RlLiBU
-aG91Z2ggdGhpcyBpcyBhIGdvb2QgZGVzaWduIHRvIGdldCBjb25zaXN0ZW50DQpiZWhhdmlvciBi
-ZXR3ZWVuIGRpZmZlcmVudCB2ZW5kb3JzLCB3ZSBjYW4ndCBjdXN0b21pemUgdGhlIGZ1bmN0aW9u
-cyBzdG9yZWQgaW4gIHJlYWQsIHdyaXRlLCByZWFkX2M0NSwgYW5kIHdyaXRlX2M0NSBmdW5jdGlv
-biBwb2ludGVycy4NCg0KSW4gb3VyIE1ESU8gZnVuY3Rpb25zLCB3ZSBkbyBjZXJ0YWluIHRoaW5n
-cyBiYXNlZCBvbiBQSFkgSUQsIGFsc28gb3VyIGRyaXZlciBkZWFsIHdpdGggdmVuZG9yIHNwZWNp
-ZmljIHJlZ2lzdGVyLCBNTVMgMTIgKHJlZmVyIFRhYmxlIDYgaW4gc2VjdGlvbiA5LjENCk9wZW4g
-QWxsaWFuY2UgTUFDLVBIWSBTZXJpYWwgaW50ZXJmYWNlIHNwZWNpZmljYXRpb24gZG9jdW1lbnQu
-KQ0KDQpJIGhvcGUgaXQgaXMgbm90IHVuY29tbW9uIHRvIGV4cGVjdCB0aGUgYWJpbGl0eSB0byBp
-bXBsZW1lbnQgdmVuZG9yIHNwZWNpZmljIG1kaW8gcmVhZC93cml0ZS4gQXQgcHJlc2VudCwgdGhl
-cmUgaXMgbm8gYWx0ZXJuYXRpdmUNCnRvIGZ1bmN0aW9ucyBsaWtlIG9hX3RjNl9tZGlvYnVzX3Jl
-YWQsIG9hX3RjNl9tZGlvYnVzX3dyaXRlLCBvYV90YzZfbWRpb2J1c19yZWFkX2M0NSwgYW5kIG9h
-X3RjNl9tZGlvYnVzX3dyaXRlX2M0NS4NCg0KSSBhbSBzdXJlIHdlIGNhbiByZXNvbHZlIHRoaXMg
-aXNzdWUgaW4gbWFueSB3YXlzLiAgT25lIHdheSBpcyB0byBwcm92aWRlIGEgcHVibGljIGZ1bmN0
-aW9uIHRvIHBvcHVsYXRlIG1paV9idXMgcG9pbnRlciAodGM2LT5tZGlvYnVzDQppbiB0aGUgY29k
-ZSkgZnJvbSB0aGUgdmVuZG9yIGRyaXZlciwgb3IgcHJvdmlkZSBhIHdheSB0aGUgcGFzcyB3aGVu
-IHdlIGNhbGwgb2FfdGM2X2luaXQuDQoNClZlbmRvcnMgd2hvIGRvbid0IHJlcXVpcmUgc3VjaCBj
-dXN0b21pemF0aW9uIGNhbiB1c2UgZXhpc3RpbmcgZnVuY3Rpb25hbGl0eS4gVGhvc2Ugd2hvIHJl
-cXVpcmUgY3VzdG9taXphdGlvbiwgY2FuIGhhdmUgZXh0cmEgY29kZQ0KYmVmb3JlIGNhbGxpbmcg
-dGhpcyBzdGFuZGFyZCBNRElPIGZ1bmN0aW9ucy4NCg0KU2luY2VyZWx5DQpTZWx2YQ0KDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFBhcnRoaWJhbi5WZWVyYXNvb3JhbkBt
-aWNyb2NoaXAuY29tDQo+IDxQYXJ0aGliYW4uVmVlcmFzb29yYW5AbWljcm9jaGlwLmNvbT4NCj4g
-U2VudDogRnJpZGF5LCBNYXkgMTAsIDIwMjQgNDoyMiBBTQ0KPiBUbzogYW5kcmV3QGx1bm4uY2gN
-Cj4gQ2M6IGRhdmVtQGRhdmVtbG9mdC5uZXQ7IGVkdW1hemV0QGdvb2dsZS5jb207IGt1YmFAa2Vy
-bmVsLm9yZzsNCj4gcGFiZW5pQHJlZGhhdC5jb207IGhvcm1zQGtlcm5lbC5vcmc7IHNhZWVkbUBu
-dmlkaWEuY29tOw0KPiBhbnRob255Lmwubmd1eWVuQGludGVsLmNvbTsgbmV0ZGV2QHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGNvcmJldEBsd24ubmV0
-OyBsaW51eC1kb2NAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IGtyenlz
-enRvZi5rb3psb3dza2krZHRAbGluYXJvLm9yZzsNCj4gY29ub3IrZHRAa2VybmVsLm9yZzsgZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IEhvcmF0aXUuVnVsdHVyQG1pY3JvY2hpcC5jb207
-IHJ1YW5qaW5qaWVAaHVhd2VpLmNvbTsNCj4gU3RlZW4uSGVnZWx1bmRAbWljcm9jaGlwLmNvbTsg
-dmxhZGltaXIub2x0ZWFuQG54cC5jb207DQo+IFVOR0xpbnV4RHJpdmVyQG1pY3JvY2hpcC5jb207
-DQo+IFRob3JzdGVuLkt1bW1lcm1laHJAbWljcm9jaGlwLmNvbTsgUGllcmdpb3JnaW8gQmVydXRv
-DQo+IDxQaWVyLkJlcnV0b0BvbnNlbWkuY29tPjsgU2VsdmFtYW5pIFJhamFnb3BhbA0KPiA8U2Vs
-dmFtYW5pLlJhamFnb3BhbEBvbnNlbWkuY29tPjsgTmljb2xhcy5GZXJyZUBtaWNyb2NoaXAuY29t
-Ow0KPiBiZW5qYW1pbi5iaWdsZXJAYmVybmZvcm11bGFzdHVkZW50LmNoDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggbmV0LW5leHQgdjQgMDAvMTJdIEFkZCBzdXBwb3J0IGZvciBPUEVOIEFsbGlhbmNl
-DQo+IDEwQkFTRS1UMXggTUFDUEhZIFNlcmlhbCBJbnRlcmZhY2UNCj4gDQo+IFtFeHRlcm5hbCBF
-bWFpbF06IFRoaXMgZW1haWwgYXJyaXZlZCBmcm9tIGFuIGV4dGVybmFsIHNvdXJjZSAtIFBsZWFz
-ZQ0KPiBleGVyY2lzZSBjYXV0aW9uIHdoZW4gb3BlbmluZyBhbnkgYXR0YWNobWVudHMgb3IgY2xp
-Y2tpbmcgb24gbGlua3MuDQo+IA0KPiBIaSBBbmRyZXcsDQo+IA0KPiBPbiAxMC8wNS8yNCAyOjA5
-IGFtLCBBbmRyZXcgTHVubiB3cm90ZToNCj4gPiBFWFRFUk5BTCBFTUFJTDogRG8gbm90IGNsaWNr
-IGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdQ0KPiBrbm93IHRoZSBjb250ZW50
-IGlzIHNhZmUNCj4gPg0KPiA+IE9uIFRodSwgTWF5IDA5LCAyMDI0IGF0IDAxOjA0OjUyUE0gKzAw
-MDAsDQo+IFBhcnRoaWJhbi5WZWVyYXNvb3JhbkBtaWNyb2NoaXAuY29tIHdyb3RlOg0KPiA+PiBI
-aSBBbmRyZXcsDQo+ID4+DQo+ID4+IE9uIDA4LzA1LzI0IDEwOjM0IHBtLCBBbmRyZXcgTHVubiB3
-cm90ZToNCj4gPj4+IEVYVEVSTkFMIEVNQUlMOiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBh
-dHRhY2htZW50cyB1bmxlc3MgeW91DQo+IGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZQ0KPiA+Pj4N
-Cj4gPj4+PiBZZXMuIEkgdHJpZWQgdGhpcyB0ZXN0LiBJdCB3b3JrcyBhcyBleHBlY3RlZC4NCj4g
-Pj4+DQo+ID4+Pj4gICAgICBFYWNoIExBTjg2NTEgcmVjZWl2ZWQgYXBwcm94aW1hdGVseSAzTWJw
-cyB3aXRoIGxvdCBvZg0KPiAiUmVjZWl2ZSBidWZmZXINCj4gPj4+PiBvdmVyZmxvdyBlcnJvciIu
-IEkgdGhpbmsgaXQgaXMgZXhwZWN0ZWQgYXMgdGhlIHNpbmdsZSBTUEkgbWFzdGVyIGhhcyB0bw0K
-PiA+Pj4+IHNlcnZlIGJvdGggTEFOODY1MSBhdCB0aGUgc2FtZSB0aW1lIGFuZCBib3RoIExBTjg2
-NTEgd2lsbCBiZQ0KPiByZWNlaXZpbmcNCj4gPj4+PiAxME1icHMgb24gZWFjaC4NCj4gPj4+DQo+
-ID4+PiBUaGFua3MgZm9yIHRlc3RpbmcgdGhpcy4NCj4gPj4+DQo+ID4+PiBUaGlzIGFsc28gc2hv
-d3MgdGhlICJSZWNlaXZlIGJ1ZmZlciBvdmVyZmxvdyBlcnJvciIgbmVlZHMgdG8gZ28NCj4gYXdh
-eS4NCj4gPj4+IEVpdGhlciB3ZSBkb24ndCBjYXJlIGF0IGFsbCwgYW5kIHNob3VsZCBub3QgZW5h
-YmxlIHRoZSBpbnRlcnJ1cHQsIG9yDQo+ID4+PiB3ZSBkbyBjYXJlIGFuZCBzaG91bGQgaW5jcmVt
-ZW50IGEgY291bnRlci4NCj4gPj4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLiBJIHRoaW5rLCBJ
-IHdvdWxkIGdvIGZvciB5b3VyIDJuZCBwcm9wb3NhbA0KPiA+PiBiZWNhdXNlIGhhdmluZyAiUmVj
-ZWl2ZSBidWZmZXIgb3ZlcmZsb3cgZXJyb3IiIGVuYWJsZWQgd2lsbCBpbmRpY2F0ZQ0KPiB0aGUN
-Cj4gPj4gY2F1c2Ugb2YgdGhlIHBvb3IgcGVyZm9ybWFuY2UuDQo+ID4+DQo+ID4+IEFscmVhZHkg
-d2UgaGF2ZSwNCj4gPj4gdGM2LT5uZXRkZXYtPnN0YXRzLnJ4X2Ryb3BwZWQrKzsNCj4gPj4gdG8g
-aW5jcmVtZW50IHRoZSByeCBkcm9wcGVkIGNvdW50ZXIgaW4gY2FzZSBvZiByZWNlaXZlIGJ1ZmZl
-cg0KPiBvdmVyZmxvdy4NCj4gPj4NCj4gPj4gTWF5IGJlIHdlIGNhbiByZW1vdmUgdGhlIHByaW50
-LA0KPiA+PiBuZXRfZXJyX3JhdGVsaW1pdGVkKCIlczogUmVjZWl2ZSBidWZmZXIgb3ZlcmZsb3cg
-ZXJyb3JcbiIsDQo+ID4+IHRjNi0+bmV0ZGV2LT5uYW1lKTsNCj4gPj4gYXMgaXQgbWlnaHQgbGVh
-ZCB0byBhZGRpdGlvbmFsIHBvb3IgcGVyZm9ybWFuY2UgYnkgYWRkaW5nIHNvbWUNCj4gZGVsYXku
-DQo+ID4+DQo+ID4+IENvdWxkIHlvdSBwbGVhc2UgcHJvdmlkZSB5b3VyIG9waW5pb24gb24gdGhp
-cz8NCj4gPg0KPiA+IFRoaXMgaXMgeW91ciBjb2RlLiBJZGVhbGx5IHlvdSBzaG91bGQgZGVjaWRl
-LiBJIHdpbGwgb25seSBhZGQgcmV2aWV3DQo+ID4gY29tbWVudHMgaWYgaSB0aGluayBpdCBpcyB3
-cm9uZy4gQW55IGNhbiBkZWNpZGUgYmV0d2VlbiBhbnkgY29ycmVjdA0KPiA+IG9wdGlvbi4NCj4g
-U3VyZSwgdGhhbmtzIGZvciB5b3VyIGFkdmljZS4gTGV0IG1lIHN0aWNrIHdpdGggdGhlIGFib3Zl
-IHByb3Bvc2FsIHVudGlsDQo+IEkgZ2V0IGFueSBvdGhlcnMgb3Bpbmlvbi4NCj4gDQo+IEJlc3Qg
-cmVnYXJkcywNCj4gUGFydGhpYmFuIFYNCj4gPg0KPiA+ICAgICAgICAgIEFuZHJldw0KPiA+DQoN
-Cg==
+Hello,
+
+On Tue, May 21, 2024 at 10:40=E2=80=AFAM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> When retire_latency value is used in a metric formula, perf stat would fo=
+rk a
+> perf record process with "-e" and "-W" options. Perf record will collect
+> required retire_latency values in parallel while perf stat is collecting
+> counting values.
+>
+> At the point of time that perf stat stops counting, it would send sigterm=
+ signal
+> to perf record process and receiving sampling data back from perf record =
+from a
+> pipe. Perf stat will then process the received data to get retire latency=
+ data
+> and calculate metric result.
+>
+> Another thread is required to synchronize between perf stat and perf reco=
+rd
+> when we pass data through pipe.
+>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  tools/perf/builtin-stat.c     |  17 ++
+>  tools/perf/util/Build         |   1 +
+>  tools/perf/util/intel-tpebs.c | 301 ++++++++++++++++++++++++++++++++++
+>  tools/perf/util/intel-tpebs.h |  30 ++++
+>  tools/perf/util/stat.h        |   1 +
+>  5 files changed, 350 insertions(+)
+>  create mode 100644 tools/perf/util/intel-tpebs.c
+>  create mode 100644 tools/perf/util/intel-tpebs.h
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 428e9721b908..c0e9dfa3b3c2 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -70,6 +70,7 @@
+>  #include "util/bpf_counter.h"
+>  #include "util/iostat.h"
+>  #include "util/util.h"
+> +#include "util/intel-tpebs.h"
+>  #include "asm/bug.h"
+>
+>  #include <linux/time64.h>
+> @@ -162,6 +163,7 @@ static struct perf_stat_config stat_config =3D {
+>         .ctl_fd                 =3D -1,
+>         .ctl_fd_ack             =3D -1,
+>         .iostat_run             =3D false,
+> +       .tpebs_pid              =3D -1,
+
+Where is this set?
+
+>  };
+>
+>  static void evlist__check_cpu_maps(struct evlist *evlist)
+> @@ -653,6 +655,8 @@ static enum counter_recovery stat_handle_error(struct=
+ evsel *counter)
+>
+>         if (child_pid !=3D -1)
+>                 kill(child_pid, SIGTERM);
+> +       if (stat_config.tpebs_pid !=3D -1)
+> +               stop_tpebs();
+>         return COUNTER_FATAL;
+>  }
+>
+> @@ -673,6 +677,10 @@ static int __run_perf_stat(int argc, const char **ar=
+gv, int run_idx)
+>         int err;
+>         bool second_pass =3D false;
+>
+> +       err =3D start_tpebs(&stat_config, evsel_list);
+> +       if (err < 0)
+> +               return err;
+> +
+>         if (forks) {
+>                 if (evlist__prepare_workload(evsel_list, &target, argv, i=
+s_pipe, workload_exec_failed_signal) < 0) {
+>                         perror("failed to prepare workload");
+> @@ -878,6 +886,10 @@ static int __run_perf_stat(int argc, const char **ar=
+gv, int run_idx)
+>
+>         t1 =3D rdclock();
+>
+> +       err =3D stop_tpebs();
+> +       if (err < 0)
+> +               return err;
+> +
+>         if (stat_config.walltime_run_table)
+>                 stat_config.walltime_run[run_idx] =3D t1 - t0;
+>
+> @@ -985,6 +997,9 @@ static void sig_atexit(void)
+>         if (child_pid !=3D -1)
+>                 kill(child_pid, SIGTERM);
+>
+> +       if (stat_config.tpebs_pid !=3D -1)
+> +               kill(stat_config.tpebs_pid, SIGTERM);
+> +
+>         sigprocmask(SIG_SETMASK, &oset, NULL);
+>
+>         if (signr =3D=3D -1)
+> @@ -2918,5 +2933,7 @@ int cmd_stat(int argc, const char **argv)
+>         metricgroup__rblist_exit(&stat_config.metric_events);
+>         evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack,=
+ &stat_config.ctl_fd_close);
+>
+> +       tpebs_data__delete();
+> +
+>         return status;
+>  }
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 292170a99ab6..c9f1d0bb6bf8 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -153,6 +153,7 @@ perf-y +=3D clockid.o
+>  perf-y +=3D list_sort.o
+>  perf-y +=3D mutex.o
+>  perf-y +=3D sharded_mutex.o
+> +perf-y +=3D intel-tpebs.o
+
+Can we make this Intel (or x86) only?
+
+>
+>  perf-$(CONFIG_LIBBPF) +=3D bpf_map.o
+>  perf-$(CONFIG_PERF_BPF_SKEL) +=3D bpf_counter.o
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.=
+c
+> new file mode 100644
+> index 000000000000..13f65e39a845
+> --- /dev/null
+> +++ b/tools/perf/util/intel-tpebs.c
+> @@ -0,0 +1,301 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * intel_tpebs.c: Intel TPEBS support
+> + */
+> +
+> +
+> +#include <sys/param.h>
+> +#include <subcmd/run-command.h>
+> +#include <thread.h>
+> +#include "intel-tpebs.h"
+> +#include <linux/list.h>
+> +#include <linux/zalloc.h>
+> +#include <linux/err.h>
+> +#include "sample.h"
+> +#include "debug.h"
+> +#include "evlist.h"
+> +#include "evsel.h"
+> +#include "session.h"
+> +#include "tool.h"
+> +#include "metricgroup.h"
+> +#include <sys/stat.h>
+> +#include <sys/file.h>
+> +#include <poll.h>
+> +
+> +#define PERF_DATA              "-"
+> +
+> +struct list_head tpebs_results =3D LIST_HEAD_INIT(tpebs_results);
+
+static LIST_HEAD(tpebs_results);
+
+
+> +static pthread_t reader_thread;
+> +static struct child_process *cmd;
+
+Maybe better to have the 'tpebs_' prefix.
+
+
+> +static struct perf_stat_config *stat_config;
+
+Is this really needed? ...
+
+
+> +static size_t tpebs_event_size;
+> +
+> +static int get_perf_record_args(const char **record_argv, char buf[])
+
+... I think you can just pass the stat_config argument
+from start_tpebs().
+
+> +{
+> +       struct tpebs_retire_lat *e;
+> +       int i =3D 0;
+> +
+> +       pr_debug("Prepare perf record for retire_latency\n");
+> +
+> +       record_argv[i++] =3D "perf";
+> +       record_argv[i++] =3D "record";
+> +       record_argv[i++] =3D "-W";
+> +       record_argv[i++] =3D "--synth=3Dno";
+> +       record_argv[i++] =3D buf;
+> +
+> +       if (stat_config->user_requested_cpu_list) {
+> +               record_argv[i++] =3D "-C";
+> +               record_argv[i++] =3D stat_config->user_requested_cpu_list=
+;
+> +       }
+> +
+> +       if (stat_config->system_wide)
+> +               record_argv[i++] =3D "-a";
+> +
+> +       if (!stat_config->system_wide && !stat_config->user_requested_cpu=
+_list) {
+> +               pr_err("Require -a or -C option to run sampling.\n");
+> +               return -ECANCELED;
+> +       }
+> +
+> +       list_for_each_entry(e, &tpebs_results, nd) {
+> +               record_argv[i++] =3D "-e";
+> +               record_argv[i++] =3D e->name;
+> +       }
+> +
+> +       record_argv[i++] =3D "-o";
+> +       record_argv[i++] =3D PERF_DATA;
+> +
+> +       return 0;
+> +}
+> +
+> +static int prepare_run_command(const char **argv)
+> +{
+> +       cmd =3D zalloc(sizeof(struct child_process));
+> +       if (!cmd)
+> +               return -ENOMEM;
+> +       cmd->argv =3D argv;
+> +       cmd->out =3D -1;
+> +       return 0;
+> +}
+> +
+> +static int prepare_perf_record(int control_fd[], int ack_fd[])
+> +{
+> +       const char **record_argv;
+> +       int ret;
+> +       char buf[32];
+> +
+> +       scnprintf(buf, sizeof(buf), "--control=3Dfd:%d,%d", control_fd[0]=
+, ack_fd[1]);
+> +
+> +       record_argv =3D calloc(12 + 2 * tpebs_event_size, sizeof(char *))=
+;
+> +       if (!record_argv)
+> +               return -ENOMEM;
+> +
+> +       ret =3D get_perf_record_args(record_argv, buf);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret =3D prepare_run_command(record_argv);
+> +       if (ret)
+> +               goto out;
+> +       ret =3D start_command(cmd);
+> +out:
+> +       free(record_argv);
+> +       return ret;
+> +}
+
+Please add a blank line.
+
+
+> +struct sample_data_reader {
+> +       struct perf_tool        tool;
+> +       struct perf_session     *session;
+
+You don't need this, right?  Why not pass the 'tool' directly?
+
+> +};
+> +
+> +static void tpebs_retire_lat__delete(struct tpebs_retire_lat *r)
+> +{
+> +       zfree(&r->name);
+> +       zfree(&r->tpebs_name);
+> +       free(r);
+> +}
+> +
+> +void tpebs_data__delete(void)
+> +{
+> +       struct tpebs_retire_lat *r, *rtmp;
+> +
+> +       list_for_each_entry_safe(r, rtmp, &tpebs_results, nd) {
+> +               list_del_init(&r->nd);
+> +               tpebs_retire_lat__delete(r);
+> +       }
+> +       free(cmd);
+> +}
+> +
+> +static int process_sample_event(struct perf_tool *tool __maybe_unused,
+> +                               union perf_event *event __maybe_unused,
+> +                               struct perf_sample *sample,
+> +                               struct evsel *evsel,
+> +                               struct machine *machine __maybe_unused)
+> +{
+> +       int ret =3D 0;
+> +       const char *evname;
+> +       struct tpebs_retire_lat *t;
+> +
+> +       evname =3D evsel__name(evsel);
+> +
+> +       /*
+> +        * Need to handle per core results? We are assuming average retir=
+e
+
+I don't know.  It depends on the use case where you want
+different per-core retire-latency for the (per-core) metric.
+
+
+> +        * latency value will be used. Save the number of samples and the=
+ sum of
+> +        * retire latency value for each event.
+> +        */
+> +       list_for_each_entry(t, &tpebs_results, nd) {
+> +               if (!strcmp(evname, t->name)) {
+> +                       t->count +=3D 1;
+> +                       t->sum +=3D sample->retire_lat;
+> +                       t->val =3D (double) t->sum / t->count;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int process_feature_event(struct perf_session *session,
+> +                                union perf_event *event)
+> +{
+> +       if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> +               return perf_event__process_feature(session, event);
+> +       return 0;
+> +}
+> +
+> +static void *__sample_reader(void *arg)
+> +{
+> +       struct child_process *child =3D arg;
+> +       struct perf_session *session;
+> +       struct perf_data data =3D {
+> +               .mode =3D PERF_DATA_MODE_READ,
+> +               .path =3D PERF_DATA,
+> +               .file.fd =3D child->out,
+> +       };
+> +       struct sample_data_reader reader =3D {
+> +               .tool =3D {
+> +               .sample          =3D process_sample_event,
+> +               .feature         =3D process_feature_event,
+> +               .attr            =3D perf_event__process_attr,
+
+Strange indentations.
+
+
+> +               },
+> +       };
+> +
+> +       session =3D perf_session__new(&data, &reader.tool);
+> +       if (IS_ERR(session))
+> +               return NULL;
+> +       reader.session =3D session;
+> +       perf_session__process_events(session);
+> +       perf_session__delete(session);
+> +
+> +       return NULL;
+> +}
+> +
+> +
+> +int start_tpebs(struct perf_stat_config *perf_stat_config, struct evlist=
+ *evsel_list)
+> +{
+> +       int ret =3D 0;
+> +       struct evsel *evsel;
+> +
+> +       stat_config =3D perf_stat_config;
+> +       /*
+> +        * Prepare perf record for sampling event retire_latency before f=
+ork and
+> +        * prepare workload
+> +        */
+> +       evlist__for_each_entry(evsel_list, evsel) {
+> +               if (evsel->retire_lat) {
+
+To reduce the indentation, consider early continue like
+
+    if (!evsel->retire_lat)
+        continue;
+
+
+> +                       struct tpebs_retire_lat *new =3D malloc(sizeof(st=
+ruct tpebs_retire_lat));
+
+I prefer sizeof(*new) instead but it doesn't matter.  But you might use
+zalloc() and forget about the 0 initialization later.
+
+> +                       int i;
+> +                       char *name;
+> +
+> +                       pr_debug("perf stat retire latency %s required\n"=
+, evsel->name);
+> +                       if (!new)
+> +                               return -1;
+> +                       for (i =3D strlen(evsel->name) - 1; i > 0; i--) {
+> +                               if (evsel->name[i] =3D=3D 'R')
+> +                                       break;
+
+I remember Ian checked '/' and ':' too.  Otherwise it can detect
+R in the event name and treat it as a modifier.
+
+> +                       }
+> +                       if (i <=3D 0 || evsel->name[i] !=3D 'R')
+> +                               return -1;
+
+You need to free the memory here and other places.
+
+> +
+> +                       name =3D strdup(evsel->name);
+> +                       if (!name)
+> +                               return -ENOMEM;
+> +                       name[i] =3D 'p';
+> +                       new->name =3D strdup(name);
+> +                       free(name);
+
+Seems like an unnecessary allocation.  Why not use 'name'
+directly?
+
+> +                       new->tpebs_name =3D strdup(evsel->name);
+> +                       if (!new->tpebs_name)
+> +                               return -ENOMEM;
+
+Maybe orig_name?  But I'm not sure if it's really needed..
+Can we just teach perf record to understand 'R' and to act
+like 'p'?
+
+
+> +                       new->count =3D 0;
+> +                       new->sum =3D 0;
+> +                       list_add_tail(&new->nd, &tpebs_results);
+> +                       tpebs_event_size +=3D 1;
+> +               }
+> +       }
+> +
+> +       if (tpebs_event_size > 0) {
+> +               struct pollfd pollfd =3D { .events =3D POLLIN, };
+> +               int control_fd[2], ack_fd[2], len;
+> +               char ack_buf[8];
+> +
+> +               /*Create control and ack fd for --control*/
+> +               if (pipe(control_fd) < 0) {
+> +                       pr_err("Failed to create control fifo");
+> +                       return -1;
+> +               }
+> +               if (pipe(ack_fd) < 0) {
+> +                       pr_err("Failed to create control fifo");
+> +                       return -1;
+
+Need to close the pipes here and other places.
+
+> +               }
+> +
+> +               ret =3D prepare_perf_record(control_fd, ack_fd);
+> +               if (ret)
+> +                       return ret;
+> +               if (pthread_create(&reader_thread, NULL, __sample_reader,=
+ cmd)) {
+> +                       kill(cmd->pid, SIGTERM);
+> +                       close(cmd->out);
+> +                       pr_err("Could not create thread to process sample=
+ data.\n");
+> +                       return -1;
+> +               }
+> +               /* Wait for perf record initialization.*/
+> +               len =3D strlen("enable");
+> +               ret =3D write(control_fd[1], "enable", len);
+> +               if (ret !=3D len) {
+> +                       pr_err("perf record control write control message=
+ failed\n");
+> +                       goto out;
+> +               }
+> +
+> +               pollfd.fd =3D ack_fd[0];
+> +               if (!poll(&pollfd, 1, 2000))
+> +                       goto out;
+
+Do we need this?  Why not just read?
+
+> +
+> +               ret =3D read(ack_fd[0], ack_buf, sizeof(ack_buf));
+> +               if (ret > 0)
+> +                       ret =3D strcmp(ack_buf, "ack\n");
+> +               else {
+> +                       pr_err("perf record control ack failed\n");
+> +                       goto out;
+> +               }
+> +               pr_debug("Received ack from perf record\n");
+> +out:
+> +               close(control_fd[0]);
+> +               close(control_fd[1]);
+> +               close(ack_fd[0]);
+> +               close(ack_fd[1]);
+> +       }
+> +       return ret;
+> +}
+> +
+> +
+> +int stop_tpebs(void)
+> +{
+> +       int ret =3D 0;
+> +
+> +       if (tpebs_event_size > 0) {
+> +               kill(cmd->pid, SIGTERM);
+> +               pthread_join(reader_thread, NULL);
+> +               close(cmd->out);
+> +               ret =3D finish_command(cmd);
+> +               if (ret =3D=3D -ERR_RUN_COMMAND_WAITPID_SIGNAL)
+> +                       ret =3D 0;
+> +       }
+> +       return ret;
+> +}
+> diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.=
+h
+> new file mode 100644
+> index 000000000000..25e3e6729146
+> --- /dev/null
+> +++ b/tools/perf/util/intel-tpebs.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * intel_tpebs.h: Intel TEPBS support
+> + */
+> +#include "stat.h"
+> +
+> +#ifndef INCLUDE__PERF_INTEL_TPEBS_H__
+> +#define INCLUDE__PERF_INTEL_TPEBS_H__
+> +
+> +struct tpebs_retire_lat {
+> +       struct list_head nd;
+> +       /* Event name */
+> +       const char *name;
+> +       /* Event name with the TPEBS modifier R */
+> +       const char *tpebs_name;
+> +       /* Count of retire_latency values found in sample data */
+> +       size_t count;
+> +       /* Sum of all the retire_latency values in sample data */
+> +       int sum;
+> +       /* Average of retire_latency, val =3D sum / count */
+> +       double val;
+> +};
+> +
+> +extern struct list_head tpebs_results;
+> +
+> +int start_tpebs(struct perf_stat_config *perf_stat_config, struct evlist=
+ *evsel_list);
+> +int stop_tpebs(void);
+> +void tpebs_data__delete(void);
+
+I think it's better to have the same prefix.
+
+tpebs_start()
+tpebs_stop()
+tpebs_delete()
+
+Thanks,
+Namhyung
+
+> +
+> +#endif
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index fd7a187551bd..6e86311bc75e 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -110,6 +110,7 @@ struct perf_stat_config {
+>         struct cpu_aggr_map     *cpus_aggr_map;
+>         u64                     *walltime_run;
+>         struct rblist            metric_events;
+> +       pid_t                    tpebs_pid;
+>         int                      ctl_fd;
+>         int                      ctl_fd_ack;
+>         bool                     ctl_fd_close;
+> --
+> 2.43.0
+>
