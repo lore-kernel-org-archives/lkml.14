@@ -1,103 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACF2433C9
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 18:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B974AECA
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 18:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716575918; cv=none; b=ufqBxEnsmOEvCBrUwOujjzwicG/P1/an5hWmrNC7JjrBMM5sUZo5+JpsWyuyYKoPpnb0R04Zi4nOSbA4uvknjthtZb4peSmZHIbwoVz1VoE6sCA4I1pPidND7tx7y7V6768E6XF7utnEfVTFAUxwXGlCrwb+z0C6VOg2yJpWpoU=
+	t=1716575953; cv=none; b=Kptp8Z9prtiY+1+2P5YdpO4VT+V0E9Sxop9qNEhkwTUoajNRHW/YjAnG0QmUy97LGhMCahCN0up7d6oDTVb6XuXt20wPMpwAoxqf5ZVCn9BrCxlhUkpV9hb9GT9NjQYZ89LpcY9Q5Kl2Z7HI9Zv47Le0MhDipNgqjSXEcWfnxFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716575918; c=relaxed/simple;
-	bh=qkmiCTDIp+RlY9SVudQLTucZW/DhqQCY5MQH29yXiSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6HjpVd+h/5JB4aFEdo6Q5dv9Q+lUMDFa03vKCW9mxZBZYBJt4eyGL5BkBLeXrEFZWp8sqqAtFLGQcUq9j2r604mel2cLtk/FZBiCUp/B8QiVEg+uBAPqlYN41/4g0wfkL455r2a7DaT++x/YcSdvfyQiVZv0+xcom1gc3jJqvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DWhowe0b; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716575953; c=relaxed/simple;
+	bh=4BWDlFzmKgPu7pIeN9TGO2G9NGrk4rFNS9672TWXGuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MtDyq4pLEhGahDVGweXJl+bBiCkveckXVNWLredQz5iT/WWHKgU+YaB1+rxG6tq0D8RBn4Ap1J8hS4eHH/Ch2266bQkOkfOD32X4TXKoL0RHeVLxGdbjV1sCxyLRKMeiYjLDZ4nTU0E+MU/WOFaWkZraYxSAxGkr53Gw7SN+S/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=howett.net; spf=none smtp.mailfrom=howett.net; dkim=pass (2048-bit key) header.d=howett-net.20230601.gappssmtp.com header.i=@howett-net.20230601.gappssmtp.com header.b=cX3UtwcX; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=howett.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=howett.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DWhowe0b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716575915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fWsJyQ6rLMkevxfFKkLWUkPGRkXnJQrmFjIwpW29V3U=;
-	b=DWhowe0bSwLOoYa8OqUbh6ukQZK5SRvVfXQmsne6H2E2wU7Yjs47YCOw1upbI4nTfmepao
-	Y5nRb+N1yMvuYWnvsNxnSOibsy4ghfay2Vl47GeXlyazHp3zROuWwQstvxbiaho5FOqT7U
-	HlUpDbGcl0LF+Fc7cy4LygX9gTBUcmA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-460-MINCGCs2OGuRWCsTmzrC9g-1; Fri, 24 May 2024 14:38:30 -0400
-X-MC-Unique: MINCGCs2OGuRWCsTmzrC9g-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E7A4F8058D1;
-	Fri, 24 May 2024 18:38:29 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.56])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 15A5F492BC6;
-	Fri, 24 May 2024 18:38:27 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 24 May 2024 20:37:02 +0200 (CEST)
-Date: Fri, 24 May 2024 20:37:00 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
-	Chris von Recklinghausen <crecklin@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: sched/isolation: tick_take_do_timer_from_boot() calls
- smp_call_function_single() with irqs disabled
-Message-ID: <20240524183700.GA17065@redhat.com>
-References: <20240522151742.GA10400@redhat.com>
- <20240523132358.GA1965@redhat.com>
- <87h6eneeu7.ffs@tglx>
- <ZlCwKk65-eL0FrKX@pavilion.home>
+	dkim=pass (2048-bit key) header.d=howett-net.20230601.gappssmtp.com header.i=@howett-net.20230601.gappssmtp.com header.b="cX3UtwcX"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-df771cae64aso1257469276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 11:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=howett-net.20230601.gappssmtp.com; s=20230601; t=1716575951; x=1717180751; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4BWDlFzmKgPu7pIeN9TGO2G9NGrk4rFNS9672TWXGuI=;
+        b=cX3UtwcXQISd+LmyOvOu0+o5LjCteXrUajdcN0ijCjqCmvhKIgyJxFFbZKMtu67x+h
+         5V91tPnLg852WRijF91ImsoFchQBcf+Gw8okv9bg2Iqcz2QcFc2S7pS6HtxSqn2sPetC
+         ZyAMsp0cPrcR7pgFCb6OR2OXIR+Z3qGEUdeZPkgpPF2ppBy83Xo/96UcinVsIxGnRl+i
+         E+Z8O/TNke2Q5RQaKL9CF1juYQtxVzf+32LXRQOsT9Gg/tECMAiENmYT32QahCgzVre6
+         a0QSPEj/HXro/bghZnvEDUOxnrS9C2ri3Q6Z3lN5Z2INkh6RSQgXxZQV5R5+G64kph7K
+         n7gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716575951; x=1717180751;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4BWDlFzmKgPu7pIeN9TGO2G9NGrk4rFNS9672TWXGuI=;
+        b=OYYRVRZHNKRMMxLatCX7DY4fETN5uK4MgGAeChca9nhJ8GcDiVruhQ8Pqq9lUy/NLp
+         jbabcQPV0+w6bHhmwiZrTBS0c4m8TzmpZXB/F1FBEnrW8KfyaCCooNACOeOgv13PIyQU
+         dDmu+K1no41p753Qp5iltQktvHvmkTbeOAqA4EgYsJZbhlcrfPuCixXswYXeLbQtYlSG
+         bz++Hi7DO00lNhN/aY6j5WNUcOXEGiNKCpmnP2NYb9lx2GbzVuYaiVCX2zshe7JXjcoY
+         rEzIsFzFSJEhiyxLuSvJfKFmZrUx6yt7glP9Y4TJpxGGXgffZhzNr4kp9Dgy7ZFH+eVR
+         6YJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVml6CfnlRwn6mmMoP8zyWRgXKjXMj1G0hVEbf8O/n0SjgSvLt5cvMhUa28wA0DvNRyKcNy+DI68RBBUJvLkwSDNbhSn/UWQOGrgeWK
+X-Gm-Message-State: AOJu0YwiiUV9ceOg8t3puaXRtZT2jX4fbssDa8D5tJaidDsFTsevF9ej
+	ejm7PVUkTbYf4ZK9wwHFjZf9p1rrahqlfftknL2/36br45bghsvWblflxXaNpTDrg5/vffgU0Hw
+	RN8PBxAU6u+02cvr8YgOSRU0mkPsW+bEULCFI
+X-Google-Smtp-Source: AGHT+IGySwby0Wi3hsPE2Ha/40Yh/i6YxdkBaMZS0CGt0TCthCDA2n11AkgR+AfJ1Wsm10vYyVXwWIN/nMtZG/RaeNo=
+X-Received: by 2002:a25:943:0:b0:de5:51d0:9a8d with SMTP id
+ 3f1490d57ef6-df77237535amr3114332276.55.1716575950805; Fri, 24 May 2024
+ 11:39:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZlCwKk65-eL0FrKX@pavilion.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+References: <20240515055631.5775-1-ben@jubnut.com> <20240515055631.5775-6-ben@jubnut.com>
+ <ZkscFnmHeWWma7Nb@google.com> <87jzjk1ibr.fsf@jubnut.com> <Zk_63rrDJFhN1Y1q@google.com>
+ <87cypb12j9.fsf@jubnut.com>
+In-Reply-To: <87cypb12j9.fsf@jubnut.com>
+From: Dustin Howett <dustin@howett.net>
+Date: Fri, 24 May 2024 13:39:00 -0500
+Message-ID: <CA+BfgNL7RGWuFK-M=Cpt8nLfroK+Xpqtzs4nQ1Bwnv6iiVd5nQ@mail.gmail.com>
+Subject: Re: [PATCH 5/6] platform/chrome: cros_ec_lpc: Correct ACPI name for
+ Framework Laptop
+To: Ben Walsh <ben@jubnut.com>
+Cc: Tzung-Bi Shih <tzungbi@kernel.org>, Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Kieran Levin <ktl@frame.work>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Mario Limonciello <mario.limonciello@amd.com>, chrome-platform@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Frederic. Thanks for looking at this!
-
-I've already had a few beers today, I know I'll regret about this email
-tomorrow, but I can't resist ;)
-
-On 05/24, Frederic Weisbecker wrote:
+On Fri, May 24, 2024 at 1:35=E2=80=AFPM Ben Walsh <ben@jubnut.com> wrote:
 >
-> Actually... The boot CPU is nohz_full and nothing prevents it
-> from stopping its tick once IRQs are enabled and before calling
-> tick_nohz_idle_enter(). When that happens, tick_nohz_full_update_tick()
-> doesn't go through can_stop_idle_tick() and therefore doesn't check if it
-> is the timekeeper. And then it goes through tick_nohz_stop_tick() which
-> can set tick_do_timer_cpu = TICK_DO_TIMER_NONE.
+> I could add a new quirk which provides an alternative ACPI match table
+> to be used instead of the default. In the default case the match_table
+> will contain only "GOOG0004" as before. But in the Framework EC case the
+> match table will be "PNP0C09".
 
-Heh. May be you mean, say, tick_nohz_full_update_tick() or
-tick_nohz_idle_update_tick() which check tick_nohz_full_cpu(cpu).
-Yes this doesn't help during the boot, and this was another source for
-confusion to me.
+My biggest concern with putting PNP0C09 in the direct match table is
+that it would cause cros_ec_lpcs to be loaded for *all* devices with
+an ACPI-compatible embedded controller; it would likely print an error
+and bail out early on, but it would still be unnecessary on 99% of
+platforms.
 
-But again, again. tick_sched_do_timer() says
-
-	* If nohz_full is enabled, this should not happen because the
-	* 'tick_do_timer_cpu' CPU never relinquishes.
-
-so I guess it is not supposed to happen?
-
-And. My main question was: how can smp_call_function_single() help???
-Why do we actually need it?
-
-Thanks ;)
-
-Oleg.
-
+This is my misunderstanding the driver model, but is it possible to
+add a second companion device?
+d
