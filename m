@@ -1,96 +1,125 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC6538FA3
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 07:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5710682D7A;
+	Fri, 24 May 2024 07:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716537167; cv=none; b=LSbo+7BFvXb16dmUrm0vE5wh3ka7+DGzO9SVge3b4Np4AKIyYpCwky2cWbzuVHOTwXBe/9aAkDwh7X53Mc2P/jCkHSW4Tu0JvexxxnayTn+YWw5ibdWJM4qRE+gdEdpO43UmgGHHpUuehj1MzfafoloaW6aYLnCO2gOxqjS7BgE=
+	t=1716537179; cv=none; b=Ji0H3/x7bmVPqOx7ll/OJUth5mFzpVYeGOo5VFcUgP3GDVk57fRhsL0lQMe5zPONwM1ZIcUPjlEdF/B4GiRfkjJJeybZBl27rrBc/3RIunz6oEK/x7R5uPKAGEBVYJpgT1X9KFDMTPYH/hnHg4fd0zt5FRrHRCljbi0Kcz7FYO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716537167; c=relaxed/simple;
-	bh=0WCNFDXp1xMSbC4bwKH3Ol6IPf4WEDGeRYHim8+28wU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=gi0O3Z4uY/ejDlSoi3flmKLk0wcei7CihF48IR5T0obtgBd4dq1JEXJGgyi/kzQ0F3L5/CaX4XSWyfwk6x/ZInVfrZq5jmcz1JOfHSLDr7vQGMY3aM4NYKAqEz2k4vB4PQXiKN47qWy9zk0cDL/QO+xFdXCjYZLRUFyC6fIc2+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-199-p_PFq1w1MwCWhi6R7Pg5-g-1; Fri, 24 May 2024 08:52:37 +0100
-X-MC-Unique: p_PFq1w1MwCWhi6R7Pg5-g-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 24 May
- 2024 08:52:05 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 24 May 2024 08:52:05 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: =?utf-8?B?J0FuZHLDqSBBbG1laWRhJw==?= <andrealmeid@igalia.com>, "Mathieu
- Desnoyers" <mathieu.desnoyers@efficios.com>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Thomas
- Gleixner" <tglx@linutronix.de>, "Paul E . McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, "H . Peter Anvin" <hpa@zytor.com>, "Paul
- Turner" <pjt@google.com>, "linux-api@vger.kernel.org"
-	<linux-api@vger.kernel.org>, Christian Brauner <brauner@kernel.org>, "Florian
- Weimer" <fw@deneb.enyo.de>, "carlos@redhat.com" <carlos@redhat.com>, "Peter
- Oskolkov" <posk@posk.io>, Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	Chris Kennelly <ckennelly@google.com>, Ingo Molnar <mingo@redhat.com>,
-	"Darren Hart" <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	"libc-alpha@sourceware.org" <libc-alpha@sourceware.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>, Noah Goldstein
-	<goldstein.w.n@gmail.com>, Daniel Colascione <dancol@google.com>,
-	"longman@redhat.com" <longman@redhat.com>, "kernel-dev@igalia.com"
-	<kernel-dev@igalia.com>
-Subject: RE: [PATCH v2 1/1] futex: Add FUTEX_SPIN operation
-Thread-Topic: [PATCH v2 1/1] futex: Add FUTEX_SPIN operation
-Thread-Index: AQHarUzWukUXPS/11kKDb3WyV7rGCLGmAfcw
-Date: Fri, 24 May 2024 07:52:05 +0000
-Message-ID: <16a6a6f28cc547b7a0a27ae6eebcca43@AcuMS.aculab.com>
-References: <20240523200704.281514-1-andrealmeid@igalia.com>
- <20240523200704.281514-2-andrealmeid@igalia.com>
-In-Reply-To: <20240523200704.281514-2-andrealmeid@igalia.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1716537179; c=relaxed/simple;
+	bh=ch+MbRPZTGBQUr5ZCA23iXr8FmFMlS0SQtrDDjy1Y0M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YDB3XaxomhMXT1AOP5L1F0M71YQCnjduiLrAgS975L58HW5uzLnfh//6Q0Zu6vRDWk/Ji4WceEQR7PIxLNeCeiCa7rYERkhqfKD5V5FTrLHs6iNcg/6oZnIW87B74pn9Ra012mfEnTBCQ4eEx3cuOWdSPX+nfci3q4RQyT7cSe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YcqIBrSo; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YcqIBrSo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716537178; x=1748073178;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ch+MbRPZTGBQUr5ZCA23iXr8FmFMlS0SQtrDDjy1Y0M=;
+  b=YcqIBrSorjaqPGS9xYxFnc+A145D83oPgTTnsy18f5uEUuBysMo3O5Vk
+   gCxmmIAmWdgEjFIG2Q6pdObblH6C8/rnScCfw7x998JgyRq8KJzGFKXUR
+   pN/yBTua7plcHNC/xLw6Zv6HeP8xRGl/wg3ANI1LLUqmHOUcCrD74qI/X
+   mXwahMX9FoTONQAnZT26EqurwnC0jfmwZoz6Z69MZnt3vnjyEf61vM6qs
+   JkZp8OXGam4L5OaJMn5fak6a/Lb3xm+kivVFiyyN8KbEIxZDhp0cjhkbB
+   o3P3O5PzGXoSt9GJnl/MEsbXtYEnb0sU/VKPdNCHpv9ldlAAmGPt69ur9
+   g==;
+X-CSE-ConnectionGUID: vaNWmLemQr6LCbm9ogJzBg==
+X-CSE-MsgGUID: 8hFIiiosSvOByXHHObk4Rw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="15845955"
+X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
+   d="scan'208";a="15845955"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 00:52:57 -0700
+X-CSE-ConnectionGUID: Re7qkzs6RuCEsJ3DEFCn2w==
+X-CSE-MsgGUID: 9CFGnEvqQjKWmLYUyFkJjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
+   d="scan'208";a="33953892"
+Received: from xiao-desktop.sh.intel.com ([10.239.46.158])
+  by fmviesa006.fm.intel.com with ESMTP; 24 May 2024 00:52:51 -0700
+From: Xiao Wang <xiao.w.wang@intel.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	luke.r.nels@gmail.com,
+	xi.wang@gmail.com,
+	bjorn@kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	pulehui@huawei.com,
+	puranjay@kernel.org,
+	haicheng.li@intel.com,
+	Xiao Wang <xiao.w.wang@intel.com>
+Subject: [PATCH bpf-next v4 0/2] riscv, bpf: Introduce Zba optimization
+Date: Fri, 24 May 2024 15:55:41 +0800
+Message-Id: <20240524075543.4050464-1-xiao.w.wang@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-RnJvbTogQW5kcsOpIEFsbWVpZGENCj4gU2VudDogMjMgTWF5IDIwMjQgMjE6MDcNCj4gDQo+IEFk
-ZCBhIG5ldyBtb2RlIGZvciBmdXRleCB3YWl0LCB0aGUgZnV0ZXggc3Bpbi4NCj4gDQo+IEdpdmVu
-IHRoZSBGVVRFWDJfU1BJTiBmbGFnLCBwYXJzZSB0aGUgZnV0ZXggdmFsdWUgYXMgdGhlIFRJRCBv
-ZiB0aGUgbG9jaw0KPiBvd25lci4gVGhlbiwgYmVmb3JlIGdvaW5nIHRvIHRoZSBub3JtYWwgd2Fp
-dCBwYXRoLCBzcGlucyB3aGlsZSB0aGUgbG9jaw0KPiBvd25lciBpcyBydW5uaW5nIGluIGEgZGlm
-ZmVyZW50IENQVSwgdG8gYXZvaWQgdGhlIHdob2xlIGNvbnRleHQgc3dpdGNoDQo+IG9wZXJhdGlv
-biBhbmQgdG8gcXVpY2tseSByZXR1cm4gdG8gdXNlcnNwYWNlLiBJZiB0aGUgbG9jayBvd25lciBp
-cyBub3QNCj4gcnVubmluZywganVzdCBzbGVlcCBhcyB0aGUgbm9ybWFsIGZ1dGV4IHdhaXQgcGF0
-aC4NCj4gDQo+IFRoZSB1c2VyIHZhbHVlIGlzIG1hc2tlZCB3aXRoIEZVVEVYX1RJRF9NQVNLLCB0
-byBhbGxvdyBzb21lIGJpdHMgZm9yDQo+IGZ1dHVyZSB1c2UuDQo+IA0KPiBUaGUgY2hlY2sgZm9y
-IHRoZSBvd25lciB0byBiZSBydW5uaW5nIG9yIG5vdCBpcyBpbXBvcnRhbnQgdG8gYXZvaWQNCj4g
-c3Bpbm5pbmcgZm9yIHNvbWV0aGluZyB0aGF0IHdvbid0IGJlIHJlbGVhc2VkIHF1aWNrbHkuIFVz
-ZXJzcGFjZSBpcw0KPiByZXNwb25zaWJsZSBvbiBwcm92aWRpbmcgdGhlIHByb3BlciBUSUQsIHRo
-ZSBrZXJuZWwgZG9lcyBhIGJhc2ljIGNoZWNrLg0KDQpUaGUga2VybmVsIG5lZWRzIHRvIGRvIHNv
-bWV0aGluZyB0byBzdG9wIGEgdXNlci1wcm9jZXNzIHNwaW5uaW5nIGluLWtlcm5lbA0KaW5kZWZp
-bml0ZWx5Lg0KDQouLi4NCj4gK3N0YXRpYyBpbmxpbmUgYm9vbCB0YXNrX29uX2NwdShzdHJ1Y3Qg
-dGFza19zdHJ1Y3QgKnApDQo+ICt7DQo+ICsjaWZkZWYgQ09ORklHX1NNUA0KPiArCXJldHVybiAh
-IShwLT5vbl9jcHUpOw0KPiArI2Vsc2UNCj4gKwlyZXR1cm4gZmFsc2U7DQo+ICsjZW5kaWYNCj4g
-K30NCg0KSSBzdXNwZWN0IHRoYXQgaXNuJ3QgZ29pbmcgdG8gd29yayBpbiBhIFZNIHdoZXJlIHRo
-ZSBlbnRpcmUgJ2NwdScNCmNhbiBiZSBzbGVlcGluZy4NCg0KVGhpcyBpcyBzaW1pbGFyIHRvIHRo
-ZSAoSSBkb24ndCB0aGluayB3b3JrcyBwcm9wZXJseSkgY2hlY2sNCmluIHRoZSAnb3NxJyAob3B0
-aW1pc3RpYyBzcGluIHF1ZXVlKSB1c2VkIHdoZW4gd2FpdGluZyBmb3INCnRoZSB0aHJlYWQgc3Bp
-bm5pbmcgb24gYSBtdXRleC9yd2xvY2sgdG8gY2hhbmdlIHN0YXRlLg0KDQpJSVJDIHRoYXQgY29k
-ZSBhbHNvIGNoZWNrcyB3aGV0aGVyIHRoZSBjdXJyZW50IHRocmVhZCBzaG91bGQNCmJlIHByZS1l
-bXB0ZWQgYnkgYSBoaWdoZXIgcHJpb3JpdHkgcHJvY2Vzcy4NCg0KCURhdmlkDQoNCi0NClJlZ2lz
-dGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24g
-S2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+The riscv Zba extension provides instructions to accelerate the generation
+of addresses that index into arrays of basic data types, bpf JIT generated
+insn counts could be reduced by leveraging Zba for address calculation.
+
+The first patch introduces RISCV_ISA_ZBA Kconfig option and uses Zba add.uw
+insn to optimize zextw operation.
+
+The second patch uses Zba shift-and-add insns to optimize address
+calculation for array of unsigned long data.
+
+Thanks,
+Xiao
+
+v4:
+* Combine the second patch (previously v1) and the first patch into a series. (Bjorn)
+* Rebase the second patch on bpf-next tree.
+* Link to v3: https://lore.kernel.org/bpf/20240516090430.493122-1-xiao.w.wang@intel.com/
+
+v3:
+* Remove the Kconfig dependencies on TOOLCHAIN_HAS_ZBA and
+  RISCV_ALTERNATIVE. (Andrew)
+* Link to v2: https://lore.kernel.org/bpf/20240511023436.3282285-1-xiao.w.wang@intel.com/
+
+v2:
+* Add Zba description in the Kconfig. (Lehui)
+* Reword the Kconfig help message to make it clearer. (Conor)
+* Link to v1: https://lore.kernel.org/bpf/20240507104528.435980-1-xiao.w.wang@intel.com/
+
+Xiao Wang (2):
+  riscv, bpf: Optimize zextw insn with Zba extension
+  riscv, bpf: Introduce shift add helper with Zba optimization
+
+ arch/riscv/Kconfig              | 12 ++++++++
+ arch/riscv/net/bpf_jit.h        | 51 +++++++++++++++++++++++++++++++++
+ arch/riscv/net/bpf_jit_comp32.c |  3 +-
+ arch/riscv/net/bpf_jit_comp64.c |  9 ++----
+ 4 files changed, 67 insertions(+), 8 deletions(-)
+
+
+base-commit: 5c1672705a1a2389f5ad78e0fea6f08ed32d6f18
+-- 
+2.25.1
 
