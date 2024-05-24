@@ -1,170 +1,199 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2082.outbound.protection.outlook.com [40.107.6.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE7785277
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 09:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716543804; cv=none; b=InAeZ2Enif4DZahVb/vUp0WNvid/t9B0zZ0laBfUS657fHHC/YKQxZHTLJY2/Qx33f9X4rzNOOIi+YmEum7auXDZDa0T1zI/yBUmb9uXTxw+0YPaeoduuwrYpvz/DLvJT3OFZb4xaYPCiVoT6dY1Ya41ap6H0bF+8zOhBgSTeuA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716543804; c=relaxed/simple;
-	bh=HWGnM/wwv3ua6vnMV0Uk/fMv8L7Xpi74FGdXEyduxng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dfdfvrcaeRtocaM4+URH2vZzEbXO2W7amn6vrL83I05JVGSfeqtowQGhOFISJXbOnwVoWP1WNDL55hBqgUPxYIyQH4TKKUfoxc5LXEvOaI3fEjNiV63XkIY6cmBTweMTW5JA6thmbF76UgU8FTXmLU6kNLP48ZIFrlmLtfU5o14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=as/fXvSL; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCD742067;
+	Fri, 24 May 2024 09:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716543968; cv=fail; b=hsK0DxotT/kcW3MXp1w268R6N2jcQxkEQ5xiHwfeYObHmt4QahEW0q3OvV138hLtdVxeCFf24C1tztLWRqTb/g4vPfGPClKXm2qLM+4Pw8gFvkGtDrERy/p6x9MYW2UYhW/TmO6Hz1qjv5mH4z4lgkv8qwjRssNU2huPFHfACwA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716543968; c=relaxed/simple;
+	bh=RDs7H3rbrQnIGMofi87btZA4zDs+Z5gLalpAzOR5e7M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rhfx8kHSyzil0+mxGfij/NTm98UmJY2t9r4ebeF70uCsVjtzZKQwNJ0JIS6Ngr0qNMTn1EWJLfKFe9DCBrNdl3XGl2mpHqrb2sgP7l0dNaOwA7Mre+OnY3axe4yjkjPTVq67vsYGEFybhFXAOM/dThH9wjJ3oK9iBp9XiY+lICs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=UDuSk15o; arc=fail smtp.client-ip=40.107.6.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="as/fXvSL"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2e95a1eff78so8389451fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 02:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716543801; x=1717148601; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OsWVQTfT7df58fpSGLkZCtsbCMRflqNxxYlAlGuL/2c=;
-        b=as/fXvSL4/PHzm+BrU6xvxoxdstWDJkZAxQUA18lN0JlZP/M4BYfypZnM8llH7Nyzc
-         KOhhkm1z9CPnM2Xs7n46M+uA81F0R52FxqNFdM2bIT225ccLookOnB5Vm0p4BdV7gu8D
-         tLfT/9/8C0FNWk2dJYsT6TW8c9HWB5C4haU3SHqMFdLg75yWUD7E/ur4pCCHepr17pXQ
-         5ZNTwrzVmINJjO2r8SkTfCoDapHGZai+nL3br5LkERfMcoCkjEpeFhhtLRIOMgJlVp4v
-         PHXM2pKOV7wlZzJJea89ULJL8Z+KtrHrXK/4HvNgJ1pIBfY9+RxkNSTzsPA81ltC8fAX
-         EsOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716543801; x=1717148601;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OsWVQTfT7df58fpSGLkZCtsbCMRflqNxxYlAlGuL/2c=;
-        b=KS/wr1yix1+hpFugG4aMJuAD2cbLCzxQOtgzPsulHWy01pQroEXW2NNBmj6A5TCfOv
-         vIPGjscm8KCMzqaNNvFuJbCtIMCLx19COPz7gdQ0OZeE84WQvjLaoYwvquFivd4IUZlt
-         a9pzFvREQgX5ViVMGCNvhMXcawfwKFEMqko6XNhx+Lr8Ept0NJGqH4UxxLsmjmGfDUk0
-         KArakT39/1+TW1wF0pPb0Hbyit5cCX3/p+pX100Dwwt9Cf4HSVwJ4/4uNYN+a3dq/RQD
-         A2ItFaopStbai5iD4pokaNFbBXbmMtBxmJ2GSrb2IVHXBBhLn4tT/3a20nFlsd5VXRMF
-         h5Nw==
-X-Gm-Message-State: AOJu0YyK5ltv4dr7JGWqS6P/jtKuIbAv4bFMYba7Qy3cg3bBxfLx1XXD
-	ngHzfxpU/MFLAMYouE2wBug8twP9aaPKx4nv3dZjfMdMnKjDCTYWj2AdtPuxDk4=
-X-Google-Smtp-Source: AGHT+IEgvRjNTdAczPMN3IxHxRGtpPDjB3IaHz1XVZx83tnK5mdnWEeYaN9YImeJHMTSymEhtPrY4g==
-X-Received: by 2002:a2e:2c19:0:b0:2e9:564a:db29 with SMTP id 38308e7fff4ca-2e95b0c4da4mr16297911fa.29.1716543800699;
-        Fri, 24 May 2024 02:43:20 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95bdcd21esm1211721fa.100.2024.05.24.02.43.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 02:43:20 -0700 (PDT)
-Date: Fri, 24 May 2024 12:43:18 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: linux-kernel@vger.kernel.org, andrzej.hajda@intel.com, 
-	neil.armstrong@linaro.org, rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
-	mripard@kernel.org, dri-devel@lists.freedesktop.org, jonas@kwiboo.se, 
-	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, 
-	airlied@gmail.com, daniel@ffwll.ch, u.kleine-koenig@pengutronix.de, 
-	a-bhatia1@ti.com, javierm@redhat.com, nikhil.nd@ti.com, jani.nikula@intel.com, 
-	amishin@t-argos.ru
-Subject: Re: [PATCH] drm: bridge: cdns-mhdp8546: Add mode_valid hook for the
- drm_bridge_funcs
-Message-ID: <unpyokzp44mxbycjam375zp3xhxz4vtrhjbafg2hnwycm6e3g3@ywv6hwkdenlz>
-References: <20240524071348.106210-1-j-choudhary@ti.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UDuSk15o"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X8m54QUD7peYI7dXxv477M4Wgsiy0T5BqOIyts8WeGlf0iMA2GNZ8llNp3v3s1hMkb3cy7YIqqNNaZwzZYQeACrXnrq4gULSARxI9ovkoQBAC7+mM1aftKsURstCdkWP667Bn0UJRfqYQUVSR54BHRaJIcbF8vMKehCt6QYQlNWZDG3DAs7AzbfEjJeH4Sj40fDSd31nPmn3yBVk4brqw3K7Bq6wbfKtZv4mofhKp7yclnf+hI2Cft8sa3chg1pcI1O5D0+VfpScuPzU/HeBPn3wE/lppHI3a6ppJNcpyhl18/V1/I3VzNG1hebyenqgMAJuWKinTyq8Fd4LBrbPNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/VPZi7Z7JstSE/MxOYzxNIVSLmDs92uwzaV9FfdICJ4=;
+ b=WmhnHj7MqawNBhj9UpXtiSX51KtJkjC1WMvG2bYDyVAgmJHV/AsXMCGS5la6yRZLHy14/pCNLqWEixwG19Bml6biBElQuOR5P6SAyd5laiBCFGJ/U+BjH+Lw7BD6dSL7KragfYwLL419Q/UAkSyk250/vYEjluvlN/WcOj/++jyMI+E0RSsKEfdiYnegE09Ss0KHQDOZU2qgu4WmFh99NBwkJ5yJ3rgiyU+mLl0W7JfxDIxuwY72WC0zv4T+sV56+7A4llnOA6mQOKIc+gpF4A6Ls3zNjTHC+vvCBNvdmn4zFOub2WwhJ7RSq/0kL9+7cYk1EklmN+8G9W8SBxGjYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/VPZi7Z7JstSE/MxOYzxNIVSLmDs92uwzaV9FfdICJ4=;
+ b=UDuSk15obF7rodTYBUf1DuumhiBJX54DgETTxDHv/pCUHAVA0BFBm2QpzO3CJ3bmdSSjQ2s74ceFK6FDZHczN+MfXfj65ubEK2UJTCIJ5s+GKyzQEgR6IBb+xDVLcoYuPecjNeiUanbrLGytusyckUc4Qg9juquTe7vd1TJHMZI=
+Received: from PA4PR04MB9638.eurprd04.prod.outlook.com (2603:10a6:102:273::20)
+ by DU2PR04MB8597.eurprd04.prod.outlook.com (2603:10a6:10:2d8::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
+ 2024 09:46:00 +0000
+Received: from PA4PR04MB9638.eurprd04.prod.outlook.com
+ ([fe80::f950:3bb6:6848:2257]) by PA4PR04MB9638.eurprd04.prod.outlook.com
+ ([fe80::f950:3bb6:6848:2257%4]) with mapi id 15.20.7611.016; Fri, 24 May 2024
+ 09:46:00 +0000
+From: David Lin <yu-hao.lin@nxp.com>
+To: Brian Norris <briannorris@chromium.org>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvalo@kernel.org" <kvalo@kernel.org>, "francesco@dolcini.it"
+	<francesco@dolcini.it>, Pete Hsieh <tsung-hsien.hsieh@nxp.com>, Francesco
+ Dolcini <francesco.dolcini@toradex.com>
+Subject: RE: [EXT] Re: [PATCH v10 1/2] wifi: mwifiex: add host mlme for client
+ mode
+Thread-Topic: [EXT] Re: [PATCH v10 1/2] wifi: mwifiex: add host mlme for
+ client mode
+Thread-Index: AQHakVadTJiKH7Fbwkii2Ljo0AqkAbGkNJ4AgAIC2FA=
+Date: Fri, 24 May 2024 09:46:00 +0000
+Message-ID:
+ <PA4PR04MB9638DC958102D07A7B7084B6D1F52@PA4PR04MB9638.eurprd04.prod.outlook.com>
+References: <20240418060626.431202-1-yu-hao.lin@nxp.com>
+ <20240418060626.431202-2-yu-hao.lin@nxp.com> <Zk6TklTIbxZxIWyb@google.com>
+In-Reply-To: <Zk6TklTIbxZxIWyb@google.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB9638:EE_|DU2PR04MB8597:EE_
+x-ms-office365-filtering-correlation-id: 387c7a38-a729-4f67-6496-08dc7bd651ce
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|376005|1800799015|366007|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?VaMVds4dwC6MBQMgKhcVFucXzhJiPyEDYRxSi3Zxb9yYbWZ0lTux1C87JS6W?=
+ =?us-ascii?Q?/VGEwymslIuARWJ24ts5RAue3YrGq/8GbHocno5GXUFsMpNs5+XB+QAdkdGz?=
+ =?us-ascii?Q?SLZRHSAtYiYpJ92YAKRVWs0T1DoHQ0znWz0Z0K3Jlb/eSoEvmGVZYwE7soHj?=
+ =?us-ascii?Q?9yulAkoq+rBusYiQLfbliPvlK6T00JtFlmnp15/xlI9ZetGE/yQqbtJk/dnb?=
+ =?us-ascii?Q?9iR+9/kPAwTaZl4MrwZmQxnVTK0trX1folG0jfIf0GF1zCMLB2l/fo7AJeYl?=
+ =?us-ascii?Q?WuB44TlujIhV9/rC9KYrQeCjHxI70+F2+chlARAB9+sff8Sy/AhQUkJ8b8iS?=
+ =?us-ascii?Q?eO+GInBvEY3A3yfk5R6k9Z/j70+o13eg7pfLEU4xPDz7zFXMSNv2TZ1z8ZH5?=
+ =?us-ascii?Q?4Tay0tho/1vHPE6iP/2kvU4ssGVtMp8MWQ1B8oSY89N90zUwzIDiHQ1CElYa?=
+ =?us-ascii?Q?EOj8ni/80ttkvAY57WTdlbO5Bv0fWumh/zv/nU0XtSNQv6U8ZNogeqC8fnEA?=
+ =?us-ascii?Q?ffeSTT83eWGoamjEenUeL9gKC3PVdUHpNzrwBdD+rFUPrbjLd54em+bUQxJX?=
+ =?us-ascii?Q?NDKSWb8pzwbXNYU1twXAx0mPR95DFWee6iX1K7Ve+ygJZBEm19HVKqpgGG22?=
+ =?us-ascii?Q?RsQL9IZHuhIHdd+RT0E1rXOkQI8oOJVwpFfY0+KE1up2mWfwd3KmqFuEZB88?=
+ =?us-ascii?Q?B/E/bKeBmJmWuUnkpBkChhDNDfBp47bztK16lxao3SCSznRx9GEJ+fy9MMr5?=
+ =?us-ascii?Q?J8ycwisUUZlGfBPiw56RBrQV3QJWcUhFIoZXgg9qoSWAYFtw3gaoz3krbio4?=
+ =?us-ascii?Q?/1ZmsbZUhlaoHZPKXOruVbIx87NTywB/cG0ERsojIdBQRkDfyzIrQlBng2L0?=
+ =?us-ascii?Q?ar9j9m+dTIgxBI0XJwDbdyJ0VhJsWsazS1vyl9lHektdPE2VVdU89akVf3xL?=
+ =?us-ascii?Q?VK5rxsLpX7eCg+VrhvfVQF/Vds8N/sJwqL/18mY62eXpXAVaxeNZGSmKy6jz?=
+ =?us-ascii?Q?ESIKNwiH8mqy5hT6dUFe/sQOVohVvtSq2enHAt8D9RqicVfqhpXtkcC8GDYI?=
+ =?us-ascii?Q?Cw9PDolvobJeZigNWSBzYvhiZ0zPt2RnCbQhVYxtb/mhJ68hz2pY4LOg5pu+?=
+ =?us-ascii?Q?LaeMEVMpgEUzQbct91qUev0OOOsZtoTSglJhjrGE/F0c8+zvCRmPSiZ1M1UL?=
+ =?us-ascii?Q?dQ5lA7RSFc4l8Rn+DPgwNc90p6tDblBGzhDW+K0QC2zbbijwlIVSKKn+Da+A?=
+ =?us-ascii?Q?NTV6TO5o/57JHBzxdVKBWsEBCVd+oBw7210RBv3sYA=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?8nj3fNGArDw9hqhlgN7IwIpKB+KN/l9dfRD1KVlVhe4bOusoGT83PjsHW3hf?=
+ =?us-ascii?Q?KAx1RPqTcpWGv0SMyW+NSq40TMYua9HVnfMZspx1FpcnYPSmxRaTvebvAMRi?=
+ =?us-ascii?Q?fsl993hlA7q8WWnOTyZFZFS8FBFXD3Pvx7/xpcUUr49CESuHY+iMvl9h4RnS?=
+ =?us-ascii?Q?p6f/mzCYiWbx4YHnZ8N/VgbHy61U7atQLD0345ugycCTre9OOVH6ybQIUEOA?=
+ =?us-ascii?Q?SUlLj8EYomNnl3nuGPvEah2hs8LkFRJSlzpO8YKG9lzlHLHX3TY3Z28lFnEp?=
+ =?us-ascii?Q?8CCc3MsDF4fwp7nGYNTxU7EKFN0E5o4/ni4ga5FW9MhMQWya7fqFL0YWjQjJ?=
+ =?us-ascii?Q?14b06E3Ukf5+YRiDHH5Q0QB6fLJ7iDf1H6C8xOgLKUnVTSgRozMbCDRfLrUZ?=
+ =?us-ascii?Q?tIhmliWPVdFngCdWkmsNnBVx6ZnoWtGPzpKyulcLdGpyhQhb2qVnTRkysgfA?=
+ =?us-ascii?Q?cleuDELyM7D/yWydzc+S6VNOc6ZMWpg8wLa5si9Wknu1mJyGaVMSD/GxfJHZ?=
+ =?us-ascii?Q?Xg46ixHQRM1hSUE0rGpjLu2qnehkBrGZsbfEwGrDxYMnineRYamF6Iq+H95w?=
+ =?us-ascii?Q?84SecN1hzAXxzgDJZZ2ap4uqxEySc/eRAb4W/ZbaeZ2joRimUCAphz7Le91v?=
+ =?us-ascii?Q?7m3TvAHrQbH4y1yGkhyNWUBEZ23lXE9/u83WHL9eG31qcSphHen5jn13tqA3?=
+ =?us-ascii?Q?EkznhPY1MeO3Xt39SLFfg4lovQc0Y0c4z+G1XD/1+V9ixobRfjBz+hilLpF5?=
+ =?us-ascii?Q?MNsEEOKXg4p6KL+FAs04HDnXMw07UM0aM+cM8HI2yEQrxSxkDz9KGZ4h2knj?=
+ =?us-ascii?Q?BEurCrfyVMPQAi8G5f2lxa1wmkmcoOeNWoCilaMOboQZRssYKJ3+MIDU+tlv?=
+ =?us-ascii?Q?crgC+f3nYPid/DEGI96Q1syilUNnmonbDtiFeHfYorxFCFloX2/t+7s0bess?=
+ =?us-ascii?Q?wpe5mNFmswAqU0uZeiQR4M0/q0YKA5lsuj7yyuSrnyfeBKBD1JPwoFJ1FQRh?=
+ =?us-ascii?Q?7khwzyD/9IlsCiBiWAV6AnYicyosKVt14Q2PTSlLbmaRnTf8oL1VTi4H5ZMw?=
+ =?us-ascii?Q?UoIQTLd5VLrQaGCwS9oFfzWHQsRMvtZ2PXib3b8rT24q1lLguFJOwvhU7aty?=
+ =?us-ascii?Q?xhrOudXCcc8nEFcx7pnxzHBfHoU0cPkX0fg1cotB9+JSyEPuWUWHDW5Z33rQ?=
+ =?us-ascii?Q?yJYHlJMClO07yL+OBYH7v9gTL9upjTZtOkohJ1Q1TfK5LhZJ/mhP+sBka4V+?=
+ =?us-ascii?Q?Qd0pfch/hqbeuQ86ZG73qPQDiqPWPIwaZ4xabeuXMEyoArMMLvKKa3uArRyf?=
+ =?us-ascii?Q?33nZ9zBE0IsR8YX/nDw8ELj7fUOM8Kvo4k2NFDwXyxCuRYSumT7nRgaZ34RA?=
+ =?us-ascii?Q?S1W8wgnk/1mXX2uDWyVoVnih8drNR3SPSC2Gr51R6cvD6c3D55H3IbC8VfSs?=
+ =?us-ascii?Q?msngB5RdEeJ7O06fxyxr7WnmW6AchlgUkdzjTidAK2dlsETaCpTWwqq/by7A?=
+ =?us-ascii?Q?FcuHXpzsPCeDtTQHQlbzniwNpR9OwPzxMzu4WoERrKMmhSCz8Hdur14dZQkn?=
+ =?us-ascii?Q?L3tgy6FWmhUq7QxMfMhHhyYb1id9c56u9tpR6X9U?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524071348.106210-1-j-choudhary@ti.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 387c7a38-a729-4f67-6496-08dc7bd651ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2024 09:46:00.4925
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RFX7qDoJ/W/fDHAw93z8irJlwZdDIAhC1ezLsis+pyt418lkY/zLT4mbauAd3KeXyvdzX+3P4Vw87/Vx+z21Gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8597
 
-On Fri, May 24, 2024 at 12:43:48PM +0530, Jayesh Choudhary wrote:
-> With the support for the 'DRM_BRIDGE_ATTACH_NO_CONNECTOR' case,
-> the connector_helper funcs are not initialized if the encoder has this
-> flag in its bridge_attach call. Till now we had mode_valid hook only in
-> the drm_connector_helper_funcs. Add this hook in drm_bridge_funcs to
-> validate the modes in this case as well.
-> 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->  .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 31 +++++++++++++++----
->  1 file changed, 25 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> index 8a91ef0ae065..0aee038f5db7 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> @@ -1617,12 +1617,10 @@ bool cdns_mhdp_bandwidth_ok(struct cdns_mhdp_device *mhdp,
->  	return true;
->  }
->  
-> -static
-> -enum drm_mode_status cdns_mhdp_mode_valid(struct drm_connector *conn,
-> -					  struct drm_display_mode *mode)
-> +static enum
-> +drm_mode_status cdns_mhdp_mode_valid(struct cdns_mhdp_device *mhdp,
-> +				     const struct drm_display_mode *mode)
->  {
-> -	struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
-> -
->  	mutex_lock(&mhdp->link_mutex);
->  
->  	if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
-> @@ -1635,6 +1633,16 @@ enum drm_mode_status cdns_mhdp_mode_valid(struct drm_connector *conn,
->  	return MODE_OK;
->  }
->  
-> +static enum drm_mode_status
-> +cdns_mhdp_connector_mode_valid(struct drm_connector *conn,
-> +			       struct drm_display_mode *mode)
-> +{
-> +	struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
-> +	const struct drm_display_mode *mod = mode;
-> +
-> +	return cdns_mhdp_mode_valid(mhdp, mod);
-> +}
-> +
->  static int cdns_mhdp_connector_atomic_check(struct drm_connector *conn,
->  					    struct drm_atomic_state *state)
->  {
-> @@ -1678,7 +1686,7 @@ static int cdns_mhdp_connector_atomic_check(struct drm_connector *conn,
->  static const struct drm_connector_helper_funcs cdns_mhdp_conn_helper_funcs = {
->  	.detect_ctx = cdns_mhdp_connector_detect,
->  	.get_modes = cdns_mhdp_get_modes,
-> -	.mode_valid = cdns_mhdp_mode_valid,
-> +	.mode_valid = cdns_mhdp_connector_mode_valid,
+Hi Brian,
 
-Just move it to bridge_funcs and drop it from connector_helper_funcs. It
-should be enough.
+> From: Brian Norris <briannorris@chromium.org>
+> Sent: Thursday, May 23, 2024 8:54 AM
+> To: David Lin <yu-hao.lin@nxp.com>
+> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+> kvalo@kernel.org; francesco@dolcini.it; Pete Hsieh
+> <tsung-hsien.hsieh@nxp.com>; Francesco Dolcini
+> <francesco.dolcini@toradex.com>
+> Subject: [EXT] Re: [PATCH v10 1/2] wifi: mwifiex: add host mlme for clien=
+t
+> mode
+>
+> On Thu, Apr 18, 2024 at 02:06:25PM +0800, David Lin wrote:
+> > +static int
+> > +mwifiex_cfg80211_probe_client(struct wiphy *wiphy,
+> > +                           struct net_device *dev, const u8 *peer,
+> > +                           u64 *cookie) {
+> > +     return -EOPNOTSUPP;
+> > +}
+> > +
+>
+> > +             mwifiex_cfg80211_ops.probe_client =3D
+> > +                     mwifiex_cfg80211_probe_client;
+>
+> For the record, I feel like this question was not adequately handled from=
+ v8.
+> That thread is:
+>
+> https://lore.kern/
+> el.org%2Fall%2FCA%2BASDXM1PEMRyxRpBryJ7G6e7yzG8Ku%2Bg2_qpHN3g5d
+> jFpAWkw%40mail.gmail.com%2F&data=3D05%7C02%7Cyu-hao.lin%40nxp.com%
+> 7C0b65f7e4a5fc46c8bdbc08dc7ac2c9ff%7C686ea1d3bc2b4c6fa92cd99c5c301
+> 635%7C0%7C0%7C638520224227876720%7CUnknown%7CTWFpbGZsb3d8eyJ
+> WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7
+> C0%7C%7C%7C&sdata=3DMpqW1U4yTgDcM0g20DRSAxEnHkNNkd2hwsZrVAxg8p
+> w%3D&reserved=3D0
+> Re: [EXT] Re: [PATCH v8 1/2] wifi: mwifiex: add host mlme for client mode
+>
+> Brian
 
->  	.atomic_check = cdns_mhdp_connector_atomic_check,
->  };
->  
-> @@ -2233,6 +2241,16 @@ static const struct drm_edid *cdns_mhdp_bridge_edid_read(struct drm_bridge *brid
->  	return cdns_mhdp_edid_read(mhdp, connector);
->  }
->  
-> +static enum drm_mode_status
-> +cdns_mhdp_bridge_mode_valid(struct drm_bridge *bridge,
-> +			    const struct drm_display_info *info,
-> +			    const struct drm_display_mode *mode)
-> +{
-> +	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
-> +
-> +	return cdns_mhdp_mode_valid(mhdp, mode);
-> +}
-> +
->  static const struct drm_bridge_funcs cdns_mhdp_bridge_funcs = {
->  	.atomic_enable = cdns_mhdp_atomic_enable,
->  	.atomic_disable = cdns_mhdp_atomic_disable,
-> @@ -2247,6 +2265,7 @@ static const struct drm_bridge_funcs cdns_mhdp_bridge_funcs = {
->  	.edid_read = cdns_mhdp_bridge_edid_read,
->  	.hpd_enable = cdns_mhdp_bridge_hpd_enable,
->  	.hpd_disable = cdns_mhdp_bridge_hpd_disable,
-> +	.mode_valid = cdns_mhdp_bridge_mode_valid,
->  };
->  
->  static bool cdns_mhdp_detect_hpd(struct cdns_mhdp_device *mhdp, bool *hpd_pulse)
-> -- 
-> 2.25.1
-> 
+The difference with and without hooking probe_client() is that "poll_comman=
+d_supported" of hostapd will be set or not.
+If "poll_command_supported" is not set (won't hook probe_client), it will l=
+et hostapd to set "use_monitor" and client can't
+connect to AP.
 
--- 
-With best wishes
-Dmitry
+Maybe I can put following comments:
+
+Hook probe_client to avoid hostapd to set "poll_command_supported" as 0 and=
+ set "use_monitor" to 1.
+
+David
