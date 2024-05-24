@@ -1,109 +1,117 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 4FC1F12C47B
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 14:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BCA12C52E;
+	Fri, 24 May 2024 14:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716560069; cv=none; b=sgIE1/fiQ1nhjaYnK/vckTQ0Z5Lk6D/VVBUigI80KJUtKIS1WOi5X1M0iRFEp6hcOhoKHHZYvanp10XFJ20CyoeXz4SqqaaY0lnN4V81qyPUQlPITWWP8R5g0IlFOlK03kRQn2Pb6yxjzSrEIbfpE+zsBukNRahuHhRKAGSRQx4=
+	t=1716560081; cv=none; b=H624D163D3I58NlltNaV0HqQtCFj3mt7IL4KT37pByVt/6vVR/TK2vTsyjb2N4svoOeRBzSXsDSKIryp+ELwpCBQV9zp1VWemWxRCvYrZrDT6p0XhKdmapaBDpmDT8FtKVLGc6rEU6YP1G8CS9JM8X1ILkPRPuQouznM1TwXKsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716560069; c=relaxed/simple;
-	bh=W/QFZgZjVK4PgDuIaqIeI+JhOty3H64BskYsUZZh49w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g6+cueFHtfm0TMYjUN/oTTPa6Ko5AqYpKyd6KqVMrQj879pXsmVgykmgTXSr5v0UcKNWz8+gK1xNltYhN2S05zJtJrKztHYyjRsSyAHywlt7ZP04490MkD+9TKS+rkvyOtFpMqmnaAfDEyYonBpIJxq1MF+9Cx+XEH06z7ypL0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 575113 invoked by uid 1000); 24 May 2024 10:14:25 -0400
-Date: Fri, 24 May 2024 10:14:25 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>,
-  Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>,
-  "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
-  linux-arch@vger.kernel.org, kernel-team@meta.com, parri.andrea@gmail.com,
-  j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-  Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: LKMM: Making RMW barriers explicit
-Message-ID: <9256f95a-858b-435f-b40a-a4508a1096c9@rowland.harvard.edu>
-References: <0c309dd3-f8c1-4945-b8f1-154b2a775216@huaweicloud.com>
- <4286e5b2-5954-4c77-a815-c1c2735d9509@rowland.harvard.edu>
- <58042cf3-e515-4e5f-ab48-1d0d6123c9e9@huaweicloud.com>
- <6174fd09-b287-49ae-b117-c3a36ef3800a@rowland.harvard.edu>
- <7bd31eca-3cf3-4377-a747-ec224262bd2e@huaweicloud.com>
- <35b3fd07-fa85-4244-b9cb-50ea54d9de6a@rowland.harvard.edu>
- <a25f9654-e681-1bad-47ae-ddc519610504@huaweicloud.com>
- <Zk9dXj-f4rANxPep@Boquns-Mac-mini.home>
- <da5241f5-0ae3-40dd-a2fb-8f5307d31dba@rowland.harvard.edu>
- <ZlAAY-BuXSs9xU0m@Boquns-Mac-mini.home>
+	s=arc-20240116; t=1716560081; c=relaxed/simple;
+	bh=/iCSwYFpPpnWKrk7OTbEJ2X5LrFGQnqRxn/p12z43c4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NiLG12Zy+TDk75DZ4DuXVrLaAeRsf7Yx1okDL7569ldWxC0mKW7kw7Sa4DzwqLmERMKqRoq/3lrkYYldROL2iLIacLmWUHgVDeVN13VgBbXxw35npMl2cZGIFqFfFtocJK/c0GYQG72cgGa76n1pUic+e8NfxARCVG140O0803M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=a26KhZTH; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a26KhZTH"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44OEDgwW096179;
+	Fri, 24 May 2024 09:13:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716560022;
+	bh=JI2PXYUUtgJy4L/iAwhj/g1y9I44a0am6XbwNhHJQ7o=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=a26KhZTHL5qHOOYNEiH75TcYqpvWhZfY3PB+h1CC6ppZ1Fjxna4Yr5bfB8LWN0CHG
+	 aU+dNUzlXKNaehwkFkmhfG12qbK2R6CzjmwSNa/Rt5e+EspHOH7WgRNW7DXH3gj+ZB
+	 X+Lf6ivw1XPD4dmi0h8BDbtFE6uy1rpwTA9bajbc=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44OEDgn5026390
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 24 May 2024 09:13:42 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 24
+ May 2024 09:13:41 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 24 May 2024 09:13:41 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44OEDfjc067963;
+	Fri, 24 May 2024 09:13:41 -0500
+Message-ID: <ddcab8c0-3772-4134-a3bb-27729e864627@ti.com>
+Date: Fri, 24 May 2024 09:13:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZlAAY-BuXSs9xU0m@Boquns-Mac-mini.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 8/8] arm64: defconfig: Enable TI eQEP Driver
+To: Nishanth Menon <nm@ti.com>
+CC: Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        David Lechner
+	<david@lechnology.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <20240523231516.545085-1-jm@ti.com>
+ <20240523231516.545085-9-jm@ti.com>
+ <20240524055923.zyfthiwcsbwbjg5k@undecided>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20240524055923.zyfthiwcsbwbjg5k@undecided>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, May 23, 2024 at 07:50:11PM -0700, Boqun Feng wrote:
-> On Thu, May 23, 2024 at 09:38:05PM -0400, Alan Stern wrote:
-> > On Thu, May 23, 2024 at 08:14:38AM -0700, Boqun Feng wrote:
-> > > Besides, I'm not sure this is a good idea. Because the "{mb}, {once},
-> > > etc" part is a syntax thing, you write a cmpxchg(), it should be
-> > > translated to a cmpxchg event with MB tag on. As to failed cmpxchg()
-> > > doesn't provide ordering, it's a semantics thing, as Jonas showed that
-> > > it can be represent in cat file. As long as it's a semanitc thing and we
-> > > can represent in cat file, I don't think we want herd to give a special
-> > > treatment.
-> > 
-> > I don't really understand the distinction you're making between 
-> > syntactic things and semantic things.  For most instructions there's no 
+Hi Nishanth,
+
+On 5/24/24 12:59 AM, Nishanth Menon wrote:
+> On 18:15-20240523, Judith Mendez wrote:
+>> TI K3 SoC's support eQEP hardware, so enable TI eQEP driver
+>> to be built as a module.
 > 
-> Syntax is how the code is written, and semantic is how the code is
-> executed (in each execution candidate). So if we write a cmpxchg{mb}(),
-> and in execution candiates, it could generates a read{MB} event and a
-> write{MB} event (succeed case), or a read{MB} event (fail case), "{MB}"
-> here doesn't mean it's a full barrier, it only means the event comes
-> from a no suffix API. Here "{MB}" only has syntactic meaning (no
-> semantic meaning).
+> All the nodes seem to be only in disabled mode, is there even a single
+> board that is actually using this? if so, why isn't it enabled?
 
-Okay, I get it.  Then you might agree that it probably would be better 
-to use a different tag here, because the mb tag is already in use with 
-other instructions (like smp_mb()) where it does always mean there's a 
-full barrier.
+I will add pinmux and enable in the board level dts file.
 
-> Not really, RMW events contains all events generated from
-> read-modify-write primitives, if there is an R event without a rmw
-> relation (i.e there is no corresponding write event), it's a failed RWM
-> by definition: it cannot be anything else.
+~ Judith
 
-Not true.  An R event without an rmw relation could be a READ_ONCE().  
-Or a plain read.  The memory model uses the tag to distinguish these 
-cases.
-
-> > that it would work is merely an artifact of herd7's internal actions.  I 
-> > think it would be much cleaner if herd7 represented these events in some 
-> > other way, particularly if we can tell it how.
-> > 
-> > After all, herd7 already does generate different sets of events for 
-> > successful (both R and W) and failed (only R) RMWs.  It's not such a big 
-> > stretch to make the R events it generates different in the two cases.
-> > 
 > 
-> I thought we want to simplify the herd internal processing by avoid
-> adding mb events in cmpxchg() cases, in the same spirit, if syntactic
-> tagging is already good enough, why do we want to make herd complicate?
+>>
+>> Signed-off-by: Judith Mendez <jm@ti.com>
+>> ---
+>> Changes since v1:
+>> - No change
+>> ---
+>>   arch/arm64/configs/defconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index 2c30d617e1802..23d11a1b20195 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -1593,6 +1593,7 @@ CONFIG_INTERCONNECT_QCOM_SM8550=y
+>>   CONFIG_INTERCONNECT_QCOM_SM8650=y
+>>   CONFIG_INTERCONNECT_QCOM_X1E80100=y
+>>   CONFIG_COUNTER=m
+>> +CONFIG_TI_EQEP=m
+>>   CONFIG_RZ_MTU3_CNT=m
+>>   CONFIG_HTE=y
+>>   CONFIG_HTE_TEGRA194=y
+>> -- 
+>> 2.45.1
+>>
+> 
 
-Herd7 already is complicated by the fact that it needs to handle 
-cmpxchg() instructions in two ways: success and failure.  This 
-complication is unavoidable.  Adding one extra layer (different tags for 
-the different ways) is an insignificant increase in the complication, 
-IMO. And it's a net reduction when you compare it to the amount of 
-complication currently in the herd7 code.
-
-Also what about cmpxchg_acquire()?  If it fails, it will generate an R 
-event with an acquire tag not in the rmw relation.  There is no way to 
-tell such events apart from a normal smp_load_acquire(), and so the .cat 
-file would have no way to know that the event should not have acquire 
-semantics.  I guess we would have to rename this tag, as well.
-
-Alan
