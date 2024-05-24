@@ -1,140 +1,143 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5155F19B;
-	Fri, 24 May 2024 00:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8561936D
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 00:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716510011; cv=none; b=meslyr967TNy+zYKtFIFM2DKbNmDQnwQ8lHdDVMmtulxpQCbx2nqfNsWmVAqkC1iD6W5yxqf6tbJQmd/YBC0+eQRMJBh+KWHNbGR6mWS1afnVHyiTRAjPF5bvTUR7/ZO1PvzaDyXw4gT70p9Ga1VKD27kS3HDd9VtzaauRFkuG8=
+	t=1716510315; cv=none; b=qz1bW9cHE7BIqjzWM5/GJ/Dw7NZ5u22ybMI9e2mWY6VviVhUf0SZpwnlMRsVdVC01q39X/ZdQZWXpN1nxi7K6ohCFQRC7hUbDoKrLIwG/g/YBdPz3urVLhOKRng8mO7gebahHjQWZsqBSaof7KgtTy/Jbg7Z55SqWKIhYM2021Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716510011; c=relaxed/simple;
-	bh=UISalHEbveHVG2/HSIHQqF9o5XaSlJzmRionrjBFrfw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=NDgUORIZ8ai0wuj9rk8+4tHDebMTTT5SYbdscX3SLLOEH7zP0X7Yp8YIB+R56tUHk8WcfR7i1TU/75OQF0Rcq8zJaGUV51YJ0omo3dMvmkYnUZ969ibYhTsCcgwx/BpAZEB54O5Wg7j1CcX4fcOJv+zELFoFk3AHFb2FJIInV3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PV21+wi8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716510315; c=relaxed/simple;
+	bh=U+XQqQjFGY0Dsnz1iYyMGSwZE5e64uigVIBpySGsOWQ=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SnqZojKZZZADX6Kbc1PcYCw+WPBpIkbysP+7djCaGE1BXQyIPp/TpTmHQIAkYu/YlQ1N/KKk2jkoo5UVkIsjku/x3gFdrv4Hm4yXkvGSad8POjBe5hflTk6vfAYrf0FtJRFk7CxszH46d1XMfLOOUFbJ6YOj++gxK6fZ/mU99jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=c0PNkwvg; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PV21+wi8"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NNP0cp004106;
-	Fri, 24 May 2024 00:20:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=ZeHxtkw586PaODVHgHJTtw
-	yVLvMA6RMOHdQGuTC/h/o=; b=PV21+wi8oEW6fWopGRU9nAhpuEmsn9Cgk8DdAo
-	aWR3dWoWfJ6KSCOivMUiTn2PNiWlCCjSCaEbnNPplgSS/ygHHE3cJDWzFq7X0VSJ
-	eQMvEH7afwhBT5iCZA2FBW+ozAGuJnodPi8c5z44jye6Gx32/RJ4AUPl9dflW4dj
-	rSWXtBrZ3YVV0+l0jIsUd/sxkzociNw7yhS90OKktOOLFtsWYpoKXCjTxbvZXcfM
-	v29oM8Cd5Ze/p0W6pDUCuGTRLTIE2T4mboAzHnKLqiQ6s6ivzus4JFyxePNETqCh
-	zNIDz66TkoHNEyjxVzBAP7LRrYdUbyXx3LI+3bIrE3Cl9O+g==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yaa8kgr8w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 May 2024 00:20:08 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44O0K7cQ019089
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 May 2024 00:20:07 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 23 May
- 2024 17:20:06 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 23 May 2024 17:12:24 -0700
-Subject: [PATCH] vfio-mdev: add MODULE_DESCRIPTION() macros
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c0PNkwvg"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-794aa87af7cso13527385a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2024 17:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716510312; x=1717115112; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZX2oAdiZue5vGuu38VdxDUrJ1eMtA33xvB1yO4Vm7T4=;
+        b=c0PNkwvggpIrbWlbj9sRMJfNM2D47FdObwLX/tEWZIK+r57zbLqX2gMgJ579DDq1zm
+         Yn2H0M3E4aw0yr4awUDYI02ixHDnQFpaspApbOmpY6C9Y97jN7M3FJkdoszkRku+3+tQ
+         PeDFZjcrH5/BJb0/ARPOs5+/jKWMWvExoo0dE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716510312; x=1717115112;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZX2oAdiZue5vGuu38VdxDUrJ1eMtA33xvB1yO4Vm7T4=;
+        b=NsfcAIcn1xTQCQ+2iSzSmOeBMTvmGbQie60l+rYAPdTks7YA2Ycyj/XEL6j4lbf6u9
+         GI4kz1DvjUxfjtJRqtZrjR98NjCVPLlFGrBOA0XsxU0u5nS/fcG1GnfHFBqcX6xhHkQc
+         /68lrv9iJ1myHrPDeD8KLjVi1nDQcyIoDxbdu5l5wsRLpPZMZFRr7X2bZNSbSjCqtrqM
+         uJ+62D16n027ncPvysVlNaetjjU3ygPvEgNORbBLk6xzfgtRw0RndYRsAsAduF8poMGs
+         nC+V9TC7OozO1+uDOYWbNCixzpIulGHNWVu1LAnGNxLIqgYqlD4quoAADY+vfJqF0vtN
+         08oA==
+X-Forwarded-Encrypted: i=1; AJvYcCXp55l1AWH/rhkHooE8np6kYqGzXqCfjCo0EAbnF3N/fm8VIQprk+jRHJ05/FBR7/osnCBdMdbMKlM2s5ry+glaVfCKUyvXL0UN2EVo
+X-Gm-Message-State: AOJu0Yx41iGJ2YcsBlVrJfBPGUWYRhHWP0IeJIjokb1DK5qSZweXpPkk
+	5dCLN0utnBVx5Mjo7GVvrrN2CYxpGEFSx95JzVMQzepQrG1zpvMH9z58/0ckEtiFEfjH0durCo4
+	003ftF4mn/8HkWzPz68qZ/ZJsJmWOkKUemVBp
+X-Google-Smtp-Source: AGHT+IGFLK1p3SdN9AodStf+OL72IZFLq1VoeAAFc3OOdOka8ZwEhPtfLoJ456ZTTwjV8kUX6SQvIZZmMiHRGzOhlRc=
+X-Received: by 2002:a05:620a:2952:b0:792:9a4b:dcd4 with SMTP id
+ af79cd13be357-794ab09e87cmr96261885a.45.1716510312469; Thu, 23 May 2024
+ 17:25:12 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 23 May 2024 17:25:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240523-md-vfio-mdev-v1-1-4676cd532b10@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGjbT2YC/x2M0QqDMAxFf0XyvICtDmW/MvbQajoDs0riikP89
- 2V7uhy45xygJEwKt+oAocLKSzZwlwqGKeQnIY/G4Gvf1lff4DxiSbzYUsGmd6lrY+q75MCUVSj
- x/s/dH8YxKGGUkIfpF3lxfu84B91IcP3YFc7zC8L3u/qDAAAA
-To: Kirti Wankhede <kwankhede@nvidia.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: B-sDN7bfuIo3ZNOaHS6SqkLDMDa7EKL4
-X-Proofpoint-GUID: B-sDN7bfuIo3ZNOaHS6SqkLDMDa7EKL4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-23_13,2024-05-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 impostorscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405240000
+In-Reply-To: <20240523162207.1.I2395e66cf70c6e67d774c56943825c289b9c13e4@changeid>
+References: <20240523232216.3148367-1-dianders@chromium.org> <20240523162207.1.I2395e66cf70c6e67d774c56943825c289b9c13e4@changeid>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Thu, 23 May 2024 17:25:11 -0700
+Message-ID: <CAE-0n51nBXsaubmtbUxPBsNDiNuOVa1hB9O0bihm8fpEhEDjRg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] serial: port: Don't block system suspend even if
+ bytes are left to xmit
+To: Douglas Anderson <dianders@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	John Ogness <john.ogness@linutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	linux-arm-msm@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Guanbing Huang <albanhuang@tencent.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Fix the 'make W=1' warnings:
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mtty.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mdpy.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mdpy-fb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mbochs.o
+Quoting Douglas Anderson (2024-05-23 16:22:12)
+> Recently, suspend testing on sc7180-trogdor based devices has started
+> to sometimes fail with messages like this:
+>
+>   port a88000.serial:0.0: PM: calling pm_runtime_force_suspend+0x0/0xf8 @ 28934, parent: a88000.serial:0
+>   port a88000.serial:0.0: PM: dpm_run_callback(): pm_runtime_force_suspend+0x0/0xf8 returns -16
+>   port a88000.serial:0.0: PM: pm_runtime_force_suspend+0x0/0xf8 returned -16 after 33 usecs
+>   port a88000.serial:0.0: PM: failed to suspend: error -16
+>
+> I could reproduce these problem by logging in via an agetty on the
+> debug serial port (which was _not_ used for kernel console) and
+> running:
+>   cat /var/log/messages
+> ...and then (via an SSH session) forcing a few suspend/resume cycles.
+>
+> Tracing through the code and doing some printf debugging shows that
+> the -16 (-EBUSY) comes from the recently added
+> serial_port_runtime_suspend().
+>
+> The idea of the serial_port_runtime_suspend() function is to prevent
+> the port from being _runtime_ suspended if it still has bytes left to
+> transmit. Having bytes left to transmit isn't a reason to block
+> _system_ suspend, though.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- samples/vfio-mdev/mbochs.c  | 1 +
- samples/vfio-mdev/mdpy-fb.c | 1 +
- samples/vfio-mdev/mdpy.c    | 1 +
- samples/vfio-mdev/mtty.c    | 1 +
- 4 files changed, 4 insertions(+)
+Can you elaborate? I paused to think that maybe we would want to make
+sure that everything that was transmitted had been transmitted but that
+doesn't seem right because it's a problem for higher layers to solve,
+e.g. serdev would want to make sure some sleep command sent over the
+wire actually got sent.
 
-diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-index 9062598ea03d..836456837997 100644
---- a/samples/vfio-mdev/mbochs.c
-+++ b/samples/vfio-mdev/mbochs.c
-@@ -88,6 +88,7 @@
- #define STORE_LE32(addr, val)	(*(u32 *)addr = val)
- 
- 
-+MODULE_DESCRIPTION("Mediated virtual PCI display host device driver");
- MODULE_LICENSE("GPL v2");
- 
- static int max_mbytes = 256;
-diff --git a/samples/vfio-mdev/mdpy-fb.c b/samples/vfio-mdev/mdpy-fb.c
-index 4598bc28acd9..149af7f598f8 100644
---- a/samples/vfio-mdev/mdpy-fb.c
-+++ b/samples/vfio-mdev/mdpy-fb.c
-@@ -229,4 +229,5 @@ static int __init mdpy_fb_init(void)
- module_init(mdpy_fb_init);
- 
- MODULE_DEVICE_TABLE(pci, mdpy_fb_pci_table);
-+MODULE_DESCRIPTION("Framebuffer driver for mdpy (mediated virtual pci display device)");
- MODULE_LICENSE("GPL v2");
-diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-index 27795501de6e..8104831ae125 100644
---- a/samples/vfio-mdev/mdpy.c
-+++ b/samples/vfio-mdev/mdpy.c
-@@ -40,6 +40,7 @@
- #define STORE_LE32(addr, val)	(*(u32 *)addr = val)
- 
- 
-+MODULE_DESCRIPTION("Mediated virtual PCI display host device driver");
- MODULE_LICENSE("GPL v2");
- 
- #define MDPY_TYPE_1 "vga"
-diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-index 2284b3751240..40e7d154455e 100644
---- a/samples/vfio-mdev/mtty.c
-+++ b/samples/vfio-mdev/mtty.c
-@@ -2059,5 +2059,6 @@ module_exit(mtty_dev_exit)
- 
- MODULE_LICENSE("GPL v2");
- MODULE_INFO(supported, "Test driver that simulate serial port over PCI");
-+MODULE_DESCRIPTION("Test driver that simulate serial port over PCI");
- MODULE_VERSION(VERSION_STRING);
- MODULE_AUTHOR(DRIVER_AUTHOR);
+> The DEFINE_RUNTIME_DEV_PM_OPS() used by the
+> serial_port code means that the system suspend function will be
+> pm_runtime_force_suspend(). In pm_runtime_force_suspend() we can see
+> that before calling the runtime suspend function we'll call
+> pm_runtime_disable(). This should be a reliable way to detect that
+> we're called from system suspend and that we shouldn't look for
+> busyness.
+>
+> Fixes: 43066e32227e ("serial: port: Don't suspend if the port is still busy")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>  drivers/tty/serial/serial_port.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/tty/serial/serial_port.c b/drivers/tty/serial/serial_port.c
+> index 91a338d3cb34..b781227cc996 100644
+> --- a/drivers/tty/serial/serial_port.c
+> +++ b/drivers/tty/serial/serial_port.c
+> @@ -64,6 +64,16 @@ static int serial_port_runtime_suspend(struct device *dev)
+>         if (port->flags & UPF_DEAD)
+>                 return 0;
+>
+> +       /*
+> +        * We only want to check the busyness of the port if PM Runtime is
+> +        * enabled. Specifically PM Runtime will be disabled by
+> +        * pm_runtime_force_suspend() during system suspend and we don't want
+> +        * to block system suspend even if there is data still left to
+> +        * transmit. We only want to block regulator PM Runtime transitions.
 
----
-base-commit: 5c4069234f68372e80e4edfcce260e81fd9da007
-change-id: 20240523-md-vfio-mdev-381f74bf87f1
+s/regulator/regular/
 
+Is this a typo? Also, why is "runtime" capitalized?
+
+> +        */
+> +       if (!pm_runtime_enabled(dev))
+> +               return 0;
