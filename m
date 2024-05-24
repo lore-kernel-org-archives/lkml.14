@@ -1,42 +1,72 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECFF12CD81;
-	Fri, 24 May 2024 15:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A01B126F04;
+	Fri, 24 May 2024 15:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716566056; cv=none; b=CEvp3yhqlkNrGndsAmUfUvSFBqxjHWkR5xXnHgB1wSz1Vm5gXuJcHotZpVFD/Z4ceUEYLi+ARBb8MR+bllDg7oEmdDg0mM3WZQ8za5vV1Q26JZzZZIyRh7TRLoLCh6SQdfMN1GaM6Hpm1w4lztv/lg6FxvKju4zvZ9n7ivQ2pY8=
+	t=1716566129; cv=none; b=tqSsbXmpht9oEZOW5MVkygQTdleh+03rhj+b9xvQP1uv/c81G/AFMgA3J9kFrBn0HWLYeJe202JUzsDRWNZ8q1P1dQ8PuWWfzfUuC7dB5TMtode+gYTm3uTg8CanUSvcfxTg7DU4cagwLQih1rSOvAyN4TWvb0ehPny65fkw9iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716566056; c=relaxed/simple;
-	bh=+Pq8Ay0wvcb7Etnygr3YARipsS/gX3bUE7ZtLQZNb+Y=;
+	s=arc-20240116; t=1716566129; c=relaxed/simple;
+	bh=xS5Cb4oU68zPCtUxfTuRzeBZiDu8VHCvZRRao9Wn4OM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YvB8dIz/I6lK28J6ty99SxHDx+cJ0K9pkxjjyidrNelt9dfMMEuhhH5Ol8N0iWuAbOJRv553SjhK5/GtSINELqnqPTi9pF5uU0nf1FzWQ/xNS+XPV63HLwBYjTxL0v9px0xgarAqxkrPSL9mQy5KydJS+QxXcEH1lOydJ1Y0zA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=IQvJheCf; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wr4+hd0T0nA+ugHRHlfo0j2pJBMAD6xsG3xBF27yumDy8IbaqUv/K2VKuSdUtymEnJiW1A9cPP2/gVCS/T/2ZVa1nV1wkM3lgGVMwhf/AfxN1BgIbCnhmJ1xQpuGzZJwtvypnQBWzZPj8CEL9Dad41bznR0iWl0mh/MeSLt1BSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iSo9KmLY; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IQvJheCf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=MV8cl0rOGCTFcJnTsA5zvFiTquGTr/gV2k/m7gDsWG4=; b=IQvJheCf08SL2R5FzIUr3qIfsc
-	IzMIZ0eIwz7vKm8f4p86ki3xUrLeYmy/XCtrU95+Ch702s+sxm1aRpBcOqCCE8wo1tTN6k2GzaeC4
-	r4n1v+rd40kqOqWXg5XHy+dsYG6keBnzRs5Xsc2H8T+r9x68fWuDfzYnEAJiUSKZXAd8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sAXF3-00Fxnh-Rc; Fri, 24 May 2024 17:54:01 +0200
-Date: Fri, 24 May 2024 17:54:01 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Xiaolei Wang <xiaolei.wang@windriver.com>
-Cc: wei.fang@nxp.com, shenwei.wang@nxp.com, xiaoning.wang@nxp.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, imx@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [net v3 PATCH] net:fec: Add fec_enet_deinit()
-Message-ID: <9eb45fe8-a0df-4b5d-88a3-ed61f9e320f1@lunn.ch>
-References: <20240524050528.4115581-1-xiaolei.wang@windriver.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSo9KmLY"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35507de9853so587079f8f.0;
+        Fri, 24 May 2024 08:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716566126; x=1717170926; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=//KD1Ad6RRaTW94yeORLrlBuaIevXtri2sWaywu2r1w=;
+        b=iSo9KmLYdnM9CdcRxSy6fKoYsfFCnJrBgqA184WuoxjNiE+edVoZXC9mwI/G/4VQiH
+         f3iBI2hGsAcU/5ShRyxv8qkko4gRe+hDVCu936f6H65zoZ7nv3Tv10zFDPJiMirNVdOO
+         iSlEjJBd3HLqJYtk5oeKRZU2bS6C0/qkT1oAHGjzVO6Pr3KoBCret//dWvt8fTgmJtmb
+         Y1Sm804XsdSvtjzTqZVo+9L0gffaQQn3njRYCsTC7BoI1goGElUoP1UXaw6UfIYGNwGI
+         WRkaaWY8vcpWZMqcfCkhHZ0mQOjgIi1SqBaRAshP5fdRVPPoB24yO48PSDyyU4hteRZo
+         Wbhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716566126; x=1717170926;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=//KD1Ad6RRaTW94yeORLrlBuaIevXtri2sWaywu2r1w=;
+        b=uUGSMffX80YSw1Ph8sx9CCBRTYPYl1edsRdZ+ij44dZSk7wvh1ErvH+k6HEv+EEyDD
+         9GZSzi3cldFsL2Jzc85CVS50f6M/PmgE0qLqmwxqJyXOz1OYmPtFQPa5QzQu4APTV0CU
+         s0rJWFgHGnHVIAZxTtGZFsBMucfe6Ui2nFcyoL+LRkZ+Wk+pZgpgO1pfGw0WmIduFHL/
+         xFdAd4i7uv776D9TsqH5xinECjzXOc0toTjz3n4XnY1xC8MKPHXd/RvwPN8YyIow6PI4
+         N/fd04UcDJ2HccnKzdGhga6C91SavfGQcmTKVbG6C0F0G2GBJf67bkQEHot0XW8X8QeU
+         n6vg==
+X-Forwarded-Encrypted: i=1; AJvYcCVT6BxZD5Wnal4vHsqQA7ZY2rirLF4N2hkNs1EysIKLXzmvlE+oM051TE2oJ052EJuy+uLvJNQCce5jHeCz2b/QmEWogaxxg56H+Nbwo6iUtr100wIidcgCPMRiX0M7NMDFN98nDXyS8w==
+X-Gm-Message-State: AOJu0YzObSTXFpYUJnl5y8XKwo3IzpF+oi7fHVzupSHvBF8AFNA3hcMt
+	atRBC2xpqzmzMelQF0/pedRONNOxYXc6uKVa1aKvDP6cmNGJZJPc
+X-Google-Smtp-Source: AGHT+IGvjRiaA8GlfSDW7h+Ok/W23XLgkVoUl4OzjYq5we7GcVfeiytWRtbZHIoF1/0S4q9ZqlUhig==
+X-Received: by 2002:a5d:5242:0:b0:34c:77bd:2508 with SMTP id ffacd0b85a97d-35506d48543mr2704271f8f.11.1716566125620;
+        Fri, 24 May 2024 08:55:25 -0700 (PDT)
+Received: from andrea ([151.76.32.59])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557dcf06dcsm1901645f8f.106.2024.05.24.08.55.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 08:55:25 -0700 (PDT)
+Date: Fri, 24 May 2024 17:55:20 +0200
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+	npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+	luc.maranget@inria.fr, paulmck@kernel.org, akiyks@gmail.com,
+	dlustig@nvidia.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	hernan.poncedeleon@huaweicloud.com,
+	jonas.oberhauser@huaweicloud.com
+Subject: Re: [PATCH] tools/memory-model: Document herd7 (internal)
+ representation
+Message-ID: <ZlC4aFfAx4u8cjDb@andrea>
+References: <20240524151356.236071-1-parri.andrea@gmail.com>
+ <ZlC0IkzpQdeGj+a3@andrea>
+ <bd6426c0-f439-4b15-9ab4-12768aa8557a@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,45 +75,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240524050528.4115581-1-xiaolei.wang@windriver.com>
+In-Reply-To: <bd6426c0-f439-4b15-9ab4-12768aa8557a@rowland.harvard.edu>
 
-On Fri, May 24, 2024 at 01:05:28PM +0800, Xiaolei Wang wrote:
-> When fec_probe() fails or fec_drv_remove() needs to release the
-> fec queue and remove a NAPI context, therefore add a function
-> corresponding to fec_enet_init() and call fec_enet_deinit() which
-> does the opposite to release memory and remove a NAPI context.
+> > $ cat T.litmus 
+> > C T
+> > 
+> > {}
+> > 
+> > P0(spinlock_t *x)
+> > {
+> > 	int r0;
+> > 
+> > 	spin_lock(x);
+> > 	spin_unlock(x);
+> > 	r0 = spin_is_locked(x);
+> > }
 > 
-> Fixes: 59d0f7465644 ("net: fec: init multi queue date structure")
-> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
-> Reviewed-by: Wei Fang <wei.fang@nxp.com>
-> ---
-> v1 -> v2
->  - Add fec_enet_free_queue() in fec_drv_remove()
-> v2 -> v3
->  - Add fec_enet_deinit()
-> 
->  drivers/net/ethernet/freescale/fec_main.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-> index a72d8a2eb0b3..881ece735dcf 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -4130,6 +4130,14 @@ static int fec_enet_init(struct net_device *ndev)
->  	return ret;
->  }
->  
-> +static void fec_enet_deinit(struct net_device *ndev)
-> +{
-> +	struct fec_enet_private *fep = netdev_priv(ndev);
-> +
-> +	netif_napi_del(&fep->napi);
-> +	fec_enet_free_queue(ndev);
-> +}
+> No "exists" clause?  Maybe that's your problem.
 
-That is much better, and using the correct structure helped you find
-other bug....
+Nope, that doesn't seem to be it.  (Same result after adding one.)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+  Andrea
