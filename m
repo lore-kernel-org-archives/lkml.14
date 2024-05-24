@@ -1,32 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149FC128382
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D2C383A2
 	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 08:41:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716540110; cv=none; b=E+aEZ7H9oPj6TQwVCfIoji4l46WNmNEz2SHqz6Wu4Yz42O5rFl+DXFeeRLPTSWjIpWG2sUTRZ+taA7A4xyKBQW10yp+rq678nDpdmXFKIfSo07Ezpy1BV6QLIy487qRnUNg1c2pXK/SmtQwqiZ1Y2Xa1OP+/IB0QM9PkJkWZHQI=
+	t=1716540110; cv=none; b=NjAmASCVgvIfbPTY2m6pLurEuMUns/1hOQZODqcek4VOH9cfJRnquJybXrStcKmXCd2pe5E7fb2EmNbz1CvoSwZ9LLRrMh1WCJXULJhdpdvSgTOM1jqd2Nohz4hq0BahMb+0oOSXU/k9I0thqiDqZ8EiwMnzkaIEN42ll/74/68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716540110; c=relaxed/simple;
-	bh=5TOBwxsF/ssAhWevLOKVZZiad/EoE9Qjo1wELgR4coQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Cr4wz52AALX0VJ8sKy88ttRNYFFQkA2LUbtHl6DK4FKn99TFPBgoWTluTJzpqyzWAwsX+Cjn7rUDUn1//VAz7ZFPV+5xF0Lh0z4TWrQ+34qUPx/d1poby5f+Dj0e35i/Vv+TJk6PT1NTg88dIRp9pSn0D6/nb7Tn6NR+9zFy/ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=LcNB+fVr; arc=none smtp.client-ip=159.69.126.157
+	bh=e5+L5SBvzSbV28oQcw8gx5HYgfjLqOw6uTnbrnA+RYM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZO7P1m9l58wfGTxJYYYGSmmg9UBFxrTtQSvQTv0/e74/MWhwMYM7pgD3zAVmptOKEk9n7eqbaQYAYr1Jw87sK2ViqpRnoGIQzT5Zz+JUj8+RgVD44tJcOqrSrxLYM+XfrZb4R0yx/mqIdUuun3zwvjjJ5y1nzhHJ2zEWB1Tmh9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Mclfm2qb; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="LcNB+fVr"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Mclfm2qb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1716539617;
-	bh=5TOBwxsF/ssAhWevLOKVZZiad/EoE9Qjo1wELgR4coQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LcNB+fVrAstclMmo+s7OkLnZov3T5v4uYCIGxidfSmxDkoE9blWvLpDN3QXIlqulb
-	 rNQQHloLLqm656kkw7QiCXRmNTHqniWpFwIgDey1wBsg19m/ehmt4i8UwLALQBvJ3x
-	 3vNVuKCBoEFwtgQ6DeG4k5QDpqd2xJ/W4FrtDtGM=
+	bh=e5+L5SBvzSbV28oQcw8gx5HYgfjLqOw6uTnbrnA+RYM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Mclfm2qbw9bM2D2YTK0RJLAdzpxr4DY9pKKkgbtZ6oaIE+h0/ECxbz/7aRR2yllWg
+	 DRMvmcxPJvIvkmUV/de13hWPu59SNmsLLmI6K6foBni+FjXPSCYiHDU/TvL3Ik5idq
+	 8SHK+759ktOhzzm5tPwfJA1V9flhpi39x/C1SsvY=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Fri, 24 May 2024 10:33:34 +0200
-Subject: [PATCH 2/2] platform/chrome: cros_ec_proto: Fix
- cros_ec_get_host_command_version_mask kdoc
+Subject: [PATCH 0/2] platform/chrome: cros_ec_proto: Trivial kdoc fixes
+Date: Fri, 24 May 2024 10:33:32 +0200
+Message-Id: <20240524-cros_ec-cmd_versions-v1-0-8a148647d051@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,50 +34,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240524-cros_ec-cmd_versions-v1-2-8a148647d051@weissschuh.net>
-References: <20240524-cros_ec-cmd_versions-v1-0-8a148647d051@weissschuh.net>
-In-Reply-To: <20240524-cros_ec-cmd_versions-v1-0-8a148647d051@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIANxQUGYC/x2MSQqAMAwAvyI5W9C6HPyKiNQkag4uJCBC8e9Wj
+ wMzE8FYhQ26LILyJSbHnqDMM8A17As7ocTgC18Xja8d6mEjo8ONxov1882Rn2iuQjtRQEjpqTz
+ L/W/74XletTrBH2YAAAA=
 To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
  Guenter Roeck <groeck@chromium.org>
 Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716539616; l=907;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716539616; l=572;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=5TOBwxsF/ssAhWevLOKVZZiad/EoE9Qjo1wELgR4coQ=;
- b=5JvEnK5PvixO13QAhdFeynqVs1V2NjccBnydXRn0155oulCmimDplO7i0ZdvDH3u0pQINFLVq
- y/6ffRXurkdBh8vFcjK1GY7k41WdcqJnZz55YMTZNybAkyhU/C+zBMQ
+ bh=e5+L5SBvzSbV28oQcw8gx5HYgfjLqOw6uTnbrnA+RYM=;
+ b=ujL9GC0Y9YWChyYrvGEeiFl+pf889hCJuDbpNyetWqoVCKdV6fUmd8dCYV+hU8seTyHGSvlkB
+ Bd4ClgEB9mOBNtxW00RbJ9Uku8Ieu+EOZeHheeFVdbHhM49fHWmBLju
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Mark the documentation block as kernel doc and drop the documentation of
-the non-existing parameter "@msg".
+Two tiny fixes for kernel docs.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/platform/chrome/cros_ec_proto.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Thomas Weißschuh (2):
+      platform/chrome: cros_ec_proto: Fix cros_ec_get_host_event_wake_mask kdoc
+      platform/chrome: cros_ec_proto: Fix cros_ec_get_host_command_version_mask kdoc
 
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index 0006a3439644..dcfc18fe1cdf 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -426,13 +426,12 @@ static int cros_ec_get_proto_info_legacy(struct cros_ec_device *ec_dev)
- 	return ret;
- }
- 
--/*
-+/**
-  * cros_ec_get_host_command_version_mask
-  *
-  * Get the version mask of a given command.
-  *
-  * @ec_dev: EC device to call
-- * @msg: message structure to use
-  * @cmd: command to get the version of.
-  * @mask: result when function returns 0.
-  *
+ drivers/platform/chrome/cros_ec_proto.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+---
+base-commit: 6d69b6c12fce479fde7bc06f686212451688a102
+change-id: 20240524-cros_ec-cmd_versions-d2bdf3a6bdac
 
+Best regards,
 -- 
-2.45.1
+Thomas Weißschuh <linux@weissschuh.net>
 
