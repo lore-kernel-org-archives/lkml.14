@@ -1,106 +1,109 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C53E86643
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 14:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D3286643;
+	Fri, 24 May 2024 14:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716561513; cv=none; b=pCvVOtTQAzmQ01PGT+fQhtoEijEzHH117z6MqYk5YUdWdvDHhpDZeZ9hm+oN9eemSRRLmVJIzcZ60omFvtUVYOxZdGqyoI0PRQ273FAs5pBMUbXBdW2g58OwCdYIZYwWzCzmggaESp+wPbUlUKX1/gQ53yjN9n4wAchEhuEbpqc=
+	t=1716561589; cv=none; b=kpuZ2efmZtZlpdfGTtYTKgOgnuE+hxU3KhlQSdOfIEOcjpfAOdKy+QZLvmoU4ht2FE8enG8jQkYNX59XVkIvtJXPULkeV0zHlQQ9kDgFglMx2CW+uvDqq1mb8fJYVZd2ukfC+Dv/hCDfza/vajfCMG+fIoJaDlPUwgB1QeLFclk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716561513; c=relaxed/simple;
-	bh=P0oGiXPwUYgxEc8MMGLYiqhD0U1U/yW8vDU6/y/HYA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lkjETtjA8Z5p4Y/Y/chRZVAJfHFtCJA15axry/L8eolPgFf9HxbtKPwsC1cZnUlzdIep1eBcIKkG2gG88Nz83k4TkVpePhJto+S62Gcglo0O0ahJhbF4tcHIg6OKpD6DENdNoFBbJfmof5bm/yqhmSxQrgwYohUY6pA54ynJ3CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W+6sNU+8; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716561589; c=relaxed/simple;
+	bh=M9oEkYlMCsLV8xMj4+wTERAWbk6x/3fQFKuCW2n0YG8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VdgxfN8qY4GZlOFEGV7pt1R5OmbYh6oZStXweiU12gMkSR5PoMbsPgXTwzxIT/uSR3Rbi8eDCNoJDN4RVIFnNNyh2ePO/KZbTOSAJwh4fDVg+syg/AOMVc1G5zUay10Il0v0CfuC9phqIFkF0ceaY4mITZhQRoE1A3Pdejh6LtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bt2WlCCG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W+6sNU+8"
-X-Envelope-To: markus.elfring@web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716561508;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KNBYTib7bUrTL43Ki1euUCce0RgdF7TpezQWmMPaS+0=;
-	b=W+6sNU+8P+CQXEFhRbBWKO7eHkid0PNn/SrR8Ctd1eIuq/OVVzJbS8HWe469L3WfSuZSvW
-	jv4AxCVIjSyIS1kVjuGpkGKjBhOvGeJEQhIYV9e3TFpCIX+JY6NIHRPZ+ibvMr8f8ZuqD4
-	f2QaMZbCPnVfA+1kzyv6TuGv0jbQqYg=
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-pci@vger.kernel.org
-X-Envelope-To: kernel-janitors@vger.kernel.org
-X-Envelope-To: kw@linux.com
-X-Envelope-To: lpieralisi@kernel.org
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: bharat.kumar.gogada@xilinx.com
-X-Envelope-To: bhelgaas@google.com
-X-Envelope-To: lorenzo.pieralisi@arm.com
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: michal.simek@xilinx.com
-X-Envelope-To: thippeswamy.havalige@amd.com
-Message-ID: <ad8da38a-5e3d-4f79-8744-66acf73703af@linux.dev>
-Date: Fri, 24 May 2024 10:38:23 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bt2WlCCG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A61CC32782;
+	Fri, 24 May 2024 14:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716561589;
+	bh=M9oEkYlMCsLV8xMj4+wTERAWbk6x/3fQFKuCW2n0YG8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Bt2WlCCGVn3Nt81R3yCa8GpCrYR4fOUV/UdO0/yyIWOtRzvm+vO/8J2RXbzAmuXwo
+	 uL0ZhJTyx8BLSagQLCng+6mubnw1I2W+lzLh1IPAYq7kN6sA4h9B3yAKVLt2jH2Rs5
+	 AXrAJrpDkd17NTir6HZ0jdZc7jFle3FRZ+vK4tKMVlz3xKG48cdRm+Gepc3rOd0hha
+	 ivMAUuDwBdST34b8LdZL1BPaNauNMF7Xne+TeShr3l7r4iDYetPtEUe5x3xxKC3U7Q
+	 kEeUTdt4WrbeqiLggBJQVTiFtBOgRgirtlbzuue49W7zT96y5tx6J9r2LU5o2XTi+l
+	 rmqLzBuox9HlA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B367C25B7C;
+	Fri, 24 May 2024 14:39:49 +0000 (UTC)
+From: Joel Selvaraj via B4 Relay <devnull+joelselvaraj.oss.gmail.com@kernel.org>
+Date: Fri, 24 May 2024 09:39:18 -0500
+Subject: [PATCH v2 1/3] Input: novatek-nvt-ts: replace generic i2c device
+ id with specific IC variant
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 6/7] PCI: xilinx-nwl: Add phy support
-To: Markus Elfring <Markus.Elfring@web.de>,
- linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- kernel-janitors@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Michal Simek <michal.simek@amd.com>, Michal Simek <michal.simek@xilinx.com>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-References: <20240520145402.2526481-7-sean.anderson@linux.dev>
- <89d6acd5-5008-4db3-927c-d267be7b9302@web.de>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <89d6acd5-5008-4db3-927c-d267be7b9302@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240524-nvt-ts-devicetree-regulator-support-v2-1-b74947038c44@gmail.com>
+References: <20240524-nvt-ts-devicetree-regulator-support-v2-0-b74947038c44@gmail.com>
+In-Reply-To: <20240524-nvt-ts-devicetree-regulator-support-v2-0-b74947038c44@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ Joel Selvaraj <joelselvaraj.oss@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716561588; l=1393;
+ i=joelselvaraj.oss@gmail.com; s=20240420; h=from:subject:message-id;
+ bh=o9JSDCGAeFyywH+QabP9V+yumWYX1UdF0t0fi0getJU=;
+ b=+OHGaB9WLCWxuEeAT06cejRG59IV/cz0Vfn5cBW7XM9N5BLLtADdbu3SlSTg8/7LJHtJssDAJ
+ lujx96/TNl1ApdmyOspcU4XlxT0qo/HB70ckz2PcY1BzGCLk9SlfNlK
+X-Developer-Key: i=joelselvaraj.oss@gmail.com; a=ed25519;
+ pk=qT4gsuVtlPE0Dpr+tQA/Fumm7wzVP6qfeVaY+6pX04s=
+X-Endpoint-Received: by B4 Relay for joelselvaraj.oss@gmail.com/20240420
+ with auth_id=165
+X-Original-From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
+Reply-To: joelselvaraj.oss@gmail.com
 
-On 5/24/24 04:16, Markus Elfring wrote:
->> Add support for enabling/disabling PCIe phys. We can't really do
->> anything about failures in the disable/remove path, so just warn.
-> …
->> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> …
->> @@ -818,12 +876,15 @@ static int nwl_pcie_probe(struct platform_device *pdev)
->>  		err = nwl_pcie_enable_msi(pcie);
->>  		if (err < 0) {
->>  			dev_err(dev, "failed to enable MSI support: %d\n", err);
->> -			goto err_clk;
->> +			goto err_phy;
->>  		}
->>  	}
->>
->>  	err = pci_host_probe(bridge);
->>
->> +err_phy:
->> +	if (err)
->> +		nwl_pcie_phy_disable(pcie);
->>  err_clk:
->>  	if (err)
->>  		clk_disable_unprepare(pcie->clk);
-> 
-> I got the impression that some source code adjustments should be performed
-> in another separate update step for this function implementation.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.9#n81
-> 
-> You propose to extend the exception handling here.
-> Does such information indicate a need for another tag “Fixes”?
+From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
 
-Huh? I am only disabling what I enabled...
+This is done in preparation to introduce other variants of the Novatek NVT
+touchscreen controller that can be supported by the driver.
 
---Sean
+Signed-off-by: Joel Selvaraj <joelselvaraj.oss@gmail.com>
+---
+ drivers/input/touchscreen/novatek-nvt-ts.c       | 2 +-
+ drivers/platform/x86/x86-android-tablets/other.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/novatek-nvt-ts.c b/drivers/input/touchscreen/novatek-nvt-ts.c
+index 1a797e410a3fa..224fd112b25a9 100644
+--- a/drivers/input/touchscreen/novatek-nvt-ts.c
++++ b/drivers/input/touchscreen/novatek-nvt-ts.c
+@@ -278,7 +278,7 @@ static int nvt_ts_probe(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id nvt_ts_i2c_id[] = {
+-	{ "NVT-ts" },
++	{ "NT11205-ts" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, nvt_ts_i2c_id);
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index eb0e55c69dfed..5ecee6e66fb4d 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -40,7 +40,7 @@ static const struct x86_i2c_client_info acer_b1_750_i2c_clients[] __initconst =
+ 	{
+ 		/* Novatek NVT-ts touchscreen */
+ 		.board_info = {
+-			.type = "NVT-ts",
++			.type = "NT11205-ts",
+ 			.addr = 0x34,
+ 			.dev_name = "NVT-ts",
+ 		},
+
+-- 
+2.45.1
+
+
