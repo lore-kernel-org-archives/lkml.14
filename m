@@ -1,45 +1,46 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507DC85272
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 09:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3364C8593F
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 09:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716543332; cv=none; b=dzu1QH/pbD7lTwYpUDRvwuOMkgBBOm3Bw6Bs9ZnA3KDDWvJyJ7DDwGTfsBCIkqBTr0ODJiFm/KaNEdjWRX65vW1Wi1+Wh84vKn2FYvBhkpQnW4LMzzNFYLdoGXY0ywDXni54mWe1JO+a6nSnJNEdI84/ABoWyz9EeiDF92o4XHA=
+	t=1716543337; cv=none; b=IMtgExU1MFy+lyyKZlAyGPR6URjTg7pgXnGp+eTawWChq7dAKAsZurpDZSd3m472JUsvm3yMNJ3JLpBzqod+EGbVaCKJlQ2+zjI5BaTKow95LacD3e5qOiaPSLUZGppURXAB5Wf+72TUu1WRu2miOLQZPP0g0Q+D7V4RObPuD1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716543332; c=relaxed/simple;
-	bh=wmyJNeDE8Fz8mOGzmbzTS3KZQkyuTkwlsaU3KPEYjsY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s0/J+WOezyX9KLx9duUfnsMJWAK5c24W3C9R7c6+Db0jCCUWcyeTFSuOiQ1eyW8pNbn4itXl21fZDsugo3KFDWwtibUsfjbH+4Cv39ttSofh8aAe6zs4y02tj2QnUC3i+BpXL2XWW6Ck8d4sUivcSuxu2BtRRAq5WVsXTREmX7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nurBZOw7; arc=none smtp.client-ip=198.47.23.249
+	s=arc-20240116; t=1716543337; c=relaxed/simple;
+	bh=QuINseyPMWbtjzxt+mFdDX14hPa0Dkxx2vMcHqZDm6g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gaGmCSoWyO0bfreP4pyBOntlpm0t7c/dFM79ebmkhdC8XsxDdF3C3VOf0+JaVEDflP0eHY+WMqZrDzlosvBbhCMUWFwNgibLtZAqLV1QMtvboebdNK1EoT6BNzJd/Omn4uwkXMLFa+v9OwOluG26u4szb8EFd5CGLo5sqjXhUnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gX6P6YzF; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nurBZOw7"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44O9ZBKH007431;
-	Fri, 24 May 2024 04:35:11 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gX6P6YzF"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44O9ZE0n082222;
+	Fri, 24 May 2024 04:35:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716543311;
-	bh=rsYvHGCDHB4V1mOmaVnCjAvN1QUmRTqGqmwmU0aE0cQ=;
-	h=From:To:CC:Subject:Date;
-	b=nurBZOw70arpuTbCcL2NNx5owa7uq9t/uJYSuXVuEVmKNgtA0XrWx9qR4Zpkp9zN+
-	 9WUJDU+crHagP+Hczv6G41zPWepp/2wF8jWiVi+EGggNk3OS+y8sBXMYKpPByeFs9C
-	 a8o53FFueThIdOpFQ1je9RdlvoSDdWLs1E3FznOM=
+	s=ti-com-17Q1; t=1716543314;
+	bh=yNHllYLZp8VUFajO1ZSbz4JR76BCSglDPm2k6Bn2KIA=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=gX6P6YzFTFejJpJKeYuvr0RfqeRPqqIj8R2Vs7J/xpACKm9Z/W6G5lVRXqZ3nXTkD
+	 1mVF/8hmK0orpiprTF7g8ak5RlOGBCtkNmlnYeud1qgo+SF4F6y7l4h8tyUAqkR+G5
+	 oXduSJdUZdjMcvLK179ueoN2ipOWV69LgtWFoVB4=
 Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44O9ZBgU053938
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44O9ZExV023870
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 24 May 2024 04:35:11 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
+	Fri, 24 May 2024 04:35:14 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE107.ent.ti.com
  (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 24
- May 2024 04:35:11 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 04:35:14 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 24 May 2024 04:35:11 -0500
+ Frontend Transport; Fri, 24 May 2024 04:35:14 -0500
 Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.102] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44O9ZAXD060455;
-	Fri, 24 May 2024 04:35:10 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44O9ZDcO040590;
+	Fri, 24 May 2024 04:35:14 -0500
 From: Jayesh Choudhary <j-choudhary@ti.com>
 To: <linux-kernel@vger.kernel.org>, <andrzej.hajda@intel.com>,
         <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
@@ -49,10 +50,12 @@ To: <linux-kernel@vger.kernel.org>, <andrzej.hajda@intel.com>,
 CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
         <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
         <airlied@gmail.com>, <daniel@ffwll.ch>, <a-bhatia1@ti.com>
-Subject: [PATCH v3 0/2] Add mode_valid hook for sii902x bridge
-Date: Fri, 24 May 2024 15:05:07 +0530
-Message-ID: <20240524093509.127189-1-j-choudhary@ti.com>
+Subject: [PATCH v3 2/2] drm/bridge: Add pixel clock check in atomic_check
+Date: Fri, 24 May 2024 15:05:09 +0530
+Message-ID: <20240524093509.127189-3-j-choudhary@ti.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240524093509.127189-1-j-choudhary@ti.com>
+References: <20240524093509.127189-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,39 +66,31 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Currently, there are no check to validate the modes in the bridge.
-Add pixel clock check to validate the modes that the bridge can support.
+Check the pixel clock for the mode in atomic_check and ensure that
+it is within the range supported by the bridge.
 
-Also add the mode_valid hook in drm_bridge_funcs structure to take care
-of the case when the encoder attaches the bridge chain with the
-DRM_BRIDGE_ATTACH_NO_CONNECTOR flag in which case, the connector is not
-initialized in the bridge's attach call.
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
+ drivers/gpu/drm/bridge/sii902x.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Also add this check to the atomic_check call as suggested by Maxime in
-v1 patch.
-
-Changelog v2->v3:
-- Remove newline that was introduced in [1/2] and later deleted in [2/2]
-  in v2
-
-v2 patch:
-<https://lore.kernel.org/all/20240524073305.107293-1-j-choudhary@ti.com/>
-
-Changelog v1->v2:
-- Add KHZ suffix in the macros to be more clear
-- Add the hook for drm_bridge_funcs as well
-- Add check in atomic_check dunction call (in a separate patch)
-
-v1 patch:
-<https://lore.kernel.org/all/20240408081435.216927-1-j-choudhary@ti.com/>
-
-Jayesh Choudhary (2):
-  drm/bridge: sii902x: Fix mode_valid hook
-  drm/bridge: Add pixel clock check in atomic_check
-
- drivers/gpu/drm/bridge/sii902x.c | 43 ++++++++++++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+index bae551e107f9..a5b7ee1e3bbe 100644
+--- a/drivers/gpu/drm/bridge/sii902x.c
++++ b/drivers/gpu/drm/bridge/sii902x.c
+@@ -517,6 +517,12 @@ static int sii902x_bridge_atomic_check(struct drm_bridge *bridge,
+ 				       struct drm_crtc_state *crtc_state,
+ 				       struct drm_connector_state *conn_state)
+ {
++	if (crtc_state->mode.clock < SII902X_MIN_PIXEL_CLOCK_KHZ)
++		return MODE_CLOCK_LOW;
++
++	if (crtc_state->mode.clock > SII902X_MAX_PIXEL_CLOCK_KHZ)
++		return MODE_CLOCK_HIGH;
++
+ 	/*
+ 	 * There might be flags negotiation supported in future but
+ 	 * set the bus flags in atomic_check statically for now.
 -- 
 2.25.1
 
