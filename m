@@ -1,217 +1,225 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28C163B8;
-	Fri, 24 May 2024 01:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3BDD79C8;
+	Fri, 24 May 2024 01:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716515362; cv=none; b=MWGuHL1Bne6mIFKUSSXTg+rwwOhbxO/93KdV+IL5/fKQ9HsYl8gIEL7HyojxRfb7X8i9a1cLjxY0jnFMMCkmCm9Lsnja3tNSHELvC7bfeiffkR9nAzKojTU5Krkiy1U0i2weHvUUCbydWq8XaEFrSqGOovqYMxjQN6O77z1riig=
+	t=1716515461; cv=none; b=Tb5YjTiVbiyI3gOaHmzmfwoYYAyeW+nFkkbPSwU3ED5CZlh6zbyaf7/HA0E9JSzof5nDHYBYoQhNkTPasy+w1N+KpD35K7XiyCzZXVbevrwnx/MTV9lbut9b1Oq24wma1btuzDgPRs8r2+NWcKArekAh/8Yhj5eBKNSA8cjeius=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716515362; c=relaxed/simple;
-	bh=fOK2TCE5oDIMbTwzI9DfT0ukFf7sfhp16ruyzkZnJtE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cylVhUSDAUJRRtOFtCn5K3NU1n6csuBbLbZLMdA1F05ysr9i6kM9AqeDeZohUM5Lhsfliun7rVmAyq+hE0QUUKQL2cV1IwK1On0Txr20SrSDIkGaiXMGH0t+42L+jyLzfhhKeVh8pNvIuheiJCH7eCJ5215GeS7GcxRhiNw8bzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X25gAqII; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X25gAqII"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3737b26657fso2162105ab.0;
-        Thu, 23 May 2024 18:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716515360; x=1717120160; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QaHuh4+m6vv2JYkBPChLg2kvgbF787xvUsagVVKzGy4=;
-        b=X25gAqIIN1YjBYrwcAcD824tq3Tf2sO6EVWmrKsuimaKJR7WH/7pB0U2/cqp0xRKx2
-         29KEjdCiCx0JiY3qsD1me1sHOQhT5j2b1BoU4ck+rIL7RbxmT4m41DDiQcRaUwx3/PcZ
-         k5v2qUBs2GVDk3x/kU4Sbx3GrXxy3Y0vspHiVhx4TzT/gzTJOYFtR9nBL/kTOghT5hC5
-         /0P5SCp6prHrtQRjMdfO0/FqA3g6SWnpwAzJMoiDMDM0SaFPKRvrTLXH+o7E6+Dm49El
-         ERyn6w1ze541VBKwZvAiqABBhgyBdeskkR+sTOQOX05q0QEqr3ek6TIKkxHxzwwIgOR+
-         Yb0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716515360; x=1717120160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QaHuh4+m6vv2JYkBPChLg2kvgbF787xvUsagVVKzGy4=;
-        b=ucg4UgtEl41KEftqejY6VLcBInETagLyAr+09Jb55zUJt/Yud5ecEXikrsyVb6xVkL
-         lXNbFgE8wgqRc/eOpTePnwJVLoUbJJl5l5VK/D7V66/u+LG8byBSqBgqgnGM+Ui+5YnJ
-         9WMttVsezVVEnxoNVK3RJYQ8Jp/GFWMN3xW8Vx8U1d+n6anfrL4EMyMigMvQvmeukEUp
-         Ov5UO6glQrREJQMZPJdR/aUj69KrN8g4/iaaMwCbM/0a79URfa5wZKSDPeoINnmd+r6C
-         RSrLPXjfjJzQf+upKWlTicLFPCCFjsF9EoMLvBBkI8/GO30B9v5KorM8zrceQXk1SDVw
-         Ne3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXs0O0XIyUFyaSk7JqLVwNoKaFNX2cVF0nnDpWoYerfktF9F65OUgCGQE78c9909zPYRkuhLkBIwjRymPv6oKJabvC09fm5aBJN8cOzsTaVpLjE/eK8B11lmKqFRWRsOz2Wah/86cdX1w041p+HeTiXKwZOujKXzPgSTlrmNCHCydwcMQ==
-X-Gm-Message-State: AOJu0YzBXblQIds50KpvuglWCFSyPkycu9oOgSDSlsAZGvtJcR8MrjaT
-	7mCFt9bfGRjFzQAdQ61scDuC8KR7N8PeYpL8G5OkNPWJSTQpwsyE8fS6aNd8Lyv6b+HwjGDFR/y
-	hoeCyzA2gBhi4LGZdenBG+UH2Vjo=
-X-Google-Smtp-Source: AGHT+IEK9vmj8neF4F55N645JBC1EaRdY3npShutVz5Cv3dOxwoge7Qm5GttoeiQi1A3WlSKb4Zn6OT23sNlHff/HF4=
-X-Received: by 2002:a92:c249:0:b0:371:b5a7:e44c with SMTP id
- e9e14a558f8ab-3737b35f477mr10159775ab.25.1716515359840; Thu, 23 May 2024
- 18:49:19 -0700 (PDT)
+	s=arc-20240116; t=1716515461; c=relaxed/simple;
+	bh=N/NewkKbyUb7UrI1/SHjF9zkPikBTE9MYNulI6nPEq0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=MUiGxpIMvxqrg740UTWeTIPbf8iKAO5o74BClnNyh+BCr2lnQt9fCgP1bLehTGEwniCuAnbjxgbMRKnpvJM8vSWrfm4icajEUwHwx7eiDOWiE6Fizg13O/uuP+lrb4qNHuuKNEa/7fItd+zcLMLjmoGHtrlABg481jotn/lwMN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8Cxaep_8k9mTTkDAA--.3876S3;
+	Fri, 24 May 2024 09:50:55 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHMd78k9mJHEHAA--.20507S3;
+	Fri, 24 May 2024 09:50:53 +0800 (CST)
+Subject: Re: [PATCH v2 4/6] KVM: Delete the now unused kvm_arch_sched_in()
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240522014013.1672962-1-seanjc@google.com>
+ <20240522014013.1672962-5-seanjc@google.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <d2810a82-3111-36f0-c27d-fb7c4c7efe58@loongson.cn>
+Date: Fri, 24 May 2024 09:50:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1716458390-20120-1-git-send-email-shengjiu.wang@nxp.com>
- <1716458390-20120-3-git-send-email-shengjiu.wang@nxp.com> <Zk+oxAh9+c0RIQ/t@lizhi-Precision-Tower-5810>
-In-Reply-To: <Zk+oxAh9+c0RIQ/t@lizhi-Precision-Tower-5810>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Fri, 24 May 2024 09:49:08 +0800
-Message-ID: <CAA+D8ANOQ8Pgt8QZWduZoVKCcb8Mdc=Xzotu4zAqakTjHO8pBQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] clk: imx: clk-audiomix: Add reset controller
-To: Frank Li <Frank.li@nxp.com>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, abelvesa@kernel.org, peng.fan@nxp.com, 
-	mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	marex@denx.de, linux-clk@vger.kernel.org, imx@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, p.zabel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240522014013.1672962-5-seanjc@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxHMd78k9mJHEHAA--.20507S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtF47GFW5Jry5Jr4DGw45Arc_yoWxtF4Upa
+	s3uFs5Wa1fKryrKa4DJr4q93y5Zws5Kw1av34UKrW5JFn8trn8JF4kKr9rJr98JrW093WS
+	kFy3KF1ruF4jywcCm3ZEXasCq-sJn29KB7ZKAUJUUUUA529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUShiSDUUUU
 
-On Fri, May 24, 2024 at 4:36=E2=80=AFAM Frank Li <Frank.li@nxp.com> wrote:
->
-> On Thu, May 23, 2024 at 05:59:47PM +0800, Shengjiu Wang wrote:
-> > Audiomix block control can be a reset controller for
-> > Enhanced Audio Return Channel (EARC), which is one of
-> > modules in this audiomix subsystem.
-> >
-> > The reset controller is supported by the auxiliary device
-> > framework.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  drivers/clk/imx/Kconfig               |  1 +
-> >  drivers/clk/imx/clk-imx8mp-audiomix.c | 60 +++++++++++++++++++++++++++
-> >  2 files changed, 61 insertions(+)
-> >
-> > diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
-> > index 6da0fba68225..9edfb030bea9 100644
-> > --- a/drivers/clk/imx/Kconfig
-> > +++ b/drivers/clk/imx/Kconfig
-> > @@ -81,6 +81,7 @@ config CLK_IMX8MP
-> >       tristate "IMX8MP CCM Clock Driver"
-> >       depends on ARCH_MXC || COMPILE_TEST
-> >       select MXC_CLK
-> > +     select AUXILIARY_BUS
-> >       help
-> >           Build the driver for i.MX8MP CCM Clock Driver
-> >
-> > diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/cl=
-k-imx8mp-audiomix.c
-> > index b381d6f784c8..2ee68f518850 100644
-> > --- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-> > +++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-> > @@ -5,6 +5,7 @@
-> >   * Copyright (C) 2022 Marek Vasut <marex@denx.de>
-> >   */
-> >
-> > +#include <linux/auxiliary_bus.h>
-> >  #include <linux/clk-provider.h>
-> >  #include <linux/device.h>
-> >  #include <linux/io.h>
-> > @@ -13,6 +14,7 @@
-> >  #include <linux/of.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/slab.h>
-> >
-> >  #include <dt-bindings/clock/imx8mp-clock.h>
-> >
-> > @@ -217,6 +219,60 @@ struct clk_imx8mp_audiomix_priv {
-> >       struct clk_hw_onecell_data clk_data;
-> >  };
-> >
-> > +#if IS_ENABLED(CONFIG_RESET_CONTROLLER)
-> > +
-> > +static void clk_imx8mp_audiomix_reset_unregister_adev(void *_adev)
-> > +{
-> > +     struct auxiliary_device *adev =3D _adev;
-> > +
-> > +     auxiliary_device_delete(adev);
-> > +     auxiliary_device_uninit(adev);
-> > +}
-> > +
-> > +static void clk_imx8mp_audiomix_reset_adev_release(struct device *dev)
-> > +{
-> > +     struct auxiliary_device *adev =3D to_auxiliary_dev(dev);
-> > +
-> > +     kfree(adev);
-> > +}
-> > +
-> > +static int clk_imx8mp_audiomix_reset_controller_register(struct device=
- *dev,
-> > +                                                      struct clk_imx8m=
-p_audiomix_priv *priv)
-> > +{
-> > +     struct auxiliary_device __free(kfree) * adev =3D NULL;
->
-> nit:  *adev =3D NULL;
 
-Actually,  the checkpatch.pl told me need to have space after '*'...
 
-Best regards
-Shengjiu Wang
+On 2024/5/22 上午9:40, Sean Christopherson wrote:
+> Delete kvm_arch_sched_in() now that all implementations are nops.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/arm64/include/asm/kvm_host.h     | 1 -
+>   arch/loongarch/include/asm/kvm_host.h | 1 -
+>   arch/mips/include/asm/kvm_host.h      | 1 -
+>   arch/powerpc/include/asm/kvm_host.h   | 1 -
+>   arch/riscv/include/asm/kvm_host.h     | 1 -
+>   arch/s390/include/asm/kvm_host.h      | 1 -
+>   arch/x86/kvm/pmu.c                    | 6 +++---
+>   arch/x86/kvm/x86.c                    | 5 -----
+>   include/linux/kvm_host.h              | 2 --
+>   virt/kvm/kvm_main.c                   | 1 -
+>   10 files changed, 3 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 8170c04fde91..615e7a2e5590 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -1225,7 +1225,6 @@ static inline bool kvm_system_needs_idmapped_vectors(void)
+>   }
+>   
+>   static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+> -static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+>   
+>   void kvm_arm_init_debug(void);
+>   void kvm_arm_vcpu_init_debug(struct kvm_vcpu *vcpu);
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index c87b6ea0ec47..4162a252cdf6 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -261,7 +261,6 @@ static inline bool kvm_is_ifetch_fault(struct kvm_vcpu_arch *arch)
+>   static inline void kvm_arch_hardware_unsetup(void) {}
+>   static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+>   static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+> -static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+>   static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+>   static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+>   static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
+> diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
+> index 179f320cc231..6743a57c1ab4 100644
+> --- a/arch/mips/include/asm/kvm_host.h
+> +++ b/arch/mips/include/asm/kvm_host.h
+> @@ -890,7 +890,6 @@ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+>   static inline void kvm_arch_free_memslot(struct kvm *kvm,
+>   					 struct kvm_memory_slot *slot) {}
+>   static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+> -static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+>   static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+>   static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+>   
+> diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+> index 8abac532146e..c4fb6a27fb92 100644
+> --- a/arch/powerpc/include/asm/kvm_host.h
+> +++ b/arch/powerpc/include/asm/kvm_host.h
+> @@ -897,7 +897,6 @@ struct kvm_vcpu_arch {
+>   static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+>   static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+>   static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
+> -static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+>   static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+>   static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+>   
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> index d96281278586..dd77c2db6819 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -286,7 +286,6 @@ struct kvm_vcpu_arch {
+>   };
+>   
+>   static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+> -static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+>   
+>   #define KVM_RISCV_GSTAGE_TLB_MIN_ORDER		12
+>   
+> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+> index 95990461888f..e9fcaf4607a6 100644
+> --- a/arch/s390/include/asm/kvm_host.h
+> +++ b/arch/s390/include/asm/kvm_host.h
+> @@ -1045,7 +1045,6 @@ extern int kvm_s390_gisc_register(struct kvm *kvm, u32 gisc);
+>   extern int kvm_s390_gisc_unregister(struct kvm *kvm, u32 gisc);
+>   
+>   static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+> -static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+>   static inline void kvm_arch_free_memslot(struct kvm *kvm,
+>   					 struct kvm_memory_slot *slot) {}
+>   static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index a593b03c9aed..f9149c9fc275 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -521,9 +521,9 @@ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+>   	}
+>   
+>   	/*
+> -	 * Unused perf_events are only released if the corresponding MSRs
+> -	 * weren't accessed during the last vCPU time slice. kvm_arch_sched_in
+> -	 * triggers KVM_REQ_PMU if cleanup is needed.
+> +	 * Release unused perf_events if the corresponding guest MSRs weren't
+> +	 * accessed during the last vCPU time slice (need_cleanup is set when
+> +	 * the vCPU is scheduled back in).
+>   	 */
+>   	if (unlikely(pmu->need_cleanup))
+>   		kvm_pmu_cleanup(vcpu);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index e924d1c51e31..59aa772af755 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -12586,11 +12586,6 @@ bool kvm_vcpu_is_bsp(struct kvm_vcpu *vcpu)
+>   	return (vcpu->arch.apic_base & MSR_IA32_APICBASE_BSP) != 0;
+>   }
+>   
+> -void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu)
+> -{
+> -
+> -}
+> -
+>   void kvm_arch_free_vm(struct kvm *kvm)
+>   {
+>   #if IS_ENABLED(CONFIG_HYPERV)
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index bde69f74b031..c404c428a866 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -1495,8 +1495,6 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>   					struct kvm_guest_debug *dbg);
+>   int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
+>   
+> -void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu);
+> -
+>   void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+>   void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu);
+>   int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id);
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 7ecea573d121..b312d0cbe60b 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -6286,7 +6286,6 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
+>   	WRITE_ONCE(vcpu->ready, false);
+>   
+>   	__this_cpu_write(kvm_running_vcpu, vcpu);
+> -	kvm_arch_sched_in(vcpu, cpu);
+>   	kvm_arch_vcpu_load(vcpu, cpu);
+>   
+>   	WRITE_ONCE(vcpu->scheduled_out, false);
+> 
 
->
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
->
-> > +     int ret;
-> > +
-> > +     adev =3D kzalloc(sizeof(*adev), GFP_KERNEL);
-> > +     if (!adev)
-> > +             return -ENOMEM;
-> > +
-> > +     adev->name =3D "reset";
-> > +     adev->dev.parent =3D dev;
-> > +     adev->dev.release =3D clk_imx8mp_audiomix_reset_adev_release;
-> > +
-> > +     ret =3D auxiliary_device_init(adev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D auxiliary_device_add(adev);
-> > +     if (ret) {
-> > +             auxiliary_device_uninit(adev);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return devm_add_action_or_reset(dev, clk_imx8mp_audiomix_reset_un=
-register_adev,
-> > +                                     no_free_ptr(adev));
-> > +}
-> > +
-> > +#else /* !CONFIG_RESET_CONTROLLER */
-> > +
-> > +static int clk_imx8mp_audiomix_reset_controller_register(struct clk_im=
-x8mp_audiomix_priv *priv)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +#endif /* !CONFIG_RESET_CONTROLLER */
-> > +
-> >  static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool =
-save)
-> >  {
-> >       struct clk_imx8mp_audiomix_priv *priv =3D dev_get_drvdata(dev);
-> > @@ -337,6 +393,10 @@ static int clk_imx8mp_audiomix_probe(struct platfo=
-rm_device *pdev)
-> >       if (ret)
-> >               goto err_clk_register;
-> >
-> > +     ret =3D clk_imx8mp_audiomix_reset_controller_register(dev, priv);
-> > +     if (ret)
-> > +             goto err_clk_register;
-> > +
-> >       pm_runtime_put_sync(dev);
-> >       return 0;
-> >
-> > --
-> > 2.34.1
-> >
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+
