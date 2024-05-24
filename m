@@ -1,62 +1,48 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB46786120;
-	Fri, 24 May 2024 13:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA29E1E52C;
+	Fri, 24 May 2024 13:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716559019; cv=none; b=MQJ0cUAdgvoeCosu1NNfYuzwLOHXX9t8pli1Ad3hx2x273T8Hj9gCKQDhfNBk0XEIajAKchxS2tQTkUcWkdXi563j9kGjmwB12a/sdazEc13srJ2+Gk64gO2ulj48gsrHDgN16ct555iEiJR8V312GMoonx46/YywaYbBCKE0vE=
+	t=1716559090; cv=none; b=mrEx2YIgVrCQGV4R2pLN4L5ye2z+Ca8k3Y2C1dbCPAQnL0MvoYePlNYaCPZH1RnDG1PNfSdfeUnvQ5BXz1CMwZSK2JblBfADOLQlajlwfPApT98FPFFh7Q+1inaLMWdp7FSWp5Ug1/2pD6dW6JEG4PwSiwGdL865QVRuDVdPtuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716559019; c=relaxed/simple;
-	bh=TbI1b1nQhIM/TWlonzYbHmL/h2K+W+tquMtOW1q6Oto=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BkW5+4RcdIIKfCLp/bFgbtR4vt0z0ePpA0NM5b//RtHWvSky7xH7y6+Tk4ZVCgqhTzUIFYONcUwR9OfhteLljbyYBGH2dF2Gougrewc/lMRLqiAbr/9itotpxF+F6UtK0btNi2N5aOWxCQEg1l7a+NqfpfSIXvc+PRe+Al6wvig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fnv85tLf; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716559090; c=relaxed/simple;
+	bh=My46v/q3vuGUyzhpBjk8iJOci71XYAlSL0dzslvRT94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=XN4I8g+QCMfGv0ialZ8U0ecmnbb3D5e//q4pkTmbOPo2xvrdQWTkmI/95glH5VDXln/ZYmYn7vK3yP/JQxuPBYf6k6iWmJKoI4FdZ+z995XZYHguDDT7bKwsazqpO0k1+hi7aUXgpkbfxtQsw+dX3GoNw1C0vJNvwX2jPRYT/Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=e7V9Lm77; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnv85tLf"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e538a264f7so101204591fa.0;
-        Fri, 24 May 2024 06:56:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716559016; x=1717163816; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DnGCZeDgq06e4yJxv3zYBUOrTNbIwkOVZezg5gdIpJc=;
-        b=fnv85tLf9xERd7u1q6vWGyNstsJNAk/7uSIn0M+OBE2WXJizTBzl30vq06zZan7qQT
-         b5aeWNeRRzLfPCX7x0e9h/03AdIOR/k+qqdDN9RFw8rXAuiVeTFy9alegIduBNvEDy9v
-         6RpQKqMAVHSnuDvZB72eNjb6tlnss+ag/17rD6zHTucOkkirEGtYupw6gdH/NopCa8sR
-         JHsiUWRPLT0mQu4QQxt0Z0pyn5Vz8bjLzP4RCZ2y1Q2iDsqcd79WJSU5vY7T5EhwWuYs
-         LMS4ZhmTvenNP7j9hZIdVjnwa5npSJ+KJ6+zwlJzI1dNfKPXCnBjkC1HMlD43AXJA5ei
-         x3qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716559016; x=1717163816;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DnGCZeDgq06e4yJxv3zYBUOrTNbIwkOVZezg5gdIpJc=;
-        b=OM8eIpSeZqucTMMOtW9BTlthLu3fb4foAU3uUGpM1ZQ7XgauCWbITIfM6tb7L4rV9G
-         3c5Us51WQOj8dy1v1oQeXYMkOCTlY5gbJFLPhWQ4XxCnWWvUrA0imuzdP7ZZVQxl1OSv
-         PazLOSHYMEZSaRzVx3o6Q6Fvunh/xRjrfj5TTJ1nG1+fhDtbgHqOK7xY6MrgNBJ2xjV9
-         MSNxXntm4phMiqtl+m8/QDGZLUHPyC4zsjfneNUIkqTxd96RKYWAEv6+vVrtPtLZVusJ
-         OO218CdeKliUjZBVOdna0hbg7fN/VNqhovBNBA44SZ20cumM7MPKbYi55V5lf1T+spGV
-         sM7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWKnzUgE7t8D/l+eq3Qda/U6UGehyU+1cLTtYibu35KMfrhUEa0sz46XyKMcJ4O//8Qm12qpTgITm8FD8Uclt+9F8nTQRi1S+3YLnXE97YnDtaPvyP6yMMFQZzvoCrYnm7VfaG8pvuYnFdCl3JKivRfMtX8QhEDBl6slde1
-X-Gm-Message-State: AOJu0Yz/Lx8RLEjxl1I5N3Le3GKdQfX8KbJ8fnTd5hSHnLxvRXfbY2j3
-	RNdTDSbD9V2atItzKkxMluw3rqhBhGxJoc2BTgQcBIxanE9drYEB
-X-Google-Smtp-Source: AGHT+IHetKRmg0p6ec20FHTRXCN/whjCZU8/Nl0XsjhlMJEnyWnCU0egaJ69kA4sx+zMiu/9CyYB0Q==
-X-Received: by 2002:a2e:b3c9:0:b0:2e1:2169:a5cc with SMTP id 38308e7fff4ca-2e95b0c2343mr12132001fa.15.1716559015865;
-        Fri, 24 May 2024 06:56:55 -0700 (PDT)
-Received: from [192.168.0.200] (54-240-197-234.amazon.com. [54.240.197.234])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100fad970sm54296835e9.37.2024.05.24.06.56.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 May 2024 06:56:55 -0700 (PDT)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <e62157f2-d691-4cf1-8cb0-717580b8a836@xen.org>
-Date: Fri, 24 May 2024 14:56:53 +0100
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="e7V9Lm77"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Vm67h2CkLz6Cnk98;
+	Fri, 24 May 2024 13:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1716559085; x=1719151086; bh=YSAvrSBYQ1N+WHlYWnVL/esX
+	HnHkzq/h8R3JKbIoeoA=; b=e7V9Lm77kIZf29EMMJzHB/H3dvp5vL3WtxOauLqu
+	PalH564fnUrroI7IyvU+lTJ55USND8R+tPxNtffRIhxXKhlpDMkGqiIShm6VRaP9
+	xp7QUpJMW5IjO47eUSo9gibNdKiDcmt30r+lxDSzw+4hvyLWldSypa7zn2Orgm8j
+	/rDHoQ7gzXfNTFt7D6Xy/xBB8I8alp3f76m14RCF3V1++94RPGkatpr3Sx5Kjpi/
+	MY9n0LGK/k4MqZ/EjcKxbdBtQwxc5ofiVlHFsUGGa4MZYfiRB4kNlBIbkdPMpEJv
+	gywL83Zx+F7kxU4FUrTYVtjc60v0p3EEgJy+YuQdzdEp8w==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id L21v3LBY9ndt; Fri, 24 May 2024 13:58:05 +0000 (UTC)
+Received: from [192.168.50.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Vm67Z6ZL0z6Cnk94;
+	Fri, 24 May 2024 13:58:02 +0000 (UTC)
+Message-ID: <396e5a4f-b9a1-4d82-bfc7-9264dd741a00@acm.org>
+Date: Fri, 24 May 2024 06:58:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,53 +50,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [RFC PATCH v3 12/21] KVM: x86: Remove implicit rdtsc() from
- kvm_compute_l1_tsc_offset()
-To: David Woodhouse <dwmw2@infradead.org>, kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
- Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, jalliste@amazon.co.uk, sveith@amazon.de,
- zide.chen@intel.com, Dongli Zhang <dongli.zhang@oracle.com>,
- Chenyi Qiang <chenyi.qiang@intel.com>
-References: <20240522001817.619072-1-dwmw2@infradead.org>
- <20240522001817.619072-13-dwmw2@infradead.org>
+Subject: Re: [PATCH v2] ufs:mcq:Fixing Error Output and cleanup for
+ ufshcd_mcq_abort
+To: Chanwoo Lee <cw9316.lee@samsung.com>, alim.akhtar@samsung.com,
+ avri.altman@wdc.com, James.Bottomley@HansenPartnership.com,
+ martin.petersen@oracle.com, quic_nguyenb@quicinc.com,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20240524015907epcas1p2598a2ba8a81529b6639cff007fe9106b@epcas1p2.samsung.com>
+ <20240524015904.1116005-1-cw9316.lee@samsung.com>
 Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20240522001817.619072-13-dwmw2@infradead.org>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240524015904.1116005-1-cw9316.lee@samsung.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 22/05/2024 01:17, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
+On 5/23/24 18:59, Chanwoo Lee wrote:
+> An error unrelated to ufshcd_try_to_abort_task is being output and
+> can cause confusion. So, I modified it to output the result of abort
+> fail.
+>    * dev_err(hba->dev, "%s: device abort failed %d\n", __func__, err);
 > 
-> Let the callers pass the host TSC value in as an explicit parameter.
-> 
-> This leaves some fairly obviously stupid code, which using this function
-> to compare the guest TSC at some *other* time, with the newly-minted TSC
-> value from rdtsc(). Unless it's being used to measure *elapsed* time,
-> that isn't very sensible.
-> 
-> In this case, "obviously stupid" is an improvement over being non-obviously
-> so.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->   arch/x86/kvm/x86.c | 14 ++++++++------
->   1 file changed, 8 insertions(+), 6 deletions(-)
-> 
+> And for readability,I modified it to return immediately instead of 'goto'.
 
-Reviewed-by: Paul Durrant <paul@xen.org>
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
