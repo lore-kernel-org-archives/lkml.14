@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3323D76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493238626C
 	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 16:45:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716569126; cv=none; b=YQDyfBJzgLxqwqk4iU+hZ5wRBJqmJCFQvI3BzWeKN2x/2asn5abg31k03UhA4RUVuLoXm2Jrp4U5dgZWU4DmolnUM7tagxYUfft6c2bjc89mT0Y2ADzgCqUfTrOUhaPE54KVyx0B7I+hAfjouM2jgZ7FJgCaQmqbpgBZR7dhaP8=
+	t=1716569126; cv=none; b=j8/XDdgVdUMqUV+s73Ibz7GvqgzF1nH98CAt014wXCll9XshcuSp9lnMrBeHYiEGKWJTRAFPgo0xeiwbqBcnSxTAal7K3Yq5frWuHMw5+fWWHodDfqAD6PCH8WOLozAU40nA0boU8j4d9FZj0HzG4wou/gbhQ4UXwZVNex+JvS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716569126; c=relaxed/simple;
-	bh=VE8qg68nZPwNjA6Q0XTg5dVqXarGnbaZjRYSOy/mcpw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=AMk6feJ8D6skv0xuClXla4cjoIJCxi00f4C7axdWyc5g68thu1lgu8Nk/ImfPfBUyADhsJcXAdgtq+g/OcCm7DdfT1SVaf5hs6Ljx3PfnQ2J5/HKw9aNXFb4Q8AimFumUgqouB6irJXAbfFPEe+qGUMAgaxE2JmXwit93evMvLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVcePM3/; arc=none smtp.client-ip=10.30.226.201
+	bh=tJesxouxrH0A8R/OymfkbdToG3zXGCkBJ45SJjQ1gS0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rGugtCm7K5ZihCSD+0pKI9stPXkZDGf1kzwvgeu5AmgO612BfxEeqg6JvC6MvuULWgzK7dBuXFYOfPrsm3m23ezz0BuDF2D4NkhgHRquU/pJSWv+wM/E2mnbkq+bMkK/X9UsMV0/3LAQOi3DJniy8C+MgsYQX9Ld7pEmfXX/dbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=On59lcbA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVcePM3/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D21CCC32782;
-	Fri, 24 May 2024 16:45:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="On59lcbA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 28B10C4AF07;
+	Fri, 24 May 2024 16:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716569125;
-	bh=VE8qg68nZPwNjA6Q0XTg5dVqXarGnbaZjRYSOy/mcpw=;
+	s=k20201202; t=1716569126;
+	bh=tJesxouxrH0A8R/OymfkbdToG3zXGCkBJ45SJjQ1gS0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=FVcePM3/RUY3uZCQXZEti0jZijuwRAQuYnrTo5NcVA1ovn38XCFoofUDLZzyvF3ne
-	 0yZ8MWFgGbEynd7elwCS7gcp77wggeUF9kXd1d+V1PZYr5tTnuGBEu5BjFT+XZFDwa
-	 SSMI+0aNxMGL7Jk4+rgRdzGNhVEZuAC3UaNu69Ez+ZLy8n0JQ+edfmXmbyKi87FE+S
-	 b4gvQjF4b+enaL/cWDu9GEwcgwUYk/XrEA+N4Vw5mMNCYds6BISe3NjxxJuQOIJm3t
-	 wO4BtB3gwKWDp5vMS+astceMHvvBRHaEhMekEuWpIscMTd9Qxwjo/ATeA31poIXXXE
-	 mw94lUzqpcABA==
+	b=On59lcbAUO0v8nrOCRj8n44n4Ga/PHtB3zALCVPGEzTOKyxYPycMagwn6sKTJybga
+	 +njRdHOXHIQzAOpmYLTI2xJAh2yW27VkoWA+9ajOujz8hujDJfgspawyRJaZY+RWie
+	 24J7RrkvenoPKIXmq3+fkn8myL6qC+u05o+Kj82e1mDlpcP06q2DoaluMuR5TZ+8c2
+	 UlbeiFlDzJm/sbJGXgEfTOne66eY/eIyt8SznQjJKziMmwBjN7MsPxjXXhhML4W/OO
+	 snI+06I3/uZR2IDpqTZZESLnSaeh/wHUDdir/Isp/VUioIVBZusJtGxxD7twofd/tv
+	 04UDxJ45wtIbw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C784CC32766;
-	Fri, 24 May 2024 16:45:25 +0000 (UTC)
-Subject: Re: [GIT PULL] tracefs/eventfs: Fixes and cleanups for v6.10
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1E566C4332E;
+	Fri, 24 May 2024 16:45:26 +0000 (UTC)
+Subject: Re: [GIT PULL] hardening fixes for v6.10-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240523174419.1e5885a5@gandalf.local.home>
-References: <20240523174419.1e5885a5@gandalf.local.home>
+In-Reply-To: <202405231637.664DFA26FA@keescook>
+References: <202405231637.664DFA26FA@keescook>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240523174419.1e5885a5@gandalf.local.home>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-tracefs-v6.10
-X-PR-Tracked-Commit-Id: 2dd00ac1d38afba1b59e439abc300a9b0ce696bf
+X-PR-Tracked-Message-Id: <202405231637.664DFA26FA@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.10-rc1-fixes
+X-PR-Tracked-Commit-Id: ae1a863bcdbd6ea2abc93519a82ab5d715d5dcbc
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0eb03c7e8e2a4cc3653eb5eeb2d2001182071215
-Message-Id: <171656912579.29701.16740873194804586676.pr-tracker-bot@kernel.org>
-Date: Fri, 24 May 2024 16:45:25 +0000
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Masahiro Yamada <masahiroy@kernel.org>
+X-PR-Merge-Commit-Id: b0a9ba13ffdb9591d468d84f26ec2cefdd7625b4
+Message-Id: <171656912611.29701.8621694102640464617.pr-tracker-bot@kernel.org>
+Date: Fri, 24 May 2024 16:45:26 +0000
+To: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Douglas Anderson <dianders@chromium.org>, Kees Cook <keescook@chromium.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Stephen Boyd <swboyd@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 23 May 2024 17:44:19 -0400:
+The pull request you sent on Thu, 23 May 2024 16:37:56 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-tracefs-v6.10
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.10-rc1-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0eb03c7e8e2a4cc3653eb5eeb2d2001182071215
+https://git.kernel.org/torvalds/c/b0a9ba13ffdb9591d468d84f26ec2cefdd7625b4
 
 Thank you!
 
