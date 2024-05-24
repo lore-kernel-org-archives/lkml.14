@@ -1,63 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C0912C488;
-	Fri, 24 May 2024 16:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A3F12D75D;
+	Fri, 24 May 2024 16:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716566431; cv=none; b=NtJw4zM6YpZRE8WWcwkJoeFq6iSa2/bvNljOszy6QGt3AKbpiQ/wYARHAbpdj6IjQBv8Uit2foUOeUMlIA3nqLlWrR9RuvoJErDg1vokriTPbf9W3KUB2dDscjLnFaNR2OoYCmXLrrAa8yFeetK/hjnIwaRgjmBUxXbG+IaojTE=
+	t=1716566450; cv=none; b=BXryNhHRgJZLSN4pJvrQ6j0GOXuH7Vaov5OQj7x57sd05tjLBSkjUXXcZix6j+5o7YuvRiIQ2/gx8B+1lQPWE3Vj2o/SimHwlQAcNze8KO2BgbqxX43C/25DPuGeQopYWRvxlAk9TjPo1LL9F4653VR3/eSmTAP7JKR4YdQ97BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716566431; c=relaxed/simple;
-	bh=cIkbosX3WAgkpupjWKvUxqpqI35ry0vgf/GaC4+aR9Y=;
+	s=arc-20240116; t=1716566450; c=relaxed/simple;
+	bh=FnAaiCmQC7YRKlzCDKAI0OXamAuUxY3zUlnua8fn3oU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GRLJ2J7IMZpWpb+20Q3OKHk9TMvPHL8tZ5zplMJeXryc2p+/bLNW6QuZdMDcqEFzqXpCnfkpZY2XriAfuhvByNcoHQIMmZZijVOdbT5T2t7Jdb3PXPRO4HAmWmlz0xYvQ9N6ftnAqvYywtnqdsX/7SbTc7uD/ivLjq/zU/3FNyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GVbzhpcm; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ibLECZA1SQbMO/y9D+8fnoYwFEk4lUAyzNdLsm8bv4YyxYhL2qEN6JhDWBJrDhh6OYUF3v5c+WjehNe2NAjI1/ABNvVL3bQPYrsnrSBON2yRBs+L6lOnZSu6Zvm6fymnF3nkxkRzDru7NE4JIszNs9d0sV8aLcqbGjuZorgi6u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aZwHdI6f; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GVbzhpcm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716566429; x=1748102429;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cIkbosX3WAgkpupjWKvUxqpqI35ry0vgf/GaC4+aR9Y=;
-  b=GVbzhpcmTow9gJ1veSxSPnZEnhIb3jpha028NAF8dKNzpwnS5Sgb5q15
-   IJpMhw+Sl3Q2vVRn+yLcGf/PhaNFRVRfXSlMFRt2iZYnp80wFz5W7F4NB
-   JWzpn6KhfnwyQoXkFMB9KesK2AfO9+MbftkUt6LKDS+LFGuxBqokjl0XU
-   aRqG3eTcExRAEbsW1jhUgpe2mVPNMDuy7lRjdcYpjzug7xm65MfimRkFT
-   xTF7/UD9KSPbhpANh6yNMcC/oqawcrhDjSi4JEoYK7UVM/O/UXtdbuviE
-   a3J+Q90B6j5JRGF+fVpLjrkfiXyjrvYCoaj54XqPXgQ+hCNSOMcGIKzpr
-   A==;
-X-CSE-ConnectionGUID: XfHwGAVWTj+ZTXpAs87F7w==
-X-CSE-MsgGUID: LqdOxGN1Qzmb8y6yv7iC/A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11082"; a="23614791"
-X-IronPort-AV: E=Sophos;i="6.08,185,1712646000"; 
-   d="scan'208";a="23614791"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 09:00:28 -0700
-X-CSE-ConnectionGUID: glhMuJ8BRzKyS4JocldrYg==
-X-CSE-MsgGUID: GlAbNeCwTTW2ihAl+Szi2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,185,1712646000"; 
-   d="scan'208";a="71478838"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 24 May 2024 09:00:26 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sAXLC-0005a9-31;
-	Fri, 24 May 2024 16:00:22 +0000
-Date: Fri, 24 May 2024 23:59:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Miaohe Lin <linmiaohe@huawei.com>, akpm@linux-foundation.org,
-	tony.luck@intel.com, bp@alien8.de
-Cc: oe-kbuild-all@lists.linux.dev, nao.horiguchi@gmail.com,
-	linmiaohe@huawei.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH 07/13] mm/memory-failure: remove unneeded
- hwpoison_filter() variant
-Message-ID: <202405242336.o1NEOrln-lkp@intel.com>
-References: <20240524091310.1430048-8-linmiaohe@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZwHdI6f"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4210c9d1df6so2340765e9.2;
+        Fri, 24 May 2024 09:00:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716566447; x=1717171247; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EeGxIN2NLzfkcvB5SwbOf6TisZFQzjCd2Zm13eyZV2Y=;
+        b=aZwHdI6fHD6FVqiwULtAjRG8q/+Xwgce+MLh0saIIQZuaze81i7+ndbL38ugVY7xKh
+         FFR2YI+HauS/y9O512e6JtMLlic8Y67G1lMF1FQVuWn7o0CeonrXerxH30hLs7CBh5Yf
+         tSoEUarxJIAc6Rs6l56FYf+P4pVDiaTmbli2mUaXN0Jx9rPUT2EXjwIry2/NHNDiHb+k
+         FxjGAw9WniZae8mg6/usDCs5pu2JV0Vaa58qqLSSdZt2mKr4/44IIOoASwyPcickK2Zh
+         Gj06JSfqAYLv2Uqjw0acPskIKOMOlIG5SF2l/bdzUFzr//TVT2jQKrkVq1P+3bZJqpy6
+         9EOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716566447; x=1717171247;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EeGxIN2NLzfkcvB5SwbOf6TisZFQzjCd2Zm13eyZV2Y=;
+        b=XQRR6vhpRiuHM7nBvs/3Ital/4GObdH9hGucyOrGvnMBB45Xhz2hRW9a/kIrutTMDt
+         Aj2UIaxEibCqQeSuL5War6QTzZC7IE0AWjpc7LAM3BWUW8E/iq+YMsFASWNOjMap0Mhz
+         agqVt8lfPywReH96bkHSFl+yOqWVUl+r2e4ScPT11+7DGj7wo0qniQeKOmIZgS5+igwU
+         mH8USq/+UhDP8qvkqmrBe9HARD+Dd6PNKdP9xsw4WZy8Z9R/G2hnHhYMzHhIirC8WKBB
+         +8ZrPzRqxgV2bvbQUlxSy9HmcGITmm8lmAIO0IC6sumQsd4KbL/4e8pNbIUz2jeR20Cj
+         5Xkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHnx9LzGuzvMZoYcXohJ1wCu5lJbCHYHYHjWt24+ZhzQF4WIxTeBucheYgW6kqyFmTy7dViGhRj70fg44Y1RloKI14Xr3AMoprGDuCsGzDWx2cLgZw1OvaS3GS/UYIybrh6DSDVgI4Mg==
+X-Gm-Message-State: AOJu0YyokkXCc4Nngge+1MPv8agTQkCtBw4EKUH57nHddhMMhfcQBezZ
+	3xP93tSJaq0RlPetA0oVn96oLS4J6KZkza+8wyX3MHd4JE2hoCF9
+X-Google-Smtp-Source: AGHT+IF1nzlmWcJjKLmWsVsX2Q/bz3pbEstFXA5fX3vj4NYfHb6SpOA1kbfUC2hwKB/oVXMdf4RHSw==
+X-Received: by 2002:a05:600c:581a:b0:41f:f957:96ac with SMTP id 5b1f17b1804b1-421089d9dc3mr22424605e9.13.1716566447029;
+        Fri, 24 May 2024 09:00:47 -0700 (PDT)
+Received: from andrea ([151.76.32.59])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089667fbsm24207395e9.9.2024.05.24.09.00.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 09:00:45 -0700 (PDT)
+Date: Fri, 24 May 2024 18:00:43 +0200
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+	npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+	luc.maranget@inria.fr, paulmck@kernel.org, akiyks@gmail.com,
+	dlustig@nvidia.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	hernan.poncedeleon@huaweicloud.com,
+	jonas.oberhauser@huaweicloud.com
+Subject: Re: [PATCH] tools/memory-model: Document herd7 (internal)
+ representation
+Message-ID: <ZlC5q7bcdCAe7xPp@andrea>
+References: <20240524151356.236071-1-parri.andrea@gmail.com>
+ <1c6d4146-86f8-4fd5-a23e-a95ba2464c9e@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,121 +74,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240524091310.1430048-8-linmiaohe@huawei.com>
+In-Reply-To: <1c6d4146-86f8-4fd5-a23e-a95ba2464c9e@rowland.harvard.edu>
 
-Hi Miaohe,
+> What's the difference between R and R*, or between W and W*?
 
-kernel test robot noticed the following build errors:
+AFAIU, herd7 uses such notation, "*", to denote a load or a store which
+is also in RMW.
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on linus/master next-20240523]
-[cannot apply to v6.9]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Miaohe-Lin/mm-memory-failure-simplify-put_ref_page/20240524-171903
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20240524091310.1430048-8-linmiaohe%40huawei.com
-patch subject: [PATCH 07/13] mm/memory-failure: remove unneeded hwpoison_filter() variant
-config: i386-randconfig-005-20240524 (https://download.01.org/0day-ci/archive/20240524/202405242336.o1NEOrln-lkp@intel.com/config)
-compiler: gcc-11 (Ubuntu 11.4.0-4ubuntu1) 11.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240524/202405242336.o1NEOrln-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405242336.o1NEOrln-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: mm/memory-failure.o: in function `try_memory_failure_hugetlb':
->> mm/memory-failure.c:2098:(.text+0x28a8): undefined reference to `hwpoison_filter'
-   ld: mm/memory-failure.o: in function `memory_failure':
-   mm/memory-failure.c:2321:(.text+0x2a98): undefined reference to `hwpoison_filter'
-   ld: mm/memory-failure.o: in function `soft_offline_page':
-   mm/memory-failure.c:2841:(.text+0x3217): undefined reference to `hwpoison_filter'
-
-
-vim +2098 mm/memory-failure.c
-
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2057  
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2058  /*
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2059   * Taking refcount of hugetlb pages needs extra care about race conditions
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2060   * with basic operations like hugepage allocation/free/demotion.
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2061   * So some of prechecks for hwpoison (pinning, and testing/setting
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2062   * PageHWPoison) should be done in single hugetlb_lock range.
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2063   */
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2064  static int try_memory_failure_hugetlb(unsigned long pfn, int flags, int *hugetlb)
-0348d2ebec9b00 Naoya Horiguchi         2017-07-10  2065  {
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2066  	int res;
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2067  	struct page *p = pfn_to_page(pfn);
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2068  	struct folio *folio;
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2069  	unsigned long page_flags;
-e591ef7d96d6ea Naoya Horiguchi         2022-10-24  2070  	bool migratable_cleared = false;
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2071  
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2072  	*hugetlb = 1;
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2073  retry:
-e591ef7d96d6ea Naoya Horiguchi         2022-10-24  2074  	res = get_huge_page_for_hwpoison(pfn, flags, &migratable_cleared);
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2075  	if (res == 2) { /* fallback to normal page handling */
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2076  		*hugetlb = 0;
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2077  		return 0;
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2078  	} else if (res == -EHWPOISON) {
-96f96763de26d6 Kefeng Wang             2022-07-26  2079  		pr_err("%#lx: already hardware poisoned\n", pfn);
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2080  		if (flags & MF_ACTION_REQUIRED) {
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2081  			folio = page_folio(p);
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2082  			res = kill_accessing_process(current, folio_pfn(folio), flags);
-38fe2f81155c0e Jane Chu                2024-05-21  2083  			action_result(pfn, MF_MSG_ALREADY_POISONED, MF_FAILED);
-38fe2f81155c0e Jane Chu                2024-05-21  2084  			return res;
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2085  		}
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2086  		return res;
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2087  	} else if (res == -EBUSY) {
-38f6d29397ccb9 Naoya Horiguchi         2022-07-14  2088  		if (!(flags & MF_NO_RETRY)) {
-38f6d29397ccb9 Naoya Horiguchi         2022-07-14  2089  			flags |= MF_NO_RETRY;
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2090  			goto retry;
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2091  		}
-38fe2f81155c0e Jane Chu                2024-05-21  2092  		return action_result(pfn, MF_MSG_GET_HWPOISON, MF_IGNORED);
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2093  	}
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2094  
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2095  	folio = page_folio(p);
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2096  	folio_lock(folio);
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2097  
-e37e7b0b3bd52e Naoya Horiguchi         2021-12-24 @2098  	if (hwpoison_filter(p)) {
-2ff6cecee669bf Sidhartha Kumar         2023-01-12  2099  		folio_clear_hugetlb_hwpoison(folio);
-e591ef7d96d6ea Naoya Horiguchi         2022-10-24  2100  		if (migratable_cleared)
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2101  			folio_set_hugetlb_migratable(folio);
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2102  		folio_unlock(folio);
-f36a5543a74883 Miaohe Lin              2022-08-18  2103  		if (res == 1)
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2104  			folio_put(folio);
-f36a5543a74883 Miaohe Lin              2022-08-18  2105  		return -EOPNOTSUPP;
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2106  	}
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2107  
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2108  	/*
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2109  	 * Handling free hugepage.  The possible race with hugepage allocation
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2110  	 * or demotion can be prevented by PageHWPoison flag.
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2111  	 */
-405ce051236cc6 Naoya Horiguchi         2022-04-21  2112  	if (res == 0) {
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2113  		folio_unlock(folio);
-f40962a5b0bca2 Miaohe Lin              2024-05-23  2114  		if (__page_handle_poison(p) > 0) {
-a8b2c2ce89d4e0 Oscar Salvador          2020-12-14  2115  			page_ref_inc(p);
-a8b2c2ce89d4e0 Oscar Salvador          2020-12-14  2116  			res = MF_RECOVERED;
-ceaf8fbea79a85 Naoya Horiguchi         2022-07-14  2117  		} else {
-ceaf8fbea79a85 Naoya Horiguchi         2022-07-14  2118  			res = MF_FAILED;
-a8b2c2ce89d4e0 Oscar Salvador          2020-12-14  2119  		}
-b66d00dfebe79e Kefeng Wang             2022-10-21  2120  		return action_result(pfn, MF_MSG_FREE_HUGE, res);
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2121  	}
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2122  
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2123  	page_flags = folio->flags;
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2124  
-03468a0f52893b Matthew Wilcox (Oracle  2024-04-12  2125) 	if (!hwpoison_user_mappings(folio, p, pfn, flags)) {
-bc1cfde1946752 Sidhartha Kumar         2023-01-12  2126  		folio_unlock(folio);
-38fe2f81155c0e Jane Chu                2024-05-21  2127  		return action_result(pfn, MF_MSG_UNMAP_FAILED, MF_FAILED);
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2128  	}
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2129  
-ea6d0630100b28 Naoya Horiguchi         2021-06-24  2130  	return identify_page_state(pfn, p, page_flags);
-761ad8d7c7b548 Naoya Horiguchi         2017-07-10  2131  }
-00cc790e003693 Shiyang Ruan            2022-06-03  2132  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Andrea
