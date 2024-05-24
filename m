@@ -1,212 +1,78 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C10B381CC;
-	Fri, 24 May 2024 17:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B691D442F
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 17:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716570820; cv=none; b=QuSfA7M/9qnSrVzySiDzeloVFeqnsO0QqACQOqSmEtcH0LAz1dQP3fFkKolZdFeh3qzDjffmfSpp4fKnEAIxqEpyCPcYASEKalbQmfU5zw1Xo5xcBeElna+l4DUgGVdAEwIFUYeulvk7xTwi5cLKNxvwVOg+ZzpaGccny0/6bjo=
+	t=1716570983; cv=none; b=MagwUD58/64EXyJG8YN+W8fL8t6iWAvvcepc10Snh2cwO7HdwgcCU5KkhcQ1yylhJk6ZaCLaWTt6DWVgZW+Ul0SHxLGiB0ha8pYLqIbsgOp0kyT+n1Y2GQKDlnPKYtNfYTpELczJkbp0qYoUIwd7IDDFxQXHONFP0JD4iCt9zMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716570820; c=relaxed/simple;
-	bh=niiygQemT/sqnVFy3UWwLMvNxIikaJEfzXfZrGhDvJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AykQWKEbJWhE/RP2cWl6stqEEYO8gv9QnCRUjuvESl2b0Squv7N1IomJLEaFWKDWoCrtkCONqw3t/sod4HW6xu50AD5wfeMi7qmprzFQcbLDin01fX/tu484knFfRcCDPUweEJ7CODuMSs29SKsICybZt6J6So8rJ/WxRZ2G4fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=f4ccaKAw; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1716570983; c=relaxed/simple;
+	bh=Lh1/ZiqQOtBnGCfUA+jL+uz9J6FiB76LY/j2aJ3Lx9E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KrmHEU8OQ9BpalO0uscX6JzcuSuYv4MndLn0fAhNrbQbqwE/Vh1uM3/hPgW5/vR55C1ecAYo+7s1s8hkPCbT8KEyME5ydjkEtbgtG9i8203Ni1C/Xqdu6ia8Jv2SdNSbXqSbbzbp7ZGPjvjW6WFUEE79i8zP/wJGLhXw0yAQalY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CJo7IR/C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y04txm8U; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="f4ccaKAw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1aJfRRbC8WpoZM7RERcls71YiqRszkda7JhNjiCCDo4=; b=f4ccaKAwYs++oHMLkZG1DeJl46
-	XbxPpb9GSkHiPgJzQJV9PgbY5U6lnCr4phhHQulTUMIbzv+S+oaowg+7BGpqVZRg0SkWuNJZFev/W
-	7d5EiQud6xbl9ye0BkxF555nnF+qdDnW8ObWJoq3lW7RKxcIwt4lhxdhMCwoNEZIde5m93mGkavJR
-	Z0bSiGSsK/f3Jfi7/p2KztgxmGWgjtrM17kLL+NOeVD9pdhv0MVp4ATvZXEImaIUUv38xKiUl9GNs
-	fnXrH1bQPK78qwea9qneljDs/cqTlJaZ9uAGFH5kCYY4BhMIid382YNuh0hajWrlIN3vbph5NWE25
-	B/rcDztQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46500)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sAYTn-0005iu-2p;
-	Fri, 24 May 2024 18:13:20 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sAYTm-00087X-4Z; Fri, 24 May 2024 18:13:18 +0100
-Date: Fri, 24 May 2024 18:13:17 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Sneh Shah <quic_snehshah@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
-	Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Andrew Halaney <ahalaney@redhat.com>, kernel@quicinc.com
-Subject: Re: [PATCH net-next 2/2] net: stmmac: dwmac-qcom-ethqos: Enable
- support for 2500BASEX
-Message-ID: <ZlDKrS0EhHgQPHAo@shell.armlinux.org.uk>
-References: <20240524130653.30666-1-quic_snehshah@quicinc.com>
- <20240524130653.30666-3-quic_snehshah@quicinc.com>
- <a7317809-77a1-4884-83d8-2271ceea2c81@lunn.ch>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CJo7IR/C";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y04txm8U"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716570979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lh1/ZiqQOtBnGCfUA+jL+uz9J6FiB76LY/j2aJ3Lx9E=;
+	b=CJo7IR/C2u19hzw4gvNNsArZONhriIqrB2qTmb5O/0Pv7kWazkWMDZyIMUqB7TQukaofqG
+	tcHZT7/Y/Pq2VFty86zGLI//BgEr7P1qTwoLlLecdtEFxEbhuLrH40VyGKFrq1kyAql/Hs
+	J8jaTB/15+dKbj+QuNGAel/e3VZ7XUT//KTbT/U1cLpawWQcYgatD8VrXQrkYTCwPpYWVp
+	y+WKevUNS55NKXWonuy8HjgrIaXMxXGdqxxR7J+LupnFtc+8AJQoMYkzG3mHNc5Pl7jQ/M
+	WSILhe1/g/M9vzvWRikcsE5Hxi2IJ9p6zdvS8D5p+kVU8asWLu4XrSybjcuuLA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716570979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lh1/ZiqQOtBnGCfUA+jL+uz9J6FiB76LY/j2aJ3Lx9E=;
+	b=Y04txm8UJxIuT5k6HvFCufPgGPl9myW8KJuWm3uXlTnOWx0LT90QVhabwRR4U2/mWr85ng
+	3T+VS5Bg7w2r8iCQ==
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Peter Zijlstra
+ <peterz@infradead.org>, Phil Auld <pauld@redhat.com>, Chris von
+ Recklinghausen <crecklin@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: sched/isolation: tick_take_do_timer_from_boot() calls
+ smp_call_function_single() with irqs disabled
+In-Reply-To: <ZlCwKk65-eL0FrKX@pavilion.home>
+References: <20240522151742.GA10400@redhat.com>
+ <20240523132358.GA1965@redhat.com> <87h6eneeu7.ffs@tglx>
+ <ZlCwKk65-eL0FrKX@pavilion.home>
+Date: Fri, 24 May 2024 19:16:19 +0200
+Message-ID: <878qzzdtb0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a7317809-77a1-4884-83d8-2271ceea2c81@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 06:07:15PM +0200, Andrew Lunn wrote:
-> On Fri, May 24, 2024 at 06:36:53PM +0530, Sneh Shah wrote:
-> > With integrated PCS qcom mac supports both SGMII and 2500BASEX mode.
-> > Implement get_interfaces to add support for 2500BASEX.
-> 
-> I don't know this driver very well..... but
-> 
-> /* PCS defines */
-> #define STMMAC_PCS_RGMII        (1 << 0)
-> #define STMMAC_PCS_SGMII        (1 << 1)
-> #define STMMAC_PCS_TBI          (1 << 2)
-> #define STMMAC_PCS_RTBI         (1 << 3)
-> 
-> 
-> static int stmmac_ethtool_get_link_ksettings(struct net_device *dev,
->                                              struct ethtool_link_ksettings *cmd)
-> {
->         struct stmmac_priv *priv = netdev_priv(dev);
-> 
->         if (!(priv->plat->flags & STMMAC_FLAG_HAS_INTEGRATED_PCS) &&
->             (priv->hw->pcs & STMMAC_PCS_RGMII ||
->              priv->hw->pcs & STMMAC_PCS_SGMII)) {
->                 struct rgmii_adv adv;
->                 u32 supported, advertising, lp_advertising;
-> 
->                 if (!priv->xstats.pcs_link) {
->                         cmd->base.speed = SPEED_UNKNOWN;
->                         cmd->base.duplex = DUPLEX_UNKNOWN;
->                         return 0;
->                 }
+On Fri, May 24 2024 at 17:20, Frederic Weisbecker wrote:
+> Le Fri, May 24, 2024 at 11:31:12AM +0200, Thomas Gleixner a =C3=A9crit :
+>> >> Race with tick_nohz_stop_tick() on boot CPU which can set
+>> >> tick_do_timer_cpu =3D TICK_DO_TIMER_NONE? Is it really bad?
+>>=20
+>> This can't happen.
+>
+> Actually... The boot CPU is nohz_full and nothing prevents it
+> from stopping its tick once IRQs are enabled and before calling
+> tick_nohz_idle_enter(). When that happens, tick_nohz_full_update_tick()
+> doesn't go through can_stop_idle_tick() and therefore doesn't check if it
+> is the timekeeper. And then it goes through tick_nohz_stop_tick() which
+> can set tick_do_timer_cpu =3D TICK_DO_TIMER_NONE.
 
-Note that this checks for !STMMAC_FLAG_HAS_INTEGRATED_PCS, so this isn't
-going to be used by this code which is conditional on this flag being
-set.
-
-In any case, I posted a patch set 12 days ago, which has remained
-unreviewed and untested for 10 days from a promise to do so converting
-this ugly hack to a phylink PCS driver (not that I would have had time
-to deal with any feedback due to an urgent work issue, but that's sort
-of beside the point.) There's some vague handwaving by Serge that there
-are some issues in this series, but there hasn't been any feedback yet
-on what these issues may be.
-
-Also, from what I can tell, neither STMMAC_PCS_TBI nor STMMAC_PCS_RTBI
-are ever assigned to hw->pcs. So, in stmmac_eee_init():
-
-        if (priv->hw->pcs == STMMAC_PCS_TBI ||
-            priv->hw->pcs == STMMAC_PCS_RTBI)
-                return false;
-
-is always false, and can be removed.
-
-In __stmmac_open():
-
-        if (priv->hw->pcs != STMMAC_PCS_TBI &&
-            priv->hw->pcs != STMMAC_PCS_RTBI &&
-            (!priv->hw->xpcs ||
-             xpcs_get_an_mode(priv->hw->xpcs, mode) != DW_AN_C73)) {
-
-can become:
-	if (!priv->hw->xpcs ||
-	    xpcs_get_an_mode(priv->hw->xpcs, mode) != DW_AN_C73)) {
-
-In stmmac_dvr_probe():
-
-        if (priv->hw->pcs != STMMAC_PCS_TBI &&
-            priv->hw->pcs != STMMAC_PCS_RTBI) {
-                /* MDIO bus Registration */
-                ret = stmmac_mdio_register(ndev);
-
-This if() condition can be eliminated, and we always register the
-MDIO, and similarly in the cleanup and stmmac_dvr_remove() paths.
-
-> /**
->  * stmmac_check_pcs_mode - verify if RGMII/SGMII is supported
->  * @priv: driver private structure
->  * Description: this is to verify if the HW supports the PCS.
->  * Physical Coding Sublayer (PCS) interface that can be used when the MAC is
->  * configured for the TBI, RTBI, or SGMII PHY interface.
->  */
-> static void stmmac_check_pcs_mode(struct stmmac_priv *priv)
-> {
->         int interface = priv->plat->mac_interface;
-> 
->         if (priv->dma_cap.pcs) {
->                 if ((interface == PHY_INTERFACE_MODE_RGMII) ||
->                     (interface == PHY_INTERFACE_MODE_RGMII_ID) ||
->                     (interface == PHY_INTERFACE_MODE_RGMII_RXID) ||
->                     (interface == PHY_INTERFACE_MODE_RGMII_TXID)) {
->                         netdev_dbg(priv->dev, "PCS RGMII support enabled\n");
->                         priv->hw->pcs = STMMAC_PCS_RGMII;
->                 } else if (interface == PHY_INTERFACE_MODE_SGMII) {
->                         netdev_dbg(priv->dev, "PCS SGMII support enabled\n");
->                         priv->hw->pcs = STMMAC_PCS_SGMII;
->                 }
->         }
-> }
-> 
-> I get the feeling this is a minimal hack, rather than a proper
-> solution.
-
-I didn't remove that in my patch set because I don't understand fully
-the logic here - and I didn't want to add further dubious complication
-to my six patch series. I actually kept the logic and continued to
-use it explicitly to avoid changing the decision making:
-
-+static struct phylink_pcs *
-+dwmac4_phylink_select_pcs(struct stmmac_priv *priv, phy_interface_t interface)
-+{
-+       if (priv->hw->pcs & STMMAC_PCS_RGMII ||
-+           priv->hw->pcs & STMMAC_PCS_SGMII)
-+               return &priv->hw->mac_pcs;
-+
-+       return NULL;
-+}
-
-Ultimately, this _should_ check the "interface" here, but bear in
-mind that stmmac_check_pcs_mode() checks plat->mac_interface
-(which is the interface between the MAC and PCS) whereas the
-"interface" passed here is the interface between the PCS and PHY.
-This is why removing stmmac_check_pcs_mode() isn't a sane change
-to make until we have worked through the issues with removing the
-its-a-PCS-but-not-phylink_pcs hack.
-
-I _think_ a sensible next step would be to eliminate priv->hw->pcs,
-instead testing priv->plat->mac_interface in
-dwmac4_phylink_select_pcs() and dwmac1000_phylink_select_pcs():
-
-	phy_interface_t mac_interface = priv->plat->mac_interface;
-
-	if (phy_interface_is_rgmii(mac_interface) ||
-	    mac_interface == PHY_INTERFACE_MODE_SGMII)
-		return &priv->hw->mac_pcs;
-
-and _then_ maybe as a separate patch switch this to test the
-PHY-side interface (because that would make more sense... but
-that would be a behavioural change to the driver.)
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+OMG...
