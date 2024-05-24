@@ -1,209 +1,186 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B02636D
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 07:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90F186AFA
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 07:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716534122; cv=none; b=p9gg0fULkw7fV246iD6JEdJkW0pIhLr2AMHw+XaToEFjNQoTKRh/uHfoTxv9oFStlE35ReuQdylqtokdpDL03VWm21TV4Os1QL2G8TxRywc+mPSn9pWEHgRK+sKW3+sAt14vOGWAZsbe/VMvv4IUk20Ie1MQ0MuCaZvRHzfse4k=
+	t=1716534217; cv=none; b=mP71GNpN0CXnStGEIBXzxF7A/jYrYo7GYvwevq9vToyChwHMX8xIdsn4oWzLtoEwxO0QWZwNl7U1kmb+E9sIbW2+f2qngdCL6PtHinCsNSZxgTNfmyzL1ScVMUJIIw7XrgK6Zq1m7LFVxSpMX08/K0BSQt+BiEeWjI5Tr5OQTCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716534122; c=relaxed/simple;
-	bh=S6X3QWQ+0K1WufA9+NZWA+XmUyZ213h25aZFAPV5q4g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QD59Fvxt9Z+Q3YhYfLO5mmgcwuVfD35MwDS+reFxSbbXHb3idAwrYsLS7RHqDGAs5kugC6bEe5WhEsJE0ldYoqOxcr5jr/46ZXMMpwor6pBRsSXhRMgnmtvr8tBdLMQ02FZlLWN8K3n2n9OshUNfaK4rSA9Do4U3YGA4elGEcVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cqxVJB0A; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716534217; c=relaxed/simple;
+	bh=F2JL3Tk4mSGuw62JqOU9hci9zTtERlsnAZex134S9BI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=UBk3418zkvsjFrCVpbFsCCqj8YaxPaiyFyx+4AwZemjm4kZ8ZtZmx4c9q7BXF3rrHEL8Qz+Gwas1gZ3T0VPApnTegcX5RG2TSjVP/9h7RuMdyDBv+rC9tQMNXFT+sd9Y4lm1YZSuDKBw4+AN/gT4OGWr7LIzbmYwGuNQbOnUo0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GqL9tjnZ; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cqxVJB0A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716534118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0uHq3ec8ZMgbwjUPHUCI4MPEhdD2KzAA/CPZDlqmLUk=;
-	b=cqxVJB0A912q8BZWb6HdiTCcxGZXtQ6dlO44B+00aJkRkzvcX1sG3w3XorVwJKreQxhPar
-	w2liX1Cu1zjIwqcaUt1/SVbzFFH1R4Q/81po7v01QMhfsdkq7LMBd2GRA38JuXh8hPs5MH
-	Yedl4S4pe9yU5SOCs0wrrh9VjMxBx2M=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-4dlcqD-SNP2L1ImLU4e4bQ-1; Fri, 24 May 2024 03:01:57 -0400
-X-MC-Unique: 4dlcqD-SNP2L1ImLU4e4bQ-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-420eed123a2so32038215e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 00:01:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716534116; x=1717138916;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0uHq3ec8ZMgbwjUPHUCI4MPEhdD2KzAA/CPZDlqmLUk=;
-        b=wwDjPpyq2knrz5HitJsik2N80J0P/i50SN7DlzbRNFDceQnf/TIPFwQY7y72ixkgvf
-         poeMrfpYrAKW3QV1cZds7/beeo1nqXYn6X3bbPbNWRGhLoTsa+ye2nh/icOkPAAhLT99
-         AB+jsDBAUJHU/qFTBG3yQ9j9Q430riAcbA5pRB+oYFqpu2BHV4nWn2wYB3hBnYZzCpi/
-         gOfS9PtxkXPaxxRiWLikihoMSs6T8CMq826iSugGqXeGLiX23khM3Sp0pMQVU/PmDMeE
-         jDJKFdi1cwiiPLLncej7LRtU71tHbztVHoJq/Tcp/DXJtotEyWh/qd4jxQnFsCl9T662
-         382A==
-X-Forwarded-Encrypted: i=1; AJvYcCUbsme8mCl+QyLUMInMbScKgSkuueIhI1vL+scDBmieb1fVkYxBvSPlFjOAUzTwfCXKId6hHp4hvZ3QgddYn+AxOVabd10CePrRquwO
-X-Gm-Message-State: AOJu0YzNxAxwyERcLd1oIgWUF3sb8MlmPNrofKzKZkmGRyndNAWIAiGK
-	Dyxw8BrYinJyP1yyRWMBiLMh5q5u1R6G6hpSgV+2InC1Kl++Aa6ERtsOOSRZZWNIwCwdiXe4+0w
-	HBGKypIJi2ZlEbyRts/bw+HtploYX3fxqFTICIQ++T9H5DLOFe16/InTQUx5xzA==
-X-Received: by 2002:a7b:cbd0:0:b0:420:1284:475 with SMTP id 5b1f17b1804b1-421089cd413mr11031005e9.12.1716534116033;
-        Fri, 24 May 2024 00:01:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWxG9Is1RP9OAuCNjoZ84PzkbrNAp1YEXxVe/Wk2tG3Id8JRSEhNammAi0NqOk2IOBrH+qkQ==
-X-Received: by 2002:a7b:cbd0:0:b0:420:1284:475 with SMTP id 5b1f17b1804b1-421089cd413mr11030695e9.12.1716534115521;
-        Fri, 24 May 2024 00:01:55 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c724:bc00:e919:27a8:d431:782a? (p200300cbc724bc00e91927a8d431782a.dip0.t-ipconnect.de. [2003:cb:c724:bc00:e919:27a8:d431:782a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100fadcabsm44408595e9.35.2024.05.24.00.01.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 May 2024 00:01:55 -0700 (PDT)
-Message-ID: <c9ee47d3-77cd-4333-805a-d457e4a1bb80@redhat.com>
-Date: Fri, 24 May 2024 09:01:54 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GqL9tjnZ"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240524070331epoutp01517d16e738ef623b9d25d70c52c809ce~SWsVLMR1f2723927239epoutp01Q
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 07:03:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240524070331epoutp01517d16e738ef623b9d25d70c52c809ce~SWsVLMR1f2723927239epoutp01Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716534211;
+	bh=fcrs1hfVkjlHVW7bOXNOC8znpYsTD2JmXRZJGVnZaTg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GqL9tjnZZt8X6EigF1/D5trSRVqa3CmecAJbL891GseVyUaF5ibFdJ6syZS7PAjWU
+	 EMQbagZf+nBm810/AshsWNVSYa4JK3qP+RV2Qdc7UKloK5ak50urZ1nqY2pkPP4P/i
+	 /1nMD2xnS7YlMQmDNGP+DUD4UDSHLAc1Svfk5Wa4=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240524070330epcas5p193140b9e9c3ca20ce1044b5e97e16cc7~SWsUYtv1G2043720437epcas5p18;
+	Fri, 24 May 2024 07:03:30 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VlwxD29VZz4x9Q6; Fri, 24 May
+	2024 07:03:28 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	43.35.09665.0CB30566; Fri, 24 May 2024 16:03:28 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240524070201epcas5p3a398a82835799d0956448c3590544c0a~SWrBgm2e33040130401epcas5p3j;
+	Fri, 24 May 2024 07:02:01 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240524070201epsmtrp27d72daa4f932ba34758cd2fa2e31a2ba~SWrBfF5Gm1951119511epsmtrp2S;
+	Fri, 24 May 2024 07:02:01 +0000 (GMT)
+X-AuditID: b6c32a4b-829fa700000025c1-6d-66503bc0b68a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	BA.14.19234.96B30566; Fri, 24 May 2024 16:02:01 +0900 (KST)
+Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240524070157epsmtip26fdc4027c3bba14725ebb809cd21c241~SWq93B5fC0925409254epsmtip2m;
+	Fri, 24 May 2024 07:01:57 +0000 (GMT)
+Date: Fri, 24 May 2024 06:54:49 +0000
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
+	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
+	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
+	<hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
+	<kch@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+	Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	martin.petersen@oracle.com, bvanassche@acm.org, david@fromorbit.com,
+	damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
+	nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
+ and request layer.
+Message-ID: <20240524065449.ydfracefq77urii4@nj.shetty@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftest: mm: Test if hugepage does not get leaked during
- __bio_release_pages()
-To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Donet Tom <donettom@linux.ibm.com>, Shuah Khan <shuah@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Tony Battersby
- <tonyb@cybernetics.com>, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mike Rapoport <rppt@kernel.org>, Muchun Song <songmuchun@bytedance.com>
-References: <20240523063905.3173-1-donettom@linux.ibm.com>
- <20240523121344.6a67a109e0af2ba70973b34b@linux-foundation.org>
- <d551d1cd-a02f-42aa-9de2-10ff7757224c@redhat.com>
- <20240523195734.bc03a8822a34b1a97880fb65@linux-foundation.org>
- <7792c8ba-39e6-47ee-9b43-108270325c15@redhat.com> <87o78vsoav.fsf@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <87o78vsoav.fsf@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f54c770c-9a14-44d3-9949-37c4a08777e7@suse.de>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTdxTH97u3vS1EyLXg/FmiwzKzVMKjUNgPBcYmIdegjOwRM9wGd/QK
+	SGlry0uSKRQZoCIFEUMRQYbykIECIyCgrPKQqquGhwFE3psTeQiLZkFhrQXjf5/zPeeb8/ud
+	k8PFeVc4fG6ULJZRymipgLBkNd4WCp3adwcfcv2rcgOq1XfhSK15g6OrI9kEmrm9CFD+wn84
+	mmpPB2j5vgFHDV1PACopLWKhwfZmDLWW5mKo8monhgrPp2Koc3WWQLm6AYCm+7UYahtyRJd+
+	KWOh1rYeFuq9cYFAxVemOai8ewVDORn9GGqaSgGoZmaehe4M2SHDm262nx3V2xdI6Ush1awd
+	4VCGJ9dZVO/9OKquKpOg6suOU0/rCwDVMphMUL+eOcumslLnCKo5bZRNvZgeYlHzN/sJ6kxD
+	FaDulXRwgm1Cor0jGVrCKO0ZWbhcEiWL8BEEfh26J9TD01XkJPJCnwrsZXQM4yPw3xfsFBAl
+	NQ5HYB9PS+OMUjCtUglcfL2V8rhYxj5Sror1ETAKiVQhVjir6BhVnCzCWcbE7hK5urp5GAvD
+	oiNPZTcSiqWNiU2neclgwPoksOBCUgyzz/WzTwJLLo9sAfBpURFhDhYBPG2YZL0LJrIvYuuW
+	S6vFmDnRDODD4fE1/xKAdeNDwFTFInfA/L6zRjuXS5CO8O4q1yTbkgL4Il3HMdXjZDkBX6+O
+	sE0JGzIMzupz3rIVuQcuFtzkmHkj7CmYYpnYgtwNX3cM4iYzJP+0gPc6KzjmJ/lD7cuutefZ
+	wGfdDWs6Hy7NtRFmToCVeRWE2XwCQO0jLTAnPoNp+mzcxDgZCccznuNmfSs8p6/BzLo1zFqe
+	WmtgBZsurrMDrK4tWWuwBQ68SiFMP4YkBYerPzJPZQ7AxjsaTAO2ad/7kPa9dmbeBTMX1Gyt
+	0Y6TdrB8hWtGIay94VIC2FVgC6NQxUQwKg+Fu4xJeLflcHlMHXh7MDsDm8DE2IKzDmBcoAOQ
+	iwtsrQ5W7j/Es5LQR5MYpTxUGSdlVDrgYVxQDs7fFC43XpwsNlQk9nIVe3p6ir3cPUWCzVYz
+	aUUSHhlBxzLRDKNglOs+jGvBT8YO9vsdzg0ytAZ8KFsaqcMffuk7KdKceukU4mi937JxyeDw
+	+NXzI0sq4e8h+em3Wr9tlz7wn8u5npJE8KU1YTwgTOXrkv7OczhOb6hUu0xW3JJEz//Raqt+
+	sCeRxIJTBgK1GX0XMqPVLQe+yNn6cdpPY9cCyo7urfNiUmd+Ezf6eyc8/mqH/bP87SEBMZfz
+	/o3//oPZyw5jpT88ovJP7EWhhcMzGb4en0xOB23PCDpg4zH18+fx85K+CfpuvU/Q4ZaF6k3F
+	x+QdWVN9bpoaZ99j2470i1cCu5KD/imUlwj97N2+0Y8lFvwY3rhZGdpjqcaCNXmC72rTLbuW
+	z48S5LUkd9A8KmCpImnRTlypov8HtDMqBbkEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUxTWRiGOfdcbi9V9Fq2A3UZ6xZlqHZCyFGMkmgmJ1FiXWaMEpVGLrUj
+	UGwtihpBiQI1OkhRhyrKZrHgEgou7FoBBSXNTAGljogB4oLC4MTEra0pxOi/J+/zvt+vj4Wi
+	fjqEVSXt5jVJigQJI6Rv3JXMCFNFyuMXXT4lxtfaWyE+nOOEuOLpnwweuvsO4NP/fYR44HYm
+	wJ87bBBXt/YCXFhcQOOe2zUUri/OpbC5ooXCZ89kULjF/ZbBudZugAe7jBRucITioqOlNK5v
+	aKOxvfYcgy+YBgW47J6Lwiezuih8a+AQwFeHRmh83yHGNuc97ygxsXeuIu3FiNQYnwqIrbeS
+	JvYOHbGUZzOkqjSNvKzKB6SuJ50hJScM3uR4xjBDao488yajgw6ajDR2MeREdTkgDwubBXK/
+	zcKlcXyCKoXXLFwWK9zxvP9/Kvni5L3mjGMgHRRP1AMfFnHhqMh9gdIDISvibgKUZ6tkxkUw
+	Mjmb4Tj7IbPrhWC8NApQ15k6yiNobg463Wmg9YBlGS4UPXCzntifk6DRTOtYH3IVDKq1lgCP
+	8ONi0dv2k94e9uVWoHf5jQIPi7hhgJoy8Hg+BbXlD9AehlwEOl/1HHruQ06Mylxj9324SPSl
+	uQfmAM74w8L4w8L4fVEIYDkI4JO1icrE7ckyqVaRqNUlKaXb1YkWMPYHC9bdAqZrTqkVUCyw
+	AsRCib9vjDk6XuQbp0jdx2vU2zS6BF5rBWKWlgT5zkrIjhNxSsVufifPJ/Oab5ZifULSqWAe
+	TvUP/2NGgfD99NcGNTJPCI+rXViwZfmNpE2m89X2ol8OdM9c9rLaK2vpb+KYL4P/9jmalmyU
+	VjwJ2Leh744+8mBglt7vYVPdSNimna4J8o8H3N0tlr8i4q/EtslyyNyo8Murjz6bZ3ZC+YM9
+	G6JWWGbTaatjU4Tq6JDfg9fCF+v3/zRla9ixv1+nqHNRb6rpVWpgzeNHWfOvXwk6lFOy0r72
+	UkraK0NMr2SNrd9ryCJzX4/p3lUipbb8k2dV1S4Wq0vrJ+taQ6O9+JDswMrhaR1ElRe0X9pA
+	lmf+PEn/qw41KvvqlR3kzQel7smlTsPiN4fL5LJPAeoInw8OZb7rvoTW7lDIFkCNVvEVtAjO
+	T3YDAAA=
+X-CMS-MailID: 20240524070201epcas5p3a398a82835799d0956448c3590544c0a
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----0ARpVfROdpzmGW4Ln12FwIta42jNjH8le_L8dBWq-uMGoSqN=_250cc_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240520102842epcas5p4949334c2587a15b8adab2c913daa622f
+References: <20240520102033.9361-1-nj.shetty@samsung.com>
+	<CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
+	<20240520102033.9361-3-nj.shetty@samsung.com>
+	<f54c770c-9a14-44d3-9949-37c4a08777e7@suse.de>
 
-On 24.05.24 08:43, Ritesh Harjani (IBM) wrote:
-> David Hildenbrand <david@redhat.com> writes:
-> 
-> dropping stable@vger.kernel.org
-> 
->> On 24.05.24 04:57, Andrew Morton wrote:
->>> On Thu, 23 May 2024 22:40:25 +0200 David Hildenbrand <david@redhat.com> wrote:
->>>
->>>>> You have stable@vger.kernel.org in the mail headers, so I assume you're
->>>>> proposing this for backporting.  When doing this, please include
->>>>>
->>>>> Cc: <stable@vger.kernel.org>
->>>>>
->>>>> in the changelog footers and also include a Fixes: target.  I'm
->>>>> assuming the suitable Fixes: target for this patch is 38b43539d64b?
->>>>
->>>> This adds a new selfest to make sure what was fixed (and backported to
->>>> stable) remains fixed.
->>>
->>> Sure.  But we should provide -stable maintainers guidance for "how far
->>> back to go".  There isn't much point in backporting this into kernels
->>> where it's known to fail!
+------0ARpVfROdpzmGW4Ln12FwIta42jNjH8le_L8dBWq-uMGoSqN=_250cc_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
+
+On 21/05/24 09:01AM, Hannes Reinecke wrote:
+>On 5/20/24 12:20, Nitesh Shetty wrote:
+>>We add two new opcode REQ_OP_COPY_DST, REQ_OP_COPY_SRC.
+>>Since copy is a composite operation involving src and dst sectors/lba,
+>>each needs to be represented by a separate bio to make it compatible
+>>with device mapper.
+>>We expect caller to take a plug and send bio with destination information,
+>>followed by bio with source information.
+>>Once the dst bio arrives we form a request and wait for source
+>>bio. Upon arrival of source bio we merge these two bio's and send
+>>corresponding request down to device driver.
+>>Merging non copy offload bio is avoided by checking for copy specific
+>>opcodes in merge function.
 >>
->> I'm probably missing something important.
+>>Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>>Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
+>>---
+>>  block/blk-core.c          |  7 +++++++
+>>  block/blk-merge.c         | 41 +++++++++++++++++++++++++++++++++++++++
+>>  block/blk.h               | 16 +++++++++++++++
+>>  block/elevator.h          |  1 +
+>>  include/linux/bio.h       |  6 +-----
+>>  include/linux/blk_types.h | 10 ++++++++++
+>>  6 files changed, 76 insertions(+), 5 deletions(-)
 >>
->> 1) It's a test that does not fall into the common stable kernels
->> categories (see Documentation/process/stable-kernel-rules.rst).
->>
->> 2) If it fails in a kernel *it achieved its goal* of highlighting that
->> something serious is broken.
->>
->>>
->>> I'm still thinking that we want this in kernels which have 38b43539d64b?
->>
->> To hide that the other kernels are seriously broken and miss that fix?
->>
->> Really (1) this shouldn't be backported. I'm not even sure it should be
->> a selftest (sounds more like a reproducer that we usually attach to
->> commits, but that's too late). And if people care about backporting it,
->> (2) you really want this test to succeed everywhere. Especially also to
->> find kernels *without* 38b43539d64b
-> 
-> 
-> Sorry about the noise and cc'd to stable. I believe we don't need to
-> backport this test. The idea of adding a selftests was "also" to catch any
-> future bugs like this.
+>I am a bit unsure about leveraging 'merge' here. As Bart pointed out, 
+>this is arguably as mis-use of the 'merge' functionality as we don't
+>actually merge bios, but rather use the information from these bios to
+>form the actual request.
+>Wouldn't it be better to use bio_chain here, and send out the eventual
+>request from the end_io function of the bio chain?
+>
+With above bio chain approach, I see a difficulty while dealing with
+stacked/partitioned devices, as they might get remapped.
+Or am I missing something here ?
 
-Yes, for that purpose it's fine, but it has quite the "specific 
-reproducer taste". Having it as part of something that is prepared to 
-run against arbitrary kernels (which selftests frequently are not) to 
-detect known problems feels better.
+Bart, Hannes,
+Regarding merge, does it looks any better, if we use single request
+operation such as REQ_OP_COPY and use op_flags(REQ_COPY_DST/REQ_COPY_SRC)
+to identify dst and src bios ?
 
-> 
-> I am unaware of any functional test suite where we could add such tests
-> like how filesystems have fstests. Hence the ideas was to add this in
-> selftests.
 
-LTP has quite some MM testcases in testcases/kernel/mem/. But it often 
-has a different focus (CVE or advanced feature/syscall tests). Now that 
-most things are CVEs ... it might not be a bad fit ... :)
+Regards,
+Nitesh Shetty
 
-> 
-> So this begs the question which I also asked few people at LSFMM,
-> Does mm has any mmfvt (mm functional verification tests)? Should we have
-> something like this? Was it tried in past?
+------0ARpVfROdpzmGW4Ln12FwIta42jNjH8le_L8dBWq-uMGoSqN=_250cc_
+Content-Type: text/plain; charset="utf-8"
 
-I think LTP is mostly the only "bigger" thing we have that is prepared 
-to run against arbitrary kernel versions.
 
--- 
-Cheers,
-
-David / dhildenb
-
+------0ARpVfROdpzmGW4Ln12FwIta42jNjH8le_L8dBWq-uMGoSqN=_250cc_--
