@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D6F126F06;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CC117C9;
 	Fri, 24 May 2024 14:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716561589; cv=none; b=bHTdiPReZB6lSlsDUjcYb4rbGXY9cIdN00NazB4Blb40tdQs7VuBvjt5Lcd2BiLIwzCAUQJ/zrFUizT5LyQKja3eeTdBwXQSsHD6fMIZTPxcQIoHfvbbi0+UVLb4BPL95hmTTlkbnx8XjLWyXR9n3gFj4RPoisuu0yZeQ4251QA=
+	t=1716561589; cv=none; b=mhSZozOCHHwLC7QBTi9Llbcv9sXgk0e9kLoTbzMDhl6ODod6YAhYvjF6SbMvPxfpNKTeBDL52hNgmOt9W/8RcM3P9bx3pIEpsLRgwH2O73GssuadzfozrOW7Ed51hYGVBCiqpPo6K9xIhvSoZkGdIhmyS3wUbh/3SXNDfjiXPts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716561589; c=relaxed/simple;
-	bh=WnxLNupJVJOryf7l5yLGWQgD6VwnyCE/cZW/EX1xubA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jIiOs3np1N86zYdefiFTZPv3kG537VY7u8mtW7DcgWY5ZJw2MzpAQlViSaxubMZFAkqF0dmMyyOsnnLfx343L/Ii5dH2+G/rYsngj5K2CKXevCurDCItcmeuQcM3Vgb4lYgvn9Zrk8lrkAmjjUJKoe6CGjaM2Fl/ol1ZGwFDgmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wb1kE5LK; arc=none smtp.client-ip=10.30.226.201
+	bh=qPagS3nf7JxLDEBoJP6Rlhnx9zPxEQqI9AG4+8sd/Oo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SXrlhEh/wTJKWQ16zw324XF0Jbfs3tL3AdgAVzpin9wJrtykg2Yyn8pO1p6Dg95dPxl0LKyjNrOkUKqDGxFPSiCme/hkVfA19m1AtkZZJwxkcMnGywWvTchgBdhE92KIoYD7TcxfT/YvQd/q+wNllnTrxuTks6xwmHHB7eWsiOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5U1d6lj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wb1kE5LK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6532BC2BBFC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5U1d6lj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81378C2BD11;
 	Fri, 24 May 2024 14:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716561589;
-	bh=WnxLNupJVJOryf7l5yLGWQgD6VwnyCE/cZW/EX1xubA=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=Wb1kE5LKILnkmLBG+wDmvOJDqaTj4+pJxrBEOlUcZKtTEwk3KYVBam7IEY3YwAnws
-	 yUKP5NraFi+PVrXZMvlfFuQR47P15RDqrn/0TD4m1zLDYmWsCAT9t72ukt/FTfVw5b
-	 e6a9EumNQucWW4BVQG6UwGiwqO8KoieJeK3p2u/cEI9NqBqbzZzFZRz4cra73rn4hw
-	 lYBtH1GY+Y44nayz6nj2SKbm8WBKptiM0fvlEi2erbS2JdTPQsUkchER2xYUJsRCm1
-	 DajB82XHirqaiu9IYuTguaKdtZTTgIqBBKdfIU/DgXqHgQQC+HVey1Wcm+az/cSlQo
-	 ER6GooD+B+7Iw==
+	bh=qPagS3nf7JxLDEBoJP6Rlhnx9zPxEQqI9AG4+8sd/Oo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=a5U1d6lj5avUgnLbwhLnasDun9VuLD6Pq/mjpi/7jv7N7IGzpIngjgD4vilY1n6QZ
+	 zOfbqsOmWG1fxUABq3uBdE2Pf67RCpya3JZRtbrU8EAjEq5oRHJqxRiZAUazcw2ekT
+	 iLj+dG3T5C1aKQCpib/8bKODh+xQnpzheOniz3SHbA7sjxl4Poqg8XVMuhkbHIe4rW
+	 Uzz6GyNwE2K2WuFK4FzA3QLbDUrQPvoMsNdIoiXBqDbAGh5GTUq9jaU7hr5vPGh0AZ
+	 JPncP6XxhC+5r8zyDInFjaaLJvEc3mr2h5MQRA377B2DbzViyLaCLvura7nl6j0sIm
+	 4jhX8OEwoRf5A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB9BC25B74;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6912FC25B7D;
 	Fri, 24 May 2024 14:39:49 +0000 (UTC)
 From: Joel Selvaraj via B4 Relay <devnull+joelselvaraj.oss.gmail.com@kernel.org>
-Subject: [PATCH v2 0/3] novatek-nvt-ts: add support for NT36672A
- touchscreen
-Date: Fri, 24 May 2024 09:39:17 -0500
-Message-Id: <20240524-nvt-ts-devicetree-regulator-support-v2-0-b74947038c44@gmail.com>
+Date: Fri, 24 May 2024 09:39:19 -0500
+Subject: [PATCH v2 2/3] dt-bindings: input: document Novatek NVT
+ touchscreen controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJWmUGYC/42NQQ6CMBBFr0Jm7RhasYAr72FY1HaESZCStjQaw
- t2txAO4fD8/760QyDMFuBQreEoc2E0Z5KEAM+ipJ2SbGWQpq/IsGpxSxBjQ5q+h6InQU7+MOjq
- PYZln5yNq01LV3utGCwXZNHt68Guv3LrMA4d8f+/RJL7rzy/FX/4ksMTG1koZdWqt0df+qXk8G
- veEbtu2DyHSnqzWAAAA
+Message-Id: <20240524-nvt-ts-devicetree-regulator-support-v2-2-b74947038c44@gmail.com>
+References: <20240524-nvt-ts-devicetree-regulator-support-v2-0-b74947038c44@gmail.com>
+In-Reply-To: <20240524-nvt-ts-devicetree-regulator-support-v2-0-b74947038c44@gmail.com>
 To: Hans de Goede <hdegoede@redhat.com>, 
  Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -54,11 +53,11 @@ Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
  Joel Selvaraj <joelselvaraj.oss@gmail.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716561588; l=1668;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716561588; l=2807;
  i=joelselvaraj.oss@gmail.com; s=20240420; h=from:subject:message-id;
- bh=WnxLNupJVJOryf7l5yLGWQgD6VwnyCE/cZW/EX1xubA=;
- b=yhyitQNPtgrT0jWpsno8N21dVyiLPhcYAPHd0sGgXsFN0PMSiHuIVxO2SpEOiZDro2D/VTryf
- 9SdJ10nCtx2BpX/bW3ao1+v3Ng4dIejkaASvEqXOIGJOU/rbrPQ3aTk
+ bh=Y6dkGY1AKwCQh1ciYwF2DiXPtYGhHE52a60bkhbIlpc=;
+ b=YJD1TuFL0D65mNKAyem1JMSxF062NJeL2lFevzqLNvapmkGwEpGn6W+EksRgr26odzQCIas0Z
+ ARnVuVCHoCHAQSjHxcO1EKB+XS9z9dysNdHYAWfB8a2InIhr0Ja1/na
 X-Developer-Key: i=joelselvaraj.oss@gmail.com; a=ed25519;
  pk=qT4gsuVtlPE0Dpr+tQA/Fumm7wzVP6qfeVaY+6pX04s=
 X-Endpoint-Received: by B4 Relay for joelselvaraj.oss@gmail.com/20240420
@@ -66,40 +65,102 @@ X-Endpoint-Received: by B4 Relay for joelselvaraj.oss@gmail.com/20240420
 X-Original-From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
 Reply-To: joelselvaraj.oss@gmail.com
 
-Extend the novatek touchscreen driver to support NT36672A chip which
-is found in phones like Xiaomi Poco F1 [1]. Added devicetree support for
-the driver and used i2c chip data to handle the variation in chip id and
-wake type. Also added vcc and iovcc regulators which are used to power
-the touchscreen hardware. 
+From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
+
+Document the Novatek NVT touchscreen controller present in devices like
+the Xiaomi Poco F1 [1]. Also, include the devictree binding file in the
+MAINTAINERS file.
 
 [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-tianma.dts?h=v6.9
 
 Signed-off-by: Joel Selvaraj <joelselvaraj.oss@gmail.com>
 ---
-Changes in v2:
-- The generic i2c device id is now replaced with the correct IC variant
-  provided by Hans de Goede
-- Updated the bindings to reflect the latest changes and also incorporated
-  the suggestions provided by Krzysztof Kozlowski
-- Link to v1: https://lore.kernel.org/r/20240521-nvt-ts-devicetree-regulator-support-v1-0-8d766c639dca@gmail.com
-
----
-Joel Selvaraj (3):
-      Input: novatek-nvt-ts: replace generic i2c device id with specific IC variant
-      dt-bindings: input: document Novatek NVT touchscreen controller
-      Input: novatek-nvt-ts: add support for NT36672A touchscreen
-
- .../bindings/input/touchscreen/novatek,nvt-ts.yaml | 62 +++++++++++++++++
+ .../bindings/input/touchscreen/novatek,nvt-ts.yaml | 62 ++++++++++++++++++++++
  MAINTAINERS                                        |  1 +
- drivers/input/touchscreen/novatek-nvt-ts.c         | 78 ++++++++++++++++++++--
- drivers/platform/x86/x86-android-tablets/other.c   |  2 +-
- 4 files changed, 136 insertions(+), 7 deletions(-)
----
-base-commit: 6578aac6a270bd6deb9f9319b991dd430de263dd
-change-id: 20240518-nvt-ts-devicetree-regulator-support-ac9e49b78a16
+ 2 files changed, 63 insertions(+)
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/novatek,nvt-ts.yaml b/Documentation/devicetree/bindings/input/touchscreen/novatek,nvt-ts.yaml
+new file mode 100644
+index 0000000000000..c47b4de9d58e7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/novatek,nvt-ts.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/touchscreen/novatek,nvt-ts.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Novatek NVT Touchscreen Controller
++
++maintainers:
++  - Hans de Goede <hdegoede@redhat.com>
++
++allOf:
++  - $ref: touchscreen.yaml#
++
++properties:
++  compatible:
++    enum:
++      - novatek,nt11205-ts
++      - novatek,nt36672a-ts
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++
++  vcc-supply: true
++  iovcc-supply: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        touchscreen@1 {
++          compatible = "novatek,nt36672a-ts";
++          reg = <0x01>;
++          interrupts-extended = <&tlmm 31 IRQ_TYPE_EDGE_RISING>;
++          reset-gpios = <&tlmm 32 GPIO_ACTIVE_LOW>;
++          vcc-supply = <&vreg_l22a_2p85>;
++          iovcc-supply = <&vreg_l14a_1p8>;
++          pinctrl-0 = <&ts_int_default &ts_reset_default>;
++          pinctrl-1 = <&ts_int_sleep &ts_reset_sleep>;
++          pinctrl-names = "default", "sleep";
++          touchscreen-size-x = <1080>;
++          touchscreen-size-y = <2246>;
++        };
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 90754a451bcfc..e1f744992b15f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15942,6 +15942,7 @@ NOVATEK NVT-TS I2C TOUCHSCREEN DRIVER
+ M:	Hans de Goede <hdegoede@redhat.com>
+ L:	linux-input@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/input/touchscreen/novatek,nvt-ts.yaml
+ F:	drivers/input/touchscreen/novatek-nvt-ts.c
+ 
+ NSDEPS
+
 -- 
-Joel Selvaraj <joelselvaraj.oss@gmail.com>
+2.45.1
 
 
