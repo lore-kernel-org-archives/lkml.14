@@ -1,36 +1,36 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016F085937;
-	Fri, 24 May 2024 09:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9946A85C76;
+	Fri, 24 May 2024 09:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716542199; cv=none; b=IgUN3TP2tIamphJw5gUTO5uyWLWiZYbA8VmgLxqf1BCfotFqYyheqdfLwZNFt6cOPbIrNz2FuEmEwj4dUFGPA0QWgUqid7EktQQxyhM06BV/xnrNofe0gZYL3XQJ/1xEvD1Cd+dm2nYt9jzvkMeS/AIJyloeVRC/OE9KFbCj2ZM=
+	t=1716542199; cv=none; b=Zt+vDv23EJd/b1uus8Bywvezd60xSB8OzwohJ1hM6Z8UKApOUJQk4a2VitRplVk0B663WdLJLhtev3mswI1xsMmhgXXn7bOzuRz7VIpQTob2o6AwXIi8Mz79nQyKGrKuDvELW6Ur0wo9f1QOoqG5jbHd65JZr3qRsHmGpH/+qf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716542199; c=relaxed/simple;
-	bh=4ORM+LTuiEk3sa/gaLB3Wh9ziHCUed4N+GPGWhqSDrc=;
+	bh=RqqyeXN49L+OxvoPKSY+bYr6mtFoqKTj/RQxWasN8sQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o+6zdSe0mxHwRMR9n76uqiBtN7JW90PkavFjSDwB80Q0wS7xCcSUrWaE/EhFabZBZX20Ahn92XFZg1carA3Fd36NfEwOAuNWvitbE7CRfagWcC+S4jibwtvQ7efl7Rqc9E+RTX4CfJ1z3I9RDsFns0eHUyUORWHRfQ/hFoWapKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+	 MIME-Version:Content-Type; b=GKztQZ6UFXaGuCMXHpS7xSv/cwcJgMEzjsHG+ksj55unY+vtOtl05aQM41JuXqm0/8J8VT/kIxjScIy3gUz+CeCPfSsQcqZ5UjD2iENWY8Snrs5Lvx86vVs4XgR5WyhWSitlfBAlUe4++Vq5RHANLAa9HnV35XgSi7BZ2pMjDqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Vlzq82b8VzPkVR;
-	Fri, 24 May 2024 17:13:24 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VlzpT6NSWz1S4rl;
+	Fri, 24 May 2024 17:12:49 +0800 (CST)
 Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8C739180A9C;
-	Fri, 24 May 2024 17:16:28 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 803351400D1;
+	Fri, 24 May 2024 17:16:30 +0800 (CST)
 Received: from huawei.com (10.173.135.154) by canpemm500002.china.huawei.com
  (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 24 May
- 2024 17:16:28 +0800
+ 2024 17:16:29 +0800
 From: Miaohe Lin <linmiaohe@huawei.com>
 To: <akpm@linux-foundation.org>, <tony.luck@intel.com>, <bp@alien8.de>
 CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
 	<linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-Subject: [PATCH 05/13] mm/memory-failure: remove unneeded empty string
-Date: Fri, 24 May 2024 17:13:02 +0800
-Message-ID: <20240524091310.1430048-6-linmiaohe@huawei.com>
+Subject: [PATCH 09/13] mm/memory-failure: remove obsolete comment in unpoison_memory()
+Date: Fri, 24 May 2024 17:13:06 +0800
+Message-ID: <20240524091310.1430048-10-linmiaohe@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240524091310.1430048-1-linmiaohe@huawei.com>
 References: <20240524091310.1430048-1-linmiaohe@huawei.com>
@@ -45,27 +45,30 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  canpemm500002.china.huawei.com (7.192.104.244)
 
-Remove unneeded empty string in definition of macro pr_fmt. No functional
-change intended.
+Since commit 130d4df57390 ("mm/sl[au]b: rearrange struct slab fields to
+allow larger rcu_head"), folio->_mapcount is not overloaded with SLAB.
+Update corresponding comment.
 
 Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- mm/memory-failure.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memory-failure.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 73878ecdec22..c09e1bf83682 100644
+index 19d338e83e43..e4252f297d41 100644
 --- a/mm/memory-failure.c
 +++ b/mm/memory-failure.c
-@@ -2549,7 +2549,7 @@ static int __init memory_failure_init(void)
- core_initcall(memory_failure_init);
+@@ -2610,10 +2610,6 @@ int unpoison_memory(unsigned long pfn)
+ 	    folio_test_reserved(folio) || folio_test_offline(folio))
+ 		goto unlock_mutex;
  
- #undef pr_fmt
--#define pr_fmt(fmt)	"" fmt
-+#define pr_fmt(fmt)	fmt
- #define unpoison_pr_info(fmt, pfn, rs)			\
- ({							\
- 	if (__ratelimit(rs))				\
+-	/*
+-	 * Note that folio->_mapcount is overloaded in SLAB, so the simple test
+-	 * in folio_mapped() has to be done after folio_test_slab() is checked.
+-	 */
+ 	if (folio_mapped(folio)) {
+ 		unpoison_pr_info("Unpoison: Someone maps the hwpoison page %#lx\n",
+ 				 pfn, &unpoison_rs);
 -- 
 2.33.0
 
