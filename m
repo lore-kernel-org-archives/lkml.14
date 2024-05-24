@@ -1,148 +1,215 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2053.outbound.protection.outlook.com [40.107.13.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD4E33D0;
-	Fri, 24 May 2024 07:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716536883; cv=none; b=PNyRRe8POCt1PJQAgng/m94K8mUzU0e6/vpOqexRUPFUgRt4R/+vd+O1nr44ouEoNHbkNTYsyI2l5tzkCLVZU59sDCuNQ2xYDnXlxL64+u1SJuKXoVLS/Nrrc9yS44qE1XJrS0UFV0o5AUK8U9j5Z0OdRO3hbAla3ZnMktDbOO0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716536883; c=relaxed/simple;
-	bh=xmLO/x9BvymHv0Wcd7nxb4frCFgzEWm4oGv7O7Uvo/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H5Yf7POFbe5Ho4vp2WABfVVxDGzdwj7Igqcgq5lY2lgTprAX6x820Iixw92T+uySgVNJ1ztLyoQMOmJK4zI7WGpkQSlgJSKZGKk1XqDsBdSO2aNcL5zL+1KbsebjJkd5/dQoD5sgBsmfvUIip1Yu5RKAe2KX34VDGQPW+Qsnk0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62a0826ceb0so6356697b3.1;
-        Fri, 24 May 2024 00:48:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716536880; x=1717141680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aENHTdUsW8qhM2dHax4VkVpC4dCLHvt2JVCa4jPrTiQ=;
-        b=uO3H37cFzyZ4VHLKSqgkRuiXXMGqvsy480WpZwfezQTImN5v5Xf2atv3a02hP82/BM
-         tmL+JTI5pDeN1MlUNiV3Oq4ix59+hYSmo95IazM2N6to9yXCPB8l6l76e81CqdhJ95p4
-         PrZ1+F1zS28znRvqMv/59wHlHK091TIUS85FDroQ1E4grMrHo4z8zI3UHg3zcnSbUI8t
-         /rkXkCrNI8BHmi8nybFCnmtGhrAfLQcOAp3tLoaOA9jnqyYa4bJGtAq6s7Oy4fsAcq3a
-         1ayunhnfccjUV42QAW4kKCuW8ZQ10itWZ290q6CN9l7zwNLPEePOZQpYyst+Y+xAWli+
-         sklQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsCoC98VZ0d0EHhCMHbqdLz8cyki6SqJzfu/gd3IEfwY8qrgGvfl3VLyPuxC+js4sf7Zz8vJSi7F6KwJL3vLFi2sW38mh4diIC9NjSXZ8UR3YdI2NnAzIgq0DtAidvGHBfbz0R1TmeTt9/
-X-Gm-Message-State: AOJu0YwJVcDirUrAYIUz3SzmvYHXoWdxG8/VlVN6lf9tz2rLIGYeE94n
-	wNO26D3i9frB3PQLRWMM7Fk3tnnAbiGjUdDBqpMWn7VrJKTkboc+GuAfeZNN
-X-Google-Smtp-Source: AGHT+IFRCNHLSupKVi8l2G9kpa5B2pY09m+6yIKphByz9urrhoirFRjVZDcGkz+YWS5stBFf/Pzdgg==
-X-Received: by 2002:a81:6d96:0:b0:61b:1718:7302 with SMTP id 00721157ae682-62a08dfd012mr13747547b3.31.1716536879429;
-        Fri, 24 May 2024 00:47:59 -0700 (PDT)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a4f34d3sm1676307b3.86.2024.05.24.00.47.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 May 2024 00:47:57 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-df771983aedso579007276.1;
-        Fri, 24 May 2024 00:47:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU35eEXuH3fp/yKqjM/2ZFHpwA6uiW6spGNo0XLcQNwxXEAUXkaRJmpR5iKjWFbkvDx/Z7G8RPWoGb1BvLhPl+f7WK0xN/upxhRp6L4F/vHtgVsDbUK7OE2uymfhW9zpReAqs8EyyfnbFiF
-X-Received: by 2002:a25:83c4:0:b0:de6:b58:fe72 with SMTP id
- 3f1490d57ef6-df772259b37mr1448543276.58.1716536877102; Fri, 24 May 2024
- 00:47:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6D66FCC
+	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 07:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716536881; cv=fail; b=db26gg2lYIckCvfDgobuPGuoHSEsWSfF7V0ziJxInR7o5R3PVLkfCHef7ZRzRE4l3E/3OCw4zWuIhZ9vyF+NlCZG4KS37tjDtLmhi9U5HszNx3hYPvByxPt19Xiwu2NIulf9Upn51OqwgVp2qKi2hHSxDMrhNYyHZh8YwBzwiC0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716536881; c=relaxed/simple;
+	bh=6GMZakGCtlidiqF7IBTVnqO4OUyJUdo017Xw5FjAJuo=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Z+qz8nj9vtnT20+S95omz7+QSDUMKgPUaSRMnGr72r9ozerFWzL6YSqYgD+K0tFLwCofmJRcM86AlxZUGOqaGE+i5VExl41nkSogrvi30Nj0bTd7IM29OeKr21hernAHVpqFWCczFbh9/1NP3q35FcDV+UUDsZZKR0LpgDVNWG0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=W11VllKR; arc=fail smtp.client-ip=40.107.13.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="W11VllKR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UpOx/UyPqm1fJ1SB27JgP5O3Nr80vwigN7fRQVd3TBp/CV7T+b+bK2o2BWiT7BJEK/a0l88z3lwiXMxZmxdwk8GC2hX7ec/SCMrpVDGZhHWo9uSe51Ie7KemgZN5X53w1YzcucJiMVLAdtEzklqfcJNXnvwwn5bGCtwpgWZ48Bb4C2hMlLTg+soYY46WbeVy8eDcq4e+zttk46+Dm70hnas4R9hEDv8PR2kDQqR80Q0VzGKHvqKmLjP/V6v/FaMebj2bN+fIWkOJ+PJcWuuNCVK2npAAYa1CUFPirLME5ReHMvGXKTv4junwZ7QatOhd0VfeiqGqMvY4MMP8Dqb0+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sT49zB2xCkDCe2MHK6qV90scOYjR+/CjmSEWgazEacc=;
+ b=aqxLbobfCaaUPsGevNvSl1OitsgAd709iAeuArkEwAo23yucTzXD+ZvFer3oLzdxxT8RGpUp4XCIDD0BaanzCetFIljtVqmMFdYV9ioCQqNncdHyh6HcJ2GvZxAANaRk1Y/JynqUpzr7QdmjfIW0a1MmpP0gOcykSiTPj666hmuKFCbrkT690sCM69AglYkTBCgBnzJhhAUShI6lNSIt/ElhxFUgpnLNPiireT826P4KgXLty4PMqhcCcmdcBcltkfowB1CcycqIPkf7F6kX0Snby/9ZOYMm9TI6f3XApxOQl/BlpHfd53LLH5gyGHUa/qcw/I5R8ENLRjGdRpRYsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sT49zB2xCkDCe2MHK6qV90scOYjR+/CjmSEWgazEacc=;
+ b=W11VllKRpzhc47XKpE0IUjRVNKdLqGWAfSUgj1CKxAFRKI5BYItC1j0U2+yVZHpjcHdzWuZIdc1f4s+t6JKbzIF/9Q1kRNcP3I6SX92Tivs1UnzbCLhSwFE2Gb5IeQ5euNgAzAJTa4T8WcujzBYI7RcqtJvB+aefFVsRLSARIbU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 24 May
+ 2024 07:47:43 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::557f:6fcf:a5a7:981c]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::557f:6fcf:a5a7:981c%7]) with mapi id 15.20.7611.016; Fri, 24 May 2024
+ 07:47:43 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Peng Fan <peng.fan@nxp.com>
+Cc: Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+	Jassi Brar <jaswinder.singh@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] mailbox: imx: fix TXDB_V2 channel race condition
+Date: Fri, 24 May 2024 15:56:32 +0800
+Message-Id: <20240524075632.1009044-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0043.apcprd02.prod.outlook.com
+ (2603:1096:4:196::12) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409154253.3043822-1-hugo@hugovil.com> <20240409154253.3043822-4-hugo@hugovil.com>
- <CAMuHMdVq=rf-6o485KiA+zcwJPHMe5STKUtSWtFPs2nmvshu-A@mail.gmail.com>
- <CAHp75Vfi2YjE0wzwABURxXhcWLozAf9Cdj_pT+DL_tm8E_zm4Q@mail.gmail.com>
- <CAMuHMdXqc9tZkd7YzX56QRroDhjbweQAUj+th68DU8oFxpp+jg@mail.gmail.com>
- <CAMuHMdX2rrncANhCVf5bo+Md5bpMOeacYAu+Sgiy7noo55PYew@mail.gmail.com> <20240523195625.fa40049802a43a76dbc2a96d@hugovil.com>
-In-Reply-To: <20240523195625.fa40049802a43a76dbc2a96d@hugovil.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 24 May 2024 09:47:44 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV_yMTyAa0t5=Qm6YNbtOFQTyZZvjYn8Y+6mO3L-GswWQ@mail.gmail.com>
-Message-ID: <CAMuHMdV_yMTyAa0t5=Qm6YNbtOFQTyZZvjYn8Y+6mO3L-GswWQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] serial: sc16is7xx: split into core and I2C/SPI
- parts (core)
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, gregkh@linuxfoundation.org, 
-	jirislaby@kernel.org, peterz@infradead.org, mingo@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|DU2PR04MB8951:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd554cac-c413-43e6-70c7-08dc7bc5cb6a
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|1800799015|376005|366007|52116005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NlBum5W8pciNMhxKj3pu4gzc4XnkKSDXeNGHY6XAIS80BqG3vuxadLvFEuvJ?=
+ =?us-ascii?Q?42lm37jX91HaztTJFiC7+yd6sfjpGVms/JFap4IgePSh5aBmZjvY2NfVIjde?=
+ =?us-ascii?Q?R1gHJc28rBK9U16QNbzQa9/FA/yt2pTTalnqjFDivqKt6/VCj9EX2G5m+PUa?=
+ =?us-ascii?Q?GjA+vU8JjLgI98X084SlrXGvCD9cWOCFJawdvxZF1nBA8MpQEuT6bGxh7lEt?=
+ =?us-ascii?Q?uWqEAIFIxrAbKfYPnTNF0AQO2H9PXhBIsWiIIuuE89Ufay+cBeYplOVzG/Ix?=
+ =?us-ascii?Q?ANK6O9M716tVXCssTG6riQ0ETqpWOE5dHpe3mhMfpNBQMJRQrCQuar6OKmhv?=
+ =?us-ascii?Q?92V0DfB9YNqsDcVmmD9y00oBfP445yuKhqLV//qcm0IqD0ltdEMUUhd8rtgF?=
+ =?us-ascii?Q?TjmZMTo7ptPN+HoSab39bF/CgEJn7itp0+/EReRjX/O9BXktNomzpcrHup8P?=
+ =?us-ascii?Q?EO+TiROUa1bmkQSa5UIYBkmXvAf9HVggmKOkuxgHteNFKknaDgYj9CeTj/HW?=
+ =?us-ascii?Q?j2rXgRZRGtUdT1FSe+YXI8mQTa7EnwTvulKhjt/YtfDL9jEPayU9J0fnKoLm?=
+ =?us-ascii?Q?xccFdPIvXGaebSEkDNDOYr0DCt1MZrNQWQYMomn1KdmYipGwEG/4fT1Zos95?=
+ =?us-ascii?Q?8p9ixfBB2Zv9+rkZXfub2nDGxahVUtrkSY45SRCkEis3p0oOqhFTTL+dPTOt?=
+ =?us-ascii?Q?7FJz1xDgKMv8Xzq4yEbghWM02eCck9XWUYfJXuuZKYa10vnd+GfUgRSxcxnA?=
+ =?us-ascii?Q?cffhOA+GJTsgxpLQ0QrKqkDxC7x5pijpVVZGRoGXIBqrBAgeoQZkEYdIC8+R?=
+ =?us-ascii?Q?/ZdihYPYJmhJmUEpPVOrqcNbkzJ09SOXPCAAuuDjxG1u4XrKpc1HX5NKNv4l?=
+ =?us-ascii?Q?xOJ7aUCzgfm01DnLtD+KJ9P1FxtmCcXfTeKr7TltFm/OfWXqEiJxcq5jXQ1+?=
+ =?us-ascii?Q?LWTH3ZgykD6rn1S4nYg8hylrLpnP5ORGmRxseCTh7eNGxWOIRV07iW8Fuv7b?=
+ =?us-ascii?Q?Se3i3v3wXWVaMf14vsFXHT4DExSawhzcYB3K3KD0woJLYzYjSwSUDGVUdMY6?=
+ =?us-ascii?Q?qXiuOwkDXsixX1S/rOy+IUfWxcjJW5iVfIgxu9hcQ+7YWoWi+qqgZz1adz5r?=
+ =?us-ascii?Q?RSwRbJmNAd1y/8h+MehwBWn6w8V7lywrUrLXwW7ElKyAFSoOJmPDpSlJXaeP?=
+ =?us-ascii?Q?Htc2iTqxQms97uOPFpwIGtCA79CNUQyzBRD51If3MyAksAXgPvcdOEKCJ6n9?=
+ =?us-ascii?Q?PeQz3EWe/mAV+B5kB87d+0czUFqA/yBkX0qV6TFHodV88eS2aEXlnwEZp3ri?=
+ =?us-ascii?Q?w5yioeFhiIGwsm8iuZE/rnRZtdp0duiAHo6UgYACz3FawA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(52116005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?N/Ht5qFTCfCziOHA0iGRohCB1mDHGH9Uq0xjY8noGlHLYrUE46WdL2xjodeC?=
+ =?us-ascii?Q?PeUV7TzP+yo7JKaVVtVwl+7lGtn3TvWyJlg2FQWdM4HALWvJQXgujiYPAj7B?=
+ =?us-ascii?Q?FMRcO0LXIFvmdvP727tfoDutTMSUVOP7bxNCjR4ywDtiqzqgLZ3tj/Nbz0al?=
+ =?us-ascii?Q?Y3v9mHHJCB5U4d3DaV9mLxl/NM39adVapFZ+Rqk0901wkcMyOc/sMdppEcVK?=
+ =?us-ascii?Q?UUUtqKADnhvKvBEHmbZOiVitefpFaTHxS0s3nq4Ds/T2vOSoHKBFImo6XyX+?=
+ =?us-ascii?Q?XzPSK/UtR+vEAeFvXCBJ3HE3Ei1RyXgH8sjPOx+W1O58B4/g9dlk/FNQsMTl?=
+ =?us-ascii?Q?FJZIiXefalDSEwP83xAs4C2nQzb7o8z4AayOYS7nW0SheA1nptZ506pz0YBN?=
+ =?us-ascii?Q?DzoPzDP0WRRq/sAGj96q2pneCH3ICu8SvMF25IpXqGMOtjPnPQ2oXLTI2ryv?=
+ =?us-ascii?Q?fQRwBYDll4vzlKkI1py3RrbbVBV8nK/lF6gLERO9JIcdZPYmHC1dIRkYh0BT?=
+ =?us-ascii?Q?Pl9D8sQvQaDjRTF8xFpYoFMAx7mBfUvoNVVY7yj6QTxrdbDqxsixiizqaD/B?=
+ =?us-ascii?Q?n0QvTQubPVl81/LnSSsHvLw+8qHCCiQahTeDl5XW2/ry72odY3jsd4RhAu+L?=
+ =?us-ascii?Q?9dC62HZB1shGZJqAUJBbQbGXf22AxW3kO/qbxPVdIQzNELIwiBCNuCr/cqYs?=
+ =?us-ascii?Q?ptBxxSBMhzToK8chwu6oUDneIPuCZHbHevJxsR3u/pVta/1egA/VqWJKx0j3?=
+ =?us-ascii?Q?lYjzJQlaFLk92F40ddG6hd6uHAzaSA0yBR95ItaJjmFEsBk2DrauG+u4EmI7?=
+ =?us-ascii?Q?vtDp9s+XkYtvHiNHUBXeb8Oxf46re6uxUMmH0a7/Vtcs++0IOkiHI03zuKFX?=
+ =?us-ascii?Q?xwgl9xXEHYdlrUczmRzVRllkVaNB2A7g0DKGjYMp1haLTkuHk4Kmx264x5Bi?=
+ =?us-ascii?Q?kv1HqI4A6yWgbIS826R1UEI3jp4jfNc2zNNygcMteZm4Tu8ZH39ArPtwLDA+?=
+ =?us-ascii?Q?viFmIJdosiBvdGuSK0Kmc8XpRSn3TEgMcp6KK+pehvxVQIM/2yiSw/0mr/Un?=
+ =?us-ascii?Q?demI8YLlbqdzsDwF8Aw43hoPPd+Pa8RnP+E7uXu1nnI/0KJLIW98Fsz0tnQg?=
+ =?us-ascii?Q?zAFimKn4p2xgwXYdzrUtRi3DDzgiIZLdNx5C7phkBqaULeDhd2HW+u21huYu?=
+ =?us-ascii?Q?eLI6Eps0dZSZbAA9y6Cu8/NIgVBiaW65XotAoTTk2idbzrYEN1w0MfoZBboA?=
+ =?us-ascii?Q?vipK4F9NtxaMPnOfmHCTHwN1LAospGe/cwCnYb4U68Htx/JK53c5l5pwpYut?=
+ =?us-ascii?Q?i52rME40dXgHEbbGLsKZo9jZ6IgzYe1ply4W6mkxgP34c3V5zSkRjfX4d6FH?=
+ =?us-ascii?Q?ghZ4hXM+cxunNvYUPPczI/szSN5WOkfSkNfQlsQrW80fPdpMksBjV5cG2Nlu?=
+ =?us-ascii?Q?ntg92L2LRcdDIdt2wy+MUzxMPau4VvnsjDCc8Iceb9+OUBk4vOo9hPPSsNkx?=
+ =?us-ascii?Q?tVbj3Qd8nIGpjTFnjrjDO/OGikFEfiexjoMror4d/89RmBu9wI5o8D3dwkJ0?=
+ =?us-ascii?Q?hIyCEsPUILJK9+w6RGLDBHpWFRjtGkCHqbW7TvX4?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd554cac-c413-43e6-70c7-08dc7bc5cb6a
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2024 07:47:43.4032
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MjLqagxPpN84F8LbZHngBS/KyJogdsnXIDl0oGeoW5jTzznYS4sWbn43edu5ER0LIah+xTC5QkZOqJhS0/eGyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8951
 
-Hi Hugo,
+From: Peng Fan <peng.fan@nxp.com>
 
-On Fri, May 24, 2024 at 1:56=E2=80=AFAM Hugo Villeneuve <hugo@hugovil.com> =
-wrote:
-> On Thu, 23 May 2024 09:33:36 +0200
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Tue, Apr 23, 2024 at 3:11=E2=80=AFPM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> > > On Tue, Apr 23, 2024 at 12:37=E2=80=AFPM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Tue, Apr 23, 2024 at 1:01=E2=80=AFPM Geert Uytterhoeven <geert@l=
-inux-m68k.org> wrote:
-> > > > > On Tue, Apr 9, 2024 at 5:48=E2=80=AFPM Hugo Villeneuve <hugo@hugo=
-vil.com> wrote:
-> > >
-> > > > > > -config SERIAL_SC16IS7XX
-> > > > > > -       tristate "SC16IS7xx serial support"
-> > > > > > +       tristate "NXP SC16IS7xx UART support"
-> > > > >
-> > > > > Hence this replaces SERIAL_SC16IS7XX_CORE by SERIAL_SC16IS7XX,
-> > > > > so arch/mips/configs/cu1??0-neo_defconfig needs to updated.
-> > > >
-> > > >         select SERIAL_CORE
-> > > > -       depends on (SPI_MASTER && !I2C) || I2C
-> > > > +       select SERIAL_SC16IS7XX_SPI if SPI_MASTER
-> > > > +       select SERIAL_SC16IS7XX_I2C if I2C
-> > > >
-> > > > > So if SPI_MASTER or I2C is enabled, the corresponding SERIAL_SC16=
-IS7XX_*
-> > > > > subdriver can no longer be disabled?  According to
-> > > > > https://lore.kernel.org/all/20240403123501.8ef5c99f65a40ca2c10f63=
-5a@hugovil.com/
-> > > > > you did want to support that?
-> > > >
-> > > > I believe it has been taken from one of the IIO drivers as an examp=
-le.
-> > >
-> > > Looks like a bad example to follow:
-> > >   1. The driver question now pops up if both I2C and SPI_MASTER
-> > >      are disabled,
-> > >   2. What if SERIAL_SC16IS7XX_CORE is builtin, but I2C and/or
-> > >      SPI_MASTER are modular?
-> > >
-> > > I believe the only way to fix that is by letting the sub-drivers sele=
-ct the
-> > > core driver, like before.
-> >
-> > FTR, this issue is now upstream.
+Two TXDB_V2 channels are used between Linux and System Manager(SM).
+Channel0 for normal TX, Channel 1 for notification completion.
+The TXDB_V2 trigger logic is using imx_mu_xcr_rmw which uses
+read/modify/update logic.
 
-> I replied to you and Andy a few weeks ago about this (multiple emails wit=
-h suggestions/explanations), and I even asked if you were satisfied with wh=
-at I proposed, but never got anything from you, so I am still waiting on fe=
-edback to send a patch to fix this:
->
-> https://lore.kernel.org/all/20240430090333.5c5f029553cabcdf699310cb@hugov=
-il.com/
+Note: clear MUB GSR BITs, the MUA side GCR BITs will also got cleared per
+hardware design.
+Channel0 Linux
+read GCR->modify GCR->write GCR->M33 SM->read GSR----->clear GSR
+                                                |-(1)-|
+Channel1 Linux start in time slot(1)
+read GCR->modify GCR->write GCR->M33 SM->read GSR->clear GSR
+So Channel1 read GCR will read back the GCR that Channel0 wrote, because
+M33 has not finish clear GSR, this means Channel1 GCR writing will
+trigger Channel1 and Channel0 interrupt both which is wrong.
 
-Sorry, I indeed forgot to reply there.
+Channel0 will be freed(SCMI channel status set to FREE) in M33 SM when
+processing the 1st Channel0 interrupt. So when 2nd interrupt trigger
+(channel 0/1 trigger together), SM will see a freed Channel0, and report
+protocol error.
 
-Please use two visible symbols (for I2C and SPI), which select
-the invisible SERIAL_SC16IS7XX_CORE.
-Thanks!
+To address the issue, not using read/modify/update logic, just use
+write, because write 0 to GCR will be ignored. And after write MUA GCR,
+wait the SM to clear MUB GSR by looping MUA GCR value.
 
-Gr{oetje,eeting}s,
+Fixes: 5bfe4067d350 ("mailbox: imx: support channel type tx doorbell v2")
+Reviewed-by: Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-                        Geert
+V1: This patch has got R-b inside NXP and could be directly applied to
+    upstream linux, so I keep the R-b tag from Ranjani.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+ drivers/mailbox/imx-mailbox.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 5c1d09cad761..38abe07babdf 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -224,6 +224,8 @@ static int imx_mu_generic_tx(struct imx_mu_priv *priv,
+ 			     void *data)
+ {
+ 	u32 *arg = data;
++	u32 val;
++	int ret;
+ 
+ 	switch (cp->type) {
+ 	case IMX_MU_TYPE_TX:
+@@ -235,7 +237,13 @@ static int imx_mu_generic_tx(struct imx_mu_priv *priv,
+ 		tasklet_schedule(&cp->txdb_tasklet);
+ 		break;
+ 	case IMX_MU_TYPE_TXDB_V2:
+-		imx_mu_xcr_rmw(priv, IMX_MU_GCR, IMX_MU_xCR_GIRn(priv->dcfg->type, cp->idx), 0);
++		imx_mu_write(priv, IMX_MU_xCR_GIRn(priv->dcfg->type, cp->idx),
++			     priv->dcfg->xCR[IMX_MU_GCR]);
++		ret = readl_poll_timeout(priv->base + priv->dcfg->xCR[IMX_MU_GCR], val,
++					 !(val & IMX_MU_xCR_GIRn(priv->dcfg->type, cp->idx)),
++					 0, 1000);
++		if (ret)
++			dev_warn_ratelimited(priv->dev, "channel type: %d failure\n", cp->type);
+ 		break;
+ 	default:
+ 		dev_warn_ratelimited(priv->dev, "Send data on wrong channel type: %d\n", cp->type);
+-- 
+2.37.1
+
