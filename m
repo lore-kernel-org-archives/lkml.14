@@ -1,81 +1,76 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41006FCC;
-	Fri, 24 May 2024 07:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111D86FCC;
+	Fri, 24 May 2024 07:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716537282; cv=none; b=dIPd1Z6QMq6vHPLOn94zqgVCRj1c/Y+2XWQxWtRKuixADenKZ9E7VHjEykI1GeAPNFb24Rju/6oKRRrzKOQ/cjEDpoF2b8yW+YzeaPrmtL5utOi7Vu+S4pHWJmwRSpaUc81SeDL6MCGqsiBANBhK6tCv6XHBQX0qMDfHM9Dzp5o=
+	t=1716537321; cv=none; b=BhrUNPsVYnN4QbCetY+rvwXw/l1vIFxXzCtYZWsHPn1c21dHYa4FAp3v3hedehtUx0kT+hq/3dZ0wCSMxKh8BX/s8laWArlWNUABUO2DLpbUqK/V1FWbPypV/eKh4aUce39l+U12gD62YjG2Opt72dSRtuX3MnFN78M+a5XgTJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716537282; c=relaxed/simple;
-	bh=AQWIfTfzqOdbhk0hDPdwIJF63BEKo8joJ/woMW6honc=;
+	s=arc-20240116; t=1716537321; c=relaxed/simple;
+	bh=u9XYM378s13S95kk/UOjXzX8CF8ut9uPIj6c0utzj7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JZuw7v9ORP7t0L3yA8g6iTDSYQFQKKsP0W/F5gdqXeFz4sz3NdVojmjjAo3VsR22aJGWte6PgATzRPzcIe5MK5Nps+vLZbmp/vU/1xXk0EfzxWp7veediN7BsSej736EdazVoi7U0HlYcZEmUfS65HFCqFUBsevl3PmjxJnmEtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uMeyXc1H; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+ZG5WGa9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBT9qsCLX58+uAOhXw4DiZLlkvQM/xj718GUhrp8SI0JxfQbZWgo/a7aKL87S2vWHKlnQJePlxN+wH9I2VPa+4declgsjwwc6AV6tBAZWmIwytZHNsgT8MKmSuD4IMPNfJtEWCC4o86dRBfHi0z03dTbbnHVahu/IEPaM6cqQRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M/NtIItA; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uMeyXc1H";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+ZG5WGa9"
-Date: Fri, 24 May 2024 09:54:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716537278;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Quo18N2mmMPeVXpuHfcBQuoUjpytv9zJfnyZAoBrUVk=;
-	b=uMeyXc1HjFcnaUyLvgRwOwm82KtAhhWBKQNpBghl0LQW5k/ovxecYJa1N42lABtcqiG3LZ
-	ClT8pFrFZLMC9ZC6SCJNvQSHvm3nPqTy4AavHN0jkqnRz+RfhaljuE0WAEqRJ3jJq987vR
-	wegatQnhb2wLNBEurd5bPdVDTPU09fnOM3MA9O1OBpuwlRyYGtZviJMuq59aLYoY5EnETQ
-	VqktWrcPqYjH3HjUNGblDowgLnrpfFAdjN1nU2RYCvEkPsECk+YbfUpesr7KSsRCEegObA
-	Hf7JuGckCav82Y29coefjsTNi7fb/Yu+Fsns/EcLmmYQdm4JCjXiQRvL3XpY6g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716537278;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Quo18N2mmMPeVXpuHfcBQuoUjpytv9zJfnyZAoBrUVk=;
-	b=+ZG5WGa9tN7ZP5kLzEFpKTRaySsoOrRKvi2ByisggOcrg1bQAPSjmZVZTFUnfVp2u0ooYJ
-	WeM2muSII4AOL+Dw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Network Development <netdev@vger.kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH net-next 14/15 v2] net: Reference bpf_redirect_info via
- task_struct on PREEMPT_RT.
-Message-ID: <20240524075436.YmcT7GSd@linutronix.de>
-References: <CAADnVQJkiwaYXUo+LyKoV96VFFCFL0VY5Jgpuv_0oypksrnciA@mail.gmail.com>
- <20240507123636.cTnT7TvU@linutronix.de>
- <93062ce7-8dfa-48a9-a4ad-24c5a3993b41@kernel.org>
- <20240510162121.f-tvqcyf@linutronix.de>
- <20240510162214.zNWRKgFU@linutronix.de>
- <4949dca0-377a-45b1-a0fd-17bdf5a6ab10@kernel.org>
- <20240514054345.DZkx7fJs@linutronix.de>
- <e4123697-3e6e-4d4a-8b06-f69e1c453225@kernel.org>
- <20240517161553.SSh4BNQO@linutronix.de>
- <e3e21c87-d210-4360-8beb-25c6a04ce581@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M/NtIItA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716537320; x=1748073320;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=u9XYM378s13S95kk/UOjXzX8CF8ut9uPIj6c0utzj7M=;
+  b=M/NtIItApmqbFmorQb4Sa3wHOutafcUZJQ99bKuIdmNkS1R3TpEdFmfF
+   vZncJGnWSyMpf2fJvPneeLkYlwLUlucAtg8yPZ1JY/mlcuEX5czochy8E
+   0wrL0CpWen1mWhFq14tazWWBI837LmAT62M3LN+VWqq6xj3KtrRnV823f
+   64N+ZFhcy7n7xTuGUf2AXkYSCc5pMMuTg5ip5GRQJQXu0fu65fSvz1ece
+   jl7AMbPP+6fQCQpnZrPvp30A3PQ1TmZq3nwksLjK9RH5d465zVCQwJz/4
+   3o1wjV9j7YM+uvOXwIJcHI/NEfk3yr+unMYxn7UKBCJ/v4KI0q4cSvnyP
+   Q==;
+X-CSE-ConnectionGUID: //qraz2sRlO/5DQmiVWwaQ==
+X-CSE-MsgGUID: IajMaoAvTyGeTBJduvc31Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="13081361"
+X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
+   d="scan'208";a="13081361"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 00:55:20 -0700
+X-CSE-ConnectionGUID: 0RGi0TV4Rg6Gn/rfk2sdgA==
+X-CSE-MsgGUID: QFXpfw8wT7y5Pa8iG2+1qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
+   d="scan'208";a="33864767"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.54])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 00:55:19 -0700
+Date: Fri, 24 May 2024 00:55:19 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "Yamahata, Isaku" <isaku.yamahata@intel.com>,
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	"sagis@google.com" <sagis@google.com>,
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Zhao, Yan Y" <yan.y.zhao@intel.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"dmatlack@google.com" <dmatlack@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>
+Subject: Re: [PATCH 10/16] KVM: x86/tdp_mmu: Support TDX private mapping for
+ TDP MMU
+Message-ID: <20240524075519.GF212599@ls.amr.corp.intel.com>
+References: <20240517191630.GC412700@ls.amr.corp.intel.com>
+ <20240520233227.GA29916@ls.amr.corp.intel.com>
+ <a071748328e5c0a85d91ea89bb57c4d23cd79025.camel@intel.com>
+ <20240521161520.GB212599@ls.amr.corp.intel.com>
+ <20240522223413.GC212599@ls.amr.corp.intel.com>
+ <9bc661643e3ce11f32f0bac78a2dbfd62d9cd283.camel@intel.com>
+ <20240522234754.GD212599@ls.amr.corp.intel.com>
+ <4a6e393c6a1f99ee45b9020fbd2ac70f48c980b4.camel@intel.com>
+ <20240523000100.GE212599@ls.amr.corp.intel.com>
+ <35b63d56fe6ebd98c61b7c7ca1680da91c28a4d0.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,19 +79,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e3e21c87-d210-4360-8beb-25c6a04ce581@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <35b63d56fe6ebd98c61b7c7ca1680da91c28a4d0.camel@intel.com>
 
-On 2024-05-22 09:09:45 [+0200], Jesper Dangaard Brouer wrote:
+On Thu, May 23, 2024 at 06:27:49PM +0000,
+"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> wrote:
+
+> On Wed, 2024-05-22 at 17:01 -0700, Isaku Yamahata wrote:
+> > Ok, Let's include the patch.
 > 
-> Yes, except I had to guess how the workload was split between CPUs ;-)
+> We were discussing offline, that actually the existing behavior of
+> kvm_mmu_max_gfn() can be improved for normal VMs. It would be more proper to
+> trigger it off of the GFN range supported by EPT level, than the host MAXPA. 
 > 
-> Thanks for doing these benchmarks! :-)
+> Today I was thinking, to fix this would need somthing like an x86_ops.max_gfn(),
+> so it could get at VMX stuff (usage of 4/5 level EPT). If that exists we might
+> as well just call it directly in kvm_mmu_max_gfn().
+> 
+> Then for TDX we could just provide a TDX implementation, rather than stash the
+> GFN on the kvm struct? Instead it could use gpaw stashed on struct kvm_tdx. The
+> op would still need to be take a struct kvm.
+> 
+> What do you think of that alternative?
 
-Thank you for all the explanations and walking me through it.
-I'm going to update the patches as discussed and redo the numbers as
-suggested here.
-Thanks.
+I don't see benefit of x86_ops.max_gfn() compared to kvm->arch.max_gfn.
+But I don't have strong preference. Either way will work.
 
-> --Jesper
-
-Sebastian
+The max_gfn for the guest is rather static once the guest is created and
+initialized.  Also the existing codes that use max_gfn expect that the value
+doesn't change.  So we can use x86_ops.vm_init() to determine the value for VMX
+and TDX.  If we introduced x86_ops.max_gfn(), the implementation will be simply
+return kvm_vmx->max_gfn or return kvm_tdx->max_gfn. (We would have similar for
+SVM and SEV.)  So I don't see benefit of x86_ops.max_gfn() than
+kvm->arch.max_gfn.
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
