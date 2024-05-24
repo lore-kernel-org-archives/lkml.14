@@ -1,120 +1,157 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEF439850
-	for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 03:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B7D2F50A;
+	Fri, 24 May 2024 03:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716522975; cv=none; b=A6i96EAR/UXwpQSl2E3/80LZ+andfMN+6Rjm4g2EludU97ZuVdi+9ZCsK12bnOmK84s/38FMHUxz+lM1DMykFERE0wTN6yi5xuxRrdyPjAqFAWg5UJdlW+cXAcY8PQv+qvrcjwRN04KgZ4W0jJUtSEsAdo0Ra3DuXQT1+k651TQ=
+	t=1716522996; cv=none; b=fv+L6ek2lC+TA7d/CIobm3PdI2ZD4UoS7ZU5Xx1gtPghZx0LgGTuhHVylaMvsCf6ewekS9YmqKOZ+i6XUWbhvUKeWjgjD+2fmwyTRiwL7iFZu1JEkoRwbmUHs5nGvGIQsWLjVDTsjYSM+dEa4dD1tqpYtqOxChMLvd65iRs0w5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716522975; c=relaxed/simple;
-	bh=b0OXx68f3pRMuKufG4kLSg9yI3HiTxdnA3tB5xoFOEo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dD2VhFZNyJ45D+MWJ+PtbSwSKKoCiq0XWTVYchOigoLTeh7tloyInKyaaqVqh0jqjb3X/HURa5amzn7lYI5Q2qSZwHzfK/5fN/5qecep7gvc0oslH7aA8cdxht1YBzTkkCdZUYdsYSsMZZp+jT3FgExfr/t4VFcgWKgdHTtdzRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VlrjY4PQ7z1ypJ4;
-	Fri, 24 May 2024 11:53:05 +0800 (CST)
-Received: from canpemm500001.china.huawei.com (unknown [7.192.104.163])
-	by mail.maildlp.com (Postfix) with ESMTPS id 22211180067;
-	Fri, 24 May 2024 11:56:09 +0800 (CST)
-Received: from octopus.huawei.com (10.67.174.191) by
- canpemm500001.china.huawei.com (7.192.104.163) with Microsoft SMTP Server
+	s=arc-20240116; t=1716522996; c=relaxed/simple;
+	bh=tCImr3eNuGCx3++HG06+FF6HfNx8UBkQ8vONEBmnqFw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CiwjE7CEvUaDZZuJxNVAFAb5vDhkytMdUJ+Gn6HyWZaRC9VWNzMVOd1WhCv8CaNRtMde150jJ9xIa+KmnlRFYQCeQRxl8heKojDFr5Vr0wdPAzvIbkAksVkQWyCX3hB2MsmAiu/I5ZxmDomVU+aQP0nbDjjh5tw0TaJhU0xxiIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AQkuYC5j; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AQkuYC5j"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44NNPjke013266;
+	Fri, 24 May 2024 03:56:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ZAR/+EBIHXZGJe+mq0lrwc
+	QHAnY1nldA39qM/Y3XeFY=; b=AQkuYC5ja9rNX6gpHm0fkb4Ipm+aXACAatm/6h
+	caAiB/WQQrpoH0xZ5zo84wK4Rv6ye6/T+JNN5K4xHVCTl++IKj+hr2AJ7d5B2FIk
+	0B0SeqsAMxGM8Df7ofePjHwBfxP1A579Mj8XfqDtAXNJEKniFc8t/zo+wWO/DPTi
+	CnHlaqWm1J0J0sAW9rQmq0/SKxiv6604+oCo6RchdyRYrnJ1490ZaZg+44+ujqGf
+	NpfAGaRX7br/lbh3nhZ393Qsylgp3DrflEGdEFfCLZQ8O0T4SUypkioV/ZDVvoq6
+	4b5SRNXHG6mXNvJItGqOrPHHYCQlug30uCwQQMmCTNfhmmjw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yaa8hs470-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 May 2024 03:56:16 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44O3uF7B018545
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 May 2024 03:56:15 GMT
+Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 24 May 2024 11:56:08 +0800
-From: Zhang Qiao <zhangqiao22@huawei.com>
-To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
-	<vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
-	<rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-	<bristot@redhat.com>, <vschneid@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <zhangqiao22@huawei.com>
-Subject: [PATCH] sched/numa: Correct NUMA imbalance calculation
-Date: Fri, 24 May 2024 11:54:38 +0800
-Message-ID: <20240524035438.2701479-1-zhangqiao22@huawei.com>
-X-Mailer: git-send-email 2.18.0.huawei.25
+ 15.2.1544.9; Thu, 23 May 2024 20:56:10 -0700
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Banajit Goswami
+	<bgoswami@quicinc.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela
+	<perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_rohkumar@quicinc.com>,
+        <quic_pkumpatl@quicinc.com>,
+        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Subject: [PATCH v5 0/7] ASoC: codecs: wcd937x: add wcd937x audio codec support
+Date: Fri, 24 May 2024 09:25:28 +0530
+Message-ID: <20240524035535.3119208-1-quic_mohs@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500001.china.huawei.com (7.192.104.163)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: L3st0f3sd4uXIkAkilpiBdlveYl6tFL7
+X-Proofpoint-GUID: L3st0f3sd4uXIkAkilpiBdlveYl6tFL7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-23_15,2024-05-23_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 bulkscore=1 malwarescore=0 clxscore=1015
+ impostorscore=0 suspectscore=0 mlxlogscore=624 lowpriorityscore=1
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405240025
 
-When perform load balance, a NUMA imbalance is allowed
-if busy CPUs is less than the maximum threshold, it
-remains a pair of communication tasks on the current
-node when the source doamin is lightly loaded. In many
-cases, this prevents communicating tasks being pulled apart.
+This patchset adds support for Qualcomm WCD9370/WCD9375 codec.
 
-But when I ran the lmbench bw_pipe testcase, I found that
-it was a little inconsistent with the above expectations,
-the communicating tasks were migrated to two different
-NUMA nodes.
+Qualcomm WCD9370/WCD9375 Codec is a standalone Hi-Fi audio codec IC
+connected over SoundWire. This device has two SoundWire devices, RX and
+TX respectively supporting 3 x ADCs, ClassH, Ear, Aux PA, 2xHPH,
+6 DMICs and MBHC.
 
-There may be two reasons for this issue:
-1. calculate_imbalance() use local->sum_nr_running, it
-may not be accurate, because the communication tasks run
-on busiest group, it should be busiest->sum_nr_running.
+For codec driver to be functional it would need both tx and rx Soundwire devices
+to be up and this is taken care by using device component framework and device-links
+are used to ensure proper pm dependencies. Ex tx does not enter suspend
+before rx or codec is suspended.
 
-2. In calculate_imbalance(), idles cpus are used to calculat
-imbalance, but the group_weight may not be equal between local
-and busiest group(My server has 4 NUMA nodes and kernel
-builds 3 level NUMA sched_domain, some sched_group's weight
-is different). In this case, even if both groups are very idle,
-imbalance will be calculated very large, the difference of busy
-cpus between groups might be more appropriate as imbalance value.
+This patchset along with other SoundWire patches on the list
+have been tested on QCM6490 IDP device.
 
-For lmbench bw_pipe(bw_pipe -P 1):
-v6.6: 			1776.7533 MB/sec
-v6.6 + this patch:	4323 	  MB/sec
-
-Signed-off-by: Zhang Qiao <zhangqiao22@huawei.com>
----
- kernel/sched/fair.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 03be0d1330a6..c6170cde9c14 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1323,7 +1323,6 @@ static inline bool is_core_idle(int cpu)
- }
+Changes since v4:
+ - Removed volatile/read-only registers from defaults list
+ - Added wcd939x_volatile_register() with only volatile registers
+ - Added a wcd939x_readable_register() with read-only and read-write registers, so cache does it's job
+ - Fixed Spurious events for mixer controls and validated with mixer selftest tool
+ - Used TLV instead of enum for ear_pa_gain mixer control
+ - Used enum constraints instead of OneOf in dt-binding patch
+ - Added vdd-px supply property as non optional in dt-binding patch
+ - Reworked and done driver cleanup
  
- #ifdef CONFIG_NUMA
--#define NUMA_IMBALANCE_MIN 2
+Changes since v3:
+ - Fixed dt binding check errors.
+ - Added constraints on values in v4-0001 binding patch as suggested by Krzysztof
+ - Change the patch sequence soundwire driver first then codec driver
+ - Added missing .remove soundwire driver function
+ - Reworked and done driver cleanup
+
+Changes since v2:
+ - Used common qcom,wcd93xx-common.yaml. removed duplicate properties.
+ - Merged bindings patches "v2-0001" and "v2-0003" in single patch for easy review.
+ - Fixed dt binding check errors.
+ - Added missing "qcom,wcd9375-codec" in v3-0001 dt binding patch.
+ - Added constraints on values in v3-0001 binding patch as suggested by Krzysztof
+ - Fix the typo mistake in v2 cover letter
  
- static inline long
- adjust_numa_imbalance(int imbalance, int dst_running, int imb_numa_nr)
-@@ -1342,7 +1341,7 @@ adjust_numa_imbalance(int imbalance, int dst_running, int imb_numa_nr)
- 	 * Allow a small imbalance based on a simple pair of communicating
- 	 * tasks that remain local when the destination is lightly loaded.
- 	 */
--	if (imbalance <= NUMA_IMBALANCE_MIN)
-+	if (imbalance <= imb_numa_nr)
- 		return 0;
- 
- 	return imbalance;
-@@ -10727,14 +10726,15 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 			 */
- 			env->migration_type = migrate_task;
- 			env->imbalance = max_t(long, 0,
--					       (local->idle_cpus - busiest->idle_cpus));
-+					(busiest->group_weight - busiest->idle_cpus) -
-+					 (local->group_weight - local->idle_cpus));
- 		}
- 
- #ifdef CONFIG_NUMA
- 		/* Consider allowing a small imbalance between NUMA groups */
- 		if (env->sd->flags & SD_NUMA) {
- 			env->imbalance = adjust_numa_imbalance(env->imbalance,
--							       local->sum_nr_running + 1,
-+							       busiest->sum_nr_running,
- 							       env->sd->imb_numa_nr);
- 		}
- #endif
+Changes since v1:
+ - Split the patch per driver for easier review as suggested by Krzysztof
+ - Used devm_gpiod_get api to get reset gpio as suggested by Krzysztof
+
+Prasad Kumpatla (7):
+  ASoC: dt-bindings: document wcd937x Audio Codec
+  ASoC: codecs: wcd937x-sdw: add SoundWire driver
+  ASoC: codecs: wcd937x: add wcd937x codec driver
+  ASoC: codecs: wcd937x: add basic controls
+  ASoC: codecs: wcd937x: add playback dapm widgets
+  ASoC: codecs: wcd937x: add capture dapm widgets
+  ASoC: codecs: wcd937x: add audio routing and Kconfig
+
+ .../bindings/sound/qcom,wcd937x-sdw.yaml      |   91 +
+ .../bindings/sound/qcom,wcd937x.yaml          |   82 +
+ sound/soc/codecs/Kconfig                      |   20 +
+ sound/soc/codecs/Makefile                     |    7 +
+ sound/soc/codecs/wcd937x-sdw.c                | 1139 +++++++
+ sound/soc/codecs/wcd937x.c                    | 3029 +++++++++++++++++
+ sound/soc/codecs/wcd937x.h                    |  653 ++++
+ 7 files changed, 5021 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x.yaml
+ create mode 100644 sound/soc/codecs/wcd937x-sdw.c
+ create mode 100644 sound/soc/codecs/wcd937x.c
+ create mode 100644 sound/soc/codecs/wcd937x.h
+
+
+base-commit: 124cfbcd6d185d4f50be02d5f5afe61578916773
 -- 
-2.18.0.huawei.25
+2.25.1
 
