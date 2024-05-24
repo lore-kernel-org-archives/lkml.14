@@ -1,134 +1,98 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9144585956;
-	Fri, 24 May 2024 10:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FD785C6A;
+	Fri, 24 May 2024 10:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716548268; cv=none; b=kbBFGQIqWT89qGnsNFnWMt7Jwpvqm1gNSRV/8dA85bN20dN3O5UGkYHrbYapPLY9P6NwDnkg0Tx51O67WuHplYji2tk9Q6H3+xClCCREZh5Mv8Tva7MvMyQOLY4OlHltP3Te+3QNmsMtfXx4Q6dGR3rRik0xmwsD1ee2PSCh5Ew=
+	t=1716548270; cv=none; b=YKMDbwcatpQ9EYjhuCfUke8QjCsNmBMMJk4EDVSkjjYoeANevA5S+B9w1BjHz9eUvVVMHrDDXaV/kIm56y8PI0N2ajDn/2IX3ryhuYKNehTZPBlzrYLc2y90hu9Xr/oLQOoJJHbykmmD3EUklEsBz9Spjh/Lh9IaZQbj4uWr7ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716548268; c=relaxed/simple;
-	bh=colrypTjylwyez/3r9sQhQskA+fGLFAX5Vtn76reIsw=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IBk+ySyHK/134aWZZttRdRwqDlBUvwutEH2ekEfFewr5svqs3uIG+OAc2Uo1PSr5r2SvN+x/8jNFNeWhVKKFRzWb9/eQr1QdVzcB+38O6WHIS4OHnOyg3nqmv3Sc6IH5FX/pmBpmJC25sjETq9vXL1XcS4BOKWO2k3k6qc+6rtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J+p5TNps; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wyrt3ETa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716548270; c=relaxed/simple;
+	bh=Vn0zeGLzZS52gTkwm0qFtIpYRyVjwcLLAAjfXZqKVmo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k512QMw6CYaoGF5+zFs5bRyo4U0I7qg6tPySXlaKJpU8JWENLgD3b7+loGlYOeZJMJrhgpjQDqi15TvZa1ufbL8DQ1uBwwV85QYoQEdRcC2s5T7DhusHerfyNiKpiq68SUdykOPtgYGkvfZQ0N+0CgmLLtxZOms4Vqfg+9Q5Wxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vBaWWvlq; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J+p5TNps";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wyrt3ETa"
-Date: Fri, 24 May 2024 10:57:43 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716548264;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BLYn3FwQBwFMOl0ONyA3r9l1SvJ452A313P0X1CGLe0=;
-	b=J+p5TNpsmfs1LzuvHTrFETBpJUNc2Ow2jID0Odkui9OWA14LfyWRuQdwoZQghv3yGVqcQp
-	iFoQYQi3VOwZhVUKikSDbrQ5eclREGbuBLE7vKPUSstHlLNpl6QuMtC95rO5fEQrKhH+af
-	H7Eieono3dKrINSXXHWv5K43wDVRK6WKBxDalCckG2lwRoFHIJoE/YOlL2+y9/LnzSJpXJ
-	3Xqw9gkNHwTlSYGnDUkTqYSh/LMPNe1o/gtnECEJjmv7eE/nrxBhQWWXeyiHkrbWVkCRwe
-	RozwWzJBdKbhTvBBI5HiOks2aOxAlxBiDJwUTnvZTyW5Udrc8LnMuNW9UXap4A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716548264;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BLYn3FwQBwFMOl0ONyA3r9l1SvJ452A313P0X1CGLe0=;
-	b=Wyrt3ETaQN8tBUGYJimQo23LgMKAtNZQ0hlQiv9n7oPAun+/7GAigxd4mFzwIGd7vRnqwg
-	tTH4gAxF5U9OjNAQ==
-From: "tip-bot2 for dicken.ding" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] genirq/irqdesc: Prevent use-after-free in
- irq_find_at_or_after()
-Cc: "dicken.ding" <dicken.ding@mediatek.com>,
- Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240524091739.31611-1-dicken.ding@mediatek.com>
-References: <20240524091739.31611-1-dicken.ding@mediatek.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vBaWWvlq"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44OAvPNi028558;
+	Fri, 24 May 2024 05:57:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716548245;
+	bh=Mqo/yUaUfbqua5wM0i9He7Mecv4ALw4lJn4cQAMllsY=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=vBaWWvlq2WPGhCb54YveM71vVWp5Ljfy4GOkQ4+B+cJx6pPNLFRSKl4nN81KxytSw
+	 WbvddOTsLNm9Rl5nJp+R4A9Cy/aTZqyiDy/jYiNBkxzyR5Xpr1lIfsxVDfVT2ZUVaS
+	 ZLJ/CtHpSmpC3LBkuBAWmOk7jgynGQzX3cFTkdJU=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44OAvPi9037393
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 24 May 2024 05:57:25 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 24
+ May 2024 05:57:24 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 24 May 2024 05:57:24 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44OAvFvE049802;
+	Fri, 24 May 2024 05:57:20 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <manivannan.sadhasivam@linaro.org>,
+        <kishon@kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <cassel@kernel.org>, <dlemoal@kernel.org>,
+        <yoshihiro.shimoda.uh@renesas.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v2 1/2] PCI: keystone: Set mode as RootComplex for "ti,keystone-pcie" compatible
+Date: Fri, 24 May 2024 16:27:13 +0530
+Message-ID: <20240524105714.191642-2-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240524105714.191642-1-s-vadapalli@ti.com>
+References: <20240524105714.191642-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171654826399.10875.17851209724801691980.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The following commit has been merged into the irq/urgent branch of tip:
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-Commit-ID:     b84a8aba806261d2f759ccedf4a2a6a80a5e55ba
-Gitweb:        https://git.kernel.org/tip/b84a8aba806261d2f759ccedf4a2a6a80a5e55ba
-Author:        dicken.ding <dicken.ding@mediatek.com>
-AuthorDate:    Fri, 24 May 2024 17:17:39 +08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 24 May 2024 12:49:35 +02:00
+commit 23284ad677a9 ("PCI: keystone: Add support for PCIe EP in AM654x
+Platforms") introduced configuring "enum dw_pcie_device_mode" as part of
+device data ("struct ks_pcie_of_data"). However it failed to set mode
+for "ti,keystone-pcie" compatible. Set mode as RootComplex for
+"ti,keystone-pcie" compatible here.
 
-genirq/irqdesc: Prevent use-after-free in irq_find_at_or_after()
-
-irq_find_at_or_after() dereferences the interrupt descriptor which is
-returned by mt_find() while neither holding sparse_irq_lock nor RCU read
-lock, which means the descriptor can be freed between mt_find() and the
-dereference:
-
-    CPU0                            CPU1
-    desc = mt_find()
-                                    delayed_free_desc(desc)
-    irq_desc_get_irq(desc)
-
-The use-after-free is reported by KASAN:
-
-    Call trace:
-     irq_get_next_irq+0x58/0x84
-     show_stat+0x638/0x824
-     seq_read_iter+0x158/0x4ec
-     proc_reg_read_iter+0x94/0x12c
-     vfs_read+0x1e0/0x2c8
-
-    Freed by task 4471:
-     slab_free_freelist_hook+0x174/0x1e0
-     __kmem_cache_free+0xa4/0x1dc
-     kfree+0x64/0x128
-     irq_kobj_release+0x28/0x3c
-     kobject_put+0xcc/0x1e0
-     delayed_free_desc+0x14/0x2c
-     rcu_do_batch+0x214/0x720
-
-Guard the access with a RCU read lock section.
-
-Fixes: 721255b9826b ("genirq: Use a maple tree for interrupt descriptor management")
-Signed-off-by: dicken.ding <dicken.ding@mediatek.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20240524091739.31611-1-dicken.ding@mediatek.com
+Fixes: 23284ad677a9 ("PCI: keystone: Add support for PCIe EP in AM654x Platforms")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
- kernel/irq/irqdesc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 88ac365..07e99c9 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -160,7 +160,10 @@ static int irq_find_free_area(unsigned int from, unsigned int cnt)
- static unsigned int irq_find_at_or_after(unsigned int offset)
- {
- 	unsigned long index = offset;
--	struct irq_desc *desc = mt_find(&sparse_irqs, &index, nr_irqs);
-+	struct irq_desc *desc;
-+
-+	guard(rcu)();
-+	desc = mt_find(&sparse_irqs, &index, nr_irqs);
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index d3a7d14ee685..3184546ba3b6 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -1064,6 +1064,7 @@ static int ks_pcie_am654_set_mode(struct device *dev,
  
- 	return desc ? irq_desc_get_irq(desc) : nr_irqs;
- }
+ static const struct ks_pcie_of_data ks_pcie_rc_of_data = {
+ 	.host_ops = &ks_pcie_host_ops,
++	.mode = DW_PCIE_RC_TYPE,
+ 	.version = DW_PCIE_VER_365A,
+ };
+ 
+-- 
+2.40.1
+
