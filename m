@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25F8C6F069;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D73A612EBFC;
 	Fri, 24 May 2024 20:47:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716583623; cv=none; b=LqYl/stnqI7BwIoyM+9ad/e+F7Y0ho5lu56Td7cdCv/KAWv4EYKSIvC3Al5eCm2nKJT1NVodMvNsRQAp+/fKipbCpKwTXzeH+29INIMWhmRm3pvXOJEbB7Zm14OEpR/inD7/OID9wggcx9vxGOt2BwRFELyD4Oy5L15HhRBowuE=
+	t=1716583626; cv=none; b=Y4U9IQXe146+D2hQSLbO1COUK/oIBkdzDPCV4n8rD9xV8EGBGyxrkvHGO6xDrZBb7FQrL6k9QETQfbrmGIr65Uqrcyl7r03Laz8lacUaH0bZTDkm3oMijWxmB5XAhXtYehBYRoq0zq5ugP8txeasGSCyOJ1XGybiM9kw0xLeKzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716583623; c=relaxed/simple;
-	bh=ZgZSdBm9f/hG/rLDZktWp5ZHUu1y5hlr814zXBNMiL0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=YOnR9K33r8PcrKrskKoFQaF5Sxy4cMBrWnuPR4GHhiqD9uLNveyZ4SE0IWlUtQcnDWyMIjmXUBbGDXFOAAT6rtbOgYqpsI+PGuv+VPTzsKd1ANrhBl5zlgxkEG2WhO7Ghs4VGjwNRS5/a4f6RG7qB6j9dJ3dXaCpPZiQ3wp13lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=A1lJ8IwI; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1716583626; c=relaxed/simple;
+	bh=AhH2IqJvdgM9pOq0Cqn3h3nREs4VRy8ntYk/eAa9cO0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=HBxuyF1wnMhClBmpsuGqTPNx0tjY74JzK0SVMi47csrHz0EC+oI161/sA+QAENm2W+Kp1zRWq4YbvHOA8ctQvFpKxPPf6ADz8JjFID7ozvWqL2aIoNqch9LOPE+7j66UeEo8EbCG3zx/TG2p9lupkz3GRHHEjYXV7F/LzQZ/fK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KTqFoZvo; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="A1lJ8IwI"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KTqFoZvo"
 Received: by linux.microsoft.com (Postfix, from userid 1052)
-	id AAE3A20BE570; Fri, 24 May 2024 13:46:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AAE3A20BE570
+	id E0D5920BE590; Fri, 24 May 2024 13:46:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E0D5920BE590
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1716583611;
-	bh=X/T0IYnvZUsQBRuDA0SMC6AbcZUvyLBXZ/3ijf/cjsg=;
+	bh=vBOMBcwQCO6k4hxnAcXoCQRNIv6CgwhcPskZVNgjbOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A1lJ8IwIMDHLOXi0bGNj2lOlMvTrvlBdiniUScKVXDvpiyX32U/QHP2M8x2/3dIuN
-	 IthZ4d+S0OlGYK4PX+qBXrzBbQV6olpJ98Q+eMDIqYnE3mEb8P2mmJRQZmlOVJo08u
-	 Nraj82fvYZaZDhArQOGDRBVmCkFAYB4C5BFIWFLk=
+	b=KTqFoZvo0a8F1mIbNlvZnAmq/0C5EuRRTxz6HPZOGPEcwLZVFFhUs2qrWyAW/GZXQ
+	 vFR9GqQs+yvXNVyDgAFVWyruhUs0mOGgyEm/CCT2SEf2fZ/eOEHPFP67+JRPLJ/T+e
+	 sqEnIkRhXZbZFcN788bkK8H+ddylfZtndHv7Yg5U=
 From: Fan Wu <wufan@linux.microsoft.com>
 To: corbet@lwn.net,
 	zohar@linux.ibm.com,
@@ -44,11 +44,10 @@ Cc: linux-doc@vger.kernel.org,
 	dm-devel@lists.linux.dev,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Deven Bowers <deven.desai@linux.microsoft.com>,
 	Fan Wu <wufan@linux.microsoft.com>
-Subject: [PATCH v19 10/20] ipe: add permissive toggle
-Date: Fri, 24 May 2024 13:46:39 -0700
-Message-Id: <1716583609-21790-11-git-send-email-wufan@linux.microsoft.com>
+Subject: [PATCH v19 14/20] security: add security_inode_setintegrity() hook
+Date: Fri, 24 May 2024 13:46:43 -0700
+Message-Id: <1716583609-21790-15-git-send-email-wufan@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1716583609-21790-1-git-send-email-wufan@linux.microsoft.com>
 References: <1716583609-21790-1-git-send-email-wufan@linux.microsoft.com>
@@ -58,338 +57,110 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-From: Deven Bowers <deven.desai@linux.microsoft.com>
+This patch introduces a new hook to save inode's integrity
+data. For example, for fsverity enabled files, LSMs can use this hook to
+save the verified fsverity builtin signature into the inode's security
+blob, and LSMs can make access decisions based on the data inside
+the signature, like the signer certificate.
 
-IPE, like SELinux, supports a permissive mode. This mode allows policy
-authors to test and evaluate IPE policy without it effecting their
-programs. When the mode is changed, a 1404 AUDIT_MAC_STATUS
-be reported.
-
-This patch adds the following audit records:
-
-    audit: MAC_STATUS enforcing=0 old_enforcing=1 auid=4294967295
-      ses=4294967295 enabled=1 old-enabled=1 lsm=ipe res=1
-    audit: MAC_STATUS enforcing=1 old_enforcing=0 auid=4294967295
-      ses=4294967295 enabled=1 old-enabled=1 lsm=ipe res=1
-
-The audit record only emit when the value from the user input is
-different from the current enforce value.
-
-Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
 Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
 
----
-v2:
-  + Split evaluation loop, access control hooks,
-    and evaluation loop from policy parser and userspace
-    interface to pass mailing list character limit
-
-v3:
-  + Move ipe_load_properties to patch 04.
-  + Remove useless 0-initializations
-  + Prefix extern variables with ipe_
-  + Remove kernel module parameters, as these are
-    exposed through sysctls.
-  + Add more prose to the IPE base config option
-    help text.
-  + Use GFP_KERNEL for audit_log_start.
-  + Remove unnecessary caching system.
-  + Remove comments from headers
-  + Use rcu_access_pointer for rcu-pointer null check
-  + Remove usage of reqprot; use prot only.
-  + Move policy load and activation audit event to 03/12
-
-v4:
-  + Remove sysctls in favor of securityfs nodes
-  + Re-add kernel module parameters, as these are now
-    exposed through securityfs.
-  + Refactor property audit loop to a separate function.
-
-v5:
-  + fix minor grammatical errors
-  + do not group rule by curly-brace in audit record,
-    reconstruct the exact rule.
-
-v6:
-  + No changes
-
-v7:
-  + Further split lsm creation into a separate commit from the
-    evaluation loop and audit system, for easier review.
-  + Propagating changes to support the new ipe_context structure in the
-    evaluation loop.
-  + Split out permissive functionality into a separate patch for easier
-    review.
-  + Remove permissive switch compile-time configuration option - this
-    is trivial to add later.
-
-v8:
-  + Remove "IPE" prefix from permissive audit record
-  + align fields to the linux-audit field dictionary. This causes the
-    following fields to change:
-      enforce -> permissive
-
-  + Remove duplicated information correlated with syscall record, that
-    will always be present in the audit event.
-  + Change audit types:
-    + AUDIT_TRUST_STATUS -> AUDIT_MAC_STATUS
-      + There is no significant difference in meaning between
-        these types.
-
-v9:
-  + Clean up ipe_context related code
-
-v10:
-  + Change audit format to comform with the existing format selinux is
-    using
-  + Remove the audit record emission during init to align with selinux,
-    which does not perform this action.
-
-v11:
-  + Remove redundant code
-
-v12:
-  + Remove redundant code
-
-v13:
-  + Remove audit format macro
-
-v14:
-  + No changes
+--
+v1-v14:
+  + Not present
 
 v15:
-  + No changes
+  + Introduced
 
 v16:
-  + No changes
+  + Switch to call_int_hook()
 
 v17:
-  + Fix code and documentation style issues
+  + Fix a typo
 
 v18:
   + No changes
 
 v19:
-  + No changes
+  + Refactor hook declaration
 ---
- security/ipe/audit.c | 27 ++++++++++++++++--
- security/ipe/audit.h |  1 +
- security/ipe/eval.c  | 11 ++++++--
- security/ipe/eval.h  |  1 +
- security/ipe/fs.c    | 66 ++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 102 insertions(+), 4 deletions(-)
+ include/linux/lsm_hook_defs.h |  2 ++
+ include/linux/security.h      | 10 ++++++++++
+ security/security.c           | 20 ++++++++++++++++++++
+ 3 files changed, 32 insertions(+)
 
-diff --git a/security/ipe/audit.c b/security/ipe/audit.c
-index 6a3f24665655..a416291ba477 100644
---- a/security/ipe/audit.c
-+++ b/security/ipe/audit.c
-@@ -93,8 +93,8 @@ void ipe_audit_match(const struct ipe_eval_ctx *const ctx,
- 	if (!ab)
- 		return;
- 
--	audit_log_format(ab, "ipe_op=%s ipe_hook=%s pid=%d comm=",
--			 op, audit_hook_names[ctx->hook],
-+	audit_log_format(ab, "ipe_op=%s ipe_hook=%s enforcing=%d pid=%d comm=",
-+			 op, audit_hook_names[ctx->hook], READ_ONCE(enforce),
- 			 task_tgid_nr(current));
- 	audit_log_untrustedstring(ab, get_task_comm(comm, current));
- 
-@@ -212,3 +212,26 @@ void ipe_audit_policy_load(const struct ipe_policy *const p)
- 
- 	audit_log_end(ab);
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index 4f9b43a87ba5..46293ca34091 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -178,6 +178,8 @@ LSM_HOOK(void, LSM_RET_VOID, inode_getsecid, struct inode *inode, u32 *secid)
+ LSM_HOOK(int, 0, inode_copy_up, struct dentry *src, struct cred **new)
+ LSM_HOOK(int, -EOPNOTSUPP, inode_copy_up_xattr, struct dentry *src,
+ 	 const char *name)
++LSM_HOOK(int, 0, inode_setintegrity, const struct inode *inode,
++	 enum lsm_integrity_type type, const void *value, size_t size)
+ LSM_HOOK(int, 0, kernfs_init_security, struct kernfs_node *kn_dir,
+ 	 struct kernfs_node *kn)
+ LSM_HOOK(int, 0, file_permission, struct file *file, int mask)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 09c80326518f..ab489fb02f06 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -410,6 +410,9 @@ int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer
+ void security_inode_getsecid(struct inode *inode, u32 *secid);
+ int security_inode_copy_up(struct dentry *src, struct cred **new);
+ int security_inode_copy_up_xattr(struct dentry *src, const char *name);
++int security_inode_setintegrity(const struct inode *inode,
++				enum lsm_integrity_type type, const void *value,
++				size_t size);
+ int security_kernfs_init_security(struct kernfs_node *kn_dir,
+ 				  struct kernfs_node *kn);
+ int security_file_permission(struct file *file, int mask);
+@@ -1026,6 +1029,13 @@ static inline int security_inode_copy_up(struct dentry *src, struct cred **new)
+ 	return 0;
  }
-+
-+/**
-+ * ipe_audit_enforce() - Audit a change in IPE's enforcement state.
-+ * @new_enforce: The new value enforce to be set.
-+ * @old_enforce: The old value currently in enforce.
-+ */
-+void ipe_audit_enforce(bool new_enforce, bool old_enforce)
+ 
++static inline int security_inode_setintegrity(const struct inode *inode,
++					      enum lsm_integrity_type type,
++					      const void *value, size_t size)
 +{
-+	struct audit_buffer *ab;
-+
-+	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_MAC_STATUS);
-+	if (!ab)
-+		return;
-+
-+	audit_log(audit_context(), GFP_KERNEL, AUDIT_MAC_STATUS,
-+		  "enforcing=%d old_enforcing=%d auid=%u ses=%u"
-+		  " enabled=1 old-enabled=1 lsm=ipe res=1",
-+		  new_enforce, old_enforce,
-+		  from_kuid(&init_user_ns, audit_get_loginuid(current)),
-+		  audit_get_sessionid(current));
-+
-+	audit_log_end(ab);
++	return 0;
 +}
-diff --git a/security/ipe/audit.h b/security/ipe/audit.h
-index 3ba8b8a91541..ed2620846a79 100644
---- a/security/ipe/audit.h
-+++ b/security/ipe/audit.h
-@@ -14,5 +14,6 @@ void ipe_audit_match(const struct ipe_eval_ctx *const ctx,
- void ipe_audit_policy_load(const struct ipe_policy *const p);
- void ipe_audit_policy_activation(const struct ipe_policy *const op,
- 				 const struct ipe_policy *const np);
-+void ipe_audit_enforce(bool new_enforce, bool old_enforce);
- 
- #endif /* _IPE_AUDIT_H */
-diff --git a/security/ipe/eval.c b/security/ipe/eval.c
-index 18fd5d8fa03e..dd9064974be6 100644
---- a/security/ipe/eval.c
-+++ b/security/ipe/eval.c
-@@ -18,6 +18,7 @@
- 
- struct ipe_policy __rcu *ipe_active_policy;
- bool success_audit;
-+bool enforce = true;
- 
- #define FILE_SUPERBLOCK(f) ((f)->f_path.mnt->mnt_sb)
- 
-@@ -108,6 +109,7 @@ int ipe_evaluate_event(const struct ipe_eval_ctx *const ctx)
- 	enum ipe_action_type action;
- 	enum ipe_match match_type;
- 	bool match = false;
-+	int rc = 0;
- 
- 	rcu_read_lock();
- 
-@@ -160,9 +162,12 @@ int ipe_evaluate_event(const struct ipe_eval_ctx *const ctx)
- 	ipe_audit_match(ctx, match_type, action, rule);
- 
- 	if (action == IPE_ACTION_DENY)
--		return -EACCES;
-+		rc = -EACCES;
- 
--	return 0;
-+	if (!READ_ONCE(enforce))
-+		rc = 0;
 +
-+	return rc;
+ static inline int security_kernfs_init_security(struct kernfs_node *kn_dir,
+ 						struct kernfs_node *kn)
+ {
+diff --git a/security/security.c b/security/security.c
+index 743652e5e893..f4c7a13c6009 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -2682,6 +2682,26 @@ int security_inode_copy_up_xattr(struct dentry *src, const char *name)
  }
- 
- /* Set the right module name */
-@@ -173,3 +178,5 @@ int ipe_evaluate_event(const struct ipe_eval_ctx *const ctx)
- 
- module_param(success_audit, bool, 0400);
- MODULE_PARM_DESC(success_audit, "Start IPE with success auditing enabled");
-+module_param(enforce, bool, 0400);
-+MODULE_PARM_DESC(enforce, "Start IPE in enforce or permissive mode");
-diff --git a/security/ipe/eval.h b/security/ipe/eval.h
-index 42b74a7a7c2b..80b74f55fa69 100644
---- a/security/ipe/eval.h
-+++ b/security/ipe/eval.h
-@@ -16,6 +16,7 @@
- 
- extern struct ipe_policy __rcu *ipe_active_policy;
- extern bool success_audit;
-+extern bool enforce;
- 
- struct ipe_superblock {
- 	bool initramfs;
-diff --git a/security/ipe/fs.c b/security/ipe/fs.c
-index 9e410982b759..b52fb6023904 100644
---- a/security/ipe/fs.c
-+++ b/security/ipe/fs.c
-@@ -16,6 +16,7 @@ static struct dentry *np __ro_after_init;
- static struct dentry *root __ro_after_init;
- struct dentry *policy_root __ro_after_init;
- static struct dentry *audit_node __ro_after_init;
-+static struct dentry *enforce_node __ro_after_init;
- 
- /**
-  * setaudit() - Write handler for the securityfs node, "ipe/success_audit"
-@@ -65,6 +66,58 @@ static ssize_t getaudit(struct file *f, char __user *data,
- 	return simple_read_from_buffer(data, len, offset, result, 1);
- }
+ EXPORT_SYMBOL(security_inode_copy_up_xattr);
  
 +/**
-+ * setenforce() - Write handler for the securityfs node, "ipe/enforce"
-+ * @f: Supplies a file structure representing the securityfs node.
-+ * @data: Supplies a buffer passed to the write syscall.
-+ * @len: Supplies the length of @data.
-+ * @offset: unused.
++ * security_inode_setintegrity() - Set the inode's integrity data
++ * @inode: inode
++ * @type: type of integrity, e.g. hash digest, signature, etc
++ * @value: the integrity value
++ * @size: size of the integrity value
 + *
-+ * Return:
-+ * * Length of buffer written	- Success
-+ * * %-EPERM			- Insufficient permission
-+ */
-+static ssize_t setenforce(struct file *f, const char __user *data,
-+			  size_t len, loff_t *offset)
-+{
-+	int rc = 0;
-+	bool new_value, old_value;
-+
-+	if (!file_ns_capable(f, &init_user_ns, CAP_MAC_ADMIN))
-+		return -EPERM;
-+
-+	old_value = READ_ONCE(enforce);
-+	rc = kstrtobool_from_user(data, len, &new_value);
-+	if (rc)
-+		return rc;
-+
-+	if (new_value != old_value) {
-+		ipe_audit_enforce(new_value, old_value);
-+		WRITE_ONCE(enforce, new_value);
-+	}
-+
-+	return len;
-+}
-+
-+/**
-+ * getenforce() - Read handler for the securityfs node, "ipe/enforce"
-+ * @f: Supplies a file structure representing the securityfs node.
-+ * @data: Supplies a buffer passed to the read syscall.
-+ * @len: Supplies the length of @data.
-+ * @offset: unused.
++ * Register a verified integrity measurement of a inode with LSMs.
++ * LSMs should free the previously saved data if @value is NULL.
 + *
-+ * Return: Length of buffer written
++ * Return: Returns 0 on success, negative values on failure.
 + */
-+static ssize_t getenforce(struct file *f, char __user *data,
-+			  size_t len, loff_t *offset)
++int security_inode_setintegrity(const struct inode *inode,
++				enum lsm_integrity_type type, const void *value,
++				size_t size)
 +{
-+	const char *result;
-+
-+	result = ((READ_ONCE(enforce)) ? "1" : "0");
-+
-+	return simple_read_from_buffer(data, len, offset, result, 1);
++	return call_int_hook(inode_setintegrity, inode, type, value, size);
 +}
++EXPORT_SYMBOL(security_inode_setintegrity);
 +
  /**
-  * new_policy() - Write handler for the securityfs node, "ipe/new_policy".
-  * @f: Supplies a file structure representing the securityfs node.
-@@ -123,6 +176,11 @@ static const struct file_operations audit_fops = {
- 	.read = getaudit,
- };
- 
-+static const struct file_operations enforce_fops = {
-+	.write = setenforce,
-+	.read = getenforce,
-+};
-+
- /**
-  * ipe_init_securityfs() - Initialize IPE's securityfs tree at fsinit.
-  *
-@@ -149,6 +207,13 @@ static int __init ipe_init_securityfs(void)
- 		goto err;
- 	}
- 
-+	enforce_node = securityfs_create_file("enforce", 0600, root, NULL,
-+					      &enforce_fops);
-+	if (IS_ERR(enforce_node)) {
-+		rc = PTR_ERR(enforce_node);
-+		goto err;
-+	}
-+
- 	policy_root = securityfs_create_dir("policies", root);
- 	if (IS_ERR(policy_root)) {
- 		rc = PTR_ERR(policy_root);
-@@ -165,6 +230,7 @@ static int __init ipe_init_securityfs(void)
- err:
- 	securityfs_remove(np);
- 	securityfs_remove(policy_root);
-+	securityfs_remove(enforce_node);
- 	securityfs_remove(audit_node);
- 	securityfs_remove(root);
- 	return rc;
+  * security_kernfs_init_security() - Init LSM context for a kernfs node
+  * @kn_dir: parent kernfs node
 -- 
 2.44.0
 
