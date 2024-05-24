@@ -1,114 +1,116 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF09385933;
-	Fri, 24 May 2024 14:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B544585933;
+	Fri, 24 May 2024 14:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716559989; cv=none; b=Mn0Ty2DH2GzGId6CbCJan34PsYh8UjqDKGHWexbna4zwnKMUwg7PskAXU3joWYcdSwHOARTPfy/U/1JDexbQihol/xcY+dDSjt4MB29zYymvWMyjl07n5CvqeT87w14GtgyT4E9zFCXR+jZFTKHGnojctJqXjFPgWVmNdLmvGvA=
+	t=1716560037; cv=none; b=nVlSk+T/9nu4AERgFgvDJ+cyGwIq1P8SdBZGmomszVmkBe1vIAIjB/NdVpUGnGnhz4yI65TZfYxjedcsM9GlRZu37VJePLNiKIDNeElzoaU4QKxDTA2NxyelqCJxbwywvNDMC9Cj0PdPkXlJePdG6+Mu8flAD3BoqlW7o2hT2uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716559989; c=relaxed/simple;
-	bh=YxlpxnAvu/dOAFR4HiHkvmKzMo8zhWdu8PHes8ZOYBE=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=g5C0y1761ATQ9zKGuDHpqg2LK27/94mf8SOYMl/6BsZgSteMMVLPDtBzRahLtxOnEHHogtoi/88iWB/JTLG0sTauRK9Tv+U1e7eI2Ogw7zd+vbC++fdc7zM4OZZ+Onq0mkY8bhPpF4bd7bCGNni4Ec0Ntlq4Hi8J9TWF+ScQD/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZNTN49S; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716560037; c=relaxed/simple;
+	bh=E5+8fyOw15iLM3lIB1Gmk2lZYVOBl+crVzUTt50b210=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WPk+WcDOV+YbP+GGYk/MA8hVO/u/gF1KXFeTR62mjdmlCp9Mp4NFhZXs9hsEXisQQqm7wH86l/z5QzIHrZWFs2rpMM7Gw7fvhYwEIOhnUmEhtlJR5DKwvlcWKtjO/SRFPNurdamtHFappbT50FhZzpZGzVfWY1jJOHjB77jqHg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hoCB6JU9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Au2a7eBm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hoCB6JU9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Au2a7eBm; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZNTN49S"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-351d309bbecso6137934f8f.2;
-        Fri, 24 May 2024 07:13:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716559986; x=1717164786; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LIXRmETsPlPipZyoH/zKNgJDW/uAVRzPgiJ3jVW/v6w=;
-        b=kZNTN49SzksxwanMzbirTJAHmotgdeEut93X4C7pEJBjUFSm5J7E8XHyv6k5H+gjQj
-         TjPmXrpD9yP025UfFebZZ2ZzxHu826+cNVruTNi+ZvK9wbtqSXkhSGht/5BnR7MWFdAJ
-         1Lm2dzdyRN2JrQgVekogsh/nDT9Fgv02pKGTLSHwt6+q4EbiIRwNnQeGKHKfOCeEfvth
-         G+hD+VTGrd5C4CBWuU9oC9NyMMW8p7E/HudHEFw8Er6y4SvK+TDIX3AOKpbE4mQIvnHu
-         kVDHHNBdZVo/ZUFN61aex6q/sKIFU6XdTGBpe9ylYkGos2o8ykmbpwSgOpwtiEN/+guY
-         8WSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716559986; x=1717164786;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LIXRmETsPlPipZyoH/zKNgJDW/uAVRzPgiJ3jVW/v6w=;
-        b=Td3QNObuuRUsS5XnxA+AtzAIohqczkT30Bf6xtz2fSVEBK5G3kT13iScYrCor3hf4E
-         ZU0mJ5Scw6J9d27Hh1fA+V6Fgjnxv++TCkCI8RJW815iiwSNWhJ+lpvlMFvkGJY5thuC
-         YF3KJwDSj+fbUgBNOUWuYTcHg/Ta0QhFX3QhDFX1V+pDc+X3K7o4fc3iqyF6Yniodh5k
-         0u7juikTQkG9FA0aYZi+/CxecQMY7TqqovWahfytbanFyBkDEMNZut0UKCQ+j+dU7QvT
-         chKDx3rmqRWx9e1cA4bI0CNZsv3E8VU0+p2u4dlcCy5ROmXnucumwxjxkCPq3ozKvhBX
-         w+Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEvKJUAh8lj3rqIgApM+FZCJYtKjrHl6FN+v8UTbHSJj2GhnohSbEdEm0tmMku4MSWIgILIA+Ip2VpTinDcANI0vt0p+S5o5Q6/TFx8K7bSwGWK5Eb/lQ3gO5Z7QN1pRgY0yI+pEUSisX5elJnEUhFArT+4bIAdex/Q4KN
-X-Gm-Message-State: AOJu0YxOck33OljQcEt96cQ/Ow0o8x4LUJE9GreXKkEpTvV1w9rWBFSF
-	Ozeetv3LjW0lpfDxZmUPZ44a6PkerAS29DN4crdGfVho83AI+bMr
-X-Google-Smtp-Source: AGHT+IFpZvhYYO5p+X8RvnaHaktMtmd6wJtUb7B3pM5HVUaET70KBsAXDd1FRaAUGWaRlo3Sk/st9w==
-X-Received: by 2002:adf:fe91:0:b0:355:2cc:2f3a with SMTP id ffacd0b85a97d-3552f4fd766mr1876855f8f.18.1716559986127;
-        Fri, 24 May 2024 07:13:06 -0700 (PDT)
-Received: from [192.168.0.200] (54-240-197-234.amazon.com. [54.240.197.234])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a08ab76sm1698469f8f.34.2024.05.24.07.13.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 May 2024 07:13:05 -0700 (PDT)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <2b4c8233-9168-4e92-88fc-9dee0afec48c@xen.org>
-Date: Fri, 24 May 2024 15:13:03 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hoCB6JU9";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Au2a7eBm";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hoCB6JU9";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Au2a7eBm"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out2.suse.de (Postfix) with ESMTP id ABBFA20A94;
+	Fri, 24 May 2024 14:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716560033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ENZk+YNrymrvrrD0I2MRl9n2PBLEnhCmMDbUSSQHsE=;
+	b=hoCB6JU9XprYJdvuL8+l1iNbmT1ZYa1Rl5VRmYqZ0oS1KNS1EC1IJ8wJp1vSO/hvRptPz1
+	S8EAzBSwXldgUqjrxj2QsbMl+eH0jp4MpyO53psZ0R2dXFuWThK9150jb9vDZrOhzM900H
+	y9pH3EfD64HQ1lTur4u3nsgb7GzEZmA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716560033;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ENZk+YNrymrvrrD0I2MRl9n2PBLEnhCmMDbUSSQHsE=;
+	b=Au2a7eBmvLDVIBcZVVGbc+XGLHrRaIQIPCMaePnoTad5afSIwUqsgcrg/2VSin5J71GR9h
+	PDXEX3hEV9NkHWBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716560033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ENZk+YNrymrvrrD0I2MRl9n2PBLEnhCmMDbUSSQHsE=;
+	b=hoCB6JU9XprYJdvuL8+l1iNbmT1ZYa1Rl5VRmYqZ0oS1KNS1EC1IJ8wJp1vSO/hvRptPz1
+	S8EAzBSwXldgUqjrxj2QsbMl+eH0jp4MpyO53psZ0R2dXFuWThK9150jb9vDZrOhzM900H
+	y9pH3EfD64HQ1lTur4u3nsgb7GzEZmA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716560033;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ENZk+YNrymrvrrD0I2MRl9n2PBLEnhCmMDbUSSQHsE=;
+	b=Au2a7eBmvLDVIBcZVVGbc+XGLHrRaIQIPCMaePnoTad5afSIwUqsgcrg/2VSin5J71GR9h
+	PDXEX3hEV9NkHWBg==
+Date: Fri, 24 May 2024 16:13:53 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org,
+	Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
+Subject: Re: CVE-2023-52823: kernel: kexec: copy user-array safely
+Message-ID: <ZlCgoTr27AT_eg9A@dwarf.suse.cz>
+References: <2024052106-CVE-2023-52823-3d81@gregkh>
+ <ZlBlorsBMPK0RdnR@dwarf.suse.cz>
+ <2024052420-clang-flatterer-366b@gregkh>
+ <ZlCKLBjrF5PWt1hz@dwarf.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [RFC PATCH v3 16/21] KVM: x86: Factor out kvm_use_master_clock()
-To: David Woodhouse <dwmw2@infradead.org>, kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
- Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, jalliste@amazon.co.uk, sveith@amazon.de,
- zide.chen@intel.com, Dongli Zhang <dongli.zhang@oracle.com>,
- Chenyi Qiang <chenyi.qiang@intel.com>
-References: <20240522001817.619072-1-dwmw2@infradead.org>
- <20240522001817.619072-17-dwmw2@infradead.org>
-Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20240522001817.619072-17-dwmw2@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZlCKLBjrF5PWt1hz@dwarf.suse.cz>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.992];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_FIVE(0.00)[6]
 
-On 22/05/2024 01:17, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
+On Fri, May 24, 2024 at 02:38:04PM +0200, Jiri Bohac wrote:
+> On Fri, May 24, 2024 at 12:15:47PM +0200, Greg Kroah-Hartman wrote:
+> > Nice, but then why was this commit worded this way?  Now we check twice?
+> > Double safe?  Should it be reverted?
 > 
-> Both kvm_track_tsc_matching() and pvclock_update_vm_gtod_copy() make a
-> decision about whether the KVM clock should be in master clock mode.
-> 
-> They use *different* criteria for the decision though. This isn't really
-> a problem; it only has the potential to cause unnecessary invocations of
-> KVM_REQ_MASTERCLOCK_UPDATE if the masterclock was disabled due to TSC
-> going backwards, or the guest using the old MSR. But it isn't pretty.
-> 
-> Factor the decision out to a single function. And document the historical
-> reason why it's disabled for guests that use the old MSR_KVM_SYSTEM_TIME.
-> 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->   arch/x86/kvm/x86.c | 27 +++++++++++++++++++++++----
->   1 file changed, 23 insertions(+), 4 deletions(-)
-> 
+> double safe's good; turning it into a CVE not so much :(
+> CVE-2023-52822, CVE-2023-52824 and CVE-2023-52820, originally from the same patch
+> series, seem to be the exact same case.
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+Same thing: CVE-2023-52758
+
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
