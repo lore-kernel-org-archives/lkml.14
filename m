@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1360564CFC;
-	Sat, 25 May 2024 14:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D825A0E6;
+	Sat, 25 May 2024 14:47:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716648489; cv=none; b=VTraUDf0mUMYiq05cI3DS7nRhVGUTWGwQh4MhqZ4NWv55uKujShZ80rsQULnQRRkdHPSt/epxKUf28qZzukU9xV/R/oMcX4aPbOzn/ib5M/zlKKtx2o3b8uY8vBNmT5IymUJMaLFLeK/xVsT4WBAQmSchVH+l7gyIqEoaaK/jdg=
+	t=1716648478; cv=none; b=BJs/7klklM/w0NSIW0juI1s03+gCe5Bw7Kk+bVC2YLf/Ao/nJpW38M95b6RtvAqSNB/KAga/aw9IwqYH8IobtxWLoYuqDlpwZSw95XSStdhwgZDYyS5m46/kGJiU586dJgvSQj95kIRyZfGnxpJhb/jyJo85uOvjmLn1gP9jdhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716648489; c=relaxed/simple;
-	bh=bS7W7mdPRi5emzNhy5cGqdEJPTloSNJiMoLo584yuQA=;
+	s=arc-20240116; t=1716648478; c=relaxed/simple;
+	bh=BdtdYfa5wIecKQu4t1BuNKbVwkMuqbSe8rxNr3hJZ6U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f5ZYU3DkjEGb81v+JfnzuoQy5OxdyPGOQbSE8X7WL4m+ZXN24zAq7Gg5CCPRfwZR8gyLWzSaSoi27+WSXF0e2Ut8A76gzGue6kMUdbWPk+uBVlcO8iVXVJ6chk+mCDn3dcBOM2halFB7JPGkNwrFpTiU1biWvprxoYXnvoKhfNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lFvVnxr2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BnCbULA0I0o+dUv1jL/a2pE+pEZ1UaPqMohKiJMJ+u97Z8+9e4inLAdGk88QyxKa2R98OWBveFzcfTMmZv0BN3gCPXqAgg4bqQpEzOlSMQB6MSuJr2cokv9wbOWn3vT7xRbdgW8JTiJevIJX+xd38/1mun0JoBKRLP0gbBQoXoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zmGh/EqE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lFvVnxr2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B921C2BD11;
-	Sat, 25 May 2024 14:48:08 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zmGh/EqE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83F68C2BD11;
+	Sat, 25 May 2024 14:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716648488;
-	bh=bS7W7mdPRi5emzNhy5cGqdEJPTloSNJiMoLo584yuQA=;
+	s=korg; t=1716648478;
+	bh=BdtdYfa5wIecKQu4t1BuNKbVwkMuqbSe8rxNr3hJZ6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lFvVnxr2q0Ml/9KHiRS/Q157aFHzOanAVB8Ve4Nvs/UR4k+KDGgp3YEh5D+o1BTYe
-	 7YzG6eQJW/D2WBguK5JtsaIUC3qOFt3qIgAZJ7gkcb6WCiwNtm9GPouucjpsRO0kBH
-	 ibcYCsXDpQuY/iSSd2quesfo0tBp3IvZenXAVudY=
+	b=zmGh/EqE7IQCRtTTE74L2U3/1MtFd+Be/K3szRQ9oUgG/pZhau1RgXHXVWGbD7rwT
+	 +Q9G8LZPaD0Bk7Hlgz1ffvz24yDqHft8u+knW9doEQX1mc19Ul8bmrtxbPwQQ/8vJx
+	 MkLMyjmT/nM9nDQBxi45iE3oupAebLupvFe+HZ/4=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,12 +31,12 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 5.4.277
-Date: Sat, 25 May 2024 16:48:02 +0200
-Message-ID: <2024052501-retreat-flavorful-b67c@gregkh>
+Subject: Re: Linux 4.19.315
+Date: Sat, 25 May 2024 16:47:46 +0200
+Message-ID: <2024052545-tubeless-jolliness-dee3@gregkh>
 X-Mailer: git-send-email 2.45.1
-In-Reply-To: <2024052500-gravitate-dragonish-b98c@gregkh>
-References: <2024052500-gravitate-dragonish-b98c@gregkh>
+In-Reply-To: <2024052545-fridge-semester-b4a7@gregkh>
+References: <2024052545-fridge-semester-b4a7@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,355 +58,87 @@ index f523aa68a36b..cf601bd058ab 100755
              'encoding', self.state.document.settings.input_encoding)
          e_handler=self.state.document.settings.input_encoding_error_handler
 diff --git a/Makefile b/Makefile
-index b45c9b7543e5..99ea90429465 100644
+index ba5ae757b2c6..67d36496debd 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 4
--SUBLEVEL = 276
-+SUBLEVEL = 277
+ VERSION = 4
+ PATCHLEVEL = 19
+-SUBLEVEL = 314
++SUBLEVEL = 315
  EXTRAVERSION =
- NAME = Kleptomaniac Octopus
+ NAME = "People's Front"
  
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 9cb7163c5714..5c653ab90746 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -872,10 +872,10 @@
- 			interrupts = <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi";
- 			interrupt-map-mask = <0 0 0 0x7>;
--			interrupt-map =	<0 0 0 1 &intc 0 135 IRQ_TYPE_LEVEL_HIGH>,
--					<0 0 0 2 &intc 0 136 IRQ_TYPE_LEVEL_HIGH>,
--					<0 0 0 3 &intc 0 138 IRQ_TYPE_LEVEL_HIGH>,
--					<0 0 0 4 &intc 0 139 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-map =	<0 0 0 1 &intc 0 0 135 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc 0 0 136 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc 0 0 138 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc 0 0 139 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/drivers/md/dm-core.h b/drivers/md/dm-core.h
+index 8cda3f7ddbae..2542f0881ac6 100644
+--- a/drivers/md/dm-core.h
++++ b/drivers/md/dm-core.h
+@@ -18,6 +18,8 @@
+ #include "dm.h"
  
- 			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
- 				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
-index 6d223f345b6c..b45d3e9cee12 100644
---- a/drivers/firmware/arm_scmi/reset.c
-+++ b/drivers/firmware/arm_scmi/reset.c
-@@ -135,8 +135,12 @@ static int scmi_domain_reset(const struct scmi_handle *handle, u32 domain,
- 	struct scmi_xfer *t;
- 	struct scmi_msg_reset_domain_reset *dom;
- 	struct scmi_reset_info *pi = handle->reset_priv;
--	struct reset_dom_info *rdom = pi->dom_info + domain;
-+	struct reset_dom_info *rdom;
+ #define DM_RESERVED_MAX_IOS		1024
++#define DM_MAX_TARGETS			1048576
++#define DM_MAX_TARGET_PARAMS		1024
  
-+	if (domain >= pi->num_domains)
-+		return -EINVAL;
-+
-+	rdom = pi->dom_info + domain;
- 	if (rdom->async_reset)
- 		flags |= ASYNCHRONOUS_RESET;
+ struct dm_kobject_holder {
+ 	struct kobject kobj;
+diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
+index 88e89796ccbf..70929ff79eec 100644
+--- a/drivers/md/dm-ioctl.c
++++ b/drivers/md/dm-ioctl.c
+@@ -1734,7 +1734,8 @@ static int copy_params(struct dm_ioctl __user *user, struct dm_ioctl *param_kern
+ 	if (copy_from_user(param_kernel, user, minimum_data_size))
+ 		return -EFAULT;
  
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index 9c5cbc47edf1..b6fc191c353a 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -594,6 +594,9 @@ int amdgpu_ras_error_query(struct amdgpu_device *adev,
- 	if (!obj)
+-	if (param_kernel->data_size < minimum_data_size)
++	if (unlikely(param_kernel->data_size < minimum_data_size) ||
++	    unlikely(param_kernel->data_size > DM_MAX_TARGETS * DM_MAX_TARGET_PARAMS))
  		return -EINVAL;
  
-+	if (!info || info->head.block == AMDGPU_RAS_BLOCK_COUNT)
-+		return -EINVAL;
-+
- 	switch (info->head.block) {
- 	case AMDGPU_RAS_BLOCK__UMC:
- 		if (adev->umc.funcs->query_ras_error_count)
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 469cfc74617a..fd5f9a3a8352 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1990,12 +1990,18 @@ static void umac_enable_set(struct bcmgenet_priv *priv, u32 mask, bool enable)
+ 	secure_data = param_kernel->flags & DM_SECURE_DATA_FLAG;
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index 3faaf21be5b6..4822f66b08d9 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -187,7 +187,12 @@ static int alloc_targets(struct dm_table *t, unsigned int num)
+ int dm_table_create(struct dm_table **result, fmode_t mode,
+ 		    unsigned num_targets, struct mapped_device *md)
  {
- 	u32 reg;
- 
-+	spin_lock_bh(&priv->reg_lock);
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
-+	if (reg & CMD_SW_RESET) {
-+		spin_unlock_bh(&priv->reg_lock);
-+		return;
-+	}
- 	if (enable)
- 		reg |= mask;
- 	else
- 		reg &= ~mask;
- 	bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+	spin_unlock_bh(&priv->reg_lock);
- 
- 	/* UniMAC stops on a packet boundary, wait for a full-size packet
- 	 * to be processed
-@@ -2010,11 +2016,11 @@ static void reset_umac(struct bcmgenet_priv *priv)
- 	bcmgenet_rbuf_ctrl_set(priv, 0);
- 	udelay(10);
- 
--	/* disable MAC while updating its registers */
--	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
--
--	/* issue soft reset with (rg)mii loopback to ensure a stable rxclk */
--	bcmgenet_umac_writel(priv, CMD_SW_RESET | CMD_LCL_LOOP_EN, UMAC_CMD);
-+	/* issue soft reset and disable MAC while updating its registers */
-+	spin_lock_bh(&priv->reg_lock);
-+	bcmgenet_umac_writel(priv, CMD_SW_RESET, UMAC_CMD);
-+	udelay(2);
-+	spin_unlock_bh(&priv->reg_lock);
- }
- 
- static void bcmgenet_intr_disable(struct bcmgenet_priv *priv)
-@@ -2882,7 +2888,9 @@ static void bcmgenet_netif_start(struct net_device *dev)
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 
- 	/* Start the network engine */
-+	netif_addr_lock_bh(dev);
- 	bcmgenet_set_rx_mode(dev);
-+	netif_addr_unlock_bh(dev);
- 	bcmgenet_enable_rx_napi(priv);
- 
- 	umac_enable_set(priv, CMD_TX_EN | CMD_RX_EN, true);
-@@ -3146,16 +3154,19 @@ static void bcmgenet_set_rx_mode(struct net_device *dev)
- 	 * 3. The number of filters needed exceeds the number filters
- 	 *    supported by the hardware.
- 	*/
-+	spin_lock(&priv->reg_lock);
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
- 	if ((dev->flags & (IFF_PROMISC | IFF_ALLMULTI)) ||
- 	    (nfilter > MAX_MDF_FILTER)) {
- 		reg |= CMD_PROMISC;
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+		spin_unlock(&priv->reg_lock);
- 		bcmgenet_umac_writel(priv, 0, UMAC_MDF_CTRL);
- 		return;
- 	} else {
- 		reg &= ~CMD_PROMISC;
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+		spin_unlock(&priv->reg_lock);
- 	}
- 
- 	/* update MDF filter */
-@@ -3513,6 +3524,7 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
-+	spin_lock_init(&priv->reg_lock);
- 	spin_lock_init(&priv->lock);
- 
- 	SET_NETDEV_DEV(dev, &pdev->dev);
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index 29bf256d13f6..9efc503a9c8b 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -608,6 +608,8 @@ struct bcmgenet_rx_ring {
- /* device context */
- struct bcmgenet_priv {
- 	void __iomem *base;
-+	/* reg_lock: lock to serialize access to shared registers */
-+	spinlock_t reg_lock;
- 	enum bcmgenet_version version;
- 	struct net_device *dev;
- 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-index a2da09da4907..973275d116b6 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-@@ -132,10 +132,16 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
- 		return -EINVAL;
- 	}
- 
--	/* disable RX */
-+	/* Can't suspend with WoL if MAC is still in reset */
-+	spin_lock_bh(&priv->reg_lock);
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
-+	if (reg & CMD_SW_RESET)
-+		reg &= ~CMD_SW_RESET;
+-	struct dm_table *t = kzalloc(sizeof(*t), GFP_KERNEL);
++	struct dm_table *t;
 +
-+	/* disable RX */
- 	reg &= ~CMD_RX_EN;
- 	bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+	spin_unlock_bh(&priv->reg_lock);
- 	mdelay(10);
++	if (num_targets > DM_MAX_TARGETS)
++		return -EOVERFLOW;
++
++	t = kzalloc(sizeof(*t), GFP_KERNEL);
  
- 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
-@@ -159,6 +165,7 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
- 		  retries);
+ 	if (!t)
+ 		return -ENOMEM;
+@@ -202,7 +207,7 @@ int dm_table_create(struct dm_table **result, fmode_t mode,
  
- 	/* Enable CRC forward */
-+	spin_lock_bh(&priv->reg_lock);
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
- 	priv->crc_fwd_en = 1;
- 	reg |= CMD_CRC_FWD;
-@@ -166,6 +173,7 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
- 	/* Receiver must be enabled for WOL MP detection */
- 	reg |= CMD_RX_EN;
- 	bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+	spin_unlock_bh(&priv->reg_lock);
- 
- 	return 0;
- }
-@@ -187,8 +195,10 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
- 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
- 
- 	/* Disable CRC Forward */
-+	spin_lock_bh(&priv->reg_lock);
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
- 	reg &= ~CMD_CRC_FWD;
- 	bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+	spin_unlock_bh(&priv->reg_lock);
- 	priv->crc_fwd_en = 0;
- }
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 026f00ccaa0c..bd532e5b9f73 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -91,12 +91,20 @@ void bcmgenet_mii_setup(struct net_device *dev)
- 		reg |= RGMII_LINK;
- 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
- 
-+		spin_lock_bh(&priv->reg_lock);
- 		reg = bcmgenet_umac_readl(priv, UMAC_CMD);
- 		reg &= ~((CMD_SPEED_MASK << CMD_SPEED_SHIFT) |
- 			       CMD_HD_EN |
- 			       CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE);
- 		reg |= cmd_bits;
-+		if (reg & CMD_SW_RESET) {
-+			reg &= ~CMD_SW_RESET;
-+			bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+			udelay(2);
-+			reg |= CMD_TX_EN | CMD_RX_EN;
-+		}
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+		spin_unlock_bh(&priv->reg_lock);
- 
- 		priv->eee.eee_active = phy_init_eee(phydev, 0) >= 0;
- 		bcmgenet_eee_enable_set(dev,
-@@ -187,38 +195,8 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 	const char *phy_name = NULL;
- 	u32 id_mode_dis = 0;
- 	u32 port_ctrl;
--	int bmcr = -1;
--	int ret;
- 	u32 reg;
- 
--	/* MAC clocking workaround during reset of umac state machines */
--	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
--	if (reg & CMD_SW_RESET) {
--		/* An MII PHY must be isolated to prevent TXC contention */
--		if (priv->phy_interface == PHY_INTERFACE_MODE_MII) {
--			ret = phy_read(phydev, MII_BMCR);
--			if (ret >= 0) {
--				bmcr = ret;
--				ret = phy_write(phydev, MII_BMCR,
--						bmcr | BMCR_ISOLATE);
--			}
--			if (ret) {
--				netdev_err(dev, "failed to isolate PHY\n");
--				return ret;
--			}
--		}
--		/* Switch MAC clocking to RGMII generated clock */
--		bcmgenet_sys_writel(priv, PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
--		/* Ensure 5 clks with Rx disabled
--		 * followed by 5 clks with Reset asserted
--		 */
--		udelay(4);
--		reg &= ~(CMD_SW_RESET | CMD_LCL_LOOP_EN);
--		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
--		/* Ensure 5 more clocks before Rx is enabled */
--		udelay(2);
--	}
--
- 	priv->ext_phy = !priv->internal_phy &&
- 			(priv->phy_interface != PHY_INTERFACE_MODE_MOCA);
- 
-@@ -250,9 +228,6 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 		phy_set_max_speed(phydev, SPEED_100);
- 		bcmgenet_sys_writel(priv,
- 				    PORT_MODE_EXT_EPHY, SYS_PORT_CTRL);
--		/* Restore the MII PHY after isolation */
--		if (bmcr >= 0)
--			phy_write(phydev, MII_BMCR, bmcr);
- 		break;
- 
- 	case PHY_INTERFACE_MODE_REVMII:
-@@ -296,6 +271,7 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 	 * block for the interface to work
- 	 */
- 	if (priv->ext_phy) {
-+		mutex_lock(&phydev->lock);
- 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
- 		reg |= id_mode_dis;
- 		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-@@ -303,6 +279,7 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 		else
- 			reg |= RGMII_MODE_EN;
- 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
-+		mutex_unlock(&phydev->lock);
+ 	if (!num_targets) {
+ 		kfree(t);
+-		return -ENOMEM;
++		return -EOVERFLOW;
  	}
  
- 	if (init)
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 3947b7064bea..44802e501794 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -203,6 +203,7 @@ static int pinctrl_register_one_pin(struct pinctrl_dev *pctldev,
- 				    const struct pinctrl_pin_desc *pin)
- {
- 	struct pin_desc *pindesc;
-+	int error;
- 
- 	pindesc = pin_desc_get(pctldev, pin->number);
- 	if (pindesc) {
-@@ -224,18 +225,25 @@ static int pinctrl_register_one_pin(struct pinctrl_dev *pctldev,
- 	} else {
- 		pindesc->name = kasprintf(GFP_KERNEL, "PIN%u", pin->number);
- 		if (!pindesc->name) {
--			kfree(pindesc);
--			return -ENOMEM;
-+			error = -ENOMEM;
-+			goto failed;
- 		}
- 		pindesc->dynamic_name = true;
- 	}
- 
- 	pindesc->drv_data = pin->drv_data;
- 
--	radix_tree_insert(&pctldev->pin_desc_tree, pin->number, pindesc);
-+	error = radix_tree_insert(&pctldev->pin_desc_tree, pin->number, pindesc);
-+	if (error)
-+		goto failed;
-+
- 	pr_debug("registered pin %d (%s) on %s\n",
- 		 pin->number, pindesc->name, pctldev->desc->name);
- 	return 0;
-+
-+failed:
-+	kfree(pindesc);
-+	return error;
- }
- 
- static int pinctrl_register_pins(struct pinctrl_dev *pctldev,
+ 	if (alloc_targets(t, num_targets)) {
 diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 6d4792ec9e5f..2df77f894746 100644
+index 6e81d782d8a0..d837a585f114 100644
 --- a/drivers/tty/serial/kgdboc.c
 +++ b/drivers/tty/serial/kgdboc.c
-@@ -19,6 +19,7 @@
+@@ -16,6 +16,7 @@
  #include <linux/console.h>
  #include <linux/vt_kern.h>
  #include <linux/input.h>
 +#include <linux/irq_work.h>
  #include <linux/module.h>
- #include <linux/platform_device.h>
  
-@@ -42,6 +43,25 @@ static int			kgdb_tty_line;
- 
- static struct platform_device *kgdboc_pdev;
+ #define MAX_CONFIG_LEN		40
+@@ -35,6 +36,25 @@ static int kgdboc_use_kms;  /* 1 if we use kernel mode switching */
+ static struct tty_driver	*kgdb_tty_driver;
+ static int			kgdb_tty_line;
  
 +/*
 + * When we leave the debug trap handler we need to reset the keyboard status
@@ -430,7 +162,7 @@ index 6d4792ec9e5f..2df77f894746 100644
  #ifdef CONFIG_KDB_KEYBOARD
  static int kgdboc_reset_connect(struct input_handler *handler,
  				struct input_dev *dev,
-@@ -93,10 +113,17 @@ static void kgdboc_restore_input_helper(struct work_struct *dummy)
+@@ -86,10 +106,17 @@ static void kgdboc_restore_input_helper(struct work_struct *dummy)
  
  static DECLARE_WORK(kgdboc_restore_input_work, kgdboc_restore_input_helper);
  
@@ -449,7 +181,7 @@ index 6d4792ec9e5f..2df77f894746 100644
  }
  
  static int kgdboc_register_kbd(char **cptr)
-@@ -127,6 +154,7 @@ static void kgdboc_unregister_kbd(void)
+@@ -120,6 +147,7 @@ static void kgdboc_unregister_kbd(void)
  			i--;
  		}
  	}
@@ -457,33 +189,11 @@ index 6d4792ec9e5f..2df77f894746 100644
  	flush_work(&kgdboc_restore_input_work);
  }
  #else /* ! CONFIG_KDB_KEYBOARD */
-diff --git a/drivers/usb/typec/ucsi/displayport.c b/drivers/usb/typec/ucsi/displayport.c
-index 166c2aabb512..f67c5a304155 100644
---- a/drivers/usb/typec/ucsi/displayport.c
-+++ b/drivers/usb/typec/ucsi/displayport.c
-@@ -251,8 +251,6 @@ static void ucsi_displayport_work(struct work_struct *work)
- 	struct ucsi_dp *dp = container_of(work, struct ucsi_dp, work);
- 	int ret;
- 
--	mutex_lock(&dp->con->lock);
--
- 	ret = typec_altmode_vdm(dp->alt, dp->header,
- 				dp->vdo_data, dp->vdo_size);
- 	if (ret)
-@@ -261,8 +259,6 @@ static void ucsi_displayport_work(struct work_struct *work)
- 	dp->vdo_data = NULL;
- 	dp->vdo_size = 0;
- 	dp->header = 0;
--
--	mutex_unlock(&dp->con->lock);
- }
- 
- void ucsi_displayport_remove_partner(struct typec_altmode *alt)
 diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index d7014b2b28d6..10cc12ad2a2b 100644
+index 30b5646b2c0d..ba5324be100a 100644
 --- a/fs/btrfs/volumes.c
 +++ b/fs/btrfs/volumes.c
-@@ -3277,6 +3277,7 @@ static int btrfs_relocate_sys_chunks(struct btrfs_fs_info *fs_info)
+@@ -2957,6 +2957,7 @@ static int btrfs_relocate_sys_chunks(struct btrfs_fs_info *fs_info)
  			 * alignment and size).
  			 */
  			ret = -EUCLEAN;
@@ -491,203 +201,2354 @@ index d7014b2b28d6..10cc12ad2a2b 100644
  			goto error;
  		}
  
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 5fea15a5f341..b2e45e168548 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -787,9 +787,11 @@ int open_shroot(unsigned int xid, struct cifs_tcon *tcon,
- 	/* BB TBD check to see if oplock level check can be removed below */
- 	if (o_rsp->OplockLevel == SMB2_OPLOCK_LEVEL_LEASE) {
- 		kref_get(&tcon->crfid.refcount);
--		smb2_parse_contexts(server, o_rsp,
-+		rc = smb2_parse_contexts(server, rsp_iov,
- 				&oparms.fid->epoch,
- 				oparms.fid->lease_key, &oplock, NULL);
-+		if (rc)
-+			goto oshr_exit;
- 	} else
- 		goto oshr_exit;
- 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index da1a1b531ca5..667528132b69 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -1929,48 +1929,73 @@ parse_query_id_ctxt(struct create_context *cc, struct smb2_file_all_info *buf)
- 	buf->IndexNumber = pdisk_id->DiskFileId;
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 1e0c442b941e..f85860ab7e55 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -492,4 +492,24 @@ static inline void memcpy_and_pad(void *dest, size_t dest_len,
+ 		memcpy(dest, src, dest_len);
  }
  
--void
--smb2_parse_contexts(struct TCP_Server_Info *server,
--		       struct smb2_create_rsp *rsp,
--		       unsigned int *epoch, char *lease_key, __u8 *oplock,
--		       struct smb2_file_all_info *buf)
-+int smb2_parse_contexts(struct TCP_Server_Info *server,
-+			struct kvec *rsp_iov,
-+			unsigned int *epoch,
-+			char *lease_key, __u8 *oplock,
-+			struct smb2_file_all_info *buf)
- {
--	char *data_offset;
-+	struct smb2_create_rsp *rsp = rsp_iov->iov_base;
- 	struct create_context *cc;
--	unsigned int next;
--	unsigned int remaining;
-+	size_t rem, off, len;
-+	size_t doff, dlen;
-+	size_t noff, nlen;
- 	char *name;
- 
- 	*oplock = 0;
--	data_offset = (char *)rsp + le32_to_cpu(rsp->CreateContextsOffset);
--	remaining = le32_to_cpu(rsp->CreateContextsLength);
--	cc = (struct create_context *)data_offset;
++/**
++ * str_has_prefix - Test if a string has a given prefix
++ * @str: The string to test
++ * @prefix: The string to see if @str starts with
++ *
++ * A common way to test a prefix of a string is to do:
++ *  strncmp(str, prefix, sizeof(prefix) - 1)
++ *
++ * But this can lead to bugs due to typos, or if prefix is a pointer
++ * and not a constant. Instead use str_has_prefix().
++ *
++ * Returns: 0 if @str does not start with @prefix
++         strlen(@prefix) if @str does start with @prefix
++ */
++static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
++{
++	size_t len = strlen(prefix);
++	return strncmp(str, prefix, len) == 0 ? len : 0;
++}
 +
-+	off = le32_to_cpu(rsp->CreateContextsOffset);
-+	rem = le32_to_cpu(rsp->CreateContextsLength);
-+	if (check_add_overflow(off, rem, &len) || len > rsp_iov->iov_len)
+ #endif /* _LINUX_STRING_H_ */
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 755daada7def..f4077379420f 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -529,8 +529,6 @@ extern int trace_event_raw_init(struct trace_event_call *call);
+ extern int trace_define_field(struct trace_event_call *call, const char *type,
+ 			      const char *name, int offset, int size,
+ 			      int is_signed, int filter_type);
+-extern int trace_add_event_call_nolock(struct trace_event_call *call);
+-extern int trace_remove_event_call_nolock(struct trace_event_call *call);
+ extern int trace_add_event_call(struct trace_event_call *call);
+ extern int trace_remove_event_call(struct trace_event_call *call);
+ extern int trace_event_get_offsets(struct trace_event_call *call);
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index e656d1e232da..f589c37b4573 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -518,6 +518,9 @@ config BPF_EVENTS
+ 	help
+ 	  This allows the user to attach BPF programs to kprobe events.
+ 
++config DYNAMIC_EVENTS
++	def_bool n
++
+ config PROBE_EVENTS
+ 	def_bool n
+ 
+@@ -630,6 +633,7 @@ config HIST_TRIGGERS
+ 	depends on ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select TRACING_MAP
+ 	select TRACING
++	select DYNAMIC_EVENTS
+ 	default n
+ 	help
+ 	  Hist triggers allow one or more arbitrary trace event fields
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index f81dadbc7c4a..9ff3c4fa91b6 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -78,6 +78,7 @@ endif
+ ifeq ($(CONFIG_TRACING),y)
+ obj-$(CONFIG_KGDB_KDB) += trace_kdb.o
+ endif
++obj-$(CONFIG_DYNAMIC_EVENTS) += trace_dynevent.o
+ obj-$(CONFIG_PROBE_EVENTS) += trace_probe.o
+ obj-$(CONFIG_UPROBE_EVENTS) += trace_uprobe.o
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index e6b2d443bab9..8292c7441e23 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4470,7 +4470,7 @@ static int trace_set_options(struct trace_array *tr, char *option)
+ 
+ 	cmp = strstrip(option);
+ 
+-	if (strncmp(cmp, "no", 2) == 0) {
++	if (str_has_prefix(cmp, "no")) {
+ 		neg = 1;
+ 		cmp += 2;
+ 	}
+@@ -4665,6 +4665,10 @@ static const char readme_msg[] =
+ 	"\t\t\t  traces\n"
+ #endif
+ #endif /* CONFIG_STACK_TRACER */
++#ifdef CONFIG_DYNAMIC_EVENTS
++	"  dynamic_events\t\t- Add/remove/show the generic dynamic events\n"
++	"\t\t\t  Write into this file to define/undefine new trace events.\n"
++#endif
+ #ifdef CONFIG_KPROBE_EVENTS
+ 	"  kprobe_events\t\t- Add/remove/show the kernel dynamic events\n"
+ 	"\t\t\t  Write into this file to define/undefine new trace events.\n"
+@@ -4677,6 +4681,9 @@ static const char readme_msg[] =
+ 	"\t  accepts: event-definitions (one definition per line)\n"
+ 	"\t   Format: p[:[<group>/]<event>] <place> [<args>]\n"
+ 	"\t           r[maxactive][:[<group>/]<event>] <place> [<args>]\n"
++#ifdef CONFIG_HIST_TRIGGERS
++	"\t           s:[synthetic/]<event> <field> [<field>]\n"
++#endif
+ 	"\t           -:[<group>/]<event>\n"
+ #ifdef CONFIG_KPROBE_EVENTS
+ 	"\t    place: [<module>:]<symbol>[+<offset>]|<memaddr>\n"
+@@ -4690,6 +4697,11 @@ static const char readme_msg[] =
+ 	"\t           $stack<index>, $stack, $retval, $comm\n"
+ 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, string,\n"
+ 	"\t           b<bit-width>@<bit-offset>/<container-size>\n"
++#ifdef CONFIG_HIST_TRIGGERS
++	"\t    field: <stype> <name>;\n"
++	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
++	"\t           [unsigned] char/int/long\n"
++#endif
+ #endif
+ 	"  events/\t\t- Directory containing all trace event subsystems:\n"
+ 	"      enable\t\t- Write 0/1 to enable/disable tracing of all events\n"
+@@ -4742,6 +4754,7 @@ static const char readme_msg[] =
+ 	"\t            [:size=#entries]\n"
+ 	"\t            [:pause][:continue][:clear]\n"
+ 	"\t            [:name=histname1]\n"
++	"\t            [:<handler>.<action>]\n"
+ 	"\t            [if <filter>]\n\n"
+ 	"\t    Note, special fields can be used as well:\n"
+ 	"\t            common_timestamp - to record current timestamp\n"
+@@ -4787,7 +4800,16 @@ static const char readme_msg[] =
+ 	"\t    The enable_hist and disable_hist triggers can be used to\n"
+ 	"\t    have one event conditionally start and stop another event's\n"
+ 	"\t    already-attached hist trigger.  The syntax is analagous to\n"
+-	"\t    the enable_event and disable_event triggers.\n"
++	"\t    the enable_event and disable_event triggers.\n\n"
++	"\t    Hist trigger handlers and actions are executed whenever a\n"
++	"\t    a histogram entry is added or updated.  They take the form:\n\n"
++	"\t        <handler>.<action>\n\n"
++	"\t    The available handlers are:\n\n"
++	"\t        onmatch(matching.event)  - invoke on addition or update\n"
++	"\t        onmax(var)               - invoke if var exceeds current max\n\n"
++	"\t    The available actions are:\n\n"
++	"\t        <synthetic_event>(param list)        - generate synthetic event\n"
++	"\t        save(field,...)                      - save current event fields\n"
+ #endif
+ ;
+ 
+diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+new file mode 100644
+index 000000000000..f17a887abb66
+--- /dev/null
++++ b/kernel/trace/trace_dynevent.c
+@@ -0,0 +1,210 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Generic dynamic event control interface
++ *
++ * Copyright (C) 2018 Masami Hiramatsu <mhiramat@kernel.org>
++ */
++
++#include <linux/debugfs.h>
++#include <linux/kernel.h>
++#include <linux/list.h>
++#include <linux/mm.h>
++#include <linux/mutex.h>
++#include <linux/tracefs.h>
++
++#include "trace.h"
++#include "trace_dynevent.h"
++
++static DEFINE_MUTEX(dyn_event_ops_mutex);
++static LIST_HEAD(dyn_event_ops_list);
++
++int dyn_event_register(struct dyn_event_operations *ops)
++{
++	if (!ops || !ops->create || !ops->show || !ops->is_busy ||
++	    !ops->free || !ops->match)
 +		return -EINVAL;
-+	cc = (struct create_context *)((u8 *)rsp + off);
- 
- 	/* Initialize inode number to 0 in case no valid data in qfid context */
- 	if (buf)
- 		buf->IndexNumber = 0;
- 
--	while (remaining >= sizeof(struct create_context)) {
--		name = le16_to_cpu(cc->NameOffset) + (char *)cc;
--		if (le16_to_cpu(cc->NameLength) == 4 &&
--		    strncmp(name, SMB2_CREATE_REQUEST_LEASE, 4) == 0)
--			*oplock = server->ops->parse_lease_buf(cc, epoch,
--							   lease_key);
--		else if (buf && (le16_to_cpu(cc->NameLength) == 4) &&
--		    strncmp(name, SMB2_CREATE_QUERY_ON_DISK_ID, 4) == 0)
--			parse_query_id_ctxt(cc, buf);
--
--		next = le32_to_cpu(cc->Next);
--		if (!next)
-+	while (rem >= sizeof(*cc)) {
-+		doff = le16_to_cpu(cc->DataOffset);
-+		dlen = le32_to_cpu(cc->DataLength);
-+		if (check_add_overflow(doff, dlen, &len) || len > rem)
-+			return -EINVAL;
 +
-+		noff = le16_to_cpu(cc->NameOffset);
-+		nlen = le16_to_cpu(cc->NameLength);
-+		if (noff + nlen >= doff)
-+			return -EINVAL;
++	INIT_LIST_HEAD(&ops->list);
++	mutex_lock(&dyn_event_ops_mutex);
++	list_add_tail(&ops->list, &dyn_event_ops_list);
++	mutex_unlock(&dyn_event_ops_mutex);
++	return 0;
++}
 +
-+		name = (char *)cc + noff;
-+		switch (nlen) {
-+		case 4:
-+			if (!strncmp(name, SMB2_CREATE_REQUEST_LEASE, 4)) {
-+				*oplock = server->ops->parse_lease_buf(cc, epoch,
-+								       lease_key);
-+			} else if (buf &&
-+				   !strncmp(name, SMB2_CREATE_QUERY_ON_DISK_ID, 4)) {
-+				parse_query_id_ctxt(cc, buf);
-+			}
-+			break;
-+		default:
-+			cifs_dbg(FYI, "%s: unhandled context (nlen=%zu dlen=%zu)\n",
-+				 __func__, nlen, dlen);
-+			if (IS_ENABLED(CONFIG_CIFS_DEBUG2))
-+				cifs_dump_mem("context data: ", cc, dlen);
++int dyn_event_release(int argc, char **argv, struct dyn_event_operations *type)
++{
++	struct dyn_event *pos, *n;
++	char *system = NULL, *event, *p;
++	int ret = -ENOENT;
++
++	if (argv[0][1] != ':')
++		return -EINVAL;
++
++	event = &argv[0][2];
++	p = strchr(event, '/');
++	if (p) {
++		system = event;
++		event = p + 1;
++		*p = '\0';
++	}
++	if (event[0] == '\0')
++		return -EINVAL;
++
++	mutex_lock(&event_mutex);
++	for_each_dyn_event_safe(pos, n) {
++		if (type && type != pos->ops)
++			continue;
++		if (pos->ops->match(system, event, pos)) {
++			ret = pos->ops->free(pos);
 +			break;
 +		}
++	}
++	mutex_unlock(&event_mutex);
 +
-+		off = le32_to_cpu(cc->Next);
-+		if (!off)
- 			break;
--		remaining -= next;
--		cc = (struct create_context *)((char *)cc + next);
-+		if (check_sub_overflow(rem, off, &rem))
-+			return -EINVAL;
-+		cc = (struct create_context *)((u8 *)cc + off);
++	return ret;
++}
++
++static int create_dyn_event(int argc, char **argv)
++{
++	struct dyn_event_operations *ops;
++	int ret;
++
++	if (argv[0][0] == '-')
++		return dyn_event_release(argc, argv, NULL);
++
++	mutex_lock(&dyn_event_ops_mutex);
++	list_for_each_entry(ops, &dyn_event_ops_list, list) {
++		ret = ops->create(argc, (const char **)argv);
++		if (!ret || ret != -ECANCELED)
++			break;
++	}
++	mutex_unlock(&dyn_event_ops_mutex);
++	if (ret == -ECANCELED)
++		ret = -EINVAL;
++
++	return ret;
++}
++
++/* Protected by event_mutex */
++LIST_HEAD(dyn_event_list);
++
++void *dyn_event_seq_start(struct seq_file *m, loff_t *pos)
++{
++	mutex_lock(&event_mutex);
++	return seq_list_start(&dyn_event_list, *pos);
++}
++
++void *dyn_event_seq_next(struct seq_file *m, void *v, loff_t *pos)
++{
++	return seq_list_next(v, &dyn_event_list, pos);
++}
++
++void dyn_event_seq_stop(struct seq_file *m, void *v)
++{
++	mutex_unlock(&event_mutex);
++}
++
++static int dyn_event_seq_show(struct seq_file *m, void *v)
++{
++	struct dyn_event *ev = v;
++
++	if (ev && ev->ops)
++		return ev->ops->show(m, ev);
++
++	return 0;
++}
++
++static const struct seq_operations dyn_event_seq_op = {
++	.start	= dyn_event_seq_start,
++	.next	= dyn_event_seq_next,
++	.stop	= dyn_event_seq_stop,
++	.show	= dyn_event_seq_show
++};
++
++/*
++ * dyn_events_release_all - Release all specific events
++ * @type:	the dyn_event_operations * which filters releasing events
++ *
++ * This releases all events which ->ops matches @type. If @type is NULL,
++ * all events are released.
++ * Return -EBUSY if any of them are in use, and return other errors when
++ * it failed to free the given event. Except for -EBUSY, event releasing
++ * process will be aborted at that point and there may be some other
++ * releasable events on the list.
++ */
++int dyn_events_release_all(struct dyn_event_operations *type)
++{
++	struct dyn_event *ev, *tmp;
++	int ret = 0;
++
++	mutex_lock(&event_mutex);
++	for_each_dyn_event(ev) {
++		if (type && ev->ops != type)
++			continue;
++		if (ev->ops->is_busy(ev)) {
++			ret = -EBUSY;
++			goto out;
++		}
++	}
++	for_each_dyn_event_safe(ev, tmp) {
++		if (type && ev->ops != type)
++			continue;
++		ret = ev->ops->free(ev);
++		if (ret)
++			break;
++	}
++out:
++	mutex_unlock(&event_mutex);
++
++	return ret;
++}
++
++static int dyn_event_open(struct inode *inode, struct file *file)
++{
++	int ret;
++
++	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
++		ret = dyn_events_release_all(NULL);
++		if (ret < 0)
++			return ret;
++	}
++
++	return seq_open(file, &dyn_event_seq_op);
++}
++
++static ssize_t dyn_event_write(struct file *file, const char __user *buffer,
++				size_t count, loff_t *ppos)
++{
++	return trace_parse_run_command(file, buffer, count, ppos,
++				       create_dyn_event);
++}
++
++static const struct file_operations dynamic_events_ops = {
++	.owner          = THIS_MODULE,
++	.open           = dyn_event_open,
++	.read           = seq_read,
++	.llseek         = seq_lseek,
++	.release        = seq_release,
++	.write		= dyn_event_write,
++};
++
++/* Make a tracefs interface for controlling dynamic events */
++static __init int init_dynamic_event(void)
++{
++	struct dentry *d_tracer;
++	struct dentry *entry;
++
++	d_tracer = tracing_init_dentry();
++	if (IS_ERR(d_tracer))
++		return 0;
++
++	entry = tracefs_create_file("dynamic_events", 0644, d_tracer,
++				    NULL, &dynamic_events_ops);
++
++	/* Event list interface */
++	if (!entry)
++		pr_warn("Could not create tracefs 'dynamic_events' entry\n");
++
++	return 0;
++}
++fs_initcall(init_dynamic_event);
+diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
+new file mode 100644
+index 000000000000..8c334064e4d6
+--- /dev/null
++++ b/kernel/trace/trace_dynevent.h
+@@ -0,0 +1,119 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Common header file for generic dynamic events.
++ */
++
++#ifndef _TRACE_DYNEVENT_H
++#define _TRACE_DYNEVENT_H
++
++#include <linux/kernel.h>
++#include <linux/list.h>
++#include <linux/mutex.h>
++#include <linux/seq_file.h>
++
++#include "trace.h"
++
++struct dyn_event;
++
++/**
++ * struct dyn_event_operations - Methods for each type of dynamic events
++ *
++ * These methods must be set for each type, since there is no default method.
++ * Before using this for dyn_event_init(), it must be registered by
++ * dyn_event_register().
++ *
++ * @create: Parse and create event method. This is invoked when user passes
++ *  a event definition to dynamic_events interface. This must not destruct
++ *  the arguments and return -ECANCELED if given arguments doesn't match its
++ *  command prefix.
++ * @show: Showing method. This is invoked when user reads the event definitions
++ *  via dynamic_events interface.
++ * @is_busy: Check whether given event is busy so that it can not be deleted.
++ *  Return true if it is busy, otherwides false.
++ * @free: Delete the given event. Return 0 if success, otherwides error.
++ * @match: Check whether given event and system name match this event.
++ *  Return true if it matches, otherwides false.
++ *
++ * Except for @create, these methods are called under holding event_mutex.
++ */
++struct dyn_event_operations {
++	struct list_head	list;
++	int (*create)(int argc, const char *argv[]);
++	int (*show)(struct seq_file *m, struct dyn_event *ev);
++	bool (*is_busy)(struct dyn_event *ev);
++	int (*free)(struct dyn_event *ev);
++	bool (*match)(const char *system, const char *event,
++			struct dyn_event *ev);
++};
++
++/* Register new dyn_event type -- must be called at first */
++int dyn_event_register(struct dyn_event_operations *ops);
++
++/**
++ * struct dyn_event - Dynamic event list header
++ *
++ * The dyn_event structure encapsulates a list and a pointer to the operators
++ * for making a global list of dynamic events.
++ * User must includes this in each event structure, so that those events can
++ * be added/removed via dynamic_events interface.
++ */
++struct dyn_event {
++	struct list_head		list;
++	struct dyn_event_operations	*ops;
++};
++
++extern struct list_head dyn_event_list;
++
++static inline
++int dyn_event_init(struct dyn_event *ev, struct dyn_event_operations *ops)
++{
++	if (!ev || !ops)
++		return -EINVAL;
++
++	INIT_LIST_HEAD(&ev->list);
++	ev->ops = ops;
++	return 0;
++}
++
++static inline int dyn_event_add(struct dyn_event *ev)
++{
++	lockdep_assert_held(&event_mutex);
++
++	if (!ev || !ev->ops)
++		return -EINVAL;
++
++	list_add_tail(&ev->list, &dyn_event_list);
++	return 0;
++}
++
++static inline void dyn_event_remove(struct dyn_event *ev)
++{
++	lockdep_assert_held(&event_mutex);
++	list_del_init(&ev->list);
++}
++
++void *dyn_event_seq_start(struct seq_file *m, loff_t *pos);
++void *dyn_event_seq_next(struct seq_file *m, void *v, loff_t *pos);
++void dyn_event_seq_stop(struct seq_file *m, void *v);
++int dyn_events_release_all(struct dyn_event_operations *type);
++int dyn_event_release(int argc, char **argv, struct dyn_event_operations *type);
++
++/*
++ * for_each_dyn_event	-	iterate over the dyn_event list
++ * @pos:	the struct dyn_event * to use as a loop cursor
++ *
++ * This is just a basement of for_each macro. Wrap this for
++ * each actual event structure with ops filtering.
++ */
++#define for_each_dyn_event(pos)	\
++	list_for_each_entry(pos, &dyn_event_list, list)
++
++/*
++ * for_each_dyn_event	-	iterate over the dyn_event list safely
++ * @pos:	the struct dyn_event * to use as a loop cursor
++ * @n:		the struct dyn_event * to use as temporary storage
++ */
++#define for_each_dyn_event_safe(pos, n)	\
++	list_for_each_entry_safe(pos, n, &dyn_event_list, list)
++
++#endif
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 2830a9cbe648..a982cbfcb9f1 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1249,7 +1249,7 @@ static int f_show(struct seq_file *m, void *v)
+ 	 */
+ 	array_descriptor = strchr(field->type, '[');
+ 
+-	if (!strncmp(field->type, "__data_loc", 10))
++	if (str_has_prefix(field->type, "__data_loc"))
+ 		array_descriptor = NULL;
+ 
+ 	if (!array_descriptor)
+@@ -2312,7 +2312,8 @@ __trace_early_add_new_event(struct trace_event_call *call,
+ struct ftrace_module_file_ops;
+ static void __add_event_to_tracers(struct trace_event_call *call);
+ 
+-int trace_add_event_call_nolock(struct trace_event_call *call)
++/* Add an additional event_call dynamically */
++int trace_add_event_call(struct trace_event_call *call)
+ {
+ 	int ret;
+ 	lockdep_assert_held(&event_mutex);
+@@ -2327,17 +2328,6 @@ int trace_add_event_call_nolock(struct trace_event_call *call)
+ 	return ret;
+ }
+ 
+-/* Add an additional event_call dynamically */
+-int trace_add_event_call(struct trace_event_call *call)
+-{
+-	int ret;
+-
+-	mutex_lock(&event_mutex);
+-	ret = trace_add_event_call_nolock(call);
+-	mutex_unlock(&event_mutex);
+-	return ret;
+-}
+-
+ /*
+  * Must be called under locking of trace_types_lock, event_mutex and
+  * trace_event_sem.
+@@ -2383,8 +2373,8 @@ static int probe_remove_event_call(struct trace_event_call *call)
+ 	return 0;
+ }
+ 
+-/* no event_mutex version */
+-int trace_remove_event_call_nolock(struct trace_event_call *call)
++/* Remove an event_call */
++int trace_remove_event_call(struct trace_event_call *call)
+ {
+ 	int ret;
+ 
+@@ -2399,18 +2389,6 @@ int trace_remove_event_call_nolock(struct trace_event_call *call)
+ 	return ret;
+ }
+ 
+-/* Remove an event_call */
+-int trace_remove_event_call(struct trace_event_call *call)
+-{
+-	int ret;
+-
+-	mutex_lock(&event_mutex);
+-	ret = trace_remove_event_call_nolock(call);
+-	mutex_unlock(&event_mutex);
+-
+-	return ret;
+-}
+-
+ #define for_each_event(event, start, end)			\
+ 	for (event = start;					\
+ 	     (unsigned long)event < (unsigned long)end;		\
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index ede370225245..6108c9176c21 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -15,6 +15,7 @@
+ 
+ #include "tracing_map.h"
+ #include "trace.h"
++#include "trace_dynevent.h"
+ 
+ #define SYNTH_SYSTEM		"synthetic"
+ #define SYNTH_FIELDS_MAX	16
+@@ -286,9 +287,24 @@ struct hist_trigger_data {
+ 	struct field_var_hist		*field_var_hists[SYNTH_FIELDS_MAX];
+ 	unsigned int			n_field_var_hists;
+ 
+-	struct field_var		*max_vars[SYNTH_FIELDS_MAX];
+-	unsigned int			n_max_vars;
+-	unsigned int			n_max_var_str;
++	struct field_var		*save_vars[SYNTH_FIELDS_MAX];
++	unsigned int			n_save_vars;
++	unsigned int			n_save_var_str;
++};
++
++static int synth_event_create(int argc, const char **argv);
++static int synth_event_show(struct seq_file *m, struct dyn_event *ev);
++static int synth_event_release(struct dyn_event *ev);
++static bool synth_event_is_busy(struct dyn_event *ev);
++static bool synth_event_match(const char *system, const char *event,
++			      struct dyn_event *ev);
++
++static struct dyn_event_operations synth_event_ops = {
++	.create = synth_event_create,
++	.show = synth_event_show,
++	.is_busy = synth_event_is_busy,
++	.free = synth_event_release,
++	.match = synth_event_match,
+ };
+ 
+ struct synth_field {
+@@ -300,7 +316,7 @@ struct synth_field {
+ };
+ 
+ struct synth_event {
+-	struct list_head			list;
++	struct dyn_event			devent;
+ 	int					ref;
+ 	char					*name;
+ 	struct synth_field			**fields;
+@@ -311,38 +327,107 @@ struct synth_event {
+ 	struct tracepoint			*tp;
+ };
+ 
++static bool is_synth_event(struct dyn_event *ev)
++{
++	return ev->ops == &synth_event_ops;
++}
++
++static struct synth_event *to_synth_event(struct dyn_event *ev)
++{
++	return container_of(ev, struct synth_event, devent);
++}
++
++static bool synth_event_is_busy(struct dyn_event *ev)
++{
++	struct synth_event *event = to_synth_event(ev);
++
++	return event->ref != 0;
++}
++
++static bool synth_event_match(const char *system, const char *event,
++			      struct dyn_event *ev)
++{
++	struct synth_event *sev = to_synth_event(ev);
++
++	return strcmp(sev->name, event) == 0 &&
++		(!system || strcmp(system, SYNTH_SYSTEM) == 0);
++}
++
+ struct action_data;
+ 
+ typedef void (*action_fn_t) (struct hist_trigger_data *hist_data,
+ 			     struct tracing_map_elt *elt, void *rec,
+-			     struct ring_buffer_event *rbe,
++			     struct ring_buffer_event *rbe, void *key,
+ 			     struct action_data *data, u64 *var_ref_vals);
+ 
++typedef bool (*check_track_val_fn_t) (u64 track_val, u64 var_val);
++
++enum handler_id {
++	HANDLER_ONMATCH = 1,
++	HANDLER_ONMAX,
++};
++
++enum action_id {
++	ACTION_SAVE = 1,
++	ACTION_TRACE,
++};
++
+ struct action_data {
++	enum handler_id		handler;
++	enum action_id		action;
++	char			*action_name;
+ 	action_fn_t		fn;
++
+ 	unsigned int		n_params;
+ 	char			*params[SYNTH_FIELDS_MAX];
+ 
++	/*
++	 * When a histogram trigger is hit, the values of any
++	 * references to variables, including variables being passed
++	 * as parameters to synthetic events, are collected into a
++	 * var_ref_vals array.  This var_ref_idx is the index of the
++	 * first param in the array to be passed to the synthetic
++	 * event invocation.
++	 */
++	unsigned int		var_ref_idx;
++	struct synth_event	*synth_event;
++
+ 	union {
+ 		struct {
+-			unsigned int		var_ref_idx;
+-			char			*match_event;
+-			char			*match_event_system;
+-			char			*synth_event_name;
+-			struct synth_event	*synth_event;
+-		} onmatch;
++			char			*event;
++			char			*event_system;
++		} match_data;
+ 
+ 		struct {
++			/*
++			 * var_str contains the $-unstripped variable
++			 * name referenced by var_ref, and used when
++			 * printing the action.  Because var_ref
++			 * creation is deferred to create_actions(),
++			 * we need a per-action way to save it until
++			 * then, thus var_str.
++			 */
+ 			char			*var_str;
+-			char			*fn_name;
+-			unsigned int		max_var_ref_idx;
+-			struct hist_field	*max_var;
+-			struct hist_field	*var;
+-		} onmax;
++
++			/*
++			 * var_ref refers to the variable being
++			 * tracked e.g onmax($var).
++			 */
++			struct hist_field	*var_ref;
++
++			/*
++			 * track_var contains the 'invisible' tracking
++			 * variable created to keep the current
++			 * e.g. max value.
++			 */
++			struct hist_field	*track_var;
++
++			check_track_val_fn_t	check_val;
++			action_fn_t		save_data;
++		} track_data;
+ 	};
+ };
+ 
+-
+ static char last_hist_cmd[MAX_FILTER_STR_VAL];
+ static char hist_err_str[MAX_FILTER_STR_VAL];
+ 
+@@ -401,9 +486,6 @@ static bool have_hist_err(void)
+ 	return false;
+ }
+ 
+-static LIST_HEAD(synth_event_list);
+-static DEFINE_MUTEX(synth_event_mutex);
+-
+ struct synth_trace_event {
+ 	struct trace_entry	ent;
+ 	u64			fields[];
+@@ -445,7 +527,7 @@ static int synth_event_define_fields(struct trace_event_call *call)
+ 
+ static bool synth_field_signed(char *type)
+ {
+-	if (strncmp(type, "u", 1) == 0)
++	if (str_has_prefix(type, "u"))
+ 		return false;
+ 	if (strcmp(type, "gfp_t") == 0)
+ 		return false;
+@@ -758,14 +840,12 @@ static void free_synth_field(struct synth_field *field)
+ 	kfree(field);
+ }
+ 
+-static struct synth_field *parse_synth_field(int argc, char **argv,
++static struct synth_field *parse_synth_field(int argc, const char **argv,
+ 					     int *consumed)
+ {
+ 	struct synth_field *field;
+-	const char *prefix = NULL;
+-	char *field_type = argv[0], *field_name;
++	const char *prefix = NULL, *field_type = argv[0], *field_name, *array;
+ 	int len, ret = 0;
+-	char *array;
+ 
+ 	if (field_type[0] == ';')
+ 		field_type++;
+@@ -782,20 +862,31 @@ static struct synth_field *parse_synth_field(int argc, char **argv,
+ 		*consumed = 2;
  	}
  
- 	if (rsp->OplockLevel != SMB2_OPLOCK_LEVEL_LEASE)
- 		*oplock = rsp->OplockLevel;
+-	len = strlen(field_name);
+-	if (field_name[len - 1] == ';')
+-		field_name[len - 1] = '\0';
+-
+ 	field = kzalloc(sizeof(*field), GFP_KERNEL);
+ 	if (!field)
+ 		return ERR_PTR(-ENOMEM);
  
--	return;
+-	len = strlen(field_type) + 1;
++	len = strlen(field_name);
+ 	array = strchr(field_name, '[');
++	if (array)
++		len -= strlen(array);
++	else if (field_name[len - 1] == ';')
++		len--;
++
++	field->name = kmemdup_nul(field_name, len, GFP_KERNEL);
++	if (!field->name) {
++		ret = -ENOMEM;
++		goto free;
++	}
++
++	if (field_type[0] == ';')
++		field_type++;
++	len = strlen(field_type) + 1;
+ 	if (array)
+ 		len += strlen(array);
+ 	if (prefix)
+ 		len += strlen(prefix);
++
+ 	field->type = kzalloc(len, GFP_KERNEL);
+ 	if (!field->type) {
+ 		ret = -ENOMEM;
+@@ -806,7 +897,8 @@ static struct synth_field *parse_synth_field(int argc, char **argv,
+ 	strcat(field->type, field_type);
+ 	if (array) {
+ 		strcat(field->type, array);
+-		*array = '\0';
++		if (field->type[len - 1] == ';')
++			field->type[len - 1] = '\0';
+ 	}
+ 
+ 	field->size = synth_field_size(field->type);
+@@ -820,11 +912,6 @@ static struct synth_field *parse_synth_field(int argc, char **argv,
+ 
+ 	field->is_signed = synth_field_signed(field->type);
+ 
+-	field->name = kstrdup(field_name, GFP_KERNEL);
+-	if (!field->name) {
+-		ret = -ENOMEM;
+-		goto free;
+-	}
+  out:
+ 	return field;
+  free:
+@@ -888,9 +975,13 @@ static inline void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+ 
+ static struct synth_event *find_synth_event(const char *name)
+ {
++	struct dyn_event *pos;
+ 	struct synth_event *event;
+ 
+-	list_for_each_entry(event, &synth_event_list, list) {
++	for_each_dyn_event(pos) {
++		if (!is_synth_event(pos))
++			continue;
++		event = to_synth_event(pos);
+ 		if (strcmp(event->name, name) == 0)
+ 			return event;
+ 	}
+@@ -932,7 +1023,7 @@ static int register_synth_event(struct synth_event *event)
+ 	call->data = event;
+ 	call->tp = event->tp;
+ 
+-	ret = trace_add_event_call_nolock(call);
++	ret = trace_add_event_call(call);
+ 	if (ret) {
+ 		pr_warn("Failed to register synthetic event: %s\n",
+ 			trace_event_name(call));
+@@ -956,7 +1047,7 @@ static int unregister_synth_event(struct synth_event *event)
+ 	struct trace_event_call *call = &event->call;
+ 	int ret;
+ 
+-	ret = trace_remove_event_call_nolock(call);
++	ret = trace_remove_event_call(call);
+ 
+ 	return ret;
+ }
+@@ -979,7 +1070,7 @@ static void free_synth_event(struct synth_event *event)
+ 	kfree(event);
+ }
+ 
+-static struct synth_event *alloc_synth_event(char *event_name, int n_fields,
++static struct synth_event *alloc_synth_event(const char *name, int n_fields,
+ 					     struct synth_field **fields)
+ {
+ 	struct synth_event *event;
+@@ -991,7 +1082,7 @@ static struct synth_event *alloc_synth_event(char *event_name, int n_fields,
+ 		goto out;
+ 	}
+ 
+-	event->name = kstrdup(event_name, GFP_KERNEL);
++	event->name = kstrdup(name, GFP_KERNEL);
+ 	if (!event->name) {
+ 		kfree(event);
+ 		event = ERR_PTR(-ENOMEM);
+@@ -1005,6 +1096,8 @@ static struct synth_event *alloc_synth_event(char *event_name, int n_fields,
+ 		goto out;
+ 	}
+ 
++	dyn_event_init(&event->devent, &synth_event_ops);
++
+ 	for (i = 0; i < n_fields; i++)
+ 		event->fields[i] = fields[i];
+ 
+@@ -1015,12 +1108,12 @@ static struct synth_event *alloc_synth_event(char *event_name, int n_fields,
+ 
+ static void action_trace(struct hist_trigger_data *hist_data,
+ 			 struct tracing_map_elt *elt, void *rec,
+-			 struct ring_buffer_event *rbe,
++			 struct ring_buffer_event *rbe, void *key,
+ 			 struct action_data *data, u64 *var_ref_vals)
+ {
+-	struct synth_event *event = data->onmatch.synth_event;
++	struct synth_event *event = data->synth_event;
+ 
+-	trace_synth(event, var_ref_vals, data->onmatch.var_ref_idx);
++	trace_synth(event, var_ref_vals, data->var_ref_idx);
+ }
+ 
+ struct hist_var_data {
+@@ -1028,28 +1121,11 @@ struct hist_var_data {
+ 	struct hist_trigger_data *hist_data;
+ };
+ 
+-static void add_or_delete_synth_event(struct synth_event *event, int delete)
+-{
+-	if (delete)
+-		free_synth_event(event);
+-	else {
+-		if (!find_synth_event(event->name))
+-			list_add(&event->list, &synth_event_list);
+-		else
+-			free_synth_event(event);
+-	}
+-}
+-
+-static int create_synth_event(int argc, char **argv)
++static int __create_synth_event(int argc, const char *name, const char **argv)
+ {
+ 	struct synth_field *field, *fields[SYNTH_FIELDS_MAX];
+ 	struct synth_event *event = NULL;
+-	bool delete_event = false;
+ 	int i, consumed = 0, n_fields = 0, ret = 0;
+-	char *name;
+-
+-	mutex_lock(&event_mutex);
+-	mutex_lock(&synth_event_mutex);
+ 
+ 	/*
+ 	 * Argument syntax:
+@@ -1057,42 +1133,19 @@ static int create_synth_event(int argc, char **argv)
+ 	 *  - Remove synthetic event: !<event_name> field[;field] ...
+ 	 *      where 'field' = type field_name
+ 	 */
+-	if (argc < 1) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+ 
+-	name = argv[0];
+-	if (name[0] == '!') {
+-		delete_event = true;
+-		name++;
+-	}
++	if (name[0] == '\0' || argc < 1)
++		return -EINVAL;
++
++	mutex_lock(&event_mutex);
+ 
+ 	event = find_synth_event(name);
+ 	if (event) {
+-		if (delete_event) {
+-			if (event->ref) {
+-				event = NULL;
+-				ret = -EBUSY;
+-				goto out;
+-			}
+-			list_del(&event->list);
+-			goto out;
+-		}
+-		event = NULL;
+ 		ret = -EEXIST;
+ 		goto out;
+-	} else if (delete_event) {
+-		ret = -ENOENT;
+-		goto out;
+-	}
+-
+-	if (argc < 2) {
+-		ret = -EINVAL;
+-		goto out;
+ 	}
+ 
+-	for (i = 1; i < argc - 1; i++) {
++	for (i = 0; i < argc - 1; i++) {
+ 		if (strcmp(argv[i], ";") == 0)
+ 			continue;
+ 		if (n_fields == SYNTH_FIELDS_MAX) {
+@@ -1120,80 +1173,91 @@ static int create_synth_event(int argc, char **argv)
+ 		event = NULL;
+ 		goto err;
+ 	}
++	ret = register_synth_event(event);
++	if (!ret)
++		dyn_event_add(&event->devent);
++	else
++		free_synth_event(event);
+  out:
+-	if (event) {
+-		if (delete_event) {
+-			ret = unregister_synth_event(event);
+-			add_or_delete_synth_event(event, !ret);
+-		} else {
+-			ret = register_synth_event(event);
+-			add_or_delete_synth_event(event, ret);
+-		}
+-	}
+-	mutex_unlock(&synth_event_mutex);
+ 	mutex_unlock(&event_mutex);
+ 
+ 	return ret;
+  err:
+-	mutex_unlock(&synth_event_mutex);
+-	mutex_unlock(&event_mutex);
+-
+ 	for (i = 0; i < n_fields; i++)
+ 		free_synth_field(fields[i]);
+-	free_synth_event(event);
+ 
+-	return ret;
++	goto out;
+ }
+ 
+-static int release_all_synth_events(void)
++static int create_or_delete_synth_event(int argc, char **argv)
+ {
+-	struct synth_event *event, *e;
+-	int ret = 0;
+-
+-	mutex_lock(&event_mutex);
+-	mutex_lock(&synth_event_mutex);
+-
+-	list_for_each_entry(event, &synth_event_list, list) {
+-		if (event->ref) {
+-			mutex_unlock(&synth_event_mutex);
+-			return -EBUSY;
+-		}
+-	}
+-
+-	list_for_each_entry_safe(event, e, &synth_event_list, list) {
+-		list_del(&event->list);
++	const char *name = argv[0];
++	struct synth_event *event = NULL;
++	int ret;
+ 
+-		ret = unregister_synth_event(event);
+-		add_or_delete_synth_event(event, !ret);
++	/* trace_run_command() ensures argc != 0 */
++	if (name[0] == '!') {
++		mutex_lock(&event_mutex);
++		event = find_synth_event(name + 1);
++		if (event) {
++			if (event->ref)
++				ret = -EBUSY;
++			else {
++				ret = unregister_synth_event(event);
++				if (!ret) {
++					dyn_event_remove(&event->devent);
++					free_synth_event(event);
++				}
++			}
++		} else
++			ret = -ENOENT;
++		mutex_unlock(&event_mutex);
++		return ret;
+ 	}
+-	mutex_unlock(&synth_event_mutex);
+-	mutex_unlock(&event_mutex);
+ 
+-	return ret;
++	ret = __create_synth_event(argc - 1, name, (const char **)argv + 1);
++	return ret == -ECANCELED ? -EINVAL : ret;
+ }
+ 
+-
+-static void *synth_events_seq_start(struct seq_file *m, loff_t *pos)
++static int synth_event_create(int argc, const char **argv)
+ {
+-	mutex_lock(&synth_event_mutex);
++	const char *name = argv[0];
++	int len;
+ 
+-	return seq_list_start(&synth_event_list, *pos);
+-}
++	if (name[0] != 's' || name[1] != ':')
++		return -ECANCELED;
++	name += 2;
+ 
+-static void *synth_events_seq_next(struct seq_file *m, void *v, loff_t *pos)
+-{
+-	return seq_list_next(v, &synth_event_list, pos);
++	/* This interface accepts group name prefix */
++	if (strchr(name, '/')) {
++		len = sizeof(SYNTH_SYSTEM "/") - 1;
++		if (strncmp(name, SYNTH_SYSTEM "/", len))
++			return -EINVAL;
++		name += len;
++	}
++	return __create_synth_event(argc - 1, name, argv + 1);
+ }
+ 
+-static void synth_events_seq_stop(struct seq_file *m, void *v)
++static int synth_event_release(struct dyn_event *ev)
+ {
+-	mutex_unlock(&synth_event_mutex);
++	struct synth_event *event = to_synth_event(ev);
++	int ret;
++
++	if (event->ref)
++		return -EBUSY;
++
++	ret = unregister_synth_event(event);
++	if (ret)
++		return ret;
++
++	dyn_event_remove(ev);
++	free_synth_event(event);
 +	return 0;
  }
  
- static int
-@@ -2680,8 +2705,8 @@ SMB2_open(const unsigned int xid, struct cifs_open_parms *oparms, __le16 *path,
- 	}
- 
- 
--	smb2_parse_contexts(server, rsp, &oparms->fid->epoch,
--			    oparms->fid->lease_key, oplock, buf);
-+	rc = smb2_parse_contexts(server, &rsp_iov, &oparms->fid->epoch,
-+				 oparms->fid->lease_key, oplock, buf);
- creat_exit:
- 	SMB2_open_free(&rqst);
- 	free_rsp_buf(resp_buftype, rsp);
-diff --git a/fs/cifs/smb2proto.h b/fs/cifs/smb2proto.h
-index 4d4c0faa3d8a..2f08f7f13ced 100644
---- a/fs/cifs/smb2proto.h
-+++ b/fs/cifs/smb2proto.h
-@@ -238,10 +238,12 @@ extern int smb3_validate_negotiate(const unsigned int, struct cifs_tcon *);
- 
- extern enum securityEnum smb2_select_sectype(struct TCP_Server_Info *,
- 					enum securityEnum);
--extern void smb2_parse_contexts(struct TCP_Server_Info *server,
--				struct smb2_create_rsp *rsp,
--				unsigned int *epoch, char *lease_key,
--				__u8 *oplock, struct smb2_file_all_info *buf);
-+int smb2_parse_contexts(struct TCP_Server_Info *server,
-+			struct kvec *rsp_iov,
-+			unsigned int *epoch,
-+			char *lease_key, __u8 *oplock,
-+			struct smb2_file_all_info *buf);
-+
- extern int smb3_encryption_required(const struct cifs_tcon *tcon);
- extern int smb2_validate_iov(unsigned int offset, unsigned int buffer_length,
- 			     struct kvec *iov, unsigned int min_buf_size);
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 98e1b1ddb4ec..90b12c7c0f20 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -409,7 +409,7 @@ static int ext4_valid_extent_entries(struct inode *inode,
+-static int synth_events_seq_show(struct seq_file *m, void *v)
++static int __synth_event_show(struct seq_file *m, struct synth_event *event)
  {
- 	unsigned short entries;
- 	ext4_lblk_t lblock = 0;
--	ext4_lblk_t prev = 0;
-+	ext4_lblk_t cur = 0;
+ 	struct synth_field *field;
+-	struct synth_event *event = v;
+ 	unsigned int i;
  
- 	if (eh->eh_entries == 0)
- 		return 1;
-@@ -435,12 +435,12 @@ static int ext4_valid_extent_entries(struct inode *inode,
+ 	seq_printf(m, "%s\t", event->name);
+@@ -1211,11 +1275,30 @@ static int synth_events_seq_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
  
- 			/* Check for overlapping extents */
- 			lblock = le32_to_cpu(ext->ee_block);
--			if ((lblock <= prev) && prev) {
-+			if (lblock < cur) {
- 				pblock = ext4_ext_pblock(ext);
- 				es->s_last_error_block = cpu_to_le64(pblock);
- 				return 0;
- 			}
--			prev = lblock + ext4_ext_get_actual_len(ext) - 1;
-+			cur = lblock + ext4_ext_get_actual_len(ext);
- 			ext++;
- 			entries--;
++static int synth_event_show(struct seq_file *m, struct dyn_event *ev)
++{
++	struct synth_event *event = to_synth_event(ev);
++
++	seq_printf(m, "s:%s/", event->class.system);
++
++	return __synth_event_show(m, event);
++}
++
++static int synth_events_seq_show(struct seq_file *m, void *v)
++{
++	struct dyn_event *ev = v;
++
++	if (!is_synth_event(ev))
++		return 0;
++
++	return __synth_event_show(m, to_synth_event(ev));
++}
++
+ static const struct seq_operations synth_events_seq_op = {
+-	.start  = synth_events_seq_start,
+-	.next   = synth_events_seq_next,
+-	.stop   = synth_events_seq_stop,
+-	.show   = synth_events_seq_show
++	.start	= dyn_event_seq_start,
++	.next	= dyn_event_seq_next,
++	.stop	= dyn_event_seq_stop,
++	.show	= synth_events_seq_show,
+ };
+ 
+ static int synth_events_open(struct inode *inode, struct file *file)
+@@ -1223,7 +1306,7 @@ static int synth_events_open(struct inode *inode, struct file *file)
+ 	int ret;
+ 
+ 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
+-		ret = release_all_synth_events();
++		ret = dyn_events_release_all(&synth_event_ops);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -1236,7 +1319,7 @@ static ssize_t synth_events_write(struct file *file,
+ 				  size_t count, loff_t *ppos)
+ {
+ 	return trace_parse_run_command(file, buffer, count, ppos,
+-				       create_synth_event);
++				       create_or_delete_synth_event);
+ }
+ 
+ static const struct file_operations synth_events_fops = {
+@@ -1595,9 +1678,9 @@ find_match_var(struct hist_trigger_data *hist_data, char *var_name)
+ 	for (i = 0; i < hist_data->n_actions; i++) {
+ 		struct action_data *data = hist_data->actions[i];
+ 
+-		if (data->fn == action_trace) {
+-			char *system = data->onmatch.match_event_system;
+-			char *event_name = data->onmatch.match_event;
++		if (data->handler == HANDLER_ONMATCH) {
++			char *system = data->match_data.event_system;
++			char *event_name = data->match_data.event;
+ 
+ 			file = find_var_file(tr, system, event_name, var_name);
+ 			if (!file)
+@@ -1838,8 +1921,8 @@ static int parse_action(char *str, struct hist_trigger_attrs *attrs)
+ 	if (attrs->n_actions >= HIST_ACTIONS_MAX)
+ 		return ret;
+ 
+-	if ((strncmp(str, "onmatch(", strlen("onmatch(")) == 0) ||
+-	    (strncmp(str, "onmax(", strlen("onmax(")) == 0)) {
++	if ((str_has_prefix(str, "onmatch(")) ||
++	    (str_has_prefix(str, "onmax("))) {
+ 		attrs->action_str[attrs->n_actions] = kstrdup(str, GFP_KERNEL);
+ 		if (!attrs->action_str[attrs->n_actions]) {
+ 			ret = -ENOMEM;
+@@ -1856,34 +1939,34 @@ static int parse_assignment(char *str, struct hist_trigger_attrs *attrs)
+ {
+ 	int ret = 0;
+ 
+-	if ((strncmp(str, "key=", strlen("key=")) == 0) ||
+-	    (strncmp(str, "keys=", strlen("keys=")) == 0)) {
++	if ((str_has_prefix(str, "key=")) ||
++	    (str_has_prefix(str, "keys="))) {
+ 		attrs->keys_str = kstrdup(str, GFP_KERNEL);
+ 		if (!attrs->keys_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
  		}
-@@ -460,13 +460,13 @@ static int ext4_valid_extent_entries(struct inode *inode,
+-	} else if ((strncmp(str, "val=", strlen("val=")) == 0) ||
+-		 (strncmp(str, "vals=", strlen("vals=")) == 0) ||
+-		 (strncmp(str, "values=", strlen("values=")) == 0)) {
++	} else if ((str_has_prefix(str, "val=")) ||
++		   (str_has_prefix(str, "vals=")) ||
++		   (str_has_prefix(str, "values="))) {
+ 		attrs->vals_str = kstrdup(str, GFP_KERNEL);
+ 		if (!attrs->vals_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (strncmp(str, "sort=", strlen("sort=")) == 0) {
++	} else if (str_has_prefix(str, "sort=")) {
+ 		attrs->sort_key_str = kstrdup(str, GFP_KERNEL);
+ 		if (!attrs->sort_key_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (strncmp(str, "name=", strlen("name=")) == 0) {
++	} else if (str_has_prefix(str, "name=")) {
+ 		attrs->name = kstrdup(str, GFP_KERNEL);
+ 		if (!attrs->name) {
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (strncmp(str, "clock=", strlen("clock=")) == 0) {
++	} else if (str_has_prefix(str, "clock=")) {
+ 		strsep(&str, "=");
+ 		if (!str) {
+ 			ret = -EINVAL;
+@@ -1896,7 +1979,7 @@ static int parse_assignment(char *str, struct hist_trigger_attrs *attrs)
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (strncmp(str, "size=", strlen("size=")) == 0) {
++	} else if (str_has_prefix(str, "size=")) {
+ 		int map_bits = parse_map_size(str);
  
- 			/* Check for overlapping index extents */
- 			lblock = le32_to_cpu(ext_idx->ei_block);
--			if ((lblock <= prev) && prev) {
-+			if (lblock < cur) {
- 				*pblk = ext4_idx_pblock(ext_idx);
- 				return 0;
- 			}
- 			ext_idx++;
- 			entries--;
--			prev = lblock;
-+			cur = lblock + 1;
+ 		if (map_bits < 0) {
+@@ -2033,7 +2116,7 @@ static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
  		}
  	}
- 	return 1;
+ 
+-	n_str = hist_data->n_field_var_str + hist_data->n_max_var_str;
++	n_str = hist_data->n_field_var_str + hist_data->n_save_var_str;
+ 
+ 	size = STR_VAR_LEN_MAX;
+ 
+@@ -3075,7 +3158,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
+ 	int ret;
+ 
+ 	if (target_hist_data->n_field_var_hists >= SYNTH_FIELDS_MAX) {
+-		hist_err_event("onmatch: Too many field variables defined: ",
++		hist_err_event("trace action: Too many field variables defined: ",
+ 			       subsys_name, event_name, field_name);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+@@ -3083,7 +3166,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
+ 	file = event_file(tr, subsys_name, event_name);
+ 
+ 	if (IS_ERR(file)) {
+-		hist_err_event("onmatch: Event file not found: ",
++		hist_err_event("trace action: Event file not found: ",
+ 			       subsys_name, event_name, field_name);
+ 		ret = PTR_ERR(file);
+ 		return ERR_PTR(ret);
+@@ -3097,7 +3180,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
+ 	 */
+ 	hist_data = find_compatible_hist(target_hist_data, file);
+ 	if (!hist_data) {
+-		hist_err_event("onmatch: Matching event histogram not found: ",
++		hist_err_event("trace action: Matching event histogram not found: ",
+ 			       subsys_name, event_name, field_name);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+@@ -3159,7 +3242,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
+ 		kfree(cmd);
+ 		kfree(var_hist->cmd);
+ 		kfree(var_hist);
+-		hist_err_event("onmatch: Couldn't create histogram for field: ",
++		hist_err_event("trace action: Couldn't create histogram for field: ",
+ 			       subsys_name, event_name, field_name);
+ 		return ERR_PTR(ret);
+ 	}
+@@ -3172,7 +3255,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
+ 	if (IS_ERR_OR_NULL(event_var)) {
+ 		kfree(var_hist->cmd);
+ 		kfree(var_hist);
+-		hist_err_event("onmatch: Couldn't find synthetic variable: ",
++		hist_err_event("trace action: Couldn't find synthetic variable: ",
+ 			       subsys_name, event_name, field_name);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+@@ -3250,13 +3333,13 @@ static void update_field_vars(struct hist_trigger_data *hist_data,
+ 			    hist_data->n_field_vars, 0);
+ }
+ 
+-static void update_max_vars(struct hist_trigger_data *hist_data,
+-			    struct tracing_map_elt *elt,
+-			    struct ring_buffer_event *rbe,
+-			    void *rec)
++static void save_track_data_vars(struct hist_trigger_data *hist_data,
++				 struct tracing_map_elt *elt, void *rec,
++				 struct ring_buffer_event *rbe, void *key,
++				 struct action_data *data, u64 *var_ref_vals)
+ {
+-	__update_field_vars(elt, rbe, rec, hist_data->max_vars,
+-			    hist_data->n_max_vars, hist_data->n_field_var_str);
++	__update_field_vars(elt, rbe, rec, hist_data->save_vars,
++			    hist_data->n_save_vars, hist_data->n_field_var_str);
+ }
+ 
+ static struct hist_field *create_var(struct hist_trigger_data *hist_data,
+@@ -3391,18 +3474,71 @@ create_target_field_var(struct hist_trigger_data *target_hist_data,
+ 	return create_field_var(target_hist_data, file, var_name);
+ }
+ 
+-static void onmax_print(struct seq_file *m,
+-			struct hist_trigger_data *hist_data,
+-			struct tracing_map_elt *elt,
+-			struct action_data *data)
++static bool check_track_val_max(u64 track_val, u64 var_val)
++{
++	if (var_val <= track_val)
++		return false;
++
++	return true;
++}
++
++static u64 get_track_val(struct hist_trigger_data *hist_data,
++			 struct tracing_map_elt *elt,
++			 struct action_data *data)
++{
++	unsigned int track_var_idx = data->track_data.track_var->var.idx;
++	u64 track_val;
++
++	track_val = tracing_map_read_var(elt, track_var_idx);
++
++	return track_val;
++}
++
++static void save_track_val(struct hist_trigger_data *hist_data,
++			   struct tracing_map_elt *elt,
++			   struct action_data *data, u64 var_val)
++{
++	unsigned int track_var_idx = data->track_data.track_var->var.idx;
++
++	tracing_map_set_var(elt, track_var_idx, var_val);
++}
++
++static void save_track_data(struct hist_trigger_data *hist_data,
++			    struct tracing_map_elt *elt, void *rec,
++			    struct ring_buffer_event *rbe, void *key,
++			    struct action_data *data, u64 *var_ref_vals)
++{
++	if (data->track_data.save_data)
++		data->track_data.save_data(hist_data, elt, rec, rbe, key, data, var_ref_vals);
++}
++
++static bool check_track_val(struct tracing_map_elt *elt,
++			    struct action_data *data,
++			    u64 var_val)
+ {
+-	unsigned int i, save_var_idx, max_idx = data->onmax.max_var->var.idx;
++	struct hist_trigger_data *hist_data;
++	u64 track_val;
++
++	hist_data = data->track_data.track_var->hist_data;
++	track_val = get_track_val(hist_data, elt, data);
+ 
+-	seq_printf(m, "\n\tmax: %10llu", tracing_map_read_var(elt, max_idx));
++	return data->track_data.check_val(track_val, var_val);
++}
++
++static void track_data_print(struct seq_file *m,
++			     struct hist_trigger_data *hist_data,
++			     struct tracing_map_elt *elt,
++			     struct action_data *data)
++{
++	u64 track_val = get_track_val(hist_data, elt, data);
++	unsigned int i, save_var_idx;
+ 
+-	for (i = 0; i < hist_data->n_max_vars; i++) {
+-		struct hist_field *save_val = hist_data->max_vars[i]->val;
+-		struct hist_field *save_var = hist_data->max_vars[i]->var;
++	if (data->handler == HANDLER_ONMAX)
++		seq_printf(m, "\n\tmax: %10llu", track_val);
++
++	for (i = 0; i < hist_data->n_save_vars; i++) {
++		struct hist_field *save_val = hist_data->save_vars[i]->val;
++		struct hist_field *save_var = hist_data->save_vars[i]->var;
+ 		u64 val;
+ 
+ 		save_var_idx = save_var->var.idx;
+@@ -3417,64 +3553,67 @@ static void onmax_print(struct seq_file *m,
+ 	}
+ }
+ 
+-static void onmax_save(struct hist_trigger_data *hist_data,
+-		       struct tracing_map_elt *elt, void *rec,
+-		       struct ring_buffer_event *rbe,
+-		       struct action_data *data, u64 *var_ref_vals)
++static void ontrack_action(struct hist_trigger_data *hist_data,
++			   struct tracing_map_elt *elt, void *rec,
++			   struct ring_buffer_event *rbe, void *key,
++			   struct action_data *data, u64 *var_ref_vals)
+ {
+-	unsigned int max_idx = data->onmax.max_var->var.idx;
+-	unsigned int max_var_ref_idx = data->onmax.max_var_ref_idx;
+-
+-	u64 var_val, max_val;
+-
+-	var_val = var_ref_vals[max_var_ref_idx];
+-	max_val = tracing_map_read_var(elt, max_idx);
+-
+-	if (var_val <= max_val)
+-		return;
+-
+-	tracing_map_set_var(elt, max_idx, var_val);
++	u64 var_val = var_ref_vals[data->track_data.var_ref->var_ref_idx];
+ 
+-	update_max_vars(hist_data, elt, rbe, rec);
++	if (check_track_val(elt, data, var_val)) {
++		save_track_val(hist_data, elt, data, var_val);
++		save_track_data(hist_data, elt, rec, rbe, key, data, var_ref_vals);
++	}
+ }
+ 
+-static void onmax_destroy(struct action_data *data)
++static void action_data_destroy(struct action_data *data)
+ {
+ 	unsigned int i;
+ 
+-	destroy_hist_field(data->onmax.max_var, 0);
+-	destroy_hist_field(data->onmax.var, 0);
++	lockdep_assert_held(&event_mutex);
+ 
+-	kfree(data->onmax.var_str);
+-	kfree(data->onmax.fn_name);
++	kfree(data->action_name);
+ 
+ 	for (i = 0; i < data->n_params; i++)
+ 		kfree(data->params[i]);
+ 
++	if (data->synth_event)
++		data->synth_event->ref--;
++
+ 	kfree(data);
+ }
+ 
+-static int onmax_create(struct hist_trigger_data *hist_data,
+-			struct action_data *data)
++static void track_data_destroy(struct hist_trigger_data *hist_data,
++			       struct action_data *data)
+ {
++	destroy_hist_field(data->track_data.track_var, 0);
++
++	kfree(data->track_data.var_str);
++
++	action_data_destroy(data);
++}
++
++static int action_create(struct hist_trigger_data *hist_data,
++			 struct action_data *data);
++
++static int track_data_create(struct hist_trigger_data *hist_data,
++			     struct action_data *data)
++{
++	struct hist_field *var_field, *ref_field, *track_var = NULL;
+ 	struct trace_event_file *file = hist_data->event_file;
+-	struct hist_field *var_field, *ref_field, *max_var;
+-	unsigned int var_ref_idx = hist_data->n_var_refs;
+-	struct field_var *field_var;
+-	char *onmax_var_str, *param;
+-	unsigned int i;
++	char *track_data_var_str;
+ 	int ret = 0;
+ 
+-	onmax_var_str = data->onmax.var_str;
+-	if (onmax_var_str[0] != '$') {
+-		hist_err("onmax: For onmax(x), x must be a variable: ", onmax_var_str);
++	track_data_var_str = data->track_data.var_str;
++	if (track_data_var_str[0] != '$') {
++		hist_err("For onmax(x), x must be a variable: ", track_data_var_str);
+ 		return -EINVAL;
+ 	}
+-	onmax_var_str++;
++	track_data_var_str++;
+ 
+-	var_field = find_target_event_var(hist_data, NULL, NULL, onmax_var_str);
++	var_field = find_target_event_var(hist_data, NULL, NULL, track_data_var_str);
+ 	if (!var_field) {
+-		hist_err("onmax: Couldn't find onmax variable: ", onmax_var_str);
++		hist_err("Couldn't find onmax variable: ", track_data_var_str);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -3482,39 +3621,18 @@ static int onmax_create(struct hist_trigger_data *hist_data,
+ 	if (!ref_field)
+ 		return -ENOMEM;
+ 
+-	data->onmax.var = ref_field;
++	data->track_data.var_ref = ref_field;
+ 
+-	data->fn = onmax_save;
+-	data->onmax.max_var_ref_idx = var_ref_idx;
+-	max_var = create_var(hist_data, file, "max", sizeof(u64), "u64");
+-	if (IS_ERR(max_var)) {
+-		hist_err("onmax: Couldn't create onmax variable: ", "max");
+-		ret = PTR_ERR(max_var);
++	if (data->handler == HANDLER_ONMAX)
++		track_var = create_var(hist_data, file, "__max", sizeof(u64), "u64");
++	if (IS_ERR(track_var)) {
++		hist_err("Couldn't create onmax variable: ", "__max");
++		ret = PTR_ERR(track_var);
+ 		goto out;
+ 	}
+-	data->onmax.max_var = max_var;
++	data->track_data.track_var = track_var;
+ 
+-	for (i = 0; i < data->n_params; i++) {
+-		param = kstrdup(data->params[i], GFP_KERNEL);
+-		if (!param) {
+-			ret = -ENOMEM;
+-			goto out;
+-		}
+-
+-		field_var = create_target_field_var(hist_data, NULL, NULL, param);
+-		if (IS_ERR(field_var)) {
+-			hist_err("onmax: Couldn't create field variable: ", param);
+-			ret = PTR_ERR(field_var);
+-			kfree(param);
+-			goto out;
+-		}
+-
+-		hist_data->max_vars[hist_data->n_max_vars++] = field_var;
+-		if (field_var->val->flags & HIST_FIELD_FL_STRING)
+-			hist_data->n_max_var_str++;
+-
+-		kfree(param);
+-	}
++	ret = action_create(hist_data, data);
+  out:
+ 	return ret;
+ }
+@@ -3525,11 +3643,14 @@ static int parse_action_params(char *params, struct action_data *data)
+ 	int ret = 0;
+ 
+ 	while (params) {
+-		if (data->n_params >= SYNTH_FIELDS_MAX)
++		if (data->n_params >= SYNTH_FIELDS_MAX) {
++			hist_err("Too many action params", "");
+ 			goto out;
++		}
+ 
+ 		param = strsep(&params, ",");
+ 		if (!param) {
++			hist_err("No action param found", "");
+ 			ret = -EINVAL;
+ 			goto out;
+ 		}
+@@ -3553,82 +3674,122 @@ static int parse_action_params(char *params, struct action_data *data)
+ 	return ret;
+ }
+ 
+-static struct action_data *onmax_parse(char *str)
++static int action_parse(char *str, struct action_data *data,
++			enum handler_id handler)
+ {
+-	char *onmax_fn_name, *onmax_var_str;
+-	struct action_data *data;
+-	int ret = -EINVAL;
+-
+-	data = kzalloc(sizeof(*data), GFP_KERNEL);
+-	if (!data)
+-		return ERR_PTR(-ENOMEM);
++	char *action_name;
++	int ret = 0;
+ 
+-	onmax_var_str = strsep(&str, ")");
+-	if (!onmax_var_str || !str) {
++	strsep(&str, ".");
++	if (!str) {
++		hist_err("action parsing: No action found", "");
+ 		ret = -EINVAL;
+-		goto free;
++		goto out;
+ 	}
+ 
+-	data->onmax.var_str = kstrdup(onmax_var_str, GFP_KERNEL);
+-	if (!data->onmax.var_str) {
+-		ret = -ENOMEM;
+-		goto free;
++	action_name = strsep(&str, "(");
++	if (!action_name || !str) {
++		hist_err("action parsing: No action found", "");
++		ret = -EINVAL;
++		goto out;
+ 	}
+ 
+-	strsep(&str, ".");
+-	if (!str)
+-		goto free;
+-
+-	onmax_fn_name = strsep(&str, "(");
+-	if (!onmax_fn_name || !str)
+-		goto free;
+-
+-	if (strncmp(onmax_fn_name, "save", strlen("save")) == 0) {
++	if (str_has_prefix(action_name, "save")) {
+ 		char *params = strsep(&str, ")");
+ 
+ 		if (!params) {
++			hist_err("action parsing: No params found for %s", "save");
+ 			ret = -EINVAL;
+-			goto free;
++			goto out;
+ 		}
+ 
+ 		ret = parse_action_params(params, data);
+ 		if (ret)
+-			goto free;
+-	} else
++			goto out;
++
++		if (handler == HANDLER_ONMAX)
++			data->track_data.check_val = check_track_val_max;
++		else {
++			hist_err("action parsing: Handler doesn't support action: ", action_name);
++			ret = -EINVAL;
++			goto out;
++		}
++
++		data->track_data.save_data = save_track_data_vars;
++		data->fn = ontrack_action;
++		data->action = ACTION_SAVE;
++	} else {
++		char *params = strsep(&str, ")");
++
++		if (params) {
++			ret = parse_action_params(params, data);
++			if (ret)
++				goto out;
++		}
++
++		if (handler == HANDLER_ONMAX)
++			data->track_data.check_val = check_track_val_max;
++
++		if (handler != HANDLER_ONMATCH) {
++			data->track_data.save_data = action_trace;
++			data->fn = ontrack_action;
++		} else
++			data->fn = action_trace;
++
++		data->action = ACTION_TRACE;
++	}
++
++	data->action_name = kstrdup(action_name, GFP_KERNEL);
++	if (!data->action_name) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	data->handler = handler;
++ out:
++	return ret;
++}
++
++static struct action_data *track_data_parse(struct hist_trigger_data *hist_data,
++					    char *str, enum handler_id handler)
++{
++	struct action_data *data;
++	int ret = -EINVAL;
++	char *var_str;
++
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return ERR_PTR(-ENOMEM);
++
++	var_str = strsep(&str, ")");
++	if (!var_str || !str) {
++		ret = -EINVAL;
+ 		goto free;
++	}
+ 
+-	data->onmax.fn_name = kstrdup(onmax_fn_name, GFP_KERNEL);
+-	if (!data->onmax.fn_name) {
++	data->track_data.var_str = kstrdup(var_str, GFP_KERNEL);
++	if (!data->track_data.var_str) {
+ 		ret = -ENOMEM;
+ 		goto free;
+ 	}
++
++	ret = action_parse(str, data, handler);
++	if (ret)
++		goto free;
+  out:
+ 	return data;
+  free:
+-	onmax_destroy(data);
++	track_data_destroy(hist_data, data);
+ 	data = ERR_PTR(ret);
+ 	goto out;
+ }
+ 
+ static void onmatch_destroy(struct action_data *data)
+ {
+-	unsigned int i;
+-
+-	mutex_lock(&synth_event_mutex);
+-
+-	kfree(data->onmatch.match_event);
+-	kfree(data->onmatch.match_event_system);
+-	kfree(data->onmatch.synth_event_name);
+-
+-	for (i = 0; i < data->n_params; i++)
+-		kfree(data->params[i]);
+-
+-	if (data->onmatch.synth_event)
+-		data->onmatch.synth_event->ref--;
+-
+-	kfree(data);
++	kfree(data->match_data.event);
++	kfree(data->match_data.event_system);
+ 
+-	mutex_unlock(&synth_event_mutex);
++	action_data_destroy(data);
+ }
+ 
+ static void destroy_field_var(struct field_var *field_var)
+@@ -3678,8 +3839,9 @@ static int check_synth_field(struct synth_event *event,
+ }
+ 
+ static struct hist_field *
+-onmatch_find_var(struct hist_trigger_data *hist_data, struct action_data *data,
+-		 char *system, char *event, char *var)
++trace_action_find_var(struct hist_trigger_data *hist_data,
++		      struct action_data *data,
++		      char *system, char *event, char *var)
+ {
+ 	struct hist_field *hist_field;
+ 
+@@ -3687,24 +3849,24 @@ onmatch_find_var(struct hist_trigger_data *hist_data, struct action_data *data,
+ 
+ 	hist_field = find_target_event_var(hist_data, system, event, var);
+ 	if (!hist_field) {
+-		if (!system) {
+-			system = data->onmatch.match_event_system;
+-			event = data->onmatch.match_event;
++		if (!system && data->handler == HANDLER_ONMATCH) {
++			system = data->match_data.event_system;
++			event = data->match_data.event;
+ 		}
+ 
+ 		hist_field = find_event_var(hist_data, system, event, var);
+ 	}
+ 
+ 	if (!hist_field)
+-		hist_err_event("onmatch: Couldn't find onmatch param: $", system, event, var);
++		hist_err_event("trace action: Couldn't find param: $", system, event, var);
+ 
+ 	return hist_field;
+ }
+ 
+ static struct hist_field *
+-onmatch_create_field_var(struct hist_trigger_data *hist_data,
+-			 struct action_data *data, char *system,
+-			 char *event, char *var)
++trace_action_create_field_var(struct hist_trigger_data *hist_data,
++			      struct action_data *data, char *system,
++			      char *event, char *var)
+ {
+ 	struct hist_field *hist_field = NULL;
+ 	struct field_var *field_var;
+@@ -3727,9 +3889,9 @@ onmatch_create_field_var(struct hist_trigger_data *hist_data,
+ 		 * looking for fields on the onmatch(system.event.xxx)
+ 		 * event.
+ 		 */
+-		if (!system) {
+-			system = data->onmatch.match_event_system;
+-			event = data->onmatch.match_event;
++		if (!system && data->handler == HANDLER_ONMATCH) {
++			system = data->match_data.event_system;
++			event = data->match_data.event;
+ 		}
+ 
+ 		if (!event)
+@@ -3753,9 +3915,8 @@ onmatch_create_field_var(struct hist_trigger_data *hist_data,
+ 	goto out;
+ }
+ 
+-static int onmatch_create(struct hist_trigger_data *hist_data,
+-			  struct trace_event_file *file,
+-			  struct action_data *data)
++static int trace_action_create(struct hist_trigger_data *hist_data,
++			       struct action_data *data)
+ {
+ 	char *event_name, *param, *system = NULL;
+ 	struct hist_field *hist_field, *var_ref;
+@@ -3764,15 +3925,15 @@ static int onmatch_create(struct hist_trigger_data *hist_data,
+ 	struct synth_event *event;
+ 	int ret = 0;
+ 
+-	mutex_lock(&synth_event_mutex);
+-	event = find_synth_event(data->onmatch.synth_event_name);
++	lockdep_assert_held(&event_mutex);
++
++	event = find_synth_event(data->action_name);
+ 	if (!event) {
+-		hist_err("onmatch: Couldn't find synthetic event: ", data->onmatch.synth_event_name);
+-		mutex_unlock(&synth_event_mutex);
++		hist_err("trace action: Couldn't find synthetic event: ", data->action_name);
+ 		return -EINVAL;
+ 	}
++
+ 	event->ref++;
+-	mutex_unlock(&synth_event_mutex);
+ 
+ 	var_ref_idx = hist_data->n_var_refs;
+ 
+@@ -3799,13 +3960,15 @@ static int onmatch_create(struct hist_trigger_data *hist_data,
+ 		}
+ 
+ 		if (param[0] == '$')
+-			hist_field = onmatch_find_var(hist_data, data, system,
+-						      event_name, param);
++			hist_field = trace_action_find_var(hist_data, data,
++							   system, event_name,
++							   param);
+ 		else
+-			hist_field = onmatch_create_field_var(hist_data, data,
+-							      system,
+-							      event_name,
+-							      param);
++			hist_field = trace_action_create_field_var(hist_data,
++								   data,
++								   system,
++								   event_name,
++								   param);
+ 
+ 		if (!hist_field) {
+ 			kfree(p);
+@@ -3827,7 +3990,7 @@ static int onmatch_create(struct hist_trigger_data *hist_data,
+ 			continue;
+ 		}
+ 
+-		hist_err_event("onmatch: Param type doesn't match synthetic event field type: ",
++		hist_err_event("trace action: Param type doesn't match synthetic event field type: ",
+ 			       system, event_name, param);
+ 		kfree(p);
+ 		ret = -EINVAL;
+@@ -3835,28 +3998,73 @@ static int onmatch_create(struct hist_trigger_data *hist_data,
+ 	}
+ 
+ 	if (field_pos != event->n_fields) {
+-		hist_err("onmatch: Param count doesn't match synthetic event field count: ", event->name);
++		hist_err("trace action: Param count doesn't match synthetic event field count: ", event->name);
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+ 
+-	data->fn = action_trace;
+-	data->onmatch.synth_event = event;
+-	data->onmatch.var_ref_idx = var_ref_idx;
++	data->synth_event = event;
++	data->var_ref_idx = var_ref_idx;
+  out:
+ 	return ret;
+  err:
+-	mutex_lock(&synth_event_mutex);
+ 	event->ref--;
+-	mutex_unlock(&synth_event_mutex);
+ 
+ 	goto out;
+ }
+ 
++static int action_create(struct hist_trigger_data *hist_data,
++			 struct action_data *data)
++{
++	struct field_var *field_var;
++	unsigned int i;
++	char *param;
++	int ret = 0;
++
++	if (data->action == ACTION_TRACE)
++		return trace_action_create(hist_data, data);
++
++	if (data->action == ACTION_SAVE) {
++		if (hist_data->n_save_vars) {
++			ret = -EEXIST;
++			hist_err("save action: Can't have more than one save() action per hist", "");
++			goto out;
++		}
++
++		for (i = 0; i < data->n_params; i++) {
++			param = kstrdup(data->params[i], GFP_KERNEL);
++			if (!param) {
++				ret = -ENOMEM;
++				goto out;
++			}
++
++			field_var = create_target_field_var(hist_data, NULL, NULL, param);
++			if (IS_ERR(field_var)) {
++				hist_err("save action: Couldn't create field variable: ", param);
++				ret = PTR_ERR(field_var);
++				kfree(param);
++				goto out;
++			}
++
++			hist_data->save_vars[hist_data->n_save_vars++] = field_var;
++			if (field_var->val->flags & HIST_FIELD_FL_STRING)
++				hist_data->n_save_var_str++;
++			kfree(param);
++		}
++	}
++ out:
++	return ret;
++}
++
++static int onmatch_create(struct hist_trigger_data *hist_data,
++			  struct action_data *data)
++{
++	return action_create(hist_data, data);
++}
++
+ static struct action_data *onmatch_parse(struct trace_array *tr, char *str)
+ {
+ 	char *match_event, *match_event_system;
+-	char *synth_event_name, *params;
+ 	struct action_data *data;
+ 	int ret = -EINVAL;
+ 
+@@ -3882,43 +4090,19 @@ static struct action_data *onmatch_parse(struct trace_array *tr, char *str)
+ 		goto free;
+ 	}
+ 
+-	data->onmatch.match_event = kstrdup(match_event, GFP_KERNEL);
+-	if (!data->onmatch.match_event) {
++	data->match_data.event = kstrdup(match_event, GFP_KERNEL);
++	if (!data->match_data.event) {
+ 		ret = -ENOMEM;
+ 		goto free;
+ 	}
+ 
+-	data->onmatch.match_event_system = kstrdup(match_event_system, GFP_KERNEL);
+-	if (!data->onmatch.match_event_system) {
+-		ret = -ENOMEM;
+-		goto free;
+-	}
+-
+-	strsep(&str, ".");
+-	if (!str) {
+-		hist_err("onmatch: Missing . after onmatch(): ", str);
+-		goto free;
+-	}
+-
+-	synth_event_name = strsep(&str, "(");
+-	if (!synth_event_name || !str) {
+-		hist_err("onmatch: Missing opening paramlist paren: ", synth_event_name);
+-		goto free;
+-	}
+-
+-	data->onmatch.synth_event_name = kstrdup(synth_event_name, GFP_KERNEL);
+-	if (!data->onmatch.synth_event_name) {
++	data->match_data.event_system = kstrdup(match_event_system, GFP_KERNEL);
++	if (!data->match_data.event_system) {
+ 		ret = -ENOMEM;
+ 		goto free;
+ 	}
+ 
+-	params = strsep(&str, ")");
+-	if (!params || !str || (str && strlen(str))) {
+-		hist_err("onmatch: Missing closing paramlist paren: ", params);
+-		goto free;
+-	}
+-
+-	ret = parse_action_params(params, data);
++	ret = action_parse(str, data, HANDLER_ONMATCH);
+ 	if (ret)
+ 		goto free;
+  out:
+@@ -4359,10 +4543,10 @@ static void destroy_actions(struct hist_trigger_data *hist_data)
+ 	for (i = 0; i < hist_data->n_actions; i++) {
+ 		struct action_data *data = hist_data->actions[i];
+ 
+-		if (data->fn == action_trace)
++		if (data->handler == HANDLER_ONMATCH)
+ 			onmatch_destroy(data);
+-		else if (data->fn == onmax_save)
+-			onmax_destroy(data);
++		else if (data->handler == HANDLER_ONMAX)
++			track_data_destroy(hist_data, data);
+ 		else
+ 			kfree(data);
+ 	}
+@@ -4375,28 +4559,28 @@ static int parse_actions(struct hist_trigger_data *hist_data)
+ 	unsigned int i;
+ 	int ret = 0;
+ 	char *str;
++	int len;
+ 
+ 	for (i = 0; i < hist_data->attrs->n_actions; i++) {
+ 		str = hist_data->attrs->action_str[i];
+ 
+-		if (strncmp(str, "onmatch(", strlen("onmatch(")) == 0) {
+-			char *action_str = str + strlen("onmatch(");
++		if ((len = str_has_prefix(str, "onmatch("))) {
++			char *action_str = str + len;
+ 
+ 			data = onmatch_parse(tr, action_str);
+ 			if (IS_ERR(data)) {
+ 				ret = PTR_ERR(data);
+ 				break;
+ 			}
+-			data->fn = action_trace;
+-		} else if (strncmp(str, "onmax(", strlen("onmax(")) == 0) {
+-			char *action_str = str + strlen("onmax(");
++		} else if ((len = str_has_prefix(str, "onmax("))) {
++			char *action_str = str + len;
+ 
+-			data = onmax_parse(action_str);
++			data = track_data_parse(hist_data, action_str,
++						HANDLER_ONMAX);
+ 			if (IS_ERR(data)) {
+ 				ret = PTR_ERR(data);
+ 				break;
+ 			}
+-			data->fn = onmax_save;
+ 		} else {
+ 			ret = -EINVAL;
+ 			break;
+@@ -4408,8 +4592,7 @@ static int parse_actions(struct hist_trigger_data *hist_data)
+ 	return ret;
+ }
+ 
+-static int create_actions(struct hist_trigger_data *hist_data,
+-			  struct trace_event_file *file)
++static int create_actions(struct hist_trigger_data *hist_data)
+ {
+ 	struct action_data *data;
+ 	unsigned int i;
+@@ -4418,14 +4601,17 @@ static int create_actions(struct hist_trigger_data *hist_data,
+ 	for (i = 0; i < hist_data->attrs->n_actions; i++) {
+ 		data = hist_data->actions[i];
+ 
+-		if (data->fn == action_trace) {
+-			ret = onmatch_create(hist_data, file, data);
++		if (data->handler == HANDLER_ONMATCH) {
++			ret = onmatch_create(hist_data, data);
+ 			if (ret)
+-				return ret;
+-		} else if (data->fn == onmax_save) {
+-			ret = onmax_create(hist_data, data);
++				break;
++		} else if (data->handler == HANDLER_ONMAX) {
++			ret = track_data_create(hist_data, data);
+ 			if (ret)
+-				return ret;
++				break;
++		} else {
++			ret = -EINVAL;
++			break;
+ 		}
+ 	}
+ 
+@@ -4441,26 +4627,43 @@ static void print_actions(struct seq_file *m,
+ 	for (i = 0; i < hist_data->n_actions; i++) {
+ 		struct action_data *data = hist_data->actions[i];
+ 
+-		if (data->fn == onmax_save)
+-			onmax_print(m, hist_data, elt, data);
++		if (data->handler == HANDLER_ONMAX)
++			track_data_print(m, hist_data, elt, data);
+ 	}
+ }
+ 
+-static void print_onmax_spec(struct seq_file *m,
+-			     struct hist_trigger_data *hist_data,
+-			     struct action_data *data)
++static void print_action_spec(struct seq_file *m,
++			      struct hist_trigger_data *hist_data,
++			      struct action_data *data)
+ {
+ 	unsigned int i;
+ 
+-	seq_puts(m, ":onmax(");
+-	seq_printf(m, "%s", data->onmax.var_str);
+-	seq_printf(m, ").%s(", data->onmax.fn_name);
+-
+-	for (i = 0; i < hist_data->n_max_vars; i++) {
+-		seq_printf(m, "%s", hist_data->max_vars[i]->var->var.name);
+-		if (i < hist_data->n_max_vars - 1)
+-			seq_puts(m, ",");
++	if (data->action == ACTION_SAVE) {
++		for (i = 0; i < hist_data->n_save_vars; i++) {
++			seq_printf(m, "%s", hist_data->save_vars[i]->var->var.name);
++			if (i < hist_data->n_save_vars - 1)
++				seq_puts(m, ",");
++		}
++	} else if (data->action == ACTION_TRACE) {
++		for (i = 0; i < data->n_params; i++) {
++			if (i)
++				seq_puts(m, ",");
++			seq_printf(m, "%s", data->params[i]);
++		}
+ 	}
++}
++
++static void print_track_data_spec(struct seq_file *m,
++				  struct hist_trigger_data *hist_data,
++				  struct action_data *data)
++{
++	if (data->handler == HANDLER_ONMAX)
++		seq_puts(m, ":onmax(");
++	seq_printf(m, "%s", data->track_data.var_str);
++	seq_printf(m, ").%s(", data->action_name);
++
++	print_action_spec(m, hist_data, data);
++
+ 	seq_puts(m, ")");
+ }
+ 
+@@ -4468,18 +4671,12 @@ static void print_onmatch_spec(struct seq_file *m,
+ 			       struct hist_trigger_data *hist_data,
+ 			       struct action_data *data)
+ {
+-	unsigned int i;
+-
+-	seq_printf(m, ":onmatch(%s.%s).", data->onmatch.match_event_system,
+-		   data->onmatch.match_event);
++	seq_printf(m, ":onmatch(%s.%s).", data->match_data.event_system,
++		   data->match_data.event);
+ 
+-	seq_printf(m, "%s(", data->onmatch.synth_event->name);
++	seq_printf(m, "%s(", data->action_name);
+ 
+-	for (i = 0; i < data->n_params; i++) {
+-		if (i)
+-			seq_puts(m, ",");
+-		seq_printf(m, "%s", data->params[i]);
+-	}
++	print_action_spec(m, hist_data, data);
+ 
+ 	seq_puts(m, ")");
+ }
+@@ -4496,7 +4693,9 @@ static bool actions_match(struct hist_trigger_data *hist_data,
+ 		struct action_data *data = hist_data->actions[i];
+ 		struct action_data *data_test = hist_data_test->actions[i];
+ 
+-		if (data->fn != data_test->fn)
++		if (data->handler != data_test->handler)
++			return false;
++		if (data->action != data_test->action)
+ 			return false;
+ 
+ 		if (data->n_params != data_test->n_params)
+@@ -4507,22 +4706,19 @@ static bool actions_match(struct hist_trigger_data *hist_data,
+ 				return false;
+ 		}
+ 
+-		if (data->fn == action_trace) {
+-			if (strcmp(data->onmatch.synth_event_name,
+-				   data_test->onmatch.synth_event_name) != 0)
+-				return false;
+-			if (strcmp(data->onmatch.match_event_system,
+-				   data_test->onmatch.match_event_system) != 0)
+-				return false;
+-			if (strcmp(data->onmatch.match_event,
+-				   data_test->onmatch.match_event) != 0)
++		if (strcmp(data->action_name, data_test->action_name) != 0)
++			return false;
++
++		if (data->handler == HANDLER_ONMATCH) {
++			if (strcmp(data->match_data.event_system,
++				   data_test->match_data.event_system) != 0)
+ 				return false;
+-		} else if (data->fn == onmax_save) {
+-			if (strcmp(data->onmax.var_str,
+-				   data_test->onmax.var_str) != 0)
++			if (strcmp(data->match_data.event,
++				   data_test->match_data.event) != 0)
+ 				return false;
+-			if (strcmp(data->onmax.fn_name,
+-				   data_test->onmax.fn_name) != 0)
++		} else if (data->handler == HANDLER_ONMAX) {
++			if (strcmp(data->track_data.var_str,
++				   data_test->track_data.var_str) != 0)
+ 				return false;
+ 		}
+ 	}
+@@ -4539,10 +4735,10 @@ static void print_actions_spec(struct seq_file *m,
+ 	for (i = 0; i < hist_data->n_actions; i++) {
+ 		struct action_data *data = hist_data->actions[i];
+ 
+-		if (data->fn == action_trace)
++		if (data->handler == HANDLER_ONMATCH)
+ 			print_onmatch_spec(m, hist_data, data);
+-		else if (data->fn == onmax_save)
+-			print_onmax_spec(m, hist_data, data);
++		else if (data->handler == HANDLER_ONMAX)
++			print_track_data_spec(m, hist_data, data);
+ 	}
+ }
+ 
+@@ -4734,14 +4930,15 @@ static inline void add_to_key(char *compound_key, void *key,
+ static void
+ hist_trigger_actions(struct hist_trigger_data *hist_data,
+ 		     struct tracing_map_elt *elt, void *rec,
+-		     struct ring_buffer_event *rbe, u64 *var_ref_vals)
++		     struct ring_buffer_event *rbe, void *key,
++		     u64 *var_ref_vals)
+ {
+ 	struct action_data *data;
+ 	unsigned int i;
+ 
+ 	for (i = 0; i < hist_data->n_actions; i++) {
+ 		data = hist_data->actions[i];
+-		data->fn(hist_data, elt, rec, rbe, data, var_ref_vals);
++		data->fn(hist_data, elt, rec, rbe, key, data, var_ref_vals);
+ 	}
+ }
+ 
+@@ -4802,7 +4999,7 @@ static void event_hist_trigger(struct event_trigger_data *data, void *rec,
+ 	hist_trigger_elt_update(hist_data, elt, rec, rbe, var_ref_vals);
+ 
+ 	if (resolve_var_refs(hist_data, key, var_ref_vals, true))
+-		hist_trigger_actions(hist_data, elt, rec, rbe, var_ref_vals);
++		hist_trigger_actions(hist_data, elt, rec, rbe, key, var_ref_vals);
+ }
+ 
+ static void hist_trigger_stacktrace_print(struct seq_file *m,
+@@ -5565,6 +5762,8 @@ static void hist_unreg_all(struct trace_event_file *file)
+ 	struct synth_event *se;
+ 	const char *se_name;
+ 
++	lockdep_assert_held(&event_mutex);
++
+ 	if (hist_file_check_refs(file))
+ 		return;
+ 
+@@ -5574,12 +5773,10 @@ static void hist_unreg_all(struct trace_event_file *file)
+ 			list_del_rcu(&test->list);
+ 			trace_event_trigger_enable_disable(file, 0);
+ 
+-			mutex_lock(&synth_event_mutex);
+ 			se_name = trace_event_name(file->event_call);
+ 			se = find_synth_event(se_name);
+ 			if (se)
+ 				se->ref--;
+-			mutex_unlock(&synth_event_mutex);
+ 
+ 			update_cond_flag(file);
+ 			if (hist_data->enable_timestamps)
+@@ -5605,6 +5802,8 @@ static int event_hist_trigger_func(struct event_command *cmd_ops,
+ 	char *trigger, *p;
+ 	int ret = 0;
+ 
++	lockdep_assert_held(&event_mutex);
++
+ 	if (glob && strlen(glob)) {
+ 		last_cmd_set(param);
+ 		hist_err_clear();
+@@ -5695,14 +5894,10 @@ static int event_hist_trigger_func(struct event_command *cmd_ops,
+ 		}
+ 
+ 		cmd_ops->unreg(glob+1, trigger_ops, trigger_data, file);
+-
+-		mutex_lock(&synth_event_mutex);
+ 		se_name = trace_event_name(file->event_call);
+ 		se = find_synth_event(se_name);
+ 		if (se)
+ 			se->ref--;
+-		mutex_unlock(&synth_event_mutex);
+-
+ 		ret = 0;
+ 		goto out_free;
+ 	}
+@@ -5723,7 +5918,7 @@ static int event_hist_trigger_func(struct event_command *cmd_ops,
+ 	if (get_named_trigger_data(trigger_data))
+ 		goto enable;
+ 
+-	ret = create_actions(hist_data, file);
++	ret = create_actions(hist_data);
+ 	if (ret)
+ 		goto out_unreg;
+ 
+@@ -5741,13 +5936,10 @@ static int event_hist_trigger_func(struct event_command *cmd_ops,
+ 	if (ret)
+ 		goto out_unreg;
+ 
+-	mutex_lock(&synth_event_mutex);
+ 	se_name = trace_event_name(file->event_call);
+ 	se = find_synth_event(se_name);
+ 	if (se)
+ 		se->ref++;
+-	mutex_unlock(&synth_event_mutex);
+-
+ 	/* Just return zero, not the number of registered triggers */
+ 	ret = 0;
+  out:
+@@ -5930,6 +6122,12 @@ static __init int trace_events_hist_init(void)
+ 	struct dentry *d_tracer;
+ 	int err = 0;
+ 
++	err = dyn_event_register(&synth_event_ops);
++	if (err) {
++		pr_warn("Could not register synth_event_ops\n");
++		return err;
++	}
++
+ 	d_tracer = tracing_init_dentry();
+ 	if (IS_ERR(d_tracer)) {
+ 		err = PTR_ERR(d_tracer);
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index d85ee1778b99..6efd38b5843c 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -342,7 +342,7 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+ 			f->fn = t->fetch[FETCH_MTD_retval];
+ 		else
+ 			ret = -EINVAL;
+-	} else if (strncmp(arg, "stack", 5) == 0) {
++	} else if (str_has_prefix(arg, "stack")) {
+ 		if (arg[5] == '\0') {
+ 			if (strcmp(t->name, DEFAULT_FETCH_TYPE_STR))
+ 				return -EINVAL;
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 40337094085c..9a4e24d5b8c0 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -453,7 +453,7 @@ static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata;
+ 
+ static __init int enable_stacktrace(char *str)
+ {
+-	if (strncmp(str, "_filter=", 8) == 0)
++	if (str_has_prefix(str, "_filter="))
+ 		strncpy(stack_trace_filter_buf, str+8, COMMAND_LINE_SIZE);
+ 
+ 	stack_tracer_enabled = 1;
 diff --git a/tools/testing/selftests/vm/map_hugetlb.c b/tools/testing/selftests/vm/map_hugetlb.c
 index c65c55b7a789..312889edb84a 100644
 --- a/tools/testing/selftests/vm/map_hugetlb.c
