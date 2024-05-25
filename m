@@ -1,137 +1,159 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDA9391
-	for <linux-kernel@vger.kernel.org>; Sat, 25 May 2024 01:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C904696;
+	Sat, 25 May 2024 01:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716600402; cv=none; b=glxipwT6hrZnd8xq3XhTEVDcZb/Ux7ZCwd7WEuJ6hZEuf0jaxhSrpVWRRiApO24ysmrOGVZ0z931koH8m1GM7/oTtMRlbeueHC1mtlplEQh4eYqGOBrwsZvBAhTOLwmVhZmAPwxs1Efg86W9+NXeCQ31wHVjaxKHXnF4xtM6iqc=
+	t=1716600449; cv=none; b=Y93a4xP/+QeIjtTwcL3W5G7zRBehSNGX22tnTHY2FFBRBKuJIO1gGgrv2Qh9PUM+rYirdY8m9pAoxeQWu76qx3se3csmTYmzV1G1oLTHT40yIl+ppVM2ZoKN1VfKqkpbCntmBIhDsHAtiTF8TIFIU1IuFqInYILj9t8qD4v5phc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716600402; c=relaxed/simple;
-	bh=ekWtQiuFC9hRTRqzLYUPI8tvqm3UzOZX4/nHMuyW4Xg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TYC8iSNbtUYL7I1VL5OiFNZ9Ha1+0ovmiyYOB7L/cbDsL0FOX2mtnkyQGsMqC2WM01fXp8qlbpybRVadBMFCjdMm604zrUhB5ICRgSkNfGaYTc6v/iVBCAuQf8aQxRdSJNwJyBQtAlZ7FULIG+TvP+i20V918Mu9IESDMZRxBHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PtPF/wfq; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716600449; c=relaxed/simple;
+	bh=13HAQrLwwWPz+/+91LNfsO8pC8kND2d29yux2cPGoF4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=THNsLEHqlsJPVIS+0Ubp3XknAU4wJ9q5cIOB/mlPA+CnXROjKmPRnJNed+DfxPt8XHvdyR6+67teK5oUynOfrWMdYZj+GE61UzL462IOosTgjxUn2Z6/aVwB3dEuxQja8YE7qhfUsw74lPQjUvZ96mXpjZfGb29TkNHup7EkNWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NigPwiM8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PtPF/wfq"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43dfa9a98d2so43491cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 May 2024 18:26:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716600399; x=1717205199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pyskWn7gAK4GatlSK3paUJEmvNBp3h8+7kuW84hMmtg=;
-        b=PtPF/wfqPGgXSHwHecfDvlEI/Ch4BZJBapB3wJz6eT/Ivij1jAGYACVJtTg6O7NiKZ
-         nrB6kJZeYzDxDqSAp4o2yJR0TfQNYpcqFXX/gVVuUF1Tt0jVgQtTjVnuxJJKjesan3EO
-         QHtrLUUT7RrSrZhCAfHzZlTwDYds1AsOPRP49mSL74dSjTqTJrbDIJGdN6HFxK5BmHMh
-         QoZn2fEywv4ljoAm/XHTi0NJ0cDzjJ0rHj1dPf3EuT08oSVmiNT4FjU3bhqzI6BuR/kf
-         uid82beCo/O31muPc+JRJzkWUMXutsxCpjfdu8PF4lURSMnBNS3Dju5fqqafAKR/m2QI
-         Srkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716600399; x=1717205199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pyskWn7gAK4GatlSK3paUJEmvNBp3h8+7kuW84hMmtg=;
-        b=R2HiqSY9JDbxEU0l7ANgow7dSa+ewvSkNXAm0E27LmeV0jkC4NOLD6Y/yoquN90ovr
-         Aot8mcl1Y6QmWqbvYjt9IlIlQtrKPJ+AfnzwKMksNMdnr3e85aOGDzxDYjnnIP5tTEpZ
-         1mXnjSK+xE8YwdeF+avTxsmRrK0MZm8pAAYstnsFHR6q7pLseZsGDNp4/2zW977Xfwz9
-         WXkOMX/umxil0SCw8OD/lTdiLRMJSTHnF7SQBYY5K/wALVWqXCd/EH5HCXSnjRSCMmNE
-         np6LYgYf36sw8qeMmA4HFRwNqLZXBci4J6SCJr+JrLU5SzkqoCcQQ6GbImdY/saoxn6V
-         bL0g==
-X-Forwarded-Encrypted: i=1; AJvYcCX3xLUmcnPaHHigWsVQ29VnoRtn9GBGGlHaRBwZwxq2KS3yZgwAO609iU+9hlqyZhI3Fvm+abcZgyhEDUytyTmz055JCpATYUEAnMlN
-X-Gm-Message-State: AOJu0YwPkm4lTTLkCN4hyuwpgj1fDqHPfXk+RLJYsS2Xl/AB3E0CFwC4
-	q3I+elGPShmd/J1GGo9vM21FOM5RpCCW7XgEk4LfTnrYKsI09iYMl++fXZCvpJXZaUF/kwx60/S
-	XDzT/8gJ/ZJMcud7Y8KmBUMDXsplMOkIfmfNf
-X-Google-Smtp-Source: AGHT+IE0+qpSMG1Nj1Ou0YsvA+xYJ1ZLiqofkBmsWLfKf34amWFXg6qqms2k5cTej7Za/5Dfw7xalvOK5IhtKkG2sbQ=
-X-Received: by 2002:ac8:6f08:0:b0:43e:ec2:4bb8 with SMTP id
- d75a77b69052e-43fb9f9b9a5mr1296071cf.26.1716600399486; Fri, 24 May 2024
- 18:26:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NigPwiM8"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44P0xtLt026120;
+	Sat, 25 May 2024 01:27:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eWW/Fts9ZTO/IMJHtvDIeUpdCYtzrr5gIN9D8VxPqig=; b=NigPwiM8xIAo0LcI
+	92xlY9WCOoj/uLXo1FJGdBUFBxAZO7OsOXwpHiC2N970S2RYh6pK16yCvx43S0iy
+	h+kSaeXL9ws18j1iao1PJqHD50peiusyxKJ5twH63UCeTDqWi3vRQs1wyn7C+1v4
+	gdDHWMSSJZuvNtOMB6VdpPXavTQIFJSdhSAqXCdcwGGyAu5d0xWjad5LgljkGQ1D
+	zq2pVICYS9CTee9d5yxZQZ+UAelklPXigoDJNres47LmoUPKWQoVajVRhLQPzJdX
+	t2ZFfA5fOiunlD9yRjtZB5G1BO5HoLHVzcjnfde9BZri85UMe/lUTyecrjL09tka
+	CrKsOw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yaa9u3q3a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 25 May 2024 01:27:02 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44P1Qxv0031411
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 25 May 2024 01:26:59 GMT
+Received: from hu-clew-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 24 May 2024 18:26:58 -0700
+From: Chris Lew <quic_clew@quicinc.com>
+Date: Fri, 24 May 2024 18:26:41 -0700
+Subject: [PATCH v2 2/4] hwspinlock: qcom: implement bust operation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522204254.1841420-1-weilin.wang@intel.com>
-In-Reply-To: <20240522204254.1841420-1-weilin.wang@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 24 May 2024 18:26:27 -0700
-Message-ID: <CAP-5=fUtp_vd=EeeesXPR=nsm0VOZoyXico=EVWobOEYsxq27g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] perf test: make metric validation test return
- early when there is no metric supported on the test system
-To: weilin.wang@intel.com
-Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
-	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240524-hwspinlock-bust-v2-2-fb88fd17ca0b@quicinc.com>
+References: <20240524-hwspinlock-bust-v2-0-fb88fd17ca0b@quicinc.com>
+In-Reply-To: <20240524-hwspinlock-bust-v2-0-fb88fd17ca0b@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Baolin Wang
+	<baolin.wang@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ingo
+ Molnar" <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Waiman Long
+	<longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+        Jonathan Corbet
+	<corbet@lwn.net>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Chris Lew <quic_clew@quicinc.com>,
+        "Richard
+ Maina" <quic_rmaina@quicinc.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716600418; l=1477;
+ i=quic_clew@quicinc.com; s=20240508; h=from:subject:message-id;
+ bh=8LP+NZipY61xQn1OPhiw3j6bY8rC5vxWsxK44sr5W9o=;
+ b=+TvJED5FF6HiBMbRymGJLf/R/tjbq5RBwxuE/PI6XKd/JzxxvtFNuATZGbfh0GX+ZBchLO1pe
+ IWRa/1GyPZqCjDc9FqwlxzIod6JhuHj8BCtyvZD7Y6/rO/4fa7jvdOF
+X-Developer-Key: i=quic_clew@quicinc.com; a=ed25519;
+ pk=lEYKFaL1H5dMC33BEeOULLcHAwjKyHkTLdLZQRDTKV4=
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: fgV9spTLvkXTw9qy13K9oEORibNksZLv
+X-Proofpoint-ORIG-GUID: fgV9spTLvkXTw9qy13K9oEORibNksZLv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-24_09,2024-05-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 impostorscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405250010
 
-On Wed, May 22, 2024 at 1:43=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Add a check to return the metric validation test early when perf list met=
-ric
-> does not output any metric. This would happen when NO_JEVENTS=3D1 is set =
-or in a
-> system that there is no metric supported.
->
->
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+From: Richard Maina <quic_rmaina@quicinc.com>
 
-Tested-by: Ian Rogers <irogers@google.com>
+Implement a new operation qcom_hwspinlock_bust() which can be invoked
+to bust any locks that are in use when a remoteproc is stopped or
+crashed.
 
-Thanks,
-Ian
+Signed-off-by: Richard Maina <quic_rmaina@quicinc.com>
+Signed-off-by: Chris Lew <quic_clew@quicinc.com>
+---
+ drivers/hwspinlock/qcom_hwspinlock.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-> ---
->  tools/perf/tests/shell/lib/perf_metric_validation.py | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools=
-/perf/tests/shell/lib/perf_metric_validation.py
-> index a2d235252183..0b94216c9c46 100644
-> --- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-> +++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-> @@ -95,7 +95,7 @@ class Validator:
->                        indent=3D4)
->
->      def get_results(self, idx: int =3D 0):
-> -        return self.results[idx]
-> +        return self.results.get(idx)
->
->      def get_bounds(self, lb, ub, error, alias=3D{}, ridx: int =3D 0) -> =
-list:
->          """
-> @@ -173,7 +173,10 @@ class Validator:
->          pcnt =3D 0
->          tcnt =3D 0
->          rerun =3D list()
-> -        for name, val in self.get_results().items():
-> +        results =3D self.get_results()
-> +        if not results:
-> +            return
-> +        for name, val in results.items():
->              if val < 0:
->                  negmetric[name] =3D val
->                  rerun.append(name)
-> @@ -532,6 +535,9 @@ class Validator:
->          '''
->          if not self.collectlist:
->              self.parse_perf_metrics()
-> +        if not self.metrics:
-> +            print("No metric found for testing")
-> +            return 0
->          self.create_rules()
->          for i in range(0, len(self.workloads)):
->              self.wlidx =3D i
-> --
-> 2.42.0
->
+diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
+index 814dfe8697bf..0390979fd765 100644
+--- a/drivers/hwspinlock/qcom_hwspinlock.c
++++ b/drivers/hwspinlock/qcom_hwspinlock.c
+@@ -64,9 +64,34 @@ static void qcom_hwspinlock_unlock(struct hwspinlock *lock)
+ 		pr_err("%s: failed to unlock spinlock\n", __func__);
+ }
+ 
++static int qcom_hwspinlock_bust(struct hwspinlock *lock, unsigned int id)
++{
++	struct regmap_field *field = lock->priv;
++	u32 owner;
++	int ret;
++
++	ret = regmap_field_read(field, &owner);
++	if (ret) {
++		dev_err(lock->bank->dev, "unable to query spinlock owner\n");
++		return ret;
++	}
++
++	if (owner != id)
++		return 0;
++
++	ret = regmap_field_write(field, 0);
++	if (ret) {
++		dev_err(lock->bank->dev, "failed to bust spinlock\n");
++		return ret;
++	}
++
++	return 0;
++}
++
+ static const struct hwspinlock_ops qcom_hwspinlock_ops = {
+ 	.trylock	= qcom_hwspinlock_trylock,
+ 	.unlock		= qcom_hwspinlock_unlock,
++	.bust		= qcom_hwspinlock_bust,
+ };
+ 
+ static const struct regmap_config sfpb_mutex_config = {
+
+-- 
+2.25.1
+
