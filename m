@@ -1,183 +1,131 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4225A4EB51;
-	Sat, 25 May 2024 14:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D7143AD1
+	for <linux-kernel@vger.kernel.org>; Sat, 25 May 2024 14:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716647805; cv=none; b=Z04kAz26R4ojcqOijpFneaGaVuJIE6+jByJGsxfKj4KTAwKUGXAk3udMsN3CESZIM0DJ4dKf3zNa+QkjKeik9iJ10577lljS9gLkHQ8pr+j9oyQHTtyqRtJg+kO1BvPKujuGCaapTDiUt51rFZizucg0yT/5MIjgqjFF80Wz6ac=
+	t=1716647988; cv=none; b=lOxlclQc8edgsayNkg6xj14UHMnF8zw49x/4H9OKejMwCHMSIhHxfoTuXm/ARrqGndENuFeNCPKxl5RD8nFNS0BmKaiccJ4llK+Mz2ix5lbUF5/QTV3PqGENbZtKCxjFvRHD1jurQ8qdZ/ozQIIEPHcg+gWNrWqa0H1B5Wp4zeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716647805; c=relaxed/simple;
-	bh=B22/fE5n/tUIdZkkXpOM1JOMbxjDeybFnhsg7upMGNQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UgWcg0yNNKuIvw1lDr2FpyVLD0srphluNV5/PmOngFVQigLLb0J0SNm5xRfl2k/3275wrL4WbyzMOVSNB1FcOk9ejnWPDaDc77ZomM/6O/UCaO5HbBpvx0W9psTiPvPFXGm9vMo+3Nv9zg3/JPKE4W0DMlJWfMrHSHeLwSv7d28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TtYvpEqo; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716647988; c=relaxed/simple;
+	bh=Y4T7pbQtADwH/bbaTgPIAdUqhjKHFrElhzFanucHHOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sUCYYtfNukufE5+SYKNJcTEo5+Sj4WQE3jWf70Opguze+TTkRsc5hopedFqe6rnvgc6RYJpduv4W8bUs3rIYqxpYyWv+RmmdBJsXLI2M82buyrnwCoNtQqWpSvynkOTTZdJsm9IGU+1ny3dxmGELeuhNYxVP+cwVLLsUlzTvdAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=dHm2H7Jf; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TtYvpEqo"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-354b7d76c52so3455882f8f.3;
-        Sat, 25 May 2024 07:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716647802; x=1717252602; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=WjQnVpwHFdxlugRza/DesNP5iM1P3CKDJhcdhgbGcEQ=;
-        b=TtYvpEqok1QGvYV6IQBGicSMolcZ731Z7a/3zEmM7hrx4BaZt0HihyL9lP0DmKlOB9
-         vj1ofN8h86n+uBWdn7Gn3e1rWob8Ty6J0SLp5SjQ/Oao/7TeYkKVLt+Ya3bnoWnjusSH
-         uZC/idul8R+GYQhUSyQWxiiobnQQMOc7EvOeqSwcqeHGN6UVjBNjzPvtC+Oc5hftr3XW
-         uvWLaVvbEDkS2DsgKMaCzO1BaI5zQkmVpo/+xeKupP0hZ1gMHkAXcG5x1jUmuCE7PS8g
-         BTPA0FJ0Y+lM4StZncwjyfuTCF7/XfpHeR/oV15tszvFxgCLd6n/tR39KHnhUH1c+MNr
-         nb8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716647802; x=1717252602;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WjQnVpwHFdxlugRza/DesNP5iM1P3CKDJhcdhgbGcEQ=;
-        b=Wq6s0BSZzuilOfT+7zN3RnaSv2yAolZzrI4BN23FyUHd8vdHw0U/lsBcXr39lERP+C
-         paErfCmFZlPFvGItfU6eFZcTl+JnzuzEBrRhDHbEInok7SheWLAfQl2V4sbWXv/4RjFI
-         V7Z6YeHbCnK6WsVfaXYAyas6G80zQzeJ97EbPW/R7bUJjObDNJP+w7Ts4bchad3DQwhH
-         /nBJGVUOiK2QwFrb6Zo8pr8BNuI8jtiibJ6aRaFuO9dWKNs6ZOYyqUr8r3XB4lwfamN4
-         b6eH1TRYRYDcwFG3ZkJu1GnD56DO0aN8rfH2zHfznVM4XtEZZyOkzHie01Aiv/S3qd/q
-         yx6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUC0v0z7lx1ZmCVm9Ya12eN/0xc/g+kgq1FqxZbs3LoKPDsaFkv9fg7UtwL2y9v6ayQKAmVhO4/0ui81AmDZoW3eFmgqgdCD3Uh0IdcVGDJ+OgyCXWnoufKHZxzQH+SoumSZwo6h70YZ6PSUjE56bGWAHQWU+CxrlK61Vdwi3vsuXHDfw9U
-X-Gm-Message-State: AOJu0YyIlrRGiveZMqalA2lvCrVxvUQKDlZPR21K5RyoT+PscnbujrkU
-	aHkzlrIR+xcFn+Qa8Y/jNW1FIB7WRPvIuAAEOuCXr6wjfE3n/2KyFfrS0A==
-X-Google-Smtp-Source: AGHT+IFLKo1fCIS2uoQeL1/yJB4MNhgKkjHvSkY2Ov5bdH3GLXt1qoMxqEZwkrfzM756CNPUVQhXxw==
-X-Received: by 2002:a5d:6c65:0:b0:356:c47a:87d2 with SMTP id ffacd0b85a97d-356c47a8ab8mr1582952f8f.6.1716647802405;
-        Sat, 25 May 2024 07:36:42 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a08a8dfsm4121592f8f.30.2024.05.25.07.36.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 May 2024 07:36:42 -0700 (PDT)
-Message-ID: <6651f77a.050a0220.9b079.fbf3@mx.google.com>
-X-Google-Original-Message-ID: <ZlHCd8upWMBfbuM2@Ansuel-XPS.>
-Date: Sat, 25 May 2024 12:50:31 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: hwmon: g76x: Add support for g761
-References: <20240525102914.22634-1-ansuelsmth@gmail.com>
- <20240525102914.22634-2-ansuelsmth@gmail.com>
- <22e1daf4-ffce-4fac-be4c-0e7bebd91c88@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="dHm2H7Jf"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Vml170C44z6Cnk9X;
+	Sat, 25 May 2024 14:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:in-reply-to:content-disposition
+	:content-type:content-type:mime-version:references:reply-to
+	:message-id:subject:subject:from:from:date:date:received
+	:received; s=mr01; t=1716647976; x=1719239977; bh=wzdGIvVeas6cfl
+	W4dzZNIQbq57bEwr0qOTTzIb9+4Co=; b=dHm2H7JftcP93Qm48MqeBtHr8OZzbY
+	f6yobsQTgkeNL9N1mx8RRfAq0UrFClkjI7RueqPRrxQ2gq+oQtdBVeq5+CLIkK8G
+	29feyF/I7vUluRFB+1pjkOiTdkCSEoguVjgLORU74uB8Wpsychq+nBnSmm79YKkl
+	C+nMTirjKRVqxFIg1q76m7JcMQCXmdZwUJQ0Mr/v/2FgYWflzud8ymGo/1JxcFY0
+	1FbjEf+1N4ycPFOTSVgxxEoHw6EDQ7K+eJe41E1/vd16p4YBZArA+6vvl+8DgTQi
+	GKfPNkJBeUtvn9PFBX5SqroiF5U2zUPUpwAhLNF8cp2JNt+4ZAFhEnHA==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id dxHjxwqORrP9; Sat, 25 May 2024 14:39:36 +0000 (UTC)
+Received: from mail.minyard.net (unknown [47.184.136.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: minyard@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Vml136788z6Cnk9W;
+	Sat, 25 May 2024 14:39:35 +0000 (UTC)
+Date: Sat, 25 May 2024 09:39:33 -0500
+From: Corey Minyard <minyard@acm.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	openipmi-developer@lists.sourceforge.net
+Cc: Jani Rantanen <jrantanen@mvista.com>
+Subject: Re: [GIT PULL] IPMI bug fixes for 6.10
+Message-ID: <ZlH4JYGpbVd1CW8P@mail.minyard.net>
+Reply-To: minyard@acm.org
+References: <ZkJhmhatRHeKuIfE@mail.minyard.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <22e1daf4-ffce-4fac-be4c-0e7bebd91c88@roeck-us.net>
+In-Reply-To: <ZkJhmhatRHeKuIfE@mail.minyard.net>
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 25, 2024 at 07:32:04AM -0700, Guenter Roeck wrote:
-> On 5/25/24 03:29, Christian Marangi wrote:
-> > Add support for g761 PWM Fan controller. This is an exact copy of g763
-> > with the difference that it does also support an internal clock
-> > oscillators.
-> > 
-> > Add required logic to support this additional feature with the property
-> > gmt,internal-clock and reject invalid schema that define both
-> > internal-clock property and external clocks.
-> > 
-> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> > ---
-> >   .../devicetree/bindings/hwmon/gmt,g76x.yaml   | 43 +++++++++++++++++--
-> >   1 file changed, 40 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml b/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
-> > index bfefe49f54bf..d6e80392d045 100644
-> > --- a/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
-> > +++ b/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
-> > @@ -4,13 +4,13 @@
-> >   $id: http://devicetree.org/schemas/hwmon/gmt,g76x.yaml#
-> >   $schema: http://devicetree.org/meta-schemas/core.yaml#
-> > -title: GMT G762/G763 PWM Fan controller
-> > +title: GMT G761/G762/G763 PWM Fan controller
-> >   maintainers:
-> >     - Christian Marangi <ansuelsmth@gmail.com>
-> >   description: |
-> > -  GMT G762/G763 PWM Fan controller.
-> > +  GMT G761/G762/G763 PWM Fan controller.
-> >     If an optional property is not set in DT, then current value is kept
-> >     unmodified (e.g. bootloader installed value).
-> > @@ -22,6 +22,7 @@ description: |
-> >   properties:
-> >     compatible:
-> >       enum:
-> > +      - gmt,g761
-> >         - gmt,g762
-> >         - gmt,g763
-> > @@ -48,10 +49,37 @@ properties:
-> >       $ref: /schemas/types.yaml#/definitions/uint32
-> >       enum: [0, 1, 2]
-> > +  gmt,internal-clock:
-> > +    description: Use the Internal clock instead of externally attached one
-> > +      via the CLK pin.
-> > +    type: boolean
-> > +
-> >   required:
-> >     - compatible
-> >     - reg
-> > -  - clocks
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - gmt,g762
-> > +              - gmt,g763
-> > +    then:
-> > +      properties:
-> > +        gmt,internal-clock: false
-> > +
-> > +      required:
-> > +        - clocks
-> 
-> Is the new property even necessary ? The absence of an external clock on G761
-> could be used to imply that the internal clock is used.
->
+Hi Linus,
 
-Well with how the driver works, if a property is not defined, then the
-value is not set and the one set by the bootloader or from device reset
-is keept.
+These haven't hit the kernel yet, were the missed?
 
-This conflicts with the logic of no clock = internal.
+Thank you,
 
-But yes if asked I can drop that, I can totally see your point since the
-clocks is a required property anyway so it's always set.
+-corey
 
-> 
-> > +
-> > +  - if:
-> > +      required:
-> > +        - gmt,internal-clock
-> > +
-> > +    then:
-> > +      properties:
-> > +        clocks: false
-> >   additionalProperties: false
-> > @@ -80,4 +108,13 @@ examples:
-> >               fan_startv = <1>;
-> >               pwm_polarity = <0>;
-> >           };
-> > +
-> > +        g761@1e {
-> > +            compatible = "gmt,g761";
-> > +            reg = <0x1e>;
-> > +            gmt,internal-clock;
-> > +            fan_gear_mode = <0>;
-> > +            fan_startv = <1>;
-> > +            pwm_polarity = <0>;
-> > +        };
-> >       };
-> 
-
--- 
-	Ansuel
+On Mon, May 13, 2024 at 01:53:15PM -0500, Corey Minyard wrote:
+> The following changes since commit 8d025e2092e29bfd13e56c78e22af25fac83=
+c8ec:
+>=20
+>   Merge tag 'erofs-for-6.9-rc2-fixes' of git://git.kernel.org/pub/scm/l=
+inux/kernel/git/xiang/erofs (2024-03-27 20:24:09 -0700)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://github.com/cminyard/linux-ipmi.git tags/for-linus-6.10-1
+>=20
+> for you to fetch changes up to 999dff3c13930ad77a7070a5fb4473b1fafdcecc=
+:
+>=20
+>   ipmi: kcs_bmc_npcm7xx: Convert to platform remove callback returning =
+void (2024-04-17 14:55:04 -0500)
+>=20
+> ----------------------------------------------------------------
+> ipmi: Mostly updates for deprecated interfaces
+>=20
+> These changes are mostly updates for deprecated interfaces,
+> platform.remove and converting from a tasklet to a BH workqueue.  Also
+> use HAS_IOPORT for disabling inb()/outb().
+>=20
+> -corey
+>=20
+> ----------------------------------------------------------------
+> Allen Pais (1):
+>       ipmi: Convert from tasklet to BH workqueue
+>=20
+> Niklas Schnelle (1):
+>       char: ipmi: handle HAS_IOPORT dependencies
+>=20
+> Uwe Kleine-K=C3=B6nig (6):
+>       ipmi: bt-bmc: Convert to platform remove callback returning void
+>       ipmi: ipmi_powernv: Convert to platform remove callback returning=
+ void
+>       ipmi: ipmi_si_platform: Convert to platform remove callback retur=
+ning void
+>       ipmi: ipmi_ssif: Convert to platform remove callback returning vo=
+id
+>       ipmi: kcs_bmc_aspeed: Convert to platform remove callback returni=
+ng void
+>       ipmi: kcs_bmc_npcm7xx: Convert to platform remove callback return=
+ing void
+>=20
+>  drivers/char/ipmi/Makefile           | 11 ++++-------
+>  drivers/char/ipmi/bt-bmc.c           |  5 ++---
+>  drivers/char/ipmi/ipmi_msghandler.c  | 29 ++++++++++++++--------------=
+-
+>  drivers/char/ipmi/ipmi_powernv.c     |  6 ++----
+>  drivers/char/ipmi/ipmi_si_intf.c     |  3 ++-
+>  drivers/char/ipmi/ipmi_si_pci.c      |  3 +++
+>  drivers/char/ipmi/ipmi_si_platform.c |  6 ++----
+>  drivers/char/ipmi/ipmi_ssif.c        |  5 ++---
+>  drivers/char/ipmi/kcs_bmc_aspeed.c   |  6 ++----
+>  drivers/char/ipmi/kcs_bmc_npcm7xx.c  |  6 ++----
+>  10 files changed, 35 insertions(+), 45 deletions(-)
+>=20
