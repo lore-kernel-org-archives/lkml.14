@@ -1,100 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032AE4EB51;
-	Sat, 25 May 2024 15:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9B81429E;
+	Sat, 25 May 2024 15:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716650638; cv=none; b=k7cfmCKzE3/hzj9PiB9fIChFvfuo4j877d4QRBwEw2urGvmtz3RPdVP7gcpY/7MGQpd4lJ/4ZbLNTD7e9NaKWco9vtVupkA5sAC55mTtjPxuYECCWwMrn+SQoNBx4apsfJLxRH8doJjUy9mtbqh/u33DVddSpAvkpXOuI0ogDGs=
+	t=1716650639; cv=none; b=fvX+Gru6iNxO8+vPJHArqET6HcMv1/affvEkJYmuhjQitpLomM7LpsrAgiqeiste8F1Tgb4LxKWGKhdNkoJIulSMo2FycT5rBpobxVfp5geWA60BdylKbzf3g5xJ43dbG9rsj/z8ELf7WUjFF7jGSwXJvSCaidNbRLieQmHKzyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716650638; c=relaxed/simple;
-	bh=hWex0/0EDFdU/EG8w6h6Es7v4FQycOVdAAznlCeBeTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X8LEmD4lgkMsYY97PlOZC8xcjCZhxwl9uYHjVpcsS+ysrodldcpAea/zFN6lFWM5adnvnhPJmPbePePphZ3XttlXdGNOILS1o548CXzCDA1PQRtjJMTFUwRBzkyexbLT70iQbp/jL+oaXnG+7MOJ4F5nt7BC1XTwNqVDKA7BdJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkL1V6X/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716650639; c=relaxed/simple;
+	bh=Y1QbV1fVDvWYwh1mRKjVim+xdyrWT0f/WnYH38ND510=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NOU2QGAbtu/+ghiQ8HW4bVOGUoJKwMP4WqhmAYUQ3rAij8KNZViMPDEHj1nHTAGYCEsHn6MA9kVCWjXl5/vFXqgw64wJQokr7ZQp+Jw87PExKZk7Dg89Amsnnu+iGe5Kx3ITc8HYLF70F1hQNIUYNMfr6+yr5idw1N6ZjmK1a7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UcNiW7vq; arc=none smtp.client-ip=80.12.242.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkL1V6X/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C5DC2BD11;
-	Sat, 25 May 2024 15:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716650637;
-	bh=hWex0/0EDFdU/EG8w6h6Es7v4FQycOVdAAznlCeBeTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UkL1V6X/oNXEsr099GOqomLQ5Fa3bk6UX5V7XtHOGdLU8QQYydARcKOxHFFbbFoHk
-	 f1ZJF/LZkCueJeuATzmD/uEyEWDerQGwlKicH3o/yifUkpZCaM+9oKXbWuFGUPHYCn
-	 iFMpgasccP7bFAvv7l6VdW7ha/1Qn1DGTBa7ii6ZJHX64eMFEF/oNqxPLgVbJEhSuT
-	 BRwEWXLwGAidEwjZZLVU21yDPSURSKsu9t46bys3BuUAWLWqSCkg3/vje5RW239sIt
-	 hy3WJTXAQ5aMeVQMm3bBGaWBFg3iWQOf494CWdAZKBMDyfNP1vURd00+HDPRHEyv1Z
-	 giEcyZovW03VA==
-Date: Sat, 25 May 2024 16:23:52 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Judith Mendez <jm@ti.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	William Breathitt Gray <william.gray@linaro.org>,
-	David Lechner <david@lechnology.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: counter: Add new ti,am62-eqep
- compatible
-Message-ID: <20240525-tall-cultural-1a3f181d39ac@spud>
-References: <20240523231516.545085-1-jm@ti.com>
- <20240523231516.545085-3-jm@ti.com>
- <20240524-wrecker-busybody-2c082b87ddef@spud>
- <57e4f7b1-2955-4dd5-b9d9-f3b1f27aab75@ti.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UcNiW7vq"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id At6asqDFCOBGCAt6asbEpr; Sat, 25 May 2024 17:14:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1716650087;
+	bh=SsSnU22BLOw2sFJbi0JknTXepGNVkme9LGYumcyMsq0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=UcNiW7vqBL6W/uiJKJok9ctWJIJmgX2JZMruZnW+I5yvkB6lsgwEVFIa07qypLFq1
+	 HWc7s94sRHNc7PwjCcHclfEeCFFuE0HZ+FRG1BZCZNZESKn2Jrda875XMEAESMpY6w
+	 5+Ysr+/16CU3fUE2TEoz5OHshQGHoLZLYbTmszZuxpd9OPZ3Nvsowe+VuMoIkPBI7D
+	 eOoWxtp/ePwL+D//ijSf/y+eFEDdSfKDVbWREi6NCihYDfaIVeLDjItTUibKkRibM/
+	 qVSegiqnjva1HfXNG+dUC+TMg3xNO8iAv9fvqgENWbk4flNtwAOWa5MLW3NQ2SCaee
+	 jXRW6ExbhnTtg==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 25 May 2024 17:14:47 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Akhil R <akhilrajeev@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-crypto@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH] crypto: tegra - Remove an incorrect iommu_fwspec_free() call in tegra_se_remove()
+Date: Sat, 25 May 2024 17:14:35 +0200
+Message-ID: <ea775b351a3dbe4cef4056ea89da25084f73df22.1716650050.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8je3ZeGf7UWWQx7L"
-Content-Disposition: inline
-In-Reply-To: <57e4f7b1-2955-4dd5-b9d9-f3b1f27aab75@ti.com>
+Content-Transfer-Encoding: 8bit
 
+The only iommu function call in this driver is a
+tegra_dev_iommu_get_stream_id() which does not allocate anything and does
+not take any reference.
 
---8je3ZeGf7UWWQx7L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+More-over, what is freed is "se->dev" which has been devm_kzalloc()'ed in
+the probe.
 
-On Fri, May 24, 2024 at 04:30:32PM -0500, Judith Mendez wrote:
-> On 5/24/24 1:38 PM, Conor Dooley wrote:
-> > On Thu, May 23, 2024 at 06:15:10PM -0500, Judith Mendez wrote:
-> > > Add new compatible ti,am62-eqep for TI K3 devices. If a device
-> > > uses this compatible, require power-domains property.
-> > >=20
-> > > Since there is only one functional and interface clock for eqep,
-> > > clock-names is not really required. The clock-name also changed
-> > > for TI K3 SoCs so make clock-names optional for the new compatible
-> > > since there is only one clock that is routed to the IP.
-> >=20
-> > Really the clock should be named after the function it has in the IP
-> > block - it looks like "sysoutclk" is more likely the name of the clock
-> > routed to the IP rather than the role it has?
->=20
-> It is the name of the clock, though id like to keep sysclkout for
-> backwards compatibility, even though the name is confusing.
+So there is no point in calling iommu_fwspec_free() in the remove function.
 
-FWIW, I was not suggesting that it be renamed.
+Remove this incorrect function call.
 
-Thanks,
-Conor.
+Fixes: 0880bb3b00c8 ("crypto: tegra - Add Tegra Security Engine driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only
 
---8je3ZeGf7UWWQx7L
-Content-Type: application/pgp-signature; name="signature.asc"
+This patch is completely speculative. *Review with care*.
+---
+ drivers/crypto/tegra/tegra-se-main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/crypto/tegra/tegra-se-main.c b/drivers/crypto/tegra/tegra-se-main.c
+index 9955874b3dc3..f94c0331b148 100644
+--- a/drivers/crypto/tegra/tegra-se-main.c
++++ b/drivers/crypto/tegra/tegra-se-main.c
+@@ -326,7 +326,6 @@ static void tegra_se_remove(struct platform_device *pdev)
+ 
+ 	crypto_engine_stop(se->engine);
+ 	crypto_engine_exit(se->engine);
+-	iommu_fwspec_free(se->dev);
+ 	host1x_client_unregister(&se->client);
+ }
+ 
+-- 
+2.45.1
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlICiAAKCRB4tDGHoIJi
-0t6iAQClRgCyK+bzcV2T6gg6WUEarZMXaD9E9NT/lqh7PJoeSAEArxBbuYcL8wXg
-TQbhTBU5CK6YWmRE9K233SaqLbSV7gw=
-=MmSb
------END PGP SIGNATURE-----
-
---8je3ZeGf7UWWQx7L--
