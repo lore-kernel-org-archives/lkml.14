@@ -1,27 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3647B59161;
-	Sat, 25 May 2024 14:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1335A4D1;
+	Sat, 25 May 2024 14:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716648470; cv=none; b=J9xKkO//a8IPN6DQliLIHZ6+zXu+NbzBE3G3Ba/L766pdNCWv/xoqNAGarAMcMwbmCpTu/o93+zbsEp2+fOA4STpmdqwhq+lqGYKvoxMkMXiTwcPFMqZOPwCAV0dG0eAy1SHrAVNbtjYuLzp707gK559v7kdwAxYw1F0Ci6G4C0=
+	t=1716648486; cv=none; b=UN2AZtkYc3Ay0ATaUfFiSra8fv6tgkcwfU/4mW7D03e6XJ/sx55J5EksK7dCvj2r3492RUH8EUCF5R/hUUNZAFqIfFKlMXyAz9bZHq+yUz515UXIuYyQQsaY1jI9mwWRDcvi6VPv3AdfOPCrf74aPyoj6vU0PtQ0/tmrh7EmnsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716648470; c=relaxed/simple;
-	bh=eeCR+FVA5mizGL9/V2+mlkpfHe1YBVwWSDeCMIJD0dQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oAx2eaMOPgA55eiQZJsz31Ctzdt3NGhiycij6+hURlbs/TX6hIVt/yEvRCftBC19JJx5u58AMFwI80bQyznY1NkETuBnrj0RD7hbGbStSYIHoVw/xpzyFlAdkQvg9qYSGN4tTZmvZuN6YFdZa/z7l1xxQNqtupw8wMX0HDm7Lwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=L6Ybhw/b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716648486; c=relaxed/simple;
+	bh=R9HQdl8tqqjOtcb56+7EY9QQyjllC8NO+LtiarLVXPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BNjvctRVWFogCOJw7C9lLdfs3GbFstOm8jA2w7+ASJfr+9SWXg+g2CjWXAjMTTkltfWsF0jsd8CJLeMnOWY1dueSZyNo1DiqsyEkNzs2nKz4LBzOYy70+TLI1KV1XzA6GHPPrF/LJPX0mYP0butGgw2nVpO9CHhReS1S9glSBjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TOVQdOMK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="L6Ybhw/b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A905C2BD11;
-	Sat, 25 May 2024 14:47:49 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TOVQdOMK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C5BC2BD11;
+	Sat, 25 May 2024 14:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716648469;
-	bh=eeCR+FVA5mizGL9/V2+mlkpfHe1YBVwWSDeCMIJD0dQ=;
+	s=korg; t=1716648485;
+	bh=R9HQdl8tqqjOtcb56+7EY9QQyjllC8NO+LtiarLVXPE=;
 	h=From:To:Cc:Subject:Date:From;
-	b=L6Ybhw/bTfx/0uilyWKx+Vk7EvnQZClaFqgMrtWj4KU0e7JtWjfmH6sYs6lWWa1e8
-	 6cjlKxwDMFyNkWVF1yzNsAMq29de/YKyWj0SqAsOA9Li6ct8oGcYagOWFE4bejZijr
-	 yGIvcMItubvT3Y/JqSTAVpE4HY+02AD+vbcWaChs=
+	b=TOVQdOMKuH09V/DWYGfn2foPpcE7ES1dhfN1fqbJ++b8aHI5527doO8PScfoFWHYj
+	 Fj9Z9FdJxQKVXiucW08bJd4mu3Vy74PHSX3oWN6/n2xxZ4ve0DzsrLnrNUmOIM5JOL
+	 //qxgMMjgSm3nw6mKuvLb3eaDcLyI1C3hwQS4hso=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -30,9 +30,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.19.315
-Date: Sat, 25 May 2024 16:47:45 +0200
-Message-ID: <2024052545-fridge-semester-b4a7@gregkh>
+Subject: Linux 5.4.277
+Date: Sat, 25 May 2024 16:48:01 +0200
+Message-ID: <2024052500-gravitate-dragonish-b98c@gregkh>
 X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,12 +42,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I'm announcing the release of the 4.19.315 kernel.
+I'm announcing the release of the 5.4.277 kernel.
 
-All users of the 4.19 kernel series must upgrade.
+All users of the 5.4 kernel series must upgrade.
 
-The updated 4.19.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.19.y
+The updated 5.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.4.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -57,29 +57,34 @@ greg k-h
 
 ------------
 
- Documentation/sphinx/kernel_include.py   |    1 
- Makefile                                 |    2 
- drivers/md/dm-core.h                     |    2 
- drivers/md/dm-ioctl.c                    |    3 
- drivers/md/dm-table.c                    |    9 
- drivers/tty/serial/kgdboc.c              |   30 
- fs/btrfs/volumes.c                       |    1 
- include/linux/string.h                   |   20 
- include/linux/trace_events.h             |    2 
- kernel/trace/Kconfig                     |    4 
- kernel/trace/Makefile                    |    1 
- kernel/trace/trace.c                     |   26 
- kernel/trace/trace_dynevent.c            |  210 ++++++
- kernel/trace/trace_dynevent.h            |  119 +++
- kernel/trace/trace_events.c              |   32 
- kernel/trace/trace_events_hist.c         | 1048 ++++++++++++++++++-------------
- kernel/trace/trace_probe.c               |    2 
- kernel/trace/trace_stack.c               |    2 
- tools/testing/selftests/vm/map_hugetlb.c |    7 
- 19 files changed, 1050 insertions(+), 471 deletions(-)
+ Documentation/sphinx/kernel_include.py             |    1 
+ Makefile                                           |    2 
+ arch/arm64/boot/dts/qcom/msm8998.dtsi              |    8 +-
+ drivers/firmware/arm_scmi/reset.c                  |    6 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |    3 
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     |   22 ++++-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h     |    2 
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |   12 ++-
+ drivers/net/ethernet/broadcom/genet/bcmmii.c       |   43 ++---------
+ drivers/pinctrl/core.c                             |   14 ++-
+ drivers/tty/serial/kgdboc.c                        |   30 +++++++
+ drivers/usb/typec/ucsi/displayport.c               |    4 -
+ fs/btrfs/volumes.c                                 |    1 
+ fs/cifs/smb2ops.c                                  |    4 -
+ fs/cifs/smb2pdu.c                                  |   81 +++++++++++++--------
+ fs/cifs/smb2proto.h                                |   10 +-
+ fs/ext4/extents.c                                  |   10 +-
+ tools/testing/selftests/vm/map_hugetlb.c           |    7 -
+ 18 files changed, 161 insertions(+), 99 deletions(-)
 
 Akira Yokosawa (1):
       docs: kernel_include.py: Cope with docutils 0.21
+
+Baokun Li (1):
+      ext4: fix bug_on in __es_tree_search
+
+Cristian Marussi (1):
+      firmware: arm_scmi: Harden accesses to the reset domains
 
 Daniel Thompson (1):
       serial: kgdboc: Fix NMI-safety problems from keyboard reset code
@@ -87,31 +92,31 @@ Daniel Thompson (1):
 Dominique Martinet (1):
       btrfs: add missing mutex_unlock in btrfs_relocate_sys_chunks()
 
+Doug Berger (5):
+      Revert "net: bcmgenet: use RGMII loopback for MAC reset"
+      net: bcmgenet: keep MAC in reset until PHY is up
+      net: bcmgenet: synchronize EXT_RGMII_OOB_CTRL access
+      net: bcmgenet: synchronize use of bcmgenet_set_rx_mode()
+      net: bcmgenet: synchronize UMAC_CMD access
+
 Greg Kroah-Hartman (1):
-      Linux 4.19.315
+      Linux 5.4.277
 
 Harshit Mogalapalli (1):
       Revert "selftests: mm: fix map_hugetlb failure on 64K page size systems"
 
-Masami Hiramatsu (4):
-      tracing: Simplify creation and deletion of synthetic events
-      tracing: Add unified dynamic event framework
-      tracing: Use dyn_event framework for synthetic events
-      tracing: Remove unneeded synth_event_mutex
+Heikki Krogerus (1):
+      usb: typec: ucsi: displayport: Fix potential deadlock
 
-Mikulas Patocka (1):
-      dm: limit the number of targets and parameter size area
+Paulo Alcantara (1):
+      smb: client: fix potential OOBs in smb2_parse_contexts()
 
-Steven Rostedt (VMware) (5):
-      tracing: Consolidate trace_add/remove_event_call back to the nolock functions
-      string.h: Add str_has_prefix() helper function
-      tracing: Use str_has_prefix() helper for histogram code
-      tracing: Use str_has_prefix() instead of using fixed sizes
-      tracing: Have the historgram use the result of str_has_prefix() for len of prefix
+Rob Herring (1):
+      arm64: dts: qcom: Fix 'interrupt-map' parent address cells
 
-Tom Zanussi (4):
-      tracing: Refactor hist trigger action code
-      tracing: Split up onmatch action data
-      tracing: Generalize hist trigger onmax and save action
-      tracing: Remove unnecessary var_ref destroy in track_data_destroy()
+Sergey Shtylyov (1):
+      pinctrl: core: handle radix_tree_insert() errors in pinctrl_register_one_pin()
+
+Srinivasan Shanmugam (1):
+      drm/amdgpu: Fix possible NULL dereference in amdgpu_ras_query_error_status_helper()
 
