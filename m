@@ -1,84 +1,97 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2188F9F8;
-	Sat, 25 May 2024 18:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B06F9F8;
+	Sat, 25 May 2024 18:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716660035; cv=none; b=AnneYvQ9BWxaE3v8Ybabzxw0oLOWxlnWBn6oL5zt8BEq112cw62lH6K2C9gKWO50m3iq94N7c/kBuYRAccYA0Ft+/sGS6Pw3Ex/7czjd/B2eq+X3J0WPjo4RzOTEBbtaqPcaPDDa9iYWLi1fh/Ox4gDTtYNl6b/LX55j7cS988Q=
+	t=1716660047; cv=none; b=kD58f0R94PZT1wAxyGErbfjYsILN/ToTXS2GTwUxmK64yeKIQ7leh+qnN7dZO3mLVm4BIxDO8586x0aByuX/5JLszNP2PRKqMmtnuPb67iXERabPe2viJxRhF+rAJcMMdPGQ3HC5NhYosE4Ss8A1nKbeEmXkctLkZbahSvXVwuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716660035; c=relaxed/simple;
-	bh=4p+EeENtrNBhk+BdqQn7xAY7/P5w0W1qsA3OlgQYGGA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=hU/efklqHsXUASGyRlH8PjKT8i3gm23/7qA+YxDlf4urFFdq83/cxrHvKRVqWYoqHQkbV5nWRgJHJ6h6nsOuDqkr8olJIRN+ZmXJCIfGv78mNFOUaz2EN7u2VU9Jp03k4KN52iRbsIrdn0wwn8lU+uPfEyub8t7omtiUZ21S5XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=NOOxKcKh; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716660047; c=relaxed/simple;
+	bh=WTUferHCo9WFPFc4jvFPPGvl3/PJJmknm08eNpl9uNQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GwyPUnr873r2Y4W3rtfCeOx79ZNXkk5PsZaG974ZrXWk1hrIM4J+lFfc/eaNpkN6bylLhvbxipJIoRaI9ilMhK52zNMKqxRiRu0UcRn0nxw+aArWyJR2G7X2xH9vSy3jFxif7Lq+XJwSTMDhUTNW5zNwVGbDQPWevDfZryq+gEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeyWzhWC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="NOOxKcKh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716660028; x=1717264828; i=markus.elfring@web.de;
-	bh=4p+EeENtrNBhk+BdqQn7xAY7/P5w0W1qsA3OlgQYGGA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=NOOxKcKh7hMBGZYJhXb0JttxmWERmptV2LsfYdRIWIGNDbOBDeolIFnUaLxyV6KP
-	 NxVtLZIpyNp3trpwyL4ImjjQ5Md31M7Gu3iS56JNkfFBYUFjYDVlV7EAByfK2WgvO
-	 qgTTKPzswqNvVQTyv2eCx/Q8UMJpTXrC/b6FAJ6WAB8QswcDeHMecTFSuVnDDsdHt
-	 UNQR0gGEgNEo6Q7z2ikxnw4ScKMCm84+3xZEqNh3yuY8LLtZwMJTrf36MEyF9hQkZ
-	 wbFdwdiRrPDLJ7bguCUuo3sBNy6L3uWUY8v0n09vYcqizb6uufqAxtdN9cu/qV9Cl
-	 VSeMDCN6A4JYE/2jLg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MgRMB-1siuOJ0G9n-00hjap; Sat, 25
- May 2024 20:00:28 +0200
-Message-ID: <7721c32f-06ea-4e8c-894b-cdfb4f6270b4@web.de>
-Date: Sat, 25 May 2024 20:00:20 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeyWzhWC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59E28C2BD11;
+	Sat, 25 May 2024 18:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716660047;
+	bh=WTUferHCo9WFPFc4jvFPPGvl3/PJJmknm08eNpl9uNQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=NeyWzhWCCMVLXOqnKzwicaR+P2Zp+xmL8pUvWvMmonT4RBa+ZLTO1rw97grJVp8sN
+	 hyXEliv8d3cp89YFISpbEe1MhndxxAvWBrtJhlXsKTeA96kfs4F2rG9vYUo/jyMPqG
+	 dY3SDVsRnjE2QGNwQPK7XKY4/TQxgob9OVc/c72QuLC+8KZcnvTSWWk5Z2mm9Uf6Bo
+	 ipjVQehuvI4aNFTar4n8jL1CKl10DUWcRREepFdSFRC+iaR2mjhuD7eLw9UxtUsqmR
+	 ATUwZx2mGPkSCPkdIlhuEmLm2RKeij3gMBve9u2kY/oN0T3B8crweutAojWiLChKl/
+	 VrvlmyOvqnaVA==
+From: Bjorn Andersson <andersson@kernel.org>
+Date: Sat, 25 May 2024 11:05:31 -0700
+Subject: [PATCH] dt-bindings: interrupt-controller: qcom,pdc: Add sc8180x
+ PDC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Shichao Lai <shichaorai@gmail.com>, usb-storage@lists.one-eyed-alien.net,
- linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Alan Stern <stern@rowland.harvard.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Oliver Neukum <oneukum@suse.com>,
- Xingwei Lee <xrivendell7@gmail.com>, Yue Sun <samsun1006219@gmail.com>
-References: <20240525141020.2520942-1-shichaorai@gmail.com>
-Subject: Re: [PATCH v5] usb-storage: Check whether the media is initialized
- successfully
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240525141020.2520942-1-shichaorai@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Q2jtdCbdvwkFxXuO0488+GAQQIdetaKP637x3VlWViN3e+5OOgB
- w66bNNcVqgIm0sFx+N0lIc5D6/qZ7Ib0UVrIZ2KA5JQ5RwS6WLVz4ax7m8ynj5f7Gk+hyvo
- YnN/nn0ESPBQTP9BwZ+lknUROPvztDI2cAyH/iG4FMA8vkNr7LXtVHM4YfsvJaEvyif3etA
- s0tK6mcv9r4d8HoIHrvHg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lDKllwEVkwk=;V4laeXtw9iFysfIld77f31ySKbk
- IaJwFmlUVUQFce6bkVWJNwW+pUZhYzir4QyPcjye4LMympoV7sJYWURhOzB2KsiWNtLPlk+fO
- +MCfDz/LUT73j+EcS+5aasejPDf+OzCIwUIN0yp59vFTYueHZQbovS/zBg4IUxjhEhaVVhhr/
- QuA1p2hoeVpOJHeH+u+bfFgU6b0urLQ8UBeSt2rwxk82TYosX5ok35YU7icDhIGsr+kr1oujK
- FLUkhyKsuxNeOFTLw/PITM+6VdqloH5dqRNxYe2CnBrHSmLfWSspIl1YzSiD4+0buTQhskSrx
- VVG4d+4s+ofBxbk1yN73mxXiEkIGJefOi5OSO6rjg20zKEOGAofw1qIlFzg153cWYBP/usUio
- ota0pug/hcgCniNrHRuvl+KzAHCVRTCl/6JyGjaDA1sT3YVrGLRk4x2vHzbV8DqxMGy/vbMZg
- R5z5Eg0G6FIbLfRojMxaFLQ3Mc20xUBN3OX2Xw6xtMpDsx4U1qANviktLG+pbWO8jMIhm9VwO
- kUwVW3w5CokYVWZhO0WiUUT5rjBqAyC6THCZ5ixGOQK75DF9FeT2OiuYPlRhzgcOMqaG6Z3cu
- /6tCxckN4OHGocohWpwMZRB+iVCta4fXXVuyYCW7UnL5AJ2Qb7BxDBA8wainRpUh3ORcwyxZg
- D7U8ZJMNMBEFD+2g9OsfJRiBjAklD89EQbZlvqjMD4Q5Z2bot9+CGm//94PJNKk8wuQ1s9csX
- 9nx/OcDuwnhiUPDp1sw9QKd331+tIYRV+BCTMbe1b/Cj0aau1LMXQrrQaf/ZRt3fEMpND+jBu
- EswABUsVrCVte8AzNZ0OLTEf/v+08RCO8/mdhvrax7Bbs=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240525-sc8180x-pdc-binding-compatible-v1-1-17031c85ed69@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAGooUmYC/x3NwQqDMAyA4VeRnA00RVnZq4wdapK5wFZLKyKI7
+ 27x+F3+/4CqxbTCszug6GbVltRAfQf8jWlWNGkG7/zgRj9i5UDB7ZiFcbIklmbk5Z/jatNPkT2
+ FSCQy8ANaJBf92H4PXu/zvAAjFcKUcAAAAA==
+To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1031;
+ i=quic_bjorande@quicinc.com; h=from:subject:message-id;
+ bh=QkJM5gGh6CBEFtKrdSsF2mNdiYW9/CwgDySvZ3GxKVM=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBmUihvU5XGXhce22YCS/OK3DJep1UK2XQHoZrym
+ uGk83kzaNqJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZlIobxUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcW8AxAAzhqsGgW0QSuyyhhpzuZlTGQ4muTgrdlQ6KFnu9h
+ T15m9iRmFzjlwF1YHk5aX6coNdoC3tQNOViqqUkY53GOZbSX7TBpX0GProDMFF4EkPQp98NN6UW
+ qKZmLK/m3BSPzBS7PgvDgPCzZ2qqU9i+24OmcysEtVA0qVnpM3Pdc9cFE4nZ6FInn1utuNhBgCT
+ aJ+3ieESQf2l8A1EqQ84iyrzE33m75xasZVimL/DikZPaXdoMc/YHo7QSDozsIJt66x58xx2Tb2
+ fN2n7LfdxNqB+ECs//Gu0361/94SqC1ZJ5TBjlaViaupRwkJ5Kca85C8z4bB8HrzGBNC6PBbIhk
+ j7/zK9j74iqQZX4hsJfXl8n8qg011SIHVj2Wiw+raESSuKpbzUrtnjFhP1pbzozxjUaWcLaq1ww
+ 3Q56ki9cPpzYSaZqSweggNcXdvlAJq7gLIWq4GGS0wD3YvgT6QJKhn5qkOvQnt6K4cEJW6CSDKx
+ qcPrAZ95ZkcyvrEktVIYAVCtvDdWvcxvTUdYBBL1i+adXPGMty5C+7CuE90dSDC1OHtYjXea0/z
+ /A9lMcSnQKtcvhaD4/8WEGaDATaoawcNx/RIM0wCZuzxyasIG9ZeJZ1pj3LtEkcQPHtaiKEcE+E
+ LsJjMnbdc+MhP6S58I9gxcf/EUI1TuQAZluHfgZdjnqc=
+X-Developer-Key: i=quic_bjorande@quicinc.com; a=openpgp;
+ fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
 
-=E2=80=A6
-> - Add an error check for the return value of alauda_init_media().
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-Does such information indicate a need for the tag =E2=80=9CFixes=E2=80=9D?
+The SC8180X platform has a PDC block, add a compatible for this.
 
-Regards,
-Markus
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+---
+ Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
+index 4bdc8321904b..985fa10abb99 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
+@@ -30,6 +30,7 @@ properties:
+           - qcom,sa8775p-pdc
+           - qcom,sc7180-pdc
+           - qcom,sc7280-pdc
++          - qcom,sc8180x-pdc
+           - qcom,sc8280xp-pdc
+           - qcom,sdm670-pdc
+           - qcom,sdm845-pdc
+
+---
+base-commit: 3689b0ef08b70e4e03b82ebd37730a03a672853a
+change-id: 20240525-sc8180x-pdc-binding-compatible-c218a11dd4c7
+
+Best regards,
+-- 
+Bjorn Andersson <quic_bjorande@quicinc.com>
+
