@@ -1,91 +1,111 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C91486ADC;
-	Sat, 25 May 2024 17:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F723A1C9;
+	Sat, 25 May 2024 17:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716659724; cv=none; b=T7lRxcQmpYA8AnSGX9ff8QyV3Uz/WK/Wup+7lwPnj7KuAo3tM3Oi75yHjfKOwSI7rCYjWjHi6+RYyAD36wY+KFWGKOkSiSc4lOyKg9FacGL6U0NS7NV6ROCaIBpendv9+OBmABYUT5pF84TQxacNm48OzofjpfkfBGcAU7nU1G8=
+	t=1716659949; cv=none; b=nTBVflWTdt2adyUvNoFwROJmGMzGkszoPMHvNVgCmZ9pxvjjbNi+/gd38siY59fjieSEbALbK7gzIgNfI1ps8A/g7ZX+keQdpYN4BoduWMk896U8vwX2/y1KjHIMewc5+725m1I7LYz7gqiz3gsFk/yVXRgGfDQV8hhcqYDgmNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716659724; c=relaxed/simple;
-	bh=/Daddhd1J61xufDyCg5FjDOPfTMSIi5aUeTQ+lvhvCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I+sess3WHfvit6AZtkLwMsSv/5cFfadgvjNFYt7kHm96kdJCislB57TCnxmB/vp2AoUUCtyuC42g6wRBB2oZhihF+2cTqpPj/jmRKZR2CJC0ZHa08fH8xThTW6sjzAaijXWHVhJ0tzRrwhP1bdp4rClfwuOVAN5lmK8vHiV85GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=nt5sPvr7; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1716659949; c=relaxed/simple;
+	bh=D+M5uC/gLzRtwYP8kRKD2zieRkaDxcHiXzI6VKM923E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hmc74j4RnrYGzCTp67hsnWPaCcQtW1mflPFNfFKAi4ql9Iy3BjBT7/D48qgVaVXLXdWLzRwreKwhpi3EClvvJSLRdbxPqUO5X9KSYF0blcy96raMfnDwihCKE2mV12IkJS8Fb68E3HBCApFEc4nm3sX9jKuNcImGoKEaasML7p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBmneknL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="nt5sPvr7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=sWHpoYAbwc/NBxu2pzSoM+et6peAc7u8uTs6bJ/QDWA=; b=nt5sPvr7/t2Sr7+N
-	z+/JCuQg3AyFyzIN2U2T4w4Pb3MdyeonPzZE0MfLIg3c04lA5icPxCfqNSNgGE/0ajRo72XcA3e8N
-	hdR9PwwBdsExr9nXtJ9QSAyLk+FSpYhlyjWjzEYdkHbZAS4MyinhQJTCFeZC5WSxcDETv8sLJ3eBE
-	udgcSmONr2grf/RAcjPHlPAxxbA37yNr3k4THhfywAfZX9/rLwX1uyRy5zIfm6PHSTwq5pyRd2QOd
-	rHBxR6hRWxHXvjH2/OCOO2eT6P1o5mC+i/eBEGo/GIKICOLL2k3fDy41h/UIFM/1u+YzAIbGRM6PP
-	BrzOz0PwHH+uQpyX3Q==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1sAvc0-002Wjd-0l;
-	Sat, 25 May 2024 17:55:20 +0000
-Date: Sat, 25 May 2024 17:55:20 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: mchehab@kernel.org, isely@pobox.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] media dead struct removal
-Message-ID: <ZlImCPQJHUK3omiX@gallifrey>
-References: <20240525175229.100559-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBmneknL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CC9C2BD11;
+	Sat, 25 May 2024 17:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716659948;
+	bh=D+M5uC/gLzRtwYP8kRKD2zieRkaDxcHiXzI6VKM923E=;
+	h=From:Subject:Date:To:Cc:From;
+	b=QBmneknLLtl4Pb9C54CyKSYirsSIUkfWLTaivAUcgoKnCROBDNg1dJV6qTnb3GJJG
+	 SnROZcHiP4KWR/7zgp+01Lq5ftBjJFmEfbmcJorQUdQRwDVdCdiGqrkTQsyN5aynkF
+	 l5a7gOCCCmn4BRDnVoOqf9tG7BrIWSgyJJG0ogKYTQkGyQodQGDmxnEoKQZJlR7RY9
+	 EXJRiLeXIKL/XamFQGW2GF2ZDg+1yMRiiPMt7SP9LFeiQ5GjgLLAHllfJc4UJh8C8f
+	 YB99eKZGKnQyZRgSRHTtfzS8WxRQ1q9H8vCJ3Wc9XrMNoeNJNmGx1grJPQYw3qR/Ym
+	 v4KG3hRSHe0nw==
+From: Bjorn Andersson <andersson@kernel.org>
+Subject: [PATCH 00/10] arm64: dts: qcom: sc8180x: Enable the USB multiport
+ controller
+Date: Sat, 25 May 2024 11:03:53 -0700
+Message-Id: <20240525-sc8180x-usb-mp-v1-0-60a904392438@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20240525175229.100559-1-linux@treblig.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 17:54:41 up 17 days,  5:08,  1 user,  load average: 0.00, 0.00, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAkoUmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDUyMT3eJkC0MLgwrd0uIk3dwCXZPUJCNzi5Q089Q0QyWgpoKi1LTMCrC
+ B0bG1tQD35vd1YAAAAA==
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Wesley Cheng <quic_wcheng@quicinc.com>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-clk@vger.kernel.org, linux-usb@vger.kernel.org, 
+ Bjorn Andersson <quic_bjorande@quicinc.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1715;
+ i=quic_bjorande@quicinc.com; h=from:subject:message-id;
+ bh=D+M5uC/gLzRtwYP8kRKD2zieRkaDxcHiXzI6VKM923E=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBmUigMuXpF5bHXK2P2/HJqaYU/pcjYTCVfnLLc8
+ 1gUlADCE2SJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZlIoDBUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcWE1BAAipMBeEOeI+AJ7au7JeaOu0DBn7s4jXiS84x5qzv
+ CPSqza4RbM3FtKrwSQs23BfOJFV9S/ZLrjO+zW4daRJJ5XOAKRCywrgcuhct2Arf/ZzNnd29kvz
+ 4e2LJAmPSh6oyESHvPHNz+MO9ZVvARzysIdk0JUvMmkyUJdryS+yxD17Y/1QCwUQQeful+fWV3f
+ WJNw1s4qDi+9zaKnuOG54Gx1Ead/QdOko02hME3OONx9iicRjXMHA64Hy9RKn+TWBpTwC3B52Jb
+ qL8+R0ku/W43FDuM3VHyidN2i3hKSZlOiMOc9fZa5AHZRRYzVr6hZLX/EgrMHmfoAtW+P03fDAY
+ ub3chdOWDzHt8OAbyujHu+6e6dYJ49FpiEb2h8sMWC3xaWHBbmrgSQhblXpCw88jRSG5yfBMen3
+ rpZWhZNs3j06tD+R7GnqyFmSBd9McbGbmY7dzRCNGwXmEnZi9qp6SjWC4GCjHLEbJzCydyA+ugy
+ dMC2NtNU1oLwa3znMUp+P8/GyOzKp6dc9IT9NyWrODwr3XF1ej8TtzE4LwBwRM0mK8KSU1LH/12
+ Iw+8e3DPp6yOOUPdwq4CCn3/30LDbz5oCGTO6ef2z1orwIhsDSU6y00Ub3+pmGFhG0rBFIN6XqU
+ uqX9+hycBFYnLrUYkCAG/dZb9bcg+NY9yH8Bm17094KM=
+X-Developer-Key: i=quic_bjorande@quicinc.com; a=openpgp;
+ fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
 
-* linux@treblig.org (linux@treblig.org) wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> Dead struct removal in spi and usb.
-> 
-> (These are the last of my struct removal in media as
-> far as I know).
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> 
+The USB multiport controller found in SC8180X is used to driver the
+camera in the Lenovo Flex 5G, and a couple of additional USB ports on
+the Primus AUX board.
 
-Note there's a bounce for:
-Charles-Antoine Couret <charles-antoine.couret@nexvision.fr> (maintainer:GS1662 VIDEO SERIALIZER)
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+---
+Bjorn Andersson (10):
+      dt-bindings: phy: qcom,sc8280xp-qmp-usb3-uni: Add sc8180x USB3 compatible
+      phy: qcom-qmp-usb: Add sc8180x USB UNIPHY
+      dt-bindings: clock: qcom: Add missing USB MP resets
+      clk: qcom: gcc-sc8180x: Add missing USB MP resets
+      dt-bindings: usb: qcom,dwc3: Add SC8180X compatibles
+      arm64: dts: qcom: sc8180x-pmics: Add second PMC8180 GPIO
+      arm64: dts: qcom: sc8180x: Align USB nodes with binding
+      arm64: dts: qcom: sc8180x: Add USB MP controller and phys
+      arm64: dts: qcom: sc8180x-primus: Enable the two MP USB ports
+      arm64: dts: qcom: sc8180x-lenovo-flex-5g: Enable USB multiport controller
 
-  charles-antoine.couret@nexvision.fr
-    host mx0.mail.ovh.net [178.33.252.245]
-    SMTP error from remote mail server after RCPT TO:<charles-antoine.couret@nexvision.fr>:
-    550 5.1.1 <charles-antoine.couret@nexvision.fr>:
-    Recipient address rejected: User unknown
+ .../phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml        |   3 +
+ .../devicetree/bindings/usb/qcom,dwc3.yaml         |  29 ++++
+ .../arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts |  32 ++++
+ arch/arm64/boot/dts/qcom/sc8180x-pmics.dtsi        |  16 +-
+ arch/arm64/boot/dts/qcom/sc8180x-primus.dts        |  60 +++++++
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi              | 175 +++++++++++++++++++--
+ drivers/clk/qcom/gcc-sc8180x.c                     |   4 +
+ drivers/phy/qualcomm/phy-qcom-qmp-usb.c            |   3 +
+ include/dt-bindings/clock/qcom,gcc-sc8180x.h       |   4 +
+ 9 files changed, 312 insertions(+), 14 deletions(-)
+---
+base-commit: 3689b0ef08b70e4e03b82ebd37730a03a672853a
+change-id: 20240524-sc8180x-usb-mp-4eb278df7ef1
 
-> Dave
-> 
-> Dr. David Alan Gilbert (3):
->   media: gs1662: remove unused struct 'gs_reg_fmt_custom'
->   media: opera1: remove unused struct 'rc_map_opera_table'
->   media: pvrusb2: remove unused struct 'debugifc_mask_item'
-> 
->  drivers/media/spi/gs1662.c                   | 8 --------
->  drivers/media/usb/dvb-usb/opera1.c           | 4 ----
->  drivers/media/usb/pvrusb2/pvrusb2-debugifc.c | 5 -----
->  3 files changed, 17 deletions(-)
-> 
-> -- 
-> 2.45.1
-> 
+Best regards,
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Bjorn Andersson <quic_bjorande@quicinc.com>
+
