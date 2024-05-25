@@ -1,153 +1,114 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7595F2CCC2
-	for <linux-kernel@vger.kernel.org>; Sat, 25 May 2024 23:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7396A2C69A;
+	Sat, 25 May 2024 23:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716678164; cv=none; b=GFObeRDn5fRTI/lqe+pDjfo1F6FNPOti7dNUCNOHFcvHYwb2GyFcMUnxyNfrPaQdJEdnswVwC7JuPER9XTyS36Oa/9JvuoCn9rpqi9ZhI5LDV4CCrAh2w5AQ7P/Q5/7jzHNfWX52P1Wf8irBQQgyltV/7Rj/BFw1deTBsbGtaVk=
+	t=1716678506; cv=none; b=G8UfnXp4j7E6buz55EbZagfZAGof/pIRdhpYXiZ/pTbLEAM5oWwKu41Bh0Ya9ITzww0YqZhb/KYFCR0oCHOFtYxKT4o4Mg7KOElH+hHuHCWrZpW+x8g+Jv+YwFCBZJICcsedOt/8ecSVGucV8EhiRyxyxZqD94U1BP5/v6TXr0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716678164; c=relaxed/simple;
-	bh=L3hWBTMmA6viEgmlEybu5t+iS/55NiCc6jPW1Kjsoa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iE8WAYeIYTF+BWOGlcOBpV3KprPX2GkOXBqgh/e8+snjGWXjV5/QbXhmqmxb/ON8yM+BE+6U3+faHzUkND2GL6VEwTctxIewt1Ada6NmvEBTeKL+OXPVZUqZySC8Kke0Onmqi1UT1WCJ6xnQk/Zz0jPWew7BjFCeU7ZP2P1f8wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=upxmnVYb; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1716678506; c=relaxed/simple;
+	bh=1IQnkFeo5hwJ8HyehC09JEYs92fCaB3Xdgd27Gp26KY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r+rCh4bW5SqkA/YkSH0Vw7/+mAn4nsYmj0LpSKVPf9RAivSplzLsXdN4e37AkrQD9cYdbIqc+j8Gd6u8KY/hXKG/TCAMLLaZA5T3C39LdlqFgPcjYj63TeO9nRO16FR3HmuaxYF2ZVvAIPNb8IWEdFPPBT/VgE0250KzT2H662E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Yk9TTsBv; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="upxmnVYb"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f6911d16b4so4940491b3a.3
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2024 16:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1716678163; x=1717282963; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gic6Wo3zjudyzI0BAjsVaWRrn7WVkv86SSZTvDO7XFs=;
-        b=upxmnVYbF9XuqlhXcqNr8K+zIJ1d9TVX6Mon09OG0FFLHCqYaj7yD1Ms1Sfxu9RZpD
-         TaeFXJNQ4eJ1FqL21NTClYIV26S51nH8shM+vzjfb7KSxRYxcH0dk2Wng+cxkDpr40EH
-         hFgNR/0qWwNxlLCHQ6WGhnSpbnJLmLmN2k+/XAQdFWDFjrtPZHVdDAxS55mGnXE9Ldv8
-         NEba7m2oCj4uPOVIAKdjDZBlyNaTbGOcVUvJIH4YWzWz4WXeeb3eGs6is2FivFkODsB+
-         QOR88d4K70UUIwKaKx6rEcHOO+FDHMF8DLliEHlzPAHFkPz5aUoRlKnlUkPN6i7y5TAs
-         KzVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716678163; x=1717282963;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gic6Wo3zjudyzI0BAjsVaWRrn7WVkv86SSZTvDO7XFs=;
-        b=WaX4gl1apmtXiYGfF4NqUAqhK10a0faMxb5H3t/Lsrutcbv4RG7mTIlIG1FEjbkY1Z
-         iTH1WWltaFRQO+mVmIM11e3KYrYhmv++tb7LU/bFrFNBJw6mQKx41iKoYOS81HmV/bGX
-         ZnPYEABUuqeFLyrZGEa0ivTVhREWryc669KLWqTcRTgrT9dLkXLviteqGYm2BJX009er
-         SSt8XMMioGyekTuWME+5u0Uvc74fmpzvXad0V/2lTlr6d6MAA0LeVL0YfjP+rfyUo8S3
-         ldo/4gs/gi7UYT8xS/oHC0dGHwNoWY9CN7h1AgW+xc8Wn9DAjKLd4ussWbMKYXKTpm89
-         kIrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQeVwR02jIIwqLB0/FPj9Olvc5/L+Uq8u9dxMgIrN8Sr5bnupOTn+5PlyWUVhFRUqnGY/XyHNHeJTrvPQtJtzqL+TTRNChtyhcSHJo
-X-Gm-Message-State: AOJu0Yzley/sXzLuOW1wwD+h59w9eogoKtuy5QNVdFd+HTWEPZwe/ATz
-	9GcHAjEBlajcEyDiE2RP85kWLabbsVct4QKnOEUHtSoJU1s2xYDWZf/KazrgpnA=
-X-Google-Smtp-Source: AGHT+IHkIK468Us7w5racBBbD0k32HWYTGqS9h3qKLyIaPSGj5Sg+dT6eM4UpYv8VhDI97pWq3omsw==
-X-Received: by 2002:a05:6a00:4405:b0:6f8:caf2:8f4f with SMTP id d2e1a72fcca58-6f8f45d2624mr6450954b3a.33.1716678162585;
-        Sat, 25 May 2024 16:02:42 -0700 (PDT)
-Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbeaaa3sm2831749b3a.103.2024.05.25.16.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 May 2024 16:02:42 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1sB0PP-00AUdG-2E;
-	Sun, 26 May 2024 09:02:39 +1000
-Date: Sun, 26 May 2024 09:02:39 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: Nitesh Shetty <nj.shetty@samsung.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	martin.petersen@oracle.com, bvanassche@acm.org, hare@suse.de,
-	damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com,
-	joshi.k@samsung.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v20 05/12] fs/read_write: Enable copy_file_range for
- block device.
-Message-ID: <ZlJuDxhMEpJxKQHV@dread.disaster.area>
-References: <20240520102033.9361-1-nj.shetty@samsung.com>
- <CGME20240520102917epcas5p1bda532309b9174bf2702081f6f58daf7@epcas5p1.samsung.com>
- <20240520102033.9361-6-nj.shetty@samsung.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Yk9TTsBv"
+X-UUID: a8d8b78e1aeb11efbfff99f2466cf0b4-20240526
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=LN8PN6WdAK9w2x83kX6kZCxmAZMlqcey6szu6viJQYg=;
+	b=Yk9TTsBvMNX04Mk5ks52iIhWpIKbEDZnkPYy6ykATd4oRL9sMdB2k5od5HSJG0JtjRYnLPkX+aX2Gr9klN9j2tCWwT78bo62lhtM/f/qxiCCfcK3TobGQzLIQU0v/Y4kwKCpFv11mZ3PVtdhu0SCOHw5J682TI/PMBg4jIg+u7c=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:a7a273e8-9311-4746-84fb-138742c42b4e,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:82c5f88,CLOUDID:80c23693-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: a8d8b78e1aeb11efbfff99f2466cf0b4-20240526
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1916550598; Sun, 26 May 2024 07:08:12 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Sun, 26 May 2024 07:08:10 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Sun, 26 May 2024 07:08:10 +0800
+From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, Chun-Kuang Hu
+	<chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: Conor Dooley <conor+dt@kernel.org>, Jason-ch Chen
+	<jason-ch.chen@mediatek.com>, "Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
+	Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
+	Shawn Sung <shawn.sung@mediatek.com>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <dri-devel@lists.freedesktop.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH v6 1/8] dt-bindings: gce: mt8195: Add CMDQ_SYNC_TOKEN_SECURE_THR_EOF event id
+Date: Sun, 26 May 2024 07:08:03 +0800
+Message-ID: <20240525230810.24623-2-jason-jh.lin@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240525230810.24623-1-jason-jh.lin@mediatek.com>
+References: <20240525230810.24623-1-jason-jh.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240520102033.9361-6-nj.shetty@samsung.com>
+Content-Type: text/plain
+X-MTK: N
 
-On Mon, May 20, 2024 at 03:50:18PM +0530, Nitesh Shetty wrote:
-> From: Anuj Gupta <anuj20.g@samsung.com>
-> 
-> This is a prep patch. Allow copy_file_range to work for block devices.
-> Relaxing generic_copy_file_checks allows us to reuse the existing infra,
-> instead of adding a new user interface for block copy offload.
-> Change generic_copy_file_checks to use ->f_mapping->host for both inode_in
-> and inode_out. Allow block device in generic_file_rw_checks.
-> 
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
-> Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
-> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-> ---
->  fs/read_write.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index ef6339391351..31645ca5ed58 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -1413,8 +1413,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
->  				    struct file *file_out, loff_t pos_out,
->  				    size_t *req_count, unsigned int flags)
->  {
-> -	struct inode *inode_in = file_inode(file_in);
-> -	struct inode *inode_out = file_inode(file_out);
-> +	struct inode *inode_in = file_in->f_mapping->host;
-> +	struct inode *inode_out = file_out->f_mapping->host;
->  	uint64_t count = *req_count;
->  	loff_t size_in;
->  	int ret;
+There are 2 kind of GCE event signal:
+- The SW token means: a GCE event signal triggered by SW drivers.
+e.g. SW driver append a GCE command to set a GCE event after a specific
+GCE command. Or SW driver use CPU to write a event id to GCE register to
+trigger the GCE event corresponding to that event id.
 
-Ok, so this changes from file->f_inode to file->mapping->host. No
-doubt this is because of how bdev inode mappings are munged.
-However, the first code that is run here is:
+- The HW event means: a GCE event signal triggered by HW engines.
+e.g. When HW OVL fetches all the data in frame buffer, HW OVL will send
+a frame done irq and also send a frame done GCE event via HW bus directly.
 
-	ret = generic_file_rw_checks(file_in, file_out);
+CMDQ_SYNC_TOKEN_SECURE_THR_EOF is a SW token event that is set in the
+end of each cmdq secure pkt. It is used as a secure irq to notify
+CMDQ driver in the normal world that GCE secure thread has completed
+a secure cmd buffer in thee secure world.
 
-and that function still uses file_inode().
+Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+---
+ include/dt-bindings/gce/mt8195-gce.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Hence there checks:
-
-> @@ -1726,7 +1726,9 @@ int generic_file_rw_checks(struct file *file_in, struct file *file_out)
->  	/* Don't copy dirs, pipes, sockets... */
->  	if (S_ISDIR(inode_in->i_mode) || S_ISDIR(inode_out->i_mode))
->  		return -EISDIR;
-> -	if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
-> +	if (!S_ISREG(inode_in->i_mode) && !S_ISBLK(inode_in->i_mode))
-> +		return -EINVAL;
-> +	if ((inode_in->i_mode & S_IFMT) != (inode_out->i_mode & S_IFMT))
->  		return -EINVAL;
-
-.... are being done on different inodes to the rest of
-generic_copy_file_checks() when block devices are used.
-
-Is this correct? If so, this needs a pair of comments (one for each
-function) to explain why the specific inode used for these functions
-is correct for block devices....
-
--Dave.
+diff --git a/include/dt-bindings/gce/mt8195-gce.h b/include/dt-bindings/gce/mt8195-gce.h
+index dcfb302b8a5b..b6b3db82c381 100644
+--- a/include/dt-bindings/gce/mt8195-gce.h
++++ b/include/dt-bindings/gce/mt8195-gce.h
+@@ -800,6 +800,12 @@
+ #define CMDQ_EVENT_WPE_VPP1_WPE_GCE_FRAME_DONE	969
+ #define CMDQ_EVENT_WPE_VPP1_WPE_DONE_SYNC_OUT	970
+ 
++/*
++ * Notify normal CMDQ there are some secure task done,
++ * this token sync with secure world.
++ */
++#define CMDQ_SYNC_TOKEN_SECURE_THR_EOF			980
++
+ #define CMDQ_EVENT_DP_TX_VBLANK_FALLING	994
+ #define CMDQ_EVENT_DP_TX_VSC_FINISH	995
+ 
 -- 
-Dave Chinner
-david@fromorbit.com
+2.18.0
+
