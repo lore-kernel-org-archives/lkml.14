@@ -1,85 +1,86 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A91C3B297;
-	Sat, 25 May 2024 13:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4BB1E480;
+	Sat, 25 May 2024 13:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716643953; cv=none; b=A+QvJqQctuT9CX4LDWYDIt9hlOGuFz+oCbqaEM5MxfCuLeopHhrLd96W3weoj+tidauE5Fpv3Wiv7KiV8QrL5lT0LRtLWI5QOjKslcNjUMSYoeWA3OCk4a/7cwUooy5RfXaz3Dl+vcMoMAyuEGVMZxdn0JY7h8cqzGzbwPv2BTU=
+	t=1716644528; cv=none; b=tgUBkMQuKEAWmnPIRYAyidvQI8ln6haQkZyqTSz8Tq/UblDMfFGZN4S9oCMQR5WpceWhbYrkRIHiTwyobCL25uBRW0qUd0I5FXZIw1sGo1U9BdUa0GjgdnSWb2tFP7qPsyvHsT1xbBPD1x/BROqEpynzs1P3n4EhKmEjU60DcRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716643953; c=relaxed/simple;
-	bh=JP4di3yKoXAyHQTDL4MSNwnDqzZtn247np5kkTP3B5E=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=C77+G/ri+RrTzQxh3lIcnI/JsToaFhfoPBlLFo3Jm2RSbOOeI1xXOHPsG9t61XPCCY90sFg5wI4VnY4G3Kie+Ut2BzS63Pp1XQVE03UCmsuKINTODR3bYWH+syV+/CNPwaVvUg5W6I5Bjen1UZwb47KBwlxQfbSU7XHcfJeqH/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YH8FdB/l; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716644528; c=relaxed/simple;
+	bh=amI1SPYRnBjM8Ew/R6TtCgxDdWD5U2OLyaFMWH/xHco=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aa1MMQQLBgU5qJ0eBmBtTOBfknBd+HJDXf7QKzay6smJ/8R1wudXxA7AgcXP+fNY99wXZ5W+y2C1G7D/ZiaRJNLQIcFthWDhYMjToySBWgzMVdnZP8WfkY9doUvzZAZ5m2Z8oP/X4yXjN0HimND+Wc6prxWQj4GoqMAHBTVLRSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=VtwIkuKh; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=VtwIkuKh; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YH8FdB/l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716643928; x=1717248728; i=markus.elfring@web.de;
-	bh=JP4di3yKoXAyHQTDL4MSNwnDqzZtn247np5kkTP3B5E=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=YH8FdB/lUS36NPdYcOmahpPmRDpyYvatL4dKxuwsGKOlL+rnVWvxwupeaj57IaG4
-	 RIJN8bCtxZhhMswv90aLMHq2KRVa7o47Z/+ObN0uYRFFHCRMNyQti0ll8EUPytuc8
-	 qvlAjYNmDMH2fAOlmu7TIPBDDJ07ziq/itLCVCryWCqHfq/+kUHD/y4yBT5YYe/ld
-	 hsyc7iwvry4f5XD1TJCgw3gAYP0gOrFpcqa/1BeljMURfMob0w8g77NoLz8bA3qiq
-	 EfqgmOYE2NW0ti14zHrZ4+z7G4pLb9tX6CkglA6Qgs8E4nmE6ouhDro5ZQqueofo3
-	 JLxSqNsFzizHDEqAvg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M28SL-1sCmNV1jp3-002daF; Sat, 25
- May 2024 15:32:08 +0200
-Message-ID: <8e3cc13d-c2d0-46f9-82f1-67849c6add91@web.de>
-Date: Sat, 25 May 2024 15:32:07 +0200
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="VtwIkuKh";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="VtwIkuKh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1716644525;
+	bh=amI1SPYRnBjM8Ew/R6TtCgxDdWD5U2OLyaFMWH/xHco=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=VtwIkuKhcA50/tF3DmtgWWcszs8/cLEA02WPuZLwtGVta7DLVEO8WmZkDFCORIqsk
+	 M6F2y02YGWSrUrh4IyyC1rabzA8T7vAvMA5F4a6PBtoo6n2rbDP235Ww7vJVEqlYtz
+	 WCiaJ6fKL3qM5CCSGUtQApDaVgwDKWg4VEmYbi5o=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 7818B1287ABA;
+	Sat, 25 May 2024 09:42:05 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id 1QvmScxBCgUX; Sat, 25 May 2024 09:42:05 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1716644525;
+	bh=amI1SPYRnBjM8Ew/R6TtCgxDdWD5U2OLyaFMWH/xHco=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=VtwIkuKhcA50/tF3DmtgWWcszs8/cLEA02WPuZLwtGVta7DLVEO8WmZkDFCORIqsk
+	 M6F2y02YGWSrUrh4IyyC1rabzA8T7vAvMA5F4a6PBtoo6n2rbDP235Ww7vJVEqlYtz
+	 WCiaJ6fKL3qM5CCSGUtQApDaVgwDKWg4VEmYbi5o=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 5AFC01287AB8;
+	Sat, 25 May 2024 09:42:04 -0400 (EDT)
+Message-ID: <b1ac7ec116c871294d856185da44ae1e9fc02fe7.camel@HansenPartnership.com>
+Subject: Re: [PATCH] KEYS: trusted_tpm2: Only check options->keyhandle for
+ ASN.1
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org
+Cc: keyrings@vger.kernel.org, stable@vger.kernel.org, Mimi Zohar
+	 <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Paul Moore
+	 <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
+	 <serge@hallyn.com>, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Sat, 25 May 2024 09:42:02 -0400
+In-Reply-To: <20240525123634.3396-1-jarkko@kernel.org>
+References: <20240525123634.3396-1-jarkko@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Yazen Ghannam <yazen.ghannam@amd.com>, linux-edac@vger.kernel.org,
- linux-hwmon@vger.kernel.org, kernel-janitors@vger.kernel.org,
- x86@kernel.org, =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?= <linux@roeck-us.net>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20240523-fix-smn-bad-read-v3-3-aa44c622de39@amd.com>
-Subject: Re: [PATCH v3 3/8] hwmon: (k10temp) Check return value of
- amd_smn_read()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240523-fix-smn-bad-read-v3-3-aa44c622de39@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UMwIlxbVxCxbl6+EBLJ18Kg/xiTYPFfku5uWGn/ab5Gh1o0V2uk
- a6QK2TsSiLBT9oGRgqxWMsTpKCR5MfSOYsYfHYKG2brGF4H+sqVvoUh1zFYoiAhS3z2nZaX
- O0veVbiNYcuWCaQT5Q+7RS33eXHU0hDr4P+mRGmg6bJ/8JefgHGUTWpHBX5P0kZw0CtlIHo
- /jVZ4rSp4bjzbJzSBHLtw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:yDbl8Q/FwLo=;Pl32SA/RLxsVM2tVdUy05gy+8cL
- rLcmEhxZMpBifK3RveJ+MiJzAeerd83AYXJnK/y3W+kH1Iu00/36xZqkwFl+oybiDUBj40rrD
- /VNPazUX3dLgkHqU+hch8zCVGwH4EAnEIWNKC8iJBvlriYmJsN8XOvSG27/YWilxcmaBPSIUw
- 1OlVdI6DIRAgt56d5kMp7GFQPSabCA+WjZLS72uRqrE5QhSCR3jiFlBM0Jj+1zBcEpdvdNGIF
- y0VAEd/oVHsJYoPqLiQfjRbChs1ozd7hlR3BzDYQAygHs9Zi/dQajClIF23el1qWm0psnBT4A
- hvVxiENowIZnLSV/rDFPAYcNe1lHgFIWAnXI9tFjgoEjtOQ0ky2iqSAOoK3czuLpyY6VWkSjH
- hKIExLNaaG2/DntEBjz8imfSGkt6AqDXtLhBVFLd/vhDibUEFr0GjUSQcuQYXmNKk18nugJ7I
- Pk21v8Ir68cAFjbwV649aZfbgYIA6dYMWrecsSspBrm6dhQeuokLN3yttFDcXud0upQRaxyij
- +0Z1idxC4ilmUFduxKqlqM0u88ecj0vMXNLX/QbA5RhmydBGOvSoP+WsUklu1cVma7TdeBxg8
- wvMU1moMn1/Xbj13kEKn7MaHpXOhyw1f6jnExU5T37AHdwlhrVT8x8hLIs8EjjJBPurTVLzFP
- rp+cJljGoIO8qk+gP1MCtj0pSSctuekSBWQ7cgM4W1pUOFwjKqn+IuZA3hkPD6OI20etXZfMu
- JMJ8GQrmqh8foxzSBSRli769Z/1m8q4udZ9CJ712ykVAoO29mYI6qH2T9uXxVUtSze4XAv3O0
- RBfKD4ZK6J9qfF6nG7uZNn3uzeYhQOpo4Fxsm43EXrHBw=
+Content-Transfer-Encoding: 7bit
 
-> Check the return value of amd_smn_read() before saving a value.
-> This ensures invalid values aren't saved or used.
-=E2=80=A6
+On Sat, 2024-05-25 at 15:36 +0300, Jarkko Sakkinen wrote:
+> tpm2_load_cmd incorrectly checks options->keyhandle also for the
+> legacy format, as also implied by the inline comment. Check
+> options->keyhandle when ASN.1 is loaded.
 
-Does such information indicate a need for the tag =E2=80=9CFixes=E2=80=9D =
-once more?
+No that's not right.  keyhandle must be specified for the old format,
+because it's just the two private/public blobs and doesn't know it's
+parent. Since tpm2_key_decode() always places the ASN.1 parent into
+options->keyhandle, the proposed new code is fully redundant (options-
+>keyhandle must be non zero if the ASN.1 parsed correctly) but it loses
+the check that the loader must specify it for the old format.
 
-Regards,
-Markus
+What the comment above the code you removed means is that the keyhandle
+must be non zero here, either extracted from the ASN.1 for the new
+format or specified on the command line for the old.
+
+James
+
