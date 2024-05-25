@@ -1,44 +1,28 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C292E4AEDD;
-	Sat, 25 May 2024 13:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id C75FD23769
+	for <linux-kernel@vger.kernel.org>; Sat, 25 May 2024 13:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716643730; cv=none; b=WRMHhShi/XF/JYpS7JsBFLHihR7pK5cofbWHM/yoKyqgyi52J7M63Csp4F56QYJncEqExMRSpwD9UKMIjvildvroZvwx2AP1B8OTZMU51MP2MnDWgJL/kk4ii3fn9hLzCY0BAhi6wHGDUV7SBKDyn7NZYSk7EVIzVaEiLqdN4Ac=
+	t=1716643955; cv=none; b=sgtvp/aEo3PEh9F2Qber0Aql71eIdtnRy/Lq1KaDdlSO+rjUHeS070BGlmQJ0FO60ja0R+ynwwP3RWIMKB8mH6Qysrlq1QS/eyjfuvYo8j5YcYZ+OBiGUg9Bbk55U38ROO0yA47HeYXpoHOAbpCUL9oOdOxXGM5fbCScI/suNq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716643730; c=relaxed/simple;
-	bh=XlLrP6tdf0od3KFy5Clz03uLomMef757C+aHlRwveds=;
+	s=arc-20240116; t=1716643955; c=relaxed/simple;
+	bh=Axz9OkkEOjo4Fx6zfmpIBHHrgAhOr5F5OL+y8qm3kQ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s93V8Hm5CHjGl/1vual4CwxpnF5V9yrI6BdaazS8VZsWbwxnwK1O9absOVJvebEKxk8hhFw4EruezWW29+EpILxOcvAhvq6Nvjhyqayq4gRdM0bzIcxuFg440tbY9htI6tSd2G0rOyKJKDJJSF282kvy7oYtTk0aT1+wbv7Voco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=f1D1ROxh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="f1D1ROxh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0156BC2BD11;
-	Sat, 25 May 2024 13:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716643730;
-	bh=XlLrP6tdf0od3KFy5Clz03uLomMef757C+aHlRwveds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f1D1ROxhHfupUbo66/cA3oXIKgGwUfEBpPIi4svG9FQmc+/LskeIf42Shb95RUk7B
-	 Rgqo/FWQPiRjwWsTbJKSrLqsmlZ/DIDljNh2H/1jGW6jZ6ghB7x4EHaWl4TeauXApS
-	 VpezuNi3J/DN4ZCnf96vNvgP0LHcBLoZiaaTYemY=
-Date: Sat, 25 May 2024 15:28:47 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Davide Benini <davide.benini@suse.com>, cve@kernel.org,
-	linux-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>,
-	linux-cve-announce@vger.kernel.org
-Subject: Re: CVE-2024-27429: netrom: Fix a data-race around
- sysctl_netrom_obsolescence_count_initialiser
-Message-ID: <2024052540-shallot-hypnosis-1653@gregkh>
-References: <2024051722-CVE-2024-27429-878c@gregkh>
- <ZkxdqOUek_MHqIMn@tiehlicka>
- <2024052105-pulsate-reborn-119a@gregkh>
- <ZkzGL_vXciG7ipm5@tiehlicka>
- <2024052219-storewide-arrogance-8d54@gregkh>
- <5f3cccea-eff5-40f7-a868-743ca837e84d@suse.com>
- <ZlB5l40ahqW8PGlC@tiehlicka>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLkurS7IC/ccRUv3PtQ7Di5dVDHfZ7Qgeftup3xOWYo49xr8C8jqW0bPfnTVPcuhD6Wi1CQFsxCanTTnvruEFI4/X5ae5FsfM8EOSkDmCA2LCWLo5lawbgxsgZ7Rv7LxeID2KheVxGNL+e05WnyBWdirx03XyjX1xtrIHAlGpe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 606348 invoked by uid 1000); 25 May 2024 09:32:30 -0400
+Date: Sat, 25 May 2024 09:32:30 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Shichao Lai <shichaorai@gmail.com>
+Cc: gregkh@linuxfoundation.org, oneukum@suse.com, linux-usb@vger.kernel.org,
+  usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+  xingwei lee <xrivendell7@gmail.com>, yue sun <samsun1006219@gmail.com>
+Subject: Re: [PATCH v4] usb-storage: Check whether the media is initialized
+ successfully
+Message-ID: <503256e5-fea7-42ab-af15-015b0f78ab33@rowland.harvard.edu>
+References: <20240525063653.2331587-1-shichaorai@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,51 +31,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZlB5l40ahqW8PGlC@tiehlicka>
+In-Reply-To: <20240525063653.2331587-1-shichaorai@gmail.com>
 
-On Fri, May 24, 2024 at 01:27:19PM +0200, Michal Hocko wrote:
-> On Wed 22-05-24 12:21:54, Davide Benini wrote:
-> > On 22/05/24 07:11, Greg Kroah-Hartman wrote:
-> > > On Tue, May 21, 2024 at 06:05:03PM +0200, Michal Hocko wrote:
-> > > > On Tue 21-05-24 16:40:24, Greg KH wrote:
-> > > > > On Tue, May 21, 2024 at 10:39:04AM +0200, Michal Hocko wrote:
-> > > > > > This and couple of others are all having the same pattern. Adding
-> > > > > > READ_ONCE for an integer value with a claim that this might race with
-> > > > > > sysctl updates. While the claim about the race is correct I fail to see
-> > > > > > how this could have any security consequences. Even if a partial write
-> > > > > > was observed which sounds _more_ than theoretical these all are merely
-> > > > > > timeouts and delays.
-> > > > > > 
-> > > > > > Is there anything I am missing?
-> > > > > 
-> > > > > Nope, you are right, our fault, I'll go revoke this now.
-> > > > 
-> > > > please also revoke all others touching the same function.
-> > > 
-> > > I don't see any other CVEs that reference that function, but I do see
-> > > some that reference the same type of issue in the same file:
-> > > 	CVE-2024-27420
-> > > 	CVE-2024-27421
-> > > 	CVE-2024-27430
-> > > are those what you are referring to?  If not, which ones do you think
-> > > also should be revoked?
-> > 
-> > It seems all the CVEs in the range [CVE-2024-27420, CVE-2024-27430] are of the same kind.
-> > Shouldn't all be revoked?
+On Sat, May 25, 2024 at 02:36:53PM +0800, Shichao Lai wrote:
+> The member "uzonesize" of struct alauda_info will remain 0
+> if alauda_init_media() fails, potentially causing divide errors
+> in alauda_read_data() and alauda_write_lba().
+> - Add a member "initialized" to struct alauda_info as a symbol
+>   for media initialization.
+> - Change a condition in alauda_check_media() to ensure the
+>   first initialization.
+> - Add an error check for the return value of alauda_init_media().
 > 
-> Yes all these
-> bc76645ebdd0 ("netrom: Fix a data-race around sysctl_netrom_link_fails_count")
-> b5dffcb8f71b ("netrom: Fix a data-race around sysctl_netrom_routing_control")
-> f99b494b4043 ("netrom: Fix a data-race around sysctl_netrom_transport_no_activity_timeout")
-> a2e706841488 ("netrom: Fix a data-race around sysctl_netrom_transport_requested_window_size")
-> 43547d869943 ("netrom: Fix a data-race around sysctl_netrom_transport_busy_delay")
-> 806f462ba902 ("netrom: Fix a data-race around sysctl_netrom_transport_acknowledge_delay")
-> e799299aafed ("netrom: Fix a data-race around sysctl_netrom_transport_maximum_tries")
-> 60a7a152abd4 ("netrom: Fix a data-race around sysctl_netrom_transport_timeout")
-> 119cae5ea3f9 ("netrom: Fix data-races around sysctl_netrom_network_ttl_initialiser")
-> cfd9f4a740f7 ("netrom: Fix a data-race around sysctl_netrom_obsolescence_count_initialiser")
-> 958d6145a6d9 ("netrom: Fix a data-race around sysctl_netrom_default_path_quality")
+> Reported-by: xingwei lee <xrivendell7@gmail.com>
+> Reported-by: yue sun <samsun1006219@gmail.com>
+> Suggested-by: Oliver Neukum <oneukum@suse.com>
 
-All now revoked, thanks.
+Oliver did not suggest that the patch be written this way.
 
-greg k-h
+> Signed-off-by: Shichao Lai <shichaorai@gmail.com>
+> ---
+> Changes since v1:
+> - Check the initialization of alauda_check_media() 
+>   which is the root cause.
+> 
+>  drivers/usb/storage/alauda.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/storage/alauda.c b/drivers/usb/storage/alauda.c
+> index 115f05a6201a..ddf0da203481 100644
+> --- a/drivers/usb/storage/alauda.c
+> +++ b/drivers/usb/storage/alauda.c
+> @@ -105,6 +105,8 @@ struct alauda_info {
+>  	unsigned char sense_key;
+>  	unsigned long sense_asc;	/* additional sense code */
+>  	unsigned long sense_ascq;	/* additional sense code qualifier */
+> +
+> +	bool initialized;           /* true if the media is initialized */
+
+Now with the patch written out, I think a better name for this variable 
+would be media_initialized.  That is a better description of what it 
+means (it doesn't mean that the driver or the device is initialized).  
+And then you could remove the comment, because it would be obvious.
+
+>  };
+>  
+>  #define short_pack(lsb,msb) ( ((u16)(lsb)) | ( ((u16)(msb))<<8 ) )
+> @@ -476,11 +478,12 @@ static int alauda_check_media(struct us_data *us)
+>  	}
+>  
+>  	/* Check for media change */
+> -	if (status[0] & 0x08) {
+> +	if (status[0] & 0x08 || !info->initialized) {
+>  		usb_stor_dbg(us, "Media change detected\n");
+>  		alauda_free_maps(&MEDIA_INFO(us));
+> -		alauda_init_media(us);
+> -
+> +		rc = alauda_init_media(us);
+> +		if (rc == USB_STOR_TRANSPORT_GOOD)
+> +			info->initialized = true;
+>  		info->sense_key = UNIT_ATTENTION;
+>  		info->sense_asc = 0x28;
+>  		info->sense_ascq = 0x00;
+> @@ -1120,6 +1123,7 @@ static int init_alauda(struct us_data *us)
+>  	info->wr_ep = usb_sndbulkpipe(us->pusb_dev,
+>  		altsetting->endpoint[0].desc.bEndpointAddress
+>  		& USB_ENDPOINT_NUMBER_MASK);
+> +	info->initialized = false;
+
+You don't need to do this.  The info pointer is an alias for us->extra, 
+which is allocated by kzalloc(), which clears all the memory it 
+allocates to zero.
+
+Alan Stern
