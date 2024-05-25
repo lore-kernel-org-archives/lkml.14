@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9EF6166E;
-	Sat, 25 May 2024 14:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0096983CBB;
+	Sat, 25 May 2024 14:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716648690; cv=none; b=H8lNP082AYQTjs8SO2yS9o50S3Yrl/fHvnFJTCipglo7wO1fvqrfDUiPV5FFgKb75ysBk0KToCXlG7LuWzZ2eHeypZAMMYzzoXgv7go+9v0yuo45t8uwDmPMgzarfA5uzf+DvSXrmTWTvuXxvYhuLhUKG7h16aB1yp/W3jKPP+I=
+	t=1716648703; cv=none; b=QiqhUenfw/Ug9ZbM1XS6zm9qF1omlPBndH+Rjd7+WzA9EqvN5Rk6/HHgR1LZ6tCEscd08JNJ1EPihpufTR6rcdAomDLdBvC8zSJuKPIIZ7hG6BW5hZje1/ptleDxVml853gosvSzvBVuVpcqqDe2mDSNxVLk0/5us/Umk4s2E8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716648690; c=relaxed/simple;
-	bh=9d156cmneLncJECuV1aaz/KRmoNreqiK/MwRvfoYrbc=;
+	s=arc-20240116; t=1716648703; c=relaxed/simple;
+	bh=f4b24KKRauhipSBMVqxzUFWOhznOyICrRVC+FbaIewA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=krR+VuaKU1KAjfJdBaEMZ/Ez5zM4OHoz8VYXAXbA42A4x+stY+0+wCt8PPOWAf5b1nEQcPbLfidzD7a+yX0Wyh89wGZz9tQbyQASLLMG4tsG/T/mhEwJQfcMjWiV/kAENH8m3+AffQdr+mMYwdbai0sqT/v4jq6QMAzj1x6dBaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IjG0EDN/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZGV9MCe5+UMZDbyVIH0LCjKXVcewlFzT3vN/RhJeFXM9M9cxMhJ9/Iz6IfGWZy8HCjREUaF7FxSyWSNF2lGZRibJeYW6msPd18Hf2fZpUefR2Bqh0/HbJw91rcMoeUpsfQxwlV95PqIErkRA34Zd72Ki+tDBnYvh6z0+B5s9s1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fqMzHRY9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IjG0EDN/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE385C3277B;
-	Sat, 25 May 2024 14:51:29 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fqMzHRY9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC3BFC32786;
+	Sat, 25 May 2024 14:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716648690;
-	bh=9d156cmneLncJECuV1aaz/KRmoNreqiK/MwRvfoYrbc=;
+	s=korg; t=1716648702;
+	bh=f4b24KKRauhipSBMVqxzUFWOhznOyICrRVC+FbaIewA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IjG0EDN/nPvYTQSDiwKy88T5s4EjpNzKrwdrTQNiGkBDNCeZ2a4zhClzRZFP9L5GQ
-	 pBUnGYacYS44LcbHIF9YssxRlcWXIHXZmkWsbze6s/wxbVPxPm21QX6vZfl0GdW46b
-	 BfZFbB59VEkbBhGUnLNyIgBb268eIvKGFfzUDgL4=
+	b=fqMzHRY9k6w7zTlfTBT3zhn97xwGBypqeUcwB3VLlmXEF+ylTFYcwKwVedCNf/q+T
+	 myJIM7rUgGQ06VvSL/z2xm+jeSNvMzgz/d/InRwi3c13XYQp5cAsjASi21tjdDWBVE
+	 7QNKZUlpVYveMbz0niPS9/SdrnTpzO4BbLDATk5c=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,12 +31,12 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.8.11
-Date: Sat, 25 May 2024 16:51:21 +0200
-Message-ID: <2024052521-cozily-music-b500@gregkh>
+Subject: Re: Linux 6.9.2
+Date: Sat, 25 May 2024 16:51:28 +0200
+Message-ID: <2024052527-reflux-slashed-b142@gregkh>
 X-Mailer: git-send-email 2.45.1
-In-Reply-To: <2024052520-riding-silencer-2453@gregkh>
-References: <2024052520-riding-silencer-2453@gregkh>
+In-Reply-To: <2024052527-panama-playgroup-899a@gregkh>
+References: <2024052527-panama-playgroup-899a@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,10 +82,28 @@ index cf1eeefdfc32..a92e10ec402e 100644
  In order for a process to push a cookie to, or pull a cookie from a process, it
  is required to have the ptrace access mode: `PTRACE_MODE_READ_REALCREDS` to the
 diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index 9d23144bf985..87fdc258d102 100644
+index 6fce035fdbf5..7daf1a95f9cb 100644
 --- a/Documentation/admin-guide/mm/damon/usage.rst
 +++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -450,7 +450,7 @@ pages of all memory cgroups except ``/having_care_already``.::
+@@ -153,7 +153,7 @@ Users can write below commands for the kdamond to the ``state`` file.
+ - ``clear_schemes_tried_regions``: Clear the DAMON-based operating scheme
+   action tried regions directory for each DAMON-based operation scheme of the
+   kdamond.
+-- ``update_schemes_effective_bytes``: Update the contents of
++- ``update_schemes_effective_quotas``: Update the contents of
+   ``effective_bytes`` files for each DAMON-based operation scheme of the
+   kdamond.  For more details, refer to :ref:`quotas directory <sysfs_quotas>`.
+ 
+@@ -342,7 +342,7 @@ Based on the user-specified :ref:`goal <sysfs_schemes_quota_goals>`, the
+ effective size quota is further adjusted.  Reading ``effective_bytes`` returns
+ the current effective size quota.  The file is not updated in real time, so
+ users should ask DAMON sysfs interface to update the content of the file for
+-the stats by writing a special keyword, ``update_schemes_effective_bytes`` to
++the stats by writing a special keyword, ``update_schemes_effective_quotas`` to
+ the relevant ``kdamonds/<N>/state`` file.
+ 
+ Under ``weights`` directory, three files (``sz_permil``,
+@@ -434,7 +434,7 @@ pages of all memory cgroups except ``/having_care_already``.::
      # # further filter out all cgroups except one at '/having_care_already'
      echo memcg > 1/type
      echo /having_care_already > 1/memcg_path
@@ -107,24 +125,48 @@ index abe768088377..638762442336 100755
              'encoding', self.state.document.settings.input_encoding)
          e_handler=self.state.document.settings.input_encoding_error_handler
 diff --git a/Makefile b/Makefile
-index 01acaf667e78..ce6b03cce386 100644
+index a7045435151e..8302496ee7a5 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 6
- PATCHLEVEL = 8
--SUBLEVEL = 10
-+SUBLEVEL = 11
+ PATCHLEVEL = 9
+-SUBLEVEL = 1
++SUBLEVEL = 2
  EXTRAVERSION =
  NAME = Hurr durr I'ma ninja sloth
  
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index 44958ebaf626..b77bbb67e77b 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -70,7 +70,7 @@
+ 	unsigned long tcp_ptr__;				\
+ 	tcp_ptr__ = __raw_cpu_read(, this_cpu_off);		\
+ 								\
+-	tcp_ptr__ += (unsigned long)(ptr);			\
++	tcp_ptr__ += (__force unsigned long)(ptr);		\
+ 	(typeof(*(ptr)) __kernel __force *)tcp_ptr__;		\
+ })
+ #else /* CONFIG_USE_X86_SEG_SUPPORT */
+@@ -102,8 +102,8 @@
+ #endif /* CONFIG_SMP */
+ 
+ #define __my_cpu_type(var)	typeof(var) __percpu_seg_override
+-#define __my_cpu_ptr(ptr)	(__my_cpu_type(*ptr) *)(uintptr_t)(ptr)
+-#define __my_cpu_var(var)	(*__my_cpu_ptr(&var))
++#define __my_cpu_ptr(ptr)	(__my_cpu_type(*ptr)*)(__force uintptr_t)(ptr)
++#define __my_cpu_var(var)	(*__my_cpu_ptr(&(var)))
+ #define __percpu_arg(x)		__percpu_prefix "%" #x
+ #define __force_percpu_arg(x)	__force_percpu_prefix "%" #x
+ 
 diff --git a/block/genhd.c b/block/genhd.c
-index d74fb5b4ae68..d0471f469f7d 100644
+index bb29a68e1d67..52a4521df067 100644
 --- a/block/genhd.c
 +++ b/block/genhd.c
 @@ -345,9 +345,7 @@ int disk_scan_partitions(struct gendisk *disk, blk_mode_t mode)
- 	struct bdev_handle *handle;
+ 	struct file *file;
  	int ret = 0;
  
 -	if (disk->flags & (GENHD_FL_NO_PART | GENHD_FL_HIDDEN))
@@ -174,10 +216,10 @@ index d74fb5b4ae68..d0471f469f7d 100644
  	&dev_attr_fail.attr,
  #endif
 diff --git a/block/partitions/core.c b/block/partitions/core.c
-index 5f5ed5c75f04..eac887755f4f 100644
+index b11e88c82c8c..37b5f92d07fe 100644
 --- a/block/partitions/core.c
 +++ b/block/partitions/core.c
-@@ -584,10 +584,7 @@ static int blk_add_partitions(struct gendisk *disk)
+@@ -573,10 +573,7 @@ static int blk_add_partitions(struct gendisk *disk)
  	struct parsed_partitions *state;
  	int ret = -EAGAIN, p;
  
@@ -190,7 +232,7 @@ index 5f5ed5c75f04..eac887755f4f 100644
  
  	state = check_partition(disk);
 diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index d6f14c8e20be..e029687e5732 100644
+index dd6923d37931..b21a7b246a0d 100644
 --- a/drivers/android/binder.c
 +++ b/drivers/android/binder.c
 @@ -5367,7 +5367,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
@@ -215,11 +257,77 @@ index 7270d4d22207..5b7c80b99ae8 100644
  	int requested_threads;
  	int requested_threads_started;
  	int tmp_ref;
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index e3946f7b736e..01b99471d1bb 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3118,6 +3118,7 @@ static int btusb_mtk_setup(struct hci_dev *hdev)
+ 			bt_dev_err(hdev, "Failed to get fw flavor (%d)", err);
+ 			return err;
+ 		}
++		fw_flavor = (fw_flavor & 0x00000080) >> 7;
+ 	}
+ 
+ 	mediatek = hci_get_priv(hdev);
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index 2015c9fcc3c9..28166df81cf8 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -50,7 +50,8 @@
+ 
+ #define AMD_PSTATE_TRANSITION_LATENCY	20000
+ #define AMD_PSTATE_TRANSITION_DELAY	1000
+-#define AMD_PSTATE_PREFCORE_THRESHOLD	166
++#define CPPC_HIGHEST_PERF_PERFORMANCE	196
++#define CPPC_HIGHEST_PERF_DEFAULT	166
+ 
+ /*
+  * TODO: We need more time to fine tune processors with shared memory solution
+@@ -290,6 +291,21 @@ static inline int amd_pstate_enable(bool enable)
+ 	return static_call(amd_pstate_enable)(enable);
+ }
+ 
++static u32 amd_pstate_highest_perf_set(struct amd_cpudata *cpudata)
++{
++	struct cpuinfo_x86 *c = &cpu_data(0);
++
++	/*
++	 * For AMD CPUs with Family ID 19H and Model ID range 0x70 to 0x7f,
++	 * the highest performance level is set to 196.
++	 * https://bugzilla.kernel.org/show_bug.cgi?id=218759
++	 */
++	if (c->x86 == 0x19 && (c->x86_model >= 0x70 && c->x86_model <= 0x7f))
++		return CPPC_HIGHEST_PERF_PERFORMANCE;
++
++	return CPPC_HIGHEST_PERF_DEFAULT;
++}
++
+ static int pstate_init_perf(struct amd_cpudata *cpudata)
+ {
+ 	u64 cap1;
+@@ -306,7 +322,7 @@ static int pstate_init_perf(struct amd_cpudata *cpudata)
+ 	 * the default max perf.
+ 	 */
+ 	if (cpudata->hw_prefcore)
+-		highest_perf = AMD_PSTATE_PREFCORE_THRESHOLD;
++		highest_perf = amd_pstate_highest_perf_set(cpudata);
+ 	else
+ 		highest_perf = AMD_CPPC_HIGHEST_PERF(cap1);
+ 
+@@ -330,7 +346,7 @@ static int cppc_init_perf(struct amd_cpudata *cpudata)
+ 		return ret;
+ 
+ 	if (cpudata->hw_prefcore)
+-		highest_perf = AMD_PSTATE_PREFCORE_THRESHOLD;
++		highest_perf = amd_pstate_highest_perf_set(cpudata);
+ 	else
+ 		highest_perf = cppc_perf.highest_perf;
+ 
 diff --git a/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c b/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
-index 0df6c55eb326..6b10124e21b7 100644
+index ac41f9c0a283..8e7b35f764e3 100644
 --- a/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
 +++ b/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
-@@ -1050,7 +1050,12 @@ static bool setup_dsc_config(
+@@ -1055,7 +1055,12 @@ static bool setup_dsc_config(
  	if (!is_dsc_possible)
  		goto done;
  
@@ -233,108 +341,57 @@ index 0df6c55eb326..6b10124e21b7 100644
  
  	if (target_bandwidth_kbps > 0) {
  		is_dsc_possible = decide_dsc_target_bpp_x16(
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl.c b/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-index 7b550d7d96b6..1ff9818b4c84 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-@@ -550,17 +550,15 @@ bool ice_vc_isvalid_vsi_id(struct ice_vf *vf, u16 vsi_id)
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls-core.c b/drivers/media/v4l2-core/v4l2-ctrls-core.c
+index c4d995f32191..09ceb2a86876 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls-core.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls-core.c
+@@ -2504,8 +2504,7 @@ int v4l2_ctrl_handler_setup(struct v4l2_ctrl_handler *hdl)
+ EXPORT_SYMBOL(v4l2_ctrl_handler_setup);
  
- /**
-  * ice_vc_isvalid_q_id
-- * @vf: pointer to the VF info
-- * @vsi_id: VSI ID
-+ * @vsi: VSI to check queue ID against
-  * @qid: VSI relative queue ID
-  *
-  * check for the valid queue ID
-  */
--static bool ice_vc_isvalid_q_id(struct ice_vf *vf, u16 vsi_id, u8 qid)
-+static bool ice_vc_isvalid_q_id(struct ice_vsi *vsi, u8 qid)
+ /* Log the control name and value */
+-static void log_ctrl(const struct v4l2_ctrl_handler *hdl,
+-		     struct v4l2_ctrl *ctrl,
++static void log_ctrl(const struct v4l2_ctrl *ctrl,
+ 		     const char *prefix, const char *colon)
  {
--	struct ice_vsi *vsi = ice_find_vsi(vf->pf, vsi_id);
- 	/* allocated Tx and Rx queues should be always equal for VF VSI */
--	return (vsi && (qid < vsi->alloc_txq));
-+	return qid < vsi->alloc_txq;
+ 	if (ctrl->flags & (V4L2_CTRL_FLAG_DISABLED | V4L2_CTRL_FLAG_WRITE_ONLY))
+@@ -2515,11 +2514,7 @@ static void log_ctrl(const struct v4l2_ctrl_handler *hdl,
+ 
+ 	pr_info("%s%s%s: ", prefix, colon, ctrl->name);
+ 
+-	if (ctrl->handler != hdl)
+-		v4l2_ctrl_lock(ctrl);
+ 	ctrl->type_ops->log(ctrl);
+-	if (ctrl->handler != hdl)
+-		v4l2_ctrl_unlock(ctrl);
+ 
+ 	if (ctrl->flags & (V4L2_CTRL_FLAG_INACTIVE |
+ 			   V4L2_CTRL_FLAG_GRABBED |
+@@ -2538,7 +2533,7 @@ static void log_ctrl(const struct v4l2_ctrl_handler *hdl,
+ void v4l2_ctrl_handler_log_status(struct v4l2_ctrl_handler *hdl,
+ 				  const char *prefix)
+ {
+-	struct v4l2_ctrl_ref *ref;
++	struct v4l2_ctrl *ctrl;
+ 	const char *colon = "";
+ 	int len;
+ 
+@@ -2550,12 +2545,9 @@ void v4l2_ctrl_handler_log_status(struct v4l2_ctrl_handler *hdl,
+ 	if (len && prefix[len - 1] != ' ')
+ 		colon = ": ";
+ 	mutex_lock(hdl->lock);
+-	list_for_each_entry(ref, &hdl->ctrl_refs, node) {
+-		if (ref->from_other_dev ||
+-		    (ref->ctrl->flags & V4L2_CTRL_FLAG_DISABLED))
+-			continue;
+-		log_ctrl(hdl, ref->ctrl, prefix, colon);
+-	}
++	list_for_each_entry(ctrl, &hdl->ctrls, node)
++		if (!(ctrl->flags & V4L2_CTRL_FLAG_DISABLED))
++			log_ctrl(ctrl, prefix, colon);
+ 	mutex_unlock(hdl->lock);
  }
- 
- /**
-@@ -1318,7 +1316,7 @@ static int ice_vc_ena_qs_msg(struct ice_vf *vf, u8 *msg)
- 	 */
- 	q_map = vqs->rx_queues;
- 	for_each_set_bit(vf_q_id, &q_map, ICE_MAX_RSS_QS_PER_VF) {
--		if (!ice_vc_isvalid_q_id(vf, vqs->vsi_id, vf_q_id)) {
-+		if (!ice_vc_isvalid_q_id(vsi, vf_q_id)) {
- 			v_ret = VIRTCHNL_STATUS_ERR_PARAM;
- 			goto error_param;
- 		}
-@@ -1340,7 +1338,7 @@ static int ice_vc_ena_qs_msg(struct ice_vf *vf, u8 *msg)
- 
- 	q_map = vqs->tx_queues;
- 	for_each_set_bit(vf_q_id, &q_map, ICE_MAX_RSS_QS_PER_VF) {
--		if (!ice_vc_isvalid_q_id(vf, vqs->vsi_id, vf_q_id)) {
-+		if (!ice_vc_isvalid_q_id(vsi, vf_q_id)) {
- 			v_ret = VIRTCHNL_STATUS_ERR_PARAM;
- 			goto error_param;
- 		}
-@@ -1445,7 +1443,7 @@ static int ice_vc_dis_qs_msg(struct ice_vf *vf, u8 *msg)
- 		q_map = vqs->tx_queues;
- 
- 		for_each_set_bit(vf_q_id, &q_map, ICE_MAX_RSS_QS_PER_VF) {
--			if (!ice_vc_isvalid_q_id(vf, vqs->vsi_id, vf_q_id)) {
-+			if (!ice_vc_isvalid_q_id(vsi, vf_q_id)) {
- 				v_ret = VIRTCHNL_STATUS_ERR_PARAM;
- 				goto error_param;
- 			}
-@@ -1471,7 +1469,7 @@ static int ice_vc_dis_qs_msg(struct ice_vf *vf, u8 *msg)
- 		bitmap_zero(vf->rxq_ena, ICE_MAX_RSS_QS_PER_VF);
- 	} else if (q_map) {
- 		for_each_set_bit(vf_q_id, &q_map, ICE_MAX_RSS_QS_PER_VF) {
--			if (!ice_vc_isvalid_q_id(vf, vqs->vsi_id, vf_q_id)) {
-+			if (!ice_vc_isvalid_q_id(vsi, vf_q_id)) {
- 				v_ret = VIRTCHNL_STATUS_ERR_PARAM;
- 				goto error_param;
- 			}
-@@ -1527,7 +1525,7 @@ ice_cfg_interrupt(struct ice_vf *vf, struct ice_vsi *vsi, u16 vector_id,
- 	for_each_set_bit(vsi_q_id_idx, &qmap, ICE_MAX_RSS_QS_PER_VF) {
- 		vsi_q_id = vsi_q_id_idx;
- 
--		if (!ice_vc_isvalid_q_id(vf, vsi->vsi_num, vsi_q_id))
-+		if (!ice_vc_isvalid_q_id(vsi, vsi_q_id))
- 			return VIRTCHNL_STATUS_ERR_PARAM;
- 
- 		q_vector->num_ring_rx++;
-@@ -1541,7 +1539,7 @@ ice_cfg_interrupt(struct ice_vf *vf, struct ice_vsi *vsi, u16 vector_id,
- 	for_each_set_bit(vsi_q_id_idx, &qmap, ICE_MAX_RSS_QS_PER_VF) {
- 		vsi_q_id = vsi_q_id_idx;
- 
--		if (!ice_vc_isvalid_q_id(vf, vsi->vsi_num, vsi_q_id))
-+		if (!ice_vc_isvalid_q_id(vsi, vsi_q_id))
- 			return VIRTCHNL_STATUS_ERR_PARAM;
- 
- 		q_vector->num_ring_tx++;
-@@ -1698,7 +1696,7 @@ static int ice_vc_cfg_qs_msg(struct ice_vf *vf, u8 *msg)
- 		    qpi->txq.headwb_enabled ||
- 		    !ice_vc_isvalid_ring_len(qpi->txq.ring_len) ||
- 		    !ice_vc_isvalid_ring_len(qpi->rxq.ring_len) ||
--		    !ice_vc_isvalid_q_id(vf, qci->vsi_id, qpi->txq.queue_id)) {
-+		    !ice_vc_isvalid_q_id(vsi, qpi->txq.queue_id)) {
- 			goto error_param;
- 		}
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c b/drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c
-index f001553e1a1a..8e4ff3af86c6 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c
-@@ -94,9 +94,6 @@ ice_vc_fdir_param_check(struct ice_vf *vf, u16 vsi_id)
- 	if (!(vf->driver_caps & VIRTCHNL_VF_OFFLOAD_FDIR_PF))
- 		return -EINVAL;
- 
--	if (vsi_id != vf->lan_vsi_num)
--		return -EINVAL;
--
- 	if (!ice_vc_isvalid_vsi_id(vf, vsi_id))
- 		return -EINVAL;
- 
+ EXPORT_SYMBOL(v4l2_ctrl_handler_log_status);
 diff --git a/drivers/net/ethernet/micrel/ks8851_common.c b/drivers/net/ethernet/micrel/ks8851_common.c
 index 502518cdb461..6453c92f0fa7 100644
 --- a/drivers/net/ethernet/micrel/ks8851_common.c
@@ -395,7 +452,7 @@ index 502518cdb461..6453c92f0fa7 100644
  		/* the datasheet says to disable the rx interrupt during
  		 * packet read-out, however we're masking the interrupt
 diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index 21b6c4d94a63..6d31061818e9 100644
+index df9d767cb524..56ede5fa0261 100644
 --- a/drivers/net/usb/ax88179_178a.c
 +++ b/drivers/net/usb/ax88179_178a.c
 @@ -174,6 +174,7 @@ struct ax88179_data {
@@ -540,6 +597,39 @@ index 21b6c4d94a63..6d31061818e9 100644
  	.stop   = ax88179_stop,
  	.flags  = FLAG_ETHER | FLAG_FRAMING_AX,
  	.rx_fixup = ax88179_rx_fixup,
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index 4696d73c8971..1b7254569a37 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -1484,7 +1484,6 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
+ 	size_t trigger_tlv_sz[FW_DBG_TRIGGER_MAX];
+ 	u32 api_ver;
+ 	int i;
+-	bool load_module = false;
+ 	bool usniffer_images = false;
+ 	bool failure = true;
+ 
+@@ -1732,19 +1731,12 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
+ 			goto out_unbind;
+ 		}
+ 	} else {
+-		load_module = true;
++		request_module_nowait("%s", op->name);
+ 	}
+ 	mutex_unlock(&iwlwifi_opmode_table_mtx);
+ 
+ 	complete(&drv->request_firmware_complete);
+ 
+-	/*
+-	 * Load the module last so we don't block anything
+-	 * else from proceeding if the module fails to load
+-	 * or hangs loading.
+-	 */
+-	if (load_module)
+-		request_module("%s", op->name);
+ 	failure = false;
+ 	goto free;
+ 
 diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
 index a35409eda0cf..67518291a8ad 100644
 --- a/drivers/remoteproc/mtk_scp.c
@@ -634,10 +724,10 @@ index 7ce7bb164005..58ea1e1391ce 100644
  }
  #else /* ! CONFIG_KDB_KEYBOARD */
 diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 4062a486b9e6..579d90efc281 100644
+index f94f68f1e7d2..89fc690fdf34 100644
 --- a/drivers/usb/dwc3/gadget.c
 +++ b/drivers/usb/dwc3/gadget.c
-@@ -1718,7 +1718,6 @@ static int __dwc3_gadget_get_frame(struct dwc3 *dwc)
+@@ -1699,7 +1699,6 @@ static int __dwc3_gadget_get_frame(struct dwc3 *dwc)
   */
  static int __dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force, bool interrupt)
  {
@@ -645,7 +735,7 @@ index 4062a486b9e6..579d90efc281 100644
  	struct dwc3_gadget_ep_cmd_params params;
  	u32 cmd;
  	int ret;
-@@ -1743,8 +1742,7 @@ static int __dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force, bool int
+@@ -1724,8 +1723,7 @@ static int __dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force, bool int
  	dep->resource_index = 0;
  
  	if (!interrupt) {
@@ -813,296 +903,8 @@ index d9d3c91125ca..8be92fc1d12c 100644
  }
  
  void ucsi_displayport_remove_partner(struct typec_altmode *alt)
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 410f5af62354..c69174675caf 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -84,13 +84,6 @@ struct erofs_dev_context {
- 	bool flatdev;
- };
- 
--struct erofs_fs_context {
--	struct erofs_mount_opts opt;
--	struct erofs_dev_context *devs;
--	char *fsid;
--	char *domain_id;
--};
--
- /* all filesystem-wide lz4 configurations */
- struct erofs_sb_lz4_info {
- 	/* # of pages needed for EROFS lz4 rolling decompression */
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 24788c230b49..a2fa74558570 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -370,18 +370,18 @@ static int erofs_read_superblock(struct super_block *sb)
- 	return ret;
- }
- 
--static void erofs_default_options(struct erofs_fs_context *ctx)
-+static void erofs_default_options(struct erofs_sb_info *sbi)
- {
- #ifdef CONFIG_EROFS_FS_ZIP
--	ctx->opt.cache_strategy = EROFS_ZIP_CACHE_READAROUND;
--	ctx->opt.max_sync_decompress_pages = 3;
--	ctx->opt.sync_decompress = EROFS_SYNC_DECOMPRESS_AUTO;
-+	sbi->opt.cache_strategy = EROFS_ZIP_CACHE_READAROUND;
-+	sbi->opt.max_sync_decompress_pages = 3;
-+	sbi->opt.sync_decompress = EROFS_SYNC_DECOMPRESS_AUTO;
- #endif
- #ifdef CONFIG_EROFS_FS_XATTR
--	set_opt(&ctx->opt, XATTR_USER);
-+	set_opt(&sbi->opt, XATTR_USER);
- #endif
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
--	set_opt(&ctx->opt, POSIX_ACL);
-+	set_opt(&sbi->opt, POSIX_ACL);
- #endif
- }
- 
-@@ -426,17 +426,17 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
- static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
- {
- #ifdef CONFIG_FS_DAX
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
- 
- 	switch (mode) {
- 	case EROFS_MOUNT_DAX_ALWAYS:
- 		warnfc(fc, "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
--		set_opt(&ctx->opt, DAX_ALWAYS);
--		clear_opt(&ctx->opt, DAX_NEVER);
-+		set_opt(&sbi->opt, DAX_ALWAYS);
-+		clear_opt(&sbi->opt, DAX_NEVER);
- 		return true;
- 	case EROFS_MOUNT_DAX_NEVER:
--		set_opt(&ctx->opt, DAX_NEVER);
--		clear_opt(&ctx->opt, DAX_ALWAYS);
-+		set_opt(&sbi->opt, DAX_NEVER);
-+		clear_opt(&sbi->opt, DAX_ALWAYS);
- 		return true;
- 	default:
- 		DBG_BUGON(1);
-@@ -451,7 +451,7 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
- static int erofs_fc_parse_param(struct fs_context *fc,
- 				struct fs_parameter *param)
- {
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
- 	struct fs_parse_result result;
- 	struct erofs_device_info *dif;
- 	int opt, ret;
-@@ -464,9 +464,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 	case Opt_user_xattr:
- #ifdef CONFIG_EROFS_FS_XATTR
- 		if (result.boolean)
--			set_opt(&ctx->opt, XATTR_USER);
-+			set_opt(&sbi->opt, XATTR_USER);
- 		else
--			clear_opt(&ctx->opt, XATTR_USER);
-+			clear_opt(&sbi->opt, XATTR_USER);
- #else
- 		errorfc(fc, "{,no}user_xattr options not supported");
- #endif
-@@ -474,16 +474,16 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 	case Opt_acl:
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
- 		if (result.boolean)
--			set_opt(&ctx->opt, POSIX_ACL);
-+			set_opt(&sbi->opt, POSIX_ACL);
- 		else
--			clear_opt(&ctx->opt, POSIX_ACL);
-+			clear_opt(&sbi->opt, POSIX_ACL);
- #else
- 		errorfc(fc, "{,no}acl options not supported");
- #endif
- 		break;
- 	case Opt_cache_strategy:
- #ifdef CONFIG_EROFS_FS_ZIP
--		ctx->opt.cache_strategy = result.uint_32;
-+		sbi->opt.cache_strategy = result.uint_32;
- #else
- 		errorfc(fc, "compression not supported, cache_strategy ignored");
- #endif
-@@ -505,27 +505,27 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 			kfree(dif);
- 			return -ENOMEM;
- 		}
--		down_write(&ctx->devs->rwsem);
--		ret = idr_alloc(&ctx->devs->tree, dif, 0, 0, GFP_KERNEL);
--		up_write(&ctx->devs->rwsem);
-+		down_write(&sbi->devs->rwsem);
-+		ret = idr_alloc(&sbi->devs->tree, dif, 0, 0, GFP_KERNEL);
-+		up_write(&sbi->devs->rwsem);
- 		if (ret < 0) {
- 			kfree(dif->path);
- 			kfree(dif);
- 			return ret;
- 		}
--		++ctx->devs->extra_devices;
-+		++sbi->devs->extra_devices;
- 		break;
- #ifdef CONFIG_EROFS_FS_ONDEMAND
- 	case Opt_fsid:
--		kfree(ctx->fsid);
--		ctx->fsid = kstrdup(param->string, GFP_KERNEL);
--		if (!ctx->fsid)
-+		kfree(sbi->fsid);
-+		sbi->fsid = kstrdup(param->string, GFP_KERNEL);
-+		if (!sbi->fsid)
- 			return -ENOMEM;
- 		break;
- 	case Opt_domain_id:
--		kfree(ctx->domain_id);
--		ctx->domain_id = kstrdup(param->string, GFP_KERNEL);
--		if (!ctx->domain_id)
-+		kfree(sbi->domain_id);
-+		sbi->domain_id = kstrdup(param->string, GFP_KERNEL);
-+		if (!sbi->domain_id)
- 			return -ENOMEM;
- 		break;
- #else
-@@ -582,8 +582,7 @@ static const struct export_operations erofs_export_ops = {
- static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct inode *inode;
--	struct erofs_sb_info *sbi;
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 	int err;
- 
- 	sb->s_magic = EROFS_SUPER_MAGIC;
-@@ -591,19 +590,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sb->s_maxbytes = MAX_LFS_FILESIZE;
- 	sb->s_op = &erofs_sops;
- 
--	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
--	if (!sbi)
--		return -ENOMEM;
--
--	sb->s_fs_info = sbi;
--	sbi->opt = ctx->opt;
--	sbi->devs = ctx->devs;
--	ctx->devs = NULL;
--	sbi->fsid = ctx->fsid;
--	ctx->fsid = NULL;
--	sbi->domain_id = ctx->domain_id;
--	ctx->domain_id = NULL;
--
- 	sbi->blkszbits = PAGE_SHIFT;
- 	if (erofs_is_fscache_mode(sb)) {
- 		sb->s_blocksize = PAGE_SIZE;
-@@ -707,9 +693,9 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- static int erofs_fc_get_tree(struct fs_context *fc)
- {
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
- 
--	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
-+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
- 		return get_tree_nodev(fc, erofs_fc_fill_super);
- 
- 	return get_tree_bdev(fc, erofs_fc_fill_super);
-@@ -719,19 +705,19 @@ static int erofs_fc_reconfigure(struct fs_context *fc)
- {
- 	struct super_block *sb = fc->root->d_sb;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *new_sbi = fc->s_fs_info;
- 
- 	DBG_BUGON(!sb_rdonly(sb));
- 
--	if (ctx->fsid || ctx->domain_id)
-+	if (new_sbi->fsid || new_sbi->domain_id)
- 		erofs_info(sb, "ignoring reconfiguration for fsid|domain_id.");
- 
--	if (test_opt(&ctx->opt, POSIX_ACL))
-+	if (test_opt(&new_sbi->opt, POSIX_ACL))
- 		fc->sb_flags |= SB_POSIXACL;
- 	else
- 		fc->sb_flags &= ~SB_POSIXACL;
- 
--	sbi->opt = ctx->opt;
-+	sbi->opt = new_sbi->opt;
- 
- 	fc->sb_flags |= SB_RDONLY;
- 	return 0;
-@@ -762,12 +748,15 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
- 
- static void erofs_fc_free(struct fs_context *fc)
- {
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
- 
--	erofs_free_dev_context(ctx->devs);
--	kfree(ctx->fsid);
--	kfree(ctx->domain_id);
--	kfree(ctx);
-+	if (!sbi)
-+		return;
-+
-+	erofs_free_dev_context(sbi->devs);
-+	kfree(sbi->fsid);
-+	kfree(sbi->domain_id);
-+	kfree(sbi);
- }
- 
- static const struct fs_context_operations erofs_context_ops = {
-@@ -779,38 +768,35 @@ static const struct fs_context_operations erofs_context_ops = {
- 
- static int erofs_init_fs_context(struct fs_context *fc)
- {
--	struct erofs_fs_context *ctx;
-+	struct erofs_sb_info *sbi;
- 
--	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
--	if (!ctx)
-+	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-+	if (!sbi)
- 		return -ENOMEM;
--	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
--	if (!ctx->devs) {
--		kfree(ctx);
-+
-+	sbi->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
-+	if (!sbi->devs) {
-+		kfree(sbi);
- 		return -ENOMEM;
- 	}
--	fc->fs_private = ctx;
-+	fc->s_fs_info = sbi;
- 
--	idr_init(&ctx->devs->tree);
--	init_rwsem(&ctx->devs->rwsem);
--	erofs_default_options(ctx);
-+	idr_init(&sbi->devs->tree);
-+	init_rwsem(&sbi->devs->rwsem);
-+	erofs_default_options(sbi);
- 	fc->ops = &erofs_context_ops;
- 	return 0;
- }
- 
- static void erofs_kill_sb(struct super_block *sb)
- {
--	struct erofs_sb_info *sbi;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 
--	if (erofs_is_fscache_mode(sb))
-+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
- 		kill_anon_super(sb);
- 	else
- 		kill_block_super(sb);
- 
--	sbi = EROFS_SB(sb);
--	if (!sbi)
--		return;
--
- 	erofs_free_dev_context(sbi->devs);
- 	fs_put_dax(sbi->dax_dev, NULL);
- 	erofs_fscache_unregister_fs(sb);
 diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index b43ca3b9d2a2..6ee8e7d7383c 100644
+index 69e7da33ca49..00e62b81a736 100644
 --- a/include/linux/blkdev.h
 +++ b/include/linux/blkdev.h
 @@ -233,6 +233,19 @@ static inline unsigned int disk_openers(struct gendisk *disk)
@@ -1126,10 +928,10 @@ index b43ca3b9d2a2..6ee8e7d7383c 100644
   * The gendisk is refcounted by the part0 block_device, and the bd_device
   * therein is also used for device model presentation in sysfs.
 diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 2cfd8d862639..f9db2d1ca5d3 100644
+index 5c12761cbc0e..07198beb3d80 100644
 --- a/include/net/bluetooth/hci.h
 +++ b/include/net/bluetooth/hci.h
-@@ -1665,6 +1665,15 @@ struct hci_cp_le_set_event_mask {
+@@ -1666,6 +1666,15 @@ struct hci_cp_le_set_event_mask {
  	__u8     mask[8];
  } __packed;
  
@@ -1146,7 +948,7 @@ index 2cfd8d862639..f9db2d1ca5d3 100644
  struct hci_rp_le_read_buffer_size {
  	__u8     status;
 diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index fe9e1524d30f..8504e10f5170 100644
+index e8f581f3f3ce..b1c8489ff93e 100644
 --- a/include/net/bluetooth/hci_core.h
 +++ b/include/net/bluetooth/hci_core.h
 @@ -706,6 +706,7 @@ struct hci_conn {
@@ -1158,7 +960,7 @@ index fe9e1524d30f..8504e10f5170 100644
  	__u8		type;
  	__u8		role;
 diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-index 18f97b228869..9a369bc14fd5 100644
+index 05346250f719..6ab404dda794 100644
 --- a/net/bluetooth/hci_conn.c
 +++ b/net/bluetooth/hci_conn.c
 @@ -909,11 +909,37 @@ struct hci_conn *hci_conn_add(struct hci_dev *hdev, int type, bdaddr_t *dst,
@@ -1328,8 +1130,19 @@ index 18f97b228869..9a369bc14fd5 100644
  
  	/* Use the same PHY as ACL if set to any */
  	if (qos->phy == BT_ISO_PHY_ANY)
+@@ -2071,8 +2098,8 @@ struct hci_conn *hci_pa_create_sync(struct hci_dev *hdev, bdaddr_t *dst,
+ 		return ERR_PTR(-EBUSY);
+ 
+ 	conn = hci_conn_add_unset(hdev, ISO_LINK, dst, HCI_ROLE_SLAVE);
+-	if (!conn)
+-		return ERR_PTR(-ENOMEM);
++	if (IS_ERR(conn))
++		return conn;
+ 
+ 	conn->iso_qos = *qos;
+ 	conn->state = BT_LISTEN;
 diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 0f56ad33801e..c19d78e5d205 100644
+index d72d238c1656..4de8f0dc1a52 100644
 --- a/net/bluetooth/hci_event.c
 +++ b/net/bluetooth/hci_event.c
 @@ -954,6 +954,9 @@ static u8 hci_cc_read_buffer_size(struct hci_dev *hdev, void *data,
@@ -1395,7 +1208,7 @@ index 0f56ad33801e..c19d78e5d205 100644
  	return rp->status;
  }
  
-@@ -5912,8 +5921,8 @@ static void le_conn_complete_evt(struct hci_dev *hdev, u8 status,
+@@ -5768,8 +5777,8 @@ static void le_conn_complete_evt(struct hci_dev *hdev, u8 status,
  			goto unlock;
  
  		conn = hci_conn_add_unset(hdev, LE_LINK, bdaddr, role);
@@ -1406,7 +1219,7 @@ index 0f56ad33801e..c19d78e5d205 100644
  			goto unlock;
  		}
  
-@@ -7042,7 +7051,7 @@ static void hci_le_cis_req_evt(struct hci_dev *hdev, void *data,
+@@ -6898,7 +6907,7 @@ static void hci_le_cis_req_evt(struct hci_dev *hdev, void *data,
  	if (!cis) {
  		cis = hci_conn_add(hdev, ISO_LINK, &acl->dst, HCI_ROLE_SLAVE,
  				   cis_handle);
@@ -1415,7 +1228,7 @@ index 0f56ad33801e..c19d78e5d205 100644
  			hci_le_reject_cis(hdev, ev->cis_handle);
  			goto unlock;
  		}
-@@ -7151,7 +7160,7 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+@@ -7007,7 +7016,7 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
  		if (!bis) {
  			bis = hci_conn_add(hdev, ISO_LINK, BDADDR_ANY,
  					   HCI_ROLE_SLAVE, handle);
@@ -1424,7 +1237,7 @@ index 0f56ad33801e..c19d78e5d205 100644
  				continue;
  		}
  
-@@ -7223,7 +7232,7 @@ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
+@@ -7079,7 +7088,7 @@ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
  	pa_sync = hci_conn_add_unset(hdev, ISO_LINK, BDADDR_ANY,
  				     HCI_ROLE_SLAVE);
  
@@ -1434,10 +1247,10 @@ index 0f56ad33801e..c19d78e5d205 100644
  
  	pa_sync->sync_handle = le16_to_cpu(ev->sync_handle);
 diff --git a/net/bluetooth/iso.c b/net/bluetooth/iso.c
-index fa6c2e95d554..6d217df75c62 100644
+index ef0cc80b4c0c..6bed4aa8291d 100644
 --- a/net/bluetooth/iso.c
 +++ b/net/bluetooth/iso.c
-@@ -1264,7 +1264,7 @@ static int iso_sock_sendmsg(struct socket *sock, struct msghdr *msg,
+@@ -1285,7 +1285,7 @@ static int iso_sock_sendmsg(struct socket *sock, struct msghdr *msg,
  		return -ENOTCONN;
  	}
  
@@ -1447,68 +1260,10 @@ index fa6c2e95d554..6d217df75c62 100644
  	release_sock(sk);
  
 diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 5761d37c5537..3f7a82f10fe9 100644
+index 9223b1a698e3..3f7a82f10fe9 100644
 --- a/net/bluetooth/l2cap_core.c
 +++ b/net/bluetooth/l2cap_core.c
-@@ -3905,13 +3905,12 @@ static inline int l2cap_command_rej(struct l2cap_conn *conn,
- 	return 0;
- }
- 
--static struct l2cap_chan *l2cap_connect(struct l2cap_conn *conn,
--					struct l2cap_cmd_hdr *cmd,
--					u8 *data, u8 rsp_code, u8 amp_id)
-+static void l2cap_connect(struct l2cap_conn *conn, struct l2cap_cmd_hdr *cmd,
-+			  u8 *data, u8 rsp_code, u8 amp_id)
- {
- 	struct l2cap_conn_req *req = (struct l2cap_conn_req *) data;
- 	struct l2cap_conn_rsp rsp;
--	struct l2cap_chan *chan = NULL, *pchan;
-+	struct l2cap_chan *chan = NULL, *pchan = NULL;
- 	int result, status = L2CAP_CS_NO_INFO;
- 
- 	u16 dcid = 0, scid = __le16_to_cpu(req->scid);
-@@ -3924,7 +3923,7 @@ static struct l2cap_chan *l2cap_connect(struct l2cap_conn *conn,
- 					 &conn->hcon->dst, ACL_LINK);
- 	if (!pchan) {
- 		result = L2CAP_CR_BAD_PSM;
--		goto sendresp;
-+		goto response;
- 	}
- 
- 	mutex_lock(&conn->chan_lock);
-@@ -4011,17 +4010,15 @@ static struct l2cap_chan *l2cap_connect(struct l2cap_conn *conn,
- 	}
- 
- response:
--	l2cap_chan_unlock(pchan);
--	mutex_unlock(&conn->chan_lock);
--	l2cap_chan_put(pchan);
--
--sendresp:
- 	rsp.scid   = cpu_to_le16(scid);
- 	rsp.dcid   = cpu_to_le16(dcid);
- 	rsp.result = cpu_to_le16(result);
- 	rsp.status = cpu_to_le16(status);
- 	l2cap_send_cmd(conn, cmd->ident, rsp_code, sizeof(rsp), &rsp);
- 
-+	if (!pchan)
-+		return;
-+
- 	if (result == L2CAP_CR_PEND && status == L2CAP_CS_NO_INFO) {
- 		struct l2cap_info_req info;
- 		info.type = cpu_to_le16(L2CAP_IT_FEAT_MASK);
-@@ -4044,7 +4041,9 @@ static struct l2cap_chan *l2cap_connect(struct l2cap_conn *conn,
- 		chan->num_conf_req++;
- 	}
- 
--	return chan;
-+	l2cap_chan_unlock(pchan);
-+	mutex_unlock(&conn->chan_lock);
-+	l2cap_chan_put(pchan);
- }
- 
- static int l2cap_connect_req(struct l2cap_conn *conn,
-@@ -6242,7 +6241,7 @@ static int l2cap_finish_move(struct l2cap_chan *chan)
+@@ -6241,7 +6241,7 @@ static int l2cap_finish_move(struct l2cap_chan *chan)
  	BT_DBG("chan %p", chan);
  
  	chan->rx_state = L2CAP_RX_STATE_RECV;
@@ -1517,7 +1272,7 @@ index 5761d37c5537..3f7a82f10fe9 100644
  
  	return l2cap_resegment(chan);
  }
-@@ -6309,7 +6308,7 @@ static int l2cap_rx_state_wait_f(struct l2cap_chan *chan,
+@@ -6308,7 +6308,7 @@ static int l2cap_rx_state_wait_f(struct l2cap_chan *chan,
  	 */
  	chan->next_tx_seq = control->reqseq;
  	chan->unacked_frames = 0;
@@ -1526,7 +1281,7 @@ index 5761d37c5537..3f7a82f10fe9 100644
  
  	err = l2cap_resegment(chan);
  
-@@ -6849,18 +6848,7 @@ static struct l2cap_conn *l2cap_conn_add(struct hci_conn *hcon)
+@@ -6848,18 +6848,7 @@ static struct l2cap_conn *l2cap_conn_add(struct hci_conn *hcon)
  
  	BT_DBG("hcon %p conn %p hchan %p", hcon, conn, hchan);
  
@@ -1630,3 +1385,143 @@ index bc700f85f80b..ea277c55a38d 100644
  }
  
  struct tpm2_key_context {
+diff --git a/sound/soc/intel/boards/Makefile b/sound/soc/intel/boards/Makefile
+index bbf796a5f7ba..08cfd4baecdd 100644
+--- a/sound/soc/intel/boards/Makefile
++++ b/sound/soc/intel/boards/Makefile
+@@ -42,6 +42,7 @@ snd-soc-sof-sdw-objs += sof_sdw.o				\
+ 			sof_sdw_rt711.o sof_sdw_rt_sdca_jack_common.o	\
+ 			sof_sdw_rt712_sdca.o sof_sdw_rt715.o	\
+ 			sof_sdw_rt715_sdca.o sof_sdw_rt722_sdca.o	\
++			sof_sdw_rt_dmic.o			\
+ 			sof_sdw_cs42l42.o sof_sdw_cs42l43.o	\
+ 			sof_sdw_cs_amp.o			\
+ 			sof_sdw_dmic.o				\
+diff --git a/sound/soc/intel/boards/sof_sdw.c b/sound/soc/intel/boards/sof_sdw.c
+index 08f330ed5c2e..a90b43162a54 100644
+--- a/sound/soc/intel/boards/sof_sdw.c
++++ b/sound/soc/intel/boards/sof_sdw.c
+@@ -730,7 +730,7 @@ static struct sof_sdw_codec_info codec_info_list[] = {
+ 				.dai_name = "rt712-sdca-dmic-aif1",
+ 				.dai_type = SOF_SDW_DAI_TYPE_MIC,
+ 				.dailink = {SDW_UNUSED_DAI_ID, SDW_DMIC_DAI_ID},
+-				.rtd_init = rt712_sdca_dmic_rtd_init,
++				.rtd_init = rt_dmic_rtd_init,
+ 			},
+ 		},
+ 		.dai_num = 1,
+@@ -760,7 +760,7 @@ static struct sof_sdw_codec_info codec_info_list[] = {
+ 				.dai_name = "rt712-sdca-dmic-aif1",
+ 				.dai_type = SOF_SDW_DAI_TYPE_MIC,
+ 				.dailink = {SDW_UNUSED_DAI_ID, SDW_DMIC_DAI_ID},
+-				.rtd_init = rt712_sdca_dmic_rtd_init,
++				.rtd_init = rt_dmic_rtd_init,
+ 			},
+ 		},
+ 		.dai_num = 1,
+@@ -822,7 +822,7 @@ static struct sof_sdw_codec_info codec_info_list[] = {
+ 				.dai_name = "rt715-aif2",
+ 				.dai_type = SOF_SDW_DAI_TYPE_MIC,
+ 				.dailink = {SDW_UNUSED_DAI_ID, SDW_DMIC_DAI_ID},
+-				.rtd_init = rt715_sdca_rtd_init,
++				.rtd_init = rt_dmic_rtd_init,
+ 			},
+ 		},
+ 		.dai_num = 1,
+@@ -837,7 +837,7 @@ static struct sof_sdw_codec_info codec_info_list[] = {
+ 				.dai_name = "rt715-aif2",
+ 				.dai_type = SOF_SDW_DAI_TYPE_MIC,
+ 				.dailink = {SDW_UNUSED_DAI_ID, SDW_DMIC_DAI_ID},
+-				.rtd_init = rt715_sdca_rtd_init,
++				.rtd_init = rt_dmic_rtd_init,
+ 			},
+ 		},
+ 		.dai_num = 1,
+@@ -852,7 +852,7 @@ static struct sof_sdw_codec_info codec_info_list[] = {
+ 				.dai_name = "rt715-aif2",
+ 				.dai_type = SOF_SDW_DAI_TYPE_MIC,
+ 				.dailink = {SDW_UNUSED_DAI_ID, SDW_DMIC_DAI_ID},
+-				.rtd_init = rt715_rtd_init,
++				.rtd_init = rt_dmic_rtd_init,
+ 			},
+ 		},
+ 		.dai_num = 1,
+@@ -867,7 +867,7 @@ static struct sof_sdw_codec_info codec_info_list[] = {
+ 				.dai_name = "rt715-aif2",
+ 				.dai_type = SOF_SDW_DAI_TYPE_MIC,
+ 				.dailink = {SDW_UNUSED_DAI_ID, SDW_DMIC_DAI_ID},
+-				.rtd_init = rt715_rtd_init,
++				.rtd_init = rt_dmic_rtd_init,
+ 			},
+ 		},
+ 		.dai_num = 1,
+diff --git a/sound/soc/intel/boards/sof_sdw_common.h b/sound/soc/intel/boards/sof_sdw_common.h
+index b1d57034361c..8a541b6bb0ac 100644
+--- a/sound/soc/intel/boards/sof_sdw_common.h
++++ b/sound/soc/intel/boards/sof_sdw_common.h
+@@ -190,6 +190,7 @@ int rt712_sdca_dmic_rtd_init(struct snd_soc_pcm_runtime *rtd);
+ int rt712_spk_rtd_init(struct snd_soc_pcm_runtime *rtd);
+ int rt715_rtd_init(struct snd_soc_pcm_runtime *rtd);
+ int rt715_sdca_rtd_init(struct snd_soc_pcm_runtime *rtd);
++int rt_dmic_rtd_init(struct snd_soc_pcm_runtime *rtd);
+ int rt_amp_spk_rtd_init(struct snd_soc_pcm_runtime *rtd);
+ int rt_sdca_jack_rtd_init(struct snd_soc_pcm_runtime *rtd);
+ 
+diff --git a/sound/soc/intel/boards/sof_sdw_rt_dmic.c b/sound/soc/intel/boards/sof_sdw_rt_dmic.c
+new file mode 100644
+index 000000000000..9091f5b5c648
+--- /dev/null
++++ b/sound/soc/intel/boards/sof_sdw_rt_dmic.c
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (c) 2024 Intel Corporation
++
++/*
++ * sof_sdw_rt_dmic - Helpers to handle Realtek SDW DMIC from generic machine driver
++ */
++
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <sound/soc.h>
++#include <sound/soc-acpi.h>
++#include "sof_board_helpers.h"
++#include "sof_sdw_common.h"
++
++static const char * const dmics[] = {
++	"rt715",
++	"rt712-sdca-dmic",
++};
++
++int rt_dmic_rtd_init(struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_soc_card *card = rtd->card;
++	struct snd_soc_component *component;
++	struct snd_soc_dai *codec_dai;
++	char *mic_name;
++
++	codec_dai = get_codec_dai_by_name(rtd, dmics, ARRAY_SIZE(dmics));
++	if (!codec_dai)
++		return -EINVAL;
++
++	component = codec_dai->component;
++
++	/*
++	 * rt715-sdca (aka rt714) is a special case that uses different name in card->components
++	 * and component->name_prefix.
++	 */
++	if (!strcmp(component->name_prefix, "rt714"))
++		mic_name = devm_kasprintf(card->dev, GFP_KERNEL, "rt715-sdca");
++	else
++		mic_name = devm_kasprintf(card->dev, GFP_KERNEL, "%s", component->name_prefix);
++
++	card->components = devm_kasprintf(card->dev, GFP_KERNEL,
++					  "%s mic:%s", card->components,
++					  mic_name);
++	if (!card->components)
++		return -ENOMEM;
++
++	dev_dbg(card->dev, "card->components: %s\n", card->components);
++
++	return 0;
++}
++MODULE_IMPORT_NS(SND_SOC_INTEL_SOF_BOARD_HELPERS);
