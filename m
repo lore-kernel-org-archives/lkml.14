@@ -1,165 +1,167 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6669605C6
-	for <linux-kernel@vger.kernel.org>; Sat, 25 May 2024 14:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B943C08F;
+	Sat, 25 May 2024 14:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716648927; cv=none; b=WVnTHmcpnCMeN3MyDE0O6VICvPS9yOc9QrN4IX51pqNuPL6ImdKu2F13otFAgsuDRbBOQo2/W7NxoOIlu7OMZE9xTzOZKRDVizmNK2iUux1y04+truoXAqJfr+jIKQK0yENHkADiszrw87B7RHiByqDUAq/RIxfQIWQmPoqd4t4=
+	t=1716649034; cv=none; b=XDg+ynSB2NtJKbnxqqs7yURwveup2mQktvoULt2yZgPsqHiIhPfZqXIS+RwJiUysfGBpwuD9GSLu7oZXBE1yJ3vhPdyWhTW24yxubvumHTjhiOxQicwXH4DdtMQ7vO5vGHDmGUBGdCZmEh8iCo+eX4Ry/sGjINqrGa3u9uns/0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716648927; c=relaxed/simple;
-	bh=Fz0aw1EiF6ZOsk6k1keRmejxcoSipTICrN0oQ3OoEV8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=KPhNM4xaGrdJwEIimyljiWKF55KNLAsCjYwazHHDlZ5pCdq+2qDXsxEwn+qJdicfuQ2s8Gr0u2ichS7pusuCR94yF6AqH2ADsT5B/EqT0RjUD7TYV6HE0x1kmPW8pAdgevY2mxDiPQcPV4EtOTHTVRp9OiJ12Lv0Td6tihk2fFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-36db3bbf931so43182005ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 May 2024 07:55:25 -0700 (PDT)
+	s=arc-20240116; t=1716649034; c=relaxed/simple;
+	bh=QMwElAfCIaoW3VvCQJ0Aba3nXaVHbKNoj2smh37TLdM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s9nvaCIEF/5wuyW/SUMoWwRGQ+uI+DI0p3IiAzEY+oL1Tbl3fJivKM571gRBa6xHgbnQzLMOKGHx2XFt/z6RNqyfeDAjxv4sFhLhwpKCHx+u9BbxPWqZr869D5aSaCCBnh0pr1Du9GArRh2A/5qQ13DJmdWm/6nkKiTZ+YHm+gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W79X/mzs; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W79X/mzs"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2e73359b8fbso72992541fa.2;
+        Sat, 25 May 2024 07:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716649031; x=1717253831; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TIfet0oo2M0dTN9IioUaowhYpfdPo8hWYoxafPh4BQ4=;
+        b=W79X/mzs53RIXzLRJX8a+H6vzzp2DBCE0cjqADB/snj6fcLpoAo/6SoH2XT/dK4CFX
+         JWgiBvOm8itrcTpfShIDNLW6iYEr+U9bxhOzVXwgqRoY5MIaS2FbOrTviNrC9PcQpSz0
+         YqNZTIkT376MjGMlprgGmjB5kg1SwSm5vC28MLHieDp6EnomHXRkXoj7iJ2g/ZFmaAkP
+         9GNSG7UFK6HcNWB9TVMSmc4Oidt/W+S+Gcwi8G2R+LuwafwZOLZJCeioiKJfgXE7gXfm
+         HhI0xVaOWWeWRMetifLO6PlpeHD722ZKfiPHECrn44A9rwF8rVoZDSWis0FWvMvpvj9E
+         VmHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716648925; x=1717253725;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7P0rG7yKNGHrRRe/5Vz8+uxInZHOLcNoxttbH0GENig=;
-        b=bACZ8GPX7oRxsBMq2shCAamNufC6jD+bztf+aegYsntyHxFZcea26HHFWGx3w+sQVR
-         QZaCAQbbhmLcSJby4++mGHjq1dOPV1RDUxsJ2WsJi2/xkddLJvajqqEeuDzDU1u0rvB6
-         OPpN2jrjibRcgyTLamVzFmaS2gKfpt64eupfdijisMWJaU+G2Tx1oynU5ffBL0djPElW
-         Rf2CVNV4dxz0zia/4CxTg7+/iFArFOozFKIsodhanR4WaiOkmIV2+G9v/VuCDv6ATWL0
-         6Zv0LaxvDLk03w+dsabE+i/ULcn6wNCuR9SN/6OkTxD9Qipji9jxsDfsl+ndONvXyd50
-         wjYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuPEvUCfoep8AvSN+I7RhNYbIXN4YGU5l/nZgOsTXAcOtFMqjFp5ggeQC9mmoma+iam09Fm98xB83zWYuki+FN+hYXoBfHSbeonUvR
-X-Gm-Message-State: AOJu0Yze2QM87Ui1YsagXOaNQ6pmheXUTnBpuhDfG4U6LEW09Omw4Qzi
-	mxNrKTrzbKYh5xk1FyAZsS6nmX3ZtOcvrwbSsYpFodbKGWhxvhIW9QBYAaYnIk8kXKEVfrWk+0T
-	mCQUO3igX5Jkc99vi4Ckcup/QpAHohCO/+GLX6rWUOmDy2nI6PvoJNzA=
-X-Google-Smtp-Source: AGHT+IEYU52nZW35CbtGY+KBokbn0lYgK9/tzTsldeM5A23wuJhtCjFzvgGlzX3U7WfWHdv/tFfVWr4XKMPbKihB/Jmuox9BnMLI
+        d=1e100.net; s=20230601; t=1716649031; x=1717253831;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TIfet0oo2M0dTN9IioUaowhYpfdPo8hWYoxafPh4BQ4=;
+        b=OhKhAG+1bVTvMToCbNiUHyu7yF6PtBZ9PjcD4ArP40GVCKqOhr+vy1JQGzmMA3vaev
+         eqzL6nHcIOievugHIorqLnSWx5oz8JRREBxC0N4kPX4BbNnXMdOJNps8DwWzHA3AfYgi
+         YA+pzmGoKkw6jfHaWkJfDTSFTDk8LoFSSUi08zOfVJudcvLNneZGNEaE4Dsy66gxDvjt
+         pFzFpmI57LxwGJqGQfJjcwwIOe6FiTazDPmiwl+8PBQpSTPUrj6VcQlCYHxZEV1khbZW
+         REmNzilcSdg9ltsH9+xmiPgiZdnjHBCb/U2Wt0444zDJP/SRASL64BcfDx9hZc3HHqy+
+         f2aw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+NeETzHbP99oZM/NWFZvHuymlLSbue2Oi7LtZ/pjb0zPoPns4pPbl9IlRQfycjQKf2emSG2qkVOpudSUN6TRxN+kgQgjW66rd+3KFJvfJx13vZrmRKdKs5ZkQ4S5dKiJ2TtxX0D7r8DVQNsTz6whA1FJbqE4GgEUBNUD00pmLo9COyPY9
+X-Gm-Message-State: AOJu0YxWTQ3yBWEDXIiApJXuAJBRjL3+DGyESeaDBPT3e69jOSa93SCO
+	PbMIB2TsmuyiLepAPHZ0SMQhf+PfY07xmxuNtgMTw732gevLg+uAZzOuqQ==
+X-Google-Smtp-Source: AGHT+IEQLAp42vuhTf+k4A91OUPMJVggFXAaF5UDWAZ9n2WZwj9ZRgm7etUs8D1J72fzlRAhzR0kfg==
+X-Received: by 2002:a2e:80da:0:b0:2e6:eb0f:5f59 with SMTP id 38308e7fff4ca-2e95b0977c7mr45542491fa.17.1716649030545;
+        Sat, 25 May 2024 07:57:10 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100f1410csm83514765e9.15.2024.05.25.07.57.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 May 2024 07:57:10 -0700 (PDT)
+Message-ID: <6651fc46.050a0220.5b758.034d@mx.google.com>
+X-Google-Original-Message-ID: <ZlHHqlNtcwaOLhLx@Ansuel-XPS.>
+Date: Sat, 25 May 2024 13:12:42 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: hwmon: g76x: Add support for g761
+References: <20240525102914.22634-1-ansuelsmth@gmail.com>
+ <20240525102914.22634-2-ansuelsmth@gmail.com>
+ <22e1daf4-ffce-4fac-be4c-0e7bebd91c88@roeck-us.net>
+ <6651f77a.050a0220.9b079.fbf3@mx.google.com>
+ <818aacc7-5244-45e1-844d-561e8540cb46@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d8a:b0:36c:2976:3012 with SMTP id
- e9e14a558f8ab-3737b2b947dmr3482855ab.2.1716648925146; Sat, 25 May 2024
- 07:55:25 -0700 (PDT)
-Date: Sat, 25 May 2024 07:55:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000633dce06194879ad@google.com>
-Subject: [syzbot] [bcachefs?] KMSAN: uninit-value in bch2_alloc_v4_invalid
-From: syzbot <syzbot+3b2968fa4953885dd66a@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <818aacc7-5244-45e1-844d-561e8540cb46@roeck-us.net>
 
-Hello,
+On Sat, May 25, 2024 at 07:53:57AM -0700, Guenter Roeck wrote:
+> On 5/25/24 03:50, Christian Marangi wrote:
+> > On Sat, May 25, 2024 at 07:32:04AM -0700, Guenter Roeck wrote:
+> > > On 5/25/24 03:29, Christian Marangi wrote:
+> > > > Add support for g761 PWM Fan controller. This is an exact copy of g763
+> > > > with the difference that it does also support an internal clock
+> > > > oscillators.
+> > > > 
+> > > > Add required logic to support this additional feature with the property
+> > > > gmt,internal-clock and reject invalid schema that define both
+> > > > internal-clock property and external clocks.
+> > > > 
+> > > > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> > > > ---
+> > > >    .../devicetree/bindings/hwmon/gmt,g76x.yaml   | 43 +++++++++++++++++--
+> > > >    1 file changed, 40 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml b/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
+> > > > index bfefe49f54bf..d6e80392d045 100644
+> > > > --- a/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
+> > > > +++ b/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
+> > > > @@ -4,13 +4,13 @@
+> > > >    $id: http://devicetree.org/schemas/hwmon/gmt,g76x.yaml#
+> > > >    $schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > -title: GMT G762/G763 PWM Fan controller
+> > > > +title: GMT G761/G762/G763 PWM Fan controller
+> > > >    maintainers:
+> > > >      - Christian Marangi <ansuelsmth@gmail.com>
+> > > >    description: |
+> > > > -  GMT G762/G763 PWM Fan controller.
+> > > > +  GMT G761/G762/G763 PWM Fan controller.
+> > > >      If an optional property is not set in DT, then current value is kept
+> > > >      unmodified (e.g. bootloader installed value).
+> > > > @@ -22,6 +22,7 @@ description: |
+> > > >    properties:
+> > > >      compatible:
+> > > >        enum:
+> > > > +      - gmt,g761
+> > > >          - gmt,g762
+> > > >          - gmt,g763
+> > > > @@ -48,10 +49,37 @@ properties:
+> > > >        $ref: /schemas/types.yaml#/definitions/uint32
+> > > >        enum: [0, 1, 2]
+> > > > +  gmt,internal-clock:
+> > > > +    description: Use the Internal clock instead of externally attached one
+> > > > +      via the CLK pin.
+> > > > +    type: boolean
+> > > > +
+> > > >    required:
+> > > >      - compatible
+> > > >      - reg
+> > > > -  - clocks
+> > > > +
+> > > > +allOf:
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        compatible:
+> > > > +          contains:
+> > > > +            enum:
+> > > > +              - gmt,g762
+> > > > +              - gmt,g763
+> > > > +    then:
+> > > > +      properties:
+> > > > +        gmt,internal-clock: false
+> > > > +
+> > > > +      required:
+> > > > +        - clocks
+> > > 
+> > > Is the new property even necessary ? The absence of an external clock on G761
+> > > could be used to imply that the internal clock is used.
+> > > 
+> > 
+> > Well with how the driver works, if a property is not defined, then the
+> > value is not set and the one set by the bootloader or from device reset
+> > is keept.
+> > 
+> > This conflicts with the logic of no clock = internal.
+> > 
+> 
+> Not sure I understand the problem. It would be a simple change in the driver
+> to add "if the chip is G761 and the clock is not provided in DT, use the
+> internal clock".
+>
 
-syzbot found the following issue on:
+Yes sure code wise is pretty easy, my concern is more of losing this
+info in DT. But anyway ok will drop in V2. Thanks a lot for the review!
 
-HEAD commit:    614da38e2f7a Merge tag 'hid-for-linus-2024051401' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1259beb2980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f5d2cbf33633f507
-dashboard link: https://syzkaller.appspot.com/bug?extid=3b2968fa4953885dd66a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/89eafb874b71/disk-614da38e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/356000512ad9/vmlinux-614da38e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/839c73939115/bzImage-614da38e.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3b2968fa4953885dd66a@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in bch2_alloc_v4_invalid+0x625/0x10f0 fs/bcachefs/alloc_background.c:247
- bch2_alloc_v4_invalid+0x625/0x10f0 fs/bcachefs/alloc_background.c:247
- bch2_bkey_val_invalid+0x24f/0x380 fs/bcachefs/bkey_methods.c:140
- bset_key_invalid fs/bcachefs/btree_io.c:831 [inline]
- validate_bset_keys+0x12d8/0x25d0 fs/bcachefs/btree_io.c:904
- validate_bset_for_write+0x1dd/0x340 fs/bcachefs/btree_io.c:1945
- __bch2_btree_node_write+0x4777/0x67c0 fs/bcachefs/btree_io.c:2138
- bch2_btree_node_write+0xa5/0x2e0 fs/bcachefs/btree_io.c:2288
- btree_node_write_if_need fs/bcachefs/btree_io.h:153 [inline]
- __btree_node_flush+0x4d0/0x640 fs/bcachefs/btree_trans_commit.c:229
- bch2_btree_node_flush0+0x35/0x60 fs/bcachefs/btree_trans_commit.c:238
- journal_flush_pins+0xce6/0x1780 fs/bcachefs/journal_reclaim.c:553
- __bch2_journal_reclaim+0xd88/0x1610 fs/bcachefs/journal_reclaim.c:685
- bch2_journal_reclaim_thread+0x18e/0x760 fs/bcachefs/journal_reclaim.c:727
- kthread+0x3e2/0x540 kernel/kthread.c:389
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Uninit was stored to memory at:
- memcpy_u64s_small fs/bcachefs/util.h:511 [inline]
- bkey_p_copy fs/bcachefs/bkey.h:46 [inline]
- bch2_sort_keys+0x1f34/0x2cb0 fs/bcachefs/bkey_sort.c:194
- __bch2_btree_node_write+0x3acd/0x67c0 fs/bcachefs/btree_io.c:2100
- bch2_btree_node_write+0xa5/0x2e0 fs/bcachefs/btree_io.c:2288
- btree_node_write_if_need fs/bcachefs/btree_io.h:153 [inline]
- __btree_node_flush+0x4d0/0x640 fs/bcachefs/btree_trans_commit.c:229
- bch2_btree_node_flush0+0x35/0x60 fs/bcachefs/btree_trans_commit.c:238
- journal_flush_pins+0xce6/0x1780 fs/bcachefs/journal_reclaim.c:553
- __bch2_journal_reclaim+0xd88/0x1610 fs/bcachefs/journal_reclaim.c:685
- bch2_journal_reclaim_thread+0x18e/0x760 fs/bcachefs/journal_reclaim.c:727
- kthread+0x3e2/0x540 kernel/kthread.c:389
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Uninit was created at:
- __kmalloc_large_node+0x231/0x370 mm/slub.c:3994
- __do_kmalloc_node mm/slub.c:4027 [inline]
- __kmalloc_node+0xb10/0x10c0 mm/slub.c:4046
- kmalloc_node include/linux/slab.h:648 [inline]
- kvmalloc_node+0xc0/0x2d0 mm/util.c:634
- kvmalloc include/linux/slab.h:766 [inline]
- btree_bounce_alloc fs/bcachefs/btree_io.c:118 [inline]
- bch2_btree_node_read_done+0x4e68/0x75e0 fs/bcachefs/btree_io.c:1185
- btree_node_read_work+0x8a5/0x1eb0 fs/bcachefs/btree_io.c:1324
- bch2_btree_node_read+0x3d42/0x4b50
- __bch2_btree_root_read fs/bcachefs/btree_io.c:1748 [inline]
- bch2_btree_root_read+0xa6c/0x13d0 fs/bcachefs/btree_io.c:1772
- read_btree_roots+0x454/0xee0 fs/bcachefs/recovery.c:457
- bch2_fs_recovery+0x7b6a/0x93e0 fs/bcachefs/recovery.c:785
- bch2_fs_start+0x7b2/0xbd0 fs/bcachefs/super.c:1043
- bch2_fs_open+0x152a/0x15f0 fs/bcachefs/super.c:2105
- bch2_mount+0x90d/0x1d90 fs/bcachefs/fs.c:1906
- legacy_get_tree+0x114/0x290 fs/fs_context.c:662
- vfs_get_tree+0xa7/0x570 fs/super.c:1779
- do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
- path_mount+0x742/0x1f20 fs/namespace.c:3679
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount+0x725/0x810 fs/namespace.c:3875
- __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
- x64_sys_call+0x2bf4/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:166
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 0 PID: 8109 Comm: bch-reclaim/loo Not tainted 6.9.0-syzkaller-02707-g614da38e2f7a #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+	Ansuel
