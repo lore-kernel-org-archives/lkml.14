@@ -1,93 +1,102 @@
-Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9B81429E;
-	Sat, 25 May 2024 15:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE28444C6F;
+	Sat, 25 May 2024 15:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716650639; cv=none; b=fvX+Gru6iNxO8+vPJHArqET6HcMv1/affvEkJYmuhjQitpLomM7LpsrAgiqeiste8F1Tgb4LxKWGKhdNkoJIulSMo2FycT5rBpobxVfp5geWA60BdylKbzf3g5xJ43dbG9rsj/z8ELf7WUjFF7jGSwXJvSCaidNbRLieQmHKzyo=
+	t=1716650773; cv=none; b=g1XDBTXj86awzDkgUPIk5QrrCp/lLR5+427IivamkkhSyMsaW7GjQ6xIb1JmzHJZs/6i+hpmmShx0f2uJWvvOepqrWzc8n072FSBEu4hlEggPykkd5YoyfcfWcceSPBnr5EobZSLEVMpi2hD7kvd39O/9CL/oB9sFudsgJyrPBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716650639; c=relaxed/simple;
-	bh=Y1QbV1fVDvWYwh1mRKjVim+xdyrWT0f/WnYH38ND510=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NOU2QGAbtu/+ghiQ8HW4bVOGUoJKwMP4WqhmAYUQ3rAij8KNZViMPDEHj1nHTAGYCEsHn6MA9kVCWjXl5/vFXqgw64wJQokr7ZQp+Jw87PExKZk7Dg89Amsnnu+iGe5Kx3ITc8HYLF70F1hQNIUYNMfr6+yr5idw1N6ZjmK1a7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UcNiW7vq; arc=none smtp.client-ip=80.12.242.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1716650773; c=relaxed/simple;
+	bh=UpornZwFGcZkt9ze4fdtoh3iyUIkzReEUqXzo7qNhTQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=SuE7cMYKgBBo/25+WS5W+60TGwUeAwRAiauT+SebHvqkj45sBP0Yx7QIpZE9vpFJcdhqXp1efE/gS2GL6+5EhmMXCgA8IX5UhcH6sAtYh502adeKZDamXJbsmekPApM6dLgZ9C7kwSQmRF0svQhLyFakGyY3rD1yXCzfT3vYi10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e6jJvMUF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UcNiW7vq"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id At6asqDFCOBGCAt6asbEpr; Sat, 25 May 2024 17:14:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1716650087;
-	bh=SsSnU22BLOw2sFJbi0JknTXepGNVkme9LGYumcyMsq0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=UcNiW7vqBL6W/uiJKJok9ctWJIJmgX2JZMruZnW+I5yvkB6lsgwEVFIa07qypLFq1
-	 HWc7s94sRHNc7PwjCcHclfEeCFFuE0HZ+FRG1BZCZNZESKn2Jrda875XMEAESMpY6w
-	 5+Ysr+/16CU3fUE2TEoz5OHshQGHoLZLYbTmszZuxpd9OPZ3Nvsowe+VuMoIkPBI7D
-	 eOoWxtp/ePwL+D//ijSf/y+eFEDdSfKDVbWREi6NCihYDfaIVeLDjItTUibKkRibM/
-	 qVSegiqnjva1HfXNG+dUC+TMg3xNO8iAv9fvqgENWbk4flNtwAOWa5MLW3NQ2SCaee
-	 jXRW6ExbhnTtg==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 25 May 2024 17:14:47 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Akhil R <akhilrajeev@nvidia.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-crypto@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH] crypto: tegra - Remove an incorrect iommu_fwspec_free() call in tegra_se_remove()
-Date: Sat, 25 May 2024 17:14:35 +0200
-Message-ID: <ea775b351a3dbe4cef4056ea89da25084f73df22.1716650050.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e6jJvMUF"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44PB9tm3022757;
+	Sat, 25 May 2024 15:25:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=9dCJ/M81ZarIpNHGwnzW6v
+	E62xjRIb1v5A0jpB2E2+w=; b=e6jJvMUFvroAl87b3MvOlhuG6xi56VvQNH4WFr
+	4N32zul/MkrAQTwk/ZVcuJaDxgOBuKG+pxbGmwsLuyw5KIKYp7VQ7nVpS2gXCeYV
+	mmN5iF3xjmfWQsUPIMuIjGK0VRSuyPFeRBCTMlWLQ5gsjBCP9TxQZ8OlLOQLx4gI
+	l5nCaf2yXclhEju4q+xFbMh/WWgkKlElYQQ1zKft37fKFmTWh8EO/0RGpk5aeUi/
+	pDasP0hMBmx6Uw7RPhmzx4U310icbgtLDVZT3k7NyaQ6rijKV7/Us/6XYx1DBFQO
+	02qimBkF93DGq/QWBa/Y0WMQbL5Y6KNM2S20129BykMj0HmQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2h0ggf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 25 May 2024 15:25:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44PFPvR2006005
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 25 May 2024 15:25:57 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 25 May
+ 2024 08:25:56 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sat, 25 May 2024 08:25:56 -0700
+Subject: [PATCH] fs: minix: add MODULE_DESCRIPTION()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240525-md-fs-minix-v1-1-824800f78f7d@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAAMDUmYC/x3M0QrCMAyF4VcZuTZQy4riq4gX6Za6gI2jcVIZe
+ /fVXX5wzr+CcRE2uHUrFP6KyVsbzqcOhon0yShjM3jnexd8wDxiMsyiUtGn0Ed3iVdKCdpjLpy
+ kHrX7ozmSMcZCOkz/xkt0qZjJPlxw/rUpbNsOJHnmyoIAAAA=
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner
+	<brauner@kernel.org>
+CC: <linux-fsdevel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: jNiwyS40TNX6W4vfdHtZ5wzWx3c4ZRsR
+X-Proofpoint-ORIG-GUID: jNiwyS40TNX6W4vfdHtZ5wzWx3c4ZRsR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-25_09,2024-05-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=790 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405250125
 
-The only iommu function call in this driver is a
-tegra_dev_iommu_get_stream_id() which does not allocate anything and does
-not take any reference.
+Fix the 'make W=1' warning:
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/minix/minix.o
 
-More-over, what is freed is "se->dev" which has been devm_kzalloc()'ed in
-the probe.
-
-So there is no point in calling iommu_fwspec_free() in the remove function.
-
-Remove this incorrect function call.
-
-Fixes: 0880bb3b00c8 ("crypto: tegra - Add Tegra Security Engine driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 ---
-Compile tested only
+ fs/minix/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-This patch is completely speculative. *Review with care*.
+diff --git a/fs/minix/inode.c b/fs/minix/inode.c
+index 7f9a2d8aa420..1c3df63162ef 100644
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -730,5 +730,6 @@ static void __exit exit_minix_fs(void)
+ 
+ module_init(init_minix_fs)
+ module_exit(exit_minix_fs)
++MODULE_DESCRIPTION("Minix file system");
+ MODULE_LICENSE("GPL");
+ 
+
 ---
- drivers/crypto/tegra/tegra-se-main.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/crypto/tegra/tegra-se-main.c b/drivers/crypto/tegra/tegra-se-main.c
-index 9955874b3dc3..f94c0331b148 100644
---- a/drivers/crypto/tegra/tegra-se-main.c
-+++ b/drivers/crypto/tegra/tegra-se-main.c
-@@ -326,7 +326,6 @@ static void tegra_se_remove(struct platform_device *pdev)
- 
- 	crypto_engine_stop(se->engine);
- 	crypto_engine_exit(se->engine);
--	iommu_fwspec_free(se->dev);
- 	host1x_client_unregister(&se->client);
- }
- 
--- 
-2.45.1
+base-commit: 07506d1011521a4a0deec1c69721c7405c40049b
+change-id: 20240525-md-fs-minix-2f54b07b8aff
 
