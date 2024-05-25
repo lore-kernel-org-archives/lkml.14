@@ -1,33 +1,34 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0662127B53;
-	Sat, 25 May 2024 17:52:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B136A127E2D;
+	Sat, 25 May 2024 17:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716659573; cv=none; b=bQFgZM336OR0C0l4X8XxQt1mXnaV3oUDByFacX0eY9Tp3IRKGOohGwOepnsPXlVJ8KNfM6GkeAqItqjSPAhTu25CNB8gw85Q9MvCUXdRw67JIGcw9xAOiFoF7xDmhxoIZsUtpra3UXdOCI9A9tOfccOGyW/OgaqXP5CHQ8KrbtY=
+	t=1716659574; cv=none; b=YahmbhXGsy+qVf8giSpTbnFhzUkr1X+NpGEtsU8OnSgYoz7pOqLqg6sYH3FsBmp/0nRK9uZgnENTGDBp37YlJ5/0JHSnY//UQXDQCXxefytY5YbY1JQAMIx87NHUtQMCIXUfK8v8VwMuK/m7osxX3/0Zec+/8jqX3xctHnnEA+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716659573; c=relaxed/simple;
-	bh=n2gSzLJAVR/Dw4PlUaVFh/cZe8nDCg+VsxMJYZV6wiw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pVH0jTrsfXD9OEqtaX2HO+aaLnhbU5VbXCkirB1+6Gx6jzBKY1jwL3dL47GW7ZVM3rnmVvERjuakNtH+cxAv3mcvIzwQ+V7OTZWYjzyHNO7KjmTZ5o2KUzIhgvyWeXn+e+or8byhL85I82DkgG+1p83UNi2pxa4RxFVw8nAM+KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=iWxvDqR+; arc=none smtp.client-ip=46.235.229.95
+	s=arc-20240116; t=1716659574; c=relaxed/simple;
+	bh=VGqT8+ANTTSxIllZKF7XYwLnlMY9zfu2eB8jhUy4KTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rj1Xa3E6DwOqMiclrM4wx7yzEHRHYtbd9u4GPYcFKwf0PC9/XoPWAxvrVYrLISzDdXQd2BfawbukE7XntrXU2fgA82kAPbElKiJGlVLMIzXdulwQ9NZOeBjLJjqblvunx5v0MXGIkiG9F32f0RPizkbASpN5ukyOT8wauvP2R7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=pBsJfdMM; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="iWxvDqR+"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="pBsJfdMM"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
 	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=FogEAuJxLZKuSvi+ipJi2aarhPLy54vfOso/MWiUiSk=; b=iWxvDqR+b/AHa8kf
-	egJ75QCJZ0MzNISv7HIROJBY5H5HiMVIZEyPOGE+jahgqVaKxUWI2qM5s7GSDypZXWLlTBBBKvI4j
-	xBtORmaArTGUW+gXMlrIDZRzczpQslxjlNStJWsXQMj6mry0sTHa3MBTCrYptj4wqIQcQ39aYsY8c
-	nQrY4AvINGdBoAHEC1enMbbr0lazXH74qByl4UbYo3EZiCZ6HSr8Ho3u2bjowAfFWh1Q7hWO3VORe
-	7cM3pTHLyZzIZZWypM/xD59flZf6gHibdfNV6MNNBZ7OzT9JV7Garezs5AldShg0PC+hO4hAVYz5I
-	p5QvXDQcHMSqfmagSw==;
+	:Subject; bh=vkUPOCqjOJNixqbovJCTAg37YSIHfYkepx5YIQTAeZA=; b=pBsJfdMMqb4bVd3W
+	ksk3FUqNIC2heMLY8SqxPMUKoBGrwQIgcvuKfvZdjxCDjHr6/Q2X4Ffm3jOfpIYKT4bhzGrlV2JIF
+	3gNcudPHZ/3KwIy32KtbYq5bsxUQXLDnNfiomQklzMLQOYWz2bPNP2ZnnCQnAfHP9DvUv73V9c9+L
+	tNpSK0ps7YbEztY4gkC37XH7biErNMsTAiXwUKoRy2+ZuHyIYKyh3Q/NjzcBRwdBbbonj1kwWd0rG
+	ZYSdqFD7njVPo9HxPJZ6DClwdV2mqBV0H+l7UCNH1bQtsw/UIJvFN00PshdqDz5ID5utQvJVCXEC6
+	yBonKG/SvELEXqmNaA==;
 Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
 	by mx.treblig.org with esmtp (Exim 4.96)
 	(envelope-from <linux@treblig.org>)
-	id 1sAvZJ-002Wcl-17;
-	Sat, 25 May 2024 17:52:33 +0000
+	id 1sAvZW-002Wcl-0j;
+	Sat, 25 May 2024 17:52:46 +0000
 From: linux@treblig.org
 To: mchehab@kernel.org,
 	charles-antoine.couret@nexvision.fr,
@@ -35,10 +36,12 @@ To: mchehab@kernel.org,
 Cc: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 0/3] media dead struct removal
-Date: Sat, 25 May 2024 18:52:26 +0100
-Message-ID: <20240525175229.100559-1-linux@treblig.org>
+Subject: [PATCH 3/3] media: pvrusb2: remove unused struct 'debugifc_mask_item'
+Date: Sat, 25 May 2024 18:52:29 +0100
+Message-ID: <20240525175229.100559-4-linux@treblig.org>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240525175229.100559-1-linux@treblig.org>
+References: <20240525175229.100559-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,25 +52,33 @@ Content-Transfer-Encoding: 8bit
 
 From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Dead struct removal in spi and usb.
+'debugifc_mask_item' is unused since
+commit 681c73994401 ("V4L/DVB (6691): pvrusb2: Rework pipeline state
+control").
 
-(These are the last of my struct removal in media as
-far as I know).
+Remove it.
 
 Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-
-Dave
-
-Dr. David Alan Gilbert (3):
-  media: gs1662: remove unused struct 'gs_reg_fmt_custom'
-  media: opera1: remove unused struct 'rc_map_opera_table'
-  media: pvrusb2: remove unused struct 'debugifc_mask_item'
-
- drivers/media/spi/gs1662.c                   | 8 --------
- drivers/media/usb/dvb-usb/opera1.c           | 4 ----
+---
  drivers/media/usb/pvrusb2/pvrusb2-debugifc.c | 5 -----
- 3 files changed, 17 deletions(-)
+ 1 file changed, 5 deletions(-)
 
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-debugifc.c b/drivers/media/usb/pvrusb2/pvrusb2-debugifc.c
+index 84cfb5ce8b8d..81d711269ab5 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-debugifc.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-debugifc.c
+@@ -9,11 +9,6 @@
+ #include "pvrusb2-hdw.h"
+ #include "pvrusb2-debug.h"
+ 
+-struct debugifc_mask_item {
+-	const char *name;
+-	unsigned long msk;
+-};
+-
+ 
+ static unsigned int debugifc_count_whitespace(const char *buf,
+ 					      unsigned int count)
 -- 
 2.45.1
 
