@@ -1,36 +1,63 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92DA18044;
-	Sat, 25 May 2024 09:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF883208D6;
+	Sat, 25 May 2024 09:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716630958; cv=none; b=LNgE+3TPpwW0ZG1YSNM0gWhjXXXqzDEKOAa9ltBeLlh+2qpV64Msx5YsiPHpAki2yH007dSZX6eA0vi7ssKhna4MnKQ/wUC2krZAp8j3dqEZNODz7xLiV9EwJWWefAxueY7HRxYsQU9oXdQjoTptAb5pucCF88p8fQRTabOcP/o=
+	t=1716631088; cv=none; b=bf2lvNvWnBYZ/RrdVQ/2cEqRCLFB/woI3NPM7SXGWUc92nikI4b2s1+1hDRSG0qsmGYvvF2KIAxHd7YS3JfK57uHcvGm0TL9SFVRyRZ9oCAETb68WyiT/Id6u1kLclBGxB0zqqcbPXL+VVinU9IS6kutERE+DF7vQ5dyLr3MhAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716630958; c=relaxed/simple;
-	bh=dsdHmYAYzOR7M6UUfdKTjuvEBmTe8UA2tjAlgVqAlIo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lcTMWzViopiCq32ccG8Jgu6SGTnCpWEV1QenlT7/eyCyFRKvv8e1U3ba+tsG4InR5OQcuF9VUQIVv3+5OJY6cVO2rvtXvcPHYndYdT00sW4qbJEEHlztZFN4RnTNFbr2pxk84zp1cwwJ10u+pS+Ouy/wD6Wy12XJMV9k/xSttxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VmcdK4Tn2z1S4s7;
-	Sat, 25 May 2024 17:52:05 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 93BC214011D;
-	Sat, 25 May 2024 17:55:47 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sat, 25 May 2024 17:55:47 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <longman@redhat.com>, <lizefan.x@bytedance.com>, <tj@kernel.org>,
-	<hannes@cmpxchg.org>
-CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] cgroup/cpuset: Reduce the lock protecting CS_SCHED_LOAD_BALANCE
-Date: Sat, 25 May 2024 09:46:48 +0000
-Message-ID: <20240525094648.1585086-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1716631088; c=relaxed/simple;
+	bh=uVSIth6ogeOC/8FQzcjH9y0w6jOWh1Y0ZlSRtiXqTw4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GhYEKZhJ9ETMkLdVCeNxwpHeAtB5PdhfckoAyeQr6epSnk3Y4tlQLQwbvF9ro2bDq49G55srkdk1VdRcbXsWjhfBUTAjaLAkGmtPlh3PB9P+0hO1ha1sdDWTYw4j6x28fyuNsE+yIL6cnMiStmZVyAWMsA5XwCklkbGZqXgpBzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZAQbjCXT; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAQbjCXT"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-529597d77b4so1662731e87.0;
+        Sat, 25 May 2024 02:58:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716631085; x=1717235885; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G/oK9VbRLSqksA3s8yPL/Mo5ZKUPSWzfI/BM0U3lWD4=;
+        b=ZAQbjCXTgGZ04jt6okbx5HyEiVAB9pCkZ4nwHr9GIAPFnZrlpomkQ1Lav86dIe/x9+
+         l94lcfywuWixs2yf0ygtOXJlEo7pxI/s7MPHuzJOTs3YOt92OGQxD4QlOTMXswAGpE5I
+         XcGnrqgKwyUUfap1IZ4ByccriR2XOu03+Gc/P8uBt7umI5Ski2AOwox82tbTzd1nzRcV
+         RCddDBEMkrungKtC6qoOlWNq1FsmzvAQpHw1LQRAvxv9ztaI3Clxs9Sn/cEPBuo3v4zy
+         DF8TclpwvnFdi6AjP4kCGSoAz+9zFzb4AP05ddn/ytE+sTbk4CRMa5Ok1IjGsD2YgPoi
+         gyWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716631085; x=1717235885;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G/oK9VbRLSqksA3s8yPL/Mo5ZKUPSWzfI/BM0U3lWD4=;
+        b=jHuG9sj4/eiiOIvlpC4IXfCFhUGR6ZYoa0qXPZoAST0sYWvo7lC1zTAxl6sRdzvAyV
+         FIyd7fTstL3kHKui838hsfc2qWbiPn6nsGLEqCfGDhqhQslXaQwnUgEkQZjlJjwxFhSf
+         nGn16XDeRcgZ8SjBtre1gkxzMqqcNQFSCSrUYvsbpPL4ZSyPBLmlVUiiZGVfrtTbwb4h
+         7dIZpAIRWIKvA6fcu7J6lQiBBI0qNgxKWlYKAm583/GvQwsLPmVHxHx2pi7bOV7FeZne
+         3TuiTHlNrRz1WcspYhogWBPn2/X8BMtVhY0H9xPs4WFpNCQPl6lE33R6wm0MoAq2IA2U
+         y+Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUUGcDfl05wd1BLvcVuMDfIVGMnx1Mse1JqLKfvx3spe6OSGtiJ8tMwLrTpXeuYLNFmgTw1VWMgZthojZSNyesiUK4JBQJiGrCKK7Ha
+X-Gm-Message-State: AOJu0YxVAgL65ShlvmmHrc6/0uAGmMqf+Gi9TckLIX+mLOJKhyQUY1mJ
+	Y9/u6H4oTpLPo5eXTIfDscRvEhF8MqxVSvpaqByEaF98KKWzgvJHS3plx5If
+X-Google-Smtp-Source: AGHT+IG2M3nzhep0olkhXEKvEzVhg9J40leNtuAl3S+t1h+TD9xTwQ1I/O+XdGle4xU4PPu8l57w7g==
+X-Received: by 2002:a05:6512:68b:b0:520:7a44:3f30 with SMTP id 2adb3069b0e04-529645e342amr2766068e87.16.1716631084319;
+        Sat, 25 May 2024 02:58:04 -0700 (PDT)
+Received: from localhost.localdomain (ip-94-112-167-15.bb.vodafone.cz. [94.112.167.15])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100fad965sm77025795e9.34.2024.05.25.02.58.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 May 2024 02:58:03 -0700 (PDT)
+From: Ilya Dryomov <idryomov@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ceph-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph updates for 6.10-rc1
+Date: Sat, 25 May 2024 11:57:37 +0200
+Message-ID: <20240525095738.3046298-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,58 +65,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500023.china.huawei.com (7.185.36.114)
 
-In the cpuset_css_online(), clearing the CS_SCHED_LOAD_BALANCE bit
-of cs->flags is guarded by callback_lock and cpuset_mutex. There is
-no problem with itself, because it is consistent with the description
-of there two global lock at the beginning of this file. However, since
-the operation of checking, setting and clearing the flag bit is atomic,
-protection of callback_lock is unnecessary here, see CS_SPREAD_*. so
-to make it more consistent with the other code, move the operation
-outside the critical section of callback_lock.
+Hi Linus,
 
-No functional changes intended.
+The following changes since commit a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6:
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- kernel/cgroup/cpuset.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+  Linux 6.9 (2024-05-12 14:12:29 -0700)
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index f9d2a3487645..315f8cbd6d35 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -4038,6 +4038,12 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
- 		set_bit(CS_SPREAD_PAGE, &cs->flags);
- 	if (is_spread_slab(parent))
- 		set_bit(CS_SPREAD_SLAB, &cs->flags);
-+	/*
-+	 * For v2, clear CS_SCHED_LOAD_BALANCE if parent is isolated
-+	 */
-+	if (cgroup_subsys_on_dfl(cpuset_cgrp_subsys) &&
-+	    !is_sched_load_balance(parent))
-+		clear_bit(CS_SCHED_LOAD_BALANCE, &cs->flags);
- 
- 	cpuset_inc();
- 
-@@ -4048,14 +4054,6 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
- 		cs->use_parent_ecpus = true;
- 		parent->child_ecpus_count++;
- 	}
--
--	/*
--	 * For v2, clear CS_SCHED_LOAD_BALANCE if parent is isolated
--	 */
--	if (cgroup_subsys_on_dfl(cpuset_cgrp_subsys) &&
--	    !is_sched_load_balance(parent))
--		clear_bit(CS_SCHED_LOAD_BALANCE, &cs->flags);
--
- 	spin_unlock_irq(&callback_lock);
- 
- 	if (!test_bit(CGRP_CPUSET_CLONE_CHILDREN, &css->cgroup->flags))
--- 
-2.34.1
+are available in the Git repository at:
 
+  https://github.com/ceph/ceph-client.git tags/ceph-for-6.10-rc1
+
+for you to fetch changes up to 93a2221c9c1ae32643df67c482dc4c4c591b7514:
+
+  doc: ceph: update userspace command to get CephFS metadata (2024-05-23 10:35:47 +0200)
+
+----------------------------------------------------------------
+We have a series from Xiubo that adds support for additional access
+checks based on MDS auth caps which were recently made available to
+clients.  This is needed to prevent scenarios where the MDS quietly
+discards updates that a UID-restricted client previously (wrongfully)
+acked to the user.  Other than that, just a documentation fixup.
+
+----------------------------------------------------------------
+Artem Ikonnikov (1):
+      doc: ceph: update userspace command to get CephFS metadata
+
+Xiubo Li (6):
+      ceph: save cap_auths in MDS client when session is opened
+      ceph: add ceph_mds_check_access() helper
+      ceph: check the cephx mds auth access for setattr
+      ceph: check the cephx mds auth access for open
+      ceph: check the cephx mds auth access for async dirop
+      ceph: add CEPHFS_FEATURE_MDS_AUTH_CAPS_CHECK feature bit
+
+ Documentation/filesystems/ceph.rst |  15 ++-
+ fs/ceph/dir.c                      |  28 ++++
+ fs/ceph/file.c                     |  66 ++++++++-
+ fs/ceph/inode.c                    |  46 +++++--
+ fs/ceph/mds_client.c               | 270 ++++++++++++++++++++++++++++++++++++-
+ fs/ceph/mds_client.h               |  28 +++-
+ 6 files changed, 434 insertions(+), 19 deletions(-)
