@@ -1,50 +1,48 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317E552F8C;
-	Sun, 26 May 2024 17:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B008F40;
+	Sun, 26 May 2024 17:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716744361; cv=none; b=gMBE9znbpKO26GoKw8o9ruTOIudZXU/pFeyOq297tYor1pa0RbkGK71uByjIL6awzhF1CiPdETkenULRrL8dm2N4dfhCn1Mi2+iymSwmM8cX4XI2binBm3QEKO/kh+Gmor4yNDlteemaN/xPlKILdxzFfyoydl2LCVN1mWGNZ2w=
+	t=1716744458; cv=none; b=UyoyHGfkPInIHuZ/7vhbeGY9VYSLd2IA4jCHjWShJbrOTYuxQIEvclZLo44dAOPpnEvr9W+azHvMmSXl20q/CdQaPHuf/mWCODNgyGoSmbR/MyYKisNz+2Is/eol8aPWWIxMSXZfzVhROO1Ro80Em3PfU8SsOpPxZ8vEvjHSru0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716744361; c=relaxed/simple;
-	bh=378XXa0Bo17EZwBI247WORitI2varrhaPXmIosZX9/c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cJjcQ+p37fe6bxdcTaPrkZq+Ar//84i+TuN2iefjahzYITtISzlXPW0+QUnscoNAjZcQzW7cSjw/cWgo3rQb6Zfv0r8rRgF2hN8LXrHZi/xHjnozuE+efOcffmNPNRvQG/eltBuedwsVM3+GP28JsJyG9Ro4o2wWGGsHOsSvqxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=I6HJSLrt; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1716744458; c=relaxed/simple;
+	bh=gMVISDvt27PqArWWAYMROWxlMPEWKBZrhuZFwb21ZKk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=egWYJ5+HsxOzHU8gMLeQJgrwz1u7p/wKCURhTLVghi+Helmi5alUVl1XWF+8vtxgoJTrx6T7AnSOL7Pba16SHBb223nIfqpVexHDnN7KoSzgtd4qCShGPZZAVElQ+3hwW4NxpHSJJWG7xP6rfiYfFIAxSp62hU5ux+RQyStJNOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=w1c0xEUe; arc=none smtp.client-ip=134.0.28.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="I6HJSLrt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=fJwBIr6v15ZehR1HVxgnQmaZc/OqYRDjeLZFE00kofo=; b=I6HJSLrtnC2+Cerk
-	EOJeft+PhiMcnBQrE62Py10+x07kcHWG/LMvVLmzN3hixktplNJks/62wXF3aQhP6Ko99D7/GOmY9
-	AAs/D1sPU51JJMLrrivU4/9CVu+My0FWqKiJHbKw+3sLtPngbQerjjnGgqUdoaj8GzItgL2fHhyVl
-	D1+K6ixoms60DUh48gUICTObq2oIBG0DBAPIOCPqbqbxeE6veARpuXRCH3dr9M68H9R3L+7318NPT
-	t+pYCzbtZCGuNnj1KOgXakWlRrxDZ79c3ylJU431/Q6pabFDljSKbNd+CB/ZtoRPcDuGzk94zoEKW
-	dMGyXrwmHLk2Yogh+w==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1sBHcz-002aYf-0V;
-	Sun, 26 May 2024 17:25:49 +0000
-From: linux@treblig.org
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: ionut@badula.org,
-	tariqt@nvidia.com,
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="w1c0xEUe"
+Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
+	by mxout3.routing.net (Postfix) with ESMTP id EDE7460144;
+	Sun, 26 May 2024 17:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1716744107;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gynUFeKlK7bwR/LNfSPExiIbRZQ2pzBMdaawzedPczQ=;
+	b=w1c0xEUeZdaYLS7WwJ5AngC3BOPaOe1j+5V15sNDXx5l476D7V5CNMQ4pNDdyzr4pSO2Bq
+	1LeVxlf5qoczz8qT9pnMruHii9hQ0zf+Yb5294tnOEInS8XYu3ttbbmm6FZRdORZjVgEJ2
+	7wGa46ztBrVxnopMnf7+I/sO1r0SEEg=
+Received: from frank-G5.. (fttx-pool-157.180.226.247.bambit.de [157.180.226.247])
+	by mxbox1.masterlogin.de (Postfix) with ESMTPSA id 3EEDE4003D;
+	Sun, 26 May 2024 17:21:46 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: 
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	John Crispin <john@phrozen.org>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 4/4] net: ethernet: 8390: ne2k-pci: remove unused struct 'ne2k_pci_card'
-Date: Sun, 26 May 2024 18:24:28 +0100
-Message-ID: <20240526172428.134726-5-linux@treblig.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240526172428.134726-1-linux@treblig.org>
-References: <20240526172428.134726-1-linux@treblig.org>
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Daniel Golle <daniel@makrotopia.org>
+Subject: [net] net: ethernet: mtk_eth_soc: handle dma buffer size soc specific
+Date: Sun, 26 May 2024 19:21:37 +0200
+Message-Id: <20240526172137.60770-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,40 +50,360 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Mail-ID: a2f1974f-838e-443e-b974-70058ff4522b
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+From: Frank Wunderlich <frank-w@public-files.de>
 
-'ne2k_pci_card' is unused since 2.3.99-pre3 in March 2000.
+The mainline MTK ethernet driver suffers long time from rarly but
+annoying tx queue timeouts. We think that this is caused by fixed
+dma sizes hardcoded for all SoCs.
 
-Remove it.
+Use the dma-size implementation from SDK in a per SoC manner.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Fixes: 656e705243fd ("net-next: mediatek: add support for MT7623 ethernet")
+Suggested-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
- drivers/net/ethernet/8390/ne2k-pci.c | 11 -----------
- 1 file changed, 11 deletions(-)
+based on SDK:
 
-diff --git a/drivers/net/ethernet/8390/ne2k-pci.c b/drivers/net/ethernet/8390/ne2k-pci.c
-index 65f56a98c0a0..1a34da07c0db 100644
---- a/drivers/net/ethernet/8390/ne2k-pci.c
-+++ b/drivers/net/ethernet/8390/ne2k-pci.c
-@@ -186,17 +186,6 @@ static void ne2k_pci_block_output(struct net_device *dev, const int count,
- static const struct ethtool_ops ne2k_pci_ethtool_ops;
+https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/fac194d6253d339e15c651c052b532a449a04d6e
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 106 +++++++++++++-------
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h |   9 +-
+ 2 files changed, 79 insertions(+), 36 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index cae46290a7ae..6178bb53608c 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -1131,9 +1131,9 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
+ {
+ 	const struct mtk_soc_data *soc = eth->soc;
+ 	dma_addr_t phy_ring_tail;
+-	int cnt = MTK_QDMA_RING_SIZE;
++	int cnt = soc->tx.fq_dma_size;
+ 	dma_addr_t dma_addr;
+-	int i;
++	int i, j, len;
  
+ 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM))
+ 		eth->scratch_ring = eth->sram_base;
+@@ -1142,40 +1142,47 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
+ 						       cnt * soc->tx.desc_size,
+ 						       &eth->phy_scratch_ring,
+ 						       GFP_KERNEL);
++
+ 	if (unlikely(!eth->scratch_ring))
+ 		return -ENOMEM;
  
--
--/* There is no room in the standard 8390 structure for extra info we need,
-- * so we build a meta/outer-wrapper structure..
-- */
--struct ne2k_pci_card {
--	struct net_device *dev;
--	struct pci_dev *pci_dev;
--};
--
--
--
- /* NEx000-clone boards have a Station Address (SA) PROM (SAPROM) in the packet
-  * buffer memory space.  By-the-spec NE2000 clones have 0x57,0x57 in bytes
-  * 0x0e,0x0f of the SAPROM, while other supposed NE2000 clones must be
+-	eth->scratch_head = kcalloc(cnt, MTK_QDMA_PAGE_SIZE, GFP_KERNEL);
+-	if (unlikely(!eth->scratch_head))
+-		return -ENOMEM;
++	phy_ring_tail = eth->phy_scratch_ring + soc->tx.desc_size * (cnt - 1);
+ 
+-	dma_addr = dma_map_single(eth->dma_dev,
+-				  eth->scratch_head, cnt * MTK_QDMA_PAGE_SIZE,
+-				  DMA_FROM_DEVICE);
+-	if (unlikely(dma_mapping_error(eth->dma_dev, dma_addr)))
+-		return -ENOMEM;
++	for (j = 0; j < DIV_ROUND_UP(soc->tx.fq_dma_size, MTK_FQ_DMA_LENGTH); j++) {
++		len = min_t(int, cnt - j * MTK_FQ_DMA_LENGTH, MTK_FQ_DMA_LENGTH);
++		eth->scratch_head[j] = kcalloc(len, MTK_QDMA_PAGE_SIZE, GFP_KERNEL);
+ 
+-	phy_ring_tail = eth->phy_scratch_ring + soc->tx.desc_size * (cnt - 1);
++		if (unlikely(!eth->scratch_head[j]))
++			return -ENOMEM;
+ 
+-	for (i = 0; i < cnt; i++) {
+-		dma_addr_t addr = dma_addr + i * MTK_QDMA_PAGE_SIZE;
+-		struct mtk_tx_dma_v2 *txd;
++		dma_addr = dma_map_single(eth->dma_dev,
++					  eth->scratch_head[j], len * MTK_QDMA_PAGE_SIZE,
++					  DMA_FROM_DEVICE);
+ 
+-		txd = eth->scratch_ring + i * soc->tx.desc_size;
+-		txd->txd1 = addr;
+-		if (i < cnt - 1)
+-			txd->txd2 = eth->phy_scratch_ring +
+-				    (i + 1) * soc->tx.desc_size;
++		if (unlikely(dma_mapping_error(eth->dma_dev, dma_addr)))
++			return -ENOMEM;
+ 
+-		txd->txd3 = TX_DMA_PLEN0(MTK_QDMA_PAGE_SIZE);
+-		if (MTK_HAS_CAPS(soc->caps, MTK_36BIT_DMA))
+-			txd->txd3 |= TX_DMA_PREP_ADDR64(addr);
+-		txd->txd4 = 0;
+-		if (mtk_is_netsys_v2_or_greater(eth)) {
+-			txd->txd5 = 0;
+-			txd->txd6 = 0;
+-			txd->txd7 = 0;
+-			txd->txd8 = 0;
++		for (i = 0; i < cnt; i++) {
++			dma_addr_t addr = dma_addr + i * MTK_QDMA_PAGE_SIZE;
++			struct mtk_tx_dma_v2 *txd;
++
++			txd = eth->scratch_ring + (j * MTK_FQ_DMA_LENGTH + i) * soc->tx.desc_size;
++			txd->txd1 = dma_addr + i * MTK_QDMA_PAGE_SIZE;
++			if (j * MTK_FQ_DMA_LENGTH + i < cnt)
++				txd->txd2 = eth->phy_scratch_ring +
++					    (j * MTK_FQ_DMA_LENGTH + i + 1) * soc->tx.desc_size;
++
++			txd->txd3 = TX_DMA_PLEN0(MTK_QDMA_PAGE_SIZE);
++			if (MTK_HAS_CAPS(soc->caps, MTK_36BIT_DMA))
++				txd->txd3 |= TX_DMA_PREP_ADDR64(addr);
++
++			txd->txd4 = 0;
++			if (mtk_is_netsys_v2_or_greater(eth)) {
++				txd->txd5 = 0;
++				txd->txd6 = 0;
++				txd->txd7 = 0;
++				txd->txd8 = 0;
++			}
+ 		}
+ 	}
+ 
+@@ -2457,7 +2464,7 @@ static int mtk_tx_alloc(struct mtk_eth *eth)
+ 	if (MTK_HAS_CAPS(soc->caps, MTK_QDMA))
+ 		ring_size = MTK_QDMA_RING_SIZE;
+ 	else
+-		ring_size = MTK_DMA_SIZE;
++		ring_size = soc->tx.dma_size;
+ 
+ 	ring->buf = kcalloc(ring_size, sizeof(*ring->buf),
+ 			       GFP_KERNEL);
+@@ -2465,8 +2472,8 @@ static int mtk_tx_alloc(struct mtk_eth *eth)
+ 		goto no_tx_mem;
+ 
+ 	if (MTK_HAS_CAPS(soc->caps, MTK_SRAM)) {
+-		ring->dma = eth->sram_base + ring_size * sz;
+-		ring->phys = eth->phy_scratch_ring + ring_size * (dma_addr_t)sz;
++		ring->dma = eth->sram_base + soc->tx.fq_dma_size * sz;
++		ring->phys = eth->phy_scratch_ring + soc->tx.fq_dma_size * (dma_addr_t)sz;
+ 	} else {
+ 		ring->dma = dma_alloc_coherent(eth->dma_dev, ring_size * sz,
+ 					       &ring->phys, GFP_KERNEL);
+@@ -2588,6 +2595,7 @@ static void mtk_tx_clean(struct mtk_eth *eth)
+ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
+ {
+ 	const struct mtk_reg_map *reg_map = eth->soc->reg_map;
++	const struct mtk_soc_data *soc = eth->soc;
+ 	struct mtk_rx_ring *ring;
+ 	int rx_data_len, rx_dma_size, tx_ring_size;
+ 	int i;
+@@ -2595,7 +2603,7 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
+ 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_QDMA))
+ 		tx_ring_size = MTK_QDMA_RING_SIZE;
+ 	else
+-		tx_ring_size = MTK_DMA_SIZE;
++		tx_ring_size = soc->tx.dma_size;
+ 
+ 	if (rx_flag == MTK_RX_FLAGS_QDMA) {
+ 		if (ring_no)
+@@ -2610,7 +2618,7 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
+ 		rx_dma_size = MTK_HW_LRO_DMA_SIZE;
+ 	} else {
+ 		rx_data_len = ETH_DATA_LEN;
+-		rx_dma_size = MTK_DMA_SIZE;
++		rx_dma_size = soc->rx.dma_size;
+ 	}
+ 
+ 	ring->frag_size = mtk_max_frag_size(rx_data_len);
+@@ -3139,7 +3147,10 @@ static void mtk_dma_free(struct mtk_eth *eth)
+ 			mtk_rx_clean(eth, &eth->rx_ring[i], false);
+ 	}
+ 
+-	kfree(eth->scratch_head);
++	for (i = 0; i < DIV_ROUND_UP(soc->tx.fq_dma_size, MTK_FQ_DMA_LENGTH); i++) {
++		kfree(eth->scratch_head[i]);
++		eth->scratch_head[i] = NULL;
++	}
+ }
+ 
+ static bool mtk_hw_reset_check(struct mtk_eth *eth)
+@@ -5052,11 +5063,14 @@ static const struct mtk_soc_data mt2701_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(2K),
++		.fq_dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma),
+ 		.irq_done_mask = MTK_RX_DONE_INT,
+ 		.dma_l4_valid = RX_DMA_L4_VALID,
++		.dma_size = MTK_DMA_SIZE(2K),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
+ 	},
+@@ -5076,11 +5090,14 @@ static const struct mtk_soc_data mt7621_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(2K),
++		.fq_dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma),
+ 		.irq_done_mask = MTK_RX_DONE_INT,
+ 		.dma_l4_valid = RX_DMA_L4_VALID,
++		.dma_size = MTK_DMA_SIZE(2K),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
+ 	},
+@@ -5102,11 +5119,14 @@ static const struct mtk_soc_data mt7622_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(2K),
++		.fq_dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma),
+ 		.irq_done_mask = MTK_RX_DONE_INT,
+ 		.dma_l4_valid = RX_DMA_L4_VALID,
++		.dma_size = MTK_DMA_SIZE(2K),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
+ 	},
+@@ -5127,11 +5147,14 @@ static const struct mtk_soc_data mt7623_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(2K),
++		.fq_dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma),
+ 		.irq_done_mask = MTK_RX_DONE_INT,
+ 		.dma_l4_valid = RX_DMA_L4_VALID,
++		.dma_size = MTK_DMA_SIZE(2K),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
+ 	},
+@@ -5150,11 +5173,14 @@ static const struct mtk_soc_data mt7629_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(2K),
++		.fq_dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma),
+ 		.irq_done_mask = MTK_RX_DONE_INT,
+ 		.dma_l4_valid = RX_DMA_L4_VALID,
++		.dma_size = MTK_DMA_SIZE(2K),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
+ 	},
+@@ -5176,6 +5202,8 @@ static const struct mtk_soc_data mt7981_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma_v2),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+ 		.dma_len_offset = 8,
++		.dma_size = MTK_DMA_SIZE(4K),
++		.fq_dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma),
+@@ -5183,6 +5211,7 @@ static const struct mtk_soc_data mt7981_data = {
+ 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(1K),
+ 	},
+ };
+ 
+@@ -5202,6 +5231,8 @@ static const struct mtk_soc_data mt7986_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma_v2),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+ 		.dma_len_offset = 8,
++		.dma_size = MTK_DMA_SIZE(4K),
++		.fq_dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma),
+@@ -5209,6 +5240,7 @@ static const struct mtk_soc_data mt7986_data = {
+ 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(1K),
+ 	},
+ };
+ 
+@@ -5228,6 +5260,8 @@ static const struct mtk_soc_data mt7988_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma_v2),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+ 		.dma_len_offset = 8,
++		.dma_size = MTK_DMA_SIZE(4K),
++		.fq_dma_size = MTK_DMA_SIZE(4K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma_v2),
+@@ -5235,6 +5269,7 @@ static const struct mtk_soc_data mt7988_data = {
+ 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+ 		.dma_len_offset = 8,
++		.dma_size = MTK_DMA_SIZE(1K),
+ 	},
+ };
+ 
+@@ -5249,6 +5284,8 @@ static const struct mtk_soc_data rt5350_data = {
+ 		.desc_size = sizeof(struct mtk_tx_dma),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(2K),
++		.fq_dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma),
+@@ -5256,6 +5293,7 @@ static const struct mtk_soc_data rt5350_data = {
+ 		.dma_l4_valid = RX_DMA_L4_VALID_PDMA,
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
+ 		.dma_len_offset = 16,
++		.dma_size = MTK_DMA_SIZE(2K),
+ 	},
+ };
+ 
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 4eab30b44070..f5174f6cb1bb 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -32,7 +32,9 @@
+ #define MTK_TX_DMA_BUF_LEN	0x3fff
+ #define MTK_TX_DMA_BUF_LEN_V2	0xffff
+ #define MTK_QDMA_RING_SIZE	2048
+-#define MTK_DMA_SIZE		512
++#define MTK_DMA_SIZE(x)		(SZ_##x)
++#define MTK_FQ_DMA_HEAD		32
++#define MTK_FQ_DMA_LENGTH	2048
+ #define MTK_RX_ETH_HLEN		(ETH_HLEN + ETH_FCS_LEN)
+ #define MTK_RX_HLEN		(NET_SKB_PAD + MTK_RX_ETH_HLEN + NET_IP_ALIGN)
+ #define MTK_DMA_DUMMY_DESC	0xffffffff
+@@ -1176,6 +1178,8 @@ struct mtk_soc_data {
+ 		u32	desc_size;
+ 		u32	dma_max_len;
+ 		u32	dma_len_offset;
++		u32	dma_size;
++		u32	fq_dma_size;
+ 	} tx;
+ 	struct {
+ 		u32	desc_size;
+@@ -1183,6 +1187,7 @@ struct mtk_soc_data {
+ 		u32	dma_l4_valid;
+ 		u32	dma_max_len;
+ 		u32	dma_len_offset;
++		u32	dma_size;
+ 	} rx;
+ };
+ 
+@@ -1264,7 +1269,7 @@ struct mtk_eth {
+ 	struct napi_struct		rx_napi;
+ 	void				*scratch_ring;
+ 	dma_addr_t			phy_scratch_ring;
+-	void				*scratch_head;
++	void				*scratch_head[MTK_FQ_DMA_HEAD];
+ 	struct clk			*clks[MTK_CLK_MAX];
+ 
+ 	struct mii_bus			*mii_bus;
 -- 
-2.45.1
+2.34.1
 
