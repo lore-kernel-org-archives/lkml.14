@@ -1,418 +1,410 @@
-Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFF812BE9D;
-	Sun, 26 May 2024 18:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB96512C467
+	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 18:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716747746; cv=none; b=Qs+u9BarLGs0vRf+PGIKL0Lzyb8NowpVXfl1qjKruHa9k4g3xLEAywybX8kvNWucRu/FTzPXN9URzFid3JFNorS2EZW9UVwNTijP8sPCTqHIYM8oetCwPDXMHoqAdX8ojY30JlhOi29MOjsW20SCFcpRc5qtvgN2f5HnDk3TBVo=
+	t=1716747748; cv=none; b=RTXg2lkndRDn6AjkzAl4dI3w+Az8WkX3mQyUuD7aEmF6sY49Rnu916krFuYLSYEbgWgUwnFkNq7ROQglqEU9k6kifZqE6eydNnfSBKxEMBJjGKCb4WZrdLl+cClb06ZspMsknO3/jiWu86lo5+tARTWLk2vM4E2+hc4011tGlns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716747746; c=relaxed/simple;
-	bh=gMVISDvt27PqArWWAYMROWxlMPEWKBZrhuZFwb21ZKk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jgM/LpJN4Yf4H+5wPXn/IGzKjxyH54wuKdBzKMmps7Om8vY7iir1gA+AuVoxQEylhL8FVYcpaB2ve/bJyZ8EWEAKATyarCaHBfKf6QqxgaMFiBATrkeKGKog3OPpCrR30Lpdvb2Y9JZjVw/2XFw8HQ8cp5KT7d4tAzALLbVyt9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=IynnE00z; arc=none smtp.client-ip=134.0.28.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1716747748; c=relaxed/simple;
+	bh=xvPcI6gfFhB1qrDvScfjlNlRUb/SuewMGeLYqNfmCqI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=o67NX29A9zGPBqlIOiYSSxrSA3jeymbLeKFFX7oWlTLAzBZQgtIjreT690qPQB7OOJkmWqFPHBKcm90C6haP8Mqbqrkh/eyOqeK8uBLVfymNbMwO93sayeH5jhlr53IqGSoaBt4GQmKj2W+3Fgi751ls0mJm/J6ntRb9LoHW2F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PiNm0rEU; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="IynnE00z"
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
-	by mxout2.routing.net (Postfix) with ESMTP id 82B725FAAF;
-	Sun, 26 May 2024 18:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1716747401;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gynUFeKlK7bwR/LNfSPExiIbRZQ2pzBMdaawzedPczQ=;
-	b=IynnE00z7paNMV+3GPrFYtyiFr+2FcbJUT9iiEdRE83sUPjLC9RWDzQO2vzoejp/rgLrPI
-	qZ4xpHVZj7BMbd1IkrqlIN4nTtvN6y70qhvJIzAkUtuna4hKTsNtxQ52Cm0HCs7o8D64+2
-	4AIok5UT37SA0dDt3C3pcMmqWuYY6WY=
-Received: from frank-G5.. (fttx-pool-157.180.226.247.bambit.de [157.180.226.247])
-	by mxbox1.masterlogin.de (Postfix) with ESMTPSA id 5A26040029;
-	Sun, 26 May 2024 18:16:40 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Felix Fietkau <nbd@nbd.name>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Mark Lee <Mark-MC.Lee@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	John Crispin <john@phrozen.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: [net] net: ethernet: mtk_eth_soc: handle dma buffer size soc specific
-Date: Sun, 26 May 2024 20:16:16 +0200
-Message-Id: <20240526181616.63727-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PiNm0rEU"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df4954aa0d0so2748726276.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 11:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716747745; x=1717352545; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fkztai17OUTDruPYJRakPlD+iWL3WoqixnzK62Tclrw=;
+        b=PiNm0rEUeyBvH4LXzjdIrhRG1rkclimlUR7CD3wYQz1TKnnNGBIQtJ8M4ZSElKOHtA
+         qZUT+Ev7hgxuwfSrn/lo+m6qseELfcT2Aq/WTBqi36AZYjV7KgPWLCNsoHN4FdrSldaT
+         BEvOeOj49MgY9cA4n45XE0003Jo1aqma3lA002UXElDTF6Ao5eBzs03uD6d7/aaNbeRh
+         w7y/9jX1RhfGPGFtkxr7DHVFGZ2TawkNrrGKdXDsKwOgCNAa571y/MQYhIy8zGHbcdiz
+         tpYLwTjqASmc1prMA3sof690kTz0+jnrk4FRYE6YVGc/bX3b1D4G2mkX9tkEETLXIrAk
+         cY5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716747745; x=1717352545;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fkztai17OUTDruPYJRakPlD+iWL3WoqixnzK62Tclrw=;
+        b=OJpzl+MyQvODFQ2GFn/56oIYsujFioze3bA7HtyLM1Ok0LIcTQN7mtCMoY5sXKMOvt
+         5ubO4rPCvZdsE9pPgwjtL2K+gRGVTVzZEjOwEmeyuIEFgpdqnIqOeOaVEIDAb6ISIs8r
+         D2lAtKgcyei7KKFvazdLYLKGbuxl3je/oameJ6QRMIZIZoLA0NemVmpM45TJO7YIVhZM
+         ozP3M/9EaTwtCkQieecDtPsBsC5lyQ/H8+hsqi1voXRJgZP+Gn+eiFo6wFF1nHofle7O
+         BMih8hUrYMzfAnwBC/TDpt2xxKP0d7Xtcab4Y75hTeOhdKpS1DWeKKB4xSLjbVz/hBQN
+         ZzrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXw6cqr2cVKJG/U6Gh0a8Q3cC1tkCPizchzIe3uf9DqE2BQjzHizCKx5y2D/bXZypLmFo/4cdmXsxTOgCcSSHBFEaGWfSGIkL3pnVOv
+X-Gm-Message-State: AOJu0YwTeUKLEsln8EG0YiCjUg3r3FTKSIhBhBqsnbMe7sF6sDHmRpQg
+	z+Fa5mujwvSP/KAjYQuMovpEm8OT5/PzJQeVEUfAwraOICYNXJr20OVnuNAobQ/yHeoAxcgJyA=
+	=
+X-Google-Smtp-Source: AGHT+IEVs3nJdrnEJtkpiaXiKgg/KgxxsXeqbyxtum2py0Di3sugB8fCJtR9uipW9waD54C/YAsCOC6RPg==
+X-Received: from sesse.osl.corp.google.com ([2a00:79e0:18:10:1a92:9649:8b20:5054])
+ (user=sesse job=sendgmr) by 2002:a05:6902:f09:b0:dee:80d7:e72d with SMTP id
+ 3f1490d57ef6-df7721a082bmr514006276.7.1716747745018; Sun, 26 May 2024
+ 11:22:25 -0700 (PDT)
+Date: Sun, 26 May 2024 20:22:12 +0200
+In-Reply-To: <20240526182212.544525-1-sesse@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 61986cbb-004f-4af2-a9fc-cb68983d8dba
+Mime-Version: 1.0
+References: <20240526182212.544525-1-sesse@google.com>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Message-ID: <20240526182212.544525-4-sesse@google.com>
+Subject: [PATCH v7 4/4] perf report: LLVM-based symbol listing
+From: "Steinar H. Gunderson" <sesse@google.com>
+To: acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Frank Wunderlich <frank-w@public-files.de>
+Similar to the previous LLVM patches, this allows symbol enumeration
+using LLVM instead of libbfd or libelf. This allows distro builds to
+reliably enumerate symbols in e.g. PE binaries as profiled with WINE.
 
-The mainline MTK ethernet driver suffers long time from rarly but
-annoying tx queue timeouts. We think that this is caused by fixed
-dma sizes hardcoded for all SoCs.
+A lot of the logic for e.g. length detection has been carried over
+from the libbfd code.
 
-Use the dma-size implementation from SDK in a per SoC manner.
-
-Fixes: 656e705243fd ("net-next: mediatek: add support for MT7623 ethernet")
-Suggested-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Signed-off-by: Steinar H. Gunderson <sesse@google.com>
 ---
-based on SDK:
+ tools/perf/util/llvm-c-helpers.cpp | 124 +++++++++++++++++++++++++++++
+ tools/perf/util/llvm-c-helpers.h   |  49 ++++++++++++
+ tools/perf/util/symbol.c           |  54 ++++++++++++-
+ tools/perf/util/symbol.h           |   3 +
+ 4 files changed, 228 insertions(+), 2 deletions(-)
 
-https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/fac194d6253d339e15c651c052b532a449a04d6e
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 106 +++++++++++++-------
- drivers/net/ethernet/mediatek/mtk_eth_soc.h |   9 +-
- 2 files changed, 79 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index cae46290a7ae..6178bb53608c 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1131,9 +1131,9 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
- {
- 	const struct mtk_soc_data *soc = eth->soc;
- 	dma_addr_t phy_ring_tail;
--	int cnt = MTK_QDMA_RING_SIZE;
-+	int cnt = soc->tx.fq_dma_size;
- 	dma_addr_t dma_addr;
--	int i;
-+	int i, j, len;
+diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
+index 4070e2d5682f..87caf98cc8f6 100644
+--- a/tools/perf/util/llvm-c-helpers.cpp
++++ b/tools/perf/util/llvm-c-helpers.cpp
+@@ -9,6 +9,7 @@
+ #pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
+ #include <llvm/DebugInfo/Symbolize/Symbolize.h>
+ #include <llvm/Support/TargetSelect.h>
++#include <llvm/Object/Binary.h>
+ #pragma GCC diagnostic pop
  
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM))
- 		eth->scratch_ring = eth->sram_base;
-@@ -1142,40 +1142,47 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
- 						       cnt * soc->tx.desc_size,
- 						       &eth->phy_scratch_ring,
- 						       GFP_KERNEL);
+ #include <stdio.h>
+@@ -17,6 +18,8 @@
+ extern "C" {
+ #include <linux/zalloc.h>
+ }
++#include <vector>
++#include <algorithm>
+ #include "symbol_conf.h"
+ #include "llvm-c-helpers.h"
+ 
+@@ -24,6 +27,7 @@ extern "C"
+ char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
+ 
+ using namespace llvm;
++using namespace llvm::object;
+ using llvm::symbolize::LLVMSymbolizer;
+ 
+ /*
+@@ -194,3 +198,123 @@ char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr)
+ 		dso, res_or_err->Name.c_str(),
+ 		addr, res_or_err->Start);
+ }
 +
- 	if (unlikely(!eth->scratch_ring))
- 		return -ENOMEM;
- 
--	eth->scratch_head = kcalloc(cnt, MTK_QDMA_PAGE_SIZE, GFP_KERNEL);
--	if (unlikely(!eth->scratch_head))
--		return -ENOMEM;
-+	phy_ring_tail = eth->phy_scratch_ring + soc->tx.desc_size * (cnt - 1);
- 
--	dma_addr = dma_map_single(eth->dma_dev,
--				  eth->scratch_head, cnt * MTK_QDMA_PAGE_SIZE,
--				  DMA_FROM_DEVICE);
--	if (unlikely(dma_mapping_error(eth->dma_dev, dma_addr)))
--		return -ENOMEM;
-+	for (j = 0; j < DIV_ROUND_UP(soc->tx.fq_dma_size, MTK_FQ_DMA_LENGTH); j++) {
-+		len = min_t(int, cnt - j * MTK_FQ_DMA_LENGTH, MTK_FQ_DMA_LENGTH);
-+		eth->scratch_head[j] = kcalloc(len, MTK_QDMA_PAGE_SIZE, GFP_KERNEL);
- 
--	phy_ring_tail = eth->phy_scratch_ring + soc->tx.desc_size * (cnt - 1);
-+		if (unlikely(!eth->scratch_head[j]))
-+			return -ENOMEM;
- 
--	for (i = 0; i < cnt; i++) {
--		dma_addr_t addr = dma_addr + i * MTK_QDMA_PAGE_SIZE;
--		struct mtk_tx_dma_v2 *txd;
-+		dma_addr = dma_map_single(eth->dma_dev,
-+					  eth->scratch_head[j], len * MTK_QDMA_PAGE_SIZE,
-+					  DMA_FROM_DEVICE);
- 
--		txd = eth->scratch_ring + i * soc->tx.desc_size;
--		txd->txd1 = addr;
--		if (i < cnt - 1)
--			txd->txd2 = eth->phy_scratch_ring +
--				    (i + 1) * soc->tx.desc_size;
-+		if (unlikely(dma_mapping_error(eth->dma_dev, dma_addr)))
-+			return -ENOMEM;
- 
--		txd->txd3 = TX_DMA_PLEN0(MTK_QDMA_PAGE_SIZE);
--		if (MTK_HAS_CAPS(soc->caps, MTK_36BIT_DMA))
--			txd->txd3 |= TX_DMA_PREP_ADDR64(addr);
--		txd->txd4 = 0;
--		if (mtk_is_netsys_v2_or_greater(eth)) {
--			txd->txd5 = 0;
--			txd->txd6 = 0;
--			txd->txd7 = 0;
--			txd->txd8 = 0;
-+		for (i = 0; i < cnt; i++) {
-+			dma_addr_t addr = dma_addr + i * MTK_QDMA_PAGE_SIZE;
-+			struct mtk_tx_dma_v2 *txd;
++int llvm_load_symbols(const char *debugfile, struct llvm_symbol_list *symbols)
++{
++	/* NOTE: This nominally does an mmap, despite the scary name. */
++	ErrorOr<std::unique_ptr<MemoryBuffer>> mem_buf_or_err =
++		MemoryBuffer::getFile(debugfile);
++	if (mem_buf_or_err.getError())
++		return -1;
 +
-+			txd = eth->scratch_ring + (j * MTK_FQ_DMA_LENGTH + i) * soc->tx.desc_size;
-+			txd->txd1 = dma_addr + i * MTK_QDMA_PAGE_SIZE;
-+			if (j * MTK_FQ_DMA_LENGTH + i < cnt)
-+				txd->txd2 = eth->phy_scratch_ring +
-+					    (j * MTK_FQ_DMA_LENGTH + i + 1) * soc->tx.desc_size;
++	Expected<std::unique_ptr<Binary>> binary_or_err(
++		createBinary(mem_buf_or_err.get()->getMemBufferRef(), nullptr));
++	if (!binary_or_err)
++		return -1;
 +
-+			txd->txd3 = TX_DMA_PLEN0(MTK_QDMA_PAGE_SIZE);
-+			if (MTK_HAS_CAPS(soc->caps, MTK_36BIT_DMA))
-+				txd->txd3 |= TX_DMA_PREP_ADDR64(addr);
++	/* Find the .text section. */
++	SectionRef text_section;
++	uint64_t text_filepos, image_base;
++	for (SectionRef section :
++	     cast<ObjectFile>(*binary_or_err.get()).sections()) {
++		Expected<StringRef> name = section.getName();
++		if (name && *name == ".text") {
++			text_section = section;
 +
-+			txd->txd4 = 0;
-+			if (mtk_is_netsys_v2_or_greater(eth)) {
-+				txd->txd5 = 0;
-+				txd->txd6 = 0;
-+				txd->txd7 = 0;
-+				txd->txd8 = 0;
-+			}
- 		}
- 	}
- 
-@@ -2457,7 +2464,7 @@ static int mtk_tx_alloc(struct mtk_eth *eth)
- 	if (MTK_HAS_CAPS(soc->caps, MTK_QDMA))
- 		ring_size = MTK_QDMA_RING_SIZE;
- 	else
--		ring_size = MTK_DMA_SIZE;
-+		ring_size = soc->tx.dma_size;
- 
- 	ring->buf = kcalloc(ring_size, sizeof(*ring->buf),
- 			       GFP_KERNEL);
-@@ -2465,8 +2472,8 @@ static int mtk_tx_alloc(struct mtk_eth *eth)
- 		goto no_tx_mem;
- 
- 	if (MTK_HAS_CAPS(soc->caps, MTK_SRAM)) {
--		ring->dma = eth->sram_base + ring_size * sz;
--		ring->phys = eth->phy_scratch_ring + ring_size * (dma_addr_t)sz;
-+		ring->dma = eth->sram_base + soc->tx.fq_dma_size * sz;
-+		ring->phys = eth->phy_scratch_ring + soc->tx.fq_dma_size * (dma_addr_t)sz;
- 	} else {
- 		ring->dma = dma_alloc_coherent(eth->dma_dev, ring_size * sz,
- 					       &ring->phys, GFP_KERNEL);
-@@ -2588,6 +2595,7 @@ static void mtk_tx_clean(struct mtk_eth *eth)
- static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
- {
- 	const struct mtk_reg_map *reg_map = eth->soc->reg_map;
-+	const struct mtk_soc_data *soc = eth->soc;
- 	struct mtk_rx_ring *ring;
- 	int rx_data_len, rx_dma_size, tx_ring_size;
- 	int i;
-@@ -2595,7 +2603,7 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_QDMA))
- 		tx_ring_size = MTK_QDMA_RING_SIZE;
- 	else
--		tx_ring_size = MTK_DMA_SIZE;
-+		tx_ring_size = soc->tx.dma_size;
- 
- 	if (rx_flag == MTK_RX_FLAGS_QDMA) {
- 		if (ring_no)
-@@ -2610,7 +2618,7 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
- 		rx_dma_size = MTK_HW_LRO_DMA_SIZE;
- 	} else {
- 		rx_data_len = ETH_DATA_LEN;
--		rx_dma_size = MTK_DMA_SIZE;
-+		rx_dma_size = soc->rx.dma_size;
- 	}
- 
- 	ring->frag_size = mtk_max_frag_size(rx_data_len);
-@@ -3139,7 +3147,10 @@ static void mtk_dma_free(struct mtk_eth *eth)
- 			mtk_rx_clean(eth, &eth->rx_ring[i], false);
- 	}
- 
--	kfree(eth->scratch_head);
-+	for (i = 0; i < DIV_ROUND_UP(soc->tx.fq_dma_size, MTK_FQ_DMA_LENGTH); i++) {
-+		kfree(eth->scratch_head[i]);
-+		eth->scratch_head[i] = NULL;
++			/*
++			 * If we don't find an image base below, we infer the
++			 * image base * from the address and file offset of the
++			 * .text section.
++			 */
++			text_filepos = reinterpret_cast<const char *>(
++				text_section.getContents()->bytes_begin()) -
++				mem_buf_or_err.get()->getBufferStart();
++			image_base = text_section.getAddress() - text_filepos;
++			break;
++		}
 +	}
++	if (text_section == SectionRef())
++		/* No .text section, so no symbols (but also not a failure). */
++		return 0;
++
++	/*
++	 * See if we can find an explicit image base pseudosymbol. If so, get
++	 * the image base directly from it, then infer the file position of
++	 * .text from that (i.e., the opposite inference of the fallback above).
++	 */
++	for (SymbolRef symbol :
++	     cast<ObjectFile>(*binary_or_err.get()).symbols())
++		if (symbol.getName() &&
++		    symbol.getAddress() &&
++		    (*symbol.getName() == "__ImageBase" ||
++		     *symbol.getName() == "__image_base__")) {
++			image_base = *symbol.getAddress();
++			if (image_base < 0x100000000ULL)
++				/*
++				 * PE symbols can only have 4 bytes, so use
++				 * .text high bits (if any).
++				 */
++				image_base |= text_section.getAddress() &
++					~0xFFFFFFFFULL;
++			text_filepos = text_section.getAddress() - image_base;
++			break;
++		}
++
++	symbols->image_base = image_base;
++	symbols->text_end = text_filepos + text_section.getSize();
++
++	/* Collect all valid symbols. */
++	std::vector<SymbolRef> all_symbols;
++	for (SymbolRef symbol :
++	     cast<ObjectFile>(*binary_or_err.get()).symbols())
++		if (symbol.getName() && symbol.getFlags() &&
++		    symbol.getAddress() && symbol.getSection())
++			all_symbols.push_back(symbol);
++	symbols->num_symbols = all_symbols.size();
++	symbols->symbols = (struct llvm_symbol *)calloc(
++		all_symbols.size(), sizeof(struct llvm_symbol));
++	if (symbols->symbols == nullptr)
++		return -1;
++
++	/*
++	 * Symbols don't normally come with lengths, so we'll infer them
++	 * from what comes after the symbol address-wise. There is some
++	 * extra logic around zero-length symbols and deduplication,
++	 * which the caller will do for us (it's shared with other backends).
++	 */
++	std::sort(all_symbols.begin(), all_symbols.end(),
++		  [](const SymbolRef &a, const SymbolRef &b) {
++			  if (*a.getAddress() != *b.getAddress())
++				  return *a.getAddress() < *b.getAddress();
++			  return *a.getName() < *b.getName();
++		  });
++	for (size_t i = 0; i < all_symbols.size(); ++i) {
++		const SymbolRef &sym = all_symbols[i];
++		llvm_symbol &out_sym = symbols->symbols[i];
++		out_sym.start = *sym.getAddress() - image_base;
++		out_sym.name = (char *)calloc(1, sym.getName()->size() + 1);
++		if (out_sym.name == nullptr) {
++			for (size_t i = 0; i < all_symbols.size(); ++i) {
++				zfree(&symbols->symbols[i].name);
++			}
++			zfree(&symbols->symbols);
++			return -1;
++		}
++		memcpy(out_sym.name, sym.getName()->bytes_begin(),
++		       sym.getName()->size());
++		out_sym.global = *sym.getFlags() & SymbolRef::SF_Global;
++		out_sym.weak = *sym.getFlags() & SymbolRef::SF_Weak;
++
++		SectionRef section = **sym.getSection();
++		uint64_t next_addr;
++		if (i + 1 < all_symbols.size() &&
++		    section == **all_symbols[i + 1].getSection())
++			next_addr = *all_symbols[i + 1].getAddress();
++		else
++			next_addr = section.getAddress() + section.getSize();
++
++		out_sym.len = next_addr - *sym.getAddress();
++	}
++
++	return 1;
++}
+diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
+index d2b99637a28a..1abbc9ef3dab 100644
+--- a/tools/perf/util/llvm-c-helpers.h
++++ b/tools/perf/util/llvm-c-helpers.h
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <linux/compiler.h>
++#include <stddef.h>
+ 
+ #ifdef __cplusplus
+ extern "C" {
+@@ -53,6 +54,54 @@ int llvm_addr2line(const char* dso_name,
+ char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr);
+ char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr);
+ 
++struct llvm_symbol {
++	u64 start, len;
++	bool weak, global;
++
++	/* Must be freed by the caller. */
++	char *name;
++};
++
++struct llvm_symbol_list {
++	/*
++	 * The address this dso is loaded at in memory; adding this to
++	 * the file position of any symbol will give the address that
++	 * symbol is loaded at.
++	 */
++	u64 image_base;
++
++	/*
++	 * The byte offset of the end of the .text segment (one-past-the-end)
++	 * in the file.
++	 */
++	u64 text_end;
++
++	/*
++	 * The actual symbols. Must be freed by the caller, with free().
++	 * The string inside each llvm_symbol must also be freed.
++	 */
++	size_t num_symbols;
++	struct llvm_symbol *symbols;
++};
++
++/*
++ * Get a list of all symbols in the given file using LLVM. Similarly to
++ * addr2line(), we need to implement this using a helper structure;
++ * LLVM actually has a C API for this, but we can't use it (it doesn't
++ * have an equivalent of getFlags()). So we do the meat of the LLVM-facing
++ * logic here and let the caller make perf symbols out of it.
++ *
++ * Possible return values and their meaning:
++ *
++ * -1: An error occurred.
++ *  0: The file loaded fine, but there were no .text section.
++ *  1: The file loaded successfully.
++ *
++ * For -1 and 0, "symbols" does not contain any meaningful information,
++ * and nothing needs to be freed.
++ */
++int llvm_load_symbols(const char *debugfile, struct llvm_symbol_list *symbols);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 9e5940b5bc59..69b8c0a280c7 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -22,6 +22,7 @@
+ #include "util.h" // lsdir()
+ #include "debug.h"
+ #include "event.h"
++#include "llvm-c-helpers.h"
+ #include "machine.h"
+ #include "map.h"
+ #include "symbol.h"
+@@ -1566,6 +1567,50 @@ static int dso__load_perf_map(const char *map_path, struct dso *dso)
+ 	return -1;
  }
  
- static bool mtk_hw_reset_check(struct mtk_eth *eth)
-@@ -5052,11 +5063,14 @@ static const struct mtk_soc_data mt2701_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5076,11 +5090,14 @@ static const struct mtk_soc_data mt7621_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5102,11 +5119,14 @@ static const struct mtk_soc_data mt7622_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5127,11 +5147,14 @@ static const struct mtk_soc_data mt7623_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5150,11 +5173,14 @@ static const struct mtk_soc_data mt7629_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5176,6 +5202,8 @@ static const struct mtk_soc_data mt7981_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma_v2),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
- 		.dma_len_offset = 8,
-+		.dma_size = MTK_DMA_SIZE(4K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
-@@ -5183,6 +5211,7 @@ static const struct mtk_soc_data mt7981_data = {
- 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(1K),
- 	},
- };
++#ifdef HAVE_LIBLLVM_SUPPORT
++int dso__load_llvm_symbols(struct dso *dso, const char *debugfile)
++{
++	struct llvm_symbol_list symbols;
++	struct symbol *symbol;
++	int err = llvm_load_symbols(debugfile, &symbols);
++	int ret = -1;
++
++	if (err == -1)
++		return -1;
++	else if (err == 0)
++		return 0;
++
++	for (size_t i = 0; i < symbols.num_symbols; ++i) {
++		const struct llvm_symbol *sym = &symbols.symbols[i];
++		int elf_binding;
++
++		if (sym->weak)
++			elf_binding = STB_WEAK;
++		else if (sym->global)
++			elf_binding = STB_GLOBAL;
++		else
++			elf_binding = STB_LOCAL;
++		symbol = symbol__new(sym->start, sym->len, elf_binding, STT_FUNC,
++				     sym->name);
++		if (!symbol)
++			goto out_free;
++
++		symbols__insert(dso__symbols(dso), symbol);
++	}
++
++	symbols__fixup_end(dso__symbols(dso), false);
++	symbols__fixup_duplicate(dso__symbols(dso));
++	dso__set_adjust_symbols(dso, true);
++	ret = 0;
++
++out_free:
++	for (size_t i = 0; i < symbols.num_symbols; ++i)
++		zfree(&symbols.symbols[i].name);
++	zfree(&symbols.symbols);
++	return ret;
++}
++#endif
++
+ #ifdef HAVE_LIBBFD_SUPPORT
+ #define PACKAGE 'perf'
+ #include <bfd.h>
+@@ -1871,6 +1916,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 		bool next_slot = false;
+ 		bool is_reg;
+ 		bool nsexit;
++		int llvmrc = -1;
+ 		int bfdrc = -1;
+ 		int sirc = -1;
  
-@@ -5202,6 +5231,8 @@ static const struct mtk_soc_data mt7986_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma_v2),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
- 		.dma_len_offset = 8,
-+		.dma_size = MTK_DMA_SIZE(4K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
-@@ -5209,6 +5240,7 @@ static const struct mtk_soc_data mt7986_data = {
- 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(1K),
- 	},
- };
+@@ -1899,11 +1945,15 @@ int dso__load(struct dso *dso, struct map *map)
+ 			}
+ 		}
  
-@@ -5228,6 +5260,8 @@ static const struct mtk_soc_data mt7988_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma_v2),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
- 		.dma_len_offset = 8,
-+		.dma_size = MTK_DMA_SIZE(4K),
-+		.fq_dma_size = MTK_DMA_SIZE(4K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma_v2),
-@@ -5235,6 +5269,7 @@ static const struct mtk_soc_data mt7988_data = {
- 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
- 		.dma_len_offset = 8,
-+		.dma_size = MTK_DMA_SIZE(1K),
- 	},
- };
+-#ifdef HAVE_LIBBFD_SUPPORT
++#ifdef HAVE_LIBLLVM_SUPPORT
+ 		if (is_reg)
++			llvmrc = dso__load_llvm_symbols(dso, name);
++#endif
++#ifdef HAVE_LIBBFD_SUPPORT
++		if (is_reg && llvmrc < 0)
+ 			bfdrc = dso__load_bfd_symbols(dso, name);
+ #endif
+-		if (is_reg && bfdrc < 0)
++		if (is_reg && llvmrc < 0 && bfdrc < 0)
+ 			sirc = symsrc__init(ss, dso, name, symtab_type);
  
-@@ -5249,6 +5284,8 @@ static const struct mtk_soc_data rt5350_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
-@@ -5256,6 +5293,7 @@ static const struct mtk_soc_data rt5350_data = {
- 		.dma_l4_valid = RX_DMA_L4_VALID_PDMA,
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 	},
- };
+ 		if (nsexit)
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 3fb5d146d9b1..01256c41467a 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -174,6 +174,9 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
  
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-index 4eab30b44070..f5174f6cb1bb 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -32,7 +32,9 @@
- #define MTK_TX_DMA_BUF_LEN	0x3fff
- #define MTK_TX_DMA_BUF_LEN_V2	0xffff
- #define MTK_QDMA_RING_SIZE	2048
--#define MTK_DMA_SIZE		512
-+#define MTK_DMA_SIZE(x)		(SZ_##x)
-+#define MTK_FQ_DMA_HEAD		32
-+#define MTK_FQ_DMA_LENGTH	2048
- #define MTK_RX_ETH_HLEN		(ETH_HLEN + ETH_FCS_LEN)
- #define MTK_RX_HLEN		(NET_SKB_PAD + MTK_RX_ETH_HLEN + NET_IP_ALIGN)
- #define MTK_DMA_DUMMY_DESC	0xffffffff
-@@ -1176,6 +1178,8 @@ struct mtk_soc_data {
- 		u32	desc_size;
- 		u32	dma_max_len;
- 		u32	dma_len_offset;
-+		u32	dma_size;
-+		u32	fq_dma_size;
- 	} tx;
- 	struct {
- 		u32	desc_size;
-@@ -1183,6 +1187,7 @@ struct mtk_soc_data {
- 		u32	dma_l4_valid;
- 		u32	dma_max_len;
- 		u32	dma_len_offset;
-+		u32	dma_size;
- 	} rx;
- };
+ struct symsrc;
  
-@@ -1264,7 +1269,7 @@ struct mtk_eth {
- 	struct napi_struct		rx_napi;
- 	void				*scratch_ring;
- 	dma_addr_t			phy_scratch_ring;
--	void				*scratch_head;
-+	void				*scratch_head[MTK_FQ_DMA_HEAD];
- 	struct clk			*clks[MTK_CLK_MAX];
- 
- 	struct mii_bus			*mii_bus;
++#ifdef HAVE_LIBLLVM_SUPPORT
++int dso__load_llvm_symbols(struct dso *dso, const char *debugfile);
++#endif
+ #ifdef HAVE_LIBBFD_SUPPORT
+ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile);
+ #endif
 -- 
-2.34.1
+2.45.1
 
