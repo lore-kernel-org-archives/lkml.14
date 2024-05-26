@@ -1,83 +1,89 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE44B139D18
-	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 21:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42304C15D
+	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 22:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716760670; cv=none; b=cqMe2kaMJydq2ZaVjb//dMPOGpvahyrrEh2BY/3uFH4evfigp6J0AefLnoZw/MU94cVA+foVSs4IBQx35i3BICmKhdJyiahNgKpYYWmBqp5pD8nkJmFF6wsxp67OR5K4UKU9UKpqerkjjU4/BY9LbOYenJdC5tWUs2gsYQore54=
+	t=1716761907; cv=none; b=aJ40SlQ7HePqwuhL9YAWDUYuXmQEuVna4SJUo5ZLew1+1lvCuiGbR7eu0sdyP/gHkxmNlvn6fp+jgi18cjRJj8pTr0IWmsJDQNM19/VRKYQus1bmZbt8qHT2mH1EcXJMxd/KvNdSEP029U+sxXxQcp1XOkl6w34RgEtggVrJMlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716760670; c=relaxed/simple;
-	bh=9wL/22quDYLNFYhnuRp0mH/tZ5p0xW200lbufDgduRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nyig+2EFi5rvOBSqk64YvC81oDxrWKg878pOTobmXoGyqne+OpTHFWW5YYq0EB5g1HPbuqGZrlFQyBzFVuCdTsZ6helBH8lVH1VhYHQp8EvYIHTg2EVe+v+NtvWAh0vBn1PwjTJ009es2Bjtq2QifscM5SxLznF+u5FRMgeqUNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ndkMmUuf; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716761907; c=relaxed/simple;
+	bh=9/5fvB1xIJ+i5TilG/M81YbF603J1R2/aMxePAVS4cw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JSUZnHg+XsTeOmq395IwEsn5YCmETKzk/joKYNm5RMvBYlvvsoOPLY51ODWXQ2XavszByugFEZG5oNhgLbkF6jYDBeTqpSf4YrZeH/Dt7HUkwOtqkhJmv9TmJbXh1jrnDn3tuVUCs2WHU2ufv++nVpmiDC9uaZQXWFeNJeXvHBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cg/QW6ul; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ndkMmUuf"
-X-Envelope-To: torvalds@linux-foundation.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716760665;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=43IgFxcGtIR014iSSMSUZhPtpCTI0j9chMuGbiquXxs=;
-	b=ndkMmUufmdAAiOm6yTTzvJjV9SCnx1CL8Z/3FY7syS7c1ht9LhZ/9/yypRfozTyzrukrpl
-	gEkIwOK3f24MatGq4+cCwT76vDu0ocqS93Yq/czO6u06toYEzLMwprQXP1hEkBZJlci403
-	2kQ+gsm2MsI5/BEs2P+aIV7J3rrO8Xk=
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: surenb@google.com
-Date: Sun, 26 May 2024 17:57:41 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [GIT PULL] header fix for riscv build failure
-Message-ID: <i4zl55yyhky74ouig4h6z2mleb3ruwp24xbt5wyb4eod6exja2@uwyxbll63j3v>
-References: <h23suk5s4hhkf7prhkzxp6a4kmhpgqxyl6ioski5cg7ciihxmj@j4zif6l6dqxc>
- <CAHk-=whMS56xLhb7cAmTri2sXtGxK_zKWhZVX87YzjwAfVqTqQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cg/QW6ul"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-578517cab9eso3069691a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 15:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1716761903; x=1717366703; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xsGP6ce4iO5NvkiHy+c8mQVrB3Pa/X5QqzVEb03Zcb4=;
+        b=cg/QW6ulr+MlarYiJGAEw0UbS51he/wh1dYvod6jcysXDw+K+de1bw+kqkTM5NIXzE
+         frSn73scOXqEXLWaagu9Nx09QApapGBa1WdnneDNFyFtD5RnUE2EI2gSrC3zgkTBzB8f
+         /JvzHc87/tDnRTb0pKuJxwAqxyAZIP1hCFAeE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716761903; x=1717366703;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xsGP6ce4iO5NvkiHy+c8mQVrB3Pa/X5QqzVEb03Zcb4=;
+        b=oIpAy5kWjYGRpQbhpMERWjQdnDE+lLP2PyBbO0zPrNy/yiavSQaxFxnPA2qbvdq/yj
+         +8rcvoHSQ3+BIKikf4KMEDD0NpTbx2nmYJKI+J++8UgSHQ1jKzP4iqoz3CtLABdI63Bl
+         svgv1b9d6gmrmaRPxCsDzgW3CR6TxntzUWTjre/BERlkTL32Rx0RRuKnFUf2VsRMaW9E
+         kmkCLoCruY8xXKblt0Apai7okS9EnbynVezOHc9uxGE+llsyjNP0E9R1awHAVFzcPyOT
+         Idx43lAEq5TUz43XFzziUs3OEevZwDbkOQ0uuxxG8t9bkUEdQ+RcXNPwp4ET57zSRGkl
+         hctg==
+X-Gm-Message-State: AOJu0YxBSRlkT6n4WkX+q5zCRyHquXWZBqaHrcdZ0/Nb+UZzT3mo1yDo
+	6v9suTWpKNI37HTD/2pLTwPxsE1azkW0zg/pJjiHam4OlabB5sfP2wx2WY+M4qlzk+vWifBxQVY
+	+v1B7ow==
+X-Google-Smtp-Source: AGHT+IFPQXBqhigR8TTJek69DnAQ5BGgsJgjUcdlsOK6v6eSh5aAf0044nSdU5LUVOjPg9+5TzZjTg==
+X-Received: by 2002:a50:8e43:0:b0:579:d01a:938b with SMTP id 4fb4d7f45d1cf-579d01a955fmr1242613a12.35.1716761903388;
+        Sun, 26 May 2024 15:18:23 -0700 (PDT)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579d0b02625sm1048892a12.9.2024.05.26.15.18.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 May 2024 15:18:21 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6303e13ffeso8085766b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 15:18:21 -0700 (PDT)
+X-Received: by 2002:a17:906:c0d3:b0:a59:c2c3:bb45 with SMTP id
+ a640c23a62f3a-a6265112b00mr547196366b.56.1716761901487; Sun, 26 May 2024
+ 15:18:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whMS56xLhb7cAmTri2sXtGxK_zKWhZVX87YzjwAfVqTqQ@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+References: <h23suk5s4hhkf7prhkzxp6a4kmhpgqxyl6ioski5cg7ciihxmj@j4zif6l6dqxc>
+ <CAHk-=whMS56xLhb7cAmTri2sXtGxK_zKWhZVX87YzjwAfVqTqQ@mail.gmail.com> <i4zl55yyhky74ouig4h6z2mleb3ruwp24xbt5wyb4eod6exja2@uwyxbll63j3v>
+In-Reply-To: <i4zl55yyhky74ouig4h6z2mleb3ruwp24xbt5wyb4eod6exja2@uwyxbll63j3v>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 26 May 2024 15:18:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wifUy3a7q94VYU7_nhLgA9y9gdo8cGuwMPyVtX=Ektp4Q@mail.gmail.com>
+Message-ID: <CAHk-=wifUy3a7q94VYU7_nhLgA9y9gdo8cGuwMPyVtX=Ektp4Q@mail.gmail.com>
+Subject: Re: [GIT PULL] header fix for riscv build failure
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Suren Baghdasaryan <surenb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, May 26, 2024 at 02:46:04PM -0700, Linus Torvalds wrote:
-> On Sun, 26 May 2024 at 10:03, Kent Overstreet <kent.overstreet@linux.dev> wrote:
-> >
-> > Hi Linus, this fixes a riscv randconfig build failure from memory
-> > allocation profiling...
-> 
-> This pull request is odd in multiple ways.
-> 
->  (a) it's unsigned, and I really don't pull from unsigned sources any more
+On Sun, 26 May 2024 at 14:57, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+>
+> >  (a) it's unsigned, and I really don't pull from unsigned sources any more
+>
+> I thought it'd be fine since it's a one liner - I'll fix that
 
-I thought it'd be fine since it's a one liner - I'll fix that
+Oh, I certainly considered just making an exception for it being
+trivial, and if that had been the only issue, I would have just
+grumbled and done that.
 
->  (b) the commit message is strange. It says "bcachefs", but I don't see why
+But since I felt the oneliner fix was paired with a commit that needed
+rewriting anyway...
 
-blech, muscle memory...
-
->  (c) you say riscv randconfig in the pull request but then when I
-> follow the links in the commit, it says "mips-randconfig". Maybe the
-> same thing ends up happening elsewhere too - including riscv - but it
-> sure is confusing and I suspect it was just a typo.
-
-Yeah, another typo
-
->  (d) there's no "Fixes:" tag, so then I had to go and look up that
-> this wasn't stable material (it doesn't seem to be, the "Fixes" tag
-> would seem to be 24e44cc22aa3 ("mm: percpu: enable per-cpu allocation
-> tagging") from the current merge window
-
-yeah, I should have added that.
-
-Sorry for the confusion...
+               Linus
