@@ -1,118 +1,133 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B171DA5F;
-	Sun, 26 May 2024 19:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AEB5231
+	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 19:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716750671; cv=none; b=iv6i8e+vgrm8otFI3+PfsvrW1XZTgB9SGPZVrYmuYMbMdnHrcEXfmouvGdcNU04MJdsRccnmaASWAsiLQYQNL/xg9ujYfe6gnGRqATZ/qtIPY7Jmhft68gYB1SvNo6Rupa78OHxevyi3sTBveUFkRpPSlRN/m+euJR7fU0nG5yk=
+	t=1716751777; cv=none; b=HYNbGKeXNmGINh/qpfyRMEDjBEFiROX2UATDeYvk5rB7NcyAXeEzslNqQsPVjNShQ7jfj/5+8UWFf2NqzKFj1wYdfli6gy2igjmTImeOwoJqOY3q7ZGmMiRNu4Vind65P4xq9wi3/uuTdLZjVdk3kg6M1A2y3mQEshwfIhbc7Qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716750671; c=relaxed/simple;
-	bh=V6pWRl5/R829vCPQdCBHueI2AkDTCJb53fNdMCXSLVs=;
+	s=arc-20240116; t=1716751777; c=relaxed/simple;
+	bh=6f3OVUR126mQqphazmXjBWx6HkP9r58nBwsJg+iHtT8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m3GNuF+4urxAL06SeE9OYaxn/IfqIr6kHwbN4PON75MzcBYjnqphSMFWqrLELWjFnrkXZwMvNEZSqaCSbkH71p5cXGDSUOHXu05Nqwo2Osmp4GepTRX4TF5zq8INLC+wCj51tTZ2JPhBf7ImlS9lMRedGuw+QobCeLielGrnnMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=fkbI9bRf; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GwcCSzuI1t/y9ETkaHc+zapCuwAVyK1PmiDXb55UaPGBsLIkyv/EzlTy2MPRD9SE/GkFZpqsiiP7KAJAONnwTqwmLrl95wWLlBZRGuz/VMmnrLut+wB+uW6VJuCgm4AFpKuO39NPzitGdf0i7zL7YaFDSbkF6KApFZFnJs14FFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ioYsn9+Q; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="fkbI9bRf"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4VnSmn5LbQz9srB;
-	Sun, 26 May 2024 21:01:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1716750089;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ioYsn9+Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716751774;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r9cppxWmIe0VMvcGEUiv0Uu8DZiQtFpwpAKbCgnUVyg=;
-	b=fkbI9bRf/v/PG60NTXoiBFnGW5PQxoNWMLCvvN7rODxFDwx6ejMnjC9KwgfkpALWziWwaR
-	PDci3KZIGuSNuO/8QY+KkOQ3EDD0JSRLI2UOK7pZpOFEJx3jJAcYN9g8msXO/Zn1YK8Wt9
-	ZttMp8XBMWyX44zD2lk1aTuNNEf9DBEwkxGx458+K234gn22VwJ2KLGnY34uJ9/ASqfHhH
-	/Sa2c8xo3APTm4DQbujnAyZuT+1NDou7/yDDCgqpjb/83Db9rPLRB5Z3WvcW33k510oszj
-	E3jo6rKtWo5vyKnIoGnTb+r6GGHr2FUuALlyN/BfjHpHwLpAU5d3+o4cHYk+fg==
-Date: Sun, 26 May 2024 12:01:08 -0700
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Message-ID: <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
-References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
- <ZlMADupKkN0ITgG5@infradead.org>
+	bh=RK24F2wzxXyRWWsg0IS99CT+RTmRpCxyqLgYB7eJ4e8=;
+	b=ioYsn9+QKhjsoUI4x4jJ7jKp7pUEDpCgufQ5NVjiw5si3OaDHXl+VSOlhYBwx9jZMffqRS
+	pErGKitLYC4ul7Rx7pDWQUpSmJwjGjbhEv6MWHOoWXJX+Cplw/xuQ9vfpq/uGJRAtz/U95
+	+lrAZE67ZxA+RFl3QXHfXkBEKxDJ4nE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-303-bFI8zcppPOe1BUv6dhs5nQ-1; Sun, 26 May 2024 15:29:29 -0400
+X-MC-Unique: bFI8zcppPOe1BUv6dhs5nQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F1F898029E1;
+	Sun, 26 May 2024 19:29:28 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.27])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 3D3D1105480A;
+	Sun, 26 May 2024 19:29:26 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun, 26 May 2024 21:28:01 +0200 (CEST)
+Date: Sun, 26 May 2024 21:27:58 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Nicholas Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	Chris von Recklinghausen <crecklin@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: sched/isolation: tick_take_do_timer_from_boot() calls
+ smp_call_function_single() with irqs disabled
+Message-ID: <20240526192758.GA21193@redhat.com>
+References: <20240522151742.GA10400@redhat.com>
+ <20240523132358.GA1965@redhat.com>
+ <87h6eneeu7.ffs@tglx>
+ <ZlCwKk65-eL0FrKX@pavilion.home>
+ <20240524183700.GA17065@redhat.com>
+ <87v832dfw1.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3co2dmrrdjgd6wv5"
-Content-Disposition: inline
-In-Reply-To: <ZlMADupKkN0ITgG5@infradead.org>
-
-
---3co2dmrrdjgd6wv5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87v832dfw1.ffs@tglx>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On 2024-05-26, Christoph Hellwig <hch@infradead.org> wrote:
-> On Thu, May 23, 2024 at 01:57:32PM -0700, Aleksa Sarai wrote:
-> > Now that we provide a unique 64-bit mount ID interface in statx, we can
-> > now provide a race-free way for name_to_handle_at(2) to provide a file
-> > handle and corresponding mount without needing to worry about racing
-> > with /proc/mountinfo parsing.
->=20
-> file handles are not tied to mounts, they are tied to super_blocks,
-> and they can survive reboots or (less relevant) remounts.  This thus
-> seems like a very confusing if not wrong interfaces.
+The more I grep the more I confused.
 
-The existing interface already provides a mount ID which is not even
-safe without rebooting.
+On 05/25, Thomas Gleixner wrote:
+>
+> Right. It does not happen because the kernel starts with jiffies as
+> clocksource except on S390. The jiffies clocksource is not qualified to
+> switch over to NOHZ mode for obvious reasons.
 
-The purpose of the mount ID (in the existing API) is to allow userspace
-to make sure they know which filesystem mount the file handle came from
-so they can store the relevant information (fsid, etc) to make sure they
-know which superblock the mount came from when it comes to doing
-open_by_handle_at(2). However, there is a race between getting the mount
-ID from name_to_handle_at() and parsing /proc/self/mountinfo, which
-means that userspace cannot ever be sure that they know the correct
-mount the file handle came from (the man page for open_by_handle_at
-mentions this issue explicitly).
+Not obvious for those who never looked at this code ;)
 
-Getting the ability to get a 64-bit mount ID would allow userspace to
-use statmount(2) directly, avoiding this race. You're quite right that
-obviously you wouldn't want to just store the mount ID.
+OK, clocksource_jiffies doesn't have CLOCK_SOURCE_VALID_FOR_HRES,
 
-An alternative would be to return something unique to the filesystem
-superblock, but as far as I can tell there is no guarantee that every
-Linux filesystem's fsid is sufficiently unique to act as a globally
-unique identifier. At least with a 64-bit mount ID and statmount(2),
-userspace can decide what information is needed to get sufficiently
-unique information about the source filesystem.
+> fs_initcall(clocksource_done_booting)
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+So clocksource_done_booting() -> clocksource_select() should find another
+CLOCK_SOURCE_VALID_FOR_HRES cs, then timekeeping_notify(best)
 
---3co2dmrrdjgd6wv5
-Content-Type: application/pgp-signature; name="signature.asc"
+	- sets tk_core.timekeeper.tkr_mono.clock = best
 
------BEGIN PGP SIGNATURE-----
+	- calls tick_clock_notify() which sets .check_clocks on every cpu.
 
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZlOG8AAKCRAol/rSt+lE
-b8uGAP9d019CDlw84s9QU6/eCUdNT1w0Lk0Ce3UIIdsD8vPxHgD/Xj44w2qaMngH
-r0EgXJWO83ghM64/Bg7QGygzx48oNQU=
-=/g8f
------END PGP SIGNATURE-----
+This makes tick_check_oneshot_change(false) return true. (I am ignoring the
+highres=n case, tick_nohz_switch_to_nohz() doesn't really differ).
 
---3co2dmrrdjgd6wv5--
+Now, on every CPU the next ->event_handler == tick_handle_periodic path
+call hrtimer_switch_to_hres() which
+
+	- sets ->event_handler == hrtimer_interrupt (tick_init_highres)
+	  so tick_periodic/do_timer will be never called again
+
+	- calls tick_setup_sched_timer() -> tick_nohz_activate() which
+	  sets TS_FLAG_NOHZ
+
+> [    1.918548] clocksource_done_booting: Switched to NOHZ // debug printk
+>
+> This is the point where tick_nohz_activate() is called first time and
+> that does:
+>
+>   tick_sched_flag_set(ts, TS_FLAG_NOHZ);
+
+See above, but I got lost, most probably I misunderstood these nontrivial
+code paths.
+
+> So up to this point the tick is never stopped neither on housekeeping
+> nor on NOHZ FULL CPUs:
+>
+> tick_nohz_full_update_tick()
+>   if (!tick_sched_flag_test(ts, TS_FLAG_NOHZ))
+>     return;
+
+OK... But tick_nohz_idle_update_tick() doesn't check TS_FLAG_NOHZ and
+the tick_nohz_full_cpu() check can't help at boot time.
+
+And I still don't understand why we can rely on can_stop_idle_tick() even
+in tick_nohz_idle_stop_tick().
+
+I'll try to read this code again tomorrow, but it will never fit my poor
+little brain ;)
+
+Oleg.
+
