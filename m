@@ -1,32 +1,32 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C9B1386D1
-	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 20:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11361386D5
+	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 20:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716754908; cv=none; b=brr0JeUSCg++52x/PshtBE4TT2iDkBSXutdCQU8nhgiY+XXubmtG3eHMRn3DmI7UABRwE8IyDJFq5vhVqNo/05uI9aQxorwzQHYzQk2OJS/YC7RJOaHxXVHyGlQ8bc6nNa52+9NskhpNSfuw/8jCfLlnpYqKbaVlAxIR7C5bwIo=
+	t=1716754915; cv=none; b=UrgWRQC98nP8AsNUOw5duhvvILAjdVw0MR4R+L/ZL2eKnZuaiUHG57phzas3gtYqcLSeBB0CiP6T6n5Z2qBLjP8wvoNlMx65JZCpv3xwXwB7O2r/tJRstOCfZzwfjxi+OvvfF1F8KmUAkK2V0m8t5YACGasnw2w3H6qT8w0M1FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716754908; c=relaxed/simple;
-	bh=qMXwCeIM1C7ZZfksXGJEnRIXsvC3QSzpQ4EzwJ0bKyE=;
+	s=arc-20240116; t=1716754915; c=relaxed/simple;
+	bh=TEAT7ln5dk99EzK70C7z+YnuBl1yk9GN5l9RBsiF/XA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=blAk4rSVj0hfhmZ3HlGPNd/jf1ojmj33QsbZsvwseFqDOGbgGb4vzGflIxxSDkkE1cVjid0UkruF2OpjMyudhJVKLCD3a0fhdFdDHdmrnNp6nO06KmjrQCiv3m6u1jKnCthoEiEFqCYrBX3NfozZJ0ZrGfvCKD1ydn3nxL+Fm8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=thbuwD16; arc=none smtp.client-ip=95.215.58.184
+	 MIME-Version; b=AIw7FcZaY85tMCTMa5pjhnTJD5sGVQacB8aH+wL/gpI0CXYzuWu9BmrwVmXrs+7/H86j0y/c0L60/wZTtf101FDYwyXSRY8LbpjBM5S/4IcaLpszQ/y/kh88Cq3S3qTidamZ02zw0TrfhIzPXG1WgrGPXjWw6Dc4JpXhlJheviU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kZgaaq2L; arc=none smtp.client-ip=95.215.58.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="thbuwD16"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kZgaaq2L"
 X-Envelope-To: rfoss@kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716754904;
+	t=1716754912;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+TesjfpUGDPwVI7KOd3mjPhe4mEXc1CsmbWQvMFAKEY=;
-	b=thbuwD16tGjJd8wjfYaHZeUPgFecI5vvma6S+JUANcmMNuzXERGwyWgldMnUvt/OP+D/9L
-	+GAHHD9C3qu7VU7RXvmsZFF3cm/fz9jzuke3HxrQMskDe6LO/ecaoCDOz+kHfyE+drKfNM
-	opArLMaNvlBY8HK4eogbHGAKoaOTMb0=
+	bh=Ax3mzsSKWaKtO/VKspU0u4aFE2YRX4lxmc4yisd0VCk=;
+	b=kZgaaq2LcKIAVWpj5LqUOOMVFWZhtAPBeHsUIDVQkz2GEttX32HFWx9ChsUdE8US81w1lZ
+	bkQQ97MJJ/UYmNfkfjaSv9SgEIdq53QccscD5/BJcNv9RL94Vk3CIWl8sFfZHjifaEgmCQ
+	gOxaSv9XgpGdq5GKUC0yNCawxD4p5io=
 X-Envelope-To: laurent.pinchart@ideasonboard.com
 X-Envelope-To: dri-devel@lists.freedesktop.org
 X-Envelope-To: linux-kernel@vger.kernel.org
@@ -38,9 +38,9 @@ To: Robert Foss <rfoss@kernel.org>,
 Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: [PATCH v6 01/10] drm/bridge: Allow using fwnode APIs to get the next bridge
-Date: Mon, 27 May 2024 04:21:06 +0800
-Message-Id: <20240526202115.129049-2-sui.jingfeng@linux.dev>
+Subject: [PATCH v6 03/10] drm/bridge: Implement of_drm_find_bridge() on the top of drm_bridge_find_by_fwnode()
+Date: Mon, 27 May 2024 04:21:08 +0800
+Message-Id: <20240526202115.129049-4-sui.jingfeng@linux.dev>
 In-Reply-To: <20240526202115.129049-1-sui.jingfeng@linux.dev>
 References: <20240526202115.129049-1-sui.jingfeng@linux.dev>
 Precedence: bulk
@@ -52,149 +52,84 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The various display bridge drivers rely on 'OF' infrastructures to
-works very well, yet there are some platforms and/or devices lack of
-'OF' support. Such as virtual display drivers, USB display apapters
-and ACPI based systems etc.
-
-Add fwnode based helpers to fill the niche, this allows part of display
-bridge drivers to work across systems. As the fwnode APIs has wider
-coverage than DT counterpart, and fwnode graphs are compatible with
-OF graphs. So the newly created helpers can be used on all systems
-in theory, assumed that there has valid OF/fwnode graphs established.
-
-Note, the involved drm bridge instance should also has the fwnode
-assigned, so that the user of it could find it via the fwnode handle.
+Before applying this patch, people may worry about the OF and non-OF API
+will have a risk to diverge. Eliminate the risk by reimplement the
+of_drm_find_bridge() on the top of drm_bridge_find_by_fwnode(). As for now
+the fundamental searching method is unique.
 
 Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
 ---
- drivers/gpu/drm/drm_bridge.c | 74 ++++++++++++++++++++++++++++++++++++
- include/drm/drm_bridge.h     | 11 +++++-
- 2 files changed, 83 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_bridge.c | 29 -----------------------------
+ include/drm/drm_bridge.h     | 14 +++++---------
+ 2 files changed, 5 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 584d109330ab..cef5bc88ee60 100644
+index 7759ca066db4..4c5584922d3c 100644
 --- a/drivers/gpu/drm/drm_bridge.c
 +++ b/drivers/gpu/drm/drm_bridge.c
-@@ -1363,6 +1363,80 @@ struct drm_bridge *of_drm_find_bridge(struct device_node *np)
- EXPORT_SYMBOL(of_drm_find_bridge);
- #endif
+@@ -1346,35 +1346,6 @@ void drm_bridge_hpd_notify(struct drm_bridge *bridge,
+ }
+ EXPORT_SYMBOL_GPL(drm_bridge_hpd_notify);
  
-+/**
-+ * drm_bridge_find_by_fwnode - Find the bridge corresponding to the fwnode
-+ *
-+ * @fwnode: fwnode for which to find the matching drm_bridge
-+ *
-+ * This function looks up a drm_bridge in the global bridge list, based on
-+ * its associated fwnode. Drivers who want to use this function should has
-+ * fwnode handle assigned to the fwnode member of the struct drm_bridge
-+ * instance.
-+ *
-+ * Returns:
-+ *  * A reference to the requested drm_bridge object on success, or
-+ *  * %NULL otherwise (object does not exist or the driver of requested
-+ *    bridge not probed yet).
-+ */
-+struct drm_bridge *drm_bridge_find_by_fwnode(struct fwnode_handle *fwnode)
-+{
-+	struct drm_bridge *ret = NULL;
-+	struct drm_bridge *bridge;
-+
-+	if (!fwnode)
-+		return NULL;
-+
-+	mutex_lock(&bridge_lock);
-+
-+	list_for_each_entry(bridge, &bridge_list, list) {
-+		if (bridge->fwnode == fwnode) {
-+			ret = bridge;
-+			break;
-+		}
-+	}
-+
-+	mutex_unlock(&bridge_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(drm_bridge_find_by_fwnode);
-+
-+/**
-+ * drm_bridge_find_next_bridge_by_fwnode - Find the next bridge by fwnode
-+ * @fwnode: fwnode pointer to the current device.
-+ * @port: identifier of the port node of the next bridge is connected.
-+ *
-+ * This function find the next bridge of the current node the fwnode
-+ * pointed to, assumed that the fwnode graph has been well established.
-+ *
-+ * Returns:
-+ *  * A reference to the requested drm_bridge object on success, or
-+ *  * -%ENODEV if the fwnode graph or OF graph is not complete, or
-+ *  * %NULL if object does not exist or the next bridge is not ready yet.
-+ */
-+struct drm_bridge *
-+drm_bridge_find_next_bridge_by_fwnode(struct fwnode_handle *fwnode, u32 port)
-+{
-+	struct drm_bridge *bridge;
-+	struct fwnode_handle *ep;
-+	struct fwnode_handle *remote;
-+
-+	ep = fwnode_graph_get_endpoint_by_id(fwnode, port, 0, 0);
-+	if (!ep)
-+		return ERR_PTR(-ENODEV);
-+
-+	remote = fwnode_graph_get_remote_port_parent(ep);
-+	fwnode_handle_put(ep);
-+	if (!remote)
-+		return ERR_PTR(-ENODEV);
-+
-+	bridge = drm_bridge_find_by_fwnode(remote);
-+	fwnode_handle_put(remote);
-+
-+	return bridge;
-+}
-+EXPORT_SYMBOL_GPL(drm_bridge_find_next_bridge_by_fwnode);
-+
- MODULE_AUTHOR("Ajay Kumar <ajaykumar.rs@samsung.com>");
- MODULE_DESCRIPTION("DRM bridge infrastructure");
- MODULE_LICENSE("GPL and additional rights");
+-#ifdef CONFIG_OF
+-/**
+- * of_drm_find_bridge - find the bridge corresponding to the device node in
+- *			the global bridge list
+- *
+- * @np: device node
+- *
+- * RETURNS:
+- * drm_bridge control struct on success, NULL on failure
+- */
+-struct drm_bridge *of_drm_find_bridge(struct device_node *np)
+-{
+-	struct drm_bridge *bridge;
+-
+-	mutex_lock(&bridge_lock);
+-
+-	list_for_each_entry(bridge, &bridge_list, list) {
+-		if (bridge->of_node == np) {
+-			mutex_unlock(&bridge_lock);
+-			return bridge;
+-		}
+-	}
+-
+-	mutex_unlock(&bridge_lock);
+-	return NULL;
+-}
+-EXPORT_SYMBOL(of_drm_find_bridge);
+-#endif
+-
+ /**
+  * drm_bridge_find_by_fwnode - Find the bridge corresponding to the fwnode
+  *
 diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 4baca0d9107b..725d6dddaf36 100644
+index 7b592cf30340..8d743dfe782c 100644
 --- a/include/drm/drm_bridge.h
 +++ b/include/drm/drm_bridge.h
-@@ -26,14 +26,13 @@
- #include <linux/ctype.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
+@@ -791,21 +791,17 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+ 		      struct drm_bridge *previous,
+ 		      enum drm_bridge_attach_flags flags);
  
- #include <drm/drm_atomic.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_mode_object.h>
- #include <drm/drm_modes.h>
- 
--struct device_node;
+-#ifdef CONFIG_OF
+-struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+-#else
+-static inline struct drm_bridge *of_drm_find_bridge(struct device_node *np)
+-{
+-	return NULL;
+-}
+-#endif
 -
- struct drm_bridge;
- struct drm_bridge_timings;
- struct drm_connector;
-@@ -721,6 +720,8 @@ struct drm_bridge {
- 	struct list_head chain_node;
- 	/** @of_node: device node pointer to the bridge */
- 	struct device_node *of_node;
-+	/** @fwnode: fwnode pointer to the bridge */
-+	struct fwnode_handle *fwnode;
- 	/** @list: to keep track of all added bridges */
- 	struct list_head list;
- 	/**
-@@ -797,6 +798,12 @@ static inline struct drm_bridge *of_drm_find_bridge(struct device_node *np)
- }
- #endif
+ struct drm_bridge *
+ drm_bridge_find_by_fwnode(struct fwnode_handle *fwnode);
  
-+struct drm_bridge *
-+drm_bridge_find_by_fwnode(struct fwnode_handle *fwnode);
-+
-+struct drm_bridge *
-+drm_bridge_find_next_bridge_by_fwnode(struct fwnode_handle *fwnode, u32 port);
+ struct drm_bridge *
+ drm_bridge_find_next_bridge_by_fwnode(struct fwnode_handle *fwnode, u32 port);
+ 
++static inline struct drm_bridge *of_drm_find_bridge(struct device_node *np)
++{
++	return drm_bridge_find_by_fwnode(of_fwnode_handle(np));
++}
 +
  /**
   * drm_bridge_get_next_bridge() - Get the next bridge in the chain
