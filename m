@@ -1,124 +1,118 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0821C8494;
-	Sun, 26 May 2024 23:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C348494
+	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 23:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716766434; cv=none; b=iXKvU8VAeCltPv9BI+5ACI00aF40Bdv3gmtKubsy0Y1IYvoO79ni6Od1Wli58FVdXT7pBcfZUpVppG8U4Zu1v3+2eyXxk7Qq5KVOJs73C+40ozNjKo3ToWjEeFAeJXzTQm1qEW0F/bUBLFE2jsESzUmJ9iNtDh6Avrd1KxodryE=
+	t=1716766462; cv=none; b=WFGC9jqaKQWqTe6SCKk/mNuXoSEsZvI9m4QLUuk47SxXXm/45mVOED4iIjRx8mo+uQDXQOqcqlulIncXR8Mwmu8DgwOtbdMglMezFuSDPbXnmUWzPtyK7AdrKUtJFaRw5P4Y5KJ9lMNFscq/vggayeLZmK76oDOK5dQlwYsYrYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716766434; c=relaxed/simple;
-	bh=/yahvlFAlI1KiXni2dKRY5F1eLx91D3e5J7ZQamDkoI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rtYLpkM2+wz5MAbSPX+URy8FQqwHrU7h2XCRdHLoJ9T1Gl0VIBE4azVufX0OWqWNwASI5flNf0PwZtmQCrvDGmUBNZSxPNZkz7rXHCY4jfoLAXFzha7xcGAxJXmespv1D+8QyoH9FzuloZ1AvLmjN3ZEuHt+hAYC55qQnhHgUNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=seb-dev@web.de header.b=QptUMr+a; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716766462; c=relaxed/simple;
+	bh=YQOuh/heB2ECjajHc+hfb5AhWWtp9iWjRbj78w+1CBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BRXmAJh2GS4rb07VST0s0O1nzp/n9HjnOmjNM5TlDqFfeClzFdH+9nBUiBpi7XGWnV77Vm5I8D37A9VX8mfuXj3DUl/pU8t4Ji0E88wEal5we2CAmNJevRWdThO20M1yHXYy8UGBB5gOEO9WkRWyWeGk+9nrH/OvIcb+kdNSdbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R7ihNR/3; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=seb-dev@web.de header.b="QptUMr+a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716766402; x=1717371202; i=seb-dev@web.de;
-	bh=Ck9yiP7ihI2T91SwUO4f1rkfndnqU2p6BXfIvig2gCk=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QptUMr+arYl5MZp/xa6LZ8b3ptXqm/cOxcMvWNiuSf3Zi2G3eQ7cpcoUu2zvfIvJ
-	 iOe7bf797xsyweXv1uN0b1rVd6eH+bLEmJWUPAaTXdJGlio3bycorF68EpPQV1olT
-	 mqsF266MB6RE7EprOQPNJaVofBbwWfcG36I6zPpCL3Qv94GWyyz7C1hW5QWkYAap0
-	 1u46QGzk1pij3Zi/WoWrPWgtlyl0qwMB6wQ8h3ZPbiL544YF7lloaeo0EKomAh2kn
-	 zgip5aG62kIjfAs1Pywk3tqfH31v9BZdiOZlkiiVv1XrSn2vsbqYt5UJwf7AsOfM+
-	 mQQ9mBcTevUmoFFE0w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from localhost.localdomain ([84.155.184.248]) by smtp.web.de
- (mrweb006 [213.165.67.108]) with ESMTPSA (Nemesis) id
- 1MUUAG-1s2Xf02wlc-00Qf6F; Mon, 27 May 2024 01:33:22 +0200
-From: Sebastian Kropatsch <seb-dev@web.de>
-To: Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Sebastian Kropatsch <seb-dev@web.de>
-Subject: [PATCH 0/2] RK3588: FriendlyElec CM3588 NAS board support
-Date: Sun, 26 May 2024 23:42:15 +0200
-Message-ID: <20240526214340.8459-1-seb-dev@web.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R7ihNR/3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716766461; x=1748302461;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YQOuh/heB2ECjajHc+hfb5AhWWtp9iWjRbj78w+1CBs=;
+  b=R7ihNR/3+Zyc3PQsihdWDOxbcFe1fvc5Lo8isbCTnnS/xoImMXHGkCQ5
+   YIh6BfsnhTcoqjvzrkA/W1b+9KmBFRKf3zO4X6Rp2zm94pAN7vQ838Hpw
+   ZoTmPUV9+fdzL+gVN7cHxBGeD6zK9eYr7qtJEbOV2/ax22lDmIPSTb07k
+   ggtaf/TcgKlB3TpoOU80F/m+yoxyQkGSGH5nT5ap9qbZAn/5jb7zgZE2U
+   A1E7m5ADdvvqY3giUirPYayrcfgG4e+GjyCs1rA/vCC5pCJPSLu/GOele
+   l+JU96vO+r3W+iQ0PzbOrDc1ug3QzMrBrByHjOiU+JLHqvQxtUtPenOLk
+   g==;
+X-CSE-ConnectionGUID: abjGPGbFQjOUzjxZung2ow==
+X-CSE-MsgGUID: C6NgNZz9QLGmHflIBNCG6w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="35585949"
+X-IronPort-AV: E=Sophos;i="6.08,191,1712646000"; 
+   d="scan'208";a="35585949"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2024 16:34:21 -0700
+X-CSE-ConnectionGUID: 8PV7+unKQ12ZKoBXrzU2mg==
+X-CSE-MsgGUID: rKWAxDmSRmiheDPISxCmAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,191,1712646000"; 
+   d="scan'208";a="39547247"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 26 May 2024 16:34:19 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sBNNW-0008qr-2t;
+	Sun, 26 May 2024 23:34:15 +0000
+Date: Mon, 27 May 2024 07:33:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sui Jingfeng <sui.jingfeng@linux.dev>, Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Sui Jingfeng <sui.jingfeng@linux.dev>
+Subject: Re: [PATCH v6 02/10] drm/bridge: Set firmware node of drm_bridge
+ instances automatically
+Message-ID: <202405270622.VDMbp9FR-lkp@intel.com>
+References: <20240526202115.129049-3-sui.jingfeng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UgF7Y/I2rFfSRmOfe5K9q7vLJJ0MHmaYtmPoJ40u8djNgfnfKlk
- +q5ycSPzDccYAp0qkQpvwxAJvxy4N3/Z8dld+M4F43q0zR2JV5QfisMxtOFNXqoRz0BPrQi
- nwkfA+8Qufr2ar+eRszvoaCFbJe6nMs0ZOQg6yFeud5Fem68IUyA6kP29co/AeRittvstoz
- +n2Ifsq9V1zmbsmZ/xxYg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mCzxCoR1YFo=;U39Y6KVr2BoiWscYlUxP30KLxFB
- d1aIuZq+RiHz+5DlSNZcjT4FEnz4mTrOEegtDs6z23CNcEXlP8XKxIRiPLHMG5tuQgYukDjTW
- NxhCpX5smb9jVAk8Fqd3hXLYjIiBCexwGNgl9jUdEtW7grUH6SjX223v1WpP9BerBLoM3Vq3I
- 2IzI1PvX0tHmZTvNEStBRkhNd0KipV2XjfgyvnAzsXUCetsQyfGq+em7XwnerPVgRCQQhs4ie
- QkmMHslnqnlQnbPVbgLzuPRneI7L9XFGs0NKtYJrvjzlw2vq3kJZWxL5IIy0kapGY6st10oFT
- JjtvEJSs/O6vp78aw1If+yob+bCBNCv0uNz7rpN5Mp0g6War8rettZgbBw1yfgEtp2MLy15HU
- AQvxCK8YSymI0TD47eqE+HyluxI8H9ml3bdZDgc26NEzi3AIEl6j4i/A1axBe8AndkAkcrq6V
- vkIlaxLButWpWvhweiZNRjRZoOmRFpuyHlYiMmtli34VntIkznlD8tqzptiIAIcXV0Nba4GVm
- izgsBVaibPcA9uq4AS8QimJPeVwCgdUIsilqxiKbyjS8Mte1JUhPvIwsm2ynEchm2N8MdEI3g
- NbRcfmvhy9vdG7/4QFFu+QKyUQihIlbklv3k72laiINiX6GkmSSuJMVSOnSPlpEHZyNJ1F6Mb
- G1STDjwc8pb774XK5uXcsNVXOkTztqwxDL9BKQaYWY8+s4lj2voMN/OZcrZAqYTRxsedBZjpD
- IzxyvGrhXWh2iI36j5G/9kmSSfgxDdmiWSz6NJZaACvymPa0d2i5FRd+jBrajb58yCXwIwg5I
- +EVgGwCnR74YER28y0BlelmfpUWuAX1AoooPvzPVbYk68=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240526202115.129049-3-sui.jingfeng@linux.dev>
 
-Hello!
+Hi Sui,
 
-This adds support for the FriendlyElec CM3588 NAS board.
-The board's device tree makes use of the latest upstream advances on the
-RK3588 like USB3 DRD and GPU support as well as the latest Rockchip PCIe
-driver bifurcation fixes, but some features such as thermal management
-and HDMI will have to be added later when SoC support for these features
-is merged.
-Since the hardware has similarities with FriendlyElec's NanoPC T6, the
-device tree for the CM3588 NAS also partially shares some sections with
-the NanoPC T6 tree.
+kernel test robot noticed the following build errors:
 
-Minor issue:
-The device enumeration of NVMe SSDs plugged into the four PCIe M.2 slots
-does not follow the order of the slots on the board: The slots are
-physically named from 1 to 4, top to bottom. However, they do not show
-up in this same order in Linux when all slots are polulated:
-   - SSD in physical slot 1 shows up as nvme0
-   - SSD in physical slot 2 shows up as nvme2
-   - SSD in physical slot 3 shows up as nvme1
-   - SSD in physical slot 4 shows up as nvme3
-This is the same order in which the data lanes are mapped for PCIe
-bifurcation (dts property: data-lanes =3D <1 3 2 4>).
-I could not solve this by using aliases for the PCIe nodes in the device
-tree. Perhaps this is something that can only be solved at driver level?
-I am not sure if this behaviour is even considered a bug or if this is
-intended behaviour by design.
+[auto build test ERROR on drm-exynos/exynos-drm-next]
+[also build test ERROR on linus/master v6.10-rc1 next-20240523]
+[cannot apply to shawnguo/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Devicetree validation:
-`make CHECK_DTBS=3Dy rockchip/rk3588-cm3588-nas.dtb` does not give any
-warnings or errors, tested on Linux next-20240523.
+url:    https://github.com/intel-lab-lkp/linux/commits/Sui-Jingfeng/drm-bridge-Allow-using-fwnode-APIs-to-get-the-next-bridge/20240527-042402
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git exynos-drm-next
+patch link:    https://lore.kernel.org/r/20240526202115.129049-3-sui.jingfeng%40linux.dev
+patch subject: [PATCH v6 02/10] drm/bridge: Set firmware node of drm_bridge instances automatically
+config: arm-defconfig (https://download.01.org/0day-ci/archive/20240527/202405270622.VDMbp9FR-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240527/202405270622.VDMbp9FR-lkp@intel.com/reproduce)
 
-Best regards,
-Sebastian Kropatsch
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405270622.VDMbp9FR-lkp@intel.com/
 
-=2D--
-Sebastian Kropatsch (2):
-  dt-bindings: arm: rockchip: Add CM3588 NAS
-  arm64: dts: rockchip: Add CM3588 NAS board
+All errors (new ones prefixed by >>):
 
- .../devicetree/bindings/arm/rockchip.yaml     |    5 +
- arch/arm64/boot/dts/rockchip/Makefile         |    1 +
- .../boot/dts/rockchip/rk3588-cm3588-nas.dts   | 1269 +++++++++++++++++
- 3 files changed, 1275 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-cm3588-nas.dts
+>> drivers/gpu/drm/omapdrm/dss/hdmi5.c:487:49: error: expected identifier
+           drm_bridge_add(&hdmi->bridge, &hdmi->pdev->dev.);
+                                                          ^
+   1 error generated.
 
-=2D-
-2.43.0
 
+vim +487 drivers/gpu/drm/omapdrm/dss/hdmi5.c
+
+   480	
+   481	static void hdmi5_bridge_init(struct omap_hdmi *hdmi)
+   482	{
+   483		hdmi->bridge.funcs = &hdmi5_bridge_funcs;
+   484		hdmi->bridge.ops = DRM_BRIDGE_OP_EDID;
+   485		hdmi->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
+   486	
+ > 487		drm_bridge_add(&hdmi->bridge, &hdmi->pdev->dev.);
+   488	}
+   489	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
