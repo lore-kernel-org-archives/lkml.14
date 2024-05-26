@@ -1,54 +1,57 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6A21FA5;
-	Sun, 26 May 2024 18:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EE11DA5F;
+	Sun, 26 May 2024 18:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716749138; cv=none; b=IPJ4M4vPPbMtc0jGsdbnh/LDdg/Dm4pRC1v64XQVkrVwc2Q1ENatcQkPMboRP0XCJqrM2t83MTjhkIwWfyzpC8OH/vCFudMAyhHn4+xdyai8ZWtDkZYgo0zn2Wr3JHDfDdSBnHzdy6XpEf5zW1Dl+R6d76P6TKMpgs8uIPCFcLg=
+	t=1716749140; cv=none; b=YKHySNcHW9LBCecFKtXn0mxYkVAocmwNsV8xbZLUa6YpAVGcJpr6cu79DJ5T2c4wOcK4D4HOu/0J0Yu6QwkZkOW1lAg3yHt+4pfQsnlSsBJ8RRp9rnuKQvVpiGkte+Y1UgO10Q5TOFi5tHvxgoSHBprE0yeWjpVtBCOR8RnMlGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716749138; c=relaxed/simple;
-	bh=kBxqKZt3yNiBobYLsd+AE4sKuvGrJdLiY2b+Bt+0qno=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=bkadFg7/213RerL1ceQWdcb00RnRzjX5HvdBtlSj5tL0xiDx0SiYKpMMOYAYc2UKqbzLIxiXVlhk1/HKlycB8v6JwNbA4MPee3GZBbnCshkn0+pKopHHuX1djtWr1rJAvh3cjfW7LkQ3yQ25kuKMFSWO5UBcADdVNy0Z2QyFvEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OfgLfjod; arc=none smtp.client-ip=209.85.208.169
+	s=arc-20240116; t=1716749140; c=relaxed/simple;
+	bh=DYn2aSysUxjoJXWq3Kj3csOOiFlPojw8oWHmMl9rv6w=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SpZaI4TVbNtKbV2Mf1JEg8xQqaTcwbdhxva6162Pnpu8ix7RavwfL7CxdEHd8BBIP2/iotnRJBI1tsNwdFfcBp+j2dkMp4W4Gr4SFKLn4ygi/a/TYpfP/pWImK3MHaujeNW/LMRZF2rzZnJgI3mUxw7fdvDyqHyUCEL7GejH6o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gV4j0RmS; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfgLfjod"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e95a1f9c53so31491101fa.0;
-        Sun, 26 May 2024 11:45:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gV4j0RmS"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e73359b8fbso81870081fa.2;
+        Sun, 26 May 2024 11:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716749135; x=1717353935; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=miLZb61bb6eHKVsGFJqgSUKqREuKVQ85VCQ63BLN4t4=;
-        b=OfgLfjod2vU9NMat+fTqXCOPcJsT0fTMlMP+7GLbkBWkQVhSkH5XJuzj2ZPJmUdfDy
-         7+wB5MIbO66zEe5bMROt35ox6jSX/holij+z1KNL3VHDYZjRnMKX4MeaR6tPxhl3fMxQ
-         0lYmfZ7t1nuidxj55Zn3lUseLTLEHDzjfwvDoiRnvkFkljzERcO+9UuBi1QRMD2W/9rw
-         JoaseO251qrENwQO5LXEayrDhs+bbib6GJ4IcLrf3SxNSOfTdF/ArHobBIGiDfqeOAjr
-         Xe7Ll7EmbIS2Y0deThbDEMz506QdXCRywdSc2vhI6NG5ED/V0pS5QHX68edp0DDmiz6t
-         TTgg==
+        d=gmail.com; s=20230601; t=1716749137; x=1717353937; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K5IL9WVaL+MRAvoehS1X61pU+AcxiSLj6714R/XAATo=;
+        b=gV4j0RmS4M2R2vQdAtIfzWJxMMYTnzBFEzKJKRllk8nuiDIXVfCvug6sNyqhDYj5Kz
+         tciCJP6UxTvmOS8QluI5qBFBFF8GMviO9HmGovCa8TfteBIdtn9P6EcA6SFRqd01RUDO
+         NOWfto6EgaeBB3zAjbjK7hMaQnSAoetwtYn4dRwO75n3NIUh7dfdu/oEDn9s3vgP6y4b
+         eN4cdDHWwhQGSvyj2vnZCpPLg6C7yz3UchRoFUdh0eDB6fhWXKKCT1X9MJGH3ovcxoNe
+         nuqDH0nnWwlLcmyiFrHsnDT1vwp6JBv+zN1aMrd7dgNyrec/9dWluKGqnL76yzhsjykP
+         r+sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716749135; x=1717353935;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=miLZb61bb6eHKVsGFJqgSUKqREuKVQ85VCQ63BLN4t4=;
-        b=Ksc++e5yn2I73lISYf5NlE8uMjQQrmSizA6TV5Sb3j3fJ7FJl+4rZsAr6JwY6ql8ei
-         sFfio8WG0MW66JrVoxKzxnEQ1xF2EcmrUrOHyussLhYPsFlxewNJjpRUskEIz49oI3oJ
-         6lIfNg1uxt47ErFP6VTZtfrCcxC121RsPm6qqKJ0OhMMiPHINX7P7uKU23KuAw6+bGNv
-         ygliATAhHzUXX9xeoEYy0LVilJuvMAupSpMjXeEfcc1lBVtug3n61M2dLCt+GZFUQUPM
-         JNNBxO+lEBCfEIFiOUHTyi8ZqfgLE1ASyBb5YIVV6knhdhS7s9CRiHrHExWRZwY3G2xu
-         cloA==
-X-Forwarded-Encrypted: i=1; AJvYcCUW1egqPbbemvRNRMN3R1lSbfAB1drcHJdpIEcSisQ9Cco8vG5Dj2CpO5JFZTpwAVG4JZq+rVmIAsl2gU5w9YB7RH2kY4ASGBQ5gLSWwuCViOneGwXgc+3UTLI0XPxOF8T4PNPzr7Cnf6vDsBJyJnLYHI5vFKkb2+vVS4d8e1Xwbvu9dJNZ
-X-Gm-Message-State: AOJu0Yx2N67vpY/i5UEPwHjflbC9TnHlZyzTSh9LEi9ZE6UVsttN6XPQ
-	R8eJHVe5YwyZ0kVxGq/rDrcF/Xiaa7XaQ0rEUbyA/mbgkjnnqQz8
-X-Google-Smtp-Source: AGHT+IHSCfugX/hh3BML+J946B+KyEq7nhGjevAknvFRJgmvi01bsdZjuw2ImLGRO7NGEScNBD0o/g==
-X-Received: by 2002:a2e:b70a:0:b0:2e1:adc4:47f6 with SMTP id 38308e7fff4ca-2e95b0945d4mr45205081fa.6.1716749134608;
-        Sun, 26 May 2024 11:45:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716749137; x=1717353937;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K5IL9WVaL+MRAvoehS1X61pU+AcxiSLj6714R/XAATo=;
+        b=hgvXCFgleU6cycBL5zfFLHalZnqN1SkabFNH7gzQU2PhMfwcMv1alz973zbmCfJ846
+         ldRp796r5aYohVvt/3IFWWGcadFYtxgQ4yiE8Yl+Z99RHEzqfuG5VKXRjoMh+TstdrBP
+         9ZyL45qWFxOTBzKsuSIrGh8wtIRz3Jvs5ySsCEhd+gNaC/r+4SEaN1f5vNyto+xezRDD
+         ONhqK6XqJb50hbjBiCNyVt5Rm/zf/qVwAdYXDleJIp94ZyRPipg1AH5lXkDu1uvaLU4J
+         dwFVc6MzSFourtCwtHVs2cHshrmech8wb9raeT8JWCjiLg9EB3DlLeleTBo3hmrfrSSb
+         4tOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXn3bUF4qTmIdS2iUVHpNcXcgSaToiP0hevWDOdBrFxgPOKf3uZ7q8+gO1T2Vto8U7RdMFFosdyEWsAlZMIDh4CFYXA/bOuMk1vsL+Aj4Pia++/X1bFAHEnZOrT5jcC90fsJIu/lmOzsrspRdplBWK4FcH75KKWOEawPu2Sh9USWvpM5pHz
+X-Gm-Message-State: AOJu0YyMVTFCCyC8YU1fiN696OZmWry5ZFjeNJufi2QTN2OrgSi2sYIr
+	ePMJCqP0YwAkrllGQVqCZEzsQUSui/llPP56FEG5AEMVi8YoxTaM
+X-Google-Smtp-Source: AGHT+IFeY+DPFBdoClSgAlOqZo+Z5AKnX0cbUgFQyPiSnm2Mh4+flIRnbeMwzJIJb8B/uipjI9owZQ==
+X-Received: by 2002:a2e:9f0a:0:b0:2da:a3ff:5254 with SMTP id 38308e7fff4ca-2e95b042cd4mr65305581fa.1.1716749136562;
+        Sun, 26 May 2024 11:45:36 -0700 (PDT)
 Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-421089cc504sm84960075e9.40.2024.05.26.11.45.33
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-421089cc504sm84960075e9.40.2024.05.26.11.45.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 May 2024 11:45:34 -0700 (PDT)
+        Sun, 26 May 2024 11:45:36 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Jean Delvare <jdelvare@suse.com>,
 	Guenter Roeck <linux@roeck-us.net>,
@@ -59,10 +62,12 @@ To: Jean Delvare <jdelvare@suse.com>,
 	linux-hwmon@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings: hwmon: g762: Convert to yaml schema
-Date: Sun, 26 May 2024 20:45:23 +0200
-Message-ID: <20240526184526.21010-1-ansuelsmth@gmail.com>
+Subject: [PATCH v2 3/3] hwmon: g672: add support for g761
+Date: Sun, 26 May 2024 20:45:25 +0200
+Message-ID: <20240526184526.21010-3-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240526184526.21010-1-ansuelsmth@gmail.com>
+References: <20240526184526.21010-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,161 +76,110 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert g762 Documentation to yaml schema.
+Add support for g761 PWM Fan Controller.
 
-Since it supports various device, change the name to g76x and add the
-vendor prefix.
+The g761 is a copy of the g763 with the only difference of supporting
+and internal clock. The internal clock is used if no clocks property is
+defined in device node and in such case the required bit is enabled and
+clock handling is skipped.
+
+The internal clock oscillator runs at 31KHz.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- .../devicetree/bindings/hwmon/g762.txt        | 47 -----------
- .../devicetree/bindings/hwmon/gmt,g76x.yaml   | 83 +++++++++++++++++++
- 2 files changed, 83 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/hwmon/g762.txt
- create mode 100644 Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
+Changes v2:
+- Rework handling of internal clock
 
-diff --git a/Documentation/devicetree/bindings/hwmon/g762.txt b/Documentation/devicetree/bindings/hwmon/g762.txt
-deleted file mode 100644
-index 6d154c4923de..000000000000
---- a/Documentation/devicetree/bindings/hwmon/g762.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--GMT G762/G763 PWM Fan controller
--
--Required node properties:
--
-- - "compatible": must be either "gmt,g762" or "gmt,g763"
-- - "reg": I2C bus address of the device
-- - "clocks": a fixed clock providing input clock frequency
--	     on CLK pin of the chip.
--
--Optional properties:
--
-- - "fan_startv": fan startup voltage. Accepted values are 0, 1, 2 and 3.
--	       The higher the more.
--
-- - "pwm_polarity": pwm polarity. Accepted values are 0 (positive duty)
--	       and 1 (negative duty).
--
-- - "fan_gear_mode": fan gear mode. Supported values are 0, 1 and 2.
--
--If an optional property is not set in .dts file, then current value is kept
--unmodified (e.g. u-boot installed value).
--
--Additional information on operational parameters for the device is available
--in Documentation/hwmon/g762.rst. A detailed datasheet for the device is available
--at http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf.
--
--Example g762 node:
--
--   clocks {
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	g762_clk: fixedclk {
--		 compatible = "fixed-clock";
--		 #clock-cells = <0>;
--		 clock-frequency = <8192>;
--	}
--   }
--
--   g762: g762@3e {
--	compatible = "gmt,g762";
--	reg = <0x3e>;
--	clocks = <&g762_clk>
--	fan_gear_mode = <0>; /* chip default */
--	fan_startv = <1>;    /* chip default */
--	pwm_polarity = <0>;  /* chip default */
--   };
-diff --git a/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml b/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
-new file mode 100644
-index 000000000000..bfefe49f54bf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/gmt,g76x.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/gmt,g76x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ drivers/hwmon/g762.c | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hwmon/g762.c b/drivers/hwmon/g762.c
+index af1228708e25..a00cf3245eec 100644
+--- a/drivers/hwmon/g762.c
++++ b/drivers/hwmon/g762.c
+@@ -69,6 +69,7 @@ enum g762_regs {
+ #define G762_REG_FAN_CMD1_PWM_POLARITY  0x02 /* PWM polarity */
+ #define G762_REG_FAN_CMD1_PULSE_PER_REV 0x01 /* pulse per fan revolution */
+ 
++#define G761_REG_FAN_CMD2_FAN_CLOCK     0x20 /* choose internal clock*/
+ #define G762_REG_FAN_CMD2_GEAR_MODE_1   0x08 /* fan gear mode */
+ #define G762_REG_FAN_CMD2_GEAR_MODE_0   0x04
+ #define G762_REG_FAN_CMD2_FAN_STARTV_1  0x02 /* fan startup voltage */
+@@ -115,6 +116,7 @@ enum g762_regs {
+ 
+ struct g762_data {
+ 	struct i2c_client *client;
++	bool internal_clock;
+ 	struct clk *clk;
+ 
+ 	/* update mutex */
+@@ -566,6 +568,7 @@ static int do_set_fan_startv(struct device *dev, unsigned long val)
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id g762_dt_match[] = {
++	{ .compatible = "gmt,g761" },
+ 	{ .compatible = "gmt,g762" },
+ 	{ .compatible = "gmt,g763" },
+ 	{ },
+@@ -597,6 +600,21 @@ static int g762_of_clock_enable(struct i2c_client *client)
+ 	if (!client->dev.of_node)
+ 		return 0;
+ 
++	data = i2c_get_clientdata(client);
 +
-+title: GMT G762/G763 PWM Fan controller
++	/*
++	 * Skip CLK detection and handling if we use internal clock.
++	 * This is only valid for g761.
++	 */
++	data->internal_clock = of_device_is_compatible(client->dev.of_node,
++						       "gmt,g761") &&
++			       !of_property_present(client->dev.of_node,
++						    "clocks");
++	if (data->internal_clock) {
++		do_set_clk_freq(&client->dev, 32768);
++		return 0;
++	}
 +
-+maintainers:
-+  - Christian Marangi <ansuelsmth@gmail.com>
+ 	clk = of_clk_get(client->dev.of_node, 0);
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&client->dev, "failed to get clock\n");
+@@ -616,7 +634,6 @@ static int g762_of_clock_enable(struct i2c_client *client)
+ 		goto clk_unprep;
+ 	}
+ 
+-	data = i2c_get_clientdata(client);
+ 	data->clk = clk;
+ 
+ 	ret = devm_add_action(&client->dev, g762_of_clock_disable, data);
+@@ -1025,16 +1042,26 @@ ATTRIBUTE_GROUPS(g762);
+ static inline int g762_fan_init(struct device *dev)
+ {
+ 	struct g762_data *data = g762_update_client(dev);
++	int ret;
+ 
+ 	if (IS_ERR(data))
+ 		return PTR_ERR(data);
+ 
++	/* internal_clock can only be set with compatible g761 */
++	if (data->internal_clock)
++		data->fan_cmd2 |= G761_REG_FAN_CMD2_FAN_CLOCK;
 +
-+description: |
-+  GMT G762/G763 PWM Fan controller.
+ 	data->fan_cmd1 |= G762_REG_FAN_CMD1_DET_FAN_FAIL;
+ 	data->fan_cmd1 |= G762_REG_FAN_CMD1_DET_FAN_OOC;
+ 	data->valid = false;
+ 
+-	return i2c_smbus_write_byte_data(data->client, G762_REG_FAN_CMD1,
+-					 data->fan_cmd1);
++	ret = i2c_smbus_write_byte_data(data->client, G762_REG_FAN_CMD1,
++					data->fan_cmd1);
++	if (ret)
++		return ret;
 +
-+  If an optional property is not set in DT, then current value is kept
-+  unmodified (e.g. bootloader installed value).
-+
-+  Additional information on operational parameters for the device is available
-+  in Documentation/hwmon/g762.rst. A detailed datasheet for the device is available
-+  at http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - gmt,g762
-+      - gmt,g763
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description: a fixed clock providing input clock frequency on CLK
-+      pin of the chip.
-+    maxItems: 1
-+
-+  fan_startv:
-+    description: Fan startup voltage step
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1, 2, 3]
-+
-+  pwm_polarity:
-+    description: PWM polarity (psotivie or negative duty)
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1]
-+
-+  fan_gear_mode:
-+    description: FAN gear mode. Configure High speed fan setting factor
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1, 2]
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clocks {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        g762_clk: fixedclk {
-+            compatible = "fixed-clock";
-+            #clock-cells = <0>;
-+            clock-frequency = <8192>;
-+        };
-+    };
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        g762@3e {
-+            compatible = "gmt,g762";
-+            reg = <0x3e>;
-+            clocks = <&g762_clk>;
-+            fan_gear_mode = <0>;
-+            fan_startv = <1>;
-+            pwm_polarity = <0>;
-+        };
-+    };
++	return i2c_smbus_write_byte_data(data->client, G762_REG_FAN_CMD2,
++					 data->fan_cmd2);
+ }
+ 
+ static int g762_probe(struct i2c_client *client)
 -- 
 2.43.0
 
