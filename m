@@ -1,161 +1,146 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92E41803D;
-	Sun, 26 May 2024 16:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEC618EAF;
+	Sun, 26 May 2024 16:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716740858; cv=none; b=jSQdWZ6rqSsFiY/ci68lEx6bgNO7dF38YzeklMaIux3vE6l6pi8RZn/p3pYyB05M4boNiTAP5KL01yYRz3BwQBx0QqaISvj0uWfsRYRpGXb5Mfuskc9kiFVJLq1FFvi1BBF9mTwJtebzuNvSFk9+y3/4IwrjYlaTJRCvQI+PO9Y=
+	t=1716741624; cv=none; b=dbuuoXp1SChdbSyoojBzDnNB/7+yrGIPQflLqWoKF5nn+QdMr6R1V+v7SFj6ZIDBOPDc5Lc/JZC4y50nm9Vsn/tnR3/9a+vB4ZBFUP6bl4PALbexCtFBXdYuJHLldjfD8S85riKwm5xN/4E3VhV9zYwvZ3yRCbVxbQ9WZ1IgKh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716740858; c=relaxed/simple;
-	bh=Ck8ZP8XmBhx3qfNQgaZytRg6uoSkdm/hDN0wyzQbEcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZSze0a8yysbPoOsHcit/5kSXcGV0HYbvZQ4zm49lFgbuJSFjLdyY0krPKbqrMZAiRiowR41xajiwS4NcG1Znv5jwyq+vxBH5lQ0gsEkcXUlH1vIxaIXYBLgh6dL5jjaWrNouwmFucTmqQGVvRtYG/6dkzziNQGP1uA5o4w0fdPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=hp9Nyopb; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1716741624; c=relaxed/simple;
+	bh=yOm6cdxOJDaW3vY/3rDEchTDMZQvn9FaKFIVCGigcZo=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=OtKlCeSq4LYnbiXre8XwbNW98VM+sEO7KO66ObZirfbw0s00wYXdtbyjgobMdxR5n/fFwi9SMIzPE3KGMidKsD0jHiCQezlxm1352TOU39oMimNuijuKmaqP84Dbi0Y3w/IHj4I39JHHZzm5ipIte1QuM5fQwy1m8kMEKuIX9Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=meYLVjXQ; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hp9Nyopb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HQ77S7fv3o2eNNFdQwNAIpUe0Htav/emvIcvmyeydso=; b=hp9NyopbKR1MoB2zPFnPbXwX3v
-	rO8DRx7ecCpR8ZcLKVQBjIBERF7z4kD288lBS4Wohdk/O/IVgrHyc8UkvLAAaimqFqScFr6MLPank
-	a/8ciH7WW+adrEUv+Twq7G29LVpNGKgClj+lJOaYJBqPCwbI7a+Fk4XhdATH7wvO7f9FoQG8AsP2R
-	KuQsqrWpTio7pYfgApOHJQ+u2a4MY9PXJmFpuNboiHKmu02OqC65mrVsmM4Iia1gSP9YnwfAoQFIq
-	IEX/qKvnoKUYJMgnrOvYun297Arp039xQT0uawxqddScEgHgxHAPek41V4X1D5/YHHM3JR4dTp568
-	nTxoWzbw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35300)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sBGiA-0002of-2D;
-	Sun, 26 May 2024 17:27:06 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sBGi8-0001Vm-2o; Sun, 26 May 2024 17:27:04 +0100
-Date: Sun, 26 May 2024 17:27:03 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sneh Shah <quic_snehshah@quicinc.com>
-Cc: Andrew Halaney <ahalaney@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-	Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@quicinc.com
-Subject: Re: [PATCH net-next] net: stmmac: dwmac-qcom-ethqos: Add support for
- 2.5G SGMII
-Message-ID: <ZlNi11AsdDpKM6AM@shell.armlinux.org.uk>
-References: <20231218071118.21879-1-quic_snehshah@quicinc.com>
- <4zbf5fmijxnajk7kygcjrcusf6tdnuzsqqboh23nr6f3rb3c4g@qkfofhq7jmv6>
- <8b80ab09-8444-4c3d-83b0-c7dbf5e58658@quicinc.com>
- <wvzhz4fmtheculsiag4t2pn2kaggyle2mzhvawbs4m5isvqjto@lmaonvq3c3e7>
- <8f94489d-5f0e-4166-a14e-4959098a5c80@quicinc.com>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="meYLVjXQ"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f94489d-5f0e-4166-a14e-4959098a5c80@quicinc.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1716741613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j3lZcgRjy9m9i6VrLn+CFxC//39rHct7UpondOikJUI=;
+	b=meYLVjXQ14iHnjjG6vi6dXbEFJAFzMA7Dpk4lIIyPVVPoFpaMHYdL8m6kOW0lWbCeEM9+F
+	lu9ivY3Sl+YlcdpQCiaV7XVlwHdp501iTC97XUQ+ezqRzM9el9N+hc/5Zx6Zds377cFE3M
+	spGVPG4Sfo6QsbtJv56iEovKliySDyLg5LDhFi5Ul18YZj8EpymjWCc4PcgcDg8GgZpFbb
+	vJ2W8n+rTj+C2JELC6Nb1f7hG8jAX9LvZV/PDU21534fV4cIgu0XijTnzjHxhxK8rUjjZs
+	RUNWKOqJKVZWsYOo5qN4c12ptoCjx/g12xbp5reZ60XbMQRy+xWPt0zxA0A5IA==
+Date: Sun, 26 May 2024 18:40:12 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Icenowy Zheng <uwu@icenowy.me>, linux-sunxi@lists.linux.dev,
+ wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-kernel@vger.kernel.org, didi.debian@cknow.org, Marek Kraus
+ <gamiee@pine64.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: sunxi: Correct the descriptions for
+ Pine64 boards
+In-Reply-To: <90fada7d9a37a5e413b16bc176ec2f8d@manjaro.org>
+References: <d2943d9f4c99a239f86188eaf45a73972685c255.1713833436.git.dsimic@manjaro.org>
+ <057b4a5504656bb7455ead39768d9e7167fb724b.camel@icenowy.me>
+ <5635a6e79427e43ef20b690c766267d0@manjaro.org>
+ <20240522110507.51b12966@donnerap.manchester.arm.com>
+ <90fada7d9a37a5e413b16bc176ec2f8d@manjaro.org>
+Message-ID: <eeb46ba769f6ee9a1972cd104f0de19d@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Thu, Dec 21, 2023 at 02:23:57PM +0530, Sneh Shah wrote:
-> On 12/20/2023 9:29 PM, Andrew Halaney wrote:
-> > I'd evaluate if you can update that function to clear the ANE bit when
-> > the ane boolean is false. From the usage I see I feel that makes sense,
-> > but correct me if you think I'm wrong.
-> > At the very least let's use the defines from there, and possibly add a
-> > new function if clearing is not acceptable in dwmac_ctrl_ane().
-> > 
-> > Stepping back, I was asking in general is the need to muck with ANE here
-> > is a Qualcomm specific problem, or is that a generic thing that should be
-> > handled in the core (and the phy_set_speed() bit stay here)? i.e. would
-> > any dwmac5 based IP need to do something like this for SPEED_2500?
-> I think disabling ANE for SPEED_2500 is generic not specific to qualcomm.
-> Even in dwxgmac2 versions also we need to disable ANE for SPEED_2500.
-> Autoneg clause 37 stadard doesn't support 2500 speed. So we need to
-> disable autoneg for speed 2500
+Hello Andre and Icenowy,
 
-(Going back over the history of this addition)
+On 2024-05-22 15:06, Dragan Simic wrote:
+> On 2024-05-22 12:05, Andre Przywara wrote:
+>> On Wed, 22 May 2024 08:10:21 +0200
+>> Dragan Simic <dsimic@manjaro.org> wrote:
+>>> On 2024-05-22 02:48, Icenowy Zheng wrote:
+>>> > 在 2024-04-23星期二的 03:00 +0200，Dragan Simic写道：
+>>> >> Correct the descriptions of a few Pine64 boards and devices,
+>>> >> according
+>>> >> to their official names used on the Pine64 wiki.  This ensures
+>>> >> consistency
+>>> >> between the officially used names and the names in the source code.
+>>> >>
+>>> >> [...]
+>>> >>
+>>> >> -      - description: Pine64 PineH64 model A
+>>> >> +      - description: Pine64 H64 Model A
+>>> >>          items:
+>>> >>            - const: pine64,pine-h64
+>>> >>            - const: allwinner,sun50i-h6
+>>> >>  
+>>> >> -      - description: Pine64 PineH64 model B
+>>> >> +      - description: Pine64 H64 Model B
+>>> >
+>>> > Sorry for replying so late, but I don't think there is a Pine64 H64
+>>> > board. The Pine64 wiki calls it Pine H64. [1]
+>>> >
+>>> > [1] https://wiki.pine64.org/wiki/PINE_H64
+>>> 
+>>> Good point, thanks.  Though, this board is really an exception to
+>>> the naming scheme employed for the Pine64 boards, so perhaps it would
+>>> actually be better to rename the board in the Pine64 wiki, by adding
+>>> "64" to "Pine", to ensure consistency.
+>> 
+>> I am sorry, but I don't think this is how it works. The board is 
+>> really
+>> called "Pine H64", that's printed on the board [1] and everywhere else 
+>> [2].
+>> That's a choice the manufacturer made, and renaming some Wiki page 
+>> won't
+>> change that. I understand the engineer's desire to make everything 
+>> nice and
+>> consistent ;-) , but I am afraid that's not our call. After all this 
+>> file
+>> is to document the device naming, not to be an example of consistent
+>> naming schemes.
+>> 
+>> [1] https://linux-sunxi.org/images/5/53/Pineh64_top.jpg
+>> [2] https://pine64.org/devices/pine_h64_model_a/
+> 
+> Those are all valid concerns.  Though, when it comes to the 
+> silkscreened
+> labels on PCBs, sometimes they have no connection with the real, 
+> official
+> board names.  An almost funny example :) is the QuartzPro64 board, also
+> from Pine64. [3]
+> 
+> I'll check with Pine64 are there some intentions for unifying the 
+> officially
+> used board names, and if there aren't, I'll submit the v2 of this 
+> series
+> with the corrected board names.
+> 
+> [3] 
+> https://wiki.pine64.org/images/f/fe/Quartzpro64_whole_board_top_resized.jpeg
 
-What 802.3 Clause 37 says is utterly _irrelevant_ when discussing Cisco
-SGMII. Cisco took 802.3 1000base-X and modified it for their own
-purposes, changing the format of the 16-bit control word, adding support
-for symbol replication to support 100Mbps and 10Mbps, changing the link
-timer, etc. SGMII is *not* 802.3 Clause 37.
+It's been decided that the history should be preserved, so I'll prepare
+and submit the v2 of this series with the original Pine64 board names 
+that
+are currently used officially.
 
-I guess you are getting caught up in the widespread crud where
-manufacturers stupidly abuse "SGMII" to mean maybe "Cisco SGMII" and
-maybe "802.3 1000base-X" because both are "serial gigabit MII". Yes,
-both are serial in nature, but Cisco SGMII is not 1000base-X and it
-also is not 2500base-X.
-
-What makes this even more difficult is that 2500base-X was never
-standardised by the 802.3 committees until very late, so we've ended
-up with manufacturers doing their own thing for years. We've ended up
-with a mess of different implementations described in different ways
-many of which boil down to being 2500base-X without inband AN. For
-example, one manufacturer talks about "HS-SGMII", but doesn't permit
-the interface to operate at the x10 and x100 symbol replications that
-conventional Cisco SGMII uses for 100M and 10M speeds respectfully,
-making it in effect no different from 2500base-X.
-
-Now through into this mess various implementations that do not support
-inband at 2.5G speeds, those that require inband at 2.5G speeds... one
-can get into the situation where one pairs a PHY that requires inband
-with a PCS that doesn't support it and the result doesn't work. This
-is particularly problematical if the PHY is on a hotpluggable module
-like a SFP.
-
-It's a total trainwreck.
-
-I do have some work-in-progress patches that attempt to sort this out
-in phylink and identify incompatible situations.
-
-See http://git.armlinux.org.uk/cgit/linux-arm.git/log/?h=net-queue
-
-commits (I think)...
-
-net: phylink: clean up phylink_resolve()
-
-to:
-
-net: phylink: switch to MLO_AN_PHY when PCS uses outband
-
-and since I'm converting stmmac's hacky PCS that bypasses phylink to
-a real phylink_pcs, the ethqos code as it stands presents a blocker
-because of this issue. So, I'm intending to post a series in the next
-few days (after the bank holiday) and will definitely need to be
-tested on ethqos hardware.
-
-However, first we need to get to the bottom of your latest patch that
-only sets PHY_INTERFACE_MODE_2500BASEX when plat_dat->flags has the
-STMMAC_FLAG_HAS_INTEGRATED_PCS flag _set_, but the stmmac code very
-oddly does _not_ use the built-in PCS if this flag is set. See:
-
-	stmmac_ethtool_get_link_ksettings()
-	stmmac_ethtool_set_link_ksettings()
-
-and their use of pcs_link / pcs_duplex / pcs_speed. Also see
-
-	stmmac_common_interrupt()
-
-and its use of pcs_link to control the carrier, the dwmac1000 and
-dwmac4 code that reads the status from the GMAC, updating the
-pcs_link / pcs_duplex / pcs_speed variables.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>>> Alas, the Pine64 wiki is currently in read-only mode, due to some
+>>> recent issues with the underlying hardware that runs it.  Migration 
+>>> to
+>>> another form of documentation for Pine64 boards is also a 
+>>> possibility,
+>>> which makes the updates even more complicated.
+>>> 
+>>> With all this in mind, I think it would be the best to rename the 
+>>> board
+>>> on the Pine64 side, to ensure consistency, and keep this patch as-is.
+>>> I'll make a mental note to do that on the Pine64 side once the 
+>>> current
+>>> situation with the Pine64 wiki is resolved.
