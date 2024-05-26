@@ -1,418 +1,257 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580B658105;
-	Sun, 26 May 2024 17:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0CD5FB8B;
+	Sun, 26 May 2024 17:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716744776; cv=none; b=JW1k9Vfu50ej0paxOc9vaidqk81Wg+qLA6B4vvQy3ZGImUOYHvwpwfmu5g4yFPMMDivUqXz4nt/BK5G5+237K9N4KVnOGMM2Afcs+RIez+Sx/77IY2dqi2qMYdV55zGzCALABajwoVUDYK0H48g0eDbx9CvnaaNFgbSOTEsUv8Y=
+	t=1716744912; cv=none; b=cjqxIXNEZsQuWK3uLzTR/q9jNn2AdKcLe5kuVaJp+I8MIyUWmzj96W56CxaVUgJNhFupl9+NKWedGb5fz8y+6CajvDVa5EWfroiOdbciwKOG2+mhwhMEIGdK8AERxOhOE52KjxK7N2qtLpCekjDsL13p7Y4Px2yUiL46DAtDtb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716744776; c=relaxed/simple;
-	bh=gMVISDvt27PqArWWAYMROWxlMPEWKBZrhuZFwb21ZKk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YAzGzcQR1uL+qvtJDVd4AMoxJx/EMfoNCoCGUDZIou5zU6e3wFGSKo0HipTHswwbGYOvcoxsnGwNSc1n/1cjNUKLx0k3kTYjtJvLoUVm5sxUUd1WMmHdaq8h5WEiTVyNZmv46Hz+VPTVBnJKOQ5UTwsO82iKempO+TVbJpz7u9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=hNU8iFsl; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1716744912; c=relaxed/simple;
+	bh=IzDnJEdVx1v2rrzV/rd8P+bEHnIH4yb3AD4Oiu9Y76k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oM/Y478Ocl1XEXGNiJamzeEwGuGbE1dNyxuPTA5EYaK1kP2lmU7JwtZiZfTW4KKQJZlXIj0/pqyAgAkNBWugIPIPTBSJ5whamAu+sRaKhEP3jZA+Od6WAYc9QUDTVyzy2DXsl1jh3hccFGIGnesoXm49yhyBtrXS7c8OSMirbFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTllzFZ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="hNU8iFsl"
-Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-	by mxout4.routing.net (Postfix) with ESMTP id 3753A100106;
-	Sun, 26 May 2024 17:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1716744201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gynUFeKlK7bwR/LNfSPExiIbRZQ2pzBMdaawzedPczQ=;
-	b=hNU8iFslxZcBlu/h5juR+tTS9mjzgIa+OFxpnGM1NTmv9xFFDyUE954EX7Snlp9dFlaeXx
-	0nLXm2e7PS3Ei9Co6TYABdh//toyX7WBY4vzQ28axdsaJQcJKUKovSDprT3jgTfNV1LDzX
-	xDovgR1FWPje028LytnutQCqK2KyC3k=
-Received: from frank-G5.. (fttx-pool-157.180.226.247.bambit.de [157.180.226.247])
-	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id 245798020D;
-	Sun, 26 May 2024 17:23:20 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Felix Fietkau <nbd@nbd.name>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Mark Lee <Mark-MC.Lee@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	John Crispin <john@phrozen.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: [net] net: ethernet: mtk_eth_soc: handle dma buffer size soc specific
-Date: Sun, 26 May 2024 19:23:11 +0200
-Message-Id: <20240526172311.61081-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTllzFZ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42021C32781;
+	Sun, 26 May 2024 17:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716744912;
+	bh=IzDnJEdVx1v2rrzV/rd8P+bEHnIH4yb3AD4Oiu9Y76k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rTllzFZ/Dl533ve7/fDkLc/MpEAl+ijDFjZRYL1+RZiUijO1qMH2Xk3Rur950x+e/
+	 SakJgWyjyHB0cmWqzA8jKlMPeqyHSc8KXmu73wwATjSLdQF+VBL+efRvUQWujXJc4s
+	 BeRkJiHVxrvQARR8mhima3jDhEtL4lwevE00f/eZ77GK5Viww0t2i7bkLG0ffNd45o
+	 a+ib10LvG6nALsKO5XtD/TMkaLXVe2wZBK6kCJUy6nCsVvetLqFudG1YzXqCFsm4y/
+	 vDTxs1AzlfTJx/plTFMJoVeiLCMl26MtohLRLEYx6Qt55Ivo0eAcQ95zrLLELyUoap
+	 wV7Ua/nqzdzBg==
+Date: Sun, 26 May 2024 18:35:07 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Jander <david@protonic.nl>,
+	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH RFC v2 1/8] spi: dt-bindings: spi-peripheral-props: add
+ spi-offloads property
+Message-ID: <20240526-peculiar-panama-badda4f02336@spud>
+References: <20240513-headsman-hacking-d51fcc811695@spud>
+ <CAMknhBE5XJzhdJ=PQUXiubw_CiCLcn1jihiscnQZUzDWMASPKw@mail.gmail.com>
+ <20240514-aspire-ascension-449556da3615@spud>
+ <CAMknhBFFpEGcMoLo5gsC11Syv+CwUM0mnq1yDMUzL1uutUtB+Q@mail.gmail.com>
+ <20240516-rudder-reburial-dcf300504c0a@spud>
+ <CAMknhBF_s0btus4yqPe-T=F3z7Asi9KkRGsGr7FHDFi=k4EQjw@mail.gmail.com>
+ <20240519-abreast-haziness-096a57ef57d3@spud>
+ <CAMknhBHvEse2FyDoBXR1PvymGpSGq8dotKfm+8XH+0+k+xKtQw@mail.gmail.com>
+ <20240522-gullible-ibuprofen-cf9111c25f6f@spud>
+ <5ad0b5782434eaf4cf565cffb0e4c14b7414ae38.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: bb23b2ea-0cd9-4a4a-a53c-e29530ba1449
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="m4VkfGK+SP6sTPQb"
+Content-Disposition: inline
+In-Reply-To: <5ad0b5782434eaf4cf565cffb0e4c14b7414ae38.camel@gmail.com>
 
-From: Frank Wunderlich <frank-w@public-files.de>
 
-The mainline MTK ethernet driver suffers long time from rarly but
-annoying tx queue timeouts. We think that this is caused by fixed
-dma sizes hardcoded for all SoCs.
+--m4VkfGK+SP6sTPQb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Use the dma-size implementation from SDK in a per SoC manner.
+On Thu, May 23, 2024 at 02:15:35PM +0200, Nuno S=E1 wrote:
+> On Wed, 2024-05-22 at 19:24 +0100, Conor Dooley wrote:
 
-Fixes: 656e705243fd ("net-next: mediatek: add support for MT7623 ethernet")
-Suggested-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-based on SDK:
+> >=20
+> > To remind myself, "Application 2" featured an offload engine designed
+> > specifically to work with a particular data format that would strip a
+> > CRC byte and check the validity of the data stream.
+> >=20
+>=20
+> I think the data manipulation is not really a property of the engine. Typ=
+ically data
+> going out of the offload engine goes into another "data reorder" block th=
+at is pure
+> HW.
+>=20
+> > I think you're right something like that is a stretch to say that that
+> > is a feature of the SPI controller - but I still don't believe that
+> > modelling it as part of the ADC is correct. I don't fully understand the
+> > io-backends and how they work yet, but the features you describe there
+> > seem like something that should/could be modelled as one, with its own
+> > node and compatible etc. Describing custom RTL stuff ain't always
+> > strightforward, but the stuff from Analog is versioned and documented
+> > etc so it shouldn't be quite that hard.
+> >=20
+>=20
+> Putting this in io-backends is likely a stretch but one thing to add is t=
+hat the
+> peripheral is always (I think) kind of the consumer of the resources.
 
-https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/fac194d6253d339e15c651c052b532a449a04d6e
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 106 +++++++++++++-------
- drivers/net/ethernet/mediatek/mtk_eth_soc.h |   9 +-
- 2 files changed, 79 insertions(+), 36 deletions(-)
+Could you explain you think why making some additional processing done to
+the data an io-backend is a stretch? Where else can this RTL be
+represented? hint: it's not part of the ADC, just like how if you have
+some custom RTL that does video processing that is not part of the
+camera!
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index cae46290a7ae..6178bb53608c 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1131,9 +1131,9 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
- {
- 	const struct mtk_soc_data *soc = eth->soc;
- 	dma_addr_t phy_ring_tail;
--	int cnt = MTK_QDMA_RING_SIZE;
-+	int cnt = soc->tx.fq_dma_size;
- 	dma_addr_t dma_addr;
--	int i;
-+	int i, j, len;
- 
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM))
- 		eth->scratch_ring = eth->sram_base;
-@@ -1142,40 +1142,47 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
- 						       cnt * soc->tx.desc_size,
- 						       &eth->phy_scratch_ring,
- 						       GFP_KERNEL);
-+
- 	if (unlikely(!eth->scratch_ring))
- 		return -ENOMEM;
- 
--	eth->scratch_head = kcalloc(cnt, MTK_QDMA_PAGE_SIZE, GFP_KERNEL);
--	if (unlikely(!eth->scratch_head))
--		return -ENOMEM;
-+	phy_ring_tail = eth->phy_scratch_ring + soc->tx.desc_size * (cnt - 1);
- 
--	dma_addr = dma_map_single(eth->dma_dev,
--				  eth->scratch_head, cnt * MTK_QDMA_PAGE_SIZE,
--				  DMA_FROM_DEVICE);
--	if (unlikely(dma_mapping_error(eth->dma_dev, dma_addr)))
--		return -ENOMEM;
-+	for (j = 0; j < DIV_ROUND_UP(soc->tx.fq_dma_size, MTK_FQ_DMA_LENGTH); j++) {
-+		len = min_t(int, cnt - j * MTK_FQ_DMA_LENGTH, MTK_FQ_DMA_LENGTH);
-+		eth->scratch_head[j] = kcalloc(len, MTK_QDMA_PAGE_SIZE, GFP_KERNEL);
- 
--	phy_ring_tail = eth->phy_scratch_ring + soc->tx.desc_size * (cnt - 1);
-+		if (unlikely(!eth->scratch_head[j]))
-+			return -ENOMEM;
- 
--	for (i = 0; i < cnt; i++) {
--		dma_addr_t addr = dma_addr + i * MTK_QDMA_PAGE_SIZE;
--		struct mtk_tx_dma_v2 *txd;
-+		dma_addr = dma_map_single(eth->dma_dev,
-+					  eth->scratch_head[j], len * MTK_QDMA_PAGE_SIZE,
-+					  DMA_FROM_DEVICE);
- 
--		txd = eth->scratch_ring + i * soc->tx.desc_size;
--		txd->txd1 = addr;
--		if (i < cnt - 1)
--			txd->txd2 = eth->phy_scratch_ring +
--				    (i + 1) * soc->tx.desc_size;
-+		if (unlikely(dma_mapping_error(eth->dma_dev, dma_addr)))
-+			return -ENOMEM;
- 
--		txd->txd3 = TX_DMA_PLEN0(MTK_QDMA_PAGE_SIZE);
--		if (MTK_HAS_CAPS(soc->caps, MTK_36BIT_DMA))
--			txd->txd3 |= TX_DMA_PREP_ADDR64(addr);
--		txd->txd4 = 0;
--		if (mtk_is_netsys_v2_or_greater(eth)) {
--			txd->txd5 = 0;
--			txd->txd6 = 0;
--			txd->txd7 = 0;
--			txd->txd8 = 0;
-+		for (i = 0; i < cnt; i++) {
-+			dma_addr_t addr = dma_addr + i * MTK_QDMA_PAGE_SIZE;
-+			struct mtk_tx_dma_v2 *txd;
-+
-+			txd = eth->scratch_ring + (j * MTK_FQ_DMA_LENGTH + i) * soc->tx.desc_size;
-+			txd->txd1 = dma_addr + i * MTK_QDMA_PAGE_SIZE;
-+			if (j * MTK_FQ_DMA_LENGTH + i < cnt)
-+				txd->txd2 = eth->phy_scratch_ring +
-+					    (j * MTK_FQ_DMA_LENGTH + i + 1) * soc->tx.desc_size;
-+
-+			txd->txd3 = TX_DMA_PLEN0(MTK_QDMA_PAGE_SIZE);
-+			if (MTK_HAS_CAPS(soc->caps, MTK_36BIT_DMA))
-+				txd->txd3 |= TX_DMA_PREP_ADDR64(addr);
-+
-+			txd->txd4 = 0;
-+			if (mtk_is_netsys_v2_or_greater(eth)) {
-+				txd->txd5 = 0;
-+				txd->txd6 = 0;
-+				txd->txd7 = 0;
-+				txd->txd8 = 0;
-+			}
- 		}
- 	}
- 
-@@ -2457,7 +2464,7 @@ static int mtk_tx_alloc(struct mtk_eth *eth)
- 	if (MTK_HAS_CAPS(soc->caps, MTK_QDMA))
- 		ring_size = MTK_QDMA_RING_SIZE;
- 	else
--		ring_size = MTK_DMA_SIZE;
-+		ring_size = soc->tx.dma_size;
- 
- 	ring->buf = kcalloc(ring_size, sizeof(*ring->buf),
- 			       GFP_KERNEL);
-@@ -2465,8 +2472,8 @@ static int mtk_tx_alloc(struct mtk_eth *eth)
- 		goto no_tx_mem;
- 
- 	if (MTK_HAS_CAPS(soc->caps, MTK_SRAM)) {
--		ring->dma = eth->sram_base + ring_size * sz;
--		ring->phys = eth->phy_scratch_ring + ring_size * (dma_addr_t)sz;
-+		ring->dma = eth->sram_base + soc->tx.fq_dma_size * sz;
-+		ring->phys = eth->phy_scratch_ring + soc->tx.fq_dma_size * (dma_addr_t)sz;
- 	} else {
- 		ring->dma = dma_alloc_coherent(eth->dma_dev, ring_size * sz,
- 					       &ring->phys, GFP_KERNEL);
-@@ -2588,6 +2595,7 @@ static void mtk_tx_clean(struct mtk_eth *eth)
- static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
- {
- 	const struct mtk_reg_map *reg_map = eth->soc->reg_map;
-+	const struct mtk_soc_data *soc = eth->soc;
- 	struct mtk_rx_ring *ring;
- 	int rx_data_len, rx_dma_size, tx_ring_size;
- 	int i;
-@@ -2595,7 +2603,7 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_QDMA))
- 		tx_ring_size = MTK_QDMA_RING_SIZE;
- 	else
--		tx_ring_size = MTK_DMA_SIZE;
-+		tx_ring_size = soc->tx.dma_size;
- 
- 	if (rx_flag == MTK_RX_FLAGS_QDMA) {
- 		if (ring_no)
-@@ -2610,7 +2618,7 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
- 		rx_dma_size = MTK_HW_LRO_DMA_SIZE;
- 	} else {
- 		rx_data_len = ETH_DATA_LEN;
--		rx_dma_size = MTK_DMA_SIZE;
-+		rx_dma_size = soc->rx.dma_size;
- 	}
- 
- 	ring->frag_size = mtk_max_frag_size(rx_data_len);
-@@ -3139,7 +3147,10 @@ static void mtk_dma_free(struct mtk_eth *eth)
- 			mtk_rx_clean(eth, &eth->rx_ring[i], false);
- 	}
- 
--	kfree(eth->scratch_head);
-+	for (i = 0; i < DIV_ROUND_UP(soc->tx.fq_dma_size, MTK_FQ_DMA_LENGTH); i++) {
-+		kfree(eth->scratch_head[i]);
-+		eth->scratch_head[i] = NULL;
-+	}
- }
- 
- static bool mtk_hw_reset_check(struct mtk_eth *eth)
-@@ -5052,11 +5063,14 @@ static const struct mtk_soc_data mt2701_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5076,11 +5090,14 @@ static const struct mtk_soc_data mt7621_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5102,11 +5119,14 @@ static const struct mtk_soc_data mt7622_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5127,11 +5147,14 @@ static const struct mtk_soc_data mt7623_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5150,11 +5173,14 @@ static const struct mtk_soc_data mt7629_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
- 		.irq_done_mask = MTK_RX_DONE_INT,
- 		.dma_l4_valid = RX_DMA_L4_VALID,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
- 	},
-@@ -5176,6 +5202,8 @@ static const struct mtk_soc_data mt7981_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma_v2),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
- 		.dma_len_offset = 8,
-+		.dma_size = MTK_DMA_SIZE(4K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
-@@ -5183,6 +5211,7 @@ static const struct mtk_soc_data mt7981_data = {
- 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(1K),
- 	},
- };
- 
-@@ -5202,6 +5231,8 @@ static const struct mtk_soc_data mt7986_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma_v2),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
- 		.dma_len_offset = 8,
-+		.dma_size = MTK_DMA_SIZE(4K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
-@@ -5209,6 +5240,7 @@ static const struct mtk_soc_data mt7986_data = {
- 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(1K),
- 	},
- };
- 
-@@ -5228,6 +5260,8 @@ static const struct mtk_soc_data mt7988_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma_v2),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
- 		.dma_len_offset = 8,
-+		.dma_size = MTK_DMA_SIZE(4K),
-+		.fq_dma_size = MTK_DMA_SIZE(4K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma_v2),
-@@ -5235,6 +5269,7 @@ static const struct mtk_soc_data mt7988_data = {
- 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
- 		.dma_len_offset = 8,
-+		.dma_size = MTK_DMA_SIZE(1K),
- 	},
- };
- 
-@@ -5249,6 +5284,8 @@ static const struct mtk_soc_data rt5350_data = {
- 		.desc_size = sizeof(struct mtk_tx_dma),
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
-+		.fq_dma_size = MTK_DMA_SIZE(2K),
- 	},
- 	.rx = {
- 		.desc_size = sizeof(struct mtk_rx_dma),
-@@ -5256,6 +5293,7 @@ static const struct mtk_soc_data rt5350_data = {
- 		.dma_l4_valid = RX_DMA_L4_VALID_PDMA,
- 		.dma_max_len = MTK_TX_DMA_BUF_LEN,
- 		.dma_len_offset = 16,
-+		.dma_size = MTK_DMA_SIZE(2K),
- 	},
- };
- 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-index 4eab30b44070..f5174f6cb1bb 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -32,7 +32,9 @@
- #define MTK_TX_DMA_BUF_LEN	0x3fff
- #define MTK_TX_DMA_BUF_LEN_V2	0xffff
- #define MTK_QDMA_RING_SIZE	2048
--#define MTK_DMA_SIZE		512
-+#define MTK_DMA_SIZE(x)		(SZ_##x)
-+#define MTK_FQ_DMA_HEAD		32
-+#define MTK_FQ_DMA_LENGTH	2048
- #define MTK_RX_ETH_HLEN		(ETH_HLEN + ETH_FCS_LEN)
- #define MTK_RX_HLEN		(NET_SKB_PAD + MTK_RX_ETH_HLEN + NET_IP_ALIGN)
- #define MTK_DMA_DUMMY_DESC	0xffffffff
-@@ -1176,6 +1178,8 @@ struct mtk_soc_data {
- 		u32	desc_size;
- 		u32	dma_max_len;
- 		u32	dma_len_offset;
-+		u32	dma_size;
-+		u32	fq_dma_size;
- 	} tx;
- 	struct {
- 		u32	desc_size;
-@@ -1183,6 +1187,7 @@ struct mtk_soc_data {
- 		u32	dma_l4_valid;
- 		u32	dma_max_len;
- 		u32	dma_len_offset;
-+		u32	dma_size;
- 	} rx;
- };
- 
-@@ -1264,7 +1269,7 @@ struct mtk_eth {
- 	struct napi_struct		rx_napi;
- 	void				*scratch_ring;
- 	dma_addr_t			phy_scratch_ring;
--	void				*scratch_head;
-+	void				*scratch_head[MTK_FQ_DMA_HEAD];
- 	struct clk			*clks[MTK_CLK_MAX];
- 
- 	struct mii_bus			*mii_bus;
--- 
-2.34.1
+> Taking the
+> trigger (PWM) as an example and even when it is directly connected with t=
+he offload
+> block, the peripheral still needs to know about it. Think of sampling fre=
+quency...
+> The period of the trigger signal is strictly connected with the sampling =
+frequency of
+> the peripheral for example. So I see 2 things:
+>=20
+> 1) Enabling/Disabling the trigger could be easily done from the periphera=
+l even with
+> the resource in the spi engine. I think David already has some code in th=
+e series
+> that would make this trivial and so having the property in the spi contro=
+ller brings
+> no added complexity.
+>=20
+> 2) Controlling things like the trigger period/sample_rate. This could be =
+harder to do
+> over SPI (or making it generic enough) so we would still need to have the=
+ same
+> property on the peripheral (even if not directly connected to it). I kind=
+ of agree
+> with David that having the property both in the peripheral and controller=
+ is a bit
+> weird.
 
+Can you explain what you mean by "same property on the peripheral"? I
+would expect a peripheral to state its trigger period (just like how it
+states the max frequency) and for the trigger period not to appear in
+the controller.
+
+I think a way that this could be modelled to reduce some software
+complexity is considering that the periodic trigger is a clock, not
+a PWM, provided you are only interested in the period. That'd give you
+an interface that was less concerned about what the provider of the
+periodic trigger is. After all, I doubt the ADC cares how you decide to
+generate the trigger, as long as the periodicity is correct.
+With the examples provided, you'd get something like:
+
+pwm {
+}
+
+pclk {
+	compatible =3D pwm-clock
+	pwms =3D <&pwm 0 x>
+}
+
+spi {
+	compatible =3D spi-engine
+	clocks =3D <&clks SPI>, <&pwm>
+	clock-names =3D "bus", "offload"
+}
+
+The pwm-clock driver (clk-pwm.c) doesn't implement .set_rate though, but
+maybe you don't need that or maybe it could be added if needed.
+
+> And the DMA block is a complete different story. Sharing that data back w=
+ith the
+> peripheral driver (in this case, the IIO subsystem) would be very interes=
+ting at the
+> very least. Note that the DMA block is not really something that is part =
+of the
+> controller nor the offload block. It is an external block that gets the d=
+ata coming
+> out of the offload engine (or the data reorder block). In IIO, we already=
+ have a DMA
+> buffer interface so users of the peripheral can get the data without any =
+intervention
+> of the driver (on the data). We "just" enable buffering and then everythi=
+ng happens
+> on HW and userspace can start requesting data. If we are going to attach =
+the DMA in
+> the controller, I have no idea how we can handle it. Moreover, the offloa=
+d it's
+> really just a way of replaying the same spi transfer over and over and th=
+at happens
+> in HW so I'm not sure how we could "integrate" that with dmaengine.
+>=20
+> But maybe I'm overlooking things... And thinking more in how this can be =
+done in SW
+> rather than what makes sense from an HW perspective.
+
+I don't think you're overlooking things at all, I'm intentionally being
+a bit difficult and ignoring what may be convenient for the adc driver.
+This is being presented as a solution to a generic problem (and I think
+you're right to do that), but it feels as if the one implementation is
+all that's being considered here and I'm trying to ensure that what we
+end up with doesn't make limiting assumptions.
+
+Part of me says "sure, hook the DMAs up to the devices, as that's what
+happens for other IIO devices" but at the same time I recognise that the
+DMA isn't actually hooked up like that and the other IIO devices I see
+like that are all actually on the SoC, rather than connected over SPI.
+It might be easy to do it this way right now, but be problematic for a
+future device or if someone wants to chuck away the ADI provided RTL and
+do their own thing for this device. Really it just makes me wonder if
+what's needed to describe more complex data pipelines uses an of_graph,
+just like how video pipelines are handled, rather than the implementation
+of io-backends that don't really seem to model the flow of data.
+
+> > continuation:
+> > If offload engines have their own register region in the memory map,
+>=20
+>=20
+> Don't think it has it's own register region... David?
+>=20
+> > their own resources (the RTL is gonna need at the very least a clock)
+> > and potentially also provide other services (like acting as an
+> > io-backend type device that pre-processes data) it doesn't sound like
+> > either the controller or peripheral nodes are the right place for these
+> > properties. And uh, spi-offloads gets a phandle once more...
+> >=20
+>=20
+> But then it would be valid for both peripheral and controller to referenc=
+e that
+> phandle right (and get the resources of interest)?
+
+Sure. But to assume that, for example, the provider of data processing
+services also provided the periodic polling trigger would be incorrect
+even if in the only currently existing case it does. Nothing is stopping
+someone splitting those into different blocks, after all this is "random"
+RTL in an FPGA :)
+
+> FWIW, maybe look at the below usecase. It has some block diagrams that ma=
+y be helpful
+> to you:
+>=20
+> https://wiki.analog.com/resources/eval/user-guides/ad463x/hdl
+
+Yeah, they're a good reference, thanks.
+
+I had to go AFK in the middle of this, I have a nagging feeling that I
+forgot to say something but I cannot recall what.
+
+Cheers,
+Conor.
+
+--m4VkfGK+SP6sTPQb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlNyywAKCRB4tDGHoIJi
+0rMZAP97is6BrH21b+W8jp5WHAZWlcL+sL5JJBGfvH+Cek3K1wEAu+nE5Db4zn21
+jWEa1dDsYFgPjF1xjU+v8+b3KpxbTgE=
+=mmOM
+-----END PGP SIGNATURE-----
+
+--m4VkfGK+SP6sTPQb--
