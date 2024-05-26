@@ -1,198 +1,90 @@
-Received: from out.smtpout.orange.fr (out-17.smtpout.orange.fr [193.252.22.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9CA8F4E;
-	Sun, 26 May 2024 10:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916D479C0;
+	Sun, 26 May 2024 11:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716720003; cv=none; b=pStvoKFyII9eBxeLfiClRU82lhGRhuZTgU9sf/MJSar67LS/cGZFWxJGcyLBfX27houkQU42pLA3apDdGHpARtqi2rP688XKwjgzpE+lZlI47qoY6SkeGNrYphJjmaG/Wd713ue9qHfWZMtxBr3H60Xsqsq9q9LRPSeJVZ5RhxI=
+	t=1716721283; cv=none; b=CqSGeFWf3HjTkUQOYo079J62clzJuUZT+xFUo/Dsa7BgEnlC0iV63VU0dXv51ZoOLJr/2bbZ9EV7077CE/P/J90lXx6Gy7mRCvjBNbBm2W93tYIvBfJf8b1yawFY1OCXPauMY4CenH1AKafBlclnf6cNpMYb8gZgOEIC0bdcAr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716720003; c=relaxed/simple;
-	bh=ABKkFQje7ZO0Xq2B2Vy/IfAlIAoW0dsuFwwptNEUZ1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t3mFuODbd043MByHNeIjaqMxxIuBwFB6CyzamK4ERjmFpsreeL/lbSjPd9OGdNOXf3chZIqADRHylt0Ku4Ah8MnMm7bV26O6WoCg4ecATn2sZg2IcCsHFOeTCM44P4/xJE/I58NKdT9eTLDGQHgXFkAAYxyzPoqXT9uvr4j1XCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=CVuMyDRI; arc=none smtp.client-ip=193.252.22.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1716721283; c=relaxed/simple;
+	bh=6e+h3k3AZ4xi2cYwU9pOafFSVaC00lSZkE0jcbqcV3s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IRc8xwANe7fLQA0EtQKm37x6PBe6jNsIHphSZOpaWRw9+/ZMqHae61g9s1z4xsiPk8Zt0fBMsJVgQmqTHjmkK+shQg4aw0IATXSEBItMIxZkqswqCbFx5UKUoos4OSwHgZmsKgjI+8LziFV3hWaGTsxaI+q5pa49wvZgYBXFh6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cJ+z3s7n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9E6rWNlr; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="CVuMyDRI"
-Received: from [192.168.1.37] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id BBH5su3rUWLctBBH5sRads; Sun, 26 May 2024 12:38:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1716719928;
-	bh=RZoKiF0VbGitkMBWjUFlo2g+BnlJQuteJAm55UMz3vQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=CVuMyDRIr84fG3FaKPfFroOvIXOd3eJvkBd2gegI2vB4BztPsDfmJiTNbiCP5u1Tv
-	 dDEoBj6aw7dDQiOWC/dRHbpo0Tfd9X/4q8A+0OyDflaBSWvkBSGbeJBfVE9apx7wnW
-	 vyXWX2fzltPe/tyOw4e5mWVUKdhOQ5nYWjWf9JM+iLnbBxcE8OnWW59eFyjq8Jqv27
-	 sNZ24iRWQ9c508bqVyjfE9Z+YslefAeHd9gLAoFj4vee/sAM0jeHF1f8ph7fR2dQqw
-	 iUJ7DggAFGrm6euvkBNR74lXuyHNxuXpvslE85QOj4ao5rCXQlJebplywuqolB/3wM
-	 BYJw6kKfWacDg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 26 May 2024 12:38:48 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <45007327-9d45-4a4e-b88f-ebb9a195e76c@wanadoo.fr>
-Date: Sun, 26 May 2024 12:38:46 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cJ+z3s7n";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9E6rWNlr"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716721274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t2Uz48YRsUOXeGZ9DVsANdtln0IbDr3I+aFSlZRM3WI=;
+	b=cJ+z3s7nk0Gp7f9D4DJzEQ/CuZwEJLOxzlVVbBIkA2z/NXZpKArFHcQqGF50fczr1iPJlp
+	gT6hOT56hnY4ui78+Pwa9Sp2Dx+brf4ii0v0Evv3QFke+pvS0MaXaI/WgDiqi+WWIXclfP
+	7rRkWQwKuy4u7Vwrik4nrKEF4FxiGL1dRM4wuLSjUDrisUUt/gDbPia9iErLESPSK8MdPr
+	rx0fZmY+DQxZjDwIzoTNBAnCtv31ssmh2El/j1pIqyNrVnULVGymlLgIC9uahERdM0YBZO
+	nfvFyCQ0M0Xo7uBZsZIL89FTBg57DtwG935Uq5gzbZxLSj/QoI8dBRFAZLOMzg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716721274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t2Uz48YRsUOXeGZ9DVsANdtln0IbDr3I+aFSlZRM3WI=;
+	b=9E6rWNlr93vWj3BRUMTK3cmikVL1VaaaPC9QIWtLSafLmmoHGrMk5F4SfqY7UVXXIfWpWY
+	Bm8URRST7vSd3SDg==
+To: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>,
+	stable@vger.kernel.org
+Subject: [PATCH] riscv: enable HAVE_ARCH_HUGE_VMAP for XIP kernel
+Date: Sun, 26 May 2024 13:01:04 +0200
+Message-Id: <20240526110104.470429-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: btintel_pcie: Fix the error handling path of
- btintel_pcie_probe()
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Tedd Ho-Jeong An <tedd.an@intel.com>, Kiran K <kiran.k@intel.com>,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
- linux-bluetooth@vger.kernel.org
-References: <692b4749f4267436363a5a8840140da8cd8858a1.1716190895.git.christophe.jaillet@wanadoo.fr>
- <CABBYNZLeM7MQrBuGE49KN9Xm1EQ-cFK3nR57sg2hWB0jOUFn7A@mail.gmail.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <CABBYNZLeM7MQrBuGE49KN9Xm1EQ-cFK3nR57sg2hWB0jOUFn7A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Le 24/05/2024 à 21:39, Luiz Augusto von Dentz a écrit :
-> Hi Christophe,
-> 
-> On Mon, May 20, 2024 at 3:42 AM Christophe JAILLET
-> <christophe.jaillet@wanadoo.fr> wrote:
->>
->> Some resources freed in the remove function are not handled by the error
->> handling path of the probe.
->>
->> Add the needed function calls.
->>
->> Fixes: c2b636b3f788 ("Bluetooth: btintel_pcie: Add support for PCIe transport")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> Compile tested only.
->> Maybe incomplete.
->> ---
->>   drivers/bluetooth/btintel_pcie.c | 20 ++++++++++++++------
->>   1 file changed, 14 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
->> index 5b6805d87fcf..d572576d0dbc 100644
->> --- a/drivers/bluetooth/btintel_pcie.c
->> +++ b/drivers/bluetooth/btintel_pcie.c
->> @@ -1280,17 +1280,17 @@ static int btintel_pcie_probe(struct pci_dev *pdev,
->>
->>          err = btintel_pcie_config_pcie(pdev, data);
->>          if (err)
->> -               goto exit_error;
->> +               goto exit_destroy_worqueue;
->>
->>          pci_set_drvdata(pdev, data);
->>
->>          err = btintel_pcie_alloc(data);
->>          if (err)
->> -               goto exit_error;
->> +               goto exit_free_irq_vectors;
->>
->>          err = btintel_pcie_enable_bt(data);
->>          if (err)
->> -               goto exit_error;
->> +               goto exit_free_pcie;
->>
->>          /* CNV information (CNVi and CNVr) is in CSR */
->>          data->cnvi = btintel_pcie_rd_reg32(data, BTINTEL_PCIE_CSR_HW_REV_REG);
->> @@ -1299,17 +1299,25 @@ static int btintel_pcie_probe(struct pci_dev *pdev,
->>
->>          err = btintel_pcie_start_rx(data);
->>          if (err)
->> -               goto exit_error;
->> +               goto exit_free_pcie;
->>
->>          err = btintel_pcie_setup_hdev(data);
->>          if (err)
->> -               goto exit_error;
->> +               goto exit_free_pcie;
->>
->>          bt_dev_dbg(data->hdev, "cnvi: 0x%8.8x cnvr: 0x%8.8x", data->cnvi,
->>                     data->cnvr);
->>          return 0;
->>
->> -exit_error:
->> +exit_free_pcie:
->> +       btintel_pcie_free(data);
->> +
->> +exit_free_irq_vectors:
->> +       pci_free_irq_vectors(pdev);
->> +
->> +exit_destroy_worqueue:
->> +       destroy_workqueue(data->workqueue);
->> +
-> 
-> This looks a bit messy, perhaps we should really be calling
-> btintel_pcie_remove instead and adapt it to check if a field has been
-> initialized or not then proceed to free/cleanup/etc.
-> 
+HAVE_ARCH_HUGE_VMAP also works on XIP kernel, so remove its dependency on
+!XIP_KERNEL.
 
-Not sure it would be that easy / readable.
+This also fixes a boot problem for XIP kernel introduced by the commit in
+"Fixes:". This commit used huge page mapping for vmemmap, but huge page
+vmap was not enabled for XIP kernel.
 
-It would look like something like:
-static void btintel_pcie_remove(struct pci_dev *pdev)
-{
-	struct btintel_pcie_data *data;
+Fixes: ff172d4818ad ("riscv: Use hugepage mappings for vmemmap")
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Cc: <stable@vger.kernel.org>
+---
+This patch replaces:
+https://patchwork.kernel.org/project/linux-riscv/patch/20240508173116.2866192-1-namcao@linutronix.de/
 
-	data = pci_get_drvdata(pdev);
+ arch/riscv/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	btintel_pcie_reset_bt(data);
-	for (int i = 0; i < data->alloc_vecs; i++) {
-		struct msix_entry *msix_entry;
-
-		msix_entry = &data->msix_entries[i];
-		free_irq(msix_entry->vector, msix_entry);
-	}
-
-	if (data->alloc_vecs)
-		pci_free_irq_vectors(pdev);
-
-	btintel_pcie_release_hdev(data);
-
-	flush_work(&data->rx_work);
-
-	if (data->workqueue)
-		destroy_workqueue(data->workqueue);
-
-	if (data->dma_pool)
-		btintel_pcie_free(data);
-
-	pci_clear_master(pdev);
-
-	pci_set_drvdata(pdev, NULL);
-}
-
-The added tests don't always look related to the function call just 
-after it :
-
-   - data->alloc_vecs vs pci_free_irq_vectors(), ok why not
-
-   - data->dma_pool vs btintel_pcie_free() does not look that really 
-obvious.
-
-
-There is also another issue in the remove function. We call free_irq() 
-on irq allocated with devm_request_threaded_irq().
-
-I'll try to see if more managed resources usage and/or some 
-devm_add_action_or_reset() could help.
-
-CJ
-
->>          /* reset device before exit */
->>          btintel_pcie_reset_bt(data);
->>
->> --
->> 2.45.1
->>
-> 
-> 
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index b94176e25be1..0525ee2d63c7 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -106,7 +106,7 @@ config RISCV
+ 	select HAS_IOPORT if MMU
+ 	select HAVE_ARCH_AUDITSYSCALL
+ 	select HAVE_ARCH_HUGE_VMALLOC if HAVE_ARCH_HUGE_VMAP
+-	select HAVE_ARCH_HUGE_VMAP if MMU && 64BIT && !XIP_KERNEL
++	select HAVE_ARCH_HUGE_VMAP if MMU && 64BIT
+ 	select HAVE_ARCH_JUMP_LABEL if !XIP_KERNEL
+ 	select HAVE_ARCH_JUMP_LABEL_RELATIVE if !XIP_KERNEL
+ 	select HAVE_ARCH_KASAN if MMU && 64BIT
+-- 
+2.39.2
 
