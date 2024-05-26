@@ -1,125 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BC44A0F
-	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 02:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F3F7FD;
+	Sun, 26 May 2024 02:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716688930; cv=none; b=ktBhB8DKHayl7VzpxGT/RWAKwJEHhKoD90t9jNMWiH6yZJtzuX+KDFWboThx+JRhZD5uGrSRtWV47y1qH5xobuoyQ7OYHyEWKFryzOrg80Pr/qy7aCUwNyulEq4GESeUIgcRuV4Jkz5GiXb/qIHYYFfJEvvq3GqnAgJSg83XDbM=
+	t=1716690889; cv=none; b=sOF3RAwXp6R0ep2LiD4qJRJBLLWgHCVJMC/U1Vu6goJvYOm42q6DwNksU9cUk8hbtesoTru8s9kBaydx0saAsCLAVCYcXZQmRlf0DV4D/eqNv4wH7rQGrsZXNRJ50qndz1YQ4+kXw13kEmxQJUYX95ZhkBvnOZB6gWfsN07rWDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716688930; c=relaxed/simple;
-	bh=wySTrCiWbxv3d5CkP0WjwDn7rMNpNEwftP0j7quJ8LM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DlvGKdfHNeuAP0eM+p3Fzzg8HVx8/KiUCLr4ojW20c7ndFaANm2O8C1Rnb0yyiTrOATpfpXmplIeXajL91tkwxtsaluJrfOTQGOPVraDXLWobF2mhSX8gY6AgnjB2nuB34EhpbysdzdZdhZAIgg+MqfYPtVPGSIcAsjIRi9f5Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n2IPv/pc; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716690889; c=relaxed/simple;
+	bh=DIA5pybZR9SEnmC5+DeImOXnefIy8D/nCYVJLB4fFno=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KE7hbvqJZwKStTOkn282u9NVscHIVtbY06mp9pjl4nnyl1Vq6t9yXKd6DHrHYUe2n5EgokVzM0TC3k0qrJbBdHbXm8sC52j2mYEpCUpKhfu8ndUSTL3BUtehsQj6uPQV2gmsEkRwa0yvP2k5fj2bnTAVwhi1j60hKQfwgc35Y4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FxNbPKGQ; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n2IPv/pc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716688928; x=1748224928;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wySTrCiWbxv3d5CkP0WjwDn7rMNpNEwftP0j7quJ8LM=;
-  b=n2IPv/pcJzeFPUbZCgsSqVVdRRkNDvJsp9xilbc9mjIr1ULQNVGguITT
-   KvotSGozl+JS0uGWZaKVZ5NcgZt21ti4b/VgvXd/aDfq8v8l0SdvQYpdR
-   vgpzLMa1EXevvhqp21++lZKLvyeYKiHPZLuAIOnt73z8D8gpIzNfF9ZUe
-   uU6iv09rdpiKppnz/4WoSDuse11ic85u8If2rZcfgVwF83zLtXt5CQFL/
-   JvTMGWHiixzqd24E0qFWcW7WzbNIeomTvQNcqXp0uYcuHWYY4KhCGuFOA
-   Q7Pwiuld+T9RFvxeUezWrYSbMRkPPX6KqTuo3OTkjkFoIbOA7hG3Y/wTA
-   A==;
-X-CSE-ConnectionGUID: iKKG1ii/QUuuZi2UzgI0lg==
-X-CSE-MsgGUID: aDqswrwAT8KdgAfQ1hrycQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11083"; a="23633421"
-X-IronPort-AV: E=Sophos;i="6.08,189,1712646000"; 
-   d="scan'208";a="23633421"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2024 19:02:08 -0700
-X-CSE-ConnectionGUID: /iF1cy3dSnCmVTft7XP+Vw==
-X-CSE-MsgGUID: PPmQzdpWQ2WRWRTggtGsow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,189,1712646000"; 
-   d="scan'208";a="39375802"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.164])
-  by orviesa004.jf.intel.com with ESMTP; 25 May 2024 19:02:04 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ajay Kaher <ajay.kaher@broadcom.com>
-Cc: x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	Prem Nath Dey <prem.nath.dey@intel.com>,
-	Xiaoping Zhou <xiaoping.zhou@intel.com>
-Subject: [PATCH v2] x86/paravirt: Disable virt spinlock on bare metal
-Date: Sun, 26 May 2024 09:58:47 +0800
-Message-Id: <20240526015847.14142-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxNbPKGQ"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-df771b6cf71so2376357276.2;
+        Sat, 25 May 2024 19:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716690887; x=1717295687; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DIA5pybZR9SEnmC5+DeImOXnefIy8D/nCYVJLB4fFno=;
+        b=FxNbPKGQ+0b7FL6S1hmL6zW1q4xMuJjowP/Obp3ukzDMDmIlDVs2mnhO1IBbPw+rwI
+         zVKdhzTfj0WHYbmI8BSBn9G3DSE8wCQ3s0gDJHKWRiarCkdJ7v1B8lp7g/Vts5ydKwUI
+         KiILsZ9bDoZ5XVlgCoLE7H8iefvj52lh8NYRdsJKCKJaV71xOwyURWqaJvlXaUVB7JrO
+         gyV1vYpzbN3baIg2Q2S+3v75op5OYhjJi4junOnYF+zoIG+VpXEZC2z2Bv8StWJyMGLm
+         1+svAhyHUNDXiU14n1W+pSgeWkKGiIyuModS+/O3zVvStmSFamRVKNxgn47ThbKjCJYV
+         YcWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716690887; x=1717295687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DIA5pybZR9SEnmC5+DeImOXnefIy8D/nCYVJLB4fFno=;
+        b=qdG0JFlFdRXvOkjtCdxyIjHzzHkMwv4FYvydA2Q+o3Ktop+uXOIuU66ug0UwWUd5A3
+         Mv0+DCWUpUGAs1DrnUTXAagQ9RWYsyeXPlcDP3e7ipLy976MDuGtSASKROL9k4XXkezg
+         V0y+3csd8xbPTrenF+EwBti9CFNugCgVdRfEia+k+hdAq9iYV3x4yT3xdD8c0Rpxk32w
+         Q70dEdTwxZ6NCY4QMfRDLN9XNOdlH/Xq3qC9mIfLWtH/LlUFbytXWsdk/xhr8SXKKvZI
+         9wCps0TRHrxNFd5Zv2TA1skYCmxAbVc11WtRntnLAbNyVLmbNBG1oJppJBFIx2YBe1hE
+         O9nw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXcQKIaXchHhFaw23M+KqUMVskMv4osYh1iTgRWW4N67d60iqejhlANc2MTGjpLQn712w0po0LRE6jbzkvTk2Pz1XD9xRWZquZ4iFH
+X-Gm-Message-State: AOJu0Yzr5PkUeiPHRh7rhsjkgO+NMdGrcy/T6KkDEmtaLxpc9w3BsO9R
+	bTdGpsFm43nyVrwx5tbvQBOcQVUPWAVxOAl3rPkGGW5w7FJuXQg5uNwH9xD0bplAI+iVqt2QfOF
+	dmV/c5AeEClxcVPCHihTe2aVGjlQ=
+X-Google-Smtp-Source: AGHT+IGxnh6lmwJCz/IqjigbqR3/kbl6EF9Xnb4m6brrSjVJtjG4roLzHD3Mebdx/nIMvMwVKHKTFIO+sKYtQr0++2E=
+X-Received: by 2002:a25:bccc:0:b0:df7:8291:d109 with SMTP id
+ 3f1490d57ef6-df78291d1dcmr3791368276.59.1716690887359; Sat, 25 May 2024
+ 19:34:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <o89373n4-3oq5-25qr-op7n-55p9657r96o8@vanv.qr> <CAHk-=wjxdtkFMB8BPYpU3JedjAsva3XXuzwxtzKoMwQ2e8zRzw@mail.gmail.com>
+ <ZkvO-h7AsWnj4gaZ@slm.duckdns.org> <CALOAHbCYpV1ubO3Z3hjMWCQnSmGd9-KYARY29p9OnZxMhXKs4g@mail.gmail.com>
+ <CAHk-=wj9gFa31JiMhwN6aw7gtwpkbAJ76fYvT5wLL_tMfRF77g@mail.gmail.com>
+ <CALOAHbAmHTGxTLVuR5N+apSOA29k08hky5KH9zZDY8yg2SAG8Q@mail.gmail.com>
+ <CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com>
+ <CALOAHbAAAU9MTQFc56GYoYWR3TsLbkncp5QrrwHMbqJ9SECivw@mail.gmail.com>
+ <CAHk-=whwtEFJnDVrkkMtb6SWcmBQMK8+qXGtqvBO+xH8y2i6nA@mail.gmail.com>
+ <CALOAHbD0LdbQTWyvDiLcgGupcQJKmadzWhoZiUTj126Rqqn6fQ@mail.gmail.com> <CAHk-=wivfrF0_zvf+oj6==Sh=-npJooP8chLPEfaFV0oNYTTBA@mail.gmail.com>
+In-Reply-To: <CAHk-=wivfrF0_zvf+oj6==Sh=-npJooP8chLPEfaFV0oNYTTBA@mail.gmail.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Sun, 26 May 2024 10:34:08 +0800
+Message-ID: <CALOAHbDCykYBi__Aq95tQU7eAbN9rJ_7vNME_wREab+X1oORtA@mail.gmail.com>
+Subject: Re: [PATCH workqueue/for-6.10-fixes] workqueue: Refactor worker ID
+ formatting and make wq_worker_comm() use full ID string
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: bpf <bpf@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Jan Engelhardt <jengelh@inai.de>, 
+	Craig Small <csmall@enc.com.au>, linux-kernel@vger.kernel.org, 
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The kernel can change spinlock behavior when running as a guest. But
-this guest-friendly behavior causes performance problems on bare metal.
-So there's a 'virt_spin_lock_key' static key to switch between the two
-modes.
+On Fri, May 24, 2024 at 10:58=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, 24 May 2024 at 00:43, Yafang Shao <laoar.shao@gmail.com> wrote:
+> >
+> > Actually, there are already helpers for this: get_task_comm() and
+> > __get_task_comm(). We can simply replace the memcpy() with one of
+> > these
+>
+> No. We should get rid of those horrendous helpers.
+>
+> > If the task_lock() in __get_task_comm() is a concern, we could
+> > consider adding a new __get_current_comm().
+>
+> The task_lock is indeed the problem - it generates locking problems
+> and basically means that most places cannot use them. Certainly not
+> things like tracing etc.
+>
+> The locking is also entirely pointless\, since absolutely nobody
+> cares. If somebody is changing the name at the same time - which
+> doesn't happen in practice - getting some halfway result is fine as
+> long as you get a proper NUL terminated result.
+>
+> Even for non-current, they are largely useless. They were a mistake.
+>
+> So those functions should never be used for any normal thing. Instead
+> of locking, the function should literally just do a "copy a couple of
+> words and make sure the end result still has a NUL at the end".
+>
+> That's literally what selinuxfs.c wants, for example - it copies the
+> thing to a local buffer not because it cares about some locking issue,
+> but because it wants one stable value. But by using 'memcpy()' and
+> that fixed size, it means that we can't sanely extend the source size
+> because now it wouldn't be NUL-terminated. But selinux never wanted a
+> lock, and never wanted any kind of *consistent* result, it just wanted
+> a *stable* result.
+>
+> Since user space can randomly change their names anyway, using locking
+> was always wrong for readers (for writers it probably does make sense
+> to have some lock - although practically speaking nobody cares there
+> either, but at least for a writer some kind of race could have
+> long-term mixed results)
 
-The static key is always enabled by default (run in guest mode) and
-should be disabled for bare metal (and in some guests that want native
-behavior).
+Thanks for your explanation.
+Let's proceed by removing the task_lock() inside __get_task_comm().
 
-Performance drop is reported when running encode/decode workload and
-BenchSEE cache sub-workload.
-Bisect points to commit ce0a1b608bfc ("x86/paravirt: Silence unused
-native_pv_lock_init() function warning"). When CONFIG_PARAVIRT_SPINLOCKS
-is disabled the virt_spin_lock_key is incorrectly set to true on bare
-metal. The qspinlock degenerates to test-and-set spinlock, which
-decrease the performance on bare metal.
-
-Fix this by disabling virt_spin_lock_key if it is on bare metal,
-regardless of CONFIG_PARAVIRT_SPINLOCKS.
-
-Fixes: ce0a1b608bfc ("x86/paravirt: Silence unused native_pv_lock_init() function warning")
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-Suggested-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Reported-by: Prem Nath Dey <prem.nath.dey@intel.com>
-Reported-by: Xiaoping Zhou <xiaoping.zhou@intel.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
-v1->v2:
-  Refine the commit log per Dave's suggestion.
-  Simplify the fix by directly disabling the virt_spin_lock_key on bare metal.
-  Collect Reviewed-by from Juergen.
----
- arch/x86/kernel/paravirt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 5358d43886ad..c193c9e60a1b 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -55,8 +55,7 @@ DEFINE_STATIC_KEY_TRUE(virt_spin_lock_key);
- 
- void __init native_pv_lock_init(void)
- {
--	if (IS_ENABLED(CONFIG_PARAVIRT_SPINLOCKS) &&
--	    !boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		static_branch_disable(&virt_spin_lock_key);
- }
- 
--- 
-2.25.1
-
+--=20
+Regards
+Yafang
