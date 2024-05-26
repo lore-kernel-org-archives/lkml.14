@@ -1,55 +1,58 @@
-Received: from msa.smtpout.orange.fr (smtp-70.smtpout.orange.fr [80.12.242.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FEEB640;
-	Sun, 26 May 2024 08:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E488BEE;
+	Sun, 26 May 2024 08:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716710989; cv=none; b=g0oJvFsP+WV24rPORFJ9Z43l1ymmP0e+pq8wNjKPmCJI27R10mQ8dT2nBvH0h5YH/el12U0EMJ47BM1J1BIMG/QQ9HsLeqOr08otPS/dnQlQT89w+Rd+vD6YcRgGupGL+FSlJBpSGWCqoncssoNeee6SxhMo7DpuGG17d9KRwkY=
+	t=1716711418; cv=none; b=reAm+Rbr4wLO49lPpv9n1jBmNmZXyYjADg6NRD6ysAx7VldvJ7LtUbghVMjl2iDc22mdA/1Jr3cJGXviQNgyhVTbpAwrlNjCiOpSM8eazECRW1T0QzK2Kh9JzMUGxobdIGvq64VnGe/7q/stUX15jRJ9espS0f5P7ARMkg/+SRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716710989; c=relaxed/simple;
-	bh=9mL+pOz+vQ8U+AQZywT6y8vUmRELxvG7EkDXJCpb10o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VfFgSbWQ+0haeD3PmV6hDEzh90pBNClJ6iZEoKydWL1qIe7y1ORiLvc9uZ//vDSzmbKPAfLF/NhMJv+vaSex4QmYsJ5rf7XkyILKmbstwaMMWdd2hMH6mcBmPOASAMp/2JXhR5mvS3oHSNXR+g6Ed/Ddk5CDimcClMSR9N7A35I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dD1rjx9l; arc=none smtp.client-ip=80.12.242.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1716711418; c=relaxed/simple;
+	bh=wPjkuqy7/TUpStWC5aJK0tThAfQUMWuS92Pd6h5bFhw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UFls5fAYjWdrg8PiV7txZ51s/iFkqpOS0eTqHRsdN9vPHv6e45Gd16ChHH6zooLWQz1pO/pS/9n1X15iRyHO6fdK2U9njJyPKuLXKZ8sMdlLwZHqRVy1pFTFDDdxlwS7P343egcT5AAH+uVkGTPZpG0BTy/HCsiAtxS4dz+Qw5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=Q1yboHmL; arc=none smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dD1rjx9l"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id B8nVshp7epUD1B8nhsPLd9; Sun, 26 May 2024 10:00:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1716710440;
-	bh=IgEDtJfaNI1iWwOQr1DJGweCIYES2brPtEIEBcUvbBo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=dD1rjx9ljJHof3mvVsNUW2GUHVNARNQhhWGp1hXRBDkHehpCp1jhIZu0E4bjSmKRB
-	 no1GajJcY9WORHZrhH3FxT00XWc/BiSnN+2qqPJDG6ZHNAgzO2dwgGcQX/SjyRzZ0O
-	 bvDDh/33CFFYaoCuHgD/NxUGB+yKq+8LnrDaHCwEDX/AkFIyypYzBc0qLUFNFPR//M
-	 cyJuYerH9/S76t6nCeTDTKNDalA8GLpvPZWQuhDl2mcLIQhYlm7BSJs07Pg3I06q4g
-	 khoWa2KHH/oQDupulLNCIg/uOdbop9ERh8koekQy6MOi3AFw8dHgFs7GWal5JQUW26
-	 Fdb+A4EkRYUOw==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 26 May 2024 10:00:40 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: sakari.ailus@linux.intel.com,
-	bingbu.cao@intel.com,
-	tian.shu.qiu@intel.com,
-	mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl,
-	hdegoede@redhat.com
-Cc: linux-media@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Q1yboHmL"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1716711416; x=1748247416;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wPjkuqy7/TUpStWC5aJK0tThAfQUMWuS92Pd6h5bFhw=;
+  b=Q1yboHmLzqX5C+5ThqfA/qCfiElV2Vq0bslxqSPQ7BTchO5eXvJ8Dud+
+   Tlb5mOXfKyZ/QtH3Z+aiGkgWCFHjPPMAhcz11j3YnYb+oycYKDeLxsMlK
+   e5b5U4KVuGs82xXPeuGpMhPCb/47DSIoio+Sx35ZNxGKfmfsxcydTKG14
+   jESAuBDJ08vss/GwL/hNSk0RzC0Rmi5G1w5qdWMrZklwikX4PbXy4zF7w
+   RCPEkDUhM2tIj/UTLxqoj628yPQxuRjvQfXbQJML6dyuxp4TiKswhDTSz
+   PlfCUK03Swu2oHAg88xy1EdPLJkgl6rKkpBlFkiq1WRz+PKgupWqcY9LL
+   w==;
+X-CSE-ConnectionGUID: MNofxBkFQ/unrkNmKI04zA==
+X-CSE-MsgGUID: SA+y0A8VTdOe7seORAbdQw==
+X-IronPort-AV: E=Sophos;i="6.08,190,1712592000"; 
+   d="scan'208";a="17270699"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 26 May 2024 16:16:49 +0800
+IronPort-SDR: 6652e3a5_FmK3oc4I5P2r9a80TXUjnofXB3YBpeYX5wkDncMsZfznXFT
+ 0U5GMImndRQhi2gwlCDBPSGFf48qXBzcWZ0Xygw==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 May 2024 00:24:22 -0700
+WDCIronportException: Internal
+Received: from bxygm33.ad.shared ([10.45.31.229])
+  by uls-op-cesaip02.wdc.com with ESMTP; 26 May 2024 01:16:47 -0700
+From: Avri Altman <avri.altman@wdc.com>
+To: "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Bart Van Assche <bvanassche@acm.org>,
+	Bean Huo <beanhuo@micron.com>,
+	Peter Wang <peter.wang@mediatek.com>,
+	linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v2 2/2] media: intel/ipu6: Fix an error handling path in isys_probe()
-Date: Sun, 26 May 2024 09:59:57 +0200
-Message-ID: <69c6a062959077414af05c44116e2351b0600977.1716710255.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <15a056198775689cb533a7b0ea7e100559a2465d.1716710255.git.christophe.jaillet@wanadoo.fr>
-References: <15a056198775689cb533a7b0ea7e100559a2465d.1716710255.git.christophe.jaillet@wanadoo.fr>
+	Avri Altman <avri.altman@wdc.com>
+Subject: [PATCH v6 0/3] scsi: ufs: Allow RTT negotiation
+Date: Sun, 26 May 2024 11:16:33 +0300
+Message-ID: <20240526081636.2064-1-avri.altman@wdc.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,92 +61,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If an error occurs after a successful alloc_fw_msg_bufs() call, some
-resources should be released as already done in the remove function.
+The rtt-upiu packets precede any data-out upiu packets, thus
+synchronizing the data input to the device: this mostly applies to write
+operations, but there are other operations that requires rtt as well.
 
-Add a new free_fw_msg_bufs() function that releases what has been allocated
-by alloc_fw_msg_bufs().
+There are several rules binding this rtt - data-out dialog, specifically
+There can be at most outstanding bMaxNumOfRTT such packets.  This might
+have an effect on write performance (sequential write in particular), as
+each data-out upiu must wait for its rtt sibling.
 
-Also use this new function in isys_remove() to avoid some code duplication.
+UFSHCI expects bMaxNumOfRTT to be min(bDeviceRTTCap, NORTT). However,
+as of today, there does not appear to be no-one who sets it: not the
+host controller nor the driver.  It wasn't an issue up to now:
+bMaxNumOfRTT is set to 2 after manufacturing, and wasn't limiting the
+write performance.
 
-Fixes: f50c4ca0a820 ("media: intel/ipu6: add the main input system driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only.
+UFS4.0, and specifically gear 5 changes this, and requires the device to
+be more attentive.  This doesn't come free - the device has to allocate
+more resources to that end, but the sequential write performance
+improvement is significant. Early measurements shows 25% gain when
+moving from rtt 2 to 9. Therefore, set bMaxNumOfRTT to be
+min(bDeviceRTTCap, NORTT) as UFSHCI expects.
 
-I'm slightly puzzled by the use of the _safe version of
-list_for_each_entry(). Is it really needed here.
+v5 -> v6:
+Use blk_mq_<un>freeze_queue to drain the queues (Bart)
+Replace the rtt_set() vop by a max_num_rtt constant (Cristoph/Bart)
 
-Also, should isys->listlock be used?
-The code looks racy to me.
+v4 -> v5:
+Quiesce the queues before writing bMaxNumOfRTT (Bart)
+Make bDeviceRTTCap available in ufshcd_device_params_init() (Bart)
 
-Changes in v2:
-  - Introduce and use free_fw_msg_bufs()   [Sakari Ailus]
+v3 -> v4:
+Allow bMaxNumOfRTT to be configured via sysfs (Bart)
 
-v1: https://lore.kernel.org/all/545315bcaac0a897c25cfa20a603be2af2a40aa9.1716201136.git.christophe.jaillet@wanadoo.fr/
----
- drivers/media/pci/intel/ipu6/ipu6-isys.c | 27 ++++++++++++++++--------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+v2 -> v3:
+Allow platform vendors to take precedence having their own rtt
+negotiation mechanism (Peter)
 
-diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys.c b/drivers/media/pci/intel/ipu6/ipu6-isys.c
-index 7ce2047a09b5..1998b72ac07d 100644
---- a/drivers/media/pci/intel/ipu6/ipu6-isys.c
-+++ b/drivers/media/pci/intel/ipu6/ipu6-isys.c
-@@ -925,6 +925,20 @@ static const struct dev_pm_ops isys_pm_ops = {
- 	.resume = isys_resume,
- };
- 
-+static void free_fw_msg_bufs(struct ipu6_isys *isys)
-+{
-+	struct device *dev = &isys->adev->auxdev.dev;
-+	struct isys_fw_msgs *fwmsg, *safe;
-+
-+	list_for_each_entry_safe(fwmsg, safe, &isys->framebuflist, head)
-+		dma_free_attrs(dev, sizeof(struct isys_fw_msgs), fwmsg,
-+			       fwmsg->dma_addr, 0);
-+
-+	list_for_each_entry_safe(fwmsg, safe, &isys->framebuflist_fw, head)
-+		dma_free_attrs(dev, sizeof(struct isys_fw_msgs), fwmsg,
-+			       fwmsg->dma_addr, 0);
-+}
-+
- static int alloc_fw_msg_bufs(struct ipu6_isys *isys, int amount)
- {
- 	struct device *dev = &isys->adev->auxdev.dev;
-@@ -1105,12 +1119,14 @@ static int isys_probe(struct auxiliary_device *auxdev,
- 
- 	ret = isys_register_devices(isys);
- 	if (ret)
--		goto out_remove_pkg_dir_shared_buffer;
-+		goto free_fw_msg_bufs;
- 
- 	ipu6_mmu_hw_cleanup(adev->mmu);
- 
- 	return 0;
- 
-+free_fw_msg_bufs:
-+	free_fw_msg_bufs(isys);
- out_remove_pkg_dir_shared_buffer:
- 	if (!isp->secure_mode)
- 		ipu6_cpd_free_pkg_dir(adev);
-@@ -1137,16 +1153,9 @@ static void isys_remove(struct auxiliary_device *auxdev)
- 	struct ipu6_bus_device *adev = auxdev_to_adev(auxdev);
- 	struct ipu6_isys *isys = dev_get_drvdata(&auxdev->dev);
- 	struct ipu6_device *isp = adev->isp;
--	struct isys_fw_msgs *fwmsg, *safe;
- 	unsigned int i;
- 
--	list_for_each_entry_safe(fwmsg, safe, &isys->framebuflist, head)
--		dma_free_attrs(&auxdev->dev, sizeof(struct isys_fw_msgs),
--			       fwmsg, fwmsg->dma_addr, 0);
--
--	list_for_each_entry_safe(fwmsg, safe, &isys->framebuflist_fw, head)
--		dma_free_attrs(&auxdev->dev, sizeof(struct isys_fw_msgs),
--			       fwmsg, fwmsg->dma_addr, 0);
-+	free_fw_msg_bufs(isys);
- 
- 	isys_unregister_devices(isys);
- 	isys_notifier_cleanup(isys);
+v1 -> v2:
+bMaxNumOfRTT is a Persistent attribute - do not override if it was
+written (Bean)
+
+Avri Altman (3):
+  scsi: ufs: Allow RTT negotiation
+  scsi: ufs: Maximum RTT supported by the host driver
+  scsi: ufs: sysfs: Make max_number_of_rtt read-write
+
+ Documentation/ABI/testing/sysfs-driver-ufs | 14 +++--
+ drivers/ufs/core/ufs-sysfs.c               | 68 +++++++++++++++++++++-
+ drivers/ufs/core/ufshcd-priv.h             | 24 ++++++++
+ drivers/ufs/core/ufshcd.c                  | 42 +++++++++++++
+ drivers/ufs/host/ufs-mediatek.c            |  1 +
+ drivers/ufs/host/ufs-mediatek.h            |  3 +
+ include/ufs/ufs.h                          |  2 +
+ include/ufs/ufshcd.h                       |  4 ++
+ include/ufs/ufshci.h                       |  1 +
+ 9 files changed, 152 insertions(+), 7 deletions(-)
+
 -- 
-2.45.1
+2.34.1
 
