@@ -1,453 +1,443 @@
-Received: from mail-lj1-f201.google.com (mail-lj1-f201.google.com [209.85.208.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EE61EB26
-	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 18:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C6412BE9C
+	for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 18:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716747741; cv=none; b=mSShq2wpz2GWNXtABJS6Lg8xWKWtGu2hQKb4iFluNTLSH+AO2nFmZKbvhPUippCz23gJ2mCSnTV3oRVs7TbcPooPnK0zbqC3OM3QWSxqnTFKcGRI1ty2GUrtO4BI1iDUAhsFf06MpDhCjouLXgy+OeubMaxp+Qh2Fgcgc70KK6s=
+	t=1716747745; cv=none; b=So+7mqKUTE/etA+KrhDOg/bfvv3k8lqQTqXCsrluNRXeswPhFYzOe/1wZr2YHfTbfWOSSIMm6jxeI1NNfhJeeD4qLY8lm6ZsV7KcA+n5JYwvEr4rGHIKuHcQNCbDQQj4zXG5Cb7tfz/VN5EqDhLanOw+JPX0X3tHBTXiTmO2Bx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716747741; c=relaxed/simple;
-	bh=VTlFRcnx+Lg4+oIZqZKs3xHWublrvwOdE+PBBUj5fCs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=h6t7qY9Yxf4PDz/REtHWBXIrakfPqnxv2YF9zA2mKkcxzCLMsgo/dh+KJKMCAA9vlPogOoOroeAVQNIfOXQs5gM3rCjJK2aadj0NTsLCw3BN/gSFr9lNoL+8xu+xhdcedALGWlP4D2gay+v4z+Vp9TMMRDLARI2DKESe1Cu8FWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fxo7iwRY; arc=none smtp.client-ip=209.85.208.201
+	s=arc-20240116; t=1716747745; c=relaxed/simple;
+	bh=GpcChZfMpfvtzKftRFDjvbq03JF8yxLIasM86Vlx8i8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uJNfks14pv1UfR8CDpN2VK1+Rpkp9ngsdA3DNmmq6HVDfm9AvfjfLLvTiJ0ZZroqEqJXCs671rPN6eBoj3nj32/5NeI2t1L9Fi1J3gVzWxjgazNjb4SL5MEqgwn3ybTCvWDbszGSypjhWaMj/IHUQyBsrA6Bc940elItfQIurRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VU8qoLRk; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fxo7iwRY"
-Received: by mail-lj1-f201.google.com with SMTP id 38308e7fff4ca-2e95b03a1ebso9292581fa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 11:22:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VU8qoLRk"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-df78b56f6caso1914365276.2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 11:22:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716747736; x=1717352536; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZQTG6i1Te1AqiYPDuwbl7LlMYzKHb8m5RjcLBI0WPCQ=;
-        b=fxo7iwRY2LMHEuFsBZk0Q89v9FImfjffa87MVadXMtvetJm8DwfQz83J1SoGVP92B4
-         3dya48Jt1XXUzmz3ztT/FS3ctLTyOBK0U6hCnW6+yW9s8Qv+ckEQqvVmCHBeF6XOMzUw
-         1LjT4YXPmra7ww/MksOp9fjQoG5CJiKRjcrd3j0j2pFFF0TCzYi1I3EhZpCgwqblJSOF
-         cnX51+a2uVwxechH6zdjG5wrRuPWd7gsGywKbG1nHbc5pvqPm6hf0yO5dPh1rpNulxqj
-         sG8Er3RY9d0I3jr9Hqe/g42LRXzm1M5PE8b0JxdFjplMrRe7xxBgcZdJQo4MXohrxkRE
-         imuA==
+        d=google.com; s=20230601; t=1716747742; x=1717352542; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KgUV7H3zVKc5i2iiaZwEYA1PB5WyP/jjC3KCwzffqKc=;
+        b=VU8qoLRkSSOO1cEdY5zXdQq7P7cNurnzJVW9CPoln6GzebobwH4UF0qTIiL4m8kkxQ
+         1mJkhlX0/x7+WNG7jUlJOUHIoBXFyppN2YQejRGve6d2xlDUZQHpWBbMq9fN8cVYb0Uj
+         7AgWYEDfoeAQkTLwJjKdaQhdL5RrKWAAOp92PSaKEnXNNlbtlxTK9VMVXtOA7W22ZFb+
+         7yipccIrBhN15AYw8GOkYGpRmR7fvA/Q2doAMs085z2j212tZpVPXaBoguxg2/7I+pIf
+         B3s5HTkaISQUF1gTEXCVO4wB98Pc/giOl5Sblr4MV/GXt0aCecX59k0W7KzHWWAsyr9b
+         11pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716747736; x=1717352536;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZQTG6i1Te1AqiYPDuwbl7LlMYzKHb8m5RjcLBI0WPCQ=;
-        b=T8jF8c8U3OcBPccOe+o4FKPvVCxHc5Ukkj0sp7YJUYlnMbKx0soFry7l71Y6vg3X0C
-         MaCUnp4gRdh2rSUJxIxsiXNMpMe8JKhXRCad6WXXC28fsRzJ3s9n66LhjWeoCo645XND
-         0yEIYRUvyI+NuaIcaZJGUODVpRCqgaRx6jNkLq06BlT6lt5h7B/Jkds+frUggfeC/xN9
-         UXZKJUPPrXI3wT5LELeKvqWs8XRcRldJonnXynBDW4l6qzMmc6FLEQdz1ofkOT9mDdMf
-         gXkYp9KNSA0mrghybfTni4N8TOlulicqAocq72+0ZrH2OiD8WoppHb+QDvODREq7Joa7
-         eZDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdEtfbPoeNNVtLJVxnHdszaqRW5gKx1poqbDyb2EEUbUBPLlpTh5PqtccX2sPSU6oT4OasGXYhskmiUWkmw9jSr4uAVnG59UhT1Ikc
-X-Gm-Message-State: AOJu0YyrkYQYkn4Vffe7hYqc5cM9Dhsg0zcI3m1IYmH9Mg62sCw9oqYb
-	iFCf4A42k1K6OUHZ+8XLMuwxu4IbQombHLGmeKjN4yvvAxDlj5aqQK24IGslR1pVdvCZ2gVH3Q=
+        d=1e100.net; s=20230601; t=1716747742; x=1717352542;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KgUV7H3zVKc5i2iiaZwEYA1PB5WyP/jjC3KCwzffqKc=;
+        b=Hojp5a3t6MKLNGl8OznDfLf4UfzEDLE8dcLNpYDZNFLb4ozU9qOh7FwzcRikuHLEzm
+         tCjXVlUu3GEeVjBgV+oDgGrxu1PKOfQVDbnajrGZRQZQf+/0NlSImj/rgp/fX2cMSNAR
+         OA/TZmgr5D5Po2HesgdVLCGcC/g90LZDZtQTLMSuyxBPTWp/vgcDzMkscuCakWo8GJHa
+         voRQXI/pWPg0pNKj7zQf7dFeF+mca5dgFSvoxsefHMHe0oVFdrRNPFYFDl7ib0TcfT0J
+         zYQEE2T/GaYQkq0BJuVfImCM7voYCglK/UY8oUkc+plrWnH5vjEOJhssX/8YSNS0P2Ho
+         3/kw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAnPse/DBmRrY09oJPsSqQ2+m2quUuhgsaNx2DdStIMHevs59gn/WaDw5dORfHf1AgmbOMBLX2D6CFppsTkIgV5OYPcf2R7V0nJ32A
+X-Gm-Message-State: AOJu0YyvJjwBfTqnb2dwVrO47UsRkHQsHEezHuQq1A88lJf0XT9rTizF
+	6Sd6RN83gxj9VCcDLdxMb+hm3w9guBu1CaCBWq/4Y6zphXNDWcW2I74K92/qgy2bQTJ6TWen2g=
 	=
-X-Google-Smtp-Source: AGHT+IHk7cEoRivEiR8yi3xC9G6kyCOtQlaOwrVxtEQiFjWKdsUwChGj2iPpKKoT7R+m7bxj3g/q+Ph0/A==
+X-Google-Smtp-Source: AGHT+IGpk4yOUevSDXOa0NBjZh4lXXeRoQwwGoYeYVvd61gQ58KDoq0nXX6cYYKynkO1cewiL3lHGpE/dg==
 X-Received: from sesse.osl.corp.google.com ([2a00:79e0:18:10:1a92:9649:8b20:5054])
- (user=sesse job=sendgmr) by 2002:a2e:a164:0:b0:2e2:12b1:4971 with SMTP id
- 38308e7fff4ca-2e951c22768mr131821fa.3.1716747736250; Sun, 26 May 2024
- 11:22:16 -0700 (PDT)
-Date: Sun, 26 May 2024 20:22:09 +0200
+ (user=sesse job=sendgmr) by 2002:a05:6902:2b8d:b0:df4:a2a1:4653 with SMTP id
+ 3f1490d57ef6-df7722165c7mr561899276.9.1716747742185; Sun, 26 May 2024
+ 11:22:22 -0700 (PDT)
+Date: Sun, 26 May 2024 20:22:11 +0200
+In-Reply-To: <20240526182212.544525-1-sesse@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240526182212.544525-1-sesse@google.com>
 X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240526182212.544525-1-sesse@google.com>
-Subject: [PATCH v7 1/4] perf report: Support LLVM for addr2line()
+Message-ID: <20240526182212.544525-3-sesse@google.com>
+Subject: [PATCH v7 3/4] perf annotate: LLVM-based disassembler
 From: "Steinar H. Gunderson" <sesse@google.com>
 To: acme@kernel.org
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
+	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-In addition to the existing support for libbfd and calling out to
-an external addr2line command, add support for using libllvm directly.
-This is both faster than libbfd, and can be enabled in distro builds
-(the LLVM license has an explicit provision for GPLv2 compatibility).
-Thus, it is set as the primary choice if available.
+Support using LLVM as a disassembler method, allowing helperless
+annotation in non-distro builds. (It is also much faster than
+using libbfd or bfd objdump on binaries with a lot of debug
+information.)
 
-As an example, running perf report on a medium-size profile with
-DWARF-based backtraces took 58 seconds with LLVM, 78 seconds with
-libbfd, 153 seconds with external llvm-addr2line, and I got tired
-and aborted the test after waiting for 55 minutes with external
-bfd addr2line (which is the default for perf as compiled by distributions
-today). Evidently, for this case, the bfd addr2line process needs
-18 seconds (on a 5.2 GHz Zen 3) to load the .debug ELF in question,
-hits the 1-second timeout and gets killed during initialization,
-getting restarted anew every time. Having an in-process addr2line
-makes this much more robust.
-
-As future extensions, libllvm can be used in many other places where
-we currently use libbfd or other libraries:
-
- - Symbol enumeration (in particular, for PE binaries).
- - Demangling (including non-Itanium demangling, e.g. Microsoft
-   or Rust).
- - Disassembling (perf annotate).
-
-However, these are much less pressing; most people don't profile
-PE binaries, and perf has non-bfd paths for ELF. The same with
-demangling; the default _cxa_demangle path works fine for most
-users. Disassembling is coming in a later patch in the series;
-however do note that while bfd objdump can be slow on large binaries,
-it is possible to use --objdump=llvm-objdump to get the speed benefits.
-(It appears LLVM-based demangling is very simple, should we want
-that.)
-
-Tested with LLVM 14, 15, 16, 18 and 19. For some reason, LLVM 12 was not
-correctly detected using feature_check, and thus was not tested.
+This is nearly identical to the output of llvm-objdump; there are
+some very rare whitespace differences, some minor changes to demangling
+(since we use perf's regular demangling and not LLVM's own) and
+the occasional case where llvm-objdump makes a different choice
+when multiple symbols share the same address. It should work across
+all of LLVM's supported architectures, although I've only tested 64-bit
+x86, and finding the right triple from perf's idea of machine
+architecture can sometimes be a bit tricky. Ideally, we should have
+some way of finding the triplet just from the file itself.
 
 Signed-off-by: Steinar H. Gunderson <sesse@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature       |   1 +
- tools/perf/Makefile.config         |  15 ++++
- tools/perf/builtin-version.c       |   1 +
- tools/perf/util/Build              |   1 +
- tools/perf/util/llvm-c-helpers.cpp | 134 +++++++++++++++++++++++++++++
- tools/perf/util/llvm-c-helpers.h   |  49 +++++++++++
- tools/perf/util/srcline.c          |  57 +++++++++++-
- 7 files changed, 257 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/util/llvm-c-helpers.cpp
- create mode 100644 tools/perf/util/llvm-c-helpers.h
+ tools/perf/util/disasm.c           | 195 +++++++++++++++++++++++++++++
+ tools/perf/util/llvm-c-helpers.cpp |  62 +++++++++
+ tools/perf/util/llvm-c-helpers.h   |  11 ++
+ 3 files changed, 268 insertions(+)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 1e2ab148d5db..278b26216254 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -136,6 +136,7 @@ FEATURE_DISPLAY ?=              \
-          libunwind              \
-          libdw-dwarf-unwind     \
-          libcapstone            \
-+         llvm                   \
-          zlib                   \
-          lzma                   \
-          get_cpuid              \
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 7f1e016a9253..42f5ad89c0ca 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -969,6 +969,21 @@ ifdef BUILD_NONDISTRO
-   endif
- endif
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index c0dbb955e61a..ee7c2365d066 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -43,6 +43,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
  
-+ifndef NO_LIBLLVM
-+  $(call feature_check,llvm)
-+  ifeq ($(feature-llvm), 1)
-+    CFLAGS += -DHAVE_LIBLLVM_SUPPORT
-+    CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT
-+    CXXFLAGS += $(shell $(LLVM_CONFIG) --cxxflags)
-+    LIBLLVM = $(shell $(LLVM_CONFIG) --libs all) $(shell $(LLVM_CONFIG) --system-libs)
-+    EXTLIBS += -L$(shell $(LLVM_CONFIG) --libdir) $(LIBLLVM)
-+    $(call detected,CONFIG_LIBLLVM)
-+  else
-+    $(warning No libllvm found, slower source file resolution, please install llvm-devel/llvm-dev)
-+    NO_LIBLLVM := 1
-+  endif
-+endif
+ static void ins__sort(struct arch *arch);
+ static int disasm_line__parse(char *line, const char **namep, char **rawp);
++static char *expand_tabs(char *line, char **storage, size_t *storage_len);
+ 
+ static __attribute__((constructor)) void symbol__init_regexpr(void)
+ {
+@@ -1378,7 +1379,9 @@ static int open_capstone_handle(struct annotate_args *args, bool is_64bit,
+ 
+ 	return 0;
+ }
++#endif
+ 
++#if defined(HAVE_LIBCAPSTONE_SUPPORT) || defined(HAVE_LIBLLVM_SUPPORT)
+ struct find_file_offset_data {
+ 	u64 ip;
+ 	u64 offset;
+@@ -1442,7 +1445,9 @@ read_symbol(const char *filename, struct map *map, struct symbol *sym,
+ 	free(buf);
+ 	return NULL;
+ }
++#endif
+ 
++#ifdef HAVE_LIBCAPSTONE_SUPPORT
+ static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
+ 				  struct annotate_args *args, u64 addr)
+ {
+@@ -1606,6 +1611,191 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ }
+ #endif
+ 
++#ifdef HAVE_LIBLLVM_SUPPORT
++#include <llvm-c/Disassembler.h>
++#include <llvm-c/Target.h>
++#include "util/llvm-c-helpers.h"
 +
- ifndef NO_DEMANGLE
-   $(call feature_check,cxa-demangle)
-   ifeq ($(feature-cxa-demangle), 1)
-diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index 398aa53e9e2e..4b252196de12 100644
---- a/tools/perf/builtin-version.c
-+++ b/tools/perf/builtin-version.c
-@@ -65,6 +65,7 @@ static void library_status(void)
- 	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
- 	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
- 	STATUS(HAVE_LIBELF_SUPPORT, libelf);
-+	STATUS(HAVE_LIBLLVM_SUPPORT, libllvm);
- 	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
- 	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
- 	STATUS(HAVE_LIBPERL_SUPPORT, libperl);
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index da64efd8718f..6a1fd8f1a488 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -226,6 +226,7 @@ perf-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
- perf-y += demangle-ocaml.o
- perf-y += demangle-java.o
- perf-y += demangle-rust.o
-+perf-$(CONFIG_LIBLLVM) += llvm-c-helpers.o
- 
- ifdef CONFIG_JITDUMP
- perf-$(CONFIG_LIBELF) += jitdump.o
-diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
-new file mode 100644
-index 000000000000..3cc967ec6f28
---- /dev/null
-+++ b/tools/perf/util/llvm-c-helpers.cpp
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0
++struct symbol_lookup_storage {
++	u64 branch_addr;
++	u64 pcrel_load_addr;
++};
 +
 +/*
-+ * Must come before the linux/compiler.h include, which defines several
-+ * macros (e.g. noinline) that conflict with compiler builtins used
-+ * by LLVM.
++ * Whenever LLVM wants to resolve an address into a symbol, it calls this
++ * callback. We don't ever actually _return_ anything (in particular, because
++ * it puts quotation marks around what we return), but we use this as a hint
++ * that there is a branch or PC-relative address in the expression that we
++ * should add some textual annotation for after the instruction. The caller
++ * will use this information to add the actual annotation.
 + */
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
-+#include <llvm/DebugInfo/Symbolize/Symbolize.h>
-+#pragma GCC diagnostic pop
-+
-+#include <stdio.h>
-+#include <sys/types.h>
-+#include <linux/compiler.h>
-+extern "C" {
-+#include <linux/zalloc.h>
-+}
-+#include "symbol_conf.h"
-+#include "llvm-c-helpers.h"
-+
-+using namespace llvm;
-+using llvm::symbolize::LLVMSymbolizer;
-+
-+/*
-+ * Allocate a static LLVMSymbolizer, which will live to the end of the program.
-+ * Unlike the bfd paths, LLVMSymbolizer has its own cache, so we do not need
-+ * to store anything in the dso struct.
-+ */
-+static LLVMSymbolizer *get_symbolizer()
++static const char *
++symbol_lookup_callback(void *disinfo, uint64_t value,
++		       uint64_t *ref_type,
++		       uint64_t address __maybe_unused,
++		       const char **ref __maybe_unused)
 +{
-+	static LLVMSymbolizer *instance = nullptr;
-+	if (instance == nullptr) {
-+		LLVMSymbolizer::Options opts;
-+		/*
-+		 * LLVM sometimes demangles slightly different from the rest
-+		 * of the code, and this mismatch can cause new_inline_sym()
-+		 * to get confused and mark non-inline symbol as inlined
-+		 * (since the name does not properly match up with base_sym).
-+		 * Thus, disable the demangling and let the rest of the code
-+		 * handle it.
-+		 */
-+		opts.Demangle = false;
-+		instance = new LLVMSymbolizer(opts);
++	struct symbol_lookup_storage *storage =
++		(struct symbol_lookup_storage *)disinfo;
++	if (*ref_type == LLVMDisassembler_ReferenceType_In_Branch)
++		storage->branch_addr = value;
++	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
++		storage->pcrel_load_addr = value;
++	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
++	return NULL;
++}
++
++static int symbol__disassemble_llvm(char *filename, struct symbol *sym,
++				    struct annotate_args *args)
++{
++	struct annotation *notes = symbol__annotation(sym);
++	struct map *map = args->ms.map;
++	struct dso *dso = map__dso(map);
++	u64 start = map__rip_2objdump(map, sym->start);
++	u8 *buf;
++	u64 len;
++	u64 pc;
++	bool is_64bit;
++	char triplet[64];
++	char disasm_buf[2048];
++	size_t disasm_len;
++	struct disasm_line *dl;
++	LLVMDisasmContextRef disasm = NULL;
++	struct symbol_lookup_storage storage;
++	char *line_storage = NULL;
++	size_t line_storage_len = 0;
++
++	if (args->options->objdump_path)
++		return -1;
++
++	LLVMInitializeAllTargetInfos();
++	LLVMInitializeAllTargetMCs();
++	LLVMInitializeAllDisassemblers();
++
++	buf = read_symbol(filename, map, sym, &len, &is_64bit);
++	if (buf == NULL)
++		return -1;
++
++	if (arch__is(args->arch, "x86")) {
++		if (is_64bit)
++			scnprintf(triplet, sizeof(triplet), "x86_64-pc-linux");
++		else
++			scnprintf(triplet, sizeof(triplet), "i686-pc-linux");
++	} else {
++		scnprintf(triplet, sizeof(triplet), "%s-linux-gnu",
++			  args->arch->name);
 +	}
-+	return instance;
-+}
 +
-+/* Returns 0 on error, 1 on success. */
-+static int extract_file_and_line(const DILineInfo &line_info, char **file,
-+				 unsigned int *line)
-+{
-+	if (file) {
-+		if (line_info.FileName == "<invalid>") {
-+			/* Match the convention of libbfd. */
-+			*file = nullptr;
-+		} else {
-+			/* The caller expects to get something it can free(). */
-+			*file = strdup(line_info.FileName.c_str());
-+			if (*file == nullptr)
-+				return 0;
++	disasm = LLVMCreateDisasm(
++		triplet, &storage, 0, NULL, symbol_lookup_callback);
++	if (disasm == NULL)
++		goto err;
++
++	if (args->options->disassembler_style &&
++	    !strcmp(args->options->disassembler_style, "intel"))
++		LLVMSetDisasmOptions(
++			disasm, LLVMDisassembler_Option_AsmPrinterVariant);
++
++	/*
++	 * This needs to be set after AsmPrinterVariant, due to a bug in LLVM;
++	 * setting AsmPrinterVariant makes a new instruction printer, making it
++	 * forget about the PrintImmHex flag (which is applied before if both
++	 * are given to the same call).
++	 */
++	LLVMSetDisasmOptions(disasm, LLVMDisassembler_Option_PrintImmHex);
++
++	/* add the function address and name */
++	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
++		  start, sym->name);
++
++	args->offset = -1;
++	args->line = disasm_buf;
++	args->line_nr = 0;
++	args->fileloc = NULL;
++	args->ms.sym = sym;
++
++	dl = disasm_line__new(args);
++	if (dl == NULL)
++		goto err;
++
++	annotation_line__add(&dl->al, &notes->src->source);
++
++	pc = start;
++	for (u64 offset = 0; offset < len; ) {
++		unsigned int ins_len;
++
++		storage.branch_addr = 0;
++		storage.pcrel_load_addr = 0;
++
++		ins_len = LLVMDisasmInstruction(
++			disasm, buf + offset, len - offset, pc,
++			disasm_buf, sizeof(disasm_buf));
++		if (ins_len == 0)
++			goto err;
++		disasm_len = strlen(disasm_buf);
++
++		if (storage.branch_addr != 0) {
++			char *name = llvm_name_for_code(
++				dso, filename, storage.branch_addr);
++			if (name != NULL) {
++				disasm_len += scnprintf(
++					disasm_buf + disasm_len,
++					sizeof(disasm_buf) - disasm_len,
++					" <%s>", name);
++				free(name);
++			}
 +		}
++		if (storage.pcrel_load_addr != 0) {
++			char *name = llvm_name_for_data(
++				dso, filename, storage.pcrel_load_addr);
++			disasm_len += scnprintf(disasm_buf + disasm_len,
++						sizeof(disasm_buf) - disasm_len,
++						"  # %#"PRIx64,
++						storage.pcrel_load_addr);
++			if (name) {
++				disasm_len += scnprintf(
++					disasm_buf + disasm_len,
++					sizeof(disasm_buf) - disasm_len,
++					" <%s>", name);
++				free(name);
++			}
++		}
++
++		args->offset = offset;
++		args->line = expand_tabs(
++			disasm_buf, &line_storage, &line_storage_len);
++		args->line_nr = 0;
++		args->fileloc = NULL;
++		args->ms.sym = sym;
++
++		llvm_addr2line(filename, pc, &args->fileloc,
++			       (unsigned int *)&args->line_nr, false, NULL);
++
++		dl = disasm_line__new(args);
++		if (dl == NULL)
++			goto err;
++
++		annotation_line__add(&dl->al, &notes->src->source);
++
++		free(args->fileloc);
++		pc += ins_len;
++		offset += ins_len;
 +	}
-+	if (line)
-+		*line = line_info.Line;
-+	return 1;
++
++	LLVMDisasmDispose(disasm);
++	free(buf);
++	free(line_storage);
++	return 0;
++
++err:
++	LLVMDisasmDispose(disasm);
++	free(buf);
++	free(line_storage);
++	return -1;
++}
++#endif
++
++
+ /*
+  * Possibly create a new version of line with tabs expanded. Returns the
+  * existing or new line, storage is updated if a new line is allocated. If
+@@ -1730,6 +1920,11 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		strcpy(symfs_filename, tmp);
+ 	}
+ 
++#ifdef HAVE_LIBLLVM_SUPPORT
++	err = symbol__disassemble_llvm(symfs_filename, sym, args);
++	if (err == 0)
++		goto out_remove_tmp;
++#endif
+ #ifdef HAVE_LIBCAPSTONE_SUPPORT
+ 	err = symbol__disassemble_capstone(symfs_filename, sym, args);
+ 	if (err == 0)
+diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
+index 3cc967ec6f28..4070e2d5682f 100644
+--- a/tools/perf/util/llvm-c-helpers.cpp
++++ b/tools/perf/util/llvm-c-helpers.cpp
+@@ -8,6 +8,7 @@
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
+ #include <llvm/DebugInfo/Symbolize/Symbolize.h>
++#include <llvm/Support/TargetSelect.h>
+ #pragma GCC diagnostic pop
+ 
+ #include <stdio.h>
+@@ -19,6 +20,9 @@ extern "C" {
+ #include "symbol_conf.h"
+ #include "llvm-c-helpers.h"
+ 
++extern "C"
++char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
++
+ using namespace llvm;
+ using llvm::symbolize::LLVMSymbolizer;
+ 
+@@ -132,3 +136,61 @@ int llvm_addr2line(const char *dso_name, u64 addr,
+ 		return extract_file_and_line(*res_or_err, file, line);
+ 	}
+ }
++
++static char *
++make_symbol_relative_string(struct dso *dso, const char *sym_name,
++			    u64 addr, u64 base_addr)
++{
++	if (!strcmp(sym_name, "<invalid>"))
++		return NULL;
++
++	char *demangled = dso__demangle_sym(dso, 0, sym_name);
++	if (base_addr && base_addr != addr) {
++		char buf[256];
++		snprintf(buf, sizeof(buf), "%s+0x%lx",
++			 demangled ? demangled : sym_name, addr - base_addr);
++		free(demangled);
++		return strdup(buf);
++	} else {
++		if (demangled)
++			return demangled;
++		else
++			return strdup(sym_name);
++	}
 +}
 +
 +extern "C"
-+int llvm_addr2line(const char *dso_name, u64 addr,
-+		   char **file, unsigned int *line,
-+		   bool unwind_inlines,
-+		   llvm_a2l_frame **inline_frames)
++char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr)
 +{
 +	LLVMSymbolizer *symbolizer = get_symbolizer();
 +	object::SectionedAddress sectioned_addr = {
 +		addr,
 +		object::SectionedAddress::UndefSection
 +	};
-+
-+	if (unwind_inlines) {
-+		Expected<DIInliningInfo> res_or_err =
-+			symbolizer->symbolizeInlinedCode(dso_name,
-+							 sectioned_addr);
-+		if (!res_or_err)
-+			return 0;
-+		unsigned num_frames = res_or_err->getNumberOfFrames();
-+		if (num_frames == 0)
-+			return 0;
-+
-+		if (extract_file_and_line(res_or_err->getFrame(0),
-+					  file, line) == 0)
-+			return 0;
-+
-+		*inline_frames = (llvm_a2l_frame *)calloc(
-+			num_frames, sizeof(**inline_frames));
-+		if (*inline_frames == nullptr)
-+			return 0;
-+
-+		for (unsigned i = 0; i < num_frames; ++i) {
-+			const DILineInfo &src = res_or_err->getFrame(i);
-+
-+			llvm_a2l_frame &dst = (*inline_frames)[i];
-+			if (src.FileName == "<invalid>")
-+				/* Match the convention of libbfd. */
-+				dst.filename = nullptr;
-+			else
-+				dst.filename = strdup(src.FileName.c_str());
-+			dst.funcname = strdup(src.FunctionName.c_str());
-+			dst.line = src.Line;
-+
-+			if (dst.filename == nullptr ||
-+			    dst.funcname == nullptr) {
-+				for (unsigned j = 0; j <= i; ++j) {
-+					zfree(&(*inline_frames)[j].filename);
-+					zfree(&(*inline_frames)[j].funcname);
-+				}
-+				zfree(inline_frames);
-+				return 0;
-+			}
-+		}
-+
-+		return num_frames;
-+	} else {
-+		if (inline_frames)
-+			*inline_frames = nullptr;
-+
-+		Expected<DILineInfo> res_or_err =
-+			symbolizer->symbolizeCode(dso_name, sectioned_addr);
-+		if (!res_or_err)
-+			return 0;
-+		return extract_file_and_line(*res_or_err, file, line);
++	Expected<DILineInfo> res_or_err =
++		symbolizer->symbolizeCode(dso_name, sectioned_addr);
++	if (!res_or_err) {
++		return NULL;
 +	}
++	return make_symbol_relative_string(
++		dso, res_or_err->FunctionName.c_str(),
++		addr, res_or_err->StartAddress ? *res_or_err->StartAddress : 0);
++}
++
++extern "C"
++char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr)
++{
++	LLVMSymbolizer *symbolizer = get_symbolizer();
++	object::SectionedAddress sectioned_addr = {
++		addr,
++		object::SectionedAddress::UndefSection
++	};
++	Expected<DIGlobal> res_or_err =
++		symbolizer->symbolizeData(dso_name, sectioned_addr);
++	if (!res_or_err) {
++		return NULL;
++	}
++	return make_symbol_relative_string(
++		dso, res_or_err->Name.c_str(),
++		addr, res_or_err->Start);
 +}
 diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
-new file mode 100644
-index 000000000000..19332dd98e14
---- /dev/null
+index 19332dd98e14..d2b99637a28a 100644
+--- a/tools/perf/util/llvm-c-helpers.h
 +++ b/tools/perf/util/llvm-c-helpers.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_LLVM_C_HELPERS
-+#define __PERF_LLVM_C_HELPERS 1
+@@ -13,6 +13,8 @@
+ extern "C" {
+ #endif
+ 
++struct dso;
 +
+ struct llvm_a2l_frame {
+   char* filename;
+   char* funcname;
+@@ -42,6 +44,15 @@ int llvm_addr2line(const char* dso_name,
+                    bool unwind_inlines,
+                    struct llvm_a2l_frame** inline_frames);
+ 
 +/*
-+ * Helpers to call into LLVM C++ code from C, for the parts that do not have
-+ * C APIs.
-+ */
-+
-+#include <linux/compiler.h>
-+
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
-+
-+struct llvm_a2l_frame {
-+  char* filename;
-+  char* funcname;
-+  unsigned int line;
-+};
-+
-+/*
-+ * Implement addr2line() using libLLVM. LLVM is a C++ API, and
-+ * many of the linux/ headers cannot be included in a C++ compile unit,
-+ * so we need to make a little bridge code here. llvm_addr2line() will
-+ * convert the inline frame information from LLVM's internal structures
-+ * and put them into a flat array given in inline_frames. The caller
-+ * is then responsible for taking that array and convert it into perf's
-+ * regular inline frame structures (which depend on e.g. struct list_head).
++ * Simple symbolizers for addresses; will convert something like
++ * 0x12345 to "func+0x123". Will return NULL if no symbol was found.
 + *
-+ * If the address could not be resolved, or an error occurred (e.g. OOM),
-+ * returns 0. Otherwise, returns the number of inline frames (which means 1
-+ * if the address was not part of an inlined function). If unwind_inlines
-+ * is set and the return code is nonzero, inline_frames will be set to
-+ * a newly allocated array with that length. The caller is then responsible
-+ * for freeing both the strings and the array itself.
++ * The returned value must be freed by the caller, with free().
 + */
-+int llvm_addr2line(const char* dso_name,
-+                   u64 addr,
-+                   char** file,
-+                   unsigned int* line,
-+                   bool unwind_inlines,
-+                   struct llvm_a2l_frame** inline_frames);
++char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr);
++char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr);
 +
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif /* __PERF_LLVM_C_HELPERS */
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 9d670d8c1c08..74091ecc21df 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -16,6 +16,9 @@
- #include "util/debug.h"
- #include "util/callchain.h"
- #include "util/symbol_conf.h"
-+#ifdef HAVE_LIBLLVM_SUPPORT
-+#include "util/llvm-c-helpers.h"
-+#endif
- #include "srcline.h"
- #include "string2.h"
- #include "symbol.h"
-@@ -130,7 +133,59 @@ static struct symbol *new_inline_sym(struct dso *dso,
- 
- #define MAX_INLINE_NEST 1024
- 
--#ifdef HAVE_LIBBFD_SUPPORT
-+#ifdef HAVE_LIBLLVM_SUPPORT
-+
-+static void free_llvm_inline_frames(struct llvm_a2l_frame *inline_frames,
-+				    int num_frames)
-+{
-+	if (inline_frames != NULL) {
-+		for (int i = 0; i < num_frames; ++i) {
-+			zfree(&inline_frames[i].filename);
-+			zfree(&inline_frames[i].funcname);
-+		}
-+		zfree(&inline_frames);
-+	}
-+}
-+
-+static int addr2line(const char *dso_name, u64 addr,
-+		     char **file, unsigned int *line, struct dso *dso,
-+		     bool unwind_inlines, struct inline_node *node,
-+		     struct symbol *sym)
-+{
-+	struct llvm_a2l_frame *inline_frames = NULL;
-+	int num_frames = llvm_addr2line(dso_name, addr, file, line,
-+					node && unwind_inlines, &inline_frames);
-+
-+	if (num_frames == 0 || !inline_frames) {
-+		/* Error, or we didn't want inlines. */
-+		return num_frames;
-+	}
-+
-+	for (int i = 0; i < num_frames; ++i) {
-+		struct symbol *inline_sym =
-+			new_inline_sym(dso, sym, inline_frames[i].funcname);
-+		char *srcline = NULL;
-+
-+		if (inline_frames[i].filename)
-+			srcline = srcline_from_fileline(
-+				inline_frames[i].filename,
-+				inline_frames[i].line);
-+		if (inline_list__append(inline_sym, srcline, node) != 0) {
-+			free_llvm_inline_frames(inline_frames, num_frames);
-+			return 0;
-+		}
-+	}
-+	free_llvm_inline_frames(inline_frames, num_frames);
-+
-+	return num_frames;
-+}
-+
-+void dso__free_a2l(struct dso *)
-+{
-+	/* Nothing to free. */
-+}
-+
-+#elif defined(HAVE_LIBBFD_SUPPORT)
- 
- /*
-  * Implement addr2line using libbfd.
+ #ifdef __cplusplus
+ }
+ #endif
 -- 
 2.45.1
 
