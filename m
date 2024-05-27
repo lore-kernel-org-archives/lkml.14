@@ -1,202 +1,163 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B8015EFAD
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E05415ECFE;
+	Mon, 27 May 2024 13:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816620; cv=none; b=F6oZ8MNgIWBBho0XKKHf0s8sOmMaRb4kmYGuOMVBLEfarB8bJLbwVrEOo87u+KKVUx+X5i9Io0xrqQ/cgPxLmXJluh0SJk0wQfOWdFU042xfujL2xUVAU5A7pRCcERuHXsgrd264GKkjEyr+vhDspETTvsy+tsB3NaeV35cSHzQ=
+	t=1716816623; cv=none; b=bLM3jKfs9+IzvMcj41KzNa3KVq+oG/WqMki8EWUUMXOJ3EOz/kyORnedJZcc2RQwIdZDCcPxRbmFbmf9jHvaMuYpl0BbjcIBDd3BgZn4iNTz8+81hwE409oiEQf1rmP90U4ZDgNEzu3Q4ROW2sISWUUMJpzQhCtlFMYlhv3cEpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816620; c=relaxed/simple;
-	bh=J9J2V9eVNWcolO4HkttaKyavsOHGJwEhHxVyvbC/t/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S6wHZd2qPHfCHzL736QanQh6cCNsuZrQsaQtxSpverRnPthGrYR21MY04ucJqjSj9X60rSZG5jTepf6zmjEWWZq2jQWM5w89gW8wyWUFolHeGxkeAoS+KVw96mJfZRtt9Xs0Sn2500Bpm7MIC952MfAFWTxLiHl+ZBhS8K1AS7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4VnxN1430kz9syd;
-	Mon, 27 May 2024 15:30:09 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Pj7Yxgttc3ll; Mon, 27 May 2024 15:30:09 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4VnxN12xRmz9sqS;
-	Mon, 27 May 2024 15:30:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 603768B773;
-	Mon, 27 May 2024 15:30:09 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id DVj7Btd2kdXr; Mon, 27 May 2024 15:30:09 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.49])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 709598B764;
-	Mon, 27 May 2024 15:30:07 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [RFC PATCH v4 00/16] Reimplement huge pages without hugepd on powerpc (8xx, e500, book3s/64)
-Date: Mon, 27 May 2024 15:29:58 +0200
-Message-ID: <cover.1716815901.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1716816623; c=relaxed/simple;
+	bh=TF/G2ffwfrBRISpD7K1d5EZ9ItCYMb2x92oWHu7T4AM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQJxiEOy+vK8GxzS+YiFkGkebOzg+lS3X3/BnddotmX8ZTenYUgxfc7ACJdC+Mhl70WF1xbkhmzwMele4fzZTaOi6sEktbhjXJsxUgFybPaUclkVUbjQXFJ5ky0kzcs0lQBpdJ8OAyQlcWU17LVIwdlL3CdDHbjVegF14BuTX2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2glDx+3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2glDx+3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48CB1C4AF07;
+	Mon, 27 May 2024 13:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716816622;
+	bh=TF/G2ffwfrBRISpD7K1d5EZ9ItCYMb2x92oWHu7T4AM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F2glDx+39JvZ8wnXQ32eLjUP4/ijfHmYOPAR3IWCS52WYonp3adypyoHL43pOKEIw
+	 pua5H9IocB1EWiS+PP8277F61bmkw/7YM6Zq/yAJnDph5evoOKVrSMVPEEC8kfF0Lc
+	 eCinKxXlFityRJ45ODnWMC4rgTnkq1De/XcY6nde07CDm+9iFxYSe1hibktpnIBBA8
+	 u5g/nqZzec8VeOsqqIqlj+ggMKD4mFYlVtfUDdcqlReD4FRfkGlNeMTtcWH0MUdHrL
+	 DzfbRjC7mgqW3t9+cKg/mO/eRsTT+seji5fjvNsd1TkEPIKzMzkKVXvTv2v83M68us
+	 +LBBBDXRC+udA==
+Date: Mon, 27 May 2024 15:30:19 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+	Sandy Huang <hjc@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Wick <sebastian.wick@redhat.com>, 
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, dri-devel@lists.freedesktop.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, Pekka Paalanen <pekka.paalanen@collabora.com>
+Subject: Re: [PATCH v14 17/28] drm/connector: hdmi: Add Broadcast RGB property
+Message-ID: <20240527-colorful-orange-bug-bbeefe@houat>
+References: <20240521-kms-hdmi-connector-state-v14-0-51950db4fedb@kernel.org>
+ <20240521-kms-hdmi-connector-state-v14-17-51950db4fedb@kernel.org>
+ <4n55dbl2h275z5ubebigri4xjtjsvt44w62n656srdgndcav2j@rrq5haucqx5u>
+ <20240527-adamant-just-spaniel-ebed4e@houat>
+ <a65wtf2hy7ufimkcgo5k2c34ygvtv7erwh567ngsnuaha7qiny@nl6lx67qsjuw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716816600; l=7097; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=J9J2V9eVNWcolO4HkttaKyavsOHGJwEhHxVyvbC/t/U=; b=l5tcmLFXyLhyJA1651pcJ8HDgdTLLgQZ5Ri35StgetQseLuCtSay7uca9/k26SbU/8/pM8+II nrgQ21YmA5LA0uB4MF/pDpA8UhSeWSUuKbva1aAJ/UX0oE3bAvdksol
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="rh4txa2gphc5y7co"
+Content-Disposition: inline
+In-Reply-To: <a65wtf2hy7ufimkcgo5k2c34ygvtv7erwh567ngsnuaha7qiny@nl6lx67qsjuw>
 
-This is the continuation of the RFC v1 series "Reimplement huge pages
-without hugepd on powerpc 8xx". It now get rid of hugepd completely
-after handling also e500 and book3s/64
 
-Also see https://github.com/linuxppc/issues/issues/483
+--rh4txa2gphc5y7co
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Unlike most architectures, powerpc 8xx HW requires a two-level
-pagetable topology for all page sizes. So a leaf PMD-contig approach
-is not feasible as such.
+Hi,
 
-Possible sizes on 8xx are 4k, 16k, 512k and 8M.
+On Mon, May 27, 2024 at 12:43:18PM GMT, Dmitry Baryshkov wrote:
+> On Mon, May 27, 2024 at 11:02:13AM +0200, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > Thanks again for that thorough review :)
+> >=20
+> > On Thu, May 23, 2024 at 01:22:56PM GMT, Dmitry Baryshkov wrote:
+> > > On Tue, May 21, 2024 at 12:13:50PM +0200, Maxime Ripard wrote:
+> > > > The i915 driver has a property to force the RGB range of an HDMI ou=
+tput.
+> > > > The vc4 driver then implemented the same property with the same
+> > > > semantics. KWin has support for it, and a PR for mutter is also the=
+re to
+> > > > support it.
+> > > >=20
+> > > > Both drivers implementing the same property with the same semantics,
+> > > > plus the userspace having support for it, is proof enough that it's
+> > > > pretty much a de-facto standard now and we can provide helpers for =
+it.
+> > > >=20
+> > > > Let's plumb it into the newly created HDMI connector.
+> > > >=20
+> > > > Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> > > > Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
+> > > > Reviewed-by: Sebastian Wick <sebastian.wick@redhat.com>
+> > > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> > > > ---
+> > > >  Documentation/gpu/kms-properties.csv            |  1 -
+> > > >  drivers/gpu/drm/display/drm_hdmi_state_helper.c |  4 +-
+> > > >  drivers/gpu/drm/drm_atomic.c                    |  2 +
+> > > >  drivers/gpu/drm/drm_atomic_uapi.c               |  4 ++
+> > > >  drivers/gpu/drm/drm_connector.c                 | 88 +++++++++++++=
+++++++++++++
+> > > >  include/drm/drm_connector.h                     | 36 ++++++++++
+> > > >  6 files changed, 133 insertions(+), 2 deletions(-)
+> > > >=20
+> > > > diff --git a/Documentation/gpu/kms-properties.csv b/Documentation/g=
+pu/kms-properties.csv
+> > > > index 0f9590834829..caef14c532d4 100644
+> > > > --- a/Documentation/gpu/kms-properties.csv
+> > > > +++ b/Documentation/gpu/kms-properties.csv
+> > > > @@ -15,11 +15,10 @@ Owner Module/Drivers,Group,Property Name,Type,P=
+roperty Values,Object attached,De
+> > > >  ,,=E2=80=9Csaturation=E2=80=9D,RANGE,"Min=3D0, Max=3D100",Connecto=
+r,TBD
+> > > >  ,,=E2=80=9Chue=E2=80=9D,RANGE,"Min=3D0, Max=3D100",Connector,TBD
+> > > >  ,Virtual GPU,=E2=80=9Csuggested X=E2=80=9D,RANGE,"Min=3D0, Max=3D0=
+xffffffff",Connector,property to suggest an X offset for a connector
+> > > >  ,,=E2=80=9Csuggested Y=E2=80=9D,RANGE,"Min=3D0, Max=3D0xffffffff",=
+Connector,property to suggest an Y offset for a connector
+> > > >  ,Optional,"""aspect ratio""",ENUM,"{ ""None"", ""4:3"", ""16:9"" }=
+",Connector,TDB
+> > > > -i915,Generic,"""Broadcast RGB""",ENUM,"{ ""Automatic"", ""Full"", =
+""Limited 16:235"" }",Connector,"When this property is set to Limited 16:23=
+5 and CTM is set, the hardware will be programmed with the result of the mu=
+ltiplication of CTM by the limited range matrix to ensure the pixels normal=
+ly in the range 0..1.0 are remapped to the range 16/255..235/255."
+> > >=20
+> > > Should it still be defined as a generic property?
+> >=20
+> > I'm not sure what you mean here, sorry. It's being documented as a
+> > connector property now, so it's very much still listed as a generic
+> > property?
+>=20
+> I didn't perform my duty well enough and I didn't check the file for
+> other instances of the property. Now I indeed see a generic "Broadcast
+> RGB" property, but to me it looks like having a different set of values:
+>=20
+> ,,"""Broadcast RGB""",ENUM,"{ =E2=80=9Coff=E2=80=9D, =E2=80=9Cauto=E2=80=
+=9D, =E2=80=9Con=E2=80=9D }",Connector,TBD
 
-First level (PGD/PMD) covers 4M per entry. For 8M pages, two PMD entries
-must point to a single entry level-2 page table. Until now that was
-done using hugepd. This series changes it to use standard page tables
-where the entry is replicated 1024 times on each of the two pagetables
-refered by the two associated PMD entries for that 8M page.
+That's not really what I meant: that file is deprecated now and it's not
+where we document the properties anymore. This patch has improved that
+documentation and moved it to the new place, and removed the deprecated
+part.
 
-For e500 and book3s/64 there are less constraints because it is not
-tied to the HW assisted tablewalk like on 8xx, so it is easier to use
-leaf PMDs (and PUDs).
+However, this line shouldn't be there at all. I'll add a patch to remove
+it.
 
-On e500 the supported page sizes are 4M, 16M, 64M, 256M and 1G. All at
-PMD level on e500/32 (mpc85xx) and mix of PMD and PUD for e500/64. We
-encode page size with 4 available bits in PTE entries. On e300/32 PGD
-entries size is increases to 64 bits in order to allow leaf-PMD entries
-because PTE are 64 bits on e500.
+Thanks!
+Maxime
 
-On book3s/64 only the hash-4k mode is concerned. It supports 16M pages
-as cont-PMD and 16G pages as cont-PUD. In other modes (radix-4k, radix-6k
-and hash-64k) the sizes match with PMD and PUD sizes so that's just leaf
-entries. The hash processing make things a bit more complex. To ease
-things, __hash_page_huge() is modified to bail out when DIRTY or ACCESSED
-bits are missing, leaving it to mm core to fix it.
+--rh4txa2gphc5y7co
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Global changes in v4:
-- Fixed a few issues reported privately by robots
-- Rebased on top of v6.10-rc1
+-----BEGIN PGP SIGNATURE-----
 
-Global changes in v3:
-- Removed patches 1 and 2
-- Squashed patch 11 into patch 5
-- Replaced patches 12 and 13 with a series from Michael
-- Reordered patches a bit to have more general patches up front
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZlSK6wAKCRAnX84Zoj2+
+duG9AYDdUpGu5aVO7zw3zFdz1kudBfe8bhW4zbk7Rqh2F38nbF9k6OHwGoXKxcQe
+BoqzGpYBf2GmKLiAj1MKfeIjRVsuVzqIgaw1sWlPvBOTPP+4TYXBl/H+8CBtp9KB
+EgfYt9ctqg==
+=NOy6
+-----END PGP SIGNATURE-----
 
-For more details on changes, see in each patch.
-
-Christophe Leroy (15):
-  mm: Define __pte_leaf_size() to also take a PMD entry
-  mm: Provide mm_struct and address to huge_ptep_get()
-  powerpc/mm: Remove _PAGE_PSIZE
-  powerpc/mm: Fix __find_linux_pte() on 32 bits with PMD leaf entries
-  powerpc/mm: Allow hugepages without hugepd
-  powerpc/8xx: Fix size given to set_huge_pte_at()
-  powerpc/8xx: Rework support for 8M pages using contiguous PTE entries
-  powerpc/8xx: Simplify struct mmu_psize_def
-  powerpc/e500: Remove enc and ind fields from struct mmu_psize_def
-  powerpc/e500: Switch to 64 bits PGD on 85xx (32 bits)
-  powerpc/e500: Encode hugepage size in PTE bits
-  powerpc/e500: Use contiguous PMD instead of hugepd
-  powerpc/64s: Use contiguous PMD/PUD instead of HUGEPD
-  powerpc/mm: Remove hugepd leftovers
-  mm: Remove CONFIG_ARCH_HAS_HUGEPD
-
-Michael Ellerman (1):
-  powerpc/64e: Remove unused IBM HTW code [SQUASHED]
-
- arch/arm/include/asm/hugetlb-3level.h         |   4 +-
- arch/arm64/include/asm/hugetlb.h              |   2 +-
- arch/arm64/mm/hugetlbpage.c                   |   2 +-
- arch/powerpc/Kconfig                          |   1 -
- arch/powerpc/include/asm/book3s/32/pgalloc.h  |   2 -
- arch/powerpc/include/asm/book3s/64/hash-4k.h  |  15 -
- arch/powerpc/include/asm/book3s/64/hash.h     |  38 +-
- arch/powerpc/include/asm/book3s/64/hugetlb.h  |  38 --
- .../include/asm/book3s/64/pgtable-4k.h        |  47 --
- .../include/asm/book3s/64/pgtable-64k.h       |  20 -
- arch/powerpc/include/asm/book3s/64/pgtable.h  |  22 +-
- arch/powerpc/include/asm/hugetlb.h            |  15 +-
- .../include/asm/nohash/32/hugetlb-8xx.h       |  38 +-
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h  |   9 +-
- arch/powerpc/include/asm/nohash/32/pte-40x.h  |   3 -
- arch/powerpc/include/asm/nohash/32/pte-44x.h  |   3 -
- arch/powerpc/include/asm/nohash/32/pte-85xx.h |   3 -
- arch/powerpc/include/asm/nohash/32/pte-8xx.h  |  58 ++-
- .../powerpc/include/asm/nohash/hugetlb-e500.h |  36 +-
- arch/powerpc/include/asm/nohash/mmu-e500.h    |   6 +-
- arch/powerpc/include/asm/nohash/pgalloc.h     |   2 -
- arch/powerpc/include/asm/nohash/pgtable.h     |  41 +-
- arch/powerpc/include/asm/nohash/pte-e500.h    |  35 +-
- arch/powerpc/include/asm/page.h               |  32 --
- arch/powerpc/include/asm/pgtable-be-types.h   |  10 -
- arch/powerpc/include/asm/pgtable-types.h      |  13 +-
- arch/powerpc/include/asm/pgtable.h            |   3 +
- arch/powerpc/kernel/exceptions-64e.S          |   4 +-
- arch/powerpc/kernel/head_85xx.S               |  33 +-
- arch/powerpc/kernel/head_8xx.S                |  10 +-
- arch/powerpc/kernel/setup_64.c                |   6 +-
- arch/powerpc/mm/book3s64/hash_utils.c         |  11 +-
- arch/powerpc/mm/book3s64/hugetlbpage.c        |  10 +
- arch/powerpc/mm/book3s64/pgtable.c            |  12 -
- arch/powerpc/mm/hugetlbpage.c                 | 455 +---------------
- arch/powerpc/mm/init-common.c                 |   8 +-
- arch/powerpc/mm/kasan/8xx.c                   |  21 +-
- arch/powerpc/mm/nohash/8xx.c                  |  43 +-
- arch/powerpc/mm/nohash/Makefile               |   2 +-
- arch/powerpc/mm/nohash/book3e_pgtable.c       |   4 +-
- arch/powerpc/mm/nohash/tlb.c                  | 407 +--------------
- arch/powerpc/mm/nohash/tlb_64e.c              | 314 ++++++++++++
- arch/powerpc/mm/nohash/tlb_low_64e.S          | 484 ++----------------
- arch/powerpc/mm/pgtable.c                     |  94 ++--
- arch/powerpc/mm/pgtable_32.c                  |   2 +-
- arch/riscv/include/asm/hugetlb.h              |   2 +-
- arch/riscv/mm/hugetlbpage.c                   |   2 +-
- arch/s390/include/asm/hugetlb.h               |   4 +-
- arch/s390/mm/hugetlbpage.c                    |   4 +-
- fs/hugetlbfs/inode.c                          |   2 +-
- fs/proc/task_mmu.c                            |  10 +-
- fs/userfaultfd.c                              |   2 +-
- include/asm-generic/hugetlb.h                 |   2 +-
- include/linux/hugetlb.h                       |   6 -
- include/linux/pgtable.h                       |   3 +
- include/linux/swapops.h                       |   4 +-
- kernel/events/core.c                          |   2 +-
- mm/Kconfig                                    |  10 -
- mm/damon/vaddr.c                              |   6 +-
- mm/gup.c                                      | 183 +------
- mm/hmm.c                                      |   2 +-
- mm/hugetlb.c                                  |  44 +-
- mm/memory-failure.c                           |   2 +-
- mm/mempolicy.c                                |   2 +-
- mm/migrate.c                                  |   4 +-
- mm/mincore.c                                  |   2 +-
- mm/pagewalk.c                                 |  57 +--
- mm/userfaultfd.c                              |   2 +-
- 68 files changed, 756 insertions(+), 2019 deletions(-)
- delete mode 100644 arch/powerpc/include/asm/book3s/64/pgtable-4k.h
- create mode 100644 arch/powerpc/mm/nohash/tlb_64e.c
-
--- 
-2.44.0
-
+--rh4txa2gphc5y7co--
