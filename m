@@ -1,142 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2707438FB9;
-	Mon, 27 May 2024 16:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81CE155C91;
+	Mon, 27 May 2024 16:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825606; cv=none; b=haiEWPw6wm0Xtgt2LFfCykqTfm1oYvfxd7nADX98O09/GiXHwPbDJqZ7N+dWCpqGhWvXwvx5Mn/3dVXuRhtcCUXP1M9SUiaQTlr7NWMiuwFOsh/EVdp1t1vgp1KodCwF9aOSfw2nezHx73wtVQg49BuADipVnXWMZ2lpGcwyi8E=
+	t=1716825640; cv=none; b=Tq0cVepPbk3rQ5MaXfbiATs+TVLXyL1Mibhy3CbMnl36dCWiBmf0nqIehQpm1ndckGTE0NSP7K6toWKxJ9y5GnMHi0iFO12xSXTYd7SVEWolW+a9d2kHiZUFdR3g00f8RqeZJFEMBYo450B22fI7bBk5egrVnYER7nA2pm205L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825606; c=relaxed/simple;
-	bh=3j6I4oXfoJyk2FD8DzmE8CORnviTv/b07TPvLGl+Hf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L1XC4yfvn9/pGhOwdITzIUHq/O6RJWuyNiuBMyf34bveY6vMdm10vGI7nUaHMWe233KjJg1dWTDRMwNBhrQ6B9cR5fj+MwBlYG4j3GtXpMyYH+x7FvetjlTfT8nvYnmeoIfVRpLkfQMgdl1EcKOdm7dTwUxZE394kY/dnJpDA0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/8XJZaE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716825640; c=relaxed/simple;
+	bh=9mYmjRBk0P5Q0AObg6ek9rZm4zLIX9lqhsl2xATV73U=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qxpe0b2KiW3TAeVDzywjQsUpNd0/sy0cyrJCiHvIolCYupRVsDUbZosqyXiHzxaXnwapt4DjILf0qtlmWI3K0vndMqJ/zsDY4POqxsrdXNiJBgPjoaLxY/mjYfQ4T22ISq4lWukbYQFS8rH9y5Pl6YQp8svIACLV6+BbsSmLQJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dm9QvyP8; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/8XJZaE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F333CC2BBFC;
-	Mon, 27 May 2024 16:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825605;
-	bh=3j6I4oXfoJyk2FD8DzmE8CORnviTv/b07TPvLGl+Hf0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q/8XJZaEAZmUW1fYgIXjoKQfJaX+mSVsfPHrZwE5fsSqdZiWWXyCBfFDRpjsY0rPB
-	 8lt1N2o5sERqeJn6vLMO2NlT9DXpx3Xx4tM9WezJOyYePmR/TcsAhUNrWYbDT2zVVs
-	 YQoIgFeKv8ONoIKGGuc71Fxinp0BQFCSwoMyXZnBJqAX4odIqW5/FgLATQsaSsvoW1
-	 /0AwB14ClTi2SStkR2WIY2aF2Wcd+6XojEZTJu0T5ZmQ7QdaBdQDOy21RgaTdC8Rti
-	 YhSqynuIShshgB0UidXd/3isVpAS/UpEsTK1YORI2iFRlU6EYsMWabF3aavK/VUbOI
-	 TH7o17n92Q/Cw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	nathan@kernel.org,
-	bhe@redhat.com,
-	arnd@arndb.de,
-	geert@linux-m68k.org,
-	rppt@kernel.org,
-	stanislav.kinsburskii@gmail.com,
-	wangkefeng.wang@huawei.com,
-	christophe.leroy@csgroup.eu,
-	bhelgaas@google.com,
-	linuxppc-dev@lists.ozlabs.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 4.19 2/2] powerpc/io: Avoid clang null pointer arithmetic warnings
-Date: Mon, 27 May 2024 11:59:45 -0400
-Message-ID: <20240527155949.3866553-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240527155949.3866553-1-sashal@kernel.org>
-References: <20240527155949.3866553-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dm9QvyP8"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42102c51524so24643595e9.1;
+        Mon, 27 May 2024 09:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716825637; x=1717430437; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GnnpD0FzpzbYfq1ngxZSbacY0kBYXWsANl4BUlAOofU=;
+        b=dm9QvyP8eUBJ50JdJhIcaV0rurpq3CkNMH3uVVK/7FK9fiM7MlitSillV4unV1JWbh
+         lG08OsNcqTZB1bFfSol2uBGUDwDS25nC+IkHclg6xabQ76vAQAnw7GEtKcVXTirys2WX
+         hQCSUokD+723uni2SWLCTu5U9mRB8UXERKBK0fueZdQlvExSryqxoGZCLX3JcZAQlUe1
+         eKHBUEIj4qMRyzrdI2ZPQiOPHLqXbPYi9LDAEFQ2LCB69qgfY5upZvX+P1D/vHO90Fti
+         I1kUVVHft2hZOySIzSxTwjJ5EfdLYud7KZ1Wdrevpk9HOoImSrY1NzGJ51ouXfmGqcYj
+         pIng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716825637; x=1717430437;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GnnpD0FzpzbYfq1ngxZSbacY0kBYXWsANl4BUlAOofU=;
+        b=E0u/pb2SqeLgpE7KLaV91/VmN7y2XqC+21JcnSI9AHsjuZods9ORiuQfwShuoxPKb5
+         +WXvk8oyyV8HRwYICNjhcDevmyFkWhEdPSBNGN5D/Eyd0HAw5Qd8B0mzWtojjZrDw3Q6
+         r550HuJy8H4NQ65TfozOwa7U3KhvWA4Sah8IVIXIqNnTD5eYqOb62RJ4pGup+1nMuXiQ
+         CDBHVvOK7facgVFX7y5KHhbtBu5MYEj/a54Z+DKhVX+l0MEJgEbkfZdIhIN5Lly4HhvY
+         qF7nMdffkECDcnBQuFGHMt9oXvynU8EdsM9PRmBqfM+kjH+kgJOdR/7VSKeP1mX9pE+p
+         Jc7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUqqaoK8dZr/AMRiMEGoX+hspt9sTSwUADRp0XzHHg+s4Ad8YmeSmXMT5n+AxiCP7CGDRjU6jGKj5FvDvP+eLMFdpfyDqzhHEztwPdD5XTX0jpQW1y0ldxm69cvo4mnvVAb
+X-Gm-Message-State: AOJu0YzCeXYuD+8KA5WM/vhFmv/KXgi6JqWdAIIv35RSChi6nBZECmej
+	RCAHtYdfrMEA+7BEyPqVlOKLsGQxEg7/Q4D3v0NgIGxSAVhrUIhir8xLLA==
+X-Google-Smtp-Source: AGHT+IGtO7+X98RuvpMG2dActz0xWJmVguWHzph/jBeY6LMcG/4HZrsbQNDsc+iimhUZE7+DFXGchw==
+X-Received: by 2002:a05:600c:450a:b0:41a:8035:af77 with SMTP id 5b1f17b1804b1-421015c7259mr107577395e9.12.1716825636675;
+        Mon, 27 May 2024 09:00:36 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089667fbsm113219105e9.9.2024.05.27.09.00.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 09:00:36 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 27 May 2024 18:00:34 +0200
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH -fixes] bpf: resolve_btfids: Fix integer overflow when
+ calling elf_update()
+Message-ID: <ZlSuIu1aFLzAiH_1@krava>
+References: <20240527153137.271933-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.315
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527153137.271933-1-alexghiti@rivosinc.com>
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+On Mon, May 27, 2024 at 05:31:37PM +0200, Alexandre Ghiti wrote:
+> The following error was encoutered in [1]:
+> 
+> FAILED elf_update(WRITE): no error
 
-[ Upstream commit 03c0f2c2b2220fc9cf8785cd7b61d3e71e24a366 ]
+hi,
+this fix got already in, check this patch:
+  https://patchwork.kernel.org/project/netdevbpf/patch/20240514070931.199694-1-friedrich.vock@gmx.de/
 
-With -Wextra clang warns about pointer arithmetic using a null pointer.
-When building with CONFIG_PCI=n, that triggers a warning in the IO
-accessors, eg:
+thanks,
+jirka
 
-  In file included from linux/arch/powerpc/include/asm/io.h:672:
-  linux/arch/powerpc/include/asm/io-defs.h:23:1: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     23 | DEF_PCI_AC_RET(inb, u8, (unsigned long port), (port), pio, port)
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ...
-  linux/arch/powerpc/include/asm/io.h:591:53: note: expanded from macro '__do_inb'
-    591 | #define __do_inb(port)          readb((PCI_IO_ADDR)_IO_BASE + port);
-        |                                       ~~~~~~~~~~~~~~~~~~~~~ ^
-
-That is because when CONFIG_PCI=n, _IO_BASE is defined as 0.
-
-Although _IO_BASE is defined as plain 0, the cast (PCI_IO_ADDR) converts
-it to void * before the addition with port happens.
-
-Instead the addition can be done first, and then the cast. The resulting
-value will be the same, but avoids the warning, and also avoids void
-pointer arithmetic which is apparently non-standard.
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Closes: https://lore.kernel.org/all/CA+G9fYtEh8zmq8k8wE-8RZwW-Qr927RLTn+KqGnq1F=ptaaNsA@mail.gmail.com
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240503075619.394467-1-mpe@ellerman.id.au
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/include/asm/io.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
-index 4681d4c50567e..5ff8ab12f56c7 100644
---- a/arch/powerpc/include/asm/io.h
-+++ b/arch/powerpc/include/asm/io.h
-@@ -569,12 +569,12 @@ __do_out_asm(_rec_outl, "stwbrx")
- #define __do_inw(port)		_rec_inw(port)
- #define __do_inl(port)		_rec_inl(port)
- #else /* CONFIG_PPC32 */
--#define __do_outb(val, port)	writeb(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_outw(val, port)	writew(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_outl(val, port)	writel(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_inb(port)		readb((PCI_IO_ADDR)_IO_BASE + port);
--#define __do_inw(port)		readw((PCI_IO_ADDR)_IO_BASE + port);
--#define __do_inl(port)		readl((PCI_IO_ADDR)_IO_BASE + port);
-+#define __do_outb(val, port)	writeb(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_outw(val, port)	writew(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_outl(val, port)	writel(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_inb(port)		readb((PCI_IO_ADDR)(_IO_BASE + port));
-+#define __do_inw(port)		readw((PCI_IO_ADDR)(_IO_BASE + port));
-+#define __do_inl(port)		readl((PCI_IO_ADDR)(_IO_BASE + port));
- #endif /* !CONFIG_PPC32 */
- 
- #ifdef CONFIG_EEH
-@@ -590,12 +590,12 @@ __do_out_asm(_rec_outl, "stwbrx")
- #define __do_writesw(a, b, n)	_outsw(PCI_FIX_ADDR(a),(b),(n))
- #define __do_writesl(a, b, n)	_outsl(PCI_FIX_ADDR(a),(b),(n))
- 
--#define __do_insb(p, b, n)	readsb((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_insw(p, b, n)	readsw((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_insl(p, b, n)	readsl((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_outsb(p, b, n)	writesb((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
--#define __do_outsw(p, b, n)	writesw((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
--#define __do_outsl(p, b, n)	writesl((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
-+#define __do_insb(p, b, n)	readsb((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_insw(p, b, n)	readsw((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_insl(p, b, n)	readsl((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_outsb(p, b, n)	writesb((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
-+#define __do_outsw(p, b, n)	writesw((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
-+#define __do_outsl(p, b, n)	writesl((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
- 
- #define __do_memset_io(addr, c, n)	\
- 				_memset_io(PCI_FIX_ADDR(addr), c, n)
--- 
-2.43.0
-
+> 
+> elf_update() returns the total size of the file which here happens to be
+> a ~2.5GB vmlinux file: this size overflows the integer used to hold the
+> return value of elf_update() and is then interpreted as being negative.
+> 
+> So fix this by using the correct type expected by elf_update() which is
+> off_t.
+> 
+> Fixes: fbbb68de80a4 ("bpf: Add resolve_btfids tool to resolve BTF IDs in ELF object")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218887 [1]
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ---
+>  tools/bpf/resolve_btfids/main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/bpf/resolve_btfids/main.c b/tools/bpf/resolve_btfids/main.c
+> index d9520cb826b3..af393c7dee1f 100644
+> --- a/tools/bpf/resolve_btfids/main.c
+> +++ b/tools/bpf/resolve_btfids/main.c
+> @@ -728,7 +728,7 @@ static int sets_patch(struct object *obj)
+>  
+>  static int symbols_patch(struct object *obj)
+>  {
+> -	int err;
+> +	off_t err;
+>  
+>  	if (__symbols_patch(obj, &obj->structs)  ||
+>  	    __symbols_patch(obj, &obj->unions)   ||
+> -- 
+> 2.39.2
+> 
