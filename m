@@ -1,136 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA5717082A;
-	Mon, 27 May 2024 15:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191C2168C31
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825555; cv=none; b=Fq2kO4BYEWhXcZsCZ+CqMT3KnNz0Nxn93mR3k7lEu9qwvXkFWmHrBCu9NYc/9Md3GVUMBfYf6m2i9Jk7On3kIFr5vFBGPlO4dSQxqhLpDlp9sGOajKqloZOmkayLjeJFccpg5HN6WV/xmMpwceKsr3JJBo8/qgh6w8dmuO2mkqY=
+	t=1716825556; cv=none; b=ulWt2ucUKcHNcguJ0+4BQI8KB55uaUZW0u9m0JZjsqrrKDqM5ofiPmztmj6Fdblzhyd8LautixyTIC2WFCwq5HGwP5/ebWEYH6xpvH4IL0QWo/47hZOzpoMQvrekShNVfgFnb/eBphFi2vcowjplV4m/+RtJPa/F5RXidbmlQjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825555; c=relaxed/simple;
-	bh=TyJFoh57lXVSFKFbEQkDyizMJeZPrs9afzkUpBAV0Qk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V2jfXi6GRmMO4ngbkNGUq58oKxAfyN/JbK5nhE/O91qkafW1IHub+OAkjS2InDS0N3Y2GOjHvLSFi8iqq8hm30iuq2k2pkztyC/b68LjxWdHbARmIuguCH26G5RqQNGGy2GHYfnFF9ivgFUoNgPjSPA3n0XM4KkAErxYqR8eiOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjnn1rnB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716825556; c=relaxed/simple;
+	bh=+2MBnVSy/FwwVGNcD8DYPhWgNjfN7sTC7c+izVqBLCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FXShtWvEJcQPxO1r4/wNrOJ00GGPybYkIE3/JMLL3B8YVJccefyWxHg0w1oWoeyUYq14nlD2zEyvNjZwuZQDX0Cyhp9gaVpDeNZ5kqCT5jIyUMkRPVBZPrR7jaHrSrvVasYoBYsacSj+29UQGFCNEr9BjpyuM6UCpHe7roJ5mA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eQm7Oa3a; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjnn1rnB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA98C2BBFC;
-	Mon, 27 May 2024 15:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825554;
-	bh=TyJFoh57lXVSFKFbEQkDyizMJeZPrs9afzkUpBAV0Qk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kjnn1rnBOR5Ld6rftupc4czkfTSnckWuhvvUz3KbQQ/S+9h7v+zmZxCN0EUeDMtvU
-	 wvvzTOyvxSZhooy/GAERRnWVS1dtsvgOP5SUOEE05kxjs88ZEiPceO27aTl/K65D9b
-	 SbtygkhAbbZY3O87dO8U8gyb8qbN2R85KTPoNcSDlT9LF/p9QRz+90Qkdz8C5x3uOj
-	 aPXReB0M+gz/7e6YhNYAvO3esK2rS/eRYdSQZKzcFeQf+T3xGKr7Fk//LFA0sD1j2I
-	 g3Lcgp2CySRbIuQzhAkJHUb4A5WDWN/zhAfEtWZYynSGt6fdBJi6fWUFHOcS5Qmxix
-	 7oOWDm0n8zQYA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Nathan Lynch <nathanl@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Sasha Levin <sashal@kernel.org>,
-	nathan@kernel.org,
-	vaibhav@linux.ibm.com,
-	gautam@linux.ibm.com,
-	amachhiw@linux.vnet.ibm.com,
-	sshegde@linux.ibm.com,
-	jniethe5@gmail.com,
-	linuxppc-dev@lists.ozlabs.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.10 6/7] powerpc/pseries: Enforce hcall result buffer validity and size
-Date: Mon, 27 May 2024 11:58:30 -0400
-Message-ID: <20240527155845.3866271-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240527155845.3866271-1-sashal@kernel.org>
-References: <20240527155845.3866271-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eQm7Oa3a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716825554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hfE5bqY12+J/fHuO8jUr2r6BVU+YoH1eMrP4/6WOM44=;
+	b=eQm7Oa3alO0dnFB7SD3+bGW66n0L8yUuD7dyGQ6kSMOHgYabNwu2s4VFhrC/pulqgNOrLd
+	o2wvXTVkzVUaNdwh5xedwH9YHGhxZIX7G1YTTStVLVFS7BjgJoZfH1Ht+gHrSBI5dEOH01
+	YWsCXKBr0aj94mnEzdvxgpHUF0wpzIo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-cndmWuTHNX2pA2bmzJNlYQ-1; Mon,
+ 27 May 2024 11:59:10 -0400
+X-MC-Unique: cndmWuTHNX2pA2bmzJNlYQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5526729AA39D;
+	Mon, 27 May 2024 15:59:10 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.41])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 43C7C3C27;
+	Mon, 27 May 2024 15:59:08 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 27 May 2024 17:57:42 +0200 (CEST)
+Date: Mon, 27 May 2024 17:57:39 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Nicholas Piggin <npiggin@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	Chris von Recklinghausen <crecklin@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: sched/isolation: tick_take_do_timer_from_boot() calls
+ smp_call_function_single() with irqs disabled
+Message-ID: <20240527155739.GB5733@redhat.com>
+References: <20240522151742.GA10400@redhat.com>
+ <20240523132358.GA1965@redhat.com>
+ <87h6eneeu7.ffs@tglx>
+ <ZlCwKk65-eL0FrKX@pavilion.home>
+ <20240524183700.GA17065@redhat.com>
+ <87v832dfw1.ffs@tglx>
+ <20240526192758.GA21193@redhat.com>
+ <D1KDJILBPEKS.27MVR6A44NMX8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.218
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D1KDJILBPEKS.27MVR6A44NMX8@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+On 05/27, Nicholas Piggin wrote:
+>
+> On Mon May 27, 2024 at 5:27 AM AEST, Oleg Nesterov wrote:
+> > The more I grep the more I confused.
+> >
+> > On 05/25, Thomas Gleixner wrote:
+> > >
+> > > Right. It does not happen because the kernel starts with jiffies as
+> > > clocksource except on S390. The jiffies clocksource is not qualified to
+> > > switch over to NOHZ mode for obvious reasons.
+> >
+> > Not obvious for those who never looked at this code ;)
+> >
+> > OK, clocksource_jiffies doesn't have CLOCK_SOURCE_VALID_FOR_HRES,
+>
+> jiffies clocksource requires a timer to run it I suppose.
 
-[ Upstream commit ff2e185cf73df480ec69675936c4ee75a445c3e4 ]
+I meant, this is enough to ensure that clocksource_done_booting() paths should
+find another cs, best != curr_clocksource, and call timekeeping_notify().
 
-plpar_hcall(), plpar_hcall9(), and related functions expect callers to
-provide valid result buffers of certain minimum size. Currently this
-is communicated only through comments in the code and the compiler has
-no idea.
+Nevermind, quite possibly I misread this code.
 
-For example, if I write a bug like this:
+> > And I still don't understand why we can rely on can_stop_idle_tick() even
+> > in tick_nohz_idle_stop_tick().
+>
+> AFAIKS timer_expires_base would be 0 unless tick_nohz_next_event()
+> were called, but that is only called from places that checked
+> can_stop_idle_tick() or is already a tick_nohz_full() CPU.
 
-  long retbuf[PLPAR_HCALL_BUFSIZE]; // should be PLPAR_HCALL9_BUFSIZE
-  plpar_hcall9(H_ALLOCATE_VAS_WINDOW, retbuf, ...);
+OK, thanks.
 
-This compiles with no diagnostics emitted, but likely results in stack
-corruption at runtime when plpar_hcall9() stores results past the end
-of the array. (To be clear this is a contrived example and I have not
-found a real instance yet.)
+So, Frederic, Nicholas, any objections to the trivial change below?
 
-To make this class of error less likely, we can use explicitly-sized
-array parameters instead of pointers in the declarations for the hcall
-APIs. When compiled with -Warray-bounds[1], the code above now
-provokes a diagnostic like this:
+We can cleanup the tick_do_timer_boot_cpu logic on top of it.
 
-error: array argument is too small;
-is of size 32, callee requires at least 72 [-Werror,-Warray-bounds]
-   60 |                 plpar_hcall9(H_ALLOCATE_VAS_WINDOW, retbuf,
-      |                 ^                                   ~~~~~~
+Oleg.
 
-[1] Enabled for LLVM builds but not GCC for now. See commit
-    0da6e5fd6c37 ("gcc: disable '-Warray-bounds' for gcc-13 too") and
-    related changes.
-
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240408-pseries-hvcall-retbuf-v1-1-ebc73d7253cf@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/include/asm/hvcall.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/hvcall.h b/arch/powerpc/include/asm/hvcall.h
-index 00c8cda1c9c31..a8035af4fc50a 100644
---- a/arch/powerpc/include/asm/hvcall.h
-+++ b/arch/powerpc/include/asm/hvcall.h
-@@ -453,7 +453,7 @@ long plpar_hcall_norets_notrace(unsigned long opcode, ...);
-  * Used for all but the craziest of phyp interfaces (see plpar_hcall9)
-  */
- #define PLPAR_HCALL_BUFSIZE 4
--long plpar_hcall(unsigned long opcode, unsigned long *retbuf, ...);
-+long plpar_hcall(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL_BUFSIZE], ...);
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -178,26 +178,6 @@ void tick_setup_periodic(struct clock_event_device *dev, int broadcast)
+ 	}
+ }
  
- /**
-  * plpar_hcall_raw: - Make a hypervisor call without calculating hcall stats
-@@ -467,7 +467,7 @@ long plpar_hcall(unsigned long opcode, unsigned long *retbuf, ...);
-  * plpar_hcall, but plpar_hcall_raw works in real mode and does not
-  * calculate hypervisor call statistics.
+-#ifdef CONFIG_NO_HZ_FULL
+-static void giveup_do_timer(void *info)
+-{
+-	int cpu = *(unsigned int *)info;
+-
+-	WARN_ON(tick_do_timer_cpu != smp_processor_id());
+-
+-	tick_do_timer_cpu = cpu;
+-}
+-
+-static void tick_take_do_timer_from_boot(void)
+-{
+-	int cpu = smp_processor_id();
+-	int from = tick_do_timer_boot_cpu;
+-
+-	if (from >= 0 && from != cpu)
+-		smp_call_function_single(from, giveup_do_timer, &cpu, 1);
+-}
+-#endif
+-
+ /*
+  * Setup the tick device
   */
--long plpar_hcall_raw(unsigned long opcode, unsigned long *retbuf, ...);
-+long plpar_hcall_raw(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL_BUFSIZE], ...);
+@@ -231,9 +211,8 @@ static void tick_setup_device(struct tick_device *td,
  
- /**
-  * plpar_hcall9: - Make a pseries hypervisor call with up to 9 return arguments
-@@ -478,8 +478,8 @@ long plpar_hcall_raw(unsigned long opcode, unsigned long *retbuf, ...);
-  * PLPAR_HCALL9_BUFSIZE to size the return argument buffer.
-  */
- #define PLPAR_HCALL9_BUFSIZE 9
--long plpar_hcall9(unsigned long opcode, unsigned long *retbuf, ...);
--long plpar_hcall9_raw(unsigned long opcode, unsigned long *retbuf, ...);
-+long plpar_hcall9(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL9_BUFSIZE], ...);
-+long plpar_hcall9_raw(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL9_BUFSIZE], ...);
+ 		} else if (tick_do_timer_boot_cpu != -1 &&
+ 						!tick_nohz_full_cpu(cpu)) {
+-			tick_take_do_timer_from_boot();
+ 			tick_do_timer_boot_cpu = -1;
+-			WARN_ON(READ_ONCE(tick_do_timer_cpu) != cpu);
++			WRITE_ONCE(tick_do_timer_cpu, cpu);
+ #endif
+ 		}
  
- struct hvcall_mpp_data {
- 	unsigned long entitled_mem;
--- 
-2.43.0
 
