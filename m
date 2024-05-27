@@ -1,169 +1,120 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2C814A90
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5A010A0D
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716795914; cv=none; b=C55h/AKNL94WCP11wNzGNiRRBL7GOKMKnai2GDTyRgUKUmX0FYiXE599r0QEaICnGMNdwPDu3CtmoQgpgUfmFZEbCOUp5FZ4Gq5/9Y19lzjAvgJHMQwZ6c2ql5BO3w+Eg6V8oCeluEShKHdFskAN883qHZWpS+vRz3zfFubnJ64=
+	t=1716795937; cv=none; b=MoBwej0UhZgCiDxh7NCh7Xc/OhrEfCM064/SxiX5mcNh/Oc9QFgEb9+BjiQXQhXzQaoOsecb2LRMR/Z5Ke9dDoi/yDWLtwkE03wU59QnPF6SYJegHLWMLPHapKZyL81Et3YZcmEBy41d81Rb/QiyoDVO/Lpj/orKlDNakZZLvyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716795914; c=relaxed/simple;
-	bh=vkv5hq6lsxJi0KlXu4VtTvGXpDP8px3EhRFjgy+7uqc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZtobdSUUawcqt9/y6Q6beF6/Isr+eu5KB1IaBGccZk8v+9P0nsYXhWyibU7aENoOqys1gRYvuIY6wliubMo2WilPd2zYSb/8klsMgxqOH2Ng8gWXeNAZz7nteiEqakwp0ruoZkBTpmCQBP6GhM9amP7Rno2Obn6UJm3aqP9se2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=H4R2DvoY; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1716795937; c=relaxed/simple;
+	bh=L25LeAJvksa9NHLEzSxruzChrK53a1cBjhUfyi0GPpI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W1FsKck+Q7BGy+139jzWBhP3GQ3tc0WWR8JqT/U2iCqp/9CeLy+342muWhR3JGzh6YoNWHo//aeCwmQTGQ5x/PK7jIOtqbIxaFqxFNS2/iqVi26nVjxVWGDQDaaUkxfMVywXyUF+0oWthoXXP/pHsARTZPTCvRSt0SRboL6mOko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z29yhp09; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="H4R2DvoY"
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 64AC341203
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1716795909;
-	bh=NKJlqXXBWxTZdncrTmUweWa85elS5Yd/G+CtJGHvhOY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=H4R2DvoYnrmRs6R3BkCftlfTB9oOMtdfztdHo3LW9pfsE9UI86AvmpEj/3/Y1hgb5
-	 RYcMYeStaclDhUBMpIXGEx53Icr7miApI64u/vS4+xpIgbqskw7AuoS1J5vdNuRx/I
-	 GXcvU2kZzIe3NBvMJFYr0RzatKrzsVl/jbAulzSu0+wPj596AC5UKJmXkmv+gJkxQw
-	 Msgfwo0+YJl5i/3IC0oOPeDlAom7VOSswkkp3/PM61LodehcIIVUK8VQSRkUZzIdRB
-	 oxTqvNXlHXvy23MXyhLhG3ND4mS8fjCwcavENcpaiaLXjtbmwntKtoR8nm7hKYqQDC
-	 Jb1NcGJikWeqQ==
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1f44b70822eso22299455ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 00:45:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z29yhp09"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3588cb76276so399090f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 00:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716795934; x=1717400734; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r3W0IRzbYrdpGZO/IX0+cL20f8hz6Rtqdx3NFjQ6cU0=;
+        b=Z29yhp09xiVc6+Lpj9OvByrDJjANJ4nF8Kx45ea4z4lOTl4FMNl3J4I67jFiqer8m6
+         UYPeiSS4FDJ0Hc+8sn+fUxoJEJoEQFasrW6W4PGtYopUk1+KLu2UHns2rmVeftYGT0aH
+         Cnxb+o22ezB14mPpfNduj6U/5lftZhrf6bQ3fn4JL9zsXMHqbVE9CW/ntuorlECGKNDl
+         cR3SLgJC7K9AuTrlKzkGF4caX0IHKv7szpnkP0W4Q69QDSIWoYBbMD/ejlX8L/QcpHNR
+         7sKJdN4EzgW0KPWYu8PaadkvO5rIHBclW6LBY2ppIEvruK1sfLh8N99lsrZUiGMLzYy9
+         Bdsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716795908; x=1717400708;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1716795934; x=1717400734;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NKJlqXXBWxTZdncrTmUweWa85elS5Yd/G+CtJGHvhOY=;
-        b=YecagfIxwhdVBdQyN4TuSP7d3RSuR0OBtnZf6biSiHw1Z/3kRpGylyAV2iWXsoHHpc
-         dzlyvJl9d9sKBsJX84gUrkleiQU3kgvUPIdYDY1/pMy7WghzyP7BAnzFrz5uQoukXY9b
-         T2UCB0zeB3o6NIjn8gulFPngSg6JRjCKVEQ0m2WkKggF1AiMX7b06csmZVyJ37YSb6UT
-         pICEoyOG1GYQo+UIuXCscAWwl7OqpYijJdh8Bz83LWLxe5Kofyr214TgGQhv1JZR43Nv
-         iD+4DGGcE6nr0CEZtFMj7wBj74bpWAH9pJ+CHnhQT2XrLznLKdeWygOt6h2GiMvxbD9Y
-         7hHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJQUVP7xc0stHR4uytEMuKXmNhEYKoheP6mkbTHt9b5N6uF+SSSg1QPynkQPQcOaa2xzcFb8gMBSiHrOjUJ8HsDDApRhWpBKNYTlvk
-X-Gm-Message-State: AOJu0Yx0qWqKPOUee2cFTC+jOuKE8NUfz2mpPRfAb8xIIFsG3GG7tfe6
-	dMusBqf5T2pnlR+m0JqllEOgSMbqNgD9GXAt62LpJHjSNtOVq4uClgGZ3W/mUmoRnPsr3Qt9b/J
-	f9nfRedRj7BHC8uaYqnVAxHb3R6GPZRPHQEz4ldXt3XVN2R/zIWToCgjGgA1MGK3ThGGP3b+LDR
-	QsAw==
-X-Received: by 2002:a17:903:32c2:b0:1e2:9aa7:fd21 with SMTP id d9443c01a7336-1f4497db381mr84970105ad.54.1716795907691;
-        Mon, 27 May 2024 00:45:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFubTHVSQn/kO3LglR8Ud8SJ6R07rDQ7c+0cFnGPKehvgk91gfVJ0j9e6cIAYJu8GB82vzCWw==
-X-Received: by 2002:a17:903:32c2:b0:1e2:9aa7:fd21 with SMTP id d9443c01a7336-1f4497db381mr84969955ad.54.1716795907341;
-        Mon, 27 May 2024 00:45:07 -0700 (PDT)
-Received: from chengendu.. (36-227-176-221.dynamic-ip.hinet.net. [36.227.176.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f479010035sm29573505ad.82.2024.05.27.00.45.03
+        bh=r3W0IRzbYrdpGZO/IX0+cL20f8hz6Rtqdx3NFjQ6cU0=;
+        b=YojUnDNYnufZy9HBuuEukdAOY8pZZutjP0pEqOsDifvwvZF2fglfULdWwUB/60RSPN
+         zLwWN2H2YxlNws59JM8Qa7Us2WwOA8CNH9nF4uQ6EGyYL+s3NbO/M8FaUzaqxZ3aQHg9
+         05ZIvj1GTm7idoElVMj6GV2+OrcdnZD/ScibC3WJoxrkXgk94ZV4RI8yYDaqN4BghYLK
+         2h4bOUq2xfhzsy2Gv/hvJKz4RbdfiuIcHjoX3TuakuuoRPXBZHYa/i6CnIDKqqh9kRlU
+         6Viz96e75IqyzaZip3UH0sJobcqFoWHEU7IAAF+QXiM+BamfIWJHA7zHGFennorPOdyI
+         Al6w==
+X-Forwarded-Encrypted: i=1; AJvYcCWKwpVA4sV7qdHILQKCAYP76a/EgvZ0G2/qO79GT2Nx1YIvDUzZgZWD2eUcNPKLXqHsrUhTPXPVMaqc/tIJr0EpNMZqqYRkP3MpB18K
+X-Gm-Message-State: AOJu0YxqoGuicOeVMG9kKJwN6vG/DwA++f8KZzI6fhIbGvEp7gq6hwH8
+	Zew7PIyxUruf84RLfbuBUuY2MudGWRgKiCLkRkiXJko6baEQmqcQzyraVjypLRZ2RN/tfHU4fxO
+	8uUA=
+X-Google-Smtp-Source: AGHT+IEewCQaS2JXdMuRvuS5ujtjvCFY3WzcrznMhPgggMKCeN4AQiw2HzeSuItoWxarSft/mG7ZXg==
+X-Received: by 2002:adf:db49:0:b0:34c:600b:b016 with SMTP id ffacd0b85a97d-35506dc5898mr7269721f8f.27.1716795933614;
+        Mon, 27 May 2024 00:45:33 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7d96fsm8293353f8f.12.2024.05.27.00.45.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 00:45:07 -0700 (PDT)
-From: Chengen Du <chengen.du@canonical.com>
-To: willemdebruijn.kernel@gmail.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	loke.chetan@gmail.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chengen Du <chengen.du@canonical.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] af_packet: Handle outgoing VLAN packets without hardware offloading
-Date: Mon, 27 May 2024 15:44:56 +0800
-Message-Id: <20240527074456.9310-1-chengen.du@canonical.com>
-X-Mailer: git-send-email 2.40.1
+        Mon, 27 May 2024 00:45:33 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH 0/2] usb: typec-mux: broadcast typec state to next mux for
+ ptn36502 & nb7vpq904m retimers
+Date: Mon, 27 May 2024 09:45:28 +0200
+Message-Id: <20240527-topic-sm8x50-upstream-retimer-broadcast-mode-v1-0-79ec91381aba@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABg6VGYC/x3NQQ7CIBBA0as0s3YSRCmNVzEuKEx1FhQyg6ZJ0
+ 7uXuHyb/3dQEiaFx7CD0I+Vy9pxvQwQP2F9E3LqBmvs3TjrsZXKETVPmzP4rdqEQkahxpkEZyk
+ hxaANc0mEfnTW+HEK8bZAT1ahhbf/7vk6jhMC9fVpfgAAAA==
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+ Luca Weiss <luca.weiss@fairphone.com>, linux-arm-msm@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1122;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=L25LeAJvksa9NHLEzSxruzChrK53a1cBjhUfyi0GPpI=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmVDobN1E65KFEsCOFpO948mxbN9rt74AlIlIzWnLp
+ /r7tDV2JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZlQ6GwAKCRB33NvayMhJ0eemEA
+ CjdAr8cskG36GuOGrPp/Z5zZ3qN3RkJjH27XcPdWxw/+LKZNoSpyD2nxSDXXgIHn2mEPAOwNUy5dO1
+ LPoGPM8xdng3JK7/dt++JVHJLPR4EH4gw827tWHsFTf6y6GIiZhPqQZcsSdQ+N8Y/4bp/6SUORE2Uo
+ eYMebd1p8JX23qUfDJ/LKh42iB2fJF06wDCuuoCipDYvrUnmRCGHkGMhrProSsm65E5olPIj9GR/wL
+ djUx+2E0xvjHN/SXy9Oz1NAelstFXvBFoLtLiLXH2QwAWWDkoWrzemJcxBWldqvjq7xL+d/y6kIYhp
+ G4pavDoPm1aSoLa7lz/eX1ejryvkkS1kSssb0jao+CVaAnmyxuM96hA2eWEv6+mQg43bXR9HvIaNSr
+ q3vhbOnnvmp24+cDIhCqtdWMKw8NRGp3cd9q6cHUNqAYx8DnFJyw5VwOCI+UYCWCGlZ2GRKhpYPOOG
+ WUf2gwttxXMzpWHlViZN8yLpKeO4hMMgLkx9KKyZNAkpaF3NxbI3IfG4jtUG47maMPt5dXVtsckR5W
+ jO+ysITtwnIXD8yz7SEuFaRNK2fd+zf1PMNNqyHewD4ZKU7QWlMOb/A+SUsC0jwNWDteGJPZ/JY8hb
+ x5UVZyq2LDlzPdgylzV+rEGbai0fRhpXYG5PRHucYqWcWsW4foII+mODNJQA==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-The issue initially stems from libpcap [1]. In the outbound packet path,
-if hardware VLAN offloading is unavailable, the VLAN tag is inserted into
-the payload but then cleared from the sk_buff struct. Consequently, this
-can lead to a false negative when checking for the presence of a VLAN tag,
-causing the packet sniffing outcome to lack VLAN tag information (i.e.,
-TCI-TPID). As a result, the packet capturing tool may be unable to parse
-packets as expected.
+In the Type-C graph, a retimer is usually in between the USB-C
+connector and the USB3/DP combo PHY, and this PHY also requires the
+USB-C mode events to properly set-up the SuperSpeed Lanes functions
+to setup USB3-only, USB3 + DP Altmode or DP Altmode only on the 4 lanes.
 
-The TCI-TPID is missing because the prb_fill_vlan_info() function does not
-modify the tp_vlan_tci/tp_vlan_tpid values, as the information is in the
-payload and not in the sk_buff struct. The skb_vlan_tag_present() function
-only checks vlan_all in the sk_buff struct. In cooked mode, the L2 header
-is stripped, preventing the packet capturing tool from determining the
-correct TCI-TPID value. Additionally, the protocol in SLL is incorrect,
-which means the packet capturing tool cannot parse the L3 header correctly.
+Update the nb7vpq904m & ptn36502 retimers to get an optional type-c mux
+on the next endpoint, and broadcast the received mode to it.
 
-[1] https://github.com/the-tcpdump-group/libpcap/issues/1105
+This makes it possible to support 4-lanes DP altmode on Qualcomm platforms.
 
-Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Chengen Du <chengen.du@canonical.com>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- net/packet/af_packet.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+Neil Armstrong (2):
+      usb: typec-mux: ptn36502: broadcast typec state to next mux
+      usb: typec-mux: nb7vpq904m: broadcast typec state to next mux
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index ea3ebc160e25..82b36e90d73b 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1011,6 +1011,10 @@ static void prb_fill_vlan_info(struct tpacket_kbdq_core *pkc,
- 		ppd->hv1.tp_vlan_tci = skb_vlan_tag_get(pkc->skb);
- 		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->vlan_proto);
- 		ppd->tp_status = TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-+	} else if (eth_type_vlan(pkc->skb->protocol)) {
-+		ppd->hv1.tp_vlan_tci = ntohs(vlan_eth_hdr(pkc->skb)->h_vlan_TCI);
-+		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->protocol);
-+		ppd->tp_status = TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
- 	} else {
- 		ppd->hv1.tp_vlan_tci = 0;
- 		ppd->hv1.tp_vlan_tpid = 0;
-@@ -2428,6 +2432,10 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 			h.h2->tp_vlan_tci = skb_vlan_tag_get(skb);
- 			h.h2->tp_vlan_tpid = ntohs(skb->vlan_proto);
- 			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-+		} else if (eth_type_vlan(skb->protocol)) {
-+			h.h2->tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
-+			h.h2->tp_vlan_tpid = ntohs(skb->protocol);
-+			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
- 		} else {
- 			h.h2->tp_vlan_tci = 0;
- 			h.h2->tp_vlan_tpid = 0;
-@@ -2457,7 +2465,8 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 	sll->sll_halen = dev_parse_header(skb, sll->sll_addr);
- 	sll->sll_family = AF_PACKET;
- 	sll->sll_hatype = dev->type;
--	sll->sll_protocol = skb->protocol;
-+	sll->sll_protocol = (skb->protocol == htons(ETH_P_8021Q)) ?
-+		vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
- 	sll->sll_pkttype = skb->pkt_type;
- 	if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV)))
- 		sll->sll_ifindex = orig_dev->ifindex;
-@@ -3482,7 +3491,8 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 		/* Original length was stored in sockaddr_ll fields */
- 		origlen = PACKET_SKB_CB(skb)->sa.origlen;
- 		sll->sll_family = AF_PACKET;
--		sll->sll_protocol = skb->protocol;
-+		sll->sll_protocol = (skb->protocol == htons(ETH_P_8021Q)) ?
-+			vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
- 	}
- 
- 	sock_recv_cmsgs(msg, sk, skb);
-@@ -3539,6 +3549,10 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 			aux.tp_vlan_tci = skb_vlan_tag_get(skb);
- 			aux.tp_vlan_tpid = ntohs(skb->vlan_proto);
- 			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-+		} else if (eth_type_vlan(skb->protocol)) {
-+			aux.tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
-+			aux.tp_vlan_tpid = ntohs(skb->protocol);
-+			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
- 		} else {
- 			aux.tp_vlan_tci = 0;
- 			aux.tp_vlan_tpid = 0;
+ drivers/usb/typec/mux/nb7vpq904m.c | 29 +++++++++++++++++++++++++++--
+ drivers/usb/typec/mux/ptn36502.c   | 33 ++++++++++++++++++++++++++++++---
+ 2 files changed, 57 insertions(+), 5 deletions(-)
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240527-topic-sm8x50-upstream-retimer-broadcast-mode-76520768ac3f
+
+Best regards,
 -- 
-2.40.1
+Neil Armstrong <neil.armstrong@linaro.org>
 
