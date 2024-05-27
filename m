@@ -1,121 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71A322301
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC779200A9
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716794304; cv=none; b=AmC+mLvvGwHePM6U3kEjSLxGGk9GYyZaHSj7LZWJjM77BlOIg7vg8H3LYD9/uv+ZIt79WpwlbK9dF16D5QJ87YomO3LL+uaxBolCqAHFTRu9vDP4ks8LXBZv/BxonmaGyprhex4QRTxlZ1LfMq94CDim7mJYe/QmkBig1VlNvu4=
+	t=1716794323; cv=none; b=i+ZSkyvUyLQCbfW6NmFMwhMjgvWpWqWE8kLBJl2aEYEsc7j+4upZ0+q/vbbTm4291+6m+GIFPF4gNdIKg+qX7FtUctBGzI6gPvjAw3f8YRb83Z3uOGuU+zbK7hmpcKG0soLFGooKiB1LYb8q3ioUobofNsMwaJTrgT2lW90Czps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716794304; c=relaxed/simple;
-	bh=O3z8wJj/RY7tGCWilHtBGM/+NL7UV0l+De08BSogcjw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qQ69fp++i3+t6Ib65XxC7fzdaFbgxW6XgruGjREgsNF7l+S/dU2TZFLxUI+9I8atFz0lgkp+2qJhu+mxyCeZPo+SLGGbQKaSaKOVBcBWtftIeTuU6Gqt/bmzdjHJ58Av4lzEZLXxp4g0t5Kod/eOTALas2tCg4B//CCafSIw48s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GeEkXfnm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716794323; c=relaxed/simple;
+	bh=Zi33nNAiIDGa0FSB+SFlOzYKSr9pX1z8RzcNuVbH+R0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SbzzmHWsVL3IxoVOSRFkeno23IqzoxgnsW1twexW1QiwGvYiee1IXVedzn9EDLZCfcUXMQmPDpkm2azdAO/rtRfM4qO+lIjx/PUhKa+jpag0/9Q70vXFjpkjXnWl6su5Ti2hJYbl6Wwub2XnTGk7lEhY+CmEVm04IIcdAlkp3Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=iy9ORCzh; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GeEkXfnm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716794301;
+	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="iy9ORCzh"
+X-Envelope-To: val@packett.cool
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
+	s=key1; t=1716794318;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SM1q7lncJqyUgRL+tvS7Y4Z/ejSGiKTndXWZjUnltd0=;
-	b=GeEkXfnm3y8BfiGluHhM+4kYyZqd3gAHo0UfImf5x7MZFCDvKf15rOJDIDK/s6F5aF9sj0
-	CCPf+ysXJV0dU1c/8jcVq4sy7AjORRA1m9013boff68oCeO547LLVKNC7rMo2jvRZdwiyD
-	kno3IFqQ0FTmcffYS2AYNZ8Frv0tq4g=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-568-s12t_Au9Pfq7C0fARdOQ8g-1; Mon, 27 May 2024 03:18:20 -0400
-X-MC-Unique: s12t_Au9Pfq7C0fARdOQ8g-1
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3d1ca4ed5a3so106699b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 00:18:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716794299; x=1717399099;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SM1q7lncJqyUgRL+tvS7Y4Z/ejSGiKTndXWZjUnltd0=;
-        b=afgDw2xQnLt7nUpLKRGWdt7j3P2rWvrBjdp8gb/rFepZE3BtnpRp3fKdsQmhVhmY70
-         xSM1dq5rp6B0O/JQRDPr1GMmRsSTVuJhj8QyeA50p+aO80Gna8OnI4+UN2uhNiM2rk6v
-         JkKNWl2AzjW7U6cR0cz1k7TWplOx4x27RPetqRcdv/nO99WSyh5eEG/Yb25tEl2nG1CW
-         Z5od8quZuoWLgR85D7uF6m8/4Z2AdvnAcyNkVRZ0ewuvTToBL2ZhcQd+EFpQblRx4VwW
-         /9p/deNB9GrevK3i02KB1x9XYWglbpJSTA4d3kN/GDp5SBsaHrVYfhZhwIwV9EL0uj1m
-         1a2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVOs/q4KYe2lFDPKPoAfLgM8a81plXhb+ePhh40oTN7G+bFNCW3InUYS7/ADQIOMyER3bSzhthYVPngiVUE+EcUWYGbSItQi2FfACQP
-X-Gm-Message-State: AOJu0YxZw9NtoakgejO34gG6VS8D/PBE0Ra1UJm3FP3OXGUPphf5eWgD
-	jOYWTBmvAuJiBmRFLKt7S90RJgklbwpUxgjkMb4J486for2TNF1Hu2mhPoGJOhjYoSvHh1vgCWm
-	YMrd7ceBu8q/DBPeZMMBzmCpT1CuCG3IiQMUjz6dM5TrnIbKgrx5NunQWhcCySQ==
-X-Received: by 2002:aca:1312:0:b0:3c9:ad70:39ce with SMTP id 5614622812f47-3d1a6112debmr8635045b6e.29.1716794298018;
-        Mon, 27 May 2024 00:18:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGV8wNdsYexNXiniGqldjiWs6gOpxxTn5nnS4Owmc8hzpeS/GcM6kANJPEIljKOoKIbsf/30A==
-X-Received: by 2002:aca:1312:0:b0:3c9:ad70:39ce with SMTP id 5614622812f47-3d1a6112debmr8635028b6e.29.1716794297618;
-        Mon, 27 May 2024 00:18:17 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f28:4600:d3a7:6c26:54cf:e01e? (p200300d82f284600d3a76c2654cfe01e.dip0.t-ipconnect.de. [2003:d8:2f28:4600:d3a7:6c26:54cf:e01e])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fd16b2dc6sm2784471cf.63.2024.05.27.00.18.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 May 2024 00:18:17 -0700 (PDT)
-Message-ID: <18ad1a9f-8f00-41c1-9c77-ac3252061852@redhat.com>
-Date: Mon, 27 May 2024 09:18:13 +0200
+	bh=X/HcY+X0iAsHdzRuxUa8q7blOFA1qc44VzdOT0NN0pc=;
+	b=iy9ORCzh7lapaOkZMTEJsmXVG/+BIMfnecYQMWgUjZ2+sq98W3zFVnqaDLifxgDJS2XrSH
+	pqXfwVLJ8PIpmhN4yufkns0BlQG4ykCgGjQLMpzlINXF14ulgAuORgPV+1j9sJRxrbebzI
+	b7hnSCmVc9jO6U7KghD6m/ICuf5rLFHDJ/1JqSIec75UTBjYmG6RDXz8/46cYrxAxT0iIY
+	uGtYK/+pQc+T97tX+QT8gnz6JNrWV2k88u3VWgnHklhVArsgqcKwxOaBh7LbUh0KQOfJs0
+	DEBJe40GfOwFR5n90lNX2zfx1KbjYxwvL4vg0SmjWklkoAiZL/M375No+Jnq1Q==
+X-Envelope-To: stable@vger.kernel.org
+X-Envelope-To: hjc@rock-chips.com
+X-Envelope-To: heiko@sntech.de
+X-Envelope-To: andy.yan@rock-chips.com
+X-Envelope-To: maarten.lankhorst@linux.intel.com
+X-Envelope-To: mripard@kernel.org
+X-Envelope-To: tzimmermann@suse.de
+X-Envelope-To: airlied@gmail.com
+X-Envelope-To: daniel@ffwll.ch
+X-Envelope-To: dri-devel@lists.freedesktop.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-rockchip@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Val Packett <val@packett.cool>
+To: 
+Cc: Val Packett <val@packett.cool>,
+	stable@vger.kernel.org,
+	Sandy Huang <hjc@rock-chips.com>,
+	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] drm/rockchip: vop: clear DMA stop bit upon vblank on RK3066
+Date: Mon, 27 May 2024 04:16:33 -0300
+Message-ID: <20240527071736.21784-1-val@packett.cool>
+In-Reply-To: <2024051930-canteen-produce-1ba7@gregkh>
+References: <2024051930-canteen-produce-1ba7@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] mm/ksm: refactor out try_to_merge_with_zero_page()
-To: Chengming Zhou <chengming.zhou@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, aarcange@redhat.com,
- hughd@google.com, shr@devkernel.io
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- zhouchengming@bytedance.com
-References: <20240524-b4-ksm-scan-optimize-v1-0-053b31bd7ab4@linux.dev>
- <20240524-b4-ksm-scan-optimize-v1-1-053b31bd7ab4@linux.dev>
- <18259f7c-d57e-4504-91ec-90b7c87aad01@redhat.com>
- <36d4f3a6-c426-4455-b5be-2ab503d380ad@linux.dev>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-In-Reply-To: <36d4f3a6-c426-4455-b5be-2ab503d380ad@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Am 27.05.24 um 06:36 schrieb Chengming Zhou:
-> On 2024/5/24 23:12, David Hildenbrand wrote:
->> On 24.05.24 10:56, Chengming Zhou wrote:
->>> In preparation for later changes, refactor out a new function called
->>> try_to_merge_with_zero_page(), which tries to merge with zero page.
->>>
->>> Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
->>> ---
->>>    mm/ksm.c | 67 +++++++++++++++++++++++++++++++++++-----------------------------
->>>    1 file changed, 37 insertions(+), 30 deletions(-)
->>>
->>> diff --git a/mm/ksm.c b/mm/ksm.c
->>> index 4dc707d175fa..cbd4ba7ea974 100644
->>> --- a/mm/ksm.c
->>> +++ b/mm/ksm.c
->>> @@ -1531,6 +1531,41 @@ static int try_to_merge_one_page(struct vm_area_struct *vma,
->>>        return err;
->>>    }
->>>    +/* This function returns 0 if the pages were merged, -EFAULT otherwise. */
->>
->> No it doesn't. Check the "err = 0" case.
->>
-> 
-> Right, how about this: This function returns 0 if the page were merged or the vma
-> is out of date, which means we don't need to continue, -EFAULT otherwise.
+On the RK3066, there is a bit that must be cleared, otherwise
+the picture does not show up on the display (at least for RGB).
 
-Maybe slightly adjusted:
+Fixes: f4a6de8 ("drm: rockchip: vop: add rk3066 vop definitions")
+Cc: stable@vger.kernel.org
+Signed-off-by: Val Packett <val@packett.cool>
+---
+v2: doing this on vblank makes more sense; added fixes tag
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 6 ++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h | 1 +
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 1 +
+ 3 files changed, 8 insertions(+)
 
-This function returns 0 if the pages were merged or if they are no longer 
-merging candidates (e.g., VMA stale), -EFAULT otherwise.
-
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index a13473b2d..2731fe2b2 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -1766,6 +1766,12 @@ static void vop_handle_vblank(struct vop *vop)
+ 	}
+ 	spin_unlock(&drm->event_lock);
+ 
++	if (VOP_HAS_REG(vop, common, dma_stop)) {
++		spin_lock(&vop->reg_lock);
++		VOP_REG_SET(vop, common, dma_stop, 0);
++		spin_unlock(&vop->reg_lock);
++	}
++
+ 	if (test_and_clear_bit(VOP_PENDING_FB_UNREF, &vop->pending))
+ 		drm_flip_work_commit(&vop->fb_unref_work, system_unbound_wq);
+ }
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+index b33e5bdc2..0cf512cc1 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+@@ -122,6 +122,7 @@ struct vop_common {
+ 	struct vop_reg lut_buffer_index;
+ 	struct vop_reg gate_en;
+ 	struct vop_reg mmu_en;
++	struct vop_reg dma_stop;
+ 	struct vop_reg out_mode;
+ 	struct vop_reg standby;
+ };
+diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+index b9ee02061..9bcb40a64 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
++++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+@@ -466,6 +466,7 @@ static const struct vop_output rk3066_output = {
+ };
+ 
+ static const struct vop_common rk3066_common = {
++	.dma_stop = VOP_REG(RK3066_SYS_CTRL0, 0x1, 0),
+ 	.standby = VOP_REG(RK3066_SYS_CTRL0, 0x1, 1),
+ 	.out_mode = VOP_REG(RK3066_DSP_CTRL0, 0xf, 0),
+ 	.cfg_done = VOP_REG(RK3066_REG_CFG_DONE, 0x1, 0),
 -- 
-Thanks,
-
-David / dhildenb
+2.45.1
 
