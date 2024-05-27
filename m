@@ -1,89 +1,99 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952CF15FD19
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C96A15FD19;
+	Mon, 27 May 2024 14:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716821707; cv=none; b=cBe6A2Y6KAU1EufaF5l4seIyevEw/QnyEVAYZnTObwtkWWz3+3CsVCSuFgvCsSeYhvhKi21VUunb8aNSb0NbykamjHAluoUgaDvl9cEbbZy8Gz3zR4IoFb0QWAc/jRhg5TqgL40BZ/GpU3COu2lPQxfR2BUY/hI3eYTN+jq+K3A=
+	t=1716821736; cv=none; b=kMeLdXWmhkO8e/hMf/TYVM7EnAObRydUaq/zreA2vbsjgCTboGh6vetIMtqV1rsiSXGUPbnpt9GKujTV0esclmdAt1O3myVK/tvI8oUEKbDYYhOwZBr9TbvqqQdJ2Kq4CwtNVOcUsyl6cutqL8H2E4H7QkGr2n2JthY0G7OVkUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716821707; c=relaxed/simple;
-	bh=5TD6+fP9zGBVCkWnjvWQY4Ucu0QI2ucP5yTRATx+ATE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zn2Kedne2RoyqY5ULQI4jtTydlGmVODLbloKe4fDjy6qyOPo0bjpsD/r/TSgo38jDEZ0lbSCRc5ZDMKp/4jCAQAOGFLBkff2sp79AAdEJIkgfri6L9x8MfKNYobHm6Z4xBKjjmlZFgVNOVExyXXyIlkwuA/5FDGJ9yj8ht2v+oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FzN2KyoQ; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1716821736; c=relaxed/simple;
+	bh=WqdfSky25P014jToQJxbbx2jmpw/Y6gIbx3q5jkMXhQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=r0oXFDlfO+oXok30RXIXuKr38vstRx2h+cJ3MvyfN/I/egpHWqJyytM9bXPKuuRAWj/7QMsD0UX2uaN6wdpozc8oJ5c3YIwEtvsrXx7Vq7J/+3P/ECBO8oiV6jnIAheAxqy3UO6VM3knhRp11lqopBqelu3SYz6rYZYHs0YEknk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=OpSRQSnA; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FzN2KyoQ"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e968e77515so27487821fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:55:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716821704; x=1717426504; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5TD6+fP9zGBVCkWnjvWQY4Ucu0QI2ucP5yTRATx+ATE=;
-        b=FzN2KyoQRXGJ5PiqXT8HuzkptLZdyml+tDdNuAwiBFtsZJXifQR1IaF+h2pDadjYgj
-         HA98Q25DbUir1P8Em96kIycOto1xILQeTE3R1RgjwABHQ8RlI0qEU2q2XPTfky8u8blx
-         q1yoijWX42uapWS/sybfs7AzOSM6ve+HCAywljseJbFSOgNtNljerpatjDxYXkRPxz10
-         T6/WLRRpysk/DKjktBXzFaiDxidKp/hatQkXupKH63AmNBm9RsmomL0L4YF3/QoGQN/O
-         xPgTCo4YEhReoMb9EF5secNWEoNxOnVb2gs6G1tbi4l6YJxAreGuBfPavlKFk2K+QYOZ
-         72lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716821704; x=1717426504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5TD6+fP9zGBVCkWnjvWQY4Ucu0QI2ucP5yTRATx+ATE=;
-        b=nyykIMP9+TKXJzhPNQtBZTON8ktT5FEiU+asnlt6cFk76ozBVfypCLJS+yx5anurQd
-         OrufbbbpFVBWPsGS1Cn0puHtF7cFh88HVRBK6DDkUhNrMtHvXhekBMC7uVDxCakENwVx
-         BXhWF3LhrVuBL08r/VLB8K3tubSgnB3FIaiuYkzzMWiUxIC3LcFWEcbks5VMjPtZ3CRC
-         GZf36D/Hgncr+5jNMqunilbmBgX/Y29YqAfqVJzZNk/WesBq3VLHax0XXpcbRRfrXV71
-         37wCm69k9uHpHo7uoW1wfYLLTKpm5a25mktzaDShi5l263oI7VFFC8QQXqM9RaL8Xjjg
-         sdcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVEnWKh/2N2Y0IJiStTrTryrhqUE+qiVDGYYrZXrbarM7wB+GgtXyIm2HZnlK2qiTSx1t/9N2qngjnc7Jm6fZLFihEMMDlOMii9LFX3
-X-Gm-Message-State: AOJu0YytUc6YVBXqmyR3uczOlDof2MFgmFs5avt1DkE1CDd+3sX9ItpJ
-	VPWfFJBnyEZZwOpfvwCElE0hcy9Oe9DbnrdtZ0zAB4x9O7kKerzS7NQi8XfVGCq8wVGNSoQqTaK
-	2Y8ALk/ai5vr3XLc+vBLNjqVsIQ8lpQKUJa01sg==
-X-Google-Smtp-Source: AGHT+IEWEP0lfG2yK4OCOQAmDalN2VIZFxrErH+r4nSQ8/qZSUVrTMLkXMTAMXvfbr6eAaU2P2kpvtmtsnGulk2HYyo=
-X-Received: by 2002:a2e:a0cb:0:b0:2e9:4c17:9c8e with SMTP id
- 38308e7fff4ca-2e95b2d04a2mr63410011fa.44.1716821703725; Mon, 27 May 2024
- 07:55:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="OpSRQSnA"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3BD0547C39
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1716821734; bh=JUk9kiyoUx5RdgIxL9VYYk1ttK/biBJXbO+frYzpI0E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=OpSRQSnAig4IIYY8BNqix2k+Yb6FWJLwUUDh/7zJR3VliwFvSwhjOVu+Z00OWVUTi
+	 KVw4IkJcG5msbhLvlUo1sTFRWleDxOukx7T4tmzLHByyJOy6WBoMQSoE6Z4VSj5BNh
+	 wCoU4L9+TRxIe0jBtjA1q9CovmgzTdxCOQMzpRLTRj3LkpHIAEgFEA6yy5+Q2HGI0Q
+	 FM43LYmqlZedmh5NcbRxWKNjYk8UYXdxqSsRLcfqgT+CyufHyV+BJrCbjenZAOG8kO
+	 7LfrCr41ZPvqI+8bFU0s7/jDCVKQxYGIJHgACbRe+inNRNKS/hgtXKkEvGcJaSVSbY
+	 agwtFAZLmVOSA==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 3BD0547C39;
+	Mon, 27 May 2024 14:55:34 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Yunseong Kim <yskelg@gmail.com>
+Cc: skhan@linuxfoundation.org, Jinwoo Park <pmnxis@gmail.com>, Austin Kim
+ <austindh.kim@gmail.com>, shjy180909@gmail.com, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v3] Documentation: cve Korean translation
+In-Reply-To: <8880b0ec-9315-428e-b9c4-e578690d3c08@gmail.com>
+References: <20240527103003.29318-1-yskelg@gmail.com>
+ <87ikyzpgqz.fsf@meer.lwn.net>
+ <bf37bf39-32d3-457f-abd6-115215d631af@gmail.com>
+ <87o78rnz3a.fsf@meer.lwn.net>
+ <8880b0ec-9315-428e-b9c4-e578690d3c08@gmail.com>
+Date: Mon, 27 May 2024 08:55:33 -0600
+Message-ID: <877cffnw2i.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240514041223.800811-1-foxhoundsk.tw@gmail.com>
-In-Reply-To: <20240514041223.800811-1-foxhoundsk.tw@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 27 May 2024 16:54:52 +0200
-Message-ID: <CAMRc=MeuHpu4_QbgW-6Kc-TGzhcBim7Eb-TZhPax6G2SZHR5iw@mail.gmail.com>
-Subject: Re: [PATCH] docs: gpio: prefer pread(2) for interrupt reading
-To: Huichun Feng <foxhoundsk.tw@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 14, 2024 at 6:12=E2=80=AFAM Huichun Feng <foxhoundsk.tw@gmail.c=
-om> wrote:
->
-> In legacy sysfs GPIO, when using poll(2) on the sysfs GPIO value for
-> state change awaiting, a subsequent read(2) is required for consuming
-> the event, which the doc recommends the use of lseek(2) or
-> close-and-reopen to reset the file offset afterwards.
->
-> The recommendations however, require at least 2 syscalls to consume
-> the event. Gladly, use of pread(2) require only 1 syscall for the
-> consumption. Let's advertise this usage by prioritizing its placement.
->
-> Signed-off-by: Huichun Feng <foxhoundsk.tw@gmail.com>
-> ---
+Yunseong Kim <yskelg@gmail.com> writes:
 
-This doesn't apply on top of gpio/for-next, please rebase and resend.
+> On 5/27/24 10:50 =EC=98=A4=ED=9B=84, Jonathan Corbet wrote:
+>> Yunseong Kim <yskelg@gmail.com> writes:
+>>=20
+>>>> 1) Why do I have three versions of it in my mailbox, sent over a period
+>>>>    of 13 minutes?  What changed between the versions?
+>>>
+>>> Sorry, I forgot the name of the reviewer when I first sent the
+>>> documentation content related patch version 2.
+>>=20
+>> Which is fine, but...
+>>=20
+>>>>    Normally, you want to wait for reviews to come in on one version
+>>>>    before posting the next, and you should put a comment after the "--=
+-"
+>>>>    line saying what changed.
+>>>>
+>>>> 2) When did this review from Jinwoo Park happen?  I was not copied on
+>>>>    that.
+>>=20
+>> You did not answer this question.  Reviews should generally be done in
+>> public, but that does not seem to have happened here?
+>
+> Oops, sorry about that, Jonathan.
+>
+> Jinwoo Park sent me the review below, and I've updated some of ambiguous
+> words in patch version 2.
+>
+> https://lore.kernel.org/linux-doc/57f0d90c-4cc6-4418-ab79-6ae026d8ae09@gm=
+ail.com/T/#t
 
-Bart
+It does look like the patch was reviewed, but no Reviewed-by tag was
+offered.  *Never* apply a Reviewed-by tag that has not been explicitly
+given to you.
+
+Jinwoo, would you like to offer that tag for this patch?
+
+Thanks,
+
+jon
