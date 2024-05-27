@@ -1,107 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40AF16728E
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2AD15FA87;
+	Mon, 27 May 2024 15:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825527; cv=none; b=jIZn+h9mGAM7A1kwnbDqce5xqzLDGAqPp3y0oIc9j4HjUWxTC/lzV0k9DP1oEql8pJGlTCnV+M4vrNjuVM7r15353NPHZaxGXCS5leI+hYmmxr6o7wyz71d5LtqqkW9NhdHC/xEZBHSKTRqWWXh28YxzdlAeLcGi7J77pGVVDpc=
+	t=1716825540; cv=none; b=r9ggIPgVaL7To0b7trKoe0u+yspLyO8Zi9FXEvXNPZZhuJbr8IjtpQD/1n1wSQwicORUP1TmHjpEz5BiJ+/R42IOWftQHbfQIdMib7yMIT3gxpg+DpKtK/OAnPXl8tdK0TBXOcMYHXCLDMjqPRH7H5Qm5Or18d5NbmOXuljt0ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825527; c=relaxed/simple;
-	bh=4EUBGrUVhm/r5cBtJVBlRDWc/A8E3//UXsSF13PgPTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XDQ7om3mxK/BOaGUbqhuDx4eGkM/xzAGGwwsLagS5aSJE2WYdzu9kZOvnrl81abu42CoGZ4+NebNvxTalczyxmx9S+XNonVHzW+fcnrWQM8pV78E6HJimf/Eac67a8qL9BPZkwIrJjFnFlD/XPOCVCTrQjWqvT/CXYHgvhBvDUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fhvEpwpp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716825540; c=relaxed/simple;
+	bh=xipOaRVdVWSiUaRoSxffQqcebbtF8vt7roSqD9RJX+M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sR/jB/1d9bfaQtWee+cShgoMT97nyy+Piu+4qFionXlDwP2mH56uQFv03HuvAHS/cE92iLhOe6qp1s77CgW7vYMPiXfNpGwdJSwjuZKd8jebMtAL8Le1+zyD3HWb7NEq32EE7rvXsk0Dlw2H5m9tVVOCGPDb36pLepfWjMRtpzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+lHfd3g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fhvEpwpp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716825524;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cwxKfYS2pCvrGUMtybHaN+IODPR5mz8KIAEhCBULf0w=;
-	b=fhvEpwppXo7mBswY4LSR3vRtk6tA1isvUjnhGkwMT1SZyJvFUt743tZNT9YHOPSE2ZaJOI
-	0wlmDm8CEuwNs6rcdrWkt/OmYCCVCQYvYsWH4YHo58i8/Y04av7KVlu9WDjnnJAsSi08GN
-	oLCOKrcOL+tNfCwL5sqMCIsgUP5CFiU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-371-tH75msrNPIqR0b_GMtyP3A-1; Mon, 27 May 2024 11:58:41 -0400
-X-MC-Unique: tH75msrNPIqR0b_GMtyP3A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3A538800169;
-	Mon, 27 May 2024 15:58:40 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.41])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 2C4AD2026D68;
-	Mon, 27 May 2024 15:58:37 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 27 May 2024 17:57:12 +0200 (CEST)
-Date: Mon, 27 May 2024 17:57:09 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
-	Chris von Recklinghausen <crecklin@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: sched/isolation: tick_take_do_timer_from_boot() calls
- smp_call_function_single() with irqs disabled
-Message-ID: <20240527155709.GA5733@redhat.com>
-References: <20240522151742.GA10400@redhat.com>
- <20240523132358.GA1965@redhat.com>
- <87h6eneeu7.ffs@tglx>
- <ZlCwKk65-eL0FrKX@pavilion.home>
- <20240524183700.GA17065@redhat.com>
- <87v832dfw1.ffs@tglx>
- <20240526192758.GA21193@redhat.com>
- <ZlOhDiqomHlumd-u@pavilion.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+lHfd3g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FD0C4AF09;
+	Mon, 27 May 2024 15:58:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716825540;
+	bh=xipOaRVdVWSiUaRoSxffQqcebbtF8vt7roSqD9RJX+M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=i+lHfd3goMChVeZu1o8y162YS/MqZLCq4dtOxsghybpm4ej2bszlbbw9IOcO9v/lh
+	 ZCtaz598bj2JYNyKm71QgOl9o9mEV0lST9INHwe8AT2kgOuYhEE+QN53VGdSEwUcna
+	 aLMqb5BOgtvVLDGVhh73rMzsxrwkU6LbQyCDktN2eZQUhrufcHEVI+go+Xxv5FX80v
+	 hwctMhofDpy1Uu4QaCM9PxubkrX5SluxIPwUdkmEHEF2xv2qpr1CBrkeDI9WJcsaPY
+	 g9+/zCmee9lPxHgNYERV6YGNP2ro0bdg8D/Qvm0gJ26QzYSihihj6ITMc7kF2qB079
+	 cgh8eID/FihLA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Charlene Liu <charlene.liu@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	martin.leung@amd.com,
+	wayne.lin@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.10 1/7] drm/amd/display: Exit idle optimizations before HDCP execution
+Date: Mon, 27 May 2024 11:58:25 -0400
+Message-ID: <20240527155845.3866271-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.218
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZlOhDiqomHlumd-u@pavilion.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On 05/26, Frederic Weisbecker wrote:
->
-> Le Sun, May 26, 2024 at 09:27:58PM +0200, Oleg Nesterov a écrit :
-> > > So up to this point the tick is never stopped neither on housekeeping
-> > > nor on NOHZ FULL CPUs:
-> > >
-> > > tick_nohz_full_update_tick()
-> > >   if (!tick_sched_flag_test(ts, TS_FLAG_NOHZ))
-> > >     return;
-> >
-> > OK... But tick_nohz_idle_update_tick() doesn't check TS_FLAG_NOHZ and
-> > the tick_nohz_full_cpu() check can't help at boot time.
->
-> Yes but tick_nohz_idle_update_tick() is only called when the tick is already
-> stopped. And for the tick to be already stopped, TS_FLAG_NOHZ must have been
-> set.
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-Ah, TS_FLAG_NOHZ! Indeed, thanks.
+[ Upstream commit f30a3bea92bdab398531129d187629fb1d28f598 ]
 
-> > And I still don't understand why we can rely on can_stop_idle_tick() even
-> > in tick_nohz_idle_stop_tick().
->
-> Not sure I follow you on this one...
+[WHY]
+PSP can access DCN registers during command submission and we need
+to ensure that DCN is not in PG before doing so.
 
-can_stop_idle_tick() has no effect if ->timer_expires_base || tick_nohz_next_event()
-but I see another email from Nicholas.
+[HOW]
+Add a callback to DM to lock and notify DC for idle optimization exit.
+It can't be DC directly because of a potential race condition with the
+link protection thread and the rest of DM operation.
 
-Thanks!
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Charlene Liu <charlene.liu@amd.com>
+Acked-by: Alex Hung <alex.hung@amd.com>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/display/modules/hdcp/hdcp.c    | 10 ++++++++++
+ drivers/gpu/drm/amd/display/modules/inc/mod_hdcp.h |  8 ++++++++
+ 2 files changed, 18 insertions(+)
 
-Oleg.
+diff --git a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp.c b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp.c
+index fa8aeec304ef4..c39cb4b6767cf 100644
+--- a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp.c
++++ b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp.c
+@@ -86,6 +86,14 @@ static uint8_t is_cp_desired_hdcp2(struct mod_hdcp *hdcp)
+ 			!hdcp->connection.is_hdcp2_revoked;
+ }
+ 
++static void exit_idle_optimizations(struct mod_hdcp *hdcp)
++{
++	struct mod_hdcp_dm *dm = &hdcp->config.dm;
++
++	if (dm->funcs.exit_idle_optimizations)
++		dm->funcs.exit_idle_optimizations(dm->handle);
++}
++
+ static enum mod_hdcp_status execution(struct mod_hdcp *hdcp,
+ 		struct mod_hdcp_event_context *event_ctx,
+ 		union mod_hdcp_transition_input *input)
+@@ -448,6 +456,8 @@ enum mod_hdcp_status mod_hdcp_process_event(struct mod_hdcp *hdcp,
+ 	memset(&event_ctx, 0, sizeof(struct mod_hdcp_event_context));
+ 	event_ctx.event = event;
+ 
++	exit_idle_optimizations(hdcp);
++
+ 	/* execute and transition */
+ 	exec_status = execution(hdcp, &event_ctx, &hdcp->auth.trans_input);
+ 	trans_status = transition(
+diff --git a/drivers/gpu/drm/amd/display/modules/inc/mod_hdcp.h b/drivers/gpu/drm/amd/display/modules/inc/mod_hdcp.h
+index eed560eecbab4..fb195276fb704 100644
+--- a/drivers/gpu/drm/amd/display/modules/inc/mod_hdcp.h
++++ b/drivers/gpu/drm/amd/display/modules/inc/mod_hdcp.h
+@@ -143,6 +143,13 @@ struct mod_hdcp_ddc {
+ 	} funcs;
+ };
+ 
++struct mod_hdcp_dm {
++	void *handle;
++	struct {
++		void (*exit_idle_optimizations)(void *handle);
++	} funcs;
++};
++
+ struct mod_hdcp_psp {
+ 	void *handle;
+ 	void *funcs;
+@@ -252,6 +259,7 @@ struct mod_hdcp_display_query {
+ struct mod_hdcp_config {
+ 	struct mod_hdcp_psp psp;
+ 	struct mod_hdcp_ddc ddc;
++	struct mod_hdcp_dm dm;
+ 	uint8_t index;
+ };
+ 
+-- 
+2.43.0
 
