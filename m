@@ -1,114 +1,111 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0C2161914
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F94F170828
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819976; cv=none; b=QMlF+GCcmQFVf+08sFGTADir72E7cMm+nriWSuDXFXTq/L+yt4I3ughOpYaI/vYEdUHojFW7PZAWdM79KGLDbCvWGljHDbaDE6c80bh/7DC0mLgLwiNDrJxIDgoxq87HFV1NlElXofx46ZSWtSVgNeoZZqZMevAKepzoPnk1pjo=
+	t=1716819978; cv=none; b=M7T11HE4fPDaexRq5xSVvcihbqkkR3nvydEN6Qgb54RcUwji79YpI/Kcyh99CBRxhsRZff5VT4y5Tt8LwBH7L8FNnEp8/vWxCUDrgqYUUzELrOnIQT6Wh1xMKcGO40eUFWFxntG5Zs3b6ugYRyy9L+1ounAwScWxKUSS4MLCV2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819976; c=relaxed/simple;
-	bh=mIexTCXVeUPx/vSiQvIkN6fMNuyrTcPp/6jeHHlIuU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mSydpB1HySZAQ7yb0hC6lK4SmWrv4g/5Jw37TETFzvibXyQeWs8U7QcqQ69j2ckbMAc6qg0wzkhQMJFkAHpbedR73q/QIGQORpFBroeeRXZ7iSaWGnLyRrqfUeTk5Ug0mlaPC+L1UYbD54L5b1jxNjtrAmNNUz03K+eqn/RupbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nrTFd1KC; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1716819978; c=relaxed/simple;
+	bh=Th6flGQrgEICY4BFAb32zGR1x8yV5aU/F10SCLnIldA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tusNdArninmPx2fSOllGuXq5r4eODnFWSpgpWKaGCczo59DNwOjaPexM0HgHNIFEuY5G4dKX5VNPQYcySoi5cU17KY0Ae0Sxi6sYsj5wcfROgvPMu3gaOdFGxyiDypP/djWrgCjM+82gSb73LfGJr7ZFgBpe+7bIMs1357Ln4S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WdcOzz9I; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nrTFd1KC"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57822392a0dso8499128a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:26:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WdcOzz9I"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5295f012748so3685927e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716819971; x=1717424771; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=v7c0ZrJPynvxMLH92Q3X2WTOon5tSRNZ2c7KU9q10EA=;
-        b=nrTFd1KCvlLfA//4I+gCqd8ZcWdfnLCJ3ucTz510/Os2KxkVEy/PwsXga90ubfXQiS
-         belfAJa7pFpPIqeygLzvUlwUdW2WNMOQ8lfAfJmPXVjRIA86bfTA0ilOc7YnsFuGgDWN
-         LRAATof3mgk1AQ5AQuHKGxCpFx9t8LDjCMeBja5hVF1GZR6stDUd62+RZfK8K9MNcQJB
-         VuiXxiZbZkawFldGGq667R7AdA6X7gsuhZCaIptDCeUJ8v5w4LLNuJ3Tjng1IqZ+MD5l
-         GTCDzY4+w5YJzZ6eIhqM1CtveMyzWcA5AQxGHLWQWASQWZrWfIv14ZhuNm91OSu2KKvv
-         7nhA==
+        d=linaro.org; s=google; t=1716819974; x=1717424774; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KjTbB47lhtg0PaxHpHSV+ev3VLrPkOO85FcCwtdMOr8=;
+        b=WdcOzz9IhLaz5Mo4VEzpUGRMS+C608dF3VrdPzlgkAdqW8RVlCvrUStcF64LIfPXrR
+         sKsUTuvBIOESdJXZL4hDd0y4Vbd+oHoAAblxVZtfcZcOW3zWESz273lNsXLdAbXDC2Gl
+         TKcOVzagaRTMrvH/jtUtP3q71ez/8Luu3MNw+JCi0fUzimzFzRlZ5mwvo6BwdmeCvwhA
+         ygRDwTIoUxuJ73AnIZ9FxF//cI46hK34HEU9ylNmPCn/g+DcIkGTYG4u9aD0c9+PEQaE
+         RXc7Y/gVyd0aSlt2ABkI6LfD2r99xSD5dfsx2zQO9X9BalusczlIzuAwkKHMRxs8qhuc
+         qURg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716819971; x=1717424771;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v7c0ZrJPynvxMLH92Q3X2WTOon5tSRNZ2c7KU9q10EA=;
-        b=IfqBBgNOJg8NDFhj5A8T2scjt0BSX6sBdkJLDLgpEMVOHDr6gpIBUqH7a9TY3DtnyQ
-         VBOpTqoMKBCYaTaKRG7yO/OnPIbAdfUd2JNhXizKlTvDivGoTjbsBzi4pJ36mjeJbX2m
-         uuH9F1ODNIuD9teosdqFf+4rQXHFODk4CIIldwtF1gSSdQWKLtyS7Jwmc9kWLqMxjHb+
-         qNLph5OHI7osXRDlfWX41v1Nvq5Mp5r7Q32DF4LYRWaTMLMSPFeiWprkIhfLEZvECW/V
-         exYeO+7DQGetzHAHip8pGKYaC1w2H1h5M51xIlhXK0nZPll+N81GXTnbwxQezaIeHcmo
-         hTow==
-X-Forwarded-Encrypted: i=1; AJvYcCXUbfP0MBm85YpeeTdhBoKYEa0FDAvuvRp1VHkyhGrrB4GnS/J5OgZLoZzkFWSsPawJRAB5YnygxHVAHi3jJRPHrAtmq1UZupg4moi9
-X-Gm-Message-State: AOJu0YwedEVHsHW8BblE6nUleQBt4TC7z/sJTjdSiTAO0RYbvl9QHL5s
-	31F4C5QoOPeyiS9XcPWq7J8ZH6AVzJdgPt4Bjhhh8OiSjbTwvZAtYPKVNGaLocM=
-X-Google-Smtp-Source: AGHT+IGDy6lBIZRlSXWUHrbdvlDpDLY1u7lkMBWjrjOr4cWf2ElMKM1ipIguJpApXRrP72OijJSLjA==
-X-Received: by 2002:a17:906:3614:b0:a62:8116:cb59 with SMTP id a640c23a62f3a-a628116cbf3mr535401266b.30.1716819970946;
-        Mon, 27 May 2024 07:26:10 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6283119b12sm420845566b.192.2024.05.27.07.26.10
+        d=1e100.net; s=20230601; t=1716819974; x=1717424774;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KjTbB47lhtg0PaxHpHSV+ev3VLrPkOO85FcCwtdMOr8=;
+        b=GS4xi+RZWE18p0YJk8O9ue+fCV1XQnhRFHsUewRhCtodPGKjqswS8nedhIW7uZnh3t
+         nhAJfE1Idlfxcum82wsBZw+9Fp/imBCRQySZ9y+3mSGfcdgDdnRgN0sEBndgfyY+n7sk
+         2r6JcTNkLEMKuUpho2nQoiG1maEG3zgUF4mWg7seMh243VqqF/bHtbmJxLMsrTyp3OhT
+         2eciyztVMIwv/S93zBwcSlWGdaRc27lI6PF486C4iy6msq2SrjIxq1zuIodR96rQK+2W
+         JNQvEHKAt/8T/p5+dKQJ2IyrEm3R7p75rS8D+gVqapRMDB8XugLiL6q099gfb46Jj7Kk
+         N1LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVk0d9cZaotr73GyZXeO4K4QIBo8VdhPNva1p3yyzNSXOBSYMnstdYQmVtnDtKCQ5CpDRMIpApgGig/SAivpaBj5YIOmIbKltBX8DRy
+X-Gm-Message-State: AOJu0YzeMfQOjgK+eBVbp0t3LZ8ouyoeiWVXPC1VdRk3myXjFXplhHw9
+	eCzWger57fH+H8k4242ZGlLjbQod8utwlc5ElBFmvGV8L/rZwq8f8R7CX0b7db0=
+X-Google-Smtp-Source: AGHT+IHROwLUTMrWjmP0xh3ZK9H8kROHkOyC9/3gwwdjBZr0Ond0GgOAOqXLU1YQx0oMT2Wjx7S+wA==
+X-Received: by 2002:a19:5f07:0:b0:51f:3cb3:48a4 with SMTP id 2adb3069b0e04-529646e3b70mr5388521e87.1.1716819974755;
+        Mon, 27 May 2024 07:26:14 -0700 (PDT)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529711fa7f3sm562002e87.258.2024.05.27.07.26.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 07:26:10 -0700 (PDT)
-Date: Mon, 27 May 2024 17:26:06 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Baryshkov <dbaryshkov@gmail.com>, linux-gpio@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpio: amd8111: Convert PCIBIOS_* return codes to
- errnos
-Message-ID: <50e1c6a7-f583-4b5b-997b-2e505b3df0ec@moroto.mountain>
-References: <20240527132345.13956-1-ilpo.jarvinen@linux.intel.com>
- <09f2f3ac-94a7-43d3-8c43-0d264a1d9c65@moroto.mountain>
- <7d475c6c-8bbf-86f4-b2d8-8bc11cb9043e@linux.intel.com>
+        Mon, 27 May 2024 07:26:14 -0700 (PDT)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-pm@vger.kernel.org
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+	Nikunj Kela <nkela@quicinc.com>,
+	Prasad Sodagudi <psodagud@quicinc.com>,
+	Maulik Shah <quic_mkshah@quicinc.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-rt-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/7] cpuidle: psci: Drop redundant assignment of CPUIDLE_FLAG_RCU_IDLE
+Date: Mon, 27 May 2024 16:25:55 +0200
+Message-Id: <20240527142557.321610-6-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240527142557.321610-1-ulf.hansson@linaro.org>
+References: <20240527142557.321610-1-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d475c6c-8bbf-86f4-b2d8-8bc11cb9043e@linux.intel.com>
 
-On Mon, May 27, 2024 at 05:11:32PM +0300, Ilpo Järvinen wrote:
-> On Mon, 27 May 2024, Dan Carpenter wrote:
-> 
-> > On Mon, May 27, 2024 at 04:23:44PM +0300, Ilpo Järvinen wrote:
-> > > diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
-> > > index 6f3ded619c8b..3377667a28de 100644
-> > > --- a/drivers/gpio/gpio-amd8111.c
-> > > +++ b/drivers/gpio/gpio-amd8111.c
-> > > @@ -195,8 +195,10 @@ static int __init amd_gpio_init(void)
-> > >  
-> > >  found:
-> > >  	err = pci_read_config_dword(pdev, 0x58, &gp.pmbase);
-> > > -	if (err)
-> > > +	if (err) {
-> > > +		err = pcibios_err_to_errno(err);
-> > 
-> > The patch is correct, but is the CC to stable necessary?  Is this a real
-> > concern?
-> > 
-> > Most callers don't check.  Linus Torvalds, once said something to the
-> > effect that if your PCI bus starts failing, there isn't anything the
-> > operating system can do, so checking is pointless.  The only fix is to
-> > buy new hardware.  There was a hotpluggable PCI back in the day but I
-> > don't think it exists any more.
-> 
-> I don't mind if the CC stable isn't there.
+When using the hierarchical topology and PSCI OSI-mode we may end up
+overriding the deepest idle-state's ->enter|enter_s2idle() callbacks, but
+there is no point to also re-assign the CPUIDLE_FLAG_RCU_IDLE for the
+idle-state in question, as that has already been set when parsing the
+states from DT. See init_state_node().
 
-I don't mind either way.  I was hoping you were going to say it was for
-some new hotswap hardware Intel was working on.
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+Changes in v2:
+	- None.
+---
+ drivers/cpuidle/cpuidle-psci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Smatch deletes all the failure paths from the pci_read_ functions
-because otherwise you end up with a lot of warnings that no one cares
-about.  Uninitialized variables mostly?
+diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+index 782030a27703..d82a8bc1b194 100644
+--- a/drivers/cpuidle/cpuidle-psci.c
++++ b/drivers/cpuidle/cpuidle-psci.c
+@@ -234,7 +234,6 @@ static int psci_dt_cpu_init_topology(struct cpuidle_driver *drv,
+ 	 * of a shared state for the domain, assumes the domain states are all
+ 	 * deeper states.
+ 	 */
+-	drv->states[state_count - 1].flags |= CPUIDLE_FLAG_RCU_IDLE;
+ 	drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
+ 	drv->states[state_count - 1].enter_s2idle = psci_enter_s2idle_domain_idle_state;
+ 	psci_cpuidle_use_cpuhp = true;
+-- 
+2.34.1
 
-regards,
-dan carpenter
