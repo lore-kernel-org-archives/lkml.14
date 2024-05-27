@@ -1,53 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B9025774
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0BB1C686;
+	Mon, 27 May 2024 06:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716791904; cv=none; b=iBqmBPNYOq6NWmvLNOMtYIRWUZNaESM55WO9TDp8vNjRTnOpLSKvblpGjn4QaMyEFP1lCPt+alv7Uu9MY2c6uJ+pffLiRhi34VDupkn+UXdrTQf5XWZe01//wADEgQEblAxAk7d57gMa6PaVLq6IME/R6ld9NYgMJMih1GvRdSA=
+	t=1716791905; cv=none; b=cAfby1CcgxzP3nD4E/B9yqrNSMuQjSPgfxQFhkPYM7hyEIK+vUzaUmOe2sm5lOivfKgfjtsHlr+gWPbhoktctuG2CKLu540dNLbBoh8Nb9DDdXuBhy0MJq24qKf0ORI90kz9t8znh4Btw82VH7G9h6HgTnkeN7um9i1iVPHFu2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716791904; c=relaxed/simple;
-	bh=zB+R6jhg2BE6ADHCpzR6mMsmJtTlMFnZXzIpx7pfX40=;
+	s=arc-20240116; t=1716791905; c=relaxed/simple;
+	bh=AiH8EnN6GRzi8B2qcObkU/HEqg04wntd+nSfmS7tVhM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JBDcrFB6cEyUgbkBTfnuqGFj7fb0WDJSZM9TQ0OuVslKCntGtPNdoPXpsyDdXOno9i4cJX7SYPvbSm7mEGmfkIn1kFYe7diARQK2PVrpn0ZU8+Go0RPZDTFlP5KquM+u1rDDitXpGOXwZbuVMuuAvYEJxwbKVj8BntmqMsvr5yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IFXFLCuO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n55C7AG/; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=lf2IHOinTeNJW7o3QSgHm1xLWAoSZhia96Nl4NQTui93IwRvAVvtFA59e4SHOkf2Uy9syHwB2n2DE2HJRnLj8Vd1LyPKxx6Al/ihTgVQrBzdtSrg5t5QVNobdsIXDZRTRWhNUH7j+AXZ6STEcOzE4o4OLujqm8zkhBq62FON3i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MWfm1v/S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mtJG7MYi; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IFXFLCuO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n55C7AG/"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MWfm1v/S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mtJG7MYi"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716791901;
+	s=2020; t=1716791899;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GoAnFoEDBtUewczef8goHn9wNNbG58iWoQEY2ToK04k=;
-	b=IFXFLCuO9PvXtfNHNA0n3oP+uHMJIFeVM1fpRWQElecn6BnzcoIBUxI9aHeJilUXnIQ2M8
-	EusljbidYDwiyd31vZMel0W3MugopB0WMHB19UCTH9ETEVMi4mg60jKagmOv47avuida7e
-	bjAp8V8UHJuO8DhnA7KeLkobS/FcvFyQ/vU2D91Exrp2m1vs+lcSrflGY2GEornKInOvlp
-	AyQepP3dsUmjzTn6p0pjnSStsiBUwdgD7nn5KTXNAaFyw3LapXi/WvsGFKQE5jxIMZ0FHy
-	xuugRHlA3jkDMojqWK7XrfaBr+Hx04qjompiVilcU1ppnmALosqMALJAYzJHAw==
+	bh=TkEmSH+TeCzW4mgc3Qx6oM4UTLT7owCiQ5MwVZZnUf0=;
+	b=MWfm1v/SDq5UBs2uYn8xLpTUBfAUg6ebL8WM55kFJWkV7h2WuzJwfQ6sgmqQnn8fSy1SPK
+	Rm7aGRiSkufQn6TiKr9IzTkSdChmnAFZECXuFb9Dnda+stuzrxGw7JI8pJ84zHxDe6jH5C
+	fM1UShVvGDBI23d3RFshfkf1e936Rx7Lkr9L0C7YdhIcZVZZtOEXo30FYEWgpmBEkd5t0V
+	EVSrWhW9rExqdc5qVmVgY0uEEZskuGTukTSO29YUpeMq3DEU21ItQS8BUROysuEKJ6uqev
+	ddCH6o5QW0AaOPvxoF1xsZPg3uJ/sUKqacDDo8UCnEy6VfqPZ01zlMpOS0fgjQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716791901;
+	s=2020e; t=1716791899;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GoAnFoEDBtUewczef8goHn9wNNbG58iWoQEY2ToK04k=;
-	b=n55C7AG/uJkfQLYGvY709d/WmgZSFNur/U83H1HlprzxNNrOxzO4/Td6va71SCXYVD8GUA
-	ghlwFbKFxaL/emBQ==
+	bh=TkEmSH+TeCzW4mgc3Qx6oM4UTLT7owCiQ5MwVZZnUf0=;
+	b=mtJG7MYiy42HnHVpBuzvx+qMo0svogSYJ75Tg/hZgZsaUKanxZKF0fBDT0V/WWRBhJ6b8M
+	GjR5PN9ws9T84yCg==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH printk v6 11/30] nbcon: Add API to acquire context for non-printing operations
-Date: Mon, 27 May 2024 08:43:30 +0206
-Message-Id: <20240527063749.391035-12-john.ogness@linutronix.de>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org
+Subject: [PATCH printk v6 08/30] serial: core: Provide low-level functions to lock port
+Date: Mon, 27 May 2024 08:43:27 +0206
+Message-Id: <20240527063749.391035-9-john.ogness@linutronix.de>
 In-Reply-To: <20240527063749.391035-1-john.ogness@linutronix.de>
 References: <20240527063749.391035-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -58,181 +60,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Provide functions nbcon_device_try_acquire() and
-nbcon_device_release() which will try to acquire the nbcon
-console ownership with NBCON_PRIO_NORMAL and mark it unsafe for
-handover/takeover.
+It will be necessary at times for the uart nbcon console
+drivers to acquire the port lock directly (without the
+additional nbcon functionality of the port lock wrappers).
+These are special cases such as the implementation of the
+device_lock()/device_unlock() callbacks or for internal
+port lock wrapper synchronization.
 
-These functions are to be used together with the device-specific
-locking when performing non-printing activities on the console
-device. They will allow synchronization against the
-atomic_write() callback which will be serialized, for higher
-priority contexts, only by acquiring the console context
-ownership.
-
-Pitfalls:
-
-The API requires to be called in a context with migration
-disabled because it uses per-CPU variables internally.
-
-The context is set unsafe for a takeover all the time. It
-guarantees full serialization against any atomic_write() caller
-except for the final flush in panic() which might try an unsafe
-takeover.
+Provide low-level variants __uart_port_lock_irqsave() and
+__uart_port_unlock_irqrestore() for this purpose.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/console.h |  2 ++
- include/linux/printk.h  | 14 +++++++++++
- kernel/printk/nbcon.c   | 56 ++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 71 insertions(+), 1 deletion(-)
+ include/linux/serial_core.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/include/linux/console.h b/include/linux/console.h
-index aea4f5aa4a45..dd3d4b5d3737 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -304,6 +304,7 @@ struct nbcon_write_context {
-  *
-  * @nbcon_state:	State for nbcon consoles
-  * @nbcon_seq:		Sequence number of the next record for nbcon to print
-+ * @nbcon_device_ctxt:	Context available for non-printing operations
-  * @pbufs:		Pointer to nbcon private buffer
-  */
- struct console {
-@@ -399,6 +400,7 @@ struct console {
- 
- 	atomic_t		__private nbcon_state;
- 	atomic_long_t		__private nbcon_seq;
-+	struct nbcon_context	__private nbcon_device_ctxt;
- 	struct printk_buffers	*pbufs;
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 55b1f3ba48ac..bb3324d49453 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -588,6 +588,24 @@ struct uart_port {
+ 	void			*private_data;		/* generic platform data pointer */
  };
  
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 6e1f055afef6..31f72df29da5 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -9,6 +9,8 @@
- #include <linux/ratelimit_types.h>
- #include <linux/once_lite.h>
- 
-+struct console;
-+
- extern const char linux_banner[];
- extern const char linux_proc_banner[];
- 
-@@ -193,6 +195,8 @@ void show_regs_print_info(const char *log_lvl);
- extern asmlinkage void dump_stack_lvl(const char *log_lvl) __cold;
- extern asmlinkage void dump_stack(void) __cold;
- void printk_trigger_flush(void);
-+extern bool nbcon_device_try_acquire(struct console *con);
-+extern void nbcon_device_release(struct console *con);
- #else
- static inline __printf(1, 0)
- int vprintk(const char *s, va_list args)
-@@ -272,6 +276,16 @@ static inline void dump_stack(void)
- static inline void printk_trigger_flush(void)
- {
- }
-+
-+static inline bool nbcon_device_try_acquire(struct console *con)
-+{
-+	return false;
-+}
-+
-+static inline void nbcon_device_release(struct console *con)
-+{
-+}
-+
- #endif
- 
- bool this_cpu_in_panic(void);
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index dd7c3180b335..1c03508b90f2 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -5,7 +5,9 @@
- #include <linux/kernel.h>
- #include <linux/console.h>
- #include <linux/delay.h>
-+#include <linux/export.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
- #include "internal.h"
- /*
-  * Printk console printing implementation for consoles which does not depend
-@@ -528,6 +530,7 @@ static struct printk_buffers panic_nbcon_pbufs;
-  * nbcon_context_try_acquire - Try to acquire nbcon console
-  * @ctxt:	The context of the caller
-  *
-+ * Context:	Under @ctxt->con->device_lock() or local_irq_save().
-  * Return:	True if the console was acquired. False otherwise.
-  *
-  * If the caller allowed an unsafe hostile takeover, on success the
-@@ -535,7 +538,6 @@ static struct printk_buffers panic_nbcon_pbufs;
-  * in an unsafe state. Otherwise, on success the caller may assume
-  * the console is not in an unsafe state.
-  */
--__maybe_unused
- static bool nbcon_context_try_acquire(struct nbcon_context *ctxt)
- {
- 	unsigned int cpu = smp_processor_id();
-@@ -989,3 +991,55 @@ void nbcon_free(struct console *con)
- 
- 	con->pbufs = NULL;
- }
-+
-+/**
-+ * nbcon_device_try_acquire - Try to acquire nbcon console and enter unsafe
-+ *				section
-+ * @con:	The nbcon console to acquire
-+ *
-+ * Context:	Under the locking mechanism implemented in
-+ *		@con->device_lock() including disabling migration.
-+ * Return:	True if the console was acquired. False otherwise.
-+ *
-+ * Console drivers will usually use their own internal synchronization
-+ * mechasism to synchronize between console printing and non-printing
-+ * activities (such as setting baud rates). However, nbcon console drivers
-+ * supporting atomic consoles may also want to mark unsafe sections when
-+ * performing non-printing activities in order to synchronize against their
-+ * atomic_write() callback.
-+ *
-+ * This function acquires the nbcon console using priority NBCON_PRIO_NORMAL
-+ * and marks it unsafe for handover/takeover.
++/*
++ * Only for console->device_lock()/_unlock() callbacks and internal
++ * port lock wrapper synchronization.
 + */
-+bool nbcon_device_try_acquire(struct console *con)
++static inline void __uart_port_lock_irqsave(struct uart_port *up, unsigned long *flags)
 +{
-+	struct nbcon_context *ctxt = &ACCESS_PRIVATE(con, nbcon_device_ctxt);
-+
-+	cant_migrate();
-+
-+	memset(ctxt, 0, sizeof(*ctxt));
-+	ctxt->console	= con;
-+	ctxt->prio	= NBCON_PRIO_NORMAL;
-+
-+	if (!nbcon_context_try_acquire(ctxt))
-+		return false;
-+
-+	if (!nbcon_context_enter_unsafe(ctxt))
-+		return false;
-+
-+	return true;
++	spin_lock_irqsave(&up->lock, *flags);
 +}
-+EXPORT_SYMBOL_GPL(nbcon_device_try_acquire);
 +
-+/**
-+ * nbcon_device_release - Exit unsafe section and release the nbcon console
-+ * @con:	The nbcon console acquired in nbcon_device_try_acquire()
++/*
++ * Only for console->device_lock()/_unlock() callbacks and internal
++ * port lock wrapper synchronization.
 + */
-+void nbcon_device_release(struct console *con)
++static inline void __uart_port_unlock_irqrestore(struct uart_port *up, unsigned long flags)
 +{
-+	struct nbcon_context *ctxt = &ACCESS_PRIVATE(con, nbcon_device_ctxt);
-+
-+	if (nbcon_context_exit_unsafe(ctxt))
-+		nbcon_context_release(ctxt);
++	spin_unlock_irqrestore(&up->lock, flags);
 +}
-+EXPORT_SYMBOL_GPL(nbcon_device_release);
++
+ /**
+  * uart_port_lock - Lock the UART port
+  * @up:		Pointer to UART port structure
 -- 
 2.39.2
 
