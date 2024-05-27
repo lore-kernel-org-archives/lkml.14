@@ -1,135 +1,153 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6B013A890;
-	Mon, 27 May 2024 09:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63CB13A868;
+	Mon, 27 May 2024 09:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716803168; cv=none; b=nV/X20sSno2zzEgEQGqIfyK6AoTcTUzOsehr8USdcVwckwtiurLxJ+BMeG/lvlejZRKlVUwwxUtIJIh2+jz8yxQ4YlCgIhI/qDsjtUKCfRpB+kb5qOtXH6lf6bxN4GMZRolVUgL9hwEQfvc7GPWphnujNIOuAObTlPDqhy/LDRg=
+	t=1716803193; cv=none; b=Gqnb+bRg4HB+/0VgHgbVF6RkB58Pu/Xx6nT1DFWYcN4thS7NumNpB4AAzJIVsxIF6Yr2xEjjDAjLSh/VLn0eqP1vTWoP9PUCH9Ai19zuse2Xim0ccNm8N4NtKGoXNTrq9qiTcVtBPrj6Mq49r4yI4KMafIFzuS4Y5LtpuWjKUek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716803168; c=relaxed/simple;
-	bh=Qg/8XDQ2y4nz1E3KZ78FVxwmzL8QMPbzuLqJUGrZKek=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nyP8yO5Ts3799PM7CINhjlXx9IyMGNiT9VJRMlUBt92HsRZiLARi/sdNtCHRbjPPzsAVF/F1WDFQOWAyp5t1LjNjZHZP3s06T+SI1iUU1uJ+iOPVChdUOteRkMb+MenyvwFB/fKPUIXsUJ39Y4J7p8ppxJ5AqhM1XZNvIY1G30M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=GZjfPuYJ; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716803193; c=relaxed/simple;
+	bh=0J7Goas7XfaqrjeDmO5xbFVdnXoNnA0rtt90fCBrbeE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NQ8Boc2qv/2dW/3P8P05JAFa6I8GUoTRTCdgWdBjugFG4Xe6UVcjtkFv/ivhrhiEzKdRkx/gYWhHQxv8A48LHSC1XzJ2z4DmYMzZNdQ/1HLgLhnN4693M4j3yNogbqp470IrLtIY70m8rUaP/y+twf5Tp/08ouZG/XW3xC9cKYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HeujMHhK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DdcUi/st; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HeujMHhK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DdcUi/st; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="GZjfPuYJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716803136; x=1717407936; i=markus.elfring@web.de;
-	bh=b0hWRCQXVgCjXUi18BLPuJgUdQMZo6dOE/TxIyOa5qE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=GZjfPuYJWaALaaTQHYbcyIs00O6+Ji7r6Sx+7MHU7QwP/199r8reePOjg2nXJ9sV
-	 qsAHcxbKcEZuPo6NJRnjRQZUaSL11hHJ3zWh08BHZYV6qMzhY8dtvvzOozzo5oDjv
-	 5iiX9ZApyBvvehaD2femcX33EsUUMtcIMj7/9zS4xT7ZcNtgFSUrsKyuJfmEGxypZ
-	 NziUfLAh/+YKOeX+Cfm+JRDQU5O8ElpCBUawx1f2/EXFRhmhU+RX5hYE87/iW9D7r
-	 +JZSA8Tj3ycm+jdpOzDIUDz15wQE8a3U0g4aNs3bCc7WAOHClAxHijT2V3YEE2D49
-	 HnJ0HjpDBdKonqu92Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MODmV-1rrvjK41IP-00U476; Mon, 27
- May 2024 11:45:36 +0200
-Message-ID: <568162b8-563e-4ec7-8f31-bd16f329b245@web.de>
-Date: Mon, 27 May 2024 11:45:34 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HeujMHhK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DdcUi/st";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HeujMHhK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DdcUi/st"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C498621DB1;
+	Mon, 27 May 2024 09:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716803189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KEUi4RnVMGp2yzXFYg94XEmXhdXc3uYod367qTqvHLo=;
+	b=HeujMHhKEh9k7Wq0LmbWESKvLSF0TDTZ5zNjby8npHd/FTS5/G8/SITXFFZm+NxFtKFBbY
+	CEGxz1TTMquajfB3TzkRBIjL0hn9l625MeziS7nm5XY6m+Rtf2g0X5wz7CsJegPeHhrKjA
+	R3hpLjtvCQksAlaadSCZIKUCIrZpqlk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716803189;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KEUi4RnVMGp2yzXFYg94XEmXhdXc3uYod367qTqvHLo=;
+	b=DdcUi/stZ6t5oll9CD1/ztqfZB4JkNGXBp9c9bZ0jUrXjp8G4Q281stfFE5E3vwAqeNs6T
+	XLw5HGCwodaepECQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=HeujMHhK;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="DdcUi/st"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716803189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KEUi4RnVMGp2yzXFYg94XEmXhdXc3uYod367qTqvHLo=;
+	b=HeujMHhKEh9k7Wq0LmbWESKvLSF0TDTZ5zNjby8npHd/FTS5/G8/SITXFFZm+NxFtKFBbY
+	CEGxz1TTMquajfB3TzkRBIjL0hn9l625MeziS7nm5XY6m+Rtf2g0X5wz7CsJegPeHhrKjA
+	R3hpLjtvCQksAlaadSCZIKUCIrZpqlk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716803189;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KEUi4RnVMGp2yzXFYg94XEmXhdXc3uYod367qTqvHLo=;
+	b=DdcUi/stZ6t5oll9CD1/ztqfZB4JkNGXBp9c9bZ0jUrXjp8G4Q281stfFE5E3vwAqeNs6T
+	XLw5HGCwodaepECQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4717E13A6B;
+	Mon, 27 May 2024 09:46:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jC6MDXVWVGa7NQAAD6G6ig
+	(envelope-from <clopez@suse.de>); Mon, 27 May 2024 09:46:29 +0000
+From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
+To: linux-trace-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	linux-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH v2] tracing/probes: fix error check in parse_btf_field()
+Date: Mon, 27 May 2024 11:43:52 +0200
+Message-Id: <20240527094351.15687-1-clopez@suse.de>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] drm/loongson: Add dummy gpu driver as a
- subcomponent
-To: Sui Jingfeng <sui.jingfeng@linux.dev>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20240526195826.109008-1-sui.jingfeng@linux.dev>
- <20240526195826.109008-4-sui.jingfeng@linux.dev>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240526195826.109008-4-sui.jingfeng@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QBWQBXE9g1+Sf2ppixiXzVQP3Rkay7qyHC4DgAIEj4DyWUs46yv
- wOIsyoWViQeITi8HOTwcOdse/1pCAu1/TbBlr7O+Ytl95ibvCbyJuYZ6VucOGA8qMmcqJeM
- GhsHUC3ej/dQQJu+/zwqtRlOT5OlSmlrbdR5hHbnoHO8p1Mnh2mM1FHgp1LjN3pqPtt7Dxg
- zrq1vYLhsdm2eAEC+2J2Q==
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.58 / 50.00];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	BAYES_HAM(-1.07)[87.92%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: C498621DB1
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:NYLnz5L0av4=;5CfIPCZ4HKcxCI2iE3OBU+9r8Bt
- w5qKMdMZfB67NYxwP5F1YmER+TqhJqLpK6o3i50no16Ges0MRsRcxMC3HUhKeMiqgrnmZSHkk
- fHzHpaEk6Cr0yXYSuRgdicvOer7cIAJW91+8rgiQPqX0Ary0ci/LAHwxIllS5Z3NO/s2CufuP
- 0iv4MwA2Uw4uFRU7az5H/dvVzI6MHe11dQ82PCD8ltsJuZ1wDAwdDapX4oALNzDrEuMrBWkvd
- uHi8d7AYgEwcmssD07f9MiiHUFwgcTb0iZ+ZI2eglFxqGR3UGAtUn3SBRy81Sy7+XYrPlZY6r
- w+n5GD+ZgiAS1f85rq/ABDBRdn2sIzIKebfQIEzmr6SHqX3n0HcD5izWZxne4MXNxDw8KqMIt
- 0OS7gfL4nirEwf2ElcWKV5uPDgbpkHa530WofBRh+CSbcVqMTYAR+ljji8eWJ1atLmuz/fwza
- FWZtQUw3uikcg/Xd+05b5B+wO+9RKDg7/nz4umi1z1CL3MVm+bLZwGyy1rabDzGx6UwWWWp0A
- Euau3irXtpGFPwACV/ApUq/uqdljH+YyaBmmzRnNIfCOxHQe5RnQeqaUpyY/Qff31A/KWR1Ft
- LD1R2h7W4ApeREWynbYTfQGdck9Yo/aEUOskFLPLRO9dDliETE+4X3yMrrh0IYDGnHGVuQ4FI
- UJ97DTe2CbktgSf1nLFfh7jjhTDbx7chHyZrY1AtFN3r5VRf5DkuQCJifHnFW9Bc8sIqrYwTd
- Bd44se47iXPe/+dANwGYsL+/lb0C90+TpNG616vpjOD97T3DZMa0RUF9d78aJfahQeo0xWwnk
- 71koy2ilJNryfj+61v34WbPNAM5lMEwA8Ozl77HYetsO8=
+X-Spam-Score: -3.58
 
-=E2=80=A6
-> loose coupling, but still be able to works togather to provide a unified
+btf_find_struct_member() might return NULL or an error via the
+ERR_PTR() macro. However, its caller in parse_btf_field() only checks
+for the NULL condition. Fix this by using IS_ERR() and returning the
+error up the stack.
 
-  use loose?          should?          work together?            an?
+Fixes: c440adfbe3025 ("tracing/probes: Support BTF based data structure field access")
+Signed-off-by: Carlos López <clopez@suse.de>
+---
+v2: added call to trace_probe_log_err()
 
+ kernel/trace/trace_probe.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-=E2=80=A6
-> Add a dummy driver for the GPU, it functional as a subcomponent as well.
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 5e263c141574..39877c80d6cb 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -554,6 +554,10 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+ 			anon_offs = 0;
+ 			field = btf_find_struct_member(ctx->btf, type, fieldname,
+ 						       &anon_offs);
++			if (IS_ERR(field)) {
++				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
++				return PTR_ERR(field);
++			}
+ 			if (!field) {
+ 				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
+ 				return -ENOENT;
+-- 
+2.35.3
 
-                                     is?
-
-
-Please improve your change descriptions considerably.
-
-
-=E2=80=A6
-> +++ b/drivers/gpu/drm/loongson/loongson_module.c
-> @@ -29,8 +29,15 @@ static int __init loongson_module_init(void)
->  	if (ret)
->  		return ret;
->
-> +	ret =3D pci_register_driver(&loong_gpu_pci_driver);
-> +	if (ret) {
-> +		platform_driver_unregister(&lsdc_output_port_platform_driver);
-> +		return ret;
-> +	}
-> +
->  	ret =3D pci_register_driver(&lsdc_pci_driver);
->  	if (ret) {
-> +		pci_unregister_driver(&loong_gpu_pci_driver);
->  		platform_driver_unregister(&lsdc_output_port_platform_driver);
->  		return ret;
->  	}
-
-How do you think about to use another goto chain for common exception hand=
-ling?
-https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+go=
-to+chain+when+leaving+a+function+on+error+when+using+and+releasing+resourc=
-es
-
-Would you become interested in the application of scope-based resource man=
-agement here?
-
-
-> @@ -43,6 +50,8 @@ static void __exit loongson_module_exit(void)
->  {
->  	pci_unregister_driver(&lsdc_pci_driver);
->
-> +	pci_unregister_driver(&loong_gpu_pci_driver);
-> +
->  	platform_driver_unregister(&lsdc_output_port_platform_driver);
->  }
-
-I suggest to avoid blank lines for this function implementation.
-
-Regards,
-Markus
