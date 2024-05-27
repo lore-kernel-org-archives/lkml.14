@@ -1,483 +1,95 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D38515F3F6
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02D615ECF0;
+	Mon, 27 May 2024 13:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816695; cv=none; b=O/5+hdrPi/n3Ph66kz/NsW3nQ6DHiXijMJewAxH3ZrQPAE9EglkocNeGMaKzkH17vNRzrzSmAQjdRyCuGsp7wEeHv+Tn9IA5A3rp+NQIcLISBEoS8CE2xqxCV/QLgwr5cCpFTWwTanb/Mv0eUQPQzGtMZ/52ZIqXVGZLHSltnN4=
+	t=1716816751; cv=none; b=hKiAY92Nd5xgmiFZZWHWUgIeuPANDem2yWONIbTK5UoLDKkAJDJePyxJS8zaRWBr2qG9zFwrqlJ4I23cR7K+PpSZcTUm8PnGFZjVqtilQLZ2lQsrq55d0BrvVPgzu7ESPhbvBzCrPQiYJZ2I7067EUvNInWmnRteLFw4Fak6wKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816695; c=relaxed/simple;
-	bh=2mnucT7jK/WjK+hp16tx3H/CY4w2kcP/kZQm14EdO3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YSzEr8VLv/NFGJmFtLXR57BZl4VvEhCEf1hetA/9X36ZI6rFAwIV9jQc8GNRqyhG0h2NR7ePPk/dERt6adS4dPMbBlcciStu8hCTqpKqR7Rx57gpl+rNAaD69MeephzcT7FyNtZakDsRedpqp5IlA9exHZ5JugjymFvNh5766mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4VnxPK5zXmz9tLb;
-	Mon, 27 May 2024 15:31:17 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id OdZTzxKM_r1Z; Mon, 27 May 2024 15:31:17 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4VnxPK5KFzz9tFS;
-	Mon, 27 May 2024 15:31:17 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B12D18B773;
-	Mon, 27 May 2024 15:31:17 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id wNrmK42xOPRp; Mon, 27 May 2024 15:31:17 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.49])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 26C5E8B764;
-	Mon, 27 May 2024 15:31:09 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [RFC PATCH v4 16/16] mm: Remove CONFIG_ARCH_HAS_HUGEPD
-Date: Mon, 27 May 2024 15:30:14 +0200
-Message-ID: <98d6ff5bc9395785e268b9f8eff08fb742c045c6.1716815901.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1716815901.git.christophe.leroy@csgroup.eu>
-References: <cover.1716815901.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1716816751; c=relaxed/simple;
+	bh=pgZeXtSbEyXQ6I2ykA4tVLirFGIPg/Fk39T8jyzcKno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lbvgwwALG6janTt4m3gdD91a1cFZG6GRg0Fp0OspZ59wZjYFkMowUmgQpQFwqvNEQodAa6cvvGx+WMWuHR7RiV0BvTuLW2r7XvOF1PGgx1hDKQeQYdY0IEyqRI1r6ijG4QIJi2v7qVfk/CVKbJ0jmvGfJKZKuE053nfK+ntsumU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PiHVUzBf; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PiHVUzBf"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-420180b58c3so85049685e9.2;
+        Mon, 27 May 2024 06:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716816748; x=1717421548; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FPelcZ7WHvjbzGj63vH28P2uqTe4G+u9uApH1oPNWBo=;
+        b=PiHVUzBfpe5zih6niH/1s3M3CKowyeSfSbj4OH5SaPGXhrRYxpz9SH79WJT0LcWED9
+         Lxpk0yKEqs2cMam/tfImNP6e5IOuop46RV6pH1zUsL3IVTdR7yk74f0RkC4oLIX5777r
+         4NB5iqx02+jbKY0dGByJVXYrR9usDHF5HF3AGOtcFGvzCyE4RuTZ7DxQPsfG0pV2RmxC
+         ZkxyDR2+cPo0GCDypI8EY6ytyJw7SKIGLHepH1DzNSNa0vusHfBzKxiH0+rbC4fyWN6E
+         B52NqYuQeD8+JTPMZ+5gvTaCrnxP2fi3bACIGFhG/19Cv2FgKAHXFp0cg+SnY2dnPX3B
+         fEnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716816748; x=1717421548;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FPelcZ7WHvjbzGj63vH28P2uqTe4G+u9uApH1oPNWBo=;
+        b=WYDznSYYjRzdoNUqQmOI4NAOPHEL7k0gF0D1IMO2lkpNUijg8ZNmL/EEUsrXQ7ncjf
+         20LuR0NuyenhTDmd4Xe5Cj1uI/nVdwPDNT+LVsBiTa/tYXLkDTH1RUGBfjriP7ZHaYjC
+         G/ne9rOLqh+ZzKzq3Z4D+kMan8dn4h43CbWWuSq/i5MUTbIqnZsdXWiajY/98HZuaQ8e
+         7OpZPUNkgZjw3k+gwAK9pxZkXloWDxGDRuW4e/E0/QpuTiB2Y30X6LEALpDJX8SSacih
+         EBeTZNieo6B5/MjB2dQDGL7XRiOKIEhFASzd9yaXi69LCgiGb4yu92ONuE+wb27EK3TD
+         0NZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFEFrb6ojUZVaawfpvRvs9lL1gg/tcvzkxZ/WA1WchP+E8yltorx8U85Rl/kp3yXsZ2uJkvmZSVkv+oqIIz8//LX3FYKwDjw2Th/yqmD4ida9WxmfKvJUdYBzCNz5vG2MewsECoPUX6Q==
+X-Gm-Message-State: AOJu0YwVXYdi3IWWKxhguzmUznYrIbswBn+eiTB1cojMnYWJyG67zoRs
+	LVExw1fP8skAbaMQtEv+YLylwf7dvI+2wg9Lzwr0c2xdKieceC+F
+X-Google-Smtp-Source: AGHT+IEjetj0XxOYo7E9N5hGrPpt+t/8icovtDnfaD4dMEnpELKai925LdGc2zg3w3RyCWUT//PhkA==
+X-Received: by 2002:a05:600c:46c5:b0:41b:855b:5d26 with SMTP id 5b1f17b1804b1-42108a4f8c4mr67045565e9.2.1716816747732;
+        Mon, 27 May 2024 06:32:27 -0700 (PDT)
+Received: from andrea ([151.76.32.59])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100ee7e1fsm143047805e9.6.2024.05.27.06.32.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 06:32:27 -0700 (PDT)
+Date: Mon, 27 May 2024 15:32:24 +0200
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, will@kernel.org,
+	peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+	dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+	paulmck@kernel.org, akiyks@gmail.com, dlustig@nvidia.com,
+	joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, jonas.oberhauser@huaweicloud.com
+Subject: Re: [PATCH] tools/memory-model: Document herd7 (internal)
+ representation
+Message-ID: <ZlSLaOiSqmX+mPDC@andrea>
+References: <20240524151356.236071-1-parri.andrea@gmail.com>
+ <1c6d4146-86f8-4fd5-a23e-a95ba2464c9e@rowland.harvard.edu>
+ <ZlC5q7bcdCAe7xPp@andrea>
+ <b7365700-a983-b787-e22a-7526621d4c18@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716816601; l=13969; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=2mnucT7jK/WjK+hp16tx3H/CY4w2kcP/kZQm14EdO3U=; b=+y4afFc8IAbinC7WJjJ+NWwCU4NrtOneoLV6ulrU1x1Do1PwObN+oY70VUBj2BtI+7WPYfpWJ zCg+niYXt4bD9ECim5rrTwaqunq+8ARrng9xS33KK3M6mjRtiFpAYid
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7365700-a983-b787-e22a-7526621d4c18@huaweicloud.com>
 
-powerpc was the only user of CONFIG_ARCH_HAS_HUGEPD and doesn't
-use it anymore, so remove all related code.
+On Mon, May 27, 2024 at 02:25:01PM +0200, Hernan Ponce de Leon wrote:
+> On 5/24/2024 6:00 PM, Andrea Parri wrote:
+> > > What's the difference between R and R*, or between W and W*?
+> > 
+> > AFAIU, herd7 uses such notation, "*", to denote a load or a store which
+> > is also in RMW.
+> 
+> I also got confused with this. What about the following notation?
+> 
+> 	R[once,RMW] ->rmw W[once,RMW]
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v4: Rebased on v6.10-rc1
----
- arch/powerpc/mm/hugetlbpage.c |   1 -
- include/linux/hugetlb.h       |   6 --
- mm/Kconfig                    |  10 --
- mm/gup.c                      | 183 +---------------------------------
- mm/pagewalk.c                 |  57 +----------
- 5 files changed, 9 insertions(+), 248 deletions(-)
+I'll add a (minimal) legenda describing this and some other notations in the
+next version.  As Jonas remarked in his reply, * is what you would currently
+find in herd7-generated graphs, so I'd stick to it for the moment.
 
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 76846c6014e4..6b043180220a 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -78,7 +78,6 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
- 
- 	return pte_alloc_huge(mm, pmd, addr);
- }
--#endif
- 
- #ifdef CONFIG_PPC_BOOK3S_64
- /*
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 2b3c3a404769..58daf7d14bf4 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -20,12 +20,6 @@ struct user_struct;
- struct mmu_gather;
- struct node;
- 
--#ifndef CONFIG_ARCH_HAS_HUGEPD
--typedef struct { unsigned long pd; } hugepd_t;
--#define is_hugepd(hugepd) (0)
--#define __hugepd(x) ((hugepd_t) { (x) })
--#endif
--
- void free_huge_folio(struct folio *folio);
- 
- #ifdef CONFIG_HUGETLB_PAGE
-diff --git a/mm/Kconfig b/mm/Kconfig
-index b4cb45255a54..049d29ec6e20 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1119,16 +1119,6 @@ config DMAPOOL_TEST
- config ARCH_HAS_PTE_SPECIAL
- 	bool
- 
--#
--# Some architectures require a special hugepage directory format that is
--# required to support multiple hugepage sizes. For example a4fe3ce76
--# "powerpc/mm: Allow more flexible layouts for hugepage pagetables"
--# introduced it on powerpc.  This allows for a more flexible hugepage
--# pagetable layouts.
--#
--config ARCH_HAS_HUGEPD
--	bool
--
- config MAPPING_DIRTY_HELPERS
-         bool
- 
-diff --git a/mm/gup.c b/mm/gup.c
-index 53ebb0ae53a0..f8e982a42bba 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -501,7 +501,7 @@ static inline void mm_set_has_pinned_flag(unsigned long *mm_flags)
- 
- #ifdef CONFIG_MMU
- 
--#if defined(CONFIG_ARCH_HAS_HUGEPD) || defined(CONFIG_HAVE_GUP_FAST)
-+#ifdef CONFIG_HAVE_GUP_FAST
- static int record_subpages(struct page *page, unsigned long sz,
- 			   unsigned long addr, unsigned long end,
- 			   struct page **pages)
-@@ -515,147 +515,7 @@ static int record_subpages(struct page *page, unsigned long sz,
- 
- 	return nr;
- }
--#endif	/* CONFIG_ARCH_HAS_HUGEPD || CONFIG_HAVE_GUP_FAST */
--
--#ifdef CONFIG_ARCH_HAS_HUGEPD
--static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
--				      unsigned long sz)
--{
--	unsigned long __boundary = (addr + sz) & ~(sz-1);
--	return (__boundary - 1 < end - 1) ? __boundary : end;
--}
--
--/*
-- * Returns 1 if succeeded, 0 if failed, -EMLINK if unshare needed.
-- *
-- * NOTE: for the same entry, gup-fast and gup-slow can return different
-- * results (0 v.s. -EMLINK) depending on whether vma is available.  This is
-- * the expected behavior, where we simply want gup-fast to fallback to
-- * gup-slow to take the vma reference first.
-- */
--static int gup_hugepte(struct vm_area_struct *vma, pte_t *ptep, unsigned long sz,
--		       unsigned long addr, unsigned long end, unsigned int flags,
--		       struct page **pages, int *nr)
--{
--	unsigned long pte_end;
--	struct page *page;
--	struct folio *folio;
--	pte_t pte;
--	int refs;
--
--	pte_end = (addr + sz) & ~(sz-1);
--	if (pte_end < end)
--		end = pte_end;
--
--	pte = huge_ptep_get(vma->mm, addr, ptep);
--
--	if (!pte_access_permitted(pte, flags & FOLL_WRITE))
--		return 0;
--
--	/* hugepages are never "special" */
--	VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
--
--	page = pte_page(pte);
--	refs = record_subpages(page, sz, addr, end, pages + *nr);
--
--	folio = try_grab_folio(page, refs, flags);
--	if (!folio)
--		return 0;
--
--	if (unlikely(pte_val(pte) != pte_val(ptep_get(ptep)))) {
--		gup_put_folio(folio, refs, flags);
--		return 0;
--	}
--
--	if (!pte_write(pte) && gup_must_unshare(vma, flags, &folio->page)) {
--		gup_put_folio(folio, refs, flags);
--		return -EMLINK;
--	}
--
--	*nr += refs;
--	folio_set_referenced(folio);
--	return 1;
--}
--
--/*
-- * NOTE: currently GUP for a hugepd is only possible on hugetlbfs file
-- * systems on Power, which does not have issue with folio writeback against
-- * GUP updates.  When hugepd will be extended to support non-hugetlbfs or
-- * even anonymous memory, we need to do extra check as what we do with most
-- * of the other folios. See writable_file_mapping_allowed() and
-- * gup_fast_folio_allowed() for more information.
-- */
--static int gup_hugepd(struct vm_area_struct *vma, hugepd_t hugepd,
--		      unsigned long addr, unsigned int pdshift,
--		      unsigned long end, unsigned int flags,
--		      struct page **pages, int *nr)
--{
--	pte_t *ptep;
--	unsigned long sz = 1UL << hugepd_shift(hugepd);
--	unsigned long next;
--	int ret;
--
--	ptep = hugepte_offset(hugepd, addr, pdshift);
--	do {
--		next = hugepte_addr_end(addr, end, sz);
--		ret = gup_hugepte(vma, ptep, sz, addr, end, flags, pages, nr);
--		if (ret != 1)
--			return ret;
--	} while (ptep++, addr = next, addr != end);
--
--	return 1;
--}
--
--static struct page *follow_hugepd(struct vm_area_struct *vma, hugepd_t hugepd,
--				  unsigned long addr, unsigned int pdshift,
--				  unsigned int flags,
--				  struct follow_page_context *ctx)
--{
--	struct page *page;
--	struct hstate *h;
--	spinlock_t *ptl;
--	int nr = 0, ret;
--	pte_t *ptep;
--
--	/* Only hugetlb supports hugepd */
--	if (WARN_ON_ONCE(!is_vm_hugetlb_page(vma)))
--		return ERR_PTR(-EFAULT);
--
--	h = hstate_vma(vma);
--	ptep = hugepte_offset(hugepd, addr, pdshift);
--	ptl = huge_pte_lock(h, vma->vm_mm, ptep);
--	ret = gup_hugepd(vma, hugepd, addr, pdshift, addr + PAGE_SIZE,
--			 flags, &page, &nr);
--	spin_unlock(ptl);
--
--	if (ret == 1) {
--		/* GUP succeeded */
--		WARN_ON_ONCE(nr != 1);
--		ctx->page_mask = (1U << huge_page_order(h)) - 1;
--		return page;
--	}
--
--	/* ret can be either 0 (translates to NULL) or negative */
--	return ERR_PTR(ret);
--}
--#else /* CONFIG_ARCH_HAS_HUGEPD */
--static inline int gup_hugepd(struct vm_area_struct *vma, hugepd_t hugepd,
--			     unsigned long addr, unsigned int pdshift,
--			     unsigned long end, unsigned int flags,
--			     struct page **pages, int *nr)
--{
--	return 0;
--}
--
--static struct page *follow_hugepd(struct vm_area_struct *vma, hugepd_t hugepd,
--				  unsigned long addr, unsigned int pdshift,
--				  unsigned int flags,
--				  struct follow_page_context *ctx)
--{
--	return NULL;
--}
--#endif /* CONFIG_ARCH_HAS_HUGEPD */
--
-+#endif	/* CONFIG_HAVE_GUP_FAST */
- 
- static struct page *no_page_table(struct vm_area_struct *vma,
- 				  unsigned int flags, unsigned long address)
-@@ -1025,9 +885,6 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
- 		return no_page_table(vma, flags, address);
- 	if (!pmd_present(pmdval))
- 		return no_page_table(vma, flags, address);
--	if (unlikely(is_hugepd(__hugepd(pmd_val(pmdval)))))
--		return follow_hugepd(vma, __hugepd(pmd_val(pmdval)),
--				     address, PMD_SHIFT, flags, ctx);
- 	if (pmd_devmap(pmdval)) {
- 		ptl = pmd_lock(mm, pmd);
- 		page = follow_devmap_pmd(vma, address, pmd, flags, &ctx->pgmap);
-@@ -1078,9 +935,6 @@ static struct page *follow_pud_mask(struct vm_area_struct *vma,
- 	pud = READ_ONCE(*pudp);
- 	if (!pud_present(pud))
- 		return no_page_table(vma, flags, address);
--	if (unlikely(is_hugepd(__hugepd(pud_val(pud)))))
--		return follow_hugepd(vma, __hugepd(pud_val(pud)),
--				     address, PUD_SHIFT, flags, ctx);
- 	if (pud_leaf(pud)) {
- 		ptl = pud_lock(mm, pudp);
- 		page = follow_huge_pud(vma, address, pudp, flags, ctx);
-@@ -1106,10 +960,6 @@ static struct page *follow_p4d_mask(struct vm_area_struct *vma,
- 	p4d = READ_ONCE(*p4dp);
- 	BUILD_BUG_ON(p4d_leaf(p4d));
- 
--	if (unlikely(is_hugepd(__hugepd(p4d_val(p4d)))))
--		return follow_hugepd(vma, __hugepd(p4d_val(p4d)),
--				     address, P4D_SHIFT, flags, ctx);
--
- 	if (!p4d_present(p4d) || p4d_bad(p4d))
- 		return no_page_table(vma, flags, address);
- 
-@@ -1153,10 +1003,7 @@ static struct page *follow_page_mask(struct vm_area_struct *vma,
- 	ctx->page_mask = 0;
- 	pgd = pgd_offset(mm, address);
- 
--	if (unlikely(is_hugepd(__hugepd(pgd_val(*pgd)))))
--		page = follow_hugepd(vma, __hugepd(pgd_val(*pgd)),
--				     address, PGDIR_SHIFT, flags, ctx);
--	else if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
-+	if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
- 		page = no_page_table(vma, flags, address);
- 	else
- 		page = follow_p4d_mask(vma, address, pgd, flags, ctx);
-@@ -3270,14 +3117,6 @@ static int gup_fast_pmd_range(pud_t *pudp, pud_t pud, unsigned long addr,
- 				pages, nr))
- 				return 0;
- 
--		} else if (unlikely(is_hugepd(__hugepd(pmd_val(pmd))))) {
--			/*
--			 * architecture have different format for hugetlbfs
--			 * pmd format and THP pmd format
--			 */
--			if (gup_hugepd(NULL, __hugepd(pmd_val(pmd)), addr,
--				       PMD_SHIFT, next, flags, pages, nr) != 1)
--				return 0;
- 		} else if (!gup_fast_pte_range(pmd, pmdp, addr, next, flags,
- 					       pages, nr))
- 			return 0;
-@@ -3304,10 +3143,6 @@ static int gup_fast_pud_range(p4d_t *p4dp, p4d_t p4d, unsigned long addr,
- 			if (!gup_fast_pud_leaf(pud, pudp, addr, next, flags,
- 					       pages, nr))
- 				return 0;
--		} else if (unlikely(is_hugepd(__hugepd(pud_val(pud))))) {
--			if (gup_hugepd(NULL, __hugepd(pud_val(pud)), addr,
--				       PUD_SHIFT, next, flags, pages, nr) != 1)
--				return 0;
- 		} else if (!gup_fast_pmd_range(pudp, pud, addr, next, flags,
- 					       pages, nr))
- 			return 0;
-@@ -3331,12 +3166,8 @@ static int gup_fast_p4d_range(pgd_t *pgdp, pgd_t pgd, unsigned long addr,
- 		if (!p4d_present(p4d))
- 			return 0;
- 		BUILD_BUG_ON(p4d_leaf(p4d));
--		if (unlikely(is_hugepd(__hugepd(p4d_val(p4d))))) {
--			if (gup_hugepd(NULL, __hugepd(p4d_val(p4d)), addr,
--				       P4D_SHIFT, next, flags, pages, nr) != 1)
--				return 0;
--		} else if (!gup_fast_pud_range(p4dp, p4d, addr, next, flags,
--					       pages, nr))
-+		if (!gup_fast_pud_range(p4dp, p4d, addr, next, flags,
-+					pages, nr))
- 			return 0;
- 	} while (p4dp++, addr = next, addr != end);
- 
-@@ -3360,10 +3191,6 @@ static void gup_fast_pgd_range(unsigned long addr, unsigned long end,
- 			if (!gup_fast_pgd_leaf(pgd, pgdp, addr, next, flags,
- 					       pages, nr))
- 				return;
--		} else if (unlikely(is_hugepd(__hugepd(pgd_val(pgd))))) {
--			if (gup_hugepd(NULL, __hugepd(pgd_val(pgd)), addr,
--				       PGDIR_SHIFT, next, flags, pages, nr) != 1)
--				return;
- 		} else if (!gup_fast_p4d_range(pgdp, pgd, addr, next, flags,
- 					       pages, nr))
- 			return;
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index f46c80b18ce4..ae2f08ce991b 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -73,45 +73,6 @@ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
- 	return err;
- }
- 
--#ifdef CONFIG_ARCH_HAS_HUGEPD
--static int walk_hugepd_range(hugepd_t *phpd, unsigned long addr,
--			     unsigned long end, struct mm_walk *walk, int pdshift)
--{
--	int err = 0;
--	const struct mm_walk_ops *ops = walk->ops;
--	int shift = hugepd_shift(*phpd);
--	int page_size = 1 << shift;
--
--	if (!ops->pte_entry)
--		return 0;
--
--	if (addr & (page_size - 1))
--		return 0;
--
--	for (;;) {
--		pte_t *pte;
--
--		spin_lock(&walk->mm->page_table_lock);
--		pte = hugepte_offset(*phpd, addr, pdshift);
--		err = ops->pte_entry(pte, addr, addr + page_size, walk);
--		spin_unlock(&walk->mm->page_table_lock);
--
--		if (err)
--			break;
--		if (addr >= end - page_size)
--			break;
--		addr += page_size;
--	}
--	return err;
--}
--#else
--static int walk_hugepd_range(hugepd_t *phpd, unsigned long addr,
--			     unsigned long end, struct mm_walk *walk, int pdshift)
--{
--	return 0;
--}
--#endif
--
- static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 			  struct mm_walk *walk)
- {
-@@ -159,10 +120,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 		if (walk->vma)
- 			split_huge_pmd(walk->vma, pmd, addr);
- 
--		if (is_hugepd(__hugepd(pmd_val(*pmd))))
--			err = walk_hugepd_range((hugepd_t *)pmd, addr, next, walk, PMD_SHIFT);
--		else
--			err = walk_pte_range(pmd, addr, next, walk);
-+		err = walk_pte_range(pmd, addr, next, walk);
- 		if (err)
- 			break;
- 
-@@ -215,10 +173,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 		if (pud_none(*pud))
- 			goto again;
- 
--		if (is_hugepd(__hugepd(pud_val(*pud))))
--			err = walk_hugepd_range((hugepd_t *)pud, addr, next, walk, PUD_SHIFT);
--		else
--			err = walk_pmd_range(pud, addr, next, walk);
-+		err = walk_pmd_range(pud, addr, next, walk);
- 		if (err)
- 			break;
- 	} while (pud++, addr = next, addr != end);
-@@ -250,9 +205,7 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
- 			if (err)
- 				break;
- 		}
--		if (is_hugepd(__hugepd(p4d_val(*p4d))))
--			err = walk_hugepd_range((hugepd_t *)p4d, addr, next, walk, P4D_SHIFT);
--		else if (ops->pud_entry || ops->pmd_entry || ops->pte_entry)
-+		if (ops->pud_entry || ops->pmd_entry || ops->pte_entry)
- 			err = walk_pud_range(p4d, addr, next, walk);
- 		if (err)
- 			break;
-@@ -287,9 +240,7 @@ static int walk_pgd_range(unsigned long addr, unsigned long end,
- 			if (err)
- 				break;
- 		}
--		if (is_hugepd(__hugepd(pgd_val(*pgd))))
--			err = walk_hugepd_range((hugepd_t *)pgd, addr, next, walk, PGDIR_SHIFT);
--		else if (ops->p4d_entry || ops->pud_entry || ops->pmd_entry || ops->pte_entry)
-+		if (ops->p4d_entry || ops->pud_entry || ops->pmd_entry || ops->pte_entry)
- 			err = walk_p4d_range(pgd, addr, next, walk);
- 		if (err)
- 			break;
--- 
-2.44.0
-
+  Andrea
