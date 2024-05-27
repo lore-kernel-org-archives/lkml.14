@@ -1,40 +1,40 @@
 Received: from mail02.habana.ai (habanamailrelay.habana.ai [213.57.90.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAD615DBC7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69CF15DBCC
 	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.57.90.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716811994; cv=none; b=fu1P7VGlIYX/7VVQhOJ0CQwVGO84i/hwjy3tcSzS8YTJMbfuNDvhx/CEkaiBPdILXM8CxnTYvmwfl71Ak8btW/Q9QKEKU1mC9TvSivKBHTj3MpfaoIBAfyYDausNK99bkfbtWP5zq/6lUeO3qBlOhF6oSFxFBp1+cms1qv6qz6A=
+	t=1716811994; cv=none; b=KqmF49aLE/rc8wdy2Ms0LI9hOA1IFV2NJ5uxGxH2BMZhaUzleN6SC81DQpXD345NhNWabOpPVHAI1Gxz5KS+Np/ibQ7URGDX6YtiZ1S4oOuwmytdNSa2IuNf3fhWbGd29jYjNLpVyiN4jRjxc+/c+n2E7wHjMXd22JUMakaPbYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716811994; c=relaxed/simple;
-	bh=6fkm+Ekorc42aQ0DgvCRfc8pbcF22Uheaaz/c06hl/o=;
+	bh=HA3Ew5tpL7ApKKFbeZ+k1CKifd7ompu4unxRVvUSSkU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xi8cUKB9Puw5LIM2GEijOxELy00sKaTFB3+QT317VLoH7j1ZAxF0L0MotA3tj6BRtHjYVO1ArbhUZThX+QKtbgGGOmZo4TJRY5sdB/rNBfnT2UKisp7UgLb2ZJ6EAwAtbZnhw+D4XlxUm+u2PwAERR6rdcTMqNxuSGSafv2E5WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=LcQCWYKU; arc=none smtp.client-ip=213.57.90.13
+	 MIME-Version; b=GhgzYqbGulhnn11Ol4vPfnyasdRGLfzmTM2q/jNxZ+KM5oFAg9J9Hb2DPjoL6trvGXFi+AZ2D+KAR2YVyrFYRPDB5hjeUcS4BSU2b8aVOvfJcqg2OH6slqZK/nVqOWaOVZ5VqQfYwYLbgrVyO8VHjJn3HpOKCDg0IVExBwc1i2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=hJPjxmUc; arc=none smtp.client-ip=213.57.90.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="LcQCWYKU"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="hJPjxmUc"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716811993; bh=6fkm+Ekorc42aQ0DgvCRfc8pbcF22Uheaaz/c06hl/o=;
+	t=1716811993; bh=HA3Ew5tpL7ApKKFbeZ+k1CKifd7ompu4unxRVvUSSkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LcQCWYKUKob8FxyRRMksHjTJjtqkXFFJhp0EEZg6JpkjOSenDkGStR7NJby89TSSW
-	 TZanMV8UbA1hd9R1uTK620Eodt+tA4htDm3++AatDc1Idwd/T5a9c+ecMIaVvDEQzM
-	 6OUfr9X5A+ubbdKNT5hJNMwaDCWF44tzGAreq4dO9r/fDNVI5YZdfuoOJnZNt2Ezxt
-	 xwtjGmr67clZlMO39sCnM+l6YHT4GSFHgonr1XWW6qpKog+M3hcpwVv9fAJK0ryIfo
-	 AebwE8OVcR7ZaAto8gIq2gQcS9APkf/mdB/5YdF0tLI1185ouPvO8nYq8t/55TyW7F
-	 r2/HVYSqr0qQg==
+	b=hJPjxmUciGCeDmYTn82I0pH8ClJhQRo8Ku/9DqJTCAyoxQzt/DBzC3TAzhh+aq1Ou
+	 I4eV1MaPXENiqYOJWp7wJpkbtalz5Sy02v0dXXOnvePNY7Sfp4jMVtwMHYT7dWxAOf
+	 1t/Z/tINg6YYTXNeZMIOX4dx87+VOnlCQl89Z1eusBxC7Qvn0jhivLGtzFPQo5uh0X
+	 b4uhNP9O2OSZadK8AVqoQs5Pm6cWRcMICojKTKM/ZE81NrO6DDMl+cA9m6X149aIxA
+	 Kc+L+uWd2rwrfwAL+BE7MqkB8p3Zz9EYF5BrT8XiTq2iPNhHGrupEvQuK0EcYKcKPB
+	 TINOv+umpz6nw==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RCCuas1921351;
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RCCub01921351;
 	Mon, 27 May 2024 15:12:57 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Farah Kassabri <fkassabri@habana.ai>
-Subject: [PATCH 2/8] accel/habanalabs: check for errors after preboot is ready
-Date: Mon, 27 May 2024 15:12:48 +0300
-Message-Id: <20240527121254.1921306-2-obitton@habana.ai>
+Cc: Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 8/8] accel/habanalabs: move hl_eq_heartbeat_event_handle() to common code
+Date: Mon, 27 May 2024 15:12:54 +0300
+Message-Id: <20240527121254.1921306-8-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527121254.1921306-1-obitton@habana.ai>
 References: <20240527121254.1921306-1-obitton@habana.ai>
@@ -46,65 +46,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Farah Kassabri <fkassabri@habana.ai>
+From: Tomer Tayar <ttayar@habana.ai>
 
-Driver should check and report any fatal errors detected by preboot,
-before it attempts to load the boot fit.
-Some errors may cause the driver to stop the boot process and mark
-the device as unusable.
-This check will allow the driver to fail and print the error reported
-by preboot and skip the time wasting attempt of trying to load the
-boot fit, which will fail due to the error.
+hl_eq_heartbeat_event_handle() doesn't have ASIC specific code, and
+therefore can be moved from Gaudi2-only code to common code, and
+possibly used for other ASICs.
 
-Signed-off-by: Farah Kassabri <fkassabri@habana.ai>
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- drivers/accel/habanalabs/common/firmware_if.c | 24 +++++++++----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/accel/habanalabs/common/device.c     | 6 ++++++
+ drivers/accel/habanalabs/common/habanalabs.h | 1 +
+ drivers/accel/habanalabs/gaudi2/gaudi2.c     | 6 ------
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/common/firmware_if.c b/drivers/accel/habanalabs/common/firmware_if.c
-index 886b3c07503d..6f0c40b12072 100644
---- a/drivers/accel/habanalabs/common/firmware_if.c
-+++ b/drivers/accel/habanalabs/common/firmware_if.c
-@@ -1482,7 +1482,7 @@ int hl_fw_wait_preboot_ready(struct hl_device *hdev)
- {
- 	struct pre_fw_load_props *pre_fw_load = &hdev->fw_loader.pre_fw_load;
- 	u32 status = 0, timeout;
--	int rc, tries = 1;
-+	int rc, tries = 1, fw_err = 0;
- 	bool preboot_still_runs;
+diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
+index 35502e938b5d..f9b8601c4396 100644
+--- a/drivers/accel/habanalabs/common/device.c
++++ b/drivers/accel/habanalabs/common/device.c
+@@ -2850,3 +2850,9 @@ void hl_set_irq_affinity(struct hl_device *hdev, int irq)
+ 	if (irq_set_affinity_and_hint(irq, &hdev->irq_affinity_mask))
+ 		dev_err(hdev->dev, "Failed setting irq %d affinity\n", irq);
+ }
++
++void hl_eq_heartbeat_event_handle(struct hl_device *hdev)
++{
++	hdev->heartbeat_debug_info.heartbeat_event_counter++;
++	hdev->eq_heartbeat_received = true;
++}
+diff --git a/drivers/accel/habanalabs/common/habanalabs.h b/drivers/accel/habanalabs/common/habanalabs.h
+index 8d0df685e627..057087dc8592 100644
+--- a/drivers/accel/habanalabs/common/habanalabs.h
++++ b/drivers/accel/habanalabs/common/habanalabs.h
+@@ -4059,6 +4059,7 @@ void hl_capture_engine_err(struct hl_device *hdev, u16 engine_id, u16 error_coun
+ void hl_enable_err_info_capture(struct hl_error_info *captured_err_info);
+ void hl_init_cpu_for_irq(struct hl_device *hdev);
+ void hl_set_irq_affinity(struct hl_device *hdev, int irq);
++void hl_eq_heartbeat_event_handle(struct hl_device *hdev);
  
- 	/* Need to check two possible scenarios:
-@@ -1522,18 +1522,18 @@ int hl_fw_wait_preboot_ready(struct hl_device *hdev)
- 		}
- 	}
+ #ifdef CONFIG_DEBUG_FS
  
--	if (rc) {
-+	/* If we read all FF, then something is totally wrong, no point
-+	 * of reading specific errors
-+	 */
-+	if (status != -1)
-+		fw_err = fw_read_errors(hdev, pre_fw_load->boot_err0_reg,
-+					pre_fw_load->boot_err1_reg,
-+					pre_fw_load->sts_boot_dev_sts0_reg,
-+					pre_fw_load->sts_boot_dev_sts1_reg);
-+	if (rc || fw_err) {
- 		detect_cpu_boot_status(hdev, status);
--		dev_err(hdev->dev, "CPU boot ready timeout (status = %d)\n", status);
+diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
+index 4791582d157c..a38b88baadf2 100644
+--- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
++++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
+@@ -9777,12 +9777,6 @@ static u16 event_id_to_engine_id(struct hl_device *hdev, u16 event_type)
+ 	return U16_MAX;
+ }
+ 
+-static void hl_eq_heartbeat_event_handle(struct hl_device *hdev)
+-{
+-	hdev->heartbeat_debug_info.heartbeat_event_counter++;
+-	hdev->eq_heartbeat_received = true;
+-}
 -
--		/* If we read all FF, then something is totally wrong, no point
--		 * of reading specific errors
--		 */
--		if (status != -1)
--			fw_read_errors(hdev, pre_fw_load->boot_err0_reg,
--						pre_fw_load->boot_err1_reg,
--						pre_fw_load->sts_boot_dev_sts0_reg,
--						pre_fw_load->sts_boot_dev_sts1_reg);
-+		dev_err(hdev->dev, "CPU boot %s (status = %d)\n",
-+				fw_err ? "failed due to an error" : "ready timeout", status);
- 		return -EIO;
- 	}
- 
+ static void gaudi2_handle_eqe(struct hl_device *hdev, struct hl_eq_entry *eq_entry)
+ {
+ 	struct gaudi2_device *gaudi2 = hdev->asic_specific;
 -- 
 2.34.1
 
