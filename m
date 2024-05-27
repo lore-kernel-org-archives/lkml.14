@@ -1,113 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE3E53370;
-	Mon, 27 May 2024 21:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABE615FA62
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 21:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716844053; cv=none; b=L+QXwIAmA9Oest6Uo0jN+AE84GinkEdXri03wyEfIteAGsF+IHcgD87zxci4y1qkEL8U/5gE62z/4HwZmtPQ8nghHxfqAmJtU6JPd0UBw3ZZ+BgjNlbJGNjNRJ/Wc2nqMQ6XjtDK4/T4ot/e8R/jC+LGbIqXNid7B5o+D2hHm4M=
+	t=1716844138; cv=none; b=TRWgXuuVdkN05Fgc/GuttF3EBZel8vUzmf2HfEfJyfC7ONutTy/WXGj97ynHj6QDPaaLG5RpFBk4UZMSNA0OsJeBGHyX/urMti7HsxDICclqTlelhF1k097U15CpftHvk/WmyQwPnm2mSd46u+NDlZnO60kJVNPBJp8T1144sWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716844053; c=relaxed/simple;
-	bh=mhVfWIrto4jIU5ikPnSkoETBiu2Uq0drRspSjx8EjrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcpXWDeDwxG9miGTS/3EvgZ48OyuFljgo+cRgf3iXB8QxAxHzHEsb4iv/J2z/NwGARs5vBevOakAXUCDkRM7j+TXtWYGx8RtlJ5NihsuGKkG4rj41eh+SY/blYUsvAfGKI9EU4Dj+/J4lb2GN/h3gAF+dSYQxqw2as5bw5VoIRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyeY8w8i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716844138; c=relaxed/simple;
+	bh=JSygS4gzMJ/tHT/j3LMxdo2fBykWODOKPWAhI9tH2kY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qKyqT12BzxSybaZPu5bLAH+tL85zHab2KayvxbSUPx2pDcE6y6FoBrYc7KkJ4FRJMtX5CTSl1V9i1R7wtzKGQhytl1N4AiBYBT7MIS4gMMncr4Hu1zb7loe34RqduLumVfVIOAOefjyIJPTUpZIWrLL/+qTffm3jzpBNnH7sPBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dzsnouHG; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyeY8w8i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94C3FC2BBFC;
-	Mon, 27 May 2024 21:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716844053;
-	bh=mhVfWIrto4jIU5ikPnSkoETBiu2Uq0drRspSjx8EjrE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nyeY8w8iM3a2bKqXDG6a5LCeGu84qqJ1ghEDJrUibye8UWiHMZ26cN9Srpo8k+Bo0
-	 eJcl+jTC0oRs64ZMgJ9MCEcGQjVeCOnGVpnYRgax/rnyX8RdPKjytNF8MxejhswWVq
-	 +OckIrSDp2jp5e/QyypniY29hLvJ9uhNul4IrEe2pCVDnmqSP4IlXP1u5iYzEy7EEm
-	 xOqcd5JYMYGlMOIOIHmBu7TUiZGIL4TgeLtiQ8wjhrmpbi8qcLE7b1BTT6/lPpEHko
-	 jmcFPAm3tRCsuawEQnq9b2CHGIALDfxKli0x6MfJ0EpgvBz+nKxNyhghDSstcL8sKz
-	 OhleTPgmzvL8A==
-Date: Mon, 27 May 2024 22:07:28 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Nicolas Pitre <npitre@baylibre.com>
-Cc: Julien Panis <jpanis@baylibre.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] dt-bindings: thermal: mediatek: Rename thermal
- zone definitions for MT8186 and MT8188
-Message-ID: <20240527-reclusive-elderly-5b2d6bfee6b9@spud>
-References: <20240524-mtk-thermal-mt818x-dtsi-v5-0-56f8579820e7@baylibre.com>
- <20240524-mtk-thermal-mt818x-dtsi-v5-1-56f8579820e7@baylibre.com>
- <20240524-concerned-fritter-262f5e16293e@spud>
- <20240524-clatter-antivirus-b1939900ee58@spud>
- <61a1be10-7df3-4ba7-b7b4-ccc7f0379656@baylibre.com>
- <20240527-wife-dress-3ecaf1509506@spud>
- <r9q3n5n4-4pqn-53so-4n65-33p432530793@onlyvoer.pbz>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dzsnouHG"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ad7a2f8715so1746786d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716844135; x=1717448935; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nd4v7ke+Cy0nQV6qfaxBYuXvHeijlfFLOED6efio0lk=;
+        b=dzsnouHG3jS54O7qwP2Equ3HYnxbcKBuse7ievqjO8sdON7g4hEZfDS8GgVTRQKLIw
+         1kBszvjBzZea/pYD2Lbt+6s9FBIfcS+BN9ZMgWq2SLMu5WgOqPrH2MQA187J28XkNyjb
+         SNhlnq8+PnSDl6B2hHnDQeEH50KUW7zuLlD4s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716844135; x=1717448935;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nd4v7ke+Cy0nQV6qfaxBYuXvHeijlfFLOED6efio0lk=;
+        b=rjGBQ/dIStNreduXlN4DNIx1cyx6V3vWJIMUeIabZ+1EqerGwtjUsazeVfYqkqYtKQ
+         C7MDcESsc1tGByVtWP8rzveamqo0Ws3+zjuE3A2i2X8jvuEu0iUhtD2bvvCHlGd8OXOt
+         ZEm5G/prd8d1PpST+RTJBtuihLjh6P0G+eMaOogR75jlBgT1mfP0vXtzocrylCcAQNTO
+         W5Vj+urdnrt/WBx7XthUnLgqoRenqN2JCj9enwXgQ6N4yANYQPWfF/TA4FiF2DoJqDZh
+         Y1dgpOZ3fdaQIm2bcRCybbFRZui7WkzcYBRBJiCDkKXjGfmY/R3dJnd1p5eSwqdIV9GS
+         0TzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1joTNSQP8SBA88pdxYmnspPk6C8EaTgrgtGJNhXK3dCSK6iXdxR7XBdfdcdCW+jxxuOUX7eXVMYZlSjhbLkv1qc/3le8pcflPIxsS
+X-Gm-Message-State: AOJu0Yw4u9w6ntRmvNkSQOyXsFmLBdfrLZS92lhK1k6I0V9R+jZ1Y7+N
+	bt6VKj6jvcKv6Vko9zXVpk34Sd+2jto8Oa76HIINhHuAglpvKZKoWrlYoavMHA==
+X-Google-Smtp-Source: AGHT+IFrp5m4vKJTJulTHuvhixEpNuF0CZjI5X9x0U2J+O2dhe08H2Gd8tgo/a4lMVfyPDSv08IJGw==
+X-Received: by 2002:a05:6214:2b9c:b0:6ab:9a03:ff96 with SMTP id 6a1803df08f44-6ab9cfbe9d3mr169298836d6.7.1716844135480;
+        Mon, 27 May 2024 14:08:55 -0700 (PDT)
+Received: from denia.c.googlers.com (125.135.86.34.bc.googleusercontent.com. [34.86.135.125])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ad850a6dc7sm9511866d6.93.2024.05.27.14.08.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 14:08:54 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 27 May 2024 21:08:51 +0000
+Subject: [PATCH v3 01/18] media: allegro: nal-hevc: Replace array[1] with
+ arrray[N]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wMFiEWgMGRM5yNJl"
-Content-Disposition: inline
-In-Reply-To: <r9q3n5n4-4pqn-53so-4n65-33p432530793@onlyvoer.pbz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240527-cocci-flexarray-v3-1-cda09c535816@chromium.org>
+References: <20240527-cocci-flexarray-v3-0-cda09c535816@chromium.org>
+In-Reply-To: <20240527-cocci-flexarray-v3-0-cda09c535816@chromium.org>
+To: Michael Tretter <m.tretter@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Michal Simek <michal.simek@amd.com>, Andy Walls <awalls@md.metrocast.net>, 
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+ Vikash Garodia <quic_vgarodia@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.4
 
+Structures that have a single element array as the last field can be
+mistaken as a "flex array".
 
---wMFiEWgMGRM5yNJl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We could replace all the single element arrays in the structure with
+single element fields, but this driver prefers to follow the ITU-T H.265
+specification, which defines it as an array.
 
-On Mon, May 27, 2024 at 04:57:15PM -0400, Nicolas Pitre wrote:
-> On Mon, 27 May 2024, Conor Dooley wrote:
+If we introduce a new define N_HRD_PARAMETERS, we make clear our
+intentions.
 
-> > > Would Russell's suggestion be acceptable for you ?
-> > > I mean, this one:
-> > > https://lore.kernel.org/all/ZlDMNkdE2jmFgD8B@shell.armlinux.org.uk/
-> > >=20
-> > > I could implement it, but before submitting it I would like to make
-> > > sure that it suits everyone.
-> >=20
-> > How's that going to work? MT8188_AP_GPU1 currently means 1, after your
-> > series it means 2.
-> > You're gonna need to pick a different naming for the new defines to
-> > avoid that. Additionally, why even delete the old ones? Just define
-> > new names with the same numbering and you don't need to worry about
-> > any compatibility issues.
->=20
-> Isn't this making a mountain out of a molehill here?
->=20
-> Seriously... none of this was present in a released kernel. The naming=20
-> can be adjusted "atomically" so compilation doesn't break, and=20
-> it is within maintainers' discretion to bypass the checkpatch warning in=
-=20
-> such particular case.
+This fixes this cocci warning:
+drivers/media/platform/allegro-dvt/nal-hevc.h:102:14-22: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
 
-If that's the case, then great. Provide a fixes tag, and a better commit
-message than "Use thermal zone names that make more sense." that
-actually explains why it is okay to change the definitions. There'd've
-been neither mountain nor molehill were a sufficient commit message
-provided.
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+ drivers/media/platform/allegro-dvt/nal-hevc.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/media/platform/allegro-dvt/nal-hevc.h b/drivers/media/platform/allegro-dvt/nal-hevc.h
+index eb46f12aae80..361e2f55c254 100644
+--- a/drivers/media/platform/allegro-dvt/nal-hevc.h
++++ b/drivers/media/platform/allegro-dvt/nal-hevc.h
+@@ -96,10 +96,11 @@ struct nal_hevc_vps {
+ 	unsigned int extension_data_flag;
+ };
+ 
++#define N_HRD_PARAMS 1
+ struct nal_hevc_sub_layer_hrd_parameters {
+-	unsigned int bit_rate_value_minus1[1];
+-	unsigned int cpb_size_value_minus1[1];
+-	unsigned int cbr_flag[1];
++	unsigned int bit_rate_value_minus1[N_HRD_PARAMS];
++	unsigned int cpb_size_value_minus1[N_HRD_PARAMS];
++	unsigned int cbr_flag[N_HRD_PARAMS];
+ };
+ 
+ struct nal_hevc_hrd_parameters {
 
---wMFiEWgMGRM5yNJl
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.45.1.288.g0e0cd299f1-goog
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlT2EAAKCRB4tDGHoIJi
-0ukrAQDMx2V/zyc186dIn+Ks5bop1v80bcJVAiGhMggRt21d8gD/bXAHQUuzVQKi
-99Y5nTyefGk40OXYnqLeWsRQxfcm9wA=
-=qebK
------END PGP SIGNATURE-----
-
---wMFiEWgMGRM5yNJl--
