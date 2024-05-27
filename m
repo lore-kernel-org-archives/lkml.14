@@ -1,95 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA32180A8B;
-	Mon, 27 May 2024 14:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5795816ABF3
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819318; cv=none; b=cRQpXqVu+RaNUn5S9TAILKY9eFg6+7O2uscaQ5g+pzY4BodJ9JIdxV8WLUtR0+kXvoRhroDCNJKxTsd0uLL1DqXQ45/7l+upzUwQBrNi2e7m2VWpaTCpzYfhXbmCXG+AuEbIN9ufxRKJl0QPJpEf8hYGbRxb87rhF4I9qmeJKrw=
+	t=1716819318; cv=none; b=rxQFAWaQm/JGrIFLJERVrwuLJRPVR+g/R4NIWU7dNWy7V4pG08eZYB2H3SPdTqGl1rs+IX4X00bEEgjF93+jDDWLdVp1WDbjj59SH8zMyFEpCd10oC6AMHSCi+cEMnamXtT+JVmZY+GbjCP2XBcKwxMRq2sdG0TSlyNsj2e+4OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716819318; c=relaxed/simple;
-	bh=40t4tHjWFDuMpxRmW027bCl5BGzQoCTq6GRC2BpRg8Y=;
+	bh=eR54nyN8X331jvh+2F+9aDH/YXJgBoJDMxx+DXSKR14=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P0AIaCShq1r0TPSqK2gzgZNmfMl4gMKqOpPcxL5bD+PDb2sqUqMFOAQlDu8qg524X5gWKoxVaEZqfxiWdkFJaaN+5UopR4PgaLy52OuJzgXZZDmgtO4lQxUOlcxVy3430m+0MhSsI85S/epG7J4uZg+U2WVAgVT2W5QC96pYmFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tua3JtTy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qriZPXxKLXr8s++VzFzN1WtvGj+ozRVj1sMfeWA2nS3h2LZ8JuG57DbsH31GnZqL9ll12UHOR+urqzMsB5AfXg1AwkU6itGvKIFUd3VgQIwS9kfJlSdtawOfnERTzUzym2IMb4LrOFfGtM6A2zONggkzgRBgcKCgRNHLsmGQV0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FH0Indix; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tua3JtTy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0EF1C4AF0A;
-	Mon, 27 May 2024 14:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716819317;
-	bh=40t4tHjWFDuMpxRmW027bCl5BGzQoCTq6GRC2BpRg8Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tua3JtTylt0nCWFisdjQYB2MgtgaqSBrL9wp/JVuJcwXxvYiMRL+2YxJIsVwSlh6S
-	 X+6FC45bHl4djHV4HoS4Zgix7I6LtczP8UzQH1e8/FIv3Ib7LUM62Fx/iesSfMFAJa
-	 x69kkwNuHhxbkWYYBl6A1HopCKNJmpjh6Q++9JK9sdDALEyNAeabQVxTxjKKLnTqh0
-	 /wozJ/YYSHTgp7JKPTqBMw6hUeEkAzqN2kn9SraSzD6Wni5WFz3bs34ssS5X0th3rC
-	 l7YCTeiX8PbjCc9T7coD9Rkwrs/HqKeXQ5vosraw2nS9XUvCI7p5e7t2CkidwHrWJR
-	 bZ1PEVTDS0sLQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Takashi Iwai <tiwai@suse.de>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 26/30] ACPI: video: Add backlight=native quirk for Lenovo Slim 7 16ARH7
-Date: Mon, 27 May 2024 10:13:35 -0400
-Message-ID: <20240527141406.3852821-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240527141406.3852821-1-sashal@kernel.org>
-References: <20240527141406.3852821-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FH0Indix"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716819316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hshwfl98bML8acqrBVRK8K6pB1i4C/7ItyePT11o37I=;
+	b=FH0Indix9f/mdiHiwZexNkJ4+ru6n6TNYOF6Q6CbGXwx5mdWfOgeh5jx/efXB7DHkC1VDL
+	arORcoFolLjzYoMI0JVIwUbfZB+jktbga8pzKuDOydmeZbgZOPupAKuMqdyLpNw9ej28iJ
+	uAIvWi+xIn4IRFaM7aKDut78yZ0UDMc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-120-AAUNmNJgPs6LTG_45hYmFg-1; Mon, 27 May 2024 10:15:09 -0400
+X-MC-Unique: AAUNmNJgPs6LTG_45hYmFg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 51D76185A78E;
+	Mon, 27 May 2024 14:15:09 +0000 (UTC)
+Received: from t490s.redhat.com (unknown [10.39.192.209])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 902091C00A8F;
+	Mon, 27 May 2024 14:15:07 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Subject: [PATCH v1 4/6] mm/page_alloc: clear PageBuddy using __ClearPageBuddy() for bad pages
+Date: Mon, 27 May 2024 16:14:52 +0200
+Message-ID: <20240527141454.113132-5-david@redhat.com>
+In-Reply-To: <20240527141454.113132-1-david@redhat.com>
+References: <20240527141454.113132-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.11
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-From: Takashi Iwai <tiwai@suse.de>
+Let's stop using page_mapcount_reset() and clear PageBuddy using
+__ClearPageBuddy() instead.
 
-[ Upstream commit c901f63dc142c48326931f164f787dfff69273d9 ]
-
-Lenovo Slim 7 16ARH7 is a machine with switchable graphics between AMD
-and Nvidia, and the backlight can't be adjusted properly unless
-acpi_backlight=native is passed.  Although nvidia-wmi-backlight is
-present and loaded, this doesn't work as expected at all.
-
-For making it working as default, add the corresponding quirk entry
-with a DMI matching "LENOVO" "82UX".
-
-Link: https://bugzilla.suse.com/show_bug.cgi?id=1217750
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/acpi/video_detect.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ mm/page_alloc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 9fdcc620c6524..2cc3821b2b16e 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -497,6 +497,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "82BK"),
- 		},
- 	},
-+	{
-+	 .callback = video_detect_force_native,
-+	 /* Lenovo Slim 7 16ARH7 */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "82UX"),
-+		},
-+	},
- 	{
- 	 .callback = video_detect_force_native,
- 	 /* Lenovo ThinkPad X131e (3371 AMD version) */
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 2e22ce5675ca..b595342e73c2 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -498,7 +498,8 @@ static void bad_page(struct page *page, const char *reason)
+ 	dump_stack();
+ out:
+ 	/* Leave bad fields for debug, except PageBuddy could make trouble */
+-	page_mapcount_reset(page); /* remove PageBuddy */
++	if (PageBuddy(page))
++		__ClearPageBuddy(page);
+ 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+ }
+ 
+@@ -1346,7 +1347,8 @@ static void check_new_page_bad(struct page *page)
+ {
+ 	if (unlikely(page->flags & __PG_HWPOISON)) {
+ 		/* Don't complain about hwpoisoned pages */
+-		page_mapcount_reset(page); /* remove PageBuddy */
++		if (PageBuddy(page))
++			__ClearPageBuddy(page);
+ 		return;
+ 	}
+ 
 -- 
-2.43.0
+2.45.1
 
