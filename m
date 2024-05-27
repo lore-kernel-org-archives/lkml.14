@@ -1,118 +1,153 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F3079DE
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 04:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09612D502
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 04:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716782478; cv=none; b=BxtauuSnoQCyMwv04DDCrPlOm+gPnDAYo5MiyKkHQYIOn/eiHnNK8oMlH8jv0HHhtoaMZwthK1Kj0PFpyHKtLOlRKSyt7FzBk7qoWFU5m9Zl8ucXQOqz3NwGpHGmMs3VQTvrCG/aItDRd7YfD060jX2t9D1htKFlXKzWg4/Pt2k=
+	t=1716782584; cv=none; b=oWApTT3b8X3TH+fDWyBYc2iMDmfdkVECgwdg/rLLXfkWEJrMWZm6UO8E6e5FiWgj3wHVYGoDK+EG4UtLUuTshj8wDzYehotND83GE7LG6gWr8Src9HwkufIKSbaMwunENFdXVuQaYBlcQoIm6aPJ1+nInH0Y4Isn4UueJF/fTUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716782478; c=relaxed/simple;
-	bh=JEmZ2ZNJgUk970OW5thFtZvmS2FUlgQSJCEho+rb7JI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HGzzrifVf1nKSGSGGf3aBBLMHxAfnmOpwHJQ/9kWz9YLIudJ0Nv3jCFihKycZ+yLGM7/0A6pcjbQTH5Y7GmkMb5T3FUAt6hlOOj1Qa+VLV7tKKrM3Qz8Ith09UCelyR1vOqqY+S/KUxWfVEmr4UhsmaZsgXlwi58GErh7ItW1Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ycj0/Gq0; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ycj0/Gq0"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e95a1d5ee2so52857021fa.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 21:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716782474; x=1717387274; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s5YuxOJdU9XB0S53SkjnfI1sZE6Vk9sFqwRQVMXQ1bQ=;
-        b=Ycj0/Gq0J09s7tWz+BnzDab4GyH5Bbb8q1ji+2lV/9MtFgHNS1G7YDUfORULGPNSqr
-         t4I1A/Nx8rGuQ2mKdRn07y3320IAGLZyEH7wOoJ69+sOjftL/Ybixid2TjhIm2dTUluy
-         B2aw3oFHrYM41Ljq4f7+Rk10LOxdXKi/YW9ozGY8fDnEze+6+ALDA7RcvBcex0uxSRiW
-         tQvFB+dNodyaLgt/1+TSlcYg+Zeuuos0QoreVuWKcz7HW+98naSvIImKeF1ACuhsPw34
-         EKpa05MpoSm1WuaE84Txqf7RvcInN+kZ/pXST9qoHZLzBREfcB7A1yR6YiXeEpXMpSir
-         kQrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716782474; x=1717387274;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s5YuxOJdU9XB0S53SkjnfI1sZE6Vk9sFqwRQVMXQ1bQ=;
-        b=rHi/IYaRsQcq+KnMYwlD6D+9bruESFQowGDmI/CYF7unnvoCar2cTBDiM/DqQWbdu+
-         hXjlifji1jcOjWG8m+d5XdAwFzPjRw7apDtN9i25YzxdH7++T5NmKxSZAV8CspatoFRA
-         asNBKd50J8qQwrS3Ye2/kVv/Bo5iDQX3KmIGRrwMqqn3bOdCeLk3bV1jqC16Qk3NMFr3
-         XN73WgK5su86o8VD5KuiTJvueWOJByeZMzyc4nAArJ9y+6qq5isZBCP62Zq/XiaqgKn8
-         4vmeaN607/AxYesPic+WvxpwzSbFDZn/K3KZo2UcpuXtYgfIU7HhIe9EQ+DLcJHwNM+V
-         Hx5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUhWFyBjealY4pnHuvbQT5HBdES6zTcVofW6rYK+L8aLV9HcArMFAXSsLvr677AHQFUhZo6ynBV7QHdsN9hjrWZ75dVY1GTaJ3VeteE
-X-Gm-Message-State: AOJu0YydVYIUOz1jdJZacGHrXNikfAAPQC+oEVpkb7NpcKBYRTmTxJwp
-	9gzn0hOAKtyzot14WPjxpOitl8K+i+jvxrlORr9Mn+nJr2FwzAuDII4cmDshoLk=
-X-Google-Smtp-Source: AGHT+IG4aug5RPq90CPydL6j3kQeZiP8MsFOZIFTCpgaUm2yZDiAvuuVVMdgHT4gIaI+finP5qdUzg==
-X-Received: by 2002:a2e:9b0a:0:b0:2e6:935f:b6d3 with SMTP id 38308e7fff4ca-2e95b096b74mr60317541fa.14.1716782474129;
-        Sun, 26 May 2024 21:01:14 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95bcdb000sm17915321fa.47.2024.05.26.21.01.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 May 2024 21:01:13 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 27 May 2024 07:01:11 +0300
-Subject: [PATCH] arm64: dts: qcom: sdm850-lenovo-yoga-c630: add WiFi
- calibration variant
+	s=arc-20240116; t=1716782584; c=relaxed/simple;
+	bh=iFsO/uDenGFjNxv/Aedsr/2qc9SLqkBaJgizzpFNTHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WvJkyLZ/L18PqTSVGZV4dzF2jb1G1/TtIFWIuyY+tAnX8O3GwKFe4jMH2g8YX7KD3lW5zzfda9wxXDbP/m5fHNjJ9KoWXmX1rPAMBEgXBL4q/70K0+q5O0y6ul6rWxuU7tqTLLB7NfYFwjcTx0z7eYW8VyrTtIXTteLytrGzXBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-eb-6654045d84c7
+Date: Mon, 27 May 2024 12:56:08 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com,
+	akpm@linux-foundation.org, vernhao@tencent.com,
+	mgorman@techsingularity.net, hughd@google.com, willy@infradead.org,
+	david@redhat.com, peterz@infradead.org, luto@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [PATCH v10 00/12] LUF(Lazy Unmap Flush) reducing tlb numbers
+ over 90%
+Message-ID: <20240527035608.GB12937@system.software.com>
+References: <20240510065206.76078-1-byungchul@sk.com>
+ <982317c0-7faa-45f0-82a1-29978c3c9f4d@intel.com>
+ <20240527015732.GA61604@system.software.com>
+ <8734q46jc8.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240527-yoga-wifi-calib-v1-1-af9dc33880e8@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAIYFVGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDUyNz3cr89ETd8sy0TN3kxJzMJF1DMxNLi+SkRBPzlEQloK6CotS0zAq
- widGxtbUAomvuFmEAAAA=
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=949;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=JEmZ2ZNJgUk970OW5thFtZvmS2FUlgQSJCEho+rb7JI=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmVAWJzAFwkymeAxeLbiqXk0UiEdxqPqZXlPTnn
- kDiUyaGWvGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZlQFiQAKCRCLPIo+Aiko
- 1RLAB/4uAUE+3WQhZCRKNRg+lpWL3qVYzblwGJnLN4ougnP5ykM8XWe/IP7aXReNFEjV1tNopJa
- tKHkUT1WhnEp+/CzNK7qtQW1SViFIpKSKnxqn5FK27o9s6Mm6edoWZxo+lkfvQOZcwjjT0LtK9K
- nNbrPTh/meZnI1+41HXZCUJBX/oIEcCzB56oCsnuc9+rjk13doWgVwG47NzdjqfSuGF+UY9+bYA
- sD2iFPa+HgCZk+grX7DWxeqtOAxe736wnRszZkAoAUO7hHfjUBOHLNV9VTe87/1FdNS408j8SaZ
- 24SQ4zQD15PMbSMaupAXtd7LAgmyHRmTr+0fzKrkXpgpHcad
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8734q46jc8.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsXC9ZZnoe4H1pA0g7dfdSzmrF/DZvF5wz82
+	i08vHzBavNjQzmjxdf0vZounn/pYLC7vmsNmcW/Nf1aL87vWslrsWLqPyeLSgQVMFsd7DzBZ
+	zL/3mc1i86apzBbHp0xltPj9A6j45KzJLA6CHt9b+1g8ds66y+6xYFOpx+YVWh6L97xk8ti0
+	qpPNY9OnSewe786dY/c4MeM3i8e8k4Ee7/ddZfPY+svOo3HqNTaPz5vkAviiuGxSUnMyy1KL
+	9O0SuDI+HbvGWvBGouL1ssUsDYyPhboYOTkkBEwkGietZu9i5ACzL7eLgYRZBFQlJr/8zApi
+	swmoS9y48ZMZxBYR0JD4tHA5UDkXB7NAH7PEmsWHGEESwgIhEtM+rGECsXkFLCQuLN0PZgsJ
+	nGaU2NrmChEXlDg58wkLiM0soCVx499LJpC9zALSEsv/cYCYnAJ2Eg93SIJUiAooSxzYdpwJ
+	ZJWEwC52iU37z7FCnCwpcXDFDZYJjAKzkEydhWTqLISpCxiZVzEKZeaV5SZm5pjoZVTmZVbo
+	JefnbmIExuOy2j/ROxg/XQg+xCjAwajEw5vhHpwmxJpYVlyZe4hRgoNZSYRXZF5gmhBvSmJl
+	VWpRfnxRaU5q8SFGaQ4WJXFeo2/lKUIC6YklqdmpqQWpRTBZJg5OqQZGAQW3lAO/3WLNZB3u
+	b5lx7H1wh+018V0q2m98bGUuKvn1s1/j2vx/j3VNS9/JiTP2Sd29ciUswPPU8kMdr1jEa431
+	rzHHqr+49VaCfdo3oa+le74dXCAeWMAgtYIzSi1cSlD0KnsIT2D71IYlNVqu35UXrPWe63un
+	rbOUPaFuJ8OsG4+4t/xQYinOSDTUYi4qTgQAiJQRe8MCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsXC5WfdrBvLEpJmcGKFuMWc9WvYLD5v+Mdm
+	8enlA0aLFxvaGS2+rv/FbPH0Ux+LxeG5J1ktLu+aw2Zxb81/Vovzu9ayWuxYuo/J4tKBBUwW
+	x3sPMFnMv/eZzWLzpqnMFsenTGW0+P0DqPjkrMksDkIe31v7WDx2zrrL7rFgU6nH5hVaHov3
+	vGTy2LSqk81j06dJ7B7vzp1j9zgx4zeLx7yTgR7v911l81j84gOTx9Zfdh6NU6+xeXzeJBfA
+	H8Vlk5Kak1mWWqRvl8CV8enYNdaCNxIVr5ctZmlgfCzUxcjBISFgInG5XayLkZODRUBVYvLL
+	z6wgNpuAusSNGz+ZQWwRAQ2JTwuXs3cxcnEwC/QxS6xZfIgRJCEsECIx7cMaJhCbV8BC4sLS
+	/WC2kMBpRomtba4QcUGJkzOfsIDYzAJaEjf+vWQC2cssIC2x/B8HiMkpYCfxcIckSIWogLLE
+	gW3HmSYw8s5C0jwLSfMshOYFjMyrGEUy88pyEzNzTPWKszMq8zIr9JLzczcxAqNrWe2fiTsY
+	v1x2P8QowMGoxMOb4R6cJsSaWFZcmXuIUYKDWUmEV2ReYJoQb0piZVVqUX58UWlOavEhRmkO
+	FiVxXq/w1AQhgfTEktTs1NSC1CKYLBMHp1QD4/zrMn9mpt5cXHXij9nO8hUH/L6cSeTd8XhJ
+	yp8V3jyfPr3q+SLn/m/L9N3quYFm1xMu1P8Qn9fZdUH00MtLbSly9hMdU5wXPP8SqK/2XKom
+	ZVP1pt06Xaf4/+rWpVYeVXeZem/imTdN09ZMn9Tss6XcZqd/2q46c3f7KyY/ll2qq/mscvxN
+	vasSS3FGoqEWc1FxIgDJUBi2qgIAAA==
+X-CFilter-Loop: Reflected
 
-Add calibration variant that is used by the board data for the laptop:
+On Mon, May 27, 2024 at 11:10:15AM +0800, Huang, Ying wrote:
+> Byungchul Park <byungchul@sk.com> writes:
+> 
+> > On Fri, May 24, 2024 at 10:16:39AM -0700, Dave Hansen wrote:
+> >> On 5/9/24 23:51, Byungchul Park wrote:
+> >> > To achieve that:
+> >> > 
+> >> >    1. For the folios that map only to non-writable tlb entries, prevent
+> >> >       tlb flush during unmapping but perform it just before the folios
+> >> >       actually become used, out of buddy or pcp.
+> >> 
+> >> Is this just _pure_ unmapping (like MADV_DONTNEED), or does it apply to
+> >> changing the memory map, like munmap() itself?
+> >
+> > I think it can be applied to any unmapping of ro ones but LUF for now is
+> > working only with unmapping during folio migrion and reclaim.
+> >
+> >> >    2. When any non-writable ptes change to writable e.g. through fault
+> >> >       handler, give up luf mechanism and perform tlb flush required
+> >> >       right away.
+> >> > 
+> >> >    3. When a writable mapping is created e.g. through mmap(), give up
+> >> >       luf mechanism and perform tlb flush required right away.
+> >> 
+> >> Let's say you do this:
+> >> 
+> >> 	fd = open("/some/file", O_RDONLY);
+> >> 	ptr1 = mmap(-1, size, PROT_READ, ..., fd, ...);
+> >> 	foo1 = *ptr1;
+> >> 
+> >> You now have a read-only PTE pointing to the first page of /some/file.
+> >> Let's say try_to_unmap() comes along and decides it can_luf_folio().
+> >> The page gets pulled out of the page cache and freed, the PTE is zeroed.
+> >>  But the TLB is never flushed.
+> >> 
+> >> Now, someone does:
+> >> 
+> >> 	fd2 = open("/some/other/file", O_RDONLY);
+> >> 	ptr2 = mmap(ptr1, size, PROT_READ, MAP_FIXED, fd, ...);
+> >> 	foo2 = *ptr2;
+> >> 
+> >> and they overwrite the old VMA.  Does foo2 have the contents of the new
+> >> "/some/other/file" or the old "/some/file"?  How does the new mmap()
+> >
+> > Good point.  It should've give up LUF at the 2nd mmap() in this case.
+> > I will fix it by introducing a new flag in task_struct indicating if LUF
+> > has left stale maps for the task so that LUF can give up and flush right
+> > away in mmap().
+> >
+> >> know that there was something to flush?
+> >> 
+> >> BTW, the same thing could happen without a new mmap().  Someone could
+> >> modify the file in the middle, maybe even from another process.
+> >
+> > Thank you for the pointing out.  I will fix it too by introducing a new
+> > flag in inode or something to make LUF aware if updating the file has
+> > been tried so that LUF can give up and flush right away in the case.
+> >
+> > Plus, I will add another give-up at code changing the permission of vma
+> > to writable.
+> 
+> I guess that you need a framework similar as
+> "flush_tlb_batched_pending()" to deal with interaction with other TLB
+> related operations.
 
-bus=snoc,qmi-board-id=ff,qmi-chip-id=30214,variant=Lenovo_C630
+Thank you.  I will check it.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 1 +
- 1 file changed, 1 insertion(+)
+	Byungchul
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index 47dc42f6e936..17773f9dba44 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -834,6 +834,7 @@ &wifi {
- 	vdd-3.3-ch1-supply = <&vreg_l23a_3p3>;
- 
- 	qcom,snoc-host-cap-8bit-quirk;
-+	qcom,ath10k-calibration-variant = "Lenovo_C630";
- };
- 
- &crypto {
-
----
-base-commit: 8314289a8d50a4e05d8ece1ae0445a3b57bb4d3b
-change-id: 20240527-yoga-wifi-calib-16498cba47da
-
-Best regards,
--- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
+> --
+> Best Regards,
+> Huang, Ying
+> 
+> > Thank you very much.
+> >
+> > 	Byungchul
+> >
+> >> 	fd = open("/some/file", O_RDONLY);
+> >> 	ptr1 = mmap(-1, size, PROT_READ, ..., fd, ...);
+> >> 	foo1 = *ptr1;
+> >> 	// LUF happens here
+> >> 	// "/some/file" changes
+> >> 	foo2 = *ptr1; // Does this see the change?
