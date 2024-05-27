@@ -1,126 +1,97 @@
-Received: from mg.ssi.bg (mg.ssi.bg [193.238.174.37])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBFB15F41F;
-	Mon, 27 May 2024 18:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3431DDC9;
+	Mon, 27 May 2024 18:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716833344; cv=none; b=Ihr65HHIXuYQ2nHJgn2PK6MPJHFdbv5yCygCei01QkXc5XliuPLMK2PXZx/WBAfT4m49mG5O3El1XCEobOJsXgOREjDcONJh17IUhjWpC0Oy6VI9/E9XzEa3eClpESkBI7qIH3wAWi/AWO3mlYZubAkiHfUmdJ1VXoNV62aFM/4=
+	t=1716833531; cv=none; b=shoL27b2kY6ARNtfPJFE8lYqXCwyln1capaRbBc8pRXzoVave5dH4wWdEzgeJ9pGBC5qL/D9lNMciqSa3/nxSXsnWNvA2aZs7gqs2D9EiUo+rX88gd5o/Ad6RHWLeYrDlNyDnW89E3rmghb0Rr3mgI9tWJrg3h1kKNoLX4Ge6L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716833344; c=relaxed/simple;
-	bh=9MFvsjCLOxLQUeqYvox4UAHsYgXHt0OZSILjh79XzQw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=vDTQQZUobltKkfAF6+0HEj8ClHHBUZvuSn2O4Su6ayTxk17270vWo/5GiE8Vm0gDmuLjukZ2iX943gI8m27xn9y1aeXjnJ2O795WErlOsYtJftOXQl1GvZYiseQhvtBVIrsbotOxg7pZrAAagbf8bRBw0zTHmoTZVGxnA0+Q5oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (1024-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=GlJDVE5q; arc=none smtp.client-ip=193.238.174.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ssi.bg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
+	s=arc-20240116; t=1716833531; c=relaxed/simple;
+	bh=vyOPeMDydjG+3mtefSP68GvSsts0LUWn9Mx0JVnwW1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dXaqgor8G9VT2gP3hmTVYjX2RpUDN1QcpokSmuMo7X8W/ATTzpPrEbqlbt3yfWp5IH6+MpXcG69u49I05YTRw0nqCynibQSUR/v/KvI9HBit6dwMYyObaDf/BUA7XPXCVhJRmDOmY0TQJN/ePIBQ27yWtNVSCt/0b+fjmwjNu/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gbZ8nyH6; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="GlJDVE5q"
-Received: from mg.ssi.bg (localhost [127.0.0.1])
-	by mg.ssi.bg (Proxmox) with ESMTP id 407A635F2B;
-	Mon, 27 May 2024 20:59:49 +0300 (EEST)
-Received: from ink.ssi.bg (ink.ssi.bg [193.238.174.40])
-	by mg.ssi.bg (Proxmox) with ESMTPS;
-	Mon, 27 May 2024 20:59:48 +0300 (EEST)
-Received: from ja.ssi.bg (unknown [213.16.62.126])
-	by ink.ssi.bg (Postfix) with ESMTPSA id D5E36900442;
-	Mon, 27 May 2024 20:59:44 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ssi.bg; s=ink;
-	t=1716832785; bh=9MFvsjCLOxLQUeqYvox4UAHsYgXHt0OZSILjh79XzQw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=GlJDVE5qpBrmHj8Z7pNUmlXavoobwPcF5d7zxzCGcQWybi8S1fjopwnoyX98Renzd
-	 qWdR0ZtM1u12YRrPg1pIBADW5aDGd3UbL1dWGClQALNXt5ZXlgaYmEEbOHAcrbm3ki
-	 UWj5BGB2BvgMu3SLeh7y2Y5biZdAZp6xqZv7WXzA=
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by ja.ssi.bg (8.18.1/8.17.1) with ESMTP id 44RHxb7L058509;
-	Mon, 27 May 2024 20:59:37 +0300
-Date: Mon, 27 May 2024 20:59:37 +0300 (EEST)
-From: Julian Anastasov <ja@ssi.bg>
-To: Ismael Luceno <iluceno@suse.de>
-cc: linux-kernel@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        =?UTF-8?Q?Michal_Kube=C4=8Dek?= <mkubecek@suse.com>,
-        Simon Horman <horms@verge.net.au>, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: Re: [PATCH] ipvs: Avoid unnecessary calls to skb_is_gso_sctp
-In-Reply-To: <20240523165445.24016-1-iluceno@suse.de>
-Message-ID: <16cacbcd-2f4c-1dc1-ecf7-8c081c84c6aa@ssi.bg>
-References: <20240523165445.24016-1-iluceno@suse.de>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gbZ8nyH6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id ECA69240002;
+	Mon, 27 May 2024 18:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716833526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=84tR/MeWeFcIW4v7f6DJplwGROoeC+MxszrPF8W46tc=;
+	b=gbZ8nyH6pTNk7Q6vldoWwK/CoNlpxOkcJiJ5DMsp6UH91YzFPiS8OuNKTpWqe/p6bHhPK4
+	4vnED5Twr6ceiP2ABdMkobMY4NBihJG/Mw5UuB4UjF4MtY7WLDOnZOsW4650dt/Vl8N+sh
+	qOtKyO09LMhFg1JdHEGvrD1O46UjAYEy8JQYFk7etGuTWpE0t5tYC4jOcQYAfmaGU9l/3f
+	XnOEeO58kdR0NbsI993o1UnjSywrJWrEuZGBKsOON+Z8D9OcAt6cqy7ek2XxyuhcbE9Qhp
+	XPJlTZaY+ie139w7cTNLtfVAnCG/3NRgfKTX3WOE0ytNxge6BFTyzd0CzQ292w==
+Message-ID: <1b1d8d54-5440-40f1-9324-8476ebf4678f@bootlin.com>
+Date: Mon, 27 May 2024 20:12:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463811672-159640941-1716832778=:3498"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] riscv: dts: sophgo: Add LicheeRV Nano board device
+ tree
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Chen Wang <unicorn_wang@outlook.com>,
+ Inochi Amaoto <inochiama@outlook.com>, Chao Wei <chao.wei@sophgo.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20240527-sg2002-v1-0-1b6cb38ce8f4@bootlin.com>
+ <20240527-sg2002-v1-5-1b6cb38ce8f4@bootlin.com>
+Content-Language: en-US
+From: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+In-Reply-To: <20240527-sg2002-v1-5-1b6cb38ce8f4@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.bonnefille@bootlin.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
----1463811672-159640941-1716832778=:3498
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
 
 
-	Hello,
-
-On Thu, 23 May 2024, Ismael Luceno wrote:
-
-> In the context of the SCTP SNAT/DNAT handler, these calls can only
-> return true.
+On 5/27/24 12:28 PM, Thomas Bonnefille wrote:
+> LicheeRV Nano [1] is an embedded development platform base on the SOPHGO
+> SG2002 chip.
 > 
-> Ref: e10d3ba4d434 ("ipvs: Fix checksumming on GSO of SCTP packets")
-
-	checkpatch.pl prefers to see the "commit" word:
-
-Ref: commit e10d3ba4d434 ("ipvs: Fix checksumming on GSO of SCTP packets")
-
-> Signed-off-by: Ismael Luceno <iluceno@suse.de>
-
-	Looks good to me for nf-next, thanks!
-
-Acked-by: Julian Anastasov <ja@ssi.bg>
-
-> CC: Pablo Neira Ayuso <pablo@netfilter.org>
-> CC: Michal Kubeček <mkubecek@suse.com>
-> CC: Simon Horman <horms@verge.net.au>
-> CC: Julian Anastasov <ja@ssi.bg>
-> CC: lvs-devel@vger.kernel.org
-> CC: netfilter-devel@vger.kernel.org
-> CC: netdev@vger.kernel.org
-> CC: coreteam@netfilter.org
+> Add only support for UART.
+> 
+> Link: https://wiki.sipeed.com/hardware/en/lichee/RV_Nano/1_intro.html
+> [1]
+> 
+> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
 > ---
->  net/netfilter/ipvs/ip_vs_proto_sctp.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>   arch/riscv/boot/dts/sophgo/Makefile                |  1 +
+>   .../boot/dts/sophgo/sg2002-lichee-rv-nano.dts      | 25 ++++++++++++++++++++++
+>   2 files changed, 26 insertions(+)
 > 
-> diff --git a/net/netfilter/ipvs/ip_vs_proto_sctp.c b/net/netfilter/ipvs/ip_vs_proto_sctp.c
-> index 1e689c714127..83e452916403 100644
-> --- a/net/netfilter/ipvs/ip_vs_proto_sctp.c
-> +++ b/net/netfilter/ipvs/ip_vs_proto_sctp.c
-> @@ -126,7 +126,7 @@ sctp_snat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
->  	if (sctph->source != cp->vport || payload_csum ||
->  	    skb->ip_summed == CHECKSUM_PARTIAL) {
->  		sctph->source = cp->vport;
-> -		if (!skb_is_gso(skb) || !skb_is_gso_sctp(skb))
-> +		if (!skb_is_gso(skb))
->  			sctp_nat_csum(skb, sctph, sctphoff);
->  	} else {
->  		skb->ip_summed = CHECKSUM_UNNECESSARY;
-> @@ -175,7 +175,7 @@ sctp_dnat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
->  	    (skb->ip_summed == CHECKSUM_PARTIAL &&
->  	     !(skb_dst(skb)->dev->features & NETIF_F_SCTP_CRC))) {
->  		sctph->dest = cp->dport;
-> -		if (!skb_is_gso(skb) || !skb_is_gso_sctp(skb))
-> +		if (!skb_is_gso(skb))
->  			sctp_nat_csum(skb, sctph, sctphoff);
->  	} else if (skb->ip_summed != CHECKSUM_PARTIAL) {
->  		skb->ip_summed = CHECKSUM_UNNECESSARY;
-> -- 
-> 2.44.0
+> diff --git a/arch/riscv/boot/dts/sophgo/Makefile b/arch/riscv/boot/dts/sophgo/Makefile
+> index 57ad82a61ea6..5759b21805dc 100644
+> --- a/arch/riscv/boot/dts/sophgo/Makefile
+> +++ b/arch/riscv/boot/dts/sophgo/Makefile
+> @@ -1,4 +1,5 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   dtb-$(CONFIG_ARCH_SOPHGO) += cv1800b-milkv-duo.dtb
+>   dtb-$(CONFIG_ARCH_SOPHGO) += cv1812h-huashan-pi.dtb
+> +dtb-$(CONFIG_ARCH_SOPHGO) += sg2002-licheerv-nano.dtb
+>   dtb-$(CONFIG_ARCH_SOPHGO) += sg2042-milkv-pioneer.dtb
+>...
+> +++ b/arch/riscv/boot/dts/sophgo/sg2002-lichee-rv-nano.dts
 
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
----1463811672-159640941-1716832778=:3498--
-
+I'm really sorry, it seems that I made a mistake here with git, the 
+device tree should not have an hyphen in its name, I'll send a new 
+version soon to correct this.
