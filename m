@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CEF16C6A0;
-	Mon, 27 May 2024 16:15:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518EA16D333;
+	Mon, 27 May 2024 16:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826522; cv=none; b=WoCl4DTOfgsf8dEamQTV1My5m13BclHNiVArWOSSypuh7mxG95a1A3Q+atkYAVOPsWmN5ZeFfKLG+SLmpDMKLrYpesMLpWy7LiHsCqQhHtVLneZS0Qu9fzmF/eXZFWlQlLPHDBzjQhqnSWHIzLcA6tmYmclZXGWQ4V7CqYLd9To=
+	t=1716826526; cv=none; b=SG83cYDsBvEWduOPGR8V4NkbLUXZlV+Vqrmhk2Gj9ZL/TIFsc0aCTb8O047m0Na6z0lSqTWEwz61vVr+qtXJSevauR2bAU2V03FaC3oQa8fOF13DalVsQA9yIvrttiSaLDpIeaJTEJhieguT+q9Ia9+6AwTJvmLojpt+PrafXDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826522; c=relaxed/simple;
-	bh=x/m77iqhUFE/lj7qj1x4mjZYBl01jxuGtZ9/VfM95qo=;
+	s=arc-20240116; t=1716826526; c=relaxed/simple;
+	bh=47UWH4KURJgUJfA5++HvyM/XP+Ig032FdKBU4JWD2mU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q4Nq+2Q5x32yE89EKb3CjoPH5hTGt60D+jbBYX6FLHDFEIEjWMmf1vm5k1fqNbmi6aw5p9hepjdycFhmRC8YGRCBGRQ+R9kkE6HrO/kk5m9U5RNrCBl40di4hPsCHoV1W1WYb6ogheY0a1CkfNprE0H61cxQQl1GLgin7meOGJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CRs0Bt2a; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=Zf30hbe5d/bdlosa1JLgG19wzdrV/4KlgcMUBsfBhyntHdYog6JksybEVQKAoZloivMNimuxIjaiP3iSQN463oSVva/IbkzR2tJ+SYKD5w+UNVXWIMMCSBCYHfXYZ7nLDqM1wH7/68zRvI+Lcre4yg5xMf4Sh7nOYcNEhfd+aa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F4h6G8/A; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CRs0Bt2a"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 6C5F8FF80C;
-	Mon, 27 May 2024 16:15:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F4h6G8/A"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 3EA1DFF80F;
+	Mon, 27 May 2024 16:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716826518;
+	t=1716826522;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gEUkUf+BSyAO3M0CiXuz/ivWZ/onbuyxsn9Wx1tQueo=;
-	b=CRs0Bt2aY+bUF72VIn1+7ihLLbL6Mu17GL06QgZcN+v7HYoOOhKR7L0m/HmJ54tZUv2IJn
-	50l/PUaq2subgrdUZr8cG5ExgZRdT1Y5427Inld3sEzNozK3FHLLhCDRiu9XcaOPwslj+6
-	3Wy3GQxbr4ZLj90oyb8Iy9lpoZr+Kxmf057cci+bzIMVGLE7Qd8JV8xVwz/kMw+JtGVUss
-	qOzPJvQ6vWisB1cqhnRHOBPA5vSXF8Ht26/lxny1R7VIXNpnBw0nkRmu9NMRAVqXBTPOTB
-	DDM9bGqFbJs0MXsebPrydEkW8OsMO3lKPcv2hT23Kpt/QCK7NIQvvmja1OupSQ==
+	bh=mF8W0q33/WLkH7WVZ32ffP/0R0KTagxfDzA1SpJMHeE=;
+	b=F4h6G8/AlLbVnFnZ5vKQPhDJdVvmTWCmZGLDBNDnIIq3lB3QnQZFz/my78gSgZ9BHAFa43
+	Ml1Il0+9vCqn1iLh7jgMukY7Q+Cp6xI1wZV0vllvxhPcTaNTBzO0wiTZWLUZnMAftkWPd4
+	sacXvNPipctbZCxUQgcCMijue3RtJQ/8b7ta04+kylDMtPNpgSFeqghxRNHTgay6wjEKYd
+	vApo00aynnlhxHy2rzNzLXW9qaQxzhm59P0u+3p6fyNqhvLfOXSOF1cxt0ju058mHRISce
+	pMl/w15TJv15xlBVbDgKhVM1j4br6z4AwNU/OmGyJEUBiA66LPgwGJ8hJNtpbw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Simon Horman <horms@kernel.org>,
 	Sai Krishna Gajula <saikrishnag@marvell.com>,
@@ -65,9 +65,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 11/19] irqchip: Add support for LAN966x OIC
-Date: Mon, 27 May 2024 18:14:38 +0200
-Message-ID: <20240527161450.326615-12-herve.codina@bootlin.com>
+Subject: [PATCH v2 14/19] of: unittest: Add tests for changeset properties adding
+Date: Mon, 27 May 2024 18:14:41 +0200
+Message-ID: <20240527161450.326615-15-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240527161450.326615-1-herve.codina@bootlin.com>
 References: <20240527161450.326615-1-herve.codina@bootlin.com>
@@ -77,373 +77,197 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-The Microchip LAN966x outband interrupt controller (OIC) maps the
-internal interrupt sources of the LAN966x device to an external
-interrupt.
-When the LAN966x device is used as a PCI device, the external interrupt
-is routed to the PCI interrupt.
+No test cases are present to test the of_changes_add_prop_*() function
+family.
+
+Add a new test to fill this lack.
+Functions tested are:
+  - of_changes_add_prop_string()
+  - of_changes_add_prop_string_array()
+  - of_changeset_add_prop_u32()
+  - of_changeset_add_prop_u32_array()
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/irqchip/Kconfig           |  12 ++
- drivers/irqchip/Makefile          |   1 +
- drivers/irqchip/irq-lan966x-oic.c | 308 ++++++++++++++++++++++++++++++
- 3 files changed, 321 insertions(+)
- create mode 100644 drivers/irqchip/irq-lan966x-oic.c
+ drivers/of/unittest.c | 155 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 155 insertions(+)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 14464716bacb..348f34525d23 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -169,6 +169,18 @@ config IXP4XX_IRQ
- 	select IRQ_DOMAIN
- 	select SPARSE_IRQ
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 445ad13dab98..f8edc96db680 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -917,6 +917,160 @@ static void __init of_unittest_changeset(void)
+ #endif
+ }
  
-+config LAN966X_OIC
-+	tristate "Microchip LAN966x OIC Support"
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+	help
-+	  Enable support for the LAN966x Outbound Interrupt Controller.
-+	  This controller is present on the Microchip LAN966x PCI device and
-+	  maps the internal interrupts sources to PCIe interrupt.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called irq-lan966x-oic.
-+
- config MADERA_IRQ
- 	tristate
- 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index d9dc3d99aaa8..9f6f88274bec 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -104,6 +104,7 @@ obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
- obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
- obj-$(CONFIG_IMX_MU_MSI)		+= irq-imx-mu-msi.o
- obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
-+obj-$(CONFIG_LAN966X_OIC)		+= irq-lan966x-oic.o
- obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
-diff --git a/drivers/irqchip/irq-lan966x-oic.c b/drivers/irqchip/irq-lan966x-oic.c
-new file mode 100644
-index 000000000000..a5f64610e62d
---- /dev/null
-+++ b/drivers/irqchip/irq-lan966x-oic.c
-@@ -0,0 +1,308 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for the Microchip LAN966x outbound interrupt controller
-+ *
-+ * Copyright (c) 2024 Technology Inc. and its subsidiaries.
-+ *
-+ * Authors:
-+ *	Horatiu Vultur <horatiu.vultur@microchip.com>
-+ *	Clément Léger <clement.leger@bootlin.com>
-+ *	Herve Codina <herve.codina@bootlin.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/build_bug.h>
-+#include <linux/interrupt.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irq.h>
-+#include <linux/iopoll.h>
-+#include <linux/mfd/core.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/delay.h>
-+
-+struct lan966x_oic_chip_regs {
-+	int reg_off_ena_set;
-+	int reg_off_ena_clr;
-+	int reg_off_sticky;
-+	int reg_off_ident;
-+	int reg_off_map;
-+};
-+
-+struct lan966x_oic_data {
-+	struct irq_domain *domain;
-+	void __iomem *regs;
-+	int irq;
-+};
-+
-+#define LAN966X_OIC_NR_IRQ 86
-+
-+/* Interrupt sticky status */
-+#define LAN966X_OIC_INTR_STICKY		0x30
-+#define LAN966X_OIC_INTR_STICKY1	0x34
-+#define LAN966X_OIC_INTR_STICKY2	0x38
-+
-+/* Interrupt enable */
-+#define LAN966X_OIC_INTR_ENA		0x48
-+#define LAN966X_OIC_INTR_ENA1		0x4c
-+#define LAN966X_OIC_INTR_ENA2		0x50
-+
-+/* Atomic clear of interrupt enable */
-+#define LAN966X_OIC_INTR_ENA_CLR	0x54
-+#define LAN966X_OIC_INTR_ENA_CLR1	0x58
-+#define LAN966X_OIC_INTR_ENA_CLR2	0x5c
-+
-+/* Atomic set of interrupt */
-+#define LAN966X_OIC_INTR_ENA_SET	0x60
-+#define LAN966X_OIC_INTR_ENA_SET1	0x64
-+#define LAN966X_OIC_INTR_ENA_SET2	0x68
-+
-+/* Mapping of source to destination interrupts (_n = 0..8) */
-+#define LAN966X_OIC_DST_INTR_MAP(_n)	(0x78 + (_n) * 4)
-+#define LAN966X_OIC_DST_INTR_MAP1(_n)	(0x9c + (_n) * 4)
-+#define LAN966X_OIC_DST_INTR_MAP2(_n)	(0xc0 + (_n) * 4)
-+
-+/* Currently active interrupt sources per destination (_n = 0..8) */
-+#define LAN966X_OIC_DST_INTR_IDENT(_n)	(0xe4 + (_n) * 4)
-+#define LAN966X_OIC_DST_INTR_IDENT1(_n)	(0x108 + (_n) * 4)
-+#define LAN966X_OIC_DST_INTR_IDENT2(_n)	(0x12c + (_n) * 4)
-+
-+static unsigned int lan966x_oic_irq_startup(struct irq_data *data)
++static void __init __maybe_unused changeset_check_string(struct device_node *np,
++							 const char *prop_name,
++							 const char *expected_str)
 +{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	struct irq_chip_type *ct = irq_data_get_chip_type(data);
-+	struct lan966x_oic_chip_regs *chip_regs = gc->private;
-+	u32 map;
++	const char *str;
++	int ret;
 +
-+	irq_gc_lock(gc);
-+
-+	/* Map the source interrupt to the destination */
-+	map = irq_reg_readl(gc, chip_regs->reg_off_map);
-+	map |= data->mask;
-+	irq_reg_writel(gc, map, chip_regs->reg_off_map);
-+
-+	irq_gc_unlock(gc);
-+
-+	ct->chip.irq_ack(data);
-+	ct->chip.irq_unmask(data);
-+
-+	return 0;
-+}
-+
-+static void lan966x_oic_irq_shutdown(struct irq_data *data)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	struct irq_chip_type *ct = irq_data_get_chip_type(data);
-+	struct lan966x_oic_chip_regs *chip_regs = gc->private;
-+	u32 map;
-+
-+	ct->chip.irq_mask(data);
-+
-+	irq_gc_lock(gc);
-+
-+	/* Unmap the interrupt */
-+	map = irq_reg_readl(gc, chip_regs->reg_off_map);
-+	map &= ~data->mask;
-+	irq_reg_writel(gc, map, chip_regs->reg_off_map);
-+
-+	irq_gc_unlock(gc);
-+}
-+
-+static int lan966x_oic_irq_set_type(struct irq_data *data,
-+				    unsigned int flow_type)
-+{
-+	if (flow_type != IRQ_TYPE_LEVEL_HIGH) {
-+		pr_err("lan966x oic doesn't support flow type %d\n", flow_type);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void lan966x_oic_irq_handler_domain(struct irq_domain *d, u32 first_irq)
-+{
-+	struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, first_irq);
-+	struct lan966x_oic_chip_regs *chip_regs = gc->private;
-+	unsigned long ident;
-+	unsigned int hwirq;
-+
-+	ident = irq_reg_readl(gc, chip_regs->reg_off_ident);
-+	if (!ident)
++	ret = of_property_read_string(np, prop_name, &str);
++	if (unittest(ret == 0, "failed to read %s\n", prop_name))
 +		return;
 +
-+	for_each_set_bit(hwirq, &ident, 32)
-+		generic_handle_domain_irq(d, hwirq + first_irq);
++	unittest(strcmp(str, expected_str) == 0,
++		 "%s value mismatch (read '%s', exp '%s')\n",
++		 prop_name, str, expected_str);
 +}
 +
-+static void lan966x_oic_irq_handler(struct irq_desc *desc)
++static void __init __maybe_unused changeset_check_string_array(struct device_node *np,
++							       const char *prop_name,
++							       const char * const *expected_array,
++							       unsigned int count)
 +{
-+	struct irq_domain *d = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+
-+	chained_irq_enter(chip, desc);
-+	lan966x_oic_irq_handler_domain(d, 0);
-+	lan966x_oic_irq_handler_domain(d, 32);
-+	lan966x_oic_irq_handler_domain(d, 64);
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static struct lan966x_oic_chip_regs lan966x_oic_chip_regs[3] = {
-+	{
-+		.reg_off_ena_set = LAN966X_OIC_INTR_ENA_SET,
-+		.reg_off_ena_clr = LAN966X_OIC_INTR_ENA_CLR,
-+		.reg_off_sticky = LAN966X_OIC_INTR_STICKY,
-+		.reg_off_ident = LAN966X_OIC_DST_INTR_IDENT(0),
-+		.reg_off_map = LAN966X_OIC_DST_INTR_MAP(0),
-+	}, {
-+		.reg_off_ena_set = LAN966X_OIC_INTR_ENA_SET1,
-+		.reg_off_ena_clr = LAN966X_OIC_INTR_ENA_CLR1,
-+		.reg_off_sticky = LAN966X_OIC_INTR_STICKY1,
-+		.reg_off_ident = LAN966X_OIC_DST_INTR_IDENT1(0),
-+		.reg_off_map = LAN966X_OIC_DST_INTR_MAP1(0),
-+	}, {
-+		.reg_off_ena_set = LAN966X_OIC_INTR_ENA_SET2,
-+		.reg_off_ena_clr = LAN966X_OIC_INTR_ENA_CLR2,
-+		.reg_off_sticky = LAN966X_OIC_INTR_STICKY2,
-+		.reg_off_ident = LAN966X_OIC_DST_INTR_IDENT2(0),
-+		.reg_off_map = LAN966X_OIC_DST_INTR_MAP2(0),
-+	}
-+};
-+
-+static void lan966x_oic_chip_init(struct lan966x_oic_data *lan966x_oic,
-+				  struct irq_chip_generic *gc,
-+				  struct lan966x_oic_chip_regs *chip_regs)
-+{
-+	gc->reg_base = lan966x_oic->regs;
-+	gc->chip_types[0].regs.enable = chip_regs->reg_off_ena_set;
-+	gc->chip_types[0].regs.disable = chip_regs->reg_off_ena_clr;
-+	gc->chip_types[0].regs.ack = chip_regs->reg_off_sticky;
-+	gc->chip_types[0].chip.irq_startup = lan966x_oic_irq_startup;
-+	gc->chip_types[0].chip.irq_shutdown = lan966x_oic_irq_shutdown;
-+	gc->chip_types[0].chip.irq_set_type = lan966x_oic_irq_set_type;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_disable_reg;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_unmask_enable_reg;
-+	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
-+	gc->private = chip_regs;
-+
-+	/* Disable all interrupts handled by this chip */
-+	irq_reg_writel(gc, ~0, chip_regs->reg_off_ena_clr);
-+}
-+
-+static void lan966x_oic_chip_exit(struct irq_chip_generic *gc)
-+{
-+	/* Disable and ack all interrupts handled by this chip */
-+	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.disable);
-+	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.ack);
-+}
-+
-+static int lan966x_oic_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct lan966x_oic_data *lan966x_oic;
-+	struct device *dev = &pdev->dev;
-+	struct irq_chip_generic *gc;
++	const char *str;
++	unsigned int i;
 +	int ret;
-+	int i;
++	int cnt;
 +
-+	lan966x_oic = devm_kmalloc(dev, sizeof(*lan966x_oic), GFP_KERNEL);
-+	if (!lan966x_oic)
-+		return -ENOMEM;
++	cnt = of_property_count_strings(np, prop_name);
++	if (unittest(cnt >= 0, "failed to get %s count\n", prop_name))
++		return;
 +
-+	lan966x_oic->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(lan966x_oic->regs))
-+		return dev_err_probe(dev, PTR_ERR(lan966x_oic->regs),
-+				     "failed to map resource\n");
++	if (unittest(cnt == count,
++		     "%s count mismatch (read %d, exp %u)\n",
++		     prop_name, cnt, count))
++		return;
 +
-+	lan966x_oic->domain = irq_domain_alloc_linear(of_node_to_fwnode(node),
-+						      LAN966X_OIC_NR_IRQ,
-+						      &irq_generic_chip_ops,
-+						      NULL);
-+	if (!lan966x_oic->domain) {
-+		dev_err(dev, "failed to create an IRQ domain\n");
-+		return -EINVAL;
++	for (i = 0; i < count; i++) {
++		ret = of_property_read_string_index(np, prop_name, i, &str);
++		if (unittest(ret == 0, "failed to read %s[%d]\n", prop_name, i))
++			continue;
++
++		unittest(strcmp(str, expected_array[i]) == 0,
++			 "%s[%d] value mismatch (read '%s', exp '%s')\n",
++			 prop_name, i, str, expected_array[i]);
 +	}
-+
-+	lan966x_oic->irq = platform_get_irq(pdev, 0);
-+	if (lan966x_oic->irq < 0) {
-+		ret = dev_err_probe(dev, lan966x_oic->irq,
-+				    "failed to get the IRQ\n");
-+		goto err_domain_free;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(lan966x_oic->domain, 32, 1,
-+					     "lan966x-oic", handle_level_irq, 0,
-+					     0, 0);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to alloc irq domain gc\n");
-+		goto err_domain_free;
-+	}
-+
-+	/* Init chips */
-+	BUILD_BUG_ON(DIV_ROUND_UP(LAN966X_OIC_NR_IRQ, 32) !=
-+		     ARRAY_SIZE(lan966x_oic_chip_regs));
-+	for (i = 0; i < ARRAY_SIZE(lan966x_oic_chip_regs); i++) {
-+		gc = irq_get_domain_generic_chip(lan966x_oic->domain, i * 32);
-+		lan966x_oic_chip_init(lan966x_oic, gc,
-+				      &lan966x_oic_chip_regs[i]);
-+	}
-+
-+	irq_set_chained_handler_and_data(lan966x_oic->irq,
-+					 lan966x_oic_irq_handler,
-+					 lan966x_oic->domain);
-+
-+	irq_domain_publish(lan966x_oic->domain);
-+	platform_set_drvdata(pdev, lan966x_oic);
-+	return 0;
-+
-+err_domain_free:
-+	irq_domain_free(lan966x_oic->domain);
-+	return ret;
 +}
 +
-+static void lan966x_oic_remove(struct platform_device *pdev)
++static void __init __maybe_unused changeset_check_u32(struct device_node *np,
++						      const char *prop_name,
++						      u32 expected_u32)
 +{
-+	struct lan966x_oic_data *lan966x_oic = platform_get_drvdata(pdev);
-+	struct irq_chip_generic *gc;
-+	int i;
++	u32 val32;
++	int ret;
 +
-+	for (i = 0; i < ARRAY_SIZE(lan966x_oic_chip_regs); i++) {
-+		gc = irq_get_domain_generic_chip(lan966x_oic->domain, i * 32);
-+		lan966x_oic_chip_exit(gc);
-+	}
++	ret = of_property_read_u32(np, prop_name, &val32);
++	if (unittest(ret == 0, "failed to read %s\n", prop_name))
++		return;
 +
-+	irq_set_chained_handler_and_data(lan966x_oic->irq, NULL, NULL);
-+
-+	for (i = 0; i < LAN966X_OIC_NR_IRQ; i++)
-+		irq_dispose_mapping(irq_find_mapping(lan966x_oic->domain, i));
-+
-+	irq_domain_unpublish(lan966x_oic->domain);
-+
-+	for (i = 0; i < ARRAY_SIZE(lan966x_oic_chip_regs); i++) {
-+		gc = irq_get_domain_generic_chip(lan966x_oic->domain, i * 32);
-+		irq_remove_generic_chip(gc, ~0, 0, 0);
-+	}
-+
-+	kfree(lan966x_oic->domain->gc);
-+	irq_domain_free(lan966x_oic->domain);
++	unittest(val32 == expected_u32,
++		 "%s value mismatch (read '%u', exp '%u')\n",
++		 prop_name, val32, expected_u32);
 +}
 +
-+static const struct of_device_id lan966x_oic_of_match[] = {
-+	{ .compatible = "microchip,lan966x-oic" },
-+	{} /* sentinel */
-+};
-+MODULE_DEVICE_TABLE(of, lan966x_oic_of_match);
++static void __init __maybe_unused changeset_check_u32_array(struct device_node *np,
++							    const char *prop_name,
++							    const u32 *expected_array,
++							    unsigned int count)
++{
++	unsigned int i;
++	u32 val32;
++	int ret;
++	int cnt;
 +
-+static struct platform_driver lan966x_oic_driver = {
-+	.probe = lan966x_oic_probe,
-+	.remove_new = lan966x_oic_remove,
-+	.driver = {
-+		.name = "lan966x-oic",
-+		.of_match_table = lan966x_oic_of_match,
-+	},
-+};
-+module_platform_driver(lan966x_oic_driver);
++	cnt = of_property_count_u32_elems(np, prop_name);
++	if (unittest(cnt >= 0, "failed to get %s count\n", prop_name))
++		return;
 +
-+MODULE_AUTHOR("Herve Codina <herve.codina@bootlin.com>");
-+MODULE_DESCRIPTION("Microchip LAN966x OIC driver");
-+MODULE_LICENSE("GPL");
++	if (unittest(cnt == count,
++		     "%s count mismatch (read %d, exp %u)\n",
++		     prop_name, cnt, count))
++		return;
++
++	for (i = 0; i < count; i++) {
++		ret = of_property_read_u32_index(np, prop_name, i, &val32);
++		if (unittest(ret == 0, "failed to read %s[%d]\n", prop_name, i))
++			continue;
++
++		unittest(val32 == expected_array[i],
++			 "%s[%d] value mismatch (read '%u', exp '%u')\n",
++			 prop_name, i, val32, expected_array[i]);
++	}
++}
++
++static void __init of_unittest_changeset_prop(void)
++{
++#ifdef CONFIG_OF_DYNAMIC
++	static const char * const str_array[] = { "abc", "defg", "hij" };
++	static const u32 u32_array[] = { 123, 4567, 89, 10, 11 };
++	struct device_node *nchangeset, *np;
++	struct of_changeset chgset;
++	int ret;
++
++	nchangeset = of_find_node_by_path("/testcase-data/changeset");
++	if (!nchangeset) {
++		pr_err("missing testcase data\n");
++		return;
++	}
++
++	of_changeset_init(&chgset);
++
++	np = of_changeset_create_node(&chgset, nchangeset, "test-prop");
++	if (unittest(np, "failed to create test-prop node\n"))
++		goto end_changeset_destroy;
++
++	ret = of_changeset_add_prop_string(&chgset, np, "prop-string", "abcde");
++	unittest(ret == 0, "failed to add prop-string\n");
++
++	ret = of_changeset_add_prop_string_array(&chgset, np, "prop-string-array",
++						 str_array, ARRAY_SIZE(str_array));
++	unittest(ret == 0, "failed to add prop-string-array\n");
++
++	ret = of_changeset_add_prop_u32(&chgset, np, "prop-u32", 1234);
++	unittest(ret == 0, "failed to add prop-u32\n");
++
++	ret = of_changeset_add_prop_u32_array(&chgset, np, "prop-u32-array",
++					      u32_array, ARRAY_SIZE(u32_array));
++	unittest(ret == 0, "failed to add prop-u32-array\n");
++
++	of_node_put(np);
++
++	ret = of_changeset_apply(&chgset);
++	if (unittest(ret == 0, "failed to apply changeset\n"))
++		goto end_changeset_destroy;
++
++	np = of_find_node_by_path("/testcase-data/changeset/test-prop");
++	if (unittest(np, "failed to find test-prop node\n"))
++		goto end_revert_changeset;
++
++	changeset_check_string(np, "prop-string", "abcde");
++	changeset_check_string_array(np, "prop-string-array", str_array, ARRAY_SIZE(str_array));
++	changeset_check_u32(np, "prop-u32", 1234);
++	changeset_check_u32_array(np, "prop-u32-array", u32_array, ARRAY_SIZE(u32_array));
++
++	of_node_put(np);
++
++end_revert_changeset:
++	ret = of_changeset_revert(&chgset);
++	unittest(ret == 0, "failed to revert changeset\n");
++
++end_changeset_destroy:
++	of_changeset_destroy(&chgset);
++	of_node_put(nchangeset);
++#endif
++}
++
+ static void __init of_unittest_dma_get_max_cpu_address(void)
+ {
+ 	struct device_node *np;
+@@ -4101,6 +4255,7 @@ static int __init of_unittest(void)
+ 	of_unittest_property_string();
+ 	of_unittest_property_copy();
+ 	of_unittest_changeset();
++	of_unittest_changeset_prop();
+ 	of_unittest_parse_interrupts();
+ 	of_unittest_parse_interrupts_extended();
+ 	of_unittest_dma_get_max_cpu_address();
 -- 
 2.45.0
 
