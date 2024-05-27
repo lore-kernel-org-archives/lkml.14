@@ -1,137 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B121A2C35;
-	Mon, 27 May 2024 09:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41B4381B1
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716800537; cv=none; b=AFnNrIlAWRYd6C2XWAEU86VTnnBmgUlk6pwyJjyqWAoyxVjBwVuVt5X01lszfQ42OKSfaeP/j4jI6Mdi+fVAqeuNiGxLUNtMmxrPN4hIAjAg95WA+RdxyPw8bMMlBXsVGsSr11JJaez7w4q7jM1EiyxaxJUkoAIW9BipUxuy/CI=
+	t=1716800617; cv=none; b=VREIsJ/oFwVpdCuoxidZn83N3I4nGTE+Dj0e3AWCtpWS7Kq87SRaGrrZjBQIxCVugFpyL/8MFVOBnm5q+eqhwbLjt89mnPwgsODVqcYpXl0fgdWoxgRH13djOTrKMpEBoh7wtijXSM80xCjEKFKoHVl+qFRuhQ7xAU4OCKCY4P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716800537; c=relaxed/simple;
-	bh=uYAFBgtM5vXI9g7/LeVQ+pczQ1yooR+keQpxvhcuA8k=;
+	s=arc-20240116; t=1716800617; c=relaxed/simple;
+	bh=G5Bh2X2s8X3dIBYLrkIYsnBHdHVh3//9YRXeeJxI2sQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZdjyuWLoq6ME7fBeVZyjbZ2iamWHglfoZ91kYg8aftspZaf3qB2ZrFM2LvuKihQ/xANSsLSHgQUBbMIAD2id36ig8jjtdhrDAVeARwK4OiDvXGatlHL091CPcN4TfFwmiLJrka8PEfIl7XY6mHgYB8+b7bGE9MIyEywyU6Q0NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRMPiNiI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NFrzHEisHpEUlp4VNsUkK8g/XrEhXnqAtXALFNNg8Lm/svNtc7Fo14u+X0DsOVreKju1ZE0046LXMMrvZuKbqXwHX8nvdQVGeIg6sLQZdxbZYKgOeYI0/vqb4FXX7MVG8lI3ogC8ba+QUHMb/ZIn86nl5uiD8gdKiEixJ88ChUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iJFFVgoJ; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRMPiNiI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A944C2BBFC;
-	Mon, 27 May 2024 09:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716800536;
-	bh=uYAFBgtM5vXI9g7/LeVQ+pczQ1yooR+keQpxvhcuA8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TRMPiNiIHap5cUpLkC3niSfLnS5r5ay/7/AKD7dAXmxw4VtzFUte71pZ8s4wYxN6C
-	 5N7gB4+obnBGFvTNNxSuXzK/U5TbAzL9ZplGMilaZr1KdblJ6LczlqxIQ8GuuBy7nc
-	 9i1Xee/2KLe/dEp3NpfRWXYMXpQGjWGZRqeXwpsjJf83/GO2GxAql5Y4nbHCV2YGjz
-	 rYh02qQutduLCSqGeaeXpUEYU9uSWnlHpo/iwn2FqW2k+BzSyYmty//oZ6FRorGIBN
-	 +xcOBIRc0ZuQyvFii3U1AO5zNKn47fmXCnneBR7Hq+ycIaKg4tSKiWLgwSvWA5gvkB
-	 +hbDCAwtJxCnQ==
-Date: Mon, 27 May 2024 11:02:13 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
-	Sandy Huang <hjc@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Wick <sebastian.wick@redhat.com>, 
-	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, dri-devel@lists.freedesktop.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>, Pekka Paalanen <pekka.paalanen@collabora.com>
-Subject: Re: [PATCH v14 17/28] drm/connector: hdmi: Add Broadcast RGB property
-Message-ID: <20240527-adamant-just-spaniel-ebed4e@houat>
-References: <20240521-kms-hdmi-connector-state-v14-0-51950db4fedb@kernel.org>
- <20240521-kms-hdmi-connector-state-v14-17-51950db4fedb@kernel.org>
- <4n55dbl2h275z5ubebigri4xjtjsvt44w62n656srdgndcav2j@rrq5haucqx5u>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iJFFVgoJ"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52449b7aa2bso8338178e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716800614; x=1717405414; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pDbfSg8Bk1OlV44IsJpk4n7yxHQg+kBBcGX0Pm6RSHY=;
+        b=iJFFVgoJ6Ex4O0PBiwRP671jlXp2VHvYUrmohAPCHAqP/fuYB33g0cBNPTnhMhTdkL
+         eIiygNBp3N7sQj5gSvz4Ijd5YrdoUJsnqjV6NXqVnv2Pt6W+KyF8Wr9upFj5x2GVHWPZ
+         zxMxnZJJj/91KxqmgLL2qz2sxjxnIMwxWeUi6S7cMbZTG/1weaM38O/XLrusPqXAdmaQ
+         7sjdsyyRDpbRGH7p0Mf/6+vxFxl6NlKO1iGC5tJI0qcvglUj6uFNH2YW5zvLp62t2c3L
+         imlig7IdorX7t9MAxpnUHU7xCMSTXN29q5sAogRPMXoVytSOO363MyP+qFT96XOUg7jV
+         mh2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716800614; x=1717405414;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pDbfSg8Bk1OlV44IsJpk4n7yxHQg+kBBcGX0Pm6RSHY=;
+        b=Ekm+1pPgGuu2mtIvp3ovKcAJAyTtnxGjipGO5u0ymUMUcYUGqB6wrHIuYy5K4+RNVh
+         bKldF7QYynlVKpU1auJFzpFKDz2ppj+/Vbcb7sbS5x70aj4p0qRRRtPf58VJM1DhIBM8
+         jKIEybZjFG7mYAceT1II4OxoH3c3R7EeO7dkjFrGV8fvHo8OqvwGBj3HfUxxnBrdfdA8
+         H3SS5kF9njJe+Ap50DvfZ+r49dzDYmUkrbrpRevbiKmBbQVLo36lwXhv2kj2kGLPcIFd
+         TUwLZgGN5QwYYVRg6PyaOuQKEKhH7+W8BW9iT5k5iAc4Xhi04Q2gHS9wyAZgRaiWpsSv
+         HrwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyaDwnrI7grVtqJSZ1EH2y+XwHqTvyV0IRr7tFv9knRSk47jlWBJZTZxfdTccwXAH/KpT1ktPzycFUDGeQs9dD0WqG7/3DjbxkRZ2O
+X-Gm-Message-State: AOJu0Yyg8DPf5GklhJy92D8VctDWz2394yyiPMfEQWxcCoWiUPcQnrHG
+	V7FPpr83IoC2r1K3w0XPxzbCgtHjCagq9Py6DLP+8tuFFKlO6TBYUKyWtf89BW0QIscW1O+hN+B
+	w
+X-Google-Smtp-Source: AGHT+IEmCeUDXcsw6FPQgssqSnh256ZdtCG0rOxDKXtIzEh9uHIxpd7toGyYzGtLMhIFgkbWc1Awmw==
+X-Received: by 2002:a05:6512:1d0:b0:527:a952:44c with SMTP id 2adb3069b0e04-52966ca6455mr4519498e87.55.1716800613864;
+        Mon, 27 May 2024 02:03:33 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5296ee4a9cfsm490355e87.75.2024.05.27.02.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 02:03:33 -0700 (PDT)
+Date: Mon, 27 May 2024 12:03:31 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/7] arm64: dts: qcom-sm8550: allow 4 lanes for
+ DisplayPort and enable QMP PHY mode-switch
+Message-ID: <jwgt2aa662ig7max5k7f24uu4zpv4urvg5aplgl2pwo2ty4zp3@a644uqdn2avh>
+References: <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-0-a03e68d7b8fc@linaro.org>
+ <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-5-a03e68d7b8fc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="wqcwbvnihqwt2l7e"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4n55dbl2h275z5ubebigri4xjtjsvt44w62n656srdgndcav2j@rrq5haucqx5u>
+In-Reply-To: <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-5-a03e68d7b8fc@linaro.org>
+
+On Mon, May 27, 2024 at 10:42:37AM +0200, Neil Armstrong wrote:
+> Allow up to 4 lanes for the DisplayPort link from the PHY to the Controller
+> and allow mode-switch events to the QMP Combo PHY.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8550-hdk.dts | 3 ++-
+>  arch/arm64/boot/dts/qcom/sm8550-qrd.dts | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> index ccff744dcd14..a95949c01f25 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> @@ -941,7 +941,7 @@ &mdss_dp0 {
+>  
+>  &mdss_dp0_out {
+>  	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+> -	data-lanes = <0 1>;
+> +	data-lanes = <0 1 2 3>;
+>  };
+>  
+>  &pcie0 {
+> @@ -1280,6 +1280,7 @@ &usb_dp_qmpphy {
+>  	vdda-phy-supply = <&vreg_l3e_1p2>;
+>  	vdda-pll-supply = <&vreg_l3f_0p88>;
+>  
+> +	mode-switch;
+>  	orientation-switch;
+
+Please rebase on top of https://lore.kernel.org/linux-arm-msm/20240429-usb-link-dtsi-v1-0-87c341b55cdf@linaro.org/
+
+After that:
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 
---wqcwbvnihqwt2l7e
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>  
+>  	status = "okay";
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> index 39ba3e9969b7..fbac5270b4d7 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> @@ -795,7 +795,7 @@ &mdss_dp0 {
+>  };
+>  
+>  &mdss_dp0_out {
+> -	data-lanes = <0 1>;
+> +	data-lanes = <0 1 2 3>;
+>  	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+>  };
+>  
+> @@ -1142,6 +1142,7 @@ &usb_dp_qmpphy {
+>  	vdda-phy-supply = <&vreg_l3e_1p2>;
+>  	vdda-pll-supply = <&vreg_l3f_0p88>;
+>  
+> +	mode-switch;
+>  	orientation-switch;
+>  
+>  	status = "okay";
+> 
+> -- 
+> 2.34.1
+> 
 
-Hi,
-
-Thanks again for that thorough review :)
-
-On Thu, May 23, 2024 at 01:22:56PM GMT, Dmitry Baryshkov wrote:
-> On Tue, May 21, 2024 at 12:13:50PM +0200, Maxime Ripard wrote:
-> > The i915 driver has a property to force the RGB range of an HDMI output.
-> > The vc4 driver then implemented the same property with the same
-> > semantics. KWin has support for it, and a PR for mutter is also there to
-> > support it.
-> >=20
-> > Both drivers implementing the same property with the same semantics,
-> > plus the userspace having support for it, is proof enough that it's
-> > pretty much a de-facto standard now and we can provide helpers for it.
-> >=20
-> > Let's plumb it into the newly created HDMI connector.
-> >=20
-> > Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> > Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
-> > Reviewed-by: Sebastian Wick <sebastian.wick@redhat.com>
-> > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > ---
-> >  Documentation/gpu/kms-properties.csv            |  1 -
-> >  drivers/gpu/drm/display/drm_hdmi_state_helper.c |  4 +-
-> >  drivers/gpu/drm/drm_atomic.c                    |  2 +
-> >  drivers/gpu/drm/drm_atomic_uapi.c               |  4 ++
-> >  drivers/gpu/drm/drm_connector.c                 | 88 +++++++++++++++++=
-++++++++
-> >  include/drm/drm_connector.h                     | 36 ++++++++++
-> >  6 files changed, 133 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/Documentation/gpu/kms-properties.csv b/Documentation/gpu/k=
-ms-properties.csv
-> > index 0f9590834829..caef14c532d4 100644
-> > --- a/Documentation/gpu/kms-properties.csv
-> > +++ b/Documentation/gpu/kms-properties.csv
-> > @@ -15,11 +15,10 @@ Owner Module/Drivers,Group,Property Name,Type,Prope=
-rty Values,Object attached,De
-> >  ,,=E2=80=9Csaturation=E2=80=9D,RANGE,"Min=3D0, Max=3D100",Connector,TBD
-> >  ,,=E2=80=9Chue=E2=80=9D,RANGE,"Min=3D0, Max=3D100",Connector,TBD
-> >  ,Virtual GPU,=E2=80=9Csuggested X=E2=80=9D,RANGE,"Min=3D0, Max=3D0xfff=
-fffff",Connector,property to suggest an X offset for a connector
-> >  ,,=E2=80=9Csuggested Y=E2=80=9D,RANGE,"Min=3D0, Max=3D0xffffffff",Conn=
-ector,property to suggest an Y offset for a connector
-> >  ,Optional,"""aspect ratio""",ENUM,"{ ""None"", ""4:3"", ""16:9"" }",Co=
-nnector,TDB
-> > -i915,Generic,"""Broadcast RGB""",ENUM,"{ ""Automatic"", ""Full"", ""Li=
-mited 16:235"" }",Connector,"When this property is set to Limited 16:235 an=
-d CTM is set, the hardware will be programmed with the result of the multip=
-lication of CTM by the limited range matrix to ensure the pixels normally i=
-n the range 0..1.0 are remapped to the range 16/255..235/255."
->=20
-> Should it still be defined as a generic property?
-
-I'm not sure what you mean here, sorry. It's being documented as a
-connector property now, so it's very much still listed as a generic
-property?
-
-Maxime
-
---wqcwbvnihqwt2l7e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZlRMEAAKCRAnX84Zoj2+
-dhGAAYDS1llqP+ICZyWXx+g6L1EiXrG7OIB0z7t7KF3yJW5Y1zN4+dIvVNhFS6LU
-gAXKTp4BgKUepq65FIlFjrRN3gyXTVxmbiIMJd5mPgjySS4scgX65VNBO5cc0Qvt
-qThCHUrQ2A==
-=K55A
------END PGP SIGNATURE-----
-
---wqcwbvnihqwt2l7e--
+-- 
+With best wishes
+Dmitry
