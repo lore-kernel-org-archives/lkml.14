@@ -1,95 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A2D26ACC;
-	Mon, 27 May 2024 16:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E3E17E913;
+	Mon, 27 May 2024 16:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826449; cv=none; b=i8+iBV1suxEZdjL9FlOFSYfsjU2BWDPNQVMcjGAulA7sFq7svhw1KHweyxrBWZ3243sgZ/HCZT20FmvfVF9WtgZddECDvzMwZATP0ppjDmx3eK3KDgn5iERZgAhUpy9Q+a5Jj7MAmLAGSn3Do/zI9BeCCAxTVj2ZR7wVbwNf2RM=
+	t=1716826487; cv=none; b=p1fGERFVt25iWxc2bVXYw5J77q/IqTuEKGFOJqT5H/4It8iGWWEM0Me47qobRnDfa6qgPXgmMMqM+ZI3Xf/iKS+FXVlXjdDXojjwqNx0t5sc3f6XUn5yMBQbPIAAWdpcxUPyBGE+CHr2012L9uGvqV52XP0zElA5NRiHe2xX888=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826449; c=relaxed/simple;
-	bh=QPrw8v5oiECiQO1YuKcA45PIH9PAQOCn3cbaoRZpgYw=;
+	s=arc-20240116; t=1716826487; c=relaxed/simple;
+	bh=ujfSi3fu/yloH/M4yTSPIT1sEFbDxfHs66CZJiGQ9K8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tXVU4JNXQx16rzYb01FSAQqrDNCo8VyTo3bcepaz2M0NVjp/oOgym9nSTRaC7fjoJCkrGkYcbPk+0sCyb+19oEOBghGyteewZBVwzyODrTGtIoup1wI9KGkVuCyNXf3NmbMUvziH0IIC425hE39PHjr3pMtLmRRw11scUM9KIG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UhN+Upbx; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ikdCnRan+F4/lEMX+3UQw1j9aSj+RdnEAr+QhFkQsOZuqYk3+xhRphk97wSCHXchWAXwTsXwdS3ThcPtqyyypL++UERC/one13Kh2hlAZnDtdyqeMf+1NjR898NIaKy4xqabdygQIGz1p2Vn2Na6SYA26wzuwGqb82RVBTKzFV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=akvUQLSZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a1oCo9j7; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=akvUQLSZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a1oCo9j7; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UhN+Upbx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716826448; x=1748362448;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=QPrw8v5oiECiQO1YuKcA45PIH9PAQOCn3cbaoRZpgYw=;
-  b=UhN+UpbxYrncfoNK54cJykC44mza6SWo9mYuPifdQD3NNCx/3XmT9FoD
-   P1GFApQ5xEQgsuduUEaLIcF6Df+DpMdJ5s+flLsqVihHQ1/fPSnHKKJdz
-   du/BI3RJ71TiW7hJhNtLWrj1yiFWt1FmZXE4A8sGv09LfEqkED8IF3WSa
-   KZ8X8pgOHSRjJt/yR800Pb3ChgSopQpFHClAwLmjJpm4JMciJHqvxszGg
-   wmRqBnF1j9RJk+n1spoUsjQxK1jD0RquuGw48yhh4nO5A/3EnM7Upjvkx
-   Fc01hVgmd3A6k4vSD2WAvf7sl4nl0Mom3MMwdmo7xCE/2QKGRzkN6Q1XW
-   Q==;
-X-CSE-ConnectionGUID: tXQbHrgtRSyhSM56EabZOg==
-X-CSE-MsgGUID: CCgiFtWDTB+6XpQnc/zcJg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="16943372"
-X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
-   d="scan'208";a="16943372"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 09:14:07 -0700
-X-CSE-ConnectionGUID: xoYtQbIjSxKmqmVpcnFMkQ==
-X-CSE-MsgGUID: 51xVZ1ebRXux+wD1YnPhFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
-   d="scan'208";a="39650545"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 09:14:05 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sBcz3-0000000BJmk-3UXd;
-	Mon, 27 May 2024 19:14:01 +0300
-Date: Mon, 27 May 2024 19:14:01 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/pci/intel_mid_pci: Fix PCIBIOS_* return code
- handling
-Message-ID: <ZlSxSVUu4zxYh82g@smile.fi.intel.com>
-References: <20240527125538.13620-1-ilpo.jarvinen@linux.intel.com>
- <20240527125538.13620-2-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="akvUQLSZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a1oCo9j7";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="akvUQLSZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a1oCo9j7"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 80E2121F87;
+	Mon, 27 May 2024 16:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716826483;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wssN6e0yGUvF1iJN/7+g+bS10CSfVX5ayRqBNqac4Bk=;
+	b=akvUQLSZJCeZpd4YAWKDu+6iaZkf53Lp+CcaAX8/Y9tfDwqcIX8ZGqPBrHN3aNkSKOSXgJ
+	kG8UL6qMP1UsEYC6eCZCvbUE9zS2UZl+4qNt4ndaN7CFPACfNfHN/mjUtphBkK9+zJlFse
+	tNiF1r+oRn+f94HsVBDDohpr12yNeSk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716826483;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wssN6e0yGUvF1iJN/7+g+bS10CSfVX5ayRqBNqac4Bk=;
+	b=a1oCo9j7HDlkvWOhfs9ZESGIw/LCCJltL0LKO5WUSP0Gc68pFUF4jOgtq6qZ/Qs6ybEiqN
+	tygARkaIUU6t/UAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=akvUQLSZ;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=a1oCo9j7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716826483;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wssN6e0yGUvF1iJN/7+g+bS10CSfVX5ayRqBNqac4Bk=;
+	b=akvUQLSZJCeZpd4YAWKDu+6iaZkf53Lp+CcaAX8/Y9tfDwqcIX8ZGqPBrHN3aNkSKOSXgJ
+	kG8UL6qMP1UsEYC6eCZCvbUE9zS2UZl+4qNt4ndaN7CFPACfNfHN/mjUtphBkK9+zJlFse
+	tNiF1r+oRn+f94HsVBDDohpr12yNeSk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716826483;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wssN6e0yGUvF1iJN/7+g+bS10CSfVX5ayRqBNqac4Bk=;
+	b=a1oCo9j7HDlkvWOhfs9ZESGIw/LCCJltL0LKO5WUSP0Gc68pFUF4jOgtq6qZ/Qs6ybEiqN
+	tygARkaIUU6t/UAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6730B13A56;
+	Mon, 27 May 2024 16:14:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 1icIGXOxVGYzXAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 27 May 2024 16:14:43 +0000
+Date: Mon, 27 May 2024 18:14:38 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc: Toralf =?iso-8859-1?Q?F=F6rster?= <toralf.foerster@gmx.de>,
+	Linux Kernel <linux-kernel@vger.kernel.org>,
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
+Subject: Re: RIP: + BUG: with 6.8.11 and BTRFS
+Message-ID: <20240527161438.GB8631@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <e8b3311c-9a75-4903-907f-fc0f7a3fe423@gmx.de>
+ <3c053912-4e47-4c44-be80-dee4ade8bc6b@gmx.de>
+ <1d887489-200c-46e1-9ee3-8b18722ce19c@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240527125538.13620-2-ilpo.jarvinen@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1d887489-200c-46e1-9ee3-8b18722ce19c@gmx.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmx.com];
+	FREEMAIL_ENVRCPT(0.00)[gmx.com,gmx.de];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmx.de,vger.kernel.org];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 80E2121F87
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.21
 
-On Mon, May 27, 2024 at 03:55:36PM +0300, Ilpo J�rvinen wrote:
-> intel_mid_pci_irq_enable() uses pci_read_config_byte() that returns
-> PCIBIOS_* codes. The error handling, however, assumes the codes are
-> normal errnos because it checks for < 0.
+On Mon, May 27, 2024 at 07:02:56PM +0930, Qu Wenruo wrote:
 > 
-> intel_mid_pci_irq_enable() also returns the PCIBIOS_* code back to the
-> caller but the function is used as the (*pcibios_enable_irq) function
-> which should return normal errnos.
 > 
-> Convert the error check to plain non-zero check which works for
-> PCIBIOS_* return codes and convert the PCIBIOS_* return code using
-> pcibios_err_to_errno() into normal errno before returning it.
+> 在 2024/5/27 00:16, Toralf Förster 写道:
+> > On 5/26/24 11:08, Toralf Förster wrote:
+> >>
+> >> I upgraded yesterday from kernel 6.8.10 to 6.8.11.
+> >>
+> >> The system does not recover from reboot in moment.
+> >
+> > It recovered eventually, I switched to 6.9.2, which runs fine so far.
+> > But these are new log messages:
+> 
+> That looks exactly the one Linus recently reported
+> (https://lore.kernel.org/linux-btrfs/CAHk-=wgt362nGfScVOOii8cgKn2LVVHeOvOA7OBwg1OwbuJQcw@mail.gmail.com/)
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+It could be similar to what was fixed in ef1e68236b91 ("btrfs: fix race
+in read_extent_buffer_pages()"), also hard to reproduce. The stack
+traces are the only clues we have now.
