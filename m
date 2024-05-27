@@ -1,79 +1,93 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F1A1DDC9;
-	Mon, 27 May 2024 12:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07211DDC9
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716814388; cv=none; b=J3OMCK8qtyeMBa6Pbg6NFcKcwjlAtgeQ0obb+Etwvezx/MevEsjilCdVNRW4j3BZoRu3+hJHM0xU4TFweqnkbxstCf+z+HAs74b2n8ccMidipepVjYy88i/VWNtnW46A2ZCf3AdJ1nWdaHau1u/XZXMy2xljUGcVJRicyerFsAM=
+	t=1716814414; cv=none; b=Nrloo0PsInPcSlIZfE7Cg2SvQk/mncrjz9jbFJ68h2xii5PFHYsyd+FblncGdzDHejybi5pI5u8TfocaM7DyriYCAXf57L16fvnPeJXDeMVv64djY2RFImkBsOv4XXh+z4KgHEZrGEAPCeq32vUse9EUBlTd3zGKBU7PLj087JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716814388; c=relaxed/simple;
-	bh=kBPorpQ7vBYqMRTfoGQhRu1WySBg6CbmBx69KpiwWGE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tJLxKLuPNCjL1Zf21c8AL37sQVaJMpkvaMNHLY3KLrUPplTeXJdAFrA/L5DVD8uiYz0Ujuj2OqusISBCDo1PPo+fw85HjFLVisDUavvZ8BlgWAmDJtaFFiStytFFDFYzpwlo33vV6n0w0oTu0XRZwu+yd8/BPsJ9sf4HtIPRgRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=N0/wY+f3; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="N0/wY+f3"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 269E247C5F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1716813813; bh=hZwk0AW8MLiViFy52ADHgAvY9XF6YcrHWsC+PnuwlD8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=N0/wY+f3sVLJ5hmYykdJ3dqt8t9u6adwghZY4UVPJQrK/haj1xVCL/ipi7mnAIIZP
-	 aOZRYUUa5Ix8zduN2WqD5lpzg79od4xBJ3E+rnSFWVBEt/7cKqb/RwmEsaus9ENcNd
-	 HsvjHPtklHZk45chyYMocmPBDPI+EX6DsefwzWSc+pczfBLBEyodip6PgKa5AduTxp
-	 9+9XooKIm3+c6J+Bwrth+T/WHs6mPTGRpy8ImJA/EQiFEXEaUtrWu/jsMngUcIelgG
-	 92ZF3BDtAlLm/+3XxoqWLNNGflc5/gc/fwF/UAWq8/jo90vhoOq8judBV8PTuaQF8u
-	 Yzg/RnE7R5mhA==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 269E247C5F;
-	Mon, 27 May 2024 12:43:33 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: yskelg@gmail.com
-Cc: skhan@linuxfoundation.org, Jinwoo Park <pmnxis@gmail.com>, Austin Kim
- <austindh.kim@gmail.com>, shjy180909@gmail.com, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linuxfoundation.org, Yunseong Kim
- <yskelg@gmail.com>
-Subject: Re: [PATCH v3] Documentation: cve Korean translation
-In-Reply-To: <20240527103003.29318-1-yskelg@gmail.com>
-References: <20240527103003.29318-1-yskelg@gmail.com>
-Date: Mon, 27 May 2024 06:43:32 -0600
-Message-ID: <87ikyzpgqz.fsf@meer.lwn.net>
+	s=arc-20240116; t=1716814414; c=relaxed/simple;
+	bh=5Bybq8cKJlG0qEa1Ub7/CJsdd3PAgncbujsxxqAVJvM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iTO4279iUiFx9+w0tKnhaYZmROXzt0xbKtYbLN0t6mM0gmpuphHS7kh3ARuwlsrTtRCrR6SGcfjOf3JRLuw5qJNbKBu3AROaX8TXEb/Vyw/aJGee8p0X5X9HkT07yc/RwNQrBGiVI2PACx4pL9M+01zfrWO8XYcez1qs+lc8oJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 21968FF808;
+	Mon, 27 May 2024 12:53:29 +0000 (UTC)
+Message-ID: <19a87876-70f3-40d3-996e-ea8b1862de0d@ghiti.fr>
+Date: Mon, 27 May 2024 14:53:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] riscv: drop the use of XIP_OFFSET in
+ create_kernel_page_table()
+Content-Language: en-US
+To: Nam Cao <namcao@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1715286093.git.namcao@linutronix.de>
+ <8748eab99d76e466a44a0bb81d836ff1c9ad9879.1715286093.git.namcao@linutronix.de>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <8748eab99d76e466a44a0bb81d836ff1c9ad9879.1715286093.git.namcao@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-yskelg@gmail.com writes:
 
-> From: Yunseong Kim <yskelg@gmail.com>
+On 10/05/2024 08:28, Nam Cao wrote:
+> XIP_OFFSET is the hard-coded offset of writable data section within the
+> kernel.
 >
-> This is a Documentation/process/cve korean version.
+> By hard-coding this value, the read-only section of the kernel (which is
+> placed before the writable data section) is restricted in size.
+>
+> As a preparation to remove this hard-coded value entirely, stop using
+> XIP_OFFSET in create_kernel_page_table(). Instead use _sdata and _start to
+> do the same thing.
+>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+>   arch/riscv/mm/init.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 9846c6924509..62ff4aa2be96 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -907,7 +907,7 @@ static void __init relocate_kernel(void)
+>   static void __init create_kernel_page_table(pgd_t *pgdir,
+>   					    __always_unused bool early)
+>   {
+> -	uintptr_t va, end_va;
+> +	uintptr_t va, start_va, end_va;
+>   
+>   	/* Map the flash resident part */
+>   	end_va = kernel_map.virt_addr + kernel_map.xiprom_sz;
+> @@ -917,10 +917,11 @@ static void __init create_kernel_page_table(pgd_t *pgdir,
+>   				   PMD_SIZE, PAGE_KERNEL_EXEC);
+>   
+>   	/* Map the data in RAM */
+> +	start_va = kernel_map.virt_addr + (uintptr_t)&_sdata - (uintptr_t)&_start;
+>   	end_va = kernel_map.virt_addr + kernel_map.size;
+> -	for (va = kernel_map.virt_addr + XIP_OFFSET; va < end_va; va += PMD_SIZE)
+> +	for (va = start_va; va < end_va; va += PMD_SIZE)
+>   		create_pgd_mapping(pgdir, va,
+> -				   kernel_map.phys_addr + (va - (kernel_map.virt_addr + XIP_OFFSET)),
+> +				   kernel_map.phys_addr + (va - start_va),
+>   				   PMD_SIZE, PAGE_KERNEL);
+>   }
+>   #else
 
-Thank you for working to improve our documentation.  A couple of
-questions, though:
 
-> Reviewed-by: Jinwoo Park <pmnxis@gmail.com>
-> Signed-off-by: Yunseong Kim <yskelg@gmail.com>
-
-1) Why do I have three versions of it in my mailbox, sent over a period
-   of 13 minutes?  What changed between the versions?
-
-   Normally, you want to wait for reviews to come in on one version
-   before posting the next, and you should put a comment after the "---"
-   line saying what changed.
-
-2) When did this review from Jinwoo Park happen?  I was not copied on
-   that.
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
 Thanks,
 
-jon
+Alex
+
