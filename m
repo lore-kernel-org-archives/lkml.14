@@ -1,108 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB4116F28C
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B1D16F82C
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819830; cv=none; b=l0q/TCcPzycZlqLmhjf+kQXp1DnJ2Sa1k/T17U5l9QHPYRc9gdBW3q1uXS/lVL1RggzXKXfPsJtabtCH7sRvr/gu/AdsVt1BAIyBt+oRC0/DV/wFZmGPASWo7nFQ422i9h8j3Lj0IC252rqelgN6+p7oKdVq3Fw5B9ijMiOHF+U=
+	t=1716819834; cv=none; b=a4nSdlcwcweEo0clZ1394dGRALwCwe4fn/ybOlY1KEsECI965WVz3lQYYSSHBPjqqSTAdPbyY8CeRMwlB7sB/ylTfnOq79GhaPqqIWEVJIs02rA0TIOif9P+vQUyS1+fOAhtTvqvGyJQLR1e1hY1YAmoi4YIcVjD5EHnDF23BAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819830; c=relaxed/simple;
-	bh=U/8+cNT/6r/cPMQxaKHzz9tqRw3+vgHMhlaxgqt/NIY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KOOA61KjcCH5UXZ6/yBKui+H10jc16hui0pRA4s0Lyu3hB4ehSKpHr5TXRYisvHDImJjUflnJkrHSNxQcQnWN31NXIZzZgEPgjku52GtToCa2UDPkcm2dwSTtTmAtEEwGBcTgLPVhw6YN3ixSdtWt3YFmsKTqb02Pg85P7lm4RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zpo3QcK3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716819834; c=relaxed/simple;
+	bh=G4jmD+K/fkmFufgBXjmnjPbCcQzArsr/IXqIKSDtt2s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PE2RJMI5BbBkG/OHBTs6YicAloEYbdGyrLgEAKpGwGeXCSUXfk/bk/TH4JbH1dbPGj7fcmqcR/NKfsdAr8lTN1tdp22cZeQzcs8JNDC24+Z0P3cXZcwz+dzBdk8Dqy/+X2TD+uPftqk2xhGryS7z8QyAl5OM5di1A28uQ1Rn4sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L3bm/2hS; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zpo3QcK3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716819828;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uDkfQTZ2OD4EHqIyUHZnwKqde9p/2Gl7tlIUwS9iQSE=;
-	b=Zpo3QcK3FIC1cgPF1L7YNaK6xzcZgxPAyd98bGkaO+KWiX30t8RPve54ufvrYM73p2Kq9L
-	0y/IcOG3FafwOrGS6aXPQluex2gdX+ONj2Qh9jUM3EoPXB+gP8AtU2/n705haV4MtcNFZ+
-	TuYTj6sAfpwkrGbVI5/AOvXOfjVnnLg=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-_9a1mtQHMTKWqB6pg-Ox2Q-1; Mon, 27 May 2024 10:23:45 -0400
-X-MC-Unique: _9a1mtQHMTKWqB6pg-Ox2Q-1
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3d1c9fcce4bso476048b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:23:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L3bm/2hS"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f8eaa14512so2591445b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716819832; x=1717424632; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O7X6X7Xg0a7P3rLwok0YLujXGrmUyMxWDQ/9AezaVG8=;
+        b=L3bm/2hSZFyoQ6N3aybetsRc6AaauTaN9MciBwqzUbaFPtcdjE/7nGFKQ/kDzfF9+L
+         qMX7aKUQBbhqD7CFGe6qkzaMRLCUy2eHG1tNsCZiDvB4m/ibGLe7qHXSz/y7bRW+sZ4j
+         3Aiv1QsCQEhKt4fgddwMwj2wOMlgchY4H0ORpphmsZQ/0Nryn+2G0MLL+kvQYEdLiyJz
+         E5aCafrMQDSUQzC+QBj5rav1XT5LKpmnAmMb+MKSejIIHbPBYQ05mx9C0iNIX7ifI20J
+         sSCD/B036QxzhVzVPlseHjCBvmTUZnPwiP+7t9Bd4HNccVje2trEhwKtkdHgq5G9syb2
+         Qarg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716819825; x=1717424625;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uDkfQTZ2OD4EHqIyUHZnwKqde9p/2Gl7tlIUwS9iQSE=;
-        b=Q67N0pm9qGdNAVb73i7b54628FVRzI3j+jtTcKP73/hbWmawjqsLp1G9LoX+pQy6sQ
-         XYzpvo8h0Iku7YH9K/W3WLwFmDf/O/zHI5O3b2YEPH9/Smjn9NRHB4flSDNs5Ml6boWP
-         jl15HsBZyd/kQaqPns4snw8cHPzB5UVWORm7OWzPr4dH5E3OvYiIIwcdwCYvi/Tjr0yD
-         dx0y21VsxlJDek8mwkn8XGHm9U5jPIsLmveVSsvgygzdiv0jAv4kCs2ZeS5hCM08yxht
-         Fmg+liVs0kdKrASGjDDZrDm3a22HtpAB/yGGXE9nLE3uiCuTtscVu1NG+DyO2vF77NvX
-         zz7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVS7BLEOy9oGhGJO9JIEahU3/jTSgrdalaEduiIxcxWVtTzuSCwctFu2MjYglBaVMO0otme5QOqUtUm5J6HazfMcV/UejJzt66tKwh1
-X-Gm-Message-State: AOJu0YzyLYaiMf+PDqvoEf5md2mhugS9/cuM8myVjxe+cQ/TdiRESztN
-	FvfULx+IjwbAu98L4mdJiVNqTTLgRrRvzfaB25+OVHqS14hp2rED4kHx6yG+uINcxe8EGkSQc/a
-	kawpgypOz1r7R9sGgn/QiPKtZpk8Amc3YB1xVprYV+jbpHhXKIa6cHoYhmsKLTg==
-X-Received: by 2002:a05:6808:2895:b0:3c9:6f32:48ae with SMTP id 5614622812f47-3d1a7646b36mr10077213b6e.47.1716819824866;
-        Mon, 27 May 2024 07:23:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFd337yra6VNYY4/lCnAw6wP0WY3esjyq2b6ysnQazhhPyLwvvBYzmWw4XghHqjVOjt15jOCg==
-X-Received: by 2002:a05:6808:2895:b0:3c9:6f32:48ae with SMTP id 5614622812f47-3d1a7646b36mr10077185b6e.47.1716819824441;
-        Mon, 27 May 2024 07:23:44 -0700 (PDT)
-Received: from rh (p200300c93f02d1004c157eb0f018dd01.dip0.t-ipconnect.de. [2003:c9:3f02:d100:4c15:7eb0:f018:dd01])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ad77430c57sm17299476d6.38.2024.05.27.07.23.41
+        d=1e100.net; s=20230601; t=1716819832; x=1717424632;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O7X6X7Xg0a7P3rLwok0YLujXGrmUyMxWDQ/9AezaVG8=;
+        b=M6bNHku2EnNqIUsUug1djAGXWOYTuFVVXXOStmByaFoVjGswpllFA5uW8Hj0RBreFY
+         mmdpvOAC5pXrdzMr0KGtzhqPH4zvQ7oMjBMZ/SlbTp9i6Ac4g0kvHROC64kKnrTkR5U4
+         Ee7txxfhsU+z5pcmITL7g7L0ul1vo0Evtpn+NKhFMH4X+WuGUYm0PLdcnuMp0x2Bzlk+
+         MKMNY5+hLQNo0DSYSRgezIlS2QVuqC/1/5gV9KHYblrBK9iVB8kWEuOfQVpW9PeBjwbP
+         WdHV1r/1g/Mn/royoH9b4UpwwmxO0KEzHIP/H5RHEmdNZ+moiZn/be9zR161cWh0pcEu
+         TiPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXtiztwvrI3MemDkW2VSW6vFuhaUnwEVagwlglq4mlIoS2HXciMpgbfRbIXGA4a2sJ1PEmXRw5wOhhekPctCVsPhYfH1ofE8Dpjmc+P
+X-Gm-Message-State: AOJu0YzM9pXSOgSJMB6vYFRw+Le/efe3elasgZhRa09HRlgsQA35OS6G
+	j/iJyDYh+JtawvirXIdKhWkJ/CA3FSM9tO8d3nVl+1iqKZWCDkSpx35RcqjHZ4A=
+X-Google-Smtp-Source: AGHT+IG27XneYYlxfnsTtGUnnHHJLVJw3XpHBmvzPjELzZgM4IPaUCPSYuo23gRJ69ondE1sRJxjlg==
+X-Received: by 2002:a05:6a00:2c94:b0:6ec:ebf4:3e8a with SMTP id d2e1a72fcca58-6f8f34ca63dmr10771339b3a.15.1716819832148;
+        Mon, 27 May 2024 07:23:52 -0700 (PDT)
+Received: from [127.0.1.1] ([112.64.61.67])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fbd3eb67sm5109895b3a.19.2024.05.27.07.23.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 07:23:44 -0700 (PDT)
-Date: Mon, 27 May 2024 16:23:39 +0200 (CEST)
-From: Sebastian Ott <sebott@redhat.com>
-To: Shaoqin Huang <shahuang@redhat.com>
-cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>, 
-    Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
-    Suzuki K Poulose <suzuki.poulose@arm.com>, 
-    Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 1/6] KVM: arm64: unify code to prepare traps
-In-Reply-To: <080b8820-d665-40d6-9cf2-35e47086d01e@redhat.com>
-Message-ID: <ab00cdd6-7b93-05a0-896b-24e68e9413a2@redhat.com>
-References: <20240514072252.5657-1-sebott@redhat.com> <20240514072252.5657-2-sebott@redhat.com> <080b8820-d665-40d6-9cf2-35e47086d01e@redhat.com>
+        Mon, 27 May 2024 07:23:51 -0700 (PDT)
+From: Jun Nie <jun.nie@linaro.org>
+Date: Mon, 27 May 2024 22:21:50 +0800
+Subject: [PATCH v5 4/6] drm/msm/dsi: set video mode widebus enable bit when
+ widebus is enabled
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-4-f797ffba4682@linaro.org>
+References: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-0-f797ffba4682@linaro.org>
+In-Reply-To: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-0-f797ffba4682@linaro.org>
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Vinod Koul <vkoul@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Jun Nie <jun.nie@linaro.org>, Jonathan Marek <jonathan@marek.ca>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716819804; l=1644;
+ i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
+ bh=myYBVxgRS2I/E3QUdyhnLOjWSeM7jzrWqz2ABozlocE=;
+ b=KGkFKxznrl2L4qx7rg8Wv+F+s40+BieN1hHXytdmrRqouAatjjpJr4uDP8ac42S540r7BBQDB
+ GPbVAfPkobRDtEz1BKE+9Ztglw7OwGo5V0hA5R+RnlgrZDYLNb5gAbT
+X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
+ pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-Hi Shaoqin,
+From: Jonathan Marek <jonathan@marek.ca>
 
-On Mon, 27 May 2024, Shaoqin Huang wrote:
-> On 5/14/24 15:22, Sebastian Ott wrote:
->> +++ b/arch/arm64/include/asm/kvm_emulate.h
->>     static inline void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
->>   {
->> -	vcpu->arch.hcr_el2 = HCR_GUEST_FLAGS;
->> -	if (has_vhe() || has_hvhe())
->> -		vcpu->arch.hcr_el2 |= HCR_E2H;
->> -	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN)) {
->> -		/* route synchronous external abort exceptions to EL2 */
->> -		vcpu->arch.hcr_el2 |= HCR_TEA;
->> -		/* trap error record accesses */
->> -		vcpu->arch.hcr_el2 |= HCR_TERR;
->> -	}
->> +	if (!vcpu_has_run_once(vcpu))
->> +		vcpu->arch.hcr_el2 = HCR_GUEST_FLAGS;
->
-> Could you give more explaination in your comments about why we still keep the 
-> non-FWB handling in vcpu_reset_hcr()? That would be better for understanding 
-> the special case.
->
+The value returned by msm_dsi_wide_bus_enabled() doesn't match what the
+driver is doing in video mode. Fix that by actually enabling widebus for
+video mode.
 
-VM ops trapping needs to be toggled via KVM_ARM_VCPU_INIT for this case to
-catch when the guest activates its MMU. This is different to the other
-traps that are setup once before the guest runs for the first time.
+Fixes: efcbd6f9cdeb ("drm/msm/dsi: Enable widebus for DSI")
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+Signed-off-by: Jun Nie <jun.nie@linaro.org>
+---
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Sebastian
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index a50f4dda5941..47f5858334f6 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -754,6 +754,8 @@ static void dsi_ctrl_enable(struct msm_dsi_host *msm_host,
+ 		data |= DSI_VID_CFG0_TRAFFIC_MODE(dsi_get_traffic_mode(flags));
+ 		data |= DSI_VID_CFG0_DST_FORMAT(dsi_get_vid_fmt(mipi_fmt));
+ 		data |= DSI_VID_CFG0_VIRT_CHANNEL(msm_host->channel);
++		if (msm_dsi_host_is_wide_bus_enabled(&msm_host->base))
++			data |= DSI_VID_CFG0_DATABUS_WIDEN;
+ 		dsi_write(msm_host, REG_DSI_VID_CFG0, data);
+ 
+ 		/* Do not swap RGB colors */
+@@ -778,7 +780,6 @@ static void dsi_ctrl_enable(struct msm_dsi_host *msm_host,
+ 			if (cfg_hnd->minor >= MSM_DSI_6G_VER_MINOR_V1_3)
+ 				data |= DSI_CMD_MODE_MDP_CTRL2_BURST_MODE;
+ 
+-			/* TODO: Allow for video-mode support once tested/fixed */
+ 			if (msm_dsi_host_is_wide_bus_enabled(&msm_host->base))
+ 				data |= DSI_CMD_MODE_MDP_CTRL2_DATABUS_WIDEN;
+ 
+
+-- 
+2.34.1
 
