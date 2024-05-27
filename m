@@ -1,163 +1,130 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5905A13AA31;
-	Mon, 27 May 2024 11:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECB313AA31;
+	Mon, 27 May 2024 11:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716810958; cv=none; b=Nl12LRGWhL40Hh/+Br2B/vrvbAKzPDe6/XqyT5YutsYc2kVZjX0vNtJMG2Z0VGJ7ThUnwY0/M57DI5X62sImE1JRxQvvljb6X+jxmRtjolxMlUBnrxiVWOb6YeoXDo2w7SxjBcT9/VolBFoekCIgZZtDHPdw4WGjFbllm9f48Bw=
+	t=1716810986; cv=none; b=kGa+yhOlZXkYEPa/0RBjxYraZ2GCMvcP5guPeTW3Nw/PbK9Pa1y3pFoaHxeMyFllx0Ps+4C+0Gbat+BdKAdn+oEnsOhhNgy0m7BnfEi6PAgobK9ZmiBHgmBwL9Gdw4Rv8vwH9RBLRKGVwoNWmNMSftjmw89fJTHjNJ5IkT7+gM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716810958; c=relaxed/simple;
-	bh=XmO9cPon2zzzsUypK4aJv1Cb6tsJcKac4jB3cPU6A0w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oEw1husUm5VJOhn1G7h9vqycE0oqYbpRKbCapMpz/P57mgHSqnW3/eK5LHgPX8+IAlY81wvpbt8FNVs38DDzkKmHvfldYSvuIa0Kua+I/0jH98bqY9IGIzoo7TcJqOdYDcq9wVge9rp7yYO8Vp5V0SG3Lfwbe29f3sjg/EIGNTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l7GALYZP; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716810986; c=relaxed/simple;
+	bh=DEckiRwCpgziP0P5S6eFtBf5HVE5oC96zcHHkjDlBpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tR7QwZScSbvzw06KGGnNCFrtPxPTZDmbpH0Nt8pj7WP6P+4DCIig9SoGjPqegChLlwm9z51QgIilBE+sqcVW6gtezaEuBMfoYqN5LYfKGneQWxayFVw6s2f36FwY1UEzpqYEK4zu2WcJhzS3PWtkqgJmpDsBpFggmsjGWVvzdfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p87k6Xro; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7GALYZP"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70109d34a16so795446b3a.2;
-        Mon, 27 May 2024 04:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716810956; x=1717415756; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZUX9Qc2CwQXtipTZ8HtlhuYljQCKpgoWARDk9odQFco=;
-        b=l7GALYZP+OUhuHez1HW3VilpPi0IEi7Iw4MUFbWTlCXFXbKafHinjju8OL48MldMQf
-         aVlzLg2bs8GdU/sQqn4C9BWWeMtBDiYSNAvtmIMfbJGSP7yjdiyO/h+mFdRKyvVSNa+p
-         sGgWYCZUx8g203DXooncnMvmNhw2tXarBAqKtI8Cwv96KQV2oC2duLSi7NQa6SRbTs5m
-         RmOEomb8suyYkdgEr3EUT3EGXqj8/yLSxVjmgzpObhw1y1BTnJmcLlItNraj2t3x9PxT
-         WF+YvoeH+DHubZFspskoQCMSJG0pZoXyvGpfyLpfw0+MzYk3WVAzz60kCTiaMfp78B03
-         eJPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716810956; x=1717415756;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZUX9Qc2CwQXtipTZ8HtlhuYljQCKpgoWARDk9odQFco=;
-        b=GbusqBkir1s5ji/IUuDNgNRmN1QcbKLB1NQ+kXQn348t+YqeE3gp8g+91EIXHL9cwM
-         2G02K2iQ3oVrXzJdUSz/RlS9KTDqFYuN9KiEuItyaOM3PsXTKpMFlikJ3jSnlyKiFUmM
-         xvc4m6eMGc5DerdnpiLMArL3T/vKcwM++AtzuF6yYWJbrUq2iu2UC5mCkmvJRT32/wI8
-         Liy/P5TfSMG3FlMbpZCzAmbiGpmZOWhTtDjnFOKKwibiPr9BfhVl2wHwjEQLZweuLIbR
-         1d6CzRT4eq/kHjKx8wnKCUQ0SqBliHFYtbxk0ohhmVvEGQXytKCfiMJkMZnpei0O7asr
-         ffLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFfFPxmkHWK0Vc6GU9Yhse1HXlsBNgTfKcSAFfRxr5Pq/w/VExUCVPbSUqBcUymTCWL4XWdvmjGRbgkv7P/zSmpF5kiIt1TZ8DaA==
-X-Gm-Message-State: AOJu0YxzjhTyzVRMyqzMQXpNQv+nvWJ35wnRfuAUYsMuRDPAVJkz52aX
-	5tOlrTMze7JdrEBvvB0T9KoM5MKky1K79akUcOdjK4TdZWuPwrcQmtwHxA==
-X-Google-Smtp-Source: AGHT+IGZUTwDxxXl3RLQDctVHB+qoPi1AFwLPqsOY6ZQkg0fTEVpKIgWAqbW7ykw4YpzLa3JbLh5TQ==
-X-Received: by 2002:a05:6a20:8409:b0:1af:b0b6:a35f with SMTP id adf61e73a8af0-1b212ccf7d3mr11944205637.2.1716810956234;
-        Mon, 27 May 2024 04:55:56 -0700 (PDT)
-Received: from rigel.home.arpa (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbea8a9sm4749256b3a.139.2024.05.27.04.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 04:55:56 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 3/3] gpiolib: cdev: Cleanup kfifo_out() error handling
-Date: Mon, 27 May 2024 19:54:19 +0800
-Message-Id: <20240527115419.92606-4-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240527115419.92606-1-warthog618@gmail.com>
-References: <20240527115419.92606-1-warthog618@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p87k6Xro"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EB89C2BBFC;
+	Mon, 27 May 2024 11:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716810985;
+	bh=DEckiRwCpgziP0P5S6eFtBf5HVE5oC96zcHHkjDlBpY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=p87k6XroMqATDsUBvJyUqe9q5lavadM/gv1KHuYzxpMfiUkGCe8jSrkO56TiVtXMH
+	 ZJ6KUkXLl9hVz2/xzrPLirHk7IfDWZnGbCaZZ8kvB8KUfDw5j+VIl+g0CyE8a0vLk5
+	 ZPvAo2fiVb7MV9cR8hYrcM1Qm77UMKbO8vAJ/tdg8IfN9vcDUGuiFC10ZVA139be+U
+	 5mjx0nMrVZl0pW1HZS3hpihNooBpeiN5TRbgFeUxANxOKsxyY23Ej1Xv67XJYG6vp/
+	 p/w28ym6kLVKIwOde7ZyQOMTXciQkmIx6YZJWssG69RRzPCAkGmpAsqMJUV31lxT5l
+	 OeXtGPugeBzPg==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs fixes
+Date: Mon, 27 May 2024 13:55:56 +0200
+Message-ID: <20240527-vfs-fixes-96860426ed27@brauner>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3021; i=brauner@kernel.org; h=from:subject:message-id; bh=DEckiRwCpgziP0P5S6eFtBf5HVE5oC96zcHHkjDlBpY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSFlJwPvfXEoezmieigy2xbxXrc332x31mft05U3oP9r ZHnUpeNHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABO5dI3hD9dZkbx3E+/smhly 2PHn33lfz4QUXPmtWD1h/yJlxVkWXpUM/7Qcptu6L3r/XCZxl926sE8zXi0tXT/1t83s/Mk7nj9 ynswGAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-The handling of kfifo_out() errors in read functions obscures any error.
-The error condition should never occur but, while a ret is set to -EIO, it
-is subsequently ignored and the read functions instead return the number
-of bytes copied to that point, potentially masking the fact that any error
-occurred.
+Hey Linus,
 
-Return -EIO in the case of a kfifo_out() error to make it clear something
-very odd is going on here.
+/* Summary */
+This contains a few small fixes for this merge window:
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 47 +++++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 26 deletions(-)
+* Fix io_uring based write-through after converting cifs to use the netfs
+  library.
+* Fix aio error handling when doing write-through via netfs library.
+* Fix performance regression in iomap when used with non-large folio mappings.
+* Fix signalfd error code.
+* Remove obsolete comment in signalfd code.
+* Fix async request indication in netfs_perform_write() by raising BDP_ASYNC
+  when IOCB_NOWAIT is set.
+* Yield swap device immediately to prevent spurious EBUSY errors.
+* Don't cross a .backup mountpoint from backup volumes in afs to avoid infinite
+  loops.
+* Fix a race between umount and async request completion in 9p after 9p was
+  converted to use the netfs library.
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index c7218c9f2c5e..6a986d7f1f2f 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1642,16 +1642,13 @@ static ssize_t linereq_read(struct file *file, char __user *buf,
- 					return ret;
- 			}
- 
--			ret = kfifo_out(&lr->events, &le, 1);
--		}
--		if (ret != 1) {
--			/*
--			 * This should never happen - we were holding the
--			 * lock from the moment we learned the fifo is no
--			 * longer empty until now.
--			 */
--			ret = -EIO;
--			break;
-+			if (kfifo_out(&lr->events, &le, 1) != 1)
-+				/*
-+				 * This should never happen - we hold the
-+				 * lock from the moment we learned the fifo
-+				 * is no longer empty until now.
-+				 */
-+				return -EIO;
- 		}
- 
- 		if (copy_to_user(buf + bytes_read, &le, sizeof(le)))
-@@ -1995,16 +1992,13 @@ static ssize_t lineevent_read(struct file *file, char __user *buf,
- 					return ret;
- 			}
- 
--			ret = kfifo_out(&le->events, &ge, 1);
--		}
--		if (ret != 1) {
--			/*
--			 * This should never happen - we were holding the lock
--			 * from the moment we learned the fifo is no longer
--			 * empty until now.
--			 */
--			ret = -EIO;
--			break;
-+			if (kfifo_out(&le->events, &ge, 1) != 1)
-+				/*
-+				 * This should never happen - we hold the
-+				 * lock from the moment we learned the fifo
-+				 * is no longer empty until now.
-+				 */
-+				return -EIO;
- 		}
- 
- 		if (copy_to_user(buf + bytes_read, &ge, ge_size))
-@@ -2707,12 +2701,13 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
- 			if (count < event_size)
- 				return -EINVAL;
- #endif
--			ret = kfifo_out(&cdev->events, &event, 1);
--		}
--		if (ret != 1) {
--			ret = -EIO;
--			break;
--			/* We should never get here. See lineevent_read(). */
-+			if (kfifo_out(&cdev->events, &event, 1) != 1)
-+				/*
-+				 * This should never happen - we hold the
-+				 * lock from the moment we learned the fifo
-+				 * is no longer empty until now.
-+				 */
-+				return -EIO;
- 		}
- 
- #ifdef CONFIG_GPIO_CDEV_V1
--- 
-2.39.2
+/* Testing */
+clang: Debian clang version 16.0.6 (27)
+gcc: (Debian 13.2.0-25) 13.2.0
 
+All patches are based on mainline. No build failures or warnings were observed.
+
+/* Conflicts */
+No known conflicts.
+
+The following changes since commit 8f6a15f095a63a83b096d9b29aaff4f0fbe6f6e6:
+
+  Merge tag 'cocci-for-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/jlawall/linux (2024-05-20 16:00:04 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.10-rc2.fixes
+
+for you to fetch changes up to f89ea63f1c65d3e93b255f14f9d9e05df87955fa:
+
+  netfs, 9p: Fix race between umount and async request completion (2024-05-27 13:12:13 +0200)
+
+Please consider pulling these changes from the signed vfs-6.10-rc2.fixes tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.10-rc2.fixes
+
+----------------------------------------------------------------
+Christian Brauner (1):
+      swap: yield device immediately
+
+David Howells (4):
+      netfs: Fix io_uring based write-through
+      netfs: Fix AIO error handling when doing write-through
+      netfs: Fix setting of BDP_ASYNC from iocb flags
+      netfs, 9p: Fix race between umount and async request completion
+
+Fedor Pchelkin (2):
+      signalfd: fix error return code
+      signalfd: drop an obsolete comment
+
+Marc Dionne (1):
+      afs: Don't cross .backup mountpoint from backup volume
+
+Xu Yang (2):
+      filemap: add helper mapping_max_folio_size()
+      iomap: fault in smaller chunks for non-large folio mappings
+
+ fs/9p/vfs_inode.c         |  1 +
+ fs/afs/inode.c            |  1 +
+ fs/afs/mntpt.c            |  5 +++++
+ fs/iomap/buffered-io.c    |  2 +-
+ fs/netfs/buffered_write.c |  2 +-
+ fs/netfs/direct_write.c   |  2 +-
+ fs/netfs/objects.c        |  5 +++++
+ fs/netfs/write_collect.c  |  7 ++++---
+ fs/netfs/write_issue.c    |  9 +++++++--
+ fs/signalfd.c             |  6 +-----
+ fs/smb/client/cifsfs.c    |  1 +
+ include/linux/netfs.h     | 18 ++++++++++++++++++
+ include/linux/pagemap.h   | 34 +++++++++++++++++++++-------------
+ kernel/power/swap.c       |  2 +-
+ 14 files changed, 68 insertions(+), 27 deletions(-)
