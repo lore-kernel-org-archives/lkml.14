@@ -1,40 +1,33 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4395D17E91B;
-	Mon, 27 May 2024 14:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0440F15D5D0;
+	Mon, 27 May 2024 14:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716820026; cv=none; b=XoG28LPWR6+ZGGkpxD/Ct6ypPiMMwVyVHTPHc78R0nXiZ6lAswM88paNw1Mrux2LwExOutFOu3dm0zUsdwUe/QB+jR4rTFiT/UvT74yjEKv8zaVustNJWos69fIabdu4mZQztgGV9Q2aZifGM2fPu4whT69mwGGSL9mGdbtNogM=
+	t=1716820176; cv=none; b=dmDP1Tq00cjLJxB1TbniI9bN1wOm5SAkZS16sPyDjbMMvNc4vZOFiJwDsfbMC3NB/1IWR+HLpic04hA/Chon/coaXNo+Ee/lEqIKVmLjgvRmOVQxanaNpw2UFIFNdBH/D3zWlJzNASnUoJeac9EAc9k8KoEeFp9jLuqhApG7U10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716820026; c=relaxed/simple;
-	bh=TgeovkgpeOWUAlJ7eOdHzTn1cFUm/dVzU2NqObmFObU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=rDWMMLz/FvwD0GuHTRuOPt0uWEScp+8G/YcwkLE70Ps1j61uDD5MRsF4pW6x05qE7ovPnsEbQmbG0AEC1Hs/poZ/p+wNXNOToHuAW/b2f+2Wjq2F+6ANZ6f/A2a1C86K8Rhc1z9dikVKawp7z68X9SCJNskzr+MSOBxw5E4lzbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=vX3VhVkt; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716820176; c=relaxed/simple;
+	bh=PQHKI0v3kfahV+WO0+ELOBiuGyhB7NTGZcjanRwq69w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WsrAbYUySriH5Kej6J7zxqbxMUouqc7rL909+KZoRy1vEjwyVRKeWOITQEF33wTmx+ysnxJfy61e4h/F+uAbzRy/+YiGFf1KER21EKwtUN4nkM7XHhhjXIKbQW5EcMGaR2qUBg3qo3d+BFWoPyN/Sq6//kx2knQ0zbzZ3D/BeSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MA1UtrmJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="vX3VhVkt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716819939; x=1717424739; i=markus.elfring@web.de;
-	bh=WBD5fZbJKASRGqCVJjwjF0/sBlA3tJ1is50PhfAuexQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=vX3VhVktvAsC3VEpXA8voazwMQsxjS3krCXirqMDaKAZ3hS5dLEBLJJcYH/CnQUD
-	 LX884yPHk6T2CjcYkXrEWl3j7h+qjsuQr6krfiSjSbT9o7hELP6R1MOL3ePslfGIM
-	 nUn+Cno9/WCN6Qt7tnw9wJkEH43RGHNxZEMJFx1wgs5oyZoUK9bL3MJfGys243Jnt
-	 RWe1fGAwlia3NmWKjA9buWb62mNSN4PEffNKdBdV4ee2XJY9EETUDzwTlBNTo8KlT
-	 kv2IvCfd4sTrUVWvA5STc6LBECDk34micjPSbDUs3ES7nw1m899uLKkS35frEPwr4
-	 gv2XA0CeWBiz5oCAtw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mtgyj-1sV3WP3CJT-017EBc; Mon, 27
- May 2024 16:25:38 +0200
-Message-ID: <96beb071-ec2c-475f-8fa2-d519a1b1dc28@web.de>
-Date: Mon, 27 May 2024 16:25:18 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MA1UtrmJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CAFFC2BBFC;
+	Mon, 27 May 2024 14:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716820175;
+	bh=PQHKI0v3kfahV+WO0+ELOBiuGyhB7NTGZcjanRwq69w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MA1UtrmJkgAVPTyIPSkBpMsmFjxQmIvSbb6uJ4EEOlqJ3RYAQz/41sokR7Ar7oBPy
+	 GH3AIeB/5P2UHJRraJTWt7dmpfLsSXbgll00MuA5ZJaG6JzRGggrwU+EH4YymRImvu
+	 IYvc4Khe4XOOdf0BfcRfRTEYQkP1xW77qP5KkgNVEWk2G7GhMu8JgAeHFoD5KAhl86
+	 HsCBow8y5vlyDgLm3+HTb7VU7kTa5X7qYQSECA5NPZ1o+gDyG+9q6WI+VHr+aIzaJE
+	 Fcki8DCXzquYpYVmBBng2ZjUriFSJTpRsshQ+G7UWd2OB+XzWgF581iUegcbeeB1NX
+	 gexhFrtr5Zu5g==
+Message-ID: <547196ae-af25-43bb-801c-9a9dbb6ec134@kernel.org>
+Date: Mon, 27 May 2024 16:29:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,154 +35,178 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Peng Fan <peng.fan@nxp.com>, soc@kernel.org,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Chester Lin <chester62515@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Damien Le Moal <dlemoal@kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>,
- Dvorkin Dmitry <dvorkin@tibbo.com>, Emil Renner Berthing <kernel@esmil.dk>,
- Fabio Estevam <festevam@gmail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- Hal Feng <hal.feng@starfivetech.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Jacky Bai <ping.bai@nxp.com>,
- Jianlong Huang <jianlong.huang@starfivetech.com>,
- Joel Stanley <joel@jms.id.au>, Jonathan Hunter <jonathanh@nvidia.com>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Matthias Brugger <mbrugger@suse.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Orson Zhai
- <orsonzhai@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, Sean Wang <sean.wang@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>,
- Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
- Stephen Warren <swarren@wwwdotorg.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Thierry Reding <thierry.reding@gmail.com>, Tony Lindgren <tony@atomide.com>,
- Viresh Kumar <vireshk@kernel.org>, Wells Lu <wellslutw@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-samsung-soc@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-mediatek@lists.infradead.org,
- imx@lists.linux.dev, linux-aspeed@lists.ozlabs.org,
- openbmc@lists.ozlabs.org, kernel@pengutronix.de,
- Peng Fan <peng.fan@oss.nxp.com>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>
-References: <20240504-pinctrl-cleanup-v2-4-26c5f2dc1181@nxp.com>
-Subject: Re: [PATCH v2 04/20] pinctrl: starfive: Use scope based of_node_put()
- cleanups
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240504-pinctrl-cleanup-v2-4-26c5f2dc1181@nxp.com>
+Subject: Re: [PATCH v2 1/3] arm64: boot: dts: ti: k3-am68-sk-base-board: Add
+ LP8733 and TPS6287 nodes
+To: Neha Malcom Francis <n-francis@ti.com>, robh@kernel.org,
+ conor+dt@kernel.org, krzk+dt@kernel.org, kristo@kernel.org, vigneshr@ti.com,
+ nm@ti.com, broonie@kernel.org, lgirdwood@gmail.com
+Cc: marten.lindahl@axis.com, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, u-kumar1@ti.com
+References: <20240527124422.3553828-1-n-francis@ti.com>
+ <20240527124422.3553828-2-n-francis@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240527124422.3553828-2-n-francis@ti.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+RyPoq5wWT0ZiaKtbHEM7oUjpYEVZsaQY6N7Y3GqAcCCbvu/2JH
- u2A1o9G2LZb7XdHLU3H69K/ZAgfhJvU9jxdpYiqAnNWG9BA1SqA6BdADoQmnmuaRrP6fAil
- 8Vj3+benFoPx5AOFPUxJJt7XUQwXd4D4fxOV2u0S4nMX3GZIShaRs493PFfPvepvyAbRCtv
- sA0TyVvmVIL0Nk6+KE4zA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:31oKYLNiYt8=;Hxns51jU3fPbLxYZhS6Zxy9O8BL
- qcSJkc+8tI81FYEgYUDEjPFyxO5CsD0G4Yr1KM0HiJM1RAdO+budqXdzmwIJQJO5p6Qgg2nVe
- YKgM7j5yLFrWsSzyaik+NFTvY+PW6VUe11QHVHkDricbyYHE5P9qzbTg86+yeRiFSOOQZksg9
- Xdrs6r2eTX9AowMfEJqKIKNofU6TcDdmBmEh2hd5cMEugRlaO/xU/ubiYD/XRmfkiGEw2Tk9X
- NW8zaQg81GL2PPwft4f4poEafCoYwl+CIrmPHqURH/2YArZiC4UDm9VTu3lTVR8WSADgs2juL
- WzjmfuF3Nb/H8VSJqqzY977EL7BYu0JfjXhqczsj/AJHIU8x7U9FkHQwVLD+/aW9Q5b/a9OPw
- LI1zUhjAqpzjkl9ILHME5dfhA7gkD4YfqDP0iVyWu+VnmZh/pblaybHt4rD5ZI5OfaaxJKTej
- VGs+IMuQBrMttXj/4DWsuAy6tL2ASvq9ajbc+W4PfJFRO8eiyAiXlRr8A1ilG3Wwi2usEs8x0
- pyhK5u8Ye84ZDNXC0xiObkf3AMdCBhIc+0OAJbS7S/lr4Wa88XoId5G8Ib9v3q3Danb/+yyUK
- 5YECHUaogBhuwKJTAPf6awFWX25sWIKFsuMiL9bOP098OSKsVamHNvrpo4VNiI2KTPlO3jYMF
- m4zC6H3fMiyTT6q5AwrZQbBuPo5FStw2mq46jULp/VkrI2I5mP81da+ZdY2nuNi0JHqnAsXYb
- nCNKXCaTB/N8hkFz1ZJ6BaXlj9tzCbHQ/4RlK/pJC38X/hUvhfMryOHSpF+68/zEebizBSnT2
- Xmop5HdbEWKcl91rEpyYcoeHY0XK5F3NVihbciHAlOag4=
+Content-Transfer-Encoding: 7bit
 
-> Use scope based of_node_put() cleanup to simplify code.
+On 27/05/2024 14:44, Neha Malcom Francis wrote:
+> Add DTS node for LP87334E PMIC and two TPS6287x high current buck
+> converters.
+> 
+> LP87334E is responsible for supplying power to the MCU and MAIN domains
+> as well as to LPDDR4. The two TPS6287x supply power to the MAIN
+> domain for AVS and other core supplies.
 
-I see opportunities to improve affected function implementations another b=
-it.
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
+> 
+> Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
+> Link: https://www.ti.com/lit/pdf/slda060
+> ---
+>  .../boot/dts/ti/k3-am68-sk-base-board.dts     | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> index d743f023cdd9..74e59035013c 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> @@ -414,6 +414,83 @@ &wkup_uart0 {
+>  	pinctrl-0 = <&wkup_uart0_pins_default>;
+>  };
+>  
+> +&wkup_i2c0 {
+> +	bootph-all;
+> +	status = "okay";
 
-=E2=80=A6
-> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c
-=E2=80=A6
-> @@ -543,18 +540,18 @@ static int starfive_dt_node_to_map(struct pinctrl_=
-dev *pctldev,
->  			pins =3D devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
->  			if (!pins) {
->  				ret =3D -ENOMEM;
-> -				goto put_child;
-> +				goto free_map;
->  			}
->
->  			pinmux =3D devm_kcalloc(dev, npins, sizeof(*pinmux), GFP_KERNEL);
->  			if (!pinmux) {
->  				ret =3D -ENOMEM;
-> -				goto put_child;
-> +				goto free_map;
->  			}
-=E2=80=A6
-> @@ -623,8 +620,6 @@ static int starfive_dt_node_to_map(struct pinctrl_de=
-v *pctldev,
->  	mutex_unlock(&sfp->mutex);
->  	return 0;
->
-> -put_child:
-> -	of_node_put(child);
->  free_map:
->  	pinctrl_utils_free_map(pctldev, map, nmaps);
->  	mutex_unlock(&sfp->mutex);
-=E2=80=A6
-> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
-=E2=80=A6
-> @@ -175,18 +175,18 @@ static int jh7110_dt_node_to_map(struct pinctrl_de=
-v *pctldev,
->  		pins =3D devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
->  		if (!pins) {
->  			ret =3D -ENOMEM;
-> -			goto put_child;
-> +			goto free_map;
->  		}
->
->  		pinmux =3D devm_kcalloc(dev, npins, sizeof(*pinmux), GFP_KERNEL);
->  		if (!pinmux) {
->  			ret =3D -ENOMEM;
-> -			goto put_child;
-> +			goto free_map;
->  		}
-=E2=80=A6
-> @@ -233,8 +233,6 @@ static int jh7110_dt_node_to_map(struct pinctrl_dev =
-*pctldev,
->  	*num_maps =3D nmaps;
->  	return 0;
->
-> -put_child:
-> -	of_node_put(child);
->  free_map:
->  	pinctrl_utils_free_map(pctldev, map, nmaps);
->  	mutex_unlock(&sfp->mutex);
+Please order the properties according to DTS coding style:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
 
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&wkup_i2c0_pins_default>;
+> +	clock-frequency = <400000>;
+> +
+> +	lp8733: pmic@60 {
+> +		compatible = "ti,lp8733";
+> +		reg = <0x60>;
+> +
+> +		buck0-in-supply = <&vsys_3v3>;
+> +		buck1-in-supply = <&vsys_3v3>;
+> +		ldo0-in-supply = <&vsys_3v3>;
+> +		ldo1-in-supply = <&vsys_3v3>;
+> +
+> +		lp8733_regulators: regulators {
+> +			lp8733_buck0_reg: buck0 {
+> +				/* FB_B0 -> LP8733-BUCK1 - VDD_MCU_0V85 */
+> +				regulator-name = "lp8733-buck0";
+> +				regulator-min-microvolt = <850000>;
+> +				regulator-max-microvolt = <850000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			lp8733_buck1_reg: buck1 {
+> +				/* FB_B1 -> LP8733-BUCK2 - VDD_DDR_1V1 */
+> +				regulator-name = "lp8733-buck1";
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			lp8733_ldo0_reg: ldo0 {
+> +				/* LDO0 -> LP8733-LDO1 - VDA_DLL_0V8 */
+> +				regulator-name = "lp8733-ldo0";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			lp8733_ldo1_reg: ldo1 {
+> +				/* LDO1 -> LP8733-LDO2 - VDA_LN_1V8 */
+> +				regulator-name = "lp8733-ldo1";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +		};
+> +	};
+> +
+> +	tps62873a: tps62873@40 {
 
-1. Exception handling is repeated a few times also according to memory all=
-ocation failures.
-   How do you think about to use a corresponding label like =E2=80=9Ce_nom=
-em=E2=80=9D
-   so that another bit of duplicate source code can be avoided?
-   https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a=
-+goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+reso=
-urces
-
-2. Will development interests grow for the usage of a statement like =E2=
-=80=9Cguard(mutex)(&sfp->mutex);=E2=80=9D?
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
 
 
-Regards,
-Markus
+> +		compatible = "ti,tps62873";
+> +		bootph-pre-ram;
+> +		reg = <0x40>;
+> +		regulator-name = "VDD_CPU_AVS";
+> +		regulator-min-microvolt = <600000>;
+> +		regulator-max-microvolt = <900000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	tps62873b: tps62873@43 {
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+
+
+
+Best regards,
+Krzysztof
+
