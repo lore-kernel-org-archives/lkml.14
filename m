@@ -1,118 +1,192 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9453161339
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF30B161906
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819848; cv=none; b=ACT/Sm+KmhEjbSdvC58lycp7P+Vc09Oj++9nbEWoYs7wlJbNX9cf+tPdBq8fMCI+y171z5T6JmB0n9KNCvdPGIkeGHoQ9qgn7sMgdle/+zC0an3A6gJ3GaWmnxQPe2dsMkYEr4ctIE3HOTehjH5TZD/vUxeQD8zlz1dJo3EM1yw=
+	t=1716819973; cv=none; b=AnisvRN8GtihYT2M/51uP5LkoIyIJt82Q8qhb8R905NmZceXlb2+ciY/JoKlpAy3vIAcbUgKFy9WESLSHC+Xvz5gzUFwPu1zFAgNbQszI9zWB2BrdjrnAy4rGNFp8ERKutCb8oYYiWyzc0XrJa7bjZB9rBAqVK/C/xADpddxkis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819848; c=relaxed/simple;
-	bh=OWccy+nICEZUKQPwByjtML13iQY9e7N6XueMvybRfeI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t6B0MVOsrRYytI1q3WYUQ5cnzmQJgXwANZzMw5Mq5n5p8l0wYWa2BgMb1pmtktXTKsxMhgyY+GEkPOvNrboqNxueE+MfX7i1MvUUusdk2gOL3HsITkXqrEdzKbEeLsmW+QGVqi7DXhTPQqNeufkOkKgc1A0guqVAv22OPQfFlkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=geZBSPNM; arc=none smtp.client-ip=209.85.210.173
+	s=arc-20240116; t=1716819973; c=relaxed/simple;
+	bh=XKLaI74qjA22QeAsWI8Ln1246wnUj1/8uIXA+l/FzQk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=L9YYqtN4+LEEozRYb/vfK7VY6SuD6pgEb2BGdotlMUzfAkiO2aEdxcL6Fyw1K+8+GHDu7TiGtoIBy4OqWTIX3zligWlqDf8yyW7fqshfp7xmtQzHKttJR1J7oa6Q7MQ/7uP39FdfkshYp8AP8sjdzXNYYmKQD7ybvJcgJNO2Pkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MB+Qa57g; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="geZBSPNM"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7010a7df499so900930b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:24:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MB+Qa57g"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51fcb7dc722so5088075e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716819846; x=1717424646; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y7t4uYmRqlJLrpJDiHKBdOulRnB5HHZ6HHejKDBAJ1A=;
-        b=geZBSPNM0L7z+LF+w4vMu3B3WY7AF2PO+By/1Ifp0qgg5iN1245+kM7nXmhoFleiKm
-         Vpz8hEfwz4jho/HtEwTstgSK9WIPsZGUI1Tg1xYdKh23/zThArvtorBrWBgrp5DfizE/
-         s/O6Fv263DlWJgmyiQvlSfAWiGs4DUsV5c9WMYmeUgABxabXobrfVER4lw7CMcuj5POc
-         rPGcwoJNC/T5ZSxQLIG8W7d0zmU5DdNxbA4HiDdwJ+bqX9M3JbMbefitjNtbR44WuLYP
-         x+6DMVu/TTt7tgAkovfXB7lLJx2jCklNtC2o9sS0wRM0z1oVgSfL0YHWUxWFpr0ZRgYu
-         E0xQ==
+        d=linaro.org; s=google; t=1716819970; x=1717424770; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PZoaMc6WifhZ+fBwKL5gwIEFdMUp0oaX6j5v8OfXh20=;
+        b=MB+Qa57g/N7vGhiTnBqeOdPr2vrn3NUueqPQQ1Cj2S9JeTDVEVYKown+p3pkV1/rnz
+         2fdKR7s0KH8PLV6H7cqPf/nbWkIBZM4RAAEb8ujyrliHHUxgFs36RiT7aCnqeKIfGoIL
+         V1HY731aMyAVRbVhkXsr/6dXHuWynzkwFmUTXL+ug3jsUqPampMfQfxYLbzDVxJdrpbb
+         gTUTLo0o4x9Ne+RxMEeEKxbTsC2Wod91QWafaMdpzINvF1BpSlgNzNaV215B2i+dzhJK
+         lDoLTcmsZ2YF57TJAyaamMFaD8Uc0NUU9vq+bPBqAruMedGXVwU22A3ZxhvfPC5OciKB
+         Nw9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716819846; x=1717424646;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716819970; x=1717424770;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y7t4uYmRqlJLrpJDiHKBdOulRnB5HHZ6HHejKDBAJ1A=;
-        b=bb+RIFSvoZ7w0dqolYPnkDB20ms3eIx+FvuGPQmxVGfCN1k9A2NplnMwz/CAYYlQUb
-         cylXp/QCD8+dGcmvXJDDQZPmqk7zHkfEPzMtTY9wcocsAQExQskr/EGbPPn0ojNY8Xsi
-         Tqy8HsS2l0BuLegwTc+NJ/mFg2A+st7BnZnBgpS7K1B6t3+MfbGTp/koGl1pNtF4/ym2
-         mvcFHpszMT4YFqcYA+RHjvRkkrWfBjkHdv9noawbCja4TE9vKQcjic3fDqkiin/2OyDM
-         SlY5vTQST3xoZIrzStWWOyS2ycuxsLlCSs2lahuC3XgxnWTsmc/K99dUIlPILHmEHqov
-         CdKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ5pj3D5fnaGfPG63Ug9n/U3gyhzj7lYuHsj6X6+X10UzV056TbLIj0RjgRPqUk/QHaOljCacaApi/9hgCTy6oZar3pyPqkHrUXbKo
-X-Gm-Message-State: AOJu0Yza/aT+qL8zjCw6KAED38r6i6UNbOT6FyTIvzmW6JUoOQJl3EBJ
-	D1h8iT5QtjylGUFAzAzPldJIeChEKUWXrz/jLojG7w9erDsu3WIlxmGmCamYVZY=
-X-Google-Smtp-Source: AGHT+IHJ7Gus1KojOvbGG4MRVvDnQ0USYq7JfPcmCETBzGI3IuW+o9e/WGNMRkZQQAcHSiH5qpRc+Q==
-X-Received: by 2002:a05:6a20:5612:b0:1b0:24e7:5a35 with SMTP id adf61e73a8af0-1b212e5273emr8026076637.56.1716819846219;
-        Mon, 27 May 2024 07:24:06 -0700 (PDT)
-Received: from [127.0.1.1] ([112.64.61.67])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fbd3eb67sm5109895b3a.19.2024.05.27.07.23.59
+        bh=PZoaMc6WifhZ+fBwKL5gwIEFdMUp0oaX6j5v8OfXh20=;
+        b=jkfUOsZ0FCbyDgaul6sqXOhXiLC4vRiq3dCyFZx/P38o2dgzJru1FHqUlvkcOIQxms
+         UfpPUm4q1B5h9E+DgRzFWpe1JZneOsdmc9PQhiQAb5L+9R5VD5shr37WmuSJ1NvX367t
+         nJ/2UPOCB9GBhpY3IZH/y49DWblNVn7H1ipuPBJSLkxvOrwNmPEYuUKn/mjS5XXLYe9T
+         D+rt+FMp60jcv4W0pXRGYLr3PhCEjVvkayWsynXGvT5uFCNQzcL1XgSONa5Ja6JybH9t
+         +uYwXesPstUV+DqT8K7xMAJR/DnuWQPhZvovSv42bp/BGvzKqUC6dcj8fUezb7hv6dea
+         tRZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9a9uZ0QtUvaR15SksLJ7t0cfVNYZErYaFNiqXUK+USu3JjHkgdrZoMe6SICSfMItkQMTl2k3tTb5bpzVoo1V1U4NEMbmOtkq4CSPQ
+X-Gm-Message-State: AOJu0Yy1QG3h9S1LtZ3ypXjpzcRAIwhB/UDZn2Wfy5tiIsOCUNyoFJo8
+	GPWoV63+S8VvesJ/mz5hqe24OnTGa6LqFU1VYDJ1Z14Mj/Z6MKCc5AF/4u1r9v8=
+X-Google-Smtp-Source: AGHT+IE/McdjIB2db+Ta75EpAOuo80HDc4szOTHxbQY1a3UNLxB5stFeNpM3m1xKFPzyrfs8FAVxmA==
+X-Received: by 2002:a19:5e10:0:b0:51f:c38b:149c with SMTP id 2adb3069b0e04-527ef3ff4d1mr4004099e87.10.1716819970021;
+        Mon, 27 May 2024 07:26:10 -0700 (PDT)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529711fa7f3sm562002e87.258.2024.05.27.07.26.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 07:24:05 -0700 (PDT)
-From: Jun Nie <jun.nie@linaro.org>
-Date: Mon, 27 May 2024 22:21:52 +0800
-Subject: [PATCH v5 6/6] drm/msm/dsi: add a comment to explain pkt_per_line
- encoding
+        Mon, 27 May 2024 07:26:09 -0700 (PDT)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-pm@vger.kernel.org
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+	Nikunj Kela <nkela@quicinc.com>,
+	Prasad Sodagudi <psodagud@quicinc.com>,
+	Maulik Shah <quic_mkshah@quicinc.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-rt-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/7] pmdomain: core: Enable s2idle for CPU PM domains on PREEMPT_RT
+Date: Mon, 27 May 2024 16:25:51 +0200
+Message-Id: <20240527142557.321610-2-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240527142557.321610-1-ulf.hansson@linaro.org>
+References: <20240527142557.321610-1-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-6-f797ffba4682@linaro.org>
-References: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-0-f797ffba4682@linaro.org>
-In-Reply-To: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-0-f797ffba4682@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, Vinod Koul <vkoul@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jun Nie <jun.nie@linaro.org>, Jonathan Marek <jonathan@marek.ca>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716819804; l=1190;
- i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=hsA6cTh9A+abQ7dtFiITzQof1AHhT8P4eUkFfENrPaA=;
- b=DmbDrlVs3esyebwnhCPWbFsy+3uwdGxILFetgc/uTTqgEnXQ4scfPZdp9cpq2OPCVEMiCYALa
- kYkngMR3pH8CTp6Ev9lolCotIye0Vm+rDHwrPIy1FkaaCunqMdtsjC0
-X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
- pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
+Content-Transfer-Encoding: 8bit
 
-From: Jonathan Marek <jonathan@marek.ca>
+To allow a genpd provider for a CPU PM domain to enter a domain-idle-state
+during s2idle on a PREEMPT_RT based configuration, we can't use the regular
+spinlock, as they are turned into sleepable locks on PREEMPT_RT.
 
-Make it clear why the pkt_per_line value is being "divided by 2".
+To address this problem, let's convert into using the raw spinlock, but
+only for genpd providers that have the GENPD_FLAG_CPU_DOMAIN bit set. In
+this way, the lock can still be acquired/released in atomic context, which
+is needed in the idle-path for PREEMPT_RT.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
+Do note that the genpd power-on/off notifiers may also be fired during
+s2idle, but these are already prepared for PREEMPT_RT as they are based on
+the raw notifiers. However, consumers of them may need to adopt accordingly
+to work properly on PREEMPT_RT.
+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 7252d36687e6..4768cff08381 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -885,7 +885,11 @@ static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mod
- 	/* DSI_VIDEO_COMPRESSION_MODE & DSI_COMMAND_COMPRESSION_MODE
- 	 * registers have similar offsets, so for below common code use
- 	 * DSI_VIDEO_COMPRESSION_MODE_XXXX for setting bits
-+	 *
-+	 * pkt_per_line is log2 encoded, >>1 works for supported values (1,2,4)
- 	 */
-+	if (pkt_per_line > 4)
-+		drm_warn_once(msm_host->dev, "pkt_per_line too big");
- 	reg |= DSI_VIDEO_COMPRESSION_MODE_CTRL_PKT_PER_LINE(pkt_per_line >> 1);
- 	reg |= DSI_VIDEO_COMPRESSION_MODE_CTRL_EOL_BYTE_NUM(eol_byte_num);
- 	reg |= DSI_VIDEO_COMPRESSION_MODE_CTRL_EN;
+Changes in v2:
+	- None.
 
+---
+ drivers/pmdomain/core.c   | 47 ++++++++++++++++++++++++++++++++++++++-
+ include/linux/pm_domain.h |  5 ++++-
+ 2 files changed, 50 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index 623d15b68707..072e6bdb6ee6 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -117,6 +117,48 @@ static const struct genpd_lock_ops genpd_spin_ops = {
+ 	.unlock = genpd_unlock_spin,
+ };
+ 
++static void genpd_lock_raw_spin(struct generic_pm_domain *genpd)
++	__acquires(&genpd->raw_slock)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&genpd->raw_slock, flags);
++	genpd->raw_lock_flags = flags;
++}
++
++static void genpd_lock_nested_raw_spin(struct generic_pm_domain *genpd,
++					int depth)
++	__acquires(&genpd->raw_slock)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave_nested(&genpd->raw_slock, flags, depth);
++	genpd->raw_lock_flags = flags;
++}
++
++static int genpd_lock_interruptible_raw_spin(struct generic_pm_domain *genpd)
++	__acquires(&genpd->raw_slock)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&genpd->raw_slock, flags);
++	genpd->raw_lock_flags = flags;
++	return 0;
++}
++
++static void genpd_unlock_raw_spin(struct generic_pm_domain *genpd)
++	__releases(&genpd->raw_slock)
++{
++	raw_spin_unlock_irqrestore(&genpd->raw_slock, genpd->raw_lock_flags);
++}
++
++static const struct genpd_lock_ops genpd_raw_spin_ops = {
++	.lock = genpd_lock_raw_spin,
++	.lock_nested = genpd_lock_nested_raw_spin,
++	.lock_interruptible = genpd_lock_interruptible_raw_spin,
++	.unlock = genpd_unlock_raw_spin,
++};
++
+ #define genpd_lock(p)			p->lock_ops->lock(p)
+ #define genpd_lock_nested(p, d)		p->lock_ops->lock_nested(p, d)
+ #define genpd_lock_interruptible(p)	p->lock_ops->lock_interruptible(p)
+@@ -2079,7 +2121,10 @@ static void genpd_free_data(struct generic_pm_domain *genpd)
+ 
+ static void genpd_lock_init(struct generic_pm_domain *genpd)
+ {
+-	if (genpd->flags & GENPD_FLAG_IRQ_SAFE) {
++	if (genpd->flags & GENPD_FLAG_CPU_DOMAIN) {
++		raw_spin_lock_init(&genpd->raw_slock);
++		genpd->lock_ops = &genpd_raw_spin_ops;
++	} else if (genpd->flags & GENPD_FLAG_IRQ_SAFE) {
+ 		spin_lock_init(&genpd->slock);
+ 		genpd->lock_ops = &genpd_spin_ops;
+ 	} else {
+diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+index f24546a3d3db..0d7fc47de3bc 100644
+--- a/include/linux/pm_domain.h
++++ b/include/linux/pm_domain.h
+@@ -194,8 +194,11 @@ struct generic_pm_domain {
+ 			spinlock_t slock;
+ 			unsigned long lock_flags;
+ 		};
++		struct {
++			raw_spinlock_t raw_slock;
++			unsigned long raw_lock_flags;
++		};
+ 	};
+-
+ };
+ 
+ static inline struct generic_pm_domain *pd_to_genpd(struct dev_pm_domain *pd)
 -- 
 2.34.1
 
