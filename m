@@ -1,47 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D4479E1;
-	Mon, 27 May 2024 15:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2399A155CB4;
+	Mon, 27 May 2024 15:52:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825152; cv=none; b=QGSqEH8J036+ypgHIsyobVgWmaQaJ12Lc4dtzCDzBqRUTOL8Hy4z/rM3VNYWpEQkobYu9MDsSMDS/QFvIlBFdJjpmRyrKGqxYluiWHgclTBgiNi5Bp0u6tfaAEIibSEPkmhV3qdpfQlk3EgVL2ogoSZb5ehKtDFUedEwEHe9ArM=
+	t=1716825163; cv=none; b=JHr2rRTVWxJxdl3cltXAkfSZFcfdB6xfBDwKWLS+xUm2Rhcmyi3Wge8TXyicJrI5tjLcHTO9rZWHIKny3N7nvA9HYZEGvPhlry/NNEdeD8XPcQxtipN6Z/M38f0o33gUpE6Fgy5taERuRyKOb4wL2KiOqzFBjis73LOFG7SrDGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825152; c=relaxed/simple;
-	bh=Tw3zDUMJPnwZjnIYo1ORXpO1GQ+JnxUHJ0CmsdPjWLw=;
+	s=arc-20240116; t=1716825163; c=relaxed/simple;
+	bh=3SmlgS7uzCZyp3qIvmlKEKCak6Qut8+f73ynLbkP9IM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GiDM4usyluj3SLbxW+20oQqRNQpwkJH/reo56vxTBoze54sowJ3K5BguxTy2jukIhdkRt1ENWD0I46n1b1ES8amSERALPaR5wNLdgwnDw5u86RW2/k4M821IYV4xRuXtwuNVEtqRq/lTuR4nADDoOqCRRDXYJXbeyOYhzugoReA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmsMdfB9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=krQlSb8HIL2kxov8njqkw8lJQRnepbumhT++KcBzW4WUkcDQ58XtTV3kiz4BY2YQKKIt07T1dqdXShQzofiOvTd3k6JW6ouyo3n6FekgZoZO95m83hyO/wh18gjv4RCkSpOZaVeTlAP5O2V/+PIPBMwX1eNNH+bxueDgz2PW/Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXz4bQle; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmsMdfB9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BAA8C2BBFC;
-	Mon, 27 May 2024 15:52:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXz4bQle"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC07C32781;
+	Mon, 27 May 2024 15:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825152;
-	bh=Tw3zDUMJPnwZjnIYo1ORXpO1GQ+JnxUHJ0CmsdPjWLw=;
+	s=k20201202; t=1716825163;
+	bh=3SmlgS7uzCZyp3qIvmlKEKCak6Qut8+f73ynLbkP9IM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JmsMdfB9mLtMyTWbv0BnanBHpOBgCIrjdCpV+Ou8cCa/pQpMkQ6Tzbm3Xl0p97Zlu
-	 rk7yLxEYIip4XdfyaLkAGZqY/7cnwe2XF5VeSVt5WgoK/nGFMjPeNPVCiU9QM9FzZp
-	 no0dt5YMVkG/NwBMI66TzW9iFqTm+jWWh9mBb42d8VfP80XhzM+7RRDgvAM459zbLQ
-	 qZUvXYbrX3ZECSRMS1QEkpxNkV+mKhfbD1ok8H6uGXLLJVGH/WSBOL2lAD3zDsAUTq
-	 uv0EF7csEhZfCTVFWFUiYyOR7pPARs7WZOAbStXIxDpvdhh7tifW3aMkkCOZirDosj
-	 MzNQnZMZc4ilQ==
+	b=OXz4bQleBft3zYeRZTcnuXa7+f4aVFhmoubxHfKd/BquxcRnTfCLnsQ+7FaUex+83
+	 SSrZpd+AE8th+n8yL2Gpnt2J5T8NE9LBVIWF38PMZfG00HsykFo6Wha6ji915bLYvQ
+	 C4qsL7+vCFikSO2cHa0ftMZam0Jz5QrvqR6R7SIaVC3X1mleg9UbQvJzbML9PjRg6P
+	 I3wuWMcUiyfmJlK0Qztjh52GYgVVH8tupo9mgXO3w0MwaHD+KP0qK+YAEojvzqPo7t
+	 LUWFNRU+cgeXCBQKX0LQF1MjM6LwmbXYaY3gqqKD4ew374GWC7+yzJsG2WvMJeegoo
+	 kUwEjE20KDFyQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zheyu Ma <zheyuma97@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc: Nathan Lynch <nathanl@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>,
-	hverkuil-cisco@xs4all.nl,
-	rdunlap@infradead.org,
-	gregkh@linuxfoundation.org,
-	mcgrof@kernel.org,
-	andriy.shevchenko@linux.intel.com,
-	hkallweit1@gmail.com,
-	linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 17/23] media: lgdt3306a: Add a check against null-pointer-def
-Date: Mon, 27 May 2024 11:50:18 -0400
-Message-ID: <20240527155123.3863983-17-sashal@kernel.org>
+	nathan@kernel.org,
+	vaibhav@linux.ibm.com,
+	gautam@linux.ibm.com,
+	amachhiw@linux.vnet.ibm.com,
+	jniethe5@gmail.com,
+	sshegde@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org,
+	llvm@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.9 19/23] powerpc/pseries: Enforce hcall result buffer validity and size
+Date: Mon, 27 May 2024 11:50:20 -0400
+Message-ID: <20240527155123.3863983-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240527155123.3863983-1-sashal@kernel.org>
 References: <20240527155123.3863983-1-sashal@kernel.org>
@@ -56,54 +57,80 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.9.2
 Content-Transfer-Encoding: 8bit
 
-From: Zheyu Ma <zheyuma97@gmail.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit c1115ddbda9c930fba0fdd062e7a8873ebaf898d ]
+[ Upstream commit ff2e185cf73df480ec69675936c4ee75a445c3e4 ]
 
-The driver should check whether the client provides the platform_data.
+plpar_hcall(), plpar_hcall9(), and related functions expect callers to
+provide valid result buffers of certain minimum size. Currently this
+is communicated only through comments in the code and the compiler has
+no idea.
 
-The following log reveals it:
+For example, if I write a bug like this:
 
-[   29.610324] BUG: KASAN: null-ptr-deref in kmemdup+0x30/0x40
-[   29.610730] Read of size 40 at addr 0000000000000000 by task bash/414
-[   29.612820] Call Trace:
-[   29.613030]  <TASK>
-[   29.613201]  dump_stack_lvl+0x56/0x6f
-[   29.613496]  ? kmemdup+0x30/0x40
-[   29.613754]  print_report.cold+0x494/0x6b7
-[   29.614082]  ? kmemdup+0x30/0x40
-[   29.614340]  kasan_report+0x8a/0x190
-[   29.614628]  ? kmemdup+0x30/0x40
-[   29.614888]  kasan_check_range+0x14d/0x1d0
-[   29.615213]  memcpy+0x20/0x60
-[   29.615454]  kmemdup+0x30/0x40
-[   29.615700]  lgdt3306a_probe+0x52/0x310
-[   29.616339]  i2c_device_probe+0x951/0xa90
+  long retbuf[PLPAR_HCALL_BUFSIZE]; // should be PLPAR_HCALL9_BUFSIZE
+  plpar_hcall9(H_ALLOCATE_VAS_WINDOW, retbuf, ...);
 
-Link: https://lore.kernel.org/linux-media/20220405095018.3993578-1-zheyuma97@gmail.com
-Signed-off-by: Zheyu Ma <zheyuma97@gmail.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+This compiles with no diagnostics emitted, but likely results in stack
+corruption at runtime when plpar_hcall9() stores results past the end
+of the array. (To be clear this is a contrived example and I have not
+found a real instance yet.)
+
+To make this class of error less likely, we can use explicitly-sized
+array parameters instead of pointers in the declarations for the hcall
+APIs. When compiled with -Warray-bounds[1], the code above now
+provokes a diagnostic like this:
+
+error: array argument is too small;
+is of size 32, callee requires at least 72 [-Werror,-Warray-bounds]
+   60 |                 plpar_hcall9(H_ALLOCATE_VAS_WINDOW, retbuf,
+      |                 ^                                   ~~~~~~
+
+[1] Enabled for LLVM builds but not GCC for now. See commit
+    0da6e5fd6c37 ("gcc: disable '-Warray-bounds' for gcc-13 too") and
+    related changes.
+
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240408-pseries-hvcall-retbuf-v1-1-ebc73d7253cf@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/lgdt3306a.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/powerpc/include/asm/hvcall.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/lgdt3306a.c b/drivers/media/dvb-frontends/lgdt3306a.c
-index 2638875924153..231b45632ad5a 100644
---- a/drivers/media/dvb-frontends/lgdt3306a.c
-+++ b/drivers/media/dvb-frontends/lgdt3306a.c
-@@ -2176,6 +2176,11 @@ static int lgdt3306a_probe(struct i2c_client *client)
- 	struct dvb_frontend *fe;
- 	int ret;
+diff --git a/arch/powerpc/include/asm/hvcall.h b/arch/powerpc/include/asm/hvcall.h
+index a41e542ba94dd..39cd1ca4ccb9c 100644
+--- a/arch/powerpc/include/asm/hvcall.h
++++ b/arch/powerpc/include/asm/hvcall.h
+@@ -524,7 +524,7 @@ long plpar_hcall_norets_notrace(unsigned long opcode, ...);
+  * Used for all but the craziest of phyp interfaces (see plpar_hcall9)
+  */
+ #define PLPAR_HCALL_BUFSIZE 4
+-long plpar_hcall(unsigned long opcode, unsigned long *retbuf, ...);
++long plpar_hcall(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL_BUFSIZE], ...);
  
-+	if (!client->dev.platform_data) {
-+		dev_err(&client->dev, "platform data is mandatory\n");
-+		return -EINVAL;
-+	}
-+
- 	config = kmemdup(client->dev.platform_data,
- 			 sizeof(struct lgdt3306a_config), GFP_KERNEL);
- 	if (config == NULL) {
+ /**
+  * plpar_hcall_raw: - Make a hypervisor call without calculating hcall stats
+@@ -538,7 +538,7 @@ long plpar_hcall(unsigned long opcode, unsigned long *retbuf, ...);
+  * plpar_hcall, but plpar_hcall_raw works in real mode and does not
+  * calculate hypervisor call statistics.
+  */
+-long plpar_hcall_raw(unsigned long opcode, unsigned long *retbuf, ...);
++long plpar_hcall_raw(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL_BUFSIZE], ...);
+ 
+ /**
+  * plpar_hcall9: - Make a pseries hypervisor call with up to 9 return arguments
+@@ -549,8 +549,8 @@ long plpar_hcall_raw(unsigned long opcode, unsigned long *retbuf, ...);
+  * PLPAR_HCALL9_BUFSIZE to size the return argument buffer.
+  */
+ #define PLPAR_HCALL9_BUFSIZE 9
+-long plpar_hcall9(unsigned long opcode, unsigned long *retbuf, ...);
+-long plpar_hcall9_raw(unsigned long opcode, unsigned long *retbuf, ...);
++long plpar_hcall9(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL9_BUFSIZE], ...);
++long plpar_hcall9_raw(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL9_BUFSIZE], ...);
+ 
+ /* pseries hcall tracing */
+ extern struct static_key hcall_tracepoint_key;
 -- 
 2.43.0
 
