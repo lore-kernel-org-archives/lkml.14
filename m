@@ -1,129 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6D743AC1;
-	Mon, 27 May 2024 13:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065AB15EFB8
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816297; cv=none; b=IyM8a12fmb77XuWMBzJ/5SIhTWSqjLR40/W/dMw4IYJyrSx461S2iYs/GjdCF+ePNWU+d8qd3FPdKSN/duYgw2faN6YpdRoIFeFZWD8JHyWggEFijnGMSZIRJB0YOfEPVjSftYdZtKwPL7prDU5o8XqcvU+4plz0Xpe0j3DUAgQ=
+	t=1716816304; cv=none; b=qMIOTni2+Fm0XRsTuUzB3jJHqKjs0v89c/GQq5IeIUGTkGxEIodgvkAJzwt/yg58NnFhTBA2mz5c4RdwhcmCezw7jW98Er+YZJJGusGyyEHe4JC2GqYoKuPdv2hZIMsWNPltcZPoRH6cO9louXIIs0ZqGfsnYvh4rsSRyyM+Ve8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816297; c=relaxed/simple;
-	bh=f4fM4T0TMF6cOrFSdyxC7ZQRG1qooTij00PqLggleCU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SyM2m8f6GWfMpdOXGF8l/87uAxO94cZ5AuQIxKcSr2VtfUO4WLGe9cWLuznxa6B1iLozEkIeKZWcvkalVqqgYu6ei/YnzCFl8tgUhaTsB4nJzceOxFEpvk9DEWLWZpZI72WjfeWQ3VCm/ZK5aXdgCkpeDdVr+R57cmZD7GdW3b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N53DSNHT; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716816304; c=relaxed/simple;
+	bh=CQ6QFnP2deDpvp3Pj7oNizzTCPgYn5yROzn1dc6gUJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PffKzazYI1GB8bSjsk3hNmUPGCFbCxgYL2TewjiKXYmZcJDowZNZHBuCHNXmzbItIT699YAeOhCToO0QLV0lqbdoVRxJ3KrBn0isOnEeu3UNamaRWnycoemm7lAnYvPLNq1iy5jlk0XmiFplQSr9Bv6Ubykg+EtB5/iH1pGzVK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GX6aFElK; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N53DSNHT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716816296; x=1748352296;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=f4fM4T0TMF6cOrFSdyxC7ZQRG1qooTij00PqLggleCU=;
-  b=N53DSNHTW8iifcNnvTDSSvDmuqqQiKqXtGdJQBG0lJMdNyBrTps3ITWT
-   lw1CFrVwWGPiwKYB28RifwdqyFD4Xp6z6bEJdA+K4kU3ew8GJCe/x56k9
-   fLpBO60EK4gAIRyGNuMpS55Uhrh3YibtIVR6lDaJKnlsZtiPzQYcYPy8S
-   tTg13TB5RGQI6gPuPBs5WCalcrMWA0yDXKQkEL0YMIIIQpUisrN33VjKU
-   L5I6cPSfDrak7Uq1UXI/j+Xkb7B97tymrsSXfP2SJiMWS2pZy1335DYcm
-   zHyGFp8UJS8nHbaG5lYKIdRrLntcVqNc1wSj3Ayyyt0iXryCwgsqi0GGZ
-   Q==;
-X-CSE-ConnectionGUID: tM/vpn2rQYmDru4cRgnhaw==
-X-CSE-MsgGUID: R+ksqsj7TbWaSKdI2oMGrQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="13325750"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="13325750"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 06:24:55 -0700
-X-CSE-ConnectionGUID: gxmgFYY+Ti2gmtwIf+Yhdw==
-X-CSE-MsgGUID: 9PZXqOcCSlyWLBpfjurhRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="34841336"
-Received: from unknown (HELO localhost) ([10.245.247.140])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 06:24:52 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Fengguang Wu <fengguang.wu@intel.com>,
-	Pierre Ossman <drzeus@drzeus.cx>,
-	linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/2] mmc: sdhci-pci: Convert PCIBIOS_* return codes to errnos
-Date: Mon, 27 May 2024 16:24:41 +0300
-Message-Id: <20240527132443.14038-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GX6aFElK"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-62a080a171dso31600407b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716816302; x=1717421102; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CQ6QFnP2deDpvp3Pj7oNizzTCPgYn5yROzn1dc6gUJE=;
+        b=GX6aFElKK7u+h/K8jDC4n0pKU9+8DjxGsOjF+VvFBjQfjzbFnA+20Q35RpTlLxh3Jn
+         CIsz+bwM2wRv1l7ibGCxqKIP8NB/Nlgyu0GDbIC9AS8xIfspE8NXwAWzFcSr7glIOooe
+         4HxcLZzmfWkCaR96VbfHPm06oWwUUYrOaAnhW5yPqePK7fLFPBTcJEwQVQX/Dexdap6d
+         UBc9796Tww7pJxe+mxAfK6O2OTEbg6v+STguCf4oRsnK69edMu13I9D9wYrEUo5azcuW
+         U1MKarOp6VBLlti+MtXoyj92URNZeBzVjI0Q1qCj6NWYjo2wGV6+cpJ1qvidspDwlxTq
+         REQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716816302; x=1717421102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CQ6QFnP2deDpvp3Pj7oNizzTCPgYn5yROzn1dc6gUJE=;
+        b=b0LOMagvouMybjikwGTfDi4w//ubwTyiayzq2duyCERU0lWiImwXizAde0li3Z9xQR
+         cXmaLQXIJDpvkLG60eVGQx3qcgbaG7x8VRjSkijEuWLF33TeD7oDT07dHod7Fu0ca9L5
+         4aXv4jvp+xq3JcPl8qkAId0JcBhfqtTzRWl7kzFDIm73f6E+xd3krHiz14wNvsbZN2bf
+         fx9hXr1cGN7T1FcumSs2WJN4GHLZBaszmI31XMIQUhbI90BSgMS3RxxKI8G7Bj7l2xfC
+         uNGVk2j1qD+GraL/9tRwfgrlpwvLn99O6s8eVTfMF8bYQhG0HVOTx8aikS+O2kULdvCt
+         KtHg==
+X-Gm-Message-State: AOJu0YwfeouGJPtLj34azIIO5OlF8JjwomO9/bidj+SgQGphrJpxEc7Q
+	CS8SQ4C9l5szG3IYJ6YwWZgMvy3h9dgW1rGOgrlyU9W9U6AG4YzxI6sYZRtbeVg68QOq1H0SSH9
+	wvgUXgq52SJXpJXOjfbBjdAoCOPKheaC2iMt9xA==
+X-Google-Smtp-Source: AGHT+IFva1a/cQkBiyWvE7gUZAS0TVsAW0fRcqJHDA9tmjBCLMZvIEDmvw/hk2OUWJb0h0vbuBejxk7aTe8N+86gM/k=
+X-Received: by 2002:a05:6902:1021:b0:de5:549b:dc9e with SMTP id
+ 3f1490d57ef6-df772385ecbmr10475413276.57.1716816301823; Mon, 27 May 2024
+ 06:25:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240508184905.2102633-1-andriy.shevchenko@linux.intel.com> <20240508184905.2102633-5-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240508184905.2102633-5-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 27 May 2024 15:24:51 +0200
+Message-ID: <CACRpkdaSU97+aA4fvVZT=ay2e9g8pjbX0dMO23gFF8+sn5S88A@mail.gmail.com>
+Subject: Re: [PATCH v1 04/10] misc: eeprom_93xx46: Hide legacy platform data
+ in the driver
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-jmicron_pmos() and sdhci_pci_probe() use pci_{read,write}_config_byte()
-that return PCIBIOS_* codes. The return code is then returned as is by
-jmicron_probe() and sdhci_pci_probe(). Similarly, the return code is
-also returned as is from jmicron_resume(). Both probe and resume
-functions should return normal errnos.
+On Wed, May 8, 2024 at 8:49=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Convert PCIBIOS_* returns code using pcibios_err_to_errno() into normal
-errno before returning them the fix these issues.
+> First of all, there is no user for the platform data in the kernel.
+> Second, it needs a lot of updates to follow the modern standards
+> of the kernel, including proper Device Tree bindings and device
+> property handling.
+>
+> For now, just hide the legacy platform data in the driver's code.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Fixes: 7582041ff3d4 ("mmc: sdhci-pci: fix simple_return.cocci warnings")
-Fixes: 45211e215984 ("sdhci: toggle JMicron PMOS setting")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/mmc/host/sdhci-pci-core.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index ef89ec382bfe..23e6ba70144c 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -1326,7 +1326,7 @@ static int jmicron_pmos(struct sdhci_pci_chip *chip, int on)
- 
- 	ret = pci_read_config_byte(chip->pdev, 0xAE, &scratch);
- 	if (ret)
--		return ret;
-+		goto fail;
- 
- 	/*
- 	 * Turn PMOS on [bit 0], set over current detection to 2.4 V
-@@ -1337,7 +1337,10 @@ static int jmicron_pmos(struct sdhci_pci_chip *chip, int on)
- 	else
- 		scratch &= ~0x47;
- 
--	return pci_write_config_byte(chip->pdev, 0xAE, scratch);
-+	ret = pci_write_config_byte(chip->pdev, 0xAE, scratch);
-+
-+fail:
-+	return pcibios_err_to_errno(ret);
- }
- 
- static int jmicron_probe(struct sdhci_pci_chip *chip)
-@@ -2202,7 +2205,7 @@ static int sdhci_pci_probe(struct pci_dev *pdev,
- 
- 	ret = pci_read_config_byte(pdev, PCI_SLOT_INFO, &slots);
- 	if (ret)
--		return ret;
-+		return pcibios_err_to_errno(ret);
- 
- 	slots = PCI_SLOT_INFO_SLOTS(slots) + 1;
- 	dev_dbg(&pdev->dev, "found %d slot(s)\n", slots);
-@@ -2211,7 +2214,7 @@ static int sdhci_pci_probe(struct pci_dev *pdev,
- 
- 	ret = pci_read_config_byte(pdev, PCI_SLOT_INFO, &first_bar);
- 	if (ret)
--		return ret;
-+		return pcibios_err_to_errno(ret);
- 
- 	first_bar &= PCI_SLOT_INFO_FIRST_BAR_MASK;
- 
--- 
-2.39.2
-
+Yours,
+Linus Walleij
