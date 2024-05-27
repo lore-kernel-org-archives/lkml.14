@@ -1,61 +1,61 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6814515F304
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF3415F407
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716814611; cv=none; b=shzrPOfPksMe0r3ei8NpMMj3Ls2zlBJwka3TmzqaMJc2vS1OIKtlGM2J3zEzIyjzGOeKm0rNpOTYv0NJxtL0/+6szGlpNNvihevM+liO59uJGxMbh73sjtsRTPmxqZ4za+sL8+hG8aQz9sYPl2MNndxeohbpWVNV2TfbqP13wS8=
+	t=1716814615; cv=none; b=JAcX7yIN+zHJvokMd3RDRyQgQnYNG9f4aqTgbv8+TV/HgV1E7q1rtN3R5hnzpB9en92Dw8iH2rWro6htBh6baCKPlGugpGgUb3r/1sy+B+XLkTjiMakSDyewWOxcUl3QB7ML+Srw93XpDCCxfE9I25S9hqrkvly4qcqO4CEwtek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716814611; c=relaxed/simple;
-	bh=meY1wo/NxEzDOv9msjl7yzgZ55EZS0CQR42a5BSERck=;
+	s=arc-20240116; t=1716814615; c=relaxed/simple;
+	bh=VYDo6jzomkuy4JdOPo08LJWfL+6TdFoDBjONKt90Fys=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HZtbnnNWdlWNrFofd6+Wepsqz0nk1myMtnXxbC9dVtRySN+XclLI0ED2/2BcoaQvBMmqiGfH9UQjwI9Lpw1ydqi+8ss7lR884bT6tZz+4Oy5yJ83lwTXIioEYE9OX33+hWdDd1UT8Whiju+tv9Wr8ZPm7IEZmWOoFoBzzIqQ0Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hOlu23/D; arc=none smtp.client-ip=209.85.128.43
+	 In-Reply-To:To:Cc; b=DmeFWl9oneicxQ9WbOB2uKPnNlDr5VbqSo2tutjHsnckx3Xc3alGMbrcVloYKZkE7G4qvkCxhEZkVbCkpF3YR5yqlw7Y3258OmTj2zN4z0nE/UnqaJphcYppRltaANBy3Q1zJt5i7zYuhZ6VChYBOA30bL9XNQSWo5jUG67JDcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i9Wk1uEA; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hOlu23/D"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4202cea9941so81457405e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 05:56:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i9Wk1uEA"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-420180b5838so57830805e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 05:56:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716814607; x=1717419407; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716814610; x=1717419410; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=TVHi2ZeQ402QhpJd86jW1aHMB/MsAESVEUlJCBYjKa0=;
-        b=hOlu23/DsjlZofAS4rW/hJ5thrigj73lu5BxK66SymHzG648n15PF3uSWPFahggic+
-         BYe7kFE7UYiViuV98Tv+BobeErZmz97yjD4Bmr/UidlrxMrdOy7OZzqi6ZgRBiAPXBi6
-         jqiQbVePbt7GOlNWNyIfWJZUwlPLecfpyMugnjvqgAbfYf6EbRNjo1zBo/IIv/zzG3YN
-         YzIkzB5uEi8K7E9mKG8GIs8IwysxWrSXaL92ho3Q2vYSRqBLdfhcDJVqD5h/XLR00fhM
-         WNJmsX/tU1glO07gD2oXOoquetNQeU7Ws9Rzy8BAqAv2ofriVJw2rAOkhWwnTYYZzqy7
-         5bVg==
+        bh=hwqjl/ua5BMkegCLuGyA1/eY3rbR4AbTFjr6wje8pn4=;
+        b=i9Wk1uEArmXGRsSaTravi7w/ya1pxnRpXvpQIb8CigF0qN2NCkBnRzE0j+H0ftpKGZ
+         JajFpZ4CKYP699OtDIfzZGb1CrPAF6x4sqhPZU0CeghIvF/DbX4qXj+QJHGeHoFULgo3
+         1ZMrjAZ9PmOE5rW2JdY/4qNgSmcytrXO7+lkp9TsCEZEpQ6tdfJYE8Cg76UuiP3dp+Jd
+         uxoKkQ79eiw9Uw76DngKuKXmgRWPTHS9UdmwbXHm4P4dRwm9Q/Ft2XXwYxxb1OG7OCsv
+         pn9meMnR1NpvyspwF2QIktmYANmthaEPkr0UpNxxdbR+1s7GBanTkxZs0nnKktxVdLEO
+         Jy3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716814607; x=1717419407;
+        d=1e100.net; s=20230601; t=1716814610; x=1717419410;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TVHi2ZeQ402QhpJd86jW1aHMB/MsAESVEUlJCBYjKa0=;
-        b=VDrT+PfYq09BTyE5y88ZSY5ZdQ52ZXsCS/S39MOvJzk6eSquC4PnXftkVXlmb72G2m
-         1R0plgAH0TWlGsOzFtxTkFQkp9U9pozqj/xBWeFuXfblIbVaBXC38/cJJLV82kEzHKsj
-         pXWOLwrkR8FgD190C5yNN4wLx1L3yTnqU2wpmlRb7VKtlcJYp3SIehqSIIeVTOF6SYva
-         bK0QJbK/0cLMZFJ1ibAOw5qdyDAuEdlxasvB4NXRCVGc+5at8uuWLiM4u5jUVIiTrOEA
-         L7cSIgrIJsyLQP9+4LAuoI4NrGnpTLTVU/37+WZRxna26G4/OBmnnKeOt0U6HUH5SnSi
-         aIVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVoMSWyLRAmgwUcghuLII9ELsdywIphMloQtyJ0PSi5Kygjq1OY6ebDDHislGNI0ZJVabmp8NpN6eu/ggBCwjR29pY6xGQ5NBLApdat
-X-Gm-Message-State: AOJu0YwglUoJJmGb1k1Ig6v5YUeSRR/dtUfx0z5Y+qfdoI8quRIiAimR
-	8RYVd2UnytMwkl7jwSq93ZoPNgXw6u+eHLZN0wmTWyGJFLiozgb7F23WhGGDAbs=
-X-Google-Smtp-Source: AGHT+IEog9ZNeS5+TA3qTIOArr0SSOWysA8XUZz5jMk3vmSPZBNBAaKBYOJEIxZ3RY1xn9NfV0Y8Wg==
-X-Received: by 2002:a05:600c:b57:b0:420:11c1:b240 with SMTP id 5b1f17b1804b1-421089fa31dmr75202205e9.24.1716814606612;
-        Mon, 27 May 2024 05:56:46 -0700 (PDT)
+        bh=hwqjl/ua5BMkegCLuGyA1/eY3rbR4AbTFjr6wje8pn4=;
+        b=FK065IyGKDOjBlFdejn/q5Of30GZY71kUfyPqfpMYAQutEGL5UTcQ04k8amhrKLj4q
+         TZ7qijAE/tYJZ8VPTHbtAPhH/siTjHOpObwJTcTLTa07r1SdijJ78o7V7XZqK7UTak+w
+         xhl7QnORmHLUGmfndMAPZ6cmK+N55lfEuXHN8N8Bpo8ra7WYGqvlP4syt096RQhrVtpr
+         gYZKjdqn9L8uDaIa3sWhoUyjX9vipCooOZdprgSiSqRUDKRGgHNxcBNr8DfyyOHLc4Uw
+         V60MNnuO6ZBbIadYlu+inDvEVM5OBA/CLxk7qpriaCj72b4LODHIVMuhiVhw1lo8Xrw3
+         D10Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWhTPzaYNdC51/ZSp/E/AGZbcGoOv/sMWTyWvGjR2bMmq8XcA0G3IBNobZmjAyCpWY+urw3oY4tg59Est509JDra67vJMI1Z7WKhvXo
+X-Gm-Message-State: AOJu0Yze/D65OW0zabe+H68tf/8PZgmhP2Ai9J18Uby8JwAQi0fqWmzY
+	UiMYSxyvX27K/Pcz6fL9gYA5dt5s7RRBCa3kV3u1pf+myFxouyvn/TnR3PAhLOw=
+X-Google-Smtp-Source: AGHT+IEkkOnfkm2D13BrEQ3/361Fm2xiC1eRGcXiFJMGscUWHvqf4qBhm46RUioe2i98CYXq1xagcQ==
+X-Received: by 2002:a05:600c:4fc2:b0:421:1611:cd8a with SMTP id 5b1f17b1804b1-4211611ced2mr17280225e9.4.1716814610493;
+        Mon, 27 May 2024 05:56:50 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:75a:e000:c322:131e:ff9d:ef41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100f64f98sm138753635e9.24.2024.05.27.05.56.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100f64f98sm138753635e9.24.2024.05.27.05.56.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 05:56:46 -0700 (PDT)
+        Mon, 27 May 2024 05:56:50 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 27 May 2024 14:54:52 +0200
-Subject: [PATCH v10 02/15] firmware: qcom: add a dedicated TrustZone buffer
- allocator
+Date: Mon, 27 May 2024 14:54:56 +0200
+Subject: [PATCH v10 06/15] firmware: qcom: scm: make qcom_scm_ice_set_key()
+ use the TZ allocator
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240527-shm-bridge-v10-2-ce7afaa58d3a@linaro.org>
+Message-Id: <20240527-shm-bridge-v10-6-ce7afaa58d3a@linaro.org>
 References: <20240527-shm-bridge-v10-0-ce7afaa58d3a@linaro.org>
 In-Reply-To: <20240527-shm-bridge-v10-0-ce7afaa58d3a@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -83,42 +83,28 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  kernel@quicinc.com, Andrew Halaney <ahalaney@redhat.com>, 
  Deepti Jaggi <quic_djaggi@quicinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=15890;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2079;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=mOaQJ76pAi8DfDmYfUIgvI22J5C2x0SmFzelql6S1xc=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmVIMIch6WhvRS5l6JSfrZ2sgNLqinYJUoa6s13
- CTL3pAZ3iCJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlSDCAAKCRARpy6gFHHX
- cmP5D/913GO7T1Bt5zSp3QSRjHJR7P9a5aghpFTCeMYwu1FzOjQ+EdaUWsyAM9DpJDd4AlQy4yc
- P+vAsSG483eYyNdzsDuKhb5cRGOBIG6pZ036CuQkJ0qtUMD+3yLOfL5N8ws/uTkYsuSm9SDbuZu
- A2QCpvF4knYCbrNjGDaQ7booCnoNX4fj0h8k/0TPCpdV3w9xrukhvWtaP6+DmOgRV/0QDqJzqvY
- cwLuJ4ky2laRoqZo4AWoFGx3LYU1jXS7BBRsTjEbiNKr4/T7eQb9sD8j+4YDpQDjHaDoOWSSAfx
- 2MK8b1DYSCgEig0Si90OgwJffJKVcZ218N3g3xjf9dBae+FCfaKwX8uTKaiRgWn0DcT80zDKN9M
- gooSPD1ZiDBx4jBIgVov2enJC/48fWR16ZSdFj9PWi6RUiLjopKhu9Jc0hg70BQN+pLzeLm53cq
- EKbxmQhXN9y6kJpzL8i+cUSxSJBgTyLVaXSqRAeoYDYORUhf054yj0YirMfbihmExVeuAjGFjNF
- GndcHvLdP1QLOdf8yIbeSohACNf496jHYw31kSCwjH0BN3CZAArZilyrZApISgSU0QlRuhOsWD+
- JYm85l4Z180Im0ktc6Z4Mwme5UK+0wGpo4C5kVpG02++jcfpdEZHTPnEyEhHmf5qlLafTs6kzrN
- 6GWmTPrxDxtmvow==
+ bh=MwBEmBbakFP8mlp72MFfpWCULQKICitWzxgwxI2nn+U=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmVIMJUy60Czjqag7xEYc7ahX2YHMBSOfNGP/+O
+ 3e+knl2ozuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlSDCQAKCRARpy6gFHHX
+ cpb7D/4k0RoNmUPSLf9pVkBFfOLzL5VCbdT/rLt9zoANLGewCzYTlfvevPcAPxYcnPdVNxNOOsS
+ 3VXMio/WlodYtrHhKM1jf3/YJxMis4vXMvQheuHxFiBah7735lA0IDUmZV0Y9SBMLd8XMYbzLIp
+ 05gFaSIZkhvLVzzRNquuPq41VZpPpHFZnK2124ftvaesthOzdGPenn3F4MMMHunTtIaURjWEmJe
+ 5exqKcCw8mtxtQhVw9VngQROJKUIE9xTf/8I89j0ITxquPXgPawilUvC3imwaIYv5o92UN75oyZ
+ het5o9/XtuuGCnPl0dw8gA4hcOe8SJiZDoQUVAXp8/DBlW0JpsbnWmcioV8DfYHq5pHy+Xp/Ogb
+ FTbgrA604bdVrYMxp3NBb/+ciCfiJEzUsTOQBbQ77KJblwh6ga81EPQlvAXriK8lKFKhOAVcpab
+ q2kHrKK2NqesBOqKjrJaT1IjGe7jDA921eHyEAXZr0qw27EWYtt43O+7e3s5dyB0fBwU8TFr4ra
+ SIlURWmItONYJRVfOhu4IzwRq74cpznca1b5sIksYOPsU0e4M4VNUTazf1rt1WBfvGGGrb/CnlG
+ nEgnrJBy5fujQNRDlszNtrIhBemtxfigF2MQZGxyYpe6pzZ301OCp2a2KX0+ZVlntNF+QuKMQm0
+ +uP6Ntt5HyVprvg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-We have several SCM calls that require passing buffers to the TrustZone
-on top of the SMC core which allocates memory for calls that require
-more than 4 arguments.
-
-Currently every user does their own thing which leads to code
-duplication. Many users call dma_alloc_coherent() for every call which
-is terribly unperformant (speed- and size-wise).
-
-Provide a set of library functions for creating and managing pools of
-memory which is suitable for sharing with the TrustZone, that is:
-page-aligned, contiguous and non-cachable as well as provides a way of
-mapping of kernel virtual addresses to physical space.
-
-Make the allocator ready for extending with additional modes of operation
-which will allow us to support the SHM bridge safety mechanism once all
-users convert.
+Let's use the new TZ memory allocator to obtain a buffer for this call
+instead of using dma_alloc_coherent().
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Reviewed-by: Andrew Halaney <ahalaney@redhat.com>
@@ -126,551 +112,51 @@ Tested-by: Andrew Halaney <ahalaney@redhat.com> # sc8280xp-lenovo-thinkpad-x13s
 Tested-by: Deepti Jaggi <quic_djaggi@quicinc.com> #sa8775p-ride
 Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- MAINTAINERS                              |   8 +
- drivers/firmware/qcom/Kconfig            |  20 ++
- drivers/firmware/qcom/Makefile           |   1 +
- drivers/firmware/qcom/qcom_tzmem.c       | 389 +++++++++++++++++++++++++++++++
- drivers/firmware/qcom/qcom_tzmem.h       |  13 ++
- include/linux/firmware/qcom/qcom_tzmem.h |  56 +++++
- 6 files changed, 487 insertions(+)
+ drivers/firmware/qcom/qcom_scm.c | 21 +++++----------------
+ 1 file changed, 5 insertions(+), 16 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dbc5d9ec3d20..305a1ea0f6be 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18606,6 +18606,14 @@ F:	Documentation/networking/device_drivers/cellular/qualcomm/rmnet.rst
- F:	drivers/net/ethernet/qualcomm/rmnet/
- F:	include/linux/if_rmnet.h
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index ea4d71bb0ad3..2c350de1df07 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -1218,32 +1218,21 @@ int qcom_scm_ice_set_key(u32 index, const u8 *key, u32 key_size,
+ 		.args[4] = data_unit_size,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+-	void *keybuf;
+-	dma_addr_t key_phys;
++
+ 	int ret;
  
-+QUALCOMM TRUST ZONE MEMORY ALLOCATOR
-+M:	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+L:	linux-arm-msm@vger.kernel.org
-+S:	Maintained
-+F:	drivers/firmware/qcom/qcom_tzmem.c
-+F:	drivers/firmware/qcom/qcom_tzmem.h
-+F:	include/linux/firmware/qcom/qcom_tzmem.h
-+
- QUALCOMM TSENS THERMAL DRIVER
- M:	Amit Kucheria <amitk@kernel.org>
- M:	Thara Gopinath <thara.gopinath@gmail.com>
-diff --git a/drivers/firmware/qcom/Kconfig b/drivers/firmware/qcom/Kconfig
-index 3f05d9854ddf..3c495f8698e1 100644
---- a/drivers/firmware/qcom/Kconfig
-+++ b/drivers/firmware/qcom/Kconfig
-@@ -9,6 +9,26 @@ menu "Qualcomm firmware drivers"
- config QCOM_SCM
- 	tristate
+-	/*
+-	 * 'key' may point to vmalloc()'ed memory, but we need to pass a
+-	 * physical address that's been properly flushed.  The sanctioned way to
+-	 * do this is by using the DMA API.  But as is best practice for crypto
+-	 * keys, we also must wipe the key after use.  This makes kmemdup() +
+-	 * dma_map_single() not clearly correct, since the DMA API can use
+-	 * bounce buffers.  Instead, just use dma_alloc_coherent().  Programming
+-	 * keys is normally rare and thus not performance-critical.
+-	 */
+-
+-	keybuf = dma_alloc_coherent(__scm->dev, key_size, &key_phys,
+-				    GFP_KERNEL);
++	void *keybuf __free(qcom_tzmem) = qcom_tzmem_alloc(__scm->mempool,
++							   key_size,
++							   GFP_KERNEL);
+ 	if (!keybuf)
+ 		return -ENOMEM;
+ 	memcpy(keybuf, key, key_size);
+-	desc.args[1] = key_phys;
++	desc.args[1] = qcom_tzmem_to_phys(keybuf);
  
-+config QCOM_TZMEM
-+	tristate
-+	select GENERIC_ALLOCATOR
-+
-+choice
-+	prompt "TrustZone interface memory allocator mode"
-+	default QCOM_TZMEM_MODE_GENERIC
-+	help
-+	  Selects the mode of the memory allocator providing memory buffers of
-+	  suitable format for sharing with the TrustZone. If in doubt, select
-+	  'Generic'.
-+
-+config QCOM_TZMEM_MODE_GENERIC
-+	bool "Generic"
-+	help
-+	  Use the generic allocator mode. The memory is page-aligned, non-cachable
-+	  and physically contiguous.
-+
-+endchoice
-+
- config QCOM_SCM_DOWNLOAD_MODE_DEFAULT
- 	bool "Qualcomm download mode enabled by default"
- 	depends on QCOM_SCM
-diff --git a/drivers/firmware/qcom/Makefile b/drivers/firmware/qcom/Makefile
-index c9f12ee8224a..0be40a1abc13 100644
---- a/drivers/firmware/qcom/Makefile
-+++ b/drivers/firmware/qcom/Makefile
-@@ -5,5 +5,6 @@
+ 	ret = qcom_scm_call(__scm->dev, &desc, NULL);
  
- obj-$(CONFIG_QCOM_SCM)		+= qcom-scm.o
- qcom-scm-objs += qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
-+obj-$(CONFIG_QCOM_TZMEM)	+= qcom_tzmem.o
- obj-$(CONFIG_QCOM_QSEECOM)	+= qcom_qseecom.o
- obj-$(CONFIG_QCOM_QSEECOM_UEFISECAPP) += qcom_qseecom_uefisecapp.o
-diff --git a/drivers/firmware/qcom/qcom_tzmem.c b/drivers/firmware/qcom/qcom_tzmem.c
-new file mode 100644
-index 000000000000..3853385bf215
---- /dev/null
-+++ b/drivers/firmware/qcom/qcom_tzmem.c
-@@ -0,0 +1,389 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Memory allocator for buffers shared with the TrustZone.
-+ *
-+ * Copyright (C) 2023-2024 Linaro Ltd.
-+ */
-+
-+#include <linux/bug.h>
-+#include <linux/cleanup.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/firmware/qcom/qcom_tzmem.h>
-+#include <linux/genalloc.h>
-+#include <linux/gfp.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/mm.h>
-+#include <linux/radix-tree.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+
-+#include "qcom_tzmem.h"
-+
-+struct qcom_tzmem_area {
-+	struct list_head list;
-+	void *vaddr;
-+	dma_addr_t paddr;
-+	size_t size;
-+	void *priv;
-+};
-+
-+struct qcom_tzmem_pool {
-+	struct gen_pool *genpool;
-+	struct list_head areas;
-+	enum qcom_tzmem_policy policy;
-+	size_t increment;
-+	size_t max_size;
-+	spinlock_t lock;
-+};
-+
-+struct qcom_tzmem_chunk {
-+	phys_addr_t paddr;
-+	size_t size;
-+	struct qcom_tzmem_pool *owner;
-+};
-+
-+static struct device *qcom_tzmem_dev;
-+static RADIX_TREE(qcom_tzmem_chunks, GFP_ATOMIC);
-+static DEFINE_SPINLOCK(qcom_tzmem_chunks_lock);
-+
-+#if IS_ENABLED(CONFIG_QCOM_TZMEM_MODE_GENERIC)
-+
-+static int qcom_tzmem_init(void)
-+{
-+	return 0;
-+}
-+
-+static int qcom_tzmem_init_area(struct qcom_tzmem_area *area)
-+{
-+	return 0;
-+}
-+
-+static void qcom_tzmem_cleanup_area(struct qcom_tzmem_area *area)
-+{
-+
-+}
-+
-+#endif /* CONFIG_QCOM_TZMEM_MODE_GENERIC */
-+
-+static int qcom_tzmem_pool_add_memory(struct qcom_tzmem_pool *pool,
-+				      size_t size, gfp_t gfp)
-+{
-+	int ret;
-+
-+	struct qcom_tzmem_area *area __free(kfree) = kzalloc(sizeof(*area),
-+							     gfp);
-+	if (!area)
-+		return -ENOMEM;
-+
-+	area->size = PAGE_ALIGN(size);
-+
-+	area->vaddr = dma_alloc_coherent(qcom_tzmem_dev, area->size,
-+					 &area->paddr, gfp);
-+	if (!area->vaddr)
-+		return -ENOMEM;
-+
-+	ret = qcom_tzmem_init_area(area);
-+	if (ret) {
-+		dma_free_coherent(qcom_tzmem_dev, area->size,
-+				  area->vaddr, area->paddr);
-+		return ret;
-+	}
-+
-+	ret = gen_pool_add_virt(pool->genpool, (unsigned long)area->vaddr,
-+				(phys_addr_t)area->paddr, size, -1);
-+	if (ret) {
-+		dma_free_coherent(qcom_tzmem_dev, area->size,
-+				  area->vaddr, area->paddr);
-+		return ret;
-+	}
-+
-+	scoped_guard(spinlock_irqsave, &pool->lock)
-+		list_add_tail(&area->list, &pool->areas);
-+
-+	area = NULL;
-+	return 0;
-+}
-+
-+/**
-+ * qcom_tzmem_pool_new() - Create a new TZ memory pool.
-+ * @config: Pool configuration.
-+ *
-+ * Create a new pool of memory suitable for sharing with the TrustZone.
-+ *
-+ * Must not be used in atomic context.
-+ *
-+ * Return: New memory pool address or ERR_PTR() on error.
-+ */
-+struct qcom_tzmem_pool *
-+qcom_tzmem_pool_new(const struct qcom_tzmem_pool_config *config)
-+{
-+	int ret = -ENOMEM;
-+
-+	might_sleep();
-+
-+	switch (config->policy) {
-+	case QCOM_TZMEM_POLICY_STATIC:
-+		if (!config->initial_size)
-+			return ERR_PTR(-EINVAL);
-+		break;
-+	case QCOM_TZMEM_POLICY_MULTIPLIER:
-+		if (!config->increment)
-+			return ERR_PTR(-EINVAL);
-+		break;
-+	case QCOM_TZMEM_POLICY_ON_DEMAND:
-+		break;
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	struct qcom_tzmem_pool *pool __free(kfree) = kzalloc(sizeof(*pool),
-+							     GFP_KERNEL);
-+	if (!pool)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pool->genpool = gen_pool_create(PAGE_SHIFT, -1);
-+	if (!pool->genpool)
-+		return ERR_PTR(-ENOMEM);
-+
-+	gen_pool_set_algo(pool->genpool, gen_pool_best_fit, NULL);
-+
-+	pool->policy = config->policy;
-+	pool->increment = config->increment;
-+	pool->max_size = config->max_size;
-+	INIT_LIST_HEAD(&pool->areas);
-+	spin_lock_init(&pool->lock);
-+
-+	if (config->initial_size) {
-+		ret = qcom_tzmem_pool_add_memory(pool, config->initial_size,
-+						 GFP_KERNEL);
-+		if (ret) {
-+			gen_pool_destroy(pool->genpool);
-+			return ERR_PTR(ret);
-+		}
-+	}
-+
-+	return no_free_ptr(pool);
-+}
-+EXPORT_SYMBOL_GPL(qcom_tzmem_pool_new);
-+
-+/**
-+ * qcom_tzmem_pool_free() - Destroy a TZ memory pool and free all resources.
-+ * @pool: Memory pool to free.
-+ *
-+ * Must not be called if any of the allocated chunks has not been freed.
-+ * Must not be used in atomic context.
-+ */
-+void qcom_tzmem_pool_free(struct qcom_tzmem_pool *pool)
-+{
-+	struct qcom_tzmem_area *area, *next;
-+	struct qcom_tzmem_chunk *chunk;
-+	struct radix_tree_iter iter;
-+	bool non_empty = false;
-+	void __rcu **slot;
-+
-+	might_sleep();
-+
-+	if (!pool)
-+		return;
-+
-+	scoped_guard(spinlock_irqsave, &qcom_tzmem_chunks_lock) {
-+		radix_tree_for_each_slot(slot, &qcom_tzmem_chunks, &iter, 0) {
-+			chunk = radix_tree_deref_slot_protected(slot,
-+						&qcom_tzmem_chunks_lock);
-+
-+			if (chunk->owner == pool)
-+				non_empty = true;
-+		}
-+	}
-+
-+	WARN(non_empty, "Freeing TZ memory pool with memory still allocated");
-+
-+	list_for_each_entry_safe(area, next, &pool->areas, list) {
-+		list_del(&area->list);
-+		qcom_tzmem_cleanup_area(area);
-+		dma_free_coherent(qcom_tzmem_dev, area->size,
-+				  area->vaddr, area->paddr);
-+		kfree(area);
-+	}
-+
-+	gen_pool_destroy(pool->genpool);
-+	kfree(pool);
-+}
-+EXPORT_SYMBOL_GPL(qcom_tzmem_pool_free);
-+
-+static void devm_qcom_tzmem_pool_free(void *data)
-+{
-+	struct qcom_tzmem_pool *pool = data;
-+
-+	qcom_tzmem_pool_free(pool);
-+}
-+
-+/**
-+ * devm_qcom_tzmem_pool_new() - Managed variant of qcom_tzmem_pool_new().
-+ * @dev: Device managing this resource.
-+ * @config: Pool configuration.
-+ *
-+ * Must not be used in atomic context.
-+ *
-+ * Return: Address of the managed pool or ERR_PTR() on failure.
-+ */
-+struct qcom_tzmem_pool *
-+devm_qcom_tzmem_pool_new(struct device *dev,
-+			 const struct qcom_tzmem_pool_config *config)
-+{
-+	struct qcom_tzmem_pool *pool;
-+	int ret;
-+
-+	pool = qcom_tzmem_pool_new(config);
-+	if (IS_ERR(pool))
-+		return pool;
-+
-+	ret = devm_add_action_or_reset(dev, devm_qcom_tzmem_pool_free, pool);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return pool;
-+}
-+
-+static bool qcom_tzmem_try_grow_pool(struct qcom_tzmem_pool *pool,
-+				     size_t requested, gfp_t gfp)
-+{
-+	size_t current_size = gen_pool_size(pool->genpool);
-+
-+	if (pool->max_size && (current_size + requested) > pool->max_size)
-+		return false;
-+
-+	switch (pool->policy) {
-+	case QCOM_TZMEM_POLICY_STATIC:
-+		return false;
-+	case QCOM_TZMEM_POLICY_MULTIPLIER:
-+		requested = current_size * pool->increment;
-+		break;
-+	case QCOM_TZMEM_POLICY_ON_DEMAND:
-+		break;
-+	}
-+
-+	return !qcom_tzmem_pool_add_memory(pool, requested, gfp);
-+}
-+
-+/**
-+ * qcom_tzmem_alloc() - Allocate a memory chunk suitable for sharing with TZ.
-+ * @pool: TZ memory pool from which to allocate memory.
-+ * @size: Number of bytes to allocate.
-+ * @gfp: GFP flags.
-+ *
-+ * Can be used in any context.
-+ *
-+ * Return:
-+ * Address of the allocated buffer or NULL if no more memory can be allocated.
-+ * The buffer must be released using qcom_tzmem_free().
-+ */
-+void *qcom_tzmem_alloc(struct qcom_tzmem_pool *pool, size_t size, gfp_t gfp)
-+{
-+	unsigned long vaddr;
-+	int ret;
-+
-+	if (!size)
-+		return NULL;
-+
-+	size = PAGE_ALIGN(size);
-+
-+	struct qcom_tzmem_chunk *chunk __free(kfree) = kzalloc(sizeof(*chunk),
-+							       gfp);
-+	if (!chunk)
-+		return NULL;
-+
-+again:
-+	vaddr = gen_pool_alloc(pool->genpool, size);
-+	if (!vaddr) {
-+		if (qcom_tzmem_try_grow_pool(pool, size, gfp))
-+			goto again;
-+
-+		return NULL;
-+	}
-+
-+	chunk->paddr = gen_pool_virt_to_phys(pool->genpool, vaddr);
-+	chunk->size = size;
-+	chunk->owner = pool;
-+
-+	scoped_guard(spinlock_irqsave, &qcom_tzmem_chunks_lock) {
-+		ret = radix_tree_insert(&qcom_tzmem_chunks, vaddr, chunk);
-+		if (ret) {
-+			gen_pool_free(pool->genpool, vaddr, size);
-+			return NULL;
-+		}
-+
-+		chunk = NULL;
-+	}
-+
-+	return (void *)vaddr;
-+}
-+EXPORT_SYMBOL_GPL(qcom_tzmem_alloc);
-+
-+/**
-+ * qcom_tzmem_free() - Release a buffer allocated from a TZ memory pool.
-+ * @vaddr: Virtual address of the buffer.
-+ *
-+ * Can be used in any context.
-+ */
-+void qcom_tzmem_free(void *vaddr)
-+{
-+	struct qcom_tzmem_chunk *chunk;
-+
-+	scoped_guard(spinlock_irqsave, &qcom_tzmem_chunks_lock)
-+		chunk = radix_tree_delete_item(&qcom_tzmem_chunks,
-+					       (unsigned long)vaddr, NULL);
-+
-+	if (!chunk) {
-+		WARN(1, "Virtual address %p not owned by TZ memory allocator",
-+		     vaddr);
-+		return;
-+	}
-+
-+	scoped_guard(spinlock_irqsave, &chunk->owner->lock)
-+		gen_pool_free(chunk->owner->genpool, (unsigned long)vaddr,
-+			      chunk->size);
-+	kfree(chunk);
-+}
-+EXPORT_SYMBOL_GPL(qcom_tzmem_free);
-+
-+/**
-+ * qcom_tzmem_to_phys() - Map the virtual address of a TZ buffer to physical.
-+ * @vaddr: Virtual address of the buffer allocated from a TZ memory pool.
-+ *
-+ * Can be used in any context. The address must have been returned by a call
-+ * to qcom_tzmem_alloc().
-+ *
-+ * Returns: Physical address of the buffer.
-+ */
-+phys_addr_t qcom_tzmem_to_phys(void *vaddr)
-+{
-+	struct qcom_tzmem_chunk *chunk;
-+
-+	guard(spinlock_irqsave)(&qcom_tzmem_chunks_lock);
-+
-+	chunk = radix_tree_lookup(&qcom_tzmem_chunks, (unsigned long)vaddr);
-+	if (!chunk)
-+		return 0;
-+
-+	return chunk->paddr;
-+}
-+EXPORT_SYMBOL_GPL(qcom_tzmem_to_phys);
-+
-+int qcom_tzmem_enable(struct device *dev)
-+{
-+	if (qcom_tzmem_dev)
-+		return -EBUSY;
-+
-+	qcom_tzmem_dev = dev;
-+
-+	return qcom_tzmem_init();
-+}
-+EXPORT_SYMBOL_GPL(qcom_tzmem_enable);
-+
-+MODULE_DESCRIPTION("TrustZone memory allocator for Qualcomm firmware drivers");
-+MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/firmware/qcom/qcom_tzmem.h b/drivers/firmware/qcom/qcom_tzmem.h
-new file mode 100644
-index 000000000000..8fa8a3eb940e
---- /dev/null
-+++ b/drivers/firmware/qcom/qcom_tzmem.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2023-2024 Linaro Ltd.
-+ */
-+
-+#ifndef __QCOM_TZMEM_PRIV_H
-+#define __QCOM_TZMEM_PRIV_H
-+
-+struct device;
-+
-+int qcom_tzmem_enable(struct device *dev);
-+
-+#endif /* __QCOM_TZMEM_PRIV_H */
-diff --git a/include/linux/firmware/qcom/qcom_tzmem.h b/include/linux/firmware/qcom/qcom_tzmem.h
-new file mode 100644
-index 000000000000..b83b63a0c049
---- /dev/null
-+++ b/include/linux/firmware/qcom/qcom_tzmem.h
-@@ -0,0 +1,56 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2023-2024 Linaro Ltd.
-+ */
-+
-+#ifndef __QCOM_TZMEM_H
-+#define __QCOM_TZMEM_H
-+
-+#include <linux/cleanup.h>
-+#include <linux/gfp.h>
-+#include <linux/types.h>
-+
-+struct device;
-+struct qcom_tzmem_pool;
-+
-+/**
-+ * enum qcom_tzmem_policy - Policy for pool growth.
-+ */
-+enum qcom_tzmem_policy {
-+	/**< Static pool, never grow above initial size. */
-+	QCOM_TZMEM_POLICY_STATIC = 1,
-+	/**< When out of memory, add increment * current size of memory. */
-+	QCOM_TZMEM_POLICY_MULTIPLIER,
-+	/**< When out of memory add as much as is needed until max_size. */
-+	QCOM_TZMEM_POLICY_ON_DEMAND,
-+};
-+
-+/**
-+ * struct qcom_tzmem_pool_config - TZ memory pool configuration.
-+ * @initial_size: Number of bytes to allocate for the pool during its creation.
-+ * @policy: Pool size growth policy.
-+ * @increment: Used with policies that allow pool growth.
-+ * @max_size: Size above which the pool will never grow.
-+ */
-+struct qcom_tzmem_pool_config {
-+	size_t initial_size;
-+	enum qcom_tzmem_policy policy;
-+	size_t increment;
-+	size_t max_size;
-+};
-+
-+struct qcom_tzmem_pool *
-+qcom_tzmem_pool_new(const struct qcom_tzmem_pool_config *config);
-+void qcom_tzmem_pool_free(struct qcom_tzmem_pool *pool);
-+struct qcom_tzmem_pool *
-+devm_qcom_tzmem_pool_new(struct device *dev,
-+			 const struct qcom_tzmem_pool_config *config);
-+
-+void *qcom_tzmem_alloc(struct qcom_tzmem_pool *pool, size_t size, gfp_t gfp);
-+void qcom_tzmem_free(void *ptr);
-+
-+DEFINE_FREE(qcom_tzmem, void *, if (_T) qcom_tzmem_free(_T))
-+
-+phys_addr_t qcom_tzmem_to_phys(void *ptr);
-+
-+#endif /* __QCOM_TZMEM */
+ 	memzero_explicit(keybuf, key_size);
+ 
+-	dma_free_coherent(__scm->dev, key_size, keybuf, key_phys);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(qcom_scm_ice_set_key);
 
 -- 
 2.43.0
