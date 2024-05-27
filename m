@@ -1,185 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CCC17BB0A;
-	Mon, 27 May 2024 14:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386EE7344A
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716821063; cv=none; b=qBKJOW4JysZN3YSteQZ7MPztKly3wzL6EVfTR6mUsVV4WFJuTkgB+H1wP6NBNimP/2q7qrBYKHj9K4+oLZEi2YoGPRLGxT2he/PlsBM47/5Inrt0Edo0m/DxL1xALrgnU3x8Pmc+L0zFocNto02yoGrtwa4uW8u8LxtCoW+53+M=
+	t=1716821064; cv=none; b=N5xVpQzXJPGFx/5gIXvcFMxeuJHMM2irTOqILfyYwTdz36Zw43FViaJ6lqrFCUKNu8gL4JZvv8YgmerOorj9+UMQcTx4SHYH5UUJOVywZ3kAl+cIowqRfVB/ZBKpUReC8BCrCXMU+6TE5mcf0bCqx6V0jhIBSmo5VT4ZdQOj8lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716821063; c=relaxed/simple;
-	bh=IXQy/KWuSXcucpOdFBz5dgMWJsMiQUwKZC+1vOSlerM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dQol1s9+U1d4tySCb7p1IkxVz0TLwJZAKomqGdD097N/Nscw8Lqa/Lvs8sKXgV1gUek7BCjTgmodueqYCQp5P7x+mf9XnFZIgC+E8P6IEv3wwIkFer5swKrUiKI2BMjlcUOlroM+MNyn/SceUEisOWBVfsh0M7mm6JQkRbTxJrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IpmKBUOR; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716821064; c=relaxed/simple;
+	bh=naxWkh+jaHwQkl6wdomPYdy1Lu2VRfU+XBoYyk6CnJ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kleXGJdsO7qcsYWxGOZfblgg5yOxlgchHS1/7q5vj7/Ztx1iCY8k9kGrLFNrj43T/b97Kjn3Ye3r+RKe7zUR81Zl9P8GJfyVsd/PTKzicZIPoVfJwx1zHAK9L5FxZ8gtoBf0rxIZPcmISmFlMNYHr/SjeMESVFtDDNVnV4936rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Li6IEBRh; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IpmKBUOR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716821062; x=1748357062;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=IXQy/KWuSXcucpOdFBz5dgMWJsMiQUwKZC+1vOSlerM=;
-  b=IpmKBUOR44jZBSZF+upHdf6C3a5SoFnUx0FHEBMOmVi4MFgh6ryedYe7
-   CFMtibam7rKVZoM4y+xVBGQmAix8kuyt4qjPdKvrCC8WybqetxpODDSXG
-   tTVz47gMkSQhKbhATVrLNELQ5xGP734OgeBMFC28fexgPOVibfSE7mE++
-   /wLnQrCiBqbOgW33G6GLxsf6iYRrzF+CGRDwYFggIrk9kGfv1o1e1WxrD
-   Kq0HLWAh1ZDMTofwuO64rtClBdKT2AtK+IpK291T4F7hzlllJGfnV+PT9
-   8pO/0fY7rfDWDPqG5RnRNCY8GlP6A64q6LMoJCPDCWheLu/X+hyHNg4GX
-   Q==;
-X-CSE-ConnectionGUID: UFHMTjbLR1OOH/NWUUFwXw==
-X-CSE-MsgGUID: VvXJXk6sSp+Zdy9hf4Dtjw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13269766"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="13269766"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:44:22 -0700
-X-CSE-ConnectionGUID: GtWvV7ORS/qh9CPqqni7Jg==
-X-CSE-MsgGUID: s5kI9NZRS9OyA+a/ogKfhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="35279810"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.246.214])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:44:18 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 2/2] ACPI: extlog: Trace CPER PCI Express Error Section
-Date: Mon, 27 May 2024 16:43:41 +0200
-Message-ID: <20240527144356.246220-3-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240527144356.246220-1-fabio.m.de.francesco@linux.intel.com>
-References: <20240527144356.246220-1-fabio.m.de.francesco@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Li6IEBRh"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2bfdae7997aso609058a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716821062; x=1717425862; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=33epQlN6HkJRhJOgQtZxq9FfffiSVKippP5QOan7qrs=;
+        b=Li6IEBRhkqB5Z+tqwQEI7BhwKaKpWryxucIY2Fn9vXobMWjxpz3uqagmN9ciFh4wwZ
+         TFWnp9pAEMpU0+BqJenpql0hB1768q/zV1kAidpyr82Bru+9ysFYR/oAAZkn72CizsL6
+         1sTQbUeJlQYcSuaMLHBElrhArobapsQbZnucWc8fVQZ65yzgYbkWvD5IaZt26AWQop3o
+         57lWl95ejGO+6FKnlBT3GJuwvJgSWLr/Djrh32VqWU2DPBoWMY9Cj2Kr4wCMUI+wmxzj
+         4WwDmE8fs8wxyknRgWKGvRTTpj3Tr/XQarZkMVGXAbNpXV6O7yis+V+K4hnq7s+lEXmR
+         3wBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716821062; x=1717425862;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=33epQlN6HkJRhJOgQtZxq9FfffiSVKippP5QOan7qrs=;
+        b=HVaYtUeUwoVrDprnEfgxXnPmAEocqFDObcbHCI+B4+4VTAyy7lJeSrKpB6TsQxshxb
+         wYpPcesF1s5X8XVG1zmoFfnvGfpUp/mokgOIYlIh2jEC+lAknhFljHEa9Cva8D+jyYQa
+         UDfu6omM96q+Ng49fGjx3jaL9WKDKWjCayDGMCoqKTMLmE24ETDm+WZU5Wt4jnqWAA9D
+         JAiH7lknZDMI7NjNswpM82FgtdM5im17QsKBxWcw9Of8P4Y8XfjuNVEsbO164ffiJ71m
+         jf7NNrZDVTlEQdJJ1fK3RrpcjhbFjFebRrFZj7uFFr7H4p5Xv5UZyWqtxKSw1ihCPHIk
+         K2og==
+X-Forwarded-Encrypted: i=1; AJvYcCXmYkDH0wHJDMdr49ksPSrRVmB2FNJSNEr9/tyciaTIA7FEP6FbdlTX7DajG6TVIvCZktxFPVEYlrIjy5CNf0q7L+mAVFzDnqQxxJEt
+X-Gm-Message-State: AOJu0YyVDxADOkGqFNc+GkEMpj0XX7hlDFVPMeGB358tz3B3Rzo4mPDo
+	zCuzWCpvHGdeOq1OkMuZhQTF+IMmA32c3UKfs8ShBOoB48W/gWZZG/cYBv3l8PAZu+sn0H2anho
+	ExuG3u7uu1ZGxDG6tJhJhfD9Z+SheuQ==
+X-Google-Smtp-Source: AGHT+IFm4UmAs6X0gy4NyYZ2+/6TjuN/HpBLYgaJx0duaa4fvNf+tI9o8AmCS25QUej7Si8DFMKmmT76q4H8I9wXtHA=
+X-Received: by 2002:a17:90b:1085:b0:2bd:ec55:9f38 with SMTP id
+ 98e67ed59e1d1-2bf5ee1ff20mr8201233a91.29.1716821062404; Mon, 27 May 2024
+ 07:44:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240527142311.3053-1-mario.limonciello@amd.com>
+In-Reply-To: <20240527142311.3053-1-mario.limonciello@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 27 May 2024 10:44:10 -0400
+Message-ID: <CADnq5_MxA3JkUkYfu7baP30NKs1W49w-AEA8fM3W+XbTEMdOXw@mail.gmail.com>
+Subject: Re: [PATCH] drm/client: Detect when ACPI lid is closed during initialization
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	linux-kernel@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>, 
+	Chris Bainbridge <chris.bainbridge@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, extlog_print() (ELOG) only reports CPER PCIe section (UEFI
-v2.10, Appendix N.2.7) to the kernel log via print_extlog_rcd(). Instead,
-the similar ghes_do_proc() (GHES) prints to kernel log and calls
-pci_print_aer() to report via the ftrace infrastructure.
+On Mon, May 27, 2024 at 10:32=E2=80=AFAM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> If the lid on a laptop is closed when eDP connectors are populated
+> then it remains enabled when the initial framebuffer configuration
+> is built.
+>
+> When creating the initial framebuffer configuration detect the ACPI
+> lid status and if it's closed disable any eDP connectors.
+>
+> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3349
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/gpu/drm/drm_client_modeset.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_c=
+lient_modeset.c
+> index 31af5cf37a09..b76438c31761 100644
+> --- a/drivers/gpu/drm/drm_client_modeset.c
+> +++ b/drivers/gpu/drm/drm_client_modeset.c
+> @@ -8,6 +8,7 @@
+>   */
+>
+>  #include "drm/drm_modeset_lock.h"
+> +#include <acpi/button.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/slab.h>
+> @@ -257,6 +258,27 @@ static void drm_client_connectors_enabled(struct drm=
+_connector **connectors,
+>                 enabled[i] =3D drm_connector_enabled(connectors[i], false=
+);
+>  }
+>
+> +static void drm_client_match_edp_lid(struct drm_device *dev,
+> +                                    struct drm_connector **connectors,
+> +                                    unsigned int connector_count,
+> +                                    bool *enabled)
+> +{
+> +       int i;
+> +
+> +       for (i =3D 0; i < connector_count; i++) {
+> +               struct drm_connector *connector =3D connectors[i];
+> +
+> +               if (connector->connector_type !=3D DRM_MODE_CONNECTOR_eDP=
+ || !enabled[i])
 
-Add support to report the CPER PCIe Error section also via the ftrace
-infrastructure by calling pci_print_aer() to make ELOG act consistently
-with GHES.
+Might want to check for LVDS here as well since a lot of laptops used
+LVDS prior to eDP.
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/acpi/acpi_extlog.c | 30 ++++++++++++++++++++++++++++++
- drivers/pci/pcie/aer.c     |  2 +-
- include/linux/aer.h        | 13 +++++++++++--
- 3 files changed, 42 insertions(+), 3 deletions(-)
+Alex
 
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index e025ae390737..007ce96f8672 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -131,6 +131,32 @@ static int print_extlog_rcd(const char *pfx,
- 	return 1;
- }
- 
-+static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
-+			      int severity)
-+{
-+	struct aer_capability_regs *aer;
-+	struct pci_dev *pdev;
-+	unsigned int devfn;
-+	unsigned int bus;
-+	int aer_severity;
-+	int domain;
-+
-+	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
-+	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
-+		aer_severity = cper_severity_to_aer(severity);
-+		aer = (struct aer_capability_regs *)pcie_err->aer_info;
-+		domain = pcie_err->device_id.segment;
-+		bus = pcie_err->device_id.bus;
-+		devfn = PCI_DEVFN(pcie_err->device_id.device,
-+				  pcie_err->device_id.function);
-+		pdev = pci_get_domain_bus_and_slot(domain, bus, devfn);
-+		if (!pdev)
-+			return;
-+		pci_print_aer(pdev, aer_severity, aer);
-+		pci_dev_put(pdev);
-+	}
-+}
-+
- static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			void *data)
- {
-@@ -179,6 +205,10 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			if (gdata->error_data_length >= sizeof(*mem))
- 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
- 						       (u8)gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
-+			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
-+
-+			extlog_print_pcie(pcie_err, gdata->error_severity);
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index ac6293c24976..794aa15527ba 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -801,7 +801,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
- 			aer_severity, tlp_header_valid, &aer->header_log);
- }
--EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
-+EXPORT_SYMBOL_GPL(pci_print_aer);
- 
- /**
-  * add_error_device - list device to be handled
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 4b97f38f3fcf..fbc82206045c 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -42,17 +42,26 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
- #if defined(CONFIG_PCIEAER)
- int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
- int pcie_aer_is_native(struct pci_dev *dev);
-+void pci_print_aer(struct pci_dev *dev, int aer_severity,
-+		   struct aer_capability_regs *aer);
- #else
- static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
- {
- 	return -EINVAL;
- }
-+
- static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-+static inline void pci_print_aer(struct pci_dev *dev, int aer_severity,
-+				 struct aer_capability_regs *aer)
-+{ }
- #endif
- 
--void pci_print_aer(struct pci_dev *dev, int aer_severity,
--		    struct aer_capability_regs *aer);
-+#if defined(CONFIG_ACPI_APEI_PCIEAER)
- int cper_severity_to_aer(int cper_severity);
-+#else
-+static inline int cper_severity_to_aer(int cper_severity) { return 0; }
-+#endif
-+
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- 		       int severity, struct aer_capability_regs *aer_regs);
- #endif //_AER_H_
--- 
-2.45.1
-
+> +                       continue;
+> +
+> +               if (!acpi_lid_open()) {
+> +                       drm_dbg_kms(dev, "[CONNECTOR:%d:%s] lid is closed=
+, disabling\n",
+> +                                   connector->base.id, connector->name);
+> +                       enabled[i] =3D false;
+> +               }
+> +       }
+> +}
+> +
+>  static bool drm_client_target_cloned(struct drm_device *dev,
+>                                      struct drm_connector **connectors,
+>                                      unsigned int connector_count,
+> @@ -844,6 +866,7 @@ int drm_client_modeset_probe(struct drm_client_dev *c=
+lient, unsigned int width,
+>                 memset(crtcs, 0, connector_count * sizeof(*crtcs));
+>                 memset(offsets, 0, connector_count * sizeof(*offsets));
+>
+> +               drm_client_match_edp_lid(dev, connectors, connector_count=
+, enabled);
+>                 if (!drm_client_target_cloned(dev, connectors, connector_=
+count, modes,
+>                                               offsets, enabled, width, he=
+ight) &&
+>                     !drm_client_target_preferred(dev, connectors, connect=
+or_count, modes,
+> --
+> 2.43.0
+>
