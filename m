@@ -1,97 +1,105 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0410979F6
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 01:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E2B653
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716775175; cv=none; b=MrtGXhS1SM/B4g+dGcmXz6bBsj+Qk0ToYUKzR33m+eDwIFrJ6jcyC8uP6fAroiGpWCq/WKC2diB0Z6V2rLs7AuKwHTnWWZypDELipZhIKweyv9WakjwQ+O6+04Ke0q4CmjC10N+mpJj95YoHj3gywp+I0PRSDd1ajpVhUD+ATB4=
+	t=1716775309; cv=none; b=RUSfCmHMiYPo3KmE8xkOseWqM1fUqAecoOOYMRRYeZRmtKE0D9zv+ogzvD3uFzf9V80oPb10DROIy3TfrLRGtZrFM9ltGsvNvrNYYzYbAVU1gtSkPaagzOTPQ/5LJq1KFpZforz2FNkvCVBToR+atwqcKxQ9XPBeqi8yqBqprXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716775175; c=relaxed/simple;
-	bh=yOIe72PbQbqtVcTgh+G6eF84DeLeYwtfA8DIj9hEyMY=;
+	s=arc-20240116; t=1716775309; c=relaxed/simple;
+	bh=1iKB6LSdGo/7FZCO/nsmeCr9BVtKte1llxxIyXddlgo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C4ungOqs6Itozf9F2QMlXUgLPyy2xc2r0yIPjX5ONSmt1RD6RTVxjxCm8pu+0hEEmlm8C3jIYlO95gh4yrm+2Z4M76sOgrIwxvWhoUNSAnfueKphvVMu1NrtVTUO5BowLR0X/k2ySfisJSXk9Iy3EN2UKVew6gW4vdQnl4dDPrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akYtCvQk; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=WM3ge95fuJXGPMcDt0IvwAdjsWDybSWveg1llqtoN7UEDFMXNgu8KpNCQxAjcOGw67VDiGOHJ9fpXW9Uco4ecfiMWeB21jvEX1r/KU1KcjSJ3W8yKKEzv9Nzq9Lzg+TF0c4DphAASen18jRVFCPSR7AqLIDparhqFJ8iGLxkAqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aI1YAsuy; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akYtCvQk"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f47f07acd3so8124795ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 18:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716775173; x=1717379973; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U+zzWyRU5qWnzugd8CovIQiw+CxvZcxWliAl2kOBqqY=;
-        b=akYtCvQkAKyNF8aDmG/L+VutQD0EL5wqqaDRGTHbiuVE3HpBOWbvlHIyNaunL+jHB3
-         S/3CFzQY8TUU3f0pJn8Bvdgl9P9T40A2qwrHhAUwHSzD1iCzuGnjeziVX7wUUFpYQrWv
-         NGj/EBnF2flPvMfoYFz+8PXoUFkd8l83vKN1E11SvbzaRSnsKzV96g5OElMNgbqQB0Bj
-         zHHe3muCfzvon2zIw629OFUupGeGC071yPLowTX0n7MRvG6Rfjy+/ujDy33fEQyDxrEy
-         MMod57Bu41/TG12McIQEmv9tUHqc6DdQmB75e2dZGh4ehVw5rLggLW0HY2xG+IwGfHlR
-         u6dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716775173; x=1717379973;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U+zzWyRU5qWnzugd8CovIQiw+CxvZcxWliAl2kOBqqY=;
-        b=Hm9wXnjwl2HDtgTyGYCOe/4MXW23nbhU8CGh4T/beNoK+O5ivaNN5s5YPseJfu7GWd
-         CKW3KoYu6LAyg82IbIs8PR/EvS6GljyTk/0ge1W4ooFtY2WliD68PGdf9TBxq+quUAMP
-         sMNONxTycLaYLBo1L3+xVep/7VYyEe1qSCG9OMcx75zEY2Fwe9rOx3SSgYLyfttlq+0a
-         jDxeXnnqacQeS7aHxQpk1wYfSOyjwiJRdJLJjAO4ANOBNtBDmHkIbGgP2lmcTQGkinkq
-         xU+QZUYfHr9pUJeOnAiecTZvUVdK5uvIdyIu2AKhRJooImFthjRRAfaCK4tKO5ksTU8A
-         oYNw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7hzQ1nJs2ti4bqynp/y+NEX1cqiZQcui/1PK8wtGXVFmXJFYSTUrvoB86HTbxpLthXt7XagozcW29+e0d8NoApA/jYm7ddjbEcEVa
-X-Gm-Message-State: AOJu0YwJK25R8gppRtF35RONXpOAVODrv1juCFX4sRNTqp8N8oNY4I0L
-	+5Pr6VF+Q6hDRO5O1J9/TWcTcFtHLA8HSxPF671ce4+/ycdty/DfuOkfikhI
-X-Google-Smtp-Source: AGHT+IFUBex9jKUULJQctg3O7TT5Yd/cX+zdgKIEgDux6Xih0RQneJcV5BUi+AqmAJzO7vKZ0VjNyQ==
-X-Received: by 2002:a17:902:eccb:b0:1f4:6fe0:f950 with SMTP id d9443c01a7336-1f46fe18c78mr58102495ad.67.1716775173035;
-        Sun, 26 May 2024 18:59:33 -0700 (PDT)
-Received: from [0.0.0.0] (74.211.104.32.16clouds.com. [74.211.104.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c97090dsm49364135ad.124.2024.05.26.18.59.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 May 2024 18:59:32 -0700 (PDT)
-Message-ID: <8142808e-0f87-42f4-a46a-e21b74bbe1f8@gmail.com>
-Date: Mon, 27 May 2024 09:59:10 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aI1YAsuy"
+X-Envelope-To: dmitry.baryshkov@linaro.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716775304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C4KbC23pVUx2ZjByBYlN7VlAIPsbM3xhWrQdhcgUorw=;
+	b=aI1YAsuyn35SzhLYiWlpO+d5nNexjamENbPmTyQSbuBnXV4YNy/F9IQ3Sh1BPtVMC5VAtv
+	dhCQQx1ME086s38TXjxcZDILTzAdK8+2w25Bss+qnOaR1m3Po54Et78J9AI1DWM09UQ9Z1
+	DQhvk+bhFzFdb+ySSykqQKW0B9+bOzo=
+X-Envelope-To: rfoss@kernel.org
+X-Envelope-To: laurent.pinchart@ideasonboard.com
+X-Envelope-To: dri-devel@lists.freedesktop.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+Message-ID: <03701609-86b7-47a3-85af-db47035695fb@linux.dev>
+Date: Mon, 27 May 2024 10:01:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] workqueue: Fix rescuer task's name truncated
-Content-Language: en-US
-To: Tejun Heo <tj@kernel.org>
-Cc: Wenchao Hao <haowenchao2@huawei.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Aaron Tomlin <atomlin@atomlin.com>,
- linux-kernel@vger.kernel.org
-References: <20240513140115.3892827-1-haowenchao2@huawei.com>
- <b09604a0-83b0-4317-85ad-ead3d7d5bb3e@gmail.com>
- <ZlOEXWx4WJdeM4GZ@slm.duckdns.org>
-From: Wenchao Hao <haowenchao22@gmail.com>
-In-Reply-To: <ZlOEXWx4WJdeM4GZ@slm.duckdns.org>
+Subject: Re: [PATCH v6 02/10] drm/bridge: Set firmware node of drm_bridge
+ instances automatically
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240526202115.129049-1-sui.jingfeng@linux.dev>
+ <20240526202115.129049-3-sui.jingfeng@linux.dev>
+ <lfgb24qv22sohgizlmt7kq3ymnshjeawlkwwcndivbeiloip55@x3qnu4ss3x4y>
+Content-Language: en-US, en-AU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <lfgb24qv22sohgizlmt7kq3ymnshjeawlkwwcndivbeiloip55@x3qnu4ss3x4y>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 2024/5/27 2:50, Tejun Heo wrote:
-> Hello,
+Hi,
+
+
+On 5/27/24 05:19, Dmitry Baryshkov wrote:
+> On Mon, May 27, 2024 at 04:21:07AM +0800, Sui Jingfeng wrote:
+>> Normally, the drm_bridge::of_node won't be used by bridge driver instances
+>> themselves. Rather, it is mainly used by other modules to find associated
+>> drm bridge drvier. Therefore, adding a drm bridge to the global bridge list
+>> and setting 'of_node' field of a drm bridge share the same goal. Both are
+>> for finding purpose, therefore better to group them to one function.
+>>
+>> Update the drm_bridge_add() interface and implementation to achieve such
+>> goal atomically, new implementation will fetch the device node from the
+>> backing device of the drm bridge driver automatically. For the majority
+>> cases, which is one device backing one drm bridge driver, this model works
+>> well. Drivers still can set it manually by passing NULL if this model
+>> doesn't fit.
+>>
+>> While at it, Add a 'struct device *' pointer to the drm_bridge structure.
+>> As it already being passed in by both of drm_bridge_add() and
+>> devm_drm_bridge_add(). A lot of driver instances has already added it into
+>> their derived structure, promote it into drm_bridge core helps to reduce
+>> a batch of boilerplates.
+>>
+>> Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+>> ---
 > 
-> On Thu, May 23, 2024 at 09:36:57AM +0800, Wenchao Hao wrote:
->>> The first patch fix the rescuer task's name truncated;
->>> The second patch fix workqueue_struct's name truncated.
+> [trimmed]
 > 
-> I missed these and the issue got reported separately and a different fix has
-> been applied:
+>> @@ -231,7 +243,7 @@ static void drm_bridge_remove_void(void *bridge)
+>>    */
+>>   int devm_drm_bridge_add(struct device *dev, struct drm_bridge *bridge)
+>>   {
+>> -	drm_bridge_add(bridge);
+>> +	drm_bridge_add(bridge, dev);
+>>   	return devm_add_action_or_reset(dev, drm_bridge_remove_void, bridge);
 > 
->    https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git/commit/?h=for-6.10-fixes&id=2a1b02bcba78f8498ab00d6142e1238d85b01591
+> This breaks aux-hpd-bridge, which gets of_node as an external pointer
+> rather than dev->of_node.
 > 
 
-I applied these changes and the issue has been fixed.
+Yes, you are right. I forget to modify that driver.
+My bad, will be fixed at the next version.
 
-> My apologies for missing your patches. Can you please see whether the above
-> patch addresses the issues you saw.
->  > Thanks.
-> 
-
+-- 
+Best regards
+Sui
