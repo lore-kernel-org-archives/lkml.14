@@ -1,232 +1,518 @@
-Received: from MRZP264CU002.outbound.protection.outlook.com (mail-francesouthazon11020002.outbound.protection.outlook.com [52.101.165.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5FB73468
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.165.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825107; cv=fail; b=Ticq2BUTyZZm/iioCOmCa/27cy375IRscsJ6pXy5mb3bL9k9RgyVXCwMoh53tolHRCahW3hNJsbKk/JlR3/9OWzgfQGnzHOsWdnACVKzPN4fkQv8hhCBtqv4KXnp9BuawCeOhVigdeMnvJ35MDQzXGzeTHNGNTrlbjX5NqXttuI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825107; c=relaxed/simple;
-	bh=atA0qf6Th68/GBsL42zGqtHHphiAxZtqAoGMKEc9vZE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RR4ZtFNkYkB23ZoUd/yRNGi0Z3ZeuLfYdBtbHjL47y4cINB+VTg1fpp/KiHdZkzbgXvQZ2WrC51mmaaXqX9nMmsekQKywr6kAadygXB29jb5D7Uly9XKSD1wQ1J3QWS7sjxysnHIfq6LBo05DHuaoLXkxwSdgOmZMuY7iaLMMRY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b=S2LJsuV1; arc=fail smtp.client-ip=52.101.165.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BE3155CB0;
+	Mon, 27 May 2024 15:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716825112; cv=none; b=NLbTzQecIut8wRvUewUH7oOrs2puCB6GQMRz+TUHo/M9djEYXJn/Hs25vLzWnjKcYhbtbHde44bMlTlm4UiATHR63TBWR1zoPGlL4XKHAsQt6zwau51hSDmEvqDVh1dlZYj5iHZwhBQrxHZfU8rdT0QmTAnSM93OFoLSc6alTQc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716825112; c=relaxed/simple;
+	bh=MiGE80CeLbrozLsH1T/KJ5SwEQt07TGcAp6a5gUZ8FY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZgzyvpnDbK5jNhheJkMsrBmEomFR0y2evLUAIByAbN8i+3Xvc3WwZlZEQ6BagyqR5jjNG9EBRSMDDVtHXdSkfNpoeW73wvGaoaW+uAEQMsZe2EdyP34GjgA1rRiV9VSndWnyIzvZJI67yj8ugD0eMboBE5d4b73Dy9SL3yX/NBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqJDWQL8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b="S2LJsuV1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BuvPqcInuhF+zHwQyzLEAg+MzytGiFgrqS5BHm4swFOe/x42g4DLtD5toqWsZuHia5K15rcvs4J5MP4bXZ99z8Z3aCdfhHkZozomly6Z2+CJOSlB2oPYaR+gq7ZRhvN381hpZ5F/yixRrF5L8dViUw2hvsnFBdL9aK8jNfubMy0b6rM8CWpJNhIw5f5THi609sXL9+RkGqSbnrsVxpZxIeDbXtYvO72/vObqqLnTWplnizci/PFX6M1K0MmDGhYoyFHaa0UWWhA6AXD9gIrz8kKRTs6mE3y0SPqjSVz1iYhzTP18sFaAe6eA8Jebq/HKFwi5+E9lw8BqFRq0KxwaDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=atA0qf6Th68/GBsL42zGqtHHphiAxZtqAoGMKEc9vZE=;
- b=Ueiqiy0BqGzgPnvrIATO4qW8GcE2+NWBWcdkinpzZEiX9cZ4p14INzXLbJoEgBA+lUyZ8x14xuj2wzCEAd5oynUwOfO7HOIGuxsjR6/cVWeqnqvix+UMfx2Z9t1MUPQSqsJAovqsXmqDHcMB1GiD4G2xv5S+jpqR3BdM06wJvneYg9X2wtBaQEpOOPAG+NF98RI3CwM7TQA9exWB5YsiXicHFKBKIrijBM6H81s1L0UwSJSOQefUjd53L6dAf1FsHBkz9fh8xUSbNFt82hLkbphOh/qqMbK8z0kutMMbU9usCm8Rb/jbz2feuk3TekUE0dhQg6zNxLHmn+3HHVc87w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
- dkim=pass header.d=csgroup.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=atA0qf6Th68/GBsL42zGqtHHphiAxZtqAoGMKEc9vZE=;
- b=S2LJsuV1GJSdLMqiG2hOxVLytN+61/bX1udipoQTsAe7w55GijeeG+V6C8Sx8gCagxXSDzxV2UHvAfdXMBIwQjg/i0dpF+BEPilmY8Jf0ceGBViA8550hbCkVTEvvvjH2KFsQR+jcTZLFPrVQTVo0Fudoy9YKZy2XoY8LaEcUZ0Vm+wAMmR5OEU4Ja6iuSUEfIQMMpJiDFZU1sa7vP0Jg+UhgxG0dcT3GcqBHVnjJ0gNWNHWB0Kj5vYGnywmhIlBOfGZEPl1gCb0YkSusoBXBEMyxhNM4ZDeT9o56QCvZd9AnwDyrcMWguCaR+85V+piOW/BZ/C+j2TEB77I2pNang==
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
- by PR1P264MB3695.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:142::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Mon, 27 May
- 2024 15:51:42 +0000
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::96ff:7284:1fa1:b02a]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::96ff:7284:1fa1:b02a%4]) with mapi id 15.20.7611.025; Mon, 27 May 2024
- 15:51:41 +0000
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Oscar Salvador <osalvador@suse.de>
-CC: Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe
-	<jgg@nvidia.com>, Peter Xu <peterx@redhat.com>, Michael Ellerman
-	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [RFC PATCH v3 03/16] mm: Provide mm_struct and address to
- huge_ptep_get()
-Thread-Topic: [RFC PATCH v3 03/16] mm: Provide mm_struct and address to
- huge_ptep_get()
-Thread-Index: AQHar049Ix1YQLnVmUmJYzhNoE20v7Gq8MoAgABMH4A=
-Date: Mon, 27 May 2024 15:51:41 +0000
-Message-ID: <22c4ba7c-28d2-43bd-81b6-bd63f77d1d9e@csgroup.eu>
-References: <cover.1716714720.git.christophe.leroy@csgroup.eu>
- <fbba60d762faad40ebb959bf9517c5c22301f69e.1716714720.git.christophe.leroy@csgroup.eu>
- <ZlRsMCvVo9tSEFQV@localhost.localdomain>
-In-Reply-To: <ZlRsMCvVo9tSEFQV@localhost.localdomain>
-Accept-Language: fr-FR, en-US
-Content-Language: fr-FR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=csgroup.eu;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MRZP264MB2988:EE_|PR1P264MB3695:EE_
-x-ms-office365-filtering-correlation-id: 5f0b9f5f-b4e3-4d1b-dd77-08dc7e64e6f8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|1800799015|38070700009;
-x-microsoft-antispam-message-info:
- =?utf-8?B?blVLOEhDYzhWdk1YMUsvd3AweFVTbUU2UHdTRms2S0V4OHJlbHVwR1lzOGlK?=
- =?utf-8?B?ekpzaDE0ZEVTVS9Bak9Gay9EK0t1Q3lWNzRsV2JjQXUwVitLNitPVWpZeVYw?=
- =?utf-8?B?SUo0L1VvTW1JVEkrclcwVkFWNjZ0YlByTXE5VklGYnBZYlAwVmNBTVkrdVUw?=
- =?utf-8?B?K3h0WjFObTdhejh2TUk0eEVleGF1QlA5QUx4cEgvUHlacjM1WUsyQmpZcGh0?=
- =?utf-8?B?N3k0UjRxWWlseUtUUUViemxRNHYzL0tHQi93aWdLTmk5NnAra1JiQ3hra2F5?=
- =?utf-8?B?djNhem9SSzc4U3VZZjd3WWtmSnZVVXliQWVsTEdGdmpFQWR6K0NXcmZzRk5W?=
- =?utf-8?B?R3EzaG1pQ28yT0d6SnJuK1FWNzlhdmpySUVXTitVNWU1TTBoSzFoeUExazVZ?=
- =?utf-8?B?dDY2ZHFVNDNwSFlTQStWZDR2RmxiUk8wNy9weVRwVkJHZ2U1d0NiRHFPV0RE?=
- =?utf-8?B?S2txUlRMaFAxMHEwK0F0KzFjMGhqNmtndkxIdkFGUDhycWFOaXY0dWJJa3U0?=
- =?utf-8?B?Y1F5MmFIT2xZUDI1YllyeTgvL1ZxUk94aEFOZmp6Y2x2Zy9QaXZLcHNKRTdQ?=
- =?utf-8?B?VWZsNmhhdkh5QWJ6VlViV0VmMWJjaVBiWWlDZEVUQk9JWHdGcStHKzdiMGlG?=
- =?utf-8?B?RVhWU0oxVU9vZUpLaStJL01HbURNNkdWSDh5TUhtOUZRMjYrWm44ekVtbDZo?=
- =?utf-8?B?K1pLQ1hIZlMySjloM3Iya3AyT010RFdkU0ZmR25nOEQ4UHNzZy9JQ0F2M3ZE?=
- =?utf-8?B?WTJ5M014aWptcHJqU2MyUWVkb3U2ai9LWmtXWWFVcXkrY2R0Wm0zZzRodXgy?=
- =?utf-8?B?dElqWklHY0hWTTJ5c3hwSVp6UVBXYjhEaTh4UTBneldZZzRNMlV5SllyQ0xG?=
- =?utf-8?B?cGNEcS93bWl4aU92L29sdStkSFhGdFgzQXRwZEhmNkkrOWVUQnFPQWMwYnNH?=
- =?utf-8?B?cmpXc1hMZnNPNVp1ei84aEQ1QUwxODBocU5RYU5qWGFWWW5oWWE1Z3I0akli?=
- =?utf-8?B?Q25sUHRuL1pMZWlyakZ2WWljTXdQZzNtclIwNVFvaWxtUDBqci9ubWNYcmkz?=
- =?utf-8?B?MlZvWFdFT2g5d2MxZndIT2VjL0RmS0lJcnF6N3Qrd056Y3ZvSG9zOUFnRmNT?=
- =?utf-8?B?T1QwNkVrcFZHd0IrS0dHeXdEblRYS2sxclNZTUd6ajJlNjJNSmZBMEttbm5u?=
- =?utf-8?B?R0Q1WkdxTGxsWW54S2RHN1g0ekxTek1nWk95Z3IyeDQ5OWVac3pyWW5yanFR?=
- =?utf-8?B?eFpVcG1CSHRsZlEzc1QraFdseTJkakltNnZhejhENHJNV1RkQ0xBY2ZuKzUy?=
- =?utf-8?B?OUo5SWhkK1gycE04OGdTdVVvYW90TmdwbVpJNmNZNndhQlB6blIxK0NDRWRn?=
- =?utf-8?B?YlpSYjJ1dWdabGNPV2UvWjFZMUsvQnREYWJkTFF4TWdocVZyR1lmV2wzYUZx?=
- =?utf-8?B?aUkyckpJdU10ZWtjUHg3RXRaRTBoek5nU3NpekhvMGtVb1ZibE5JeURCcXZ4?=
- =?utf-8?B?U0dUbnpMbGZvY1B0OGRQZ1VNRHh1V1J5a2Vqa1p3cVB0OGpYSEo0RDRWdkRr?=
- =?utf-8?B?dW42V2tFYmpnQS9NUmpESjh0bWJHOFNSQURaY1UwbzVCY2VXcGNpWnh0aUFk?=
- =?utf-8?B?RzlYQllNY1RZRU9SbjMrV0ZRSU5KVVozREVuN3Z1UUhUbUlFVm02WWhpQlNW?=
- =?utf-8?B?cDJDeGt1Q3dxNit3YmVKanJZaWpSOWxJQjlvQmFDaUI2dUFXUC92RHIzN2po?=
- =?utf-8?B?cFBqQm9WUVZ3emV1LzBKaGdoeWYybGFrdzhha2ZEQXJZdFZQUXJxZS8rSW9O?=
- =?utf-8?B?eGdGZVpsRThlSythVFI5QT09?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Z0F0dWV1SXRybGw3Ti9QT3VrVGR3bWpwc0RIenFpc3IzMzU2MFdrZTd1c1Uv?=
- =?utf-8?B?NDdUMGZmUHIzekN5Ky8veFJLSFNjOERUU29CWUZaajl1V0swRVljOE52eFB3?=
- =?utf-8?B?aWF4VytmSkFiYUhiT2gwbkh0UEc4eFRBa0c1YzgzVGp3OEFzeWJnSk5oODdt?=
- =?utf-8?B?MnErZDBZekw3S0ozNzlyOC93QjAyWlVrTlhWUFZ0ZENYb3ZIU29zZkF3TmVB?=
- =?utf-8?B?WTBCbTcxYWhTbFR0TmtTQ0hvSmRQczhxd3VnYm5qVFVjVDJWaXhWUUJRdlBJ?=
- =?utf-8?B?Y0ZKbWRNS2tQWktoZy90NVF5S3ozZFJaR2JZZnh4QWhmb3ZpVHFHdngrd2VZ?=
- =?utf-8?B?Wm9TUjFvbExzRDR3VG9NY3pvTk5TYjdoY1ZuYnR3bXR1VHdjZ0p2ajBuV1Bt?=
- =?utf-8?B?SlpmSDRiVVdScHdMM2VzUDJtdzE1WmZoRTl5VWE3N2NnaDEwRlEwM1J3M3cr?=
- =?utf-8?B?Z3B2K2lVRUFoMFF1ckQxbWZ6ZDFGeTN4cFIvZnMyTXV0ZlZMdUJHOHRIY3BK?=
- =?utf-8?B?VFV3a0xORkV4VnJzenowKzQ2Myt4ZCtiVkZRc05wcXlXd0hIMG9za2FjZFFP?=
- =?utf-8?B?U2xvWWpOMENnakkwLy8vSG52bmZVSUQxM291dUhVMjZHUjJKZU5EZExMbjY4?=
- =?utf-8?B?NVlTOTZWODVCY3NnWnd0RG80ODZsVnNpYWVteEN2ZmhSdEthSTlOczdvbGFY?=
- =?utf-8?B?MmpFRUFrakZScGtUSmhFMDF5ak5vZkZmUGVBSTNSbzdLV3k0WXZRUHg1WEQz?=
- =?utf-8?B?U3VDUGpaOVZQeGdrR1gvWEp3NTN4cmFHdGtpV2pjelR0UVFtN0ZLanhnNHBP?=
- =?utf-8?B?U28yNEtBOHplM2lTVG8rTi9jelkxZXRQaVE1aTl4cTkvMHlZZjlUYVJmS2NX?=
- =?utf-8?B?YWJ3aitmNWRQcGYvL2s4dkYwV29mNlF1dy9JN0VNb1o3cDRYN1VpbXdqRWp0?=
- =?utf-8?B?KytsQ0lMSm11QWQ1OVhhQTBQaWdpSlBvQ1lybzhJNWpVNGxNV0l5Z0ZjYnFo?=
- =?utf-8?B?WFRHcnNoMlIrSnR6UHRLbU0ySHEzMFpLMkhtanRGY0VlYWZ5a05ZSnNndUlz?=
- =?utf-8?B?eTFUQkZvMXBkVDQyMyt5U0MxR1dXTUpnNGR6RTYvckpNalZXUXFYSncxemFU?=
- =?utf-8?B?OU5YWTZORkt2VDRKWk51NURyUm10TVFPWmNLa0dzZU1RbHNLdFkrTHZsNzFn?=
- =?utf-8?B?NEk4TmY5UnN0UG40bkxUWTVleUtlemFXODU2b2VyN2RYbjdzODFXNWxSdEN2?=
- =?utf-8?B?VGtSaW9Bb3JKWFJxTmcxZmJDZ01HWHFXazBBbFEwUHAzbnpVWHBnTkhaVERw?=
- =?utf-8?B?YS9BMmNBRGFvNDRzL25ROE1BVllBS1JEanlRVTQ0Tm1PRWhDUzNnWkFMVHBO?=
- =?utf-8?B?bTQ0NzdteE1Yd0FsNURFMzNqRmI4QVl3L1ZkMmdZeEY2MEJDUmlZK0dmMjY2?=
- =?utf-8?B?UnphZUNwZVV4cG5uc1hWaWQzVlB0T3dGdGtvVUFvWHlSSkhXcEdDS0FGOUdD?=
- =?utf-8?B?OEd0TlZtckNHcTNmYkRqSG9kdyswbkFIUmdxb0g3ZFRobS9tSTJZMWFsWWtq?=
- =?utf-8?B?a1VFdVIrZ0lyY2R1R0dKT3R6cnFpMVpoSXBTcEtOZzlzZFZkN3BBRFJaYis0?=
- =?utf-8?B?RVh0VVlLUE5paG1rSWRzbEVDMHNQN012ci95UjJ6ZXlEamJ3QWdwejNsdGh1?=
- =?utf-8?B?LzFGVGU2YUxlKy9xM2xOdzZmaXdCVUJkSHdTWnlMNUFERUlCck81KzM0NElQ?=
- =?utf-8?B?Vi9uYVFzMlhiaFo2SjlXSmpJRGEwL1NxNDVRSU5ndjUyaEs1QVF2M2Nad21U?=
- =?utf-8?B?VjZPWmRDbVQ2L2JhUnVlbXI2dk5Uamx3ejRJQUMvc2lwNzNUc3p5SlAwTVdL?=
- =?utf-8?B?ZjJnaHloZ1l6YVc3TUlxTDFGTTZJVVZibnpGQlk2MXNNZkVMK21CMmNXSjVI?=
- =?utf-8?B?YytmNStVS0xqVzdkbVFlcFJPSE53VkEyZjBuUlZMWXpGTUs1OEtGVzJsaFhF?=
- =?utf-8?B?d3hObDVBQXJmYWhtREQ5cEp3K3JqSHhtb1lseTdUeHhqNEVrUk50R2pYajZE?=
- =?utf-8?B?c3Rld1BqcS8yZUo1QmNVSHFJN0Qrcm12NXFIdlRXR0VvTmV5Qlh1d0k4dWZY?=
- =?utf-8?Q?TD08JoK81tX+cphEtCKjNKikp?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DDF29D008F33E84A9BFCCE968012B909@FRAP264.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqJDWQL8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6230C4AF0E;
+	Mon, 27 May 2024 15:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716825112;
+	bh=MiGE80CeLbrozLsH1T/KJ5SwEQt07TGcAp6a5gUZ8FY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hqJDWQL8XI0OKZxXlz+9Ab9k2omBRw+eJ2IqSyd8Tzr+5CFztEW4flmyp9FXWLbvL
+	 lkpLHqtqSDUOrGPm2OJaIGQ2a4hza+JERmHzKvmLwAXL/TvOCGp9b/Z2UXivSKJQKJ
+	 mCCtRTUrFzFdQF0VD/N1BVyO2d+2ICpfHuXh4i+ftE6hIXQt6aSDuwLwZBXAcnT+FH
+	 vIG8b4fuYSfvUDb6AvBoC8cSSJ3ILBDrszb/MtcaqHg6vqan9w/33f86yZvifeUDWc
+	 9Ztflp1/w6F8zYJq5BcaXmRBx6qGli3d0JxyTrT42Sa/YlbvdL9RaHJ1Ys/+fycegX
+	 Z511fWGTdxs3g==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Waiman Long <longman@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Tejun Heo <tj@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lizefan.x@bytedance.com,
+	hannes@cmpxchg.org,
+	tglx@linutronix.de,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	len.brown@intel.com,
+	pavel@ucw.cz,
+	cgroups@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 06/23] cgroup/cpuset: Make cpuset hotplug processing synchronous
+Date: Mon, 27 May 2024 11:50:07 -0400
+Message-ID: <20240527155123.3863983-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240527155123.3863983-1-sashal@kernel.org>
+References: <20240527155123.3863983-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: csgroup.eu
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f0b9f5f-b4e3-4d1b-dd77-08dc7e64e6f8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2024 15:51:41.6108
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u1kpcPp1/azShOLHL4tafVNLOEtxppbsLfrian5eEVmf9+v+MtcTKHTFXjBV1VTItjd1VGvr3f/DwpKh6tBxEVfPahnSwxz0vy4pgmPynaQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR1P264MB3695
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.2
+Content-Transfer-Encoding: 8bit
 
-DQoNCkxlIDI3LzA1LzIwMjQgw6AgMTM6MTksIE9zY2FyIFNhbHZhZG9yIGEgw6ljcml0wqA6DQo+
-IE9uIFN1biwgTWF5IDI2LCAyMDI0IGF0IDExOjIyOjIzQU0gKzAyMDAsIENocmlzdG9waGUgTGVy
-b3kgd3JvdGU6DQo+PiBPbiBwb3dlcnBjIDh4eCBodWdlX3B0ZXBfZ2V0KCkgd2lsbCBuZWVkIHRv
-IGtub3cgd2hldGhlciB0aGUgZ2l2ZW4NCj4+IHB0ZXAgaXMgYSBQVEUgZW50cnkgb3IgYSBQTUQg
-ZW50cnkuIFRoaXMgY2Fubm90IGJlIGtub3duIHdpdGggdGhlDQo+PiBQTUQgZW50cnkgaXRzZWxm
-IGJlY2F1c2UgdGhlcmUgaXMgbm8gZWFzeSB3YXkgdG8ga25vdyBpdCBmcm9tIHRoZQ0KPj4gY29u
-dGVudCBvZiB0aGUgZW50cnkuDQo+Pg0KPj4gU28gaHVnZV9wdGVwX2dldCgpIHdpbGwgbmVlZCB0
-byBrbm93IGVpdGhlciB0aGUgc2l6ZSBvZiB0aGUgcGFnZQ0KPj4gb3IgZ2V0IHRoZSBwbWQuDQo+
-Pg0KPj4gSW4gb3JkZXIgdG8gYmUgY29uc2lzdGVudCB3aXRoIGh1Z2VfcHRlcF9nZXRfYW5kX2Ns
-ZWFyKCksIGdpdmUNCj4+IG1tIGFuZCBhZGRyZXNzIHRvIGh1Z2VfcHRlcF9nZXQoKS4NCj4+DQo+
-PiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGhlIExlcm95IDxjaHJpc3RvcGhlLmxlcm95QGNzZ3Jv
-dXAuZXU+DQo+PiAtLS0NCj4+IHYyOiBBZGQgbWlzc2luZyBjaGFuZ2VzIGluIGFyY2ggaW1wbGVt
-ZW50YXRpb25zDQo+PiB2MzogRml4ZWQgYSBjb21tZW50IGluIEFSTSBhbmQgbWlzc2luZyBjaGFu
-Z2VzIGluIFMzOTANCj4+IC0tLQ0KPj4gICBhcmNoL2FybS9pbmNsdWRlL2FzbS9odWdldGxiLTNs
-ZXZlbC5oIHwgIDQgKy0tDQo+PiAgIGFyY2gvYXJtNjQvaW5jbHVkZS9hc20vaHVnZXRsYi5oICAg
-ICAgfCAgMiArLQ0KPj4gICBhcmNoL2FybTY0L21tL2h1Z2V0bGJwYWdlLmMgICAgICAgICAgIHwg
-IDIgKy0NCj4+ICAgYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9odWdldGxiLmggICAgICB8ICAyICst
-DQo+PiAgIGFyY2gvcmlzY3YvbW0vaHVnZXRsYnBhZ2UuYyAgICAgICAgICAgfCAgMiArLQ0KPj4g
-ICBhcmNoL3MzOTAvaW5jbHVkZS9hc20vaHVnZXRsYi5oICAgICAgIHwgIDQgKy0tDQo+PiAgIGFy
-Y2gvczM5MC9tbS9odWdldGxicGFnZS5jICAgICAgICAgICAgfCAgNCArLS0NCj4gDQo+IEkgd2Fz
-IHdvbmRlcmluZyB3aGV0aGVyIHdlIGNvdWxkIGRvIHNvbWV0aGluZyBzaW1pbGFyIGZvciB3aGF0
-IHdlIGRpZCBpbg0KPiBwYXRjaCMxLCBzbyB3ZSBkbyBub3QgdG91Y2ggYXJjaGl0ZWN0dXJlcyBj
-b2RlLg0KDQpXZSBjb3VsZCBiZSBpcyB0aGF0IHdvcnRoIHRoZSBjaHVybiA/DQoNCldpdGggcGF0
-Y2ggMSB0aGVyZSB3YXMgb25seSBvbmUgY2FsbHNpdGUuDQoNCkhlcmUgd2UgaGF2ZSBtYW55IGNh
-bGxzaXRlcywgYW5kIHdlIGFsc28gaGF2ZSBodWdlX3B0ZXBfZ2V0X2FuZF9jbGVhcigpIA0Kd2hp
-Y2ggYWxyZWFkeSB0YWtlcyB0aHJlZSBhcmd1bWVudHMuIFNvIGZvciBtZSBpdCBtYWtlIG1vcmUg
-c2Vuc2UgdG8gDQphZGFwdCBodWdlX3B0ZXBfZ2V0KCkgaGVyZS4NCg0KVG9kYXkgc2V2ZXJhbCBv
-ZiB0aGUgaHVnZS1yZWxhdGVkIGZ1bmN0aW9ucyBhbHJlYWR5IGhhdmUgcGFyYW1ldGVycyB0aGF0
-IA0KYXJlIHVzZWQgb25seSBieSBhIGZldyBhcmNoaXRlY3R1cmVzIGFuZCBldmVyeXRpbWUgb25l
-IGFyY2hpdGVjdHVyZSANCm5lZWRzIGEgbmV3IHBhcmFtZXRlciBpdCBpcyBhZGRlZCBmb3IgYWxs
-IG9mIHRoZW0sIGFuZCB0aGVyZSBhcmUgDQpleGVtcGxlcyBpbiB0aGUgcGFzdCBvZiBuZXcgZnVu
-Y3Rpb25zIGFkZGVkIHRvIGdldCBuZXcgcGFyYW1ldGVycyBmb3IgDQpvbmx5IGEgZmV3IGFyY2hp
-dGVjdHVyZXMgdGhhdCBlbmRlZCB1cCB3aXRoIGEgbWVzcyBhbmQgYSBuZWVkIHRvIA0KcmUtZmFj
-dG9yIGF0IHRoZSBlbmQuDQoNClNlZSBmb3IgaW5zdGFuY2UgdGhlIHN0b3J5IGFyb3VuZCBhcmNo
-X21ha2VfaHVnZV9wdGUoKSBhbmQgcHRlX21raHVnZSgpLCANCmJvdGggZG8gdGhlIHNhbWUgYnV0
-IGFyY2hfbWFrZV9odWdlX3B0ZSgpIHdhcyBhZGRlZCB0byB0YWtlIGFkZGl0aW9uYWwgDQpwYXJh
-bWV0ZXJzIGJ5IGNvbW1pdCBkOWVkOWZhYWMyODMgKCJtbTogYWRkIG5ldyBhcmNoX21ha2VfaHVn
-ZV9wdGUoKSANCm1ldGhvZCBmb3IgdGlsZSBzdXBwb3J0IikgdGhlbiB0aGV5IHdlcmUgbWVyZ2Vk
-IGJ5IGNvbW1pdCAxNjc4NWJkNzc0MzEgDQooIm1tOiBtZXJnZSBwdGVfbWtodWdlKCkgY2FsbCBp
-bnRvIGFyY2hfbWFrZV9odWdlX3B0ZSgpIikNCg0KU28gSSdtIG9wZW4gdG8gYW55IHN1Z2dlc3Rp
-b24gYnV0IHdlIG5lZWQgdG8gdHJ5IG5vdCBtYWtlIGl0IGEgYmlnZ2VyIA0KbWVzcyBhdCB0aGUg
-ZW5kLg0KDQpCeSB0aGUgd2F5LCBJIHRoaW5rIG1vc3QgaWYgbm90IGFsbCBodWdlIHJlbGF0ZWQg
-aGVscGVycyBzaG91bGQgYWxsIHRha2UgDQp0aGUgc2FtZSBwYXJhbWV0ZXJzIGV2ZW4gaWYgbm90
-IGFsbCBvZiB0aGVtIGFyZSB1c2VkLCB0aGVuIGl0IHdvdWxkIG1ha2UgDQp0aGluZ3MgZWFzaWVy
-LiBBbmQgbWF5YmUgdGhlIGNsZWFuZXN0IHdvdWxkIGJlIHRvIGdpdmUgdGhlIHBhZ2Ugc2l6ZSB0
-byANCmFsbCB0aG9zZSBmdW5jdGlvbnMgaW5zdGVhZCBvZiBoYXZpbmcgdGhlbSBndWVzcyBpdC4N
-Cg0KU28gbGV0J3MgaGF2ZSB5b3VyIGlkZWFzIGhlcmUgb24gdGhlIG1vc3Qgc3RyYWlnaHQgZm9y
-d2FyZCB3YXkgdG8gaGFuZGxlIA0KdGhhdC4NCg0KPiANCj4gICAgDQo+PiBkaWZmIC0tZ2l0IGEv
-bW0vZ3VwLmMgYi9tbS9ndXAuYw0KPj4gaW5kZXggMTYxMWU3M2IxMTIxLi44NmI1MTA1YjgyYTEg
-MTAwNjQ0DQo+PiAtLS0gYS9tbS9ndXAuYw0KPj4gKysrIGIvbW0vZ3VwLmMNCj4+IEBAIC0yODEy
-LDcgKzI4MTIsNyBAQCBzdGF0aWMgaW50IGd1cF9odWdlcHRlKHB0ZV90ICpwdGVwLCB1bnNpZ25l
-ZCBsb25nIHN6LCB1bnNpZ25lZCBsb25nIGFkZHIsDQo+PiAgIAlpZiAocHRlX2VuZCA8IGVuZCkN
-Cj4+ICAgCQllbmQgPSBwdGVfZW5kOw0KPj4gICANCj4+IC0JcHRlID0gaHVnZV9wdGVwX2dldChw
-dGVwKTsNCj4+ICsJcHRlID0gaHVnZV9wdGVwX2dldChOVUxMLCBhZGRyLCBwdGVwKTsNCj4gDQo+
-IEkga25vdyB0aGF0IGFmdGVyIHRoaXMgc2VyaWVzIGFsbCB0aGlzIGNvZGUgaXMgZ29uZSwgYnV0
-IEkgd2FzIG5vdCBzdXJlDQo+IGFib3V0IHRoZSBiZWhhdmlvdXIgYmV0d2VlbiB0aGlzIHBhdGNo
-IGFuZCB0aGUgbGFzdCBvbmUuDQo+IA0KPiBJdCBtYWRlIG1lIG5lcnZvdXMsIHVudGlsIEkgcmVh
-bGl6ZWQgdGhhdCB0aGlzIGNvZGUgaXMgb25seSB1c2VkDQo+IG9uIENPTkZJR19BUkNIX0hBU19I
-VUdFUEQsIHdoaWNoIHNob3VsZCBub3QgYmUgdGhlIGNhc2UgYW55bW9yZSBmb3IgOHh4IGFmdGVy
-DQo+IHBhdGNoIzgsIGFuZCBzaW5jZSA4eHggaXMgdGhlIG9ubHkgb25lIHRoYXQgd2lsbCB1c2Ug
-dGhlIG1tIHBhcmFtZXRlciBmcm9tDQo+IGh1Z2VfcHRlcF9nZXQsIHdlIGFyZSBhbGwgZ29vZC4N
-Cj4gDQoNCkJ5IHRoZSB3YXksIGFmdGVyIGNvbW1pdCAwMWQ4OWI5M2UxNzYgKCJtbS9ndXA6IGZp
-eCBodWdlcGQgaGFuZGxpbmcgaW4gDQpodWdldGxiIHJld29yayIpIHdlIG5vdyBoYXZlIHRoZSB2
-bWEgaW4gZ3VwX2h1Z2VwdGUoKSBzbyB3ZSBub3cgcGFzcyANCnZtYS0+dm1fbW0NCg0KVGhhbmtz
-IGZvciB0aGUgcmV2aWV3DQpDaHJpc3RvcGhlDQo=
+From: Waiman Long <longman@redhat.com>
+
+[ Upstream commit 2125c0034c5dfd61171b494bd309bb7637bff6eb ]
+
+Since commit 3a5a6d0c2b03("cpuset: don't nest cgroup_mutex inside
+get_online_cpus()"), cpuset hotplug was done asynchronously via a work
+function. This is to avoid recursive locking of cgroup_mutex.
+
+Since then, the cgroup locking scheme has changed quite a bit. A
+cpuset_mutex was introduced to protect cpuset specific operations.
+The cpuset_mutex is then replaced by a cpuset_rwsem. With commit
+d74b27d63a8b ("cgroup/cpuset: Change cpuset_rwsem and hotplug lock
+order"), cpu_hotplug_lock is acquired before cpuset_rwsem. Later on,
+cpuset_rwsem is reverted back to cpuset_mutex. All these locking changes
+allow the hotplug code to call into cpuset core directly.
+
+The following commits were also merged due to the asynchronous nature
+of cpuset hotplug processing.
+
+  - commit b22afcdf04c9 ("cpu/hotplug: Cure the cpusets trainwreck")
+  - commit 50e76632339d ("sched/cpuset/pm: Fix cpuset vs. suspend-resume
+    bugs")
+  - commit 28b89b9e6f7b ("cpuset: handle race between CPU hotplug and
+    cpuset_hotplug_work")
+
+Clean up all these bandages by making cpuset hotplug
+processing synchronous again with the exception that the call to
+cgroup_transfer_tasks() to transfer tasks out of an empty cgroup v1
+cpuset, if necessary, will still be done via a work function due to the
+existing cgroup_mutex -> cpu_hotplug_lock dependency. It is possible
+to reverse that dependency, but that will require updating a number of
+different cgroup controllers. This special hotplug code path should be
+rarely taken anyway.
+
+As all the cpuset states will be updated by the end of the hotplug
+operation, we can revert most the above commits except commit
+50e76632339d ("sched/cpuset/pm: Fix cpuset vs. suspend-resume bugs")
+which is partially reverted.  Also removing some cpus_read_lock trylock
+attempts in the cpuset partition code as they are no longer necessary
+since the cpu_hotplug_lock is now held for the whole duration of the
+cpuset hotplug code path.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Tested-by: Valentin Schneider <vschneid@redhat.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/cpuset.h |   3 -
+ kernel/cgroup/cpuset.c | 141 ++++++++++++++++-------------------------
+ kernel/cpu.c           |  48 --------------
+ kernel/power/process.c |   2 -
+ 4 files changed, 56 insertions(+), 138 deletions(-)
+
+diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+index 0ce6ff0d9c9aa..de4cf0ee96f79 100644
+--- a/include/linux/cpuset.h
++++ b/include/linux/cpuset.h
+@@ -70,7 +70,6 @@ extern int cpuset_init(void);
+ extern void cpuset_init_smp(void);
+ extern void cpuset_force_rebuild(void);
+ extern void cpuset_update_active_cpus(void);
+-extern void cpuset_wait_for_hotplug(void);
+ extern void inc_dl_tasks_cs(struct task_struct *task);
+ extern void dec_dl_tasks_cs(struct task_struct *task);
+ extern void cpuset_lock(void);
+@@ -185,8 +184,6 @@ static inline void cpuset_update_active_cpus(void)
+ 	partition_sched_domains(1, NULL, NULL);
+ }
+ 
+-static inline void cpuset_wait_for_hotplug(void) { }
+-
+ static inline void inc_dl_tasks_cs(struct task_struct *task) { }
+ static inline void dec_dl_tasks_cs(struct task_struct *task) { }
+ static inline void cpuset_lock(void) { }
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 4237c8748715d..d8d3439eda4e4 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -201,6 +201,14 @@ struct cpuset {
+ 	struct list_head remote_sibling;
+ };
+ 
++/*
++ * Legacy hierarchy call to cgroup_transfer_tasks() is handled asynchrously
++ */
++struct cpuset_remove_tasks_struct {
++	struct work_struct work;
++	struct cpuset *cs;
++};
++
+ /*
+  * Exclusive CPUs distributed out to sub-partitions of top_cpuset
+  */
+@@ -449,12 +457,6 @@ static DEFINE_SPINLOCK(callback_lock);
+ 
+ static struct workqueue_struct *cpuset_migrate_mm_wq;
+ 
+-/*
+- * CPU / memory hotplug is handled asynchronously.
+- */
+-static void cpuset_hotplug_workfn(struct work_struct *work);
+-static DECLARE_WORK(cpuset_hotplug_work, cpuset_hotplug_workfn);
+-
+ static DECLARE_WAIT_QUEUE_HEAD(cpuset_attach_wq);
+ 
+ static inline void check_insane_mems_config(nodemask_t *nodes)
+@@ -540,22 +542,10 @@ static void guarantee_online_cpus(struct task_struct *tsk,
+ 	rcu_read_lock();
+ 	cs = task_cs(tsk);
+ 
+-	while (!cpumask_intersects(cs->effective_cpus, pmask)) {
++	while (!cpumask_intersects(cs->effective_cpus, pmask))
+ 		cs = parent_cs(cs);
+-		if (unlikely(!cs)) {
+-			/*
+-			 * The top cpuset doesn't have any online cpu as a
+-			 * consequence of a race between cpuset_hotplug_work
+-			 * and cpu hotplug notifier.  But we know the top
+-			 * cpuset's effective_cpus is on its way to be
+-			 * identical to cpu_online_mask.
+-			 */
+-			goto out_unlock;
+-		}
+-	}
+-	cpumask_and(pmask, pmask, cs->effective_cpus);
+ 
+-out_unlock:
++	cpumask_and(pmask, pmask, cs->effective_cpus);
+ 	rcu_read_unlock();
+ }
+ 
+@@ -1217,7 +1207,7 @@ static void rebuild_sched_domains_locked(void)
+ 	/*
+ 	 * If we have raced with CPU hotplug, return early to avoid
+ 	 * passing doms with offlined cpu to partition_sched_domains().
+-	 * Anyways, cpuset_hotplug_workfn() will rebuild sched domains.
++	 * Anyways, cpuset_handle_hotplug() will rebuild sched domains.
+ 	 *
+ 	 * With no CPUs in any subpartitions, top_cpuset's effective CPUs
+ 	 * should be the same as the active CPUs, so checking only top_cpuset
+@@ -1260,12 +1250,17 @@ static void rebuild_sched_domains_locked(void)
+ }
+ #endif /* CONFIG_SMP */
+ 
+-void rebuild_sched_domains(void)
++static void rebuild_sched_domains_cpuslocked(void)
+ {
+-	cpus_read_lock();
+ 	mutex_lock(&cpuset_mutex);
+ 	rebuild_sched_domains_locked();
+ 	mutex_unlock(&cpuset_mutex);
++}
++
++void rebuild_sched_domains(void)
++{
++	cpus_read_lock();
++	rebuild_sched_domains_cpuslocked();
+ 	cpus_read_unlock();
+ }
+ 
+@@ -2079,14 +2074,11 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
+ 
+ 	/*
+ 	 * For partcmd_update without newmask, it is being called from
+-	 * cpuset_hotplug_workfn() where cpus_read_lock() wasn't taken.
+-	 * Update the load balance flag and scheduling domain if
+-	 * cpus_read_trylock() is successful.
++	 * cpuset_handle_hotplug(). Update the load balance flag and
++	 * scheduling domain accordingly.
+ 	 */
+-	if ((cmd == partcmd_update) && !newmask && cpus_read_trylock()) {
++	if ((cmd == partcmd_update) && !newmask)
+ 		update_partition_sd_lb(cs, old_prs);
+-		cpus_read_unlock();
+-	}
+ 
+ 	notify_partition_change(cs, old_prs);
+ 	return 0;
+@@ -3599,8 +3591,8 @@ static ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
+ 	 * proceeding, so that we don't end up keep removing tasks added
+ 	 * after execution capability is restored.
+ 	 *
+-	 * cpuset_hotplug_work calls back into cgroup core via
+-	 * cgroup_transfer_tasks() and waiting for it from a cgroupfs
++	 * cpuset_handle_hotplug may call back into cgroup core asynchronously
++	 * via cgroup_transfer_tasks() and waiting for it from a cgroupfs
+ 	 * operation like this one can lead to a deadlock through kernfs
+ 	 * active_ref protection.  Let's break the protection.  Losing the
+ 	 * protection is okay as we check whether @cs is online after
+@@ -3609,7 +3601,6 @@ static ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
+ 	 */
+ 	css_get(&cs->css);
+ 	kernfs_break_active_protection(of->kn);
+-	flush_work(&cpuset_hotplug_work);
+ 
+ 	cpus_read_lock();
+ 	mutex_lock(&cpuset_mutex);
+@@ -4354,6 +4345,16 @@ static void remove_tasks_in_empty_cpuset(struct cpuset *cs)
+ 	}
+ }
+ 
++static void cpuset_migrate_tasks_workfn(struct work_struct *work)
++{
++	struct cpuset_remove_tasks_struct *s;
++
++	s = container_of(work, struct cpuset_remove_tasks_struct, work);
++	remove_tasks_in_empty_cpuset(s->cs);
++	css_put(&s->cs->css);
++	kfree(s);
++}
++
+ static void
+ hotplug_update_tasks_legacy(struct cpuset *cs,
+ 			    struct cpumask *new_cpus, nodemask_t *new_mems,
+@@ -4383,12 +4384,21 @@ hotplug_update_tasks_legacy(struct cpuset *cs,
+ 	/*
+ 	 * Move tasks to the nearest ancestor with execution resources,
+ 	 * This is full cgroup operation which will also call back into
+-	 * cpuset. Should be done outside any lock.
++	 * cpuset. Execute it asynchronously using workqueue.
+ 	 */
+-	if (is_empty) {
+-		mutex_unlock(&cpuset_mutex);
+-		remove_tasks_in_empty_cpuset(cs);
+-		mutex_lock(&cpuset_mutex);
++	if (is_empty && cs->css.cgroup->nr_populated_csets &&
++	    css_tryget_online(&cs->css)) {
++		struct cpuset_remove_tasks_struct *s;
++
++		s = kzalloc(sizeof(*s), GFP_KERNEL);
++		if (WARN_ON_ONCE(!s)) {
++			css_put(&cs->css);
++			return;
++		}
++
++		s->cs = cs;
++		INIT_WORK(&s->work, cpuset_migrate_tasks_workfn);
++		schedule_work(&s->work);
+ 	}
+ }
+ 
+@@ -4421,30 +4431,6 @@ void cpuset_force_rebuild(void)
+ 	force_rebuild = true;
+ }
+ 
+-/*
+- * Attempt to acquire a cpus_read_lock while a hotplug operation may be in
+- * progress.
+- * Return: true if successful, false otherwise
+- *
+- * To avoid circular lock dependency between cpuset_mutex and cpus_read_lock,
+- * cpus_read_trylock() is used here to acquire the lock.
+- */
+-static bool cpuset_hotplug_cpus_read_trylock(void)
+-{
+-	int retries = 0;
+-
+-	while (!cpus_read_trylock()) {
+-		/*
+-		 * CPU hotplug still in progress. Retry 5 times
+-		 * with a 10ms wait before bailing out.
+-		 */
+-		if (++retries > 5)
+-			return false;
+-		msleep(10);
+-	}
+-	return true;
+-}
+-
+ /**
+  * cpuset_hotplug_update_tasks - update tasks in a cpuset for hotunplug
+  * @cs: cpuset in interest
+@@ -4493,13 +4479,11 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+ 		compute_partition_effective_cpumask(cs, &new_cpus);
+ 
+ 	if (remote && cpumask_empty(&new_cpus) &&
+-	    partition_is_populated(cs, NULL) &&
+-	    cpuset_hotplug_cpus_read_trylock()) {
++	    partition_is_populated(cs, NULL)) {
+ 		remote_partition_disable(cs, tmp);
+ 		compute_effective_cpumask(&new_cpus, cs, parent);
+ 		remote = false;
+ 		cpuset_force_rebuild();
+-		cpus_read_unlock();
+ 	}
+ 
+ 	/*
+@@ -4519,18 +4503,8 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+ 	else if (is_partition_valid(parent) && is_partition_invalid(cs))
+ 		partcmd = partcmd_update;
+ 
+-	/*
+-	 * cpus_read_lock needs to be held before calling
+-	 * update_parent_effective_cpumask(). To avoid circular lock
+-	 * dependency between cpuset_mutex and cpus_read_lock,
+-	 * cpus_read_trylock() is used here to acquire the lock.
+-	 */
+ 	if (partcmd >= 0) {
+-		if (!cpuset_hotplug_cpus_read_trylock())
+-			goto update_tasks;
+-
+ 		update_parent_effective_cpumask(cs, partcmd, NULL, tmp);
+-		cpus_read_unlock();
+ 		if ((partcmd == partcmd_invalidate) || is_partition_valid(cs)) {
+ 			compute_partition_effective_cpumask(cs, &new_cpus);
+ 			cpuset_force_rebuild();
+@@ -4558,8 +4532,7 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+ }
+ 
+ /**
+- * cpuset_hotplug_workfn - handle CPU/memory hotunplug for a cpuset
+- * @work: unused
++ * cpuset_handle_hotplug - handle CPU/memory hot{,un}plug for a cpuset
+  *
+  * This function is called after either CPU or memory configuration has
+  * changed and updates cpuset accordingly.  The top_cpuset is always
+@@ -4573,8 +4546,10 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+  *
+  * Note that CPU offlining during suspend is ignored.  We don't modify
+  * cpusets across suspend/resume cycles at all.
++ *
++ * CPU / memory hotplug is handled synchronously.
+  */
+-static void cpuset_hotplug_workfn(struct work_struct *work)
++static void cpuset_handle_hotplug(void)
+ {
+ 	static cpumask_t new_cpus;
+ 	static nodemask_t new_mems;
+@@ -4585,6 +4560,7 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
+ 	if (on_dfl && !alloc_cpumasks(NULL, &tmp))
+ 		ptmp = &tmp;
+ 
++	lockdep_assert_cpus_held();
+ 	mutex_lock(&cpuset_mutex);
+ 
+ 	/* fetch the available cpus/mems and find out which changed how */
+@@ -4666,7 +4642,7 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
+ 	/* rebuild sched domains if cpus_allowed has changed */
+ 	if (cpus_updated || force_rebuild) {
+ 		force_rebuild = false;
+-		rebuild_sched_domains();
++		rebuild_sched_domains_cpuslocked();
+ 	}
+ 
+ 	free_cpumasks(NULL, ptmp);
+@@ -4679,12 +4655,7 @@ void cpuset_update_active_cpus(void)
+ 	 * inside cgroup synchronization.  Bounce actual hotplug processing
+ 	 * to a work item to avoid reverse locking order.
+ 	 */
+-	schedule_work(&cpuset_hotplug_work);
+-}
+-
+-void cpuset_wait_for_hotplug(void)
+-{
+-	flush_work(&cpuset_hotplug_work);
++	cpuset_handle_hotplug();
+ }
+ 
+ /*
+@@ -4695,7 +4666,7 @@ void cpuset_wait_for_hotplug(void)
+ static int cpuset_track_online_nodes(struct notifier_block *self,
+ 				unsigned long action, void *arg)
+ {
+-	schedule_work(&cpuset_hotplug_work);
++	cpuset_handle_hotplug();
+ 	return NOTIFY_OK;
+ }
+ 
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 63447eb85dab6..563877d6c28b6 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1208,52 +1208,6 @@ void __init cpuhp_threads_init(void)
+ 	kthread_unpark(this_cpu_read(cpuhp_state.thread));
+ }
+ 
+-/*
+- *
+- * Serialize hotplug trainwrecks outside of the cpu_hotplug_lock
+- * protected region.
+- *
+- * The operation is still serialized against concurrent CPU hotplug via
+- * cpu_add_remove_lock, i.e. CPU map protection.  But it is _not_
+- * serialized against other hotplug related activity like adding or
+- * removing of state callbacks and state instances, which invoke either the
+- * startup or the teardown callback of the affected state.
+- *
+- * This is required for subsystems which are unfixable vs. CPU hotplug and
+- * evade lock inversion problems by scheduling work which has to be
+- * completed _before_ cpu_up()/_cpu_down() returns.
+- *
+- * Don't even think about adding anything to this for any new code or even
+- * drivers. It's only purpose is to keep existing lock order trainwrecks
+- * working.
+- *
+- * For cpu_down() there might be valid reasons to finish cleanups which are
+- * not required to be done under cpu_hotplug_lock, but that's a different
+- * story and would be not invoked via this.
+- */
+-static void cpu_up_down_serialize_trainwrecks(bool tasks_frozen)
+-{
+-	/*
+-	 * cpusets delegate hotplug operations to a worker to "solve" the
+-	 * lock order problems. Wait for the worker, but only if tasks are
+-	 * _not_ frozen (suspend, hibernate) as that would wait forever.
+-	 *
+-	 * The wait is required because otherwise the hotplug operation
+-	 * returns with inconsistent state, which could even be observed in
+-	 * user space when a new CPU is brought up. The CPU plug uevent
+-	 * would be delivered and user space reacting on it would fail to
+-	 * move tasks to the newly plugged CPU up to the point where the
+-	 * work has finished because up to that point the newly plugged CPU
+-	 * is not assignable in cpusets/cgroups. On unplug that's not
+-	 * necessarily a visible issue, but it is still inconsistent state,
+-	 * which is the real problem which needs to be "fixed". This can't
+-	 * prevent the transient state between scheduling the work and
+-	 * returning from waiting for it.
+-	 */
+-	if (!tasks_frozen)
+-		cpuset_wait_for_hotplug();
+-}
+-
+ #ifdef CONFIG_HOTPLUG_CPU
+ #ifndef arch_clear_mm_cpumask_cpu
+ #define arch_clear_mm_cpumask_cpu(cpu, mm) cpumask_clear_cpu(cpu, mm_cpumask(mm))
+@@ -1494,7 +1448,6 @@ static int __ref _cpu_down(unsigned int cpu, int tasks_frozen,
+ 	 */
+ 	lockup_detector_cleanup();
+ 	arch_smt_update();
+-	cpu_up_down_serialize_trainwrecks(tasks_frozen);
+ 	return ret;
+ }
+ 
+@@ -1728,7 +1681,6 @@ static int _cpu_up(unsigned int cpu, int tasks_frozen, enum cpuhp_state target)
+ out:
+ 	cpus_write_unlock();
+ 	arch_smt_update();
+-	cpu_up_down_serialize_trainwrecks(tasks_frozen);
+ 	return ret;
+ }
+ 
+diff --git a/kernel/power/process.c b/kernel/power/process.c
+index cae81a87cc91e..66ac067d9ae64 100644
+--- a/kernel/power/process.c
++++ b/kernel/power/process.c
+@@ -194,8 +194,6 @@ void thaw_processes(void)
+ 	__usermodehelper_set_disable_depth(UMH_FREEZING);
+ 	thaw_workqueues();
+ 
+-	cpuset_wait_for_hotplug();
+-
+ 	read_lock(&tasklist_lock);
+ 	for_each_process_thread(g, p) {
+ 		/* No other threads should have PF_SUSPEND_TASK set */
+-- 
+2.43.0
+
