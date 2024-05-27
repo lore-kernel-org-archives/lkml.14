@@ -1,99 +1,89 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA1643AC1
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EF48BF0;
+	Mon, 27 May 2024 09:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716801240; cv=none; b=cIu3//vaLQR+SVU7uVVrfdK1AQjsRynn1L1GCU0Fe/4+ZjQ90ekSzzWerBy/ffNmHENVMexdhkD6ZVYTEQWGZLS2VTIkOTDudkZ8OPkmj1+BMJCFtx+WfrzEsZM6Hy9xHz+r/CbT6nfa/qQLGg/xmo5nt0oKrZGNkhmHdHlqG+U=
+	t=1716801361; cv=none; b=ii9hYE9MR33mdhO8Oh6oGVc1LACRgOFT5GScxkv/YUgNDuskRLvTmbHQEfvgBOcQw2ORme0kG0x86ZEGb/fUvPCrLYxINDq5e91DrOpCGTI4eilpBVegQJ/YjGog7PlveIvStvG691AOyInF98TtM94DY0oAhJArh1EkMeC5hHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716801240; c=relaxed/simple;
-	bh=JsRHev1Ql+06KUhRx46fWyhIYNRL9SDHIC1akpSgRY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TVyW3rBS20xO+sV5hxeXekIEisJdOEr6yGpsmwipm1iReQ4b8pO3H4TC5jRj1piT0RLI4xPqHYBWh9kdZDwOh1q+H9Rhcksj25gPJJ5GC55Z+KCjqxRyVNvUiB6YLl8dxbgvNlgRTAQQyCXhyCbMoMdfT0kMcdmEJoj1oiz0iXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KGJ/1+qU; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716801361; c=relaxed/simple;
+	bh=kHuxnuK7Desk/N+IPyXzbt83uiVcs+xURs8rC8z/8mE=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=WwidwlTe1afspgxmncNT9WGdx388QLQ9D4G985SI1uM14M5atKE8JIOm+AnNjlyrC3mwGyB+BROBjN7xWriUadNotpHaONbYhiALCE20v4CxcGS/IcHES8BNCOhZ7c1lAS1nHjgFy/7EmYH4GVlkF/sG24eRDv9INKU6hHY1HKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwLi7YXk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KGJ/1+qU"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-529597d77b4so2935553e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:13:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716801236; x=1717406036; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fU7wt3RoJ/ZRhVzR1OvMGpUkhRA7vQQ7+ZvSLIkQePg=;
-        b=KGJ/1+qUKQdBNzF9JckUusqTx1HeNcYOaHewHYClltozMuVmv1UT72zlzwOjOFIkxu
-         vxghFXG9U3FNuzfTpCo6LrnmunwUy9arI8SUgiFu0Zo1NbCvf7UKrT3h1Erui/H8cz6C
-         DR1wXro6IN9J9hdU+iSxKrqbQijqGyQu6E8p1r6Gz/OeeRb2W+H7z4Cp2VO6NQxa3k3i
-         NzEIfI+VL6LPBA7NaxxsTCDhFxJt8I2DM6sNiZhn/dB3aRe/BZCKHXFD0P409G1jujdj
-         hjF/4y3ZsJeJG46aMZ78niI4eShy30uZAWcSB1b4+Rs32CPcV8C+4SpkyqnngCGX/IgF
-         2rOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716801236; x=1717406036;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fU7wt3RoJ/ZRhVzR1OvMGpUkhRA7vQQ7+ZvSLIkQePg=;
-        b=wNa3Q3eUgKL3k5u6vZMAp2LeVQlbatytBX1TwYhLwwAZRFsGsSEnfIkzib1q0Cx7Mq
-         fJp/iUyIdAiYuXuQTlMXjuruSPZz76sPSrQp35sJBXh2s7z3R/32M0KYtvzln9/RlnpQ
-         5S77eYgh7ZL1QfNBx/TjtiH/e8hpCyA1d0Y4Cu7Gs+qFSHH+vXISEiNK/d1/ULSuuKmi
-         pDz3oZlYSqRcHNhj51DnYkpKLiWz7EhlUNwl6DdyKQ4hYriMPO6PkIpmWcnx997SjtO9
-         s1rWjubDRcdi3ikSSaKOdiGt/xmRufEUxpjg0Qs2wPrlqTdtid89FdUpv/cvBzyAuRt/
-         IOcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVekSGJP2Fy/xZxRPMWcCoOqbWDW6QqmnabVjxaAHgT1jq5Nj0F40XsiN5pzgiAOPI42VDkh+KpHm3kKungoikkE6UPOSQedUIV6wP1
-X-Gm-Message-State: AOJu0YzweJ00wjbyQ+LuBiHjqPG2fpIGJpCBV8GX/65iasDD618bsyZl
-	ATJ3dnj+iwHIfjmPbFy4X0jOolVnvrdpYs+R7VhIJTrDIO/3pjQ6FgA1GhnK2WI=
-X-Google-Smtp-Source: AGHT+IFVa65amKWg0sDvxcneN95XLq2oAjYgTo5y33Nlr/ZBV8Jie8NEAzCjb5dV3ztVi9w84Tah4A==
-X-Received: by 2002:a19:7502:0:b0:524:68f8:9566 with SMTP id 2adb3069b0e04-52964bb2c9dmr4994304e87.30.1716801236570;
-        Mon, 27 May 2024 02:13:56 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5296ee4ad1asm500411e87.95.2024.05.27.02.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 02:13:56 -0700 (PDT)
-Date: Mon, 27 May 2024 12:13:54 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Kuogee Hsieh <quic_khsieh@quicinc.com>
-Subject: Re: [PATCH 3/3] phy: qcom: qmp-combo: Switch from V6 to V6 N4
- register offsets
-Message-ID: <zbveo2mdozzumc3gekvochcemfhy3e4eo4dc3sgyfivlxpjbzx@if6svye4wvhz>
-References: <20240527-x1e80100-phy-qualcomm-combo-fix-dp-v1-0-be8a0b882117@linaro.org>
- <20240527-x1e80100-phy-qualcomm-combo-fix-dp-v1-3-be8a0b882117@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwLi7YXk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1606FC2BBFC;
+	Mon, 27 May 2024 09:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716801361;
+	bh=kHuxnuK7Desk/N+IPyXzbt83uiVcs+xURs8rC8z/8mE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=cwLi7YXkzWx8/v9pWLl+jtmGUvSB6Z+qbFloVH2yh4K+TaJzoBZioSSv4HPg8ENMA
+	 20B3oDLR2Kj+p6dg2G35l3bcu2oDnobqx1tRAI9/RcApjyofE+yIgDZm5iToWZf6+Y
+	 LYSzYfUiB7iMR0o/KRfTZET8t/KU8hFBKkAjk7iPcrHQbn5tsZmHSEVVCoZiaSgvAx
+	 797MFRDEtNJVYsqtcRCflI12nO8a51ap25z1nbETK51OGtygPXFZ6kNk1Tu3jSake8
+	 QVrV144SZJixGWArl0ugeuGIjvKNWMSvCzNYrlVTKoGBVTJB0vWiuNrBGXuHooEQrj
+	 Bd1oV6ygyrlkg==
+Date: Mon, 27 May 2024 04:16:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240527-x1e80100-phy-qualcomm-combo-fix-dp-v1-3-be8a0b882117@linaro.org>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: imx@lists.linux.dev, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, 
+ Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org, 
+ Thomas Gleixner <tglx@linutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Lucas Stach <l.stach@pengutronix.de>
+In-Reply-To: <20240527083402.30895-2-alexander.stein@ew.tq-group.com>
+References: <20240527083402.30895-1-alexander.stein@ew.tq-group.com>
+ <20240527083402.30895-2-alexander.stein@ew.tq-group.com>
+Message-Id: <171680135999.3825292.7751628816521294257.robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: interrupt-controller:
+ fsl,irqsteer: Add imx8mp/imx8qxp support
 
-On Mon, May 27, 2024 at 10:20:37AM +0300, Abel Vesa wrote:
-> Currently, none of the X1E80100 supported boards upstream have enabled
-> DP. As for USB, the reason it is not broken when it's obvious that the
-> offsets are wrong is because the only difference with respect to USB is
-> the difference in register name. The V6 uses QPHY_V6_PCS_CDR_RESET_TIME
-> while V6 N4 uses QPHY_V6_N4_PCS_RX_CONFIG. Now, in order for the DP to
-> work, the DP serdes tables need to be added as they have different
-> values for V6 N4 when compared to V6 ones, even though they use the same
-> V6 offsets. While at it, switch swing and pre-emphasis tables to V6 as
-> well.
+
+On Mon, 27 May 2024 10:34:01 +0200, Alexander Stein wrote:
+> Some SoC like i.MX8MP or i.MX8QXP use a power-domain for this IP. Add
+> SoC-specific compatibles, which also requires a power-domain.
 > 
-> Fixes: d7b3579f84f7 ("phy: qcom-qmp-combo: Add x1e80100 USB/DP combo phys")
-> Co-developed-by: Kuogee Hsieh <quic_khsieh@quicinc.com>
-> Signed-off-by: Kuogee Hsieh <quic_khsieh@quicinc.com>
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 > ---
->  drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 189 +++++++++++++++++++++++++-----
->  drivers/phy/qualcomm/phy-qcom-qmp.h       |   2 +
->  2 files changed, 162 insertions(+), 29 deletions(-)
+>  .../interrupt-controller/fsl,irqsteer.yaml    | 23 ++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-With best wishes
-Dmitry
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml:85:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240527083402.30895-2-alexander.stein@ew.tq-group.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
