@@ -1,40 +1,40 @@
 Received: from mail02.habana.ai (habanamailrelay02.habana.ai [62.90.112.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC93615F3FC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8EC15F3F7
 	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.90.112.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716822161; cv=none; b=u2X6ZRwJqDUiO8IuLxKfwEUI+dR20zyg2dA3i2cQc/PUn3W0sw5G61R1m2wvYwNtdXTODywlc3EwGU8VpMAUe/KncK9M0Mn14qWMHcOXrNXBMLA7nDDKFPRpwgZzHtBZTorjAbtFUbEY1aU725LZru4Fo9S/Pe5nSxv/yYzvHrY=
+	t=1716822161; cv=none; b=spk5NDEZdIamU+bWLDw2takrHZETsx+HdMHEPXTOLBknthJZxfDw0MUUEStfYEQnosya52usFM3OkkkU7eJOBWBH6ZiiXXPm7Fki8H6DW1eskG00wPpGRfSh1SW+Gkez/ZLqT+eqPhzKr0QTlheQsfKwvSFl77ow8qPuW/WUbSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716822161; c=relaxed/simple;
-	bh=RWXMU3GyJCU75uomT+8y1qOi6l/HEYh3drr95SCacsU=;
+	bh=mO1wTBrjD0PxLOyQ4AqovbqlEFzmz5ozW7rB391zFZg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g1v3TVY0LOZMDBsRJF8bYHfDqyPBvdHAXg3vBRASBgMEXFa2EpzbSv8LURA2rPsUQfaeWqszKROA+TYu0mRGxx28kR6OScMCaRofkqzkMSs6BXRF3EXFckaThyoblvFEhmudaMEtk7uz+craM4EOf3sMz2Kcv/H7t4PxgZza9BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=wel+q3Hg; arc=none smtp.client-ip=62.90.112.121
+	 MIME-Version; b=lYJT0Qb21ljlbc+0WN2vfaBs/vp6jB/xiuBrgU4s/EEujf7161Jm6VPfI0715/SbS82q7LXZygzvVK8fMaiZYQ4a+yQWZsb5LbemvpcZ5G1cMfQk5mF+ywSmnFb66boq5Mj7dHjcpY8hI+rXETVjrb3Ly8mSRUZJhZDe4/A+usQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=cURU/Aju; arc=none smtp.client-ip=62.90.112.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="wel+q3Hg"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="cURU/Aju"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716822151; bh=RWXMU3GyJCU75uomT+8y1qOi6l/HEYh3drr95SCacsU=;
+	t=1716822151; bh=mO1wTBrjD0PxLOyQ4AqovbqlEFzmz5ozW7rB391zFZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=wel+q3HgXrc/bEV8os0BtkKGeV5x5N2XLFJBMj19VHjQ916hKFtUmleHzdcXnHMft
-	 BfEciLuwqXQXqoPcLSAU9uny37EyszoqQNda/5nhP5Z469ckni8EpZg/wqgabsP9Wk
-	 QTVXAvgBzlDf0dLvMTIdhhlINzU66hqYA1RdkmYzwo/kD7WpbfoMRwExgHWVvp5p05
-	 XRcQmSQC+vcMjbr6e3VeRr29J4s/x/6Ukrtm4ekTT9aVRRmoteyHAFDk3FFm3JX67S
-	 C5Mtjios1KjfHAlOOY3iRwmYz34ruxKWcrk2+Ks0pWNpVVyNk46Fc0LufiKkBfSe6+
-	 cxyhkKoWeTFmw==
+	b=cURU/AjuxgUwR+8nWz1e4LtyXs/e1DBcpK1wFmxlXep0ObfgsF5ZvgtPS+d1JnRxA
+	 IDCRW/4Q3AqLNCwF8+pE/UIHPPfOy17xNm2u4UmbHubR8HHKn/mLwi24TOgL9ARuY3
+	 SgAxj0YCbgtYPDjAPpVD0+tRVCv5Mwlr//PIZFxz92HZhXJ/E9QzANce44CgngQVa6
+	 n3GgTwg7LvtvysfhUUHW4uv3O/Ke6DreKA38CmDl//SOQWDafxsMm7tE8Dk+I9kQwK
+	 a95TKV6v7BESJqVpzvIKI0wBbPga4hVmshbGBnMIQd/H+b+2L1NRqxgzYdbNlfLXb+
+	 SV8Zm+6KAnVaw==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RF2PiX1954007;
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RF2PiZ1954007;
 	Mon, 27 May 2024 18:02:26 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Rakesh Ughreja <rughreja@habana.ai>
-Subject: [PATCH 6/8] accel/habanalabs/gaudi2: unsecure edma max outstanding register
-Date: Mon, 27 May 2024 18:02:22 +0300
-Message-Id: <20240527150224.1953969-6-obitton@habana.ai>
+Cc: Tal Cohen <talcohen@habana.ai>
+Subject: [PATCH 8/8] accel/habanalabs: disable EQ interrupt after disabling pci
+Date: Mon, 27 May 2024 18:02:24 +0300
+Message-Id: <20240527150224.1953969-8-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527150224.1953969-1-obitton@habana.ai>
 References: <20240527150224.1953969-1-obitton@habana.ai>
@@ -46,29 +46,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Rakesh Ughreja <rughreja@habana.ai>
+From: Tal Cohen <talcohen@habana.ai>
 
-Netowrk EDMAs uses more outstanding transfers so this needs to be
-programmed by EDMA firmware.
+When sending disable pci msg towards firmware, there is a
+possibility that an EQ packet is already pending,
+disabling EQ interrupt will prevent this from happening.
+The interrupt will be re-enabled after reset.
 
-Signed-off-by: Rakesh Ughreja <rughreja@habana.ai>
+Signed-off-by: Tal Cohen <talcohen@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- drivers/accel/habanalabs/gaudi2/gaudi2_security.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/accel/habanalabs/common/device.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2_security.c b/drivers/accel/habanalabs/gaudi2/gaudi2_security.c
-index 34bf80c5a44b..307ccb912ccd 100644
---- a/drivers/accel/habanalabs/gaudi2/gaudi2_security.c
-+++ b/drivers/accel/habanalabs/gaudi2/gaudi2_security.c
-@@ -479,6 +479,7 @@ static const u32 gaudi2_pb_dcr0_edma0_unsecured_regs[] = {
- 	mmDCORE0_EDMA0_CORE_CTX_TE_NUMROWS,
- 	mmDCORE0_EDMA0_CORE_CTX_IDX,
- 	mmDCORE0_EDMA0_CORE_CTX_IDX_INC,
-+	mmDCORE0_EDMA0_CORE_WR_COMP_MAX_OUTSTAND,
- 	mmDCORE0_EDMA0_CORE_RD_LBW_RATE_LIM_CFG,
- 	mmDCORE0_EDMA0_QM_CQ_CFG0_0,
- 	mmDCORE0_EDMA0_QM_CQ_CFG0_1,
+diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
+index 5ca7014def00..78e65c6b76a7 100644
+--- a/drivers/accel/habanalabs/common/device.c
++++ b/drivers/accel/habanalabs/common/device.c
+@@ -1502,10 +1502,11 @@ static void send_disable_pci_access(struct hl_device *hdev, u32 flags)
+ 		if (hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0))
+ 			return;
+ 
+-		/* verify that last EQs are handled before disabled is set */
++		/* disable_irq also generates sync irq, this verifies that last EQs are handled
++		 * before disabled is set. The IRQ will be enabled again in request_irq call.
++		 */
+ 		if (hdev->cpu_queues_enable)
+-			synchronize_irq(pci_irq_vector(hdev->pdev,
+-					hdev->asic_prop.eq_interrupt_id));
++			disable_irq(pci_irq_vector(hdev->pdev, hdev->asic_prop.eq_interrupt_id));
+ 	}
+ }
+ 
 -- 
 2.34.1
 
