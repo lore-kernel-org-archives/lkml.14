@@ -1,40 +1,40 @@
-Received: from mail02.habana.ai (habanamailrelay.habana.ai [213.57.90.13])
+Received: from mail02.habana.ai (habanamailrelay02.habana.ai [62.90.112.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6E715E5C6
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 11:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.57.90.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3C415E5CA
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 11:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.90.112.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716810527; cv=none; b=K3X0BmesUWmsdOEMFPEdYxMKVbu1Us65qm3jf78BHGkk87nECoFZXePUz1j80dUrI0UAsE2QumPk5FG2qCujKH2JTCMnFaY0u4E7m3fLvmgX1/5b3yFHGMi9AMZnJJ+q1E5fHwUcbA01gOLY1cuvItPwtrR6R54osD/aWZ5xB74=
+	t=1716810530; cv=none; b=a2Mr8ZtgnKwsl3hCkNKtpT+2Sfgoh78QGrgxAkQdvtwZPQ6/hLykBqRHf/5MepGXHMu+WomyfGhUnfqymDY+uJoYsrRbe1mtCWK4JjA3DVcm0Ig/7b9V8DFQ0mtj3kakkuesssvrJlgLlPdvne/cj8aqbQcQ5SSTkshWOd5kBug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716810527; c=relaxed/simple;
-	bh=mp5DAl21UuJcDlAVTYNSw0SqQLrU/a4V6eKgkuG5J8Q=;
+	s=arc-20240116; t=1716810530; c=relaxed/simple;
+	bh=jxHY8fiURwbUDxH2EqODM/mfzNkmtKBp+RbUF5zNYpk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T9AnokWO0v05yB58qCPE27a9rotEnR9kcmVFWESPFurodlXG6hrGyeNJIdMMlKQ/2zeu6/085oY8jqbnBglHJbmFPhhxiT0yrAkG/Mkbx+CCUd0ViixRiCpUxAJcqpPWbSloq6eCaGiXqW8U85bKfweUoixIQE3BPaB0d780hnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=gU3sezJV; arc=none smtp.client-ip=213.57.90.13
+	 MIME-Version; b=Rndo/f9HlZMt+yWGNFlkYI3LNrITwnkeLqP9D6JykkU+O8YhriDhDVQSQedig3ryDcctglH8GW5mUS6ASClTsqBOSRMhfZcL+TAAhi2W+L5bXFpXUf0yHMf+NOxOjHl3sg9hus1E3VHYINLt8SXsRg2uKbc3zWsqLF5X8sohM0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=UkLH1els; arc=none smtp.client-ip=62.90.112.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="gU3sezJV"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="UkLH1els"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716810492; bh=mp5DAl21UuJcDlAVTYNSw0SqQLrU/a4V6eKgkuG5J8Q=;
+	t=1716810481; bh=jxHY8fiURwbUDxH2EqODM/mfzNkmtKBp+RbUF5zNYpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gU3sezJVjMC+rZyyE2IDiEiPjdsfNX87Jxr+wY/gezbcd9j9FFyUzPrRVrXTAR1n4
-	 DcF9m4YsVwW8UCj8vOVqdm0EsACpMYTDGWXxsSts63egR42iidyWg3V9LPdoBwSsrI
-	 JsI/NwlMRR0kXhh4vN8fjowwUWW7nrnTgcPZ1f+qo9q94cMGaDYjcnuzhQrdob1ERz
-	 NkaDjKcfW3+6Kpt0ZBVN8I0CGM9RY/mT62SeCD3SIac6I+90w6MVS0t7fWt+cdXOqA
-	 lO2n+0jcA7O6YKkPG4r6B4/hQ+7J7iJt5OqCGpuBtqRdt7kNvu900hP4VjMZ9nWlVC
-	 1FYta+dXIvrow==
+	b=UkLH1elshxJ5W4W6FS1O7IH1dmROmE8EDoeqzOuNqOvvPk68FF7jwbhKl/KjEp4Vz
+	 tKZeyMoYxZT++RI++swWSvn0dhGQRK1XEvaNhEb5H1uB2GBzeHG/d9SAERrpECmHq+
+	 J38xqAAahM+6agTZ+Wvx2lgMQh8FGndR1t9LRQXY887Ry4Bq/tOlS9607Ky00oKDvS
+	 njLW4p8H6Wz0unRCWoYwpnwulUOMo6C1GWQJ4NzyGASUH1Hp6qAoERt74tBcyy3rld
+	 8JNgitmr1UBIPOpmxZhPZDEYUucAxgF2Y/lQWgBG4wXvqPrvTHtwubu+WSrY5Nypnb
+	 vIK0Nu/BLVDvQ==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RBltNn1919357;
-	Mon, 27 May 2024 14:47:56 +0300
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RBltNk1919357;
+	Mon, 27 May 2024 14:47:55 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Farah Kassabri <fkassabri@habana.ai>
-Subject: [PATCH 9/9] accel/habanalabs: add heartbeat debug info
-Date: Mon, 27 May 2024 14:47:46 +0300
-Message-Id: <20240527114746.1919292-9-obitton@habana.ai>
+Cc: Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 6/9] accel/habanalabs: use parent device for trace events
+Date: Mon, 27 May 2024 14:47:43 +0300
+Message-Id: <20240527114746.1919292-6-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527114746.1919292-1-obitton@habana.ai>
 References: <20240527114746.1919292-1-obitton@habana.ai>
@@ -46,126 +46,196 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Farah Kassabri <fkassabri@habana.ai>
+From: Tomer Tayar <ttayar@habana.ai>
 
-It is hard to debug the reason for heartbeat check failures.
-As an attempt to ease this task, this patch will provide more
-information when this failure happens.
-Heartbeat checks the communication with FW, so printing
-the CPU queue pi/ci and the counter of how many times that event
-was received would help in debugging the issue.
+Trace events might still be recorded after the accel device is released,
+while the device name is no longer available.
+Modify the trace functions to use the parent device instead, which is
+available at that point and still informative as the device name.
 
-Signed-off-by: Farah Kassabri <fkassabri@habana.ai>
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- drivers/accel/habanalabs/common/device.c     | 12 ++++++++++++
- drivers/accel/habanalabs/common/habanalabs.h | 15 ++++++++++++++-
- drivers/accel/habanalabs/gaudi2/gaudi2.c     |  3 +++
- 3 files changed, 29 insertions(+), 1 deletion(-)
+ drivers/accel/habanalabs/common/device.c      | 25 ++++++++++---------
+ drivers/accel/habanalabs/common/firmware_if.c | 10 +++++---
+ drivers/accel/habanalabs/common/mmu/mmu.c     |  5 ++--
+ drivers/accel/habanalabs/common/pci/pci.c     |  4 +--
+ 4 files changed, 24 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
-index bb3f44392908..35502e938b5d 100644
+index 087bbb1778e5..bb3f44392908 100644
 --- a/drivers/accel/habanalabs/common/device.c
 +++ b/drivers/accel/habanalabs/common/device.c
-@@ -1052,12 +1052,22 @@ static bool is_pci_link_healthy(struct hl_device *hdev)
- static bool hl_device_eq_heartbeat_received(struct hl_device *hdev)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
-+	u32 cpu_q_id;
- 
- 	if (!prop->cpucp_info.eq_health_check_supported)
- 		return true;
- 
- 	if (!hdev->eq_heartbeat_received) {
-+		cpu_q_id = hdev->heartbeat_debug_info.cpu_queue_id;
-+
- 		dev_err(hdev->dev, "EQ heartbeat event was not received!\n");
-+
-+		dev_err(hdev->dev, "Heartbeat events counter: %u, Q_PI: %u, Q_CI: %u, EQ CI: %u, EQ prev: %u\n",
-+				hdev->heartbeat_debug_info.heartbeat_event_counter,
-+				hdev->kernel_queues[cpu_q_id].pi,
-+				atomic_read(&hdev->kernel_queues[cpu_q_id].ci),
-+				hdev->event_queue.ci,
-+				hdev->event_queue.prev_eqe_index);
- 		return false;
+@@ -130,8 +130,8 @@ static void *hl_dma_alloc_common(struct hl_device *hdev, size_t size, dma_addr_t
  	}
  
-@@ -1138,6 +1148,8 @@ static int device_late_init(struct hl_device *hdev)
- 	hdev->high_pll = hdev->asic_prop.high_pll;
+ 	if (trace_habanalabs_dma_alloc_enabled() && !ZERO_OR_NULL_PTR(ptr))
+-		trace_habanalabs_dma_alloc(hdev->dev, (u64) (uintptr_t) ptr, *dma_handle, size,
+-						caller);
++		trace_habanalabs_dma_alloc(&(hdev)->pdev->dev, (u64) (uintptr_t) ptr, *dma_handle,
++						size, caller);
  
- 	if (hdev->heartbeat) {
-+		hdev->heartbeat_debug_info.heartbeat_event_counter = 0;
-+
- 		/*
- 		 * Before scheduling the heartbeat driver will check if eq event has received.
- 		 * for the first schedule we need to set the indication as true then for the next
-diff --git a/drivers/accel/habanalabs/common/habanalabs.h b/drivers/accel/habanalabs/common/habanalabs.h
-index 55495861f432..5e9f54ca336a 100644
---- a/drivers/accel/habanalabs/common/habanalabs.h
-+++ b/drivers/accel/habanalabs/common/habanalabs.h
-@@ -71,7 +71,7 @@ struct hl_fpriv;
+ 	return ptr;
+ }
+@@ -152,7 +152,7 @@ static void hl_asic_dma_free_common(struct hl_device *hdev, size_t size, void *c
+ 		break;
+ 	}
  
- #define HL_DEVICE_TIMEOUT_USEC		1000000 /* 1 s */
+-	trace_habanalabs_dma_free(hdev->dev, store_cpu_addr, dma_handle, size, caller);
++	trace_habanalabs_dma_free(&(hdev)->pdev->dev, store_cpu_addr, dma_handle, size, caller);
+ }
  
--#define HL_HEARTBEAT_PER_USEC		5000000 /* 5 s */
-+#define HL_HEARTBEAT_PER_USEC		10000000 /* 10 s */
+ void *hl_asic_dma_alloc_coherent_caller(struct hl_device *hdev, size_t size, dma_addr_t *dma_handle,
+@@ -204,15 +204,15 @@ int hl_dma_map_sgtable_caller(struct hl_device *hdev, struct sg_table *sgt,
+ 		return 0;
  
- #define HL_PLL_LOW_JOB_FREQ_USEC	5000000 /* 5 s */
+ 	for_each_sgtable_dma_sg(sgt, sg, i)
+-		trace_habanalabs_dma_map_page(hdev->dev,
+-				page_to_phys(sg_page(sg)),
+-				sg->dma_address - prop->device_dma_offset_for_host_access,
++		trace_habanalabs_dma_map_page(&(hdev)->pdev->dev,
++					page_to_phys(sg_page(sg)),
++					sg->dma_address - prop->device_dma_offset_for_host_access,
+ #ifdef CONFIG_NEED_SG_DMA_LENGTH
+-				sg->dma_length,
++					sg->dma_length,
+ #else
+-				sg->length,
++					sg->length,
+ #endif
+-				dir, caller);
++					dir, caller);
  
-@@ -3174,6 +3174,16 @@ struct hl_reset_info {
- 	u8		watchdog_active;
- };
+ 	return 0;
+ }
+@@ -247,7 +247,8 @@ void hl_dma_unmap_sgtable_caller(struct hl_device *hdev, struct sg_table *sgt,
  
-+/**
-+ * struct eq_heartbeat_debug_info - stores debug info to be used upon heartbeat failure.
-+ * @heartbeat_event_counter: number of heartbeat events received.
-+ * @cpu_queue_id: used to read the queue pi/ci
-+ */
-+struct eq_heartbeat_debug_info {
-+	u32 heartbeat_event_counter;
-+	u32 cpu_queue_id;
-+};
-+
- /**
-  * struct hl_device - habanalabs device structure.
-  * @pdev: pointer to PCI device, can be NULL in case of simulator device.
-@@ -3262,6 +3272,7 @@ struct hl_reset_info {
-  * @clk_throttling: holds information about current/previous clock throttling events
-  * @captured_err_info: holds information about errors.
-  * @reset_info: holds current device reset information.
-+ * @heartbeat_debug_info: counters used to debug heartbeat failures.
-  * @irq_affinity_mask: mask of available CPU cores for user and decoder interrupt handling.
-  * @stream_master_qid_arr: pointer to array with QIDs of master streams.
-  * @fw_inner_major_ver: the major of current loaded preboot inner version.
-@@ -3452,6 +3463,8 @@ struct hl_device {
+ 	if (trace_habanalabs_dma_unmap_page_enabled()) {
+ 		for_each_sgtable_dma_sg(sgt, sg, i)
+-			trace_habanalabs_dma_unmap_page(hdev->dev, page_to_phys(sg_page(sg)),
++			trace_habanalabs_dma_unmap_page(&(hdev)->pdev->dev,
++					page_to_phys(sg_page(sg)),
+ 					sg->dma_address - prop->device_dma_offset_for_host_access,
+ #ifdef CONFIG_NEED_SG_DMA_LENGTH
+ 					sg->dma_length,
+@@ -2593,7 +2594,7 @@ inline u32 hl_rreg(struct hl_device *hdev, u32 reg)
+ 	u32 val = readl(hdev->rmmio + reg);
  
- 	struct hl_reset_info		reset_info;
+ 	if (unlikely(trace_habanalabs_rreg32_enabled()))
+-		trace_habanalabs_rreg32(hdev->dev, reg, val);
++		trace_habanalabs_rreg32(&(hdev)->pdev->dev, reg, val);
  
-+	struct eq_heartbeat_debug_info	heartbeat_debug_info;
-+
- 	cpumask_t			irq_affinity_mask;
+ 	return val;
+ }
+@@ -2611,7 +2612,7 @@ inline u32 hl_rreg(struct hl_device *hdev, u32 reg)
+ inline void hl_wreg(struct hl_device *hdev, u32 reg, u32 val)
+ {
+ 	if (unlikely(trace_habanalabs_wreg32_enabled()))
+-		trace_habanalabs_wreg32(hdev->dev, reg, val);
++		trace_habanalabs_wreg32(&(hdev)->pdev->dev, reg, val);
  
- 	u32				*stream_master_qid_arr;
-diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-index 962b7fcd4318..08276f03c80f 100644
---- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
-+++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-@@ -3796,6 +3796,8 @@ static int gaudi2_sw_init(struct hl_device *hdev)
- 	if (rc)
- 		goto special_blocks_free;
+ 	writel(val, hdev->rmmio + reg);
+ }
+diff --git a/drivers/accel/habanalabs/common/firmware_if.c b/drivers/accel/habanalabs/common/firmware_if.c
+index b5b960ce4ebd..d1a1d601bde9 100644
+--- a/drivers/accel/habanalabs/common/firmware_if.c
++++ b/drivers/accel/habanalabs/common/firmware_if.c
+@@ -8,6 +8,7 @@
+ #include "habanalabs.h"
+ #include <linux/habanalabs/hl_boot_if.h>
  
-+	hdev->heartbeat_debug_info.cpu_queue_id = GAUDI2_QUEUE_ID_CPU_PQ;
-+
++#include <linux/pci.h>
+ #include <linux/firmware.h>
+ #include <linux/crc32.h>
+ #include <linux/slab.h>
+@@ -1803,7 +1804,7 @@ static void hl_fw_dynamic_send_cmd(struct hl_device *hdev,
+ 	val = FIELD_PREP(COMMS_COMMAND_CMD_MASK, cmd);
+ 	val |= FIELD_PREP(COMMS_COMMAND_SIZE_MASK, size);
+ 
+-	trace_habanalabs_comms_send_cmd(hdev->dev, comms_cmd_str_arr[cmd]);
++	trace_habanalabs_comms_send_cmd(&hdev->pdev->dev, comms_cmd_str_arr[cmd]);
+ 	WREG32(le32_to_cpu(dyn_regs->kmd_msg_to_cpu), val);
+ }
+ 
+@@ -1861,7 +1862,7 @@ static int hl_fw_dynamic_wait_for_status(struct hl_device *hdev,
+ 
+ 	dyn_regs = &fw_loader->dynamic_loader.comm_desc.cpu_dyn_regs;
+ 
+-	trace_habanalabs_comms_wait_status(hdev->dev, comms_sts_str_arr[expected_status]);
++	trace_habanalabs_comms_wait_status(&hdev->pdev->dev, comms_sts_str_arr[expected_status]);
+ 
+ 	/* Wait for expected status */
+ 	rc = hl_poll_timeout(
+@@ -1878,7 +1879,8 @@ static int hl_fw_dynamic_wait_for_status(struct hl_device *hdev,
+ 		return -EIO;
+ 	}
+ 
+-	trace_habanalabs_comms_wait_status_done(hdev->dev, comms_sts_str_arr[expected_status]);
++	trace_habanalabs_comms_wait_status_done(&hdev->pdev->dev,
++						comms_sts_str_arr[expected_status]);
+ 
+ 	/*
+ 	 * skip storing FW response for NOOP to preserve the actual desired
+@@ -1952,7 +1954,7 @@ int hl_fw_dynamic_send_protocol_cmd(struct hl_device *hdev,
+ {
+ 	int rc;
+ 
+-	trace_habanalabs_comms_protocol_cmd(hdev->dev, comms_cmd_str_arr[cmd]);
++	trace_habanalabs_comms_protocol_cmd(&hdev->pdev->dev, comms_cmd_str_arr[cmd]);
+ 
+ 	/* first send clear command to clean former commands */
+ 	rc = hl_fw_dynamic_send_clear_cmd(hdev, fw_loader);
+diff --git a/drivers/accel/habanalabs/common/mmu/mmu.c b/drivers/accel/habanalabs/common/mmu/mmu.c
+index d3eaab908457..166c7da8b937 100644
+--- a/drivers/accel/habanalabs/common/mmu/mmu.c
++++ b/drivers/accel/habanalabs/common/mmu/mmu.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/slab.h>
++#include <linux/pci.h>
+ 
+ #include "../habanalabs.h"
+ 
+@@ -262,7 +263,7 @@ int hl_mmu_unmap_page(struct hl_ctx *ctx, u64 virt_addr, u32 page_size, bool flu
+ 		mmu_funcs->flush(ctx);
+ 
+ 	if (trace_habanalabs_mmu_unmap_enabled() && !rc)
+-		trace_habanalabs_mmu_unmap(hdev->dev, virt_addr, 0, page_size, flush_pte);
++		trace_habanalabs_mmu_unmap(&hdev->pdev->dev, virt_addr, 0, page_size, flush_pte);
+ 
+ 	return rc;
+ }
+@@ -349,7 +350,7 @@ int hl_mmu_map_page(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr, u32 page_s
+ 	if (flush_pte)
+ 		mmu_funcs->flush(ctx);
+ 
+-	trace_habanalabs_mmu_map(hdev->dev, virt_addr, phys_addr, page_size, flush_pte);
++	trace_habanalabs_mmu_map(&hdev->pdev->dev, virt_addr, phys_addr, page_size, flush_pte);
+ 
  	return 0;
  
- special_blocks_free:
-@@ -9777,6 +9779,7 @@ static u16 event_id_to_engine_id(struct hl_device *hdev, u16 event_type)
+diff --git a/drivers/accel/habanalabs/common/pci/pci.c b/drivers/accel/habanalabs/common/pci/pci.c
+index 191e0e3cf3a5..81cbd8697d4c 100644
+--- a/drivers/accel/habanalabs/common/pci/pci.c
++++ b/drivers/accel/habanalabs/common/pci/pci.c
+@@ -123,7 +123,7 @@ int hl_pci_elbi_read(struct hl_device *hdev, u64 addr, u32 *data)
+ 		pci_read_config_dword(pdev, mmPCI_CONFIG_ELBI_DATA, data);
  
- static void hl_eq_heartbeat_event_handle(struct hl_device *hdev)
- {
-+	hdev->heartbeat_debug_info.heartbeat_event_counter++;
- 	hdev->eq_heartbeat_received = true;
- }
+ 		if (unlikely(trace_habanalabs_elbi_read_enabled()))
+-			trace_habanalabs_elbi_read(hdev->dev, (u32) addr, val);
++			trace_habanalabs_elbi_read(&hdev->pdev->dev, (u32) addr, val);
+ 
+ 		return 0;
+ 	}
+@@ -186,7 +186,7 @@ static int hl_pci_elbi_write(struct hl_device *hdev, u64 addr, u32 data)
+ 
+ 	if ((val & PCI_CONFIG_ELBI_STS_MASK) == PCI_CONFIG_ELBI_STS_DONE) {
+ 		if (unlikely(trace_habanalabs_elbi_write_enabled()))
+-			trace_habanalabs_elbi_write(hdev->dev, (u32) addr, val);
++			trace_habanalabs_elbi_write(&hdev->pdev->dev, (u32) addr, val);
+ 		return 0;
+ 	}
  
 -- 
 2.34.1
