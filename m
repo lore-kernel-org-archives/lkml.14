@@ -1,99 +1,89 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2E361FE9;
-	Mon, 27 May 2024 18:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CD91D53F
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 18:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716832955; cv=none; b=vDLoIlly27Y122iRE8mRISwmhFcQuQ/xiN3h+kVohFqHsYCEpaQes4HoJ8BiyjtYpURlm/K6+hOFE2VpI1PQWvF4fIjRyCgfFN08nH9Xl0gFFbLJ7KLFNCHvCjox5JcvEMhsH20NH03IVbn/koj3ZMw0RDpvtL4ovjX8vjJaJf8=
+	t=1716833209; cv=none; b=ZXHbEdzBHeNcPbe/AFbQRU6Y1UBX6/XHhn2uwVjxfOGkUJY748tOnv45Ldd9IMiea6RUm09n4SzgwNHRcFKzYRLML3JgvcuyblMQXcU2/Jt5NAetFudPszP2Rf8lomtluVVy0OUxoCdYV4RinsxZyTKTeqc8UqZEAbrkZz4Zb3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716832955; c=relaxed/simple;
-	bh=wa1L9VoauTTKHEa6vX1CApzuEJe1DfRB/MC0GiWaPWc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=M9GTDlR49vbNOeTn6JcQqWOGd+qa0ISMaVZ9pccI5LdNSGUjQ6oK9MwgOftqShHKbI+PhiiIAasFJLWoyV7Wi4Rg0WKC/pxTRVfIqMr5QHYnsaEGnbPBNgrkbiv1i+6ulEnIX9dealAeTvuoNpkBzQ/CIApwth+nDMKcpkDsfQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Vkj85MON; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716833209; c=relaxed/simple;
+	bh=pzZeJfyni1NMNSarctd7XFqTYT9P+RBcOOvt+eGWGOM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=TO5xsEY0MVcMVsGRGVbREECOIYQnjIQvloNn+d153vYLZLERrepJB12r64oIjJ5vujQBovDEG+VxvFy7088Elm9F6GOeyH8/4uk2xFOkBljdgffQJVYJGAkRV3uMM7d4xqLm6oIRHbSL2JBlg7hHqWDQIH5KDpxmgkHk8RhXsjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com; spf=pass smtp.mailfrom=jubnut.com; dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b=m9OAgr6I; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jubnut.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Vkj85MON"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44RAlher030409;
-	Mon, 27 May 2024 18:02:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=+smRZOrjGfOTzzOqwIb7JZ
-	geZcDu6DdS6uzLgh10RxI=; b=Vkj85MONbnI3KwdC9ctoucvC0gMyVzmHy2Ccp7
-	6ZATlXZXYj7hpQwIl7jvg9aEnezOSFCVWFCykgXS+tN5K5SPcrOt66cpqCgRzLVp
-	+7Rrp3hl4FiEgSeq+fHl1DUCTkzBAO/Whrpn9W1ZeKuZLpPbwEFVHt1C1TkGQQzJ
-	nZIlz/OgofJq1/cXzwgCgn7kRXszWmwpNShEqFG4jkZuYC76zkTdnpnCeE+qbQ9G
-	odNXeBDSykxEwQkZo+jNAnrh05Dnm8LBaWBI/0O2pXffENtbY9TqdY4LyCoE4MqF
-	MgFjd0ENeavY5jRvYYvSkKIOXvzIsGgV6NqGl6Bx1212orTQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yb9yj4dh7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 May 2024 18:02:31 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44RI2UJM009567
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 May 2024 18:02:30 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 27 May
- 2024 11:02:29 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Mon, 27 May 2024 11:02:29 -0700
-Subject: [PATCH] fs: ext4: add missing MODULE_DESCRIPTION()
+	dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b="m9OAgr6I"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Vp3W71TQtz9sS4;
+	Mon, 27 May 2024 20:06:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jubnut.com; s=MBO0001;
+	t=1716833203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dRJfzl+erb4rP0hvVohvOtSHuuZdGY2XJTVv3TRXHpw=;
+	b=m9OAgr6I2btEfKm+dEm4KPEFkDsJQk3ETNE69MsZ4cXYyp4S31oODCR+g0zBWrfKx/eIDC
+	G52/WLXF575JUJH6bP8c6qz0JPCi/dxVGLyX+JVurdzsQqmUNNRPFe9f40VgyQwC0nStp8
+	Vu7gZAoezq5hGQe0XUaDkCdN4Ly+uKezDu8AltOo0QR26gJv27+Hi5pr1ldoUZK3n0l+mR
+	z3VVV38XMLmARwzDojgg8lQ9RNFC+n1sgxaF6+r9QBC6N9qal0bkucfsOmoxTbtQ1nj6Su
+	hPaf8VeYbLxnpkcVdWbzvAa8K2PkGah2nri/ValvbCP6qsyg5eZp3CIn6oxrlw==
+From: Ben Walsh <ben@jubnut.com>
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+ "Dustin L. Howett" <dustin@howett.net>, Kieran Levin <ktl@frame.work>,
+ Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Mario Limonciello
+ <mario.limonciello@amd.com>, chrome-platform@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] platform/chrome: cros_ec_lpc: Correct ACPI name for
+ Framework Laptop
+In-Reply-To: <ZlKPwlF86Oe8OPK9@google.com>
+References: <20240515055631.5775-1-ben@jubnut.com>
+ <20240515055631.5775-6-ben@jubnut.com> <ZkscFnmHeWWma7Nb@google.com>
+ <87jzjk1ibr.fsf@jubnut.com> <Zk_63rrDJFhN1Y1q@google.com>
+ <87cypb12j9.fsf@jubnut.com> <ZlKPwlF86Oe8OPK9@google.com>
+Date: Mon, 27 May 2024 19:06:40 +0100
+Message-ID: <877cff2kpb.fsf@jubnut.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240527-md-fs-ext4-v1-1-07aad5936bb1@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIALTKVGYC/x3MQQqDMBBA0avIrDtgg1HSq5QuEjPRgZqWGZWAe
- HfTLt/i/wOUhEnh0RwgtLPyJ1fcbw2Ms88TIcdqMK3pWmsGXCImRSprhy5aE3tnXQo91OArlLj
- 8Z89XdfBKGMTncf4t3py3govXlQTO8wIB9cznewAAAA==
-To: Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>
-CC: <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Z1wj6_RaWP8OBYbPW8270hS66Edy0niW
-X-Proofpoint-ORIG-GUID: Z1wj6_RaWP8OBYbPW8270hS66Edy0niW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-27_04,2024-05-27_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=882 spamscore=0
- clxscore=1011 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405270148
+Content-Type: text/plain
+X-Rspamd-Queue-Id: 4Vp3W71TQtz9sS4
 
-Fix the 'make W=1' warning:
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/ext4/ext4-inode-test.o
+Tzung-Bi Shih <tzungbi@kernel.org> writes:
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- fs/ext4/inode-test.c | 1 +
- 1 file changed, 1 insertion(+)
+> On Fri, May 24, 2024 at 07:35:22PM +0100, Ben Walsh wrote:
 
-diff --git a/fs/ext4/inode-test.c b/fs/ext4/inode-test.c
-index f0c0fd507fbc..749af7ad4e09 100644
---- a/fs/ext4/inode-test.c
-+++ b/fs/ext4/inode-test.c
-@@ -279,4 +279,5 @@ static struct kunit_suite ext4_inode_test_suite = {
- 
- kunit_test_suites(&ext4_inode_test_suite);
- 
-+MODULE_DESCRIPTION("KUnit test of ext4 inode timestamp decoding");
- MODULE_LICENSE("GPL v2");
+>> I could add a new quirk which provides an alternative ACPI match table
+>> to be used instead of the default. In the default case the match_table
+>> will contain only "GOOG0004" as before. But in the Framework EC case the
+>> match table will be "PNP0C09".
+>
+> I think it doesn't work as the current quirk is handling in
+> cros_ec_lpc_probe() which is after matching.
 
----
-base-commit: 2bfcfd584ff5ccc8bb7acde19b42570414bf880b
-change-id: 20240527-md-fs-ext4-9d52d6959fb6
+I was thinking of a new quirk called CROS_EC_LPC_QUIRK_ACPI_MATCH, and
+putting it in cros_ec_lpc_init(), not cros_ec_lpc_probe(). Do we have to
+do all quirk handling in cros_ec_lpc_probe()?
 
+> My original idea: would it be possible to get the `adev` in cros_ec_lpc_probe()
+> via any lookup API?  If yes, it could still use DMI match and get `adev` if
+> required.
+
+That works; I've tested it.
+
+In this scenario we're not using the existing PNP0C09 platform device,
+which means I can't look at
+/sys/bus/acpi/devices/PNP0C09\:00/physical_node/driver and see the
+driver. Is this OK?
+
+(Note that ACPI_COMPANION_SET() doesn't fix this. You can use
+acpi_bind_one() but that seems more like internal plumbing).
