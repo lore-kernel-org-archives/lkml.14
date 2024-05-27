@@ -1,136 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BDF16E893;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC4E15F403;
 	Mon, 27 May 2024 15:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825476; cv=none; b=bY8Lwtgug0oCEQTCs6cGKQhiR8yq6zihxJ3+ZgQxX32RYjDzxstj/Rh9V1gIW5dqORcM4wZKIfyeUwZO6jvhUX/Y2X1FNtmOYk8ecFfJ0q0Nu80mxjOxfnkjnBk9eouw4F7lntS70SM1MHIn9sFpCb2JDOv4N2XF8tbvqLwMVrU=
+	t=1716825478; cv=none; b=CPZ7Ryc/Lfir5ydAEsgd/+yKs0eeG7+7Mgc0AH/IPQpUg8aIkIb4rQSJ5h5RR8g67a+QAzImhQFft7jZ+IsjDQevCwcFDVW/oIevaTwvnETWpWNTGZW23esEWk5GG49Cs0LSeG32sSLnY+vfTJqsFg4BK2D78k4yz087wjnqMI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825476; c=relaxed/simple;
-	bh=RXItawyunSKwgW8TbTmkLjm06IxAaMojUWhmDVD+9Iw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TTBr7V9X7fE0ziuVyX049hDHoEeGCsx3yGyXBNAivQcm66OibuzKJZ8UdC3RsjQpR2Z/zDlTLvOE3X0TLWWN68W9qLyYL4HkfKpEr3s7+8QjCKN8nWupu6QqHeDcCUW/FJAFUd/Q0GB1rbDKQ4gfyzz/4vqZ2ssFUzxoyN2hBJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHUo5g9M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716825478; c=relaxed/simple;
+	bh=LyY89JJGjC8Y+DxaXq1cHlE/nuU3X/RNIGtC1yqhUhI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=I5fZtjOlAibwg1RSKhXPaAlotrpGEvsSEs6qcNILhQoLk2btVRRYMt0o/XnjjHzWypnteuu/q9vQaq1Irq4d7yhOCZk2NuzsiV05bdJbN+rD4A9Rci5EFvO9PNQ6YwcMyMm/aqCuTjWI6knF3IWjF+OugN7kKY5moK+FbkR8i+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PUTkJtv+; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHUo5g9M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F78EC32789;
-	Mon, 27 May 2024 15:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825475;
-	bh=RXItawyunSKwgW8TbTmkLjm06IxAaMojUWhmDVD+9Iw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sHUo5g9MP+KTBnMJMrgxOAE2AjaCWw8SmL+hV/h/DpvxUGq/mSvdDTdYks2osJMic
-	 GT54tCzAipodM/TT2+bVn0Jq9YXSRs96+Ml8p1vkJUT9qRrkLIeMVZRcLL1WKW+Yi7
-	 y3++sIlpHGqJC8gV5P/rJpu7XSpqE9YR4hYU0ZUNRYIRCjZrg73oAo5AICMXIoxwhl
-	 GC4o/AvInjxqyFNOiiHfh8LVY9sV1zjq7qWslRwNY3OsJFoGNoH0EHHuANgXI4W236
-	 43YhnfYkFnEcFtoONVD7rtpZR9F6q9i4AvkWe5g6iizo9vN7nmHrJqmI0pi4XsUUhT
-	 39gMWjG2otwyA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ben Fradella <bfradell@netapp.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Klara Modin <klarasmodin@gmail.com>,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 11/11] platform/x86: p2sb: Don't init until unassigned resources have been assigned
-Date: Mon, 27 May 2024 11:56:48 -0400
-Message-ID: <20240527155710.3865826-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240527155710.3865826-1-sashal@kernel.org>
-References: <20240527155710.3865826-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PUTkJtv+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1716825410; x=1717430210; i=markus.elfring@web.de;
+	bh=cCQzbMHV0uZw8ARZF6tyJxZsTWRc/buEbEqLjIXSnlw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PUTkJtv+17tmHPSwdj2hf899Cxz87JZtpAv6Jc/t460ErK6rIZ1XjrMEwjT/IL5e
+	 u6asEjjbaWV05EEJOrnLlJNLso+bKJ6JUhoe+vAQmYcyr1mOVJ9CmwVzJFYdsDjWk
+	 lhH7BRvhFBzVj6hnFHPSxBLuofy8FnxnuGCzKVh06VXSoykW9+Z5sNppeifyGBhS7
+	 Tbby0eXDkzEd3ur+rXCvlZhYwOhxY2j+kjNeQE+m/gaI7bzpQ3HVkzXeOYg+oIyfZ
+	 hv0kSHTDq7XWjQmMF+X+gAfIYHkN5y02reNDf+/pFuI1uzraU+ayvVz08dwXuor0H
+	 +gQ8lygtBMIj/W0VNQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N6JxT-1sa0Ai3q9J-016inV; Mon, 27
+ May 2024 17:56:50 +0200
+Message-ID: <aa58efd3-b502-4bed-8c84-e5d78da23fbe@web.de>
+Date: Mon, 27 May 2024 17:56:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.92
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Peng Fan <peng.fan@nxp.com>, soc@kernel.org,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Chester Lin <chester62515@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Damien Le Moal <dlemoal@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>,
+ Dvorkin Dmitry <dvorkin@tibbo.com>, Emil Renner Berthing <kernel@esmil.dk>,
+ Fabio Estevam <festevam@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+ Hal Feng <hal.feng@starfivetech.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Jacky Bai <ping.bai@nxp.com>,
+ Jianlong Huang <jianlong.huang@starfivetech.com>,
+ Joel Stanley <joel@jms.id.au>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Ludovic Desroches <ludovic.desroches@microchip.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Matthias Brugger <mbrugger@suse.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Orson Zhai
+ <orsonzhai@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Sean Wang <sean.wang@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>,
+ Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+ Stephen Warren <swarren@wwwdotorg.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Tony Lindgren <tony@atomide.com>,
+ Viresh Kumar <vireshk@kernel.org>, Wells Lu <wellslutw@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-samsung-soc@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ imx@lists.linux.dev, linux-aspeed@lists.ozlabs.org,
+ openbmc@lists.ozlabs.org, kernel@pengutronix.de,
+ Peng Fan <peng.fan@oss.nxp.com>
+References: <20240504-pinctrl-cleanup-v2-18-26c5f2dc1181@nxp.com>
+Subject: Re: [PATCH v2 18/20] pinctrl: freescale: mxs: Fix refcount of child
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240504-pinctrl-cleanup-v2-18-26c5f2dc1181@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fY28vuOzSy7D3myo+NUo+Q8h4MAB+DMYH6x54XY9zacr23bFm3Z
+ XEU1mqywgExmQK1yZjuU6En9jXs1HgcwzsaQZ+4suTC5BPEjIf/Fg4o0HdX3AuRpQZI2yac
+ KrkniKWThKnQbs96+yLl/Dm5E5NsImhOyFs1ksUAetHBWVW2WfIWoOdGSaoQFZRJLEXutYy
+ iCHwBxLqQsK9Mq+39k2DQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:TjeN7uyFccs=;bjTTRHq6gIBTOMFXSFUogBWSZuQ
+ ZTwgZq2VnppV1aZlnrDYMmOmytXyq0JrjEzIfy/yH2myRvZFwVxrMpYgtVdN++fuf8ainJk/t
+ uFkTD8huhpK+v/6sd6lXCGtTOMoxBExDvHrzfiIvMwNnj5vJaD78bXrOpQIviBkrbo/dpouOC
+ Ln7QFnEpQNN9tfIRGg8gaddFRITCsPb8eIY2ZjqdGWqcC0mpb+GXVonl0LzMFBCnUIrGNucUB
+ JyF0gcU5WkAg6RJMxI6bQbphTn5At4z7kJpzYsMNnHFABhVCUal+gm0247pr1mpjl/KiGECTR
+ XNTX442NdkykPvhiMNWp17M35HW0J6oLENbsSL8PyhGQHAW5h5EnpFB5SuC+MkmcW7VQwxd36
+ lCdpZmXrsZsRJ7AbJhptgf/dByjHu/LOLAj4+ethb/xC2SLDH84JLTDzzYCw43EzHk/09K8p9
+ cDEpfpl8+VPFN35SSlqs/3lTQxU1UurqQF96DxIJCZdCGRE3icPsCoTwZMOJqDYJkYsmztQRH
+ YW541Ftvhar9wZSgE19Bcj1s0L3HXu9Xp3pkz7IcX+lrc7RPJuNoPC+xc48ucMhoGmNSMI5WK
+ RVp1WSoLoJahSt7/mjjyxqyly6XzUtnKE6um1tWMAR0vojK8hQcOOL84UbAmXM7tbS+2QyuCj
+ LkzuEZ/KIlY89jP9+dNMuuSCCwKeQJA7ykttwUV0aQte1rS7POYfJSX2aeTAa8Z7rWLzt7kHc
+ AmtJvjHPIr4iMol58kTZo18kQbOqJQsi9qx7qS9pObTVMxyOiWt4lPdDW0vYOWO4MOmC4QlIy
+ k96VHg44SU3OMjnGBpPp4v6EScAmUEUHJaYg/CdI/NGc8=
 
-From: Ben Fradella <bfradell@netapp.com>
+How do you think about to use the summary phrase =E2=80=9CFix reference co=
+unting for children in mxs_pinctrl_probe_dt()=E2=80=9D?
 
-[ Upstream commit 2c6370e6607663fc5fa0fd9ed58e2e01014898c7 ]
 
-The P2SB could get an invalid BAR from the BIOS, and that won't be fixed
-up until pcibios_assign_resources(), which is an fs_initcall().
+=E2=80=A6
+> of_get_next_child() will increase refcount =E2=80=A6
 
-- Move p2sb_fs_init() to an fs_initcall_sync(). This is still early
-  enough to avoid a race with any dependent drivers.
+                                    the reference counter?
 
-- Add a check for IORESOURCE_UNSET in p2sb_valid_resource() to catch
-  unset BARs going forward.
 
-- Return error values from p2sb_fs_init() so that the 'initcall_debug'
-  cmdline arg provides useful data.
+> Per current implementation, 'child' will be override by
 
-Signed-off-by: Ben Fradella <bfradell@netapp.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Klara Modin <klarasmodin@gmail.com>
-Reviewed-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Link: https://lore.kernel.org/r/20240509164905.41016-1-bcfradella@proton.me
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/p2sb.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+                                              overridden?
 
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index a64f56ddd4a44..053be5c5e0cad 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -56,12 +56,9 @@ static int p2sb_get_devfn(unsigned int *devfn)
- 	return 0;
- }
- 
--static bool p2sb_valid_resource(struct resource *res)
-+static bool p2sb_valid_resource(const struct resource *res)
- {
--	if (res->flags)
--		return true;
--
--	return false;
-+	return res->flags & ~IORESOURCE_UNSET;
- }
- 
- /* Copy resource from the first BAR of the device in question */
-@@ -220,16 +217,20 @@ EXPORT_SYMBOL_GPL(p2sb_bar);
- 
- static int __init p2sb_fs_init(void)
- {
--	p2sb_cache_resources();
--	return 0;
-+	return p2sb_cache_resources();
- }
- 
- /*
-- * pci_rescan_remove_lock to avoid access to unhidden P2SB devices can
-- * not be locked in sysfs pci bus rescan path because of deadlock. To
-- * avoid the deadlock, access to P2SB devices with the lock at an early
-- * step in kernel initialization and cache required resources. This
-- * should happen after subsys_initcall which initializes PCI subsystem
-- * and before device_initcall which requires P2SB resources.
-+ * pci_rescan_remove_lock() can not be locked in sysfs PCI bus rescan path
-+ * because of deadlock. To avoid the deadlock, access P2SB devices with the lock
-+ * at an early step in kernel initialization and cache required resources.
-+ *
-+ * We want to run as early as possible. If the P2SB was assigned a bad BAR,
-+ * we'll need to wait on pcibios_assign_resources() to fix it. So, our list of
-+ * initcall dependencies looks something like this:
-+ *
-+ * ...
-+ * subsys_initcall (pci_subsys_init)
-+ * fs_initcall     (pcibios_assign_resources)
-  */
--fs_initcall(p2sb_fs_init);
-+fs_initcall_sync(p2sb_fs_init);
--- 
-2.43.0
 
+> for_each_child_of_node(np, child), so use of_get_child_count to avoid
+> refcount leakage.
+
+Another wording suggestion:
+  for_each_child_of_node(np, child). Thus use an of_get_child_count() call
+  to avoid reference counting leakage.
+
+
+Regards,
+Markus
