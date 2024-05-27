@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9020ADF55;
-	Mon, 27 May 2024 06:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44910DF55;
+	Mon, 27 May 2024 06:10:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716790190; cv=none; b=BVAvPtdbH/qMmpnEj8H8zA1hZHEA1el7DEPB3W4d+p6fg8ag72VK1n2a2gOnu8x0bH+NZ4KC806BDP9/5mRuXH0nVjEGNB8rOldvk3Vxf8tmOT38dFU7GyGBGRemCZk/G+DendYIn6Q8fopgOMOYgn7h0+Q84F4eyZP32voJCWY=
+	t=1716790217; cv=none; b=XhaS2otgNo1pWrYWoRQna63iH5tk5DiLEWOPCiCPEHqVlQYi4z6Fqj75W2WKIUMCqWBvdgLpVYn6GuuWHyDWRVjLr/D7y0vArhRDoZmS3jHUvl3RN0yUGNwpv+bUZ6chr4JPduU1MqWIcAdYPfC0AB5FhVtqkvMRTlkDZbq9ACw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716790190; c=relaxed/simple;
-	bh=kqFEa0efHktXb7iQYp7Pu7Mb9fROxeYnc0QIY9GgQtY=;
+	s=arc-20240116; t=1716790217; c=relaxed/simple;
+	bh=Z2GZu/Vpwc8eK5mTOyWyDMkYThWwgvmDmuyHkTCGvjQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pXav2mJ99L9qkfWUIXRnY3UltdiqgBNEFrCcN0CWkXqCy6AHdP7vh9nZptWYHee+KW8Ke35WomE8goP6g4FpcUkNbZ9W43L+lNJL+9uk4xD44E24sno303IUg7veTVzR0CwEyPSwnlsooxxLILS6viRoEVPKxmkkQfX9r1uZVG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVQwTRs0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iC94Yjr9owNp62p83lw1U3jWflVhzhkXGRRPv2Q+AbeO7QUQ20+34574Mqc2e8Qizw9oD4LgzDzzF2IPEI1pH/8Liidou4JlnLB65nsgzHJA1ddLQEZEA3YCjB9YX7Ytw8a9CGan+A0jRce3GjxCE+4k3P0uwhcXNAgPEZuPqn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2/dTeqG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVQwTRs0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4365DC2BBFC;
-	Mon, 27 May 2024 06:09:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2/dTeqG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C558C2BBFC;
+	Mon, 27 May 2024 06:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716790190;
-	bh=kqFEa0efHktXb7iQYp7Pu7Mb9fROxeYnc0QIY9GgQtY=;
+	s=k20201202; t=1716790216;
+	bh=Z2GZu/Vpwc8eK5mTOyWyDMkYThWwgvmDmuyHkTCGvjQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rVQwTRs0yVQhgtFp4Lwe6cDY9C9o6ttmEEiiV+PQvYzt9AEH22X+HyArw3nbIwJbW
-	 GXpI1NV+E3Ib9OOrYxDWo2fxBttA4eZLHiagqpAx1pHMBSd6QeiQntDDZEPQZutlJb
-	 1C/WG/8nOnu1apJ1teDnTrMpQRi6gGlA0jPUBeJj88ytRE+Fm00BkLN6JvR4HgMfiR
-	 S9ubzddugn+1Dwf9qV0Oer6JJXqRIIxSfI0S2Xy9CFFY0H5WzrtqYEoAtKvw6UFo4U
-	 m5jiwWdJQ798+416omQyOUAwTsof40EAb/ryB1VbCrYm1g71797z8OkF3NVDvXMZrK
-	 u63rfpwT7WlCQ==
-Message-ID: <ae1ac58b-1722-4a20-aa30-cdd9402913ce@kernel.org>
-Date: Mon, 27 May 2024 08:09:45 +0200
+	b=H2/dTeqGCgarYC01gvSg9XpktdwqhcH+yMtY3TvmKPrwOO9hoU+KVXrRbqXFXlQ13
+	 TUZgt9ftUA5O8w3pJs7P2DeFTSbvzSXcC/pTdRGZidKV5R/Za5EhSGqRzIZ0YowOGb
+	 +eYj09iOVdGyj/TD5kHHXqJEG0C12OlpydZQ4wwNisZl4+UqRuuTr0+5vbzwvZHJf0
+	 KQ1NreO/JXa292cGRChNRIKV9KWInCbGgWVKxxiKAN3HAJ9NNw5mnn/QVZcWHZDTeB
+	 4slM0pM40JQ5an2eqoj1TETSKr2RXha2DyX7sm/BLqs2CFpkpbNa/HI6PBeh8bVQ+5
+	 fbHkLK8vFVpig==
+Message-ID: <5f6a2469-5443-4edb-a13c-8b3bc5e4083c@kernel.org>
+Date: Mon, 27 May 2024 08:10:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,14 +35,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: input: touchscreen: add Hynitron
- CST816X
-To: Oleh Kuzhylnyi <kuzhylol@gmail.com>, linux-input@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, jeff@labundy.com, neil.armstrong@linaro.org,
- hdegoede@redhat.com, artur.serhiienko@gmail.com, igor.opaniuk@gmail.com
-References: <20240526212443.8496-1-kuzhylol@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Add CM3588 NAS
+To: Sebastian Kropatsch <seb-dev@web.de>, Heiko Stuebner <heiko@sntech.de>,
+ linux-rockchip@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240526214340.8459-1-seb-dev@web.de>
+ <20240526214625.8830-1-seb-dev@web.de>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -88,31 +90,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240526212443.8496-1-kuzhylol@gmail.com>
+In-Reply-To: <20240526214625.8830-1-seb-dev@web.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/05/2024 23:24, Oleh Kuzhylnyi wrote:
-> Add documentation for the Hynitron CST816X touchscreen bindings.
+On 26/05/2024 23:46, Sebastian Kropatsch wrote:
+> Add devicetree binding for the FriendlyElec CM3588 NAS board.
 > 
-> Signed-off-by: Oleh Kuzhylnyi <kuzhylol@gmail.com>
+> The CM3588 NAS by FriendlyElec pairs the CM3588 compute module, based on
+> the Rockchip RK3588 SoC, with the CM3588 NAS Kit carrier board.
+> 
+> Signed-off-by: Sebastian Kropatsch <seb-dev@web.de>
 > ---
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
 
-This is a friendly reminder during the review process.
-
-It looks like you received a tag and forgot to add it.
-
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions, under or above your Signed-off-by tag. Tag is "received", when
-provided in a message replied to you on the mailing list. Tools like b4
-can help here. However, there's no need to repost patches *only* to add
-the tags. The upstream maintainer will do that for tags received on the
-version they apply.
-
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-If a tag was not added on purpose, please state why and what changed.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
