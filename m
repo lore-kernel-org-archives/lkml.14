@@ -1,40 +1,43 @@
 Received: from mail02.habana.ai (habanamailrelay02.habana.ai [62.90.112.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9A415DBB9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A95C15DBB7
 	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.90.112.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716811993; cv=none; b=C2qUVoY77lBiDu+iuujXSV9nKShcPCAsCB5EhJ+EE4nPT7+hveMHMXmPrEshUBzytVUU0/bCVgk6L+sZ9hiTsR7liOYlP2ybLYZnmWDtpvudjtZLIUdS+xxHwdeSeIlCYtzMmGUlv5b9xQk6/3O8D3aw7KSxt0aw6//oZ/qGyxA=
+	t=1716811993; cv=none; b=NK5i7uozrr6QRt21iE1VW4+TEl9CuBO3B4qq+Qex1dw3ZroN2v3LlmwlxePTTB3+a0cpluE4C5YbvmsXstiYktVFPsDtJB1WHDhlhnNdhsMzsw7ru2NCTsDBQCmKx+/JhdfONZWksCGkVpsIhogBLFCrv4Ww15o4W4tB+dp6Ahc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716811993; c=relaxed/simple;
-	bh=jEOjfncRnHrY/GOzNXLpivOmaWg+BBdNPnztm7r0mH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SSbwEm3ylyO7Jb/2KdCOePcX8mGI5GrqRNNGCzVE7/igI9AXUIat0dz9LX7czdoimoMzAeVBcu12+y/g5zqBhqvF/0Toj2K6/NHTXgK5fjg8a0XQMbBkdvoaEVUrFuCofbmtZ4e3bujZCbWvxXBMtZtASa/MA0qUB00gh7dPoU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=oiOfkJPX; arc=none smtp.client-ip=62.90.112.121
+	bh=U9MPkc2aHrKjb35j4wkT+YPsoCL4v2hDv0CLivsUJDc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CppoTqAX+oTi/APBEDEjsczu0Bp5yrFKT8ZNJMek8RD4cBlvpO2Le8wqomKQMEXMrNaxZcxmBSEY7MTpLvzkeh8B1ExQXqtwGo8ZR0dyY6TaYbTR1qcz4njFAVkmFHOe9RD0pBvgyaHONKXAD1i4uTAOSKvT5Hz3dEWLhxDOLt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=vF1NwWg+; arc=none smtp.client-ip=62.90.112.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="oiOfkJPX"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="vF1NwWg+"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716811982; bh=jEOjfncRnHrY/GOzNXLpivOmaWg+BBdNPnztm7r0mH8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oiOfkJPX8EvLromWEhc+OBGh0jTo6HhFUurBbH+ItJWBQgulfLoxrTNFWkPllmHzC
-	 4f5nPBaR4/YBIhEb++Z7iaQLecrROgCM2Q5zOsXJgEw1+kjP2EHyzmKz7w6se1/lq+
-	 SJw4kMmWLt/U1UObkRwM3Q4gyzCHXB7aOtkVhXr/7vnssqQySbrH1SCB/s2F3+51Vt
-	 xTeG4KJOX7rdjMbooNAWbMDc2mQthgkI8pACSov7e0l8pMymF1C5VMTS6ZmeYfzhS/
-	 B9N1U5T2Edvr9Km/Q8CNoUxdUA9oRTIjuYZCUJYvyC0bse39D5BGJUaEQgn9XlWzMA
-	 30wkqU2xwtH9w==
+	t=1716811982; bh=U9MPkc2aHrKjb35j4wkT+YPsoCL4v2hDv0CLivsUJDc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vF1NwWg+FaHiAOT9UF/be/Exbyf0JagRctd5W1240nR69rSZyVqMc+3sajkv0p144
+	 9DI0qn8a7168/9Po2LX/b7xKvJKqc0xR4uZrUO1M+l19XiHyMk6vDNZAeVRxwekDe9
+	 xWO8blujS6AVMwx8h1q328h3SW6nha1bx24PlN1i3tGFrX2FvVHPcE8/oSYwiiM6wb
+	 y4knMVBLSJ5LyWOjDFBXUSTT00O/ycaFCUR+xv5/l84TGOdOM6mGTziv9ba6OoF1Gy
+	 mrWKgY/6o6WdC4GTNh4DzfSaxc2HptEkiTQxOE89jwsGVgIA/hODjBf+dguAO3i9JQ
+	 ghDkY2i84NZiw==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RCCuar1921351;
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RCCuax1921351;
 	Mon, 27 May 2024 15:12:57 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Igal Zeltser <izeltser@habana.ai>
-Subject: [PATCH 1/8] accel/habanalabs: use msg_header instead of desc_header
-Date: Mon, 27 May 2024 15:12:47 +0300
-Message-Id: <20240527121254.1921306-1-obitton@habana.ai>
+Cc: Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 7/8] accel/habanalabs: add an EQ size ASIC property
+Date: Mon, 27 May 2024 15:12:53 +0300
+Message-Id: <20240527121254.1921306-7-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240527121254.1921306-1-obitton@habana.ai>
+References: <20240527121254.1921306-1-obitton@habana.ai>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,45 +46,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Igal Zeltser <izeltser@habana.ai>
+From: Tomer Tayar <ttayar@habana.ai>
 
-Struct comms_desc_header is deprecated and replaced by struct
-comms_msg_header. As a preparation for removing comms_desc_header
-from FW, all it's usage in code is replaced by comms_msg_header.
+Future supported ASICs might use the dynamic EQ mechanism with the
+firmware, and in that case the EQ size won't be equal to the default
+HL_EQ_SIZE_IN_BYTES value.
+Add an ASIC property to enable overriding this value.
 
-Signed-off-by: Igal Zeltser <izeltser@habana.ai>
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- drivers/accel/habanalabs/common/firmware_if.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/accel/habanalabs/common/habanalabs.h | 5 +++++
+ drivers/accel/habanalabs/common/irq.c        | 8 +++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/common/firmware_if.c b/drivers/accel/habanalabs/common/firmware_if.c
-index d1a1d601bde9..886b3c07503d 100644
---- a/drivers/accel/habanalabs/common/firmware_if.c
-+++ b/drivers/accel/habanalabs/common/firmware_if.c
-@@ -2093,7 +2093,7 @@ static int hl_fw_dynamic_validate_descriptor(struct hl_device *hdev,
- 	 * note that no alignment/stride address issues here as all structures
- 	 * are 64 bit padded.
- 	 */
--	data_ptr = (u8 *)fw_desc + sizeof(struct comms_desc_header);
-+	data_ptr = (u8 *)fw_desc + sizeof(struct comms_msg_header);
- 	data_size = le16_to_cpu(fw_desc->header.size);
+diff --git a/drivers/accel/habanalabs/common/habanalabs.h b/drivers/accel/habanalabs/common/habanalabs.h
+index 5e9f54ca336a..8d0df685e627 100644
+--- a/drivers/accel/habanalabs/common/habanalabs.h
++++ b/drivers/accel/habanalabs/common/habanalabs.h
+@@ -651,6 +651,8 @@ struct hl_hints_range {
+  * @hbw_flush_reg: register to read to generate HBW flush. value of 0 means HBW flush is
+  *                 not supported.
+  * @reserved_fw_mem_size: size of dram memory reserved for FW.
++ * @fw_event_queue_size: queue size for events from CPU-CP.
++ *                       A value of 0 means using the default HL_EQ_SIZE_IN_BYTES value.
+  * @collective_first_sob: first sync object available for collective use
+  * @collective_first_mon: first monitor available for collective use
+  * @sync_stream_first_sob: first sync object available for sync stream use
+@@ -782,6 +784,7 @@ struct asic_fixed_properties {
+ 	u32				glbl_err_max_cause_num;
+ 	u32				hbw_flush_reg;
+ 	u32				reserved_fw_mem_size;
++	u32				fw_event_queue_size;
+ 	u16				collective_first_sob;
+ 	u16				collective_first_mon;
+ 	u16				sync_stream_first_sob;
+@@ -1229,6 +1232,7 @@ struct hl_user_pending_interrupt {
+  * @hdev: pointer to the device structure
+  * @kernel_address: holds the queue's kernel virtual address
+  * @bus_address: holds the queue's DMA address
++ * @size: the event queue size
+  * @ci: ci inside the queue
+  * @prev_eqe_index: the index of the previous event queue entry. The index of
+  *                  the current entry's index must be +1 of the previous one.
+@@ -1240,6 +1244,7 @@ struct hl_eq {
+ 	struct hl_device	*hdev;
+ 	void			*kernel_address;
+ 	dma_addr_t		bus_address;
++	u32			size;
+ 	u32			ci;
+ 	u32			prev_eqe_index;
+ 	bool			check_eqe_index;
+diff --git a/drivers/accel/habanalabs/common/irq.c b/drivers/accel/habanalabs/common/irq.c
+index 978b7f4d5eeb..2caf2df4de08 100644
+--- a/drivers/accel/habanalabs/common/irq.c
++++ b/drivers/accel/habanalabs/common/irq.c
+@@ -652,14 +652,16 @@ void hl_cq_reset(struct hl_device *hdev, struct hl_cq *q)
+  */
+ int hl_eq_init(struct hl_device *hdev, struct hl_eq *q)
+ {
++	u32 size = hdev->asic_prop.fw_event_queue_size ? : HL_EQ_SIZE_IN_BYTES;
+ 	void *p;
  
- 	data_crc32 = hl_fw_compat_crc32(data_ptr, data_size);
-@@ -2247,11 +2247,11 @@ static int hl_fw_dynamic_read_and_validate_descriptor(struct hl_device *hdev,
- 	memcpy_fromio(fw_desc, src, sizeof(struct lkd_fw_comms_desc));
- 	fw_data_size = le16_to_cpu(fw_desc->header.size);
- 
--	temp_fw_desc = vzalloc(sizeof(struct comms_desc_header) + fw_data_size);
-+	temp_fw_desc = vzalloc(sizeof(struct comms_msg_header) + fw_data_size);
- 	if (!temp_fw_desc)
+-	p = hl_cpu_accessible_dma_pool_alloc(hdev, HL_EQ_SIZE_IN_BYTES, &q->bus_address);
++	p = hl_cpu_accessible_dma_pool_alloc(hdev, size, &q->bus_address);
+ 	if (!p)
  		return -ENOMEM;
  
--	memcpy_fromio(temp_fw_desc, src, sizeof(struct comms_desc_header) + fw_data_size);
-+	memcpy_fromio(temp_fw_desc, src, sizeof(struct comms_msg_header) + fw_data_size);
+ 	q->hdev = hdev;
+ 	q->kernel_address = p;
++	q->size = size;
+ 	q->ci = 0;
+ 	q->prev_eqe_index = 0;
  
- 	rc = hl_fw_dynamic_validate_descriptor(hdev, fw_loader,
- 					(struct lkd_fw_comms_desc *) temp_fw_desc);
+@@ -678,7 +680,7 @@ void hl_eq_fini(struct hl_device *hdev, struct hl_eq *q)
+ {
+ 	flush_workqueue(hdev->eq_wq);
+ 
+-	hl_cpu_accessible_dma_pool_free(hdev, HL_EQ_SIZE_IN_BYTES, q->kernel_address);
++	hl_cpu_accessible_dma_pool_free(hdev, q->size, q->kernel_address);
+ }
+ 
+ void hl_eq_reset(struct hl_device *hdev, struct hl_eq *q)
+@@ -693,5 +695,5 @@ void hl_eq_reset(struct hl_device *hdev, struct hl_eq *q)
+ 	 * when the device is operational again
+ 	 */
+ 
+-	memset(q->kernel_address, 0, HL_EQ_SIZE_IN_BYTES);
++	memset(q->kernel_address, 0, q->size);
+ }
 -- 
 2.34.1
 
