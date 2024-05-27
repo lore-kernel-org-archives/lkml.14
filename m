@@ -1,88 +1,94 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E533C38FA6
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78B313BC31;
+	Mon, 27 May 2024 12:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716813052; cv=none; b=FJyebNRVgGODLQedYyhgb0Ro5Ch6IttLyP9ITy8UEiYR/vOVPqAgN5gdcHWyUDh8xEKkQaYXviTT8KEspGycgHPu+93uMTnZ66t3Tf2tHcRuwKQN0fAQixHf7FCyE40KtVM121GbJO0amNcorIy/+DkFm40H1Qnwx0QEtBXlMaU=
+	t=1716813109; cv=none; b=VIg+A2riXiOQgRwltsxbdYF+qjdYcusgQr8zPY26qaG2xXM1ox9WkXGH4oM2HazriHTUH1E53aRn0NYUV9qfrYLB8duukkx2jjqd5lEnRRyTEatH5Ut1DaxuxYPS/apNngzU8wMc/6COW/eGPYIWYDGajJrTW9DOXmVDk4AEh1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716813052; c=relaxed/simple;
-	bh=6+DvNF9RmDjZqkDGx57QY0y83XXuNrV7E1Kzbl2XyQ0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=gEyn80UJ3GTPG2piVQkWqJUoP9XD5N1j61zADWzwW58kik3k7wyZM2hnxQKxJlGIjVNwz7DAfoIVHkkUpQ4qtaKrHUeiP5ZFx+rAiN4yAT28uszv01d9xqeK8veNgPA6biirbwZHU8mu6vxHHqcdj9wWPvx4ZqMtC7ibzrGJcjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=aIalgtHa; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1716813109; c=relaxed/simple;
+	bh=dEr1eVERIFIU7dLP++AfOw57CChhj5RmQUdT0i9PbpQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=l0Z1Qw9hPYtOhoTwI/kg/YzTg7UrpiTRA6B9UyToo2sM12AE84wyZ+qixoDzl/6ypn0n5Xovo+PVmJlEJQvYsKH65OEM0gPZ8WEpNAL4OID73kGxpgzu2f1f27kQ+F/tnCgc9nOnenOvE4o3vEV3tcOSmFXF9rhtQuULrZPM+jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7EbQaw3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="aIalgtHa"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a5cec2c2981so654396266b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 05:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716813049; x=1717417849; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kfzGbRD3sk8twjWqVfYmhO7ZpaFRIUQWKhYr1L1EPwE=;
-        b=aIalgtHaJdleI/Fhf7+Mt8dZOfgMd7DJ4cc8oblSeemsMFOqX5aTcgxmAPI4EeLEk9
-         GTHzVePq+WSqKTvpVigiqKs6znAv/Z9xq7/f+lyTmlLmaRwQx+AmB+rhaHtVewbn5TaA
-         Kop6PsTQxbsx5qdP0l5YQRutW5EMmpLbTdd+yllMbZnqFaImOAJQXoSknd82TynFjVkE
-         OExjAuNd2oTO7s/DyKCMVbIBw3p6wmkXi24Wnk68c+o7+s/XWZVUqmO9mUKXz4Sl+QKS
-         AxZzhnkdGcwoIMNUQmDEhEioTa5R+zGBD363Gw7PlWIoDp35K59T64t/1ImdZv+IGVaA
-         8pLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716813049; x=1717417849;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kfzGbRD3sk8twjWqVfYmhO7ZpaFRIUQWKhYr1L1EPwE=;
-        b=QNFHdtYRKdObuHiqkhEcEH2v49tT+IEe+KVMM7cJFefZKvbOzClXQPvy+pNU4NB+vf
-         6Iw2dt7qH1LyzGvmYt1Y17SQFYZY7BJrd0W0pSDPkMIcIGo8yRCh2iqGdPBDxa1i/j0d
-         cb91H9NkBFtxqaeHqVpXl2BDFUh71xw+IydkG5iH7gmOnjRgSIKOxULyUr0DKiNIl0Mh
-         XYJUol6KmfQNYtKMAzGlWk6y1ZE2dg5NeCq9YJnTjXPSzMNq6CWYGQIs8pXQ2UKNfD89
-         CJxvXK2oP9/4A/yjgbNYPy2DTZqQNVTbofkUR+8dRy7VHbhQn0eodflzjis/e+9DlNGj
-         rpbQ==
-X-Gm-Message-State: AOJu0YyDhugdKO4dm+Tk+xGFq0g2jWN2wp6Noy1mGAHZLwFbJRxWggMo
-	INRBwMTlE1o9PkxWm7yEtIQ2qEihsZ/JdD4gr23DM3EvLwQgXlPul/arI4dFdt8=
-X-Google-Smtp-Source: AGHT+IFpUMr18cxOauY12oXYvM6RE8hLu/q+zupGiRCnd0dXkMbEPZiZwA/qkFVsXWVeyutQBdWRUQ==
-X-Received: by 2002:a50:c907:0:b0:572:689f:6380 with SMTP id 4fb4d7f45d1cf-578519144e9mr7586305a12.3.1716813049163;
-        Mon, 27 May 2024 05:30:49 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:aa3:5c01:cd9d:f244:3bcd:de57])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57861b4ddefsm4475753a12.60.2024.05.27.05.30.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2024 05:30:48 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7EbQaw3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7210C32781;
+	Mon, 27 May 2024 12:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716813109;
+	bh=dEr1eVERIFIU7dLP++AfOw57CChhj5RmQUdT0i9PbpQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=m7EbQaw3RNWe6dTQgsJ5YgGu5nsD+jDrZXWjElKDAfKwzRLyn+UwOBJHPXIks6hE7
+	 8KZszY8TvZH5L5c7Av3pJDoOsPHVvw7xtWEUGMYuyb1325vSXAt8lDfmYcIH/aEERn
+	 yOdWb9rcUQCGOLPvoPrZCQ13BFfhegTFH3sgdwXKuSq1JoQzyt6vFgBl6wz4hz4wAa
+	 mppR0PDSFwE0B9wUyAw7oRF5QpCQ2n3QdbqHYulZHEwlKJglSwP1FhfNBkeVEB794P
+	 CaFJt+4xejgJ6yhAEvTmNpYlciJbxuDgAqVuaG2mtQMpcrIRIV/98SVyw+UCKUeeS2
+	 RfuO2/uVyLyiw==
+Date: Mon, 27 May 2024 21:31:44 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Carlos =?UTF-8?B?TMOzcGV6?= <clopez@suse.de>
+Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Alan Maguire
+ <alan.maguire@oracle.com>, linux-kernel@vger.kernel.org (open list:TRACING)
+Subject: Re: [PATCH v2] tracing/probes: fix error check in parse_btf_field()
+Message-Id: <20240527213144.1883fcdf4d97d08ea12988bd@kernel.org>
+In-Reply-To: <20240527094351.15687-1-clopez@suse.de>
+References: <20240527094351.15687-1-clopez@suse.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [RESEND PATCH] w1: Add missing newline and fix typos in
- w1_bus_master comment
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <38eae3e5-cb91-436f-a422-0d03d4c8cc95@kernel.org>
-Date: Mon, 27 May 2024 14:30:37 +0200
-Cc: linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <80088619-34B7-4815-8697-368EBB0CF48B@toblux.com>
-References: <20240515101150.3289-2-thorsten.blum@toblux.com>
- <20240527092746.263038-2-thorsten.blum@toblux.com>
- <38eae3e5-cb91-436f-a422-0d03d4c8cc95@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 27. May 2024, at 13:49, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On 27/05/2024 11:27, Thorsten Blum wrote:
->> - Add missing newline before @return
->> - s/bytes/byte/
->> - s/handles/handle/
->> 
->> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+On Mon, 27 May 2024 11:43:52 +0200
+Carlos López <clopez@suse.de> wrote:
+
+> btf_find_struct_member() might return NULL or an error via the
+> ERR_PTR() macro. However, its caller in parse_btf_field() only checks
+> for the NULL condition. Fix this by using IS_ERR() and returning the
+> error up the stack.
 > 
-> Do not attach (thread) your patchsets to some other threads (unrelated
-> or older versions). This buries them deep in the mailbox and might
-> interfere with applying entire sets.
 
-Ok thanks - didn't know that either.
+Thanks for updating! This version looks good to me.
+Let me pick this to probes/fixes.
+
+Thank you,
+
+
+> Fixes: c440adfbe3025 ("tracing/probes: Support BTF based data structure field access")
+> Signed-off-by: Carlos López <clopez@suse.de>
+> ---
+> v2: added call to trace_probe_log_err()
+> 
+>  kernel/trace/trace_probe.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 5e263c141574..39877c80d6cb 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -554,6 +554,10 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  			anon_offs = 0;
+>  			field = btf_find_struct_member(ctx->btf, type, fieldname,
+>  						       &anon_offs);
+> +			if (IS_ERR(field)) {
+> +				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> +				return PTR_ERR(field);
+> +			}
+>  			if (!field) {
+>  				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
+>  				return -ENOENT;
+> -- 
+> 2.35.3
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
