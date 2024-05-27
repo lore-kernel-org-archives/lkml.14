@@ -1,89 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6A261FE1
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 16:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5E861FE1;
+	Mon, 27 May 2024 16:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716827670; cv=none; b=O/7rbnSuCWG/Zlt9LvrkeJ/yQUpMSmHX2QIXGUSwe/rb5DBk6eAwQ6bTR78XCp9U3wd329omMJsp6WNAVx40e/7NtGTmCOGy1feGEzI8JUz4PGTBhEsxGduS/cTZuB6wdd4qZoOKK2GXE01bUPjJmbl0ibyfd8XGXMD7KCh8eCY=
+	t=1716827681; cv=none; b=RnH2PesfDUpGQuaTfl/c/WCgWnOmoYnZ+PSJu3cLRDn4rwuasOmo/uLf555+A2fmFVzm7xZyeUK7mq/aaGImtWNA/cTYsfAZMhtZ9Hc6AtQX/Xd5v5Vi67Eg+9vlCbKCthvlNZmObjMdvtbIUjVoH131NdkPCnSCT0FqtcLgrz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716827670; c=relaxed/simple;
-	bh=bl8ZlK/CAMRWrVdQ/hpu/WdQl8FR7dw4nzTZlB2IpRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A7wcEsdDgkA19NIyWZ8ry14MvX5x+ZaQ02eowzli+QSdOMil3WBuxpKJJBKVmR32Qb2nI5sxfHIN+RJUlauMwgdVgWMK/zP9QUvG2vtbFH9cXkMi2M3fdpnRD3zlRT2nffCT/kSAIxJf0RRTiseMF/87DVicyBvD0yG+gCI6bXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmRdsKbg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmRdsKbg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB960C2BBFC;
-	Mon, 27 May 2024 16:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716827669;
-	bh=bl8ZlK/CAMRWrVdQ/hpu/WdQl8FR7dw4nzTZlB2IpRo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XmRdsKbgJbzTQX3HxnL8ihxsExEVY+oGZ4ReTwSwnp+tJFDu3yBrEMuz3760IFes7
-	 ftNoC5Dy98t6wKQJbFQdyXxBRpJSNishbkLEEdvTma/Zpsad9qmi+RWU+JUwrJ9uwq
-	 pPaInLLIzJDZDuMIiyelzlQDs8k09AFn0pnajkhdnn1S9LNSGXrSF+oh82vxwuR5rb
-	 6bmhS51qTKvsLCXyBRJEvY3e4s2o5SsPUbQGZjZXdjHB4nBNss50VRArMOzeY2/6tU
-	 FNjkdwcXtDOxdMgyMYYgKyOmUvDM2c1gzYzda6Hy98ns3/ePIXCfU84oUxA+6cZN9I
-	 B0bkFNRqGa09g==
-Message-ID: <86006806-4ffc-4330-ab4b-29215ab2c98c@kernel.org>
-Date: Mon, 27 May 2024 18:34:24 +0200
+	s=arc-20240116; t=1716827681; c=relaxed/simple;
+	bh=YnPCfmPlSjFb9s0kuzVRNjS5wB0T6GQWiLt+H7w4WXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yq8nqOJb8hL7ffbkeuhfUrEmKxuJ976E13DxmU5Z0ALJ7penz2ZC//rB4bRE1fy3UYwY5jt6kTdZp2ihzI7bU2S2b//fD+/w2rZGqiQO6h8Iw79u60SaE0JOMEqrW643hPLrcvjKuKGEYOphGTqv2rfqaoqRuDTXD2JMShSx44M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.97.1)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1sBcyu-000000007MD-3VgY;
+	Mon, 27 May 2024 16:13:52 +0000
+Date: Mon, 27 May 2024 17:13:42 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Cc: Sam Shih <Sam.Shih@mediatek.com>, 
+	SkyLake Huang <SkyLake.Huang@mediatek.com>, Steven Liu <steven.liu@mediatek.com>, 
+	Frank Wunderlich <linux@fw-web.de>, Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, 
+	Mark Lee <Mark-MC.Lee@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Frank Wunderlich <frank-w@public-files.de>, 
+	John Crispin <john@phrozen.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+Subject: Re: [net v2] net: ethernet: mtk_eth_soc: handle dma buffer size soc
+ specific
+Message-ID: <kbzsne4rm4232w44ph3a3hbpgr3th4xvnxazdq3fblnbamrloo@uvs3jyftecma>
+References: <20240527142142.126796-1-linux@fw-web.de>
+ <BY3PR18MB4737D0ED774B14833353D202C6F02@BY3PR18MB4737.namprd18.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] memcg: simple cleanup of stats update functions
-Content-Language: en-US
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-References: <20240420232505.2768428-1-shakeel.butt@linux.dev>
- <20240527152200.P1rU7FaG@linutronix.de>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <20240527152200.P1rU7FaG@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BY3PR18MB4737D0ED774B14833353D202C6F02@BY3PR18MB4737.namprd18.prod.outlook.com>
 
-On 5/27/24 5:22 PM, Sebastian Andrzej Siewior wrote:
-> On 2024-04-20 16:25:05 [-0700], Shakeel Butt wrote:
->> mod_memcg_lruvec_state() is never called from outside of memcontrol.c
->> and with always irq disabled. So, replace it with the irq disabled
->> version and add an assert that irq is disabled in the caller.
+On Mon, May 27, 2024 at 03:55:55PM GMT, Sunil Kovvuri Goutham wrote:
 > 
-> unless PREEMPT_RT is enabled. In that case IRQs are not disabled as part
-> of local_lock_irqsave(&memcg_stock.stock_lock, …) leading to:
-
-But then the "interrupts are handled by a kernel thread that can sleep" part
-of RT also means it's ok to just have the stock_lock taken with no
-interrupts disabled as no actual raw interrupt handler will interrupt the
-holder and deadlock, right?
-
-> | ------------[ cut here ]------------
-> | WARNING: CPU: 0 PID: 1 at mm/memcontrol.c:3150 __mod_objcg_mlstate+0xc2/0x110
-> | CPU: 0 PID: 1 Comm: systemd Not tainted 6.10.0-rc1-rt0+ #17
-> | Call Trace:
-> |  <TASK>
-> |  mod_objcg_state+0x2b3/0x320
-> |  __memcg_slab_post_alloc_hook+0x13c/0x340
-> |  kmem_cache_alloc_lru_noprof+0x2bd/0x2e0
-> |  alloc_inode+0x59/0xc0
-> |  iget_locked+0xf0/0x290
 > 
-> suggestions?
-
-So in that case the appropriate thing would be to replace the assert with
-lockdep_assert_held(&memcg_stock.stock_lock);
-?
-
-It seems all the code paths leading here have that one.
-
-> Sebastian
+> > -----Original Message-----
+> > From: Frank Wunderlich <linux@fw-web.de>
+> > Sent: Monday, May 27, 2024 7:52 PM
+> > To: Felix Fietkau <nbd@nbd.name>; Sean Wang <sean.wang@mediatek.com>;
+> > Mark Lee <Mark-MC.Lee@mediatek.com>; Lorenzo Bianconi
+> > <lorenzo@kernel.org>; David S. Miller <davem@davemloft.net>; Eric Dumazet
+> > <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni
+> > <pabeni@redhat.com>; Matthias Brugger <matthias.bgg@gmail.com>;
+> > AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> > Cc: Frank Wunderlich <frank-w@public-files.de>; John Crispin
+> > <john@phrozen.org>; netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linux-mediatek@lists.infradead.org;
+> > Daniel Golle <daniel@makrotopia.org>
+> > Subject: [net v2] net: ethernet: mtk_eth_soc: handle dma buffer size soc specific
+> > 
+> > From: Frank Wunderlich <frank-w@public-files.de>
+> > 
+> > The mainline MTK ethernet driver suffers long time from rarly but annoying tx
+> > queue timeouts. We think that this is caused by fixed dma sizes hardcoded for
+> > all SoCs.
+> > 
+> > Use the dma-size implementation from SDK in a per SoC manner.
+> > 
+> > Fixes: 656e705243fd ("net-next: mediatek: add support for MT7623
+> > ethernet")
+> > Suggested-by: Daniel Golle <daniel@makrotopia.org>
+> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 > 
+> ..............
+> > 
+> > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> > b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> > index cae46290a7ae..f1ff1be73926 100644
+> > --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> > +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> 
+> .............
+> > @@ -1142,40 +1142,46 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
+> >  						       cnt * soc->tx.desc_size,
+> >  						       &eth->phy_scratch_ring,
+> >  						       GFP_KERNEL);
+> 
+> ..............
+> > -	for (i = 0; i < cnt; i++) {
+> > -		dma_addr_t addr = dma_addr + i * MTK_QDMA_PAGE_SIZE;
+> > -		struct mtk_tx_dma_v2 *txd;
+> > +		dma_addr = dma_map_single(eth->dma_dev,
+> > +					  eth->scratch_head[j], len *
+> > MTK_QDMA_PAGE_SIZE,
+> > +					  DMA_FROM_DEVICE);
+> > 
+> 
+> As per commit msg, the fix is for transmit queue timeouts.
+> But the DMA buffer changes seems for receive pkts.
+> Can you please elaborate the connection here.
 
+*I guess* the memory window used for both, TX and RX DMA descriptors
+needs to be wisely split to not risk TX queue overruns, depending on the
+SoC speed and without hurting RX performance...
+
+Maybe someone inside MediaTek (I've added to Cc now) and more familiar
+with the design can elaborate in more detail.
