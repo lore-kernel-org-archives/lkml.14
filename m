@@ -1,126 +1,98 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57626179A8;
-	Mon, 27 May 2024 21:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781D3179A8;
+	Mon, 27 May 2024 21:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716846500; cv=none; b=EDDb0NQdJwzDirPtEI+Ke9WGoLZKVdfNjSvZKPbUn7lcgwR4NpgFz2QrZSoxQpbMEHODoXjg68V6F9tgQYbECxo56NbEHQq/V6yXIU8AzF3FaqK1wOv124sQ3pZOlxBAEvi4cOP3h2CZbOpJyTUjuRF3WyvOsziD5deIWTpQXyk=
+	t=1716847078; cv=none; b=XE73DQ4ftwAWfSGfu3Qq6blvHIB9+c/zGHtvF6riYeJpnf4M/s4+/1WNhhspreYxsXf3PhT2NNY3MNR7LV3691Nkrb6HEkAsEChpgZhITOsbAbWEbyKbaw/mRRZrJfGOQxReDq0TqWt/oUsZUP4qF5lkH0ckxUiVMdk2Ug/uYSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716846500; c=relaxed/simple;
-	bh=zxRDLoTSPNW6sovIA3ZYzXSAjtVP08W0gskGkvCAyZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s0EVLXaBYknnvNKJ0YJjdORtJvB5IWArEIBM5cH4lDd/bAU78uxkHTjfQ4eQoiZmjNv70J5/lwajUCX5eocxczQwOrfKpse2D00KVEAMS45kSIBIBLr11qNDTbFncBJ1twMmJdo96n9UYb882MqqhT7dNTCFnNupxbLSAswubcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=yJKMqde4; arc=none smtp.client-ip=217.72.192.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1716847078; c=relaxed/simple;
+	bh=tFpudmb7utFLtp1DrkxJwkGe4WVa+1FmsNU710JrlLA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=ol2aQRV4DAMttlcELRC15lCr9nCdJY55fU2K3WZw5PSpQc6tWwGGxDvtXKa5LwnvUWB86IREyOvsbsurQWzfdLKN4TamjoZaLN0gLqLGL21mU0AgRMi+VVVG4orXBumDxrWKaV9R3ft/GVN9WwOmXuaz4upWqkMcan4McmqzocA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJLGt255; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="yJKMqde4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1716846491; x=1717451291; i=christian@heusel.eu;
-	bh=R+f0Q8VcWIyhz264FCQqt43P/cR/JJ56NeNlZocLLw4=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=yJKMqde47Ahc0NAq80bt51xbkq6kVm51B9OxEDiLwFXIt/M47ySp0P/zuOQHvZ7D
-	 w5BsiZg/nZYjoDwZK4drmKxhh2AiJN7OC5oeX+iU7Hh9HrzMy+PjTe/rM99uRFDAT
-	 qj0PRCrhUGPGl1zFznpuPxGSBEoBS8kb4S4YEHSO2I5bmYLiEVcJ09A202Tm8upwD
-	 wPTa2ya9NH7+ZKX4ndxY4l18+kyF58GGg1cK19aQek60WfOy7QSBIX6KpwW/8xF13
-	 XdWTi7Hj92ZnWanYsJa1J1BvJxDI2C7EgW/Dn89szhk+PC7H2WmAyyu8u1jgy6n0w
-	 tXZRIWZze39Pud0QTQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue107
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1N9d4t-1sWcaI1wbV-015brs; Mon, 27
- May 2024 23:34:15 +0200
-Date: Mon, 27 May 2024 23:34:14 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Peter Schneider <pschneider1968@googlemail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, 
-	LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, stable@vger.kernel.org, 
-	regressions@lists.linux.dev
-Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology
- detection
-Message-ID: <r7yx564fpovn2zhelafj6binigdatjrnw5pqbn2qqafn6fxey6@q4qekfqqby4l>
-References: <877cffcs7h.ffs@tglx>
- <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
- <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJLGt255"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f6bddf57f6so189383b3a.0;
+        Mon, 27 May 2024 14:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716847077; x=1717451877; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:subject:from:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4aEY/VZ0kOW3TO79bbaxiQdw+PPKgHYYJ4mnExDE3Dw=;
+        b=dJLGt255ljxAq+2FwTxgGtZYFDiV9WE+r2qKq1wy686VH9pzYeglM91MKop/hz2WtA
+         //KS2yKqkwoextAghk1hj0WMDCYbHHYFo8Uv+07kP5W1/gvknRBYzGoWnTSkzu1OlEQD
+         9lpBlucComTyUmouD314ssoG4gk+nmzp8StB4znZv7YS2HkhUw7VJsXkDPPGnFcwmt6S
+         Qd9BArNnSWyB3torwmE6nWx6idOKOUe4HaDE2dMjhSRmQcmbvWKx6Jnmu+fUuKXd0kda
+         Vd6+Dg9ZV/7qFJNks7Cb+uehxsTfsb/1gs1Z2qcuuGo0wLVz6nfULpdMzpw8NPOGLdwm
+         4d4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716847077; x=1717451877;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4aEY/VZ0kOW3TO79bbaxiQdw+PPKgHYYJ4mnExDE3Dw=;
+        b=DKbLoqpTfpxu6naZOp6W3b9EJhlN7ARgGOHs7p9UDu6beDaiX6SU8MTYzHQwJwlLvg
+         vbttoX+wYuxyC2/DmBqJvkuFz0S6NXS7J+vmxDvWSMTY6Jemud/cRp+8391bboqLQslH
+         AZj+ipejblaI0HzWKmHFhJqLOnWM4Kv0Tj1HzzVykFf55L2QDO80n6FCNXlE6J2QFvUs
+         gA+AHGvkopie0AGFyL78w8vo2nkh/H1egMjxAP8l8mb3C+1CU4JN396j2wGFnMY8n0Wl
+         BtA3fyk+638WIPu+P2d/y2/S0M8c/Vh2Y+axgqTLkSeaNDqi45bdUCjpl7HBR3rfuIls
+         W0tA==
+X-Forwarded-Encrypted: i=1; AJvYcCUeOKr6H/Y8BvXilg9c2VPR0OUAdsZKoWl4DcFWcjhGhZ0000J2ICeyUIyU0oHTjHv51edOsP3CKC3K95fosTuifYXN5XteW4QT7qe+90vM+iZxKLvb3PO+N4e8GBqFNxZGqH/x
+X-Gm-Message-State: AOJu0Yz1hn7loPYi/DCtBOH/DJJ0D4zInSsuGNswe0Z8iqgZXyZfpbC7
+	Ojb9EG2OmhQpn/LwlOyl7rI00EMsGo8ONL04o0S4SRpy++OQrelc
+X-Google-Smtp-Source: AGHT+IHyyK9R+xE+MtpfI+UAMFtrboJJduXIZ818GnkIr7zOYph0pzCdXWMyUAy3gUzpvIq3+Gb5Dw==
+X-Received: by 2002:a05:6a00:330d:b0:6f8:d499:2d41 with SMTP id d2e1a72fcca58-6f8f3f8ba84mr12440692b3a.24.1716847076494;
+        Mon, 27 May 2024 14:57:56 -0700 (PDT)
+Received: from [10.83.3.140] (177.204.11.224.dynamic.adsl.gvt.net.br. [177.204.11.224])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-701b2219980sm508796b3a.46.2024.05.27.14.57.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 May 2024 14:57:56 -0700 (PDT)
+Message-ID: <bf02d65d-876f-4a90-84b5-595707659fb0@gmail.com>
+Date: Mon, 27 May 2024 18:57:52 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2ym3suufqpgosluf"
-Content-Disposition: inline
-In-Reply-To: <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
-X-Provags-ID: V03:K1:TzN8SZqqqWbrtcPaGOiZy5NIot8TbGA3uyJ8xjfRM1J+7g+Lsv5
- R5KEKqwiwEV3RBdW97Now6z9Sms6+EBLPLZr+kp8iY9eF2dxM+w+M51A82NcvKxZW9tJ9/S
- FqO4nnCfV3kGWD61/oDZGbCIelP0RudwobeHyHh/vpmAJWW5w8e0GmgPyTnQPTlS5EpO9bY
- yR2SJt0qcftQTUNBasr6w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:fi2kicbCbbQ=;qiGko958NBAVzz7xLKJQlsiZQvm
- bMWX8y+PXGqF9+Jgy1WFiE0JnB3S87eSfe1JQms//d6QcUMwwRs6LrvxeNh3PU9jwLn+ElnA9
- bWwTzU8fWgKlMp8+PV1xXo7MhKf+adWN1Ljb/ToHYs/C7Eh0+x2k7yY9Q1jmCtDF556n7jxFn
- rpZZZYph9x5NZUMl6HYiRG3mz2qxvcxdPG32faYpIcKIvqnRKfqwSS18f6lCEeo0IwMO9JcX+
- AFIF3IRkoif6RkXTSo9Qh6ON82UmB6TnUq/8puL1E0Syan1MS011quPyvwMzbEDGopYXDR9Yv
- GmK4okZ+kEfSvgAxzLk9uweECUWuWYkSXPSE+G5QZ6mBN+hPq7efQ9v84qcBzTXe2TWoxECWv
- bF1+iTYYL4TWjO6gW+frIjUB3DFZrfxs++2xkNN9Go9quO9IhUHxCMk6YmgzQVrkPzeGyw3h6
- r+YMvui7NrFxBnETfPsFDNV/q+EdyWk/ERcDUp8qrULY1LcQt1qmSjtNBIWg/kCJo0O3yZ32q
- r0oUYcAaDhB+jKD0GmTgtf3e5MisTyOfBXsVx+HfhSp7Cy9QldSi75/lJ3nD6SnDSonxZn/55
- TMp7bTOHCNd1khDabKFhqgOiUrKW/i0zm5DkkluWpzshvv35FzZ3au7HRjf5zG5EJ/pCxD41Y
- cVX0O+7nWUf3QuJn9Ey1I3rYtkmvR01TqXKOBy+C3fBm+raL7AnDTTud7RnL2JPnTPSy/Muft
- yYFwTSKrzWrVGtkaRw1A/99kSgTjLynMuY9uC5CPcXbmAcmHjM5Fis=
+User-Agent: Mozilla Thunderbird
+From: Gustavo Brondani Schenkel <gustavo.schenkel@gmail.com>
+Subject: Issue with f2fs on kernel 6.9.x
+To: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <2024052527-panama-playgroup-899a@gregkh>
+Content-Language: en-US
+In-Reply-To: <2024052527-panama-playgroup-899a@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi,
+since upgrade to Kernel 6.9 I am getting Issues when booting using f2fs.
+If I am correct, I am receiving `fs error: invalid_blkaddr` in two 
+distinct drives, one nvme, and other sata.
+Each reboot the fsck runs to correct this suppose error.
+If I downgrade to Kernel 6.6.29, on the first boot, fsck runs just once, 
+than after reboot is normal.
+I used 6.9.0, but in 6.9.1 it took my attention because I don't reboot 
+often. One 6.9.2 the Issue persist.
+Since I didn't find nothing about issues on kernel messages I am trying 
+reach you.
 
---2ym3suufqpgosluf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I use Slackware Linux 15.0-current, and debug flags are disabled by 
+default, but if you needed,
+I can rebuilt the kernel with the flags you say are needed, to find what 
+are happening.
 
-Hey Peter,
+PS: I didn't find any better way to report this issue, said that, sorry 
+if this is the wrong way to do so.
 
-On 24/05/27 11:15PM, Peter Schneider wrote:
->=20
-> I want to add one thing: there is a log entry in the dmesg output of a "b=
-ad"
-> kernel, which I initially overlooked, because it is way up, and I noticed
-> this just now. I guess this might be relevant:
->=20
-> [    1.683564] [Firmware Bug]: CPU0: Topology domain 0 shift 1 !=3D 5
->=20
-> This does not appear in the 6.8 kernel dmesg.
->=20
+-- 
+Gustavo B. Schenkel
+System Analyst
+B.Sc(IT), MBA(Banking)
 
-I also can't comment on whether this is relevant or not, but I have
-noticed this in more places:
-
-    - https://bugzilla.kernel.org/show_bug.cgi?id=3D218879
-    - https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/iss=
-ues/57
-
-Cheers,
-Chris
-
---2ym3suufqpgosluf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmZU/FYACgkQwEfU8yi1
-JYVmzxAAtW7Y1RVf3PrMoBU9g590MNPJUU9rDfbjxIJvlVLNAuUO28Ace7twgezB
-/nRFCvBa4swGyG8GmJNpNnfUjKkAdK3iBXGWJP2X7EIqfgMeQHh95+6d47EICxKx
-GxlxP6tikMkb8b8S1EXxFcXZOFvCmXCQD1EkEImm++Twy40jL90v74Nedy0Ksvve
-94Gzf9qM6YQs6GM5LNthlEtKIVLiXkJif6HkQ8mmxT3yKemDJo6UkdRV77Ng4nAp
-lv33XQSvnihgKFeINa/WXGMGuJOyEynbEQwO2KacPvCqUNv17NR4O67kNZjzUVtn
-KeCl5+/N/UGW8j7WZhk7QeY02hTdYv64nAPBXVehZXlGgUH5I6HieYU5l+2aBvJy
-SixmWX8EaRNVDGFY7X/kkMf4/7UzZM2dzj/iI/40H90anAhj1+nWWH73tZXscanE
-+rX1IMHf5d8sJAPgE9nFEJoPv86291sG37NJjUrHgrWksIesX+flLkBdS51qIdfn
-Vil+8a8hB6GV1pqd5740iuoVb+AEwHgCS0UOt3kaxZHX7GtQBPSAMkkYwHH5ko17
-E6rSyb0W8AWaKEsaxfR3QepOLTzBVy10zjoVsTD84YQBZy9Yg4U55G0lOKHKih6y
-I43T2ZzbcmKhZBAYhmJvfMe4K3FSyYAu4OFRElsxN8c/g5h5Oh8=
-=QlDh
------END PGP SIGNATURE-----
-
---2ym3suufqpgosluf--
