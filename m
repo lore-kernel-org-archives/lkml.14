@@ -1,103 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2479F1640B;
-	Mon, 27 May 2024 14:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481D91640B;
+	Mon, 27 May 2024 14:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819100; cv=none; b=RMPKH1+r8XvfeZ8c3ZNE1/leElgf6g6e/HMrgmASf9q1H3Az8+lHKbkIlQ7iTqQwVNKONGluiPuHZ2LdLjQIylRby5IuDrgJVqsGkO0Y8nP0fqmiJpAJatK8SQh7wC241UaKMTIWnk74qqqFmozyc1o83hxQOwkKKqUZrPRhcjc=
+	t=1716819137; cv=none; b=dGmFpxxcFhP08JhGeOpMDt087zrp0azNs9PBNP5gbE0CNWBrbmoHz6JaY1C2FJ3Xusi6/9mBDB0m9T/S1x9jGst0wd21deESN0yeAC7Y+PuOnQW6otczky+4z5h/vthv2XL+OkFJt5iXGrhFCY9vTdTzYskmlURSI3AmbnkzUg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819100; c=relaxed/simple;
-	bh=o5hbqwBIk7hbVfK+3GoDhFtKqh6k+H303kYL9/uP8BU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bxRUPK9iJVCtXIUwrGuOpyQ8vj9QgU8SKS51PQAc2GoAubCUBlfKs4N5WeFmjfOaiNM1fnjEM4y4J0ofn6QAqxhm94PRZbFagRoq6cAqt8PUzUI0II2aIda5rkVqDImSoGO5MGDMqRxrexVLCSDZTaR940W6aKlEJB5eg6mI7GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=btIVkH8V; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716819137; c=relaxed/simple;
+	bh=6SYKgBlXJN9TOW8fSy6AeVIJaXX94pXSGwfM/4Tmus4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SACeCP6WSeo0Dum8NFdI30gcvquNCHE2eTtFcscoB8Elp2esMfXP/u/pdTKwJ4piLNnQVuJpqIJmCVqSreYUfJVhYL6rIDl5kP5MtwG+BGjz76HOoPdJVpRNZRX5ek+Uc/tUMNI+ltsH0pWnTXyhZuJ9jbYDgAJdmoHqCMZq4r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9NLFaWp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btIVkH8V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716819100; x=1748355100;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=o5hbqwBIk7hbVfK+3GoDhFtKqh6k+H303kYL9/uP8BU=;
-  b=btIVkH8VG3nLkoluYtHKtpqtNocofhWbTYqn3SSi5k0AsqkdNY2Y6Mdx
-   mavajyB6uW31yeGxAk70SJdJOQbNzqWoIGLQhr40pxLerX4TAO5dI+BGO
-   gELXg3nRlcc21gDfrCOfTLPK05eHDIaCtI5bEDB/0hprbcih2aptPZTKP
-   ftvXweCQgTLHiNIEPStlqU1Ms5xEYPxEcJ4V0CPjKbLieUfswm4JOV2pY
-   w1HvMUsGjWMMbuZzlBywKieM19hGlPlg/RfKXSkoh4ScMmW31QhqqXafK
-   ItNqdplFIwaoaYK9Q11stCDjv5bYPmhJj1FXPMHQA8TlYQMxDTmghbLyR
-   w==;
-X-CSE-ConnectionGUID: Zd8Ki25gTKOdKGmKgylV0g==
-X-CSE-MsgGUID: sVVEbBwxQ8SPHSAbEMIciQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13085578"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="13085578"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:11:39 -0700
-X-CSE-ConnectionGUID: Zhuq5rPFQmKHqU+Ja7y81A==
-X-CSE-MsgGUID: CZN/hKapTWO683lguzJlNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="65990651"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.140])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:11:36 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 27 May 2024 17:11:32 +0300 (EEST)
-To: Dan Carpenter <dan.carpenter@linaro.org>
-cc: Linus Walleij <linus.walleij@linaro.org>, 
-    Bartosz Golaszewski <brgl@bgdev.pl>, 
-    Dmitry Baryshkov <dbaryshkov@gmail.com>, linux-gpio@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpio: amd8111: Convert PCIBIOS_* return codes to
- errnos
-In-Reply-To: <09f2f3ac-94a7-43d3-8c43-0d264a1d9c65@moroto.mountain>
-Message-ID: <7d475c6c-8bbf-86f4-b2d8-8bc11cb9043e@linux.intel.com>
-References: <20240527132345.13956-1-ilpo.jarvinen@linux.intel.com> <09f2f3ac-94a7-43d3-8c43-0d264a1d9c65@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9NLFaWp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03D8FC2BBFC;
+	Mon, 27 May 2024 14:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716819136;
+	bh=6SYKgBlXJN9TOW8fSy6AeVIJaXX94pXSGwfM/4Tmus4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=B9NLFaWpRBFXUabGFdTwJzSy6wxkeE8Dq15PHjo9+Pym3PKSVCUNHzw2V5N6cZBGg
+	 8xYoOf46rWc2AzhmhBEC8itJGl/Rj8t/dDMyIBsD05ySS3gglp+U9Gg/37wKMjrWIy
+	 Agon5V1v4LfhPYKtgxSsDbehpo0jOFoGK6MbZfK2BZwqUhTOeccL0q8Q/e3qdLwAiz
+	 gVhmgNQrVMSzHZZJiPtnzxOrpd+P7IHzmaJLN335G570xo1QqXWIQZsxj2OTBl8a/T
+	 TBbhewxOxe1xSJBWruBS2gPcGd7irr5Gd1DWVFaKiRHQIj3QpiHxC/Ua8AVR38Lq7P
+	 ETBJ97sMLkQ8A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Rand Deeb <rand.sec96@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 01/35] ssb: Fix potential NULL pointer dereference in ssb_device_uevent()
+Date: Mon, 27 May 2024 10:11:06 -0400
+Message-ID: <20240527141214.3844331-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1881005345-1716819092=:1006"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.2
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Rand Deeb <rand.sec96@gmail.com>
 
---8323328-1881005345-1716819092=:1006
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+[ Upstream commit 789c17185fb0f39560496c2beab9b57ce1d0cbe7 ]
 
-On Mon, 27 May 2024, Dan Carpenter wrote:
+The ssb_device_uevent() function first attempts to convert the 'dev' pointer
+to 'struct ssb_device *'. However, it mistakenly dereferences 'dev' before
+performing the NULL check, potentially leading to a NULL pointer
+dereference if 'dev' is NULL.
 
-> On Mon, May 27, 2024 at 04:23:44PM +0300, Ilpo J=E4rvinen wrote:
-> > diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
-> > index 6f3ded619c8b..3377667a28de 100644
-> > --- a/drivers/gpio/gpio-amd8111.c
-> > +++ b/drivers/gpio/gpio-amd8111.c
-> > @@ -195,8 +195,10 @@ static int __init amd_gpio_init(void)
-> > =20
-> >  found:
-> >  =09err =3D pci_read_config_dword(pdev, 0x58, &gp.pmbase);
-> > -=09if (err)
-> > +=09if (err) {
-> > +=09=09err =3D pcibios_err_to_errno(err);
->=20
-> The patch is correct, but is the CC to stable necessary?  Is this a real
-> concern?
->=20
-> Most callers don't check.  Linus Torvalds, once said something to the
-> effect that if your PCI bus starts failing, there isn't anything the
-> operating system can do, so checking is pointless.  The only fix is to
-> buy new hardware.  There was a hotpluggable PCI back in the day but I
-> don't think it exists any more.
+To fix this issue, move the NULL check before dereferencing the 'dev' pointer,
+ensuring that the pointer is valid before attempting to use it.
 
-I don't mind if the CC stable isn't there.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
+Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240306123028.164155-1-rand.sec96@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/ssb/main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---=20
- i.
+diff --git a/drivers/ssb/main.c b/drivers/ssb/main.c
+index 9f30e0edadfe2..bdb6595ffd2d5 100644
+--- a/drivers/ssb/main.c
++++ b/drivers/ssb/main.c
+@@ -341,11 +341,13 @@ static int ssb_bus_match(struct device *dev, struct device_driver *drv)
+ 
+ static int ssb_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
+ {
+-	const struct ssb_device *ssb_dev = dev_to_ssb_dev(dev);
++	const struct ssb_device *ssb_dev;
+ 
+ 	if (!dev)
+ 		return -ENODEV;
+ 
++	ssb_dev = dev_to_ssb_dev(dev);
++
+ 	return add_uevent_var(env,
+ 			     "MODALIAS=ssb:v%04Xid%04Xrev%02X",
+ 			     ssb_dev->id.vendor, ssb_dev->id.coreid,
+-- 
+2.43.0
 
---8323328-1881005345-1716819092=:1006--
