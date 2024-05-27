@@ -1,128 +1,204 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BF34D59F
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 08:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8B44D59F;
+	Mon, 27 May 2024 08:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716798422; cv=none; b=RHhIqKGOb+L3EiRWZO5XnoJgEL+EDS7rFQ6k1qLLvU01Et6W9xjWGXWGoF7WLKPJ4UtJwZbi7A6+iRmlS8o4o7P5RxiFJhvikqtgJpA4ZzZoc6nVAT4dxdo7+QtvCEszELuDK36DeHk0+L1AGGn2qZHKDKijnc4OpaMpE4U6ZYk=
+	t=1716798435; cv=none; b=EOVo0GcTzxlcE9C1Ugx0lGmhYTeZpqfvQKPAoWaWzO12cuJDaZxTtd6keovOpBdL8t9HthrVLNvO2Fs6ecV7A6Wg3Nv+b1o8+HytTwMhYYKqP5GfMB9D0U843AjslLl1FzbNZ7Z+KCP0Nbuh/zqXOte5Tul5POqRMRRMqU74sDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716798422; c=relaxed/simple;
-	bh=o2Cd7FRHxRKyzXe1nYxRHpuLDvQDRWJ5/IpjiVl+PCw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jSjedTGLm04MdaGpCt6g8EjxMx3/Rml7ktCjoHAvdIQfNvipJNafJWJ7dGVhJl9kGyOoLxQLdmnabfuwBk/xvmbznxLVque+sn/KHiFCgdpOmqSOIo+DO1tBHIhuqtAZWrMR++PWqzFLkDN4V/kAZ/UxZqc5QWTqKcYaWMw7iBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=kbdidkAR; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="kbdidkAR"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3737b33270aso13786835ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 01:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1716798420; x=1717403220; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5SBKZRmfn8ClYY/nEFrKLglh6rD618P8LlNAa3InrU=;
-        b=kbdidkARwHSwzlUbu+afTQLfphDeDpCM+PjqCTmDdT9vhrFV1KRWUb6TqDwRbSFs4/
-         TuUHa/LHQCKMJheuyMdtp8yp4JoGpmAP5CWNwD2P1FUUW1j+7g4zbGBWczQlE9F44KYg
-         ihaLvng52uGIJsV0BSMiUJHA4o6SFt32Nz3rjjej4TkQ0uNyrBPjb/O+TCyjYUKFUsda
-         ac/Il97m+7fH4ns3FLGSBDwNpGXuf1Wy5J8+aNtC3SMlBT+NAgv0n2/Bo6qFP53T3Uf8
-         W3dDR+H8gSv5PK1x+ZVg+xwEokAhBWfi3nPbbfrP/6wCKXoyXQ4/19aKe/bayqrXd0u6
-         mqcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716798420; x=1717403220;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/5SBKZRmfn8ClYY/nEFrKLglh6rD618P8LlNAa3InrU=;
-        b=pvf7nJdfDNCqFShvariSWvPCvlpCG97ge8AOauZrD1vkGGQ1R58QQYIxUpwjSuXAlW
-         NcEBw1SDMlKoD2pG1DWwYu2re7YFjlQMCAwbzG98xbMMlQpPU+63DVfjPpFI0HmItoFQ
-         Oxi5d0WDXbb5Uh9mGpZ/8oaQJe7OWCY7HhTRFySXc7e3KPL/COJ5rpmsdShrw7kX9XNF
-         1ypP050TNlmZOKMpn+AgVmauNI8DndeYV4amrv+g/g9PAjbl80Nb/vfqUbj/xpXfdiv2
-         hwbPVYy7H4KoKmu9ofbCPydOjVt1NGPWxQTA+y3koeE62C5tUdwxtUceoQmr5PHpRbdr
-         peEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvGaCXD7YAazJ93RvKp/B1agTPq1ZjU/P0FZRDZxGWRGn88+48tjashXck2u7fO2GouEtkdnUa8thXJZyal+mi2Fu73wJ589NF3BhI
-X-Gm-Message-State: AOJu0YwQZTU0EKzk3VXeQ1zoLojSpCthDj8BMnEXn61a/CERGwGRsOfd
-	nr84zY6Lrv6BhxYB0CJb5TooR5FStnJ/H0aBFeDkPrXCeqQHgm+he0RPN1Dp3XBA/+amsNfGabH
-	Y4rhx+MuAIa4E0Hflmz8M4O8c//Vq8TvrX0EJ9Q==
-X-Google-Smtp-Source: AGHT+IEgDT4pS/mZr+ttNPQ/LXB18npnZnRGGeZXrhjUs0eiWtyBh4xHpLQwJaB4P1cmTNr+R0jrfrct3QLM4SE+COM=
-X-Received: by 2002:a92:cf0a:0:b0:373:7f12:bc1a with SMTP id
- e9e14a558f8ab-3737f12c098mr74389655ab.13.1716798419836; Mon, 27 May 2024
- 01:26:59 -0700 (PDT)
+	s=arc-20240116; t=1716798435; c=relaxed/simple;
+	bh=zUE6pPT76PHtvUaIgPgs0DAmlWvRn84at9iQJw0SZZY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rMALbBpfBuMwSkY5QNVboPNisKYgNHBwhTgc1z5kUPwQ7nag+wSzN/OoBzxv2Kc/JIonSMa/dJnY4Sqf/A0EZps5NIUf/EnStYZz9+Uds/A6o8vme8u4KHPwuK87vnVavFiEwr0SptjeC8eDH+Er3Vya8q8xsABnciQY6uHDGkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VnpZJ1C6yz1S5m8;
+	Mon, 27 May 2024 16:23:36 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id CC0DC1A016C;
+	Mon, 27 May 2024 16:27:09 +0800 (CST)
+Received: from [10.67.111.172] (10.67.111.172) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 27 May 2024 16:27:09 +0800
+Message-ID: <e3af2eda-8239-a3ca-9d8b-9f31dcbb83f0@huawei.com>
+Date: Mon, 27 May 2024 16:27:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527081113.616189-1-sunilvl@ventanamicro.com>
-In-Reply-To: <20240527081113.616189-1-sunilvl@ventanamicro.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Mon, 27 May 2024 13:56:47 +0530
-Message-ID: <CAAhSdy2tDtYPwPPa2o7_JBpVJXynv9+NwRMoOXErjRCcs+xBYg@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/riscv-intc: Fix memory leak when
- riscv_intc_init_common() fails
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Andrew Jones <ajones@ventanamicro.com>, Conor Dooley <conor.dooley@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2] media: dvb-usb: Fix unexpected infinite loop in
+ dvb_usb_read_remote_control()
+To: Sean Young <sean@mess.org>
+CC: <mchehab@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-media@vger.kernel.org>
+References: <20240412135256.1546051-1-zhengyejian1@huawei.com>
+ <20240430104137.1014471-1-zhengyejian1@huawei.com>
+ <ZjTPqR3_EhbNU-fm@gofer.mess.org>
+Content-Language: en-US
+From: Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <ZjTPqR3_EhbNU-fm@gofer.mess.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-On Mon, May 27, 2024 at 1:41=E2=80=AFPM Sunil V L <sunilvl@ventanamicro.com=
-> wrote:
->
-> When riscv_intc_init_common() fails, the firmware node allocated is not
-> freed. Fix this memory leak.
->
-> Fixes: 7023b9d83f03 ("irqchip/riscv-intc: Add ACPI support")
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+On 2024/5/3 19:51, Sean Young wrote:
+> On Tue, Apr 30, 2024 at 06:41:37PM +0800, Zheng Yejian wrote:
+>> Infinite log printing occurs during fuzz test:
+>>
+>>    rc rc1: DViCO FusionHDTV DVB-T USB (LGZ201) as ...
+>>    ...
+>>    dvb-usb: schedule remote query interval to 100 msecs.
+>>    dvb-usb: DViCO FusionHDTV DVB-T USB (LGZ201) successfully initialized ...
+>>    dvb-usb: bulk message failed: -22 (1/0)
+>>    dvb-usb: bulk message failed: -22 (1/0)
+>>    dvb-usb: bulk message failed: -22 (1/0)
+>>    ...
+>>    dvb-usb: bulk message failed: -22 (1/0)
+>>
+>> Looking into the codes, there is a loop in dvb_usb_read_remote_control(),
+>> that is in rc_core_dvb_usb_remote_init() create a work that will call
+>> dvb_usb_read_remote_control(), and this work will reschedule itself at
+>> 'rc_interval' intervals to recursively call dvb_usb_read_remote_control(),
+>> see following code snippet:
+>>
+>>    rc_core_dvb_usb_remote_init() {
+>>      ...
+>>      INIT_DELAYED_WORK(&d->rc_query_work, dvb_usb_read_remote_control);
+>>      schedule_delayed_work(&d->rc_query_work,
+>>                            msecs_to_jiffies(rc_interval));
+>>      ...
+>>    }
+>>
+>>    dvb_usb_read_remote_control() {
+>>      ...
+>>      err = d->props.rc.core.rc_query(d);
+>>      if (err)
+>>        err(...)  // Did not return even if query failed
+>>      schedule_delayed_work(&d->rc_query_work,
+>>                            msecs_to_jiffies(rc_interval));
+>>    }
+>>
+>> When the infinite log printing occurs, the query callback
+>> 'd->props.rc.core.rc_query' is cxusb_rc_query(). And the log is due to
+>> the failure of finding a valid 'generic_bulk_ctrl_endpoint'
+>> in usb_bulk_msg(), see following code snippet:
+>>
+>>    cxusb_rc_query() {
+>>      cxusb_ctrl_msg() {
+>>        dvb_usb_generic_rw() {
+>>          ret = usb_bulk_msg(d->udev, usb_sndbulkpipe(d->udev,
+>>                             d->props.generic_bulk_ctrl_endpoint),...);
+>>          if (ret)
+>>            err("bulk message failed: %d (%d/%d)",ret,wlen,actlen);
+>>            ...
+>>        }
+>>    ...
+>>    }
+>>
+>> By analyzing the corresponding USB descriptor, it shows that the
+>> bNumEndpoints is 0 in its interface descriptor, but
+>> the 'generic_bulk_ctrl_endpoint' is 1, that means user don't configure
+>> a valid endpoint for 'generic_bulk_ctrl_endpoint', therefore this
+>> 'invalid' USB device should be rejected before it calls into
+>> dvb_usb_read_remote_control().
+>>
+>> To fix it, we need to add endpoint check for 'generic_bulk_ctrl_endpoint'.
+>> And as Sean suggested, the same check and clear halts should be done for
+>> 'generic_bulk_ctrl_endpoint_response'. So introduce
+>> dvb_usb_check_bulk_endpoint() to do it for both of them.
+>>
+>> Fixes: 4d43e13f723e ("V4L/DVB (4643): Multi-input patch for DVB-USB device")
+>> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+>> ---
+>>   drivers/media/usb/dvb-usb/dvb-usb-init.c | 27 ++++++++++++++++++++----
+>>   1 file changed, 23 insertions(+), 4 deletions(-)
+>>
+>> v2:
+>>   - As Sean suggested, check endpoint and clear halt for both
+>>     'generic_bulk_ctrl_endpoint' and 'generic_bulk_ctrl_endpoint_response'
+>>     with the new introduced dvb_usb_check_bulk_endpoint();
+>>     Link: https://lore.kernel.org/all/ZjCl97Ww6NrzJQCB@gofer.mess.org/
+>>     Link: https://lore.kernel.org/all/ZjC7rXU7ViaH60_S@gofer.mess.org/
+>>
+>>   - Add Fixes tag.
+>>
+>> v1:
+>>   - Link: https://lore.kernel.org/all/20240412135256.1546051-1-zhengyejian1@huawei.com/
+>>
+>> diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+>> index fbf58012becd..7eb321bab84f 100644
+>> --- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
+>> +++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+>> @@ -23,6 +23,23 @@ static int dvb_usb_force_pid_filter_usage;
+>>   module_param_named(force_pid_filter_usage, dvb_usb_force_pid_filter_usage, int, 0444);
+>>   MODULE_PARM_DESC(force_pid_filter_usage, "force all dvb-usb-devices to use a PID filter, if any (default: 0).");
+>>   
+>> +static int dvb_usb_check_bulk_endpoint(struct dvb_usb_device *d, u8 endpoint)
+>> +{
+>> +	if (endpoint) {
+>> +		int ret;
+>> +
+>> +		ret = usb_pipe_type_check(d->udev, usb_sndbulkpipe(d->udev, endpoint));
+>> +		if (ret)
+>> +			return ret;
+>> +		ret = usb_pipe_type_check(d->udev, usb_rcvbulkpipe(d->udev, endpoint));
+>> +		if (ret)
+>> +			return ret;
+>> +		usb_clear_halt(d->udev, usb_sndbulkpipe(d->udev, endpoint));
+>> +		usb_clear_halt(d->udev, usb_rcvbulkpipe(d->udev, endpoint));
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>>   static int dvb_usb_adapter_init(struct dvb_usb_device *d, short *adapter_nrs)
+>>   {
+>>   	struct dvb_usb_adapter *adap;
+>> @@ -103,10 +120,12 @@ static int dvb_usb_adapter_init(struct dvb_usb_device *d, short *adapter_nrs)
+>>   	 * when reloading the driver w/o replugging the device
+>>   	 * sometimes a timeout occurs, this helps
+>>   	 */
+>> -	if (d->props.generic_bulk_ctrl_endpoint != 0) {
+>> -		usb_clear_halt(d->udev, usb_sndbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+>> -		usb_clear_halt(d->udev, usb_rcvbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+>> -	}
+>> +	ret = dvb_usb_check_bulk_endpoint(d, d->props.generic_bulk_ctrl_endpoint);
+>> +	if (ret)
+>> +		goto frontend_init_err;
+>> +	ret = dvb_usb_check_bulk_endpoint(d, d->props.generic_bulk_ctrl_endpoint_response);
+>> +	if (ret)
+>> +		goto frontend_init_err;
+>>   
+>>   	return 0;
+> 
+> This results in the following warning:
+> 
+> drivers/media/usb/dvb-usb/dvb-usb-init.c:133:9: warning: 'adap' may be used uninitialized [-Wmaybe-uninitialized]
+> 
+> I think these tests should be moved to the top of the function, so no cleanup
+> is required.
+> 
 
-LGTM.
+Hi, Sean,
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+I have fixed the warning in v3: https://lore.kernel.org/all/20240509124414.1392304-1-zhengyejian1@huawei.com/,
+would you mind taking a look at it ?
+I introduce a new funciton dvb_usb_clear_halt() to clear sndbulkpipe and rcvbulkpipe,
+dvb_usb_check_bulk_endpoint() only do pipe type check and is moved to the top of
+the function.
 
-Regards,
-Anup
+--
+Thanks,
+Zheng Yejian
 
-> ---
->  drivers/irqchip/irq-riscv-intc.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
--intc.c
-> index 9e71c4428814..4f3a12383a1e 100644
-> --- a/drivers/irqchip/irq-riscv-intc.c
-> +++ b/drivers/irqchip/irq-riscv-intc.c
-> @@ -253,8 +253,9 @@ IRQCHIP_DECLARE(andes, "andestech,cpu-intc", riscv_in=
-tc_init);
->  static int __init riscv_intc_acpi_init(union acpi_subtable_headers *head=
-er,
->                                        const unsigned long end)
->  {
-> -       struct fwnode_handle *fn;
->         struct acpi_madt_rintc *rintc;
-> +       struct fwnode_handle *fn;
-> +       int rc;
->
->         rintc =3D (struct acpi_madt_rintc *)header;
->
-> @@ -273,7 +274,11 @@ static int __init riscv_intc_acpi_init(union acpi_su=
-btable_headers *header,
->                 return -ENOMEM;
->         }
->
-> -       return riscv_intc_init_common(fn, &riscv_intc_chip);
-> +       rc =3D riscv_intc_init_common(fn, &riscv_intc_chip);
-> +       if (rc)
-> +               irq_domain_free_fwnode(fn);
-> +
-> +       return rc;
->  }
->
->  IRQCHIP_ACPI_DECLARE(riscv_intc, ACPI_MADT_TYPE_RINTC, NULL,
-> --
-> 2.40.1
->
+> 
+> Sean
+
