@@ -1,99 +1,63 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A5B15FA63;
-	Mon, 27 May 2024 15:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0106817E901;
+	Mon, 27 May 2024 15:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716823658; cv=none; b=nXuI9ejgpKVrHOfZkqdzDOEsBnqw+QZOTshDRNBD0eyHKO4IxBSx6NVGeWf+5/L5ZfE8XMcW47+E8v1ROC2kin/WuH6C42UXkAUBVxfihuUmmdmRuA4PUP3zC3xhpQZ8zPh8PHfukVpPZB5OLzc8ZkrjItyBQ3V3syBNy2vMKPI=
+	t=1716823808; cv=none; b=KPVPyLG9q6PQ36ZvQjDeO7s6ouIjcybPBjDX9Cg9zf67d6pZODbXChhDHEMBvsyEPNPnpk5p3FxOhD2RM6KeBmdhOrvvnV0rgZpgtxsRl7+KzY545mN3LnM8Xk50pxmUzjT/Q+Rna1VY7k0O4A+qm1jp5eSJPBeCTKyTKo1E1wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716823658; c=relaxed/simple;
-	bh=E389+cPhZt2vqBGphSjSmB5qagkz0uANoo76v397sas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jVS6c3U1cMB6IFnf6gykAqAx9NPo6ycinvW8DDVjg09/A67GAXUV0sRamauSdALXxKkWqGN/9TjuWNiXAlsZrPoTjdG5gRxAFwhBaJSpzGu8jw8nLJdoF4Aa7PdxIoYF/lEfvEVE0U9GOSxYR30RxWd0Q2jFhdDuZmKx+OGsoms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FfgPGAoH; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716823808; c=relaxed/simple;
+	bh=av+0AkCMXX2n6oucQPkQP/tR3wmYObAftqkimVYfURg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=sDmuVptahpOnaA4bB5Qz8LyMb6cCVaVeJT6EkI97nbKxKBDuYlXmaNyRvNsLfruteYZ8woseNGBe4vm4thEci8glmZP44KbN3gluVClGNChU1rtfUr9CZFAdoLk3zOonoKXSOqYAYsxTgZ3ZQW4LaOLha/emxHpAlMdPGoOhwHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gj9OAe7A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FfgPGAoH"
-X-Envelope-To: mripard@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716823652;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vsw4ZGatsr0eZbdbPVbaiC9GTnbbEm5u3nRWlw+hGUc=;
-	b=FfgPGAoHB1qlQWojPKPbc3dqBZe+TrUH4BSedSn814UMa4siCJ0fTL/3BQ2TGlKsDjfXHM
-	5Y9klSvpPbdA23gk4DwM/9zAoaIfAXh1ELhXijHvf9FSzUNt0hDVBjkpojFdAEUePklnFY
-	qvmpTQ9v8Z3A6HOiYnsXGLu5kOJRqyE=
-X-Envelope-To: maarten.lankhorst@linux.intel.com
-X-Envelope-To: tzimmermann@suse.de
-X-Envelope-To: airlied@gmail.com
-X-Envelope-To: daniel@ffwll.ch
-X-Envelope-To: corbet@lwn.net
-X-Envelope-To: hjc@rock-chips.com
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: wens@csie.org
-X-Envelope-To: jernej.skrabec@gmail.com
-X-Envelope-To: samuel@sholland.org
-X-Envelope-To: andy.yan@rock-chips.com
-X-Envelope-To: hverkuil@xs4all.nl
-X-Envelope-To: sebastian.wick@redhat.com
-X-Envelope-To: ville.syrjala@linux.intel.com
-X-Envelope-To: dri-devel@lists.freedesktop.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-doc@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-media@vger.kernel.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: linux-sunxi@lists.linux.dev
-X-Envelope-To: dave.stevenson@raspberrypi.com
-X-Envelope-To: dmitry.baryshkov@linaro.org
-Message-ID: <50622688-c1ab-4dde-8735-0456722fab14@linux.dev>
-Date: Mon, 27 May 2024 23:27:21 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gj9OAe7A"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 807EDC2BBFC;
+	Mon, 27 May 2024 15:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716823807;
+	bh=av+0AkCMXX2n6oucQPkQP/tR3wmYObAftqkimVYfURg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=gj9OAe7AOnY3jHh8v0gD8c8Qgv7hfBi3ueO49IJYdxmsvsdgq2bbUTFd0Zoh8WzNM
+	 NvfQuctOsyssaqSNLk9xz0xPQW6+MkbHcRMXh6Z/n8on4+SSpahjsJ/QUF7GBoj/MC
+	 8M013Sk+bvFA9eprttjjHM4aZe0t/S4ZNgKQvFzFme3hS8/QvE26fwOgcENHuyKMvL
+	 /L9cOtEPxEIHpq2Rtv1exSsuzVGc8QE4YZYLnoJwBzqLBdWQskz0TN6FvhAszk/P3A
+	 Zbz4RVmxGpm7ISYgVTzIOOGMJ+rshQz8ocT6vcN+PKU7FOkCoHv4zPn0zm/mrI7/dp
+	 ojL0P9vATXNjQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 62E21CF21F7;
+	Mon, 27 May 2024 15:30:07 +0000 (UTC)
+Subject: Re: [GIT PULL] vfs fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240527-vfs-fixes-96860426ed27@brauner>
+References: <20240527-vfs-fixes-96860426ed27@brauner>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240527-vfs-fixes-96860426ed27@brauner>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.10-rc2.fixes
+X-PR-Tracked-Commit-Id: f89ea63f1c65d3e93b255f14f9d9e05df87955fa
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e4c07ec89ef5299c7bebea6640ac82bc9f7e1c95
+Message-Id: <171682380733.26768.727803727113502416.pr-tracker-bot@kernel.org>
+Date: Mon, 27 May 2024 15:30:07 +0000
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [v15,06/29] drm/tests: Add output bpc tests
-To: Maxime Ripard <mripard@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>,
- Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
- Sebastian Wick <sebastian.wick@redhat.com>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-sunxi@lists.linux.dev, Dave Stevenson
- <dave.stevenson@raspberrypi.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <20240527-kms-hdmi-connector-state-v15-6-c5af16c3aae2@kernel.org>
-Content-Language: en-US, en-AU
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <20240527-kms-hdmi-connector-state-v15-6-c5af16c3aae2@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-Hi,
+The pull request you sent on Mon, 27 May 2024 13:55:56 +0200:
 
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.10-rc2.fixes
 
-On 5/27/24 21:57, Maxime Ripard wrote:
-> Now that we're tracking the output bpc count in the connector state,
-> let's add a few tests to make sure it works as expected.
-> 
-> Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e4c07ec89ef5299c7bebea6640ac82bc9f7e1c95
 
-Tested-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
