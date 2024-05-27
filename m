@@ -1,55 +1,57 @@
 Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C857110A1E
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 23:45:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3798F13C3D5
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 23:45:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716853521; cv=none; b=NFwPlFrqQnkwsx8p91/bZLCqrIJ3IUaTZ5/uDXrJaCpttm5fx5qGSGWx/jKfBsIbGBC5WhzsAOhiVxrICBj72T14KitL2KPy7x3pEqCuqrtF2tfVwvD7UWVjuF3WeLcLuvTXjmAvrQ9MPiKeHhl75gMb1FJWUevQ7SMjLrUqgHU=
+	t=1716853523; cv=none; b=XkK6lIY7Anh7PQVA+OwBirUbbk0M30lAGqD7r4OHkPfIbpUE2iIaze3Pf7oMStqyPToPDTZqaLfBVfdeaDcVFsDNsDW/55CXpYlw0SjwAahnl7KaRtv1R87c6QVbFzILT+0RqWqSeo5f4Szu+XSxuPMR/lf1Lzq/8qckJftx6T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716853521; c=relaxed/simple;
-	bh=ilnFqztr6YvKOP1wiWFQn72ziqayuZkyKp9feAbsV5Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ezxU0lQQWfWNjjJc9gqqf6OCmkmdt0lF26T0HEZt4Np79b4jmncJlmr70Jwc2KH0/uN/rNc6SPMKc3u1lDXs/MOH3GJrN/gHoLGZgVCOYaXoDkiq2sQi9QiHP4/cdK/kRvWRCkaDHfHAo7uafcYqFOCQZ9+8vWBEaxgsV5vcQ20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=zi77ixl2; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1716853523; c=relaxed/simple;
+	bh=DukxrWCXAjyyH7zpUw9lAqh0pCE9UlNjO3BaKcx0yMU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=r9SkmlfHJC0Num/Hibd+H4NP6L0SAeNmlL60BlggtKtXODJHRpGaWZbFuxEEpYvtLxRYw6OlbGXQaqVdbL5/Zlw42vYuM281hNBPFC2iOz748b6+sNyNWVkiAbPdKxjRYFDPima8YwkD30WvK7/77d4GArMmNMiwldYixs/Eq88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=zv3Fm8NW; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="zi77ixl2"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-356c4e926a3so164306f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 16:45:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="zv3Fm8NW"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-354b7d76c52so189882f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 16:45:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1716853517; x=1717458317; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sRO/CnRPtpBsbl7nBhwPcIaynZHQudWyGgLN4ebnUfQ=;
-        b=zi77ixl2RElbuX0WbF4Yz3H/D0XISXLJIh7v0bUM8mDk8K7gUaIlsNk+wG+CeoIc+i
-         HZuO8hKnRr7arFfxPo+/KGIq/EJeJ8KJnsIye1XqISfn9SfFo2U+uw/re6ceeHVekQx2
-         d/yJsVbBNxatKEZ5ot/gJP5Zncn+bkIQrCUmoc5zTvTNUNq7l0eBEnSHmQPBYVd1VDHw
-         3KV+aYaR09ptHGgGvRu6lVw12cecdMdWSFHu2LioFVJwI8WpyQj+v2uadESWA8ySo1Ub
-         9Tf/9vfIA8knJto9G2xmoGxBoayMXSrW0c59xAdv2Z7BNTW0xxYxxICnlW2xLMY43N5J
-         mXCQ==
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1716853520; x=1717458320; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LabiRKd6+Fdc1S9teFQ4XXd5rRTCMDgsFOfIBlpIeJQ=;
+        b=zv3Fm8NWfLrh94W5mbCakfMstwMO4wu8AdTeDfEvLpZSjKRj/4qeCIwudlWxcYS8ol
+         p/Eb3wAeirABuNhlt5fJ69Pbrl6sTz4RECNH6BHdBgfxzo1Oz7afBzHmRWPChALa+v6n
+         gIHFNppSN7onGqSKdvk00hjjUaltzuTdP5Oqmy7Lf0gaZ/fjX/oc8+6LY445PtIwURfp
+         vVhZ1EoHqaVsXZRy3MdTpqE6o4Rf/CSPIPS93M4nXMU+0lBVSz63EvB9IDGG4SJOGrK3
+         eKuNQaKYD6iobPN6WcIeIIJ+w552eGfxrJEh2VCugtOCUIddCiifv/EXBboMlW75GA9C
+         kQkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716853517; x=1717458317;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sRO/CnRPtpBsbl7nBhwPcIaynZHQudWyGgLN4ebnUfQ=;
-        b=xC2SgyEksYF/HCW/w0COeP2ExUSu7iegL97OZ0bKzagV0Tef3Yjz5InxqTwcEGKaPo
-         r1E80RJm4hGRzyg05wNWHmHFsv4RxumGlxCfXsfhiyFu1Y3U0DsXmBFxoVliOZCdRG38
-         acx/mAOtHxTsgSvD21nSjcS55OngFhqb8/S9ELcE6bm7w4reHfMSJ/OE/1qBQ5ySu27g
-         vZrIi+PRiqoJWmDmXStIV/VlmivpXeK6mv/HdeoINux+wLhsif60yumHnWu9JkifNp1V
-         hoyYLxpFAMx1Xe5YW1jBG5n+yNEgtq/yueMLBchzumTYo8LSXOdy5I9vwYn29LeJ6AsY
-         C/1w==
-X-Forwarded-Encrypted: i=1; AJvYcCW4/SbhpG9WqEvmYfLCoC9NBfXmsVSJoOzksVLNcbD6tO7EmGgObyQ8p62NUA9SZyJAmoPogc6siA1ZOOkAwu538PhOqKc+FAU5fqps
-X-Gm-Message-State: AOJu0YwiItqFig00YxZksHnbKbyWu7UxTB+mw65B2bf2o7ApQpZDEeKa
-	DXHsIW3c3eB3AgwrwDzYV1eR2YMLnpt5gJqPX8ShktOkRjsb0SnHUSp4zE0H9d4=
-X-Google-Smtp-Source: AGHT+IH9cpBoOavUU39BKyiX5ZVVtYqsyiD57pc9wsnRSAnUTzf+Xg02xdlAzGi0KOkEJdwOY+claQ==
-X-Received: by 2002:a05:600c:6b04:b0:41f:e7ac:cc72 with SMTP id 5b1f17b1804b1-421089f9a09mr75891875e9.40.1716853516966;
-        Mon, 27 May 2024 16:45:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716853520; x=1717458320;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LabiRKd6+Fdc1S9teFQ4XXd5rRTCMDgsFOfIBlpIeJQ=;
+        b=PzN4QEFAQcIxugUjneiL5z9jHD/uWhab438mWuJgWAwGGmSCA1qOfAJq31WMO/hfJx
+         2McSwSMd8crv3Ghqxbzt2bY5PM3ozm6Fpqifh/fhLkLRSoKkw3w1tdIKU8SXLqqtv864
+         /mc2NUCzO0+c90U2CjMFuJiAI8w3SkwYblL5/OhGyjSwW++0X3nCz9/uyQ3/Wnp+66so
+         Avm1QpYSrmrsWBtdjd13gka8JZsIpWhhiN2L2oCnJ1rT6OJejxURLXnu2BD+ozL1MIv6
+         cHHi3g33Nlsw0AHGYp1JhjRGck9HI4Kar0WM5mxeP/fWOqZw/szq6WvUoULpI1r9H7Hl
+         Mr4A==
+X-Forwarded-Encrypted: i=1; AJvYcCX0qAVCApk2KeeX2QczJx+5mHFKcsvvGBeht91SDnvdakG0LJjorlg8WA1ftWRb3v2P6UKZsKUlu8Vmz9oFgZMiXXLp/ifXSk/8wu9c
+X-Gm-Message-State: AOJu0YxZe+jYGsArU86/Tixru+UZZx98mY/gVOTliUuu2inW77uv45hh
+	cjWo+DXy++aGgMq42A0p8euEGDRe4qHUkRHm+7M/J1lCyyan3r1gLx7DTSbH61Q=
+X-Google-Smtp-Source: AGHT+IGy/gagOKc04QMh7vQyWY1fx5jjEL/7vEbfZ1S7DNLjj4/0M9wIHpNhOOn/pNT8THqBrympIA==
+X-Received: by 2002:a05:600c:3ca5:b0:41a:b54a:9ad8 with SMTP id 5b1f17b1804b1-421089fa29dmr70623995e9.0.1716853520726;
+        Mon, 27 May 2024 16:45:20 -0700 (PDT)
 Received: from airbuntu.. (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42108970967sm123535515e9.17.2024.05.27.16.45.15
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42108970967sm123535515e9.17.2024.05.27.16.45.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 16:45:16 -0700 (PDT)
+        Mon, 27 May 2024 16:45:20 -0700 (PDT)
 From: Qais Yousef <qyousef@layalina.io>
 To: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -68,10 +70,12 @@ Cc: Vincent Guittot <vincent.guittot@linaro.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v3 0/3] Clean up usage of rt_task()
-Date: Tue, 28 May 2024 00:45:05 +0100
-Message-Id: <20240527234508.1062360-1-qyousef@layalina.io>
+Subject: [PATCH v3 2/3] hrtimer: Convert realtime_task() to realtime_task_policy()
+Date: Tue, 28 May 2024 00:45:07 +0100
+Message-Id: <20240527234508.1062360-3-qyousef@layalina.io>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240527234508.1062360-1-qyousef@layalina.io>
+References: <20240527234508.1062360-1-qyousef@layalina.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,56 +84,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make rt_task() return true only for RT class and add new realtime_task() to
-return true for RT and DL classes to avoid some confusion the old API can
-cause.
+As Sebastian explained in [1], We need only look at the policy to decide
+if we need to remove the slack because PI-boosted tasks should not
+sleep.
 
-No functional changes intended in patch 1. Patch 2 changes hrtimer users as
-suggested by Sebastian. Patch 3 cleans up the return type as suggested by
-Steve.
+[1] https://lore.kernel.org/lkml/20240521110035.KRIwllGe@linutronix.de/
 
-Changes since v2:
+Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Qais Yousef <qyousef@layalina.io>
+---
+ kernel/time/hrtimer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-	* Fix one user that should use realtime_task() but remained using
-	  rt_task() (Sebastian)
-	* New patch to convert all hrtimer users to use realtime_task_policy()
-	  (Sebastian)
-	* Add a new patch to convert return type to bool (Steve)
-	* Rebase on tip/sched/core and handle a conflict with code shuffle to
-	  syscalls.c
-	* Add Reviewed-by Steve
-
-Changes since v1:
-
-	* Use realtime_task_policy() instead task_has_realtime_policy() (Peter)
-	* Improve commit message readability about replace some rt_task()
-	  users.
-
-v1 discussion: https://lore.kernel.org/lkml/20240514234112.792989-1-qyousef@layalina.io/
-v2 discussion: https://lore.kernel.org/lkml/20240515220536.823145-1-qyousef@layalina.io/
-
-Qais Yousef (3):
-  sched/rt: Clean up usage of rt_task()
-  hrtimer: Convert realtime_task() to realtime_task_policy()
-  sched/rt, dl: Convert functions to return bool
-
- fs/bcachefs/six.c                 |  2 +-
- fs/select.c                       |  2 +-
- include/linux/ioprio.h            |  2 +-
- include/linux/sched/deadline.h    | 10 ++++++----
- include/linux/sched/prio.h        |  1 +
- include/linux/sched/rt.h          | 31 ++++++++++++++++++++++++++++---
- kernel/locking/rtmutex.c          |  4 ++--
- kernel/locking/rwsem.c            |  4 ++--
- kernel/locking/ww_mutex.h         |  2 +-
- kernel/sched/core.c               |  4 ++--
- kernel/sched/syscalls.c           |  2 +-
- kernel/time/hrtimer.c             |  6 +++---
- kernel/trace/trace_sched_wakeup.c |  2 +-
- mm/page-writeback.c               |  4 ++--
- mm/page_alloc.c                   |  2 +-
- 15 files changed, 53 insertions(+), 25 deletions(-)
-
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 89d4da59059d..36086ab46d08 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -2073,7 +2073,7 @@ long hrtimer_nanosleep(ktime_t rqtp, const enum hrtimer_mode mode,
+ 	u64 slack;
+ 
+ 	slack = current->timer_slack_ns;
+-	if (realtime_task(current))
++	if (realtime_task_policy(current))
+ 		slack = 0;
+ 
+ 	hrtimer_init_sleeper_on_stack(&t, clockid, mode);
+@@ -2278,7 +2278,7 @@ schedule_hrtimeout_range_clock(ktime_t *expires, u64 delta,
+ 	 * Override any slack passed by the user if under
+ 	 * rt contraints.
+ 	 */
+-	if (realtime_task(current))
++	if (realtime_task_policy(current))
+ 		delta = 0;
+ 
+ 	hrtimer_init_sleeper_on_stack(&t, clock_id, mode);
 -- 
 2.34.1
 
