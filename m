@@ -1,77 +1,69 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E9C171660
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEC0171660;
+	Mon, 27 May 2024 14:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819982; cv=none; b=Doqj3pbpgA5ouabeOTfXhvXpJ/oIb8UWncBJjI85rf4XXHlg6sWEqhayL3Vxm99PPr2xgieC67mM5wl1L6CGfyuBg2UDsa4WL3xxQHAhgLe24XENNU+b+bldEx0EouJc7WD1hITdYSREdwkILIIo0DHmtXwtdhaA6tDIv/sSbpo=
+	t=1716819987; cv=none; b=ebj/RR/PrukfBUtxYCwQihz2OFQS4ydcaLF9frcq9EvzXLvI1oZncLshQZbA95seoSIfgeAyWqI/kjpXYAikA0NIO1c1MIdJzvi4UhwiGmRSf1jPok3YK4fzwn1ukQwdLi68zFy76/xnoqpH1NHEwy7xr5RsFb9LK7taeg5HoWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819982; c=relaxed/simple;
-	bh=sz5by33IERLM5zwiJFy9mJ1MJ8cDhLszCDyK9tAyqqs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=An7ngLZydzwCpVfpDe5dVZ8GUavfFQIkT7JKLedI5kHPXdESZxng13JPtszHAYpH4D4RlIH+GKEX3kHVOsXvUz2CXbbj4OTz+ktqDNdQibhpnf8NozqMPZ58ZxSKCx5UZRoyZy6Qa5RjIqEL3nbMWJDegr38QJmGr9nDVMCdT9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b0mg4Z0x; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716819987; c=relaxed/simple;
+	bh=CfLh9yu54xuTSwlbf9xMLzFnPHFmKJW9PS9bvEukrAc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q1qb2Rr+ITthtxxSGoTh8gfFpehYeQH9XJ0+omLSgmgyYkSHovzhjjFgrnl2rzPtcg35Wgu7goNIEg7pbl1kw66M4xf7HnYE6djr5ENBECVUdPQah3Qg6jlsoYQz6h9VOJzdJHHJtyuRcJWNWwUfvINF7BQmiIGiJB4z24wW97Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m9346zTe; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b0mg4Z0x"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-529644ec0ebso4381240e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:26:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9346zTe"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5295f012748so3686094e87.1;
+        Mon, 27 May 2024 07:26:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716819977; x=1717424777; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/GR2SPI55DeqkFqYqinmHi2Z3WjfSQZFZ8NPV3Q+VMg=;
-        b=b0mg4Z0xdl7v29H92uBbvl0HkpfgAKp1wdAFy3MO13XRMb9IrbXEu1DIavjcc2LFoT
-         DSSSXD5tl3gXxZhdv/jOH32h2YTG1JrfAZ3lddtLHDGnPDrk8cwXqxK+L2uB9kgfZWIz
-         NDEr7TPFg1+fYRfpGkCasrGmLH5O1vWSibYXPzf3OP8R7m8T6OAuQUJ9QF2XeH6jV5p4
-         gfC71z1SUgTE2/WdPCXgA8qR8vmOKslCqrZ3f7l0b/HEQLqwy2aWmFkOBSqPlZ2FAL9N
-         h7HYmlIwkDP3/Ed8M57vTCSf8HK6quVp3cJOxTq5ElKCjujVH7hR/X6Qhf7JOzmpvsX3
-         wydA==
+        d=gmail.com; s=20230601; t=1716819984; x=1717424784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rk4/vnQZ81wjUO4Em5QwJ+7FetQF6/nmn1oakCi33wg=;
+        b=m9346zTeTEu9OVZca01hweNTgXqw95kl1ORfCalGgBtY12qVJFglyZHTD+PvWBtO1s
+         TCf3ms3g998t8JMq34cdfzC2bFICRhytpV9r5mv3jltSTjKSarjymNBQhYCFdChAjKXK
+         xQVYlrLr8UqQuk7WSelLk86+ZIvMBhvPk4sxP59VTQfSgieH/SECSeHJDhHS74XcaiZ3
+         j8yLHBjCFoNKXv5OxwTA6yzZBlKq5Tf7/HcPbm5OCkZMwO8L78WAyfnKcLGI59I3Y1tx
+         gXiZnYU8IptbLUFkMJ7jw/UnLbBGDRwryZaks+OanjJin5Fek8DbVFwDE78JLwkmshi5
+         s5Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716819977; x=1717424777;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/GR2SPI55DeqkFqYqinmHi2Z3WjfSQZFZ8NPV3Q+VMg=;
-        b=GgbXXAcVtTe6zeAbVqR071Oi1An6rFY20OSURgWwPJFAuz9jj7d9CGKvY3OTB82wBv
-         7V8oqA2gcOP7rp5ObQPGvFQFvU6JedcevPZLeN9MoVuCdd1ZMqWe0MQ2XRTxhM1f3aog
-         ti69/IVU7wHhnnqAblNtUU9Y9n4PI2qPso5JLFq5sFsbUEn4MGncIsCTuyzYy6hstwpU
-         p7NQT+Eog9ZOszr65DBw5/PHWCoX/TFLOoR8+gsTlDN3v/DVKtxwSOzB2JUQ4fhJbwNd
-         I9hH7n1E5FirkRWcwCuhbyEPxgzAYYGhLsW+r3sLZ6c/45NTqv2J54LPmzjY1UM8WlaJ
-         WeKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCAco28qml6zFhRpsUpjX7GAhTpwn3zq7Au+QUIcBrsQHtdZ6NpiTT+cywmvJwl+SUrfQ5tKaNaXb+2m5BNC2sMlMzbVMmnL91mqj6
-X-Gm-Message-State: AOJu0YwK/gHwZRwcWMYLXvK4fk8tX6ZzFYEm73h03ytapjwoH78d2HcQ
-	unut5P9dLxQeP8GRfzrIQEZE0OXuMBoWNaAGWUGtaT1huNZMesTtOpAn5spO/18=
-X-Google-Smtp-Source: AGHT+IGA/P2FW8XpPqzZeELvPdtjcyg+OYc+xsv0HaG5JN5DSLqw1uWa/8UhB3bobcPBPC4oZ82dnw==
-X-Received: by 2002:a05:6512:3107:b0:51b:528e:ce7d with SMTP id 2adb3069b0e04-52966005b6emr7056095e87.34.1716819977519;
-        Mon, 27 May 2024 07:26:17 -0700 (PDT)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529711fa7f3sm562002e87.258.2024.05.27.07.26.16
+        d=1e100.net; s=20230601; t=1716819984; x=1717424784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rk4/vnQZ81wjUO4Em5QwJ+7FetQF6/nmn1oakCi33wg=;
+        b=Hbbusj8Dziu2CnTjDsIVo+HEPOxLOGzzUgdQ4kxsiD7IKjEL5XQxuMNWCvdHtjOT1o
+         F5RrduayoXssFm+EojSGyicv9L8s+vsUdHWazq3b0F5oJ+iWWYRXQhtwIYqBUFSyNM+v
+         weWsbkhTrDXOpAd3ipiNIK+y3RGUytQdQKIS+cW9WEViMhFHj0T/4daxPGTnjmcuEWr6
+         Q0CbxP8r29U+AJTW7JcY9Mh9abq0Rf1B/U2J2+IDkjB6dy6HDRoJ8IvNNgzgkBetSPF+
+         0k9aZAcWlYXW5Pb2bhzLJw9grVLJPKVWVwvZDscQbBjvbngzh3KCciA+XOV5OG8m0y7b
+         iePA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBmRYJM78mFCLwe4dbwbv1Bc0L42RCzx1bUqFv7G6ebmr/ohwM9Vlpy+qYt3kVUlL7gpvFg8kxppFSGHgyz4z3GjZAKhyErprbIKWxXqjAT9p9HbYR/+aygVyaCRaA23egatdxlQ==
+X-Gm-Message-State: AOJu0YzdvhslMzP9rxUJV7YBVVLPXxuP1d06ksrnita9ti8O9LdzYEKS
+	4JeDyDeU/uWkwPV58keWcPDa6cPAVcsEKYGQQpbnAM2/QdU/dVC//cMHadJ/Px4=
+X-Google-Smtp-Source: AGHT+IH9aeVp4nH4rJ8R5xTCubFecyNbrZ4z7lTqCru+xj6DucdB6UUebshpKC+AjuP0+S43uco8yQ==
+X-Received: by 2002:a05:6512:94b:b0:51d:d4e8:c71c with SMTP id 2adb3069b0e04-5296556f23amr5575585e87.36.1716819983682;
+        Mon, 27 May 2024 07:26:23 -0700 (PDT)
+Received: from rbolboac.. ([2a02:2f0e:350b:4500:9c9:f6ef:e79b:45ce])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089ae976sm110537875e9.38.2024.05.27.07.26.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 07:26:17 -0700 (PDT)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-pm@vger.kernel.org
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-	Nikunj Kela <nkela@quicinc.com>,
-	Prasad Sodagudi <psodagud@quicinc.com>,
-	Maulik Shah <quic_mkshah@quicinc.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-rt-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/7] cpuidle: psci: Enable the hierarchical topology for s2idle on PREEMPT_RT
-Date: Mon, 27 May 2024 16:25:57 +0200
-Message-Id: <20240527142557.321610-8-ulf.hansson@linaro.org>
+        Mon, 27 May 2024 07:26:23 -0700 (PDT)
+From: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	jic23@kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	conor+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	robh@kernel.org,
+	nuno.sa@analog.com
+Cc: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
+Subject: [PATCH v5 0/9] adis16501 and adis1657x support
+Date: Mon, 27 May 2024 17:26:09 +0300
+Message-Id: <20240527142618.275897-1-ramona.bolboaca13@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240527142557.321610-1-ulf.hansson@linaro.org>
-References: <20240527142557.321610-1-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,53 +72,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To enable the domain-idle-states to be used during s2idle on a PREEMPT_RT
-based configuration, let's allow the re-assignment of the ->enter_s2idle()
-callback to psci_enter_s2idle_domain_idle_state().
+Add adis16501 and adis1657x support in adis16475.
 
-Similar to s2ram, let's leave the support for CPU hotplug outside
-PREEMPT_RT, as it's depending on using runtime PM. For s2idle, this means
-that an offline CPU's PM domain will remain powered-on. In practise this
-may lead to that a shallower idle-state than necessary gets selected, which
-shouldn't be an issue (besides wasting power).
+Ramona Gradinariu (9):
+  dt-bindings: iio: imu: Add ADIS16501 compatibles
+  drivers: iio: imu: Add support for ADIS16501
+  iio: imu: adis_buffer: Add buffer setup API with buffer attributes
+  iio: imu: adis16475: Create push single sample API
+  drivers: iio: imu: adis16475: generic computation for sample rate
+  iio: imu: adis_trigger: Allow level interrupts for FIFO readings
+  iio: imu: adis16475: Re-define ADIS16475_DATA
+  dt-bindings: iio: imu: Add ADIS1657X family devices compatibles
+  drivers: iio: imu: Add support for adis1657x family
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
-Changes in v2:
-	- None.
----
- drivers/cpuidle/cpuidle-psci.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ .../bindings/iio/imu/adi,adis16475.yaml       |  31 +
+ drivers/iio/imu/Kconfig                       |   4 +-
+ drivers/iio/imu/adis16475.c                   | 807 +++++++++++++++---
+ drivers/iio/imu/adis_buffer.c                 |  32 +-
+ drivers/iio/imu/adis_trigger.c                |  37 +-
+ include/linux/iio/imu/adis.h                  |  21 +-
+ 6 files changed, 792 insertions(+), 140 deletions(-)
 
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index ad6ce9fe12b4..2562dc001fc1 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -233,18 +233,17 @@ static int psci_dt_cpu_init_topology(struct cpuidle_driver *drv,
- 
- 	psci_cpuidle_use_syscore = true;
- 
--	/* The hierarchical topology is limited to s2ram on PREEMPT_RT. */
--	if (IS_ENABLED(CONFIG_PREEMPT_RT))
--		return 0;
--
- 	/*
- 	 * Using the deepest state for the CPU to trigger a potential selection
- 	 * of a shared state for the domain, assumes the domain states are all
--	 * deeper states.
-+	 * deeper states. On PREEMPT_RT the hierarchical topology is limited to
-+	 * s2ram and s2idle.
- 	 */
--	drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
- 	drv->states[state_count - 1].enter_s2idle = psci_enter_s2idle_domain_idle_state;
--	psci_cpuidle_use_cpuhp = true;
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
-+		drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
-+		psci_cpuidle_use_cpuhp = true;
-+	}
- 
- 	return 0;
- }
--- 
+--
 2.34.1
 
