@@ -1,57 +1,57 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293E717333E;
-	Mon, 27 May 2024 14:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23826174EDE;
+	Mon, 27 May 2024 14:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819991; cv=none; b=AVEbmmeu41KzYsU2IPYGIORKfoaLp5qC7YeTeDbFnLn3evAOE1ckAe02dd+olymNsujX+5R6cMfdEr3w3bxoovSsQewMdjME7gkQjenx1Ilrm7JtLL/2Cb6wWV1U+KhYcb2ad/o05/rXaUy/SRJfv/nlfn0N9acV2za9DOFdA5Y=
+	t=1716819993; cv=none; b=C87db/cQgNayl1bqfMA6SpIkU2PoW1hmr1yYD+93sxpccUn8t9nrHKtOTpWsoVkwZ+2pL776o4hbO7/dR/OmJIlrWPqWBveVT9D8/+cbmH/KGSlc6g6Arny6lvGRfFKfwOhhjprvmKU0cl+Wd2jdJYKHv2LuDynjjrbAEOpWFNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819991; c=relaxed/simple;
-	bh=RMPXJYEwFOZroUgmkuxwKqtKKgiemJd22bvUxZqSvWY=;
+	s=arc-20240116; t=1716819993; c=relaxed/simple;
+	bh=BH2CoSHmpvFu18FCQ6+njmK8cCe9ldOZLR73CUTyLk4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ntlGuYZ6Xqp2h9RzpGU9b5aCwKBXv8+GA2iKVD1HYW8egZcSc8YZV5uzkfw1DUsBIiOeUTr7dFiOvOha3RBxZ7dbp8ZgiDsPqwtfqOApqCApNzvReQH8HJk3SvXlGzAmC80BAKSfQNtYOTyAGplzPHeoC/KwQ9ScKOUrYuGuiQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z3gXwsC2; arc=none smtp.client-ip=209.85.208.180
+	 MIME-Version; b=RxL+bmNCuShEh4NRWR66j5QKWHK1KodXdqu70Wb5dDOEKaLqIBL9ww3EpNEpAoK219ZlSNlpOfRQfB2xUdAkRqYlB3k6GQ71ZadqMO1qkKG69OmPvuqDl0Rs/CYILNvSPw+3vHXNQWR+J9uvwJmGxzMIgnqZsIdOuHxoogBqxXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lL2C8H2p; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3gXwsC2"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e96f298fbdso23707271fa.1;
-        Mon, 27 May 2024 07:26:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lL2C8H2p"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-351d309bbecso8400844f8f.2;
+        Mon, 27 May 2024 07:26:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716819987; x=1717424787; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716819990; x=1717424790; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mKDi0ODpalwh7XFfa3z0kEIRqjnKQETIGu0AgUCOPmo=;
-        b=Z3gXwsC2/prMXEsD464jCP4mZAv37X2Q39uH8KIloMEfvVO7ShwiZ4YvjLyJoSywPm
-         C7oBxXJ+C558Cu2lmze+uB4mH0ssV9TbT2RrTttnZ9HNZjqvZakfQ9zuJTF/5nvDf/Rn
-         PFn31sMArqV32sfO9n0nGcahvKuR2+yAknOY1b8py4pxdfbkvnbZuXzuboPgZh2VLEGc
-         yUkBI2h/cijiP9zmA2Al6pit/o5BfKFpud2VFcj37eexEKv3QqBLOn0a+LQWWUxzvbyS
-         pvtvjsnWVoGwB5eQn/BOQ/necU7fQlsf4Jy6fh/YZdTpisgzIELFua2P3fBUhcPe+bsH
-         EoHQ==
+        bh=wPGHhK1Cp+7Ofc0LuMsph5CLZwGhIdmtihVxp6Eh99g=;
+        b=lL2C8H2p3iZVRdf98VdLvV/zWm2z8QWrRhc1ins60C3R6wYIVF7rsBuhp7ArBR+YIE
+         aRyJM20skXMVPsjwXGM8IhU19h59xirFw3L59ZH96HpPh6vnWGKO7Au+0jwizmGeB7sq
+         35JC65SV5PzRYFBNGzzBKuPa774PXJUNQWDozAdP30ulYTO5nXjapI40ugeGy8z8S2t6
+         Ixib+y6vFR2TtOGutCW6jUeRBkQV4vvG8bGnsQ3GtFKQum7x0Gf7/kWW32y0uhbny2/M
+         frYiKE+CByp2MoCmawyP9VthQdF9Z3nbeP6GJtw4Z8gfeSwclGQuFLaWF+SsryJx3r7h
+         Ddcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716819987; x=1717424787;
+        d=1e100.net; s=20230601; t=1716819990; x=1717424790;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mKDi0ODpalwh7XFfa3z0kEIRqjnKQETIGu0AgUCOPmo=;
-        b=SKAYpkYf5lMCXjB8FDXaCtEosiZIdf6OS57sTnFK2VBKWP0f5UWvCFaMijHcy1MHEu
-         Y09afhhg1R26NL5Fk4pmC/8Cu5QH5TxrSn0IhEt/vxSgTJ0atTBtr8mNb/q9wXVtzayh
-         lZYw1fNxOCNAeNvMcvREpoSlyuC/Rdhkz37eZMvZNZ/CqB4Bl64n7Bf+gY1RL1xvNdwD
-         /a5nZ7fxIU+95TSd1cMmBVn76hTLKgEmTzh2RCYh1fpp4/rZxG1g+Ye69C6yfFUCldJf
-         B7HajSECrXLGfKwqPM+IhwUV8b2YacKPS2G+chskb1/Sa/N1Ke1ZLcN2SZo2zMmvhZJ9
-         p0kg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3Fv9knysFDaPKjwSdPWZEAM+xEfu6dXaCKlbazuoHdpQCh1LDASvdMxQOIUpbNpCBx/laaxmjJB6PcP77jcKmO2c3ikIguPWlvraB53mACfMWNepAPSUZ1teDS52EBhnHfdreUw==
-X-Gm-Message-State: AOJu0YzDl1+ySKH/paY5UNE+rWUVbQF9mzCKtbpiZu9YmjRXB09hE3u5
-	RjHnJI5r6Ne5qSNiRACjnvhn54H/Z9Gg+x7RAZQjMjNPKEe5qi0QyVzXDM3in2o=
-X-Google-Smtp-Source: AGHT+IERT67ezaWwD+jVSrKGh3jzVEvnAAmbHcjAERdxJl6xF+uiKlcoE5xSiJNPR7jFbUU6gGVEMw==
-X-Received: by 2002:a2e:2a45:0:b0:2e9:820b:c38d with SMTP id 38308e7fff4ca-2e9820bc6ffmr6699461fa.36.1716819987269;
-        Mon, 27 May 2024 07:26:27 -0700 (PDT)
+        bh=wPGHhK1Cp+7Ofc0LuMsph5CLZwGhIdmtihVxp6Eh99g=;
+        b=xLv/JYMbKgBpkVDTD0WBZQfKZz/M5sDxNZ4Xokw4LQOTjGZxF9xI5kwwhDIIgts4JG
+         qg7P6KnMKwRvOzhJG5vF33Nw/is6VuWOjOMrn8GHJWKjgutPhj1TLR8BG0Rj7WU5CFm3
+         CRh+/h4XfzwB+ynv4seuYhmkv3ztQXyv20+pqRklUJACJ7w431d6G8FlVaZ7C0MPsndx
+         seC0UuYs8OdRBYEKWy3PjUNHkg52x3hKKwtYJz8qS/AHZ2U4tpWwCg92N+WB6bDKfEGY
+         3iAPvEjerYpK8ZwXY1mW15I7eU13r0hFpo8nVesrmmUuQPkPUEstrYYuWPaXyIh6xanI
+         7nCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWM0IAwkcwVmxtPMIl0sJb+bpIQn6UFujGSnhv5id+0VvGn94rjiPsL4ot8eZbbyYESbcdvcSRr4sAs9qt6bKh0a8bmU2DW9YmZqB83ZcaLktcpv0vB2p5Rxw/NLpTiy5Xlrte4Vw==
+X-Gm-Message-State: AOJu0Yy17wUFoexXbkVfGBmATJ+qKvNaiLTR5nr1jPzOiISa/ldgcXxx
+	ihWdi/f0p5NKBNc8/5yp2JeGdniOFurTN00Hjc7wyvtQNrLUxoiLoeZD/bXBHZ0=
+X-Google-Smtp-Source: AGHT+IGy7U00w22RJXbDrlSf3tHgjES9cbfc6XxZ1yagDC9k33LRU54rZ76tM5XaG0t/Iy1D/aN7/A==
+X-Received: by 2002:adf:e64c:0:b0:354:de8e:b66b with SMTP id ffacd0b85a97d-3552fe02b74mr8239274f8f.52.1716819990228;
+        Mon, 27 May 2024 07:26:30 -0700 (PDT)
 Received: from rbolboac.. ([2a02:2f0e:350b:4500:9c9:f6ef:e79b:45ce])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089ae976sm110537875e9.38.2024.05.27.07.26.26
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089ae976sm110537875e9.38.2024.05.27.07.26.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 07:26:26 -0700 (PDT)
+        Mon, 27 May 2024 07:26:29 -0700 (PDT)
 From: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	jic23@kernel.org,
@@ -62,9 +62,9 @@ To: linux-kernel@vger.kernel.org,
 	robh@kernel.org,
 	nuno.sa@analog.com
 Cc: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
-Subject: [PATCH v5 3/9] iio: imu: adis_buffer: Add buffer setup API with buffer attributes
-Date: Mon, 27 May 2024 17:26:12 +0300
-Message-Id: <20240527142618.275897-4-ramona.bolboaca13@gmail.com>
+Subject: [PATCH v5 5/9] drivers: iio: imu: adis16475: generic computation for sample rate
+Date: Mon, 27 May 2024 17:26:14 +0300
+Message-Id: <20240527142618.275897-6-ramona.bolboaca13@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527142618.275897-1-ramona.bolboaca13@gmail.com>
 References: <20240527142618.275897-1-ramona.bolboaca13@gmail.com>
@@ -76,129 +76,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add new API called devm_adis_setup_buffer_and_trigger_with_attrs() which
-also takes buffer attributes as a parameter.
-Rewrite devm_adis_setup_buffer_and_trigger() implementation such that it
-calls devm_adis_setup_buffer_and_trigger_with_attrs() with buffer
-attributes parameter NULL
+Currently adis16475 supports a sample rate between 1900 and 2100 Hz.
+This patch changes the setting of sample rate from hardcoded values to
+a generic computation based on the internal clock frequency.
+This is a preparatory patch for adding support for adis1657x family
+devices which allow sample rates between 3900 and 4100 Hz.
 
 Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 Signed-off-by: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
 ---
-changes in v5:
- - added line break after adis in devm_adis_setup_buffer_and_trigger_with_attrs
- drivers/iio/imu/adis_buffer.c | 32 ++++++++++++++++++--------------
- include/linux/iio/imu/adis.h  | 20 ++++++++++++++++----
- 2 files changed, 34 insertions(+), 18 deletions(-)
+no changes in v5
+ drivers/iio/imu/adis16475.c | 39 +++++++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
-index 928933027ae3..871b78b225e2 100644
---- a/drivers/iio/imu/adis_buffer.c
-+++ b/drivers/iio/imu/adis_buffer.c
-@@ -175,31 +175,36 @@ static void adis_buffer_cleanup(void *arg)
- }
-
- /**
-- * devm_adis_setup_buffer_and_trigger() - Sets up buffer and trigger for
-- *					  the managed adis device
-+ * devm_adis_setup_buffer_and_trigger_with_attrs() - Sets up buffer and trigger
-+ * for the managed adis device with buffer attributes.
-  * @adis: The adis device
-  * @indio_dev: The IIO device
-- * @trigger_handler: Optional trigger handler, may be NULL.
-+ * @trigger_handler: Trigger handler: should handle the buffer readings.
-+ * @ops: Optional buffer setup functions, may be NULL.
-+ * @buffer_attrs: Extra buffer attributes.
-  *
-  * Returns 0 on success, a negative error code otherwise.
-  *
-- * This function sets up the buffer and trigger for a adis devices.  If
-- * 'trigger_handler' is NULL the default trigger handler will be used. The
-- * default trigger handler will simply read the registers assigned to the
-- * currently active channels.
-+ * This function sets up the buffer (with buffer setup functions and extra
-+ * buffer attributes) and trigger for a adis devices with buffer attributes.
-  */
- int
--devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *indio_dev,
--				   irq_handler_t trigger_handler)
-+devm_adis_setup_buffer_and_trigger_with_attrs(struct adis *adis, struct iio_dev *indio_dev,
-+					      irq_handler_t trigger_handler,
-+					      const struct iio_buffer_setup_ops *ops,
-+					      const struct iio_dev_attr **buffer_attrs)
- {
+diff --git a/drivers/iio/imu/adis16475.c b/drivers/iio/imu/adis16475.c
+index 64c8bdaba4c5..b1def85b6f90 100644
+--- a/drivers/iio/imu/adis16475.c
++++ b/drivers/iio/imu/adis16475.c
+@@ -310,6 +310,9 @@ static int adis16475_set_freq(struct adis16475 *st, const u32 freq)
+ 	u16 dec;
  	int ret;
+ 	u32 sample_rate = st->clk_freq;
++	/* The optimal sample rate for the supported IMUs is between int_clk - 100 and int_clk + 100. */
++	u32 max_sample_rate =  st->info->int_clk * 1000 + 100000;
++	u32 min_sample_rate =  st->info->int_clk * 1000 - 100000;
 
- 	if (!trigger_handler)
- 		trigger_handler = adis_trigger_handler;
+ 	if (!freq)
+ 		return -EINVAL;
+@@ -317,8 +320,9 @@ static int adis16475_set_freq(struct adis16475 *st, const u32 freq)
+ 	adis_dev_lock(&st->adis);
+ 	/*
+ 	 * When using sync scaled mode, the input clock needs to be scaled so that we have
+-	 * an IMU sample rate between (optimally) 1900 and 2100. After this, we can use the
+-	 * decimation filter to lower the sampling rate in order to get what the user wants.
++	 * an IMU sample rate between (optimally) int_clk - 100 and int_clk + 100.
++	 * After this, we can use the decimation filter to lower the sampling rate in order
++	 * to get what the user wants.
+ 	 * Optimally, the user sample rate is a multiple of both the IMU sample rate and
+ 	 * the input clock. Hence, calculating the sync_scale dynamically gives us better
+ 	 * chances of achieving a perfect/integer value for DEC_RATE. The math here is:
+@@ -336,23 +340,24 @@ static int adis16475_set_freq(struct adis16475 *st, const u32 freq)
+ 		 * solution. In this case, we get the highest multiple of the input clock
+ 		 * lower than the IMU max sample rate.
+ 		 */
+-		if (scaled_rate > 2100000)
+-			scaled_rate = 2100000 / st->clk_freq * st->clk_freq;
++		if (scaled_rate > max_sample_rate)
++			scaled_rate = max_sample_rate / st->clk_freq * st->clk_freq;
+ 		else
+-			scaled_rate = 2100000 / scaled_rate * scaled_rate;
++			scaled_rate = max_sample_rate / scaled_rate * scaled_rate;
 
--	ret = devm_iio_triggered_buffer_setup(&adis->spi->dev, indio_dev,
--					      &iio_pollfunc_store_time,
--					      trigger_handler, NULL);
-+	ret = devm_iio_triggered_buffer_setup_ext(&adis->spi->dev, indio_dev,
-+						  &iio_pollfunc_store_time,
-+						  trigger_handler,
-+						  IIO_BUFFER_DIRECTION_IN,
-+						  ops,
-+						  buffer_attrs);
- 	if (ret)
- 		return ret;
+ 		/*
+ 		 * This is not an hard requirement but it's not advised to run the IMU
+-		 * with a sample rate lower than 1900Hz due to possible undersampling
+-		 * issues. However, there are users that might really want to take the risk.
+-		 * Hence, we provide a module parameter for them. If set, we allow sample
+-		 * rates lower than 1.9KHz. By default, we won't allow this and we just roundup
+-		 * the rate to the next multiple of the input clock bigger than 1.9KHz. This
+-		 * is done like this as in some cases (when DEC_RATE is 0) might give
+-		 * us the closest value to the one desired by the user...
++		 * with a sample rate lower than internal clock frequency, due to possible
++		 * undersampling issues. However, there are users that might really want
++		 * to take the risk. Hence, we provide a module parameter for them. If set,
++		 * we allow sample rates lower than internal clock frequency.
++		 * By default, we won't allow this and we just roundup the rate to the next
++		 *  multiple of the input clock. This is done like this as in some cases
++		 * (when DEC_RATE is 0) might give us the closest value to the one desired
++		 * by the user...
+ 		 */
+-		if (scaled_rate < 1900000 && !low_rate_allow)
+-			scaled_rate = roundup(1900000, st->clk_freq);
++		if (scaled_rate < min_sample_rate && !low_rate_allow)
++			scaled_rate = roundup(min_sample_rate, st->clk_freq);
 
-@@ -212,5 +217,4 @@ devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *indio_dev,
- 	return devm_add_action_or_reset(&adis->spi->dev, adis_buffer_cleanup,
- 					adis);
- }
--EXPORT_SYMBOL_NS_GPL(devm_adis_setup_buffer_and_trigger, IIO_ADISLIB);
--
-+EXPORT_SYMBOL_NS_GPL(devm_adis_setup_buffer_and_trigger_with_attrs, IIO_ADISLIB);
-diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-index 8898966bc0f0..0fe3a2f63033 100644
---- a/include/linux/iio/imu/adis.h
-+++ b/include/linux/iio/imu/adis.h
-@@ -21,6 +21,7 @@
- #define ADIS_REG_PAGE_ID 0x00
+ 		sync_scale = scaled_rate / st->clk_freq;
+ 		ret = __adis_write_reg_16(&st->adis, ADIS16475_REG_UP_SCALE, sync_scale);
+@@ -1317,6 +1322,7 @@ static int adis16475_config_sync_mode(struct adis16475 *st)
+ 	struct device *dev = &st->adis.spi->dev;
+ 	const struct adis16475_sync *sync;
+ 	u32 sync_mode;
++	u16 max_sample_rate = st->info->int_clk + 100;
 
- struct adis;
-+struct iio_dev_attr;
+ 	/* default to internal clk */
+ 	st->clk_freq = st->info->int_clk * 1000;
+@@ -1356,10 +1362,9 @@ static int adis16475_config_sync_mode(struct adis16475 *st)
+ 			/*
+ 			 * In sync scaled mode, the IMU sample rate is the clk_freq * sync_scale.
+ 			 * Hence, default the IMU sample rate to the highest multiple of the input
+-			 * clock lower than the IMU max sample rate. The optimal range is
+-			 * 1900-2100 sps...
++			 * clock lower than the IMU max sample rate.
+ 			 */
+-			up_scale = 2100 / st->clk_freq;
++			up_scale = max_sample_rate / st->clk_freq;
 
- /**
-  * struct adis_timeouts - ADIS chip variant timeouts
-@@ -515,11 +516,19 @@ int adis_single_conversion(struct iio_dev *indio_dev,
- #define ADIS_ROT_CHAN(mod, addr, si, info_sep, info_all, bits) \
- 	ADIS_MOD_CHAN(IIO_ROT, mod, addr, si, info_sep, info_all, bits)
-
-+#define devm_adis_setup_buffer_and_trigger(adis, indio_dev, trigger_handler)	\
-+	devm_adis_setup_buffer_and_trigger_with_attrs((adis), (indio_dev),	\
-+						      (trigger_handler), NULL,	\
-+						      NULL)
-+
- #ifdef CONFIG_IIO_ADIS_LIB_BUFFER
-
- int
--devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *indio_dev,
--				   irq_handler_t trigger_handler);
-+devm_adis_setup_buffer_and_trigger_with_attrs(struct adis *adis,
-+					      struct iio_dev *indio_dev,
-+					      irq_handler_t trigger_handler,
-+					      const struct iio_buffer_setup_ops *ops,
-+					      const struct iio_dev_attr **buffer_attrs);
-
- int devm_adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev);
-
-@@ -529,8 +538,11 @@ int adis_update_scan_mode(struct iio_dev *indio_dev,
- #else /* CONFIG_IIO_BUFFER */
-
- static inline int
--devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *indio_dev,
--				   irq_handler_t trigger_handler)
-+devm_adis_setup_buffer_and_trigger_with_attrs(struct adis *adis,
-+					      struct iio_dev *indio_dev,
-+					      irq_handler_t trigger_handler,
-+					      const struct iio_buffer_setup_ops *ops,
-+					      const struct iio_dev_attr **buffer_attrs)
- {
- 	return 0;
- }
+ 			ret = __adis_write_reg_16(&st->adis,
+ 						  ADIS16475_REG_UP_SCALE,
 --
 2.34.1
 
