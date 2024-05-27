@@ -1,156 +1,202 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE8613A3E4;
-	Mon, 27 May 2024 13:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B8015EFAD
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816610; cv=none; b=cls5GPV9llZloz2Rlo2mKLSWzwuWDhN5CBi8I/9CJ/WVUXgHqnTX1jv2dapu9mPZby/G405pAb8IZ8Cg5Djl797lTCswC8WVi8JxITpwroUZjkpYpGKrZeUVwQpljB2T1mWt0nYei30O8M/3+CpXh/L9uG4YboqKdk53uYbl95E=
+	t=1716816620; cv=none; b=F6oZ8MNgIWBBho0XKKHf0s8sOmMaRb4kmYGuOMVBLEfarB8bJLbwVrEOo87u+KKVUx+X5i9Io0xrqQ/cgPxLmXJluh0SJk0wQfOWdFU042xfujL2xUVAU5A7pRCcERuHXsgrd264GKkjEyr+vhDspETTvsy+tsB3NaeV35cSHzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816610; c=relaxed/simple;
-	bh=YmojrlRDzHa9eeRvE+hFdRHXFKUIo3HD3FBR9dlhGEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wh9Nrh4lBye+HWTeD8Cg2bZkaTr/R/YNUupjjC5sEt+k5Cv3LdrpvOgM/ygDZ6xB9F0rGOCDqUOQyi1iZMe2sIlE/tZa+T+Ec447KUgpocLX/8K9+3qn+FdVvDrtwcu/OyjIY5utyJAzZExO0ZgqbS0Kfbu5EdmRA4C3tuuZ6tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=cirjdWAI; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="cirjdWAI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gaotFr9Z3qhj+JKsAg1inJzMtusA7qZ6jQmUAEHIia4=; b=cirjdWAIYaq+0jwGFEqDYqDnfy
-	QAK1s0Vqmyf4wwn38WG/QltTYuX6Bse9wkkpj2GLCEhfD+QV7VYyE5KjJSJSKpxtSHv+uJlt6+EmR
-	QK5UvYTClcMBaEmf/Js1VzcmKXIuUHP73aNRsOiQszbikKKLL92AJZCao8abKZl76o9qxj0oqNqL+
-	tbySwWOQnbA66/XtuEuWxRH7atcz1nzKjwm5YUKMIw/6YVOtG9Yze9577aiOxRGyhKeU+FD8GRQp5
-	PRaP6UvLFY81CKdtGTr7uNfhdUttJOea54yLzuO4pyVed0WXDNsjiWPP01dsfAQwtmMZE74wLWE11
-	ysTlNN6Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33938)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sBaQI-0003Zm-18;
-	Mon, 27 May 2024 14:29:58 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sBaQK-0002ME-KF; Mon, 27 May 2024 14:30:00 +0100
-Date: Mon, 27 May 2024 14:30:00 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Ron Economos <re@w6rz.net>
-Cc: Guenter Roeck <linux@roeck-us.net>, regressions@lists.linux.dev,
-	linux-clk@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-riscv <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
-Message-ID: <ZlSK2CcbLaWFRpnR@shell.armlinux.org.uk>
-References: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
- <ZlSIH1/etwPQe+bQ@shell.armlinux.org.uk>
- <ZlSJkCtx6eYPCQwG@shell.armlinux.org.uk>
+	s=arc-20240116; t=1716816620; c=relaxed/simple;
+	bh=J9J2V9eVNWcolO4HkttaKyavsOHGJwEhHxVyvbC/t/U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S6wHZd2qPHfCHzL736QanQh6cCNsuZrQsaQtxSpverRnPthGrYR21MY04ucJqjSj9X60rSZG5jTepf6zmjEWWZq2jQWM5w89gW8wyWUFolHeGxkeAoS+KVw96mJfZRtt9Xs0Sn2500Bpm7MIC952MfAFWTxLiHl+ZBhS8K1AS7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4VnxN1430kz9syd;
+	Mon, 27 May 2024 15:30:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Pj7Yxgttc3ll; Mon, 27 May 2024 15:30:09 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4VnxN12xRmz9sqS;
+	Mon, 27 May 2024 15:30:09 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 603768B773;
+	Mon, 27 May 2024 15:30:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id DVj7Btd2kdXr; Mon, 27 May 2024 15:30:09 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.49])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 709598B764;
+	Mon, 27 May 2024 15:30:07 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [RFC PATCH v4 00/16] Reimplement huge pages without hugepd on powerpc (8xx, e500, book3s/64)
+Date: Mon, 27 May 2024 15:29:58 +0200
+Message-ID: <cover.1716815901.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716816600; l=7097; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=J9J2V9eVNWcolO4HkttaKyavsOHGJwEhHxVyvbC/t/U=; b=l5tcmLFXyLhyJA1651pcJ8HDgdTLLgQZ5Ri35StgetQseLuCtSay7uca9/k26SbU/8/pM8+II nrgQ21YmA5LA0uB4MF/pDpA8UhSeWSUuKbva1aAJ/UX0oE3bAvdksol
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZlSJkCtx6eYPCQwG@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, May 27, 2024 at 02:24:32PM +0100, Russell King (Oracle) wrote:
-> On Mon, May 27, 2024 at 02:18:23PM +0100, Russell King (Oracle) wrote:
-> > On Mon, May 27, 2024 at 03:45:15AM -0700, Ron Economos wrote:
-> > > On Fri, May 17, 2024 at 03:09:14PM -0700, Guenter Roeck wrote:
-> > > > Hi,
-> > > >
-> > > > On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
-> > > > > Report an error when an attempt to register a clkdev entry results in a
-> > > > > truncated string so the problem can be easily spotted.
-> > > > >
-> > > > > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
-> > > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > > >
-> > > > With this patch in the mainline kernel, I get
-> > > >
-> > > > 10000000.clock-controller:corepll: device ID is greater than 24
-> > > > sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for
-> > > corepll: -12
-> > > > sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
-> > > > sifive-clk-prci 10000000.clock-controller: probe with driver
-> > > sifive-clk-prci failed with error -12
-> > > > ...
-> > > > platform 10060000.gpio: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10010000.serial: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10011000.serial: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10040000.spi: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10050000.spi: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10090000.ethernet: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > >
-> > > > when trying to boot sifive_u in qemu.
-> > > >
-> > > > Apparently, "10000000.clock-controller" is too long. Any suggestion on
-> > > > how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
-> > > > for clk_hw_register_clkdev() is not or no longer a good idea.
-> > > > What else should be used instead ?
-> > > 
-> > > This issue causes a complete boot failure on real hardware (SiFive
-> > > Unmatched). The boot only gets as far as "Starting kernel ..." with no other
-> > > indication of what's going on.
-> > > 
-> > > Guenter's suggested patch solves the issue.
-> > > 
-> > > diff --git a/drivers/clk/sifive/sifive-prci.c
-> > > b/drivers/clk/sifive/sifive-prci.c
-> > > index 25b8e1a80ddc..20cc8f42d9eb 100644
-> > > --- a/drivers/clk/sifive/sifive-prci.c
-> > > +++ b/drivers/clk/sifive/sifive-prci.c
-> > > @@ -537,7 +537,7 @@ static int __prci_register_clocks(struct device *dev,
-> > > struct __prci_data *pd,
-> > >                          return r;
-> > >                  }
-> > > 
-> > > -               r = clk_hw_register_clkdev(&pic->hw, pic->name,
-> > > dev_name(dev));
-> > > +               r = clk_hw_register_clkdev(&pic->hw, pic->name, "prci");
-> > 
-> > How about just changing this to:
-> > 
-> > 		r = clk_hw_register(dev, &pic->hw);
-> > 
-> > ?
-> > 
-> > Since, if the device name is over-sized and thus truncated in the clk
-> > lookup array that clkdev maintains, *nothing* will be able to match
-> > the entry. Hence, I suspect all those clkdev registrations are
-> > completely redundant for this driver (and do nothing other than
-> > waste memory!)
-> 
-> Note that I mentioned *exactly* this point in my first reply to the
-> report of the regression in:
-> 
-> https://lore.kernel.org/r/ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk
-> 
-> "We need to think about (a) whether your use of clk_hw_register_clkdev()
-> is still appropriate, and (b) whether we need to increase the size of
-> the strings."
+This is the continuation of the RFC v1 series "Reimplement huge pages
+without hugepd on powerpc 8xx". It now get rid of hugepd completely
+after handling also e500 and book3s/64
 
-Note this will be my last reply on this today - it's Bank Holiday Monday
-in the UK and I have the right to take this time off from working on the
-kernel.
+Also see https://github.com/linuxppc/issues/issues/483
 
-Thanks.
+Unlike most architectures, powerpc 8xx HW requires a two-level
+pagetable topology for all page sizes. So a leaf PMD-contig approach
+is not feasible as such.
+
+Possible sizes on 8xx are 4k, 16k, 512k and 8M.
+
+First level (PGD/PMD) covers 4M per entry. For 8M pages, two PMD entries
+must point to a single entry level-2 page table. Until now that was
+done using hugepd. This series changes it to use standard page tables
+where the entry is replicated 1024 times on each of the two pagetables
+refered by the two associated PMD entries for that 8M page.
+
+For e500 and book3s/64 there are less constraints because it is not
+tied to the HW assisted tablewalk like on 8xx, so it is easier to use
+leaf PMDs (and PUDs).
+
+On e500 the supported page sizes are 4M, 16M, 64M, 256M and 1G. All at
+PMD level on e500/32 (mpc85xx) and mix of PMD and PUD for e500/64. We
+encode page size with 4 available bits in PTE entries. On e300/32 PGD
+entries size is increases to 64 bits in order to allow leaf-PMD entries
+because PTE are 64 bits on e500.
+
+On book3s/64 only the hash-4k mode is concerned. It supports 16M pages
+as cont-PMD and 16G pages as cont-PUD. In other modes (radix-4k, radix-6k
+and hash-64k) the sizes match with PMD and PUD sizes so that's just leaf
+entries. The hash processing make things a bit more complex. To ease
+things, __hash_page_huge() is modified to bail out when DIRTY or ACCESSED
+bits are missing, leaving it to mm core to fix it.
+
+Global changes in v4:
+- Fixed a few issues reported privately by robots
+- Rebased on top of v6.10-rc1
+
+Global changes in v3:
+- Removed patches 1 and 2
+- Squashed patch 11 into patch 5
+- Replaced patches 12 and 13 with a series from Michael
+- Reordered patches a bit to have more general patches up front
+
+For more details on changes, see in each patch.
+
+Christophe Leroy (15):
+  mm: Define __pte_leaf_size() to also take a PMD entry
+  mm: Provide mm_struct and address to huge_ptep_get()
+  powerpc/mm: Remove _PAGE_PSIZE
+  powerpc/mm: Fix __find_linux_pte() on 32 bits with PMD leaf entries
+  powerpc/mm: Allow hugepages without hugepd
+  powerpc/8xx: Fix size given to set_huge_pte_at()
+  powerpc/8xx: Rework support for 8M pages using contiguous PTE entries
+  powerpc/8xx: Simplify struct mmu_psize_def
+  powerpc/e500: Remove enc and ind fields from struct mmu_psize_def
+  powerpc/e500: Switch to 64 bits PGD on 85xx (32 bits)
+  powerpc/e500: Encode hugepage size in PTE bits
+  powerpc/e500: Use contiguous PMD instead of hugepd
+  powerpc/64s: Use contiguous PMD/PUD instead of HUGEPD
+  powerpc/mm: Remove hugepd leftovers
+  mm: Remove CONFIG_ARCH_HAS_HUGEPD
+
+Michael Ellerman (1):
+  powerpc/64e: Remove unused IBM HTW code [SQUASHED]
+
+ arch/arm/include/asm/hugetlb-3level.h         |   4 +-
+ arch/arm64/include/asm/hugetlb.h              |   2 +-
+ arch/arm64/mm/hugetlbpage.c                   |   2 +-
+ arch/powerpc/Kconfig                          |   1 -
+ arch/powerpc/include/asm/book3s/32/pgalloc.h  |   2 -
+ arch/powerpc/include/asm/book3s/64/hash-4k.h  |  15 -
+ arch/powerpc/include/asm/book3s/64/hash.h     |  38 +-
+ arch/powerpc/include/asm/book3s/64/hugetlb.h  |  38 --
+ .../include/asm/book3s/64/pgtable-4k.h        |  47 --
+ .../include/asm/book3s/64/pgtable-64k.h       |  20 -
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |  22 +-
+ arch/powerpc/include/asm/hugetlb.h            |  15 +-
+ .../include/asm/nohash/32/hugetlb-8xx.h       |  38 +-
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h  |   9 +-
+ arch/powerpc/include/asm/nohash/32/pte-40x.h  |   3 -
+ arch/powerpc/include/asm/nohash/32/pte-44x.h  |   3 -
+ arch/powerpc/include/asm/nohash/32/pte-85xx.h |   3 -
+ arch/powerpc/include/asm/nohash/32/pte-8xx.h  |  58 ++-
+ .../powerpc/include/asm/nohash/hugetlb-e500.h |  36 +-
+ arch/powerpc/include/asm/nohash/mmu-e500.h    |   6 +-
+ arch/powerpc/include/asm/nohash/pgalloc.h     |   2 -
+ arch/powerpc/include/asm/nohash/pgtable.h     |  41 +-
+ arch/powerpc/include/asm/nohash/pte-e500.h    |  35 +-
+ arch/powerpc/include/asm/page.h               |  32 --
+ arch/powerpc/include/asm/pgtable-be-types.h   |  10 -
+ arch/powerpc/include/asm/pgtable-types.h      |  13 +-
+ arch/powerpc/include/asm/pgtable.h            |   3 +
+ arch/powerpc/kernel/exceptions-64e.S          |   4 +-
+ arch/powerpc/kernel/head_85xx.S               |  33 +-
+ arch/powerpc/kernel/head_8xx.S                |  10 +-
+ arch/powerpc/kernel/setup_64.c                |   6 +-
+ arch/powerpc/mm/book3s64/hash_utils.c         |  11 +-
+ arch/powerpc/mm/book3s64/hugetlbpage.c        |  10 +
+ arch/powerpc/mm/book3s64/pgtable.c            |  12 -
+ arch/powerpc/mm/hugetlbpage.c                 | 455 +---------------
+ arch/powerpc/mm/init-common.c                 |   8 +-
+ arch/powerpc/mm/kasan/8xx.c                   |  21 +-
+ arch/powerpc/mm/nohash/8xx.c                  |  43 +-
+ arch/powerpc/mm/nohash/Makefile               |   2 +-
+ arch/powerpc/mm/nohash/book3e_pgtable.c       |   4 +-
+ arch/powerpc/mm/nohash/tlb.c                  | 407 +--------------
+ arch/powerpc/mm/nohash/tlb_64e.c              | 314 ++++++++++++
+ arch/powerpc/mm/nohash/tlb_low_64e.S          | 484 ++----------------
+ arch/powerpc/mm/pgtable.c                     |  94 ++--
+ arch/powerpc/mm/pgtable_32.c                  |   2 +-
+ arch/riscv/include/asm/hugetlb.h              |   2 +-
+ arch/riscv/mm/hugetlbpage.c                   |   2 +-
+ arch/s390/include/asm/hugetlb.h               |   4 +-
+ arch/s390/mm/hugetlbpage.c                    |   4 +-
+ fs/hugetlbfs/inode.c                          |   2 +-
+ fs/proc/task_mmu.c                            |  10 +-
+ fs/userfaultfd.c                              |   2 +-
+ include/asm-generic/hugetlb.h                 |   2 +-
+ include/linux/hugetlb.h                       |   6 -
+ include/linux/pgtable.h                       |   3 +
+ include/linux/swapops.h                       |   4 +-
+ kernel/events/core.c                          |   2 +-
+ mm/Kconfig                                    |  10 -
+ mm/damon/vaddr.c                              |   6 +-
+ mm/gup.c                                      | 183 +------
+ mm/hmm.c                                      |   2 +-
+ mm/hugetlb.c                                  |  44 +-
+ mm/memory-failure.c                           |   2 +-
+ mm/mempolicy.c                                |   2 +-
+ mm/migrate.c                                  |   4 +-
+ mm/mincore.c                                  |   2 +-
+ mm/pagewalk.c                                 |  57 +--
+ mm/userfaultfd.c                              |   2 +-
+ 68 files changed, 756 insertions(+), 2019 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/book3s/64/pgtable-4k.h
+ create mode 100644 arch/powerpc/mm/nohash/tlb_64e.c
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.44.0
+
