@@ -1,103 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9DA15EFAE
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEDF15EFDE;
+	Mon, 27 May 2024 14:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819256; cv=none; b=tHkanhRusk278dviHfCkqI3A5rXZzNTJ3TRw+cJtBY5Bzo/BwB5ov3ugjBFBJCwCDhnK5KCxIDtN+RyWOLLK1igkPhPW3qF8z+oIfR2zP1QmR0ZDQj28lUzOhWPG5DVe2bJh6wZdt4/kssYhWWHfv1qrOOkAEezFrikpelbgXwg=
+	t=1716819259; cv=none; b=KdNRffwZn/7Z2Rt6NosAwOeZsqqwZ/icVGJ4Puq7eM4t/KG8dPxWFk22+EkH8YP/QjLHKXqqD2hs6lb1E1NwiBl7rKUYOMnAYw2KIQWl84yqKXdGAzXhuWys+1WZHt/7jqBPxedvoT+gj6Vvs3Qc1IMiBEIRAdNM87bfcXr//Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819256; c=relaxed/simple;
-	bh=wS1BFxKWoEkKiNdSApsvB8JRUm9MZJzCp1jj637qV3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MO6MLeRp2+NKesnZefvah7ovp1NgzXdVNcwJ2PaubWypaKaoHtJd1G7psoHS7tQ/svd3PbCIqgB9xhLEKH8WS7MCuYMU+NEw/coz/SebRkNWhPS7ri5YBsMDpeprRgm08uG9qfL8dZAlrbmj28GHUeeBL8OrYgvNDsUzz3154U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b/3JO/Di; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716819259; c=relaxed/simple;
+	bh=vcodY77d0fjdgiOcurVpNnSE7/ZF163gHw2AiqjgWxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N5C6T0I4ELxtTS55TmotGfih4VMpdpcazm1TnzwelrvVL8ayrL1P0vClN3YDyppyzPxVhuRwO3HKCIHSefiwZJMnWqX9xPhulkGBoeDZrM0ABmoDY5LmH9OWolk+UgZU1rw6iaYxUCaV/D72Zc/q/loqmoWIqV2wMan5OaJvHNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeKKZVfM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/3JO/Di"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716819253;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SFzMZWvRCDrb7WkYa5wLatMYu1+RpvoRMJMjVnqZvBU=;
-	b=b/3JO/DiCWuqT7mrNRNL72nKwG9RuveCwsU+yoyUDiZAKGoc/GkD8pIvLn2YIEnEltj9Sd
-	vnxtWmH2XJhdoOHPpgS1lDt7vPULej2/ppwSU7CU9D7+hdiDPp9O75WSe/O8qON/hP2KsU
-	9PyY/NXoO8QMbzlqRttfbqpI+SVtfYw=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-637-M7tzZXrKOn2r6CETXMdE5g-1; Mon, 27 May 2024 10:14:11 -0400
-X-MC-Unique: M7tzZXrKOn2r6CETXMdE5g-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6ab960d4c84so28206d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:14:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716819250; x=1717424050;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SFzMZWvRCDrb7WkYa5wLatMYu1+RpvoRMJMjVnqZvBU=;
-        b=vbfffZ7bXWX1D5dx25YUE68YXT5xFnEiUlO0UtJ6akhD+sBDYULUprRi/L5fiNDfuP
-         oO8rLoNrEul9PXRZmZNydat46x5kxKXh2kryaz0o4HLd5uIcBeXJNCV0iTYJLkslEdb1
-         KcEAQVuN6HWO5A/5PpWSj2PkFmsKDGzbBepHl/YEVBbP+jbO82Ld7U2wKouympitTxuN
-         puvhrT2JhR9ltbPjmCeefotze33SSTrvXWjW5s0Wg95/oq5dbSHI5VxYZSy30BCQ/yxF
-         YPSCzGsDGexAFT4l23RyescSeEYhDhjKFbc5BmJVC+yoKxBeSwPq9WkqcOYI9GsBXZTU
-         kxVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+fn7NVp3IlH/jifgszAVXsZVsjUKx6yt8pMH8vKnjuJtZWng2XTIRm2zWo9nGJTKGW0H7nYLHW9tDAtti3ROg83BoQmDBvysoOLpz
-X-Gm-Message-State: AOJu0Yy2RW3gCwm6hk3tQZCTjiNhcmZs49bIFsdIZ8UuGL+m4A2l1dgM
-	lAogh6D6N+jESzVrfRcadhRq/ILCkn0ofKVEDRzTDggCSy+Es8qT4toFHybzDDr9Lczwe8ete10
-	6jDCfeCCLP7SqKJUs4t4DQQ84VKvo2rPhewS5ZQEoOiv+Dsic06IE+5ouHveb9kHUXP0xOA==
-X-Received: by 2002:a05:622a:1a08:b0:439:ecc6:cdff with SMTP id d75a77b69052e-43fb0e50bbdmr106246811cf.1.1716819249855;
-        Mon, 27 May 2024 07:14:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGd8th8Wg469CYBTawHV9rsQeFuB8nclhehcyxMjGfWytXD5S2gp1EDIKK4hPSKKRLENR5EfA==
-X-Received: by 2002:a05:622a:1a08:b0:439:ecc6:cdff with SMTP id d75a77b69052e-43fb0e50bbdmr106246401cf.1.1716819249131;
-        Mon, 27 May 2024 07:14:09 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fb16b97b5sm33974641cf.18.2024.05.27.07.14.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 07:14:08 -0700 (PDT)
-Date: Mon, 27 May 2024 10:14:06 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH v2 00/20] Reimplement huge pages without hugepd on
- powerpc (8xx, e500, book3s/64)
-Message-ID: <ZlSVLv2JlsZS4f3d@x1n>
-References: <cover.1715971869.git.christophe.leroy@csgroup.eu>
- <Zk-bpBZ_yjsj_B2z@x1n>
- <87jzjj4y0t.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeKKZVfM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F26D5C2BBFC;
+	Mon, 27 May 2024 14:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716819259;
+	bh=vcodY77d0fjdgiOcurVpNnSE7/ZF163gHw2AiqjgWxo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PeKKZVfMpw1Z9ACDnUUgNKU4ArPn4gpsQrLMDIiQiVyQwuUwQaHj73afr2Xgr/xhn
+	 UNonDSouZ4GzEyfGliud+4Fl6GOPiWHSqbdsYFuIXnpSGcZDhz/CncugQiV+dV+Qk3
+	 VxNlwYp0OOFdVhDsQOL3pbEHxhWbyifFLMYji7/iQQ5bUs011VsWjP0z1oPNUcoTLh
+	 V+VJCwPB47iaI47v/I+e2jKIoRnCW8oDHutQjfMB5Ix7A6X/7JhaMHqpAdkcWcZRDi
+	 ZjDGpTI2bzGKGhl26jg5JtzH+jnohqhzaNp95fDoslAFC+y9HbChtme0r1n2IKwjFe
+	 GboLVx1RzFqag==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Rand Deeb <rand.sec96@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 01/30] ssb: Fix potential NULL pointer dereference in ssb_device_uevent()
+Date: Mon, 27 May 2024 10:13:10 -0400
+Message-ID: <20240527141406.3852821-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87jzjj4y0t.fsf@mail.lhotse>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.11
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 24, 2024 at 02:46:58PM +1000, Michael Ellerman wrote:
-> Christophe is a powerpc developer :)
+From: Rand Deeb <rand.sec96@gmail.com>
 
-Yes, definitely. :)
+[ Upstream commit 789c17185fb0f39560496c2beab9b57ce1d0cbe7 ]
 
-> 
-> I'll help where I can, but I don't know the hugepd code that well, I've
-> never really worked on it before. Nick will hopefully also be able to
-> help, he at least knows mm better than me, but he also has other work.
-> 
-> Hopefully we can make this series work, and replace hugepd. But if we
-> can't make that work then there is the possibility of just dropping
-> support for 16M/16G pages with HPT/4K pages.
+The ssb_device_uevent() function first attempts to convert the 'dev' pointer
+to 'struct ssb_device *'. However, it mistakenly dereferences 'dev' before
+performing the NULL check, potentially leading to a NULL pointer
+dereference if 'dev' is NULL.
 
-Great, thank you!
+To fix this issue, move the NULL check before dereferencing the 'dev' pointer,
+ensuring that the pointer is valid before attempting to use it.
 
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240306123028.164155-1-rand.sec96@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/ssb/main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/ssb/main.c b/drivers/ssb/main.c
+index b9934b9c2d708..070a99a4180cc 100644
+--- a/drivers/ssb/main.c
++++ b/drivers/ssb/main.c
+@@ -341,11 +341,13 @@ static int ssb_bus_match(struct device *dev, struct device_driver *drv)
+ 
+ static int ssb_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
+ {
+-	const struct ssb_device *ssb_dev = dev_to_ssb_dev(dev);
++	const struct ssb_device *ssb_dev;
+ 
+ 	if (!dev)
+ 		return -ENODEV;
+ 
++	ssb_dev = dev_to_ssb_dev(dev);
++
+ 	return add_uevent_var(env,
+ 			     "MODALIAS=ssb:v%04Xid%04Xrev%02X",
+ 			     ssb_dev->id.vendor, ssb_dev->id.coreid,
 -- 
-Peter Xu
+2.43.0
 
