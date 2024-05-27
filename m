@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 582A92232A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C31732836A;
 	Mon, 27 May 2024 07:46:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716796015; cv=none; b=f3pjI39kHFWTANadTPDvjmmKfB/KL1T2vmiS3t43syNa6AM4UeNt0vKiaKxCnB8hXN/lMN261O0K8RdDATZ5hJHyj6eYgmZA+Ze5Obqne99YfPLOrHH3q/wpcy4O4GagUBzHJC88oU9ujgDyDPIcihXOl+876I3GIw+qIvh/2M8=
+	t=1716796016; cv=none; b=OVPv1AlCm/Wrc9fIZQ1Wta4UkdiDrDLVVWof+m76mkSQlUwm5ohDXawo6FfMFhTRa4uMfYkibK5xT+x9213RFEK05KECysYqKgIBCr9iisTrVrqsaEb9c91sKKZSElxWqS6iKsblhRIbwJu9HUzmq4/EfjWSSbGWBkVXL1CfazI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716796015; c=relaxed/simple;
-	bh=uRPYeu1g//OQLx04rdY+78NfsbRwAUuTxvQddEsoBHs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VBxBXI9e5p8Nw9HYIVU5Cxou3esUaDcUkvfDEOZtXT7AW+56i50pA78+7TQsvHRjGfeMjoiRGPy1cwCvOPvWvfQUDTSG3HnNgVUXSGILpwzzf4A0cwMTW0Yt0fUeIgHD+HvV4J9+s2zI4X4F330dCfsW3tzt2LCyStqxroUUBA4=
+	s=arc-20240116; t=1716796016; c=relaxed/simple;
+	bh=4YyU3rtnfFX9YrhUnBGT37Ld3wJFK1+xQcIB/PpJnZ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YQwQ5pM3+caCB5ohAOYswd7jIAXoAJf9JBTigJBYly8CkDiODaF48W/epjUAYmia9evPUqBnSZdSQBYoqtp4fSUJSfpB9HXF1G+IDGqHJ6DS/tmLBnJ2VdklGvStYBvaQqHX9WfUnUGYLR3o0AANsSq4TNBmgLaC5HERgaFm+Y8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxnOplOlRmrB4AAA--.364S3;
-	Mon, 27 May 2024 15:46:45 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxW+pmOlRmvB4AAA--.382S3;
+	Mon, 27 May 2024 15:46:46 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTcdlOlRmHuIKAA--.28594S2;
-	Mon, 27 May 2024 15:46:45 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTcdlOlRmHuIKAA--.28594S6;
+	Mon, 27 May 2024 15:46:46 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -24,10 +25,12 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/4] LoongArch: KVM: Add Binary Translation extension support
-Date: Mon, 27 May 2024 15:46:40 +0800
-Message-Id: <20240527074644.836699-1-maobibo@loongson.cn>
+Subject: [PATCH v3 4/4] LoongArch: KVM: Add VM LBT feature detection support
+Date: Mon, 27 May 2024 15:46:44 +0800
+Message-Id: <20240527074644.836699-5-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240527074644.836699-1-maobibo@loongson.cn>
+References: <20240527074644.836699-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,54 +38,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxTcdlOlRmHuIKAA--.28594S2
+X-CM-TRANSID:AQAAf8AxTcdlOlRmHuIKAA--.28594S6
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Loongson Binary Translation (LBT) is used to accelerate binary
-translation, which contains 4 scratch registers (scr0 to scr3), x86/ARM
-eflags (eflags) and x87 fpu stack pointer (ftop).
+Before virt machine or vcpu is created, vmm need check supported
+features from KVM. Here ioctl command KVM_HAS_DEVICE_ATTR is added
+for VM, and macro KVM_LOONGARCH_VM_FEAT_CTRL is added to check
+supported feature.
 
-Like FPU extension, here late enabling method is used for LBT. LBT context
-is saved/restored on vcpu context switch path.
+Three sub-features relative with LBT are added, in later any new
+feature can be added if it is used for vmm. The sub-features is
+ KVM_LOONGARCH_VM_FEAT_X86BT
+ KVM_LOONGARCH_VM_FEAT_ARMBT
+ KVM_LOONGARCH_VM_FEAT_MIPSBT
 
-Also this patch set BT capability detection, and BT register get/set
-interface for userspace vmm, so that vm supports migration with BT
-extension.
-
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
-v2 ... v3:
-  1. Split KVM_LOONGARCH_VM_FEAT_LBT capability checking into three
-sub-features, KVM_LOONGARCH_VM_FEAT_X86BT/KVM_LOONGARCH_VM_FEAT_ARMBT
-and KVM_LOONGARCH_VM_FEAT_MIPSBT. Return success only if host supports
-the sub-feature.
+ arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
+ arch/loongarch/kvm/vm.c               | 44 ++++++++++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 1 deletion(-)
 
-v1 ... v2:
-  1. With LBT register read or write interface to userpace, replace
-device attr method with KVM_GET_ONE_REG method, since lbt register is
-vcpu register and can be added in kvm_reg_list in future.
-  2. Add vm device attr ctrl marcro KVM_LOONGARCH_VM_FEAT_CTRL, it is
-used to get supported LBT feature before vm or vcpu is created.
----
-
-Bibo Mao (4):
-  LoongArch: KVM: Add HW Binary Translation extension support
-  LoongArch: KVM: Add LBT feature detection with cpucfg
-  LoongArch: KVM: Add vm migration support for LBT registers
-  LoongArch: KVM: Add VM LBT feature detection support
-
- arch/loongarch/include/asm/kvm_host.h |   8 ++
- arch/loongarch/include/asm/kvm_vcpu.h |  10 +++
- arch/loongarch/include/uapi/asm/kvm.h |  15 ++++
- arch/loongarch/kvm/exit.c             |   9 ++
- arch/loongarch/kvm/vcpu.c             | 121 +++++++++++++++++++++++++-
- arch/loongarch/kvm/vm.c               |  44 +++++++++-
- 6 files changed, 205 insertions(+), 2 deletions(-)
-
-
-base-commit: 29c73fc794c83505066ee6db893b2a83ac5fac63
+diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+index 656aa6a723a6..ed12e509815c 100644
+--- a/arch/loongarch/include/uapi/asm/kvm.h
++++ b/arch/loongarch/include/uapi/asm/kvm.h
+@@ -91,6 +91,12 @@ struct kvm_fpu {
+ #define KVM_IOC_CSRID(REG)		LOONGARCH_REG_64(KVM_REG_LOONGARCH_CSR, REG)
+ #define KVM_IOC_CPUCFG(REG)		LOONGARCH_REG_64(KVM_REG_LOONGARCH_CPUCFG, REG)
+ 
++/* Device Control API on vm fd */
++#define KVM_LOONGARCH_VM_FEAT_CTRL	0
++#define  KVM_LOONGARCH_VM_FEAT_X86BT	0
++#define  KVM_LOONGARCH_VM_FEAT_ARMBT	1
++#define  KVM_LOONGARCH_VM_FEAT_MIPSBT	2
++
+ /* Device Control API on vcpu fd */
+ #define KVM_LOONGARCH_VCPU_CPUCFG	0
+ #define KVM_LOONGARCH_VCPU_PVTIME_CTRL	1
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+index 6b2e4f66ad26..09e05108c68b 100644
+--- a/arch/loongarch/kvm/vm.c
++++ b/arch/loongarch/kvm/vm.c
+@@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	return r;
+ }
+ 
++static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr)
++{
++	switch (attr->attr) {
++	case KVM_LOONGARCH_VM_FEAT_X86BT:
++		if (cpu_has_lbt_x86)
++			return 0;
++		return -ENXIO;
++	case KVM_LOONGARCH_VM_FEAT_ARMBT:
++		if (cpu_has_lbt_arm)
++			return 0;
++		return -ENXIO;
++	case KVM_LOONGARCH_VM_FEAT_MIPSBT:
++		if (cpu_has_lbt_mips)
++			return 0;
++		return -ENXIO;
++	default:
++		return -ENXIO;
++	}
++}
++
++static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_device_attr *attr)
++{
++	switch (attr->group) {
++	case KVM_LOONGARCH_VM_FEAT_CTRL:
++		return kvm_vm_feature_has_attr(kvm, attr);
++	default:
++		return -ENXIO;
++	}
++}
++
+ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+ {
+-	return -ENOIOCTLCMD;
++	struct kvm *kvm = filp->private_data;
++	void __user *argp = (void __user *)arg;
++	struct kvm_device_attr attr;
++
++	switch (ioctl) {
++	case KVM_HAS_DEVICE_ATTR:
++		if (copy_from_user(&attr, argp, sizeof(attr)))
++			return -EFAULT;
++
++		return kvm_vm_has_attr(kvm, &attr);
++	default:
++		return -EINVAL;
++	}
+ }
 -- 
 2.39.3
 
