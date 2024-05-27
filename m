@@ -1,242 +1,124 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D8C15ECF4
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7386D13BAC2;
+	Mon, 27 May 2024 13:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816150; cv=none; b=dwAUpS60KJN1VFnbLZjPJpo6ohSjoV5v8xIrwerUtyuBNNs2ZI4D74AQj4QPa0DyihClfdNISz/zjhAG1b1STDt7PSTi0omaimEaqBGcUUtkWo46Zga84f9o0qie0oxqR4y6plOMCGqj9DQDuJ4Sa52sf7Q3sV8K6PJZaPLJ9HI=
+	t=1716816168; cv=none; b=LGQyQTLMIWZCsN18/5w2JESDyNDR0z52mVLGArr0sPVrLnPaCB+Hr33KkFCkQ8JBprBOIl/qoC5voWEkXa7RI2FPzcRa6p36JVsPraULBR4AJuETtKKltw8Gw/SzkfTFwUn4R4KZxZ1rika0I2zKyVPWvlVGPxU78wtpa5PijuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816150; c=relaxed/simple;
-	bh=h2EjNcRnOdSV3DrRyQsiknvlwZNQpE3YDPF0q0Tuz+Q=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Ix7U7sGOFhCKu0aNWiJgYcbYQ0DBjPOw0+8uBw1frAtrvIemyqkp0OKJhVffTBNsxWPJEhYDYyfH0sIAFEifAh2kpU3FKtuetiguXrVZP4dWO2s6C7wdbo980oXOdhnIYavShOIQK3Fp+baItJLtXvFsoUCsaM23l4MmyLt/vJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3738732f988so23544715ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:22:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716816148; x=1717420948;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+vmoO/Nv+2txm2yPb4KYAH+uAveGcGWYNX2XgXKPZCM=;
-        b=NAzptMGbqilCuSOVE7Pp2MohRsc0mnXgBRvgF97fPhf0GoKtWrUu26lFt0wNoqDi3l
-         BZHluNtLLUaP772aCSf/z40ydkhl0bugl4lgjYHuYoq03vv1RY3AoVPma0uWjlzIj4U2
-         GSgul4kt8wm4Ws1V8yb3gBvpOxv9Iy6Pn6/yQ1xNAAS3OkWjdQofKH+I5voJ9EqybSnN
-         KfXiQ7TXqQ4cFwVzd+cB27g0uAWQAKkFXJHHtgrEhsTFM29HkOsFvJTfXMCtWu4durS9
-         T5rhnt8SlqEwjofwDeQnch7aFtdbyF47bUZTX2Jn0dzp617jTE80gRAYSLo/kL9s+rwB
-         IyzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8Ic7FwpoVVZRn125eXvalkJxdiGufj9Z/z5CW1IMDKaqB7uWpBoM68ml/j9b1v8lvATMdsu+Premv3hcC1MFbBwCQzacYuFWHjA9g
-X-Gm-Message-State: AOJu0YxWTNnvcIb7uXPjNzSWPD6vu5LocBfpv7mlXb7i8zcXN5uIt+FV
-	+6SwTywUOfj+pwj9oC1iy5Fzw6IvJvbFq2OmMbHWJb4drdzKZXbrzmVru+MqL3gCZzHvau+YUX7
-	trWIFCXE+mHNxfLg4jNb5I75ziPfabslxg8q7GRiFXNPDInu8D/O8Lz4=
-X-Google-Smtp-Source: AGHT+IGHCy6gagCt/fKN9YxjO56/wZM/jeyns5XEXri714QY6R7SBKw1sUI9XotZOrKtP7bQkAUMcon3fNja/K9ulgrmnyDyuIlw
+	s=arc-20240116; t=1716816168; c=relaxed/simple;
+	bh=1fUsgjmy0HwSjUNwgAEgVrkX83AtUHExHKTskQldwu8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=D82wnb3RVIdip6zHpddHnKzZlWti2EB+TQJD1AlVBByJAtW4ozGYMaVQW1m/TVHwZyzoWLQTsmm5sDTg1fBaF6/67xJ0SSh0M0YBJhPvBfeMT1pjHVHdY9fgZAWAAf3A1cC2SspvuGttaRMMcbVWQ6vIsILLGbZEIMz6oOGF0xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pt8k4UTl; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pt8k4UTl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716816166; x=1748352166;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1fUsgjmy0HwSjUNwgAEgVrkX83AtUHExHKTskQldwu8=;
+  b=Pt8k4UTlbnlaFgonvn609LfYBebOhaT2boSzng0U7qXIv8DF7Kp2ped/
+   E4NxIza4/BePtCUU4WLZOOczLn4zu0Ig2KTTwo9s20hgmOSYG/X8QEOvN
+   mfhXQ/268DkX7t++pHlOVHWAeRMLyN5TkJB91BfsAYl96xqkOcmg1xYW/
+   C7Ek/WR6ibawdE8VI0F80OClGzE8gSxTuzAE/8uH1sB1l6971LADz+Yoz
+   XA0wt0ejj6gVeIgmFOEUXINZXaXeB3ngwSHao+ClCE6hP3TnkYJYxgRb3
+   ZzaRQ2OIHczOgbxTP3tNzy+31Xg0bhxxq6VXPAJGFOKPb06As6w5NC+Ef
+   w==;
+X-CSE-ConnectionGUID: eAoe8qImTCiyjspxLRHPBw==
+X-CSE-MsgGUID: Lg3NhQjYTi+AVJkPd2xD0g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="13006467"
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="13006467"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 06:22:45 -0700
+X-CSE-ConnectionGUID: V+Sj+DB6RGiufqFct8CSyw==
+X-CSE-MsgGUID: uvfdAZLMSSOZkgYtaStOvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="34787283"
+Received: from unknown (HELO localhost) ([10.245.247.140])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 06:22:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Yazen Ghannam <yazen.ghannam@amd.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Muralidhara M K <muralidhara.mk@amd.com>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/2] EDAC/amd64: Convert PCIBIOS_* return codes to errnos
+Date: Mon, 27 May 2024 16:22:34 +0300
+Message-Id: <20240527132236.13875-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a27:b0:374:529a:dfd3 with SMTP id
- e9e14a558f8ab-374529ae1c8mr3359065ab.4.1716816148327; Mon, 27 May 2024
- 06:22:28 -0700 (PDT)
-Date: Mon, 27 May 2024 06:22:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aa7cb106196f6883@google.com>
-Subject: [syzbot] [bcachefs?] possible deadlock in bch2_gc_mark_key
-From: syzbot <syzbot+050e797ad21ccc3f5d1a@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+gpu_get_node_map() uses pci_read_config_dword() that returns PCIBIOS_*
+codes. The return code is then returned all the way into the module
+init function amd64_edac_init() that returns it as is. The module init
+functions, however, should return normal errnos.
 
-syzbot found the following issue on:
+Convert PCIBIOS_* returns code using pcibios_err_to_errno() into normal
+errno before returning it from gpu_get_node_map().
 
-HEAD commit:    9b62e02e6336 Merge tag 'mm-hotfixes-stable-2024-05-25-09-1..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e3fb34980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3e73beba72b96506
-dashboard link: https://syzkaller.appspot.com/bug?extid=050e797ad21ccc3f5d1a
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+For consistency, convert also the other similar cases which return
+PCIBIOS_* codes even if they do not have any bugs at the moment.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/61b507f6e56c/disk-9b62e02e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6991f1313243/vmlinux-9b62e02e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/65f88b96d046/bzImage-9b62e02e.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+050e797ad21ccc3f5d1a@syzkaller.appspotmail.com
-
-bcachefs (loop4): alloc_read... done
-bcachefs (loop4): stripes_read... done
-bcachefs (loop4): snapshots_read... done
-bcachefs (loop4): check_allocations...
-======================================================
-WARNING: possible circular locking dependency detected
-6.9.0-syzkaller-12393-g9b62e02e6336 #0 Not tainted
-------------------------------------------------------
-syz-executor.4/6744 is trying to acquire lock:
-ffff888025c00988 (&c->sb_lock){+.+.}-{3:3}, at: bch2_gc_mark_key+0x9f6/0xd90 fs/bcachefs/btree_gc.c:599
-
-but task is already holding lock:
-ffff888025c01a50 (&c->btree_root_lock){+.+.}-{3:3}, at: bch2_gc_btree.constprop.0+0x106/0x11e0 fs/bcachefs/btree_gc.c:643
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&c->btree_root_lock){+.+.}-{3:3}:
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
-       bch2_btree_roots_to_journal_entries+0x93/0x570 fs/bcachefs/btree_update_interior.c:2633
-       bch2_fs_mark_clean+0x31b/0x470 fs/bcachefs/sb-clean.c:376
-       bch2_fs_read_only+0x88a/0xf10 fs/bcachefs/super.c:381
-       __bch2_fs_stop+0xfc/0x540 fs/bcachefs/super.c:613
-       generic_shutdown_super+0x159/0x3d0 fs/super.c:642
-       bch2_kill_sb+0x3b/0x50 fs/bcachefs/fs.c:2026
-       deactivate_locked_super+0xbe/0x1a0 fs/super.c:473
-       deactivate_super+0xde/0x100 fs/super.c:506
-       cleanup_mnt+0x222/0x450 fs/namespace.c:1267
-       task_work_run+0x14e/0x250 kernel/task_work.c:180
-       resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
-       exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
-       exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
-       __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
-       syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
-       do_syscall_64+0xda/0x250 arch/x86/entry/common.c:89
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&c->sb_lock){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain kernel/locking/lockdep.c:3869 [inline]
-       __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
-       lock_acquire kernel/locking/lockdep.c:5754 [inline]
-       lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
-       bch2_gc_mark_key+0x9f6/0xd90 fs/bcachefs/btree_gc.c:599
-       bch2_gc_btree.constprop.0+0x394/0x11e0 fs/bcachefs/btree_gc.c:647
-       bch2_gc_btrees+0x442/0x8c0 fs/bcachefs/btree_gc.c:697
-       bch2_check_allocations+0x98f/0x2670 fs/bcachefs/btree_gc.c:1217
-       bch2_run_recovery_pass+0x8e/0x1a0 fs/bcachefs/recovery_passes.c:182
-       bch2_run_recovery_passes+0x33b/0x710 fs/bcachefs/recovery_passes.c:225
-       bch2_fs_recovery+0x259f/0x3db0 fs/bcachefs/recovery.c:807
-       bch2_fs_start+0x2e9/0x600 fs/bcachefs/super.c:1031
-       bch2_fs_open+0xfa0/0x1110 fs/bcachefs/super.c:2123
-       bch2_mount+0xdcc/0x1130 fs/bcachefs/fs.c:1917
-       legacy_get_tree+0x109/0x220 fs/fs_context.c:662
-       vfs_get_tree+0x8f/0x380 fs/super.c:1780
-       do_new_mount fs/namespace.c:3352 [inline]
-       path_mount+0x14e6/0x1f20 fs/namespace.c:3679
-       do_mount fs/namespace.c:3692 [inline]
-       __do_sys_mount fs/namespace.c:3898 [inline]
-       __se_sys_mount fs/namespace.c:3875 [inline]
-       __x64_sys_mount+0x297/0x320 fs/namespace.c:3875
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&c->btree_root_lock);
-                               lock(&c->sb_lock);
-                               lock(&c->btree_root_lock);
-  lock(&c->sb_lock);
-
- *** DEADLOCK ***
-
-4 locks held by syz-executor.4/6744:
- #0: ffff888025c00278 (&c->state_lock){+.+.}-{3:3}, at: bch2_fs_start+0x3e/0x600 fs/bcachefs/super.c:1001
- #1: ffff888025c268d8 (&c->gc_lock){++++}-{3:3}, at: bch2_check_allocations+0xf1/0x2670 fs/bcachefs/btree_gc.c:1202
- #2: ffff888025c042d0 (&c->btree_trans_barrier){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
- #2: ffff888025c042d0 (&c->btree_trans_barrier){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
- #2: ffff888025c042d0 (&c->btree_trans_barrier){.+.+}-{0:0}, at: __bch2_trans_get+0x656/0xf20 fs/bcachefs/btree_iter.c:3204
- #3: ffff888025c01a50 (&c->btree_root_lock){+.+.}-{3:3}, at: bch2_gc_btree.constprop.0+0x106/0x11e0 fs/bcachefs/btree_gc.c:643
-
-stack backtrace:
-CPU: 0 PID: 6744 Comm: syz-executor.4 Not tainted 6.9.0-syzkaller-12393-g9b62e02e6336 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain kernel/locking/lockdep.c:3869 [inline]
- __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
- lock_acquire kernel/locking/lockdep.c:5754 [inline]
- lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
- __mutex_lock_common kernel/locking/mutex.c:608 [inline]
- __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
- bch2_gc_mark_key+0x9f6/0xd90 fs/bcachefs/btree_gc.c:599
- bch2_gc_btree.constprop.0+0x394/0x11e0 fs/bcachefs/btree_gc.c:647
- bch2_gc_btrees+0x442/0x8c0 fs/bcachefs/btree_gc.c:697
- bch2_check_allocations+0x98f/0x2670 fs/bcachefs/btree_gc.c:1217
- bch2_run_recovery_pass+0x8e/0x1a0 fs/bcachefs/recovery_passes.c:182
- bch2_run_recovery_passes+0x33b/0x710 fs/bcachefs/recovery_passes.c:225
- bch2_fs_recovery+0x259f/0x3db0 fs/bcachefs/recovery.c:807
- bch2_fs_start+0x2e9/0x600 fs/bcachefs/super.c:1031
- bch2_fs_open+0xfa0/0x1110 fs/bcachefs/super.c:2123
- bch2_mount+0xdcc/0x1130 fs/bcachefs/fs.c:1917
- legacy_get_tree+0x109/0x220 fs/fs_context.c:662
- vfs_get_tree+0x8f/0x380 fs/super.c:1780
- do_new_mount fs/namespace.c:3352 [inline]
- path_mount+0x14e6/0x1f20 fs/namespace.c:3679
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount fs/namespace.c:3875 [inline]
- __x64_sys_mount+0x297/0x320 fs/namespace.c:3875
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f743727e5ea
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f7437fb6ef8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007f7437fb6f80 RCX: 00007f743727e5ea
-RDX: 0000000020005b00 RSI: 0000000020000000 RDI: 00007f7437fb6f40
-RBP: 0000000020005b00 R08: 00007f7437fb6f80 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000020000000
-R13: 00007f7437fb6f40 R14: 0000000000005b46 R15: 00000000200000c0
- </TASK>
-bucket 0:26 gen 0 data type btree has wrong cached_sectors: got 458752, should be 0, shutting down
-bcachefs (loop4): inconsistency detected - emergency read only at journal seq 8
-bcachefs (loop4): bch2_gc_alloc_done(): error fsck_errors_not_fixed
-bcachefs (loop4): bch2_check_allocations(): error fsck_errors_not_fixed
-bcachefs (loop4): bch2_fs_recovery(): error fsck_errors_not_fixed
-bcachefs (loop4): bch2_fs_start(): error starting filesystem fsck_errors_not_fixed
-bcachefs (loop4): shutting down
-bcachefs (loop4): shutdown complete
-
-
+Fixes: 4251566ebc1c ("EDAC/amd64: Cache and use GPU node map")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/edac/amd64_edac.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 1f3520d76861..a17f3c0cdfa6 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -81,7 +81,7 @@ int __amd64_read_pci_cfg_dword(struct pci_dev *pdev, int offset,
+ 		amd64_warn("%s: error reading F%dx%03x.\n",
+ 			   func, PCI_FUNC(pdev->devfn), offset);
+ 
+-	return err;
++	return pcibios_err_to_errno(err);
+ }
+ 
+ int __amd64_write_pci_cfg_dword(struct pci_dev *pdev, int offset,
+@@ -94,7 +94,7 @@ int __amd64_write_pci_cfg_dword(struct pci_dev *pdev, int offset,
+ 		amd64_warn("%s: error writing to F%dx%03x.\n",
+ 			   func, PCI_FUNC(pdev->devfn), offset);
+ 
+-	return err;
++	return pcibios_err_to_errno(err);
+ }
+ 
+ /*
+@@ -1025,8 +1025,10 @@ static int gpu_get_node_map(struct amd64_pvt *pvt)
+ 	}
+ 
+ 	ret = pci_read_config_dword(pdev, REG_LOCAL_NODE_TYPE_MAP, &tmp);
+-	if (ret)
++	if (ret) {
++		ret = pcibios_err_to_errno(ret);
+ 		goto out;
++	}
+ 
+ 	gpu_node_map.node_count = FIELD_GET(LNTM_NODE_COUNT, tmp);
+ 	gpu_node_map.base_node_id = FIELD_GET(LNTM_BASE_NODE_ID, tmp);
+-- 
+2.39.2
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
