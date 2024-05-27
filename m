@@ -1,76 +1,66 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD63C26AFA;
-	Mon, 27 May 2024 10:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68E013AA31
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 10:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716807027; cv=none; b=kmqUaPY1gQfr/eAzdzq6cobPkW6yfM1vwDbhZZGqRdQ0vZbzm+0DMawEWeIDpQouG8Jbminrv2eMHv8DFXworj2XZpx5Nu2g0l7tzpgJX2Q0xTw15S5CtJkBKG/YyWXGRHKvDEDPEMg3K9aouGveMOLRZLjPkfuPQoewRPk50lI=
+	t=1716807058; cv=none; b=NbDXqy0XT67s2QhAwHYuTPBjWuWaoZt9xQGJzEmdApZjwSb2BW+eAWJ7B5ZzJ+iVnUo7GJxo0cIGACKh1UiTs2j9WzKfgsMyau9TLnUtqBowi1yMRNaIhsiQt923muESCmNTkEHoQnYsZqR9LUEVgoSh/dUAGiR3oCJYef+qnjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716807027; c=relaxed/simple;
-	bh=PBIN0QawD2NPAG4XO+sttWPtgLsmF6K+be/5GyQwvLU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U7KHiE2n2lR68x5Ik5Okl0lswjog0FLh+ziBag+0yQ8bAg8UPqxRP4OBmsMBNHi5NB03crVX0xViGKbWSWEFZoK4Ra4g+Ftn46KfWon7k4MX40yZiuItcxVbA8oYe+IH19uiaQnUnZ5PwBqY9h+rUJ4wijioeTJvRnPC0JfP3so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=XzAgiHQ/; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="XzAgiHQ/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1716807023; x=1717066223;
-	bh=zDqqdgPcxNIOCNxfRj2Ird7GKrHKPSBXxIMDgjl4viU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=XzAgiHQ/0IkeWD+FyKc6E7eVOAek3i2k0BdZS91/GcyDIufbOgeXWpNrbzPjFOVKm
-	 lB2os8ICoCD1RkngLrYOcKftflpTcZ8g9mPGQmTZ3yst2TnmTc4W2wuq37dX6khVE0
-	 A9zeMgE9Cyl/pBl9LjROrs2rmp0WFcbTuaAjUIjSRcTFeH7arYbhU8Y1Y3umaxIVXl
-	 ROvOo29re/OH17r+PvFdTvFJqjuU20CYpac4nri7Au/KWxuJqiRdQFZHRYJXYcygch
-	 PpXQX/JjWYRWLjaxugTOW1/XDQxLQcIouA6v3Eco5RzqnCZm6gnr0dw1d313yo/rqN
-	 iVOyijt3J/Qdg==
-Date: Mon, 27 May 2024 10:50:17 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Marco Elver <elver@google.com>, Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>, Paolo Abeni <pabeni@redhat.com>, Pierre Gondois <pierre.gondois@arm.com>, Ingo Molnar <mingo@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 9/9] rust: list: add ListArcField
-Message-ID: <4a713d0e-00d7-4735-b68b-fbf9edb2e282@proton.me>
-In-Reply-To: <20240506-linked-list-v2-9-7b910840c91f@google.com>
-References: <20240506-linked-list-v2-0-7b910840c91f@google.com> <20240506-linked-list-v2-9-7b910840c91f@google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: f93350be2b5ccdcc25cf38e360e978dad03999b7
+	s=arc-20240116; t=1716807058; c=relaxed/simple;
+	bh=M+5oJJBFymwz7yytBUNL9Ovt9zv5azHe+2mI94Y5ekw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oD1JNRy5yOLAK3lTr937DfE4G1UL1FQ2THpeFONLFtFou1G1b06792Q/psNW/LmCphKtExThY5kqIlIurBhNpxjC59oxK3MpOMTZK8Yi14SetQ3ueN/JqtKDdwEuzWbpNpmN0F6UNyRk83UyR2rEy/WKGTZH1Ef4NXfI3YTg16E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.50.196])
+	by sina.com (172.16.235.24) with ESMTP
+	id 6654644300000507; Mon, 27 May 2024 18:45:25 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 39220745089343
+X-SMAIL-UIID: 5D1534DC5E0A47D2A6A59D59E8846220-20240527-184525-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+2459c1b9fcd39be822b1@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] WARNING in inet_csk_get_port (3)
+Date: Mon, 27 May 2024 18:45:12 +0800
+Message-Id: <20240527104512.2559-1-hdanton@sina.com>
+In-Reply-To: <0000000000005736990617c4fa63@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 06.05.24 11:53, Alice Ryhl wrote:
-> One way to explain what `ListArc` does is that it controls exclusive
-> access to the prev/next pointer field in a refcounted object. The
-> feature of having a special reference to a refcounted object with
-> exclusive access to specific fields is useful for other things, so
-> provide a general utility for that.
->=20
-> This is used by Rust Binder to keep track of which processes have a
-> reference to a given node. This involves an object for each process/node
-> pair, that is referenced by both the process and the node. For some
-> fields in this object, only the process's reference needs to access
-> them (and it needs mutable access), so Binder uses a ListArc to give the
-> process's reference exclusive access.
->=20
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  rust/kernel/list.rs           |  3 ++
->  rust/kernel/list/arc_field.rs | 96 +++++++++++++++++++++++++++++++++++++=
-++++++
->  2 files changed, 99 insertions(+)
+On Mon, 06 May 2024 01:37:21 -0700
+> syzbot found the following issue on:
+> 
+> HEAD commit:    977b1ef51866 Merge tag 'block-6.9-20240420' of git://git.k..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11135520980000
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  977b1ef51866
 
----
-Cheers,
-Benno
-
+--- x/net/ipv4/inet_connection_sock.c
++++ y/net/ipv4/inet_connection_sock.c
+@@ -589,7 +589,7 @@ int inet_csk_get_port(struct sock *sk, u
+ success:
+ 	inet_csk_update_fastreuse(tb, sk);
+ 
+-	if (!inet_csk(sk)->icsk_bind_hash)
++	if (tb != inet_csk(sk)->icsk_bind_hash || inet_csk(sk)->icsk_bind2_hash != tb2)
+ 		inet_bind_hash(sk, tb, tb2, port);
+ 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
+ 	WARN_ON(inet_csk(sk)->icsk_bind2_hash != tb2);
+--
