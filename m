@@ -1,90 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8696427701;
-	Mon, 27 May 2024 10:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0F0E572;
+	Mon, 27 May 2024 10:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716805045; cv=none; b=tDw0nUwb98JonxdfM2MF7iT8DMvoDPlGLKAElzby25ntmusF/1IbG/rH2+lrJUoPOJeQd4hNogrRHxxeFu5B/88H+FnoBhe2tY9Y1V6N0WPyBg7/M8+DwLPLoIKn37B4Ygwy83NGP/wu6ZsKhSHhXL0vsghF/cmI/eB6h8Yz7zA=
+	t=1716805078; cv=none; b=Na/kUToV7hSegacxeKrHyYBHX2NEoI5KOgDhHBjHrEiv8by2PTceQeAd2sFFBDgTLoXcJI1Qrew+LG83ZPVXyibIo6EshkdUdIAQDIWSt5yR0JLv8DsMiqgotDcjdkhbArtJ/MQ4JyDabldVkVJBk9uYC33l/IszvRRwy2vRzRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716805045; c=relaxed/simple;
-	bh=WGewnNRqrB4yIglI8RDMdjSqZ/L0q5XXfLeuc7tx7JM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tDG7KH6YGDqBAJcosZj7uCnUnOilgE6UrU1q9g9SuJlWmPun0ZJg1dsXcz9McUsYKDegxSNlhVgqLtQPtpJTrUwsBLQvxbN6PZziYdP+6Oyi73BUjGG1j1QGXove1cojTylw+3BB7hz9GlPMaCOnobFnybO1lUFKSDOow0ckxyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FtwCiVIU; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716805078; c=relaxed/simple;
+	bh=cyr6EFzXGJf5ZwPIzTR1hgMASRZcnsU93XrAAYJbXcI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ccsEf66zRyg3OajcTotcESMOlGuvOLgt9ofYC5jpfoN7+qAOTO8DTE/DeWkk3kmp337wDUTiviPvE0qTMcL0cOtzhVrHD5ROS7G1FkOORUPG69eDc8xJ97XB7ILDj+ItTKBcfEn+pwggmVdB0aR9Ii/pkt2YaSoHDQPAN7rUJoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AC0aMroZ; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FtwCiVIU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716805044; x=1748341044;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=WGewnNRqrB4yIglI8RDMdjSqZ/L0q5XXfLeuc7tx7JM=;
-  b=FtwCiVIUSdzTJP9nRgsMfSCFsDD8pdapJuBWxBpzqDMkTfoOypd7I+CN
-   xWsUJcwGOzKhrpA3C2QQOlOQ/b+XmWqrxUcMZ36M/LEiDUHwiYmrMd7sL
-   BLXefqd1+6MAv2nsgRvXMjsgwVskc3/JQF/DItohwtOOlyiNNE8VjQajM
-   QpMTdKyLeURaTg1LsXYfL68f38hT3cJNbVHpG3mqzSru6oz4dFAzJTyCQ
-   d6JhSNxkGkQk34TYL42QLSAlFmD4Wtn2o8juCMBwkz80xa6+r0qeICpKR
-   gbynVQYgvGs3NdKbHio8ni6XU3NlWFocp13+IR1y51hHMH2EPDIonn475
-   g==;
-X-CSE-ConnectionGUID: V+DkMCOFT0i4uB61Y2j83A==
-X-CSE-MsgGUID: OXnn9jZUQ+CzbSiBfyeDMg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="16904483"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="16904483"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 03:15:26 -0700
-X-CSE-ConnectionGUID: yR5bOMzmQwuKz7NGPJTijA==
-X-CSE-MsgGUID: c+ib9qCPSJqwUWeAW7+mTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="39118209"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.138])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 03:15:23 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: markus.elfring@web.de, Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Shyam-sundar.S-k@amd.com, hdegoede@redhat.com, 
- kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org
-In-Reply-To: <20240527083628.210491-2-thorsten.blum@toblux.com>
-References: <50d10f0b-d108-4057-be9c-a90e2398e810@web.de>
- <20240527083628.210491-2-thorsten.blum@toblux.com>
-Subject: Re: [PATCH v2] platform/x86/amd/pmf: Use memdup_user()
-Message-Id: <171680491830.2175.13318371328377311135.b4-ty@linux.intel.com>
-Date: Mon, 27 May 2024 13:15:18 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AC0aMroZ"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f8ea3e9543so2368878b3a.2;
+        Mon, 27 May 2024 03:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716805076; x=1717409876; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jq72rLrn+A+D7G+wX9IPCEHaClv8ndLPPxQk8oIeS9c=;
+        b=AC0aMroZkMP96jmDORv0yNXel1Lb700sD+TB/gzo2yUhH1TNbSxVwQxKBL1IAYyCGq
+         ++ktwiU0ug05+CKAbteFX+vAh3rnvO4Etnm715to+wjZuQc1io48tPTuMu/CVfEWzgkM
+         k1UprVfJumq05W9+iyTVJn6bNPj2pgEHvsDfRVWbLrrtvcjW7bcycryL98J2iuaipxpE
+         3vuRoEDisSvqI9ik6BYXS+oUWT5U1j7DPOKzndhoCAfvj0g2o9UyXlCjAnNiJ9D+zIP0
+         zy6gqEV1upBd68bjL0qIUS+CZm1M7Ob2QuYLj3jHmVrvxkWo/3eO8zEw3/Lr2ND8mvKF
+         bCfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716805076; x=1717409876;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jq72rLrn+A+D7G+wX9IPCEHaClv8ndLPPxQk8oIeS9c=;
+        b=L3u5td8uY0IjM9eCWKhRjoes2IVK5ybiz5cNo96pIsWLuhON6NQ0qTaoKB5PxAU87b
+         SZ+UEFRkSCSsa6/PuhAjKU08I6uOPRPRTv5Xwu0UCAvtw3lJgxRQB7VF0w2Fr3kVp6sa
+         5FOFJ+4Xqbi1T8INMyshEKb6s3iGrmShNRXB8Q/j8Kh6B1wKABXnIPVOkYsocF+gZ4hZ
+         lnFl/fXPqm3lqRRFf7cf4d3ikp4BtRSQ5wnDxwyEysUq2sj7wb3arPkkfU3IooSQvnhG
+         Qp13jXzK8mfgbvNZClsNZ4q6q73mUFxvsh6QkpVWoRK3PPR+X1Cg5FyrBA2f291GMGKf
+         k2CA==
+X-Forwarded-Encrypted: i=1; AJvYcCUySbIrnveXsjvYvQBTnoMxS5xX+7+lYP5R9or2sluXvqLIYh6HWtm4yhhXf9arwwFczuSiYg+Any7Lo/1E4xhl0jdzNR1Xv6OpUOiAA1EpYiyG
+X-Gm-Message-State: AOJu0YwsXNrJoEPSrz+GhQ9yWpZ2U3L1+dRx9n0tTTmYpNv+Re9S07oL
+	J8G5AsqhPIa9TyLTVLAiCQy7YRCE0Ds/NmzwvowNH/ODJROVaaEo
+X-Google-Smtp-Source: AGHT+IF/G3fuC0rANnb+pLiF++4Ae182gfa6BvzyOPoaWKyoEVDn4Bx0Cb9Pq1cvu1yZBtgs8vvz8w==
+X-Received: by 2002:a05:6a20:324b:b0:1b0:14ee:3b1c with SMTP id adf61e73a8af0-1b212d2852bmr8178711637.22.1716805076222;
+        Mon, 27 May 2024 03:17:56 -0700 (PDT)
+Received: from localhost.localdomain ([240d:1a:13a:f00:f3a2:fbda:2824:ae0e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fc059912sm4594570b3a.54.2024.05.27.03.17.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 03:17:55 -0700 (PDT)
+From: Tatsuya S <tatsuya.s2862@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tatsuya S <tatsuya.s2862@gmail.com>
+Subject: [PATCH v2] ftrace: Fix stack trace entry generated by ftrace_pid_func()
+Date: Mon, 27 May 2024 18:44:56 +0900
+Message-ID: <20240527100916.5737-2-tatsuya.s2862@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 27 May 2024 10:36:29 +0200, Thorsten Blum wrote:
+On setting set_ftrace_pid, a extra entry generated by ftrace_pid_func()
+is shown on stack trace(CONFIG_UNWINDER_FRAME_POINTER=y).
 
-> Switch to memdup_user() to overwrite the allocated memory only once
-> instead of initializing the allocated memory to zero with kzalloc() and
-> then immediately overwriting it with copy_from_user().
-> 
-> Fix the following Coccinelle/coccicheck warning reported by
-> memdup_user.cocci:
-> 
-> [...]
+        [004] .....    68.459382: <stack trace>
+ => 0xffffffffa00090af
+ => ksys_read
+ => __x64_sys_read
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
 
+To resolve this issue, increment skip count
+in function_stack_trace_call() if pids are set.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
+---
+Changes in v2:
+    - Fix build warnings reported by kernel test robot
+    - Link to v1: https://lore.kernel.org/linux-trace-kernel/20240526112658.46740-1-tatsuya.s2862@gmail.com/
 
-The list of commits applied:
-[1/1] platform/x86/amd/pmf: Use memdup_user()
-      commit: 46de513068f956b76d68d241a7ad6bc5576d2948
+ include/linux/ftrace.h         | 2 ++
+ kernel/trace/ftrace.c          | 2 +-
+ kernel/trace/trace_functions.c | 7 ++++++-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
---
- i.
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 800995c425e0..0855dfe768eb 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -913,6 +913,8 @@ static inline bool is_ftrace_trampoline(unsigned long addr)
+ /* totally disable ftrace - can not re-enable after this */
+ void ftrace_kill(void);
+ 
++bool ftrace_pids_enabled(struct ftrace_ops *ops);
++
+ static inline void tracer_disable(void)
+ {
+ #ifdef CONFIG_FUNCTION_TRACER
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 65208d3b5ed9..e8ddd56d1e55 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -99,7 +99,7 @@ struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
+ /* What to set function_trace_op to */
+ static struct ftrace_ops *set_function_trace_op;
+ 
+-static bool ftrace_pids_enabled(struct ftrace_ops *ops)
++bool ftrace_pids_enabled(struct ftrace_ops *ops)
+ {
+ 	struct trace_array *tr;
+ 
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index 9f1bfbe105e8..455c9a880199 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -223,6 +223,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	long disabled;
+ 	int cpu;
+ 	unsigned int trace_ctx;
++	int skip = STACK_SKIP;
+ 
+ 	if (unlikely(!tr->function_enabled))
+ 		return;
+@@ -239,7 +240,11 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (likely(disabled == 1)) {
+ 		trace_ctx = tracing_gen_ctx_flags(flags);
+ 		trace_function(tr, ip, parent_ip, trace_ctx);
+-		__trace_stack(tr, trace_ctx, STACK_SKIP);
++#ifdef CONFIG_UNWINDER_FRAME_POINTER
++		if (ftrace_pids_enabled(op))
++			skip++;
++#endif
++		__trace_stack(tr, trace_ctx, skip);
+ 	}
+ 
+ 	atomic_dec(&data->disabled);
+-- 
+2.45.1
 
