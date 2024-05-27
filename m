@@ -1,100 +1,71 @@
-Received: from mail02.habana.ai (habanamailrelay02.habana.ai [62.90.112.121])
+Received: from mail.alarsen.net (mail.alarsen.net [144.76.18.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D04316F0FE
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.90.112.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D56BA33;
+	Mon, 27 May 2024 15:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.18.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716822165; cv=none; b=kyJNI2Nvt2wwkSyyUjclLPqLbRqOkHwqGAEINC2bF7CXj/axtcGRmbK6rhS8tbY9ORFso98SBSRePAyyr5+HfJ3YTBLq3MvfMHSyv7S04AQz0UIzxMlXMACiugGYCEHo+RLTwrl7/iKp7P+pAHtQCGUeu4vJaeOrCkG4X+B/P+o=
+	t=1716822479; cv=none; b=bO2JMLtrPOGNSFFwZ2DWWHF2dFSDuXBqseO+F1/A+tKk7S3i1cz1h0U9XXeGup9DN3oY3epexvYx40a8KpJr3AA+/lV6ymx4Jpqct5ua8Zvs4vspfBtmCIXPsDnNRHqo2CxoenSiv2ceNn8q3HUZpIEbUBUi4vhIxT98zSn8ivA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716822165; c=relaxed/simple;
-	bh=3+YL0eQjbechtjlZb3uB0GxuQXjYmHn+ITIAg1aUPEQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FJgHNqhSIQg5Oh8yyCUWYvkq25cYpIdejOmGbcPZI+MUfSMz4Yk2OoBhyh+gf3cj1yiHt+9xswoAT9bPDGm/uGdFgaukuj65vDq+5ZS2WJXtGIhLtbX+53uUcBtObbCBKhkrqsJ0IzSYSTLh6v3bWpuCw5kshFv9iSds+COq6ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=C9DfpX3s; arc=none smtp.client-ip=62.90.112.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
+	s=arc-20240116; t=1716822479; c=relaxed/simple;
+	bh=WNlVgPq/9ZcAYvijasjpBAubvV+mz+ZO9zMYVUgIqGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gy0tPy4nId7cyiE9a78XMU7HdWQGym874YKgrTOy6pW73D5oaUkQhvs4tvUC1pIBKr5T78T9PSxlqx9+t3H1YbcXm8lZ8R1tbfmfJKGuVeE1PmfTJGNTwulTXIcYeGXL2OdC/wvWH/KBxZqGmzFhqlXow3nptfpvMXCSe6byd4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alarsen.net; spf=pass smtp.mailfrom=alarsen.net; dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b=LZqN+ugL; arc=none smtp.client-ip=144.76.18.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alarsen.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alarsen.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="C9DfpX3s"
-Received: internal info suppressed
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716822151; bh=3+YL0eQjbechtjlZb3uB0GxuQXjYmHn+ITIAg1aUPEQ=;
+	dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b="LZqN+ugL"
+Received: from oscar.alarsen.net (unknown [IPv6:fd8b:531:bccf:96:a7dd:89dc:47d6:b438])
+	by joe.alarsen.net (Postfix) with ESMTPS id 1050F180ADC;
+	Mon, 27 May 2024 17:01:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alarsen.net; s=joe;
+	t=1716822081; bh=g4El62Z0PvcpYS27xbh7IP+TvBK/gM8B4NRi7BDDHR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C9DfpX3sPr8XuD5qvYfKgzv7yT1uDuxthmI+jZAwXvStGpd+6Ob4hp0jgI6kzq9y+
-	 4raN1k3zAFntcTcuomUAXid5l18NuFDS8xQQiaRKEr/JCse6Fxel7ZjUQYeK+itxUS
-	 w2RvauWjnaO9JIM7nJmM3cjHs6u7ikKo2au/Q1X2VR02OdQZNqBROrtXLN+EP9VHWk
-	 eNXOolsXpmvXpYofsL6Xdg/Wv3ZdZlhQnJrGn9b7VahTaFxxpU0BvJQpC9dWwQ4Dcv
-	 G1ywwBF61DXnsQr0kC4v8QUasQDKODyHA8Gc+k30jT/Z7zXPxGQy8lek1g6Cu7Atsv
-	 M8wbqUXKDajcw==
-Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RF2PiV1954007;
-	Mon, 27 May 2024 18:02:26 +0300
-From: Ofir Bitton <obitton@habana.ai>
-To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Vitaly Margolin <vmargolin@habana.ai>
-Subject: [PATCH 4/8] accel/habanalabs: add cpld ts cpld_timestamp cpucp
-Date: Mon, 27 May 2024 18:02:20 +0300
-Message-Id: <20240527150224.1953969-4-obitton@habana.ai>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240527150224.1953969-1-obitton@habana.ai>
-References: <20240527150224.1953969-1-obitton@habana.ai>
+	b=LZqN+ugLepx6631caBgOJ0QyRuxitYJ9LsHg0RSuJfiLaXPdVBMa77zO6jjlSMkQt
+	 1I7IKkSgG/f74csXPnC3kHgU9T1AMkwp5W++neY3t0sAPIL6WbwKGF8m3lS+XQ+1kJ
+	 nYJnmBBo0z3NbztF8fV38CVYJc+QzdxQbQGvAG/U=
+Received: from oscar.localnet (localhost [IPv6:::1])
+	by oscar.alarsen.net (Postfix) with ESMTPS id EE1EF1CA7;
+	Mon, 27 May 2024 17:01:20 +0200 (CEST)
+From: Anders Larsen <al@alarsen.net>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, Jeff Johnson <quic_jjohnson@quicinc.com>
+Subject: Re: [PATCH] qnx4: add MODULE_DESCRIPTION()
+Date: Mon, 27 May 2024 17:01:20 +0200
+Message-ID: <2881626.mvXUDI8C0e@oscar>
+In-Reply-To: <20240524-md-qnx4-v1-1-5ae060082e5f@quicinc.com>
+References: <20240524-md-qnx4-v1-1-5ae060082e5f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-From: Vitaly Margolin <vmargolin@habana.ai>
+On 2024-05-24 22:51 Jeff Johnson wrote:
+> Fix the 'make W=1' warning:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/qnx4/qnx4.o
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> ---
+>  fs/qnx4/inode.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/qnx4/inode.c b/fs/qnx4/inode.c
+> index d79841e94428..e399e2dd3a12 100644
+> --- a/fs/qnx4/inode.c
+> +++ b/fs/qnx4/inode.c
+> @@ -430,5 +430,6 @@ static void __exit exit_qnx4_fs(void)
+> 
+>  module_init(init_qnx4_fs)
+>  module_exit(exit_qnx4_fs)
+> +MODULE_DESCRIPTION("QNX4 file system");
+>  MODULE_LICENSE("GPL");
 
-Add cpld_timestamp field to cpucp_info structure and return cpld
-timestamp as part of cpld version
+Acked-by: Anders Larsen <al@alarsen.net>
 
-Signed-off-by: Vitaly Margolin <vmargolin@habana.ai>
-Reviewed-by: Ofir Bitton <obitton@habana.ai>
----
- drivers/accel/habanalabs/common/sysfs.c | 5 +++--
- include/linux/habanalabs/cpucp_if.h     | 3 ++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/common/sysfs.c b/drivers/accel/habanalabs/common/sysfs.c
-index b6c63f8a0c1b..e9f8ccc0bbf9 100644
---- a/drivers/accel/habanalabs/common/sysfs.c
-+++ b/drivers/accel/habanalabs/common/sysfs.c
-@@ -142,8 +142,9 @@ static ssize_t cpld_ver_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct hl_device *hdev = dev_get_drvdata(dev);
- 
--	return sprintf(buf, "0x%08x\n",
--			le32_to_cpu(hdev->asic_prop.cpucp_info.cpld_version));
-+	return sprintf(buf, "0x%08x%08x\n",
-+		le32_to_cpu(hdev->asic_prop.cpucp_info.cpld_timestamp),
-+		le32_to_cpu(hdev->asic_prop.cpucp_info.cpld_version));
- }
- 
- static ssize_t cpucp_kernel_ver_show(struct device *dev,
-diff --git a/include/linux/habanalabs/cpucp_if.h b/include/linux/habanalabs/cpucp_if.h
-index 0913415243e8..1ed17887f1a8 100644
---- a/include/linux/habanalabs/cpucp_if.h
-+++ b/include/linux/habanalabs/cpucp_if.h
-@@ -1146,6 +1146,7 @@ struct cpucp_security_info {
-  *                (0 = fully functional, 1 = lower-half is not functional,
-  *                 2 = upper-half is not functional)
-  * @sec_info: security information
-+ * @cpld_timestamp: CPLD programmed F/W timestamp.
-  * @pll_map: Bit map of supported PLLs for current ASIC version.
-  * @mme_binning_mask: MME binning mask,
-  *                    bits [0:6]   <==> dcore0 mme fma
-@@ -1193,7 +1194,7 @@ struct cpucp_info {
- 	__u8 substrate_version;
- 	__u8 eq_health_check_supported;
- 	struct cpucp_security_info sec_info;
--	__le32 reserved2;
-+	__le32 cpld_timestamp;
- 	__u8 pll_map[PLL_MAP_LEN];
- 	__le64 mme_binning_mask;
- 	__u8 fw_os_version[VERSION_MAX_LEN];
--- 
-2.34.1
 
