@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1026A347
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E543C537F2
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716791908; cv=none; b=ZA8pXzV34ObXwYE4zQsxxPGewOQdBwMwcWBVON69ORbHiI59zdKyE9PxgLg0ky6Lpoh0yyc5p7ORMGFUonoxq0DjWAMNxJWmaSOi++YmOrXIYPoI3rhsx+dZPLJItcqNyBRz7frLrjN7aNnsGOIl/o1kaZWKDBOmcN9wuXdCBn4=
+	t=1716791908; cv=none; b=mZdQWXrJuuv/EGTc0pwDzW9XDmilrYzv80nk/IPDcufk747FUj9n//1qitebd4/cJDZXepAiH189JygGBrxTKgVTTqPsJlgBPuOGwiG0zxh8DdFsZw03KgRlrW+ucypL8Ltpbqgn3G9lEw4vCnEVPQHF8xc2Ci9AP+KPx4QmeWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716791908; c=relaxed/simple;
-	bh=Rd0t6WNNNckIBVkHKjfeD6/vzFKHe00qBLlxBSoqArE=;
+	bh=Q6b6AVR+OLPi2moRw9nS56wTI2Qvg3VL+I9G/3D9t3s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gl1G/69Ms+uTuOkyzwW9A0gXuziOQ8DgWzGQV/8p9CzjmvJnZBTw+4/pWojfB6/xpHrhBoH4T8XznsgBKkYqiQKqPni3YWdEIVjiSUIyPrQj3jE0198XvmvQ+jWQ3jjeho7ywiE/41hk6INedo6QAenHX1DQqUfKSurP6PwhU5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i78GElMR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1Ue4W54J; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=drtt5WdALahA8Ea0RMSas6mq439mNa/d29B5vlgQAA2wYVP5rsmvj2CkzlMxB4SMCXkWio3OwRvX+wPHjFteOGwCeMGD8+j+yk7Rch6DNYXKEgeu2g0ErDPMgMCCKv/N6Wi/RJCwUISo5yHNyxZBwNjy4n0PO0feQH3qZjbI1Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IzsJikse; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1ScfevS/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i78GElMR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Ue4W54J"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IzsJikse";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1ScfevS/"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716791905;
+	s=2020; t=1716791904;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1K8de/y+g8Dnqh1KWpBj2+5OXJyql0b3Ov26lWETiB8=;
-	b=i78GElMRqal8B/krWZI7qtrfYERKYX5kbXYLMuGNadiKytQ6BFRxLii+u/ppQxC96ejVrL
-	To8uh5iYbi3iOq6JgpW5n3FCSOmqml80tmpTTKmev87i8vCAxTCj9YDiUYcQMXVFu/7KVM
-	RI9+Pwz9oqRJD864nA+5lnUAufqkbQtaCKEazJu5WNAgC85f1husG+OndCnfUyUrBWBn42
-	npAK4hcxXtkXH+BFf9XQqV91YpcCaSPcIwciA5neYsQMk+UIhUpiZ3o0jVfiFG7p+mqBIH
-	EUmYi4YRdVjvgy/UmnzxaNjlRBH5HIVhU5fqJWfTQObBQBXdITPtSO7x8CTTAA==
+	bh=A3In+KGOOeAXG80pN26YZIQE7Yh4V5NoQeSHCFrtsvU=;
+	b=IzsJikseyh7cFQVKhRQZhdxqns8x0P2CGGeKKVYR/hBrGIDKHJ4VKbTebjSVGCxyZLcqkm
+	waDbIAjQxP8MUGUVV0KAOM5b9jCKXBqDIzbKK2wENYWYwI8R/Ce8L2zT0WAdePHy/7Bmjr
+	fJE2ep65pTv/Rj3ZAgNu+Sia4++M8STqwQNLwGgdBsXfaCvqQdFvF6SznXC7Kyt0T3aunr
+	WIpo2Hi8xbl3ia8F5deu15WTJHCo0mXUrZmR20urN/3f5ixwc09GeUdr6nChFO/BTuPCz5
+	7HBImiCd9a2CyliVeprRt7Ys8C3chwu8+KO1OpNROSjb4VS7x56m0OcP/dfX4A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716791905;
+	s=2020e; t=1716791904;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1K8de/y+g8Dnqh1KWpBj2+5OXJyql0b3Ov26lWETiB8=;
-	b=1Ue4W54JWCzZD4Cyy+i508KQtWOk/KRzTr2CeHrSDvmUo83fTftg9LmyLbCTLvNXckt5ob
-	TEbCSg7GPa+tWmDw==
+	bh=A3In+KGOOeAXG80pN26YZIQE7Yh4V5NoQeSHCFrtsvU=;
+	b=1ScfevS/Ae6sD8CaeGPDW/93aQoAdCYPhZH7U1QuCYKoBahOJms+/gN3gGXGarEejIaGYX
+	FRnsWuGgbgq5tgBw==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH printk v6 23/30] printk: Avoid console_lock dance if no legacy or boot consoles
-Date: Mon, 27 May 2024 08:43:42 +0206
-Message-Id: <20240527063749.391035-24-john.ogness@linutronix.de>
+Subject: [PATCH printk v6 21/30] printk: nbcon: Use nbcon consoles in console_flush_all()
+Date: Mon, 27 May 2024 08:43:40 +0206
+Message-Id: <20240527063749.391035-22-john.ogness@linutronix.de>
 In-Reply-To: <20240527063749.391035-1-john.ogness@linutronix.de>
 References: <20240527063749.391035-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -57,208 +57,215 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently the console lock is used to attempt legacy-type
-printing even if there are no legacy or boot consoles registered.
-If no such consoles are registered, the console lock does not
-need to be taken.
+Allow nbcon consoles to print messages in the legacy printk()
+caller context (printing via unlock) by integrating them into
+console_flush_all(). The write_atomic() callback is used for
+printing.
 
-Add tracking of legacy console registration and use it with
-boot console tracking to avoid unnecessary code paths, i.e.
-do not use the console lock if there are no boot consoles
-and no legacy consoles.
+Provide nbcon_legacy_emit_next_record(), which acts as the
+nbcon variant of console_emit_next_record(). Call this variant
+within console_flush_all() for nbcon consoles. Since nbcon
+consoles use their own @nbcon_seq variable to track the next
+record to print, this also must be appropriately handled in
+console_flush_all().
+
+Note that the legacy printing logic uses @handover to detect
+handovers for printing all consoles. For nbcon consoles,
+handovers/takeovers occur on a per-console basis and thus do
+not cause the console_flush_all() loop to abort.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/printk/printk.c | 78 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 63 insertions(+), 15 deletions(-)
+ kernel/printk/internal.h |  6 +++
+ kernel/printk/nbcon.c    | 87 ++++++++++++++++++++++++++++++++++++++++
+ kernel/printk/printk.c   | 17 +++++---
+ 3 files changed, 105 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 9a7532cff8d2..f00192df84f0 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -463,6 +463,13 @@ static int console_msg_format = MSG_FORMAT_DEFAULT;
- /* syslog_lock protects syslog_* variables and write access to clear_seq. */
- static DEFINE_MUTEX(syslog_lock);
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 5a93825871de..91bc0ee43f8d 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -78,6 +78,8 @@ void defer_console_output(void);
  
-+/*
-+ * Specifies if a legacy console is registered. If legacy consoles are
-+ * present, it is necessary to perform the console lock/unlock dance
-+ * whenever console flushing should occur.
-+ */
-+static bool have_legacy_console;
-+
+ u16 printk_parse_prefix(const char *text, int *level,
+ 			enum printk_info_flags *flags);
++void console_lock_spinning_enable(void);
++int console_lock_spinning_disable_and_check(int cookie);
+ 
+ u64 nbcon_seq_read(struct console *con);
+ void nbcon_seq_force(struct console *con, u64 seq);
+@@ -86,6 +88,8 @@ void nbcon_init(struct console *con, u64 init_seq);
+ void nbcon_free(struct console *con);
+ enum nbcon_prio nbcon_get_default_prio(void);
+ void nbcon_atomic_flush_pending(void);
++bool nbcon_legacy_emit_next_record(struct console *con, bool *handover,
++				   int cookie);
+ 
  /*
-  * Specifies if a boot console is registered. If boot consoles are present,
-  * nbcon consoles cannot print simultaneously and must be synchronized by
-@@ -471,6 +478,14 @@ static DEFINE_MUTEX(syslog_lock);
-  */
- static bool have_boot_console;
+  * Check if the given console is currently capable and allowed to print
+@@ -142,6 +146,8 @@ static inline void nbcon_init(struct console *con, u64 init_seq) { }
+ static inline void nbcon_free(struct console *con) { }
+ static inline enum nbcon_prio nbcon_get_default_prio(void) { return NBCON_PRIO_NONE; }
+ static inline void nbcon_atomic_flush_pending(void) { }
++static inline bool nbcon_legacy_emit_next_record(struct console *con, bool *handover,
++						 int cookie) { return false; }
  
-+/*
-+ * Specifies if the console lock/unlock dance is needed for console
-+ * printing. If @have_boot_console is true, the nbcon consoles will
-+ * be printed serially along with the legacy consoles because nbcon
-+ * consoles cannot print simultaneously with boot consoles.
-+ */
-+#define printing_via_unlock (have_legacy_console || have_boot_console)
-+
- #ifdef CONFIG_PRINTK
- DECLARE_WAIT_QUEUE_HEAD(log_wait);
- /* All 3 protected by @syslog_lock. */
-@@ -2339,7 +2354,7 @@ asmlinkage int vprintk_emit(int facility, int level,
- 	printed_len = vprintk_store(facility, level, dev_info, fmt, args);
+ static inline bool console_is_usable(struct console *con, short flags) { return false; }
  
- 	/* If called from the scheduler, we can not call up(). */
--	if (!in_sched) {
-+	if (!in_sched && printing_via_unlock) {
- 		/*
- 		 * The caller may be holding system-critical or
- 		 * timing-sensitive locks. Disable preemption during
-@@ -2648,7 +2663,7 @@ void resume_console(void)
-  */
- static int console_cpu_notify(unsigned int cpu)
- {
--	if (!cpuhp_tasks_frozen) {
-+	if (!cpuhp_tasks_frozen && printing_via_unlock) {
- 		/* If trylock fails, someone else is doing the printing */
- 		if (console_trylock())
- 			console_unlock();
-@@ -3189,7 +3204,8 @@ void console_flush_on_panic(enum con_flush_mode mode)
- 
- 	nbcon_atomic_flush_pending();
- 
--	console_flush_all(false, &next_seq, &handover);
-+	if (printing_via_unlock)
-+		console_flush_all(false, &next_seq, &handover);
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index fc48fcb4da9b..f6fbcf6d80fa 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -953,6 +953,93 @@ enum nbcon_prio nbcon_get_default_prio(void)
  }
  
  /*
-@@ -3524,6 +3540,7 @@ void register_console(struct console *newcon)
- 	if (newcon->flags & CON_NBCON) {
- 		nbcon_init(newcon, init_seq);
- 	} else {
-+		have_legacy_console = true;
- 		newcon->seq = init_seq;
- 	}
- 
-@@ -3600,6 +3617,7 @@ EXPORT_SYMBOL(register_console);
- static int unregister_console_locked(struct console *console)
- {
- 	bool use_device_lock = (console->flags & CON_NBCON) && console->write_atomic;
-+	bool found_legacy_con = false;
- 	bool found_boot_con = false;
- 	unsigned long flags;
- 	struct console *c;
-@@ -3667,9 +3685,13 @@ static int unregister_console_locked(struct console *console)
- 	for_each_console(c) {
- 		if (c->flags & CON_BOOT)
- 			found_boot_con = true;
-+		if (!(c->flags & CON_NBCON))
-+			found_legacy_con = true;
- 	}
- 	if (!found_boot_con)
- 		have_boot_console = found_boot_con;
-+	if (!found_legacy_con)
-+		have_legacy_console = found_legacy_con;
- 
- 	return res;
- }
-@@ -3830,22 +3852,34 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
- 	seq = prb_next_reserve_seq(prb);
- 
- 	/* Flush the consoles so that records up to @seq are printed. */
--	console_lock();
--	console_unlock();
-+	if (printing_via_unlock) {
-+		console_lock();
-+		console_unlock();
-+	}
- 
- 	for (;;) {
- 		unsigned long begin_jiffies;
- 		unsigned long slept_jiffies;
--
--		diff = 0;
-+		bool use_console_lock = printing_via_unlock;
- 
- 		/*
--		 * Hold the console_lock to guarantee safe access to
--		 * console->seq. Releasing console_lock flushes more
--		 * records in case @seq is still not printed on all
--		 * usable consoles.
-+		 * Ensure the compiler does not optimize @use_console_lock to
-+		 * be @printing_via_unlock since the latter can change at any
-+		 * time.
- 		 */
--		console_lock();
-+		barrier();
++ * nbcon_atomic_emit_one - Print one record for an nbcon console using the
++ *				write_atomic() callback
++ * @wctxt:	An initialized write context struct to use for this context
++ *
++ * Return:	True, when a record has been printed and there are still
++ *		pending records. The caller might want to continue flushing.
++ *
++ *		False, when there is no pending record, or when the console
++ *		context cannot be acquired, or the ownership has been lost.
++ *		The caller should give up. Either the job is done, cannot be
++ *		done, or will be handled by the owning context.
++ *
++ * This is an internal helper to handle the locking of the console before
++ * calling nbcon_emit_next_record().
++ */
++static bool nbcon_atomic_emit_one(struct nbcon_write_context *wctxt)
++{
++	struct nbcon_context *ctxt = &ACCESS_PRIVATE(wctxt, ctxt);
 +
-+		diff = 0;
-+
-+		if (use_console_lock) {
-+			/*
-+			 * Hold the console_lock to guarantee safe access to
-+			 * console->seq. Releasing console_lock flushes more
-+			 * records in case @seq is still not printed on all
-+			 * usable consoles.
-+			 */
-+			console_lock();
-+		}
- 
- 		cookie = console_srcu_read_lock();
- 		for_each_console_srcu(c) {
-@@ -3865,6 +3899,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
- 			if (flags & CON_NBCON) {
- 				printk_seq = nbcon_seq_read(c);
- 			} else {
-+				WARN_ON_ONCE(!use_console_lock);
- 				printk_seq = c->seq;
- 			}
- 
-@@ -3876,7 +3911,8 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
- 		if (diff != last_diff && reset_on_progress)
- 			remaining_jiffies = timeout_jiffies;
- 
--		console_unlock();
-+		if (use_console_lock)
-+			console_unlock();
- 
- 		/* Note: @diff is 0 if there are no usable consoles. */
- 		if (diff == 0 || remaining_jiffies == 0)
-@@ -3946,6 +3982,7 @@ static void __wake_up_klogd(int val)
- 		return;
- 
- 	preempt_disable();
-+
- 	/*
- 	 * Guarantee any new records can be seen by tasks preparing to wait
- 	 * before this context checks if the wait queue is empty.
-@@ -3957,11 +3994,22 @@ static void __wake_up_klogd(int val)
- 	 *
- 	 * This pairs with devkmsg_read:A and syslog_print:A.
- 	 */
--	if (wq_has_sleeper(&log_wait) || /* LMM(__wake_up_klogd:A) */
--	    (val & PRINTK_PENDING_OUTPUT)) {
-+	if (!wq_has_sleeper(&log_wait)) /* LMM(__wake_up_klogd:A) */
-+		val &= ~PRINTK_PENDING_WAKEUP;
++	if (!nbcon_context_try_acquire(ctxt))
++		return false;
 +
 +	/*
-+	 * Simple read is safe. register_console() would flush a newly
-+	 * registered legacy console when writing the message about it
-+	 * being enabled.
++	 * nbcon_emit_next_record() returns false when the console was
++	 * handed over or taken over. In both cases the context is no
++	 * longer valid.
++	 *
++	 * The higher priority printing context takes over responsibility
++	 * to print the pending records.
 +	 */
-+	if (!printing_via_unlock)
-+		val &= ~PRINTK_PENDING_OUTPUT;
++	if (!nbcon_emit_next_record(wctxt))
++		return false;
 +
-+	if (val) {
- 		this_cpu_or(printk_pending, val);
- 		irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
- 	}
++	nbcon_context_release(ctxt);
 +
- 	preempt_enable();
- }
++	return ctxt->backlog;
++}
++
++/**
++ * nbcon_legacy_emit_next_record - Print one record for an nbcon console
++ *					in legacy contexts
++ * @con:	The console to print on
++ * @handover:	Will be set to true if a printk waiter has taken over the
++ *		console_lock, in which case the caller is no longer holding
++ *		both the console_lock and the SRCU read lock. Otherwise it
++ *		is set to false.
++ * @cookie:	The cookie from the SRCU read lock.
++ *
++ * Context:	Any context except NMI.
++ * Return:	True, when a record has been printed and there are still
++ *		pending records. The caller might want to continue flushing.
++ *
++ *		False, when there is no pending record, or when the console
++ *		context cannot be acquired, or the ownership has been lost.
++ *		The caller should give up. Either the job is done, cannot be
++ *		done, or will be handled by the owning context.
++ *
++ * This function is meant to be called by console_flush_all() to print records
++ * on nbcon consoles from legacy context (printing via console unlocking).
++ * Essentially it is the nbcon version of console_emit_next_record().
++ */
++bool nbcon_legacy_emit_next_record(struct console *con, bool *handover,
++				   int cookie)
++{
++	struct nbcon_write_context wctxt = { };
++	struct nbcon_context *ctxt = &ACCESS_PRIVATE(&wctxt, ctxt);
++	unsigned long flags;
++	bool progress;
++
++	/* Use the same procedure as console_emit_next_record(). */
++	printk_safe_enter_irqsave(flags);
++	console_lock_spinning_enable();
++	stop_critical_timings();
++
++	ctxt->console	= con;
++	ctxt->prio	= nbcon_get_default_prio();
++
++	progress = nbcon_atomic_emit_one(&wctxt);
++
++	start_critical_timings();
++	*handover = console_lock_spinning_disable_and_check(cookie);
++	printk_safe_exit_irqrestore(flags);
++
++	return progress;
++}
++
++/**
+  * __nbcon_atomic_flush_pending_con - Flush specified nbcon console using its
+  *					write_atomic() callback
+  * @con:			The nbcon console to flush
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index d81d541558fd..9a7532cff8d2 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1860,7 +1860,7 @@ static bool console_waiter;
+  * there may be a waiter spinning (like a spinlock). Also it must be
+  * ready to hand over the lock at the end of the section.
+  */
+-static void console_lock_spinning_enable(void)
++void console_lock_spinning_enable(void)
+ {
+ 	/*
+ 	 * Do not use spinning in panic(). The panic CPU wants to keep the lock.
+@@ -1899,7 +1899,7 @@ static void console_lock_spinning_enable(void)
+  *
+  * Return: 1 if the lock rights were passed, 0 otherwise.
+  */
+-static int console_lock_spinning_disable_and_check(int cookie)
++int console_lock_spinning_disable_and_check(int cookie)
+ {
+ 	int waiter;
  
+@@ -2951,13 +2951,20 @@ static bool console_flush_all(bool do_cond_resched, u64 *next_seq, bool *handove
+ 		cookie = console_srcu_read_lock();
+ 		for_each_console_srcu(con) {
+ 			short flags = console_srcu_read_flags(con);
++			u64 printk_seq;
+ 			bool progress;
+ 
+ 			if (!console_is_usable(con, flags))
+ 				continue;
+ 			any_usable = true;
+ 
+-			progress = console_emit_next_record(con, handover, cookie);
++			if (flags & CON_NBCON) {
++				progress = nbcon_legacy_emit_next_record(con, handover, cookie);
++				printk_seq = nbcon_seq_read(con);
++			} else {
++				progress = console_emit_next_record(con, handover, cookie);
++				printk_seq = con->seq;
++			}
+ 
+ 			/*
+ 			 * If a handover has occurred, the SRCU read lock
+@@ -2967,8 +2974,8 @@ static bool console_flush_all(bool do_cond_resched, u64 *next_seq, bool *handove
+ 				return false;
+ 
+ 			/* Track the next of the highest seq flushed. */
+-			if (con->seq > *next_seq)
+-				*next_seq = con->seq;
++			if (printk_seq > *next_seq)
++				*next_seq = printk_seq;
+ 
+ 			if (!progress)
+ 				continue;
 -- 
 2.39.2
 
