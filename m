@@ -1,69 +1,69 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C0144C68
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 08:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511C0763F8
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 08:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716800347; cv=none; b=LL7eYzvFQLQeEf9CUGIIoepe8YsRLy5xFdDc/t6iCq3Vbqy0FFrJfUDu6XKcvDe6dzjjrCSJ/OWJuWPhZE3/mLi1l2XV72ViCJ7CT47Iwdwr/CLSfy3uh5KEJLxMXC/G4FJ/DzxWw+f2DodozNV0OFcrwu9aDwEaT0TNxqlijn8=
+	t=1716800350; cv=none; b=C5O4fAh8szvEqeTXT5DwrXB1wEf0JwfYjStUWgyWpLE5jizi1iF0fZoF0/Hxd545iPI+FwbKfPIIAI9kPRavSXF56bO2MuI12mIVhfR+N49hE0i7kFvQlxgK5iHZUaJ51yFCZphXPVp5T6Xo6DlDkMoWJ4IrciP4BmKVSy2qF4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716800347; c=relaxed/simple;
-	bh=A78FdFo4RLjFPLucX4ffcT0ibYCwJ3V6Wxt3ML0Ii1o=;
+	s=arc-20240116; t=1716800350; c=relaxed/simple;
+	bh=hmxUP5Z7QdlGlEg0+Ja3e7QurCcYH+MN7MLrF0tlpwc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iiHA8jRr0HHSVFteaIitUrV3ughcHmZLMhRHEUcQ/kAP42wNWjYy0i7SpkOiT/K2ReT7h0FGzcnOfCIA1qtGZxsQAiSKRt8V/0jYpLJyF/XYsMiuMQLl3Wyp4rQ500mtrMhwsQalQNazbRLslaj879FF3PqKtAqzF4z87sEaYPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zr1A8kS4; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=cP1iOQ7fmpjREr4rEWDDffaffR/ue2BR4QQ2qk3TUqBTNYMOE25jnV/FljthCeCXW7QxkNYxqoxunX3Ep6AXN6Z7smqYdSUGvro3r9fQPWtdUlWC1vfe9y+QbZJq605zEmfcdST6zV7UdGB1uu1zC5lBUcJPzFDPCWWUACAveqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=Cr3NzGa+; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zr1A8kS4"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e73359b979so79916001fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 01:59:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="Cr3NzGa+"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f8edddf756so2483217b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 01:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716800344; x=1717405144; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1716800348; x=1717405148; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/5BNAdc7fzStUp+7Ojtmy7LHh0vzwdBHulbKPGaS47o=;
-        b=zr1A8kS4PHcQZ8LV0Vwpc+OGPzZJcxMzVJjE+e+YgooGq3uQ8EiigFen/FnKAiCSSp
-         NKzBCMXf4+qpkN4Qju+WPF8cO6I+4jz/t74gQBAucxRfRYaro3egK4PuY7lIZSAT+iuE
-         1Xoi6ZuCnk0ma62JgUxY0isquPVoqXEGEKG+spUJitviReUXgMQ+Wa75F4BoVLwZOFx5
-         7WuJ1Pcf/kGZxgMQOtevEMxsuDCZDy6i/RbaYfUH1sRX4MClp877bR+vsnVTPPd6MFzD
-         iAzaI5lzkEddc9aTY3iJFVKXq5q6RoyBnFCLVC84882HRAEyY3aesa9uRz+CoB4kK3pe
-         EmhQ==
+        bh=nbbx6nUFj83QyRdmf9m/6N662YSsaUnaN6QsIjAe+OU=;
+        b=Cr3NzGa+W65vuzVXtkNqM4YuZaHPsiKj0BZUxAPT5XY2AyoTv2QCn4EkZN8EtkGJsF
+         TQi0qMFB2b7LqLQCl/u7dQ8C6uc14pXCaI1QQv7MxyVNH0gTr0L3b/2sQOiHtDV4jZot
+         E8B1AvXA9agY5RCv0XtdYboJMVBWJIWeC4PeoJIPszELVB3aM9Dw3Nx3YzNVP1SWb/b2
+         sGrGW2pdqPnGr6dUzaz1iMy6AMWiklOeKR2NdfDbENdabNkhoDUQAe0o/2GgeMGLgUCM
+         MkGM6uyhrtTkXBf+p4bx4yYyO5wwu2zm4n9QiT3ri02xYL5TIbUH4ivHYB39GOT0nKD+
+         eKAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716800344; x=1717405144;
+        d=1e100.net; s=20230601; t=1716800348; x=1717405148;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/5BNAdc7fzStUp+7Ojtmy7LHh0vzwdBHulbKPGaS47o=;
-        b=Pqkyi3xQNEKjVQ4vUjJA73MmBK0VTpR8XoPiRTOepwIYvIOdm8WhKIpqBmKdDyhAxI
-         CZtaO7q5C1WKyUKRwTZ1Ra+szKlOfkcuNFcJLWPXzpZM7TTx3OIhufntF/KNjCX6ZXGF
-         g5jVUoIJBOnCWaS0BVBrcZ/sNkcZTRBAvsN00ykm+k7TeIGkBGYZO/HwtfjpnrX01RYS
-         tzeNmhd8PUbk2PFglZI0a5S8hbIMbUHgh6HAebdsI80Dj8j2LbH/7Cy/K0G5o7ZMo/Nn
-         WKnJH0KR/RBJN4aJw+RgWZryCXg2L3EKq806739i1IHwm9KJgOBdCmy9LFi3dAuAoBtH
-         2iGg==
-X-Forwarded-Encrypted: i=1; AJvYcCU52hqw1AaUA6oeEFpYmUT+uO29/mh6lfAeusDNweaNkIw46xRhs7lirpX0EYGfG/6v7yeyp7rd+M5wCEN1Qyjy6e2NbPJP7V+kTsLf
-X-Gm-Message-State: AOJu0Yw4OTaiQE45lDTcG6KA1gUBsCRr1ZWykr3+v7XFiagyHlz3N0Ru
-	MOwU683CrxMGdT1bRCnZSvGC0u0WwVSq49Bne2xd/Fat6bQJ1beZfq8PWWlZLeE=
-X-Google-Smtp-Source: AGHT+IEN1e8NUNgsI1QLywlyg1XCpUhtQNI6su2WHQ5KSOYWn3ql/TkuY2yIGoxn75XSD1VEQHrSRA==
-X-Received: by 2002:a2e:7a07:0:b0:2e1:f199:3853 with SMTP id 38308e7fff4ca-2e95b276994mr52810941fa.47.1716800343962;
-        Mon, 27 May 2024 01:59:03 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95be0182esm18277501fa.104.2024.05.27.01.59.03
+        bh=nbbx6nUFj83QyRdmf9m/6N662YSsaUnaN6QsIjAe+OU=;
+        b=bgJ4vEbc0gcO4fCY146ImL5RLllwRgLrWVBOc+UWEy2D7rJwr2Nab8iyJHIPigyKrj
+         SG8c3NwOF0pBvyaSr+a9KW/cVH4f+blcCroCaPty+g8xOF5M+cX/FgG/x3Pg8sxLhRGA
+         L2jQ0PxJVIfp6F9QI+quHW6G3f3KO+ZH2VGfnbNK2hZRI4i1BncI+YZAIviQnRxu2ftH
+         YA59ZXzANSuA85pB/JgR6CMLXVPhds6qr6yhSepM59QUOP7Zgh/Fnsc2I8KZ01pJddKC
+         uCMeI6MBbnNwDg/YgqzIWDSUIvxmLEfB2/h1mA0gJTXcRbh/oiSvdy3sugMUMNDmIvcN
+         7zBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj6+THdLC0+7DtkR3aXIsKPB3WeBW+smLjFzDZZoC3h37JDAGzXEAWMXLlREdyEnx9T7EywHHb5G4g5kOTXd2+e7hoFWOs20CEElaC
+X-Gm-Message-State: AOJu0YwcTQ5mNPgAnEf75FUIQw9K1QvRy2vTDfPzQ69Tqay/Q01bTUG3
+	xNC9Yin8ALD97fa/VHa1M18Mzn9MRyvC9ED52HCyT5HQUA76sSf9sV6C17mcN0Q=
+X-Google-Smtp-Source: AGHT+IE7KpvSPdkd4tFoDqSuQ/oSQP/6c4Bex4uzgffVT9s10lzeYFfPXrzfzOdxzJTlkRKq6X2pKw==
+X-Received: by 2002:a05:6a00:4c8b:b0:6ea:9252:435 with SMTP id d2e1a72fcca58-6f8f3d70f73mr14322417b3a.30.1716800347451;
+        Mon, 27 May 2024 01:59:07 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6822635dc6esm5597113a12.65.2024.05.27.01.59.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 01:59:03 -0700 (PDT)
-Date: Mon, 27 May 2024 11:59:02 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] phy: qcom: qmp-combo: store DP phy power state
-Message-ID: <du4345tswno5pfeiux5ks5eo37bbydilvdzw3firnsps2ejgn5@avnoqzxbmzj7>
-References: <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-0-a03e68d7b8fc@linaro.org>
- <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-2-a03e68d7b8fc@linaro.org>
+        Mon, 27 May 2024 01:59:07 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sBWC8-00C8Jr-14;
+	Mon, 27 May 2024 18:59:04 +1000
+Date: Mon, 27 May 2024 18:59:04 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-xfs@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>,
+	Chandan Babu R <chandanbabu@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] xfs: avoid redundant AGFL buffer invalidation
+Message-ID: <ZlRLWP3Ty6uvMzjd@dread.disaster.area>
+References: <20240527061006.4045908-1-hsiangkao@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,55 +72,136 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-2-a03e68d7b8fc@linaro.org>
+In-Reply-To: <20240527061006.4045908-1-hsiangkao@linux.alibaba.com>
 
-On Mon, May 27, 2024 at 10:42:34AM +0200, Neil Armstrong wrote:
-> Switching the PHY Mode requires the DisplayPort PHY to be powered off,
-> keep track of the DisplayPort phy power state.
-
-How is this different from dp_init_count?
-
+On Mon, May 27, 2024 at 02:10:06PM +0800, Gao Xiang wrote:
+> Currently AGFL blocks can be filled from the following three sources:
+>  - allocbt free blocks, as in xfs_allocbt_free_block();
+>  - rmapbt free blocks, as in xfs_rmapbt_free_block();
+>  - refilled from freespace btrees, as in xfs_alloc_fix_freelist().
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Originally, allocbt free blocks would be marked as stale only when they
+> put back in the general free space pool as Dave mentioned on IRC, "we
+> don't stale AGF metadata btree blocks when they are returned to the
+> AGFL .. but once they get put back in the general free space pool, we
+> have to make sure the buffers are marked stale as the next user of
+> those blocks might be user data...."
+
+So it turns out that xfs_alloc_ag_vextent_small() does this when
+allocating from the AGFL:
+
+	if (args->datatype & XFS_ALLOC_USERDATA) {
+                struct xfs_buf  *bp;
+
+                error = xfs_trans_get_buf(args->tp, args->mp->m_ddev_targp,
+                                XFS_AGB_TO_DADDR(args->mp, args->agno, fbno),
+                                args->mp->m_bsize, 0, &bp);
+                if (error)
+                        goto error;
+                xfs_trans_binval(args->tp, bp);
+        }
+
+Hence we're already invalidating any buffer over the block allocated
+from the AGFL to ensure nothing will overwrite the user data that
+will be placed in the block after the allocation is committed.
+
+This means we can trigger the log force from this path - more
+about that below....
+
+> However, after commit ca250b1b3d71 ("xfs: invalidate allocbt blocks
+> moved to the free list") and commit edfd9dd54921 ("xfs: move buffer
+> invalidation to xfs_btree_free_block"), even allocbt / bmapbt free
+> blocks will be invalidated immediately since they may fail to pass
+> V5 format validation on writeback even writeback to free space would be
+> safe.
+
+*nod*
+
+> IOWs, IMHO currently there is actually no difference of free blocks
+> between AGFL freespace pool and the general free space pool.  So let's
+> avoid extra redundant AGFL buffer invalidation, since otherwise we're
+> currently facing unnecessary xfs_log_force() due to xfs_trans_binval()
+> again on buffers already marked as stale before as below:
+> 
+> [  333.507469] Call Trace:
+> [  333.507862]  xfs_buf_find+0x371/0x6a0
+> [  333.508451]  xfs_buf_get_map+0x3f/0x230
+> [  333.509062]  xfs_trans_get_buf_map+0x11a/0x280
+> [  333.509751]  xfs_free_agfl_block+0xa1/0xd0
+> [  333.510403]  xfs_agfl_free_finish_item+0x16e/0x1d0
+> [  333.511157]  xfs_defer_finish_noroll+0x1ef/0x5c0
+> [  333.511871]  xfs_defer_finish+0xc/0xa0
+> [  333.512471]  xfs_itruncate_extents_flags+0x18a/0x5e0
+> [  333.513253]  xfs_inactive_truncate+0xb8/0x130
+> [  333.513930]  xfs_inactive+0x223/0x270
+> 
+> And xfs_log_force() will take tens of milliseconds with AGF buffer
+> locked.  It becomes an unnecessary long latency especially on our PMEM
+> devices with FSDAX enabled.  Also fstests are passed with this patch.
+
+Well, keep in mind the reason the log force was introduced in
+xfs_buf_lock() - commit ed3b4d6cdc81 ("xfs: Improve scalability of
+busy extent tracking") says:
+
+    The only problem with this approach is that when a metadata buffer is
+    marked stale (e.g. a directory block is removed), then buffer remains
+    pinned and locked until the log goes to disk. The issue here is that
+    if that stale buffer is reallocated in a subsequent transaction, the
+    attempt to lock that buffer in the transaction will hang waiting
+    the log to go to disk to unlock and unpin the buffer. Hence if
+    someone tries to lock a pinned, stale, locked buffer we need to
+    push on the log to get it unlocked ASAP. Effectively we are trading
+    off a guaranteed log force for a much less common trigger for log
+    force to occur.
+
+IOWs, this "log force on buffer lock" trigger isn't specific to AGFL
+blocks.  The log force is placed there to ensure that access latency
+to any block we rapidly reallocate is *only* a few milliseconds,
+rather than being "whenever the next log writes trigger" which could
+be tens of seconds away....
+
+Hence we need to be aware that removing the double invalidation on
+the AGFL blocks does not make this "log force on stale buffer"
+latency issue go away, it just changes when and where it happens
+(i.e. on reallocation).
+
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 > ---
->  drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  fs/xfs/libxfs/xfs_alloc.c | 18 ++----------------
+>  1 file changed, 2 insertions(+), 16 deletions(-)
 > 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> index 7f999e8a433d..183cd9cd1884 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> @@ -1512,6 +1512,7 @@ struct qmp_combo {
->  	unsigned int dp_aux_cfg;
->  	struct phy_configure_opts_dp dp_opts;
->  	unsigned int dp_init_count;
-> +	bool dp_powered_on;
->  
->  	struct clk_fixed_rate pipe_clk_fixed;
->  	struct clk_hw dp_link_hw;
-> @@ -2685,6 +2686,8 @@ static int qmp_combo_dp_power_on(struct phy *phy)
->  	/* Configure link rate, swing, etc. */
->  	cfg->configure_dp_phy(qmp);
->  
-> +	qmp->dp_powered_on = true;
-> +
->  	mutex_unlock(&qmp->phy_mutex);
->  
->  	return 0;
-> @@ -2699,6 +2702,8 @@ static int qmp_combo_dp_power_off(struct phy *phy)
->  	/* Assert DP PHY power down */
->  	writel(DP_PHY_PD_CTL_PSR_PWRDN, qmp->dp_dp_phy + QSERDES_DP_PHY_PD_CTL);
->  
-> +	qmp->dp_powered_on = false;
-> +
->  	mutex_unlock(&qmp->phy_mutex);
->  
->  	return 0;
-> 
-> -- 
-> 2.34.1
-> 
+> diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+> index 6cb8b2ddc541..a80d2a31252a 100644
+> --- a/fs/xfs/libxfs/xfs_alloc.c
+> +++ b/fs/xfs/libxfs/xfs_alloc.c
+> @@ -2432,22 +2432,8 @@ xfs_free_agfl_block(
+>  	struct xfs_buf		*agbp,
+>  	struct xfs_owner_info	*oinfo)
+>  {
+> -	int			error;
+> -	struct xfs_buf		*bp;
+> -
+> -	error = xfs_free_ag_extent(tp, agbp, agno, agbno, 1, oinfo,
+> -				   XFS_AG_RESV_AGFL);
+> -	if (error)
+> -		return error;
+> -
+> -	error = xfs_trans_get_buf(tp, tp->t_mountp->m_ddev_targp,
+> -			XFS_AGB_TO_DADDR(tp->t_mountp, agno, agbno),
+> -			tp->t_mountp->m_bsize, 0, &bp);
+> -	if (error)
+> -		return error;
+> -	xfs_trans_binval(tp, bp);
+> -
+> -	return 0;
+> +	return xfs_free_ag_extent(tp, agbp, agno, agbno, 1, oinfo,
+> +				  XFS_AG_RESV_AGFL);
+>  }
 
+I'd just get rid of the xfs_free_agfl_block() wrapper entirely and
+call xfs_free_ag_extent() directly from xfs_agfl_free_finish_item().
+
+-Dave.
 -- 
-With best wishes
-Dmitry
+Dave Chinner
+david@fromorbit.com
