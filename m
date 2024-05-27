@@ -1,197 +1,267 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCA21BC59
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7451078F
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716791552; cv=none; b=FFBo7aOh3b2Q6W+8lOXjRYmEzjH3J1wYEKwfJMGK16XPgiGJF5xCpqx3HHCaVcbjUveQbn4CLO6SZZLON5QZEXtexBHgWaqQPSkm0JHIW+Yd809v2ZBudN6VuZDDWN8n08ntRPdU/bI1LMQEypg2iYk0cp7v46CsvgKxaHckqcw=
+	t=1716791788; cv=none; b=i41dmOfuGwbXD6hvx0JEhchQ+DTg4wlDH4ztdTAClhOe30VkfRgv7NViwNwpWQz4UyJo3Jse3m4+b4jsl0Nm3RPpL30ghtc81dSxbK+6QfoaGG9ZrtaEmlUvpnJI+XU1XcovDNWiu9xdguSl9ty9eGNrCC7CLIy6qXUBJJp/Q9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716791552; c=relaxed/simple;
-	bh=auVjQlWyoHQdIMybmSN8O+mK3/mRNQukHdMV1W+b0oA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RMIXP1RU3OyTZBc6MzTFuwSaEw9cCM0k8TEDBbd1OQHqErMjcpiZ7iGdpZSy1HIUrKIb02J2WpIKO1aSbC/G3gD4XSlceKz4y243jYU3Qq349M2UN/zzrLWdv1Po7Kfuvo2/j6FUzTroA7K1mroHwXrCKos7RNpm1uUhy0fcuIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LXpdJ4Qx; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LXpdJ4Qx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716791550; x=1748327550;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=auVjQlWyoHQdIMybmSN8O+mK3/mRNQukHdMV1W+b0oA=;
-  b=LXpdJ4QxT3+LuakAbjZTMQF5eMGjoUDQEbjgaA1+CahEqHbRB4uF0pNI
-   kAsjekAsf/75zKNHGIY2to4YahqTjY8jzGApdlby8xmtG60p86vaRBqSD
-   CKpUx6PQg7M1gj0Lqx1dT6ApqinCuPqGWzSCqgvj9hP/rfYrepdzY3Lv6
-   Ot/fpqilxq/XlMa0aJBgmOB1WSwvlM9rQTGpwO/NB37Taik8v+wR0FAql
-   h1QUhCVEF+y4rGenvnA34ckFgfBPso8muid4UZoKy0V0ayWpf/3LRvAEK
-   ct5sYrE4mb6pVFLvmxamuNuuNQw6UzdBnJqAZmORvB441f6L9L/EZ/uep
-   A==;
-X-CSE-ConnectionGUID: QYHl7F2CQXSxsvuPJwZLbg==
-X-CSE-MsgGUID: S7LMDVTHQ6uVK5zsFkdtDA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="13215150"
-X-IronPort-AV: E=Sophos;i="6.08,191,1712646000"; 
-   d="scan'208";a="13215150"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2024 23:32:29 -0700
-X-CSE-ConnectionGUID: tVu+4zmCQdaSKioLnOq7Hg==
-X-CSE-MsgGUID: gde25LMFRPGtsewYoyXRiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,191,1712646000"; 
-   d="scan'208";a="57847351"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 26 May 2024 23:32:26 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sBTu9-0009Wj-2r;
-	Mon, 27 May 2024 06:32:22 +0000
-Date: Mon, 27 May 2024 14:31:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: drivers/nvme/target/fc.c:150:2: warning: 'counted_by' should not be
- applied to an array with element of unknown size because 'struct
- nvmet_fc_fcp_iod' is a struct type with a flexible array member. This will
- be an error in a future compiler version
-Message-ID: <202405271448.bD0Hn0p4-lkp@intel.com>
+	s=arc-20240116; t=1716791788; c=relaxed/simple;
+	bh=xmP3VhOCd1AxLXN6BJ6CxuRnTmdIHaFhFfmv9IZmsqk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OGVO8Pw+bbA5c2PNCgJg/utTSPmMWQ8VMnGSL9TtlRr8VO+pPoQqxr1GdQDogBxM3+eiy0oSRNhDeioGyvaIQPkKu3yUcyz0bEZZLj5m9Kbi9Nb68WWOH3qemXSd69qk+RoOsvbqYAx3Fc0BaZ0rjMM/Xro0XQdYmVmsBgxYbAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7eaccb5a928so89268239f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 23:36:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716791786; x=1717396586;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i+PKiPkBJYaEPjN/V2rVFav0UrCBiisVA2iYobVu1oU=;
+        b=PbkG/oZkEGw6kkagiq9XuRM+ww9N9Ix4Ggxzq7IJoBU2i1Jd2WScBOI2C5w7tnN735
+         Y5YLLvgqNMHaHeaq81vdqqnSW4fcPP2oQbUbzOnLaIqa8QvaxRlewfYnXc4dJdXbD62T
+         yaDhEoAsLN0jnKL8yQoT8xJI8fnB5Bo3o/OZs1h8b5Ge80SwOzoKm3xfxDoc6Jo93mi9
+         Ttl4CuFoYUrhck0aNxGhBpetED/Fa9kbIquy5P5J0LcE1wBaX4z0EzCnGvQnoISgbSmn
+         WM1Pd/e9r+K4T2QA3du3W42RQ2EajJUjFSaHY/dfsE0I2RlqjsAlYZf2bf1zDM75zi2r
+         +9sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVF47mK1PqCgrRCTgVp6kUu9HHS/px5KjHgOJ9VZ/2grbdTsz6sjTn3nACvCqYPopB82JTs5f3rWjSHBCfeiQs+Hkb0ue80dCzDm//9
+X-Gm-Message-State: AOJu0YzOTfYzJn7CdkuiaYFbF+PAzrJqzjFV929cQntSnxZJD172uqrF
+	2ERUagV2C8tuegURQaTzQzuKF9FLjbgrgkZ5psvplyzK2I/QR+F1zVJwmeY2UenBF+1KWnZZbkp
+	MH+aqPdYnesnZzueohlH1ubPzZkLYo+FF9Ml1NCnOsCO+hB0SdHvcIM8=
+X-Google-Smtp-Source: AGHT+IFlCk4We9U1hMljv5jcIhJt2gDy+B+1W6leAYrzBpnLGJLUh0ZC/7SS5kyvM2peHimZV5yc/uuLOybLt6kNCVp4rdfLFZ/p
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Received: by 2002:a02:a883:0:b0:4b0:278e:96d8 with SMTP id
+ 8926c6da1cb9f-4b03f637e66mr200616173.1.1716791786114; Sun, 26 May 2024
+ 23:36:26 -0700 (PDT)
+Date: Sun, 26 May 2024 23:36:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000909ea8061969bce5@google.com>
+Subject: [syzbot] [bpf?] KASAN: slab-use-after-free Read in bpf_link_free (2)
+From: syzbot <syzbot+1989ee16d94720836244@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@google.com, 
+	song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-commit: ccd3129aca286c41616afe357e3494c5b43350a0 nvmet-fc: Annotate struct nvmet_fc_tgt_queue with __counted_by
-date:   8 months ago
-config: s390-randconfig-002-20240527 (https://download.01.org/0day-ci/archive/20240527/202405271448.bD0Hn0p4-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 7aa382fd7257d9bd4f7fc50bb7078a3c26a1628c)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240527/202405271448.bD0Hn0p4-lkp@intel.com/reproduce)
+Hello,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405271448.bD0Hn0p4-lkp@intel.com/
+syzbot found the following issue on:
 
-All warnings (new ones prefixed by >>):
+HEAD commit:    6fbf71854e2d Merge tag 'perf-tools-fixes-for-v6.10-1-2024-..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=173e822c980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=62be2ac813b33670
+dashboard link: https://syzkaller.appspot.com/bug?extid=1989ee16d94720836244
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-   In file included from drivers/nvme/target/fc.c:6:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:173:
-   In file included from arch/s390/include/asm/mmu_context.h:11:
-   In file included from arch/s390/include/asm/pgalloc.h:18:
-   In file included from include/linux/mm.h:2168:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from drivers/nvme/target/fc.c:8:
-   In file included from include/linux/blk-mq.h:8:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from drivers/nvme/target/fc.c:8:
-   In file included from include/linux/blk-mq.h:8:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from drivers/nvme/target/fc.c:8:
-   In file included from include/linux/blk-mq.h:8:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:692:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     692 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:700:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     700 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:708:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     708 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:717:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     717 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:726:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     726 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:735:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     735 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> drivers/nvme/target/fc.c:150:2: warning: 'counted_by' should not be applied to an array with element of unknown size because 'struct nvmet_fc_fcp_iod' is a struct type with a flexible array member. This will be an error in a future compiler version [-Wbounds-safety-counted-by-elt-type-unknown-size]
-     150 |         struct nvmet_fc_fcp_iod         fod[] __counted_by(sqsize);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/nvme/target/fc.c:177:1: warning: unused function 'nvmet_fc_iodnum' [-Wunused-function]
-     177 | nvmet_fc_iodnum(struct nvmet_fc_ls_iod *iodptr)
-         | ^~~~~~~~~~~~~~~
-   drivers/nvme/target/fc.c:183:1: warning: unused function 'nvmet_fc_fodnum' [-Wunused-function]
-     183 | nvmet_fc_fodnum(struct nvmet_fc_fcp_iod *fodptr)
-         | ^~~~~~~~~~~~~~~
-   16 warnings generated.
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/eab66bf09e4e/disk-6fbf7185.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/232ac0545252/vmlinux-6fbf7185.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2820e679b0ee/bzImage-6fbf7185.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1989ee16d94720836244@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-use-after-free in bpf_link_free+0x234/0x2d0 kernel/bpf/syscall.c:3078
+Read of size 8 at addr ffff888011469b10 by task syz-executor.1/6398
+
+CPU: 0 PID: 6398 Comm: syz-executor.1 Not tainted 6.9.0-syzkaller-12400-g6fbf71854e2d #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ bpf_link_free+0x234/0x2d0 kernel/bpf/syscall.c:3078
+ bpf_link_put_direct kernel/bpf/syscall.c:3106 [inline]
+ bpf_link_release+0x7b/0x90 kernel/bpf/syscall.c:3113
+ __fput+0x408/0x8b0 fs/file_table.c:422
+ task_work_run+0x251/0x310 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x168/0x370 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe75847cee9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fe75916f0c8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007fe7585ac120 RCX: 00007fe75847cee9
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000000000004
+RBP: 00007fe7584c949e R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000006e R14: 00007fe7585ac120 R15: 00007ffe4ae3abc8
+ </TASK>
+
+Allocated by task 6385:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+ __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
+ kasan_kmalloc include/linux/kasan.h:211 [inline]
+ kmalloc_trace_noprof+0x19c/0x2c0 mm/slub.c:4152
+ kmalloc_noprof include/linux/slab.h:660 [inline]
+ kzalloc_noprof include/linux/slab.h:778 [inline]
+ bpf_raw_tp_link_attach+0x2a0/0x6e0 kernel/bpf/syscall.c:3858
+ bpf_raw_tracepoint_open+0x1c2/0x240 kernel/bpf/syscall.c:3905
+ __sys_bpf+0x3c0/0x810 kernel/bpf/syscall.c:5729
+ __do_sys_bpf kernel/bpf/syscall.c:5794 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5792 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5792
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 6399:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:579
+ poison_slab_object+0xe0/0x150 mm/kasan/common.c:240
+ __kasan_slab_free+0x37/0x60 mm/kasan/common.c:256
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2195 [inline]
+ slab_free mm/slub.c:4436 [inline]
+ kfree+0x149/0x360 mm/slub.c:4557
+ rcu_do_batch kernel/rcu/tree.c:2535 [inline]
+ rcu_core+0xaff/0x1830 kernel/rcu/tree.c:2809
+ handle_softirqs+0x2c6/0x970 kernel/softirq.c:554
+ __do_softirq kernel/softirq.c:588 [inline]
+ invoke_softirq kernel/softirq.c:428 [inline]
+ __irq_exit_rcu+0xf4/0x1c0 kernel/softirq.c:637
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:649
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1043
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+
+Last potentially related work creation:
+ kasan_save_stack+0x3f/0x60 mm/kasan/common.c:47
+ __kasan_record_aux_stack+0xac/0xc0 mm/kasan/generic.c:541
+ __call_rcu_common kernel/rcu/tree.c:3072 [inline]
+ call_rcu+0x167/0xa70 kernel/rcu/tree.c:3176
+ bpf_link_free+0x1f8/0x2d0 kernel/bpf/syscall.c:3076
+ bpf_link_put_direct kernel/bpf/syscall.c:3106 [inline]
+ bpf_link_release+0x7b/0x90 kernel/bpf/syscall.c:3113
+ __fput+0x408/0x8b0 fs/file_table.c:422
+ task_work_run+0x251/0x310 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x168/0x370 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888011469b00
+ which belongs to the cache kmalloc-128 of size 128
+The buggy address is located 16 bytes inside of
+ freed 128-byte region [ffff888011469b00, ffff888011469b80)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x11469
+anon flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: 0xffffefff(slab)
+raw: 00fff00000000000 ffff888015041a00 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000080100010 00000001ffffefff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x152820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_HARDWALL), pid 2897, tgid 2897 (kworker/u8:8), ts 84640710621, free_ts 84523372123
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1468
+ prep_new_page mm/page_alloc.c:1476 [inline]
+ get_page_from_freelist+0x2e2d/0x2ee0 mm/page_alloc.c:3402
+ __alloc_pages_noprof+0x256/0x6c0 mm/page_alloc.c:4660
+ __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
+ alloc_slab_page+0x5f/0x120 mm/slub.c:2264
+ allocate_slab+0x5a/0x2e0 mm/slub.c:2427
+ new_slab mm/slub.c:2480 [inline]
+ ___slab_alloc+0xcd1/0x14b0 mm/slub.c:3666
+ __slab_alloc+0x58/0xa0 mm/slub.c:3756
+ __slab_alloc_node mm/slub.c:3809 [inline]
+ slab_alloc_node mm/slub.c:3988 [inline]
+ kmalloc_trace_noprof+0x1d5/0x2c0 mm/slub.c:4147
+ kmalloc_noprof include/linux/slab.h:660 [inline]
+ __hw_addr_create net/core/dev_addr_lists.c:60 [inline]
+ __hw_addr_add_ex+0x1a8/0x610 net/core/dev_addr_lists.c:118
+ __dev_mc_add net/core/dev_addr_lists.c:867 [inline]
+ dev_mc_add+0xa3/0x110 net/core/dev_addr_lists.c:885
+ igmp6_group_added+0x1a4/0x710 net/ipv6/mcast.c:680
+ __ipv6_dev_mc_inc+0x8b8/0xa90 net/ipv6/mcast.c:949
+ addrconf_join_solict net/ipv6/addrconf.c:2240 [inline]
+ addrconf_dad_begin net/ipv6/addrconf.c:4101 [inline]
+ addrconf_dad_work+0x448/0x16f0 net/ipv6/addrconf.c:4226
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2e/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
+ kthread+0x2f2/0x390 kernel/kthread.c:389
+page last free pid 5243 tgid 5242 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1088 [inline]
+ free_unref_folios+0xf23/0x19e0 mm/page_alloc.c:2614
+ folios_put_refs+0x93a/0xa60 mm/swap.c:1024
+ free_pages_and_swap_cache+0x5c8/0x690 mm/swap_state.c:332
+ __tlb_batch_free_encoded_pages mm/mmu_gather.c:136 [inline]
+ tlb_batch_pages_flush mm/mmu_gather.c:149 [inline]
+ tlb_flush_mmu_free mm/mmu_gather.c:366 [inline]
+ tlb_flush_mmu+0x3a3/0x680 mm/mmu_gather.c:373
+ tlb_finish_mmu+0xd4/0x200 mm/mmu_gather.c:465
+ exit_mmap+0x44f/0xc80 mm/mmap.c:3354
+ __mmput+0x115/0x3c0 kernel/fork.c:1346
+ exit_mm+0x220/0x310 kernel/exit.c:565
+ do_exit+0x9aa/0x27e0 kernel/exit.c:861
+ do_group_exit+0x207/0x2c0 kernel/exit.c:1023
+ get_signal+0x16a1/0x1740 kernel/signal.c:2909
+ arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:310
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xc9/0x370 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff888011469a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc
+ ffff888011469a80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff888011469b00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff888011469b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888011469c00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
-vim +150 drivers/nvme/target/fc.c
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-   128	
-   129	struct nvmet_fc_tgt_queue {
-   130		bool				ninetypercent;
-   131		u16				qid;
-   132		u16				sqsize;
-   133		u16				ersp_ratio;
-   134		__le16				sqhd;
-   135		atomic_t			connected;
-   136		atomic_t			sqtail;
-   137		atomic_t			zrspcnt;
-   138		atomic_t			rsn;
-   139		spinlock_t			qlock;
-   140		struct nvmet_cq			nvme_cq;
-   141		struct nvmet_sq			nvme_sq;
-   142		struct nvmet_fc_tgt_assoc	*assoc;
-   143		struct list_head		fod_list;
-   144		struct list_head		pending_cmd_list;
-   145		struct list_head		avail_defer_list;
-   146		struct workqueue_struct		*work_q;
-   147		struct kref			ref;
-   148		struct rcu_head			rcu;
-   149		/* array of fcp_iods */
- > 150		struct nvmet_fc_fcp_iod		fod[] __counted_by(sqsize);
-   151	} __aligned(sizeof(unsigned long long));
-   152	
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
