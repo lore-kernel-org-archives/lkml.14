@@ -1,144 +1,98 @@
-Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C6415ECC4
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E266339B1;
+	Mon, 27 May 2024 12:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716813692; cv=none; b=Uee+QfMj4uMHR5J3Wz59Jwa5F7i/4OQS0Em4RTooWR15D0MUmZMHwWO5w8YtoazHeRGxqfkyWBuYN5vptPp9h4pDVym/ET7LcBiyAOLxU6i1lzgGFDcTOsyTLdRwjiB5BQUR2cNvGZCumT1A+aOX0nzcrnn0KPZKV6Gpu6ZxNJc=
+	t=1716813730; cv=none; b=thmv7lp2oxhiF+gLBsz78UZSohGRPotmxd4ILfQ1QxrT8hfrulYUTBIvWS/j2QfI5SaHw+aSEFiBEcTSaq8KhgPhumFUuCRaihgsrj2gUeH0+GDim8vOd7w1cX1cfBOxL6MzITPWHXyKPbjPdvskcaQBRoOqjbDl4OrUV4McnrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716813692; c=relaxed/simple;
-	bh=8hdldazWVA2zqxn3teJVpbzPafUsFkhaXGXuAlZegCc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gyiyKI3/LdQh6NXfs3Uj12SxUmM2kqTzy29Z17mwmjhYsfoEtnld195Sj3M7wnRbqC7KJdArLrlqkczJgqcFzM0BQpwdSAApzYgBShy5PrQmUeoUb4Zd6P0fNs3lVNOoUlidx4LeBLo/1zPAfN9Ipi+eYy9W+e+/XZk7DC5VGUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4VnwHq28Pjz4wy8b
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:41:27 +0200 (CEST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:c993:5573:f894:7353])
-	by andre.telenet-ops.be with bizsmtp
-	id UChF2C0032nC7mg01ChF7d; Mon, 27 May 2024 14:41:19 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sBZeD-00CfTd-4Q;
-	Mon, 27 May 2024 14:41:14 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sBZf8-003hdW-RS;
-	Mon, 27 May 2024 14:41:14 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
+	s=arc-20240116; t=1716813730; c=relaxed/simple;
+	bh=DYhkxv+4qslfB3GCZb5USw9Yc4GNuRSlvX8gOfRsEKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DNFIMO+zHs4AQfMuuOZPSquRKQC+q/mzEPDTjDbSN4XpZapTbqte63Im/fN2//5awR3fj4YFQaygcRYKzoGzRHbVlP+32b5BqmH6TNAMsSX1Wmnh61HZYJPdcNFcB+tx18wRHePRdwjHBm3UAO0w5T/zTtRRMUzCvBuBjS9hnOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id DB3752800DC37;
+	Mon, 27 May 2024 14:33:22 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id C414A9926AC; Mon, 27 May 2024 14:33:22 +0200 (CEST)
+Date: Mon, 27 May 2024 14:33:22 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Yinghai Lu <yinghai@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	linux-pm@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 0/3] pmdomain: renesas: rmobile-sysc: Remove serial console handling
-Date: Mon, 27 May 2024 14:41:10 +0200
-Message-Id: <cover.1716811405.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Abort hot-plug if
+ pci_hp_add_bridge() fails
+Message-ID: <ZlR9kg-SEshXvBEP@wunner.de>
+References: <cover.1714838173.git.namcao@linutronix.de>
+ <f3db713f4a737756782be6e94fcea3eda352e39f.1714838173.git.namcao@linutronix.de>
+ <Zjcc6Suf5HmmZVM9@wunner.de>
+ <20240505071451.df3l6mdK@linutronix.de>
+ <20240506083701.NZNifFGn@linutronix.de>
+ <ZjkxTGaAc48jPzqC@wunner.de>
+ <20240507142738.wyj19VVh@linutronix.de>
+ <ZlRPS9TCYjccpNLr@wunner.de>
+ <20240527092322.N8nbxYAL@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527092322.N8nbxYAL@linutronix.de>
 
-	Hi all,
+On Mon, May 27, 2024 at 11:23:22AM +0200, Nam Cao wrote:
+> On Mon, May 27, 2024 at 11:15:55AM +0200, Lukas Wunner wrote:
+> > We already check for a NULL subordinate pointer in various places.
+> > See e.g. commit 62e4492c3063 ("PCI: Prevent NULL dereference during
+> > pciehp probe").
+> 
+> Ah, so bridge without subordinate bus is allowed in the kernel.
+> 
+> > If we're missing such checks, I'd suggest to add those.
+> > 
+> > If you believe having a NULL subordinate pointer is wrong and the
+> > bridge should be de-enumerated altogether, I think you would have
+> > to remove these NULL pointer checks as they'd otherwise become
+> > pointless with your change.
+> > 
+> > Just adding missing NULL pointer checks seems to be the most
+> > straightforward solution to me.
+> 
+> If the kernel do permits bridges without subordinate bus number, I am
+> happy to go this direction. I expect going this way will require many more
+> patches, I will dig into it and come back later.
 
-Since commit a47cf07f60dcb02d ("serial: core: Call
-device_set_awake_path() for console port"), the serial driver properly
-handles the case where the serial console is part of the awake path, and
-it looked like we could start removing special serial console handling
-from PM Domain drivers like the R-Mobile SYSC PM Domain driver.
-Unfortunately the devil is in the details, as usual...
+It seems a lot of functions use a "if (dev->subordinate)" check
+to distinguish between bridges and endpoints.
 
-Earlycon relies on the serial port to be initialized by the firmware
-and/or bootloader.  Linux is not aware of any hardware dependencies that
-must be met to keep the port working, and thus cannot guarantee they
-stay met, until the full serial driver takes over.
+A bridge with a NULL subordinate pointer is then basically treated
+like an endpoint.
 
-E.g. all unused clocks and unused PM Domains are disabled in a late
-initcall.  As this happens after the full serial driver has taken over,
-the serial port's clock and/or PM Domain are no longer deemed unused,
-and this is typically not a problem.
+There are places which use other ways to recognize bridges, e.g.
+by looking at dev->hdr_type.  Only these code paths will have to
+check for a NULL subordinate pointer.  In the case of pciehp,
+portdrv binds to anything with class PCI_CLASS_BRIDGE_PCI_NORMAL,
+without consideration for the subordinate pointer, hence a check
+was needed in pciehp.
 
-However, if the serial port's clock or PM Domain is shared with another
-device, and that other device is runtime-suspended before the full
-serial driver has probed, the serial port's clock and/or PM Domain will
-be disabled inadvertently.  Any subsequent serial console output will
-cause a crash or system lock-up.  E.g. on R/SH-Mobile SoCs, the serial
-ports share their PM Domain with several other I/O devices.  After the
-use of pwm (Armadillo-800-EVA) or i2c (KZM-A9-GT) during early boot,
-before the full serial driver takes over, the PM Domain containing the
-early serial port is powered down, causing a lock-up when booted with
-"earlycon".
+pciehp is used a lot by Thunderbolt/USB4, SD 7.0 and for NVMe drives.
+I think shpchp isn't used as much, so its code paths aren't exercised
+as heavily and bugs aren't found and fixed as quickly.  So chances are
+that more checks are missing in shpchp than in pciehp.
 
-This RFC patch series aims to provide a mechanism for handling this, and
-to fix it for the PM Domain case:
-  1. The first patch provides a mechanism to let the clock and/or PM
-     Domain subsystem or drivers handle this, by exporting the clock and
-     PM Domain dependencies for the serial port, as available in the
-     system's device tree,
-  2. The second patch introduces a new flag to handle a PM domain that
-     must be kept powered-on during early boot, and by setting this flag
-     if the PM Domain contains the serial console (originally I handled
-     this inside rmobile-sysc, but it turned out to be easy to
-     generalize this to other platforms in the core PM Domain code).
-  3. The third patch removes the no longer needed special console
-     handling from the R-Mobile SYSC PM Domain driver.
+Thanks,
 
-I did not fix the similar clock issue, as it is more complex (there can
-be multiple clocks, and each clock provider can have its own value of
-#clock-cells), and I do not need it for Renesas ARM platforms.
-
-This has been tested on the APE6-EVM, Armadillo-800-EVA, and KZM-A9-GT
-development boards, with and without earlycon, including s2ram with and
-without no_console_suspend.
-
-Notes:
-  - This should not be needed on RZ/G3S, where each serial port device
-    has its own PM Domain,
-  - drivers/clk/imx/clk.c and drivers/pmdomain/imx/scu-pd.c have special
-    handling for the of_stdout device, but is probably not affected, as
-    each serial port seems to share its PM Domain only with the serial
-    port's clock controller.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (3):
-  earlycon: Export clock and PM Domain info from FDT
-  pmdomain: core: Avoid earlycon power-down
-  pmdomain: renesas: rmobile-sysc: Remove serial console handling
-
- drivers/pmdomain/core.c                 | 24 ++++++++++++++++--
- drivers/pmdomain/renesas/rmobile-sysc.c | 33 +------------------------
- drivers/tty/serial/earlycon.c           | 14 ++++++++++-
- include/linux/pm_domain.h               |  4 +++
- include/linux/serial_core.h             | 10 ++++++++
- 5 files changed, 50 insertions(+), 35 deletions(-)
-
--- 
-2.34.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Lukas
