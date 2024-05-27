@@ -1,213 +1,112 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF0F61FC0;
-	Mon, 27 May 2024 14:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E5716DED5;
+	Mon, 27 May 2024 14:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716821050; cv=none; b=Hu6VnKN7ZYC8heaT5PinSqs7ZHawms3zS84zF3GF+ANtd2h2hTVOMdgQ/RC0HzyT8UddnxYAP+yKdL0MxhvssgwlSt10Ji1k6AJoveoBIOMum/HGuBW9Z4oWmj+iwMfmNbW+2tqdJkSm5EJBfD2J2ZY39064NlZBp6e5eCyki50=
+	t=1716821055; cv=none; b=Yg7c/19JgtpB03dBjZsTP3wtaIhjyUd34aFw1jd0GPGQOWLkAfzdpiUkTgwvkcsDp+7f/gyay3BX6YR/DtbVf34EiwgJ3SqRuX6KiLlG3VHBq62vpQ8U7D4J/CIb/+Bj8BNIrNZ93n4fbYq3F/veQvUtjco/ykdsayy0VqTHlzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716821050; c=relaxed/simple;
-	bh=qvX3RliwmS0AWBg/MBZkPGJDobJusbbwVS+qslPFgko=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=czPujwcA1SyGSuPP3coJiE1oQ3rr9edDVH7HygVDQXZ8lxsZScMS/2UiuHU9sjyWWpYOwL3nYQ5fXNHiLaJ++WvM4OUkKHPrVTafP+yT33P41GkzRdPdAa/lDu69p/RQE+jIsxMltY4nQvf4OO8QEFnIEDjiZ5HHKWEyq6u3GZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LmyV0Dkp; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716821055; c=relaxed/simple;
+	bh=N2BkBEfMjIfRh7g1dfIjn0MfLhYtzu3BShYG5yFIizg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=elpcgPIfv5DifaKLR+oFtak8ZTbIEctD+ebl7Zal+F85XHYh9EGTMvXk9YA7sr8sV3T2hVq2SBUJ3L2tqFxO8Xv1uUbna+Z2ezxMM6AaaKJlUI8CJfUoHvUEm0uph39a/yAUC1O+kHU9/CHx/4RYMuycQHC9vkOqa5sf1uUCx7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BMc07xs9; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmyV0Dkp"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-24c91c46d00so1875160fac.2;
-        Mon, 27 May 2024 07:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716821047; x=1717425847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BwD7XyrVcKBS1VkIWc/Q0G9yZOd/6w+0LFfX510sSyY=;
-        b=LmyV0Dkp8neEBryTsLx5Ovitr4P1x9GqX3p3irWqprtK58GeEh9pp7BBekDp8oeTmz
-         Q5FDxXxjRFP/76eRKT0hwFWY6uAFlPhxf+KVLvb9B+8n/bdd30V07R8fOjlhL375vHEG
-         RzjDHCSf6GFgWbq85OFyb9wOLvyuwyItIsWvNzbjDgvGBfznMB1kmHfnDjXDBkiqmqwj
-         U2toyaeyJlu+ueLIJDPCDNhDDy5Q/QljsbXKHrIS5qjCLHF1in8vFNwa1GpRVm4HTw7R
-         160eE6atWk7nlHjqRQkmPQ1Px5kWqKCr4iY84IffmFYyPfNOxUbv57yssJQlNIrIa3BO
-         uYXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716821047; x=1717425847;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BwD7XyrVcKBS1VkIWc/Q0G9yZOd/6w+0LFfX510sSyY=;
-        b=d0fwb+Vp4AiRLRZIeBhLGpz1p28l9Z2+z/eBvFAfGds4XO0Os3PuJu3yPlFqkPMZ0Z
-         Fuk59iFad8gdPL+/+QDjGhCM43RCs4NN/EZMhMngCkz1I5T2QYveXGXnioNgf7E9J0Ay
-         +MGoWSVChhff5GWNhEE2GFRYmYZtO3+DQJvEPNtZsi/RE5hlr5sGLDXmGXYoDiV3RmMh
-         3XXGTQ2LFziNWKTidfTFBQFjmb6IwmwcgmQLbOlWhJoyTBB6F54KV2wy14tynGHIg7kN
-         47G7qLwFhi5uwhTwaup9R1U9y8m+5TOpTJ6k1EZ6YQjBuzJA1PeQR5M/ByhvG1U7nsPR
-         KDHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzhMRJggfK4hv34KKUTR2w8EjIjnP8x86EmxPiXEq6Tr0sXfaQ0T7FwcjbVgdFiuDHDercSuNGlao7ALiYS4zwdvvxex+W8aPVmLiaOKfJNefTQsHpJho5U1Q1zBoAOE2bhFeN0AH1rlulY0OWGtSGrFSh1ikKacjOjoR+
-X-Gm-Message-State: AOJu0Yzw4ImwjGEPSKnAkg+w1vP0EPbuuExwOzcBU5CgMtaNHqxS42/c
-	s9z7s+BaXfiJIIwY5KsScU1NCu/oyXbedaqznwijsCThLC64pOVi
-X-Google-Smtp-Source: AGHT+IGGnCwnK3T8cqacBKrtjoqEXSRb+AgmcjQzeZ/s/QuBkvFdGxTTFZZa+D0n+P5Gq7Do17HUXg==
-X-Received: by 2002:a05:6870:c088:b0:24f:e5e1:b0cb with SMTP id 586e51a60fabf-24fe5e208c8mr4689840fac.15.1716821047520;
-        Mon, 27 May 2024 07:44:07 -0700 (PDT)
-Received: from localhost (112.49.199.35.bc.googleusercontent.com. [35.199.49.112])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fb1827696sm34599101cf.51.2024.05.27.07.44.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 07:44:06 -0700 (PDT)
-Date: Mon, 27 May 2024 10:44:06 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Chengen Du <chengen.du@canonical.com>, 
- willemdebruijn.kernel@gmail.com
-Cc: davem@davemloft.net, 
- edumazet@google.com, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- loke.chetan@gmail.com, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Chengen Du <chengen.du@canonical.com>, 
- stable@vger.kernel.org
-Message-ID: <66549c368764b_268e8229462@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20240527074456.9310-1-chengen.du@canonical.com>
-References: <20240527074456.9310-1-chengen.du@canonical.com>
-Subject: Re: [PATCH v3] af_packet: Handle outgoing VLAN packets without
- hardware offloading
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BMc07xs9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716821054; x=1748357054;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=N2BkBEfMjIfRh7g1dfIjn0MfLhYtzu3BShYG5yFIizg=;
+  b=BMc07xs9fWBvYLj1oBlPak5DdUH5Q9KHPix8OVZDlCbXI4USga4VPUsr
+   caS0F1WSRhAIzw7/R8/Tg9nakOMbwf5JAyFQlq/490xBznFlMazHoMTUv
+   aWFWh7OdMiOIUrcAV9jqoyxfNzbyvCQ8D+7tkSl2A+jYHR6VjyNJ1QaJN
+   ZGioPMM3eG04Cbqor5JOahXem0teFvbJyt1ZrhTPHoJO/Y4VkEVO/wcw4
+   pvMmtnnbqBnuK2PBWDr7vW9kKLZIJcGEH2cpUc/nIvjZ1JyaXqRSoRDrs
+   +AdrMJtkCjw5GmKfn7CVUWhDZRTs50R6+RVyPi5jsEy1IFeg2/ZQIIJS5
+   g==;
+X-CSE-ConnectionGUID: WNaqFvGqSKqxbFgHYlUGIg==
+X-CSE-MsgGUID: RLae22qHSGWcJjojIvUOag==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13269742"
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="13269742"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:44:13 -0700
+X-CSE-ConnectionGUID: Y71KIk33R0SQTM5KxhYC5w==
+X-CSE-MsgGUID: R+PV6+o1R+Oqcy6DJptl2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="35279780"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.246.214])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:44:09 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org,
+	Dan Williams <dan.j.williams@intel.com>,
+	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 0/2] Make ELOG log and trace consistently with GHES
+Date: Mon, 27 May 2024 16:43:39 +0200
+Message-ID: <20240527144356.246220-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Include target: net vs net-next
+When Firmware First is enabled, BIOS handles errors first and then it
+makes them available to the kernel via the Common Platform Error Record
+(CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
+via one of two similar paths, either ELOG or GHES.
 
-[PATCH net v3]
+Currently, ELOG and GHES show some inconsistencies in how they print to
+the kernel log as well as in how they report to userspace via trace
+events.
 
-Chengen Du wrote:
-> The issue initially stems from libpcap [1]. In the outbound packet path,
-> if hardware VLAN offloading is unavailable, the VLAN tag is inserted into
-> the payload but then cleared from the sk_buff struct. Consequently, this
-> can lead to a false negative when checking for the presence of a VLAN tag,
-> causing the packet sniffing outcome to lack VLAN tag information (i.e.,
-> TCI-TPID). As a result, the packet capturing tool may be unable to parse
-> packets as expected.
-> 
-> The TCI-TPID is missing because the prb_fill_vlan_info() function does not
-> modify the tp_vlan_tci/tp_vlan_tpid values, as the information is in the
-> payload and not in the sk_buff struct. The skb_vlan_tag_present() function
-> only checks vlan_all in the sk_buff struct. In cooked mode, the L2 header
-> is stripped, preventing the packet capturing tool from determining the
-> correct TCI-TPID value. Additionally, the protocol in SLL is incorrect,
-> which means the packet capturing tool cannot parse the L3 header correctly.
-> 
+Make the two mentioned paths act similarly for what relates to logging
+and tracing.
 
-This does not add much context over v1 of the patch. But at least a
-pointer to context.
+--- Changes for v1 ---
 
-> [1] https://github.com/the-tcpdump-group/libpcap/issues/1105
+	- Drop the RFC prefix and restart from PATCH v1
+	- Drop patch 3/3 because a discussion on it has not yet been
+	  settled
+	- Drop namespacing in export of pci_print_aer while() (Dan)
+	- Don't use '#ifdef' in *.c files (Dan)
+	- Drop a reference on pdev after operation is complete (Dan)
+	- Don't log an error message if pdev is NULL (Dan)
 
-Prefer Link: $URL
+--- Changes for RFC v2 ---
+	
+	- 0/3: rework the subject line and the letter.
+        - 1/3: no changes.
+        - 2/3: trace CPER PCIe Section only if CONFIG_ACPI_APEI_PCIEAER
+          is defined; the kernel test robot reported the use of two
+          undefined symbols because the test for the config option was
+          missing; rewrite the subject line and part of commit message.
+        - 3/3: no changes.
 
-Please also add a Link to the conversation on patch 1:
+Fabio M. De Francesco (2):
+  ACPI: extlog: Trace CPER Non-standard Section Body
+  ACPI: extlog: Trace CPER PCI Express Error Section
 
-Link: https://lore.kernel.org/netdev/20240520070348.26725-1-chengen.du@canonical.com/T/#u
- 
-> Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
+ drivers/acpi/acpi_extlog.c | 35 +++++++++++++++++++++++++++++++++++
+ drivers/pci/pcie/aer.c     |  2 +-
+ include/linux/aer.h        |  9 ++++++---
+ 3 files changed, 42 insertions(+), 4 deletions(-)
 
-The referenced commit only introduces v3. The code changes to
-tpacket_rcv and packet_recvmsg indicate that this goes back further.
-Let's say to the introduction of explicitly passing VLAN information:
-
-Fixes: 393e52e33c6c ("packet: deliver VLAN TCI to userspace")
-
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chengen Du <chengen.du@canonical.com>
-> ---
->  net/packet/af_packet.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-> index ea3ebc160e25..82b36e90d73b 100644
-> --- a/net/packet/af_packet.c
-> +++ b/net/packet/af_packet.c
-> @@ -1011,6 +1011,10 @@ static void prb_fill_vlan_info(struct tpacket_kbdq_core *pkc,
->  		ppd->hv1.tp_vlan_tci = skb_vlan_tag_get(pkc->skb);
->  		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->vlan_proto);
->  		ppd->tp_status = TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-> +	} else if (eth_type_vlan(pkc->skb->protocol)) {
-> +		ppd->hv1.tp_vlan_tci = ntohs(vlan_eth_hdr(pkc->skb)->h_vlan_TCI);
-
-Careful about packet length. A malicious packet can be inserted that
-is an Ethernet header with zero payload, but ETH_P_8021Q as h_proto.
-
-See how __vlan_get_protocol carefully reads the headers.
-
-> +		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->protocol);
-> +		ppd->tp_status = TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
->  	} else {
->  		ppd->hv1.tp_vlan_tci = 0;
->  		ppd->hv1.tp_vlan_tpid = 0;
-> @@ -2428,6 +2432,10 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
->  			h.h2->tp_vlan_tci = skb_vlan_tag_get(skb);
->  			h.h2->tp_vlan_tpid = ntohs(skb->vlan_proto);
->  			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-> +		} else if (eth_type_vlan(skb->protocol)) {
-> +			h.h2->tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
-> +			h.h2->tp_vlan_tpid = ntohs(skb->protocol);
-> +			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
->  		} else {
->  			h.h2->tp_vlan_tci = 0;
->  			h.h2->tp_vlan_tpid = 0;
-> @@ -2457,7 +2465,8 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
->  	sll->sll_halen = dev_parse_header(skb, sll->sll_addr);
->  	sll->sll_family = AF_PACKET;
->  	sll->sll_hatype = dev->type;
-> -	sll->sll_protocol = skb->protocol;
-> +	sll->sll_protocol = (skb->protocol == htons(ETH_P_8021Q)) ?
-> +		vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
-
-In SOCK_RAW mode, the VLAN tag will be present, so should be returned.
-
-I'm concerned about returning a different value between SOCK_RAW and
-SOCK_DGRAM. But don't immediately see a better option. And for
-SOCK_DGRAM this approach is indistinguishable from the result on a
-device with hardware offload, so is acceptable.
-
-This test for ETH_P_8021Q ignores the QinQ stacked VLAN case. When
-fixing VLAN encap, both variants should be addressed at the same time.
-Note that ETH_P_8021AD is included in the eth_type_vlan test you call
-above.
-
-All these extra branches also makes the common case slower. Let's try
-to mitigate that as much as possible.
-
->  	sll->sll_pkttype = skb->pkt_type;
->  	if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV)))
->  		sll->sll_ifindex = orig_dev->ifindex;
-> @@ -3482,7 +3491,8 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
->  		/* Original length was stored in sockaddr_ll fields */
->  		origlen = PACKET_SKB_CB(skb)->sa.origlen;
->  		sll->sll_family = AF_PACKET;
-> -		sll->sll_protocol = skb->protocol;
-> +		sll->sll_protocol = (skb->protocol == htons(ETH_P_8021Q)) ?
-> +			vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
->  	}
->  
->  	sock_recv_cmsgs(msg, sk, skb);
-> @@ -3539,6 +3549,10 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
->  			aux.tp_vlan_tci = skb_vlan_tag_get(skb);
->  			aux.tp_vlan_tpid = ntohs(skb->vlan_proto);
->  			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-> +		} else if (eth_type_vlan(skb->protocol)) {
-> +			aux.tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
-> +			aux.tp_vlan_tpid = ntohs(skb->protocol);
-> +			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
->  		} else {
->  			aux.tp_vlan_tci = 0;
->  			aux.tp_vlan_tpid = 0;
-> -- 
-> 2.40.1
-> 
-
+-- 
+2.45.1
 
