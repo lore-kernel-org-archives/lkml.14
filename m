@@ -1,110 +1,79 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9144215E5BE
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F1A1DDC9;
+	Mon, 27 May 2024 12:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716814332; cv=none; b=id6zuSe2bKr2k4o6PDxv8NHXowMg8Iz/MUWATrY72zo/IPvcKITpxHaA7xBxkiyNJciMWZlnZvTN/F8bz3G779ibUeyiDUF70/tmC4i2Abm8vAGy3tA2ZZ6PNKJCsudQ0ptD1e86AQIv665L1yBKZCzWEv4WkCRElYMvjB4ik6w=
+	t=1716814388; cv=none; b=J3OMCK8qtyeMBa6Pbg6NFcKcwjlAtgeQ0obb+Etwvezx/MevEsjilCdVNRW4j3BZoRu3+hJHM0xU4TFweqnkbxstCf+z+HAs74b2n8ccMidipepVjYy88i/VWNtnW46A2ZCf3AdJ1nWdaHau1u/XZXMy2xljUGcVJRicyerFsAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716814332; c=relaxed/simple;
-	bh=MiGSg2DVarbMyLbJiHXGtEZVkuuMShi5RwBLr/tjlOQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Q0p6HhcXWtBpYeNho1S6c4WrIYxsdz3YRamPOavcMXVG1ro7BqI/o6uRgKkf5VvAOFqQ9w5bk9u/YWvWnmmG13Y+d438DPI2vqy+IJ1tMqTuwRt+5zvju0R4qfqrvN4WMGlJNMDTUoop0LiGAv/V/vUBVTul0Y32DAy2Gy7HuXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=aWtUyG3N; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1716814388; c=relaxed/simple;
+	bh=kBPorpQ7vBYqMRTfoGQhRu1WySBg6CbmBx69KpiwWGE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tJLxKLuPNCjL1Zf21c8AL37sQVaJMpkvaMNHLY3KLrUPplTeXJdAFrA/L5DVD8uiYz0Ujuj2OqusISBCDo1PPo+fw85HjFLVisDUavvZ8BlgWAmDJtaFFiStytFFDFYzpwlo33vV6n0w0oTu0XRZwu+yd8/BPsJ9sf4HtIPRgRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=N0/wY+f3; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aWtUyG3N"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-24ca03ad307so1809280fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 05:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1716814329; x=1717419129; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0VNs4oFMLk5Bxve1lZWNZ/kvg56aSZ6dBKt3FEfaoOw=;
-        b=aWtUyG3N/TYslBGkr156D2iLHLkIadJAzhF0kN+s0+iQrSujsExmPvS5QJ3j1MnEaU
-         vgc0y/Ze3v07PKideScYsNy7XS42leI5GYn3FM29MCCIc/GvWUrDcMFDBFTAskjH8vk+
-         OAY2OuGB5ZoL1jxR12dKx6I3ZQL8F4l8oV2fL3DanKVKMEoFt4zIMLI8DJcv2yI5m0Zc
-         RBkUmKI9DS2pTYIDYvMBjYf5aF5IQRwf3+1bTzxBhSiOmtWGREpbFNnqB2QPd6CR3P2V
-         8LanbEc9b1IwAckjuo8ajFNEA6HIx2FAHGR4QZuvj8YQuXFySKvbZMr/FFdEZhV1hjKr
-         t2Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716814329; x=1717419129;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0VNs4oFMLk5Bxve1lZWNZ/kvg56aSZ6dBKt3FEfaoOw=;
-        b=CNDZKNM0xcZOBxprqsAkdd5G1oIOp+j9UyZvxYMkz8icf7xPKPRJl2vxAiac6SeZ7j
-         UEZkbkRkPcgC0tDI6SunHkEtMg0g7yaDaAt/QPlXXzXO+8KZLVoWbI5352vSBiIGO606
-         Hnx444LBXJEhc3T0NhHxxJGqsbFW3CdHcdbuEoFA2iTfs4m8A4IzHrMr9eTfrxv8il0U
-         h9U30e7j6cGEDwL+p5VU1INLahiUTmScAmBQmKRnM2XpAkmezGL1Jd2URFtSnVm2kSCt
-         RmJQfcQLwklTR1+1MqSav6Nb3NBDPFSGuxlaHAJKH6404hd4lb1dVg0jeQi20tIRzfBl
-         QDmg==
-X-Forwarded-Encrypted: i=1; AJvYcCXkdmsVAUlf+vOTI2jbV3deFzh8TFArFNbaVk59h/CoBS/nPE6RG9qVGffD5gqMCO5fIBxZZw2OeLabqmV0zkOjdNE3zt9I5UDKKxdg
-X-Gm-Message-State: AOJu0Yzufe3cwV2IAlAK/XbadInFcgCVIZGHm541JvIXjhBESE0OdgnC
-	RY1H8qDa3NG1g/x095x3IrLOvSiZJ66zh8+yVagC8EOpDecsCqe/Exc+34ewj8fWWgdzUI1tC2V
-	R9EXRiUX3xKG/Wa77tBhEogqlwQH/XwRUjPuTAQ==
-X-Google-Smtp-Source: AGHT+IFVFWgWxhliY5IXKCFKP9m7cDXkraybWH9+iqYWLKMEa+9I0GGRzLeE9MBVs6oZk8aZlQsaGyKMaOogBnll8yY=
-X-Received: by 2002:a05:6870:1495:b0:24f:eced:8a38 with SMTP id
- 586e51a60fabf-24fecedcff3mr4083403fac.56.1716814329558; Mon, 27 May 2024
- 05:52:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="N0/wY+f3"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 269E247C5F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1716813813; bh=hZwk0AW8MLiViFy52ADHgAvY9XF6YcrHWsC+PnuwlD8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=N0/wY+f3sVLJ5hmYykdJ3dqt8t9u6adwghZY4UVPJQrK/haj1xVCL/ipi7mnAIIZP
+	 aOZRYUUa5Ix8zduN2WqD5lpzg79od4xBJ3E+rnSFWVBEt/7cKqb/RwmEsaus9ENcNd
+	 HsvjHPtklHZk45chyYMocmPBDPI+EX6DsefwzWSc+pczfBLBEyodip6PgKa5AduTxp
+	 9+9XooKIm3+c6J+Bwrth+T/WHs6mPTGRpy8ImJA/EQiFEXEaUtrWu/jsMngUcIelgG
+	 92ZF3BDtAlLm/+3XxoqWLNNGflc5/gc/fwF/UAWq8/jo90vhoOq8judBV8PTuaQF8u
+	 Yzg/RnE7R5mhA==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 269E247C5F;
+	Mon, 27 May 2024 12:43:33 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: yskelg@gmail.com
+Cc: skhan@linuxfoundation.org, Jinwoo Park <pmnxis@gmail.com>, Austin Kim
+ <austindh.kim@gmail.com>, shjy180909@gmail.com, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linuxfoundation.org, Yunseong Kim
+ <yskelg@gmail.com>
+Subject: Re: [PATCH v3] Documentation: cve Korean translation
+In-Reply-To: <20240527103003.29318-1-yskelg@gmail.com>
+References: <20240527103003.29318-1-yskelg@gmail.com>
+Date: Mon, 27 May 2024 06:43:32 -0600
+Message-ID: <87ikyzpgqz.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240523111322.19243-1-cuiyunhui@bytedance.com> <20240523111322.19243-3-cuiyunhui@bytedance.com>
-In-Reply-To: <20240523111322.19243-3-cuiyunhui@bytedance.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Mon, 27 May 2024 20:51:58 +0800
-Message-ID: <CAEEQ3wnE+8FXXf76zapqNnC5vruoR9C-y0qjjFw47cHYP57MmQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v5 3/3] RISC-V: Select ACPI PPTT drivers
-To: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	sunilvl@ventanamicro.com, aou@eecs.berkeley.edu, 
-	linux-riscv@lists.infradead.org, bhelgaas@google.com, james.morse@arm.com, 
-	jeremy.linton@arm.com, Jonathan.Cameron@huawei.com, pierre.gondois@arm.com, 
-	sudeep.holla@arm.com, tiantao6@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Palmer,
+yskelg@gmail.com writes:
 
-Gentle ping ...
+> From: Yunseong Kim <yskelg@gmail.com>
+>
+> This is a Documentation/process/cve korean version.
 
-On Thu, May 23, 2024 at 7:13=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com=
-> wrote:
->
-> After adding ACPI support to populate_cache_leaves(), RISC-V can build
-> cacheinfo through the ACPI PPTT table, thus enabling the ACPI_PPTT
-> configuration.
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  arch/riscv/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index f961449ca077..a9ebecd72052 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -14,6 +14,7 @@ config RISCV
->         def_bool y
->         select ACPI_GENERIC_GSI if ACPI
->         select ACPI_REDUCED_HARDWARE_ONLY if ACPI
-> +       select ACPI_PPTT if ACPI
->         select ARCH_DMA_DEFAULT_COHERENT
->         select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATIO=
-N
->         select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
-> --
-> 2.20.1
->
+Thank you for working to improve our documentation.  A couple of
+questions, though:
+
+> Reviewed-by: Jinwoo Park <pmnxis@gmail.com>
+> Signed-off-by: Yunseong Kim <yskelg@gmail.com>
+
+1) Why do I have three versions of it in my mailbox, sent over a period
+   of 13 minutes?  What changed between the versions?
+
+   Normally, you want to wait for reviews to come in on one version
+   before posting the next, and you should put a comment after the "---"
+   line saying what changed.
+
+2) When did this review from Jinwoo Park happen?  I was not copied on
+   that.
 
 Thanks,
-Yunhui
+
+jon
