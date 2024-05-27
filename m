@@ -1,55 +1,60 @@
-Received: from smtp.cecloud.com (unknown [1.203.97.240])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB7A913AD34;
-	Mon, 27 May 2024 10:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.240
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BA422EE8
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 10:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716804909; cv=none; b=utJbKqmwmbGZyNcA+1anEXKtmnf7hZIC/mMOLH99/WifiYqCP0vmS2TjDxIp09SiFwMTBUybe+RTTtgIOJd/e0dE7eSoBsgBMMw1ENwVVTU9iD8eNka9uEZRpJt7G4Vb2fIG28xDzUNXC64UqUQDXQ7Ug41oEDfmP6czUjowwcg=
+	t=1716804934; cv=none; b=O07HeePEnmezNrPBPOGU9Vxk9pV/aMEMDXOAWK4leDU/QP6vkoSA+mZMySzq/Zp7GLGhCmEGqAeaf4cA+zy/TjrtnyzQ5raEB2Ovxs7eYOe7xCWDNJ3lOfjhQEc43N+q8/WQUWbmLSLZ1OhfCTSMRYlN4BfJP6EGvojXfDYehnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716804909; c=relaxed/simple;
-	bh=t4855T7zRAAyXJTGdNBnjyzLLE/1b84BjFAew89mgrQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IiX0C7q/8CJOoNw8dP7WxVoCCSCCam3JmO6RJcPJCetcZbrCmtbPAhgy11uhQFvQ9ioBaOfg7pPdIvf3HLzMYCHMbt5iA7ybzpZbbJsN4SfXOUq0FsCf6GBWI7hT7tqNCQZ7vIzBEvQKoIUtdLF8bHSC7lGGDHwFGSyYqf0JsRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.cecloud.com (Postfix) with ESMTP id 24381900112;
-	Mon, 27 May 2024 18:09:10 +0800 (CST)
-X-MAIL-GRAY:0
-X-MAIL-DELIVERY:1
-X-ANTISPAM-LEVEL:2
-X-ABS-CHECKED:0
-Received: from localhost.localdomain (unknown [111.48.58.12])
-	by smtp.cecloud.com (postfix) whith ESMTP id P894637T281473226436976S1716804548742756_;
-	Mon, 27 May 2024 18:09:10 +0800 (CST)
-X-IP-DOMAINF:1
-X-RL-SENDER:liuwei09@cestc.cn
-X-SENDER:liuwei09@cestc.cn
-X-LOGIN-NAME:liuwei09@cestc.cn
-X-FST-TO:axboe@kernel.dk
-X-RCPT-COUNT:9
-X-LOCAL-RCPT-COUNT:1
-X-MUTI-DOMAIN-COUNT:0
-X-SENDER-IP:111.48.58.12
-X-ATTACHMENT-NUM:0
-X-UNIQUE-TAG:<acfc3dfd82f899d0dbff6eb8768ac03f>
-X-System-Flag:0
-From: Liu Wei <liuwei09@cestc.cn>
-To: axboe@kernel.dk
-Cc: akpm@linux-foundation.org,
-	hch@lst.de,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
+	s=arc-20240116; t=1716804934; c=relaxed/simple;
+	bh=SaTHtM3+CzAX3Nqlt1UrAv706o4OTbTRxvuPgYz9kG4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gJcjPLQGSuuOrYnFi0zKOE8Rn9lqVMyuA4RB8hzcvgUP2Ln9vSBmCw5xjWmG52Rwd05PmpNEcCooIcjlJqD8BUkawJdSLPzLO1QEycZt8vqFZ9eVFGmkGfIY+3StW+5i+7QeDSVp5+jbSUszolnsXlYpWWgpIgnTFFZ+ZkAiXx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YD6IT/8U; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YD6IT/8U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716804931;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=R8cvAHQEMV5i/B574wxhIOQP308p8fXzk2BaEibPcEQ=;
+	b=YD6IT/8UVE4yl3sgE++qzos82Rtc9l14P/7e1IG9F5lLZDfyH168HPSb2eJkehVHWqO4Xk
+	kb/jQlbtwHsOcmnnSl4cxSOT+RSAEWGP8uikBA958Pk2GX2l6PO4WyX27umwn8rQmqWHJK
+	7lIuUM31SEjaa6OkzeadEXKJyG46xAE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-288-3Ud599KLPy-lM_MM7PTFyQ-1; Mon, 27 May 2024 06:15:25 -0400
+X-MC-Unique: 3Ud599KLPy-lM_MM7PTFyQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EB81F85A58C;
+	Mon, 27 May 2024 10:15:24 +0000 (UTC)
+Received: from alecto.usersys.redhat.com (unknown [10.45.225.142])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D40741000A0E;
+	Mon, 27 May 2024 10:15:21 +0000 (UTC)
+From: Artem Savkov <asavkov@redhat.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
-	liuwei09@cestc.cn,
-	rgoldwyn@suse.com,
-	willy@infradead.org
-Subject: Re: [PATCH] mm/filemap: invalidating pages is still necessary when io with IOCB_NOWAIT
-Date: Mon, 27 May 2024 18:09:08 +0800
-Message-ID: <20240527100908.49913-1-liuwei09@cestc.cn>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <024b9a30-ad3b-4063-b5c8-e6c948ad6b2e@kernel.dk>
-References: <024b9a30-ad3b-4063-b5c8-e6c948ad6b2e@kernel.dk>
+	Artem Savkov <asavkov@redhat.com>
+Subject: [PATCH] perf record: add a shortcut for metrics
+Date: Mon, 27 May 2024 12:15:19 +0200
+Message-ID: <20240527101519.356342-1-asavkov@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,62 +62,139 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-I am a newer, thanks for the reminder.
+Add -M/--metrics option to perf-record providing a shortcut to record
+metrics and metricgroups. This option mirrors the one in perf-stat.
 
-> 
-> >> when we issuing AIO with direct I/O and IOCB_NOWAIT on a block device, the
-> >> process context will not be blocked.
-> >>
-> >> However, if the device already has page cache in memory, EAGAIN will be
-> >> returned. And even when trying to reissue the AIO with direct I/O and
-> >> IOCB_NOWAIT again, we consistently receive EAGAIN.
-> 
-> -EAGAIN doesn't mean "just try again and it'll work".
-> 
-> >> Maybe a better way to deal with it: filemap_fdatawrite_range dirty pages
-> >> with WB_SYNC_NONE flag, and invalidate_mapping_pages unmapped pages at
-> >> the same time.
-> >>
-> >> Signed-off-by: Liu Wei <liuwei09@cestc.cn>
-> >> ---
-> >>  mm/filemap.c | 9 ++++++++-
-> >>  1 file changed, 8 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/mm/filemap.c b/mm/filemap.c
-> >> index 30de18c4fd28..1852a00caf31 100644
-> >> --- a/mm/filemap.c
-> >> +++ b/mm/filemap.c
-> >> @@ -2697,8 +2697,15 @@ int kiocb_invalidate_pages(struct kiocb *iocb, size_t count)
-> >>  
-> >>  	if (iocb->ki_flags & IOCB_NOWAIT) {
-> >>  		/* we could block if there are any pages in the range */
-> >> -		if (filemap_range_has_page(mapping, pos, end))
-> >> +		if (filemap_range_has_page(mapping, pos, end)) {
-> >> +			if (mapping_needs_writeback(mapping)) {
-> >> +				__filemap_fdatawrite_range(mapping,
-> >> +						pos, end, WB_SYNC_NONE);
-> >> +			}
-> 
-> I don't think WB_SYNC_NONE tells it not to block, it just says not to
-> wait for it... So this won't work as-is.
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Signed-off-by: Artem Savkov <asavkov@redhat.com>
+---
+ tools/perf/Documentation/perf-record.txt |  7 +++-
+ tools/perf/builtin-record.c              | 43 ++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 1 deletion(-)
 
-Yes, but I think an asynchronous writex-back is better than simply return EAGAIN.
-By using __filemap_fdatawrite_range to trigger a writeback, subsequent retries
-may have a higher chance of success. 
-
-> 
-> >> +			invalidate_mapping_pages(mapping,
-> >> +					pos >> PAGE_SHIFT, end >> PAGE_SHIFT);
-> >>  			return -EAGAIN;
-> >> +		}
-> >>  	} else {
-> >>  		ret = filemap_write_and_wait_range(mapping, pos, end);
-> >>  		if (ret)
-> >> -- 
-> >> 2.42.1
-> >>
-> >>
-> >>
-
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 6015fdd08fb63..ebb560d137e62 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -18,7 +18,6 @@ from it, into perf.data - without displaying anything.
+ 
+ This file can then be inspected later on, using 'perf report'.
+ 
+-
+ OPTIONS
+ -------
+ <command>...::
+@@ -216,6 +215,12 @@ OPTIONS
+ 	  na, by_data, by_addr (for mem_blk)
+ 	  hops0, hops1, hops2, hops3 (for mem_hops)
+ 
++-M::
++--metrics::
++Record metrics or metricgroups specified in a comma separated list.
++For a group all metrics from the group are added.
++See perf list output for the possible metrics and metricgroups.
++
+ --exclude-perf::
+ 	Don't record events issued by perf itself. This option should follow
+ 	an event selector (-e) which selects tracepoint event(s). It adds a
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 66a3de8ac6618..5828051ff2736 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -40,6 +40,7 @@
+ #include "util/trigger.h"
+ #include "util/perf-hooks.h"
+ #include "util/cpu-set-sched.h"
++#include "util/metricgroup.h"
+ #include "util/synthetic-events.h"
+ #include "util/time-utils.h"
+ #include "util/units.h"
+@@ -188,6 +189,7 @@ static volatile int done;
+ static volatile int auxtrace_record__snapshot_started;
+ static DEFINE_TRIGGER(auxtrace_snapshot_trigger);
+ static DEFINE_TRIGGER(switch_output_trigger);
++static char *metrics;
+ 
+ static const char *affinity_tags[PERF_AFFINITY_MAX] = {
+ 	"SYS", "NODE", "CPU"
+@@ -200,6 +202,25 @@ static inline pid_t gettid(void)
+ }
+ #endif
+ 
++static int append_metric_groups(const struct option *opt __maybe_unused,
++			       const char *str,
++			       int unset __maybe_unused)
++{
++	if (metrics) {
++		char *tmp;
++
++		if (asprintf(&tmp, "%s,%s", metrics, str) < 0)
++			return -ENOMEM;
++		free(metrics);
++		metrics = tmp;
++	} else {
++		metrics = strdup(str);
++		if (!metrics)
++			return -ENOMEM;
++	}
++	return 0;
++}
++
+ static int record__threads_enabled(struct record *rec)
+ {
+ 	return rec->opts.threads_spec;
+@@ -3382,6 +3403,9 @@ static struct option __record_options[] = {
+ 		     parse_events_option),
+ 	OPT_CALLBACK(0, "filter", &record.evlist, "filter",
+ 		     "event filter", parse_filter),
++	OPT_CALLBACK('M', "metrics", &record.evlist, "metric/metric group list",
++		     "monitor specified metrics or metric groups (separated by ,)",
++		     append_metric_groups),
+ 	OPT_CALLBACK_NOOPT(0, "exclude-perf", &record.evlist,
+ 			   NULL, "don't record events from perf itself",
+ 			   exclude_perf),
+@@ -3984,6 +4008,7 @@ int cmd_record(int argc, const char **argv)
+ 	int err;
+ 	struct record *rec = &record;
+ 	char errbuf[BUFSIZ];
++	struct rblist mevents;
+ 
+ 	setlocale(LC_ALL, "");
+ 
+@@ -4153,6 +4178,23 @@ int cmd_record(int argc, const char **argv)
+ 	if (record.opts.overwrite)
+ 		record.opts.tail_synthesize = true;
+ 
++	if (metrics) {
++		const char *pmu = parse_events_option_args.pmu_filter ?: "all";
++		int ret = metricgroup__parse_groups(rec->evlist, pmu, metrics,
++						false, /* metric_no_group */
++						false, /* metric_no_merge */
++						false, /* metric_no_threshold */
++						rec->opts.target.cpu_list,
++						rec->opts.target.system_wide,
++						false, /* hardware_aware_grouping */
++						&mevents);
++		if (ret) {
++			err = ret;
++			goto out;
++		}
++		zfree(&metrics);
++	}
++
+ 	if (rec->evlist->core.nr_entries == 0) {
+ 		bool can_profile_kernel = perf_event_paranoid_check(1);
+ 
+@@ -4264,6 +4306,7 @@ int cmd_record(int argc, const char **argv)
+ out_opts:
+ 	record__free_thread_masks(rec, rec->nr_threads);
+ 	rec->nr_threads = 0;
++	metricgroup__rblist_exit(&mevents);
+ 	evlist__close_control(rec->opts.ctl_fd, rec->opts.ctl_fd_ack, &rec->opts.ctl_fd_close);
+ 	return err;
+ }
+-- 
+2.45.1
 
