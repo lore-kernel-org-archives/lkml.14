@@ -1,78 +1,70 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF6A13BC3B;
-	Mon, 27 May 2024 13:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917AE1640B
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716817823; cv=none; b=VZca92Jvn/yS4LZugnakPQIpyPdKx2uxP94N7oA+7fZMLNEptKs3GQVRW5JWeUZ5hCUTFnc+ejLVOVlHoLCdzah8OL2d2l/v22GaaX+fVCP+EKIMDAUtL2sSw7qQxx3C4b0gGtdi18eIVSUjbxlCDOYJoCeyucpZ4xMgmeSVn1Q=
+	t=1716817872; cv=none; b=kiXGjDq3Qp682BOsHKU+XbooA2YqYvoLDwMsK5vbjhPOOGSMk7Un8C4V1QV3wbI19MV/oK4CzUQ7IThPx/JzbfSLh2MtwSsoKamLRLPtmz7YZpuIZUcDkGIYDW5vsY9ZlmxIg6S8yl6cSzc/2vWNv6AwtOtGQWvDRFrWaQP/AaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716817823; c=relaxed/simple;
-	bh=+nP0nFvWQTGmKN1h8mBWXPdJ/NyR49065Fmlx0vf/hE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ijWs+N+I/PQttu9/4q+dtMLt/P9/gwRtBh+Ez6R7D4tVuALxE2h4udhsx8VU/vZC8pCextsW7SGB0JN83zEYHpGnA9XeDJPiAoBA0SZatVlEf0ZGC97lyC3Og3qN88kvuEKfBloGVnVGZMSNvUdUh32ZK8yiikL/IhVHaV9lVgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=KRzARuGC; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1716817872; c=relaxed/simple;
+	bh=uuQY43wa+0cys4WzKZsdo95EDIza7dv83nymBpPfuio=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dSTo/abiVlsetYKrU7jqRlOAx4HvhakhHoAxVjjW+mxq5Sqsb3zfukHtThvUbwJJmGkMp9C2Z0pg2fr+epPKDWUl9Gi6+pMafnVwm9iTT1txmGUWe3k3Oyg2g0WMmnsMDAiXPQUXgsqmh3hGnF3sCiuE3a4mSXAuc8BGzPrwX8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=CEWDhMIg; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="KRzARuGC"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 44AC247C39
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1716817818; bh=JskqYYyNz3dMD01WU+7KptXTcnGKmuo6XobKIxRvLCk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=KRzARuGChKTGCcbDUHYk3ELS9q4KssOknufzQxGTvfXOYWjW45Z5x8qzsjfzSsh2a
-	 xQsNZcSAkOz3vRGzBnu1c9h9405N7mTbZSH97gBrvdKAJ5zbPrqJ0LRXGFWCyI4bhy
-	 FDHUfk9nkcQZ/AGfp+4zLcGA/t2njvkxCwpjVYm6w9ZdQraiWGHxDutSh87SC7Ldwj
-	 Me4QJzwPCFh1rk6BeYpfckdQM63R5O4KCec53FY8sYM3V8/1HQ/ZktC0rcnVtOt3Nj
-	 QJdNEEAkl8Yt3KLdp3nrBaUKQm9IA5Y/BN+bEOqnB5DhUknVa0icYvVTEeUPuKrb5D
-	 hv3NM+N13yIqg==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 44AC247C39;
-	Mon, 27 May 2024 13:50:18 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Yunseong Kim <yskelg@gmail.com>
-Cc: skhan@linuxfoundation.org, Jinwoo Park <pmnxis@gmail.com>, Austin Kim
- <austindh.kim@gmail.com>, shjy180909@gmail.com, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v3] Documentation: cve Korean translation
-In-Reply-To: <bf37bf39-32d3-457f-abd6-115215d631af@gmail.com>
-References: <20240527103003.29318-1-yskelg@gmail.com>
- <87ikyzpgqz.fsf@meer.lwn.net>
- <bf37bf39-32d3-457f-abd6-115215d631af@gmail.com>
-Date: Mon, 27 May 2024 07:50:17 -0600
-Message-ID: <87o78rnz3a.fsf@meer.lwn.net>
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="CEWDhMIg"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a6267778b3aso225073166b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1716817869; x=1717422669; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uuQY43wa+0cys4WzKZsdo95EDIza7dv83nymBpPfuio=;
+        b=CEWDhMIgwS6jcTyM9CnO7Rs5RJSfU/Ovrj3b06MqDJ6R0YIYvhzNBppzLFJqGSdNmy
+         XiTjn+ECfLvvID5/oJgG0etMRFTl4BEZEDxCCZ8SNhtcOx3apaD8OEhdO5DZaGW065Do
+         cZdNLeGeLioeciz/B5oH3VdXomvPXOPafXkds=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716817869; x=1717422669;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uuQY43wa+0cys4WzKZsdo95EDIza7dv83nymBpPfuio=;
+        b=H0fEWyuzVYHKdDPI5bSYrLyi/2EtbbCw36TuJADeGnAVIVDKIkL1A5/bKxkWqRoq/x
+         Y+bEMcn60rKiFqp2COWUcR4rGabhF7lOF+MX64g7K7tiBdAPqVQVcoAVGcZmk08j43Wv
+         w7udt8zG5Xb1f6bGd5qp+LgJKQdKE96nyNIucGQYrOugI2rATbvq3BqkUFYP5alit3Gy
+         tzaQvy2tIEDdzH136KS6PRPvqOPZbBj5ibFGqSDMEgUZMddwfI+2iWu2/uIXc853C0jK
+         ZBhmLN0Sbz6Ut/Zrox3JrKAS4xWQemd71nasowQ4Y/qrr5B2BMLiM9hnbQdw12JsaFxv
+         pGnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQJet1gyew8P+4uJPcSv+8rdrZ8F1OzIGxRaNNlvafaZ6vM3L6tyQtyTip9XYhUvN/CY2UTBhl7KPgxJ2vdjus1+UrhBYUfLwHjd1y
+X-Gm-Message-State: AOJu0YzdS57wHh0T04JYPRNuFG94kRoZKQjqVn3fz3Z0qYuvSBqP/cZr
+	b8T29uI8Zw98Q2q3DryErfytnus0fL7/3mbBT50xbCzXIJyd9APBmQqSrUbHzbPdHhoXLkcLfgS
+	P6cW+O3099LRtSkqSHfkRaO9w+gKYacHqB0ESMQ==
+X-Google-Smtp-Source: AGHT+IE+776/I97VJo1iquiMi/Yw2Zf4q5ChRdOsvC6Wn8oeSttS7ENd+orAmozSW0Y0YeHPwc8Ri+zGLINvPPdC46g=
+X-Received: by 2002:a17:906:5a70:b0:a5a:1562:5187 with SMTP id
+ a640c23a62f3a-a626512942fmr636424766b.55.1716817868894; Mon, 27 May 2024
+ 06:51:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <000000000000f6865106191c3e58@google.com>
+In-Reply-To: <000000000000f6865106191c3e58@google.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 27 May 2024 15:50:57 +0200
+Message-ID: <CAJfpeguD5jSUd=fLaAGzuYU-01cKjSij6UbQWy72LDpqK1KQfw@mail.gmail.com>
+Subject: Re: [syzbot] [btrfs?] [overlayfs?] possible deadlock in ovl_copy_up_flags
+To: syzbot <syzbot+85e58cdf5b3136471d4b@syzkaller.appspotmail.com>
+Cc: amir73il@gmail.com, brauner@kernel.org, clm@fb.com, dsterba@suse.com, 
+	jack@suse.cz, josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, mszeredi@redhat.com, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-Yunseong Kim <yskelg@gmail.com> writes:
-
->> 1) Why do I have three versions of it in my mailbox, sent over a period
->>    of 13 minutes?  What changed between the versions?
->
-> Sorry, I forgot the name of the reviewer when I first sent the
-> documentation content related patch version 2.
-
-Which is fine, but...
-
->>    Normally, you want to wait for reviews to come in on one version
->>    before posting the next, and you should put a comment after the "---"
->>    line saying what changed.
->> 
->> 2) When did this review from Jinwoo Park happen?  I was not copied on
->>    that.
-
-You did not answer this question.  Reviews should generally be done in
-public, but that does not seem to have happened here?
-
-Thanks,
-
-jon
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/overlayfs/vfs.git
+ f74ee925761ead1a07a5e42e1cb1f2d59ab75b8c
