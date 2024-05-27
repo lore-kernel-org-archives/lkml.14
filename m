@@ -1,95 +1,102 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32D51640B;
-	Mon, 27 May 2024 13:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D961640B
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716817762; cv=none; b=OntCHm80soi0razQjh3UM6D0Fs0qsPp0AVVk1jNEWDKbzCV10WLVaT/qAodd+8RVMxEV+eMUIvqvcKZnmEVOhGrymWQquVeiwfaAlEPnd0ReSe5UhWpkjZzlICv/Q4DFquuHdKhbfTnuva0oMtNCvqJ+3zhNEmOYtsReMDgrvxs=
+	t=1716817821; cv=none; b=oCPsG1dBsOhm7l/3Nj2HSgLCAK9FP20LxBQ8i9BcOUyGs70Ld20462c5rdhe+tkQGh4QqmpA81Nu2lb/yW9RORQvJsGhlhW0s46kaRjREZQV+1fFuCSoT3Ft+jaY9BuWro0R32TVnpB93KVGnns8GRrzxSGGoylsY9ncJCuqxKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716817762; c=relaxed/simple;
-	bh=gqza+53r5VdbcAND+Hi9YfxVDyGCS9djsD4wSOb5XXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tNygDAISHlSJrueL2AvgWRcFtE7f/pMEKFfXZjUD61Skv11MBM1dUNVznL82BbCy0RntATNB8l9q8inMuCFFNm2n7vsy9KUQfsDVdplXn/w7O8CEGJi+o3C9HB3DRLRrv0IbZxabO9CrTEmEJJsTzQWMmCl38NoCLXeAbLJtBRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=tkh5WiiA; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1716817821; c=relaxed/simple;
+	bh=SlXdApCylnQr8N4neH0zBYcckEuMSS9hVMXK7hRZ0Ao=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q2ztFAMUUl8kp5et8Sow2femhP3qpCzcTSXz7OAXXdMyL/75Tn3hRT9qtV7aj7Yg2aPqd/joZ0azWyIy4px++9RfEMtYfaMkWOzC2EtfjyOTlidGAhg93MHj36iluPCiFVilaVRKYTZ+Cq6GKrzvOtFcdNyGVff6E8jqXJiG6CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=D6Nsjc8M; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="tkh5WiiA"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 8D9221D2C84;
-	Mon, 27 May 2024 15:40:05 +0200 (CEST)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1716817205; bh=vzQMaKe8PWq8/rJIUTZI8C7BenHzVSRhtEQYf/oFXl0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tkh5WiiAboiiWDCmRyyPkyqW3L3y4BGcfr2IVSnE000zAnqBVehCthCdnt5HF//Sf
-	 czWPcJDgPtMJeXWAkPQwwXCxQQYI4WGwg+p5mOVXBF+GkXoUOfuVV9qY3AoaiJXLxs
-	 e9GUxse0caC3zHiaONykC3nFyUL3lg53epva4av26V9xw0s1SBYvTDo7Qji/wa2IoI
-	 fumT5hlRv1YqUyyTPtH7ewdcG1PbAgqKxLwSAYNmZNiPFdvzI9Lv55koPkJ4oesE5v
-	 JAFFt/4bY8BqC4KrocxDMv8WX9CSCk/Hqqqufv854ToBcEuh8x4I+eO5TCCW/o9CYY
-	 QOtkOYjfT/2CA==
-Date: Mon, 27 May 2024 15:40:04 +0200
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Lukas Bulwahn <lbulwahn@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>,
- iommu@lists.linux.dev, Michael Kelley <mhklinux@outlook.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: Re: [PATCH] Documentation/core-api: correct reference to
- SWIOTLB_DYNAMIC
-Message-ID: <20240527154004.41a41caf@meshulam.tesarici.cz>
-In-Reply-To: <20240527131314.22794-1-lukas.bulwahn@redhat.com>
-References: <20240527131314.22794-1-lukas.bulwahn@redhat.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="D6Nsjc8M"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52742fdd363so4740476e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:50:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716817818; x=1717422618; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tIOT9wvexJ79HNlrDmaPIby9uyeD/58/CsVvVIRo/Pk=;
+        b=D6Nsjc8M+mozp/1Yt+GtPtqPBNmvMQwHHnB3qJdGlaIf8/8cHyJzmqEeKiQoHBE8yI
+         Gc8X0OQzJRYEivdCq4uCi168JDSVQMLd+3LV2UbCuSbWmlavsHBd5SQ5PFhg9eWrsRQN
+         07BdIVb7CzPkIvK2LuldHc9lqSESnwjVzoJGW/B+Kk26LIZUJv8eAOp40JdNDLNddTBX
+         wI8pLXjFmgsNx/7yl5J/F0QBSNnQePk9zu/QTAZQZcHIvpZaW2HYwIyHYH0xQKCZM3nJ
+         UlKFzYcsfd6acOSs9TSAYcrYzpoSOdF5vW2LFLDpmvly7VuthTwgzUvzDCULEWA3n7zx
+         iuNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716817818; x=1717422618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tIOT9wvexJ79HNlrDmaPIby9uyeD/58/CsVvVIRo/Pk=;
+        b=UONoMVh2p0pI6HWA4FuEKTtvrZnN8dPFAL/+hIg42SEiHraOugbM1kofX69qq6vsUF
+         aTisG3sflkS5SX5309bL2OhOm1UTosmIxYmJIhpaQS9XkG7+yFAJGnRsaRbpUKdJbnq6
+         kamKoX+b01zDYCrfjf+uju+rlXcSNwClnP6hKSLp9SBAhuqkis2HlN4C7fh44qO8Xba9
+         VBl0sZb0xTEXZqn3UGl+X2VEiJQNBMLBIj6QJ2jvIcWpn9xQlM0DJkmEG17qy+HrNQfm
+         1MiRs+mp85CnFKpWDTbJd+V4WgdHh5kTzAh2HIi8IYgmIL5QBRIyo/QrHZDE7O82bTnn
+         hXIQ==
+X-Gm-Message-State: AOJu0YwO2pWwg9jRj9M2gTB9mU2AwH2NGJQUqiFDjgp6jhELAXyhpE8G
+	Bg+kYdkORCa8VxSjo8Wps6gnpMbeHZ0mGGeYKptK7rA3BH6upiJWLvZFUOL6Bh7qwHEx7WNpJXZ
+	4Kr4=
+X-Google-Smtp-Source: AGHT+IEgARaZR+bIcjTK+/X0WoYnEvM7h0HHZFhNHPDwp9UyqUv1nbtDit7XTXMaV1EI/AddrP1s2A==
+X-Received: by 2002:a19:7705:0:b0:521:a96:bf1a with SMTP id 2adb3069b0e04-52966bad0eamr5027540e87.61.1716817817617;
+        Mon, 27 May 2024 06:50:17 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-578524b9e80sm5802279a12.85.2024.05.27.06.50.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 06:50:17 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH v2] w1: Drop allocation error message
+Date: Mon, 27 May 2024 15:49:47 +0200
+Message-ID: <20240527134946.338398-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 27 May 2024 15:13:14 +0200
-Lukas Bulwahn <lbulwahn@redhat.com> wrote:
+Drop the custom error message because kzalloc() already prints
+allocation failures.
 
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> 
-> Commit c93f261dfc39 ("Documentation/core-api: add swiotlb documentation")
-> accidentally refers to CONFIG_DYNAMIC_SWIOTLB in one place, while the
-> config is actually called CONFIG_SWIOTLB_DYNAMIC.
-> 
-> Correct the reference to the intended config option.
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- Drop the error message instead of fixing it as suggested by Krzysztof
+  Kozlowski
+- Link to v1: https://lore.kernel.org/linux-kernel/20240513154354.185974-3-thorsten.blum@toblux.com/
+---
+ drivers/w1/w1_int.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Good catch!
-
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-
-Reviewed-by: Petr Tesarik <petr@tesarici.cz>
-
-Petr T
-
-> ---
->  Documentation/core-api/swiotlb.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/core-api/swiotlb.rst b/Documentation/core-api/swiotlb.rst
-> index 5ad2c9ca85bc..cf06bae44ff8 100644
-> --- a/Documentation/core-api/swiotlb.rst
-> +++ b/Documentation/core-api/swiotlb.rst
-> @@ -192,7 +192,7 @@ alignment larger than PAGE_SIZE.
->  
->  Dynamic swiotlb
->  ---------------
-> -When CONFIG_DYNAMIC_SWIOTLB is enabled, swiotlb can do on-demand expansion of
-> +When CONFIG_SWIOTLB_DYNAMIC is enabled, swiotlb can do on-demand expansion of
->  the amount of memory available for allocation as bounce buffers. If a bounce
->  buffer request fails due to lack of available space, an asynchronous background
->  task is kicked off to allocate memory from general system memory and turn it
+diff --git a/drivers/w1/w1_int.c b/drivers/w1/w1_int.c
+index 3a71c5eb2f83..19a0ea28e9f3 100644
+--- a/drivers/w1/w1_int.c
++++ b/drivers/w1/w1_int.c
+@@ -32,12 +32,8 @@ static struct w1_master *w1_alloc_dev(u32 id, int slave_count, int slave_ttl,
+ 	 * We are in process context(kernel thread), so can sleep.
+ 	 */
+ 	dev = kzalloc(sizeof(struct w1_master) + sizeof(struct w1_bus_master), GFP_KERNEL);
+-	if (!dev) {
+-		pr_err("Failed to allocate %zd bytes for new w1 device.\n",
+-			sizeof(struct w1_master));
++	if (!dev)
+ 		return NULL;
+-	}
+-
+ 
+ 	dev->bus_master = (struct w1_bus_master *)(dev + 1);
+ 
+-- 
+2.45.1
 
