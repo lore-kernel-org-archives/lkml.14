@@ -1,140 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEEF17BB0B;
-	Mon, 27 May 2024 14:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4BC17BB18
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819305; cv=none; b=lKzKhUdrNodPoFe5rO2kShACHfQUKA9+9sQ4Y5BGBVkrhZp2M4micJQid95ynCSQoyrcmZ8CDJd0XyiLFnY0VZzDNwiBUnbboBEkz3oqsk3YFoNowUjT2hKS9o9kigfm4RDuAmamJVT/PCLqofmTv0ywymY4mjV5fWpPr0OSHu4=
+	t=1716819307; cv=none; b=QslyF0+9RGOmB7x0LjO5ZsWOJ+YVhcPRqtI6AxFHqRTL8+/T8Ubx4yhBEg5Y3qmDDmNv9nkUqAFwlNjMywPPrWhdAaWMqB9WRLtG1nXy3FIvyLgc5+vIQFmaqGaXHcI9rcNpA3CComK2iT0XYwk+MMEarnhv5U8E/SixUJnnk0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819305; c=relaxed/simple;
-	bh=LCTo4W6Sd0YOU46uvur/qnfKTRHtLNeR0VCT8BV92P0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dYPbWB4r3+vtuykjO5g6FydT2wCH3PCE8nKnQvh463Rv8JPzge76I82G8vyS3lABhIn94DOS6g5Xsj335cNu+AlLkVYb+OUg6cDWS42p8DuOqAzKPMOpPb2dUiyOcJdKBo61DVYvYXPq2Y/sDsMN4nFZjT/tbTnaYNBRD33vSH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T2Vcm7nK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716819307; c=relaxed/simple;
+	bh=pMHg2pCAWLHVIM5Px7JnnPO2FNi4+GM85ekhL3dRmm8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fj0sNyEt22nVzr6zsRy4ccKgparMN+mkrH31xjGks5/KUSuaml4JUPigPIfiQn9LpFwLQnr3qh3iklVp0LMfZuRl4i2IgJQmy6WMWnYeKDwrXJOArcBCaZim6OmQwG/whHciRmw9x4lXY5TM5yHtF5qzem3N7M3K31MA3zJMTP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jC3iBprP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T2Vcm7nK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1E40C32781;
-	Mon, 27 May 2024 14:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716819304;
-	bh=LCTo4W6Sd0YOU46uvur/qnfKTRHtLNeR0VCT8BV92P0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T2Vcm7nKlV4eCccWXvC6m7Uki5xrcOWoA522kj443ohXbFIpbfHP1VuZJXj+MjTn+
-	 YZbuh7EmoQd3byLnEkt0l6mk92TBK6GoWQw2w/RfAS9G7M7RS/o54QH7a42YzRjMdW
-	 3rzVLiLjwxujbxvjjISF5lXPupXJ7Dt2ItLMwFJl708Bca9kJtJWLYCD1vYg6T7XeW
-	 9Hltezbd3yXC8ky7RAWlN9hmoOzDEYJvtlVLHlo8CPhT/xHpdYpUcd4aYXbwyeSV3z
-	 xDh5VHVwonRNgz1BxLId0bwLZ+5fzaK2soQgbcYG3QbPyhX/ITvCkl9t8Mhg/CTzMv
-	 zoLT2Nn1XbSkA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Lingbo Kong <quic_lingbok@quicinc.com>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Kalle Valo <quic_kvalo@quicinc.com>,
-	Sasha Levin <sashal@kernel.org>,
-	kvalo@kernel.org,
-	jjohnson@kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.8 22/30] wifi: ath12k: fix the problem that down grade phy mode operation
-Date: Mon, 27 May 2024 10:13:31 -0400
-Message-ID: <20240527141406.3852821-22-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240527141406.3852821-1-sashal@kernel.org>
-References: <20240527141406.3852821-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jC3iBprP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716819304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KKccOQIZycQoZBPSPGMUHOGUVheMa94LVY3B/d+1+Zo=;
+	b=jC3iBprPu092b9YbOMD9gV9Jlya5YRAlIVEy6sdF0Kpyxk4tSJp4iYtvHItcX3bcECWsFr
+	hy4zDczlhVuAr9wl446GDkSc6auNbeuw1/KaGWZ0JRruEpIMDjMtNXft5QIJJurVvSPRkM
+	xRJEmXvIXeeWsGcxfc8Hr7TysYNIfto=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-387-spO2U6whOJWTtFQD_qaNog-1; Mon,
+ 27 May 2024 10:15:01 -0400
+X-MC-Unique: spO2U6whOJWTtFQD_qaNog-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C284C1C0512D;
+	Mon, 27 May 2024 14:15:00 +0000 (UTC)
+Received: from t490s.redhat.com (unknown [10.39.192.209])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 595A11C00047;
+	Mon, 27 May 2024 14:14:58 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Subject: [PATCH v1 0/6] mm: page_type, zsmalloc and page_mapcount_reset()
+Date: Mon, 27 May 2024 16:14:48 +0200
+Message-ID: <20240527141454.113132-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.11
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-From: Lingbo Kong <quic_lingbok@quicinc.com>
+Wanting to remove the remaining abuser of _mapcount/page_type along with
+page_mapcount_reset(), I stumbled over zsmalloc, which is yet to be
+converted away from "struct page" [1].
 
-[ Upstream commit bf76b144fe53c7f0de9e294947d903fc7724776f ]
+Unfortunately, we cannot stop using the page_type field in zsmalloc code
+completely for its own purposes. All other fields in "struct page" are
+used one way or the other. Could we simply store a 2-byte offset value
+at the beginning of each page? Likely, but that will require a bit more
+work; and once we have memdesc we might want to move the offset in there
+(struct zsalloc?) again.
 
-Currently, when using WCN7850 or QCN9274 as AP, ath12k always performs down
-grade phy mode operation regardless of whether the firmware supports EHT
-capability or not and then vdev will start in HE mode. When stations that
-support EHT capability try to connect to the AP, the AP will set phy mode
-to EHT after receiving the association request packet, and then send
-WMI_PEER_ASSOC_CMDID command to firmware, AP’s firmware will crash.
+... but we can limit the abuse to 16 bit, glue it to a page type that
+must be set, and document it. page_has_type() will always successfully
+indicate such zsmalloc pages, and such zsmalloc pages only.
 
-This is because when the ath12k_mac_copy_sband_iftype_data() function
-handles EHT capability, it does not copy the EHT capability into the
-iftype[band][type] array according to the interface type. So, interface
-type should not be used as an index to get eht_cap in
-ath12k_mac_check_down_grade_phy_mode() function.
+We lose zsmalloc support for PAGE_SIZE > 64KB, which should be tolerable.
+We could use more bits from the page type, but 16 bit sounds like a good
+idea for now.
 
-To address this issue, use types_mask to select the eht_cap in
-ath12k_mac_check_down_grade_phy_mode() function.
+So clarify the _mapcount/page_type documentation, use a proper page_type
+for zsmalloc, and remove page_mapcount_reset().
 
-This patch affects QCN9274 and WCN7850 because they have the same issue.
+Survived a couple of days with the built bots and my cross-compile
+attempts. Briefly tested with zram on x86-64.
 
-Hostapd log:
-wlo1: STA 02:03:7f:37:12:34 IEEE 802.11: Could not set STA to kernel driver
+[1] https://lore.kernel.org/all/20231130101242.2590384-1-42.hyeyoo@gmail.com/
 
-Kernel log:
-[270894.816076] ath12k_pci 0000:03:00.0: failed to send WMI_PEER_SET_PARAM cmd
-[270894.816111] ath12k_pci 0000:03:00.0: failed to setup peer SMPS for vdev 0: -108
-[270894.816122] ath12k_pci 0000:03:00.0: Failed to associate station: 02:03:7f:37:12:34
-[270894.843389] ieee80211 phy5: Hardware restart was requested
-[270894.843517] ath12k_pci 0000:03:00.0: failed to lookup peer 02:03:7f:37:12:34 on vdev 0
-[270894.843616] ath12k_pci 0000:03:00.0: failed to send WMI_PEER_DELETE cmd
-[270894.843650] ath12k_pci 0000:03:00.0: failed to delete peer vdev_id 0 addr 02:03:7f:37:12:34 ret -108
-[270894.843663] ath12k_pci 0000:03:00.0: Failed to delete peer: 02:03:7f:37:12:34 for VDEV: 0
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.0.1-00029-QCAHKSWPL_SILICONZ-1
+v1 -> v2:
+ * Rebased to v6.10-rc1
+ * "mm: update _mapcount and page_type documentation"
+  -> Exchange members and fixup doc as suggested by Mike
+ * "mm: allow reuse of the lower 16bit of the page type with an actual
+    type"
+  -> Remove "highest bit" comment, fixup PG_buddy, extend description
+ * "mm/zsmalloc: use a proper page type"
+  -> Add and use HAVE_ZSMALLOC to fixup compilcation
+  -> Fixup BUILD_BUG_ON
+  -> Add some VM_WARN_ON_ONCE(!PageZsmalloc(page));
+ * "mm/mm_init: initialize page->_mapcount directly
+    in __init_single_page()"
+  -> Fixup patch subject
 
-Signed-off-by: Lingbo Kong <quic_lingbok@quicinc.com>
-Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
-Link: https://msgid.link/20240425083837.5340-1-quic_lingbok@quicinc.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath12k/mac.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+David Hildenbrand (6):
+  mm: update _mapcount and page_type documentation
+  mm: allow reuse of the lower 16 bit of the page type with an actual
+    type
+  mm/zsmalloc: use a proper page type
+  mm/page_alloc: clear PageBuddy using __ClearPageBuddy() for bad pages
+  mm/filemap: reinitialize folio->_mapcount directly
+  mm/mm_init: initialize page->_mapcount directly in
+    __init_single_page()
 
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index b965fc46ad89a..d67ee0312c1d9 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -5911,14 +5911,24 @@ ath12k_mac_check_down_grade_phy_mode(struct ath12k *ar,
- 				     enum nl80211_band band,
- 				     enum nl80211_iftype type)
- {
--	struct ieee80211_sta_eht_cap *eht_cap;
-+	struct ieee80211_sta_eht_cap *eht_cap = NULL;
- 	enum wmi_phy_mode down_mode;
-+	int n = ar->mac.sbands[band].n_iftype_data;
-+	int i;
-+	struct ieee80211_sband_iftype_data *data;
- 
- 	if (mode < MODE_11BE_EHT20)
- 		return mode;
- 
--	eht_cap = &ar->mac.iftype[band][type].eht_cap;
--	if (eht_cap->has_eht)
-+	data = ar->mac.iftype[band];
-+	for (i = 0; i < n; i++) {
-+		if (data[i].types_mask & BIT(type)) {
-+			eht_cap = &data[i].eht_cap;
-+			break;
-+		}
-+	}
-+
-+	if (eht_cap && eht_cap->has_eht)
- 		return mode;
- 
- 	switch (mode) {
+ drivers/block/zram/Kconfig |  1 +
+ include/linux/mm.h         | 10 ----------
+ include/linux/mm_types.h   | 33 ++++++++++++++++++++++-----------
+ include/linux/page-flags.h | 23 +++++++++++++++--------
+ mm/Kconfig                 | 10 ++++++++--
+ mm/filemap.c               |  2 +-
+ mm/mm_init.c               |  2 +-
+ mm/page_alloc.c            |  6 ++++--
+ mm/zsmalloc.c              | 29 +++++++++++++++++++++++++----
+ 9 files changed, 77 insertions(+), 39 deletions(-)
+
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
 -- 
-2.43.0
+2.45.1
 
