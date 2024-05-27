@@ -1,96 +1,125 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857A916D332
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD0D16D4D4;
+	Mon, 27 May 2024 14:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716820687; cv=none; b=KgdYtCTxLFuBW4OtEABSQCkcUAnTMKa4l7KSkYG6yiPtEWe9Bid/loKcBBSTvIF+tlKsbc+vQWCpLrHlWLO/7f++GK7VTNzVfhwxrYtGB27U7ncyWiMVYNYDA4zAYZEgj9GCrk7SbjINN93bvTk6SujEIE2xJTr6LWy1xXGFszo=
+	t=1716820705; cv=none; b=BYe4aGTBgivPvfbJGUsTgpDluJJeZy2usHtVHaJ8sME4T3rskAb13heXHa90dmLBs7vJ0CR6UQR1jRwMwJwC2CAkiaYffa7z16btri9Tgu8gMsKgVZHt4P5d7oHea+Hc1v6H7w7r9Z/gj5WO+GBgusjlZ0UtTQdQaOY/erF+j+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716820687; c=relaxed/simple;
-	bh=TsORAf+30DK49YwxeDsXCfFaQYfYRcUm4oGKDiMwiIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UOMgYYVB1BzS8n5O13rODmKI3sx9mBR1MgZ4ZA9BEs1LMtrhP1eSr0HFGoD2i1yUCqzjcHUCrlDoN4WBOkHRB3PQvjw/PKCbE/si4JpSp/3ZwRcZfTmHg9XtRFMbhecpjApvRS6ZBdGxRdKvJiqAw+adftyINIgORNslv/qAo88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DPuHgg+4; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716820705; c=relaxed/simple;
+	bh=LYrxo21W1bsyvjfXuzeaTk8JC1rRC2D0zdpW+2zRoSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DOdyaXG/Xm2Mbq6uNY3qyY0VfbY/BgJB+v0ttGXEkrrzaMuWt5TSLsK9bctc608H14Z5OUnBmY/jSnXhF5LVz/9TQivUzcnki874KlvC3O01kEIkJTj6Yxlq2oRZcAM2+lFBS5zTLq/sYvEiTpM2e8rz3GQ517I+4RfWivMnKgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ql3U8QUD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DPuHgg+4"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-df7722171bcso3421580276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:38:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716820684; x=1717425484; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TsORAf+30DK49YwxeDsXCfFaQYfYRcUm4oGKDiMwiIg=;
-        b=DPuHgg+4KYNWgq7fqY/iFCm3R1+zkrtT3WVhwz5XfVtHmbGcdwr1y7ltnmbWu74aev
-         f8t6wAdtq3CMWCgh/1UfGv65PaDwGHiQuuz7qO0JNXLaALFq7zVQhnB1kNnkTV9PUmmu
-         M9BL9m+WL0VE9Qz8PSgmkY3WpbvKe8oj+9pnRsnwmMlmuD/h7VtZRDbgWfbC78LHY4qO
-         W2j2+JPRWk1zDKAYz1QcLP0cXJ59RTEKX7kod+RtkWxL217Ut1dc3w7s94HKyhZg58uh
-         wiTZTJyWvjppGdncahdFWW189eVr4qDXHVmavrzQHqqAI/4tPNeRlfFDeJow4DuOstRF
-         FEyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716820684; x=1717425484;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TsORAf+30DK49YwxeDsXCfFaQYfYRcUm4oGKDiMwiIg=;
-        b=stgiKC7Vy7xQvFHixFIuuXlJPUsmUz+hRkvh7W+ubpKEnRSyysVNRxsaAYgCBZ79p1
-         T+uyc7KowaVluSbPKUieSqkhc44Q36E5XORQpPmd//3chhYmdUChxDQpGQe+UvNZqPXa
-         x8hhxzA9IylEjxqN30cNaDasvR72+r8S1aYxf2EvFCKmlVncoGWoABde35iUOeAW/3pN
-         Z72A3F4TpG1DEXSqPExBX1tTQvrqGowcM+6572n+cM/3oPo/7sMXfuWTMZKejlWYgOVL
-         n4kGgWiOsqpmH9pMjPO2GVLpXmaiinMkCBgB41lLXrVz1CqS/DNozWmKmOsnUwM1I88G
-         2fAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTlLJa1lm55YaYbWYGwuZG+QcTQNbqMStEhWVC2rRuKiAqCYUCtZovhKrzeZzaTFazw3xvIxaC7r21JCeOnsG8nuEGzOtCxPrEyqEH
-X-Gm-Message-State: AOJu0YwZ9j/tbwv90gtTTEpTCe4agve+rn3i+MIUInlkGIziTdsLLAeE
-	+JwesIh9t2PhqSagylgHEloMQjhEDXwQUYri8fFvvsug2/xOl6eGfw7MR5zXDZgbqvr5yjboiNO
-	O1xinicbiRBl+Yk/qi8NVeR2XhmcQcTCY0HsuIA==
-X-Google-Smtp-Source: AGHT+IEwTZzUZTnOFyK1J+Cmkx0U06fySsAKy1c+9/Zyl9b38yE9jX5xO+y6/SfRx/NvtCMT1w5cN419DuraUe6mJAc=
-X-Received: by 2002:a25:ab8a:0:b0:df4:df29:bcc6 with SMTP id
- 3f1490d57ef6-df7721a2897mr8786729276.31.1716820684554; Mon, 27 May 2024
- 07:38:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ql3U8QUD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFF29C32781;
+	Mon, 27 May 2024 14:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716820704;
+	bh=LYrxo21W1bsyvjfXuzeaTk8JC1rRC2D0zdpW+2zRoSU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ql3U8QUDFQX5VUUIvPoFuIKCS7Xuc+wyXk4E60IlPLYYE4ZO0vLXIT5C+oUPjp9mZ
+	 L7Kzv8UkvZ2YMK7FPVrcNwtjvg+OgGeb+NnIrCLre1pmds+PjbMp18qniWCgZM5xe5
+	 8B4J4dtDJrhakp5vSNn7+HId5oNT1yzXunGmqVUO1fzqkLZCEkvkKUldznq5+Q+Eea
+	 GJwva9ipWej7AH/ZeJT3U7TbgX2u6U7uUsLVsr1N1Vc2qAyxoeyZXKlsITobvYUr2x
+	 1FLkq4+kHcbcIL1+8cT2JeJc/yKbZU0GStCBqqrDBmUaW9SK6TywEljZXkiQEMsiQF
+	 qM87b9M7Pt83Q==
+Message-ID: <4f4db483-6042-4f85-9c64-8d3ad9290506@kernel.org>
+Date: Mon, 27 May 2024 16:38:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1715396125-3724-1-git-send-email-shengjiu.wang@nxp.com>
- <CAPDyKFp4V8f0iyeRASSEu4YaCSz0m56=8ssBJ9ogSvqG1dzMZA@mail.gmail.com> <a04b3939-081a-49e0-a063-5b50d3321ca7@sirena.org.uk>
-In-Reply-To: <a04b3939-081a-49e0-a063-5b50d3321ca7@sirena.org.uk>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 27 May 2024 16:37:28 +0200
-Message-ID: <CAPDyKFrhvB9bXiuQS6QKd28S2tOu7WJ-48qHP7KEBTpE8SSi+Q@mail.gmail.com>
-Subject: Re: [PATCH v3] pmdomain: imx: gpcv2: Add delay after power up handshake
-To: Mark Brown <broonie@kernel.org>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, heiko@sntech.de, u.kleine-koenig@pengutronix.de, 
-	geert+renesas@glider.be, rafael@kernel.org, linux-pm@vger.kernel.org, 
-	abelvesa@kernel.org, peng.fan@nxp.com, mturquette@baylibre.com, 
-	sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, 
-	kernel@pengutronix.de, festevam@gmail.com, imx@lists.linux.dev, 
-	shengjiu.wang@gmail.com, frank.li@nxp.com, mkl@pengutronix.de, 
-	linus.walleij@linaro.org, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: i2c: gpio: Add 'transition-delay-ms'
+ property
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>,
+ Peter Rosin <peda@axentia.se>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Peter Korsgaard <peter.korsgaard@barco.com>, Wolfram Sang <wsa@kernel.org>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca
+References: <20240527113908.127893-1-bastien.curutchet@bootlin.com>
+ <20240527113908.127893-2-bastien.curutchet@bootlin.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240527113908.127893-2-bastien.curutchet@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 27 May 2024 at 14:49, Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, May 21, 2024 at 12:22:41PM +0200, Ulf Hansson wrote:
-> > On Sat, 11 May 2024 at 05:15, Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
->
-> > > The BLK-CTL module needs to add delay to wait for a handshake request finished.
-> > > For some BLK-CTL module (eg. AudioMix on i.MX8MP) doesn't have BUS clk-en
-> > > bit, it is better to add delay in this driver, as the BLK-CTL module doesn't
-> > > need to care about how it is powered up.
->
-> > Sorry for the delay!
->
-> > Applied for fixes, thanks!
->
-> I see this is in -next but mainline is currently broken for i.MX8
-> platforms - could we get it in for -rc2?
+On 27/05/2024 13:39, Bastien Curutchet wrote:
+> The i2c-gpio-mux can be used to describe a multiplexer built upon
+> several i2c isolators having an enable pin (such as LTC4310). These
+> isolators can need some time between their enable pin's assertion and
+> the first i2c transfer.
+> 
+> Add a 'transition-delay-ms' property that indicates the delay to be
+> respected before doing the first i2c transfer.
+> 
 
-Yes, I am preparing a pull-request as of right now!
+That's quite limited hardware description, comparing to cover letter.
+Please provide full description here, not in cover letter. This is the
+binding, so the hardware part.
 
-Kind regards
-Uffe
+Anyway, this does not look like property of mux itself. If there is no
+isolator, the mux would work fine, right?
+
+Then why you are not adding this property to every possible bus and I2C
+controller? I2C isolator could be placed there as well.
+
+So just like RC binding, that's not a property of I2C mux. Maybe this
+fits usage of GPIO RC / delay binding.
+
+Best regards,
+Krzysztof
+
