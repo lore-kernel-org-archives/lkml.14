@@ -1,121 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5955415DBC1;
-	Mon, 27 May 2024 13:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E65515DBC1;
+	Mon, 27 May 2024 13:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716815839; cv=none; b=eqm4Tag0d5xGIXdtOAAAhLUxVmXP1pinxQU0qoKBzZBS66ym4j2zYiQHn128dd0+3mEOTbpazUj6DHgNRh0jsVUfQvPfwxn1xrgt8GkLmHxF2YdoHstEV3BqwAJHrGi4cR9vDT7CSUdSfw0XJX2sp8B9ML260FycLJ4nT4E91y4=
+	t=1716815846; cv=none; b=Xv5zJM1fnZzUo8muBySoKxo7iJJGExDJV8OJuOf4Mc6xAUkkB8EIvK75f/knBl3Z71BdkAsXjgWDPrmyjMr4TuKdqksoBDM4RuIrPUJaGIxLhD/4ghbdk1nhVs4PYJkAoQVk5+2KRcv7JjQS/WZrcfQo+sPa+pEl5jm+/MeF+AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716815839; c=relaxed/simple;
-	bh=mbc7e5Aw51Pj7Y7uXh0+EUTmMjHOr9lpqOQGt0LJNj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W4ZV2KNaEIUaB0qmguRRlYGgysHCQvP1rqZqFfLFzZ6F9ltS2L33ahAUX5hy/lCJH6GkeM38sw0scDyAOCXGIhNFvNI6JsJqqozKEjn85z64226EoVpM1QiXMhzI/yzfPAmr4m0Z53jLkga2yi2b0WH91NKhpeLLszMpRCxgdvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JiDXrb77; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JiDXrb77"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6587C2BBFC;
-	Mon, 27 May 2024 13:17:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716815838;
-	bh=mbc7e5Aw51Pj7Y7uXh0+EUTmMjHOr9lpqOQGt0LJNj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JiDXrb77d1bgd6e2DuJZv7zycxfNAaNgJiQqhZ/Tz8eWQhtdmsKbvLpZ9wMsrfpgC
-	 H/snoGkHgh5YBLptJ2cBfzz3ObHLDFUUObg5FqU3xaVNYBo7VLsEeTwyfJdDO4UnoH
-	 HExGdKZoJLJ/HP8qRau/9qZcJjyc1lOIQObo6zU3zajkvHGuXujNA3jtNvlXLZIjc4
-	 dMdbeo+88BXg+/AO4gumXZCatcHMXtaOL/EFSOPSLpqEFcJmfM8wJaRpfxkAAplwB+
-	 fdUMuqIoxiTYeSgDizJ0c+EjYHHP8IqNU+MepsHIRzxm150fcnfEylDlZq53fviMYM
-	 EEhy/wWYRdNMQ==
-Date: Mon, 27 May 2024 15:17:13 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Aleksa Sarai <cyphar@cyphar.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Message-ID: <20240527-raufen-skorpion-fa81805b3273@brauner>
-References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
- <ZlMADupKkN0ITgG5@infradead.org>
- <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
- <ZlRy7EBaV04F2UaI@infradead.org>
- <20240527-hagel-thunfisch-75781b0cf75d@brauner>
+	s=arc-20240116; t=1716815846; c=relaxed/simple;
+	bh=P9Sp2M8DvUMb5rgeT8Yrm7zVrQWRZ2B/cS+bWosHL4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kLpKDvei0nNPJsBDUiwoe6HIyUxyhkgL3iglTOvaoJv6fumsjxVV6OEF13+V+xdpuMfdD8Cb23Z9Rro8fXfrMbyR8o+8eiO4QHAskzVlKj9fPjjostF9SfmhPAXF9jkwsN/spdpVssJsaot5kAGkyhoniehE8xI/t0pkD3hnAeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vnwj81qCNz9v7Hm;
+	Mon, 27 May 2024 20:59:56 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 884761403D2;
+	Mon, 27 May 2024 21:17:10 +0800 (CST)
+Received: from [10.206.134.102] (unknown [10.206.134.102])
+	by APP1 (Coremail) with SMTP id LxC2BwCXjhfJh1RmaUIFCQ--.43989S2;
+	Mon, 27 May 2024 14:17:09 +0100 (CET)
+Message-ID: <d0bc38bc-e089-48d9-80a5-aafa54e98595@huaweicloud.com>
+Date: Mon, 27 May 2024 15:16:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240527-hagel-thunfisch-75781b0cf75d@brauner>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/memory-model: Document herd7 (internal)
+ representation
+To: Andrea Parri <parri.andrea@gmail.com>, stern@rowland.harvard.edu,
+ will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+ npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+ luc.maranget@inria.fr, paulmck@kernel.org, akiyks@gmail.com,
+ dlustig@nvidia.com, joel@joelfernandes.org
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ hernan.poncedeleon@huaweicloud.com
+References: <20240524151356.236071-1-parri.andrea@gmail.com>
+ <ZlC0IkzpQdeGj+a3@andrea>
+From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+In-Reply-To: <ZlC0IkzpQdeGj+a3@andrea>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:LxC2BwCXjhfJh1RmaUIFCQ--.43989S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY67AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aV
+	CY1x0267AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
+	CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxG
+	xcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
+	xVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
+	AFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
+	cIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU122NtUUUUU==
+X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
 
-On Mon, May 27, 2024 at 02:29:02PM +0200, Christian Brauner wrote:
-> On Mon, May 27, 2024 at 04:47:56AM -0700, Christoph Hellwig wrote:
-> > On Sun, May 26, 2024 at 12:01:08PM -0700, Aleksa Sarai wrote:
-> > > The existing interface already provides a mount ID which is not even
-> > > safe without rebooting.
-> > 
-> > And that seems to be a big part of the problem where the Linux by handle
-> > syscall API deviated from all know precedence for no good reason.  NFS
-> > file handles which were the start of this do (and have to) encode a
-> > persistent file system identifier.  As do the xfs handles (although they
-> > do the decoding in the userspace library on Linux for historic reasons),
-> > as do the FreeBSD equivalents to these syscalls.
-> > 
-> > > An alternative would be to return something unique to the filesystem
-> > > superblock, but as far as I can tell there is no guarantee that every
-> > > Linux filesystem's fsid is sufficiently unique to act as a globally
-> > > unique identifier. At least with a 64-bit mount ID and statmount(2),
-> > > userspace can decide what information is needed to get sufficiently
-> > > unique information about the source filesystem.
-> > 
-> > Well, every file system that supports export ops already needs a
-> > globally unique ID for NFS to work properly.  We might not have good
-> > enough interfaces for that, but that shouldn't be too hard.
+
+
+Am 5/24/2024 um 5:37 PM schrieb Andrea Parri:
+>> - While checking the information below using herd7, I've observed some
+>>    "strange" behavior with spin_is_locked() (perhaps, unsurprisingly...);
+>>    IAC, that's also excluded from this table/submission.
 > 
-> I see not inherent problem with exposing the 64 bit mount id through
-> name_to_handle_at() as we already to expose the old one anyway.
+> For completeness, the behavior in question:
 > 
-> But I agree that it is useful if we had the guarantee that file handles
-> are unique in the way you describe. As it currently stands that doesn't
-> seem to be the case and userspace doesn't seem to have a way of figuring
-> out if the handle provided by name_to_handle_at() is indeed unique as
-> you describe and can be reliably passed to open_by_handle_at().
+> $ cat T.litmus
+> C T
 > 
-> Yes, we should fix it but that's really orthogonal to the mount id. It
-> is separately useful and we already do expose it anyway.
+> {}
+> 
+> P0(spinlock_t *x)
+> {
+> 	int r0;
+> 
+> 	spin_lock(x);
+> 	spin_unlock(x);
+> 	r0 = spin_is_locked(x);
+> }
+> 
 
-Put another way, name_to_handle_at(2) currently states:
+Since 0 executions are generated, possibly herd things there's a deadlock.
 
-   Obtaining a persistent filesystem ID
-       The mount IDs in /proc/self/mountinfo can be reused as
-       filesystems are unmounted and mounted.  Therefore, the mount ID
-       returned by name_to_handle_at()  (in  *mount_id)  should  not  be
-       treated  as  a persistent identifier for the corresponding
-       mounted filesystem.  However, an application can use the
-       information in the mountinfo record that corresponds to the mount
-       ID to derive a persistent identifier.
+Could be either a problem with the deadlock definition, or do you need 
+to initialize the lock somehow?
 
-       For example, one can use the device name in the fifth field of
-       the mountinfo record to search for the corresponding device UUID
-       via the symbolic links in /dev/disks/by-uuid.   (A  more
-       comfortable  way  of obtaining the UUID is to use the libblkid(3)
-       library.)  That process can then be reversed, using the UUID to
-       look up the device name, and then obtaining the corre‐ sponding
-       mount point, in order to produce the mount_fd argument used by
-       open_by_handle_at().
-
-Returning the 64bit mount id makes this race-free because we now have
-statmount():
-
-u64 mnt_id = 0;
-name_to_handle_at(AT_FDCWD, "/path/to/file", &handle, &mnt_id, 0);
-statmount(mnt_id);
-
-Which gets you the device number which one can use to figure out the
-uuid without ever having to open a single file (We could even expose the
-UUID of the filesystem through statmount() if we wanted to.).
