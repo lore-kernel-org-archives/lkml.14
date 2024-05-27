@@ -1,162 +1,111 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1246CDB1;
-	Mon, 27 May 2024 09:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AA943AB5
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716801059; cv=none; b=Wze2Rp6CNf5U5kfNa0TSW83jP9KCzBv1/JN+D0u7vUOgCfVRbOIC/kWCzpb6uLiahBtRiYjezYUCiOsKLkQ5HAw9lfi4Riobje348V6rLtiNXDJZWZml52L5Fhe1rj7Rg4bQ/g3TKvc+eX6ye0lJDOuF+gmHDV53f28NiNuaTr0=
+	t=1716801094; cv=none; b=XJ9gNQQv4iWcOalweLKpHaLzPpPg/x9GVYpO+qDSMn/5dS/JNioe8qLNNZNqsPE6ISIGx/Kp0IrwEi21eauJH+OZosD61xKkb19vPRs+wwA032A/AgeFSH7s7v/IeMEfUgab595/Rcg33aqdCz8tzXfhzPNqKIL0PUnlCUVU4Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716801059; c=relaxed/simple;
-	bh=hna6wiJn5J3YlKLz1DIYbTqakeYLBOtj6qBnzA4Yaic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k+hL1w7SbO5L2j1+ukNfPf8DlpWXXG59h96sguVzeClEI9AtiIT3+5reVVaam1YOxRIZUoO6aWHXqXJ6cw2/hgQPeY+is5F8BbLK6F8VYx4QjvgFRKPwQrPv94HPf/DGwtd1vlLq9CjspSyOUFu4cDJhs3fUDjYECgWXULDf+Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YyTu/wxD; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1716801094; c=relaxed/simple;
+	bh=FX8CUXOjKuY0njjjxY7QGNcRoFXxTO7KWKilkbWSobE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aLRgogIdld1PuMfRbaerTPRWw1yQtKpWEcO2LxN6hBdkYXfj0IlitgqXfMHvNn2ovqB+PAXHX7UY8WfGctViHp/LraYKprVlX8ltEwYN44Op94rZqwR1e9RsASCEBTxvPG9twsVMK4NHrcPF1sFTMFpKuQQedMptLyz4LsMBR3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BDFhN6g1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YyTu/wxD"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8F9A940E01E8;
-	Mon, 27 May 2024 09:10:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id KohNzWZ-0NVO; Mon, 27 May 2024 09:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1716801045; bh=9w6qbzhl3mSC9BIHJao+s6F+3dipO5EQO7O9UXzK/zI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YyTu/wxDSCSpg3L0kZMPZppqT/G+B//WNjrOLn+PjqrbbMgu9dR0NVDH28KuTRxVm
-	 C7MPk9kDlKbxXo6Ozp9t9p5hAuS8WRuOaZA1NuVCjdqnqmhKiV0yYcDCJ0exzbHRRO
-	 NugkfCcU9KYfpFbohF7s7CMfvrAqH+XMC2Qa4YQOnPe563GpTIkLFD6Iz+fgd7aUTG
-	 2x6WelBxPxHgSP919X3hCV5laUPRAippv0q/HRbtzWnsOkpbVWXnzL8hr2P2FhYWeD
-	 KvHyKFskhgtz2kXi6tKVL+/y6p0nnCdEkMQBnBUsXZhGQiEfJPTRx3LHyxKtadwvjU
-	 c1qdGPpc6DnFOXMssojWCwGrOUZcuHDI53O8UQgthz9LELy2OdCglqDqSs1ACih7kI
-	 7JMSRUOvGesXZmn/q+fnw3PrQBEsX2yfhW01zPT1nv+gM7PwIyNu20y/akRoRYfs4X
-	 uGXp1gbnlDlmjVgzgf5KmIB7G543KcpaNBCxy8SbrUsPcqpIEAwrTUyoHZ2mV2RwEz
-	 ezqAhf9DxvnEQ1HrjhsLxFJOdDQe+wYz8KqRlQILtCwm5S/rQiud3KZyr1AIQpyNWj
-	 4NTDdQnFD94AOADNehNN7feDr+OnRr6lqEWqW8DTwRTvhPgvxo1M1S1+xfAqfdt/RK
-	 6CLE1az6qWrGmVfm9qW8JuDs=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9615A40E016A;
-	Mon, 27 May 2024 09:09:58 +0000 (UTC)
-Date: Mon, 27 May 2024 11:09:51 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
-	"gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Message-ID: <20240527090951.GAZlRN3wh9107DSfGK@fat_crate.local>
-References: <663d3e58a0f73_1c0a1929487@dwillia2-xfh.jf.intel.com.notmuch>
- <20240509215147.GBZj1Fc06Ieg8EQfnR@fat_crate.local>
- <663d55515a2d9_db82d2941e@dwillia2-xfh.jf.intel.com.notmuch>
- <20240510092511.GBZj3n9ye_BCSepFZy@fat_crate.local>
- <663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240511101705.GAZj9FoVbThp7JUK16@fat_crate.local>
- <20240517121554.000031d4@Huawei.com>
- <20240517124418.00000b48@Huawei.com>
- <20240521080621.GBZkxV_ZWnbbrq-yV_@fat_crate.local>
- <20240522104017.00003904@Huawei.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BDFhN6g1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716801091;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FX8CUXOjKuY0njjjxY7QGNcRoFXxTO7KWKilkbWSobE=;
+	b=BDFhN6g1p7ud4bYJbaMoYICYSG48ffPH/zWWdm71pLXP6yAfAeDaYqR2IZm2e7dSGJVP4C
+	w+CVA2Jnrueerm581jiUXYLN/FPcV6C+vI4fAw2ZHyrmAiwBfe2x/WEK12nIaQ+llunfmv
+	hXV6zP2mTutmikL/cBPOE8OVwAAH+hA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-649-B3alxq2XOxyv5rwWc__ZgQ-1; Mon, 27 May 2024 05:11:30 -0400
+X-MC-Unique: B3alxq2XOxyv5rwWc__ZgQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42111cf8bfbso1043085e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:11:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716801089; x=1717405889;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FX8CUXOjKuY0njjjxY7QGNcRoFXxTO7KWKilkbWSobE=;
+        b=LYtMhfK9sSmU90Vphtb6eC+awgTOtA4A+n0VQpGGGuAnOcbpEnyd+oJ2sCOBggRaYC
+         lveShv4qX1ze2i5rHgv0+PBIyv7ZK1r8sZZM41AuX658LTh0EbTVGfmPSBmRl89XWspe
+         KLVudJek9dNdihjEoPE9unsEbzjWpNeWrwGI7XKrZwpriNeQKT/5Rg+2oaECqH9LvedF
+         nqBS0t5R2T0wKQUNmYBaF9KzHr+c6pNu8zXSpDzy7MnvEIZ/aMXBKZlda/GehsUDIumr
+         3fJ0cNhlDsUr8Z50sLPrl1u5asx/5JcRAk51NOYwOTk+/mVUwjQH1qRSK3U1xI2DXG4z
+         VMTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXYS4Dn1ChIWewAFdh1TC9px+wMQ0KXsXX0z3uQWbRdUM073lbP6knaEBC1tn8ReYoMNHIXDPuPkOXQIiOPpqpIvpTx9pq9IZIIEHh
+X-Gm-Message-State: AOJu0YzKY5LanhMEafTvvYorf3FCVtiish4k5WfkJqqx29g2jG7fXpcm
+	a7kY01TDtmi+iAnN7cb0erDbnlMaMO+tY+bF4nQBoZnPIhOB82rJE0a4qBWi0KRi9xAanz1tsdv
+	1qI58d3K3/RCVxBWZaVCHP/3+nsp6UpV8MuF0QTphPw7pn7w7r1pDtHIST0Whrw==
+X-Received: by 2002:a05:600c:3c8e:b0:41c:a98:b217 with SMTP id 5b1f17b1804b1-42108a18d32mr73657905e9.4.1716801089042;
+        Mon, 27 May 2024 02:11:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEf9dprPL4bvNkNzDX6mG0B4lvF/NL9LfIb63/5RwgpuHNN1/UYkv9mKBT4/75V3nrk1uA1w==
+X-Received: by 2002:a05:600c:3c8e:b0:41c:a98:b217 with SMTP id 5b1f17b1804b1-42108a18d32mr73657725e9.4.1716801088497;
+        Mon, 27 May 2024 02:11:28 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3341:b094:ab10:29ae:cdc:4db4:a22a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42108966682sm102307015e9.2.2024.05.27.02.11.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 02:11:28 -0700 (PDT)
+Message-ID: <9bb0e47adf20c5524b45712fc92a37f2dae568be.camel@redhat.com>
+Subject: Re: [PATCH v2] net/ncsi: Fix the multi thread manner of NCSI driver
+From: Paolo Abeni <pabeni@redhat.com>
+To: DelphineCCChiu <delphine_cc_chiu@wiwynn.com>, patrick@stwcx.xyz, Samuel
+ Mendoza-Jonas <sam@mendozajonas.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 27 May 2024 11:11:25 +0200
+In-Reply-To: <20240522012537.2485027-1-delphine_cc_chiu@wiwynn.com>
+References: <20240522012537.2485027-1-delphine_cc_chiu@wiwynn.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240522104017.00003904@Huawei.com>
 
-On Wed, May 22, 2024 at 10:40:17AM +0100, Jonathan Cameron wrote:
-> Where I've used the symlink approach in the past, it has always
-> been about keeping a legacy interface in place, not where I'd start
-> with something new.   Hence I think this is a question of how far
-> we 'breakaway' from existing edac structure.
+Hi,
 
-Yes, since we're designing this anew, we can do whatever we prefer. So
-let's do the standard driver model stuff.
+On Wed, 2024-05-22 at 09:25 +0800, DelphineCCChiu wrote:
+> Currently NCSI driver will send several NCSI commands back to back withou=
+t
+> waiting the response of previous NCSI command or timeout in some state
+> when NIC have multi channel. This operation against the single thread
+> manner defined by NCSI SPEC(section 6.3.2.3 in DSP0222_1.1.1)
+>=20
+> According to NCSI SPEC(section 6.2.13.1 in DSP0222_1.1.1), we should prob=
+e
+> one channel at a time by sending NCSI commands (Clear initial state, Get
+> version ID, Get capabilities...), than repeat this steps until the max
+> number of channels which we got from NCSI command (Get capabilities) has
+> been probed.
+>=20
+> Signed-off-by: DelphineCCChiu <delphine_cc_chiu@wiwynn.com>
 
-However, there's also /sys/devices/system/edac/ so I don't know what the
-right thing to do there is. Are we supposed to put everything under
-/sys/bus/edac now and /sys/devices/system/edac is wrong now and should
-go away? Maybe we should talk to Greg first ... :)
-
-> This suggests the second option above, but I wanted to confirm as Shiju
-> and I read this differently.
-
-As said, we wanna do the new correct way of how a sysfs interface should
-look and leave the old one as it is.
-
-> Ok. There is an existing is the minimal sysfs existing interface but I'm
-> fine with ignoring it for now.
-
-Yes, we don't know who's even using it and why. That's why I'm very
-interested in how this new thing is going to be used so that we know
-what we're committing to supporting forever.
-
-> *much sympathy!*  As we ramp up more on this stuff, we'll try and
-> help out where we can.
-
-Always appreciated! :-)
-
-> Hopefully we all agree on a unified solution being the target.
-> 
-> Feels like we are converging. Now we are down to the details :)
-
-Yap.
+As noted by Jakub, this looks like a fix. Please include a suitable
+Fixes tag in the tag area and the target tree 'net' inside the subject
+prefix.
 
 Thanks!
 
--- 
-Regards/Gruss,
-    Boris.
+Paolo
 
-https://people.kernel.org/tglx/notes-about-netiquette
