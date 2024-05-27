@@ -1,40 +1,40 @@
 Received: from mail02.habana.ai (habanamailrelay.habana.ai [213.57.90.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37A015DBCB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAD615DBC7
 	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.57.90.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716811994; cv=none; b=PQ2yd8ayGyAHySKHxVCH0n9Udz1qI/3ZZuLcRw2yBadBw40Fvjr3yU0qHUOkLzUSTdAQ+RwHzN+kjYOZgs3P9+uTbxCU++zjVD+o6Aiyvu9kaRbBHsj8utejdp9WjZzOIichhKundUaf4t70mGcEZG4bTaQgA/hnoLufYdsZ/6k=
+	t=1716811994; cv=none; b=fu1P7VGlIYX/7VVQhOJ0CQwVGO84i/hwjy3tcSzS8YTJMbfuNDvhx/CEkaiBPdILXM8CxnTYvmwfl71Ak8btW/Q9QKEKU1mC9TvSivKBHTj3MpfaoIBAfyYDausNK99bkfbtWP5zq/6lUeO3qBlOhF6oSFxFBp1+cms1qv6qz6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716811994; c=relaxed/simple;
-	bh=hikixPhgw118twEP+21boqHR0BCJuA1UyHNIo4eFSHc=;
+	bh=6fkm+Ekorc42aQ0DgvCRfc8pbcF22Uheaaz/c06hl/o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Fsf09ArrBNzSORVmyy7oOgFeHFiCKRb09zSJRbVRWVHquq1GbQAYouncxjupDLkFZLGWBA35z+YOr5dSunAZ+rgh/Z7arwn7AZo8gt7LL6nOM2AWZIM6788XOvqdrDEJ6NCRnzxE+wz4Zha6xL9GG/Hw5FlqwaFepEsGNlrMvLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=fZHcM75B; arc=none smtp.client-ip=213.57.90.13
+	 MIME-Version; b=Xi8cUKB9Puw5LIM2GEijOxELy00sKaTFB3+QT317VLoH7j1ZAxF0L0MotA3tj6BRtHjYVO1ArbhUZThX+QKtbgGGOmZo4TJRY5sdB/rNBfnT2UKisp7UgLb2ZJ6EAwAtbZnhw+D4XlxUm+u2PwAERR6rdcTMqNxuSGSafv2E5WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=LcQCWYKU; arc=none smtp.client-ip=213.57.90.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="fZHcM75B"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="LcQCWYKU"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716811993; bh=hikixPhgw118twEP+21boqHR0BCJuA1UyHNIo4eFSHc=;
+	t=1716811993; bh=6fkm+Ekorc42aQ0DgvCRfc8pbcF22Uheaaz/c06hl/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fZHcM75BM/ZPCm5dogM9PnM2+U6VWsKfHNApocPn57lLGXJ8tUPoYjLT1F86ne5cr
-	 mEOtlWPuSo6frJzyxu3p8jU4NhvJpASqHThmvzrDpawGeN3riUTZ+YW8P95ddU4kmt
-	 VMYYDPnEmluzgrRQPDKLYCNsUe0C8UGa1np/60FHiKRBJYLGLsi0yOJEICtk5m8tYf
-	 oWQU7qildiZgUmLj0YfvGe66zMDKLz9crvlzbG4NhUFlZJSXBsqa29lUdW1VKs/VhD
-	 zF2tz5ULOMOzoTHx6+xnWogyd5u4mLIfrkz+m8hohlIxI4N7YxC5hw5yCWRd6PYV6L
-	 DlXsPryuK/8Uw==
+	b=LcQCWYKUKob8FxyRRMksHjTJjtqkXFFJhp0EEZg6JpkjOSenDkGStR7NJby89TSSW
+	 TZanMV8UbA1hd9R1uTK620Eodt+tA4htDm3++AatDc1Idwd/T5a9c+ecMIaVvDEQzM
+	 6OUfr9X5A+ubbdKNT5hJNMwaDCWF44tzGAreq4dO9r/fDNVI5YZdfuoOJnZNt2Ezxt
+	 xwtjGmr67clZlMO39sCnM+l6YHT4GSFHgonr1XWW6qpKog+M3hcpwVv9fAJK0ryIfo
+	 AebwE8OVcR7ZaAto8gIq2gQcS9APkf/mdB/5YdF0tLI1185ouPvO8nYq8t/55TyW7F
+	 r2/HVYSqr0qQg==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RCCuaw1921351;
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RCCuas1921351;
 	Mon, 27 May 2024 15:12:57 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Dani Liberman <dliberman@habana.ai>
-Subject: [PATCH 6/8] accel/habanalabs: separate nonce from max_size in cpucp_packet struct
-Date: Mon, 27 May 2024 15:12:52 +0300
-Message-Id: <20240527121254.1921306-6-obitton@habana.ai>
+Cc: Farah Kassabri <fkassabri@habana.ai>
+Subject: [PATCH 2/8] accel/habanalabs: check for errors after preboot is ready
+Date: Mon, 27 May 2024 15:12:48 +0300
+Message-Id: <20240527121254.1921306-2-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527121254.1921306-1-obitton@habana.ai>
 References: <20240527121254.1921306-1-obitton@habana.ai>
@@ -46,43 +46,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Dani Liberman <dliberman@habana.ai>
+From: Farah Kassabri <fkassabri@habana.ai>
 
-In struct cpucp_packet both nonce and data_max_size members are in an
-union overlapping each other. This is a problem as they both are used
-in attestation and info_signed packets.
-The solution here is to move the nonce member to a different union under
-the same structure.
+Driver should check and report any fatal errors detected by preboot,
+before it attempts to load the boot fit.
+Some errors may cause the driver to stop the boot process and mark
+the device as unusable.
+This check will allow the driver to fail and print the error reported
+by preboot and skip the time wasting attempt of trying to load the
+boot fit, which will fail due to the error.
 
-Signed-off-by: Dani Liberman <dliberman@habana.ai>
+Signed-off-by: Farah Kassabri <fkassabri@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- include/linux/habanalabs/cpucp_if.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/accel/habanalabs/common/firmware_if.c | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/habanalabs/cpucp_if.h b/include/linux/habanalabs/cpucp_if.h
-index 1ac1d68193e3..0913415243e8 100644
---- a/include/linux/habanalabs/cpucp_if.h
-+++ b/include/linux/habanalabs/cpucp_if.h
-@@ -859,9 +859,6 @@ struct cpucp_packet {
- 		 * result cannot be used to hold general purpose data.
- 		 */
- 		__le32 status_mask;
+diff --git a/drivers/accel/habanalabs/common/firmware_if.c b/drivers/accel/habanalabs/common/firmware_if.c
+index 886b3c07503d..6f0c40b12072 100644
+--- a/drivers/accel/habanalabs/common/firmware_if.c
++++ b/drivers/accel/habanalabs/common/firmware_if.c
+@@ -1482,7 +1482,7 @@ int hl_fw_wait_preboot_ready(struct hl_device *hdev)
+ {
+ 	struct pre_fw_load_props *pre_fw_load = &hdev->fw_loader.pre_fw_load;
+ 	u32 status = 0, timeout;
+-	int rc, tries = 1;
++	int rc, tries = 1, fw_err = 0;
+ 	bool preboot_still_runs;
+ 
+ 	/* Need to check two possible scenarios:
+@@ -1522,18 +1522,18 @@ int hl_fw_wait_preboot_ready(struct hl_device *hdev)
+ 		}
+ 	}
+ 
+-	if (rc) {
++	/* If we read all FF, then something is totally wrong, no point
++	 * of reading specific errors
++	 */
++	if (status != -1)
++		fw_err = fw_read_errors(hdev, pre_fw_load->boot_err0_reg,
++					pre_fw_load->boot_err1_reg,
++					pre_fw_load->sts_boot_dev_sts0_reg,
++					pre_fw_load->sts_boot_dev_sts1_reg);
++	if (rc || fw_err) {
+ 		detect_cpu_boot_status(hdev, status);
+-		dev_err(hdev->dev, "CPU boot ready timeout (status = %d)\n", status);
 -
--		/* random, used once number, for security packets */
--		__le32 nonce;
- 	};
- 
- 	union {
-@@ -870,6 +867,9 @@ struct cpucp_packet {
- 
- 		/* For Generic packet sub index */
- 		__le32 pkt_subidx;
-+
-+		/* random, used once number, for security packets */
-+		__le32 nonce;
- 	};
- };
+-		/* If we read all FF, then something is totally wrong, no point
+-		 * of reading specific errors
+-		 */
+-		if (status != -1)
+-			fw_read_errors(hdev, pre_fw_load->boot_err0_reg,
+-						pre_fw_load->boot_err1_reg,
+-						pre_fw_load->sts_boot_dev_sts0_reg,
+-						pre_fw_load->sts_boot_dev_sts1_reg);
++		dev_err(hdev->dev, "CPU boot %s (status = %d)\n",
++				fw_err ? "failed due to an error" : "ready timeout", status);
+ 		return -EIO;
+ 	}
  
 -- 
 2.34.1
