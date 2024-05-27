@@ -1,725 +1,381 @@
-Received: from mail02.habana.ai (habanamailrelay.habana.ai [213.57.90.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C0D15EFD8
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 11:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.57.90.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716810533; cv=none; b=lfYo8Rs50FlZLZlZfkRDkVTsfpUpRMyzCeacVxtGQkTujtk6wuxMWF4RpZ9o49DL7Zk9cmOuXwXT68l0XKlpwAy0/IYxdp8vNqZ7qwjDyyFzbxmZqZGkI/iijr6oRmVwljPp1wSgMNmui5tXB+EPLQK6zq38W4NiG828f7gtGkU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716810533; c=relaxed/simple;
-	bh=PJBEw7FnVPzIJklufwcaLQMQa3zl0cjZowAebR5IijA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jAJQLDAK9C04Z/o0BiCmqauTrXOuLgnd/BmrpkYG7Tu38WpYmUspTi7lpgIiWyCdQbahD9weBO3/5mL9hrOjCne9EwPDdLhDFntyjxtbUlOVrHLHZUebqDo5zU6tp1rrOfZUvGGJxBCtkcaQ+Dr5nqpfc/D1E7jUyy60iynflLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=b+3mZv9P; arc=none smtp.client-ip=213.57.90.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D056C15ECCA;
+	Mon, 27 May 2024 11:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716810543; cv=fail; b=TnxHzCm7/baZ9f+r3Pxip9y2EV+KSxdhsKOkTG0b7mrwVk0GRs4XSI40lpnTvWZShcoJDGTdKkOL6qgdFr92i7j0WDCG3YsTCGxsIg7UER3uCz9oPzpuYIfF9mU6nEi9sHsvyu9oPx+miS/OmK3gMBI7Nxq8sNgTOwk0qEt12gs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716810543; c=relaxed/simple;
+	bh=Ml2hz5nMoNW0Uzw5N+S4/PwZN7R65gzD4+OoVB5d28w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=T38GiShPSV8iXpQjDEDWKB0x5J5dgRfg6gczNddBWP/mG89xRbMk1LSxsMQCyJDrGyZZd6gAo7XIorsSihKhKQnTIajxlTmm3Hc0jn/+zflP3TA08yy8JdnIHv6Cb7KHo+tO7DchDMRuIiCGj4HY8NydwxD92A1U28TC8HfTPAQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bRgGz1RI; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="b+3mZv9P"
-Received: internal info suppressed
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716810491; bh=PJBEw7FnVPzIJklufwcaLQMQa3zl0cjZowAebR5IijA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b+3mZv9PoUjcWumUz39c0/6zaZEUqPo3HArqi2wMR1dpllstpe3rsM8rO1pOXkJnW
-	 cZY8D7f1cUeUw6nETUojvL10n03kAh9novWehD1G7iLlbOGYp9LB9jkdsSigpbJjuS
-	 sMtyTeRC8OzeL62qaPWTOt5LQwiNvOzdIZu0ofsxJgWwDU87/lEb98aMaTn1Hbyw1y
-	 xuJCPAdXzE8vRFu/4gbrBhbnu1Kf07Gd/oMw/G6UNd15Y+hwBSLjhhbfUc/9uN1lew
-	 LhLD0ygNQhRcxYqwE0WSGDd53Y8lIZnK1y/YSvXuCjfUZBSfLNnTtb0JROzdCdcMfv
-	 +Ll4vZjzKRjIQ==
-Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RBltNj1919357;
-	Mon, 27 May 2024 14:47:55 +0300
-From: Ofir Bitton <obitton@habana.ai>
-To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Ohad Sharabi <osharabi@habana.ai>
-Subject: [PATCH 5/9] accel/habanalabs: no CPUCP prints on heartbeat failure
-Date: Mon, 27 May 2024 14:47:42 +0300
-Message-Id: <20240527114746.1919292-5-obitton@habana.ai>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240527114746.1919292-1-obitton@habana.ai>
-References: <20240527114746.1919292-1-obitton@habana.ai>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bRgGz1RI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716810542; x=1748346542;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Ml2hz5nMoNW0Uzw5N+S4/PwZN7R65gzD4+OoVB5d28w=;
+  b=bRgGz1RI7RQBoRsOQmpsKgJe1ma6kUZjSrwzxtmNo+jvCd3pKMvqa9KY
+   Dst2luvO1rX7Xz8IBW3BAY0YaQPkcv7wwxnwTFtdJ1Hn4oyXaCz5Hshrd
+   c49gXoOtCg7wf2RVjYRAbyT3CU5apaE5+XxL4jJRmQFZHoghJ5ZxNvwN0
+   FqrCRxQ9qQA43ToZjOU1CmYNIS0S9eJHPfFNkyk3Ojvujwd8uMvVli7aU
+   CpBvGGbixbJAy8LhQZVmbHEEblykZ3o/953MqmWJhcd/fh0a2d0wuhryU
+   2EuEvTF5KFx+2HaMTXG/IcPlhEIBC9WRqyvpVJaypc2XgTCweR1BxdX+2
+   g==;
+X-CSE-ConnectionGUID: cEgybqwATdaokBiW1qg1rw==
+X-CSE-MsgGUID: MOhTu65zSMqPURULLX/ALA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="16072612"
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="16072612"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 04:49:01 -0700
+X-CSE-ConnectionGUID: tioTmhUjQG2VYumr2+NIEQ==
+X-CSE-MsgGUID: ueyZYOB+Tiuy2wh4Mt+eIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="39521069"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 May 2024 04:49:00 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 27 May 2024 04:48:59 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 27 May 2024 04:48:59 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 27 May 2024 04:48:59 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 27 May 2024 04:48:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K7zA83bSRC1OTC9qWfZtXWHxKq4EwR6KApICaFTv2OoPdGpWpmsA01NE63sGxbxgArrkfSMLeMzh/pdhCizEhaqzlXz5hFcnQ7jEr+b9amdkAPVxdcfQWAaAi7AlZ2mUP90RgxRMMG06sIbCrF42rEQA0MycUQbCtZGLJXfWbaNPEZ56sxFi/2Bib31EH5bmek3aNwwbdfAmzUPdW6a8jb33TM1W/67l3J3vbxgBNNDgan5Wut7FrQ6dqNzMVvpue7wbaecA/44Lf4fttWtNWtr7151rJI2HUkI6caG1f76+yD5iBbCyPoajGSI4DxLGpBSl+v71inYZArJJlnXt9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TGAbVLtiV4MA4imP85PWNDLxyoBUIf7750F4rwxDBGg=;
+ b=cigvNP50jS2p86bMtnxDDS+aCVN1TuOSMH8o0li7lpqCw7ALx7jziGFX5scqQo+Ta03P3MTugX0Z9mvSc8a0N6M3kZiGCDATn/jr5jsbK5z+oZZZhDhMUD6T0JX3Q+6QEiryhnf/Hv0kHhjB7bSPzyRD6hq9cwzaCD7p3SuNAygeUU3+ggkfQFLekSBgai9Ifwrv4ybSkW13+CbVdm8u4FuFf47XVHUTscBw7xIXcaqTPvDb0uuI4z5fTL2rjAJJAzg20Wlf8+qFNBpjP6JBDvcQNrD5Nd1TKTJoczrkG6NK1MO/UQPSZ+MbPjC8ZZcXEqw5HcoBPXg3ApGWevb+pQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY8PR11MB7364.namprd11.prod.outlook.com (2603:10b6:930:87::14)
+ by CY8PR11MB7798.namprd11.prod.outlook.com (2603:10b6:930:77::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Mon, 27 May
+ 2024 11:48:54 +0000
+Received: from CY8PR11MB7364.namprd11.prod.outlook.com
+ ([fe80::1fe:535e:7c0e:1d67]) by CY8PR11MB7364.namprd11.prod.outlook.com
+ ([fe80::1fe:535e:7c0e:1d67%3]) with mapi id 15.20.7587.035; Mon, 27 May 2024
+ 11:48:54 +0000
+From: "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: "tglx@linutronix.de" <tglx@linutronix.de>, "jstultz@google.com"
+	<jstultz@google.com>, "giometti@enneenne.com" <giometti@enneenne.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>, "Dong,
+ Eddie" <eddie.dong@intel.com>, "Hall, Christopher S"
+	<christopher.s.hall@intel.com>, "Brandeburg, Jesse"
+	<jesse.brandeburg@intel.com>, "davem@davemloft.net" <davem@davemloft.net>,
+	"alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>,
+	"joabreu@synopsys.com" <joabreu@synopsys.com>, "mcoquelin.stm32@gmail.com"
+	<mcoquelin.stm32@gmail.com>, "perex@perex.cz" <perex@perex.cz>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, "Nguyen, Anthony
+ L" <anthony.l.nguyen@intel.com>, "peter.hilber@opensynergy.com"
+	<peter.hilber@opensynergy.com>, "N, Pandith" <pandith.n@intel.com>, "Mohan,
+ Subramanian" <subramanian.mohan@intel.com>, "T R, Thejesh Reddy"
+	<thejesh.reddy.t.r@intel.com>
+Subject: RE: [PATCH v8 10/12] pps: generators: Add PPS Generator TIO Driver
+Thread-Topic: [PATCH v8 10/12] pps: generators: Add PPS Generator TIO Driver
+Thread-Index: AQHapSHXUIkwGaeDCkGimvlL+UU2cbGVBGIAgBXrFfA=
+Date: Mon, 27 May 2024 11:48:54 +0000
+Message-ID: <CY8PR11MB7364D1C85099E4337408EBAFC4F02@CY8PR11MB7364.namprd11.prod.outlook.com>
+References: <20240513103813.5666-1-lakshmi.sowjanya.d@intel.com>
+ <20240513103813.5666-11-lakshmi.sowjanya.d@intel.com>
+ <ZkH3GP2b9WTz9W3W@smile.fi.intel.com>
+In-Reply-To: <ZkH3GP2b9WTz9W3W@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY8PR11MB7364:EE_|CY8PR11MB7798:EE_
+x-ms-office365-filtering-correlation-id: 7c090394-6c0c-47bc-091c-08dc7e42fc61
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007|38070700009;
+x-microsoft-antispam-message-info: =?us-ascii?Q?ebx3msG2kyO4XNrbESakasfmF7F7MMYeYaWjrdNU51DbW3cFp8cJ0uGBjbCu?=
+ =?us-ascii?Q?0H6pwSVIK0Yhco+lUAj4331JmmqUUOlYsAzYazsaeeRdyTnK0LPAQx5d4c9r?=
+ =?us-ascii?Q?i2OlIFpNhDzhKdJ3ooCaE370skA14C3dcCX2VTJzW6t0GorG/NqsF3Iqk+qD?=
+ =?us-ascii?Q?fLoj+Aq9f9eyuzijsbOecsfKHm8+xdM3s6YZWjGbXHcXRWICVlrP2tNv0nl0?=
+ =?us-ascii?Q?BJElRkEU+JfQoc07/SfUDPgxms0y5YjMC6Osv6A1Lu0N9uAbZ7YLB1wi8T62?=
+ =?us-ascii?Q?juJGGsJoFh5F8Ko1LkLffESlOnbPKPgFy9USL7SRT9bLhGFC5PKTQ087uih3?=
+ =?us-ascii?Q?hl6os8AwzOiMdXXPQP41ddQuWEhfWxK4QGYIcbh1YtC5WVHseYQDWve/E93Y?=
+ =?us-ascii?Q?iWlSCNMuWi0ic68OrOOnYXeCdaO3cfcWteuvdshfMjrmk8CDg8aiOnN6VcK8?=
+ =?us-ascii?Q?8AyRUjFH5hBy7ym8F8nd9IRH2WwGVlPadbzK7Xxg7T28hmlz7zpG8+ZlH8d1?=
+ =?us-ascii?Q?k3V6236QPBjyskfAFFzqaZDr/1fLjenxwXRIzBrMTZ1Y3U3L3s5HfpnSrnM5?=
+ =?us-ascii?Q?HOISseMc3Cuczk29h736+QSGOIOSRouJI/vFPmw+B2m1/9YIU7QL2DZY6OJ5?=
+ =?us-ascii?Q?7ofME3Zw4pgAxX2GzOpkSKgZhxUgAvJeoQsO7TA8kpN11kF5kr+VPff+m/8j?=
+ =?us-ascii?Q?/8xMVUEl76kyo6vsvrOcpFNz7Q3QtSltlhFYnGjyL9aTbj5haJK+HHD24xmd?=
+ =?us-ascii?Q?dKv6MLNLDP318RoZH5OuTH6xT1eiso7z2yuC+xBAKQtDxiMu+vc8h5APifCT?=
+ =?us-ascii?Q?t7WdGzo5IaSK6BMaOm4DqU+ZN/H45SgQoZpHGUQaURvvoSPXRv7bwlauMZ4l?=
+ =?us-ascii?Q?6tTuybnCGiHIBGgu410wm+8+P3CKf9cVe2z9uzTNSguxPEdYQhlDNgQdqCrA?=
+ =?us-ascii?Q?XrdKfn3vcVtZzZmjzU7jTzb9oRH6zNN3Z2O8G4zPOcVPG8W3o7re9uhnXYqQ?=
+ =?us-ascii?Q?iKFBjo9FSEagFyMvz3XSy8NeCEbUAYT7qx8cx8vuM2B78Hjr3bl8Rf4ziMyy?=
+ =?us-ascii?Q?IiV+N1+Kn2gcukW3zLNRJmZ0v1dMr/g1Bwf9IN/ygDDOHBCKPw6H2vCEJwhi?=
+ =?us-ascii?Q?EnP1nScS+127T1wzuVN+YynApH0ECgcu/SJr5p7Tg+jX8sCezyZ7FLwhTqWO?=
+ =?us-ascii?Q?oF2uMgT8GumrTznieof/YIoNu/0fLTZBYKonF8ny2vpzJrz5CJTGcG8jWVMd?=
+ =?us-ascii?Q?R6jYXEVZN4Ljq15tWgwR7GDihETjQWsTwB7VcB0WxOhZ2Lx6CrcMEfgEl6Xx?=
+ =?us-ascii?Q?dnHXhGuDlvmMGCLefnmAEXHXpYtddJpNCKolroM/6UiwSw=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7364.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?bjjOO8wz9xxq1DFgGMoWH5tb6Tne1BpDXMOz7G6ZS9c2SYuQEPN4Jtk7Byxv?=
+ =?us-ascii?Q?fH3cYK0haIU1EOgaSwrCrEVprI/+em1QTq+8GA442jbj0ouH48V/r6Sl9DGI?=
+ =?us-ascii?Q?8fzcJYC5rUbRjnlEAe2MMS9T+Kc0IIBBfr8skyiRLfaatbNsnBRat3lpKOSs?=
+ =?us-ascii?Q?oq1ZcGDjtwO6sfTLRsRFnV4arfWY3HMMHcYJIAKXVgFX8D/99ZuUGC/bzsaf?=
+ =?us-ascii?Q?ivcDhpviELjwDVhrjpwJnQ5n50k+8ISxA2PUfMiSs7SJBkZ1L0/Xq/90u6C2?=
+ =?us-ascii?Q?BHb07CG6ILrOgsbs7i308ft9hhQHOvTP8XvjeCn1ZHZiO93zOsTfYOb1QXp2?=
+ =?us-ascii?Q?qTvSze9Nb2PlBFHk+HBCy6iuZXJPRU1yRMCltp9/1RjvdEt27iFum9CnmpXH?=
+ =?us-ascii?Q?lMkPiODDGmU/8jKZxYN1/M6ylRD5+MdMcB3XbMhbWCfnwb7bKsRoPDb7tRLS?=
+ =?us-ascii?Q?PMIGWe0+WCQdTiLo36YVK6zjdA30OVoWlttNH9jbu2Uh1wlejlAYxdbs6GX+?=
+ =?us-ascii?Q?BNwt7emC6ocuPuyVnyoHxAmMYiwDp+nqBozIIFe9XAE+qYo4Df3w1Rmi4jk6?=
+ =?us-ascii?Q?FX1FZQHpJ8s8RDZVpGu4yZ+u5MfX0mAiUPw8354aPXLBpvtoBYOkZamuq3gL?=
+ =?us-ascii?Q?CxxAndg65s6nGKH1Y2c4ACUm8OB0Rv5iRc7R5Ztt8MkEZbYps/QdQdi5nuhp?=
+ =?us-ascii?Q?gItFhqs4MSVMHuA3z5viC+MgHattLLuXiJXJ8FPaUgAgneZeow/RteG+CJJd?=
+ =?us-ascii?Q?7/Z1JiLDvWrChcO5o+5pVi0fJk3YgaKQJZaXJRn3N9cAvkdZVcUuQMdFtuFv?=
+ =?us-ascii?Q?cP3C1GUvadeex0m1NQSS8NQwWXT7b4KJK+zPv5aUGJmzFMSh2skjlAofKDAd?=
+ =?us-ascii?Q?XxeLJ33r71z+PbclExWu79/+M0YZiHR5s3FvK7uG60OI77PC8sYqdYj0QSvv?=
+ =?us-ascii?Q?wA6n3woko8oU0useM+/QOFWt7/MhlwS3C1zNYOjFQ7vqL1/KNjuUN13c+wsa?=
+ =?us-ascii?Q?dkah/OfihRhhcwBXGfmwsX4dhiD0yuQX+Ug0TrUcHH03pB0OMCSNZcXau/pW?=
+ =?us-ascii?Q?d6jQI2O6jS5KiO0Ech0b6kberid2FalxxT/DgYNZMqLM0gt+7acLhoYjAbTc?=
+ =?us-ascii?Q?9ZZwQrYaTFeLNVrQ2YVnYzUrTvbHpXE3ojV2fO++LXBpsbAp/IA/Zg6x6hzP?=
+ =?us-ascii?Q?OY0oMpDyBgBcT5GH9hG95Vv2Ryu0ZH1VoujzDgAOfRfAPtbOHmIYb3Fwfxkb?=
+ =?us-ascii?Q?EFO/SNmz4IDrEEQeG+g2uKJelMLLWr8W4i2BiwmrRha4AzIizenzn5MU+awL?=
+ =?us-ascii?Q?+D5EWzy396irxIg9PML70bZ4a5izEB6kCwMqvZu51Q/YQvABrOq2fGD+58gJ?=
+ =?us-ascii?Q?6CzRKFpJfMThXWpalnioMCmUQVIyfdo8MsNtrBa/ESqOi0yb+X9K7IGY9HC2?=
+ =?us-ascii?Q?7fTVQZQs1cRZ0aihKyFdvnIxbDT8avYFrXWo7L/um4H+8XuuYSmpOjotA/Lg?=
+ =?us-ascii?Q?1xIGbLMrOkM+5dIaoOVlwM6xWJmPROq3KnlpysFBbyqsakCekJN17ubkB7w7?=
+ =?us-ascii?Q?ypqTDWmCKOtyAWe/ghi2wIwrr0AKLBgLQVHiDtVu3GdK4YhQHQBe4GVsrbwL?=
+ =?us-ascii?Q?fA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7364.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c090394-6c0c-47bc-091c-08dc7e42fc61
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2024 11:48:54.6334
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o1B3QJYS3NSBASYtWpStprIt9cvT9vioPRtaDKH9UjaOqh1PZBPw7qIwvIQGsMascAGjf1d296hx55vE9z3gc9HHo67fik48FQdF3F3sitA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7798
+X-OriginatorOrg: intel.com
 
-From: Ohad Sharabi <osharabi@habana.ai>
 
-If we detected heartbet event while some daemon in the background send
-(via driver interface) CPUCP messages the dmesg will be flooded.
 
-Instead, a slight refactor in hl_fw_send_cpu_message() returns -EAGAIN
-when CPU is disabled (i.e. heartbeat failure) and only then.
+> -----Original Message-----
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sent: Monday, May 13, 2024 4:49 PM
+> To: D, Lakshmi Sowjanya <lakshmi.sowjanya.d@intel.com>
+> Cc: tglx@linutronix.de; jstultz@google.com; giometti@enneenne.com;
+> corbet@lwn.net; linux-kernel@vger.kernel.org; x86@kernel.org;
+> netdev@vger.kernel.org; linux-doc@vger.kernel.org; intel-wired-
+> lan@lists.osuosl.org; Dong, Eddie <eddie.dong@intel.com>; Hall, Christoph=
+er
+> S <christopher.s.hall@intel.com>; Brandeburg, Jesse
+> <jesse.brandeburg@intel.com>; davem@davemloft.net;
+> alexandre.torgue@foss.st.com; joabreu@synopsys.com;
+> mcoquelin.stm32@gmail.com; perex@perex.cz; linux-
+> sound@vger.kernel.org; Nguyen, Anthony L <anthony.l.nguyen@intel.com>;
+> peter.hilber@opensynergy.com; N, Pandith <pandith.n@intel.com>; Mohan,
+> Subramanian <subramanian.mohan@intel.com>; T R, Thejesh Reddy
+> <thejesh.reddy.t.r@intel.com>
+> Subject: Re: [PATCH v8 10/12] pps: generators: Add PPS Generator TIO Driv=
+er
+>=20
+> On Mon, May 13, 2024 at 04:08:11PM +0530, lakshmi.sowjanya.d@intel.com
+> wrote:
+> > From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> >
+> > The Intel Timed IO PPS generator driver outputs a PPS signal using
+> > dedicated hardware that is more accurate than software actuated PPS.
+> > The Timed IO hardware generates output events using the ART timer.
+> > The ART timer period varies based on platform type, but is less than
+> > 100 nanoseconds for all current platforms. Timed IO output accuracy is
+> > within 1 ART period.
+> >
+> > PPS output is enabled by writing '1' the 'enable' sysfs attribute. The
+> > driver uses hrtimers to schedule a wake-up 10 ms before each event
+> > (edge) target time. At wakeup, the driver converts the target time in
+> > terms of CLOCK_REALTIME to ART trigger time and writes this to the
+> > Timed IO hardware. The Timed IO hardware generates an event precisely
+> > at the requested system time without software involvement.
+>=20
+> ...
+>=20
+> > +static ssize_t enable_store(struct device *dev, struct device_attribut=
+e
+> *attr, const char *buf,
+> > +			    size_t count)
+> > +{
+> > +	struct pps_tio *tio =3D dev_get_drvdata(dev);
+> > +	bool enable;
+> > +	int err;
+>=20
+> (1)
+>=20
+> > +	err =3D kstrtobool(buf, &enable);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	guard(spinlock_irqsave)(&tio->lock);
+> > +	if (enable && !tio->enabled) {
+>=20
+> > +		if (!timekeeping_clocksource_has_base(CSID_X86_ART)) {
+> > +			dev_err(tio->dev, "PPS cannot be started as clock is
+> not related
+> > +to ART");
+>=20
+> Why not simply dev_err(dev, ...)?
+>=20
+> > +			return -EPERM;
+> > +		}
+>=20
+> I'm wondering if we can move this check to (1) above.
+> Because currently it's a good question if we are able to stop PPS which w=
+as
+> run by somebody else without this check done.
 
-Later, all calling functions that may be invoked by user space can issue
-prints only if the error code is not -EAGAIN.
+Do you mean can someone stop the signal without this check?=20
+Yes, this check is not required to stop.  So, I feel it need not be moved t=
+o (1).
 
-Signed-off-by: Ohad Sharabi <osharabi@habana.ai>
-Reviewed-by: Ofir Bitton <obitton@habana.ai>
----
- drivers/accel/habanalabs/common/debugfs.c     |  17 +--
- drivers/accel/habanalabs/common/device.c      |   4 +-
- drivers/accel/habanalabs/common/firmware_if.c | 142 +++++++++++-------
- drivers/accel/habanalabs/common/hwmon.c       |  60 ++++----
- drivers/accel/habanalabs/gaudi/gaudi.c        |  12 +-
- drivers/accel/habanalabs/gaudi2/gaudi2.c      |  12 +-
- drivers/accel/habanalabs/goya/goya.c          |  13 +-
- 7 files changed, 128 insertions(+), 132 deletions(-)
+Please, correct me if my understanding is wrong.
 
-diff --git a/drivers/accel/habanalabs/common/debugfs.c b/drivers/accel/habanalabs/common/debugfs.c
-index b1c88d1837d9..de3ae2e47ec4 100644
---- a/drivers/accel/habanalabs/common/debugfs.c
-+++ b/drivers/accel/habanalabs/common/debugfs.c
-@@ -42,9 +42,8 @@ static int hl_debugfs_i2c_read(struct hl_device *hdev, u8 i2c_bus, u8 i2c_addr,
- 	pkt.i2c_reg = i2c_reg;
- 	pkt.i2c_len = i2c_len;
- 
--	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--						0, val);
--	if (rc)
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, val);
-+	if (rc && rc != -EAGAIN)
- 		dev_err(hdev->dev, "Failed to read from I2C, error %d\n", rc);
- 
- 	return rc;
-@@ -75,10 +74,8 @@ static int hl_debugfs_i2c_write(struct hl_device *hdev, u8 i2c_bus, u8 i2c_addr,
- 	pkt.i2c_len = i2c_len;
- 	pkt.value = cpu_to_le64(val);
- 
--	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--						0, NULL);
--
--	if (rc)
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, NULL);
-+	if (rc && rc != -EAGAIN)
- 		dev_err(hdev->dev, "Failed to write to I2C, error %d\n", rc);
- 
- 	return rc;
-@@ -99,10 +96,8 @@ static void hl_debugfs_led_set(struct hl_device *hdev, u8 led, u8 state)
- 	pkt.led_index = cpu_to_le32(led);
- 	pkt.value = cpu_to_le64(state);
- 
--	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--						0, NULL);
--
--	if (rc)
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, NULL);
-+	if (rc && rc != -EAGAIN)
- 		dev_err(hdev->dev, "Failed to set LED %d, error %d\n", led, rc);
- }
- 
-diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
-index eee41c367bd1..087bbb1778e5 100644
---- a/drivers/accel/habanalabs/common/device.c
-+++ b/drivers/accel/habanalabs/common/device.c
-@@ -1498,10 +1498,8 @@ static void send_disable_pci_access(struct hl_device *hdev, u32 flags)
- 		 * of heartbeat, the device CPU is marked as disable
- 		 * so this message won't be sent
- 		 */
--		if (hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0)) {
--			dev_warn(hdev->dev, "Failed to disable FW's PCI access\n");
-+		if (hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0))
- 			return;
--		}
- 
- 		/* verify that last EQs are handled before disabled is set */
- 		if (hdev->cpu_queues_enable)
-diff --git a/drivers/accel/habanalabs/common/firmware_if.c b/drivers/accel/habanalabs/common/firmware_if.c
-index 348418643709..b5b960ce4ebd 100644
---- a/drivers/accel/habanalabs/common/firmware_if.c
-+++ b/drivers/accel/habanalabs/common/firmware_if.c
-@@ -370,43 +370,63 @@ int hl_fw_load_fw_to_device(struct hl_device *hdev, const char *fw_name,
- int hl_fw_send_pci_access_msg(struct hl_device *hdev, u32 opcode, u64 value)
- {
- 	struct cpucp_packet pkt = {};
-+	int rc;
- 
- 	pkt.ctl = cpu_to_le32(opcode << CPUCP_PKT_CTL_OPCODE_SHIFT);
- 	pkt.value = cpu_to_le64(value);
- 
--	return hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, NULL);
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, NULL);
-+	if (rc)
-+		dev_err(hdev->dev, "Failed to disable FW's PCI access\n");
-+
-+	return rc;
- }
- 
-+/**
-+ * hl_fw_send_cpu_message() - send CPU message to the device.
-+ *
-+ * @hdev: pointer to hl_device structure.
-+ * @hw_queue_id: HW queue ID
-+ * @msg: raw data of the message/packet
-+ * @size: size of @msg in bytes
-+ * @timeout_us: timeout in usec to wait for CPU reply on the message
-+ * @result: return code reported by FW
-+ *
-+ * send message to the device CPU.
-+ *
-+ * Return: 0 on success, non-zero for failure.
-+ *     -ENOMEM: memory allocation failure
-+ *     -EAGAIN: CPU is disabled (try again when enabled)
-+ *     -ETIMEDOUT: timeout waiting for FW response
-+ *     -EIO: protocol error
-+ */
- int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
--				u16 len, u32 timeout, u64 *result)
-+				u16 size, u32 timeout_us, u64 *result)
- {
- 	struct hl_hw_queue *queue = &hdev->kernel_queues[hw_queue_id];
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
-+	u32 tmp, expected_ack_val, pi, opcode;
- 	struct cpucp_packet *pkt;
- 	dma_addr_t pkt_dma_addr;
- 	struct hl_bd *sent_bd;
--	u32 tmp, expected_ack_val, pi, opcode;
--	int rc;
-+	int rc = 0, fw_rc;
- 
--	pkt = hl_cpu_accessible_dma_pool_alloc(hdev, len, &pkt_dma_addr);
-+	pkt = hl_cpu_accessible_dma_pool_alloc(hdev, size, &pkt_dma_addr);
- 	if (!pkt) {
--		dev_err(hdev->dev,
--			"Failed to allocate DMA memory for packet to CPU\n");
-+		dev_err(hdev->dev, "Failed to allocate DMA memory for packet to CPU\n");
- 		return -ENOMEM;
- 	}
- 
--	memcpy(pkt, msg, len);
-+	memcpy(pkt, msg, size);
- 
- 	mutex_lock(&hdev->send_cpu_message_lock);
- 
- 	/* CPU-CP messages can be sent during soft-reset */
--	if (hdev->disabled && !hdev->reset_info.in_compute_reset) {
--		rc = 0;
-+	if (hdev->disabled && !hdev->reset_info.in_compute_reset)
- 		goto out;
--	}
- 
- 	if (hdev->device_cpu_disabled) {
--		rc = -EIO;
-+		rc = -EAGAIN;
- 		goto out;
- 	}
- 
-@@ -422,7 +442,7 @@ int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
- 	 * Which means that we don't need to lock the access to the entire H/W
- 	 * queues module when submitting a JOB to the CPU queue.
- 	 */
--	hl_hw_queue_submit_bd(hdev, queue, hl_queue_inc_ptr(queue->pi), len, pkt_dma_addr);
-+	hl_hw_queue_submit_bd(hdev, queue, hl_queue_inc_ptr(queue->pi), size, pkt_dma_addr);
- 
- 	if (prop->fw_app_cpu_boot_dev_sts0 & CPU_BOOT_DEV_STS0_PKT_PI_ACK_EN)
- 		expected_ack_val = queue->pi;
-@@ -431,7 +451,7 @@ int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
- 
- 	rc = hl_poll_timeout_memory(hdev, &pkt->fence, tmp,
- 				(tmp == expected_ack_val), 1000,
--				timeout, true);
-+				timeout_us, true);
- 
- 	hl_hw_queue_inc_ci_kernel(hdev, hw_queue_id);
- 
-@@ -450,8 +470,8 @@ int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
- 
- 	tmp = le32_to_cpu(pkt->ctl);
- 
--	rc = (tmp & CPUCP_PKT_CTL_RC_MASK) >> CPUCP_PKT_CTL_RC_SHIFT;
--	if (rc) {
-+	fw_rc = (tmp & CPUCP_PKT_CTL_RC_MASK) >> CPUCP_PKT_CTL_RC_SHIFT;
-+	if (fw_rc) {
- 		opcode = (tmp & CPUCP_PKT_CTL_OPCODE_MASK) >> CPUCP_PKT_CTL_OPCODE_SHIFT;
- 
- 		if (!prop->supports_advanced_cpucp_rc) {
-@@ -460,7 +480,7 @@ int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
- 			goto scrub_descriptor;
- 		}
- 
--		switch (rc) {
-+		switch (fw_rc) {
- 		case cpucp_packet_invalid:
- 			dev_err(hdev->dev,
- 				"CPU packet %d is not supported by F/W\n", opcode);
-@@ -485,7 +505,7 @@ int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
- 
- 		/* propagate the return code from the f/w to the callers who want to check it */
- 		if (result)
--			*result = rc;
-+			*result = fw_rc;
- 
- 		rc = -EIO;
- 
-@@ -505,7 +525,7 @@ int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
- out:
- 	mutex_unlock(&hdev->send_cpu_message_lock);
- 
--	hl_cpu_accessible_dma_pool_free(hdev, len, pkt);
-+	hl_cpu_accessible_dma_pool_free(hdev, size, pkt);
- 
- 	return rc;
- }
-@@ -575,7 +595,7 @@ int hl_fw_unmask_irq_arr(struct hl_device *hdev, const u32 *irq_arr,
- int hl_fw_test_cpu_queue(struct hl_device *hdev)
- {
- 	struct cpucp_packet test_pkt = {};
--	u64 result;
-+	u64 result = 0;
- 	int rc;
- 
- 	test_pkt.ctl = cpu_to_le32(CPUCP_PACKET_TEST <<
-@@ -648,7 +668,7 @@ int hl_fw_send_device_activity(struct hl_device *hdev, bool open)
- int hl_fw_send_heartbeat(struct hl_device *hdev)
- {
- 	struct cpucp_packet hb_pkt;
--	u64 result;
-+	u64 result = 0;
- 	int rc;
- 
- 	memset(&hb_pkt, 0, sizeof(hb_pkt));
-@@ -910,7 +930,7 @@ static int hl_fw_send_msi_info_msg(struct hl_device *hdev)
- {
- 	struct cpucp_array_data_packet *pkt;
- 	size_t total_pkt_size, data_size;
--	u64 result;
-+	u64 result = 0;
- 	int rc;
- 
- 	/* skip sending this info for unsupported ASICs */
-@@ -1001,11 +1021,10 @@ int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size)
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 			HL_CPUCP_EEPROM_TIMEOUT_USEC, &result);
--
- 	if (rc) {
--		dev_err(hdev->dev,
--			"Failed to handle CPU-CP EEPROM packet, error %d\n",
--			rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
-+				"Failed to handle CPU-CP EEPROM packet, error %d\n", rc);
- 		goto out;
- 	}
- 
-@@ -1046,7 +1065,9 @@ int hl_fw_get_monitor_dump(struct hl_device *hdev, void *data)
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 							HL_CPUCP_MON_DUMP_TIMEOUT_USEC, &result);
- 	if (rc) {
--		dev_err(hdev->dev, "Failed to handle CPU-CP monitor-dump packet, error %d\n", rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
-+				"Failed to handle CPU-CP monitor-dump packet, error %d\n", rc);
- 		goto out;
- 	}
- 
-@@ -1080,8 +1101,9 @@ int hl_fw_cpucp_pci_counters_get(struct hl_device *hdev,
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 					HL_CPUCP_INFO_TIMEOUT_USEC, &result);
- 	if (rc) {
--		dev_err(hdev->dev,
--			"Failed to handle CPU-CP PCI info pkt, error %d\n", rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
-+				"Failed to handle CPU-CP PCI info pkt, error %d\n", rc);
- 		return rc;
- 	}
- 	counters->rx_throughput = result;
-@@ -1095,8 +1117,9 @@ int hl_fw_cpucp_pci_counters_get(struct hl_device *hdev,
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 					HL_CPUCP_INFO_TIMEOUT_USEC, &result);
- 	if (rc) {
--		dev_err(hdev->dev,
--			"Failed to handle CPU-CP PCI info pkt, error %d\n", rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
-+				"Failed to handle CPU-CP PCI info pkt, error %d\n", rc);
- 		return rc;
- 	}
- 	counters->tx_throughput = result;
-@@ -1109,8 +1132,9 @@ int hl_fw_cpucp_pci_counters_get(struct hl_device *hdev,
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 			HL_CPUCP_INFO_TIMEOUT_USEC, &result);
- 	if (rc) {
--		dev_err(hdev->dev,
--			"Failed to handle CPU-CP PCI info pkt, error %d\n", rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
-+				"Failed to handle CPU-CP PCI info pkt, error %d\n", rc);
- 		return rc;
- 	}
- 	counters->replay_cnt = (u32) result;
-@@ -1130,9 +1154,9 @@ int hl_fw_cpucp_total_energy_get(struct hl_device *hdev, u64 *total_energy)
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 					HL_CPUCP_INFO_TIMEOUT_USEC, &result);
- 	if (rc) {
--		dev_err(hdev->dev,
--			"Failed to handle CpuCP total energy pkt, error %d\n",
--				rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
-+				"Failed to handle CpuCP total energy pkt, error %d\n", rc);
- 		return rc;
- 	}
- 
-@@ -1208,7 +1232,8 @@ int hl_fw_cpucp_pll_info_get(struct hl_device *hdev, u32 pll_index,
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 			HL_CPUCP_INFO_TIMEOUT_USEC, &result);
- 	if (rc) {
--		dev_err(hdev->dev, "Failed to read PLL info, error %d\n", rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev, "Failed to read PLL info, error %d\n", rc);
- 		return rc;
- 	}
- 
-@@ -1235,7 +1260,8 @@ int hl_fw_cpucp_power_get(struct hl_device *hdev, u64 *power)
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 			HL_CPUCP_INFO_TIMEOUT_USEC, &result);
- 	if (rc) {
--		dev_err(hdev->dev, "Failed to read power, error %d\n", rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev, "Failed to read power, error %d\n", rc);
- 		return rc;
- 	}
- 
-@@ -1272,8 +1298,9 @@ int hl_fw_dram_replaced_row_get(struct hl_device *hdev,
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 					HL_CPUCP_INFO_TIMEOUT_USEC, &result);
- 	if (rc) {
--		dev_err(hdev->dev,
--			"Failed to handle CPU-CP replaced rows info pkt, error %d\n", rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
-+				"Failed to handle CPU-CP replaced rows info pkt, error %d\n", rc);
- 		goto out;
- 	}
- 
-@@ -1298,7 +1325,8 @@ int hl_fw_dram_pending_row_get(struct hl_device *hdev, u32 *pend_rows_num)
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, &result);
- 	if (rc) {
--		dev_err(hdev->dev,
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
- 				"Failed to handle CPU-CP pending rows info pkt, error %d\n", rc);
- 		goto out;
- 	}
-@@ -3147,10 +3175,10 @@ long hl_fw_get_frequency(struct hl_device *hdev, u32 pll_index, bool curr)
- 	pkt.pll_index = cpu_to_le32((u32)used_pll_idx);
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, &result);
--
- 	if (rc) {
--		dev_err(hdev->dev, "Failed to get frequency of PLL %d, error %d\n",
--			used_pll_idx, rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev, "Failed to get frequency of PLL %d, error %d\n",
-+				used_pll_idx, rc);
- 		return rc;
- 	}
- 
-@@ -3174,8 +3202,7 @@ void hl_fw_set_frequency(struct hl_device *hdev, u32 pll_index, u64 freq)
- 	pkt.value = cpu_to_le64(freq);
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, NULL);
--
--	if (rc)
-+	if (rc && rc != -EAGAIN)
- 		dev_err(hdev->dev, "Failed to set frequency to PLL %d, error %d\n",
- 			used_pll_idx, rc);
- }
-@@ -3191,9 +3218,9 @@ long hl_fw_get_max_power(struct hl_device *hdev)
- 	pkt.ctl = cpu_to_le32(CPUCP_PACKET_MAX_POWER_GET << CPUCP_PKT_CTL_OPCODE_SHIFT);
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, &result);
--
- 	if (rc) {
--		dev_err(hdev->dev, "Failed to get max power, error %d\n", rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev, "Failed to get max power, error %d\n", rc);
- 		return rc;
- 	}
- 
-@@ -3215,8 +3242,7 @@ void hl_fw_set_max_power(struct hl_device *hdev)
- 	pkt.value = cpu_to_le64(hdev->max_power);
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, NULL);
--
--	if (rc)
-+	if (rc && rc != -EAGAIN)
- 		dev_err(hdev->dev, "Failed to set max power, error %d\n", rc);
- }
- 
-@@ -3242,11 +3268,11 @@ static int hl_fw_get_sec_attest_data(struct hl_device *hdev, u32 packet_id, void
- 	pkt.data_max_size = cpu_to_le32(size);
- 	pkt.nonce = cpu_to_le32(nonce);
- 
--	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--					timeout, NULL);
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), timeout, NULL);
- 	if (rc) {
--		dev_err(hdev->dev,
--			"Failed to handle CPU-CP pkt %u, error %d\n", packet_id, rc);
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev,
-+				"Failed to handle CPU-CP pkt %u, error %d\n", packet_id, rc);
- 		goto out;
- 	}
- 
-@@ -3288,10 +3314,12 @@ int hl_fw_send_generic_request(struct hl_device *hdev, enum hl_passthrough_type
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *)&pkt, sizeof(pkt),
- 						HL_CPUCP_INFO_TIMEOUT_USEC, &result);
--	if (rc)
--		dev_err(hdev->dev, "failed to send CPUCP data of generic fw pkt\n");
--	else
-+	if (rc) {
-+		if (rc != -EAGAIN)
-+			dev_err(hdev->dev, "failed to send CPUCP data of generic fw pkt\n");
-+	} else {
- 		dev_dbg(hdev->dev, "generic pkt was successful, result: 0x%llx\n", result);
-+	}
- 
- 	*size = (u32)result;
- 
-diff --git a/drivers/accel/habanalabs/common/hwmon.c b/drivers/accel/habanalabs/common/hwmon.c
-index 36b951b5f503..52d1e6bf10dc 100644
---- a/drivers/accel/habanalabs/common/hwmon.c
-+++ b/drivers/accel/habanalabs/common/hwmon.c
-@@ -585,9 +585,10 @@ int hl_get_temperature(struct hl_device *hdev,
- 	*value = (long) result;
- 
- 	if (rc) {
--		dev_err_ratelimited(hdev->dev,
--			"Failed to get temperature from sensor %d, error %d\n",
--			sensor_index, rc);
-+		if (rc != -EAGAIN)
-+			dev_err_ratelimited(hdev->dev,
-+				"Failed to get temperature from sensor %d, error %d\n",
-+				sensor_index, rc);
- 		*value = 0;
- 	}
- 
-@@ -610,8 +611,7 @@ int hl_set_temperature(struct hl_device *hdev,
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 						0, NULL);
--
--	if (rc)
-+	if (rc && rc != -EAGAIN)
- 		dev_err_ratelimited(hdev->dev,
- 			"Failed to set temperature of sensor %d, error %d\n",
- 			sensor_index, rc);
-@@ -639,9 +639,10 @@ int hl_get_voltage(struct hl_device *hdev,
- 	*value = (long) result;
- 
- 	if (rc) {
--		dev_err_ratelimited(hdev->dev,
--			"Failed to get voltage from sensor %d, error %d\n",
--			sensor_index, rc);
-+		if (rc != -EAGAIN)
-+			dev_err_ratelimited(hdev->dev,
-+				"Failed to get voltage from sensor %d, error %d\n",
-+				sensor_index, rc);
- 		*value = 0;
- 	}
- 
-@@ -668,9 +669,10 @@ int hl_get_current(struct hl_device *hdev,
- 	*value = (long) result;
- 
- 	if (rc) {
--		dev_err_ratelimited(hdev->dev,
--			"Failed to get current from sensor %d, error %d\n",
--			sensor_index, rc);
-+		if (rc != -EAGAIN)
-+			dev_err_ratelimited(hdev->dev,
-+				"Failed to get current from sensor %d, error %d\n",
-+				sensor_index, rc);
- 		*value = 0;
- 	}
- 
-@@ -697,9 +699,10 @@ int hl_get_fan_speed(struct hl_device *hdev,
- 	*value = (long) result;
- 
- 	if (rc) {
--		dev_err_ratelimited(hdev->dev,
--			"Failed to get fan speed from sensor %d, error %d\n",
--			sensor_index, rc);
-+		if (rc != -EAGAIN)
-+			dev_err_ratelimited(hdev->dev,
-+				"Failed to get fan speed from sensor %d, error %d\n",
-+				sensor_index, rc);
- 		*value = 0;
- 	}
- 
-@@ -726,9 +729,10 @@ int hl_get_pwm_info(struct hl_device *hdev,
- 	*value = (long) result;
- 
- 	if (rc) {
--		dev_err_ratelimited(hdev->dev,
--			"Failed to get pwm info from sensor %d, error %d\n",
--			sensor_index, rc);
-+		if (rc != -EAGAIN)
-+			dev_err_ratelimited(hdev->dev,
-+				"Failed to get pwm info from sensor %d, error %d\n",
-+				sensor_index, rc);
- 		*value = 0;
- 	}
- 
-@@ -751,8 +755,7 @@ void hl_set_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr,
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 						0, NULL);
--
--	if (rc)
-+	if (rc && rc != -EAGAIN)
- 		dev_err_ratelimited(hdev->dev,
- 			"Failed to set pwm info to sensor %d, error %d\n",
- 			sensor_index, rc);
-@@ -774,8 +777,7 @@ int hl_set_voltage(struct hl_device *hdev,
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 						0, NULL);
--
--	if (rc)
-+	if (rc && rc != -EAGAIN)
- 		dev_err_ratelimited(hdev->dev,
- 			"Failed to set voltage of sensor %d, error %d\n",
- 			sensor_index, rc);
-@@ -797,10 +799,8 @@ int hl_set_current(struct hl_device *hdev,
- 	pkt.type = __cpu_to_le16(attr);
- 	pkt.value = __cpu_to_le64(value);
- 
--	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--						0, NULL);
--
--	if (rc)
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt), 0, NULL);
-+	if (rc && rc != -EAGAIN)
- 		dev_err_ratelimited(hdev->dev,
- 			"Failed to set current of sensor %d, error %d\n",
- 			sensor_index, rc);
-@@ -830,8 +830,7 @@ int hl_set_power(struct hl_device *hdev,
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
- 						0, NULL);
--
--	if (rc)
-+	if (rc && rc != -EAGAIN)
- 		dev_err_ratelimited(hdev->dev,
- 			"Failed to set power of sensor %d, error %d\n",
- 			sensor_index, rc);
-@@ -859,9 +858,10 @@ int hl_get_power(struct hl_device *hdev,
- 	*value = (long) result;
- 
- 	if (rc) {
--		dev_err_ratelimited(hdev->dev,
--			"Failed to get power of sensor %d, error %d\n",
--			sensor_index, rc);
-+		if (rc != -EAGAIN)
-+			dev_err_ratelimited(hdev->dev,
-+				"Failed to get power of sensor %d, error %d\n",
-+				sensor_index, rc);
- 		*value = 0;
- 	}
- 
-diff --git a/drivers/accel/habanalabs/gaudi/gaudi.c b/drivers/accel/habanalabs/gaudi/gaudi.c
-index f2b04ffb0ecb..fa893a9b826e 100644
---- a/drivers/accel/habanalabs/gaudi/gaudi.c
-+++ b/drivers/accel/habanalabs/gaudi/gaudi.c
-@@ -1639,10 +1639,8 @@ static int gaudi_late_init(struct hl_device *hdev)
- 	}
- 
- 	rc = hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_ENABLE_PCI_ACCESS, 0x0);
--	if (rc) {
--		dev_err(hdev->dev, "Failed to enable PCI access from CPU\n");
-+	if (rc)
- 		return rc;
--	}
- 
- 	/* Scrub both SRAM and DRAM */
- 	rc = hdev->asic_funcs->scrub_device_mem(hdev);
-@@ -4154,13 +4152,7 @@ static int gaudi_hw_fini(struct hl_device *hdev, bool hard_reset, bool fw_reset)
- 
- static int gaudi_suspend(struct hl_device *hdev)
- {
--	int rc;
--
--	rc = hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0);
--	if (rc)
--		dev_err(hdev->dev, "Failed to disable PCI access from CPU\n");
--
--	return rc;
-+	return hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0);
- }
- 
- static int gaudi_resume(struct hl_device *hdev)
-diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-index ba1518f2bf5c..962b7fcd4318 100644
---- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
-+++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-@@ -3312,10 +3312,8 @@ static int gaudi2_late_init(struct hl_device *hdev)
- 
- 	rc = hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_ENABLE_PCI_ACCESS,
- 					gaudi2->virt_msix_db_dma_addr);
--	if (rc) {
--		dev_err(hdev->dev, "Failed to enable PCI access from CPU\n");
-+	if (rc)
- 		return rc;
--	}
- 
- 	rc = gaudi2_fetch_psoc_frequency(hdev);
- 	if (rc) {
-@@ -6467,13 +6465,7 @@ static int gaudi2_hw_fini(struct hl_device *hdev, bool hard_reset, bool fw_reset
- 
- static int gaudi2_suspend(struct hl_device *hdev)
- {
--	int rc;
--
--	rc = hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0);
--	if (rc)
--		dev_err(hdev->dev, "Failed to disable PCI access from CPU\n");
--
--	return rc;
-+	return hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0);
- }
- 
- static int gaudi2_resume(struct hl_device *hdev)
-diff --git a/drivers/accel/habanalabs/goya/goya.c b/drivers/accel/habanalabs/goya/goya.c
-index 5a359c3bdc78..84768e306269 100644
---- a/drivers/accel/habanalabs/goya/goya.c
-+++ b/drivers/accel/habanalabs/goya/goya.c
-@@ -893,11 +893,8 @@ int goya_late_init(struct hl_device *hdev)
- 	WREG32(mmMMU_LOG2_DDR_SIZE, ilog2(prop->dram_size));
- 
- 	rc = hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_ENABLE_PCI_ACCESS, 0x0);
--	if (rc) {
--		dev_err(hdev->dev,
--			"Failed to enable PCI access from CPU %d\n", rc);
-+	if (rc)
- 		return rc;
--	}
- 
- 	/* force setting to low frequency */
- 	goya->curr_pll_profile = PLL_LOW;
-@@ -2864,13 +2861,7 @@ static int goya_hw_fini(struct hl_device *hdev, bool hard_reset, bool fw_reset)
- 
- int goya_suspend(struct hl_device *hdev)
- {
--	int rc;
--
--	rc = hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0);
--	if (rc)
--		dev_err(hdev->dev, "Failed to disable PCI access from CPU\n");
--
--	return rc;
-+	return hl_fw_send_pci_access_msg(hdev, CPUCP_PACKET_DISABLE_PCI_ACCESS, 0x0);
- }
- 
- int goya_resume(struct hl_device *hdev)
--- 
-2.34.1
+>=20
+> I.o.w. this sounds too weird to me and reading the code doesn't give any =
+hint
+> if it's even possible. And if it is, are we supposed to touch that since =
+it was
+> definitely *not* us who ran it.
+
+Yes, we are not restricting on who can stop/start the signal.=20
+
+>=20
+> > +		pps_tio_direction_output(tio);
+> > +		hrtimer_start(&tio->timer, first_event(tio),
+> HRTIMER_MODE_ABS);
+> > +		tio->enabled =3D true;
+> > +	} else if (!enable && tio->enabled) {
+> > +		hrtimer_cancel(&tio->timer);
+> > +		pps_tio_disable(tio);
+> > +		tio->enabled =3D false;
+> > +	}
+> > +	return count;
+> > +}
+>=20
+> ...
+>=20
+> > +static int pps_tio_probe(struct platform_device *pdev) {
+>=20
+> 	struct device *dev =3D &pdev->dev;
+>=20
+> > +	struct pps_tio *tio;
+> > +
+> > +	if (!(cpu_feature_enabled(X86_FEATURE_TSC_KNOWN_FREQ) &&
+> > +	      cpu_feature_enabled(X86_FEATURE_ART))) {
+> > +		dev_warn(&pdev->dev, "TSC/ART is not enabled");
+>=20
+> 		dev_warn(dev, "TSC/ART is not enabled");
+>=20
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	tio =3D devm_kzalloc(&pdev->dev, sizeof(*tio), GFP_KERNEL);
+>=20
+> 	tio =3D devm_kzalloc(dev, sizeof(*tio), GFP_KERNEL);
+>=20
+>=20
+> > +	if (!tio)
+> > +		return -ENOMEM;
+> > +
+> > +	tio->dev =3D &pdev->dev;
+>=20
+> 	tio->dev =3D dev;
+>=20
+> > +	tio->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(tio->base))
+> > +		return PTR_ERR(tio->base);
+>=20
+> > +	pps_tio_disable(tio);
+>=20
+> This...
+>=20
+> > +	hrtimer_init(&tio->timer, CLOCK_REALTIME, HRTIMER_MODE_ABS);
+> > +	tio->timer.function =3D hrtimer_callback;
+> > +	spin_lock_init(&tio->lock);
+>=20
+> > +	tio->enabled =3D false;
+>=20
+> ...and this should go together, which makes me look at the enabled flag o=
+ver
+> the code and it seems there are a few places where you missed to sync it
+> with the reality.
+>=20
+> I would think of something like this:
+>=20
+> 	pps_tio_direction_output() =3D=3D> true
+> 	pps_tio_disable(tio) =3D=3D> false
+>=20
+> where "=3D=3D> X" means assignment of enabled flag.
+>=20
+> And perhaps this:
+>=20
+> 	tio->enabled =3D pps_generate_next_pulse(tio, expires +
+> SAFE_TIME_NS);
+> 	if (!tio->enabled)
+> 		...
+>=20
+> But the above is just thinking out loudly, you may find the better
+> approach(es).
+
+Yeah, makes sense.
+
+Will add enable counterpart.
+Will update tio->enabled in disable and enable functions.
+
+>=20
+> > +	platform_set_drvdata(pdev, tio);
+> > +
+> > +	return 0;
+> > +}
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
+
+Regards,
+Lakshmi Sowjanya
 
