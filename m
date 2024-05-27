@@ -1,146 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D2A17E90A
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2FD17E8E2;
+	Mon, 27 May 2024 15:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716824949; cv=none; b=taT28WgjIpo+O2pu7erR4wnRqJLb5DAI4+Tb+aWdPoodl5+gPvvHiNbTDG5ZFTBaNiHZRESjZ7dMXvW5cUU/XguZ1MxpnnW+WvP7rs8Hp216nYA/yxn6pNqlBcjDWMagpq7oTcfLQGnazKVG1MGTd2pEDBK4G9+sRD7wV+Lt5e0=
+	t=1716825088; cv=none; b=ZMapQBCGkFxJTnIge/3A0Wv6rOBJ3nN8nfsmq7OB/xkIgFkxKjKZvCWLiVHUhej9q+NZvfg5++MHypnqx1d8DZ+OvMkwQnsj2wrPf9HoWywIyXyH2A0u9tYPcQgqJjexr8JdxEiqNybB3qUC8l1UoYW95TI5fc5HChjXpSoKONg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716824949; c=relaxed/simple;
-	bh=PTOD43twZezS1LaJReRCBTqZRcQpJg3FNX+Bc7pvXxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XkRXPuXo2PeWM/Rfi5ksVzAfYMf7mXC1eiOMeWr0RTM7iPzAEhwBdUxRmt3AaYbYsBx1UTSC9ao+izFHOrpVWcLVf3K9e2ChHV3ZnwDLZfeQFrj034/sitP2aUYRCaWymZOb2tAPipANg1sEuLoMmTszHnnq4yiZnXf47I6iMeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IxbKH5C2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716825088; c=relaxed/simple;
+	bh=6i4gd8J4KRT2ZQgVgP185Z+O7p9xL8wu8xsohxPyeKE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ItXQE/X3kprV177f6u5VmCps07gMNWS3VvGI3aneBGiAuJuS8VfbGxHjuPBYGvilcVEVR/PAVQSJQs3M8WEB2Nf9IlCYdqUt60TgOUU+0Zrh1kP5SuP6I/KgRDrUSS1XEqt3Nl2VS9Dudady42wAGYeS6usen4BOZTuodctRi6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I4v0fBz3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2OWIUhQr; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IxbKH5C2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11313C4AF07;
-	Mon, 27 May 2024 15:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716824948;
-	bh=PTOD43twZezS1LaJReRCBTqZRcQpJg3FNX+Bc7pvXxE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=IxbKH5C2BwSP+iOUIKaBS1SI3wXJKhKcDFUkIG4T9t9UPywfcjK5Ljk/qO0lPp55t
-	 217DLLh6BUR0hOyEtCUHB0lf7exkGCiKr+9YxJmGO5fLPA34hVX8VImzpAQCBR6CoX
-	 3dDifS/1vT/4ds3hUzCA3lkPy08MkQ6tSjCW8ySmYv3SeWfh3s8Ci8J5rsYJT1Ous9
-	 BNuunDrH+Rx8SdQ6ny8IQbh0QkTc0TD/Co53IIuU4MpiEGueDMJXqkBJ7VI6p9hmlf
-	 Aj3MOPUvSlG4SrPPa1gfFTwQturO3j1vm3XP/0PNgnwLybrgKjeddRuqUkpLBNsHrV
-	 M9f6khanAmVbg==
-Date: Mon, 27 May 2024 12:49:05 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jens Axboe <axboe@kernel.dk>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 1/1 fyi] perf beauty: Update copy of linux/socket.h with the
- kernel sources
-Message-ID: <ZlSrceExgjrUiDb5@x1>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I4v0fBz3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2OWIUhQr"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716825085;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iWrH8s0HgipnxikmiKvoWS+Y3TJn/3HsJ/qkGf8lcaY=;
+	b=I4v0fBz3bJImtrw8YX/tQPY9d4C5qdDuLZprK7pfqNybqDRHzCnieIVcSjCMdqOIsNlddX
+	WpOw2tBHYLf4PoiS4h1BZf84hHuTknyjIXU6XbaORSLV3ii0jA2KulQpeOWNynLGgr97qo
+	/44IQ+8OakKxfiHvKJNcEfsZsLM11sKNu2O9TKSCAR8qWntmTAWlek3WVnP+hn9ifbmQvx
+	mElh4VMht95N2BZV2zek9zR/XhZRzS1Hh46sP5Gv6D/3nUcmReEfwdYV1SICHnD0o63TqX
+	ZRuIbjv8DskE9DvtSisIdFp9/u6rrrrVwDjvDQlBDs1BmHnQXMl6oU1M2jWTxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716825085;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iWrH8s0HgipnxikmiKvoWS+Y3TJn/3HsJ/qkGf8lcaY=;
+	b=2OWIUhQrmt1EzQTNsZ0eAKLiptoz2yrlLQPIZ/7qyCJA5MmeIct02qNJuqlW2weJszwd1j
+	alAOtzRCAixG/oBg==
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen
+ <chenhuacai@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v2] clocksource: Add node counter timer driver for
+ MIPS/Loongson64
+In-Reply-To: <20240517-loongson_nodecnt-v2-1-5bd0bb20ff5f@flygoat.com>
+References: <20240517-loongson_nodecnt-v2-1-5bd0bb20ff5f@flygoat.com>
+Date: Mon, 27 May 2024 17:51:25 +0200
+Message-ID: <87sey3b6de.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+Jiaxun!
 
-Full explanation:
+On Fri, May 17 2024 at 18:13, Jiaxun Yang wrote:
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
+> +static void __iomem *nodecnt_reg;
+> +static u64 (*nodecnt_read_fn)(void);
+> +
+> +static u64 notrace nodecnt_read_2x32(void)
+> +{
+> +	unsigned int hi, hi2, lo;
+> +
+> +	do {
+> +		hi = readl_relaxed(nodecnt_reg + 4);
+> +		lo = readl_relaxed(nodecnt_reg);
+> +		hi2 = readl_relaxed(nodecnt_reg + 4);
+> +	} while (hi2 != hi);
+> +
+> +	return (((u64) hi) << 32) + lo;
+> +}
+> +
+> +static u64 notrace nodecnt_read_64(void)
+> +{
+> +	return readq_relaxed(nodecnt_reg);
+> +}
+> +
+> +static u64 notrace nodecnt_read_csr(void)
+> +{
+> +	return csr_readq(LOONGSON_CSR_NODECNT);
+> +}
+> +
+> +static u64 nodecnt_clocksource_read(struct clocksource *cs)
+> +{
+> +	return nodecnt_read_fn();
 
-The way these headers are used in perf are not restricted to just
-including them to compile something.
+What's this indirection for? Why dont you update 
 
-There are sometimes used in scripts that convert defines into string
-tables, etc, so some change may break one of these scripts, or new MSRs
-may use some different #define pattern, etc.
+> +static struct clocksource nodecnt_clocksource = {
+> +	.name	= "nodecnt",
+> +	.read	= nodecnt_clocksource_read,
 
-E.g.:
+the read function pointer here and spare the indirection?
 
-  $ ls -1 tools/perf/trace/beauty/*.sh | head -5
-  tools/perf/trace/beauty/arch_errno_names.sh
-  tools/perf/trace/beauty/drm_ioctl.sh
-  tools/perf/trace/beauty/fadvise.sh
-  tools/perf/trace/beauty/fsconfig.sh
-  tools/perf/trace/beauty/fsmount.sh
-  $
-  $ tools/perf/trace/beauty/fadvise.sh
-  static const char *fadvise_advices[] = {
-        [0] = "NORMAL",
-        [1] = "RANDOM",
-        [2] = "SEQUENTIAL",
-        [3] = "WILLNEED",
-        [4] = "DONTNEED",
-        [5] = "NOREUSE",
-  };
-  $
+Thanks
 
-The tools/perf/check-headers.sh script, part of the tools/ build
-process, points out changes in the original files.
-
-So its important not to touch the copies in tools/ when doing changes in
-the original kernel headers, that will be done later, when
-check-headers.sh inform about the change to the perf tools hackers.
-
-To pick up the fixes in:
-
-  0645fbe760afcc53 ("net: have do_accept() take a struct proto_accept_arg argument")
-
-That just changes a function prototype, not touching things used by the
-perf scrape scripts such as:
-
-  $ tools/perf/trace/beauty/sockaddr.sh | head -5
-  static const char *socket_families[] = {
-  	[0] = "UNSPEC",
-  	[1] = "LOCAL",
-  	[2] = "INET",
-  	[3] = "AX25",
-  $
-
-This addresses this perf tools build warning:
-
-  Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/socket.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/trace/beauty/include/linux/socket.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
-index 139c330ccf2c3bf9..89d16b90370bd412 100644
---- a/tools/perf/trace/beauty/include/linux/socket.h
-+++ b/tools/perf/trace/beauty/include/linux/socket.h
-@@ -16,6 +16,7 @@ struct cred;
- struct socket;
- struct sock;
- struct sk_buff;
-+struct proto_accept_arg;
- 
- #define __sockaddr_check_size(size)	\
- 	BUILD_BUG_ON(((size) > sizeof(struct __kernel_sockaddr_storage)))
-@@ -433,7 +434,7 @@ extern int __sys_recvfrom(int fd, void __user *ubuf, size_t size,
- extern int __sys_sendto(int fd, void __user *buff, size_t len,
- 			unsigned int flags, struct sockaddr __user *addr,
- 			int addr_len);
--extern struct file *do_accept(struct file *file, unsigned file_flags,
-+extern struct file *do_accept(struct file *file, struct proto_accept_arg *arg,
- 			      struct sockaddr __user *upeer_sockaddr,
- 			      int __user *upeer_addrlen, int flags);
- extern int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
--- 
-2.45.1
-
+        tglx
