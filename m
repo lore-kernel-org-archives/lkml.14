@@ -1,86 +1,133 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id B61F315FD04
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBDC169AC4;
+	Mon, 27 May 2024 16:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825598; cv=none; b=dSw3VMEGBUjD44FWrgcXvhKU9cJyqNuFttMxn6mAFhAdcOMs4IFdw/xh+aKUuJU3ZKQcILoTdVRK1pbhax5HWdVkrPOsGCpUMUH/pqsb0mYuQFGIchNVVE2AbJFbtfhlSSws344gsJxlpuXMzEEEqcAz9dhgAkL4m1vCcB8UYxo=
+	t=1716825602; cv=none; b=WtHBE7zJtR6WjY5+BfIOdEpHoqh6FbUh2jolRM2nD8Z06So3W3WrZCU7yfEcRtTaXPrupTzyysgds92sznj54SvN070f462qkZ27m3lwv05uygbUd+i1LOBRtXh8OABtlNSpuptlT9QT34vWzvgLCv88LkcYPN1k5kqgT04EYt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825598; c=relaxed/simple;
-	bh=ffEWuxCllktJhS6CvvMULqiZ+vYepD6NCdO09y7vhNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EJ4UwCcnIJDM4cIk4+x6PpHKTthQhXRzQJIUXnGKK51qlOYgP9LAE7dAG1adjnswCqVNYfqrbpbS9k+oA/yTA9LyFyzvzQWiig/EXqFPtQ3AnL8ws4pMuFFZM8Q69SGd1MkYUgO2QEhSkNdQVe0EV5kJaxDuj0AiUJUBMwzxVuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 663339 invoked by uid 1000); 27 May 2024 11:59:55 -0400
-Date: Mon, 27 May 2024 11:59:55 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-Cc: paulmck@kernel.org, parri.andrea@gmail.com, will@kernel.org,
-  peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-  dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-  akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
-  urezki@gmail.com, quic_neeraju@quicinc.com, frederic@kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 2/4] tools/memory-model: Define applicable tags on
- operation in tools/...
-Message-ID: <2094aee7-4597-4f7e-b08f-9829f70aa8ff@rowland.harvard.edu>
-References: <20240527152253.195956-1-jonas.oberhauser@huaweicloud.com>
- <20240527152253.195956-3-jonas.oberhauser@huaweicloud.com>
+	s=arc-20240116; t=1716825602; c=relaxed/simple;
+	bh=3LP7uINaualE2hoqM45O6u0ZwllI3zhOUOedJOEdnH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fYnuG3EoJwp8U3FvAtQVs7rEhg77MfDR8QvGyDbuBUOvKwW/irqshkXacuU1+z1u9PAzUW9PzS3v8SjPorFBjX0AWTFjVT/64xLkJxJ7AkLc4her7DY4/mE8df5vSvD5W5FOiYAVmEHxw/UXH1sqglgxuUh6QLRLrsH09Nq8erw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUw2MYTf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUw2MYTf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4C1AC2BBFC;
+	Mon, 27 May 2024 16:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716825602;
+	bh=3LP7uINaualE2hoqM45O6u0ZwllI3zhOUOedJOEdnH8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UUw2MYTfkI0teLDh/djEjYvHlBgczLiFJHTX3I+tuAEUa7nk5iXxi/lUooh2xFOMn
+	 dibY8uI8dsE21NyGTiVeaNYQn4wJl3A4b9gbRkkBAEI87aqy/t11bhcf5It3rnbFjy
+	 jCcNCWN86Yr8dMo/JjI3yZ53OR5Zd8WnJmF+os+c1FbmMHKZiWu9b5GVXUaLtz22jB
+	 KKQhR1blf3M+d/x3LiSohWfFaqEilamlmoZjZ84b7WfaxCoYjlkF4xrU41awh5wuil
+	 SHy4bJpz+1klLFKsWJai6q8o6jrcrbp/VGHBUDZJJfWQL9fvz7c5alHBXpND9AOwrC
+	 N+S0mpTj+Xlew==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Nathan Lynch <nathanl@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Sasha Levin <sashal@kernel.org>,
+	nathan@kernel.org,
+	vaibhav@linux.ibm.com,
+	kconsul@linux.vnet.ibm.com,
+	jniethe5@gmail.com,
+	gautam@linux.ibm.com,
+	sshegde@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org,
+	llvm@lists.linux.dev
+Subject: [PATCH AUTOSEL 4.19 1/2] powerpc/pseries: Enforce hcall result buffer validity and size
+Date: Mon, 27 May 2024 11:59:44 -0400
+Message-ID: <20240527155949.3866553-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240527152253.195956-3-jonas.oberhauser@huaweicloud.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 4.19.315
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 27, 2024 at 05:22:51PM +0200, Jonas Oberhauser wrote:
-> Herd7 transforms reads, writes, and read-modify-writes by eliminating
-> 'acquire tags from writes, 'release tags from reads, and 'acquire,
-> 'release, and 'mb tags from failed read-modify-writes. We emulate this
-> behavior by redefining Acquire, Release, and Mb sets in linux-kernel.bell
-> to explicitly exclude those combinations.
-> 
-> Herd7 furthermore adds 'noreturn tag to certain reads. Currently herd7
-> does not allow specifying the 'noreturn tag manually, but such manual
-> declaration (e.g., through a syntax __atomic_op{noreturn}) would add
-> invalid 'noreturn tags to writes; in preparation, we already also exclude
-> this combination.
-> 
-> Signed-off-by: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-> ---
->  tools/memory-model/linux-kernel.bell | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/memory-model/linux-kernel.bell b/tools/memory-model/linux-kernel.bell
-> index 1b2444cdf8d1..08fa1ccb1328 100644
-> --- a/tools/memory-model/linux-kernel.bell
-> +++ b/tools/memory-model/linux-kernel.bell
-> @@ -36,6 +36,13 @@ enum Barriers = 'wmb (*smp_wmb*) ||
->  		'after-srcu-read-unlock (*smp_mb__after_srcu_read_unlock*)
->  instructions F[Barriers]
->  
-> +(* Remove impossible tags, such as Acquire on a store or failed RMW *)
-> +let FailedRMW = RMW \ (domain(rmw) | range(rmw))
-> +let Acquire = Acquire \ W \ FailedRMW
-> +let Release = Release \ R \ FailedRMW
-> +let Mb = Mb \ FailedRMW
-> +let Noreturn = Noreturn \ W
-> +
->  (* SRCU *)
->  enum SRCU = 'srcu-lock || 'srcu-unlock || 'sync-srcu
->  instructions SRCU[SRCU]
-> @@ -82,4 +89,4 @@ let Plain = M \ Marked
->  let carry-dep = (data ; [~ Srcu-unlock] ; rfi)*
->  let addr = carry-dep ; addr
->  let ctrl = carry-dep ; ctrl
-> -let data = carry-dep ; data
-> +let data = carry-dep ; data
-> \ No newline at end of file
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-It looks like the final newline was accidentally deleted.
+[ Upstream commit ff2e185cf73df480ec69675936c4ee75a445c3e4 ]
 
-Alan
+plpar_hcall(), plpar_hcall9(), and related functions expect callers to
+provide valid result buffers of certain minimum size. Currently this
+is communicated only through comments in the code and the compiler has
+no idea.
+
+For example, if I write a bug like this:
+
+  long retbuf[PLPAR_HCALL_BUFSIZE]; // should be PLPAR_HCALL9_BUFSIZE
+  plpar_hcall9(H_ALLOCATE_VAS_WINDOW, retbuf, ...);
+
+This compiles with no diagnostics emitted, but likely results in stack
+corruption at runtime when plpar_hcall9() stores results past the end
+of the array. (To be clear this is a contrived example and I have not
+found a real instance yet.)
+
+To make this class of error less likely, we can use explicitly-sized
+array parameters instead of pointers in the declarations for the hcall
+APIs. When compiled with -Warray-bounds[1], the code above now
+provokes a diagnostic like this:
+
+error: array argument is too small;
+is of size 32, callee requires at least 72 [-Werror,-Warray-bounds]
+   60 |                 plpar_hcall9(H_ALLOCATE_VAS_WINDOW, retbuf,
+      |                 ^                                   ~~~~~~
+
+[1] Enabled for LLVM builds but not GCC for now. See commit
+    0da6e5fd6c37 ("gcc: disable '-Warray-bounds' for gcc-13 too") and
+    related changes.
+
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240408-pseries-hvcall-retbuf-v1-1-ebc73d7253cf@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/include/asm/hvcall.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/hvcall.h b/arch/powerpc/include/asm/hvcall.h
+index a0b17f9f1ea4e..8347f57e1c6a3 100644
+--- a/arch/powerpc/include/asm/hvcall.h
++++ b/arch/powerpc/include/asm/hvcall.h
+@@ -383,7 +383,7 @@ long plpar_hcall_norets(unsigned long opcode, ...);
+  * Used for all but the craziest of phyp interfaces (see plpar_hcall9)
+  */
+ #define PLPAR_HCALL_BUFSIZE 4
+-long plpar_hcall(unsigned long opcode, unsigned long *retbuf, ...);
++long plpar_hcall(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL_BUFSIZE], ...);
+ 
+ /**
+  * plpar_hcall_raw: - Make a hypervisor call without calculating hcall stats
+@@ -397,7 +397,7 @@ long plpar_hcall(unsigned long opcode, unsigned long *retbuf, ...);
+  * plpar_hcall, but plpar_hcall_raw works in real mode and does not
+  * calculate hypervisor call statistics.
+  */
+-long plpar_hcall_raw(unsigned long opcode, unsigned long *retbuf, ...);
++long plpar_hcall_raw(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL_BUFSIZE], ...);
+ 
+ /**
+  * plpar_hcall9: - Make a pseries hypervisor call with up to 9 return arguments
+@@ -408,8 +408,8 @@ long plpar_hcall_raw(unsigned long opcode, unsigned long *retbuf, ...);
+  * PLPAR_HCALL9_BUFSIZE to size the return argument buffer.
+  */
+ #define PLPAR_HCALL9_BUFSIZE 9
+-long plpar_hcall9(unsigned long opcode, unsigned long *retbuf, ...);
+-long plpar_hcall9_raw(unsigned long opcode, unsigned long *retbuf, ...);
++long plpar_hcall9(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL9_BUFSIZE], ...);
++long plpar_hcall9_raw(unsigned long opcode, unsigned long retbuf[static PLPAR_HCALL9_BUFSIZE], ...);
+ 
+ struct hvcall_mpp_data {
+ 	unsigned long entitled_mem;
+-- 
+2.43.0
+
