@@ -1,72 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC5715ECE7
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2BE15ECFD;
+	Mon, 27 May 2024 13:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816434; cv=none; b=g5EQM0Nb8H052SOdfM3Fj784QC6WOCzNL/QzHXRaeHVfrGAgNKbpB8YTQNrijHPzXeiB6HCmqVqXveiErhrvDbOqz3vVXYUjsnhyEOoyc6iCC8cDSC+94SVy56SueelCC8eomRHylb+Bx/araeRLHgBIP12dXGOYILHHErriqaM=
+	t=1716816436; cv=none; b=B+0lG6r+XZqPj2fZ/ZfmJZ46sn1sFPEjnDNPYFLvOgt0GG8JvybMJpjkVr1H1dkETiP0QSo8rBftfN0aAFsmkO6Eq2uZxr2BjSfkLTh7ica2NnMztN7d/9kOUcwsKOpPp2LvuwP5vSJJ+MSGK1gEGreZBGhoV7Lw13A8Kh1veDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816434; c=relaxed/simple;
-	bh=ZyDOV+M5aNRQcxoeRg24V5eddc/YAovsvaL/j6YVyGw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LMP6cuCplhjvGIWSmlJGFvgU2t3sxT5y4K8H55rtMnnnyPgE472rbpxRFBkXJM6eRWfkzdPHxZ8V545yfBjPrh4LkY9pQOCZQ61rKM04cDRwbkVRKWDocdPuEJxoCYFERVK+BsB+UbkECwghk5FiAxVWZaviTEB+wshzIlgfh8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiZxRfwf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716816436; c=relaxed/simple;
+	bh=wvKfF7CTGkILCYXaRxLo0BRYhRmTr1qU9enaps1pCtI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=l1qjkTjE1WY3ETsYMSBANzDwNMF/sFat3/5oFiPPmfvjjC8iaRY5SxElZr8AEZVJSykrvnafLd2V/khlSZk00jADq6Sif13Du6MYSfg6LMuqzRy5uiIQtsm7HGSSfrFrctIE1HSK+g3QgiDTdigXQ48GBb6ZaoBml9aZ4xbaUmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S8B7pcjp; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiZxRfwf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24221C2BBFC;
-	Mon, 27 May 2024 13:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716816433;
-	bh=ZyDOV+M5aNRQcxoeRg24V5eddc/YAovsvaL/j6YVyGw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=CiZxRfwfJp8nIKYRU8dJ5T6vBGq+Bt0Mkn28mthMikZxjE1870baR737ift0Y+t0R
-	 uukJ4B6ZoozamSouwyN8VhzVFaLY/afL7Vu+ajw0eiBl9pHbppFk42Sfv1JdO5Opyg
-	 LOWpQUrPcypzvWmy3vFRPR3dWLrZ34AaEgPu336YDaBBgCZ+DG8pC0rCImd+gS7b4l
-	 uLVRVXRXjuGjp3NCyP3cY/NGxdfvydmMD6Qlt4AqES/KFIxpezDi7Lc4OrmdWTbZfw
-	 Jrg70BgDbsSu/Jd8V9BuEwlixKcnzyhu2niHteXuBh46vQUM/yR4vKfnyoFTlw43K0
-	 4X8xpfRj+CBGw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
- <pratyush@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,
-  Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  Ricardo Ribalda <ribalda@kernel.org>,
-  linux-kernel@vger.kernel.org,  linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 3/6] mtd: spi-nor: remove .setup() callback
-In-Reply-To: <20240419141249.609534-4-mwalle@kernel.org> (Michael Walle's
-	message of "Fri, 19 Apr 2024 16:12:46 +0200")
-References: <20240419141249.609534-1-mwalle@kernel.org>
-	<20240419141249.609534-4-mwalle@kernel.org>
-Date: Mon, 27 May 2024 15:27:10 +0200
-Message-ID: <mafs0jzjfe66p.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S8B7pcjp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716816435; x=1748352435;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wvKfF7CTGkILCYXaRxLo0BRYhRmTr1qU9enaps1pCtI=;
+  b=S8B7pcjpn/vYnLpnbZpyta0K6D1GEvMUuLZ5q7FHtyHWCN/g4LwzU8jT
+   I8XiFRRuFx7tcTc8Z/AArcnIyEwC2Lu45R9K6vvH9zoZHEmEh31q4GXyH
+   rYvL19AWULEpSeqwlW3dFKm73cc9KnU4ZfnXCUy50XMa+H56qvntOCb/W
+   0NeOpCfnk203brSmBw88DXCsZuG7Uo8qkmmaCf4ZyRPgXhPbn149OA2WV
+   B/inU7fUzAk/OQzYbPgHDEPBRoNey+sNouTlM0tngq2ke8dnp/2x8CThq
+   EMHAcmencl4D/of/85NtYcKUZX2LuhfwfX+DG/NK7Aojsc5tECJM+8Fn3
+   Q==;
+X-CSE-ConnectionGUID: 9VjXVEgHTxycoXmeR3L1HA==
+X-CSE-MsgGUID: wQekaMZDS26Q6ONroRgW1w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="13360158"
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="13360158"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 06:27:14 -0700
+X-CSE-ConnectionGUID: /os+K9DuQBOnhPvFbYJ2mw==
+X-CSE-MsgGUID: 4kE1KxpaTKW4Su4ifoDNdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="39558544"
+Received: from unknown (HELO localhost) ([10.245.247.140])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 06:27:11 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Dave Hansen <dave@sr71.net>,
+	Richard Purdie <rpurdie@linux.intel.com>,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/1] leds: ss4200: Convert PCIBIOS_* return codes to errnos
+Date: Mon, 27 May 2024 16:27:00 +0300
+Message-Id: <20240527132700.14260-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+ich7_lpc_probe() uses pci_read_config_dword() that returns PCIBIOS_*
+codes. The error handling code assumes incorrectly it's a normal errno
+and checks for < 0. The return code is returned from the probe function
+as is but probe functions should return normal errnos.
 
-On Fri, Apr 19 2024, Michael Walle wrote:
+Remove < 0 from the check and convert PCIBIOS_* returns code using
+pcibios_err_to_errno() into normal errno before returning it.
 
-> With the removal of the Xilinx flashes, there is no more flash driver
-> using that hook. The original intention was to let the driver configure
-> special requirements like page size an opcodes.  This is already
-> possible by other means and it is unlikely a flash will overwrite the
-> (more or less complex) setup function.
+Fixes: a328e95b82c1 ("leds: LED driver for Intel NAS SS4200 series (v5)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/leds/leds-ss4200.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Just for comparison, I checked if U-Boot does anything with the setup
-hook that we might also need. It looks like it mostly uses it for
-handling non-uniform erases on Spansion flashes, since U-Boot doesn't
-have proper support for them. This shouldn't be needed by Linux since it
-can already do those erases.
-
-Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-
+diff --git a/drivers/leds/leds-ss4200.c b/drivers/leds/leds-ss4200.c
+index fcaa34706b6c..2ef9fc7371bd 100644
+--- a/drivers/leds/leds-ss4200.c
++++ b/drivers/leds/leds-ss4200.c
+@@ -356,8 +356,10 @@ static int ich7_lpc_probe(struct pci_dev *dev,
+ 
+ 	nas_gpio_pci_dev = dev;
+ 	status = pci_read_config_dword(dev, PMBASE, &g_pm_io_base);
+-	if (status)
++	if (status) {
++		status = pcibios_err_to_errno(status);
+ 		goto out;
++	}
+ 	g_pm_io_base &= 0x00000ff80;
+ 
+ 	status = pci_read_config_dword(dev, GPIO_CTRL, &gc);
+@@ -369,8 +371,9 @@ static int ich7_lpc_probe(struct pci_dev *dev,
+ 	}
+ 
+ 	status = pci_read_config_dword(dev, GPIO_BASE, &nas_gpio_io_base);
+-	if (0 > status) {
++	if (status) {
+ 		dev_info(&dev->dev, "Unable to read GPIOBASE.\n");
++		status = pcibios_err_to_errno(status);
+ 		goto out;
+ 	}
+ 	dev_dbg(&dev->dev, ": GPIOBASE = 0x%08x\n", nas_gpio_io_base);
 -- 
-Regards,
-Pratyush Yadav
+2.39.2
+
