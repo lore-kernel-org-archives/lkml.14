@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B906D23D7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BF44C96;
 	Mon, 27 May 2024 03:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716779430; cv=none; b=mNKXasUgviP5a5KHqZTA+7AlZjKbmdwl9aQARnaLSSCI7fTG/50GvDbOt3kBUfNlK/UvN6RAszlamXxnYlMG09SCzKU305L5NVO/C+YJzhcsRuEllDT6widYZKA4UOmdUbvbDztSa9XzgLRBeIkv67uuxGE9meYpCPLw7vDxLAI=
+	t=1716779431; cv=none; b=DalGTIUuLlQBR1uZKjwRJa0hmCoo0ruywegCZmLS/VTlJUideoyx+zSiJSlc338Zwvd3ag2L6Rxkiiob8iUnvgYOg128kLHlaXkI+OcGBOhuqZTTnFVOinuAeNvaS+g6+yLN+yXV6dvXxE+G55tV9ASBhju3mIYTNCR2CVHxiX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716779430; c=relaxed/simple;
-	bh=H9f98sf9KBY7q0f3ExFOE5UpF03Q4X6HE5DY4K8Pv8Y=;
+	s=arc-20240116; t=1716779431; c=relaxed/simple;
+	bh=nQ+yASZZf4ZLThVtkct1L/qj2j0Q16CyRcHYQ4Z86wg=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KnjlMdmsns06GN6PR3LklgC5E4L3EWFJXww9orNNtwJqo141r2xLkaYPuBvlFJmWLwJcD/C17Xgin9J66EzB82m7atgPaxib+pz+tThAb3Pk1PnsCdWu66j+U4otV8IsbTLMQShNTUN1Pb/xqlgTjO8jhD2C56KWDSxt3EI3kvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PkAsgTx4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=WwHM5QHU4y4aT8HlYXMqMO2zkDF8r9bHRqi0vm65mrk0X8Ys6ODSRh1dGVIc5RcIGbDm6bH27i+Fe4xgvSA9MOSu6pwkzKGw2/hGkDQeyfrSHSJ7/mLs5CLUOXJThMl81T1OMDWS5u0T+YWZ3ZXGOs4p4gPpisvD+8OybHaDXxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgU9NaeB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PkAsgTx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 96227C4AF0C;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgU9NaeB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 37055C4AF07;
 	Mon, 27 May 2024 03:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716779430;
-	bh=H9f98sf9KBY7q0f3ExFOE5UpF03Q4X6HE5DY4K8Pv8Y=;
+	bh=nQ+yASZZf4ZLThVtkct1L/qj2j0Q16CyRcHYQ4Z86wg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=PkAsgTx4VwGk+piZoKNks4CeST2HutgtgoBoqFoFMGNNSWU86ifJpzKi10zBCMY8n
-	 IWf0YUXB3r2i1jaWnlxQSFNPIM9H+ibNHcQmIqmXPFvt54+ydwYy1+qY9lMz2C3IkC
-	 Wh7qyLbTiogBXg3p8BzECUjjZms5DO+MebmLxQO4TWibB/0J/B/1HMez13gAc1ho85
-	 WqumxzQk9OgBIy5bJE/gTiRUomXHb1bT0fG3tSj8KYB7pPSZNRiMETh0bkBgkqnkIp
-	 Ehy3QQlN5s4VPSJiCNepBYeCeB1T1Nf97xLS3jwoTnIzQ4A0rrYQoEmEvdELGEaS82
-	 y+S78D8yilNtA==
+	b=qgU9NaeBAbSdTky8/A6A8K/xPF+zEV6R4u+bb88ssTV8YECw/Lh7ttmQoqOpS78IP
+	 Mpx2sJTmqe17Uz/IR4AzGgi7Lq8f95AHDA2ry7p4z9iyoAJHirOUeOWdemKaybgT3I
+	 HttHA5h8HmagOLgqZNdEHA+i9iV9mBsldgi697KBnnHUEjuonICRdFhAUblWiglsSh
+	 e1VNe4V4vQEdyHr9pMp0K4L3SvK5RjUd9vtdq2Lo1b+V77E8jKyWPbBTKkhGFjTKoN
+	 Ry3BWP1sUIXZyyGMqX4xKOJ6dQpD9uUSQu9NsO2j5CGgHCx0wu8SRxbQnkxBc88eoH
+	 E4ktahHFwenxQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8A199CF21F7;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 28C48CF21F7;
 	Mon, 27 May 2024 03:10:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -40,7 +40,7 @@ Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH 0/2] platform/chrome: cros_ec_proto: Trivial kdoc fixes
 From: patchwork-bot+chrome-platform@kernel.org
 Message-Id: 
- <171677943055.24851.13069392043315072746.git-patchwork-notify@kernel.org>
+ <171677943016.24851.12983091193443152313.git-patchwork-notify@kernel.org>
 Date: Mon, 27 May 2024 03:10:30 +0000
 References: <20240524-cros_ec-cmd_versions-v1-0-8a148647d051@weissschuh.net>
 In-Reply-To: <20240524-cros_ec-cmd_versions-v1-0-8a148647d051@weissschuh.net>
@@ -50,7 +50,7 @@ Cc: bleung@chromium.org, tzungbi@kernel.org, groeck@chromium.org,
 
 Hello:
 
-This series was applied to chrome-platform/linux.git (for-next)
+This series was applied to chrome-platform/linux.git (for-kernelci)
 by Tzung-Bi Shih <tzungbi@kernel.org>:
 
 On Fri, 24 May 2024 10:33:32 +0200 you wrote:
