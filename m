@@ -1,106 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4816F1581E2
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 11:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0EE1581E2;
+	Mon, 27 May 2024 11:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716810472; cv=none; b=CFL6HkCbX9k6oA41wa6JQZ3pA1JdRpXNRZcOiDL0BKvhdubKIF7jbxGTCGjQznLZDkgaEQCuoiwY+boXOIMx0YA6xxfqZ0/dSqCMkBBtWlp/YgKHgh51s/9LMSYNi1hufahJi6ayf+vSk9FDxfYbXiWhSz/l9lUiS4CJbxNbZ+U=
+	t=1716810483; cv=none; b=bJtW+JE5UDUBE8Dv04mE6FjZ2Z61GY4RiVu0SCqzhZ5nv/Aa82yFzrQljGFUCJAiDlSaQoaH8GJxzs03VPejEXwVFxNxn+nwcMima5sUqtTD/E+WOCvyeEB5jKIl2pB8pNbGbk8dC7Wh26JMwGEEdrqRe2/2s7uJEC57+AdsrNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716810472; c=relaxed/simple;
-	bh=sRmVMUWEsGd3JiARjxDS9+4xUJi2FEDCmK4BeqEOf/I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iv23Xk577dHRNXOP8nGyXsDJz8A9IzNdC3kxOPwliu9SzHnn/tYpJnIjkocf/aDxGzWc0uO7ZwXoiIP0Y2PFPcnVCTVn0Cfm9kapiU76UPgXGyyGiF6Pxfjm/FoTLi8eg3aRXjb2eJhaF9pyeAJSzZ8tE+692wrPeBlMNeUCk2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UovBtMHy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716810483; c=relaxed/simple;
+	bh=Xi54afU0dRqoCutzzQ1x9zNEqkgWSsCL5ib1ypoy3ho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sxB1s7QzdPQaMiHo5ifTgC3kITZG1Vt5JQCjPlyLbnmk+4V1z9pkQZQmCYQzVEy9NLsS67W21ga2fYXaZCKpgW71dgnvjrp/LZIMFAhaZoj8G9sll1lSzscLzlLZv0cTN4THAWqwIjr5QQaXfvQv657OwvNAZnIBSGxFvddQDtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DqGCY/hL; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UovBtMHy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716810470;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HdRZ8PJH5vkD9TGX7r4B8NiG3gmtbnkvy1NOwKAXBr8=;
-	b=UovBtMHyhkD4qHSrmmzu9jYSvkiI5gNlLBJnCvfYS7vpgpqGVOBv9wLJY+sipTBE22yr7C
-	5TX1xlXdnrApBh7/mjkw5LDcCb5g6Gl4J/CLY3w7F2fbAx8IsIQGpDz3ZP4ki2n27InBtK
-	+HE5OW2n1oFwMC6//cCvbwEbzYsrnmM=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-294-rO7QlqMwOFWkDCJDZuiSoA-1; Mon,
- 27 May 2024 07:47:45 -0400
-X-MC-Unique: rO7QlqMwOFWkDCJDZuiSoA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6834629AA39D;
-	Mon, 27 May 2024 11:47:45 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.194.78])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 79B6E200A610;
-	Mon, 27 May 2024 11:47:44 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: Andy Shevchenko <andy@kernel.org>,
-	Lee Jones <lee.jones@linaro.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] mfd: intel_soc_pmic_crc: Use PWM_LOOKUP_WITH_MODULE() for the PWM lookup
-Date: Mon, 27 May 2024 13:47:43 +0200
-Message-ID: <20240527114743.326482-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DqGCY/hL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=2iRQNARYz6TUh7I9OHQgqaA8lNEZzq7pUVB+8f4qGN4=; b=DqGCY/hL/0v4+ZNJS7sSHJagi8
+	oZVPqgNF/00HXA745NxhP4BaRThnL5JZpYyz5qG3Dfgag4MWoutaQBQv+9ZH7FzRYe6lMguZCdxE4
+	fs/abRl28V5+/10XFpBn8pLZH6w464YsE4cIRiurnyZJ78wezBYtzgh3zDgN1+wHKo9lZVA9YCicg
+	38tSg4lFKZly7B3RPJwAOTjWqkKBV2l64rOpBvPFBLQ1Nx4lPke/2zxidK6ARkANVo127qwbbXthp
+	lPsQfeN3tZiUujm2xVdSG8Mcx2JGGivYojdgjv6GZfruQWwudJQ/Y9dX/rsvKXk6gzI2geUnFXlpQ
+	BkNDiedg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sBYpY-0000000Ejny-3eAr;
+	Mon, 27 May 2024 11:47:56 +0000
+Date: Mon, 27 May 2024 04:47:56 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <ZlRy7EBaV04F2UaI@infradead.org>
+References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+ <ZlMADupKkN0ITgG5@infradead.org>
+ <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-The primary use of the CRC PMIC's PWM is for LCD panel backlight
-control by the i915 driver.
+On Sun, May 26, 2024 at 12:01:08PM -0700, Aleksa Sarai wrote:
+> The existing interface already provides a mount ID which is not even
+> safe without rebooting.
 
-Due to its complexity the probe() function of the i915 driver does not
-support -EPROBE_DEFER handling. So far the pwm-crc driver must be built
-into the kernel to ensure that the pwm_get() done by the i915 driver
-succeeds at once (rather then returning -EPROBE_DEFER).
+And that seems to be a big part of the problem where the Linux by handle
+syscall API deviated from all know precedence for no good reason.  NFS
+file handles which were the start of this do (and have to) encode a
+persistent file system identifier.  As do the xfs handles (although they
+do the decoding in the userspace library on Linux for historic reasons),
+as do the FreeBSD equivalents to these syscalls.
 
-But the PWM core can load the module from pwm_get() if a module-name is
-provided in the pwm_lookup associated with the consumer device.
+> An alternative would be to return something unique to the filesystem
+> superblock, but as far as I can tell there is no guarantee that every
+> Linux filesystem's fsid is sufficiently unique to act as a globally
+> unique identifier. At least with a 64-bit mount ID and statmount(2),
+> userspace can decide what information is needed to get sufficiently
+> unique information about the source filesystem.
 
-Switch to using PWM_LOOKUP_WITH_MODULE() for the lookup added for
-the Intel integrated GPU, so that the PWM core can load the module from
-pwm_get() as needed allowing the pwm-crc driver to be safely built as
-module.
-
-This has been successfully tested on an Asus T100TAM with pwm-crc
-build as a module.
-
-Link: https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/11081
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Some small commit message tweaks
-- Add Andy's Reviewed-by
----
- drivers/mfd/intel_soc_pmic_crc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mfd/intel_soc_pmic_crc.c b/drivers/mfd/intel_soc_pmic_crc.c
-index 581f81cbaa24..876d017f74fe 100644
---- a/drivers/mfd/intel_soc_pmic_crc.c
-+++ b/drivers/mfd/intel_soc_pmic_crc.c
-@@ -137,7 +137,9 @@ static const struct regmap_irq_chip crystal_cove_irq_chip = {
- 
- /* PWM consumed by the Intel GFX */
- static struct pwm_lookup crc_pwm_lookup[] = {
--	PWM_LOOKUP("crystal_cove_pwm", 0, "0000:00:02.0", "pwm_pmic_backlight", 0, PWM_POLARITY_NORMAL),
-+	PWM_LOOKUP_WITH_MODULE("crystal_cove_pwm", 0, "0000:00:02.0",
-+			       "pwm_pmic_backlight", 0, PWM_POLARITY_NORMAL,
-+			       "pwm-crc"),
- };
- 
- struct crystal_cove_config {
--- 
-2.45.1
-
+Well, every file system that supports export ops already needs a
+globally unique ID for NFS to work properly.  We might not have good
+enough interfaces for that, but that shouldn't be too hard.
