@@ -1,130 +1,288 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872D115DBC1
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7542715ECE7;
+	Mon, 27 May 2024 13:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716815733; cv=none; b=cqMXjB8bffYs1s5nXKnMiqXkQNCC5/UsyCPhqHhI3KEdGcPu2Hq3xSkJd/7PSCn+cm0p0kKCq1e86PGRoLbCOS7zyYxQSivFYFC8AI/uDoJkZM9f4/7BH/NXBZIcMHxF1eDHn3wuRCo8PeCArAKkL+/Zdo+xfShWa/MHaZENZWM=
+	t=1716815738; cv=none; b=gGNZ1GuV9JSiQluH6q4k8kEDr5LTdVhfg500UQRE0q1P05JQlw+rRG9HJ5bkRdp2CjFoKiH8kxrzP0pSd7Ior3BmMG6v6yOgcrGADyh3nbYe05zRVmHPpDXQF/QOYMcx0kKDgptzGRECIgJaew9NzflXuOGO4fQBO+Cdjn70aXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716815733; c=relaxed/simple;
-	bh=K247tM0uRG0BEBi0QtYli0dAiX2cPA2+pN50KQ+XwJ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ta/dJPMNfdKLcSx0W6w5Sq8K1Iu3OZk7Ry+7vWj5zrJRVBINaAa9/QV3OVyr7YoOLihshf9ddNitW1GCP5zy8TDeg7ZE7qTAc7XfhVx+qlEAQA2g+wIiLMClDacig+HSVwf+pOPl272PVNRxufl1JTOkVg57CMp0W36d/muU5r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SyHO7WSO; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716815738; c=relaxed/simple;
+	bh=B8cYOtpeE0HUjZd9NR4Eg7T92wexYwy2k7m+8psPL18=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NSHT2VApfxO3F+OKQvhzbEyAKxGdOjxSSzY+nht5JyVk2FKP54bNAiNdeg3M0Flq4a/RV+tSrq+0Bbv7zvyY7DXaottuFy7xeMlif9H0yluEgcPAUuwJl+iAD/8gfLCH7Ipgjoev5R1JKEVvkA+SrnqMMoOoZN3Xp+q0VOvsFso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=PWUcrWnw; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SyHO7WSO"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62a145e0bb2so25701287b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716815730; x=1717420530; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ORWWAV5DFVa1AMsT2HoJ2yL9cgtTVCQWr4c970t4N2A=;
-        b=SyHO7WSObKi/9vVbWpFY6Iyi/jPD3vlvvL2Qk6liuyQAxH2aO220Y1WYbahv1/dan6
-         09NGErKxptysMMj+46h15XI65RhX+UsWq2UIEL4waYEsdm599mD/XZCbSGMjGtg6RxPz
-         h9eI5jS6jDdR6uMZUITLr5j96bji46XXFOwEIB2XweALj095/cSqImxFmxPSi7iiweNX
-         fOm+Tyz2NksN5ul5WLE6EgdFGXbbaQok5YCvUnOtaHHO+L+n6w0F175mAFyYpHJt3ZwC
-         57APHQ7Sq7sbOEj5Y8mLhpBED+N3a8WPC+OQrDaMW1HfMUMvqxB6E1q/e7F1n77SPB2b
-         hlhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716815730; x=1717420530;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ORWWAV5DFVa1AMsT2HoJ2yL9cgtTVCQWr4c970t4N2A=;
-        b=rQIuJheKJnZc7FfWdI6AJtTl8XomJ0Q0WX89Znkrmi1Yyx+4IzW9CDYE9QBww2JH6J
-         2Y0dhf5sb31FWDVGhWJmtuAKc6ixL3FbS3DzCEGz6eilYQQn1AssBj7BmtothXarvxR7
-         jPjvrYsuhz7bQEOFePqfiPqRR1H5/SeemJrDCop+cUvHm+5UCJbq89h+qL29ma4s7sFI
-         z/AbD80aoQxN9Qs3WAVlt3HmZaUSJah/vWS9pXweMvQN9kcw6jTnQ6NEOCoEHD0PnN1/
-         9kSR20/PX56yOQnmBxZKtdo6qKt1iG0SzY1Crt6nTsrTfM0C7DE8EDvtbUDmI5RCMyti
-         MONw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnXJmnuuZNhoiqF4bdGhYWZGv/qba0rkwqRrs5C9ucX4VIRF8cq5uNdI7nvAP1dj1Hl/a830xXYMCsLONleFaesRArxW5kHicMhzBY
-X-Gm-Message-State: AOJu0YzjfkkG1dg5vxKoP01KmeWN19cd1WANi3eIaZahKWjCn+ACQQWM
-	ych6DCKhmAWP9HaaUHiKBD6gvWCJTDoZzsHaxooEwH4tl0flmZEsn06oKEB1JpjuLEgOlASLiha
-	jDSE/gFU1q6gbvyNGSKfu1d3iyjFVVLRVy/IMQg==
-X-Google-Smtp-Source: AGHT+IFLnsaD839+3qfvvjKNYcPNIoZukpexfAQJweynlTmE92arqErfYxJaJwjE2NjnD3ByeP9B2Eef7aVU5QowlBM=
-X-Received: by 2002:a25:bc0a:0:b0:df4:ece5:2712 with SMTP id
- 3f1490d57ef6-df7721c416bmr9545693276.39.1716815730399; Mon, 27 May 2024
- 06:15:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="PWUcrWnw"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44RCGrF3017304;
+	Mon, 27 May 2024 15:15:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	6U3S0nhV1fvnOXy1Abo104qBpad6fsNBZGWtsNvzJD0=; b=PWUcrWnwrzPB4SX6
+	I0yJEZrdYnIwZKHRTorsJQsiiUj34EB/DLx5GZzqH3WxpwDGGeO14cybCpBBljDs
+	Cbvvz0wizV4skWlvNuqDHxMVuRFeBNMv8veRiqO4z5h03/OdqUwx/kNRdIhzaXSF
+	RQJ9FZD66Q8EnqnnFtWApDiFwFefvDDWar1mILM0fY3PjRbQbCcUWIH22h9HzcfX
+	oJkILm9FWFVunvlrhwDti+D6LSsZU+ITe5Al79DgskokmQV/FhN3GxaubWoaIIlR
+	sRL/+Hh7tMZtPKWeQ6qu3WrlTXCc8MmDNDjZ4uDs/0pJMIXU1JM/LqiRVFZOr5Vh
+	6yJEYw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yb9yj7e3r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 May 2024 15:15:20 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5B35C4002D;
+	Mon, 27 May 2024 15:15:15 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4710A215BD5;
+	Mon, 27 May 2024 15:14:37 +0200 (CEST)
+Received: from [10.131.140.24] (10.131.140.24) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 27 May
+ 2024 15:14:36 +0200
+Message-ID: <77fa3ed3-2341-4106-adf2-ec8bd9de91ff@foss.st.com>
+Date: Mon, 27 May 2024 15:14:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240503162217.1999467-1-sean.anderson@linux.dev>
- <CACRpkdbOAoSDNFhXfz3djUZh1_MQ_T75CC+-LmojRXvyCbUusA@mail.gmail.com> <06a4e5fd-3d26-4923-bcbf-0bdd66d756c4@linux.dev>
-In-Reply-To: <06a4e5fd-3d26-4923-bcbf-0bdd66d756c4@linux.dev>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 May 2024 15:15:19 +0200
-Message-ID: <CACRpkdbSsgxtKqF6ORXubufTaegjysHU7zH-tJfDfKNd=Kdoeg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pinctrl: zynqmp: Support muxing individual pins
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
-	Krishna Potthuri <sai.krishna.potthuri@amd.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD56G3 camera sensor
+ binding
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <benjamin.mugnier@foss.st.com>, <mchehab@kernel.org>,
+        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, Sakari Ailus
+	<sakari.ailus@iki.fi>
+CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240521162950.6987-1-sylvain.petinot@foss.st.com>
+ <20240521162950.6987-2-sylvain.petinot@foss.st.com>
+ <2110ba34-658e-4d60-b524-2f5ead6c8d3e@linaro.org>
+Content-Language: en-US
+From: Sylvain Petinot <sylvain.petinot@foss.st.com>
+In-Reply-To: <2110ba34-658e-4d60-b524-2f5ead6c8d3e@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-27_02,2024-05-24_01,2024-05-17_01
 
-On Mon, May 6, 2024 at 4:45=E2=80=AFPM Sean Anderson <sean.anderson@linux.d=
-ev> wrote:
+Hi Krzysztof,
 
-> > Then we realize that not everyone need all the modem
-> > control signals provided. What to do. Well this:
-> >
-> > uart0_rxtx_grp =3D pin_rx, pin_tx:
-> > uart0_modem_grp =3D pin_cts, pin_dts, pin_dcd;
-> >
-> > mux0:
-> >     function =3D "uart0";
-> >     groups =3D "uart0_rxtx_grp";
-> >
-> > Now the CTS, DTS, DCD pins can be reused for something
-> > else such as GPIO.
-> >
-> > I *know* that this breaks ABI: the driver group definitions change
-> > and the device tree needs to be changed too.
+Thanks for the review.
 
-Actually I didn't think that over, it is possible to add new groups
-and retain the old ones.
+On 5/21/2024 7:37 PM, Krzysztof Kozlowski wrote:
+> On 21/05/2024 18:29, Sylvain Petinot wrote:
+>> Add devicetree bindings Documentation for ST VD56G3 & ST VD66GY camera
+>> sensors. Update MAINTAINERS file.
+>>
+> 
+> A nit, subject: drop second/last, redundant "binding". The "dt-bindings"
+> prefix is already stating that these are bindings.
+> See also:
+> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+> 
 
-I.e. retain uart0_grp, but additionally add and use
-uart0_rxtx and uart0_modem_grp and use one or the
-other approach.
+Ok, fixed in V3.
 
-> Well, the pin groups are actually defined in the PMU firmware.
+> 
+>> Signed-off-by: Sylvain Petinot <sylvain.petinot@foss.st.com>
+>> ---
+>>  .../bindings/media/i2c/st,st-vd56g3.yaml      | 132 ++++++++++++++++++
+>>  MAINTAINERS                                   |   9 ++
+>>  2 files changed, 141 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml b/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
+>> new file mode 100644
+>> index 000000000000..22cb2557e311
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
+> 
+> Why duplicated 'st'?
 
-Is that firmware written in such an helpful way that the groups
-can be extracted from the firmware then, as with SCMI? Or is it
-a matter of duplicating the info from the PMU in the software-defined
-groups.
+Legacy : our first st-mipid02 driver was upstream this way few years back.
 
-> And
-> frankly, I don't see the point of pin "groups" when there are not actual
-> pin groups at the hardware level. The pins can all be muxed
-> individually, so there's no point in adding artificial groups on top.
-> Just mux the pins like the hardware allows and everything is easy. Cuts
-> down on the absurd number of strings too.
+We have 3 options :
 
-So are you going to switch all of Xilinx devicetrees over to using exclusiv=
-ely
-the new method (muxing individual pins)?
+1- keep this unpleasant naming to keep consistency with st-mipid02 [1]
+and st-vgxy61 [2]
+2- rename this driver properly ('vd56g3') and keep the two others the
+old way (I personally don't like this option)
+3- rename this driver properly ('vd56g3') and in a second patch rename
+the two others drivers.
 
-I'm fine with one (string identified groups) which I encourage, but I
-let individual pin control pass as well on several occasions.
+I would be interested to get Sakari's opinion on this subject.
 
-What I don't want to see is a Franken-solution that mixes the two
-approaches, even less so on the same system. Someone is going to
-have to maintain the resulting mess. And this looks like exactly that.
+[1]:
+https://elixir.bootlin.com/linux/v6.9.1/source/drivers/media/i2c/st-mipid02.c
 
-If you want to mux individual pins instead of groups and functions, by
-all means, but please do not mix the two approaches in the same
-driver, I'm just trying to save Xilinx from themselves here.
+[2]:
+https://elixir.bootlin.com/linux/v6.9.1/source/drivers/media/i2c/st-vgxy61.c
 
-Yours,
-Linus Walleij
+> 
+>> @@ -0,0 +1,132 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +# Copyright (c) 2024 STMicroelectronics SA.
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/media/i2c/st,st-vd56g3.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: STMicroelectronics VD56G3 Global Shutter Image Sensor
+>> +
+>> +maintainers:
+>> +  - Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>> +  - Sylvain Petinot <sylvain.petinot@foss.st.com>
+>> +
+>> +description: |-
+>> +  The STMicroelectronics VD56G3 is a 1.5 M pixel global shutter image sensor
+> 
+> This claims device is VD56G3, not ST-VD56G3.
+
+Sure, linked with previous point.
+
+> 
+>> +  with an active array size of 1124 x 1364 (portrait orientation). It is
+>> +  programmable through I2C, the address is fixed to 0x10. The sensor output is
+>> +  available via CSI-2, which is configured as either 1 or 2 data lanes. The
+>> +  sensor provides 8 GPIOS that can be used for external LED signal
+>> +  (synchronized with sensor integration periods)
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - st,st-vd56g3
+>> +      - st,st-vd66gy
+>> +    description:
+>> +      Two variants are availables; VD56G3 is a monochrome sensor while VD66GY
+>> +      is a colour variant.
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  vcore-supply:
+>> +    description: Digital core power supply (1.15V)
+>> +
+>> +  vddio-supply:
+>> +    description: Digital IO power supply (1.8V)
+>> +
+>> +  vana-supply:
+>> +    description: Analog power supply (2.8V)
+>> +
+>> +  reset-gpios:
+>> +    description: Sensor reset active low GPIO (XSHUTDOWN)
+>> +    maxItems: 1
+>> +
+>> +  st,leds:
+>> +    description:
+>> +      Sensor's GPIOs used for external LED control. Signal being the enveloppe
+>> +      of the integration time.
+> 
+> More information is needed. GPIOs coming from LED or SoC? What's the
+> meaning of values?
+
+The vd56g3 image sensor provides 8 GPIOS that can be used for different
+use cases (external led controls, synchronization between master/slave
+sensors, external sensor trigger, etc.). This submission supports only
+the first use case: the control of one(or multiple) external LED.
+
+The vd56g3 sensor family are optimized for visible and near infrared
+scenes. In NIR, external IR leds are generally used for illumination.
+
+With such use case, a led (or a led driver) can be connected directly to
+one of the 8 GPIOs of the sensor. On the driver side, when a led is
+configured in the dt, the driver will configure the sensor accordingly.
+It will also offer an optional "V4L2_FLASH_LED_MODE_FLASH" control to
+start/stop the external control.
+
+Different signal modes are supported by the HW, but the default
+(implemented) one is a "strobe" mode where signal is the envelope of the
+integration time (IR led is on while image sensor is integrating).
+
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    minItems: 1
+>> +    maxItems: 8
+>> +    items:
+>> +      minimum: 0
+>> +      maximum: 7
+>> +
+>> +  port:
+>> +    $ref: /schemas/graph.yaml#/$defs/port-base
+> 
+> missing additionalProperties: false
+
+Ok, fixed in V3.
+
+> 
+>> +
+>> +    properties:
+>> +      endpoint:
+>> +        $ref: /schemas/media/video-interfaces.yaml#
+>> +        unevaluatedProperties: false
+>> +
+>> +        properties:
+>> +          data-lanes:
+>> +            minItems: 1
+>> +            maxItems: 2
+>> +            items:
+>> +              enum: [1, 2]
+> 
+> 
+>> +
+>> +          link-frequencies:
+>> +            minItems: 1
+> 
+> maxItems is enough
+
+Ok, fixed in V3.
+
+> 
+>> +            maxItems: 1
+>> +            items:
+>> +              enum: [402000000, 750000000]
+>> +
+>> +          lane-polarities:
+>> +            minItems: 1
+>> +            maxItems: 3
+>> +            description: Any lane can be inverted or not.
+>> +
+>> +        required:
+>> +          - data-lanes
+>> +          - link-frequencies
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - vcore-supply
+>> +  - vddio-supply
+>> +  - vana-supply
+>> +  - reset-gpios
+>> +  - port
+>> +
+> 
+> 
+> Not a video-interface-device.yaml type of device?
+
+Good point, something I'll consider in V3
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
+--
+Sylvain
