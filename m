@@ -1,89 +1,91 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC15ADF60
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 10:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39927DF60
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 10:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716804430; cv=none; b=KJhty2epqxlKSYNpm94j94SJSnhDI7eylVDywVW/+/NNPcDnhTkQS3+HSjeI/YHQ+wu5qsAZiDUXddQPeQ9Jt8lofV3A+BuxHte1I55TwW4WYDuqt/eYkWsN+/JxmIt2+mz8nRb3BkurYPnFXRjafMg8TdFIBnyTkbsfAU6Ra8w=
+	t=1716804568; cv=none; b=HMCbYY7RnoMvkd3oRWEeu0ah9xFxAb4y7xN+Eblf5hZ0plCvx9dMmN1LV7+Baa+tfw5f/mED/Ftb77HWfaOyMTgoVmEoeRMh/b/mxbxD04dmBwWyQDtqbM3/VUM9z+ddCqE1UEwUsSr27zUanLaG15ETJ5NOz8aPk+wtFbbgyHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716804430; c=relaxed/simple;
-	bh=lhGSLA+6Fd+lkf7hFK9IB1TG8eIIis9jKYhy9eOwP2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dx2eLZTsoGq3JDk83y3VEjUiLSvnZpqi4Sf7j0YCgkTqcWmp/pKp/e0mbax98+NnIreRA3X34N/UVAyR/heMqGSP9bNGEVyp2AbVGVUgPuBwpcA6o3NrFl2C0uj4yz/Q2SUA4l4mfx+nfExNyDxaOU00wLwDCXMjCPh3+yKlEw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nIAFvG6n; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716804568; c=relaxed/simple;
+	bh=aZ4MaEqd057Xl3Tu/Y7GeDjs3N+JtYzWYYn8cfC3UVY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=B3PZuC0lqYCNVm3AUUB1cOKzQlxMXmTGMlCB3bZ3ZLFCpZxXShysiBLxuXXlKkc0UjmJzqdQUCC3wSLwQRDnjMnAfrM24t8pTMQucG70jHftCX73GJhpDya7CqPIqiex73JNvRMWwurZ1iZt8k82Yve86khGoKl+baqDQQ7EEzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=CvWKG/HJ; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nIAFvG6n"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5788eaf5366so1841196a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 03:07:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="CvWKG/HJ"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-529b4011070so340027e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 03:09:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716804427; x=1717409227; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JbPDN1bud0jCQR0vRfMQ4CNUPwHYHGmVY5chaq0K9V0=;
-        b=nIAFvG6n3Xi3QOQ4GvkFymxNUObn297f+RX1WHMZpn0A/WDuMQKooPSP5kdvAnQhHp
-         IrA95Y0md9ZDfk76PL2tGvNwMGQv8/QepCiRI2lGM7ZVjajVeRvnSaztnveR1DRhgIGA
-         vjPzGDpZFwFsNYCCYtztJxvLImAwjYf+7Xq/tB9+lZ2pR2Y36VXX5EtBGWNrmyKv82kL
-         KCd8BdlCJJODHKGgqj04RjaZ+yNnwwUrFFJbdKlejxg3QisKkHGEyn530dNfd/aZz+yF
-         KT7BRNLocbk43cbtyewv6ur8P55mdkg/F4emh+gaWMr4IEr/s1lYq0Zv5Te+kC9uJeL0
-         lctg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716804427; x=1717409227;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716804564; x=1717409364; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JbPDN1bud0jCQR0vRfMQ4CNUPwHYHGmVY5chaq0K9V0=;
-        b=rfVFyxomOu84qVttekGSMEewvJdDen/z4iEKZTmvRP8yL1P2Z2ai+fRWgcEl45QmuQ
-         pBgifipqjbZBROspXvCUQ+ds+LrCwFR1D85yrq8zBSjz75FXT9SggCk7eR+SUIhSPWv6
-         3HVSM98cF3nVO8PlLJP2o/C5zcZAtWIcNiqAIj6ebwidvN7gUxYFZfPgW3Apg5tjb4mJ
-         TbRnFysmHwQgWk/x+nfvvOUfynykv+8NVC8AunD7GhwHa+BMg+gCkEfOr22sJNAD18Os
-         0fws9EC0OckQWlX2kMU8hJYgE3drz03k67Wpyw/v1AWDiNnflP8KlrJo4j5Ia3NSxogU
-         ocRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUw0raY5BUo6l74MBai1/YRiob+2jXWp9XtdsTV9iZEKZOboYbHsFE78ShmgNHj7en+o52YRujn7iyIlONVHq3Mlgj1nviSVAq5eojm
-X-Gm-Message-State: AOJu0Ywf2gNFOTewVPs33fB4pTjne+Ewu4DHSy2XjG8EGpqoDV+YgBOA
-	49OhtzDgXFdor3txWwz5KclfRHZs3J32TzpGa+mMY7VABEZwcp3nMmvKX3qJNAs=
-X-Google-Smtp-Source: AGHT+IHmKdFKS+UH05kV/Ub9d8YRErAmwvuWURmcX2+a+Wh+DzcLct8J/iJmx6FJlI5QlYuLMmZ62A==
-X-Received: by 2002:a50:cc85:0:b0:578:3336:92a with SMTP id 4fb4d7f45d1cf-578517a5268mr5768669a12.0.1716804426876;
-        Mon, 27 May 2024 03:07:06 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579d018ef3fsm1649365a12.13.2024.05.27.03.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 03:07:06 -0700 (PDT)
-Date: Mon, 27 May 2024 13:07:02 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Michael Straube <straube.linux@gmail.com>
-Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
-	namcao@linutronix.de, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] staging: rtl8192e: some refactoring
-Message-ID: <efe21ff3-313f-44cf-b1c5-361b48393fda@moroto.mountain>
-References: <20240527094527.2046-1-straube.linux@gmail.com>
+        bh=wMH3UkEu6/RcdYfYyNBaHDRYNbs+NKh5/urWdRiWtOk=;
+        b=CvWKG/HJKyhw6tMldspy4jkX3/MJHBkbfvw5feC+sKI04krJ/sJeOVDekr9uCfoFkZ
+         6fbBZHkDIaaFJ8vIEnVKyk9T8NWqEVq67y092Diyxb3JAZNXaghe79vaBwWofH701wIl
+         b4Y/xE53bXyyESSGt9eab1yr8OmgcYWia5cuALAhmU4ESHQOHymCG0Lowg0ljrRvitZI
+         Ycehg6K2LAlp6lFpmZETaUwZsoOS6ijSfLQ1Z4OdvTBlAwBYFahfWuGk/mQ4+0bFhX2G
+         y1dsX+pKRTrtnfNNtAiXmUDWz62Bm5snbEe1vkYh6x/7tpSWmIVmM067Fh6tYLdxER90
+         kKTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716804564; x=1717409364;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wMH3UkEu6/RcdYfYyNBaHDRYNbs+NKh5/urWdRiWtOk=;
+        b=h5b54DzQ9SAeQ/g/q2I4ERjXg0Z0TwwJ6Jg7KHnr0xSTPnfDG/rNeYB1xy3qGo2vj8
+         yJhhCgikf0cTBB4pIiTDkqs3YGnyQPIu/EFQ1Cn4s25Lfuop3oubZYNRg1x0JWIKl4c3
+         +OqjDNyU1GEAZBcvxTLNaKaEBx38GmDru0js3tWTQqAcSsvffvGKw+5woLqNFxP8A0vL
+         wk9FlMQ0xaHm5LtUaJ7RT6uR8TJoDvMeamtIFdZu/9dzDsaZ+TzDDSNvSHgVYrwigW8y
+         aJ3JrSFsxmrK4fOeS+4k0XPq1FeXMM+z2ezSVId1BlxrSdy6FRYE512Hf4SARf1awXWF
+         ryEg==
+X-Gm-Message-State: AOJu0Yx6l0EU5m/Vb/f4DrPUYsI8rUqAra62LzKIa9K4WaHwyIhAtA1W
+	Qy5gOmitnh2gnYuJiiqwnZHFs+sKDgW8AHjni5e/mLbw9eyCvNoWz25T7NK0gWsY3bteCg3dD6h
+	5PKk=
+X-Google-Smtp-Source: AGHT+IEF/5VzncQiFnULFcnyyA5N/TZrJYk8hxu7tEF8PJ0jG3qviAz1+55bJQVfrwoxK/7HeZwsAQ==
+X-Received: by 2002:a05:6512:ea2:b0:524:34ad:ba77 with SMTP id 2adb3069b0e04-529642048eemr5635804e87.12.1716804564266;
+        Mon, 27 May 2024 03:09:24 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:aa3:5c01:cd9d:f244:3bcd:de57])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089b2470sm105502115e9.33.2024.05.27.03.09.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2024 03:09:23 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240527094527.2046-1-straube.linux@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [RESEND PATCH] w1: Add missing newline and fix typos in
+ w1_bus_master comment
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <86fc563a-f542-4e02-8a95-b93aa6eadce9@kernel.org>
+Date: Mon, 27 May 2024 12:09:12 +0200
+Cc: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <64E0D2CD-B53A-4890-AFE4-46DD2A4144B1@toblux.com>
+References: <20240515101150.3289-2-thorsten.blum@toblux.com>
+ <20240527092746.263038-2-thorsten.blum@toblux.com>
+ <86fc563a-f542-4e02-8a95-b93aa6eadce9@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-On Mon, May 27, 2024 at 11:45:25AM +0200, Michael Straube wrote:
-> This series refactors two for loops in _rtl92e_dm_rx_path_sel_byrssi()
-> to reduce indentation and improve readability.
+On 27. May 2024, at 11:41, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On 27/05/2024 11:27, Thorsten Blum wrote:
+>> - Add missing newline before @return
+>> - s/bytes/byte/
+>> - s/handles/handle/
+>> 
+>> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 > 
-> Compile-tested only, due to lack of hardware.
-> 
-> v1 -> v2
-> - Removed patch 3/3
-> - Added Nam Cao's reviewed-by tags from v1
+> You sent a patch during merge window. It's waiting in the queue, so
+> timeout for pinging kind of started yesterday...
 
-Thanks!
+Thanks, I didn't know that.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-
-regards,
-dan carpenter
-
+Best,
+Thorsten
