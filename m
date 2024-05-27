@@ -1,39 +1,40 @@
 Received: from mail02.habana.ai (habanamailrelay.habana.ai [213.57.90.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4E416C6B3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC8016C6B7
 	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.57.90.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716822161; cv=none; b=m3AHSw4n8AxyjNOcxV/AkgsqlW9eM9DdRIeuzC/bcqXGZj/RTnwQnx/SotS5E9dpB+jepOlpMP6PycvG6k6wwRtv5O23L7ofIA+LoVDuWn4jNeNzbUThtW5qx7YRvCNTzP1V3SwDP9zBubL6occMlGoRDoWURJU6fpsmvoggYX0=
+	t=1716822161; cv=none; b=KcElWDzAkISSVbTMXcKQAoxN7iyGDp4/Ihm2VmJh1ChJg35AdITRGoxoZHYCEJko3FVscKAZSA16aAH8z0X5FJ4XI1UMVOH15SpHU3572FWb/9qkfuCLgw9ySGLQdR9Y2VXgv5NLlFRhsYTA9HW0r3b5yYuy9tg99MQ/yCW0KAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716822161; c=relaxed/simple;
-	bh=PZJIzad51lipFAHvPkTrc6zNNzNFwz6JZWAXDJXz+zs=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TRfGCyimZZcf6kLGMw7rmyy+CfX+hupW5uW4358yfRwRpU1XglL5L6qss8MlhNJvE+rmtQTWq1e5IqSUp3P6PNqCy33GzEHu3OJ7vuNpsKYajcG7OAd+RbvpoIQgnsqxxFkagV2aZN3nQMDRlXqE8LIUodMWU8n1fO+KHA1+1RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=Y6/M1a2h; arc=none smtp.client-ip=213.57.90.13
+	bh=A7hb/8XwlGIYcRbyAd3Z+DLTG2+4TxEgmPGbtk3dXII=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bUKtIL20jzg3a7fItuWAxVxyuCiFspml/Vg0WCpHTCVUWNk9EVJtsDzr54aXTGtuiLP4TuzVtRfuwsFI37Nj5jKCTRqoJ7bUseV1qShmZSB8gNbZ0POxOHJRyywAlkTlEahaFFDPahU5cjHf5EK5Eme7pi9nM+o+PnIGtIluHsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=JwYIrAxl; arc=none smtp.client-ip=213.57.90.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="Y6/M1a2h"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="JwYIrAxl"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716822162; bh=PZJIzad51lipFAHvPkTrc6zNNzNFwz6JZWAXDJXz+zs=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Y6/M1a2hlOV2P5yxkk35EU6rN/XFtO/V97JMUNWgiA/gJKKCcCNrU8ca+gPJwyy+V
-	 +1V1Y0jTNnq7HMgpGM5GtdNqU/UQOjCeEofq2EpSYRlAA/Ycge5icZ+b8J+X+x4ZOE
-	 P/zKT5ucAvX9q1cMP8ASyOYA7MuDkzSgrB6teOjOjPuShV4h1CNMQfW9BELTpRjxgF
-	 4WfLy0JO1TJJ/l/TbE+W2uZlMPM48NiYT6kS5GSXpiJlCVW5rGNNblZICjbAwcbc7c
-	 IVuYEiqLlzvTxXNyjFUF+/APB/n6dr+hmVtZk4UeUPjaXvLNIdJh6JRwUL7IKiLXJx
-	 3KnylbaNzhEQg==
+	t=1716822162; bh=A7hb/8XwlGIYcRbyAd3Z+DLTG2+4TxEgmPGbtk3dXII=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JwYIrAxlp9i/xR2v+Ewocpm/r7XEA0pGJiklc7Agj0sIRbV5H4WC8pqlIFJqwufF3
+	 HlzTMa/1sKwROHZh5A9iUTFOHwkiESRtPDKVSoeSFjZK7x/uLdVvPI7bMyO5xL9gl6
+	 N8W5CF8S7aVpY3cwEYhnWOFBasdadKFtFaIGTyg7OJjliL+wowjrZCNKHpzXdY83Fd
+	 /APllACUdSvQqLfeTtfo2+bK2w7U+7q9sc1DsfQRR7jB4ij+tKq6/IOJXSGXrF4npb
+	 iu198Fxv93ODFf+gAlwF7I6c7jrag9RjSmD6j3xd027b7CjBgjrtn53YQ8UGXVJzur
+	 q2PgHLRhLFQZg==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RF2PiW1954007;
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RF2PiU1954007;
 	Mon, 27 May 2024 18:02:26 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] accel/habanalabs: remove timestamp registration debug prints
-Date: Mon, 27 May 2024 18:02:21 +0300
-Message-Id: <20240527150224.1953969-5-obitton@habana.ai>
+Cc: Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 3/8] accel/habanalabs: add a common handler for clock change events
+Date: Mon, 27 May 2024 18:02:19 +0300
+Message-Id: <20240527150224.1953969-3-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527150224.1953969-1-obitton@habana.ai>
 References: <20240527150224.1953969-1-obitton@habana.ai>
@@ -45,53 +46,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are several timestamp registration debug prints which
-spams the kernel log whenever dyn debug is enabled.
-Remove those prints.
+From: Tomer Tayar <ttayar@habana.ai>
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
+As the new dynamic EQ includes clock change events which are common and
+not ASIC-specific, add a common handler for these events.
+
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- .../accel/habanalabs/common/command_submission.c    | 13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/accel/habanalabs/common/device.c     | 46 ++++++++++++++++++++
+ drivers/accel/habanalabs/common/habanalabs.h |  1 +
+ 2 files changed, 47 insertions(+)
 
-diff --git a/drivers/accel/habanalabs/common/command_submission.c b/drivers/accel/habanalabs/common/command_submission.c
-index 39e23d625a3c..59823e3c3bf7 100644
---- a/drivers/accel/habanalabs/common/command_submission.c
-+++ b/drivers/accel/habanalabs/common/command_submission.c
-@@ -3284,12 +3284,6 @@ static int ts_get_and_handle_kernel_record(struct hl_device *hdev, struct hl_ctx
+diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
+index fd117489a05a..31daa9184537 100644
+--- a/drivers/accel/habanalabs/common/device.c
++++ b/drivers/accel/habanalabs/common/device.c
+@@ -2860,3 +2860,49 @@ void hl_eq_heartbeat_event_handle(struct hl_device *hdev)
+ 	hdev->heartbeat_debug_info.heartbeat_event_counter++;
+ 	hdev->eq_heartbeat_received = true;
+ }
++
++void hl_handle_clk_change_event(struct hl_device *hdev, u16 event_type, u64 *event_mask)
++{
++	struct hl_clk_throttle *clk_throttle = &hdev->clk_throttling;
++	ktime_t zero_time = ktime_set(0, 0);
++
++	mutex_lock(&clk_throttle->lock);
++
++	switch (event_type) {
++	case EQ_EVENT_POWER_EVT_START:
++		clk_throttle->current_reason |= HL_CLK_THROTTLE_POWER;
++		clk_throttle->aggregated_reason |= HL_CLK_THROTTLE_POWER;
++		clk_throttle->timestamp[HL_CLK_THROTTLE_TYPE_POWER].start = ktime_get();
++		clk_throttle->timestamp[HL_CLK_THROTTLE_TYPE_POWER].end = zero_time;
++		dev_dbg_ratelimited(hdev->dev, "Clock throttling due to power consumption\n");
++		break;
++
++	case EQ_EVENT_POWER_EVT_END:
++		clk_throttle->current_reason &= ~HL_CLK_THROTTLE_POWER;
++		clk_throttle->timestamp[HL_CLK_THROTTLE_TYPE_POWER].end = ktime_get();
++		dev_dbg_ratelimited(hdev->dev, "Power envelop is safe, back to optimal clock\n");
++		break;
++
++	case EQ_EVENT_THERMAL_EVT_START:
++		clk_throttle->current_reason |= HL_CLK_THROTTLE_THERMAL;
++		clk_throttle->aggregated_reason |= HL_CLK_THROTTLE_THERMAL;
++		clk_throttle->timestamp[HL_CLK_THROTTLE_TYPE_THERMAL].start = ktime_get();
++		clk_throttle->timestamp[HL_CLK_THROTTLE_TYPE_THERMAL].end = zero_time;
++		*event_mask |= HL_NOTIFIER_EVENT_USER_ENGINE_ERR;
++		dev_info_ratelimited(hdev->dev, "Clock throttling due to overheating\n");
++		break;
++
++	case EQ_EVENT_THERMAL_EVT_END:
++		clk_throttle->current_reason &= ~HL_CLK_THROTTLE_THERMAL;
++		clk_throttle->timestamp[HL_CLK_THROTTLE_TYPE_THERMAL].end = ktime_get();
++		*event_mask |= HL_NOTIFIER_EVENT_USER_ENGINE_ERR;
++		dev_info_ratelimited(hdev->dev, "Thermal envelop is safe, back to optimal clock\n");
++		break;
++
++	default:
++		dev_err(hdev->dev, "Received invalid clock change event %d\n", event_type);
++		break;
++	}
++
++	mutex_unlock(&clk_throttle->lock);
++}
+diff --git a/drivers/accel/habanalabs/common/habanalabs.h b/drivers/accel/habanalabs/common/habanalabs.h
+index 0d16b5310add..3ea1b131cd42 100644
+--- a/drivers/accel/habanalabs/common/habanalabs.h
++++ b/drivers/accel/habanalabs/common/habanalabs.h
+@@ -4063,6 +4063,7 @@ void hl_enable_err_info_capture(struct hl_error_info *captured_err_info);
+ void hl_init_cpu_for_irq(struct hl_device *hdev);
+ void hl_set_irq_affinity(struct hl_device *hdev, int irq);
+ void hl_eq_heartbeat_event_handle(struct hl_device *hdev);
++void hl_handle_clk_change_event(struct hl_device *hdev, u16 event_type, u64 *event_mask);
  
- 	/* In case the node already registered, need to unregister first then re-use */
- 	if (req_offset_record->ts_reg_info.in_use) {
--		dev_dbg(data->buf->mmg->dev,
--				"Requested record %p is in use on irq: %u ts addr: %p, unregister first then put on irq: %u\n",
--				req_offset_record,
--				req_offset_record->ts_reg_info.interrupt->interrupt_id,
--				req_offset_record->ts_reg_info.timestamp_kernel_addr,
--				data->interrupt->interrupt_id);
- 		/*
- 		 * Since interrupt here can be different than the one the node currently registered
- 		 * on, and we don't want to lock two lists while we're doing unregister, so
-@@ -3345,10 +3339,6 @@ static int _hl_interrupt_ts_reg_ioctl(struct hl_device *hdev, struct hl_ctx *ctx
- 		goto put_cq_cb;
- 	}
+ #ifdef CONFIG_DEBUG_FS
  
--	dev_dbg(hdev->dev, "Timestamp registration: interrupt id: %u, handle: 0x%llx, ts offset: %llu, cq_offset: %llu\n",
--					data->interrupt->interrupt_id, data->ts_handle,
--					data->ts_offset, data->cq_offset);
--
- 	data->buf = hl_mmap_mem_buf_get(data->mmg, data->ts_handle);
- 	if (!data->buf) {
- 		rc = -EINVAL;
-@@ -3370,9 +3360,6 @@ static int _hl_interrupt_ts_reg_ioctl(struct hl_device *hdev, struct hl_ctx *ctx
- 	if (*pend->cq_kernel_addr >= data->target_value) {
- 		spin_unlock_irqrestore(&data->interrupt->ts_list_lock, flags);
- 
--		dev_dbg(hdev->dev, "Target value already reached release ts record: pend: %p, offset: %llu, interrupt: %u\n",
--				pend, data->ts_offset, data->interrupt->interrupt_id);
--
- 		pend->ts_reg_info.in_use = 0;
- 		*status = HL_WAIT_CS_STATUS_COMPLETED;
- 		*pend->ts_reg_info.timestamp_kernel_addr = ktime_get_ns();
 -- 
 2.34.1
 
