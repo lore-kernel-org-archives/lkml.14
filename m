@@ -1,40 +1,40 @@
 Received: from mail02.habana.ai (habanamailrelay02.habana.ai [62.90.112.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3C415E5CA
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 11:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E8E15EFBE
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 11:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.90.112.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716810530; cv=none; b=a2Mr8ZtgnKwsl3hCkNKtpT+2Sfgoh78QGrgxAkQdvtwZPQ6/hLykBqRHf/5MepGXHMu+WomyfGhUnfqymDY+uJoYsrRbe1mtCWK4JjA3DVcm0Ig/7b9V8DFQ0mtj3kakkuesssvrJlgLlPdvne/cj8aqbQcQ5SSTkshWOd5kBug=
+	t=1716810532; cv=none; b=r9XJ3h2fGIo+MqrcqP/V5KABw+boe2+vR/payvrjSo8yo/aQoZrki8LMNmvxFrW0OpYZ5IwVLMxjYeER8yEHujT9UXFa+jRO828pSPAzLuZZDTzt4lDmyKi679EGaD5AHi1CrKMwtdslCGzwPTjfo5PV3FBOd6oUskp5fTuKlFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716810530; c=relaxed/simple;
-	bh=jxHY8fiURwbUDxH2EqODM/mfzNkmtKBp+RbUF5zNYpk=;
+	s=arc-20240116; t=1716810532; c=relaxed/simple;
+	bh=wMKV683tdUXSeWL6//qztdT9QYdnP00891EC9rnPw38=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Rndo/f9HlZMt+yWGNFlkYI3LNrITwnkeLqP9D6JykkU+O8YhriDhDVQSQedig3ryDcctglH8GW5mUS6ASClTsqBOSRMhfZcL+TAAhi2W+L5bXFpXUf0yHMf+NOxOjHl3sg9hus1E3VHYINLt8SXsRg2uKbc3zWsqLF5X8sohM0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=UkLH1els; arc=none smtp.client-ip=62.90.112.121
+	 MIME-Version; b=qK80NO88aIzEBBLgOUI2xnoud+B54LUgH3OgDxt+u2HSyZ5KkZrQMJ3pZ4u/yNX/N9e+rFvkKBwvyn1RFBVbGyfVZCPrL6hRTYHJhZjVXDxq/kz5Sg4FPLetQ4seeaqmlzYkrRctNS6/ySGW5jLwJiAjIyYiCadRmq3r3TOBURA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=q2z6lc32; arc=none smtp.client-ip=62.90.112.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="UkLH1els"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="q2z6lc32"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716810481; bh=jxHY8fiURwbUDxH2EqODM/mfzNkmtKBp+RbUF5zNYpk=;
+	t=1716810481; bh=wMKV683tdUXSeWL6//qztdT9QYdnP00891EC9rnPw38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UkLH1elshxJ5W4W6FS1O7IH1dmROmE8EDoeqzOuNqOvvPk68FF7jwbhKl/KjEp4Vz
-	 tKZeyMoYxZT++RI++swWSvn0dhGQRK1XEvaNhEb5H1uB2GBzeHG/d9SAERrpECmHq+
-	 J38xqAAahM+6agTZ+Wvx2lgMQh8FGndR1t9LRQXY887Ry4Bq/tOlS9607Ky00oKDvS
-	 njLW4p8H6Wz0unRCWoYwpnwulUOMo6C1GWQJ4NzyGASUH1Hp6qAoERt74tBcyy3rld
-	 8JNgitmr1UBIPOpmxZhPZDEYUucAxgF2Y/lQWgBG4wXvqPrvTHtwubu+WSrY5Nypnb
-	 vIK0Nu/BLVDvQ==
+	b=q2z6lc32XsANzKP4xkycrVWuJrdTYtExfaxZ9ZeIeaNDNDeWSdcfnS9uReG8IA5eE
+	 Ryxr7ORGZTkMDrhg7we/9p+Sfcq+u9yiocbuHiOGtWKl5q0vXNpolOfwFwpdepru/d
+	 19aZg0dGgEMd/08BrKHWRl11uzKnkk8r0MPM7/ldLUK8Av+zGa3iDX3d+4xko0bLCW
+	 yW6Zmx+n6p72yCKFb/1Q0l0qjRu98428B7uu4iKK0axuEYecTI1A3nUtTh0wBCstcF
+	 2MbyKN0X/FvIblqawVQpcJO/vWPZZp+zSfE60FKJoIycpFCPn/oq+bWkgqXRX+IhKq
+	 CQYofc/XCaHJg==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RBltNk1919357;
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RBltNg1919357;
 	Mon, 27 May 2024 14:47:55 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Tomer Tayar <ttayar@habana.ai>
-Subject: [PATCH 6/9] accel/habanalabs: use parent device for trace events
-Date: Mon, 27 May 2024 14:47:43 +0300
-Message-Id: <20240527114746.1919292-6-obitton@habana.ai>
+Cc: Farah Kassabri <fkassabri@habana.ai>
+Subject: [PATCH 2/9] accel/habanalabs/gaudi2: update interrupts related headers
+Date: Mon, 27 May 2024 14:47:39 +0300
+Message-Id: <20240527114746.1919292-2-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527114746.1919292-1-obitton@habana.ai>
 References: <20240527114746.1919292-1-obitton@habana.ai>
@@ -46,197 +46,190 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Tomer Tayar <ttayar@habana.ai>
+From: Farah Kassabri <fkassabri@habana.ai>
 
-Trace events might still be recorded after the accel device is released,
-while the device name is no longer available.
-Modify the trace functions to use the parent device instead, which is
-available at that point and still informative as the device name.
+Align the interrupts related headers to latest release.
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+Signed-off-by: Farah Kassabri <fkassabri@habana.ai>
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- drivers/accel/habanalabs/common/device.c      | 25 ++++++++++---------
- drivers/accel/habanalabs/common/firmware_if.c | 10 +++++---
- drivers/accel/habanalabs/common/mmu/mmu.c     |  5 ++--
- drivers/accel/habanalabs/common/pci/pci.c     |  4 +--
- 4 files changed, 24 insertions(+), 20 deletions(-)
+ .../gaudi2/gaudi2_async_ids_map_extended.h    | 94 +++++++++----------
+ 1 file changed, 47 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
-index 087bbb1778e5..bb3f44392908 100644
---- a/drivers/accel/habanalabs/common/device.c
-+++ b/drivers/accel/habanalabs/common/device.c
-@@ -130,8 +130,8 @@ static void *hl_dma_alloc_common(struct hl_device *hdev, size_t size, dma_addr_t
- 	}
+diff --git a/drivers/accel/habanalabs/include/gaudi2/gaudi2_async_ids_map_extended.h b/drivers/accel/habanalabs/include/gaudi2/gaudi2_async_ids_map_extended.h
+index b2dbe1f64430..1db73923de62 100644
+--- a/drivers/accel/habanalabs/include/gaudi2/gaudi2_async_ids_map_extended.h
++++ b/drivers/accel/habanalabs/include/gaudi2/gaudi2_async_ids_map_extended.h
+@@ -330,9 +330,9 @@ static struct gaudi2_async_events_ids_map gaudi2_irq_map_table[] = {
+ 	{ .fc_id = 149, .cpu_id = 48, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
+ 		 .name = "EDMA7_ECC_SERR" },
+ 	{ .fc_id = 150, .cpu_id = 48, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "HDMA4_ECC_SERR" },
++		 .name = "EDMA4_ECC_SERR" },
+ 	{ .fc_id = 151, .cpu_id = 48, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "HDMA5_ECC_SERR" },
++		 .name = "EDMA5_ECC_SERR" },
+ 	{ .fc_id = 152, .cpu_id = 49, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "EDMA2_ECC_DERR" },
+ 	{ .fc_id = 153, .cpu_id = 49, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+@@ -965,73 +965,73 @@ static struct gaudi2_async_events_ids_map gaudi2_irq_map_table[] = {
+ 		 .name = "MME3_CTRL_AXI_ERROR_RESPONSE" },
+ 	{ .fc_id = 467, .cpu_id = 91, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_COMPUTE,
+ 		 .name = "MME3_QMAN_SW_ERROR" },
+-	{ .fc_id = 468, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 468, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "PSOC_MME_PLL_LOCK_ERR" },
+-	{ .fc_id = 469, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 469, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "PSOC_CPU_PLL_LOCK_ERR" },
+-	{ .fc_id = 470, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 470, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE3_TPC_PLL_LOCK_ERR" },
+-	{ .fc_id = 471, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 471, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE3_NIC_PLL_LOCK_ERR" },
+-	{ .fc_id = 472, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 472, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE3_XBAR_MMU_PLL_LOCK_ERR" },
+-	{ .fc_id = 473, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 473, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE3_XBAR_DMA_PLL_LOCK_ERR" },
+-	{ .fc_id = 474, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 474, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE3_XBAR_IF_PLL_LOCK_ERR" },
+-	{ .fc_id = 475, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 475, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE3_XBAR_BANK_PLL_LOCK_ERR" },
+-	{ .fc_id = 476, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 476, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE1_XBAR_MMU_PLL_LOCK_ERR" },
+-	{ .fc_id = 477, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 477, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE1_XBAR_DMA_PLL_LOCK_ERR" },
+-	{ .fc_id = 478, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 478, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE1_XBAR_IF_PLL_LOCK_ERR" },
+-	{ .fc_id = 479, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 479, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE1_XBAR_MESH_PLL_LOCK_ERR" },
+-	{ .fc_id = 480, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 480, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE1_TPC_PLL_LOCK_ERR" },
+-	{ .fc_id = 481, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 481, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE1_NIC_PLL_LOCK_ERR" },
+-	{ .fc_id = 482, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 482, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "PMMU_MME_PLL_LOCK_ERR" },
+-	{ .fc_id = 483, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 483, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE0_TPC_PLL_LOCK_ERR" },
+-	{ .fc_id = 484, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 484, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE0_PCI_PLL_LOCK_ERR" },
+-	{ .fc_id = 485, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 485, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE0_XBAR_MMU_PLL_LOCK_ERR" },
+-	{ .fc_id = 486, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 486, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE0_XBAR_DMA_PLL_LOCK_ERR" },
+-	{ .fc_id = 487, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 487, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE0_XBAR_IF_PLL_LOCK_ERR" },
+-	{ .fc_id = 488, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 488, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE0_XBAR_MESH_PLL_LOCK_ERR" },
+-	{ .fc_id = 489, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 489, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE2_XBAR_MMU_PLL_LOCK_ERR" },
+-	{ .fc_id = 490, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 490, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE2_XBAR_DMA_PLL_LOCK_ERR" },
+-	{ .fc_id = 491, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 491, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE2_XBAR_IF_PLL_LOCK_ERR" },
+-	{ .fc_id = 492, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 492, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE2_XBAR_BANK_PLL_LOCK_ERR" },
+-	{ .fc_id = 493, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 493, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE2_TPC_PLL_LOCK_ERR" },
+-	{ .fc_id = 494, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 494, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "PSOC_VID_PLL_LOCK_ERR" },
+-	{ .fc_id = 495, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 495, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "PMMU_VID_PLL_LOCK_ERR" },
+-	{ .fc_id = 496, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 496, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE3_HBM_PLL_LOCK_ERR" },
+-	{ .fc_id = 497, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 497, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE1_XBAR_HBM_PLL_LOCK_ERR" },
+-	{ .fc_id = 498, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 498, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE1_HBM_PLL_LOCK_ERR" },
+-	{ .fc_id = 499, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 499, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE0_HBM_PLL_LOCK_ERR" },
+-	{ .fc_id = 500, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 500, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE2_XBAR_HBM_PLL_LOCK_ERR" },
+-	{ .fc_id = 501, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++	{ .fc_id = 501, .cpu_id = 92, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DCORE2_HBM_PLL_LOCK_ERR" },
+ 	{ .fc_id = 502, .cpu_id = 93, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "CPU_AXI_ERR_RSP" },
+@@ -1827,8 +1827,8 @@ static struct gaudi2_async_events_ids_map gaudi2_irq_map_table[] = {
+ 		 .name = "DEC0_BMON_SPMU" },
+ 	{ .fc_id = 898, .cpu_id = 330, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_COMPUTE,
+ 		 .name = "DEC1_SPI" },
+-	{ .fc_id = 899, .cpu_id = 330, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_COMPUTE,
+-		 .name = "DEC1_SPI" },
++	{ .fc_id = 899, .cpu_id = 330, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
++		 .name = "DEC1_BMON_SPMU" },
+ 	{ .fc_id = 900, .cpu_id = 331, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_COMPUTE,
+ 		 .name = "DEC2_SPI" },
+ 	{ .fc_id = 901, .cpu_id = 331, .valid = 1, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
+@@ -2377,8 +2377,8 @@ static struct gaudi2_async_events_ids_map gaudi2_irq_map_table[] = {
+ 		 .name = "" },
+ 	{ .fc_id = 1173, .cpu_id = 479, .valid = 0, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
+ 		 .name = "" },
+-	{ .fc_id = 1174, .cpu_id = 480, .valid = 0, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "" },
++	{ .fc_id = 1174, .cpu_id = 480, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_NONE,
++		 .name = "PSOC_DMA_QM" },
+ 	{ .fc_id = 1175, .cpu_id = 481, .valid = 0, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
+ 		 .name = "" },
+ 	{ .fc_id = 1176, .cpu_id = 482, .valid = 0, .msg = 0, .reset = EVENT_RESET_TYPE_NONE,
+@@ -2674,19 +2674,19 @@ static struct gaudi2_async_events_ids_map gaudi2_irq_map_table[] = {
+ 	{ .fc_id = 1321, .cpu_id = 627, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_HARD,
+ 		 .name = "DEV_RESET_REQ" },
+ 	{ .fc_id = 1322, .cpu_id = 628, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "ARC_PWR_BRK_ENTRY" },
++		 .name = "PWR_BRK_ENTRY" },
+ 	{ .fc_id = 1323, .cpu_id = 629, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "ARC_PWR_BRK_EXT" },
++		 .name = "PWR_BRK_EXT" },
+ 	{ .fc_id = 1324, .cpu_id = 630, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "ARC_PWR_RD_MODE0" },
++		 .name = "PWR_RD_MODE0" },
+ 	{ .fc_id = 1325, .cpu_id = 631, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "ARC_PWR_RD_MODE1" },
++		 .name = "PWR_RD_MODE1" },
+ 	{ .fc_id = 1326, .cpu_id = 632, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "ARC_PWR_RD_MODE2" },
++		 .name = "PWR_RD_MODE2" },
+ 	{ .fc_id = 1327, .cpu_id = 633, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "ARC_PWR_RD_MODE3" },
++		 .name = "PWR_RD_MODE3" },
+ 	{ .fc_id = 1328, .cpu_id = 634, .valid = 1, .msg = 1, .reset = EVENT_RESET_TYPE_NONE,
+-		 .name = "ARC_EQ_HEARTBEAT" },
++		 .name = "EQ_HEARTBEAT" },
+ };
  
- 	if (trace_habanalabs_dma_alloc_enabled() && !ZERO_OR_NULL_PTR(ptr))
--		trace_habanalabs_dma_alloc(hdev->dev, (u64) (uintptr_t) ptr, *dma_handle, size,
--						caller);
-+		trace_habanalabs_dma_alloc(&(hdev)->pdev->dev, (u64) (uintptr_t) ptr, *dma_handle,
-+						size, caller);
- 
- 	return ptr;
- }
-@@ -152,7 +152,7 @@ static void hl_asic_dma_free_common(struct hl_device *hdev, size_t size, void *c
- 		break;
- 	}
- 
--	trace_habanalabs_dma_free(hdev->dev, store_cpu_addr, dma_handle, size, caller);
-+	trace_habanalabs_dma_free(&(hdev)->pdev->dev, store_cpu_addr, dma_handle, size, caller);
- }
- 
- void *hl_asic_dma_alloc_coherent_caller(struct hl_device *hdev, size_t size, dma_addr_t *dma_handle,
-@@ -204,15 +204,15 @@ int hl_dma_map_sgtable_caller(struct hl_device *hdev, struct sg_table *sgt,
- 		return 0;
- 
- 	for_each_sgtable_dma_sg(sgt, sg, i)
--		trace_habanalabs_dma_map_page(hdev->dev,
--				page_to_phys(sg_page(sg)),
--				sg->dma_address - prop->device_dma_offset_for_host_access,
-+		trace_habanalabs_dma_map_page(&(hdev)->pdev->dev,
-+					page_to_phys(sg_page(sg)),
-+					sg->dma_address - prop->device_dma_offset_for_host_access,
- #ifdef CONFIG_NEED_SG_DMA_LENGTH
--				sg->dma_length,
-+					sg->dma_length,
- #else
--				sg->length,
-+					sg->length,
- #endif
--				dir, caller);
-+					dir, caller);
- 
- 	return 0;
- }
-@@ -247,7 +247,8 @@ void hl_dma_unmap_sgtable_caller(struct hl_device *hdev, struct sg_table *sgt,
- 
- 	if (trace_habanalabs_dma_unmap_page_enabled()) {
- 		for_each_sgtable_dma_sg(sgt, sg, i)
--			trace_habanalabs_dma_unmap_page(hdev->dev, page_to_phys(sg_page(sg)),
-+			trace_habanalabs_dma_unmap_page(&(hdev)->pdev->dev,
-+					page_to_phys(sg_page(sg)),
- 					sg->dma_address - prop->device_dma_offset_for_host_access,
- #ifdef CONFIG_NEED_SG_DMA_LENGTH
- 					sg->dma_length,
-@@ -2593,7 +2594,7 @@ inline u32 hl_rreg(struct hl_device *hdev, u32 reg)
- 	u32 val = readl(hdev->rmmio + reg);
- 
- 	if (unlikely(trace_habanalabs_rreg32_enabled()))
--		trace_habanalabs_rreg32(hdev->dev, reg, val);
-+		trace_habanalabs_rreg32(&(hdev)->pdev->dev, reg, val);
- 
- 	return val;
- }
-@@ -2611,7 +2612,7 @@ inline u32 hl_rreg(struct hl_device *hdev, u32 reg)
- inline void hl_wreg(struct hl_device *hdev, u32 reg, u32 val)
- {
- 	if (unlikely(trace_habanalabs_wreg32_enabled()))
--		trace_habanalabs_wreg32(hdev->dev, reg, val);
-+		trace_habanalabs_wreg32(&(hdev)->pdev->dev, reg, val);
- 
- 	writel(val, hdev->rmmio + reg);
- }
-diff --git a/drivers/accel/habanalabs/common/firmware_if.c b/drivers/accel/habanalabs/common/firmware_if.c
-index b5b960ce4ebd..d1a1d601bde9 100644
---- a/drivers/accel/habanalabs/common/firmware_if.c
-+++ b/drivers/accel/habanalabs/common/firmware_if.c
-@@ -8,6 +8,7 @@
- #include "habanalabs.h"
- #include <linux/habanalabs/hl_boot_if.h>
- 
-+#include <linux/pci.h>
- #include <linux/firmware.h>
- #include <linux/crc32.h>
- #include <linux/slab.h>
-@@ -1803,7 +1804,7 @@ static void hl_fw_dynamic_send_cmd(struct hl_device *hdev,
- 	val = FIELD_PREP(COMMS_COMMAND_CMD_MASK, cmd);
- 	val |= FIELD_PREP(COMMS_COMMAND_SIZE_MASK, size);
- 
--	trace_habanalabs_comms_send_cmd(hdev->dev, comms_cmd_str_arr[cmd]);
-+	trace_habanalabs_comms_send_cmd(&hdev->pdev->dev, comms_cmd_str_arr[cmd]);
- 	WREG32(le32_to_cpu(dyn_regs->kmd_msg_to_cpu), val);
- }
- 
-@@ -1861,7 +1862,7 @@ static int hl_fw_dynamic_wait_for_status(struct hl_device *hdev,
- 
- 	dyn_regs = &fw_loader->dynamic_loader.comm_desc.cpu_dyn_regs;
- 
--	trace_habanalabs_comms_wait_status(hdev->dev, comms_sts_str_arr[expected_status]);
-+	trace_habanalabs_comms_wait_status(&hdev->pdev->dev, comms_sts_str_arr[expected_status]);
- 
- 	/* Wait for expected status */
- 	rc = hl_poll_timeout(
-@@ -1878,7 +1879,8 @@ static int hl_fw_dynamic_wait_for_status(struct hl_device *hdev,
- 		return -EIO;
- 	}
- 
--	trace_habanalabs_comms_wait_status_done(hdev->dev, comms_sts_str_arr[expected_status]);
-+	trace_habanalabs_comms_wait_status_done(&hdev->pdev->dev,
-+						comms_sts_str_arr[expected_status]);
- 
- 	/*
- 	 * skip storing FW response for NOOP to preserve the actual desired
-@@ -1952,7 +1954,7 @@ int hl_fw_dynamic_send_protocol_cmd(struct hl_device *hdev,
- {
- 	int rc;
- 
--	trace_habanalabs_comms_protocol_cmd(hdev->dev, comms_cmd_str_arr[cmd]);
-+	trace_habanalabs_comms_protocol_cmd(&hdev->pdev->dev, comms_cmd_str_arr[cmd]);
- 
- 	/* first send clear command to clean former commands */
- 	rc = hl_fw_dynamic_send_clear_cmd(hdev, fw_loader);
-diff --git a/drivers/accel/habanalabs/common/mmu/mmu.c b/drivers/accel/habanalabs/common/mmu/mmu.c
-index d3eaab908457..166c7da8b937 100644
---- a/drivers/accel/habanalabs/common/mmu/mmu.c
-+++ b/drivers/accel/habanalabs/common/mmu/mmu.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/slab.h>
-+#include <linux/pci.h>
- 
- #include "../habanalabs.h"
- 
-@@ -262,7 +263,7 @@ int hl_mmu_unmap_page(struct hl_ctx *ctx, u64 virt_addr, u32 page_size, bool flu
- 		mmu_funcs->flush(ctx);
- 
- 	if (trace_habanalabs_mmu_unmap_enabled() && !rc)
--		trace_habanalabs_mmu_unmap(hdev->dev, virt_addr, 0, page_size, flush_pte);
-+		trace_habanalabs_mmu_unmap(&hdev->pdev->dev, virt_addr, 0, page_size, flush_pte);
- 
- 	return rc;
- }
-@@ -349,7 +350,7 @@ int hl_mmu_map_page(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr, u32 page_s
- 	if (flush_pte)
- 		mmu_funcs->flush(ctx);
- 
--	trace_habanalabs_mmu_map(hdev->dev, virt_addr, phys_addr, page_size, flush_pte);
-+	trace_habanalabs_mmu_map(&hdev->pdev->dev, virt_addr, phys_addr, page_size, flush_pte);
- 
- 	return 0;
- 
-diff --git a/drivers/accel/habanalabs/common/pci/pci.c b/drivers/accel/habanalabs/common/pci/pci.c
-index 191e0e3cf3a5..81cbd8697d4c 100644
---- a/drivers/accel/habanalabs/common/pci/pci.c
-+++ b/drivers/accel/habanalabs/common/pci/pci.c
-@@ -123,7 +123,7 @@ int hl_pci_elbi_read(struct hl_device *hdev, u64 addr, u32 *data)
- 		pci_read_config_dword(pdev, mmPCI_CONFIG_ELBI_DATA, data);
- 
- 		if (unlikely(trace_habanalabs_elbi_read_enabled()))
--			trace_habanalabs_elbi_read(hdev->dev, (u32) addr, val);
-+			trace_habanalabs_elbi_read(&hdev->pdev->dev, (u32) addr, val);
- 
- 		return 0;
- 	}
-@@ -186,7 +186,7 @@ static int hl_pci_elbi_write(struct hl_device *hdev, u64 addr, u32 data)
- 
- 	if ((val & PCI_CONFIG_ELBI_STS_MASK) == PCI_CONFIG_ELBI_STS_DONE) {
- 		if (unlikely(trace_habanalabs_elbi_write_enabled()))
--			trace_habanalabs_elbi_write(hdev->dev, (u32) addr, val);
-+			trace_habanalabs_elbi_write(&hdev->pdev->dev, (u32) addr, val);
- 		return 0;
- 	}
- 
+ #endif /* __GAUDI2_ASYNC_IDS_MAP_EVENTS_EXT_H_ */
 -- 
 2.34.1
 
