@@ -1,54 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A22A17E8E3
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 16:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66068155CBA
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 16:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716827064; cv=none; b=fuL9HRZz4kK3D1hAYiL8s4bVzl4wdc0YnlbZ4mqbVvv8gU1TFonwqet59h8I8Nb+I//FSoouleIX6AVnyqzNkk3oI8gMIfJ0LzfXhPjqGkCAqWQHfDsSwyuIv1vT4htF1luG46S0myTHiiIN9+UHpQXstH8FrGvWgtK833DzOcI=
+	t=1716827154; cv=none; b=Tk4Kr1kiLzHfvuKwhVBvyXDYfZJiWHlFN+NWPDOLVt/ijhMCc0SRNDMUpsjMhM5GULvWCp7CBg2kQxVhKx4EHc2q7viZbOqb5Pjnm/HhmeNyxKq1ir7C1HPIt/t7YXm7SWmJlLv3Jsv4T8n4G/W0/h9itsK02A644EtW0bNFT9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716827064; c=relaxed/simple;
-	bh=PgMG8Nl4HW/frSEexzbSY5VEC+HJRgX+juJE9zXQsSo=;
+	s=arc-20240116; t=1716827154; c=relaxed/simple;
+	bh=BWHpsqf+a3APel0aPkI161DJdxHGlPWG1TM+Qe431l0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RjDAfpk9lPaA91coPkOdxcrtxLqzU5/MRTi/ikGNYejc93Ivt873mbR0JKmDzo3FGbx9vLyBxz5Wyb401ZKVtd3l49TCAQBE5E969yqZrALwMgYXVLUmmqpu3ECDh/lSsAHFyreWHKyGEOFZwWQq3Gxpo1Z33j9YbfjqPN+WU50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKnIPKTO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=V3Vgi+fpdxCga2wIlBwmW+3YFGt4ie7tLyW1catBhSMraqrvzJJn7cdUOoRU61JTjQ1VFJfhnOn5fcBw7gCI5QQnbvS/nZ8zzs2JNAap+nZ2YJ8UdDEqzpIP7rweuS2Bm2soxaCtDEZfXsgo5E0hCghEX46S73S5XjeDW4FAMcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=H4hcpxAY; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKnIPKTO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4EAC32789;
-	Mon, 27 May 2024 16:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716827063;
-	bh=PgMG8Nl4HW/frSEexzbSY5VEC+HJRgX+juJE9zXQsSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bKnIPKTOd1Ifou5xt4csJYw733fCEaV6tSXDjNtxd1rExGVMOebjmIefiycpEkpyr
-	 M4b5JV2jfbN/KY9dMchyigO5c9ks+h/oC34GnHTDrdNyd8cKRigRr5IJzaa/CBhSsx
-	 krHZXoYvMB8kxz9UVkpvQIrvxe/+AX8feryEOPl5VcPyNyXuIVGHpHdiQ6msNtYk7L
-	 vKm4WpPXJbWgwc1AigzcUzNFE7/AtJ0nU3WPGsLOvx8kjsd+g1tJw3YrBlDsieL65f
-	 FZoTkNR6tozVwFk+9jWPBA7guzEtM5Xpdi4xiBpgViAyQnoxn42bRIjU3f5UMFcGM8
-	 65r2KD1aRtb1g==
-Date: Mon, 27 May 2024 19:22:36 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Jaewon Kim <jaewon31.kim@samsung.com>
-Cc: "vbabka@suse.cz" <vbabka@suse.cz>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>,
-	"tkjos@google.com" <tkjos@google.com>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Pintu Agarwal <pintu.ping@gmail.com>
-Subject: Re: (2) [RESEND PATCH 00/10] memblock: introduce memsize showing
- reserved memory
-Message-ID: <ZlSzTOSu06ziefUj@kernel.org>
-References: <ZlM_Ndng_JstAee3@kernel.org>
- <Zk9UCsZdizqC1_36@kernel.org>
- <ZkxN0yQ7Fb0X26hT@kernel.org>
- <20240521023957.2587005-1-jaewon31.kim@samsung.com>
- <20240521025329epcms1p6ce11064c0f0608a0156d82fda7ef285c@epcms1p6>
- <20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1@epcms1p5>
- <20240524090715epcms1p274939a1d5954be3423f6ce14a3df6f92@epcms1p2>
- <CGME20240521024009epcas1p10ed9f9b929203183a29f79508e79bb76@epcms1p2>
- <20240527013504epcms1p22bec7b83f2a42e76877b97ed0d769009@epcms1p2>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="H4hcpxAY"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-529b22aabc1so1035200e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:25:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1716827150; x=1717431950; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=47CM+OohXZ/uj91laGtyNIW1WOIMEW/2BamLnhPhjLg=;
+        b=H4hcpxAYs5UAhSYxgijMwPV11OuRAyn13m7zKZt0hY4vTMcSNeItK+Y4aiJmxXU0I3
+         ysfs8Tan9cLKsVp3e5yypdVj7nrU9Ja/o6x1ApjN86yUo/EfvI57OevpNxYp/iCZDYsj
+         ANOXJ7rIZBbvxOhMsmgF9hbzo1OQMsJZlfHfwx4isCTTygj/dc4ML4TBnC4V+ninTdlE
+         6IpHEzMZ/SDa+Qc2CAYBDicMnB2hYOoWKh+4TxJ5dXBGA/KIyPJRSFDPmDbV3B+b/UCn
+         oZRpgBa1e+D2zxH58lrVwIOcTTkZ/kP35jYotUvNcZP3NKnp2wVg+jTDBY+GrBMEcxGm
+         UiyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716827150; x=1717431950;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=47CM+OohXZ/uj91laGtyNIW1WOIMEW/2BamLnhPhjLg=;
+        b=WM5R4J4D18aIHQbHNcQzpHMHPGquHjQmQBU8Zm92zMPmIeOmDAzJRPAjssVYeAfngQ
+         k+oUiPTR/ZUMWgUMdGULYh3ckHhCjyjLeRxthS3yXpoEjtVr0tbqml5lB6jRpNdMXbL/
+         2IlT0hO96YbAzFP1xEm8yzLJld3m12gVfiQ9/wpkwsYQgpJFoQ6QSUMMc0UTp7ao0k7O
+         wTv/tJWhG7wyUyJn6c0FrWEKAKzclD8k1kguzRkeIQ3Cluz4axWxI+A9WJp2uJbnfOwX
+         QFnODpUdDF0N8tMo/Tuwfr4eVM5fnVHGv1DRroKb6eSUwA3+fvf9x5HPnNLn2P/QFMET
+         FxXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtOzDBZ8SyfzzgEyVEdCR5o8oyhu2cqJ56yomKB8Qt8bKhM3hzQ5kSei1yLvt5DMFVFoPT08y9uJGN7xpx1sZU+TfyqfvOxWQCApBg
+X-Gm-Message-State: AOJu0YwVhzXEm6/jZIvuogfPs2l69Iq/jAetsw0GfGJj1vxVrDbi70g6
+	CNX66A5TT2skI8a8WVi3tuU2C0PgtxbnJh6yt5eocqZ2iZe/XSZD8AdNGy7a2n0=
+X-Google-Smtp-Source: AGHT+IERUBuY75t+21Dh0Te3entq997PSVNxYrQiMf+uzfZwadVoSO9JlMdhr5Poe9kWJuTWdn1vkQ==
+X-Received: by 2002:ac2:5ec6:0:b0:51e:147d:bd2d with SMTP id 2adb3069b0e04-52964eac421mr5508085e87.39.1716827150373;
+        Mon, 27 May 2024 09:25:50 -0700 (PDT)
+Received: from localhost ([176.74.158.132])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-578524bb79esm5935351a12.92.2024.05.27.09.25.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 09:25:49 -0700 (PDT)
+Date: Mon, 27 May 2024 18:25:49 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Cc: linux-riscv@lists.infradead.org, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, greentime.hu@sifive.com, vincent.chen@sifive.com, 
+	cleger@rivosinc.com, alex@ghiti.fr, Jinyu Tang <tjytimi@163.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Mayuresh Chitale <mchitale@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Samuel Ortiz <sameo@rivosinc.com>, 
+	Evan Green <evan@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Leonardo Bras <leobras@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4 1/5] RISC-V: Detect and Enable Svadu Extension
+ Support
+Message-ID: <20240527-41b376a2bfedb3b9cf7e9c7b@orel>
+References: <20240524103307.2684-1-yongxuan.wang@sifive.com>
+ <20240524103307.2684-2-yongxuan.wang@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,92 +79,142 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240527013504epcms1p22bec7b83f2a42e76877b97ed0d769009@epcms1p2>
+In-Reply-To: <20240524103307.2684-2-yongxuan.wang@sifive.com>
 
-On Mon, May 27, 2024 at 10:35:04AM +0900, Jaewon Kim wrote:
-> >On Fri, May 24, 2024 at 06:07:15PM +0900, Jaewon Kim wrote:
-> >> >On Tue, May 21, 2024 at 07:17:53PM +0900, Jaewon Kim wrote:
-> >> >> >On Tue, May 21, 2024 at 11:53:29AM +0900, Jaewon Kim wrote:
-> >> >> >> 
-> >> >> >> This is actually RESEND as it was introduced 2 years ago.
-> >> >> >> Please refer to https://lore.kernel.org/linux-mm/YkQB6Ah603yPR3qf@kernel.org/#t
-> >> >> >> 
-> >> >> >> > But you never provided details about *why* you want this information exposed.
-> >> >> >> 
-> >> >> >> For your question, I'd like to say ;
-> >> >> >> We can see the same format and exact information between different version of kernel status.
-> >> >> >> 
-> >> >> >> 1) Internally we can check if the reserved memory changes.
-> >> >> >> 2) Externally we can communicate between chipset vendors and OEM, with a same format.
-> >> >> >
-> >> >> >Why the existing debugfs interface is not sufficient?
-> >> >> 
-> >> >> debugfs/memblock/memory & debugfs/memblock/reserved have changed its
-> >> >> format but still does not show name, reusable, kernel size.  If memory is
-> >> >> reserved from memblock, and did not freed back to memblock. Memblock does
-> >> >> not know even after the memory is freed to system.  I think a simple
-> >> >> debug interface is needed to easily communicate with others or compare
-> >> >> different SW releases.
-> >> >
-> >> >I still don't understand what problem are you trying to solve with these
-> >> >patches. 
-> >> 
-> >> I think we need a common API to easily see the reserved memory status.
-> >> Through MemTotal on /proc/meminfo, we can only see only the total size
-> >> of reserved memory. We don't how big kernel init size within the the
-> >> total size. I think this really helps to compare different kernel and
-> >> communicate with others.
-> >
-> > As was already mentioned on this thread, something like
-> >
-> > $ dmesg | grep Memory:
-> > [    0.000000] Memory: 8058204K/8388608K available (35392K kernel code, 8706K rwdata, 23320K rodata, 16832K init, 848K bss, 297636K reserved, 32768K cma-reserved)
-> >
-> > already shows init, rodata and bss sizes.
-> >
-> > And size -A vmlinux provides detailed breakdown of the kernel image into
-> > sections.
-> > 
-> >> I think the debugfs API or early boot log shows quite much information
-> >> for the reserved memory information defined in device tree. But it is
-> >> difficult to see after boot, as the boot log already was removed ouf of
-> >> the kernel log buffer.
-> >
-> > Kernel log is persisted, isn't it?
+On Fri, May 24, 2024 at 06:33:01PM GMT, Yong-Xuan Wang wrote:
+> Svadu is a RISC-V extension for hardware updating of PTE A/D bits.
 > 
-> Early kernel log is removed after other log is written to the log buffer. I may
-> not be able to get it, after waiting for the target device is ready to be
-> connected from host PC. I wanted to keep that information.
+> In this patch we detect Svadu extension support from DTB and enable it
+> with SBI FWFT extension. Also we add arch_has_hw_pte_young() to enable
+> optimization in MGLRU and __wp_page_copy_user() if Svadu extension is
+> available.
 > 
-> Actually the commit aeb9267eb6b1 ("of: reserved-mem: print out reserved-mem
-> details during boot") seems to show most of information if I can get the early
-> boot log.
+> Co-developed-by: Jinyu Tang <tjytimi@163.com>
+> Signed-off-by: Jinyu Tang <tjytimi@163.com>
+> Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 
-Unless the kernel log is stored on the target you need to redirect
-target's console to a file on the host, then all of the boot log will be
-accessible on the host.
+I think this patch changed too much to keep r-b's. We didn't have the
+FWFT part before.
 
-Then with memblock=debug kernel parameter you'll be able to get much more
-information about memblock reservations.
- 
-> If you don't mind, let me ask one question. How can we easily find the undefined
-> DRAM memory regions in kernel persective. Do we have to look into the debugfs 
-> memblock/memory and combine the information with the kernel log information?
+> ---
+>  arch/riscv/Kconfig               |  1 +
+>  arch/riscv/include/asm/csr.h     |  1 +
+>  arch/riscv/include/asm/hwcap.h   |  1 +
+>  arch/riscv/include/asm/pgtable.h |  8 +++++++-
+>  arch/riscv/kernel/cpufeature.c   | 11 +++++++++++
+>  5 files changed, 21 insertions(+), 1 deletion(-)
 > 
-> case1) Actual DRAM is mapped as two regions like,
->    2GB @ 0x00000000_80000000 and 6GB @ 0x00000008_80000000,
->    how can we find the hole, 0x00000000_80000000--0x00000008_7FFFFFFF ?
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index be09c8836d56..30fa558ee284 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -34,6 +34,7 @@ config RISCV
+>  	select ARCH_HAS_PMEM_API
+>  	select ARCH_HAS_PREPARE_SYNC_CORE_CMD
+>  	select ARCH_HAS_PTE_SPECIAL
+> +	select ARCH_HAS_HW_PTE_YOUNG
+>  	select ARCH_HAS_SET_DIRECT_MAP if MMU
+>  	select ARCH_HAS_SET_MEMORY if MMU
+>  	select ARCH_HAS_STRICT_KERNEL_RWX if MMU && !XIP_KERNEL
+> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+> index 2468c55933cd..2ac270ad4acd 100644
+> --- a/arch/riscv/include/asm/csr.h
+> +++ b/arch/riscv/include/asm/csr.h
+> @@ -194,6 +194,7 @@
+>  /* xENVCFG flags */
+>  #define ENVCFG_STCE			(_AC(1, ULL) << 63)
+>  #define ENVCFG_PBMTE			(_AC(1, ULL) << 62)
+> +#define ENVCFG_ADUE			(_AC(1, ULL) << 61)
+>  #define ENVCFG_CBZE			(_AC(1, UL) << 7)
+>  #define ENVCFG_CBCFE			(_AC(1, UL) << 6)
+>  #define ENVCFG_CBIE_SHIFT		4
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> index e17d0078a651..8d539e3f4e11 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -81,6 +81,7 @@
+>  #define RISCV_ISA_EXT_ZTSO		72
+>  #define RISCV_ISA_EXT_ZACAS		73
+>  #define RISCV_ISA_EXT_XANDESPMU		74
+> +#define RISCV_ISA_EXT_SVADU		75
+>  
+>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
+>  
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index 9f8ea0e33eb1..1f1b326ccf63 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -117,6 +117,7 @@
+>  #include <asm/tlbflush.h>
+>  #include <linux/mm_types.h>
+>  #include <asm/compat.h>
+> +#include <asm/cpufeature.h>
+>  
+>  #define __page_val_to_pfn(_val)  (((_val) & _PAGE_PFN_MASK) >> _PAGE_PFN_SHIFT)
+>  
+> @@ -285,7 +286,6 @@ static inline pte_t pud_pte(pud_t pud)
+>  }
+>  
+>  #ifdef CONFIG_RISCV_ISA_SVNAPOT
+> -#include <asm/cpufeature.h>
+>  
+>  static __always_inline bool has_svnapot(void)
+>  {
+> @@ -621,6 +621,12 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+>  	return __pgprot(prot);
+>  }
+>  
+> +#define arch_has_hw_pte_young arch_has_hw_pte_young
+> +static inline bool arch_has_hw_pte_young(void)
+> +{
+> +	return riscv_has_extension_unlikely(RISCV_ISA_EXT_SVADU);
+> +}
+> +
+>  /*
+>   * THP functions
+>   */
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index 3ed2359eae35..b023908c5932 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -93,6 +93,16 @@ static bool riscv_isa_extension_check(int id)
+>  			return false;
+>  		}
+>  		return true;
+> +	case RISCV_ISA_EXT_SVADU:
+> +		if (sbi_probe_extension(SBI_EXT_FWFT) > 0) {
 
-The actual memory banks reported to Linux are shown at
-debugfs/memblock/memory
- 
-> case2) If some region is already carved out at bootloader stage like.
->    0x00000000_81200000-0x00000000_812FFFFF was not initinally on memblock.
->    0x00000000_80000000-0x00000000_81200000 was removed as no-map through device tree.
->    how can we find the hole, 0x00000000_81200000-0x00000000_812FFFFF ?
+I think we've decided the appropriate way to prove for SBI extensions is
+to first ensure the SBI version and then do the probe, like we do for STA
+in has_pv_steal_clock()
 
-nomap regions are shown in debugfs/memblock/memory as NOMAP.
+> +			struct sbiret ret;
+> +
+> +			ret = sbi_ecall(SBI_EXT_FWFT, SBI_EXT_FWFT_SET, SBI_FWFT_PTE_AD_HW_UPDATING,
+> +					1, 0, 0, 0, 0);
+> +
+> +			return ret.error == SBI_SUCCESS;
+> +		}
+> +		return false;
+>  	case RISCV_ISA_EXT_INVALID:
+>  		return false;
+>  	}
+> @@ -301,6 +311,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>  	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
+>  	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
+>  	__RISCV_ISA_EXT_DATA(sstc, RISCV_ISA_EXT_SSTC),
+> +	__RISCV_ISA_EXT_SUPERSET(svadu, RISCV_ISA_EXT_SVADU, riscv_xlinuxenvcfg_exts),
 
--- 
-Sincerely yours,
-Mike.
+We do we need XLINUXENVCFG?
+
+Thanks,
+drew
+
+>  	__RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
+>  	__RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+>  	__RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+> -- 
+> 2.17.1
+> 
