@@ -1,182 +1,195 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2067.outbound.protection.outlook.com [40.107.22.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325FE47F5F
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716796104; cv=none; b=KtGrvB590jGWg5hgPkV9nAQ493Q5PhwLAQklefwZWEIJOYE2wvZkeYoewp/+gb5MQD0I9jpL89ed4NsL7Bmq/1FZKTmsTNHe8YQXZ7AKlYM17it7+A0Q1WSGkF3QVEF5bOpvw7X5oZL9ss3h9sUpAgD3lVoHgSNIw1iCHqO2BUo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716796104; c=relaxed/simple;
-	bh=snHEB08XY5JQn621PObDnGVEpGYE4z2PihmqwwfM3ZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gHYMMo8JOOfRshZh6q2Y9J7kaD5Lg45y+biKXcevdA5eRVNVpDHCHHEH5NVrAHoxSmhMq0y81ns+z6Gqwq+eKIPFk1pySVxSZh1kwWnfeQ18MoxhPG3ViyaBsgj/QNJfyDPhu7LaD0OwgUdEBeBOkD8irUMpepLO4J8fNFtDNAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QDooChSZ; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04C722079;
+	Mon, 27 May 2024 07:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716796215; cv=fail; b=mpjSFm0m07mYTWlWRuLku1brPo4vJ8C2nUhNk2HyNqSkEUdXFAFicMfAGmEYrgobwW9qgLnwCA65YXLU2XjpAjzY+3nLS7IFybDPhzoERi7tLUXEzi+ziUIWqIsp+xw2e6SMV6PfOWOWVSlteWP8hezKwLUQQ96GOg2XRBXpoh0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716796215; c=relaxed/simple;
+	bh=0r83rudtottwUHmJG/okPv+XDtoPaNMkMxpYhQpS/g8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=GiIxN1Yp/HBB3NZQyKkvd8rILBH/7/RDNZqX3JUen0zPQ4tsIes3qrg/k3sZ14JnWMh+G+95j6guSQYM7GD4x0+S5XVPgRcbHkcQmevI4f+jQJXUTkshgHa3SyvMVAe5Ydzy8pDTKLcwj5ZAxQ3OCI9LDr11vKv7XfA3Ig1x/yY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=TTFcUrTa; arc=fail smtp.client-ip=40.107.22.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QDooChSZ"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52962423ed8so3158132e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 00:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716796100; x=1717400900; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G0F8xDz21HTi5SrFsLB+iyLzGOKVclLkyve6qrrpHP8=;
-        b=QDooChSZLqSa4V0kNcos/UGo/5DEd9P/Xb4vGpkO1VpBMPGWvH37GMwppNMoC6wY4S
-         A2OMvyeESfuVp85Mq6HQRhevN/wOG42sk2ZZrAGZRo7KBVrqyvWL4EI91MUqO8eKf3kv
-         +idvmbjhtFTJZzAjbFLoO5aUC/jxBzeTlR2vV+K8Vmg0TwgZzW+wrJnosMlQFFua8saH
-         ZaZIydKZR9NdNIxOx10ZkIbSWXccysCRm+R53tI2TspfCv/ROeO4WSQ2lGGdrcMR2Nvr
-         bjLb0h0JV/uIDoKs6S7ytyENQ6hwQ5yNagFvD5rZXn2AanAqkPnn3DWP3yKoFAXGkQzU
-         RM9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716796100; x=1717400900;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G0F8xDz21HTi5SrFsLB+iyLzGOKVclLkyve6qrrpHP8=;
-        b=axKbmA9IBq9+NHG0Tl72bpxpJqDqafBlvBnlNpDepSD2SYStzEcIqFHEE+LBysFMq9
-         7oPhy/XNhxnvSFSNj+DyCsoMDyf8nEE0fFmy/6aTuVcZceX82Z/hZfrbU7Vx0sS+FI9E
-         0XQykuddqvUGoQGYZuMwwqclxDbq+SRSqLmrA7yChDIVZg6l+L+PFSqRVc/2Ap4TiEw+
-         n+G/64u3ZQJPLc61Lfn3Piw5+3IDDXEYOpHmPhPTLpEZXoNKe3q88P7CVwzpXzAnlh8L
-         i7//yl4EYpwy9mZ+IVULsO7hnPiLMII3q/hG5Joq3M7ZL5YzRV4xErdJbQb7D7Mg7Kke
-         niug==
-X-Forwarded-Encrypted: i=1; AJvYcCUm3t0XWxwMhjDG74yIcJeGrPx3AXUe3jIkoUTH6DeXPOvR1U5XEeEwnNbQdOB0J/zq29cbG+vVYqJH0k7jqLJQ2rjSArS0Q4Dqw41L
-X-Gm-Message-State: AOJu0Ywyc2lRuUk7WFKcRJ8jNMUMaKANrSQb70QzZ9fOo0wiMJztVuTW
-	HIFwO1x7sPINhgaj5pNXUpVhZaXHTKvLacAQpIAAl/ti7b4kc3y2eYmgj3g3B34RLdjkaUNYT8D
-	Q
-X-Google-Smtp-Source: AGHT+IH4t/IBOf/Ew7gwWEo6+jgoCpj8r+bvyE+lZiUzS0bhtYDCCBlqMIU+yWaaueZRRxr5Vu1LEA==
-X-Received: by 2002:a05:6512:10cc:b0:523:7f19:cb44 with SMTP id 2adb3069b0e04-52965198b94mr7303495e87.29.1716796100209;
-        Mon, 27 May 2024 00:48:20 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cda48e6sm458737266b.203.2024.05.27.00.48.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 00:48:19 -0700 (PDT)
-Date: Mon, 27 May 2024 10:48:15 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, David Gstir <david@sigma-star.at>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	David Oberhollenzer <david.oberhollenzer@sigma-star.at>
-Subject: drivers/crypto/mxs-dcp.c:292 mxs_dcp_run_aes() error: uninitialized
- symbol 'key_phys'.
-Message-ID: <129493f0-211f-408f-8435-2e6fead3f07b@moroto.mountain>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TTFcUrTa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nu4nNywTJFqBBS05Uvvl4QeC1YS+CS6tauXto0/LaV0iYF6l4JV2NDhyzqvnZx3/pCrDanw/5eLhch6F7mEfTNqbJcsYNub9LN8hJ2Qe51GkLrUoIP6BLyheKyt/QRhXGUH4nwiNWbrVxlq+I9LZmsVKkk5e/HSwLEpvu/mvqneHnhBWJTZcoqOxo98ExPz+H0azjz310CCRyV8GMkiLvWK3pc9P4bCoiJHjpDg3FWBfyV+XxA/UBkj8IVBXIStL37MzBMISmyxKLb+hvgWbHnYpfQRQLFGJmpPTf1VnUYPO+LvKehdJ3Pl4Ei4baGrEKkOIK0268+rRgGGzFlmmwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bjy2w7pSwQCP2eRyDVv5BqQ/tMmazt1CWtKNnrhp1U8=;
+ b=MgpGEpQc+WKgmhw//oIWpj8nN5BP934EvymyS1zcJ9hNxXhiQmz0PYJx51D0nAcUZ+Y7eAYxB7YVQ9RFl2iyHSSEwCXG36iU9Dho59QFKIXToaE7aN8anhKAZ1CdGRy5e/kEHNIKPQKGUp55pxsEwVtRsQWdsMzuxFd1TgQcbSdGDVc0bBEFsAqoNqLa5GQ8uCMc041+or9UFe01xi64vdy4mKQGlXjU/9K2mQcYaZRC7WQ0q6r0x2inmeK/NaMIW6cTN39ZMomhy3JaeyJx6IbhniF5nivRmW/2ZZivAuhg3P7C8QMje2UePQLqXFVZw4Utx2dfPbxDssHgosJTFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bjy2w7pSwQCP2eRyDVv5BqQ/tMmazt1CWtKNnrhp1U8=;
+ b=TTFcUrTarPd+9Of+hzurqtreyZ8qR/Ex5kBvFf1gIX48DXW3GNv5pgDVq8+ASPR5/V8DgO0uo3OJesHg6HheI2j5QszWCDoTMjHhSepnugTQP7DnlBEA+RR/35I0sThynnhL6yMVlsZWtzK1VL8RykAmKBDYk5JjWrWNJVfI2Rc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB8PR04MB7065.eurprd04.prod.outlook.com (2603:10a6:10:127::9)
+ by PA1PR04MB10468.eurprd04.prod.outlook.com (2603:10a6:102:448::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Mon, 27 May
+ 2024 07:50:09 +0000
+Received: from DB8PR04MB7065.eurprd04.prod.outlook.com
+ ([fe80::8af7:8659:9d42:bd84]) by DB8PR04MB7065.eurprd04.prod.outlook.com
+ ([fe80::8af7:8659:9d42:bd84%4]) with mapi id 15.20.7611.025; Mon, 27 May 2024
+ 07:50:07 +0000
+From: Pengfei Li <pengfei.li_1@nxp.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	abelvesa@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	ping.bai@nxp.com,
+	ye.li@nxp.com,
+	peng.fan@nxp.com,
+	aisheng.dong@nxp.com,
+	frank.li@nxp.com
+Cc: tharvey@gateworks.com,
+	alexander.stein@ew.tq-group.com,
+	gregor.herburger@ew.tq-group.com,
+	hiago.franco@toradex.com,
+	joao.goncalves@toradex.com,
+	hvilleneuve@dimonoff.com,
+	Markus.Niebel@ew.tq-group.com,
+	m.felsch@pengutronix.de,
+	m.othacehe@gmail.com,
+	bhelgaas@google.com,
+	leoyang.li@nxp.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	pengfei.li_1@nxp.com
+Subject: [PATCH 0/5] arm64: dts: freescale: Add i.MX91 11x11 EVK basic support
+Date: Mon, 27 May 2024 16:51:53 -0700
+Message-Id: <20240527235158.1037971-1-pengfei.li_1@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0118.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::22) To DB8PR04MB7065.eurprd04.prod.outlook.com
+ (2603:10a6:10:127::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB8PR04MB7065:EE_|PA1PR04MB10468:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6311255d-d16f-44e4-027e-08dc7e21a061
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230031|366007|7416005|376005|52116005|1800799015|38350700005|921011;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?NzT94lBHC4us9A7pOVP5iLrbHtDVB8wwQfjVbhQbSff8VmNv4gdnUuaUktWg?=
+ =?us-ascii?Q?mQcbMJTMJJsnY/wdG3arAPVaUDEI3PaHn9ymaSNykSiTTo+W5viwIX8eGPkU?=
+ =?us-ascii?Q?f0bRAfIG3UH7SdzL+YpUQG2dtMMwBSE5jkNzOS1sXXMbUoGlHJmogGIVV5Lu?=
+ =?us-ascii?Q?32JXUKb7l8gl3I6ZhsdZXZHmtMuyaGiCGPbrvSN+zJAxly+GVl8UcXnYfAvK?=
+ =?us-ascii?Q?tBr6YCZc0XBz3KNvtq5+NdkFEhnyRYsT6iAOwEhqeQQnCyyQBAnmL/9hAF24?=
+ =?us-ascii?Q?LEdeBpnH6au46T3nlfLXItwqkS8R/6/v9mXzJahVIQCZbp20RvzH5++21QX/?=
+ =?us-ascii?Q?SOYRtpbcvOH0wxHybke65dBi3ciprEDi/rYeOy6AQUNWJDEQMjw2pAaMkeMi?=
+ =?us-ascii?Q?J4/vvrTMoWlRRfFRrPQQk/yx7U1umqohcpwckla84AdCCJW1deydFVFdxjsU?=
+ =?us-ascii?Q?icqZEOI0dRibug7kFfgVUnqPPX7AWNLOqUUJbXi/jp9cDtqIWL20okhjSllD?=
+ =?us-ascii?Q?A2R36MC7IVpqHIRdFJXTpbYVO0YmcAGttYwwZhldetqX2Af//wd1tT0cCuKT?=
+ =?us-ascii?Q?kI413Ju6RdBXdRDFFHfYVak4fkK27LmJHX6B03O1a972ALfN+C/Rz7eKdrn6?=
+ =?us-ascii?Q?SVyeaJGCZ815EuW/eK6OSHmXEj90HCENPp5IZ9ejwPxVBKKj/x51xx8fSzIy?=
+ =?us-ascii?Q?T9yQJXJGKhTeOMD5WSruPLNT8kDsYjygvEFPE6kQAVwh2EdwdBobEQQr0juD?=
+ =?us-ascii?Q?JFFN0G9Q0uMZkM0T33+vBvUmnVxEQL+k8hRzzHrPVMIEsRCr5he7oem+eRn9?=
+ =?us-ascii?Q?9MCSfK1UuO6jyk3UJDjbJ/AKnkIYYEbiVbLcSWxI+RemB1KNm/5U2UoYxmbU?=
+ =?us-ascii?Q?IKbh9V6o4LX/MLZLBsYyOFWrpNEp9Ahi/2qS4lN9GfAyvBuvYmq3+riSJULo?=
+ =?us-ascii?Q?kvOblYb4mpGnVVb4QPZ/uiTH4a9/JQsmIWZT9NRu2kYePB3J64kuMibwen9n?=
+ =?us-ascii?Q?g8ffMb3h9KJkP21mzxxB7JDnYUkY/3yyOwxIUh9kKb1I0nhNF/sKQHp1m8eD?=
+ =?us-ascii?Q?lWFHmyanG8rTf+20P4CWFkOnI7XRrhsB23SGYORDi0THSU+iy3nlSfuH4hIc?=
+ =?us-ascii?Q?rBRaIybHqdMhyfjlw96+faEBz35ooge6LLHfK25MfXpXl5FuZm6B28DwpC3C?=
+ =?us-ascii?Q?6tZEC3PSesoSYRouq1p+5IXSBwWSjSKK3UPhg1gkuYDn9nrFDs6Cf9PESwgE?=
+ =?us-ascii?Q?IHDuuCZJTZA6Yu6nMkKx5m054lasPhTj5HHTm44CShr+SW0Yy0tTahhzp5hN?=
+ =?us-ascii?Q?yD50qE9kU31Zs7yOoW7osI94OKrM/lXcwNdPRPlZcu5SgSjk5IMQyr/t5bBB?=
+ =?us-ascii?Q?SHeK/dw=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB7065.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(52116005)(1800799015)(38350700005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?WxQ48jg8OSNCBh8ujOw2Rc/fL1NTVh/6sjfbWIRX2h32qZfd7hEdtHBraDPz?=
+ =?us-ascii?Q?qU7N2/yq1eRdRm6ova1qHENuZJagmkNiQ6VPHWa5TvFXlOb6HlblgelhvJFs?=
+ =?us-ascii?Q?A5ITzFw5kgKo1ktjfwOg3VtaFRVECb9xMzJY23P21bw0pWkzh364M9WRHa6V?=
+ =?us-ascii?Q?/D3UM876ZV5PsEn/27r3wLOlDg9kvJ27SSsI+s6O4XegHHkAtrdbIBoVqd4Z?=
+ =?us-ascii?Q?4U2lGy+27bWxHHP1BaQMNHA8R1K3iEiL865vAhVfCoj9Wqqj1PrEtYWUYcsR?=
+ =?us-ascii?Q?MfUKBOKuSAAXPDTazuT6LxMlXED6VDD8bxm4YAi9cr1osFeIvdZRHgoyKoMn?=
+ =?us-ascii?Q?GsyqAIsi7lYUALbJRC0U/u7ImjACMqbZ1zr4TqmrLHrdZylOsevC77ulU0xR?=
+ =?us-ascii?Q?nh1oRMRXHDb8bpwyUvRhZZ9ejCy2G6C99xzjwpH5fEbELpeI3dwWOziE+hGk?=
+ =?us-ascii?Q?/IfjiPAEx4GNHPPp7PcKpDIoy34uT7OnE97HD8gEKMkWA1SdJ0dLDhZv315/?=
+ =?us-ascii?Q?/HxU7YMPiRMhKPdXmQaX9cgue7g8MzHnYP9KhzGNQvKpHfbaLBB9mDN63TDD?=
+ =?us-ascii?Q?SFpvHnS8mv8iejAE6lYu1ryJVvgQRGL7kbF+0YN3VBSwDxDEJSig7TpWIsZZ?=
+ =?us-ascii?Q?663LLHXtqMzpHgi9hTaG3D2YwZsYT/OSgoAMVq+gunoCteen4EcGr/BV4box?=
+ =?us-ascii?Q?rwj7VLxnmGbo2oiYBYwfsMNRQf1AscyJeyiXL6DR6zwkQFzB0+RbVtQ9W42q?=
+ =?us-ascii?Q?puTF/zHK/3iRzSWjj30wk8zPEDIBD67fiEYnbIN6samFtdf8y0iXAepjnOkT?=
+ =?us-ascii?Q?QgBGzbXHpd2yIJzf21hnGnQC9ANc2fOTXPMJbniMz5kgBH0CVW2sFudH/sLi?=
+ =?us-ascii?Q?ssmDHaQDfUqu2Gk1rso1RaajoBirvp3OchrvCMVOEg43zsqBQ06K8/VQK0xk?=
+ =?us-ascii?Q?ukN4SE+eJk6DXxLqA3QwkjiLBb/qUOIrrRcZ3RgrRrAc23hiXfmC8RCUdjGF?=
+ =?us-ascii?Q?1wl+XWowh21SHwhXMgY1u2AT8grF+qY6BsPANnO+nEDz0DszgQ/8Xw+bicOQ?=
+ =?us-ascii?Q?qRAhV/OFMXNInF4E6wzbs90pMpmYz7RlfG2eFB8SRlCzk+lHPXXh8rI1hyZi?=
+ =?us-ascii?Q?7Bvb47TcPSdTjljcvMIcL3c6qzSuBVkrz75bCLq/LZBfeCNxENpSUA/J1ard?=
+ =?us-ascii?Q?IZjn1BDUxaHOYTK/C9CR2mzV9tv8JR7l9EdYTe9O5O2UTbhcTgcqz3t8l2SN?=
+ =?us-ascii?Q?TwWQcCeNV8RYybQSy5rivkx4TMD5GcNZcFODxo+ZH8+EWdGP+YW+OKjrvjgj?=
+ =?us-ascii?Q?ltkE2igCndDlC9NZW2fkhKss56s8GuPvfoe9tvbSLDag5+r2LQ3yVLN1R2FC?=
+ =?us-ascii?Q?gxEWRPUgo60w35bolhtBwPgVFld+mh85+w20Wavx0DBIrb/V2bW6ySIkrPEP?=
+ =?us-ascii?Q?2IQ0IluzaFPViOqabWhLHtZyQNYsO2if6pYI6bhhUBH9pxsWBOV0fU6bkkq5?=
+ =?us-ascii?Q?03I2rsJHiZHkocM/9PgWDKwywM7Uz8ahTAFIknZNujh8FHnwaPF1RdPntdq+?=
+ =?us-ascii?Q?YF2b5ijhjx3vtNGb+MD4Rb8rCVDJVA0ujGDMAy49?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6311255d-d16f-44e4-027e-08dc7e21a061
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB7065.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2024 07:50:07.2836
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MzzghDW6cHyXGRfvxqiP+ZMG2u/KE08IHYO2fQE91buc7U/CrkxO1WoumvrBYxdAQPZHaOdIOpwN4VAFqm/eCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10468
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   c13320499ba0efd93174ef6462ae8a7a2933f6e7
-commit: 3d16af0b4cfac4b2c3b238e2ec37b38c2f316978 crypto: mxs-dcp: Add support for hardware-bound keys
-config: arm-randconfig-r071-20240524 (https://download.01.org/0day-ci/archive/20240527/202405270146.Y9tPoil8-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 7aa382fd7257d9bd4f7fc50bb7078a3c26a1628c)
+The design of the i.MX91 platform is very similar to i.MX93.
+The mainly difference between i.MX91 and i.MX93 is as follows:
+- i.MX91 removed some clocks and modified the names of some clocks.
+- i.MX91 only has one A core
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202405270146.Y9tPoil8-lkp@intel.com/
+Therefore, i.MX91 can reuse i.MX93 dtsi.
 
-smatch warnings:
-drivers/crypto/mxs-dcp.c:292 mxs_dcp_run_aes() error: uninitialized symbol 'key_phys'.
+Pengfei Li (5):
+  dt-bindings: clock: Add i.MX91 clock support
+  dt-bindings: clock: Add i.MX91 clock definition
+  arm64: dts: freescale: Add i.MX91 dtsi support
+  dt-bindings: arm: fsl: Add i.MX91 11x11 evk board
+  arm64: dts: freescale: Add i.MX91 11x11 EVK basic support
 
-vim +/key_phys +292 drivers/crypto/mxs-dcp.c
-
-2021abaa00da64a Marek Vasut    2014-01-14  225  static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
-9acb3247e0e1d94 Ard Biesheuvel 2019-11-09  226  			   struct skcipher_request *req, int init)
-15b59e7c3733f90 Marek Vasut    2013-12-10  227  {
-df6313d707e575a Sean Anderson  2021-07-01  228  	dma_addr_t key_phys, src_phys, dst_phys;
-15b59e7c3733f90 Marek Vasut    2013-12-10  229  	struct dcp *sdcp = global_sdcp;
-15b59e7c3733f90 Marek Vasut    2013-12-10  230  	struct dcp_dma_desc *desc = &sdcp->coh->desc[actx->chan];
-9acb3247e0e1d94 Ard Biesheuvel 2019-11-09  231  	struct dcp_aes_req_ctx *rctx = skcipher_request_ctx(req);
-3d16af0b4cfac4b David Gstir    2024-04-03  232  	bool key_referenced = actx->key_referenced;
-15b59e7c3733f90 Marek Vasut    2013-12-10  233  	int ret;
-15b59e7c3733f90 Marek Vasut    2013-12-10  234  
-3d16af0b4cfac4b David Gstir    2024-04-03  235  	if (!key_referenced) {
-df6313d707e575a Sean Anderson  2021-07-01  236  		key_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_key,
-df6313d707e575a Sean Anderson  2021-07-01  237  					  2 * AES_KEYSIZE_128, DMA_TO_DEVICE);
-df6313d707e575a Sean Anderson  2021-07-01  238  		ret = dma_mapping_error(sdcp->dev, key_phys);
-df6313d707e575a Sean Anderson  2021-07-01  239  		if (ret)
-df6313d707e575a Sean Anderson  2021-07-01  240  			return ret;
-3d16af0b4cfac4b David Gstir    2024-04-03  241  	}
-
-key_phys not initialized on else path.
-
-df6313d707e575a Sean Anderson  2021-07-01  242  
-df6313d707e575a Sean Anderson  2021-07-01  243  	src_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_in_buf,
-15b59e7c3733f90 Marek Vasut    2013-12-10  244  				  DCP_BUF_SZ, DMA_TO_DEVICE);
-df6313d707e575a Sean Anderson  2021-07-01  245  	ret = dma_mapping_error(sdcp->dev, src_phys);
-df6313d707e575a Sean Anderson  2021-07-01  246  	if (ret)
-df6313d707e575a Sean Anderson  2021-07-01  247  		goto err_src;
-df6313d707e575a Sean Anderson  2021-07-01  248  
-df6313d707e575a Sean Anderson  2021-07-01  249  	dst_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_out_buf,
-15b59e7c3733f90 Marek Vasut    2013-12-10  250  				  DCP_BUF_SZ, DMA_FROM_DEVICE);
-df6313d707e575a Sean Anderson  2021-07-01  251  	ret = dma_mapping_error(sdcp->dev, dst_phys);
-df6313d707e575a Sean Anderson  2021-07-01  252  	if (ret)
-df6313d707e575a Sean Anderson  2021-07-01  253  		goto err_dst;
-15b59e7c3733f90 Marek Vasut    2013-12-10  254  
-fadd7a6e616b89c Radu Solea     2018-10-02  255  	if (actx->fill % AES_BLOCK_SIZE) {
-fadd7a6e616b89c Radu Solea     2018-10-02  256  		dev_err(sdcp->dev, "Invalid block size!\n");
-fadd7a6e616b89c Radu Solea     2018-10-02  257  		ret = -EINVAL;
-fadd7a6e616b89c Radu Solea     2018-10-02  258  		goto aes_done_run;
-fadd7a6e616b89c Radu Solea     2018-10-02  259  	}
-fadd7a6e616b89c Radu Solea     2018-10-02  260  
-15b59e7c3733f90 Marek Vasut    2013-12-10  261  	/* Fill in the DMA descriptor. */
-15b59e7c3733f90 Marek Vasut    2013-12-10  262  	desc->control0 = MXS_DCP_CONTROL0_DECR_SEMAPHORE |
-15b59e7c3733f90 Marek Vasut    2013-12-10  263  		    MXS_DCP_CONTROL0_INTERRUPT |
-15b59e7c3733f90 Marek Vasut    2013-12-10  264  		    MXS_DCP_CONTROL0_ENABLE_CIPHER;
-15b59e7c3733f90 Marek Vasut    2013-12-10  265  
-3d16af0b4cfac4b David Gstir    2024-04-03  266  	if (key_referenced)
-3d16af0b4cfac4b David Gstir    2024-04-03  267  		/* Set OTP key bit to select the key via KEY_SELECT. */
-3d16af0b4cfac4b David Gstir    2024-04-03  268  		desc->control0 |= MXS_DCP_CONTROL0_OTP_KEY;
-3d16af0b4cfac4b David Gstir    2024-04-03  269  	else
-15b59e7c3733f90 Marek Vasut    2013-12-10  270  		/* Payload contains the key. */
-15b59e7c3733f90 Marek Vasut    2013-12-10  271  		desc->control0 |= MXS_DCP_CONTROL0_PAYLOAD_KEY;
-15b59e7c3733f90 Marek Vasut    2013-12-10  272  
-2021abaa00da64a Marek Vasut    2014-01-14  273  	if (rctx->enc)
-15b59e7c3733f90 Marek Vasut    2013-12-10  274  		desc->control0 |= MXS_DCP_CONTROL0_CIPHER_ENCRYPT;
-15b59e7c3733f90 Marek Vasut    2013-12-10  275  	if (init)
-15b59e7c3733f90 Marek Vasut    2013-12-10  276  		desc->control0 |= MXS_DCP_CONTROL0_CIPHER_INIT;
-15b59e7c3733f90 Marek Vasut    2013-12-10  277  
-15b59e7c3733f90 Marek Vasut    2013-12-10  278  	desc->control1 = MXS_DCP_CONTROL1_CIPHER_SELECT_AES128;
-15b59e7c3733f90 Marek Vasut    2013-12-10  279  
-2021abaa00da64a Marek Vasut    2014-01-14  280  	if (rctx->ecb)
-15b59e7c3733f90 Marek Vasut    2013-12-10  281  		desc->control1 |= MXS_DCP_CONTROL1_CIPHER_MODE_ECB;
-15b59e7c3733f90 Marek Vasut    2013-12-10  282  	else
-15b59e7c3733f90 Marek Vasut    2013-12-10  283  		desc->control1 |= MXS_DCP_CONTROL1_CIPHER_MODE_CBC;
-15b59e7c3733f90 Marek Vasut    2013-12-10  284  
-3d16af0b4cfac4b David Gstir    2024-04-03  285  	if (key_referenced)
-3d16af0b4cfac4b David Gstir    2024-04-03  286  		desc->control1 |= sdcp->coh->aes_key[0] << MXS_DCP_CONTROL1_KEY_SELECT_SHIFT;
-3d16af0b4cfac4b David Gstir    2024-04-03  287  
-15b59e7c3733f90 Marek Vasut    2013-12-10  288  	desc->next_cmd_addr = 0;
-15b59e7c3733f90 Marek Vasut    2013-12-10  289  	desc->source = src_phys;
-15b59e7c3733f90 Marek Vasut    2013-12-10  290  	desc->destination = dst_phys;
-15b59e7c3733f90 Marek Vasut    2013-12-10  291  	desc->size = actx->fill;
-15b59e7c3733f90 Marek Vasut    2013-12-10 @292  	desc->payload = key_phys;
-                                                                        ^^^^^^^^
-Uninitialized.
-
-15b59e7c3733f90 Marek Vasut    2013-12-10  293  	desc->status = 0;
-15b59e7c3733f90 Marek Vasut    2013-12-10  294  
-15b59e7c3733f90 Marek Vasut    2013-12-10  295  	ret = mxs_dcp_start_dma(actx);
-15b59e7c3733f90 Marek Vasut    2013-12-10  296  
-fadd7a6e616b89c Radu Solea     2018-10-02  297  aes_done_run:
-df6313d707e575a Sean Anderson  2021-07-01  298  	dma_unmap_single(sdcp->dev, dst_phys, DCP_BUF_SZ, DMA_FROM_DEVICE);
-df6313d707e575a Sean Anderson  2021-07-01  299  err_dst:
-df6313d707e575a Sean Anderson  2021-07-01  300  	dma_unmap_single(sdcp->dev, src_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
-df6313d707e575a Sean Anderson  2021-07-01  301  err_src:
-3d16af0b4cfac4b David Gstir    2024-04-03  302  	if (!key_referenced)
-15b59e7c3733f90 Marek Vasut    2013-12-10  303  		dma_unmap_single(sdcp->dev, key_phys, 2 * AES_KEYSIZE_128,
-15b59e7c3733f90 Marek Vasut    2013-12-10  304  				 DMA_TO_DEVICE);
-15b59e7c3733f90 Marek Vasut    2013-12-10  305  	return ret;
-15b59e7c3733f90 Marek Vasut    2013-12-10  306  }
+ .../devicetree/bindings/arm/fsl.yaml          |   6 +
+ .../bindings/clock/imx93-clock.yaml           |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx91-11x11-evk.dts    | 807 ++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx91-pinfunc.h | 770 +++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx91.dtsi      |  66 ++
+ include/dt-bindings/clock/imx93-clock.h       |   7 +-
+ 7 files changed, 1657 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx91-11x11-evk.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx91-pinfunc.h
+ create mode 100644 arch/arm64/boot/dts/freescale/imx91.dtsi
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
 
