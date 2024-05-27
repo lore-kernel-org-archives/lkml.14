@@ -1,137 +1,86 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07B817BCA;
-	Mon, 27 May 2024 07:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716795268; cv=pass; b=r7CdySXFBVtEElfAc+dgqMrqumDtZAlc43ZmjBNh8gAD50aJyV7gQYnWss+RQfpj8jNhMVx9r1gtMrSis7d0hMGCzFghQ+3CpP1PhlsdAD5eeTw7PkDN3W6Q9RMQ3p9kaxqKeNZWybbJ7FIRKJ9s+xSuQiabWJdMjtuA9MEc1P8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716795268; c=relaxed/simple;
-	bh=2aUHCuEHYPSY1aqgTbH07WewgGXDHVS+cl/5npazbSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HDtpnImklA6gQ8zH4gVWT8ZzJJymeu4RbnbbsXLvSMZwl1SrTyX4sS8saX/FlcCPoQNPcC6TUnKLTRmlh8+hzsDGd/Xw0G+0xpC855VJePgw1UUAbtH6X7lIrzpoy8gWNI/ZThi5b9WzCxzHsIlBitf8eA9O06C1H/N6tE4wAyc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=XZLZT5u4; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3E5381B1
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716795299; cv=none; b=HrT1Yu3141EzuVXdRayklO3hQToNmwt2nPQt+kgQiclMv+Fa0PXzvoVUykYknhz0TKcVhpxff0RO+QMQUDtAaGLbiKe79giDN7ZGSixZOKdgQT3mQul3JNfKyd1/Ot+9ANEYQWDjAbfTIocaIAnlrisV0JxesqfEaIo6qEyaQR0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716795299; c=relaxed/simple;
+	bh=vgdlxkawZpV0xZ2eaHgO28wqSVxgzaGKRc/AlVdwfhk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yupsyptp58Au/kSNRWtKNVw/MgpYxKGi8O4FwKtoHXfpCdiMKyiffAhZKsa2/X3JlWtz5xWzTnkIx8pcW5DHagWWs/veB6B8eS279WlN4ggq5Cx0ewpJyGIXmuTEQvtyQY+LSTAxpbpY2gAg8sEtZ69SD95PXcIQRvqs23aFqH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ib6OBuR3; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="XZLZT5u4"
-Received: from hillosipuli.retiisi.eu (80-248-247-191.cust.suomicom.net [80.248.247.191])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4VnnTW2kzQz49Pyk;
-	Mon, 27 May 2024 10:34:23 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1716795263;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=20RQnVNvBDYr+FH4kFsSKaG6M/MyCTgpME0lCI4FhFw=;
-	b=XZLZT5u4WxvUYJAuY12Mkc2QAwE223rUqwwSRo29WTZt/ntX1zEddEQANMsAWXHflDk+/+
-	I9LwirdI/w5aM2mwdxEGCYMgzpjmd2TLC2HNNpLsxsNyDWm8QuzCw4klXUy0bF/0ZOzHrx
-	jz8KVu8vTgE005ffyxNqSEgfzFCMV2TkH+d367KX8V2ZnFvAHKbyCcjhxnO7Z1rtYWTp5l
-	Z+Djo9BOI0YCuBXAE5gEfnIda4ly2YfGctSKM9s9ojzv6BcCQBKusZoYKFz0XljFwfxQxg
-	WzG7bciJv/jp9Te7ez9kjphaZQkhzBqW4E8NmI+95qd9asON7C9Tv7J+JAOrfw==
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1716795263; a=rsa-sha256;
-	cv=none;
-	b=OrTm0sGPkg/Fj/sLTOBHDpgC+0oUY1LYA+z9GJzm7r2MF2Fsg/D3LKUPRUlsyMiN9bbY8m
-	BKgk+sELKUsH7yHjzeYPbZvaWLITWhFiQ24drtITXDsFYvKGpaCGP3fG8qMXndBDkKn9He
-	26Sl1vaqpXlLHk/KcOm/bYuzAut7vktyNNqOIdGueWB+aJHsXgXe5GYq2a2AsMkQeCBiiV
-	APmpnDL354SLShJs10FuqMh0cXEke0ANDyKLQiolFqocot1NW1IQxnTcpZSmUgH/VkwI4t
-	Gi/OFpAr/SUUeTrT0cS7uB+Z8RtiEMEQOM3lNvTTnr2RGMI/peoOrMPhiiufmQ==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1716795263;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=20RQnVNvBDYr+FH4kFsSKaG6M/MyCTgpME0lCI4FhFw=;
-	b=eHyxaXzusUS5nE1k+w8Tx2OKSomDhZUF3v5f8Q68A3OAvnzHK+JynoJIMG90skV629Ms44
-	J5Hr6BD7iGMSkCnjPNn0RkwcffcCZ31PVmmFhCbREq4aE8KhNwwLOis2kDezVgmmifmvNT
-	2wDZ+1HCVRjmhor2LuZG7TcIQPlM55UufwRf4G6GzCRZdSi3lNnQ2RhTi6Km1eoTAYE1mE
-	p/AECKIuzg66C3CQdPC9jcJuDSfqNcNqnewWp5RWLC5NjQ8V6b9w0IaIuOfDEvgCnkmckM
-	UXdgh+4L+wwUJSeDJEEI1K2whY2jtP4GkaZosFrUmpNTi50jD8h2Fkb82NR0Sw==
-Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 38798634C93;
-	Mon, 27 May 2024 10:31:28 +0300 (EEST)
-Date: Mon, 27 May 2024 07:31:27 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>, mchehab@kernel.org,
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	hdegoede@redhat.com, laurent.pinchart@ideasonboard.com
-Subject: Re: [PATCH 2/2] media: i2c: Add driver for ST VD56G3 camera sensor
-Message-ID: <ZlQ2zymJguCipLMl@valkosipuli.retiisi.eu>
-References: <20240417133453.17406-1-sylvain.petinot@foss.st.com>
- <20240417133453.17406-3-sylvain.petinot@foss.st.com>
- <Zil1wiCcCdwZs5Df@valkosipuli.retiisi.eu>
- <d45a2ea1-bc2d-441a-b036-1da40290c6b3@foss.st.com>
- <c9b35dc4-6f52-48e2-8952-5a43c500f819@foss.st.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ib6OBuR3"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e78fe9fc2bso78239681fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 00:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716795295; x=1717400095; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vgdlxkawZpV0xZ2eaHgO28wqSVxgzaGKRc/AlVdwfhk=;
+        b=Ib6OBuR3bsAh7pgbX94POgpIQ0woJzY/D5VkxGDqfjixqijmaColvi9oHgyD5UbAnO
+         bWzuiz1ooU6YIvHLTWzPVEoMpijyFcEUwo6RgHl0GEggCmzkK6l0gtlLaj9nOfiMc9eK
+         KpR8yAsp3hiMkKTDuNGsb9FjNA49P8m4THwoVctjNokP+MI76rEBRLM/qjhiYOpLX+X5
+         t9FYT45dDeUy3Fikuwui2SOAe1Frg+Vh4lwMwMAHvfUAZM3R+KpcrbMGbxYnHNjp0wOh
+         swmwsh0+mseowLpVH9BgbN1dNWybLoqw416zIvULrRsJYKSMEwiEdf2kc6203CDTT20r
+         mgsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716795295; x=1717400095;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vgdlxkawZpV0xZ2eaHgO28wqSVxgzaGKRc/AlVdwfhk=;
+        b=qHbAvUDKOrOjBTaW8xtVuuBt8LacPEUULJHcfnZhrX5p7NNVzTzMJk2CsF0pL0t0R/
+         lyvLfz+qN+YcsUh5LU/X9hCGCE9nzjof6vjvWpJhEDNpbSn7jqi1fypGvRb6nd85RWtb
+         JsJnaagmSB66x6rIGICNRZnIHI8AvAFa5ua+XSKfvhE7b173AqO0qVNOxjrkxiGaiIn0
+         rMJoFM05FQZddQnOdguhhaSowbA7ApgsXuQ/uGKDah/ZJXvWLkWzXY4IfFyUEKfaeNJS
+         hd7lrS5OVk5Mx2bDe3wrWS4b/96NaiT85zOvfUo6mmtaWiE4lko49xvHbNjM9k0ErWMo
+         hmEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuWdGthG+ZSLjM5S6jU5gWX4WqgX7YkJGi+GGfUPaA1PBPAEuoO7TLUb4vxMKp/OQC4syCWMvTIMsTTggkcOqPaZ4PDzbXWn4WtnSr
+X-Gm-Message-State: AOJu0YzFXbKFFukbpzNlR6JDlHXiAWpqnYyIPS72JxGPL1pt7RZRb2I+
+	XA/nQDXOH0XWUFVl/YxhnkY2sUZt3cs9jpliKXee5CpqkIXW0qBZYaqEJSuoxG1u8++CbXFd/aQ
+	BS3OGhSibzmI6AnsIwKVk0rVaA1siZwesUYCM0g==
+X-Google-Smtp-Source: AGHT+IGLXoh7sz0bCxzSkFCiS6AWpWUwvuYxn8fKZ1rYD+46hFS/m6HJPD33W3kGiCGR4jBo6gaC7Qv/4okEav6ckg4=
+X-Received: by 2002:a2e:9101:0:b0:2e8:10ca:2437 with SMTP id
+ 38308e7fff4ca-2e95b2db206mr49603801fa.50.1716795295202; Mon, 27 May 2024
+ 00:34:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9b35dc4-6f52-48e2-8952-5a43c500f819@foss.st.com>
+References: <20240514041223.800811-1-foxhoundsk.tw@gmail.com> <CAFbkdV175LdW_r04DhhG7pkE4xs9W5305Unk6RK06SiudvnzFQ@mail.gmail.com>
+In-Reply-To: <CAFbkdV175LdW_r04DhhG7pkE4xs9W5305Unk6RK06SiudvnzFQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 27 May 2024 09:34:43 +0200
+Message-ID: <CAMRc=Md2NZhUG+HmPR4Zd_+ho3PraB13m+=ByG44+Nv138N1hw@mail.gmail.com>
+Subject: Re: [PATCH] docs: gpio: prefer pread(2) for interrupt reading
+To: Huichun Feng <foxhoundsk.tw@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Benjamin,
+On Mon, May 27, 2024 at 9:05=E2=80=AFAM Huichun Feng <foxhoundsk.tw@gmail.c=
+om> wrote:
+>
+> Kindly ping.
+>
+> Sorry that the last ping wasn't sent in plain text.
+>
+>
 
-On Mon, May 13, 2024 at 03:37:25PM +0200, Benjamin Mugnier wrote:
-> >>> +static int vd56g3_read_expo_cluster(struct vd56g3 *sensor, bool force_cur_val)
-> >>> +{
-> >>> +	u64 exposure = 0;
-> >>> +	u64 again = 0;
-> >>> +	u64 dgain = 0;
-> >>
-> >> Do you need the assignments? The values are assigned by cci_read() below,
-> >> right?
-> > 
-> > Well initially, I didn't have those assignments and some checker
-> > complains (Honestly I didn't investigate the warning).
-> > I will double check and see if they are necessary.
-> > 
-> 
-> Since I have smatch ready, I ran it without these initialization against
-> the latest media tree. I got these :
-> 
-> drivers/media/i2c/st-vd56g3.c:403 vd56g3_read_expo_cluster() error:
-> uninitialized symbol 'exposure'.
-> drivers/media/i2c/st-vd56g3.c:404 vd56g3_read_expo_cluster() error:
-> uninitialized symbol 'again'.
-> drivers/media/i2c/st-vd56g3.c:405 vd56g3_read_expo_cluster() error:
-> uninitialized symbol 'dgain'.
-> drivers/media/i2c/st-vd56g3.c:407 vd56g3_read_expo_cluster() error:
-> uninitialized symbol 'exposure'.
-> drivers/media/i2c/st-vd56g3.c:408 vd56g3_read_expo_cluster() error:
-> uninitialized symbol 'again'.
-> drivers/media/i2c/st-vd56g3.c:409 vd56g3_read_expo_cluster() error:
-> uninitialized symbol 'dgain'.
-> 
-> cci_read() is indeed not modifying its 'var' argument in the default
-> case of the switch [1]. Spawning these errors.
-> Adding a '*val = 0' in the default case would also fix it, but will
-> change the function behavior.
+Please don't ping me on the morning of the day after the merge window
+closes. I don't pick up patches for the next release during the merge
+window (like most maintainers) and I need some time to catch up on my
+queue during rc1.
 
-I think I'd add the assignment to cci_read(). This isn't the only driver
-that's affected. In the best case smatch would be fixed to figure this out.
-
-Any thoughts?
-
-Cc also Hans and Laurent.
-
--- 
-Regards,
-
-Sakari Ailus
+Bart
