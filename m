@@ -1,135 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01A817F36B
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52C31802D7;
+	Mon, 27 May 2024 14:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819315; cv=none; b=h4MOUcfgk6IUMuvz7cGeWp1Z0fVeIGfK4WmhPxbLbmIdBQi51MePwiS1wQGw5Z8Ta3Gdga1aT2GmptIkZKgZB43MQm9GEWUV/9P9THnblPv7eq8fO1oSUKvCA7Bl4DA6wGtE+oIw4K1GJhBE0aa1g0dO1cHJTvCtL54f2SJMuo8=
+	t=1716819316; cv=none; b=dz7SS5KZKiL8QzJS5rI42mp6YLeybcfzqDgbNbIib4rFGZv/auAet5pe0rjvzIwhw2VW59VEsFKz2Kgsl7B4B9KeUfRbDFn3NnRBlCFUNbHF7MfA88cibYpX3NFrRARxLlZOaYglMUyWezXE9GuSDdzqbNeh9qO4obdsCPyUwbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819315; c=relaxed/simple;
-	bh=TuHCmrWuZwGpoZ5sT8ZAtkpr/leRSP9V4NWCvIzzY08=;
+	s=arc-20240116; t=1716819316; c=relaxed/simple;
+	bh=gSlwN5js8MlJT3Vc2y1GjcwiAoMKOVUoZeb6E/zARnE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JWkOO+WUgrV4h4cShbn2EuucPxkMpVzL1e+QS3PAMj++zTm28/CzWotMhIHtGvbn8OdZE55bGvCYxxtqzyVpBko9wAk3AmJaPiXzPioha9Gasy/Q12nS5bSckEcTF2KzToBLiao+ONgLfgNcKz6mtPXQGZzoVUrcS09VvYRFmck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c17uarff; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=Q7ymf7yLYlie9wjIlkM5yv41pyt0qc3WWKTs4C5CyTRApLxCSEadVn2mx0vQEOd/tBFwiaz5/QUPt81PffQTB+YPhlwR/E1XtmZrkuG9h4QRw/vWTYwCoVtNzeKlyout1IEDIF9loAbDDfGipS4JL3tZw4DgkXNS66wVFcVcYEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3aZnc4d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c17uarff"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716819309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cG/bHQ4quJa6Sy8Ny8W5KhH3qb/Pwqg5bjhVWAnFcjs=;
-	b=c17uarffuFCXg/QqNYa2aTjQCM+LpsSymliHHPxZ9jLcJ0r5qokrTTH7xldI/Tv/AvXLIQ
-	gnKsFHWGPvJ/thgIwfpBFpdhQ3yAk8zBul2GvdfrVo5eQjmyDLghIUIOynm2496HUu9/MT
-	hsWTgkvm2LrehG6ruDU5ll1dgcUu2d4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-320-eU3y4psHO9CVn5thPdziNg-1; Mon,
- 27 May 2024 10:15:05 -0400
-X-MC-Unique: eU3y4psHO9CVn5thPdziNg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D3E611C0512D;
-	Mon, 27 May 2024 14:15:04 +0000 (UTC)
-Received: from t490s.redhat.com (unknown [10.39.192.209])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 39E141C00047;
-	Mon, 27 May 2024 14:15:02 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Subject: [PATCH v1 2/6] mm: allow reuse of the lower 16 bit of the page type with an actual type
-Date: Mon, 27 May 2024 16:14:50 +0200
-Message-ID: <20240527141454.113132-3-david@redhat.com>
-In-Reply-To: <20240527141454.113132-1-david@redhat.com>
-References: <20240527141454.113132-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3aZnc4d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54F7BC32781;
+	Mon, 27 May 2024 14:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716819316;
+	bh=gSlwN5js8MlJT3Vc2y1GjcwiAoMKOVUoZeb6E/zARnE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=g3aZnc4dsSmYCcH78Cj9sf1mpEfAUYze8K2k3I4ppI4FlcCicOWOD1f0uipUONxb9
+	 0v2k8nw7rJelQ196dQWySnJ4xMC9BYvv+k0J9E5PA5wgCx0JA5MyKrRsDkUS9P21yG
+	 p89SyoQ0B3BUJt5uHpkDnj4XbLpcCoOqwslete5bd3RSRI2wWR+9pZcsbX9zUV4zDH
+	 XUuXZMQX86izSuW0H0Gt/eWWOAcuEpX+00kXPyjdC3AP9xZHexD3cOuTJYPizYs5Ug
+	 9xwOY9e7XaQHlG3O6vSkxfmC4K/ECvOB+b65OXeceKZbbmRT/iHMHcVM/RH8tyUPuf
+	 F96DoWgK5TCgQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: "Luke D. Jones" <luke@ljones.dev>,
+	Jiri Kosina <jkosina@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 25/30] HID: asus: fix more n-key report descriptors if n-key quirked
+Date: Mon, 27 May 2024 10:13:34 -0400
+Message-ID: <20240527141406.3852821-25-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240527141406.3852821-1-sashal@kernel.org>
+References: <20240527141406.3852821-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.11
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-As long as the owner sets a page type first, we can allow reuse of the
-lower 18 bit: sufficient to store an offset into a 64 KiB page, which
-is the maximum base page size in *common* configurations (ignoring the
-256 KiB variant). Restrict it to the head page.
+From: "Luke D. Jones" <luke@ljones.dev>
 
-We'll use that for zsmalloc next, to set a proper type while still
-reusing that field to store information (offset into a base page) that
-cannot go elsewhere for now.
+[ Upstream commit 59d2f5b7392e988a391e6924e177c1a68d50223d ]
 
-Fear of running out of bits for storing the actual type? Actually, we
-don't need one bit per type, we could store a single value instead.
-Further, we could likely limit PAGE_TYPE_BASE to a single (highest) bit.
+Adjusts the report descriptor for N-Key devices to
+make the output count 0x01 which completely avoids
+the need for a block of filtering.
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm_types.h   |  5 +++++
- include/linux/page-flags.h | 20 ++++++++++++--------
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ drivers/hid/hid-asus.c | 51 ++++++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 27 deletions(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 6b2aeba792c4..598cfedbbfa0 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -157,6 +157,11 @@ struct page {
- 		 *
- 		 * See page-flags.h for a list of page types which are currently
- 		 * stored here.
-+		 *
-+		 * Owners of typed folios may reuse the lower 16 bit of the
-+		 * head page page_type field after setting the page type,
-+		 * but must reset these 16 bit to -1 before clearing the
-+		 * page type.
- 		 */
- 		unsigned int page_type;
+diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+index 78cdfb8b9a7ae..d6d8a028623a7 100644
+--- a/drivers/hid/hid-asus.c
++++ b/drivers/hid/hid-asus.c
+@@ -335,36 +335,20 @@ static int asus_raw_event(struct hid_device *hdev,
+ 	if (drvdata->quirks & QUIRK_MEDION_E1239T)
+ 		return asus_e1239t_event(drvdata, data, size);
  
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 104078afe0b1..b43e380ffa0b 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -945,14 +945,18 @@ PAGEFLAG_FALSE(HasHWPoisoned, has_hwpoisoned)
-  */
+-	if (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT) {
++	/*
++	 * Skip these report ID, the device emits a continuous stream associated
++	 * with the AURA mode it is in which looks like an 'echo'.
++	 */
++	if (report->id == FEATURE_KBD_LED_REPORT_ID1 || report->id == FEATURE_KBD_LED_REPORT_ID2)
++		return -1;
++	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+ 		/*
+-		 * Skip these report ID, the device emits a continuous stream associated
+-		 * with the AURA mode it is in which looks like an 'echo'.
++		 * G713 and G733 send these codes on some keypresses, depending on
++		 * the key pressed it can trigger a shutdown event if not caught.
+ 		*/
+-		if (report->id == FEATURE_KBD_LED_REPORT_ID1 ||
+-				report->id == FEATURE_KBD_LED_REPORT_ID2) {
++		if (data[0] == 0x02 && data[1] == 0x30) {
+ 			return -1;
+-		/* Additional report filtering */
+-		} else if (report->id == FEATURE_KBD_REPORT_ID) {
+-			/*
+-			 * G14 and G15 send these codes on some keypresses with no
+-			 * discernable reason for doing so. We'll filter them out to avoid
+-			 * unmapped warning messages later.
+-			*/
+-			if (data[1] == 0xea || data[1] == 0xec || data[1] == 0x02 ||
+-					data[1] == 0x8a || data[1] == 0x9e) {
+-				return -1;
+-			}
+ 		}
+-		if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+-			/*
+-			 * G713 and G733 send these codes on some keypresses, depending on
+-			 * the key pressed it can trigger a shutdown event if not caught.
+-			*/
+-			if(data[0] == 0x02 && data[1] == 0x30) {
+-				return -1;
+-			}
+-		}
+-
+ 	}
  
- #define PAGE_TYPE_BASE	0xf0000000
--/* Reserve		0x0000007f to catch underflows of _mapcount */
--#define PAGE_MAPCOUNT_RESERVE	-128
--#define PG_buddy	0x00000080
--#define PG_offline	0x00000100
--#define PG_table	0x00000200
--#define PG_guard	0x00000400
--#define PG_hugetlb	0x00000800
--#define PG_slab		0x00001000
-+/*
-+ * Reserve		0x0000ffff to catch underflows of _mapcount and
-+ * allow owners that set a type to reuse the lower 16 bit for their own
-+ * purposes.
-+ */
-+#define PAGE_MAPCOUNT_RESERVE	-65536
-+#define PG_buddy	0x00010000
-+#define PG_offline	0x00020000
-+#define PG_table	0x00040000
-+#define PG_guard	0x00080000
-+#define PG_hugetlb	0x00100800
-+#define PG_slab		0x00200000
+ 	if (drvdata->quirks & QUIRK_ROG_CLAYMORE_II_KEYBOARD) {
+@@ -1250,6 +1234,19 @@ static __u8 *asus_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+ 		rdesc[205] = 0x01;
+ 	}
  
- #define PageType(page, flag)						\
- 	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
++	/* match many more n-key devices */
++	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
++		for (int i = 0; i < *rsize + 1; i++) {
++			/* offset to the count from 0x5a report part always 14 */
++			if (rdesc[i] == 0x85 && rdesc[i + 1] == 0x5a &&
++			    rdesc[i + 14] == 0x95 && rdesc[i + 15] == 0x05) {
++				hid_info(hdev, "Fixing up Asus N-Key report descriptor\n");
++				rdesc[i + 15] = 0x01;
++				break;
++			}
++		}
++	}
++
+ 	return rdesc;
+ }
+ 
+@@ -1319,4 +1316,4 @@ static struct hid_driver asus_driver = {
+ };
+ module_hid_driver(asus_driver);
+ 
+-MODULE_LICENSE("GPL");
+\ No newline at end of file
++MODULE_LICENSE("GPL");
 -- 
-2.45.1
+2.43.0
 
