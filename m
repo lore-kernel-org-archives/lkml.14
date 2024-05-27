@@ -1,83 +1,175 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F588160781
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52ED16089A
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816659; cv=none; b=JBfBNnygjH9g3W3N53MIIa6VqI3W+YyI8u4E3aMsz8ZsOfRrjYuMTPNzsKvrg0jBv5SAHisxYdfGZeifDUsh7jOnFKanI06E/mH9xXMdUU+ginY+Z4Dl9eWKdXRSsOozbiUIKX4tKkbOnh54DRLLf5wV7iMpYf5Up8Fhk/fd0C8=
+	t=1716816664; cv=none; b=hdAaTGEGwAc+sr6WugZ6GAqhgOnOq3iFai2lQ0iMG7EFLMqW+oAptHP6ghIxP+HQ8QYcHb57+6O/l+sVdUzAhH+WgEPx7bza/DgCcnDPWknU9dLDhUvaltoZo1XnWNqvSTsweLaAW6VA4iOA1bRb9JXUq9ocfCaUCSGQyDcddIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816659; c=relaxed/simple;
-	bh=rUiKhIQlcwiEQXJHZVELzN8Q/DITRA97u9VF6lMX/0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cRXcd1NZOZpyB4ZICfujZ97N9LIAWtMcu86YS+VSy4m5h/GxWZkmnUjliScGYLRqwlP29cplBbHjaD2cXaqpjzoPhghfxityXe+VfYz756hk9kuq2FAgAMyN5iBfbLBDHFx2BkoWAUhCUIoVZwep3qU8NTveeVK6FDHLMRHNeDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g9Hq1eFq; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g9Hq1eFq"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-df4e0d8fa10so5253927276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:30:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716816657; x=1717421457; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rUiKhIQlcwiEQXJHZVELzN8Q/DITRA97u9VF6lMX/0E=;
-        b=g9Hq1eFqk1P+0xUOpwUBgGaVGLBE6+wVlilOpBRgge9xAfUVZGaS84jjKNT3+alKIO
-         o2iPzVbKz6YPBC1umoxh8MLw5nUjUBt6nzr9kvgsD8KWDldIiwAFvJMwkyue9Zb1dD/+
-         2rj6p97Qr3zR2y4Q9Vjp/gM0blcWvANEXlIiGRY9e/ACgZiiOgy4X3S2waKVaA082ewi
-         YBuKB9XKwTa25wNO2f4DCPusQqME68XY0+tRqCelDUZIVpXLQEQBO9ZkKsCz7u26o0+P
-         osK21vwqXzAzW/FQJrR8ltzo46edZdbq8iRSTYxopVaTFNlmqVd2uYgc+hLXIuooU3Nl
-         yrrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716816657; x=1717421457;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rUiKhIQlcwiEQXJHZVELzN8Q/DITRA97u9VF6lMX/0E=;
-        b=Tg2JcIMLKKkLTZPXpuESUzs/8YzPnB0WNWgJZnMF1lEUDGNBNjdc3j6dDdxN3gTkoB
-         daiGcvjLDwo55Av5dLAlQkt+NISv6SNTcWokDXDHZ3u4cfn+DBb7FgL+J5rgVmPuFOFG
-         JvtQH7xF4fBwWz3L2nKN/P9EbuhF51ukpMv6TZj3IY5fwcszYsBvsBu/yY6oPTOHXJax
-         AMZc+syIvWrTJZHw7DyyKGs97NS30AEywAMN348lyfwQ3IrMpUG7aoje5XYrXqekIpKf
-         EjfynwSyCyCFFVUwxj2FXLdkw+UPfrhnLYiaKWCNFhXj6ldcOmtTj2dTqA9lNomD23M2
-         Y16A==
-X-Gm-Message-State: AOJu0YysGe7ladMRiM4JdT1IcmIKFBQoFdnLvBsP3S+WJ1XlR6SRcxy2
-	g8yhk4wOHJq5XMtHkeIc5NSYlH8Qsh1BgicGrtT7U+8L9C5CoYjXIuuBQHObaskQhuPLgzp9Aw0
-	KVobeD8ZaYZ+VBjK/IW3nPqFuSYgmrbDGHKm8iQ==
-X-Google-Smtp-Source: AGHT+IHdRuKmCVmemQ0j0xgNhmtw0RYFSZB+3BIUaEd1PHa8PiK/C7Xl0eiC1i4bVQmey2JhvwqoCATjCF1e8t5KgBM=
-X-Received: by 2002:a25:a545:0:b0:deb:42d2:c299 with SMTP id
- 3f1490d57ef6-df7721ff9dbmr8887699276.55.1716816657463; Mon, 27 May 2024
- 06:30:57 -0700 (PDT)
+	s=arc-20240116; t=1716816664; c=relaxed/simple;
+	bh=GvUuKmINqllZ54PyQ+lDpy16CYLzBdm/Cr1rg49spF8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=n3Bp6ATvGnQlejEGsLH057tw/XJSehUqZ7smZbpD9GPTld1gK/elA1AYJwZ6XtnsyAj6nzSHTD6aoeRs8JKJlopULcdJIs6zx08ai04G9XwzfDWKdKq+me03e7sNCe5hljUcE3eGWq95sEip9ArSzIbs+HvLJ3KoXCbfYZPGpZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4VnxNj27dVz9tHF;
+	Mon, 27 May 2024 15:30:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id OMtrQV6-bPEi; Mon, 27 May 2024 15:30:45 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4VnxNj1W8nz9tC6;
+	Mon, 27 May 2024 15:30:45 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F2978B773;
+	Mon, 27 May 2024 15:30:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id j18ynURuvhtH; Mon, 27 May 2024 15:30:45 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.49])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 318758B764;
+	Mon, 27 May 2024 15:30:43 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [RFC PATCH v4 10/16] powerpc/e500: Remove enc and ind fields from struct mmu_psize_def
+Date: Mon, 27 May 2024 15:30:08 +0200
+Message-ID: <fae1595dbb821512ecb42b0ef4d58d6ff92e37e8.1716815901.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1716815901.git.christophe.leroy@csgroup.eu>
+References: <cover.1716815901.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240508184905.2102633-1-andriy.shevchenko@linux.intel.com> <20240508184905.2102633-10-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240508184905.2102633-10-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 May 2024 15:30:46 +0200
-Message-ID: <CACRpkdb3Bsv=49vJ3HYC9wndjB7Fg_5+8Es6y_q0tFpZ47ozoQ@mail.gmail.com>
-Subject: Re: [PATCH v1 09/10] misc: eeprom_93xx46: Use string_choices API
- instead of ternary operator
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716816601; l=3777; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=GvUuKmINqllZ54PyQ+lDpy16CYLzBdm/Cr1rg49spF8=; b=RxMHKhJJDAP5VpYsyWZSt1EFiYcmwhH/8hOQ85y473bMx94B2aAMvyWdPD8Ua2+9iVSiBAblO I+3pg9fCTWWAX53sbwzZ4ZdyOu8X7nryQzRKv38fQaDfVr2VNipKl4h
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 8, 2024 at 8:49=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+enc field is hidden behind BOOK3E_PAGESZ_XX macros, and when you look
+closer you realise that this field is nothing else than the value of
+shift minus ten.
 
-> Use modern string_choices API instead of manually determining the
-> output using ternary operator.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+So remove enc field and calculate tsize from shift field.
 
-Hm. Neat actually. Starting to like the string_chioces.h more.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Also remove inc field which is unused.
 
-Yours,
-Linus Walleij
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+---
+ arch/powerpc/include/asm/nohash/mmu-e500.h | 3 ---
+ arch/powerpc/mm/nohash/book3e_pgtable.c    | 4 ++--
+ arch/powerpc/mm/nohash/tlb.c               | 9 +--------
+ arch/powerpc/mm/nohash/tlb_64e.c           | 2 +-
+ 4 files changed, 4 insertions(+), 14 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/nohash/mmu-e500.h b/arch/powerpc/include/asm/nohash/mmu-e500.h
+index 7dc24b8632d7..b281d9eeaf1e 100644
+--- a/arch/powerpc/include/asm/nohash/mmu-e500.h
++++ b/arch/powerpc/include/asm/nohash/mmu-e500.h
+@@ -244,14 +244,11 @@ typedef struct {
+ /* Page size definitions, common between 32 and 64-bit
+  *
+  *    shift : is the "PAGE_SHIFT" value for that page size
+- *    penc  : is the pte encoding mask
+  *
+  */
+ struct mmu_psize_def
+ {
+ 	unsigned int	shift;	/* number of bits */
+-	unsigned int	enc;	/* PTE encoding */
+-	unsigned int    ind;    /* Corresponding indirect page size shift */
+ 	unsigned int	flags;
+ #define MMU_PAGE_SIZE_DIRECT	0x1	/* Supported as a direct size */
+ #define MMU_PAGE_SIZE_INDIRECT	0x2	/* Supported as an indirect size */
+diff --git a/arch/powerpc/mm/nohash/book3e_pgtable.c b/arch/powerpc/mm/nohash/book3e_pgtable.c
+index 1c5e4ecbebeb..ad2a7c26f2a0 100644
+--- a/arch/powerpc/mm/nohash/book3e_pgtable.c
++++ b/arch/powerpc/mm/nohash/book3e_pgtable.c
+@@ -29,10 +29,10 @@ int __meminit vmemmap_create_mapping(unsigned long start,
+ 		_PAGE_KERNEL_RW;
+ 
+ 	/* PTEs only contain page size encodings up to 32M */
+-	BUG_ON(mmu_psize_defs[mmu_vmemmap_psize].enc > 0xf);
++	BUG_ON(mmu_psize_defs[mmu_vmemmap_psize].shift - 10 > 0xf);
+ 
+ 	/* Encode the size in the PTE */
+-	flags |= mmu_psize_defs[mmu_vmemmap_psize].enc << 8;
++	flags |= (mmu_psize_defs[mmu_vmemmap_psize].shift - 10) << 8;
+ 
+ 	/* For each PTE for that area, map things. Note that we don't
+ 	 * increment phys because all PTEs are of the large size and
+diff --git a/arch/powerpc/mm/nohash/tlb.c b/arch/powerpc/mm/nohash/tlb.c
+index f57dc721d063..b653a7be4cb1 100644
+--- a/arch/powerpc/mm/nohash/tlb.c
++++ b/arch/powerpc/mm/nohash/tlb.c
+@@ -53,37 +53,30 @@
+ struct mmu_psize_def mmu_psize_defs[MMU_PAGE_COUNT] = {
+ 	[MMU_PAGE_4K] = {
+ 		.shift	= 12,
+-		.enc	= BOOK3E_PAGESZ_4K,
+ 	},
+ 	[MMU_PAGE_2M] = {
+ 		.shift	= 21,
+-		.enc	= BOOK3E_PAGESZ_2M,
+ 	},
+ 	[MMU_PAGE_4M] = {
+ 		.shift	= 22,
+-		.enc	= BOOK3E_PAGESZ_4M,
+ 	},
+ 	[MMU_PAGE_16M] = {
+ 		.shift	= 24,
+-		.enc	= BOOK3E_PAGESZ_16M,
+ 	},
+ 	[MMU_PAGE_64M] = {
+ 		.shift	= 26,
+-		.enc	= BOOK3E_PAGESZ_64M,
+ 	},
+ 	[MMU_PAGE_256M] = {
+ 		.shift	= 28,
+-		.enc	= BOOK3E_PAGESZ_256M,
+ 	},
+ 	[MMU_PAGE_1G] = {
+ 		.shift	= 30,
+-		.enc	= BOOK3E_PAGESZ_1GB,
+ 	},
+ };
+ 
+ static inline int mmu_get_tsize(int psize)
+ {
+-	return mmu_psize_defs[psize].enc;
++	return mmu_psize_defs[psize].shift - 10;
+ }
+ #else
+ static inline int mmu_get_tsize(int psize)
+diff --git a/arch/powerpc/mm/nohash/tlb_64e.c b/arch/powerpc/mm/nohash/tlb_64e.c
+index 053128a5636c..7988238496d7 100644
+--- a/arch/powerpc/mm/nohash/tlb_64e.c
++++ b/arch/powerpc/mm/nohash/tlb_64e.c
+@@ -53,7 +53,7 @@ int extlb_level_exc;
+  */
+ void tlb_flush_pgtable(struct mmu_gather *tlb, unsigned long address)
+ {
+-	int tsize = mmu_psize_defs[mmu_pte_psize].enc;
++	int tsize = mmu_psize_defs[mmu_pte_psize].shift - 10;
+ 
+ 	if (book3e_htw_mode != PPC_HTW_NONE) {
+ 		unsigned long start = address & PMD_MASK;
+-- 
+2.44.0
+
