@@ -1,60 +1,60 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C53761FCD
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 19:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA911078F
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 19:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716836712; cv=none; b=M3XUKzMoP94bM3ml/UY6Dr6X71dkRL7oxOlexaNaOeUYCjLWSNbyXfPAZ9MK7MOI/yVK2WsG9qaNl2IxCHxM5VYL+Els0cjSLT8RmdHUyD6OjHyghnbubB13FK/CkqeUOgoRkZ/OJh2Kr+XG3Mq1VGTcmVzG48FLFzzEN+uvD68=
+	t=1716836858; cv=none; b=fCiX79vuPObGTub8fJamK3ANkNRCGLaMXCfa6e3eZHr8aK2Ch4gFViTyzO/OBDwzVw0DvmhgKS+Iu9ydUn3sqvqe0AASljOUu/BKyWoKi0JYO1RlXubsmKFo6LVe7ZzqPhwoj8sPLJpkYZnR+Sz3q5sC4hnUs3GsHb8DQpfCzB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716836712; c=relaxed/simple;
-	bh=/rnvwWn+eIPBI0YrWZQpmPB9aZMBK6dV8VBOnimWFjg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=S+5qOb4W33/kgyzRGClVYZmbUcHgPBfLs8uG/0FNI7wkm33cAeAZlCWaassfaz0ggGSga7CWWc+3pJWUF/2EjUeP4L4xkKFEDpTLakmRMMsYeOb5pyzRI14iLZs3pU8vPUpCY6MIGWprFwFPSvoT1hCyiAMP2/ioQ1PYUpkzz5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WM5+at7f; arc=none smtp.client-ip=209.85.167.46
+	s=arc-20240116; t=1716836858; c=relaxed/simple;
+	bh=tSHuEMxJouR4cSNe/6JdiZ4bbwdl6FmRIp/8udEk/vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LjOJNcqgM09v/zeo/FjH6bhe/pyUBLF8/DWlNCzXIXsLCesTRAvFIdwhDu0rqr/+nepGK+wvdVknvuMjWxehoHCkCAt6ZwWsgMBpZ+cxGlsPcNZb08zouuLHta9SwVyNS2p6aNdLYpG1Evf2APjYJZ2kJfMHI2BZXl+IomdVSW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BQmfo1UY; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WM5+at7f"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5238b7d0494so82127e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:05:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BQmfo1UY"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e974862b00so298861fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:07:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716836709; x=1717441509; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1716836855; x=1717441655; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
+         :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4kXS9nddib3XLf5CYGsW2IFBpVQNzR2KAdVGPMDeXnQ=;
-        b=WM5+at7fCcAkyY/E9wiz6q2rls12OQAud/61WcUozux2uDilKwyon9SLyo4oGYAoyG
-         Qa2C9IvHKCOPCwgPYMksBQ6LS3g8wIOHyxro3yNnCKHOHYyRjrkoutIfNdfRTbFr+lGu
-         XAkf+WKj1nD7nqYezBfZflr2zwooBIjJiZ/LDV5XmEH9PxY6Zj3rUQ2hWpSPkK2KX3zi
-         slg95C1BZhRwAJAQMWjhsIOY5gvkdd4d0tYgTJqfHotw8oIc4jMq5WaoTwphNj0CuQns
-         nih5Mr7P/+G1KaN3V6Q6Vssy80kaBhlL+xVO3GBLBdzNobW4qAlQn+/lXtqqC4Ej/aEJ
-         +ylQ==
+        bh=MMb8cqOGHOlYvluE+ZypX3WOvmD8Wjx3TnYK5qZF94M=;
+        b=BQmfo1UYoTH5tjllwLxuw0ihQb2mGq8N4GHmMZJaT9if6hYkZRxjD2s+g7vpkmPOXb
+         8lw23itcTG6NI7xeovFEZiT7BC/CoiU5+8t0uBt98NU+/yvftzoL2aEDV94SYmugCsoF
+         UUapaSpo4WTsVahb6sQWaB/gOXEbd4SLQ0I286IF8uQSODlpENTmdiXxEzpoHF0H0aub
+         WQmak19ERCpnWC4lHMdyjxyYCv8BPhm3X8TiTdIpdRsMU7x2OzMMFOpDTsg2FbjQEAJO
+         Bo24yFpYoQzv/PCwif8aMA7ANeq1lxUbfwprTBbDxNppTVWhN840KgpAWTCLq1qMtBfT
+         vxUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716836709; x=1717441509;
+        d=1e100.net; s=20230601; t=1716836855; x=1717441655;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
+         :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4kXS9nddib3XLf5CYGsW2IFBpVQNzR2KAdVGPMDeXnQ=;
-        b=VXN0ivft7UmQlE/gs2+zU3+S+N+qqp4ImAOT7hRFwNU21te1zXqXRQmYtyypZIgSEn
-         9l0rHKHqb+0LyAarf3lPjY4KlseLGSGzEQIssopOhOIIlDuGS7GuQDDoAp54EKTFB7Fz
-         xy4WsO2yNvrlfs+U+4h117uF4foqOD9UYETh3hfNdq0wn4hq9lrY5/3sLZmgyJ+X5L9y
-         hMCsCbxppOHNs7WO0Unt932NcaTcqFb8iPKVFGH1Co9v0eusB7/Ki5tfpXfP52KdTcUc
-         HuPq0tKvnjnEeg12BkN1q4lm3Owg/QbCZPoYkZiGXMnPikIrHvWmBhi4yDv9BedoV5FP
-         kejw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZno1vkN+0RTlqwtW5LdY/59kwnMi5zVZijOi588yMJgZH4WTCW3vgZ7qV5bkuJqQUGt4ujp7zM+q++hRL5pyV23ez4JRN2XwBcbBd
-X-Gm-Message-State: AOJu0YzHhEDZdRmeRvlCN3v92byxh/WrJh1WnMfpRayIFprJiXtNC0m/
-	OQbG3VWVcLevEORRf4L9lHcB5az9XtQc3VP9yTofdfzrj3d5Y8HWBdBZ+jQ3HE0=
-X-Google-Smtp-Source: AGHT+IGuPXTldBY/idHnqHLU54Du9J/gwZ+dEmL4Y8kySgTCzJ0Kyt8fHAJw7L2mKqlLcvYcbA5idQ==
-X-Received: by 2002:a05:6512:3ca0:b0:51d:1d42:3eef with SMTP id 2adb3069b0e04-52965b39a01mr11310662e87.29.1716836708817;
-        Mon, 27 May 2024 12:05:08 -0700 (PDT)
+        bh=MMb8cqOGHOlYvluE+ZypX3WOvmD8Wjx3TnYK5qZF94M=;
+        b=Xh6K3p0PfFJKQd7KO0cfdyu2JbHuA6BkgcntL6IGq3pRXLMmIIe3er1vkYs/sXUxZv
+         3G8qeU5x/N6ZWDj/59u0l8B2muMkdfKX/mnoGWzrTLNeKEUVFEa6Tn7wYQr5dCWQYDKX
+         p5y9yRm9yL8nfOyzF8oVcCklM//yFSgMjHiADhUDPfAThFu07GiNZdjEJpK+pekMFBRa
+         eHwTi4gEgZEQYv9ap8nLFkrUlMQGF/KgBAo90aodkhu2fLT9Z5mJxqIaRrzxFICd22uE
+         K2MY3YX/izm/nIjbzaxjWrMVtjpORmBWzmH3IPKIBhQKZ0niNKpFBC3XjIDDg5TqZhx/
+         Q73A==
+X-Forwarded-Encrypted: i=1; AJvYcCWstORYUmryQHdaolJ7Zdv4VGZM/WZcWMWheWszlkUaUWi2iw3iPcKn1LE8RhvZ4VGNRLyb30M5o/hAAfquQm2cfiHLIBOGYMi1m+sm
+X-Gm-Message-State: AOJu0YwTBf9RTepvgR2VT4r72LWoiIgOyotYQC5zuetyIEYLXJEbWvW2
+	HI4whVMKlN2GpMIyf6N4y9yj2RksUUrhr59fQgMvyPXsONj+q066KYSi5relQOw=
+X-Google-Smtp-Source: AGHT+IH5U4venbl2NzsLrKNcps4t4Gp/IpeMMHzyGog1s4eLpoa67ICa5GNm24fgsm4lauKXMm34qw==
+X-Received: by 2002:ac2:4a9a:0:b0:522:36f7:3660 with SMTP id 2adb3069b0e04-52965198b61mr6454265e87.36.1716836854746;
+        Mon, 27 May 2024 12:07:34 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-578524bb79esm6085907a12.92.2024.05.27.12.05.07
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c987cf8sm520773066b.94.2024.05.27.12.07.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 May 2024 12:05:08 -0700 (PDT)
-Message-ID: <959cb44e-064d-4127-95d1-a3b13cfd9a2a@linaro.org>
-Date: Mon, 27 May 2024 21:05:06 +0200
+        Mon, 27 May 2024 12:07:34 -0700 (PDT)
+Message-ID: <c4e7ea45-bd81-49c1-a461-e418a32d6122@linaro.org>
+Date: Mon, 27 May 2024 21:07:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,20 +62,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] media: dt-bindings: Add ST VD56G3 camera sensor
- binding
+Subject: Re: [PATCH 1/6] dt-bindings: ti, sci: Add property for
+ partial-io-wakeup-sources
+To: Markus Schneider-Pargmann <msp@baylibre.com>, Nishanth Menon <nm@ti.com>,
+ Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Vibhore Vardhan <vibhore@ti.com>, Kevin Hilman <khilman@baylibre.com>,
+ Dhruva Gole <d-gole@ti.com>, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240523080225.1288617-1-msp@baylibre.com>
+ <20240523080225.1288617-2-msp@baylibre.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Sylvain Petinot <sylvain.petinot@foss.st.com>,
- Rob Herring <robh@kernel.org>
-Cc: benjamin.mugnier@foss.st.com, mchehab@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240417133453.17406-1-sylvain.petinot@foss.st.com>
- <20240417133453.17406-2-sylvain.petinot@foss.st.com>
- <20240418130916.GA1016598-robh@kernel.org>
- <e38eeaab-f3dd-4129-86aa-9f6bb03bdc40@foss.st.com>
- <4a75aae4-9ed6-4e7e-883f-23ffdc1354ec@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -121,39 +120,37 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <4a75aae4-9ed6-4e7e-883f-23ffdc1354ec@linaro.org>
+In-Reply-To: <20240523080225.1288617-2-msp@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03/05/2024 18:06, Krzysztof Kozlowski wrote:
-> On 03/05/2024 10:25, Sylvain Petinot wrote:
->>>> +...
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index 7c121493f43d..991e65627e18 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -20868,6 +20868,15 @@ S:	Maintained
->>>>  F:	Documentation/hwmon/stpddc60.rst
->>>>  F:	drivers/hwmon/pmbus/stpddc60.c
->>>>  
->>>> +ST VD56G3 DRIVER
->>>> +M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
->>>> +M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
->>>> +L:	linux-media@vger.kernel.org
->>>> +S:	Maintained
->>>> +T:	git git://linuxtv.org/media_tree.git
->>>
->>> This should be covered by the media maintainer entry.
->>
->> I'm really sorry but I don't see what you're referring to. Can you point
->> me to the correct direction please ?
->>
+On 23/05/2024 10:02, Markus Schneider-Pargmann wrote:
+> Add a property with an array of phandles to devices that have pins that
+> are capable to wakeup the SoC from Partial-IO. In Partial-IO everything
+> is powered off including the DDR. Only pins belonging to a couple of
+> devices are active and wakeup the system on activity.
 > 
-> Find the media maintainer entry. Do you see Git tree there? Then it is
-> done. Otherwise, do you have write commit access to above Git? Are you
-> going to commit to that Git?
+> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml b/Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml
+> index 7f06b1080244..c8ed0dd4fee4 100644
+> --- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml
+> +++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml
+> @@ -61,6 +61,12 @@ properties:
+>    mboxes:
+>      minItems: 2
+>  
+> +  ti,partial-io-wakeup-sources:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      List of phandles to devicetree nodes that can wakeup the SoC from the
+> +      Partial IO poweroff mode.
 
-Please answer above: can you commit to above Git?
+We have binding for this - wakeup-source in each device - what's wrong
+with it?
 
 Best regards,
 Krzysztof
