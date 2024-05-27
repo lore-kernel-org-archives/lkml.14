@@ -1,112 +1,108 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08F9161326
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB4116F28C
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819827; cv=none; b=YeYHnNtxklPss6km8DMcxiwzlHD8P/pZlxTTKMN5yoQfExTDoq0SvAHDgaec+Rzwp77mbPvj2ewATb3cZZF64NugSrmiMVBGIGIuPqzY7o9TDrtc2qdqlEUnzJtENfXT7NUuH4vLPohnOEIBRxeMg3WQ96XGsILpbrZn7vgN0fM=
+	t=1716819830; cv=none; b=l0q/TCcPzycZlqLmhjf+kQXp1DnJ2Sa1k/T17U5l9QHPYRc9gdBW3q1uXS/lVL1RggzXKXfPsJtabtCH7sRvr/gu/AdsVt1BAIyBt+oRC0/DV/wFZmGPASWo7nFQ422i9h8j3Lj0IC252rqelgN6+p7oKdVq3Fw5B9ijMiOHF+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819827; c=relaxed/simple;
-	bh=puwV6VMl3Gje+6cIe4adoHwyL8CXWB3PvIs7MINp1lg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qGRhbjUk32/rnaWmC0HW0CMDP4UwJLB0VUcHWm7t+3dKEnnHFujGd24M76UcO0ZI6693yOldshkpUpT9yqs9CaBeF7/y904/ZZLZdazcbuhtUMb/uCMGwy5rBn6dSBsdkOu8t/0g/Uu5biuY9UpRa+m3ZWeAeGhs/1KXqr0knpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ITL8eiBl; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716819830; c=relaxed/simple;
+	bh=U/8+cNT/6r/cPMQxaKHzz9tqRw3+vgHMhlaxgqt/NIY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KOOA61KjcCH5UXZ6/yBKui+H10jc16hui0pRA4s0Lyu3hB4ehSKpHr5TXRYisvHDImJjUflnJkrHSNxQcQnWN31NXIZzZgEPgjku52GtToCa2UDPkcm2dwSTtTmAtEEwGBcTgLPVhw6YN3ixSdtWt3YFmsKTqb02Pg85P7lm4RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zpo3QcK3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ITL8eiBl"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6f8edff35a0so2577212b3a.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zpo3QcK3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716819828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uDkfQTZ2OD4EHqIyUHZnwKqde9p/2Gl7tlIUwS9iQSE=;
+	b=Zpo3QcK3FIC1cgPF1L7YNaK6xzcZgxPAyd98bGkaO+KWiX30t8RPve54ufvrYM73p2Kq9L
+	0y/IcOG3FafwOrGS6aXPQluex2gdX+ONj2Qh9jUM3EoPXB+gP8AtU2/n705haV4MtcNFZ+
+	TuYTj6sAfpwkrGbVI5/AOvXOfjVnnLg=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-_9a1mtQHMTKWqB6pg-Ox2Q-1; Mon, 27 May 2024 10:23:45 -0400
+X-MC-Unique: _9a1mtQHMTKWqB6pg-Ox2Q-1
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3d1c9fcce4bso476048b6e.0
         for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:23:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716819825; x=1717424625; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9zZvfy4gBMpippgmQ5wbc8/FSu6Fg33BHDu+XbQ+New=;
-        b=ITL8eiBlZbFXSrNKy7PvsQzawBX0cEqhk2kSk0RSQjGEaTcfXre2xxoKi5VRj18jWR
-         M048OKP7cJuKfnH8sFZy2TND2i02wqV1MnPFdvDI/iSN872OV5Q0UHiGiFzH4pQoCOKT
-         0CF+yukHAVZs1sF8s0aFhFKhDzI+wA+fzT0schUH7Bm3Q2iRtWvS1GJbuQsob5PD1ZP9
-         J9J+Q23GYlyW2CvNXoqz5aleY6YgRtAWKE8LL/5+e8+pgAVSX8rvqZEzo0WxY0MbO9Gw
-         jLP16wF0o3yhU2dEN3R4ZicuIs+MYbvLiAoX4nyQvEZ1BEOq+NgyzvZHR0lNyXe7Lsqi
-         qYzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1716819825; x=1717424625;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9zZvfy4gBMpippgmQ5wbc8/FSu6Fg33BHDu+XbQ+New=;
-        b=AM3SwRAOd5tfjDF6HKhuF99+mfKXg4Pm9PvuNMZoSQjC/asTcbAQcWA52SCeRcDtje
-         ieiJT6U3jujYl4740ZeUfhSem8yyJad5W1l/M5vkDvieCqERXwZVvTSoTPR9M37nYG5c
-         Lj/eri16SKxpK8Acn6AfH2wYMNL0HkIx9miHOHR87i6sFKJhFiS5c/IkyFOnEQ2gBEOk
-         iV8IB4po8uxRNxqRHp/IoPvWWO5YkPN+/AQJptG9TVLEZ+KfXjAIWAD3pm3xWRGBos0C
-         8SgCgzj20Ta4+JO2FUVN5WGpwsDXIhVUGANQzQ+jVz3CwK1Jg2f+glnW6gGILRLg3mCt
-         iYqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxwz/frzMIuGVFszfCkqvHiUuJF19Qs27byBV8TJVpuAqHC3QXrqQLJIPm10sCjIA/2CXLMwAKQRy9cXZ3fkwhFCz8FIOEGjQLGB6J
-X-Gm-Message-State: AOJu0YzqM2POvxFwfbVcpqny+SKDyr/a+1ZaQUcT3/kthvN/Kl2+WNoU
-	Y9nYan0lWftmP9ymzRk528FqVyPRH/hUi0eA6G1gwwkpzv35DxJfHNEgjE4IKXM=
-X-Google-Smtp-Source: AGHT+IFNKaRSlZszopjikYU0pMskYc/ekBfYriMXVMO/i95lcWdRC6YJKq+hsm5J3tzzdDaM/zWi/Q==
-X-Received: by 2002:a05:6a20:72a6:b0:1af:a45a:a8de with SMTP id adf61e73a8af0-1b212d5aa97mr11310422637.5.1716819824793;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uDkfQTZ2OD4EHqIyUHZnwKqde9p/2Gl7tlIUwS9iQSE=;
+        b=Q67N0pm9qGdNAVb73i7b54628FVRzI3j+jtTcKP73/hbWmawjqsLp1G9LoX+pQy6sQ
+         XYzpvo8h0Iku7YH9K/W3WLwFmDf/O/zHI5O3b2YEPH9/Smjn9NRHB4flSDNs5Ml6boWP
+         jl15HsBZyd/kQaqPns4snw8cHPzB5UVWORm7OWzPr4dH5E3OvYiIIwcdwCYvi/Tjr0yD
+         dx0y21VsxlJDek8mwkn8XGHm9U5jPIsLmveVSsvgygzdiv0jAv4kCs2ZeS5hCM08yxht
+         Fmg+liVs0kdKrASGjDDZrDm3a22HtpAB/yGGXE9nLE3uiCuTtscVu1NG+DyO2vF77NvX
+         zz7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVS7BLEOy9oGhGJO9JIEahU3/jTSgrdalaEduiIxcxWVtTzuSCwctFu2MjYglBaVMO0otme5QOqUtUm5J6HazfMcV/UejJzt66tKwh1
+X-Gm-Message-State: AOJu0YzyLYaiMf+PDqvoEf5md2mhugS9/cuM8myVjxe+cQ/TdiRESztN
+	FvfULx+IjwbAu98L4mdJiVNqTTLgRrRvzfaB25+OVHqS14hp2rED4kHx6yG+uINcxe8EGkSQc/a
+	kawpgypOz1r7R9sGgn/QiPKtZpk8Amc3YB1xVprYV+jbpHhXKIa6cHoYhmsKLTg==
+X-Received: by 2002:a05:6808:2895:b0:3c9:6f32:48ae with SMTP id 5614622812f47-3d1a7646b36mr10077213b6e.47.1716819824866;
         Mon, 27 May 2024 07:23:44 -0700 (PDT)
-Received: from [127.0.1.1] ([112.64.61.67])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fbd3eb67sm5109895b3a.19.2024.05.27.07.23.38
+X-Google-Smtp-Source: AGHT+IFd337yra6VNYY4/lCnAw6wP0WY3esjyq2b6ysnQazhhPyLwvvBYzmWw4XghHqjVOjt15jOCg==
+X-Received: by 2002:a05:6808:2895:b0:3c9:6f32:48ae with SMTP id 5614622812f47-3d1a7646b36mr10077185b6e.47.1716819824441;
+        Mon, 27 May 2024 07:23:44 -0700 (PDT)
+Received: from rh (p200300c93f02d1004c157eb0f018dd01.dip0.t-ipconnect.de. [2003:c9:3f02:d100:4c15:7eb0:f018:dd01])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ad77430c57sm17299476d6.38.2024.05.27.07.23.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 27 May 2024 07:23:44 -0700 (PDT)
-From: Jun Nie <jun.nie@linaro.org>
-Date: Mon, 27 May 2024 22:21:49 +0800
-Subject: [PATCH v5 3/6] drm/msm/dpu: enable compression bit in cfg2 for DSC
+Date: Mon, 27 May 2024 16:23:39 +0200 (CEST)
+From: Sebastian Ott <sebott@redhat.com>
+To: Shaoqin Huang <shahuang@redhat.com>
+cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>, 
+    Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+    Suzuki K Poulose <suzuki.poulose@arm.com>, 
+    Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 1/6] KVM: arm64: unify code to prepare traps
+In-Reply-To: <080b8820-d665-40d6-9cf2-35e47086d01e@redhat.com>
+Message-ID: <ab00cdd6-7b93-05a0-896b-24e68e9413a2@redhat.com>
+References: <20240514072252.5657-1-sebott@redhat.com> <20240514072252.5657-2-sebott@redhat.com> <080b8820-d665-40d6-9cf2-35e47086d01e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-3-f797ffba4682@linaro.org>
-References: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-0-f797ffba4682@linaro.org>
-In-Reply-To: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-0-f797ffba4682@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, Vinod Koul <vkoul@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jun Nie <jun.nie@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716819804; l=886;
- i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=puwV6VMl3Gje+6cIe4adoHwyL8CXWB3PvIs7MINp1lg=;
- b=ZogImoZXzCH580LPFWHl29ocg7xqFmLTY0xbQUs0QVH/Rf4R1calGI+KqzyIgCRbmiPD8fn9V
- 6qwpylPoVrBBEX6cdG8aua9l2xblGmOgNFwbUeRWLLOM6Wl0yuwy7Ny
-X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
- pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Enable compression bit in cfg2 register for DSC in the DSI case
+Hi Shaoqin,
 
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On Mon, 27 May 2024, Shaoqin Huang wrote:
+> On 5/14/24 15:22, Sebastian Ott wrote:
+>> +++ b/arch/arm64/include/asm/kvm_emulate.h
+>>     static inline void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
+>>   {
+>> -	vcpu->arch.hcr_el2 = HCR_GUEST_FLAGS;
+>> -	if (has_vhe() || has_hvhe())
+>> -		vcpu->arch.hcr_el2 |= HCR_E2H;
+>> -	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN)) {
+>> -		/* route synchronous external abort exceptions to EL2 */
+>> -		vcpu->arch.hcr_el2 |= HCR_TEA;
+>> -		/* trap error record accesses */
+>> -		vcpu->arch.hcr_el2 |= HCR_TERR;
+>> -	}
+>> +	if (!vcpu_has_run_once(vcpu))
+>> +		vcpu->arch.hcr_el2 = HCR_GUEST_FLAGS;
+>
+> Could you give more explaination in your comments about why we still keep the 
+> non-FWB handling in vcpu_reset_hcr()? That would be better for understanding 
+> the special case.
+>
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-index f97221423249..34bfcfba3df2 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-@@ -177,6 +177,10 @@ static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *intf,
- 	if (p->wide_bus_en && !dp_intf)
- 		data_width = p->width >> 1;
- 
-+	/* TODO: handle DSC+DP case, we only handle DSC+DSI case so far */
-+	if (p->compression_en && !dp_intf)
-+		intf_cfg2 |= INTF_CFG2_DCE_DATA_COMPRESS;
-+
- 	hsync_data_start_x = hsync_start_x;
- 	hsync_data_end_x =  hsync_start_x + data_width - 1;
- 
+VM ops trapping needs to be toggled via KVM_ARM_VCPU_INIT for this case to
+catch when the guest activates its MMU. This is different to the other
+traps that are setup once before the guest runs for the first time.
 
--- 
-2.34.1
+Sebastian
 
