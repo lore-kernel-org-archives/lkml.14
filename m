@@ -1,80 +1,174 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.65.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2351E225D9
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.65.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E68224D1
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716794666; cv=none; b=sWjxRdBsM+aYWwjj4HAek+bZzXKoYDHabPseZo0d2AmLYmVYpA+hC/C8gVS6TXtzG1/nI/XDLMfagmY/iaV9l85W4vPAfFG9aR8Ux26/XGK1N8b4qD66jPG3gHI10Hy0A7pSsvfW6aQ2A+/UnDl2Pzxnymkg2iipWF7vCv9dOTw=
+	t=1716794671; cv=none; b=KJJcQI2tLQSQzL3YiIWuPJneYeU0DVf5lXUkoaIyg37eFQfSOzSNRyxwUKDcfT7axpxvbFGvszmVYRp3jGxkCGye6gQrZ8nrDKR6UjxeUZlSRF2X+ZJohGp7zv7ybUPO0OV7N/Y8t76pN7VWBxhsFqimMZIBXDojFNNdmqkKXQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716794666; c=relaxed/simple;
-	bh=aPiIhR+m9iGDtxCHtCYVb7JeTUjsH3WI98/sUyxl4uA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hsqdI1I/pKep71f44ZM4GBDH9Px45WKOmZ3rqsh1J8woMeoFixsdeLhrgqTHF7H1I1doQohknkxQClkedLPMBgN8dbiViI2mlWaGu9ykLvUnWtaTYhG74WmBc7ebBOSoeJhWM7wE+MeYvbTHAk2QFGwDusfWQZU5kVLdy9+wvLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=114.132.65.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtp86t1716794606tnasmnbu
-X-QQ-Originating-IP: /Xk/LN/8Z4qIinQBp8A8RPUX74FSdJzZpdFc91wgj68=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 27 May 2024 15:23:25 +0800 (CST)
-X-QQ-SSF: 01400000000000B0B000000A0000000
-X-QQ-FEAT: LWG2AsFjWxiu5HW3atjRW0xiWRXDEc4fT7z9nYD91M230xWwwalVIaJirul3z
-	kMhmIJeGSzp0KK/C6LvpQAtaT2G7cLEghmJoEib5KjXCR9b1G725FHUhT4kpcfpKecSkdub
-	pzOsW1yLgk6Qw5zUSyF1pJBM47Tlxj8wGDUyjzDjXa7fXmJAVPsV7sYAIhGjGvroorRVCaN
-	E2pLo9H4mUQcF0AOewfLkmXDBrKAgg2goIB+oKIIcVpk9Ag2pQO1DkKJiOugjvcc7cXJ6b5
-	iapqOwea25jBdz5mumnzlM13D6eH1A85NRp9VFEoGiAh5zMh02DS4gSHhgOn1VmKXcjkGV2
-	3ZfNxdO+2Sthp6hiWvyw+9oQi53T6wc89I9MsrkFKvBwXh528a5HGA+CEASow==
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8843610495016260499
-From: tuhaowen <tuhaowen@uniontech.com>
-To: sudipm.mukherjee@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	huangbibo@uniontech.com,
-	wangyuli@uniontech.com,
-	tuhaowen <tuhaowen@uniontech.com>
-Subject: [PATCH] dev/parport: fix the array out-of-bounds risk
-Date: Mon, 27 May 2024 15:23:22 +0800
-Message-Id: <20240527072322.26130-1-tuhaowen@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1716794671; c=relaxed/simple;
+	bh=lw8KkLJUAe8zbtM6WWDBVTxtolCUjkKLl/X460mypOo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=aH7r7eQsUiVo2mchONSvqWba8F78IFYwb/QEYD+K/J/KFq7iGtZSgbLCAhUFBIXTryT/WmnrbeQ/EtoBnLA8zzaDMiJfnqU0ou5djip7efVnWhtjFIQKHkxXeWOb8ad0adT+haqiGNFlPNVlj9S9gb3vIrLHmh5isTH7R55kjMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3713862bcefso38490935ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 00:24:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716794669; x=1717399469;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Lmfp46OXIt859MZHaU6A+z3GBHDbs4UP5Lz/+uglPoE=;
+        b=fX2P/Hc/L+6fNNx7WI3nk7YZFY339qqpzMmAO2iMpT3egezMxYDWiuoofAxKrd/nnE
+         g3Cv73kEPRUdElu/YtARpydsEMINh9WBsE1t0/HCsgLY6N5OceSfes4kndZomwNzg3Kf
+         Pss9WcGDe6UkXRwONmoeZyFIf8vrTk0/4BzzX0SFEyUcviiToLm4XfKDnGBhJkTevgav
+         OSHh8DUJzAO/c2MXfbay2u7KjaPyHvRW1inOMPXQiYFHgCq15R3nUtneuSDkN96HGmKm
+         99tlm3iuWeir3i+oH1whAjQK4DxLgqI9x1vRqAhinzbFKtAKoznid15npsQo/OLfpSJP
+         sCNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXf78r2ix8Q8HUWyruYLbDxpdr+PbrW69P2V7TtomV5HZkAnWw9RaxV6Yl8ODbAgemWCBeWQD0cBTtqz9jWzbqOGhbA/OiWgAj40w2L
+X-Gm-Message-State: AOJu0YwraPzdOUwfYweHIMCQuqGbxLcJPX+FizVRDXHLMpDIxchFktP8
+	g6aUHYsRsa2eO/SFi6fpspEC0F2BoZtjNNg3SzlQjFOSSQo3naUqwf+PuWjA+NTTDB7Fq0kvPZ5
+	2VBUUebzGI9LztIYk96o6E3rJOW51XNl9T0iHmJtykZRENblcJbBMx+E=
+X-Google-Smtp-Source: AGHT+IF0D+SBEAfyHXY+f4w4IB0XaBM88nfJbwNbHgX23hmzt65xUjYOd40kaT7dEqVkbrz5bV7Vw8VDxkExQNd9oKktnsBAmjgW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-Received: by 2002:a05:6e02:1d83:b0:36c:6080:753d with SMTP id
+ e9e14a558f8ab-37347c2e5a9mr5061585ab.1.1716794669425; Mon, 27 May 2024
+ 00:24:29 -0700 (PDT)
+Date: Mon, 27 May 2024 00:24:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006c777106196a68c1@google.com>
+Subject: [syzbot] [kvm?] KASAN: wild-memory-access Read in __timer_delete_sync
+From: syzbot <syzbot+d74d6f2cf5cb486c708f@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, kvm@vger.kernel.org, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The array buffer size is 20 bytes.
-When executing code in a 64-bit CPU environment, up to 42 bytes of
-data will be written into this array
-(the size of "%lu\t%lu\n" is 20 +1 + 20 + 1).
+Hello,
 
-In fact, this line of code for 32-bit CPUs also has the risk of
-crossing the boundary, but it can exceed 2 bytes at most. With good
-luck, it is local variables that are damaged, and there are no serious
-consequences.
+syzbot found the following issue on:
 
-Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
+HEAD commit:    1613e604df0c Linux 6.10-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10672b3f180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=733cc7a95171d8e7
+dashboard link: https://syzkaller.appspot.com/bug?extid=d74d6f2cf5cb486c708f
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-1613e604.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/bdfe02141e4c/vmlinux-1613e604.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9e655c2629f1/bzImage-1613e604.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d74d6f2cf5cb486c708f@syzkaller.appspotmail.com
+
+bcachefs (loop0): shutting down
+bcachefs (loop0): shutdown complete
+==================================================================
+BUG: KASAN: wild-memory-access in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+BUG: KASAN: wild-memory-access in _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
+BUG: KASAN: wild-memory-access in __lock_acquire+0xeba/0x3b30 kernel/locking/lockdep.c:5107
+Read of size 8 at addr 1fffffff8763e898 by task syz-executor.0/11675
+
+CPU: 0 PID: 11675 Comm: syz-executor.0 Not tainted 6.10.0-rc1-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ kasan_report+0xd9/0x110 mm/kasan/report.c:601
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
+ __lock_acquire+0xeba/0x3b30 kernel/locking/lockdep.c:5107
+ lock_acquire kernel/locking/lockdep.c:5754 [inline]
+ lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
+ __timer_delete_sync+0x152/0x1b0 kernel/time/timer.c:1647
+ del_timer_sync include/linux/timer.h:185 [inline]
+ cleanup_srcu_struct+0x124/0x520 kernel/rcu/srcutree.c:659
+ bch2_fs_btree_iter_exit+0x46e/0x630 fs/bcachefs/btree_iter.c:3410
+ __bch2_fs_free fs/bcachefs/super.c:556 [inline]
+ bch2_fs_release+0x11b/0x810 fs/bcachefs/super.c:603
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1fa/0x5b0 lib/kobject.c:737
+ deactivate_locked_super+0xbe/0x1a0 fs/super.c:473
+ deactivate_super+0xde/0x100 fs/super.c:506
+ cleanup_mnt+0x222/0x450 fs/namespace.c:1267
+ task_work_run+0x14e/0x250 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
+ __do_fast_syscall_32+0x80/0x120 arch/x86/entry/common.c:389
+ do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
+ entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+RIP: 0023:0xf731b579
+Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
+RSP: 002b:00000000ffc4e538 EFLAGS: 00000292 ORIG_RAX: 0000000000000034
+RAX: 0000000000000000 RBX: 00000000ffc4e5e0 RCX: 0000000000000009
+RDX: 00000000f7471ff4 RSI: 00000000f73c2361 RDI: 00000000ffc4f684
+RBP: 00000000ffc4e5e0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000292 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+==================================================================
+----------------
+Code disassembly (best guess), 2 bytes skipped:
+   0:	10 06                	adc    %al,(%rsi)
+   2:	03 74 b4 01          	add    0x1(%rsp,%rsi,4),%esi
+   6:	10 07                	adc    %al,(%rdi)
+   8:	03 74 b0 01          	add    0x1(%rax,%rsi,4),%esi
+   c:	10 08                	adc    %cl,(%rax)
+   e:	03 74 d8 01          	add    0x1(%rax,%rbx,8),%esi
+  1e:	00 51 52             	add    %dl,0x52(%rcx)
+  21:	55                   	push   %rbp
+  22:	89 e5                	mov    %esp,%ebp
+  24:	0f 34                	sysenter
+  26:	cd 80                	int    $0x80
+* 28:	5d                   	pop    %rbp <-- trapping instruction
+  29:	5a                   	pop    %rdx
+  2a:	59                   	pop    %rcx
+  2b:	c3                   	ret
+  2c:	90                   	nop
+  2d:	90                   	nop
+  2e:	90                   	nop
+  2f:	90                   	nop
+  30:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
+  37:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
+
+
 ---
- drivers/parport/procfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/parport/procfs.c b/drivers/parport/procfs.c
-index bd388560ed59..9f501d5fa1ec 100644
---- a/drivers/parport/procfs.c
-+++ b/drivers/parport/procfs.c
-@@ -117,7 +117,7 @@ static int do_hardware_base_addr(struct ctl_table *table, int write,
- 				 void *result, size_t *lenp, loff_t *ppos)
- {
- 	struct parport *port = (struct parport *)table->extra1;
--	char buffer[20];
-+	char buffer[64];
- 	int len = 0;
- 
- 	if (*ppos) {
--- 
-2.20.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
