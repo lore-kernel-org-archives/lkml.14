@@ -1,99 +1,89 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F5B13B299
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 10:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0F213B285;
+	Mon, 27 May 2024 10:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716806241; cv=none; b=W7MMsAxsa4FMjp1IoyCwK1wGY9tiaB0uGA7AFbAYHAQo0AWJFkX5QmLkLGaVp1tspbG9XrMGqxzOsaWCyo1Dlk9rnzaKr8pYlaYutf2NNeeWaDYFIAZ/S/IWhid/4wTci32+NteOA7IyhMiPXjWCIx6XfNN7x9W+lCvKiKJQkyM=
+	t=1716806265; cv=none; b=mleMOHJaYHFkOxPVQXRhQ+xJ5QJgcU6lr2L/vmbbOTqAccdlUkIRMtt1VKYDadsNAIvm+8/YhG3bonLlM7yBGe9ID/6BcgYxZuMG3fICTZ3SSIBuHDhO+ABgCcizjt/IxaR2o1g+Oezkunat29Xnld7UIzP55ZbeS8y9PQ7eVk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716806241; c=relaxed/simple;
-	bh=BGmd38XxGSdKDMMcN3G3XiQIcyOv9DXSluGqtKQy9+M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SHfjLroHXQdPcOCQHE+dn7qymcb08g31ikHzc/IzIH+EvRwPJhi2snreCXrhz+exifRQa4mu5ELjVKx0Y5aj8dLCzIcouAtnJy3IuPJhwJ3vtpchdrD2dYSKcH7tjF6tb6wYep1QvQmtSWIRftlfu3n+cyRiiFhi7MGLN5T15Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=nLsveh6t; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1716806265; c=relaxed/simple;
+	bh=/l5XUuv8nQtGDLPCUzrTecaodGAdXukMy8bIzHTUU0A=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K4B31M76Jo8+vWCPC/YhsT1cva9u/33a5/m7rzVYVQ9fR9+E34wytwTUqsP5FMsJN1s4OJAaeJh0jJ09Xwo7b9NhYZWZQbocBIPL4Mz4dlcO6f4v5p0aCsFqImUR92Jrg7LMYUhw9oE1LmITux10tKsCYwfmWEhz1ZAems8y3xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ZNAifA0D; arc=none smtp.client-ip=185.70.40.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="nLsveh6t"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57883b25b50so1924027a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 03:37:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716806237; x=1717411037; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dO0AvFL5QwePC2QZ3gqTYDM4BcsHQKgOykoeZh92DyU=;
-        b=nLsveh6tAbZJL4bicjOJ+RVpjPLj4fH507GnAWwY2BdwXg/C4CtH7brjzp/AE4ISLM
-         OAZwBDKo354WnSasjw+SVTevql+5gTWy655tiuou0W9EPqpQLpjXRyl29/bRaxNY6+PZ
-         oqoJpGHQ8epYzwZ/Skcd0KhZeiRR8WPbt7FdRiI1fGrLpZSCwEHluYME3PnsQjm0NZPc
-         Gz6i5Ucv9WwjZvmB9uxWIFHTl8l5p2GXWloug08NtpcqVlSjE7fZitPH24gp3lIh+5BC
-         /y1MIk2IzmmcebQ+OC8VEDfG1RUzecul+Dubj0kxINx0vP17x9Ir8/1BhHVWO/MAPFgt
-         f1KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716806237; x=1717411037;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dO0AvFL5QwePC2QZ3gqTYDM4BcsHQKgOykoeZh92DyU=;
-        b=MH4mBVPJlgs7mphBJ0CP64TsrC0/rG8nY9X/J1WzbHKci1mi+/4bQ6YbULcEZrMXik
-         8IGlDtiGIzCBSehlvXDt0u8dtB/PqG79zEqdoZD6qNKCSsj2krGyKB8D9n0dwsDbqEir
-         6eVhhDEE2z8sWbdv+ZX9Z92fxkB7a8hHWyx4ug3Z3Du0OkjadIe/s3mYavq6r1iGLYza
-         Ze2/FTA+cKf6CQmRyPoJN4vUIEU+0Z67Mg6289xCu9+NqjfoN6gNuOOIMOU7HL7XHwfA
-         rnNgSnuWKM59CZX6cUa9UTy4zEWew69TuTChTQCFeQ3fKH21NdjBP1TYNr5sH6slc3ej
-         fyDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVcpfBNdn4F36BE5ukYJf6Yi9rHVbmpoxOEt1KHrX/kq84KWbD52aT0IUDg5qGPrJG/FQWnq/Vn1WG4HJlQ0dggrAvyN5HgWcdXbYH
-X-Gm-Message-State: AOJu0YzrEt2e4TcU9sr6rTtrteBLYApUD3u57tArkV0qCAbtPBDAqHic
-	Pd3BSoxyzp8rxBzlJ0xYvYb3l2HwuGcZ8vuDukSi4cpIhri/FM6Qr2rY7CU7jfkmq1/g/kR53nD
-	sz50=
-X-Google-Smtp-Source: AGHT+IGxcPe6uT4yc9jWNU7ehZJr1E6b4aaoClrPA8u7hsmcPOTrwWBbPYZS8ijvvtGcf2XiujMAjA==
-X-Received: by 2002:a50:ab5a:0:b0:578:6c19:4801 with SMTP id 4fb4d7f45d1cf-5786c195f95mr4162253a12.22.1716806237244;
-        Mon, 27 May 2024 03:37:17 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-578f47126f0sm3208478a12.91.2024.05.27.03.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 03:37:16 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH net] docs: netdev: Fix typo in Signed-off-by tag
-Date: Mon, 27 May 2024 12:36:19 +0200
-Message-ID: <20240527103618.265801-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ZNAifA0D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1716806260; x=1717065460;
+	bh=xmJd03Rx3Rsva29jvNtokJfKBgBZOsRKCO2bIGkI074=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=ZNAifA0DNvB75SPNd8q/OstLXxVN1gU+9xJQepeuD8bPcnGzLxu6M52SGX2WfzwyR
+	 L3YdxmFiL/efVGjkvX0JSPPxX5aHhHVB8sNn/7BJSwSEMV0Sh6LYsVGqo8P/zc1SE4
+	 /4/FnwkHA7cvXezmCdpgeXGtXHCI2B6bqmr/oeL2SWmKnnIDFhNFh0Hf8SHMVBnF5U
+	 sWbMAyOjffKa/ZP9r4Y0qhcq49DCysKklCRW+ZjGnelDU9ZuuegnSJnNwSqSb0cIPG
+	 J+ZFVTL1d78lg5OgaqIk3aB22lxZv2qbt4oAeACgHHXoDRPMYNZQQmHHZBTDSId02z
+	 cB3e5wfc6VZKw==
+Date: Mon, 27 May 2024 10:37:34 +0000
+To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Marco Elver <elver@google.com>, Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>, Paolo Abeni <pabeni@redhat.com>, Pierre Gondois <pierre.gondois@arm.com>, Ingo Molnar <mingo@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 7/9] rust: list: add cursor
+Message-ID: <d6c98f90-7bbb-45c3-bc0d-d700fa16cbd9@proton.me>
+In-Reply-To: <20240506-linked-list-v2-7-7b910840c91f@google.com>
+References: <20240506-linked-list-v2-0-7b910840c91f@google.com> <20240506-linked-list-v2-7-7b910840c91f@google.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: bac6eefd646ce6bbb8fb40143a92647993893885
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-s/of/off/
+On 06.05.24 11:53, Alice Ryhl wrote:
+> The cursor is very similar to the list iterator, but it has one
+> important feature that the iterator doesn't: it can be used to remove
+> items from the linked list.
+>=20
+> This feature cannot be added to the iterator because the references you
+> get from the iterator are considered borrows of the original list,
+> rather than borrows of the iterator. This means that there's no way to
+> prevent code like this:
+>=20
+> let item =3D iter.next();
+> iter.remove();
+> use(item);
+>=20
+> If `iter` was a cursor instead of an iterator, then `item` will be
+> considered a borrow of `iter`. Since `remove` destroys `iter`, this
+> means that the borrow-checker will prevent uses of `item` after the call
+> to `remove`.
+>=20
+> So there is a trade-off between supporting use in traditional for loops,
+> and supporting removal of elements as you iterate. Iterators and cursors
+> represents two different choices on that spectrum.
+>=20
+> Rust Binder needs cursors for the list of death notifications that a
+> process is currently handling. When userspace tells Binder that it has
+> finished processing the death notification, Binder will iterate the list
+> to search for the relevant item and remove it.
+>=20
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  rust/kernel/list.rs | 82 +++++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 82 insertions(+)
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+
 ---
- Documentation/process/maintainer-netdev.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/process/maintainer-netdev.rst b/Documentation/process/maintainer-netdev.rst
-index fd96e4a3cef9..5e1fcfad1c4c 100644
---- a/Documentation/process/maintainer-netdev.rst
-+++ b/Documentation/process/maintainer-netdev.rst
-@@ -227,7 +227,7 @@ preferably including links to previous postings, for example::
-   The amount of mooing will depend on packet rate so should match
-   the diurnal cycle quite well.
- 
--  Signed-of-by: Joe Defarmer <joe@barn.org>
-+  Signed-off-by: Joe Defarmer <joe@barn.org>
-   ---
-   v3:
-     - add a note about time-of-day mooing fluctuation to the commit message
--- 
-2.45.1
+Cheers,
+Benno
 
