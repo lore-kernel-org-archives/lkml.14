@@ -1,67 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13A513D260;
-	Mon, 27 May 2024 03:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E0379EA;
+	Mon, 27 May 2024 03:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716778883; cv=none; b=a26GYLL1jMY3UdR1RqY5LP3fmpzHzd+GeQBiqMGOAC7wWpTyJgD2G8lJbPciYBVAuf4/Yags5bk7Vp8Gt3KhJ5OQjuTTcROk2CTIt1YZZHf9dives6b2rea6t+saU00AdoqkdB1x3Q0qs5tP9xs1WQ1k2lRFMdpr6fArIwgdLl8=
+	t=1716779226; cv=none; b=hyGA+8G+drV+Lwk6fokcwP9dfdywC0C9/QFcr1unT/BCY3ebdrPzuxZtftC86qs/VE2XrGhFBUcCEnHn6md8aDbgT5R+ZRTJ125XSI1c+OoKtELDxvYayI5lZM9IBlhpU7G3tMBPKW/SdTxg+DEZYeULuw1V7RsC1xhlltj5X+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716778883; c=relaxed/simple;
-	bh=5BfxkhujCg/EybUvYnTYa0ntOh9c5oP1K3sKp7Ab+mI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NuNZP5UKTZQi/E6Z1g5V9cr2qD2jm8sat4IOhfbGA5Wfche8mdvqpYU82EIn2R2OT9rc6vvEL6A0U2oSiy87H6fjgpERYHWmb1Ayar/2WOgR1gwXpNaldqPoRbh2xU+q8sQ8nYmFq/VPmHZUgUGhbYYHn6nw9kzPp6Pd2dY92xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKad2anY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716779226; c=relaxed/simple;
+	bh=y45Na4LBDYUvhYaEwJT8HcEr8Rv3sz8j5bWUCZh9Kxs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ErXWTO2lefwvBJm0N8i0byE/H/BD9eJl9+BiX6IQ3sIevs/0jEd/W7ipSHveE98PAB2MmA4lIc16VNJ0d7QwyEF5IqWbUqNiNoxcEtYjVG1cUiGyCwRWb73uYlKr/D1juXh0tToWjUjoaaMEo5LnDj3gxVq6OEgmmL7xnF1To2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZCIa6hWK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKad2anY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E38C4AF08;
-	Mon, 27 May 2024 03:01:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZCIa6hWK"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E51ACC32789;
+	Mon, 27 May 2024 03:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716778882;
-	bh=5BfxkhujCg/EybUvYnTYa0ntOh9c5oP1K3sKp7Ab+mI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bKad2anYgmXXqQZFYKb0ievGAGIB8O4vBNUzeOJ97RilQKUGOLVmz3VTG5BMQ/L1e
-	 CKp923pYTulqR1Cya5CwQbHUkEZJtTwCmuyW72vHDiyTi+Xn0v+I3xaaCxbSfT4Qys
-	 gt0f56W5XQual6bvjcwWj17G3NCKc2yKQ8C7To6exOkDKlsonCZRFA70tmT7mIidM1
-	 qQMGtMFkFRtip/gbvxIQFRadRHGgtv1soHTJVfhauOGvwUoKwAw5adnKMP2pnq8hEo
-	 RIDCM8AfU/p6yiike0fgwWb7cmPhbq68SholQLVw1EFHrw3qLd4LTyx5W2DK1BvaTR
-	 iYsGP+w/INJSw==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <trabarni@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: msm8996: add reset for display subsystem
-Date: Sun, 26 May 2024 22:00:46 -0500
-Message-ID: <171677884193.490947.12306600950596489908.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240525-mdss-reset-v1-1-c0489e8be0d0@gmail.com>
-References: <20240525-mdss-reset-v1-1-c0489e8be0d0@gmail.com>
+	s=k20201202; t=1716779225;
+	bh=y45Na4LBDYUvhYaEwJT8HcEr8Rv3sz8j5bWUCZh9Kxs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ZCIa6hWKHlrUOMkDZUoL86dcwTXJuJo6U4UMmZFcEazw9DJsu/yFrojUodbOYo4Py
+	 0q1PnEeztBzpF1UhOMDouOCEqLXBRghTWsKivBxXSI/vybmf4daxJF3uH2djQ4/gpo
+	 wMtnXMxUmGowH49nuFSk48/jN7Re5/37uZZUxUWumvXiTYJAQ8TdnmbgpkR6h6xXBK
+	 JctDEewhwK7Az399IMHqaDowlAxE7DQNd4tVYRZVNqLKwgzaGHCL0CJGozirWpOpZb
+	 zVRh3qJ4av1GnixImMisPqVZoF/5Ai3Jz2Xjr5mAvZRbpiGWRD8lQ1GEKUQlqkyTsd
+	 9qzSozbwye/Cw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D52EBCF21F9;
+	Mon, 27 May 2024 03:07:05 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/2] firmware: coreboot: store owner from modules with
+ coreboot_driver_register()
+From: patchwork-bot+chrome-platform@kernel.org
+Message-Id: 
+ <171677922587.1901.3423676427961660678.git-patchwork-notify@kernel.org>
+Date: Mon, 27 May 2024 03:07:05 +0000
+References: <20240330-module-owner-coreboot-v1-0-ddba098b6dcf@linaro.org>
+In-Reply-To: <20240330-module-owner-coreboot-v1-0-ddba098b6dcf@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: tzungbi@kernel.org, briannorris@chromium.org, jwerner@chromium.org,
+ chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
 
+Hello:
 
-On Sat, 25 May 2024 16:08:57 +0200, Barnabás Czémán wrote:
-> Add reset for display subsystem, make sure it gets
-> properly reset.
+This series was applied to chrome-platform/linux.git (for-next)
+by Tzung-Bi Shih <tzungbi@kernel.org>:
+
+On Sat, 30 Mar 2024 20:49:46 +0100 you wrote:
+> Moving the .owner setting code to the core this effectively fixes
+> missing .owner in framebuffer-coreboot, memconsole-coreboot and vpd
+> drivers.
 > 
+> Best regards,
+> Krzysztof
 > 
+> [...]
 
-Applied, thanks!
+Here is the summary with links:
+  - [1/2] firmware: coreboot: store owner from modules with coreboot_driver_register()
+    https://git.kernel.org/chrome-platform/c/46c6685e7e88
+  - [2/2] firmware: google: cbmem: drop driver owner initialization
+    https://git.kernel.org/chrome-platform/c/7f20f21c22aa
 
-[1/1] arm64: dts: qcom: msm8996: add reset for display subsystem
-      commit: b3f8cdef8a5c0bc89ceb1095856f64ba7445c6b9
-
-Best regards,
+You are awesome, thank you!
 -- 
-Bjorn Andersson <andersson@kernel.org>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
