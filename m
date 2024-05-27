@@ -1,67 +1,79 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2CCDDA5;
-	Mon, 27 May 2024 06:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53650125BA
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716791436; cv=none; b=GA4ZjmKxa7/APaOiavoyWLH9jVWqxr33DU+9D8T3WIgMwoiSizhIUlOkWLOKaWCKzRGnVHFSk84rkaP6EVj7mvcnTON2BhCOt8hIHVE+bpbGX0oD+1422a90FkUs91VEldle9jsh6Jd9iz0cW+fDQGqJBimTyUvvVVB+8IU0GRc=
+	t=1716791517; cv=none; b=qNUiDENE74HchGZk+lMsDSr5XBbswGnQzhqFIAwhd2RB/GJrUWpBgeJ7bUeYT23mXKyiTBpa+ZWAIgyfl1RNVr85NWxyljSG1xrtwsnLvHxAroL9e4C+KN1122E+BIkIWAhkPNH4z3+dDZpiT3OfgLIu/qUL8EeE1yNkh2zN7tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716791436; c=relaxed/simple;
-	bh=Zn/2jBpern3fDjh2DJoZ1OoCFMovbTXWs2MkcYdzcTE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n8j49q0pNQixklb7053ItGBsGPbdTLd80IC8lA6QUWCaMRNVqyStS5puoT8G21AtXvNugRlkiMsK6kVhJhgS+iWfn7ftiKPcyJoY/SYcnut+5MJxeaDDmRYvBRPOmjX56h7sqZtEEMwoK6KpcMajvHf6NqXr/RtOnK3b4uSJGvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Pd0SQjXl; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1716791517; c=relaxed/simple;
+	bh=GiX/F6U+4AhQxOl6Y7hnIeCCOl0QPSSAqz7DQ9FqL6k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ACccpnKupLrbh/rAA5KyBgeBsekExPTij5TEysWQY6/q4iOH8SylmOGM7d39i/QN0TkZadVk5EECixLnJtUrGd7MxQI3bQnLu753G1hEfZcgbbgtMQyLAqrA5s9664EpBLyWn3XUuHdtBa0wodcv74419qcFcQeJhBl1rf08cZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=FZCvON5z; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pd0SQjXl"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44R6UI7w123976;
-	Mon, 27 May 2024 01:30:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716791418;
-	bh=03tHTJNR6JRpcSZNxBdBLsUOYYQnOce3h4UMjr16pHg=;
-	h=From:To:CC:Subject:Date;
-	b=Pd0SQjXlquFv+yYHhyoBRVi2BJarhQwUk8LydogqK1fKRut1TL3kj2GZi0tJgwNgt
-	 YpXo3ExwyBApGhvp5Y8+B2RDGf5ABC9EcsRgF4W98P6bxhft0MQWkie6tjj3xdcLDg
-	 fUNjIv1vrZsehfr+WEI3VuV9xzLXSqT+IRNzzDzw=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44R6UItR021611
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 27 May 2024 01:30:18 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 27
- May 2024 01:30:18 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 27 May 2024 01:30:18 -0500
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44R6UIg1128224;
-	Mon, 27 May 2024 01:30:18 -0500
-Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 44R6UHO7031809;
-	Mon, 27 May 2024 01:30:18 -0500
-From: MD Danish Anwar <danishanwar@ti.com>
-To: Diogo Ivo <diogo.ivo@siemens.com>, Andrew Lunn <andrew@lunn.ch>,
-        Paolo
- Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet
-	<edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Roger Quadros <rogerq@kernel.org>,
-        MD Danish Anwar
-	<danishanwar@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH net v2] net: ti: icssg-prueth: Fix start counter for ft1 filter
-Date: Mon, 27 May 2024 12:00:15 +0530
-Message-ID: <20240527063015.263748-1-danishanwar@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="FZCvON5z"
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id ED82141203
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1716791511;
+	bh=MbnK7btCma2THOpFcDrHSellO+iE5ad9pZfYFL7rGkU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=FZCvON5zGdX1O61DfHue+fp4tvnVGxUiYe86rxSls6BF36m4Ndlkd6pLaW+7i3AdG
+	 HKAx/ltGkSVzCGe3zPtLcThaLBnXH0HzkCVYdgtUviTFzYt6lOORIte6ki19Rgaf4B
+	 jVUcMulGwEYJIlkOUg3XyMKrF/zn5DYEXLd1/LMCBjrk2+LWZ3qK3lIu4SM26ie68m
+	 Zv9BxCHiIr/PNr02TnWQSUCx+MtgpewHDWAxRvjKJuGOAZYWtMhOTren+oh+QRsVW5
+	 Rj3gJG0JVb7rXDwLToptnPFT12GdjksGE6LlQHnga2G2pVf/X1PyJihboPvqjGevR6
+	 ZiSWwu0jt/xaA==
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1f2fbeba024so21329045ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 23:31:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716791510; x=1717396310;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MbnK7btCma2THOpFcDrHSellO+iE5ad9pZfYFL7rGkU=;
+        b=gcNsLzONpRcku4AOcBpjeaEit4sLuQmzOX7OlRaLIUXtB54IN53RxyglYzYdkekDmt
+         Jlu+fy8RiPBp+36DRyeqiLwFxq8gGQlAyTP36ALT+14PoJCdx/v56wtyWecIuD1C/LW5
+         XGbZaHVPlOdVyfQWrAkkHZ1SLNb2wbrXfTMEnohBV4Kp44fJwdHG/iBoAse3lHc7cCw6
+         XFnQ0r1/56SNIoTu4XwOUX2WMw8EF9OST30GiA7rHgPbUfCIVM4E5oOApyLE4uyeNmHs
+         0oYL1RFD+g/VZHor4QRZM/Th4du1W0i39XlK7rCDMkaTxWbO8nRzYT21E9HMTwT/rh7W
+         NPzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCi+QwQZjfWtaYhTcY5yQbQzZNIgfmZAir1UiICCMsCvhUnVI5Cd5VBER3ZTPQ+0kEkpEZKsY8RZYFntfIKHtaGTsKC3l1SXLEGqIB
+X-Gm-Message-State: AOJu0Yy94SkfQJX/VR3x32al+9uc17UUmQqumW0wZC5x64qOxefPhqb2
+	xJmm+de+KtwEh0B25dfaVNVzIJBSXwXoEc+asZyTlwWW0qP0g4mW6PiiFkRraQNrXLkY3olBt5y
+	Ze36zYQ8Tj2KxZV4fHCfOjs6btN+iRch4vx1H3Ts4jBEzf4OynN22nJeMvylAtxgXt8NYMtQDaZ
+	ZOuA==
+X-Received: by 2002:a17:902:f684:b0:1f3:5ca:4200 with SMTP id d9443c01a7336-1f448126212mr124732225ad.2.1716791510241;
+        Sun, 26 May 2024 23:31:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGFUziuMR/5+E+Q+QV57THPE3WYQpjvV0wcM+chWabofAbbVJ71xH4WrYKvxXh9Yk8XM+0QQw==
+X-Received: by 2002:a17:902:f684:b0:1f3:5ca:4200 with SMTP id d9443c01a7336-1f448126212mr124731835ad.2.1716791509744;
+        Sun, 26 May 2024 23:31:49 -0700 (PDT)
+Received: from chengendu.. (36-227-176-221.dynamic-ip.hinet.net. [36.227.176.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f4aa742215sm5895275ad.289.2024.05.26.23.31.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 May 2024 23:31:49 -0700 (PDT)
+From: Chengen Du <chengen.du@canonical.com>
+To: willemdebruijn.kernel@gmail.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	loke.chetan@gmail.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Chengen Du <chengen.du@canonical.com>
+Subject: [PATCH v2] af_packet: Handle outgoing VLAN packets without hardware offloading
+Date: Mon, 27 May 2024 14:31:36 +0800
+Message-Id: <20240527063136.159616-1-chengen.du@canonical.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,43 +81,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The start counter for FT1 filter is wrongly set to 0 in the driver.
-FT1 is used for source address violation (SAV) check and source address
-starts at Byte 6 not Byte 0. Fix this by changing start counter to
-ETH_ALEN in icssg_ft1_set_mac_addr().
+The issue initially stems from libpcap [1]. In the outbound packet path,
+if hardware VLAN offloading is unavailable, the VLAN tag is inserted into
+the payload but then cleared from the sk_buff struct. Consequently, this
+can lead to a false negative when checking for the presence of a VLAN tag,
+causing the packet sniffing outcome to lack VLAN tag information (i.e.,
+TCI-TPID). As a result, the packet capturing tool may be unable to parse
+packets as expected.
 
-Fixes: e9b4ece7d74b ("net: ti: icssg-prueth: Add Firmware config and classification APIs.")
-Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+The TCI-TPID is missing because the prb_fill_vlan_info() function does not
+modify the tp_vlan_tci/tp_vlan_tpid values, as the information is in the
+payload and not in the sk_buff struct. The skb_vlan_tag_present() function
+only checks vlan_all in the sk_buff struct. In cooked mode, the L2 header
+is stripped, preventing the packet capturing tool from determining the
+correct TCI-TPID value. Additionally, the protocol in SLL is incorrect,
+which means the packet capturing tool cannot parse the L3 header correctly.
+
+[1] https://github.com/the-tcpdump-group/libpcap/issues/1105
+
+Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
+Signed-off-by: Chengen Du <chengen.du@canonical.com>
 ---
-Cc: Florian Fainelli <f.fainelli@gmail.com>
+ net/packet/af_packet.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-Changes from v1 to v2:
-*) Using ETH_ALEN instead of hardcoding the values to 6 as suggested by
-   Florian Fainelli <f.fainelli@gmail.com>
-
-v1: https://lore.kernel.org/all/20240524093719.68353-1-danishanwar@ti.com/
-
- drivers/net/ethernet/ti/icssg/icssg_classifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_classifier.c b/drivers/net/ethernet/ti/icssg/icssg_classifier.c
-index 79ba47bb3602..f7d21da1a0fb 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_classifier.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_classifier.c
-@@ -455,7 +455,7 @@ void icssg_ft1_set_mac_addr(struct regmap *miig_rt, int slice, u8 *mac_addr)
- {
- 	const u8 mask_addr[] = { 0, 0, 0, 0, 0, 0, };
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index ea3ebc160e25..82b36e90d73b 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -1011,6 +1011,10 @@ static void prb_fill_vlan_info(struct tpacket_kbdq_core *pkc,
+ 		ppd->hv1.tp_vlan_tci = skb_vlan_tag_get(pkc->skb);
+ 		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->vlan_proto);
+ 		ppd->tp_status = TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
++	} else if (eth_type_vlan(pkc->skb->protocol)) {
++		ppd->hv1.tp_vlan_tci = ntohs(vlan_eth_hdr(pkc->skb)->h_vlan_TCI);
++		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->protocol);
++		ppd->tp_status = TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
+ 	} else {
+ 		ppd->hv1.tp_vlan_tci = 0;
+ 		ppd->hv1.tp_vlan_tpid = 0;
+@@ -2428,6 +2432,10 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
+ 			h.h2->tp_vlan_tci = skb_vlan_tag_get(skb);
+ 			h.h2->tp_vlan_tpid = ntohs(skb->vlan_proto);
+ 			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
++		} else if (eth_type_vlan(skb->protocol)) {
++			h.h2->tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
++			h.h2->tp_vlan_tpid = ntohs(skb->protocol);
++			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
+ 		} else {
+ 			h.h2->tp_vlan_tci = 0;
+ 			h.h2->tp_vlan_tpid = 0;
+@@ -2457,7 +2465,8 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	sll->sll_halen = dev_parse_header(skb, sll->sll_addr);
+ 	sll->sll_family = AF_PACKET;
+ 	sll->sll_hatype = dev->type;
+-	sll->sll_protocol = skb->protocol;
++	sll->sll_protocol = (skb->protocol == htons(ETH_P_8021Q)) ?
++		vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
+ 	sll->sll_pkttype = skb->pkt_type;
+ 	if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV)))
+ 		sll->sll_ifindex = orig_dev->ifindex;
+@@ -3482,7 +3491,8 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 		/* Original length was stored in sockaddr_ll fields */
+ 		origlen = PACKET_SKB_CB(skb)->sa.origlen;
+ 		sll->sll_family = AF_PACKET;
+-		sll->sll_protocol = skb->protocol;
++		sll->sll_protocol = (skb->protocol == htons(ETH_P_8021Q)) ?
++			vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
+ 	}
  
--	rx_class_ft1_set_start_len(miig_rt, slice, 0, 6);
-+	rx_class_ft1_set_start_len(miig_rt, slice, ETH_ALEN, ETH_ALEN);
- 	rx_class_ft1_set_da(miig_rt, slice, 0, mac_addr);
- 	rx_class_ft1_set_da_mask(miig_rt, slice, 0, mask_addr);
- 	rx_class_ft1_cfg_set_type(miig_rt, slice, 0, FT1_CFG_TYPE_EQ);
-
-base-commit: 0b4f5add9fa59bfd42c1030f572db2e4c395181b
+ 	sock_recv_cmsgs(msg, sk, skb);
+@@ -3539,6 +3549,10 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 			aux.tp_vlan_tci = skb_vlan_tag_get(skb);
+ 			aux.tp_vlan_tpid = ntohs(skb->vlan_proto);
+ 			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
++		} else if (eth_type_vlan(skb->protocol)) {
++			aux.tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
++			aux.tp_vlan_tpid = ntohs(skb->protocol);
++			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
+ 		} else {
+ 			aux.tp_vlan_tci = 0;
+ 			aux.tp_vlan_tpid = 0;
 -- 
-2.34.1
+2.40.1
 
