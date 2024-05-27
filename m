@@ -1,129 +1,129 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F4E15EFDF;
-	Mon, 27 May 2024 20:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716840678; cv=pass; b=o2v6wNCoNrcU5scSAjkz0alAAqEAx8QC+GSKnwPb/B3CljEq/mcEhBO03Gh/m0W+BiIRwP5QSZRheuKzZo3mB6E/r5IISI277B8zX8W9idYBgSAgnDeO2KWq/Jw+P2ISB1WGMoTqcqIAqcmTnCeYyrnVPpilblhu2XYXkl9RlYU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716840678; c=relaxed/simple;
-	bh=GAna6CmtZWwigrmOfREHXsKA0rw/oX+CUaud9yi1C00=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB852FC12;
+	Mon, 27 May 2024 20:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716840943; cv=none; b=VjIhgwF2+B+H17L32YRXIgm9IrkFSPiGmsVh4nCY0YlWsBvUfxdQupEFS5sW+i5fhteuYTYB/aYNHrTC0ms27hGrY1bCejvtkf9GHe47aivARf90vWQ347/kIa3LuMwMTTE0Cxdt3jdECJ5GSk9GjzTiz7A7x+jMx+gCJO/cc+k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716840943; c=relaxed/simple;
+	bh=clAc0glAG+FdzsTbysKZU8GdPk0PzethWuZGkjC7mjw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nOoVgupO+/guMhHqQhiX2lbS77wyKoOdmL7YsP5O/EKqi9Yh2pOem+HXAggZmFCpQx6nsD6082jaQxhk3XTF6xZi73LMPjjkTwixSU65W5PR1MawsgAb5cgzAzXsT6EgFn0KyZWhvHFlozc7k+tSInseQfbaz6PUiBqcCmH6naU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=QsbTQAwA; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	 Content-Type:Content-Disposition:In-Reply-To; b=sRv9LTxUwkShPGUfYuwSvODiPs13THLscofxZD69mAzRfeZyLV8/aLCQM+ymkB85B+cBkh4uFUGmtBvjZPt+BAxfgX0QE5WJI0JLewyS49j/HhD3+L8xbQ5gVaDyDyKFYZ3OklPRffX4k8uT7h5doH9MOzwyytyYSip3Zv0Il9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iynXkjA6; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="QsbTQAwA"
-Received: from hillosipuli.retiisi.eu (80-248-247-191.cust.suomicom.net [80.248.247.191])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4Vp6Gm2HZ0z49Pym;
-	Mon, 27 May 2024 23:11:12 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1716840673;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1dOUbisstpfi5giuXiz9vGluX9yAy7I4sBmLBvo2Ydc=;
-	b=QsbTQAwAma3JX5ZGrUCLdSWQnWGRM/VwuK7OTY5B+WDfopMDOnR5/vwkLA/2rNk3O+Ov/4
-	yk3jd65h8potPC9lJZqtpdpgCfB1d8tW+mW4huz1Fm3RjtaVSkYyjaWul8fTtewRhbnJHe
-	NDkwNnx+IgGyr8o5EEv1G1qzxdYTdpLW3sACLfm4BddEAOiYTwO7+ppVaGPIBxssneAE5n
-	v/T0FtV4Ob65ZAvFvtT9loniss5l1Vx2WCkLJzR8DerIRHsgpzJio5P0QQknWi2apiDNNB
-	l7qdWzreVLRFIpQyfHxfQh002WUhHkh4bFOJG4EPidq7GqYoB0S4BwyEs1Qykw==
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1716840673; a=rsa-sha256;
-	cv=none;
-	b=SC4sjRWTrFvXnVp8v21dLlzWxxQ+IyI84hwLvdadAcjsT6VBEzHDg60p4l4WHYeeuGorHq
-	9++UsgQXuQPi3PFRzChZzdu3cknxdjh+KDJDFjheLPhQZIUixFoTy+F7wbv/ZRMghpbIdq
-	dLsVP16GL4q2+69L5Qc1+cKl717nuPZSkf0N2gbAZBvSdZLe67XSFfUYQLx9MtK0HojEJV
-	dK3J0IrKi3gpY/c52th8JBc0XgQEO9jEr5sENXEBMcBQZXPocieY6YnNk9Hj/bmZUWElRU
-	WAtwNppfC5T2ZhXihD1hRL1VpfGp27vUahssQ5jbqL/59qytC8BQJ7pbJsNgvQ==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1716840673;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1dOUbisstpfi5giuXiz9vGluX9yAy7I4sBmLBvo2Ydc=;
-	b=AaC3JrXcUqWFTzZohNx4Ja74VBdcE8NXcyHSI9828U13xvpehMUerBjzCZFwqrwpAVaujz
-	5nvLxPHaFhwBZgLEwI2fBB5G6n5WFjuYrZnYDXbDV9Eyt/3Luflc/H0mIn/NVdt0cWS5wl
-	yfF6XeJ3jSEyXPjHanEqSq3fHL1YhyiGbR3bN4CchKL30lzqVKRsjlvnsmqychu7nF91Tr
-	RJceAlFvuwxDp+b4Cm0bJmbJEn/J2Ay2vuX3F693l8UdesloViQUhZ8A19VfCl5uWdp2da
-	SGuQmpsfLLckG+6YPDJ7Q8d+oja2ZRgjdOPQsuddLpvQDzNgIxWuCUWMHRPD9A==
-Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 9F48C634C93;
-	Mon, 27 May 2024 23:08:14 +0300 (EEST)
-Date: Mon, 27 May 2024 20:08:14 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Sylvain Petinot <sylvain.petinot@foss.st.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	benjamin.mugnier@foss.st.com, mchehab@kernel.org, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD56G3 camera sensor
- binding
-Message-ID: <ZlToLtUkVqzrZf4p@valkosipuli.retiisi.eu>
-References: <20240521162950.6987-1-sylvain.petinot@foss.st.com>
- <20240521162950.6987-2-sylvain.petinot@foss.st.com>
- <2110ba34-658e-4d60-b524-2f5ead6c8d3e@linaro.org>
- <77fa3ed3-2341-4106-adf2-ec8bd9de91ff@foss.st.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iynXkjA6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716840942; x=1748376942;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=clAc0glAG+FdzsTbysKZU8GdPk0PzethWuZGkjC7mjw=;
+  b=iynXkjA69Q1twfd0AE1UijUXw7rt73xHxlBuopgOlUJiNLQEwfoc+Z7g
+   Uwi4iBUHuV7c13G4UtSxbFGYoYCihUBtobvgJq1T1Sd3R1X/7+K6InNmF
+   A/9crJQ9BVQupF8Cj+r//eZSnj8BIdTmE4B/HiY7UqUM/DCjikKZVwI2M
+   DLmjsc2AzlrvdY+gSVjjAhxP2aPaBr31yLoy4xVQyADQOjW8FuDVnVmV6
+   60pJSwHFYH8kqEcGpnkCmdhKp2XAPd4x1sO5ltTJijINvGqJjAM/MxJLO
+   n0/OKVyiwVg2o7s8UK+PVyMB1Jrkd0ERcI2f4fTaF0nXc9DU/Fe7WY2qh
+   w==;
+X-CSE-ConnectionGUID: zw0w8ujrR3qd7tHaCF28uw==
+X-CSE-MsgGUID: /MoLDLMURwyHHAxnwl7LnA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13293960"
+X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
+   d="scan'208";a="13293960"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 13:15:41 -0700
+X-CSE-ConnectionGUID: 5rdLFS3LRSGQVhJ1wldX1Q==
+X-CSE-MsgGUID: nV82EXoASdKMiCik2rxfcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
+   d="scan'208";a="35340224"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 13:15:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1sBgko-0000000BMVg-203o;
+	Mon, 27 May 2024 23:15:34 +0300
+Date: Mon, 27 May 2024 23:15:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Woody Suwalski <terraluna977@gmail.com>
+Cc: Guanbing Huang <albanhuang@outlook.com>, gregkh@linuxfoundation.org,
+	rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org,
+	tony@atomide.com, john.ogness@linutronix.de,
+	yangyicong@hisilicon.com, jirislaby@kernel.org,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	lvjianmin@loongson.cn, albanhuang@tencent.com,
+	tombinfan@tencent.com
+Subject: Re: Kernel 6.10-rc1 b,Build error with [PATCH v5 2/3] serial: port:
+ Add support of PNP IRQ
+Message-ID: <ZlTp5lGiT3pNF_di@smile.fi.intel.com>
+References: <cover.1712472167.git.albanhuang@tencent.com>
+ <PSAPR06MB4952C4112E75D882AC61CA5EC9002@PSAPR06MB4952.apcprd06.prod.outlook.com>
+ <cc8a93b2-2504-9754-e26c-5d5c3bd1265c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <77fa3ed3-2341-4106-adf2-ec8bd9de91ff@foss.st.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cc8a93b2-2504-9754-e26c-5d5c3bd1265c@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Sylvain,
-
-On Mon, May 27, 2024 at 03:14:35PM +0200, Sylvain Petinot wrote:
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml b/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
-> >> new file mode 100644
-> >> index 000000000000..22cb2557e311
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
+On Mon, May 27, 2024 at 03:44:42PM -0400, Woody Suwalski wrote:
+> Guanbing Huang wrote:
+> > From: Guanbing Huang <albanhuang@tencent.com>
 > > 
-> > Why duplicated 'st'?
-> 
-> Legacy : our first st-mipid02 driver was upstream this way few years back.
-> 
-> We have 3 options :
-> 
-> 1- keep this unpleasant naming to keep consistency with st-mipid02 [1]
-> and st-vgxy61 [2]
-> 2- rename this driver properly ('vd56g3') and keep the two others the
-> old way (I personally don't like this option)
-> 3- rename this driver properly ('vd56g3') and in a second patch rename
-> the two others drivers.
-> 
-> I would be interested to get Sakari's opinion on this subject.
-> 
-> [1]:
-> https://elixir.bootlin.com/linux/v6.9.1/source/drivers/media/i2c/st-mipid02.c
-> 
-> [2]:
-> https://elixir.bootlin.com/linux/v6.9.1/source/drivers/media/i2c/st-vgxy61.c
+> > The function __uart_read_properties doesn't cover PNP devices, so add IRQ
+> > processing for PNP devices in the branch.
 
-The driver could be renamed to align with a large majority that use the
-same name as the bindings without the vendor prefix. You could add
-MODULE_ALIAS() to help user space to cope with the change.
+...
 
-The DT compatible string indeed should reflect the name of the device, the
-driver is indeed another matter.
+> >   #include <linux/property.h>
+> >   #include <linux/serial_core.h>
+> >   #include <linux/spinlock.h>
+> > @@ -221,7 +222,11 @@ static int __uart_read_properties(struct uart_port *port, bool use_defaults)
+> >   	if (dev_is_platform(dev))
+> >   		ret = platform_get_irq(to_platform_device(dev), 0);
+> > -	else
+> > +	else if (dev_is_pnp(dev)) {
+> > +		ret = pnp_irq(to_pnp_dev(dev), 0);
+> > +		if (ret < 0)
+> > +			ret = -ENXIO;
+> > +	} else
+> >   		ret = fwnode_irq_get(dev_fwnode(dev), 0);
+> >   	if (ret == -EPROBE_DEFER)
+> >   		return ret;
+> 
+> Hello all, trying to build 6.10-rc1 fails for me in serial_base.o:
+>   CALL    scripts/checksyscalls.sh
+>   DESCEND objtool
+>   INSTALL libsubcmd_headers
+>   CC [M]  drivers/tty/serial/serial_port.o
+>   LD [M]  drivers/tty/serial/serial_base.o
+>   MODPOST Module.symvers
+> ERROR: modpost: "pnp_bus_type" [drivers/tty/serial/serial_base.ko]
+> undefined!
+> make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 1
+> make[1]: ***
+> [/woody/src/kernels/linux-6.10-pingu/work/linux-6.10/Makefile:1892: modpost]
+> Error 2
+> make: *** [Makefile:246: __sub-make] Error 2
+> 
+> Reversing the patch "fixes" the problem :-(
+> I am building on a Debian bookworm system, gcc 12.2
+> 
+> Any suggestions  how to make it work?
+
+Yes, I will send a patch soon. Thanks for the report!
 
 -- 
-Kind regards,
+With Best Regards,
+Andy Shevchenko
 
-Sakari Ailus
+
