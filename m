@@ -1,111 +1,158 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D12913C3CA
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B6613C3CA;
+	Mon, 27 May 2024 12:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716812222; cv=none; b=pUQ4K5SPy6fHZ8x/ZeWfGjnlHfWwvRGbve2DfEX1z8kkapcETj0CDvQf8iLZEhYCn31p4MfRxWC845TYukdX2EYhv0SPhMWuy2AbbEgjA9PUOj2SygWoeqGWsDu5qRZBMnVEiwIuMBHSQSkkZ9dYlu+e8siXZAkN/PCw4Oci2c4=
+	t=1716812230; cv=none; b=S9OWYQaf4uUHE+1lXKMLVhMNKhsvDgfpH/KUqvJXUj3YGxDOcXvt7CYpv2puqftjJL+7PQt89Utaby2OrhaJqcap2NE+ddiCmfReLJ7pnLoX0Qs+fBMb2uxpf8h9Bgu0Qs+0T/9Jzd8QGzsg3bmwiU5sErYrKanXIT38huTxjoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716812222; c=relaxed/simple;
-	bh=4rmwT8fMBWaUg4ppZqnb51hiutGTSWM0Qo7P2tV1PV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mZIYXvyjxqnvThF2AjGRBKGgxP29igGkJWYzhKpsocgkAK79oSs5D0TUQbxZhSBKyCyD6N1J0zM8qN+rFcqBL6aBwxndE8HhHLVucQPRzoE4RBLuAWi6tNzIponBu0f5O5MoJocSbVoQHDhW1Ui9ngVEWvR6QKy6+55mao2Cv5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3B5AA60011;
-	Mon, 27 May 2024 12:16:57 +0000 (UTC)
-Message-ID: <fb039f36-07ad-488b-a988-c149a68ef177@ghiti.fr>
-Date: Mon, 27 May 2024 14:16:56 +0200
+	s=arc-20240116; t=1716812230; c=relaxed/simple;
+	bh=v7mwebxOX/a1s/ML0ZEls3SJ4IPgSe8KPM9vsKrPK9I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FS8xG5enWKMHCZkFqaXpAKqx8u0ZyY5RScgXgiksNxpVbEMk7kvuJw4AJdlDf0/acfLIWO2TMV1u/g6qi3bgCoQe80UYKPzhf8/6To54i7Gz2zhxnVhUjDk5i+7JulmYlxQp+e5m0+90Du90npW53LrOmRxLJgfQVaI0vlJbCas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kVO2pEnD; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kVO2pEnD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716812228; x=1748348228;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=v7mwebxOX/a1s/ML0ZEls3SJ4IPgSe8KPM9vsKrPK9I=;
+  b=kVO2pEnDjK9x6TH/ykKA6NnsnfD4DDNcIfUHHsP7VECYWIw74hhX/4b6
+   kRZq2VwflOUlrrPVjL4hP1pL6tciwyIfN/yVpd+/PWjewCsXAndy4TzHy
+   EkzL5YvgvkME2ilE/eOPAMUXpFLLWwgltsnUj/yPKI2EXd8l3XCFMk/wg
+   YRzNvW42nNAzMdKDK4GzGaUtgrOZ3f7HZOQmaOIuiBoGfUI7Msgr4cLVq
+   /dpocrA4oku7upUFQC//9x5JvReZbISm0+47Jfatmc8wTJGRej61Pdubv
+   J0lJC8Hp20B6cNaWdITb1mTgOb+YNJ0HT4sXpmPeHuQ6pm2x0HwffR9vD
+   g==;
+X-CSE-ConnectionGUID: 57/v2V0xRy6xdyc7HNT0UA==
+X-CSE-MsgGUID: SOu1kKn8RUOUKHA7hloO1A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="24253945"
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="24253945"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 05:17:08 -0700
+X-CSE-ConnectionGUID: r5jiZ86jQhaITYpFAWV54g==
+X-CSE-MsgGUID: mgrFYRFzR2iM6Xu4Hio2ew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="39289986"
+Received: from wentongw-optiplex-8070.sh.intel.com ([10.239.154.12])
+  by fmviesa004.fm.intel.com with ESMTP; 27 May 2024 05:17:05 -0700
+From: Wentong Wu <wentong.wu@intel.com>
+To: sakari.ailus@linux.intel.com,
+	tomas.winkler@intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Wentong Wu <wentong.wu@intel.com>,
+	stable@vger.kernel.org,
+	Hao Yao <hao.yao@intel.com>,
+	Jason Chen <jason.z.chen@intel.com>
+Subject: [PATCH v3] mei: vsc: Don't stop/restart mei device during system suspend/resume
+Date: Mon, 27 May 2024 20:38:35 +0800
+Message-Id: <20240527123835.522384-1-wentong.wu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] riscv: cleanup XIP_FIXUP macro
-Content-Language: en-US
-To: Nam Cao <namcao@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1715286093.git.namcao@linutronix.de>
- <19e63324d7a099f561c4a2e55f7df051bd5b8a6f.1715286093.git.namcao@linutronix.de>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <19e63324d7a099f561c4a2e55f7df051bd5b8a6f.1715286093.git.namcao@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
 
-Hi Nam,
+The dynamically created mei client device (mei csi) is used as one V4L2
+sub device of the whole video pipeline, and the V4L2 connection graph is
+built by software node. The mei_stop() and mei_restart() will delete the
+old mei csi client device and create a new mei client device, which will
+cause the software node information saved in old mei csi device lost and
+the whole video pipeline will be broken.
 
-On 10/05/2024 08:28, Nam Cao wrote:
-> The XIP_FIXUP macro is used to fix addresses early during boot before MMU:
-> generated code "thinks" the data section is in ROM while it is actually in
-> RAM. So this macro correct the addresses in the data section.
->
-> This macro determines if the address needs to be fixed by checking if it is
-> within the range startting of ROM address up to the size of 2 * XIP_OFFSET
+Removing mei_stop()/mei_restart() during system suspend/resume can fix
+the issue above and won't impact hardware actual power saving logic.
 
+Fixes: f6085a96c973 ("mei: vsc: Unregister interrupt handler for system suspend")
+Cc: stable@vger.kernel.org # for 6.8+
+Reported-by: Hao Yao <hao.yao@intel.com>
+Signed-off-by: Wentong Wu <wentong.wu@intel.com>
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Tested-by: Jason Chen <jason.z.chen@intel.com>
+Tested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-s/startting/starting
+---
+Changes since v2:
+ - add change log which is not covered by v2, and no code change
 
-And the sentence lacks the final dot.
+Changes since v1:
+ - correct Fixes commit id in commit message, and no code change
 
+---
+ drivers/misc/mei/platform-vsc.c | 39 +++++++++++++--------------------
+ 1 file changed, 15 insertions(+), 24 deletions(-)
 
->
-> This means addresses within the .text section would incorrectly get fixed.
-
-
-Yes, but XIP_FIXUP() should only be applied to data symbols so I believe 
-this ^ is not relevant.
-
-
-> Also if the kernel size if bigger than (2 * XIP_OFFSET), some addresses
-> would not be fixed up.
-
-s/the kernel size if/the kernel size is
-
->
-> XIP kernel can still work if the above 2 cases do not happen. But this
-> macro is obviously incorrect.
->
-> Rewrite this macro to only fix up addresses within the data section.
->
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
->   arch/riscv/include/asm/pgtable.h | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 58fd7b70b903..fbf342f4afee 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -139,11 +139,14 @@
->   
->   #ifdef CONFIG_XIP_KERNEL
->   #define XIP_FIXUP(addr) ({							\
-> +	extern char _sdata[], _start[], _end[];					\
-> +	uintptr_t __rom_start_data = CONFIG_XIP_PHYS_ADDR			\
-> +				+ (uintptr_t)&_sdata - (uintptr_t)&_start;	\
-> +	uintptr_t __rom_end_data = CONFIG_XIP_PHYS_ADDR				\
-> +				+ (uintptr_t)&_end - (uintptr_t)&_start;	\
->   	uintptr_t __a = (uintptr_t)(addr);					\
-> -	(__a >= CONFIG_XIP_PHYS_ADDR && \
-> -	 __a < CONFIG_XIP_PHYS_ADDR + XIP_OFFSET * 2) ?	\
-> -		__a - CONFIG_XIP_PHYS_ADDR + CONFIG_PHYS_RAM_BASE - XIP_OFFSET :\
-> -		__a;								\
-> +	(__a >= __rom_start_data && __a < __rom_end_data) ?			\
-> +		__a - __rom_start_data + CONFIG_PHYS_RAM_BASE :	__a;		\
->   	})
->   #else
->   #define XIP_FIXUP(addr)		(addr)
-
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-Thanks,
-
-Alex
+diff --git a/drivers/misc/mei/platform-vsc.c b/drivers/misc/mei/platform-vsc.c
+index b543e6b9f3cf..1ec65d87488a 100644
+--- a/drivers/misc/mei/platform-vsc.c
++++ b/drivers/misc/mei/platform-vsc.c
+@@ -399,41 +399,32 @@ static void mei_vsc_remove(struct platform_device *pdev)
+ 
+ static int mei_vsc_suspend(struct device *dev)
+ {
+-	struct mei_device *mei_dev = dev_get_drvdata(dev);
+-	struct mei_vsc_hw *hw = mei_dev_to_vsc_hw(mei_dev);
++	struct mei_device *mei_dev;
++	int ret = 0;
+ 
+-	mei_stop(mei_dev);
++	mei_dev = dev_get_drvdata(dev);
++	if (!mei_dev)
++		return -ENODEV;
+ 
+-	mei_disable_interrupts(mei_dev);
++	mutex_lock(&mei_dev->device_lock);
+ 
+-	vsc_tp_free_irq(hw->tp);
++	if (!mei_write_is_idle(mei_dev))
++		ret = -EAGAIN;
+ 
+-	return 0;
++	mutex_unlock(&mei_dev->device_lock);
++
++	return ret;
+ }
+ 
+ static int mei_vsc_resume(struct device *dev)
+ {
+-	struct mei_device *mei_dev = dev_get_drvdata(dev);
+-	struct mei_vsc_hw *hw = mei_dev_to_vsc_hw(mei_dev);
+-	int ret;
+-
+-	ret = vsc_tp_request_irq(hw->tp);
+-	if (ret)
+-		return ret;
+-
+-	ret = mei_restart(mei_dev);
+-	if (ret)
+-		goto err_free;
++	struct mei_device *mei_dev;
+ 
+-	/* start timer if stopped in suspend */
+-	schedule_delayed_work(&mei_dev->timer_work, HZ);
++	mei_dev = dev_get_drvdata(dev);
++	if (!mei_dev)
++		return -ENODEV;
+ 
+ 	return 0;
+-
+-err_free:
+-	vsc_tp_free_irq(hw->tp);
+-
+-	return ret;
+ }
+ 
+ static DEFINE_SIMPLE_DEV_PM_OPS(mei_vsc_pm_ops, mei_vsc_suspend, mei_vsc_resume);
+-- 
+2.34.1
 
