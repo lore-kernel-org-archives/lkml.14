@@ -1,175 +1,260 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2060.outbound.protection.outlook.com [40.107.94.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD83913D8A1;
-	Mon, 27 May 2024 09:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716802520; cv=fail; b=Ky0XJjYBsmLKS8EffkIUYECC3H3EB9BaejXU4JYKsu7NaqX/GEvuGavmPSecLoOqYJXCqZ/hFE4CBzGH3n8YXOaWFwLmq3xkCt2TgqX/78ku1ZMzFMVTIfdvf2fExIWUJex2nIVxiyQTKsK14rRoLMO2isG3fAFwJt6DgWu7PGU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716802520; c=relaxed/simple;
-	bh=xZGjYSV3AoMsOTulm9NKcLJNutqz6lhGUqrOdLDu3HE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y1Nei+OveXYoyxISfX1whfY0V8UR/COaEba145KGUuISBHQKNwZfzY3kk7Nj9oqsY8a5d9dxc+HUcwjEG4iQ8l0j0Aiv3vOYaGJhVEAjfkK2UAhSm5R0YGveDEzZfNIBrxRJifNdWUo9a5+hm8ZqHQM7RucHhzEDHs4REDYeUPU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fO7upOTY; arc=fail smtp.client-ip=40.107.94.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC34F13A418
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716802621; cv=none; b=XARsTeR1oO12z8taip+5nqlTbrdZLALC3iYNJZ+yxOWnmEwLeIFnNUPLhAlIvzB0NZKRGvQRNSnNEikNgPEh7UE7LuPXf19/gYuqWWoMFhWL41MhWh3NUfnUjfGC/pXLnXtU7Gdt3lSTI6XjysNAxtZ90ub/5kCr/n4oFX+WJC4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716802621; c=relaxed/simple;
+	bh=ca7qxTX4u6UzTeFhYW4NkFxCP0XwOUteCJo7P6ydaEg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y1ENIAJAWVrwKnRtYOJtUFIE727AKy4t9r41FTEScMrsYu7QH149pKBSAtWio8hp78z4yb4e/qin1C5mcOmjUDOM2H9dSUcIj2PfBNNc46MBzRq6s23TglgEp1NnEMwWqU2XWFAc6DkGyTUrd5oRB3cjmUIOqlSu7LJC0mPfxHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P0/R063B; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fO7upOTY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q4nLvqkwDZYlFuUPuma0Td/CatvPwA90GyEtRd3FxbaaJgShW+Iz4tfOBFX/tc7yxW9eJ0P4RuvEAxYW5N47Ae0VG7V34hTTMdqo1iYt2wFsucerhjk34xMoosv/U3Z2uZFLhoadibUJ/b3EVA0LXm1MM/KV2sz7zE+jpqGlqHRtprdeJAkEo2rLEdlTURuiECW/EW6DrX+NsxBopbYhijIQxzs5sot18tf4fcWvvoz7LOI9bLotUvVxpwfwlU010XMZOJy+HPe9X3jvpvUjKTuBkMmK4Hw33Ve4Sq09wTgLL2Nd8JexKdW4NkEufNYLZn0o/jjKthR2Sdj6QbV96w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QR+26BQKvQrpzcXYyk+OcshGVyrbSqM86JQ0j0TVKEM=;
- b=Jhx5N/LTRDP3vaRQvEn6Y5+4G0E/PGga+8+BK/d/5IKmczI+5gW6Md98Vh4FF4iOqqG2IBwTnD1Vbe2ccE023lC2ysIhMGD6Rtk4HShBksXkNfiUpfxgJxlai/h74FsIc94fZzW3F9jKwww6/8q8i5ct+QbA9MGj1Ac7oGGf9A2v7pYKfsG7hrcOW+aKku3MZ97dd+FoWIaB5+/uAg5qYFd/ThUvyCRZJR4oZ+FqhTH0nc6gkEVOcXBQ69RWCRC9OUwvoaDHPETpPkFXQOuD93hDt64znyz6YccfYQiSuHbB+1urt490UxPCSlnwtoONt/fjVXXFXOC+v3zZ+dU7CQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QR+26BQKvQrpzcXYyk+OcshGVyrbSqM86JQ0j0TVKEM=;
- b=fO7upOTYf99eJI+x7sh7oYDpx+BYIitRisPZZdWjLCzX9z9yYhEz6GmCwg/VlQWiEoryOLfnthD4XVoN2vR22fb0VwODPwQnn2G8+EwLhNLylN5nyUlyVTYKbgM2ZFvbA6wqTYfyAb7cFMukJdgOFgWubGYAN5FhhirKVoUnQMI=
-Received: from SA1P222CA0095.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:35e::26)
- by MN0PR12MB6031.namprd12.prod.outlook.com (2603:10b6:208:3cd::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Mon, 27 May
- 2024 09:35:15 +0000
-Received: from SA2PEPF00003F62.namprd04.prod.outlook.com
- (2603:10b6:806:35e:cafe::5b) by SA1P222CA0095.outlook.office365.com
- (2603:10b6:806:35e::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29 via Frontend
- Transport; Mon, 27 May 2024 09:35:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003F62.mail.protection.outlook.com (10.167.248.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7633.15 via Frontend Transport; Mon, 27 May 2024 09:35:15 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 27 May
- 2024 04:35:14 -0500
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Vishal Patel <vishal.patel@xilinx.com>, Conor Dooley
-	<conor+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh@kernel.org>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 12/12] arm64: zynqmp: Add pwm-fan node and fix ttc0 pwm-cells property
-Date: Mon, 27 May 2024 11:34:18 +0200
-Message-ID: <ff6b4dbfc9bb1b53769ffbf7d0e932c7a8be7c08.1716802450.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1716802450.git.michal.simek@amd.com>
-References: <cover.1716802450.git.michal.simek@amd.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P0/R063B"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5295a576702so3282244e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1716802617; x=1717407417; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H/ixPzkRCck5ZUKxx74gVuIQcS7/KCEVfrXzpOu54PQ=;
+        b=P0/R063Bgh8BsH8SNa6+rs36Zb1kMEof/Yc0G5AAUt0yFyewwUf1VgJw8I/kvNV6VO
+         xIztpzoTlXe6tsmRXONhnsrEfAG6crTv3WYkVGxTrxGHd8Kq+/EQDoGKcm+DGIQGaiBO
+         yJ3WK5j8rjrrsOGXMGStHIdXYegB7+iibzBd6pTIROqY2zBAnmsXgfinBYBlD8fYfCzQ
+         QBdk0wXhaADo5BFEsDq5si78RRXrmeUyQpKTjbeOCayXaOnSKVgPeSUfQwe73v85r5NF
+         wyOSVdcI651j3kUt5eeEK3enBDDMaUvjUIArWzmgAyeCgvTSCCFB5V0MLVe1ZjjW3HRe
+         aowg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716802617; x=1717407417;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H/ixPzkRCck5ZUKxx74gVuIQcS7/KCEVfrXzpOu54PQ=;
+        b=GIwLOpjNHEWmRfbjWWGMUtASQo2RUYf1Tw+RqYGrLWKTSxV4AQQdI+KnZSPPVLqZRw
+         4bGpHYOiPbNuamD+MISpJ9kQKzI2dMZM9wNR9ht/aHJMr233Hz7f4gkoiLdwC7YyxOqG
+         jkSVqPA+V16rlzP9N5VX/1PKq221GOcWwsAnk07hBc26CBMbHFJGJSp16/1VBKfnwjqa
+         09tf0qPXphLSPdMir83tt8tnLh05MLP6P0yGwXNV0oblCTpKAxbR33w51buUCfXrog7G
+         ajHXm72V24fRL1Nck8DEpedQbtpMbhCEF1v5Gdm0I1MYg/fwinil6mJuocmSESx8t5VV
+         u3qA==
+X-Forwarded-Encrypted: i=1; AJvYcCXW6ubDjjbRmYBn/KGuP9YiQLVFzn3OBeERs414J+wZY2AWJ8fHnWGvn4rUUHUq2iwLc+mjjLthwoCEVUykiw30/T0a2oxRl+CDU5l9
+X-Gm-Message-State: AOJu0YzKruGVNS5jP0JICyrJVx2YgXpEzCU2iOqVlvFb1RH+W2ANsn4M
+	OVvgNN7uhIQufXWLm8wxkfmEKAV8gpArGoMLikcrLwnnXJpv5ODosXPMsPwfNYY=
+X-Google-Smtp-Source: AGHT+IHEAjDHV04sv046OkrhZ6dT5pavox8wzKlyT3vi+iHB28XVQkbRU0voEZTDpoqyXyek79OCfA==
+X-Received: by 2002:ac2:4e10:0:b0:51b:e0f0:e4f8 with SMTP id 2adb3069b0e04-52964bb0ea4mr7110372e87.31.1716802616696;
+        Mon, 27 May 2024 02:36:56 -0700 (PDT)
+Received: from [10.100.51.161] (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100fad8e2sm136039195e9.33.2024.05.27.02.36.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 May 2024 02:36:56 -0700 (PDT)
+Message-ID: <2b920bab-23a2-4a8d-95c2-b69472d38373@suse.com>
+Date: Mon, 27 May 2024 11:36:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1064; i=michal.simek@amd.com; h=from:subject:message-id; bh=1Xedc0gq1O0CvixBiRDZ6qI/t1FkJfQJfW5xWrDpDUI=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhrSQ4OlWhxbdLFeOa0rKulG2YQvLkukP5rBrFbn7xwqy/ pxtL/W5I4aFQZCJQVZMkUXa5sqZvZUzpghfPCwHM4eVCWQIAxenAEyEU4JhntI9sXltWu5sGhev 9c5Yd8yCM/fpVYYZz7ZuPXHG4PbvRK6bwrkTz/1P+c0CAA==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F62:EE_|MN0PR12MB6031:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1632aaeb-90e6-45c9-44d9-08dc7e305091
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|376005|1800799015|82310400017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EPfnNHDUc2RNAaiw7yn9Oj0b3PeXpob63d8aR0olJN3cUIMr0ZUMrgHWacLO?=
- =?us-ascii?Q?V5eLGxdcYxuG84l7IHxjgwO6wiRDwgopr8NJoVi5vBzoLaWGqTbzfF/Jiu6V?=
- =?us-ascii?Q?rNG3rhSfIYTYvvtyPuu02YTcw3Ukwz+P2StJy2p0KhMWty9+lMbcxB0M2+fS?=
- =?us-ascii?Q?uUsh0O8LwHu+GI6s6xJIUe5mXS73VUjuqllxpEGISGuAnbOVuALXhTmxLRFV?=
- =?us-ascii?Q?mWn5tpTObUmLv/Wjcuim4yXjCnlRZTsWJOAtECN1phh/n31qDVmlu/idloZD?=
- =?us-ascii?Q?ZveKc59VobGy6VfwIY+Ktn6rLIfOtZ4T0s2a2HNP/FI4MMugDGRklYbXHAx1?=
- =?us-ascii?Q?nASaLwTdacGf6k2EfW4fiZj4zZNvZqV8vpFnBhPG87fBqckppWI9i2WcOnkR?=
- =?us-ascii?Q?CWUf5t+K5oS0LwQUDWwXdh8b76RmQd+aY+Ga7SUGcbMlSJ9BaIPBtU0A5e8K?=
- =?us-ascii?Q?wrSUiPFg8C3+z4bydSQqEu1K7CsRZ6Z+gmbjEbPlma7Vm6gvc9Szy6x6e9pB?=
- =?us-ascii?Q?FyMA87AilP2RsvPJBvoLbV0TfYM7XvnW6dE17eMa94QXTj8o2Uvkuc/JQ5Vj?=
- =?us-ascii?Q?uoh4vwUedL+130wcC3o4GjevGqEFYX+dReddL04DUsLs3MuM6kdI1k3ja46T?=
- =?us-ascii?Q?MSVaLd59BT2MohBVvQV99N5w9tKoUkHpIm/6vmR+LewO7P8/iiwJEqBdKJ+4?=
- =?us-ascii?Q?7TWLpOKdnWVLt3pcJfAbIs/RVlu2udYnlep0kG44pLBuMSOVqo06/ekZ4SaR?=
- =?us-ascii?Q?iK2Y25dscTlBLFDZsJj0Redn2qeCV0IHKYFNUmZzX97FZGb3hdjx/e+aAA6i?=
- =?us-ascii?Q?KE7XvhHArkoySxAIG884pI/JyA0qX8T9yCs7of1WyuNLIW+ML2BGLrY8y0qS?=
- =?us-ascii?Q?7W5mr0DzEnfHMmFDK6xz/Rj1J5/2XnxuWGWK6fiN62bMraGqEThQGBP2Xw7p?=
- =?us-ascii?Q?7qeVlK++oqTnk+yWsnfHw5j64clH229eg0fSP4O59ywTdyqoBL/lhbGRfyWZ?=
- =?us-ascii?Q?m5Hag0yNSXGsST4oxdvjo3B70XVNxFPRjQARw3MM6Exj8YFDpKSdmEjL3seP?=
- =?us-ascii?Q?KpJ3JQDS3y6hv2+Vv2td+dCZczSI623n7Hd9nJrO1wmP2yfFfM51M/JAIHOB?=
- =?us-ascii?Q?I81eTYzJgcZNbmWUbAh6grZNh+XmMYwVeHkQcLgIrGxHEOf+Av3Vb7OUcC3W?=
- =?us-ascii?Q?WhCeBREqXH2VpTKvGGHDPnw5djDaFpQ+eAtE2odIORmNezzEHjoR48sulBmD?=
- =?us-ascii?Q?MYrySoJNVrXv58lmAEo+pAe90ah4N4ndAG2lPuWEIoMLM90TdYTp2g4ctnsf?=
- =?us-ascii?Q?BPdzzco3b8PpsYAKRQ34PkL5ZubpyPM8CQWZHxK2beOEcYtF2U1kFvMmjfQ6?=
- =?us-ascii?Q?OzEcRo68w7gUprZ3hdn2KPjfsAOA?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(1800799015)(82310400017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2024 09:35:15.4370
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1632aaeb-90e6-45c9-44d9-08dc7e305091
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003F62.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6031
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ring-buffer: Fix a race between readers and resize
+ checks
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rt-users <linux-rt-users@vger.kernel.org>
+References: <20240517134008.24529-1-petr.pavlu@suse.com>
+ <20240517134008.24529-3-petr.pavlu@suse.com>
+ <20240520095037.33a7fde6@gandalf.local.home>
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20240520095037.33a7fde6@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Vishal Patel <vishal.patel@xilinx.com>
+On 5/20/24 15:50, Steven Rostedt wrote:
+> On Fri, 17 May 2024 15:40:08 +0200
+> Petr Pavlu <petr.pavlu@suse.com> wrote:
+> 
+>> The reader code in rb_get_reader_page() swaps a new reader page into the
+>> ring buffer by doing cmpxchg on old->list.prev->next to point it to the
+>> new page. Following that, if the operation is successful,
+>> old->list.next->prev gets updated too. This means the underlying
+>> doubly-linked list is temporarily inconsistent, page->prev->next or
+>> page->next->prev might not be equal back to page for some page in the
+>> ring buffer.
+>>
+>> The resize operation in ring_buffer_resize() can be invoked in parallel.
+>> It calls rb_check_pages() which can detect the described inconsistency
+>> and stop further tracing:
+>>
+>> [  190.271762] ------------[ cut here ]------------
+>> [  190.271771] WARNING: CPU: 1 PID: 6186 at kernel/trace/ring_buffer.c:1467 rb_check_pages.isra.0+0x6a/0xa0
+>> [  190.271789] Modules linked in: [...]
+>> [  190.271991] Unloaded tainted modules: intel_uncore_frequency(E):1 skx_edac(E):1
+>> [  190.272002] CPU: 1 PID: 6186 Comm: cmd.sh Kdump: loaded Tainted: G            E      6.9.0-rc6-default #5 158d3e1e6d0b091c34c3b96bfd99a1c58306d79f
+>> [  190.272011] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552c-rebuilt.opensuse.org 04/01/2014
+>> [  190.272015] RIP: 0010:rb_check_pages.isra.0+0x6a/0xa0
+>> [  190.272023] Code: [...]
+>> [  190.272028] RSP: 0018:ffff9c37463abb70 EFLAGS: 00010206
+>> [  190.272034] RAX: ffff8eba04b6cb80 RBX: 0000000000000007 RCX: ffff8eba01f13d80
+>> [  190.272038] RDX: ffff8eba01f130c0 RSI: ffff8eba04b6cd00 RDI: ffff8eba0004c700
+>> [  190.272042] RBP: ffff8eba0004c700 R08: 0000000000010002 R09: 0000000000000000
+>> [  190.272045] R10: 00000000ffff7f52 R11: ffff8eba7f600000 R12: ffff8eba0004c720
+>> [  190.272049] R13: ffff8eba00223a00 R14: 0000000000000008 R15: ffff8eba067a8000
+>> [  190.272053] FS:  00007f1bd64752c0(0000) GS:ffff8eba7f680000(0000) knlGS:0000000000000000
+>> [  190.272057] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [  190.272061] CR2: 00007f1bd6662590 CR3: 000000010291e001 CR4: 0000000000370ef0
+>> [  190.272070] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> [  190.272073] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> [  190.272077] Call Trace:
+>> [  190.272098]  <TASK>
+>> [  190.272189]  ring_buffer_resize+0x2ab/0x460
+>> [  190.272199]  __tracing_resize_ring_buffer.part.0+0x23/0xa0
+>> [  190.272206]  tracing_resize_ring_buffer+0x65/0x90
+>> [  190.272216]  tracing_entries_write+0x74/0xc0
+>> [  190.272225]  vfs_write+0xf5/0x420
+>> [  190.272248]  ksys_write+0x67/0xe0
+>> [  190.272256]  do_syscall_64+0x82/0x170
+>> [  190.272363]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>> [  190.272373] RIP: 0033:0x7f1bd657d263
+>> [  190.272381] Code: [...]
+>> [  190.272385] RSP: 002b:00007ffe72b643f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+>> [  190.272391] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f1bd657d263
+>> [  190.272395] RDX: 0000000000000002 RSI: 0000555a6eb538e0 RDI: 0000000000000001
+>> [  190.272398] RBP: 0000555a6eb538e0 R08: 000000000000000a R09: 0000000000000000
+>> [  190.272401] R10: 0000555a6eb55190 R11: 0000000000000246 R12: 00007f1bd6662500
+>> [  190.272404] R13: 0000000000000002 R14: 00007f1bd6667c00 R15: 0000000000000002
+>> [  190.272412]  </TASK>
+>> [  190.272414] ---[ end trace 0000000000000000 ]---
+>>
+>> Note that ring_buffer_resize() calls rb_check_pages() only if the parent
+>> trace_buffer has recording disabled. Recent commit d78ab792705c
+>> ("tracing: Stop current tracer when resizing buffer") causes that it is
+>> now always the case which makes it more likely to experience this issue.
+>>
+>> The window to hit this race is nonetheless very small. To help
+>> reproducing it, one can add a delay loop in rb_get_reader_page():
+>>
+>>  ret = rb_head_page_replace(reader, cpu_buffer->reader_page);
+>>  if (!ret)
+>>  	goto spin;
+>>  for (unsigned i = 0; i < 1U << 26; i++)  /* inserted delay loop */
+>>  	__asm__ __volatile__ ("" : : : "memory");
+>>  rb_list_head(reader->list.next)->prev = &cpu_buffer->reader_page->list;
+>>
+>> .. and then run the following commands on the target system:
+>>
+>>  echo 1 > /sys/kernel/tracing/events/sched/sched_switch/enable
+>>  while true; do
+>>  	echo 16 > /sys/kernel/tracing/buffer_size_kb; sleep 0.1
+>>  	echo 8 > /sys/kernel/tracing/buffer_size_kb; sleep 0.1
+>>  done &
+>>  while true; do
+>>  	for i in /sys/kernel/tracing/per_cpu/*; do
+>>  		timeout 0.1 cat $i/trace_pipe; sleep 0.2
+>>  	done
+>>  done
+>>
+>> To fix the problem, make sure ring_buffer_resize() doesn't invoke
+>> rb_check_pages() concurrently with a reader operating on the same
+>> ring_buffer_per_cpu by taking its cpu_buffer->reader_lock.
+> 
+> Definitely a bug. Thanks for catching it. But...
+> 
+>>
+>> Fixes: 659f451ff213 ("ring-buffer: Add integrity check at end of iter read")
+>> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+>> ---
+>>  kernel/trace/ring_buffer.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+>> index 0ae569eae55a..967655591719 100644
+>> --- a/kernel/trace/ring_buffer.c
+>> +++ b/kernel/trace/ring_buffer.c
+>> @@ -1449,6 +1449,11 @@ static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+>>   *
+>>   * As a safety measure we check to make sure the data pages have not
+>>   * been corrupted.
+>> + *
+>> + * Callers of this function need to guarantee that the list of pages doesn't get
+>> + * modified during the check. In particular, if it's possible that the function
+>> + * is invoked with concurrent readers which can swap in a new reader page then
+>> + * the caller should take cpu_buffer->reader_lock.
+>>   */
+>>  static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+>>  {
+>> @@ -2200,8 +2205,13 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+>>  		 */
+>>  		synchronize_rcu();
+>>  		for_each_buffer_cpu(buffer, cpu) {
+>> +			unsigned long flags;
+>> +
+>>  			cpu_buffer = buffer->buffers[cpu];
+>> +			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+>>  			rb_check_pages(cpu_buffer);
+>> +			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock,
+>> +						   flags);
+> 
+> Putting my RT hat on, I really don't like the above fix. The
+> rb_check_pages() iterates all subbuffers which makes the time interrupts
+> are disabled non-deterministic.
 
-Add pwm-fan node to control fan through hwmon and change
-pwm-cells property to 3 to allow fancontrol utility to
-function correctly.
+I see, this applies also to the same rb_check_pages() validation invoked
+from ring_buffer_read_finish().
 
-Signed-off-by: Vishal Patel <vishal.patel@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@amd.com>
----
+> 
+> Instead, I would rather have something where we disable readers while we do
+> the check, and re-enable them.
+> 
+> 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> 			cpu_buffer->read_disabled++;
+> 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> 
+> // Also, don't put flags on a new line. We are allow to go 100 characters now.
 
- arch/arm64/boot/dts/xilinx/zynqmp-sm-k26-revA.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Noted.
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-sm-k26-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-sm-k26-revA.dts
-index 2841be11ae66..86e6c4990560 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-sm-k26-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-sm-k26-revA.dts
-@@ -103,12 +103,23 @@ ams {
- 			<&xilinx_ams 24>, <&xilinx_ams 25>, <&xilinx_ams 26>,
- 			<&xilinx_ams 27>, <&xilinx_ams 28>, <&xilinx_ams 29>;
- 	};
-+
-+	pwm-fan {
-+		compatible = "pwm-fan";
-+		status = "okay";
-+		pwms = <&ttc0 2 40000 0>;
-+	};
- };
- 
- &modepin_gpio {
- 	label = "modepin";
- };
- 
-+&ttc0 {
-+	status = "okay";
-+	#pwm-cells = <3>;
-+};
-+
- &uart1 { /* MIO36/MIO37 */
- 	status = "okay";
- };
--- 
-2.40.1
+> 
+> 
+>   			rb_check_pages(cpu_buffer);
+> 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> 			cpu_buffer->read_disabled--;
+> 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> 
+> Or something like that. Yes, that also requires creating a new
+> "read_disabled" field in the ring_buffer_per_cpu code.
 
+I think this would work but I'm personally not immediately sold on this
+approach. If I understand the idea correctly, readers should then check
+whether cpu_buffer->read_disabled is set and bail out with some error if
+that is the case. The rb_check_pages() function is only a self-check
+code and as such, I feel it doesn't justify disrupting readers with
+a new error condition and adding more complex locking.
+
+I've been considering how to approach this RT issue differently. One
+obvious approach would be to drop the rb_check_pages() validation but
+that is probably not desirable.
+
+Another option could be to make the check less thorough and walk only
+a part of the list which is bounded by some constant, typically one
+would want to check the part where some change was just made. In case of
+a smaller list, it should be still possible to traverse it completely.
+
+This is an idea that I'm currently looking at.
+
+> 
+> That said, I'm going to accept these patches as is (moving flags onto the
+> same line). But would like the above code for the next merge window as it
+> would then not affect RT.
+> 
+> I'll accept these patches because it does fix the bug now.
+
+Thanks,
+Petr
