@@ -1,57 +1,57 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD48013AD0E
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 23:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2608213C8E4
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 23:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716853522; cv=none; b=IUCnGSLvON68Wc6r15lxoUOG03dut6Ko4rHOnEDEhZ4XM9Lm0l46DqSJhMRqqilp5XSpRHPUqDGihyo+krj1/Z8UXde06CPqftXBJoIg3PW9ix+zITIvY3D1OKUveqvgVyl+9Q8NF9bVbOvxpd8AX584czEAWH2Ih3WaaU4s7og=
+	t=1716853525; cv=none; b=HMD8pUjSIXOc4VJUe+JLriIfmcBqGNAgx3+qvMjN6PC2Ytn+T18ioGfQtWioBsbmGzI9KVkEKmZI/eBoO2EyjSkW2AhLs2ywk9Li/i5mkCwYXapzn5bJuE/l2F+XZXv+VpmwZf9tlbdUZysrjjh3q817l6sbLQ8/oHoCqVSBtX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716853522; c=relaxed/simple;
-	bh=WcLKIok6lrt+bvPY32ICPSnt5O5/geZeyMq2jK4Dhno=;
+	s=arc-20240116; t=1716853525; c=relaxed/simple;
+	bh=r0I8WXwNICm+VrTNgL8eelRj73Nyj9XjwKgQCzzkGQY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=siwbkOq4V9hBndZe0fhqWYlgn55T3Mk62T2WqPIJ8w5lwp04TjFn8ldIRur447floticizIDDsX8eR5bKjVP7liWm+nchk9QJG309WJJa589ZiWxRSHArXOOGI8tU5z4h2Lsc8inKPNk80aXWMWybbFVXE2TjA2+zaUnfu8W1Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=ECU3jfLk; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=g1Tju5bKa8TZ/bnpzu3L7R/IFZ0UvFkTcVjrkm3cGceZoqCBotHCv3llRg7QnkmsaCFZ+9EB0TKhPq94t4oHPFdMtBrdqLmqp6kFLDCXYlx5FmonXDH/aMr3cA7o1YsFnFk8hIQy+lPwf+6YCirPqgCmKiOoIVsDsdtMbIyFzUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=2rH9TvBr; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="ECU3jfLk"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4211b3c0ef3so1527445e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 16:45:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="2rH9TvBr"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-420180b58c5so1488585e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 16:45:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1716853519; x=1717458319; darn=vger.kernel.org;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1716853522; x=1717458322; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GXEctD+/EB3461EYts4njlT0zGyad7Kh+tMqKCzOAgc=;
-        b=ECU3jfLkprIAD0qC2x5mBczVzAzYcdRDJGsN++vG3cqPQHgO7lH4XQKstJDdVBJNOA
-         YiggPfczm/+DnvTo0IFg2JC9KPU0+9lbhkwTkanW1n0IZA2dUlorkcNSB7uU5ftLhFXG
-         ninV3erqCsvx6U1sw6ctdOxyshWjM1WJhSsAE8jp0b2EpDd2chus6AEfL0HHhJZSXDhK
-         BbwtS4lzC3n+KoNs5Rdu2t8VCzCTThvHbRmMlzk2ECUdH4mMUL8XcLQCg1ayIt5Wi6mG
-         cNBLaXMkaLG4kboW4GpPC3pXqGmTnF/EX5KvVpliLviCR0FEHIpmTECHKsTyQSvOWjAp
-         15uA==
+        bh=HNry0zoFn66IZX3uvbz/6TnygFqmohU9To85tOy+8kg=;
+        b=2rH9TvBrRqNzcLEKK21rk6S/c+QXXj2gqSEPIyh8sNmiy3zeDm3gUdpztHFbZhZHmD
+         yhx/Wg3cDw27AnbePqkwu3LuiJOQ3krGbAlnkFoM6KdEHfDFP7gl8oiVGBrp5nIQA1gb
+         u7wgu/7fUCvP87v+xsOw1xBrBrrL0qim/PHLSl48pUZ+YdmBjquQUmcIxr8hY5HYbqeU
+         4aR+01b44BbZZXrSHGXzfM1IXfCVED+Qehmh5SihlPKTn+6S2N7qfJNnyXMiS63ovd54
+         JgyhQzFuEktQKRUlpnIsQdBbwi8kHmhQ9kCbTTIpEj+gNrVPH6AmU03oryn6iF4sJvQR
+         TtKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716853519; x=1717458319;
+        d=1e100.net; s=20230601; t=1716853522; x=1717458322;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GXEctD+/EB3461EYts4njlT0zGyad7Kh+tMqKCzOAgc=;
-        b=WpjYyVPFhWhGtjEk/Yr0D5ksWrDpy4Tu55bVWeDm7ZAhxFZsR2rN/IGidp5Eg+jxu6
-         ATdowAw61c1gVW2CqG6w+n3AvRBH48ad0BYopDN5HuBI8B94hNmObnROpN19mlVds3wg
-         M421CR+3S6uh2M2WxgOVnnJFb1u586JnwYA/hGDQzkxc8Iy4/970NRcver+x2kFwDuJ+
-         UXseLdO3djeDCVHOhU00WQlwDlgsx8VjJhFe+KpxBBvBEBdOxqs95McsJOPhVVOXNb0n
-         0Ysv3BUyRMeetXRPnPmwFTF75LWc/dX2EnVp+vI5kGuDXbfypMvcQYg5czmpuz6QbYMc
-         tFeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBaTXr38m3K1eBHNpe/hcJ7EKyXVId0Yq/z3G7j8zhhHRmduyXwTLlqF8HU0bjGQSY70d0IBKlQU0fjG+gIhSah5bGPvT3IXsGVWxP
-X-Gm-Message-State: AOJu0YzRCrpzCAXoLLGZT2Kz9CqoXiJJseImcpwu3h3XvEKg+VYTiEcT
-	30UxnkLG2Pm5Ck5VA8jlHKQZz6bDhF3twy6OCnNospj7BYB0sL3RmknFHt8CnQI=
-X-Google-Smtp-Source: AGHT+IF1zfMkfgGQRQXU8QNenOLWitAFOXQWV7Hl2ogZvdFzyhaj9f18jMiXpI/rt+z2ALUm7dw3tw==
-X-Received: by 2002:a05:600c:1c1e:b0:418:c2af:ab83 with SMTP id 5b1f17b1804b1-42108a27227mr86839175e9.36.1716853518917;
-        Mon, 27 May 2024 16:45:18 -0700 (PDT)
+        bh=HNry0zoFn66IZX3uvbz/6TnygFqmohU9To85tOy+8kg=;
+        b=PwJXFAO9hYh+ZENg+nX/yO8S5e+5d0Tg9U2y7WEglrBGWDrpUn1XarDLcy/dD/3o2Q
+         312lp4J+cDHUpAlve6t0YA05w6mOerA+k4WwGOMZpZn2wfpGAZZI1rmj3uXXa2a+iH/o
+         tNrgG4txUHsfpFDsdOaj3ezZTy4XBBwTMmYCJS47oCBOBdExTAkIzuGNgaVsLCJg18tk
+         wrKKWnSJIuer/3ltRQqMjd61e7GivvWMpSjqT564hwOknhk8+wZUlBosNAiPrQFVMZo4
+         MuZeWdv/exVAOsqG83PK0njFedCVbEcUEG+rowyinNBx2NowiCFbn0cvqZtjFQ2ctX2H
+         9GnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRLP6wHKHBDd208ABuDu4v2Vo/dH7QCqXEJtZ4H1S5FtCxjMC/SWGIuH29tN33mZy2J8g/1M8D5SrMDWy7Stc6QFBw+2uJGiwgIbMO
+X-Gm-Message-State: AOJu0YzqaJ6uPZVe8TetQ9W9v/M5iMnhSfUL1HlI+cwqgfQ93DQaV/Az
+	Hd6KpXfh4ULwBwACz7C6dMk9dnZRobWHS+xyVCRS93CHBj60u/Tc0fEn7zWssRM=
+X-Google-Smtp-Source: AGHT+IF9T8Y/YkvAOvS0rS97TuRQ2Ix59hiyfEGtGD745/9EUk8XFN2C3Rg4A4HSPq7FUd53hxMojg==
+X-Received: by 2002:a05:600c:4f94:b0:41b:fea6:6526 with SMTP id 5b1f17b1804b1-421089f8d2cmr66410055e9.33.1716853522480;
+        Mon, 27 May 2024 16:45:22 -0700 (PDT)
 Received: from airbuntu.. (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42108970967sm123535515e9.17.2024.05.27.16.45.18
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42108970967sm123535515e9.17.2024.05.27.16.45.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 16:45:18 -0700 (PDT)
+        Mon, 27 May 2024 16:45:22 -0700 (PDT)
 From: Qais Yousef <qyousef@layalina.io>
 To: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -69,11 +69,10 @@ Cc: Vincent Guittot <vincent.guittot@linaro.org>,
 	linux-fsdevel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
-	Qais Yousef <qyousef@layalina.io>,
-	Phil Auld <pauld@redhat.com>
-Subject: [PATCH v3 1/3] sched/rt: Clean up usage of rt_task()
-Date: Tue, 28 May 2024 00:45:06 +0100
-Message-Id: <20240527234508.1062360-2-qyousef@layalina.io>
+	Qais Yousef <qyousef@layalina.io>
+Subject: [PATCH v3 3/3] sched/rt, dl: Convert functions to return bool
+Date: Tue, 28 May 2024 00:45:08 +0100
+Message-Id: <20240527234508.1062360-4-qyousef@layalina.io>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527234508.1062360-1-qyousef@layalina.io>
 References: <20240527234508.1062360-1-qyousef@layalina.io>
@@ -85,349 +84,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-rt_task() checks if a task has RT priority. But depends on your
-dictionary, this could mean it belongs to RT class, or is a 'realtime'
-task, which includes RT and DL classes.
+{rt, realtime, dl}_{task, prio}() functions return value is actually
+a bool.  Convert their return type to reflect that.
 
-Since this has caused some confusion already on discussion [1], it
-seemed a clean up is due.
-
-I define the usage of rt_task() to be tasks that belong to RT class.
-Make sure that it returns true only for RT class and audit the users and
-replace the ones required the old behavior with the new realtime_task()
-which returns true for RT and DL classes. Introduce similar
-realtime_prio() to create similar distinction to rt_prio() and update
-the users that required the old behavior to use the new function.
-
-Move MAX_DL_PRIO to prio.h so it can be used in the new definitions.
-
-Document the functions to make it more obvious what is the difference
-between them. PI-boosted tasks is a factor that must be taken into
-account when choosing which function to use.
-
-Rename task_is_realtime() to realtime_task_policy() as the old name is
-confusing against the new realtime_task().
-
-No functional changes were intended.
-
-[1] https://lore.kernel.org/lkml/20240506100509.GL40213@noisy.programming.kicks-ass.net/
-
-Reviewed-by: Phil Auld <pauld@redhat.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Qais Yousef <qyousef@layalina.io>
 ---
- fs/bcachefs/six.c                 |  2 +-
- fs/select.c                       |  2 +-
- include/linux/ioprio.h            |  2 +-
- include/linux/sched/deadline.h    |  6 ++++--
- include/linux/sched/prio.h        |  1 +
- include/linux/sched/rt.h          | 27 ++++++++++++++++++++++++++-
- kernel/locking/rtmutex.c          |  4 ++--
- kernel/locking/rwsem.c            |  4 ++--
- kernel/locking/ww_mutex.h         |  2 +-
- kernel/sched/core.c               |  4 ++--
- kernel/sched/syscalls.c           |  2 +-
- kernel/time/hrtimer.c             |  6 +++---
- kernel/trace/trace_sched_wakeup.c |  2 +-
- mm/page-writeback.c               |  4 ++--
- mm/page_alloc.c                   |  2 +-
- 15 files changed, 49 insertions(+), 21 deletions(-)
+ include/linux/sched/deadline.h | 4 ++--
+ include/linux/sched/rt.h       | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/bcachefs/six.c b/fs/bcachefs/six.c
-index 3a494c5d1247..b30870bf7e4a 100644
---- a/fs/bcachefs/six.c
-+++ b/fs/bcachefs/six.c
-@@ -335,7 +335,7 @@ static inline bool six_owner_running(struct six_lock *lock)
- 	 */
- 	rcu_read_lock();
- 	struct task_struct *owner = READ_ONCE(lock->owner);
--	bool ret = owner ? owner_on_cpu(owner) : !rt_task(current);
-+	bool ret = owner ? owner_on_cpu(owner) : !realtime_task(current);
- 	rcu_read_unlock();
- 
- 	return ret;
-diff --git a/fs/select.c b/fs/select.c
-index 9515c3fa1a03..8d5c1419416c 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -82,7 +82,7 @@ u64 select_estimate_accuracy(struct timespec64 *tv)
- 	 * Realtime tasks get a slack of 0 for obvious reasons.
- 	 */
- 
--	if (rt_task(current))
-+	if (realtime_task(current))
- 		return 0;
- 
- 	ktime_get_ts64(&now);
-diff --git a/include/linux/ioprio.h b/include/linux/ioprio.h
-index db1249cd9692..75859b78d540 100644
---- a/include/linux/ioprio.h
-+++ b/include/linux/ioprio.h
-@@ -40,7 +40,7 @@ static inline int task_nice_ioclass(struct task_struct *task)
- {
- 	if (task->policy == SCHED_IDLE)
- 		return IOPRIO_CLASS_IDLE;
--	else if (task_is_realtime(task))
-+	else if (realtime_task_policy(task))
- 		return IOPRIO_CLASS_RT;
- 	else
- 		return IOPRIO_CLASS_BE;
 diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
-index df3aca89d4f5..5cb88b748ad6 100644
+index 5cb88b748ad6..87d2370dd3db 100644
 --- a/include/linux/sched/deadline.h
 +++ b/include/linux/sched/deadline.h
-@@ -10,8 +10,6 @@
+@@ -10,7 +10,7 @@
  
  #include <linux/sched.h>
  
--#define MAX_DL_PRIO		0
--
- static inline int dl_prio(int prio)
+-static inline int dl_prio(int prio)
++static inline bool dl_prio(int prio)
  {
  	if (unlikely(prio < MAX_DL_PRIO))
-@@ -19,6 +17,10 @@ static inline int dl_prio(int prio)
- 	return 0;
- }
- 
-+/*
-+ * Returns true if a task has a priority that belongs to DL class. PI-boosted
-+ * tasks will return true. Use dl_policy() to ignore PI-boosted tasks.
-+ */
- static inline int dl_task(struct task_struct *p)
+ 		return 1;
+@@ -21,7 +21,7 @@ static inline int dl_prio(int prio)
+  * Returns true if a task has a priority that belongs to DL class. PI-boosted
+  * tasks will return true. Use dl_policy() to ignore PI-boosted tasks.
+  */
+-static inline int dl_task(struct task_struct *p)
++static inline bool dl_task(struct task_struct *p)
  {
  	return dl_prio(p->prio);
-diff --git a/include/linux/sched/prio.h b/include/linux/sched/prio.h
-index ab83d85e1183..6ab43b4f72f9 100644
---- a/include/linux/sched/prio.h
-+++ b/include/linux/sched/prio.h
-@@ -14,6 +14,7 @@
-  */
- 
- #define MAX_RT_PRIO		100
-+#define MAX_DL_PRIO		0
- 
- #define MAX_PRIO		(MAX_RT_PRIO + NICE_WIDTH)
- #define DEFAULT_PRIO		(MAX_RT_PRIO + NICE_WIDTH / 2)
+ }
 diff --git a/include/linux/sched/rt.h b/include/linux/sched/rt.h
-index b2b9e6eb9683..a055dd68a77c 100644
+index a055dd68a77c..78da97cdac48 100644
 --- a/include/linux/sched/rt.h
 +++ b/include/linux/sched/rt.h
-@@ -7,18 +7,43 @@
+@@ -6,14 +6,14 @@
+ 
  struct task_struct;
  
- static inline int rt_prio(int prio)
-+{
-+	if (unlikely(prio < MAX_RT_PRIO && prio >= MAX_DL_PRIO))
-+		return 1;
-+	return 0;
-+}
-+
-+static inline int realtime_prio(int prio)
+-static inline int rt_prio(int prio)
++static inline bool rt_prio(int prio)
  {
- 	if (unlikely(prio < MAX_RT_PRIO))
+ 	if (unlikely(prio < MAX_RT_PRIO && prio >= MAX_DL_PRIO))
  		return 1;
  	return 0;
  }
  
-+/*
-+ * Returns true if a task has a priority that belongs to RT class. PI-boosted
-+ * tasks will return true. Use rt_policy() to ignore PI-boosted tasks.
-+ */
- static inline int rt_task(struct task_struct *p)
+-static inline int realtime_prio(int prio)
++static inline bool realtime_prio(int prio)
+ {
+ 	if (unlikely(prio < MAX_RT_PRIO))
+ 		return 1;
+@@ -24,7 +24,7 @@ static inline int realtime_prio(int prio)
+  * Returns true if a task has a priority that belongs to RT class. PI-boosted
+  * tasks will return true. Use rt_policy() to ignore PI-boosted tasks.
+  */
+-static inline int rt_task(struct task_struct *p)
++static inline bool rt_task(struct task_struct *p)
  {
  	return rt_prio(p->prio);
  }
- 
--static inline bool task_is_realtime(struct task_struct *tsk)
-+/*
-+ * Returns true if a task has a priority that belongs to RT or DL classes.
-+ * PI-boosted tasks will return true. Use realtime_task_policy() to ignore
-+ * PI-boosted tasks.
-+ */
-+static inline int realtime_task(struct task_struct *p)
-+{
-+	return realtime_prio(p->prio);
-+}
-+
-+/*
-+ * Returns true if a task has a policy that belongs to RT or DL classes.
-+ * PI-boosted tasks will return false.
-+ */
-+static inline bool realtime_task_policy(struct task_struct *tsk)
+@@ -34,7 +34,7 @@ static inline int rt_task(struct task_struct *p)
+  * PI-boosted tasks will return true. Use realtime_task_policy() to ignore
+  * PI-boosted tasks.
+  */
+-static inline int realtime_task(struct task_struct *p)
++static inline bool realtime_task(struct task_struct *p)
  {
- 	int policy = tsk->policy;
- 
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 88d08eeb8bc0..55c9dab37f33 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -347,7 +347,7 @@ static __always_inline int __waiter_prio(struct task_struct *task)
- {
- 	int prio = task->prio;
- 
--	if (!rt_prio(prio))
-+	if (!realtime_prio(prio))
- 		return DEFAULT_PRIO;
- 
- 	return prio;
-@@ -435,7 +435,7 @@ static inline bool rt_mutex_steal(struct rt_mutex_waiter *waiter,
- 	 * Note that RT tasks are excluded from same priority (lateral)
- 	 * steals to prevent the introduction of an unbounded latency.
- 	 */
--	if (rt_prio(waiter->tree.prio) || dl_prio(waiter->tree.prio))
-+	if (realtime_prio(waiter->tree.prio))
- 		return false;
- 
- 	return rt_waiter_node_equal(&waiter->tree, &top_waiter->tree);
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index c6d17aee4209..ad8d4438bc91 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -631,7 +631,7 @@ static inline bool rwsem_try_write_lock(struct rw_semaphore *sem,
- 			 * if it is an RT task or wait in the wait queue
- 			 * for too long.
- 			 */
--			if (has_handoff || (!rt_task(waiter->task) &&
-+			if (has_handoff || (!realtime_task(waiter->task) &&
- 					    !time_after(jiffies, waiter->timeout)))
- 				return false;
- 
-@@ -914,7 +914,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- 		if (owner_state != OWNER_WRITER) {
- 			if (need_resched())
- 				break;
--			if (rt_task(current) &&
-+			if (realtime_task(current) &&
- 			   (prev_owner_state != OWNER_WRITER))
- 				break;
- 		}
-diff --git a/kernel/locking/ww_mutex.h b/kernel/locking/ww_mutex.h
-index 3ad2cc4823e5..fa4b416a1f62 100644
---- a/kernel/locking/ww_mutex.h
-+++ b/kernel/locking/ww_mutex.h
-@@ -237,7 +237,7 @@ __ww_ctx_less(struct ww_acquire_ctx *a, struct ww_acquire_ctx *b)
- 	int a_prio = a->task->prio;
- 	int b_prio = b->task->prio;
- 
--	if (rt_prio(a_prio) || rt_prio(b_prio)) {
-+	if (realtime_prio(a_prio) || realtime_prio(b_prio)) {
- 
- 		if (a_prio > b_prio)
- 			return true;
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 5d861b59d737..22c7efed83b4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -163,7 +163,7 @@ static inline int __task_prio(const struct task_struct *p)
- 	if (p->sched_class == &stop_sched_class) /* trumps deadline */
- 		return -2;
- 
--	if (rt_prio(p->prio)) /* includes deadline */
-+	if (realtime_prio(p->prio)) /* includes deadline */
- 		return p->prio; /* [-1, 99] */
- 
- 	if (p->sched_class == &idle_sched_class)
-@@ -8522,7 +8522,7 @@ void normalize_rt_tasks(void)
- 		schedstat_set(p->stats.sleep_start, 0);
- 		schedstat_set(p->stats.block_start, 0);
- 
--		if (!dl_task(p) && !rt_task(p)) {
-+		if (!realtime_task(p)) {
- 			/*
- 			 * Renice negative nice level userspace
- 			 * tasks back to 0:
-diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-index ae1b42775ef9..6d60326d73e4 100644
---- a/kernel/sched/syscalls.c
-+++ b/kernel/sched/syscalls.c
-@@ -57,7 +57,7 @@ static int effective_prio(struct task_struct *p)
- 	 * keep the priority unchanged. Otherwise, update priority
- 	 * to the normal priority:
- 	 */
--	if (!rt_prio(p->prio))
-+	if (!realtime_prio(p->prio))
- 		return p->normal_prio;
- 	return p->prio;
+ 	return realtime_prio(p->prio);
  }
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 492c14aac642..89d4da59059d 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1973,7 +1973,7 @@ static void __hrtimer_init_sleeper(struct hrtimer_sleeper *sl,
- 	 * expiry.
- 	 */
- 	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
--		if (task_is_realtime(current) && !(mode & HRTIMER_MODE_SOFT))
-+		if (realtime_task_policy(current) && !(mode & HRTIMER_MODE_SOFT))
- 			mode |= HRTIMER_MODE_HARD;
- 	}
- 
-@@ -2073,7 +2073,7 @@ long hrtimer_nanosleep(ktime_t rqtp, const enum hrtimer_mode mode,
- 	u64 slack;
- 
- 	slack = current->timer_slack_ns;
--	if (rt_task(current))
-+	if (realtime_task(current))
- 		slack = 0;
- 
- 	hrtimer_init_sleeper_on_stack(&t, clockid, mode);
-@@ -2278,7 +2278,7 @@ schedule_hrtimeout_range_clock(ktime_t *expires, u64 delta,
- 	 * Override any slack passed by the user if under
- 	 * rt contraints.
- 	 */
--	if (rt_task(current))
-+	if (realtime_task(current))
- 		delta = 0;
- 
- 	hrtimer_init_sleeper_on_stack(&t, clock_id, mode);
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index 0469a04a355f..19d737742e29 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -545,7 +545,7 @@ probe_wakeup(void *ignore, struct task_struct *p)
- 	 *  - wakeup_dl handles tasks belonging to sched_dl class only.
- 	 */
- 	if (tracing_dl || (wakeup_dl && !dl_task(p)) ||
--	    (wakeup_rt && !dl_task(p) && !rt_task(p)) ||
-+	    (wakeup_rt && !realtime_task(p)) ||
- 	    (!dl_task(p) && (p->prio >= wakeup_prio || p->prio >= current->prio)))
- 		return;
- 
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 12c9297ed4a7..d9464af1d992 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -418,7 +418,7 @@ static void domain_dirty_limits(struct dirty_throttle_control *dtc)
- 	if (bg_thresh >= thresh)
- 		bg_thresh = thresh / 2;
- 	tsk = current;
--	if (rt_task(tsk)) {
-+	if (realtime_task(tsk)) {
- 		bg_thresh += bg_thresh / 4 + global_wb_domain.dirty_limit / 32;
- 		thresh += thresh / 4 + global_wb_domain.dirty_limit / 32;
- 	}
-@@ -468,7 +468,7 @@ static unsigned long node_dirty_limit(struct pglist_data *pgdat)
- 	else
- 		dirty = vm_dirty_ratio * node_memory / 100;
- 
--	if (rt_task(tsk))
-+	if (realtime_task(tsk))
- 		dirty += dirty / 4;
- 
- 	return dirty;
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 2e22ce5675ca..807dd6aa3edb 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3962,7 +3962,7 @@ gfp_to_alloc_flags(gfp_t gfp_mask, unsigned int order)
- 		 */
- 		if (alloc_flags & ALLOC_MIN_RESERVE)
- 			alloc_flags &= ~ALLOC_CPUSET;
--	} else if (unlikely(rt_task(current)) && in_task())
-+	} else if (unlikely(realtime_task(current)) && in_task())
- 		alloc_flags |= ALLOC_MIN_RESERVE;
- 
- 	alloc_flags = gfp_to_alloc_flags_cma(gfp_mask, alloc_flags);
 -- 
 2.34.1
 
