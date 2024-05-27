@@ -1,100 +1,156 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E7A15E5CC
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE8613A3E4;
+	Mon, 27 May 2024 13:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816598; cv=none; b=Pb9IDw4SX7QKzMfWeyNcsx+UVroIMcLeb3VOUWERZMh43X/wwuEyyPq7FwoiEhjSqk243UYaOB1QjD5Q0MVv9ozxcbn0DirbIVYAnCWd+sr/XT+S9tj3WrfuMNpBgyeXtp395V/uk7zDJF0/et0j88+RAS9/6l72CYqWtF93h/o=
+	t=1716816610; cv=none; b=cls5GPV9llZloz2Rlo2mKLSWzwuWDhN5CBi8I/9CJ/WVUXgHqnTX1jv2dapu9mPZby/G405pAb8IZ8Cg5Djl797lTCswC8WVi8JxITpwroUZjkpYpGKrZeUVwQpljB2T1mWt0nYei30O8M/3+CpXh/L9uG4YboqKdk53uYbl95E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816598; c=relaxed/simple;
-	bh=LWDWRx2hI9lviIuJZ1uHrq2MbJn9S35DQwXdtkJC0eg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=YDjVG+nVEupEvdKI/eEbRakv7csIEviqVYGcU3kns9o4KH5nJKJVmp1BOp2Numk/OiQaSv+J5NA8jyYfZ1VaAF8GJYWHzDsDQehXyYVrAAaafcqYsViytDphJAEwv6yO5NAxKG4CMNuzUzudxEX7Hv6/jHZASdCy/kAk5TGjpIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=PqcNajA2; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1716816610; c=relaxed/simple;
+	bh=YmojrlRDzHa9eeRvE+hFdRHXFKUIo3HD3FBR9dlhGEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wh9Nrh4lBye+HWTeD8Cg2bZkaTr/R/YNUupjjC5sEt+k5Cv3LdrpvOgM/ygDZ6xB9F0rGOCDqUOQyi1iZMe2sIlE/tZa+T+Ec447KUgpocLX/8K9+3qn+FdVvDrtwcu/OyjIY5utyJAzZExO0ZgqbS0Kfbu5EdmRA4C3tuuZ6tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=cirjdWAI; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="PqcNajA2"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-523b017a5c6so15748715e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716816595; x=1717421395; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LWDWRx2hI9lviIuJZ1uHrq2MbJn9S35DQwXdtkJC0eg=;
-        b=PqcNajA2iqlK3KMa9mVZYuvbDiRjnslRyUtPk8TZ+FMpEUMj0eH9wPhVEmRdbWy6qh
-         EyfmhY7EbxCqnSxsSd75mnYxhXxlljNpXhLwaVcPNoqGu2SqLSJwMrh5X4ZlPBhj7cjZ
-         +MziJcHgXm1SaR+znqudJ5yKxS8vqzaJpFuT+76C0B+UpeGyK1ieWaiK9prPvPcl0niJ
-         DyfRPbcz/iCWDIdsxYoF1babh993DbpccnvTA2cuJwqOHllqxoMZNPcfTdbxAxfFiDTs
-         7iQXFYdEuBV0X+j9mg5vgUeyixEO89TeISt6Zbp0y+uDXFJwH06J16HFAk1reyp41zc6
-         IcEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716816595; x=1717421395;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LWDWRx2hI9lviIuJZ1uHrq2MbJn9S35DQwXdtkJC0eg=;
-        b=PIh2PSBIkasyvuf1cuJ2nfCyBC1iTni05NsP3x1QIZvAeQh/K90XX/th7iP1Jp8auw
-         wlF+e07DWANa4eUpms2JgDJtteCuFIypi0P3AFryufFAA/khSKQMLwFAyYK4bMEJvlui
-         28cihc06IlUsR4+iWoJrUh36DhpzKG0InYj2mFrGaC2ez4ZFyAXUNdq4j85hqey5rkph
-         VboF2nyUN5+BxYkTCFY1/Mju3Ghsmbb7gu5Gx+DVC+eWD8JMJnv5lO5XM3ueN5WJrwbi
-         NI1FFZDjdS9M6FFWLNvOk+qseWZc1BbDp+KQ8jJi7PyQJoXLMKDG9zNuM5JMq0+jZ6jM
-         f5gw==
-X-Gm-Message-State: AOJu0YxPWCkQdGPL0sG7pFQOt/mCcAhMTO1qoqbcKu7WZTYfSk4Fu9iD
-	VIU6DnuhG1pGVD4BXYuyACl2dnDRHDgLA22S3xixJeZ4AevZQ10vsb5B12GLoxE=
-X-Google-Smtp-Source: AGHT+IEm2szHWhY0KHxywC8YT1CC8IO/Es5s4I3Im5uDaIxIxINP0zGehUOvCCebefhTuKU5HDEysA==
-X-Received: by 2002:a05:6512:1305:b0:529:b6d2:2550 with SMTP id 2adb3069b0e04-529b6d22971mr375297e87.36.1716816594877;
-        Mon, 27 May 2024 06:29:54 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:aa3:5c01:f57b:72f9:7de2:6b32])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c93a828sm493860566b.83.2024.05.27.06.29.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2024 06:29:54 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="cirjdWAI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gaotFr9Z3qhj+JKsAg1inJzMtusA7qZ6jQmUAEHIia4=; b=cirjdWAIYaq+0jwGFEqDYqDnfy
+	QAK1s0Vqmyf4wwn38WG/QltTYuX6Bse9wkkpj2GLCEhfD+QV7VYyE5KjJSJSKpxtSHv+uJlt6+EmR
+	QK5UvYTClcMBaEmf/Js1VzcmKXIuUHP73aNRsOiQszbikKKLL92AJZCao8abKZl76o9qxj0oqNqL+
+	tbySwWOQnbA66/XtuEuWxRH7atcz1nzKjwm5YUKMIw/6YVOtG9Yze9577aiOxRGyhKeU+FD8GRQp5
+	PRaP6UvLFY81CKdtGTr7uNfhdUttJOea54yLzuO4pyVed0WXDNsjiWPP01dsfAQwtmMZE74wLWE11
+	ysTlNN6Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33938)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1sBaQI-0003Zm-18;
+	Mon, 27 May 2024 14:29:58 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1sBaQK-0002ME-KF; Mon, 27 May 2024 14:30:00 +0100
+Date: Mon, 27 May 2024 14:30:00 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Ron Economos <re@w6rz.net>
+Cc: Guenter Roeck <linux@roeck-us.net>, regressions@lists.linux.dev,
+	linux-clk@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-riscv <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
+Message-ID: <ZlSK2CcbLaWFRpnR@shell.armlinux.org.uk>
+References: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
+ <ZlSIH1/etwPQe+bQ@shell.armlinux.org.uk>
+ <ZlSJkCtx6eYPCQwG@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH] w1: Fix number of bytes in error message
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <98f19584-9851-46f0-a9dc-8dbae1793b72@kernel.org>
-Date: Mon, 27 May 2024 15:29:43 +0200
-Cc: linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C3C8C8AE-C5F8-45CE-8319-0985A78DA91F@toblux.com>
-References: <20240513154354.185974-3-thorsten.blum@toblux.com>
- <98f19584-9851-46f0-a9dc-8dbae1793b72@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZlSJkCtx6eYPCQwG@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 27. May 2024, at 13:51, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On 13/05/2024 17:43, Thorsten Blum wrote:
->> Fix the number of bytes that failed to be allocated for a new w1 =
-device.
->>=20
->> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
->> ---
->> drivers/w1/w1_int.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/w1/w1_int.c b/drivers/w1/w1_int.c
->> index 3a71c5eb2f83..677e7167806c 100644
->> --- a/drivers/w1/w1_int.c
->> +++ b/drivers/w1/w1_int.c
->> @@ -34,7 +34,7 @@ static struct w1_master *w1_alloc_dev(u32 id, int =
-slave_count, int slave_ttl,
->> dev =3D kzalloc(sizeof(struct w1_master) + sizeof(struct =
-w1_bus_master), GFP_KERNEL);
->> if (!dev) {
->> pr_err("Failed to allocate %zd bytes for new w1 device.\n",
->> - sizeof(struct w1_master));
->> + sizeof(struct w1_master) + sizeof(struct w1_bus_master));
->=20
-> No, instead error message should be dropped. Core handles printing
-> memory allocation failures.
+On Mon, May 27, 2024 at 02:24:32PM +0100, Russell King (Oracle) wrote:
+> On Mon, May 27, 2024 at 02:18:23PM +0100, Russell King (Oracle) wrote:
+> > On Mon, May 27, 2024 at 03:45:15AM -0700, Ron Economos wrote:
+> > > On Fri, May 17, 2024 at 03:09:14PM -0700, Guenter Roeck wrote:
+> > > > Hi,
+> > > >
+> > > > On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
+> > > > > Report an error when an attempt to register a clkdev entry results in a
+> > > > > truncated string so the problem can be easily spotted.
+> > > > >
+> > > > > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
+> > > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > > > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> > > >
+> > > > With this patch in the mainline kernel, I get
+> > > >
+> > > > 10000000.clock-controller:corepll: device ID is greater than 24
+> > > > sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for
+> > > corepll: -12
+> > > > sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
+> > > > sifive-clk-prci 10000000.clock-controller: probe with driver
+> > > sifive-clk-prci failed with error -12
+> > > > ...
+> > > > platform 10060000.gpio: deferred probe pending: platform: supplier
+> > > 10000000.clock-controller not ready
+> > > > platform 10010000.serial: deferred probe pending: platform: supplier
+> > > 10000000.clock-controller not ready
+> > > > platform 10011000.serial: deferred probe pending: platform: supplier
+> > > 10000000.clock-controller not ready
+> > > > platform 10040000.spi: deferred probe pending: platform: supplier
+> > > 10000000.clock-controller not ready
+> > > > platform 10050000.spi: deferred probe pending: platform: supplier
+> > > 10000000.clock-controller not ready
+> > > > platform 10090000.ethernet: deferred probe pending: platform: supplier
+> > > 10000000.clock-controller not ready
+> > > >
+> > > > when trying to boot sifive_u in qemu.
+> > > >
+> > > > Apparently, "10000000.clock-controller" is too long. Any suggestion on
+> > > > how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
+> > > > for clk_hw_register_clkdev() is not or no longer a good idea.
+> > > > What else should be used instead ?
+> > > 
+> > > This issue causes a complete boot failure on real hardware (SiFive
+> > > Unmatched). The boot only gets as far as "Starting kernel ..." with no other
+> > > indication of what's going on.
+> > > 
+> > > Guenter's suggested patch solves the issue.
+> > > 
+> > > diff --git a/drivers/clk/sifive/sifive-prci.c
+> > > b/drivers/clk/sifive/sifive-prci.c
+> > > index 25b8e1a80ddc..20cc8f42d9eb 100644
+> > > --- a/drivers/clk/sifive/sifive-prci.c
+> > > +++ b/drivers/clk/sifive/sifive-prci.c
+> > > @@ -537,7 +537,7 @@ static int __prci_register_clocks(struct device *dev,
+> > > struct __prci_data *pd,
+> > >                          return r;
+> > >                  }
+> > > 
+> > > -               r = clk_hw_register_clkdev(&pic->hw, pic->name,
+> > > dev_name(dev));
+> > > +               r = clk_hw_register_clkdev(&pic->hw, pic->name, "prci");
+> > 
+> > How about just changing this to:
+> > 
+> > 		r = clk_hw_register(dev, &pic->hw);
+> > 
+> > ?
+> > 
+> > Since, if the device name is over-sized and thus truncated in the clk
+> > lookup array that clkdev maintains, *nothing* will be able to match
+> > the entry. Hence, I suspect all those clkdev registrations are
+> > completely redundant for this driver (and do nothing other than
+> > waste memory!)
+> 
+> Note that I mentioned *exactly* this point in my first reply to the
+> report of the regression in:
+> 
+> https://lore.kernel.org/r/ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk
+> 
+> "We need to think about (a) whether your use of clk_hw_register_clkdev()
+> is still appropriate, and (b) whether we need to increase the size of
+> the strings."
 
-Ok, I'll submit a v2 shortly.
+Note this will be my last reply on this today - it's Bank Holiday Monday
+in the UK and I have the right to take this time off from working on the
+kernel.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
