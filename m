@@ -1,40 +1,40 @@
-Received: from mail02.habana.ai (habanamailrelay.habana.ai [213.57.90.13])
+Received: from mail02.habana.ai (habanamailrelay02.habana.ai [62.90.112.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9A616C6B9
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.57.90.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D04316F0FE
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.90.112.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716822163; cv=none; b=lKqjxptl2pMcah4zVpmy848aVzlg5bXAFsu4Dfm4+5gePQPcBDI+qVxRho6nANQu+E+icbcn1vlWg4qLL4tFnd3ZUXs+9ov8fzTSpGjftvDlXsD/iV0Sonuf3DAwC3/hki2d4opLcHiAct+zdatLspnX+Fq9KQaniz3Qpd+EnTk=
+	t=1716822165; cv=none; b=kyJNI2Nvt2wwkSyyUjclLPqLbRqOkHwqGAEINC2bF7CXj/axtcGRmbK6rhS8tbY9ORFso98SBSRePAyyr5+HfJ3YTBLq3MvfMHSyv7S04AQz0UIzxMlXMACiugGYCEHo+RLTwrl7/iKp7P+pAHtQCGUeu4vJaeOrCkG4X+B/P+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716822163; c=relaxed/simple;
-	bh=02pFJ4y+owr0x7FFw2etdAv6pcbCk5FXca4Qfvfnw+g=;
+	s=arc-20240116; t=1716822165; c=relaxed/simple;
+	bh=3+YL0eQjbechtjlZb3uB0GxuQXjYmHn+ITIAg1aUPEQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uVgDkNFan/u/r4momRBBiYmaYPGXKKjJxemzJq5qOyQUsnFJ0xq2OuKYUSiolZj+W9D153RE6/yL9O1xu9vXmKG0dvIHdTFQGgaxvYVmPiyzyE8cwrhOhy9z7vo+7WICo4bRzBmZVBOxUp4yBL+qXZcB4zyltvcN6tPJKFrILjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=TKWMqcx5; arc=none smtp.client-ip=213.57.90.13
+	 MIME-Version; b=FJgHNqhSIQg5Oh8yyCUWYvkq25cYpIdejOmGbcPZI+MUfSMz4Yk2OoBhyh+gf3cj1yiHt+9xswoAT9bPDGm/uGdFgaukuj65vDq+5ZS2WJXtGIhLtbX+53uUcBtObbCBKhkrqsJ0IzSYSTLh6v3bWpuCw5kshFv9iSds+COq6ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=C9DfpX3s; arc=none smtp.client-ip=62.90.112.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="TKWMqcx5"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="C9DfpX3s"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1716822162; bh=02pFJ4y+owr0x7FFw2etdAv6pcbCk5FXca4Qfvfnw+g=;
+	t=1716822151; bh=3+YL0eQjbechtjlZb3uB0GxuQXjYmHn+ITIAg1aUPEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TKWMqcx5DTK7U7vLjrOjrJjsNrRegt9cGkaRBW7kWR57UXGu1LfUgeQqhqZKbdm5d
-	 ERZbDKCjJhlNnvDHsW6keNX06sjUqufeJRPw91ZE2k8MfPKSoAN4hGen6dGe8SI4IY
-	 T8fc1Ub7cDSlNBXLSdJYBE7a47OQarX7w7Bx7PH8az86YG2BY2ZYF2XPkzeQFMNfjn
-	 PE3Gc8FoLNFwGNyKCIQZh5fZtoE6RDGt4r1kCDoU/dqTd+hDJOcqe4nyHX6B1UvBWz
-	 caAv4+Dr9M2TCIA4178jBoorl5xabZd8q40U7elnDjVDIJLTF0rsvPX52dkdYy1E7T
-	 HSftQMRlPiMCw==
+	b=C9DfpX3sPr8XuD5qvYfKgzv7yT1uDuxthmI+jZAwXvStGpd+6Ob4hp0jgI6kzq9y+
+	 4raN1k3zAFntcTcuomUAXid5l18NuFDS8xQQiaRKEr/JCse6Fxel7ZjUQYeK+itxUS
+	 w2RvauWjnaO9JIM7nJmM3cjHs6u7ikKo2au/Q1X2VR02OdQZNqBROrtXLN+EP9VHWk
+	 eNXOolsXpmvXpYofsL6Xdg/Wv3ZdZlhQnJrGn9b7VahTaFxxpU0BvJQpC9dWwQ4Dcv
+	 G1ywwBF61DXnsQr0kC4v8QUasQDKODyHA8Gc+k30jT/Z7zXPxGQy8lek1g6Cu7Atsv
+	 M8wbqUXKDajcw==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RF2PiY1954007;
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 44RF2PiV1954007;
 	Mon, 27 May 2024 18:02:26 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Farah Kassabri <fkassabri@habana.ai>
-Subject: [PATCH 7/8] accel/habanalabs: change the heartbeat scheduling point
-Date: Mon, 27 May 2024 18:02:23 +0300
-Message-Id: <20240527150224.1953969-7-obitton@habana.ai>
+Cc: Vitaly Margolin <vmargolin@habana.ai>
+Subject: [PATCH 4/8] accel/habanalabs: add cpld ts cpld_timestamp cpucp
+Date: Mon, 27 May 2024 18:02:20 +0300
+Message-Id: <20240527150224.1953969-4-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240527150224.1953969-1-obitton@habana.ai>
 References: <20240527150224.1953969-1-obitton@habana.ai>
@@ -46,125 +46,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Farah Kassabri <fkassabri@habana.ai>
+From: Vitaly Margolin <vmargolin@habana.ai>
 
-Currently we schedule the heartbeat thread at late init, only then
-we set the INTS_REGISTER packet which enables events to be received
-from firmware.
+Add cpld_timestamp field to cpucp_info structure and return cpld
+timestamp as part of cpld version
 
-Init may take some time and we want to give firmware 2 full cycles of
-heartbeat thread after it received INTS_REGISTER.
-
-The patch will move the heartbeat thread scheduling to be after driver
-is done with all initializations.
-
-Signed-off-by: Farah Kassabri <fkassabri@habana.ai>
+Signed-off-by: Vitaly Margolin <vmargolin@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- drivers/accel/habanalabs/common/device.c | 54 +++++++++++++++---------
- 1 file changed, 33 insertions(+), 21 deletions(-)
+ drivers/accel/habanalabs/common/sysfs.c | 5 +++--
+ include/linux/habanalabs/cpucp_if.h     | 3 ++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
-index 31daa9184537..5ca7014def00 100644
---- a/drivers/accel/habanalabs/common/device.c
-+++ b/drivers/accel/habanalabs/common/device.c
-@@ -1150,23 +1150,6 @@ static int device_late_init(struct hl_device *hdev)
- 	}
- 
- 	hdev->high_pll = hdev->asic_prop.high_pll;
--
--	if (hdev->heartbeat) {
--		hdev->heartbeat_debug_info.heartbeat_event_counter = 0;
--
--		/*
--		 * Before scheduling the heartbeat driver will check if eq event has received.
--		 * for the first schedule we need to set the indication as true then for the next
--		 * one this indication will be true only if eq event was sent by FW.
--		 */
--		hdev->eq_heartbeat_received = true;
--
--		INIT_DELAYED_WORK(&hdev->work_heartbeat, hl_device_heartbeat);
--
--		schedule_delayed_work(&hdev->work_heartbeat,
--				usecs_to_jiffies(HL_HEARTBEAT_PER_USEC));
--	}
--
- 	hdev->late_init_done = true;
- 
- 	return 0;
-@@ -1183,9 +1166,6 @@ static void device_late_fini(struct hl_device *hdev)
- 	if (!hdev->late_init_done)
- 		return;
- 
--	if (hdev->heartbeat)
--		cancel_delayed_work_sync(&hdev->work_heartbeat);
--
- 	if (hdev->asic_funcs->late_fini)
- 		hdev->asic_funcs->late_fini(hdev);
- 
-@@ -1286,8 +1266,12 @@ static void hl_abort_waiting_for_completions(struct hl_device *hdev)
- static void cleanup_resources(struct hl_device *hdev, bool hard_reset, bool fw_reset,
- 				bool skip_wq_flush)
+diff --git a/drivers/accel/habanalabs/common/sysfs.c b/drivers/accel/habanalabs/common/sysfs.c
+index b6c63f8a0c1b..e9f8ccc0bbf9 100644
+--- a/drivers/accel/habanalabs/common/sysfs.c
++++ b/drivers/accel/habanalabs/common/sysfs.c
+@@ -142,8 +142,9 @@ static ssize_t cpld_ver_show(struct device *dev, struct device_attribute *attr,
  {
--	if (hard_reset)
-+	if (hard_reset) {
-+		if (hdev->heartbeat)
-+			cancel_delayed_work_sync(&hdev->work_heartbeat);
-+
- 		device_late_fini(hdev);
-+	}
+ 	struct hl_device *hdev = dev_get_drvdata(dev);
  
- 	/*
- 	 * Halt the engines and disable interrupts so we won't get any more
-@@ -1565,6 +1549,26 @@ static void handle_reset_trigger(struct hl_device *hdev, u32 flags)
- 	}
+-	return sprintf(buf, "0x%08x\n",
+-			le32_to_cpu(hdev->asic_prop.cpucp_info.cpld_version));
++	return sprintf(buf, "0x%08x%08x\n",
++		le32_to_cpu(hdev->asic_prop.cpucp_info.cpld_timestamp),
++		le32_to_cpu(hdev->asic_prop.cpucp_info.cpld_version));
  }
  
-+static inline void device_heartbeat_schedule(struct hl_device *hdev)
-+{
-+	if (!hdev->heartbeat)
-+		return;
-+
-+	hdev->heartbeat_debug_info.heartbeat_event_counter = 0;
-+
-+	/*
-+	 * Before scheduling the heartbeat driver will check if eq event has received.
-+	 * for the first schedule we need to set the indication as true then for the next
-+	 * one this indication will be true only if eq event was sent by FW.
-+	 */
-+	hdev->eq_heartbeat_received = true;
-+
-+	INIT_DELAYED_WORK(&hdev->work_heartbeat, hl_device_heartbeat);
-+
-+	schedule_delayed_work(&hdev->work_heartbeat,
-+			usecs_to_jiffies(HL_HEARTBEAT_PER_USEC));
-+}
-+
- /*
-  * hl_device_reset - reset the device
-  *
-@@ -1934,6 +1938,8 @@ int hl_device_reset(struct hl_device *hdev, u32 flags)
- 	if (hard_reset) {
- 		hdev->reset_info.hard_reset_cnt++;
- 
-+		device_heartbeat_schedule(hdev);
-+
- 		/* After reset is done, we are ready to receive events from
- 		 * the F/W. We can't do it before because we will ignore events
- 		 * and if those events are fatal, we won't know about it and
-@@ -2368,6 +2374,12 @@ int hl_device_init(struct hl_device *hdev)
- 		goto out_disabled;
- 	}
- 
-+	/* Scheduling the EQ heartbeat thread must come after driver is done with all
-+	 * initializations, as we want to make sure the FW gets enough time to be prepared
-+	 * to respond to heartbeat packets.
-+	 */
-+	device_heartbeat_schedule(hdev);
-+
- 	dev_notice(hdev->dev,
- 		"Successfully added device %s to habanalabs driver\n",
- 		dev_name(&(hdev)->pdev->dev));
+ static ssize_t cpucp_kernel_ver_show(struct device *dev,
+diff --git a/include/linux/habanalabs/cpucp_if.h b/include/linux/habanalabs/cpucp_if.h
+index 0913415243e8..1ed17887f1a8 100644
+--- a/include/linux/habanalabs/cpucp_if.h
++++ b/include/linux/habanalabs/cpucp_if.h
+@@ -1146,6 +1146,7 @@ struct cpucp_security_info {
+  *                (0 = fully functional, 1 = lower-half is not functional,
+  *                 2 = upper-half is not functional)
+  * @sec_info: security information
++ * @cpld_timestamp: CPLD programmed F/W timestamp.
+  * @pll_map: Bit map of supported PLLs for current ASIC version.
+  * @mme_binning_mask: MME binning mask,
+  *                    bits [0:6]   <==> dcore0 mme fma
+@@ -1193,7 +1194,7 @@ struct cpucp_info {
+ 	__u8 substrate_version;
+ 	__u8 eq_health_check_supported;
+ 	struct cpucp_security_info sec_info;
+-	__le32 reserved2;
++	__le32 cpld_timestamp;
+ 	__u8 pll_map[PLL_MAP_LEN];
+ 	__le64 mme_binning_mask;
+ 	__u8 fw_os_version[VERSION_MAX_LEN];
 -- 
 2.34.1
 
