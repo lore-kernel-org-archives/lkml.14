@@ -1,124 +1,82 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198DF1CF96
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FF51754B;
+	Mon, 27 May 2024 06:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716792781; cv=none; b=CrntGjtRQ6mFOM+iB3vmVOeifKipBl6A2WqD0c8lfk93oGB+WQMzNnNNyV3Y7HFKSTWkQObV3Jwiw6wqYLEyZanpY3CtTJO/imK+cwY+y+rhw8McLzfnoLN9UuFcWtTduVBKmjU2/IXPQvwXnzKPX35uggUGBtJ6Rw0b3WNYQkE=
+	t=1716792849; cv=none; b=qAXkp0YZzStJdsDKz6Q6rZK7PQPy8kuMge4zxr/sM9StPqGg393jhgG6Z/E2La10o5XWSLmSYAVQAQ07rk4UPYqdycmorTbGebpRiaACAM8wrwhgwm//uTyJg3lmdRdpjxkMb/O182R1RzGWfuNhqFevpP9I4My+hLE/cgkWdbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716792781; c=relaxed/simple;
-	bh=LQt9dThnSzo/E4SnKuEuBz+EbP/P0jrW+Y4I8XPbjzg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Yba56rGHGppB9qX0K1hrsMEovgQ/PtNjB/mbVYw7EdjPKW7JNjeuW6as/F/ElEhlwKZ+hE+ljS6RAlwRWH6y8Ps4YxWIGOkyED98AeTnFXnMKc16lup14TMTxE8elVvmHXfBQyA9ONrr9p0vD4f8rP00ehVccoRLDH5ulOvHrDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X+p19uTt; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X+p19uTt"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57857e0f45dso2697102a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 23:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716792778; x=1717397578; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Is1GYzjcsTC+5qtL51hTLZtB96PeUDAxukDQor2tqyA=;
-        b=X+p19uTt650EPosEfqgIsNiv+75tr3rIsCjWlwGF5K8a+PlIVtZQOsqyMuh7lC+6Ye
-         bwIk0tfEiByA1/HGWInBavKtXsZjZQmDMEPwTdNAHz6FXJ5SdJLQT/MeRaqwsATJb2Ez
-         KtYg3XGfmGGS3mUwM1cmXFheTRQ21E/Y6YizVT7/eMLgZu5jeEwRi6Rso6DnfuDuDuOA
-         xqMI6YD1qpeaxJvYTeKaPZnHOOY9BydnpexQydNE0wyf918RPb1aw7aaBtnSUqopj9/D
-         2U5FbjqJB2Pp3VLYt+iPHjZR7gKLeNyg9orQqOpLmvsIBknILoFHuvXSfIQ7d1ZzrAli
-         XYOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716792778; x=1717397578;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Is1GYzjcsTC+5qtL51hTLZtB96PeUDAxukDQor2tqyA=;
-        b=a4Y5RT/dePAGBPKr0mA4Zbu1JQ0Z2xDGPbjnB9x37msr+IqJdbB7x9kj3/lUfKiVIc
-         JsuY48KaQf6UW2EWDy8CZNsQX4tZimK7VBcyr474NmTdyNyXRo5Ei537Spl6QKQ1Ut/c
-         8iQUapRLNO3XZIM1A6ayudw0Gfu7TrvGH83t/sOsVX6MuRe/pipRUYHkuXzEhzUJC6tG
-         Tur0ZSe+aU3T0Mq7vgCkoqDWU59ppwPRqPNgI5z9UgYez4lBTgglGzCaqUBuP7T8Qxez
-         P9qqlAZrei+8ZbojyJP8DvAnBK4L+jPd5Uq8qHRywcuuOVTt/XGeWCooIkJlG8+RSQ7b
-         c9Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCWSgdfbiJTfShKPxsi2SIOiWZeUc0Kr178wUre4+lK4Fss6QOX4e1yvhKOxA4zO6HOCy+DlHGpzv5PwTW2SgV0Qf+QUXqvi6EFu+Tzn
-X-Gm-Message-State: AOJu0YxbK54IdME+5pR1+GMhj2t/tBGLi9S0VnNE8TiozNFiqU7jX9Q/
-	pmXZWaFacbugxBqQBciS4xDdaQ+9f+N0lAWO6nzzBpjeWY9hL8OEbWbLp1uO1qM=
-X-Google-Smtp-Source: AGHT+IHaeStXfSqqOyUz+Mi/3wHy2ylA84orYV5PCgQVyCYO3ytJiWkgkxQsbxtOs6DBUfK4Ifynzg==
-X-Received: by 2002:a50:d4ce:0:b0:572:8aab:4420 with SMTP id 4fb4d7f45d1cf-57851aa84cemr5690278a12.39.1716792778316;
-        Sun, 26 May 2024 23:52:58 -0700 (PDT)
-Received: from [127.0.1.1] ([188.27.161.69])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-578524bae20sm5345800a12.90.2024.05.26.23.52.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 May 2024 23:52:57 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Mon, 27 May 2024 09:52:51 +0300
-Subject: [PATCH] dt-bindings: thermal: qcom-tsens: Document the X1E80100
- Temperature Sensor
+	s=arc-20240116; t=1716792849; c=relaxed/simple;
+	bh=wEmRLmU/0I4+xSi2a6MkXlw+Hd17sMoSYos2JLMQvCA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yui+TBmB9uoc5ISY9nNaNrEPMdGKzheFztdcp5WkMxo+KqsbVTrCeDt5hziU2E44MSKChhf2Vh5wAHX66JcJDl2wSd3JfyQUD7vg1XcCXlijRt/cyueKYhCMNagMkAqxlKSvMPiLkRnkjyYK00qwcZmv2/N2Rtly2JTV4JAbNEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D31F1FF80B;
+	Mon, 27 May 2024 06:53:56 +0000 (UTC)
+Message-ID: <a00942ea-d208-475d-b595-922d8432ddc6@ghiti.fr>
+Date: Mon, 27 May 2024 08:53:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: enable HAVE_ARCH_HUGE_VMAP for XIP kernel
+Content-Language: en-US
+To: Nam Cao <namcao@linutronix.de>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20240526110104.470429-1-namcao@linutronix.de>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240526110104.470429-1-namcao@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240527-x1e80100-bindings-thermal-qcom-tsens-v1-1-0f50f58253e1@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAMItVGYC/x3NSwrDMAwA0asErSuQhUs/VyldKLaaCBqntUIIh
- Ny9psu3mdnBtZo63Lsdqq7mNpeGcOogjVIGRcvNwMSRzsy4Bb1SIMLeSrYyOC6j1kne+E3zhIt
- rcRTh3N8oRblEaKlP1Zdt/83jeRw/rbZVmHYAAAA=
-To: Amit Kucheria <amitk@kernel.org>, 
- Thara Gopinath <thara.gopinath@gmail.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=990; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=LQt9dThnSzo/E4SnKuEuBz+EbP/P0jrW+Y4I8XPbjzg=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmVC3E5P09MQRe2+lB4aZi9HE/8prDG2IC1HVm8
- slFb9jEvYeJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZlQtxAAKCRAbX0TJAJUV
- VmLND/0XE0UA+5AAbC2jndetnZAvUOZlq4sUG9jRlVtfSlZ65DYvoezr47+mwJnqrFDUqNMrOJ7
- OF85YBxZk/GWsSNh0+GG40cw9dJ8Y+1w5g7sehd977oO49Kvah4RdcMRCXdm09EAkJ1g6Eds00F
- oq4jPyQf0iV9H/wF7Byn4dB7s7kybyI7HR9wqOh6yv8+k3rjBW8TtA3thaTbxI3EDCv2deYZ6QT
- /e08tmPLR1p1Ti8iQ7p+7emqoDDqVqGrWFb7jpJyzqa+vMISyTm05HsxRS+2PIUZO2M9VOSRf22
- PaoQwuoCJ41ixi8ZI5N/FGYk6/WewteT2DwRtdRk0OcwYcgYIvRyf3uxqCszPRy0pFOHc/IkQg+
- xaiQDpnl+Ex6scwnFI/jIBPQisvflH8nLFIlX3fGfJvetIyqX7qPOfTmpcrvLKbWJ0H/MwdDaAq
- l88NVZH3bychxCkYhsyLMFOzPmWpJLc7XV51OfMm0sOJsM2HYMlMckWWg7IVFXfifsiUTlulMV4
- N/RVoBuvbsvcZdSH68lDn2X/ZCa78R6PVZ3lIjgmT0QnNgDDfx1NbGCXW6mjTzfCOK52MpCtMYI
- NFmadgtIhcLqQSeQzmlWX1Swx/mWY5zrMXTid1zSEdH0vaVvEK6VOpoJX6mOVmMgqSOO6qDGqoa
- LcD9icJ39DkqZ7w==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+X-GND-Sasl: alex@ghiti.fr
 
-Document the Temperature Sensor (TSENS) on the X1E80100 Platform.
+Hi Nam,
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
- 1 file changed, 1 insertion(+)
+On 26/05/2024 13:01, Nam Cao wrote:
+> HAVE_ARCH_HUGE_VMAP also works on XIP kernel, so remove its dependency on
+> !XIP_KERNEL.
+>
+> This also fixes a boot problem for XIP kernel introduced by the commit in
+> "Fixes:". This commit used huge page mapping for vmemmap, but huge page
+> vmap was not enabled for XIP kernel.
+>
+> Fixes: ff172d4818ad ("riscv: Use hugepage mappings for vmemmap")
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Cc: <stable@vger.kernel.org>
+> ---
+> This patch replaces:
+> https://patchwork.kernel.org/project/linux-riscv/patch/20240508173116.2866192-1-namcao@linutronix.de/
+>
+>   arch/riscv/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index b94176e25be1..0525ee2d63c7 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -106,7 +106,7 @@ config RISCV
+>   	select HAS_IOPORT if MMU
+>   	select HAVE_ARCH_AUDITSYSCALL
+>   	select HAVE_ARCH_HUGE_VMALLOC if HAVE_ARCH_HUGE_VMAP
+> -	select HAVE_ARCH_HUGE_VMAP if MMU && 64BIT && !XIP_KERNEL
+> +	select HAVE_ARCH_HUGE_VMAP if MMU && 64BIT
+>   	select HAVE_ARCH_JUMP_LABEL if !XIP_KERNEL
+>   	select HAVE_ARCH_JUMP_LABEL_RELATIVE if !XIP_KERNEL
+>   	select HAVE_ARCH_KASAN if MMU && 64BIT
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-index 99d9c526c0b6..ac54ed604b74 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-@@ -67,6 +67,7 @@ properties:
-               - qcom,sm8450-tsens
-               - qcom,sm8550-tsens
-               - qcom,sm8650-tsens
-+              - qcom,x1e80100-tsens
-           - const: qcom,tsens-v2
- 
-       - description: v2 of TSENS with combined interrupt
 
----
-base-commit: 3689b0ef08b70e4e03b82ebd37730a03a672853a
-change-id: 20240522-x1e80100-bindings-thermal-qcom-tsens-aa2db90c4a74
+Great, thanks!
 
-Best regards,
--- 
-Abel Vesa <abel.vesa@linaro.org>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Alex
 
