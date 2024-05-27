@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E5379F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E2D79F2;
 	Mon, 27 May 2024 03:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716779226; cv=none; b=MhZS4zgcJfmQsrD2VWDrOuldlqRRcVrQ2kKeHiiTNMD1gU3VZZZsF+d51/r9SeE5lyM0FebCmnCOm1LWQP6SD7OeMKQsUxAc4hF9Ab9qEY32VHx6Go2fcrLbf+JIiBeSFuOr3PDGEMo8v6vBYmnEwa2UDKm6Z3T3kGJK2lOTscs=
+	t=1716779226; cv=none; b=S0pmqZf2p7ZLTOUGs5/Nm+8GrKc+4SVWEb1Nm8J2tg4l6TK/3gawVWzhHJpTGKE+Bpd64DY27krnRg/vVIewtKZT2RMMz3DugGcjkgL5aB5ttu0vJclFBrdvxoFByQk2DFdfcWMsoFfTIM1OltB8+hTTbjkMojxc8qgxxTeU58Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716779226; c=relaxed/simple;
-	bh=mkomIXN6pzO9hx2rumxV0LvfWlO256pCZqTQ8w4ZMdI=;
+	bh=V0pcoxiScDQe0zi5pcugxdyFa3kNMUT0YjglHWD7vvA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=m5iE5OnWyPDkHFWuAj8Tro3cwocbPa+82mXB/uYiwCgoZVNUXK/H4DlZPC6X+PM2Fim2TxtaHDQPq/1VVEDjYSrKA6pk6z1j+95RX4GHWQ+gHozwqyNTgWduBixLsjHdEEop7HQrurOTQL8ZKzU1UigXzvbw4N0VjUxppcAa0XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1MuILI/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=D+2XwrHc9/Y9lXOCq94spHChGJgtPiKClMQ4GELig7JeoSRBS0hURUbrInepFjAi9tBncvzvn1hpURzf0qc/vde9I4EID1WrA3GmpY5dGRcTn8+hxjwgzhzJFm3BfG6EkAsxExX9vLJzE7KJsT8cOK3t3/b/3Vb51XkN844PfF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTlhTC7O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1MuILI/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 09702C4AF0B;
-	Mon, 27 May 2024 03:07:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTlhTC7O"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F3F93C4AF08;
+	Mon, 27 May 2024 03:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716779226;
-	bh=mkomIXN6pzO9hx2rumxV0LvfWlO256pCZqTQ8w4ZMdI=;
+	bh=V0pcoxiScDQe0zi5pcugxdyFa3kNMUT0YjglHWD7vvA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=s1MuILI/d20Z7r2wAbDepbguQer2hhl+fXrJiYW9S6ABVevaZXgV70GpB5Uw9nYIc
-	 7DtuE7pWhbvOBAOugNN9HwSCayO4A3Kt1aak+xsBhM9gd+DeQQOZUgWw+rrEsoRrQi
-	 9d2G+1vAKCI5New51Elxi/1RRsYfReHmLrVesrlmVWxSi5kIFRIzGT3/a917Ugnz9V
-	 FfqVpIjt/lvJeVRRRbwxmBWOybeykpJiN5sOUFvmsDYKgKPdjVAwNjvb5mFlKFiFR6
-	 O24k9xUlVXXvlQtEplj11v43p5mPiDoq/sK0CDDGL3WnoG3HG4AQEOOQjXw9rjO/fv
-	 1/9Xy53k8eSpg==
+	b=sTlhTC7OsK22UDnsIs9n0/tAU9EjpKKUDsg8PQl7qbEvR41N1JDkNDDxYEEcR2nJ0
+	 BQveAiPLIg59AY9GnhoZy1Wdwgc8aEv+8BGhDv18l45JgLlySi2VgHp9pAr8CRqDBh
+	 9mktd0xh8O4m/02wsj11btazwYnZCMkPdtTFjrXI75ocBslFULWD3D59vy5XTNrS4K
+	 LVWI5xacBLKo7TkFc0wdSnaCcYac8N/SQFaiVZacJNohMkb2OchAU1J8l/wIDUmU2m
+	 k7fVoEsdOpVnnfouWqnPEH/4WcQEcW93l5cyciuGGHti0vfBqwYy0huealRqI4L672
+	 kL4iz1cyMR9vg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ECA59D4F15D;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E35A3DE4000;
 	Mon, 27 May 2024 03:07:05 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,37 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] Input: cros_ec_keyb - Remove an unused field in struct
- cros_ec_keyb
+Subject: Re: [PATCH v2] drm/mediatek/dp: fix mtk_dp_aux_transfer return value
 From: patchwork-bot+chrome-platform@kernel.org
 Message-Id: 
- <171677922596.1901.2861363430804951826.git-patchwork-notify@kernel.org>
+ <171677922592.1901.1875168136657939730.git-patchwork-notify@kernel.org>
 Date: Mon, 27 May 2024 03:07:05 +0000
-References: <6bab1449c01c4537aa2d9cb4481e1d5da8aa2389.1714546173.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <6bab1449c01c4537aa2d9cb4481e1d5da8aa2389.1714546173.git.christophe.jaillet@wanadoo.fr>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: dmitry.torokhov@gmail.com, bleung@chromium.org, groeck@chromium.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-input@vger.kernel.org, chrome-platform@lists.linux.dev
+References: <20240417103819.990512-1-wmacek@chromium.org>
+In-Reply-To: <20240417103819.990512-1-wmacek@chromium.org>
+To: Wojciech Macek <wmacek@chromium.org>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com,
+ daniel@ffwll.ch, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, chrome-platform@lists.linux.dev
 
 Hello:
 
 This patch was applied to chrome-platform/linux.git (for-next)
-by Dmitry Torokhov <dmitry.torokhov@gmail.com>:
+by Chun-Kuang Hu <chunkuang.hu@kernel.org>:
 
-On Wed,  1 May 2024 08:49:47 +0200 you wrote:
-> In "struct cros_ec_keyb", the 'keymap_data' field is unused.
-> Remove it.
-> 
-> Found with cppcheck, unusedStructMember.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Wed, 17 Apr 2024 10:38:19 +0000 you wrote:
+> In case there is no DP device attached to the port the
+> transfer function should return IO error, similar to what
+> other drivers do.
+> In case EAGAIN is returned then any read from /dev/drm_dp_aux
+> device ends up in an infinite loop as the upper layers
+> constantly repeats the transfer request.
 > 
 > [...]
 
 Here is the summary with links:
-  - Input: cros_ec_keyb - Remove an unused field in struct cros_ec_keyb
-    https://git.kernel.org/chrome-platform/c/5128de84d8fc
+  - [v2] drm/mediatek/dp: fix mtk_dp_aux_transfer return value
+    https://git.kernel.org/chrome-platform/c/8431fff9e0f3
 
 You are awesome, thank you!
 -- 
