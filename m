@@ -1,137 +1,91 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BF0155C96;
-	Mon, 27 May 2024 16:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4F017E906;
+	Mon, 27 May 2024 16:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716828061; cv=none; b=r0Vn6YVBqVpGqG/rC/8Zbgd/a6jTnFm9JmAuL0NE2e3+P3go12F7Gno7WasfUbVHk+CyccKly4nWuqje3jrT33HG3lMZUk7A+KByeBmE3ho2e16fgYNKncOLGxigklFUnXmfpeuVuWanudv3Q9mVAlsmlGa1YHPZ0dnQf7RQZs0=
+	t=1716828084; cv=none; b=VFuJfrRu6n9hBHIb6szkfRzG+Pp75RE+bDPluks7e5Elowge8prN8xqSsAp/7eK+/uKczIWml2UOxTXk6dDR5BLIMw/MglIbB2f2n+YnXxlmNu4J/TgbQ9jpOHy0I9AiczPzMG3iRW+HgiDCdwIQ23gPnyWXrzaWpTOxpZD4moY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716828061; c=relaxed/simple;
-	bh=dfkfDaQUMpGwTtp2bomb4Iu2aKjA9XikV5FqpfBCsSE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q3kUf/kz+mNl/MIbRSBqVmjhMaoZmb5KsnvHlRFo/YKsh5gfCZAiAECwTxoa1vngR/1eEoTL1XT3Q5yRsxfaDJ5LxZj4NOj26oCYbTBnFv/9y8EXcagtQr9tNVc17Wdlb+fqwwf3a2/tcx2jeJTZlVwFFRthah+kVPZ+m+SKHYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dzldhrqR; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716828084; c=relaxed/simple;
+	bh=VP+qsmC54b19MmboZBNiJ4/Iw5W2tqYz1l0e+9i3aFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f890NI8okTNC5/GWnWlchgHUOn4DMvN/P5hnMi7WDGD/JFa20H3LEaBM7uBqMab9TxvkNam2X9r2tlqfb34SxGFSGp74XuwPUOHTQ8oSj3ZRFsf9r6N7i8vrvRlLVVvh95BYMzP1rfb10CA1r4hML73i440luRTtDflQHOH8SAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnkOyx5A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzldhrqR"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e964acff1aso35515841fa.0;
-        Mon, 27 May 2024 09:40:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716828058; x=1717432858; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zXhZGnNO1k1I5G/0gxKase3G2b7JBGSEOc1kPGMl+NM=;
-        b=dzldhrqRlF2YGq29PgfboobrpPcgJhFZ/nm16yLreVDOdZwXqkm2h21vTuLDBsQQNj
-         dHciV2SKF5vFhkzlECH8CxHnTnT6QFAd3AEydnj7YtGGQbLcU/HCTBTJZlTIDZ3jFF8k
-         JYkjWwMhH6CKmC+/0r0v/xxbWRGrT2uWvT3W3yMO3Xv9rE9+4bkFZxV5Ha4Y8D2wGdRh
-         bHsz1s6JRmcloxtE7/ZrjvWG2xW7ApsYS1Es16FQcZsM7o6ck6YSnnikFB0wpsVy4/o1
-         ISNK0TUsyyuQS7BvaTtDyho39Y8MD6ss35akWSLUaLjDEOuGP1Cn4Nbfs0Ku3LBRom/x
-         YADw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716828058; x=1717432858;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zXhZGnNO1k1I5G/0gxKase3G2b7JBGSEOc1kPGMl+NM=;
-        b=LB8jbZaQRdOdORVaPo52wLx0GZ3byYglJVzTmQJIrkvrb9NfbZClJpWyeDHeJAT61f
-         UYDuQe6tKbIYSmCcmv4+czp/TzImtKRatm5MrGpG1RcyJ00GnAOW8KId5vpRvsdNWoeb
-         SbVzLGjMZ/l9YWeT24tX0rV88rfi8WSt+9SsR8zpefDXKWGwswa6kbbrfT636PivjWva
-         5KPH0zprTgfN9aVgmZrrM94ilb3g61kiFJ0J4J2LUAquF9aJbVlQ2baNHQ+rN8Ff/BrN
-         0ETVsZjXaPNrZ/7Io0LQvcHxKaUKJQooszLtFt7vXrm+fqUe805VtNUre/XawGO+/b6S
-         o+VA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8s1l2nzZ4mVrVxWRsHW0Aey2+yUj3/Bb42HtwnwEaBCPDDYqcNUAmXUJDFORF8Swpd9gW43h3BiH6/kIFi/neJ4CC3y+AKMwxpD7Q4jK7oLynSwWEU1HWyXR/g6f5uSw/hd+j4uZRaj7nsa0hBtVYalQBzlNCH4/fXQ6wCnJJK3tZrQKjOBPV
-X-Gm-Message-State: AOJu0YzqBntKNyxV4+uWewl1SWx5huwtxrAI6W2qabAAdtVrs5G0WXR6
-	8DaqjAwKZPTSxdZALT5IzezRFtpF1iBCCGjyrE+7TB+lVwyINQumsloirG9AI4L4yS9wuVf2LTs
-	9TxCfgtoIFXeOwj0PzQrLyKp1k20EHFDb3X4=
-X-Google-Smtp-Source: AGHT+IEsccTJyokgadctxD4gUbLFqcCCT0IkiQsUawd8VegpGiS5XsBpVEQl3nAm3VoXKG7/pPR0CRO43bwFcNIF1xc=
-X-Received: by 2002:a2e:bc08:0:b0:2e9:570e:1cf with SMTP id
- 38308e7fff4ca-2e95b3089d9mr71753261fa.52.1716828057942; Mon, 27 May 2024
- 09:40:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnkOyx5A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E3AEC2BBFC;
+	Mon, 27 May 2024 16:41:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716828084;
+	bh=VP+qsmC54b19MmboZBNiJ4/Iw5W2tqYz1l0e+9i3aFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OnkOyx5ALbSmHTXbPoXK+DoM0+zMLpr2uEBJ5j3VgIJhliFWJ8Pjd8SeVL2t0+VPX
+	 h4/1TrQH2qC7up8kjrBV04Mxcmww++vsthpYV9knAI6o4MBdSeEpUymCzzn0Xx+vK6
+	 q2fR2f/W3BbcV07a05oKKGXjURGn+XkB5Fyrm/5H7T5mVvmbisjUPDV1rUlMm4N7ST
+	 sFNwvzXpPAzUp3/BDe9LQi0xzNrfEERm4HK7cGejaRsod80C5AVVcNjZuMkicmnLCL
+	 lP82XuC03rUET7RlkWiTtGsmx52PuYhMjJAZhJqCTMSJzNp3nMvy0QsaRLxTkK8Fte
+	 jRM8MbmkbIcOg==
+Date: Mon, 27 May 2024 17:41:19 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Chao Wei <chao.wei@sophgo.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 5/5] riscv: dts: sophgo: Add LicheeRV Nano board device
+ tree
+Message-ID: <20240527-skedaddle-flavored-a869c7918088@spud>
+References: <20240527-sg2002-v1-0-1b6cb38ce8f4@bootlin.com>
+ <20240527-sg2002-v1-5-1b6cb38ce8f4@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info> <20240524132008.6b6f69f6@gandalf.local.home>
- <CAE4VaRF80OhnaiqeP9STfLa5pORB31YSorgoJ92fQ8tsRovxqQ@mail.gmail.com>
-In-Reply-To: <CAE4VaRF80OhnaiqeP9STfLa5pORB31YSorgoJ92fQ8tsRovxqQ@mail.gmail.com>
-From: =?UTF-8?B?SWxra2EgTmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Date: Mon, 27 May 2024 19:40:21 +0300
-Message-ID: <CAE4VaRGaNJSdo474joOtKEkxkfmyJ-zsrr8asb7ojP2JexFt-A@mail.gmail.com>
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During Shutdown/Reboot
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Yw+/J0Tv/ZDAD4WK"
+Content-Disposition: inline
+In-Reply-To: <20240527-sg2002-v1-5-1b6cb38ce8f4@bootlin.com>
+
+
+--Yw+/J0Tv/ZDAD4WK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Steven,
+On Mon, May 27, 2024 at 12:28:21PM +0200, Thomas Bonnefille wrote:
+> LicheeRV Nano [1] is an embedded development platform base on the SOPHGO
+> SG2002 chip.
+>=20
+> Add only support for UART.
+>=20
+> Link: https://wiki.sipeed.com/hardware/en/lichee/RV_Nano/1_intro.html
+> [1]
 
-I took some time and bisected the 6.8.9 - 6.8.10 and git gave the
-panic inducing commit:
+Just format this as:
+Link: https://wiki.sipeed.com/hardware/en/lichee/RV_Nano/1_intro.html [1]
 
-414fb08628143 (tracefs: Reset permissions on remount if permissions are opt=
-ions)
+--Yw+/J0Tv/ZDAD4WK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I reverted that commit to 6.9.2 and now it only serves the trace but
-the panic is gone. But I can live with it.
+-----BEGIN PGP SIGNATURE-----
 
---Ilkka
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlS3rwAKCRB4tDGHoIJi
+0rOkAP9bRQj9cpTdgLImE92TIFi+ah9V2qy65P0BMYXUljfdsgD9GSKX367tx7hF
+SgN63XgxVmLn9hrm7OQ1xLo883xL2g4=
+=Pqk7
+-----END PGP SIGNATURE-----
 
-On Sun, May 26, 2024 at 8:42=E2=80=AFPM Ilkka Naulap=C3=A4=C3=A4 <digirigaw=
-a@gmail.com> wrote:
->
-> hi,
->
-> I took 6.9.2 and applied that 0bcfd9aa4dafa to it. Now the kernel is
-> serving me both problems; the trace and the panic as the pic shows.
->
-> > To understand this, did you do anything with tracing? Before shutting d=
-own,
-> > is there anything in /sys/kernel/tracing/instances directory?
-> > Were any of the files/directories permissions in /sys/kernel/tracing ch=
-anged?
->
-> And to answer your question, I did not do any tracing or so and the
-> /sys/kernel/tracing is empty.
-> Just plain boot-up, no matter if in full desktop or in bare rescue
-> mode, ends up the same way.
->
-> --Ilkka
->
-> On Fri, May 24, 2024 at 8:19=E2=80=AFPM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
-> >
-> > On Fri, 24 May 2024 12:50:08 +0200
-> > "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.i=
-nfo> wrote:
-> >
-> > > > - Affected Versions: Before kernel version 6.8.10, the bug caused a
-> > > > quick display of a kernel trace dump before the shutdown/reboot
-> > > > completed. Starting from version 6.8.10 and continuing into version
-> > > > 6.9.0 and 6.9.1, this issue has escalated to a kernel panic,
-> > > > preventing the shutdown or reboot from completing and leaving the
-> > > > machine stuck.
-> >
-> > Ah, I bet it was this commit: baa23a8d4360d ("tracefs: Reset permission=
-s on
-> > remount if permissions are options"), which added a "iput" callback to =
-the
-> > dentry without calling iput, leaving stale inodes around.
-> >
-> > This is fixed with:
-> >
-> >   0bcfd9aa4dafa ("tracefs: Clear EVENT_INODE flag in tracefs_drop_inode=
-()")
-> >
-> > Try adding just that patch. It will at least make it go back to what wa=
-s
-> > happening before 6.8.10 (I hope!).
-> >
-> > -- Steve
+--Yw+/J0Tv/ZDAD4WK--
