@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42EC16B751;
-	Mon, 27 May 2024 16:15:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B25216C853;
+	Mon, 27 May 2024 16:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826520; cv=none; b=O73C2/DIeIPdgPDRu9nVE3eV8I6ML3rNlmRIgWwQ8hVtjNHiTP+jEoTdf8dNcZ6UWHMjPNftiM5XZXiPrOx/L0si1bYgplBCOaLwrrRNLkhpnfJGYSsESJUvmfDbonmsw+VOYY7PLjuwtRRJMISOJ/zvG1USvOemBPHhBngrtr8=
+	t=1716826523; cv=none; b=mCEGcxK0ZxubF+X7dhY5kCTEwxJogEi2GTrL17RI7Bb6eCknL4t1KKGBG3yj1nBIK3LJ9+pG9Da601ArE/OWBPPRvhQW4lY9MHACU4bgT9/Wokj5RlwW9h0So8P79PNNoc1y+/FkFcb7j5x7lHRuSuZa6REiA9yL/c0YkeJ9PtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826520; c=relaxed/simple;
-	bh=C/7pxn/zvd0ZkrMu2JxCU9aLE6K8DlE8/+ktjuIqF+0=;
+	s=arc-20240116; t=1716826523; c=relaxed/simple;
+	bh=CFOBUXD7jTvQ0DUMWL0UDE8CpiU/yP+TFleNjxWwLxs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=otMJenDNqVYOR38B7HL+/SigtRFHpR9hy6dBxUwncXSVxcr2prrAQ3h3t6pLQeORH0ebFT5cVaUzGzJb6Eqcg4V1rQKM7kC5tWRYE9k2XYzMYof88mo+yRVK+NWxHbzqDx35Ct4Aq+MlQuiBxRRfdK09Oc95th1wn5LujwayfZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jPHjua9W; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=Cs66J/a+DMFU4pxWp8CuvbbHvZZEKhabnKOQJzS0D5A1pBtbeE8Zr4uS5js118E0FRcLytxWmUEGO/cHiJ4VRYfuisC38a314xvbwYdKlSUqnk7h1JgdjodsKQ6yTJhXAfyZ/RtuwKfUt6IdBdgHVW5YuCaERpprj1Dyuyh9Qds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EmO6An5I; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jPHjua9W"
-Received: by mail.gandi.net (Postfix) with ESMTPA id A25BCFF80D;
-	Mon, 27 May 2024 16:15:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EmO6An5I"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 19243FF806;
+	Mon, 27 May 2024 16:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716826516;
+	t=1716826519;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Mi3oj3KqfvDzq+/15bPMcWypI2LWK0r10UEBjijnOtc=;
-	b=jPHjua9WxG50yVIdqMNDLvOGQkQ6iB4QYm/1BGyxgTb8OooPHLqIJLy60UGGZXbIaxDabh
-	pPwkbWZxBGOXlZV1InZfo4OhQlP68xHlK+trSLZ43n7dfRalP7Sbu0nRxGRb4Zchwpp2af
-	LeGKWTAEnleyERDMXp34zfuDP8pzZDx22iB0CHstGcAwBtpK48FI1m5zkI/J4kq1c/MQmG
-	kTftzwBFldi7v+VE0xn3HBxR8Jku6AQ3puEOoTRhmEHrVYtSkmYNZAx1SGktc5is99y3ii
-	Mm4FGQ3Wo2H18jkER+EKHkcMdMh7L1ALa6QmzwRTfI9Jx8aiq6vdAP8rBBQmXg==
+	bh=JtCflf5DaqbhOm9L/XxD0yo5M1odlrsrVmdrUVelr04=;
+	b=EmO6An5ITzuHevOPrIUJm6RSfD/ArCoQ6tTeHUehj+hn1u6lb02evxqw5NsL7P/cfUqgD0
+	eMmkt4i5WMIAluDszbw5iDGvGTxbYVwjQUfyfaoePE0D7z/qmUyI60218WREFbPL9zaRSq
+	G/VPzdLNa1hTwzH/BrVoB9zrtNirHuAd2/8VVZ0c8a/BAF6IKUWnEbnSModAjTvDILpyzL
+	O27uFINwi9mG9m45uepaKV42ES2MNZGlsXYoC/jP9HKZNtdKTJ/8fkiGOTigRyMpSFP4pR
+	Tyn6EO7w90ljwlDti7WGYc4stVTMTXqdDWuBkUeC4YHBOaGxVihBXOOn+3AbBw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Simon Horman <horms@kernel.org>,
 	Sai Krishna Gajula <saikrishnag@marvell.com>,
@@ -65,9 +65,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 10/19] irqdomain: Introduce irq_domain_alloc() and irq_domain_publish()
-Date: Mon, 27 May 2024 18:14:37 +0200
-Message-ID: <20240527161450.326615-11-herve.codina@bootlin.com>
+Subject: [PATCH v2 12/19] MAINTAINERS: Add the Microchip LAN966x OIC driver entry
+Date: Mon, 27 May 2024 18:14:39 +0200
+Message-ID: <20240527161450.326615-13-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240527161450.326615-1-herve.codina@bootlin.com>
 References: <20240527161450.326615-1-herve.codina@bootlin.com>
@@ -80,187 +80,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-The irq_domain_add_*() family functions create an irq_domain and also
-publish this newly created to domain. Once an irq_domain is published,
-consumers can request IRQ in order to use them.
-
-Some interrupt controller drivers have to perform some more operations
-with the created irq_domain in order to have it ready to be used.
-For instance:
-  - Allocate generic irq chips with irq_alloc_domain_generic_chips()
-  - Retrieve the generic irq chips with irq_get_domain_generic_chip()
-  - Initialize retrieved chips: set register base address and offsets,
-    set several hooks such as irq_mask, irq_unmask, ...
-
-To avoid a window where the domain is published but not yet ready to be
-used, introduce irq_domain_alloc_*() family functions to create the
-irq_domain and irq_domain_publish() to publish the irq_domain.
-With this new functions, any additional initialisation can then be done
-between the call creating the irq_domain and the call publishing it.
+After contributing the driver, add myself as the maintainer for the
+Microchip LAN966x OIC driver.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- include/linux/irqdomain.h | 16 +++++++
- kernel/irq/irqdomain.c    | 91 ++++++++++++++++++++++++++++-----------
- 2 files changed, 82 insertions(+), 25 deletions(-)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 21ecf582a0fe..86203e7e6659 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -257,6 +257,22 @@ static inline struct fwnode_handle *irq_domain_alloc_fwnode(phys_addr_t *pa)
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7bf..baeb307344cd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14727,6 +14727,12 @@ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	drivers/net/ethernet/microchip/lan966x/*
  
- void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
-+struct irq_domain *irq_domain_alloc(struct fwnode_handle *fwnode, unsigned int size,
-+				    irq_hw_number_t hwirq_max, int direct_max,
-+				    const struct irq_domain_ops *ops,
-+				    void *host_data);
++MICROCHIP LAN966X OIC DRIVER
++M:	Herve Codina <herve.codina@bootlin.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
++F:	drivers/irqchip/irq-lan966x-oic.c
 +
-+static inline struct irq_domain *irq_domain_alloc_linear(struct fwnode_handle *fwnode,
-+							 unsigned int size,
-+							 const struct irq_domain_ops *ops,
-+							 void *host_data)
-+{
-+	return irq_domain_alloc(fwnode, size, size, 0, ops, host_data);
-+}
-+
-+void irq_domain_free(struct irq_domain *domain);
-+void irq_domain_publish(struct irq_domain *domain);
-+void irq_domain_unpublish(struct irq_domain *domain);
- struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
- 				    irq_hw_number_t hwirq_max, int direct_max,
- 				    const struct irq_domain_ops *ops,
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 86f8b91b0d3a..06c3e1b03a1d 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -231,7 +231,38 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
- 	return domain;
- }
- 
--static void __irq_domain_publish(struct irq_domain *domain)
-+struct irq_domain *irq_domain_alloc(struct fwnode_handle *fwnode, unsigned int size,
-+				    irq_hw_number_t hwirq_max, int direct_max,
-+				    const struct irq_domain_ops *ops,
-+				    void *host_data)
-+{
-+	return __irq_domain_create(fwnode, size, hwirq_max, direct_max, ops,
-+				   host_data);
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_alloc);
-+
-+/**
-+ * irq_domain_free() - Free an irq domain.
-+ * @domain: domain to free
-+ *
-+ * This routine is used to free an irq domain. The caller must ensure
-+ * that the domain is not published.
-+ */
-+void irq_domain_free(struct irq_domain *domain)
-+{
-+	fwnode_dev_initialized(domain->fwnode, false);
-+	fwnode_handle_put(domain->fwnode);
-+	if (domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
-+		kfree(domain->name);
-+	kfree(domain);
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_free);
-+
-+/**
-+ * irq_domain_publish() - Publish an irq domain.
-+ * @domain: domain to publish
-+ */
-+void irq_domain_publish(struct irq_domain *domain)
- {
- 	mutex_lock(&irq_domain_mutex);
- 	debugfs_add_domain_dir(domain);
-@@ -240,6 +271,36 @@ static void __irq_domain_publish(struct irq_domain *domain)
- 
- 	pr_debug("Added domain %s\n", domain->name);
- }
-+EXPORT_SYMBOL_GPL(irq_domain_publish);
-+
-+/**
-+ * irq_domain_unpublish() - Unpublish an irq domain.
-+ * @domain: domain to unpublish
-+ *
-+ * This routine is used to unpublish an irq domain. The caller must ensure
-+ * that all mappings within the domain have been disposed of prior to
-+ * use, depending on the revmap type.
-+ */
-+void irq_domain_unpublish(struct irq_domain *domain)
-+{
-+	mutex_lock(&irq_domain_mutex);
-+	debugfs_remove_domain_dir(domain);
-+
-+	WARN_ON(!radix_tree_empty(&domain->revmap_tree));
-+
-+	list_del(&domain->link);
-+
-+	/*
-+	 * If the going away domain is the default one, reset it.
-+	 */
-+	if (unlikely(irq_default_domain == domain))
-+		irq_set_default_host(NULL);
-+
-+	mutex_unlock(&irq_domain_mutex);
-+
-+	pr_debug("Removed domain %s\n", domain->name);
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_unpublish);
- 
- /**
-  * __irq_domain_add() - Allocate a new irq_domain data structure
-@@ -264,7 +325,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int s
- 	domain = __irq_domain_create(fwnode, size, hwirq_max, direct_max,
- 				     ops, host_data);
- 	if (domain)
--		__irq_domain_publish(domain);
-+		irq_domain_publish(domain);
- 
- 	return domain;
- }
-@@ -280,28 +341,8 @@ EXPORT_SYMBOL_GPL(__irq_domain_add);
-  */
- void irq_domain_remove(struct irq_domain *domain)
- {
--	mutex_lock(&irq_domain_mutex);
--	debugfs_remove_domain_dir(domain);
--
--	WARN_ON(!radix_tree_empty(&domain->revmap_tree));
--
--	list_del(&domain->link);
--
--	/*
--	 * If the going away domain is the default one, reset it.
--	 */
--	if (unlikely(irq_default_domain == domain))
--		irq_set_default_host(NULL);
--
--	mutex_unlock(&irq_domain_mutex);
--
--	pr_debug("Removed domain %s\n", domain->name);
--
--	fwnode_dev_initialized(domain->fwnode, false);
--	fwnode_handle_put(domain->fwnode);
--	if (domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
--		kfree(domain->name);
--	kfree(domain);
-+	irq_domain_unpublish(domain);
-+	irq_domain_free(domain);
- }
- EXPORT_SYMBOL_GPL(irq_domain_remove);
- 
-@@ -1184,7 +1225,7 @@ struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
- 		domain->parent = parent;
- 		domain->flags |= flags;
- 
--		__irq_domain_publish(domain);
-+		irq_domain_publish(domain);
- 	}
- 
- 	return domain;
+ MICROCHIP LCDFB DRIVER
+ M:	Nicolas Ferre <nicolas.ferre@microchip.com>
+ L:	linux-fbdev@vger.kernel.org
 -- 
 2.45.0
 
