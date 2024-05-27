@@ -1,100 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5347DF503
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2479F1640B;
+	Mon, 27 May 2024 14:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716818921; cv=none; b=bC/4/N5EVJu6e0QDgZXWO3GTCVMDl97SzS5HfiHjA9Jn1xOIiV3/MovwPOir2I+iJ06E6ki2Fd16TFTviHqsTK/9iWTPPXI5Iwrc45pidCnyRIM1L4kNR5YErwoyL2odF308PQPEdP6E2JluMtzwZv1vG8mieyYv8DoysLlDm7Q=
+	t=1716819100; cv=none; b=RMPKH1+r8XvfeZ8c3ZNE1/leElgf6g6e/HMrgmASf9q1H3Az8+lHKbkIlQ7iTqQwVNKONGluiPuHZ2LdLjQIylRby5IuDrgJVqsGkO0Y8nP0fqmiJpAJatK8SQh7wC241UaKMTIWnk74qqqFmozyc1o83hxQOwkKKqUZrPRhcjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716818921; c=relaxed/simple;
-	bh=ZXwbZiy8td+gubmN1p/8TtpDqubSKNzO4ViE717nqXo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=I13oI6NSMSjtdgyG5s8dx8aYZhfuqfnt0HhVmMfDnBfi1rvY2+7JaEmLJjPb1ud3/lK6fybkaJV74sM4D79NDu4T3VK1iTx3QPpimpF03OehgbV3N7EoDjeC6hqknGCpMGssPvLH5NQ73cAlCZ8GSr/dm6i/l3ANf7MPm9/eJJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2fkXIN3; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716819100; c=relaxed/simple;
+	bh=o5hbqwBIk7hbVfK+3GoDhFtKqh6k+H303kYL9/uP8BU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bxRUPK9iJVCtXIUwrGuOpyQ8vj9QgU8SKS51PQAc2GoAubCUBlfKs4N5WeFmjfOaiNM1fnjEM4y4J0ofn6QAqxhm94PRZbFagRoq6cAqt8PUzUI0II2aIda5rkVqDImSoGO5MGDMqRxrexVLCSDZTaR940W6aKlEJB5eg6mI7GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=btIVkH8V; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2fkXIN3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btIVkH8V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716818921; x=1748354921;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=ZXwbZiy8td+gubmN1p/8TtpDqubSKNzO4ViE717nqXo=;
-  b=i2fkXIN3qIZXOB6GjN8+mdHyAdSxcYPQrg4uqgFOaN5L+oxERO6bMHW6
-   2fLcZoiLTlIFRMge9mHZ8O7/DlC3LSQH2isSURHETggYYomos77puKs91
-   BEhH+FXlOffStyKDfwbNmT/xHwISpc/mpZ/DHUVLD30a3vH6Nycje4UP8
-   A3SBtftCVqQVa/oPcvTUIryrllkOEFQ+bhg4uQr6MMUyLZiQi+cvmY4xH
-   71rsqSjHv5bhxpS2wnaXo2K1osDORWq6DUairG4zBR4+4pFpgRRr777w/
-   t0D/qx4dWSMhODTC3/8R8UJcZN5E+y8GMs39x7Ck8JwmsbKxm27PFXlI3
+  t=1716819100; x=1748355100;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=o5hbqwBIk7hbVfK+3GoDhFtKqh6k+H303kYL9/uP8BU=;
+  b=btIVkH8VG3nLkoluYtHKtpqtNocofhWbTYqn3SSi5k0AsqkdNY2Y6Mdx
+   mavajyB6uW31yeGxAk70SJdJOQbNzqWoIGLQhr40pxLerX4TAO5dI+BGO
+   gELXg3nRlcc21gDfrCOfTLPK05eHDIaCtI5bEDB/0hprbcih2aptPZTKP
+   ftvXweCQgTLHiNIEPStlqU1Ms5xEYPxEcJ4V0CPjKbLieUfswm4JOV2pY
+   w1HvMUsGjWMMbuZzlBywKieM19hGlPlg/RfKXSkoh4ScMmW31QhqqXafK
+   ItNqdplFIwaoaYK9Q11stCDjv5bYPmhJj1FXPMHQA8TlYQMxDTmghbLyR
    w==;
-X-CSE-ConnectionGUID: AtWyVuEjTjqpSOl6Ht7E5A==
-X-CSE-MsgGUID: CaAhchByRZO2TYEyAtGTOA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13314252"
+X-CSE-ConnectionGUID: Zd8Ki25gTKOdKGmKgylV0g==
+X-CSE-MsgGUID: sVVEbBwxQ8SPHSAbEMIciQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13085578"
 X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="13314252"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:08:40 -0700
-X-CSE-ConnectionGUID: WclyaCNiQxKBcSASf3gFJQ==
-X-CSE-MsgGUID: e/YtuAi0SRKK8zGxEOOCBw==
+   d="scan'208";a="13085578"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:11:39 -0700
+X-CSE-ConnectionGUID: Zhuq5rPFQmKHqU+Ja7y81A==
+X-CSE-MsgGUID: CZN/hKapTWO683lguzJlNg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="39318700"
-Received: from lfiedoro-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.200])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:08:37 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, Kees Cook <keescook@chromium.org>, Andy
- Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH 2/2] drm: use mem_is_zero() instead of !memchr_inv(s, 0, n)
-In-Reply-To: <CAHp75Ve0vyOv3KNY_7286wLKd8u6HOvu0Trm17rs46h-BOGsfA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240527094320.2653177-1-jani.nikula@intel.com>
- <20240527094320.2653177-2-jani.nikula@intel.com>
- <CAHp75Ve0vyOv3KNY_7286wLKd8u6HOvu0Trm17rs46h-BOGsfA@mail.gmail.com>
-Date: Mon, 27 May 2024 17:08:34 +0300
-Message-ID: <87h6ejmjod.fsf@intel.com>
+   d="scan'208";a="65990651"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.140])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:11:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 27 May 2024 17:11:32 +0300 (EEST)
+To: Dan Carpenter <dan.carpenter@linaro.org>
+cc: Linus Walleij <linus.walleij@linaro.org>, 
+    Bartosz Golaszewski <brgl@bgdev.pl>, 
+    Dmitry Baryshkov <dbaryshkov@gmail.com>, linux-gpio@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] gpio: amd8111: Convert PCIBIOS_* return codes to
+ errnos
+In-Reply-To: <09f2f3ac-94a7-43d3-8c43-0d264a1d9c65@moroto.mountain>
+Message-ID: <7d475c6c-8bbf-86f4-b2d8-8bc11cb9043e@linux.intel.com>
+References: <20240527132345.13956-1-ilpo.jarvinen@linux.intel.com> <09f2f3ac-94a7-43d3-8c43-0d264a1d9c65@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-1881005345-1716819092=:1006"
 
-On Mon, 27 May 2024, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Mon, May 27, 2024 at 12:43=E2=80=AFPM Jani Nikula <jani.nikula@intel.c=
-om> wrote:
->>
->> Use the mem_is_zero() helper where possible.
->
-> ...
->
->> -       if (memchr_inv(guid, 0, 16) =3D=3D NULL) {
->> +       if (mem_is_zero(guid, 16)) {
->>                 tmp64 =3D get_jiffies_64();
->>                 memcpy(&guid[0], &tmp64, sizeof(u64));
->>                 memcpy(&guid[8], &tmp64, sizeof(u64));
->
-> What is the type of guid? Shouldn't it be guid_t with the respective
-> guid_is_null()
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I can leave out these parts of the patch.
+--8323328-1881005345-1716819092=:1006
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-BR,
-Jani.
+On Mon, 27 May 2024, Dan Carpenter wrote:
 
->
-> ...
->
->> -       if (memchr_inv(guid, 0, 16))
->> +       if (!mem_is_zero(guid, 16))
->>                 return true;
->
-> Ditto.
+> On Mon, May 27, 2024 at 04:23:44PM +0300, Ilpo J=E4rvinen wrote:
+> > diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
+> > index 6f3ded619c8b..3377667a28de 100644
+> > --- a/drivers/gpio/gpio-amd8111.c
+> > +++ b/drivers/gpio/gpio-amd8111.c
+> > @@ -195,8 +195,10 @@ static int __init amd_gpio_init(void)
+> > =20
+> >  found:
+> >  =09err =3D pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> > -=09if (err)
+> > +=09if (err) {
+> > +=09=09err =3D pcibios_err_to_errno(err);
+>=20
+> The patch is correct, but is the CC to stable necessary?  Is this a real
+> concern?
+>=20
+> Most callers don't check.  Linus Torvalds, once said something to the
+> effect that if your PCI bus starts failing, there isn't anything the
+> operating system can do, so checking is pointless.  The only fix is to
+> buy new hardware.  There was a hotpluggable PCI back in the day but I
+> don't think it exists any more.
+
+I don't mind if the CC stable isn't there.
+
 
 --=20
-Jani Nikula, Intel
+ i.
+
+--8323328-1881005345-1716819092=:1006--
