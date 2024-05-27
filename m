@@ -1,83 +1,66 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C638E2E40E;
-	Mon, 27 May 2024 07:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716796091; cv=pass; b=A//MkmnD1A+qOLgVFot7YMq9bJJFu8SMwH3Cn36vmWGx7GYOEAWhucyIqBfbve+WMkP/YsKz7LlLxoCR43Xl5uUrxfu1xd6QoxaXH3xSh3E2nX33P7+H5caBrbuXawAdER4mhA8EJ52Ft91gjf6qNjQz4fCqCWV/VxEWeIhwNZU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716796091; c=relaxed/simple;
-	bh=keh5W7U3dzsEif6ksUmuqn4x55o5x9L/8HfBAVTKtxY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C+xJwJO79JJLhVjmTP62k1C5ibd263pZKLdvK6tyCujG+xx+yLlC6dYxsKsq/XcHkSJC+ebjdqq95jPHzw6oFmT+TrhwkTrxGCZUkSKaBUDsEViStK4bmeRWYd1mM7W9yMVagnyt+RkcAGjNLG5mp8FfDoqNBA8x6gF//1kmrJw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=tnoW2b8c; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325FE47F5F
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716796104; cv=none; b=KtGrvB590jGWg5hgPkV9nAQ493Q5PhwLAQklefwZWEIJOYE2wvZkeYoewp/+gb5MQD0I9jpL89ed4NsL7Bmq/1FZKTmsTNHe8YQXZ7AKlYM17it7+A0Q1WSGkF3QVEF5bOpvw7X5oZL9ss3h9sUpAgD3lVoHgSNIw1iCHqO2BUo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716796104; c=relaxed/simple;
+	bh=snHEB08XY5JQn621PObDnGVEpGYE4z2PihmqwwfM3ZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gHYMMo8JOOfRshZh6q2Y9J7kaD5Lg45y+biKXcevdA5eRVNVpDHCHHEH5NVrAHoxSmhMq0y81ns+z6Gqwq+eKIPFk1pySVxSZh1kwWnfeQ18MoxhPG3ViyaBsgj/QNJfyDPhu7LaD0OwgUdEBeBOkD8irUMpepLO4J8fNFtDNAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QDooChSZ; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="tnoW2b8c"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-c641-1eff-feae-163c.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:c641:1eff:feae:163c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4VnnnK2tg0z49Pyk;
-	Mon, 27 May 2024 10:48:05 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1716796085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hfBVpEPdEi/Ida+CmoF5UCxGqdboIgH47sljlECVuIs=;
-	b=tnoW2b8cLuTt8UKe7iN88sAtOeI9i9K2vjv+XJXvAFA0t+4SNnMdmEDOUNijRlBK/NsJ0h
-	uUzotMwRH1EZz/t8mO9ijz+S/7DK39MDXNuajhj2/pVrcw1FbQUFm1efCA+znDx5VUrQ2G
-	/Ckj+uOBdsRD3W7SQvwbU0OYwhqhDqe53nmjNs0kOUr4FWUBosMN3z2vTKFzjX5w+jA9eZ
-	WjVAdqkt78csYJcQauRuyhlh/Q511gsxo/tBueLhJmJme3coht+pvaDT57d6gx2qOO600D
-	T51rObGuRPWqyN6gkM7ngnh1VolzFWzQmgALHO7NLhTQyoHuH+dGj4MJrkem8A==
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1716796085; a=rsa-sha256;
-	cv=none;
-	b=b7Jkeh351bThPsf2iZpujuWgqn01uSvebMT9Sm79zb6zO7o8ADi4MBXktkYRJisQ81cmBN
-	2yNpNO/MogsTWcb7ojhfw2aa1VPohy94WOHYCRKyBB1KAQR72kJhaGleppzN90qKjyKMpt
-	EVxKZdZkxXGzWTPnxj0+JCR2MU6D576G7EjSK5lFTNAE+y1xCXLlMS7eV8tYP+T8zU6qkg
-	sFHZ2GDoqq5qP+lEjLsZYFHpOCLlSCFV2FyDhxKx2cBXLLtLrdvXWAyU2lBh/SE9Zhm7Sg
-	vWJge4WryhijygAjn/gfO72Hox/pBZSo66UdKAdAotNxXniwyKMww1XdmUamHg==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1716796085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hfBVpEPdEi/Ida+CmoF5UCxGqdboIgH47sljlECVuIs=;
-	b=Mj58O8gZ3WhdDHzNm1zQxgpvo0+yrIqPafXCEkJnp4xgLIKznp8Mb05Wq7bBUv/2h5M1sz
-	XQFR+g2iuFKzKDEQ9i6hxOWi5GYpK1zkeG/7IE6Kc3jnx1qba0BxVqgYpYTNAzCeSsAxYp
-	YWkVcQ+mmbFshgC0FGVJdeXuIYJz5acZb4S27vVG9mZ7rmEJCqJEsOrN37YU/CUVr8/mcp
-	92JWYZG9vhTQHJntmDhQhl0jBiEp6zK8npQYo17R71X3BLV25hkLzj931GxFE+q/tMgJLD
-	/kI+AdMiu8amxFplZLJ5xPosR65k7oNWFqs35AnZHEJbGLVHt4vAYu/gWPNYmA==
-Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 25730634C93;
-	Mon, 27 May 2024 10:45:10 +0300 (EEST)
-Date: Mon, 27 May 2024 07:45:09 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>, mchehab@kernel.org,
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	hdegoede@redhat.com, laurent.pinchart@ideasonboard.com
-Subject: Re: [PATCH 2/2] media: i2c: Add driver for ST VD56G3 camera sensor
-Message-ID: <ZlQ6BV2sEw8PioBS@valkosipuli.retiisi.eu>
-References: <20240417133453.17406-1-sylvain.petinot@foss.st.com>
- <20240417133453.17406-3-sylvain.petinot@foss.st.com>
- <Zil1wiCcCdwZs5Df@valkosipuli.retiisi.eu>
- <d45a2ea1-bc2d-441a-b036-1da40290c6b3@foss.st.com>
- <c9b35dc4-6f52-48e2-8952-5a43c500f819@foss.st.com>
- <ZlQ2zymJguCipLMl@valkosipuli.retiisi.eu>
- <864dc1d3-2478-46a2-84a5-c7c51f96268f@foss.st.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QDooChSZ"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52962423ed8so3158132e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 00:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716796100; x=1717400900; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G0F8xDz21HTi5SrFsLB+iyLzGOKVclLkyve6qrrpHP8=;
+        b=QDooChSZLqSa4V0kNcos/UGo/5DEd9P/Xb4vGpkO1VpBMPGWvH37GMwppNMoC6wY4S
+         A2OMvyeESfuVp85Mq6HQRhevN/wOG42sk2ZZrAGZRo7KBVrqyvWL4EI91MUqO8eKf3kv
+         +idvmbjhtFTJZzAjbFLoO5aUC/jxBzeTlR2vV+K8Vmg0TwgZzW+wrJnosMlQFFua8saH
+         ZaZIydKZR9NdNIxOx10ZkIbSWXccysCRm+R53tI2TspfCv/ROeO4WSQ2lGGdrcMR2Nvr
+         bjLb0h0JV/uIDoKs6S7ytyENQ6hwQ5yNagFvD5rZXn2AanAqkPnn3DWP3yKoFAXGkQzU
+         RM9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716796100; x=1717400900;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G0F8xDz21HTi5SrFsLB+iyLzGOKVclLkyve6qrrpHP8=;
+        b=axKbmA9IBq9+NHG0Tl72bpxpJqDqafBlvBnlNpDepSD2SYStzEcIqFHEE+LBysFMq9
+         7oPhy/XNhxnvSFSNj+DyCsoMDyf8nEE0fFmy/6aTuVcZceX82Z/hZfrbU7Vx0sS+FI9E
+         0XQykuddqvUGoQGYZuMwwqclxDbq+SRSqLmrA7yChDIVZg6l+L+PFSqRVc/2Ap4TiEw+
+         n+G/64u3ZQJPLc61Lfn3Piw5+3IDDXEYOpHmPhPTLpEZXoNKe3q88P7CVwzpXzAnlh8L
+         i7//yl4EYpwy9mZ+IVULsO7hnPiLMII3q/hG5Joq3M7ZL5YzRV4xErdJbQb7D7Mg7Kke
+         niug==
+X-Forwarded-Encrypted: i=1; AJvYcCUm3t0XWxwMhjDG74yIcJeGrPx3AXUe3jIkoUTH6DeXPOvR1U5XEeEwnNbQdOB0J/zq29cbG+vVYqJH0k7jqLJQ2rjSArS0Q4Dqw41L
+X-Gm-Message-State: AOJu0Ywyc2lRuUk7WFKcRJ8jNMUMaKANrSQb70QzZ9fOo0wiMJztVuTW
+	HIFwO1x7sPINhgaj5pNXUpVhZaXHTKvLacAQpIAAl/ti7b4kc3y2eYmgj3g3B34RLdjkaUNYT8D
+	Q
+X-Google-Smtp-Source: AGHT+IH4t/IBOf/Ew7gwWEo6+jgoCpj8r+bvyE+lZiUzS0bhtYDCCBlqMIU+yWaaueZRRxr5Vu1LEA==
+X-Received: by 2002:a05:6512:10cc:b0:523:7f19:cb44 with SMTP id 2adb3069b0e04-52965198b94mr7303495e87.29.1716796100209;
+        Mon, 27 May 2024 00:48:20 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cda48e6sm458737266b.203.2024.05.27.00.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 00:48:19 -0700 (PDT)
+Date: Mon, 27 May 2024 10:48:15 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, David Gstir <david@sigma-star.at>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	David Oberhollenzer <david.oberhollenzer@sigma-star.at>
+Subject: drivers/crypto/mxs-dcp.c:292 mxs_dcp_run_aes() error: uninitialized
+ symbol 'key_phys'.
+Message-ID: <129493f0-211f-408f-8435-2e6fead3f07b@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,70 +69,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <864dc1d3-2478-46a2-84a5-c7c51f96268f@foss.st.com>
 
-Hi Benjamin,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   c13320499ba0efd93174ef6462ae8a7a2933f6e7
+commit: 3d16af0b4cfac4b2c3b238e2ec37b38c2f316978 crypto: mxs-dcp: Add support for hardware-bound keys
+config: arm-randconfig-r071-20240524 (https://download.01.org/0day-ci/archive/20240527/202405270146.Y9tPoil8-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 7aa382fd7257d9bd4f7fc50bb7078a3c26a1628c)
 
-On Mon, May 27, 2024 at 09:44:15AM +0200, Benjamin Mugnier wrote:
-> Hi Sakari,
-> 
-> On 5/27/24 09:31, Sakari Ailus wrote:
-> > Hi Benjamin,
-> > 
-> > On Mon, May 13, 2024 at 03:37:25PM +0200, Benjamin Mugnier wrote:
-> >>>>> +static int vd56g3_read_expo_cluster(struct vd56g3 *sensor, bool force_cur_val)
-> >>>>> +{
-> >>>>> +	u64 exposure = 0;
-> >>>>> +	u64 again = 0;
-> >>>>> +	u64 dgain = 0;
-> >>>>
-> >>>> Do you need the assignments? The values are assigned by cci_read() below,
-> >>>> right?
-> >>>
-> >>> Well initially, I didn't have those assignments and some checker
-> >>> complains (Honestly I didn't investigate the warning).
-> >>> I will double check and see if they are necessary.
-> >>>
-> >>
-> >> Since I have smatch ready, I ran it without these initialization against
-> >> the latest media tree. I got these :
-> >>
-> >> drivers/media/i2c/st-vd56g3.c:403 vd56g3_read_expo_cluster() error:
-> >> uninitialized symbol 'exposure'.
-> >> drivers/media/i2c/st-vd56g3.c:404 vd56g3_read_expo_cluster() error:
-> >> uninitialized symbol 'again'.
-> >> drivers/media/i2c/st-vd56g3.c:405 vd56g3_read_expo_cluster() error:
-> >> uninitialized symbol 'dgain'.
-> >> drivers/media/i2c/st-vd56g3.c:407 vd56g3_read_expo_cluster() error:
-> >> uninitialized symbol 'exposure'.
-> >> drivers/media/i2c/st-vd56g3.c:408 vd56g3_read_expo_cluster() error:
-> >> uninitialized symbol 'again'.
-> >> drivers/media/i2c/st-vd56g3.c:409 vd56g3_read_expo_cluster() error:
-> >> uninitialized symbol 'dgain'.
-> >>
-> >> cci_read() is indeed not modifying its 'var' argument in the default
-> >> case of the switch [1]. Spawning these errors.
-> >> Adding a '*val = 0' in the default case would also fix it, but will
-> >> change the function behavior.
-> > 
-> > I think I'd add the assignment to cci_read(). This isn't the only driver
-> > that's affected. In the best case smatch would be fixed to figure this out.
-> > 
-> > Any thoughts?
-> 
-> IMHO adding the assignment to cci_read() is the cleanest way to handle it.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202405270146.Y9tPoil8-lkp@intel.com/
 
-A fix in smatch would be the best in my opinion as it could catch the use
-of the value in case of an error. But it's not going to be a short term
-solution, hence I'd also assign *val to 0 now.
+smatch warnings:
+drivers/crypto/mxs-dcp.c:292 mxs_dcp_run_aes() error: uninitialized symbol 'key_phys'.
 
-> 
-> > 
-> > Cc also Hans and Laurent.
-> > 
-> 
+vim +/key_phys +292 drivers/crypto/mxs-dcp.c
+
+2021abaa00da64a Marek Vasut    2014-01-14  225  static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
+9acb3247e0e1d94 Ard Biesheuvel 2019-11-09  226  			   struct skcipher_request *req, int init)
+15b59e7c3733f90 Marek Vasut    2013-12-10  227  {
+df6313d707e575a Sean Anderson  2021-07-01  228  	dma_addr_t key_phys, src_phys, dst_phys;
+15b59e7c3733f90 Marek Vasut    2013-12-10  229  	struct dcp *sdcp = global_sdcp;
+15b59e7c3733f90 Marek Vasut    2013-12-10  230  	struct dcp_dma_desc *desc = &sdcp->coh->desc[actx->chan];
+9acb3247e0e1d94 Ard Biesheuvel 2019-11-09  231  	struct dcp_aes_req_ctx *rctx = skcipher_request_ctx(req);
+3d16af0b4cfac4b David Gstir    2024-04-03  232  	bool key_referenced = actx->key_referenced;
+15b59e7c3733f90 Marek Vasut    2013-12-10  233  	int ret;
+15b59e7c3733f90 Marek Vasut    2013-12-10  234  
+3d16af0b4cfac4b David Gstir    2024-04-03  235  	if (!key_referenced) {
+df6313d707e575a Sean Anderson  2021-07-01  236  		key_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_key,
+df6313d707e575a Sean Anderson  2021-07-01  237  					  2 * AES_KEYSIZE_128, DMA_TO_DEVICE);
+df6313d707e575a Sean Anderson  2021-07-01  238  		ret = dma_mapping_error(sdcp->dev, key_phys);
+df6313d707e575a Sean Anderson  2021-07-01  239  		if (ret)
+df6313d707e575a Sean Anderson  2021-07-01  240  			return ret;
+3d16af0b4cfac4b David Gstir    2024-04-03  241  	}
+
+key_phys not initialized on else path.
+
+df6313d707e575a Sean Anderson  2021-07-01  242  
+df6313d707e575a Sean Anderson  2021-07-01  243  	src_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_in_buf,
+15b59e7c3733f90 Marek Vasut    2013-12-10  244  				  DCP_BUF_SZ, DMA_TO_DEVICE);
+df6313d707e575a Sean Anderson  2021-07-01  245  	ret = dma_mapping_error(sdcp->dev, src_phys);
+df6313d707e575a Sean Anderson  2021-07-01  246  	if (ret)
+df6313d707e575a Sean Anderson  2021-07-01  247  		goto err_src;
+df6313d707e575a Sean Anderson  2021-07-01  248  
+df6313d707e575a Sean Anderson  2021-07-01  249  	dst_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_out_buf,
+15b59e7c3733f90 Marek Vasut    2013-12-10  250  				  DCP_BUF_SZ, DMA_FROM_DEVICE);
+df6313d707e575a Sean Anderson  2021-07-01  251  	ret = dma_mapping_error(sdcp->dev, dst_phys);
+df6313d707e575a Sean Anderson  2021-07-01  252  	if (ret)
+df6313d707e575a Sean Anderson  2021-07-01  253  		goto err_dst;
+15b59e7c3733f90 Marek Vasut    2013-12-10  254  
+fadd7a6e616b89c Radu Solea     2018-10-02  255  	if (actx->fill % AES_BLOCK_SIZE) {
+fadd7a6e616b89c Radu Solea     2018-10-02  256  		dev_err(sdcp->dev, "Invalid block size!\n");
+fadd7a6e616b89c Radu Solea     2018-10-02  257  		ret = -EINVAL;
+fadd7a6e616b89c Radu Solea     2018-10-02  258  		goto aes_done_run;
+fadd7a6e616b89c Radu Solea     2018-10-02  259  	}
+fadd7a6e616b89c Radu Solea     2018-10-02  260  
+15b59e7c3733f90 Marek Vasut    2013-12-10  261  	/* Fill in the DMA descriptor. */
+15b59e7c3733f90 Marek Vasut    2013-12-10  262  	desc->control0 = MXS_DCP_CONTROL0_DECR_SEMAPHORE |
+15b59e7c3733f90 Marek Vasut    2013-12-10  263  		    MXS_DCP_CONTROL0_INTERRUPT |
+15b59e7c3733f90 Marek Vasut    2013-12-10  264  		    MXS_DCP_CONTROL0_ENABLE_CIPHER;
+15b59e7c3733f90 Marek Vasut    2013-12-10  265  
+3d16af0b4cfac4b David Gstir    2024-04-03  266  	if (key_referenced)
+3d16af0b4cfac4b David Gstir    2024-04-03  267  		/* Set OTP key bit to select the key via KEY_SELECT. */
+3d16af0b4cfac4b David Gstir    2024-04-03  268  		desc->control0 |= MXS_DCP_CONTROL0_OTP_KEY;
+3d16af0b4cfac4b David Gstir    2024-04-03  269  	else
+15b59e7c3733f90 Marek Vasut    2013-12-10  270  		/* Payload contains the key. */
+15b59e7c3733f90 Marek Vasut    2013-12-10  271  		desc->control0 |= MXS_DCP_CONTROL0_PAYLOAD_KEY;
+15b59e7c3733f90 Marek Vasut    2013-12-10  272  
+2021abaa00da64a Marek Vasut    2014-01-14  273  	if (rctx->enc)
+15b59e7c3733f90 Marek Vasut    2013-12-10  274  		desc->control0 |= MXS_DCP_CONTROL0_CIPHER_ENCRYPT;
+15b59e7c3733f90 Marek Vasut    2013-12-10  275  	if (init)
+15b59e7c3733f90 Marek Vasut    2013-12-10  276  		desc->control0 |= MXS_DCP_CONTROL0_CIPHER_INIT;
+15b59e7c3733f90 Marek Vasut    2013-12-10  277  
+15b59e7c3733f90 Marek Vasut    2013-12-10  278  	desc->control1 = MXS_DCP_CONTROL1_CIPHER_SELECT_AES128;
+15b59e7c3733f90 Marek Vasut    2013-12-10  279  
+2021abaa00da64a Marek Vasut    2014-01-14  280  	if (rctx->ecb)
+15b59e7c3733f90 Marek Vasut    2013-12-10  281  		desc->control1 |= MXS_DCP_CONTROL1_CIPHER_MODE_ECB;
+15b59e7c3733f90 Marek Vasut    2013-12-10  282  	else
+15b59e7c3733f90 Marek Vasut    2013-12-10  283  		desc->control1 |= MXS_DCP_CONTROL1_CIPHER_MODE_CBC;
+15b59e7c3733f90 Marek Vasut    2013-12-10  284  
+3d16af0b4cfac4b David Gstir    2024-04-03  285  	if (key_referenced)
+3d16af0b4cfac4b David Gstir    2024-04-03  286  		desc->control1 |= sdcp->coh->aes_key[0] << MXS_DCP_CONTROL1_KEY_SELECT_SHIFT;
+3d16af0b4cfac4b David Gstir    2024-04-03  287  
+15b59e7c3733f90 Marek Vasut    2013-12-10  288  	desc->next_cmd_addr = 0;
+15b59e7c3733f90 Marek Vasut    2013-12-10  289  	desc->source = src_phys;
+15b59e7c3733f90 Marek Vasut    2013-12-10  290  	desc->destination = dst_phys;
+15b59e7c3733f90 Marek Vasut    2013-12-10  291  	desc->size = actx->fill;
+15b59e7c3733f90 Marek Vasut    2013-12-10 @292  	desc->payload = key_phys;
+                                                                        ^^^^^^^^
+Uninitialized.
+
+15b59e7c3733f90 Marek Vasut    2013-12-10  293  	desc->status = 0;
+15b59e7c3733f90 Marek Vasut    2013-12-10  294  
+15b59e7c3733f90 Marek Vasut    2013-12-10  295  	ret = mxs_dcp_start_dma(actx);
+15b59e7c3733f90 Marek Vasut    2013-12-10  296  
+fadd7a6e616b89c Radu Solea     2018-10-02  297  aes_done_run:
+df6313d707e575a Sean Anderson  2021-07-01  298  	dma_unmap_single(sdcp->dev, dst_phys, DCP_BUF_SZ, DMA_FROM_DEVICE);
+df6313d707e575a Sean Anderson  2021-07-01  299  err_dst:
+df6313d707e575a Sean Anderson  2021-07-01  300  	dma_unmap_single(sdcp->dev, src_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
+df6313d707e575a Sean Anderson  2021-07-01  301  err_src:
+3d16af0b4cfac4b David Gstir    2024-04-03  302  	if (!key_referenced)
+15b59e7c3733f90 Marek Vasut    2013-12-10  303  		dma_unmap_single(sdcp->dev, key_phys, 2 * AES_KEYSIZE_128,
+15b59e7c3733f90 Marek Vasut    2013-12-10  304  				 DMA_TO_DEVICE);
+15b59e7c3733f90 Marek Vasut    2013-12-10  305  	return ret;
+15b59e7c3733f90 Marek Vasut    2013-12-10  306  }
 
 -- 
-Regards,
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
-Sakari Ailus
