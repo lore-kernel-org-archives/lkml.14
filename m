@@ -1,195 +1,155 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F402E40E
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716796041; cv=none; b=oy1lcK4TqFFS+R4O0Nifu8NzUYoocINKPNkN0S3p9qINMz5dxIbmz+8PNhV9uiNpMR7w+KW8XxZXbASfHSZsiha31taORZmY3c+hRZw2PUTaWzzH+OoTU/+1YDzedS6cnk1jYW9gN/iYPv9v7f4j2TQRb+/Th9jLlNc0uky1tG0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716796041; c=relaxed/simple;
-	bh=9v6Q8GT8zMIOW7dcrjy4/kj3+hxtMAo2AEzO1ITXXJw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=H+OlGjGSsg5IiIPvR76/BZ0QVGO06Zgq3Rl5kZEHnmQhHGsyocDR6p7OtHU2vaS9XTjKupxnjtwOb98sU2sRAdZ4jHehjLfBHLqyBJa9OMpjrnFWi9bkEycT2TEfXEqZ9EciDIbd9RmG5IsxNTl40c7U5VeAId4uCXaVdcRaQdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=kQsy3pHE; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C638E2E40E;
+	Mon, 27 May 2024 07:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716796091; cv=pass; b=A//MkmnD1A+qOLgVFot7YMq9bJJFu8SMwH3Cn36vmWGx7GYOEAWhucyIqBfbve+WMkP/YsKz7LlLxoCR43Xl5uUrxfu1xd6QoxaXH3xSh3E2nX33P7+H5caBrbuXawAdER4mhA8EJ52Ft91gjf6qNjQz4fCqCWV/VxEWeIhwNZU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716796091; c=relaxed/simple;
+	bh=keh5W7U3dzsEif6ksUmuqn4x55o5x9L/8HfBAVTKtxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C+xJwJO79JJLhVjmTP62k1C5ibd263pZKLdvK6tyCujG+xx+yLlC6dYxsKsq/XcHkSJC+ebjdqq95jPHzw6oFmT+TrhwkTrxGCZUkSKaBUDsEViStK4bmeRWYd1mM7W9yMVagnyt+RkcAGjNLG5mp8FfDoqNBA8x6gF//1kmrJw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=tnoW2b8c; arc=pass smtp.client-ip=185.185.170.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="kQsy3pHE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=j4aj9tNdSCThBc71zb119bQ/6ie6a20643nUo5sbWSY=; b=kQsy3pHEn/Rbo+0i3xHus7tJSG
-	B3+aqvvEIdrZklAyyOXOehVRhenOWNAZ6lPb28oD+6sGgLPU8zwbax0qdtzuGnHe4iP5G79T/7Ofg
-	xT6D2Ga7Qx2eISJRHQBiFzTOHepisJYm2EMzdA40dTCB7ypL9FgbgxIGnI66pmkXnTeBiBgiDYInf
-	wwzgNa8EdLLSUY0WFYjmGz9pi4hTlU7DqJC6xviyujK2gtPmHr3wAVhA49qDWFHkNgNRWH9a7bYNY
-	RmbNMQGdmt+NehhbybWoglS0LhkLMpUZZibGYZ60nmuPWCnrYJ6xQGT41QszsHTlBjjzsZmuz0KQy
-	kzMqeP9Q==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sBV4e-0009Gh-VK; Mon, 27 May 2024 09:47:16 +0200
-Received: from [185.17.218.86] (helo=localhost)
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sBV4e-000HiL-2j;
-	Mon, 27 May 2024 09:47:16 +0200
-From: Esben Haabendal <esben@geanix.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
- <pratyush@kernel.org>,  Michael Walle <mwalle@kernel.org>,
-  linux-kernel@vger.kernel.org,  linux-mtd@lists.infradead.org
-Subject: Re: [PATCH] memory: fsl_ifc: Make FSL_IFC config visible and
- selectable
-In-Reply-To: <87msobaes6.fsf@geanix.com> (Esben Haabendal's message of "Mon,
-	27 May 2024 09:35:05 +0200")
-References: <20240523-fsl-ifc-config-v1-1-6eff73bdc7e6@geanix.com>
-	<979fd913-050b-445d-9ca8-0ec6906ce3ea@kernel.org>
-	<87cypc38gu.fsf@geanix.com>
-	<9a7f73f4-f5dc-4342-855b-08df6a839bb5@kernel.org>
-	<87le3zoatn.fsf@geanix.com>
-	<6c166ad5-8004-4bc4-9107-a47ba9a72161@kernel.org>
-	<87ttijaglp.fsf@geanix.com>
-	<c045f1a4-9ddf-4c53-a69b-22ceb68a1ce8@kernel.org>
-	<87msobaes6.fsf@geanix.com>
-Date: Mon, 27 May 2024 09:47:16 +0200
-Message-ID: <87ikyzae7v.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="tnoW2b8c"
+Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-c641-1eff-feae-163c.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:c641:1eff:feae:163c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sailus)
+	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4VnnnK2tg0z49Pyk;
+	Mon, 27 May 2024 10:48:05 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
+	t=1716796085;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hfBVpEPdEi/Ida+CmoF5UCxGqdboIgH47sljlECVuIs=;
+	b=tnoW2b8cLuTt8UKe7iN88sAtOeI9i9K2vjv+XJXvAFA0t+4SNnMdmEDOUNijRlBK/NsJ0h
+	uUzotMwRH1EZz/t8mO9ijz+S/7DK39MDXNuajhj2/pVrcw1FbQUFm1efCA+znDx5VUrQ2G
+	/Ckj+uOBdsRD3W7SQvwbU0OYwhqhDqe53nmjNs0kOUr4FWUBosMN3z2vTKFzjX5w+jA9eZ
+	WjVAdqkt78csYJcQauRuyhlh/Q511gsxo/tBueLhJmJme3coht+pvaDT57d6gx2qOO600D
+	T51rObGuRPWqyN6gkM7ngnh1VolzFWzQmgALHO7NLhTQyoHuH+dGj4MJrkem8A==
+ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1716796085; a=rsa-sha256;
+	cv=none;
+	b=b7Jkeh351bThPsf2iZpujuWgqn01uSvebMT9Sm79zb6zO7o8ADi4MBXktkYRJisQ81cmBN
+	2yNpNO/MogsTWcb7ojhfw2aa1VPohy94WOHYCRKyBB1KAQR72kJhaGleppzN90qKjyKMpt
+	EVxKZdZkxXGzWTPnxj0+JCR2MU6D576G7EjSK5lFTNAE+y1xCXLlMS7eV8tYP+T8zU6qkg
+	sFHZ2GDoqq5qP+lEjLsZYFHpOCLlSCFV2FyDhxKx2cBXLLtLrdvXWAyU2lBh/SE9Zhm7Sg
+	vWJge4WryhijygAjn/gfO72Hox/pBZSo66UdKAdAotNxXniwyKMww1XdmUamHg==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=lahtoruutu; t=1716796085;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hfBVpEPdEi/Ida+CmoF5UCxGqdboIgH47sljlECVuIs=;
+	b=Mj58O8gZ3WhdDHzNm1zQxgpvo0+yrIqPafXCEkJnp4xgLIKznp8Mb05Wq7bBUv/2h5M1sz
+	XQFR+g2iuFKzKDEQ9i6hxOWi5GYpK1zkeG/7IE6Kc3jnx1qba0BxVqgYpYTNAzCeSsAxYp
+	YWkVcQ+mmbFshgC0FGVJdeXuIYJz5acZb4S27vVG9mZ7rmEJCqJEsOrN37YU/CUVr8/mcp
+	92JWYZG9vhTQHJntmDhQhl0jBiEp6zK8npQYo17R71X3BLV25hkLzj931GxFE+q/tMgJLD
+	/kI+AdMiu8amxFplZLJ5xPosR65k7oNWFqs35AnZHEJbGLVHt4vAYu/gWPNYmA==
+Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 25730634C93;
+	Mon, 27 May 2024 10:45:10 +0300 (EEST)
+Date: Mon, 27 May 2024 07:45:09 +0000
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>, mchehab@kernel.org,
+	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	hdegoede@redhat.com, laurent.pinchart@ideasonboard.com
+Subject: Re: [PATCH 2/2] media: i2c: Add driver for ST VD56G3 camera sensor
+Message-ID: <ZlQ6BV2sEw8PioBS@valkosipuli.retiisi.eu>
+References: <20240417133453.17406-1-sylvain.petinot@foss.st.com>
+ <20240417133453.17406-3-sylvain.petinot@foss.st.com>
+ <Zil1wiCcCdwZs5Df@valkosipuli.retiisi.eu>
+ <d45a2ea1-bc2d-441a-b036-1da40290c6b3@foss.st.com>
+ <c9b35dc4-6f52-48e2-8952-5a43c500f819@foss.st.com>
+ <ZlQ2zymJguCipLMl@valkosipuli.retiisi.eu>
+ <864dc1d3-2478-46a2-84a5-c7c51f96268f@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27287/Sun May 26 10:27:50 2024)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <864dc1d3-2478-46a2-84a5-c7c51f96268f@foss.st.com>
 
-Esben Haabendal <esben@geanix.com> writes:
+Hi Benjamin,
 
-> Krzysztof Kozlowski <krzk@kernel.org> writes:
->
->> On 27/05/2024 08:55, Esben Haabendal wrote:
->>> Krzysztof Kozlowski <krzk@kernel.org> writes:
->>> 
->>>> On 24/05/2024 10:47, Esben Haabendal wrote:
->>>>> Krzysztof Kozlowski <krzk@kernel.org> writes:
->>>>>
->>>>>> On 23/05/2024 16:32, Esben Haabendal wrote:
->>>>>>> Krzysztof Kozlowski <krzk@kernel.org> writes:
->>>>>>>
->>>>>>>> On 23/05/2024 15:58, Esben Haabendal wrote:
->>>>>>>>> While use of fsl_ifc driver with NAND flash is fine, as the fsl_ifc_nand
->>>>>>>>> driver selects FSL_IFC automatically, we need the option to be selectable
->>>>>>>>> for platforms using fsl_ifc with NOR flash.
->>>>>>>>
->>>>>>>> Which driver is that?
->>>>>>>
->>>>>>> This is drivers/memory/fsl_ifc.o driver. It is for Integrated Flash
->>>>>>> Controller (IFC) from NXP. It is used in various Layerscape socs.
->>>>>>
->>>>>> ? I know that, I mean the NOR flash working here.
->>>>>
->>>>> Ah, sorry. The NOR flash I am using here is a Spansion S29AL016J.
->>>>>
->>>>>>>> Which DTS?
->>>>>>>
->>>>>>> It is for "fsl,ifc" compatible devices.
->>>>>>
->>>>>> That's not a NOR flash.
->>>>>
->>>>> Nope.  The binding used for the NOR flash is "cfi-flash".
->>>>
->>>> And now let's get back to my original question. I asked for driver, not
->>>> device, and for DTS not compatible.
->>> 
->>> You got me really confused now. I am not sure what you are asking me
->>> for, and why.
->>> 
->>> I am sending a patch which changes to Kconfig for a memory controller
->>> driver. The change is AFAICS quite similar to commit be34f45f0d4a
->>> ("memory: omap-gpmc: Make OMAP_GPMC config visible and selectable").
->>> 
->>> As for the NOR flash that in this situation is attached to the IFC
->>> controller, it is (as mentioned) Spansion S29AL016J. It is handled by
->>> the drivers/mtd/maps/physmap.o driver (CONFIG_MTD_PHYSMAP +
->>> CONFIG_MTD_PHYSMAP_OF)
->>
->> Thanks.
->>
->>> 
->>> The DTS used to specify the NOR flash is
->>
->> Upstream DTS. I don't care about downstream.
->
-> Upstream DTS is arch/arm/boot/dts/nxp/ls/ls1021a.dtsi
->
-> Which has
->
->                 ifc: memory-controller@1530000 {
->                         compatible = "fsl,ifc";
->                         reg = <0x0 0x1530000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
->                         status = "disabled";
->                 };
->
-> The NOR flash is not specified in upstream DTS, as it is board and not
-> SoC specific.
->
-> I assume it is not considered bad practise to keep downstream DTS out of
-> tree.
->
->>> &ifc {
->>>         status = "okay";
->>>         #address-cells = <2>;
->>>         #size-cells = <1>;
->>>         ranges = <0x0 0x0 0x0 0x60000000 0x00200000>;
->>> 
->>>         nor_flash: nor@0,0 {
->>>                 #address-cells = <1>;
->>>                 #size-cells = <1>;
->>>                 compatible = "cfi-flash";
->>>                 reg = <0x0 0x0 0x200000>;
->>>                 bank-width = <2>;
->>> 
->>>                 partition@0 {
->>>                         reg = <0x000000 0x0f0000>;
->>>                         label = "boot0";
->>>                 };
->>>         };
->>> };
+On Mon, May 27, 2024 at 09:44:15AM +0200, Benjamin Mugnier wrote:
+> Hi Sakari,
+> 
+> On 5/27/24 09:31, Sakari Ailus wrote:
+> > Hi Benjamin,
+> > 
+> > On Mon, May 13, 2024 at 03:37:25PM +0200, Benjamin Mugnier wrote:
+> >>>>> +static int vd56g3_read_expo_cluster(struct vd56g3 *sensor, bool force_cur_val)
+> >>>>> +{
+> >>>>> +	u64 exposure = 0;
+> >>>>> +	u64 again = 0;
+> >>>>> +	u64 dgain = 0;
+> >>>>
+> >>>> Do you need the assignments? The values are assigned by cci_read() below,
+> >>>> right?
+> >>>
+> >>> Well initially, I didn't have those assignments and some checker
+> >>> complains (Honestly I didn't investigate the warning).
+> >>> I will double check and see if they are necessary.
+> >>>
+> >>
+> >> Since I have smatch ready, I ran it without these initialization against
+> >> the latest media tree. I got these :
+> >>
+> >> drivers/media/i2c/st-vd56g3.c:403 vd56g3_read_expo_cluster() error:
+> >> uninitialized symbol 'exposure'.
+> >> drivers/media/i2c/st-vd56g3.c:404 vd56g3_read_expo_cluster() error:
+> >> uninitialized symbol 'again'.
+> >> drivers/media/i2c/st-vd56g3.c:405 vd56g3_read_expo_cluster() error:
+> >> uninitialized symbol 'dgain'.
+> >> drivers/media/i2c/st-vd56g3.c:407 vd56g3_read_expo_cluster() error:
+> >> uninitialized symbol 'exposure'.
+> >> drivers/media/i2c/st-vd56g3.c:408 vd56g3_read_expo_cluster() error:
+> >> uninitialized symbol 'again'.
+> >> drivers/media/i2c/st-vd56g3.c:409 vd56g3_read_expo_cluster() error:
+> >> uninitialized symbol 'dgain'.
+> >>
+> >> cci_read() is indeed not modifying its 'var' argument in the default
+> >> case of the switch [1]. Spawning these errors.
+> >> Adding a '*val = 0' in the default case would also fix it, but will
+> >> change the function behavior.
+> > 
+> > I think I'd add the assignment to cci_read(). This isn't the only driver
+> > that's affected. In the best case smatch would be fixed to figure this out.
+> > 
+> > Any thoughts?
+> 
+> IMHO adding the assignment to cci_read() is the cleanest way to handle it.
 
-Ok, I seem to still be confused as to what you want from me. If you are
-saying that the kernel is not supposed to care about out-of-tree DTS
-(and thereby any bootloader provided DTB), I would like to bring your
-attention to arch/arm/boot/dts/nxp/ls/ls1021a-twr.dts in upstream:
+A fix in smatch would be the best in my opinion as it could catch the use
+of the value in case of an error. But it's not going to be a short term
+solution, hence I'd also assign *val to 0 now.
 
-&ifc {
-        #address-cells = <2>;
-        #size-cells = <1>;
-        /* NOR Flash on board */
-        ranges = <0x0 0x0 0x0 0x60000000 0x08000000>;
-        status = "okay";
+> 
+> > 
+> > Cc also Hans and Laurent.
+> > 
+> 
 
-        nor@0,0 {
-                #address-cells = <1>;
-                #size-cells = <1>;
-                compatible = "cfi-flash";
-                reg = <0x0 0x0 0x8000000>;
-                big-endian;
-                bank-width = <2>;
-                device-width = <1>;
-        };
-};
+-- 
+Regards,
 
-This is basically identical to what I am using, and it will have the
-same problem. It requires CONFIG_FSL_IFC enabled, which is not possible
-(without enabling CONFIG_MTD_NAND_FSL_IFC). This board does not have
-NAND, so I don't think it is reasonable to require keeping support for
-it enabled to be able to use NOR flash.
-
-/Esben
+Sakari Ailus
