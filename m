@@ -1,54 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD41639AC9
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E56A2207A
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716791905; cv=none; b=P1+0t+Bn3SPPctq4u88bM7owtk872uPv4XMW2fN8A++6v1sHBCdEIlZHbSQ9vhQFkG6pPynS9pgsnQBPVCeLXyeObvGFhDKJEyawCuVyBoukhii5dlaIfo7lTVCqBdC0SheChQMqpkSkbtfK6VK5zpr/icpRpk+m+qr89gLRwEM=
+	t=1716791904; cv=none; b=ShmFq2hNhFSs0SG6HR8VGoierBJtBaORH7gL1KMKAOF5RQde6R093XbzyTH1BEPIjIkXE5DFnAYfPWxzrSh8GOzUG/wCDOGhHKDljuYiFt1EzHo4MocjTj97sAb29hU/XWtLMEJqCJCWVmF/GV3lIpKLGJjVNetOjW9+WCw0jJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716791905; c=relaxed/simple;
-	bh=e+s5yp9kuOUcSKomNwvNgs7LuhomtVTH2kEePY50ErY=;
+	s=arc-20240116; t=1716791904; c=relaxed/simple;
+	bh=Cp5rG2YqPtZnpO861UnOvSpwJyI1madSjKWclzZ6Pcw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cPKt40vtaZcgz4+uNBtazTVa6uMTr55nn7qUY2rYsJPv1JlJEHbN0fqs5VZDm5zjJ/+UOxlKc/kItu/z2eRI7tjbTj5e7AObczGDXsZzenYgynzvWUVg6h1c2pUlAkq7RFfVN77nF3A08beMHzzo5VA5g8JJCMAZk2fj6S7rCYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sMp6+EjY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I+bsIqBG; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=EcKLU6OerpQ8PcNt9JWkQgVzScn/GmO3r0UTx/Bvnv2XFydp8rkR/TNwQC7Kwl2ouc9O72Xv32DSX7Frh0aQnDHFlVHSH3TirQ2lhZjYKbB2jYg5APWaCToRUooLf4kSzLBnpskxwMTdLpzYubwL01Xt8Q734JV+vjHPk+if5dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=agGKEwd/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m/ZUIGyO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sMp6+EjY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I+bsIqBG"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="agGKEwd/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m/ZUIGyO"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716791902;
+	s=2020; t=1716791898;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KpkOnoEtjNOpdOq64j/1rkP+WasLftMlBbDsyMeeGFk=;
-	b=sMp6+EjYeS6YAY8SgyjF5e5BXoJxOg4s7avGTViMvziV0zJ7G+yUbtCWn4sU/v0vRqCov2
-	ZKAaEAT7RtL4kLaDAJqQrQdULBaq3Tdi0Oxj3QMBRp/qvcynfBhI3rjlezvV2pzBCupVDj
-	TGrxOuVwDqAsERWrk9Dp4LHpr/6jHWRTOepLEJA8OuB65VhFWC4X2Z/9hhyWo2uxXgku0I
-	ri3omk2qAcp+QO9OkwuwAsjzHm/+lrbyHZSm1LBY0RsRSdeACNq8LpQGO4Ugap+lzf7hxU
-	bhfJEe0EWoJR9gWsOVW4onT3Bgg9Ab0GBJjXAu4wEOf1lHheqd9PtepDAfTH3g==
+	bh=Wlf6KcDO+RSt0m5hbX6TLMb9vXVt0E3+gB/34zgqmT0=;
+	b=agGKEwd/5fTzX1tubGtH+Jy8oH9yozoGwAv8td9G594TX6uoVFJAr7uczrJsJrdUOMRiqC
+	waK+FscwvHvw2HQ5y1L0CEsIeYWlSiXv4Xa/G29tPO8N8/GQR6XmQ+2j72Wx5pcI+GyHz0
+	fo+g0DykcgZRqbHW2iN2SyQo9POlo+1CGAdd+3/TzSnrSQHQOyUFdJaLAYhECcaR9BCNwF
+	D40qm+sH8WsmrC/dPgUxSjhgaxjHwIRgAaGciJNw/b/9RsAYjd7148ZYv3GPOdqlB770GF
+	mErv7SAANhT6La5KnazQn3bC+H/NjmFO9HUT6GE3dExLdp9l2yMhN6wdWnIypA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716791902;
+	s=2020e; t=1716791898;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KpkOnoEtjNOpdOq64j/1rkP+WasLftMlBbDsyMeeGFk=;
-	b=I+bsIqBGpA1zIjFTPZZYJf+8xCoHy4GUJF1NxokOLusl4kQi/uAQRjr3mrc6c4+p5gailH
-	DzNeZXV7TnfptnDQ==
+	bh=Wlf6KcDO+RSt0m5hbX6TLMb9vXVt0E3+gB/34zgqmT0=;
+	b=m/ZUIGyOEL3+DYWkTlxmJaeWLcE2Y/e4gAgBK7pXnEs41qlDYHmlV1v0M/0kPymyeOlGl/
+	SOPfMt7tfcWGTIBA==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH printk v6 14/30] printk: nbcon: Fix kerneldoc for enums
-Date: Mon, 27 May 2024 08:43:33 +0206
-Message-Id: <20240527063749.391035-15-john.ogness@linutronix.de>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH printk v6 06/30] printk: nbcon: Add callbacks to synchronize with driver
+Date: Mon, 27 May 2024 08:43:25 +0206
+Message-Id: <20240527063749.391035-7-john.ogness@linutronix.de>
 In-Reply-To: <20240527063749.391035-1-john.ogness@linutronix.de>
 References: <20240527063749.391035-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -59,38 +58,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Kerneldoc requires enums to be specified as such. Otherwise it is
-interpreted as function documentation.
+Console drivers typically must deal with access to the hardware
+via user input/output (such as an interactive login shell) and
+output of kernel messages via printk() calls. To provide the
+necessary synchronization, usually some driver-specific locking
+mechanism is used (for example, the port spinlock for uart
+serial consoles).
+
+Until now, usage of this driver-specific locking has been hidden
+from the printk-subsystem and implemented within the various
+console callbacks. However, nbcon consoles would need to use it
+even in the generic code.
+
+Add device_lock() and device_unlock() callback which will need
+to get implemented by nbcon consoles.
+
+The callbacks will use whatever synchronization mechanism the
+driver is using for itself. The minimum requirement is to
+prevent CPU migration. It would allow a context friendly
+acquiring of nbcon console ownership in non-emergency and
+non-panic context.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- include/linux/console.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/console.h | 43 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 diff --git a/include/linux/console.h b/include/linux/console.h
-index dd3d4b5d3737..729f7c3b10c1 100644
+index 3291cc340f1a..33a029d976c3 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
-@@ -137,7 +137,7 @@ static inline int con_debug_leave(void)
-  */
+@@ -354,6 +354,49 @@ struct console {
+ 	 */
+ 	void (*write_atomic)(struct console *con, struct nbcon_write_context *wctxt);
  
- /**
-- * cons_flags - General console flags
-+ * enum cons_flags - General console flags
-  * @CON_PRINTBUFFER:	Used by newly registered consoles to avoid duplicate
-  *			output of messages that were already shown by boot
-  *			consoles or read by userspace via syslog() syscall.
-@@ -218,7 +218,7 @@ struct nbcon_state {
- static_assert(sizeof(struct nbcon_state) <= sizeof(int));
- 
- /**
-- * nbcon_prio - console owner priority for nbcon consoles
-+ * enum nbcon_prio - console owner priority for nbcon consoles
-  * @NBCON_PRIO_NONE:		Unused
-  * @NBCON_PRIO_NORMAL:		Normal (non-emergency) usage
-  * @NBCON_PRIO_EMERGENCY:	Emergency output (WARN/OOPS...)
++	/**
++	 * @device_lock:
++	 *
++	 * NBCON callback to begin synchronization with driver code.
++	 *
++	 * Console drivers typically must deal with access to the hardware
++	 * via user input/output (such as an interactive login shell) and
++	 * output of kernel messages via printk() calls. This callback is
++	 * called by the printk-subsystem whenever it needs to synchronize
++	 * with hardware access by the driver. It should be implemented to
++	 * use whatever synchronization mechanism the driver is using for
++	 * itself (for example, the port lock for uart serial consoles).
++	 *
++	 * The callback is always called from task context. It may use any
++	 * synchronization method required by the driver.
++	 *
++	 * IMPORTANT: The callback MUST disable migration. The console driver
++	 *	may be using a synchronization mechanism that already takes
++	 *	care of this (such as spinlocks). Otherwise this function must
++	 *	explicitly call migrate_disable().
++	 *
++	 * The flags argument is provided as a convenience to the driver. It
++	 * will be passed again to device_unlock(). It can be ignored if the
++	 * driver does not need it.
++	 */
++	void (*device_lock)(struct console *con, unsigned long *flags);
++
++	/**
++	 * @device_unlock:
++	 *
++	 * NBCON callback to finish synchronization with driver code.
++	 *
++	 * It is the counterpart to device_lock().
++	 *
++	 * This callback is always called from task context. It must
++	 * appropriately re-enable migration (depending on how device_lock()
++	 * disabled migration).
++	 *
++	 * The flags argument is the value of the same variable that was
++	 * passed to device_lock().
++	 */
++	void (*device_unlock)(struct console *con, unsigned long flags);
++
+ 	atomic_t		__private nbcon_state;
+ 	atomic_long_t		__private nbcon_seq;
+ 	struct printk_buffers	*pbufs;
 -- 
 2.39.2
 
