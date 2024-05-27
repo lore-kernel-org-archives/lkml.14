@@ -1,67 +1,92 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03B0169368;
-	Mon, 27 May 2024 22:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7A0167292;
+	Mon, 27 May 2024 22:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716849753; cv=none; b=VSOOZCVA1QmEmB3cgZnCbzLgqsJrB+WhqWXZF/1cv6A94zZrQx0rITmg8yY52NKdFzuOjN29ZELiixHVmFVqZAdD6ARaN6buF3n3VmkGD4nGh5AsZpCHHpaWSvXmCPCYVT3bmAUDOIrmdwJXfDnKYH0pqXT1jZ1a3WfenuGIYQE=
+	t=1716849804; cv=none; b=EyLRq9a1K1+ITuv2KdBM1jR5pwbUBig8mCQJjIqFBmvjiB7wmVoSHRKX9FqaEfvY8KaD0qbsC2/I5IgwRtuCk7fkcRs+mAWLRd42F94Xt5U1xeXcAFfWeLr47KypUiNM3CRXNvl0JRQ2IY2z2fTLC8Z+qSkCNZF5dWMqdT7w7q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716849753; c=relaxed/simple;
-	bh=VyOQIWPEbtuHOC1cQJVCNYPzGlSZqGH9Wpc+QOwHASY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XG3utdnZVGXkPHl5xFoGZ2ZFOzEMs33h/aOw1dzIc94TepJumY4/Vt4fI8BeyTW205yWy4fvI1JnVUkOTEa2yaZjD1JEZW/Z0WLpQ0rPJ9oRIPg7jb69i8SOLjPGGdO6bYf/t0l84yHE/JexdpeUH3gqItsGmsp48HYlGzEj6ZA=
+	s=arc-20240116; t=1716849804; c=relaxed/simple;
+	bh=7OxofZiGxhcjWtYvBKTvsLyc5RWpkNBKUQTszFUvvfE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ls6Cs9+h5L6wxTfwyXnbpi5uHcVywyPz0RvnYjFiubD6KArdX9u8xFQACloa5GdWVJPvuS+99dvTWPP6PbIqiQ6ZTq4yZDuUgLB1UdKg3vZLpt965eFn4tx11huYDcsttHhE2HGm+GIzbHtLZDCNIr05pqlbM959ISfxme+K0n4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e86193d.versanet.de ([94.134.25.61] helo=phil.lan)
+Received: from i5e86193d.versanet.de ([94.134.25.61] helo=diego.localnet)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1sBj2q-0005Os-ED; Tue, 28 May 2024 00:42:20 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Dragan Simic <dsimic@manjaro.org>,
-	linux-rockchip@lists.infradead.org
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	stable@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	krzk+dt@kernel.org,
-	robh+dt@kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix the DCDC_REG2 minimum voltage on Quartz64 Model B
-Date: Tue, 28 May 2024 00:42:15 +0200
-Message-Id: <171684956152.1783037.2786989707792820997.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <e70742ea2df432bf57b3f7de542d81ca22b0da2f.1716225483.git.dsimic@manjaro.org>
-References: <e70742ea2df432bf57b3f7de542d81ca22b0da2f.1716225483.git.dsimic@manjaro.org>
+	id 1sBj3l-0005Qx-Me; Tue, 28 May 2024 00:43:17 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Jonas Karlman <jonas@kwiboo.se>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: (subset) [PATCH 00/13] rockchip: Fixes and improvements for ROCK Pi S
+Date: Tue, 28 May 2024 00:43:16 +0200
+Message-ID: <1750846.QkHrqEjB74@diego>
+In-Reply-To: <171684956152.1783037.15483261423757153532.b4-ty@sntech.de>
+References:
+ <20240521211029.1236094-1-jonas@kwiboo.se>
+ <171684956152.1783037.15483261423757153532.b4-ty@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, 20 May 2024 19:20:28 +0200, Dragan Simic wrote:
-> Correct the specified regulator-min-microvolt value for the buck DCDC_REG2
-> regulator, which is part of the Rockchip RK809 PMIC, in the Pine64 Quartz64
-> Model B board dts.  According to the RK809 datasheet, version 1.01, this
-> regulator is capable of producing voltages as low as 0.5 V on its output,
-> instead of going down to 0.9 V only, which is additionally confirmed by the
-> regulator-min-microvolt values found in the board dts files for the other
-> supported boards that use the same RK809 PMIC.
+Am Dienstag, 28. Mai 2024, 00:42:16 CEST schrieb Heiko Stuebner:
+> On Tue, 21 May 2024 21:10:03 +0000, Jonas Karlman wrote:
+> > This series include fixes for DT schema validation, fixes and improve
+> > support for onboard features of the Radxa ROCK Pi S board.
+> > 
+> > Patch 1-2 fixes DT schema validation of ethernet and audio codec.
+> > 
+> > Patch 3 fixes use of onboard SD NAND and eMMC.
+> > 
+> > [...]
 > 
-> [...]
+> Applied, thanks!
+> 
+> [02/13] arm64: dts: rockchip: rk3308: Fix codec@ff560000 reset-names
+>         commit: cb1622df6a28e3eac34a8b95feba2dd2dc6cd887
+> [03/13] arm64: dts: rockchip: rk3308-rock-pi-s: Fix SD NAND and eMMC init
+>         commit: 1fb98c855ccd7bc7f50c7a9626fbb8440454760b
+> [04/13] arm64: dts: rockchip: rk3308-rock-pi-s: Add sdmmc related properties
+>         commit: fc0daeccc384233eadfa9d5ddbd00159653c6bdc
+> [05/13] arm64: dts: rockchip: rk3308-rock-pi-s: Add pinctrl for UART0
+>         commit: 7affb86ef62581e3475ce3e0a7640da1f2ee29f8
+> [06/13] arm64: dts: rockchip: rk3308-rock-pi-s: Rename LED related pinctrl nodes
+>         commit: d2a52f678883fe4bc00bca89366b1ba504750abf
+> [07/13] arm64: dts: rockchip: rk3308-rock-pi-s: Add mdio and ethernet-phy nodes
+>         commit: 4b64ed510ed946a4e4ca6d51d6512bf5361f6a04
+> [08/13] arm64: dts: rockchip: Add OTP device node for RK3308
+>         commit: 36d3bbc8cdbef2f83391f7708888265ac4c37a99
+> [09/13] dt-bindings: power: rockchip: Document RK3308 IO voltage domains
+>         commit: 579e5b476307797b3a1260bec544dbbabcce1de5
+> [10/13] soc: rockchip: io-domain: Add RK3308 IO voltage domains
+>         commit: 0536fa6e6fa3e48f4ca11855b586c277be524fbe
+> [11/13] arm64: dts: rockchip: Add RK3308 IO voltage domains
+>         commit: d1829ba469d5743734e37d59fece73e3668ab084
+> [12/13] arm64: dts: rockchip: rk3308-rock-pi-s: Enable the io-domains node
+>         commit: 100b3bdee6035192f6d4a1847970fe004bb505fb
+> [13/13] arm64: dts: rockchip: rk3308-rock-pi-s: Update WIFi/BT related nodes
+>         commit: 12c3ec878cbe3709782e85b88124abecc3bb8617
+> 
+> I've split this up slightly.
+> Some patches for 6.10 as fixes, and the rest for 6.11 .
+> Edited patch7 (for 6.11) to apply without patch6 (6.10)
+> That disappears during a merge of those branches.
 
-Applied, thanks!
+and as stated, please re-send patch1 separately.
 
-[1/1] arm64: dts: rockchip: Fix the DCDC_REG2 minimum voltage on Quartz64 Model B
-      commit: d201c92bff90f3d3d0b079fc955378c15c0483cc
+Thanks
+Heiko
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+
