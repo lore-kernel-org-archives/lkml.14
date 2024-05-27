@@ -1,201 +1,106 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834BB13A3E7;
-	Mon, 27 May 2024 09:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707F1139CFC;
+	Mon, 27 May 2024 09:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716801753; cv=none; b=MvW/OpPBmGc9n3DQaGYvsJW3PvfQC016S+r5QVNz8WOor9pCqzt21Z5iJLRm9pcbX24r/ptnb4fnYEcHLh+TtKjk67f5Tur43OLjxnTK3GqsnU0Kog8wreOSS/3qv0ye7UK77e5m7eybyspDKj0NAqNTU1YqaqMrv3nNq0lJRNY=
+	t=1716801773; cv=none; b=TSrkTbWFM27M5hpbRr/Hg8KIFUm77wnGigWIMGeg8utmH6iN+LbWncVsF3ETCvVj84NvHGO1IZQHl/x80u7VJLqFJlObEg1P660ZtO6RRjm8Xihuj31fjOOOscMEcR3rPQq72pOmwdcbWiWqhgEHde9E4rPIOA5TsjP61e7mx6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716801753; c=relaxed/simple;
-	bh=7Do3jd1IN413L/V5MF6Yd5UQUtCIWA7aOu/aea4sp3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kCjbqDI+M0/O/9TrhQE0bedRTK/DY2rwg5UZCPcKWTNpMWDr78pzavW0ZCjH3MXY8aiVkYkZaJ5rAZG7HLehP6oomDEIE1erhCHwD0ksb95ZutG1P+Dhl9sykp3tEa1++sm2mNiW4L1hr4v/LDjCaVp/Ytxto5YiF6/3bCxdmMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SPBZriHQ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1716801773; c=relaxed/simple;
+	bh=sPpYKX6e2tu3TT0zTxK282y8SKfHEdgc9wUY0M5CiN0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mpyQo8WR95S0Hn25A+7+a0NiuE4wbveHzzlOWH7pv9L5d6Hw3Up4g1TSmbVu0g/mlQSJ2qQ6uVcB6IYtN1NBE5HC5u5vSlDSQ4qDojaqHo6/o4weTPB20eMXDOjaoK0AfndpXbUor8HwZUU9eGUzp+SoZPUf3sNOlmo5/gFDV7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hTkj12tC; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SPBZriHQ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7201740E01E8;
-	Mon, 27 May 2024 09:22:28 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RYjAB7Wc3NWx; Mon, 27 May 2024 09:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1716801745; bh=T0xBExIPLlnb73V0TN4uBsw1poWCW7XSDlsFHChb7DM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SPBZriHQF7lKX5IFE2i7S1WHgpw/e2ZgDazXBq2Ne56WAW5uru0h+D/KZXOPaow1P
-	 FHipNPfAwwjOQbjng7shfjAA0cwUnWZ3jtcBFYS6Is/DGJ2O0rDVCkWUXAD+RWMRxc
-	 61UBtzXkkk8FoB0eTYVOFKTsHyZiSAJO2cJSnM2Gqhjenoby2XPyH2j4AfwJTSX0uQ
-	 On6B/ja7boKIi1jWU0PrZSauop8+bPkkRszbZn6uflLP8SiAbTngYcS6t+0eRxFfYs
-	 0SVkKasS/iskL50XTOEtGisylul6MNaQbrDx4qVFtkXEoH2Rp679HS3MJ/p/Hr4Eck
-	 /otdKmMO4CH5lQmzOP9kfXSxA4lD5+4lnghX8DDs7KJt1jidNFjQBtrHrj083/6lpe
-	 Akawq58ni+CJiL2kNQlWenuIZZleiXG3oITRIZ+Ydlb7L4pxaOwcbnBn1UXolrrfYh
-	 J7hOrSYRjZ+vRgJEV7jMQ5Dlxl6htEvaRFcEV+g9J1rJao8MxgPsmwxe0WmRlvxjjW
-	 lJOcTQr/90xnlE4LuW62QkLpUGIN6WRohLJEaQP2Qfbqw9OXBmRaMKFpstAdFmoG0W
-	 CSoPIFHshGcybeQ2Czc5N8HCQKWfCj6p9M/HeLlt0G9TC/V0Am0BKjRTH0sjyOmljv
-	 6nCCho46U5kXTjKdcgyD3No0=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7B97F40E0177;
-	Mon, 27 May 2024 09:21:38 +0000 (UTC)
-Date: Mon, 27 May 2024 11:21:31 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Shiju Jose <shiju.jose@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
-	"gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Message-ID: <20240527092131.GBZlRQmxwFTxxyR20q@fat_crate.local>
-References: <D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
- <20240509200306.GAZj0r-h5Tnc0ecIOz@fat_crate.local>
- <663d3e58a0f73_1c0a1929487@dwillia2-xfh.jf.intel.com.notmuch>
- <20240509215147.GBZj1Fc06Ieg8EQfnR@fat_crate.local>
- <663d55515a2d9_db82d2941e@dwillia2-xfh.jf.intel.com.notmuch>
- <20240510092511.GBZj3n9ye_BCSepFZy@fat_crate.local>
- <663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240511101705.GAZj9FoVbThp7JUK16@fat_crate.local>
- <6645f0738ead48a79f1baf753fc709c6@huawei.com>
- <20240520125857.00007641@Huawei.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hTkj12tC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1716801756; x=1717406556; i=markus.elfring@web.de;
+	bh=Rb/B2ovHnZ6QCVFezt1gZmqIJ3Eo3AhrdizD4T2BxdQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=hTkj12tCBX3HI66imhYWRFCG4rSHyzcmExs38b+aGk/TttJG7wwTvamyTok0aLL1
+	 kbbYkfhrl+OvHU9NpXmt6g5n7AjApV94E6I/kfg7P1VcRKaRyMHxrq/Uame3tRq10
+	 TdgdwgRSoAxaYEMtFSbKn8USNelXdplk62x/00LrOh3+69MdE3BN+KHLjI2Q2V6l9
+	 QU9/wFhsT8t4vs+tmpe/DvRE78rpJGwXdul63tmfztUzxlGuMAqhgk2eEIEUbNaQ0
+	 Gbt+yJFBHHFI8kgfsu+328q4FNkMySomc9z4zERR8u3h4finQn4VzEw6xKWEBE2hV
+	 i6cp5kbRtGEWX8uG8Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M3m5B-1sCLuR0mkV-000qYL; Mon, 27
+ May 2024 11:22:36 +0200
+Message-ID: <e6762978-d35f-4356-beac-bcb8b36d3ee2@web.de>
+Date: Mon, 27 May 2024 11:22:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240520125857.00007641@Huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] drm/loongson: Introduce component framework
+ support
+To: Sui Jingfeng <sui.jingfeng@linux.dev>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20240526195826.109008-1-sui.jingfeng@linux.dev>
+ <20240526195826.109008-3-sui.jingfeng@linux.dev>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240526195826.109008-3-sui.jingfeng@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xat59LEQihQ6e/FrLPV3GI+wzB7H+wFr4geqZy205A9JyyREx0J
+ cjeWo3zCyOMWbeJiSfuU3OLNPTAnTaC4MEkK6agdN/2aQbVPPmmD2/ActAPjc0pF9PKvuSl
+ 2UuAeM0yYBXQXWR32hpFx01ThUFbP9/tXtaVzRkttjgc/ufNoB+dpVszVpeNobklc9fVb3a
+ Bqxkc5Ff836eLeysjExsA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:A3PTnOl92B4=;nAi17OmfVJQD5ZwFF3RBuJzcxff
+ T6p4Rls6Tp+X/czicoT0qucygzSBqbDHmhMrpd1XdpVpLgHsEe1EuK8lsEig2xSygyFg9qTxV
+ U4Hnb7gntzPZ5SKF8F04ruBjvOgoEuSzcaDdia7WPh5zZt7C9ZivRrcgArBVa7untyLvUsS+L
+ FXBEtr+zGGek9pnlxwNv87qKZW+bNpkoCHhhJ/3sdFhbQ9TOlCD29aw48JoNDZFPrJAhikLWk
+ ahcaHiE0HeIXXmMoYOrSW0EEdBhUM36VM2pJzW0EPm1Ghehqqf1zj+u1/QjuapU5LV+uVoWSb
+ TiQYvE6uTPtI4ALpeMw5paHjwTwIdBPcvQ+lgRrEKpVvjnpHK3k7pTK30e1Rh3tnnZ7HKiiTD
+ Tlyg3WfFaQPJTtkQR0ZWdrU7psPSveQeH+M2EzHdCoQJ9m5P2uCWaJnfJ4O8e84eAWO6H1+G/
+ 1HHaFt3wRZI5YoEC7n2h8xJFqSIJXKnLtxUxVKIkP3guCRBPjTStdXDwanqixyL68yXc5n5L8
+ UqK2rdsB4xiFlCVYVbeoDpXEp1a/UxUgFRD9YDiriX1/p8ViRrU1T4tjMCt1iVoYJ+pyd4iiL
+ 4VyvYwd23V1BXRrajdnGcV457xTrTUNsLXqNB8+szP2iXuKa7tIuDqemToVoQYYuny4wZrOkf
+ cKgcEjUr7coCkEHtpA0oXuhfmDRdCgXfWmFPIKElx2E0pOWQ0xBbrz3zvBY+4mqu3z9fW/euM
+ TwAWDpsWRbOUot4+WGTWkIE3T9Fd3LTOkYUAKb2x85Ks7KovJdjEOT3GQFN7u7LuPQ96TlFT8
+ qMJs2PqxRAZVqKbibpS2hzmuS3TZIzsrd/McQV+YO+xAc=
 
-On Mon, May 20, 2024 at 12:58:57PM +0100, Jonathan Cameron wrote:
-> > Following are some of the use cases of generic scrub control
-> > subsystem as given in the cover letter.  Request please add any
-> > other use cases, which I missed.
-> >
-> > 1. There are several types of interfaces to HW memory scrubbers
-> >    identified such as ACPI NVDIMM ARS(Address Range Scrub), CXL
-> >    memory device patrol scrub, CXL DDR5 ECS, ACPI RAS2 memory
-> >    scrubbing features and software based memory scrubber(discussed
-> >    in the community Reference [5] in the cover letter). Also some
-> >    scrubbers support controlling (background) patrol scrubbing(ACPI
-> >    RAS2, CXL)  and/or on-demand scrubbing(ACPI RAS2, ACPI ARS).
-> >    However the scrub controls varies between memory scrubbers. Thus
-> >    there is  a need  for a standard generic ABI and sysfs scrub
-> >    controls for the userspace tools, which control HW and SW
-> >    scrubbers in the system, for the easiness of use.
+=E2=80=A6
+> However, the driver needs all of the subcompoments ready to use before
 
-This is all talking about what hw functionality there is. I'm more
-interested in the "there is a need" thing. What need? How?
+                                       subcomponents?
 
-In order to support something like this upstream, I'd like to know how
-it is going to be used and whether the major use cases are covered. So
-that everyone can benefit from it - not only your employer.
 
-> > 2. Scrub controls in user space allow the user space tool to disable
-> >    and enable the feature in case disabling of the background patrol
-> >    scrubbing and changing the scrub rate are needed for other
-> >    purposes such as performance-aware operations which requires the
-> >    background operations to be turned off or reduced.
+=E2=80=A6
+> goes with the PCIe master, sinch they has no dependency on exterinal
 
-Who's going to use those scrub controls? Tools? Admins? Scripts?
+                             since they have no dependencies on external?
 
-> > 3. Allows to perform on-demand scrubbing for specific address range
-> >    if supported by the scrubber.
-> > 4. User space tools controls scrub the memory DIMMs regularly at
-> >    a configurable scrub rate using the sysfs scrub controls
-> >    discussed help, - to detect uncorrectable memory errors early
-> >    before user accessing memory, which helps to recover the detected
-> >    memory errors.  -  reduces the chance of a correctable error
-> >    becoming uncorrectable.
 
-Yah, that's not my question: my question is, how is this new thing,
-which is exposed to userspace and which then means, this will be
-supported forever, how is this thing going to be used?
+> modules.
+>
+> While the outputs drivers, such as encoders and conectors, may has some
 
-And the next question is: is that interface sufficient for those use
-cases?
+            output?                               connectors, might have?
 
-Are we covering the majority of the usage scenarios?
 
-> Just to add one more reason a user space interface is needed.
-> 5. Policy control for hotplugged memory.  There is not necessarily
->    a system wide bios or similar in the loop to control the scrub
->    settings on a CXL device that wasn't there at boot.  What that
->    setting should be is a policy decision as we are trading of
->    reliability vs performance - hence it should be in control of
->    userspace.
->    As such, 'an' interface is needed. Seems more sensible to try and
->    unify it with other similar interfaces than spin yet another one.
+=E2=80=A6
+> if it need to do so, the master drvier won't bind until all submodules
+=E2=80=A6
 
-Yes, I get that: question is, let's say you have that interface. Now
-what do you do?
 
-Do you go and start a scrub cycle by hand?
+Please improve your change descriptions considerably.
 
-Do you have a script which does that based on some system reports?
-
-Do you automate it? I wanna say yes because that's miles better than
-having to explain yet another set of knobs to users.
-
-And so on and so on...
-
-I'm trying to get you to imagine the *full* solution and then ask
-yourselves whether that new interface is adequate.
-
-Makes more sense?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards,
+Markus
