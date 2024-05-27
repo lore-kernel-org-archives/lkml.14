@@ -1,106 +1,93 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3EB1327E5;
-	Mon, 27 May 2024 10:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F3313B79B
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 10:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716805411; cv=none; b=BtnC8otiZANOyz3zBq0h3QcNMSfKdWNeq6yG1xrmX+qfTYTzEIx1BgtXyeNwgbm6v4v6+buby0AMgWLoCnn8EhGzNSb+vKuagmbu+me11v5RzyeHOqH8amYj5v8wJabiQH/yyynH69s0Im5EIaWbdy8+lJ57JirWQpdTgXcrLIA=
+	t=1716805426; cv=none; b=mNSY/XRW/hqN/BztRIxn22qHU1he+HeS7SCH7Izj8cj240+Kf3JJ+ejR+RBJ+/3eYOwHFuSEVcNi1q90JF+ffyejN4v3/OxcCGFY4yLJGDjRlUm2WpUQpIUESCXvl3r3MqZSAJYZxLghQFlJBVpjvKXz0z3mSSs/wbxEjTZ+pxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716805411; c=relaxed/simple;
-	bh=HT+8XGk7gp+WO4jR2xVV72O1raU8oPSotBFeVbxt5wQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=sPGPMRozVWVGA3F3FZb+p6gDnRL4/Jat9DLWgfazsDTe7mndBKQc7OWqt5N2xJQfx77lEjE+Swg2On0z8OgqdOmATSwE+7XB4UMbegP8YrxcKiN902woLk1p2YOSNdxyEJlcdUX4skwTvxDSj8l3/mMXR2/rjvjNf2vrZAN7MTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-62a0c011d53so28692547b3.0;
-        Mon, 27 May 2024 03:23:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716805409; x=1717410209;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ofcOTpIvyE0qoQ1kR9BZTZeMOiB3j2MO3T05Qzwj5eU=;
-        b=T5a8cRaA5OsWbzAAS87BqlBBXNhbpWN+XLvwvyaeANBBU571PKDP1PdrZGYn6G120r
-         GH+xCe4WwiUR4MYi/XT+5n5StfqGZ21uy0EsiZrwo7SrvPJtA/xBcDcKx6xc91NVocDk
-         bkO5sqsfBg1T6PQI7yiXcW9ndu6oCHqYkY6vJY2fWPMqbfHvkYa9y5rQI32KQl2Jgdcq
-         GPIly46IV+eUxFcWXjja/QIercH1MSPAlOSjA8PQf7N1giBlCy5cazWeiNwKveawhTCh
-         eSq7ehc0+22kNsdx5vLIopLJkUyCYBJnmkGohEuccnoTtoXz+m3SbrSxT2CZnHiHxpx1
-         vJKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGGt6Ha64oyf0pGle7McBnOUomsqEWug2FZ3tZfvI72zzZnizOqYe6F2BrG7XJIHVHJfXb7aRf1CiAjZsx3EaukYTwW5NtWE9dK1DULJSHee0Ks4WGqDr4K2gA81XhqpUvuP+HMr0/UWdWExYVmH9BYADqtBArlVY0o8mewXo78wFOY1s7XVgJ/3hooCv3
-X-Gm-Message-State: AOJu0YywabICD99ifOQqt9zODAXyK8Sy8ekIdVR+fUaI/JxNODuSzO5/
-	hYNS/v8XLhoq8BuhrdGELj8d+xmMMXynpcFPCsU1dABoEn6qM4iC1ulGkMpb
-X-Google-Smtp-Source: AGHT+IH22e+WKp/1lpX9zbwb280IILBJAZPsxuHZDQjEUG6Sh9gZDfnJftXOweyxD2l9zgU5vmLAog==
-X-Received: by 2002:a25:aa71:0:b0:df1:ce97:159b with SMTP id 3f1490d57ef6-df77218dfd2mr11642763276.14.1716805408587;
-        Mon, 27 May 2024 03:23:28 -0700 (PDT)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-df77474363fsm571270276.59.2024.05.27.03.23.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 May 2024 03:23:28 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-df771b6cc9cso3380439276.3;
-        Mon, 27 May 2024 03:23:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXBnEKd99Cb5+l7mqUV62YZqS2R0znN0IhQUdTjk9TDuI5RF+LUpDx8fL1xOJJ/2eH95XZuLhoPOyiH7buQ4JqCpEDMSeNlXGauzYL+BlcAZLHIJtGKxt1RKgmSGP3L+Bp8/XWl0PkAkcEb5jzEmGSP3eF5aM+MmJJRUR/mCLzzsLCBI7quD2gxwGD3E36S
-X-Received: by 2002:a25:d393:0:b0:df4:dcb6:75bd with SMTP id
- 3f1490d57ef6-df772160dd4mr10206351276.9.1716805407062; Mon, 27 May 2024
- 03:23:27 -0700 (PDT)
+	s=arc-20240116; t=1716805426; c=relaxed/simple;
+	bh=i3vdeAypAzvlzDDD6HqhwpuYW/F7goIsrwm8HIum47o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QCHWguiyrUtZXqjG72WejPMRAb7xhgr1yFzA4PFcchHJ2LRgdigVPkM5TlW5FDcqV/8Z9Kq9mU0t6QmxvBpId5RvIY9RnvW0HcLJ1YTqoDkwGMTMl8oGMKy+1Hsvi1nWlzqOxa3DPKW4A06GF2cQeccLH6zvG4gmjhZzPdhCf8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yjj+DmYx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jSwWA1Hu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yjj+DmYx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jSwWA1Hu"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716805423;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xAi79tNwAZNKGUrFRXRD/7kC5b85OqYaOCNzQ5fyfEk=;
+	b=yjj+DmYxI9Nv/1XC+qKfhZqGe2qNZ8BAAiUthqF6qqx3q+6QE8NA2sDGKYzvJbw44Bj6qv
+	VhGsAYVfjFM2v3zzl+fX+738g8c1BbIp0MfkRFhbPCBuHc/A7RdYdpl6Q0i5AJlLift0et
+	bGT9wgxLN3CHkjN1PWMFFEWuUxOvv1EAJys6J1Mr47KI2BquCwoCq6x6t0IWPYNoGjaN4D
+	UeYKW3NVtw72y15WXSdDsWo+BXxQYkDkMZ5/YnRtjQL8NHTHCd0I2ojr+DpYZC8tAT5Qi3
+	Zso+r9a3lvKI0BksJOQklu66xbnSVZ4o4olknjc0xj8S/0lTcxCGOOvFkSp/wA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716805423;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xAi79tNwAZNKGUrFRXRD/7kC5b85OqYaOCNzQ5fyfEk=;
+	b=jSwWA1HupkoQl0DYR7t1kbmKacA5c5thpqWGeXFyU3HzWLoRqByKs+xz8u5VOt5o1TUQfr
+	FMLBb8BYfnlUwIBA==
+To: Nicholas Piggin <npiggin@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+ Frederic Weisbecker <frederic@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Phil Auld <pauld@redhat.com>, Chris von
+ Recklinghausen <crecklin@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: sched/isolation: tick_take_do_timer_from_boot() calls
+ smp_call_function_single() with irqs disabled
+In-Reply-To: <D1KB5Z1455DI.3HOVYR566ZGXN@gmail.com>
+References: <20240522151742.GA10400@redhat.com>
+ <20240523132358.GA1965@redhat.com> <87h6eneeu7.ffs@tglx>
+ <ZlCwKk65-eL0FrKX@pavilion.home> <20240524183700.GA17065@redhat.com>
+ <87v832dfw1.ffs@tglx> <D1KB5Z1455DI.3HOVYR566ZGXN@gmail.com>
+Date: Mon, 27 May 2024 12:23:42 +0200
+Message-ID: <87ed9nd041.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522083851.37668-1-wsa+renesas@sang-engineering.com>
- <20240524-glasfaser-gerede-fdff887f8ae2@brauner> <20240527100618.np2wqiw5mz7as3vk@ninjato>
-In-Reply-To: <20240527100618.np2wqiw5mz7as3vk@ninjato>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 27 May 2024 12:23:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW1kmLfT9NcQo3xhG0CzyNepmS39avw=SuyERHXc57xhw@mail.gmail.com>
-Message-ID: <CAMuHMdW1kmLfT9NcQo3xhG0CzyNepmS39avw=SuyERHXc57xhw@mail.gmail.com>
-Subject: Re: [PATCH] debugfs: ignore auto and noauto options if given
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Christian Brauner <brauner@kernel.org>, Eric Sandeen <sandeen@redhat.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Wolfram,
-
-On Mon, May 27, 2024 at 12:08=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> > Afaict, the "auto" option has either never existent or it was removed b=
-efore
-> > the new mount api conversion time ago for debugfs.
+On Mon, May 27 2024 at 19:10, Nicholas Piggin wrote:
+> On Sat May 25, 2024 at 8:06 AM AEST, Thomas Gleixner wrote:
+>> along with the removal of the SMP function call voodoo programming gunk,
+>> a lengthy changelog and a bunch of useful comments.
 >
-> Frankly, I have no idea why I put this 'auto' in my fstab ages ago. But
-> it seems, I am not the only one[1].
+> I might not have tested that path on powerpc since it should not
+> switch clockevent driver (or clocksource either I think) at least
+> on 64-bit.  Explains the smp_call_function warning if you are
+> testing on x86 :/
 
-fstab(5):
+Even on PowerPC the per CPU clockevent driver is registered during early
+boot for the boot CPU and for the APs when they are onlined. Before your
+change the boot CPU was unconditionally taking over the do_timer duty
+and never gave up on it in the NOHZ full case.
 
-       defaults
-           use default options: rw, suid, dev, exec, auto, nouser, and asyn=
-c.
+The logic you added allows that the duty is taken by the first
+housekeeping CPU in the case that the boot CPU is marked NOHZ full.
 
-       noauto
-           do not mount when mount -a is given (e.g., at boot time)
+So yes, that function call _is_ invoked on PowerPC too if the boot CPU
+is NOHZ full. There is absolutely nothing x86 specific.
 
-So I assume "auto" is still passed when using "defaults"?
+The difference is that PowerPC registers the per CPU clockevent _before_
+setting the CPU online and x86 does it afterwards.
 
-However, nowadays (since +10y?), debugfs etc. tend to no longer be
-put in /etc/fstab, but be mounted automatically by some initscript.
+So the warning does not trigger on PowerPC because:
 
-Gr{oetje,eeting}s,
+   WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled() && ...);
 
-                        Geert
+Thanks,
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+        tglx
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
