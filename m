@@ -1,96 +1,112 @@
-Received: from smtp-out.orange.com (smtp-out.orange.com [80.12.126.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C766B6FB0;
-	Mon, 27 May 2024 00:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.126.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F7B64D;
+	Mon, 27 May 2024 00:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716769181; cv=none; b=soxg8xa860dajiHnMs3/pYkgoJyxtght1XfbSpndyCwP0L5bj78hEEUq42c1v9ZT74r9xKP7g9hNv4uQw9QM/VYemjukjR6hX7dvNcIJHYPZT5xjlBInemSVo8pW1TTEsbq1v7azeZ8B9XaIjI56wYpRGDJ/jGBMCHaM1OcIufo=
+	t=1716769726; cv=none; b=Vl0WZpNz+Ywtuto4oPl6tD1fwRGAOwJbR64kwBo6N9BM61zm8zoF0B8f9fTvnWVQ8f0knmgGfFpJGsqfQ9W4kFionnqWOze8dIhi57jp82jR22A7i5gu5oWZv9Dhpe8beuEWLgOjyaM2r+nKRIhfx8NbLAeumPoBfU5PMe3S1zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716769181; c=relaxed/simple;
-	bh=8c4ilwGABuwhx4/FiUe+6pqox6IKYVl2IVng+0WGpvg=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UzLjWT+aMRrUBimfydSsqSurYc+dWwAmXIgqaBopGS8fU/wIdrJ19uxVV3ZrZspzj4EBtbS3jXl6ncKoQrEo09Vvy8yjqm4CBWStq9c7NoNw1RPE6ans1v8IkxwgGyqhLEzPdJmUqjMs18zi19Ut1uVrBWc7ENgalSTocFt6A/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=orange.com; spf=pass smtp.mailfrom=orange.com; dkim=pass (2048-bit key) header.d=orange.com header.i=@orange.com header.b=GA0pocAe; arc=none smtp.client-ip=80.12.126.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=orange.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orange.com
+	s=arc-20240116; t=1716769726; c=relaxed/simple;
+	bh=zIGvqg9C2cc/RoiPwzBBqxZiUhayYAnjEKOC116yeN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mV7SgjgS9UksgXrbyoX+uyUFqlJQ59I2l1NeA5v9fkBNWBvWHygc1hDA+73niLNXzpjRg0fGQJ7+xGk3imJpJxSFhFUZtbERTIDVDxJvJaxkW/fnRWJrtduEIzdwhcWAjZ0/1AQxpl12wqGfjA0VVXXMC9lYCrh+wFI2gyA+AWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9pxCDdP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orange.com header.i=@orange.com header.b="GA0pocAe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=orange.com; i=@orange.com; q=dns/txt; s=orange002;
-  t=1716769178; x=1748305178;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   in-reply-to:content-transfer-encoding:from;
-  bh=8c4ilwGABuwhx4/FiUe+6pqox6IKYVl2IVng+0WGpvg=;
-  b=GA0pocAerad0U6VlOW0t03iBjE1L0XKAh0UUZHD+4NrC/tD9OXuaUOl2
-   q4ACfEDwWyobQC4FkMfnDBESe7H4qpmpsJYLI0R9GFK5SWOJ8PgmCr+d7
-   u1bnN7gKx9AQgALz6uQMwytxTqDv1Fk5128vTql+qtV7dI1WJD6m264Ka
-   OJXYFCnrRT3+f+QApwf3Hc+EGKvc1x5a1BFNhrAbxknFGLgDV0AoBz+Fb
-   CxPDEkiJoGgd6L3KCBx8bpKMML1s3sxpGe9prE6LsE4LDUHBXuz90Md+p
-   Ml6/zDT6B/gtH2jD0xsO8HzyabvAr/9CxesVJ4c+fmqxji9kjEj+6TjeW
-   Q==;
-Received: from unknown (HELO opfedv1rlp0e.nor.fr.ftgroup) ([x.x.x.x]) by
- smtp-out.orange.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 27 May 2024 02:18:26 +0200
-Received: from mailhost.rd.francetelecom.fr (HELO l-mail-int) ([x.x.x.x]) by
- opfedv1rlp0e.nor.fr.ftgroup with ESMTP; 27 May 2024 02:18:28 +0200
-Received: from lat6466.rd.francetelecom.fr ([x.x.x.x])	by l-mail-int with esmtp (Exim
- 4.94.2)	(envelope-from <alexandre.ferrieux@orange.com>)	id 1sBO49-009Ocm-Gi;
- Mon, 27 May 2024 02:18:26 +0200
-From: alexandre.ferrieux@orange.com
-X-IronPort-AV: E=Sophos;i="6.08,191,1712613600"; 
-   d="scan'208";a="145223146"
-Message-ID: <5bbaf136-5409-4256-b4a4-1ac8ba501b26@orange.com>
-Date: Mon, 27 May 2024 02:18:26 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9pxCDdP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AAA6C2BD10;
+	Mon, 27 May 2024 00:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716769725;
+	bh=zIGvqg9C2cc/RoiPwzBBqxZiUhayYAnjEKOC116yeN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t9pxCDdPTcZbJk487OCtN3drARKnpYRanClbooRgz7JDyi0pWENvornsabqMg9Z6+
+	 vUuhb15uAHlDu0RrhubLZjGJNwKDAXWFJ1rDK0gDm4HoB+InCYZVYpaF3pfgmS4NCj
+	 1+WYcsiJbasmVVAvsL2x8t+J5xipZn8qWp+PeJq+6741edfDlkVVTuQcCbpr2tyfVx
+	 hCAIIrDbXNsT7MebZLrkv4ySchQKXPozemY72rHF662WMzJV7AfSJm5xGVOeTbI6r2
+	 CgrqSTtXhydJboJOVvh3ZUKp7k0iJmo4pxjAgkWviiiYc4ykPUOC3Vnb+qDBp5Iq48
+	 Nu9AEbtEVaU1g==
+Date: Sun, 26 May 2024 19:28:42 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Komal Bajaj <quic_kbajaj@quicinc.com>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bjorn Andersson <quic_bjorande@quicinc.com>, quic_wcheng@quicinc.com, quic_ppratap@quicinc.com, 
+	Jack Pham <quic_jackp@quicinc.com>, Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
+Subject: Re: [PATCH v3 0/3] Add devicetree support of USB for QDU/QRU1000
+Message-ID: <km2c2tkd5j3vedrmttpn4nydqpfhhz4bwgtzmngwbok4vic6q6@nshjtqcqmklm>
+References: <20240502090326.21489-1-quic_kbajaj@quicinc.com>
+ <CAA8EJprPLqj7GQM0vmN25U2+3kDow=NH8=-VC2N-0p92Ub3iCA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH] af_packet: Handle outgoing VLAN packets without hardware
- offloading
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Chengen Du <chengen.du@canonical.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240520070348.26725-1-chengen.du@canonical.com>
- <664f5938d2bef_1b5d2429467@willemb.c.googlers.com.notmuch>
- <CAPza5qc+m6aK0hOn8m1OxnmNVibJQn-VFXBAnjrca+UrcmEW4g@mail.gmail.com>
- <66520906120ae_215a8029466@willemb.c.googlers.com.notmuch>
- <3acef339-cdeb-407c-b643-0481bfbe3c80@orange.com>
- <6653547768757_23ef3529455@willemb.c.googlers.com.notmuch>
-Content-Language: fr, en-US
-In-Reply-To: <6653547768757_23ef3529455@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8EJprPLqj7GQM0vmN25U2+3kDow=NH8=-VC2N-0p92Ub3iCA@mail.gmail.com>
 
-T24gMjYvMDUvMjAyNCAxNzoyNSwgV2lsbGVtIGRlIEJydWlqbiB3cm90ZToKPiBJIGRvbid0IHRo
-aW5rIGEgbmV3IERMVF9MSU5VWF9TTEwzIGlzIGEgc29sdXRpb24uIFRoZSBhcHBsaWNhdGlvbgo+
-IGp1c3Qgd2FudHMgdG8gcmVjZWl2ZSB0aGUgZnVsbCBMMi41IGhlYWRlciwgbm90IHlldCBhbm90
-aGVyIHBhcnNlZAo+IHZlcnNpb24KClllcywgSSBkaWQgbm90IGludGVuZCBhbnkgcGFyc2luZyBl
-aXRoZXI6IHRoZSBTTEx2eCBzaG91bGQgZW5kIHdpdGggdGhlIGV0aHR5cGUgCih0aGUgb25lIHRo
-YXQgb2NjdXJzIHJpZ2h0IGFmdGVyIHRoZSBNQUMgYWRkcmVzc2VzIGluIEV0aGVybmV0KS4gQnV0
-IEkgd2FzIGp1c3QgCnBvaW50aW5nIG91dCB0aGF0IGl0IGlzIGEgcGl0eSB0aGF0IFNTTHYxIGFu
-ZCBTU0x2MiBvbmx5IGtlZXAgdGhlIHNvdXJjZSBNQUMgCmFkZHJlc3Mgd2hlbiBhbGwgcGh5c2lj
-YWwgaW50ZXJmYWNlcyBpbiBhIHN5c3RlbSBhcmUgRXRoZXJuZXQuIFdoeSBub3Qga2VlcCB0aGUg
-Cndob2xlIE1BQyBoZWFkZXIgPwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18NCkNlIG1lc3NhZ2UgZXQgc2VzIHBpZWNlcyBqb2ludGVzIHBldXZlbnQg
-Y29udGVuaXIgZGVzIGluZm9ybWF0aW9ucyBjb25maWRlbnRpZWxsZXMgb3UgcHJpdmlsZWdpZWVz
-IGV0IG5lIGRvaXZlbnQgZG9uYw0KcGFzIGV0cmUgZGlmZnVzZXMsIGV4cGxvaXRlcyBvdSBjb3Bp
-ZXMgc2FucyBhdXRvcmlzYXRpb24uIFNpIHZvdXMgYXZleiByZWN1IGNlIG1lc3NhZ2UgcGFyIGVy
-cmV1ciwgdmV1aWxsZXogbGUgc2lnbmFsZXINCmEgbCdleHBlZGl0ZXVyIGV0IGxlIGRldHJ1aXJl
-IGFpbnNpIHF1ZSBsZXMgcGllY2VzIGpvaW50ZXMuIExlcyBtZXNzYWdlcyBlbGVjdHJvbmlxdWVz
-IGV0YW50IHN1c2NlcHRpYmxlcyBkJ2FsdGVyYXRpb24sDQpPcmFuZ2UgZGVjbGluZSB0b3V0ZSBy
-ZXNwb25zYWJpbGl0ZSBzaSBjZSBtZXNzYWdlIGEgZXRlIGFsdGVyZSwgZGVmb3JtZSBvdSBmYWxz
-aWZpZS4gTWVyY2kuDQoNClRoaXMgbWVzc2FnZSBhbmQgaXRzIGF0dGFjaG1lbnRzIG1heSBjb250
-YWluIGNvbmZpZGVudGlhbCBvciBwcml2aWxlZ2VkIGluZm9ybWF0aW9uIHRoYXQgbWF5IGJlIHBy
-b3RlY3RlZCBieSBsYXc7DQp0aGV5IHNob3VsZCBub3QgYmUgZGlzdHJpYnV0ZWQsIHVzZWQgb3Ig
-Y29waWVkIHdpdGhvdXQgYXV0aG9yaXNhdGlvbi4NCklmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMg
-ZW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBhbmQgZGVsZXRlIHRoaXMg
-bWVzc2FnZSBhbmQgaXRzIGF0dGFjaG1lbnRzLg0KQXMgZW1haWxzIG1heSBiZSBhbHRlcmVkLCBP
-cmFuZ2UgaXMgbm90IGxpYWJsZSBmb3IgbWVzc2FnZXMgdGhhdCBoYXZlIGJlZW4gbW9kaWZpZWQs
-IGNoYW5nZWQgb3IgZmFsc2lmaWVkLg0KVGhhbmsgeW91Lgo=
+On Thu, May 02, 2024 at 12:09:41PM GMT, Dmitry Baryshkov wrote:
+> On Thu, 2 May 2024 at 12:04, Komal Bajaj <quic_kbajaj@quicinc.com> wrote:
+> >
+> > This series adds devicetree nodes to support interconnects and usb for qdu/qru1000.
+> > This is based on previously sent driver series[1].
+> >
+> > ------
+> > Changes in v3:
+> > * As per comments on upstream[2], to get role-switch working on QDU/QRU1000, it was recommended to
+> >   use the actual TI switch driver. Since driver doesn't have the functionality to provide role-switch
+> >   based on gpio, thus reverting back USB dr_mode to peripheral and removed the remote end-point nodes
+> >   and usb-conn-gpio based role switch functionality.
+> 
+> This is not correct. The recommendation was to describe hardware properly.
+> Which means adding schema description, adding  ti,your-switch
+> compatible to the usb-conn-gpio.c driver, etc.
+> 
 
+In addition to wrangling the ti,switch implementation (and binding) into
+something that only deals with the gpios and not actually talks to the
+chip, this would also require us to add support for fishing out
+vbus-supply of the connector and control that from said driver (or from
+dwc3, or from dwc3-qcom...).
+
+Given that I find it acceptable to pick up the peripheral-only support
+as presented...
+
+Regards,
+Bjorn
+
+> > * Link to v2: https://lore.kernel.org/linux-arm-msm/20240319091020.15137-1-quic_kbajaj@quicinc.com/
+> >
+> > Changes in v2:
+> > * Changes qmpphy node name
+> > * Changes dr_mode to otg and added USB-B port USB role switch
+> > * Dropped maximum-speed property from usb dwc3 node
+> > * Link to v1: https://lore.kernel.org/linux-arm-msm/20240311120859.18489-1-quic_kbajaj@quicinc.com/
+> >
+> > [1] https://lore.kernel.org/linux-arm-msm/20240502082017.13777-1-quic_kbajaj@quicinc.com/
+> > [2] https://lore.kernel.org/all/CAA8EJppNZrLzT=vGS0NXnKJT_wL+bMB9jFhJ9K7b7FPgFQbcig@mail.gmail.com/
+> > ------
+> >
+> > Komal Bajaj (3):
+> >   arm64: dts: qcom: qdu1000: Add USB3 and PHY support
+> >   arm64: dts: qcom: qdu1000-idp: enable USB nodes
+> >   arm64: dts: qcom: qru1000-idp: enable USB nodes
+> >
+> >  arch/arm64/boot/dts/qcom/qdu1000-idp.dts |  23 +++++
+> >  arch/arm64/boot/dts/qcom/qdu1000.dtsi    | 120 +++++++++++++++++++++++
+> >  arch/arm64/boot/dts/qcom/qru1000-idp.dts |  23 +++++
+> >  3 files changed, 166 insertions(+)
+> >
+> > --
+> > 2.42.0
+> >
+> >
+> 
+> 
+> -- 
+> With best wishes
+> Dmitry
