@@ -1,110 +1,147 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B32173462
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4598461FDB
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716824867; cv=none; b=Y+rQvEzxTj96LRIiGC6aMSxFjojwaXinC7/nFMaAl2d3gLQn7su6TghzzpznoCl8xYBoGyhBQflh+J2G+NO8Tj5Zp8HqYzE0sXnWWNHlfffksoCqtDeYJzJYswUFYxQk3vZworSWKYft4XJvWAENjBrbSLuelOjOKoRQul0kyPA=
+	t=1716824911; cv=none; b=rRro6ZWzapJGo+oqBUxxYgWqnw+jyjwr90PFLGmv13Rbf9WQZZcPwPUczA7MkFAUweolNclLGqY7v3ZouS/pnST8UO3eEThhzJzHCv8LqKcBzLvMN6Q4elQTS5glGRlUbMm5ZJ/EpeJt3lpNa+2+7NfrvHf7PelxMXyGgNJwUhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716824867; c=relaxed/simple;
-	bh=1G6biT5jM53hXfPGfNxY89AZ0sAXmbX1w22HLsxZ5BY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aFaK1Q1TsegN+NL35dtAvWZh24ZThfKQhiPu5FhAjlCoPM+QuMHVCC/QAjGzLT9WMtFzu+bRUm0/Wfa06EOQklKhqfT9W3B9Foha2rvPvMKeCSxLNIGCaiFOGhGnnVO2LK+lnLSuSBqEy8G+JYs8/7qnXCOmCH9xlFGv+7AQGJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vSEUfjl8; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1716824911; c=relaxed/simple;
+	bh=j6fD/Ci1a9FwE2Y3sJBitvVUfGGI6XIHk1L7eCzZkBk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=N9fj5UO5RDNZNiT1T90qc5MU2tPSp0ThWqjqOhXeX4dRaNZn2YMLU9JNWjwGaJaI/BZyO7UsC+sfI25Z9H4pnBrMgXld4aPXOW0Sammi7Zy0RXnD1/64BB78bqb8WthvBn1wX3AtyjLPOP27UAJ4JQDKBHFNlNtdGCqk+c1nlrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Yf7gDT7j; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vSEUfjl8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=u3fQhom/2PMZIi3mCUIS3hdWg4hX3jYiIfgerxDXhV8=; b=vSEUfjl8y4/F0glaDVw1jAScRD
-	d9Zduww7cYjXKRbukNjwLRCwhq6ObJgz5YT5nU9IhhwUxaQmeGxyeP8Mcu+TasBaqHaJcY6J5q0bO
-	/Dgs9GdrcGGHeoluVfAVqCLh+ahJ8TvwGV+emc0E8hAKizWgBM3T2KJjwufaHA8jO6aJghvz3t4SA
-	PvAhgUlqyF4YuX4Cj3JzC1Xeg56+ZtFBq8Z8OMxIQW+W2xOBieJ4eJ/d0fkmWcCWiI14R0DV8dQb7
-	kMlnagjhCab8m6G2Dml6eOt9PK1SLZqBqdl9R+TeCoTq01rqro/Cys+P66xGYwokqrvYMEFjvAszP
-	iccxh9nA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sBcFL-00000007l8p-3jVO;
-	Mon, 27 May 2024 15:26:47 +0000
-Date: Mon, 27 May 2024 16:26:47 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Subject: Re: [PATCH v1 2/6] mm: allow reuse of the lower 16 bit of the page
- type with an actual type
-Message-ID: <ZlSmNzgkeYaCrPWc@casper.infradead.org>
-References: <20240527141454.113132-1-david@redhat.com>
- <20240527141454.113132-3-david@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Yf7gDT7j"
+X-Envelope-To: linux-ext4@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716824907;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yigDgYzxDm/YXTY6BSYFXprUHJId2yNbt73KT7rVnq0=;
+	b=Yf7gDT7jmS3/ywn6gpmEEvyen4NW9G0f2YQlmmbNZjpllAmD4XfEZT2qsnoMAJLZYOgA6O
+	uOeoKQWMg3hubEw5otwmuiIxoCNzrn2Zul42DoZmgSO4HrLRReeh4kwK5+YTW6yy2/euVk
+	lqAnws11tV5V7Xa7ESPTU6l0QK7qr+g=
+X-Envelope-To: tytso@mit.edu
+X-Envelope-To: jack@suse.cz
+X-Envelope-To: harshadshirwadkar@gmail.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: adilger@dilger.ca
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Luis Henriques <luis.henriques@linux.dev>
+To: Jan Kara <jack@suse.cz>
+Cc: Theodore Ts'o <tytso@mit.edu>,  Andreas Dilger <adilger@dilger.ca>,
+  Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+  linux-ext4@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ext4: fix fast commit inode enqueueing during a full
+ journal commit
+In-Reply-To: <87h6ej64jv.fsf@brahms.olymp> (Luis Henriques's message of "Mon,
+	27 May 2024 09:29:40 +0100")
+References: <20240523111618.17012-1-luis.henriques@linux.dev>
+	<20240524162231.l5r4niz7awjgfju6@quack3> <87h6ej64jv.fsf@brahms.olymp>
+Date: Mon, 27 May 2024 16:48:24 +0100
+Message-ID: <87msob45o7.fsf@brahms.olymp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240527141454.113132-3-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 27, 2024 at 04:14:50PM +0200, David Hildenbrand wrote:
-> As long as the owner sets a page type first, we can allow reuse of the
-> lower 18 bit: sufficient to store an offset into a 64 KiB page, which
+On Mon 27 May 2024 09:29:40 AM +01, Luis Henriques wrote;
 
-You say 18 here and 16 below.
+<snip>
 
-> is the maximum base page size in *common* configurations (ignoring the
-> 256 KiB variant). Restrict it to the head page.
-> 
-> We'll use that for zsmalloc next, to set a proper type while still
-> reusing that field to store information (offset into a base page) that
-> cannot go elsewhere for now.
-> 
-> Fear of running out of bits for storing the actual type? Actually, we
-> don't need one bit per type, we could store a single value instead.
-> Further, we could likely limit PAGE_TYPE_BASE to a single (highest) bit.
+>>> +	/*
+>>> +	 * Used to flag an inode as part of the next fast commit; will be
+>>> +	 * reset during fast commit clean-up
+>>> +	 */
+>>> +	tid_t i_fc_next;
+>>> +
+>>
+>> Do we really need new tid in the inode? I'd be kind of hoping we could u=
+se
+>> EXT4_I(inode)->i_sync_tid for this - I can see we even already set it in
+>> ext4_fc_track_template() and used for similar comparisons in fast commit
+>> code.
+>
+> Ah, true.  It looks like it could be used indeed.  We'll still need a flag
+> here, but a simple bool should be enough for that.
 
-We could, but it's more instructions to check.
+After looking again at the code, I'm not 100% sure that this is actually
+doable.  For example, if I replace the above by
 
-> +++ b/include/linux/page-flags.h
-> @@ -945,14 +945,18 @@ PAGEFLAG_FALSE(HasHWPoisoned, has_hwpoisoned)
->   */
->  
->  #define PAGE_TYPE_BASE	0xf0000000
-> -/* Reserve		0x0000007f to catch underflows of _mapcount */
-> -#define PAGE_MAPCOUNT_RESERVE	-128
-> -#define PG_buddy	0x00000080
-> -#define PG_offline	0x00000100
-> -#define PG_table	0x00000200
-> -#define PG_guard	0x00000400
-> -#define PG_hugetlb	0x00000800
-> -#define PG_slab		0x00001000
-> +/*
-> + * Reserve		0x0000ffff to catch underflows of _mapcount and
-> + * allow owners that set a type to reuse the lower 16 bit for their own
-> + * purposes.
-> + */
-> +#define PAGE_MAPCOUNT_RESERVE	-65536
+	bool i_fc_next;
 
-I think my original comment was misleading.  This should be:
+and set to to 'true' below:
 
- * Reserve 0xffff0000 - 0xfffffffe to catch _mapcount underflow.
+>>> diff --git a/fs/ext4/fast_commit.c b/fs/ext4/fast_commit.c
+>>> index 87c009e0c59a..bfdf249f0783 100644
+>>> --- a/fs/ext4/fast_commit.c
+>>> +++ b/fs/ext4/fast_commit.c
+>>> @@ -402,6 +402,8 @@ static int ext4_fc_track_template(
+>>>  				 sbi->s_journal->j_flags & JBD2_FAST_COMMIT_ONGOING) ?
+>>>  				&sbi->s_fc_q[FC_Q_STAGING] :
+>>>  				&sbi->s_fc_q[FC_Q_MAIN]);
+>>> +	else
+>>> +		ei->i_fc_next =3D tid;
 
-How about we start at the top end and let people extend down?  ie:
+		ei->i_fc_next =3D true;
 
-#define PAGE_TYPE_BASE	0x80000000
-#define PG_buddy	0x40000000
-#define PG_offline	0x20000000
-#define PG_table	0x10000000
-#define PG_guard	0x08000000
-#define PG_hugetlb	0x04000000
-#define PG_slab		0x02000000
-#define PAGE_MAPCOUNT_RESERVE	(~0x0000ffff)
+Then, when we get to the ext4_fc_cleanup(), the value of iter->i_sync_tid
+may have changed in the meantime from, e.g., ext4_do_update_inode() or
+__ext4_iget().  This would cause the clean-up code to be bogus if it still
+implements a the logic below, by comparing the tid with i_sync_tid.
+(Although, to be honest, I couldn't see any visible effect in the quick
+testing I've done.)  Or am I missing something, and this is *exactly* the
+behaviour you'd expect?
 
-Now we can see that we have 9 flags remaining, which should last until
-we can have proper memdesc typing.
+Cheers,
+--=20
+Luis
+
+>>>  	spin_unlock(&sbi->s_fc_lock);
+>>>=20=20
+>>>  	return ret;
+>>> @@ -1280,6 +1282,15 @@ static void ext4_fc_cleanup(journal_t *journal, =
+int full, tid_t tid)
+>>>  	list_for_each_entry_safe(iter, iter_n, &sbi->s_fc_q[FC_Q_MAIN],
+>>>  				 i_fc_list) {
+>>>  		list_del_init(&iter->i_fc_list);
+>>> +		if (iter->i_fc_next =3D=3D tid)
+>>> +			iter->i_fc_next =3D 0;
+>>> +		else if (iter->i_fc_next > tid)
+>> 			 ^^^ careful here, TIDs do wrap so you need to use
+>> tid_geq() for comparison.
+>>
+>
+> Yikes!  Thanks, I'll update the code to do that.
+>
+>>> +			/*
+>>> +			 * re-enqueue inode into STAGING, which will later be
+>>> +			 * splice back into MAIN
+>>> +			 */
+>>> +			list_add_tail(&EXT4_I(&iter->vfs_inode)->i_fc_list,
+>>> +				      &sbi->s_fc_q[FC_Q_STAGING]);
+>>>  		ext4_clear_inode_state(&iter->vfs_inode,
+>>>  				       EXT4_STATE_FC_COMMITTING);
+>>>  		if (iter->i_sync_tid <=3D tid)
+>> 				     ^^^ and I can see this is buggy as
+>> well and needs tid_geq() (not your fault obviously).
+>
+> Yeah, good point.  I can that too in v3.
+>
+> Again, thanks a lot for your review!
+>
+> Cheers,
+> --=20
+> Lu=C3=ADs
+
