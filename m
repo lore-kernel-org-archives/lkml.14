@@ -1,190 +1,188 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F3E323D
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 04:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4664D2E6
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 04:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716782844; cv=none; b=n441mzUjNHERm7Cu7+b7cq8y9PTMKYlQaJm0MzMvJovKoYJU/AxsWun/R/dtS+AvB36xsgnVkXJ5oeI5UymrG0C950Tf07Imb35b3N92ZGWUQqovxlxxOgOLm/g52L89eHyxMywekwS3m0w7kbrkIp7JJKk1Ch4iBVtQYZht7os=
+	t=1716782867; cv=none; b=T2S+t2HgeYgWAJIbJjUfAeAzaGrVDFlh04GuO6UvRIX+9d3nf8s5VIq0ej+pBYNc4dB8/0hmSZm4zu6nKPRnGFREh/kSdV/qY45DSKwqcLSklV/zNVQXNv3jsHwk5KygqbIMSOVuDBAb0+BFq1Mbq2azIySt0jp5SvLmIxCucl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716782844; c=relaxed/simple;
-	bh=71oaZq4xR9DQ028U8pjpCHAuPZbnjTR5ff8W4JCHNiE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h3AfJvE3y3DAakK95324AxMgaG316DWhLPu5VKB7xDiPS7+3VcKPuP1aRcMlfuIgxvvf0n+u+PqWXgx/vn0Qnan6Uyeo6TQyf8aTd2Pd/TM3gXP3K+MEljPVLNox7Cv3NwOnLKaAv8pZI68L9xBOD/QDS/4/VjfbGhrF6M+r8LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DYRAlzYc; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716782867; c=relaxed/simple;
+	bh=XQ4MRPq1YoTtlAQuO9ub+oyrZ1uUfp5edKW2XiWOGCU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JOOh6vlqBmgzENXtLI7iL6bx9SBeOMQ2Y7W097B+1pf3rIl/hbLkKtxKmhVRUuH3Rg5xUEJHk4K2i4NFrJ7KUlfS8076i0MbqZpFdbWsKrvjZWIXJIydgqeo1uiKxeIWUGEtunuYJ/yWZfsa1GBWuJ8lRZ+fmfNgii5HDWmzKDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kcdP+Xvc; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYRAlzYc"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-420180b58c3so81424045e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 May 2024 21:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716782841; x=1717387641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3d4wcnpC+sJlEKgi++LLlXHUe/6Lf69h5GwFk08nXEw=;
-        b=DYRAlzYcW110aH6q/86lLQz1qg4W+xzkOnsyZ3oDkB8FahHCh/yKJi+SD105sDeTn6
-         xBYElzBYfFEKVcoW0KQDI+SpPJul6rT0k5bmzEzfi6Y2BgCt+AfvkwlQCRP/4sFAzbQa
-         zaChGBkPQyVrgw82IdJUZn3oy8mBc3Ah2Pl5JxiMF5zSscSbIovjUgeOLxdB/upyIphm
-         XY0fsM0eIZZ3OM8LbvvsgqyhJCkiPE7m9G1IHO19a5+D82qYlAp3tz1cYk1eAdeDRlLu
-         62II7xy2zt/h1mDoC9y9evz8/WpDirCFFEt6xlxwSWeXUTsr3vu6rty5HjsrtTKAcy/h
-         TecQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716782841; x=1717387641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3d4wcnpC+sJlEKgi++LLlXHUe/6Lf69h5GwFk08nXEw=;
-        b=LdwLRqsEXHXbbfn0ebo/UrVX07MuOswKkbD6h6KhAyVTj90MT4C35c2g1/l5UMOxVH
-         DGDbGGzF9YES5viLbUD1EeTqxxJP2WU86FYIR7AY59wH2LQ4Q95yu3d3fZFBmfuFW63P
-         1AQKK8Jli1MEu3efcufiQTMcAvwoTcPRDtaCS+q5L/WwR+qoUDN/QQttkdyjRE3WWPvd
-         6nLBYloRIhfqVHquHbbsHxWqu1oBI2OVaQzR/SGYsQNj5trZY1aAm8Cz6b3RC2HHqyH5
-         ddVz5xz6wBwCrYw1qOSLNnSyfFiiVFRanc1sSJBxfUVdU6HFs+nfnvXUG3NWtHjPC698
-         QecA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFSRlIu2GCUMb9eO5WEMyRbf4MfoiZpIhmgV3QlK0BsfgntQrCeyFNLJL8BrnMl2jNE6z1pDT3u4n4PvTMB+p1fLGxcOp+Aml3/Iru
-X-Gm-Message-State: AOJu0YwYygNZk3DYg8LVmwsN0HPkPOY1LMvC0fdDBcguopZL/knDlBTG
-	jhOLNPwOCeuQ60nK4aUCDrWYZIJkzTrtE3DYfKI3c14AKplZvgsO1aST+rGpF3QColmtXgy4Di+
-	JjObWJTt1kJ+md7qLezw2O9sWf/o3Wgf9OXk=
-X-Google-Smtp-Source: AGHT+IG8kfC9vaSJM7DNnJOgGB0H0o6noT3lMj5oUdJAizBMG6v797upDh+ThyOKhMLrJe5nEVMlcjb9bYgMNvO38j0=
-X-Received: by 2002:a05:600c:22d4:b0:41b:82ba:7997 with SMTP id
- 5b1f17b1804b1-42108a4f8cfmr64099065e9.3.1716782840435; Sun, 26 May 2024
- 21:07:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kcdP+Xvc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716782866; x=1748318866;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XQ4MRPq1YoTtlAQuO9ub+oyrZ1uUfp5edKW2XiWOGCU=;
+  b=kcdP+Xvc0Xp+BbrN4myI7HZ0j07FSonM4HLUxBztI19G0q0icBnxQnC6
+   3gFHSCvkT4U9U2ijBU83zNO4MHvkTEJSrTByqGXVXilQG9tQLaIaY4ZIt
+   Zn6DncXQNJUf7MvPLknx4v3hFrQZStG9RWRU4i8Zb9fZztygxs0Hyir4Q
+   ZZLwV7HYFaff9rUnxMAlize16N9v4Ac7d2x3V7MAlRbtNfQE9vq31vgBo
+   0KZWNa7hXXbU0p3jak/uYI/tz5RnTjKWgDySwAK3L2mkH/XDQikGjDfac
+   Tmhga9mtH2IkYUL6iCiy5dDfKFGtihQnzdY8RNXSCH7G3v83zXA1TBU6U
+   w==;
+X-CSE-ConnectionGUID: vbIW4MsDTbOKzlI2tqwnaQ==
+X-CSE-MsgGUID: jULpbePwTsuKL6PJf3CBVQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="13022636"
+X-IronPort-AV: E=Sophos;i="6.08,191,1712646000"; 
+   d="scan'208";a="13022636"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2024 21:07:25 -0700
+X-CSE-ConnectionGUID: 7+Q3sbmWSFaQyLuHuPhENQ==
+X-CSE-MsgGUID: peIcVCKOTzeklGwoT/6mbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,191,1712646000"; 
+   d="scan'208";a="39399868"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by orviesa003.jf.intel.com with ESMTP; 26 May 2024 21:07:21 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Joel Granados <j.granados@samsung.com>
+Cc: iommu@lists.linux.dev,
+	virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v6 00/10] IOMMUFD: Deliver IO page faults to user space
+Date: Mon, 27 May 2024 12:05:07 +0800
+Message-Id: <20240527040517.38561-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1716204978-29455-1-git-send-email-zhiguo.niu@unisoc.com> <1d67715b-5f88-4940-969d-e098fd80ae2a@kernel.org>
-In-Reply-To: <1d67715b-5f88-4940-969d-e098fd80ae2a@kernel.org>
-From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Mon, 27 May 2024 12:07:09 +0800
-Message-ID: <CAHJ8P3LXYWQ+bLZHPn_5FLu3oi83ei8C9ZCzAXwa9oBdEKVDNA@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: enable atgc if atgc_age_threshold from user is less
- than elapsed_time
-To: Chao Yu <chao@kernel.org>
-Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	ke.wang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 27, 2024 at 11:49=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
->
-> On 2024/5/20 19:36, Zhiguo Niu wrote:
-> > Now atgc can be enabled based on the following conditions:
-> > -ATGC mount option is set
-> > -elapsed_time is more than atgc_age_threshold already
-> > but these conditions are check when umounted->mounted device again.
-> > If the device has not be umounted->mounted for a long time, atgc can
-> > not work even the above conditions met.
->
-> Zhiguo, I didn't get it, can you please explain more about this issue?
->
-> Thanks,
-Hi Chao,
+This series implements the functionality of delivering IO page faults to
+user space through the IOMMUFD framework. One feasible use case is the
+nested translation. Nested translation is a hardware feature that
+supports two-stage translation tables for IOMMU. The second-stage
+translation table is managed by the host VMM, while the first-stage
+translation table is owned by user space. This allows user space to
+control the IOMMU mappings for its devices.
 
-At present, the point of atgc enale is checked during the mount
-process. What I mean is that if a device has not been rebooted
-(re-mounted) for a long time, even if the above two conditions are
-met(ATGC mount option is set, and the device has been powered on long
-enough=EF=BC=8C more than atgc default threshold ), atgc cannot be dynamica=
-lly
-enabled.
+When an IO page fault occurs on the first-stage translation table, the
+IOMMU hardware can deliver the page fault to user space through the
+IOMMUFD framework. User space can then handle the page fault and respond
+to the device top-down through the IOMMUFD. This allows user space to
+implement its own IO page fault handling policies.
 
-If the user is used to not restarting the phone after turning it on,
-it will be difficult to use atgc.
-thanks!
->
-> >
-> > It is better to enable atgc dynamiclly when user change atgc_age_thresh=
-old
-> > meanwhile this vale is less than elapsed_time and ATGC mount option is =
-on.
-> >
-> > Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> > ---
-> >   fs/f2fs/f2fs.h    |  1 +
-> >   fs/f2fs/segment.c |  9 ++++-----
-> >   fs/f2fs/sysfs.c   | 16 ++++++++++++++++
-> >   3 files changed, 21 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 1974b6a..e441d2d 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -3694,6 +3694,7 @@ void f2fs_clear_prefree_segments(struct f2fs_sb_i=
-nfo *sbi,
-> >   int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi);
-> >   void f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi);
-> >   void f2fs_restore_inmem_curseg(struct f2fs_sb_info *sbi);
-> > +int f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi);
-> >   int f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, int ty=
-pe,
-> >                                       unsigned int start, unsigned int =
-end);
-> >   int f2fs_allocate_new_section(struct f2fs_sb_info *sbi, int type, boo=
-l force);
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index 71dc8042..44923d4 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -2931,14 +2931,11 @@ static int get_atssr_segment(struct f2fs_sb_inf=
-o *sbi, int type,
-> >       return ret;
-> >   }
-> >
-> > -static int __f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
-> > +int f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
-> >   {
-> >       struct curseg_info *curseg =3D CURSEG_I(sbi, CURSEG_ALL_DATA_ATGC=
-);
-> >       int ret =3D 0;
-> >
-> > -     if (!sbi->am.atgc_enabled)
-> > -             return 0;
-> > -
-> >       f2fs_down_read(&SM_I(sbi)->curseg_lock);
-> >
-> >       mutex_lock(&curseg->curseg_mutex);
-> > @@ -2955,7 +2952,9 @@ static int __f2fs_init_atgc_curseg(struct f2fs_sb=
-_info *sbi)
-> >   }
-> >   int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi)
-> >   {
-> > -     return __f2fs_init_atgc_curseg(sbi);
-> > +     if (!sbi->am.atgc_enabled)
-> > +             return 0;
-> > +     return f2fs_init_atgc_curseg(sbi);
-> >   }
-> >
-> >   static void __f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi, int ty=
-pe)
-> > diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> > index 09d3ecf..72676c5 100644
-> > --- a/fs/f2fs/sysfs.c
-> > +++ b/fs/f2fs/sysfs.c
-> > @@ -673,6 +673,22 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
-> >               return count;
-> >       }
-> >
-> > +     if (!strcmp(a->attr.name, "atgc_age_threshold")) {
-> > +             if (t < 0)
-> > +                     return -EINVAL;
-> > +             sbi->am.age_threshold =3D t;
-> > +             if (sbi->am.atgc_enabled)
-> > +                     return count;
-> > +
-> > +             if (test_opt(sbi, ATGC) &&
-> > +                     le64_to_cpu(sbi->ckpt->elapsed_time) >=3D t) {
-> > +                     if (f2fs_init_atgc_curseg(sbi))
-> > +                             return -EINVAL;
-> > +                     sbi->am.atgc_enabled =3D true;
-> > +             }
-> > +             return count;
-> > +     }
-> > +
-> >       if (!strcmp(a->attr.name, "gc_segment_mode")) {
-> >               if (t < MAX_GC_MODE)
-> >                       sbi->gc_segment_mode =3D t;
+User space application that is capable of handling IO page faults should
+allocate a fault object, and bind the fault object to any domain that it
+is willing to handle the fault generatd for them. On a successful return
+of fault object allocation, the user can retrieve and respond to page
+faults by reading or writing to the file descriptor (FD) returned.
+
+The iommu selftest framework has been updated to test the IO page fault
+delivery and response functionality.
+
+The series and related patches are available on GitHub:
+https://github.com/LuBaolu/intel-iommu/commits/iommufd-io-pgfault-delivery-v6
+
+Change log:
+v6:
+ - Refine the attach handle code by shifting the handle allocation to
+   the caller. The caller will then provide the allocated handle to the
+   domain attachment interfaces.
+ - Add reference counter in iommufd_fault_iopf_enable/disable() helpers.
+ - Fix the return values of fault FD's read/write fops.
+ - Add IOMMU_CAP_USER_IOASID_TABLE capability and check it before roll
+   back getting attach_handle to RID.
+ - Move the iopf respond queue from iommufd device to iommufd fault.
+ - Disallow PRI enablement on SR-IOV VF devices.
+ - Miscellaneous cleanup.
+
+v5: https://lore.kernel.org/linux-iommu/20240430145710.68112-1-baolu.lu@linux.intel.com/
+ - Removed attach handle reference count from the core. Drivers will now
+   synchronize their use of handles and domain attach/detach.
+ - Automatically responds to all outstanding faults in hwpt detach or
+   replace paths.
+ - Supports getting a domain-type specific attach handle.
+ - Reorganized the series by changing the patch order.
+ - Miscellaneous cleanup.
+
+v4: https://lore.kernel.org/linux-iommu/20240403011519.78512-1-baolu.lu@linux.intel.com/
+ - Add the iommu domain attachment handle to replace the iopf-specific
+   domain attachment interfaces introduced in the previous v3.
+ - Replace the iommu_sva with iommu domain attachment handle.
+ - Refine some fields in the fault and response message encoding
+   according to feedback collected during v3 review period.
+ - Refine and fix some problems in the fault FD implementation.
+ - Miscellaneous cleanup.
+
+v3: https://lore.kernel.org/linux-iommu/20240122073903.24406-1-baolu.lu@linux.intel.com/
+ - Add iopf domain attach/detach/replace interfaces to manage the
+   reference counters of hwpt and device, ensuring that both can only be
+   destroyed after all outstanding IOPFs have been responded to. 
+ - Relocate the fault handling file descriptor from hwpt to a fault
+   object to enable a single fault handling object to be utilized
+   across multiple domains.
+ - Miscellaneous cleanup and performance improvements.
+
+v2: https://lore.kernel.org/linux-iommu/20231026024930.382898-1-baolu.lu@linux.intel.com/
+ - Move all iommu refactoring patches into a sparated series and discuss
+   it in a different thread. The latest patch series [v6] is available at
+   https://lore.kernel.org/linux-iommu/20230928042734.16134-1-baolu.lu@linux.intel.com/
+ - We discussed the timeout of the pending page fault messages. We
+   agreed that we shouldn't apply any timeout policy for the page fault
+   handling in user space.
+   https://lore.kernel.org/linux-iommu/20230616113232.GA84678@myrica/
+ - Jason suggested that we adopt a simple file descriptor interface for
+   reading and responding to I/O page requests, so that user space
+   applications can improve performance using io_uring.
+   https://lore.kernel.org/linux-iommu/ZJWjD1ajeem6pK3I@ziepe.ca/
+
+v1: https://lore.kernel.org/linux-iommu/20230530053724.232765-1-baolu.lu@linux.intel.com/
+
+Lu Baolu (10):
+  iommu: Introduce domain attachment handle
+  iommu: Remove sva handle list
+  iommu: Add attach handle to struct iopf_group
+  iommu: Extend domain attach group with handle support
+  iommufd: Add fault and response message definitions
+  iommufd: Add iommufd fault object
+  iommufd: Fault-capable hwpt attach/detach/replace
+  iommufd: Associate fault object with iommufd_hw_pgtable
+  iommufd/selftest: Add IOPF support for mock device
+  iommufd/selftest: Add coverage for IOPF test
+
+ include/linux/iommu.h                         |  42 +-
+ drivers/iommu/iommu-priv.h                    |  11 +
+ drivers/iommu/iommufd/iommufd_private.h       |  51 ++
+ drivers/iommu/iommufd/iommufd_test.h          |   8 +
+ include/uapi/linux/iommufd.h                  | 122 +++++
+ tools/testing/selftests/iommu/iommufd_utils.h |  84 +++-
+ drivers/dma/idxd/init.c                       |   2 +-
+ drivers/iommu/io-pgfault.c                    |  61 +--
+ drivers/iommu/iommu-sva.c                     |  37 +-
+ drivers/iommu/iommu.c                         | 178 +++++--
+ drivers/iommu/iommufd/device.c                |  16 +-
+ drivers/iommu/iommufd/fault.c                 | 435 ++++++++++++++++++
+ drivers/iommu/iommufd/hw_pagetable.c          |  41 +-
+ drivers/iommu/iommufd/main.c                  |   6 +
+ drivers/iommu/iommufd/selftest.c              |  64 +++
+ tools/testing/selftests/iommu/iommufd.c       |  18 +
+ .../selftests/iommu/iommufd_fail_nth.c        |   2 +-
+ drivers/iommu/iommufd/Makefile                |   1 +
+ 18 files changed, 1060 insertions(+), 119 deletions(-)
+ create mode 100644 drivers/iommu/iommufd/fault.c
+
+-- 
+2.34.1
+
