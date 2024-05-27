@@ -1,55 +1,57 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236362232A
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD3E13AA36
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716803149; cv=none; b=qEFygPPnzxTAYjx9rgya1LxK47xfEFnOtwtgsOddIf0NcMU/sQPZ3W+Fj5K+Ods3dwwoi/Hr1HBiC0qClNG+vCklZ2fizooQXsBfIrJmn1hhDp3KmL17yuSULk2mw6J/jqLvb/uaejZcKlUCazKy79wgfs8J5uK6lzyoCxvWATQ=
+	t=1716803155; cv=none; b=Q5mOoD2dY1PKXl3y7eNGQ7+aSDsWbeNYde71zOpisgGfCpdXZCbxkyU1BXYH+MwJNPsGYQi0tTerfbefgEIvLir7h97q1l5eDRZJ5MyH7JFLzOFnmYSFnwXQ1tf/XHRwIQgrizNwtAIiNiHZkXYmU5ogAR5jIBx0AFjW3ujDkSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716803149; c=relaxed/simple;
-	bh=cBVp7Eifp7yDkONw50FbDLe9jRStO/EOErIG9jhddpo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OT0OyVNlqL/WBY8GCu5tM+xEl2xLZ0NIjOO6jo/qCC/tKS1M7vaFOhBVKFK20md0AIF1dRb5Lt4jRQeSFfcdK/z6vw8jWUmXvxje3UqIvA8i5ePlIR9rsRfVNN0KKjaixbAuGDf/HKhk3t6Rfs2Tg9DTJebm0KwBDyVCLY6ooFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dNjN9+8W; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1716803155; c=relaxed/simple;
+	bh=WflIQoeUamn8PO2OKh5VSMS4KpxPJy/grFXhGMPOAe0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d4pajSo3G8nZ/B6iRaxqed+pE0Uf+6kc2c/PuW42BtsgfislA2t70RDyHSQW8qq3WBz2Uobh2mWfsHZ28qKPmIsIKSOfAMA8NMUmwMnvaVQH0uTistoijs1adhNAHKByTdwxlER1IDSYGDMe0Dy39ovVYnBNTu+1oiuIJFzQSrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h+PQh7Fv; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNjN9+8W"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57822392a0dso8110278a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:45:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+PQh7Fv"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57857e0f462so2989207a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:45:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716803146; x=1717407946; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+jJQAZCfqqzKp/yT4Fe8nzJklXty4v0i4TpeOod95No=;
-        b=dNjN9+8WAQfGG8zD2o3d2wrxeYkuXGwM6GmBZNZAy8tACYZwAi1gM3XImV/qAOc3+i
-         FHPaues8w+pw4hO1X8eXQAUqDo76xvxVuYOiQ9aj4VHnK1MgReb6JoX7Hqrjp0D5xp88
-         5UKw5MNqr2nt5rphXiVIRkOn9oKWHvsvwj2PKaPi7Je1wpeCifQPKxQnOSU7rdnjEN6t
-         1SKf040p64m6U3JfL9erlr2P7Let7UjyypQJGzFSDnbp5oc9hLPZskmNPC7fwIWXkzBX
-         d7xALu/R6MxYwEm0yS6/EttZz4z+c76MwY2UkijG+/zfdM7pTDbLf4vG17pdPcN3kFwj
-         cCEQ==
+        d=gmail.com; s=20230601; t=1716803152; x=1717407952; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZCU3XZH1xof6IMBlikDcCMM2jat2Zoq5blIFKcFiWcU=;
+        b=h+PQh7FvQTiBmB2So33JNq3mU2XCOVoWw//KXdvgv7PlMzb7BZBjxd2BSbxePmfeHT
+         mIvMIx9y7D1pakRQvefhuDqeCSdzI16NQLeiWQf0LVw3bl0xEawxyZlYZjXPg3ibfhIi
+         +1v+OgXybHVQULnK4brzbbdSkUy6mKQhBzEK4QTggJIUcleZvP9Rp2uqjl9P3Y9fte4F
+         5E88vNOosEXxmJ4vTxU10gqyI5JOMlOr8rSzWiDjn640H1xRCoYidIbTRmvl5HwUCxWf
+         kDeI5XNsBlWa6nxreNZzGnNuM2tMsA33+/q58ASr8lHtN6Ce3juWnQwTXVAsugJMTN/5
+         OLQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716803146; x=1717407946;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+jJQAZCfqqzKp/yT4Fe8nzJklXty4v0i4TpeOod95No=;
-        b=j+IiH4PIkQrzuC7LzZ8iXgNp0qUjuYi1UttrO7T1yGw2+963D8v7hJyCRarb6XPblI
-         hGHE5TkTr/NA9JGXWvUXRleS7+EbxMUtC896Gd5q5Aw2JiZDIPz7AalXvqEhJHSwtKe2
-         0tLVc9vZ66BSZe2Ox5RD4MQi66utvJJ4zjtc0LaTcAUrcicUL9U1YMZZ2+W3E2xRH4pG
-         VuLw6iLTTs/hPKBmIyXXdUNEPsCsN847SehacMEMBA0LMCUOcE6v+xzX5Hzww+j3aFHq
-         teUEbPIoOfhZqwgftvccnyQX5LaDqzRKETzjEBZ/bBt4R7UA0klQTDv/SH8c3B85gzlB
-         MYOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQD/EWp4tx0EiHGYZ27ialvrFfDIfi9f3mv4GIJp7JOF5BiHp3tuqiGGoUjx1mzYDC+e+Zs+jXKOx4TIXTqVqKFF5sSX0Q0J63TGbg
-X-Gm-Message-State: AOJu0YzNiAiYbErkZXq8V2ksTd47aqUdOnCH+Lh6KghjY3Wf0RlzYV52
-	U1MGzPbSiSgDzSc5GEGgJdNkrDy6SxuwSQ+SgTmaAL6xwfr3RydW
-X-Google-Smtp-Source: AGHT+IEj3c842/5ft9ggGZPWNRE5Uh6s2O92WQgTQa2GXAvGXatkoz3IByBSlddnC3LBVgPOKO2w1Q==
-X-Received: by 2002:a50:9e6d:0:b0:572:9dbf:1de5 with SMTP id 4fb4d7f45d1cf-578519ba565mr4991060a12.40.1716803146254;
-        Mon, 27 May 2024 02:45:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716803152; x=1717407952;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZCU3XZH1xof6IMBlikDcCMM2jat2Zoq5blIFKcFiWcU=;
+        b=q+3xbd+zuMlPHLXHpzrzyspSOQrRbAxT61WGUFWqkibQW7J9pGAhG2U9p2eM6Vyoo5
+         57u1YzLeOCZeuPbQIWd3YPa69izVCrmaI+LgQBJa5kSSCGSLzHPWMvs0OafWbma76nnh
+         cK/J62TN/KguGKc9CodTUQ31MFmvILs7GUCUrM387iBNgBn/MQYjZ3o6T5ZJWuofYtq/
+         1OXJMqmIYJ18FQ9pEpVXZPBMX6RSUZOh1S/E6l5/XVUGHSZRbz9OjTCLjoLZJpM1tTFv
+         LttyS+JFatwR+Ds5QEHG/1gHckRkWptC7pYk3CysyKAtZf2Xf5cIWEDCZ/Vtv4fUrUey
+         HBjw==
+X-Forwarded-Encrypted: i=1; AJvYcCU92Kedeap1Cc3Wf8/uklSNuD8SWyyvj5/kdM6nwB+cYkSss2DteBUTSRmWsxW43/wXEoeo2imfxX8mgVFp0skI3+2efg9+Q6r0djbi
+X-Gm-Message-State: AOJu0YwE+AqYpxH6Biy/x+WLJCU12L+pyJUI5gVuYVffO5IDFMBRizCE
+	jLiIrUqLKAsZTffxKnm9vg8M2mQ1odzWj6GOjH4KtqEGhueK2DDM
+X-Google-Smtp-Source: AGHT+IFCyaJZWTGFtwyvFpUuoVfenu2rfxpVDS9Di1Q0IN+mizrFBCaT9vyhskDyjLy7ncb8AVoMEw==
+X-Received: by 2002:a50:9514:0:b0:578:6c19:47fa with SMTP id 4fb4d7f45d1cf-5786c195f61mr4100819a12.22.1716803152358;
+        Mon, 27 May 2024 02:45:52 -0700 (PDT)
 Received: from localhost.localdomain (ip-77-25-34-87.web.vodafone.de. [77.25.34.87])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579c6c72ed3sm2304178a12.87.2024.05.27.02.45.45
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579c6c72ed3sm2304178a12.87.2024.05.27.02.45.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 02:45:45 -0700 (PDT)
+        Mon, 27 May 2024 02:45:52 -0700 (PDT)
 From: Michael Straube <straube.linux@gmail.com>
 To: gregkh@linuxfoundation.org
 Cc: philipp.g.hortmann@gmail.com,
@@ -57,10 +59,12 @@ Cc: philipp.g.hortmann@gmail.com,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH v2 0/2] staging: rtl8192e: some refactoring
-Date: Mon, 27 May 2024 11:45:25 +0200
-Message-ID: <20240527094527.2046-1-straube.linux@gmail.com>
+Subject: [PATCH v2 2/2] staging: rtl8192e: remove unnecessary line breaks
+Date: Mon, 27 May 2024 11:45:27 +0200
+Message-ID: <20240527094527.2046-3-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240527094527.2046-1-straube.linux@gmail.com>
+References: <20240527094527.2046-1-straube.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,22 +73,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series refactors two for loops in _rtl92e_dm_rx_path_sel_byrssi()
-to reduce indentation and improve readability.
+Remove some unnecessary line breaks after '=' and '==' to improve
+readability.
 
-Compile-tested only, due to lack of hardware.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Reviewed-by: Nam Cao <namcao@linutronix.de>
+---
+v1 -> v2:
+Added Nam Cao's reviewed-by tag from v1
 
-v1 -> v2
-- Removed patch 3/3
-- Added Nam Cao's reviewed-by tags from v1
+ drivers/staging/rtl8192e/rtl8192e/rtl_dm.c | 24 ++++++++--------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-Michael Straube (2):
-  staging: rtl8192e: reduce indentation level
-  staging: rtl8192e: remove unnecessary line breaks
-
- drivers/staging/rtl8192e/rtl8192e/rtl_dm.c | 160 ++++++++++-----------
- 1 file changed, 77 insertions(+), 83 deletions(-)
-
+diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
+index 2fda44c5a412..5392d2daf870 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
+@@ -1392,8 +1392,7 @@ static void _rtl92e_dm_rx_path_sel_byrssi(struct net_device *dev)
+ 				continue;
+ 
+ 			rf_num++;
+-			cur_cck_pwdb =
+-					dm_rx_path_sel_table.cck_pwdb_sta[i];
++			cur_cck_pwdb = dm_rx_path_sel_table.cck_pwdb_sta[i];
+ 
+ 			if (rf_num == 1) {
+ 				cck_rx_ver2_max_index = i;
+@@ -1412,27 +1411,20 @@ static void _rtl92e_dm_rx_path_sel_byrssi(struct net_device *dev)
+ 				}
+ 			} else {
+ 				if (cur_cck_pwdb > tmp_cck_max_pwdb) {
+-					tmp_cck_sec_pwdb =
+-							tmp_cck_max_pwdb;
+-					cck_rx_ver2_sec_index =
+-							cck_rx_ver2_max_index;
++					tmp_cck_sec_pwdb = tmp_cck_max_pwdb;
++					cck_rx_ver2_sec_index = cck_rx_ver2_max_index;
+ 					tmp_cck_max_pwdb = cur_cck_pwdb;
+ 					cck_rx_ver2_max_index = i;
+-				} else if (cur_cck_pwdb ==
+-						tmp_cck_max_pwdb) {
++				} else if (cur_cck_pwdb == tmp_cck_max_pwdb) {
+ 					tmp_cck_sec_pwdb = cur_cck_pwdb;
+ 					cck_rx_ver2_sec_index = i;
+ 				} else if (PWDB_IN_RANGE) {
+ 					tmp_cck_sec_pwdb = cur_cck_pwdb;
+ 					cck_rx_ver2_sec_index = i;
+-				} else if (cur_cck_pwdb ==
+-						tmp_cck_sec_pwdb) {
+-					if (tmp_cck_sec_pwdb ==
+-						tmp_cck_min_pwdb) {
+-						tmp_cck_sec_pwdb =
+-								cur_cck_pwdb;
+-						cck_rx_ver2_sec_index =
+-								i;
++				} else if (cur_cck_pwdb == tmp_cck_sec_pwdb) {
++					if (tmp_cck_sec_pwdb == tmp_cck_min_pwdb) {
++						tmp_cck_sec_pwdb = cur_cck_pwdb;
++						cck_rx_ver2_sec_index = i;
+ 					}
+ 				} else if ((cur_cck_pwdb < tmp_cck_sec_pwdb) &&
+ 						(cur_cck_pwdb > tmp_cck_min_pwdb)) {
 -- 
 2.45.1
 
