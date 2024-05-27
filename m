@@ -1,531 +1,81 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FA315ECFE
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D887D161937
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 13:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816676; cv=none; b=G5bhVzBwYvDX+jakAe+CEcnY8vKEZNND/DJ1sX/J9ZbIptspKVjqPbj427gG8sLVQLg9OKP8e+JrSiL3lLSVLDxzvRwur0R9irlqN6y5iJpihBBuF5B4berOLbGCqIKqiR5ryfe3XzpB3wEgpk1KCzSH4fxXd364lthap5/tiUg=
+	t=1716816679; cv=none; b=IlU9hr/bhZPp/CsOqLfOiceBbX35iUVwpPUl6PAhwACQueylHHcX2/sT1LsI+Rs8jr5ERQU7ibiHt5KU0BT9rxFPSM2WPrHnsZgMg7/li5H2hIl4tIgat8GxEsFcbCpFNB6Rtfx15UeTNAk40pZ7L0uKlOrxKHCs/VJnsXdUfpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816676; c=relaxed/simple;
-	bh=8UxSK6UFThA+fS5v4To3cEqypz8JD7mcZuTM7v/aoW8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dQYvo2tm6CJoSwShBNsgDpH9IFfwU7FMMbGq5+bieA/zWwUF8JOje28U/mtvvDaTNOFJS7ZPFV1wnV+chMlA55IjA0UNV7nV6wiP+nyemeUWyK1kd442PXULroQlpA1jvmW8TRC+VTklBDjYop88bfEyc3o/chaitt43lZjSRfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4VnxNp655hz9tLG;
-	Mon, 27 May 2024 15:30:50 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id DAF14CDk1IYW; Mon, 27 May 2024 15:30:50 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4VnxNp5Qs5z9tC6;
-	Mon, 27 May 2024 15:30:50 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B56818B773;
-	Mon, 27 May 2024 15:30:50 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 9vS0LqUFHk6r; Mon, 27 May 2024 15:30:50 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.49])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F5448B764;
-	Mon, 27 May 2024 15:30:47 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [RFC PATCH v4 13/16] powerpc/e500: Use contiguous PMD instead of hugepd
-Date: Mon, 27 May 2024 15:30:11 +0200
-Message-ID: <56cf925576285e2b97550f4f7317183d98d596c5.1716815901.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1716815901.git.christophe.leroy@csgroup.eu>
-References: <cover.1716815901.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1716816679; c=relaxed/simple;
+	bh=0bAPcc4QCNlr+4EuKBEFKnNcwG+uRa5Y8WxJpg/YnzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B9PWdAdu2vj86bn6cp2MEmIXZ17Cled1JLtF6lcbMluKLZxpwRNr6W6D4YunM468QUwVOuOAHToBqjDp32sosF3a72cboXc/rKf/h9cEgN/akfcdAeYPNfa9ONUaRYhcc60nY5WL5xF3HTwH2ZP1yXcCRwzqPKAAKJOF1rN2ih8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rHIOs7v1; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rHIOs7v1"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-df7c1a7d745so36031276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716816677; x=1717421477; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0bAPcc4QCNlr+4EuKBEFKnNcwG+uRa5Y8WxJpg/YnzU=;
+        b=rHIOs7v1Q3AlPrpALACt/4gAz2wtCrGoZ0JWBYsMoCvfBmHXlTggsRM1wnWboTB653
+         flp8BxoUAPEDRAiRnUuWcpjwnj39WHzEbZ3qYtET73lc7luVhzZ7KHTGt5hgqbe/Dkur
+         xeictGrsLDMzt04xQYF9BsdPypx88tqTnpCwYu62Otn1KIg9pFr1Ce8qL1DUmJMDa7Pv
+         qve8/VllGrX/+yn7kUoC7rn06+ofOMoY8ehyyX8Df2B3rH4M+nm+bsxLGBOi3TTbkmhx
+         n3QHWxNzlKWESyjRKlN2T8PHBiG7KJ/sWuxDWje05tXpZ3yq8AjopzYQM7E6lbihSGAl
+         celQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716816677; x=1717421477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0bAPcc4QCNlr+4EuKBEFKnNcwG+uRa5Y8WxJpg/YnzU=;
+        b=wJHVFCF2zq4pib42ObH5DyWp6tQfkqqVfRCIBntTEUsqOZKlABRJ1IkIAhA+fBKFzc
+         +fR/MybjT3i1Zvw7wTCQNVCGv+iQcocuuN3dxr9DPWMCdPcxhNtOphb3XVE1QM2SCjwJ
+         WM0V3Hh/HoQzUhXr64ROXFe3FxyGKvBx+rhNFLK2+4ieVZv7LFFHqaOFusdQkEzirux7
+         yegNohPLGmFNWaIv6lakUJ4qec5zzGiEfMP+u1E5CnoheVbyljffynsPdSEf9nmbcNi1
+         C6wGuMNB9kXtAMpiPno5uG5U5BnNALqvq1KNpNx/zatpapN0LJe+laPIVqfaIzRSCC7k
+         Jblg==
+X-Gm-Message-State: AOJu0YxvKIPmug1Mwv/yllEgEkpKnlU8S3e5z1Pxtz5tqMY/jgI013be
+	B5Ot2gKkJKMxgZ5pGNANsIAGarCTyoWKOl9juFh2ySf0It3+92M3GONzUQ7HQuXM/HDqMMev8Tt
+	Syl+qxDN/FtpTgCV+k1dAOnoFdbO887Yyerv32Q==
+X-Google-Smtp-Source: AGHT+IH7k1gsPCg4bqWj2BQ7PDTGPlf8s7c3n3xklRl8yoee7b32jueZXgT6/t5NgvOv6Kou0UFBTdFoDCZDHUEPiaY=
+X-Received: by 2002:a25:7208:0:b0:df4:d883:6975 with SMTP id
+ 3f1490d57ef6-df55e528b30mr9276064276.29.1716816676739; Mon, 27 May 2024
+ 06:31:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716816601; l=15623; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=8UxSK6UFThA+fS5v4To3cEqypz8JD7mcZuTM7v/aoW8=; b=3H262+jGid3iIXsxM5xPqxkdEMudmbX8YJy5U6LlJFlxe6xQOZoMR+Z/TRcIOzBUJl4RRbX9q ms72N/J4jCIAW+xLKBMMBwywKIzopg8OvfnMpE63eU9MLrJi4JBxbVn
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+References: <20240508184905.2102633-1-andriy.shevchenko@linux.intel.com> <20240508184905.2102633-11-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240508184905.2102633-11-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 27 May 2024 15:31:06 +0200
+Message-ID: <CACRpkdYwefauweP_1tkwRRGP7GXDvuoE7pd+OAs74DSuh1FOKg@mail.gmail.com>
+Subject: Re: [PATCH v1 10/10] misc: eeprom_93xx46: Convert to DEVICE_ATTR_WO()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-e500 supports many page sizes among which the following size are
-implemented in the kernel at the time being: 4M, 16M, 64M, 256M, 1G.
+On Wed, May 8, 2024 at 8:50=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-On e500, TLB miss for hugepages is exclusively handled by SW even
-on e6500 which has HW assistance for 4k pages, so there are no
-constraints like on the 8xx.
+> Use DEVICE_ATTR_WO() helper instead of plain DEVICE_ATTR(),
+> which makes the code a bit shorter and easier to read.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On e500/32, all are at PGD/PMD level and can be handled as
-cont-PMD.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-On e500/64, smaller ones are on PMD while bigger ones are on PUD.
-Again, they can easily be handled as cont-PMD and cont-PUD instead
-of hugepd.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v3: Add missing pmd_leaf_size() and pud_leaf_size()
-v4: Rebased of v6.10-rc1 : pmd_huge() and pud_huge() are gone
----
- .../powerpc/include/asm/nohash/hugetlb-e500.h | 32 +---------
- arch/powerpc/include/asm/nohash/pgalloc.h     |  2 -
- arch/powerpc/include/asm/nohash/pgtable.h     | 37 +++++++----
- arch/powerpc/include/asm/nohash/pte-e500.h    | 28 +++++++++
- arch/powerpc/include/asm/page.h               | 15 +----
- arch/powerpc/kernel/head_85xx.S               | 23 +++----
- arch/powerpc/mm/hugetlbpage.c                 |  2 -
- arch/powerpc/mm/nohash/tlb_low_64e.S          | 63 +++++++++++--------
- arch/powerpc/mm/pgtable.c                     | 31 +++++++++
- arch/powerpc/platforms/Kconfig.cputype        |  1 -
- 10 files changed, 139 insertions(+), 95 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/nohash/hugetlb-e500.h b/arch/powerpc/include/asm/nohash/hugetlb-e500.h
-index d8e51a3f8557..d30e2a3f129d 100644
---- a/arch/powerpc/include/asm/nohash/hugetlb-e500.h
-+++ b/arch/powerpc/include/asm/nohash/hugetlb-e500.h
-@@ -2,38 +2,12 @@
- #ifndef _ASM_POWERPC_NOHASH_HUGETLB_E500_H
- #define _ASM_POWERPC_NOHASH_HUGETLB_E500_H
- 
--static inline pte_t *hugepd_page(hugepd_t hpd)
--{
--	if (WARN_ON(!hugepd_ok(hpd)))
--		return NULL;
--
--	return (pte_t *)((hpd_val(hpd) & ~HUGEPD_SHIFT_MASK) | PD_HUGE);
--}
--
--static inline unsigned int hugepd_shift(hugepd_t hpd)
--{
--	return hpd_val(hpd) & HUGEPD_SHIFT_MASK;
--}
--
--static inline pte_t *hugepte_offset(hugepd_t hpd, unsigned long addr,
--				    unsigned int pdshift)
--{
--	/*
--	 * On FSL BookE, we have multiple higher-level table entries that
--	 * point to the same hugepte.  Just use the first one since they're all
--	 * identical.  So for that case, idx=0.
--	 */
--	return hugepd_page(hpd);
--}
-+#define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
-+void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
-+		     pte_t pte, unsigned long sz);
- 
- void flush_hugetlb_page(struct vm_area_struct *vma, unsigned long vmaddr);
- 
--static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
--{
--	/* We use the old format for PPC_E500 */
--	*hpdp = __hugepd(((unsigned long)new & ~PD_HUGE) | pshift);
--}
--
- static inline int check_and_get_huge_psize(int shift)
- {
- 	if (shift & 1)	/* Not a power of 4 */
-diff --git a/arch/powerpc/include/asm/nohash/pgalloc.h b/arch/powerpc/include/asm/nohash/pgalloc.h
-index 4b62376318e1..d06efac6d7aa 100644
---- a/arch/powerpc/include/asm/nohash/pgalloc.h
-+++ b/arch/powerpc/include/asm/nohash/pgalloc.h
-@@ -44,8 +44,6 @@ static inline void pgtable_free(void *table, int shift)
- 	}
- }
- 
--#define get_hugepd_cache_index(x)	(x)
--
- static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
- {
- 	unsigned long pgf = (unsigned long)table;
-diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/include/asm/nohash/pgtable.h
-index 90d6a0943b35..f7421d1a1693 100644
---- a/arch/powerpc/include/asm/nohash/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/pgtable.h
-@@ -52,11 +52,36 @@ static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, p
- {
- 	pte_basic_t old = pte_val(*p);
- 	pte_basic_t new = (old & ~(pte_basic_t)clr) | set;
-+	unsigned long sz;
-+	unsigned long pdsize;
-+	int i;
- 
- 	if (new == old)
- 		return old;
- 
--	*p = __pte(new);
-+#ifdef CONFIG_PPC_E500
-+	if (huge)
-+		sz = 1UL << (((old & _PAGE_HSIZE_MSK) >> _PAGE_HSIZE_SHIFT) + 20);
-+	else
-+#endif
-+		sz = PAGE_SIZE;
-+
-+	if (!huge || sz < PMD_SIZE)
-+		pdsize = PAGE_SIZE;
-+	else if (sz < PUD_SIZE)
-+		pdsize = PMD_SIZE;
-+	else if (sz < P4D_SIZE)
-+		pdsize = PUD_SIZE;
-+	else if (sz < PGDIR_SIZE)
-+		pdsize = P4D_SIZE;
-+	else
-+		pdsize = PGDIR_SIZE;
-+
-+	for (i = 0; i < sz / pdsize; i++, p++) {
-+		*p = __pte(new);
-+		if (new)
-+			new += (unsigned long long)(pdsize / PAGE_SIZE) << PTE_RPN_SHIFT;
-+	}
- 
- 	if (IS_ENABLED(CONFIG_44x) && !is_kernel_addr(addr) && (old & _PAGE_EXEC))
- 		icache_44x_need_flush = 1;
-@@ -340,16 +365,6 @@ static inline void __set_pte_at(struct mm_struct *mm, unsigned long addr,
- 
- #define pgprot_writecombine pgprot_noncached_wc
- 
--#ifdef CONFIG_ARCH_HAS_HUGEPD
--static inline int hugepd_ok(hugepd_t hpd)
--{
--	/* We clear the top bit to indicate hugepd */
--	return (hpd_val(hpd) && (hpd_val(hpd) & PD_HUGE) == 0);
--}
--
--#define is_hugepd(hpd)		(hugepd_ok(hpd))
--#endif
--
- int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
- void unmap_kernel_page(unsigned long va);
- 
-diff --git a/arch/powerpc/include/asm/nohash/pte-e500.h b/arch/powerpc/include/asm/nohash/pte-e500.h
-index 091e4bff1fba..86e0cd5fcbb4 100644
---- a/arch/powerpc/include/asm/nohash/pte-e500.h
-+++ b/arch/powerpc/include/asm/nohash/pte-e500.h
-@@ -67,6 +67,7 @@
- #define _PAGE_RWX	(_PAGE_READ | _PAGE_WRITE | _PAGE_BAP_UX)
- 
- #define _PAGE_SPECIAL	_PAGE_SW0
-+#define _PAGE_PTE	_PAGE_PSIZE_4K
- 
- #define	PTE_RPN_SHIFT	(24)
- 
-@@ -106,6 +107,33 @@ static inline pte_t pte_mkexec(pte_t pte)
- }
- #define pte_mkexec pte_mkexec
- 
-+static inline int pmd_leaf(pmd_t pmd)
-+{
-+	return pmd_val(pmd) & _PAGE_PTE;
-+}
-+#define pmd_leaf pmd_leaf
-+
-+static inline unsigned long pmd_leaf_size(pmd_t pmd)
-+{
-+	return 1UL << (((pmd_val(pmd) & _PAGE_HSIZE_MSK) >> _PAGE_HSIZE_SHIFT) + 20);
-+}
-+#define pmd_leaf_size pmd_leaf_size
-+
-+#ifdef CONFIG_PPC64
-+static inline int pud_leaf(pud_t pud)
-+{
-+	return pud_val(pud) & _PAGE_PTE;
-+}
-+#define pud_leaf pud_leaf
-+
-+static inline unsigned long pud_leaf_size(pud_t pud)
-+{
-+	return 1UL << (((pud_val(pud) & _PAGE_HSIZE_MSK) >> _PAGE_HSIZE_SHIFT) + 20);
-+}
-+#define pud_leaf_size pud_leaf_size
-+
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* __KERNEL__ */
-diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-index 018c3d55232c..7d3c3bc40e6a 100644
---- a/arch/powerpc/include/asm/page.h
-+++ b/arch/powerpc/include/asm/page.h
-@@ -269,20 +269,7 @@ static inline const void *pfn_to_kaddr(unsigned long pfn)
- #define is_kernel_addr(x)	((x) >= TASK_SIZE)
- #endif
- 
--#ifndef CONFIG_PPC_BOOK3S_64
--/*
-- * Use the top bit of the higher-level page table entries to indicate whether
-- * the entries we point to contain hugepages.  This works because we know that
-- * the page tables live in kernel space.  If we ever decide to support having
-- * page tables at arbitrary addresses, this breaks and will have to change.
-- */
--#ifdef CONFIG_PPC64
--#define PD_HUGE 0x8000000000000000UL
--#else
--#define PD_HUGE 0x80000000
--#endif
--
--#else	/* CONFIG_PPC_BOOK3S_64 */
-+#ifdef CONFIG_PPC_BOOK3S_64
- /*
-  * Book3S 64 stores real addresses in the hugepd entries to
-  * avoid overlaps with _PAGE_PRESENT and _PAGE_PTE.
-diff --git a/arch/powerpc/kernel/head_85xx.S b/arch/powerpc/kernel/head_85xx.S
-index a305244afc9f..96479a2230ac 100644
---- a/arch/powerpc/kernel/head_85xx.S
-+++ b/arch/powerpc/kernel/head_85xx.S
-@@ -310,16 +310,17 @@ set_ivor:
- 	rlwinm	r12, r10, 14, 18, 28;	/* Compute pgdir/pmd offset */	\
- 	add	r12, r11, r12;						\
- 	lwz	r11, 4(r12);		/* Get pgd/pmd entry */		\
--	rlwinm.	r12, r11, 0, 0, 20;	/* Extract pt base address */	\
--	blt	1000f;			/* Normal non-huge page */	\
--	beq	2f;			/* Bail if no table */		\
--	oris	r11, r11, PD_HUGE@h;	/* Put back address bit */	\
--	andi.	r10, r11, HUGEPD_SHIFT_MASK@l; /* extract size field */	\
--	xor	r12, r10, r11;		/* drop size bits from pointer */ \
-+	rotlwi.	r11, r11, 22;		/* Leaf entry (_PAGE_PTE set) */\
-+	bge	1000f;			/* Normal non-huge page */	\
-+	rlwinm	r10, r11, 64 - _PAGE_HSIZE_SHIFT - 22, 0xf;		\
-+	rotrwi	r11, r11, 22;		/* Restore entry */		\
- 	b	1001f;							\
--1000:	rlwimi	r12, r10, 23, 20, 28;	/* Compute pte address */	\
-+1000:	rlwinm.	r12, r11, 32 - 22, 0, 20; /* Extract pt base address */	\
-+	beq	2f;			/* Bail if no table */		\
-+	rlwimi	r12, r10, 23, 20, 28;	/* Compute pte address */	\
- 	li	r10, 0;			/* clear r10 */			\
--1001:	lwz	r11, 4(r12);		/* Get pte entry */
-+	lwz	r11, 4(r12);		/* Get pte entry */		\
-+1001:
- #else
- #define FIND_PTE	\
- 	rlwinm	r12, r10, 14, 18, 28;	/* Compute pgdir/pmd offset */	\
-@@ -749,16 +750,16 @@ finish_tlb_load:
- 100:	stw	r15, 0(r17)
- 
- 	/*
--	 * Calc MAS1_TSIZE from r10 (which has pshift encoded)
-+	 * Calc MAS1_TSIZE from r10 (which has pshift - 20 encoded)
- 	 * tlb_enc = (pshift - 10).
- 	 */
--	subi	r15, r10, 10
-+	addi	r15, r10, 10
- 	mfspr	r16, SPRN_MAS1
- 	rlwimi	r16, r15, 7, 20, 24
- 	mtspr	SPRN_MAS1, r16
- 
- 	/* copy the pshift for use later */
--	mr	r14, r10
-+	addi	r14, r10, 20
- 
- 	/* fall through */
- 
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 5193f6845725..ca00dbfe0e50 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -626,8 +626,6 @@ static int __init hugetlbpage_init(void)
- 		if (pdshift > shift) {
- 			if (!IS_ENABLED(CONFIG_PPC_8xx))
- 				pgtable_cache_add(pdshift - shift);
--		} else if (IS_ENABLED(CONFIG_PPC_E500)) {
--			pgtable_cache_add(PTE_T_ORDER);
- 		}
- 
- 		configured = true;
-diff --git a/arch/powerpc/mm/nohash/tlb_low_64e.S b/arch/powerpc/mm/nohash/tlb_low_64e.S
-index a54e7d6c3d0b..5f6154befde3 100644
---- a/arch/powerpc/mm/nohash/tlb_low_64e.S
-+++ b/arch/powerpc/mm/nohash/tlb_low_64e.S
-@@ -152,20 +152,26 @@ tlb_miss_common_bolted:
- 
- 	rldicl	r15,r16,64-PUD_SHIFT+3,64-PUD_INDEX_SIZE-3
- 	clrrdi	r15,r15,3
--	cmpdi	cr0,r14,0
--	bge	tlb_miss_fault_bolted	/* Bad pgd entry or hugepage; bail */
-+	cmpdi	cr3,r14,0
-+	andi.	r10,r14,_PAGE_PTE
-+	beq-	cr3,tlb_miss_fault_bolted /* No entry, bail */
-+	bne	tlb_miss_fault_bolted	/* Hugepage; bail */
- 	ldx	r14,r14,r15		/* grab pud entry */
- 
- 	rldicl	r15,r16,64-PMD_SHIFT+3,64-PMD_INDEX_SIZE-3
- 	clrrdi	r15,r15,3
--	cmpdi	cr0,r14,0
--	bge	tlb_miss_fault_bolted
-+	cmpdi	cr3,r14,0
-+	andi.	r10,r14,_PAGE_PTE
-+	beq-	cr3,tlb_miss_fault_bolted /* No entry, bail */
-+	bne	tlb_miss_fault_bolted	/* Hugepage; bail */
- 	ldx	r14,r14,r15		/* Grab pmd entry */
- 
- 	rldicl	r15,r16,64-PAGE_SHIFT+3,64-PTE_INDEX_SIZE-3
- 	clrrdi	r15,r15,3
--	cmpdi	cr0,r14,0
--	bge	tlb_miss_fault_bolted
-+	cmpdi	cr3,r14,0
-+	andi.	r10,r14,_PAGE_PTE
-+	beq-	cr3,tlb_miss_fault_bolted /* No entry, bail */
-+	bne	tlb_miss_fault_bolted	/* Hugepage; bail */
- 	ldx	r14,r14,r15		/* Grab PTE, normal (!huge) page */
- 
- 	/* Check if required permissions are met */
-@@ -390,19 +396,25 @@ ALT_FTR_SECTION_END_IFSET(CPU_FTR_SMT)
- 
- 	rldicl	r15,r16,64-PUD_SHIFT+3,64-PUD_INDEX_SIZE-3
- 	clrrdi	r15,r15,3
--	cmpdi	cr0,r14,0
--	bge	tlb_miss_huge_e6500	/* Bad pgd entry or hugepage; bail */
-+	cmpdi	cr3,r14,0
-+	andi.	r10,r14,_PAGE_PTE
-+	beq-	cr3,tlb_miss_fault_e6500 /* No entry, bail */
-+	bne	tlb_miss_huge_e6500	/* Hugepage; bail */
- 	ldx	r14,r14,r15		/* grab pud entry */
- 
- 	rldicl	r15,r16,64-PMD_SHIFT+3,64-PMD_INDEX_SIZE-3
- 	clrrdi	r15,r15,3
--	cmpdi	cr0,r14,0
--	bge	tlb_miss_huge_e6500
-+	cmpdi	cr3,r14,0
-+	andi.	r10,r14,_PAGE_PTE
-+	beq-	cr3,tlb_miss_fault_e6500 /* No entry, bail */
-+	bne	tlb_miss_huge_e6500	/* Hugepage; bail */
- 	ldx	r14,r14,r15		/* Grab pmd entry */
- 
- 	mfspr	r10,SPRN_MAS0
--	cmpdi	cr0,r14,0
--	bge	tlb_miss_huge_e6500
-+	cmpdi	cr3,r14,0
-+	andi.	r15,r14,_PAGE_PTE
-+	beq-	cr3,tlb_miss_fault_e6500 /* No entry, bail */
-+	bne	tlb_miss_huge_e6500	/* Hugepage; bail */
- 
- 	/* Now we build the MAS for a 2M indirect page:
- 	 *
-@@ -449,12 +461,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_SMT)
- 	rfi
- 
- tlb_miss_huge_e6500:
--	beq	tlb_miss_fault_e6500
--	li	r10,1
--	andi.	r15,r14,HUGEPD_SHIFT_MASK@l /* r15 = psize */
--	rldimi	r14,r10,63,0		/* Set PD_HUGE */
--	xor	r14,r14,r15		/* Clear size bits */
--	ldx	r14,0,r14
-+	rlwinm	r15,r14,32-_PAGE_HSIZE_SHIFT,0xf
- 
- 	/*
- 	 * Now we build the MAS for a huge page.
-@@ -465,7 +472,7 @@ tlb_miss_huge_e6500:
- 	 * MAS 2,3+7:	Needs to be redone similar to non-tablewalk handler
- 	 */
- 
--	subi	r15,r15,10		/* Convert psize to tsize */
-+	addi	r15,r15,10		/* Convert hsize to tsize */
- 	mfspr	r10,SPRN_MAS1
- 	rlwinm	r10,r10,0,~MAS1_IND
- 	rlwimi	r10,r15,MAS1_TSIZE_SHIFT,MAS1_TSIZE_MASK
-@@ -579,22 +586,28 @@ virt_page_table_tlb_miss:
- 	rldicl	r11,r16,64-VPTE_PGD_SHIFT,64-PGD_INDEX_SIZE-3
- 	clrrdi	r10,r11,3
- 	ldx	r15,r10,r15
--	cmpdi	cr0,r15,0
--	bge	virt_page_table_tlb_miss_fault
-+	cmpdi	cr3,r15,0
-+	andi.	r10,r15,_PAGE_PTE
-+	beq-	cr3,virt_page_table_tlb_miss_fault /* No entry, bail */
-+	bne	virt_page_table_tlb_miss_fault	/* Hugepage; bail */
- 
- 	/* Get to PUD entry */
- 	rldicl	r11,r16,64-VPTE_PUD_SHIFT,64-PUD_INDEX_SIZE-3
- 	clrrdi	r10,r11,3
- 	ldx	r15,r10,r15
--	cmpdi	cr0,r15,0
--	bge	virt_page_table_tlb_miss_fault
-+	cmpdi	cr3,r15,0
-+	andi.	r10,r15,_PAGE_PTE
-+	beq-	cr3,virt_page_table_tlb_miss_fault /* No entry, bail */
-+	bne	virt_page_table_tlb_miss_fault	/* Hugepage; bail */
- 
- 	/* Get to PMD entry */
- 	rldicl	r11,r16,64-VPTE_PMD_SHIFT,64-PMD_INDEX_SIZE-3
- 	clrrdi	r10,r11,3
- 	ldx	r15,r10,r15
--	cmpdi	cr0,r15,0
--	bge	virt_page_table_tlb_miss_fault
-+	cmpdi	cr3,r15,0
-+	andi.	r10,r15,_PAGE_PTE
-+	beq-	cr3,virt_page_table_tlb_miss_fault /* No entry, bail */
-+	bne	virt_page_table_tlb_miss_fault	/* Hugepage; bail */
- 
- 	/* Ok, we're all right, we can now create a kernel translation for
- 	 * a 4K or 64K page from r16 -> r15.
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index 294775c793ab..6498454959f3 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -331,6 +331,37 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
- 		__set_huge_pte_at(pmdp, ptep, pte_val(pte));
- 	}
- }
-+#elif defined(CONFIG_PPC_E500)
-+void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
-+		     pte_t pte, unsigned long sz)
-+{
-+	unsigned long pdsize;
-+	int i;
-+
-+	pte = set_pte_filter(pte, addr);
-+
-+	/*
-+	 * Make sure hardware valid bit is not set. We don't do
-+	 * tlb flush for this update.
-+	 */
-+	VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
-+
-+	if (sz < PMD_SIZE)
-+		pdsize = PAGE_SIZE;
-+	else if (sz < PUD_SIZE)
-+		pdsize = PMD_SIZE;
-+	else if (sz < P4D_SIZE)
-+		pdsize = PUD_SIZE;
-+	else if (sz < PGDIR_SIZE)
-+		pdsize = P4D_SIZE;
-+	else
-+		pdsize = PGDIR_SIZE;
-+
-+	for (i = 0; i < sz / pdsize; i++, ptep++, addr += pdsize) {
-+		__set_pte_at(mm, addr, ptep, pte, 0);
-+		pte = __pte(pte_val(pte) + ((unsigned long long)pdsize / PAGE_SIZE << PFN_PTE_SHIFT));
-+	}
-+}
- #endif
- #endif /* CONFIG_HUGETLB_PAGE */
- 
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index fa4bb096b3ae..30a78e99663e 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -291,7 +291,6 @@ config PPC_BOOK3S
- config PPC_E500
- 	select FSL_EMB_PERFMON
- 	bool
--	select ARCH_HAS_HUGEPD if HUGETLB_PAGE
- 	select ARCH_SUPPORTS_HUGETLBFS if PHYS_64BIT || PPC64
- 	select PPC_SMP_MUXED_IPI
- 	select PPC_DOORBELL
--- 
-2.44.0
-
+Yours,
+Linus Walleij
