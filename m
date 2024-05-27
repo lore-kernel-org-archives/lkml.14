@@ -1,96 +1,162 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA406A33D
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1246CDB1;
+	Mon, 27 May 2024 09:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716801046; cv=none; b=Usurkapy2Lf3ceP4YsqSGH9n21VaIgo/KSpj+6+ZiXqLRm2loP8PgoH8vjmmZ6CRp9mCZ+2vWzYKW/5l+co0P8phXYBTHEK3IeFeF0VF9mF0UUFBTk3200KhCxMzmVQ5v7FMCdwYkQTesTuXJ/EwutThHP2GxsC9olhLOE/CjYs=
+	t=1716801059; cv=none; b=Wze2Rp6CNf5U5kfNa0TSW83jP9KCzBv1/JN+D0u7vUOgCfVRbOIC/kWCzpb6uLiahBtRiYjezYUCiOsKLkQ5HAw9lfi4Riobje348V6rLtiNXDJZWZml52L5Fhe1rj7Rg4bQ/g3TKvc+eX6ye0lJDOuF+gmHDV53f28NiNuaTr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716801046; c=relaxed/simple;
-	bh=/rZwwBTBzv9nlq8D/sB9Sj0F3E5+t+fTKDFHjqWy9ww=;
+	s=arc-20240116; t=1716801059; c=relaxed/simple;
+	bh=hna6wiJn5J3YlKLz1DIYbTqakeYLBOtj6qBnzA4Yaic=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TyB3lSSDjihXceU5FuYynXRA8Ui/qGS6xdDR/tz3bF4I3HsJtx36h/MIxR9F+dkdPHZKW5lmZXvCKAl5rguxoHL6MwlHmyHTa0dlT7wBZd/aaWtPG2OkZ3LIcmZzOMhhxqAB+W8y5XEvg+WP6Zd5YT+TZYl93A/P+deRsMoQcHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SP/XQ3mb; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=k+hL1w7SbO5L2j1+ukNfPf8DlpWXXG59h96sguVzeClEI9AtiIT3+5reVVaam1YOxRIZUoO6aWHXqXJ6cw2/hgQPeY+is5F8BbLK6F8VYx4QjvgFRKPwQrPv94HPf/DGwtd1vlLq9CjspSyOUFu4cDJhs3fUDjYECgWXULDf+Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YyTu/wxD; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SP/XQ3mb"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51fcb7dc722so4837102e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716801043; x=1717405843; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6qtAud1ds4eRa+mr6V/f9A3wvUJWlvlDifsSBdSKpCM=;
-        b=SP/XQ3mbE+x5PZlngVK8xQmgng8PC6v9F77AvhD0eOdcnnRef7r6BhG9+XBMR9S7Mn
-         zd9vseOFxN2I7Eq5+Ym4YwllDtErSwmrvi0b9pmTzo00cHa1ytx6vibyRhrjXJMnsVKd
-         QjXjZUg6r3p5efUnaAgfmuokkljhk2vtRJ/iHhg9sLu9Wg26ZzNjwJbWOpOlyCn1LdyB
-         wj/L7wi9Y0KBox8eyeMEsWK0xNhqm7kLdU61v0talJm+YqBwmAtTHf6z+/lvDyKTrLQb
-         3KzOpOOLoJEztaNNO1C7C/L5k7RX3myJ99dTYuXdLVZsUiFBC6jYsNdvso99nvdHlPVD
-         qswA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716801043; x=1717405843;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6qtAud1ds4eRa+mr6V/f9A3wvUJWlvlDifsSBdSKpCM=;
-        b=u1AFJW3KycXPp9T7A1tp23+NO7q765W8/vCN6cvaHQQW4SO+4p0cXz7c4QkAMpCyDx
-         /2smUgbM7jBjhQlHOZtRXmE/3ErTvrBjPX/eAP+YoLmhYPNXwLNYZq689+gC6o3yy3s7
-         JOukJdaTiKLXTtPAMz0Y8L9+4W6RKhRw0EhBpeGh/b1AKkoPZHfF1+t6NHTP32SQbxDF
-         uZAWHf4jGjuQimZe/bOnhY78dB9iGcRe/MrPLUZjm2VJ5hW5MawOpOZZQPoYaMFclpAt
-         EjQOUwaazNvKXheYJOoUt046YWouF/CpLKvHitSi8Er/D0r0eOEvQRGMKxX8s3STRKbH
-         vEqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCQCLW6/b97KBx13ODo8TkKO4V6i+bcEQXBNms4cOOXyAc6ZhjqOtqXNk359S1bFv58+7u0k8NvCmw7Buiu+QG3KjcWDnuOCajbzOr
-X-Gm-Message-State: AOJu0YyLnzxISQVvdDJErPFAoGhVQ04gLf5RDakGhe/IRjtJ6lpkuJwN
-	xX99mPbuCG3CSOPuUTDOTHoR4Sf229WPrjXbKD7dp+QD4G4yqz+JiPPYbR+xm2k=
-X-Google-Smtp-Source: AGHT+IGXwKBXQrx7DyunHSME6hC1+E9VCYwulzjZWrqnRjoVgtvEY3Yxnw0gbMGqXaPlzdRw1AMMRg==
-X-Received: by 2002:ac2:511c:0:b0:525:59f6:7 with SMTP id 2adb3069b0e04-527f14d5256mr3466896e87.32.1716801042615;
-        Mon, 27 May 2024 02:10:42 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529a5fc6236sm259236e87.248.2024.05.27.02.10.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 02:10:42 -0700 (PDT)
-Date: Mon, 27 May 2024 12:10:40 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Rajendra Nayak <quic_rjendra@quicinc.com>
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100: Enable tsens and thermal
- nodes
-Message-ID: <wuqn52aiortybhvhmtdvavb4xlxr6rxt4jxbjhv3xrtivv376z@gzqzr7624gx3>
-References: <20240527-x1e80100-dts-thermal-v1-1-ea13b8fa6ffc@linaro.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YyTu/wxD"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8F9A940E01E8;
+	Mon, 27 May 2024 09:10:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id KohNzWZ-0NVO; Mon, 27 May 2024 09:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1716801045; bh=9w6qbzhl3mSC9BIHJao+s6F+3dipO5EQO7O9UXzK/zI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YyTu/wxDSCSpg3L0kZMPZppqT/G+B//WNjrOLn+PjqrbbMgu9dR0NVDH28KuTRxVm
+	 C7MPk9kDlKbxXo6Ozp9t9p5hAuS8WRuOaZA1NuVCjdqnqmhKiV0yYcDCJ0exzbHRRO
+	 NugkfCcU9KYfpFbohF7s7CMfvrAqH+XMC2Qa4YQOnPe563GpTIkLFD6Iz+fgd7aUTG
+	 2x6WelBxPxHgSP919X3hCV5laUPRAippv0q/HRbtzWnsOkpbVWXnzL8hr2P2FhYWeD
+	 KvHyKFskhgtz2kXi6tKVL+/y6p0nnCdEkMQBnBUsXZhGQiEfJPTRx3LHyxKtadwvjU
+	 c1qdGPpc6DnFOXMssojWCwGrOUZcuHDI53O8UQgthz9LELy2OdCglqDqSs1ACih7kI
+	 7JMSRUOvGesXZmn/q+fnw3PrQBEsX2yfhW01zPT1nv+gM7PwIyNu20y/akRoRYfs4X
+	 uGXp1gbnlDlmjVgzgf5KmIB7G543KcpaNBCxy8SbrUsPcqpIEAwrTUyoHZ2mV2RwEz
+	 ezqAhf9DxvnEQ1HrjhsLxFJOdDQe+wYz8KqRlQILtCwm5S/rQiud3KZyr1AIQpyNWj
+	 4NTDdQnFD94AOADNehNN7feDr+OnRr6lqEWqW8DTwRTvhPgvxo1M1S1+xfAqfdt/RK
+	 6CLE1az6qWrGmVfm9qW8JuDs=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9615A40E016A;
+	Mon, 27 May 2024 09:09:58 +0000 (UTC)
+Date: Mon, 27 May 2024 11:09:51 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
+	"leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
+	"erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>,
+	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
+	"gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>,
+	"Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
+	wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
+Message-ID: <20240527090951.GAZlRN3wh9107DSfGK@fat_crate.local>
+References: <663d3e58a0f73_1c0a1929487@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240509215147.GBZj1Fc06Ieg8EQfnR@fat_crate.local>
+ <663d55515a2d9_db82d2941e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240510092511.GBZj3n9ye_BCSepFZy@fat_crate.local>
+ <663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240511101705.GAZj9FoVbThp7JUK16@fat_crate.local>
+ <20240517121554.000031d4@Huawei.com>
+ <20240517124418.00000b48@Huawei.com>
+ <20240521080621.GBZkxV_ZWnbbrq-yV_@fat_crate.local>
+ <20240522104017.00003904@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240527-x1e80100-dts-thermal-v1-1-ea13b8fa6ffc@linaro.org>
+In-Reply-To: <20240522104017.00003904@Huawei.com>
 
-On Mon, May 27, 2024 at 09:51:17AM +0300, Abel Vesa wrote:
-> From: Rajendra Nayak <quic_rjendra@quicinc.com>
-> 
-> Add tsens and thermal nodes for x1e80100 SoC.
-> 
-> Signed-off-by: Rajendra Nayak <quic_rjendra@quicinc.com>
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 1356 ++++++++++++++++++++++++++++++++
->  1 file changed, 1356 insertions(+)
-> 
+On Wed, May 22, 2024 at 10:40:17AM +0100, Jonathan Cameron wrote:
+> Where I've used the symlink approach in the past, it has always
+> been about keeping a legacy interface in place, not where I'd start
+> with something new.   Hence I think this is a question of how far
+> we 'breakaway' from existing edac structure.
 
-Please review the thermal zones configuration. In some cases trip points
-duplicate have their values set to the same temp. In other cases they
-have "passive" for 125°C, where it definitely should be "critical", etc.
+Yes, since we're designing this anew, we can do whatever we prefer. So
+let's do the standard driver model stuff.
+
+However, there's also /sys/devices/system/edac/ so I don't know what the
+right thing to do there is. Are we supposed to put everything under
+/sys/bus/edac now and /sys/devices/system/edac is wrong now and should
+go away? Maybe we should talk to Greg first ... :)
+
+> This suggests the second option above, but I wanted to confirm as Shiju
+> and I read this differently.
+
+As said, we wanna do the new correct way of how a sysfs interface should
+look and leave the old one as it is.
+
+> Ok. There is an existing is the minimal sysfs existing interface but I'm
+> fine with ignoring it for now.
+
+Yes, we don't know who's even using it and why. That's why I'm very
+interested in how this new thing is going to be used so that we know
+what we're committing to supporting forever.
+
+> *much sympathy!*  As we ramp up more on this stuff, we'll try and
+> help out where we can.
+
+Always appreciated! :-)
+
+> Hopefully we all agree on a unified solution being the target.
+> 
+> Feels like we are converging. Now we are down to the details :)
+
+Yap.
+
+Thanks!
 
 -- 
-With best wishes
-Dmitry
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
