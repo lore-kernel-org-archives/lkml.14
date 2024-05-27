@@ -1,101 +1,95 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB6353389
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 21:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4F915F335
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 21:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716845247; cv=none; b=E43otfSvdQtt5LBbq12VBdtaJnGfjrK1kb2ZkPGIvStwOHjcStzM6oa8DSrkB5yO6UqZj4Hg0z4A9KRj/GSzlI7V/9xoLij8kpc5Szfyvemcq7xAM2pEz0PnmUaIQsJD/17y4yzmHanfjh2rs51rHAVEdANx2/MBiIW5WFobZKE=
+	t=1716845272; cv=none; b=NCtZSwTFtBbW+JKWab9gIxe5Q3W+vyQot57bn01I84gBoezDDtfFIYI4bL0YaWPiUZeBSTGQf4qvOwVCeUtlYp4xjrpK3gQ47RAIm/Az/D3aS6x4uEu4Fu8nXbTHCzL0apv8bVaA0PEcuwbpKjYh0To1gvHERowecc9fQkz6x6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716845247; c=relaxed/simple;
-	bh=JQSgT4mCqW8FyQBXigrHwRZA1y9FMk1aW742MZrqNpk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=rimF2e0J1+SfbgEW2FtPXW1X8TssReMW1j2kyxkPLc9mKAtl0tZPJUJRhW6Y2pHYNJpdxjtx6aUNqJbkPJEb1drSRHZ3kbqfBikHYB+Hn2U7r9qn6PurTSAdGVU+nrNH3XzbPZDUnzoELh3R6AbQrJi86I92zDTM7a9h1uLR7F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=k5YTyz0T; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="k5YTyz0T"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57863e2846aso118956a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716845244; x=1717450044; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JQSgT4mCqW8FyQBXigrHwRZA1y9FMk1aW742MZrqNpk=;
-        b=k5YTyz0Ts+T/LLPZtM95t2EaBrQH8RCdZ5jrAbL85mxvzgSxk1FFGtZ+PGidjZl1af
-         yF4e5frvXMjR7sUnBZX78vLGRYd1EcfP1YZPW3J/6P6p1TDcInZX3MJZkitPi7P7iVEL
-         62qbY8/9B47Mw24WECFFkZxARIw8FhGgcVIYshCq6pVGnlVEG7WbC09MKwsFFvnQTvLN
-         l472aktM2N30DXNBEqInBF6den468ngXO2rnAdQZzqGuYU9B1JLz1ZgW5Ma1GN7k2dSH
-         YvbTNZAIVWONw4c75NeA7Shm4GpnJg5uK24A01Vmd8zxFZHghqui7bM1j5GgbE0HptmT
-         SVKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716845244; x=1717450044;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JQSgT4mCqW8FyQBXigrHwRZA1y9FMk1aW742MZrqNpk=;
-        b=uszFGBIQtn9+uDTmWm2NYzZ/NPLwrCqJXTtRA3T3Iad2agm4Sf4opEaYIgnmfNJPjF
-         pLmcQbmP7IVFH+YOGG39IFr6VwgZ0r01RG6gBTmv2znA5qaUukxTCw37ta2JEHw6UfbP
-         UhqXbU+KL9vB6ntPAojRvLHZ47nHceCqRqUFVxw/NVbnoTCnZsnl/R8l5gDWOklqTCEb
-         wjtjLkEDvJATd6rtW25IGoaSndFjf1jG9TtH2GYIA5allTZf98NqAhbdanLpX/mhaqkS
-         jk4DM8jHv6ceIemFBXYPSvtONbD0zPRYZFUi3AR8fEl7bbxdCem238g+rKx10UG0RjuY
-         tHzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlV8sE+hkeviND/fpP2An20Prnu7K2F694BHp7kwJwECqven88IEU8geOHxzbftE2uo+Y9VVvqTnPXBSpYBH9yeK0sOkrkAtlXuP00
-X-Gm-Message-State: AOJu0YxuEKqPq1n5oZIfXcBKIaRzM4kyCdZ0irLt6FtvKIgvcbYTFt0K
-	kZDisbYnrcMI2EOT7Ir1eC6FtvikapNPR14q2W7DA3Dm6zBMDkQaQ6redEkBebs=
-X-Google-Smtp-Source: AGHT+IELOyKcMnwR7BVbM+SlF9SzQjptqkXxQf1KRkjjcSj4V201MJmZJSjDNl+kfWgXY+nUBqF87Q==
-X-Received: by 2002:a50:d593:0:b0:578:5f1b:5018 with SMTP id 4fb4d7f45d1cf-5785f1b50f6mr6076394a12.29.1716845244443;
-        Mon, 27 May 2024 14:27:24 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:aa3:5c01:2d16:b332:5fba:374e])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579ced17435sm2478923a12.53.2024.05.27.14.27.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2024 14:27:24 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	s=arc-20240116; t=1716845272; c=relaxed/simple;
+	bh=hcPCGtyNt9BtsRv3MK9CcRwmRQmt//+7sIK53y3Zy5s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RXvJo0eaiUvw+iQ1HEVQP1T5rCJgpABjmK6mZ9UH75gXUgpj7F58/02dYyNg2KkuCa5ReIKGDOHpXUXipkdksQtE5nj0gScEhaxuKMxlheL2TA02vJdrXZZ1pVJRf8BfEYLRO4WXzLEa+eisVi6abM8tqW59c0vmrA8pjS6fleo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id f5f62320-1c6f-11ef-8e2a-005056bdf889;
+	Tue, 28 May 2024 00:27:47 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-mips@vger.kernel.org
+Cc: Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v1 00/11] pinctrl: pinmux: Embed and reuse struct pinfunction
+Date: Tue, 28 May 2024 00:24:35 +0300
+Message-ID: <20240527212742.1432960-1-andy.shevchenko@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH net] docs: netdev: Fix typo in Signed-off-by tag
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <d0af9c38-d15d-4706-943a-b0b68d1eacea@lunn.ch>
-Date: Mon, 27 May 2024 23:27:12 +0200
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- netdev@vger.kernel.org,
- workflows@vger.kernel.org,
- linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A1AEC97F-AE56-44B4-8198-E86F73E1D0F6@toblux.com>
-References: <20240527103618.265801-2-thorsten.blum@toblux.com>
- <d0af9c38-d15d-4706-943a-b0b68d1eacea@lunn.ch>
-To: Andrew Lunn <andrew@lunn.ch>
-X-Mailer: Apple Mail (2.3774.600.62)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 27. May 2024, at 21:12, Andrew Lunn <andrew@lunn.ch> wrote:
-> On Mon, May 27, 2024 at 12:36:19PM +0200, Thorsten Blum wrote:
->> s/of/off/
->>=20
->> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
->=20
-> Good catch.
->=20
-> Please could you add a Fixes: tag. And a Cc: stable tag. The file you
-> are patching discusses all this :-)
+As promised to Linus W. there is a series that converts struct function_desc
+to use struct pinfunction. With this it both struct group_desc and struct
+function_desc will rely on the generic data types (struct pingroup and struct
+pinfunction respectively).
 
-Should I resend the patch or can I just add the tags here?
+I haven't compiled everything, some builds might fail. Anyway, comments, reviews,
+testing are all appreciated.
 
-Cc: <stable@vger.kernel.org>
-Fixes: e110ba659271 ("docs: netdev: add note about Changes Requested and =
-revising commit messages")
+Andy Shevchenko (11):
+  pinctrl: berlin: Make use of struct pinfunction
+  pinctrl: equilibrium: Make use of struct pinfunction
+  pinctrl: ingenic: Provide a helper macro INGENIC_PIN_FUNCTION()
+  pinctrl: mediatek: Provide a helper macro PINCTRL_PIN_FUNCTION()
+  pinctrl: pinmux: Add a convenient define PINCTRL_FUNCTION_DESC()
+  pinctrl: pinmux: Embed struct pinfunction into struct function_desc
+  pinctrl: imx: Convert to use func member
+  pinctrl: ingenic: Convert to use func member
+  pinctrl: keembay: Convert to use func member
+  pinctrl: mediatek: Convert to use func member
+  pinctrl: pinmux: Remove unused members from struct function_desc
 
-Thanks,
-Thorsten=
+ drivers/pinctrl/berlin/berlin.c           |  33 +-
+ drivers/pinctrl/berlin/berlin.h           |   6 -
+ drivers/pinctrl/core.h                    |   2 +-
+ drivers/pinctrl/freescale/pinctrl-imx.c   |  14 +-
+ drivers/pinctrl/mediatek/pinctrl-moore.c  |  10 +-
+ drivers/pinctrl/mediatek/pinctrl-moore.h  |   6 +
+ drivers/pinctrl/mediatek/pinctrl-mt7622.c |  32 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7623.c |  42 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7629.c |  20 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7981.c |  34 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7986.c |  24 +-
+ drivers/pinctrl/pinctrl-equilibrium.c     |  18 +-
+ drivers/pinctrl/pinctrl-equilibrium.h     |  12 -
+ drivers/pinctrl/pinctrl-ingenic.c         | 707 +++++++++++-----------
+ drivers/pinctrl/pinctrl-keembay.c         |  22 +-
+ drivers/pinctrl/pinmux.c                  |  15 +-
+ drivers/pinctrl/pinmux.h                  |  19 +-
+ 17 files changed, 501 insertions(+), 515 deletions(-)
+
+-- 
+2.45.1
+
