@@ -1,104 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C40A26AFA;
-	Mon, 27 May 2024 10:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36C326AFA
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 10:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716807154; cv=none; b=ek6Kq/rH9rwTRphxxZQo+dcqpbaeXonJNGCS0i6BUcOU9DpOx64bHgfo0FecLMYuOOajDBnkm8BfPzf+S/7W6OmYQROTPRamm4vkJyKVPVNWulYcgF1niTPM9mlNCCA3PNeWMzW5396WxlF8xvQYAkeQ5OEUE6sLwwGmNQOqWiw=
+	t=1716807398; cv=none; b=VCo6VZmfgSjCS0VeZFzZXRQg1H4EljIWXOK08rkOxByfsRPYJ2S1CPvESxD0nT/qjBxoSiXe58tY2/cIlITD4Js1xng/gUwj9tLP0+bmz6IMtWb19vMTpktTjAYZEvjwPMQ5C3IEo/mMuC3yPR3LICJBcmBs5USVxoFyEFihw0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716807154; c=relaxed/simple;
-	bh=5/ZLDV8Iyzas1ubq92DLJv9DNZaEGKWqIJPqjORoDqw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hos3VSMZCVPzPwmTte5yMe2SB+H8D9j1nBZTzF9M7C/aJgTCqcjrEb/EsChkBkQ++L0bMPZzDOp0pVpj12Qjw9Vxp7m9TLee+m5UUFAF4caM2NeHdZfLmM/X2uAfmwq/WdExObsMl2QlGvoaLRUz6oldY6HGHPf5sGWTUUSFmcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOzR9u1W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716807398; c=relaxed/simple;
+	bh=XLoTvNeTfS0Z+Xmo5LFQXXdmRX9EJkbbxeer+BFVM1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YrDXlG7TqLDNt8lWfLZ3MHVj5mtnaXb3bndNyPn+k8Nw1ahWSndW76fVz+HbjaQJjT3nH8idXpx1K0U0Dn/8/8YQCvuLaSCypdvuWZIcZTJ+lDuCi7cRDdQSRFstJY9xD/vkuyXfueMWxfAMX4EjcJcpyy+Vs67NRZVapie0TzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=KGfrfms1; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOzR9u1W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA37FC32781;
-	Mon, 27 May 2024 10:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716807153;
-	bh=5/ZLDV8Iyzas1ubq92DLJv9DNZaEGKWqIJPqjORoDqw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VOzR9u1WOXecn/8ojc6gcvkP2Bd6HM8IMvEqbJaHEiqz49dAM5MINItVPXATIjclD
-	 USXxeXxl2xsv5eVeY0TpwQi75c2yFw1O9WH/K5BVfNrKHgzox/Wouz+NWN+MnNDZxB
-	 uS4u26frYlKc+sLELcTbiFU0VJNIAkjcC8eawUSYWfAG8Q8gzCJmdc0kJrOfQCLOMT
-	 +eGQSQteZPBUWLPjhQ2+nqmMX68mt0U62ZodmV2WK8pBixKDJHiuhRbPacrshW4cPZ
-	 W/gwb4J+eKhxONVtBRHflqKA1uQg3ZGut4HaGA1gOnit5dPDR28L6JnIw+Uy+ZTq8G
-	 5LMYZhsEc/oMg==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2501408eb85so604fac.0;
-        Mon, 27 May 2024 03:52:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWcUAPWtUHkTNzq9BI5QFFrftvrhvOJv6enfYwHVhpZmzuUYKww1ZudsA5xNIbLCp/RZaEzcZUZD6JZdCd9tOn+yxsf3K2pWlFElgj6Uo3cRRG6bgPJZEU8BWooWHfFcEb82JCw+go0YQ==
-X-Gm-Message-State: AOJu0YyNJoYcvXttNEn1b//TyMF0T4Ff2uk3d4FLxsxsVunHoOMS48Lu
-	6LPQ/vStyyebCSkWIrM0o2IBHtRgYhKCm3s1RaIuMi6E+OZrwUA/yXZuA7w9Bt45UU8oJjLKRiL
-	nyP7qXCdLRF4ampocqUSOlI84+y8=
-X-Google-Smtp-Source: AGHT+IEVgIrphZbV4ggMaDxk7ostdI5gisbGfw3n+55rF2MNOFiQA0javgihIJybPLh+h8YY0KmyaWJbqIj5VsX9EiI=
-X-Received: by 2002:a05:6870:7012:b0:24f:bd2f:28d0 with SMTP id
- 586e51a60fabf-24fbd311cc0mr7298472fac.0.1716807153145; Mon, 27 May 2024
- 03:52:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="KGfrfms1"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57857e0f465so3146814a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 03:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716807395; x=1717412195; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jw0FtTciCXQX3h6CcIOAWgqPfMRJPygWAg+dmYzhfxo=;
+        b=KGfrfms1X+UnFUNtYLi7jq0LzIB6HwvfbrnrsNhHzO2IefNMb+LXLDt4+d9uQqUmht
+         GrmD2no50wAJHFO8h5JHJDq4MGcfuO3fzz6LdZEyTzZ5me7z3ZNeJRj78wv3JoArZiig
+         bG3exEjYdmQmFh7SAOVJFkgATQ3YCYLvMXmWSjWqmYiLhFUgqDd6qv0b7z4IldTxTJ41
+         sdnTEPLRW7eShK+v+KxqEySx8O9O3fnc/2QKJqJ66fpSK99syNKX21adnVilgg8q80dS
+         v+R774ONG0lF3BdRLiAbQwZMSJ+gy0ubEXAh+bG1nekEgedbqAS0mE4FksYVYlPy5lv6
+         ovwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716807395; x=1717412195;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jw0FtTciCXQX3h6CcIOAWgqPfMRJPygWAg+dmYzhfxo=;
+        b=Lz/WG+jrwDjmv6Fcofk6P+yHriKImE9XPTqTXc66AhU3NEzWcy4gU6BUxRyKMkyF7Z
+         1uobnr0Ub99U900qHiXJOGR1uE20gfZw6AKnUDnRfvJFGStMrJp88okLT4NRTIDIoFsU
+         wn4v1CPnflHIKZNltglgcLwjKdG99hvBAOZjEbl3Du4WTUK350ukigSORviT/yqzYjc4
+         3U9NlLS6ZAjqw+zuIqxT0WHcnPwQO3cbSGyzpLv+cF84P5s1OwCg179TsX7MzNzLjkPI
+         OT5KfrGrNr+2W9fUunQfGwvG1BAFDugJVlLbDZRjEg8P1N6IGrD/RvVn48khRwjXAjd5
+         rSDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgvXnetOAa/T9EqKdvFJZpC2dxQKGWZ4gjURFd2pvGZdGNIt2yTO+iCMpwtCsyVx0OCsbXW0j4c1tUg9jCs5PGrb7MEKZu+ndEEP4d
+X-Gm-Message-State: AOJu0YwNdYdi5u2rfo4bLr+fODhZnAx2aa2QMOMsMNAaU8D928F3Jx2n
+	wtXybS2PmjHKSjV6I4KjZO2diLOlX5Eq7JnBL95IJikCilf1OqkOS6EH2z9hJJ4=
+X-Google-Smtp-Source: AGHT+IGlBr+lrKmneJwsXJDybFQCF1UdYP1AaUzjy+aTvC1Qzbd1hN/9MnflALOBxAmHv0rcPKwLZQ==
+X-Received: by 2002:a50:9e4d:0:b0:578:5105:5ecc with SMTP id 4fb4d7f45d1cf-578519b7ee2mr5364221a12.37.1716807395099;
+        Mon, 27 May 2024 03:56:35 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-578524bc547sm5624412a12.96.2024.05.27.03.56.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 03:56:34 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Nicolas Pitre <nico@fluxnic.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Breno Leitao <leitao@debian.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH net] net: smc91x: Remove commented out code
+Date: Mon, 27 May 2024 12:55:58 +0200
+Message-ID: <20240527105557.266833-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524094149.189329-1-chunjie.zhu@cloud.com>
-In-Reply-To: <20240524094149.189329-1-chunjie.zhu@cloud.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 27 May 2024 12:52:19 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gcyZM7PZPrKccLhNtNDhHvqrZsgD-+Xx+W9WesD3yhyw@mail.gmail.com>
-Message-ID: <CAJZ5v0gcyZM7PZPrKccLhNtNDhHvqrZsgD-+Xx+W9WesD3yhyw@mail.gmail.com>
-Subject: Re: [PATCH] fix kdump kernel cannot find ACPI RSDP
-To: Chunjie Zhu <chunjie.zhu@cloud.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 24, 2024 at 11:43=E2=80=AFAM Chunjie Zhu <chunjie.zhu@cloud.com=
-> wrote:
->
-> kexec/kdump must pass acpi_rsdp (physical address of ACPI RSDP table) to =
-the
-> crash kernel, especially in EFI case, otherwise, the crash kernel fails t=
-o
-> locate ACPI RSDP table. Consequently, ACPI init runs into error, and APIC
-> mmio read page fault happens, finally crash kernel gets stuck.
+Remove commented out code
 
-Fair enough.
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ drivers/net/ethernet/smsc/smc91x.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-So has this ever worked before?  Presumably it has, in which case it
-has regressed and so it would be prudent to say when it broke and why
-and explain why the proposed change is the right one to make.
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 78ff3af7911a..907498848028 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -1574,12 +1574,8 @@ smc_ethtool_set_link_ksettings(struct net_device *dev,
+ 		    (cmd->base.port != PORT_TP && cmd->base.port != PORT_AUI))
+ 			return -EINVAL;
+ 
+-//		lp->port = cmd->base.port;
+ 		lp->ctl_rfduplx = cmd->base.duplex == DUPLEX_FULL;
+ 
+-//		if (netif_running(dev))
+-//			smc_set_port(dev);
+-
+ 		ret = 0;
+ 	}
+ 
+-- 
+2.45.1
 
-> Signed-off-by: Chunjie Zhu <chunjie.zhu@cloud.com>
-> ---
->  drivers/acpi/osl.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-> index f725813d0cce..39474468dba1 100644
-> --- a/drivers/acpi/osl.c
-> +++ b/drivers/acpi/osl.c
-> @@ -174,7 +174,7 @@ void acpi_os_vprintf(const char *fmt, va_list args)
->  #endif
->  }
->
-> -#ifdef CONFIG_KEXEC
-> +#ifdef CONFIG_KEXEC_CORE
->  static unsigned long acpi_rsdp;
->  static int __init setup_acpi_rsdp(char *arg)
->  {
-> @@ -187,7 +187,7 @@ acpi_physical_address __init acpi_os_get_root_pointer=
-(void)
->  {
->         acpi_physical_address pa;
->
-> -#ifdef CONFIG_KEXEC
-> +#ifdef CONFIG_KEXEC_CORE
->         /*
->          * We may have been provided with an RSDP on the command line,
->          * but if a malicious user has done so they may be pointing us
-> --
-> 2.34.1
->
