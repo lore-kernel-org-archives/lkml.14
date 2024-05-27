@@ -1,142 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D8B167299;
-	Mon, 27 May 2024 15:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40AF16728E
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825510; cv=none; b=n90w5xtpmWMwvnohATnyp6G9DJzFPj1fOBpWzBx/GaHrecdV5fQOOZ9Y45+xSrI5uzai/edKP/BoOAKUUEw0PiWUbAfe/KlZz/Gen4VcnP18W1xpF4LeNPumUSp4XMEKtDDTajdR5VSAYt0tjFHwmDN8g+Ash9HosNC2apkZYFY=
+	t=1716825527; cv=none; b=jIZn+h9mGAM7A1kwnbDqce5xqzLDGAqPp3y0oIc9j4HjUWxTC/lzV0k9DP1oEql8pJGlTCnV+M4vrNjuVM7r15353NPHZaxGXCS5leI+hYmmxr6o7wyz71d5LtqqkW9NhdHC/xEZBHSKTRqWWXh28YxzdlAeLcGi7J77pGVVDpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825510; c=relaxed/simple;
-	bh=1K2NBI0Y7/fYJW/usZ6Ws/DhvePpAOIipLG6PE2fSsU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QwOSoB9t2DKTHoqSNmLalvKtdzdRecRokC4HSdqsQ5987nYpkNxUN+EanMf5n7SCoFLrk8daWPKCCy6hRdKjkphUO321z8dqr62HzkREKPAx1CfSAD/4ioQdgrlbXo7qd8VgDYVvpLUXlh8XL3wdtSq1pQwcKiIXpmt63lBZtZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6H+pw8+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716825527; c=relaxed/simple;
+	bh=4EUBGrUVhm/r5cBtJVBlRDWc/A8E3//UXsSF13PgPTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XDQ7om3mxK/BOaGUbqhuDx4eGkM/xzAGGwwsLagS5aSJE2WYdzu9kZOvnrl81abu42CoGZ4+NebNvxTalczyxmx9S+XNonVHzW+fcnrWQM8pV78E6HJimf/Eac67a8qL9BPZkwIrJjFnFlD/XPOCVCTrQjWqvT/CXYHgvhBvDUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fhvEpwpp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6H+pw8+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1802C32781;
-	Mon, 27 May 2024 15:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825510;
-	bh=1K2NBI0Y7/fYJW/usZ6Ws/DhvePpAOIipLG6PE2fSsU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q6H+pw8+kNMLJKxdZKpQDp5WAQFH2ddmzMl/DZzK8EqvDfDG1Lot2XiKRAk+Bny9h
-	 xzg9ueA+L9InZdFbcI/Hz1UiBaiqg6AagugNsDSgw6dY7BpO3UUxti4rILzyeRnZao
-	 0NNu1LbzrKr0rFYL/OHMx7xQH4hMvf9JMT3f+NQklyCRnDUnqlS1+XQtBi0fju+d+I
-	 0paDJJFfcRdSRhmD/3QBZh4t59PA8rcB0YX62HjFL1xF/dBwx32txQlhquTdAyHirE
-	 LMPb56XKNFThONuolrvXzC23U1TmW6nd9oTU6XGlF5HzwESdT1z21ni9koFaf3eETw
-	 X2MFL5ZMSHz3w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	nathan@kernel.org,
-	arnd@arndb.de,
-	bhe@redhat.com,
-	geert@linux-m68k.org,
-	rppt@kernel.org,
-	bhelgaas@google.com,
-	christophe.leroy@csgroup.eu,
-	stanislav.kinsburskii@gmail.com,
-	wangkefeng.wang@huawei.com,
-	linuxppc-dev@lists.ozlabs.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.15 6/6] powerpc/io: Avoid clang null pointer arithmetic warnings
-Date: Mon, 27 May 2024 11:57:56 -0400
-Message-ID: <20240527155808.3866107-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240527155808.3866107-1-sashal@kernel.org>
-References: <20240527155808.3866107-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fhvEpwpp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716825524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cwxKfYS2pCvrGUMtybHaN+IODPR5mz8KIAEhCBULf0w=;
+	b=fhvEpwppXo7mBswY4LSR3vRtk6tA1isvUjnhGkwMT1SZyJvFUt743tZNT9YHOPSE2ZaJOI
+	0wlmDm8CEuwNs6rcdrWkt/OmYCCVCQYvYsWH4YHo58i8/Y04av7KVlu9WDjnnJAsSi08GN
+	oLCOKrcOL+tNfCwL5sqMCIsgUP5CFiU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-371-tH75msrNPIqR0b_GMtyP3A-1; Mon, 27 May 2024 11:58:41 -0400
+X-MC-Unique: tH75msrNPIqR0b_GMtyP3A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3A538800169;
+	Mon, 27 May 2024 15:58:40 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.41])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 2C4AD2026D68;
+	Mon, 27 May 2024 15:58:37 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 27 May 2024 17:57:12 +0200 (CEST)
+Date: Mon, 27 May 2024 17:57:09 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	Chris von Recklinghausen <crecklin@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: sched/isolation: tick_take_do_timer_from_boot() calls
+ smp_call_function_single() with irqs disabled
+Message-ID: <20240527155709.GA5733@redhat.com>
+References: <20240522151742.GA10400@redhat.com>
+ <20240523132358.GA1965@redhat.com>
+ <87h6eneeu7.ffs@tglx>
+ <ZlCwKk65-eL0FrKX@pavilion.home>
+ <20240524183700.GA17065@redhat.com>
+ <87v832dfw1.ffs@tglx>
+ <20240526192758.GA21193@redhat.com>
+ <ZlOhDiqomHlumd-u@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.160
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZlOhDiqomHlumd-u@pavilion.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+On 05/26, Frederic Weisbecker wrote:
+>
+> Le Sun, May 26, 2024 at 09:27:58PM +0200, Oleg Nesterov a écrit :
+> > > So up to this point the tick is never stopped neither on housekeeping
+> > > nor on NOHZ FULL CPUs:
+> > >
+> > > tick_nohz_full_update_tick()
+> > >   if (!tick_sched_flag_test(ts, TS_FLAG_NOHZ))
+> > >     return;
+> >
+> > OK... But tick_nohz_idle_update_tick() doesn't check TS_FLAG_NOHZ and
+> > the tick_nohz_full_cpu() check can't help at boot time.
+>
+> Yes but tick_nohz_idle_update_tick() is only called when the tick is already
+> stopped. And for the tick to be already stopped, TS_FLAG_NOHZ must have been
+> set.
 
-[ Upstream commit 03c0f2c2b2220fc9cf8785cd7b61d3e71e24a366 ]
+Ah, TS_FLAG_NOHZ! Indeed, thanks.
 
-With -Wextra clang warns about pointer arithmetic using a null pointer.
-When building with CONFIG_PCI=n, that triggers a warning in the IO
-accessors, eg:
+> > And I still don't understand why we can rely on can_stop_idle_tick() even
+> > in tick_nohz_idle_stop_tick().
+>
+> Not sure I follow you on this one...
 
-  In file included from linux/arch/powerpc/include/asm/io.h:672:
-  linux/arch/powerpc/include/asm/io-defs.h:23:1: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     23 | DEF_PCI_AC_RET(inb, u8, (unsigned long port), (port), pio, port)
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ...
-  linux/arch/powerpc/include/asm/io.h:591:53: note: expanded from macro '__do_inb'
-    591 | #define __do_inb(port)          readb((PCI_IO_ADDR)_IO_BASE + port);
-        |                                       ~~~~~~~~~~~~~~~~~~~~~ ^
+can_stop_idle_tick() has no effect if ->timer_expires_base || tick_nohz_next_event()
+but I see another email from Nicholas.
 
-That is because when CONFIG_PCI=n, _IO_BASE is defined as 0.
+Thanks!
 
-Although _IO_BASE is defined as plain 0, the cast (PCI_IO_ADDR) converts
-it to void * before the addition with port happens.
-
-Instead the addition can be done first, and then the cast. The resulting
-value will be the same, but avoids the warning, and also avoids void
-pointer arithmetic which is apparently non-standard.
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Closes: https://lore.kernel.org/all/CA+G9fYtEh8zmq8k8wE-8RZwW-Qr927RLTn+KqGnq1F=ptaaNsA@mail.gmail.com
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240503075619.394467-1-mpe@ellerman.id.au
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/include/asm/io.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
-index a4fe1292909e6..56eb8ac443930 100644
---- a/arch/powerpc/include/asm/io.h
-+++ b/arch/powerpc/include/asm/io.h
-@@ -556,12 +556,12 @@ __do_out_asm(_rec_outl, "stwbrx")
- #define __do_inw(port)		_rec_inw(port)
- #define __do_inl(port)		_rec_inl(port)
- #else /* CONFIG_PPC32 */
--#define __do_outb(val, port)	writeb(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_outw(val, port)	writew(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_outl(val, port)	writel(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_inb(port)		readb((PCI_IO_ADDR)_IO_BASE + port);
--#define __do_inw(port)		readw((PCI_IO_ADDR)_IO_BASE + port);
--#define __do_inl(port)		readl((PCI_IO_ADDR)_IO_BASE + port);
-+#define __do_outb(val, port)	writeb(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_outw(val, port)	writew(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_outl(val, port)	writel(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_inb(port)		readb((PCI_IO_ADDR)(_IO_BASE + port));
-+#define __do_inw(port)		readw((PCI_IO_ADDR)(_IO_BASE + port));
-+#define __do_inl(port)		readl((PCI_IO_ADDR)(_IO_BASE + port));
- #endif /* !CONFIG_PPC32 */
- 
- #ifdef CONFIG_EEH
-@@ -577,12 +577,12 @@ __do_out_asm(_rec_outl, "stwbrx")
- #define __do_writesw(a, b, n)	_outsw(PCI_FIX_ADDR(a),(b),(n))
- #define __do_writesl(a, b, n)	_outsl(PCI_FIX_ADDR(a),(b),(n))
- 
--#define __do_insb(p, b, n)	readsb((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_insw(p, b, n)	readsw((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_insl(p, b, n)	readsl((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_outsb(p, b, n)	writesb((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
--#define __do_outsw(p, b, n)	writesw((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
--#define __do_outsl(p, b, n)	writesl((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
-+#define __do_insb(p, b, n)	readsb((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_insw(p, b, n)	readsw((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_insl(p, b, n)	readsl((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_outsb(p, b, n)	writesb((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
-+#define __do_outsw(p, b, n)	writesw((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
-+#define __do_outsl(p, b, n)	writesl((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
- 
- #define __do_memset_io(addr, c, n)	\
- 				_memset_io(PCI_FIX_ADDR(addr), c, n)
--- 
-2.43.0
+Oleg.
 
