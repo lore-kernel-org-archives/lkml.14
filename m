@@ -1,190 +1,309 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB7C17E8F6
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 21:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D03B17E8F6
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 21:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716845087; cv=none; b=ZlBAzIRjg5Tn9yNKsNgQxaESrZnRlBdQVfKs+7FT0LHBk+EnxhkxLeLaC+voTZD7BNTlXPkH+JoWcvJ9mkR0laSLSPfXBv3U//62Q2NEtCgub2WzSN0XkXtacITvGAbnvNhpnVQWhayaSO/dADr/zwRS6nC5WNv09v2gnKcq5Vs=
+	t=1716845146; cv=none; b=bQgNF8JGzqxYuDNTXklzdI4WS+m3b94wYT8nAJX60hdjgyhIbs5NWZNycurrYXFGWGJlOooVsMtw/DWQPgvt9ABdVCtpTMFhVmbuGAvWaXIh3/s0Dk8zBHdH0/l+DiBJYtII5c6dO/JQLU+2LVZcCGm1BRu/1zn2CTHxqBFuNUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716845087; c=relaxed/simple;
-	bh=V6cmSOfE8v9Y2xZnvUIl9f0RqYR7Xyr2+cgSVv3CDNM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=WGVFz7K+9isF87OHxHopEEDXLLRO+QwzRUV8/h4EfBQtPJTSMLoDZNd+VHv32zYSPNGQ9BQrlPQByCry/pbTS1TDYA0b4g0jN780fvE+zTakbE/L19QIl6BvWS3oeLB8znvyiuh6+WzE7V7zxws24O047xBeZA3d16mJAnA/EK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OBvsMD39; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716845146; c=relaxed/simple;
+	bh=LdG7ktowhnjzEdPoZ+Ttq4iNXdNn5ME5OBb1WfTkjew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DhuQVhnQAuFIvh76yEfXTADV0dvUECb6YlDVq1XIZ1QhCDtq65lZm+HE03Kxel0Nt23C0xuaR8Hkns1qI5gYaTezcYmmRx6vfjHhH3ep9SI4CwHHskuaoOhotPUxeEZntfDr3iDZgK/hFmUoUNhbRz6SWtmi+Uo+owHfqTH7wF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=dNyqEWFx; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OBvsMD39"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716845085; x=1748381085;
-  h=date:from:to:cc:subject:message-id;
-  bh=V6cmSOfE8v9Y2xZnvUIl9f0RqYR7Xyr2+cgSVv3CDNM=;
-  b=OBvsMD39Iilj7xumhjxzfSaBymkBs/HFH8cGAgx22/I8tdkXgpz+61XJ
-   1mbGAyCPlEJ8Bef/5DhQNk7fdQ+tCCzzN/uqu7jXR/0esmkWItPbLdAx+
-   sX4r78JAbeddG/NVKxY72LhL/8WisaHi58oHGyKhpMke9usHKdsiDmZtO
-   rKfHydWeuHej6yQfS6/rVuQg8wxR9+bVQWWo7oVbmccDE+UT8TlPoLeGa
-   zrUARaKan6eh1OXwaSd/7MckJgXuJ1vbyYnTX71HTlyAMFzj+yt1tOMTn
-   bBufZstKRy1099MS59x4qxa+DrATSXiP4lqKBoOY8Bmj5BVpK0oZDCUyR
-   A==;
-X-CSE-ConnectionGUID: 2t4R4jYwTvusY/AbcUDcOg==
-X-CSE-MsgGUID: Np8RpgFFRhqRQ/4UpqMQEw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13043657"
-X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
-   d="scan'208";a="13043657"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 14:24:44 -0700
-X-CSE-ConnectionGUID: 9R218JIyQp+thdTAeHgKsg==
-X-CSE-MsgGUID: QJTGretMQ1u03fePv5TuMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
-   d="scan'208";a="39847508"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 27 May 2024 14:24:44 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sBhph-000B6h-1E;
-	Mon, 27 May 2024 21:24:41 +0000
-Date: Tue, 28 May 2024 05:24:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:ras/core] BUILD SUCCESS
- 5b9d292ea87c836ec47483f98344cb0e7add82fe
-Message-ID: <202405280535.TVO359jC-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="dNyqEWFx"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4202ca70289so874545e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:25:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1716845143; x=1717449943; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A7HC5A2aTc83IoX0PVow5xufAISx19nMRBT1reOH5cg=;
+        b=dNyqEWFxxX3QJ9zmQcl6JbU880eqreRaUNxNw+d/ZNf3ySneSISnlZK5x59XHsgZ8b
+         05G1G+6yIjspIR9OIW0aFDM9alvsroAJSciwKue+5plDyJ0JX4Am31k078cVGdFEq4is
+         +ScXkAGlMr3ta6ERFYI7TDykyjUYvgbiT3k68oFOjXkJBOy3dgQkF+64nSUrd7jj1vYB
+         WmuAHlrZQT45cVOSVPhvMBsBg4umw4pud19WEHYJah+06adcEvlNqsQQesdQRDkQzuuH
+         87ochuk0ft4c0FGI1fQaP6jJuEKVMj0PrzCJhUhMzNLpbWlQIRLbN7NT8/5L55PCg3Jc
+         dO9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716845143; x=1717449943;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7HC5A2aTc83IoX0PVow5xufAISx19nMRBT1reOH5cg=;
+        b=AmXcmhunbQEA0H0C79kSSo6b2jQZFfyqV3pc16FVrSzc1/D4IsiCq2QnT2PZhxnk3u
+         1k/5wCuj+dQjFkDvugApCLTzOloTOAqVOf5seG13S6t0vC0NCVCd7iZfMXkkWfWgZ/4W
+         +g2NNC78JEZg12ynHUywnC85byK1mO/hvEM95Rn2j87aPLc+/LtlO/Y5Kx2qch39aaYl
+         8qZh+zJX6zIvOx9m3dfBpJYkSIeC5l2Hk+DLT0/CXHMyy9cyYnyNfQv47zV4bh9o4nU9
+         cadxuqw5Ud+kONf26m84+EenYAoSkluqf1t6QwDiBYKOFxd+r4kAGQ7zyyuFps0i2JkU
+         oMhg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwoKl9PAFt78mzHHSTLOBWuHGjGULTmxCf4B5XBoZq4hzmkB+qAO3gzsBci4/6w52lRoFECZaH5oAkqscUTsXkmK7fsooIUXe333vr
+X-Gm-Message-State: AOJu0YwkdlzIh/jmTa6QSRADWCRJiQAdgGxQdTUAOh4rISiGCnQqHigC
+	r1CWhRRZLqs8wMNLLyz+ev5HeiV37nbdsdzkctH+jnf0/40uXK7fz6vOyx92Z5w=
+X-Google-Smtp-Source: AGHT+IFItlgiowD1lpOXhBLswf+hJiQT8hJaOWHUuO8HHxQlu17vMeRwoNhNTg4OgDWHWokTneDkJQ==
+X-Received: by 2002:a05:600c:46c4:b0:41a:e995:b924 with SMTP id 5b1f17b1804b1-42108a0b91dmr63716165e9.33.1716845142595;
+        Mon, 27 May 2024 14:25:42 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a1c9379sm9849541f8f.73.2024.05.27.14.25.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 14:25:42 -0700 (PDT)
+Date: Mon, 27 May 2024 22:25:40 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: David Vernet <void@manifault.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
+	torvalds@linux-foundation.org, mingo@redhat.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+	joshdon@google.com, brho@google.com, pjt@google.com,
+	derkling@google.com, haoluo@google.com, dvernet@meta.com,
+	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
+	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
+	andrea.righi@canonical.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCHSET v6] sched: Implement BPF extensible scheduler class
+Message-ID: <20240527212540.u66l3svj3iigj7ig@airbuntu>
+References: <20240501151312.635565-1-tj@kernel.org>
+ <20240502084800.GY30852@noisy.programming.kicks-ass.net>
+ <ZjPnb1vdt80FrksA@slm.duckdns.org>
+ <20240503085232.GC30852@noisy.programming.kicks-ass.net>
+ <ZjgWzhruwo8euPC0@slm.duckdns.org>
+ <20240513080359.GI30852@noisy.programming.kicks-ass.net>
+ <20240513142646.4dc5484d@rorschach.local.home>
+ <20240514000715.4765jfpwi5ovlizj@airbuntu>
+ <20240514213402.GB295811@maniforge>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240514213402.GB295811@maniforge>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras/core
-branch HEAD: 5b9d292ea87c836ec47483f98344cb0e7add82fe  x86/mce: Remove unused variable and return value in machine_check_poll()
+On 05/14/24 16:34, David Vernet wrote:
+> On Tue, May 14, 2024 at 01:07:15AM +0100, Qais Yousef wrote:
+> 
+> [...]
+> 
+> > > > 
+> > > > How does this BPF muck translate into better quality patches for me?
+> > > 
+> > > Here's how we will be using it (we will likely be porting sched_ext to
+> > > ChromeOS regardless of its acceptance).
+> > > 
+> > > Doing testing of scheduler changes in the field is extremely time
+> > > consuming and complex. We tested EEVDF vs CFS by backporting EEVDF to
+> > > 5.15 (as that is the kernel version we are using on the chromebooks we
+> > > were testing on), and then we need to add a user space "switch" to
+> > > change the scheduler. Note, this also risks causing a bug in adding
+> > > these changes. Then we push the kernel out, and then start our
+> > > experiment that enables our feature to a small percentage, and slowly
+> > > increases the number of users until we have a enough for a statistical
+> > > result.
+> > > 
+> > > What sched_ext would give us is a easy way to try different scheduling
+> > > algorithms and get feedback much quicker. Once we determine a solution
+> > > that improves things, we would then spend the time to implement it in
+> > > the scheduler, and yes, send it upstream.
+> > > 
+> > > To me, sched_ext should never be the final solution, but it can be
+> > > extremely useful in testing various changes quickly in the field. Which
+> > > to me would encourage more contributions.
+> 
+> Hello Qais,
+> 
+> [...]
+> 
+> > I really don't buy the rapid development aspect too. The scheduler was heavily
+> 
+> There are already several examples from users who have shown that the rapid
+> development and experimentation is extremely useful. Imagine if you're
+> iterating on the scheduler to improve p99 frame rates on the Steam Deck, as
+> Changwoo described. It's much more efficient to be able to just tweak and load
+> a BPF scheduler (that is safe and can't crash the machine) to try some random
+> idea out than it is to:
+> 
+> 1. Tweak and recompile the kernel
+> 2. Reinstall the kernel on the Steam Deck
+> 3. Reboot the Steam Deck
+> 4. Reload a game and let caches rewarm
+> 5. Measure FPS
+> 
+> You're talking about a 5 second compile job + 1 second to reload a safe BPF
+> scheduler vs. having to do all of the above steps _and_ potentially making a
+> mistake that brings the machine down. These benefits are also extremely useful
+> for testing workloads on production servers, etc. Let’s also not forget that
+> unlike many other kernel features, you probably can’t get reliable scheduling
+> results from running in a VM. The experimentation overhead is very real.
 
-elapsed time: 738m
+What I read here is that I can hack my system quickly. Is the intention to
+extend the kernel? If yes, I can't see how this experimentation is actually
+valid if not implemented in the kernel first taking into account the real
+constraint that you have to deal with sooner or later.
 
-configs tested: 113
-configs skipped: 135
+> 
+> [...]
+> 
+> > influenced by the early contributors which come from server market that had
+> > (few) very specific workloads they needed to optimize for and throughput had
+> > a heavier weight vs latency. Fast forward to now, things are different. Even on
+> > server market latency/responsiveness has become more important. Power and
+> > thermal are important on a larger class of systems now too. I'd dare say even
+> > on server market. How do you know when it's okay for an app/task to consume too
+> > much power and when it is not? Hint hint, you can't unless someone in userspace
+> > tells you. Similarly for latency vs throughput. What is the correct way to
+> > write an application to provide this info? Then we can ask what is missing in
+> > the scheduler to enable this.
+> 
+> Hmm, you seem to be arguing that the way forward here is to have our one
+> general purpose scheduler be entirely driven by user space hinting. Assuming
+> I’m not misunderstanding you, I strongly disagree with this sentiment.  User
+> space hinting can be powerful, but I think we need to have a general purpose
+> scheduler that's completely agnostic to whatever is running in user space.
+> We’ve also been able to get strong results from sched_ext schedulers that don’t
+> use any user space hinting.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I'm curious. If you believe in general purpose system, what work was done to
+improve the current one? What debugging and analysis was done to improve the
+current situation? It seems you reached a conclusion that we need something
+different - but no reasons behind it why is that.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                          allyesconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-004-20240527   clang
-i386                                defconfig   clang
-i386                  randconfig-002-20240527   clang
-i386                  randconfig-012-20240527   clang
-i386                  randconfig-014-20240527   clang
-i386                  randconfig-016-20240527   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                          atari_defconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            alldefconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                    or1ksim_defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                     rainier_defconfig   gcc  
-powerpc                     tqm5200_defconfig   gcc  
-powerpc                     tqm8560_defconfig   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                           se7721_defconfig   gcc  
-sh                        sh7757lcr_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240527   clang
-x86_64       buildonly-randconfig-002-20240527   gcc  
-x86_64       buildonly-randconfig-003-20240527   gcc  
-x86_64       buildonly-randconfig-004-20240527   gcc  
-x86_64       buildonly-randconfig-005-20240527   gcc  
-x86_64       buildonly-randconfig-006-20240527   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240527   clang
-x86_64                randconfig-002-20240527   gcc  
-x86_64                randconfig-003-20240527   clang
-x86_64                randconfig-004-20240527   clang
-x86_64                randconfig-005-20240527   clang
-x86_64                randconfig-006-20240527   clang
-x86_64                randconfig-011-20240527   gcc  
-x86_64                randconfig-012-20240527   gcc  
-x86_64                randconfig-013-20240527   clang
-x86_64                randconfig-014-20240527   gcc  
-x86_64                randconfig-015-20240527   gcc  
-x86_64                randconfig-016-20240527   gcc  
-x86_64                randconfig-071-20240527   gcc  
-x86_64                randconfig-072-20240527   clang
-x86_64                randconfig-073-20240527   clang
-x86_64                randconfig-074-20240527   clang
-x86_64                randconfig-075-20240527   clang
-x86_64                randconfig-076-20240527   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                generic_kc705_defconfig   gcc  
+Is the problem with the default behavior of the system? Or are your problems
+focused on corner cases where things seem to fail?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> Also, even if this ended up being the way forward, I don’t see it being
+> practical to implement. Wouldn’t it require us to update all of user space
+
+People swear by Apple's GCD by the way. It'd be really great if someone can
+create something similar that works properly on Linux. I have never tried the
+libdispatch port to see how well it does.
+
+And have you seen these?
+
+	https://developer.android.com/stories/games/mediatek-adpf
+
+> globally just to update how it interfaces with the scheduler?
+
+I think you're confusing default scheduler behavior and dealing with corner
+cases that are impossible for the scheduler to resolve. These corner cases are
+when help is needed. Note that the thermal API is actually info from the system
+to the app. If the app decides to listen, then they can help reduce the thermal
+impact without causing throttling. If they decide not to listen, then the best
+the system can do is throttle everything hard to protect from damage. And under
+bad thermal pressure, the scheduler can know which tasks to prioritize to
+performance if it has explicit knowledge/hints.
+
+If the default behavior is not working for you; could you provide more details
+on what goes wrong? It's unlikely that a new algorithm is the solution, but
+likely a bug somewhere or some configuration problem.
+
+And if someone wants to optimize for best perf, power and thermal, they need to
+do the work. There's only so much you can do on their behalf that is actually
+scalable.
+
+System designers want apps (all type of apps) to take best advantage of the
+hardware they built.
+
+App writers want to write portable software that gives the desired experience
+on all type of systems without special optimization.
+
+> 
+> [...]
+> 
+> > Note the original min/wakeup_granularity_ns, latency_ns etc were tuned by
+> > default for throughput by the way (server market bias). You can manipulate
+> > those and get better latencies.
+> 
+> Those knobs aren't available anymore in EEVDF.
+
+I generalized my statement as I didn't expect many have moved to 6.6 LTS, which
+is the only one that has EEVDF.
+
+EEVDF has base_slice_ns. What value do you read on your system? What is your
+TICK value and how m any CPUs do you have?
+
+>  
+> [...]
+> 
+> > point IMO, not the scheduler algorithm. If the latter need to change, it needs
+> > to be as the result of this friction - which what EEVDF came about from to my
+> > understanding. To enable implementing a latency interface easier. But Vincent
+> > had a working implementation with CFS too which I think would have worked fine
+> > by the way.
+> 
+> This friction is nothing new. It's why we already find ourselves in the
+> unfortunate position of having a large corpus of out of tree scheduler patches.
+> If there is a lot of performance being left on the table, vendors are going to
+> find a way to get that performance. Corporations don't need our consent to ship
+> kernels with custom schedulers on their devices. They've already been doing it
+> for years, and it's ultimately the users who suffer.
+
+I think everyone agrees on the need to improve. But..
+
+> 
+> I genuinely believe that the fair.c scheduler will benefit from being able to
+> apply ideas conceived in a sched_ext scheduler which end up working well for
+> general use cases. For example, in scx_rusty, we’re able to get very good
+> interactivity [0] by determining a task’s deadline as a function of its average
+
+.. I am really failing to see why you jumped to the fact we need a new
+scheduler. And you'll find a lot of skepticism about the validity of your
+results. We have no clue what kind of unknown constraint you've left out with
+these test. And how limited your environment is.
+
+> runtime (along with some other great ideas that Changwoo first added to
+> scx_lavd) rather than from its eligibility + slice as with what EEVDF does.
+
+You'll find soon that the concept of runtime is hard. And generally there's
+a big soup of tasks running in the system. Most of which have no real deadline.
+Only few do. And corner cases are the complexity of any situation when you
+have more tasks that need to run immediately than you have CPUs to distribute
+them on. I don't think we can figure this out automatically based on runtime.
+
+> Over the course of a day or two, I tried way more ideas that didn’t work than
+> would have been possible in that time frame than with a recompile-reboot cycle,
+> and ended up finding one that seems to work very well. It would be awesome if
+> these ideas were added to EEVDF so that everyone can benefit.
+
+Why do you think they're applicable? And how do you know you're not working
+around different problems? Or have missed constraints in your testing once
+applied will make the whole results invalid?
+
+Too many unknowns IMHO. I am not against a different scheduler algorithm if it
+proves to be a more generic default. But you'll find first you have to explain
+what has failed in current one and what kind of analysis made you reach this
+conclusion. And then you'll find you'll need to actually do it in the kernel
+taking into account all the constraints that you must handle to prove it is
+still as valid as you initially thought.
+
+And I can only share my experience, I don't think the algorithm itself is the
+bottleneck here. The devil is in the corner cases. And these are hard to deal
+with without explicit hints.
+
+The biggest issue I see generally with the default behavior is that
+traditionally it has been biased towards throughput because those folks are
+the one that keep reporting regressions when anything changes on the list.
+
+Please add your voice and report problems when you notice things don't work for
+you. That's the best way to ensure there's visibility of these issues. It seems
+to me you're hitting problems that people expect to work. But I have no clue
+what problems you have. I am not sure if this was reported somewhere else, but
+it seems not.
+
+
+Thanks!
+
+--
+Qais Yousef
