@@ -1,319 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC4C1327E5;
-	Mon, 27 May 2024 10:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2CF13B2A4;
+	Mon, 27 May 2024 10:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716805534; cv=none; b=AbEX5vdcXKb8abikuH5mhKUPFu4E9b9NU5LGE5MMb5OlfwTsWd7ubKi+H7sug/Z0pl9lkiLSh2Ojv/TIZDSbO+1s1PaZJmBSatjRAwut4OZFru/RDzuKFc0/6DTpHH95qpxMn/XTLb6jazufDAGMpQbtFJOtNC95or1n2VyiQ7g=
+	t=1716805540; cv=none; b=LkqSJR9H+Nx3XOTvlWt9aai9N4Q3byrpARvLJFt62wvhakE+/aWFQBD8Zu57pcf1UV1CTmYoRUwzMmoGMZXrTYo/tiQS5x01WTx9yo573LuRAC2ybW1DFRSFbvIvXiSlIjIHVtfdB6L3UCRCe2iiBu7AvhwdmMHl2wneZjq1PP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716805534; c=relaxed/simple;
-	bh=qCdtKxdZiJ2YQrwk0d49YXlZTA831xWuYlQwJ/olq4w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gHapmIyjHLVS590vJdWqP5ktNrtiHe9SsefQSfg1x2tN6JcSF+lVij+barWjdPrq0jsBD+pRW6eTmhX42xJXMziZqXCA/+OKZ65XgX6Sx8yOhMW7TzH1Nx/MeMgLBz0gYyCijsmBmJORX0dRJJFaGq+JCJ3dZG1C90CQQqmaUy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c3V5xJIh; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3V5xJIh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716805532; x=1748341532;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=qCdtKxdZiJ2YQrwk0d49YXlZTA831xWuYlQwJ/olq4w=;
-  b=c3V5xJIhXV8VA0YvOHDGDqwqVvNpFFLPrlKMDdn5D811jwhs7HwDR4cG
-   6F7/yk5AQo+jzad0IMg8HsFfiCUfv0kWkxcIA/c/YiZFBdMBUeKw7pKP2
-   qnbndsPLvoXjva7koCc5Mf9Pma8suB91tHRYg8Rv7jIs/VbrOezzpwxwK
-   hEIP0mnH6B9pmqKWG/di8DpLjS+2t/5p58hO/59vkixbrLXv1UVd1DKbe
-   LkZzkS9he5PSHDvBKEYAKCw1Fdj0qmLvmZA8IRJqLEV0dBTot45QQ8akT
-   BPnfpXaDIa9a+8Qs4URhzgJaRi7x87DWyaNhP8LdaV8Qi3oB54mVK21yh
-   A==;
-X-CSE-ConnectionGUID: h0JvnSh9Q2m4TJtj82q7sQ==
-X-CSE-MsgGUID: MGdogBO9QIyqQIYSkDlyjQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="13290400"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="13290400"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 03:25:32 -0700
-X-CSE-ConnectionGUID: xosg9IiWQxm2GeoOUnHvLQ==
-X-CSE-MsgGUID: HXYFp2FwReiJuY82nHChtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="35217002"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.138])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 03:25:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 27 May 2024 13:25:27 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-smbios: Fix wrong token data in
- sysfs
-In-Reply-To: <20240518234744.144484-1-W_Armin@gmx.de>
-Message-ID: <23e67b5e-8e24-0fa4-42bb-e20cb1596601@linux.intel.com>
-References: <20240518234744.144484-1-W_Armin@gmx.de>
+	s=arc-20240116; t=1716805540; c=relaxed/simple;
+	bh=IZP9GwLFHYwsUxISgzy2RcJobADfDP06LD39FBZVelc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bbXOLTpKH4QJ70egzY+NlMkLfEphLfaMLwsbH4Ixcd7b8AMtBEHmwRYhVFUiBvisklbJ6SS2XJ1VUUmSFPyzDq4ze6S8XqPMrcabFesb6MLQi2iiQXOt3Od6WXmzNEtpaHRcLiu1X0ZQjE1J8SGYDKuEayNIv3cDo2awjauj1DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.56] (g56.guest.molgen.mpg.de [141.14.220.56])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 5A5E861E5FE01;
+	Mon, 27 May 2024 12:25:00 +0200 (CEST)
+Message-ID: <96828117-2cf8-4a34-a8e6-78ace96b32d3@molgen.mpg.de>
+Date: Mon, 27 May 2024 12:24:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: ath10k_pci 0000:3a:00.0: Could not init core: -110
+To: Kalle Valo <kvalo@kernel.org>, Baochen Qiang <quic_bqiang@quicinc.com>
+Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+ James Prestwood <prestwoj@gmail.com>
+References: <0c544b16-5c0d-4687-9f96-8ff1f3269f79@molgen.mpg.de>
+ <e1bc0bb8-a66e-4e03-bc22-3dc506b6fb59@quicinc.com>
+ <87sey38vte.fsf@kernel.org>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <87sey38vte.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, 19 May 2024, Armin Wolf wrote:
+Dear Kalle, dear Baochen,
 
-> When reading token data from sysfs on my Inspiron 3505, the token
-> locations and values are wrong. This happens because match_attribute()
-> blindly assumes that all entries in da_tokens have an associated
-> entry in token_attrs.
+
+Am 27.05.24 um 11:10 schrieb Kalle Valo:
+> Baochen Qiang writes:
 > 
-> This however is not true as soon as da_tokens[] contains zeroed
-> token entries. Those entries are being skipped when initialising
-> token_attrs, breaking the core assumption of match_attribute().
+>> On 5/27/2024 4:42 PM, Paul Menzel wrote:
+
+>>> On the Intel Kaby Lake notebook Dell XPS 13 with
+>>>
+>>>      3a:00.0 Network controller [0280]: Qualcomm Atheros QCA6174 802.11ac Wireless Network Adapter [168c:003e] (rev 32)
+>>>
+>>> with at least a self-built Linux 6.9-rc5, on April 26th, 2024, and
+>>> Linux 6.8.11, today, May 27th, 2024, the error below happened, and
+>>> the device couldn’t authenticate to a WiFi network until reloading
+>>> the module *ath10k_core* and *ath10k_pci* (didn’t check just
+>>> *ath10k_pci*):
+>>>
+>>>      $ sudo modprobe -r ath10k_pci
+>>>      $ sudo modprobe -r ath10k_core
+>>>      $ sudo modprobe ath10k_pci
+>>>
+>>> ```
+>>> [   49.441618] ath10k_pci 0000:3a:00.0: wmi service ready event not received
+>>> [   49.523814] ath10k_pci 0000:3a:00.0: Could not init core: -110
 > 
-> Fix this by defining an extra struct for each pair of token attributes
-> and use container_of() to retrieve token information.
+> [...]
 > 
-> Tested on a Dell Inspiron 3050.
+>> Are you using a distro kernel?
+
+The 6.8.11 is Debian’s current Linux kernel in the suite *unstable/sid*
+(*linux-image-6.8.11-amd64* 6.8.11-1).
+
+>> Could you check if below patch merged in your kernel? if not can
+>> you merge it and try again?
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/ath/ath10k?id=e57b7d62a1b2f496caf0beba81cec3c90fad80d5
 > 
-> Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/dell/dell-smbios-base.c | 127 ++++++++-----------
->  1 file changed, 50 insertions(+), 77 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
-> index e61bfaf8b5c4..bc1bc02820d7 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
-> @@ -11,6 +11,7 @@
->   */
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> 
-> +#include <linux/container_of.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/capability.h>
-> @@ -25,11 +26,16 @@ static u32 da_supported_commands;
->  static int da_num_tokens;
->  static struct platform_device *platform_device;
->  static struct calling_interface_token *da_tokens;
-> -static struct device_attribute *token_location_attrs;
-> -static struct device_attribute *token_value_attrs;
-> +static struct token_sysfs_data *token_entries;
->  static struct attribute **token_attrs;
->  static DEFINE_MUTEX(smbios_mutex);
-> 
-> +struct token_sysfs_data {
-> +	struct device_attribute location_attr;
-> +	struct device_attribute value_attr;
-> +	struct calling_interface_token *token;
-> +};
-> +
->  struct smbios_device {
->  	struct list_head list;
->  	struct device *device;
-> @@ -416,47 +422,24 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
->  	}
->  }
-> 
-> -static int match_attribute(struct device *dev,
-> -			   struct device_attribute *attr)
-> +static ssize_t location_show(struct device *dev, struct device_attribute *attr, char *buf)
->  {
-> -	int i;
-> -
-> -	for (i = 0; i < da_num_tokens * 2; i++) {
-> -		if (!token_attrs[i])
-> -			continue;
-> -		if (strcmp(token_attrs[i]->name, attr->attr.name) == 0)
-> -			return i/2;
-> -	}
-> -	dev_dbg(dev, "couldn't match: %s\n", attr->attr.name);
-> -	return -EINVAL;
-> -}
-> -
-> -static ssize_t location_show(struct device *dev,
-> -			     struct device_attribute *attr, char *buf)
+> Paul, if you are feeling brave to try out an -rc this commit is in just
+> released v6.10-rc1.
 
-This change is littered with just style fixes which are good but do not 
-belong to this patch, such as here to remove the newline. I think it makes 
-this patch noticeably messier to include those extra style changes so 
-please separate them out of this patch.
+Thank you. I haven’t found out yet, how to reproduce this. I’ll keep an 
+eye on it.
 
-> -{
-> -	int i;
-> +	struct token_sysfs_data *data = container_of(attr, struct token_sysfs_data, location_attr);
-> 
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
-> 
-> -	i = match_attribute(dev, attr);
-> -	if (i > 0)
-> -		return sysfs_emit(buf, "%08x", da_tokens[i].location);
-> -	return 0;
-> +	return sysfs_emit(buf, "%08x", data->token->location);
->  }
-> 
-> -static ssize_t value_show(struct device *dev,
-> -			  struct device_attribute *attr, char *buf)
-> +static ssize_t value_show(struct device *dev, struct device_attribute *attr, char *buf)
+As the commit message says:
 
-Another style fix.
+> This results in timeout issue if the interrupt is not fired, due to
+> some unknown reasons.
 
->  {
-> -	int i;
-> +	struct token_sysfs_data *data = container_of(attr, struct token_sysfs_data, value_attr);
-> 
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
-> 
-> -	i = match_attribute(dev, attr);
-> -	if (i > 0)
-> -		return sysfs_emit(buf, "%08x", da_tokens[i].value);
-> -	return 0;
-> +	return sysfs_emit(buf, "%08x", data->token->value);
->  }
-> 
->  static struct attribute_group smbios_attribute_group = {
-> @@ -473,73 +456,65 @@ static int build_tokens_sysfs(struct platform_device *dev)
->  {
->  	char *location_name;
->  	char *value_name;
-> -	size_t size;
->  	int ret;
->  	int i, j;
-> 
-> -	/* (number of tokens  + 1 for null terminated */
-> -	size = sizeof(struct device_attribute) * (da_num_tokens + 1);
-> -	token_location_attrs = kzalloc(size, GFP_KERNEL);
-> -	if (!token_location_attrs)
-> +	token_entries = kcalloc(da_num_tokens, sizeof(struct token_sysfs_data), GFP_KERNEL);
+There are reports from 2016 to 2021 with similar symptoms. These were 
+supposedly fixed with 
+`/usr/lib/firmware/ath10k/QCA6174/hw3.0/board-2.bin` [1][2]:
 
-sizeof(*token_entries)
-
-> +	if (!token_entries)
->  		return -ENOMEM;
-> -	token_value_attrs = kzalloc(size, GFP_KERNEL);
-> -	if (!token_value_attrs)
-> -		goto out_allocate_value;
-> 
-> -	/* need to store both location and value + terminator*/
-> -	size = sizeof(struct attribute *) * ((2 * da_num_tokens) + 1);
-> -	token_attrs = kzalloc(size, GFP_KERNEL);
-> +	/* We need to store both location and value + terminator */
-> +	token_attrs = kcalloc((2 * da_num_tokens) + 1, sizeof(struct attribute *), GFP_KERNEL);
-
-sizeof(*token_attrs)
-
->  	if (!token_attrs)
->  		goto out_allocate_attrs;
-> 
->  	for (i = 0, j = 0; i < da_num_tokens; i++) {
-> -		/* skip empty */
-> +		/* Skip empty */
-
-Style change.
-
->  		if (da_tokens[i].tokenID == 0)
->  			continue;
-> -		/* add location */
-> -		location_name = kasprintf(GFP_KERNEL, "%04x_location",
-> -					  da_tokens[i].tokenID);
-> -		if (location_name == NULL)
-> +
-> +		token_entries[i].token = &da_tokens[i];
-> +
-
-> +		/* Add location */
-> +		location_name = kasprintf(GFP_KERNEL, "%04x_location", da_tokens[i].tokenID);
-> +		if (!location_name)
-
-Style change x3.
-
->  			goto out_unwind_strings;
-> -		sysfs_attr_init(&token_location_attrs[i].attr);
-> -		token_location_attrs[i].attr.name = location_name;
-> -		token_location_attrs[i].attr.mode = 0444;
-> -		token_location_attrs[i].show = location_show;
-> -		token_attrs[j++] = &token_location_attrs[i].attr;
-> +
-> +		sysfs_attr_init(&token_entries[i].location_attr.attr);
-> +		token_entries[i].location_attr.attr.name = location_name;
-> +		token_entries[i].location_attr.attr.mode = 0444;
-> +		token_entries[i].location_attr.show = location_show;
-> +		token_attrs[j++] = &token_entries[i].location_attr.attr;
-> 
->  		/* add value */
-> -		value_name = kasprintf(GFP_KERNEL, "%04x_value",
-> -				       da_tokens[i].tokenID);
-> -		if (value_name == NULL)
-> -			goto loop_fail_create_value;
-> -		sysfs_attr_init(&token_value_attrs[i].attr);
-> -		token_value_attrs[i].attr.name = value_name;
-> -		token_value_attrs[i].attr.mode = 0444;
-> -		token_value_attrs[i].show = value_show;
-> -		token_attrs[j++] = &token_value_attrs[i].attr;
-> -		continue;
-> -
-> -loop_fail_create_value:
-> -		kfree(location_name);
-> -		goto out_unwind_strings;
-
-> +		value_name = kasprintf(GFP_KERNEL, "%04x_value", da_tokens[i].tokenID);
-> +		if (!value_name) {
-
-Style change x2.
-
-> +			kfree(location_name);
-> +			goto out_unwind_strings;
-> +		}
-> +
-> +		sysfs_attr_init(&token_entries[i].value_attr.attr);
-> +		token_entries[i].value_attr.attr.name = value_name;
-> +		token_entries[i].value_attr.attr.mode = 0444;
-> +		token_entries[i].value_attr.show = value_show;
-> +		token_attrs[j++] = &token_entries[i].value_attr.attr;
->  	}
->  	smbios_attribute_group.attrs = token_attrs;
-> 
->  	ret = sysfs_create_group(&dev->dev.kobj, &smbios_attribute_group);
->  	if (ret)
->  		goto out_unwind_strings;
-> +
-
-Style change.
-
->  	return 0;
-> 
->  out_unwind_strings:
->  	while (i--) {
-> -		kfree(token_location_attrs[i].attr.name);
-> -		kfree(token_value_attrs[i].attr.name);
-> +		kfree(token_entries[i].location_attr.attr.name);
-> +		kfree(token_entries[i].value_attr.attr.name);
->  	}
->  	kfree(token_attrs);
->  out_allocate_attrs:
-> -	kfree(token_value_attrs);
-> -out_allocate_value:
-> -	kfree(token_location_attrs);
-> +	kfree(token_entries);
-> 
->  	return -ENOMEM;
->  }
-> @@ -548,15 +523,13 @@ static void free_group(struct platform_device *pdev)
->  {
->  	int i;
-> 
-> -	sysfs_remove_group(&pdev->dev.kobj,
-> -				&smbios_attribute_group);
-> +	sysfs_remove_group(&pdev->dev.kobj, &smbios_attribute_group);
-
-Style change.
+     $ md5sum /usr/lib/firmware/ath10k/QCA6174/hw3.0/board.bin 
+/usr/lib/firmware/ath10k/QCA6174/hw3.0/board-2.bin
+     cb37c63d9ca28f53fea1ff09ad7c7a82 
+/usr/lib/firmware/ath10k/QCA6174/hw3.0/board.bin
+     651e921b372848b3928621e6f1d34b01 
+/usr/lib/firmware/ath10k/QCA6174/hw3.0/board-2.bin
 
 
--- 
- i.
+Kind regards,
 
+Paul
+
+
+[1]: https://github.com/kvalo/ath10k-firmware/pull/2
+[2]: https://github.com/linux-surface/linux-surface/issues/41
