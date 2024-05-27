@@ -1,35 +1,35 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F0415E5B2;
-	Mon, 27 May 2024 12:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD6915DBCC;
+	Mon, 27 May 2024 12:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716812318; cv=none; b=P8Btx8zLR0mhIfZhJJSRP3F8zVl6P3v8ua/bLGk6+XzQECq7LomgVnOPmRk06KXdADiLdFVxdv5UME0NTGME9oCy1aCY0xiYvR6csJ+qk9dWVUkoqfezKzjv+YcpXrpZthCt6DIfeaysAEAZ6zVSfJ/LcUD0axTpWkMfoT2uPXo=
+	t=1716812325; cv=none; b=HGTqRMmh36NwqWaW88/eaF7fbBddJ/bHEPKT/puG6hQMV6+gP/ixl0s88TVmwKpWdWGtTNas9QZQsCN0HMozkid7pErt9C1bOm/HEok7jhYAltYbecuQ60cDRwHmBhohYie22bckq+Gk7waDbD87oekjWeMjCo9+3IioPSRfYJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716812318; c=relaxed/simple;
-	bh=+bSXoa7zKm+dP+bwmyOYx5PoNI5Xi9I6uCfiIjbRA/c=;
+	s=arc-20240116; t=1716812325; c=relaxed/simple;
+	bh=YSx9MjQ4veYq+NajQfgud5JiELKhT7CPGeCm6tpg7oY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gOdqs/nt3z0fxD5/rbnIa3t8WCWzerIHeoUDGigHjDvvCOKcA0oKiCBTj9rRi0l8jhDKVOsnEC1to8/gaTDNANcHaRUxc/XvnWICZ3E/vIVmgGKHIUFtw/1wNGCvKNd20rbc8OX2wCJWw3iBry2TPnDPWLnN6ALlkLrOnEWqzpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D/JZ7hcU; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=crU8t8GUQI05PTrsMS3HvLoslfuTrJDKXsrSFU7sRZ9kO0SggvMADUnUwVsqocJ3WiYW/hn3MIDo7HZmdO30MpDMPJcOfhOVS4CN9a/IghGFtxz0DxKFgTNQ55Jer8HRXrmRPrHeGr8FV7f+OX2QG65VFnvopJpMD5BUxlrRpgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZscDcFbs; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D/JZ7hcU"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7F3F1FF809;
-	Mon, 27 May 2024 12:18:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZscDcFbs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7CA5920007;
+	Mon, 27 May 2024 12:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716812314;
+	t=1716812322;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gJGCBGWt/YnEWyTAuowr4XOvldsHsCCiNE6m/L9+UDA=;
-	b=D/JZ7hcUtunEHjGi6W7diX1NPrwkhQsjZ8sibKty0ZOrxXwRRlUIuDQJamLQhcuyaJhNI+
-	zNEgkEr/3Owkhq++mI9a9tFiiYwkyHb1NoX9ABbKsMglYebZPqFtHa29d2uFEVD4G75TvJ
-	CB30iHLUTZt8/o43W+rqBI4FP75WQkWTgpnOATCTAv74I7pvVoKnx9eLBMDIkvUOc6WWps
-	guTLlHtwsEr6JeXO36p8Z/Vf3HduL+W4rTAQrzPKawvHkwb3gUPw3lUQhves5E4bo7iUbC
-	6RCFM7zr1B524QVYWKrvfuW6+sswaX2zf0C3Q2pWGOtmIk+DYhunhANE6GndhA==
+	bh=zUfiAG71aXn8LdRaUjhGkzb2gmamEauYl7siNmkQPII=;
+	b=ZscDcFbsoCxIlzUzanGm50DEOu5JpbDdy9iNvKULFsmbZ/99wzJbP6FhaAYkJLO8gKnNaG
+	IK19K3CEIvSx6XIeiwWMQsTI53hnkcJ3SPt8Peu1PJ0IOoAWgzmKY6EDwnYxB/1CIhoIAo
+	E+PWT7Ql8mQerbCeoxS1HbuzBo7P8T1lFl8Bjws7IPqSXpRoJV9Q94HuSE+78YWcqTpRQC
+	IwUkDsptHhcSgr1tFDIzKxYtA6f2SkYMLMY7xReggWFycsGErvMLZYNR86W9YuCvEdXiZ2
+	jsljHJaKTlFhz5EDkzDPDZV46Or2dwJnRBgO2KA7WHFHMwNjx7b9LoICOv3c+g==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 To: Frank Li <Frank.Li@nxp.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -51,11 +51,11 @@ Cc: linux-mtd@lists.infradead.org,
 	dmaengine@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/6] mtd: rawnand: gpmi: add 'support_edo_timing' in gpmi_devdata
-Date: Mon, 27 May 2024 14:18:33 +0200
-Message-Id: <20240527121833.178429-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: mtd: gpmi-nand: Add 'fsl,imx8qxp-gpmi-nand' compatible string
+Date: Mon, 27 May 2024 14:18:41 +0200
+Message-Id: <20240527121841.178486-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240520-gpmi_nand-v2-3-e3017e4c9da5@nxp.com>
+In-Reply-To: <20240520-gpmi_nand-v2-1-e3017e4c9da5@nxp.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,16 +64,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'88861f37ce6e9e31991e248c7d9d04ae2287b377'
+X-linux-mtd-patch-commit: b'a25587a7c95063635ed4d92cb6d73c9e3d7babeb'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, 2024-05-20 at 16:09:14 UTC, Frank Li wrote:
-> Introduce a boolean flag, 'support_edo_timing', within gpmi_devdata to
-> simplify the logic check in gpmi_setup_interface(). This is made in
-> preparation for adding support for imx8qxp gpmi.
+On Mon, 2024-05-20 at 16:09:12 UTC, Frank Li wrote:
+> Add 'fsl,imx8qxp-gpmi-nand' compatible string and clock-names restriction.
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
