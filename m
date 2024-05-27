@@ -1,98 +1,100 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E266339B1;
-	Mon, 27 May 2024 12:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE35B15E5A9
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 12:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716813730; cv=none; b=thmv7lp2oxhiF+gLBsz78UZSohGRPotmxd4ILfQ1QxrT8hfrulYUTBIvWS/j2QfI5SaHw+aSEFiBEcTSaq8KhgPhumFUuCRaihgsrj2gUeH0+GDim8vOd7w1cX1cfBOxL6MzITPWHXyKPbjPdvskcaQBRoOqjbDl4OrUV4McnrE=
+	t=1716813744; cv=none; b=sPJDrP0t4+jtIokhdLbGZM7+sWq8ddoeUVNvNo3o0++wAEnqZDpDzsuHoXXR7S5SbRJ4NQi4mq42m9Yzzafi7fRC1KTJDa9Tr4Zwzt2gVDqgfG+HFDGpTEIJiy7kJNzKzVi8MuATqMJb+1ay7sP9+CsuuLY+6y2RqaCaH6+Hl4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716813730; c=relaxed/simple;
-	bh=DYhkxv+4qslfB3GCZb5USw9Yc4GNuRSlvX8gOfRsEKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DNFIMO+zHs4AQfMuuOZPSquRKQC+q/mzEPDTjDbSN4XpZapTbqte63Im/fN2//5awR3fj4YFQaygcRYKzoGzRHbVlP+32b5BqmH6TNAMsSX1Wmnh61HZYJPdcNFcB+tx18wRHePRdwjHBm3UAO0w5T/zTtRRMUzCvBuBjS9hnOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id DB3752800DC37;
-	Mon, 27 May 2024 14:33:22 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C414A9926AC; Mon, 27 May 2024 14:33:22 +0200 (CEST)
-Date: Mon, 27 May 2024 14:33:22 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Yinghai Lu <yinghai@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Abort hot-plug if
- pci_hp_add_bridge() fails
-Message-ID: <ZlR9kg-SEshXvBEP@wunner.de>
-References: <cover.1714838173.git.namcao@linutronix.de>
- <f3db713f4a737756782be6e94fcea3eda352e39f.1714838173.git.namcao@linutronix.de>
- <Zjcc6Suf5HmmZVM9@wunner.de>
- <20240505071451.df3l6mdK@linutronix.de>
- <20240506083701.NZNifFGn@linutronix.de>
- <ZjkxTGaAc48jPzqC@wunner.de>
- <20240507142738.wyj19VVh@linutronix.de>
- <ZlRPS9TCYjccpNLr@wunner.de>
- <20240527092322.N8nbxYAL@linutronix.de>
+	s=arc-20240116; t=1716813744; c=relaxed/simple;
+	bh=gvmIvei/evck27eAyXPfMfAUpIW//VOl8Dual8yqM7I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b3tj+wLJ1pldLxyBKf2U8RlHUQmCfslIQQZlRJJJuh3QLUpeJZL5QDszv54s7aETEWf4lRYbRFeuYr1wV3mNyVnJBULKWb42QfiKuVLH7mN8vaw9+XQUDI2e4VVAIAMlyPTnoDYOiaQtSZo8LUrxO3mjyeXF3k0jalmrQjONpPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mROal7UP; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mROal7UP"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dee72970df8so4113941276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 05:42:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716813742; x=1717418542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RreWtAd7Wi7xpCgHNvoy0257vlpp2GBbsNvbWW0dsCg=;
+        b=mROal7UPeV2+tDOeg7vELm3fdnAOS2UtsxNIQR93+IGkKg2PeHQ4YyjhmoAj1aa3/r
+         A2yFsVPYqHOfW9WEXIA4MbOetgHi+ea1yB20ZLG1PmNmtQIDaQwDPsvbcPYe99ayKRIX
+         VJZmoV4mFCM4bOFV/bWoNX8qfELEM2p2r7jBu4tiITj0KXXrxcPSaiA1MV/G4vjTM0lB
+         mVlC9FSYngw4/VlTY5UqiDFXSESXuteL3bfKTpkB5dekpP7+G3DSPHGc6F0MBO3Jvn8d
+         JterMso9fM9vfabEGXWrp+WvMOLCpmhal/pNqcJ/vHju21Z3joHdTpUD/tmLzcUO+skT
+         sbDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716813742; x=1717418542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RreWtAd7Wi7xpCgHNvoy0257vlpp2GBbsNvbWW0dsCg=;
+        b=mlU+A9F5Xy3AhlMHymgtNKRmnOtFMTaZtWOJMnE24TWNLxDvVuH6Mb/wqvN2nYmIE/
+         2ngMAHensKl00zpAMjgJ8Hzp9mAwqq1e/Ty5qmw11nTHwwCVH+xn8/ig5XoBuuJWHBF9
+         HMsZwz0+yF8ReobtaHfJ4DcJV2iHqCxlqlfy6TmdhoNt5m6Uta58e/IkWhO7F7Bm7pXC
+         RqH6jPYW95cDfeeaRr9qk1vNwkfbZI59N3Rqg9QIUYH1WwEdtVYeTgOdD2HtkqDXWkHI
+         kSlzHZS8TwiH9FaM9w0yXg8K8p4yqmdmKHfP8oos6zIiMHuZm5Ue8TYgNhNqNBEU3/2Q
+         UuWA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1qJtm8Iw4+Ok8eaYwEKFqs/JrSpSFUq3/UJdRuj6elFynXcCCE5iuy2ptmsYG29eSJsi0bwtJhcw5IdaNzYPu5Z8Jhe7Qf0kaZ2M/
+X-Gm-Message-State: AOJu0YzGhvuJ6xR0BqEOdabbdNZgsbwGUTEMIRoDOjdDryKf09Io19yu
+	nXYvrBUBmOR/hjGQsNyGOP7mIKEMHE/ng732gwH5zYwjE3OQGHFruks6AtSN0k5pDvKn2Lcq+Ls
+	Fmg2B4cW4MKl2LGucb/gfNHgsRKWC854uNNXQcw==
+X-Google-Smtp-Source: AGHT+IGnKKyNaK0erydWgd+7egLyO1LEZVbwIGZL84HNMIAWKZun14kUnLhTrRDtqLO6jO06aGMtpPufyBXFe4UUfcs=
+X-Received: by 2002:a25:c302:0:b0:df4:d98d:3e4f with SMTP id
+ 3f1490d57ef6-df5422399dfmr8673203276.12.1716813741865; Mon, 27 May 2024
+ 05:42:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240527092322.N8nbxYAL@linutronix.de>
+References: <20240513-imx91-pinctrl-v1-0-c99a23c6843a@nxp.com>
+In-Reply-To: <20240513-imx91-pinctrl-v1-0-c99a23c6843a@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 27 May 2024 14:42:10 +0200
+Message-ID: <CACRpkdYP1Tp6Cxn7xMNusZi=DP6LPUUTaKOPzW4FChu3oEbkFQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: freescale: support i.MX91 pinctrl
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 27, 2024 at 11:23:22AM +0200, Nam Cao wrote:
-> On Mon, May 27, 2024 at 11:15:55AM +0200, Lukas Wunner wrote:
-> > We already check for a NULL subordinate pointer in various places.
-> > See e.g. commit 62e4492c3063 ("PCI: Prevent NULL dereference during
-> > pciehp probe").
-> 
-> Ah, so bridge without subordinate bus is allowed in the kernel.
-> 
-> > If we're missing such checks, I'd suggest to add those.
-> > 
-> > If you believe having a NULL subordinate pointer is wrong and the
-> > bridge should be de-enumerated altogether, I think you would have
-> > to remove these NULL pointer checks as they'd otherwise become
-> > pointless with your change.
-> > 
-> > Just adding missing NULL pointer checks seems to be the most
-> > straightforward solution to me.
-> 
-> If the kernel do permits bridges without subordinate bus number, I am
-> happy to go this direction. I expect going this way will require many more
-> patches, I will dig into it and come back later.
+On Mon, May 13, 2024 at 11:12=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
+om> wrote:
 
-It seems a lot of functions use a "if (dev->subordinate)" check
-to distinguish between bridges and endpoints.
+> Add i.MX91 IOMUXC binding doc and driver.
+> i.MX91 IOMUXC has similar design as i.MX93 IOMUXC, so reuse the
+> i.MX93 binding.
 
-A bridge with a NULL subordinate pointer is then basically treated
-like an endpoint.
+Patches applied for v6.11.
 
-There are places which use other ways to recognize bridges, e.g.
-by looking at dev->hdr_type.  Only these code paths will have to
-check for a NULL subordinate pointer.  In the case of pciehp,
-portdrv binds to anything with class PCI_CLASS_BRIDGE_PCI_NORMAL,
-without consideration for the subordinate pointer, hence a check
-was needed in pciehp.
+I haven't heard much from the i.MX maintainers for a while I guess they
+are busy.
 
-pciehp is used a lot by Thunderbolt/USB4, SD 7.0 and for NVMe drives.
-I think shpchp isn't used as much, so its code paths aren't exercised
-as heavily and bugs aren't found and fixed as quickly.  So chances are
-that more checks are missing in shpchp than in pciehp.
+Should Peng Fan be added to this list?
 
-Thanks,
+PIN CONTROLLER - FREESCALE
+M:      Dong Aisheng <aisheng.dong@nxp.com>
+M:      Fabio Estevam <festevam@gmail.com>
+M:      Shawn Guo <shawnguo@kernel.org>
+M:      Jacky Bai <ping.bai@nxp.com>
 
-Lukas
+Maybe someone should be subtracted?
+
+Yours,
+Linus Walleij
