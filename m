@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505B64779F
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1676E4594D
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716791907; cv=none; b=GB/jyRKHI9iEfMsxH32fVvONLha9VHTRvNiVfFxMmm4FtDTSbu8qKL63enEBbhSJSiZnMAUf4PyvmhpgaY0mdyg+YzV9xfHD3Fm33coF6o//XhMGv29WBkKUV7ej2gm75ejVrExMXdEf1k+EwxVT7761vL1HiyaQ8zhx5WrdXDg=
+	t=1716791907; cv=none; b=ues1e2eJWLxFI7abIm6LkQUZCbynKfXfsVdQhw2xyictFrnXtn8xTT+Gi0PqSZPnRbZGMInkX436S+6JhfdRCx3jfpJQ4SSRMTS4FbwSbCAmIkaOQ921s1o/XkFGeU06u4bKrIYnhM5zKncFSEjHiZ4dJ1fPXoZPLVb3i/OfbGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716791907; c=relaxed/simple;
-	bh=Rezx37ZAMeSkcTz4eHSQoA8t3LwCmXbSpMIu1F4cxOY=;
+	bh=4TqYg9C9M7bVyQVBRTlOYVbfQwj4hBnVKOPQn39lBzI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Rs6zTxkp/xBNijfUccZ7bmHDmRYHEocM6w2ExQHXzwMP1HN+hBKUcUq24pbgfGR7KuEKLTF9sP9GOZfhlX8rJIHpw3nOXsKWivDz+3McCB+9/+eEbURhiYa+cQ86D2VsTa9tcAEhW1wEqhNbk68Smy/8rUCdg/YNbSuJQpilKBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xh5/Smyz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HR2wR2kd; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=KS1kc8RT9Lhfx9ILfIvXhJWvzSbECPHS/6mcYgCmqsBwx5ON2BRFli+B7u2oEqCoLOuBK9OqSuTpRiFwajvb1cSXhq1KprPfhR5DTAXCDBnP7+1Mj/xgBy+6v6PW6XSlP6bZZLuKRgv4RBk4ejiIjA/aQWJwvOQDF/2srs9TmVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GHuqOGJW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NK4ijYFW; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xh5/Smyz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HR2wR2kd"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GHuqOGJW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NK4ijYFW"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716791903;
+	s=2020; t=1716791902;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dZZq8JTDc/bSa5Wad3zQxrhy3UUWwTzRNl4k7bMmCns=;
-	b=xh5/Smyz66WOa5rKJmPiOQauOT3TqMznaWocfXJyjoTnOn20ZBluKATxijAWx31SM98ecl
-	SqBftizzZ6QfVjfa6YrpqSLEkiJCYu7n72D12QXRkGLiEAeUknFHo10duRE3fQhtzcI2hZ
-	emhdkbex3NHpXkZRYh9rzdyDfvGRlR6xvCJb6Usg4btYPcdY3jBpoga3rOArdX+178gq+j
-	SZLq8QzKe639Cc+yJlqg1MfwCem1gOiBeSYqPIq01wfAaDH2agVTvet1x36yQI1qAUyxLf
-	95N5N3Nija6xxSCIYBeRhyftoVI8s620shZBpNugFR5eNtc7sY8PlgC3wNTXog==
+	bh=vAfJ0/ArpyBrKdvlxG2JN5Vl00RCt4dDRQpqktRYYBg=;
+	b=GHuqOGJWM0mKftTjKcJZFWer07OfurTQzkE2xHi9zx93nnmXVS4hW7PfaXl07TmhDxWjXc
+	lMPDWaSCycf9iIbsh3/lZ+NN5cCuUWKXpqBW49osTb3gffPbTNA0aARqoHAPTyvgvZ+Gqr
+	eoVCxn7oQV4xsOszXIT/qQa2HKhILG3YPcM/8xp3aTwzs9CZvVSSV9FM6AQkcZBc7ugqMH
+	FYBOSqhjIspUcyMpmZV3qnEu51WqN3zmNv88SdPN21dhsBxwDrkN/uuYYpFtG1+7QKzZL7
+	zT+iqgZ9+AAj2icfNMIHX/z8trqf/8D4W7U3uko3qU5UIBwq6zczM9tdwwtRJg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716791903;
+	s=2020e; t=1716791902;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dZZq8JTDc/bSa5Wad3zQxrhy3UUWwTzRNl4k7bMmCns=;
-	b=HR2wR2kdZJdN0Ly+eo6wZ27MD2WRMuHDt8faekNd9Wp5xD3lKzSLuJJyvY0pV6tWHUN587
-	tJ/FprpFlr0qvrBw==
+	bh=vAfJ0/ArpyBrKdvlxG2JN5Vl00RCt4dDRQpqktRYYBg=;
+	b=NK4ijYFWANDnGQrJZ+jdRFOKCqDon2eMqGJl5Vzuj6lF3XPUvJ2r4BvTb7q2eQNhQJK3HF
+	lhCY06fcUasuigAg==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH printk v6 17/30] printk: Add @flags argument for console_is_usable()
-Date: Mon, 27 May 2024 08:43:36 +0206
-Message-Id: <20240527063749.391035-18-john.ogness@linutronix.de>
+Subject: [PATCH printk v6 15/30] printk: Make console_is_usable() available to nbcon
+Date: Mon, 27 May 2024 08:43:34 +0206
+Message-Id: <20240527063749.391035-16-john.ogness@linutronix.de>
 In-Reply-To: <20240527063749.391035-1-john.ogness@linutronix.de>
 References: <20240527063749.391035-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -57,71 +57,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The caller of console_is_usable() usually needs @console->flags
-for its own checks. Rather than having console_is_usable() read
-its own copy, make the caller pass in the @flags. This also
-ensures that the caller saw the same @flags value.
+Move console_is_usable() as-is into internal.h so that it can
+be used by nbcon printing functions as well.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/printk/internal.h | 8 ++------
- kernel/printk/printk.c   | 5 +++--
- 2 files changed, 5 insertions(+), 8 deletions(-)
+ kernel/printk/internal.h | 32 ++++++++++++++++++++++++++++++++
+ kernel/printk/printk.c   | 30 ------------------------------
+ 2 files changed, 32 insertions(+), 30 deletions(-)
 
 diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
-index 943e8f083609..e2de2d262db4 100644
+index 6c1d01eabf3b..339563dd60bb 100644
 --- a/kernel/printk/internal.h
 +++ b/kernel/printk/internal.h
-@@ -90,13 +90,9 @@ void nbcon_free(struct console *con);
-  * records. Note that this function does not consider the current context,
-  * which can also play a role in deciding if @con can be used to print
-  * records.
-- *
-- * Requires the console_srcu_read_lock.
-  */
--static inline bool console_is_usable(struct console *con)
-+static inline bool console_is_usable(struct console *con, short flags)
- {
--	short flags = console_srcu_read_flags(con);
--
- 	if (!(flags & CON_ENABLED))
- 		return false;
+@@ -85,6 +85,36 @@ bool nbcon_alloc(struct console *con);
+ void nbcon_init(struct console *con, u64 init_seq);
+ void nbcon_free(struct console *con);
  
-@@ -143,7 +139,7 @@ static inline bool nbcon_alloc(struct console *con) { return false; }
++/*
++ * Check if the given console is currently capable and allowed to print
++ * records.
++ *
++ * Requires the console_srcu_read_lock.
++ */
++static inline bool console_is_usable(struct console *con)
++{
++	short flags = console_srcu_read_flags(con);
++
++	if (!(flags & CON_ENABLED))
++		return false;
++
++	if ((flags & CON_SUSPENDED))
++		return false;
++
++	if (!con->write)
++		return false;
++
++	/*
++	 * Console drivers may assume that per-cpu resources have been
++	 * allocated. So unless they're explicitly marked as being able to
++	 * cope (CON_ANYTIME) don't call them until this CPU is officially up.
++	 */
++	if (!cpu_online(raw_smp_processor_id()) && !(flags & CON_ANYTIME))
++		return false;
++
++	return true;
++}
++
+ #else
+ 
+ #define PRINTK_PREFIX_MAX	0
+@@ -106,6 +136,8 @@ static inline bool nbcon_alloc(struct console *con) { return false; }
  static inline void nbcon_init(struct console *con, u64 init_seq) { }
  static inline void nbcon_free(struct console *con) { }
  
--static inline bool console_is_usable(struct console *con) { return false; }
-+static inline bool console_is_usable(struct console *con, short flags) { return false; }
- 
++static inline bool console_is_usable(struct console *con) { return false; }
++
  #endif /* CONFIG_PRINTK */
  
+ extern struct printk_buffers printk_shared_pbufs;
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 3947702b7977..2dd7add07b5d 100644
+index 75f64efaa53c..3947702b7977 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -2942,9 +2942,10 @@ static bool console_flush_all(bool do_cond_resched, u64 *next_seq, bool *handove
+@@ -2697,36 +2697,6 @@ int is_console_locked(void)
+ }
+ EXPORT_SYMBOL(is_console_locked);
  
- 		cookie = console_srcu_read_lock();
- 		for_each_console_srcu(con) {
-+			short flags = console_srcu_read_flags(con);
- 			bool progress;
- 
--			if (!console_is_usable(con))
-+			if (!console_is_usable(con, flags))
- 				continue;
- 			any_usable = true;
- 
-@@ -3825,7 +3826,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
- 			 * that they make forward progress, so only increment
- 			 * @diff for usable consoles.
- 			 */
--			if (!console_is_usable(c))
-+			if (!console_is_usable(c, flags))
- 				continue;
- 
- 			if (flags & CON_NBCON) {
+-/*
+- * Check if the given console is currently capable and allowed to print
+- * records.
+- *
+- * Requires the console_srcu_read_lock.
+- */
+-static inline bool console_is_usable(struct console *con)
+-{
+-	short flags = console_srcu_read_flags(con);
+-
+-	if (!(flags & CON_ENABLED))
+-		return false;
+-
+-	if ((flags & CON_SUSPENDED))
+-		return false;
+-
+-	if (!con->write)
+-		return false;
+-
+-	/*
+-	 * Console drivers may assume that per-cpu resources have been
+-	 * allocated. So unless they're explicitly marked as being able to
+-	 * cope (CON_ANYTIME) don't call them until this CPU is officially up.
+-	 */
+-	if (!cpu_online(raw_smp_processor_id()) && !(flags & CON_ANYTIME))
+-		return false;
+-
+-	return true;
+-}
+-
+ static void __console_unlock(void)
+ {
+ 	console_locked = 0;
 -- 
 2.39.2
 
