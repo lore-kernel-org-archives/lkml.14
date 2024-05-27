@@ -1,154 +1,159 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2042.outbound.protection.outlook.com [40.107.92.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D6E13BC26;
-	Mon, 27 May 2024 09:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716802493; cv=fail; b=iN9m3DzzkT72ZYZk+XokTCqw9AqaxWIT9+4UjMBR9zgYko1Ovmw6OToWuKkrHkFRdgvN3PZfRK1WS/B1HhuzC/INz4flb5qSXr1rkLeyVHgE26YLsdTyQD21PWNKVYTONKiQCx+bktuaPmkJeNrkPEtA0Hyj/bPnv00kfnkJYcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716802493; c=relaxed/simple;
-	bh=89R6qo6Ps2isvILvdqwwmkEMTfGZSNmV7W0iAE1zgfs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GustyPquA3+d92fmeCzqQnq0LM3QN1cckFcDUWKjPlukWvLtEYQ2VTJk/T99MZW7b9PEOVoB02lH4wVsnKlPmmcJrlObI7ou+zV8y95zcLk9mcsjkSxWVme0WaKF1dMu8O8abBk0EcPEfrZ3CIK3ezhyQ5kQTibIyxRdMpsT5wo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BqD9v1f6; arc=fail smtp.client-ip=40.107.92.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DF713A40C;
+	Mon, 27 May 2024 09:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716802496; cv=none; b=Z4kNCfFSHKapQ065k+LwFsQzK2Jr+nkOK3PCKPJ68q+xuC3oWw2n/a8+s0VB8uCJ84YDoqIiQ79+Sh3m3MlaHMXCECLIpuI/GZnhYTwGMJDckH2LkcoUbFfjVmM2yC8VUvZg4EXXk/wSb9NKVAySx7oUSZ5/b5HdgJtMDP41/F0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716802496; c=relaxed/simple;
+	bh=GZmGEocmWzBeg3ElgilT4NF4U3VsdfiPEyNkcWMuauE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rxN9ObIBD8SmTXCDPNXvgxq6Oe8gcCU5PjgTVO8S/Ec2JFrqsW4ZCGTzV4h1tIAqZVbUSVGacmZhYKKwYUyvmQIMuxJo//6tpta9eSroqqgDOr/j/uNfkpEdNSpOB+LPQcmFMREete+qVS5m7VeX5Jy3Zv4X56bAVlNG6mDlNsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VsVf6wIr; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BqD9v1f6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ImdGaUSvdLgtssTU3CWt33vkUaih8CsfjqyHiAr0zQdNsbPE7EozOcAfHQMTV1EO60ptvN0sXsvJvwoOB2DOKtXwUrG+6o1nvA8YcbXSMGZjzBT7b85G0NH4DSi+mFnUSrzPGVK9JQENrOcZv0khIwb4KAptzY+w+U7hZ+FIdd7N/G8cJnN0EqRdINLxXECIJLYgLMjmitOEld60pdzFPM/ccFjoxtsMGk3JH0P6q1YHCUosZrYHy32wOBnLXY6mVKfvtvgeQG2lBsaJIm3qOpS/Rifp0MVJeecLqdSyQ1PCI5tUVGAer4gQIyXmO4OPcCJZ6LLVidVZ13pkpIh5rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A6Av+CgHDQa3zxletnl69+KTth6Ti3qcNXM48ptcYOU=;
- b=ddnUsyjZ8IbtPH9KulVWF5PNReg+nXjj8E+nFtQwZsXj9/kwrCJhhnrKMMbhM06nYhJE3ZGTRYOXuluKayBQdoT5Ga/3Ck00s8uPG0ETm3ZuDkdJfqmuBDppuCmqBAR7yOXIyTF2wsDNf6dUqm39aEkIQrRRk53tTlzwUET9KzpHUSor/EdVm+lzQwRB2DHvFoX1kkglNnUKM/0ZD3hI2hnwuKT+rs39Orj1nu90pZldDyamIgljL5gGloKgNXZWhSFArDUxZF3OEy44rJdJ84dHpYBNn5wBDFP4cIt8NuIjPZxhi1ANz+HuVE1tpjsKA1EmCXklpudebHsrDHVzQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A6Av+CgHDQa3zxletnl69+KTth6Ti3qcNXM48ptcYOU=;
- b=BqD9v1f6TaopeVBLKDA2bbbFRW+WpHmiid3xWwuTdNKNcYTB+agigSEC1qqayDSNdMshQFCwg7ZFLmypslUQyPxg6Ykm0m55G+JPNHXN0vLqFPienbodTZWW9ra3wwArYfjDbQweAbQAKCGeM0I56bXNXE8HskgFGt2Tft8qgnY=
-Received: from SN1PR12CA0074.namprd12.prod.outlook.com (2603:10b6:802:20::45)
- by DS7PR12MB5911.namprd12.prod.outlook.com (2603:10b6:8:7c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Mon, 27 May
- 2024 09:34:49 +0000
-Received: from SA2PEPF00003F63.namprd04.prod.outlook.com
- (2603:10b6:802:20:cafe::7c) by SN1PR12CA0074.outlook.office365.com
- (2603:10b6:802:20::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.30 via Frontend
- Transport; Mon, 27 May 2024 09:34:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003F63.mail.protection.outlook.com (10.167.248.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7633.15 via Frontend Transport; Mon, 27 May 2024 09:34:49 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 27 May
- 2024 04:34:47 -0500
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh@kernel.org>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 06/12] arm64: zynqmp: Remove address/size-cells from ams node
-Date: Mon, 27 May 2024 11:34:12 +0200
-Message-ID: <39f73999bbec0233264ce40f05c0885c46e423be.1716802450.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1716802450.git.michal.simek@amd.com>
-References: <cover.1716802450.git.michal.simek@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VsVf6wIr"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a6266ffdba8so218189966b.1;
+        Mon, 27 May 2024 02:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716802493; x=1717407293; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t5cBODzR4p/d1EwJmZY+G8DbaP2yePNKcsEM/yAst/A=;
+        b=VsVf6wIrhvQfX4OwzETDZGjpE7iVfOxvx7cnGtGsDG9qbjmCWa2jtewRLa8KBM7V0I
+         m1VLLTZbMRJhkKBxG65LQzS8nPKgmdSavEeI9pHFKk8hNYjbhfJ5gaYjHHsLubNvMjis
+         q+tLtuwOZXiA50u3/Wk48mvScTR47qV0eWZh6AjSISyP639FcC2yg+X3sbr04vK0jA9t
+         Ci8wbOJ30mf8EoAtGs6tP6J/umk5zxmaGfVqXGWteLH8iBbnyZc4pM7JIx1qjuUX7tLE
+         Wf0BT3UBExO5Uq3w8BXkq8OKympnn91p/+MLMsMxZgaNnnr5LQKtiH+osaqMuQ0l5Fv3
+         D9mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716802493; x=1717407293;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t5cBODzR4p/d1EwJmZY+G8DbaP2yePNKcsEM/yAst/A=;
+        b=TfyEt06USZP+uu1L0NerNebfLXkee5a0MJeH/7JZdGwMqeJBColxryT1X7GSI5+zlE
+         fEB/cHXcu2DJL9faeA+V+QHXoPwi5+o3f678jtP0N9U0A8l5/8DmlW07msNPXP1HZwbz
+         l1Cpy0WN4JwNzmHKeBEmMDFt/NAzicHU40MzXRMO7gbmBzP5MaLxQC232vJPsytIHJVx
+         79Dh7K36SzaaKXhSHfLH77TFDavPbWQLRJ4+x+gJQ+aocbtEAISIzHj03+cu/eWYyQ5k
+         b/F4nRRs7O9MZA4Z95Mut9Q3lpmV7SI9hY+hwK9J1oeZbyfkAyzzqBLE6X/QbzKKcqNK
+         eP+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWA9ezkekuoTLGru8fu20DINqPxgp6dwaTprV7dkTyA1jDoVq4CJQY1/slONxd7oaM04tM+vxewrBQl5ayLD916ENo0FGKTASmG0dI4Qi68wLOKrQyOVl82CGyYw8CcHmni
+X-Gm-Message-State: AOJu0YziBbZwaInknJ/PVOPMlldOVdEoFawHUr4HbHN/rG+J/knUa8Bb
+	qN1QV567U72saRfwAxaQ5ohCuShY+usCBW3Vzi7ahsHNkDI8r/Cm
+X-Google-Smtp-Source: AGHT+IFjYaXZRXFnIlLX5I0tdJRm3cO32xFRJZGBWA4rLg7R5JB0Spcaz69YutEH+tX+ZrdKFwP7YA==
+X-Received: by 2002:a17:907:36ca:b0:a59:a83b:d435 with SMTP id a640c23a62f3a-a62641cb750mr676443566b.18.1716802493112;
+        Mon, 27 May 2024 02:34:53 -0700 (PDT)
+Received: from f (cst-prg-19-178.cust.vodafone.cz. [46.135.19.178])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cc8b87fsm469221766b.158.2024.05.27.02.34.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 02:34:52 -0700 (PDT)
+Date: Mon, 27 May 2024 11:34:36 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jens Axboe <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Memory Management List <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <kafai@fb.com>, 
+	Song Liu <songliubraving@fb.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, 
+	Pekka Enberg <penberg@kernel.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Howard McLauchlan <hmclauchlan@fb.com>, bpf@vger.kernel.org, torvalds@linux-foundation.org
+Subject: Re: [PATCH] mm: don't call should_failslab() for !CONFIG_FAILSLAB
+Message-ID: <3j5d3p22ssv7xoaghzraa7crcfih3h2qqjlhmjppbp6f42pg2t@kg7qoicog5ye>
+References: <e01e5e40-692a-519c-4cba-e3331f173c82@kernel.dk>
+ <2dfc6273-6cdd-f4f5-bed9-400873ac9152@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=663; i=michal.simek@amd.com; h=from:subject:message-id; bh=89R6qo6Ps2isvILvdqwwmkEMTfGZSNmV7W0iAE1zgfs=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhrSQ4KnzRdqkjvwxUi18cPpU2jOnT6K3qyZG/uO5sWGuo rZxnrRiRywLgyATg6yYIou0zZUzeytnTBG+eFgOZg4rE8gQBi5OAZiIhgzDfG+pi9JFwkY9TTy8 KgcMcgTFqhcyMMxi0j2xsn3h5QlhvZfe7v3Maps475MhAA==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F63:EE_|DS7PR12MB5911:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96854e65-4c18-4f04-7d6b-08dc7e3040d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|376005|1800799015|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?mbfP07yTDhgpwSDvEiHmNU3Gp3SJkqysV7oHTuyd+uChrvakjlo7abzFLr3C?=
- =?us-ascii?Q?hnXPKD11M3wvQps2AXNAo4Um+dh96F+Ahx6S2k0Qrb8DwcqO5sN/3bSseOp8?=
- =?us-ascii?Q?aurdRJDFEgYTtYeghjN+uaRhC+9wd0i0Fwll4EM3ov07Ih1hY21RagbD3g55?=
- =?us-ascii?Q?tG3Kq/sK+LEd1VZdvcawn6tRLioiiNGoLnW23qgSOZCAre4BgfcsCZY7djQl?=
- =?us-ascii?Q?HqScJ31JXUN9jDcWD9KvoeVWfS5vnWJ/9fU0LeeHT7pzLZeD0+Uof+UU5jZ1?=
- =?us-ascii?Q?l5CY2Ydou8zR6A0Ul59jhxwFSGu86fbKh8UvJbjMXOuJi04Xjx9q0+iwACNf?=
- =?us-ascii?Q?fDhx9lZlTtVylUZZukPHviEqijd0JWGHdWYhfqBRH6m664orjj5eZTJMkgMy?=
- =?us-ascii?Q?2sGdpbji5YyMMEb3I+jdTtIC0rmkGctUioL8SaCHvXtvsjHS0gisP5MUcoJ7?=
- =?us-ascii?Q?UKvEYdr6ItYAovEtpumG9envzdiazMuyG4UphWPPQyCIoAyKROdtOgAV1x1e?=
- =?us-ascii?Q?/syIi92yiMhPZ7+IIecN1bmykJhQD2+wUNy3OD10XhVKd/Ig1iESd5aj2OUQ?=
- =?us-ascii?Q?D5nfz2gB4sEbhhwi6jSTzeOX293Snt3PXKuFbKl5/SxKS2spneVL972N0xZn?=
- =?us-ascii?Q?fhQ5xfnLCuPl03iXI+pec7KfKuE8XUR2i+w2wSSye+cJDilAHFGu2HJiJn+g?=
- =?us-ascii?Q?reN4YmVYsUqy1DY5kz5elNfeW6qN8YBHAH0FBL/Eo8BIrDE6HgWhGKroTBLd?=
- =?us-ascii?Q?PZZcTNFTxTjMc/nRuwn9n/p+CsS1Wu1AzguK+IQBsEZE/p2vIrM9lEwR/8Qv?=
- =?us-ascii?Q?JrPJbRoj5zmTLldITqNkwae09Y2VGOOckHjzDO+U5la3bG0LnqSsbLdqHMx9?=
- =?us-ascii?Q?vwDT2bqz+xrLyUcv5uHE5yIoAZKrsr1QCogz+uOODwja2o3J6yYBKi9w02jN?=
- =?us-ascii?Q?NY0QnzNSWzFyO38dhiwwjbDC6GYLQcsYw0otRloJteJ+rqKJxuOAljAIiovn?=
- =?us-ascii?Q?j+4L/rhIfJiGnDZWlg0MdZ51OreddihXcUEH9EEItrqviMTBpK8E1hQYy1V8?=
- =?us-ascii?Q?lnFKKD/MJdGjAw8qX0Dh708Ul2iY/qkrSvSxSh1OvzYLvZWG9exYTgeA48LV?=
- =?us-ascii?Q?niiJDqn6gtNZsWcEBd81eZomD4nNA8c0DH7FnhZXB3egt5RkK5gtJ1uJ8U6Y?=
- =?us-ascii?Q?ykynSKlBTOAUPH2uB5+EmOq9ZRvz7QxNRWC6D2yRlTFw9PNcyWqRro99zvBO?=
- =?us-ascii?Q?LMUAl3m6A0V+epREKWsMIr9Ds/og4kFzPuuzSX0hDxUQp/aQYW8boLl2ErRQ?=
- =?us-ascii?Q?mFngmHIzk81XjO0vI8wi2YXtwPLXTsa/uhdnhP3MVg5eM3N9n43DmShwi2CK?=
- =?us-ascii?Q?G+C5INsH8NZvhI5kqw9+xpGC6ZU5?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2024 09:34:49.0143
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96854e65-4c18-4f04-7d6b-08dc7e3040d1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003F63.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5911
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2dfc6273-6cdd-f4f5-bed9-400873ac9152@suse.cz>
 
-Remove unused address/size-cells properties without defining child.
++cc Linus
 
-Signed-off-by: Michal Simek <michal.simek@amd.com>
----
+On Thu, Oct 07, 2021 at 05:32:52PM +0200, Vlastimil Babka wrote:
+> On 10/5/21 17:31, Jens Axboe wrote:
+> > Allocations can be a very hot path, and this out-of-line function
+> > call is noticeable.
+> > 
+> > Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+> It used to be inline b4 (hi, Konstantin!) and then was converted to be like
+> this intentionally :/
+> 
+> See 4f6923fbb352 ("mm: make should_failslab always available for fault
+> injection")
+> 
+> And now also kernel/bpf/verifier.c contains:
+> BTF_ID(func, should_failslab)
+> 
+> I think either your or Andrew's version will break this BTF_ID thing, at the
+> very least.
+> 
+> But I do strongly agree that putting unconditionally a non-inline call into
+> slab allocator fastpath sucks. Can we make it so that bpf can only do these
+> overrides when CONFIG_FAILSLAB is enabled?
+> I don't know, perhaps putting this BTF_ID() in #ifdef as well, or providing
+> a dummy that is always available (so that nothing breaks), but doesn't
+> actually affect slab_pre_alloc_hook() unless CONFIG_FAILSLAB has been enabled?
+> 
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+I just ran into it while looking at kmalloc + kfree pair.
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 27adead77220..a121afb8231c 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -1146,8 +1146,6 @@ ams_pl: ams-pl@400 {
- 				compatible = "xlnx,zynqmp-ams-pl";
- 				status = "disabled";
- 				reg = <0x400 0x400>;
--				#address-cells = <1>;
--				#size-cells = <0>;
- 			};
- 		};
- 
--- 
-2.40.1
+A toy test which calls this in a loop like so:
+static long noinline custom_bench(void)
+{
+        void *buf;
 
+        while (!signal_pending(current)) {
+                buf = kmalloc(16, GFP_KERNEL);
+                kfree(buf);
+                cond_resched();
+        }
+
+        return -EINTR;
+}
+
+... shows this with perf top:
+   57.88%  [kernel]           [k] kfree
+   31.38%  [kernel]           [k] kmalloc_trace_noprof
+    3.20%  [kernel]           [k] should_failslab.constprop.0
+
+A side note is that I verified majority of the time in kfree and
+kmalloc_trace_noprof is cmpxchg16b, which is both good and bad news.
+
+As for should_failslab, it compiles to an empty func on production
+kernels and is present even when there are no supported means of
+instrumenting it. As in everyone pays for its existence, even if there
+is no way to use it.
+
+Also note there are 3 unrelated mechanisms to alter the return code,
+which imo is 2 too many. But more importantly they are not even
+coordinated.
+
+A hard requirement for a long term solution is to not alter the fast
+path beyond nops for hot patching.
+
+So far I think implementing this in a clean manner would require
+agreeing on some namespace for bpf ("failprobes"?) and coordinating
+hotpatching between different mechanisms. Maybe there is a better, I
+don't know.
+
+Here is the crux of my e-mail though:
+1. turning should_failslab into a mandatory func call is an ok local
+   hack for the test farm, not a viable approach for production
+2. as such it is up to the original submitter (or whoever else
+   who wants to pick up the slack) to implement something which
+   hotpatches the callsite as opposed to inducing a function call for
+   everyone
+
+In the meantime the routine should disappear unless explicitly included
+in kernel config. The patch submitted here would be one way to do it.
