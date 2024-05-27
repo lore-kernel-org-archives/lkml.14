@@ -1,150 +1,165 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E004163A97
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D2B16ABE2;
+	Mon, 27 May 2024 14:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716819309; cv=none; b=epwiv6CIsRPb8ELoO2f/4wbnp6cogSPsLOl15ZyUgicRx9ej+a0znKxKN9NzHvmSO4Fvo3RTvW1EjswxHKQ0WoN52fQ7P/BTfLrnctwYSdhKBINn4hzT88MkqaqFWkrJ9YqhtAgFwF0XLJyzDWhKUALlYc9Go25JfFUP0HLkJWI=
+	t=1716819313; cv=none; b=ohKBJO39l11d7indVSwGnvG+ydasfEp+y8twMsXLqpZDSh4DQX4+OJMFdk7kRSHvIBfPIRLKnQ1eL9dcypl5P//6q/0aje6DsFN9Pt2KjKQapZvJwHmS4NSfaY/MC2CndqsQZJ6R0V/fyqOY42RZVKOQDrherKFntHH76gHdYHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716819309; c=relaxed/simple;
-	bh=z4n3mZWA/a7cnUz8UErNnCGa/NYYJfT1fQxIgQIa0q4=;
+	s=arc-20240116; t=1716819313; c=relaxed/simple;
+	bh=x3V+F4/2QeO/JDxzdGbicGzEx4qIlmPs3Ym+NTYFZQE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a49XOEtpWnYrCSGphOqTnGqMvOpPghzw9+ZsGndygqCCO9OWYotkGaKcSjb3koxbuhMtDxk2Kl5w170cqoKgt3AAJHh1cUl8i4phaknkD0xXpZax/ma0dlTJWVQAkpmHpEM/WG3zktD8YLoeTkkG+PehNfqlnXcnDkSC6BpY6to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BaxaNOqm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=PfHT+VMwPJHYnsBYXWULhu/9CBjLqMQvyyTVFvh6qtOQa//JP2c0nCg/aRvoKfvishvjZULm4p0CKBQ3XajcB/Uw1N77Ay8RSDEoJMM8Mqpggm6yxl6KTuVQe/gbxOOz3olEJWHgiOmcr5H0an5FPqE8xc34YaPvXxND35yaSls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5YUqmag; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BaxaNOqm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716819307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fI7k3N6P8qJ4FuS4bDw6lNsnGteHRLAJN+b2iNRt+tE=;
-	b=BaxaNOqmFo4OQwCw2NeWbk9DVC18uQoXni/tWetHd254iaayZ7RoZI62L8okNMoRjUyt0S
-	DR8nqaKRUWFudK3n7sKN1QzTrXVog5W1O+WFCqw4nDDixreKf1cQ93mEYQJWuj0Vtsydc6
-	1uvHW1u9I0Uq30pOk5etSu79NSs3tug=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-550-kXZuQwgiNe2ZxgXhztVTPw-1; Mon, 27 May 2024 10:15:03 -0400
-X-MC-Unique: kXZuQwgiNe2ZxgXhztVTPw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CA8BD8029E1;
-	Mon, 27 May 2024 14:15:02 +0000 (UTC)
-Received: from t490s.redhat.com (unknown [10.39.192.209])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0613A1C0654B;
-	Mon, 27 May 2024 14:15:00 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Subject: [PATCH v1 1/6] mm: update _mapcount and page_type documentation
-Date: Mon, 27 May 2024 16:14:49 +0200
-Message-ID: <20240527141454.113132-2-david@redhat.com>
-In-Reply-To: <20240527141454.113132-1-david@redhat.com>
-References: <20240527141454.113132-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5YUqmag"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA81CC4AF0E;
+	Mon, 27 May 2024 14:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716819313;
+	bh=x3V+F4/2QeO/JDxzdGbicGzEx4qIlmPs3Ym+NTYFZQE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=U5YUqmagyv8rkxCexM5pGFE0R4IkMnPY2rRplIw96kGYv05UBlfKdykAQ3inwOF4w
+	 UelSnxV/TPWWVXNxFs5nfmVhW0nKT7otSg3I+Pd0Fy85o8TzXi7aZvdaiDQV40OXHk
+	 SG8BVFwERSieBjJooBJaqVB/iTGFL0lVjPWYhwYwDfai+Kz4pF3+NDB2nMelu5ckUZ
+	 dPtTwnIN949iKJ4q78TfFqUlP2YulR3sPwRj5M0/i5NAmXVt+Q8dU2vvTfMiKikbYI
+	 oE0AMOh9tHyQNTgyI/oqLIYAdJBLvMrYfVj2Swve+rw28K/69PwIBXR5pjk5OvcklA
+	 k5anqUVDdzwaQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Leon Yen <leon.yen@mediatek.com>,
+	Ming Yen Hsieh <MingYen.Hsieh@mediatek.com>,
+	Felix Fietkau <nbd@nbd.name>,
+	Sasha Levin <sashal@kernel.org>,
+	lorenzo@kernel.org,
+	ryder.lee@mediatek.com,
+	kvalo@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	deren.wu@mediatek.com,
+	horms@kernel.org,
+	kernel@mattwhitlock.name,
+	wang.zhao@mediatek.com,
+	linux-wireless@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.8 23/30] wifi: mt76: mt7921s: fix potential hung tasks during chip recovery
+Date: Mon, 27 May 2024 10:13:32 -0400
+Message-ID: <20240527141406.3852821-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240527141406.3852821-1-sashal@kernel.org>
+References: <20240527141406.3852821-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.11
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Let's make it clearer that _mapcount must no longer be used for own
-purposes, and how _mapcount and page_type behaves nowadays (also in the
-context of hugetlb folios, which are typed folios that will be mapped
-to user space).
+From: Leon Yen <leon.yen@mediatek.com>
 
-Move the documentation regarding "-1" over from page_mapcount_reset(),
-which we will remove next. Move "page_type" before "mapcount", to make
-it clearer what typed folios are.
+[ Upstream commit ecf0b2b8a37c8464186620bef37812a117ff6366 ]
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
+During chip recovery (e.g. chip reset), there is a possible situation that
+kernel worker reset_work is holding the lock and waiting for kernel thread
+stat_worker to be parked, while stat_worker is waiting for the release of
+the same lock.
+It causes a deadlock resulting in the dumping of hung tasks messages and
+possible rebooting of the device.
+
+This patch prevents the execution of stat_worker during the chip recovery.
+
+Signed-off-by: Leon Yen <leon.yen@mediatek.com>
+Signed-off-by: Ming Yen Hsieh <MingYen.Hsieh@mediatek.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h       |  5 -----
- include/linux/mm_types.h | 28 +++++++++++++++++-----------
- 2 files changed, 17 insertions(+), 16 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7921/mac.c      | 2 ++
+ drivers/net/wireless/mediatek/mt76/mt7921/pci_mac.c  | 2 --
+ drivers/net/wireless/mediatek/mt76/mt7921/sdio_mac.c | 2 --
+ drivers/net/wireless/mediatek/mt76/sdio.c            | 3 ++-
+ 4 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 9849dfda44d4..018e7c0265ca 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1206,11 +1206,6 @@ static inline int folio_entire_mapcount(const struct folio *folio)
- 	return atomic_read(&folio->_entire_mapcount) + 1;
- }
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/mac.c b/drivers/net/wireless/mediatek/mt76/mt7921/mac.c
+index 867e14f6b93a0..73e42ef429837 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/mac.c
+@@ -663,6 +663,7 @@ void mt7921_mac_reset_work(struct work_struct *work)
+ 	int i, ret;
  
--/*
-- * The atomic page->_mapcount, starts from -1: so that transitions
-- * both from it and to it can be tracked, using atomic_inc_and_test
-- * and atomic_add_negative(-1).
-- */
- static inline void page_mapcount_reset(struct page *page)
- {
- 	atomic_set(&(page)->_mapcount, -1);
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 24323c7d0bd4..6b2aeba792c4 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -46,9 +46,7 @@ struct mem_cgroup;
-  * which is guaranteed to be aligned.  If you use the same storage as
-  * page->mapping, you must restore it to NULL before freeing the page.
-  *
-- * If your page will not be mapped to userspace, you can also use the four
-- * bytes in the mapcount union, but you must call page_mapcount_reset()
-- * before freeing it.
-+ * The mapcount field must not be used for own purposes.
-  *
-  * If you want to use the refcount field, it must be used in such a way
-  * that other CPUs temporarily incrementing and then decrementing the
-@@ -152,18 +150,26 @@ struct page {
+ 	dev_dbg(dev->mt76.dev, "chip reset\n");
++	set_bit(MT76_RESET, &dev->mphy.state);
+ 	dev->hw_full_reset = true;
+ 	ieee80211_stop_queues(hw);
  
- 	union {		/* This union is 4 bytes in size. */
- 		/*
--		 * If the page can be mapped to userspace, encodes the number
--		 * of times this page is referenced by a page table.
-+		 * For head pages of typed folios, the value stored here
-+		 * allows for determining what this page is used for. The
-+		 * tail pages of typed folios will not store a type
-+		 * (mapcount == -1).
-+		 *
-+		 * See page-flags.h for a list of page types which are currently
-+		 * stored here.
- 		 */
--		atomic_t _mapcount;
-+		unsigned int page_type;
+@@ -691,6 +692,7 @@ void mt7921_mac_reset_work(struct work_struct *work)
+ 	}
  
- 		/*
--		 * If the page is neither PageSlab nor mappable to userspace,
--		 * the value stored here may help determine what this page
--		 * is used for.  See page-flags.h for a list of page types
--		 * which are currently stored here.
-+		 * For pages that are part of non-typed folios for which mappings
-+		 * are tracked via the RMAP, encodes the number of times this page
-+		 * is directly referenced by a page table.
-+		 *
-+		 * Note that the mapcount is always initialized to -1, so that
-+		 * transitions both from it and to it can be tracked, using
-+		 * atomic_inc_and_test() and atomic_add_negative(-1).
- 		 */
--		unsigned int page_type;
-+		atomic_t _mapcount;
- 	};
+ 	dev->hw_full_reset = false;
++	clear_bit(MT76_RESET, &dev->mphy.state);
+ 	pm->suspended = false;
+ 	ieee80211_wake_queues(hw);
+ 	ieee80211_iterate_active_interfaces(hw,
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/pci_mac.c b/drivers/net/wireless/mediatek/mt76/mt7921/pci_mac.c
+index c866144ff0613..031ba9aaa4e2f 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/pci_mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/pci_mac.c
+@@ -64,7 +64,6 @@ int mt7921e_mac_reset(struct mt792x_dev *dev)
+ 	mt76_wr(dev, dev->irq_map->host_irq_enable, 0);
+ 	mt76_wr(dev, MT_PCIE_MAC_INT_ENABLE, 0x0);
  
- 	/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
+-	set_bit(MT76_RESET, &dev->mphy.state);
+ 	set_bit(MT76_MCU_RESET, &dev->mphy.state);
+ 	wake_up(&dev->mt76.mcu.wait);
+ 	skb_queue_purge(&dev->mt76.mcu.res_q);
+@@ -115,7 +114,6 @@ int mt7921e_mac_reset(struct mt792x_dev *dev)
+ 
+ 	err = __mt7921_start(&dev->phy);
+ out:
+-	clear_bit(MT76_RESET, &dev->mphy.state);
+ 
+ 	local_bh_disable();
+ 	napi_enable(&dev->mt76.tx_napi);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/sdio_mac.c b/drivers/net/wireless/mediatek/mt76/mt7921/sdio_mac.c
+index 389eb0903807e..1f77cf71ca701 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/sdio_mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/sdio_mac.c
+@@ -98,7 +98,6 @@ int mt7921s_mac_reset(struct mt792x_dev *dev)
+ 	mt76_connac_free_pending_tx_skbs(&dev->pm, NULL);
+ 	mt76_txq_schedule_all(&dev->mphy);
+ 	mt76_worker_disable(&dev->mt76.tx_worker);
+-	set_bit(MT76_RESET, &dev->mphy.state);
+ 	set_bit(MT76_MCU_RESET, &dev->mphy.state);
+ 	wake_up(&dev->mt76.mcu.wait);
+ 	skb_queue_purge(&dev->mt76.mcu.res_q);
+@@ -135,7 +134,6 @@ int mt7921s_mac_reset(struct mt792x_dev *dev)
+ 
+ 	err = __mt7921_start(&dev->phy);
+ out:
+-	clear_bit(MT76_RESET, &dev->mphy.state);
+ 
+ 	mt76_worker_enable(&dev->mt76.tx_worker);
+ 
+diff --git a/drivers/net/wireless/mediatek/mt76/sdio.c b/drivers/net/wireless/mediatek/mt76/sdio.c
+index 3e88798df0178..a4ed00eebc483 100644
+--- a/drivers/net/wireless/mediatek/mt76/sdio.c
++++ b/drivers/net/wireless/mediatek/mt76/sdio.c
+@@ -499,7 +499,8 @@ static void mt76s_tx_status_data(struct mt76_worker *worker)
+ 	dev = container_of(sdio, struct mt76_dev, sdio);
+ 
+ 	while (true) {
+-		if (test_bit(MT76_REMOVED, &dev->phy.state))
++		if (test_bit(MT76_RESET, &dev->phy.state) ||
++		    test_bit(MT76_REMOVED, &dev->phy.state))
+ 			break;
+ 
+ 		if (!dev->drv->tx_status_data(dev, &update))
 -- 
-2.45.1
+2.43.0
 
