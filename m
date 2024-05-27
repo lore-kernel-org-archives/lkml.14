@@ -1,35 +1,35 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F34615EFD7;
-	Mon, 27 May 2024 12:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8880A15DBDD;
+	Mon, 27 May 2024 12:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716812348; cv=none; b=tnX/ySyyqf2dxd4ra1RJPXA+5uNIa8jgwgrhlGgdTXYYe/vLXRWbbsSsRn0AwrY4um1W5ev0PbGTN8krt9oCFJZZQjEOAv4zzmrl8KKWcGz5LHZmQRlvZtHViyUXGmnSPaNIUDkL/FCTn576TujCHvvRE9g6779rhBp+BEHOmhE=
+	t=1716812350; cv=none; b=Kg5ZekjI9QAT35i+2dAnJuhzfw65h0+UD0UGv1BqAcbbZ04/Y5YSgeaShoq9huLmZGrWh7J60yJO4s9MmBJDUFwxd9kF1Pq6vJB/DEP5q5HVX5Ig7Owq5wB7Uuy/m2SeR5A0GvtVXZUkrZT7CLGeNAhO6CZlSbeHv8t96dlITkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716812348; c=relaxed/simple;
-	bh=aJi9kEQuVivnoyDxTdlWp/ywSq1Sd13uw2LRfy4vUv8=;
+	s=arc-20240116; t=1716812350; c=relaxed/simple;
+	bh=5G2XQeKlbaBhjT2RsAL0QgWuhM7y5OA4zXW32p+VlFM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kxONG4IaTrDbV902LEQC/nzR1Z8wVjgpoLbvrJVxtHYTvTqOTubEIPUoQk4WhpnBJH9U3y3ffh7SKnCVtUeOhUZAH2XB5BvmLq4O5wX45lEIhg5FN1intR8vDYkPn+FUp7/4QVPNU2HUvJREDAr4HbhGuvNhhXFE+vGh9rzqmOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bTnKYUeJ; arc=none smtp.client-ip=217.70.183.201
+	 MIME-Version; b=WoA75zrBh0oyc1iTMyo7bDjsc51qzw1jvK+VidnJh+jryL5vJ1rRE7ZTqYLC/bis8fez4PjS/5pb1hA4xK5in0fQK2IZxPOtjoD4UOWWTPoR0VaxqHO+4mZLGOnwYjlKzbvOecAx78SG8VljMebooPUX2FC/Isblnc/BSQVB1H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=chXcKfC1; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bTnKYUeJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 41DAD1BF206;
-	Mon, 27 May 2024 12:18:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="chXcKfC1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 18FB8C0008;
+	Mon, 27 May 2024 12:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716812339;
+	t=1716812347;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=H6dIIUfmUc8NO0pZNfG5eRyXQNvs/FWO1RLC4XodFVw=;
-	b=bTnKYUeJvoYRvmmPBzaCq35Th5ZcUumDCLdE9crX1ZR1o+bgNKbq/2CzR11AFbJvlbcgdm
-	MGxCR5SkzP7VnAypaGPl1udU7UaUifdomsSBGDn1cq8Mufx7XRAFeA07vW5WiLeouZoPrK
-	DVNCWBqkJAtKex4IBdV+on+xvpmVWLWwDZbFz+H2mXIpFs+tg4O2eo+vnF0XUXAlisLuCn
-	G9vqp5YMTQhY9uWPp762N9BDVdiVDJ5WzpTQCKP/hfwBdwaYE1DGi84DoXAAF0D/Gy6jh1
-	prbL8hAmFxy5b4+l6rh4QOn3nn+e+TiUtOQgLw3ySZjJrw77pWV+uhrppcEY5w==
+	bh=BHNpEdPAzLabYPq0SKzj1VaD6s28qVaQXn92xL+zHtk=;
+	b=chXcKfC1F14nrThICBClXHAqo6TG3TKiMQu4Vp82sTG/R/e4KEhWbct2POcDlWTucShJdO
+	XovJzQzhSTsGTSEKM+O6EI+9fPO0+VuYKcB3DA43S493y2Ld1bg9j6Z6utpafbIci0XAcf
+	tfa2c9qewL2WHxqnCL+m+wmwKncTLjVBqIQxy9+6qvr/EQEuxbKOjdmJTF+3EbzON7wM+I
+	YZ52a2NBYviI2lFZo8w7ACY4RbslMXqG6nSu0ND7p9lv8b+b5zTTg1b8Hf4ow4DHhzMPgd
+	6/LFhFf9kR0C3HHBnLvZNZoef1tQOho4HWMoHIumRh1VoinHtbX+DYhJ5gSEpQ==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 To: Arseniy Krasnov <avkrasnov@salutedevices.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -49,11 +49,11 @@ Cc: linux-mtd@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	oxffffaa@gmail.com,
 	kernel@sberdevices.ru
-Subject: Re: [PATCH v6 3/3] mtd: rawnand: meson: read/write access for boot ROM pages
-Date: Mon, 27 May 2024 14:18:57 +0200
-Message-Id: <20240527121857.178627-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: mtd: amlogic,meson-nand: support fields for boot ROM code
+Date: Mon, 27 May 2024 14:19:05 +0200
+Message-Id: <20240527121905.178683-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240507230903.3399594-4-avkrasnov@salutedevices.com>
+In-Reply-To: <20240507230903.3399594-2-avkrasnov@salutedevices.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -62,24 +62,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'04a81b4f9ba1a473af7715168306c23ca4e15a25'
+X-linux-mtd-patch-commit: b'4e976b1521ca5e19fc2c0ba2bae0b97877ad0ef4'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Tue, 2024-05-07 at 23:09:03 UTC, Arseniy Krasnov wrote:
-> Boot ROM on Meson needs some pages to be read/written in a special mode:
-> 384 byte ECC mode (so called "short" by Amlogic) and with scrambling
-> enabled. Such pages are located on the chip in the following way (for
-> example):
+On Tue, 2024-05-07 at 23:09:01 UTC, Arseniy Krasnov wrote:
+> Boot ROM code on Meson requires that some pages on NAND must be written
+> in special mode: "short" ECC mode where each block is 384 bytes and
+> scrambling mode is on. Such pages are located on the chip in the
+> following way (for example):
 > 
 > [ p0 ][ p1 ][ p2 ][ p3 ][ p4 ][ p5 ][ p6 ][ p7 ] ... [ pN ]
 >   ^           ^           ^           ^
 > 
 > pX is page number "X". "^" means "special" page used by boot ROM - e.g.
-> every 2nd page in the range of [0, 7]. Step (2 here) and last page in
-> range is read from the device tree.
+> every 2nd page in the range of [0, 7]. Step (2 in example is set by
+> 'amlogic,boot-page-step' field. Last page in range (7 in example) is
+> set by 'amlogic,boot-pages' field.
 > 
 > Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
