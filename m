@@ -1,134 +1,211 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476A746453;
-	Mon, 27 May 2024 08:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA3F46453;
+	Mon, 27 May 2024 08:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716798337; cv=none; b=t2bfgipkj9We5dscdwQO8ywsfCNbF+JDeQ4oAKCDfFjLTwW2CwyZBePZUWldvOikxFuQoJ4s3J311a1/NqiYCOv6zsN6Kfn/n3N6JW3TTwq+KBtuO4kRrdUfrXCYHlQl9DQPRrrlSB1zBBs9UdV8XkNhBmb/+8ZR9QRLhGOA+P8=
+	t=1716798370; cv=none; b=Ofr2WzH79a1XCSoA2d7ySMyO/fe5I0SsNHDAYTq6YcSn87rVgpc793COYNONPj5Zc+b96jU350l6zIihZtAvdwi3aX564gRQrXel6zr9Ji5Adsi+LnY8duOVVmQCMalcCKqTTjb6/R67gunqGLdtIod1oV6gfZOlUNrLH+pJwSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716798337; c=relaxed/simple;
-	bh=Bn2vs455rOM+Jl5xxl3oCGu3ebgM2zxGmcs3r52XYYc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JSHVW599kvvsB3biJ52m7BkK9Gf11NCB3lCzLY6UoOgt9g1BobiaENonfF2ERG7J6Yy/ttP4hxEQs9Z9mlicMjNqHm3y5rbVBiRMQH9qQhJvw2gy0u/OXCRr+R4oEqCCW2VrC0rBmijgOh+ZtAUddX9MkWwZ5N/mCPnzzVUhMBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=KEDL/IVA; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1716798370; c=relaxed/simple;
+	bh=qKVJ5s6tWF0rGf4IxoXicoBveQ0KxjUtwLHMAXcDThg=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VmIudyFYXIi7xnDNw7vCI48GfJBDEh89OA3xWYCzfpDhpbfruqRudZHp5w1WWaZJg6o1foQhI34tuAxQyZrG1EjqqoXR/P6vnM0YyT8sPgZh1FtTwRkITfn9i9Awt8dkzeMVNJwjKViOjAkp5st3qQvFQ2Scc9HO+C5C/xzRGo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HY8r+DF9; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="KEDL/IVA"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44QMsgXK002040;
-	Mon, 27 May 2024 09:45:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	5MlVXLL0h6fGrepjEUKqMT+GSQ1qSjrne66KbCMAXKE=; b=KEDL/IVAUCy42ZKP
-	+HzNbTV8UT63/1WBgbgLqijzZm0mRX1RLz1JU8SPEEUN06rNTV/ArtLOOVWpaI+I
-	15Y+Owrei7MLgXqT8pNtvpLqBc1qfwyHhI8jEJbQSFnXJzt+AFOGzUIswrnziaZ9
-	xjbD9MR8aS76SK0HWEsJ9EAOOvyELXUbXQeByY7+f1Hb2pRM5IviNMSX+cA/HcOC
-	sWRhRc2aTW4yg0Zr6L9KuR4aGzEqnAG1rJue3s38laiPSiGyCBtJ2BWZ6ovYmEf+
-	x/pnCU21suyPQi9Vp2ia8BPKcvo0eMGl0wwwoaw6gAtiufYS3yoUybeqTxVPvbCx
-	l5IuHg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yba51nn38-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 May 2024 09:45:03 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 442B84002D;
-	Mon, 27 May 2024 09:44:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 67915211975;
-	Mon, 27 May 2024 09:44:16 +0200 (CEST)
-Received: from [10.130.72.241] (10.130.72.241) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 27 May
- 2024 09:44:15 +0200
-Message-ID: <864dc1d3-2478-46a2-84a5-c7c51f96268f@foss.st.com>
-Date: Mon, 27 May 2024 09:44:15 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HY8r+DF9"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44R8PL1l048596;
+	Mon, 27 May 2024 03:25:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716798321;
+	bh=l8y8XUgX/zJirmS7nB2QP3/faPTAkS4T0rfRSJa68oY=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date;
+	b=HY8r+DF9x9Tu61I/vYT0P0NVuBFfnCX8SJOA4ks68AEnZc6DLdPh8uXY1hvgajcC3
+	 U9cpAj9njT9lqm13GWpeRloxLwEhig0xlXEUKVfAKUlu0ZBYcAEHvTNKbhmG/gfgjH
+	 QdTsTgiTX6L/KkXEh2FhJpfAvdXv13qTiEALp++E=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44R8PLoi100743
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 27 May 2024 03:25:21 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 27
+ May 2024 03:25:21 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 27 May 2024 03:25:21 -0500
+Received: from localhost (kamlesh.dhcp.ti.com [172.24.227.123])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44R8PKoI017949;
+	Mon, 27 May 2024 03:25:21 -0500
+From: Kamlesh Gurudasani <kamlesh@ti.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Catalin Marinas
+	<catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [EXTERNAL] Re: [PATCH v2 3/6] dt-bindings: crypto: Add Texas
+ Instruments MCRC64
+In-Reply-To: <20230811-imminent-fancied-89663c373ab5@spud>
+References: <20230719-mcrc-upstream-v2-0-4152b987e4c2@ti.com>
+ <20230719-mcrc-upstream-v2-3-4152b987e4c2@ti.com>
+ <20230811-crestless-gratify-21c9bb422375@spud>
+ <20230811-imminent-fancied-89663c373ab5@spud>
+Date: Mon, 27 May 2024 13:55:19 +0530
+Message-ID: <87plt7acgg.fsf@kamlesh.i-did-not-set--mail-host-address--so-tickle-me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] media: i2c: Add driver for ST VD56G3 camera sensor
-To: Sakari Ailus <sakari.ailus@iki.fi>
-CC: Sylvain Petinot <sylvain.petinot@foss.st.com>, <mchehab@kernel.org>,
-        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hdegoede@redhat.com>, <laurent.pinchart@ideasonboard.com>
-References: <20240417133453.17406-1-sylvain.petinot@foss.st.com>
- <20240417133453.17406-3-sylvain.petinot@foss.st.com>
- <Zil1wiCcCdwZs5Df@valkosipuli.retiisi.eu>
- <d45a2ea1-bc2d-441a-b036-1da40290c6b3@foss.st.com>
- <c9b35dc4-6f52-48e2-8952-5a43c500f819@foss.st.com>
- <ZlQ2zymJguCipLMl@valkosipuli.retiisi.eu>
-Content-Language: en-US
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <ZlQ2zymJguCipLMl@valkosipuli.retiisi.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-26_09,2024-05-24_01,2024-05-17_01
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Sakari,
+Conor Dooley <conor@kernel.org> writes:
 
-On 5/27/24 09:31, Sakari Ailus wrote:
-> Hi Benjamin,
-> 
-> On Mon, May 13, 2024 at 03:37:25PM +0200, Benjamin Mugnier wrote:
->>>>> +static int vd56g3_read_expo_cluster(struct vd56g3 *sensor, bool force_cur_val)
->>>>> +{
->>>>> +	u64 exposure = 0;
->>>>> +	u64 again = 0;
->>>>> +	u64 dgain = 0;
->>>>
->>>> Do you need the assignments? The values are assigned by cci_read() below,
->>>> right?
->>>
->>> Well initially, I didn't have those assignments and some checker
->>> complains (Honestly I didn't investigate the warning).
->>> I will double check and see if they are necessary.
->>>
->>
->> Since I have smatch ready, I ran it without these initialization against
->> the latest media tree. I got these :
->>
->> drivers/media/i2c/st-vd56g3.c:403 vd56g3_read_expo_cluster() error:
->> uninitialized symbol 'exposure'.
->> drivers/media/i2c/st-vd56g3.c:404 vd56g3_read_expo_cluster() error:
->> uninitialized symbol 'again'.
->> drivers/media/i2c/st-vd56g3.c:405 vd56g3_read_expo_cluster() error:
->> uninitialized symbol 'dgain'.
->> drivers/media/i2c/st-vd56g3.c:407 vd56g3_read_expo_cluster() error:
->> uninitialized symbol 'exposure'.
->> drivers/media/i2c/st-vd56g3.c:408 vd56g3_read_expo_cluster() error:
->> uninitialized symbol 'again'.
->> drivers/media/i2c/st-vd56g3.c:409 vd56g3_read_expo_cluster() error:
->> uninitialized symbol 'dgain'.
->>
->> cci_read() is indeed not modifying its 'var' argument in the default
->> case of the switch [1]. Spawning these errors.
->> Adding a '*val = 0' in the default case would also fix it, but will
->> change the function behavior.
-> 
-> I think I'd add the assignment to cci_read(). This isn't the only driver
-> that's affected. In the best case smatch would be fixed to figure this out.
-> 
-> Any thoughts?
+> On Fri, Aug 11, 2023 at 04:34:33PM +0100, Conor Dooley wrote:
+>> On Fri, Aug 11, 2023 at 12:58:50AM +0530, Kamlesh Gurudasani wrote:
+>> > Add binding for Texas Instruments MCRC64
+>> > 
+>> > MCRC64 engine calculates 64-bit cyclic redundancy checks (CRC)
+>> > according to the ISO 3309 standard.
+>> > 
+>> > The ISO 3309 64-bit CRC model parameters are as follows:
+>> >     Generator Polynomial: x^64 + x^4 + x^3 + x + 1
+>> >     Polynomial Value: 0x000000000000001B
+>> >     Initial value: 0x0000000000000000
+>> >     Reflected Input: False
+>> >     Reflected Output: False
+>> >     Xor Final: 0x0000000000000000
+>> > 
+>> > Signed-off-by: Kamlesh Gurudasani <kamlesh@ti.com>
+>> > ---
+>> >  Documentation/devicetree/bindings/crypto/ti,mcrc64.yaml | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+>> >  MAINTAINERS                                             |  5 +++++
+>> >  2 files changed, 52 insertions(+)
+>> > 
+>> > diff --git a/Documentation/devicetree/bindings/crypto/ti,mcrc64.yaml b/Documentation/devicetree/bindings/crypto/ti,mcrc64.yaml
+>> > new file mode 100644
+>> > index 000000000000..38bc7efebd68
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/crypto/ti,mcrc64.yaml
+>> > @@ -0,0 +1,47 @@
+>> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> > +%YAML 1.2
+>> > +---
+>> > +$id: http://devicetree.org/schemas/crypto/ti,mcrc64.yaml#
+>> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> > +
+>> > +title: Texas Instruments MCRC64
+>> > +
+>> > +description: The MCRC64 engine calculates 64-bit cyclic redundancy checks
+>> 
+>> A newline after "description" please.
+>> 
+>> > +  (CRC) according to the ISO 3309 standard.
+>> > +
+>> > +maintainers:
+>> > +  - Kamlesh Gurudasani <kamlesh@ti.com>
+>> > +
+>> > +properties:
+>> > +  compatible:
+>> > +    const: ti,am62-mcrc64
+>> 
+>> Is the am62 an SoC or a family of SoCs? I googled a wee bit for am62 &
+>> there seems to be an am625 and an am623?
+>
+> Or is it an am62p5, in which case the compatible should contain
+> ti,am62p5 I suppose. Sorry for my confusion here, its not really clear
+> me too since I've been seeing many different-but-similar product names
+> the last few days.
+>
+> Thanks,
+> Conor.
+>
+Hi Conor,
 
-IMHO adding the assignment to cci_read() is the cleanest way to handle it.
+Thanks for the review.
 
-> 
-> Cc also Hans and Laurent.
-> 
+am62 is family of SOCs.
 
--- 
-Regards,
+All devices under this family, like am623/5/p5 and etc, have MCRC64.
 
-Benjamin
+I have kept the naming convention similar to SA2UL/SA3UL[0].
+
+[0] https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml#L18
+
+Kamlesh
+
+>> 
+>> Otherwise, this looks good to me.
+>> 
+>> > +
+>> > +  reg:
+>> > +    maxItems: 1
+>> > +
+>> > +  clocks:
+>> > +    maxItems: 1
+>> > +
+>> > +  power-domains:
+>> > +    maxItems: 1
+>> > +
+>> > +required:
+>> > +  - compatible
+>> > +  - reg
+>> > +  - clocks
+>> > +  - power-domains
+>> > +
+>> > +additionalProperties: false
+>> > +
+>> > +examples:
+>> > +  - |
+>> > +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>> > +
+>> > +    crc@30300000 {
+>> > +      compatible = "ti,am62-mcrc64";
+>> > +      reg = <0x30300000 0x1000>;
+>> > +      clocks = <&k3_clks 116 0>;
+>> > +      power-domains = <&k3_pds 116 TI_SCI_PD_EXCLUSIVE>;
+>> > +    };
+>> > +
+>> > +...
+>> > diff --git a/MAINTAINERS b/MAINTAINERS
+>> > index 02a3192195af..66b51f43d196 100644
+>> > --- a/MAINTAINERS
+>> > +++ b/MAINTAINERS
+>> > @@ -21481,6 +21481,11 @@ S:	Maintained
+>> >  F:	Documentation/devicetree/bindings/iio/adc/ti,lmp92064.yaml
+>> >  F:	drivers/iio/adc/ti-lmp92064.c
+>> >  
+>> > +TI MEMORY CYCLIC REDUNDANCY CHECK (MCRC64) DRIVER
+>> > +M:	Kamlesh Gurudasani <kamlesh@ti.com>
+>> > +S:	Maintained
+>> > +F:	Documentation/devicetree/bindings/crypto/ti,mcrc64.yaml
+>> > +
+>> >  TI PCM3060 ASoC CODEC DRIVER
+>> >  M:	Kirill Marinushkin <kmarinushkin@birdec.com>
+>> >  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+>> > 
+>> > -- 
+>> > 2.34.1
+>> > 
