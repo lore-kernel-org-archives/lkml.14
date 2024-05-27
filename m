@@ -1,153 +1,116 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63CB13A868;
-	Mon, 27 May 2024 09:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5633413A3E5
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 09:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716803193; cv=none; b=Gqnb+bRg4HB+/0VgHgbVF6RkB58Pu/Xx6nT1DFWYcN4thS7NumNpB4AAzJIVsxIF6Yr2xEjjDAjLSh/VLn0eqP1vTWoP9PUCH9Ai19zuse2Xim0ccNm8N4NtKGoXNTrq9qiTcVtBPrj6Mq49r4yI4KMafIFzuS4Y5LtpuWjKUek=
+	t=1716803245; cv=none; b=aLHCwFtowMRkL24JkG1PckMxpxQKVTlqoOK9PEuxXiWW7iCd00lno7bLpo3d3ZG+Db28LzgEZOhkUDoO5eWtlRD9E4D+LM6oeQHIj1uYysOkys+lLsU2tv/Va70ijQJoMth9vzmfe9gAZvwi0AKK0JpASaclYwQT9iNeMCQmcTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716803193; c=relaxed/simple;
-	bh=0J7Goas7XfaqrjeDmO5xbFVdnXoNnA0rtt90fCBrbeE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NQ8Boc2qv/2dW/3P8P05JAFa6I8GUoTRTCdgWdBjugFG4Xe6UVcjtkFv/ivhrhiEzKdRkx/gYWhHQxv8A48LHSC1XzJ2z4DmYMzZNdQ/1HLgLhnN4693M4j3yNogbqp470IrLtIY70m8rUaP/y+twf5Tp/08ouZG/XW3xC9cKYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HeujMHhK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DdcUi/st; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HeujMHhK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DdcUi/st; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1716803245; c=relaxed/simple;
+	bh=mogT9CSK+Vk/ExDHgD2Bj+5ISdL3rSJDhZAR+YNxGEg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IuOD22XGFINLn9R2mPZ/i9fB9doI/+ggg0nwDAxgMEBf/UoeswaqUIsFc/Q0gew/nrp7bL8LSLTimFgEwP1z84JDUstzSqCDlv6amE5rTLSfMDpBav0tPgpftJrzBh01phO92zPPCl6MHyTSMXD2mQlmy+6DQ6+avHw5Na6tCmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LivJDHPu; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HeujMHhK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DdcUi/st";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HeujMHhK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DdcUi/st"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C498621DB1;
-	Mon, 27 May 2024 09:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716803189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KEUi4RnVMGp2yzXFYg94XEmXhdXc3uYod367qTqvHLo=;
-	b=HeujMHhKEh9k7Wq0LmbWESKvLSF0TDTZ5zNjby8npHd/FTS5/G8/SITXFFZm+NxFtKFBbY
-	CEGxz1TTMquajfB3TzkRBIjL0hn9l625MeziS7nm5XY6m+Rtf2g0X5wz7CsJegPeHhrKjA
-	R3hpLjtvCQksAlaadSCZIKUCIrZpqlk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716803189;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KEUi4RnVMGp2yzXFYg94XEmXhdXc3uYod367qTqvHLo=;
-	b=DdcUi/stZ6t5oll9CD1/ztqfZB4JkNGXBp9c9bZ0jUrXjp8G4Q281stfFE5E3vwAqeNs6T
-	XLw5HGCwodaepECQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=HeujMHhK;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="DdcUi/st"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716803189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KEUi4RnVMGp2yzXFYg94XEmXhdXc3uYod367qTqvHLo=;
-	b=HeujMHhKEh9k7Wq0LmbWESKvLSF0TDTZ5zNjby8npHd/FTS5/G8/SITXFFZm+NxFtKFBbY
-	CEGxz1TTMquajfB3TzkRBIjL0hn9l625MeziS7nm5XY6m+Rtf2g0X5wz7CsJegPeHhrKjA
-	R3hpLjtvCQksAlaadSCZIKUCIrZpqlk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716803189;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KEUi4RnVMGp2yzXFYg94XEmXhdXc3uYod367qTqvHLo=;
-	b=DdcUi/stZ6t5oll9CD1/ztqfZB4JkNGXBp9c9bZ0jUrXjp8G4Q281stfFE5E3vwAqeNs6T
-	XLw5HGCwodaepECQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4717E13A6B;
-	Mon, 27 May 2024 09:46:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jC6MDXVWVGa7NQAAD6G6ig
-	(envelope-from <clopez@suse.de>); Mon, 27 May 2024 09:46:29 +0000
-From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
-To: linux-trace-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	linux-kernel@vger.kernel.org (open list:TRACING)
-Subject: [PATCH v2] tracing/probes: fix error check in parse_btf_field()
-Date: Mon, 27 May 2024 11:43:52 +0200
-Message-Id: <20240527094351.15687-1-clopez@suse.de>
-X-Mailer: git-send-email 2.35.3
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LivJDHPu"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-681ad26f277so2220693a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 02:47:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716803243; x=1717408043; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=50caWXAQ+sC+cT9R3qngK0AJe0BNtDYXixsKN4qP8Dc=;
+        b=LivJDHPuPJoBcfee9TkkAmqa0wF+xzjlwdh57bg4Vurb/s9P9QUGC2mAqbSOLTN7Vg
+         8V2XNygVo95gKTMzm8QH5n4GK+EwG8N6D/jxkKmsmNyNfdhqzcdUDAmWajmYWqi3/8kX
+         Iw4i7fSuL4hURjdW9Cz0/h1J8I7KPvicNwOhM5SCVjQw/fLfvaJf0k32T2O20muZyPTS
+         t42xlsC8RFL6Zr+8Zaa26gLrr0Wq2KZkgMoN6HNpxSiNJ/e+ZFCBuSOzPTil8lNsmle7
+         6C1Obs106cGoGBqiT4EOvomQFFNx2V9qwm5hlOqrSDUHJnpPHvCqJ6WN91CYlTdQo7oh
+         kZsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716803243; x=1717408043;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=50caWXAQ+sC+cT9R3qngK0AJe0BNtDYXixsKN4qP8Dc=;
+        b=eCMTyEMhZtQcQp156xXjZ3NBENoMqtMkHMaZnFngojP0xkn7aXT4q0C26WkH5gEqsq
+         XgYMBCfBujKDFqRTRYKzNE1LvE719TcwwIEi9MhLCSDozVGwfdA9xRAlHm2I0dfvUjXa
+         NCiV3CG0NsGNrq1f/TbB+IhHWuN4KgEykv2k/JvRL+uqx2BTstRz9yKy1bKjdZ22AROq
+         7D60D0hpomUdIfR2KW2TCV2gRZE+nogTOgdKF4IBQImknamPB/qTywmyeF0ZySdJ6zoi
+         fVKK/Ps2xlRXNNgkCT/Wvk9ITeuNHDVLkSawORMfyCimq0fvK2xw5qelCrza9zGpZDKf
+         CbPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzkQpSOazKad/z8yB27gRe17zWZvs6Lr2jn9QBQTgigI8lq5L/vqI5KNj4Fo4r6CD1yVKGF4KgpgpeZTU957IX02GK8sWa5+XKW51b
+X-Gm-Message-State: AOJu0YxK4qKfpKdIFJKqk9qSotfYD/CeS8LTINVUexxQxqUgn0VsojQx
+	TO0iWrhYnsRGT9qc/qsjXaVLyr4wiOnpUpGB4imevVte37rVwG8Y
+X-Google-Smtp-Source: AGHT+IEDc4LAFSKqNq5l9LzfWWsnC59oJ3ZllKmfg3ST/QQZBYyxM+DacHLuQWZE3lQ4rKv/W1CerQ==
+X-Received: by 2002:a05:6a20:72a8:b0:1b1:c745:5c66 with SMTP id adf61e73a8af0-1b212e64d95mr11249287637.54.1716803242578;
+        Mon, 27 May 2024 02:47:22 -0700 (PDT)
+Received: from paran-QEMU-Virtual-Machine.. ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c7d1b39sm56788195ad.116.2024.05.27.02.47.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 02:47:22 -0700 (PDT)
+From: yskelg@gmail.com
+To: "Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
+Cc: skhan@linuxfoundation.org,
+	Austin Kim <austindh.kim@gmail.com>,
+	shjy180909@gmail.com,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	Yunseong Kim <yskelg@gmail.com>
+Subject: [PATCH v2] tools/virtio: creating pipe assertion in vringh_test
+Date: Mon, 27 May 2024 18:46:05 +0900
+Message-Id: <20240527094603.23481-1-yskelg@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.58 / 50.00];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	BAYES_HAM(-1.07)[87.92%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: C498621DB1
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -3.58
 
-btf_find_struct_member() might return NULL or an error via the
-ERR_PTR() macro. However, its caller in parse_btf_field() only checks
-for the NULL condition. Fix this by using IS_ERR() and returning the
-error up the stack.
+From: Yunseong Kim <yskelg@gmail.com>
 
-Fixes: c440adfbe3025 ("tracing/probes: Support BTF based data structure field access")
-Signed-off-by: Carlos López <clopez@suse.de>
+The parallel_test() function in vringh_test needs to verify
+the creation of the guest/host pipe.
+
+Signed-off-by: Yunseong Kim <yskelg@gmail.com>
 ---
-v2: added call to trace_probe_log_err()
+ tools/virtio/vringh_test.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
- kernel/trace/trace_probe.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 5e263c141574..39877c80d6cb 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -554,6 +554,10 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 			anon_offs = 0;
- 			field = btf_find_struct_member(ctx->btf, type, fieldname,
- 						       &anon_offs);
-+			if (IS_ERR(field)) {
-+				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-+				return PTR_ERR(field);
-+			}
- 			if (!field) {
- 				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
- 				return -ENOENT;
+diff --git a/tools/virtio/vringh_test.c b/tools/virtio/vringh_test.c
+index 98ff808d6f0c..43d3a6aa1dcf 100644
+--- a/tools/virtio/vringh_test.c
++++ b/tools/virtio/vringh_test.c
+@@ -139,7 +139,7 @@ static int parallel_test(u64 features,
+ 			 bool fast_vringh)
+ {
+ 	void *host_map, *guest_map;
+-	int fd, mapsize, to_guest[2], to_host[2];
++	int pipe_ret, fd, mapsize, to_guest[2], to_host[2];
+ 	unsigned long xfers = 0, notifies = 0, receives = 0;
+ 	unsigned int first_cpu, last_cpu;
+ 	cpu_set_t cpu_set;
+@@ -161,8 +161,11 @@ static int parallel_test(u64 features,
+ 	host_map = mmap(NULL, mapsize, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+ 	guest_map = mmap(NULL, mapsize, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+ 
+-	pipe(to_guest);
+-	pipe(to_host);
++	pipe_ret = pipe(to_guest);
++	assert(!pipe_ret);
++
++	pipe_ret = pipe(to_host);
++	assert(!pipe_ret);
+ 
+ 	CPU_ZERO(&cpu_set);
+ 	find_cpus(&first_cpu, &last_cpu);
 -- 
-2.35.3
+2.34.1
 
