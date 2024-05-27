@@ -1,151 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2931A1E4AE;
-	Mon, 27 May 2024 14:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60E21E4AE
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716821301; cv=none; b=UAYHbdf3WUVplJhSjEXdYcDyNXiI2WU0ectlcK2Y5jIGAAQH8kLZ9CdeG8H8EbG4neMYPRTGkm6Ttu4WvaaSwCMtouUt/hvcyExxWiO01OZyKO7oF047sRAGGvKDH9rkQ9sN/dCvaZoNW0L+64XFy8lbaUz0ssByvHpRvxSxGPs=
+	t=1716821310; cv=none; b=mCWOtKBvZg1gEtUyKw2M05gfTdwCnsgBdizbNu0XbWBwmvp8gr2iJMcFDZyV5Q6i5Is4xUBpDaN6wVO3i+mj3vH1SFzRnfuu95MOWFsheaoxaLcf9m2QXebpAGhdNn8XdW9XbZ2uMMsUCJ8bAGmkZU6vWc17spiIfa51iEIXFX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716821301; c=relaxed/simple;
-	bh=V01owRMSGbHKVTfD/05++xO+/+N+LoOPgcGpNbPVVTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BKfaPpPW4NDtFR/8XLBFF5xDOeXyoSu7TAVoHtMWoqcopFK47fzdQNoOaNJ3R2JbbBr05HDIUZYii+HyEzaNHQiW7y4gLmJurqUMNRElicTSdcaafRBU0qPJan/sKZw/KeRIsuc+qTSCU/PpTtvvLpBlW86rYuF3giGVQl+IM+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COcSfU0w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716821310; c=relaxed/simple;
+	bh=uj43s2e84B4Rcv5RpTl0jnL36Z8SyJB0IzOcAUJN2bI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aCpmqeUgsM/tqs/ySoHQhntkZSljqLbrrqbyTDAQIBVieMy02AmsHhBqENE9gdX6Ctmq5OqsyHEw9qQERzLA3wS6Cg9/Yn8SXLoicuz9xfMX6eHI+Q+DOEMHw7AZ53i8ok81PoN2hMediVpKgLpmPwJXHCOlCAqwS61ZphkFUGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=OzmpSxYr; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COcSfU0w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17364C2BBFC;
-	Mon, 27 May 2024 14:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716821300;
-	bh=V01owRMSGbHKVTfD/05++xO+/+N+LoOPgcGpNbPVVTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=COcSfU0wu1MRgfsDFXMqtR4Gahr2SqsY3lxNNeXrvEIq3GlRtsxzqaG5tLRBBpHWj
-	 Bo0J4dRcZs//G4h2noQvrZKXaqP4owbjGTM9pZER3OnoCmJMbYBbgEUbn4n6oLtsdi
-	 K/d88HKg5eDPLWNCRcJ/DrGFAICok23Q7kWQuI+5U1ayjbzcT7rpjBDdWa/FQM3cF3
-	 lCH1vwUt+nAQphuLfb9nPdumapheDlJni74l1Zh83n2Mtw6eADzb/xE8fCvCi7hGAi
-	 ctcQSMqkHZ9EXBxM7HulLGkEOY6nqBBW7GArUUBWtWcnF6dVhm2mGCz+jXy3abgzj0
-	 k5OeKNU2ulGeQ==
-Date: Mon, 27 May 2024 16:48:16 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Peter Hutterer <peter.hutterer@who-t.net>, jikos@kernel.org, linux-input@vger.kernel.org, 
-	bpf@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.15 12/13] HID: bpf: add in-tree HID-BPF fix for
- the HP Elite Presenter Mouse
-Message-ID: <xvr4s4reolzlvydw4yzxkw5cyooyk6sodszs2qpzgq3q2jrbrn@gwegbjuuowh7>
-References: <20240527141819.3854376-1-sashal@kernel.org>
- <20240527141819.3854376-12-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="OzmpSxYr"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44RDG0i5001861;
+	Mon, 27 May 2024 16:48:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=selector1; bh=rL2QO5fqYq8aWV0+X6jIyD/0
+	k7VSEFkrOE4rijDK4CA=; b=OzmpSxYrcWTxfNjZrYt9Gv0IfFFekU+WpP1fpO05
+	JCtgZSsKQ/8EoMudgOeWme/ThFyuOMarNGx7hsRYxxZ0eCigEzCnBu+SRARhiCHW
+	VtuUUmQ0h3DJ0t1J9VVsHjK2hXIIt4FumSsNynyWqWcoMVz1sDJvxM3bVlAa0h98
+	TIDS/1w8ixIEqXp23nXoc5cJqg7qP2jlwZ6O6s/vnJlK9P0vnO8YcSAlH6ta1s1d
+	rVZavJKLYP/IXS63IZKuIkhLiXZppwK1IqNPuvS30eutapHF1TecyRuC0jM/fuxt
+	3jdkVvlxCc3EMEDYLRS1co0nIabFf/9UdWcbwZdzAjI45A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yba51qe63-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 May 2024 16:48:07 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 18F1D40048;
+	Mon, 27 May 2024 16:48:04 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6AD9B223F0A;
+	Mon, 27 May 2024 16:47:26 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.129.178.213) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 27 May
+ 2024 16:47:26 +0200
+Date: Mon, 27 May 2024 16:47:24 +0200
+From: Alain Volmat <alain.volmat@foss.st.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/6] drm/sti: hqvdp: drop driver owner assignment
+Message-ID: <20240527144724.GD713992@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240330203831.87003-1-krzysztof.kozlowski@linaro.org>
+ <20240330205722.93801-1-krzysztof.kozlowski@linaro.org>
+ <20240330205722.93801-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240527141819.3854376-12-sashal@kernel.org>
+In-Reply-To: <20240330205722.93801-2-krzysztof.kozlowski@linaro.org>
+X-Disclaimer: ce message est personnel / this message is private
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-27_04,2024-05-24_01,2024-05-17_01
 
-On May 27 2024, Sasha Levin wrote:
-> From: Benjamin Tissoires <bentiss@kernel.org>
+Hi Krzysztof,
+
+thanks for your patch, sorry for the delay.
+
+On Sat, Mar 30, 2024 at 09:57:22PM +0100, Krzysztof Kozlowski wrote:
+> Core in platform_driver_register() already sets the .owner, so driver
+> does not need to.  Whatever is set here will be anyway overwritten by
+> main driver calling platform_driver_register().
 > 
-> [ Upstream commit 4e6d2a297dd5be26ad409b7a05b20bd033d1c95e ]
-> 
-> Duplicate of commit 0db117359e47 ("HID: add quirk for 03f0:464a HP Elite
-> Presenter Mouse"), but in a slightly better way.
-> 
-> This time we actually change the application collection, making clearer
-> for userspace what the second mouse is.
-> 
-> Note that having both hid-quirks fix and this HID-BPF fix is not a
-> problem at all.
-
-Please drop this patch in all backports (and FWIW, any fix in drivers/hid/bpf/progs/).
-
-HID-BPF is only available since kernel v6.3, and the compilation output
-of the in-tree file is not used directly, but shipped from udev-hid-bpf.
-
-TL;DR: this just adds noise to those stable kernel trees.
-
-Cheers,
-Benjamin
-
-
-> 
-> Link: https://lore.kernel.org/r/20240410-bpf_sources-v1-4-a8bf16033ef8@kernel.org
-> Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
-> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  .../hid/bpf/progs/HP__Elite-Presenter.bpf.c   | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 drivers/hid/bpf/progs/HP__Elite-Presenter.bpf.c
+>  drivers/gpu/drm/sti/sti_hqvdp.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/hid/bpf/progs/HP__Elite-Presenter.bpf.c b/drivers/hid/bpf/progs/HP__Elite-Presenter.bpf.c
-> new file mode 100644
-> index 0000000000000..3d14bbb6f2762
-> --- /dev/null
-> +++ b/drivers/hid/bpf/progs/HP__Elite-Presenter.bpf.c
-> @@ -0,0 +1,58 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright (c) 2023 Benjamin Tissoires
-> + */
-> +
-> +#include "vmlinux.h"
-> +#include "hid_bpf.h"
-> +#include "hid_bpf_helpers.h"
-> +#include <bpf/bpf_tracing.h>
-> +
-> +#define VID_HP 0x03F0
-> +#define PID_ELITE_PRESENTER 0x464A
-> +
-> +HID_BPF_CONFIG(
-> +	HID_DEVICE(BUS_BLUETOOTH, HID_GROUP_GENERIC, VID_HP, PID_ELITE_PRESENTER)
-> +);
-> +
-> +/*
-> + * Already fixed as of commit 0db117359e47 ("HID: add quirk for 03f0:464a
-> + * HP Elite Presenter Mouse") in the kernel, but this is a slightly better
-> + * fix.
-> + *
-> + * The HP Elite Presenter Mouse HID Record Descriptor shows
-> + * two mice (Report ID 0x1 and 0x2), one keypad (Report ID 0x5),
-> + * two Consumer Controls (Report IDs 0x6 and 0x3).
-> + * Prior to these fixes it registers one mouse, one keypad
-> + * and one Consumer Control, and it was usable only as a
-> + * digital laser pointer (one of the two mouses).
-> + * We replace the second mouse collection with a pointer collection,
-> + * allowing to use the device both as a mouse and a digital laser
-> + * pointer.
-> + */
-> +
-> +SEC("fmod_ret/hid_bpf_rdesc_fixup")
-> +int BPF_PROG(hid_fix_rdesc, struct hid_bpf_ctx *hctx)
-> +{
-> +	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, 4096 /* size */);
-> +
-> +	if (!data)
-> +		return 0; /* EPERM check */
-> +
-> +	/* replace application mouse by application pointer on the second collection */
-> +	if (data[79] == 0x02)
-> +		data[79] = 0x01;
-> +
-> +	return 0;
-> +}
-> +
-> +SEC("syscall")
-> +int probe(struct hid_bpf_probe_args *ctx)
-> +{
-> +	ctx->retval = ctx->rdesc_size != 264;
-> +	if (ctx->retval)
-> +		ctx->retval = -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +char _license[] SEC("license") = "GPL";
+> diff --git a/drivers/gpu/drm/sti/sti_hqvdp.c b/drivers/gpu/drm/sti/sti_hqvdp.c
+> index 0fb48ac044d8..acbf70b95aeb 100644
+> --- a/drivers/gpu/drm/sti/sti_hqvdp.c
+> +++ b/drivers/gpu/drm/sti/sti_hqvdp.c
+> @@ -1414,7 +1414,6 @@ MODULE_DEVICE_TABLE(of, hqvdp_of_match);
+>  struct platform_driver sti_hqvdp_driver = {
+>  	.driver = {
+>  		.name = "sti-hqvdp",
+> -		.owner = THIS_MODULE,
+>  		.of_match_table = hqvdp_of_match,
+>  	},
+>  	.probe = sti_hqvdp_probe,
 > -- 
-> 2.43.0
+> 2.34.1
 > 
+Acked-by: Alain Volmat <alain.volmat@foss.st.com>
+
+Alain
