@@ -1,205 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FE113BC11;
-	Mon, 27 May 2024 11:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE772CCD0
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 11:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716808416; cv=none; b=LlSU5tSP7ekmWicTZUX624gfJKR+AgZ9rYen6XWZr/59WWCZk3WgC38QHXG1+RxhASHDHZ6yNgfdrlrSWcghQoqemobXnto4RxqU+rc+bpXr3O8JE39fD3eV5d3GqJiEg+IbwMb4y3CcRJ1PbrQ5IbzRA/Wgl6Xxv8FAkiPEtYw=
+	t=1716808563; cv=none; b=AyEZFgHkNaBUH+ySsdTEKxMVOZSS6KhGUBWRc+sat87CdGrvyQtYYS0UmldmhNMi9yDJVVIKLV/EOg/1fhm0Z0JXaQC+YKj0dZRVSqvV6UZC8oIVF08XqNd8YQpRv2JL4tLz1tTCmwmrF0t6kjkyv4OLk1A776gm9hrHEGOUBj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716808416; c=relaxed/simple;
-	bh=afdDbhmD9ThP1FKZTIsEe/wj5S44yknEdyXRvW/hwco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohkPDpJC2Rn4Vr+eIdxsc5V2LK4R5+30A0Vggi6uh+xR7K2UltsJ3IzkKIPij6PA91yRp8wqP7MZ2D6lFafgnSUXdC2edkUAKe9smVVSd8liBja2i6ECB7pezGAkKsrj/csvgWtiDRsZMM1GI3WrfW5Xj4D8QNMuUPTUuwEynV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UhffPI/f; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716808563; c=relaxed/simple;
+	bh=Not5pCCjEau8XHdG6uS33ofoZFsQxMHw9AycAg5bheM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k4J3gAWEiZ1dYxoAHG53jeoF8jt1CRWx9ItqotllnMi+ilNEL1QE5tx7dvJ5EP0WVJyueNPM3FEKq1AbBj34JYZBARcagZSj/mrqqXgfCBbAz11RlPHnwLB8vjmccNGZ3Y1eL/Mn97OGBzO+FkeKkBdxps+ckwDuLO3jnM0UyXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Bk3cmtNh; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UhffPI/f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716808415; x=1748344415;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=afdDbhmD9ThP1FKZTIsEe/wj5S44yknEdyXRvW/hwco=;
-  b=UhffPI/fa0ytd3xp/4Yg+JTrzCXLBdnFtaii2cMaqq+B0uy/NTOo5tjh
-   2RKlV+1cpb0XCedJ7mRzGUYp9IrPnkgQWcXcR1NwuNl/5QxapngANtTl8
-   PFXxqHzLiyHAPEOmmH7ITVQd+35TW3/uCKTHuh81VadGh8DqdcIFGwonX
-   5/0kb+Q5xDzJtLJi2CYLm25KtRSbqEJnu9Qf7LUKQvoivPoIGSJgEOoQA
-   Vim1RBC3NXY6LXGPaNigAqwTG5Dg6k4Wu8ji9hKq1V3EXZJUQGqGZ3bdh
-   q38jNxS/MAX6anNhVCy2DBuZ26+rFc2/w2XGs1qIz4ZoE31Cs40Vt5P1P
-   A==;
-X-CSE-ConnectionGUID: sKOhbvxISu+GW5VuNg+XLQ==
-X-CSE-MsgGUID: D3S0EL7zSaS25dlmLDxCWA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="16069203"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="16069203"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 04:13:34 -0700
-X-CSE-ConnectionGUID: fwN1LcrQSqe8uHf9/d/h2w==
-X-CSE-MsgGUID: zxrOB3amRoymbBaomYW/Rw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="35219496"
-Received: from oandoniu-mobl3.ger.corp.intel.com (HELO tlindgre-MOBL1) ([10.245.244.124])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 04:13:27 -0700
-Date: Mon, 27 May 2024 14:13:19 +0300
-From: Tony Lindgren <tony.lindgren@linux.intel.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Tony Lindgren <tony@atomide.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Dhruva Gole <d-gole@ti.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v7 1/7] printk: Save console options for
- add_preferred_console_match()
-Message-ID: <ZlRqz2b0ZrtkxScL@tlindgre-MOBL1>
-References: <20240327110021.59793-1-tony@atomide.com>
- <20240327110021.59793-2-tony@atomide.com>
- <ZlC6_Um4P4b-_WQE@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Bk3cmtNh"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-354fb2d8f51so3167096f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 04:16:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1716808560; x=1717413360; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MMexEptPfSGDJVxMIGryhOEGijsTTv6Ro7p77t6MOQQ=;
+        b=Bk3cmtNhvLwktVowtvH22imzMPD8SRv7ZUVHc52G1QbZr+mpa/Z016eBpLKm7TgKgA
+         gGhgnMG1JjwEAXHy5bH4z8OkUjqquICGvwOlzY/0E4pFHgjcI5b0kqvA3oBMlTfL79RQ
+         dlfEP1dM0z7nDq9ST8ZnYYkCG4m/3o5K7r4xubawRr+HHQsOcYjyArDhqRtFmoh200/r
+         EtzWVlejH2jcUpkJVsylgiBadUUR1z9vu4gvTbiaXVi4BD570MVGZAxIHizbrIyWQErD
+         47aX3uDHx/QYSir0GsZSpWjuCioLXLoi6nmkhY6WEY8CnEMQLUJyT7k0ZQfBL9ETyb8V
+         CiQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716808560; x=1717413360;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MMexEptPfSGDJVxMIGryhOEGijsTTv6Ro7p77t6MOQQ=;
+        b=qq7IMK2t2RtCPpkxicbOJti99ZyQ08IAi8+/7LTwQxguwL78NHXqeL4TGp//GYhYVk
+         ewu02rRba2hqAE22La10McmoWFcUkxsGQmcJpphZanb7JXRpEXtrFsQ1SHSRzcfOI2iz
+         B7QIpgZlWQPKEyKnwDbYFLVLC8Yoc1E87Xw5y7cH/KVRDCxZro7/V4BxP0e3+jhoyeAq
+         UW4FTmocojqOcO3+qnW4/OogRqbDSXTf//KT64SvG1w+nPdbmwf/cmY6v9u+gWNcZA2m
+         HSmq4/c1vtGBDYQmBLoNNtLQoG1hH3Z9bwCr0lOzGPeJmhmd7P/OUA8psDi1Wm914xMR
+         TmvQ==
+X-Gm-Message-State: AOJu0Yyqfj+BW2XNLw3tJOSFpDyb3QaRMwPCATm1Nwc+avjpPsD69GDP
+	MwhwLU/m8vAFOzFdBV0BsspY8/tUh0lVdQ+1vd7kblxnejsLQ/SjFmpEOMdOhCw=
+X-Google-Smtp-Source: AGHT+IFA+HZ7ExsGyMuThHmw8iCR8SzRpKmrAB3+4Fk+tDMUdAbjEna62bP/XtsJzFOuNm6uViVNgw==
+X-Received: by 2002:adf:dd89:0:b0:354:c483:a469 with SMTP id ffacd0b85a97d-35526d68f7emr5750607f8f.1.1716808559643;
+        Mon, 27 May 2024 04:15:59 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7315:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7315:7285:c2ff:fedd:7e3a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a090d1bsm8705866f8f.60.2024.05.27.04.15.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 May 2024 04:15:59 -0700 (PDT)
+Message-ID: <b77e5491-77ec-4a4f-8ea9-4842b6923bfa@suse.com>
+Date: Mon, 27 May 2024 14:15:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZlC6_Um4P4b-_WQE@pathway.suse.cz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] x86/syscall: Mark exit[_group] syscall handlers
+ __noreturn
+To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Alexandre Chartre <alexandre.chartre@oracle.com>,
+ Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sean Christopherson <seanjc@google.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Nikolay Borisov <nik.borisov@suse.com>, KP Singh <kpsingh@kernel.org>,
+ Waiman Long <longman@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Ingo Molnar <mingo@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>
+References: <cover.1715059256.git.jpoimboe@kernel.org>
+ <9ad251f6258adde596fb1f4d6826309b9f239ed3.1715059256.git.jpoimboe@kernel.org>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+In-Reply-To: <9ad251f6258adde596fb1f4d6826309b9f239ed3.1715059256.git.jpoimboe@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-On Fri, May 24, 2024 at 06:06:21PM +0200, Petr Mladek wrote:
-> I have finally found time to looks at this again.
 
-Great good to hear.
+On 7.05.24 г. 8:30 ч., Josh Poimboeuf wrote:
+> The direct-call syscall dispatch function doesn't know that the exit()
+> and exit_group() syscall handlers don't return, so the call sites aren't
+> optimized accordingly.
+> 
+> Fix that by marking those exit syscall declarations __noreturn.
+> 
+> Fixes the following warnings:
+> 
+>    vmlinux.o: warning: objtool: x64_sys_call+0x2804: __x64_sys_exit() is missing a __noreturn annotation
+>    vmlinux.o: warning: objtool: ia32_sys_call+0x29b6: __ia32_sys_exit_group() is missing a __noreturn annotation
+> 
+> Fixes: 7390db8aea0d ("x86/bhi: Add support for clearing branch history at syscall entry")
+> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+> Closes: https://lkml.kernel.org/lkml/6dba9b32-db2c-4e6d-9500-7a08852f17a3@paulmck-laptop
+> Tested-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> ---
+>   arch/x86/entry/syscall_32.c            | 10 ++++++----
+>   arch/x86/entry/syscall_64.c            |  9 ++++++---
+>   arch/x86/entry/syscall_x32.c           |  7 +++++--
+>   arch/x86/entry/syscalls/syscall_32.tbl |  6 +++---
+>   arch/x86/entry/syscalls/syscall_64.tbl |  6 +++---
+>   arch/x86/um/sys_call_table_32.c        | 10 ++++++----
+>   arch/x86/um/sys_call_table_64.c        | 11 +++++++----
+>   scripts/syscalltbl.sh                  | 18 ++++++++++++++++--
+>   tools/objtool/noreturns.h              |  4 ++++
+>   9 files changed, 56 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
+> index c2235bae17ef..8cc9950d7104 100644
+> --- a/arch/x86/entry/syscall_32.c
+> +++ b/arch/x86/entry/syscall_32.c
+> @@ -14,9 +14,12 @@
+>   #endif
+>   
+>   #define __SYSCALL(nr, sym) extern long __ia32_##sym(const struct pt_regs *);
+> -
+> +#define __SYSCALL_NORETURN(nr, sym) extern long __noreturn __ia32_##sym(const struct pt_regs *);
+>   #include <asm/syscalls_32.h>
+> -#undef __SYSCALL
+> +#undef  __SYSCALL
+> +
+> +#undef  __SYSCALL_NORETURN
+> +#define __SYSCALL_NORETURN __SYSCALL
+>   
+>   /*
+>    * The sys_call_table[] is no longer used for system calls, but
+> @@ -28,11 +31,10 @@
+>   const sys_call_ptr_t sys_call_table[] = {
+>   #include <asm/syscalls_32.h>
+>   };
+> -#undef __SYSCALL
+> +#undef  __SYSCALL
 
-> First, about breaking the preferred console:
-> 
-> The patchset still causes the regression with /dev/console association
-> as already reported for v3, see
-> https://lore.kernel.org/r/ZWnvc6-LnXdjOQLY@alley
+nit: Am I blind or all the __SYSCALL lines have an extra whitespace?
 
-Thanks and sorry for missing this issue. I thought I had this issue
-already handled, but looking at what I tested with earlier, looks like
-I had the console options the wrong way around.
- 
-> I used the following kernel command line:
-> 
->    earlycon=uart8250,io,0x3f8,115200 console=ttyS0,115200 console=tty0 ignore_loglevel log_buf_len=1M
-> 
-> The patchset caused that /dev/console became associated with
-> ttyS0 instead of tty0, see the "C" flag:
-> 
-> 	original # cat /proc/consoles
-> 	tty0                 -WU (EC    )    4:1
-> 	ttyS0                -W- (E  p a)    4:64
-> 
->    vs.
-> 
-> 	patched # cat /proc/consoles
-> 	ttyS0                -W- (EC p a)    4:64
-> 	tty0                 -WU (E     )    4:1
-
-OK
-
-> I have added some debugging messages which nicely show the reason.
-> In the original code, __add_preferred_console() is called twice
-> when processing the command line:
-> 
-> [    0.099312] __add_preferred_console[0]: ttyS, 0 (preferrred_console == 0)
-> [    0.099982] __add_preferred_console[1]: tty, 0 (preferrred_console == 1)
-
-OK thanks for tracking down where things go wrong.
-
-> The code thinks that "ttyS0" has been mentioned on the command line
-> once again. And preferred_console is _wrongly_ set back to '0'.
-> 
-> My view:
-> 
-> The delayed __add_preferred_console() is a way to hell.
-> 
-> The preferences are defined by the ordering on the command line.
-> All entries have to be added when the command line options are
-> being proceed to keep the order.
-
-To me it seems we can fix this by keeping track of the console position
-in the kernel command line. I'll send a fix for this to discuss.
-
-> A solution might be to store "devname" separately in
-> struct console_cmdline and allow empty "name". We could
-> implement then a function similar to
-> add_preferred_console_match() which would try to match
-> "devname" and set/update "name", "index" value when matched.
-> 
-> Note that we might also need to add some synchronization
-> if it might be possible to modify struct console_cmdline
-> in parallel.
-
-OK certainly no objection from me if we can make this happen without
-making things more complex :)
- 
-> Second, about the possible duplication:
-> 
-> I might get it wrong. IMHO, in principle, this patchset tries
-> to achieve similar thing as the "match()" callback, see
-> the commit c7cef0a84912cab3c9 ("console: Add extensible
-> console matching").
-> 
-> The .match() callback in struct console is to match, for example,
-> console=uart8250,io,0x3f8,115200 when the uart8250 driver
-> calls register_console() when it is being properly initialized
-> as "ttyS".
-> 
-> BTW: The .match() needs saved options because it internally calls
->      .setup() callback. IMHO, this is a very ugly detail
->      which complicates design of the register_console() code.
-> 
-> 
-> Both approaches try to match a "driver/device-specific name" with
-> the generic "ttySX".
-> 
->     console=uart8250,io,0x3f8,115200	=> ttyS0
-> vs.
->     console=00:00:0.0,115200		=> ttyS0
-> 
-> 
-> Where console=uart8250,io,0x3f8,115200 is handled by:
-> 
->     - "uart" is added to console_cmdline[]
->     - matched directly via newcon->match() callback
-> 
-> vs. console=00:00:0.0,115200
-> 
->     - 00:00:0.0 is added to conopt[]
->     - "ttyS0" added to console_cmdline[] when "00:00:0.0" initialized
->     - "ttyS0" is then matched directly
-> 
-> 
-> Question: Would it it be able to use the existing .match() callback
-> 	  also to match the DEVNAME?
-> 
-> 	  Or somehow reuse the approach?
-
-Thanks, I'll take a look if .match(), or some parts related to it, can
-be used.
-
-> 	  Could register_console() know how to generate possible
-> 	  DEVNAME for the given struct console?
-
-I don't think we can make much assumptions about the devices early on,
-and we also have the console index -1 issue.
-
-Regards,
-
-Tony
+<snip>
