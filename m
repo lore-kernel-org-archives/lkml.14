@@ -1,66 +1,104 @@
-Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68E013AA31
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 10:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C40A26AFA;
+	Mon, 27 May 2024 10:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716807058; cv=none; b=NbDXqy0XT67s2QhAwHYuTPBjWuWaoZt9xQGJzEmdApZjwSb2BW+eAWJ7B5ZzJ+iVnUo7GJxo0cIGACKh1UiTs2j9WzKfgsMyau9TLnUtqBowi1yMRNaIhsiQt923muESCmNTkEHoQnYsZqR9LUEVgoSh/dUAGiR3oCJYef+qnjU=
+	t=1716807154; cv=none; b=ek6Kq/rH9rwTRphxxZQo+dcqpbaeXonJNGCS0i6BUcOU9DpOx64bHgfo0FecLMYuOOajDBnkm8BfPzf+S/7W6OmYQROTPRamm4vkJyKVPVNWulYcgF1niTPM9mlNCCA3PNeWMzW5396WxlF8xvQYAkeQ5OEUE6sLwwGmNQOqWiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716807058; c=relaxed/simple;
-	bh=M+5oJJBFymwz7yytBUNL9Ovt9zv5azHe+2mI94Y5ekw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oD1JNRy5yOLAK3lTr937DfE4G1UL1FQ2THpeFONLFtFou1G1b06792Q/psNW/LmCphKtExThY5kqIlIurBhNpxjC59oxK3MpOMTZK8Yi14SetQ3ueN/JqtKDdwEuzWbpNpmN0F6UNyRk83UyR2rEy/WKGTZH1Ef4NXfI3YTg16E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.50.196])
-	by sina.com (172.16.235.24) with ESMTP
-	id 6654644300000507; Mon, 27 May 2024 18:45:25 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 39220745089343
-X-SMAIL-UIID: 5D1534DC5E0A47D2A6A59D59E8846220-20240527-184525-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+2459c1b9fcd39be822b1@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] WARNING in inet_csk_get_port (3)
-Date: Mon, 27 May 2024 18:45:12 +0800
-Message-Id: <20240527104512.2559-1-hdanton@sina.com>
-In-Reply-To: <0000000000005736990617c4fa63@google.com>
-References: 
+	s=arc-20240116; t=1716807154; c=relaxed/simple;
+	bh=5/ZLDV8Iyzas1ubq92DLJv9DNZaEGKWqIJPqjORoDqw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hos3VSMZCVPzPwmTte5yMe2SB+H8D9j1nBZTzF9M7C/aJgTCqcjrEb/EsChkBkQ++L0bMPZzDOp0pVpj12Qjw9Vxp7m9TLee+m5UUFAF4caM2NeHdZfLmM/X2uAfmwq/WdExObsMl2QlGvoaLRUz6oldY6HGHPf5sGWTUUSFmcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOzR9u1W; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOzR9u1W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA37FC32781;
+	Mon, 27 May 2024 10:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716807153;
+	bh=5/ZLDV8Iyzas1ubq92DLJv9DNZaEGKWqIJPqjORoDqw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VOzR9u1WOXecn/8ojc6gcvkP2Bd6HM8IMvEqbJaHEiqz49dAM5MINItVPXATIjclD
+	 USXxeXxl2xsv5eVeY0TpwQi75c2yFw1O9WH/K5BVfNrKHgzox/Wouz+NWN+MnNDZxB
+	 uS4u26frYlKc+sLELcTbiFU0VJNIAkjcC8eawUSYWfAG8Q8gzCJmdc0kJrOfQCLOMT
+	 +eGQSQteZPBUWLPjhQ2+nqmMX68mt0U62ZodmV2WK8pBixKDJHiuhRbPacrshW4cPZ
+	 W/gwb4J+eKhxONVtBRHflqKA1uQg3ZGut4HaGA1gOnit5dPDR28L6JnIw+Uy+ZTq8G
+	 5LMYZhsEc/oMg==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2501408eb85so604fac.0;
+        Mon, 27 May 2024 03:52:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWcUAPWtUHkTNzq9BI5QFFrftvrhvOJv6enfYwHVhpZmzuUYKww1ZudsA5xNIbLCp/RZaEzcZUZD6JZdCd9tOn+yxsf3K2pWlFElgj6Uo3cRRG6bgPJZEU8BWooWHfFcEb82JCw+go0YQ==
+X-Gm-Message-State: AOJu0YyNJoYcvXttNEn1b//TyMF0T4Ff2uk3d4FLxsxsVunHoOMS48Lu
+	6LPQ/vStyyebCSkWIrM0o2IBHtRgYhKCm3s1RaIuMi6E+OZrwUA/yXZuA7w9Bt45UU8oJjLKRiL
+	nyP7qXCdLRF4ampocqUSOlI84+y8=
+X-Google-Smtp-Source: AGHT+IEVgIrphZbV4ggMaDxk7ostdI5gisbGfw3n+55rF2MNOFiQA0javgihIJybPLh+h8YY0KmyaWJbqIj5VsX9EiI=
+X-Received: by 2002:a05:6870:7012:b0:24f:bd2f:28d0 with SMTP id
+ 586e51a60fabf-24fbd311cc0mr7298472fac.0.1716807153145; Mon, 27 May 2024
+ 03:52:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240524094149.189329-1-chunjie.zhu@cloud.com>
+In-Reply-To: <20240524094149.189329-1-chunjie.zhu@cloud.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 27 May 2024 12:52:19 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gcyZM7PZPrKccLhNtNDhHvqrZsgD-+Xx+W9WesD3yhyw@mail.gmail.com>
+Message-ID: <CAJZ5v0gcyZM7PZPrKccLhNtNDhHvqrZsgD-+Xx+W9WesD3yhyw@mail.gmail.com>
+Subject: Re: [PATCH] fix kdump kernel cannot find ACPI RSDP
+To: Chunjie Zhu <chunjie.zhu@cloud.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 06 May 2024 01:37:21 -0700
-> syzbot found the following issue on:
-> 
-> HEAD commit:    977b1ef51866 Merge tag 'block-6.9-20240420' of git://git.k..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11135520980000
+On Fri, May 24, 2024 at 11:43=E2=80=AFAM Chunjie Zhu <chunjie.zhu@cloud.com=
+> wrote:
+>
+> kexec/kdump must pass acpi_rsdp (physical address of ACPI RSDP table) to =
+the
+> crash kernel, especially in EFI case, otherwise, the crash kernel fails t=
+o
+> locate ACPI RSDP table. Consequently, ACPI init runs into error, and APIC
+> mmio read page fault happens, finally crash kernel gets stuck.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  977b1ef51866
+Fair enough.
 
---- x/net/ipv4/inet_connection_sock.c
-+++ y/net/ipv4/inet_connection_sock.c
-@@ -589,7 +589,7 @@ int inet_csk_get_port(struct sock *sk, u
- success:
- 	inet_csk_update_fastreuse(tb, sk);
- 
--	if (!inet_csk(sk)->icsk_bind_hash)
-+	if (tb != inet_csk(sk)->icsk_bind_hash || inet_csk(sk)->icsk_bind2_hash != tb2)
- 		inet_bind_hash(sk, tb, tb2, port);
- 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
- 	WARN_ON(inet_csk(sk)->icsk_bind2_hash != tb2);
---
+So has this ever worked before?  Presumably it has, in which case it
+has regressed and so it would be prudent to say when it broke and why
+and explain why the proposed change is the right one to make.
+
+> Signed-off-by: Chunjie Zhu <chunjie.zhu@cloud.com>
+> ---
+>  drivers/acpi/osl.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+> index f725813d0cce..39474468dba1 100644
+> --- a/drivers/acpi/osl.c
+> +++ b/drivers/acpi/osl.c
+> @@ -174,7 +174,7 @@ void acpi_os_vprintf(const char *fmt, va_list args)
+>  #endif
+>  }
+>
+> -#ifdef CONFIG_KEXEC
+> +#ifdef CONFIG_KEXEC_CORE
+>  static unsigned long acpi_rsdp;
+>  static int __init setup_acpi_rsdp(char *arg)
+>  {
+> @@ -187,7 +187,7 @@ acpi_physical_address __init acpi_os_get_root_pointer=
+(void)
+>  {
+>         acpi_physical_address pa;
+>
+> -#ifdef CONFIG_KEXEC
+> +#ifdef CONFIG_KEXEC_CORE
+>         /*
+>          * We may have been provided with an RSDP on the command line,
+>          * but if a malicious user has done so they may be pointing us
+> --
+> 2.34.1
+>
