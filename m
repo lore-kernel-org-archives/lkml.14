@@ -1,176 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A73717E8EE;
-	Mon, 27 May 2024 15:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A493717E8E2
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716824049; cv=none; b=atqtR8K52oKolUXgJozRgAvMvVOFAyXQIhWtZN4q1siRbe+cyCqiPZZ53oLV5L7jHR74fgVmuPindEmTVesUXOnnpmxvvK+nxp1B0wP5Np2c8zMoEjqpHlIuSCQ24B1LFKTWdz+Pt46H8iAwxifloh11TWsvT+tddPFTNK/g9bU=
+	t=1716824191; cv=none; b=cZrTblb+sTQ/tQJuPOR9KH8ZLElxJK7avnu+9AYJLXMYGY1RYHxxKPq7JPwOXz3HBdfAIA8VqD4fSdVH1OBP6aBiMvFsyNEJnM5WXY7a6Qs5bPU6XTFpr5g0URdjWlKWOxMTHR63YKlwhG6TzoqPvQ+JEIZL+sR/xWUnM5WWH74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716824049; c=relaxed/simple;
-	bh=9Z8aW8EOSlQCc9328Ru+wW9mtQVAXa7pMChCkwHdm2g=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=EpO56oKHj6IIzQx5QhK7iNGW2HbkGdbs7cOL7T/k17Nld/UkEYnjwZoC61plniCYzAvZxEctcqNwfcPABfn2krZRvb7JlJ6W6Bt7BJqBKK7eW3oRRxgl37b1qkgMTWw+aIUrFFLhIy6W2H/be+xD8zlYerAhZAZgsQOE8szufJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9LQcvId; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716824191; c=relaxed/simple;
+	bh=tL9SRFm+QXGfjo5/k/kK7X/HFQKtJRXpCoX7gFPiXKs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b1T9FQBLE5ldCBeal3HJFvhUV+tUp5QOghDtBJSdwaDuzKTVJrwZeEiL+wikLotFdG6d+390r6RWFxanvuiOddlXl2m5cdafwZ/MdstOz/8kxSsuPnAZUIfG1aZQESfaBWzM5A4exEvZSuO64tbQkEmY9lFf8DJRUJafKGpeqsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=F9BvcxNL; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9LQcvId"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA671C4AF07;
-	Mon, 27 May 2024 15:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716824048;
-	bh=9Z8aW8EOSlQCc9328Ru+wW9mtQVAXa7pMChCkwHdm2g=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=S9LQcvIdN654rNWQLGatJnNi//JKdlKhGRJPVr/+1HYI8v8ARsZxMPDM1fBxTR3f/
-	 VZ6MuU65+YbJzLSwbIe/aVoaQu5WkYrYnGSLkwme/ltHVAbkRIK3OevYhoQH2GqAh1
-	 XML8Xdmwvbio+Tzo8HwHkuJ+yMquvXPZCDAFzITBEp7HINM37f98He1lV+sNVihUzQ
-	 /ldhnPm62C2z5eLMHEWhtZFYh6OlF5sUEm5PzSIDzvdQ+ilHUwabk+k4KU2U9cqdFJ
-	 8YMbQ6zisfA3yNkNuuwXzfChnL3ArEhonC2BhGjVYXqoc9M1ETgrx5jO0l6D4XWQ26
-	 n4s/2lShs/Y0g==
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="F9BvcxNL"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f4c043d2f6so35095ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 08:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716824187; x=1717428987; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FGMRKGoSYUA5y3/8ZCfrZ1xp7rqzMx12hKUQWEXXdwY=;
+        b=F9BvcxNLHbFCL5XfHLnGTxQs/kbGpALZnSl2DYjNA/21xx0FBmmySwAJN/5dtkPhZV
+         IwwKjcqRB9pV10OOLL6wHdu5znp/6PE86Vas57cBS/wuAbBw2UZndM8t2ducr7YYWm6Y
+         qK9hMREyXKjeBhZWSjTI2InCbzAtbz3PLAwXmX2LUbmD27CV84Ld62XttJh+nGQRapAs
+         b070pptuUluTj7BrbyTY7tkobVJKFo/9qxvErZHnOMlm8wItNpZuLUNC8RDdtzThAB2N
+         KMJsW+YN/2uWpInjYvnpvDqSoW6Kn8DylQoMu4CqVNrueusLUWYFZNSZk1pdxY03zMc1
+         k2IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716824187; x=1717428987;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FGMRKGoSYUA5y3/8ZCfrZ1xp7rqzMx12hKUQWEXXdwY=;
+        b=CPhMhbHOK9YffoFiKDtV0Khpu+NfyscXGdbauR7ikW2SVhyGiJpw4+uaH2oTdxcQJp
+         8n4PLLZijcpA7uhY6eSngYbNg9W0N8GVCb0k+Es5NqFIDwRGN5hQ53IWyAuavf8MxoPQ
+         gyf/CMAUI2l4mRd6ebTUPSgYTPvl+YPTsWJWI6RVFTvYrWMlXaDm72KLOUADWEQhAvtZ
+         wIQt3RivAEe6aaeIkaFXSlkvu3/TkmFqvry2kOWIMCJuavmmBTFM+6Jm8zt1wOhuvRDX
+         KeT9zlF1L0CSx7G6Eu0CQqpNUPji9HMjieOGHhgPLFFXAc1685CBAslFxHZSSIx3CZi6
+         rypw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMOG1hqfcAj8O+U8OYJhDCzufVhCbdgAbARsyGquOUCPGzb4/qlUWfi1GmEWjyNPXVWjcnOAIwkpkfqK1b0Rr2kWyMri0yOsSYAgLj
+X-Gm-Message-State: AOJu0YzKpYHq7uA5B37LhUsrmqqOlmSrPE30ly9kbznTlXurSaloSBil
+	CUW6yqJdNri6W8/hPsAPPODhw+jVKov//aV6VQLQxPVoTmgOmj9khDGcyWUQ8lk=
+X-Google-Smtp-Source: AGHT+IHTxIPNAK3HsNoC9uItVsCnZCK8MD3ThRKVvVNi4TwdQa2YRFJqyU+MaLPmqStXfF6Dl3dotQ==
+X-Received: by 2002:a17:902:e810:b0:1f2:fd9a:dbf8 with SMTP id d9443c01a7336-1f449907a09mr116945035ad.5.1716824186842;
+        Mon, 27 May 2024 08:36:26 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c970058sm64280955ad.121.2024.05.27.08.36.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 May 2024 08:36:26 -0700 (PDT)
+Message-ID: <c66ca795-da93-437c-bb11-718801f8114a@kernel.dk>
+Date: Mon, 27 May 2024 09:36:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/filemap: invalidating pages is still necessary when io
+ with IOCB_NOWAIT
+To: Liu Wei <liuwei09@cestc.cn>
+Cc: akpm@linux-foundation.org, hch@lst.de, jack@suse.cz,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rgoldwyn@suse.com, willy@infradead.org
+References: <024b9a30-ad3b-4063-b5c8-e6c948ad6b2e@kernel.dk>
+ <20240527100908.49913-1-liuwei09@cestc.cn>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240527100908.49913-1-liuwei09@cestc.cn>
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 27 May 2024 18:34:03 +0300
-Message-Id: <D1KJBXOPFWT7.1F14BWQJO29FC@kernel.org>
-Cc: <keyrings@vger.kernel.org>, "Peter Huewe" <peterhuewe@gmx.de>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, "Mimi Zohar" <zohar@linux.ibm.com>, "David
- Howells" <dhowells@redhat.com>, "Paul Moore" <paul@paul-moore.com>, "James
- Morris" <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- <linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH 1/3] tpm: Disable TCG_TPM2_HMAC by default
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Vitor Soares"
- <ivitro@gmail.com>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, <linux-integrity@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240519235122.3380-1-jarkko@kernel.org>
- <20240519235122.3380-2-jarkko@kernel.org>
- <850862655008f84ef0b6ecd99750e8dc395304d1.camel@gmail.com>
- <D1F4V8NMSUNZ.2VCTEKHZZ0LB@kernel.org>
- <17dc838120b56ce342c34611596c7b46dcd9ab5a.camel@HansenPartnership.com>
- <2dd8d49516ec9c7cb8c1182b5b8537b1e82d7067.camel@gmail.com>
- <17a5dcd7aceb356587ef7c8f45b0f6359b2d2a91.camel@HansenPartnership.com>
- <D1G8HOCIDWTC.2ERVA0CYHLY0B@kernel.org>
- <0c12c9ea10aa97e246230fc33e6b35c571102b48.camel@gmail.com>
- <D1GAZSIOZVWW.2UZBFHASIG21U@kernel.org>
- <3e4bbd0f0fe9f57fd7555a3775e8d71031c0d6c5.camel@gmail.com>
- <D1KIFPNBNGKH.IJKFRXH8WINU@kernel.org>
- <D1KINAE5E2MH.729CM4ABV5VN@kernel.org>
- <D1KIV2Q682XH.1GCPYWMFZ8B6J@kernel.org>
-In-Reply-To: <D1KIV2Q682XH.1GCPYWMFZ8B6J@kernel.org>
+Content-Transfer-Encoding: 7bit
 
-On Mon May 27, 2024 at 6:12 PM EEST, Jarkko Sakkinen wrote:
-> On Mon May 27, 2024 at 6:01 PM EEST, Jarkko Sakkinen wrote:
-> > On Mon May 27, 2024 at 5:51 PM EEST, Jarkko Sakkinen wrote:
-> > > On Thu May 23, 2024 at 10:59 AM EEST, Vitor Soares wrote:
-> > > > On Wed, 2024-05-22 at 19:11 +0300, Jarkko Sakkinen wrote:
-> > > > > On Wed May 22, 2024 at 5:58 PM EEST, Vitor Soares wrote:
-> > > > > > I did run with ftrace, but need some more time to go through it=
-.
-> > > > > >=20
-> > > > > > Here the step I did:
-> > > > > > kernel config:
-> > > > > > =C2=A0 CONFIG_FUNCTION_TRACER
-> > > > > > =C2=A0 CONFIG_FUNCTION_GRAPH_TRACER
-> > > > > >=20
-> > > > > > ftrace:
-> > > > > > =C2=A0 # set filters
-> > > > > > =C2=A0 echo tpm* > set_ftrace_filter
-> > > > > >=20
-> > > > > > =C2=A0 # set tracer
-> > > > > > =C2=A0 echo function_graph > current_tracer
-> > > > > >=20
-> > > > > > =C2=A0 # take the sample
-> > > > > > =C2=A0 echo 1 > tracing_on; time modprobe tpm_tis_spi; echo 0 >=
- tracing_on
-> > > > > >=20
-> > > > > > regards,
-> > > > > > Vitor Soares
-> > > > >=20
-> > > > > I'm now compiling distro kernel (OpenSUSE) for NUC7 with v6.10 co=
-ntents.
-> > > > >=20
-> > > > > After I have that setup, I'll develop a perf test either with per=
-f or
-> > > > > bpftrace. I'll come back with the possible CONFIG_* that should b=
-e in
-> > > > > place in your kernel. Might take up until next week as I have som=
-e
-> > > > > conference stuff to prepare but I try to have stuff ready early n=
-ext
-> > > > > week.
-> > > > >=20
-> > > > > No need to rush with this as long as possible patches go to rc2 o=
-r rc3.
-> > > > > Let's do a proper analysis instead.
-> > > > >=20
-> > > > > In the meantime you could check if you get perf and/or bpftrace t=
-o=20
-> > > > > your image that use to boot up your device. Preferably both but
-> > > > > please inform about this.
-> > > > >=20
-> > > >
-> > > > I already have perf running, for the bpftrace I might not be able t=
-o help.
-> > >
-> > > The interesting function to look at with/without hmac is probably
-> > > tpm2_get_random().
-> > >
-> > > I attached a patch that removes hmac shenigans out of tpm2_get_random=
-()
-> > > for the sake of proper comparative testing.
-> >
-> > Other thing that we need to measure is to split the cost into
-> > two parts:
-> >
-> > 1. Handshake, i.e. setting up and shutdowning a session.
-> > 2. Transaction, payload TPM command.
-> >
-> > This could be done by setting up couple of kprobes_events:
-> >
-> >   payload_event: tpm2_get_random() etc.
-> >   hmac_event: tpm2_start_auth_session(), tpm2_end_auth_session() etc.
-> >
-> > And just summing up the time for a boot to get a cost for hmac.
-> >
-> > I'd use bootconfig for this:
-> >
-> > https://www.kernel.org/doc/html/v6.9/trace/boottime-trace.html
-> >
-> > So I've made up plans how measure the incident but not sure when I
-> > have time to pro-actively work on a benchmark (thus sharing details).
-> >
-> > So I think with just proper bootconfig wtih no other tools uses this
-> > can be measured.
->
->
-> I'll disable this for anything else than X86_64 by default, and put
-> such patch to my next pull request.
->
-> Someone needs to do the perf analysis properly based on the above
-> descriptions. I cannot commit my time to promise them to get the
-> perf regressions fixed by time. I can only commit on limiting the
-> feature ;-)
->
-> It is thus better be conservative and reconsider opt-in post 6.10.
-> X86_64 is safeplay because even in that 2018 NUC7 based on Celeron,
-> hmac is just fine.
+On 5/27/24 4:09 AM, Liu Wei wrote:
+> I am a newer, thanks for the reminder.
+> 
+>>
+>>>> when we issuing AIO with direct I/O and IOCB_NOWAIT on a block device, the
+>>>> process context will not be blocked.
+>>>>
+>>>> However, if the device already has page cache in memory, EAGAIN will be
+>>>> returned. And even when trying to reissue the AIO with direct I/O and
+>>>> IOCB_NOWAIT again, we consistently receive EAGAIN.
+>>
+>> -EAGAIN doesn't mean "just try again and it'll work".
+>>
+>>>> Maybe a better way to deal with it: filemap_fdatawrite_range dirty pages
+>>>> with WB_SYNC_NONE flag, and invalidate_mapping_pages unmapped pages at
+>>>> the same time.
+>>>>
+>>>> Signed-off-by: Liu Wei <liuwei09@cestc.cn>
+>>>> ---
+>>>>  mm/filemap.c | 9 ++++++++-
+>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/filemap.c b/mm/filemap.c
+>>>> index 30de18c4fd28..1852a00caf31 100644
+>>>> --- a/mm/filemap.c
+>>>> +++ b/mm/filemap.c
+>>>> @@ -2697,8 +2697,15 @@ int kiocb_invalidate_pages(struct kiocb *iocb, size_t count)
+>>>>  
+>>>>  	if (iocb->ki_flags & IOCB_NOWAIT) {
+>>>>  		/* we could block if there are any pages in the range */
+>>>> -		if (filemap_range_has_page(mapping, pos, end))
+>>>> +		if (filemap_range_has_page(mapping, pos, end)) {
+>>>> +			if (mapping_needs_writeback(mapping)) {
+>>>> +				__filemap_fdatawrite_range(mapping,
+>>>> +						pos, end, WB_SYNC_NONE);
+>>>> +			}
+>>
+>> I don't think WB_SYNC_NONE tells it not to block, it just says not to
+>> wait for it... So this won't work as-is.
+> 
+> Yes, but I think an asynchronous writex-back is better than simply
+> return EAGAIN. By using __filemap_fdatawrite_range to trigger a
+> writeback, subsequent retries may have a higher chance of success. 
 
-While looking at code I started to wanted what was the reasoning
-for adding *undocumented* "TPM2_OA_TMPL" in include/linux/tpm.h.
-It should really be in tpm2-sessions.c and named something like
-TPM2_NULL_KEY_OA or similar.
+And what's the application supposed to do, just hammer on the same
+IOCB_NOWAIT submission until it then succeeds? The only way this can
+reasonably work for that would be if yo can do:
 
-Obfuscation *on purpose* by definition... Since I see such spots (liked
-e.g. tpm_buf_parameters() to name another instance) sprinkled, I've
-pretty much locked in the decision to limit hmac to x86_64. It is right
-thing to do given not so great maturity level.
+1) Issue IOCB_NOWAIT IO
+2) Get -EAGAIN
+3) Sync kick off writeback, wait for it to be done
+4) Issue IOCB_NOWAIT IO again
+5) Success
 
-Whatever on x86_64 I'm confident we can fix for sure any issue but
-cannot make such analysis on other platforms.
+If you just kick it off, then you'd repeat steps 1..2 ad nauseam until
+it works out, not tenable.
 
-BR, Jarkko
+And this doesn't even include the other point I mentioned, which is
+__filemap_fdatawrite_range() IO issue blocking in the first place.
+
+So no, NAK on this patch.
+
+-- 
+Jens Axboe
+
