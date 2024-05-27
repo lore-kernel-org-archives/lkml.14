@@ -1,101 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7EE15EFAE;
-	Mon, 27 May 2024 14:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A6B15FCF5
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 14:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716821687; cv=none; b=VzCUEHGe5HVKm+VKjlHXY8kprTw1OoBfKeOAw/ozmnGMdnGn4mIdOb4QgXRJ6Yjd7f6zU8UaQ0KOOw1iTX1GWyP0AilUPctPSiNGJFolzjBaazAlg/P7ynX4a2vmGhSIdFfWFLHkbf8Ti108/oSQuCK9HdRobMtu6M3YmEhBr3g=
+	t=1716821701; cv=none; b=QaF2UG59HYQcPWq8eV0PmdZpg0/z++b7ZxHgYjK+ukwZxAZDoeecY2SdmywB4RIezqyak5jQScLPrbcXmbk2P3ZpBwFrpGD2Elq1fIz3Lu+gB+dKliCDGi6HnuAiukBfga6mvwSGNG02lJxR0lhxCfq09mMmnWV0Hzm/If/+8fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716821687; c=relaxed/simple;
-	bh=4xj/rMp795VJ8/WUQaQhFExsGLZLPZOia5IoxkqhSvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N0bEn7n33a3o+lUkn3DSpLHQP0WLASirS2ce0IounSoEip+ZcokJIhulztA2JwRYRVLPCDDfC/V2K6P/M4XfOdgfNv1wJaBovsa8nuPD+NCnpov+jMnox7GjMZ9+JmdurG+tAgPTk5Ly5ivLCiHVruCJiEbEMmrMc0RVywRVCqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oe4kgmTI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716821701; c=relaxed/simple;
+	bh=rxNoykyrgmE+ykXiTgwE+amgfPWMp+eHsqYoLpCLE2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pr30wktYCGmkXQmROAb6rkULv7ycCrywth1d9HX8R6t2/UJBoP8U/r8uiGxdTHQKCiv5EblCJBL5PsPSgTQIVLNJj19/LcHxAuhe/cQpc1x7CyNtqG5z9s7tTyAGbyhLPQUdpc79jH6mk8W2QRkQ8MbV3QB9IUaLCrJi21B1MkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OCyUgVho; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oe4kgmTI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2384C2BBFC;
-	Mon, 27 May 2024 14:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716821687;
-	bh=4xj/rMp795VJ8/WUQaQhFExsGLZLPZOia5IoxkqhSvY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Oe4kgmTIPvDetWrECerAh6AODF0QPzEu8znSjprVX/Qw234hajLABOpEpu7tA11gr
-	 oAkctYszlt1OxW/ILDSrC7IaiH81bc5xbi0mfTMN35fheBO/pUGryGfcU4dFzF66hQ
-	 7+ipQdSi6ipXbIBjFexRuX0U5iDHbRVI4hACoqdqX7/pTg3avV7sfDVRlX21yjY6SY
-	 WWRxSmt3ZC3pW29dSnDGskA/zMWAtgreerkJJ3gvitTOVIEkhDnaYbK4OGYInV3MT3
-	 cYclWCuJK+5fIa7T0KP+RQhHPaJFHRGI0JjJVY8IWv75aMW5QBe4uOIA5ivqX5p8zf
-	 LrEnR58Sn9j2Q==
-Date: Mon, 27 May 2024 16:54:41 +0200
-From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, Eric Woudstra
- <ericwouds@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, "David S
- . Miller" <davem@davemloft.net>, linux@armlinux.org.uk, andrew@lunn.ch,
- hkallweit1@gmail.com, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.9 12/35] net: sfp: add quirk for another
- multigig RollBall transceiver
-Message-ID: <20240527165441.2c5516c9@dellmb>
-In-Reply-To: <20240527141214.3844331-12-sashal@kernel.org>
-References: <20240527141214.3844331-1-sashal@kernel.org>
-	<20240527141214.3844331-12-sashal@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OCyUgVho"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6267639e86so384098866b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 07:54:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1716821698; x=1717426498; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fovS7e3KM/LcT9QtzEodGZIjj0DUcgpQyzljDo7RuCQ=;
+        b=OCyUgVho1XA6FAXmFcs+wNtRcOLtVUWucKghPk15LR2p4EYdFsN6noulKndjQcROiV
+         Msc27HA++C6pCDVCroszTI/XZ1pZoPjgapgCcpcVCAFRiYrinsDCrEoqdBZQJ8rLF8RQ
+         LeOT7PmW2m1QD48nS3lvScyTEj1RKQCu2SdqEFKgbBoHBxX41KfTgevyJ7RQxE91GYyV
+         uLRpaq1y06iTXhl/cUlgW9JcXVd4SDBBacqwM57VWpzGpIh6Lm0TziB8Adkzl0QWHGkF
+         ypPijbd/yNKoaHRFBTCjiWWRKEWDRug8RUU9GDYU1Nw94xLqp/KC3AFUPqAkv52Mfzhm
+         DrfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716821698; x=1717426498;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fovS7e3KM/LcT9QtzEodGZIjj0DUcgpQyzljDo7RuCQ=;
+        b=mnlbiFJgWOQZWFLLqB8UNgaQYAytp+rAGIvw9pe7jlSMv45aKh07rs4u6bpYyXIf3m
+         gASUfNpDR2FMlVIlTO782+NLE+NZP34D3Q+U4h+dA92jPLb4K6cOrWZ4fZi5loRSAsys
+         c9Nv7d6afzoU+SaKLBJIWzHp/ZAm5doZ89vxvLteEGq8J0NbYsSRwfoRTDRoDoCz4h8v
+         ex17ZlYEYCdBxF0zMQx7lh+B2FnsNN9r0UF4TebqHKg3VQNigMGcSZhMgRnaRYqTcjko
+         isFA/x2tqXvLPvUlPWLS4W8hMxAa1/r34r33PQ4Nvae7jkroD1kg9JIWkm1HlUrXVSlY
+         Wj6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW2AeKhEcR0Z9wXzS52iJkrbRbJQOPKDnThN/jvl5jEaDW1mcLvZlllybEhW+e3YT7is9iO8Y74qkAOrTTJFjKdwQs9DWHtmvtpMuir
+X-Gm-Message-State: AOJu0YwVJ6eqAUJ5NqRLxgmkeiIE/DeHlNfs/vtwfEbgTRSOv27LnMHK
+	Q4wSapMTE6HvezqWBQeSTMfVig7nIHPhEJlDdBT+2HxB+iVqtyHQu0G7m3/3cSk=
+X-Google-Smtp-Source: AGHT+IGo3H94dZVgD3Oj0JZFgaCwoWp8yWWSpLeBEfysv4WM0NLTjl+TNS8hNQyVGKq/HRHAP/vAhg==
+X-Received: by 2002:a17:906:7c98:b0:a59:beb2:62cc with SMTP id a640c23a62f3a-a62651469a3mr631672666b.61.1716821698131;
+        Mon, 27 May 2024 07:54:58 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c934fd8sm496587566b.47.2024.05.27.07.54.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 07:54:57 -0700 (PDT)
+Date: Mon, 27 May 2024 16:54:56 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Xiang Gao <gxxa03070307@gmail.com>
+Cc: rostedt@goodmis.org, john.ogness@linutronix.de,
+	senozhatsky@chromium.org, linux-kernel@vger.kernel.org,
+	fengqi@xiaomi.com, xiaoa <gaoxiang19870307@163.com>
+Subject: Re: [PATCH] printk: Increase PRINTK_PREFIX_MAX and the buf size in
+ print_caller.
+Message-ID: <ZlSewPTyQ-jMpW5n@pathway.suse.cz>
+References: <20240527091929.316471-1-gxxa03070307@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527091929.316471-1-gxxa03070307@gmail.com>
 
-Sasha,
+On Mon 2024-05-27 17:19:29, Xiang Gao wrote:
+> Sometimes we need to add our own hooks to carry more caller information
+> to improve debug efficiency, but currently the buf in print caller is
+> too small.
 
-This requires the whole series from which it came:
+> --- a/kernel/printk/internal.h
+> +++ b/kernel/printk/internal.h
+> @@ -23,7 +23,7 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
+>  #ifdef CONFIG_PRINTK
+>  
+>  #ifdef CONFIG_PRINTK_CALLER
+> -#define PRINTK_PREFIX_MAX	48
+> +#define PRINTK_PREFIX_MAX	64
+>  #else
+>  #define PRINTK_PREFIX_MAX	32
+>  #endif
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 420fd310129d..2d7f003113f7 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -1331,7 +1331,7 @@ static size_t print_time(u64 ts, char *buf)
+>  #ifdef CONFIG_PRINTK_CALLER
+>  static size_t print_caller(u32 id, char *buf)
+>  {
+> -	char caller[12];
+> +	char caller[32];
 
-  https://lore.kernel.org/netdev/20240409073016.367771-1-ericwouds@gmail.co=
-m/
+Could you provide more details, please?
+How exactly do you add your own hooks?
 
-It was merged in
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Dc31bd5b6ff6f70f016e66c0617e0b91fd7aafca4
+If you need to modify the code to add the extra info, you could also
+modify the buffer size.
 
-I don't think this can be easily applied to older kernels, the series
-has some dependencies.
+The buffer is big enough for the info printed by the upstream code.
+I do understand why we should do this change upstream.
 
-Marek
+>  	snprintf(caller, sizeof(caller), "%c%u",
+>  		 id & 0x80000000 ? 'C' : 'T', id & ~0x80000000);
 
-On Mon, 27 May 2024 10:11:17 -0400
-Sasha Levin <sashal@kernel.org> wrote:
 
-> From: Marek Beh=C3=BAn <kabel@kernel.org>
->=20
-> [ Upstream commit 1c77c721916ae108c2c5865986735bfe92000908 ]
->=20
-> Add quirk for another RollBall copper transceiver: Turris RTSFP-2.5G,
-> containing 2.5g capable RTL8221B PHY.
->=20
-> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
-> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
->=20
-> Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/net/phy/sfp.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-> index f75c9eb3958ef..6e7639fc64ddc 100644
-> --- a/drivers/net/phy/sfp.c
-> +++ b/drivers/net/phy/sfp.c
-> @@ -506,6 +506,7 @@ static const struct sfp_quirk sfp_quirks[] =3D {
->  	SFP_QUIRK_M("OEM", "SFP-2.5G-T", sfp_quirk_oem_2_5g),
->  	SFP_QUIRK_F("OEM", "RTSFP-10", sfp_fixup_rollball_cc),
->  	SFP_QUIRK_F("OEM", "RTSFP-10G", sfp_fixup_rollball_cc),
-> +	SFP_QUIRK_F("Turris", "RTSFP-2.5G", sfp_fixup_rollball),
->  	SFP_QUIRK_F("Turris", "RTSFP-10", sfp_fixup_rollball),
->  	SFP_QUIRK_F("Turris", "RTSFP-10G", sfp_fixup_rollball),
->  };
-
+Best Regards,
+Petr
