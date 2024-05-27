@@ -1,54 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C602C208D1
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F55210E9
+	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 06:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716791900; cv=none; b=PcOjPWHIckVyCpQkdkqe8SEKTxPAw7k2FpBLIWwTnEN7gHBbvXlizjeogf0Gau85F91X5+3EjGGkVzoTXSjaX3PPzMv9pZ7S51cHXD+SW9mlR9HTtJUZhjQ2uFGPvh/yDuyVidTg0oPET7IpiBte3oXx5yPELNhDB04rqGoQiTs=
+	t=1716791901; cv=none; b=oWACucCgX+WOPJQcwlrU7EPjBE6mVAQY51Cb9zrnyFWKiePZL+6+WkMOGrM/rq+nl1EvHunOh4BpvrySNVEjdDnTEqnZCp8mbltLX08NGe0Dti2mnFrW0DQOXOeIhhGe1LymB65llDzV1T0oe7N2SgPnkEHKyeTu3c9pXV9OI78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716791900; c=relaxed/simple;
-	bh=+dn/emmEEkcbSG39cIwrkA2wVajPNCrfmui1Y4Bjb98=;
+	s=arc-20240116; t=1716791901; c=relaxed/simple;
+	bh=y85BCsAtj/oIZY53Aq9gsvAF7SkfMiwPpUsNnn9BKuo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BJ6Fa51zR2Bpf/HATl7WIT3BWqF5YT5FVydlMKi/FbmQcpHmhJdDA0BORgrwkFqkPTp5x+N+C2hACyNEgyTMDlifrwJcwdURTh+u4kol11Fp1RtrGl8v+TRcJZjVu2pGC452g0DNfr3P4OG1I2Dk2wPN05bDEDWhvfHCHrR+s88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AoNGwTjf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q8opQKl9; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=u1Um8Dm1Y3rkjF1fryst1NRvErPx6ze1EZAgAhCEpi6lqhXetY/8KOQLgDkUVBa9KEI9t09GFNccJWFVhKeGuH2EnSjWUR3jiLaCS5FiSrKVLSI24SC+QGICJYxEG4tu7DqD+5upoUxN4ZJCiU8+nY/d8eASL6wVCWm1ImHKFCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dWOUjRmo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S1RhTRWs; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AoNGwTjf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q8opQKl9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dWOUjRmo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S1RhTRWs"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716791896;
+	s=2020; t=1716791897;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6ivuBM37dQqLptpOvVQ5pDKTeLxrWvfxf7hXSdzp6yc=;
-	b=AoNGwTjfxYrNKExIOJhnh8w80Pp6zrVg/HR1fZKPmXjcSGGu+skf9UJ/sQaxjYnkofAm/z
-	pIledchn374Bqei75B9bG0eMVSKbfo085gEehJEZxnBl3oQ+pB/51N5qjnN5bCEuk7Esgu
-	TX+z9bADX8/A+5eASDPZjZ109kkfsF9PX6IACZkCAe6yMObkJP5p4S8y2kYPvVSaxrGYOW
-	xhj7bg1T0x6+eZhuALV5PbkQ/0/ZttAxKkvMQOwBeqjXtJsjcf19w5WrwwxSCmKrtPGScr
-	iq4wNvjmMv4o+qLBBHSL0QQkzcWvjwM34haaNs9GuE6HMBEByHeh4i09cIzjRw==
+	bh=FGxVNv6QbVc1S9vlUzY53XnVo+kA+8x3wI8r9c33MRA=;
+	b=dWOUjRmoFz0vqKOuNqU4vTCqMqqFeIft1NSjqP9XbcC7r6JJL6VTpHVvMZoyKU0E0eeTs6
+	jSMptwZCizR/sF6WzJEVHkS7EYsm+rXA3pbMYaH88/eO9/GhGKP2lAZVcdJsYHLXFCOdm7
+	4lnLEPGTQGNFrDndjTJQu1PWoZEBnnia1WQ4pZJHsH8tNpdedpQ6r+gGmouD3wYJlQWgvo
+	+DaGnZ+hJ7uzy61LL46Q1HqpGA65ZWtJsS9V1YYtmi4cBrU/WAOOUJFpL9LtfPl5L6Zxrs
+	D75qU36AqoFawOhcDwXPPR9Zcjp/OFzM/4ygOYzzQ9sANPLiDPrVIGmTxHMEeg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716791896;
+	s=2020e; t=1716791897;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6ivuBM37dQqLptpOvVQ5pDKTeLxrWvfxf7hXSdzp6yc=;
-	b=Q8opQKl96KesAmk8O7lXPZlE+Nen47I57u/aKpdAoSqq7eUSbNEjZerbZkeSM4uXInJ966
-	dU1g4noQMaeJPcCw==
+	bh=FGxVNv6QbVc1S9vlUzY53XnVo+kA+8x3wI8r9c33MRA=;
+	b=S1RhTRWsxV+VMOG3+pqEzwlx8BzT+wsruKwrYJxue90DfQ8LKM01V+MkpXnvu4D52bkHN5
+	zqmLS73z95mntHCA==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: [PATCH printk v6 01/30] printk: Add notation to console_srcu locking
-Date: Mon, 27 May 2024 08:43:20 +0206
-Message-Id: <20240527063749.391035-2-john.ogness@linutronix.de>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH printk v6 03/30] printk: nbcon: Remove return value for write_atomic()
+Date: Mon, 27 May 2024 08:43:22 +0206
+Message-Id: <20240527063749.391035-4-john.ogness@linutronix.de>
 In-Reply-To: <20240527063749.391035-1-john.ogness@linutronix.de>
 References: <20240527063749.391035-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -59,38 +58,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-kernel/printk/printk.c:284:5: sparse: sparse: context imbalance in
-'console_srcu_read_lock' - wrong count at exit
-include/linux/srcu.h:301:9: sparse: sparse: context imbalance in
-'console_srcu_read_unlock' - unexpected unlock
+The return value of write_atomic() does not provide any useful
+information. On the contrary, it makes things more complicated
+for the caller to appropriately deal with the information.
 
-Fixes: 6c4afa79147e ("printk: Prepare for SRCU console list protection")
+Change write_atomic() to not have a return value. If the
+message did not get printed due to loss of ownership, the
+caller will notice this on its own. If ownership was not lost,
+it will be assumed that the driver successfully printed the
+message and the sequence number for that console will be
+incremented.
+
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/printk/printk.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/console.h |  2 +-
+ kernel/printk/nbcon.c   | 15 +++++++--------
+ 2 files changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 8de6a46a056c..6efb629fd976 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -282,6 +282,7 @@ EXPORT_SYMBOL(console_list_unlock);
-  * Return: A cookie to pass to console_srcu_read_unlock().
-  */
- int console_srcu_read_lock(void)
-+	__acquires(&console_srcu)
- {
- 	return srcu_read_lock_nmisafe(&console_srcu);
- }
-@@ -295,6 +296,7 @@ EXPORT_SYMBOL(console_srcu_read_lock);
-  * Counterpart to console_srcu_read_lock()
-  */
- void console_srcu_read_unlock(int cookie)
-+	__releases(&console_srcu)
- {
- 	srcu_read_unlock_nmisafe(&console_srcu, cookie);
- }
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 779d388af8a0..54b98e4f0544 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -327,7 +327,7 @@ struct console {
+ 	struct hlist_node	node;
+ 
+ 	/* nbcon console specific members */
+-	bool			(*write_atomic)(struct console *con,
++	void			(*write_atomic)(struct console *con,
+ 						struct nbcon_write_context *wctxt);
+ 	atomic_t		__private nbcon_state;
+ 	atomic_long_t		__private nbcon_seq;
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index de260531b0da..dd7c3180b335 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -849,7 +849,6 @@ static bool nbcon_emit_next_record(struct nbcon_write_context *wctxt)
+ 	unsigned long con_dropped;
+ 	struct nbcon_state cur;
+ 	unsigned long dropped;
+-	bool done;
+ 
+ 	/*
+ 	 * The printk buffers are filled within an unsafe section. This
+@@ -889,16 +888,16 @@ static bool nbcon_emit_next_record(struct nbcon_write_context *wctxt)
+ 	wctxt->unsafe_takeover = cur.unsafe_takeover;
+ 
+ 	if (con->write_atomic) {
+-		done = con->write_atomic(con, wctxt);
++		con->write_atomic(con, wctxt);
+ 	} else {
+-		nbcon_context_release(ctxt);
++		/*
++		 * This function should never be called for legacy consoles.
++		 * Handle it as if ownership was lost and try to continue.
++		 */
+ 		WARN_ON_ONCE(1);
+-		done = false;
+-	}
+-
+-	/* If not done, the emit was aborted. */
+-	if (!done)
++		nbcon_context_release(ctxt);
+ 		return false;
++	}
+ 
+ 	/*
+ 	 * Since any dropped message was successfully output, reset the
 -- 
 2.39.2
 
