@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D3A16DEB9;
-	Mon, 27 May 2024 16:15:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5538616EBF7;
+	Mon, 27 May 2024 16:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826532; cv=none; b=L0QP4JKrXXKwwJq+IQakLjfJKL73oBB5KKfLDImmjgSRq5zYVLcl0QDdiENwdvlvzEWllZ4/P+02n5v+f5pvCAH9IvbbkxGXgkTlupO6CaErTvD/vAX/64/V3q+UmvDBwnSRhRdpRjuOwug1gZiN3M37abKoosHyJqF5wG9j5SA=
+	t=1716826536; cv=none; b=kkI4jVjVzahOTwC5j8aIa64QRCU2/pEl+RRn5NLaK8KFBSiruw4gzUHNIO9Kr9In9aKzvcoqgppzTTbnBXoM27ET2GzzvM1WLfgUZkltk3Isf9U0rP1Z3kNSFw3j7py+6b0CAVj4FfwsTwNSZfj+02ndzmvhmhVludJoaNpqlDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826532; c=relaxed/simple;
-	bh=KWOkIyivWuA9wtmoHY37AqxHkQB6/jl+LFLPFAwKWV0=;
+	s=arc-20240116; t=1716826536; c=relaxed/simple;
+	bh=chCtCkqI/NY4Vy2ffwwkDxwHFQRfFlMjA49T/JZ0V2I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KpnWV3flipiMK6PkF3Y8/v9a/wBxkBTE887m7Flv5sHFG304Mh2ez/K6dwWt4vNJHdP3zXIi/jm4PewofvvUh+NQiNyv9YCHkge6j3HfUsHBNM0lu4dIxIkVNaQdWsV+iLjAftx93XYng1ps0tTllt47o2YsEsh+UXgQzUtKLgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TJPz/QjW; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=r27VkhrCUxcO9+BNg6x5fcj6XWTsTiSNHju+p33+epUdJ70tV9yImdKBKJdRU+wVbg/IVn/08uyiZubi+r44uEO/5XYKGerI+6h0mE23gql7LtrV0LDvKX1k/6BDmAcCTObScGm/4b7bSU4E6tYjFVf7w0yOchHyGQjJq3aKuiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hZGkBaDT; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TJPz/QjW"
-Received: by mail.gandi.net (Postfix) with ESMTPA id DE74FFF806;
-	Mon, 27 May 2024 16:15:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hZGkBaDT"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 7A5E0FF80E;
+	Mon, 27 May 2024 16:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716826528;
+	t=1716826533;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=b1yRwle+HAvHy0Q0ReS5EoL1LVn7psuAz06A8wMDIfo=;
-	b=TJPz/QjWh5ObhtAJXMw2B5yn/g+zKAMRCug48RsKHLX6szEZmkNH40hLcmTmQM5LpKx+iO
-	NhAUv/qW7RQz5ttxUjjFdPudhvC3e0n9QPNRlzJaa2ICSipozqa5c+lQHYBNnPtYQqp6dW
-	TwZWQi+BgEeYdYZf/+WOoV/wUki2vvF9UyyaE1UbDIgKUzRwi+uDB8dOnnolZKw5usgZ3r
-	tizf41FgBHIUCnetK/4liNaxe3KoAyDGJ2N/HKWKDojw86XyyX1aFrRg/wzMHU2sydH1GH
-	0wACs6RTe5zk8nux47hz6lvkLkfn0aYxgExj+o46a/n9kWMKmqDLjko5hPs9bg==
+	bh=S5EWnWVm8Boacgm88RxHxweJ58Kbq8GGMqtCde3uKZI=;
+	b=hZGkBaDT6XPUEKAWzhUuB2+uCGFMlArWDpCILqxRuPBbHcghizqQZSlO6wFCsZiI1gmal1
+	qJix31+53cvT67bFzT2JMWd2PWAYeSdFM1JBSybqfgMBH9ymCqyP6eNoMY5TS+PA0UvHr5
+	JP5evTTr7etsXnKUux/tPEQ/0JRsRD1zp8al+pZvukRpuvvTQUMs1ewOkEV/nbBaYldyXb
+	OdwNsy9IevypTwYfC/wG2jQvoCEMvMe81wNzeCXH//bQZkxfHBHW/lg+ax8mQk+C3xk030
+	GUKfOk8LDGvsh2bB27tPwafLEVhic2aBVX0Eu7S8iViYTvAmW7o8yOs4jNpA4Q==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Simon Horman <horms@kernel.org>,
 	Sai Krishna Gajula <saikrishnag@marvell.com>,
@@ -65,9 +65,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 17/19] PCI: of_property: Add interrupt-controller property in PCI device nodes
-Date: Mon, 27 May 2024 18:14:44 +0200
-Message-ID: <20240527161450.326615-18-herve.codina@bootlin.com>
+Subject: [PATCH v2 19/19] MAINTAINERS: Add the Microchip LAN966x PCI driver entry
+Date: Mon, 27 May 2024 18:14:46 +0200
+Message-ID: <20240527161450.326615-20-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240527161450.326615-1-herve.codina@bootlin.com>
 References: <20240527161450.326615-1-herve.codina@bootlin.com>
@@ -80,73 +80,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-PCI devices and bridges DT nodes created during the PCI scan are created
-with the interrupt-map property set to handle interrupts.
-
-In order to set this interrupt-map property at a specific level, a
-phandle to the parent interrupt controller is needed. On systems that
-are not fully described by a device-tree, the parent interrupt
-controller may be unavailable (i.e. not described by the device-tree).
-
-As mentioned in the [1], avoiding the use of the interrupt-map property
-and considering a PCI device as an interrupt controller itself avoid the
-use of a parent interrupt phandle.
-
-In that case, the PCI device itself as an interrupt controller is
-responsible for routing the interrupts described in the device-tree
-world (DT overlay) to the PCI interrupts.
-
-Add the 'interrupt-controller' property in the PCI device DT node.
-
-[1]: https://lore.kernel.org/lkml/CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com/
+After contributing the driver, add myself as the maintainer for the
+Microchip LAN966x PCI driver.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/pci/of_property.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-index 03539e505372..5a0b98e69795 100644
---- a/drivers/pci/of_property.c
-+++ b/drivers/pci/of_property.c
-@@ -183,6 +183,26 @@ static int of_pci_prop_interrupts(struct pci_dev *pdev,
- 	return of_changeset_add_prop_u32(ocs, np, "interrupts", (u32)pin);
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index baeb307344cd..c84ec27ccbe4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14733,6 +14733,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+ F:	drivers/irqchip/irq-lan966x-oic.c
  
-+static int of_pci_prop_intr_ctrl(struct pci_dev *pdev, struct of_changeset *ocs,
-+				 struct device_node *np)
-+{
-+	int ret;
-+	u8 pin;
++MICROCHIP LAN966X PCI DRIVER
++M:	Herve Codina <herve.codina@bootlin.com>
++S:	Maintained
++F:	drivers/mfd/lan966x_pci.c
++F:	drivers/mfd/lan966x_pci.dtso
 +
-+	ret = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
-+	if (ret != 0)
-+		return ret;
-+
-+	if (!pin)
-+		return 0;
-+
-+	ret = of_changeset_add_prop_u32(ocs, np, "#interrupt-cells", 1);
-+	if (ret)
-+		return ret;
-+
-+	return of_changeset_add_prop_bool(ocs, np, "interrupt-controller");
-+}
-+
- static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
- 				struct device_node *np)
- {
-@@ -336,6 +356,10 @@ int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
- 		ret = of_pci_prop_intr_map(pdev, ocs, np);
- 		if (ret)
- 			return ret;
-+	} else {
-+		ret = of_pci_prop_intr_ctrl(pdev, ocs, np);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	ret = of_pci_prop_ranges(pdev, ocs, np);
+ MICROCHIP LCDFB DRIVER
+ M:	Nicolas Ferre <nicolas.ferre@microchip.com>
+ L:	linux-fbdev@vger.kernel.org
 -- 
 2.45.0
 
