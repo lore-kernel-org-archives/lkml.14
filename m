@@ -1,872 +1,296 @@
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E910168C32
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 21:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B369C17BA7;
+	Mon, 27 May 2024 21:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716845283; cv=none; b=Jb24AHbA1HU39Wb285nhyyQCWoO/LI+7R1eUFGAOxpvXpuze90QqKu111xy44Ylp+ecdExXCQSTWvQBjvUX86jlHdJRk8Jzn6CG57HD1usgHLicr/yQPDBl+QnpQy34tLoV5onkSJc+H5fIPYBfkPnKoItBlYkMJXvyIZJM/Gow=
+	t=1716845622; cv=none; b=KhDM4Ms3ky125XKNtRVCY9d/rBPwEQ2brpHbGPg5hI5+7VDUJG9HKZ3LTfxYVyiCer8rX4opFglV1dCrH5EUUzjXC6AQuW/60FcMCf9gkw9r8DiV1pUmeTqrlgGT34aA9IsPDyEgwWon+EbpeYcH4YHY9XdFaCG6Cw7yIxCim2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716845283; c=relaxed/simple;
-	bh=WkOuYAMRW7krM/huf0kW2OFWTAkOyrJOGL1DFh65LwQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CPGE2Oa22/xFEzQXlfThfl57Y11TQblFWcB54Ex+yLrA/Kbpx0MG6Fa+lF5zqxgyb702lBMfP0TSeeGg4QTx2rGzfKJ9bwQ9vKL/4yOm9p37ceeom47+QteUOo/NL4QhZuACU08zjByp5+Zh3pwsKiiBHmgWLEvjNkHQzdeeXDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id f8a77ffe-1c6f-11ef-aaf3-005056bdd08f;
-	Tue, 28 May 2024 00:27:51 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-mips@vger.kernel.org
-Cc: Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v1 03/11] pinctrl: ingenic: Provide a helper macro INGENIC_PIN_FUNCTION()
-Date: Tue, 28 May 2024 00:24:38 +0300
-Message-ID: <20240527212742.1432960-4-andy.shevchenko@gmail.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240527212742.1432960-1-andy.shevchenko@gmail.com>
-References: <20240527212742.1432960-1-andy.shevchenko@gmail.com>
+	s=arc-20240116; t=1716845622; c=relaxed/simple;
+	bh=gt2f8b7q9dTuQ5k8HbbHD3EuOTumSOPerVFttuyVqcE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tq9G+hpSRZtgQkwPK/9kRbhKAaIf9LZsIYyiAMvYjVdHHGdwvpeYh6oIM9iQHKGctXMPrG2uEI0z0Q98dvfXEoDlD4ZYHDGcO+CMWX4RQf5JmNLer1TxObU6vHK3xeJMQnrgmLR8XcRk6+rBvyyBg8YlG41bPGMCon+NSnViSSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I82ZQZQ8; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I82ZQZQ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716845620; x=1748381620;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=gt2f8b7q9dTuQ5k8HbbHD3EuOTumSOPerVFttuyVqcE=;
+  b=I82ZQZQ8AF7Ym6Ir6bSyTNM3V+zZ2JLpZWpXi1XUfU5z0AQoPmRxr7j8
+   Oytul4JrSO4IJM7t9PNF0Na8Xtb9CRdLLERF27ILcGIY6G7q1nWDwKIr+
+   1bD9sJDkTmoYep2IRoHGTmw9XC0BkQrw2+TOXnSq0qVOyeJKdWMF3OpGK
+   uF7tD07E7b3sQj/OWN7TglF5djRNveNUl+3fA1DqAgu4vsklhshnRT47b
+   DDkkaftsQs5D3+JAXiWfdPzx8TBruO6fCyhEW/P+ehoGJuSYlVxSq5i1f
+   L6r/uchWezuw8D6YUtbvxbZzlYvuGuathvYEyNnP30UI6GcZnIj5I6wY8
+   g==;
+X-CSE-ConnectionGUID: djYHW2Y1RhSdjxMBu5WFjw==
+X-CSE-MsgGUID: N1b73wmgQq+O8dDbFGE5+A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="12999708"
+X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
+   d="scan'208";a="12999708"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 14:33:39 -0700
+X-CSE-ConnectionGUID: yMP7fafLSxOigPgZH8N+Ww==
+X-CSE-MsgGUID: 6mUhTR9XQ/qlFDIPabOU4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
+   d="scan'208";a="39264029"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 14:33:31 -0700
+Message-ID: <8646d7dbeb507ce28b6ddca1222ee3c9892d61cc.camel@linux.intel.com>
+Subject: Re: [PATCH 3/6] platform/x86/intel: TPMI domain id and CPU mapping
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Tero Kristo <tero.kristo@linux.intel.com>,
+ ilpo.jarvinen@linux.intel.com,  hdegoede@redhat.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Andy
+	Shevchenko <andriy.shevchenko@linux.intel.com>
+Date: Mon, 27 May 2024 14:33:30 -0700
+In-Reply-To: <20240527133400.483634-4-tero.kristo@linux.intel.com>
+References: <20240527133400.483634-1-tero.kristo@linux.intel.com>
+	 <20240527133400.483634-4-tero.kristo@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Provide a helper macro to assign the struct function_desc entries.
-This helps further refactoring.
-
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/pinctrl/pinctrl-ingenic.c | 697 +++++++++++++++---------------
- 1 file changed, 352 insertions(+), 345 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index bc6358a686fc..959b9ea83a66 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -94,6 +94,14 @@
- 		.data = (void *)func,							\
- 	}
- 
-+#define INGENIC_PIN_FUNCTION(_name_, id)							\
-+	{											\
-+		.name = _name_,									\
-+		.group_names = id##_groups,							\
-+		.num_group_names = ARRAY_SIZE(id##_groups),					\
-+		.data = NULL,									\
-+	}
-+
- enum jz_version {
- 	ID_JZ4730,
- 	ID_JZ4740,
-@@ -238,15 +246,15 @@ static const char *jz4730_pwm0_groups[] = { "pwm0", };
- static const char *jz4730_pwm1_groups[] = { "pwm1", };
- 
- static const struct function_desc jz4730_functions[] = {
--	{ "mmc", jz4730_mmc_groups, ARRAY_SIZE(jz4730_mmc_groups), },
--	{ "uart0", jz4730_uart0_groups, ARRAY_SIZE(jz4730_uart0_groups), },
--	{ "uart1", jz4730_uart1_groups, ARRAY_SIZE(jz4730_uart1_groups), },
--	{ "uart2", jz4730_uart2_groups, ARRAY_SIZE(jz4730_uart2_groups), },
--	{ "uart3", jz4730_uart3_groups, ARRAY_SIZE(jz4730_uart3_groups), },
--	{ "lcd", jz4730_lcd_groups, ARRAY_SIZE(jz4730_lcd_groups), },
--	{ "nand", jz4730_nand_groups, ARRAY_SIZE(jz4730_nand_groups), },
--	{ "pwm0", jz4730_pwm0_groups, ARRAY_SIZE(jz4730_pwm0_groups), },
--	{ "pwm1", jz4730_pwm1_groups, ARRAY_SIZE(jz4730_pwm1_groups), },
-+	INGENIC_PIN_FUNCTION("mmc", jz4730_mmc),
-+	INGENIC_PIN_FUNCTION("uart0", jz4730_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", jz4730_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", jz4730_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", jz4730_uart3),
-+	INGENIC_PIN_FUNCTION("lcd", jz4730_lcd),
-+	INGENIC_PIN_FUNCTION("nand", jz4730_nand),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4730_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4730_pwm1),
- };
- 
- static const struct ingenic_chip_info jz4730_chip_info = {
-@@ -343,19 +351,19 @@ static const char *jz4740_pwm6_groups[] = { "pwm6", };
- static const char *jz4740_pwm7_groups[] = { "pwm7", };
- 
- static const struct function_desc jz4740_functions[] = {
--	{ "mmc", jz4740_mmc_groups, ARRAY_SIZE(jz4740_mmc_groups), },
--	{ "uart0", jz4740_uart0_groups, ARRAY_SIZE(jz4740_uart0_groups), },
--	{ "uart1", jz4740_uart1_groups, ARRAY_SIZE(jz4740_uart1_groups), },
--	{ "lcd", jz4740_lcd_groups, ARRAY_SIZE(jz4740_lcd_groups), },
--	{ "nand", jz4740_nand_groups, ARRAY_SIZE(jz4740_nand_groups), },
--	{ "pwm0", jz4740_pwm0_groups, ARRAY_SIZE(jz4740_pwm0_groups), },
--	{ "pwm1", jz4740_pwm1_groups, ARRAY_SIZE(jz4740_pwm1_groups), },
--	{ "pwm2", jz4740_pwm2_groups, ARRAY_SIZE(jz4740_pwm2_groups), },
--	{ "pwm3", jz4740_pwm3_groups, ARRAY_SIZE(jz4740_pwm3_groups), },
--	{ "pwm4", jz4740_pwm4_groups, ARRAY_SIZE(jz4740_pwm4_groups), },
--	{ "pwm5", jz4740_pwm5_groups, ARRAY_SIZE(jz4740_pwm5_groups), },
--	{ "pwm6", jz4740_pwm6_groups, ARRAY_SIZE(jz4740_pwm6_groups), },
--	{ "pwm7", jz4740_pwm7_groups, ARRAY_SIZE(jz4740_pwm7_groups), },
-+	INGENIC_PIN_FUNCTION("mmc", jz4740_mmc),
-+	INGENIC_PIN_FUNCTION("uart0", jz4740_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", jz4740_uart1),
-+	INGENIC_PIN_FUNCTION("lcd", jz4740_lcd),
-+	INGENIC_PIN_FUNCTION("nand", jz4740_nand),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4740_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4740_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", jz4740_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", jz4740_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", jz4740_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", jz4740_pwm5),
-+	INGENIC_PIN_FUNCTION("pwm6", jz4740_pwm6),
-+	INGENIC_PIN_FUNCTION("pwm7", jz4740_pwm7),
- };
- 
- static const struct ingenic_chip_info jz4740_chip_info = {
-@@ -447,17 +455,17 @@ static const char *jz4725b_pwm4_groups[] = { "pwm4", };
- static const char *jz4725b_pwm5_groups[] = { "pwm5", };
- 
- static const struct function_desc jz4725b_functions[] = {
--	{ "mmc0", jz4725b_mmc0_groups, ARRAY_SIZE(jz4725b_mmc0_groups), },
--	{ "mmc1", jz4725b_mmc1_groups, ARRAY_SIZE(jz4725b_mmc1_groups), },
--	{ "uart", jz4725b_uart_groups, ARRAY_SIZE(jz4725b_uart_groups), },
--	{ "nand", jz4725b_nand_groups, ARRAY_SIZE(jz4725b_nand_groups), },
--	{ "pwm0", jz4725b_pwm0_groups, ARRAY_SIZE(jz4725b_pwm0_groups), },
--	{ "pwm1", jz4725b_pwm1_groups, ARRAY_SIZE(jz4725b_pwm1_groups), },
--	{ "pwm2", jz4725b_pwm2_groups, ARRAY_SIZE(jz4725b_pwm2_groups), },
--	{ "pwm3", jz4725b_pwm3_groups, ARRAY_SIZE(jz4725b_pwm3_groups), },
--	{ "pwm4", jz4725b_pwm4_groups, ARRAY_SIZE(jz4725b_pwm4_groups), },
--	{ "pwm5", jz4725b_pwm5_groups, ARRAY_SIZE(jz4725b_pwm5_groups), },
--	{ "lcd", jz4725b_lcd_groups, ARRAY_SIZE(jz4725b_lcd_groups), },
-+	INGENIC_PIN_FUNCTION("mmc0", jz4725b_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", jz4725b_mmc1),
-+	INGENIC_PIN_FUNCTION("uart", jz4725b_uart),
-+	INGENIC_PIN_FUNCTION("nand", jz4725b_nand),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4725b_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4725b_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", jz4725b_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", jz4725b_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", jz4725b_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", jz4725b_pwm5),
-+	INGENIC_PIN_FUNCTION("lcd", jz4725b_lcd),
- };
- 
- static const struct ingenic_chip_info jz4725b_chip_info = {
-@@ -579,22 +587,22 @@ static const char *jz4750_pwm4_groups[] = { "pwm4", };
- static const char *jz4750_pwm5_groups[] = { "pwm5", };
- 
- static const struct function_desc jz4750_functions[] = {
--	{ "uart0", jz4750_uart0_groups, ARRAY_SIZE(jz4750_uart0_groups), },
--	{ "uart1", jz4750_uart1_groups, ARRAY_SIZE(jz4750_uart1_groups), },
--	{ "uart2", jz4750_uart2_groups, ARRAY_SIZE(jz4750_uart2_groups), },
--	{ "uart3", jz4750_uart3_groups, ARRAY_SIZE(jz4750_uart3_groups), },
--	{ "mmc0", jz4750_mmc0_groups, ARRAY_SIZE(jz4750_mmc0_groups), },
--	{ "mmc1", jz4750_mmc1_groups, ARRAY_SIZE(jz4750_mmc1_groups), },
--	{ "i2c", jz4750_i2c_groups, ARRAY_SIZE(jz4750_i2c_groups), },
--	{ "cim", jz4750_cim_groups, ARRAY_SIZE(jz4750_cim_groups), },
--	{ "lcd", jz4750_lcd_groups, ARRAY_SIZE(jz4750_lcd_groups), },
--	{ "nand", jz4750_nand_groups, ARRAY_SIZE(jz4750_nand_groups), },
--	{ "pwm0", jz4750_pwm0_groups, ARRAY_SIZE(jz4750_pwm0_groups), },
--	{ "pwm1", jz4750_pwm1_groups, ARRAY_SIZE(jz4750_pwm1_groups), },
--	{ "pwm2", jz4750_pwm2_groups, ARRAY_SIZE(jz4750_pwm2_groups), },
--	{ "pwm3", jz4750_pwm3_groups, ARRAY_SIZE(jz4750_pwm3_groups), },
--	{ "pwm4", jz4750_pwm4_groups, ARRAY_SIZE(jz4750_pwm4_groups), },
--	{ "pwm5", jz4750_pwm5_groups, ARRAY_SIZE(jz4750_pwm5_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", jz4750_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", jz4750_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", jz4750_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", jz4750_uart3),
-+	INGENIC_PIN_FUNCTION("mmc0", jz4750_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", jz4750_mmc1),
-+	INGENIC_PIN_FUNCTION("i2c", jz4750_i2c),
-+	INGENIC_PIN_FUNCTION("cim", jz4750_cim),
-+	INGENIC_PIN_FUNCTION("lcd", jz4750_lcd),
-+	INGENIC_PIN_FUNCTION("nand", jz4750_nand),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4750_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4750_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", jz4750_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", jz4750_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", jz4750_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", jz4750_pwm5),
- };
- 
- static const struct ingenic_chip_info jz4750_chip_info = {
-@@ -744,22 +752,22 @@ static const char *jz4755_pwm4_groups[] = { "pwm4", };
- static const char *jz4755_pwm5_groups[] = { "pwm5", };
- 
- static const struct function_desc jz4755_functions[] = {
--	{ "uart0", jz4755_uart0_groups, ARRAY_SIZE(jz4755_uart0_groups), },
--	{ "uart1", jz4755_uart1_groups, ARRAY_SIZE(jz4755_uart1_groups), },
--	{ "uart2", jz4755_uart2_groups, ARRAY_SIZE(jz4755_uart2_groups), },
--	{ "ssi", jz4755_ssi_groups, ARRAY_SIZE(jz4755_ssi_groups), },
--	{ "mmc0", jz4755_mmc0_groups, ARRAY_SIZE(jz4755_mmc0_groups), },
--	{ "mmc1", jz4755_mmc1_groups, ARRAY_SIZE(jz4755_mmc1_groups), },
--	{ "i2c", jz4755_i2c_groups, ARRAY_SIZE(jz4755_i2c_groups), },
--	{ "cim", jz4755_cim_groups, ARRAY_SIZE(jz4755_cim_groups), },
--	{ "lcd", jz4755_lcd_groups, ARRAY_SIZE(jz4755_lcd_groups), },
--	{ "nand", jz4755_nand_groups, ARRAY_SIZE(jz4755_nand_groups), },
--	{ "pwm0", jz4755_pwm0_groups, ARRAY_SIZE(jz4755_pwm0_groups), },
--	{ "pwm1", jz4755_pwm1_groups, ARRAY_SIZE(jz4755_pwm1_groups), },
--	{ "pwm2", jz4755_pwm2_groups, ARRAY_SIZE(jz4755_pwm2_groups), },
--	{ "pwm3", jz4755_pwm3_groups, ARRAY_SIZE(jz4755_pwm3_groups), },
--	{ "pwm4", jz4755_pwm4_groups, ARRAY_SIZE(jz4755_pwm4_groups), },
--	{ "pwm5", jz4755_pwm5_groups, ARRAY_SIZE(jz4755_pwm5_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", jz4755_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", jz4755_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", jz4755_uart2),
-+	INGENIC_PIN_FUNCTION("ssi", jz4755_ssi),
-+	INGENIC_PIN_FUNCTION("mmc0", jz4755_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", jz4755_mmc1),
-+	INGENIC_PIN_FUNCTION("i2c", jz4755_i2c),
-+	INGENIC_PIN_FUNCTION("cim", jz4755_cim),
-+	INGENIC_PIN_FUNCTION("lcd", jz4755_lcd),
-+	INGENIC_PIN_FUNCTION("nand", jz4755_nand),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4755_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4755_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", jz4755_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", jz4755_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", jz4755_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", jz4755_pwm5),
- };
- 
- static const struct ingenic_chip_info jz4755_chip_info = {
-@@ -1079,35 +1087,35 @@ static const char *jz4760_pwm7_groups[] = { "pwm7", };
- static const char *jz4760_otg_groups[] = { "otg-vbus", };
- 
- static const struct function_desc jz4760_functions[] = {
--	{ "uart0", jz4760_uart0_groups, ARRAY_SIZE(jz4760_uart0_groups), },
--	{ "uart1", jz4760_uart1_groups, ARRAY_SIZE(jz4760_uart1_groups), },
--	{ "uart2", jz4760_uart2_groups, ARRAY_SIZE(jz4760_uart2_groups), },
--	{ "uart3", jz4760_uart3_groups, ARRAY_SIZE(jz4760_uart3_groups), },
--	{ "ssi0", jz4760_ssi0_groups, ARRAY_SIZE(jz4760_ssi0_groups), },
--	{ "ssi1", jz4760_ssi1_groups, ARRAY_SIZE(jz4760_ssi1_groups), },
--	{ "mmc0", jz4760_mmc0_groups, ARRAY_SIZE(jz4760_mmc0_groups), },
--	{ "mmc1", jz4760_mmc1_groups, ARRAY_SIZE(jz4760_mmc1_groups), },
--	{ "mmc2", jz4760_mmc2_groups, ARRAY_SIZE(jz4760_mmc2_groups), },
--	{ "nemc", jz4760_nemc_groups, ARRAY_SIZE(jz4760_nemc_groups), },
--	{ "nemc-cs1", jz4760_cs1_groups, ARRAY_SIZE(jz4760_cs1_groups), },
--	{ "nemc-cs2", jz4760_cs2_groups, ARRAY_SIZE(jz4760_cs2_groups), },
--	{ "nemc-cs3", jz4760_cs3_groups, ARRAY_SIZE(jz4760_cs3_groups), },
--	{ "nemc-cs4", jz4760_cs4_groups, ARRAY_SIZE(jz4760_cs4_groups), },
--	{ "nemc-cs5", jz4760_cs5_groups, ARRAY_SIZE(jz4760_cs5_groups), },
--	{ "nemc-cs6", jz4760_cs6_groups, ARRAY_SIZE(jz4760_cs6_groups), },
--	{ "i2c0", jz4760_i2c0_groups, ARRAY_SIZE(jz4760_i2c0_groups), },
--	{ "i2c1", jz4760_i2c1_groups, ARRAY_SIZE(jz4760_i2c1_groups), },
--	{ "cim", jz4760_cim_groups, ARRAY_SIZE(jz4760_cim_groups), },
--	{ "lcd", jz4760_lcd_groups, ARRAY_SIZE(jz4760_lcd_groups), },
--	{ "pwm0", jz4760_pwm0_groups, ARRAY_SIZE(jz4760_pwm0_groups), },
--	{ "pwm1", jz4760_pwm1_groups, ARRAY_SIZE(jz4760_pwm1_groups), },
--	{ "pwm2", jz4760_pwm2_groups, ARRAY_SIZE(jz4760_pwm2_groups), },
--	{ "pwm3", jz4760_pwm3_groups, ARRAY_SIZE(jz4760_pwm3_groups), },
--	{ "pwm4", jz4760_pwm4_groups, ARRAY_SIZE(jz4760_pwm4_groups), },
--	{ "pwm5", jz4760_pwm5_groups, ARRAY_SIZE(jz4760_pwm5_groups), },
--	{ "pwm6", jz4760_pwm6_groups, ARRAY_SIZE(jz4760_pwm6_groups), },
--	{ "pwm7", jz4760_pwm7_groups, ARRAY_SIZE(jz4760_pwm7_groups), },
--	{ "otg", jz4760_otg_groups, ARRAY_SIZE(jz4760_otg_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", jz4760_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", jz4760_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", jz4760_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", jz4760_uart3),
-+	INGENIC_PIN_FUNCTION("ssi0", jz4760_ssi0),
-+	INGENIC_PIN_FUNCTION("ssi1", jz4760_ssi1),
-+	INGENIC_PIN_FUNCTION("mmc0", jz4760_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", jz4760_mmc1),
-+	INGENIC_PIN_FUNCTION("mmc2", jz4760_mmc2),
-+	INGENIC_PIN_FUNCTION("nemc", jz4760_nemc),
-+	INGENIC_PIN_FUNCTION("nemc-cs1", jz4760_cs1),
-+	INGENIC_PIN_FUNCTION("nemc-cs2", jz4760_cs2),
-+	INGENIC_PIN_FUNCTION("nemc-cs3", jz4760_cs3),
-+	INGENIC_PIN_FUNCTION("nemc-cs4", jz4760_cs4),
-+	INGENIC_PIN_FUNCTION("nemc-cs5", jz4760_cs5),
-+	INGENIC_PIN_FUNCTION("nemc-cs6", jz4760_cs6),
-+	INGENIC_PIN_FUNCTION("i2c0", jz4760_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", jz4760_i2c1),
-+	INGENIC_PIN_FUNCTION("cim", jz4760_cim),
-+	INGENIC_PIN_FUNCTION("lcd", jz4760_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4760_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4760_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", jz4760_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", jz4760_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", jz4760_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", jz4760_pwm5),
-+	INGENIC_PIN_FUNCTION("pwm6", jz4760_pwm6),
-+	INGENIC_PIN_FUNCTION("pwm7", jz4760_pwm7),
-+	INGENIC_PIN_FUNCTION("otg", jz4760_otg),
- };
- 
- static const struct ingenic_chip_info jz4760_chip_info = {
-@@ -1417,37 +1425,37 @@ static const char *jz4770_pwm7_groups[] = { "pwm7", };
- static const char *jz4770_mac_groups[] = { "mac-rmii", "mac-mii", };
- 
- static const struct function_desc jz4770_functions[] = {
--	{ "uart0", jz4770_uart0_groups, ARRAY_SIZE(jz4770_uart0_groups), },
--	{ "uart1", jz4770_uart1_groups, ARRAY_SIZE(jz4770_uart1_groups), },
--	{ "uart2", jz4770_uart2_groups, ARRAY_SIZE(jz4770_uart2_groups), },
--	{ "uart3", jz4770_uart3_groups, ARRAY_SIZE(jz4770_uart3_groups), },
--	{ "ssi0", jz4770_ssi0_groups, ARRAY_SIZE(jz4770_ssi0_groups), },
--	{ "ssi1", jz4770_ssi1_groups, ARRAY_SIZE(jz4770_ssi1_groups), },
--	{ "mmc0", jz4770_mmc0_groups, ARRAY_SIZE(jz4770_mmc0_groups), },
--	{ "mmc1", jz4770_mmc1_groups, ARRAY_SIZE(jz4770_mmc1_groups), },
--	{ "mmc2", jz4770_mmc2_groups, ARRAY_SIZE(jz4770_mmc2_groups), },
--	{ "nemc", jz4770_nemc_groups, ARRAY_SIZE(jz4770_nemc_groups), },
--	{ "nemc-cs1", jz4770_cs1_groups, ARRAY_SIZE(jz4770_cs1_groups), },
--	{ "nemc-cs2", jz4770_cs2_groups, ARRAY_SIZE(jz4770_cs2_groups), },
--	{ "nemc-cs3", jz4770_cs3_groups, ARRAY_SIZE(jz4770_cs3_groups), },
--	{ "nemc-cs4", jz4770_cs4_groups, ARRAY_SIZE(jz4770_cs4_groups), },
--	{ "nemc-cs5", jz4770_cs5_groups, ARRAY_SIZE(jz4770_cs5_groups), },
--	{ "nemc-cs6", jz4770_cs6_groups, ARRAY_SIZE(jz4770_cs6_groups), },
--	{ "i2c0", jz4770_i2c0_groups, ARRAY_SIZE(jz4770_i2c0_groups), },
--	{ "i2c1", jz4770_i2c1_groups, ARRAY_SIZE(jz4770_i2c1_groups), },
--	{ "i2c2", jz4770_i2c2_groups, ARRAY_SIZE(jz4770_i2c2_groups), },
--	{ "cim", jz4770_cim_groups, ARRAY_SIZE(jz4770_cim_groups), },
--	{ "lcd", jz4770_lcd_groups, ARRAY_SIZE(jz4770_lcd_groups), },
--	{ "pwm0", jz4770_pwm0_groups, ARRAY_SIZE(jz4770_pwm0_groups), },
--	{ "pwm1", jz4770_pwm1_groups, ARRAY_SIZE(jz4770_pwm1_groups), },
--	{ "pwm2", jz4770_pwm2_groups, ARRAY_SIZE(jz4770_pwm2_groups), },
--	{ "pwm3", jz4770_pwm3_groups, ARRAY_SIZE(jz4770_pwm3_groups), },
--	{ "pwm4", jz4770_pwm4_groups, ARRAY_SIZE(jz4770_pwm4_groups), },
--	{ "pwm5", jz4770_pwm5_groups, ARRAY_SIZE(jz4770_pwm5_groups), },
--	{ "pwm6", jz4770_pwm6_groups, ARRAY_SIZE(jz4770_pwm6_groups), },
--	{ "pwm7", jz4770_pwm7_groups, ARRAY_SIZE(jz4770_pwm7_groups), },
--	{ "mac", jz4770_mac_groups, ARRAY_SIZE(jz4770_mac_groups), },
--	{ "otg", jz4760_otg_groups, ARRAY_SIZE(jz4760_otg_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", jz4770_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", jz4770_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", jz4770_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", jz4770_uart3),
-+	INGENIC_PIN_FUNCTION("ssi0", jz4770_ssi0),
-+	INGENIC_PIN_FUNCTION("ssi1", jz4770_ssi1),
-+	INGENIC_PIN_FUNCTION("mmc0", jz4770_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", jz4770_mmc1),
-+	INGENIC_PIN_FUNCTION("mmc2", jz4770_mmc2),
-+	INGENIC_PIN_FUNCTION("nemc", jz4770_nemc),
-+	INGENIC_PIN_FUNCTION("nemc-cs1", jz4770_cs1),
-+	INGENIC_PIN_FUNCTION("nemc-cs2", jz4770_cs2),
-+	INGENIC_PIN_FUNCTION("nemc-cs3", jz4770_cs3),
-+	INGENIC_PIN_FUNCTION("nemc-cs4", jz4770_cs4),
-+	INGENIC_PIN_FUNCTION("nemc-cs5", jz4770_cs5),
-+	INGENIC_PIN_FUNCTION("nemc-cs6", jz4770_cs6),
-+	INGENIC_PIN_FUNCTION("i2c0", jz4770_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", jz4770_i2c1),
-+	INGENIC_PIN_FUNCTION("i2c2", jz4770_i2c2),
-+	INGENIC_PIN_FUNCTION("cim", jz4770_cim),
-+	INGENIC_PIN_FUNCTION("lcd", jz4770_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4770_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4770_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", jz4770_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", jz4770_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", jz4770_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", jz4770_pwm5),
-+	INGENIC_PIN_FUNCTION("pwm6", jz4770_pwm6),
-+	INGENIC_PIN_FUNCTION("pwm7", jz4770_pwm7),
-+	INGENIC_PIN_FUNCTION("mac", jz4770_mac),
-+	INGENIC_PIN_FUNCTION("otg", jz4760_otg),
- };
- 
- static const struct ingenic_chip_info jz4770_chip_info = {
-@@ -1696,31 +1704,31 @@ static const char *jz4775_mac_groups[] = {
- static const char *jz4775_otg_groups[] = { "otg-vbus", };
- 
- static const struct function_desc jz4775_functions[] = {
--	{ "uart0", jz4775_uart0_groups, ARRAY_SIZE(jz4775_uart0_groups), },
--	{ "uart1", jz4775_uart1_groups, ARRAY_SIZE(jz4775_uart1_groups), },
--	{ "uart2", jz4775_uart2_groups, ARRAY_SIZE(jz4775_uart2_groups), },
--	{ "uart3", jz4775_uart3_groups, ARRAY_SIZE(jz4775_uart3_groups), },
--	{ "ssi", jz4775_ssi_groups, ARRAY_SIZE(jz4775_ssi_groups), },
--	{ "mmc0", jz4775_mmc0_groups, ARRAY_SIZE(jz4775_mmc0_groups), },
--	{ "mmc1", jz4775_mmc1_groups, ARRAY_SIZE(jz4775_mmc1_groups), },
--	{ "mmc2", jz4775_mmc2_groups, ARRAY_SIZE(jz4775_mmc2_groups), },
--	{ "nemc", jz4775_nemc_groups, ARRAY_SIZE(jz4775_nemc_groups), },
--	{ "nemc-cs1", jz4775_cs1_groups, ARRAY_SIZE(jz4775_cs1_groups), },
--	{ "nemc-cs2", jz4775_cs2_groups, ARRAY_SIZE(jz4775_cs2_groups), },
--	{ "nemc-cs3", jz4775_cs3_groups, ARRAY_SIZE(jz4775_cs3_groups), },
--	{ "i2c0", jz4775_i2c0_groups, ARRAY_SIZE(jz4775_i2c0_groups), },
--	{ "i2c1", jz4775_i2c1_groups, ARRAY_SIZE(jz4775_i2c1_groups), },
--	{ "i2c2", jz4775_i2c2_groups, ARRAY_SIZE(jz4775_i2c2_groups), },
--	{ "i2s", jz4775_i2s_groups, ARRAY_SIZE(jz4775_i2s_groups), },
--	{ "dmic", jz4775_dmic_groups, ARRAY_SIZE(jz4775_dmic_groups), },
--	{ "cim", jz4775_cim_groups, ARRAY_SIZE(jz4775_cim_groups), },
--	{ "lcd", jz4775_lcd_groups, ARRAY_SIZE(jz4775_lcd_groups), },
--	{ "pwm0", jz4775_pwm0_groups, ARRAY_SIZE(jz4775_pwm0_groups), },
--	{ "pwm1", jz4775_pwm1_groups, ARRAY_SIZE(jz4775_pwm1_groups), },
--	{ "pwm2", jz4775_pwm2_groups, ARRAY_SIZE(jz4775_pwm2_groups), },
--	{ "pwm3", jz4775_pwm3_groups, ARRAY_SIZE(jz4775_pwm3_groups), },
--	{ "mac", jz4775_mac_groups, ARRAY_SIZE(jz4775_mac_groups), },
--	{ "otg", jz4775_otg_groups, ARRAY_SIZE(jz4775_otg_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", jz4775_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", jz4775_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", jz4775_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", jz4775_uart3),
-+	INGENIC_PIN_FUNCTION("ssi", jz4775_ssi),
-+	INGENIC_PIN_FUNCTION("mmc0", jz4775_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", jz4775_mmc1),
-+	INGENIC_PIN_FUNCTION("mmc2", jz4775_mmc2),
-+	INGENIC_PIN_FUNCTION("nemc", jz4775_nemc),
-+	INGENIC_PIN_FUNCTION("nemc-cs1", jz4775_cs1),
-+	INGENIC_PIN_FUNCTION("nemc-cs2", jz4775_cs2),
-+	INGENIC_PIN_FUNCTION("nemc-cs3", jz4775_cs3),
-+	INGENIC_PIN_FUNCTION("i2c0", jz4775_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", jz4775_i2c1),
-+	INGENIC_PIN_FUNCTION("i2c2", jz4775_i2c2),
-+	INGENIC_PIN_FUNCTION("i2s", jz4775_i2s),
-+	INGENIC_PIN_FUNCTION("dmic", jz4775_dmic),
-+	INGENIC_PIN_FUNCTION("cim", jz4775_cim),
-+	INGENIC_PIN_FUNCTION("lcd", jz4775_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4775_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4775_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", jz4775_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", jz4775_pwm3),
-+	INGENIC_PIN_FUNCTION("mac", jz4775_mac),
-+	INGENIC_PIN_FUNCTION("otg", jz4775_otg),
- };
- 
- static const struct ingenic_chip_info jz4775_chip_info = {
-@@ -1949,42 +1957,41 @@ static const char *jz4780_cim_groups[] = { "cim-data", };
- static const char *jz4780_hdmi_ddc_groups[] = { "hdmi-ddc", };
- 
- static const struct function_desc jz4780_functions[] = {
--	{ "uart0", jz4770_uart0_groups, ARRAY_SIZE(jz4770_uart0_groups), },
--	{ "uart1", jz4770_uart1_groups, ARRAY_SIZE(jz4770_uart1_groups), },
--	{ "uart2", jz4780_uart2_groups, ARRAY_SIZE(jz4780_uart2_groups), },
--	{ "uart3", jz4770_uart3_groups, ARRAY_SIZE(jz4770_uart3_groups), },
--	{ "uart4", jz4780_uart4_groups, ARRAY_SIZE(jz4780_uart4_groups), },
--	{ "ssi0", jz4780_ssi0_groups, ARRAY_SIZE(jz4780_ssi0_groups), },
--	{ "ssi1", jz4780_ssi1_groups, ARRAY_SIZE(jz4780_ssi1_groups), },
--	{ "mmc0", jz4780_mmc0_groups, ARRAY_SIZE(jz4780_mmc0_groups), },
--	{ "mmc1", jz4780_mmc1_groups, ARRAY_SIZE(jz4780_mmc1_groups), },
--	{ "mmc2", jz4780_mmc2_groups, ARRAY_SIZE(jz4780_mmc2_groups), },
--	{ "nemc", jz4780_nemc_groups, ARRAY_SIZE(jz4780_nemc_groups), },
--	{ "nemc-cs1", jz4770_cs1_groups, ARRAY_SIZE(jz4770_cs1_groups), },
--	{ "nemc-cs2", jz4770_cs2_groups, ARRAY_SIZE(jz4770_cs2_groups), },
--	{ "nemc-cs3", jz4770_cs3_groups, ARRAY_SIZE(jz4770_cs3_groups), },
--	{ "nemc-cs4", jz4770_cs4_groups, ARRAY_SIZE(jz4770_cs4_groups), },
--	{ "nemc-cs5", jz4770_cs5_groups, ARRAY_SIZE(jz4770_cs5_groups), },
--	{ "nemc-cs6", jz4770_cs6_groups, ARRAY_SIZE(jz4770_cs6_groups), },
--	{ "i2c0", jz4770_i2c0_groups, ARRAY_SIZE(jz4770_i2c0_groups), },
--	{ "i2c1", jz4770_i2c1_groups, ARRAY_SIZE(jz4770_i2c1_groups), },
--	{ "i2c2", jz4770_i2c2_groups, ARRAY_SIZE(jz4770_i2c2_groups), },
--	{ "i2c3", jz4780_i2c3_groups, ARRAY_SIZE(jz4780_i2c3_groups), },
--	{ "i2c4", jz4780_i2c4_groups, ARRAY_SIZE(jz4780_i2c4_groups), },
--	{ "i2s", jz4780_i2s_groups, ARRAY_SIZE(jz4780_i2s_groups), },
--	{ "dmic", jz4780_dmic_groups, ARRAY_SIZE(jz4780_dmic_groups), },
--	{ "cim", jz4780_cim_groups, ARRAY_SIZE(jz4780_cim_groups), },
--	{ "lcd", jz4770_lcd_groups, ARRAY_SIZE(jz4770_lcd_groups), },
--	{ "pwm0", jz4770_pwm0_groups, ARRAY_SIZE(jz4770_pwm0_groups), },
--	{ "pwm1", jz4770_pwm1_groups, ARRAY_SIZE(jz4770_pwm1_groups), },
--	{ "pwm2", jz4770_pwm2_groups, ARRAY_SIZE(jz4770_pwm2_groups), },
--	{ "pwm3", jz4770_pwm3_groups, ARRAY_SIZE(jz4770_pwm3_groups), },
--	{ "pwm4", jz4770_pwm4_groups, ARRAY_SIZE(jz4770_pwm4_groups), },
--	{ "pwm5", jz4770_pwm5_groups, ARRAY_SIZE(jz4770_pwm5_groups), },
--	{ "pwm6", jz4770_pwm6_groups, ARRAY_SIZE(jz4770_pwm6_groups), },
--	{ "pwm7", jz4770_pwm7_groups, ARRAY_SIZE(jz4770_pwm7_groups), },
--	{ "hdmi-ddc", jz4780_hdmi_ddc_groups,
--		      ARRAY_SIZE(jz4780_hdmi_ddc_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", jz4770_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", jz4770_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", jz4780_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", jz4770_uart3),
-+	INGENIC_PIN_FUNCTION("uart4", jz4780_uart4),
-+	INGENIC_PIN_FUNCTION("ssi0", jz4780_ssi0),
-+	INGENIC_PIN_FUNCTION("ssi1", jz4780_ssi1),
-+	INGENIC_PIN_FUNCTION("mmc0", jz4780_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", jz4780_mmc1),
-+	INGENIC_PIN_FUNCTION("mmc2", jz4780_mmc2),
-+	INGENIC_PIN_FUNCTION("nemc", jz4780_nemc),
-+	INGENIC_PIN_FUNCTION("nemc-cs1", jz4770_cs1),
-+	INGENIC_PIN_FUNCTION("nemc-cs2", jz4770_cs2),
-+	INGENIC_PIN_FUNCTION("nemc-cs3", jz4770_cs3),
-+	INGENIC_PIN_FUNCTION("nemc-cs4", jz4770_cs4),
-+	INGENIC_PIN_FUNCTION("nemc-cs5", jz4770_cs5),
-+	INGENIC_PIN_FUNCTION("nemc-cs6", jz4770_cs6),
-+	INGENIC_PIN_FUNCTION("i2c0", jz4770_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", jz4770_i2c1),
-+	INGENIC_PIN_FUNCTION("i2c2", jz4770_i2c2),
-+	INGENIC_PIN_FUNCTION("i2c3", jz4780_i2c3),
-+	INGENIC_PIN_FUNCTION("i2c4", jz4780_i2c4),
-+	INGENIC_PIN_FUNCTION("i2s", jz4780_i2s),
-+	INGENIC_PIN_FUNCTION("dmic", jz4780_dmic),
-+	INGENIC_PIN_FUNCTION("cim", jz4780_cim),
-+	INGENIC_PIN_FUNCTION("lcd", jz4770_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", jz4770_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", jz4770_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", jz4770_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", jz4770_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", jz4770_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", jz4770_pwm5),
-+	INGENIC_PIN_FUNCTION("pwm6", jz4770_pwm6),
-+	INGENIC_PIN_FUNCTION("pwm7", jz4770_pwm7),
-+	INGENIC_PIN_FUNCTION("hdmi-ddc", jz4780_hdmi_ddc),
- };
- 
- static const struct ingenic_chip_info jz4780_chip_info = {
-@@ -2185,29 +2192,29 @@ static const char *x1000_pwm4_groups[] = { "pwm4", };
- static const char *x1000_mac_groups[] = { "mac", };
- 
- static const struct function_desc x1000_functions[] = {
--	{ "uart0", x1000_uart0_groups, ARRAY_SIZE(x1000_uart0_groups), },
--	{ "uart1", x1000_uart1_groups, ARRAY_SIZE(x1000_uart1_groups), },
--	{ "uart2", x1000_uart2_groups, ARRAY_SIZE(x1000_uart2_groups), },
--	{ "sfc", x1000_sfc_groups, ARRAY_SIZE(x1000_sfc_groups), },
--	{ "ssi", x1000_ssi_groups, ARRAY_SIZE(x1000_ssi_groups), },
--	{ "mmc0", x1000_mmc0_groups, ARRAY_SIZE(x1000_mmc0_groups), },
--	{ "mmc1", x1000_mmc1_groups, ARRAY_SIZE(x1000_mmc1_groups), },
--	{ "emc", x1000_emc_groups, ARRAY_SIZE(x1000_emc_groups), },
--	{ "emc-cs1", x1000_cs1_groups, ARRAY_SIZE(x1000_cs1_groups), },
--	{ "emc-cs2", x1000_cs2_groups, ARRAY_SIZE(x1000_cs2_groups), },
--	{ "i2c0", x1000_i2c0_groups, ARRAY_SIZE(x1000_i2c0_groups), },
--	{ "i2c1", x1000_i2c1_groups, ARRAY_SIZE(x1000_i2c1_groups), },
--	{ "i2c2", x1000_i2c2_groups, ARRAY_SIZE(x1000_i2c2_groups), },
--	{ "i2s", x1000_i2s_groups, ARRAY_SIZE(x1000_i2s_groups), },
--	{ "dmic", x1000_dmic_groups, ARRAY_SIZE(x1000_dmic_groups), },
--	{ "cim", x1000_cim_groups, ARRAY_SIZE(x1000_cim_groups), },
--	{ "lcd", x1000_lcd_groups, ARRAY_SIZE(x1000_lcd_groups), },
--	{ "pwm0", x1000_pwm0_groups, ARRAY_SIZE(x1000_pwm0_groups), },
--	{ "pwm1", x1000_pwm1_groups, ARRAY_SIZE(x1000_pwm1_groups), },
--	{ "pwm2", x1000_pwm2_groups, ARRAY_SIZE(x1000_pwm2_groups), },
--	{ "pwm3", x1000_pwm3_groups, ARRAY_SIZE(x1000_pwm3_groups), },
--	{ "pwm4", x1000_pwm4_groups, ARRAY_SIZE(x1000_pwm4_groups), },
--	{ "mac", x1000_mac_groups, ARRAY_SIZE(x1000_mac_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", x1000_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", x1000_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", x1000_uart2),
-+	INGENIC_PIN_FUNCTION("sfc", x1000_sfc),
-+	INGENIC_PIN_FUNCTION("ssi", x1000_ssi),
-+	INGENIC_PIN_FUNCTION("mmc0", x1000_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", x1000_mmc1),
-+	INGENIC_PIN_FUNCTION("emc", x1000_emc),
-+	INGENIC_PIN_FUNCTION("emc-cs1", x1000_cs1),
-+	INGENIC_PIN_FUNCTION("emc-cs2", x1000_cs2),
-+	INGENIC_PIN_FUNCTION("i2c0", x1000_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", x1000_i2c1),
-+	INGENIC_PIN_FUNCTION("i2c2", x1000_i2c2),
-+	INGENIC_PIN_FUNCTION("i2s", x1000_i2s),
-+	INGENIC_PIN_FUNCTION("dmic", x1000_dmic),
-+	INGENIC_PIN_FUNCTION("cim", x1000_cim),
-+	INGENIC_PIN_FUNCTION("lcd", x1000_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", x1000_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", x1000_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", x1000_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", x1000_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", x1000_pwm4),
-+	INGENIC_PIN_FUNCTION("mac", x1000_mac),
- };
- 
- static const struct regmap_range x1000_access_ranges[] = {
-@@ -2315,22 +2322,22 @@ static const char *x1500_pwm3_groups[] = { "pwm3", };
- static const char *x1500_pwm4_groups[] = { "pwm4", };
- 
- static const struct function_desc x1500_functions[] = {
--	{ "uart0", x1500_uart0_groups, ARRAY_SIZE(x1500_uart0_groups), },
--	{ "uart1", x1500_uart1_groups, ARRAY_SIZE(x1500_uart1_groups), },
--	{ "uart2", x1500_uart2_groups, ARRAY_SIZE(x1500_uart2_groups), },
--	{ "sfc", x1000_sfc_groups, ARRAY_SIZE(x1000_sfc_groups), },
--	{ "mmc", x1500_mmc_groups, ARRAY_SIZE(x1500_mmc_groups), },
--	{ "i2c0", x1500_i2c0_groups, ARRAY_SIZE(x1500_i2c0_groups), },
--	{ "i2c1", x1500_i2c1_groups, ARRAY_SIZE(x1500_i2c1_groups), },
--	{ "i2c2", x1500_i2c2_groups, ARRAY_SIZE(x1500_i2c2_groups), },
--	{ "i2s", x1500_i2s_groups, ARRAY_SIZE(x1500_i2s_groups), },
--	{ "dmic", x1500_dmic_groups, ARRAY_SIZE(x1500_dmic_groups), },
--	{ "cim", x1500_cim_groups, ARRAY_SIZE(x1500_cim_groups), },
--	{ "pwm0", x1500_pwm0_groups, ARRAY_SIZE(x1500_pwm0_groups), },
--	{ "pwm1", x1500_pwm1_groups, ARRAY_SIZE(x1500_pwm1_groups), },
--	{ "pwm2", x1500_pwm2_groups, ARRAY_SIZE(x1500_pwm2_groups), },
--	{ "pwm3", x1500_pwm3_groups, ARRAY_SIZE(x1500_pwm3_groups), },
--	{ "pwm4", x1500_pwm4_groups, ARRAY_SIZE(x1500_pwm4_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", x1500_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", x1500_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", x1500_uart2),
-+	INGENIC_PIN_FUNCTION("sfc", x1000_sfc),
-+	INGENIC_PIN_FUNCTION("mmc", x1500_mmc),
-+	INGENIC_PIN_FUNCTION("i2c0", x1500_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", x1500_i2c1),
-+	INGENIC_PIN_FUNCTION("i2c2", x1500_i2c2),
-+	INGENIC_PIN_FUNCTION("i2s", x1500_i2s),
-+	INGENIC_PIN_FUNCTION("dmic", x1500_dmic),
-+	INGENIC_PIN_FUNCTION("cim", x1500_cim),
-+	INGENIC_PIN_FUNCTION("pwm0", x1500_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", x1500_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", x1500_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", x1500_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", x1500_pwm4),
- };
- 
- static const struct ingenic_chip_info x1500_chip_info = {
-@@ -2526,28 +2533,28 @@ static const char *x1830_pwm7_groups[] = { "pwm7-c-18", "pwm7-c-28", };
- static const char *x1830_mac_groups[] = { "mac", };
- 
- static const struct function_desc x1830_functions[] = {
--	{ "uart0", x1830_uart0_groups, ARRAY_SIZE(x1830_uart0_groups), },
--	{ "uart1", x1830_uart1_groups, ARRAY_SIZE(x1830_uart1_groups), },
--	{ "sfc", x1830_sfc_groups, ARRAY_SIZE(x1830_sfc_groups), },
--	{ "ssi0", x1830_ssi0_groups, ARRAY_SIZE(x1830_ssi0_groups), },
--	{ "ssi1", x1830_ssi1_groups, ARRAY_SIZE(x1830_ssi1_groups), },
--	{ "mmc0", x1830_mmc0_groups, ARRAY_SIZE(x1830_mmc0_groups), },
--	{ "mmc1", x1830_mmc1_groups, ARRAY_SIZE(x1830_mmc1_groups), },
--	{ "i2c0", x1830_i2c0_groups, ARRAY_SIZE(x1830_i2c0_groups), },
--	{ "i2c1", x1830_i2c1_groups, ARRAY_SIZE(x1830_i2c1_groups), },
--	{ "i2c2", x1830_i2c2_groups, ARRAY_SIZE(x1830_i2c2_groups), },
--	{ "i2s", x1830_i2s_groups, ARRAY_SIZE(x1830_i2s_groups), },
--	{ "dmic", x1830_dmic_groups, ARRAY_SIZE(x1830_dmic_groups), },
--	{ "lcd", x1830_lcd_groups, ARRAY_SIZE(x1830_lcd_groups), },
--	{ "pwm0", x1830_pwm0_groups, ARRAY_SIZE(x1830_pwm0_groups), },
--	{ "pwm1", x1830_pwm1_groups, ARRAY_SIZE(x1830_pwm1_groups), },
--	{ "pwm2", x1830_pwm2_groups, ARRAY_SIZE(x1830_pwm2_groups), },
--	{ "pwm3", x1830_pwm3_groups, ARRAY_SIZE(x1830_pwm3_groups), },
--	{ "pwm4", x1830_pwm4_groups, ARRAY_SIZE(x1830_pwm4_groups), },
--	{ "pwm5", x1830_pwm5_groups, ARRAY_SIZE(x1830_pwm4_groups), },
--	{ "pwm6", x1830_pwm6_groups, ARRAY_SIZE(x1830_pwm4_groups), },
--	{ "pwm7", x1830_pwm7_groups, ARRAY_SIZE(x1830_pwm4_groups), },
--	{ "mac", x1830_mac_groups, ARRAY_SIZE(x1830_mac_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", x1830_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", x1830_uart1),
-+	INGENIC_PIN_FUNCTION("sfc", x1830_sfc),
-+	INGENIC_PIN_FUNCTION("ssi0", x1830_ssi0),
-+	INGENIC_PIN_FUNCTION("ssi1", x1830_ssi1),
-+	INGENIC_PIN_FUNCTION("mmc0", x1830_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", x1830_mmc1),
-+	INGENIC_PIN_FUNCTION("i2c0", x1830_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", x1830_i2c1),
-+	INGENIC_PIN_FUNCTION("i2c2", x1830_i2c2),
-+	INGENIC_PIN_FUNCTION("i2s", x1830_i2s),
-+	INGENIC_PIN_FUNCTION("dmic", x1830_dmic),
-+	INGENIC_PIN_FUNCTION("lcd", x1830_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", x1830_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", x1830_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", x1830_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", x1830_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", x1830_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", x1830_pwm5),
-+	INGENIC_PIN_FUNCTION("pwm6", x1830_pwm6),
-+	INGENIC_PIN_FUNCTION("pwm7", x1830_pwm7),
-+	INGENIC_PIN_FUNCTION("mac", x1830_mac),
- };
- 
- static const struct regmap_range x1830_access_ranges[] = {
-@@ -2972,56 +2979,56 @@ static const char *x2000_mac1_groups[] = { "mac1-rmii", "mac1-rgmii", };
- static const char *x2000_otg_groups[] = { "otg-vbus", };
- 
- static const struct function_desc x2000_functions[] = {
--	{ "uart0", x2000_uart0_groups, ARRAY_SIZE(x2000_uart0_groups), },
--	{ "uart1", x2000_uart1_groups, ARRAY_SIZE(x2000_uart1_groups), },
--	{ "uart2", x2000_uart2_groups, ARRAY_SIZE(x2000_uart2_groups), },
--	{ "uart3", x2000_uart3_groups, ARRAY_SIZE(x2000_uart3_groups), },
--	{ "uart4", x2000_uart4_groups, ARRAY_SIZE(x2000_uart4_groups), },
--	{ "uart5", x2000_uart5_groups, ARRAY_SIZE(x2000_uart5_groups), },
--	{ "uart6", x2000_uart6_groups, ARRAY_SIZE(x2000_uart6_groups), },
--	{ "uart7", x2000_uart7_groups, ARRAY_SIZE(x2000_uart7_groups), },
--	{ "uart8", x2000_uart8_groups, ARRAY_SIZE(x2000_uart8_groups), },
--	{ "uart9", x2000_uart9_groups, ARRAY_SIZE(x2000_uart9_groups), },
--	{ "sfc", x2000_sfc_groups, ARRAY_SIZE(x2000_sfc_groups), },
--	{ "ssi0", x2000_ssi0_groups, ARRAY_SIZE(x2000_ssi0_groups), },
--	{ "ssi1", x2000_ssi1_groups, ARRAY_SIZE(x2000_ssi1_groups), },
--	{ "mmc0", x2000_mmc0_groups, ARRAY_SIZE(x2000_mmc0_groups), },
--	{ "mmc1", x2000_mmc1_groups, ARRAY_SIZE(x2000_mmc1_groups), },
--	{ "mmc2", x2000_mmc2_groups, ARRAY_SIZE(x2000_mmc2_groups), },
--	{ "emc", x2000_emc_groups, ARRAY_SIZE(x2000_emc_groups), },
--	{ "emc-cs1", x2000_cs1_groups, ARRAY_SIZE(x2000_cs1_groups), },
--	{ "emc-cs2", x2000_cs2_groups, ARRAY_SIZE(x2000_cs2_groups), },
--	{ "i2c0", x2000_i2c0_groups, ARRAY_SIZE(x2000_i2c0_groups), },
--	{ "i2c1", x2000_i2c1_groups, ARRAY_SIZE(x2000_i2c1_groups), },
--	{ "i2c2", x2000_i2c2_groups, ARRAY_SIZE(x2000_i2c2_groups), },
--	{ "i2c3", x2000_i2c3_groups, ARRAY_SIZE(x2000_i2c3_groups), },
--	{ "i2c4", x2000_i2c4_groups, ARRAY_SIZE(x2000_i2c4_groups), },
--	{ "i2c5", x2000_i2c5_groups, ARRAY_SIZE(x2000_i2c5_groups), },
--	{ "i2s1", x2000_i2s1_groups, ARRAY_SIZE(x2000_i2s1_groups), },
--	{ "i2s2", x2000_i2s2_groups, ARRAY_SIZE(x2000_i2s2_groups), },
--	{ "i2s3", x2000_i2s3_groups, ARRAY_SIZE(x2000_i2s3_groups), },
--	{ "dmic", x2000_dmic_groups, ARRAY_SIZE(x2000_dmic_groups), },
--	{ "cim", x2000_cim_groups, ARRAY_SIZE(x2000_cim_groups), },
--	{ "lcd", x2000_lcd_groups, ARRAY_SIZE(x2000_lcd_groups), },
--	{ "pwm0", x2000_pwm0_groups, ARRAY_SIZE(x2000_pwm0_groups), },
--	{ "pwm1", x2000_pwm1_groups, ARRAY_SIZE(x2000_pwm1_groups), },
--	{ "pwm2", x2000_pwm2_groups, ARRAY_SIZE(x2000_pwm2_groups), },
--	{ "pwm3", x2000_pwm3_groups, ARRAY_SIZE(x2000_pwm3_groups), },
--	{ "pwm4", x2000_pwm4_groups, ARRAY_SIZE(x2000_pwm4_groups), },
--	{ "pwm5", x2000_pwm5_groups, ARRAY_SIZE(x2000_pwm5_groups), },
--	{ "pwm6", x2000_pwm6_groups, ARRAY_SIZE(x2000_pwm6_groups), },
--	{ "pwm7", x2000_pwm7_groups, ARRAY_SIZE(x2000_pwm7_groups), },
--	{ "pwm8", x2000_pwm8_groups, ARRAY_SIZE(x2000_pwm8_groups), },
--	{ "pwm9", x2000_pwm9_groups, ARRAY_SIZE(x2000_pwm9_groups), },
--	{ "pwm10", x2000_pwm10_groups, ARRAY_SIZE(x2000_pwm10_groups), },
--	{ "pwm11", x2000_pwm11_groups, ARRAY_SIZE(x2000_pwm11_groups), },
--	{ "pwm12", x2000_pwm12_groups, ARRAY_SIZE(x2000_pwm12_groups), },
--	{ "pwm13", x2000_pwm13_groups, ARRAY_SIZE(x2000_pwm13_groups), },
--	{ "pwm14", x2000_pwm14_groups, ARRAY_SIZE(x2000_pwm14_groups), },
--	{ "pwm15", x2000_pwm15_groups, ARRAY_SIZE(x2000_pwm15_groups), },
--	{ "mac0", x2000_mac0_groups, ARRAY_SIZE(x2000_mac0_groups), },
--	{ "mac1", x2000_mac1_groups, ARRAY_SIZE(x2000_mac1_groups), },
--	{ "otg", x2000_otg_groups, ARRAY_SIZE(x2000_otg_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", x2000_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", x2000_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", x2000_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", x2000_uart3),
-+	INGENIC_PIN_FUNCTION("uart4", x2000_uart4),
-+	INGENIC_PIN_FUNCTION("uart5", x2000_uart5),
-+	INGENIC_PIN_FUNCTION("uart6", x2000_uart6),
-+	INGENIC_PIN_FUNCTION("uart7", x2000_uart7),
-+	INGENIC_PIN_FUNCTION("uart8", x2000_uart8),
-+	INGENIC_PIN_FUNCTION("uart9", x2000_uart9),
-+	INGENIC_PIN_FUNCTION("sfc", x2000_sfc),
-+	INGENIC_PIN_FUNCTION("ssi0", x2000_ssi0),
-+	INGENIC_PIN_FUNCTION("ssi1", x2000_ssi1),
-+	INGENIC_PIN_FUNCTION("mmc0", x2000_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", x2000_mmc1),
-+	INGENIC_PIN_FUNCTION("mmc2", x2000_mmc2),
-+	INGENIC_PIN_FUNCTION("emc", x2000_emc),
-+	INGENIC_PIN_FUNCTION("emc-cs1", x2000_cs1),
-+	INGENIC_PIN_FUNCTION("emc-cs2", x2000_cs2),
-+	INGENIC_PIN_FUNCTION("i2c0", x2000_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", x2000_i2c1),
-+	INGENIC_PIN_FUNCTION("i2c2", x2000_i2c2),
-+	INGENIC_PIN_FUNCTION("i2c3", x2000_i2c3),
-+	INGENIC_PIN_FUNCTION("i2c4", x2000_i2c4),
-+	INGENIC_PIN_FUNCTION("i2c5", x2000_i2c5),
-+	INGENIC_PIN_FUNCTION("i2s1", x2000_i2s1),
-+	INGENIC_PIN_FUNCTION("i2s2", x2000_i2s2),
-+	INGENIC_PIN_FUNCTION("i2s3", x2000_i2s3),
-+	INGENIC_PIN_FUNCTION("dmic", x2000_dmic),
-+	INGENIC_PIN_FUNCTION("cim", x2000_cim),
-+	INGENIC_PIN_FUNCTION("lcd", x2000_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", x2000_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", x2000_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", x2000_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", x2000_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", x2000_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", x2000_pwm5),
-+	INGENIC_PIN_FUNCTION("pwm6", x2000_pwm6),
-+	INGENIC_PIN_FUNCTION("pwm7", x2000_pwm7),
-+	INGENIC_PIN_FUNCTION("pwm8", x2000_pwm8),
-+	INGENIC_PIN_FUNCTION("pwm9", x2000_pwm9),
-+	INGENIC_PIN_FUNCTION("pwm10", x2000_pwm10),
-+	INGENIC_PIN_FUNCTION("pwm11", x2000_pwm11),
-+	INGENIC_PIN_FUNCTION("pwm12", x2000_pwm12),
-+	INGENIC_PIN_FUNCTION("pwm13", x2000_pwm13),
-+	INGENIC_PIN_FUNCTION("pwm14", x2000_pwm14),
-+	INGENIC_PIN_FUNCTION("pwm15", x2000_pwm15),
-+	INGENIC_PIN_FUNCTION("mac0", x2000_mac0),
-+	INGENIC_PIN_FUNCTION("mac1", x2000_mac1),
-+	INGENIC_PIN_FUNCTION("otg", x2000_otg),
- };
- 
- static const struct regmap_range x2000_access_ranges[] = {
-@@ -3196,54 +3203,54 @@ static const struct group_desc x2100_groups[] = {
- static const char *x2100_mac_groups[] = { "mac", };
- 
- static const struct function_desc x2100_functions[] = {
--	{ "uart0", x2000_uart0_groups, ARRAY_SIZE(x2000_uart0_groups), },
--	{ "uart1", x2000_uart1_groups, ARRAY_SIZE(x2000_uart1_groups), },
--	{ "uart2", x2000_uart2_groups, ARRAY_SIZE(x2000_uart2_groups), },
--	{ "uart3", x2000_uart3_groups, ARRAY_SIZE(x2000_uart3_groups), },
--	{ "uart4", x2000_uart4_groups, ARRAY_SIZE(x2000_uart4_groups), },
--	{ "uart5", x2000_uart5_groups, ARRAY_SIZE(x2000_uart5_groups), },
--	{ "uart6", x2000_uart6_groups, ARRAY_SIZE(x2000_uart6_groups), },
--	{ "uart7", x2000_uart7_groups, ARRAY_SIZE(x2000_uart7_groups), },
--	{ "uart8", x2000_uart8_groups, ARRAY_SIZE(x2000_uart8_groups), },
--	{ "uart9", x2000_uart9_groups, ARRAY_SIZE(x2000_uart9_groups), },
--	{ "sfc", x2000_sfc_groups, ARRAY_SIZE(x2000_sfc_groups), },
--	{ "ssi0", x2000_ssi0_groups, ARRAY_SIZE(x2000_ssi0_groups), },
--	{ "ssi1", x2000_ssi1_groups, ARRAY_SIZE(x2000_ssi1_groups), },
--	{ "mmc0", x2000_mmc0_groups, ARRAY_SIZE(x2000_mmc0_groups), },
--	{ "mmc1", x2000_mmc1_groups, ARRAY_SIZE(x2000_mmc1_groups), },
--	{ "mmc2", x2000_mmc2_groups, ARRAY_SIZE(x2000_mmc2_groups), },
--	{ "emc", x2000_emc_groups, ARRAY_SIZE(x2000_emc_groups), },
--	{ "emc-cs1", x2000_cs1_groups, ARRAY_SIZE(x2000_cs1_groups), },
--	{ "emc-cs2", x2000_cs2_groups, ARRAY_SIZE(x2000_cs2_groups), },
--	{ "i2c0", x2000_i2c0_groups, ARRAY_SIZE(x2000_i2c0_groups), },
--	{ "i2c1", x2000_i2c1_groups, ARRAY_SIZE(x2000_i2c1_groups), },
--	{ "i2c2", x2000_i2c2_groups, ARRAY_SIZE(x2000_i2c2_groups), },
--	{ "i2c3", x2000_i2c3_groups, ARRAY_SIZE(x2000_i2c3_groups), },
--	{ "i2c4", x2000_i2c4_groups, ARRAY_SIZE(x2000_i2c4_groups), },
--	{ "i2c5", x2000_i2c5_groups, ARRAY_SIZE(x2000_i2c5_groups), },
--	{ "i2s1", x2000_i2s1_groups, ARRAY_SIZE(x2000_i2s1_groups), },
--	{ "i2s2", x2000_i2s2_groups, ARRAY_SIZE(x2000_i2s2_groups), },
--	{ "i2s3", x2000_i2s3_groups, ARRAY_SIZE(x2000_i2s3_groups), },
--	{ "dmic", x2000_dmic_groups, ARRAY_SIZE(x2000_dmic_groups), },
--	{ "cim", x2000_cim_groups, ARRAY_SIZE(x2000_cim_groups), },
--	{ "lcd", x2000_lcd_groups, ARRAY_SIZE(x2000_lcd_groups), },
--	{ "pwm0", x2000_pwm0_groups, ARRAY_SIZE(x2000_pwm0_groups), },
--	{ "pwm1", x2000_pwm1_groups, ARRAY_SIZE(x2000_pwm1_groups), },
--	{ "pwm2", x2000_pwm2_groups, ARRAY_SIZE(x2000_pwm2_groups), },
--	{ "pwm3", x2000_pwm3_groups, ARRAY_SIZE(x2000_pwm3_groups), },
--	{ "pwm4", x2000_pwm4_groups, ARRAY_SIZE(x2000_pwm4_groups), },
--	{ "pwm5", x2000_pwm5_groups, ARRAY_SIZE(x2000_pwm5_groups), },
--	{ "pwm6", x2000_pwm6_groups, ARRAY_SIZE(x2000_pwm6_groups), },
--	{ "pwm7", x2000_pwm7_groups, ARRAY_SIZE(x2000_pwm7_groups), },
--	{ "pwm8", x2000_pwm8_groups, ARRAY_SIZE(x2000_pwm8_groups), },
--	{ "pwm9", x2000_pwm9_groups, ARRAY_SIZE(x2000_pwm9_groups), },
--	{ "pwm10", x2000_pwm10_groups, ARRAY_SIZE(x2000_pwm10_groups), },
--	{ "pwm11", x2000_pwm11_groups, ARRAY_SIZE(x2000_pwm11_groups), },
--	{ "pwm12", x2000_pwm12_groups, ARRAY_SIZE(x2000_pwm12_groups), },
--	{ "pwm13", x2000_pwm13_groups, ARRAY_SIZE(x2000_pwm13_groups), },
--	{ "pwm14", x2000_pwm14_groups, ARRAY_SIZE(x2000_pwm14_groups), },
--	{ "pwm15", x2000_pwm15_groups, ARRAY_SIZE(x2000_pwm15_groups), },
--	{ "mac", x2100_mac_groups, ARRAY_SIZE(x2100_mac_groups), },
-+	INGENIC_PIN_FUNCTION("uart0", x2000_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", x2000_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", x2000_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", x2000_uart3),
-+	INGENIC_PIN_FUNCTION("uart4", x2000_uart4),
-+	INGENIC_PIN_FUNCTION("uart5", x2000_uart5),
-+	INGENIC_PIN_FUNCTION("uart6", x2000_uart6),
-+	INGENIC_PIN_FUNCTION("uart7", x2000_uart7),
-+	INGENIC_PIN_FUNCTION("uart8", x2000_uart8),
-+	INGENIC_PIN_FUNCTION("uart9", x2000_uart9),
-+	INGENIC_PIN_FUNCTION("sfc", x2000_sfc),
-+	INGENIC_PIN_FUNCTION("ssi0", x2000_ssi0),
-+	INGENIC_PIN_FUNCTION("ssi1", x2000_ssi1),
-+	INGENIC_PIN_FUNCTION("mmc0", x2000_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", x2000_mmc1),
-+	INGENIC_PIN_FUNCTION("mmc2", x2000_mmc2),
-+	INGENIC_PIN_FUNCTION("emc", x2000_emc),
-+	INGENIC_PIN_FUNCTION("emc-cs1", x2000_cs1),
-+	INGENIC_PIN_FUNCTION("emc-cs2", x2000_cs2),
-+	INGENIC_PIN_FUNCTION("i2c0", x2000_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", x2000_i2c1),
-+	INGENIC_PIN_FUNCTION("i2c2", x2000_i2c2),
-+	INGENIC_PIN_FUNCTION("i2c3", x2000_i2c3),
-+	INGENIC_PIN_FUNCTION("i2c4", x2000_i2c4),
-+	INGENIC_PIN_FUNCTION("i2c5", x2000_i2c5),
-+	INGENIC_PIN_FUNCTION("i2s1", x2000_i2s1),
-+	INGENIC_PIN_FUNCTION("i2s2", x2000_i2s2),
-+	INGENIC_PIN_FUNCTION("i2s3", x2000_i2s3),
-+	INGENIC_PIN_FUNCTION("dmic", x2000_dmic),
-+	INGENIC_PIN_FUNCTION("cim", x2000_cim),
-+	INGENIC_PIN_FUNCTION("lcd", x2000_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", x2000_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", x2000_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", x2000_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", x2000_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", x2000_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", x2000_pwm5),
-+	INGENIC_PIN_FUNCTION("pwm6", x2000_pwm6),
-+	INGENIC_PIN_FUNCTION("pwm7", x2000_pwm7),
-+	INGENIC_PIN_FUNCTION("pwm8", x2000_pwm8),
-+	INGENIC_PIN_FUNCTION("pwm9", x2000_pwm9),
-+	INGENIC_PIN_FUNCTION("pwm10", x2000_pwm10),
-+	INGENIC_PIN_FUNCTION("pwm11", x2000_pwm11),
-+	INGENIC_PIN_FUNCTION("pwm12", x2000_pwm12),
-+	INGENIC_PIN_FUNCTION("pwm13", x2000_pwm13),
-+	INGENIC_PIN_FUNCTION("pwm14", x2000_pwm14),
-+	INGENIC_PIN_FUNCTION("pwm15", x2000_pwm15),
-+	INGENIC_PIN_FUNCTION("mac", x2100_mac),
- };
- 
- static const struct ingenic_chip_info x2100_chip_info = {
--- 
-2.45.1
+T24gTW9uLCAyMDI0LTA1LTI3IGF0IDE2OjI5ICswMzAwLCBUZXJvIEtyaXN0byB3cm90ZToKPiBG
+cm9tOiBTcmluaXZhcyBQYW5kcnV2YWRhIDxzcmluaXZhcy5wYW5kcnV2YWRhQGxpbnV4LmludGVs
+LmNvbT4KPiAKPiBFYWNoIFRQTUkgcG93ZXIgZG9tYWluIGluY2x1ZGVzIGEgZ3JvdXAgb2YgQ1BV
+cy4gU2V2ZXJhbCBwb3dlcgo+IG1hbmFnZW1lbnQgc2V0dGluZ3MgaW4gdGhpcyBjYXNlIGFwcGxp
+Y2FibGUgdG8gYSBncm91cCBvZiBDUFVzLgo+IFRoZXJlIGNhbiBiZSBzZXZlcmFsIHBvd2VyIGRv
+bWFpbnMgaW4gYSBDUFUgcGFja2FnZS4gU28sIHByb3ZpZGUKPiBpbnRlcmZhY2VzIGZvcjoKPiAt
+IEdldCBwb3dlciBkb21haW4gaWQgZm9yIGEgTGludXggQ1BVCj4gLSBHZXQgbWFzayBvZiBMaW51
+eCBDUFVzIGluIGEgcG93ZXIgZG9tYWluCj4gCj4gSGFyZHdhcmUgUHVuaXQgdXNlcyBkaWZmZXJl
+bnQgQ1BVIG51bWJlcmluZywgd2hpY2ggaXMgbm90IGJhc2VkIG9uCj4gQVBJQyAoQWR2YW5jZWQg
+UHJvZ3JhbW1hYmxlIEludGVycnVwdCBDb250cm9sbGVyKSBDUFUgbnVtYmVyaW5nLgo+IFRoZSBM
+aW51eCBDUFUgbnVtYmVyaW5nIGlzIGJhc2VkIG9uIEFQSUMgQ1BVIG51bWJlcmluZy4gU29tZSBQ
+TQo+IGZlYXR1cmVzCj4gbGlrZSBJbnRlbCBTcGVlZCBTZWxlY3QsIHRoZSBDUFUgY29yZSBtYXNr
+IHByb3ZpZGVkIGJ5IHRoZSBoYXJkd2FyZQo+IGlzCj4gYmFzZWQgb24gdGhlIFB1bml0IENQVSBu
+dW1iZXJpbmcuIFRvIHVzZSB0aGUgY29yZSBtYXNrLCB0aGlzIG1hc2sKPiBuZWVkcyB0byBiZSBj
+b252ZXJ0ZWQgdG8gYSBMaW51eCBDUFVzIG1hc2suIFNvLCBwcm92aWRlIGludGVyZmFjZXMKPiBm
+b3I6Cj4gLSBDb252ZXJ0IHRvIGEgTGludXggQ1BVIG51bWJlciBmcm9tIGEgUHVuaXQgQ1BVIG51
+bWJlcgo+IC0gQ29udmVydCB0byBhIFB1bml0IENQVSBudW1iZXIgZnJvbSBhIExpbnV4IENQVSBu
+dW1iZXIKPiAKPiBPbiBlYWNoIENQVSBvbmxpbmUsIE1TUiAweDU0IGlzIHVzZWQgdG8gcmVhZCB0
+aGUgbWFwcGluZyBhbmQgc3RvcmVzCj4gaW4KPiBhIHBlciBjcHUgYXJyYXkuIENyZWF0ZSBhIGhh
+c2ggZm9yIGZhc3RlciBzZWFyY2hpbmcgb2YgYSBMaW51eCBDUFUKPiBudW1iZXIKPiBmcm9tIGEg
+UHVuaXQgQ1BVIG51bWJlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTcmluaXZhcyBQYW5kcnV2YWRh
+Cj4gPHNyaW5pdmFzLnBhbmRydXZhZGFAbGludXguaW50ZWwuY29tPgo+IFt0ZXJvLmtyaXN0bzog
+bWlub3IgdXBkYXRlc10KPiBSZXZpZXdlZC1ieTogQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hl
+dmNoZW5rb0BsaW51eC5pbnRlbC5jb20+Cj4gUmV2aWV3ZWQtYnk6IElscG8gSsOkcnZpbmVuIDxp
+bHBvLmphcnZpbmVuQGxpbnV4LmludGVsLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBUZXJvIEtyaXN0
+byA8dGVyby5rcmlzdG9AbGludXguaW50ZWwuY29tPgo+IC0tLQo+IMKgZHJpdmVycy9wbGF0Zm9y
+bS94ODYvaW50ZWwvS2NvbmZpZ8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgNCArCj4gwqBk
+cml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgIHzC
+oMKgIDMgKwo+IMKgLi4uL3BsYXRmb3JtL3g4Ni9pbnRlbC90cG1pX3Bvd2VyX2RvbWFpbnMuY8Kg
+wqAgfCAyMzYKPiArKysrKysrKysrKysrKysrKysKPiDCoC4uLi9wbGF0Zm9ybS94ODYvaW50ZWwv
+dHBtaV9wb3dlcl9kb21haW5zLmjCoMKgIHzCoCAxOSArKwo+IMKgNCBmaWxlcyBjaGFuZ2VkLCAy
+NjIgaW5zZXJ0aW9ucygrKQo+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGxhdGZvcm0v
+eDg2L2ludGVsL3RwbWlfcG93ZXJfZG9tYWlucy5jCj4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvdHBtaV9wb3dlcl9kb21haW5zLmgKPiAKPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvS2NvbmZpZwo+IGIvZHJpdmVycy9wbGF0
+Zm9ybS94ODYvaW50ZWwvS2NvbmZpZwo+IGluZGV4IGU5ZGMwYzAyMTAyOS4uZTk3YTk3MzU1ZDVh
+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL0tjb25maWcKPiArKysg
+Yi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9LY29uZmlnCj4gQEAgLTE5MiwxMCArMTkyLDE0
+IEBAIGNvbmZpZyBJTlRFTF9TTUFSVENPTk5FQ1QKPiDCoMKgwqDCoMKgwqDCoMKgwqAgVGhpcyBk
+cml2ZXIgY2hlY2tzIHRvIGRldGVybWluZSB3aGV0aGVyIHRoZSBkZXZpY2UgaGFzCj4gSW50ZWwg
+U21hcnQKPiDCoMKgwqDCoMKgwqDCoMKgwqAgQ29ubmVjdCBlbmFibGVkLCBhbmQgaWYgc28gZGlz
+YWJsZXMgaXQuCj4gwqAKPiArY29uZmlnIElOVEVMX1RQTUlfUE9XRVJfRE9NQUlOUwo+ICvCoMKg
+wqDCoMKgwqDCoHRyaXN0YXRlCj4gKwo+IMKgY29uZmlnIElOVEVMX1RQTUkKPiDCoMKgwqDCoMKg
+wqDCoMKgdHJpc3RhdGUgIkludGVsIFRvcG9sb2d5IEF3YXJlIFJlZ2lzdGVyIGFuZCBQTSBDYXBz
+dWxlCj4gSW50ZXJmYWNlIChUUE1JKSIKPiDCoMKgwqDCoMKgwqDCoMKgZGVwZW5kcyBvbiBJTlRF
+TF9WU0VDCj4gwqDCoMKgwqDCoMKgwqDCoGRlcGVuZHMgb24gWDg2XzY0Cj4gK8KgwqDCoMKgwqDC
+oMKgc2VsZWN0IElOVEVMX1RQTUlfUE9XRVJfRE9NQUlOUwo+IMKgwqDCoMKgwqDCoMKgwqBoZWxw
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgIFRoZSBJbnRlbCBUb3BvbG9neSBBd2FyZSBSZWdpc3RlciBh
+bmQgUE0gQ2Fwc3VsZSBJbnRlcmZhY2UKPiAoVFBNSSksCj4gwqDCoMKgwqDCoMKgwqDCoMKgIHBy
+b3ZpZGVzIGVudW1lcmFibGUgTU1JTyBpbnRlcmZhY2UgZm9yIHBvd2VyIG1hbmFnZW1lbnQKPiBm
+ZWF0dXJlcy4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvTWFrZWZp
+bGUKPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL01ha2VmaWxlCj4gaW5kZXggYzFkNWZl
+MDVlM2YzLi4xMDQzN2U1NjAyN2QgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+aW50ZWwvTWFrZWZpbGUKPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9NYWtlZmls
+ZQo+IEBAIC01Myw2ICs1Myw5IEBAIG9iai0kKENPTkZJR19JTlRFTF9QVU5JVF9JUEMpwqDCoMKg
+wqDCoMKgwqDCoMKgKz0KPiBpbnRlbF9wdW5pdF9pcGMubwo+IMKgaW50ZWxfdnNlY190cG1pLXnC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDo9IHRwbWkubwo+IMKg
+b2JqLSQoQ09ORklHX0lOVEVMX1RQTUkpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgKz0g
+aW50ZWxfdnNlY190cG1pLm8KPiDCoAo+ICtpbnRlbF90cG1pX3Bvd2VyX2RvbWFpbnMtecKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgOj0gdHBtaV9wb3dlcl9kb21haW5zLm8KPiArb2JqLSQoQ09O
+RklHX0lOVEVMX1RQTUlfUE9XRVJfRE9NQUlOUynCoCs9IGludGVsX3RwbWlfcG93ZXJfZG9tYWlu
+cy5vCj4gKwo+IMKgIyBJbnRlbCBVbmNvcmUgZHJpdmVycwo+IMKgaW50ZWwtcnN0LXnCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDo9IHJzdC5v
+Cj4gwqBvYmotJChDT05GSUdfSU5URUxfUlNUKcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCs9IGludGVsLXJzdC5vCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+cGxhdGZvcm0veDg2L2ludGVsL3RwbWlfcG93ZXJfZG9tYWlucy5jCj4gYi9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9pbnRlbC90cG1pX3Bvd2VyX2RvbWFpbnMuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi40MGY5OTQ4MTQyNDgKPiAtLS0gL2Rldi9udWxsCj4gKysr
+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvdHBtaV9wb3dlcl9kb21haW5zLmMKPiBAQCAt
+MCwwICsxLDIzNiBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5
+Cj4gKy8qCj4gKyAqIE1hcHBpbmcgb2YgVFBNSSBwb3dlciBkb21haW5zIENQVSBtYXBwaW5nCj4g
+KyAqCj4gKyAqIENvcHlyaWdodCAoYykgMjAyNCwgSW50ZWwgQ29ycG9yYXRpb24uCj4gKyAqIEFs
+bCBSaWdodHMgUmVzZXJ2ZWQuCj4gKyAqLwo+ICsKPiArI2luY2x1ZGUgPGxpbnV4L2JpdGZpZWxk
+Lmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9jbGVhbnVwLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9jcHVo
+b3RwbHVnLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9jcHVtYXNrLmg+Cj4gKyNpbmNsdWRlIDxsaW51
+eC9lcnJuby5oPgo+ICsjaW5jbHVkZSA8bGludXgvZXhwb3J0Lmg+Cj4gKyNpbmNsdWRlIDxsaW51
+eC9oYXNodGFibGUuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICsjaW5jbHVkZSA8
+bGludXgvbXV0ZXguaD4KPiArI2luY2x1ZGUgPGxpbnV4L292ZXJmbG93Lmg+Cj4gKyNpbmNsdWRl
+IDxsaW51eC9zbGFiLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC90b3BvbG9neS5oPgo+ICsjaW5jbHVk
+ZSA8bGludXgvdHlwZXMuaD4KPiArCj4gKyNpbmNsdWRlIDxhc20vY3B1X2RldmljZV9pZC5oPgo+
+ICsjaW5jbHVkZSA8YXNtL2ludGVsLWZhbWlseS5oPgo+ICsjaW5jbHVkZSA8YXNtL21zci5oPgo+
+ICsKPiArI2luY2x1ZGUgInRwbWlfcG93ZXJfZG9tYWlucy5oIgo+ICsKPiArI2RlZmluZSBNU1Jf
+UE1fTE9HSUNBTF9JRMKgwqDCoMKgwqDCoCAweDU0Cj4gKwo+ICsvKgo+ICsgKiBTdHJ1Y3Qgb2Yg
+TVNSIDB4NTQKPiArICogWzE1OjExXSBQTV9ET01BSU5fSUQKPiArICogWzEwOjNdIE1PRFVMRV9J
+RCAoYWthIElESV9BR0VOVF9JRCkKPiArICogWzI6MF0gTFBfSUQKPiArICogRm9yIEF0b206Cj4g
+KyAqwqDCoCBbMl0gQWx3YXlzIDAKPiArICrCoMKgIFsxOjBdIGNvcmUgSUQgd2l0aGluIG1vZHVs
+ZQo+ICsgKiBGb3IgQ29yZQo+ICsgKsKgwqAgWzI6MV0gQWx3YXlzIDAKPiArICrCoMKgIFswXSB0
+aHJlYWQgSUQKPiArICovCj4gKwo+ICsjZGVmaW5lIExQX0lEX01BU0vCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoEdFTk1BU0tfVUxMKDIsIDApCj4gKyNkZWZpbmUgTU9EVUxFX0lEX01BU0vCoMKg
+wqDCoMKgwqDCoMKgwqBHRU5NQVNLX1VMTCgxMCwgMykKPiArI2RlZmluZSBQTV9ET01BSU5fSURf
+TUFTS8KgwqDCoMKgwqDCoEdFTk1BU0tfVUxMKDE1LCAxMSkKPiArCj4gKy8qKgo+ICsgKiBzdHJ1
+Y3QgdHBtaV9jcHVfaW5mbyAtIE1hcHBpbmcgaW5mb3JtYXRpb24gZm9yIGEgQ1BVCj4gKyAqIEBo
+bm9kZTogVXNlZCB0byBhZGQgbWFwcGluZyBpbmZvcm1hdGlvbiB0byBoYXNoIGxpc3QKPiArICog
+QGxpbnV4X2NwdTrCoExpbnV4IENQVSBudW1iZXIKPiArICogQHBrZ19pZDogUGFja2FnZSBJRCBv
+ZiB0aGlzIENQVQo+ICsgKiBAcHVuaXRfdGhyZWFkX2lkOiBQdW5pdCB0aHJlYWQgaWQgb2YgdGhp
+cyBDUFUKPiArICogQHB1bml0X2NvcmVfaWQ6IFB1bml0IGNvcmUgaWQKPiArICogQHB1bml0X2Rv
+bWFpbl9pZDogUG93ZXIgZG9tYWluIGlkIGZyb20gUHVuaXQKPiArICoKPiArICogU3RydWN0dXJl
+IHRvIHN0b3JlIG1hcHBpbmcgaW5mb3JtYXRpb24gZm9yIGEgTGludXggQ1BVCj4gKyAqIHRvIGEg
+UHVuaXQgY29yZSwgdGhyZWFkIGFuZCBwb3dlciBkb21haW4uCj4gKyAqLwo+ICtzdHJ1Y3QgdHBt
+aV9jcHVfaW5mbyB7Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IGhsaXN0X25vZGUgaG5vZGU7Cj4g
+K8KgwqDCoMKgwqDCoMKgaW50IGxpbnV4X2NwdTsKPiArwqDCoMKgwqDCoMKgwqB1OCBwa2dfaWQ7
+Cj4gK8KgwqDCoMKgwqDCoMKgdTggcHVuaXRfdGhyZWFkX2lkOwo+ICvCoMKgwqDCoMKgwqDCoHU4
+IHB1bml0X2NvcmVfaWQ7Cj4gK8KgwqDCoMKgwqDCoMKgdTggcHVuaXRfZG9tYWluX2lkOwo+ICt9
+Owo+ICsKPiArc3RhdGljIERFRklORV9QRVJfQ1BVKHN0cnVjdCB0cG1pX2NwdV9pbmZvLCB0cG1p
+X2NwdV9pbmZvKTsKPiArCj4gKy8qIFRoZSBkeW5hbWljYWxseSBhc3NpZ25lZCBjcHUgaG90cGx1
+ZyBzdGF0ZSB0byBmcmVlIGxhdGVyICovCj4gK3N0YXRpYyBlbnVtIGNwdWhwX3N0YXRlIHRwbWlf
+aHBfc3RhdGUgX19yZWFkX21vc3RseTsKPiArCj4gKyNkZWZpbmUgTUFYX1BPV0VSX0RPTUFJTlPC
+oMKgwqDCoMKgwqA4Cj4gKwo+ICtzdGF0aWMgY3B1bWFza190ICp0cG1pX3Bvd2VyX2RvbWFpbl9t
+YXNrOwo+ICsKPiArLyogTG9jayB0byBwcm90ZWN0IHRwbWlfcG93ZXJfZG9tYWluX21hc2sgYW5k
+IHRwbWlfY3B1X2hhc2ggKi8KPiArc3RhdGljIERFRklORV9NVVRFWCh0cG1pX2xvY2spOwo+ICsK
+PiArc3RhdGljIGNvbnN0IHN0cnVjdCB4ODZfY3B1X2lkIHRwbWlfY3B1X2lkc1tdID0gewo+ICvC
+oMKgwqDCoMKgwqDCoFg4Nl9NQVRDSF9JTlRFTF9GQU02X01PREVMKEdSQU5JVEVSQVBJRFNfWCzC
+oMKgwqDCoMKgTlVMTCksCj4gK8KgwqDCoMKgwqDCoMKgWDg2X01BVENIX0lOVEVMX0ZBTTZfTU9E
+RUwoQVRPTV9DUkVTVE1PTlRfWCzCoMKgwqDCoE5VTEwpLAo+ICvCoMKgwqDCoMKgwqDCoFg4Nl9N
+QVRDSF9JTlRFTF9GQU02X01PREVMKEFUT01fQ1JFU1RNT05ULMKgwqDCoMKgwqDCoE5VTEwpLAo+
+ICvCoMKgwqDCoMKgwqDCoFg4Nl9NQVRDSF9JTlRFTF9GQU02X01PREVMKEdSQU5JVEVSQVBJRFNf
+RCzCoMKgwqDCoMKgTlVMTCksCj4gK8KgwqDCoMKgwqDCoMKge30KPiArfTsKCkZyb20gNi4xMCBr
+ZXJuZWwgd2UgYXJlIHN1cHBvc2VkIHRvIHVzZQpYODZfTUFUQ0hfVkZNKCkgbWFjcm8uCgpJdCBp
+cyBiZXR0ZXIgdG8gZWl0aGVyIGNoYW5nZSBoZXJlIG9yIGFwcGx5IGEgcGF0Y2ggb24gdG9wLgoK
+VGhhbmtzLApTcmluaXZhcwoKCj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUoeDg2Y3B1LCB0cG1pX2Nw
+dV9pZHMpOwo+ICsKPiArc3RhdGljIERFQ0xBUkVfSEFTSFRBQkxFKHRwbWlfY3B1X2hhc2gsIDgp
+Owo+ICsKPiArc3RhdGljIGJvb2wgdHBtaV9kb21haW5faXNfdmFsaWQoc3RydWN0IHRwbWlfY3B1
+X2luZm8gKmluZm8pCj4gK3sKPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gaW5mby0+cGtnX2lkIDwg
+dG9wb2xvZ3lfbWF4X3BhY2thZ2VzKCkgJiYKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgaW5mby0+cHVuaXRfZG9tYWluX2lkIDwgTUFYX1BPV0VSX0RPTUFJTlM7Cj4gK30KPiArCj4g
+K2ludCB0cG1pX2dldF9saW51eF9jcHVfbnVtYmVyKGludCBwYWNrYWdlX2lkLCBpbnQgZG9tYWlu
+X2lkLCBpbnQKPiBwdW5pdF9jb3JlX2lkKQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IHRw
+bWlfY3B1X2luZm8gKmluZm87Cj4gK8KgwqDCoMKgwqDCoMKgaW50IHJldCA9IC1FSU5WQUw7Cj4g
+Kwo+ICvCoMKgwqDCoMKgwqDCoGd1YXJkKG11dGV4KSgmdHBtaV9sb2NrKTsKPiArwqDCoMKgwqDC
+oMKgwqBoYXNoX2Zvcl9lYWNoX3Bvc3NpYmxlKHRwbWlfY3B1X2hhc2gsIGluZm8sIGhub2RlLAo+
+IHB1bml0X2NvcmVfaWQpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKGlu
+Zm8tPnB1bml0X2RvbWFpbl9pZCA9PSBkb21haW5faWQgJiYgaW5mby0KPiA+cGtnX2lkID09IHBh
+Y2thZ2VfaWQpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHJldCA9IGluZm8tPmxpbnV4X2NwdTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGJyZWFrOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqB9Cj4gK8KgwqDCoMKgwqDCoMKgfQo+ICsKPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gcmV0Owo+
+ICt9Cj4gK0VYUE9SVF9TWU1CT0xfTlNfR1BMKHRwbWlfZ2V0X2xpbnV4X2NwdV9udW1iZXIsCj4g
+SU5URUxfVFBNSV9QT1dFUl9ET01BSU4pOwo+ICsKPiAraW50IHRwbWlfZ2V0X3B1bml0X2NvcmVf
+bnVtYmVyKGludCBjcHVfbm8pCj4gK3sKPiArwqDCoMKgwqDCoMKgwqBpZiAoY3B1X25vID49IG51
+bV9wb3NzaWJsZV9jcHVzKCkpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVy
+biAtRUlOVkFMOwo+ICsKPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gcGVyX2NwdSh0cG1pX2NwdV9p
+bmZvLCBjcHVfbm8pLnB1bml0X2NvcmVfaWQ7Cj4gK30KPiArRVhQT1JUX1NZTUJPTF9OU19HUEwo
+dHBtaV9nZXRfcHVuaXRfY29yZV9udW1iZXIsCj4gSU5URUxfVFBNSV9QT1dFUl9ET01BSU4pOwo+
+ICsKPiAraW50IHRwbWlfZ2V0X3Bvd2VyX2RvbWFpbl9pZChpbnQgY3B1X25vKQo+ICt7Cj4gK8Kg
+wqDCoMKgwqDCoMKgaWYgKGNwdV9ubyA+PSBudW1fcG9zc2libGVfY3B1cygpKQo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gLUVJTlZBTDsKPiArCj4gK8KgwqDCoMKgwqDC
+oMKgcmV0dXJuIHBlcl9jcHUodHBtaV9jcHVfaW5mbywgY3B1X25vKS5wdW5pdF9kb21haW5faWQ7
+Cj4gK30KPiArRVhQT1JUX1NZTUJPTF9OU19HUEwodHBtaV9nZXRfcG93ZXJfZG9tYWluX2lkLAo+
+IElOVEVMX1RQTUlfUE9XRVJfRE9NQUlOKTsKPiArCj4gK2NwdW1hc2tfdCAqdHBtaV9nZXRfcG93
+ZXJfZG9tYWluX21hc2soaW50IGNwdV9ubykKPiArewo+ICvCoMKgwqDCoMKgwqDCoHN0cnVjdCB0
+cG1pX2NwdV9pbmZvICppbmZvOwo+ICvCoMKgwqDCoMKgwqDCoGNwdW1hc2tfdCAqbWFzazsKPiAr
+wqDCoMKgwqDCoMKgwqBpbnQgaW5kZXg7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoGlmIChjcHVfbm8g
+Pj0gbnVtX3Bvc3NpYmxlX2NwdXMoKSkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+cmV0dXJuIE5VTEw7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoGluZm8gPSAmcGVyX2NwdSh0cG1pX2Nw
+dV9pbmZvLCBjcHVfbm8pOwo+ICvCoMKgwqDCoMKgwqDCoGlmICghdHBtaV9kb21haW5faXNfdmFs
+aWQoaW5mbykpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiBOVUxMOwo+
+ICsKPiArwqDCoMKgwqDCoMKgwqBpbmRleCA9IGluZm8tPnBrZ19pZCAqIE1BWF9QT1dFUl9ET01B
+SU5TICsgaW5mby0KPiA+cHVuaXRfZG9tYWluX2lkOwo+ICvCoMKgwqDCoMKgwqDCoGd1YXJkKG11
+dGV4KSgmdHBtaV9sb2NrKTsKPiArwqDCoMKgwqDCoMKgwqBtYXNrID0gJnRwbWlfcG93ZXJfZG9t
+YWluX21hc2tbaW5kZXhdOwo+ICsKPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gbWFzazsKPiArfQo+
+ICtFWFBPUlRfU1lNQk9MX05TX0dQTCh0cG1pX2dldF9wb3dlcl9kb21haW5fbWFzaywKPiBJTlRF
+TF9UUE1JX1BPV0VSX0RPTUFJTik7Cj4gKwo+ICtzdGF0aWMgaW50IHRwbWlfZ2V0X2xvZ2ljYWxf
+aWQodW5zaWduZWQgaW50IGNwdSwgc3RydWN0Cj4gdHBtaV9jcHVfaW5mbyAqaW5mbykKPiArewo+
+ICvCoMKgwqDCoMKgwqDCoHU2NCBkYXRhOwo+ICvCoMKgwqDCoMKgwqDCoGludCByZXQ7Cj4gKwo+
+ICvCoMKgwqDCoMKgwqDCoHJldCA9IHJkbXNybF9zYWZlKE1TUl9QTV9MT0dJQ0FMX0lELCAmZGF0
+YSk7Cj4gK8KgwqDCoMKgwqDCoMKgaWYgKHJldCkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgcmV0dXJuIHJldDsKPiArCj4gK8KgwqDCoMKgwqDCoMKgaW5mby0+cHVuaXRfZG9tYWlu
+X2lkID0gRklFTERfR0VUKFBNX0RPTUFJTl9JRF9NQVNLLCBkYXRhKTsKPiArwqDCoMKgwqDCoMKg
+wqBpZiAoaW5mby0+cHVuaXRfZG9tYWluX2lkID49IE1BWF9QT1dFUl9ET01BSU5TKQo+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gLUVJTlZBTDsKPiArCj4gK8KgwqDCoMKg
+wqDCoMKgaW5mby0+cHVuaXRfdGhyZWFkX2lkID0gRklFTERfR0VUKExQX0lEX01BU0ssIGRhdGEp
+Owo+ICvCoMKgwqDCoMKgwqDCoGluZm8tPnB1bml0X2NvcmVfaWQgPSBGSUVMRF9HRVQoTU9EVUxF
+X0lEX01BU0ssIGRhdGEpOwo+ICvCoMKgwqDCoMKgwqDCoGluZm8tPnBrZ19pZCA9IHRvcG9sb2d5
+X3BoeXNpY2FsX3BhY2thZ2VfaWQoY3B1KTsKPiArwqDCoMKgwqDCoMKgwqBpbmZvLT5saW51eF9j
+cHUgPSBjcHU7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0
+aWMgaW50IHRwbWlfY3B1X29ubGluZSh1bnNpZ25lZCBpbnQgY3B1KQo+ICt7Cj4gK8KgwqDCoMKg
+wqDCoMKgc3RydWN0IHRwbWlfY3B1X2luZm8gKmluZm8gPSAmcGVyX2NwdSh0cG1pX2NwdV9pbmZv
+LCBjcHUpOwo+ICvCoMKgwqDCoMKgwqDCoGludCByZXQsIGluZGV4Owo+ICsKPiArwqDCoMKgwqDC
+oMKgwqAvKiBEb24ndCBmYWlsIENQVSBvbmxpbmUgZm9yIHNvbWUgYmFkIG1hcHBpbmcgb2YgQ1BV
+cyAqLwo+ICvCoMKgwqDCoMKgwqDCoHJldCA9IHRwbWlfZ2V0X2xvZ2ljYWxfaWQoY3B1LCBpbmZv
+KTsKPiArwqDCoMKgwqDCoMKgwqBpZiAocmV0KQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqByZXR1cm4gMDsKPiArCj4gK8KgwqDCoMKgwqDCoMKgaW5kZXggPSBpbmZvLT5wa2dfaWQg
+KiBNQVhfUE9XRVJfRE9NQUlOUyArIGluZm8tCj4gPnB1bml0X2RvbWFpbl9pZDsKPiArCj4gK8Kg
+wqDCoMKgwqDCoMKgZ3VhcmQobXV0ZXgpKCZ0cG1pX2xvY2spOwo+ICvCoMKgwqDCoMKgwqDCoGNw
+dW1hc2tfc2V0X2NwdShjcHUsICZ0cG1pX3Bvd2VyX2RvbWFpbl9tYXNrW2luZGV4XSk7Cj4gK8Kg
+wqDCoMKgwqDCoMKgaGFzaF9hZGQodHBtaV9jcHVfaGFzaCwgJmluZm8tPmhub2RlLCBpbmZvLT5w
+dW5pdF9jb3JlX2lkKTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIDA7Cj4gK30KPiArCj4g
+K3N0YXRpYyBpbnQgX19pbml0IHRwbWlfaW5pdCh2b2lkKQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKg
+Y29uc3Qgc3RydWN0IHg4Nl9jcHVfaWQgKmlkOwo+ICvCoMKgwqDCoMKgwqDCoHU2NCBkYXRhOwo+
+ICvCoMKgwqDCoMKgwqDCoGludCByZXQ7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoGlkID0geDg2X21h
+dGNoX2NwdSh0cG1pX2NwdV9pZHMpOwo+ICvCoMKgwqDCoMKgwqDCoGlmICghaWQpCj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRU5PREVWOwo+ICsKPiArwqDCoMKgwqDC
+oMKgwqAvKiBDaGVjayBmb3IgTVNSIDB4NTQgcHJlc2VuY2UgKi8KPiArwqDCoMKgwqDCoMKgwqBy
+ZXQgPSByZG1zcmxfc2FmZShNU1JfUE1fTE9HSUNBTF9JRCwgJmRhdGEpOwo+ICvCoMKgwqDCoMKg
+wqDCoGlmIChyZXQpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiByZXQ7
+Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHRwbWlfcG93ZXJfZG9tYWluX21hc2sgPQo+IGtjYWxsb2Mo
+c2l6ZV9tdWwodG9wb2xvZ3lfbWF4X3BhY2thZ2VzKCksIE1BWF9QT1dFUl9ET01BSU5TKSwKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgCj4gc2l6ZW9mKCp0cG1pX3Bvd2VyX2RvbWFpbl9tYXNrKSwg
+R0ZQX0tFUk5FTCk7Cj4gK8KgwqDCoMKgwqDCoMKgaWYgKCF0cG1pX3Bvd2VyX2RvbWFpbl9tYXNr
+KQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gLUVOT01FTTsKPiArCj4g
+K8KgwqDCoMKgwqDCoMKgcmV0ID0gY3B1aHBfc2V0dXBfc3RhdGUoQ1BVSFBfQVBfT05MSU5FX0RZ
+TiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAicGxhdGZvcm0veDg2L3RwbWlfcG93ZXJfZG9tYWluczpvbmxpCj4gbmUiLAo+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoHRwbWlfY3B1X29ubGluZSwgTlVMTCk7Cj4gK8KgwqDCoMKgwqDCoMKgaWYgKHJldCA8
+IDApIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKga2ZyZWUodHBtaV9wb3dlcl9k
+b21haW5fbWFzayk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiByZXQ7
+Cj4gK8KgwqDCoMKgwqDCoMKgfQo+ICsKPiArwqDCoMKgwqDCoMKgwqB0cG1pX2hwX3N0YXRlID0g
+cmV0Owo+ICsKPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gMDsKPiArfQo+ICttb2R1bGVfaW5pdCh0
+cG1pX2luaXQpCj4gKwo+ICtzdGF0aWMgdm9pZCBfX2V4aXQgdHBtaV9leGl0KHZvaWQpCj4gK3sK
+PiArwqDCoMKgwqDCoMKgwqBjcHVocF9yZW1vdmVfc3RhdGUodHBtaV9ocF9zdGF0ZSk7Cj4gK8Kg
+wqDCoMKgwqDCoMKga2ZyZWUodHBtaV9wb3dlcl9kb21haW5fbWFzayk7Cj4gK30KPiArbW9kdWxl
+X2V4aXQodHBtaV9leGl0KQo+ICsKPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJUUE1JIFBvd2VyIERv
+bWFpbnMgTWFwcGluZyIpOwo+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7Cj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3RwbWlfcG93ZXJfZG9tYWlucy5oCj4gYi9kcml2
+ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC90cG1pX3Bvd2VyX2RvbWFpbnMuaAo+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4wYzIxNTRiZDk0MWYKPiAtLS0gL2Rldi9u
+dWxsCj4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvdHBtaV9wb3dlcl9kb21haW5z
+LmgKPiBAQCAtMCwwICsxLDE5IEBACj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
+Mi4wLW9ubHkgKi8KPiArLyoKPiArICogTWFwcGluZyBvZiBUUE1JIHBvd2VyIGRvbWFpbiBhbmQg
+Q1BVcwo+ICsgKgo+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMjQsIEludGVsIENvcnBvcmF0aW9uLgo+
+ICsgKiBBbGwgcmlnaHRzIHJlc2VydmVkLgo+ICsgKi8KPiArCj4gKyNpZm5kZWYgX1RQTUlfUE9X
+RVJfRE9NQUlOU19IXwo+ICsjZGVmaW5lIF9UUE1JX1BPV0VSX0RPTUFJTlNfSF8KPiArCj4gKyNp
+bmNsdWRlIDxsaW51eC9jcHVtYXNrLmg+Cj4gKwo+ICtpbnQgdHBtaV9nZXRfbGludXhfY3B1X251
+bWJlcihpbnQgcGFja2FnZV9pZCwgaW50IGRpZV9pZCwgaW50Cj4gcHVuaXRfY29yZV9pZCk7Cj4g
+K2ludCB0cG1pX2dldF9wdW5pdF9jb3JlX251bWJlcihpbnQgY3B1X25vKTsKPiAraW50IHRwbWlf
+Z2V0X3Bvd2VyX2RvbWFpbl9pZChpbnQgY3B1X25vKTsKPiArY3B1bWFza190ICp0cG1pX2dldF9w
+b3dlcl9kb21haW5fbWFzayhpbnQgY3B1X25vKTsKPiArCj4gKyNlbmRpZgoK
 
