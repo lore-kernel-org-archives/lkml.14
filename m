@@ -1,114 +1,109 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501811E886;
-	Tue, 28 May 2024 14:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B48B13A868
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716907984; cv=none; b=cXynhF5gA7EeWL/EpokYyM82mz3PniIFNXkcK73kVnBJsDLX2dgzou4mcRASe7lwBETpPoDrsqD/hx4I3UOPWaW6B8+GZWAFzPhh6hxNd17lhWJ+wrQfBNy/3Hfm//98+qDZNCT9T6rU6j8l/PfUb230OwZ1pUhT9e1NKdmc1Ao=
+	t=1716908233; cv=none; b=rz6iMoc13RvL7TnWftPhIXlrbbkdYjAsMM9bLNbLvUuyPfv2NVmVbRlz4QL+tarxsg+8OfQlNI4IXNT/x08t1qx+UefvKFpd/tt5sUCG79H00Q+/Dl5UqWesyxuaW95VnZ9k5hbsoSJKy1txL5Cmz+IhSYvCnwPk7NyRY4LYJ2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716907984; c=relaxed/simple;
-	bh=ibWri2e7aV7kKGd9z7TStSKeci5H+utCiZFOLKXx/5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KeRVtCtKRXoXzZTl9uLWYHKv9ZalId+558/9Pd9HPKgaWDDtTGiuO3N5OTcGjBMpimw+mf89CO2K+YsgjUELiwe1wUUyNmRdYebSOm70jpM1BxjM+GIwovtH8t62F/uv4OCu3BjjUbm140lw5By0mw0ydPI80sGHUIfjkSsG/MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qkbRdsUd; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1716908233; c=relaxed/simple;
+	bh=5e4Eyu+ivSDaJd/Tf2Gk0Qf4nn/JhPXTY010TVmM2Ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQ6p3n06u+/Qqw0qrqg0WYuFZoo48DaHmNAn/QHJbYws0M/goHeji8NBMGgUq8ABO+tnP7a2uOKJv8R8SnudulhxUTsp9Uxi1Qvh4nWxmsOvwDlwvnW/OHrL7rEDIW7aSBAtCZJneR0HcWICPtuwguIqnIPy/+Hz7jB3DSpvnKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ah1FIbUq; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qkbRdsUd"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44SElbMB007284;
-	Tue, 28 May 2024 14:52:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pp1;
- bh=o9+3kDnLrc7JCHXQXr78xCMvmabUv1s7h/3uhWF4yLU=;
- b=qkbRdsUddMAa3elm0uRvSrmhThOOe/TgtcWUeiX/G1fFSFKKJraO0oH8NoppboJ6n5+R
- Iu+OKAyRxCJ6sXuoqJI+rUTzNh/ddyEqM7VG1cfaC2O8aKrqs13nNlXOLC8DM8jn5H0d
- SON+g8fz8fs6wL/OwoqPQgyck1zbwYP/MKiKZ2n5/1RWBzLN6cL4kVKAQuYEDJOoilKF
- JmRZ0Cmsr7DBZkKd34DmhW6U0uuKDsxQy1AGixoeAIxLN0Ok1RAp4cf3469JYCXXa0zP
- 9pkwRwoVbEj98rMtxF/P/BQBsbm2smeXnUQ36OZMqtvThn2+ADGtdmm6kIYJBlZZxoEX jQ== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ydhb680b9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 14:52:15 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44SDY1pc032276;
-	Tue, 28 May 2024 14:52:14 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ybutm77k4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 14:52:14 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44SEqBhL7995710
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 May 2024 14:52:13 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E97745806A;
-	Tue, 28 May 2024 14:52:10 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8FD4058064;
-	Tue, 28 May 2024 14:52:10 +0000 (GMT)
-Received: from [9.24.12.86] (unknown [9.24.12.86])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 28 May 2024 14:52:10 +0000 (GMT)
-Message-ID: <3c7fd737-c410-40a3-9994-282f214bad61@linux.ibm.com>
-Date: Tue, 28 May 2024 09:52:10 -0500
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ah1FIbUq"
+X-Envelope-To: geert@linux-m68k.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716908226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jaedXKwptRwArU5/TiEjza53c6kyC/sm8MBUE2Z0ktc=;
+	b=Ah1FIbUqRPiFab0/AihhX29Q0Vhr5jr7LNqAS7NQVlf4wwalwazM/1Q1+jhTd1GQJJbmaF
+	1+hX8Utnpl64/yOgrA9DSsbekzgJ98ic3pDWDkDHdX4X1ou9TWxhROQURQEQN+DePeGxOd
+	wXib4WonQvUPDRQO2dh1DLVT//CVY/s=
+X-Envelope-To: keescook@chromium.org
+X-Envelope-To: sfr@canb.auug.org.au
+X-Envelope-To: torvalds@linux-foundation.org
+X-Envelope-To: linux-bcachefs@vger.kernel.org
+X-Envelope-To: linux-fsdevel@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+Date: Tue, 28 May 2024 10:57:03 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kees Cook <keescook@chromium.org>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs updates fro 6.10-rc1
+Message-ID: <uetvuew5tmhjeipqlemyuocqtx2yn2t5gkuew4vmxh4tbny7kx@4g2qkhfpwbmg>
+References: <zhtllemg2gcex7hwybjzoavzrsnrwheuxtswqyo3mn2dlhsxbx@dkfnr5zx3r2x>
+ <202405191921.C218169@keescook>
+ <CAMuHMdUUTy7G6fUa7+P+ZionsiYag-ni_K4smcp6j=gFb9RJJg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 11/20] dt-bindings: i2c: i2c-fsi: Convert to
- json-schema
-To: Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lakshmiy@us.ibm.com, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        andrew@codeconstruct.com.au, joel@jms.id.au, robh@kernel.org,
-        conor+dt@kernel.org, krzk+dt@kernel.org, andi.shyti@kernel.org,
-        broonie@kernel.org
-References: <20240522192524.3286237-1-eajames@linux.ibm.com>
- <20240522192524.3286237-12-eajames@linux.ibm.com>
-Content-Language: en-US
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <20240522192524.3286237-12-eajames@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: jRes7fg_2wU65S26qKhIKfzoEE91q9nR
-X-Proofpoint-ORIG-GUID: jRes7fg_2wU65S26qKhIKfzoEE91q9nR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_11,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
- clxscore=1015 spamscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405280112
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUUTy7G6fUa7+P+ZionsiYag-ni_K4smcp6j=gFb9RJJg@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Eddie,
+On Tue, May 28, 2024 at 09:18:24AM +0200, Geert Uytterhoeven wrote:
+> Hi Kent,
+> 
+> On Mon, May 20, 2024 at 4:39 AM Kees Cook <keescook@chromium.org> wrote:
+> > On Sun, May 19, 2024 at 12:14:34PM -0400, Kent Overstreet wrote:
+> > > [...]
+> > > bcachefs changes for 6.10-rc1
+> > > [...]
+> > >       bcachefs: bch2_btree_path_to_text()
+> >
+> > Hi Kent,
+> >
+> > I've asked after this before[1], but there continues to be a lot of
+> > bcachefs development going on that is only visible when it appears in
+> > -next or during the merge window. I cannot find the above commit on
+> > any mailing list on lore.kernel.org[2]. The rules for -next are clear:
+> > patches _must_ appear on a list _somewhere_ before they land in -next
+> > (much less Linus's tree). The point is to get additional reviews, and
+> > to serve as a focal point for any discussions that pop up over a given
+> > change. Please adjust the bcachefs development workflow to address this.
+> 
+> This morning, the kisskb build service informed me about several build
+> failures on m68k (e.g. [1]).
+> 
+> In fact, the kernel test robot had already detected them on multiple 32-bit
+> platforms 4 days ago:
+>   - Subject: [bcachefs:bcachefs-testing 21/23] fs/bcachefs/btree_io.c:542:7:
+>     warning: format specifies type 'size_t' (aka 'unsigned int') but the
+>     argument has type 'unsigned long'[2]
+>   - Subject: [bcachefs:bcachefs-testing 21/23] fs/bcachefs/btree_io.c:541:33:
+>     warning: format '%zu' expects argument of type 'size_t', but argument
+>     3 has type 'long unsigned int'[3]
+> 
+> These are caused by commit 1d34085cde461893 ("bcachefs:
+> Plumb bkey into __btree_err()"), which is nowhere to be found on
+> any public mailing list archived by lore.
+> 
+> +               prt_printf(out, " bset byte offset %zu",
+> +                          (unsigned long)(void *)k -
+> +                          ((unsigned long)(void *)i & ~511UL));
+> 
+> Please stop committing private unreviewed patches to linux-next,
+> as I have asked before [4].
+> Thank you!
 
-On 5/22/24 14:25, Eddie James wrote:
-> Convert to json-schema for the FSI-attached I2C controller.
->
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
-> Changes since v5:
->   - Use more specific regex for node names
->
->   .../devicetree/bindings/i2c/i2c-fsi.txt       | 40 ----------
->   .../devicetree/bindings/i2c/ibm,i2c-fsi.yaml  | 76 +++++++++++++++++++
->   MAINTAINERS                                   |  2 +-
->   3 files changed, 77 insertions(+), 41 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
->   create mode 100644 Documentation/devicetree/bindings/i2c/ibm,i2c-fsi.yaml
+You seem to be complaining about test infrastructur eissues - you don't
+seriously expect code review to be catching 32 bit build isues, do you?
 
-
-Reviewed-by: Ninad Palsule <ninad@linux.ibm.com>
-
-Thanks & Regards,
-Ninad
-
+0day takes awhile to run, so I don't always see these right away. I'll
+add some 32 bit builds to my own test infrastructure.
