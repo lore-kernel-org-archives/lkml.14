@@ -1,165 +1,131 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672994594A
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 09:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3AE4594A;
+	Tue, 28 May 2024 09:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716887464; cv=none; b=QvFUv3RrNQV54UjNOB6X6bR+UKr9gsR7TrJy07JPmIn4kmDRdEuFZdai/XBQGx585WwYZ5DhoU2zulhegRLfLP/9cStPr/lEyS7nay7WvOgcFlrIBveK4DX/bivynsrpIY1L8PPYVPZYMXWnCvauFZYVmr4SfKVbjEevzGKpAbM=
+	t=1716887593; cv=none; b=qf0huSNedkpQUjSibBXfnjbhxGb8DnkeQgc52pzqB/bI3/LGSgF8Qba/apqDcqwtupo5lEXOg0MJjwiTAFRihGr5QxCLXWY8syaQ0b0GGDFHrhIMitx0felBJrf+APmZhhwEsBhbs6G00jV65WeSz/1hxQWpqf245Aibqjem5CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716887464; c=relaxed/simple;
-	bh=1RwQvCe3Yc/wpvVhbqyoP9WETRw6+GsL8em9Rc0ezjM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HeTwuqyonuZW48V8sd7RHfDtha6hVcqd3QxumwCi50Zw6a4ujauO/8TzjTjrsEZmzH/bW9OcmldofnbWDnw+ow95RBDj9dBnHoD5z2+fuA6iaFiWfNz+c2FFecIYe1ldUHOok4Z3X8bCqKWlj+OtOEoj+1Lq8Lr5xw3YtaNRJtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VpRV85DVszwQ7Y
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 17:07:12 +0800 (CST)
-Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id B9E7A18006E
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 17:10:58 +0800 (CST)
-Received: from huawei.com (10.67.174.55) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 28 May
- 2024 17:10:58 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH] genirq/debugfs: Print irqdomain flags as human-readable strings
-Date: Tue, 28 May 2024 09:09:17 +0000
-Message-ID: <20240528090917.3624463-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1716887593; c=relaxed/simple;
+	bh=VZyli5BDb0C7SpDT6Pbwmvg/7m3zh4VbxAZv0BGVJiI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s9xpGFLREsWc03PSiWFDwV08cvz8pv75/ET5KqoiSNWsnx1cD4O2+8TbVPp1Gb8oPGcIzywwIOTrm+AAFUnEb/j4CCi0ybGyd1UJGxEC1+5Lq4gjABJVQ+jGJDmdvMA4l6cLoXIdQa2zVFOOjne4jDScJxQSJKF9pnmU+iHfyVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=EewEnhWt; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="EewEnhWt"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1716887587; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=LGdTH9CYlq+eD3X+u8Vp575bSvRHvT7qvTa1TOKVCPY=;
+	b=EewEnhWtqPik1CPlbQK//lnQT/J3FURYJuTWw8fyRLNjFK2gtVlieGYAdjQ2MnwEFncBnB9J/a0rvJuX6lxLWAHrClnPYqB4G7qpiCJgFDCZtYMXOqZefojbHM7eVDl2Jv7IuFjHxI45I8IMMGBRd8zRoy5cp+fQEDRoSaKOfXg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W7P7ceH_1716887585;
+Received: from 30.97.48.200(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7P7ceH_1716887585)
+          by smtp.aliyun-inc.com;
+          Tue, 28 May 2024 17:13:06 +0800
+Message-ID: <36c14658-2c38-4515-92e1-839553971477@linux.alibaba.com>
+Date: Tue, 28 May 2024 17:13:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi500008.china.huawei.com (7.221.188.139)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 0/2] fuse: introduce fuse server recovery mechanism
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jingbo Xu <jefflexu@linux.alibaba.com>, Miklos Szeredi
+ <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, winters.zc@antgroup.com
+References: <20240524064030.4944-1-jefflexu@linux.alibaba.com>
+ <CAJfpeguS3PBi-rNtnR2KH1ZS1t4s2HnB_pt4UvnN1orvkhpMew@mail.gmail.com>
+ <858d23ec-ea81-45cb-9629-ace5d6c2f6d9@linux.alibaba.com>
+ <6a3c3035-b4c4-41d9-a7b0-65f72f479571@linux.alibaba.com>
+ <ce886be9-41d3-47b6-82e9-57d8f1f3421f@linux.alibaba.com>
+ <20240528-pegel-karpfen-fd16814adc50@brauner>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240528-pegel-karpfen-fd16814adc50@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This patch improves the readability of irqdomain debugging information in
-debugfs by printing the flags field of domain files as human-readable
-strings instead of a raw bitmask, which aligned with the existing style
-used for irqchip flags in the irq debug files.
+Hi Christian,
 
-Before:
-	#cat :cpus:cpu@0:interrupt-controller
-	name:   :cpus:cpu@0:interrupt-controller
-	 size:   0
-	 mapped: 2
-	 flags:  0x00000003
+On 2024/5/28 16:43, Christian Brauner wrote:
+> On Tue, May 28, 2024 at 12:02:46PM +0800, Gao Xiang wrote:
+>>
+>>
+>> On 2024/5/28 11:08, Jingbo Xu wrote:
+>>>
+>>>
+>>> On 5/28/24 10:45 AM, Jingbo Xu wrote:
+>>>>
+>>>>
+>>>> On 5/27/24 11:16 PM, Miklos Szeredi wrote:
+>>>>> On Fri, 24 May 2024 at 08:40, Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
+>>>>>
+>>>>>> 3. I don't know if a kernel based recovery mechanism is welcome on the
+>>>>>> community side.  Any comment is welcome.  Thanks!
+>>>>>
+>>>>> I'd prefer something external to fuse.
+>>>>
+>>>> Okay, understood.
+>>>>
+>>>>>
+>>>>> Maybe a kernel based fdstore (lifetime connected to that of the
+>>>>> container) would a useful service more generally?
+>>>>
+>>>> Yeah I indeed had considered this, but I'm afraid VFS guys would be
+>>>> concerned about why we do this on kernel side rather than in user space.
+>>
+>> Just from my own perspective, even if it's in FUSE, the concern is
+>> almost the same.
+>>
+>> I wonder if on-demand cachefiles can keep fds too in the future
+>> (thus e.g. daemonless feature could even be implemented entirely
+>> with kernel fdstore) but it still has the same concern or it's
+>> a source of duplication.
+>>
+>> Thanks,
+>> Gao Xiang
+>>
+>>>>
+>>>> I'm not sure what the VFS guys think about this and if the kernel side
+>>>> shall care about this.
+> 
+> Fwiw, I'm not convinced and I think that's a big can of worms security
+> wise and semantics wise. I have discussed whether a kernel-side fdstore
+> would be something that systemd would use if available multiple times
+> and they wouldn't use it because it provides them with no benefits over
+> having it in userspace.
 
-After:
-	#cat :cpus:cpu@0:interrupt-controller
-	name:   :cpus:cpu@0:interrupt-controller
-	 size:   0
-	 mapped: 3
-	 flags:  0x00000003
-	            IRQ_DOMAIN_FLAG_HIERARCHY
-	            IRQ_DOMAIN_NAME_ALLOCATED
+As far as I know, currently there are approximately two ways to do
+failover mechanisms in kernel.
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- kernel/irq/debugfs.c   | 17 -----------------
- kernel/irq/internals.h | 19 +++++++++++++++++++
- kernel/irq/irqdomain.c | 15 +++++++++++++++
- 3 files changed, 34 insertions(+), 17 deletions(-)
+The first model much like a fuse-like model: in this mode, we should
+keep and pass fd to maintain the active state.  And currently,
+userspace should be responsible for the permission/security issues
+when doing something like passing fds.
 
-diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
-index aae0402507ed..61a21a4c43ac 100644
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -9,23 +9,6 @@
- 
- static struct dentry *irq_dir;
- 
--struct irq_bit_descr {
--	unsigned int	mask;
--	char		*name;
--};
--#define BIT_MASK_DESCR(m)	{ .mask = m, .name = #m }
--
--static void irq_debug_show_bits(struct seq_file *m, int ind, unsigned int state,
--				const struct irq_bit_descr *sd, int size)
--{
--	int i;
--
--	for (i = 0; i < size; i++, sd++) {
--		if (state & sd->mask)
--			seq_printf(m, "%*s%s\n", ind + 12, "", sd->name);
--	}
--}
--
- #ifdef CONFIG_SMP
- static void irq_debug_show_masks(struct seq_file *m, struct irq_desc *desc)
- {
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index ed28059e9849..e2ea3f6917ac 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -501,6 +501,25 @@ static inline struct irq_data *irqd_get_parent_data(struct irq_data *irqd)
- #ifdef CONFIG_GENERIC_IRQ_DEBUGFS
- #include <linux/debugfs.h>
- 
-+struct irq_bit_descr {
-+	unsigned int	mask;
-+	char		*name;
-+};
-+
-+#define BIT_MASK_DESCR(m)	{ .mask = m, .name = #m }
-+
-+static inline void irq_debug_show_bits(struct seq_file *m, int ind,
-+				       unsigned int state,
-+				       const struct irq_bit_descr *sd, int size)
-+{
-+	int i;
-+
-+	for (i = 0; i < size; i++, sd++) {
-+		if (state & sd->mask)
-+			seq_printf(m, "%*s%s\n", ind + 12, "", sd->name);
-+	}
-+}
-+
- void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc);
- static inline void irq_remove_debugfs_entry(struct irq_desc *desc)
- {
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index c5832caf24cd..ba5c5cc90c3d 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1927,6 +1927,19 @@ static void irq_domain_free_one_irq(struct irq_domain *domain, unsigned int virq
- 
- static struct dentry *domain_dir;
- 
-+static const struct irq_bit_descr irqdomain_flags[] = {
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_HIERARCHY),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_NAME_ALLOCATED),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_IPI_PER_CPU),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_IPI_SINGLE),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_ISOLATED_MSI),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_NO_MAP),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI_PARENT),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI_DEVICE),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_NONCORE),
-+};
-+
- static void
- irq_domain_debug_show_one(struct seq_file *m, struct irq_domain *d, int ind)
- {
-@@ -1934,6 +1947,8 @@ irq_domain_debug_show_one(struct seq_file *m, struct irq_domain *d, int ind)
- 	seq_printf(m, "%*ssize:   %u\n", ind + 1, "", d->revmap_size);
- 	seq_printf(m, "%*smapped: %u\n", ind + 1, "", d->mapcount);
- 	seq_printf(m, "%*sflags:  0x%08x\n", ind +1 , "", d->flags);
-+	irq_debug_show_bits(m, ind, d->flags, irqdomain_flags,
-+			    ARRAY_SIZE(irqdomain_flags));
- 	if (d->ops && d->ops->debug_show)
- 		d->ops->debug_show(m, d, NULL, ind + 1);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
--- 
-2.34.1
+The second model is like one device-one instance model, for example
+ublk (If I understand correctly): each active instance (/dev/ublkbX)
+has their own unique control device (/dev/ublkcX).  Users could
+assign/change DAC/MAC for each control device.  And failover
+recovery just needs to reopen the control device with proper
+permission and do recovery.
 
+So just my own thought, kernel-side fdstore pseudo filesystem may
+provide a DAC/MAC mechanism for the first model.  That is a much
+cleaner way than doing some similar thing independently in each
+subsystem which may need DAC/MAC-like mechanism.  But that is
+just my own thought.
+
+Thanks,
+Gao Xiang
+
+> 
+> Especially since it implements a lot of special semantics and policy
+> that we really don't want in the kernel. I think that's just not
+> something we should do. We should give userspace all the means to
+> implement fdstores in userspace but not hold fds ourselves.
