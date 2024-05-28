@@ -1,96 +1,101 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAE516C852
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B73216C852;
+	Tue, 28 May 2024 11:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716895901; cv=none; b=ohiz0B9e+dRTmWxhCHDnp5hf2PWjkv/Kz05iWB+xicmWmq9RKMJywBR1JVajGbPCnDfJaSHY6uXjOrYrk+WfO3rahKCrb9PRxQMUkazpCir+uRIhArKkODxq94tLYloF/aI1vZeyPN5DZIOdI17MsVTnP9xlQr2Sp9rvudFwViE=
+	t=1716895922; cv=none; b=JWjUL34VDloE6IFs8hKlbI6EmJJi3PuWAGhvQ8ueqEHzKkvC4VgJg+i67RWKf20ejChRvMNXwMpin2XRh3XdL8zgT4zPzpm7wFbicIqKkEYke1C0R8mnoKgg2ekBqYuh+1m/gMF4vjbWbqV0ugP6qJmAU5xeWR97Gpn22u0sABQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716895901; c=relaxed/simple;
-	bh=fxpm/LIsZGIggWDXRYpJ5fdEVDu5rMF9yE2zhO+FJIY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t1ieB6yWcsX7RQuj6llZpjRg6QzBM7DLIYYE+XD7jlgDq8944rkRBZ7bbLujlNcv482o30UaYmuHGomD2UUV0Ss2nOoB8LaJHv0PpLWpvKTTzQq/zh9bTJTt1wtbEnf25Gxibr7aEHL/21gbjAKuqLghecOSiyvjyS5qKJVR25k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FW1Z3aJe; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1716895922; c=relaxed/simple;
+	bh=s9zJsE3/1kg/YHUe1X0gPbq/JexKL+o52CjjXo5/REE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WYWQrJWO8Z4KcLsDTrWlTjodSxI6F8gP6SJmf4Q9mFNKWoByFmdclElDBrIbPo5eLxuKEhbOfS/+IDkTexBNVKJNyrsHQwsTRrM+1DusmjTYX+EqRyber1CngrBPq+x9NS4WwJMxolDT1Z0YqYpRwOqT9HH0CAmU4D7CGbppdmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TmK2Z8ez; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FW1Z3aJe"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2bf196037a7so150316a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 04:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1716895898; x=1717500698; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NZzIHFKMEX46WqWH8vqiSdYuoVinlSIylJzQrt6zn/E=;
-        b=FW1Z3aJe8SU8zuVcxrrHtisGqpbNo9/oH+VGp58wmH3QxAxIfNdkow3M3qxgY9vicg
-         fUiAjgZWnaSy2DryEIRvn9L6/2vPEDrP5sRpjv0nbSjNB1GgBtbeEUb/kBiNpZlKjFUP
-         eBZ6Km9DuD3Dn5Kfd/SEddPzE36AH5bOc/5WLrZEIYzil1TJd+Euc5+oPVMq4fIrcRXo
-         B+qEP8LHPTcCtQvcq6wMje6Ch9nl8k81FiOhCokw72ALbpINSD4GFXHlnN3Ca5i4IZCk
-         xNu5hNpr2/D6aj08VcocyjBKpMWhLwDYBU2WRbxbfaRRabRCzeSQ9dFp6JsnUJ33ondo
-         ix3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716895898; x=1717500698;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NZzIHFKMEX46WqWH8vqiSdYuoVinlSIylJzQrt6zn/E=;
-        b=sG84VsSlnPAAaVOr2hKgDeqRTKZCA2MlMdK4V3jqJiwdVuiuWzJMXygEW2geMOMZHb
-         c3sN0L3ZRgJckHhBAIAeQVGZtbRo8mvmxVBFPyMBxeFR2o6SF+3QdgfDzAjfCuFqEsXI
-         hjrK9ftIbaw40kHcnvjmx2DncZmm6egMOmHM3LhtZ1Gg5yLYqD57uLqGKJvPgouyrHw0
-         +k6C15I68V3CDmY4/xlVmPMHy0uNQeG8vPgK4WCZZtE5sAPZDXwHL4bd32AoRSw2Tam+
-         YRb+3D9KjkCZ7iOjQV0udKiLeS05q4rOX2kWR/KufvFcO7OMdEorIz/toJMtFyH92R5S
-         nTtg==
-X-Gm-Message-State: AOJu0YzWvbG4WAQrOyfnjbsWdCxsB7UgAmB8UzUcVEmP8n4znQLx21Bh
-	iPUOhlfUDC+LXQTnbwgkhZGdt1X+i/NKpmqUAQ9js7oBPc7DIAOsXldhNFBZ/E5rhA5yu2eJyOx
-	M
-X-Google-Smtp-Source: AGHT+IHx4q/jVO1m3ZPLPPYQ69fEzVm1LxS04qP0WCoXPN2w1kp0nZwqrYv9bgiSkYlG47JMEiYEFw==
-X-Received: by 2002:a17:90b:11d4:b0:2bf:f584:a861 with SMTP id 98e67ed59e1d1-2bff584a883mr2993500a91.3.1716895898433;
-        Tue, 28 May 2024 04:31:38 -0700 (PDT)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.148])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bf5f50c3f2sm7553500a91.15.2024.05.28.04.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 04:31:38 -0700 (PDT)
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-To: mgorman@suse.de,
-	peterz@infradead.org,
-	mingo@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH] sched/numa: return earlier in task_numa_work()
-Date: Tue, 28 May 2024 19:30:24 +0800
-Message-Id: <20240528113024.92864-1-zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TmK2Z8ez"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44SBVenp062222;
+	Tue, 28 May 2024 06:31:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716895900;
+	bh=VpSNru19mBz9l4/n9K1fomuoEtlk8IP8cCmAhFDqj9k=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=TmK2Z8ezSKCZDHjB/iSRmrlXraznKS7RMMA+qdqEiftotR/sCS9Vzjzc4zgo24O0s
+	 h2JSxOhqLRvw3+8fYE1FAJ2tykEIoHb9RwtN/GyjQ8jrhMhuhk0epVj+Dk/W4bbQsA
+	 ndHKMSvNYdQqNRncDgz+G+cgH4zgu1fDoe/BJOdQ=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44SBVect036639
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 28 May 2024 06:31:40 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 28
+ May 2024 06:31:40 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 28 May 2024 06:31:40 -0500
+Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44SBVVrb076827;
+	Tue, 28 May 2024 06:31:32 -0500
+Message-ID: <9c88bc47-35f0-86ed-2df7-dd83640d9997@ti.com>
+Date: Tue, 28 May 2024 17:01:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v9 07/10] lib: add basic KUnit test for lib/math
+Content-Language: en-US
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
+        <akpm@linux-foundation.org>, <gregkh@linuxfoundation.org>,
+        <adobriyan@gmail.com>, <jani.nikula@intel.com>,
+        <p.zabel@pengutronix.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <laurent.pinchart@ideasonboard.com>,
+        <praneeth@ti.com>, <nm@ti.com>, <vigneshr@ti.com>, <a-bhatia1@ti.com>,
+        <j-luthra@ti.com>, <b-brnich@ti.com>, <detheridge@ti.com>,
+        <p-mantena@ti.com>, <vijayp@ti.com>, <andrzej.p@collabora.com>,
+        <nicolas@ndufresne.ca>, <davidgow@google.com>, <dlatypov@google.com>
+References: <20240526175655.1093707-1-devarsht@ti.com>
+ <20240526180933.1126116-1-devarsht@ti.com>
+ <ZlTu_9orsuosNiGk@smile.fi.intel.com> <ZlTvLS8oTPcvZKQN@smile.fi.intel.com>
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <ZlTvLS8oTPcvZKQN@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-When a new mm has been allocated, we can return directly after
-initializing the mm->numa_next_scan to avoid redundant calling
-of the time_before().
 
-No functional change intended.
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
----
- kernel/sched/fair.c | 1 +
- 1 file changed, 1 insertion(+)
+On 28/05/24 02:08, Andy Shevchenko wrote:
+> On Mon, May 27, 2024 at 11:37:20PM +0300, Andy Shevchenko wrote:
+>> On Sun, May 26, 2024 at 11:39:33PM +0530, Devarsh Thakkar wrote:
+> 
+> ...
+> 
+>>> +MODULE_LICENSE("GPL");
+>>
+>> modpost validator won't be happy about this, i.e. missing MODULE_DESCRIPTION().
+> 
+> And obviously + module.h in the inclusion block.
+> 
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8a5b1ae0aa55..b78528a6312e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3228,6 +3228,7 @@ static void task_numa_work(struct callback_head *work)
- 	if (!mm->numa_next_scan) {
- 		mm->numa_next_scan = now +
- 			msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
-+		return;
- 	}
- 
- 	/*
--- 
-2.20.1
+The module.h is already included under include/kunit/test.h and that's the
+reason compiler did not give any error. But I can still include it under
+math.h for better readability as you suggested as anyway compiler will not
+re-include if already included by another header file.
 
+Also I see we were missing a dependency between math_kunit and kunit modules,
+so adding a dependency there too.
+
+Regards
+Devarsh
