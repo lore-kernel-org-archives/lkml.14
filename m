@@ -1,131 +1,87 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9BC16C69D;
-	Tue, 28 May 2024 11:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AF916ABEA
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716896645; cv=none; b=iAYO20wy+MWwE8kYpzeD7XKQRn4qN2qlNAEAiuUjIJ/kx9pLa3TeMZfFASpaGAroujW8CN+nCH4ZMzJ/MIkH3KFoipy+7DbtirKBgMgD/IhAHXvnI0YepiTKeAK25ohPhOWRsVU6vVxYSZAyMHffx+nr/QWH+eaU3SoagG6+yl4=
+	t=1716896646; cv=none; b=JM/3KmklOf5KzB/X5PIgLyELDGEVbUsW+itrDFLovqPwFN31FHscInpDjQqdHUu2WHRuOe/gOUtIXL7zW6Rsa2q3JhMfawfRq7O/eVMcKU6bRg3Cy9VLXZS5RITP8lR7idwZlAgDm+bXKvnMlnsWLzyHOqnGWgHhltu30EVaEZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716896645; c=relaxed/simple;
-	bh=M4W+oHkOeOhdlYM/2iz4WIkappOulaLKd7/7AQX4LQI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L6sqHqIATqk0wxM9wlBtNJwm8wxHw6sHFX0pu7qOx8X30SsZCiSDNrCJ7JJW998AK+9RuzcrwjbgdjdSPE6FDGGxJE2hFDoCgL0OGj8L/JSlhgkTez0liqnUD/6vdCmbk1WgPbleDoNpGl1BK1scXjU4TPYntD3tP8kGHzqZN/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ExPyb3w9; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716896646; c=relaxed/simple;
+	bh=yOEmwDlZd2rxD+/L1uaF/14KWl2R7msUoWWl9sQJuMA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Na7HF6lDtDB2qiHCV+XTkqkGoFH3LOdwP/XJIkep1z1IEk4rRT+6vKJSD4N2BQQFzwdS7bQ2/2Ah1WqG0hWaGWq4fEBIhaRp+1u278G2RTSsiVb2bEqxg3qfq8qUDdgMh/pRRWrtVnf4U/1p/bKe7CUEeVci01r8C4kostySd00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pLVLPC4F; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ExPyb3w9"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SB8JBf001099;
-	Tue, 28 May 2024 11:44:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vTGSCjZG91irllHjXXjKPaqTtQw3nVtYXZ6CCsqxeEQ=; b=ExPyb3w9kO7D2OrQ
-	ZCG3pGZI/VhUpLY5jZ+ZdgCuCyRoUEIo3o6H0qRDE9Qk75mp+Q/cTo6o4f8rlMk0
-	6mDNMYMNq2ZHana0OLXNuTsyFBvHOkXS5aqmHJnvZYWky1m1tSlrio88sgiqSj4x
-	GUV9fChig1Q88W/9hDI+xeZ19QQK/Hk1B8BFJzD4yPHbcmhEyLAGdyHBZufYMLP5
-	4ckibAV93V+Ull5SYKupcwmhRTkI0THpk4h/RhOZ+CmKZU9ughByD+B7a6jY3Ez9
-	pR0gwfgKAgqOCstumTVhV6gdxWVxfJdQ2VPsFWM2GfUxgMcf/DBgpv/hvyDY8uGV
-	ci3e3A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yb9yj5xst-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 11:43:54 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SBhrqt017753
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 11:43:53 GMT
-Received: from hu-ajipan-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 28 May 2024 04:43:47 -0700
-From: Ajit Pandey <quic_ajipan@quicinc.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Vladimir Zapolskiy
-	<vladimir.zapolskiy@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Satya Priya Kakitapalli
-	<quic_skakitap@quicinc.com>,
-        Ajit Pandey <quic_ajipan@quicinc.com>, <stable@vger.kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH V3 1/8] clk: qcom: clk-alpha-pll: Fix CAL_L_VAL override for LUCID EVO PLL
-Date: Tue, 28 May 2024 17:12:47 +0530
-Message-ID: <20240528114254.3147988-2-quic_ajipan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240528114254.3147988-1-quic_ajipan@quicinc.com>
-References: <20240528114254.3147988-1-quic_ajipan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pLVLPC4F"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-df78acd5bb6so728999276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 04:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716896640; x=1717501440; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PDCC8CEGZqZAB2Msg7Dc9A4feCAIq5W2zp1AC6fm/sY=;
+        b=pLVLPC4Fhu25amY65NRpnDSircVt3aVW7uz5g4EfjbJdsgOBiYSsn+W/REZHto1lDe
+         nVBnyFiYUGMKyhq6Kte5sIrUegMkDf1Dpcyp1hoyVE8GjbbikHXkTeCkZXP483ZRj1xU
+         VK77wqXKG4z9a9tTQ4bQzS1QTWHxM/ZY+amuPNR0/Hv+/pJKWuakGpi/Ub2J/dl8UVxT
+         68wuMO7ikCC86BKfq9YsglwDRT4R34StAwE85B4aoxIvJPuFXCJy9TZLgMvaJa6GJWvH
+         LieOOcXXH4Q1woLFZEmjmRLhrJsCvxwF+tjRz7Ouzp9PaBtzfCrGPO+VXwgpNSQTbz0M
+         6F3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716896640; x=1717501440;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PDCC8CEGZqZAB2Msg7Dc9A4feCAIq5W2zp1AC6fm/sY=;
+        b=hyluMLdnOlESy4uuEs4KrWjAqulJvYg/UcRslQEOZVp+GSjq0M4p+1QPxyDdCaORWg
+         Mp6VVi1v33rhWMwL4ZrRXgCI8FoPLCtXgphVxPSqyNWRqscVJmidi6TxramRcuB+3URd
+         0XvjgH04VrQ/uZbo5tOAiYktVwc+9Vcp3szwA0XKKU+aw2OEE3ZHQePmwOlzNolklgOx
+         QZIfAN7s1Frgx99IkJaTJdWLVpntUHNSH6LpkCWnOW+fwitlrZdT87/1Tt+7DjTENL54
+         zyCV6p2K1UYth76/Ty9q1INCMcn69jEOaejlAhfbCtf/YcxQv7G3XipSuvu4txqzU1v8
+         HgXA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1FY7TPFmiDnEq7hjaz0S6ZvRKUnG12bfcZ7AqEI2w2VP2I0VbE5VJMbghyDvv+RRjuo1REFg8q4typloozSlceOhCJoSuzwgT2wIz
+X-Gm-Message-State: AOJu0YzUyL4SjR5YXuUhdMH3Os4XABbY9ua6G+j2i3P5oXemxS+DDYGQ
+	KIDT31IJf4f/udcTFfCC7z9Z28LG6eiLHMj4wu9pvWduvsJCGQHnNQX1US5ApF5IyE6/TItIFke
+	5Qzko7Cv9GNliQweErQa9EYPoowP7MA9JLwJwZgIqDC82SE4eaCmYWu3q
+X-Google-Smtp-Source: AGHT+IGAlEjh+hwoEoU8O0CZzP7G3ESAVthO5rQ3B4MUj+UE7U4isFNhiJtbVLHDWwHzyej5tQV+REwk0Y5mZnpxIBg=
+X-Received: by 2002:a5b:d0d:0:b0:deb:9e3f:8c7b with SMTP id
+ 3f1490d57ef6-df77223c93emr10443794276.60.1716896639907; Tue, 28 May 2024
+ 04:43:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: e9rOfkIYaCVibs-vSjZcpNqKPptyukRX
-X-Proofpoint-ORIG-GUID: e9rOfkIYaCVibs-vSjZcpNqKPptyukRX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_07,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 spamscore=0
- clxscore=1011 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405280087
+References: <Zktwd4Y8zu6XSGaE@Z926fQmE5jqhFMgp6>
+In-Reply-To: <Zktwd4Y8zu6XSGaE@Z926fQmE5jqhFMgp6>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 28 May 2024 13:43:48 +0200
+Message-ID: <CACRpkdZd_aXy5Dv_pZw5ue+T=1i8_ERP1Anc5Y_mu=cyd_hbxA@mail.gmail.com>
+Subject: Re: [PATCH] gpio-syscon: do not report bogus error
+To: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, etienne.buira@free.fr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In LUCID EVO PLL CAL_L_VAL and L_VAL bitfields are part of single
-PLL_L_VAL register. Update for L_VAL bitfield values in PLL_L_VAL
-register using regmap_write() API in __alpha_pll_trion_set_rate
-callback will override LUCID EVO PLL initial configuration related
-to PLL_CAL_L_VAL bit fields in PLL_L_VAL register.
+On Mon, May 20, 2024 at 5:48=E2=80=AFPM Etienne Buira <etienne.buira@free.f=
+r> wrote:
 
-Observed random PLL lock failures during PLL enable due to such
-override in PLL calibration value. Use regmap_update_bits() with
-L_VAL bitfield mask instead of regmap_write() API to update only
-PLL_L_VAL bitfields in __alpha_pll_trion_set_rate callback.
+> Do not issue "can't read the data register offset!" when gpio,syscon-dev
+> is not set albeit unneeded.  gpio-syscon is used with rk3328 chip, but
+> this iomem region is documented in
+> Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
+> does not require gpio,syscon-dev setting.
+>
+> v3:
+>   - moved from flag to parent regmap detection
+>
+> Signed-off-by: Etienne Buira <etienne.buira@free.fr>
 
-Fixes: 260e36606a03 ("clk: qcom: clk-alpha-pll: add Lucid EVO PLL configuration interfaces")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ajit Pandey <quic_ajipan@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/clk/qcom/clk-alpha-pll.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-index d4227909d1fe..62138ed3df88 100644
---- a/drivers/clk/qcom/clk-alpha-pll.c
-+++ b/drivers/clk/qcom/clk-alpha-pll.c
-@@ -1665,7 +1665,7 @@ static int __alpha_pll_trion_set_rate(struct clk_hw *hw, unsigned long rate,
- 	if (ret < 0)
- 		return ret;
- 
--	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
-+	regmap_update_bits(pll->clkr.regmap, PLL_L_VAL(pll), LUCID_EVO_PLL_L_VAL_MASK,  l);
- 	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
- 
- 	/* Latch the PLL input */
--- 
-2.25.1
-
+Yours,
+Linus Walleij
