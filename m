@@ -1,355 +1,205 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E86175579;
-	Tue, 28 May 2024 19:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03A2178372
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716923017; cv=none; b=NuB1ZTTVDQDALKsvfi69IfqGy1rdLgC1ueQo6Z5VB8zH2Gi2nOZYrwSjA/USLTJhDxnqPcbUyxHxqodsMZTIPFsDFXIGUV+Te65UwoGiStS/nt+F2cM1myRKyMRB5rsGFoov1WmRaz4FNfEhKWTHunhSl7/GVSRpgP6uEc6U9Vg=
+	t=1716923034; cv=none; b=LB+Y3QxnhjPsocqqBQPqQBWzMElZYef7KIXlwTfDBfE4hp0VhSg6Jh6d4VWcYS1VWMDNCS7Hgulk72uRFwslE7e+nx4Jy0/D6Cmew/FDDah5FFW2c4ASHKAYrrsogIuzNmvy23V5rHMkNBAgrJXp0Bpdj2G+VUsQCJoFvKAS1pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716923017; c=relaxed/simple;
-	bh=BnGDjJ3vHg+7SNEFXmsIpb2udnJFf0lkQrFkcZvJ+2E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nYSkDInhpZLeNQzVyMOYoxol6p5gm/assxGeMEwlPTBXraF2boYad4bkpGypfC7eFy7jzxClmArWdZnsnT7YlYYKwsuWAr/j+9WvIe4wggvy+hKNTBYpEXn5OLQm4HHTDeqI07VQXyRYCxkMmlbBhM5ovgQ6bEeVMdx8os5ldOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lOhdTmOD; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1716923034; c=relaxed/simple;
+	bh=VkJcouEly56xcn2I/JpoLlFyt/3UCbwc1z4XoFy0ZPU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ffL1fpktF/9PA0UjKwuDZjP0AQg2A9mbVMPPxJa7SgT6O/vAtUASnGmHtN/HkZiHP3GB/99vGBjFfFlBTP/VOhRg1ClgxQBSLSz2IMeBbGpYykQ8TW6MaO/MflaByc15351ZelL9HNOpNYMokM3zOjYqbSwLLovRyXUwkYnDE0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qyYhmdeY; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lOhdTmOD"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6A82E2D5F;
-	Tue, 28 May 2024 21:03:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716923009;
-	bh=BnGDjJ3vHg+7SNEFXmsIpb2udnJFf0lkQrFkcZvJ+2E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lOhdTmODULnvO50Q6qS2IxDWVj/GRZ9wKIGpue+AYs3IA0QvupDxQuP26GFY9hRa0
-	 BKs/zUhkq8EIBA+dtceVQyE8xsCRgZfZKbJPuJoU6/NNGNiEh6Eo0j4TpD8ikUbcGk
-	 T3HnHEqi4OkCmL/cLxH2n1Us1RRPAL7dUDe09vvw=
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Clark Wang <xiaoning.wang@nxp.com>
-Subject: [PATCH v2 4/4] pwm: adp5585: Add Analog Devices ADP5585 support
-Date: Tue, 28 May 2024 22:03:14 +0300
-Message-ID: <20240528190315.3865-5-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
-References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qyYhmdeY"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42108822e3cso742035e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716923030; x=1717527830; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FLB0YN7N63SKOKotZw1GpntJgaecWBJiaVtpBcrO/S0=;
+        b=qyYhmdeYpfL9SNOz7LRACcUrhqTTpu2Ygp+LYJofSDNgrfqJR44MfJhSa7BnvJQYNu
+         5H4lv9CV1k/iGSkDyfmL1ugn3Kd3sWqGn5WG8tr5jx7SZK1+oGYrNIGbVD6sNmqBW9DM
+         +DpFY/sKODRaZY9x690EUCd0U+/vCpeNmv4WMfKR/u4m+rB+slskNTznuRStFgZEzEco
+         eVPmUHHWRs6INdg09ZMn3yfiylt/nk3Q2nxN3bLeWBBDFkLi/Frz1ThVECKF08sFYzI8
+         /qWlTDUbgWc52xlYUMdUU7Zy/YoPePGqDFnqPbnnelx99n6qV5ZNdGh19RRK4+ctHz/0
+         iepw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716923030; x=1717527830;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FLB0YN7N63SKOKotZw1GpntJgaecWBJiaVtpBcrO/S0=;
+        b=Suj7fR3Si9S2fxeLKYA5KOl6qp1bigE/d1dhn93d941n8+KHpbqm48wqJzsI/ME3Te
+         4tqY00QGPwJl9Ud367kY4kCkFUwcpcfX3NdplPyjbfEa1pDv2krMtMh3D8dTnVpQ2aY+
+         CbHWVNDWLNegLqgIhR5dZTWuTdL7RY/GwLrhFgwhbxrUcOBQupJKg2ORnye4gpm1ODGv
+         DcaYAIaAZQiVy0xQLqvFec/1gnIlUmo24GzR8TiF3QnDy7+kEFxAJB2OjtVWMb9WKhPk
+         cikeJR4iYSx6fv/vCsXiPL7ewYjHNr7bKqMNzOFJslt4dHre2A7Knd+9GKqyuz6OUuVd
+         v5Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDO60MfF3R3pxIH/VBZPEkJHNi/e/h8ssyCzi424QIjffv7wEDaah6PiHnhJ2AKJr3+eAR01hqYkbP8aIznX5UMAZXAbbIAfl0nAYZ
+X-Gm-Message-State: AOJu0Ywkfe/mYg9PyuP1F0DaccJIqEEjS3j8liVC/qCxffT26oaBJn6t
+	p6B/TLwMgtFbc6n8jOkSLqswz5P74ROC5pZVWvcriwZzHpLJd8ZsaVgLvBACDSI=
+X-Google-Smtp-Source: AGHT+IGkTRJM5BqJwxMkgY3NJwBdsKQTISnjb7z3O7SzLivMCfj6/1CLTbKr3BOipAl3zMJM/jdDxQ==
+X-Received: by 2002:a05:6000:180a:b0:354:df9a:f99a with SMTP id ffacd0b85a97d-354f750f95fmr12748159f8f.11.1716923030222;
+        Tue, 28 May 2024 12:03:50 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:75a:e000:93eb:927a:e851:8a2f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100ee954bsm183895415e9.4.2024.05.28.12.03.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 12:03:49 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 28 May 2024 21:03:10 +0200
+Subject: [PATCH v8 02/17] regulator: dt-bindings: describe the PMU module
+ of the WCN7850 package
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240528-pwrseq-v8-2-d354d52b763c@linaro.org>
+References: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
+In-Reply-To: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
+ Rocky Liao <quic_rjliao@quicinc.com>, Kalle Valo <kvalo@kernel.org>, 
+ Jeff Johnson <jjohnson@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Elliot Berman <quic_eberman@quicinc.com>, 
+ Caleb Connolly <caleb.connolly@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Alex Elder <elder@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ ath11k@lists.infradead.org, Jeff Johnson <quic_jjohnson@quicinc.com>, 
+ ath12k@lists.infradead.org, linux-pm@vger.kernel.org, 
+ linux-pci@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel@quicinc.com, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2562;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=nIq2ZrI+2J8wWzUlSGNJuD+/fuNY97wIAceF1yEhqMY=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmViqMCMh0XlDYXajqmjXXmuj8/4NW5g5yO6PrS
+ V94gVmLw5GJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlYqjAAKCRARpy6gFHHX
+ ckfyD/kBiPhd5RtEIWrboqOXgS0zbovWj36MTcHNi2ZlVV2hPQ+fx5L44A+Liypg3s8bKsIRZO6
+ iSJxOpQUKsND1M1eV76xNp5dwEwPOFXUvgvpXfoMNVmDqfHFisBAdPAuZgQWT7L/hbDJsMAlgfa
+ zL5p+YQE8cgFPjQ5g2AUOK6jxwTIN5gDrtwRWg7G7m67/jToqRPkk6wksPbbthckUZLJ1QMTjaV
+ bJzeuQBa3kDX8lPqD8WZHKwWyuBaiMShy2e8MIXJ4CPIzgwWQkgJ6omxkwFpJeeAd6qjrXOlE3D
+ DzjSvKpReD/tS7xfejwZwHwvS+HLUhzPMopsHkCRpznIDOVL4swvKYgaZrMnFe3IINMOnH+rhO8
+ zzzU97xT5cJhs9OfC5u4JwDCHFfJ6XGAG1RK/cZo4P0pA3P9rkA89gO2WQw/1IJgVh0x/4hSyZW
+ FnYn60tOGi7fe7m9CJ4q+VftA2JYfPbtbPk9GeJk8CG2OZbkbZkXeeZUpv+IKg+tihbArxm8Nl8
+ e+FdfSjVNGpKxQC2aVIRhfY34/xXrId9Ggqu7Ho4PF+Ki2lRwhbT1NoBBwjE3v4alEFd8uTnoWb
+ Gzr5/MEU8hfh05PMd7wOkQeigMrSinrGUCJnBhBChnPi8qIbq/URbJf0GM0YNqUIVNC2Ku5D/4a
+ 2xy+3VAujkLYrQA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-From: Clark Wang <xiaoning.wang@nxp.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The ADP5585 is a 10/11 input/output port expander with a built in keypad
-matrix decoder, programmable logic, reset generator, and PWM generator.
-This driver supports the PWM function using the platform device
-registered by the core MFD driver.
+The WCN7850 package contains discreet modules for WLAN and Bluetooth. They
+are powered by the Power Management Unit (PMU) that takes inputs from the
+host and provides LDO outputs. Extend the bindings for QCA6390 to also
+document this model.
 
-The driver is derived from an initial implementation from NXP, available
-in commit 113113742208 ("MLK-25922-1 pwm: adp5585: add adp5585 PWM
-support") in their BSP kernel tree. It has been extensively rewritten.
-
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Acked-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Changes since v1:
+ .../bindings/regulator/qcom,qca6390-pmu.yaml       | 36 +++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-- Drop mutex
-- Restore R3 pinconfig to known value
-- Simplify error check in pwm_adp5585_request()
-- Don't fake PWM_POLARITY_INVERSED
-- Fix rounding of period and duty cycle
-- Drop OF match table
-- Drop empty .remove() handler
-- Allocate pwm_chip dynamically
-- Document limitations
-- Add platform ID table
-- Set struct device of_node manually
-- Merge child DT node into parent node
-
-Changes compared to the NXP original version
-
-- Add MAINTAINERS entry
-- Drop pwm_ops.owner
-- Fix compilation
-- Add prefix to compatible string
-- Switch to regmap
-- Use devm_pwmchip_add()
-- Cleanup header includes
-- White space fixes
-- Drop ADP5585_REG_MASK
-- Fix register field names
-- Use mutex scope guards
-- Clear OSC_EN when freeing PWM
-- Reorder functions
-- Clear PWM_IN_AND and PWM_MODE bits
-- Support inverted polarity
-- Clean up on/off computations
-- Fix duty cycle computation in .get_state()
-- Destroy mutex on remove
-- Update copyright
-- Update license to GPL-2.0-only
----
- MAINTAINERS               |   1 +
- drivers/pwm/Kconfig       |   7 ++
- drivers/pwm/Makefile      |   1 +
- drivers/pwm/pwm-adp5585.c | 187 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 196 insertions(+)
- create mode 100644 drivers/pwm/pwm-adp5585.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9c560d9a590a..9877fa342931 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -534,6 +534,7 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/*/adi,adp5585*.yaml
- F:	drivers/gpio/gpio-adp5585.c
- F:	drivers/mfd/adp5585.c
-+F:	drivers/pwm/pwm-adp5585.c
- F:	include/linux/mfd/adp5585.h
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,qca6390-pmu.yaml b/Documentation/devicetree/bindings/regulator/qcom,qca6390-pmu.yaml
+index 9d39ff9a75fd..2e543661a1e2 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,qca6390-pmu.yaml
++++ b/Documentation/devicetree/bindings/regulator/qcom,qca6390-pmu.yaml
+@@ -16,20 +16,37 @@ description:
  
- ADP5588 QWERTY KEYPAD AND IO EXPANDER DRIVER (ADP5588/ADP5587)
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 1dd7921194f5..b778ecee3e9b 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -47,6 +47,13 @@ config PWM_AB8500
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-ab8500.
+ properties:
+   compatible:
+-    const: qcom,qca6390-pmu
++    enum:
++      - qcom,qca6390-pmu
++      - qcom,wcn7850-pmu
++
++  vdd-supply:
++    description: VDD supply regulator handle
  
-+config PWM_ADP5585
-+	tristate "ADP5585 PWM support"
-+	depends on MFD_ADP5585
-+	help
-+	  This option enables support for the PWM function found in the Analog
-+	  Devices ADP5585.
+   vddaon-supply:
+     description: VDD_AON supply regulator handle
+ 
++  vdddig-supply:
++    description: VDD_DIG supply regulator handle
 +
- config PWM_APPLE
- 	tristate "Apple SoC PWM support"
- 	depends on ARCH_APPLE || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 90913519f11a..f24d518d20f2 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PWM)		+= core.o
- obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
-+obj-$(CONFIG_PWM_ADP5585)	+= pwm-adp5585.o
- obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
-diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-new file mode 100644
-index 000000000000..483846cd7334
---- /dev/null
-+++ b/drivers/pwm/pwm-adp5585.c
-@@ -0,0 +1,187 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices ADP5585 PWM driver
-+ *
-+ * Copyright 2022 NXP
-+ * Copyright 2024 Ideas on Board Oy
-+ *
-+ * Limitations:
-+ * - The .apply() operation executes atomically, but may not wait for the
-+ *   period to complete (this is not documented and would need to be tested).
-+ * - Disabling the PWM drives the output pin to a low level immediately.
-+ * - The hardware can only generate normal polarity output.
-+ */
+   vddpmu-supply:
+     description: VDD_PMU supply regulator handle
+ 
++  vddio1p2-supply:
++    description: VDD_IO_1P2 supply regulator handle
 +
-+#include <linux/device.h>
-+#include <linux/math64.h>
-+#include <linux/minmax.h>
-+#include <linux/mfd/adp5585.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/time.h>
+   vddrfa0p95-supply:
+     description: VDD_RFA_0P95 supply regulator handle
+ 
++  vddrfa1p2-supply:
++    description: VDD_RFA_1P2 supply regulator handle
 +
-+#define ADP5585_PWM_CHAN_NUM		1
+   vddrfa1p3-supply:
+     description: VDD_RFA_1P3 supply regulator handle
+ 
++  vddrfa1p8-supply:
++    description: VDD_RFA_1P8 supply regulator handle
 +
-+#define ADP5585_PWM_OSC_FREQ_HZ		1000000U
-+#define ADP5585_PWM_MIN_PERIOD_NS	(2ULL * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
-+#define ADP5585_PWM_MAX_PERIOD_NS	(2ULL * 0xffff * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
+   vddrfa1p9-supply:
+     description: VDD_RFA_1P9 supply regulator handle
+ 
+@@ -50,6 +67,10 @@ properties:
+     maxItems: 1
+     description: GPIO line enabling the ATH11K Bluetooth module supplied by the PMU
+ 
++  clocks:
++    maxItems: 1
++    description: Reference clock handle
 +
-+static int pwm_adp5585_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	int ret;
-+
-+	ret = regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
-+				 ADP5585_R3_EXTEND_CFG_MASK,
-+				 ADP5585_R3_EXTEND_CFG_PWM_OUT);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_update_bits(regmap, ADP5585_GENERAL_CFG,
-+				  ADP5585_OSC_EN, ADP5585_OSC_EN);
-+}
-+
-+static void pwm_adp5585_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+
-+	regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
-+			   ADP5585_R3_EXTEND_CFG_MASK,
-+			   ADP5585_R3_EXTEND_CFG_GPIO4);
-+	regmap_update_bits(regmap, ADP5585_GENERAL_CFG,
-+			   ADP5585_OSC_EN, 0);
-+}
-+
-+static int pwm_adp5585_apply(struct pwm_chip *chip,
-+			     struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	u64 period, duty_cycle;
-+	u32 on, off;
-+	int ret;
-+
-+	if (!state->enabled)
-+		return regmap_update_bits(regmap, ADP5585_PWM_CFG,
-+					  ADP5585_PWM_EN, 0);
-+
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
-+		return -EINVAL;
-+
-+	period = min(state->period, ADP5585_PWM_MAX_PERIOD_NS);
-+	duty_cycle = min(state->duty_cycle, period);
-+
-+	/*
-+	 * Compute the on and off time. As the internal oscillator frequency is
-+	 * 1MHz, the calculation can be simplified without loss of precision.
-+	 */
-+	on = div_u64(duty_cycle, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-+	off = div_u64(period, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on;
-+
-+	ret = regmap_write(regmap, ADP5585_PWM_OFFT_LOW,
-+			   off & 0xff);
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(regmap, ADP5585_PWM_OFFT_HIGH,
-+			   (off >> 8) & 0xff);
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(regmap, ADP5585_PWM_ONT_LOW,
-+			   on & 0xff);
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(regmap, ADP5585_PWM_ONT_HIGH,
-+			   (on >> 8) & 0xff);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable PWM in continuous mode and no external AND'ing. */
-+	ret = regmap_update_bits(regmap, ADP5585_PWM_CFG,
-+				 ADP5585_PWM_IN_AND | ADP5585_PWM_MODE |
-+				 ADP5585_PWM_EN, ADP5585_PWM_EN);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int pwm_adp5585_get_state(struct pwm_chip *chip,
-+				 struct pwm_device *pwm,
-+				 struct pwm_state *state)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	unsigned int on, off;
-+	unsigned int val;
-+
-+	regmap_read(regmap, ADP5585_PWM_OFFT_LOW, &off);
-+	regmap_read(regmap, ADP5585_PWM_OFFT_HIGH, &val);
-+	off |= val << 8;
-+
-+	regmap_read(regmap, ADP5585_PWM_ONT_LOW, &on);
-+	regmap_read(regmap, ADP5585_PWM_ONT_HIGH, &val);
-+	on |= val << 8;
-+
-+	state->duty_cycle = on * (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-+	state->period = (on + off) * (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+
-+	regmap_read(regmap, ADP5585_PWM_CFG, &val);
-+	state->enabled = !!(val & ADP5585_PWM_EN);
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops adp5585_pwm_ops = {
-+	.request = pwm_adp5585_request,
-+	.free = pwm_adp5585_free,
-+	.apply = pwm_adp5585_apply,
-+	.get_state = pwm_adp5585_get_state,
-+};
-+
-+static int adp5585_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
-+	struct pwm_chip *chip;
-+	int ret;
-+
-+	chip = devm_pwmchip_alloc(dev, ADP5585_PWM_CHAN_NUM, 0);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	device_set_of_node_from_dev(dev, dev->parent);
-+
-+	pwmchip_set_drvdata(chip, adp5585->regmap);
-+	chip->ops = &adp5585_pwm_ops;
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id adp5585_pwm_id_table[] = {
-+	{ "adp5585-pwm" },
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(platform, adp5585_pwm_id_table);
-+
-+static struct platform_driver adp5585_pwm_driver = {
-+	.driver	= {
-+		.name = "adp5585-pwm",
-+	},
-+	.probe = adp5585_pwm_probe,
-+	.id_table = adp5585_pwm_id_table,
-+};
-+module_platform_driver(adp5585_pwm_driver);
-+
-+MODULE_AUTHOR("Xiaoning Wang <xiaoning.wang@nxp.com>");
-+MODULE_DESCRIPTION("ADP5585 PWM Driver");
-+MODULE_LICENSE("GPL");
+   regulators:
+     type: object
+     description:
+@@ -83,6 +104,19 @@ allOf:
+         - vddpcie1p3-supply
+         - vddpcie1p9-supply
+         - vddio-supply
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: qcom,wcn7850-pmu
++    then:
++      required:
++        - vdd-supply
++        - vddio-supply
++        - vddaon-supply
++        - vdddig-supply
++        - vddrfa1p2-supply
++        - vddrfa1p8-supply
+ 
+ additionalProperties: false
+ 
+
 -- 
-Regards,
-
-Laurent Pinchart
+2.43.0
 
