@@ -1,180 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99CF170851
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606BF17167F;
+	Tue, 28 May 2024 15:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716911618; cv=none; b=XQETYBlzNPGFOmyUWbJbjcyTmE7GagasPgsU6KNhGMrD0wSde+Al3MLVAiVEfsJt8N8FTmVO08FuEZpC6ogCj6IQAzYJ6FeYNJq1h/dHGdaCL3zWQy90HjI5zBELZeJI0yLnvuJIhv66DkLKXoPBpN3qgVVAeOkyo8zTAubP/Zc=
+	t=1716911631; cv=none; b=bf1CZ4Xwop0yMjE4wmD4rgiFFQJlZ7btktKqNg6jBRZd2WaGAgTA5EGvryixXC/qzVm+2bv4BocoT0DzBS3oT+kUh+Ds10t7KThA5cFM2Cmy4r/aVpaJmkKdBHUEyPpcc4xHbfo6z+hfu1ld5zqwmqAv5hvkxWm7H9xSKThZ/D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716911618; c=relaxed/simple;
-	bh=bebSNINfLGRXjEL3kdOR1gvaAlgvXerHGRc6bFG72XM=;
+	s=arc-20240116; t=1716911631; c=relaxed/simple;
+	bh=rVcl4oJmbxPg0GXfNHL3b9hvs7+krxPFeYYRdXrja94=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FCO0pk5ZafCbECVYF9A9pJUsrcBoa8xDGt/WxgFCBFK78j4V2eFlxjihb5V+7S19a53JAHch3GzD/8dG8wCjjPad0cWLuZOChk8E4HadMf7SGY1zIKMuXPoqFM/El9auPvhXWrRNTpL3Dyjj3RQk/oxkCXwM2TRRq9DcmSoXv5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mXI2zp7Z; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=e4K0BSyUEYYGRRTOoiCchRb4KCQenbHN3jXrIRV1hpQoxEncSHQWK11ZfJnXtcZHjMJGfbAhqngonvJOqrWS6eBiENJXVzZDQbcLv6VEdomFKH7491eTpa96pQ+StJRrkpBLZaYl97INKMyONEsoxDvreAeoum+H4GmSXSojNQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AM+cLA+w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXI2zp7Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716911617; x=1748447617;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bebSNINfLGRXjEL3kdOR1gvaAlgvXerHGRc6bFG72XM=;
-  b=mXI2zp7ZQsjXBHVXtYpJrC69a+8aA8pC0S8WUYaiFM2Pkq3wdjgnsgwp
-   muH2iu30ZziNXJcf4RVfSX+4XwEAlscmI5vTzOY/+JiLwBeJW4djuvZ+F
-   Mu0EmMsUDoZjCqE/U8176H66cr8LNbuYKUls/NazKFWPOXvrpBMNI82/T
-   PyYa0j1UfHdgNbOdddApK5wCv6D5q5nk7u/O0eZlsKrRTW068cnS7tMqa
-   2Zf18H1tZIZYbmF9m4LSpI6RyUK0ZYKtmk5xJ6H0qjlOITJJB7yIHe3O7
-   BvE6jrn2yBpMmkurlmdyH3hTMSVDnBenFUZ5qLm83wlEE4EdUc7ZFEhYq
-   Q==;
-X-CSE-ConnectionGUID: g5gLuwjYT0mO8iUfFVdwGg==
-X-CSE-MsgGUID: sva2hfgFRlGDpjcmU4iPMw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13488885"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="13488885"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 08:53:36 -0700
-X-CSE-ConnectionGUID: MtRu17F0SRKNFeJRdnL+dw==
-X-CSE-MsgGUID: 1Akhkm+dTiWzxcfzcudOOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="72551972"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 28 May 2024 08:53:30 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sBz7l-000CPL-0V;
-	Tue, 28 May 2024 15:53:04 +0000
-Date: Tue, 28 May 2024 23:51:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] drm/bridge: imx93-mipi-dsi: Use dev_err_probe
-Message-ID: <202405282314.dvr8cFY0-lkp@intel.com>
-References: <20240528093922.194684-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AM+cLA+w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C4DC3277B;
+	Tue, 28 May 2024 15:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716911630;
+	bh=rVcl4oJmbxPg0GXfNHL3b9hvs7+krxPFeYYRdXrja94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AM+cLA+wcCb28OGJL5tYm7gL089gzdouBVMNydNW0YMWRbh22yQBshHm8dcefmDNu
+	 4NZIfrvY/NQS0toViyv70/Iz0+sSQtzGmbu0LuT0UzrzgPqAsGyUnFXVQxoqyB8kR3
+	 Yh4llfiT3eO7bI1JL4IMRzlIuqDdcxWolnO1aiDHqYQ0AeeQ6dq5iyHMnMUnee0Xnr
+	 bBh+0AN7Zt96ybXfxf+4LWAS1pCy7U8GlDqosCeA86g+P0PIYWF9Djk9K686nQ0qpa
+	 kwiB5R+oy7jxNUdZxpgMx+tg23ELUbCjTzQIGiSWO7/y7y8/kkhyXoGZwyNNGfW9H+
+	 UVlG3qQpk1EGA==
+Date: Tue, 28 May 2024 16:53:46 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, lee@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, lgirdwood@gmail.com,
+	broonie@kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [RFC PATCH] dt-bindings: regulator: twl-regulator: convert to
+ yaml
+Message-ID: <20240528-mandarin-chevron-130406a65434@spud>
+References: <20240528065756.1962482-1-andreas@kemnade.info>
+ <e497498c-f3da-4ab9-b6d4-f9723c10471c@kernel.org>
+ <20240528131622.4b4f8d03@aktux>
+ <f288a1c9-762c-4c66-8611-9a08d6c09bac@kernel.org>
+ <20240528150647.40385d08@aktux>
+ <3a29c775-4131-4047-9777-4146e6c8eed0@kernel.org>
+ <20240528-unimpeded-dealing-0128abb54272@spud>
+ <20240528174849.6945343a@aktux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="NaW3yDTJm5rP3IEB"
+Content-Disposition: inline
+In-Reply-To: <20240528174849.6945343a@aktux>
+
+
+--NaW3yDTJm5rP3IEB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528093922.194684-1-alexander.stein@ew.tq-group.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alexander,
+On Tue, May 28, 2024 at 05:48:49PM +0200, Andreas Kemnade wrote:
+> On Tue, 28 May 2024 15:36:40 +0100
+> Conor Dooley <conor@kernel.org> wrote:
+>=20
+> > On Tue, May 28, 2024 at 03:54:05PM +0200, Krzysztof Kozlowski wrote:
+> > > On 28/05/2024 15:06, Andreas Kemnade wrote: =20
+> > > > On Tue, 28 May 2024 13:25:29 +0200
+> > > > Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >  =20
+> > > >> On 28/05/2024 13:16, Andreas Kemnade wrote: =20
+> > > >>> On Tue, 28 May 2024 12:04:22 +0200
+> > > >>> Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >>>    =20
+> > > >>>> On 28/05/2024 08:57, Andreas Kemnade wrote:   =20
+> > > >>>>> Convert the regulator bindings to yaml files. To allow only the=
+ regulator
+> > > >>>>> compatible corresponding to the toplevel mfd compatible, split =
+the file
+> > > >>>>> into one per device.
+> > > >>>>>
+> > > >>>>> To not need to allow any subnode name, specify clearly node nam=
+es
+> > > >>>>> for all the regulators.
+> > > >>>>>
+> > > >>>>> Drop one twl5030 compatible due to no documentation on mfd side=
+ and no
+> > > >>>>> users of the twl5030.
+> > > >>>>>
+> > > >>>>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > >>>>> ---
+> > > >>>>> Reason for being RFC:
+> > > >>>>> the integration into ti,twl.yaml seems not to work as expected
+> > > >>>>> make dt_binding_check crashes without any clear error message
+> > > >>>>> if used on the ti,twl.yaml
+> > > >>>>>
+> > > >>>>>  .../devicetree/bindings/mfd/ti,twl.yaml       |   4 +-
+> > > >>>>>  .../regulator/ti,twl4030-regulator.yaml       | 402 ++++++++++=
+++++++++
+> > > >>>>>  .../regulator/ti,twl6030-regulator.yaml       | 292 ++++++++++=
++++
+> > > >>>>>  .../regulator/ti,twl6032-regulator.yaml       | 238 +++++++++++
+> > > >>>>>  .../bindings/regulator/twl-regulator.txt      |  80 ----
+> > > >>>>>  5 files changed, 935 insertions(+), 81 deletions(-)
+> > > >>>>>  create mode 100644 Documentation/devicetree/bindings/regulator=
+/ti,twl4030-regulator.yaml
+> > > >>>>>  create mode 100644 Documentation/devicetree/bindings/regulator=
+/ti,twl6030-regulator.yaml
+> > > >>>>>  create mode 100644 Documentation/devicetree/bindings/regulator=
+/ti,twl6032-regulator.yaml
+> > > >>>>>  delete mode 100644 Documentation/devicetree/bindings/regulator=
+/twl-regulator.txt
+> > > >>>>>
+> > > >>>>> diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml =
+b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+> > > >>>>> index c2357fecb56cc..4ced6e471d338 100644
+> > > >>>>> --- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+> > > >>>>> +++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+> > > >>>>> @@ -50,7 +50,7 @@ allOf:
+> > > >>>>>            properties:
+> > > >>>>>              compatible:
+> > > >>>>>                const: ti,twl4030-wdt
+> > > >>>>> -
+> > > >>>>> +        $ref: /schemas/regulator/ti,twl4030-regulator.yaml    =
+ =20
+> > > >>>>
+> > > >>>> That's not needed, just like othehr refs below.
+> > > >>>>   =20
+> > > >>> but how to prevent error messages like this:
+> > > >>>
+> > > >>> arch/arm/boot/dts/ti/omap/omap2430-sdp.dtb: twl@48: Unevaluated p=
+roperties are not allowed ('gpio', 'keypad', 'pwm', 'pwmled', 'regulator-va=
+ux1', 'regulator-vaux2', 'regulator-vaux3', 'regulator-vaux4', 'regulator-v=
+dac', 'regulator-vdd1', 'regulator-vintana1', 'regulator-vintana2', 'regula=
+tor-vintdig', 'regulator-vio', 'regulator-vmmc1', 'regulator-vmmc2', 'regul=
+ator-vpll1', 'regulator-vpll2', 'regulator-vsim', 'regulator-vusb1v5', 'reg=
+ulator-vusb1v8', 'regulator-vusb3v1
+> > > >>>
+> > > >>> esp. the regulator parts without adding stuff to ti,twl.yaml?   =
+=20
+> > > >>
+> > > >> Eh? That's a watchdog, not regulator. Why do you add ref to regula=
+tor?
+> > > >> =20
+> > > > hmm, wrongly indented? At what level doet it belong? But as the reg=
+ualor.yaml stuff can
+> > > > be shortened, maybe just add it directly to ti,twl.yaml to avoid th=
+at trouble. =20
+> > >=20
+> > > I don't follow. The diff here and in other two places suggest you add
+> > > twl-regulator reference to wdt/gpio/whatnot nodes, not to regulators.=
+ =20
+> >=20
+> > The diff may look like that, but I think they're just trying to add it
+> > as a subnode of the pmic. There are other nodes, like the madc that do
+> > this in the same file:
+> >         madc:
+> >           type: object
+> >           $ref: /schemas/iio/adc/ti,twl4030-madc.yaml
+> >           unevaluatedProperties: false
+> >=20
+> > I guess this is what was being attempted, albeit incorrectly.
+>=20
+> correct. No regulators node, just everything directly as a subnode of
+> the pmic. Well, I have now something using patternProperties directly itn=
+ ti,twl.yaml
+> including a more detailed example which does not upset dt_binding_check.
+> I am running dtbs_check to check if anything is odd. the 4030 variant see=
+ms
+> to be ok, waiting for some dtbs containing 603X now.
+>=20
+> But somehow I would feel better if I would understand what was syntactica=
+lly
+> wrong with my original proposal. I have totally no idea yet.
 
-kernel test robot noticed the following build warnings:
+If you want to create a child node, you can't just reference another
+schema willy nilly. You need to create a property of type object, as was
+done elsewhere in the file.
 
-[auto build test WARNING on shawnguo/for-next]
-[also build test WARNING on linus/master v6.10-rc1 next-20240528]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> The error message of dt_binding_check is also meaningless:
+>  CHKDT   Documentation/devicetree/bindings
+> Traceback (most recent call last):
+>   File "/home/andi/.local/bin/dt-doc-validate", line 64, in <module>
+>     ret |=3D check_doc(f)
+>            ^^^^^^^^^^^^
+>   File "/home/andi/.local/bin/dt-doc-validate", line 32, in check_doc
+>     for error in sorted(dtsch.iter_errors(), key=3Dlambda e: e.linecol):
+>                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>   File "/home/andi/.local/pipx/venvs/dtschema/lib/python3.11/site-package=
+s/dtschema/schema.py", line 125, in iter_errors
+>     self.annotate_error(scherr, meta_schema, scherr.schema_path)
+>   File "/home/andi/.local/pipx/venvs/dtschema/lib/python3.11/site-package=
+s/dtschema/schema.py", line 104, in annotate_error
+>     schema =3D schema[p]
+>              ~~~~~~^^^
+> KeyError: 'type'
+>   LINT    Documentation/devicetree/bindings
+>=20
+> IMHO this should be improved.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Stein/drm-bridge-imx93-mipi-dsi-Use-dev_err_probe/20240528-174332
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240528093922.194684-1-alexander.stein%40ew.tq-group.com
-patch subject: [PATCH 1/1] drm/bridge: imx93-mipi-dsi: Use dev_err_probe
-config: arm-randconfig-001-20240528 (https://download.01.org/0day-ci/archive/20240528/202405282314.dvr8cFY0-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240528/202405282314.dvr8cFY0-lkp@intel.com/reproduce)
+What I see with your patch applied is:
+/stuff/linux-dt/Documentation/devicetree/bindings/mfd/ti,twl.yaml: ignoring=
+, error in schema: allOf: 0: then: properties: $ref
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405282314.dvr8cFY0-lkp@intel.com/
+Not a great error either, but not a crash like you see. What version of
+dt-schema are you using?
 
-All warnings (new ones prefixed by >>):
+--NaW3yDTJm5rP3IEB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-   drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c: In function 'imx93_dsi_probe':
->> drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c:837:13: warning: unused variable 'ret' [-Wunused-variable]
-     837 |         int ret;
-         |             ^~~
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlX+CgAKCRB4tDGHoIJi
+0qKLAQCGFtx/Ay5ysirhXyqQuy4I9psiS/2NviHEhlp1z8v3mQEAw5uThXMaN3vj
+80ahgep6lSMNVQMa60qsYJ+unQQuFAs=
+=r4Ir
+-----END PGP SIGNATURE-----
 
-vim +/ret +837 drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c
-
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  831  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  832  static int imx93_dsi_probe(struct platform_device *pdev)
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  833  {
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  834  	struct device *dev = &pdev->dev;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  835  	struct device_node *np = dev->of_node;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  836  	struct imx93_dsi *dsi;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21 @837  	int ret;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  838  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  839  	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  840  	if (!dsi)
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  841  		return -ENOMEM;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  842  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  843  	dsi->regmap = syscon_regmap_lookup_by_phandle(np, "fsl,media-blk-ctrl");
-b407e810c9a5b87 Alexander Stein 2024-05-28  844  	if (IS_ERR(dsi->regmap))
-b407e810c9a5b87 Alexander Stein 2024-05-28  845  		return dev_err_probe(dev, PTR_ERR(dsi->regmap),
-b407e810c9a5b87 Alexander Stein 2024-05-28  846  				     "failed to get block ctrl regmap");
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  847  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  848  	dsi->clk_pixel = devm_clk_get(dev, "pix");
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  849  	if (IS_ERR(dsi->clk_pixel))
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  850  		return dev_err_probe(dev, PTR_ERR(dsi->clk_pixel),
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  851  				     "failed to get pixel clock\n");
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  852  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  853  	dsi->clk_cfg = devm_clk_get(dev, "phy_cfg");
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  854  	if (IS_ERR(dsi->clk_cfg))
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  855  		return dev_err_probe(dev, PTR_ERR(dsi->clk_cfg),
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  856  				     "failed to get phy cfg clock\n");
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  857  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  858  	dsi->clk_ref = devm_clk_get(dev, "phy_ref");
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  859  	if (IS_ERR(dsi->clk_ref))
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  860  		return dev_err_probe(dev, PTR_ERR(dsi->clk_ref),
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  861  				     "failed to get phy ref clock\n");
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  862  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  863  	dsi->ref_clk_rate = clk_get_rate(dsi->clk_ref);
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  864  	if (dsi->ref_clk_rate < REF_CLK_RATE_MIN ||
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  865  	    dsi->ref_clk_rate > REF_CLK_RATE_MAX) {
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  866  		dev_err(dev, "invalid phy ref clock rate %lu\n",
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  867  			dsi->ref_clk_rate);
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  868  		return -EINVAL;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  869  	}
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  870  	dev_dbg(dev, "phy ref clock rate: %lu\n", dsi->ref_clk_rate);
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  871  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  872  	dsi->dev = dev;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  873  	dsi->pdata.max_data_lanes = 4;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  874  	dsi->pdata.mode_valid = imx93_dsi_mode_valid;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  875  	dsi->pdata.mode_fixup = imx93_dsi_mode_fixup;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  876  	dsi->pdata.get_input_bus_fmts = imx93_dsi_get_input_bus_fmts;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  877  	dsi->pdata.phy_ops = &imx93_dsi_phy_ops;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  878  	dsi->pdata.host_ops = &imx93_dsi_host_ops;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  879  	dsi->pdata.priv_data = dsi;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  880  	platform_set_drvdata(pdev, dsi);
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  881  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  882  	dsi->dmd = dw_mipi_dsi_probe(pdev, &dsi->pdata);
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  883  	if (IS_ERR(dsi->dmd))
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  884  		return dev_err_probe(dev, PTR_ERR(dsi->dmd),
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  885  				     "failed to probe dw_mipi_dsi\n");
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  886  
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  887  	return 0;
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  888  }
-ce62f8ea7e3f8a8 Liu Ying        2023-08-21  889  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--NaW3yDTJm5rP3IEB--
