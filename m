@@ -1,41 +1,50 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBCD172BA4;
-	Tue, 28 May 2024 16:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE30172786;
+	Tue, 28 May 2024 16:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716913362; cv=none; b=pkh6UH4/xrxJhob009r49/4PvMpsh2fmu70uHgOW6ma6GPRnzyjVxVPczaNl9Fj0D2bFkTxtNZHZNaWrb4mupuiNMp+sAfFQdfFWXAyY8NJpcGgmEST2OD1Ge/1gstBCQ7QyoP47gby1GyYgdYXNHg21sEc9Wgaxd33FO884+ls=
+	t=1716913396; cv=none; b=iuTDIXPUjlFvnT4LI5gYDiQKdRTptA28iCTGufSjKQiCzxKT+4wEA7pd5keMt8n7R/pagZNe1n2I7UI5vewN8MNWqqkItoYoPTjLEa2BypasXGid5Ae0AJBYRq3wJ1+5Zpf/K+6SUnv3XGaZOlP0T70eSBKeSONx4ELGjZUGmCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716913362; c=relaxed/simple;
-	bh=kpR2fFczl4zrmb4jbIi8NsKzrZZ36Zbggc2EgLO+vSc=;
+	s=arc-20240116; t=1716913396; c=relaxed/simple;
+	bh=eIJT5LAauoUZFbvVBrouDQx9g9TxHrmRhXsibWcNbD4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tg1wk1l4V3X4z3+4+M8qImpeGjUxP2oKP2bh0eIeS9eGZfhmOLKJoxZTRJ7fJUJq7y59R8Tu7Aed0ai1uCw9gRPc+BP0giBEp12Lj3Eo2TBDV0yGM5GmJa136ehjgXphcnfADbDJRIUzyR4pOrfbQLT3pVL15A9Q92T4YkwHriM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HU0AVVPR; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	 In-Reply-To:Content-Type; b=BJTb04/Nfr7xAvHt9AVlRZfM+4B2lKE+nVXfixjKS/HjoaHM5xsACxMEuThzhAv5JAfzZ8v+li00sRV1OL7UY7n28rCpA++dlYacgWNrXO7gt3hm4gK/jR5n9bLVlVqo1lKSKx8Y/i3YqCmRDFKuyFcFo/LOU0nIHE0OMOVreWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7uz/KL6; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HU0AVVPR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716913344; x=1717518144; i=markus.elfring@web.de;
-	bh=7KM1xuNiCDT4AGTVfn5aUlOhf2Cxr9DbH5hJVtIXgBo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=HU0AVVPRMfIJjsn6LmnbDkx7JtYrWx20cImP/KI3AhFTBlRTgEUPzAzaem13l2Km
-	 8Fo5r0R7QwfenWl5LtdRCIH7aTSyR1deFjKZRgwGKV/swXLgdm1I8fTAUshcxBM++
-	 fRkBJlAfa/8LNGBDzdzSp7D0j80v2US1yc++H2scDAEwge8WBUEr1biNmBEcbySWj
-	 LRG5tlq3yGRf5I6kLCCYqc54FGT/x7OUdrheOLTu/gag9UmujPWOuBNn1o+sLtlWS
-	 T+quZWHUP+cTWU0+GPhJBT1GztH2z0ne9GMPb+UPhXbwdAJASd0/ILBGiOjzlyU7u
-	 uAkjWZq6Aumd7Qn/HQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MkEhR-1swe5Z2Ywb-00kXG6; Tue, 28
- May 2024 18:22:24 +0200
-Message-ID: <a2036c46-0527-4ac3-a40b-c9c2cd3e185e@web.de>
-Date: Tue, 28 May 2024 18:22:23 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7uz/KL6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716913394; x=1748449394;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=eIJT5LAauoUZFbvVBrouDQx9g9TxHrmRhXsibWcNbD4=;
+  b=k7uz/KL6CdfKUmlJsQWHr0HXPmxDpyCIcgBufAucNnM/dSvhClHfZzHX
+   FOUSh62D75kqntrvRA/a8kkBsr84B1vQGt/TpJwBVkDzsCI3+3CPUsPDF
+   prq2wViJzKBv3vb9+O1AxKvB168oU+vIVV+UWOo8oAAiX5bSWyhRjfuNI
+   Jz0+SgCGs8LsBORe0sEPkPMVhwQLhEAy4UHinN7QNyzPUJ5043yPpucsu
+   5fX/AKVVtJtn39MS0Ere7MrJiLd6SQ1N9IzExarnLqHWoNmuBsykOubRJ
+   aZQ8TeGWt2aFHN5oUu7mCISMNM6xI1TGxRpIUmzdbTbJOIMqdGBC4XzPi
+   Q==;
+X-CSE-ConnectionGUID: 0aVZLU/jTrK+qS1cRupdGw==
+X-CSE-MsgGUID: DSanTUznQt+bsNg2Plyr0A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24399578"
+X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
+   d="scan'208";a="24399578"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 09:23:14 -0700
+X-CSE-ConnectionGUID: +Q8TNIsBRjmfHTrI0bCqgw==
+X-CSE-MsgGUID: ig9cWYbgSRm5TNCuOxUqxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
+   d="scan'208";a="35739920"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.110.248]) ([10.125.110.248])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 09:23:13 -0700
+Message-ID: <01bb6519-680e-45bf-b8bd-34763658aa17@intel.com>
+Date: Tue, 28 May 2024 09:23:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,81 +52,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: soundwire: fix usages of device_get_named_child_node()
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>, linux-sound@vger.kernel.org,
- Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Bard Liao <bard.liao@intel.com>,
- Vinod Koul <vinod.koul@linaro.org>
-References: <20240528063533.26723-1-yung-chuan.liao@linux.intel.com>
- <0080bd18-58e1-4e82-96e0-e64d2fa978c9@web.de>
- <9d5f2625-f3e7-4212-8c9a-c22f137f39d9@linux.intel.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <9d5f2625-f3e7-4212-8c9a-c22f137f39d9@linux.intel.com>
+Subject: Re: [PATCH v3 2/2] x86/sgx: Resolve EREMOVE page vs EAUG page data
+ race
+To: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>,
+ dave.hansen@linux.intel.com, jarkko@kernel.org, kai.huang@intel.com,
+ haitao.huang@linux.intel.com, reinette.chatre@intel.com,
+ linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mona.vij@intel.com, kailun.qin@intel.com, stable@vger.kernel.org
+References: <20240517110631.3441817-1-dmitrii.kuvaiskii@intel.com>
+ <20240517110631.3441817-3-dmitrii.kuvaiskii@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240517110631.3441817-3-dmitrii.kuvaiskii@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BTQELw88TuHdzg24tV+ZDlWviFo3A2UTKj79AOudD3HtO0qZAuG
- OkPxT8mN8jE40HX3GVawWdL54FLL1DiGteLK7mLSlX2NK9dp+3kVCcnLptWLKe+4Dze8jHX
- mg0kWTkvrf+kGRYfYXQHdPGP7D7IDQIJTIJR+EzyLRzsg+3/v1X8embj9lfjKTjAWNeg01X
- sfODsivz9slGbY6MUFbaQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:js6plXQPR28=;NxkUglzSnCjMlmjBbGwe2TU+qT1
- dquw5HV3GSAdqaW4R1byAR1VsCQ+J8a7a//PThtcXar+f0cwLPhY7G0CtAO/ixp9bgaIzgwXe
- d7Quea9tMzGZmZr5KuwEsU/qDPhyGDnECcbGhsVHx4iNoDSBlm7sWwppy3PQCP3QTp7YZ/58j
- Fm4s/ctHoTzwRsokAuVLrDyd3h0wIn6dH7/E7ixjEVHj4IDmtHS6gENzkTLChmB1QxF9/4tUa
- VjPIiQgVEnhq9qKWTey4ZWQimLX6a4TMGFddeafb3/HqL6cvBED1Awhl2s6B62YQ+fb/Ebx+C
- 6cZ7QOPPq8EhI5Qku5yqq5GJGkByHdYJnU04JE/5/W7zrMsSUnPUKhDzg53ID0p/Nxyx30zAx
- HSw3lvOyWD7U8jJjC9RqT8AaHN1DfRF324NmFtku0ITcz7RpQIp2EjGZkm2EwN7UZdSYm2wNF
- DlITDKxgVNgtfpQuS9QHPr3KTPaupIrcnwZ1MI9ZfnffNsPeq/DEB6XlJQOsmKog+63xQJWAJ
- xQfOSw66SIb1Pr5dZBAxxgtb109QuRsjfFWjc0HjKobbIAxNEm9Vrf5bZTB3p9vy/X8mkjTy/
- 2cDVpQ9EYDov5hVxPNG3tYVt6Q2m0n/vxCkYNiNdX+FgT7okMzizN1Sq8x/tIya98ZrpdT2NB
- XDMXnVx5HyZycUoL4DrN5FbGkGRNJqwFNW2vLs5AhfjJtGjMh3ATN/okE4vZqybY1PwgQABHp
- 51wcv4vIvspyJKfL8PemwDeZfHMjJxnl6WYaa60CT7pDUsQrQoCYhGSE0somERX1KlvE07f+B
- 7pdvOyBytyk+J8ZcH94mcKzvn72dvG6nuKBhebxBb32ao=
+Content-Transfer-Encoding: 7bit
 
->>> Add fwnode_handle_put() to avoid leaked references.
->>
->> Are you going to respond also to my previous patch review
->> in more constructive ways?
->> https://lore.kernel.org/lkml/eb15ab0a-e416-4ae9-98bb-610fdc04492c@web.d=
-e/
->> https://lkml.org/lkml/2024/4/29/493
->
-> Sorry about that, both Bard and I missed your comments.
+On 5/17/24 04:06, Dmitrii Kuvaiskii wrote:
+...
 
-How could this happen?
+First, why is SGX so special here?  How is the SGX problem different
+than what the core mm code does?
 
+> --- a/arch/x86/kernel/cpu/sgx/encl.h
+> +++ b/arch/x86/kernel/cpu/sgx/encl.h
+> @@ -25,6 +25,9 @@
+>  /* 'desc' bit marking that the page is being reclaimed. */
+>  #define SGX_ENCL_PAGE_BEING_RECLAIMED	BIT(3)
+>  
+> +/* 'desc' bit marking that the page is being removed. */
+> +#define SGX_ENCL_PAGE_BEING_REMOVED	BIT(2)
 
-> On the Fixes tag: I made a deliberate choice to add all the fixes in one
-> patch, to show that the usage was copy-pasted and done 'wrong' in
-> multiple places. That makes it really hard to add a Fixes tag since the
-> different uses were added in a time interval of about 5 years.
+Second, convince me that this _needs_ a new bit.  Why can't we just have
+a bit that effectively means "return EBUSY if you see this bit when
+handling a fault".
 
-Is it interesting how the affected software components evolved in the mean=
-time?
+>  struct sgx_encl_page {
+>  	unsigned long desc;
+>  	unsigned long vm_max_prot_bits:8;
+> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
+> index 5d390df21440..de59219ae794 100644
+> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
+> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+> @@ -1142,6 +1142,7 @@ static long sgx_encl_remove_pages(struct sgx_encl *encl,
+>  		 * Do not keep encl->lock because of dependency on
+>  		 * mmap_lock acquired in sgx_zap_enclave_ptes().
+>  		 */
+> +		entry->desc |= SGX_ENCL_PAGE_BEING_REMOVED;
 
-
-> We could split and have multiple patches if that was desired, but I
-> would still not include a Fixes tag since the leaked references are not
-> that bad, we read the Manager properties on probe, and the peripheral
-> properties are generally not used by codec drivers, so it's unlikely
-> that any user will ever see a problem that requires a backport in linux-=
-stable.
-=E2=80=A6
-
-I became curious how the exception handling will be completed here.
-
-* Do you still care for the usage of goto chains?
-  https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+=
-goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+resou=
-rces
-
-* How do you think about to increase the application of scope-based resour=
-ce management?
-  https://elixir.bootlin.com/linux/v6.10-rc1/source/include/linux/cleanup.=
-h#L124
-
-
-Regards,
-Markus
+This also needs a comment, no matter what.
