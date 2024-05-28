@@ -1,90 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE4018AF9;
-	Tue, 28 May 2024 19:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C115744C8C;
+	Tue, 28 May 2024 19:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716922987; cv=none; b=jRQnbv26nc5irBClxZRePkcnKhmCauRbJFZHr6/yCWZQrTnYq3+3GjnXGAhiLjH8bBMjHBgNo2njGOj2bhZ8U2ONc14DN0Kry4KRZO1N7yhF/f8eqV/cT7DJq33aSWFp3y0pU5YzCJ2PJYfgxNmuA0dvtg1Enb5jp2WSdOtxOyE=
+	t=1716923010; cv=none; b=QHyBizVkCEjhjfNQREp3QaHWngW4OA/Sn9pJV+XJ8hFk0h58FsC+JNsqGmWKvqqfz7CupQRrMTIYqpGbgXyAjxWDdCyZZhde1fpjToMLA7N81BYLka+bCwOtaMlnkSen9zPgTw7aqeeCKQeEp+JWERUtHqX6k4KaftP8IEXQq6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716922987; c=relaxed/simple;
-	bh=WZ7+oO+PxWnZZbzdRvQ0XELaG7BanaIc2Y6P8/ergOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EDwAQZlM2Xvle99WEBH/EX2BGo++2IaH+5JFwA+HmAIy0Hols5gEhC/7lw+D5T7wfQvEuUiimLP7H77W1zq1a1sjAcpBXHM73700D4yQt9r19fLsPiFMYtzYNpynU5MNHon4FbfB7+Yc0YEmdmoBZZS93VKuAEH6EcZPg8VAVeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZusZzBP0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716923010; c=relaxed/simple;
+	bh=h+2v1Uu8sBVsE0sSUT/TQIKV/8xuYS/8QCvqmlBwVeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jJJr197Ql+tH26cw9DwVBXwaWv+L8+LwZ91VV4jDEGhrz2ddHZZOQ5gL9XXadNWATsWs29mlxP0qU3HN9E6zHCGsmQaoLYWz+9oQJ01HAyEr0PsY+1Msj1YaIjR4l8jwr7oitTV7m2Bi8zOuRqyBuwZsp6QO6zjdv+oreQ7qu4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=sc5vGbNd; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZusZzBP0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5B90C3277B;
-	Tue, 28 May 2024 19:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716922987;
-	bh=WZ7+oO+PxWnZZbzdRvQ0XELaG7BanaIc2Y6P8/ergOc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=ZusZzBP0XK0tVGafQCGlq1zoKOn0GKtEvaRMnq6yKZlyYxCRk14zuzhB0BsA6munc
-	 R9yc97lq72jh6JEEkg64G6NCUYQVvsToAV43PsvbwLcBfMJetCx4VA38qRJNW3gGLX
-	 SDs9fyvStIV2/FR3OaXg0His7IkAXW6nFt0x0J7ErZXEGp0ZcJz1boa4bvhtV8gYMB
-	 4pVo++N6ne176e0pD93ilEhiVJC9xFlIa9fDvJav0VJ8rhErVKGfiowQI19wQDjY9J
-	 T2rA60U+8VF4fMSiqaMFUVkuNDTC4Wsfj4PfTnv1RG/ffM2kltJv80Bn0JfsKm5N3P
-	 DXy95nTeQuqvQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 8A7D1CE0F8F; Tue, 28 May 2024 12:03:06 -0700 (PDT)
-Date: Tue, 28 May 2024 12:03:06 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Zqiang <qiang.zhang1211@gmail.com>
-Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	urezki@gmail.com, rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Skip debug object testing for cur_ops
- without ->debug_objects set
-Message-ID: <1195a9a3-db87-465d-a3b0-ee92d67da954@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240528030054.4525-1-qiang.zhang1211@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sc5vGbNd"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D583EA27;
+	Tue, 28 May 2024 21:03:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1716923004;
+	bh=h+2v1Uu8sBVsE0sSUT/TQIKV/8xuYS/8QCvqmlBwVeE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sc5vGbNdoyU8CSQ7Hv2ZxhwQWJe7uSQc41rrkg3d5sPAj6qoEN80X2rCniDNUf07u
+	 as4qoC6VEuRmxjk95qDKDFX1XPuim06eUfOAljfBIaE2q3tZLD+wiuZFJjne0sVmJW
+	 OuEciPw/arJu2a/tQZVD0E4IS7I+vFFj0VKS18Tc=
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Subject: [PATCH v2 0/4] ADP5585 GPIO expander, PWM and keypad controller support
+Date: Tue, 28 May 2024 22:03:10 +0300
+Message-ID: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528030054.4525-1-qiang.zhang1211@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 28, 2024 at 11:00:54AM +0800, Zqiang wrote:
-> This commit make rcu_test_debug_objects() early return when the
-> specified cur_ops not set the ->debug_objects.
-> 
-> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> ---
->  kernel/rcu/rcutorture.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 08bf7c669dd3..9b8c277ab91a 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -3495,8 +3495,9 @@ static void rcu_test_debug_objects(void)
->  		return;
->  	}
->  
-> -	if (WARN_ON_ONCE(cur_ops->debug_objects &&
-> -			(!cur_ops->call || !cur_ops->cb_barrier)))
-> +	if (!cur_ops->debug_objects ||
-> +			WARN_ON_ONCE(cur_ops->debug_objects &&
+Hello,
 
-You lost me here.  Given that we have "!cur_ops->debug_objects" before
-that WARN_ON_ONCE(), why do we need "cur_ops->debug_objects" inside of it?
+This patch series introduces support for the Analog Devices ADP5585, a
+GPIO expander, PWM and keyboard controller. It models the chip as an MFD
+device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
+for the GPIO (3/4) and PWM (4/4) functions.
 
-Also, we don't get here unless the rcutorture.object_debug kernel boot
-parameter is specified, don't we really want to WARN_ON_ONCE if the
-current flavor does not support that?
+Support for the keypad controller is left out, as I have no means to
+test it at the moment. The chip also includes a tiny reset controller,
+as well as a 3-bit input programmable logic block, which I haven't tried
+to support (and also have no means to test).
 
-Or do you have a use case that needs to silence these warnings?
+The driver is based on an initial version from the NXP BSP kernel, then
+extensively and nearly completely rewritten, with added DT bindings. I
+have nonetheless retained original authorship. Clark, Haibo, if you
+would prefer not being credited and/or listed as authors, please let me
+know.
 
-							Thanx, Paul
+All review comments from v1 have been taken into account as far as I can
+tell. The most notable changes are in the DT binding that now merge all
+functions in a single node, and the corresponding changes to the
+drivers.
 
-> +				(!cur_ops->call || !cur_ops->cb_barrier)))
->  		return;
->  
->  	struct rcu_head *rhp = kmalloc(sizeof(*rhp), GFP_KERNEL);
-> -- 
-> 2.17.1
-> 
+Clark Wang (1):
+  pwm: adp5585: Add Analog Devices ADP5585 support
+
+Haibo Chen (2):
+  mfd: adp5585: Add Analog Devices ADP5585 core support
+  gpio: adp5585: Add Analog Devices ADP5585 support
+
+Laurent Pinchart (1):
+  dt-bindings: Add bindings for the Analog Devices ADP5585
+
+ .../devicetree/bindings/mfd/adi,adp5585.yaml  | 107 ++++++++
+ .../devicetree/bindings/trivial-devices.yaml  |   4 -
+ MAINTAINERS                                   |  11 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-adp5585.c                   | 232 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |  11 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/adp5585.c                         | 200 +++++++++++++++
+ drivers/pwm/Kconfig                           |   7 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-adp5585.c                     | 187 ++++++++++++++
+ include/linux/mfd/adp5585.h                   | 127 ++++++++++
+ 13 files changed, 892 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+ create mode 100644 drivers/gpio/gpio-adp5585.c
+ create mode 100644 drivers/mfd/adp5585.c
+ create mode 100644 drivers/pwm/pwm-adp5585.c
+ create mode 100644 include/linux/mfd/adp5585.h
+
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+-- 
+Regards,
+
+Laurent Pinchart
+
