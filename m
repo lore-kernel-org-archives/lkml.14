@@ -1,164 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5DC1396;
-	Tue, 28 May 2024 04:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECB317E8E4;
+	Tue, 28 May 2024 04:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716868929; cv=none; b=uYUOpb4xqEy2vaSWXX3E268k6fKnzV6V14AYs5xOWPuAdZZnvgjjOMyArcTy/MhY+R412sTpbdbB5D+/p/5JVOvCqzN1jRtEZHhGPQ98QYPboPz9hLQ6Q3+r5uBpEs0MGSsU6yB3PHyMDquglrDelKcaOnb6eZJ74YazM/i8UfQ=
+	t=1716868943; cv=none; b=rOncHWBkywBN6Rixd7VSGNULNUboLrZbqVWV7gGPaSMZqcothsc7WQWPHZGKA3GIAHo79Vgd0vXubbsbdqgFK/nm19hLzQK7MCKV8gF20eQwrMG3EQfcu2u4280xhX+J5cNWuC4hZs6V96QcaLL9Xt9Fmn2lWLDzOC/DlElpABI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716868929; c=relaxed/simple;
-	bh=RnmsPifvhNThYUMsbWs/uvFbuRDTORijhZ2xFj033o4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=hWiOBUd5Gn2RiA5ty4w2Sfq78lEIYW8fVbm9FNK+ufoOfvy104wvSbZXs+1GVjzvDFrJLuIaxnlnh7GK1fhb5B+yRV0Ml75PQmtaQtr5OXhEnonyXEDuOBVq0iPseupQFjS+2kji0u3I+7VJyCC8LU2+KeqfYwZUCd1JDhqtF0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hStZr+Ev; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716868943; c=relaxed/simple;
+	bh=A7krJ9hN8ETag6cmVIyu2zB1IeKU/qgLv1W7pyi1+Lc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q7CYOLA+Y3izIzXtvXZjLfDTXIW/nc7NK1ZXR+FLzIHrENM5EVvzAQ+tC+oW32WJNOcyhox3sFCKH/VWRiIgfC0/BK3VAxAMZ/g4NFx8b+BVYIdN0hrwX69e76aL0wwgRIK/+NCym8z0ULJ7NCI0R2Ju65GGquEruR5xO/PNz9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pdCDUyd8; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hStZr+Ev"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF11C3277B;
-	Tue, 28 May 2024 04:02:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716868928;
-	bh=RnmsPifvhNThYUMsbWs/uvFbuRDTORijhZ2xFj033o4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hStZr+EvKvrKdaz9HlELdlcMdbldtuZUfL9PnHRKWQRaMvEEk4a4Kbs84E1S+kX2M
-	 dSLWmRSiOjLxhkQh0NdILB3C0rLsBblV9D2HH9z3xBww/NNAZHO+WhReJkRPVL8LAC
-	 GYtzA4ono5iDj2l56H4dBwzDpekNHzs+naerF3wfFRb/Vh7m6yPi3iDu0yM64hiQ9V
-	 Ju7SH7jNKlpl6oQFmYqxYDohQrtxzG/Ea9e+MSN0fqy5vQ55nhH+icA19zNFAoo6Sc
-	 O44IBSN6sSF0m87wY223RIKBkSTlcV/0rhy4ZcPM/wOn90i8x5Nh1ivID3r99fWPTa
-	 sc/SqSWKJmFJQ==
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pdCDUyd8"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44S429iP041030;
+	Mon, 27 May 2024 23:02:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716868929;
+	bh=7o5xZejU8GZnlz4grUA7u5BI/1wdELyrdB+AeysAwMY=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=pdCDUyd8e7wv+IlE9oniHd6vNfvBelZ6f8xx5TEEEi5HysUe35hSkAmEbTKVm/Qve
+	 iROHIXgQGTGP7FqSXfn4BQO7CtZkESjOI0zkEFHnWVEyurJtmlHhgKqUENy5McdBxH
+	 INf11QVEtAvLla9qcMDa41/YEGyg/z08XAY0qRVc=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44S429vK018987
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 27 May 2024 23:02:09 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 27
+ May 2024 23:02:09 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 27 May 2024 23:02:09 -0500
+Received: from a0497641-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.36])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44S420P0028431;
+	Mon, 27 May 2024 23:02:05 -0500
+From: Neha Malcom Francis <n-francis@ti.com>
+To: <robh@kernel.org>, <conor+dt@kernel.org>, <krzk+dt@kernel.org>,
+        <kristo@kernel.org>, <vigneshr@ti.com>, <nm@ti.com>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>
+CC: <marten.lindahl@axis.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>, <n-francis@ti.com>
+Subject: [PATCH v3 1/3] arm64: dts: ti: k3-am68-sk-base-board: Add LP8733 and TPS6287 nodes
+Date: Tue, 28 May 2024 09:31:57 +0530
+Message-ID: <20240528040159.3919652-2-n-francis@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240528040159.3919652-1-n-francis@ti.com>
+References: <20240528040159.3919652-1-n-francis@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 28 May 2024 07:02:03 +0300
-Message-Id: <D1KZ8N1QY0QW.1ACMEKZL0IW0R@kernel.org>
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Herbert Xu"
- <herbert@gondor.apana.org.au>
-Cc: <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
- <Andreas.Fuchs@infineon.com>, "James Prestwood" <prestwoj@gmail.com>,
- "David Woodhouse" <dwmw2@infradead.org>, "Eric Biggers"
- <ebiggers@kernel.org>, "James Bottomley"
- <James.Bottomley@hansenpartnership.com>, <linux-crypto@vger.kernel.org>,
- "Stefan Berger" <stefanb@linux.ibm.com>, "David S. Miller"
- <davem@davemloft.net>, "open list" <linux-kernel@vger.kernel.org>, "Peter
- Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>, "James
- Bottomley" <James.Bottomley@HansenPartnership.com>, "Ard Biesheuvel"
- <ardb@kernel.org>, "Mario Limonciello" <mario.limonciello@amd.com>
-Subject: Re: [PATCH v6 1/6] tpm: Open code tpm_buf_parameters()
-X-Mailer: aerc 0.17.0
-References: <20240528035136.11464-1-jarkko@kernel.org>
- <20240528035136.11464-2-jarkko@kernel.org>
-In-Reply-To: <20240528035136.11464-2-jarkko@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue May 28, 2024 at 6:51 AM EEST, Jarkko Sakkinen wrote:
-> With only single call site, this makes zero sense (slipped out of the
-> radar during the review). Open code and document the action directly
-> to the site, to make it more readable.
->
-> Fixes: 1b6d7f9eb150 ("tpm: add session encryption protection to tpm2_get_=
-random()")
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
->  drivers/char/tpm/tpm-buf.c  | 26 --------------------------
->  drivers/char/tpm/tpm2-cmd.c | 10 +++++++++-
->  include/linux/tpm.h         |  2 --
->  3 files changed, 9 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
-> index 647c6ca92ac3..cad0048bcc3c 100644
-> --- a/drivers/char/tpm/tpm-buf.c
-> +++ b/drivers/char/tpm/tpm-buf.c
-> @@ -223,30 +223,4 @@ u32 tpm_buf_read_u32(struct tpm_buf *buf, off_t *off=
-set)
->  }
->  EXPORT_SYMBOL_GPL(tpm_buf_read_u32);
-> =20
-> -static u16 tpm_buf_tag(struct tpm_buf *buf)
-> -{
-> -	struct tpm_header *head =3D (struct tpm_header *)buf->data;
-> -
-> -	return be16_to_cpu(head->tag);
-> -}
-> -
-> -/**
-> - * tpm_buf_parameters - return the TPM response parameters area of the t=
-pm_buf
-> - * @buf: tpm_buf to use
-> - *
-> - * Where the parameters are located depends on the tag of a TPM
-> - * command (it's immediately after the header for TPM_ST_NO_SESSIONS
-> - * or 4 bytes after for TPM_ST_SESSIONS). Evaluate this and return a
-> - * pointer to the first byte of the parameters area.
-> - *
-> - * @return: pointer to parameters area
-> - */
-> -u8 *tpm_buf_parameters(struct tpm_buf *buf)
-> -{
-> -	int offset =3D TPM_HEADER_SIZE;
-> -
-> -	if (tpm_buf_tag(buf) =3D=3D TPM2_ST_SESSIONS)
-> -		offset +=3D 4;
-> =20
-> -	return &buf->data[offset];
-> -}
-> diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-> index 0cdf892ec2a7..1e856259219e 100644
-> --- a/drivers/char/tpm/tpm2-cmd.c
-> +++ b/drivers/char/tpm/tpm2-cmd.c
-> @@ -281,6 +281,7 @@ struct tpm2_get_random_out {
->  int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
->  {
->  	struct tpm2_get_random_out *out;
-> +	struct tpm_header *head;
->  	struct tpm_buf buf;
->  	u32 recd;
->  	u32 num_bytes =3D max;
-> @@ -288,6 +289,7 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, =
-size_t max)
->  	int total =3D 0;
->  	int retries =3D 5;
->  	u8 *dest_ptr =3D dest;
-> +	off_t offset;
-> =20
->  	if (!num_bytes || max > TPM_MAX_RNG_DATA)
->  		return -EINVAL;
-> @@ -320,7 +322,13 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest,=
- size_t max)
->  			goto out;
->  		}
-> =20
-> -		out =3D (struct tpm2_get_random_out *)tpm_buf_parameters(&buf);
-> +		head =3D (struct tpm_header *)buf.data;
-> +		offset =3D TPM_HEADER_SIZE;
-> +		/* Skip the parameter size field: */
-> +		if (be16_to_cpu(head->tag) =3D=3D TPM2_ST_SESSIONS)
-> +			offset +=3D 4;
-> +
-> +		out =3D (struct tpm2_get_random_out *)&buf.data[offset];
->  		recd =3D min_t(u32, be16_to_cpu(out->size), num_bytes);
->  		if (tpm_buf_length(&buf) <
->  		    TPM_HEADER_SIZE +
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index c17e4efbb2e5..b3217200df28 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -437,8 +437,6 @@ u8 tpm_buf_read_u8(struct tpm_buf *buf, off_t *offset=
-);
->  u16 tpm_buf_read_u16(struct tpm_buf *buf, off_t *offset);
->  u32 tpm_buf_read_u32(struct tpm_buf *buf, off_t *offset);
-> =20
-> -u8 *tpm_buf_parameters(struct tpm_buf *buf);
-> -
->  /*
->   * Check if TPM device is in the firmware upgrade mode.
->   */
+Add DTS node for LP87334E PMIC and two TPS6287x high current buck
+converters.
 
+LP87334E is responsible for supplying power to the MCU and MAIN domains
+as well as to LPDDR4. The two TPS6287x supply power to the MAIN
+domain for AVS and other core supplies.
 
-This patch went into v6 by mistake, unrelated to the patch set.
+Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
+Link: https://www.ti.com/lit/pdf/slda060
+---
+ .../boot/dts/ti/k3-am68-sk-base-board.dts     | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-BR, Jarkko
+diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+index d743f023cdd9..90dbe31c5b81 100644
+--- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+@@ -414,6 +414,82 @@ &wkup_uart0 {
+ 	pinctrl-0 = <&wkup_uart0_pins_default>;
+ };
+ 
++&wkup_i2c0 {
++	bootph-all;
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&wkup_i2c0_pins_default>;
++	status = "okay";
++
++	lp8733: pmic@60 {
++		compatible = "ti,lp8733";
++		reg = <0x60>;
++		buck0-in-supply = <&vsys_3v3>;
++		buck1-in-supply = <&vsys_3v3>;
++		ldo0-in-supply = <&vsys_3v3>;
++		ldo1-in-supply = <&vsys_3v3>;
++
++		lp8733_regulators: regulators {
++			lp8733_buck0_reg: buck0 {
++				/* FB_B0 -> LP8733-BUCK1 - VDD_MCU_0V85 */
++				regulator-name = "lp8733-buck0";
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <850000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			lp8733_buck1_reg: buck1 {
++				/* FB_B1 -> LP8733-BUCK2 - VDD_DDR_1V1 */
++				regulator-name = "lp8733-buck1";
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			lp8733_ldo0_reg: ldo0 {
++				/* LDO0 -> LP8733-LDO1 - VDA_DLL_0V8 */
++				regulator-name = "lp8733-ldo0";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			lp8733_ldo1_reg: ldo1 {
++				/* LDO1 -> LP8733-LDO2 - VDA_LN_1V8 */
++				regulator-name = "lp8733-ldo1";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++		};
++	};
++
++	tps62873a: regulator@40 {
++		compatible = "ti,tps62873";
++		reg = <0x40>;
++		bootph-pre-ram;
++		regulator-name = "VDD_CPU_AVS";
++		regulator-min-microvolt = <600000>;
++		regulator-max-microvolt = <900000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	tps62873b: regulator@43 {
++		compatible = "ti,tps62873";
++		reg = <0x43>;
++		regulator-name = "VDD_CORE_0V8";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++};
++
+ &mcu_uart0 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+-- 
+2.34.1
+
