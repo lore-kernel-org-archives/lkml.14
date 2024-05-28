@@ -1,203 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB0910A3E;
-	Tue, 28 May 2024 20:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859E54436E;
+	Tue, 28 May 2024 20:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716927280; cv=none; b=ikeRTN0bY6dumtCj8R1YlxWU1mDjLOHkGmTwIRkO6vtwGi7T4rH8FpB+ZN37bMWqB+e0gU2yisiUw3uKQek0WgI0UAzCdM6A1yx6vruHbuCWXtX/FCGBcIlC1lxYm/Yp3LTFe1xyl3SnurAkB3LVPfF6D2EVhYr5GSMCnrhQXBc=
+	t=1716927305; cv=none; b=qdHw9LKq1w+yrQwrRK+5QW1LkN12sR9BI+ck+aKwmXzffqJqXDwaKmfi/tlbz5eK7fbHDC0bE4pc9UCxxotKS8H4XG9Up46By5Ig93kk7hBq9wgcTZT0Ggri0BC4p9CnrPrgGvXpVUJHG9qYe3hZJMMUeEZKP7jiYg8gvyHuSc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716927280; c=relaxed/simple;
-	bh=jl4LCEptJsszgAcfFCEtcYXHjunLw9TYfjiN3KRw8R4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mSuuGOc+8MP7QSbPfotxPAffnECSHT7Hz2z8oYCxdN67zUQdHJJpKpLLwsQm7aM1sRt/lVJ0qacFK9o3t/MDeJTuEhVb7cSu8dsH/2rJQ3lwtv+bXUJglb/Lksj29Qr7aD8MzWk3QlowxoqgYeh16Y4Ekc+tQEMLOf7ITIq5mtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eoHn6TvP; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716927305; c=relaxed/simple;
+	bh=Ww63LNVa/9EgcImn2nPJnwWoRot9McIJIb3F+xFHf6Q=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=AK4M3/Pk7J6RnC1/R6P4X+ZuoJu/VKguwgpdTf7wN5sby8xYDypXgngBiGmHyijKbOhS/YQgloo2fAM03qUepZlnA6gnzvAHyjoS/ID9/poyohUz7Cx9jb0WVZsMWt5vgF7FbPwjbhAa3x/QHP7VjITwPSeiVesNHPt6PUI0lwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Udwr7C96; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eoHn6TvP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716927279; x=1748463279;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jl4LCEptJsszgAcfFCEtcYXHjunLw9TYfjiN3KRw8R4=;
-  b=eoHn6TvP2bfF4FM0ukYoUyvS6LPq7ronOpYnj2cr04E8lowIBHhK5ENJ
-   Q38PDQW9wo/PBYZd0f+xn01zuefRfF22ckwL0nUDVYaLGzACFvIPZ8UPB
-   RYSpMDBj+MUyfONmljvGsE7pUWpymxmjhdd9VoE6tMVCUh8RydtaB8YNS
-   48E66neOwM8pdfIi3OFg1+KRkWtDDJcghX4suKsQCtRAK1WkLuG4MrssN
-   yUdHuAWZTcLcAkdT0XLBh+IR+PvJrFr8uVW9Zaxih32QEFOYEZlvwPG0G
-   sxB3a6mZVi9HZZs3dx1yhLdIA+qJKW4y6w3nB9XGPju618P0AryKcuRoN
-   A==;
-X-CSE-ConnectionGUID: K6ZtjlvpSdqM4cQ0FXj1/Q==
-X-CSE-MsgGUID: Lkn5bDaxTiSdZsFzMjyB0w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24715987"
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="24715987"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 13:14:38 -0700
-X-CSE-ConnectionGUID: ab5xhgmrSP+DZ4MoYeLVhw==
-X-CSE-MsgGUID: QJcjuo9UQQiy4FRZKIlX6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="40062364"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 28 May 2024 13:14:35 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sC3DM-000Cid-2i;
-	Tue, 28 May 2024 20:14:32 +0000
-Date: Wed, 29 May 2024 04:13:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER - DB..." <linux-crypto@vger.kernel.org>,
-	Richard Hughes <hughsient@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] crypto: ccp: Move security attributes to their own
- file
-Message-ID: <202405290447.WIh27jVI-lkp@intel.com>
-References: <20240527152649.3722-3-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Udwr7C96"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7930531494aso77386485a.0;
+        Tue, 28 May 2024 13:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716927302; x=1717532102; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CH0wQ9r97BfdF2raB0yjdWqZJVerj3rir1vzaUG1Zw0=;
+        b=Udwr7C96D/mwQIX5+6NKMJRD4uEjyGnbgD83Ck1BjGKKFpXlh4reemn8sNeAWvbra9
+         nsiqXQ6xCOyUhU/rGmlKC9wMHMAjiRd2879dLrXAPxL+vmKAuzVrI1KsNWdTjvmUOksb
+         lr5tNGXORXisJpwFTLLJ4NlBKWzTTYKTLwZFu/eM2Bds4VR/xnKN47YN1jhmKPXj1Dqf
+         TFpkRS0OMr28MpJT6Ynd9GX3Xr3FzeC2VhHo5r7JzMAXGvwCeh40ryP9M4t9/l1CLc8g
+         YPPi/jaNeTVGbtJNahRJ3TRPCFddEK1rBtQnb+w2TBrzVVcGFnS/t6jjgYMARrNWLSye
+         7wUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716927302; x=1717532102;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CH0wQ9r97BfdF2raB0yjdWqZJVerj3rir1vzaUG1Zw0=;
+        b=mlXrDVh+I1mf2RWlktyA+URcDZFrhFK4t7bSF2nGXe6SB3ad0JNw2ka26TGBwRcqgk
+         RFYKeOmxGRdcvD5msu2Q6FTviCOByAyKIRIFeCXUNdaXnDApXGYXssONhh+5SbZykRcZ
+         HGhOBN08augGVEd24RjkgFZKs82vT8OtR/kUHSAdnC8pDSwmvlUF7mNOCw4f68lxH3S+
+         Lzh+d0dohgXr7NPUyGq44+QxQ/yj21D1nf3PNi5YbVI/iSaLcPhufHjIsuHsP+shwXhn
+         h4+1+RL2uiMV3yefMw94edv0JwEEy6PPPkzyJkWbSiV8d6MuDVBe0ZVlf+YyLPBlKYdG
+         d6tg==
+X-Forwarded-Encrypted: i=1; AJvYcCWcHKLXsjDye6SqB9baJhruhp7CvIdhqn2DFlM/G6gRe+L6lgvG8Xy4GlFuZ97t4SZD4pURSuKJ4FJRGCcmSdqfhr/C6fYl2DGXGS3gPXEiPRcdXDwl3ZMQ0nm5JoMYyDjCu43ifTm2DICPPSrEqtICJZHUtYn9ujWC
+X-Gm-Message-State: AOJu0Yxj8kXp0O5uw5L1RvgjF/G00Ph3MDcc8bD/EMolVqQ5wxfUfMYz
+	uif+4bT+5q+nnpvq31X7LsftGz+AXo3jjZgIsQbrxKyzZStWm4qB
+X-Google-Smtp-Source: AGHT+IHeQanWgf4ig45uY5skreuulB1NOG86mOTKFIcZpBR6Brl5hBeAxPuofmYXZwVvDsMiX9USdw==
+X-Received: by 2002:a05:6214:4413:b0:6ad:835f:940c with SMTP id 6a1803df08f44-6ad835f9555mr54075486d6.50.1716927302391;
+        Tue, 28 May 2024 13:15:02 -0700 (PDT)
+Received: from localhost (112.49.199.35.bc.googleusercontent.com. [35.199.49.112])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ac071048a3sm47017696d6.69.2024.05.28.13.15.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 13:15:01 -0700 (PDT)
+Date: Tue, 28 May 2024 16:15:01 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Martin KaFai Lau <martin.lau@linux.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
+Cc: kernel@quicinc.com, 
+ Willem de Bruijn <willemb@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Andrew Halaney <ahalaney@redhat.com>, 
+ Martin KaFai Lau <martin.lau@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ bpf <bpf@vger.kernel.org>
+Message-ID: <66563b459e5de_2a7f7e2949d@willemb.c.googlers.com.notmuch>
+In-Reply-To: <d1c18889-ef48-4cb8-8b81-474b3b7ddd81@linux.dev>
+References: <20240509211834.3235191-1-quic_abchauha@quicinc.com>
+ <20240509211834.3235191-2-quic_abchauha@quicinc.com>
+ <6bdba7b6-fd22-4ea5-a356-12268674def1@quicinc.com>
+ <665613536e82e_2a1fb929437@willemb.c.googlers.com.notmuch>
+ <d1c18889-ef48-4cb8-8b81-474b3b7ddd81@linux.dev>
+Subject: Re: [PATCH bpf-next v8 1/3] net: Rename mono_delivery_time to
+ tstamp_type for scalabilty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240527152649.3722-3-mario.limonciello@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Hi Mario,
+Martin KaFai Lau wrote:
+> On 5/28/24 10:24 AM, Willem de Bruijn wrote:
+> > Abhishek Chauhan (ABC) wrote:
+> > 
+> >>> +static inline void skb_set_delivery_type_by_clockid(struct sk_buff *skb,
+> >>> +						    ktime_t kt, clockid_t clockid)
+> >>> +{
+> >>> +	u8 tstamp_type = SKB_CLOCK_REALTIME;
+> >>> +
+> >>> +	switch (clockid) {
+> >>> +	case CLOCK_REALTIME:
+> >>> +		break;
+> >>> +	case CLOCK_MONOTONIC:
+> >>> +		tstamp_type = SKB_CLOCK_MONOTONIC;
+> >>> +		break;
+> >>> +	default:
+> >>
+> >> Willem and Martin, I was thinking we should remove this warn_on_once from below line. Some systems also use panic on warn.
+> >> So i think this might result in unnecessary crashes.
+> >>
+> >> Let me know what you think.
+> >>
+> >> Logs which are complaining.
+> >> https://syzkaller.appspot.com/x/log.txt?x=118c3ae8980000
+> > 
+> > I received reports too. Agreed that we need to fix these reports.
+> > 
+> > The alternative is to limit sk_clockid to supported ones, by failing
+> > setsockopt SO_TXTIME on an unsupported clock.
+> > 
+> > That changes established ABI behavior. But I don't see how another
+> > clock can be used in any realistic way anyway.
+> > 
+> > Putting it out there as an option. It's riskier, but in the end I
+> > believe a better fix than just allowing this state to continue.
+> 
+> Failing early would be my preference also. The current ABI is arguably at least 
+> confusing (if not broken) considering other clockid is silently ignored by the 
+> kernel.
+>
+> > 
+> > A third option would be to not fail the system call, but silently
+> > fall back to CLOCK_REALTIME. Essentially what happens in the datapath
+> > in skb_set_delivery_type_by_clockid now. That is surprising behavior,
+> > we should not do that.
+> 
+> Not sure if it makes sense to go back to this option only after there is 
+> breakage report with a legit usage?
 
-kernel test robot noticed the following build errors:
+Agreed. We cannot break users. But I don't see how there are real
+users for the current permissive API.
 
-[auto build test ERROR on herbert-cryptodev-2.6/master]
-[also build test ERROR on herbert-crypto-2.6/master linus/master v6.10-rc1 next-20240528]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/crypto-ccp-Represent-capabilities-register-as-a-union/20240527-233301
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
-patch link:    https://lore.kernel.org/r/20240527152649.3722-3-mario.limonciello%40amd.com
-patch subject: [PATCH 2/5] crypto: ccp: Move security attributes to their own file
-config: x86_64-randconfig-015-20240528 (https://download.01.org/0day-ci/archive/20240529/202405290447.WIh27jVI-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240529/202405290447.WIh27jVI-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405290447.WIh27jVI-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_managed_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_mm_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_modes_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_plane_helper_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_probe_helper_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_rect_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/panel/panel-abt-y030xx067a.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/panel/panel-innolux-ej030na.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/panel/panel-newvision-nv3052c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/panel/panel-novatek-nt39016.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611uxc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sii9234.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tiny/bochs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/gud/gud.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/drm_panel_orientation_quirks.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/drm_mipi_dbi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/udl/udl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-i2c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-w1.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/pcf50633-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/rt4831.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/qcom-pm8008.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/core/cxl_core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pci.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_mem.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_port.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_util.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firewire/firewire-uapi-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/auxdisplay/line-display.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/misc/ezusb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/misc/isight_firmware.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/mon/usbmon.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/class/usbtmc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/chipidea/ci_hdrc_msm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/libcomposite.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ss_lb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/u_ether.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ncm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ecm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ecm_subset.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_uac1_legacy.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_uac2.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_midi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_hid.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_printer.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/legacy/g_zero.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/legacy/g_midi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/tests/input_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rtc/lib_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ccgx-ucsi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ali1563.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/tuners/tda9887.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/pci/ttpci/budget-core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/crypto/atmel-sha204a.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/of/of_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/fbtft/fbtft.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-spilib.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-light.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-log.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-loopback.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-power-supply.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-raw.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-vibrator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gbphy.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-pwm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-spi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-usb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/chrome/cros_kunit_proto_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwtracing/intel_th/intel_th_msu_sink.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_u-boot-env.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/greybus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/core/sound_kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/codecs/snd-soc-sigmadsp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/codecs/snd-soc-wm-adsp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/renoir/snd-acp3x-rn.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/yc/snd-soc-acp6x-mach.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-intel-hda-common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-apl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-cnl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-tgl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-lnl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/snd-sof-utils.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/snd-sof-pci.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mtty.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mbochs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/configfs/configfs_sample.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/bytestream-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/dma-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/inttype-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/record-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kobject/kobject-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kobject/kset-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kprobes/kprobe_example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kmemleak/kmemleak-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/video/fbdev.o
->> ERROR: modpost: "psp_security_attr_group" [drivers/crypto/ccp/ccp.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
