@@ -1,59 +1,70 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51414170829
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0DE170837
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716907437; cv=none; b=oyssItOwF32GJBeScLx0xmJgnZOGgWiTiZTAzDq9fi8j49Lzt3sz7etp1XHgYu6VtT/kmD8ftionnpR1amT2/boci/+ZWZD0wfYsnfNB7ozr0VeYNetKDD/hzHiaUyVb2+2aT2M5fAqryXx9q6pay+bDxktKKcLHnf5LAYgDF0E=
+	t=1716907444; cv=none; b=E+Zxu6CrfSHikAihrCVJQfTQKL4XGb23bu5SO16I5Q/dOKFW2ErkOXgZ+Einm7F6FkVxp6icY6D5TE2uYZ1WIuCwB0um624MKYEVx5vN2pqQrNgzoRUOVvRNsRlxGiwVxATec2mtnx5b/plOE0rc8FLZy6USEfPWZiWVBVqlxyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716907437; c=relaxed/simple;
-	bh=tlwUG6i2dN04+SFgN9SBdBQln0TBzFDCm4yq8WOlNIQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ud/zIem33mjvsEFXrbUM3VyxmVxAGcX3MN+YKy9BzRL8oxdKiisCin1KeYlmysyMmZrKVKI5yxMu2Bq3MfwjrDEIzh60xbRBdcR0g+3QPtxfYUPHPhElkNdjq+CgOLB+GKSnT30tHh1Zo6OA2p24EjWDr50EjEicwTCPUs6vP7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44SBn1fD031927;
-	Tue, 28 May 2024 14:43:51 GMT
-DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-transfer-encoding:date:from:in-reply-to:message-i?=
- =?UTF-8?Q?d:mime-version:references:subject:to;_s=3Dcorp-2023-11-20;_bh?=
- =?UTF-8?Q?=3DKPsMX+2z7i40hslxQGSb/YJgYDxUNOarNeZ/dlWFyIc=3D;_b=3Dlju9reQT?=
- =?UTF-8?Q?cFHQ0dIZmRQwhF8PJeDvqSzT/JIYFGgXrVq4VvLFXIenPkxRrj0qWdvrGXVc_m1?=
- =?UTF-8?Q?DxJMi46GPSC2tpW900JNUjvXetxDBVFP1g/CUmNBKHmmAvC2/IRtRvw19BWpiSY?=
- =?UTF-8?Q?Ogb_aXcjtpvbsIJGY1uOk21FnsM0IBmvZq9FhRrsbkPQbiDdOs/ifB1GFVBHUCi?=
- =?UTF-8?Q?68RyLIUo8_LG7KWeqgoYESR/B4+N+Ch+DvyJXzX+FYPT1xi/fH7Ko3hrcQVjClq?=
- =?UTF-8?Q?tMJSw16wmZhbk7X_pS39Ilid3IS6UmTT2jZB+D0bEx9ew/DPr91avrV7kgBGrRh?=
- =?UTF-8?Q?UHkomkvZYfgDAopx+ycDb_Ww=3D=3D_?=
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8g9mkbq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 May 2024 14:43:50 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44SDj2FL025795;
-	Tue, 28 May 2024 14:43:37 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50py1mu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 May 2024 14:43:37 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44SEhW7x035350;
-	Tue, 28 May 2024 14:43:36 GMT
-Received: from aruramak-dev.osdevelopmeniad.oraclevcn.com (aruramak-dev.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.155])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3yc50py1g5-5;
-	Tue, 28 May 2024 14:43:36 +0000
-From: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, dave.hansen@linux.intel.com, tglx@linutronix.de,
-        mingo@kernel.org, keith.lucas@oracle.com, aruna.ramakrishna@oracle.com
-Subject: [PATCH  v4 4/5] x86/pkeys: Restore altstack before sigcontext
-Date: Tue, 28 May 2024 14:43:30 +0000
-Message-Id: <20240528144331.2758104-5-aruna.ramakrishna@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240528144331.2758104-1-aruna.ramakrishna@oracle.com>
-References: <20240528144331.2758104-1-aruna.ramakrishna@oracle.com>
+	s=arc-20240116; t=1716907444; c=relaxed/simple;
+	bh=mCO/rmIafDIe5Hkv/1oVwSP41shS73lnAxb063HgRtk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SYqBRFsVvgNuKNUiOrLjnq/eOVBc81lTgrToS/zVV1ifnZmfRknKO7BUEHdXfbefHrDHFXJEWW/n8318mqO3xHjVxEP5P5L5k2Un/Yvfdt2Gd50TSMxQtudJCz/tv34SykdPWVSjScnnLxFHXQqnfQTyRQoUfhEpH2bJx8FsCpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LmaE18Rz; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmaE18Rz"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-529614b8c29so1562261e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:44:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716907441; x=1717512241; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UMfUDTirHx9AqY5s/gqdnHQ3Y6Rgml00jUPMDkQzF2g=;
+        b=LmaE18Rz44hwKWElg472qnRjNeF11GtugZp8MZm82EkKHML5296DfBqJcMIdSOFse0
+         ndXrIZrqZZ0WGvrP7llwGMw8bCzZZBriSoW8e2IKDgnJOcygeAofpXybdLPBNsRaeEY5
+         f0XbZ0oNnc/uU6hLyV8ZWw7CDdAmx8ROBqCVi6R3X7fZq/+4nbTi+xPVZ+Wgjv3nXfQL
+         MrswU34LFTbE53oU4KON6lpCJbmdzarlzINbCubfjL6G/ErZmfEohmn4OH5/fiEcc6NJ
+         h8XoCcaWOXRp9h6zPMn9gsariqMJBwUtWamITALuScqOW2kW20DDUgrhiD0ddwjynLCX
+         ooEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716907441; x=1717512241;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UMfUDTirHx9AqY5s/gqdnHQ3Y6Rgml00jUPMDkQzF2g=;
+        b=PzKs40agU+pI+3fVRE3Un0DtrHhXq0nr9ncryfcgqbNmhzmQDLgTCiDVyhPahEm9E2
+         h7EOwpc5xgU28W/CZMXtK5o8Scsc7PEAPxeaKvByKAwoa7JBP/oUQLhmxglZ8yvmfrhs
+         Dqqn9pE1W8JCx1UlZFjSZh83cjjy1a7cBnQpQP8h5Wx+Fn7CTcz7Ji/asYav2Bbp6OdT
+         7Ek8t8Kea9PmP0q/1ZgqwR2Nr5pjaLhPV/2uHd2CwlWp11wMCigdYbyYvNmD/rue6WBS
+         fP6XBbMrno37Ui1/UuqC6PoXiSxkkTv0fmWf4/Ctnt2IgnTIejimLWMczk1+x5rxTLva
+         35yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzCJhjuEi9brfVAHyLZDbSheiIBqNG1p+svsb/bj7zSS4vgEXlXfhSLJeufL8uanSY8P+UmnqoEhGggotlN9D3++qfMQD1+jKmAiQd
+X-Gm-Message-State: AOJu0YztmwfxnoYGoeq2YCcRW3CJg6WrYmHx/DDupV2lAak7hNk2lgyD
+	hrLUoUNYYHRJWcktqyRqPFeWQz7R82BhVsD7Q3rf2YTg5Ej4fBht5bzZcArU9TE=
+X-Google-Smtp-Source: AGHT+IEC9mDolb6Ese2exbI+TapVH9JPhCAovHWo2SBEk5sP16XS6XK7sfyYXR7sN9HWPUDGhi5n5A==
+X-Received: by 2002:a05:6512:3136:b0:522:3356:3b8 with SMTP id 2adb3069b0e04-52965a4241emr8553100e87.27.1716907441050;
+        Tue, 28 May 2024 07:44:01 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c817ad3sm629797966b.16.2024.05.28.07.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 07:44:00 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>
+Subject: [PATCH v2 1/2] percpu: Add __this_cpu_try_cmpxchg()
+Date: Tue, 28 May 2024 16:43:13 +0200
+Message-ID: <20240528144345.5980-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,71 +72,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_10,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
- adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=723 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405280111
-X-Proofpoint-GUID: U9QO9qC6kx28ti4fNPuB14nCVQUkjv9j
-X-Proofpoint-ORIG-GUID: U9QO9qC6kx28ti4fNPuB14nCVQUkjv9j
 
-A process can disable access to the alternate signal stack and still
-expect signals to be delivered correctly. handle_signal() updates the
-PKRU value to enable access to the atlstack, and makes sure that the
-value on the sigframe is the user-defined PKRU value so that it is
-correctly restored. However, in sigreturn(), restore_altstack() needs
-read access to the alt stack. But the PKRU is already restored from the
-sigframe (in restore_sigcontext()) which will disable access to the
-alt stack, resulting in a SIGSEGV.
+Add __this_cpu_try_cmpxchg() version of the percpu op.
 
-Fix this by restoring altstack before restoring PKRU.
-
-Signed-off-by: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
 ---
- arch/x86/kernel/signal_32.c | 4 ++--
- arch/x86/kernel/signal_64.c | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ include/linux/percpu-defs.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/kernel/signal_32.c b/arch/x86/kernel/signal_32.c
-index 68f2bfd7d6e7..c7a489f0d943 100644
---- a/arch/x86/kernel/signal_32.c
-+++ b/arch/x86/kernel/signal_32.c
-@@ -160,10 +160,10 @@ SYSCALL32_DEFINE0(rt_sigreturn)
+diff --git a/include/linux/percpu-defs.h b/include/linux/percpu-defs.h
+index ec3573119923..8efce7414fad 100644
+--- a/include/linux/percpu-defs.h
++++ b/include/linux/percpu-defs.h
+@@ -475,6 +475,12 @@ do {									\
+ 	raw_cpu_cmpxchg(pcp, oval, nval);				\
+ })
  
- 	set_current_blocked(&set);
- 
--	if (!ia32_restore_sigcontext(regs, &frame->uc.uc_mcontext))
-+	if (restore_altstack32(&frame->uc.uc_stack))
- 		goto badframe;
- 
--	if (restore_altstack32(&frame->uc.uc_stack))
-+	if (!ia32_restore_sigcontext(regs, &frame->uc.uc_mcontext))
- 		goto badframe;
- 
- 	return regs->ax;
-diff --git a/arch/x86/kernel/signal_64.c b/arch/x86/kernel/signal_64.c
-index 6b189de005b5..2d053333fcf5 100644
---- a/arch/x86/kernel/signal_64.c
-+++ b/arch/x86/kernel/signal_64.c
-@@ -260,13 +260,13 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 
- 	set_current_blocked(&set);
- 
--	if (!restore_sigcontext(regs, &frame->uc.uc_mcontext, uc_flags))
-+	if (restore_altstack(&frame->uc.uc_stack))
- 		goto badframe;
- 
--	if (restore_signal_shadow_stack())
-+	if (!restore_sigcontext(regs, &frame->uc.uc_mcontext, uc_flags))
- 		goto badframe;
- 
--	if (restore_altstack(&frame->uc.uc_stack))
-+	if (restore_signal_shadow_stack())
- 		goto badframe;
- 
- 	return regs->ax;
++#define __this_cpu_try_cmpxchg(pcp, ovalp, nval)			\
++({									\
++	__this_cpu_preempt_check("try_cmpxchg");			\
++	raw_cpu_try_cmpxchg(pcp, ovalp, nval);				\
++})
++
+ #define __this_cpu_sub(pcp, val)	__this_cpu_add(pcp, -(typeof(pcp))(val))
+ #define __this_cpu_inc(pcp)		__this_cpu_add(pcp, 1)
+ #define __this_cpu_dec(pcp)		__this_cpu_sub(pcp, 1)
 -- 
-2.39.3
+2.42.0
 
