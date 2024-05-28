@@ -1,109 +1,225 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f73.google.com (mail-lf1-f73.google.com [209.85.167.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B48B13A868
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA80516F27E
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716908233; cv=none; b=rz6iMoc13RvL7TnWftPhIXlrbbkdYjAsMM9bLNbLvUuyPfv2NVmVbRlz4QL+tarxsg+8OfQlNI4IXNT/x08t1qx+UefvKFpd/tt5sUCG79H00Q+/Dl5UqWesyxuaW95VnZ9k5hbsoSJKy1txL5Cmz+IhSYvCnwPk7NyRY4LYJ2Q=
+	t=1716908297; cv=none; b=sbUVVz4Vi+uNg3pN1pi6vO5c1+W2oWU/JeZjFNZyBlreVHL121CYBCCKdVtdhDQPqfBK+ENp4VEqVpqus/cpR6RpUIWQ6FJ/aEpj7N1WYFjy6FfyBQpX85qJcFrYV+cuh7yw057eIZF+HpkULQGUyIkUGmvgsk9gL3skC16tmEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716908233; c=relaxed/simple;
-	bh=5e4Eyu+ivSDaJd/Tf2Gk0Qf4nn/JhPXTY010TVmM2Ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gQ6p3n06u+/Qqw0qrqg0WYuFZoo48DaHmNAn/QHJbYws0M/goHeji8NBMGgUq8ABO+tnP7a2uOKJv8R8SnudulhxUTsp9Uxi1Qvh4nWxmsOvwDlwvnW/OHrL7rEDIW7aSBAtCZJneR0HcWICPtuwguIqnIPy/+Hz7jB3DSpvnKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ah1FIbUq; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716908297; c=relaxed/simple;
+	bh=UGSUXvJPMuX9Bkae/WPEm6A6AVU8nmv5zPwgw0bs7/Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Gkd5y9CDRg1YxPt2p5ng8giMZ721ZUEVCJOow+swuca481kdokMiQlPuq6dpCoNB8tvEKh3CIxAfciQtaGmrEHX4KQ9nQExVx2yVjHAbDSo35ZXkkedt4IvXmi8qazAYXYOUgOlxHI6hGdGRYmId1d9Q/rwc1sBC/GA5evrwohI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jyr4jZOL; arc=none smtp.client-ip=209.85.167.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ah1FIbUq"
-X-Envelope-To: geert@linux-m68k.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716908226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jaedXKwptRwArU5/TiEjza53c6kyC/sm8MBUE2Z0ktc=;
-	b=Ah1FIbUqRPiFab0/AihhX29Q0Vhr5jr7LNqAS7NQVlf4wwalwazM/1Q1+jhTd1GQJJbmaF
-	1+hX8Utnpl64/yOgrA9DSsbekzgJ98ic3pDWDkDHdX4X1ou9TWxhROQURQEQN+DePeGxOd
-	wXib4WonQvUPDRQO2dh1DLVT//CVY/s=
-X-Envelope-To: keescook@chromium.org
-X-Envelope-To: sfr@canb.auug.org.au
-X-Envelope-To: torvalds@linux-foundation.org
-X-Envelope-To: linux-bcachefs@vger.kernel.org
-X-Envelope-To: linux-fsdevel@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Date: Tue, 28 May 2024 10:57:03 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kees Cook <keescook@chromium.org>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs updates fro 6.10-rc1
-Message-ID: <uetvuew5tmhjeipqlemyuocqtx2yn2t5gkuew4vmxh4tbny7kx@4g2qkhfpwbmg>
-References: <zhtllemg2gcex7hwybjzoavzrsnrwheuxtswqyo3mn2dlhsxbx@dkfnr5zx3r2x>
- <202405191921.C218169@keescook>
- <CAMuHMdUUTy7G6fUa7+P+ZionsiYag-ni_K4smcp6j=gFb9RJJg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jyr4jZOL"
+Received: by mail-lf1-f73.google.com with SMTP id 2adb3069b0e04-529a8d2c85cso867562e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716908294; x=1717513094; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xLfLKzdeYSLpodZjM1TmVnfFmup+gWezC6j62g1XHPU=;
+        b=Jyr4jZOLI2Te9/VtxKIaQRi4538PI190E+cpqB93kjBDis43Y9LIJSe1hHGBRs6O/4
+         LLN3r4ycLleZP6f35C6I82l7MW5QRnZz5H2vIjcI7Wehu5olPWKQLSNgkZkzFyp5f3f5
+         VzevJno7SexdE7QFUVtLuGb/Y15ShVYmhyFfHHEPDfH05BcHL0udiOAtMtUmR2rHaLV3
+         gxlincMTiMzZZqPj9ZP81twa66Oz+EPSdC73ugxFpPUhqDhHWAQPUcJ1sMZ+iRRwtHh8
+         ojqki2Dz8gApGsaOfoL6EkSJNk5gDlnqw/J4srvmsnnIY6Cm6xL3zI/NRM920ll2Lgfz
+         aNkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716908294; x=1717513094;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xLfLKzdeYSLpodZjM1TmVnfFmup+gWezC6j62g1XHPU=;
+        b=OcLwsKkwaue3dylrjq53BxvmoZXMogZFG+2vbgkLh6AwlBLfI3cOZt/AoG4tCFL+6k
+         xYMKCQ8vUprf+rM7ZJ0YJmNB6jMCMEfTk3TItA8wyvj096VspWWROwhyZmNRYswZcoLv
+         AK6kxW0idLz6tRBFBCwy1sIFP70i5bfk3RzWI6261RFFmgGGdCLFIWxaI9ZEMMApMNJX
+         wr1du5LqTn9qsLy2D/hu3o5CrhKQyaUbiy1hDGeoEQAyS43R4p8pSkYDP5NCZF0gwL4y
+         CHXKBjtB4ki6T3pQ2Wm98vIS3PWK5y2H40hdoj0hdaQFnF8AylllF177BcMsgDj77biC
+         4phA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrS7N/YhoO2za/7vun1YDnyd1+CeJAagtYjso6uuotEEvwNe7aLzx5T1elaP1FN8AK7ywEK2TVkUKPFMsxtXczdY5NAX3Y6UBrRMOZ
+X-Gm-Message-State: AOJu0YyZSHqJThXrRyqA+9pqjVb7RXaOxQfUt2ZmnqBACu/6MKIMtmFJ
+	THWTe+4Tk3mOpsDF+bSytVplmolg8SEzJPbwTsofLltVREcsL1w61Oukj+1SyeTWaoflNgG+M5i
+	ReMW021Z+XXVqhg==
+X-Google-Smtp-Source: AGHT+IG5oCwliI55QSm/nlB6Lw5lzzQdTvktowkRPiBa6vXNuKdy+E+CON0y6SPl/fSx7Q5eHzfvSrmI1t/i15A=
+X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
+ (user=aliceryhl job=sendgmr) by 2002:a05:6512:2c86:b0:529:b6cf:cd0c with SMTP
+ id 2adb3069b0e04-529b6cfcebemr3146e87.2.1716908293547; Tue, 28 May 2024
+ 07:58:13 -0700 (PDT)
+Date: Tue, 28 May 2024 14:58:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdUUTy7G6fUa7+P+ZionsiYag-ni_K4smcp6j=gFb9RJJg@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAPnwVWYC/2XPQW7DIBAF0KtErEsFw0BIV71H1QUeDw5SHFd2Z
+ bWKfPcO2ZjKYvWB9xkeauG58KLeTg8181qWMt0lnF9Oiq7pPrAuvWQFBpy1EHW6FWI9jroj7xz
+ 6QMxRyfWvmXP5eVZ9fEq+luV7mn+fzautu7UEjQXcS1arje5t6ogpOkJ8H6ZpuPErTaOqLSvsE
+ kzz/ApVRrDg5QBTOEi3Sxm9kU4k9fncuSTyQgeJu5TVSBSJlxQRECgbOEjfSOsb6UWG7D1jHzl 7e5Chle0/Q522i9mx70OM+Z/ctu0PVYM4psMBAAA=
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5369; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=UGSUXvJPMuX9Bkae/WPEm6A6AVU8nmv5zPwgw0bs7/Y=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmVfD/kk+kkk74MgEVp2uFripge2b1MUFf9QTh8
+ lMpBFLiVYqJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZlXw/wAKCRAEWL7uWMY5
+ RjK4D/9tsWpL60+RGj9Xb+y1ietr1OB2e/gUpbdzbfoK8fTqVGvkw1xvetxbsGyDjHtkhrB/Qou
+ uzTgJBqVbbBBXK6Udk7MXKirnMOpoW3L05zP9fDm8p4JRFvwX69B5p0d+9YplqWmjEFBPg3Qv+I
+ kvW4YcV4gq0LP9wYQDHoE9CoIUq5vR9gmtxRz2xPRjSGUXiJJCTquL23dOaJ1AVPRoeZTi0xde4
+ 0NPm/CAPEXCye1BY/G/favUIfvl3jPSQjPdETIwpv9jEJ/ASp5Hgwr78ij/lzl25FxVEqjRloaQ
+ Ob5pcTDrxJ+5porJkDPaHxsKXVVqunRKepKIyrL/xEe2Ykd5upy/kQR+3CBeZMd5WPy6UTqYzJP
+ rEXlKc+ha895BR8UMiCbd2ezCpBy7Si5u3oJvoBR/E2ZVESfzu1uWghhsVUs6KA1IMo2iwHJzgm
+ d2XAJJcHCRHHuvJt4OqXqP7gXEDeJ/JGZ2sVCV2GLcn+7TUc1ibp10BySSlCWgolC6Yxtz/HLO3
+ SZAGc7hvjI4okhSdcXOFf8Qnc5JNodCoFX4fL237/v/Z/nXXgN2yu5dDsnnPToW+d6qSXkSs6RG
+ NppAJvA0n53Rpn1pMIGQNXCTf0+YpZSGgAKobh3c3CrSsPfYTQK4JSlHWDFrV77nw4vwCVS/Vwd uanXNPTOk0FEDKA==
+X-Mailer: b4 0.13-dev-26615
+Message-ID: <20240528-alice-mm-v7-0-78222c31b8f4@google.com>
+Subject: [PATCH v7 0/4] Memory management patches needed by Rust Binder
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kees Cook <keescook@chromium.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"=?utf-8?q?Arve_Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, Trevor Gross <tmgross@umich.edu>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, May 28, 2024 at 09:18:24AM +0200, Geert Uytterhoeven wrote:
-> Hi Kent,
-> 
-> On Mon, May 20, 2024 at 4:39 AM Kees Cook <keescook@chromium.org> wrote:
-> > On Sun, May 19, 2024 at 12:14:34PM -0400, Kent Overstreet wrote:
-> > > [...]
-> > > bcachefs changes for 6.10-rc1
-> > > [...]
-> > >       bcachefs: bch2_btree_path_to_text()
-> >
-> > Hi Kent,
-> >
-> > I've asked after this before[1], but there continues to be a lot of
-> > bcachefs development going on that is only visible when it appears in
-> > -next or during the merge window. I cannot find the above commit on
-> > any mailing list on lore.kernel.org[2]. The rules for -next are clear:
-> > patches _must_ appear on a list _somewhere_ before they land in -next
-> > (much less Linus's tree). The point is to get additional reviews, and
-> > to serve as a focal point for any discussions that pop up over a given
-> > change. Please adjust the bcachefs development workflow to address this.
-> 
-> This morning, the kisskb build service informed me about several build
-> failures on m68k (e.g. [1]).
-> 
-> In fact, the kernel test robot had already detected them on multiple 32-bit
-> platforms 4 days ago:
->   - Subject: [bcachefs:bcachefs-testing 21/23] fs/bcachefs/btree_io.c:542:7:
->     warning: format specifies type 'size_t' (aka 'unsigned int') but the
->     argument has type 'unsigned long'[2]
->   - Subject: [bcachefs:bcachefs-testing 21/23] fs/bcachefs/btree_io.c:541:33:
->     warning: format '%zu' expects argument of type 'size_t', but argument
->     3 has type 'long unsigned int'[3]
-> 
-> These are caused by commit 1d34085cde461893 ("bcachefs:
-> Plumb bkey into __btree_err()"), which is nowhere to be found on
-> any public mailing list archived by lore.
-> 
-> +               prt_printf(out, " bset byte offset %zu",
-> +                          (unsigned long)(void *)k -
-> +                          ((unsigned long)(void *)i & ~511UL));
-> 
-> Please stop committing private unreviewed patches to linux-next,
-> as I have asked before [4].
-> Thank you!
+This patchset contains some abstractions needed by the Rust
+implementation of the Binder driver for passing data between userspace,
+kernelspace, and directly into other processes.
 
-You seem to be complaining about test infrastructur eissues - you don't
-seriously expect code review to be catching 32 bit build isues, do you?
+These abstractions do not exactly match what was included in the Rust
+Binder RFC - I have made various improvements and simplifications since
+then. Nonetheless, please see the Rust Binder RFC [1] to get an
+understanding for how this will be used:
 
-0day takes awhile to run, so I don't always see these right away. I'll
-add some 32 bit builds to my own test infrastructure.
+Users of "rust: add userspace pointers"
+     and "rust: add typed accessors for userspace pointers":
+	rust_binder: add binderfs support to Rust binder
+	rust_binder: add threading support
+	rust_binder: add nodes and context managers
+	rust_binder: add oneway transactions
+	rust_binder: add death notifications
+	rust_binder: send nodes in transactions
+	rust_binder: add BINDER_TYPE_PTR support
+	rust_binder: add BINDER_TYPE_FDA support
+	rust_binder: add process freezing
+
+Users of "rust: add abstraction for `struct page`":
+	rust_binder: add oneway transactions
+	rust_binder: add vma shrinker
+
+Links: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [1]
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Changes in v7:
+- Fix call to `reserve` under `make rusttest`.
+- Add comment on _inline_copy_from_user.
+- Add Reviewed-by tags.
+- Link to v6: https://lore.kernel.org/r/20240418-alice-mm-v6-0-cb8f3e5d688f@google.com
+
+Changes in v6:
+- Base on top of Wedson's Allocation APIs patchset.
+  - Do not define my own gfp flags, instead use the ones that are now
+    available in `kernel::alloc`.
+  - Add gfp flags to `read_all` methods instead of always using
+    GFP_KERNEL.
+  - The __GFP_HIGHMEM flag is not provided by the Allocation APIs
+    patchset, and I do not add it here. I will send a separate patchset
+    for adding it.
+- Use usize instead of void pointer for userspace address.
+- Add _raw suffix to `fill_zero` and `copy_from_user_slice`.
+- Do not allow interior mutability in AsBytes/FromBytes.
+- Doc changes:
+  - Mention that validity of user slices is checked at read/write time,
+    not in the constructor of the user slice.
+  - Mention that methods can also return EFAULT if a bounds check fails.
+  - Mention that methods may have partially copied data even if they
+    return EFAULT.
+  - Add link from `read_raw` to `read_slice`.
+  - Move comment about initialized memory on `read_raw` to
+    `# Guarantees` section.
+  - Add examples for `Page::alloc_page`.
+  - A previous version renamed UserSlicePtr to UserSlice but forgot to
+    update that in the commit message. Commit message fixed in this
+    version.
+- Add Reviewed-by tags submitted on v5.
+- Link to v5: https://lore.kernel.org/rust-for-linux/20240415-alice-mm-v5-0-6f55e4d8ef51@google.com/
+
+Changes in v5:
+- Fix casts in declarations of PAGE_* constants.
+- Fix formatting of PAGE_MASK.
+- Reformat comments at 100 line length.
+- Minor fixes to safety comments of `read_raw` and `write_slice`.
+- Link to v4: https://lore.kernel.org/rust-for-linux/20240404-alice-mm-v4-0-49a84242cf02@google.com/
+
+Changes in v4:
+- Rephrase when we fail with EFAULT.
+- Remove `pub` from examples.
+- Use slices for raw uaccess methods.
+- Fix PAGE_MASK constant.
+- Rephrase most safety comments in Page abstraction.
+- Make with_pointer_into_page and with_page_mapped private.
+- Explain how raw pointers into pages are used correctly.
+- Other minor doc improvements.
+- Link to v3: https://lore.kernel.org/rust-for-linux/20240311-alice-mm-v3-0-cdf7b3a2049c@google.com/
+
+Changes in v3:
+- Fix bug in read_all.
+- Add missing `#include <linux/nospec.h>`.
+- Mention that the second patch passes CONFIG_TEST_USER_COPY.
+- Add gfp flags for Page.
+- Minor documentation adjustments.
+- Link to v2: https://lore.kernel.org/rust-for-linux/20240208-alice-mm-v2-0-d821250204a6@google.com/
+
+Changes in v2:
+- Rename user_ptr module to uaccess.
+- Use srctree-relative links.
+- Improve documentation.
+- Rename UserSlicePtr to UserSlice.
+- Make read_to_end append to the buffer.
+- Use named fields for uaccess types.
+- Add examples.
+- Use _copy_from/to_user to skip check_object_size.
+- Rename traits and move to kernel::types.
+- Remove PAGE_MASK constant.
+- Rename page methods to say _raw.
+- Link to v1: https://lore.kernel.org/rust-for-linux/20240124-alice-mm-v1-0-d1abcec83c44@google.com/
+
+---
+Alice Ryhl (2):
+      rust: uaccess: add typed accessors for userspace pointers
+      rust: add abstraction for `struct page`
+
+Arnd Bergmann (1):
+      uaccess: always export _copy_[from|to]_user with CONFIG_RUST
+
+Wedson Almeida Filho (1):
+      rust: uaccess: add userspace pointers
+
+ include/linux/uaccess.h         |  46 +++--
+ lib/usercopy.c                  |  30 +---
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers.c                  |  34 ++++
+ rust/kernel/alloc.rs            |   7 +
+ rust/kernel/lib.rs              |   2 +
+ rust/kernel/page.rs             | 250 ++++++++++++++++++++++++++
+ rust/kernel/types.rs            |  64 +++++++
+ rust/kernel/uaccess.rs          | 388 ++++++++++++++++++++++++++++++++++++++++
+ 9 files changed, 782 insertions(+), 40 deletions(-)
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20231128-alice-mm-bc533456cee8
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
