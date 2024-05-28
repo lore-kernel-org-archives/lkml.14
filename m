@@ -1,209 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B466EB64;
-	Tue, 28 May 2024 08:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C531013C67D;
+	Tue, 28 May 2024 08:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716885381; cv=none; b=Nhu179HwKmjo+qqCtEtsm6HfM0xPySFnpLaTk/SNjZ+nsTEM/cz5CXuHccr+x8kLHGmnQJM6ipDp5/IHlrWmBELJKbxwjLNTA9UYMxq1y9HZSkkJpj1da5NSIKPmP5bQeJ17JMuoXNQF1FCNtXsXaROulP1jrhgE1Bpt1VQc7BU=
+	t=1716885411; cv=none; b=pa64TPzA+BcC/LEGr5DN7ENr6kiqT6NhLwCPPb57LzUG7RUZOMc8mSkLQmuk4HiD7lSZo0I19UftLQFO5h8kJqZwtvDVpQjQFLo3bC9TqxWUGeSIFcK+jzy4GdwAzutx8Tr4keuw7zmcNnV7ngCXVwSdZ4VJkp+hywVA0MwX8bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716885381; c=relaxed/simple;
-	bh=WKJi3oA49761Rs6or8jvRD1SSYdP62DWREY3kVLAuFg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JBPH2Q/BZdkVj2Xqd9zkvXM9FHCRl0YQuF2NorJ+ZOsqALhCrOSQ0bpkHW+8DgDJKGWrLDNfDpXuT6Yc+DmxW8EfuiTwyi5D34jDNzrMjGro/Brqm9U1XgOFwyMAsdnPHpJVg69e8kr/K9Ta+11iVlsPv0F3bMQPvMSd4SuWzJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0HE6wbZ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716885411; c=relaxed/simple;
+	bh=ZTuQx8KWX8IIRC4V1mv9m6I/bJUNiGJlReVGGo5xTPE=;
+	h=From:To:Cc:Subject:MIME-Version:Content-Disposition:Content-Type:
+	 Message-Id:Date; b=SY6Jzrj+F4LfozMYdmunr6KcIUDY8BJkizFNgXf45bx19BuSRWsRLFDYtuv/MS6oavtdqzakXMJWDPOo06w92G8PgDpkl0X9LVXI08/J8PXnlVx/IYSXOS5eB+cU73FNoa2I4yQBLd7Npa0lSzs/DtteHnSRbZSUqlzc4Ryj3cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=uvVmAvka; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0HE6wbZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716885381; x=1748421381;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=WKJi3oA49761Rs6or8jvRD1SSYdP62DWREY3kVLAuFg=;
-  b=X0HE6wbZDwDd18U4/FMvcukIJ81TUNSjygi8sCsXZX5ifrSq8iHVfIi5
-   GzIPZle5hSU5jmBrFakMCo/aR2cTc8ORbfyfz4znVac99OhF5zdosGcGY
-   oNDARFB350P0Cm7ZsEUybx4ZYrC9qqiELP8ymqpBhY/75ZBTEVvqt0Oib
-   P5JpjEXfovIQqnNbPDi3rRxw+yiFLO/lNefK3tgY8r6oXf265xb0MBdOu
-   JGDYws2JIYzGSMG/S4kmKFhLikgjB0IR+nMYtbS0AzCYpTsB75EmHKi29
-   TzYFjTMRYr6nmwiEQvQmdhYnvEBEPRQG0odJiiZdeYTVFHnllV9SegL8I
-   A==;
-X-CSE-ConnectionGUID: f3VSfyU+QHujl74jZtuSug==
-X-CSE-MsgGUID: GtFMZDAwQXaF5ZsOIuP6Nw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="35731203"
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="35731203"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 01:36:20 -0700
-X-CSE-ConnectionGUID: kIHFHnZ8Rhq8tJomY2ooXw==
-X-CSE-MsgGUID: 4ob9eVpSQ6Oc1R9erU1ioQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="39395409"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.144])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 01:36:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 28 May 2024 11:36:12 +0300 (EEST)
-To: "Luke D. Jones" <luke@ljones.dev>
-cc: jikos@kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org, 
-    bentiss@kernel.org
-Subject: Re: [PATCH] hid-asus: use hid for brightness control on keyboard
-In-Reply-To: <20240528013959.14661-1-luke@ljones.dev>
-Message-ID: <17aa68e2-4af6-68ad-e81a-abc714517f6b@linux.intel.com>
-References: <20240528013959.14661-1-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="uvVmAvka"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
+	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+	Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ukatyUGGzQjNlOG2AgclIuThkOQwBsrQhRxKVAE/XuQ=; b=uvVmAvkaXyeNSsbacpgpHuEd+g
+	smGpxFhvxCfi8kO0lkIUNy6fKCBMWpGGm7HBZUQedHQlqqQgtsTjGLyqLjtilVd7HiPwy7sCNRK9/
+	ZFWghfI/Yha+Y36b++wfW/NkichBpG9SlFcfKKsqPFJmNbAuf2anfYPslXe0+AU/Yg6einDGIaP7y
+	aVn/NrQW49jXqMk1soKKs5YKHwP8hbbnxzMKgdEA8o9ENNTOvk+w+KvZ4aZzaTfMsaN47h5laA188
+	1FJou77ZW6LfV/TWKKTwcRTa+WDYrY9XmSGylhQMvFT6Kp2GYZ+ZcjFW2VBDDIShG3vSa8JMjjJuF
+	UFkEun3w==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:39186 helo=rmk-PC.armlinux.org.uk)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <rmk@armlinux.org.uk>)
+	id 1sBsK0-0004TA-21;
+	Tue, 28 May 2024 09:36:40 +0100
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <rmk@rmk-PC.armlinux.org.uk>)
+	id 1sBsK3-00E8Uo-Ab; Tue, 28 May 2024 09:36:43 +0100
+From: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	 Michael Nemanov <michael.nemanov@ti.com>,
+	 linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH wireless] wifi: wlcore: fix wlcore AP mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1sBsK3-00E8Uo-Ab@rmk-PC.armlinux.org.uk>
+Sender: Russell King <rmk@armlinux.org.uk>
+Date: Tue, 28 May 2024 09:36:43 +0100
 
-On Tue, 28 May 2024, Luke D. Jones wrote:
+From: Johannes Berg <johannes.berg@intel.com>
 
-> On almost all ASUS ROG series laptops the MCU used for the USB keyboard
-> also has a HID packet used for setting the brightness. This is usually
-> the same as the WMI method. But in some laptops the WMI method either
-> is missing or doesn't work, so we should default to the HID control.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/hid/hid-asus.c                     | 19 ++++++++++++-
->  drivers/platform/x86/asus-wmi.c            |  3 ++-
->  include/linux/platform_data/x86/asus-wmi.h | 31 ++++++++++++++++++++++
->  3 files changed, 51 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index 02de2bf4f790..9389a3e733e3 100644
-> --- a/drivers/hid/hid-asus.c
-> +++ b/drivers/hid/hid-asus.c
-> @@ -101,6 +101,7 @@ struct asus_kbd_leds {
->  	unsigned int brightness;
->  	spinlock_t lock;
->  	bool removed;
-> +	int report_id;
->  };
->  
->  struct asus_touchpad_info {
-> @@ -473,7 +474,7 @@ static enum led_brightness asus_kbd_backlight_get(struct led_classdev *led_cdev)
->  static void asus_kbd_backlight_work(struct work_struct *work)
->  {
->  	struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds, work);
-> -	u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, 0x00 };
-> +	u8 buf[] = { led->report_id, 0xba, 0xc5, 0xc4, 0x00 };
->  	int ret;
->  	unsigned long flags;
->  
-> @@ -492,12 +493,18 @@ static void asus_kbd_backlight_work(struct work_struct *work)
->   */
->  static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
->  {
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
->  	u32 value;
->  	int ret;
->  
->  	if (!IS_ENABLED(CONFIG_ASUS_WMI))
->  		return false;
->  
-> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_use_hidraw_led()) {
-> +		hid_info(hdev, "using hidraw for asus::kbd_backlight\n");
-> +		return false;
-> +	}
-> +
->  	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
->  				       ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
->  	hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
-> @@ -507,6 +514,12 @@ static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
->  	return !!(value & ASUS_WMI_DSTS_PRESENCE_BIT);
->  }
->  
-> +static bool asus_kbd_is_input_led(void)
-> +{
-> +	return dmi_match(DMI_PRODUCT_NAME, "GU605")
-> +	    || dmi_match(DMI_PRODUCT_NAME, "GA403");
-> +}
-> +
->  static int asus_kbd_register_leds(struct hid_device *hdev)
->  {
->  	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> @@ -549,6 +562,10 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
->  	if (!drvdata->kbd_backlight)
->  		return -ENOMEM;
->  
-> +	drvdata->kbd_backlight->report_id = FEATURE_KBD_REPORT_ID;
-> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_kbd_is_input_led())
-> +		drvdata->kbd_backlight->report_id = FEATURE_KBD_LED_REPORT_ID1;
-> +
->  	drvdata->kbd_backlight->removed = false;
->  	drvdata->kbd_backlight->brightness = 0;
->  	drvdata->kbd_backlight->hdev = hdev;
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3f9b6285c9a6..a58df18a70ad 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1681,7 +1681,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->  			goto error;
->  	}
->  
-> -	if (!kbd_led_read(asus, &led_val, NULL)) {
-> +	if (!kbd_led_read(asus, &led_val, NULL) && !asus_use_hidraw_led()) {
-> +		pr_info("using asus-wmi for asus::kbd_backlight\n");
->  		asus->kbd_led_wk = led_val;
->  		asus->kbd_led.name = "asus::kbd_backlight";
->  		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 3eb5cd6773ad..79a50102440d 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -160,4 +160,35 @@ static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
->  }
->  #endif
->  
-> +/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
-> +#if IS_REACHABLE(CONFIG_ASUS_WMI)
-> +static bool asus_use_hidraw_led(void)
+Using wl183x devices in AP mode with various firmwares is not stable.
 
-Since it's in a header, it's missing inline. However, this function looks 
-quite complicated so putting it into a header file is questionable to 
-begin with so I'd prefer it to be in a .c file.
+The driver currently adds a station to firmware with basic rates when it
+is first known to the stack using the CMD_ADD_PEER command. Once the
+station has finished authorising, another CMD_ADD_PEER command is issued
+to update the firmware with the rates the station can use.
 
-> +{
-> +	const char *product, *board;
-> +
-> +	product = dmi_get_system_info(DMI_PRODUCT_FAMILY);
-> +	if (!product)
-> +		return false;
-> +
-> +	/* These product ranges should all be using HID for keyboard LED */
-> +	if (strstr(product, "ROG Zephyrus")
-> +	|| strstr(product, "ROG Strix")
-> +	|| strstr(product, "ROG Flow")
-> +	|| strstr(product, "GA403")
-> +	|| strstr(product, "GU605"))
+However, after a random amount of time, the firmware ignores the power
+management nullfunc frames from the station, and tries to send packets
+while the station is asleep, resulting in lots of retries dropping down
+in rate due to no response. This restricts the available bandwidth.
 
-Please align these properly but consider using array and loop.
+With this happening with several stations, the user visible effect is
+the latency of interactive connections increases significantly, packets
+get dropped, and in general the WiFi connections become unreliable and
+unstable.
 
-> +		return true;
-> +
-> +	board = dmi_get_system_info(DMI_BOARD_NAME);
-> +	if (!board)
-> +		return false;
-> +
-> +	return strstr(board, "RC71L"); /* ROG Ally specific */
-> +}
-> +#else
-> +static inline bool asus_use_hidraw_led(void)
-> +{
-> +	return true;
-> +}
-> +#endif
-> +
->  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
-> 
+Eventually, the firmware transmit queue appears to get stuck - with
+packets and blocks allocated that never clear.
 
+TI have a couple of patches that address this, but they touch the
+mac80211 core to disable NL80211_FEATURE_FULL_AP_CLIENT_STATE for *all*
+wireless drivers, which has the effect of not adding the station to the
+stack until later when the rates are known. This is a sledge hammer
+approach to solving the problem.
+
+The solution implemented here has the same effect, but without
+impacting all drivers.
+
+We delay adding the station to firmware until it has been authorised
+in the driver, and correspondingly remove the station when unwinding
+from authorised state. Adding the station to firmware allocates a hlid,
+which will now happen later than the driver expects. Therefore, we need
+to track when this happens so that we transmit using the correct hlid.
+
+This patch is an equivalent fix to these two patches in TI's
+wilink8-wlan repository:
+
+https://git.ti.com/cgit/wilink8-wlan/build-utilites/tree/patches/kernel_patches/4.19.38/0004-mac80211-patch.patch?h=r8.9&id=a2ee50aa5190ed3b334373d6cd09b1bff56ffcf7
+https://git.ti.com/cgit/wilink8-wlan/build-utilites/tree/patches/kernel_patches/4.19.38/0005-wlcore-patch.patch?h=r8.9&id=a2ee50aa5190ed3b334373d6cd09b1bff56ffcf7
+
+Reported-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Co-developed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Tested-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>"
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+---
+ drivers/net/wireless/ti/wlcore/cmd.c      |  7 -------
+ drivers/net/wireless/ti/wlcore/main.c     | 17 ++++++++---------
+ drivers/net/wireless/ti/wlcore/tx.c       |  7 ++-----
+ drivers/net/wireless/ti/wlcore/wlcore_i.h |  6 ++++++
+ 4 files changed, 16 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/net/wireless/ti/wlcore/cmd.c b/drivers/net/wireless/ti/wlcore/cmd.c
+index a939fd89a7f5..92fc2d456c2c 100644
+--- a/drivers/net/wireless/ti/wlcore/cmd.c
++++ b/drivers/net/wireless/ti/wlcore/cmd.c
+@@ -1566,13 +1566,6 @@ int wl12xx_cmd_add_peer(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+ 		cpu_to_le32(wl1271_tx_enabled_rates_get(wl, sta_rates,
+ 							wlvif->band));
+ 
+-	if (!cmd->supported_rates) {
+-		wl1271_debug(DEBUG_CMD,
+-			     "peer has no supported rates yet, configuring basic rates: 0x%x",
+-			     wlvif->basic_rate_set);
+-		cmd->supported_rates = cpu_to_le32(wlvif->basic_rate_set);
+-	}
+-
+ 	wl1271_debug(DEBUG_CMD, "new peer rates=0x%x queues=0x%x",
+ 		     cmd->supported_rates, sta->uapsd_queues);
+ 
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index ef12169f8044..492cd7aef44f 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -5139,19 +5139,23 @@ static int wl12xx_update_sta_state(struct wl1271 *wl,
+ 
+ 	/* Add station (AP mode) */
+ 	if (is_ap &&
+-	    old_state == IEEE80211_STA_NOTEXIST &&
+-	    new_state == IEEE80211_STA_NONE) {
++	    old_state == IEEE80211_STA_AUTH &&
++	    new_state == IEEE80211_STA_ASSOC) {
+ 		ret = wl12xx_sta_add(wl, wlvif, sta);
+ 		if (ret)
+ 			return ret;
+ 
++		wl_sta->fw_added = true;
++
+ 		wlcore_update_inconn_sta(wl, wlvif, wl_sta, true);
+ 	}
+ 
+ 	/* Remove station (AP mode) */
+ 	if (is_ap &&
+-	    old_state == IEEE80211_STA_NONE &&
+-	    new_state == IEEE80211_STA_NOTEXIST) {
++	    old_state == IEEE80211_STA_ASSOC &&
++	    new_state == IEEE80211_STA_AUTH) {
++		wl_sta->fw_added = false;
++
+ 		/* must not fail */
+ 		wl12xx_sta_remove(wl, wlvif, sta);
+ 
+@@ -5165,11 +5169,6 @@ static int wl12xx_update_sta_state(struct wl1271 *wl,
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		/* reconfigure rates */
+-		ret = wl12xx_cmd_add_peer(wl, wlvif, sta, wl_sta->hlid);
+-		if (ret < 0)
+-			return ret;
+-
+ 		ret = wl1271_acx_set_ht_capabilities(wl, &sta->deflink.ht_cap,
+ 						     true,
+ 						     wl_sta->hlid);
+diff --git a/drivers/net/wireless/ti/wlcore/tx.c b/drivers/net/wireless/ti/wlcore/tx.c
+index 7bd3ce2f0804..464587d16ab2 100644
+--- a/drivers/net/wireless/ti/wlcore/tx.c
++++ b/drivers/net/wireless/ti/wlcore/tx.c
+@@ -140,11 +140,8 @@ EXPORT_SYMBOL(wl12xx_is_dummy_packet);
+ static u8 wl12xx_tx_get_hlid_ap(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+ 				struct sk_buff *skb, struct ieee80211_sta *sta)
+ {
+-	if (sta) {
+-		struct wl1271_station *wl_sta;
+-
+-		wl_sta = (struct wl1271_station *)sta->drv_priv;
+-		return wl_sta->hlid;
++	if (sta && wl1271_station(sta)->fw_added) {
++		return wl1271_station(sta)->hlid;
+ 	} else {
+ 		struct ieee80211_hdr *hdr;
+ 
+diff --git a/drivers/net/wireless/ti/wlcore/wlcore_i.h b/drivers/net/wireless/ti/wlcore/wlcore_i.h
+index eefae3f867b9..817a8a61cac6 100644
+--- a/drivers/net/wireless/ti/wlcore/wlcore_i.h
++++ b/drivers/net/wireless/ti/wlcore/wlcore_i.h
+@@ -324,6 +324,7 @@ struct wl12xx_rx_filter {
+ 
+ struct wl1271_station {
+ 	u8 hlid;
++	bool fw_added;
+ 	bool in_connection;
+ 
+ 	/*
+@@ -335,6 +336,11 @@ struct wl1271_station {
+ 	u64 total_freed_pkts;
+ };
+ 
++static inline struct wl1271_station *wl1271_station(struct ieee80211_sta *sta)
++{
++	return (struct wl1271_station *)sta->drv_priv;
++}
++
+ struct wl12xx_vif {
+ 	struct wl1271 *wl;
+ 	struct list_head list;
 -- 
- i.
+2.30.2
 
