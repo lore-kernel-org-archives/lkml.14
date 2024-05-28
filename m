@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA32A47F60;
-	Tue, 28 May 2024 17:41:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C03B17165D;
+	Tue, 28 May 2024 17:41:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716918106; cv=none; b=DfPtZk7f2FpMs2XZFAHU1CZsaHn5PKXjaY+sSOVA0JVN2nlGTwxye7XDxDMv3aDkfHOJpqwWbesN1098YJ1k+darZvk6H79S7Y5QWOWp6pdepg/+TiY56/p8El8rSc4PXlsqlRKWwKJYPpjHQTFRM3b3gBrwJ4w5CfsZp+tEF6Y=
+	t=1716918107; cv=none; b=L7z2CYHMInddlAbYkISinKrcQ6cV3Ve/rwQVtIT9b4sATjMWS24Xy7rGuLJkjvc76RFrJY8FpOcNysA4ZQEeULbqtRTDWHh3se1nkKdd9poOsZ8fzSGDnmsZkZHPcZSH+Q25wHteyFgt4LEXhd3ae1/kJMP6hltGXSyl9RjC+9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716918106; c=relaxed/simple;
-	bh=RLYbWmtB1JSsSqTY7dPzl/obl0aq3fUopxD+P3sLiE8=;
+	s=arc-20240116; t=1716918107; c=relaxed/simple;
+	bh=2WG8Xkeg5/Ff6RAW5YMx7uPU5FeuGNoTNHsOpsHRehQ=;
 	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=I01LRYJOUO4uqDTLrGj9TbFBsc8BSL3M4J7QaQuTDzOvW/NRX499p6PrUMgNsGJ1w5ACLwNeReNmBEaSbmKDJTdnAoi4hft2yIAtF7gHy1plaekBeUzZNZhfao0r/hy/fbhv590ZHcwxi2o25ddxglF/VYkJi26tkCBvz3tU8cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/Xp5bRw; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=CnJbtTejGuntzFs2zv8ZbkoZKKQiv1zE6RgS+2rpZJhFsXoiz5atQsgiyK1jQiFg/PCJHjO9f4k7efN+tCQQIP63VfKMt/78ymwYHMPEQvY6AwWbrI2AVsdE3T9fiTu8SYBJa6rEVHsU1meMRRG02hMaaAUCA+cw7pPM1KfUKaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eieCx/Xl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/Xp5bRw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F78EC32782;
-	Tue, 28 May 2024 17:41:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eieCx/Xl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A69EC4AF0D;
+	Tue, 28 May 2024 17:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716918105;
-	bh=RLYbWmtB1JSsSqTY7dPzl/obl0aq3fUopxD+P3sLiE8=;
+	s=k20201202; t=1716918106;
+	bh=2WG8Xkeg5/Ff6RAW5YMx7uPU5FeuGNoTNHsOpsHRehQ=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=I/Xp5bRwm2CmB1DjEPopS7cv+o9A3G5woq4FBaf3o60k1PKxJ9QSoeWj3e9TfOpxC
-	 vwNP6Ne0lfNrOp1cetrrdIDRMIvHzK9GfEJurIMsSsqZEZkEq274cNH6vLRfsQs82B
-	 2QnrAO5gtjo+YZoG+W91mS1EdgX2f6Pnmwai/k28Rnof9n/GAdHnVen9Vq3WRCDaex
-	 rXB77GDTMq8CIRDIsPzkbzVDxaLdrwAWbCXH9OPXWLVX7Qh22I2tMRePCP6PmHRQ6L
-	 Wb1dKsMEDxQ2vrPyGNaWyn47q0MCzC1h8vXIOj2E8w50nFiy7ECKKr83zgXJaPhf5G
-	 Abxys47sO/qRw==
-Date: Tue, 28 May 2024 12:41:44 -0500
+	b=eieCx/XlgmI+jlhbY37vUn6HYPJW/gdOMKp6mGaNzjjz3GOLToGr9QjASihqrsJbG
+	 LxXvFXrAz7U4G6jbq+TKzDZCIGnrtrkdkJHIG3U6AOAzLt1ZPrvfHuaI9FiDy28wQH
+	 nqaNeIA43S58NjBfrTuPRI3AkibBoH88oec2U0ZBkWv6srzSyTnCdeXyfv+i+9Y0Dn
+	 +lrojj7a+Ruvrtku4jyFHIj7T66kfQSF4y6OMVYH0htFqt1re7FU0/SiUmmO8mHUKM
+	 Z8CqT9IDh+70zIPOsrQJFZ/8ld246XSWA3LUDKxQCpmgm5EyGWsxawSmTPN6ElHLqQ
+	 HVMaos4AAKWsA==
+Date: Tue, 28 May 2024 12:41:45 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,100 +36,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Sebastian Reichel <sre@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, 
- linux-pm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- linux-usb@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org
-In-Reply-To: <20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org>
-References: <20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org>
-Message-Id: <171691793418.1180687.12564348124831502092.robh@kernel.org>
-Subject: Re: [PATCH v3 0/6] power: supply: Lenovo Yoga C630 EC
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Igor Prusov <ivprusov@salutedevices.com>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-amlogic@lists.infradead.org, 
+ devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Kevin Hilman <khilman@baylibre.com>, 
+ Dmitry Rokosov <ddrokosov@salutedevices.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+In-Reply-To: <20240528133215.2266419-1-arnd@kernel.org>
+References: <20240528133215.2266419-1-arnd@kernel.org>
+Message-Id: <171691793458.1180705.102565751927092612.robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: amlogic: ad402: move thermal-zones to top
+ node
 
 
-On Mon, 27 May 2024 13:03:45 +0300, Dmitry Baryshkov wrote:
-> This adds binding, driver and the DT support for the Lenovo Yoga C630
-> Embedded Controller, to provide battery information.
+On Tue, 28 May 2024 15:31:59 +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Support for this EC was implemented by Bjorn, who later could not work
-> on this driver. I've picked this patchset up and updated it following
-> the pending review comments.
+> It appears that this accidentally got added into the spi node, causing
+> a warning.
 > 
-> DisplayPort support is still not a part of this patchset. It uses EC
-> messages to provide AltMode information rather than implementing
-> corresponding UCSI commands. However to have a cleaner uAPI story, the
-> AltMode should be handled via the same Type-C port.
+> arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts:119.16-161.4: Warning (spi_bus_reg): /soc/spi@fd000400/thermal-zones: missing or empty reg property
 > 
-> Merge strategy: the driver bits depend on the platform/arm64 patch,
-> which adds interface for the subdrivers. I'd either ask to get that
-> patch merged to the immutable branch, which then can be picked up by
-> power/supply and USB trees or, to make life simpler, ack merging all
-> driver bits e.g. through USB subsystem (I'm biased here since I plan to
-> send more cleanups for the UCSI subsystem, which would otherwise result
-> in cross-subsystem conflicts).
-> 
+> Fixes: 593ab951232b ("arm64: dts: amlogic: ad402: setup thermal-zones")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> Changes in v3:
-> - Split the driver into core and power supply drivers,
-> - Added UCSI driver part, handling USB connections,
-> - Fixed Bjorn's address in DT bindings (Brian Masney)
-> - Changed power-role for both ports to be "dual" per UCSI
-> - Link to v2: https://lore.kernel.org/linux-arm-msm/20230205152809.2233436-1-dmitry.baryshkov@linaro.org/
-> 
-> Changes in v2:
-> - Dropped DP support for now, as the bindings are in process of being
->   discussed separately,
-> - Merged dt patch into the same patchseries,
-> - Removed the fixed serial number battery property,
-> - Fixed indentation of dt bindings example,
-> - Added property: reg and unevaluatedProperties to the connector
->   bindings.
-> - Link to v1: https://lore.kernel.org/linux-arm-msm/20220810035424.2796777-1-bjorn.andersson@linaro.org/
-> 
-> ---
-> Bjorn Andersson (2):
->       dt-bindings: power: supply: Add Lenovo Yoga C630 EC
->       arm64: dts: qcom: c630: Add Embedded Controller node
-> 
-> Dmitry Baryshkov (4):
->       platform: arm64: add Lenovo Yoga C630 WOS EC driver
->       usb: typec: ucsi: add Lenovo Yoga C630 glue driver
->       power: supply: lenovo_yoga_c630_battery: add Lenovo C630 driver
->       arm64: dts: qcom: sdm845: describe connections of USB/DP port
-> 
->  .../bindings/power/supply/lenovo,yoga-c630-ec.yaml |  83 ++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi               |  53 ++-
->  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      |  76 ++++
->  drivers/platform/arm64/Kconfig                     |  14 +
->  drivers/platform/arm64/Makefile                    |   1 +
->  drivers/platform/arm64/lenovo-yoga-c630.c          | 279 ++++++++++++
->  drivers/power/supply/Kconfig                       |   9 +
->  drivers/power/supply/Makefile                      |   1 +
->  drivers/power/supply/lenovo_yoga_c630_battery.c    | 476 +++++++++++++++++++++
->  drivers/usb/typec/ucsi/Kconfig                     |   9 +
->  drivers/usb/typec/ucsi/Makefile                    |   1 +
->  drivers/usb/typec/ucsi/ucsi_yoga_c630.c            | 189 ++++++++
->  include/linux/platform_data/lenovo-yoga-c630.h     |  42 ++
->  13 files changed, 1232 insertions(+), 1 deletion(-)
-> ---
-> base-commit: 8314289a8d50a4e05d8ece1ae0445a3b57bb4d3b
-> change-id: 20240527-yoga-ec-driver-76fd7f5ddae8
-> 
-> Best regards,
-> --
-> Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> 
+>  .../arm64/boot/dts/amlogic/meson-a1-ad402.dts | 62 +++++++++----------
+>  1 file changed, 31 insertions(+), 31 deletions(-)
 > 
 
 
@@ -147,12 +82,10 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y qcom/sdm850-lenovo-yoga-c630.dtb' for 20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org:
+New warnings running 'make CHECK_DTBS=y amlogic/meson-a1-ad402.dtb' for 20240528133215.2266419-1-arnd@kernel.org:
 
-arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb: pinctrl@3400000: ec-int-state: 'oneOf' conditional failed, one must be fixed:
-	'bias-disable', 'function', 'input-enable', 'pins' do not match any of the regexes: '-pins$', 'pinctrl-[0-9]+'
-	False schema does not allow True
-	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,sdm845-pinctrl.yaml#
+arch/arm64/boot/dts/amlogic/meson-a1-ad402.dtb: spi@fd000400: Unevaluated properties are not allowed ('power-domains' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spi/amlogic,a1-spifc.yaml#
 
 
 
