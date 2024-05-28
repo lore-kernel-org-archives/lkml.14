@@ -1,145 +1,150 @@
-Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51CC1DFDE;
-	Tue, 28 May 2024 14:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763261DFDE;
+	Tue, 28 May 2024 14:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716906735; cv=none; b=o+2TW5lqxvZiI4KRi0i2V7K03ZxaID0Sb7t5l1kuodWFR/eYWmFtcQ+/8FPyoSPMCH56qwHMwlSmqGdTZpd0q/9FURv764OkPI4OnpCtb6bhSP2UmOtTrsr90RnBWhDbxC/xxDaIj2+6ojt+//a23/kyHYYMmPSclnVkaYpYOe0=
+	t=1716906877; cv=none; b=Mn1ir0LQfrz43hA1Dqq+VfL7EvxV5SKsAK8VDD5A0U06m1Heg8vlwL6GaoCvZqi/VEDojAUp0Qbr9qViu8iSrpo8ntS/bmQnXNg7qHMUEJioxa62hENlyrvb6fsepkeILDFUgjpdnJ1HWSZiEKWA25iXJH8q2bTDNnRqDGtO7vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716906735; c=relaxed/simple;
-	bh=E0twsAQJp0cxsMgxYktc9tQCh6ugKHehv97qng9KsZI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=GVa76KvDyHXT7Z60NS7umgmT0py8Qvr40ATsszQULYIKMG2ke83sKTiv1b8pxuwDUIsK/HvsbnrAwkrXd+tN7R0N5e6P7ZB/6ndEBVdg5+KE97V2MQJsu5pW0vnbai6cakcTToaFnMIgMkNSq6UZxIvUjTIrQ1sp6bUdfnqfslQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=mUGXXBLk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bpRwgVbJ; arc=none smtp.client-ip=64.147.123.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="mUGXXBLk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bpRwgVbJ"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id A549D18000E9;
-	Tue, 28 May 2024 10:32:12 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Tue, 28 May 2024 10:32:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1716906732;
-	 x=1716993132; bh=GkVpBdu2u/m4Dx1VMyzxVy0HTZ7tx3XoPoYCq0553jo=; b=
-	mUGXXBLkuIo2GMHF/8Wjuji5S0T+SwcCjPC6Y/t8okus5g5P5Ytg9L9ABI+oTP2S
-	w15ecJMQ8txN9TQYxYfZ81iDPa/tk8YNsJQ7n9xUOOc6/PNlo79I+/S2vViHOwGF
-	ingBjfO7ZOjCVTRA6/MebPtZ1oPxRBPLHp81WKMsC/0jzlOrbX2KKKGJ2XFT+Gxi
-	BTeR5Cf/6BmGnUP1pUZ7t7+hiUywVJFUsuDgZVqgQ6oqmIl3vhGyLxrQ5lFEWnRW
-	6SqQ3qznT78wKGEvdwNCQU8yXb6YPw6xJUOBFz1gBaRqra/ffRi9/juFSC12Pj8R
-	MpLtziQ5u/De7FC0dtwH9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716906732; x=
-	1716993132; bh=GkVpBdu2u/m4Dx1VMyzxVy0HTZ7tx3XoPoYCq0553jo=; b=b
-	pRwgVbJRWzHY/6JbV1MbwXFdlRTnV/kbCz1Bq5V34L6sRlD7INXw3b2J84rDNa+s
-	27V2VDXem5tqa0H4wzGWzQLhFcA9hfKJHjKm9iy8WvweJ2OP9RUMwf7YXgW88sJl
-	efWuAZ5TY/wtE7/2EjjvFxe9a+k+C21ImbR/CqJOc+B3eSnhQd5zBBpeP3lz63yx
-	7bmelkjPjC47zbJ7/lK7pRsMyxRipD007hFRpO/3rTfwGWUswizWSkjuDPnYNckP
-	hcRXY5i4jr4FqSq/REIwiILrGb8ydm5jHa8WIHfRw4Uvl1Fkz9w/duAhLIbWO5nn
-	/9ymi1llhl5wFA5s6Gk+Q==
-X-ME-Sender: <xms:6-pVZjx9Ej-TnDdWZvrPhfgL_CpQSv9iHDzHhMsFwT4RCdHV5UVBIQ>
-    <xme:6-pVZrRWqTodgLtqEjNkyQCD5yHVfNdfaPgv8PM6oB4jsswUKjxp3gpilR0MHVQHi
-    thuUK9D0DRG_Obiyww>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedghedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:6-pVZtX6TxtsDTv_MTgnGnLg4bMsinjkYpY0E2hAmdSf0PxDOmv_Dw>
-    <xmx:6-pVZtiWqLN-ZC1dUO4cErPzhyjW8iM4DBwkwta1SD0CrRcz8lf_nA>
-    <xmx:6-pVZlAOspG1OQhL87AxSBA5Rfso90uOaZdJQVhZ4MXE3bUHbvE14g>
-    <xmx:6-pVZmKUUhTP88RB8P1-RQ06W2rrG158dmzjmf2OL9szF6iW_1xd1Q>
-    <xmx:7OpVZo7Qq5YyLR4-OjzWXxg_bpvPJmgJu_M9FMc5qy5GE96zmMHlO6wz>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 8E16A36A0074; Tue, 28 May 2024 10:32:11 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	s=arc-20240116; t=1716906877; c=relaxed/simple;
+	bh=QbezeNKJyW6qf2V3kTpxOxe+UTcg7sBnxBqrvnatxGw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rdZLyI11+YDpWTAtvReBM/ceHHNiWV9A6nM9zn28HiHvTHikdSziFruSKSyEtbgoBMTGEYmNR8eUH7+pLEdPqKBCBFJ7PSTWgvA903P0F6QOkaTKYkUJVlB46PY2/uSL8l6OVClXWWlkDts50NWdd+z/1aeISy4L6WWAGHhOiyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from [213.70.33.226] (helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sBxuB-0004aE-9M; Tue, 28 May 2024 16:34:23 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Alexey Charkov <alchark@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
+ Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Chen-Yu Tsai <wens@kernel.org>,
+ Diederik de Haas <didi.debian@cknow.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/6] RK3588 and Rock 5B dts additions: thermal,
+ OPP and fan
+Date: Tue, 28 May 2024 16:34:21 +0200
+Message-ID: <5122636.irdbgypaU6@phil>
+In-Reply-To: <ea2311d7a41162a847d37ce05d0fc441@manjaro.org>
+References:
+ <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
+ <CABjd4YyuDsWGbSfNyqcW3s=59p8adVf5Js79PYyKFqfyM71dxA@mail.gmail.com>
+ <ea2311d7a41162a847d37ce05d0fc441@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <558b1d58-08a5-410d-97b8-e77def7c1cf8@app.fastmail.com>
-In-Reply-To: <9947f7a5-1a95-48f2-b0eb-0385eb2b3d55@app.fastmail.com>
-References: <20240517-loongson_nodecnt-v2-1-5bd0bb20ff5f@flygoat.com>
- <87sey3b6de.ffs@tglx> <9947f7a5-1a95-48f2-b0eb-0385eb2b3d55@app.fastmail.com>
-Date: Tue, 28 May 2024 15:31:52 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Thomas Gleixner" <tglx@linutronix.de>,
- "Huacai Chen" <chenhuacai@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Daniel Lezcano" <daniel.lezcano@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v2] clocksource: Add node counter timer driver for MIPS/Loongson64
-Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Dragan,
+
+Am Dienstag, 28. Mai 2024, 16:05:04 CEST schrieb Dragan Simic:
+> On 2024-05-28 11:49, Alexey Charkov wrote:
+> > On Mon, May 6, 2024 at 1:37=E2=80=AFPM Alexey Charkov <alchark@gmail.co=
+m>=20
+> > wrote:
+> >>=20
+> >> This enables thermal monitoring and CPU DVFS on RK3588(s), as well as
+> >> active cooling on Radxa Rock 5B via the provided PWM fan.
+> >>=20
+> >> Some RK3588 boards use separate regulators to supply CPUs and their
+> >> respective memory interfaces, so this is handled by coupling those
+> >> regulators in affected boards' device trees to ensure that their
+> >> voltage is adjusted in step.
+> >>=20
+> >> This also enables the built-in thermal sensor (TSADC) for all boards
+> >> that don't currently have it enabled, using the default CRU based
+> >> emergency thermal reset. This default configuration only uses on-SoC
+> >> devices and doesn't rely on any external wiring, thus it should work
+> >> for all devices (tested only on Rock 5B though).
+> >>=20
+> >> The boards that have TSADC_SHUT signal wired to the PMIC reset line
+> >> can choose to override the default reset logic in favour of GPIO
+> >> driven (PMIC assisted) reset, but in my testing it didn't work on
+> >> Radxa Rock 5B - maybe I'm reading the schematic wrong and it doesn't
+> >> support PMIC assisted reset after all.
+> >>=20
+> >> Fan control on Rock 5B has been split into two intervals: let it spin
+> >> at the minimum cooling state between 55C and 65C, and then accelerate
+> >> if the system crosses the 65C mark - thanks to Dragan for suggesting.
+> >> This lets some cooling setups with beefier heatsinks and/or larger
+> >> fan fins to stay in the quietest non-zero fan state while still
+> >> gaining potential benefits from the airflow it generates, and
+> >> possibly avoiding noisy speeds altogether for some workloads.
+> >>=20
+> >> OPPs help actually scale CPU frequencies up and down for both cooling
+> >> and performance - tested on Rock 5B under varied loads. I've dropped
+> >> those OPPs that cause frequency reductions without accompanying=20
+> >> decrease
+> >> in CPU voltage, as they don't seem to be adding much benefit in day to
+> >> day use, while the kernel log gets a number of "OPP is inefficient"=20
+> >> lines.
+> >>=20
+> >> Note that this submission doesn't touch the SRAM read margin updates=20
+> >> or
+> >> the OPP calibration based on silicon quality which the downstream=20
+> >> driver
+> >> does and which were mentioned in [1]. It works as it is (also=20
+> >> confirmed by
+> >> Sebastian in his follow-up message [2]), and it is stable in my=20
+> >> testing on
+> >> Rock 5B, so it sounds better to merge a simple version first and then
+> >> extend when/if required.
+> >>=20
+> >> [1]=20
+> >> https://lore.kernel.org/linux-rockchip/CABjd4YzTL=3D5S7cS8ACNAYVa730WA=
+3iGd5L_wP1Vn9=3Df83RCORA@mail.gmail.com/
+> >> [2]=20
+> >> https://lore.kernel.org/linux-rockchip/pkyne4g2cln27dcdu3jm7bqdqpmd2kw=
+kbguiolmozntjuiajrb@gvq4nupzna4o/
+> >>=20
+> >> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> >> ---
+> >=20
+> > Hi Heiko,
+> >=20
+> > Do you think this can be merged for 6.11? Looks like there hasn't been
+> > any new feedback in a while, and it would be good to have frequency
+> > scaling in place for RK3588.
+> >=20
+> > Please let me know if you have any reservations or if we need any
+> > broader discussion.
+
+not really reservations, more like there was still discussion going on
+around the OPPs. Meanwhile we had more discussions regarding the whole
+speed binning Rockchip seems to do for rk3588 variants.
+
+And waiting for the testing Dragan wanted to do ;-) .
+
+So this should definitly make it into 6.11 though, as there is still
+a lot of time.
+=20
+
+> As I promised earlier, I was going to test this patch series in detail.
+> Alas, I haven't managed to do that yet, :/ due to many reasons, but
+> I still remain firmly committed to doing that.
+>=20
+> Is -rc4 the cutoff for 6.11?  If so, there's still time and I'll do my
+> best to test and review these patches as soon as possible.
+
+As early as possible, the hard cutoff would be -rc6 though.
+I guess I'll just start picking the easy patches from the series.
+
+
+Heiko
 
 
 
-=E5=9C=A82024=E5=B9=B45=E6=9C=8827=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8B=E5=
-=8D=885:32=EF=BC=8CJiaxun Yang=E5=86=99=E9=81=93=EF=BC=9A
-> =E5=9C=A82024=E5=B9=B45=E6=9C=8827=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8B=
-=E5=8D=884:51=EF=BC=8CThomas Gleixner=E5=86=99=E9=81=93=EF=BC=9A
->> Jiaxun!
->>
-> Hi Thomas,
-> [...]
->>
->> What's this indirection for? Why dont you update=20
-> [...]
->>
->>> +static struct clocksource nodecnt_clocksource =3D {
->>> +	.name	=3D "nodecnt",
->>> +	.read	=3D nodecnt_clocksource_read,
->>
->> the read function pointer here and spare the indirection?
-> Smart! sched_clock takes slightly different function pointer argument =
-type
-> but as we don't use the argument anyway, it should be safe to relax th=
-is
-> indirection.
 
-Sadly, I'm unable to remove it with force type catsing :-/
-
-drivers/clocksource/loongson-nodecnt.c: In function =E2=80=98nodecnt_clo=
-cksource_init=E2=80=99:
-drivers/clocksource/loongson-nodecnt.c:89:36: warning: cast between inco=
-mpatible function types from =E2=80=98u64 (*)(void)=E2=80=99 {aka =E2=80=
-=98long long unsigned int (*)(void)=E2=80=99} to =E2=80=98u64 (*)(struct=
- clocksource *)=E2=80=99 {aka =E2=80=98long long unsigned int (*)(struct=
- clocksource *)=E2=80=99} [-Wcast-function-type]
-   89 |         nodecnt_clocksource.read =3D (u64 (*)(struct clocksource=
- *))nodecnt_read_fn;
-
-I'll leave it here.
-
-Thanks
->
-> Will fix in v3.
->
-> Thanks
->>
->> Thanks
->>
->>         tglx
->
-> --=20
-> - Jiaxun
-
---=20
-- Jiaxun
