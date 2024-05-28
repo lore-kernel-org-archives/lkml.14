@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC5F16D9DA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0125F16DEA4;
 	Tue, 28 May 2024 09:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716890157; cv=none; b=fP0FvmPVC6M/F6wYeYjHooEru4V7SXLb2/P2oYDdBeEdd5Ca/kodZw0cM3DL2wU8ILuK4EJxZ2DIEi44a9rY/ppdiuQtERtOjXzakH+XiUeeFxc6SR/6ADPtr2Wb+P/nj9QUxhgqtxoKBQ7UxAv2f7W0eFecGaLDs56PszezIpE=
+	t=1716890157; cv=none; b=lfP2vd67drtcfNaL//M2vABfErk9ZsAU40IenStL/LLWzAiDEKCGVOQuoOrsHqWfmRlqBuU2p5nob9bX8ySVxDwm2bebCxdvkrUVEB6SvgJRe4RmD2YJLHQOYNP0mv/6/aaBCItNDlbXN68mEeAw36NlRkfRSztU8xcuDz3niDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716890157; c=relaxed/simple;
-	bh=ooehCP2CqaQsm8Y5n6o6IXL6w/UgTt+BI7m7NlJA8lI=;
+	bh=GSg67xlVUPvLYDL37C9OUEs7HbwzTLSXgJBxYPbO+3w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Beuyf5r/SHjLaIojDEUzX/msbOC7oMqQ6vWdfjKx0F9pftCRsisc73ASYQnSUFVpVbypo48nBKryq3Ra5LCtUnV9gL8Q7vkPVbDMs3GTzsqpwjc5X1otzZ9r/jRqpUSQNvYF79d0owDlGOZYndwlqfrGDn0e7YiQ7o8jFAD6wUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B36AZkAS; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=KwS2qTYmoK5ghk7ed1UzcqSBJU4fBSu+TNIuNSVw3o1slrWiEqfS60lBOySdmZUXQsEQArEdN/zH/l+9D1GpB/JZT9nM9BkyPY4OKmhrUSCeViSSddcj5QoAJuldnrZVgGrKzdKhwjWy7huLZ6gdB8nuXX/77xdJmyQVSpbEtOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YcNQH5b1; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B36AZkAS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YcNQH5b1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1716890156; x=1748426156;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ooehCP2CqaQsm8Y5n6o6IXL6w/UgTt+BI7m7NlJA8lI=;
-  b=B36AZkAS02El1vb3yLToeT+uChZLIpDOrrANQxhztNYoe/pqKbET3fnV
-   QUGK6gVfxEZfPI3oSRkZwS++8s1aXsYwh0TIfWU+sifXLqCUKAi+rlhIN
-   orpNGJZz5dKcEGq9QXsHderaB2hM/1RexAHKo9brUmKxAbAuZZkM+m/kZ
-   i3Pjxy3B+UGK5+6YAGEvz9+7HZfmceZIhXo7K7ieCRQl1Pkyf8gNqbIez
-   zj+1dFdl8/Ta1fC6jN84NJVMgPKrUnXrKwYENWL9P/qEVH8RZbBpVWkAL
-   iEDs4vy1+XYr4wQiOVS2HojLXqPsfSK+KSNjWbYk+lZtbxwW0bq7HFQeD
+  bh=GSg67xlVUPvLYDL37C9OUEs7HbwzTLSXgJBxYPbO+3w=;
+  b=YcNQH5b13IzDn2D9iXHwmPGc0gzi+S+bRxdnXyItmAv/bfi93acFyHRn
+   GZKQI632aIrdgA8X+46fxG50zimL7gkMfQzqbjoMhb2GOBSOho8yNrtOX
+   Fi/8l3WIE+0VjYvCcxZuawF0AsVxVATeU38Uunp4mr33th+KtozbZqn5W
+   Jkju4bKDX4eVtrKOhl/dh/8lJugHAlCt7t0kjZhX2KQcJLnnpO/g/6JYZ
+   9YBgcAlwZcdZsQ/eTOVoVGCPWEHL3OkxjxJ7tZakQ1L7RlYWPcYQbyhf0
+   mYZwGrAo3ItV5CkOV6QAU/SeMtXNv/MO7y8KiO0vPmI5zNLMgZeqgo40R
    w==;
-X-CSE-ConnectionGUID: YQI9ZXaiRyG/fZo4ACtCLw==
-X-CSE-MsgGUID: qftspoKSQg+9Mct2byXodQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13097841"
+X-CSE-ConnectionGUID: fLtQ6RVySESfhQj8o9GbYg==
+X-CSE-MsgGUID: KWjFtPClSZq1/kpug11z0A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13097859"
 X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="13097841"
+   d="scan'208";a="13097859"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 02:55:47 -0700
-X-CSE-ConnectionGUID: aBCmtDE0Qn2B/uaPQ11WMA==
-X-CSE-MsgGUID: BwiFw+EoSmadD7OOsHmOIg==
+X-CSE-ConnectionGUID: 7nAdNUDpRICNt8kaeimCAA==
+X-CSE-MsgGUID: muYZWZLMQm6HxxgLAl+xvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="34951832"
+   d="scan'208";a="34951830"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmviesa007.fm.intel.com with ESMTP; 28 May 2024 02:55:41 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 473F0B6D; Tue, 28 May 2024 12:55:27 +0300 (EEST)
+	id 25EA5A5C; Tue, 28 May 2024 12:55:27 +0300 (EEST)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -74,9 +74,9 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tao Liu <ltao@redhat.com>
-Subject: [PATCHv11 19/19] ACPI: tables: Print MULTIPROC_WAKEUP when MADT is parsed
-Date: Tue, 28 May 2024 12:55:22 +0300
-Message-ID: <20240528095522.509667-20-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv11 17/19] x86/mm: Introduce kernel_ident_mapping_free()
+Date: Tue, 28 May 2024 12:55:20 +0300
+Message-ID: <20240528095522.509667-18-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
 References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
@@ -88,46 +88,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When MADT is parsed, print MULTIPROC_WAKEUP information:
+The helper complements kernel_ident_mapping_init(): it frees the
+identity mapping that was previously allocated. It will be used in the
+error path to free a partially allocated mapping or if the mapping is no
+longer needed.
 
-ACPI: MP Wakeup (version[1], mailbox[0x7fffd000], reset[0x7fffe068])
-
-This debug information will be very helpful during bring up.
+The caller provides a struct x86_mapping_info with the free_pgd_page()
+callback hooked up and the pgd_t to free.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Acked-by: Kai Huang <kai.huang@intel.com>
 Tested-by: Tao Liu <ltao@redhat.com>
 ---
- drivers/acpi/tables.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/x86/include/asm/init.h |  3 ++
+ arch/x86/mm/ident_map.c     | 73 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
 
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index b976e5fc3fbc..9e1b01c35070 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -198,6 +198,20 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
- 		}
- 		break;
+diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
+index cc9ccf61b6bd..14d72727d7ee 100644
+--- a/arch/x86/include/asm/init.h
++++ b/arch/x86/include/asm/init.h
+@@ -6,6 +6,7 @@
  
-+	case ACPI_MADT_TYPE_MULTIPROC_WAKEUP:
-+		{
-+			struct acpi_madt_multiproc_wakeup *p =
-+				(struct acpi_madt_multiproc_wakeup *)header;
-+			u64 reset_vector = 0;
+ struct x86_mapping_info {
+ 	void *(*alloc_pgt_page)(void *); /* allocate buf for page table */
++	void (*free_pgt_page)(void *, void *); /* free buf for page table */
+ 	void *context;			 /* context for alloc_pgt_page */
+ 	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
+ 	unsigned long offset;		 /* ident mapping offset */
+@@ -16,4 +17,6 @@ struct x86_mapping_info {
+ int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
+ 				unsigned long pstart, unsigned long pend);
+ 
++void kernel_ident_mapping_free(struct x86_mapping_info *info, pgd_t *pgd);
 +
-+			if (p->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1)
-+				reset_vector = p->reset_vector;
+ #endif /* _ASM_X86_INIT_H */
+diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
+index 968d7005f4a7..3996af7b4abf 100644
+--- a/arch/x86/mm/ident_map.c
++++ b/arch/x86/mm/ident_map.c
+@@ -4,6 +4,79 @@
+  * included by both the compressed kernel and the regular kernel.
+  */
+ 
++static void free_pte(struct x86_mapping_info *info, pmd_t *pmd)
++{
++	pte_t *pte = pte_offset_kernel(pmd, 0);
 +
-+			pr_debug("MP Wakeup (version[%d], mailbox[%#llx], reset[%#llx])\n",
-+				 p->version, p->mailbox_address, reset_vector);
-+		}
-+		break;
++	info->free_pgt_page(pte, info->context);
++}
 +
- 	case ACPI_MADT_TYPE_CORE_PIC:
- 		{
- 			struct acpi_madt_core_pic *p = (struct acpi_madt_core_pic *)header;
++static void free_pmd(struct x86_mapping_info *info, pud_t *pud)
++{
++	pmd_t *pmd = pmd_offset(pud, 0);
++	int i;
++
++	for (i = 0; i < PTRS_PER_PMD; i++) {
++		if (!pmd_present(pmd[i]))
++			continue;
++
++		if (pmd_leaf(pmd[i]))
++			continue;
++
++		free_pte(info, &pmd[i]);
++	}
++
++	info->free_pgt_page(pmd, info->context);
++}
++
++static void free_pud(struct x86_mapping_info *info, p4d_t *p4d)
++{
++	pud_t *pud = pud_offset(p4d, 0);
++	int i;
++
++	for (i = 0; i < PTRS_PER_PUD; i++) {
++		if (!pud_present(pud[i]))
++			continue;
++
++		if (pud_leaf(pud[i]))
++			continue;
++
++		free_pmd(info, &pud[i]);
++	}
++
++	info->free_pgt_page(pud, info->context);
++}
++
++static void free_p4d(struct x86_mapping_info *info, pgd_t *pgd)
++{
++	p4d_t *p4d = p4d_offset(pgd, 0);
++	int i;
++
++	for (i = 0; i < PTRS_PER_P4D; i++) {
++		if (!p4d_present(p4d[i]))
++			continue;
++
++		free_pud(info, &p4d[i]);
++	}
++
++	if (pgtable_l5_enabled())
++		info->free_pgt_page(pgd, info->context);
++}
++
++void kernel_ident_mapping_free(struct x86_mapping_info *info, pgd_t *pgd)
++{
++	int i;
++
++	for (i = 0; i < PTRS_PER_PGD; i++) {
++		if (!pgd_present(pgd[i]))
++			continue;
++
++		free_p4d(info, &pgd[i]);
++	}
++
++	info->free_pgt_page(pgd, info->context);
++}
++
+ static void ident_pmd_init(struct x86_mapping_info *info, pmd_t *pmd_page,
+ 			   unsigned long addr, unsigned long end)
+ {
 -- 
 2.43.0
 
