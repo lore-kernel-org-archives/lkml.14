@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8AD4D11B;
-	Tue, 28 May 2024 06:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E964D9F4;
+	Tue, 28 May 2024 06:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716876565; cv=none; b=Ve/aRsjIIe2zHscHOC8gDfOwYpEAd326vTOnmHtjbN0Da+TK1kfGTzZNwGMZW11LGD9U3HotJOFzG43LD8EfAphd+gpbGrIeHtZT16nYKwuROdouUS6x/zWFR10KNr0ExT6+alOuxGxY6glunnRCMSIZx4JygfzRJGWkqLOJq1w=
+	t=1716876565; cv=none; b=PSautrxn8KRjZk3cN2+D1BfrSD/1YxCw7WseHR4fFMlbUjud4QYK3C8jpVmS6IUnT6J3dpk888a0yDLFmG+Pr+yehLMdN4QQoykw1fWpxpeXaiW+94dYaVMEu4sbCLAFHZtHGrBdgxb+sA/TX7G31646feWR8Mq23BnRYkjtRqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716876565; c=relaxed/simple;
-	bh=yL9QuRyCclHUhhy3AcGDuaeU09XaZ3aXaTF2FrRGqEQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OSoweSt6w/mzBWFBc9RC0B9erqxoBu1ZUa3Knb9eLNpoUagtP+8eQKc5TMMprK6jIPonODUnfb7IS4xiWkbsPBDZTWtGYZzBEh3IBQmBmyFBtRrhVdgEJiu/mDr2qjDycibGjKylYWIunhaXN0f+Fniuwwy2wlnxDmE0BcfO+sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=us73uEGj; arc=none smtp.client-ip=10.30.226.201
+	bh=ZSYu74n0jq7FH0Svutdp6klx3j4BlvlPnAQfADz0IqU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Wpgil4JylgbZ/zPZrxZz3kOlN5lLCv4W0/nxifnj8sCErNn42bc+xxl1PFytFPyU1YnBWSNB7/oVHph5mWtvTaigM4ZbqrQo/NCQ0CkdKoCRzp6yKxvjaPTmsWT2MzFFFZ7hEkIVLiVc+B4XRlLm39og3+D4HsqVl4dNEDO8ERA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/KYSXpG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="us73uEGj"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B9BF2C3277B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/KYSXpG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D4EABC32782;
 	Tue, 28 May 2024 06:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716876564;
-	bh=yL9QuRyCclHUhhy3AcGDuaeU09XaZ3aXaTF2FrRGqEQ=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=us73uEGjnmXxoVlTmdl967pSD78BNNqud12LFijTKsZ1Bm1FkQ7zo73RMV5o6hgwl
-	 rKNcCFR4a+ELHaPxcspIISmS2X9Eb8MQ4Z3s8Ygw7Qk4AzBUvlfC2aLTr88x8jAKV0
-	 DOSRa96vRPaixa1kgKKHYjVqbCUpi8Fw8dj8bAyeE4rJ0hwS4aPw8o43HTP18XcavV
-	 IeRppfFRgamIMdCMD9FG+HEa+Tpgjh2Y5BxHGGSfxiQHGOyxv1U3VhmcmXPi8M2QWq
-	 kFA5dLvsTplDyM5JGD3RwZPhxJJ6QVVwus1p0MLRb/vB7IJQc0UdioaMnjDu7AHO9S
-	 lfPaBB8/iShdw==
+	bh=ZSYu74n0jq7FH0Svutdp6klx3j4BlvlPnAQfADz0IqU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=I/KYSXpGK5Y+7Ze7M2UUTZJ196NMmqesbqijHwrYyRNEFIMwNxXgN5DiToUMZ+cD2
+	 vYkO3Y5kYzTFRcFya3iMV0Hcwg1GgG2aJu7u3P0rIeXoafmoi4ghCB85eU4tik8l2x
+	 OK3SinNpNInFFXDbztZYm3feTSE2bDWGIu3BUxfzh4Rzeb/snjUoZF6jS5bXSw3fNF
+	 em+GBDxaFXKTmEN+m1re2Kd08NxhmKK9nqBbNv/UgkywPH4apb93yUF1DNYlOD1Gs5
+	 a5x0p8bB9GLeGuYh+Paj4hwv6kEDYxNUEpZ/htEhCuZ2GSB1sx9ISGxefgIrDx3EeH
+	 T9QesbKvh6mvQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38BCC25B78;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECA7C27C44;
 	Tue, 28 May 2024 06:09:24 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+n.shubin.yadro.com@kernel.org>
-Subject: [PATCH v2 0/3] dmaengine: ioatdma: Fix mem leakage series
-Date: Tue, 28 May 2024 09:09:22 +0300
-Message-Id: <20240528-ioatdma-fixes-v2-0-a9f2fbe26ab1@yadro.com>
+Date: Tue, 28 May 2024 09:09:24 +0300
+Subject: [PATCH v2 2/3] dmaengine: ioatdma: Fix error path in
+ ioat3_dma_probe()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABJ1VWYC/3WNMQ6DMAxFr4I8NxVEIKBT71ExOI5TPEAqB6Eix
- N0b2Du+9/X0d0iswgkexQ7KqySJcwZ7K4BGnN9sxGcGW9q6bGxtJOLiJzRBvpwMdoHIY+9820N
- uHCY2TnGm8awmTAvrOXyUryLb15B5lLRE3a7ftTrtv4u1MqVxbdeEKrRIRM8NvcY7xQmG4zh+i
- CioVsMAAAA=
+Message-Id: <20240528-ioatdma-fixes-v2-2-a9f2fbe26ab1@yadro.com>
+References: <20240528-ioatdma-fixes-v2-0-a9f2fbe26ab1@yadro.com>
+In-Reply-To: <20240528-ioatdma-fixes-v2-0-a9f2fbe26ab1@yadro.com>
 To: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
  Logan Gunthorpe <logang@deltatee.com>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
@@ -51,11 +51,11 @@ Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
  linux-kernel@vger.kernel.org, linux@yadro.com, 
  Nikita Shubin <n.shubin@yadro.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716876563; l=1143;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716876563; l=2344;
  i=n.shubin@yadro.com; s=20230718; h=from:subject:message-id;
- bh=yL9QuRyCclHUhhy3AcGDuaeU09XaZ3aXaTF2FrRGqEQ=;
- b=K4gvr1A5/gyMVLHQfIfsxddXfjDgycKJo70pdAg85txaURyEa+qlUCFPsS5oPFoUE7Sg1sKc6lG8
- rm8wd6zPD+hBhf85i+hCRkyQERBYdLmxp7yd95vJWjTCJIIqhNon
+ bh=ndoUzkFelZyO92hJgOMyePUbXfzsIUrSz43B8VvnQSw=;
+ b=wPSkPuxu2pQ/S9Wnfb/LNOSGOhJ/T6XgcFUSUkg+ERcfklrp/fTuxSQ2uetgygBmRXOPVY0/dI5J
+ LdjVOBlmBqYjmezsWEvpefml+CHqRjgOmAPfvUvxxcW0msPMgAed
 X-Developer-Key: i=n.shubin@yadro.com; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for n.shubin@yadro.com/20230718 with
@@ -63,42 +63,88 @@ X-Endpoint-Received: by B4 Relay for n.shubin@yadro.com/20230718 with
 X-Original-From: Nikita Shubin <n.shubin@yadro.com>
 Reply-To: n.shubin@yadro.com
 
-Started with observing leakage in patch 3, investigating revealed much
-more problems in probing error path.
+From: Nikita Shubin <n.shubin@yadro.com>
 
-Andy you are always welcome to review if you have a spare time.
+Make sure we are disabling interrupts and destroying DMA pool if
+pcie_capability_read/write_word() call failed.
 
-Thank you Andy and Markus for your comments.
-
+Fixes: 511deae0261c ("dmaengine: ioatdma: disable relaxed ordering for ioatdma")
 Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
 ---
-Changes in v2:
-- dmaengine: ioatdma: Fix error path in ioat3_dma_probe():
-  Markus:
-    - fix typo
+ drivers/dma/ioat/init.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
-- dmaengine: ioatdma: Fix kmemleak in ioat_pci_probe()
-  Andy:
-    - s/int/unsigned int/
-    - fix spelling errors
-    - trimmed kmemleak reports
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index e76e507ae898..26964b7c8cf1 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -534,18 +534,6 @@ static int ioat_probe(struct ioatdma_device *ioat_dma)
+ 	return err;
+ }
+ 
+-static int ioat_register(struct ioatdma_device *ioat_dma)
+-{
+-	int err = dma_async_device_register(&ioat_dma->dma_dev);
+-
+-	if (err) {
+-		ioat_disable_interrupts(ioat_dma);
+-		dma_pool_destroy(ioat_dma->completion_pool);
+-	}
+-
+-	return err;
+-}
+-
+ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
+ {
+ 	struct dma_device *dma = &ioat_dma->dma_dev;
+@@ -1181,9 +1169,9 @@ static int ioat3_dma_probe(struct ioatdma_device *ioat_dma, int dca)
+ 		       ioat_chan->reg_base + IOAT_DCACTRL_OFFSET);
+ 	}
+ 
+-	err = ioat_register(ioat_dma);
++	err = dma_async_device_register(&ioat_dma->dma_dev);
+ 	if (err)
+-		return err;
++		goto err_disable_interrupts;
+ 
+ 	ioat_kobject_add(ioat_dma, &ioat_ktype);
+ 
+@@ -1192,20 +1180,29 @@ static int ioat3_dma_probe(struct ioatdma_device *ioat_dma, int dca)
+ 
+ 	/* disable relaxed ordering */
+ 	err = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &val16);
+-	if (err)
+-		return pcibios_err_to_errno(err);
++	if (err) {
++		err = pcibios_err_to_errno(err);
++		goto err_disable_interrupts;
++	}
+ 
+ 	/* clear relaxed ordering enable */
+ 	val16 &= ~PCI_EXP_DEVCTL_RELAX_EN;
+ 	err = pcie_capability_write_word(pdev, PCI_EXP_DEVCTL, val16);
+-	if (err)
+-		return pcibios_err_to_errno(err);
++	if (err) {
++		err = pcibios_err_to_errno(err);
++		goto err_disable_interrupts;
++	}
+ 
+ 	if (ioat_dma->cap & IOAT_CAP_DPS)
+ 		writeb(ioat_pending_level + 1,
+ 		       ioat_dma->reg_base + IOAT_PREFETCH_LIMIT_OFFSET);
+ 
+ 	return 0;
++
++err_disable_interrupts:
++	ioat_disable_interrupts(ioat_dma);
++	dma_pool_destroy(ioat_dma->completion_pool);
++	return err;
+ }
+ 
+ static void ioat_shutdown(struct pci_dev *pdev)
 
-- Link to v1: https://lore.kernel.org/r/20240524-ioatdma-fixes-v1-0-b785f1f7accc@yadro.com
-
----
-Nikita Shubin (3):
-      dmaengine: ioatdma: Fix leaking on version mismatch
-      dmaengine: ioatdma: Fix error path in ioat3_dma_probe()
-      dmaengine: ioatdma: Fix kmemleak in ioat_pci_probe()
-
- drivers/dma/ioat/init.c | 54 ++++++++++++++++++++++++++-----------------------
- 1 file changed, 29 insertions(+), 25 deletions(-)
----
-base-commit: 6d69b6c12fce479fde7bc06f686212451688a102
-change-id: 20240524-ioatdma-fixes-a8fccda9bd79
-
-Best regards,
 -- 
-Nikita Shubin <n.shubin@yadro.com>
+2.43.2
 
 
