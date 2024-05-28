@@ -1,76 +1,116 @@
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FA710A2A;
-	Tue, 28 May 2024 15:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.18.0.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4965E10A2A
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716911255; cv=none; b=INy/i9NYM+Tu+6tr4HqpzlscNUAnfjSQYNFoLOPuBOz4p7e6g1HAFzwmJV38vfAFzjhyQNbDcpWimsIJmQszJDUc6Mdfam4JCeJxaWFdsqGKLyi0Vc3A2X9zLaBSlS5pJj4hMb99uX64/UylhmZmk9gk0DuNmmX2rvTbT1BexgM=
+	t=1716911308; cv=none; b=mNYXYsYe/dPGqpp3U+AHog4U4V8AXZxGt9WifylldnkJf1rFrS2wtwSLZzUBsY8i91MK0vqBnT1mdV8L3SoHXeo4Gcvsxzi9UzJVqe9Uip9Wb9neNuGazLdM3Vk7g8xm8qYJEBWLTS8fi3PtpfFWYn+8c5EjkEaClVGLnCC4I5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716911255; c=relaxed/simple;
-	bh=vPa9rF0pS41uHkATsANPc1ylod/pfLeVpRJJC/BDrqs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=d1ydhQIDlkJOpEVFwZQ8wtf58joloJAz0Gnimk08SDxS8XjrIDZFVSdlGdA0T69Jfd1V64mYwSk+csia5Qbw425H608S3uADP+S4XafD982PMIDsh57Pao0JxvgTIlRely68bASs+R//RxuOIL1ByTf4bh6k/G4MMuVThJ5/m6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=nefkom.net; arc=none smtp.client-ip=212.18.0.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nefkom.net
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-	by mail-out.m-online.net (Postfix) with ESMTP id 4Vpc8Z2Tqjz1qsP0;
-	Tue, 28 May 2024 17:37:34 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
-	by mail.m-online.net (Postfix) with ESMTP id 4Vpc8Z0lYHz1qqlY;
-	Tue, 28 May 2024 17:37:34 +0200 (CEST)
-X-Virus-Scanned: amavis at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
- by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavis, port 10024)
- with ESMTP id Hg5p6M9piD87; Tue, 28 May 2024 17:37:33 +0200 (CEST)
-X-Auth-Info: HpTRMRkMphHhCoLp09Dcf9TUvqKPwejy3RutzhJcbFthbpKdAzzewlMWKt91fpbJ
-Received: from igel.home (aftr-82-135-83-75.dynamic.mnet-online.de [82.135.83.75])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.mnet-online.de (Postfix) with ESMTPSA;
-	Tue, 28 May 2024 17:37:33 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-	id E856D2C0F8D; Tue, 28 May 2024 17:37:32 +0200 (CEST)
-From: Andreas Schwab <schwab@linux-m68k.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-  devicetree@vger.kernel.org,  linux-riscv@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  Emil Renner Berthing <kernel@esmil.dk>,
-  Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
- <paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>,  Albert
- Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH v1 0/2] riscv: dts: starfive: Enable Bluetooth on JH7100
- boards
-In-Reply-To: <20240528-outpost-subduing-2e84f77427a4@spud> (Conor Dooley's
-	message of "Tue, 28 May 2024 12:30:46 +0100")
-References: <20240508111604.887466-1-emil.renner.berthing@canonical.com>
-	<87wmo2nmee.fsf@linux-m68k.org>
-	<CAJM55Z-F6N6ua5LoqyMFogDtLp=FaRPoDv4osXFDMjR1b8r9nw@mail.gmail.com>
-	<87zfsy102h.fsf@igel.home>
-	<20240528-outpost-subduing-2e84f77427a4@spud>
-X-Yow: ..  I want to perform cranial activities with Tuesday Weld!!
-Date: Tue, 28 May 2024 17:37:32 +0200
-Message-ID: <87ttii54n7.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1716911308; c=relaxed/simple;
+	bh=WqG9sZYchyys4D5XzM/xFNcQEPLv6PSK1vKnXJvpQVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZRJ57bfYJE0FJWJLvryIHcl4Oz6lSt9m5cuGelFU9NFu/mnupgcLUsRqZVMbc2VBzyjXI25tnK4LQhC+3FjW/6rADxweqE03w2qyx5muYjlQK9nraWDkyjPiQx7GrpkFleGiJ9FZOBeDykvEq6wB2j2lv7sCWDrIELb8rGIpfeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sBz3c-0003Cq-9A; Tue, 28 May 2024 17:48:12 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sBz3b-003LZF-G9; Tue, 28 May 2024 17:48:11 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sBz3b-001P6V-1I;
+	Tue, 28 May 2024 17:48:11 +0200
+Date: Tue, 28 May 2024 17:48:11 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Sebastien Laveze <slaveze@smartandconnective.com>
+Cc: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Lee Jones <lee@kernel.org>,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Abel Vesa <abel.vesa@linaro.org>, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] clk: imx: imx6ul: fix default parent for enet*_ref_sel
+Message-ID: <ZlX8u6V6l3ZwurI0@pengutronix.de>
+References: <20240528151434.227602-1-slaveze@smartandconnective.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240528151434.227602-1-slaveze@smartandconnective.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Mai 28 2024, Conor Dooley wrote:
+On Tue, May 28, 2024 at 05:14:33PM +0200, Sebastien Laveze wrote:
+> The clk_set_parent for "enet1_ref_sel" and  "enet2_ref_sel" are
+> incorrect, therefore the original requirements to have "enet_clk_ref" as
+> output sourced by iMX ENET PLL as a default config is not met.
+> 
+> Only "enet[1,2]_ref_125m" "enet[1,2]_ref_pad" are possible parents for
+> "enet1_ref_sel" and "enet2_ref_sel".
+> 
+> This was observed as a regression using a custom device tree which was
+> expecting this default config.
+> 
+> This can be fixed at the device tree level but having a default config
+> matching the original behavior (before refclock mux) will avoid breaking
+> existing configs.
+> 
+> Fixes: 4e197ee880c2 ("clk: imx6ul: add ethernet refclock mux support")
+> Link: https://lore.kernel.org/lkml/20230306020226.GC143566@dragon/T/
+> Signed-off-by: Sebastien Laveze <slaveze@smartandconnective.com>
 
-> Looking at things to apply post -rc1, are you still looking into this
-> issue?
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-I don't know what to look for.
+Thank you.
+
+> ---
+>  drivers/clk/imx/clk-imx6ul.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-imx6ul.c b/drivers/clk/imx/clk-imx6ul.c
+> index f9394e94f69d..05c7a82b751f 100644
+> --- a/drivers/clk/imx/clk-imx6ul.c
+> +++ b/drivers/clk/imx/clk-imx6ul.c
+> @@ -542,8 +542,8 @@ static void __init imx6ul_clocks_init(struct device_node *ccm_node)
+>  
+>  	clk_set_parent(hws[IMX6UL_CLK_ENFC_SEL]->clk, hws[IMX6UL_CLK_PLL2_PFD2]->clk);
+>  
+> -	clk_set_parent(hws[IMX6UL_CLK_ENET1_REF_SEL]->clk, hws[IMX6UL_CLK_ENET_REF]->clk);
+> -	clk_set_parent(hws[IMX6UL_CLK_ENET2_REF_SEL]->clk, hws[IMX6UL_CLK_ENET2_REF]->clk);
+> +	clk_set_parent(hws[IMX6UL_CLK_ENET1_REF_SEL]->clk, hws[IMX6UL_CLK_ENET1_REF_125M]->clk);
+> +	clk_set_parent(hws[IMX6UL_CLK_ENET2_REF_SEL]->clk, hws[IMX6UL_CLK_ENET2_REF_125M]->clk);
+>  
+>  	imx_register_uart_clocks();
+>  }
+> -- 
+> 2.34.1
+> 
+> 
+> 
 
 -- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
