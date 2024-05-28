@@ -1,112 +1,151 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA9117E8E4;
-	Tue, 28 May 2024 04:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EC8179AA
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 04:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716869323; cv=none; b=Bk4/M0w7BG/mD2qhkjZ2aLJIRlV+mh5TEV1uysfmlJi+SRK3by2VCB3fm7K+GAU5UFQfMaZvCiwiqwJBFj9vdrf0/Aj0xYk5Bo02WS+LPrmQ+2D0n/ypt/d7F7aIoljpWXHjunqhOUUgotz6/musM+3JelQ5mfiQXbQzAslSQ3g=
+	t=1716869427; cv=none; b=V4vjmoCQTfmPFcPOgFgWKkVRi76qO0/bYyaxwCTLExWRbYe4wpsk4W845xZ/L+4VmQwTQzqNWG0Rl9pLaTrBnLoFY/Es+79GmB6tBG8hC3qD5GSB2OXKDEbTDo3+hceKSIe6icyxmGsCzgJtd6T+NAsF0oIvl29BXuj+4xE6Ftk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716869323; c=relaxed/simple;
-	bh=1zQlRYQXYa6k6CCPf33lK1Df7v5lDyubYaYJYb2isv0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=apZPQm/u3pi6Up5boDgtXHlcTCHRTzwf+nLBxLr8j/95fOV9LthpIZNy3yfvfqRIC4gdsVEqofRhGU35jrrrakt3Q6dJyJynoMaLrx4sqtexppch+/sVwoPap8k/OxeGdYoLugmqdeo8a5B7zqzQlrCenRjdxYm6jvKfAVG2GTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJbnZWW2; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJbnZWW2"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e6f33150bcso3283641fa.2;
-        Mon, 27 May 2024 21:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716869320; x=1717474120; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tMyc3pRbel0bshffcEecjOn4iWU9YutUkHwlm4EbsFw=;
-        b=IJbnZWW2kEgxbrN+HgJviZ+yC+ib49+2Qk4saCIgbVfCrXp/BbwSFfHRYV6FUc+UD4
-         XgevKtfKGohqpMRga9P0l8h6C32clnBMlr0MM4JLBlllAudgPLCbShkenIN7AGT7wVK5
-         rC5ZWDAuzU2u02FOv/35CH1s/768H2bto0ZObotjkKDkyXdoGj32sEU/AAQLSI35HeQi
-         OAc/JRUo8Tq/QO2pRbebSk2KPxN9GtFmbHTb7xZCdyKD5pw1iXp/p0UISqSG3VFTFIPz
-         lUBPsQow9rtYAW4RTcUcPxuSnNPakXazfIYehfb5bAbBLxPwtMvHloJP7Vlh1tk8Trle
-         WeUQ==
+	s=arc-20240116; t=1716869427; c=relaxed/simple;
+	bh=6BMnFEuWeGChFxSyDZ2OuFR5UZxhXp82Y+Rh+dHsGMw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=F6z+4h4mPE9e7fXS1FeYhnSYkhpXg95R8ryWlabOK1ZTJFGSivY2A1bwzT/Ho6QLVmQFbBCb9kk/QQ3K8cLX1rtdM+GAzqsRsMhehJwJX1jibiZ0sCpXUGd4nB5RfYORwX2o9POvO7yei5ddqqHwCH8UHdDUbv7+HIpYQPREHtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-37375e83ee8so3791435ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 21:10:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716869320; x=1717474120;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tMyc3pRbel0bshffcEecjOn4iWU9YutUkHwlm4EbsFw=;
-        b=BVmrgquyBKng5/hYiOKIxLvjpMHJOPxCAO2ahe30+1T455yydp7cnvYQRAO6OcjASs
-         4DeHD2WE/phFbB2SBph/d+61JFDx0fiq87oC3tQqBnP8UlQzkCs989uZ9RJByQBzFNh6
-         jTdrpETTEKeFcIROq9pLGnSdgUiiHM/7wo2qpNMpUNpMEREtrJ2DFnMxp/IVbNf419M8
-         HuhPb3kDxFboUaydSl13r+jGm5XHNC4ZwVRuX2ugiYW5N6DmRwQsE43+8cdZdAXZFl/J
-         dcdr0touxgyMCPDYX8rm5t6qfo1/GM+CJ6QR5kXEKvUpkiSEUBqXVC/yUNmAJrfFHv1K
-         20DA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+IIpAVW2ijt7PZSbNPvgligBmMH57Va4e8ut0kK3om3+1W76yQGAt/mC54jBa9fn7uOSPiuJzBgknZPbrD5Z//4cHBGR5MJ3FapR5iyU0iG2+QRf7isnpZQKulW98umOneui16scrTrC6UE8UaPflN2VrRoc9F0Ow9vL598Xqi3TrOCcL+GLF
-X-Gm-Message-State: AOJu0YydFYaEqahgVIY32VXFiMATInnFiYm6JheW0dawwvK/7lyIInd5
-	wBoO+WPaQgBXzjXmRkttyVHbFs72/tuQF9Cxdh37UCiQ03gfbYrkxLOgNU1hnOO+/xEGXSQCq5d
-	0GzH8zeNeb3al9BoBDJrZs3LptKk=
-X-Google-Smtp-Source: AGHT+IGJiavREr3NWLKOzpRZdqUHa7q77BL+5YFsloQz18KBti8Zw39zdX1RWbJfMYba295OwGrClZrngVMi829iwIM=
-X-Received: by 2002:a2e:800f:0:b0:2e9:6306:8a51 with SMTP id
- 38308e7fff4ca-2e963069082mr58708411fa.52.1716869319348; Mon, 27 May 2024
- 21:08:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716869425; x=1717474225;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rT5Pl0xEGoFaDE9obYD33/VWqvAuRBEYSXPf3W0FSjc=;
+        b=TohuVxaAw3Po4mNXgqpIyyb3pFtieym8nOBTRWrMl/q/IkkuX99ZsMPDt1+hQePg4C
+         2aRcfjMuKWWk1oYVGKxmvF1aLPGVvpCvRRk05mj3elY1ylCTfhVxgXhPBtWfPal65U5E
+         ewpaIbZqbMipAEJAfGU7kbOFjNxlyT5sIjKLTHwplSAKdwq2rIvMJhtsbhsix3ywQSPV
+         OgYYucM6fUTvScvZZXT6SLQ/fUC4QhtWx1yUwkVa++BqTRRvvgS2KsbLTesNPLfw7pfS
+         J4GNdel7382DRq0Qptc5TqGKuuyGUGZCF+y6Dk3bcEwsONXJe1iLMHsMQQ3pSaz7N4GN
+         29rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPNT8XKcDSosdnUJdov3hJAwC2Qk/1+4U3+CTfRTErRX/Hebt5OyCZswjpdzi+VaqsVjyKB9eehwCB53iWEqgpqy3CsHpaADzccT+0
+X-Gm-Message-State: AOJu0YwFRgOCHXZn1bkDYYOXTtju+gEpC8wsBXNroPiJWIxK5fO2ISZE
+	+YiAUtQFMxB2zbwcrX6dhrH+jAKvpLRNr6gqQQvBJkfDATccE7LgoIA0tj9lVFEVgQoy6XF03Ng
+	TPLDaRcZY9q1iVdsTGSZk3X/AQn4tmSbHXMmgHCNHzLNDOg3G5HNE39s=
+X-Google-Smtp-Source: AGHT+IFHAJBp+FvS2XWXhjiH8pyko7EJ8ajwhNX85Bdt17F3NcGlR0vnwqUakmjvzjez6+hkWtMra1rD3D0frfcY7MtdAdB3mr+K
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info> <20240524132008.6b6f69f6@gandalf.local.home>
- <CAE4VaRF80OhnaiqeP9STfLa5pORB31YSorgoJ92fQ8tsRovxqQ@mail.gmail.com>
- <CAE4VaRGaNJSdo474joOtKEkxkfmyJ-zsrr8asb7ojP2JexFt-A@mail.gmail.com>
- <2024052710-marsupial-debug-febd@gregkh> <20240527174424.75625921@rorschach.local.home>
-In-Reply-To: <20240527174424.75625921@rorschach.local.home>
-From: =?UTF-8?B?SWxra2EgTmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Date: Tue, 28 May 2024 07:08:03 +0300
-Message-ID: <CAE4VaRGzvMU7ZuNwHq1SE0t+Z02Aa5QO44tBH8YgvSYX5ByRwg@mail.gmail.com>
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During Shutdown/Reboot
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, 
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+X-Received: by 2002:a92:c566:0:b0:36c:5228:462 with SMTP id
+ e9e14a558f8ab-3737b31cb5fmr8147455ab.3.1716869425391; Mon, 27 May 2024
+ 21:10:25 -0700 (PDT)
+Date: Mon, 27 May 2024 21:10:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000039f54b06197bd063@google.com>
+Subject: [syzbot] [bcachefs?] KMSAN: uninit-value in xattr_cmp_key
+From: syzbot <syzbot+915b205d9237d1182095@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-I tried 6.10-rc1 and it still ends up to panic
+Hello,
 
---Ilkka
+syzbot found the following issue on:
+
+HEAD commit:    614da38e2f7a Merge tag 'hid-for-linus-2024051401' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1279b784980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f5d2cbf33633f507
+dashboard link: https://syzkaller.appspot.com/bug?extid=915b205d9237d1182095
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/89eafb874b71/disk-614da38e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/356000512ad9/vmlinux-614da38e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/839c73939115/bzImage-614da38e.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+915b205d9237d1182095@syzkaller.appspotmail.com
+
+bcachefs (loop1): going read-write
+bcachefs (loop1): done starting filesystem
+=====================================================
+BUG: KMSAN: uninit-value in xattr_cmp_key+0x2f3/0x390 fs/bcachefs/xattr.c:49
+ xattr_cmp_key+0x2f3/0x390 fs/bcachefs/xattr.c:49
+ bch2_hash_lookup_in_snapshot fs/bcachefs/str_hash.h:178 [inline]
+ bch2_hash_lookup fs/bcachefs/str_hash.h:202 [inline]
+ bch2_acl_chmod+0xaa2/0x1590 fs/bcachefs/acl.c:423
+ bch2_setattr_nonsize+0x12ef/0x1830 fs/bcachefs/fs.c:797
+ bch2_setattr+0x264/0x2f0 fs/bcachefs/fs.c:886
+ notify_change+0x1a07/0x1af0 fs/attr.c:497
+ chmod_common+0x3b8/0x630 fs/open.c:650
+ do_fchmodat fs/open.c:698 [inline]
+ __do_sys_fchmodat fs/open.c:717 [inline]
+ __se_sys_fchmodat fs/open.c:714 [inline]
+ __x64_sys_fchmodat+0x160/0x2b0 fs/open.c:714
+ x64_sys_call+0x1d6f/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:269
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was created at:
+ __kmalloc_large_node+0x231/0x370 mm/slub.c:3994
+ __do_kmalloc_node mm/slub.c:4027 [inline]
+ __kmalloc_node+0xb10/0x10c0 mm/slub.c:4046
+ kmalloc_node include/linux/slab.h:648 [inline]
+ kvmalloc_node+0xc0/0x2d0 mm/util.c:634
+ kvmalloc include/linux/slab.h:766 [inline]
+ btree_bounce_alloc fs/bcachefs/btree_io.c:118 [inline]
+ bch2_btree_node_read_done+0x4e68/0x75e0 fs/bcachefs/btree_io.c:1185
+ btree_node_read_work+0x8a5/0x1eb0 fs/bcachefs/btree_io.c:1324
+ bch2_btree_node_read+0x3d42/0x4b50
+ __bch2_btree_root_read fs/bcachefs/btree_io.c:1748 [inline]
+ bch2_btree_root_read+0xa6c/0x13d0 fs/bcachefs/btree_io.c:1772
+ read_btree_roots+0x454/0xee0 fs/bcachefs/recovery.c:457
+ bch2_fs_recovery+0x7b6a/0x93e0 fs/bcachefs/recovery.c:785
+ bch2_fs_start+0x7b2/0xbd0 fs/bcachefs/super.c:1043
+ bch2_fs_open+0x152a/0x15f0 fs/bcachefs/super.c:2105
+ bch2_mount+0x90d/0x1d90 fs/bcachefs/fs.c:1906
+ legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+ vfs_get_tree+0xa7/0x570 fs/super.c:1779
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+ path_mount+0x742/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+ x64_sys_call+0x2bf4/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:166
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 0 PID: 7935 Comm: syz-executor.1 Not tainted 6.9.0-syzkaller-02707-g614da38e2f7a #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+=====================================================
 
 
-On Tue, May 28, 2024 at 12:44=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Mon, 27 May 2024 20:14:42 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> > On Mon, May 27, 2024 at 07:40:21PM +0300, Ilkka Naulap=C3=A4=C3=A4 wrot=
-e:
-> > > Hi Steven,
-> > >
-> > > I took some time and bisected the 6.8.9 - 6.8.10 and git gave the
-> > > panic inducing commit:
-> > >
-> > > 414fb08628143 (tracefs: Reset permissions on remount if permissions a=
-re options)
-> > >
-> > > I reverted that commit to 6.9.2 and now it only serves the trace but
-> > > the panic is gone. But I can live with it.
-> >
-> > Steven, should we revert that?
-> >
-> > Or is there some other change that we should take to resolve this?
-> >
->
-> Before we revert it (as it may be a bug in mainline), Ilkka, can you
-> test v6.10-rc1?  If it exists there, it will let me know whether or not
-> I missed something.
->
-> Thanks,
->
-> -- Steve
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
