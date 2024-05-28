@@ -1,145 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15443171080
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC586170855
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716909286; cv=none; b=B1+Py0iU0RcfnGIWDCVo9Ce7C77pY8VH8OPTd+94RBMUecT88aluFcDY2nWCTqnZ4DtT+kBuqi6dI1AKBPQeGXBvAwBNOFKMaOyJYsog/XD3Li2s9cgnhy/MMZO/XVrh/PT3VIXWz7BozfoL8QffRY5xbU1mXcJgz6Xznxe223k=
+	t=1716909287; cv=none; b=pJPMdorw1i1Fa1X4FUhkLpcIqT1fT/OsBIMb9l7I1iRJuXHWFRobjDV8tCru5JyTehD5yk5R1nLC4shRAUHhchQ1cdBRwK3GXWeiMJhleVKxkurfOzy+wVJ34eKvWy3KDYB1WUe2MDHjKzDVPiqRu75dXCLy9OAhUfMZsFEMQ34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716909286; c=relaxed/simple;
-	bh=Bxs4SPAtnH5tl5Wkqd1BAJet+5qrsAR5q00v/b5luXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C7laomzwp/67nNLxzxNX9hMYEMgxK8kINd3Dcg0kznbYxwZDIvSsZVv9xyii6cchmxjzN9cbdWQAS2TgbZHPk6AiEP0vixm7jb/sPMeJDxaPO/lYDrttl5pkEXQOUVniGH/EBYyRowWZCdTmcSTF+wqkniazE/teHh3D/INgIM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K0fjIRvn; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716909287; c=relaxed/simple;
+	bh=bXkg/CgxYBXiILs6UFR7oH6OBkmjVLVOD25GL20hsao=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J6fzk6C6J/CDwgKibi3KZKtkUs/1fP8FJqDaPYX9qQh3mZm6O8/MaBDxcr4sM99+zqUir60z53Vsk+npf0wg2PE1fZZyX4gVmOCiyvjea+UOCF+EB7r3jEs8FPaFYIKOA0sr3/e2mO4e7p/tsqJVxcFaxpIydv0iOuh2WHpFnHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DBY9wQdL; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0fjIRvn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716909286; x=1748445286;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Bxs4SPAtnH5tl5Wkqd1BAJet+5qrsAR5q00v/b5luXE=;
-  b=K0fjIRvnqrG/VzqjSapWHysN/XsDSFQ5n6OEpgi/orw7dCWnbIK7iWOf
-   EMba2EZaHfHVI9mzmvpqvRUDOaJnkN/PlHtJkP115rbVbMZ1jIGHVwVht
-   EoPSGjoWgtXxvtJV0cQ1aolOHN6KJWH9sYU4658+uMMfJZ5eyxFfiioTd
-   LbHhXaYedY80OLF/oG4NWlo2I6iSlnQc9tjj8Zz4zCb4QSTKdlC4DiujJ
-   NeACc+2Nir0R2Ca7MrhTldoqgpWIKz/wP/unDgXOtHLNsXcQxMiO9xVrd
-   R81P2dJsBk/uWAdW31CCzOeKgfJ27W2FU/taFopq8nWupGhLrfX9vkVst
-   g==;
-X-CSE-ConnectionGUID: qy5Gq0dYSsGZAvG2BUwkdg==
-X-CSE-MsgGUID: Hkyv+9fFRWOVDJaHIO8ILg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13110076"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="13110076"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 08:14:45 -0700
-X-CSE-ConnectionGUID: 8XJi24R7RTW7+BOyHYuJIg==
-X-CSE-MsgGUID: MexkEbFMTqyUkQD74gGgRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="65948911"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.110.248]) ([10.125.110.248])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 08:14:43 -0700
-Message-ID: <44e4f2fd-e76e-445d-b618-17a6ec692812@intel.com>
-Date: Tue, 28 May 2024 08:14:43 -0700
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DBY9wQdL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=AuM0r
+	CbJ0hWZ3V+vajoUI/lChlXnydV2UEWmf0D1iXQ=; b=DBY9wQdL30Y1DDfpylrwy
+	K3J0skFmoD/lClkwpeCm8fs6DfCo8mGospFS10UsFgNx95p2du3ermckS3b/t7T3
+	FjY0byc92tQ6UVEWfOwa9znyBKKWC/jdJCJxBdl5npng//iVCFKQGSM4SV7onQrl
+	lRNZrCnYSeFYfUEH4vYZ/E=
+Received: from localhost.localdomain (unknown [111.35.185.173])
+	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDXj7ek9FVmILt8Ag--.50944S4;
+	Tue, 28 May 2024 23:13:45 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: yjnworkstation@gmail.com
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	willy@infradead.org
+Subject: [BUG] 6.10.0-rc1: segfault at 0 when reboot with kernel config INIT_MLOCKED_ON_FREE_DEFAULT_ON=y
+Date: Tue, 28 May 2024 23:13:40 +0800
+Message-Id: <20240528151340.4282-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/12] LUF(Lazy Unmap Flush) reducing tlb numbers over
- 90%
-To: "Huang, Ying" <ying.huang@intel.com>, Byungchul Park <byungchul@sk.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, akpm@linux-foundation.org, vernhao@tencent.com,
- mgorman@techsingularity.net, hughd@google.com, willy@infradead.org,
- david@redhat.com, peterz@infradead.org, luto@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, rjgolo@gmail.com
-References: <20240510065206.76078-1-byungchul@sk.com>
- <982317c0-7faa-45f0-82a1-29978c3c9f4d@intel.com>
- <20240527015732.GA61604@system.software.com>
- <8734q46jc8.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <8734q46jc8.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXj7ek9FVmILt8Ag--.50944S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tF4fXF45GF4Utw18Cr4UArb_yoW8Kr4fpr
+	1j9F15Cr4vg34UAF18Jr43tF18t3yqka47Xr4DGryDXF1q9F15Jw17K3y5trWDGF45u3W7
+	J3WkXa18Kr1UXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07joGQDUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0g3sqmWXyBCpagAAsw
 
-On 5/26/24 20:10, Huang, Ying wrote:
->> Thank you for the pointing out.  I will fix it too by introducing a new
->> flag in inode or something to make LUF aware if updating the file has
->> been tried so that LUF can give up and flush right away in the case.
->>
->> Plus, I will add another give-up at code changing the permission of vma
->> to writable.
-> I guess that you need a framework similar as
-> "flush_tlb_batched_pending()" to deal with interaction with other TLB
-> related operations.
+Hi,
 
-Where "other TLB related operations" includes both things that
-traditionally invalidate TLBs (like going Present 1=>0) and things like
-fault-in that go Present 0=>1 that can result in TLB population.
+My kernel is 6.10.0-rc1 with CONFIG_INIT_MLOCKED_ON_FREE_DEFAULT_ON=y, and 
+I got following screen when I execute `systemctl reboot` on my system.
+(The text was extracted from a console image, there may be some parse error. And my kernel was tainted mostly because of nvidia driver)
 
-It's actually a really crummy problem to solve.  We don't have _any_
-machinery to say, "Hey, you know that PTE you wanted to install?  There
-was something there before you and we haven't flushed it yet.  Can you
-be a doll and do a flush before _populating_ that PTE?"
+	42.855067] watchdog: watchdog0: watchdog did not stop!
+	42.905871] show_signal_msg: 14 callbacks suppressed
+	42.905874) systemd-shutdow[1]: segfault at 0 ip 0000000000000000 sp 00007ffcc8af7318 error 14 likely on CPU 6 (core 4, socke 42.906017] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+	42.906080] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b 
+	42.906143] CPU: 6 PID: 1 Comm: systemd-shutdow Tainted: P OE 6.10.0-rc1-linan-0 #244
+	42.906220] Hardware name: Micro-Star International Co., Ltd. MS-7889/B450M MORTAR MAX (MS-7889), BIOS 2.80 06/10/2020 42.906308] Call Trace:
+	42.906329] <TASK>
+	42.906346] panic+0x31d/0x350
+	42.906375) ? srso_return_thunk+0x5/0x5f
+	42.906411] do_exit+0x968/0xad0
+	42.906441] do_group_exit+0x2c/0x80
+	42.906472] get_signal+0x876/0x8a0
+	42.906502] arch_do_signal_or_restart+0x2a/0x240
+	42.906544] irgentry_exit_to_user_mode+0xc2/0x160
+	42.906585] asm_exc_page_fault+0x22/0x30
+	42.906619] RIP: 0033:0x0
+	42.906640] Code: Unable to access opcode bytes at 0xfffft fffffffd6. 
+	42.906693] RSP: 002b:00007ffcc8af7318 EFLAGS: 00010206
+	42.906736] RAX: 0000000000000011 RBX: 000000000328adea RCX: 0000000000000005 
+	42.906794] RDX: 00007ffcc8af73b0 RSI: 0000000000000ea8 RDI: 0000000000000001 
+	42.906852] RBP: 00007ffcc8af73be R08: 003b459fca9238c4 R09: 0000000000000069 
+	42.906910] R10: 0000000000000008 R11: 0000000000000202 R12: 00007ffcc8af7330 
+	42.906968] R13: 0000000000000ea8 R14: 0000000000000000 R15: 0000000000000000 
+	42.907029] </TASK>
+	42.907328] Kernel Offset: 0x21a00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff) 
+	43.081928) --- [ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
 
-To solve it generically, I suspect you'll need some kind of special
-non-present PTE to say:
 
-	There _was_ a PTE here that wasn't flushed.
+I rebuild the kernel with `CONFIG_INIT_MLOCKED_ON_FREE_DEFAULT_ON not set`, the system can reboot normally.
+My guess, some memory is zeroed unproperly when reboot?
 
-Sure, you can add gunk to the VMA to track when this happens.  But
-that'll penalize anyone populating a PTE anywhere in the VMA at least
-once.  If there were other threads faulting in pages to the same VMA,
-they'll just end up doing the flush that LUF tried to avoid in the first
-place.
+
+David
+
