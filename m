@@ -1,104 +1,189 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CF416F27C;
-	Tue, 28 May 2024 16:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3E216D4FF
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 16:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716914213; cv=none; b=MvFROseAHrEl6GEU+Qc/6WbPvmVXDJt3bGiHq3YqkwU9CmMtGs+fDTorVRrkFsA7AlorNgIlGfpQ9LmjV4LILobqCh2kXzuoR1qLulE/wxABo2ka0twB+61kDfJtofPZWsGK4tPRHP29pP0qKi9Hj8sUQJR97pAMhp4OAP3TJaU=
+	t=1716914258; cv=none; b=TBWy7NkAX4PiKqmau/p2JhsltAeu0O+yk7rP2JVz+WRku7k8r6pSVYqxd5Ga8qNcNRIppLfuGQdXAFok0RrNCPxX6ix+IExrOt8jVnMpj9c6ZCakOUdMyorkMf3NGAJc3bm33gTNQ1vcZHTJ0yByDPdWHyi8w4DH83qPpbaCFrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716914213; c=relaxed/simple;
-	bh=CgRqHPr7XcQJWMZvGLmyA/6G5iR05+i//IJnCIrWbJ0=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uIt1uzoaggaX5/sUucxrCkqZd/uMYNxb3HGSd3nbS6cCppq+pD1o4dfv3A23jdaz54/BairhRteEN2/xApWjluJamv+WHafGSRpVSNXhHy+fwkAFWg3Hch9TfLQbfBSLLyH+b3ZbDJ+auUkQyV9M5Y/J1WNB/VwuJNzdW/CmtsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (178.176.78.2) by msexch01.omp.ru (10.188.4.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 28 May
- 2024 19:21:22 +0300
-Subject: Re: [net-next PATCH v4 1/7] net: ravb: Simplify poll & receive
- functions
-To: Paul Barker <paul.barker.ct@bp.renesas.com>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	=?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-CC: Biju Das <biju.das.jz@bp.renesas.com>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>, Yoshihiro Shimoda
-	<yoshihiro.shimoda.uh@renesas.com>, <netdev@vger.kernel.org>,
-	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240528150339.6791-1-paul.barker.ct@bp.renesas.com>
- <20240528150339.6791-2-paul.barker.ct@bp.renesas.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <271dcdf4-a6f9-3fab-5009-89766082e348@omp.ru>
-Date: Tue, 28 May 2024 19:21:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	s=arc-20240116; t=1716914258; c=relaxed/simple;
+	bh=/r/SLL08HjdI46x3LF0p3F/u9Isqs916m5IdhjUo0RM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=bsf4vknn7Ad7r9zaEKyWHx9SyAtWOxfC42de8PHmWfwhthaaf1CvcE0XxoEvFUDvsOxR+AoANUowV9uEBdEAhunREO1usV9rXNhtHMdEvaBh4QYz8tDRxiWMIq04TaaHGxkdQ7hhkdPs8GYT5JlYiZIcn/EGLj/trLuC0r/BFNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H/1j5USv; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H/1j5USv"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-df771b4eacbso1760839276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 09:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716914254; x=1717519054; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6GEC5jqmiiBW2QPmiEul4IbzhqqHXLiTP01MQ0qoF6U=;
+        b=H/1j5USvXTvJmWhwuOmLQmLvHdkM1QA1Yt5EkrBom21ZMXsaobXqIvximIHr4pIvzY
+         AFpA9EjUNSeJeRveYgHTrvsz1MAkhGVR7bGra7fVK5OfpjPYNQ4Tl7Ol1Bs07WxqFp5x
+         3bOseOJaSUmMSr1HHAJdHkhr5j5Ml2kCDwDOO3K3PES15sZjSGQ8V4qkd205rgw0BkKG
+         HUfx5HrrQNkRa5RF6aCii//d2Se+BublsMptqKOqKKnWAZy5ciXvmNvzr1zAgy6Fk1N2
+         wl71h1PIRqXQSNzFS79DwWA/b2SYk2FlcX/ZJjMBVWUWlYnlLzsiaSnHOpIex6zMYAvI
+         pMXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716914254; x=1717519054;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6GEC5jqmiiBW2QPmiEul4IbzhqqHXLiTP01MQ0qoF6U=;
+        b=d/jHUNrA4JoJwvrpcqbzN+ivO9y/6Ndmtye9cZAWeAhSlYKQI6Es65DFWZQnlLToXX
+         CJYzPaaSgPB5qIjGUFO+6TFaGIhd+5q1+ZUvVP142/d1iEmH+YqyGiM/xrIVYv99/TiZ
+         mgIUwDAhc0KMqkse4+WEQgAkNhiCG8+V09O3oMOgZ3MXGqJiJSvZjfaXWSkxlj8ZPEyd
+         1JGdBgg4UTfQ7Kdhhtm6AflDT/LZVIfGjvTSGsXW1No6twQAG0wGkJC8/4So1YKlvIK6
+         AgPVOE1Sn+ZgKmW5Z1kfTLJ673SIjDvIgXBcrN+fEYNlAroo2Yagvtr9/AsbUfq6SkNj
+         0/8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVqdY2AppMKR9iIpUavModeA22UtdK7xGg8Q3P8951laEpb83Jz+RPnjqbeWTsW4G5lhWrEzmWzJXE7eJv1vHtASl3cWJyS4r3StFnE
+X-Gm-Message-State: AOJu0YzuVI0aUvtHZfXD6aCbbVHqc/xet7OwSZqNMm5hV9F8vAwzXEHx
+	4AN7NYmR2u3gp3MyXIz3PE5+lQDmkDI8JRH6+vcCpXN2EZCiTJIAdi8jjUS0HLuQYOvD8PAC5/4
+	Pu2N7oNL/igojvA==
+X-Google-Smtp-Source: AGHT+IFCM8agQwohlgmz/X20yI5XC7cbVbMVjBbNM657wC++i+TlAhU6zWE3+cMrzjDCjID8rBD8gKeQnEhFQnM=
+X-Received: from tj-virt.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5683])
+ (user=tjmercier job=sendgmr) by 2002:a05:6902:f85:b0:de6:166f:3250 with SMTP
+ id 3f1490d57ef6-df7721c1a20mr3534064276.2.1716914254444; Tue, 28 May 2024
+ 09:37:34 -0700 (PDT)
+Date: Tue, 28 May 2024 16:37:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20240528150339.6791-2-paul.barker.ct@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 05/28/2024 16:07:02
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 185549 [May 28 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 20 0.3.20
- 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.78.2 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.78.2 in (user) dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.78.2
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 05/28/2024 16:11:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 5/28/2024 12:09:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Message-ID: <20240528163713.2024887-1-tjmercier@google.com>
+Subject: [PATCH 1/2] cgroup: Fix /proc/cgroups count for v2
+From: "T.J. Mercier" <tjmercier@google.com>
+To: tjmercier@google.com, mkoutny@suse.com, Tejun Heo <tj@kernel.org>, 
+	Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>
+Cc: shakeel.butt@linux.dev, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/28/24 6:03 PM, Paul Barker wrote:
+The /proc/cgroups documentation says that the num_cgroups value is,
+"the number of control groups in this hierarchy using this controller."
 
-> We don't need to pass the work budget to ravb_rx() by reference, it's
-> cleaner to pass this by value and return the amount of work done. This
-> allows us to simplify the ravb_poll() function and use the common
-> `work_done` variable name seen in other network drivers for consistency
-> and ease of understanding.
-> 
-> This is a pure refactor and should not affect behaviour.
-> 
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+The value printed is simply the total number of cgroups in the hierarchy
+which is correct for v1, but not for the shared v2 hierarchy.
 
-[...]
+Consider:
+controllers="cpuset cpu io memory hugetlb pids rdma misc"
+for c in $controllers
+do
+  echo +$c > /sys/fs/cgroup/cgroup.subtree_control
+  mkdir /sys/fs/cgroup/$c
+  echo +$c > /sys/fs/cgroup/$c/cgroup.subtree_control
+  for i in `seq 100`; do mkdir /sys/fs/cgroup/$c/$i; done
+done
+cat /proc/cgroups
 
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+cpuset	0	809	1
+cpu	0	809	1
+cpuacct	0	809	1
+blkio	0	809	1
+memory	0	809	1
+devices	0	809	1
+freezer	0	809	1
+net_cls	0	809	1
+perf_event	0	809	1
+net_prio	0	809	1
+hugetlb	0	809	1
+pids	0	809	1
+rdma	0	809	1
+misc	0	809	1
+debug	0	809	1
 
-MBR, Sergey
+A count of 809 is reported for each controller, but only 109 should be
+reported for most of them since each controller is enabled in only part
+of the hierarchy. (Note that io depends on memcg, so its count should be
+209.)
+
+The number of cgroups using a controller is an important metric since
+kernel memory is used for each cgroup, and some kernel operations scale
+with the number of cgroups for some controllers (memory, io). So users
+have an interest in minimizing/tracking the number of them.
+
+Signed-off-by: T.J. Mercier <tjmercier@google.com>
+
+---
+Changes from RFC:
+Don't manually initialize the atomic counters to 0 since they are
+kzalloced - Michal Koutny
+
+Also return the CSS count for utility controllers instead of the cgroup
+count - Michal Koutny
+
+ include/linux/cgroup-defs.h | 6 ++++++
+ kernel/cgroup/cgroup-v1.c   | 8 ++++++--
+ kernel/cgroup/cgroup.c      | 2 ++
+ 3 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index ea48c861cd36..bc1dbf7652c4 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -579,6 +579,12 @@ struct cgroup_root {
+ 	/* Number of cgroups in the hierarchy, used only for /proc/cgroups */
+ 	atomic_t nr_cgrps;
+ 
++	/*
++	 * Number of cgroups using each controller. Includes online and zombies.
++	 * Used only for /proc/cgroups.
++	 */
++	atomic_t nr_css[CGROUP_SUBSYS_COUNT];
++
+ 	/* Hierarchy-specific flags */
+ 	unsigned int flags;
+ 
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index b9dbf6bf2779..9bad59486c46 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -675,11 +675,15 @@ int proc_cgroupstats_show(struct seq_file *m, void *v)
+ 	 * cgroup_mutex contention.
+ 	 */
+ 
+-	for_each_subsys(ss, i)
++	for_each_subsys(ss, i) {
++		int count = cgroup_on_dfl(&ss->root->cgrp) ?
++			atomic_read(&ss->root->nr_css[i]) : atomic_read(&ss->root->nr_cgrps);
++
+ 		seq_printf(m, "%s\t%d\t%d\t%d\n",
+ 			   ss->legacy_name, ss->root->hierarchy_id,
+-			   atomic_read(&ss->root->nr_cgrps),
++			   count,
+ 			   cgroup_ssid_enabled(i));
++	}
+ 
+ 	return 0;
+ }
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index e32b6972c478..1bacd7cf7551 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -5362,6 +5362,7 @@ static void css_free_rwork_fn(struct work_struct *work)
+ 		ss->css_free(css);
+ 		cgroup_idr_remove(&ss->css_idr, id);
+ 		cgroup_put(cgrp);
++		atomic_dec(&ss->root->nr_css[ss->id]);
+ 
+ 		if (parent)
+ 			css_put(parent);
+@@ -5504,6 +5505,7 @@ static int online_css(struct cgroup_subsys_state *css)
+ 		atomic_inc(&css->online_cnt);
+ 		if (css->parent)
+ 			atomic_inc(&css->parent->online_cnt);
++		atomic_inc(&ss->root->nr_css[ss->id]);
+ 	}
+ 	return ret;
+ }
+
+base-commit: 6fbf71854e2ddea7c99397772fbbb3783bfe15b5
+-- 
+2.45.1.288.g0e0cd299f1-goog
+
