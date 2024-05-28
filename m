@@ -1,67 +1,66 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4558F48
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 00:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABD9623
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 00:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716856565; cv=fail; b=YgaX69dLeY2/1El+jyvsxPAId+VjH3nHP4q93NqYJ2ido+Xtj5QYPurC8/Pn0wMEOTSSO/SddVwRbW5XJc8rX2nFtbMxxzot2Jta+78PxMvyHvLFI59SEDee6lzyTo5SxGcWPIIjulqcbN6dfBSNr7f5Mr8zxQRWaADIHWWrBDU=
+	t=1716856562; cv=fail; b=O8V8hPUkWxe71DfHEBJSjsP3s236+Op/nmZl7DZdiOvsALWAor+8JJqDnadHVgHeQBi8vRijPAELWJLS2Owm/A56VA/PIGVWEQ3YU5UGaKYFzNVhq27XG7lYPd9JoElfkqNWgcTqA/K9NXZC6S1bfO8FvNfk0eYVV0KKOZtoxEY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716856565; c=relaxed/simple;
-	bh=8OE9K0DmTCAvJF/4RkpmXLEUXS6juMXHvI2cb+F40uw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AyGsJEZ4loIrhr5ULogYeCl3rBwcwDDlADpEodG5OoY7GDexdPgeSVHRGW0o81G2j11oauwMEsthqOU+dAiZTx3uFolTE+jgW0o8uK5nG+1EeNwhb+GaE9ujc2Jd/5ax0dX6tviNPaS6Fdcew/ZZ6MH8e3jK7eg6zrun8bBe6Es=
+	s=arc-20240116; t=1716856562; c=relaxed/simple;
+	bh=oCkvccfuhqU8HvRSsFfhTH7bARyEHdlyjW2pbmRe9o8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=brppCpWgP6o87y0Pkb+SV/yUa2Vkh83Kc+RBUDZmssLvF5bFK9hbouvorXnJ/iVcTkMMz1AFJx6Ef6AHV4RhxsWOa9hQcbmq3norfgtXtBDQGqtoZ7+aYXVmO1m3o9NI62lpCv8b05Pir6Bc/BmiHPamJoML7+5AfXPms4X3k34=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44RNl01J022022;
-	Tue, 28 May 2024 00:35:46 GMT
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44RH4gjb001286;
+	Tue, 28 May 2024 00:35:28 GMT
 DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:in-reply?=
- =?UTF-8?Q?-to:message-id:mime-version:references:subject:to;_s=3Dcorp-202?=
- =?UTF-8?Q?3-11-20;_bh=3DzAf+f1zKciofH/Sg6L+tAS+6whs23BpJstbD2khy6i8=3D;_b?=
- =?UTF-8?Q?=3Df0n8B01IMcHDpcftMZSx0DP2gfYB075IC7Y3ViRsZe72ovb4BxyJIM3MzaGT?=
- =?UTF-8?Q?wfuRdZn6_TfuDzRQrmiXw+jxMx+jjpEE22uk8vDpf+iKAPLPdjzEH5mCfXDAl59?=
- =?UTF-8?Q?l//Hdn/30Q7Sgn_i5fL73jraLt1snqoo2PSohZqpd9MFfmBuzTcCw/9eJkJnzxK?=
- =?UTF-8?Q?mA6Th5t7kv/zibI8H2WV_20A0osBCqxa4vRA+I6h399dW+ETK6cIEprJoEyhX9d?=
- =?UTF-8?Q?pnJK52QieOc91B+ukFDMJfP/sU_Z3FArwQu7hqXrH8s07COyzBCCJPyBWz70l2L?=
- =?UTF-8?Q?XbqKUYDuQlLfFdYFaXPHrxigBsawffk0_KA=3D=3D_?=
+ =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:message-?=
+ =?UTF-8?Q?id:mime-version:subject:to;_s=3Dcorp-2023-11-20;_bh=3Df3Y7F7vta?=
+ =?UTF-8?Q?Bt88mu/o//epFnZhlhCJ4ZgYFjcWvT+Aq0=3D;_b=3DimxwLjD7EMFNnW7kygaf?=
+ =?UTF-8?Q?VgPO4MWEbonE6l7JhOXQanF1hESRHViX0o5F6giVZoibHYA+_YGMsvnL6bavkux?=
+ =?UTF-8?Q?C98/J+EvkTIbRWJ00u30tgH1njFhYN3Z9fCdjQlp+Er2alX5nJ9e6r_5FD74Iel?=
+ =?UTF-8?Q?TsyCk53E3kCWqKTe0+kJws1rNd+DN0PfYcnu9/SAZ4PW7GnISmb9UYRKNsvt_LM?=
+ =?UTF-8?Q?jOpHLwtoAPqjnj30WcyPK9ZbLbJQjek9r9+Prc5G8agYV1NQork6njInfbcE49H?=
+ =?UTF-8?Q?0D+_37TSpvbJP6ZpT37K0nGAOZan87tPqKsGw0AOPt4pwQebZp0z+VCtFZQNshh?=
+ =?UTF-8?Q?ZThVhShau_WQ=3D=3D_?=
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8j835q9-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8g9k8vq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 May 2024 00:35:46 +0000
+	Tue, 28 May 2024 00:35:28 +0000
 Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44RNFf56016169;
-	Tue, 28 May 2024 00:35:45 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2041.outbound.protection.outlook.com [104.47.51.41])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc55vtfan-2
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44RME2Oh016172;
+	Tue, 28 May 2024 00:35:27 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2040.outbound.protection.outlook.com [104.47.51.40])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc55vtf67-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 May 2024 00:35:45 +0000
+	Tue, 28 May 2024 00:35:26 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jTq7LCwbmJacgk1Q0UDnpWR5B2vhJKXN5cK2X2TlzJtyj9v/Dv7Pu2s6Za27uqIAQAxcNzfSguLLX+SwiYxvU6LHBMhw3kH63JltAsXQZNMp7k9KUAUr4etGoczo39uvEK5KgheqUPMI+CFOLnsyr8MxCCzwLPYv5IFrr3XCJj4xBHHNuIBRgfwNycviwL5CtWI3MMvIEJTjNbGdhWHcNOdQuCN6dRBCLjcug+WF4vFSJHezDi9bEMof9xV9BWTvO1v1M0PUhmtoKXMjEXxhThheLtbJdGCOfVX9IqktW0Aqkd7Y9Mv6OjPlVPxfrjV8qdialK0LE9yKBohQgZCtxQ==
+ b=KggOaCoCl2YlKtxmFxapeGW1GAPLO4AFO1AMDuwBjZNUBvfY4cvvmY0qZRcY7R3QShHnnj/2vnrhZpBoNviulPtGAHMZZZ4X/hslKpTB81BB8jbYJ1BoI/wut3MpfDQpLjTL29NzNcJx99Ts4IO7UPMi6DAL3kX3NyX5WlNVC+pUbp+UVKwPRc+/MIAVHrqCY2RO5BnQt2SeHttzPk+6FcKiQS5P8Ga0ctBJNez/gVPeEDaCWJMFc1rXONhGcV4SdI7iOdMCvqMAg6etz1nmPrHufNzHb3awuJk35tipDtYy2ppA/rp9bC1LE/pJ3zWMRmd5a57ghTggxNd+JHMwYA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zAf+f1zKciofH/Sg6L+tAS+6whs23BpJstbD2khy6i8=;
- b=bTWG5nk09J6tiZY6/XSaHPpvKG8B39C1Dx7xWMVcFqbWksSRPlC7p3/XuSzbs+uSY4LmaEk8gQQqmotFfQCikqTw2nUvD4Ekai0ONI6cvROh8vrrYzzXaExPKTHPZgLYWZh98XW9UL28ZVCs9AXLdmioFsnDwBrHGUwHdrMIWGRctLz2Q8Zd5GVofEvyqqfzJINiRpz+b1x4wtEBOkfgf7TGYIIV/gwOnKF9CLXA/nnxOCuo3Emi+nktXOKP9f3c1csVEZ1Js6dzT4uliu9tba3AQH2gQ/fWYAUeiRpsAWHklksj0FbLx80klVAAjiNgkJu9dSRQ5XVFHAjLLN1Cag==
+ bh=f3Y7F7vtaBt88mu/o//epFnZhlhCJ4ZgYFjcWvT+Aq0=;
+ b=mTyHJuiEO/N21JBEdoyHAdvJXITMnNx02r9l9+dpxhKM7JJXE2vifEMsdpnQScbZvEC/35x/fMzbPPV5J666lJbaMO7bshXS0FFKhKZy+oSU/fTh0SaY8qMvSo6mji/NUfY4de0dCqyfo1rq06YFGL3G14TSGIWt5gyljd9ADDNvLsyfDoAi+2vfoTK6rMei6HY8lvEJHhg3T/URGCP0OBkDK51oljAHEjb3/Lacm0J890a4FNg2JjtaFYcOe4bRJ5bXKDG1tzeC+UDaBkLEEnbk0DJe//pRmnDmo0agF8LEUmY+nxXUokxUeC1zIiNSwXiWsM8L/7RYlpc7JiOzXg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zAf+f1zKciofH/Sg6L+tAS+6whs23BpJstbD2khy6i8=;
- b=yoPHo74JUJv5wlwarDFIjM/GXxQ1pFqj+YUHdhtONilNJeh5Cxj5H+ROb52ZmG1Y4/ofEbjQ6iiS0UyT6sU1lLuHtTNt6Org4S9ksRktuqq+zlRspVekakeTAD8Ckulw6gjC8zxbe+W34NHFstmgxTWUUAC3p4si4SLe2cm7rLs=
+ bh=f3Y7F7vtaBt88mu/o//epFnZhlhCJ4ZgYFjcWvT+Aq0=;
+ b=WKhGXJTy4RCENpJ5MHzXmPlfR+PXcclbtpA7xN6yKs0ud56dRtcGQXtIX1QFeV787kcVzoQZuw5sTxA4IGXaGjeiXp6kvM/m4yVPoVMdWC/3Xxvr36688X91qJPzXkdONqoFCK8PXboy4g3EbHtM/H3UwD1ZXtq4T+ETcndO+Ig=
 Received: from CO6PR10MB5409.namprd10.prod.outlook.com (2603:10b6:5:357::14)
  by MW4PR10MB6510.namprd10.prod.outlook.com (2603:10b6:303:224::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Tue, 28 May
- 2024 00:35:43 +0000
+ 2024 00:35:23 +0000
 Received: from CO6PR10MB5409.namprd10.prod.outlook.com
  ([fe80::25a9:32c2:a7b0:de9e]) by CO6PR10MB5409.namprd10.prod.outlook.com
  ([fe80::25a9:32c2:a7b0:de9e%4]) with mapi id 15.20.7611.030; Tue, 28 May 2024
- 00:35:43 +0000
+ 00:35:23 +0000
 From: Ankur Arora <ankur.a.arora@oracle.com>
 To: linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de, peterz@infradead.org, torvalds@linux-foundation.org,
@@ -69,16 +68,14 @@ Cc: tglx@linutronix.de, peterz@infradead.org, torvalds@linux-foundation.org,
         juri.lelli@redhat.com, joel@joelfernandes.org, raghavendra.kt@amd.com,
         sshegde@linux.ibm.com, boris.ostrovsky@oracle.com,
         konrad.wilk@oracle.com, Ankur Arora <ankur.a.arora@oracle.com>
-Subject: [PATCH v2 05/35] thread_info: selector for TIF_NEED_RESCHED[_LAZY]
-Date: Mon, 27 May 2024 17:34:51 -0700
-Message-Id: <20240528003521.979836-6-ankur.a.arora@oracle.com>
+Subject: [PATCH v2 00/35] PREEMPT_AUTO: support lazy rescheduling
+Date: Mon, 27 May 2024 17:34:46 -0700
+Message-Id: <20240528003521.979836-1-ankur.a.arora@oracle.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240528003521.979836-1-ankur.a.arora@oracle.com>
-References: <20240528003521.979836-1-ankur.a.arora@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0154.namprd03.prod.outlook.com
- (2603:10b6:303:8d::9) To CO6PR10MB5409.namprd10.prod.outlook.com
+X-ClientProxiedBy: MW4P220CA0013.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::18) To CO6PR10MB5409.namprd10.prod.outlook.com
  (2603:10b6:5:357::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -88,78 +85,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CO6PR10MB5409:EE_|MW4PR10MB6510:EE_
-X-MS-Office365-Filtering-Correlation-Id: 63967a97-de86-402d-b81c-08dc7eae1b73
+X-MS-Office365-Filtering-Correlation-Id: 8d1ec267-2aca-41cc-3b5e-08dc7eae0faf
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015|7416005;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?QZW/fIlc9mLzvI1jpgbVNcVpMC88i1sHMCwJYVExIctUpT9bt6rPuFUmHeBO?=
- =?us-ascii?Q?uEawu/zEywkdAkQ+0ktIwnDtCCIskkFtDYJz6LF2tKLu2jhhL1S4Wg3z3dmP?=
- =?us-ascii?Q?PjnBs4dFPMY4B2C+AnKx1RLLIxD5dbg51usR8PCvoLHlfMEpRfJ5bEN3R6vx?=
- =?us-ascii?Q?I0KTkbddM/1oiO8K38epCtNEDJIKORkKYoErfKZ6YGV/g03q6WdEdUPVqa7g?=
- =?us-ascii?Q?0CjtjupgSNyO3jpg2R9dvfbfZA9g0hanbmk4VnK7oQYxXPHBg32JafPtLC0F?=
- =?us-ascii?Q?V9EsWOtrwmcDRXg0j7C0XCD5jBR1PvplMAV/XVBBuYCESxNGisXRKJzUTsCY?=
- =?us-ascii?Q?Q/dBwxvqa96Kot8pHlXa7UkI3fs1yrEL6rxMCZEJjOFd8Ttrfyw6UlaOiptK?=
- =?us-ascii?Q?iZCVzIM3+escc9dodYA9PVvgUxDo+zVhB/U+YJeVYVErE5u9VYM2O9WvL00C?=
- =?us-ascii?Q?VWoxJAw2YGT5tL4bYUQYHtO6pEn+lHOWuu4uKVPtqzKO5cZ/I6kQtDwuC3tK?=
- =?us-ascii?Q?8jw5hvs4kStPNaelQQH3F/lsTbNeW1cRdMv39wX/7ERfcJTWZnF5+YQ+v409?=
- =?us-ascii?Q?h479Tb849PSNR/cnUSVRAendXY/X4D7frd2PYxjbupq58t+VX4GG708XGEfy?=
- =?us-ascii?Q?4EZ+kVUImVJcZWLmV4lgwSP65bdXtSDe4WLUcsBWT04u3oNiWKhoJBs1aG+G?=
- =?us-ascii?Q?XTm+3x6Xf5FwtrMUw3XryxpMy3alIwaYcW7LFy+g0l8uBXa8ZKEnaWb8QbR7?=
- =?us-ascii?Q?z9xCpYBllyUzsCc08dnrIRlLgPX/yChCSY25YV+o68d3nOHaAuVao1wiHM9y?=
- =?us-ascii?Q?pLlwC0IyMYYVuR7sBOgupBy7y2KuD6ohu0E4APnBllMw3ozavm5TNlRgaFVw?=
- =?us-ascii?Q?hj3C2YETPFDwIwxkFj3yAZTZ6yiE8hvM1wvmQeWWUvPe8K7dCRDN2r4iPIjF?=
- =?us-ascii?Q?gaaJdAqZiF7rN4ysOSzKaq5v03q8+itI7IxjkEz2EGNCkz86szh6ARTJr+iB?=
- =?us-ascii?Q?GwrY4IjZkA7pq7Zyu+kJOhRZlVMfkjesx4FjymRhTG39mDuLBo+Kkmp4F9eu?=
- =?us-ascii?Q?28JxkmnhePUF9lnUaDugj6Xbj8Iui/pYYOrEGk6i12ZHYgLVi5KL1SwQGTSs?=
- =?us-ascii?Q?OX9rEK2lc6P72Vx23q8Oqs2q4MCdrbKqwP+Xnf1IoAW3xWZsCMqEYseZ0NbO?=
- =?us-ascii?Q?Qee65zRCrLcBIuqxTaaOOznBjivj/YvZ8QhLziUrVG9jUkm8Mj1g6TdrwIY?=
+	=?us-ascii?Q?wOPbwhUGvHnBuRrqH2FsM/WfDS72GKyVMLi9YoHUj8pSLh04pED/bbyXG44K?=
+ =?us-ascii?Q?zZhDKzSPjX50Tz3qVa7gxRCaJen0XVJnG86UzaEwxflfOrsantLhXCHqG6X8?=
+ =?us-ascii?Q?hZ5yX58vt6CMRx98vQ7tD9SsoozaMtWL4dTguOvmTBShHW0dwWZzaOwpHieW?=
+ =?us-ascii?Q?RkxpBHPyDgPmO/anY1NJDlHeZH8Som/TlHuzY0FLZ8tZPVnyeriVUnYRyzFl?=
+ =?us-ascii?Q?WyIscDDfuM6ZbwwPmc/LMMqOYWwZRP4Ln4xysSqDaikJcaOfenWfp6OPlG1f?=
+ =?us-ascii?Q?/swoKgT2DCq/1iC6MC0lZcWBw0e4NJT4laGbk6Hxtb30+lvM+A6gbn1W0RfZ?=
+ =?us-ascii?Q?rthqxiqPctAw5oVcJj2djYgWtawOmoiVkUSUW8VDrPBTGhXXGC1xxvcAx2WN?=
+ =?us-ascii?Q?TsKZELqoDMbrDdo4yEgzOOU4Td+RHwfEGwMZVG97uaKPKf9rRBZjK4RO4FuH?=
+ =?us-ascii?Q?qXE0We26HK0Gu6M5Vs0ip7TpP10O7sbfP8UKwgrz3oh9BT88ugGt4EhFTptg?=
+ =?us-ascii?Q?f/oOdkALmorQgY0T4+yauh4qJ+GYgrRxnUzFigZ+SZQkDLYJMxPa6K8jNPFa?=
+ =?us-ascii?Q?ru+Ql8RxDJ0+HhP0nYy0jUVPof9CljENwmBOBcRO0bQtU4bDnsJj7blyr/tM?=
+ =?us-ascii?Q?Ri0saj9C7k48iK1IyXJGclRHD7hVsbdJCYP+B6BtuoRx2gP49V7SSIbjhZjh?=
+ =?us-ascii?Q?Zfz0PLwk+Dad40NaO8nnxcLsjPAJlgqa4Tbjqc9PqEEOC1gW8onPKThzB3e+?=
+ =?us-ascii?Q?cQ0Du9Vg4EsAumEXcZFUgWnyXQjm7oinfVMOjP9Oluacpt9nYUAfMl2oNyoA?=
+ =?us-ascii?Q?VcipR41BQfJiK+o8HTyIMUrVeSz0UCxm+f1ZzlDYl5oCjnlzZDGqbtJIhCZY?=
+ =?us-ascii?Q?n4Puu7mVDpqQKLVALrAHEm6K8mVXpvRSfQm8wdhic3sjdTlLMYcQ/yRQfc6L?=
+ =?us-ascii?Q?66DSJTjFAjfClbkpTByGwByhrjugiI2YY4iyxxmS71FZWsFbBqzfmws0EIaz?=
+ =?us-ascii?Q?b4ubN7H8C/1pNbGY/YxO+AqvUVU52sm/HmZYd1zJA3p3FLo0r4yzzcG/Gxcu?=
+ =?us-ascii?Q?mbiYFjToZqhPfC1o1Nq1Ggg1RX0KNPxUluBq7u1+uOh9vTN4FsIniuF5I+vy?=
+ =?us-ascii?Q?6ne+vwcMHzyN8TE06siPO6P2OCDauafb72rwMaHapQVp/wo+FJOcVrFa8rGg?=
+ =?us-ascii?Q?fLfR+PN5hqdodYwn56mRm+AjV6YqprVMlDAzUJJwVnOZu8TUjhElJ8Qn0co?=
  =?us-ascii?Q?=3D?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5409.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?2KqIJr4xvkUmaNBY2jE59vrY/NvKvLVNTwEiBKvgboVU6tJ2Kj+Cpo4BfNnN?=
- =?us-ascii?Q?yUbyhLbozE7m81jX65xqSAq5BNI5uCeytontdPNDk9Bhvh+h2k9zaEBPrzRY?=
- =?us-ascii?Q?dxN1A6cMsm4TbNxc+pYMReX9aOwEBIsQ9SFzk1zOHMfemozlU9fIzAzoiptA?=
- =?us-ascii?Q?ntNRRZgW5ai1mJK+2Pt88J04ftkUoIxlJgBf391ulwoierK4+sf/hYAVERil?=
- =?us-ascii?Q?P7RyYHDbOnHSgBMOT5MgTjWCq2Z+iXX+Pv5jd78vyfmAnErK1NojSG1FZNiI?=
- =?us-ascii?Q?xSNERKMn5iCnvWu1Yh/o4aYqhJvtagHc42B+W4LMNjR9XPVadmw1z86QAujZ?=
- =?us-ascii?Q?or1ABAWgaE5WMBFCrswnflS20vnWnyz0OuK94FnFQPU9vrqso7KyMNSVUP5g?=
- =?us-ascii?Q?sPBwvoYglRUrlDcEd3M13uMyiGBUJIGYr4APVIs1ZYp3wOUAVzFMaWetPsoX?=
- =?us-ascii?Q?Jd+eBq0wZdexWPKKyN53Xf4V/+Td9ZR8RbY8p5JcJADYeIAFVrdz44o3Whe4?=
- =?us-ascii?Q?sEB33cGT+MQ1/XebIsAdb7DpPHXaZstynBSFbJOYj5BjwlLU5J4PzhLJG3Ct?=
- =?us-ascii?Q?iyTSPmaeRvMzZuD2ThRaCew8cXBoFg733NQ5OSa7Qtf1SymdJs3AKjYMf1Th?=
- =?us-ascii?Q?dSuR6NqK7sloDdmuuecxePj8gmow5aE0/4xY3ijr/gZqNH+wixElOq8GHbS8?=
- =?us-ascii?Q?B/oVU8hwMV9GdLNFclNQNmGse/SByi3zMzpDTvuA6cfWnws7f2dqutfKuk2v?=
- =?us-ascii?Q?PO1EOFVNqq36HFtuvxkEduspvR/0jC4SVPQUcgZBKbAelMugnTd0AQIbKDwd?=
- =?us-ascii?Q?Ff8UpEAgiI22KPCxVaEeK2EgON1WKVGV2e75lw0VWywF1RXmnNHvK0b2uYoy?=
- =?us-ascii?Q?gq1EHxKn6Gm8CdVQ7+ZY54YUNIQ7m4UySzUGmQihNkgh0v/xZIM8Hx2MwMSF?=
- =?us-ascii?Q?4sSGU1XF+gYNGFW/PqWgdbwQt6vdFoXubIE3lGzoXvhadZ/VUY+zABs4js3I?=
- =?us-ascii?Q?Msamc5kln6EYc3ClJL1NuhinHx0I2bqbdfCHWFWJg2dlFmQV1x7YzQWu6oV9?=
- =?us-ascii?Q?+LPx8pTnmAxk0uuF0MtbthUIy5celsLv6N++UzLReu4UIjzjbxwLbZfdKDDV?=
- =?us-ascii?Q?rzbl5h6DYcKHPbf561d6vswrUGeCbUpOAYz9F+76C+pY7qtW4v9P0Xa1d5qr?=
- =?us-ascii?Q?MjTue0f0KjMfnWE73+hHal70cMCO9BrlDXfize4loxMsPW9mXhemXTcyUk6K?=
- =?us-ascii?Q?2LNm9EYmFUaj+lWgxl9pYSnn202C+uOXwleO3JQ8TX3RmOb/bAEO4+CU0ve5?=
- =?us-ascii?Q?RuMtZS9op1a8V13xGocG6oWQ6Dhr5vC2VwcoskPvZjOJBjpNNyCwN72xS4cA?=
- =?us-ascii?Q?X25Mb8BMe7a5QijW3U0CtJjciEtSu273n/oHFkYLmTAqUacEw/tIVg8UYvwE?=
- =?us-ascii?Q?t57R+8ThG9O50+17jE+Tk5CccizyvQpCowKwDCFKeHTIOXZ3r04TUUSrTvFu?=
- =?us-ascii?Q?t8cJ/xpgUeyyFlbeDJ85dqjRj8f932e2mRCk3g6UHSvlspPVshI+rAgdVMS+?=
- =?us-ascii?Q?ZRx3dI7eJjYGkSst2yi04JvUIrpIEORAn1dHvCJZqbfNrpmc8A7tgdVWeWrD?=
- =?us-ascii?Q?Zw=3D=3D?=
+	=?us-ascii?Q?0ir5Tb74NXdJqX4p7gi9XEEW7BdjQIPBZJCIArUQl3VrvcFlPmZzLIkgiOA5?=
+ =?us-ascii?Q?DwvPqBZRkrhWTsYwLUq5DsxeL4ySptHfRzZJE+ZJNhbs92wrttNLBPnmlCGT?=
+ =?us-ascii?Q?U23IWMMY4YBpozHrWkwkbFkAcuL+zpaS1261Zvsx7yGj8a8snx9r5wikmn5H?=
+ =?us-ascii?Q?iweBICw7RuruftS9AZNJb4SV6wx9bNLwQJn6sx7TfuBMzufayzmnZNHC9GMs?=
+ =?us-ascii?Q?0Qe0i/Kq6Qxxh1Et2UoQqVfUC1jDLJFh903CC7WRCP/eXu1nSEaF+GnIb90+?=
+ =?us-ascii?Q?ZfbpqD16TwSNpLSv0WnupIN3OY1okI0fDq7+HsOYZyfhYp4ilxHBUoSHwURW?=
+ =?us-ascii?Q?yudyax4vqswWl+46f4kLk7YmrbmxscsBbKL6He0N/f5pfmJs+rl5yg4S1uHu?=
+ =?us-ascii?Q?QIYKB+gYVWrmelR0boFCGSWC5N/eVTJodTHtUKcsTmI07TVvhXYzXkKnQCSn?=
+ =?us-ascii?Q?oLtE+ZGx14C9mFE13lv9h64YRWHzVJSBLxIzcLb1rGUaqeIyYYP/zOS/GW1M?=
+ =?us-ascii?Q?4vKSinMGi2aqjydDbVaxV1nbNLyGB8AE0xPAwgtWEA+Xe6M2dl3ZqJ/nSGJq?=
+ =?us-ascii?Q?bGV6snogXZu4U2cDVUjsFzoycxfjlbatjUZmTXbchKMq+prllJyMuMI+485f?=
+ =?us-ascii?Q?QkvrBFv2twTYa+eAkZxJlF5crWpSoHCxfBnYiSPWxkIdW7ZeqOckddgao3QJ?=
+ =?us-ascii?Q?4IG9r3Y0nEJiNTzCU9OZ9tzJesFOZ8NVHaHpeOi812Btt7Zn0Gp5gSVrOPjm?=
+ =?us-ascii?Q?Xb8Rzs/mfxXK1aZiZvKbEMjNCj9V4Yib6oKuWZ4rsysJvclg7V1AEDSvujTV?=
+ =?us-ascii?Q?ZLD7p20yK0y0rKBNHz/jV0tHLIm8sDeO3ikzsR01iDVD8AGRBZSAW54Z4feG?=
+ =?us-ascii?Q?UZf4y3ekBAW7DM5w0nYHu3XqafxNui8qZlOaXQXygG0WkK0/FrWLypWgv5O3?=
+ =?us-ascii?Q?t1ysQwKMyPCUwPfh5/x2pmXwn94p78EkbccLGZ+05Jo8kZDOhLO97OyePamB?=
+ =?us-ascii?Q?T7nqu6fpxjHA37OFXZA6fzUYOSp1UX6BdL9xI+gUKI1d84kBhpcWUjsYoJnC?=
+ =?us-ascii?Q?Cy4cWzj3mrTqwvJMVSBykpxjAZzGtxdzxhveUCMIUnZa+m6O7AS/0TH5L3gZ?=
+ =?us-ascii?Q?I0COAjvCuKx8MvzsU36KUrLpCe/yuoI2cFgvnqrB6ZBRTkokogovd+0CxIFw?=
+ =?us-ascii?Q?udB+jgEo5mhMfmjTi0MPPwDxZ724HROqdqUx7a0KQX8GWqvnMejpKQ7Z8JWi?=
+ =?us-ascii?Q?CFQT2F+E/9TDTu84CSo4fkbpLwnJqihn8q7doECnWkNQz3BSX9Lr8B6g/bhJ?=
+ =?us-ascii?Q?5uECzdxOt6tW7Fy318Oe0NC8fPCA3E1urNc6YGvOhTCHIMBcPlPnAwqOYYpO?=
+ =?us-ascii?Q?yEW/ivd4GZMXVkqeet+19Jeh32nfWisgAep3Gm1n+r57812WuNwRa2zHxman?=
+ =?us-ascii?Q?jWRa7wKJWa9+vkRWD06nwWva1cWoXhsC/NyU4htczAprq4TsXk7fVnfKbcQD?=
+ =?us-ascii?Q?3w7TsiJBxTyMZiizRHnTbSzEibcl8QrfnvuNralpI/lwrU74VqH/HOxiiSTR?=
+ =?us-ascii?Q?/zepeb5uxl+pLWI6Klx/z/5Ejbe3nEVuThcd3kElQsvWvD7EsLYyVZk2mAVQ?=
+ =?us-ascii?Q?SQ=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	mkYomvbKTQSny/5DtHo+XmTGzOs6DUxeRuBHTouCgEDAasm/qCT/xhAuuDn4BM10V4n21KsiossgpgjlCmmDH8zgAFkntQ0T7E/leNwkhJ3zj24docinN5k4fYC3DjpxuZBkXCX0oBGB00iUrDEkhwcrCDBv+U6dkzuF+tK6QvVcaABR4rlubSYc1QFTVn/KIkXLXOjzlp1SKegAYE1/b3DfgMwnPZsQLGORNhf8nfqHd9OnPHyhNXylckfulRVlUISx1WryQPKv1zlE29O0Jtkj5OBZopr8MksjLhg5lgDuBO6b7XYC7IL4Em35fgkNWkVekAmN2Z++T1qLjecdm5LLUdJoapTi4awsVHhf01pUAs+iI6dSAwsrBqAgLTiokoyOXh0UrJaVavFmZneLATGP2AmFor3u8f8QaUoy/69nutZ6UtI+sXh8k2VhTNPSdVbQ6XJ3T4INFHR6WUG0X1pI4JvcsKdrsqu4WiVqUMxQCZ5+cerz7iLT0QihXeAZghyGR7yGI8lpiy+CDFzCpIdoBb7zlA+H1ECCxUE/RZSH+2FOK2xPyFUi91+uCm4YnOwCl3mjqMFTkH+7x85XkKFs/24zvomwpN73eGv7PJQ=
+	voyQ5BcsYAZj9qVM1RU+OnzDkJ2ZNH0hTq82JMKfRiuNwxHoffd1OXZbifqz1YtVQaT6VH1SRj5YNnEoUud2hdht0MTaMwQWhrm08HT0CL+7+F2k6EmGlELXw1qJmOQIHrNRtG1DyyS07nd0VSt6F1CqTRsavUSZHQIYdpmiOtHOv+3Qp7aixR5uKmmUdz/dv03L1jk6xmSqdwv1vGh6+SpjQ4gyi39+oUpdFa91UmCrjGAkOSQH9q9e8RvhI0dDgQJAAnc15hlxarazTbGm+zaHyUtAFgnbCjzFxEKM9KMbV8TKEVvU0pMkGCZbNGfLfVKo90QnoBNBMLz+Zedg0g5KzqsjtmnRVMnsEVdcWyH1Gl7jwDmkHquAWWkM/G6+ZvuppgDBBATWXz3CLxDfLlBARKeA4mvRzTD+0YEx6wLfI0RH2Mf6pt+U+XoVXW8m1MiDUUtAwk0n/PEeqqp0Szf/BZGgKzRmihaYEE3p6bsDZNmG0oN2zYlJ3e1DlzPNSnG3UWAEOuJZn5qVNazvkTut9py36RQ5qjpK9CSXJYuvzWysM9eexp9kt5DcPzs3g3NO7tO00p4Ct1APrcMeXs+aQoazxsM8hvVcQPnfN04=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63967a97-de86-402d-b81c-08dc7eae1b73
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d1ec267-2aca-41cc-3b5e-08dc7eae0faf
 X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5409.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 00:35:43.0478
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 00:35:23.3935
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SqRW4Hvo321tHpmVsIcRPJTuAgOOUuN5zH6BqPxasK2c39MFdWHdStQa02N0N0ekmdDOz6Yv2kjzKQsNBJVSKRYWUAdftXEimfLruOFtUDQ=
+X-MS-Exchange-CrossTenant-UserPrincipalName: dV8yj/BywYxe/qGS9O/h3ESO7NN8D2q/r6RDf+Qv9A6ywoUNmQDkb+SPQsayNdwjTz4qk5TVwylc0swijCEflV+tBregw8d8KlFL2BDaABc=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6510
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
@@ -168,60 +165,383 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 susp
  adultscore=0 bulkscore=0 malwarescore=0 mlxscore=0 spamscore=0
  mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2405010000 definitions=main-2405280003
-X-Proofpoint-ORIG-GUID: ihoVAeVCkfAGiLw6R_YXFoTS08YLuPpi
-X-Proofpoint-GUID: ihoVAeVCkfAGiLw6R_YXFoTS08YLuPpi
+X-Proofpoint-GUID: WgRIWoUafPWOeK8ZTZUGmRRXoFLVLnxc
+X-Proofpoint-ORIG-GUID: WgRIWoUafPWOeK8ZTZUGmRRXoFLVLnxc
 
-Define tif_resched() to serve as selector for the specific
-need-resched flag: with tif_resched() mapping to TIF_NEED_RESCHED
-or to TIF_NEED_RESCHED_LAZY.
+Hi,
 
-For !CONFIG_PREEMPT_AUTO, tif_resched() always evaluates
-to TIF_NEED_RESCHED, preserving existing scheduling behaviour.
+This series adds a new scheduling model PREEMPT_AUTO, which like
+PREEMPT_DYNAMIC allows dynamic switching between a none/voluntary/full
+preemption model. Unlike, PREEMPT_DYNAMIC, it doesn't depend
+on explicit preemption points for the voluntary models.
 
-Cc: Peter Ziljstra <peterz@infradead.org>
-Originally-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/lkml/87jzshhexi.ffs@tglx/
-Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
----
- include/linux/thread_info.h | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+The series is based on Thomas' original proposal which he outlined
+in [1], [2] and in his PoC [3].
 
-diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
-index 06e13e7acbe2..65e5beedc915 100644
---- a/include/linux/thread_info.h
-+++ b/include/linux/thread_info.h
-@@ -71,6 +71,31 @@ enum syscall_work_bit {
- #define _TIF_NEED_RESCHED_LAZY _TIF_NEED_RESCHED
- #endif
+v2 mostly reworks v1, with one of the main changes having less
+noisy need-resched-lazy related interfaces.
+More details in the changelog below.
+
+The v1 of the series is at [4] and the RFC at [5].
+
+Design
+==
+
+PREEMPT_AUTO works by always enabling CONFIG_PREEMPTION (and thus
+PREEMPT_COUNT). This means that the scheduler can always safely
+preempt. (This is identical to CONFIG_PREEMPT.)
+
+Having that, the next step is to make the rescheduling policy dependent
+on the chosen scheduling model. Currently, the scheduler uses a single
+need-resched bit (TIF_NEED_RESCHED) which it uses to state that a
+reschedule is needed.
+PREEMPT_AUTO extends this by adding an additional need-resched bit
+(TIF_NEED_RESCHED_LAZY) which, with TIF_NEED_RESCHED now allows the
+scheduler to express two kinds of rescheduling intent: schedule at
+the earliest opportunity (TIF_NEED_RESCHED), or express a need for
+rescheduling while allowing the task on the runqueue to run to
+timeslice completion (TIF_NEED_RESCHED_LAZY).
+
+The scheduler decides which need-resched bits are chosen based on
+the preemption model in use:
+
+	       TIF_NEED_RESCHED        TIF_NEED_RESCHED_LAZY
+
+none		never   		always [*]
+voluntary       higher sched class	other tasks [*]
+full 		always                  never
+
+[*] some details elided.
+
+The last part of the puzzle is, when does preemption happen, or
+alternately stated, when are the need-resched bits checked:
+
+                 exit-to-user    ret-to-kernel    preempt_count()
+
+NEED_RESCHED_LAZY     Y               N                N
+NEED_RESCHED          Y               Y                Y
+
+Using NEED_RESCHED_LAZY allows for run-to-completion semantics when
+none/voluntary preemption policies are in effect. And eager semantics
+under full preemption.
+
+In addition, since this is driven purely by the scheduler (not
+depending on cond_resched() placement and the like), there is enough
+flexibility in the scheduler to cope with edge cases -- ex. a kernel
+task not relinquishing CPU under NEED_RESCHED_LAZY can be handled by
+simply upgrading to a full NEED_RESCHED which can use more coercive
+instruments like resched IPI to induce a context-switch.
+
+Performance
+==
+The performance in the basic tests (perf bench sched messaging, kernbench,
+cyclictest) matches or improves what we see under PREEMPT_DYNAMIC.
+(See patches 
+  "sched: support preempt=none under PREEMPT_AUTO"
+  "sched: support preempt=full under PREEMPT_AUTO"
+  "sched: handle preempt=voluntary under PREEMPT_AUTO")
+
+For a macro test, a colleague in Oracle's Exadata team tried two
+OLTP benchmarks (on a 5.4.17 based Oracle kernel, with the v1 series
+backported.)
+
+In both tests the data was cached on remote nodes (cells), and the
+database nodes (compute) served client queries, with clients being
+local in the first test and remote in the second.
+
+Compute node: Oracle E5, dual socket AMD EPYC 9J14, KVM guest (380 CPUs)
+Cells (11 nodes): Oracle E5, dual socket AMD EPYC 9334, 128 CPUs
+
+
+				  PREEMPT_VOLUNTARY                        PREEMPT_AUTO
+				                                        (preempt=voluntary)          
+                              ==============================      =============================
+                      clients  throughput    cpu-usage            throughput     cpu-usage         Gain
+                               (tx/min)    (utime %/stime %)      (tx/min)    (utime %/stime %)
+		      -------  ----------  -----------------      ----------  -----------------   -------
+				                                            
+
+  OLTP                  384     9,315,653     25/ 6                9,253,252       25/ 6            -0.7%
+  benchmark	       1536    13,177,565     50/10               13,657,306       50/10            +3.6%
+ (local clients)       3456    14,063,017     63/12               14,179,706       64/12            +0.8%
+
+
+  OLTP                   96     8,973,985     17/ 2                8,924,926       17/ 2            -0.5%
+  benchmark	        384    22,577,254     60/ 8               22,211,419       59/ 8            -1.6%
+ (remote clients,      2304    25,882,857     82/11               25,536,100       82/11            -1.3%
+  90/10 RW ratio)
+
+
+(Both sets of tests have a fair amount of NW traffic since the query
+tables etc are cached on the cells. Additionally, the first set,
+given the local clients, stress the scheduler a bit more than the
+second.)
+
+The comparative performance for both the tests is fairly close,
+more or less within a margin of error.
+
+Raghu KT also tested v1 on an AMD Milan (2 node, 256 cpu,  512GB RAM):
+
+"
+ a) Base kernel (6.7),
+ b) v1, PREEMPT_AUTO, preempt=voluntary
+ c) v1, PREEMPT_DYNAMIC, preempt=voluntary
+ d) v1, PREEMPT_AUTO=y, preempt=voluntary, PREEMPT_RCU = y
  
-+typedef enum {
-+	RESCHED_NOW = 0,
-+	RESCHED_LAZY = 1,
-+} resched_t;
-+
-+/*
-+ * tif_resched(r) maps to TIF_NEED_RESCHED[_LAZY] with CONFIG_PREEMPT_AUTO.
-+ *
-+ * For !CONFIG_PREEMPT_AUTO, both tif_resched(RESCHED_NOW) and
-+ * tif_resched(RESCHED_LAZY) reduce to the same value (TIF_NEED_RESCHED)
-+ * leaving any scheduling behaviour unchanged.
-+ */
-+static __always_inline int tif_resched(resched_t rs)
-+{
-+	if (IS_ENABLED(CONFIG_PREEMPT_AUTO))
-+		return (rs == RESCHED_NOW) ? TIF_NEED_RESCHED : TIF_NEED_RESCHED_LAZY;
-+	else
-+		return TIF_NEED_RESCHED;
-+}
-+
-+static __always_inline int _tif_resched(resched_t rs)
-+{
-+	return 1 << tif_resched(rs);
-+}
-+
- #ifdef __KERNEL__
+ Workloads I tested and their %gain,
+                    case b           case c       case d
+ NAS                +2.7%              +1.9%         +2.1%
+ Hashjoin,          +0.0%              +0.0%         +0.0%
+ Graph500,          -6.0%              +0.0%         +0.0%
+ XSBench            +1.7%              +0.0%         +1.2%
  
- #ifndef arch_set_restart_data
+ (Note about the Graph500 numbers at [8].)
+ 
+ Did kernbench etc test from Mel's mmtests suite also. Did not notice
+ much difference.
+"
+
+One case where there is a significant performance drop is on powerpc,
+seen running hackbench on a 320 core system (a test on a smaller system is
+fine.) In theory there's no reason for this to only happen on powerpc
+since most of the code is common, but I haven't been able to reproduce
+it on x86 so far.
+
+All in all, I think the tests above show that this scheduling model has legs.
+However, the none/voluntary models under PREEMPT_AUTO are conceptually
+different enough from the current none/voluntary models that there
+likely are workloads where performance would be subpar. That needs more
+extensive testing to figure out the weak points.
+
+
+Series layout
+==
+
+Patches 1,2 
+ "sched/core: Move preempt_model_*() helpers from sched.h to preempt.h"
+ "sched/core: Drop spinlocks on contention iff kernel is preemptible"
+condition spin_needbreak() on the dynamic preempt_model_*().
+Not really required but a useful bugfix for PREEMPT_DYNAMIC and PREEMPT_AUTO.
+
+Patch 3
+  "sched: make test_*_tsk_thread_flag() return bool"
+is a minor cleanup.
+
+Patch 4,
+  "preempt: introduce CONFIG_PREEMPT_AUTO"
+introduces the new scheduling model.
+
+Patch 5-7,
+ "thread_info: selector for TIF_NEED_RESCHED[_LAZY]"
+ "thread_info: define __tif_need_resched(resched_t)"
+ "sched: define *_tsk_need_resched_lazy() helpers"
+
+introduce new thread_info/task helper interfaces or make changes to
+pre-existing ones that will be used in the rest of the series.
+
+Patches 8-11,
+  "entry: handle lazy rescheduling at user-exit"
+  "entry/kvm: handle lazy rescheduling at guest-entry"
+  "entry: irqentry_exit only preempts for TIF_NEED_RESCHED"
+  "sched: __schedule_loop() doesn't need to check for need_resched_lazy()"
+
+make changes/document the rescheduling points.
+
+Patches 12-13,
+  "sched: separate PREEMPT_DYNAMIC config logic"
+  "sched: allow runtime config for PREEMPT_AUTO"
+
+reuse the PREEMPT_DYNAMIC runtime configuration logic.
+
+Patch 14-18,
+
+  "rcu: limit PREEMPT_RCU to full preemption under PREEMPT_AUTO"
+  "rcu: fix header guard for rcu_all_qs()"
+  "preempt,rcu: warn on PREEMPT_RCU=n, preempt=full"
+  "rcu: handle quiescent states for PREEMPT_RCU=n, PREEMPT_COUNT=y"
+  "rcu: force context-switch for PREEMPT_RCU=n, PREEMPT_COUNT=y"
+
+add changes needed for RCU.
+
+Patch 19-20,
+  "x86/thread_info: define TIF_NEED_RESCHED_LAZY"
+  "powerpc: add support for PREEMPT_AUTO"
+
+adds x86, powerpc support. 
+
+Patches 21-24,
+  "sched: prepare for lazy rescheduling in resched_curr()"
+  "sched: default preemption policy for PREEMPT_AUTO"
+  "sched: handle idle preemption for PREEMPT_AUTO"
+  "sched: schedule eagerly in resched_cpu()"
+
+are preparatory patches for adding PREEMPT_AUTO. Among other things
+they add the default need-resched policy for !PREEMPT_AUTO,
+PREEMPT_AUTO, and the idle task.
+
+Patches 25-26,
+  "sched/fair: refactor update_curr(), entity_tick()",
+  "sched/fair: handle tick expiry under lazy preemption"
+
+handle the 'hog' problem, where a kernel task does not voluntarily
+schedule out.
+
+And, finally patches 27-29,
+  "sched: support preempt=none under PREEMPT_AUTO"
+  "sched: support preempt=full under PREEMPT_AUTO"
+  "sched: handle preempt=voluntary under PREEMPT_AUTO"
+
+add support for the three preemption models.
+
+Patch 30-33,
+  "sched: latency warn for TIF_NEED_RESCHED_LAZY",
+  "tracing: support lazy resched",
+  "Documentation: tracing: add TIF_NEED_RESCHED_LAZY",
+  "osnoise: handle quiescent states for PREEMPT_RCU=n, PREEMPTION=y"
+
+handles remaining bits and pieces to do with TIF_NEED_RESCHED_LAZY.
+
+And, finally patches 34-35
+
+  "kconfig: decompose ARCH_NO_PREEMPT"
+  "arch: decompose ARCH_NO_PREEMPT"
+
+decompose ARCH_NO_PREEMPT which might make it easier to support
+CONFIG_PREEMPTION on some architectures.
+
+
+Changelog
+==
+v2: rebased to v6.9, addreses review comments, folds some other patches.
+
+ - the lazy interfaces are less noisy now: the current interfaces stay
+   unchanged so non-scheduler code doesn't need to change.
+   This also means that the lazy preemption becomes a scheduler detail
+   which works well with the core idea of lazy scheduling.
+   (Mark Rutland, Thomas Gleixner)
+
+ - preempt=none model now respects the leftmost deadline (Juri Lelli)
+ - Add need-resched flag combination state in tracing headers (Steven Rostedt)
+ - Decompose ARCH_NO_PREEMPT
+ - Changes for RCU (and TASKS_RCU) will go in separately [6]
+
+ - spin_needbreak() should be conditioned on preempt_model_*() at
+   runtime (patches from Sean Christopherson [7])
+ - powerpc support from Shrikanth Hegde
+
+RFC:
+ - Addresses review comments and is generally a more focused
+   version of the RFC.
+ - Lots of code reorganization.
+ - Bugfixes all over.
+ - need_resched() now only checks for TIF_NEED_RESCHED instead
+   of TIF_NEED_RESCHED|TIF_NEED_RESCHED_LAZY.
+ - set_nr_if_polling() now does not check for TIF_NEED_RESCHED_LAZY.
+ - Tighten idle related checks.
+ - RCU changes to force context-switches when a quiescent state is
+   urgently needed.
+ - Does not break live-patching anymore
+
+Also at: github.com/terminus/linux preempt-v2
+
+Please review.
+
+Thanks
+Ankur
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Raghavendra K T <raghavendra.kt@amd.com>
+Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
+
+[1] https://lore.kernel.org/lkml/87cyyfxd4k.ffs@tglx/
+[2] https://lore.kernel.org/lkml/87led2wdj0.ffs@tglx/
+[3] https://lore.kernel.org/lkml/87jzshhexi.ffs@tglx/
+[4] https://lore.kernel.org/lkml/20240213055554.1802415-1-ankur.a.arora@oracle.com/
+[5] https://lore.kernel.org/lkml/20231107215742.363031-1-ankur.a.arora@oracle.com/
+[6] https://lore.kernel.org/lkml/20240507093530.3043-1-urezki@gmail.com/
+[7] https://lore.kernel.org/lkml/20240312193911.1796717-1-seanjc@google.com/
+[8] https://lore.kernel.org/lkml/af122806-8325-4302-991f-9c0dc1857bfe@amd.com/
+[9] https://lore.kernel.org/lkml/17cc54c4-2e75-4964-9155-84db081ce209@linux.ibm.com/
+
+Ankur Arora (32):
+  sched: make test_*_tsk_thread_flag() return bool
+  preempt: introduce CONFIG_PREEMPT_AUTO
+  thread_info: selector for TIF_NEED_RESCHED[_LAZY]
+  thread_info: define __tif_need_resched(resched_t)
+  sched: define *_tsk_need_resched_lazy() helpers
+  entry: handle lazy rescheduling at user-exit
+  entry/kvm: handle lazy rescheduling at guest-entry
+  entry: irqentry_exit only preempts for TIF_NEED_RESCHED
+  sched: __schedule_loop() doesn't need to check for need_resched_lazy()
+  sched: separate PREEMPT_DYNAMIC config logic
+  sched: allow runtime config for PREEMPT_AUTO
+  rcu: limit PREEMPT_RCU to full preemption under PREEMPT_AUTO
+  rcu: fix header guard for rcu_all_qs()
+  preempt,rcu: warn on PREEMPT_RCU=n, preempt=full
+  rcu: handle quiescent states for PREEMPT_RCU=n, PREEMPT_COUNT=y
+  rcu: force context-switch for PREEMPT_RCU=n, PREEMPT_COUNT=y
+  x86/thread_info: define TIF_NEED_RESCHED_LAZY
+  sched: prepare for lazy rescheduling in resched_curr()
+  sched: default preemption policy for PREEMPT_AUTO
+  sched: handle idle preemption for PREEMPT_AUTO
+  sched: schedule eagerly in resched_cpu()
+  sched/fair: refactor update_curr(), entity_tick()
+  sched/fair: handle tick expiry under lazy preemption
+  sched: support preempt=none under PREEMPT_AUTO
+  sched: support preempt=full under PREEMPT_AUTO
+  sched: handle preempt=voluntary under PREEMPT_AUTO
+  sched: latency warn for TIF_NEED_RESCHED_LAZY
+  tracing: support lazy resched
+  Documentation: tracing: add TIF_NEED_RESCHED_LAZY
+  osnoise: handle quiescent states for PREEMPT_RCU=n, PREEMPTION=y
+  kconfig: decompose ARCH_NO_PREEMPT
+  arch: decompose ARCH_NO_PREEMPT
+
+Sean Christopherson (2):
+  sched/core: Move preempt_model_*() helpers from sched.h to preempt.h
+  sched/core: Drop spinlocks on contention iff kernel is preemptible
+
+Shrikanth Hegde (1):
+  powerpc: add support for PREEMPT_AUTO
+
+ .../admin-guide/kernel-parameters.txt         |   5 +-
+ Documentation/trace/ftrace.rst                |   6 +-
+ arch/Kconfig                                  |   7 +
+ arch/alpha/Kconfig                            |   3 +-
+ arch/hexagon/Kconfig                          |   3 +-
+ arch/m68k/Kconfig                             |   3 +-
+ arch/powerpc/Kconfig                          |   1 +
+ arch/powerpc/include/asm/thread_info.h        |   5 +-
+ arch/powerpc/kernel/interrupt.c               |   5 +-
+ arch/um/Kconfig                               |   3 +-
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/include/asm/thread_info.h            |   6 +-
+ include/linux/entry-common.h                  |   2 +-
+ include/linux/entry-kvm.h                     |   2 +-
+ include/linux/preempt.h                       |  43 ++-
+ include/linux/rcutree.h                       |   2 +-
+ include/linux/sched.h                         | 101 +++---
+ include/linux/spinlock.h                      |  14 +-
+ include/linux/thread_info.h                   |  71 +++-
+ include/linux/trace_events.h                  |   6 +-
+ init/Makefile                                 |   1 +
+ kernel/Kconfig.preempt                        |  37 ++-
+ kernel/entry/common.c                         |  16 +-
+ kernel/entry/kvm.c                            |   4 +-
+ kernel/rcu/Kconfig                            |   2 +-
+ kernel/rcu/tree.c                             |  13 +-
+ kernel/rcu/tree_plugin.h                      |  11 +-
+ kernel/sched/core.c                           | 311 ++++++++++++------
+ kernel/sched/deadline.c                       |   9 +-
+ kernel/sched/debug.c                          |  13 +-
+ kernel/sched/fair.c                           |  56 ++--
+ kernel/sched/rt.c                             |   6 +-
+ kernel/sched/sched.h                          |  27 +-
+ kernel/trace/trace.c                          |  30 +-
+ kernel/trace/trace_osnoise.c                  |  22 +-
+ kernel/trace/trace_output.c                   |  16 +-
+ 36 files changed, 598 insertions(+), 265 deletions(-)
+
 -- 
 2.31.1
 
