@@ -1,73 +1,41 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7133F172773
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0DDA17084F;
+	Tue, 28 May 2024 15:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716908564; cv=none; b=mcPh+ONhYcyLctnOkcXnbLTaNjaEnsbJo4z2URDuVIqXNLK32u5ZDjjgjBIaZRL7sRh7qaxHf/to+FeWOQTFMoS3pg2CbBoiAzX409DnnfQsnH6xXcWzuqEldzzqvdxcGjzO9tujxeY8fj1OmjIRdyy2B1wKxoocJsGjaWWHeAE=
+	t=1716908639; cv=none; b=phnep9cKzLemFFSJsBfnynU23LcwXdhIVtRn4auZrFBIvqfR29wKg19JOjpPtqPukSnNpmM+dyA18Hvkq0NAKtt9SvsbCaaHH3eXpzi9gJlTc5bLBAmXN37BLiRjqJxdTa1kzChxaX1MLXNTWo9gdKcWdWDqKe5MK1Hs3Mf213o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716908564; c=relaxed/simple;
-	bh=RE9bI6ZUEcvSqXhSN4cyLhZopUW7FnBxeJgo6kcpEXo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W7fYUuARAZY812vq68KXaSXXNHYrDVgxHdLAboOMu5sEqzEE2Bah/ko80ye3rvcAbtRh40bVqOEuEXJAciGg1pEvh83JnBBDSxAvaQTSmzt97pQ7J/xkdOGLbEnUMpqfpmQ/3BJSchj5i0kvqoKfOnA2G56pJRGhRIH3iod7OAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JJSygCKf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JJSygCKf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716908561;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MSjEvbqNmIrlRH+lx8idqnWZR1BGIt78ZUEpsZ7x8DA=;
-	b=JJSygCKfJs6NI6amubFVlxx/kA3eDlz9qFOKZe7r5ndNfOY91vmdZM4nbNKK4ibgWqf0Os
-	epjBC+6uA1Sk9V3mN6kH/LEofWw0ozpiRT4AewEXVgIefR/foYI0Kk5ExlKLoJkx4Jsv0/
-	7xHCYIHeXMB2CMhzB+P4IofFCVv586o=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-683-7K0OU6OjOIudfo685XBM9A-1; Tue,
- 28 May 2024 11:02:36 -0400
-X-MC-Unique: 7K0OU6OjOIudfo685XBM9A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ADB5A1C0512D;
-	Tue, 28 May 2024 15:02:35 +0000 (UTC)
-Received: from ksundara-mac.redhat.com (unknown [10.74.17.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C2DAC286E;
-	Tue, 28 May 2024 15:02:28 +0000 (UTC)
-From: Karthik Sundaravel <ksundara@redhat.com>
-To: jesse.brandeburg@intel.com,
-	wojciech.drewek@intel.com,
-	sumang@marvell.com,
-	jacob.e.keller@intel.com,
-	anthony.l.nguyen@intel.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	intel-wired-lan@lists.osuosl.org,
+	s=arc-20240116; t=1716908639; c=relaxed/simple;
+	bh=IqXn63ATSMk8dqT8udNaBaPif6MJcisz7HDxf9hrH4o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OvVh9AhqlBcuijCeFOs5qxGdpPNuvuxWYFS2tPhOr/BauNCXX/et+FbkUGESSD5Eoo7qQreEetw08A8qYYdUHsx+WLq4WvUbCpqkdCmMvh+LeT3/nhwyAt+z3sn7DBcQI234Spgd61iPaGc9KCs+6B8qw/OCtFJpPkED4OWz+7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.08,195,1712588400"; 
+   d="scan'208";a="205944517"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 29 May 2024 00:03:49 +0900
+Received: from renesas-deb12.cephei.uk (unknown [10.226.93.69])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 7FB73400CF19;
+	Wed, 29 May 2024 00:03:44 +0900 (JST)
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
 	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	horms@kernel.org
-Cc: pmenzel@molgen.mpg.de,
-	jiri@resnulli.us,
-	michal.swiatkowski@linux.intel.com,
-	bcreeley@amd.com,
-	rjarry@redhat.com,
-	aharivel@redhat.com,
-	vchundur@redhat.com,
-	ksundara@redhat.com,
-	cfontain@redhat.com
-Subject: [PATCH iwl-next v12] ice: Add get/set hw address for VFs using devlink commands
-Date: Tue, 28 May 2024 20:32:13 +0530
-Message-Id: <20240528150213.16771-2-ksundara@redhat.com>
-In-Reply-To: <20240528150213.16771-1-ksundara@redhat.com>
-References: <20240528150213.16771-1-ksundara@redhat.com>
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [net-next PATCH v4 0/7] Improve GbEth performance on Renesas RZ/G2L and related SoCs
+Date: Tue, 28 May 2024 16:03:32 +0100
+Message-Id: <20240528150339.6791-1-paul.barker.ct@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,193 +43,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Changing the MAC address of the VFs is currently unsupported via devlink.
-Add the function handlers to set and get the HW address for the VFs.
+This series aims to improve performance of the GbEth IP in the Renesas
+RZ/G2L SoC family and the RZ/G3S SoC, which use the ravb driver. Along
+the way, we do some refactoring and ensure that napi_complete_done() is
+used in accordance with the NAPI documentation for both GbEth and R-Car
+code paths.
 
-Signed-off-by: Karthik Sundaravel <ksundara@redhat.com>
----
- .../ethernet/intel/ice/devlink/devlink_port.c | 59 ++++++++++++++++++-
- drivers/net/ethernet/intel/ice/ice_sriov.c    | 34 ++++++++---
- drivers/net/ethernet/intel/ice/ice_sriov.h    |  8 +++
- 3 files changed, 91 insertions(+), 10 deletions(-)
+Much of the performance improvement comes from enabling SW IRQ
+Coalescing for all SoCs using the GbEth IP, and NAPI Threaded mode for
+single core SoCs using the GbEth IP. These can be enabled/disabled at
+runtime via sysfs, but our goal is to set sensible defaults which get
+good performance on the affected SoCs.
 
-diff --git a/drivers/net/ethernet/intel/ice/devlink/devlink_port.c b/drivers/net/ethernet/intel/ice/devlink/devlink_port.c
-index c9fbeebf7fb9..00fed5a61d62 100644
---- a/drivers/net/ethernet/intel/ice/devlink/devlink_port.c
-+++ b/drivers/net/ethernet/intel/ice/devlink/devlink_port.c
-@@ -372,6 +372,62 @@ void ice_devlink_destroy_pf_port(struct ice_pf *pf)
- 	devl_port_unregister(&pf->devlink_port);
- }
- 
-+/**
-+ * ice_devlink_port_get_vf_fn_mac - .port_fn_hw_addr_get devlink handler
-+ * @port: devlink port structure
-+ * @hw_addr: MAC address of the port
-+ * @hw_addr_len: length of MAC address
-+ * @extack: extended netdev ack structure
-+ *
-+ * Callback for the devlink .port_fn_hw_addr_get operation
-+ * Return: zero on success or an error code on failure.
-+ */
-+static int ice_devlink_port_get_vf_fn_mac(struct devlink_port *port,
-+					  u8 *hw_addr, int *hw_addr_len,
-+					  struct netlink_ext_ack *extack)
-+{
-+	struct ice_vf *vf = container_of(port, struct ice_vf, devlink_port);
-+
-+	ether_addr_copy(hw_addr, vf->dev_lan_addr);
-+	*hw_addr_len = ETH_ALEN;
-+
-+	return 0;
-+}
-+
-+/**
-+ * ice_devlink_port_set_vf_fn_mac - .port_fn_hw_addr_set devlink handler
-+ * @port: devlink port structure
-+ * @hw_addr: MAC address of the port
-+ * @hw_addr_len: length of MAC address
-+ * @extack: extended netdev ack structure
-+ *
-+ * Callback for the devlink .port_fn_hw_addr_set operation
-+ * Return: zero on success or an error code on failure.
-+ */
-+static int ice_devlink_port_set_vf_fn_mac(struct devlink_port *port,
-+					  const u8 *hw_addr,
-+					  int hw_addr_len,
-+					  struct netlink_ext_ack *extack)
-+
-+{
-+	struct devlink_port_attrs *attrs = &port->attrs;
-+	struct devlink_port_pci_vf_attrs *pci_vf;
-+	struct devlink *devlink = port->devlink;
-+	struct ice_pf *pf;
-+	u16 vf_id;
-+
-+	pf = devlink_priv(devlink);
-+	pci_vf = &attrs->pci_vf;
-+	vf_id = pci_vf->vf;
-+
-+	return __ice_set_vf_mac(pf, vf_id, hw_addr);
-+}
-+
-+static const struct devlink_port_ops ice_devlink_vf_port_ops = {
-+	.port_fn_hw_addr_get = ice_devlink_port_get_vf_fn_mac,
-+	.port_fn_hw_addr_set = ice_devlink_port_set_vf_fn_mac,
-+};
-+
- /**
-  * ice_devlink_create_vf_port - Create a devlink port for this VF
-  * @vf: the VF to create a port for
-@@ -407,7 +463,8 @@ int ice_devlink_create_vf_port(struct ice_vf *vf)
- 	devlink_port_attrs_set(devlink_port, &attrs);
- 	devlink = priv_to_devlink(pf);
- 
--	err = devl_port_register(devlink, devlink_port, vsi->idx);
-+	err = devl_port_register_with_ops(devlink, devlink_port, vsi->idx,
-+					  &ice_devlink_vf_port_ops);
- 	if (err) {
- 		dev_err(dev, "Failed to create devlink port for VF %d, error %d\n",
- 			vf->vf_id, err);
-diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.c b/drivers/net/ethernet/intel/ice/ice_sriov.c
-index 067712f4923f..55ef33208456 100644
---- a/drivers/net/ethernet/intel/ice/ice_sriov.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sriov.c
-@@ -1416,21 +1416,23 @@ ice_get_vf_cfg(struct net_device *netdev, int vf_id, struct ifla_vf_info *ivi)
- }
- 
- /**
-- * ice_set_vf_mac
-- * @netdev: network interface device structure
-+ * __ice_set_vf_mac - program VF MAC address
-+ * @pf: PF to be configure
-  * @vf_id: VF identifier
-  * @mac: MAC address
-  *
-  * program VF MAC address
-+ * Return: zero on success or an error code on failure
-  */
--int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
-+int __ice_set_vf_mac(struct ice_pf *pf, u16 vf_id, const u8 *mac)
- {
--	struct ice_pf *pf = ice_netdev_to_pf(netdev);
-+	struct device *dev;
- 	struct ice_vf *vf;
- 	int ret;
- 
-+	dev = ice_pf_to_dev(pf);
- 	if (is_multicast_ether_addr(mac)) {
--		netdev_err(netdev, "%pM not a valid unicast address\n", mac);
-+		dev_err(dev, "%pM not a valid unicast address\n", mac);
- 		return -EINVAL;
- 	}
- 
-@@ -1459,13 +1461,13 @@ int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
- 	if (is_zero_ether_addr(mac)) {
- 		/* VF will send VIRTCHNL_OP_ADD_ETH_ADDR message with its MAC */
- 		vf->pf_set_mac = false;
--		netdev_info(netdev, "Removing MAC on VF %d. VF driver will be reinitialized\n",
--			    vf->vf_id);
-+		dev_info(dev, "Removing MAC on VF %d. VF driver will be reinitialized\n",
-+			 vf->vf_id);
- 	} else {
- 		/* PF will add MAC rule for the VF */
- 		vf->pf_set_mac = true;
--		netdev_info(netdev, "Setting MAC %pM on VF %d. VF driver will be reinitialized\n",
--			    mac, vf_id);
-+		dev_info(dev, "Setting MAC %pM on VF %d. VF driver will be reinitialized\n",
-+			 mac, vf_id);
- 	}
- 
- 	ice_reset_vf(vf, ICE_VF_RESET_NOTIFY);
-@@ -1476,6 +1478,20 @@ int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
- 	return ret;
- }
- 
-+/**
-+ * ice_set_vf_mac - .ndo_set_vf_mac handler
-+ * @netdev: network interface device structure
-+ * @vf_id: VF identifier
-+ * @mac: MAC address
-+ *
-+ * program VF MAC address
-+ * Return: zero on success or an error code on failure
-+ */
-+int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
-+{
-+	return __ice_set_vf_mac(ice_netdev_to_pf(netdev), vf_id, mac);
-+}
-+
- /**
-  * ice_set_vf_trust
-  * @netdev: network interface device structure
-diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.h b/drivers/net/ethernet/intel/ice/ice_sriov.h
-index 8f22313474d6..96549ca5c52c 100644
---- a/drivers/net/ethernet/intel/ice/ice_sriov.h
-+++ b/drivers/net/ethernet/intel/ice/ice_sriov.h
-@@ -28,6 +28,7 @@
- #ifdef CONFIG_PCI_IOV
- void ice_process_vflr_event(struct ice_pf *pf);
- int ice_sriov_configure(struct pci_dev *pdev, int num_vfs);
-+int __ice_set_vf_mac(struct ice_pf *pf, u16 vf_id, const u8 *mac);
- int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac);
- int
- ice_get_vf_cfg(struct net_device *netdev, int vf_id, struct ifla_vf_info *ivi);
-@@ -80,6 +81,13 @@ ice_sriov_configure(struct pci_dev __always_unused *pdev,
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int
-+__ice_set_vf_mac(struct ice_pf __always_unused *pf,
-+		 u16 __always_unused vf_id, const u8 __always_unused *mac)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline int
- ice_set_vf_mac(struct net_device __always_unused *netdev,
- 	       int __always_unused vf_id, u8 __always_unused *mac)
+The rest of the performance improvement comes from using a page pool to
+allocate RX buffers, and reducing the allocation size from >8kB to 2kB.
+
+The overall performance impact of this patch series seen in testing with
+iperf3 is as follows (see patches 5-7 for more detailed results):
+  * RZ/G2L:
+    * TCP TX: +1.8% bandwidth
+    * TCP RX: +1% bandwidth at 47% less CPU load
+    * UDP RX: +1% bandwidth at 26% less CPU load
+
+  * RZ/G2UL:
+    * TCP TX: +37% bandwidth
+    * TCP RX: +43% bandwidth
+    * UDP TX: -8% bandwidth
+    * UDP RX: +32500% bandwidth (!)
+
+  * RZ/G3S:
+    * TCP TX: +25% bandwidth
+    * TCP RX: +76% bandwidth
+    * UDP TX: -9% bandwidth
+    * UDP RX: +37900% bandwidth (!)
+
+  * RZ/Five:
+    * TCP TX: +18% bandwidth
+    * TCP RX: +212% bandwidth
+    * UDP TX: +2% bandwidth
+    * UDP RX: +inf bandwidth (test no longer crashes)
+
+There is no significant impact on bandwidth or CPU load in testing on
+RZ/G2H or R-Car M3N.
+
+Fixing the crash in UDP RX testing for RZ/Five is a cumulative effect of
+patches 1, 2, 5 & 6 so this is very difficult to break out as a bugfix
+for backporting.
+
+Changes v3->v4:
+  * Dependency patches have merged so this is no longer an RFC.
+  * Fixed update of stats->rx_packets.
+  * Simplified refactoring following feedback from Niklas and Sergey.
+  * Renamed needs_irq_coalesce -> coalesce_irqs.
+  * Used a separate page pool for each RX queue.
+  * Passed struct ravb_rx_desc to ravb_alloc_rx_buffer() so that we can
+    simplify the calling function.
+  * Explained the calculation of rx_desc->ds_cc.
+  * Added handling of nonlinear SKBs in ravb_rx_csum_gbeth().
+  * Used Niklas' suggested commit message for patch 2/7.
+  * Added Sergey's Reviewed-by tags to patches 5/7 and 6/7.
+
+Changes v2->v3:
+  * Incorporated feedback on RFC v2 from Sergey.
+  * Split out bugfixes and rebased. This changed the order of what was
+    the first 5 patches of v2 and things look a little different so I've
+    not picked up Reviewed-by tags from v2.
+  * Further refactoring and tidy up of RX ring refill and
+    ravb_rx_gbeth().
+  * Switched to using a page pool to allocate RX buffers.
+  * Re-tested and provided updated performance figures.
+
+Changes v1->v2:
+  * Marked as RFC as the series depends on unmerged patches.
+  * Refactored R-Car code paths as well as GbEth code paths.
+  * Updated references to the patches this series depends on.
+
+Paul Barker (7):
+  net: ravb: Simplify poll & receive functions
+  net: ravb: Consider busypolling status when re-enabling interrupts
+  net: ravb: Refactor RX ring refill
+  net: ravb: Refactor GbEth RX code path
+  net: ravb: Enable SW IRQ Coalescing for GbEth
+  net: ravb: Use NAPI threaded mode on 1-core CPUs with GbEth IP
+  net: ravb: Allocate RX buffers via page pool
+
+ drivers/net/ethernet/renesas/ravb.h      |  13 +-
+ drivers/net/ethernet/renesas/ravb_main.c | 459 ++++++++++++-----------
+ 2 files changed, 247 insertions(+), 225 deletions(-)
+
+
+base-commit: 5233a55a5254ea38dcdd8d836a0f9ee886c3df51
 -- 
-2.39.3 (Apple Git-146)
+2.39.2
 
