@@ -1,47 +1,47 @@
 Received: from e2i187.smtp2go.com (e2i187.smtp2go.com [103.2.140.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254F316C444
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 10:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1962816C693
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 10:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.140.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716891391; cv=none; b=MvckG/L6P1phNTqVyEqIWEgzvL5QfkPXZIgmm6w+7C2W4ix1vSQP+oCBgWWAJgWYMzzeE3yaHfm/cGyuxSKdJN8lNtrMPWfN0Lghmg5pZC4qxLc8z1lFJt4xN4vPrUcKV9mbhMWyZMzUeMb9bCGEtxTziLVugIcA6hWNz6b5Nbg=
+	t=1716891393; cv=none; b=RzFlgcJ5izu/AY0fKGfyZty1T082wMy5pUbd0pkv9RGrNo8MdnaCaW0TeTQIELjv1uL8Qx05Svm+tkOTcpV7AUi9tlJfbpXD6OpigDv58Ru1V6yzUd7wjvwMATO6kG4Ei+qAyIHRyP9VYi85bcr50Oo/KIQegFH2/0WuKpB+Aio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716891391; c=relaxed/simple;
-	bh=6oC0Iuu393khyKlVI9xXwwcZLOlRA27Y75uOzGSXvFs=;
+	s=arc-20240116; t=1716891393; c=relaxed/simple;
+	bh=FxzUFMdru4osktFl89QiRJttKIRmQcse+pcZI7VhhWo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jGHiccIMIip6JDdUnYJmsR+ZRm4DASfjs9+wSNuvzyV8xnFv91aF6y07SioSsrzdgqflq2skZyUkUJHVGPGvgeRve+jrumNwIoAsvwV0HOeuDmjSdvTOXYWDiDl2R4MJvKYgB/I/5dRTCX0b1dCP745J3AMSc9BTMd5gT0r+av4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=em1174574.asem.it; dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b=zzZR+sPb; dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b=G6unpIZK; arc=none smtp.client-ip=103.2.140.187
+	 MIME-Version; b=p9W+xIZ4G9rhMFTjKR1wuWPCFeADV7wg4t8YABv8h8uFjuCa5z/NHvqLKGEMLod7nBWjonkT8cWMKjIQUDmidk2f2pf1BjXvim1V6beAn6obfi0wegQes8B5UgtUVGfU4pJ0VlvFTJ/Gg3Wje1Pois7YL1ea7mfa3vv6Hp242Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=em1174574.asem.it; dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b=0NvcXBhC; dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b=Ilk39Xq+; arc=none smtp.client-ip=103.2.140.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174574.asem.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b="zzZR+sPb";
-	dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b="G6unpIZK"
+	dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b="0NvcXBhC";
+	dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b="Ilk39Xq+"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=smtpcorp.com; s=a1-4; h=Feedback-ID:X-Smtpcorp-Track:Message-Id:Date:
 	Subject:To:From:Reply-To:Sender:List-Unsubscribe:List-Unsubscribe-Post;
-	bh=AuGU9ww0mJkm0U99Qi0nDaMfje+KtX6V7T19eN68Ao0=; b=zzZR+sPbpPQPNFMNMZTPJRThQC
-	15oEG/RwZF6xyrqmNpMhGjOUKTmplfdwMjKOrIRDZ0lSWIa8qBzWHh9kczc34Dcus1EXNuwzvZL5k
-	7VRAi28HSSwhdtrLpTZ+Arlx9MEIRqZ4zIcBIqZpQBYe7SLD22knZYH91n3DpfSJFBgBnCv9IzmkO
-	5ZarTe847dFfL0BVf+YIN4/Av7tjNcEnLM41C06besnY0zFvayA/14tDU7kk0QmVaIgiD2WyaOTmZ
-	ca6S/UjbVbGDVIamxG4wTjH3f35nIvggr6SzVzPi9xgyWTzMZ/p9RSN7rJCxI5fKgmvhxGQ2MvQB8
-	4d+3vZiA==;
+	bh=WTJGKszru6/8OXc1XDAhsOOFXU+bGmBkM3qo5s6aOGI=; b=0NvcXBhCHgX0qY4z9UKfyayV8r
+	QCi1ONHSZVwV4Gf78b0Xv2zbaggrizIjPneHx6XVRBnYKfbW9J5rS9tPZqBGWrtzKBR+cOwRpx4u4
+	Pi9a7ThkmC3xycpdo+tsoG7Xoxo/4wHIXYU7dUVnY3cNLAQ9IYUy+OrEw4ITGWvUzA1SppwpJdCJe
+	BHJAkYAoTUVggydq08wOtAV1g78upWFk4ME7bmkYBZMe8JI/gsB5NTXYxsnI1Xg2V/l3Vba4H3gzs
+	Bll/fDwCZ9wyuFhET3U0OMS1f+TY+x5rTDjiBuN/W6CkEzBstdpDu+TrAMoAIGmvDuS0Pc3DkGrAB
+	aSKQBS0w==;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it;
- i=@asem.it; q=dns/txt; s=s1174574; t=1716891390; h=from : subject : to
- : message-id : date; bh=AuGU9ww0mJkm0U99Qi0nDaMfje+KtX6V7T19eN68Ao0=;
- b=G6unpIZKoMaSVydN3Rfi9U56z6w8kkM3w142CTjsNnyofbGCmyGhlWxh79PHhLeoBNVe3
- VZGYYGf8K8fG6ORNkjP4KfXN6byOqJEErX83hb4fQJF+ZWRt2YE6UHOyW7XQkjfzFy0cBHS
- VizGf3m4Cm3xQbVhDY/GvnHI6IHpJ/nxl3ybdsrLEsqa/h6q11DFaS3zr49XWeTLufqZWiC
- 7637wLOIQgwvVVE1Mluky2g+pEEzs66+V+z6rRP1knqGe6raSdvcKkawcej3UYPzQLHdonN
- 751/FkGzoKDtzS79FWKbyMZ0VPYUhg4S2xzumMTWUksCGvLs2U9cu6/dstXQ==
+ i=@asem.it; q=dns/txt; s=s1174574; t=1716891392; h=from : subject : to
+ : message-id : date; bh=WTJGKszru6/8OXc1XDAhsOOFXU+bGmBkM3qo5s6aOGI=;
+ b=Ilk39Xq+L+1Vt+hBlk+McAP+tSmzEvnHzsdiAIWAuQF6Jc8UJ8iCympgUlm5unLEf5VOL
+ UzQCZdZbdPEhIUyM6xeanc+V3ujuCcD+NaD9jxQLXy24isRs2QzjF13+zuQE8yageR4CiN0
+ Lzue9e54s1QPHFX4912LqElZpU21fBUI7vYsQb8h7ql+g3AIlD4nhP7ngT4w0UvdaMQ9Z62
+ SgDPM8sny0PxhR9M9cJoYbUgY5n/gVFeNIHuxFHIvNvZPYOW98lsEoBnfAZLjE+mKtC92qR
+ usPEQJqdGTV6r30I/asXVbokDFM+wIbSccSioVtHYLx5vStwI6XZQHXY/g7A==
 Received: from [10.45.56.87] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
  (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
  (Exim 4.94.2-S2G) (envelope-from <f.suligoi@asem.it>)
- id 1sBtsS-Y8PCR4-9O; Tue, 28 May 2024 10:16:20 +0000
+ id 1sBtsV-Y8PCjN-MG; Tue, 28 May 2024 10:16:23 +0000
 Received: from [10.86.249.198] (helo=asas054.asem.intra)
  by smtpcorp.com with esmtpa (Exim 4.97-S2G)
- (envelope-from <f.suligoi@asem.it>) id 1sBtsQ-FnQW0hPuHwL-cTe3;
- Tue, 28 May 2024 10:16:18 +0000
+ (envelope-from <f.suligoi@asem.it>) id 1sBtsT-FnQW0hPuHwL-dxGp;
+ Tue, 28 May 2024 10:16:21 +0000
 Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with
  Microsoft SMTPSVC(10.0.14393.4169); Tue, 28 May 2024 12:16:14 +0200
 From: Flavio Suligoi <f.suligoi@asem.it>
@@ -55,10 +55,10 @@ To: "David S . Miller" <davem@davemloft.net>,
  Jose Abreu <joabreu@synopsys.com>, Adam Ford <aford173@gmail.com>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH v4 1/5] arm64: dts: freescale: imx8mp-beacon: remove
+Subject: [PATCH v4 3/5] arm64: dts: freescale: imx8mp-verdin: remove
  tx-sched-sp property
-Date: Tue, 28 May 2024 12:15:49 +0200
-Message-Id: <20240528101553.339214-2-f.suligoi@asem.it>
+Date: Tue, 28 May 2024 12:15:51 +0200
+Message-Id: <20240528101553.339214-4-f.suligoi@asem.it>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240528101553.339214-1-f.suligoi@asem.it>
 References: <20240528101553.339214-1-f.suligoi@asem.it>
@@ -69,10 +69,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 28 May 2024 10:16:14.0263 (UTC)
- FILETIME=[120D8C70:01DAB0E8]
-X-Smtpcorp-Track: ucud31kcZPX3.6wabVuvtskvw.lXkulQ6OEHj
-Feedback-ID: 1174574m:1174574aXfMg4B:1174574sk39EAmvT5
+X-OriginalArrivalTime: 28 May 2024 10:16:14.0294 (UTC)
+ FILETIME=[12124760:01DAB0E8]
+X-Smtpcorp-Track: ooOpExDEZqc5.8xJmNg2Fghn5.NS0F6A7aRlX
+Feedback-ID: 1174574m:1174574aXfMg4B:1174574s7KWN2naAj
 X-Report-Abuse: Please forward a copy of this message, including all headers,
  to <abuse-report@smtp2go.com>
 
@@ -97,14 +97,14 @@ v1 - Original version of the patch where, in addition to this DTS patch,
      there was also the one related to the correspondent snps,dwmac.yaml
      dt_binding file.
 
- arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi | 1 -
+ arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
-index 8be251b69378..34339dc4a635 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
-@@ -106,7 +106,6 @@ queue4 {
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi
+index aef4bef4bccd..222521f116f5 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi
+@@ -276,7 +276,6 @@ queue4 {
  
  	mtl_tx_setup: tx-queues-config {
  		snps,tx-queues-to-use = <5>;
