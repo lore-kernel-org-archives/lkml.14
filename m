@@ -1,153 +1,92 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF432E639;
-	Tue, 28 May 2024 18:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340C32E84A
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 18:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716922098; cv=none; b=KEhY1wnURjTJrIoAalGSJ11dUCeKg46iyX6paajBNr5WE6GufCd0m1r4aUKYrxgaglp7zZV1PpvyrI/GXaWukixqqbAUL8zFapVe3vGQ7RigSkAvJouXkx5qc3O8qb/6ffVjeRmJCNGZxFXU14DyOhVGcrHH6EGldPrNpRF6Md8=
+	t=1716922139; cv=none; b=CXXwCt+YQ+yn1vI7LRtvVNqr7G+7iW2THaF89orxp9QxNUj84EZXuwFUkstdhvCeAhX30nUz8ueyUpEwdBi4E4zZ+RsSjTzYoJ4lU3OC1rT6q9viCUBY3023G22n4kwErFVdg2RZsHyj4XWrr61IZCas8akeAmb8S/lBMWfA9tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716922098; c=relaxed/simple;
-	bh=MRChlc3fno+fgWLT1UD9zMfX7V7oZsD0KEIC9Fr5KPg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RHWPWOKAhfbmVKjTyFYkkeNF75l46+4X0+T1idcBdpn7I25iOXftjz0APARDPOodYx7ZmQ+9CqD1WjJgiqlY6if6vNEQ7/k2dce6OfTJ2d5TLER6LmLI4c2YvORuIM1jc6anuCWoXzKondML+cv5MDtyj4HpvbG9/NuBa3MfHC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B/Cq38XZ; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716922139; c=relaxed/simple;
+	bh=55VsRLtb8ErN2ls5GjyxauYkp/xcWUnZZ3ABknV+/Vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=czuB47rYAAraZBLmCh4LzBgz409taNKCO5f0wWRx1ZHmcDy3s/kwKywUrqePjSL/qv7wRTroAM3f5nYxF/g7St/Wgsj1hJkad93OBbHyzfFDvj6y3qq5MFQcj3LWRFgGturuMEEkAokjpLaYsWWd408qy8g0nzJxCUS7dnT1WxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b7C/Ho1U; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/Cq38XZ"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4e4eff99f16so372054e0c.1;
-        Tue, 28 May 2024 11:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716922096; x=1717526896; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bxlvn5Oq9LbYwfLCGxNQLz0UZ5j1MQaP4pgY98KDpRk=;
-        b=B/Cq38XZ/hShv/h3v17RcYM5+cZzKn8uI4ZinvzHxsND4zNIU2Q4ooucJccj9I+QtA
-         EMwbGbPr6NRKulqPi3he6L2/ePrfDWRysVBx8wuaRBmly3dTI8adRiI8c09l9P18JOFP
-         jS6166nNcoin8QYvDwoEiHP++x/ddV+wqhi/KaCqFo3iwzVwMzi3eAe4OSYwN0Ia7Yv4
-         JVrofvEWa3B4skFlo3fjGaXTVcjExHlP0UxX1k8wgKP40Ao6i5DYZ80zIj1/fHYzuZmd
-         e/CVrLeCetK/obB02bYxY8y4E9no9gMjlkDUgjlPGfH0fLNz71mWePrfg/QV76c/k0aa
-         fFuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716922096; x=1717526896;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bxlvn5Oq9LbYwfLCGxNQLz0UZ5j1MQaP4pgY98KDpRk=;
-        b=FzizrR3qxbMH061iZezYxPZ+hjbJ3OgJ4Ef6ZkafuKyvkUzeAV8aIKUxkHcwFDHNW2
-         TFwmIDYMJDEV/7EuNuCn/ykgtaNN4oDMUCuiWtM08HK/b0Uz9MZMq1vwdX7WoCmC+/KM
-         82nwvoUo2UPnfTd0rXwMAbdfwftnzPY30S/sR5Rd2QsI+0+4Uc/niW8/yV0vl8csqdCJ
-         ak4w+lgwj4jEdxPq18wcHZvXk/jZhiI90xlv6J9pz8H7LkhnGuXDGazfhVDVT1XSCR0f
-         gOnYIdrY6tPTOgnbk2U44xXfuURDa5Wujm5osVkkebozcH+NX6cx+UwEJ/iFBFEqJ2HG
-         /B9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWR5oXylYlqxbm1IYZX71K+M5RH53sFOj75JSY4Cbkz7zFgmJqednIiqJzuli+Zsmgj58Xt7E0jqO7T5MoCvEjc3gPQqk9KEy+BTzM5/XRDmaO162pl0Pml7yj8v/7cFg6g0Io/5HnXEGZhIoqJ8+O7B3HbCHNXe5E99Dyzcp+CDNhH3TGRz6PhgcFjoBPB3c0UqWlenynIGzbKA3v63VLUWg2OUFUa+Q==
-X-Gm-Message-State: AOJu0Yy3pP36ir7aTeyDf+GwTDBg9mDmhDVEULTf8lF0d9b4RWEMBDPF
-	m7noDmakF9tnNPBuMBiGF2AMN9aveBwU2m+39LsHWjEhe7p89aOxrf/1+8b3rL/2a/LaWETZbmw
-	Co2Rd7c/c70+iq4NTsHxIenoJbBk=
-X-Google-Smtp-Source: AGHT+IE9trmXEg3oEOdmSAsRssG2a/Bs2cLxXZv1lQZLY6SJ5JxtgyKLzQTyBQReU97+ZhJRjwN1iYkNyibCrLnWAuk=
-X-Received: by 2002:a05:6122:4127:b0:4e4:eda9:ec32 with SMTP id
- 71dfb90a1353d-4e4f02d0410mr13536269e0c.10.1716922095852; Tue, 28 May 2024
- 11:48:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b7C/Ho1U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716922138; x=1748458138;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=55VsRLtb8ErN2ls5GjyxauYkp/xcWUnZZ3ABknV+/Vc=;
+  b=b7C/Ho1UZ/RLrvLEoRGB6vNYHR7IfZC62xG8OY31DX2FAPoorMOQixKZ
+   gEsIZaWl9yT7Yee6tN+7Rk5YFEOnrm04WYe596DdphpVOM2HJ6ESyg5fV
+   9/eEv/Tswl7jr/UgESGJP/dIRKkYo0OQ1LFskZBcN7V/HUvJS3Pb8e7cW
+   vcJ5LVAo366I8uHS9vgpKFYK/dPIb+O1PLdjDwR0QOxqUz3kmqVc7uHoh
+   lnGxIkNfl0G1XG7/NfdGH0ktWUvq0mIvbZj0w2TpfenCx5AJsdTZycmtP
+   3u5R294QzeVnVqvdT5ScKPRokru5uTeFBWLwyCj9uHaODgCBbJ+dm758s
+   Q==;
+X-CSE-ConnectionGUID: 0RiZSdMTQzCpWH7aDG1wKA==
+X-CSE-MsgGUID: wpGPUcrzQ5C3p7xqAJKMYA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="11734908"
+X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
+   d="scan'208";a="11734908"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 11:48:58 -0700
+X-CSE-ConnectionGUID: hZ1427gsSWejoJrpdMRdfQ==
+X-CSE-MsgGUID: 4BkGEWXUR8a6C4lWV+lgKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
+   d="scan'208";a="40035430"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 28 May 2024 11:48:57 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sC1sT-000CdN-0x;
+	Tue, 28 May 2024 18:48:53 +0000
+Date: Wed, 29 May 2024 02:48:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:dev.2024.05.21a 44/53] update.c:undefined reference to
+ `__bad_cmpxchg'
+Message-ID: <202405290221.CXfSkR3b-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240423175900.702640-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXUM-s5RQXgKQUtqu5=fVTFk5Ajg2WNZ2eAiy5Lr-tX5A@mail.gmail.com>
-In-Reply-To: <CAMuHMdXUM-s5RQXgKQUtqu5=fVTFk5Ajg2WNZ2eAiy5Lr-tX5A@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 28 May 2024 19:47:04 +0100
-Message-ID: <CA+V-a8vbV0LZ0XkHEOYLww4mpgiaSzfGDCi+Hi45XNSSgSRnfA@mail.gmail.com>
-Subject: Re: [PATCH v2 03/13] pinctrl: renesas: pinctrl-rzg2l: Allow more bits
- for pin configuration
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Geert,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.05.21a
+head:   17284125a3f17be817e917b23511c99aea8fee81
+commit: 8b1964fedb0484ccda5a7e20f37ace2ebdcd1cf5 [44/53] rcu-tasks: Remove open-coded one-byte cmpxchg() emulation
+config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20240529/202405290221.CXfSkR3b-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240529/202405290221.CXfSkR3b-lkp@intel.com/reproduce)
 
-Thank you for the review.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405290221.CXfSkR3b-lkp@intel.com/
 
-On Wed, May 22, 2024 at 11:19=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > The pin configuration bits have been growing for every new SoCs being
-> > added for the pinctrl-rzg2l driver which would mean updating the macros
-> > every time for each new configuration. To avoid this allocate additiona=
-l
-> > bits for pin configuration by relocating the known fixed bits to the ve=
-ry
-> > end of the configuration.
-> >
-> > Also update the size of 'cfg' to 'u64' to allow more configuration bits=
- in
-> > the 'struct rzg2l_variable_pin_cfg'.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > RFC->v2
-> > - Merged the macros and rzg2l_variable_pin_cfg changes into single patc=
-h
-> > - Updated types for the config changes
->
-> Thanks for the update!
->
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > @@ -78,9 +78,9 @@
-> >                                          PIN_CFG_FILNUM | \
-> >                                          PIN_CFG_FILCLKSEL)
-> >
-> > -#define PIN_CFG_PIN_MAP_MASK           GENMASK_ULL(35, 28)
-> > -#define PIN_CFG_PIN_REG_MASK           GENMASK(27, 20)
-> > -#define PIN_CFG_MASK                   GENMASK(19, 0)
-> > +#define PIN_CFG_PIN_MAP_MASK           GENMASK_ULL(62, 55)
-> > +#define PIN_CFG_PIN_REG_MASK           GENMASK_ULL(54, 47)
-> > +#define PIN_CFG_MASK                   GENMASK_ULL(46, 0)
-> >
-> >  /*
-> >   * m indicates the bitmap of supported pins, a is the register index
->
-> > @@ -241,9 +241,9 @@ struct rzg2l_dedicated_configs {
-> >   * @pin: port pin
-> >   */
-> >  struct rzg2l_variable_pin_cfg {
-> > -       u32 cfg:20;
-> > -       u32 port:5;
-> > -       u32 pin:3;
-> > +       u64 cfg:46;
->
-> 47, to match PIN_CFG_MASK()?
->
-Oops, I missed that.
+All errors (new ones prefixed by >>):
 
-> > +       u64 port:5;
-> > +       u64 pin:3;
-> >  };
->
-> To avoid such mistakes, and to increase uniformity, I think it would
-> be good to get rid of this structure, and replace it by masks, to be
-> used with FIELD_GET() and FIELD_PREP_CONST().
->
-Agreed, I will make a patch on top of this patch (so that its easier
-for review).
+   arm-linux-gnueabi-ld: kernel/rcu/update.o: in function `rcu_trc_cmpxchg_need_qs':
+>> update.c:(.text+0x51e8): undefined reference to `__bad_cmpxchg'
+   arm-linux-gnueabi-ld: kernel/rcu/update.o: in function `trc_read_check_handler':
+   update.c:(.text+0x5250): undefined reference to `__bad_cmpxchg'
+   arm-linux-gnueabi-ld: kernel/rcu/update.o: in function `rcu_read_unlock_trace_special':
+   update.c:(.text+0x8170): undefined reference to `__bad_cmpxchg'
+   arm-linux-gnueabi-ld: kernel/rcu/update.o: in function `trc_inspect_reader':
+   update.c:(.text+0x86c0): undefined reference to `__bad_cmpxchg'
+>> arm-linux-gnueabi-ld: update.c:(.text+0x86ec): undefined reference to `__bad_cmpxchg'
+   arm-linux-gnueabi-ld: kernel/rcu/update.o:update.c:(.text+0x8a6c): more undefined references to `__bad_cmpxchg' follow
 
-Cheers,
-Prabhakar
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
