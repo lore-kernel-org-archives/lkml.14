@@ -1,110 +1,89 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.67.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF82313A868;
-	Tue, 28 May 2024 14:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.67.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4FF16DEA5
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716905130; cv=none; b=BT6gXd0k/xex+HoUwODXLqZd1GsX72aa0BXkmvQkmXanezNN6IfoYvoi3/rAP39cr+pp0tYk8oiHsthO1VkjCZgMmBBKuE4NQ8dbgjf7o/dxew4g2gqS6hQOy51CK/HA5+FG94ikejikTDnrGsTfAVDDfCunwTISNzwU4yQO/Sg=
+	t=1716905174; cv=none; b=L/ow7b+O3yxUTp8ntCCbJHiw3LKc4OqH8DVwFgHGZKvsbNiQ4TgIonimthxYDbF3PW5DVlOjvmhia4OUf6e0wVGvy+zZHPaF8x3YvhnWoIJxiCRKJavHmoeJDRGBv+Sy1SiwT5o7x4FUtIoyywclY7PV9uWyy9mtnqKL1/wimvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716905130; c=relaxed/simple;
-	bh=PURxRrT+Gaa3PgyTaM0RrVFH1zk0iI3BMDQaWlcoQoE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ykd8gnC9vJxZUlD94aBXLqosMrRXaEWRpEt8+CQoCL1vsrLDmJLyyCDjY2e7i6oBID0VfiQJ1AOXOqyOdcEVGR+Tn/EAFg6xvbWfmOiltvHe/GIxH91hFpgGyDWOo6levzSglkwiACbP3/dJek24dj6zSV3itLxn4biMQ9cagTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=114.132.67.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtpip2t1716905071t5oiaaz
-X-QQ-Originating-IP: /mF21PFK26x6K6oJviXRE4OScott3W8Q1MAQbsnwvP8=
-Received: from 192.168.5.25 ( [255.207.235.15])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 28 May 2024 22:04:29 +0800 (CST)
-X-QQ-SSF: 01400000000000E0B000000A0000000
-X-QQ-FEAT: vCKdglClpVIFIXSKsQYpcMzda8EIQBjGdN9NvI/Ztac8F9bO5JKLl43czMiql
-	lmtFEdf2Dxzm+Ienr3Qi1Z+Iisi8sTm08efBAkWZTwnTa/ogGyYIe9b0fzms+Gx8GHVvqqn
-	ouuZ5P+/jlPEevaJdT6LUEp6COMX3BNtF2d5PU95CTCjZYx37HG+dhbMDswoqw0sYbdkeT4
-	705hKwPfV4nBqvC6bSt3+0+3a5xpX4VWrUiU6glv33sclvncurol0FyrjDly/I4vRqOHILv
-	1uwPhxlPO0qGlsu4mwTujhVCTeOh4pYsZGcrTMncbZo6yESsgihfQkm1FD1bSPJ5Y3ayPqM
-	G8UxQUcK0gCft7Wy4E7p5aU9cU21tVPlPAoqZyXYAlSNHD5QzqmW4mcTxjjz8L+Nwr/4R3Z
-	d6Zgi2Dg5MQ=
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15122004700105350673
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com,
-	guanwentao@uniontech.com,
-	marcel@holtmann.org,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] Bluetooth: btusb: Add Realtek RTL8852BE support ID 0x13d3:0x3591
-Date: Tue, 28 May 2024 22:03:45 +0800
-Message-ID: <624D89A316F197DF+20240528140345.69035-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.45.1
+	s=arc-20240116; t=1716905174; c=relaxed/simple;
+	bh=ZN452joR8cCq0gYvyT5tZ9k04wcDCQaSxNmtOAl/gzI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uaqYjipNFX8ngpxDRbRd09fxpXMFMHGlEzbSLynDpWPsL5+RN5AgMiEux3UmjTm+u65IfHKJKExP8nlbbsf85G7ncnumgXMYXNzZpH1rDzq7Rgz5HZW9bn3YugcXQAdEoNyGdL1L0NO+85K0PNpX+7ojwiZXERdjcyyFILY/3n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iHgndbKa; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHgndbKa"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52961b77655so1057408e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716905171; x=1717509971; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vYW5c0SqQbiRCDOIP27l8OTzCGV5wqVGx+nbqnS3eew=;
+        b=iHgndbKaXkpcmN1XYxOabDty3eoAt1WScxd2+6gynZufCcnpPcz5+zAkYyz9N0tifG
+         cAdLGRyx3xyAPGELhZ3RMDIR3ZYgtBHxXn6cXbg8vJnYWOBYNpFGXcuUjKEnzPHB5lOB
+         eZOkIlI8doALUIdrA1u43rc7Ysg5MGjSS6Wr5N/lafL0NIZF2twaMt3itm+197ymRHmf
+         8CzjbZ4qWCXnXTElK9LUEfHSH+8J3lNNh2lctpxDHeeW3Gz/g5unkGy4/bYBxPSjbNHD
+         pxf7hBzsPprBVRasmMsA2Iwa4Sg8nyfs4zJfay/i9Vqrgo/7CF/eXtooSpusRFjh3Rj9
+         tg+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716905171; x=1717509971;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vYW5c0SqQbiRCDOIP27l8OTzCGV5wqVGx+nbqnS3eew=;
+        b=eIB79Qf++Wt/RGFniVVUHfVstjY0T3/qJFTWhJnOQ+tQ5b9OR+OtIubFsy/kywz41D
+         eWrWYrmlx4Z8ekytAHNFh9M3ptaniKhCFHoXCQGWLAK/QCYae5D1BN0bLHs0SRGLfH42
+         Oa3usRIT4O/BAekwvZxMlIWGRKYOUgTTISuh5GND4Sn2Z5XvqAZuNtIuPd+pieT+h5+o
+         AupSgPj3cPIyw077+fEu9wYQcppWMRgB8bLB1dD1DDvyvIYaYljLAB2VZPDRtS6R317o
+         DJ8T3a380KJ8qCtZvWxuRCtw6JqcMzELgzGDHegbzVySBs+XHTvwk5zd2dypPBBD9Qfu
+         314w==
+X-Forwarded-Encrypted: i=1; AJvYcCUF8+ve7yxrcBOVSGJqUasDB1vKNGIggZLBMsYYp3BuJcYMURPEjU9SZk2xGMgMxGiPVj/Ud/vQgAegFcmWy4o7e6qBC4e7s1H2hG0I
+X-Gm-Message-State: AOJu0YwlkAxIxS5+GUCpAaQtBZGVd3cRf1e1CVWIjQPmlFoy1nt3Ut+p
+	4XDcRHp6bQPFgK5+3dSUKZ1rDE53lrwI2HkiVcnm0LGsBzI71det
+X-Google-Smtp-Source: AGHT+IGudBhWVmM4V0/6WOrMTk8kNuQ3UqybpJ6HjSxLuQNDu2Z1TX4Z93aBTAL4Dau38a0BOOB0vQ==
+X-Received: by 2002:a05:6512:2350:b0:529:b6b4:7e3c with SMTP id 2adb3069b0e04-529b6b48032mr2679995e87.45.1716905171335;
+        Tue, 28 May 2024 07:06:11 -0700 (PDT)
+Received: from pc636 (host-95-193-70-101.mobileonline.telia.com. [95.193.70.101])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529a640ac48sm703269e87.119.2024.05.28.07.06.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 07:06:10 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 28 May 2024 16:06:08 +0200
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>
+Subject: Re: [PATCH 2/2] mm/vmalloc: Use __this_cpu_try_cmpxchg() in
+ preload_this_cpu_lock()
+Message-ID: <ZlXk0EyoGDf80Ild@pc636>
+References: <20240523080136.9863-1-ubizjak@gmail.com>
+ <20240523080136.9863-2-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523080136.9863-2-ubizjak@gmail.com>
 
-Add the support ID(0x13d3, 0x3591) to usb_device_id table for
-Realtek RTL8852BE.
+> Use __this_cpu_try_cmpxchg() instead of
+> __this_cpu_cmpxchg (*ptr, old, new) == old in
+> preload_this_cpu_lock().  x86 CMPXCHG instruction returns
+> success in ZF flag, so this change saves a compare after cmpxchg.
+> 
+Just a small note. Can you also add a tiny difference in assembly
+language where it is visible? I mean update a commit message.
 
-The device table is as follows:
-
-T:  Bus=01 Lev=02 Prnt=03 Port=00 Cnt=01 Dev#=  5 Spd=12   MxCh= 0
-D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=13d3 ProdID=3591 Rev= 0.00
-S:  Manufacturer=Realtek
-S:  Product=Bluetooth Radio
-S:  SerialNumber=00e04c000001
-C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/bluetooth/btusb.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 79aefdb3324d..7b9421423ebc 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -555,6 +555,8 @@ static const struct usb_device_id quirks_table[] = {
- 						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x13d3, 0x3572), .driver_info = BTUSB_REALTEK |
- 						     BTUSB_WIDEBAND_SPEECH },
-+	{ USB_DEVICE(0x13d3, 0x3591), .driver_info = BTUSB_REALTEK |
-+						     BTUSB_WIDEBAND_SPEECH },
- 
- 	/* Realtek 8852BT/8852BE-VT Bluetooth devices */
- 	{ USB_DEVICE(0x0bda, 0x8520), .driver_info = BTUSB_REALTEK |
--- 
-2.45.1
-
+--
+Uladzislau Rezki
