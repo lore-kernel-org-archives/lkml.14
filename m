@@ -1,62 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D3216F274;
-	Tue, 28 May 2024 15:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FA710A2A;
+	Tue, 28 May 2024 15:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.18.0.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716911177; cv=none; b=HtLrvG38icxkvPC6+Ih/PEL/CIvoupdFxCAz7Jhi9yjJg5qiJFK/36mQtzND9uOMMj+Xo3b2E8KYgf2uLmMUQ4kZxa+cmGGT8+7abQaODjMEu8U/rL1mjiHZBuL5cO8DJkHNaD0z5bQAieo1SpbcGTCmMrTER1oL0oOVwT0+bY0=
+	t=1716911255; cv=none; b=INy/i9NYM+Tu+6tr4HqpzlscNUAnfjSQYNFoLOPuBOz4p7e6g1HAFzwmJV38vfAFzjhyQNbDcpWimsIJmQszJDUc6Mdfam4JCeJxaWFdsqGKLyi0Vc3A2X9zLaBSlS5pJj4hMb99uX64/UylhmZmk9gk0DuNmmX2rvTbT1BexgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716911177; c=relaxed/simple;
-	bh=Wj27vs35yiz7mps8QsyWtYCw+qknu3r3k2iuRblbpeA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qj+cqunYyx4mSRDpsmNGqZKnkm1VdBZADncoolyQGpo08nm+rnwtM4syVppIMX9j4jW41jeHytl+JN75kCiDZOvFDdG6F7/ikVVNREZ/uDIyFt2qioqtyjwBbgTNDll8FxbcswZOuVjqdiwX5WkQCn1DVtS73JofcKebd4yA+RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F3FEC3277B;
-	Tue, 28 May 2024 15:46:17 +0000 (UTC)
-Received: from wens.tw (localhost [127.0.0.1])
-	by wens.tw (Postfix) with ESMTP id B353C5FA0C;
-	Tue, 28 May 2024 23:46:14 +0800 (CST)
-From: Chen-Yu Tsai <wens@csie.org>
-To: linux-sunxi@lists.linux.dev, Dragan Simic <dsimic@manjaro.org>
-Cc: jernej.skrabec@gmail.com, samuel@sholland.org, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <49abb93000078c692c48c0a65ff677893909361a.1714304071.git.dsimic@manjaro.org>
-References: <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
- <49abb93000078c692c48c0a65ff677893909361a.1714304071.git.dsimic@manjaro.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: Add cache information to the
- SoC dtsi for H6
-Message-Id: <171691117471.681554.6744393893618279840.b4-ty@csie.org>
-Date: Tue, 28 May 2024 23:46:14 +0800
+	s=arc-20240116; t=1716911255; c=relaxed/simple;
+	bh=vPa9rF0pS41uHkATsANPc1ylod/pfLeVpRJJC/BDrqs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=d1ydhQIDlkJOpEVFwZQ8wtf58joloJAz0Gnimk08SDxS8XjrIDZFVSdlGdA0T69Jfd1V64mYwSk+csia5Qbw425H608S3uADP+S4XafD982PMIDsh57Pao0JxvgTIlRely68bASs+R//RxuOIL1ByTf4bh6k/G4MMuVThJ5/m6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=nefkom.net; arc=none smtp.client-ip=212.18.0.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nefkom.net
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4Vpc8Z2Tqjz1qsP0;
+	Tue, 28 May 2024 17:37:34 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
+	by mail.m-online.net (Postfix) with ESMTP id 4Vpc8Z0lYHz1qqlY;
+	Tue, 28 May 2024 17:37:34 +0200 (CEST)
+X-Virus-Scanned: amavis at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+ by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavis, port 10024)
+ with ESMTP id Hg5p6M9piD87; Tue, 28 May 2024 17:37:33 +0200 (CEST)
+X-Auth-Info: HpTRMRkMphHhCoLp09Dcf9TUvqKPwejy3RutzhJcbFthbpKdAzzewlMWKt91fpbJ
+Received: from igel.home (aftr-82-135-83-75.dynamic.mnet-online.de [82.135.83.75])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Tue, 28 May 2024 17:37:33 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+	id E856D2C0F8D; Tue, 28 May 2024 17:37:32 +0200 (CEST)
+From: Andreas Schwab <schwab@linux-m68k.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+  devicetree@vger.kernel.org,  linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  Emil Renner Berthing <kernel@esmil.dk>,
+  Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
+ <paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>,  Albert
+ Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v1 0/2] riscv: dts: starfive: Enable Bluetooth on JH7100
+ boards
+In-Reply-To: <20240528-outpost-subduing-2e84f77427a4@spud> (Conor Dooley's
+	message of "Tue, 28 May 2024 12:30:46 +0100")
+References: <20240508111604.887466-1-emil.renner.berthing@canonical.com>
+	<87wmo2nmee.fsf@linux-m68k.org>
+	<CAJM55Z-F6N6ua5LoqyMFogDtLp=FaRPoDv4osXFDMjR1b8r9nw@mail.gmail.com>
+	<87zfsy102h.fsf@igel.home>
+	<20240528-outpost-subduing-2e84f77427a4@spud>
+X-Yow: ..  I want to perform cranial activities with Tuesday Weld!!
+Date: Tue, 28 May 2024 17:37:32 +0200
+Message-ID: <87ttii54n7.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain
 
-On Sun, 28 Apr 2024 13:40:36 +0200, Dragan Simic wrote:
-> Add missing cache information to the Allwinner H6 SoC dtsi, to allow
-> the userspace, which includes lscpu(1) that uses the virtual files provided
-> by the kernel under the /sys/devices/system/cpu directory, to display the
-> proper H6 cache information.
-> 
-> Adding the cache information to the H6 SoC dtsi also makes the following
-> warning message in the kernel log go away:
-> 
-> [...]
+On Mai 28 2024, Conor Dooley wrote:
 
-Applied to sunxi/dt-for-6.11 in sunxi/linux.git, thanks!
+> Looking at things to apply post -rc1, are you still looking into this
+> issue?
 
-[1/1] arm64: dts: allwinner: Add cache information to the SoC dtsi for H6
-      https://git.kernel.org/sunxi/linux/c/c8240e4b0fd2
+I don't know what to look for.
 
-Best regards,
 -- 
-Chen-Yu Tsai <wens@csie.org>
-
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
