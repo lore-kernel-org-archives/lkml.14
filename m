@@ -1,94 +1,151 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EX-PRD-EDGE01.vmware.com (EX-PRD-EDGE01.vmware.com [208.91.3.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D22B140384;
-	Tue, 28 May 2024 23:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED476140E38;
+	Tue, 28 May 2024 23:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.91.3.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716940469; cv=none; b=egbGmpAITk3cbvs8Vpl1yY3RxwWh3Qx/xaJo0V/hhTwy53evG4b41l2/dAlq1MMhDdb5rLC2jgrmyKUs3JnZnoIlD07laZ36xpEmx+EeIvh6RpheFkUJzRiUJ1XKrzvuZPp1JFVeEDM1hmhJwftvgAL0Lswreu0y1aTxjkI88VY=
+	t=1716940473; cv=none; b=AhnKIqwIuck0DGIWPotl58INVIo8Ot3om0xP+OwxX4c7GT55AheR2J6ofpjML9VqCN6sEQfNFYbN3Sav9k2UQg7WV4T18pZRkZ8Cid50XKdcNib/nKxdbLkQ3jO141VXqe3AOQa0QMrz4uEr2Qmq85/qGg6m0QTbmD5OHrfJ//w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716940469; c=relaxed/simple;
-	bh=/W3e8geK/8V/pJI8LI/mKqvkPRhYyE0QhjBX7G82yL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X8RdDsG3r69mPuVR0ekbaapiRNsg97Za/VYvA3xcX+4neKfjJUw4AkmSrt3xATMt3ON+1WQgxPTzGbw6EPs0Mm8dLsjmOMnWX4x0pwF43TeT7kIjtSw64qagJzQilHqkwffanRAHAyHhkd5VGJ1cM5E+UtFIQh09lLNT6n3yZ7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFpDmLKI; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFpDmLKI"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5785c1e7448so1410515a12.2;
-        Tue, 28 May 2024 16:54:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716940466; x=1717545266; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e000vksGZKxcpTxpZnBmsIz0xFc2hPH9avlD+baB/tQ=;
-        b=nFpDmLKIZhDR2+01LtZJaIZRvM0txK4YMWqzRg41jwsXh38qPRq5mvP9QsQqG4Ggqt
-         hYWFhwWOlbfVGZdPWA0I8Nfwh4oj03BW5Tzen+zxZqXUyg3iClmZ1UOJS3dOkWRsQ17t
-         l728qUzYTSQJudqWC1BUekMAKXaargTWo/bIZ0RSXsV44WYR8yFtIVL8+nFieoW4VQbB
-         BldIbpzCzOs1+F4MBmPL4OfFHoUkDcyLFp01/2e1bb/w9s97aN0fcjZLKtZxBRcHKCMw
-         3Fbtmnf9CgQFFs0FTGG4N6gZ5LgPl49QD0UrVRUZrdatrjFwv4qRGrfBfsHg/fQZ1lm5
-         ujcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716940466; x=1717545266;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e000vksGZKxcpTxpZnBmsIz0xFc2hPH9avlD+baB/tQ=;
-        b=r1PPgVoPdKXkgB82MuXxI9YZFhaBNMMixf0EV42x1ZN6mZsMIUNI8RYgw7fsoGOthO
-         RvlRw4FtyAy4PWCYSVAdGdzXF90CAs4VP5/fL2Gr6iVTQfn2cZ4S0+hQnwcYnhEtFumg
-         cgc58PLeUi+i2DaktYCoQ7AwIh5fMPcYpYd9Og4jlq2GmxZlbzuOcyzDQJVoSRZeDrE0
-         sl3Gb8rtuaargRKIErAcC1Yc0TVjZCKj+hmdO6+pFB+KhTZLNOIpeT4iZf/QorUiBIaL
-         zmo3HDVXTvWk/wQDKBT9nlsLZi5SwmvZuVD0WtXf1jkEqFtGpHlmdis+Yw8NKYDoKGLy
-         2Jww==
-X-Forwarded-Encrypted: i=1; AJvYcCVhdDETGqt3b477Ec5SACx2yChYm9/roh4Y2Qymf84/HGaOXAjPIBojvGW21uy0QPe6yuJ5rXX0sytt7PCQUG74TjkT5yAOG7huh69IBvgTX/96j37GSEKiCfBcOU9sOQVcDADC1BMMgCnEen6oIRMmjGQD61eU198QC96ymLfeiqu+lg==
-X-Gm-Message-State: AOJu0Yw2Gvq8OJEkCQd5q4XIlNiKlLTq6gY/6fFDupMBahKpJWgRN486
-	oixhYusHzw//sydavnPVws8IBGXV/C01JqMfu+JyrJkc3uXKupO2
-X-Google-Smtp-Source: AGHT+IHsWsOkBOksuCIUt51kqHsxAps4Tg6mOyc5noJl3q1Tf55mM9iZjLhMWu87KAeA5fz6kMcg+w==
-X-Received: by 2002:a50:9b12:0:b0:572:67d9:3400 with SMTP id 4fb4d7f45d1cf-578519ba232mr8723411a12.39.1716940466319;
-        Tue, 28 May 2024 16:54:26 -0700 (PDT)
-Received: from andrea ([151.76.32.59])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57852339fc4sm7658198a12.15.2024.05.28.16.54.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 16:54:25 -0700 (PDT)
-Date: Wed, 29 May 2024 01:54:21 +0200
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Subject: Re: [PATCH 2/7] riscv: Implement cmpxchg8/16() using Zabha
-Message-ID: <ZlZurXUUUfXHZJaX@andrea>
-References: <20240528151052.313031-1-alexghiti@rivosinc.com>
- <20240528151052.313031-3-alexghiti@rivosinc.com>
+	s=arc-20240116; t=1716940473; c=relaxed/simple;
+	bh=fmNaQn/IwvJ2IsbnYJ+Za6oMl7krDzxwJu+FvRk4K3E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DwU0PZ6SkWl5SvmLsdoAfSuinG5SC9ri+96YrXla9K2gREVoXPA42V1aSquZvGH0qQHxh7C0y8w5ckeGAHPodQLDJBzl0iwQ0z8tMKJKlR0crhNdskUDMYDKNKadmnfySXbr2fnLvjEfbY9S14K7EGtz9AOfeaD4XNZfGsT/vm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=broadcom.com; spf=pass smtp.mailfrom=vmware.com; arc=none smtp.client-ip=208.91.3.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vmware.com
+Received: from sc9-mailhost1.vmware.com (10.113.161.71) by
+ EX-PRD-EDGE01.vmware.com (10.188.245.6) with Microsoft SMTP Server id
+ 15.1.2375.34; Tue, 28 May 2024 16:38:59 -0700
+Received: from htb-1n-eng-dhcp122.eng.vmware.com (unknown [10.172.6.252])
+	by sc9-mailhost1.vmware.com (Postfix) with ESMTP id 9E5F720298;
+	Tue, 28 May 2024 16:39:18 -0700 (PDT)
+Received: by htb-1n-eng-dhcp122.eng.vmware.com (Postfix, from userid 0)
+	id 9A7C5B04C9; Tue, 28 May 2024 16:39:18 -0700 (PDT)
+From: Ronak Doshi <ronak.doshi@broadcom.com>
+To: <netdev@vger.kernel.org>
+CC: Ronak Doshi <ronak.doshi@broadcom.com>, Broadcom internal kernel review
+ list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, open list
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 net-next 1/4] vmxnet3: prepare for version 9 changes
+Date: Tue, 28 May 2024 16:39:03 -0700
+Message-ID: <20240528233907.2674-2-ronak.doshi@broadcom.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20240528233907.2674-1-ronak.doshi@broadcom.com>
+References: <20240528233907.2674-1-ronak.doshi@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528151052.313031-3-alexghiti@rivosinc.com>
+Content-Type: text/plain
+Received-SPF: SoftFail (EX-PRD-EDGE01.vmware.com: domain of transitioning
+ ronak.doshi@broadcom.com discourages use of 10.113.161.71 as permitted
+ sender)
 
-> +zabha:									\
-> +	__asm__ __volatile__ (						\
-> +		prepend							\
-> +		"	amocas" cas_sfx " %0, %z2, %1\n"		\
-> +		append							\
-> +		: "+&r" (r), "+A" (*(p))				\
-> +		: "rJ" (n)						\
-> +		: "memory");						\
+vmxnet3 is currently at version 7 and this patch initiates the
+preparation to accommodate changes for up to version 9. Introduced
+utility macros for vmxnet3 version 9 comparison and update Copyright
+information.
 
-Couldn't a platform have Zabha but not have Zacas?  I don't see how this
-asm goto could work in such case, what am I missing?
+Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
+Acked-by: Guolin Yang <guolin.yang@broadcom.com>
+---
+ drivers/net/vmxnet3/Makefile          | 2 +-
+ drivers/net/vmxnet3/vmxnet3_defs.h    | 2 +-
+ drivers/net/vmxnet3/vmxnet3_drv.c     | 2 +-
+ drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 +-
+ drivers/net/vmxnet3/vmxnet3_int.h     | 8 +++++++-
+ 5 files changed, 11 insertions(+), 5 deletions(-)
 
-  Andrea
+diff --git a/drivers/net/vmxnet3/Makefile b/drivers/net/vmxnet3/Makefile
+index f82870c10205..59ef494ce2e0 100644
+--- a/drivers/net/vmxnet3/Makefile
++++ b/drivers/net/vmxnet3/Makefile
+@@ -2,7 +2,7 @@
+ #
+ # Linux driver for VMware's vmxnet3 ethernet NIC.
+ #
+-# Copyright (C) 2007-2022, VMware, Inc. All Rights Reserved.
++# Copyright (C) 2007-2024, VMware, Inc. All Rights Reserved.
+ #
+ # This program is free software; you can redistribute it and/or modify it
+ # under the terms of the GNU General Public License as published by the
+diff --git a/drivers/net/vmxnet3/vmxnet3_defs.h b/drivers/net/vmxnet3/vmxnet3_defs.h
+index 41d6767283a6..67387bb7aa24 100644
+--- a/drivers/net/vmxnet3/vmxnet3_defs.h
++++ b/drivers/net/vmxnet3/vmxnet3_defs.h
+@@ -1,7 +1,7 @@
+ /*
+  * Linux driver for VMware's vmxnet3 ethernet NIC.
+  *
+- * Copyright (C) 2008-2022, VMware, Inc. All Rights Reserved.
++ * Copyright (C) 2008-2024, VMware, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms of the GNU General Public License as published by the
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index 89ca6e75fcc6..b3f3136cc8be 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -1,7 +1,7 @@
+ /*
+  * Linux driver for VMware's vmxnet3 ethernet NIC.
+  *
+- * Copyright (C) 2008-2022, VMware, Inc. All Rights Reserved.
++ * Copyright (C) 2008-2024, VMware, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms of the GNU General Public License as published by the
+diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+index 7e8008d5378a..471f91c4204a 100644
+--- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
++++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+@@ -1,7 +1,7 @@
+ /*
+  * Linux driver for VMware's vmxnet3 ethernet NIC.
+  *
+- * Copyright (C) 2008-2022, VMware, Inc. All Rights Reserved.
++ * Copyright (C) 2008-2024, VMware, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms of the GNU General Public License as published by the
+diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
+index 915aaf18c409..2926dfe8514f 100644
+--- a/drivers/net/vmxnet3/vmxnet3_int.h
++++ b/drivers/net/vmxnet3/vmxnet3_int.h
+@@ -1,7 +1,7 @@
+ /*
+  * Linux driver for VMware's vmxnet3 ethernet NIC.
+  *
+- * Copyright (C) 2008-2022, VMware, Inc. All Rights Reserved.
++ * Copyright (C) 2008-2024, VMware, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms of the GNU General Public License as published by the
+@@ -84,6 +84,8 @@
+ 	#define VMXNET3_RSS
+ #endif
+ 
++#define VMXNET3_REV_9		8	/* Vmxnet3 Rev. 9 */
++#define VMXNET3_REV_8		7	/* Vmxnet3 Rev. 8 */
+ #define VMXNET3_REV_7		6	/* Vmxnet3 Rev. 7 */
+ #define VMXNET3_REV_6		5	/* Vmxnet3 Rev. 6 */
+ #define VMXNET3_REV_5		4	/* Vmxnet3 Rev. 5 */
+@@ -463,6 +465,10 @@ struct vmxnet3_adapter {
+ 	(adapter->version >= VMXNET3_REV_6 + 1)
+ #define VMXNET3_VERSION_GE_7(adapter) \
+ 	(adapter->version >= VMXNET3_REV_7 + 1)
++#define VMXNET3_VERSION_GE_8(adapter) \
++	(adapter->version >= VMXNET3_REV_8 + 1)
++#define VMXNET3_VERSION_GE_9(adapter) \
++	(adapter->version >= VMXNET3_REV_9 + 1)
+ 
+ /* must be a multiple of VMXNET3_RING_SIZE_ALIGN */
+ #define VMXNET3_DEF_TX_RING_SIZE    512
+-- 
+2.11.0
+
