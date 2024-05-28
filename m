@@ -1,117 +1,212 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9161D16F287;
-	Tue, 28 May 2024 14:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBC016D9C7
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716905314; cv=none; b=IeZN2rTtCYIDW7L1gzd5W/eJLWkLjXFrBDDwvJ2KC3act7Py8Q+55c3DCwioGwkpiq8Tm18bFMoQcMz1SI+w+8si6NeXOcOk7rZ+ZrCSuEnzey29wYE77ye3QlVzcKEC7sE+sY3W9urUYN0fyhccPuy1bFt/DNyxZ+T6bdFI/BQ=
+	t=1716905388; cv=none; b=GK0mMZOtfuZpgLTFlMBIF9kyxBDFpinxicyEJAlEDArtZtflIpbgetg5oI3d972EYejEI3/6bFBS4bJ71HIOOB8YBd8g6qO/eGXFXW1K2ypLxO3rPhm6uLVcvlowXSr7UB4yumOPmKjoDn575HcxFpgtONtik21F4hHx7ToZ0EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716905314; c=relaxed/simple;
-	bh=0kYRkuoifz238hYaa7+VBTksrIRPb0Qrje3MA74G5/Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WEOy97NY6KGIVwo1rh83q8pS1xtw5LxIzfFWTcta28Zylh12wT85ECcRXchSQgckHZSkuWkqpS0RnaPuEiRDJW74Y2oGMyqXhP2a3sS/6IvolWoXR2fyyv0MJYwMKzwR1qSNMIVvsfRzl09pEOmzKMTCIvMO/7J+JnBCSZjQO2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=iMdtq39P; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1716905388; c=relaxed/simple;
+	bh=RhVZPDHTydObrUYFqmG3YLqwSNvx8ezX4NP6vBujhGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Jh2myuZVs6GcoO7sxGZwQSW3LX/TI4VUP8KQmTcoOwPtmC4OzL6wbifQKEDU+ufQ49Z5+Q3JFXBM8wEtI8H08UUiC/SuQXJk5d/R90qGqMUQleoIH0iQ2srkPHvPgohV2Zk/++ohqpr8HA/XII3pnqt2SLKItA/Si0VwgobePq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJH0LDtI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="iMdtq39P"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SDhLnC025707;
-	Tue, 28 May 2024 16:08:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	WID1Xn8lAVeZgvgjfAvIZ5toir+39YNbyOYV1Sn5tIE=; b=iMdtq39PTNMpN5q0
-	qF5bJ4MgHOGVhw1mZ69E37DDykQPYq78VRyRC8xOcDTIiHo8t1p5l7oZahTlfk0f
-	62z7DDATzMDcsBvM9BD7OGFShvez3iYvQr5XabiKWFIxf1f0351qZxdZyFDmvnxd
-	GoPFlJ3hA3qQASc8S351Qr8UAwzmTx6IN8L35oG2mTJ8HBYVxzGT1rhCD04nT8Q3
-	Un5yiNA+05t0WBvnKJiWdURvtWfMNoYRiQhfDHpDPnRX1HTJLWWgH8tk29MRAEMF
-	ZUoMTJzQW5S2qMI0c3XwQT+lqG3Z0Ree23XiH4o8uAVgvMLxRZfRL4i2crNBTggv
-	eKlDiQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yb9yjuyq7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 16:08:05 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9A0824004B;
-	Tue, 28 May 2024 16:08:01 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D470621BF47;
-	Tue, 28 May 2024 16:07:23 +0200 (CEST)
-Received: from localhost (10.48.86.103) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 28 May
- 2024 16:07:23 +0200
-From: Maxime MERE <maxime.mere@foss.st.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller"
-	<davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>
-CC: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Rob
- Herring <robh@kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        =?UTF-8?q?Maxime=20M=C3=A9r=C3=A9?= <maxime.mere@foss.st.com>
-Subject: [PATCH v3 4/4] crypto: stm32/cryp - call finalize with bh disabled
-Date: Tue, 28 May 2024 16:05:48 +0200
-Message-ID: <20240528140548.1632562-5-maxime.mere@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240528140548.1632562-1-maxime.mere@foss.st.com>
-References: <20240528140548.1632562-1-maxime.mere@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJH0LDtI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF87BC3277B;
+	Tue, 28 May 2024 14:09:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716905388;
+	bh=RhVZPDHTydObrUYFqmG3YLqwSNvx8ezX4NP6vBujhGw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=oJH0LDtIyOuD4tup6MYXaLjhu1lgFW5NxjsHG0Qqsy87hMYEJ0l3MorJFZAK9gO51
+	 gObNGBWGtqbdgU6lV+GfAw8NddDMcSHmZUNblpW0Np6kyt75poYdGM1K5tCJxRPJG7
+	 1ntZS3qrS0TKeQQ0KBT7pNZUGhIdEXCOiSLNlOrgDcNBXgvEW7bZGENPWbGyilPiV0
+	 949mjqkdI+J5Zrlb4W9DzxVu5hoUuYsAJt08ggWHJNXuYFGy+YBbAnvFGAgC9+eip3
+	 ibg5819nX8lN8A0InUjM/8rHdu/tD8tuzZo5YjMwH2H9BiM+L1SDvGvtltReP7vqnb
+	 kCjRGT03OdwVg==
+Date: Tue, 28 May 2024 11:09:39 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	H J Lu <hjl.tools@gmail.com>, Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@kernel.org>, Jeff Xu <jeffxu@chromium.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 1/1 fyi] tools headers: Update the syscall tables and
+ unistd.h, mostly to support the new 'mseal' syscall
+Message-ID: <ZlXlo4TNcba4wnVZ@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_10,2024-05-28_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Maxime Méré <maxime.mere@foss.st.com>
+tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-The finalize operation in interrupt mode produce a produces a spinlock
-recursion warning. The reason is the fact that BH must be disabled
-during this process.
+Full explanation:
 
-Signed-off-by: Maxime Méré <maxime.mere@foss.st.com>
+There used to be no copies, with tools/ code using kernel headers
+directly. From time to time tools/perf/ broke due to legitimate kernel
+hacking. At some point Linus complained about such direct usage. Then we
+adopted the current model.
+
+The way these headers are used in perf are not restricted to just
+including them to compile something.
+
+There are sometimes used in scripts that convert defines into string
+tables, etc, so some change may break one of these scripts, or new MSRs
+may use some different #define pattern, etc.
+
+E.g.:
+
+  $ ls -1 tools/perf/trace/beauty/*.sh | head -5
+  tools/perf/trace/beauty/arch_errno_names.sh
+  tools/perf/trace/beauty/drm_ioctl.sh
+  tools/perf/trace/beauty/fadvise.sh
+  tools/perf/trace/beauty/fsconfig.sh
+  tools/perf/trace/beauty/fsmount.sh
+  $
+  $ tools/perf/trace/beauty/fadvise.sh
+  static const char *fadvise_advices[] = {
+        [0] = "NORMAL",
+        [1] = "RANDOM",
+        [2] = "SEQUENTIAL",
+        [3] = "WILLNEED",
+        [4] = "DONTNEED",
+        [5] = "NOREUSE",
+  };
+  $
+
+The tools/perf/check-headers.sh script, part of the tools/ build
+process, points out changes in the original files.
+
+So its important not to touch the copies in tools/ when doing changes in
+the original kernel headers, that will be done later, when
+check-headers.sh inform about the change to the perf tools hackers.
+
+But also to wire up shadow stacks on 32-bit x86, picking up those
+changes from these csets:
+
+  ff388fe5c481d39c ("mseal: wire up mseal syscall")
+  2883f01ec37dd866 ("x86/shstk: Enable shadow stacks for x32")
+
+This makes 'perf trace' support it, now its possible, for instance to
+do:
+
+  # perf trace -e mseal --max-stack=16
+
+Here is an example with the 'sendmmsg' syscall:
+
+  root@x1:~# perf trace -e sendmmsg --max-stack 16 --max-events=1
+       0.000 ( 0.062 ms): dbus-broker/1012 sendmmsg(fd: 150, mmsg: 0x7ffef57cca50, vlen: 1, flags: DONTWAIT|NOSIGNAL) = 1
+                                         syscall_exit_to_user_mode_prepare ([kernel.kallsyms])
+                                         syscall_exit_to_user_mode_prepare ([kernel.kallsyms])
+                                         syscall_exit_to_user_mode ([kernel.kallsyms])
+                                         do_syscall_64 ([kernel.kallsyms])
+                                         entry_SYSCALL_64 ([kernel.kallsyms])
+                                         [0x117ce7] (/usr/lib64/libc.so.6 (deleted))
+  root@x1:~#
+
+To do a system wide tracing of the new 'mseal' syscall with a backtrace
+of at most 16 entries.
+
+This addresses these perf tools build warnings:
+
+  Warning: Kernel ABI header differences:
+    diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
+    diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+    diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
+    diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
+    diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: H J Lu <hjl.tools@gmail.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Jeff Xu <jeffxu@chromium.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/lkml/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- drivers/crypto/stm32/stm32-cryp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/include/uapi/asm-generic/unistd.h             | 5 ++++-
+ tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 1 +
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 1 +
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 1 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 3 ++-
+ 5 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/stm32/stm32-cryp.c b/drivers/crypto/stm32/stm32-cryp.c
-index 445276b848ed..937f6dab8955 100644
---- a/drivers/crypto/stm32/stm32-cryp.c
-+++ b/drivers/crypto/stm32/stm32-cryp.c
-@@ -11,6 +11,7 @@
- #include <crypto/internal/des.h>
- #include <crypto/internal/skcipher.h>
- #include <crypto/scatterwalk.h>
-+#include <linux/bottom_half.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
-@@ -2203,8 +2204,11 @@ static irqreturn_t stm32_cryp_irq_thread(int irq, void *arg)
- 		it_mask &= ~IMSCR_OUT;
- 	stm32_cryp_write(cryp, cryp->caps->imsc, it_mask);
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index 75f00965ab1586cd..d983c48a3b6af175 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -842,8 +842,11 @@ __SYSCALL(__NR_lsm_set_self_attr, sys_lsm_set_self_attr)
+ #define __NR_lsm_list_modules 461
+ __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
  
--	if (!cryp->payload_in && !cryp->header_in && !cryp->payload_out)
-+	if (!cryp->payload_in && !cryp->header_in && !cryp->payload_out) {
-+		local_bh_disable();
- 		stm32_cryp_finish_req(cryp, 0);
-+		local_bh_enable();
-+	}
++#define __NR_mseal 462
++__SYSCALL(__NR_mseal, sys_mseal)
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 462
++#define __NR_syscalls 463
  
- 	return IRQ_HANDLED;
- }
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+index 532b855df589577b..1464c6be6eb3c752 100644
+--- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
++++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+@@ -376,3 +376,4 @@
+ 459	n64	lsm_get_self_attr		sys_lsm_get_self_attr
+ 460	n64	lsm_set_self_attr		sys_lsm_set_self_attr
+ 461	n64	lsm_list_modules		sys_lsm_list_modules
++462	n64	mseal				sys_mseal
+diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+index 17173b82ca21dca2..3656f1ca7a21c659 100644
+--- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+@@ -548,3 +548,4 @@
+ 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
+ 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
+ 461	common	lsm_list_modules		sys_lsm_list_modules
++462	common	mseal				sys_mseal
+diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+index 095bb86339a7d378..bd0fee24ad10a3d1 100644
+--- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+@@ -464,3 +464,4 @@
+ 459  common	lsm_get_self_attr	sys_lsm_get_self_attr		sys_lsm_get_self_attr
+ 460  common	lsm_set_self_attr	sys_lsm_set_self_attr		sys_lsm_set_self_attr
+ 461  common	lsm_list_modules	sys_lsm_list_modules		sys_lsm_list_modules
++462  common	mseal			sys_mseal			sys_mseal
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+index 7e8d46f4147f5741..a396f6e6ab5bf97d 100644
+--- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -374,7 +374,7 @@
+ 450	common	set_mempolicy_home_node	sys_set_mempolicy_home_node
+ 451	common	cachestat		sys_cachestat
+ 452	common	fchmodat2		sys_fchmodat2
+-453	64	map_shadow_stack	sys_map_shadow_stack
++453	common	map_shadow_stack	sys_map_shadow_stack
+ 454	common	futex_wake		sys_futex_wake
+ 455	common	futex_wait		sys_futex_wait
+ 456	common	futex_requeue		sys_futex_requeue
+@@ -383,6 +383,7 @@
+ 459	common	lsm_get_self_attr	sys_lsm_get_self_attr
+ 460	common	lsm_set_self_attr	sys_lsm_set_self_attr
+ 461	common	lsm_list_modules	sys_lsm_list_modules
++462 	common  mseal			sys_mseal
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
 -- 
-2.25.1
+2.44.0
 
