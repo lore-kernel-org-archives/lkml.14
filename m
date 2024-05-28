@@ -1,108 +1,184 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD22172BCB
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 16:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970231DA4C
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 16:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716913684; cv=none; b=lwTo62ov569cGADEN4WGl7qMW8ku7gZ/DBm8RmNZwbN9ohcl6gyPxW0tBUDVZwG3AY7+4f5mnPOG58Qn+Pn+1yGlaN+Ef3urq15lD+01tbKQLq69+8bZKothF6+9kKk5ASmQOeANxOY6yv8ElGvFFS1GP+oKa7p/jVLFLc8uKyE=
+	t=1716913873; cv=none; b=MxLXsj38+OI+AYbXcNx/F7p/tN9oor8rgghYv2mZ4ZAgIHGogQbbIsYhCnrqe6GP1I2KT70iN+hasmT5gRFrgb3OaOh69uHPcUJdtad/tiW2hPuzjS1Dkof4kt8Kzzr7aoNHtLVXJia3F6adDyX0W5UQY8m/QAyo+KliLyH0xe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716913684; c=relaxed/simple;
-	bh=t74W54+/Ll0YLi8c76pQC7uwzEIjWDtBfp3CisuTzmI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mmE7cjv7qlnsUMpECF3Yvj51CQ3971QSZcSpghJh4sqiFjefTm4Gix0uX7LJJ1lnvQJOJxZyHLlAVM6P1c2zcHWz3I9NuHpQuLfxHSj3iMChp9J/2TaHTWyeYXkCcSQSiSDEcKLJmzVmRqQI4wkLM27AxvUnB8sEEgxSicRtmws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D0juCU8p; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1716913873; c=relaxed/simple;
+	bh=Mz/StU4wUt+3b/KQuEZ6HR4Rd1ua4nPPdh3/iUwgfog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k34+l5P94xm0N3g5tEuerHvtRWMPhkU65D1+E92CVBLmC9C3wmJRRmASpnY/7pLrhmsHIE6pJF4LzW64s9muwV+l+Oq89jX0vikTJmcUgB1dvtWRcmaV+3fAuypJK+8h9UPjZ39Z2dsZsskQkd8kO7fEpTxY+NAVDQDS2ECCJUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YaShId9Y; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D0juCU8p"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-43fdc18a89cso3735071cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 09:28:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716913681; x=1717518481; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t74W54+/Ll0YLi8c76pQC7uwzEIjWDtBfp3CisuTzmI=;
-        b=D0juCU8pUZP//lXn5tCCCCJJOcaXMhCl0Qi6bLWCnk/aynCZwKnWzhSlTVHysM8f9I
-         lawHkALP+QdtgIFJRbeU8a+ne0kNdmDuwAPvrTpY9cW2k6RNTjkHF8aSW/GSj7VPVgi8
-         LBNdE+tYJCiWHSO7LU1egtt6NuLKc6AIMimHA=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YaShId9Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716913866;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=KOijGqYwatsRHcZFWC3eapxDqv1fMEWcXNilAW1npbM=;
+	b=YaShId9YNp5Hc+0jZ4eDJGaYPz/IZz9w1vbx61lSm54CFy1iWtw01uUr6lDJGicrVAqfTR
+	ZXkE1a/84rHWgEaKUenaZ75WL6USu/ajLT6GFjPjwI4RBI+fM4SsigXrdKulMpxHDuogKW
+	ZT1JU+QJaMHQKVkxQ828qB3sSuf98VI=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-12-bC-7rhNAN9-tqtSlyxag9w-1; Tue, 28 May 2024 12:31:04 -0400
+X-MC-Unique: bC-7rhNAN9-tqtSlyxag9w-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5785b36c703so585643a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 09:31:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716913681; x=1717518481;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t74W54+/Ll0YLi8c76pQC7uwzEIjWDtBfp3CisuTzmI=;
-        b=cxri3sfxVLDJCI+frwsBSLBo0LZGJhFCBRsa5xgNSzoOkUHL6I75FsiNebA4Aq0M+/
-         D6nbTRPWLYPLOSPpg5YKYZzcQsNj2kE/xboKeXrdCfbkGkv+SdBXK/Hz9M0fPSHT1PEY
-         +3wileie4Sn2NAu1iTYGF/5evgcae3wqSHY7cjH4WRk0Pc9gCHjnk5SJet7/lQGpIPz/
-         3k4sHMxvBMNekOSN+RasTpLhdeIP3jciSsQXbKPzfZVAGth2gWeFmkQN3r18PSXEe07R
-         cx7Lkxl+x0VIxBOg09VNYUCFIQHK4RW7JfhHzLn1gLjkRiyyix6JjISxAc4fMCjr6AR4
-         QUOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNyoLYWpyEi15EK9IO7fFcTAkPlEblp8I9f9zSHGLFvWpFPHHPaxgdDJ4og9Qd3a3+Pe+J1EzYjuLmCd/WO8K/D/EbBgHaOXWjKimo
-X-Gm-Message-State: AOJu0YxBv4oPXZm8r7gjqCz7/91R3h+Q5NNXR4IALczWQf5fG189njp+
-	IdGNfDfMtG3e1qByntz1AH+UEak1L9Q++nqKc/CriAL6r5VWMHWxx+VM3oDOJrDvWEhcVNWJxdc
-	=
-X-Google-Smtp-Source: AGHT+IFoh/C/8yuXe7M8pA+620kHflzwzRsoBbHn6+H1eTZfstQX2c/GdsdqRr17avCc30cNhLgFyQ==
-X-Received: by 2002:a05:622a:148f:b0:43a:712d:414f with SMTP id d75a77b69052e-43fb0eeb3afmr151702351cf.42.1716913681481;
-        Tue, 28 May 2024 09:28:01 -0700 (PDT)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com. [209.85.160.182])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fb180456fsm44508601cf.50.2024.05.28.09.28.00
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1716913863; x=1717518663;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KOijGqYwatsRHcZFWC3eapxDqv1fMEWcXNilAW1npbM=;
+        b=OPNhMdNes+t+8JsdZHmvtabVH3BjN0Ie3XN8EUCCfCldbaY7KxlkbFLmEtYcb8pG0d
+         3UGVtcGoguhFTWbb6Yv8cPWTjryATjLZdJGnRIK551De4jHjlauaifiU5QSxnT3TCGEc
+         uaRsHxyEruQNIg47OmAe2mJkpWMLBJso+gBvbHXgX6hfNwQlgKSZbSr8tEfRZByh3GAn
+         BgAQIjm3eVx7MYBsLZoKTAC1DAA8Thi8Dl+zFuabEDrmN/l6/rNwG+xWrhMko0QlItvb
+         VBPIBPL+Aaz4XG0ldq0R3jXfGs32p9uU5YJHfsC5mA5hYZNSQtLNW+ErdHRbbr8lLEWi
+         //MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8aMiZlJA+DPxkFPNkw3ZHNSyhISECFSTFOa3zkRMpR1gNKBEZYuUo/ha0C0Ke14wwOCBzS3XesHBIWbRnTI00P/w/wOejrNh27Mp/
+X-Gm-Message-State: AOJu0YyuJJdQnRkEfuzVlMlsTTw7TS9NgLqzwiWDb22X8GZnL0WM0RVI
+	4lnwNIXooz9LTKrg4YB2VWCFkTfuN5EHSsi0pGYPquSSxl8mWZ3VDsm8+iIOrsPjvWWXPn1IBUE
+	VuBjKv5l75Cdp54Ueh2ud2eFqp2JRQC9y8eCw4KjJq8isulliwqRaXtGz95iGJQ==
+X-Received: by 2002:a50:cd9d:0:b0:579:1f36:603a with SMTP id 4fb4d7f45d1cf-5791f366111mr8898142a12.17.1716913863622;
+        Tue, 28 May 2024 09:31:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGlPv5GaFsn+dFXp7P++pq1zvNnUcp4Z3tgLurZbE/g/iCsp27FCIP84TPuqKbEVDkaL7lO3A==
+X-Received: by 2002:a50:cd9d:0:b0:579:1f36:603a with SMTP id 4fb4d7f45d1cf-5791f366111mr8898107a12.17.1716913863205;
+        Tue, 28 May 2024 09:31:03 -0700 (PDT)
+Received: from [192.168.10.48] ([151.95.155.52])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-579c73c771esm4166377a12.65.2024.05.28.09.31.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 May 2024 09:28:00 -0700 (PDT)
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43e14f0bd75so857341cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 09:28:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7jDs/oq6XhoRVDkhYeH3W9EXxcXZIm8wmqA2UqAHMEgGbpnBSNmV+8nP5piSQOklwPQzxmJ/MaLr3Ezc6/fAlnF9C8rBv1VgtZgkd
-X-Received: by 2002:a05:622a:1ccb:b0:43d:85ae:bee with SMTP id
- d75a77b69052e-43fbb0588e9mr7721931cf.7.1716913679727; Tue, 28 May 2024
- 09:27:59 -0700 (PDT)
+        Tue, 28 May 2024 09:31:02 -0700 (PDT)
+Message-ID: <3eca1e7e-9ddc-47a2-b214-d8788a069222@redhat.com>
+Date: Tue, 28 May 2024 18:31:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422060811.670693-1-xuxinxiong@huaqin.corp-partner.google.com>
- <CAD=FV=WRLLuOkCJeM6RdAb6xLN-cPH+hfWbOv9-LujB-WMGEFw@mail.gmail.com>
- <CAGoogDB-mj8_xu04w3V2ZxOBTWoXcPKrVR1NRt6BFcpjHX3-7Q@mail.gmail.com>
- <CAD=FV=WwsR9e-ZXJRY11FvdUZ66YPy9vqmY_=sGDw5Wqk1eV3w@mail.gmail.com>
- <CAGoogDBCzfKwkAA-VAs3_Cdw_4oFO94mt7yjy47Sp2RAtqtPxA@mail.gmail.com> <CAD=FV=WYiD-BUpksBnZrkWvORepZqtaAvm5645X-_oJPea0s0w@mail.gmail.com>
-In-Reply-To: <CAD=FV=WYiD-BUpksBnZrkWvORepZqtaAvm5645X-_oJPea0s0w@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 28 May 2024 09:27:43 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WMC0XZBc3UKP+Qzb5aeiWBnXrYDf31PNP5cGeAT-8XcA@mail.gmail.com>
-Message-ID: <CAD=FV=WMC0XZBc3UKP+Qzb5aeiWBnXrYDf31PNP5cGeAT-8XcA@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel-edp: Add panel CSOT MNB601LS1-1
-To: Xuxin Xiong <xuxinxiong@huaqin.corp-partner.google.com>
-Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
-	hsinyi@google.com, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] KVM: SEV-ES: Prevent MSR access post VMSA
+ encryption
+To: Ravi Bangoria <ravi.bangoria@amd.com>, seanjc@google.com,
+ nikunj.dadhania@amd.com
+Cc: thomas.lendacky@amd.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ michael.roth@amd.com, pankaj.gupta@amd.com, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, santosh.shukla@amd.com
+References: <20240523121828.808-1-ravi.bangoria@amd.com>
+ <20240523121828.808-2-ravi.bangoria@amd.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20240523121828.808-2-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 5/23/24 14:18, Ravi Bangoria wrote:
+> From: Nikunj A Dadhania <nikunj@amd.com>
+> 
+> KVM currently allows userspace to read/write MSRs even after the VMSA is
+> encrypted. This can cause unintentional issues if MSR access has side-
+> effects. For ex, while migrating a guest, userspace could attempt to
+> migrate MSR_IA32_DEBUGCTLMSR and end up unintentionally disabling LBRV on
+> the target. Fix this by preventing access to those MSRs which are context
+> switched via the VMSA, once the VMSA is encrypted.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>   arch/x86/kvm/svm/svm.c | 18 ++++++++++++++++++
+>   1 file changed, 18 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 3d0549ca246f..489b0183f37d 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -2834,10 +2834,24 @@ static int svm_get_msr_feature(struct kvm_msr_entry *msr)
+>   	return 0;
+>   }
+>   
+> +static bool
+> +sev_es_prevent_msr_access(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> +{
+> +	return sev_es_guest(vcpu->kvm) &&
+> +	       vcpu->arch.guest_state_protected &&
+> +	       svm_msrpm_offset(msr_info->index) != MSR_INVALID &&
+> +	       !msr_write_intercepted(vcpu, msr_info->index);
+> +}
+> +
+>   static int svm_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   {
+>   	struct vcpu_svm *svm = to_svm(vcpu);
+>   
+> +	if (sev_es_prevent_msr_access(vcpu, msr_info)) {
+> +		msr_info->data = 0;
+> +		return 0;
 
-On Mon, May 6, 2024 at 8:54=E2=80=AFAM Doug Anderson <dianders@chromium.org=
-> wrote:
->
-> Hi,
->
-> On Tue, Apr 23, 2024 at 6:55=E2=80=AFPM Xuxin Xiong
-> <xuxinxiong@huaqin.corp-partner.google.com> wrote:
-> >
-> > Hi Doug, thank you!
-> > We had reported this info to the CSOT to correct the vendor id.
-> > If they confirm to fix this with the same product ID, we will submit a
-> > patch to fix this.
->
-> FYI, "top posting" like this is generally frowned upon on kernel
-> mailing lists. One such reference about this is [1]. Some folks are
-> very passionate about this topic, so please keep it in mind to avoid
-> upsetting people in the community.
->
-> In any case: did you get any response from CSOT about the improper EDID?
+This should return -EINVAL, not 0.  Likewise below in svm_set_msr().
 
-Just following up here. Was there any response from CSOT?
+Paolo
 
--Doug
+> +	}
+> +
+>   	switch (msr_info->index) {
+>   	case MSR_AMD64_TSC_RATIO:
+>   		if (!msr_info->host_initiated &&
+> @@ -2988,6 +3002,10 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>   
+>   	u32 ecx = msr->index;
+>   	u64 data = msr->data;
+> +
+> +	if (sev_es_prevent_msr_access(vcpu, msr))
+> +		return 0;
+> +
+>   	switch (ecx) {
+>   	case MSR_AMD64_TSC_RATIO:
+>   
+
