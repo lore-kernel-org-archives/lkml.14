@@ -1,189 +1,159 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF4B17B4F0;
-	Tue, 28 May 2024 21:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D5B224D1;
+	Tue, 28 May 2024 21:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716931013; cv=none; b=qR4mXdk0XitdNTQLkp2CnqvPN/PRYmkGtEw2Q+0/zaEKqndLsJzaAEubEdfGnBdBnCyCIDrP1A0bbwqBdPnbSB3ZEoXcg7M+s4dV6RxgBq2W37spCXu5GlIQR26C++AF9De+CILjIi5oNo2Dz84qZQtfHLe3sedzwKpOYKIprKc=
+	t=1716931079; cv=none; b=UrGCOw2OGoIgpg4Kdu2VZsacGIqCrEDvS7+rRAhfT5JkFG5q5Q+C+7f8BzzmZ0qU2UBVw6+xZ1jU1MLhpxrfUVw6Zi08tzCgFPi97kFlTPtShuonMyh/7LDQq7GLr7dO699XkH3JW7vLd6FhRQav7RyqjNeZJV9RB15oDKIqtj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716931013; c=relaxed/simple;
-	bh=ozPdZGWyJWdl4U2qdefcS/T8GjDcoCTXAMNSlFsbue4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UfYj3EQOWMxSry8/6L7/TmdU60awfL2E27ULcjBVW+uVtvi0277EW7Z2gh4ye7deopUQINT8I8xGKyRGBQCOMey6Nr9+4cWVPJC6g36+oIxdnKWJGkvdcavfOBWslx1QtA7G2c0tHyHuSSLHME3wfJNSPeNyMViV0h2MovjxFOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YygSffBF; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716931079; c=relaxed/simple;
+	bh=df6P1xfVcWeYr0Prst7JHR/lRDenSZqOcvbQYQ8TnsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgMAYQBkjUFfwn5PPJp3b0aBLQOE911GGGRQnbpsW1YWY3CW5QUyHN3YPmq3CJOH089+vwRCCwavB76ukKkJ3CMIJlWa5YrUyvdBzWxV3lKYjcROimOoUBxH3OlUVXEf3/XjbELJKJGn1PAPp6s6lHoPhuElIazUA8wMsvzRhwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uipdfcm4; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YygSffBF"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SAjM5G016985;
-	Tue, 28 May 2024 21:16:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	l6lpryTJS+q85/sL/NdSWxe4EZqCUoiAFgyL5ZBhAWc=; b=YygSffBFWEcXo/nr
-	JyPFemnnMFU3haOjXitbBQ5J8sbqanRcV3pPIgVjOdNt7arDLQ+UoOiUWqqMlWDU
-	POh7Bn5ff4xvKyHN9e2W9i3HYCmk+ksHCQUpGMJ2DM0RFCbe4LfXrsX8fzjjEao2
-	wk5s9+pRCwSASlbossskJLq4lTp1YILKtpl/qbk6bZLlxlGmEdlXNwl0/M0urbEN
-	QMQDoVz7V/FbNSsJZGKhnmy6Njj3rtN90Y79Khajvcrl37tnMz7uRfl1oLiRSzbq
-	kVioMu5aCVfci5yFh4k1JPoIIfKfxBiK/eUfP5aypNEWkFQs/7JE+P5cNcUnlywO
-	jAoHrA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yb9yj7bjx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 21:16:39 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SLGcJ4022652
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 21:16:38 GMT
-Received: from [10.71.108.229] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 28 May
- 2024 14:16:37 -0700
-Message-ID: <70e03cd2-369e-4537-986d-50e517099b5b@quicinc.com>
-Date: Tue, 28 May 2024 14:16:37 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uipdfcm4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716931077; x=1748467077;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=df6P1xfVcWeYr0Prst7JHR/lRDenSZqOcvbQYQ8TnsY=;
+  b=Uipdfcm4a1vElnrAjN/KJJzM1laW0j9c+ZiN+KQHP44g+n2/+0A8/uOr
+   rRBVgKA8aThU/0oIm1xHcaG12cciawjMoFVzXYHdS9I+P3o59BLJuU+tv
+   hKiFA6IUUD9G8GqUKL/hsiAcH0HRdLA5qsqbyVmMAyS2LH3K2v5XMOw1b
+   raYH1CWB0E3NfEYRW6B474L7p8pZZmj/UHtM8skNGL92mBpsLeXAGOqVP
+   o19xr2dC2shZy/dR9gACj3J/S+4Nq1UYy7ABY9JI6d6LwQDDgG/3SqO3G
+   KCYt6G8hBly5t37e87aCQ7iosGz8SyCHpc13URLyTDdge5Fy1/G96GBGX
+   Q==;
+X-CSE-ConnectionGUID: mwC8VMBXQu6DsDRXqOAqfA==
+X-CSE-MsgGUID: 4bLoXLVUQDOBo2NWaeYgKg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24433713"
+X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
+   d="scan'208";a="24433713"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 14:17:57 -0700
+X-CSE-ConnectionGUID: 52dP+MQSTjGafcuMc8lliw==
+X-CSE-MsgGUID: 9ajn04XiQ+KcTDxH1ciLeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
+   d="scan'208";a="40196234"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 28 May 2024 14:17:54 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sC4Cd-000Clf-1k;
+	Tue, 28 May 2024 21:17:51 +0000
+Date: Wed, 29 May 2024 05:17:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Arnd Bergmann <arnd@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Zhang Lixu <lixu.zhang@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Arnd Bergmann <arnd@arndb.de>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] HID: intel-ish-hid: fix endian-conversion
+Message-ID: <202405290447.n14W21hZ-lkp@intel.com>
+References: <20240528115802.3122955-2-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/6] drm/msm/dpu: fix video mode DSC for DSI
-Content-Language: en-US
-To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Daniel
- Vetter" <daniel@ffwll.ch>,
-        Vinod Koul <vkoul@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Jonathan
- Marek" <jonathan@marek.ca>
-References: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-0-f797ffba4682@linaro.org>
- <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-1-f797ffba4682@linaro.org>
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20240527-msm-drm-dsc-dsi-video-upstream-4-v5-1-f797ffba4682@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fwRQlZwFGcnADb390U-_EubohxWBkNUj
-X-Proofpoint-ORIG-GUID: fwRQlZwFGcnADb390U-_EubohxWBkNUj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_14,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 spamscore=0
- clxscore=1011 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405280159
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528115802.3122955-2-arnd@kernel.org>
+
+Hi Arnd,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on hid/for-next]
+[also build test ERROR on next-20240528]
+[cannot apply to linus/master v6.10-rc1]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Arnd-Bergmann/HID-intel-ish-hid-fix-endian-conversion/20240528-200100
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
+patch link:    https://lore.kernel.org/r/20240528115802.3122955-2-arnd%40kernel.org
+patch subject: [PATCH 2/2] HID: intel-ish-hid: fix endian-conversion
+config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240529/202405290447.n14W21hZ-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240529/202405290447.n14W21hZ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405290447.n14W21hZ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/hid/intel-ish-hid/ishtp/loader.c:178:9: error: use of undeclared identifier 'dma'
+     178 |                                                  &dma, GFP_KERNEL);
+         |                                                   ^
+   drivers/hid/intel-ish-hid/ishtp/loader.c:186:52: error: use of undeclared identifier 'dma'
+     186 |                 fragment->fragment_tbl[i].ddr_adrs = cpu_to_le64(dma);
+         |                                                                  ^
+   include/linux/byteorder/generic.h:86:21: note: expanded from macro 'cpu_to_le64'
+      86 | #define cpu_to_le64 __cpu_to_le64
+         |                     ^
+   2 errors generated.
 
 
+vim +/dma +178 drivers/hid/intel-ish-hid/ishtp/loader.c
 
-On 5/27/2024 7:21 AM, Jun Nie wrote:
-> From: Jonathan Marek <jonathan@marek.ca>
-> 
-> Add width change in DPU timing for DSC compression case to work with
-> DSI video mode.
+   154	
+   155	/**
+   156	 * prepare_dma_bufs() - Prepare the DMA buffer for transferring firmware fragments
+   157	 * @dev: The ISHTP device
+   158	 * @ish_fw: The ISH firmware
+   159	 * @fragment: The ISHTP firmware fragment descriptor
+   160	 * @dma_bufs: The array of DMA fragment buffers
+   161	 * @fragment_size: The size of a single DMA fragment
+   162	 *
+   163	 * Return: 0 on success, negative error code on failure
+   164	 */
+   165	static int prepare_dma_bufs(struct ishtp_device *dev,
+   166				    const struct firmware *ish_fw,
+   167				    struct loader_xfer_dma_fragment *fragment,
+   168				    void **dma_bufs, u32 fragment_size, u32 fragment_count)
+   169	{
+   170		dma_addr_t dma_addr;
+   171		u32 offset = 0;
+   172		u32 length;
+   173		int i;
+   174	
+   175		for (i = 0; i < fragment->fragment_cnt && offset < ish_fw->size; i++) {
+   176			dma_bufs[i] = dma_alloc_coherent(dev->devc, fragment_size, &dma_addr, GFP_KERNEL);
+   177			dma_bufs[i] = dma_alloc_coherent(dev->devc, fragment_size,
+ > 178							 &dma, GFP_KERNEL);
+   179			if (!dma_bufs[i])
+   180				return -ENOMEM;
+   181	
+   182			fragment->fragment_tbl[i].ddr_adrs = cpu_to_le64(dma_addr);
+   183	
+   184			memcpy(dma_bufs[i], ish_fw->data + offset, le32_to_cpu(fragment->fragment_tbl[i].length));
+   185			dma_wmb();
+   186			fragment->fragment_tbl[i].ddr_adrs = cpu_to_le64(dma);
+   187			length = clamp(ish_fw->size - offset, 0, fragment_size);
+   188			fragment->fragment_tbl[i].length = cpu_to_le32(length);
+   189			fragment->fragment_tbl[i].fw_off = cpu_to_le32(offset);
+   190	
+   191			offset += length;
+   192		}
+   193	
+   194		return 0;
+   195	}
+   196	
 
-Hi Jun,
-
-LGTM
-
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-
-Thanks,
-
-Jessica Zhang
-
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c          |  2 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h     |  8 ++++++++
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 18 ++++++++++++++++++
->   3 files changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index 119f3ea50a7c..48cef6e79c70 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -564,7 +564,7 @@ bool dpu_encoder_use_dsc_merge(struct drm_encoder *drm_enc)
->   	return (num_dsc > 0) && (num_dsc > intf_count);
->   }
->   
-> -static struct drm_dsc_config *dpu_encoder_get_dsc_config(struct drm_encoder *drm_enc)
-> +struct drm_dsc_config *dpu_encoder_get_dsc_config(struct drm_encoder *drm_enc)
->   {
->   	struct msm_drm_private *priv = drm_enc->dev->dev_private;
->   	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(drm_enc);
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> index 002e89cc1705..2167c46c1a45 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> @@ -334,6 +334,14 @@ static inline enum dpu_3d_blend_mode dpu_encoder_helper_get_3d_blend_mode(
->    */
->   unsigned int dpu_encoder_helper_get_dsc(struct dpu_encoder_phys *phys_enc);
->   
-> +/**
-> + * dpu_encoder_get_dsc_config - get DSC config for the DPU encoder
-> + *   This helper function is used by physical encoder to get DSC config
-> + *   used for this encoder.
-> + * @drm_enc: Pointer to encoder structure
-> + */
-> +struct drm_dsc_config *dpu_encoder_get_dsc_config(struct drm_encoder *drm_enc);
-> +
->   /**
->    * dpu_encoder_get_drm_fmt - return DRM fourcc format
->    * @phys_enc: Pointer to physical encoder structure
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> index ef69c2f408c3..925ec6ada0e1 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> @@ -11,6 +11,7 @@
->   #include "dpu_trace.h"
->   #include "disp/msm_disp_snapshot.h"
->   
-> +#include <drm/display/drm_dsc_helper.h>
->   #include <drm/drm_managed.h>
->   
->   #define DPU_DEBUG_VIDENC(e, fmt, ...) DPU_DEBUG("enc%d intf%d " fmt, \
-> @@ -115,6 +116,23 @@ static void drm_mode_to_intf_timing_params(
->   		timing->h_front_porch = timing->h_front_porch >> 1;
->   		timing->hsync_pulse_width = timing->hsync_pulse_width >> 1;
->   	}
-> +
-> +	/*
-> +	 * for DSI, if compression is enabled, then divide the horizonal active
-> +	 * timing parameters by compression ratio. bits of 3 components(R/G/B)
-> +	 * is compressed into bits of 1 pixel.
-> +	 */
-> +	if (phys_enc->hw_intf->cap->type != INTF_DP && timing->compression_en) {
-> +		struct drm_dsc_config *dsc =
-> +		       dpu_encoder_get_dsc_config(phys_enc->parent);
-> +		/*
-> +		 * TODO: replace drm_dsc_get_bpp_int with logic to handle
-> +		 * fractional part if there is fraction
-> +		 */
-> +		timing->width = timing->width * drm_dsc_get_bpp_int(dsc) /
-> +				(dsc->bits_per_component * 3);
-> +		timing->xres = timing->width;
-> +	}
->   }
->   
->   static u32 get_horizontal_total(const struct dpu_hw_intf_timing_params *timing)
-> 
-> -- 
-> 2.34.1
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
