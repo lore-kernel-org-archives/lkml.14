@@ -1,741 +1,350 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197A516D4C7;
-	Tue, 28 May 2024 11:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35A4916DEBB;
+	Tue, 28 May 2024 11:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716896292; cv=none; b=qE7zrpfe4R+RIqBEA24GY86P+ssCjqIMYRI4P5o6wz1BeE+aePQcIcJDIhJ/gYOaRGLWoueFn4RWuIOEbCPN6FNGCwEayLhWldVrUqKHYhmsiB4lZpVrtg1AR1VMqw88GInga1ZlasGjv+bs4ALsS8X6slGgdLbp3jPHnhpVY1M=
+	t=1716896299; cv=none; b=aGDgcDBjAsgDSPjKYJNuMSn07B6BaYtPwt+3R63heQlIyAsgLoPc/g1oRsmyxGL9zfQwqYhXaLEOaVO1iXdTFe77LLPoNKzy66UvUuA68rXMMahOgHfAwNgxyfgmIzg5pR5jlKggYwYiVU4PpreLiWDUUzqpkVM0XEEEzpv/GH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716896292; c=relaxed/simple;
-	bh=teSRQulP8/vQHUOtZIdk6QCQr+soiqmHveWl7Fr0AGE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=alDpeEuxoTWEwmSWFIUDWzmqJNEXlrEEszOAO5sQl+UM/FN+lxh52O4XVuncd3h07DorNEt9FImksLFZ88lqz7SAQHG7S7Pomv9/8Jp9SzyOd4zHvIvRIiizf8GoJgC16utw+J4TQUtfFctSPbv9XyXwOirzq5hwWyyeYKT6u50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OVG36fSf; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OVG36fSf"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44SBbi83029389;
-	Tue, 28 May 2024 06:37:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716896264;
-	bh=2mM5jtU/kvxUwDKuDT2HsHKMNoLJkLzVeZPCywl44e0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=OVG36fSfvFUNxgZWwYydEl4aOfik3evKsA+B+LiaPbTTAyxmlAEtfkRMlyqJ0gJE1
-	 3O8KmkjLqAtpkM+PTKmcjz8bP6WiBci2/qE28cKLHRIsxB/rKqmiiBL4TKskEA3ZKo
-	 4uUZoK9X5BIeYTZ3HyH8uoFywixEGvqZ36ohmn4U=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44SBbi8s028111
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 28 May 2024 06:37:44 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 28
- May 2024 06:37:43 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 28 May 2024 06:37:43 -0500
-Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44SBbhvD083865;
-	Tue, 28 May 2024 06:37:43 -0500
-Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 44SBbgOf007909;
-	Tue, 28 May 2024 06:37:43 -0500
-From: MD Danish Anwar <danishanwar@ti.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-        Jan Kiszka
-	<jan.kiszka@siemens.com>, Simon Horman <horms@kernel.org>,
-        Andrew Lunn
-	<andrew@lunn.ch>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Wolfram Sang
-	<wsa+renesas@sang-engineering.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Diogo Ivo <diogo.ivo@siemens.com>,
-        Roger
- Quadros <rogerq@kernel.org>,
-        MD Danish Anwar <danishanwar@ti.com>, Paolo
- Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
-	<edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC: <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-Subject: [PATCH net-next v6 3/3] net: ti: icssg-prueth: Add support for ICSSG switch firmware
-Date: Tue, 28 May 2024 17:07:34 +0530
-Message-ID: <20240528113734.379422-4-danishanwar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240528113734.379422-1-danishanwar@ti.com>
-References: <20240528113734.379422-1-danishanwar@ti.com>
+	s=arc-20240116; t=1716896299; c=relaxed/simple;
+	bh=ix5QqjvOiMJlSqgylEXpXdAKT28y5M4v8cePiRKVtxY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lsU+fc8gMyYPUo8E9yn8288Is1Wh3HZeKfcn8XjYdT1ZDwVTkVwtMoX7Q5bjc5xSc/pjKdWpiJSRfHHe+sAcTQqfVLs3B1EI8fR8F0xcVPypkCcdmvIhmOJm8OtpeNeQ568fwcYKYATsG4iWn1PrHH4R7MOptfh327zPfpD9wNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5703339;
+	Tue, 28 May 2024 04:38:40 -0700 (PDT)
+Received: from [10.1.36.57] (e133649.arm.com [10.1.36.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5FAC3F762;
+	Tue, 28 May 2024 04:38:12 -0700 (PDT)
+Message-ID: <ede83265-4107-4c21-bc33-f733326daafe@arm.com>
+Date: Tue, 28 May 2024 12:38:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 3/6] sched/fair: Use util biases for utilization
+ and frequency
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Qais Yousef <qyousef@layalina.io>,
+ Morten Rasmussen <morten.rasmussen@arm.com>,
+ Lukasz Luba <lukasz.luba@arm.com>,
+ Christian Loehle <christian.loehle@arm.com>, pierre.gondois@arm.com,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <cover.1715082714.git.hongyan.xia2@arm.com>
+ <f0be5911214d2f6f7ea92c6c3eed37270215c590.1715082714.git.hongyan.xia2@arm.com>
+ <a1adc985-056f-4fac-9b2d-d140c3ee9e9b@arm.com>
+Content-Language: en-US
+From: Hongyan Xia <hongyan.xia2@arm.com>
+In-Reply-To: <a1adc985-056f-4fac-9b2d-d140c3ee9e9b@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add support for ICSSG switch firmware using existing Dual EMAC driver
-with switchdev.
+On 26/05/2024 23:52, Dietmar Eggemann wrote:
+> On 07/05/2024 14:50, Hongyan Xia wrote:
+>> Use the new util_avg_bias for task and runqueue utilization. We also
+>> maintain separate util_est and util_est_uclamp signals.
+>>
+>> Now that we have the sum aggregated CFS util value, we do not need to
+> 
+> There is the work uclamp missing somehow here.
 
-Limitations:
-VLAN offloading is limited to 0-256 IDs.
-MDB/FDB static entries are limited to 511 entries and different FDBs can
-hash to same bucket and thus may not completely offloaded
+Ack.
 
-Example assuming ETH1 and ETH2 as ICSSG2 interfaces:
+>> consult uclamp buckets to know how the frequency should be clamped. We
+>> simply look at the aggregated top level rq->cfs.avg.util_avg +
+>> rq->cfs.avg.util_avg_bias and rq->cfs.avg.util_est_uclamp to know what
+>> frequency to choose and how to place tasks.
+> 
+> [...]
+> 
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 571c8de59508..14376f23a8b7 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -4819,14 +4819,14 @@ static inline unsigned long cfs_rq_load_avg(struct cfs_rq *cfs_rq)
+>>   
+>>   static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf);
+>>   
+>> -static inline unsigned long task_util(struct task_struct *p)
+>> +static inline unsigned long task_runnable(struct task_struct *p)
+>>   {
+>> -	return READ_ONCE(p->se.avg.util_avg);
+>> +	return READ_ONCE(p->se.avg.runnable_avg);
+>>   }
+>>   
+>> -static inline unsigned long task_runnable(struct task_struct *p)
+>> +static inline unsigned long task_util(struct task_struct *p)
+>>   {
+>> -	return READ_ONCE(p->se.avg.runnable_avg);
+>> +	return READ_ONCE(p->se.avg.util_avg);
+>>   }
+>>   
+>>   static inline unsigned long _task_util_est(struct task_struct *p)
+>> @@ -4839,6 +4839,52 @@ static inline unsigned long task_util_est(struct task_struct *p)
+>>   	return max(task_util(p), _task_util_est(p));
+>>   }
+> 
+> IMHO, we now have two complete hierarchies of util signals:
+> 
+>         (a)                         (b) (uclamp version of (a))
+> 
+> (1) task_util()                 task_util_uclamp() (+ task_util_bias())
+> 
+> (2) _task_util_est()            _task_util_est_uclamp()
+> 
+> (3) task_util_est()             task_util_est_uclamp()
+> 
+> (4) cpu_util()                  cpu_util_uclamp()
+> 
+> (5) cpu_util_cfs()              cpu_util_cfs_uclamp()
+> 
+> (6) cpu_util_cfs_boost()        cpu_util_cfs_boost_uclamp()
+> 
+> 
+> For (4), (5), (6) we now have:
+> 
+> ---		                   cpu_util()	  cpu_util_uclamp()
+> 			
+> eenv_pd_busy_time()			x
+> 
+> eenv_pd_max_util()					x
+> 
+> find_energy_efficient_cpu()		x		x <-- (A)
+> 
+> cpu_util_without()			x
+> 
+> ---			    cpu_util_cfs()	 cpu_util_cfs_uclamp()
+> 
+> cpu_overutilized()			x		x <-- (B)
+> 
+> update_sg_lb_stats()			x
+> 
+> update_numa_stats()			x
+> 
+> sched_cpu_util()			x
+> 
+> ---                     cpu_util_cfs_boost() cpu_util_cfs_boost_uclamp()
+> 
+> sched_balance_find_src_rq()		x
+> 
+> sugov_get_util()					x
+> 
+> uclamp version falls back to mon-uclamp version for !CONFIG_UCLAMP_TASK.
+> So it looks like taht in this case we calculate the same cpu utilization
+> value twice in (A) and (B).
 
-Switch to ICSSG Switch mode:
- ip link add name br0 type bridge
- ip link set dev eth1 master br0
- ip link set dev eth2 master br0
- ip link set dev br0 up
- bridge vlan add dev br0 vid 1 pvid untagged self
+That is indeed the case. I'll see how I can avoid this duplication, 
+hopefully without too much #ifdef mess.
 
-Going back to Dual EMAC mode:
+> [...]
+> 
+>> @@ -4970,134 +5026,29 @@ static inline unsigned long get_actual_cpu_capacity(int cpu)
+>>   }
+>>   
+>>   static inline int util_fits_cpu(unsigned long util,
+>> -				unsigned long uclamp_min,
+>> -				unsigned long uclamp_max,
+>> +				unsigned long util_uclamp,
+>>   				int cpu)
+>>   {
+>>   	unsigned long capacity = capacity_of(cpu);
+>> -	unsigned long capacity_orig;
+>> -	bool fits, uclamp_max_fits;
+>> -
+>> -	/*
+>> -	 * Check if the real util fits without any uclamp boost/cap applied.
+>> -	 */
+>> -	fits = fits_capacity(util, capacity);
+>> -
+>> -	if (!uclamp_is_used())
+>> -		return fits;
+>> -
+>> -	/*
+>> -	 * We must use arch_scale_cpu_capacity() for comparing against uclamp_min and
+>> -	 * uclamp_max. We only care about capacity pressure (by using
+>> -	 * capacity_of()) for comparing against the real util.
+>> -	 *
+>> -	 * If a task is boosted to 1024 for example, we don't want a tiny
+>> -	 * pressure to skew the check whether it fits a CPU or not.
+>> -	 *
+>> -	 * Similarly if a task is capped to arch_scale_cpu_capacity(little_cpu), it
+>> -	 * should fit a little cpu even if there's some pressure.
+>> -	 *
+>> -	 * Only exception is for HW or cpufreq pressure since it has a direct impact
+>> -	 * on available OPP of the system.
+>> -	 *
+>> -	 * We honour it for uclamp_min only as a drop in performance level
+>> -	 * could result in not getting the requested minimum performance level.
+>> -	 *
+>> -	 * For uclamp_max, we can tolerate a drop in performance level as the
+>> -	 * goal is to cap the task. So it's okay if it's getting less.
+>> -	 */
+>> -	capacity_orig = arch_scale_cpu_capacity(cpu);
+>>   
+>> -	/*
+>> -	 * We want to force a task to fit a cpu as implied by uclamp_max.
+>> -	 * But we do have some corner cases to cater for..
+>> -	 *
+>> -	 *
+>> -	 *                                 C=z
+>> -	 *   |                             ___
+>> -	 *   |                  C=y       |   |
+>> -	 *   |_ _ _ _ _ _ _ _ _ ___ _ _ _ | _ | _ _ _ _ _  uclamp_max
+>> -	 *   |      C=x        |   |      |   |
+>> -	 *   |      ___        |   |      |   |
+>> -	 *   |     |   |       |   |      |   |    (util somewhere in this region)
+>> -	 *   |     |   |       |   |      |   |
+>> -	 *   |     |   |       |   |      |   |
+>> -	 *   +----------------------------------------
+>> -	 *         CPU0        CPU1       CPU2
+>> -	 *
+>> -	 *   In the above example if a task is capped to a specific performance
+>> -	 *   point, y, then when:
+>> -	 *
+>> -	 *   * util = 80% of x then it does not fit on CPU0 and should migrate
+>> -	 *     to CPU1
+>> -	 *   * util = 80% of y then it is forced to fit on CPU1 to honour
+>> -	 *     uclamp_max request.
+>> -	 *
+>> -	 *   which is what we're enforcing here. A task always fits if
+>> -	 *   uclamp_max <= capacity_orig. But when uclamp_max > capacity_orig,
+>> -	 *   the normal upmigration rules should withhold still.
+>> -	 *
+>> -	 *   Only exception is when we are on max capacity, then we need to be
+>> -	 *   careful not to block overutilized state. This is so because:
+>> -	 *
+>> -	 *     1. There's no concept of capping at max_capacity! We can't go
+>> -	 *        beyond this performance level anyway.
+>> -	 *     2. The system is being saturated when we're operating near
+>> -	 *        max capacity, it doesn't make sense to block overutilized.
+>> -	 */
+>> -	uclamp_max_fits = (capacity_orig == SCHED_CAPACITY_SCALE) && (uclamp_max == SCHED_CAPACITY_SCALE);
+>> -	uclamp_max_fits = !uclamp_max_fits && (uclamp_max <= capacity_orig);
+>> -	fits = fits || uclamp_max_fits;
+>> +	if (fits_capacity(util_uclamp, capacity))
+>> +		return 1;
+>>   
+>> -	/*
+>> -	 *
+>> -	 *                                 C=z
+>> -	 *   |                             ___       (region a, capped, util >= uclamp_max)
+>> -	 *   |                  C=y       |   |
+>> -	 *   |_ _ _ _ _ _ _ _ _ ___ _ _ _ | _ | _ _ _ _ _ uclamp_max
+>> -	 *   |      C=x        |   |      |   |
+>> -	 *   |      ___        |   |      |   |      (region b, uclamp_min <= util <= uclamp_max)
+>> -	 *   |_ _ _|_ _|_ _ _ _| _ | _ _ _| _ | _ _ _ _ _ uclamp_min
+>> -	 *   |     |   |       |   |      |   |
+>> -	 *   |     |   |       |   |      |   |      (region c, boosted, util < uclamp_min)
+>> -	 *   +----------------------------------------
+>> -	 *         CPU0        CPU1       CPU2
+>> -	 *
+>> -	 * a) If util > uclamp_max, then we're capped, we don't care about
+>> -	 *    actual fitness value here. We only care if uclamp_max fits
+>> -	 *    capacity without taking margin/pressure into account.
+>> -	 *    See comment above.
+>> -	 *
+>> -	 * b) If uclamp_min <= util <= uclamp_max, then the normal
+>> -	 *    fits_capacity() rules apply. Except we need to ensure that we
+>> -	 *    enforce we remain within uclamp_max, see comment above.
+>> -	 *
+>> -	 * c) If util < uclamp_min, then we are boosted. Same as (b) but we
+>> -	 *    need to take into account the boosted value fits the CPU without
+>> -	 *    taking margin/pressure into account.
+>> -	 *
+>> -	 * Cases (a) and (b) are handled in the 'fits' variable already. We
+>> -	 * just need to consider an extra check for case (c) after ensuring we
+>> -	 * handle the case uclamp_min > uclamp_max.
+>> -	 */
+>> -	uclamp_min = min(uclamp_min, uclamp_max);
+>> -	if (fits && (util < uclamp_min) &&
+>> -	    (uclamp_min > get_actual_cpu_capacity(cpu)))
+>> +	if (fits_capacity(util, capacity))
+>>   		return -1;
+>>   
+>> -	return fits;
+>> +	return 0;
+> 
+> The possible return values stay the same it seems: 1 if uclamp (and so
+> util_avg) fit, -1 if util_avg fit and 0 if uclamp and uclamp don't fit.
 
- ip link set dev br0 down
- ip link set dev eth1 nomaster
- ip link set dev eth2 nomaster
- ip link del name br0 type bridge
+Yes, this is the intended change to address some comments elsewhere and 
+in previous revisions.
 
-By default, Dual EMAC firmware is loaded, and can be changed to switch
-mode by above steps
+> [...]
+> 
+>> @@ -6914,6 +6861,10 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>>   			"0 tasks on CFS of CPU %d, but util_avg_bias is %d\n",
+>>   			rq->cpu, rq->cfs.avg.util_avg_bias);
+>>   		WRITE_ONCE(rq->cfs.avg.util_avg_bias, 0);
+>> +		WARN_ONCE(rq->cfs.avg.util_est_uclamp,
+>> +			"0 tasks on CFS of CPU %d, but util_est_uclamp is %u\n",
+>> +			rq->cpu, rq->cfs.avg.util_est_uclamp);
+>> +		WRITE_ONCE(rq->cfs.avg.util_est_uclamp, 0);
+> 
+> Maybe better:
+> 
+> 		if (WARN_ONCE(...
+> 			WRITE_ONCE(rq->cfs.avg.util_est_uclamp, 0);
+> 
+> How can this happen, that there are 0 tasks on rq->cfs hierarcy and
+> rq->cfs.avg.util_est_uclamp is !0 ? Is there a specific code path when
+> this happens?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
----
- drivers/net/ethernet/ti/Kconfig               |   1 +
- drivers/net/ethernet/ti/Makefile              |   3 +-
- .../net/ethernet/ti/icssg/icssg_classifier.c  |   2 +-
- drivers/net/ethernet/ti/icssg/icssg_common.c  |   2 +
- drivers/net/ethernet/ti/icssg/icssg_config.c  | 152 +++++++++--
- drivers/net/ethernet/ti/icssg/icssg_config.h  |   7 +
- drivers/net/ethernet/ti/icssg/icssg_prueth.c  | 238 +++++++++++++++++-
- 7 files changed, 386 insertions(+), 19 deletions(-)
+Ack.
 
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index 1729eb0e0b41..f160a3b71499 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -204,6 +204,7 @@ config TI_ICSSG_PRUETH_SR1
- 	select TI_ICSS_IEP
- 	select TI_K3_CPPI_DESC_POOL
- 	depends on PRU_REMOTEPROC
-+	depends on NET_SWITCHDEV
- 	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
- 	help
- 	  Support dual Gigabit Ethernet ports over the ICSSG PRU Subsystem.
-diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
-index 6e086b4c0384..59cd20a38267 100644
---- a/drivers/net/ethernet/ti/Makefile
-+++ b/drivers/net/ethernet/ti/Makefile
-@@ -39,7 +39,8 @@ icssg-prueth-y := icssg/icssg_prueth.o \
- 		  icssg/icssg_config.o \
- 		  icssg/icssg_mii_cfg.o \
- 		  icssg/icssg_stats.o \
--		  icssg/icssg_ethtool.o
-+		  icssg/icssg_ethtool.o \
-+		  icssg/icssg_switchdev.o
- obj-$(CONFIG_TI_ICSSG_PRUETH_SR1) += icssg-prueth-sr1.o
- icssg-prueth-sr1-y := icssg/icssg_prueth_sr1.o \
- 		      icssg/icssg_common.o \
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_classifier.c b/drivers/net/ethernet/ti/icssg/icssg_classifier.c
-index 79ba47bb3602..8dee737639b6 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_classifier.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_classifier.c
-@@ -455,7 +455,7 @@ void icssg_ft1_set_mac_addr(struct regmap *miig_rt, int slice, u8 *mac_addr)
- {
- 	const u8 mask_addr[] = { 0, 0, 0, 0, 0, 0, };
- 
--	rx_class_ft1_set_start_len(miig_rt, slice, 0, 6);
-+	rx_class_ft1_set_start_len(miig_rt, slice, 6, 6);
- 	rx_class_ft1_set_da(miig_rt, slice, 0, mac_addr);
- 	rx_class_ft1_set_da_mask(miig_rt, slice, 0, mask_addr);
- 	rx_class_ft1_cfg_set_type(miig_rt, slice, 0, FT1_CFG_TYPE_EQ);
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index 088ab8076db4..873126dfc173 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -581,6 +581,8 @@ static int emac_rx_packet(struct prueth_emac *emac, u32 flow_id)
- 	} else {
- 		/* send the filled skb up the n/w stack */
- 		skb_put(skb, pkt_len);
-+		if (emac->prueth->is_switch_mode)
-+			skb->offload_fwd_mark = emac->offload_fwd_mark;
- 		skb->protocol = eth_type_trans(skb, ndev);
- 		napi_gro_receive(&emac->napi_rx, skb);
- 		ndev->stats.rx_bytes += pkt_len;
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_config.c b/drivers/net/ethernet/ti/icssg/icssg_config.c
-index 2213374d4d45..9444e56b7672 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_config.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_config.c
-@@ -107,28 +107,49 @@ static const struct map hwq_map[2][ICSSG_NUM_OTHER_QUEUES] = {
- 	},
- };
- 
-+static void icssg_config_mii_init_switch(struct prueth_emac *emac)
-+{
-+	struct prueth *prueth = emac->prueth;
-+	int mii = prueth_emac_slice(emac);
-+	u32 txcfg_reg, pcnt_reg, txcfg;
-+	struct regmap *mii_rt;
-+
-+	mii_rt = prueth->mii_rt;
-+
-+	txcfg_reg = (mii == ICSS_MII0) ? PRUSS_MII_RT_TXCFG0 :
-+				       PRUSS_MII_RT_TXCFG1;
-+	pcnt_reg = (mii == ICSS_MII0) ? PRUSS_MII_RT_RX_PCNT0 :
-+				       PRUSS_MII_RT_RX_PCNT1;
-+
-+	txcfg = PRUSS_MII_RT_TXCFG_TX_ENABLE |
-+		PRUSS_MII_RT_TXCFG_TX_AUTO_PREAMBLE |
-+		PRUSS_MII_RT_TXCFG_TX_IPG_WIRE_CLK_EN;
-+
-+	if (emac->phy_if == PHY_INTERFACE_MODE_MII && mii == ICSS_MII1)
-+		txcfg |= PRUSS_MII_RT_TXCFG_TX_MUX_SEL;
-+	else if (emac->phy_if != PHY_INTERFACE_MODE_MII && mii == ICSS_MII0)
-+		txcfg |= PRUSS_MII_RT_TXCFG_TX_MUX_SEL;
-+
-+	regmap_write(mii_rt, txcfg_reg, txcfg);
-+	regmap_write(mii_rt, pcnt_reg, 0x1);
-+}
-+
- static void icssg_config_mii_init(struct prueth_emac *emac)
- {
--	u32 rxcfg, txcfg, rxcfg_reg, txcfg_reg, pcnt_reg;
- 	struct prueth *prueth = emac->prueth;
- 	int slice = prueth_emac_slice(emac);
-+	u32 txcfg, txcfg_reg, pcnt_reg;
- 	struct regmap *mii_rt;
- 
- 	mii_rt = prueth->mii_rt;
- 
--	rxcfg_reg = (slice == ICSS_MII0) ? PRUSS_MII_RT_RXCFG0 :
--				       PRUSS_MII_RT_RXCFG1;
- 	txcfg_reg = (slice == ICSS_MII0) ? PRUSS_MII_RT_TXCFG0 :
- 				       PRUSS_MII_RT_TXCFG1;
- 	pcnt_reg = (slice == ICSS_MII0) ? PRUSS_MII_RT_RX_PCNT0 :
- 				       PRUSS_MII_RT_RX_PCNT1;
- 
--	rxcfg = MII_RXCFG_DEFAULT;
- 	txcfg = MII_TXCFG_DEFAULT;
- 
--	if (slice == ICSS_MII1)
--		rxcfg |= PRUSS_MII_RT_RXCFG_RX_MUX_SEL;
--
- 	/* In MII mode TX lines swapped inside ICSSG, so TX_MUX_SEL cfg need
- 	 * to be swapped also comparing to RGMII mode.
- 	 */
-@@ -137,7 +158,6 @@ static void icssg_config_mii_init(struct prueth_emac *emac)
- 	else if (emac->phy_if != PHY_INTERFACE_MODE_MII && slice == ICSS_MII1)
- 		txcfg |= PRUSS_MII_RT_TXCFG_TX_MUX_SEL;
- 
--	regmap_write(mii_rt, rxcfg_reg, rxcfg);
- 	regmap_write(mii_rt, txcfg_reg, txcfg);
- 	regmap_write(mii_rt, pcnt_reg, 0x1);
- }
-@@ -257,6 +277,66 @@ static int emac_r30_is_done(struct prueth_emac *emac)
- 	return 1;
- }
- 
-+static int prueth_switch_buffer_setup(struct prueth_emac *emac)
-+{
-+	struct icssg_buffer_pool_cfg __iomem *bpool_cfg;
-+	struct icssg_rxq_ctx __iomem *rxq_ctx;
-+	struct prueth *prueth = emac->prueth;
-+	int slice = prueth_emac_slice(emac);
-+	u32 addr;
-+	int i;
-+
-+	addr = lower_32_bits(prueth->msmcram.pa);
-+	if (slice)
-+		addr += PRUETH_NUM_BUF_POOLS * PRUETH_EMAC_BUF_POOL_SIZE;
-+
-+	if (addr % SZ_64K) {
-+		dev_warn(prueth->dev, "buffer pool needs to be 64KB aligned\n");
-+		return -EINVAL;
-+	}
-+
-+	bpool_cfg = emac->dram.va + BUFFER_POOL_0_ADDR_OFFSET;
-+	/* workaround for f/w bug. bpool 0 needs to be initialized */
-+	for (i = 0; i <  PRUETH_NUM_BUF_POOLS; i++) {
-+		writel(addr, &bpool_cfg[i].addr);
-+		writel(PRUETH_EMAC_BUF_POOL_SIZE, &bpool_cfg[i].len);
-+		addr += PRUETH_EMAC_BUF_POOL_SIZE;
-+	}
-+
-+	if (!slice)
-+		addr += PRUETH_NUM_BUF_POOLS * PRUETH_EMAC_BUF_POOL_SIZE;
-+	else
-+		addr += PRUETH_SW_NUM_BUF_POOLS_HOST * PRUETH_SW_BUF_POOL_SIZE_HOST;
-+
-+	for (i = PRUETH_NUM_BUF_POOLS;
-+	     i < 2 * PRUETH_SW_NUM_BUF_POOLS_HOST + PRUETH_NUM_BUF_POOLS;
-+	     i++) {
-+		/* The driver only uses first 4 queues per PRU so only initialize them */
-+		if (i % PRUETH_SW_NUM_BUF_POOLS_HOST < PRUETH_SW_NUM_BUF_POOLS_PER_PRU) {
-+			writel(addr, &bpool_cfg[i].addr);
-+			writel(PRUETH_SW_BUF_POOL_SIZE_HOST, &bpool_cfg[i].len);
-+			addr += PRUETH_SW_BUF_POOL_SIZE_HOST;
-+		} else {
-+			writel(0, &bpool_cfg[i].addr);
-+			writel(0, &bpool_cfg[i].len);
-+		}
-+	}
-+
-+	if (!slice)
-+		addr += PRUETH_SW_NUM_BUF_POOLS_HOST * PRUETH_SW_BUF_POOL_SIZE_HOST;
-+	else
-+		addr += PRUETH_EMAC_RX_CTX_BUF_SIZE;
-+
-+	rxq_ctx = emac->dram.va + HOST_RX_Q_PRE_CONTEXT_OFFSET;
-+	for (i = 0; i < 3; i++)
-+		writel(addr, &rxq_ctx->start[i]);
-+
-+	addr += PRUETH_EMAC_RX_CTX_BUF_SIZE;
-+	writel(addr - SZ_2K, &rxq_ctx->end);
-+
-+	return 0;
-+}
-+
- static int prueth_emac_buffer_setup(struct prueth_emac *emac)
- {
- 	struct icssg_buffer_pool_cfg __iomem *bpool_cfg;
-@@ -321,25 +401,63 @@ static void icssg_init_emac_mode(struct prueth *prueth)
- 	/* When the device is configured as a bridge and it is being brought
- 	 * back to the emac mode, the host mac address has to be set as 0.
- 	 */
-+	u32 addr = prueth->shram.pa + EMAC_ICSSG_SWITCH_DEFAULT_VLAN_TABLE_OFFSET;
-+	int i;
- 	u8 mac[ETH_ALEN] = { 0 };
- 
- 	if (prueth->emacs_initialized)
- 		return;
- 
--	regmap_update_bits(prueth->miig_rt, FDB_GEN_CFG1,
--			   SMEM_VLAN_OFFSET_MASK, 0);
--	regmap_write(prueth->miig_rt, FDB_GEN_CFG2, 0);
-+	/* Set VLAN TABLE address base */
-+	regmap_update_bits(prueth->miig_rt, FDB_GEN_CFG1, SMEM_VLAN_OFFSET_MASK,
-+			   addr <<  SMEM_VLAN_OFFSET);
-+	/* Set enable VLAN aware mode, and FDBs for all PRUs */
-+	regmap_write(prueth->miig_rt, FDB_GEN_CFG2, (FDB_PRU0_EN | FDB_PRU1_EN | FDB_HOST_EN));
-+	prueth->vlan_tbl = (struct prueth_vlan_tbl __force *)(prueth->shram.va +
-+			    EMAC_ICSSG_SWITCH_DEFAULT_VLAN_TABLE_OFFSET);
-+	for (i = 0; i < SZ_4K - 1; i++) {
-+		prueth->vlan_tbl[i].fid = i;
-+		prueth->vlan_tbl[i].fid_c1 = 0;
-+	}
- 	/* Clear host MAC address */
- 	icssg_class_set_host_mac_addr(prueth->miig_rt, mac);
- }
- 
-+static void icssg_init_switch_mode(struct prueth *prueth)
-+{
-+	u32 addr = prueth->shram.pa + EMAC_ICSSG_SWITCH_DEFAULT_VLAN_TABLE_OFFSET;
-+	int i;
-+
-+	if (prueth->emacs_initialized)
-+		return;
-+
-+	/* Set VLAN TABLE address base */
-+	regmap_update_bits(prueth->miig_rt, FDB_GEN_CFG1, SMEM_VLAN_OFFSET_MASK,
-+			   addr <<  SMEM_VLAN_OFFSET);
-+	/* Set enable VLAN aware mode, and FDBs for all PRUs */
-+	regmap_write(prueth->miig_rt, FDB_GEN_CFG2, FDB_EN_ALL);
-+	prueth->vlan_tbl = (struct prueth_vlan_tbl __force *)(prueth->shram.va +
-+			    EMAC_ICSSG_SWITCH_DEFAULT_VLAN_TABLE_OFFSET);
-+	for (i = 0; i < SZ_4K - 1; i++) {
-+		prueth->vlan_tbl[i].fid = i;
-+		prueth->vlan_tbl[i].fid_c1 = 0;
-+	}
-+
-+	if (prueth->hw_bridge_dev)
-+		icssg_class_set_host_mac_addr(prueth->miig_rt, prueth->hw_bridge_dev->dev_addr);
-+	icssg_set_pvid(prueth, prueth->default_vlan, PRUETH_PORT_HOST);
-+}
-+
- int icssg_config(struct prueth *prueth, struct prueth_emac *emac, int slice)
- {
- 	void __iomem *config = emac->dram.va + ICSSG_CONFIG_OFFSET;
- 	struct icssg_flow_cfg __iomem *flow_cfg;
- 	int ret;
- 
--	icssg_init_emac_mode(prueth);
-+	if (prueth->is_switch_mode)
-+		icssg_init_switch_mode(prueth);
-+	else
-+		icssg_init_emac_mode(prueth);
- 
- 	memset_io(config, 0, TAS_GATE_MASK_LIST0);
- 	icssg_miig_queues_init(prueth, slice);
-@@ -353,7 +471,10 @@ int icssg_config(struct prueth *prueth, struct prueth_emac *emac, int slice)
- 	regmap_update_bits(prueth->miig_rt, ICSSG_CFG_OFFSET,
- 			   ICSSG_CFG_DEFAULT, ICSSG_CFG_DEFAULT);
- 	icssg_miig_set_interface_mode(prueth->miig_rt, slice, emac->phy_if);
--	icssg_config_mii_init(emac);
-+	if (prueth->is_switch_mode)
-+		icssg_config_mii_init_switch(emac);
-+	else
-+		icssg_config_mii_init(emac);
- 	icssg_config_ipg(emac);
- 	icssg_update_rgmii_cfg(prueth->miig_rt, emac);
- 
-@@ -376,7 +497,10 @@ int icssg_config(struct prueth *prueth, struct prueth_emac *emac, int slice)
- 	writeb(0, config + SPL_PKT_DEFAULT_PRIORITY);
- 	writeb(0, config + QUEUE_NUM_UNTAGGED);
- 
--	ret = prueth_emac_buffer_setup(emac);
-+	if (prueth->is_switch_mode)
-+		ret = prueth_switch_buffer_setup(emac);
-+	else
-+		ret = prueth_emac_buffer_setup(emac);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_config.h b/drivers/net/ethernet/ti/icssg/icssg_config.h
-index 4a9721aa6057..1ac60283923b 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_config.h
-+++ b/drivers/net/ethernet/ti/icssg/icssg_config.h
-@@ -35,6 +35,13 @@ struct icssg_flow_cfg {
- 	(2 * (PRUETH_EMAC_BUF_POOL_SIZE * PRUETH_NUM_BUF_POOLS + \
- 	 PRUETH_EMAC_RX_CTX_BUF_SIZE * 2))
- 
-+#define PRUETH_SW_BUF_POOL_SIZE_HOST	SZ_4K
-+#define PRUETH_SW_NUM_BUF_POOLS_HOST	8
-+#define PRUETH_SW_NUM_BUF_POOLS_PER_PRU 4
-+#define MSMC_RAM_SIZE_SWITCH_MODE \
-+	(MSMC_RAM_SIZE + \
-+	(2 * PRUETH_SW_BUF_POOL_SIZE_HOST * PRUETH_SW_NUM_BUF_POOLS_HOST))
-+
- #define PRUETH_SWITCH_FDB_MASK ((SIZE_OF_FDB / NUMBER_OF_FDB_BUCKET_ENTRIES) - 1)
- 
- struct icssg_rxq_ctx {
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-index 1db67a8107cc..6e65aa0977d4 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-@@ -27,6 +27,7 @@
- #include <linux/remoteproc/pruss.h>
- #include <linux/regmap.h>
- #include <linux/remoteproc.h>
-+#include <net/switchdev.h>
- 
- #include "icssg_prueth.h"
- #include "icssg_mii_rt.h"
-@@ -35,6 +36,10 @@
- 
- #define PRUETH_MODULE_DESCRIPTION "PRUSS ICSSG Ethernet driver"
- 
-+#define DEFAULT_VID		1
-+#define DEFAULT_PORT_MASK	1
-+#define DEFAULT_UNTAG_MASK	1
-+
- /* CTRLMMR_ICSSG_RGMII_CTRL register bits */
- #define ICSSG_CTRL_RGMII_ID_MODE                BIT(24)
- 
-@@ -113,6 +118,19 @@ static irqreturn_t prueth_tx_ts_irq(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static struct icssg_firmwares icssg_switch_firmwares[] = {
-+	{
-+		.pru = "ti-pruss/am65x-sr2-pru0-prusw-fw.elf",
-+		.rtu = "ti-pruss/am65x-sr2-rtu0-prusw-fw.elf",
-+		.txpru = "ti-pruss/am65x-sr2-txpru0-prusw-fw.elf",
-+	},
-+	{
-+		.pru = "ti-pruss/am65x-sr2-pru1-prusw-fw.elf",
-+		.rtu = "ti-pruss/am65x-sr2-rtu1-prusw-fw.elf",
-+		.txpru = "ti-pruss/am65x-sr2-txpru1-prusw-fw.elf",
-+	}
-+};
-+
- static struct icssg_firmwares icssg_emac_firmwares[] = {
- 	{
- 		.pru = "ti-pruss/am65x-sr2-pru0-prueth-fw.elf",
-@@ -132,7 +150,10 @@ static int prueth_emac_start(struct prueth *prueth, struct prueth_emac *emac)
- 	struct device *dev = prueth->dev;
- 	int slice, ret;
- 
--	firmwares = icssg_emac_firmwares;
-+	if (prueth->is_switch_mode)
-+		firmwares = icssg_switch_firmwares;
-+	else
-+		firmwares = icssg_emac_firmwares;
- 
- 	slice = prueth_emac_slice(emac);
- 	if (slice < 0) {
-@@ -446,9 +467,8 @@ static int emac_ndo_open(struct net_device *ndev)
- 	ether_addr_copy(emac->mac_addr, ndev->dev_addr);
- 
- 	icssg_class_set_mac_addr(prueth->miig_rt, slice, emac->mac_addr);
--	icssg_ft1_set_mac_addr(prueth->miig_rt, slice, emac->mac_addr);
--
- 	icssg_class_default(prueth->miig_rt, slice, 0, false);
-+	icssg_ft1_set_mac_addr(prueth->miig_rt, slice, emac->mac_addr);
- 
- 	/* Notify the stack of the actual queue counts. */
- 	ret = netif_set_real_num_tx_queues(ndev, num_data_chn);
-@@ -845,6 +865,203 @@ bool prueth_dev_check(const struct net_device *ndev)
- 	return false;
- }
- 
-+static void prueth_offload_fwd_mark_update(struct prueth *prueth)
-+{
-+	int set_val = 0;
-+	int i;
-+
-+	if (prueth->br_members == (BIT(PRUETH_PORT_MII0) | BIT(PRUETH_PORT_MII1)))
-+		set_val = 1;
-+
-+	dev_dbg(prueth->dev, "set offload_fwd_mark %d\n", set_val);
-+
-+	for (i = PRUETH_MAC0; i < PRUETH_NUM_MACS; i++) {
-+		struct prueth_emac *emac = prueth->emac[i];
-+
-+		if (!emac || !emac->ndev)
-+			continue;
-+
-+		emac->offload_fwd_mark = set_val;
-+	}
-+}
-+
-+static void prueth_emac_restart(struct prueth *prueth)
-+{
-+	struct prueth_emac *emac0 = prueth->emac[PRUETH_MAC0];
-+	struct prueth_emac *emac1 = prueth->emac[PRUETH_MAC1];
-+
-+	/* Detach the net_device for both PRUeth ports*/
-+	if (netif_running(emac0->ndev))
-+		netif_device_detach(emac0->ndev);
-+	if (netif_running(emac1->ndev))
-+		netif_device_detach(emac1->ndev);
-+
-+	/* Disable both PRUeth ports */
-+	emac_set_port_state(emac0, ICSSG_EMAC_PORT_DISABLE);
-+	emac_set_port_state(emac1, ICSSG_EMAC_PORT_DISABLE);
-+
-+	/* Stop both pru cores for both PRUeth ports*/
-+	prueth_emac_stop(emac0);
-+	prueth->emacs_initialized--;
-+	prueth_emac_stop(emac1);
-+	prueth->emacs_initialized--;
-+
-+	/* Start both pru cores for both PRUeth ports */
-+	prueth_emac_start(prueth, emac0);
-+	prueth->emacs_initialized++;
-+	prueth_emac_start(prueth, emac1);
-+	prueth->emacs_initialized++;
-+
-+	/* Enable forwarding for both PRUeth ports */
-+	emac_set_port_state(emac0, ICSSG_EMAC_PORT_FORWARD);
-+	emac_set_port_state(emac1, ICSSG_EMAC_PORT_FORWARD);
-+
-+	/* Attache net_device for both PRUeth ports */
-+	netif_device_attach(emac0->ndev);
-+	netif_device_attach(emac1->ndev);
-+}
-+
-+static void icssg_enable_switch_mode(struct prueth *prueth)
-+{
-+	struct prueth_emac *emac;
-+	int mac;
-+
-+	prueth_emac_restart(prueth);
-+
-+	for (mac = PRUETH_MAC0; mac < PRUETH_NUM_MACS; mac++) {
-+		emac = prueth->emac[mac];
-+		if (netif_running(emac->ndev)) {
-+			icssg_fdb_add_del(emac, eth_stp_addr, prueth->default_vlan,
-+					  ICSSG_FDB_ENTRY_P0_MEMBERSHIP |
-+					  ICSSG_FDB_ENTRY_P1_MEMBERSHIP |
-+					  ICSSG_FDB_ENTRY_P2_MEMBERSHIP |
-+					  ICSSG_FDB_ENTRY_BLOCK,
-+					  true);
-+			icssg_vtbl_modify(emac, emac->port_vlan | DEFAULT_VID,
-+					  BIT(emac->port_id) | DEFAULT_PORT_MASK,
-+					  BIT(emac->port_id) | DEFAULT_UNTAG_MASK,
-+					  true);
-+			icssg_set_pvid(prueth, emac->port_vlan, emac->port_id);
-+			emac_set_port_state(emac, ICSSG_EMAC_PORT_VLAN_AWARE_ENABLE);
-+		}
-+	}
-+}
-+
-+static int prueth_netdevice_port_link(struct net_device *ndev,
-+				      struct net_device *br_ndev,
-+				      struct netlink_ext_ack *extack)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct prueth *prueth = emac->prueth;
-+	int err;
-+
-+	if (!prueth->br_members) {
-+		prueth->hw_bridge_dev = br_ndev;
-+	} else {
-+		/* This is adding the port to a second bridge, this is
-+		 * unsupported
-+		 */
-+		if (prueth->hw_bridge_dev != br_ndev)
-+			return -EOPNOTSUPP;
-+	}
-+
-+	err = switchdev_bridge_port_offload(br_ndev, ndev, emac,
-+					    &prueth->prueth_switchdev_nb,
-+					    &prueth->prueth_switchdev_bl_nb,
-+					    false, extack);
-+	if (err)
-+		return err;
-+
-+	prueth->br_members |= BIT(emac->port_id);
-+
-+	if (!prueth->is_switch_mode) {
-+		if (prueth->br_members & BIT(PRUETH_PORT_MII0) &&
-+		    prueth->br_members & BIT(PRUETH_PORT_MII1)) {
-+			prueth->is_switch_mode = true;
-+			prueth->default_vlan = 1;
-+			emac->port_vlan = prueth->default_vlan;
-+			icssg_enable_switch_mode(prueth);
-+		}
-+	}
-+
-+	prueth_offload_fwd_mark_update(prueth);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static void prueth_netdevice_port_unlink(struct net_device *ndev)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct prueth *prueth = emac->prueth;
-+
-+	prueth->br_members &= ~BIT(emac->port_id);
-+
-+	if (prueth->is_switch_mode) {
-+		prueth->is_switch_mode = false;
-+		emac->port_vlan = 0;
-+		prueth_emac_restart(prueth);
-+	}
-+
-+	prueth_offload_fwd_mark_update(prueth);
-+
-+	if (!prueth->br_members)
-+		prueth->hw_bridge_dev = NULL;
-+}
-+
-+/* netdev notifier */
-+static int prueth_netdevice_event(struct notifier_block *unused,
-+				  unsigned long event, void *ptr)
-+{
-+	struct netlink_ext_ack *extack = netdev_notifier_info_to_extack(ptr);
-+	struct net_device *ndev = netdev_notifier_info_to_dev(ptr);
-+	struct netdev_notifier_changeupper_info *info;
-+	int ret = NOTIFY_DONE;
-+
-+	if (ndev->netdev_ops != &emac_netdev_ops)
-+		return NOTIFY_DONE;
-+
-+	switch (event) {
-+	case NETDEV_CHANGEUPPER:
-+		info = ptr;
-+
-+		if (netif_is_bridge_master(info->upper_dev)) {
-+			if (info->linking)
-+				ret = prueth_netdevice_port_link(ndev, info->upper_dev, extack);
-+			else
-+				prueth_netdevice_port_unlink(ndev);
-+		}
-+		break;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	return notifier_from_errno(ret);
-+}
-+
-+static int prueth_register_notifiers(struct prueth *prueth)
-+{
-+	int ret = 0;
-+
-+	prueth->prueth_netdevice_nb.notifier_call = &prueth_netdevice_event;
-+	ret = register_netdevice_notifier(&prueth->prueth_netdevice_nb);
-+	if (ret) {
-+		dev_err(prueth->dev, "can't register netdevice notifier\n");
-+		return ret;
-+	}
-+
-+	ret = prueth_switchdev_register_notifiers(prueth);
-+	if (ret)
-+		unregister_netdevice_notifier(&prueth->prueth_netdevice_nb);
-+
-+	return ret;
-+}
-+
-+static void prueth_unregister_notifiers(struct prueth *prueth)
-+{
-+	prueth_switchdev_unregister_notifiers(prueth);
-+	unregister_netdevice_notifier(&prueth->prueth_netdevice_nb);
-+}
-+
- static int prueth_probe(struct platform_device *pdev)
- {
- 	struct device_node *eth_node, *eth_ports_node;
-@@ -972,6 +1189,9 @@ static int prueth_probe(struct platform_device *pdev)
- 	}
- 
- 	msmc_ram_size = MSMC_RAM_SIZE;
-+	prueth->is_switchmode_supported = prueth->pdata.switch_mode;
-+	if (prueth->is_switchmode_supported)
-+		msmc_ram_size = MSMC_RAM_SIZE_SWITCH_MODE;
- 
- 	/* NOTE: FW bug needs buffer base to be 64KB aligned */
- 	prueth->msmcram.va =
-@@ -1077,6 +1297,14 @@ static int prueth_probe(struct platform_device *pdev)
- 		phy_attached_info(prueth->emac[PRUETH_MAC1]->ndev->phydev);
- 	}
- 
-+	if (prueth->is_switchmode_supported) {
-+		ret = prueth_register_notifiers(prueth);
-+		if (ret)
-+			goto netdev_unregister;
-+
-+		sprintf(prueth->switch_id, "%s", dev_name(dev));
-+	}
-+
- 	dev_info(dev, "TI PRU ethernet driver initialized: %s EMAC mode\n",
- 		 (!eth0_node || !eth1_node) ? "single" : "dual");
- 
-@@ -1146,6 +1374,8 @@ static void prueth_remove(struct platform_device *pdev)
- 	struct device_node *eth_node;
- 	int i;
- 
-+	prueth_unregister_notifiers(prueth);
-+
- 	for (i = 0; i < PRUETH_NUM_MACS; i++) {
- 		if (!prueth->registered_netdevs[i])
- 			continue;
-@@ -1187,10 +1417,12 @@ static void prueth_remove(struct platform_device *pdev)
- static const struct prueth_pdata am654_icssg_pdata = {
- 	.fdqring_mode = K3_RINGACC_RING_MODE_MESSAGE,
- 	.quirk_10m_link_issue = 1,
-+	.switch_mode = 1,
- };
- 
- static const struct prueth_pdata am64x_icssg_pdata = {
- 	.fdqring_mode = K3_RINGACC_RING_MODE_RING,
-+	.switch_mode = 1,
- };
- 
- static const struct of_device_id prueth_dt_match[] = {
--- 
-2.34.1
+This should never happen. Triggering the warning here means something 
+has gone very wrong in the maths and should be reported.
 
+>>   	}
+>>   #endif
+>>   }
+>> @@ -7485,7 +7436,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, bool
+>>   static int
+>>   select_idle_capacity(struct task_struct *p, struct sched_domain *sd, int target)
+>>   {
+>> -	unsigned long task_util, util_min, util_max, best_cap = 0;
+>> +	unsigned long task_util, task_util_uclamp, best_cap = 0;
+>>   	int fits, best_fits = 0;
+>>   	int cpu, best_cpu = -1;
+>>   	struct cpumask *cpus;
+>> @@ -7494,8 +7445,7 @@ select_idle_capacity(struct task_struct *p, struct sched_domain *sd, int target)
+>>   	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+>>   
+>>   	task_util = task_util_est(p);
+>> -	util_min = uclamp_eff_value(p, UCLAMP_MIN);
+>> -	util_max = uclamp_eff_value(p, UCLAMP_MAX);
+>> +	task_util_uclamp = task_util_est_uclamp(p);
+> 
+> select_idle_sibling() could pass task_util and task_util_uclamp into
+> select_idle_capacity(). This way we would save these calls to
+> task_util_est() and task_util_est_uclamp() here.
+
+Good idea.
+
+>>   	for_each_cpu_wrap(cpu, cpus, target) {
+>>   		unsigned long cpu_cap = capacity_of(cpu);
+>> @@ -7503,7 +7453,7 @@ select_idle_capacity(struct task_struct *p, struct sched_domain *sd, int target)
+>>   		if (!available_idle_cpu(cpu) && !sched_idle_cpu(cpu))
+>>   			continue;
+>>   
+>> -		fits = util_fits_cpu(task_util, util_min, util_max, cpu);
+>> +		fits = util_fits_cpu(task_util, task_util_uclamp, cpu);
+>>   
+>>   		/* This CPU fits with all requirements */
+>>   		if (fits > 0)
+> 
+> [...]
+> 
