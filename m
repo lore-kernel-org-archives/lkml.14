@@ -1,119 +1,138 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADAA16D4F0
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508AF16D4E4;
+	Tue, 28 May 2024 12:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716899350; cv=none; b=J7GjrJIUz89dHc5z88i7izmlDYocg0H4QDDUdrOrcqVHf3wmrs7PFqZ4S1Yzc1vuRd4IgW9ONPFOEMeSaQsa85J3RtCnPG9BY2/pjNCNeoXhFZN7ippz/g5ub4/5YWsQHY4E/Caip7bABHBfGkJ2HQYt/VGZqvL5Zx08JRqYdLs=
+	t=1716899358; cv=none; b=HDLta0xmfNmcRU5SUMJq/4B9kJ+lWcUQuXbhTcGM3/Yvp6gWZeTUeVBVBAh0Pp0z1BKiAQNOuTeEEBFYTZc7VCUY0IPqe7Ifhusb8GMNGqcLqmnScTxbAryoySUPyC3LZzZmy+PRV582CvMNdWuUIrcxA2byycV7QK5/+XcKUAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716899350; c=relaxed/simple;
-	bh=MLywZj2H9KXhqq9F76X1wtPZ9zD+O5VDL3g1/wyM9YA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eh8FH8zy2ww8XSGpThBGlCw+9e8gcwqU2qdi7QteuDkkvvHkAbEnvV67NIfvNuLWadOQOqDh/FGKTSzhgRW0wW22SeYVks14pD0jVT2QM38g3WdBIUdBKRXU3VBJ6vXpP61eM29Ogllg4aIwEJ/aK9imKv/Vy/z2T38JUdtr9J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=gqr1fttq; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1716899358; c=relaxed/simple;
+	bh=lyBc29TA4yd8u4TMM6TvlxUzwi3smQ7TFv+ljitvgIE=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=jXpjuhg2jfwwKND398Is1oPlVd/3v+yo4I1QgHb91bMaJamEEUO5wPluc6wV+rj/UY5LAxxpBOkfpoy65/UV9U6zowem5FmPpCU/SulBMWAPqnsf7NevRaYeDZygsrWINP8i75nPue7u76/TnrBgJFirF+h5H5hpVsrqd9hxNYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=dwXW4Biq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=D6HBOi5r; arc=none smtp.client-ip=64.147.123.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="gqr1fttq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=OgHle4voOTcsNO799IluUuijexopfWQRdp/vDqkrVbY=; b=gqr1fttqJZ63HiQnfzTpfV4XCO
-	deKSMqIL+UTXE4dF7bs8W4Xoy/It+A45ccx3vwOArRoYzRKP7GwtSPAP+TyNJfaswptIAdz70rmCN
-	7Jp+hO/y7/AGg2EfUgqixS7jUJSzcDuWDf7eMqattNQXn54cpY03Io4zV6nL13VAlfW6YdTl1CHHu
-	DVs+k6xzDDobNShedE2pGccxW7slgnn5KEQqPNKjE027KbWi1c0hl+v5ccJHiRmbnw5dWYQF3uwL4
-	ysaky7PPKq7GMG66LGwldyRzWNkAJdrzqbOdV8x4x+kZxQpeZNM9q0NgIpISuzkPzcjoPt9GlKdSn
-	ftnpRAWw==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sBvwu-000G8t-6a; Tue, 28 May 2024 14:29:04 +0200
-Received: from [185.17.218.86] (helo=localhost)
-	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sBvws-000CDS-1k;
-	Tue, 28 May 2024 14:29:02 +0200
-From: Esben Haabendal <esben@geanix.com>
-Date: Tue, 28 May 2024 14:28:52 +0200
-Subject: [PATCH v2 1/2] memory: fsl_ifc: Make FSL_IFC config visible and
- selectable
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="dwXW4Biq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D6HBOi5r"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.west.internal (Postfix) with ESMTP id F16001C00145;
+	Tue, 28 May 2024 08:29:14 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Tue, 28 May 2024 08:29:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1716899354; x=1716985754; bh=pOHuNo7fs/
+	acy1/fCi3/6NTcu7dPBztJ/IQU53R3K0U=; b=dwXW4Biq0+E0YhtvgzTAG29yd1
+	BGFmu85dbXSb6Vt9fuB2kKOUcu7bNF8ToXrEm2qVorOK2Q9rRcW+iqMTEHb0AluU
+	NzM6tYaNKKdClPYamhwHQiwtQrv/54CUuGQcHzBkuVmTE04NfkvvW9qWxsJTgdVb
+	49wbuzxql+89D60wlOeelw77gt2F6T9LAqctL+PsdvPB7PgiN0lBLSpPl1uYHiaq
+	PR9j/8AXWGdSrA31KLY5MHDHRgmwyxolkbHBru4+vUUtgAnA3UOj1Cj1/GhzHAR5
+	Li0KmYA1tU+qdOedGlhya2EjBoBm59jlTzoWkA13MZbY6uqYUf6hRrk/FUzw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1716899354; x=1716985754; bh=pOHuNo7fs/acy1/fCi3/6NTcu7dP
+	BztJ/IQU53R3K0U=; b=D6HBOi5raC7Eqg7/u81NSKUnIPsV2pIPSb/OSn92QM4v
+	Gxju98PvdDb/ED4HEr8BcK0/m7TxQzK/zGkSDEBGg1y/rU3bTZqdma75/YNtumsx
+	RgxfdIysfiPGlQjoyEHy+JXSgWt3WXjXiRH53wS0Jg4ZXIZNhvzz2R4FZgXsl09B
+	8cbs/gtLj53dKWfQdmoS4hVCQjwgeg954OR1uJ5q0crvsE39admbnitO2twtB3ff
+	rMJoQwlTc67MX971i0b6SMz6qg24pxzCT0Z7ivmD93rks1ZXn543ZdIA8yNs2SIA
+	ISSmTuFr3mj+ludhV1v3bCUfkBL7XoWWUrakg+lxXw==
+X-ME-Sender: <xms:Gs5VZvO6N0uu7bHsWVUBPZWu33LenMGhMNqWOvbHI-XdxBWXED6JtQ>
+    <xme:Gs5VZp8Hq3JfvxWq0nRa1RhC4ykQe6ZkRP2BNz5t9DF9Fpqq2n0w2UexlMmfAc6Zt
+    9uHMli7oP7Ff6LMcjw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedgvdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:Gs5VZuRwn1uN5tW7SfOfVfXq8mr8nF-kVlX5yI9lTSFrSnblKPK-3Q>
+    <xmx:Gs5VZjtVY1EEQ_Aac0Dg3qG8GaolQcFn3xlT8ITao9Flp8NJUCjIow>
+    <xmx:Gs5VZncQht7nLPG3uGcMoBLy-vgBoDyYuJGbPNv6a5Wz2jNrlNwuSw>
+    <xmx:Gs5VZv2IehLVXnlb3miYzkOgwOnqfGNgJ0jb7apU3HI7oSLIibAG0A>
+    <xmx:Gs5VZpu38XnG0PzRUmBgTWZmtrIDm1C5cLHY1ioFMc1nZdrYsPxoJT07>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id EBEB3C60097; Tue, 28 May 2024 08:29:13 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240528-fsl-ifc-config-v2-1-5fd7be76650d@geanix.com>
-References: <20240528-fsl-ifc-config-v2-0-5fd7be76650d@geanix.com>
-In-Reply-To: <20240528-fsl-ifc-config-v2-0-5fd7be76650d@geanix.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linuxppc-dev@lists.ozlabs.org, Esben Haabendal <esben@geanix.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716899341; l=1486;
- i=esben@geanix.com; s=20240523; h=from:subject:message-id;
- bh=MLywZj2H9KXhqq9F76X1wtPZ9zD+O5VDL3g1/wyM9YA=;
- b=I7byAcSPyjt1Yv3MJjCzMfUm/OXKpRSUKge+5wxo1ctSS0kaRtrGCDC1dq08LiL3koIJiCw+R
- K/vDfoCbrwPDp5waJAuFD4pEeMpeFAlW+NO79jK2B1sdOF00u9ZfePc
-X-Developer-Key: i=esben@geanix.com; a=ed25519;
- pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27289/Tue May 28 10:30:59 2024)
+Message-Id: <0780a0dd-be67-45a0-bec9-70458a75e823@app.fastmail.com>
+In-Reply-To: <20240528120759.3491774-1-arnd@kernel.org>
+References: <20240528120759.3491774-1-arnd@kernel.org>
+Date: Tue, 28 May 2024 08:28:40 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Arnd Bergmann" <arnd@kernel.org>,
+ "Wim Van Sebroeck" <wim@linux-watchdog.org>,
+ "Guenter Roeck" <linux@roeck-us.net>, "David Ober" <dober@lenovo.com>
+Cc: "Arnd Bergmann" <arnd@arndb.de>, "Hans de Goede" <hdegoede@redhat.com>,
+ linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watchdog: lenovo_se10_wdt: add HAS_IOPORT dependency
+Content-Type: text/plain
 
-While use of fsl_ifc driver with NAND flash is fine, as the fsl_ifc_nand
-driver selects FSL_IFC automatically, we need the CONFIG_FSL_IFC option to
-be selectable for platforms using fsl_ifc with NOR flash.
+Hi Arnd,
 
-Fixes: ea0c0ad6b6eb ("memory: Enable compile testing for most of the drivers")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/memory/Kconfig       | 2 +-
- drivers/mtd/nand/raw/Kconfig | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+On Tue, May 28, 2024, at 8:07 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> Once the inb()/outb() helpers become conditional, the newly added driver
+> fails to link on targets without CONFIG_HAS_IOPORT:
+>
+> In file included from arch/arm64/include/asm/io.h:299,
+>                  from include/linux/io.h:14,
+>                  from drivers/watchdog/lenovo_se10_wdt.c:8:
+> drivers/watchdog/lenovo_se10_wdt.c: In function 'set_bram':
+> include/asm-generic/io.h:596:15: error: call to '_outb' declared with 
+> attribute error: outb() requires CONFIG_HAS_IOPORT
+>   596 | #define _outb _outb
+> include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+>   655 | #define outb _outb
+>       |              ^~~~~
+> drivers/watchdog/lenovo_se10_wdt.c:67:9: note: in expansion of macro 
+> 'outb'
+>    67 |         outb(offset, bram_base);
+>       |         ^~~~
+>
+> Add the same dependency we added to the other such drivers.
+>
+Ah - good catch, and my apologies.
 
-diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-index 8efdd1f97139..c82d8d8a16ea 100644
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@ -167,7 +167,7 @@ config FSL_CORENET_CF
- 	  represents a coherency violation.
- 
- config FSL_IFC
--	bool "Freescale IFC driver" if COMPILE_TEST
-+	bool "Freescale IFC driver"
- 	depends on FSL_SOC || ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST
- 	depends on HAS_IOMEM
- 
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index cbf8ae85e1ae..614257308516 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -234,8 +234,7 @@ config MTD_NAND_FSL_IFC
- 	tristate "Freescale IFC NAND controller"
- 	depends on FSL_SOC || ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST
- 	depends on HAS_IOMEM
--	select FSL_IFC
--	select MEMORY
-+	depends on FSL_IFC
- 	help
- 	  Various Freescale chips e.g P1010, include a NAND Flash machine
- 	  with built-in hardware ECC capabilities.
+> Fixes: 1f6602c8ed1e ("watchdog: lenovo_se10_wdt: Watchdog driver for 
+> Lenovo SE10 platform")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/watchdog/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 5f91921afc79..24ea3b6f95fe 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -257,6 +257,7 @@ config GPIO_WATCHDOG_ARCH_INITCALL
+>  config LENOVO_SE10_WDT
+>  	tristate "Lenovo SE10 Watchdog"
+>  	depends on (X86 && DMI) || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select WATCHDOG_CORE
+>  	help
+>  	  If you say yes here you get support for the watchdog
+> -- 
+> 2.39.2
+Looks good to me. Thanks for the fix.
+Reviewed-by Mark Pearson <mpearson-lenovo@squebb.ca>
 
--- 
-2.45.1
-
+Mark
