@@ -1,37 +1,81 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC586170855
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2527416FF5E
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716909287; cv=none; b=pJPMdorw1i1Fa1X4FUhkLpcIqT1fT/OsBIMb9l7I1iRJuXHWFRobjDV8tCru5JyTehD5yk5R1nLC4shRAUHhchQ1cdBRwK3GXWeiMJhleVKxkurfOzy+wVJ34eKvWy3KDYB1WUe2MDHjKzDVPiqRu75dXCLy9OAhUfMZsFEMQ34=
+	t=1716909302; cv=none; b=mpHmuxW/724QC3G/kpFkEOHW1XMVu2AHmMVmVTdJtOxm8iXbGfFNxcyC4dUbpZkwvZZMphmYKzsfeatL2k16aQgrwhGRddXL+PFEfL9Ep0Y0B3NX7c/qYcrsSHxlFgYUkxR7H+KTQEyCRqgwR78uHI0s4ShDQ396f8vpJx1K/+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716909287; c=relaxed/simple;
-	bh=bXkg/CgxYBXiILs6UFR7oH6OBkmjVLVOD25GL20hsao=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J6fzk6C6J/CDwgKibi3KZKtkUs/1fP8FJqDaPYX9qQh3mZm6O8/MaBDxcr4sM99+zqUir60z53Vsk+npf0wg2PE1fZZyX4gVmOCiyvjea+UOCF+EB7r3jEs8FPaFYIKOA0sr3/e2mO4e7p/tsqJVxcFaxpIydv0iOuh2WHpFnHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DBY9wQdL; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1716909302; c=relaxed/simple;
+	bh=byVCn7vyyoWVCExOcLktbP9jgpsI9hB8fTXW6dyI5l4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qbUfbkl9n6ls4n9qUtgEx0yrDC2sI0G6uM0tfC9nCrvPe1ypSXiMDE+lGhNyJ+WQJQeuuviL3tOQRDjNlcYhRL1ti2dcJhY+aVrdjYw8/qYrnD7CHAABW9HOK2e4LUpY5v82GmatxOELDYgNDUeY6V85HbG6C4NZaXnDpgUEe3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=yntQABQd; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DBY9wQdL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=AuM0r
-	CbJ0hWZ3V+vajoUI/lChlXnydV2UEWmf0D1iXQ=; b=DBY9wQdL30Y1DDfpylrwy
-	K3J0skFmoD/lClkwpeCm8fs6DfCo8mGospFS10UsFgNx95p2du3ermckS3b/t7T3
-	FjY0byc92tQ6UVEWfOwa9znyBKKWC/jdJCJxBdl5npng//iVCFKQGSM4SV7onQrl
-	lRNZrCnYSeFYfUEH4vYZ/E=
-Received: from localhost.localdomain (unknown [111.35.185.173])
-	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDXj7ek9FVmILt8Ag--.50944S4;
-	Tue, 28 May 2024 23:13:45 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: yjnworkstation@gmail.com
-Cc: akpm@linux-foundation.org,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="yntQABQd"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e964acff1aso9771961fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716909299; x=1717514099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QJ9jfwQtVSCqEew5FGQUfrRX44QJ3TNBiU9EdF5jARo=;
+        b=yntQABQd2Un8Wr1ZeQtRfwEySXNs4PXXc/bgKeXzgUEt1lh/x8IbAJLtmuIRWveMrI
+         dKQkyxJ3VIo2a0vAt5uDvuhz6zyhhA2RNlNP/eW+BWUVr5rT0Ww02jxkXbdFQR+Q8yx4
+         raDEp09sVL4gbBA1DccmNWhyl7gTdZXJvbzruYtfURxWL+hMZc6CcpOf09ku3qW6Cwtu
+         aZoJ1pnA3C1kztX0H8fCuHbLIBtxvZv8Bw/w5xr378I3F4yLwuNSPJzcxSSHH5EMM2Xx
+         IZKSVfSsogKL7bB73qRmhm7xTNzRnMgfVIPLjDylZX4XTRfQ8OesccCwwMZKIXZXlWZ8
+         93sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716909299; x=1717514099;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QJ9jfwQtVSCqEew5FGQUfrRX44QJ3TNBiU9EdF5jARo=;
+        b=bfMwXo5Qx7/ap6l586OKNp4ymY3kARobk1ifYQLy49ferfzMPlIxy7t3PyvXEJmzwP
+         DfYhFZE+oKifOhlQwsloJcQqWULbY0RAva1wTHDMWaoA/wYrwzg/VZtNzmN1kaeOxcLb
+         FrF1yJQs9gvvV8XDEvyVGugF2HJcdqMcaVN1Tg28eIjNMmIFVyLT6gPTmUOMoyss/ytj
+         aolXgt71ktMe4pVhKQcSBmBCW8ajwF7PrnBjZ50lWwZ3GF7mNErLM2HFif6FYlfTp1N9
+         LRte8izEmkpxQzDv82RWpVBBSihlbT3hWqAg3Ddi5SlZIKi82rMyWHuQ3mb90LpftdwP
+         csNg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3577zn4hT2anrOODMRnwROnvYEqY6BcFRLekK0wq68BUS92ac5naPz+wo41eoLZrSxnXDSYbH0beQ4L2S8be819N8bEHNtxs94PMf
+X-Gm-Message-State: AOJu0YzLHCChDx5zIY3YdRFzXoGL3XyqUu6eHk1ixYJ6VB34a/TiZuZK
+	OzAdJsRWWFVcqxpqD6AAea8dnmGBljw96RE/MfGEnhueZ8upKb4ibwexetMUXzs=
+X-Google-Smtp-Source: AGHT+IE9xnl9B6iLJUPGftImcREYfkzUqsxyaCtbYNOO7bdA0+3T64EEnX3IW7R8WIRTpy4sMb+IqA==
+X-Received: by 2002:a2e:a7c3:0:b0:2e9:546c:544a with SMTP id 38308e7fff4ca-2e95b28ae5emr87639391fa.34.1716909299278;
+        Tue, 28 May 2024 08:14:59 -0700 (PDT)
+Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089708f8sm143918715e9.20.2024.05.28.08.14.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 08:14:58 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	willy@infradead.org
-Subject: [BUG] 6.10.0-rc1: segfault at 0 when reboot with kernel config INIT_MLOCKED_ON_FREE_DEFAULT_ON=y
-Date: Tue, 28 May 2024 23:13:40 +0800
-Message-Id: <20240528151340.4282-1-00107082@163.com>
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH 4/7] riscv: Implement xchg8/16() using Zabha
+Date: Tue, 28 May 2024 17:10:49 +0200
+Message-Id: <20240528151052.313031-5-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240528151052.313031-1-alexghiti@rivosinc.com>
+References: <20240528151052.313031-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,50 +83,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXj7ek9FVmILt8Ag--.50944S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tF4fXF45GF4Utw18Cr4UArb_yoW8Kr4fpr
-	1j9F15Cr4vg34UAF18Jr43tF18t3yqka47Xr4DGryDXF1q9F15Jw17K3y5trWDGF45u3W7
-	J3WkXa18Kr1UXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07joGQDUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0g3sqmWXyBCpagAAsw
 
-Hi,
+This adds runtime support for Zabha in xchg8/16() operations.
 
-My kernel is 6.10.0-rc1 with CONFIG_INIT_MLOCKED_ON_FREE_DEFAULT_ON=y, and 
-I got following screen when I execute `systemctl reboot` on my system.
-(The text was extracted from a console image, there may be some parse error. And my kernel was tainted mostly because of nvidia driver)
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/cmpxchg.h | 24 ++++++++++++++++++++++--
+ arch/riscv/include/asm/hwcap.h   |  1 +
+ arch/riscv/kernel/cpufeature.c   |  1 +
+ 3 files changed, 24 insertions(+), 2 deletions(-)
 
-	42.855067] watchdog: watchdog0: watchdog did not stop!
-	42.905871] show_signal_msg: 14 callbacks suppressed
-	42.905874) systemd-shutdow[1]: segfault at 0 ip 0000000000000000 sp 00007ffcc8af7318 error 14 likely on CPU 6 (core 4, socke 42.906017] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
-	42.906080] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b 
-	42.906143] CPU: 6 PID: 1 Comm: systemd-shutdow Tainted: P OE 6.10.0-rc1-linan-0 #244
-	42.906220] Hardware name: Micro-Star International Co., Ltd. MS-7889/B450M MORTAR MAX (MS-7889), BIOS 2.80 06/10/2020 42.906308] Call Trace:
-	42.906329] <TASK>
-	42.906346] panic+0x31d/0x350
-	42.906375) ? srso_return_thunk+0x5/0x5f
-	42.906411] do_exit+0x968/0xad0
-	42.906441] do_group_exit+0x2c/0x80
-	42.906472] get_signal+0x876/0x8a0
-	42.906502] arch_do_signal_or_restart+0x2a/0x240
-	42.906544] irgentry_exit_to_user_mode+0xc2/0x160
-	42.906585] asm_exc_page_fault+0x22/0x30
-	42.906619] RIP: 0033:0x0
-	42.906640] Code: Unable to access opcode bytes at 0xfffft fffffffd6. 
-	42.906693] RSP: 002b:00007ffcc8af7318 EFLAGS: 00010206
-	42.906736] RAX: 0000000000000011 RBX: 000000000328adea RCX: 0000000000000005 
-	42.906794] RDX: 00007ffcc8af73b0 RSI: 0000000000000ea8 RDI: 0000000000000001 
-	42.906852] RBP: 00007ffcc8af73be R08: 003b459fca9238c4 R09: 0000000000000069 
-	42.906910] R10: 0000000000000008 R11: 0000000000000202 R12: 00007ffcc8af7330 
-	42.906968] R13: 0000000000000ea8 R14: 0000000000000000 R15: 0000000000000000 
-	42.907029] </TASK>
-	42.907328] Kernel Offset: 0x21a00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff) 
-	43.081928) --- [ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
-
-
-I rebuild the kernel with `CONFIG_INIT_MLOCKED_ON_FREE_DEFAULT_ON not set`, the system can reboot normally.
-My guess, some memory is zeroed unproperly when reboot?
-
-
-David
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index 0789fbe38b23..43696d9e13aa 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -11,8 +11,14 @@
+ #include <asm/fence.h>
+ #include <asm/alternative.h>
+ 
+-#define __arch_xchg_masked(prepend, append, r, p, n)			\
++#define __arch_xchg_masked(swap_sfx, prepend, append, r, p, n)		\
+ ({									\
++	__label__ zabha, end;						\
++									\
++	asm goto(ALTERNATIVE("nop", "j %[zabha]", 0,			\
++			     RISCV_ISA_EXT_ZABHA, 1)			\
++			: : : : zabha);					\
++									\
+ 	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
+ 	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
+ 	ulong __mask = GENMASK(((sizeof(*p)) * BITS_PER_BYTE) - 1, 0)	\
+@@ -34,6 +40,17 @@
+ 	       : "memory");						\
+ 									\
+ 	r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
++	goto end;							\
++									\
++zabha:									\
++	__asm__ __volatile__ (						\
++		prepend							\
++		"	amoswap" swap_sfx " %0, %z2, %1\n"		\
++		append							\
++		: "=&r" (r), "+A" (*(p))				\
++		: "rJ" (n)						\
++		: "memory");						\
++end:									\
+ })
+ 
+ #define __arch_xchg(sfx, prepend, append, r, p, n)			\
+@@ -55,8 +72,11 @@
+ 									\
+ 	switch (sizeof(*__ptr)) {					\
+ 	case 1:								\
++		__arch_xchg_masked(".b" sfx, prepend, append,		\
++				   __ret, __ptr, __new);		\
++		break;							\
+ 	case 2:								\
+-		__arch_xchg_masked(prepend, append,			\
++		__arch_xchg_masked(".h" sfx, prepend, append,		\
+ 				   __ret, __ptr, __new);		\
+ 		break;							\
+ 	case 4:								\
+diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+index e17d0078a651..f71ddd2ca163 100644
+--- a/arch/riscv/include/asm/hwcap.h
++++ b/arch/riscv/include/asm/hwcap.h
+@@ -81,6 +81,7 @@
+ #define RISCV_ISA_EXT_ZTSO		72
+ #define RISCV_ISA_EXT_ZACAS		73
+ #define RISCV_ISA_EXT_XANDESPMU		74
++#define RISCV_ISA_EXT_ZABHA		75
+ 
+ #define RISCV_ISA_EXT_XLINUXENVCFG	127
+ 
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 3ed2359eae35..8d0f56dd2f53 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -257,6 +257,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+ 	__RISCV_ISA_EXT_DATA(zihintpause, RISCV_ISA_EXT_ZIHINTPAUSE),
+ 	__RISCV_ISA_EXT_DATA(zihpm, RISCV_ISA_EXT_ZIHPM),
+ 	__RISCV_ISA_EXT_DATA(zacas, RISCV_ISA_EXT_ZACAS),
++	__RISCV_ISA_EXT_DATA(zabha, RISCV_ISA_EXT_ZABHA),
+ 	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
+ 	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
+ 	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
+-- 
+2.39.2
 
