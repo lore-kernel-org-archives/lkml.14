@@ -1,147 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F6D6F079;
-	Tue, 28 May 2024 08:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C1613AA32
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716884372; cv=none; b=lbVRV5zQ8Gegmv2kUbphfOSN46dy5/nh4TZGDx6rG6l42uT58owvCWNrpxhk2z7lf/BSjAN0zpApfHe/iXQyw7Z+gw9O02dIhn5Cgv4Rjn3CZsJT2foUzy0t8TOXy5q0u0FW7iQjkEyj1L35WxTHaAMk45SlMNUsXvCRuX9Yu1s=
+	t=1716884385; cv=none; b=C4n8M9mh7x2yDYLizNff3uf7kZqvLcDQ9X+ZNTg/0b3WIu5+EPsQHT8FzK3IOaiPZZ4FN9IzjHcpPLHSPxaZb0x509t05SMLSZC7l69UU27J6uuGPQon42g9MIqjTdWhgBNctzYJrMBUzbUXySTGOH+9qXbUzlVGg0k3HM8ipz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716884372; c=relaxed/simple;
-	bh=Oc8QGTkURsUqafymwekWRoZjg0nWpLr6CloEAujioeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B3XRWB1jQh7Rr1LijYNt3raJZdI76yffu/bhmGmJdkXK6alGFZKpnWeLhVgQoiVW/2kiDU+WrgSj2kpbKX9+lt9CCBeYzH11ifCmrpDfvKmHIypxFW5rtR4dLcEbffYnDgOlHh/Lz6l9bB/wXoZSg4igukMuSO8sKKeE/jwzyDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eofvSYDU; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716884385; c=relaxed/simple;
+	bh=APKFV9eb2v+VaT8bLUdlycdrBfJ2rlkBUd7qW2g0UHk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XCHgS6ZOwbDaVElNzFTNUTip2r2IwU7iXLaX60kL3p2DyiAGybo40I5RwWb7r9RPIC4HqDbe/ZIMyDNeFVgWTKrsbshMuoW1GcI27rt4PgcPV9VRkB4HvSP50ValA8n2PKNLAwLVow8UIBU5rwz3w3IpcDsCsBkgaez+bLxL3js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ISvD7liY; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eofvSYDU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716884370; x=1748420370;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Oc8QGTkURsUqafymwekWRoZjg0nWpLr6CloEAujioeo=;
-  b=eofvSYDUCqV0gy9K7Ts8XC56NPW2jgklP5h2qW8GWL2IRzl4z7r6HQCU
-   9BCi+AilaDIT1T5O2HMGle5HtBA3OW4U9wvt+Zl0KMhiDuo2cHFKqqh2D
-   i/z75ky+ARBd/OqAV7M8Lwc4rSB0wRmyuFaFCLS6Me+cj5xrF5zM7IgTo
-   AscibwGak8WuNYDBIOffcDkN+OMicnptXiV5zZGeieN+TQl2RUIOKw/Wu
-   Gx+Zdrz1jYXfn6GizZrnEb5+7ViNiuTG3T7HC8Rk59dQ8QZQuKGfKEIIE
-   6Kgp1Hng4QJiyng9XXPE28lg+ctbmmaR57wokdtsArxDi8OvOx45m8l5d
-   g==;
-X-CSE-ConnectionGUID: 00mZGMnuTvadWRGpV41Uag==
-X-CSE-MsgGUID: taHGjtM5QhekTMkO36HPvQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="11723371"
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="11723371"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 01:19:29 -0700
-X-CSE-ConnectionGUID: EW6srXeGSdGt2Mn9vIXugg==
-X-CSE-MsgGUID: mC0outMrRpiGofdXme4ReA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="35071106"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 28 May 2024 01:19:27 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id B751B184; Tue, 28 May 2024 11:19:25 +0300 (EEST)
-Date: Tue, 28 May 2024 11:19:25 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, "Aktas, Erdem" <erdemaktas@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Sagi Shahar <sagis@google.com>, "Chen, Bo2" <chen.bo@intel.com>, 
-	"Yuan, Hang" <hang.yuan@intel.com>, "Zhang, Tina" <tina.zhang@intel.com>, 
-	"Li, Xiaoyao" <Xiaoyao.Li@intel.com>
-Subject: Re: [PATCH v19 039/130] KVM: TDX: initialize VM with TDX specific
- parameters
-Message-ID: <fagj35jsiktyxegcyb6jujq2tkwzgnvqjfebka2eybdmzhpxej@m4ycvcqow5kt>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <5eca97e6a3978cf4dcf1cff21be6ec8b639a66b9.1708933498.git.isaku.yamahata@intel.com>
- <46mh5hinsv5mup2x7jv4iu2floxmajo2igrxb3haru3cgjukbg@v44nspjozm4h>
- <de344d2c-6790-49c5-85be-180bc4d92ea4@suse.com>
- <etso5bvvs2gq3parvzukujgbatwqfb6lhzoxhenrapav6obbgl@o6lowhrcbucp>
- <e8b36230-d59f-44f1-ba48-5a0533238d8e@suse.com>
- <pfbphwefaefxw2l2u26qr6ptq7rtdmnihjmxvk34zv4srlnsum@qyjumzzdnfxo>
- <46713df6-d73e-4816-bbda-a3b2dc723438@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ISvD7liY"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6ab9ce64683so3410176d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 01:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716884383; x=1717489183; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=APKFV9eb2v+VaT8bLUdlycdrBfJ2rlkBUd7qW2g0UHk=;
+        b=ISvD7liYK1sLfzoTUpCqHA+K/e2a9dfp8hMeBD/sByy7tzypcXcD9vov3UIhnInSSN
+         z2PzxiLcOCspIsSqASDG59X6x8JCyVBatdgPYkUzIxsabctzw8UA2pH2HolEAzwFdraC
+         NZWwkirqlxr8nyPY3iejFeN8N4d2zASwpuUqHxY4PGzzA4ROG7YdZYVJ7MccGWcmGnnD
+         lvkMt/y90mdCpQ12Yi1AlZe0vNvNwFim8B7JPwB4v9Y4r9AdJsY+0VBuEkQWv59vpr/e
+         1L2UeYxklQ1LZsOYqsHutTY+XI+kD/P77psBapIMa91iBY7U716xFGEXMFM058GKcM0p
+         UB3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716884383; x=1717489183;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=APKFV9eb2v+VaT8bLUdlycdrBfJ2rlkBUd7qW2g0UHk=;
+        b=SsQLijwq6Md7Qrox2b3LovclcuCa6GUYKYt0CL7h8Ie0qMQylJzZrzBmY6ccqyx/Cu
+         67lgihf3DwZ889yNnvCeoYo9gVAPMMu3WwmYf53LDOFs8QZV/WvSiJ4Vc9F+NbFjoJI2
+         FP9ssVC7OElMpQHECBcXTwu/hVWIVJo1DDnticqCMn47F6oi359JjfIcZTGZOKGdGzgH
+         Qq7y4MGI71fpudi83imm7p+4H1t5DcmLLM3UKsROVsdT7PbE/RWaeUrw+7rkGjKgAYMo
+         4wW4Rkv+ge/KkI9XKwYU2FB0EPmxmD1q28c5h1ZMevys9f8LHwQrqzBB/v758U1Qg/v4
+         OY+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXPtpUtGTZA/2wPmHyaayqCQGRhdRgsB5N/5FMoaCFEq9kSvrhORvbLdpGOr2aRHwVL3aZlQSiXtfmlZX83Ybyjwz4A/vwsKEmGi102
+X-Gm-Message-State: AOJu0YwFDAsw8C7k872N+9qSoNxmQJXQMaXbOtT26HtxUoDY3NqodYvZ
+	n8E2pBsbN1H2WkgXHGyg2uG+VCm1//9PFx+L/dl7KNXnPC6wfGrnn7RobPRJGpPibd8ySoitvPa
+	b8QMzUpGAouEoeDVxGksVUTZ/k0oZT273Ilvj1B4EzF3l2STlbp/l
+X-Google-Smtp-Source: AGHT+IG9kXoWpuC4Ix7V4wPnSa5HxxGbI3O7kucQ+Z4K1uR5nDxN08cLZOYJo2Jd8QQ3aZOHyTkIGsHohuSwHfrZh+0=
+X-Received: by 2002:a0c:fe8e:0:b0:6ad:16a5:4842 with SMTP id
+ 6a1803df08f44-6ad16a54a20mr114449566d6.15.1716884382871; Tue, 28 May 2024
+ 01:19:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <46713df6-d73e-4816-bbda-a3b2dc723438@intel.com>
+References: <0000000000009f9447061833d477@google.com> <jgtxdyooy6zyettrj53qi7s7z5fs5zpnwdjm7eqpihwo32lxzx@v2234ezsba4d>
+ <CAG_fn=WmDCOXxAzaEJtDYuEY4b3Nq99Z7=1-tmwTx9Ox7BG0AA@mail.gmail.com>
+In-Reply-To: <CAG_fn=WmDCOXxAzaEJtDYuEY4b3Nq99Z7=1-tmwTx9Ox7BG0AA@mail.gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Tue, 28 May 2024 10:19:02 +0200
+Message-ID: <CAG_fn=WZ=i2WLAVcLGhXkfm_9CouEf8v9PoLL-zJ0TJZZSXZ6Q@mail.gmail.com>
+Subject: Re: [syzbot] [bcachefs?] KMSAN: uninit-value in bch2_extent_update_i_size_sectors
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: syzbot <syzbot+eceea46e8838baeeba67@syzkaller.appspotmail.com>, 
+	bfoster@redhat.com, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 11:37:15AM +1200, Huang, Kai wrote:
-> 
-> 
-> On 18/05/2024 4:25 am, Kirill A. Shutemov wrote:
-> > On Fri, May 17, 2024 at 05:00:19PM +0200, Jürgen Groß wrote:
-> > > On 17.05.24 16:53, Kirill A. Shutemov wrote:
-> > > > On Fri, May 17, 2024 at 04:37:16PM +0200, Juergen Gross wrote:
-> > > > > On 17.05.24 16:32, Kirill A. Shutemov wrote:
-> > > > > > On Mon, Feb 26, 2024 at 12:25:41AM -0800, isaku.yamahata@intel.com wrote:
-> > > > > > > @@ -725,6 +967,17 @@ static int __init tdx_module_setup(void)
-> > > > > > >     	tdx_info->nr_tdcs_pages = tdcs_base_size / PAGE_SIZE;
-> > > > > > > +	/*
-> > > > > > > +	 * Make TDH.VP.ENTER preserve RBP so that the stack unwinder
-> > > > > > > +	 * always work around it.  Query the feature.
-> > > > > > > +	 */
-> > > > > > > +	if (!(tdx_info->features0 & MD_FIELD_ID_FEATURES0_NO_RBP_MOD) &&
-> > > > > > > +	    !IS_ENABLED(CONFIG_FRAME_POINTER)) {
-> > > > > > 
-> > > > > > I think it supposed to be IS_ENABLED(CONFIG_FRAME_POINTER). "!" shouldn't
-> > > > > > be here.
-> > > > > 
-> > > > > No, I don't think so.
-> > > > > 
-> > > > > With CONFIG_FRAME_POINTER %rbp is being saved and restored, so there is no
-> > > > > problem in case the seamcall is clobbering it.
-> > > > 
-> > > > Could you check setup_tdparams() in your tree?
-> > > > 
-> > > > Commit
-> > > > 
-> > > > [SEAM-WORKAROUND] KVM: TDX: Don't use NO_RBP_MOD for backward compatibility
-> > > > 
-> > > > in my tree comments out the setting TDX_CONTROL_FLAG_NO_RBP_MOD.
-> > > > 
-> > > > I now remember there was problem in EDK2 using RBP. So the patch is
-> > > > temporary until EDK2 is fixed.
-> > > > 
-> > > 
-> > > I have the following line in setup_tdparams() (not commented out):
-> > > 
-> > > 	td_params->exec_controls = TDX_CONTROL_FLAG_NO_RBP_MOD;
-> > 
-> > Could you check if it is visible from the guest side?
-> > 
-> > It is zero for me.
-> > 
-> > diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-> > index c1cb90369915..f65993a6066d 100644
-> > --- a/arch/x86/coco/tdx/tdx.c
-> > +++ b/arch/x86/coco/tdx/tdx.c
-> > @@ -822,13 +822,33 @@ static bool tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
-> >   	return true;
-> >   }
-> > +#define TDG_VM_RD			7
-> > +
-> > +#define TDCS_CONFIG_FLAGS		0x1110000300000016
-> > +
-> 
-> Hi Kirill,
-> 
-> Where did you get this metadata field ID value from?  I assume you meant
-> below one, from which the ID is 0x9110000300000016?
+On Thu, May 23, 2024 at 10:15=E2=80=AFAM Alexander Potapenko <glider@google=
+.com> wrote:
+>
+> On Thu, May 23, 2024 at 1:49=E2=80=AFAM Kent Overstreet
+> <kent.overstreet@linux.dev> wrote:
+> >
+> > This (and a few others I've looked at) look more likely to be bugs in
+> > KMSAN, not bcachefs.
+>
+> Yeah, this is possible if we are missing some initialization.
+>
+> >
+> > here, the supposedly uninitialized key was read in from disk, so the ke=
+y
+> > couldn't possibly have been legitimately marked uninitialized.
+>
+> Am I right that the key is supposed to be initialized before the first
+> call of memcpy_u64s_small() (the _lower_ "Uninit was stored to memory
+> at:" stack trace)?
+> Do you have an idea what code performed the actual load of the data from =
+disk?
+> If that load was done by some assembly routine, we could've easily
+> missed that - in that case we'll need to annotate it to fix the false
+> positives.
 
-The ID has changed in recent JSON ABI definitions. Looks fishy. I will
-find out what is going on.
+I thought the initialization here was done by constructing a `struct
+bio` in fs/bcachefs/btree_io.c and passing it to
+submit_bio()/submit_bio_wait(), but I couldn't see return values of
+btree_bounce_alloc() being used in bio_vec elements.
+Are there other places that perform disk I/O?
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+We need something similar to kmsan_handle_dma()
+(https://elixir.bootlin.com/linux/latest/source/mm/kmsan/hooks.c#L328),
+but for block IO, so that data copied from the device can be marked as
+initialized.
