@@ -1,179 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4154B16F8E0;
-	Tue, 28 May 2024 15:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110D6282FA
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716909338; cv=none; b=HXdCEzHXxhXa3CMmuSH79SlUqlO5DMaNlZ7YTNaM5sJ6o/hM08XSdmTFxm7L5MwHsnj72W1TglUs7K9xDLj2A3xxaIj7GaO/waEys+VMKuXmhr+4k/rnjkTvHJupgvcvZ0xMPEJveelmO1HaTkUVmnTOKJMUuko9AlCx/4kL10k=
+	t=1716909363; cv=none; b=Q6KDnSktW4FcPZq5u+mAYJg31++68LQDiGh71dw5qocILA4QOXLis1/CPMGdwMkHb3Q2yHsfUOZ4lvRG0Z1/zgzjM4QnoEp2mF6b3YKawECsm0fjwE0qdby8R6P8y0vTbtAzRvw6V73EGxQUsdQvluiAZP25gUAI47QrIXwSgaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716909338; c=relaxed/simple;
-	bh=xpk0Yqw/VN8ddEnECwmM/UpM6KoNoPvI14IHu2eBrJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OIyBRhm3TmB621C25NPIypzskWUl7To6lqIXaWZ/s87vG/A9MVxJbSJsO0lR1f4heFd8gmmy06uwmgifOwq7BTws7zX9znVQ0YvmXS7t3MhAlIeGwF2sXxE4wx/R44aM9Z3pNYg+FNlnfqQJgX1SlmLXyYQG6uetpuO+UELKpnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUCcJuLj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716909363; c=relaxed/simple;
+	bh=zIctHSF8s4ycH2M1Xuee5DajFIDyCPEPGL7Vxs9tOR4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TDETqNBATFR+vhY/Vt3x6xBU6UzmMIIb0/d5ixk4dDSaJQ9nFP9XGb2aQ71Ya5RobHfp2IZ72QwLRlt3FTU+IsqMkw03sFksgI1Nqw7NEVc0JgEeLSmCvfoezL0dGYUBBw8F6gmwFc93haMhUsZCYNDnZkX9HZmXHDjpYzDfq1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=B/2cJVLe; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUCcJuLj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 942F9C3277B;
-	Tue, 28 May 2024 15:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716909337;
-	bh=xpk0Yqw/VN8ddEnECwmM/UpM6KoNoPvI14IHu2eBrJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cUCcJuLjneqe7FsY8PDzBO8l6FMtnMWAfv87RASRNOn7ANCjpyTOCQZHUK1hT0ig2
-	 6B8fVVMjnGid5Z1MERtu5+/uuCMrqzvGKzWVgyuK7/U7zOtQH5qc+wywSAG3cokDKX
-	 yv20Iz5vrXsx1n19nf9LXAx1T/uoIJA9hWwBrHU19WulFHEsUnTLyUZ1CABB+XaZzC
-	 2d/GYyyoaPLkTIkHMFf6WVDQ5y0ScYlfjJbkGlTNXzAJ1+ZnT2F0F+lj2jZ+BYIV8E
-	 gBq03xNbxHelWp5K2URHJuTM6b/mG6uRgHfrEUhHnOlx2fS1p1a3sY/0AY5GiTNnjJ
-	 wlbxl/nHstHPg==
-Date: Tue, 28 May 2024 10:15:36 -0500
-From: Rob Herring <robh@kernel.org>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shengjiu.wang@gmail.com, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Xiubo.Lee@gmail.com, festevam@gmail.com, nicoleotsuka@gmail.com,
-	perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: fsl,xcvr: Add compatible
- string for i.MX95
-Message-ID: <20240528151536.GA275498-robh@kernel.org>
-References: <1716286416-17621-1-git-send-email-shengjiu.wang@nxp.com>
- <1716286416-17621-2-git-send-email-shengjiu.wang@nxp.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="B/2cJVLe"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42121d27861so248885e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:16:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716909360; x=1717514160; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=heAbIXv1oMx4SoDoWG1mJ8ALiEwmwn+mI3czPDKQjFY=;
+        b=B/2cJVLeRvjhR6DtdsavZO5f1aH9SugqzUFIN6bfi7wqkO7BbNkCgyuud9c/WcgcFB
+         DNo6vfe3CsksekPdbp+cp00dihZqdQgf0fSLPkKpEJ3su1vbVGAxMtMzsJIGJNWFU7ww
+         zSCw0uMIltcXh/TtfIk+becgE2awNSoxLPMpn5pTJnEsLQod1RIsyuknJPprOsEF1W4X
+         Kt2xWSWD3iTXsS5ORWV3QEEM2/X3/jAGisD+6p2TR1rmyzSxzqrF1kf5ealpxywFmkEK
+         N3mDi5rqgucKvpUu0PNNkZGFM+JC0dKv2V9W3++exx18BTHiwg2a4syRW4GI7R6iUvdr
+         7zzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716909360; x=1717514160;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=heAbIXv1oMx4SoDoWG1mJ8ALiEwmwn+mI3czPDKQjFY=;
+        b=VMwNx/XeNo/iOTOqr7UAi/hVT8xTZykXJiBxkmB3sgRcmL4/zWyx7NNuy4BQYcOYSc
+         EkIYSWYrlYtbfzPgYHuX7IRF/AqDwUnDP1f6uy8Hpj69fUuAcXz9jbomHzhKgilqKmNB
+         DL8nTe2ZdOZt1cfjLG11Y/KuAfMvoRH+/mlsfa4wkKVynhmuw+Ci9N7Tu2t1b1Wx6zbZ
+         sbfF4EZUgszvUHhTCXVXLXZ2LsmSPFVA+TmPhgCf9RUm5U2tkQgwDY1m8r/XEVeNlSDW
+         0vdJ6gAwLORc+91BvTMOWsxMRpc89vdJ/6CjiCNGJehgZReADnIhfYGftx9kpiy3x8uE
+         2LWg==
+X-Forwarded-Encrypted: i=1; AJvYcCViQQoPiMH3UXfor65XG9GebkxbJxGHnVW8IVB/GDWly9JWfpZgwNxQWuXsjnIIxdkhEsa/DMpckle7K09GG1jvzs2oogh4Vmlzzxc0
+X-Gm-Message-State: AOJu0Yw4PJBpOjv9nbKI9oUw7cE2NL/+sCqWR3Dm1J2DVkkangEatwLq
+	pGkVrN8FWOK6biqWTfZu9g2egAq+mGlLHmJhdXlQQlBpt9HLcKqbNWrPK1ElRR4=
+X-Google-Smtp-Source: AGHT+IFjBUzptjD+yaaIGtCtzbT9/u6NhvlOiOfogXGTAn3lVdgJuuRzm1ZS7bzwllyXZTKIP0WObg==
+X-Received: by 2002:a05:600c:45cd:b0:420:29dd:84db with SMTP id 5b1f17b1804b1-42108a26c56mr116889895e9.35.1716909360501;
+        Tue, 28 May 2024 08:16:00 -0700 (PDT)
+Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42108970b4esm146682755e9.14.2024.05.28.08.15.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 08:16:00 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH 5/7] asm-generic: ticket-lock: Reuse arch_spinlock_t of qspinlock
+Date: Tue, 28 May 2024 17:10:50 +0200
+Message-Id: <20240528151052.313031-6-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240528151052.313031-1-alexghiti@rivosinc.com>
+References: <20240528151052.313031-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1716286416-17621-2-git-send-email-shengjiu.wang@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 21, 2024 at 06:13:35PM +0800, Shengjiu Wang wrote:
-> Add compatible string "fsl,imx95-xcvr" for i.MX95 platform.
-> 
-> The difference between each platform is in below table.
-> 
-> +---------+--------+----------+--------+
-> |  SOC	  |  PHY   | eARC/ARC | SPDIF  |
-> +---------+--------+----------+--------+
-> | i.MX8MP |  V1    |  Yes     |  Yes   |
-> +---------+--------+----------+--------+
-> | i.MX93  |  N/A   |  N/A     |  Yes   |
-> +---------+--------+----------+--------+
-> | i.MX95  |  V2    |  N/A     |  Yes   |
-> +---------+--------+----------+--------+
-> 
-> On i.MX95, there are two PLL clock sources, they are the parent
-> clocks of the XCVR root clock. one is for 8kHz series rates, named
-> as 'pll8k', another one is for 11kHz series rates, named as 'pll11k'.
-> They are optional clocks, if there are such clocks, then the driver
-> can switch between them to support more accurate sample rates.
-> 
-> As 'pll8k' and 'pll11k' are optional, then add 'minItems: 4' for
-> clocks and clock-names properties.
-> 
-> On i.MX95, the 'interrupts' configuration has the same constraint
-> as i.MX93.
-> 
-> Only on i.MX8MP, the 'resets' is required, but for i.MX95 and i.MX93
-> there is no such hardware setting.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  .../devicetree/bindings/sound/fsl,xcvr.yaml   | 37 ++++++++++++++++++-
->  1 file changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,xcvr.yaml b/Documentation/devicetree/bindings/sound/fsl,xcvr.yaml
-> index 0eb0c1ba8710..d1dcc27655eb 100644
-> --- a/Documentation/devicetree/bindings/sound/fsl,xcvr.yaml
-> +++ b/Documentation/devicetree/bindings/sound/fsl,xcvr.yaml
-> @@ -22,6 +22,7 @@ properties:
->      enum:
->        - fsl,imx8mp-xcvr
->        - fsl,imx93-xcvr
-> +      - fsl,imx95-xcvr
->  
->    reg:
->      items:
-> @@ -49,6 +50,9 @@ properties:
->        - description: PHY clock
->        - description: SPBA clock
->        - description: PLL clock
-> +      - description: PLL clock source for 8kHz series
-> +      - description: PLL clock source for 11kHz series
-> +    minItems: 4
->  
->    clock-names:
->      items:
-> @@ -56,6 +60,9 @@ properties:
->        - const: phy
->        - const: spba
->        - const: pll_ipg
-> +      - const: pll8k
-> +      - const: pll11k
-> +    minItems: 4
->  
->    dmas:
->      items:
-> @@ -79,15 +86,24 @@ required:
->    - clock-names
->    - dmas
->    - dma-names
-> -  - resets
->  
->  allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: fsl,imx8mp-xcvr
-> +    then:
-> +      required:
-> +        - resets
-> +
->    - if:
->        properties:
->          compatible:
->            contains:
->              enum:
->                - fsl,imx93-xcvr
-> +              - fsl,imx95-xcvr
->      then:
->        properties:
->          interrupts:
-> @@ -98,6 +114,25 @@ allOf:
->          interrupts:
->            maxItems: 1
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx95-xcvr
-> +    then:
-> +      properties:
-> +        clocks:
-> +          maxItems: 6
-> +        clock-names:
-> +          maxItems: 6
+From: Guo Ren <guoren@linux.alibaba.com>
 
-6 is already the max. Drop these and add a 'not' into the if schema (or 
-list out the other compatibles).
+The arch_spinlock_t of qspinlock has contained the atomic_t val, which
+satisfies the ticket-lock requirement. Thus, unify the arch_spinlock_t
+into qspinlock_types.h. This is the preparation for the next combo
+spinlock.
 
-> +    else:
-> +      properties:
-> +        clocks:
-> +          maxItems: 4
-> +        clock-names:
-> +          maxItems: 4
-> +
->  additionalProperties: false
->  
->  examples:
-> -- 
-> 2.34.1
-> 
+Reviewed-by: Leonardo Bras <leobras@redhat.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/linux-riscv/CAK8P3a2rnz9mQqhN6-e0CGUUv9rntRELFdxt_weiD7FxH7fkfQ@mail.gmail.com/
+Signed-off-by: Guo Ren <guoren@kernel.org>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+---
+ include/asm-generic/spinlock.h       | 14 +++++++-------
+ include/asm-generic/spinlock_types.h | 12 ++----------
+ 2 files changed, 9 insertions(+), 17 deletions(-)
+
+diff --git a/include/asm-generic/spinlock.h b/include/asm-generic/spinlock.h
+index 90803a826ba0..4773334ee638 100644
+--- a/include/asm-generic/spinlock.h
++++ b/include/asm-generic/spinlock.h
+@@ -32,7 +32,7 @@
+ 
+ static __always_inline void arch_spin_lock(arch_spinlock_t *lock)
+ {
+-	u32 val = atomic_fetch_add(1<<16, lock);
++	u32 val = atomic_fetch_add(1<<16, &lock->val);
+ 	u16 ticket = val >> 16;
+ 
+ 	if (ticket == (u16)val)
+@@ -46,31 +46,31 @@ static __always_inline void arch_spin_lock(arch_spinlock_t *lock)
+ 	 * have no outstanding writes due to the atomic_fetch_add() the extra
+ 	 * orderings are free.
+ 	 */
+-	atomic_cond_read_acquire(lock, ticket == (u16)VAL);
++	atomic_cond_read_acquire(&lock->val, ticket == (u16)VAL);
+ 	smp_mb();
+ }
+ 
+ static __always_inline bool arch_spin_trylock(arch_spinlock_t *lock)
+ {
+-	u32 old = atomic_read(lock);
++	u32 old = atomic_read(&lock->val);
+ 
+ 	if ((old >> 16) != (old & 0xffff))
+ 		return false;
+ 
+-	return atomic_try_cmpxchg(lock, &old, old + (1<<16)); /* SC, for RCsc */
++	return atomic_try_cmpxchg(&lock->val, &old, old + (1<<16)); /* SC, for RCsc */
+ }
+ 
+ static __always_inline void arch_spin_unlock(arch_spinlock_t *lock)
+ {
+ 	u16 *ptr = (u16 *)lock + IS_ENABLED(CONFIG_CPU_BIG_ENDIAN);
+-	u32 val = atomic_read(lock);
++	u32 val = atomic_read(&lock->val);
+ 
+ 	smp_store_release(ptr, (u16)val + 1);
+ }
+ 
+ static __always_inline int arch_spin_value_unlocked(arch_spinlock_t lock)
+ {
+-	u32 val = lock.counter;
++	u32 val = lock.val.counter;
+ 
+ 	return ((val >> 16) == (val & 0xffff));
+ }
+@@ -84,7 +84,7 @@ static __always_inline int arch_spin_is_locked(arch_spinlock_t *lock)
+ 
+ static __always_inline int arch_spin_is_contended(arch_spinlock_t *lock)
+ {
+-	u32 val = atomic_read(lock);
++	u32 val = atomic_read(&lock->val);
+ 
+ 	return (s16)((val >> 16) - (val & 0xffff)) > 1;
+ }
+diff --git a/include/asm-generic/spinlock_types.h b/include/asm-generic/spinlock_types.h
+index 8962bb730945..f534aa5de394 100644
+--- a/include/asm-generic/spinlock_types.h
++++ b/include/asm-generic/spinlock_types.h
+@@ -3,15 +3,7 @@
+ #ifndef __ASM_GENERIC_SPINLOCK_TYPES_H
+ #define __ASM_GENERIC_SPINLOCK_TYPES_H
+ 
+-#include <linux/types.h>
+-typedef atomic_t arch_spinlock_t;
+-
+-/*
+- * qrwlock_types depends on arch_spinlock_t, so we must typedef that before the
+- * include.
+- */
+-#include <asm/qrwlock_types.h>
+-
+-#define __ARCH_SPIN_LOCK_UNLOCKED	ATOMIC_INIT(0)
++#include <asm-generic/qspinlock_types.h>
++#include <asm-generic/qrwlock_types.h>
+ 
+ #endif /* __ASM_GENERIC_SPINLOCK_TYPES_H */
+-- 
+2.39.2
+
