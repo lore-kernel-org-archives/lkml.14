@@ -1,94 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DC8169AC3;
-	Tue, 28 May 2024 09:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC6571743;
+	Tue, 28 May 2024 09:44:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716889369; cv=none; b=pxAX38MwgG1vkCQB4Sa/xLvZMgfy2JD8XITFha1JiNyi8M4KyYu6hPY6JDcdZ28pLkP+K/U1l1phHjT7XHFjVH46QC6lOX6wfaXawjksXDPx+6zeqB6gAj2g4uBZQD5kKCOK/IgfBFxz/+j7DZprTi0ckqS9VpWPRSPQjhsKaYM=
+	t=1716889489; cv=none; b=Z5Ps5CgngnzkYx4vcam+0ueEgSNpdL4/ql62cLcnNrien7hksnJ3pIRxvlM9DoM2H+lp3G8+0yVBMujW9rQJcKDD/MKt+R2hPJxrRWebvyV/j/Pq6xSMYnS37ciNEAp870CyNOo9sVF/S8jz0ZOb3UzYyLjkgv0+YOhln3XFJLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716889369; c=relaxed/simple;
-	bh=UfrUJRalN+JaGQvgCby9CCp8D+8wPcMEPVXbXjcaw80=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TNdxnYWoLxOcei25k1ybXox4yLGdFauDyTPc9HGtj2mI8dy4+Fur4yL7LsU/faMf9boEJ24oGkpk9vkQQYTz050hqsNNuFa3WQBCEReJP+fg37xI57O2ICGWFdkBy93td5pQugGr43RlZ+jmOZ0AFKoeYVACrSX3CDw/mEJQhKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZPrCAB8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716889489; c=relaxed/simple;
+	bh=GZviAu52XQ8kXCG4L44WnreVRaNAAG4iAoGt0fANXmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l9BbKZLXejd9mw2RDHQ5GyeiSz7nPl3B1vFeZoXKWigayQJFELZn/2lNz20teahylhDluuEteKj1M0n/yS5WPV7wiYpItBQy/TkBhO/iFTuRNveLnJJF3ATAwdkO9TTkmaADWC4al4leydjZOC3QiDTaP/OpycAzXmLF8C03xiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHyp8Y0C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZPrCAB8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1704EC32782;
-	Tue, 28 May 2024 09:42:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHyp8Y0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3577BC3277B;
+	Tue, 28 May 2024 09:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716889369;
-	bh=UfrUJRalN+JaGQvgCby9CCp8D+8wPcMEPVXbXjcaw80=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mZPrCAB8rwfqX4hWOHBg2tn++8h//L9a7xXm/e10VmN5moXr0TPRti3yxqU/2AwmP
-	 6SMmzKuSk+Ouoqf/Sy1+TB+Mn8k65HkKm05meoWuJv4DkkYLK9pZ2IEtFPH+hg+bph
-	 gy/xjakhUgdm/u941YOEvnpexuRwhcn4kmbbyQfgwC8yYtpGnsqsdI+4wsLuOxH100
-	 CRqGQg0zImD3OaHN0+leMQ2RHM+aNpKYUJ10wymxJdqfuz6oyPq+ovVsF4b2DcTiwr
-	 TysycplcJ7pC5VILIO0W1zl2De2VZpjztudpKumPAJqDpUuFFJoJ+qDOVi+RmAToQP
-	 4EK1Q/lB1Aw1g==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5b2e8d73bfcso76706eaf.1;
-        Tue, 28 May 2024 02:42:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUEM6KTiIO6qLMrqHSLZasBjfZ8TTgMBpyraS1G0Krl+dPOayO29Tgm9e+3wqUNVPkPGNHVQqymI7+HseFFhTuRhL8ifh3aVX41KnTUNT6o6tB53bNxYL9nTIaOtnWlOijFqdS5xB6tbQ==
-X-Gm-Message-State: AOJu0YxaGCHC0DVTGR+UeAu5aLOHj/860yYNDUNnYDhA8tJ9TqX92ooh
-	JvMt8Xh7v7u3ldt5QnNbm0KhYX42K3LLHkfhN7//xX9+wuLD9hm4y7MUNIgwbLfJ/QHys/Gk3zs
-	KaBLsFGfDfgmDnjOAPV6sbAJtQF4=
-X-Google-Smtp-Source: AGHT+IHScf/e/h5yrs0MCreiIIj2/v8nyVYmRkV0idFLCUnsAHi3hysArgPR9VGhqstXneHzgo1UBaqEkeIfAtgjCzA=
-X-Received: by 2002:a05:6820:2e02:b0:5aa:3e4f:f01e with SMTP id
- 006d021491bc7-5b961b691eemr11367417eaf.1.1716889368402; Tue, 28 May 2024
- 02:42:48 -0700 (PDT)
+	s=k20201202; t=1716889488;
+	bh=GZviAu52XQ8kXCG4L44WnreVRaNAAG4iAoGt0fANXmo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RHyp8Y0C2vLjQHixLPbmcfLDwxctbdGDHDF8vDCh4cPLQ6UlRE3nwV3bkqFvK1S1u
+	 Fms4InBww59K6xdozge9tdTt3JS9R0g7tPAUplGhWz40N10S+rTYlyFtcLnB48knPe
+	 85sEA54htFiar4GihSk2y0BYo2/61paeUMnRghRYw5Pm1kmONhNHvWUZ3r5GT3TwsU
+	 +YCa5bKgZ/H1IYUtEKrywnxmLlvRG5IbVu19HH03X9i8juP1qsNcti96gkRUDh6b/U
+	 M03fFu9F534mRZTAzpisk4yfK91JwUWfS75s9j4HFzYSxgFwNfRUAz9GBkLXTbw24q
+	 0b3eQjHxaKpQQ==
+Message-ID: <8c7c9f47-1f41-4f22-82f6-0e81029be52e@kernel.org>
+Date: Tue, 28 May 2024 11:44:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527202424.1430103-1-andy.shevchenko@gmail.com>
-In-Reply-To: <20240527202424.1430103-1-andy.shevchenko@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 28 May 2024 11:42:35 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0i8N-SuKyzm1o601G-G9Jis4uciu3gxO-08GN-X-z0LUA@mail.gmail.com>
-Message-ID: <CAJZ5v0i8N-SuKyzm1o601G-G9Jis4uciu3gxO-08GN-X-z0LUA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] PNP: Export pnp_bus_type for modules
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Guanbing Huang <albanhuang@outlook.com>, 
-	Guanbing Huang <albanhuang@tencent.com>, Woody Suwalski <terraluna977@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 1/2] dt-bindings: net: xilinx_gmii2rgmii: Add
+ clock support
+To: Vineeth Karumanchi <vineeth.karumanchi@amd.com>, git@amd.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ harini.katakam@amd.com, andrew@lunn.ch, hkallweit1@gmail.com,
+ linux@armlinux.org.uk, michal.simek@amd.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240528062008.1594657-1-vineeth.karumanchi@amd.com>
+ <20240528062008.1594657-2-vineeth.karumanchi@amd.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240528062008.1594657-2-vineeth.karumanchi@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 27, 2024 at 10:24=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> Since we have dev_is_pnp() macro that utilises the address of pnp_bus_typ=
-e
-> variable, the users, which can be compiled as modules, will be failed to
-> build. Export the variable to the modules to prevent build breakage.
->
-> Reported-by: Woody Suwalski <terraluna977@gmail.com>
-> Closes: https://lore.kernel.org/r/cc8a93b2-2504-9754-e26c-5d5c3bd1265c@gm=
-ail.com
-> Fixes: 2a49b45cd0e7 ("PNP: Add dev_is_pnp() macro")
-> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On 28/05/2024 08:20, Vineeth Karumanchi wrote:
+> Add "clocks" bindings for the input clock.
+> 
+> Signed-off-by: Vineeth Karumanchi <vineeth.karumanchi@amd.com>
 > ---
->  drivers/pnp/driver.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/pnp/driver.c b/drivers/pnp/driver.c
-> index 0a5d0d8befa8..1394d17bd6f7 100644
-> --- a/drivers/pnp/driver.c
-> +++ b/drivers/pnp/driver.c
-> @@ -265,6 +265,7 @@ const struct bus_type pnp_bus_type =3D {
->         .pm      =3D &pnp_bus_dev_pm_ops,
->         .dev_groups =3D pnp_dev_groups,
->  };
-> +EXPORT_SYMBOL(pnp_bus_type);
+>  .../devicetree/bindings/net/xlnx,gmii-to-rgmii.yaml          | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Why not EXPORT_SYMBOL_GPL()?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
->  int pnp_register_driver(struct pnp_driver *drv)
->  {
-> --
-> 2.45.1
->
->
+Best regards,
+Krzysztof
+
