@@ -1,36 +1,47 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED30816DEDB
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 13:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A697417C7F;
+	Tue, 28 May 2024 13:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716903046; cv=none; b=aoM3WSNLi/G5P9dyTmsCRfn/eMEpVlGJRQAwLv+HRaRx4dG1paifdB0q+g302d5HhUc2ihg/FNMftD+ziA07ikZzSKBo8senYt6S6CxIJQvXH9t2z/TK9y3Jzsn7ke4veKfSDvvg1hFdc5UqIfbwxyCSGjrDKvUT4m5DITDCgVQ=
+	t=1716903104; cv=none; b=SXyDxNBrb2Hfm9ArNJ6Hm3iZu4io2nZZ4wEvdkV4hSQPCiZJkHTIms6x05a9OD+udC4D4e74rcRGp3x55MDu7JybyD9DyB9Xb0amJ1b9ZHAoox6uWQcmeN9xn35HU90BYX9YBAq6iRDZCeDji6Hr+cOBHWfDdT8sjDnGD4FZE9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716903046; c=relaxed/simple;
-	bh=6Jie44RqKx5Qzojma1qH3Xylibo10Il3iCQdi7nNgsg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tjYz2Fsg/H1fHKLmqzN3+lpSVPRMf3uWS63iMj/zPzilvB0YTv911yP9CEQcZZkwxa7NAG9/EC4+45e8/sQsx73kg7luEvtXzJGevOxojyA2uING9uLh0HdUWwRi39Eg+NXjAYpl7GcYWI8JQs27F/wqRWydXihVPTlemOso+D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Tue, 28 May
- 2024 16:30:32 +0300
-Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 28 May
- 2024 16:30:32 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: <syzbot+1c46f3771695bccbdb3a@syzkaller.appspotmail.com>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: memory leak in r8712_init_recv_priv
-Date: Tue, 28 May 2024 06:30:27 -0700
-Message-ID: <20240528133027.37641-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <00000000000092f61e05b6f1215b@google.com>
-References:
+	s=arc-20240116; t=1716903104; c=relaxed/simple;
+	bh=vAWFowi/ZtCoWVCtCiP9IvNYrXqa5Ge8ez16WM4Swes=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G9jaNcFxkJ8CyEtdGDC2IQeodR6IsXEueyozZa2aztlSgre8p5LmzDXA9jwAVLLflmnclDKZP3AIwpvPXbyelnxjaGOUpf2pqAZSCk24DqOsV/U9GUhTCBulcy/XfCkcKvZNIfivYZ+6mxm0DZ8NIfXE6EXxlUU9MW68NBapyPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGCvZfVH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGCvZfVH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AFBBC3277B;
+	Tue, 28 May 2024 13:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716903104;
+	bh=vAWFowi/ZtCoWVCtCiP9IvNYrXqa5Ge8ez16WM4Swes=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pGCvZfVHhZ3L6Pzx7NnHPDucViDWDEXfo30Quks0js3n/M15sESgT5MwXxE/XAai9
+	 fJQk6BkT+ZZxD9WMXXxk9ycI0azOl7qkJnkYXfmLJVlKI2MCibPbzOfv/h7ih4EZt+
+	 iuLKQMkhCgQAO1p1nQ2OhTnOOz+PA1xtN8YxGXp+tOJKuJraLxxl+BhOKn8GnMCa12
+	 9oTy3b86sC/2D0vyhiNo8O4UFgcxKML9hf+5ka4S1eog8mw8JqUy9X3DszxHPnDgv3
+	 fTwUMSd3rX6hQlKQQsonajId75IWesJxK/f3WmiZbRuxlByQXJ3m0WTRrzwUvXyxPQ
+	 laRSU/cuxHlXA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Dave Airlie <airlied@redhat.com>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] udmabuf: add CONFIG_MMU dependency
+Date: Tue, 28 May 2024 15:31:31 +0200
+Message-Id: <20240528133138.2237237-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,47 +49,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-I am pretty sure this issue is close to obsolete.
-Original error, I imagine, has been fixed in some other commit,
-while the latest bug iteration refers to a similar but technically
-different issue [1] with a trace:
+There is no !CONFIG_MMU version of vmf_insert_pfn():
 
-BUG: memory leak
-unreferenced object 0xffff88810891f000 (size 4096):
-  comm "kworker/0:4", pid 5084, jiffies 4294944455
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc 0):
-    [<ffffffff8166d8d2>] kmemleak_alloc_recursive include/linux/kmemleak.h:42 [inline]
-    [<ffffffff8166d8d2>] slab_post_alloc_hook mm/slub.c:3944 [inline]
-    [<ffffffff8166d8d2>] slab_alloc_node mm/slub.c:4000 [inline]
-    [<ffffffff8166d8d2>] kmalloc_trace_noprof+0x282/0x320 mm/slub.c:4147
-    [<ffffffff84171382>] kmalloc_noprof include/linux/slab.h:660 [inline]
-    [<ffffffff84171382>] _r8712_init_xmit_priv+0x2b2/0x6e0 drivers/staging/rtl8712/rtl871x_xmit.c:130
-    [<ffffffff8416bb57>] r8712_init_drv_sw+0xc7/0x2a0 drivers/staging/rtl8712/os_intfs.c:311
-    [<ffffffff8416a6d6>] r871xu_drv_init+0x1c6/0x930 drivers/staging/rtl8712/usb_intf.c:386
-    [<ffffffff836c72bf>] usb_probe_interface+0x16f/0x3f0 drivers/usb/core/driver.c:399
-    [<ffffffff82fafe8c>] call_driver_probe drivers/base/dd.c:578 [inline]
-    [<ffffffff82fafe8c>] really_probe+0x12c/0x430 drivers/base/dd.c:656
-    [<ffffffff82fb0263>] __driver_probe_device+0xc3/0x1a0 drivers/base/dd.c:79
+arm-linux-gnueabi-ld: drivers/dma-buf/udmabuf.o: in function `udmabuf_vm_fault':
+udmabuf.c:(.text+0xaa): undefined reference to `vmf_insert_pfn'
 
-[1] Other issue in question can be found here:
-Link: https://syzkaller.appspot.com/bug?extid=83763e624cfec6b462cb
+Fixes: f7254e043ff1 ("udmabuf: use vmf_insert_pfn and VM_PFNMAP for handling mmap")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/dma-buf/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patch to fix the error in [1] was sent by
-Nam Cao <namcao@linutronix.de>.
-Link: https://lore.kernel.org/all/20240525073229.4144612-1-namcao@linutronix.de/T/
-
-Once that change is pushed, this issue should most likely be closed,
-since none of the old or newer reproducers trigger original bug.
-
-Regards,
-Nikita
+diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
+index e4dc53a36428..b46eb8a552d7 100644
+--- a/drivers/dma-buf/Kconfig
++++ b/drivers/dma-buf/Kconfig
+@@ -35,6 +35,7 @@ config UDMABUF
+ 	default n
+ 	depends on DMA_SHARED_BUFFER
+ 	depends on MEMFD_CREATE || COMPILE_TEST
++	depends on MMU
+ 	help
+ 	  A driver to let userspace turn memfd regions into dma-bufs.
+ 	  Qemu can use this to create host dmabufs for guest framebuffers.
+-- 
+2.39.2
 
