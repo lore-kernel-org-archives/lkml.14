@@ -1,84 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3562E79F6;
-	Tue, 28 May 2024 15:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE28616D9B2;
+	Tue, 28 May 2024 15:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716908469; cv=none; b=VM2x7ZAaI3Zr5AZLwRmu8yAHwRMT7MjsdhWHL0HnQ0qI/SfNJN0tZsa6woW6/Z16GZIdA0UxN3Fg2411QzM8bOy0fDFG4K1RuRV5Zxl3IziUp+U9p+fYMJfgt4kXqte7yfLg18uK8k3f/Ixt1CxJekZ1GyKh2K1dLAXrdQg8+L8=
+	t=1716908472; cv=none; b=Q4d6YHzIAYYxj+cTnL8bcNCpixMsWfKUi/53RtwxBZp8D5FbfW2dGz0gCv5mpOrSqOTdWzoyMsKPJHr9MgvG7gkx/mVtUi0iYEhW7w+KdePfHEmVwsl6jVgwwdo0AFFzTp7sdc/8GEFfhJnIcMIB3kJRGhxXjOt9J7dFgxLPtrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716908469; c=relaxed/simple;
-	bh=griTV/d48tFOAXbKZWjbvzau5IV3Ow0cB3k5rjAzDCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b3FcH/0LZvFhZf3oaqYqhhPZB073QYXNPxFf8HNv4iJEebB9rP8nxBJP5lKv8sw6eb2uDGuJ1WL3oBHp5Fu2+oABMsYsJid+jWRKH+iXxfFeSgVuZrk/FrMKmOol9LKtUPQGsuVOj5SdgSV7+SJPo4Ld0TKu3evLeUAzRVayOIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhadhZBe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716908472; c=relaxed/simple;
+	bh=XNW4F+x4W/rb3WsrpbO//7YwYaf6y4JTj+CwylfVs1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hsqLlM/mqjyciYjVDdNbU3mi5yzQr3hNDNMEqL0Yhva3tqSOTkzHT3ZGAGlnLs8dnO68Ul3+6S+jYDHaTKs8xYYv3b950X50YzmHAy1WWCwucsJFD7De3Sm86hb2yHgKrid1uQjMWR25Fp/6kBh0BV3sSVYJVcmgPGr/Z+mFIxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Ulve7Ep0 reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhadhZBe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70411C3277B;
-	Tue, 28 May 2024 15:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716908468;
-	bh=griTV/d48tFOAXbKZWjbvzau5IV3Ow0cB3k5rjAzDCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EhadhZBeE18WbKLGgiooW0VxGSBMEhOGF0MwqnuuP6kyWUWmWddS1L6G9AB8+8lm5
-	 jd1V5dCU0ZRklMWsON+LU9+l0O1ByZ/Y/GmZcuj+JmkXJ4KJgwz7ebYT+N0RXxE8Ho
-	 RYFvX1N6JjSPzDnv+ut2SQFeIBGkeyW1blw4RemLnIUH0d/6ZH6f4/2NPFmLXfsiEJ
-	 4bf9tDYqxR3zJ40ngwSx60e5oa/NG0NRfU5cYq8NB2LXw9ECQLxIAXSdmyIMlO58s4
-	 i8JBbcvamnRvXTHGyIgoaPbSQs2UO3v5DCr+FVPkSJNsHSi2QUHSpSBXpUn9MlF49l
-	 fsEWFwyBrCeKw==
-Date: Tue, 28 May 2024 16:01:03 +0100
-From: Conor Dooley <conor@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: boris.brezillon@collabora.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	daniel@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, steven.price@arm.com, matthias.bgg@gmail.com,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: mali-bifrost: Add compatible for
- MT8188 SoC
-Message-ID: <20240528-flattop-foe-05d6ba73cc06@spud>
-References: <20240527092513.91385-1-angelogioacchino.delregno@collabora.com>
- <20240527092513.91385-2-angelogioacchino.delregno@collabora.com>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Ulve7Ep0"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.1.0)
+ id 345ae4cc075ba586; Tue, 28 May 2024 17:01:02 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id DE96A6A5015;
+	Tue, 28 May 2024 17:01:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1716908462;
+	bh=XNW4F+x4W/rb3WsrpbO//7YwYaf6y4JTj+CwylfVs1s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Ulve7Ep0Cidgla+Cvq2UZj/Vo8W72R1ZMiC/5kqlyPP5Bt4PInUINeYSoLvdOJ4HS
+	 QTshkIC61dM6RIVPC024n0Um+HKm8RhHm0F3ORI58OwUkvifMYx7LNwFW0W8QooMFd
+	 Fo2uXCoByG6yEfZlJVkk3ZX8zH85WJqCVdymIB0UAp+KC97gnKsKEQ14cB3HjEdvPc
+	 UcwvBcytrwrVdJevT2pbWYxN+//8aMN67v42ixWOEc3V+36HdQAxY0iV4xBnLCYNlZ
+	 nsggHTeUUPl/yj8iPI3R+lHsXfxg19p9LmlDRRr791AcM/pMqDdSFZFFJ+aVZeSAeX
+	 RY5Z21ljKB5KA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject:
+ [PATCH v2 7/8] thermal/debugfs: Move some statements from under
+ thermal_dbg->lock
+Date: Tue, 28 May 2024 16:59:55 +0200
+Message-ID: <22311651.EfDdHjke4D@kreacher>
+In-Reply-To: <5794974.DvuYhMxLoT@kreacher>
+References: <5794974.DvuYhMxLoT@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lmQ6jMLH/WOT5YCV"
-Content-Disposition: inline
-In-Reply-To: <20240527092513.91385-2-angelogioacchino.delregno@collabora.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedgheeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohephedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+The tz_dbg local variable assignments in thermal_debug_tz_trip_up(),
+thermal_debug_tz_trip_down(), and thermal_debug_update_trip_stats()
+need not be carried out under thermal_dbg->lock, so move them from
+under that lock (to avoid possible future confusion).
+
+While at it, reorder local variable definitions in
+thermal_debug_tz_trip_up() for more clarity.
+
+No functional impact.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+v1 -> v2: Rebase.
+
+---
+ drivers/thermal/thermal_debugfs.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+Index: linux-pm/drivers/thermal/thermal_debugfs.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/thermal_debugfs.c
++++ linux-pm/drivers/thermal/thermal_debugfs.c
+@@ -574,20 +574,20 @@ static struct tz_episode *thermal_debugf
+ void thermal_debug_tz_trip_up(struct thermal_zone_device *tz,
+ 			      const struct thermal_trip *trip)
+ {
+-	struct tz_episode *tze;
+-	struct tz_debugfs *tz_dbg;
+ 	struct thermal_debugfs *thermal_dbg = tz->debugfs;
+ 	int trip_id = thermal_zone_trip_id(tz, trip);
+ 	ktime_t now = ktime_get();
+ 	struct trip_stats *trip_stats;
++	struct tz_debugfs *tz_dbg;
++	struct tz_episode *tze;
+ 
+ 	if (!thermal_dbg)
+ 		return;
+ 
+-	mutex_lock(&thermal_dbg->lock);
+-
+ 	tz_dbg = &thermal_dbg->tz_dbg;
+ 
++	mutex_lock(&thermal_dbg->lock);
++
+ 	/*
+ 	 * The mitigation is starting. A mitigation can contain
+ 	 * several episodes where each of them is related to a
+@@ -677,10 +677,10 @@ void thermal_debug_tz_trip_down(struct t
+ 	if (!thermal_dbg)
+ 		return;
+ 
+-	mutex_lock(&thermal_dbg->lock);
+-
+ 	tz_dbg = &thermal_dbg->tz_dbg;
+ 
++	mutex_lock(&thermal_dbg->lock);
++
+ 	/*
+ 	 * The temperature crosses the way down but there was not
+ 	 * mitigation detected before. That may happen when the
+@@ -729,10 +729,10 @@ void thermal_debug_update_trip_stats(str
+ 	if (!thermal_dbg)
+ 		return;
+ 
+-	mutex_lock(&thermal_dbg->lock);
+-
+ 	tz_dbg = &thermal_dbg->tz_dbg;
+ 
++	mutex_lock(&thermal_dbg->lock);
++
+ 	if (!tz_dbg->nr_trips)
+ 		goto out;
+ 
 
 
---lmQ6jMLH/WOT5YCV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 27, 2024 at 11:25:12AM +0200, AngeloGioacchino Del Regno wrote:
-> Add a compatible for the MediaTek MT8188 SoC, with an integrated
-> ARM Mali G57 MC3 (Valhall-JM) GPU.
->=20
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Chers,
-Conor.
-
---lmQ6jMLH/WOT5YCV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlXxrwAKCRB4tDGHoIJi
-0gxEAQCJxm0YW/F3sE3EG2ygW0Xz2I0KMa2JKGoLWElXy5gVRgEA4qAauCj9sAWK
-GjEwoDHxelJzjM0hfALT/Qy2rP/GQQg=
-=atEx
------END PGP SIGNATURE-----
-
---lmQ6jMLH/WOT5YCV--
