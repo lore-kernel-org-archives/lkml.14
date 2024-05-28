@@ -1,155 +1,137 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9869816C698
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDE6182B3;
+	Tue, 28 May 2024 11:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716895774; cv=none; b=Y1PDxAVOV8U35nm6AUX++/qr/DYLXF0edUh1mwfGtv0ZMA20wn0ENuQFdkUjFO+S4bxHyOvANEzDJJDUw3sWyl18hwvy7ggtMH4kaBI+eTr4IiueP/sOn7ndZi8Em9tK5HvAxKkCbg+0wyPESq+AWf5tHEBBEgESx13WwGAFsRk=
+	t=1716895816; cv=none; b=TmkyPWoDvCgLUkl427rkVJPyLfYrT0HpRr2ZuRYcSTCbBd0JX3niRapHV21GcVwubFVc682YiLZ65BTNXTpNgvRhInfB3pN/dBQLUrjnpGsw58hzNXKHbUwKL06Ugeb9PUD5hWGXw/hXb/OLiKd7t1XqDBZIdgNb3VSBebC8BWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716895774; c=relaxed/simple;
-	bh=Fhx6TTOqibqI01CNB0tq59za6TZyBibaHI3P84V+iE8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eNC3vzOamn3Qb2Esl7vhYioQD52nrHAsgY5Dyi4WVkqUqFNKNz6+Z8LTz4tOXbm8o5R7uQmJ+vp4QkK+74IthSTOovEcjkhMg/nxvIgdzwOAX7OIsPSi6tHoFEe3TivMhy+oD7nM7RvJNqRdIqUyMlroM8KLmDZYNHtp2gJHWQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HHQYcMfl; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1716895816; c=relaxed/simple;
+	bh=RWIsEqPeVlOmF7FXwHF2Q/qHk0T/3X6I1ml83lchXR8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sKFlnFYqK+p4T2vd4OTJoZKs4Sd9fIDQFOMonDU52M/7ElA4sRTo+VQrZPtgFFijMoBLfuP0TAaUPfMmMrj+ZoAd+USZdktd0cYv6oPgtTdEzZuuf+lHRQE19QkAaq0BXg7M4C160t01+TRGYFGdGTPs6+J9HiVfQiCzoK9a1aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mcKOA1mh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HHQYcMfl"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42108822e3cso22329215e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 04:29:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1716895769; x=1717500569; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d5oY5QDj/F2VjFpREI5FnfmpEsPpu1JW9qQI7HQyBXo=;
-        b=HHQYcMflVg+OtmBs1SqR7Lzq+2HtlGvu7h2cPgb9t8GSsriHxCgP0BINbIUHfP8AhL
-         IkbKxLxoZSYIMcaOq0c3jaU/7wAUppJEXuuLBJjomkm44xUXb1MFNrEX2ySSS+v/W7oM
-         IwcM++5Z01QH5z3o+M1UbaWOKzpDb2MKP1BapgzGVkUXp07UmfN7XcV0f2TFEk7Tkow0
-         rpkgaQpNafIgoJ4hRXza24dH6TjSw4enPuoLu0Rg2tNsu4gFsp29od8YavJLUaZFYC/u
-         BH8kqxmo0VQ9408RAOVlWkFWRfbQA4TSCwZjUjt2K2QR8dz+j2OV+HvwwJ6UFlDhs9OP
-         AeUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716895769; x=1717500569;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d5oY5QDj/F2VjFpREI5FnfmpEsPpu1JW9qQI7HQyBXo=;
-        b=mw0gqZMWk6+wqOlRPqoa2010awmAV5gtMXG/kzmMxk2AosRRIB0Dt814Bashkl3Brw
-         muSFcBu/bDQl2WPbE7p8C5oW4J64gaRe/Z3ec2v0O1IWgS5AqyYCw5c4TeCX5Izya6pi
-         QVZsAKcmlU0XLS+FTe4S7X3/8+kwyf3Xdiq4mrgZB7lEP9cULScmoi2VAIvJOZAgmzKE
-         De6OW8KX2qv7Q1I6pZZVo1URA1BbKIOd4jrXv3hK3XGWpnYNfwX9FA3QvVcsqehj1ufn
-         2GVOoo57t/XabnZWzGruxh4mn3d+Xk6TM2p815JdUJBqiRWlAp3npah3JJlulS5g+z33
-         sLaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWisT7mNndrAEF89s9QCsQIX+lOSQeFtnLxrsHuvsw33gIg4zs4s+uMkYQIDLR85JjMKIp0SBlqAW11ToNz5MOVyTYx7jzm4CO5m4dJ
-X-Gm-Message-State: AOJu0YyOLaPNYymovwRBqyOKTPVaCoC47/zCsFSp+Tg0bpZemukZt0+o
-	rifCX3ZyZ0OPgZYJnE4BuRkZTrvy3ZSrhthPZAdzTXOSGHm33zDbwV9k4qke4sg=
-X-Google-Smtp-Source: AGHT+IHEhP3H8xEy5lW4Agk2rSDU8yNaHdbHbk2CspUGWoXeNFtS8ar0NeKjZ/WLL0Q89fYZoR3UBQ==
-X-Received: by 2002:a5d:47ab:0:b0:357:a6e3:8748 with SMTP id ffacd0b85a97d-357a6e3877emr7780899f8f.1.1716895768949;
-        Tue, 28 May 2024 04:29:28 -0700 (PDT)
-Received: from localhost.localdomain (62.83.84.125.dyn.user.ono.com. [62.83.84.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a08a8bcsm11458124f8f.44.2024.05.28.04.29.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 04:29:28 -0700 (PDT)
-From: Oscar Salvador <osalvador@suse.com>
-X-Google-Original-From: Oscar Salvador <osalvador@suse.de>
-Date: Tue, 28 May 2024 13:29:26 +0200
-To: syzbot <syzbot+d3fe2dc5ffe9380b714b@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, muchun.song@linux.dev, netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [mm?] kernel BUG in __vma_reservation_common
-Message-ID: <ZlXAFvEdT96k5iAQ@localhost.localdomain>
-References: <0000000000004096100617c58d54@google.com>
- <000000000000f9561b06196ef5b3@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mcKOA1mh"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SAwQdj022257;
+	Tue, 28 May 2024 11:30:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zar8uZesiyIz13yi/Q7CM/fVi8HkaqVyoZ/iInraejo=; b=mcKOA1mhX8YVQbjh
+	dw8DHzJ7wotGuOgxvfiEQjoEHvuMAQO3v3S1w1U/kA/sKbEevbjVDvtZq2B8SyT/
+	5tJOZQ2lp1mn4/apbQr198JIXeOgnTuafYtFULAJzS2fAaP/FRr8MrPQEHZnkXda
+	bWfyhcYZnthNuHfnNmEr/huzNW3OWpD5woGZaxhWSST5ZX0lk7BEkB1utT29eaiU
+	R+B7buUFQ64KBWFE4dBRuwMZ9ILprrW5lWDFsemLLoqE4X0KoIesCV85o1aPVti4
+	o0GQL5naejyeq1nnDanQkIkj/EqVSTPvjz509/22QGsgTLXHbxI7gWZedLcfqdBY
+	De26ig==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba1k5wcj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 11:30:11 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SBUAR3007523
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 11:30:10 GMT
+Received: from hu-ekangupt-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 28 May 2024 04:30:07 -0700
+From: Ekansh Gupta <quic_ekangupt@quicinc.com>
+To: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>
+CC: <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
+        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>
+Subject: [PATCH v2 1/8] misc: fastrpc: Add missing dev_err newlines
+Date: Tue, 28 May 2024 16:59:47 +0530
+Message-ID: <20240528112956.5979-2-quic_ekangupt@quicinc.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240528112956.5979-1-quic_ekangupt@quicinc.com>
+References: <20240528112956.5979-1-quic_ekangupt@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000f9561b06196ef5b3@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: zG7c15ugTVzNi9gst-AIW11dVKKW-D9W
+X-Proofpoint-GUID: zG7c15ugTVzNi9gst-AIW11dVKKW-D9W
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_07,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 clxscore=1011 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405280087
 
-On Mon, May 27, 2024 at 05:50:24AM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    66ad4829ddd0 Merge tag 'net-6.10-rc1' of git://git.kernel...
-> git tree:       net-next
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=15c114aa980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=48c05addbb27f3b0
-> dashboard link: https://syzkaller.appspot.com/bug?extid=d3fe2dc5ffe9380b714b
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17770d72980000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10db1592980000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/05c6f2231ef8/disk-66ad4829.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/5f4fc63b22e3/vmlinux-66ad4829.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/67f5c4c88729/bzImage-66ad4829.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+d3fe2dc5ffe9380b714b@syzkaller.appspotmail.com
+Few dev_err calls are missing newlines. This can result in unrelated
+lines getting appended which might make logs difficult to understand.
+Add trailing newlines to avoid this.
 
-#syz test
-
-From 917fa54481422c650425c8b0330439f8a3308479 Mon Sep 17 00:00:00 2001
-From: Oscar Salvador <osalvador@suse.de>
-Date: Tue, 28 May 2024 10:43:14 +0200
-Subject: [PATCH] mm/hugetlb: Do not call vma_add_reservation upon ENOMEM
-
-sysbot reported a splat [1] on __unmap_hugepage_range().
-This is because vma_needs_reservation() can return -ENOMEM if
-allocate_file_region_entries() fails to allocate the file_region struct for
-the reservation.
-Check for that and do not call vma_add_reservation() if that is the case,
-otherwise region_abort() and region_del() will see that we do not have any
-file_regions.
-
-If we detect that vma_needs_reservation returned -ENOMEM, we clear the
-hugetlb_restore_reserve flag as if this reservation was still consumed,
-so free_huge_folio will not increment the resv count.
-
-[1] https://lore.kernel.org/linux-mm/0000000000004096100617c58d54@google.com/T/#ma5983bc1ab18a54910da83416b3f89f3c7ee43aa
-
-Reported-by: syzbot+d3fe2dc5ffe9380b714b@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-mm/0000000000004096100617c58d54@google.com/
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
 ---
- mm/hugetlb.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/misc/fastrpc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 6be78e7d4f6e..a178e4bcca1b 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5768,8 +5768,20 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 		 * do_exit() will not see it, and will keep the reservation
- 		 * forever.
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 4c67e2c5a82e..4028cb96bcf2 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -325,7 +325,7 @@ static void fastrpc_free_map(struct kref *ref)
+ 			err = qcom_scm_assign_mem(map->phys, map->size,
+ 				&src_perms, &perm, 1);
+ 			if (err) {
+-				dev_err(map->fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d",
++				dev_err(map->fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
+ 						map->phys, map->size, err);
+ 				return;
+ 			}
+@@ -816,7 +816,7 @@ static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
+ 		map->attr = attr;
+ 		err = qcom_scm_assign_mem(map->phys, (u64)map->size, &src_perms, dst_perms, 2);
+ 		if (err) {
+-			dev_err(sess->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d",
++			dev_err(sess->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d\n",
+ 					map->phys, map->size, err);
+ 			goto map_err;
+ 		}
+@@ -1222,7 +1222,7 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
+ 		 * that does not support unsigned PD offload
  		 */
--		if (adjust_reservation && vma_needs_reservation(h, vma, address))
--			vma_add_reservation(h, vma, address);
-+		if (adjust_reservation) {
-+			int rc = vma_needs_reservation(h, vma, address)
-+
-+			if (rc < 0)
-+				/* Pressumably allocate_file_region_entries failed
-+				 * to allocate a file_region struct. Clear
-+				 * hugetlb_restore_reserve so that global reserve
-+				 * count will not be incremented by free_huge_folio.
-+				 * Act as if we consumed the reservation.
-+				 */
-+				folio_clear_hugetlb_restore_reserve(folio);
-+			else if (rc)
-+				vma_add_reservation(h, vma, address);
-+		}
- 
- 		tlb_remove_page_size(tlb, page, huge_page_size(h));
- 		/*
+ 		if (!fl->cctx->unsigned_support || !unsigned_pd_request) {
+-			dev_err(&fl->cctx->rpdev->dev, "Error: Untrusted application trying to offload to signed PD");
++			dev_err(&fl->cctx->rpdev->dev, "Error: Untrusted application trying to offload to signed PD\n");
+ 			return true;
+ 		}
+ 	}
+@@ -1285,7 +1285,7 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+ 							&src_perms,
+ 							fl->cctx->vmperms, fl->cctx->vmcount);
+ 			if (err) {
+-				dev_err(fl->sctx->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d",
++				dev_err(fl->sctx->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d\n",
+ 					fl->cctx->remote_heap->phys, fl->cctx->remote_heap->size, err);
+ 				goto err_map;
+ 			}
+@@ -1337,7 +1337,7 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+ 						(u64)fl->cctx->remote_heap->size,
+ 						&src_perms, &dst_perms, 1);
+ 		if (err)
+-			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d",
++			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
+ 				fl->cctx->remote_heap->phys, fl->cctx->remote_heap->size, err);
+ 	}
+ err_map:
 -- 
-2.45.1
+2.43.0
 
--- 
-Oscar Salvador
-SUSE Labs
