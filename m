@@ -1,41 +1,59 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230A116D4FD;
-	Tue, 28 May 2024 12:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF9F16727D;
+	Tue, 28 May 2024 12:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716899736; cv=none; b=AWEg1Fmc4O3UHxA1Vp1X09gnjfzAeDyTT/0RBi8ENX87E52Ct2kJ/f3j49+8fhRo1/GC3YlPeTleKhZu/rP0FSVLe4iAlIJxjL28STC7AjbICCXpzeKTGhrkkQBfYGs/+YfSQ8oBszTZTXLnWsoznYbIoQ98d4npKnqu0cfdw0I=
+	t=1716899870; cv=none; b=MjtVBWPxBJFx9/ro4ctt3MIko9ptVxBuOw17S647mXQGRZv4kWP6omrQ+m+RbL08FJqKv32twkFaaaGnQwviW1bmN7xXPW+ROWootv2S0ma3vf8jt7jpMb8dnlLDj1FcGDnps3KYaVW5gzLBn2DCwFRpfv7K3Shq8ASK2eHTflM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716899736; c=relaxed/simple;
-	bh=vTQPFxcOsTHxGRqAdJFPPFa+Rb8dSXj7HjENu91SDyI=;
+	s=arc-20240116; t=1716899870; c=relaxed/simple;
+	bh=hd9Ak4slR6v9infr9CoTSeDmxLojFf7x+Z23XzbdJ7U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sVTC78ttM44rgqL38+lDKGTdJEpf+jMP6HksQZhP01YuRj5BAijwIicGVgLxxrlRxXDWOmwPer/GA4UAHjVOI8kIso6YJbanP2SYQKOph8UzdgjHnOfxxPK80aiulp0F0cJo5QIaGVzf5BxqJCoLuZs883Qkzsfv2opbHdSYPSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ACr2K2eA; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	 In-Reply-To:Content-Type; b=tYTHfu8KGNgmuU63vSJXotNiUMFLT9m5Bhul2+DKc8WzQhpBIhlcYGUOpQbeiTSx+ueZCk+5g1l+LVF7xiyZcOmjsOTx0WxNOigzU7GiKkXbcm5Lkj0x4lIQVday4FoMcS8AvfCIgCr2yHs4hwoexH5TyplUHVpMjTkzx0iMooA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pk+PGCP2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ACr2K2eA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716899714; x=1717504514; i=markus.elfring@web.de;
-	bh=vTQPFxcOsTHxGRqAdJFPPFa+Rb8dSXj7HjENu91SDyI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ACr2K2eAeyTIVkV9Vcu+9u/8VT+q+ib95KwOaCJ4moCnwqInR8b+UnW67zXyWvel
-	 V64Hj8odu1G/0YXwP8ICDYY63jPRMheTYwBjreGsdr4sBH1ZXzYcUL4fZQ12moQ6u
-	 La4kByvDuCkhO7uNZ7f+C9O90hvQMvr2CW3KcVf1+8+aG9yWAvn8GxJ7IxDumi1QW
-	 sL7/1Wo0lQ/qhNZTJnILJ3gwwra5j1hMdrZFlvZFn32Y7zC1JJNWmIVsKcSZ/AWvt
-	 mkwsnsPgY/q6RgziixDN/bgOj/kt5byuDDT0N6PGQsmXEjO5RrZTWahQO7D8hgG+O
-	 /QGiV1taOrmecuNjEg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N79NA-1sYrlO1GaC-00yBen; Tue, 28
- May 2024 14:35:14 +0200
-Message-ID: <044e1b22-83ab-4abe-8d7a-04edf038868b@web.de>
-Date: Tue, 28 May 2024 14:35:02 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pk+PGCP2"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44SCWO2l011133;
+	Tue, 28 May 2024 12:37:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pp1;
+ bh=PvOf0uIMxDxLmNDeH9tJ2VfYkeNXKpQfJFPurb0OLqI=;
+ b=pk+PGCP2d4s/F4c9UavntZmGt/deyvRXU2gfPHz2oiQZ84kVh2uKIcwvomo1PQ8GXjMV
+ 79eGUtWol/1Kw3oaP2FGRLGy+7bQa1p1wrEYDPzfSss6fVAC5bQKHrnrwt0rtIx8modG
+ nXHPRZzpvPx+INMlKEH4cJfXF2AmRLeFAMGp38jFniYqWgC3iRIUhd5QmZ5GDrEPjNw0
+ DRzF1SDNixow7p6AG8vOMpEY3FzXEwRXSm2qpErUpb3Nhh9Hm5KlInnWbTl+xZBFWp6a
+ RVytdKiamaLZkZB+LETgcz6WNRaAyX5lE8+ixVJ4DIh3ICQGue4JEazmgyivh48lbdR+ mw== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ydfc480by-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 12:37:41 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44SBlWXA006716;
+	Tue, 28 May 2024 12:37:40 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ybtatf342-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 12:37:40 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44SCbcRx47317360
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 28 May 2024 12:37:40 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 25B885805B;
+	Tue, 28 May 2024 12:37:38 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8DEBA58055;
+	Tue, 28 May 2024 12:37:37 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 28 May 2024 12:37:37 +0000 (GMT)
+Message-ID: <b5ff9003-065f-437f-bf6b-7f1ae0a0364a@linux.ibm.com>
+Date: Tue, 28 May 2024 08:37:37 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,52 +61,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: media: dvb_ca_en50221: Add a returing EBUSY logic into CA_RESET
-To: YongSu Yoo <yongsuyoo0215@gmail.com>, linux-media@vger.kernel.org
-Cc: Hyunwoo Kim <v4bel@theori.io>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>
-References: <20240308121338.1983-1-yongsuyoo0215@gmail.com>
- <eda2a849-c23a-4624-85da-78a2fdef4fe9@web.de>
- <CANXPkT5ggr8VbYdRy+uSnfHxDRES5arJJ8p+ist1CBTm-1xaUQ@mail.gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <CANXPkT5ggr8VbYdRy+uSnfHxDRES5arJJ8p+ist1CBTm-1xaUQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] crypto: ecdsa: Fix the public key format description
+To: Jarkko Sakkinen <jarkko@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+References: <20240527202840.4818-1-jarkko@kernel.org>
+ <D1KQDPOZRWCW.1763CCYF1B84X@kernel.org>
+ <D1KRILI1KRQ8.2CNPU7PFES0VI@kernel.org>
+ <D1KRXI87G4S0.1ROKTQENIZHT7@kernel.org>
+ <D1KS7LCALKD4.1J13QGYGZ6LBW@kernel.org>
+ <D1KSLKGUWGFO.21T4OBXQQ88D@kernel.org> <D1KSSWD7FA94.5705Z3J7LKZA@kernel.org>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <D1KSSWD7FA94.5705Z3J7LKZA@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:7EvkIcrFfYAwUvzeJLbnHp2lP/rlbZybFeFB/C+3kTjCC+lgYc5
- f6EJZ2hk0AIX0j/LpOwLcWputW6roeYz8R9sqCBFbOdZgaWf4BCOgNJCgvE7DtjCE1dpO87
- INb+0eUcCBCaOYY04xjCbXBwd34vckogcVtmRxkkFIk9Ljv5Q94oiMOQaSDvI6ILJxAJUlq
- jv8i2FFbZq3FM9BIq3vhg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:LIg5BihYShU=;FY3DpcWkUt3dvZ1PmOEelVxjEO2
- QGp7pXuKEmx+HwEOnzNbf6v1kyXsRO63fzh4I1BSjYMPOee+9hOlTi59cqiEeAz4DgveZrcI2
- uojo5mM6jes7Z4y+NIWSDablgO2QON0uYnp5Bdc8vqmoQpfFkLyS+QfFeAQmxV0NNjC9lY4Xp
- 8MOaXkT1pZkV9X2QihMjLIP0yGR/OSHsoEYKf7Vr9rg/yJJn0yIwoIZU/SDKOYCtR0soRyHgX
- CdG44W/11xg6wp5nsZTcFmTayoj8g08D8NAV14M99dLZPR6MhlHUEwv33MFPZqDxNkgLfLPTT
- p3RGhbUfY/vcOM0ERF/RbZrUdiAdfB83a3M1dUTRlvp5VyKgDl+qb9OAi5y4ZmG531ns787GW
- DBppQPqehzbr37yRHZHXPo8JtlCTiRIxABvC7lXAuXh+tzPCsPmU7y/o5YVyKfl6Zdm4YSlyG
- UUlI89bMLI3KXvRWYTnSBkIm1XpwCsuFCPSstsoL0+UeTgx43GIylht8/z6pqM8DIL+Y8jQ00
- diBTnvRItbL0dWX+K+KgWvrdgtgsf7yrvfUK3i6y3s640V2xet3CN5SVCpdDT470HGOIaJ1LJ
- Q4nMZNscyUsmLUb5kwKqwJYc3jzkyPDS7xRIfHMLjLYNEnvdLqD9Qbn2CNZLiewhPjBznrZ2x
- YQqcFJhsMZmHqBAAfwGVAQ/lE8Xj2TlFNC7nI6Z0agwEgOWV26yMwcyjgbqRAl3Boc8FFh3oU
- nwEklyR+q9I0bskZxQyi+RHBxD5i38cCNwwu/DJq5rwGI6ekrH9DrwdQG9qCtfwM9YJ5NTRla
- tSXRwyPaK2XE+BYOJComdAXk+JtIRGt+IvYeo5NmqGWVI=
-
-> In response to what you suggested, is it OK if I use Gmail
-
-It depends on a proper configuration of preferred message tools.
-
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/email-clients.rst?h=v6.10-rc1#n341
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 8l5eGJnZtAtglmTQ42pXHNf36TkcJNfu
+X-Proofpoint-ORIG-GUID: 8l5eGJnZtAtglmTQ42pXHNf36TkcJNfu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_09,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 clxscore=1015 mlxlogscore=892
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2405010000 definitions=main-2405280095
 
 
-> and attach a new patch ?
 
-Unlikely.
+On 5/27/24 18:59, Jarkko Sakkinen wrote:
+> On Tue May 28, 2024 at 1:49 AM EEST, Jarkko Sakkinen wrote:
+>> On Tue May 28, 2024 at 1:31 AM EEST, Jarkko Sakkinen wrote:
+>>>>          ret = crypto_akcipher_set_pub_key(tfm, data, 3 * x_size + 1);
+>>
+>> Noticed this mistake i.e. fixed it with "2 * x_size + 1"
+>>
+>> This is results earlier failure:
+>>
+>> ecdsa: (tpm2_key_ecdsa_query+0x10d/0x170 <- ecdsa_set_pub_key) arg1=0xffffffea
+>>
+>> Totally lost with the expected input format after trying out various
+>> options.
+> 
+> OK got it working with:
+> 
+>          ptr = &data[0];
+>          *ptr++ = 0x04; /* uncompressed */
+>          memcpy(&ptr[0], &x[2], x_size);
+>          memcpy(&ptr[x_size], &x[2 + x_size + 2], x_size);
+>          ret = crypto_akcipher_set_pub_key(tfm, data, 2 * x_size + 1);
+>          crypto_free_akcipher(tfm);
+> 
+> Had still a few "off-bys".
+> 
+> Makes me wonder why this is not in ASN.1.
+> E.g. TPM2 stuff and for instance RSA code takes ASN.1.
+> 
+> This all and the required prefix byte really should be explained in
+> the documentation of this function. I.e. follows the RFC in the sense
+> that number is big-endian and has the prefix byte, but it does not
+> follow it in the sense that x and y are not in input octect strings.
+> 
+> Why is that? Does not feel right intuitively.
 
-You may respond with subsequent patch versions which contain hopefully
-a more appropriate summary phrase and improved change descriptions.
+You found the appropriate documentation -- thanks.
+The old function documentation stated that it takes 'raw uncompressed 
+key data from an x509 certificate'. So, one should take the data from 
+the x509 certificate starting with 0x04 as shown here.
 
-Regards,
-Markus
+         Subject Public Key Info:
+             Public Key Algorithm: id-ecPublicKey
+                 Public-Key: (256 bit)
+                 pub:
+                     04:c0:55:b4:68:7a:80:bc:0e:ba:b3:66:40:5f:07:
+                     aa:27:d4:da:b4:79:2e:4d:a4:f4:f4:33:b1:22:6a:
+                     6c:e9:8c:30:8d:6c:df:ac:65:f0:93:d9:7a:70:7a:
+                     05:dc:7a:7d:b3:91:18:22:9a:5c:86:9a:87:72:3b:
+                     32:1a:92:81:1d
+                 ASN1 OID: prime256v1
+                 NIST CURVE: P-256
+
+
+These are two concatenated x & y coordinates with a leading 0x4. The 
+numbers are not ints in ASN.1 format but 'plain' integers.
+
+A *signature*, however, is in ASN.1:
+
+     Signature Value:
+         30:45:02:21:00:d9:d7:64:ba:5d:03:07:ee:20:a0:12:16:46:
+         31:e6:8e:66:0c:17:0d:74:07:87:58:5a:13:fc:14:62:98:9a:
+         99:02:20:59:ff:29:9c:52:b9:0a:35:3c:4b:03:bb:47:0e:c8:
+         3e:2d:cb:3e:1c:d3:51:88:91:b1:40:e3:03:86:1b:2a:e8
+
+30:45 => sequence containing 69 bytes
+   02:21: => first coordinate with 0x21 bytes
+     00:d9 => 0x21 bytes of ASN.1 integer with leading 0 to make the 
+following 0x20-byte integer a positive number (its most significant bit 
+is set).
+   02:20: => int with 0x20 bytes
+    ...
+
+
+
+> 
+> BR, Jarkko
