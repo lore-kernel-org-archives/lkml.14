@@ -1,134 +1,199 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2091.outbound.protection.outlook.com [40.107.223.91])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB7A6DD0D
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716923851; cv=none; b=KNO1sCBcyuShemGdYgeZdVBCDXR+OuYTmFYBGRp88h2VOt8lzy16eyZM0G7SZ/D1A/uDSs5kbgpnIkL5fE1s8by20/S+Y/+TE9fEdObY8gJ+EFerWo1YKTGhUkHTZAhdRnP9awT7Q/rhbauuaQjumd2QofaePN/NBpo/2Bbamao=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716923851; c=relaxed/simple;
-	bh=8FwTXWjwMKYp0uX5gzAdX2HN/+Ud76IbFLUxgOn4Vlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=prYyh/jE+HznN7lINGC5vamanpzZjcdVEHbxqiwJnUPs7VuZUG/T53vUTF8jbirzATRorbpPvEMdO1+aTqWPNMDhVB306EQ7l91VNvUGm534hyyhWMfEm0lb8Nke9g8C1EnKi3w4q6tUGbc8bgJ4D2gfILRb7sMwpWMH4FqdZwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uewBtLHX; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513A438384;
+	Tue, 28 May 2024 19:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716923915; cv=fail; b=nNoUwFVrvJ6IHkUi43DHL4fxLDOnqOj8E5qSSl++NfPvm8QtPofY7mAT4bNqatTGo4Q++fRRZ+dKWM6SCy6joyz8dRVoxhffSosv3RqJhgK4q0Vf0HU4fS0bCMYBB3hlWnDUu968QfCimEwZQAkXMrbbtmQAx/c+rXcalxVgCdQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716923915; c=relaxed/simple;
+	bh=tU2RRQvtQf0rLNDuEOsOxY+9c/nMthbETSiYloNoAL8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HHxnNRj5kP/QSsoYBrwslrw9RLBmzPkU/5nw/D8iyiMEW6YLZd/SlHiLRXKrXmFNloKzPIoDaJSHa0kzwU+g0UUtoqXHCwoCpuqKL81T0SkMjphERADvwH/GW4WURQ8dYeKs4Ffj3LDtpl1KSvZ9kk/pRqEVF70yuKOqqkhrEB8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=JiQ80y/o; arc=fail smtp.client-ip=40.107.223.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uewBtLHX"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-354de97586cso1469319f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:17:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="JiQ80y/o"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G1d6jEvBdyss+dfF4K58OK0m0UO9ieTBIBQ2nxMU/PV+tGCRLxiuSjqyGy1JTcdJcXSnO3tWbJGyPUmmbssOi1aznjYTA1C3trP7qjwx5pJFFh5e8CO/ga31Fr/TyYWjNJ0MEgd5op4nud55gnAHbhIOZUYOF241DUZIdUt+fVeZyKoQSHMgZOiLC1hwuzxXvUXgiiEfpwI31gFa2ytMlMEZclTYm4ASa9/tWfSUGhmoPTQTQm1zhxYpW1loHk+kOFzIygzk+cau7hRj0Lcuqa3iCGA8KExK7RBkmMeG4l++4XWeCU6FeRELuqnKczRUcvVgD87A7LQuseSFCIbe1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=C9jJu1349RdDQ7YL7q0ZNWLfyOZs8ta4aMA8BIkdbnQ=;
+ b=mGELjRjEaJv4iJSokhOXYa1dEhpHb4lx25G6XvSMhzUs7hsi0jsV8uPs6emu1j3jHRKqpusjBMGL9yYIWApPUxHYKWG9Uu3MUbSdbF34AAYbIXhIquyhcYPpEgbgVrGb9GUQojySa1aV0VTfnNc52IgJqvlU2VCdtUL2rZ1hD668zoLA2h7o2BR54WZGaacq2ilxavuSjGGIukrpmP6XPhw8iJumLBG3Ig1Po3NJSsFfC+knCMx5XuG5TcJRFaW7gRbp4+ygv7eSpv6FuAZRjNreIkpBcubA1ORZqH867nhePTtY8jwuj6rc7GfuZEXNGiT4t6z7+9FsoOF0592ssA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716923847; x=1717528647; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sZV0zcVH6suZcN3zb/p9F3ljLh6Gk5jU60erqTwhnLI=;
-        b=uewBtLHXGMsNo2KB8i+70+Mi6M7Oa+jQZWT6Lr6bqvX/75QqJMEQghcoB5fvkkqH3/
-         SQyK+TxzQwZnCfO74eRkSpU76MbnoXvNMKEVDaZV8a04HD1ePHk0vEQsQb6N7kO8TWxQ
-         GP3ilMOgD1tSZRQb4XGYHXDvaVl9mvBwpW4WzvpvY3y6lWpDIdqhkwKTLtFD/i44U1V0
-         mmzEYeI+9NvxCpelEj20en/hcmGxK8h6OvMgUxyorlFHnqhCu4cVee4Vmw5OxXrBJXVP
-         UuXfOeb4GUJ22QfciYRaiG+Qgp2x57j4wFhpnOqcbAofOCyih7caMk+jZStzw7Yuxu+F
-         jqEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716923847; x=1717528647;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sZV0zcVH6suZcN3zb/p9F3ljLh6Gk5jU60erqTwhnLI=;
-        b=cLS8fIFuF2gMvpfdeist2I4tt48EvaBuC+XjOot9dAp8r8F/wOswmAjv5ObS5TOgn7
-         UeAVF9/4k5ruQqmUReCd1as6HgY3Sq7iVnsvKN3nzLSuQKuQvqiaJyiTswflLVYQOA66
-         /cWyWe8pVzVwyFi2kzVFdkkl44lhj+6GCGJjsf4+cWoAKdPkPS3RgXqAz/D1cuccxMvu
-         SXyqSdr4to1vQfboGuA9XvKTWe4iezplwAiW6+v3BLFp8JEP0jAcVCO5RNBbZSo1ToxR
-         HJRatg+ymNwGVg2P48t2BL+kxCe+XBh4LkSTgr1l6SjXHSyCv50g9T8AN7YlMaaZj/WD
-         LyjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbLQGptbvl1cZxg0nG4h5K5ilZJmvGeGHFww3DkBAmBtpNdgWGSXIfVOrft9MYkz/3oSRrUDqIVRM2xETAiWRwb0X2siHFz1aMLhSD
-X-Gm-Message-State: AOJu0YysEnu0ErQN/7/PYn7p8dr6B8cEgzYSILb3ysvgZBPq9vw4eSXq
-	KFxHrv2y7Ewp2DEzw4pI3QQFR/yCdS0Ov7PDrP6OJbQCKAAUggPjTVHMvcL8axU=
-X-Google-Smtp-Source: AGHT+IEQkE684hYTF7oD4uWMGV+/mx0mhYVZRPi2V51orz/vfPzzL2qPaRkBiMYX9Pvv3mDlAVbbnQ==
-X-Received: by 2002:a05:6000:ec2:b0:354:f724:6417 with SMTP id ffacd0b85a97d-35526d68f8amr8753328f8f.12.1716923847151;
-        Tue, 28 May 2024 12:17:27 -0700 (PDT)
-Received: from [192.168.0.2] (host-87-9-236-85.retail.telecomitalia.it. [87.9.236.85])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a0931c9sm12480054f8f.65.2024.05.28.12.17.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 May 2024 12:17:26 -0700 (PDT)
-Message-ID: <826c3185-74ca-423c-96f2-4fd4cf2481cb@baylibre.com>
-Date: Tue, 28 May 2024 21:16:50 +0200
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C9jJu1349RdDQ7YL7q0ZNWLfyOZs8ta4aMA8BIkdbnQ=;
+ b=JiQ80y/oGpXkhmxdPAr3IDcepgOXWATvMcGyJwjxIGc+QyG2rK+FIhgqOo9r/t8u/k/hz/sgwy+VQEIohtNOvNME8+8//c8KK4rNjaCfmWpg4a8qxVv5+c72Ts5nGKyKt7Q6NgyPRwFTVJbrAT2eQSJ+tNULxdw/nIk3fIAjPUs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from SA0PR01MB6171.prod.exchangelabs.com (2603:10b6:806:e5::16) by
+ SJ2PR01MB8403.prod.exchangelabs.com (2603:10b6:a03:547::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7611.29; Tue, 28 May 2024 19:18:29 +0000
+Received: from SA0PR01MB6171.prod.exchangelabs.com
+ ([fe80::b0e5:c494:81a3:5e1d]) by SA0PR01MB6171.prod.exchangelabs.com
+ ([fe80::b0e5:c494:81a3:5e1d%4]) with mapi id 15.20.7611.016; Tue, 28 May 2024
+ 19:18:29 +0000
+From: admiyo@os.amperecomputing.com
+To:
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] MCTP over PCC
+Date: Tue, 28 May 2024 15:18:20 -0400
+Message-Id: <20240528191823.17775-1-admiyo@os.amperecomputing.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240513173546.679061-1-admiyo@os.amperecomputing.com>
+References: <20240513173546.679061-1-admiyo@os.amperecomputing.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR03CA0014.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::27) To SA0PR01MB6171.prod.exchangelabs.com
+ (2603:10b6:806:e5::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/6] minor fixes and improvements
-To: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <noname.nuno@gmail.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- nuno.sa@analog.com, lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240522150141.1776196-1-adureghello@baylibre.org>
- <751faef385f81f8a2dd0dcc2acd2d4519bebebe5.camel@gmail.com>
- <20240525180631.13446abc@jic23-huawei>
-Content-Language: en-US
-From: Angelo Dureghello <adureghello@baylibre.com>
-In-Reply-To: <20240525180631.13446abc@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA0PR01MB6171:EE_|SJ2PR01MB8403:EE_
+X-MS-Office365-Filtering-Correlation-Id: e57fc712-878b-4dfa-99ff-08dc7f4af4f1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|52116005|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?UJ4B7bfJdRGN8zVkGBugSEpSuwFEnYl3iBzxGzS3giiIsek6c+a1gtdD2EI+?=
+ =?us-ascii?Q?PWNjPBnsjMWa36O1NKJpsQk26QvKSSwyhmFxMnUQWEmI7tHeSfdpHJL52ON8?=
+ =?us-ascii?Q?wdoj6PZ1+Q0OVclFOu/lh7jGLh2S2bLsaL6XAQUsRzMrTH4RI5Ur+O7x7yw1?=
+ =?us-ascii?Q?pp57WfZZEOxvRM1sbkfGK3gjUzoJwRInSLCwD2ZC292HndHcOmGncVPeWZTR?=
+ =?us-ascii?Q?rMxkfvDHScmqB7Ryv4wV+LyFNvNcBmkErLL7gD+Qc0JPpPn6eqofblkn+mMD?=
+ =?us-ascii?Q?EH/YgwSO5zZtlLrLp/Y2BgUEZ5M5DQzwx2XcP/V13uvjoHdzp0YCrdHdKr2K?=
+ =?us-ascii?Q?ifz003E4aXLZkF1+yp7rqbI9xiZWYqTw+JeuT8vp01EuWiiFLIeXlz19BCQd?=
+ =?us-ascii?Q?Mu8Uajb1yLUybuUus9uGr32s5QrNCvRr/anWadqeMmHmzpXguzcmjKYGKpEL?=
+ =?us-ascii?Q?2mKcofSuZtM/G/TxiYF3saQb1czpi50qogChUiSpa2EJqLQ1Chs10+422EGS?=
+ =?us-ascii?Q?k0zbSXm9u0gbTiG27Rg508m2ohxLj2NnAiGssOqqXEqseBYTMe1uEp1TyzqF?=
+ =?us-ascii?Q?V45niND75MQpFfk27DNWmwZGE2ONSLBT6LkpqTHNgvlcEPKcq5/EYWKMRDjZ?=
+ =?us-ascii?Q?z7YNY5ESQThpTiHPoHssE6PPGem1IFIirzkLPcRcv5hy8oJcqfhcXbjH7Pl4?=
+ =?us-ascii?Q?trNrA7W/y/ZtfJZQ95N8SXiwTCpoo5c5e70SdZhgw0nZgIRyITsjarQ7N2xh?=
+ =?us-ascii?Q?mk1zytuzloMwLnor68obrYM+qAeItofCsAmLJwdOlN4cVLe1be245LB/mkvl?=
+ =?us-ascii?Q?aEprlUAdJBKTSzM+qwLlEfhM4Zdp27hMzeBSOCGcNIqIBkFD0j5U0N+vMjJl?=
+ =?us-ascii?Q?f6SAkBjhJ3YB+Draznox3u/aVjgQtxF2Uz17Nvt9RFWrn5b5SGQrJhvXHhbF?=
+ =?us-ascii?Q?uMjbAXiys/hHO7CYC7uKu71cEOVl6dUIOe5rJHdBtG4lQOmG+Y5q/DO8DUcV?=
+ =?us-ascii?Q?ZriaNoTkbkluf5wyaDcJgZHxdkjcr9x4FxqKfuonf4boMTMcy++fdTnyRs04?=
+ =?us-ascii?Q?Ey6m5wfywIBAEvvFr7p6/nPtOwU7AmqcsTOC6rEGc2oFLp3bWzyAhJTMvuz3?=
+ =?us-ascii?Q?GfuetHE0tB1L+ikhoZ7Dn/RxBO8ClguQpVBr40sHvjTeY3WUhrJuzN93qaZs?=
+ =?us-ascii?Q?St0HpRK0Ebr8uxRaSmTM5Z5rDnrF43LnKYKIchzYSAcasdfitoI/4UPjgF9O?=
+ =?us-ascii?Q?siHWQmIm14UMXTox99VEFe97qBP/31CZt4+RhwOj0A=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR01MB6171.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?m0I40fY1q4IEO5Mvhuh3bW2XCYcUJi6BG8tc/CTHxqLdo1SZGrPu9DmNHtSR?=
+ =?us-ascii?Q?q6lPqNMTTldpfst7PNH/XgMiDg3pLzagYSM2m/i4qz1zMAfW0z3+FSoRz8uD?=
+ =?us-ascii?Q?0qlxY3xMoXmBpCrbD02ZBdGW/WbIIjfWls+kd2hp4PyYTLn/BXig/LCL3i4S?=
+ =?us-ascii?Q?aHKBwEI91iLO3ey1TmeMW3RBqEfN0czBc/rK7CApAPFwM5eDu1/R6XVlnZlQ?=
+ =?us-ascii?Q?NKHrbb162Ks5GKB3UTlTtpZmP4VZzHbYwLOqqHb0TGjzfYAa3w+Cw5BbVFNU?=
+ =?us-ascii?Q?odT7zTe5fcg9lKjh/RF+MJS5jFKtUnmwHXo0QBqcQj0ibF5lgDJU4DxRTgr5?=
+ =?us-ascii?Q?HAyg0obwi3sWYPYEx+LoMjn+GYMum3dUm20weaxyocwu0Ncolotth2CAszGs?=
+ =?us-ascii?Q?RJ3Ce7yFeNByG5tSSiOE3nNjMdQMeUg9oX1XiBt05K6EIKtmFX7y6sBmWk1n?=
+ =?us-ascii?Q?HBQUGNYrdClPCtJze4m8kmDaUz0BK6R6EE5bEfq5I3bMFhZz9amH9P3IPRKv?=
+ =?us-ascii?Q?wVpEBW7bbOick4y16l6/Au4aYYePyt9LFFjqw9t1Hh5E67vw77s+va8SMKTO?=
+ =?us-ascii?Q?Y/ZDCFJc1QK9vw+iWLZEdkYyx0Kw5bq6na3wql2bm27wKYZgqxNdrEsskeUb?=
+ =?us-ascii?Q?t+s/nQvZhoZrDlBk33Xg1itRS1RtBxaaKSv4O5AATd6UT0ApyNW4OIo9BoBh?=
+ =?us-ascii?Q?BCp/5Xef0YJs78+OR6QZnjaZkkSTw71mPm/D27tK6ic5aEGyFUTh2it2t4M6?=
+ =?us-ascii?Q?XYgPVReqNO+lIZ7cH7vfJz8JhEBZzXPUN7SPw64kTfbITe9L99LpVYfucyMp?=
+ =?us-ascii?Q?Kg7uVn83aa2SkLCfEYuHeKg8W2PmlhYNA73sylW1o/PsnnIUwyuvKxWVUNj9?=
+ =?us-ascii?Q?Ji4V58eS+NTC/MW6hDY6udJT1o3DAXfeHTGK/maC1htXvIabxXi7teNGqZS0?=
+ =?us-ascii?Q?L+SZoo0GCaVlU0uthuRfEQnipu1pxvHcG4MYVg68YA8knUFN/k2BA8lsH/Bq?=
+ =?us-ascii?Q?N+UrvuCA9TRq00wzJsFktYchdA88Yl5IBcoRjzrAxrWVGi9GAb28ITs40rCF?=
+ =?us-ascii?Q?xc/AMXd6UuUKf5BlClMduRT4yrciBB+/wPjh3xbah56q8DkycJ4lvCMRyY4P?=
+ =?us-ascii?Q?ajwn+w7rVMgtQJzPpCGF3oYu2Pkr+nT3Ji7R4Rz+flkurv/w8lJB7Hjtgd5K?=
+ =?us-ascii?Q?tn3V28Rr2guqEIPkt2k1SpGiH91fvFzWdry/Rx0IkWDp+kBF1JxtMxnf82pJ?=
+ =?us-ascii?Q?UVCCgznnq7QLI6cdrhwHnO0Dm7WQXAQPhpdFRwLuT4VT2sZ0GXThz6TZGbyf?=
+ =?us-ascii?Q?o7x9/700JyCt/KFYoZqgGLcJfIwa5pNcz4RRWmKbFQY6pvcatyia5QtaUbn5?=
+ =?us-ascii?Q?hKP/upXIthhF3Xm1XR07pEp/RyBlHB+u6UywS6gBCp2aZj08U8f6HAENR3JJ?=
+ =?us-ascii?Q?eN0pxFsyXvj6ro8kuqtzVKAVQwsQKoljz2lv1Bkz6TEu8ZFcT8QY5ClcOn6q?=
+ =?us-ascii?Q?UW5woYbH/PfN+Uv7Iymhl7ygJBgs4Vy523wt22Al6jH7ksL1hFZsnA/3IViG?=
+ =?us-ascii?Q?cLAI0EiTjs+iVWgWy1wNG46ysZAGXAvlRebKBTgGOU5/VTaVrkR7vskfW1b1?=
+ =?us-ascii?Q?WQFGKdCDBsPqCAc3q5w3/UHSUZMBqdxhqCidDW3RliJrsPOI3lJi+dSG6CxC?=
+ =?us-ascii?Q?xNZjA6HzHkaZv36Skd+flsI3MYA=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e57fc712-878b-4dfa-99ff-08dc7f4af4f1
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR01MB6171.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 19:18:29.4404
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jo+dqYFNEabaaW9Yp5yimxvMb8k0rP7t44HssV8vXiJ4Qo0Ty5oEw/JIU8YlFaHUkUO/I6wy+ozZ4mHjFy6mgtqr1Eny4ZjrfVTyM+thzaVgS9cC3Q3HTkjv+4Zjv2D0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR01MB8403
 
-Hi Jonathan,
+From: Adam Young <admiyo@os.amperecomputing.com>
 
-On 25/05/24 7:06 PM, Jonathan Cameron wrote:
-> On Thu, 23 May 2024 14:45:01 +0200
-> Nuno Sá <noname.nuno@gmail.com> wrote:
->
->> On Wed, 2024-05-22 at 17:01 +0200, Angelo Dureghello wrote:
->>> From: Angelo Dureghello <adureghello@baylibre.com>
->>>
->>> After testing this driver, add some minor fixes and improvements,
->>> as adding single channel variants support (ad3541r, ad3551r), also as a
->>> preparatory step to bigger future improvements related to fast-rate mode
->>> for this DAC family.
->>>
->>> Previous patches (v1, 3/3)
->>> https://lore.kernel.org/linux-iio/20240510141836.1624009-1-adureghello@baylibre.org
->>> https://lore.kernel.org/linux-iio/20240510141836.1624009-2-adureghello@baylibre.org/
->>> https://lore.kernel.org/linux-iio/20240510141836.1624009-3-adureghello@baylibre.org/
->>>
->>> Angelo Dureghello (6):
->>>    dt-bindings: iio: dac: fix ad3552r gain parameter names
->>>    dt-bindings: iio: dac: add ad35xxr single output variants
->>>    iio: dac: ad3552r: add model data structure
->>>    iio: dac: ad3552r: add support for ad3541r and ad3551r
->>>    iio: dac: ad3552r: change AD3552R_NUM_CH define name
->>>    iio: dac: ad3552r: uniform structure names
->>>
->>>   .../bindings/iio/dac/adi,ad3552r.yaml         |  43 ++++--
->>>   drivers/iio/dac/ad3552r.c                     | 140 ++++++++++++------
->>>   2 files changed, 128 insertions(+), 55 deletions(-)
->>>    
->> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
->>
-> This series crossed with a series using
-> device_for_each_child_node_scoped()
->
-> I've rebased on top of that. Was moderately straightforwards but
-> given last week I messed a similar change up completely please
-> check the testing branch of iio.git!
->
-> The mess was all it the patch adding model_data
+This series adds support for the Management Control Transport Protocol (MCTP)
+over the Platform Communication Channel (PCC) mechanism.
 
-i tested the driver from the iio testing beranch,
-it works as expected.
+MCTP defines a communication model intended to
+facilitate communication between Management controllers
+and other management controllers, and between Management
+controllers and management devices
 
-> Thanks,
->
-> Jonathan
+PCC is a mechanism for communication between components within
+the  Platform.  It is a composed of shared memory regions,
+interrupt registers, and status registers.
 
-Thanks,
+The MCTP over PCC driver makes use of two PCC channels. For
+sending messages, it uses a Type 3 channel, and for receiving
+messages it uses the paired Type 4 channel.  The device
+and corresponding channels are specified via ACPI.
 
-Regards,
-angelo
+Changes in V2
 
+- All Variable Declarations are in reverse Xmass Tree Format
+- All Checkpatch Warnings Are Fixed
+- Removed Dead code
+- Added packet tx/rx stats
+- Removed network physical address.  This is still in
+  disucssion in the spec, and will be added once there
+  is consensus. The protocol can be used with out it.
+  This also lead to the removal of the Big Endian
+  conversions.
+- Avoided using non volatile pointers in copy to and from io space
+- Reorderd the patches to put the ACK check for the PCC Mailbox
+  as a pre-requisite.  The corresponding change for the MCTP
+  driver has been inlined in the main patch.
+- Replaced magic numbers with constants, fixed typos, and other
+  minor changes from code review.
+
+Code Review Change not made
+
+- Did not change the module init unload function to use the
+  ACPI equivalent as they do not remove all devices prior
+  to unload, leading to dangling references and seg faults.
+
+Adam Young (3):
+  mctp pcc: Check before sending MCTP PCC response ACK
+  mctp pcc: Allow PCC Data Type in MCTP resource.
+  mctp pcc: Implement MCTP over PCC Transport
+
+ drivers/acpi/acpica/rsaddr.c |   2 +-
+ drivers/mailbox/pcc.c        |   5 +-
+ drivers/net/mctp/Kconfig     |  13 ++
+ drivers/net/mctp/Makefile    |   1 +
+ drivers/net/mctp/mctp-pcc.c  | 361 +++++++++++++++++++++++++++++++++++
+ include/acpi/pcc.h           |   1 +
+ 6 files changed, 381 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/net/mctp/mctp-pcc.c
+
+-- 
+2.34.1
 
