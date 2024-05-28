@@ -1,71 +1,163 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8A316D308;
-	Tue, 28 May 2024 11:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3319816C87C
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716897144; cv=none; b=H6Xa6eOxzg2nWY8E5ZwJki6/MppbybFGqCOtJD+lTwa8nCrH9Rk+2pLibYEvWHrhhSDwXyXR2yCy/iLi1C4L1bVEKkCRQPCoBHuEGGTrDAyXO5zHJC7AyZhly9IOWupDW7D/vyOoZsX8foUNlWqJj3m3Rm1iZRpw3Ek01KY+04w=
+	t=1716897160; cv=none; b=sP0ANyzs7S0GJ8qCKpigETNaapE8d2b9Zw/UKTHahvs4OInohjTjIjPNuSOa1xHUVTllv4KB8VfpKp4wbApmBvUDQZ/j84ssXhhyx9K+mcxqzPTLUpbv3Ch6n0ToWZvJ2nSmse4hqkC6mODalYdLqYuo6+Cv472RTP2XMYooZFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716897144; c=relaxed/simple;
-	bh=7nJOrIbNRBb2wO3PiDfHyphKLt0y6wyGs2WF4qB8lcE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=osf+78gPHYmZObseWPiVzPt1O3skJtRtLa34Osz+SDgAThtVsdpCGzFJX+R4om2RHlBlvMwFtQV1BZO1CZLDEPZeDw6e5TD8U3J7Jumn+MxWRdYCxHkxL36IPxEbrofQkg1aI+//Vynj1SrNvMHFHKsQI8dh18xnJr4LePH01Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e86193d.versanet.de ([94.134.25.61] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sBvNH-0003GJ-RU; Tue, 28 May 2024 13:52:15 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Dmitry Yashin <dmt.yashin@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Jianqun Xu <jay.xu@rock-chips.com>, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] pinctrl: rockchip: update rk3308 iomux routes
-Date: Tue, 28 May 2024 13:52:14 +0200
-Message-ID: <1770701.X513TT2pbd@diego>
-In-Reply-To:
- <CACRpkdYO_zr=OEZCv8LKtw+fNOwJ906ZVKyPhbbyA=9gP5XQgg@mail.gmail.com>
-References:
- <20240515121634.23945-1-dmt.yashin@gmail.com>
- <20240515121634.23945-2-dmt.yashin@gmail.com>
- <CACRpkdYO_zr=OEZCv8LKtw+fNOwJ906ZVKyPhbbyA=9gP5XQgg@mail.gmail.com>
+	s=arc-20240116; t=1716897160; c=relaxed/simple;
+	bh=c6HLmHQgr+K+/opF/OiiYVpCKahYXfgVPr1CgHqBTgk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZYDOtdHwFc6/0l+90f1k9P5YdCrmFp8jold7KlFfDKjpodlSGobS6Totu2xIA4aZnqFdCbw+196F82To2HxKUyT6jrrflxSC1D+889QqKQxOKS5BuBY+dYah+4u8NPKwqoWQtOdvryctVYsxRbuqVe1l+CtAq2A9YmFKvR5hW9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D03AwHuD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D03AwHuD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F68C32782;
+	Tue, 28 May 2024 11:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716897159;
+	bh=c6HLmHQgr+K+/opF/OiiYVpCKahYXfgVPr1CgHqBTgk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=D03AwHuDsKvcUkDlecqDtEPZZhMjTaMFd/0vPhG4U2wi15wGBBRYxi+a50oIIBAD3
+	 kKAzYiBT1/iSoy4fgo1HuQYlVrjGJRadJCOGeXHrEpHjmtG5x2+kEt/49Zn++EPv+4
+	 yeyFdAE0FhAbD49JWO4q62bg33zoI0vP/C8pwYSFZ30Fh2GsOjzJTbRobGkohqR5rr
+	 +m1pqpaXPIfHzUI95y9nwRik70fTPhQk/0KhuQAFuk92y8DNShIWo2NiRIKgACLAsd
+	 nq64oSyxXi+S9t5Pd+97UwuemMAMEJYbXLnE1eMhYtqw+0vuS/pjB9/noBCtL5TtS4
+	 XbAPM52H58fyQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Dillon Varone <dillon.varone@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Chaitanya Dhere <chaitanya.dhere@amd.com>,
+	Alvin Lee <alvin.lee2@amd.com>,
+	Joshua Aberback <joshua.aberback@amd.com>,
+	Charlene Liu <charlene.liu@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Wenjing Liu <wenjing.liu@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] drm/amd/display: avoid large on-stack structures
+Date: Tue, 28 May 2024 13:51:20 +0200
+Message-Id: <20240528115146.2870032-3-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240528115146.2870032-1-arnd@kernel.org>
+References: <20240528115146.2870032-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+From: Arnd Bergmann <arnd@arndb.de>
 
-Am Dienstag, 28. Mai 2024, 13:29:12 CEST schrieb Linus Walleij:
-> On Wed, May 15, 2024 at 2:17=E2=80=AFPM Dmitry Yashin <dmt.yashin@gmail.c=
-om> wrote:
->=20
-> > Some of the rk3308 iomux routes in rk3308_mux_route_data belong to
-> > the rk3308b SoC. Remove them and correct i2c3 routes.
-> >
-> > Fixes: 7825aeb7b208 ("pinctrl: rockchip: add rk3308 SoC support")
-> > Signed-off-by: Dmitry Yashin <dmt.yashin@gmail.com>
->=20
-> While you guys are thinking about the RK3308B support, is this fix
-> something I can just apply?
+Putting excessively large objects on a function stack causes
+a warning about possibly overflowing the 8KiB of kernel stack:
 
-I'd think so. I've detailed stuff in my Review mail I just sent.
-Both the soc itself and also the affected pin functions are niche
-enough that this should not cause breakage.
+drivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn401/dcn401_resource.c: In function 'dcn401_update_bw_bounding_box':
+drivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn401/dcn401_resource.c:1599:1: error: the frame size of 1196 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+ 1599 | }
+      | ^
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_state.c: In function 'dc_state_create':
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_state.c:221:1: error: the frame size of 1196 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+  221 | }
+      | ^
 
+Use dynamic allocation instead.
 
-Heiko
+Fixes: e779f4587f61 ("drm/amd/display: Add handling for DC power mode")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc_state.c   | 16 +++++++++++-----
+ .../display/dc/resource/dcn401/dcn401_resource.c | 16 +++++++++++-----
+ 2 files changed, 22 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_state.c b/drivers/gpu/drm/amd/display/dc/core/dc_state.c
+index 70928223b642..8ea9391c60b7 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_state.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_state.c
+@@ -193,7 +193,11 @@ static void init_state(struct dc *dc, struct dc_state *state)
+ struct dc_state *dc_state_create(struct dc *dc, struct dc_state_create_params *params)
+ {
+ #ifdef CONFIG_DRM_AMD_DC_FP
+-	struct dml2_configuration_options dml2_opt = dc->dml2_options;
++	struct dml2_configuration_options *dml2_opt;
++
++	dml2_opt = kmemdup(&dc->dml2_options, sizeof(*dml2_opt), GFP_KERNEL);
++	if (!dml2_opt)
++		return NULL;
+ #endif
+ 	struct dc_state *state = kvzalloc(sizeof(struct dc_state),
+ 			GFP_KERNEL);
+@@ -207,12 +211,14 @@ struct dc_state *dc_state_create(struct dc *dc, struct dc_state_create_params *p
+ 
+ #ifdef CONFIG_DRM_AMD_DC_FP
+ 	if (dc->debug.using_dml2) {
+-		dml2_opt.use_clock_dc_limits = false;
+-		dml2_create(dc, &dml2_opt, &state->bw_ctx.dml2);
++		dml2_opt->use_clock_dc_limits = false;
++		dml2_create(dc, dml2_opt, &state->bw_ctx.dml2);
+ 
+-		dml2_opt.use_clock_dc_limits = true;
+-		dml2_create(dc, &dml2_opt, &state->bw_ctx.dml2_dc_power_source);
++		dml2_opt->use_clock_dc_limits = true;
++		dml2_create(dc, dml2_opt, &state->bw_ctx.dml2_dc_power_source);
+ 	}
++
++	kfree(dml2_opt);
+ #endif
+ 
+ 	kref_init(&state->refcount);
+diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn401/dcn401_resource.c b/drivers/gpu/drm/amd/display/dc/resource/dcn401/dcn401_resource.c
+index 247bac177d1b..8dfb0a3d21cb 100644
+--- a/drivers/gpu/drm/amd/display/dc/resource/dcn401/dcn401_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/resource/dcn401/dcn401_resource.c
+@@ -1581,21 +1581,27 @@ static struct dc_cap_funcs cap_funcs = {
+ 
+ static void dcn401_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_params)
+ {
+-	struct dml2_configuration_options dml2_opt = dc->dml2_options;
++	struct dml2_configuration_options *dml2_opt;
++
++	dml2_opt = kmemdup(&dc->dml2_options, sizeof(*dml2_opt), GFP_KERNEL);
++	if (!dml2_opt)
++		return;
+ 
+ 	DC_FP_START();
+ 
+ 	dcn401_update_bw_bounding_box_fpu(dc, bw_params);
+ 
+-	dml2_opt.use_clock_dc_limits = false;
++	dml2_opt->use_clock_dc_limits = false;
+ 	if (dc->debug.using_dml2 && dc->current_state && dc->current_state->bw_ctx.dml2)
+-		dml2_reinit(dc, &dml2_opt, &dc->current_state->bw_ctx.dml2);
++		dml2_reinit(dc, dml2_opt, &dc->current_state->bw_ctx.dml2);
+ 
+-	dml2_opt.use_clock_dc_limits = true;
++	dml2_opt->use_clock_dc_limits = true;
+ 	if (dc->debug.using_dml2 && dc->current_state && dc->current_state->bw_ctx.dml2_dc_power_source)
+-		dml2_reinit(dc, &dml2_opt, &dc->current_state->bw_ctx.dml2_dc_power_source);
++		dml2_reinit(dc, dml2_opt, &dc->current_state->bw_ctx.dml2_dc_power_source);
+ 
+ 	DC_FP_END();
++
++	kfree(dml2_opt);
+ }
+ 
+ enum dc_status dcn401_patch_unknown_plane_state(struct dc_plane_state *plane_state)
+-- 
+2.39.2
 
