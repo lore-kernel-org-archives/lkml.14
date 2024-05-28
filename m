@@ -1,149 +1,139 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E45217B4ED;
-	Tue, 28 May 2024 21:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5BF17B4FA;
+	Tue, 28 May 2024 21:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716932096; cv=none; b=su1VT0ReQXjE473f5Lo7xP/wIDTRuJRA6SlHhztBdwsMpsViwcI9bA+JXkqCUYVkG4pJ0YBgQ3Ixe/1YGlT20WZxLWSXyg6oAIW54+O2XML9mTO+obJJsqj+fyCmWDjWKTK/w3USZmfGBhfCUz826zN4zkLmXy2INDRFmo6bFmU=
+	t=1716932119; cv=none; b=h3Y7+YmkgL3bOOA9kvM1/fR1etxkHuEeCxOkBrVjPvWjq19Z10vqnIV9TjrzdOXIcdgmBmmYTkvB8sfVBbCUK2hCbDbI+6XdlkVCcfYzuv2fkqxa5BbPJ0Ksm+7LW4+H5sWyLz7KYfpz+X6tHJq/ueMUQdpa9tf/SRF5jAdjKtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716932096; c=relaxed/simple;
-	bh=OTUUZ1IOGn8N+025jO0LdHeT0aqbBWd4vImEqG7ne7A=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=XYknWr2kDOj0uOWKIy01tORUBYKkxPH9iDw7JXs97ORQ/05g5a2V1ob0GQlOOjZBpWH7iS34dled2eLifrpQP8ah9HOfwxy/xmpqGCOXUAvUfbuo1pqA27rD9LJ1h3/6jhwkq1bs2rNcKVDoAoFS8VsDKm3TozZAE1ebtfVZ6bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=d20xLBfh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UxHWfasx; arc=none smtp.client-ip=64.147.123.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1716932119; c=relaxed/simple;
+	bh=TTH6TAAHwNlQVXAyaogzfwBqkN2ZRzQ1G1pQrDnBJck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aeXVN7Ij9eTczx8gKgJKkJhw9Bg4owjBXNNwT62ZXCO+81hSxxmVhy0zI61H5KSsz2owPW++lfM+me+ND92wJQ7cyTIyQA8P3CkOvamgVbCjgrqf659E8xCo9VrNGMfEQtFWf8b4pv/XLQcfbNtVZPa/7f6eus1vVS6Pz9uqWFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeU4xdkR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="d20xLBfh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UxHWfasx"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 68A0E1800103;
-	Tue, 28 May 2024 17:34:53 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Tue, 28 May 2024 17:34:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1716932093; x=1717018493; bh=y7ZRNcwP4p
-	jwdqwTtRlAY8w9sm0m48WlVfyUcA5amrM=; b=d20xLBfhlxbkU/SYrMvR0eoi4o
-	P38uCGbL00szFMDeewkI5QLC0D9lUUXnL6xEI50wsxHaIDYOe9jPRGjjkvuISphu
-	Kdgxk60UDYKdlAWA4hFbUAKjsOXPpUVm3Lbrathqh57/y69dU1qcIUUI/8QJQxbv
-	0U7d6qeTS/zJunOInz5ACXTEKg9xUCkN0+bzcYGCYKbahFH/TWDMe+tAAwfkv5Aj
-	4yxjPH5daLuOPpag3lKhHtHHPJ/Wv96r8AJddl7+EVWQpowmXxmqz2v99KIB2vNr
-	zZPwCqMV4fxaU5V+F2jx1e0Lddzy9UmK1a472ZgZrZC8Lq9ZOjygCplZ4Myg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1716932093; x=1717018493; bh=y7ZRNcwP4pjwdqwTtRlAY8w9sm0m
-	48WlVfyUcA5amrM=; b=UxHWfasxL/NE8+/ONWIR9lUhoc95gRWvx5oR3Y3PVbmF
-	pKfW0GtmXJ32YtR+62MwLQaynFI52BNUQuzXu01BDal8JNNqSyFR9SqzDhc1Im66
-	Hmop0qAsoi52cGdQBZLu07TJNw/p6e1FOEIIRz6BV9TQIJ/W5YupBoFic1SHgfew
-	s0JkemMGHOgbp3Ap9kGqAjibJlnjUUGOtdg5Np2HnNI5BWCrUgxOQpEdeCYecJwC
-	lI2sT4i8Z+qp/K76FGDyEeDUzEDMjmQO1LfgtnkVS7YiWTnnsvNKLBrPai1B1Hyi
-	rvKOcUFFaYkw8IMkHPdon8LJPeWWH7O8G/mXdXzLEA==
-X-ME-Sender: <xms:_E1WZtmg2yYELxxfD-PVzMXAgBXDX0E5eBx6B9eUcVhNbA5PF-sHiw>
-    <xme:_E1WZo2OCJyzDKKUwG874-CivXU89e3s47MrAH2tCZeN4shtUTOJHsj7UwvP1gppn
-    NzavxcQvWRtQs0T_OY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedgudefgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpefofgggkfgjfhffhffv
-    vefutgesthdtredtreertdenucfhrhhomhepfdfnuhhkvgculfhonhgvshdfuceolhhukh
-    gvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhephfeivdehffevtdehhfdt
-    ffefheethfelfefgveeifffhgeeihfefheefhfeghfeknecuffhomhgrihhnpehgihhthh
-    husgdrihhonecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:_E1WZjq4E8c3oEltPliO-RzJtT5qXLIpwQ8IgvtySU_4TOV3aiB25w>
-    <xmx:_E1WZtn4ROESPwr608vRYbvoR9EEN7XgiHLQWkZo6d0TbGY8vzHMIg>
-    <xmx:_E1WZr2uQLTd3A3yIHKz9CH7nLe5zqMSPBN4VCKTQ0nBzshRXixlyQ>
-    <xmx:_E1WZsvQqlkLPYdiBbBme-IK-WDvaTd2eayflGC8_WwXkGu6usaPqw>
-    <xmx:_U1WZr9icwl-iSU2Aj3UjbxC5xgV_aTnClx3XnlgA6UvNNSXkSfgb5x_>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 957612340080; Tue, 28 May 2024 17:34:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeU4xdkR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912C7C3277B;
+	Tue, 28 May 2024 21:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716932118;
+	bh=TTH6TAAHwNlQVXAyaogzfwBqkN2ZRzQ1G1pQrDnBJck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oeU4xdkRJ3X0RbaYEe79r7B1TPu84xeNqYBWKsrZxaMGxOC4XE9s7C/4kRLbJ0Aj0
+	 XEchBORaoDtvvgb/RDIptSSPBfgAUX9UqhFd0E3frxQikLwi35DH0omy5OuCWh3TAH
+	 0AxyXUmioNEpY0e4njH2E969CC7mvkf7YrMRz95tLZcaFXhwbXHiR7zMbvzgeX27SE
+	 fB12XzBMONchtmgAdH5sX+VDItHOlyPPDiv+A3Xcwre/07lWvk5CoQ9Cy2ojvuTg8u
+	 dkHdk9P65p7TglO/ZnmRyItggxNKVv+eGGzavQ/HF3CKHFhc/2EZ1Fp/fqch2jBKqw
+	 su59ULvI41eOw==
+Date: Tue, 28 May 2024 16:35:15 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: cros-qcom-dts-watchers@chromium.org, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH DNM 2/2] arm64: dts: qcom: qcm6490-fairphone-fp5: Add
+ DisplayPort sound support
+Message-ID: <hqwrfe2tcb6vlxybmn52k3j2xrxbt3vw5rqwudindbhj3s3nez@obkr3ayos6gm>
+References: <20240510-sc7280-apr-v1-0-e9eabda05f85@fairphone.com>
+ <20240510-sc7280-apr-v1-2-e9eabda05f85@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <6d4e7f1e-ccd0-4ac5-b450-f9c5f8d5c90e@app.fastmail.com>
-In-Reply-To: <371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com>
-References: <20240528013626.14066-1-luke@ljones.dev>
- <20240528013626.14066-9-luke@ljones.dev>
- <6f4bc109-00d0-47b0-a581-b96a6152545c@amd.com>
- <4d6b9171-7248-4937-87de-7e921ed8e507@app.fastmail.com>
- <5f4799b1-0606-46a9-a347-5a03738db341@amd.com>
- <ac597520-fb5b-40e5-ae1f-de825450d2db@app.fastmail.com>
- <371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com>
-Date: Wed, 29 May 2024 09:34:31 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Mario Limonciello" <mario.limonciello@amd.com>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, richard@hughsie.com
-Subject: Re: [PATCH 8/9] platform/x86: asus-wmi: add apu_mem setting
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510-sc7280-apr-v1-2-e9eabda05f85@fairphone.com>
 
-
-
-On Wed, 29 May 2024, at 9:16 AM, Mario Limonciello wrote:
-> >> For any "new" attributes it's better to put them in that API than code
-> >> duplication of the BIOS attributes API as well as a random sysfs file
-> >> API that you can never discard.
-> > 
-> > Do you mean the firmware_attributes API? If so, I'm not opposed to adding all the existing ROG attributes to it also.
-> > 
-> > If I'm understanding the docs correctly, for example this apu_mem attr would then become:
-> > - /sys/class/firmware-attributes/asus-bios/attributes/apu_mem/type
-> > - /sys/class/firmware-attributes/*/attributes/apu_mem/current_value
-> > - /sys/class/firmware-attributes/*/attributes/apu_mem/default_value
-> > - /sys/class/firmware-attributes/*/attributes/apu_mem/display_name
-> > - /sys/class/firmware-attributes/*/attributes/apu_mem/possible_values
-> > - ..etc
-> > 
-> > That's absolutely much better than what I've been doing and I wish I'd known about it sooner.
+On Fri, May 10, 2024 at 02:27:09PM GMT, Luca Weiss wrote:
+> Add the required nodes for sound playback via a connected external
+> display (DisplayPort over USB-C).
 > 
-> Yup!  And even better "fwupdmgr get-bios-setting" and "fwupdmgr 
-> set-bios-setting" [1] will work with bash completion too.
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+> Depends on a bunch of patches upstream doing bringup of Display (DSI),
+> DisplayPort, GPU, and then finally audio could land. But we're blocked
+> on DPU 1:1:1 topology for all of that unfortunately.
 > 
-> If you want to build a GUI around it, it could use the fwupd dbus 
-> interface for getting those settings and manipulating them. 
+> And also machine driver for sound just exists a bit hackily.
 
-My existing GUI effort revolves around me adding these attrs to both kernel and a dbus interface. So if I can drop that then all the better
+Thanks for sharing this, Luca. Can you please resubmit this once it's
+ready to be merged, so that I don't need to keep track of it?
 
-> The dbus 
-> interface policy is protected by PK.
+Regards,
+Bjorn
 
-What is PK? And I'm guessing this restricts users to requiring permissions to change settings?
- 
-> > 
-> > So if I go ahead and convert all the new attr to this are there any issues with also converting much of the previous attr? And I'm aware of "don't break userspace" so really I'm a bit unsure how best to manage that (would a new module be better here also? "asus-bios.c" perhaps).
-> > 
-> > What I don't want is a split between platform and firmware_attributes.
-> > 
+> ---
+>  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
-> My personal thought is add everything to the new API and then hide the 
-> "old" interface behind some boolean Kconfig option that defaults to 
-> disabled.  If someone enables it then when it's "used" (IE read from / 
-> written to) then do something like a pr_warn_once() that it's a 
-> deprecated interface and it will go away.  Wait until next LTS kernel, 
-> and then rip it out after that.
-
-I'm happy to do this. On a serious note though, I should make a new module for this right? It would make it much much easier to manage the "conversion" I think, and then it would act as a separation of concerns.
-
+> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> index 05bbf1da5cb8..2bbbcaeff95e 100644
+> --- a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> @@ -14,6 +14,8 @@
+>  #include <dt-bindings/leds/common.h>
+>  #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +#include <dt-bindings/sound/qcom,q6afe.h>
+> +#include <dt-bindings/sound/qcom,q6asm.h>
+>  #include "sc7280.dtsi"
+>  #include "pm7250b.dtsi"
+>  #include "pm7325.dtsi"
+> @@ -774,6 +776,12 @@ &pon_resin {
+>  	status = "okay";
+>  };
+>  
+> +&q6afedai {
+> +	dai@104 {
+> +		reg = <DISPLAY_PORT_RX>;
+> +	};
+> +};
+> +
+>  &qup_spi13_cs {
+>  	drive-strength = <6>;
+>  	bias-disable;
+> @@ -847,6 +855,34 @@ &sdhc_2 {
+>  	status = "okay";
+>  };
+>  
+> +&sound {
+> +	compatible = "fairphone,fp5-sndcard";
+> +	model = "Fairphone 5";
+> +
+> +	mm1-dai-link {
+> +		link-name = "MultiMedia1";
+> +		cpu {
+> +			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA1>;
+> +		};
+> +	};
+> +
+> +	displayport-rx-dai-link {
+> +		link-name = "DisplayPort Playback";
+> +
+> +		cpu {
+> +			sound-dai = <&q6afedai DISPLAY_PORT_RX>;
+> +		};
+> +
+> +		platform {
+> +			sound-dai = <&q6routing>;
+> +		};
+> +
+> +		codec {
+> +			sound-dai = <&mdss_dp>;
+> +		};
+> +	};
+> +};
+> +
+>  &spi13 {
+>  	status = "okay";
+>  
 > 
-> Need Hans and/or Ilpo agree to make with that though before you spend 
-> too much effort on it though.
-
-Ack
-
-> 
-> [1] https://fwupd.github.io/libfwupdplugin/bios-settings.html
+> -- 
+> 2.45.0
 > 
