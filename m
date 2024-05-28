@@ -1,109 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5525A16C854
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77AF16C6B1;
+	Tue, 28 May 2024 11:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716896280; cv=none; b=pdacealmDCfsHI/xqCJFdDxcRVxFYdjsbq3cBVokf3ljhzMQLuN2DPIG13PaxNfeP9faRfsW+uv7iMR8KltLWYWnL6vZe1F+D7JiNM1zfslXB/ZoUB94TI/JKEbZpdNpVPJ7sak9wJ9gsgUffCzxO7yiuEb9L0eg4VvQ8Y5TQn8=
+	t=1716896286; cv=none; b=nHY4GHJUcg0vUSjjPgqxtdrWxKtiYBItiKM/G7ISFSZoR05OJbEYN0kpCWfCKWSjpLoaVWz7cAOrSjMzkR+ndXjDJOGvIKfTiKc9aXxyFTk+MdAJcAK7fly/ELVAfvFK6hLuhrAZLIXJyJjM5nCHnlLFwAYbduamN/DhlnWt0SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716896280; c=relaxed/simple;
-	bh=qsUEMsJeSS+IBw2BPZZTlJN3EV1oMrAZQyqKVRUbvtE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bzU11THBcs7lKoxdA+N6FOBWCwCtkJ4N8hRwHriqQst84TBzrbibvjgwVx+MnY3p3Lv4FDaleprzfvdmz4Q1sH3kSYt3SSWblnvlRbwSwtneaxvZWjjzP2XAlenm3WJkdCzAtujroGru4ugcdFarwhqvP6GLjsLjlOdRBL7j3ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hzHHvYxp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716896286; c=relaxed/simple;
+	bh=iIEfkaLcBZrLnXPb98Krsanziumo17QkX9cbSc6RakU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=PbaUgLva9KBWDXjotCh32Eywjd9wRWHU1h8A7lelIQoASEMIaawLkA9L8Ll0ah0kvHZg2+e2vZMtNLDPfgdsFgi09P6Sa97Qukfl6TyIVeFQLq2VVSDZCL6/R1eNF8tWpnU+mfnVNTpUdQYZzoqJK8whesNi64zQzC0CR/6TqNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=TWgNXuMv; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzHHvYxp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716896278;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cR2bt1k7HyvsTYH0cB1zhL4rvahDLosFkY2Z9XJBKj4=;
-	b=hzHHvYxpq+FsTLqXvk3EO71TXhDzb/11TYP/7H1pbeIf1JguOJj3t2OWxrjQOSW8AFMyZm
-	spfYLgnOoN1/U+03z99VxT0EaXKu16Xn82NN8q5zi6ZJ/8jXnRTZG8vow+b/Fg0CJnr6fh
-	ufaUx7n9EFhEHvIiqq6XF0aw4f0CEsU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-t2Ce_dVVNM-Zrr8EG9E22Q-1; Tue, 28 May 2024 07:37:54 -0400
-X-MC-Unique: t2Ce_dVVNM-Zrr8EG9E22Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B007881227E;
-	Tue, 28 May 2024 11:37:53 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E44710004FF;
-	Tue, 28 May 2024 11:37:53 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id 872D230C1C33; Tue, 28 May 2024 11:37:53 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 8623A43520;
-	Tue, 28 May 2024 13:37:53 +0200 (CEST)
-Date: Tue, 28 May 2024 13:37:53 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Mike Snitzer <snitzer@kernel.org>
-cc: Benjamin Marzinski <bmarzins@redhat.com>, Yang Yang <yang.yang@vivo.com>, 
-    Alasdair Kergon <agk@redhat.com>, dm-devel@lists.linux.dev, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dm: optimize flushes
-In-Reply-To: <Zk-EtZE4C7bndEYn@kernel.org>
-Message-ID: <96148bb3-42e3-a5e2-63fb-ad7f67ba4fea@redhat.com>
-References: <20240514090445.2847-1-yang.yang@vivo.com> <20240514090445.2847-4-yang.yang@vivo.com> <ZkTXzG1yrPmW64Z6@redhat.com> <60bd4b9-8edd-7e22-ce8b-e5d0e43da195@redhat.com> <90f4beb-2e15-3f9-4bc2-0d13872e8ea@redhat.com> <Zk4Y6DMgK71UuoKd@kernel.org>
- <44afd6c8-d36a-4b9d-e77f-fca269a9897b@redhat.com> <Zk-EtZE4C7bndEYn@kernel.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="TWgNXuMv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1716896259; x=1717501059; i=markus.elfring@web.de;
+	bh=TDvFBcJGyPwRaT6zbKz3iL8MSVk3ipgQOdseEeqP3Oo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=TWgNXuMvD9jrT87vwEeAqB6F/Y1R3BBMFNEmuFE3hWpNBkauYtFT3ijCfkXfWw/2
+	 QA+0x+wWGG0oCylh1hvtgEoWuZO0aiCZu3tXm6P2eY6/NX9MGbIHZSERumye5rS0g
+	 6s3eyLcutS+H4gWKliP+8uAKu4xv3VMJANFmFA4AG1uyJbX3YhKuduvPg6HGRZugX
+	 iRm/TavfTS+shBwmilOzdNMCCRcp4C4el8b8xQUZoEEN0qG59VC5Q1mQkb2N94lIG
+	 j5kiD/2XF4cHV1Nqqnk5rrUKiNo6t8nuZ1+Sh7HqZThD4kKm3zA/Iqyd2xu+CN4Gf
+	 w+3eSx9ZeFFL5X0zDA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MyvBA-1sPTn731G6-00vx4O; Tue, 28
+ May 2024 13:37:39 +0200
+Message-ID: <9abb1d5e-fdac-4500-9218-fb9f28ff2c05@web.de>
+Date: Tue, 28 May 2024 13:37:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+User-Agent: Mozilla Thunderbird
+To: Weihao Li <cn.liweihao@gmail.com>, linux-gpio@vger.kernel.org,
+ linux-mips@vger.kernel.org,
+ Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ =?UTF-8?B?QXLEsW7DpyDDnG5hbA==?= <arinc.unal@arinc9.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240527022036.31985-1-user@blabla>
+Subject: Re: [PATCH] pinctrl: ralink: mt76x8: fix pinmux function
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240527022036.31985-1-user@blabla>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5QkSmp5bnBaXcyDYB3+Ih3oVkyDJtxHb/IzWgk/DY8NzsXDVZg6
+ QWk3eZqikcrEs8miOgajsxVgKq+rlIOuLQtMCPj9jKFJSjGTUZTagp/PxcHPA0rDgNTMFnJ
+ 9fffCIAM/h4Nxfe7lYa2sDjpUuYfPlm4aNm8KX0dqnDpnmGhAqF0f10WEdxcEX63N0VLXVs
+ JGGNeQlNRKTwSQnLaDZ2A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:V7J8FSJ60RI=;BPsXQDfKwdHj7znD2lR8xkEVM4G
+ MTgW1lUc2eByEVsKs+jfIGQWsJ5XF+09sJtvksTq72coBXuW5W8ZZ0IIjdsQXN829BCPPckje
+ 4lMphmJH3SRDGB1aZoDZ2vXakerGWL0OrBtlIXyxk2gyAi77FDkbtVZUKdL/5VV1t+Pg+9hAA
+ 40atqIs60e9vYXd6LOmelQkP3I5drwPMLJjdhz21who7qcyVHXQfhyr8bp35eoOGnn3zZtZ5e
+ y3XA+CoEPSY9q+Hs5zm8PjUI/c8PcHxQn+NloqQ8fxxrymF9cKwjLjjDuFuYcobRt4XnVVJzq
+ DOG8T/Iqx8b/WjoGke/GVpyVncHtEVdsvxH4ufAi7bbFCBJ37EyAvDJ3dSXSIAjc+fYkT60lc
+ 7kRCOvpoaLg+abEKpWIJEYYtsuIxuAsoU7hp0CY+9sdQ2Z+eDeEPWuvwEmSvoxk+ZkIzgPUzc
+ TjoOsfMXlFCOrh3n5uN8xPEIzYEysVAdXa+73b3ZzkSQqNk4gPnb/KQtX2YQjRW4HM32awVrO
+ xqVHBYZH1CvIN0AUBUcZynt9gDIQWbPopvh7qtXh4TrFeG9tb6vNDel3jtMY15H3nYWHvHFz3
+ WQwXMb4ByE7Ruy6Jbqpi3gf5cQ8LIJ25M7OAlKu2N9TCBkdkWSqLnUlfctJjcc4mUmPTYt5/7
+ zyCcMjuXToXeEL+f2O8o3+Va5ZuC7zuJnuwyw0xcXzrYMLuCZ5Di4FrHMp3KrUDgS+l14+ryo
+ EXP9PuUJg6nKZehG+ww9+R3aK9teE3Iy/eK8Ohw5UIN665blXy/WLsb6X3veVhWomjsw3WU7k
+ GCTba0XjzbV+gdBFztJyI9yY1Hgy0v8iXP5GpRkn2ZIQk=
+
+=E2=80=A6
+> There are some same function name in different pin groups, =E2=80=A6
+
+                               names?
 
 
+=E2=80=A6
+> To solve this problem, a simple way is just add a pingrp refix to
 
-On Thu, 23 May 2024, Mike Snitzer wrote:
+                                                    pin group prefix?
 
-> On Thu, May 23, 2024 at 07:46:25PM +0200, Mikulas Patocka wrote:
-> > Hi
-> > 
-> > Here I'm resending the patch, with more comments and explanations added.
-> > 
-> > Mikulas
-> > 
-> > 
-> > From: Mikulas Patocka <mpatocka@redhat.com>
-> > 
-> > Device mapper sends flush bios to all the targets and the targets send it
-> > to the underlying device. That may be inefficient, for example if a table
-> > contains 10 linear targets pointing to the same physical device, then
-> > device mapper would send 10 flush bios to that device - despite the fact
-> > that only one bio would be sufficient.
-> > 
-> > This commit optimizes the flush behavior. It introduces a per-target
-> > variable flush_bypasses_map - it is set when the target supports flush
-> > optimization - currently, the dm-linear and dm-stripe targets support it.
-> > When all the targets in a table have flush_bypasses_map,
-> > flush_bypasses_map on the table is set. __send_empty_flush tests if the
-> > table has flush_bypasses_map - and if it has, no flush bios are sent to
-> > the targets via the "map" method and the list dm_table->devices is
-> > iterated and the flush bios are sent to each member of the list.
-> > 
-> > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> > Suggested-by: Yang Yang <yang.yang@vivo.com>
-> 
-> Nicely done, please feel free to stage for 6.11 (create a new
-> 'dm-6.11' branch starting from 'dm-6.10' -- we'll need to rebase
-> dm-6.11 to 6.10-rc2 or so but at least we'll get this commit in the
-> pipeline, push to 'for-next').
-> 
-> Reviewed-by: Mike Snitzer <snitzer@kernel.org>
-
-OK, done.
-
-Mikulas
-
+Regards,
+Markus
