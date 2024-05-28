@@ -1,72 +1,120 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B923C1DFD1
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BA51DFD1;
+	Tue, 28 May 2024 15:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716910566; cv=none; b=t5WadtjcPSAn7Ash4rCIbNCyJCqmH/rY9KLCuvnO1ZYCGYvHHKv+EWxVf02Qy7jxiF0As/kW36CN0i/peMu1jZMKrwIZWyrzPX5f/DTBWXHkaj097dfsauDSxMFHl1oDKhRtCzWdxE3wqY8qLvOd4L3GFsHVm/ke6PDC37mB4LI=
+	t=1716910638; cv=none; b=sUptvTwcoSx+qBlO9VO21mPFtFM3+oxjPoN3L0pMRMkFg1LfL5YXbhXi99OMs4vVXpDW+DXrlLtBebA0MH0qXdfAn3C7ptIOXzE20fILPkBM2wncsdEPYMmxBO+1k+gPxzoEkv+W8XnwzHE5EOftZdM5eo2LrGHm6needk6kmVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716910566; c=relaxed/simple;
-	bh=8rnuhAuoOY4+BX2AUDdTnyJdZyLTSdhV44tJJs1mM/w=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=OUX3pCCXXH186Frh1HtHC9C829PaNHo9IKJiGD6lDShyX43oFE6M/5aLTiZZw60O/5r16lRcI1oea8dI+AVj2qbRg+YAmzJgMBp0aSzDJDdT0OOfaEprYgQ2kNWHieYexysf/hIRZm7AmNhe5t9WgDDl144EkZCZlbS83QUcn6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-373809cc942so11412805ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:36:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716910564; x=1717515364;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JQHTyKrHplm0juBKxb5WUEglNyabr48Hpql64BnOGhE=;
-        b=XCzqIPbjyPLCvNkdkplrg0Itcl2Gx/i/KtifpHSilyHViucLlGNsGNjmgWN66aUfo9
-         AZ1RDlsgE9caAtNxbb+E/wcps0MdD6K/GdUUibv7iNPyB7jGDViEgyxzlW9iywxzxqxN
-         VbOVpf8AOUyEEZoE6MtPNV6qkQP90xReb59cSFoWqScv3OKah/ny4KnrWiQ5d3FiHM0v
-         3IWL5utTA38R8XdBCVdvHgrY77WHHEGOpuz1fQ+lrHP+iD/iL+A/GUTKQ8J+HqPCYcSj
-         y8neAvgBcj9B0qXnY3AQON/8d2YI7cGUdJ6IlKgjC2CH9galM+3Dx40TF8wh3dYI3B5h
-         SRVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTeF/z5vspdXWwSMuWb4jVVpe97EgthGRcPeeK6tYFUI2cMpIbyp0+GJNI8E6R3SHDVQA9FjGGBpEUwoE1bRcXGZnqCHLP9Wk7zKeL
-X-Gm-Message-State: AOJu0Yw4DvmrE/ODlNYMql7GVTCtQlBevW2cZXOqU4AqIn4kfJI02tA3
-	79/jFJOBtslx6MOcpnZ6QntXns+zgdbFDZU6JgIHmt6mujxH8ojaKYB+L+LbDtqEoe9S9QpFq9Z
-	8KXh8mg0tLwvGGzVhNp05DSdzPtt91vsoTRdkSuKw+/xYqydkEq+kYm8=
-X-Google-Smtp-Source: AGHT+IGjSjQ2TzVZnr0zsTuk4c+Am6/3KFUFuPq2Q/w3Cy2bX4yQZmLuDmLpTnGzLwEYqbldtBfvmIHX0TtyA5SCm+3QXwrz+ryb
+	s=arc-20240116; t=1716910638; c=relaxed/simple;
+	bh=BiYxOQLp3SdeWRN8VT7No5J50/AGacW5/Vwkc78ZvTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AeK/ecz/lwdd20fSIq2MVz+bN2+uDivD2lGOCRNIO/U9RH+K+xx0NLw7f/K14pDjE2UD23wKjRQnbDfGyMmzSW6R+bA6qZ8g3JJBxyeJZQNBNZT265pFYibNViHhUoDzBAU7OtjeCO4QoQ2fJBK0TjzPkSP395WPmevtqfULz94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NKsYmWky; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKsYmWky"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFFB0C3277B;
+	Tue, 28 May 2024 15:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716910638;
+	bh=BiYxOQLp3SdeWRN8VT7No5J50/AGacW5/Vwkc78ZvTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NKsYmWkyWNCYpaEfoixgqY9fv9boQp6pD3Knsl62cVH8tUDSuRySIQx/z8qu04MiI
+	 Dkpl8t+DfqI45BdVR0COL/N+E88i9eTYyaTxeeq+I7oHd8IBaY69oDmqroZAvhTETP
+	 EvmeMuqSxgErfMsmW6uYMgmgl19ZtnE7Ka+stCW+DTtK/5FKWGVyInrrBXm96vfner
+	 /Mr55Oo0lDLibPYYFTEocC0mJwAcOyoh8HMz+AoPge3nmSDud4/Q1TfIxTI9XD9/2P
+	 5+vIm0xTjTGtMHVbO+pOh3+kHTo1I4bSo+xCmrr31V+dixBH2DuQOF74tkhqWXufpU
+	 1L3BddJzXOcXQ==
+Date: Tue, 28 May 2024 10:37:15 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sm8450: Add qfprom node
+Message-ID: <4jopw7qv2jlq7b5ljkxfhjjjdlqclruouentrvbjt43yybxyf6@qzsk4imnmq5m>
+References: <1709727995-19821-1-git-send-email-quic_mojha@quicinc.com>
+ <1709727995-19821-2-git-send-email-quic_mojha@quicinc.com>
+ <45fcf8fb-9d9b-4e6a-a7c5-9bfb96875e64@linaro.org>
+ <69a8c14c-109a-103a-b8dc-d8e303c0f0d5@quicinc.com>
+ <gxi4klvxzwwyrwb2b4h7kmii5dx5mxdypxowwz3kyllvq6grss@6lahaospwtsh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b05:b0:371:30f1:96be with SMTP id
- e9e14a558f8ab-3737b1cd625mr7322685ab.0.1716910564041; Tue, 28 May 2024
- 08:36:04 -0700 (PDT)
-Date: Tue, 28 May 2024 08:36:04 -0700
-In-Reply-To: <ZlXJOfSLb-2iuJeI@localhost.localdomain>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000047f9230619856425@google.com>
-Subject: Re: [syzbot] [mm?] kernel BUG in __vma_reservation_common
-From: syzbot <syzbot+d3fe2dc5ffe9380b714b@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, muchun.song@linux.dev, netdev@vger.kernel.org, 
-	osalvador@suse.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <gxi4klvxzwwyrwb2b4h7kmii5dx5mxdypxowwz3kyllvq6grss@6lahaospwtsh>
 
-Hello,
+On Sun, Mar 17, 2024 at 08:21:58PM GMT, Bjorn Andersson wrote:
+> On Thu, Mar 14, 2024 at 10:13:59PM +0530, Mukesh Ojha wrote:
+> > Sorry for the late reply, was on vacation.
+> > 
+> > On 3/6/2024 9:24 PM, Konrad Dybcio wrote:
+> > > 
+> > > 
+> > > On 3/6/24 13:26, Mukesh Ojha wrote:
+> > > > Add the qfprom node for sm8450 SoC.
+> > > > 
+> > > > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> > > > ---
+> > > >   arch/arm64/boot/dts/qcom/sm8450.dtsi | 7 +++++++
+> > > >   1 file changed, 7 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > > > b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > > > index b86be34a912b..02089a388d03 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > > > +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > > > @@ -4575,6 +4575,13 @@
+> > > >               };
+> > > >           };
+> > > > +        qfprom: efuse@221c8000 {
+> > > > +            compatible = "qcom,sm8450-qfprom", "qcom,qfprom";
+> > > > +            reg = <0 0x221c8000 0 0x1000>;
+> > > 
+> > > Is is really only 0x1000-long? Also, is the base you put
+> > > here the ECC-corrected part (if that still exists)?
+> > 
+> > No, its not.
+> > 
+> > Entire fuse space is this.
+> > 0x221C0000-0x221Cbfff
+> > 
+> > ECC corrected range is this 0x221C2000-0x221C3fff and High level OS
+> 
+> That's 0x2000. Does this then also imply that the ECC-corrected values
+> are no longer mapped 1:1 with non-corrected, or why do they differ in
+> size?
+> 
+> > does have a access to ECC range however, they are not recommended for
+> > SW usage.
+> > 
+> > Above mentioned SW range(4) in the patch is  one and only accessible range
+> > available out of 0-7 SW ranges(0x221C4000-0x221Cbfff with each
+> > size 0x1000) and does not have ECC fuses.
+> > 
+> 
+> So you're saying that in contrast to other platforms, the 4th software
+> range, dedicated for HLOS, does not have a matching ECC-corrected
+> shadow? If that's the case, then "not recommended for SW usage" sounds
+> wrong.
+> 
+> > All the downstream use cases are getting fulfilled with this.
+> > 
+> 
+> You only need ECC if you're unlucky...
+> 
 
-syzbot tried to test the proposed patch but the build/boot failed:
+The patch is either incorrect or the commit message is lacking answers
+to the questions from Konrad and myself.
 
-mm/hugetlb.c:5772:51: error: expected ';' at end of declaration
-mm/hugetlb.c:5782:4: error: expected expression
+Would have appreciated a reply here, but either way I'm marking this as
+"changes requested" and dropping it from the queue.
 
-
-Tested on:
-
-commit:         a2868b0f mm/hugetlb: Do not call vma_add_reservation u..
-git tree:       https://github.com/leberus/linux.git hugetlb-vma_resv-enomem
-kernel config:  https://syzkaller.appspot.com/x/.config?x=48c05addbb27f3b0
-dashboard link: https://syzkaller.appspot.com/bug?extid=d3fe2dc5ffe9380b714b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
+Regards,
+Bjorn
