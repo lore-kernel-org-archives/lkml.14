@@ -1,102 +1,125 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03A316F836
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3A316F277;
+	Tue, 28 May 2024 14:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716905412; cv=none; b=JW4W8jMiresbob0bQuZhrDGNATEb/AKFEtb5hq4n7JXlcLJWmZmZEwQwUU+g28ee3gX/cx+FCH4joLV6vs2Fe+0OGgWdD8vdyMk3exnFM/ZF3IxGXLH1XgDNJuqtT9JWlpS6cRfKzjvL85uviKgIDE2O9XV4zYcCtvbBu+604Jc=
+	t=1716905490; cv=none; b=RYIIH7Ox+IPOqtmZiInOcwh6tbTOLA/gfn3T/s+Df73YaVYnefrxPKh/XcGUX9n9OiGJT6D6OdDqoBdgvgEGmLWMe9wnOkmyMoAmOPG4Eor8YqY6KfdWcz+X3kzPIezuFD5iG7U5OnktHxo4f5oR2ZMgxwqtVSQIFtBigpmnCf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716905412; c=relaxed/simple;
-	bh=wYKyHwOcRbmBl6fi/PN4M7/WvM7jsc6gP0DuKcneGNY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=tWee6vDKuuW7jUvbillutu6lQcocA+VkyQ0vUvUUbwzt60E1estHD7nW1W5H5xwRGvz55ACyqZG5LwM/66n08oORdp9vdlENck2sulyhJ42SVZL9Uy8GQmlngX8s2fH8/o1ScwLN7jLsEk2WAh/9u5CG/g8DLe0UNn3MVTCYDa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=CZE5zEbF; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716905490; c=relaxed/simple;
+	bh=Wh4U9HaJpeOcnxWvaHFBS0Mk9WgABPGCjn/FVN+gqy8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mU8YD/kTm8DozVqt4rKkERPeEZLad6i4FfhtpjompJFyHB8tZZJWIgiPyChOQOIvQg73ZAHqShifxHfMjH4aHz4jZol5SNF/cK3NR4oUrv2ZAIvE8P7CDHa8wYz//IRmti9jXjHOvssCPGedWlBliMx/CncJnlj+tGhmYazuD6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GgmwOqsT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="CZE5zEbF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716905381; x=1717510181; i=markus.elfring@web.de;
-	bh=x3mRV9ZWaP3e1MlgUeuaRbk+mdm99fVFI5oThwwKG/Y=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=CZE5zEbF98SWM+qTHSQPtWlKxigEsB3P9HUEEaqgfqDvMnpQB8uFQTzhrtAKuxWq
-	 YcKtzzYEojdFfyClJNY1QIrPoyFP7KoT8A+iuXDWr+8f9q84kBI2x+tyiZVuOU1zY
-	 gjHLcts5F9+Yy8SHrY2b/xVl3MH2T8bB7zfBCiMx0RJWWhFE7zICNZWym1A9slj00
-	 L8L8voNCjpiPuJNnJt2+8fp+RXkp5s1EGpa96ZkA0r1mt/pgABirR6PGgrXYacuPG
-	 kI8/sUFHYhblfgR0Tw4qHp3c6jVLzfe7Qwa12nKMKNagjShTlCkI5AOi7ttWv3OBB
-	 h2yExkBB0sw12fwjEw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M9ISh-1s6kSY0Wu7-00DU2n; Tue, 28
- May 2024 16:09:41 +0200
-Message-ID: <bcf08289-58a2-47d1-8080-6105dafb7929@web.de>
-Date: Tue, 28 May 2024 16:09:39 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GgmwOqsT"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SBG8ub006307;
+	Tue, 28 May 2024 14:11:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=xt8AOuLuReTHWwWuia3CRpLS
+	kbzClAGe5UmAniUT+PY=; b=GgmwOqsT++6fSlvaARvQKpNblyp+80muxPNq2WnJ
+	4jhxJm0N8yVA7w2vXQXKE7mUXgLzsPjm3P7Pbi/W2WdbWTevFLK3D1Fc6zhtjOd3
+	4BaWNQPQx64DTuWRgjehm8WmkV7f7Gm8gF8AWWabl7e2VsTunq9854HBL6t6OFHM
+	0pqeHe8qxPJvwB5pZhvKy8Km63AVZjxLYaooK4g43fwNf/8ZWK0AUbgXzi35YMVp
+	x4WAxHs6INZZbiBRGYC055eCqPA6uS6y4//u2y21tg31TWZPHaWz0SIh4V0zk2GS
+	tl8ufHPPN6dqDqakgyTVccY4wC1s6mW383l6WIrL7yi5pA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0pp76h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 14:11:22 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SEBLmx009088
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 14:11:21 GMT
+Received: from hu-vvalluru-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 28 May 2024 07:11:17 -0700
+Date: Tue, 28 May 2024 19:41:13 +0530
+From: Prahlad Valluru <quic_vvalluru@quicinc.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: "Rob Herring (Arm)" <robh@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_nankam@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <quic_abhinavk@quicinc.com>,
+        <konrad.dybcio@linaro.org>, <conor+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: qcs6490-rb3gen2: enable hdmi bridge
+Message-ID: <20240528141113.GA6631@hu-vvalluru-hyd.qualcomm.com>
+References: <171405653305.2527744.3813895380659072690.robh@kernel.org>
+ <20240426142442.7769-1-quic_vvalluru@quicinc.com>
+ <jr3ble6sxr5mr6cvm6ldvpyk5j4rucj3xy6vbha6ttoecte3d7@llu6qf6oasuc>
+ <171517823376.1753082.4070659246393696781.robh@kernel.org>
+ <20240515150459.GA32547@hu-vvalluru-hyd.qualcomm.com>
+ <CAA8EJpo=Q4_=JU83-9ooSqiSr=xUeHh2awDhzq9q3Xd56h83zw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: kunyu@nfschina.com, Ben Segall <bsegall@google.com>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
- Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Li zeming <zeming@nfschina.com>
-References: <20240528064532.42532-1-kunyu@nfschina.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_sched=3A_core=3A_Remove_unnecessary_?=
- =?UTF-8?B?4oCYTlVMTOKAmSB2YWx1ZXMgZnJvbSBwZW5kaW5n?=
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240528064532.42532-1-kunyu@nfschina.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:f3Wio4BrB6q2Ptyi59fTYK6zKvM0GX4FV9IUuw88nPOmzXlSzEi
- qvclbdyAFRNuOZcGeVENdlstnYrlNG10i5YdzYk0cMEwTJeJrKqe4hL/EJHMqSXnq6igqKb
- PGRTvdYUOwo/OONhUmZM1XSd3SboaPjBXcrc9JBwNf2VY3i0jo5IQBQSuFhE0ofnMYwRRsG
- n35pMh99JqJ4iaxnW4IxA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uM4l5juRmsY=;3Wp6zio5SgowleLMICyscfjjFvF
- L8obBJ9EgrRh4fiBaEDGhnmdgyCPWTI6vKZFh6U+EWru1dINu1h58tBreSoNkTxsZMZlBhgJN
- 9I6h7hl/ycEwRzbU2XBp5I5Of+iPGzNiqONaxRUOdRRLGyeVv4dLT5Nd8cU3LyXqfWn+uES06
- 2scd9u4f1DQ/4lXI7Gy+rBqlL1b/kQ0sESDNFgvaso7/lwOM/xRLuWQp37BECFOzcOZCXNXqx
- BIGt8+noL17Cn6HedaX0WeawPfPNLCrDZxYwyfuDj3qhIx/AaWFNbd3vUx0CRRd4a1LTlycN4
- aEUwK/darjAP0hGhKiNUYUjzdlSIxSkqWbKxUXCfBYoGTL9ylDQPvOPMs0u2cCPLvxjtbqa4P
- bWDZkCwnIdGpP+65FRvoh8xfWVq5HpUVH+4Xu4yz17vBkX0Ay2vJEkkhJiIuNJk0Blm4ocI30
- MOLJYJVhjGZmiga/jiGtjMmSedEKk0DrqlOiHF2BtD2n4FCHTufT5jZQfHoEJ2e4vwQCWs6yG
- t/dDbXdZQIpWNjNAdFpU+cwlSUz2c4gursokmkrLxdLvkMbVFIGYd7Ktd2vwp0Y7z+QgzrYfO
- 57lIEZJKQ6MrTSLAC+rGrNvQglFZl9Qe8H+Yaj7VoOKJoufx9DHTwCmLAANHgS/9pDyhz5zlX
- avyQUCIi8ZDqgCE0C7KP6KgfL2Ze3Rc1UlGSKDiy8uEZLRBX8kxOMjxObSwdFCKC8wbR8w/Yy
- ZGucy+TmzJesrYI4aar6tw+Wib0O6bIdolXEkg9fyjLYGGeauRHq3K+pzy1JpWbtpDf6RoigO
- 1FMEkq8p69Fzc7BWEKj0mBwl5ZR/Po3fbjGeTviUiI4rk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAA8EJpo=Q4_=JU83-9ooSqiSr=xUeHh2awDhzq9q3Xd56h83zw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tHUTAAmDNPkyw3QWt4vZhox7tg88BLeY
+X-Proofpoint-GUID: tHUTAAmDNPkyw3QWt4vZhox7tg88BLeY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_10,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 clxscore=1011 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 spamscore=0 adultscore=0 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405280107
 
-> pending is assigned first, so it does not need to initialize the
-> assignment.
-
-Would a wording approach (like the following) be a bit nicer?
-
-  The variable =E2=80=9Cpending=E2=80=9D will eventually be set to an appr=
-opriate pointer
-  a bit later. Thus omit the explicit initialisation at the beginning.
-
-
-> Signed-off-by: kunyu <kunyu@nfschina.com>
-
-Can the Developer's Certificate of Origin become clearer another bit?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc1#n438
-
-
-How do you think about to use the summary phrase
-=E2=80=9CDelete an unnecessary initialisation in affine_move_task()=E2=80=
-=9D?
-
-Regards,
-Markus
+On Wed, May 15, 2024 at 05:28:24PM +0200, Dmitry Baryshkov wrote:
+> On Wed, 15 May 2024 at 17:05, Prahlad Valluru <quic_vvalluru@quicinc.com> wrote:
+> >
+> > On Wed, May 08, 2024 at 09:31:24AM -0500, Rob Herring (Arm) wrote:
+> > >
+> > > On Mon, 06 May 2024 18:14:10 -0500, Bjorn Andersson wrote:
+> > > > On Fri, Apr 26, 2024 at 07:54:42PM GMT, Prahlad Valluru wrote:
+> > > > > From: Venkata Prahlad Valluru <quic_vvalluru@quicinc.com>
+> > > > >
+> > > >
+> > > > Please don't thread new versions off existing version. b4 helps you with
+> > > > getting these things right, please check go/upstream for more details.
+> > > >
+> > > > > Enable lt9611uxc bridge for qcs6490 rb3 gen2 platform.
+> > > > >
+> > > >
+> > > > Even if it's clear what this is, I would prefer if you described the
+> > > > hardware a little bit in your commit message.
+> > > > "Rb3Gen2 has a HDMI connector, connected to DSI via a LT on i2cX.... reset and
+> > > > irq pins comes from x and y. Describe this."
+> > > >
+> > > > > Signed-off-by: Prahlad Valluru <quic_vvalluru@quicinc.com>
+> > > > > ---
+> > > > > v2: Addressed dtschema errors
+> > > > >   - Fixed lt9611-irq
+> > > > >   - vdd-supply error to be ignored, as it is connected to
+> > > > >     input supply directly, on rb3gen2
+> > >
+> > > The choice is either fix the dts or fix the binding.
+> >
+> > vdd-supply is mandatory for lt9611. Only in case of rb3gen2, we are seeing this
+> > error, since it is connected to supply directly. Will add dummy vreg to address this.
+> 
+> s/add dummy vreg/describe fixed hardware register/
+True, will define a fixed regulator for vdd.
+> 
+> 
+> -- 
+> With best wishes
+> Dmitry
