@@ -1,61 +1,61 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A32173349
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298E1179675
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716923034; cv=none; b=tMpFu66iWSj+WR9P1zoqC22kdpjPO9sZ7TEiI5mDhJyK68YzDMB578vbGDMMZdmFDeXups/R5tHDmNXJjnjUUIPNMcacTSKRJ+L0VIj4TDr1B9JUQrO67pFQEyTP5exjHV3Vj52b82hU3aXM4BwEtUW3A9f3AbDOA/wJ5g4+yFo=
+	t=1716923037; cv=none; b=ONjLqceATLy1TtKrovi0w6rXDSNdp3Gvmt2EOxIHHNEUXTuWj4hJUkQEKzErMPIwvxeNmwZT45cjehXTKLNRqxMv+XL/NQE2oNaIxzJ2zJAEqMkR/uxu3Jt8AvG7NRmnDbu++hdAghYz9vR+tRZa2e5uPghQqB6kJPki79SzDOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716923034; c=relaxed/simple;
-	bh=jRRVWnUcsllv5xg42qCNsEqBnQxxCaBinC9xgoK7ExY=;
+	s=arc-20240116; t=1716923037; c=relaxed/simple;
+	bh=6z/qJnjZFNUbmAlLhny56elZj9ozwT+lQ2sCSVhGFpE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T6BJ4g3/RwdQwQ80+/LMBJRwkyn6n8cXYJZuKPEglEci+Gt3Wuz+nTFGoTEFy2TfLDFO7U+uuy3iiFugsPhuciu4NCzXlDZdrridV1dGm/veOBx5pisQPlReyuLI+J4lomp/KzCBPkqjdpMkWy9zfdZdWA7rnz+1mJtNoLE2o8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zQy1R4s0; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=m7inrtG9JpLqcRLwU7XnZNhyo8yRXlPwtCe/jR9ukHGW5Ag9lUaP+tM2+WiwY1kaT/jnx9PnGHcpYQ00pOpIWviXfxIE22n8I8ezBF3wzHmumyrqHrtgPWSE432lz0UkNriX3OM4vswh/tXlg4WquvmWavLHREju/v4Uj5ZGkeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VRhjGJrE; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zQy1R4s0"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42120e3911eso6803925e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:03:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VRhjGJrE"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-529648cd69dso357360e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:03:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716923029; x=1717527829; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716923033; x=1717527833; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=c/rfODploHDKXzqF5uZDj5HypMDi8GHx8C3gU75cfUM=;
-        b=zQy1R4s0Fw3Hb3fuCjUOVxn+UVgKo3/10nbUP4dD1urK75sfNVqKC0vSQYScQ3pn8R
-         NIqR5BYhZun1B5CjqnNfqBT8fYujxsEqGV1sbUoeZ0v+4M0AVZjUHkycD1Letngn6r3n
-         2Wex69J1vP3bVSuI2Va4EXxBtAfwEDRPCT5SM/r9QRDi4Cn/utikY5DENAtGAASqo/W6
-         jgtEhrKX/8XcgaFnPZxgMkeFFzKqs5k5QvYv/sVFRZEFcrHcGBbPq4TJr6koG7xXD9m9
-         sPeDFQcf0hCV3RhMa6ZpB7PgrNAWTerLZivO9RdBir+rESuyz4+uNFV396Cjq1gwYWq3
-         k+vw==
+        bh=huLiadmUz+IKovUjcSJbnzDkoK16xIfjWSoucG+1C78=;
+        b=VRhjGJrEQ4c6ui95u4MjV1KZfQr2ZqloPTAyoyPRE0wswNjsCBdkDjRY1t51msMO5k
+         +ciLIUgXBkCRqnP5sSb8tjBC4bgAwy3RRuPvB/3tR95W+ttWJX+UyVmwPvjKaOF2v0FN
+         GRSxnRtVd0aYnRzW1bGQYyDOSSbKmmC9Y9s2+WQ1Z4JITMRX+R6HnK1ayDMIsZsC+prD
+         md0Xs94Ni+3odVcBvgzR2yJ5F/cvRs2vyQ2y3tWyrt0bm2UXwJFaPbmDtOCB9pheJrik
+         gKASDFradg3RomXicH5aLFYqIFhJyXK5qp58MYEqY5LLzKwr0kr7FaS9Jr4t75+Rc/Lh
+         A1rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716923029; x=1717527829;
+        d=1e100.net; s=20230601; t=1716923033; x=1717527833;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c/rfODploHDKXzqF5uZDj5HypMDi8GHx8C3gU75cfUM=;
-        b=Ew1x8i5D82zOU7q0ShdN5xNDjOsAkm0VvIO1Lpa5VPdG6htHdFlyiAUl9UKeqMcFK2
-         tKLhknVsd5o3QXheeNhG2qTG1EXhSNtV1LYoqoAhwNbOxOvXiLeNrXzhsI1sN8ef1Wks
-         nSaTGwODQPTjra6KCP7t5q6apgrd7/To7z114ioyZ1pFMGupxKqD3v/1xW2ad6bSZzGw
-         54UHNNW+rF5tGS+IgbVIBX/RV20rGFtiEN7+dEwswYTIM5jVPnwUIqPljGjo+wDLRI1D
-         s9Mzb4XVJ2+XPIXVNxQMSd8qB+QAgNJwEwIOGMNy+peAw/QDIF8rdNhjzuEc4YOEXQJv
-         Vpzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGR317KUioCZvTpCMVAEOwesYP5alR5VBIki+eq4nPXJjcbER1Ag1Nbn8kZuzbA4px2y2Jy0Bq5wNjqq5Rb2NbibW+kaWSE2ILFxLp
-X-Gm-Message-State: AOJu0YysZbgb2jGhFjpIOoyn6UG5Xf2b7a63u89bNYbucE41CRPbz8kC
-	aWe9TLj9ZECyP0AaJh0Dn8ClAIpsIVWnwzk7MkQupooLpfVvFQdp07dePoQWDA0=
-X-Google-Smtp-Source: AGHT+IEZz3DaP8vDUiO7UYMRhD5/zIn2+KNYNHhCT2WPx1urmnhscLCNQt/r21FNScSTSxiCZ5ikxw==
-X-Received: by 2002:a05:600c:224e:b0:420:fb99:ed02 with SMTP id 5b1f17b1804b1-421089b2283mr120556495e9.6.1716923028845;
-        Tue, 28 May 2024 12:03:48 -0700 (PDT)
+        bh=huLiadmUz+IKovUjcSJbnzDkoK16xIfjWSoucG+1C78=;
+        b=iSgfyAGeh/Hbs3bKfVd/BZ4+XqOUFUfsTUKJnXxlU8z1vnUyf/b4upgVM0ksBpFbw3
+         EjpBfnKQNe/ItO2Bs2vOJY5wclpPVj52xkyEcs03Dac3jwynQfrRLI3EVbdXv3S9P+8k
+         0n44u5rFmxz5I9MO97fwJqpKET7f5ZCTsntlWlw9S5jB+3YtNsu3JVtaGlIMxkJ+YpOp
+         wVi3X3JmIHu9vHIZQLeIVnLWh3ygVoFOqimvTeRnyhUDDKFQ9hr61A1FZyWvW64JO2Aj
+         ewt//+tFzq1NKdZ52u8Rt7vyRsAXXC0ZugW+FNyEe523F2s/GNhDboMKrn5Xb6sn1Lsi
+         7ejA==
+X-Forwarded-Encrypted: i=1; AJvYcCXC8F3LBjR7i9pqGisp73y7MjzLHaAgEHZQFV4UwJiaVLYfAIUs57kx+chzibcaQn+f5mPusFJG9IfR06xhY+ZFuOnr5zWvx4fRS9qI
+X-Gm-Message-State: AOJu0YxfP4SP0cTz7lsRbWRZiv1M5KdlDy3EUMsVdTAb3TeynwJuIw4f
+	7XEhw0ekJ/Lfs2f+Sa/B3vVHYfPfWjMnbOUu1R8Pg9o/uaATKmIFagL33NK5igQ=
+X-Google-Smtp-Source: AGHT+IGFGGk0GMudsEze7kMtpyQJ8IBvfOB3ee+pM19AIHFnbjGqUee/tlRtalt4CsxR0dQKz7CsVA==
+X-Received: by 2002:a19:f017:0:b0:51b:4df3:540e with SMTP id 2adb3069b0e04-52967465414mr10858521e87.65.1716923032974;
+        Tue, 28 May 2024 12:03:52 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:75a:e000:93eb:927a:e851:8a2f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100ee954bsm183895415e9.4.2024.05.28.12.03.47
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100ee954bsm183895415e9.4.2024.05.28.12.03.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 12:03:48 -0700 (PDT)
+        Tue, 28 May 2024 12:03:52 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 28 May 2024 21:03:09 +0200
-Subject: [PATCH v8 01/17] regulator: dt-bindings: describe the PMU module
- of the QCA6390 package
+Date: Tue, 28 May 2024 21:03:12 +0200
+Subject: [PATCH v8 04/17] dt-bindings: net: wireless: qcom,ath11k: describe
+ the ath11k on QCA6390
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240528-pwrseq-v8-1-d354d52b763c@linaro.org>
+Message-Id: <20240528-pwrseq-v8-4-d354d52b763c@linaro.org>
 References: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
 In-Reply-To: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -93,194 +93,103 @@ Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel@quicinc.com, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5018;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2252;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=Qkeb9YORIDfkvwkp+GlKEgMos9lOvfcfa7/lVVyOAJo=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmViqMCQ/7vIZDzBIYID6EF7Nm5cHxYRr8KSj2h
- LnquCFgGt+JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlYqjAAKCRARpy6gFHHX
- cihkD/0SSyWXBlx16ygZBVfA5mClNZjjlHCSb0a0oKurV28LhpE8Ywi7P/dafyU5VNjvLPsTGzW
- VzdDWjnAljTr21lVO2sU7RjDsL20cya9kwiFh9bWd8SKR3n9Wf9ZAkQQ2B3mEYrQB4HF8Jta66D
- orpfmCzzOusEyyX+NGHq+Bxwm0md4ba7VNzouizzBCZ1D9JIjQsXURxxKh99R/Mivhusckdlx9j
- sdsWzoHFCbb3rCRp2Jl9n9p5U0g5lN/cnoGZ0rVA8Jdz4/CY1Est956oKIYiIAV8Rp6Vv6a+UmT
- uw+oBs1iLjxTog/r4er2YKzTknHe/xlWf4/FCdAVac1Yno7ApdLLXtxP0YoCR89XeHC2VzErg2X
- ICz7ZGhPdo+47loMVwrA2XhI2GEmJkUjBmgCgXYHIc9KfrIl7bq5jGxD7f+q2eq14wQ52TLdaND
- +gf9RlbC7Y5f70cnBNG8JpWPPAVLIjgBCHRzAvenDd/TC8irL457L0WS1hGSo2tuY8u8XpbqO0n
- /QAJvHhTDNEDHUVs5vRIt1nugKXfzoay9uQ7jG4BpZODjQX46RbAfXtKpNYhw6XhojPhgfzVNeB
- 3cG9Is1qrCw00o788jXSrT/CU8jTcynrBXEUa5fwLPOx3rd68LzGtTLTVGVs9GNN5HTYxkGaolj
- cjFiCfxfmEZHUQw==
+ bh=pd2tdTUrKzxnMcTe6bYRN1TYgIvngJc2eLHs9UA91ec=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmViqN+kfChui5js4evaxmA30HWm4lKFUb+3rJ2
+ Yb+lm7qdqeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlYqjQAKCRARpy6gFHHX
+ cuhRD/4laLPrXaMS8hVWtDgWhYJYFOorDw9gabUO1iP0fRSOx7T+NRx7JAG8R0dmDflPmpm9lCz
+ nYYQtKqqc4GHl1szH5GAemRFwnZhPLkn34Y8dNBt/puruKuDEAgVFnQhsugClW9kytmY9xut0aF
+ nSbanQgQjgLSlumQr/lVE+xi36pVpg7h3p9cNbUMyIbOxHb8AWptNw1jzp6E2DUJ6s2Sh3CNUWC
+ gwE2YEppiAUcHNdfPv8HJNciTJr2Rpw3F91K/ZqwzPKi/TB4N7aTwjYizPoK/R9owVtBq6cfl3G
+ JplasZ3EhcP6sKcxBBxsYs2VYbPeue4f6/oYHBBa2QtgUkkqEBRJ8x2iuZwS7/nRIPj/EZ8l0ob
+ Vgl7spB52PHoGQOqjq9hjOSz9Z/D62D62pJgBPFMbwVdBrBdpDq9jryH9JI9PX8t7uBu7nxyyiy
+ CC1q99TenfPStNBerx70x3TW4vnd6LYewxyPukvGVGk7FPqlyqsTyoP9a5g5r5dULN3kuZZWZ4m
+ LckKHfbaBj9e+YO1DsF0MSF8DiKjQt2kQTuSx8sryZO0W816+/8ul6v8IyR+Kd7TpXhi4uFhzzZ
+ /CQrRYrYMMwSdL3R9u1l9zJV5qh5d4AzfkSpnG8UIHgPWmjiMpkPd5kElyqWK/fi9/F1crbZERS
+ YtG7I7WjbIuzAXA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The QCA6390 package contains discreet modules for WLAN and Bluetooth. They
-are powered by the Power Management Unit (PMU) that takes inputs from the
-host and provides LDO outputs. This document describes this module.
+Add a PCI compatible for the ATH11K module on QCA6390 and describe the
+power inputs from the PMU that it consumes.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Acked-by: Mark Brown <broonie@kernel.org>
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- .../bindings/regulator/qcom,qca6390-pmu.yaml       | 151 +++++++++++++++++++++
- 1 file changed, 151 insertions(+)
+ .../bindings/net/wireless/qcom,ath11k-pci.yaml     | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/qcom,qca6390-pmu.yaml b/Documentation/devicetree/bindings/regulator/qcom,qca6390-pmu.yaml
-new file mode 100644
-index 000000000000..9d39ff9a75fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/qcom,qca6390-pmu.yaml
-@@ -0,0 +1,151 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/qcom,qca6390-pmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies, Inc. QCA6390 PMU Regulators
-+
-+maintainers:
-+  - Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+description:
-+  The QCA6390 package contains discreet modules for WLAN and Bluetooth. They
-+  are powered by the Power Management Unit (PMU) that takes inputs from the
-+  host and provides LDO outputs. This document describes this module.
-+
-+properties:
-+  compatible:
-+    const: qcom,qca6390-pmu
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
+index 41d023797d7d..8675d7d0215c 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
+@@ -17,6 +17,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - pci17cb,1101  # QCA6390
+       - pci17cb,1103  # WCN6855
+ 
+   reg:
+@@ -28,10 +29,55 @@ properties:
+       string to uniquely identify variant of the calibration data for designs
+       with colliding bus and device ids
+ 
++  vddrfacmn-supply:
++    description: VDD_RFA_CMN supply regulator handle
 +
 +  vddaon-supply:
 +    description: VDD_AON supply regulator handle
 +
-+  vddpmu-supply:
-+    description: VDD_PMU supply regulator handle
++  vddwlcx-supply:
++    description: VDD_WL_CX supply regulator handle
 +
-+  vddrfa0p95-supply:
-+    description: VDD_RFA_0P95 supply regulator handle
++  vddwlmx-supply:
++    description: VDD_WL_MX supply regulator handle
 +
-+  vddrfa1p3-supply:
-+    description: VDD_RFA_1P3 supply regulator handle
++  vddrfa0p8-supply:
++    description: VDD_RFA_0P8 supply regulator handle
 +
-+  vddrfa1p9-supply:
-+    description: VDD_RFA_1P9 supply regulator handle
++  vddrfa1p2-supply:
++    description: VDD_RFA_1P2 supply regulator handle
 +
-+  vddpcie1p3-supply:
-+    description: VDD_PCIE_1P3 supply regulator handle<S-Del>
++  vddrfa1p7-supply:
++    description: VDD_RFA_1P7 supply regulator handle
 +
-+  vddpcie1p9-supply:
-+    description: VDD_PCIE_1P9 supply regulator handle
++  vddpcie0p9-supply:
++    description: VDD_PCIE_0P9 supply regulator handle
 +
-+  vddio-supply:
-+    description: VDD_IO supply regulator handle
++  vddpcie1p8-supply:
++    description: VDD_PCIE_1P8 supply regulator handle
 +
-+  wlan-enable-gpios:
-+    maxItems: 1
-+    description: GPIO line enabling the ATH11K WLAN module supplied by the PMU
-+
-+  bt-enable-gpios:
-+    maxItems: 1
-+    description: GPIO line enabling the ATH11K Bluetooth module supplied by the PMU
-+
-+  regulators:
-+    type: object
-+    description:
-+      LDO outputs of the PMU
-+
-+    patternProperties:
-+      "^ldo[0-9]$":
-+        $ref: regulator.yaml#
-+        type: object
-+        unevaluatedProperties: false
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - regulators
-+
+ required:
+   - compatible
+   - reg
+ 
 +allOf:
 +  - if:
 +      properties:
 +        compatible:
 +          contains:
-+            const: qcom,qca6390-pmu
++            const: pci17cb,1101
 +    then:
 +      required:
++        - vddrfacmn-supply
 +        - vddaon-supply
-+        - vddpmu-supply
-+        - vddrfa0p95-supply
-+        - vddrfa1p3-supply
-+        - vddrfa1p9-supply
-+        - vddpcie1p3-supply
-+        - vddpcie1p9-supply
-+        - vddio-supply
++        - vddwlcx-supply
++        - vddwlmx-supply
++        - vddrfa0p8-supply
++        - vddrfa1p2-supply
++        - vddrfa1p7-supply
++        - vddpcie0p9-supply
++        - vddpcie1p8-supply
 +
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    pmu {
-+        compatible = "qcom,qca6390-pmu";
-+
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&bt_en_state>, <&wlan_en_state>;
-+
-+        vddaon-supply = <&vreg_s6a_0p95>;
-+        vddpmu-supply = <&vreg_s2f_0p95>;
-+        vddrfa0p95-supply = <&vreg_s2f_0p95>;
-+        vddrfa1p3-supply = <&vreg_s8c_1p3>;
-+        vddrfa1p9-supply = <&vreg_s5a_1p9>;
-+        vddpcie1p3-supply = <&vreg_s8c_1p3>;
-+        vddpcie1p9-supply = <&vreg_s5a_1p9>;
-+        vddio-supply = <&vreg_s4a_1p8>;
-+
-+        wlan-enable-gpios = <&tlmm 20 GPIO_ACTIVE_HIGH>;
-+        bt-enable-gpios = <&tlmm 21 GPIO_ACTIVE_HIGH>;
-+
-+        regulators {
-+            vreg_pmu_rfa_cmn: ldo0 {
-+                regulator-name = "vreg_pmu_rfa_cmn";
-+            };
-+
-+            vreg_pmu_aon_0p59: ldo1 {
-+                regulator-name = "vreg_pmu_aon_0p59";
-+            };
-+
-+            vreg_pmu_wlcx_0p8: ldo2 {
-+                regulator-name = "vreg_pmu_wlcx_0p8";
-+            };
-+
-+            vreg_pmu_wlmx_0p85: ldo3 {
-+                regulator-name = "vreg_pmu_wlmx_0p85";
-+            };
-+
-+            vreg_pmu_btcmx_0p85: ldo4 {
-+                regulator-name = "vreg_pmu_btcmx_0p85";
-+            };
-+
-+            vreg_pmu_rfa_0p8: ldo5 {
-+                regulator-name = "vreg_pmu_rfa_0p8";
-+            };
-+
-+            vreg_pmu_rfa_1p2: ldo6 {
-+                regulator-name = "vreg_pmu_rfa_1p2";
-+            };
-+
-+            vreg_pmu_rfa_1p7: ldo7 {
-+                regulator-name = "vreg_pmu_rfa_1p7";
-+            };
-+
-+            vreg_pmu_pcie_0p9: ldo8 {
-+                regulator-name = "vreg_pmu_pcie_0p9";
-+            };
-+
-+            vreg_pmu_pcie_1p8: ldo9 {
-+                regulator-name = "vreg_pmu_pcie_1p8";
-+            };
-+        };
-+    };
+ additionalProperties: false
+ 
+ examples:
 
 -- 
 2.43.0
