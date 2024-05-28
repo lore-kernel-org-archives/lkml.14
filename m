@@ -1,57 +1,57 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDA1170824;
-	Tue, 28 May 2024 14:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2F4171080;
+	Tue, 28 May 2024 14:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716906286; cv=none; b=dqWynOkSPc+WdL6FKoDsUwqdqZo9U84+xgFQb/ycn7KdIDrXT9uX0f5f6C83UhN9wFkcrdMFVUWHF3dRBIAusXyH65LoSJI6CjlPekObYYzlnOXp6dWUNEb+9JKJZMzYu/n0QiMwwWiIWxavqauP3H/bUWpgYIPNxGzCELrf2Ho=
+	t=1716906289; cv=none; b=dORiqRjTWNZumOm1+7AmfSzVey5YuWj66LYb93EohRVFc44ZXxwtvwKRtkxTm8ePU3ZaE4VykWxg9W7DG5izZtuO3gYvvGkZm82jQww6llLS7aCePpP8EuKdAfKnBgNp4iUQkLbnIFSVREvPr2K5h0r4ISSmYPt1fXTJ9XliFRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716906286; c=relaxed/simple;
-	bh=LaC7Cp/Vch94bp0LzvJ4XVaviyhJp6VCRvtsSLC7X6A=;
+	s=arc-20240116; t=1716906289; c=relaxed/simple;
+	bh=vn//0GODgno12fCvf1Etnbz7ij3jrMnLkggWXGAMBN8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lSBp5aLdCbxLASFMDVHLq8STNAQyS3gMQXKmLVfiLbaIeAoVQs56lfuBlLpWAx9d27U+F1yxXdKPbXclbAa1SSlq/GwNe6G3k75Vu4ENvEZrmh9dqAvJ8z8v2ylpUjgj9qEHsYS5Yg2NSpU2JpyEYg2u4XNU8pDCEyUK/Faj2og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KuWvkbjK; arc=none smtp.client-ip=209.85.208.41
+	 MIME-Version:Content-Type; b=TXifI0oWRP0oocRb3ctwve/L0riGVayjLN2qADGsbKzZRgJLYg1GU49NFc7gnDjqZGhvH/NHT7kWlFfnahfzL4s68/5e0/JMRmU+QGUceoDchQBLAwmgXWX3+DWbwN2Vn6xFrCbGnxK1VZBSfSs+lr+Heot4VB2nI2f0+oI9Jlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDof2aEY; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuWvkbjK"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-578517c8b49so1085793a12.3;
-        Tue, 28 May 2024 07:24:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDof2aEY"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5785199e0d6so1294342a12.2;
+        Tue, 28 May 2024 07:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716906283; x=1717511083; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716906286; x=1717511086; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jnqXUCFZ5EtFmdWWExd39eHRKmWQKrueiv9NV1j2AHA=;
-        b=KuWvkbjKoKt80tmBm54YxxDuz9HePzM0CrfblRztb87lcfEJWpHJORdFabOIuYhTja
-         lYvGkvbDIz/SzjJx6czTbmEHdGFhwFmS8gnlHV17HygzASwn5SfUc4cOrPcLEjOlQ7oA
-         baltKPjhCCPe3xiL4gsyjgCIfdB5rQoahvhgUg0x6zlJhb2V9E5/t7C/TQDCXS3J5r3s
-         S/fJcniEOtkowcxIy6Iva1tDzKs2T+oOwh+NvjpCnbdEQ/A/hk1bpoFkP0egk7roILbX
-         OSzKg6RTtP1zx5E9y8Z258mu6caJSmxwE1cMiFVXcPZ3kF+Ed4jIRdPpDx9P+t6fOeBW
-         vL3Q==
+        bh=vnf/B5fGjaLxrp8lkIx12JHDXTwkx5Q4fK1aGE3EPWM=;
+        b=gDof2aEYz04PPbg6sB5HfIK0h5h8kFA2uZZK1LdNJkSDV1HPeOcxv+B0KMOBiLCxvr
+         F4fbJCoOiFNbqF3i9Mu/1xcBAE+Icitqwzw71dScP9YhWZ0CKZ4fxect1RtalSzQOx00
+         KUZGaVcmSju+s2XTp1rH3/+bNTK/FirGJl43IgkWIEMvUXEaqUwI92eEwSAZmb3IsBBD
+         kT8vjRdhgpYIIZoI3SBMIhDXl1bkFbHLU3LcQg8OkfvmgC8eTrqzuML5Y4MBr/+Tpg4W
+         Ho5cCYGEjZa0e0gztN49D+dhXLw3SXMU99U1BBzmoYRpaLow6etXc3L1ctQOQ6oMl483
+         UHpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716906283; x=1717511083;
+        d=1e100.net; s=20230601; t=1716906286; x=1717511086;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jnqXUCFZ5EtFmdWWExd39eHRKmWQKrueiv9NV1j2AHA=;
-        b=nCTPZk9gFOl7eO0mD/RL8BRRfbSmMzUPZH/W7UDW7FpeogV8wS7FyuJZi7qpsMXsNd
-         7yXhPNtOV2arEAf8VaGJjgv8cF0wTmnqEvrYpUwGI85dVpd1qCqKZ3j4IvySxERSXwbj
-         6s5iwuzmfqImlTdt8OVNN6vuMYoyZ5ow24Gka/AZhEJ+p/x566igO6+uY7zaUyAhrhP1
-         AKMb1AvDG1qCEovXIXTs6KfRat4kXr6N1TBdbKPimI0BnY+rblltvVnLhVlt0mHvVewi
-         xIi9Qb04zC0LJfMCg4n/ZcskCgJoZL9snfZZQKWJBuVkZsGBwISCOhEqAyX7rnipNp+n
-         Lriw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1J63LCOqKjhrlI+XFwXMDmBTHZNbm2pIDwOtSqNCpJxKFxeMSFlTIt/eKs/kFhSelJnbbHh69pnrGSjVXF5Moni6cPJEFBlDGJzY8Xv0XgLy7Ha/z92pg35eqJLPSYRawjjlHQBRYHDCLIcHthzrFQ7VcCr4yAUuV3Uy2Rgxsyw==
-X-Gm-Message-State: AOJu0Yy62kUMwfOGrZh2oYcvkg6RHJpfD1RBAyJe0If2mV8AcUDY1j30
-	IkU4y8QFvZ+PcBT2vENVD79bpBsOavotqG3rr77oyICdaMKW8Sb7TuSMCyhkl58=
-X-Google-Smtp-Source: AGHT+IHxYM2+mIFboPKU6ucMCZxA6ZOpY5B4zJBiUHaC99fhZd1z4WD3riBJXtJ6qrL2ZE96wxKoog==
-X-Received: by 2002:a50:cc4a:0:b0:579:c8cb:ec4c with SMTP id 4fb4d7f45d1cf-579c8cbef27mr4839107a12.1.1716906282770;
-        Tue, 28 May 2024 07:24:42 -0700 (PDT)
+        bh=vnf/B5fGjaLxrp8lkIx12JHDXTwkx5Q4fK1aGE3EPWM=;
+        b=Mrh8reYxQnsK2IvUAobv5OBHN6LuQClPYYO96aUyMbj3TfRwoRA83gdHyxKkkefPtH
+         c9cm2rKFg0dfixfW/PilwX3EjhyBNLj01d1LrvUMZBLcWWl4aP3qEKDgloss4fX8BP5t
+         EWLzewfpTuVBIMSjLZ+As/gvjfOk8GHfLd6QYvzRisg7nTdSciiEKzhkpVySJhkXyax7
+         u4fsJB8mSivD+wBsqu6zVKCnaFxg9KBtg5gCrsPhnSn8OEWeCmYiIC8BMccG30l/g79Z
+         2I65GzLEQPMs1BjuCI8NYkYyPPFoOUGnXFoXKQQMnULjwRvwxWylVg8cC9SxsSzsYmff
+         t2aw==
+X-Forwarded-Encrypted: i=1; AJvYcCXMuS7GfDy8l8tgcFo3GlVruedu/dBuehwXgKrZJW11Jhokl5CV0O9l+Cw857QNjLt5Hb7dFMQRjLCye/EhYglzMcFf4bHGqnAU1go464RMEa1jk40rp2QoYeLx0N0XKWcpV6S28otgRszSycJYb+f/+X5qlwxPXiZsD5Ad06CXDw==
+X-Gm-Message-State: AOJu0Yy1gILCfYpkrdFS9vVEC7RTxwYDIL+iTQ8I7uQYNVfWHbZo40b2
+	SR/eqGWoJlD9NIw+NEhTHXowJSL5/DUcoMRS/kWD+P7J4+O0hvcTHNzZlclKg3o=
+X-Google-Smtp-Source: AGHT+IHkVBqR3tGIDFRXopvYXWllcAF6z0wYYHyBnwNH5/ZOwNGX5vleqXNFqtT6SGw+CBrDp6neEA==
+X-Received: by 2002:a50:9359:0:b0:578:59a9:c6eb with SMTP id 4fb4d7f45d1cf-57859a9cd6bmr11260830a12.15.1716906285407;
+        Tue, 28 May 2024 07:24:45 -0700 (PDT)
 Received: from rbolboac.. ([2a02:2f0e:350b:4500:3736:ef2a:a857:c911])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579d7dc9efesm2495580a12.48.2024.05.28.07.24.41
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579d7dc9efesm2495580a12.48.2024.05.28.07.24.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 07:24:42 -0700 (PDT)
+        Tue, 28 May 2024 07:24:44 -0700 (PDT)
 From: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
 X-Google-Original-From: Ramona Gradinariu <ramona.gradinariu@analog.com>
 To: linux-kernel@vger.kernel.org,
@@ -63,11 +63,10 @@ To: linux-kernel@vger.kernel.org,
 	conor+dt@kernel.org,
 	krzysztof.kozlowski+dt@linaro.org,
 	robh@kernel.org
-Cc: Ramona Gradinariu <ramona.gradinariu@analog.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
-Subject: [PATCH v2 4/6] iio: adis16480: add support for adis16545/7 families
-Date: Tue, 28 May 2024 17:24:07 +0300
-Message-Id: <20240528142409.239187-5-ramona.gradinariu@analog.com>
+Cc: Ramona Gradinariu <ramona.gradinariu@analog.com>
+Subject: [PATCH v2 6/6] docs: iio: add documentation for adis16480 driver
+Date: Tue, 28 May 2024 17:24:09 +0300
+Message-Id: <20240528142409.239187-7-ramona.gradinariu@analog.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240528142409.239187-1-ramona.gradinariu@analog.com>
 References: <20240528142409.239187-1-ramona.gradinariu@analog.com>
@@ -80,396 +79,483 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The ADIS16545 and ADIS16547 are a complete inertial system that
-includes a triaxis gyroscope and a triaxis accelerometer.
-The serial peripheral interface (SPI) and register structure provide a
-simple interface for data collection and configuration control.
+Add documentation for adis16480 driver which describes the driver
+device files and shows how the user may use the ABI for various
+scenarios (configuration, measurement, etc.).
 
-These devices are similar to the ones already supported in the driver,
-with changes in the scales, timings and the max spi speed in burst
-mode.
-Also, they support delta angle and delta velocity readings in burst
-mode, for which support was added in the trigger handler.
-
-Co-developed-by: Nuno Sá <nuno.sa@analog.com>
 Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
 ---
 changes in v2:
- - dropped condition to add extra padding byte for temp channel
- - used available_scan_masks instead of checking the mask in
- adis16480_update_scan_mode
- - added macros instead of magic values for burst ids
- - added explaantory comment for selecting the default burst id
- - added missing case for delta channel in the trigger handler
- drivers/iio/imu/adis16480.c | 237 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 229 insertions(+), 8 deletions(-)
+ - explained why retrieving acceleration or gyroscope data using buffers, delta
+ readings will not be available.
+ - referenced iio_tools.rst in 4th chapter
+ Documentation/iio/adis16480.rst | 445 ++++++++++++++++++++++++++++++++
+ Documentation/iio/index.rst     |   1 +
+ 2 files changed, 446 insertions(+)
+ create mode 100644 Documentation/iio/adis16480.rst
 
-diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
-index 0cd55040db93..56ca5a09fbbf 100644
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -104,7 +104,8 @@
-  */
- #define ADIS16495_REG_SYNC_SCALE		ADIS16480_REG(0x03, 0x10)
- #define ADIS16495_REG_BURST_CMD			ADIS16480_REG(0x00, 0x7C)
--#define ADIS16495_BURST_ID			0xA5A5
-+#define ADIS16495_GYRO_ACCEL_BURST_ID		0xA5A5
-+#define ADIS16545_DELTA_ANG_VEL_BURST_ID	0xC3C3
- /* total number of segments in burst */
- #define ADIS16495_BURST_MAX_DATA		20
-
-@@ -132,6 +133,10 @@
- #define ADIS16480_SYNC_MODE_MSK		BIT(8)
- #define ADIS16480_SYNC_MODE(x)		FIELD_PREP(ADIS16480_SYNC_MODE_MSK, x)
-
-+#define ADIS16545_BURST_DATA_SEL_0_CHN_MASK	GENMASK(5, 0)
-+#define ADIS16545_BURST_DATA_SEL_1_CHN_MASK	GENMASK(16, 11)
-+#define ADIS16545_BURST_DATA_SEL_MASK		BIT(8)
+diff --git a/Documentation/iio/adis16480.rst b/Documentation/iio/adis16480.rst
+new file mode 100644
+index 000000000000..e3cc64ddc8f6
+--- /dev/null
++++ b/Documentation/iio/adis16480.rst
+@@ -0,0 +1,445 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- struct adis16480_chip_info {
- 	unsigned int num_channels;
- 	const struct iio_chan_spec *channels;
-@@ -147,6 +152,7 @@ struct adis16480_chip_info {
- 	const unsigned int *filter_freqs;
- 	bool has_pps_clk_mode;
- 	bool has_sleep_cnt;
-+	bool has_burst_delta_data;
- 	const struct adis_data adis_data;
- };
-
-@@ -170,6 +176,7 @@ struct adis16480 {
- 	struct clk *ext_clk;
- 	enum adis16480_clock_mode clk_mode;
- 	unsigned int clk_freq;
-+	u16 burst_id;
- 	/* Alignment needed for the timestamp */
- 	__be16 data[ADIS16495_BURST_MAX_DATA] __aligned(8);
- };
-@@ -876,6 +883,23 @@ static const struct iio_chan_spec adis16485_channels[] = {
- 	ADIS16480_DELTVEL_CHANNEL_NO_SCAN(Z),
- };
-
-+static const struct iio_chan_spec adis16545_channels[] = {
-+	ADIS16480_GYRO_CHANNEL(X),
-+	ADIS16480_GYRO_CHANNEL(Y),
-+	ADIS16480_GYRO_CHANNEL(Z),
-+	ADIS16480_ACCEL_CHANNEL(X),
-+	ADIS16480_ACCEL_CHANNEL(Y),
-+	ADIS16480_ACCEL_CHANNEL(Z),
-+	ADIS16480_TEMP_CHANNEL(),
-+	ADIS16480_DELTANG_CHANNEL(X),
-+	ADIS16480_DELTANG_CHANNEL(Y),
-+	ADIS16480_DELTANG_CHANNEL(Z),
-+	ADIS16480_DELTVEL_CHANNEL(X),
-+	ADIS16480_DELTVEL_CHANNEL(Y),
-+	ADIS16480_DELTVEL_CHANNEL(Z),
-+	IIO_CHAN_SOFT_TIMESTAMP(17),
-+};
++================
++ADIS16480 driver
++================
 +
- enum adis16480_variant {
- 	ADIS16375,
- 	ADIS16480,
-@@ -888,6 +912,12 @@ enum adis16480_variant {
- 	ADIS16497_1,
- 	ADIS16497_2,
- 	ADIS16497_3,
-+	ADIS16545_1,
-+	ADIS16545_2,
-+	ADIS16545_3,
-+	ADIS16547_1,
-+	ADIS16547_2,
-+	ADIS16547_3
- };
-
- #define ADIS16480_DIAG_STAT_XGYRO_FAIL 0
-@@ -969,6 +999,12 @@ static const struct adis_timeout adis16495_1_timeouts = {
- 	.self_test_ms = 20,
- };
-
-+static const struct adis_timeout adis16545_timeouts = {
-+	.reset_ms = 315,
-+	.sw_reset_ms = 270,
-+	.self_test_ms = 35,
-+};
++This driver supports Analog Device's IMUs on SPI bus.
 +
- static const struct adis16480_chip_info adis16480_chip_info[] = {
- 	[ADIS16375] = {
- 		.channels = adis16485_channels,
-@@ -1170,6 +1206,126 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
- 					    ADIS16495_BURST_MAX_DATA * 2,
- 					    6000000),
- 	},
-+	[ADIS16545_1] = {
-+		.channels = adis16545_channels,
-+		.num_channels = ARRAY_SIZE(adis16545_channels),
-+		.gyro_max_val = 20000 << 16,
-+		.gyro_max_scale = IIO_DEGREE_TO_RAD(125),
-+		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
-+		.accel_max_scale = 8,
-+		.temp_scale = 7000, /* 7 milli degree Celsius */
-+		.deltang_max_val = IIO_DEGREE_TO_RAD(360),
-+		.deltvel_max_val = 100,
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+		.has_pps_clk_mode = true,
-+		.has_burst_delta_data = true,
-+		/* 20 elements of 16bits */
-+		.adis_data = ADIS16480_DATA(16545, &adis16545_timeouts,
-+					    ADIS16495_BURST_MAX_DATA * 2,
-+					    6500000),
-+	},
-+	[ADIS16545_2] = {
-+		.channels = adis16545_channels,
-+		.num_channels = ARRAY_SIZE(adis16545_channels),
-+		.gyro_max_val = 18000 << 16,
-+		.gyro_max_scale = IIO_DEGREE_TO_RAD(450),
-+		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
-+		.accel_max_scale = 8,
-+		.temp_scale = 7000, /* 7 milli degree Celsius */
-+		.deltang_max_val = IIO_DEGREE_TO_RAD(720),
-+		.deltvel_max_val = 100,
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+		.has_pps_clk_mode = true,
-+		.has_burst_delta_data = true,
-+		/* 20 elements of 16bits */
-+		.adis_data = ADIS16480_DATA(16545, &adis16545_timeouts,
-+					    ADIS16495_BURST_MAX_DATA * 2,
-+					    6500000),
-+	},
-+	[ADIS16545_3] = {
-+		.channels = adis16545_channels,
-+		.num_channels = ARRAY_SIZE(adis16545_channels),
-+		.gyro_max_val = 20000 << 16,
-+		.gyro_max_scale = IIO_DEGREE_TO_RAD(2000),
-+		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
-+		.accel_max_scale = 8,
-+		.temp_scale = 7000, /* 7 milli degree Celsius */
-+		.deltang_max_val = IIO_DEGREE_TO_RAD(2160),
-+		.deltvel_max_val = 100,
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+		.has_pps_clk_mode = true,
-+		.has_burst_delta_data = true,
-+		/* 20 elements of 16bits */
-+		.adis_data = ADIS16480_DATA(16545, &adis16545_timeouts,
-+					    ADIS16495_BURST_MAX_DATA * 2,
-+					    6500000),
-+	},
-+	[ADIS16547_1] = {
-+		.channels = adis16545_channels,
-+		.num_channels = ARRAY_SIZE(adis16545_channels),
-+		.gyro_max_val = 20000 << 16,
-+		.gyro_max_scale = IIO_DEGREE_TO_RAD(125),
-+		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
-+		.accel_max_scale = 40,
-+		.temp_scale = 7000, /* 7 milli degree Celsius */
-+		.deltang_max_val = IIO_DEGREE_TO_RAD(360),
-+		.deltvel_max_val = 400,
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+		.has_pps_clk_mode = true,
-+		.has_burst_delta_data = true,
-+		/* 20 elements of 16bits */
-+		.adis_data = ADIS16480_DATA(16547, &adis16545_timeouts,
-+					    ADIS16495_BURST_MAX_DATA * 2,
-+					    6500000),
-+	},
-+	[ADIS16547_2] = {
-+		.channels = adis16545_channels,
-+		.num_channels = ARRAY_SIZE(adis16545_channels),
-+		.gyro_max_val = 18000 << 16,
-+		.gyro_max_scale = IIO_DEGREE_TO_RAD(450),
-+		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
-+		.accel_max_scale = 40,
-+		.temp_scale = 7000, /* 7 milli degree Celsius */
-+		.deltang_max_val = IIO_DEGREE_TO_RAD(720),
-+		.deltvel_max_val = 400,
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+		.has_pps_clk_mode = true,
-+		.has_burst_delta_data = true,
-+		/* 20 elements of 16bits */
-+		.adis_data = ADIS16480_DATA(16547, &adis16545_timeouts,
-+					    ADIS16495_BURST_MAX_DATA * 2,
-+					    6500000),
-+	},
-+	[ADIS16547_3] = {
-+		.channels = adis16545_channels,
-+		.num_channels = ARRAY_SIZE(adis16545_channels),
-+		.gyro_max_val = 20000 << 16,
-+		.gyro_max_scale = IIO_DEGREE_TO_RAD(2000),
-+		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
-+		.accel_max_scale = 40,
-+		.temp_scale = 7000, /* 7 milli degree Celsius */
-+		.deltang_max_val = IIO_DEGREE_TO_RAD(2160),
-+		.deltvel_max_val = 400,
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+		.has_pps_clk_mode = true,
-+		.has_burst_delta_data = true,
-+		/* 20 elements of 16bits */
-+		.adis_data = ADIS16480_DATA(16547, &adis16545_timeouts,
-+					    ADIS16495_BURST_MAX_DATA * 2,
-+					    6500000),
-+	},
- };
-
- static bool adis16480_validate_crc(const u16 *buf, const u8 n_elem, const u32 crc)
-@@ -1194,7 +1350,7 @@ static irqreturn_t adis16480_trigger_handler(int irq, void *p)
- 	struct adis16480 *st = iio_priv(indio_dev);
- 	struct adis *adis = &st->adis;
- 	struct device *dev = &adis->spi->dev;
--	int ret, bit, offset, i = 0;
-+	int ret, bit, offset, i = 0, buff_offset = 0;
- 	__be16 *buffer;
- 	u32 crc;
- 	bool valid;
-@@ -1227,8 +1383,8 @@ static irqreturn_t adis16480_trigger_handler(int irq, void *p)
- 	 * 16-bit responses containing the BURST_ID depending on the sclk. If
- 	 * clk > 3.6MHz, then we will have two BURST_ID in a row. If clk < 3MHZ,
- 	 * we have only one. To manage that variation, we use the transition from the
--	 * BURST_ID to the SYS_E_FLAG register, which will not be equal to 0xA5A5. If
--	 * we not find this variation in the first 4 segments, then the data should
-+	 * BURST_ID to the SYS_E_FLAG register, which will not be equal to 0xA5A5/0xC3C3.
-+	 * If we not find this variation in the first 4 segments, then the data should
- 	 * not be valid.
- 	 */
- 	buffer = adis->buffer;
-@@ -1236,7 +1392,7 @@ static irqreturn_t adis16480_trigger_handler(int irq, void *p)
- 		u16 curr = be16_to_cpu(buffer[offset]);
- 		u16 next = be16_to_cpu(buffer[offset + 1]);
-
--		if (curr == ADIS16495_BURST_ID && next != ADIS16495_BURST_ID) {
-+		if (curr == st->burst_id && next != st->burst_id) {
- 			offset++;
- 			break;
- 		}
-@@ -1263,11 +1419,24 @@ static irqreturn_t adis16480_trigger_handler(int irq, void *p)
- 		switch (bit) {
- 		case ADIS16480_SCAN_TEMP:
- 			st->data[i++] = buffer[offset + 1];
-+			/*
-+			 * The temperature channel has 16-bit storage size.
-+			 * We need to perform the padding to have the buffer
-+			 * elements naturally aligned in case there are any
-+			 * 32-bit storage size channels enabled which are added
-+			 * in the buffer after the temprature data. In case
-+			 * there is no data being added after the temperature
-+			 * data, the padding is harmless.
-+			 */
-+			st->data[i++] = 0;
- 			break;
-+		case ADIS16480_SCAN_DELTANG_X ... ADIS16480_SCAN_DELTVEL_Z:
-+			buff_offset = ADIS16480_SCAN_DELTANG_X;
-+			fallthrough;
- 		case ADIS16480_SCAN_GYRO_X ... ADIS16480_SCAN_ACCEL_Z:
- 			/* The lower register data is sequenced first */
--			st->data[i++] = buffer[2 * bit + offset + 3];
--			st->data[i++] = buffer[2 * bit + offset + 2];
-+			st->data[i++] = buffer[2 * (bit - buff_offset) + offset + 3];
-+			st->data[i++] = buffer[2 * (bit - buff_offset) + offset + 2];
- 			break;
- 		}
- 	}
-@@ -1279,10 +1448,41 @@ static irqreturn_t adis16480_trigger_handler(int irq, void *p)
- 	return IRQ_HANDLED;
- }
-
-+static const unsigned long adis16545_channel_masks[] = {
-+	ADIS16545_BURST_DATA_SEL_0_CHN_MASK | BIT(ADIS16480_SCAN_TEMP) | BIT(17),
-+	ADIS16545_BURST_DATA_SEL_1_CHN_MASK | BIT(ADIS16480_SCAN_TEMP) | BIT(17),
-+	0,
-+};
++1. Supported devices
++====================
 +
-+static int adis16480_update_scan_mode(struct iio_dev *indio_dev,
-+				      const unsigned long *scan_mask)
-+{
-+	u16 en;
-+	int ret;
-+	struct adis16480 *st = iio_priv(indio_dev);
++* `ADIS16375 <https://www.analog.com/ADIS16375>`_
++* `ADIS16480 <https://www.analog.com/ADIS16480>`_
++* `ADIS16485 <https://www.analog.com/ADIS16485>`_
++* `ADIS16488 <https://www.analog.com/ADIS16488>`_
++* `ADIS16490 <https://www.analog.com/ADIS16490>`_
++* `ADIS16495 <https://www.analog.com/ADIS16495>`_
++* `ADIS16497 <https://www.analog.com/ADIS16497>`_
++* `ADIS16545 <https://www.analog.com/ADIS16545>`_
++* `ADIS16547 <https://www.analog.com/ADIS16547>`_
 +
-+	if (st->chip_info->has_burst_delta_data) {
-+		if (*scan_mask & ADIS16545_BURST_DATA_SEL_0_CHN_MASK) {
-+			en = FIELD_PREP(ADIS16545_BURST_DATA_SEL_MASK, 0);
-+			st->burst_id = ADIS16495_GYRO_ACCEL_BURST_ID;
-+		} else {
-+			en = FIELD_PREP(ADIS16545_BURST_DATA_SEL_MASK, 1);
-+			st->burst_id = ADIS16545_DELTA_ANG_VEL_BURST_ID;
-+		}
++Each supported device is a complete inertial system that includes a triaxial
++gyroscope and a triaxial accelerometer. Each inertial sensor in device combines
++with signal conditioning that optimizes dynamic performance. The factory
++calibration characterizes each sensor for sensitivity, bias, and alignment. As
++a result, each sensor has its own dynamic compensation formulas that provide
++accurate sensor measurements.
 +
-+		ret = __adis_update_bits(&st->adis, ADIS16480_REG_CONFIG,
-+					 ADIS16545_BURST_DATA_SEL_MASK, en);
-+		if (ret)
-+			return ret;
-+	}
++2. Device attributes
++====================
 +
-+	return adis_update_scan_mode(indio_dev, scan_mask);
-+}
++Accelerometer, gyroscope measurements are always provided. Furthermore, the
++driver offers the capability to retrieve the delta angle and the delta velocity
++measurements computed by the device.
 +
- static const struct iio_info adis16480_info = {
- 	.read_raw = &adis16480_read_raw,
- 	.write_raw = &adis16480_write_raw,
--	.update_scan_mode = adis_update_scan_mode,
-+	.update_scan_mode = &adis16480_update_scan_mode,
- 	.debugfs_reg_access = adis_debugfs_reg_access,
- };
++The delta angle measurements represent a calculation of angular displacement
++between each sample update, while the delta velocity measurements represent a
++calculation of linear velocity change between each sample update.
++
++Finally, temperature data are provided which show a coarse measurement of
++the temperature inside of the IMU device. This data is most useful for
++monitoring relative changes in the thermal environment.
++
++ADIS16480 and ADIS16488 also provide access to barometric pressure data and
++triaxial magnetometer measurements.
++
++Each IIO device, has a device folder under ``/sys/bus/iio/devices/iio:deviceX``,
++where X is the IIO index of the device. Under these folders reside a set of
++device files, depending on the characteristics and features of the hardware
++device in questions. These files are consistently generalized and documented in
++the IIO ABI documentation.
++
++The following tables show the adis16480 related device files, found in the
++specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
++
++**Available only for ADIS16480 and ADIS16488:**
++
+++------------------------------------------+---------------------------------------------------------+
++| 3-Axis Magnetometer related device files | Description                                             |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_scale                            | Scale for the magnetometer channels.                    |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_x_calibbias                      | Calibration offset for the X-axis magnetometer channel. |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_x_filter_low_pass_3db_frequency  | Bandwidth for the X-axis magnetometer channel.          |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_x_raw                            | Raw X-axis magnetometer channel value.                  |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_y_calibbias                      | Calibration offset for the Y-axis magnetometer channel. |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_y_filter_low_pass_3db_frequency  | Bandwidth for the Y-axis magnetometer channel.          |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_y_raw                            | Raw Y-axis magnetometer channel value.                  |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_z_calibbias                      | Calibration offset for the Z-axis magnetometer channel. |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_z_filter_low_pass_3db_frequency  | Bandwidth for the Z-axis magnetometer channel.          |
+++------------------------------------------+---------------------------------------------------------+
++| in_magn_z_raw                            | Raw Z-axis magnetometer channel value.                  |
+++------------------------------------------+---------------------------------------------------------+
++
+++------------------------------------------+-----------------------------------------------------+
++| Barometric pressure sensor related files | Description                                         |
+++------------------------------------------+-----------------------------------------------------+
++| in_pressure0_calibbias                   | Calibration offset for barometric pressure channel. |
+++------------------------------------------+-----------------------------------------------------+
++| in_pressure0_raw                         | Raw barometric pressure channel value.              |
+++------------------------------------------+-----------------------------------------------------+
++| in_pressure0_scale                       | Scale for the barometric pressure sensor channel.   |
+++------------------------------------------+-----------------------------------------------------+
++
++**Available for all supported devices:**
++
+++-------------------------------------------+----------------------------------------------------------+
++| 3-Axis Accelerometer related device files | Description                                              |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_scale                            | Scale for the accelerometer channels.                    |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_x_calibbias                      | Calibration offset for the X-axis accelerometer channel. |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_x_calibscale                     | Calibration scale for the X-axis accelerometer channel.  |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_x_filter_low_pass_3db_frequency  | Bandwidth for the X-axis accelerometer channel.          |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_x_raw                            | Raw X-axis accelerometer channel value.                  |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_y_calibbias                      | Calibration offset for the Y-axis accelerometer channel. |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_y_calibscale                     | Calibration scale for the Y-axis accelerometer channel.  |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_y_filter_low_pass_3db_frequency  | Bandwidth for the Y-axis accelerometer channel.          |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_y_raw                            | Raw Y-axis accelerometer channel value.                  |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_z_calibbias                      | Calibration offset for the Z-axis accelerometer channel. |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_z_calibscale                     | Calibration scale for the Z-axis accelerometer channel.  |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_z_filter_low_pass_3db_frequency  | Bandwidth for the Z-axis accelerometer channel.          |
+++-------------------------------------------+----------------------------------------------------------+
++| in_accel_z_raw                            | Raw Z-axis accelerometer channel value.                  |
+++-------------------------------------------+----------------------------------------------------------+
++| in_deltavelocity_scale                    | Scale for delta velocity channels.                       |
+++-------------------------------------------+----------------------------------------------------------+
++| in_deltavelocity_x_raw                    | Raw X-axis delta velocity channel value.                 |
+++-------------------------------------------+----------------------------------------------------------+
++| in_deltavelocity_y_raw                    | Raw Y-axis delta velocity channel value.                 |
+++-------------------------------------------+----------------------------------------------------------+
++| in_deltavelocity_z_raw                    | Raw Z-axis delta velocity channel value.                 |
+++-------------------------------------------+----------------------------------------------------------+
++
+++--------------------------------------------+------------------------------------------------------+
++| 3-Axis Gyroscope related device files      | Description                                          |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_scale                           | Scale for the gyroscope channels.                    |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_x_calibbias                     | Calibration offset for the X-axis gyroscope channel. |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_x_calibscale                    | Calibration scale for the X-axis gyroscope channel.  |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_x_filter_low_pass_3db_frequency | Bandwidth for the X-axis gyroscope channel.          |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_x_raw                           | Raw X-axis gyroscope channel value.                  |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_y_calibbias                     | Calibration offset for the Y-axis gyroscope channel. |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_y_calibscale                    | Calibration scale for the Y-axis gyroscope channel.  |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_y_filter_low_pass_3db_frequency | Bandwidth for the Y-axis gyroscope channel.          |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_y_raw                           | Raw Y-axis gyroscope channel value.                  |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_z_calibbias                     | Calibration offset for the Z-axis gyroscope channel. |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_z_calibscale                    | Calibration scale for the Z-axis gyroscope channel.  |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_z_filter_low_pass_3db_frequency | Bandwidth for the Z-axis gyroscope channel.          |
+++--------------------------------------------+------------------------------------------------------+
++| in_anglvel_z_raw                           | Raw Z-axis gyroscope channel value.                  |
+++--------------------------------------------+------------------------------------------------------+
++| in_deltaangl_scale                         | Scale for delta angle channels.                      |
+++--------------------------------------------+------------------------------------------------------+
++| in_deltaangl_x_raw                         | Raw X-axis delta angle channel value.                |
+++--------------------------------------------+------------------------------------------------------+
++| in_deltaangl_y_raw                         | Raw Y-axis delta angle channel value.                |
+++--------------------------------------------+------------------------------------------------------+
++| in_deltaangl_z_raw                         | Raw Z-axis delta angle channel value.                |
+++--------------------------------------------+------------------------------------------------------+
++
+++----------------------------------+-------------------------------------------+
++| Temperature sensor related files | Description                               |
+++----------------------------------+-------------------------------------------+
++| in_temp0_raw                     | Raw temperature channel value.            |
+++----------------------------------+-------------------------------------------+
++| in_temp0_offset                  | Offset for the temperature sensor channel.|
+++----------------------------------+-------------------------------------------+
++| in_temp0_scale                   | Scale for the temperature sensor channel. |
+++----------------------------------+-------------------------------------------+
++
+++-------------------------------+---------------------------------------------------------+
++| Miscellaneous device files    | Description                                             |
+++-------------------------------+---------------------------------------------------------+
++| name                          | Name of the IIO device.                                 |
+++-------------------------------+---------------------------------------------------------+
++| sampling_frequency            | Currently selected sample rate.                         |
+++-------------------------------+---------------------------------------------------------+
++
++The following table shows the adis16480 related device debug files, found in the
++specific device debug folder path ``/sys/kernel/debug/iio/iio:deviceX``.
++
+++----------------------+-------------------------------------------------------------------------+
++| Debugfs device files | Description                                                             |
+++----------------------+-------------------------------------------------------------------------+
++| serial_number        | The serial number of the chip in hexadecimal format.                    |
+++----------------------+-------------------------------------------------------------------------+
++| product_id           | Chip specific product id (e.g. 16480, 16488, 16545, etc.).              |
+++----------------------+-------------------------------------------------------------------------+
++| flash_count          | The number of flash writes performed on the device.                     |
+++----------------------+-------------------------------------------------------------------------+
++| firmware_revision    | String containing the firmware revision in the following format ##.##.  |
+++----------------------+-------------------------------------------------------------------------+
++| firmware_date        | String containing the firmware date in the following format mm-dd-yyyy. |
+++----------------------+-------------------------------------------------------------------------+
++
++Channels processed values
++-------------------------
++
++A channel value can be read from its _raw attribute. The value returned is the
++raw value as reported by the devices. To get the processed value of the channel,
++apply the following formula:
++
++.. code-block:: bash
++
++        processed value = (_raw + _offset) * _scale
++
++Where _offset and _scale are device attributes. If no _offset attribute is
++present, simply assume its value is 0.
++
++The adis16480 driver offers data for 7 types of channels, the table below shows
++the measurement units for the processed value, which are defined by the IIO
++framework:
++
+++--------------------------------------+---------------------------+
++| Channel type                         | Measurement unit          |
+++--------------------------------------+---------------------------+
++| Acceleration on X, Y, and Z axis     | Meters per Second squared |
+++--------------------------------------+---------------------------+
++| Angular velocity on X, Y and Z axis  | Radians per second        |
+++--------------------------------------+---------------------------+
++| Delta velocity on X. Y, and Z axis   | Meters per Second         |
+++--------------------------------------+---------------------------+
++| Delta angle on X, Y, and Z axis      | Radians                   |
+++--------------------------------------+---------------------------+
++| Temperature                          | Millidegrees Celsius      |
+++--------------------------------------+---------------------------+
++| Magnetic field along X, Y and Z axis | Gauss                     |
+++--------------------------------------+---------------------------+
++| Barometric pressure                  | kilo Pascal               |
+++--------------------------------------+---------------------------+
++
++Usage examples
++--------------
++
++Show device name:
++
++.. code-block:: bash
++
++	root:/sys/bus/iio/devices/iio:device0> cat name
++        adis16545-1
++
++Show accelerometer channels value:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_raw
++        1376728
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_y_raw
++        4487621
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_z_raw
++        262773792
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_scale
++        0.000000037
++
++- X-axis acceleration = in_accel_x_raw * in_accel_scale = 0.050938936 m/s^2
++- Y-axis acceleration = in_accel_y_raw * in_accel_scale = 0.166041977 m/s^2
++- Z-axis acceleration = in_accel_z_raw * in_accel_scale = 9.722630304 m/s^2
++
++Show gyroscope channels value:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_anglvel_x_raw
++        -1041702
++        root:/sys/bus/iio/devices/iio:device0> cat in_anglvel_y_raw
++        -273013
++        root:/sys/bus/iio/devices/iio:device0> cat in_anglvel_z_raw
++        2745116
++        root:/sys/bus/iio/devices/iio:device0> cat in_anglvel_scale
++        0.000000001
++
++- X-axis angular velocity = in_anglvel_x_raw * in_anglvel_scale = −0.001041702 rad/s
++- Y-axis angular velocity = in_anglvel_y_raw * in_anglvel_scale = −0.000273013 rad/s
++- Z-axis angular velocity = in_anglvel_z_raw * in_anglvel_scale = 0.002745116 rad/s
++
++Set calibration offset for accelerometer channels:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
++        0
++
++        root:/sys/bus/iio/devices/iio:device0> echo 5000 > in_accel_x_calibbias
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
++        5000
++
++Set calibration offset for gyroscope channels:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_anglvel_y_calibbias
++        0
++
++        root:/sys/bus/iio/devices/iio:device0> echo -5000 > in_anglvel_y_calibbias
++        root:/sys/bus/iio/devices/iio:device0> cat in_anglvel_y_calibbias
++        -5000
++
++Set sampling frequency:
++
++.. code-block:: bash
++
++	root:/sys/bus/iio/devices/iio:device0> cat sampling_frequency
++        4250.000000
++
++        root:/sys/bus/iio/devices/iio:device0> echo 1000 > sampling_frequency
++        1062.500000
++
++Set bandwidth for accelerometer channels:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_filter_low_pass_3db_frequency
++        0
++
++        root:/sys/bus/iio/devices/iio:device0> echo 300 > in_accel_x_filter_low_pass_3db_frequency
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_filter_low_pass_3db_frequency
++        300
++
++Show serial number:
++
++.. code-block:: bash
++
++        root:/sys/kernel/debug/iio/iio:device0> cat serial_number
++        0x000c
++
++Show product id:
++
++.. code-block:: bash
++
++        root:/sys/kernel/debug/iio/iio:device0> cat product_id
++        16545
++
++Show flash count:
++
++.. code-block:: bash
++
++        root:/sys/kernel/debug/iio/iio:device0> cat flash_count
++        88
++
++Show firmware revision:
++
++.. code-block:: bash
++
++        root:/sys/kernel/debug/iio/iio:device0> cat firmware_revision
++        1.4
++
++Show firmware date:
++
++.. code-block:: bash
++
++        root:/sys/kernel/debug/iio/iio:device0> cat firmware_date
++        09-23-2023
++
++3. Device buffers
++=================
++
++This driver supports IIO buffers.
++
++All devices support retrieving the raw acceleration, gyroscope and temperature
++measurements using buffers.
++
++The following device families also support retrieving the delta velocity, delta
++angle and temperature measurements using buffers:
++
++- ADIS16545
++- ADIS16547
++
++However, when retrieving acceleration or gyroscope data using buffers, delta
++readings will not be available and vice versa. This is because the device only
++allows to read either acceleration and gyroscope data or delta velocity and
++delta angle data at a time and switching between these two burst data selection
++modes is time consuming.
++
++Usage examples
++--------------
++
++Set device trigger in current_trigger, if not already set:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat trigger/current_trigger
++
++        root:/sys/bus/iio/devices/iio:device0> echo adis16545-1-dev0 > trigger/current_trigger
++        root:/sys/bus/iio/devices/iio:device0> cat trigger/current_trigger
++        adis16545-1-dev0
++
++Select channels for buffer read:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_deltavelocity_x_en
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_deltavelocity_y_en
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_deltavelocity_z_en
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_temp0_en
++
++Set the number of samples to be stored in the buffer:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 10 > buffer/length
++
++Enable buffer readings:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > buffer/enable
++
++Obtain buffered data:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> hexdump -C /dev/iio\:device0
++        ...
++        00006aa0  09 62 00 00 ff ff fc a4  00 00 01 69 00 03 3c 08  |.b.........i..<.|
++        00006ab0  09 61 00 00 00 00 02 96  00 00 02 8f 00 03 37 50  |.a............7P|
++        00006ac0  09 61 00 00 00 00 12 3d  00 00 0b 89 00 03 2c 0b  |.a.....=......,.|
++        00006ad0  09 61 00 00 00 00 1e dc  00 00 16 dd 00 03 25 bf  |.a............%.|
++        00006ae0  09 61 00 00 00 00 1e e3  00 00 1b bf 00 03 27 0b  |.a............'.|
++        00006af0  09 61 00 00 00 00 15 50  00 00 19 44 00 03 30 fd  |.a.....P...D..0.|
++        00006b00  09 61 00 00 00 00 09 0e  00 00 14 41 00 03 3d 7f  |.a.........A..=.|
++        00006b10  09 61 00 00 ff ff ff f0  00 00 0e bc 00 03 48 d0  |.a............H.|
++        00006b20  09 63 00 00 00 00 00 9f  00 00 0f 37 00 03 4c fe  |.c.........7..L.|
++        00006b30  09 64 00 00 00 00 0b f6  00 00 18 92 00 03 43 22  |.d............C"|
++        00006b40  09 64 00 00 00 00 18 df  00 00 22 33 00 03 33 ab  |.d........"3..3.|
++        00006b50  09 63 00 00 00 00 1e 81  00 00 26 be 00 03 29 60  |.c........&...)`|
++        00006b60  09 63 00 00 00 00 1b 13  00 00 22 2f 00 03 23 91  |.c........"/..#.|
++        ...
++
++See ``Documentation/iio/iio_devbuf.rst`` for more information about how buffered
++data is structured.
++
++4. IIO Interfacing Tools
++========================
++
++See ``Documentation/iio/iio_tools.rst`` for the description of the available IIO
++interfacing tools.
+diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
+index 66fa69102e3a..4c13bfa2865c 100644
+--- a/Documentation/iio/index.rst
++++ b/Documentation/iio/index.rst
+@@ -19,5 +19,6 @@ Industrial I/O Kernel Drivers
 
-@@ -1479,6 +1679,8 @@ static int adis16480_probe(struct spi_device *spi)
- 	indio_dev->name = spi_get_device_id(spi)->name;
- 	indio_dev->channels = st->chip_info->channels;
- 	indio_dev->num_channels = st->chip_info->num_channels;
-+	if (st->chip_info->has_burst_delta_data)
-+		indio_dev->available_scan_masks = adis16545_channel_masks;
- 	indio_dev->info = &adis16480_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
-
-@@ -1492,6 +1694,13 @@ static int adis16480_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
-
-+	/*
-+	 * By default, use burst id for gyroscope and accelerometer data.
-+	 * This is the only option for devices which do not offer delta angle
-+	 * and delta velocity burst readings.
-+	 */
-+	st->burst_id = ADIS16495_GYRO_ACCEL_BURST_ID;
-+
- 	if (st->chip_info->has_sleep_cnt) {
- 		ret = devm_add_action_or_reset(dev, adis16480_stop, indio_dev);
- 		if (ret)
-@@ -1565,6 +1774,12 @@ static const struct spi_device_id adis16480_ids[] = {
- 	{ "adis16497-1", ADIS16497_1 },
- 	{ "adis16497-2", ADIS16497_2 },
- 	{ "adis16497-3", ADIS16497_3 },
-+	{ "adis16545-1", ADIS16545_1 },
-+	{ "adis16545-2", ADIS16545_2 },
-+	{ "adis16545-3", ADIS16545_3 },
-+	{ "adis16547-1", ADIS16547_1 },
-+	{ "adis16547-2", ADIS16547_2 },
-+	{ "adis16547-3", ADIS16547_3 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, adis16480_ids);
-@@ -1581,6 +1796,12 @@ static const struct of_device_id adis16480_of_match[] = {
- 	{ .compatible = "adi,adis16497-1" },
- 	{ .compatible = "adi,adis16497-2" },
- 	{ .compatible = "adi,adis16497-3" },
-+	{ .compatible = "adi,adis16545-1" },
-+	{ .compatible = "adi,adis16545-2" },
-+	{ .compatible = "adi,adis16545-3" },
-+	{ .compatible = "adi,adis16547-1" },
-+	{ .compatible = "adi,adis16547-2" },
-+	{ .compatible = "adi,adis16547-3" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, adis16480_of_match);
+    ad7944
+    adis16475
++   adis16480
+    bno055
+    ep93xx_adc
 --
 2.34.1
 
