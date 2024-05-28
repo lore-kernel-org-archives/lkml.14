@@ -1,73 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EEE13A242;
-	Tue, 28 May 2024 12:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375AB13BAC4;
+	Tue, 28 May 2024 12:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716897862; cv=none; b=B+HX6jVlnlajYtIZ5qwJ/a37UOsFYopdgirouU31nZ/FR5UWM6gAyGqKC0h8ERq1ggMXJfgGh2CbripRUxVgjv76U7nh6sb59QodOgfJf1wf2dqKVbh0sjpDum4vKk0MfGaZN7tC/fsR6gPoZP3bZR8vGHPC+iZccqgU8T4YBh0=
+	t=1716897863; cv=none; b=WlabJejDDlcVkROkdEK62vlTwM+E8p5lofbV+228ji5ltXF7sZgTF6XGna5zKVxdWtJpGKrjsmGBEKhgluKHJ70nPncgK7HfQCMPYTiOsAeYs35GmhmuZwPpdyYo3/QKV54u24EzhZwmvvxyRAqYVGfqlpSu8O2M10H1p/YvCGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716897862; c=relaxed/simple;
-	bh=58egx2ps+6Wd1SWHNZP2itAP+QAyWA4OV5HwePJdVbY=;
+	s=arc-20240116; t=1716897863; c=relaxed/simple;
+	bh=u7mN/Z8mmXxjzvb1rnaJtWovjfyx3RfUtm/sBSv+TEY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rBgtR9SehTIWMbB59T/tJwkanzocgAla0OG8Eysi/qbpARcoCIv9exjuVWhI9lkvZRZ+C8G+meI5337BHZc4apNbYiR1uWmldy6IgpdNU2LqtJuOMe5AZL9Sv+sceVyQmp0B2X+rodqQdncIKMnKegR1A97eL5yPiTjAxCVcJAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dG/8WVC0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RSmlAZ4QLKZg7JP9eWelzuqzbUdJDu+KZjSptTYdBlu/sWubR2yUZoPIPv1aU/0iZHsGTEq0DjQ0+br3+ZD4YIjRHmNq+ABHSGZ9ajuNdLzyuKVY4SPh/UFpCcrP4S1WE7+hjtJ4ej7dlIre6wb5o0wdhzSnGbum2qkTZtc6cmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=29Tuelrc; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dG/8WVC0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88CA4C3277B;
-	Tue, 28 May 2024 12:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716897861;
-	bh=58egx2ps+6Wd1SWHNZP2itAP+QAyWA4OV5HwePJdVbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dG/8WVC00ObIsjXJb4Rbw4GYINkQAmvMhB+ACGZyZPnoB3/5W17IxpBbpRhLMH/Zt
-	 RYKOYgWMBur6TREpatnG8wplU6AoVFE98XARvDOmb43Qb+6tZdtrfNyu0/P6kIz8au
-	 c+rz3CsefuHcMmUDeaf3FmgKn86NOHJ4aKsNGzIceAAFGpJqRkFFI5/rID5S31ortM
-	 B8WbdEi6TkVmwyfZwDexHs5Q7hr0Glk7Piwul4Wl6pxq3R4yOeW251LE90IrJTDdNd
-	 YHKmSEmphEyaIUZfA302dT0s6MS5hU6ijm7HwddSKztskCa0cS7q9GIVPNL2F62t6w
-	 A9PthY+zBZStw==
-Date: Tue, 28 May 2024 14:04:16 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Message-ID: <20240528-gipfel-dilemma-948a590a36fd@brauner>
-References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
- <ZlMADupKkN0ITgG5@infradead.org>
- <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
- <ZlRy7EBaV04F2UaI@infradead.org>
- <20240527133430.ifjo2kksoehtuwrn@quack3>
- <ZlSzotIrVPGrC6vt@infradead.org>
- <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
- <ZlWVkJwwJ0-B-Zyl@infradead.org>
- <20240528-gesell-evakuieren-899c08cbfa06@brauner>
- <ZlW4IWMYxtwbeI7I@infradead.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="29Tuelrc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=cgMnIYvxLbguq2TR4pjQwvelgSrvNm0jTjimH/62tvk=; b=29TuelrcodVZblvu/O4JbP7QXJ
+	5rO/KStxOLbIZ1GooKNqDdVYftkYRgU7Dih+FS7yLcZ+VNVgKRIP9szg8nWGJqo+QT8KN3w+dxvNA
+	uTfNQYDc3ZTHmKZUDHBnWaYdVphLwpoIwlJFZbyFEwZHpYW9zYxwfaqOr/M/w32qv3yw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sBvYU-00G9HX-F4; Tue, 28 May 2024 14:03:50 +0200
+Date: Tue, 28 May 2024 14:03:50 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: MD Danish Anwar <danishanwar@ti.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Simon Horman <horms@kernel.org>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Arnd Bergmann <arnd@arndb.de>, Diogo Ivo <diogo.ivo@siemens.com>,
+	Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, srk@ti.com,
+	Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH net-next v6 1/3] net: ti: icssg-prueth: Add helper
+ functions to configure FDB
+Message-ID: <d10793e9-75f0-418f-92d5-2109286b07e6@lunn.ch>
+References: <20240528113734.379422-1-danishanwar@ti.com>
+ <20240528113734.379422-2-danishanwar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZlW4IWMYxtwbeI7I@infradead.org>
+In-Reply-To: <20240528113734.379422-2-danishanwar@ti.com>
 
-On Tue, May 28, 2024 at 03:55:29AM -0700, Christoph Hellwig wrote:
-> On Tue, May 28, 2024 at 11:17:58AM +0200, Christian Brauner wrote:
-> > As I've said earlier, independent of the new handle type returning the
-> > new mount id is useful and needed because it allows the caller to
-> > reliably generate a mount fd for use with open_by_handle_at() via
-> > statmount(). That won't be solved by a new handle type and is racy with
-> > the old mount id. So I intend to accept a version of this patch.
+On Tue, May 28, 2024 at 05:07:32PM +0530, MD Danish Anwar wrote:
+> Introduce helper functions to configure firmware FDB tables, VLAN tables
+> and Port VLAN ID settings to aid adding Switch mode support.
 > 
-> The whole point is that with the fsid in the handle we do not even need
-> a mount fd for open_by_handle_at.
+> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
 
-Can you please explain how opening an fd based on a handle returned from
-name_to_handle_at() and not using a mount file descriptor for
-open_by_handle_at() would work?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
