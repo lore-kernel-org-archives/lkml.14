@@ -1,74 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E238364;
-	Tue, 28 May 2024 00:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2876A7E6
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 00:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716855028; cv=none; b=kUAi9OUflkSlXdOX3XvCnE0E2zG0ViFGX7raQzyHsz+UbiXzVPZ8cEH1FjkCsE9z0TspwDm/LZDkqEtfKAhni142KilD54UU3oO/2MQdikHw0qfE2ZArOQd5elJy5dEJL2BF55lFrNdInfjcHE7yIrLfDlT5Kd5n2I3Qo2pq3YA=
+	t=1716855139; cv=none; b=SYHTv78WP6d+UwFgPHeekFjsFLsC6KR0hUfRuIeC9+D6w5AbHLIEe3WHyZfW5RCAgxkxSLiq42dAYnDxwLBZq6qb5NuDiGfuEvcxwz8lmw2YC1Bt3KU7C49Y7OQIecy3Opw+iEdbZGnGCfSdQYPafaghv061SnWH9eeauhTE+pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716855028; c=relaxed/simple;
-	bh=O3cV/uZ7xVsQdZtKNy1BfIKT5MdgMzkJksLWxGkG/8Q=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QEGPVBEAqwGlWNxc+wKnJwCt3Wtthpr4XWBKI82BwtyfINokSkFZX1iQchHkRxn9NjMlBHhDaPVNp/ya+bRCQWARk8LMwbV/aL3+R0+El1GSQFBs5CmR2MlU187HrFW5Ij2hoIj4CGBCPbPHRQXDLJcmezPl2CEJLdzR/mr72CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOyaBFqt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716855139; c=relaxed/simple;
+	bh=A8DALDHd3MMh4OXdcMx5E3c0mAWR9NDzuk63Jb+1Yfc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jz8AGYfWac/DTb8Auz0CipmY13muxJ/z3XY4AaYyzNWsdT9YyXxSvvwAsadCfg/nitslFQq9z36PA/Xx6dOw5vPuL0ZSJHGpt18d21RnhCM1v82wHPKqwbk8VqZTWD78befpwGlEInJTX0xS88m/GolTFqlm98sTPO3k38537dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ETclSgOB; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOyaBFqt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 49E5EC4AF0B;
-	Tue, 28 May 2024 00:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716855028;
-	bh=O3cV/uZ7xVsQdZtKNy1BfIKT5MdgMzkJksLWxGkG/8Q=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=sOyaBFqtW+ihedqwMjPgp6JLJyPMfzRSpM9z4jwhNSDX//vN/N1cOJNQvK/s8bU2Y
-	 YFDvipIqpnCxWZZIFBEeELtldIOyrpYlueDS/Ricf1yaSw62PNkmTg+39HRS+ibA73
-	 S6Zf128i4JsOlO45EJX2DoLnbKzDkoX0OtJpTRSkst5nft8MQz65PL0qVYllEM/zVi
-	 Qe8HClt08Hw3hxVK8eL7uERckhyNmRL5oyGMi0rXagfD7xVh1VFm4OQcanCk8xOSlf
-	 WElMUkbo2pDBCLRryPi/oUl05adnnMlRvP1CY/xWqr9GSVMXjlAP9KDBewIXyo4CN9
-	 xCA75q5q98zUA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3B81FD40192;
-	Tue, 28 May 2024 00:10:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ETclSgOB"
+X-Envelope-To: f.weber@proxmox.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716855135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gMJ0eL3rp/jBrLY+934O2yj2Yff8RteD+peA5AFBPDM=;
+	b=ETclSgOBPawhuiJFChrFz0JsNyCvbhlqdJIsq2W/x40B21KJdvsG/9P30h1qDRutJIcRzp
+	gYkYUItWeuzdccAxOnB8LnkzvrMiyFsSqN4GqcNqpIgltEtUquFn4cZ1RzhrZiSNY4NQ7z
+	Xl3iKDsQSkwD6xRt3+Uw6FzC63F/cIs=
+X-Envelope-To: axboe@kernel.dk
+X-Envelope-To: ming.lei@redhat.com
+X-Envelope-To: hch@lst.de
+X-Envelope-To: bvanassche@acm.org
+X-Envelope-To: linux-block@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: zhouchengming@bytedance.com
+Message-ID: <87f495c2-7504-4d22-b355-608b13c456cd@linux.dev>
+Date: Tue, 28 May 2024 08:12:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] mISDN: remove unused struct 'bf_ctx'
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171685502824.31992.3352926230597985160.git-patchwork-notify@kernel.org>
-Date: Tue, 28 May 2024 00:10:28 +0000
-References: <20240523155922.67329-1-linux@treblig.org>
-In-Reply-To: <20240523155922.67329-1-linux@treblig.org>
-To: Dr. David Alan Gilbert <linux@treblig.org>
-Cc: isdn@linux-pingi.de, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] blk-flush: reuse rq queuelist in flush state
+ machine
+Content-Language: en-US
+To: Friedrich Weber <f.weber@proxmox.com>, axboe@kernel.dk,
+ ming.lei@redhat.com, hch@lst.de, bvanassche@acm.org
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ zhouchengming@bytedance.com
+References: <20230717040058.3993930-1-chengming.zhou@linux.dev>
+ <20230717040058.3993930-5-chengming.zhou@linux.dev>
+ <14b89dfb-505c-49f7-aebb-01c54451db40@proxmox.com>
+ <984f1f77-288c-441a-a649-5f320249b576@linux.dev>
+ <4d799672-378b-42b1-896b-38df2c5e9c84@proxmox.com>
+ <0783d367-4608-4b16-9b88-6eaf5d5706eb@linux.dev>
+ <8b1400e6-b35e-486b-8ea0-de76270267c0@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <8b1400e6-b35e-486b-8ea0-de76270267c0@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 23 May 2024 16:59:22 +0100 you wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On 2024/5/28 07:50, Chengming Zhou wrote:
+> On 2024/5/28 07:34, Chengming Zhou wrote:
+>> On 2024/5/28 00:04, Friedrich Weber wrote:
+>>> Hi Chengming,
+>>>
+>>> Thank you for taking a look at this!
+>>>
+>>> On 27/05/2024 07:09, Chengming Zhou wrote:
+>>>>> I've used this reproducer for a bisect, which produced
+>>>>>
+>>>>>  81ada09cc25e (blk-flush: reuse rq queuelist in flush state machine)
+>>>>>
+>>>>> as the first commit with which I can reproduce the crashes. I'm not 100%
+>>>>> sure it is this one because the reproducer is a bit flaky. But it does
+>>>>> sound plausible, as the commit is included in our 6.8 kernel, and
+>>>>> touches `queuelist` which is AFAICT where blk_flush_complete_seq
+>>>>> dereferences the NULL pointer.
+>>>>
+>>>> Ok, it will be better that I can reproduce it locally, will try later.
+>>>
+>>> Interestingly, so far I haven't been able to reproduce the crash when
+>>> generating IO on the host itself, I only got crashes when generating IO
+>>> in a QEMU VM.
+>>>
+>>> The reproducer in more detail:
+>>
+>> Thanks for these details, I will try to setup and reproduce when I back to work.
+>>
+>>>
+>>> - Compile Linux 6.9 with CONFIG_FAULT_INJECTION,
+>> [...]
+>>>>
+>>>> BUG shows it panic on 0000000000000008, not sure what it's accessing then,
+>>>> does it means rq->queuelist.next == 0 or something? Could you use add2line
+>>>> to show the exact source code line that panic? I use blk_flush_complete_seq+0x296/0x2e0
+>>>> and get block/blk-flush.c:190, which is "fq->flush_data_in_flight++;",
+>>>> obviously fq can't be NULL. (I'm using the v6.9 kernel)
+>>>
+>>> Sorry for the confusion, the crash dump was from a kernel compiled at
+>>> 81ada09cc25e -- with 6.9, the offset seems to be different. See [2] for
+>>> a kernel 6.9 crash dump.
+>>>
+>>> I don't know too much about kernel debugging, but I tried to get
+>>> something useful out of addr2line:
+>>>
+>>> # addr2line -f -e /usr/lib/debug/vmlinux-6.9.0-debug2
+>>> blk_flush_complete_seq+0x291/0x2d0
+>>> __list_del
+>>> /[...]./include/linux/list.h:195
+>>>
+>>> I tried to find the relevant portions in `objdump -SD blk-flush.o`, see
+>>> [3]. If I'm not mistaken, blk_flush_complete_seq+0x291 should point to
+>>>
+>>> 351:   48 89 4f 08             mov    %rcx,0x8(%rdi)
+>>>
+>>> To me this looks like part of
+>>>
+>>> 	list_move_tail(&rq->queuelist, pending);
+>>>
+>>> What do you think?
+>>
+>> Yeah, it seems correct, so the rq->queuelist.next == NULL. It can't be NULL
+>> if went through REQ_FSEQ_POSTFLUSH, so it must be REQ_FSEQ_PREFLUSH. It means
+>> we allocated a request but its queuelist is not initialized or corrupted?
+>>
+>> Anyway, I will use below changes for debugging when reproduce, and you could
+>> also try this to see if we could get something useful. :)
+>>
+>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+>> index 3b4df8e5ac9e..6e3a6cd7739d 100644
+>> --- a/block/blk-mq.c
+>> +++ b/block/blk-mq.c
+>> @@ -2989,6 +2989,8 @@ void blk_mq_submit_bio(struct bio *bio)
+>>                 blk_mq_use_cached_rq(rq, plug, bio);
+>>         }
+>>
+>> +       BUG_ON(rq->queuelist.next == NULL);
+>> +
+>>         trace_block_getrq(bio);
+>>
+>>         rq_qos_track(q, rq, bio);
+>> @@ -3006,6 +3008,8 @@ void blk_mq_submit_bio(struct bio *bio)
+>>         if (bio_zone_write_plugging(bio))
+>>                 blk_zone_write_plug_init_request(rq);
+>>
+>> +       BUG_ON(rq->queuelist.next == NULL);
+>> +
+>>         if (op_is_flush(bio->bi_opf) && blk_insert_flush(rq))
+>>                 return;
+>>
 > 
-> 'bf_ctx' appears unused since the original
-> commit 960366cf8dbb ("Add mISDN DSP").
+> Ah, I forgot to change to your kernel version, then should be:
 > 
-> Remove it.
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index d98654869615..908fdfb62132 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2963,6 +2963,8 @@ void blk_mq_submit_bio(struct bio *bio)
+>                         return;
+>         }
 > 
-> [...]
+> +       BUG_ON(rq->queuelist.next == NULL);
+> +
+>         trace_block_getrq(bio);
+> 
+>         rq_qos_track(q, rq, bio);
+> @@ -2977,6 +2979,8 @@ void blk_mq_submit_bio(struct bio *bio)
+>                 return;
+>         }
+> 
+> +       BUG_ON(rq->queuelist.next == NULL);
+> +
+>         if (op_is_flush(bio->bi_opf) && blk_insert_flush(rq))
+>                 return;
+> 
 
-Here is the summary with links:
-  - mISDN: remove unused struct 'bf_ctx'
-    https://git.kernel.org/netdev/net-next/c/5233a55a5254
+Another possibility is that drivers may change rq->queuelist even after
+rq->end_io(). So add two more BUG_ON() to detect this:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+diff --git a/block/blk-flush.c b/block/blk-flush.c
+index e73dc22d05c1..0eb684a468e5 100644
+--- a/block/blk-flush.c
++++ b/block/blk-flush.c
+@@ -179,7 +179,10 @@ static void blk_flush_complete_seq(struct request *rq,
 
+        switch (seq) {
+        case REQ_FSEQ_PREFLUSH:
++               BUG_ON(rq->queuelist.next == NULL);
++               fallthrough;
+        case REQ_FSEQ_POSTFLUSH:
++               BUG_ON(rq->queuelist.next == NULL);
+                /* queue for flush */
+                if (list_empty(pending))
+                        fq->flush_pending_since = jiffies;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index d98654869615..908fdfb62132 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2963,6 +2963,8 @@ void blk_mq_submit_bio(struct bio *bio)
+                        return;
+        }
 
++       BUG_ON(rq->queuelist.next == NULL);
++
+        trace_block_getrq(bio);
+
+        rq_qos_track(q, rq, bio);
+@@ -2977,6 +2979,8 @@ void blk_mq_submit_bio(struct bio *bio)
+                return;
+        }
+
++       BUG_ON(rq->queuelist.next == NULL);
++
+        if (op_is_flush(bio->bi_opf) && blk_insert_flush(rq))
+                return;
