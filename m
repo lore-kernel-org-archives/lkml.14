@@ -1,61 +1,100 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930E317BD8
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 03:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361111BC20;
+	Tue, 28 May 2024 03:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716866327; cv=none; b=mA+AjDdkDLmk4yNh7jJmFqbc+zkXzOhpllPzwVLg1COZ96MSmrsBJ8UdGpNpGPYE5/pXkT6Y9xlSWZStY/Jvr9EkaqaPKnlS0RoAhKQmavj2EPNQPuM/uCLgrQcrEWmUjdWaZCT9xahtrNUU/wxMQ3pTrBnuoTeAaJ1fciSrkw4=
+	t=1716866336; cv=none; b=C+GNNDP16Xz83BX6V9zblXNHWKISFQE308MfGQHChwO15ByBuaJEpC2mOkRqRAsVOGjzxhWPMolnlTLW9QbTwLE7SrIzja6YSz/bmZGgw6waYU/yn6Wt4JkMrrYK8gzkJTb9CCnOdEbH/4bdfXhIVxS3OxtH6CuDGydkuD86Yks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716866327; c=relaxed/simple;
-	bh=VYFfSvOpMeDCGiOoSm+qVlswYhROO8b0d+kxyyCiUck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hoHbWjmV0l4NqYRkkbdLqRqPbYoEZ8jKD70PxJxLjGTlhHw4fEn6zh06GTu3Mq72B7KJmuFcer93xRHPQW2vbKtP8YNbhFjX88b+Te7ElasCWoa3lJ20eHJhPuq932ARECG0V1JgSA0L8I8SaDGDrIbx7TSy32VQ4xbsm8OP4tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cSBhfM/X; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716866336; c=relaxed/simple;
+	bh=G4xWxHxviUZgZNZ4B9LEhX6CBsrFq5sUCxRNJjz0cFY=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=LQRF3GKlqXi5J7rRyNWNpdiX7nyDUsvrcpYOuQAWN5JIBxZP0umlKjDahfHM6H5YpoDW2Pyh8AOs00Wrb6yvJKHlnngtZhrNGUJYGOzhYrr1UMEzecXuxAr4UDcyXgLthpgMmgLvHWlsb+yW6/o5voT7ebjjncZER/bC5kDmesI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=JjjkF4gy; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cSBhfM/X"
-X-Envelope-To: cam.alvarez.i@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716866323;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VYFfSvOpMeDCGiOoSm+qVlswYhROO8b0d+kxyyCiUck=;
-	b=cSBhfM/X9ctdend3W+PJYjIOoS4LuAB9XcGNmbXDpyS0y55ASrR5fYfk1neh+9Rzrpbadr
-	LgPV3QtHg6TUfSrDicKctOeVYK27lznoD28InKPbHXoDUhL0k/sg972IOcEMsQP64iaE3q
-	JtDkojDBYmH7KH7E793A6zRcOLKRViE=
-X-Envelope-To: bfoster@redhat.com
-X-Envelope-To: linux-bcachefs@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: syzbot+10b936c5eaee2819b49b@syzkaller.appspotmail.com
-Date: Mon, 27 May 2024 23:18:40 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Camila Alvarez Inostroza <cam.alvarez.i@gmail.com>
-Cc: Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzbot+10b936c5eaee2819b49b@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2] bcachefs: fix last_seq and last_empty_seq in
- bch2_fs_journal_start()
-Message-ID: <adcv7g23gfc65wlwavgrfxr6wnjua5qp5jp5i66srwjizwzgiy@fg5ahzm5gp6m>
-References: <20240520025733.688425-1-cam.alvarez.i@gmail.com>
- <cf7d1a86-b1e4-08ee-0d99-0b3f2823fb47@macbook-pro-de-camila.local>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="JjjkF4gy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1716866323; bh=5Pht2AsU+jZDT84gMZB+Yjne2Pxcf/7ECz8bDPhMwww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=JjjkF4gyGX/mOpwp9XGzsHl9RevSpPfwmw5o7bYVBz+YJqpdZOQM8G6i4IExyxfNW
+	 mIc2S8tHwA7EojcqRbCBuwoD6SljYw8//+49f372KrhtbRsPlvwPXrolHiukbRk6cw
+	 uNA16fsbElq0xDbyMSpjeNMJQjLpelB6iR92ANsY=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id 31E376B2; Tue, 28 May 2024 11:12:30 +0800
+X-QQ-mid: xmsmtpt1716865950tkxn1u6wi
+Message-ID: <tencent_53E8065F49BD2ECD2EC28C9AE7EC86EC5206@qq.com>
+X-QQ-XMAILINFO: M5znx2hx04lbxlEEO+mqGqEROpB9MPkRN2A1jjEV5bh4FH+Dq6mcfbHvn/IE94
+	 dAYebOzSjFfW6AXBxwJiyrMnMTO2ylLAu7iWX6HrHz1Kegi86OPD6exqglK1bLFzYtvWYqushkzw
+	 0xR1pnRp/7SHE2QeExQPsNP6Uwb19BMM0pgglMEpRy42W4C3feu/uWDBaMxP9q5p31Q5WZ7ajQVL
+	 C7isiO84HPBIx59FOWBeze48PzTD7tPuV10ALgzl8qx5F9QPORYeGWCqv3kdYecpdb2RtG76dLS+
+	 +dGjFq50xAIDFrL1VA5hgUUkgYuNW0SO+JBXrUacSZkPJYBF3ATBrtKeadEqSX0otQeDHghdxKsA
+	 LPVRPrm+2yHTB+LdlADUJ70GswLm4su77VTt17VfNt4/KAcUxq12+IN6RjcLvTYHBeqVxng/jzqi
+	 /w/ynoA30c9ra+AoiowbAXijtcip55c6WWPkMG/Uz61Op6/7PyK5RW4iQ42C4Vuk7lhN/CWdbehh
+	 eowawPXXqKHvj4wiiDDFUZxNwWlG+GK60jhdHDE19IGaRGKYmGWX1iDlukbBVnPCyUS4sA0dDcpg
+	 MRZ3wAfijlP4tnQAG+vNJSIFGb9sU9INkMja9WKzyptMMfzvpqONmXSm8JoAThP16Uxn97LKknfo
+	 3bwqUeTsMWNjEwsrbhh0a750hvpF/06c41ksSJyf1f4pCEtfavnnF67ob2/HIepCvDsM7/O9hlKW
+	 J0oiT7zuJqWFRd9o32z8VZkTxtic+gGoi+OqvM+kNcgKWAmlg3rAVrvpgs8C1sHb2ZXJfx31BVju
+	 NyHj6HigPTw5+Rok2Go1wjbhfRsadKPuANXxiCe8tuSOVTMTlYO6tmLGpIZGHQNYErJmQ6Hwyqzw
+	 vYz2TTXMemMyH1r+zr7nabdtXPk+JmKSWf/T8G3bao2aAXn1HJ3gvVr5kMqQuv5A==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+71bfed2b2bcea46c98f2@syzkaller.appspotmail.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	krzk@kernel.org,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] nfc/nci: Add the inconsistency check between the input data length and count
+Date: Tue, 28 May 2024 11:12:31 +0800
+X-OQ-MSGID: <20240528031230.1190547-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000007018c0061964aa67@google.com>
+References: <0000000000007018c0061964aa67@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf7d1a86-b1e4-08ee-0d99-0b3f2823fb47@macbook-pro-de-camila.local>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 27, 2024 at 03:25:39PM -0400, Camila Alvarez Inostroza wrote:
-> Hello,
-> I was wondering if you had had the time to take a look at this.
-> Please let me know if there's something I'm missing.
+write$nci(r0, &(0x7f0000000740)=ANY=[@ANYBLOB="610501"], 0xf)
 
-Sorry, I'll get to it - I'm going to need to stare at this one and try
-and figure out what the assertions should be
+Syzbot constructed a write() call with a data length of 3 bytes but a count value
+of 15, which passed too little data to meet the basic requirements of the function
+nci_rf_intf_activated_ntf_packet().
+
+Therefore, increasing the comparison between data length and count value to avoid
+problems caused by inconsistent data length and count.
+
+Reported-and-tested-by: syzbot+71bfed2b2bcea46c98f2@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ drivers/nfc/virtual_ncidev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/nfc/virtual_ncidev.c b/drivers/nfc/virtual_ncidev.c
+index 590b038e449e..6b89d596ba9a 100644
+--- a/drivers/nfc/virtual_ncidev.c
++++ b/drivers/nfc/virtual_ncidev.c
+@@ -125,6 +125,10 @@ static ssize_t virtual_ncidev_write(struct file *file,
+ 		kfree_skb(skb);
+ 		return -EFAULT;
+ 	}
++	if (strnlen(skb->data, count) != count) {
++		kfree_skb(skb);
++		return -EINVAL;
++	}
+ 
+ 	nci_recv_frame(vdev->ndev, skb);
+ 	return count;
+-- 
+2.43.0
+
