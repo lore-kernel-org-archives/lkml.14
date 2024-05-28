@@ -1,47 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88B916B743;
-	Tue, 28 May 2024 12:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9EA13A242;
+	Tue, 28 May 2024 12:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716897872; cv=none; b=pCX5dolmBWQdARLWazFI1pIf6sKbiT4z0Yyf/7X5A3RVZTEIGNVR+qSuanqEsC+9JnpiTVVe60uFq/WTCPw8532RLcKvZa0dIE2vCS5g1dWEiqMYhKgSPo61HVyl8O3duoxHfSNBPwoEUBudZCYto7vVLoPRKeO+AY8IpErzCoM=
+	t=1716897907; cv=none; b=H0ONgQwBUWqKzkbmeNr64661JocWHgNIrKJXPQTlxLVqmhzJVvZTlzTe8HIG0czVqgBEJvQRXAXuCLFvZ3T86g6jpO3GY20uGaLiPMYpDZv0ain29l4OxVq8DfZ/dASICvIzP9AYtVUEt8U6ZWpvwW44hTo1ZJltGyORVRXAdcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716897872; c=relaxed/simple;
-	bh=geFzxgDm7W4HA50i8vXt3CLQRJwI4FU8uG+93ofHFxY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EFuU6234aGJNUbhvm+8mJcS/C0Amb74pHbyCO8FUNTMTqdoBZ4ILNsQ4Im+Pjg9rOLyoukqO7oruJAb/I1WMpunZUJE446+mVGAvgdlseUwnX7ihNrNSNuM4NJi6lvOAK6Ts8Dz6qDIjww9eOVPVO2cliue88MbJN2ihP6mH0sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWj8ZvqO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716897907; c=relaxed/simple;
+	bh=kaLuOjRkFqL42ZSISeMz90mU9RorzMOLwIkOwYEXp60=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s5Szbu8Boe0xvIK5RGf7kekNt17WxAas+FAiEWVwiL4VeAlATp/sCubZwKzQI14KRiHuKJZn1Fy60A8AJetlcw87UGw6eV/9gQZvufgORAVpNekfB4WoliEz23FEwLBPjj5GihvxlxePVzsgUCsT+7c2OQt6oYmeTIo8h9TYn2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUP6VGm6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWj8ZvqO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83895C32782;
-	Tue, 28 May 2024 12:04:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUP6VGm6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8677AC3277B;
+	Tue, 28 May 2024 12:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716897871;
-	bh=geFzxgDm7W4HA50i8vXt3CLQRJwI4FU8uG+93ofHFxY=;
+	s=k20201202; t=1716897907;
+	bh=kaLuOjRkFqL42ZSISeMz90mU9RorzMOLwIkOwYEXp60=;
 	h=From:To:Cc:Subject:Date:From;
-	b=nWj8ZvqO4QYiburakoYAcexvxmbveCbUU//HDUl7nERTKp6g9s8UoYzLPvtik1c9r
-	 E5dkiPoJgdwlZc342vma5XxmBxFTDLj05IzI1+cP/U6Ie6kKKJkq+Jc20mISDYZ+/F
-	 NiEG85XE+an8l0XRshU6+Yl0Ox0nOjpi5TKuBgNMGOXABd24d6MMfC9J4geeb5BaUM
-	 nChOeg0guxtb9N0GmRqjF2G2xqdJkoo2v3/8tyqtEppXWWmtKCeWv65l28h8pt8Zjl
-	 N43yo6BdlcQ8etlQ24KYJz5KJQ20Q3v7sSTUFXtKY8bnYrKwOGvxtU6GPXzuK9l8zi
-	 O4hDR15XJkplg==
+	b=PUP6VGm6Xn06TXAJ4XKsjNQZ+80X2eGoXUsCYdeFrF6spfAMMcRq6RtmWr8yRzyCc
+	 aMvXu9qy7V9UYerjK/E8ZdiskIbiuZ13jWQVK1rWCNYUkYWMnNqW7Ax03/TKA1V5BE
+	 zOgtOE7eNJKfryKtKApRvDRDu8ZJPNXmZLtUyFMom8D1/DIXzsoytEC4lyhBvP05Mj
+	 O9JM0y+/gOYU45AE7Y2BU+3RLiEAygpLkEyZXi+Uwk2bMGzA+HuX4ouo/8mZjwcdF2
+	 ucoYYPxJ+n5xymccDEyd0ZiwMfRqbFvgr9IhjCdR4M+BP/Nphs1S03GVgv0j8wQ1Jt
+	 Av3KHZo905xTg==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>
+To: Xin Zeng <xin.zeng@intel.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Yahui Cao <yahui.cao@intel.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	=?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-	netdev@vger.kernel.org,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	kvm@vger.kernel.org,
+	qat-linux@intel.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: dsa: realtek: add LEDS_CLASS dependency
-Date: Tue, 28 May 2024 14:03:46 +0200
-Message-Id: <20240528120424.3353880-1-arnd@kernel.org>
+Subject: [PATCH] vfio/qat: add PCI_IOV dependency
+Date: Tue, 28 May 2024 14:04:55 +0200
+Message-Id: <20240528120501.3382554-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,31 +52,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-This driver fails to link when LED support is disabled:
+The newly added driver depends on the crypto driver, but it uses exported
+symbols that are only available when IOV is also turned on:
 
-ERROR: modpost: "led_init_default_state_get" [drivers/net/dsa/realtek/rtl8366.ko] undefined!
-ERROR: modpost: "devm_led_classdev_register_ext" [drivers/net/dsa/realtek/rtl8366.ko] undefined!
+x86_64-linux-ld: drivers/vfio/pci/qat/main.o: in function `qat_vf_pci_open_device':
+main.c:(.text+0xd7): undefined reference to `qat_vfmig_open'
+x86_64-linux-ld: drivers/vfio/pci/qat/main.o: in function `qat_vf_pci_release_dev':
+main.c:(.text+0x122): undefined reference to `qat_vfmig_cleanup'
+x86_64-linux-ld: main.c:(.text+0x12d): undefined reference to `qat_vfmig_destroy'
+x86_64-linux-ld: drivers/vfio/pci/qat/main.o: in function `qat_vf_resume_write':
+main.c:(.text+0x308): undefined reference to `qat_vfmig_load_setup'
+x86_64-linux-ld: drivers/vfio/pci/qat/main.o: in function `qat_vf_save_device_data':
+main.c:(.text+0x64c): undefined reference to `qat_vfmig_save_state'
+x86_64-linux-ld: main.c:(.text+0x677): undefined reference to `qat_vfmig_save_setup'
+x86_64-linux-ld: drivers/vfio/pci/qat/main.o: in function `qat_vf_pci_aer_reset_done':
+main.c:(.text+0x82d): undefined reference to `qat_vfmig_reset'
+x86_64-linux-ld: drivers/vfio/pci/qat/main.o: in function `qat_vf_pci_close_device':
+main.c:(.text+0x862): undefined reference to `qat_vfmig_close'
+x86_64-linux-ld: drivers/vfio/pci/qat/main.o: in function `qat_vf_pci_set_device_state':
+main.c:(.text+0x9af): undefined reference to `qat_vfmig_suspend'
+x86_64-linux-ld: main.c:(.text+0xa14): undefined reference to `qat_vfmig_save_state'
+x86_64-linux-ld: main.c:(.text+0xb37): undefined reference to `qat_vfmig_resume'
+x86_64-linux-ld: main.c:(.text+0xbc7): undefined reference to `qat_vfmig_load_state'
 
-Add a dependency that prevents this configuration.
+Add this as a second dependency.
 
-Fixes: 32d617005475 ("net: dsa: realtek: add LED drivers for rtl8366rb")
+Fixes: bb208810b1ab ("vfio/qat: Add vfio_pci driver for Intel QAT SR-IOV VF devices")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/dsa/realtek/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/vfio/pci/qat/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/realtek/Kconfig b/drivers/net/dsa/realtek/Kconfig
-index 6989972eebc3..6c90a83c71da 100644
---- a/drivers/net/dsa/realtek/Kconfig
-+++ b/drivers/net/dsa/realtek/Kconfig
-@@ -39,6 +39,7 @@ config NET_DSA_REALTEK_RTL8365MB
- config NET_DSA_REALTEK_RTL8366RB
- 	tristate "Realtek RTL8366RB switch driver"
- 	depends on NET_DSA_REALTEK_SMI || NET_DSA_REALTEK_MDIO
-+	depends on LEDS_CLASS
- 	select NET_DSA_TAG_RTL4_A
+diff --git a/drivers/vfio/pci/qat/Kconfig b/drivers/vfio/pci/qat/Kconfig
+index bf52cfa4b595..fae9d6cb8ccb 100644
+--- a/drivers/vfio/pci/qat/Kconfig
++++ b/drivers/vfio/pci/qat/Kconfig
+@@ -1,8 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config QAT_VFIO_PCI
+ 	tristate "VFIO support for QAT VF PCI devices"
+-	select VFIO_PCI_CORE
+ 	depends on CRYPTO_DEV_QAT_4XXX
++	depends on PCI_IOV
++	select VFIO_PCI_CORE
  	help
- 	  Select to enable support for Realtek RTL8366RB.
+ 	  This provides migration support for Intel(R) QAT Virtual Function
+ 	  using the VFIO framework.
 -- 
 2.39.2
 
