@@ -1,90 +1,135 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5FF13A868;
-	Tue, 28 May 2024 14:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3F913A868;
+	Tue, 28 May 2024 14:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716905010; cv=none; b=GAEroJL/9qquvnT/qGh21pyoA/rUMhZQY8uas9mBmr+48eX+Nr3mdDvSS6QAnw7JL2Ye1EKdnFMqA1ZEHEc9dttr/XSves7LldCerdlUs+94rmyGzscFTgVr0iWNP6Jpp+Fd3zwd5JQHJ+3C1Zyh36C/VCbkf1QsrassZkI0g2U=
+	t=1716905116; cv=none; b=tyy8qObQGW501xMxHVwH50NwRIzF1hk6JsIXQhyVaB1Go3igkTNB1OFvfAwXPxuNxJyv6eC97/y7XfNuM9NRjAv/9gntQgPtJC7wK+CcGdcDjYonNovPXVWnbEq25yC+PKWmxhnYlrDw1djWpZzZd0KWlYqOo+iTn3men0MnRh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716905010; c=relaxed/simple;
-	bh=5tCZb5kyea4NJagicMF6cpfIdlu0sHvXpdfA3Z03YnQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MHoug2yWm6i1KRSHsfHw7bAu5o23K5RQwVxV5T38AQT4tzzXFohYhc0EhXRuDTSY0wuMtt7JEEZ+qCKf7JnC+chSorVyGIsZl49X+VYD7WHn/a0fvXZCTQDSPnQ+a4iTptfqgVSbSvhaOk+470gks/cxhm0WoW58FiCYvCsr3fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lpd2Bp9v; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716905116; c=relaxed/simple;
+	bh=ai1bdbgFELvr6pDqfI7dJqTlHep0caFvUJ3T3nYdQ0o=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=BY5lmSJbCXcVyQ916YzjeeipryKHAGkOEK4lC5/gfTF1MghrDaCdjB5lGH+rsBAY2ucukoCBHAqnVsMCZ80XE5F5WbP23J+4jf8cXQuNakEqZ2eC9FTAN98fsfql1wjqz4c3leDGtoS6bIsK92lkC0bIoYKSqaZludss4NY7vss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=Qpa544JQ; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lpd2Bp9v"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SBk8vv022220;
-	Tue, 28 May 2024 14:03:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qf2B6uaVwOzsoHSnptOmqBPxKS/mvVhhFLc7hn4ujoo=; b=lpd2Bp9vr4QSBIlh
-	DaKx7lGbc3rAM6mHbYohIazHhC5cGS34GLOmLeS/d93fwBKAI1XEg/KAlKyF4yXt
-	Eg525t0jjTM+yaVF2oB5DQVQna09y2EWLTSuAuDQ3DsqRvnAvr/yYKCA+uBvCTT+
-	Aze/MrNNzVVFx7e9W/orwCZMMjq0DaYAMH+tYRudg9/JiTs+tln9pZ4ZQWuNBx7N
-	lgQB6ArMKrZ1prSHP9CDarIBbfqQQ/yxLZ89ZfywLNX3/MwMycv+lGmvwdHpwYFk
-	8H5qayWedmBDpl9Iz+3VpsTlZtT2lJrB0my8qxQ1F+qqxWIEYPdkrh2RaYdpngTc
-	7Hj+lg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yb9yj68tr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 14:03:14 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SE3DHl010926
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 14:03:13 GMT
-Received: from [10.110.122.222] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 28 May
- 2024 07:03:12 -0700
-Message-ID: <38842d90-f64d-410d-8ef5-6e1d09ff01a0@quicinc.com>
-Date: Tue, 28 May 2024 07:03:12 -0700
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="Qpa544JQ"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: mediatek: Add a module description where missing
-Content-Language: en-US
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        <sboyd@kernel.org>
-CC: <mturquette@baylibre.com>, <matthias.bgg@gmail.com>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <kernel@collabora.com>
-References: <20240528121320.160685-1-angelogioacchino.delregno@collabora.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240528121320.160685-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8ONwqeoyukzF1gfyG5FMT2wykvTPWjZW
-X-Proofpoint-ORIG-GUID: 8ONwqeoyukzF1gfyG5FMT2wykvTPWjZW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_09,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=711 spamscore=0
- clxscore=1011 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405280104
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1716905104;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nR6PGtpqWBgYYKVijGtKvPaDw/ijTAXs71XPwiba6AE=;
+	b=Qpa544JQMDRkOoJe07nQK4xF57CXLvIAu1zNfexR5ACS74dObK/J6x0QvxowEYvSoHexfG
+	njg4A9zygVo2Bi5T9/8djj1eKPiTFEXsDChECQBHjrc/YksEDoncs6ijzENIdJ952Ya1nM
+	jxv2xfXH1y0PBlg4rGHT82kTA7qMUKgUlmFcnnM+yiiZ/WUMUtyIUzjc9+hbfD9l0ilKqZ
+	Figaw1QH6Bt52xZx2R4VY+lhNS32Q9RIxGaenr8Fnq9DbF3dN4RiSKYGcEN1eII19wU5Z0
+	hTcflr4ivNsNUph387Ff4L4ZEa3f+ZcQJqgDXNSthuL6uMS3jjhtVc4bTcg+9A==
+Date: Tue, 28 May 2024 16:05:04 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Chen-Yu
+ Tsai <wens@kernel.org>, Diederik de Haas <didi.debian@cknow.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/6] RK3588 and Rock 5B dts additions: thermal, OPP and
+ fan
+In-Reply-To: <CABjd4YyuDsWGbSfNyqcW3s=59p8adVf5Js79PYyKFqfyM71dxA@mail.gmail.com>
+References: <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
+ <CABjd4YyuDsWGbSfNyqcW3s=59p8adVf5Js79PYyKFqfyM71dxA@mail.gmail.com>
+Message-ID: <ea2311d7a41162a847d37ce05d0fc441@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On 5/28/2024 5:13 AM, AngeloGioacchino Del Regno wrote:
-> Add a MODULE_DESCRIPTION() on all drivers that miss it to avoid
-> modpost warnings.
+Hello Alexey and Heiko,
+
+On 2024-05-28 11:49, Alexey Charkov wrote:
+> On Mon, May 6, 2024 at 1:37 PM Alexey Charkov <alchark@gmail.com> 
+> wrote:
+>> 
+>> This enables thermal monitoring and CPU DVFS on RK3588(s), as well as
+>> active cooling on Radxa Rock 5B via the provided PWM fan.
+>> 
+>> Some RK3588 boards use separate regulators to supply CPUs and their
+>> respective memory interfaces, so this is handled by coupling those
+>> regulators in affected boards' device trees to ensure that their
+>> voltage is adjusted in step.
+>> 
+>> This also enables the built-in thermal sensor (TSADC) for all boards
+>> that don't currently have it enabled, using the default CRU based
+>> emergency thermal reset. This default configuration only uses on-SoC
+>> devices and doesn't rely on any external wiring, thus it should work
+>> for all devices (tested only on Rock 5B though).
+>> 
+>> The boards that have TSADC_SHUT signal wired to the PMIC reset line
+>> can choose to override the default reset logic in favour of GPIO
+>> driven (PMIC assisted) reset, but in my testing it didn't work on
+>> Radxa Rock 5B - maybe I'm reading the schematic wrong and it doesn't
+>> support PMIC assisted reset after all.
+>> 
+>> Fan control on Rock 5B has been split into two intervals: let it spin
+>> at the minimum cooling state between 55C and 65C, and then accelerate
+>> if the system crosses the 65C mark - thanks to Dragan for suggesting.
+>> This lets some cooling setups with beefier heatsinks and/or larger
+>> fan fins to stay in the quietest non-zero fan state while still
+>> gaining potential benefits from the airflow it generates, and
+>> possibly avoiding noisy speeds altogether for some workloads.
+>> 
+>> OPPs help actually scale CPU frequencies up and down for both cooling
+>> and performance - tested on Rock 5B under varied loads. I've dropped
+>> those OPPs that cause frequency reductions without accompanying 
+>> decrease
+>> in CPU voltage, as they don't seem to be adding much benefit in day to
+>> day use, while the kernel log gets a number of "OPP is inefficient" 
+>> lines.
+>> 
+>> Note that this submission doesn't touch the SRAM read margin updates 
+>> or
+>> the OPP calibration based on silicon quality which the downstream 
+>> driver
+>> does and which were mentioned in [1]. It works as it is (also 
+>> confirmed by
+>> Sebastian in his follow-up message [2]), and it is stable in my 
+>> testing on
+>> Rock 5B, so it sounds better to merge a simple version first and then
+>> extend when/if required.
+>> 
+>> [1] 
+>> https://lore.kernel.org/linux-rockchip/CABjd4YzTL=5S7cS8ACNAYVa730WA3iGd5L_wP1Vn9=f83RCORA@mail.gmail.com/
+>> [2] 
+>> https://lore.kernel.org/linux-rockchip/pkyne4g2cln27dcdu3jm7bqdqpmd2kwkbguiolmozntjuiajrb@gvq4nupzna4o/
+>> 
+>> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+>> ---
 > 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Hi Heiko,
+> 
+> Do you think this can be merged for 6.11? Looks like there hasn't been
+> any new feedback in a while, and it would be good to have frequency
+> scaling in place for RK3588.
+> 
+> Please let me know if you have any reservations or if we need any
+> broader discussion.
 
-All drivers/clk/mediatek MODULE_DESCRIPTION warnings resolved :)
+As I promised earlier, I was going to test this patch series in detail.
+Alas, I haven't managed to do that yet, :/ due to many reasons, but
+I still remain firmly committed to doing that.
 
-Tested-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-
+Is -rc4 the cutoff for 6.11?  If so, there's still time and I'll do my
+best to test and review these patches as soon as possible.
