@@ -1,154 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2054.outbound.protection.outlook.com [40.107.223.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3203717B4F1;
-	Tue, 28 May 2024 21:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716930462; cv=none; b=q1Lbcwr5ET2+cTbBauKayGrt7a4vCEQG0Re560IQxl0MvbmPGg2IBYpXDcs0vRKufK0s3n9j1aHvd2vxYxV6SnJ363nC2WCNQ0YlDo1nrBfRuFqOMK2Ky7npGilLnVdKKfil6FjpQiNF2yk504BoG1f/hfMhKNxpvS4IsERFzQc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716930462; c=relaxed/simple;
-	bh=Y4gOOWyilWi1IqWRonAatEZd0PGLv4JQJ/gDqGNN/Eg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l4dVmOusDRJs9lBmsVMR2j3x5N9IVxZjhxyWZmwLnwtf9HRpud+7IdOLwo4d1V9oE/Gt5k1Bew5vYgtzjy7qNjWkYJQAVbU9Jb/Ye1I/nh99Ws4QV5Aq92VIYRrcU+Me65CgOnjlxS5C4r537xU4d2NAsLtvFJzkrzTYoBxt6/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L8YJb+qj; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A141617B410;
+	Tue, 28 May 2024 21:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716930464; cv=fail; b=SvWJ9Rip2GsbIMCQpYjGHe7IDi+RE3Pdg89VFiPq2QjR21UwvUwi3A0lQMF8ONSBy5lUMJZgwBhQB7bEARphV+U5b5/jx8Gz02alnhzqviOAhYhZr2WbE/bdqleuK5hoCrc+PHf+yS+rwzEPyOy0Hv9r0W9Rn2bhLwDBEwHHNN4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716930464; c=relaxed/simple;
+	bh=AYyTRJqC7IsWTASylpHjhf5/AXo0kYF/meAnJyOACNQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lu9Tz/JZb0AIA9ajAXnZlHO1C3lQSeBvjmSl9hjwLsg9vR4Eg3/PPalqEmm6ceaMJl9G2FxUVh/ZT9x4ycW1unQWAX/MGNFObcrRAPfj5QgTBjPca2Jd5cIN50pCpzVA4Pba6vU4LOpYhG+h9vi5NW3EHdsOKSTV0XmQddF9N+M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ld6ZR719; arc=fail smtp.client-ip=40.107.223.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L8YJb+qj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716930461; x=1748466461;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y4gOOWyilWi1IqWRonAatEZd0PGLv4JQJ/gDqGNN/Eg=;
-  b=L8YJb+qjEvDGuu2SDbwYVjDr6Kgsd9nSrDqscHEb1t2DTciiZdj+WXHf
-   jCUGfzoYRaSUo0vSMWU+4IyH9M6Osd+U2A62Dv7/wV5GAZdijuIrAOCm5
-   wt1Je43b772+3kyyOuX9ip1cJeyde9qJPLs0YLTqHohM+2tcPni5N6+O0
-   yYqywVVMAxotHpckwRLpy2yPWl9vw/9CMl8T8YQ8B4QqWjfy1iKQJRIHc
-   e/06S/rp3vH268l/5fX6mNQCK4+ckRmUsEvrDTxyFxqGBOn801WQtcWOy
-   5/q/QiTiCHjJYmpgi4V2JPdWam1rje2egoK2+zJ9ttmxH/oItMIcu3xJX
-   w==;
-X-CSE-ConnectionGUID: +qg5gJTJRPSQLDvAJg+Phw==
-X-CSE-MsgGUID: UWsx7/eOTrS+xQEIRiPREg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="38690491"
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="38690491"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 14:07:40 -0700
-X-CSE-ConnectionGUID: NbNJR+pOSXCoWhLKc3u2eQ==
-X-CSE-MsgGUID: WomeDv4NRsu0RthZMCbeJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="39643188"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 28 May 2024 14:07:38 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sC42h-000ClH-1j;
-	Tue, 28 May 2024 21:07:35 +0000
-Date: Wed, 29 May 2024 05:06:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Zhang Lixu <lixu.zhang@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, Arnd Bergmann <arnd@arndb.de>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] HID: intel-ish-hid: fix endian-conversion
-Message-ID: <202405290420.DtwUdg3b-lkp@intel.com>
-References: <20240528115802.3122955-2-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ld6ZR719"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YVAJ4PixxG24CvhR0evAr9OlyqhpM6+ascPlDfT0UAC6oKpxvwSzZmbXFggB2gRtYru3949NdNyYQvLmVnYKzXrGNAzKlYCckiidVVsITPBTyKHkipIL9liog5x7cUEeY3+qGdmB3+0zCvqlrznxWgSr8vDxnZuDgr1TgfIaX2ioZP6bHljygMDq84B50Xwbeqe6b4yuF7cizxn82CG1DfAFGWCFgAy0W7V1BhgZDmaqlK71PX4DOxa9av2VZIeFyHWisjEk+CSeyKYUHiCWdUcV+3uhadeFyMMXFeVD6K2FnD9OguNW5u416I+puxTLbPOMBb5tMKoiNDcd+gjN4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5DYByaFjjTieVakmh1ZORKaASEbDVoB1wTHOhCZ+IDg=;
+ b=D/2LpkZyH6A3vkPFfPHqkJlPKLVs6dVpA4N8TFjhWoPHE9KYhep4Hunq8KHxMrT0lw+INw7ZvskdlFoBXSzrvWBiPv3xWJDaZ78lENKuFyfMtrqV+G9plKwY9u9U4tNvdAf66Akkd0zO4oMhkoER3CYex+GCJIQJPe4V+Fk/YT0ZgekG65u+9g6iZv6LWP68Xsi7FUrBeXRBcJe9m7AXPsT1CxRBMigqIZTdkAMbMGakFRgaxeTZBe2BtXUON6m5pwZaIzfyuFLpO/4VH7i/ohSWiU1eEG1OGE0klpPg7T1OT7K0/wuxOVbbqSJo/7av8ghPeIMUS5+tMcdtPvTl3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gondor.apana.org.au smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5DYByaFjjTieVakmh1ZORKaASEbDVoB1wTHOhCZ+IDg=;
+ b=Ld6ZR719Z2hsN10YtAcZQT7kytYj8WKtzqZLaZAlJHKczb2wzML6DHhO5e035+zGfwTKZmcObS/Xq91icBOX7drDg3UJgF103OSm1qsG/AoOm/uspFWJQQQkm2TTz2ERoBNZtAo1d/iid1HT9GH2i31YWRPBlJ8Pl7u9aZ3Byrs=
+Received: from MN2PR16CA0021.namprd16.prod.outlook.com (2603:10b6:208:134::34)
+ by CH3PR12MB9172.namprd12.prod.outlook.com (2603:10b6:610:198::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.30; Tue, 28 May
+ 2024 21:07:40 +0000
+Received: from BL6PEPF00020E64.namprd04.prod.outlook.com
+ (2603:10b6:208:134:cafe::d) by MN2PR16CA0021.outlook.office365.com
+ (2603:10b6:208:134::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.18 via Frontend
+ Transport; Tue, 28 May 2024 21:07:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF00020E64.mail.protection.outlook.com (10.167.249.25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7633.15 via Frontend Transport; Tue, 28 May 2024 21:07:38 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 28 May
+ 2024 16:07:34 -0500
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: Mario Limonciello <mario.limonciello@amd.com>, Tom Lendacky
+	<thomas.lendacky@amd.com>, "open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP)
+ DRIVER - DB..." <linux-crypto@vger.kernel.org>, Richard Hughes
+	<hughsient@gmail.com>, open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 3/5] crypto: ccp: align psp_platform_access_msg
+Date: Tue, 28 May 2024 16:07:10 -0500
+Message-ID: <20240528210712.1268-4-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240528210712.1268-1-mario.limonciello@amd.com>
+References: <20240528210712.1268-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528115802.3122955-2-arnd@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E64:EE_|CH3PR12MB9172:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6eca8308-e7f9-4f70-45e7-08dc7f5a3490
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|1800799015|82310400017|36860700004|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?fvOyMmKkgn1QW4igloBtOzsDY1UXeW4X/Pu+NbDT+9X6XTIezs2Y+UcSDAx8?=
+ =?us-ascii?Q?tXHiKy2AZZ+4HC9Bqpf365ldVcUrHGSOjs045SD0dZVBmaYp2Rb9Jo0XSulY?=
+ =?us-ascii?Q?gNtqfp7Kh5yTwY/v9taqbovpHNjXaZI325jWSvvMT79aLCGJmhgZaTp6gwQL?=
+ =?us-ascii?Q?WovIlK+d+DqkH3tEPS/Z/BvXuxT8EkvhZEQDtdx/dJGlu8riwnpUZSDqbc09?=
+ =?us-ascii?Q?TlS98wbDVYqHwqtoVjuLOxpkdNdAEoaaJ6LwnZetLwMHx99DWxuVc3/6q3pS?=
+ =?us-ascii?Q?DAlYjYhzTM/CtkWm3SVN0frFnw+KJRqcZ9m2RQ1OSBnxZc40hOWS5rwsMLfd?=
+ =?us-ascii?Q?Vv5f2ov2iMC69NQc6WazPhuHwJUkdd4CfZ5XyWeeUGSL8opFL8p1HNs+XQIi?=
+ =?us-ascii?Q?Uns2AJWDmQL9QouzE3pFobn8F486Rwe+FQE8FdSknH9gVQ+XZM4vvCzca0lA?=
+ =?us-ascii?Q?JtetHUBXgJLIb05bA7vs72I3spjd9uFs+2GAxDxnhF7BqOp/IMan+dxM6AXU?=
+ =?us-ascii?Q?SLERXAdXPTObytYUtssy+v1zfbBv4RyxrkEMKGqaU3ml7v+kfUgS6N9W/vwu?=
+ =?us-ascii?Q?EL04WRsnjm+bcYSrjlz/ewVjRpTqhfLerhqLFw9MNXBJgztdHHy0KRKPelV+?=
+ =?us-ascii?Q?J8hL50JSFjDTn90+s6NGm/i6y8rB8WE87zbCt7DpnPAZwPXhdsOvGoZdRtye?=
+ =?us-ascii?Q?L0Ux6nX1AnhowTv6cH1J1ybN/BklCIrZL42pR6kWUpS7zoRAzUaXEFs7C9M0?=
+ =?us-ascii?Q?O/46X83lti74SI5gU8+itvo7Dh2JEb0aezwZVNr8nH8l3wdVpewwwnTazltY?=
+ =?us-ascii?Q?CadFp0Nb46X9Y0hfsFz9gVxpZf4xjWfF7pG8JTCTeqqyPdzCYEdQqLKvCPix?=
+ =?us-ascii?Q?E9j1FMQ7SHpNRyUFqzY5SsNOapqTgOnBqGjwISIqxGd1Qf32drNfsg90JLok?=
+ =?us-ascii?Q?voJMI42Forbr6Ncad2v4KeqJxfb7Lw+5mPQkOchtjdlaLkKELFx/z2diZaDT?=
+ =?us-ascii?Q?bB9AGvC1quY9Bw7FKWu5pc0ZuhREuW4IrPcZ4479GvqxVLbB9hpp/KvRMFyV?=
+ =?us-ascii?Q?/QosNR5iX3/N8LRhTlBqpPiolR8Bq3C59wJHhIpyq17h0N58KkBLdufAnARm?=
+ =?us-ascii?Q?t+5sa8h960W7DygafZnYSewlhnZbrkjFJLZ8JyAz1tRm2tJCjQPp9V584gmq?=
+ =?us-ascii?Q?HtWTsutoT4fPI1bQzTB7J4iavqT9/LSljgtQpUbVFnR/TTH360gsiD/Vl7cQ?=
+ =?us-ascii?Q?QUB6reUrtnTh6NGJLvsgUCQIIm43k5Zqm1/qPYfDdgsr9Sn9Bgnp3PjiiAqT?=
+ =?us-ascii?Q?QCutW4jeUVHurrksGnatbelSTTRfpAKvXpbyIOqW9VAC/lgn+rz0IAV7/RRh?=
+ =?us-ascii?Q?KKIfHdx8U5Iy5+8h1CEKFF83hCVU?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(82310400017)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 21:07:38.4797
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6eca8308-e7f9-4f70-45e7-08dc7f5a3490
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00020E64.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9172
 
-Hi Arnd,
+Align the whitespace so that future messages will also be better
+aligned.
 
-kernel test robot noticed the following build errors:
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+v1->v2:
+ * Add tag
+---
+ include/linux/psp-platform-access.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[auto build test ERROR on hid/for-next]
-[also build test ERROR on next-20240528]
-[cannot apply to linus/master v6.10-rc1]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Arnd-Bergmann/HID-intel-ish-hid-fix-endian-conversion/20240528-200100
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
-patch link:    https://lore.kernel.org/r/20240528115802.3122955-2-arnd%40kernel.org
-patch subject: [PATCH 2/2] HID: intel-ish-hid: fix endian-conversion
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240529/202405290420.DtwUdg3b-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240529/202405290420.DtwUdg3b-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405290420.DtwUdg3b-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/hid/intel-ish-hid/ishtp/loader.c: In function 'prepare_dma_bufs':
->> drivers/hid/intel-ish-hid/ishtp/loader.c:178:51: error: 'dma' undeclared (first use in this function); did you mean 'cma'?
-     178 |                                                  &dma, GFP_KERNEL);
-         |                                                   ^~~
-         |                                                   cma
-   drivers/hid/intel-ish-hid/ishtp/loader.c:178:51: note: each undeclared identifier is reported only once for each function it appears in
-
-
-vim +178 drivers/hid/intel-ish-hid/ishtp/loader.c
-
-   154	
-   155	/**
-   156	 * prepare_dma_bufs() - Prepare the DMA buffer for transferring firmware fragments
-   157	 * @dev: The ISHTP device
-   158	 * @ish_fw: The ISH firmware
-   159	 * @fragment: The ISHTP firmware fragment descriptor
-   160	 * @dma_bufs: The array of DMA fragment buffers
-   161	 * @fragment_size: The size of a single DMA fragment
-   162	 *
-   163	 * Return: 0 on success, negative error code on failure
-   164	 */
-   165	static int prepare_dma_bufs(struct ishtp_device *dev,
-   166				    const struct firmware *ish_fw,
-   167				    struct loader_xfer_dma_fragment *fragment,
-   168				    void **dma_bufs, u32 fragment_size, u32 fragment_count)
-   169	{
-   170		dma_addr_t dma_addr;
-   171		u32 offset = 0;
-   172		u32 length;
-   173		int i;
-   174	
-   175		for (i = 0; i < fragment->fragment_cnt && offset < ish_fw->size; i++) {
-   176			dma_bufs[i] = dma_alloc_coherent(dev->devc, fragment_size, &dma_addr, GFP_KERNEL);
-   177			dma_bufs[i] = dma_alloc_coherent(dev->devc, fragment_size,
- > 178							 &dma, GFP_KERNEL);
-   179			if (!dma_bufs[i])
-   180				return -ENOMEM;
-   181	
-   182			fragment->fragment_tbl[i].ddr_adrs = cpu_to_le64(dma_addr);
-   183	
-   184			memcpy(dma_bufs[i], ish_fw->data + offset, le32_to_cpu(fragment->fragment_tbl[i].length));
-   185			dma_wmb();
-   186			fragment->fragment_tbl[i].ddr_adrs = cpu_to_le64(dma);
-   187			length = clamp(ish_fw->size - offset, 0, fragment_size);
-   188			fragment->fragment_tbl[i].length = cpu_to_le32(length);
-   189			fragment->fragment_tbl[i].fw_off = cpu_to_le32(offset);
-   190	
-   191			offset += length;
-   192		}
-   193	
-   194		return 0;
-   195	}
-   196	
-
+diff --git a/include/linux/psp-platform-access.h b/include/linux/psp-platform-access.h
+index c1dc87fc536b..23893b33e48c 100644
+--- a/include/linux/psp-platform-access.h
++++ b/include/linux/psp-platform-access.h
+@@ -6,8 +6,8 @@
+ #include <linux/psp.h>
+ 
+ enum psp_platform_access_msg {
+-	PSP_CMD_NONE = 0x0,
+-	PSP_I2C_REQ_BUS_CMD = 0x64,
++	PSP_CMD_NONE			= 0x0,
++	PSP_I2C_REQ_BUS_CMD		= 0x64,
+ 	PSP_DYNAMIC_BOOST_GET_NONCE,
+ 	PSP_DYNAMIC_BOOST_SET_UID,
+ 	PSP_DYNAMIC_BOOST_GET_PARAMETER,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
