@@ -1,61 +1,38 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB3316FF36
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A465717106F;
+	Tue, 28 May 2024 14:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716906048; cv=none; b=fEv3lvyZYXeVUf0/F2cnn4ue4s5DtlrfRWrfAmG+operY4XimMmd/wGszQN6pzVOT5zwrJv0Q7nZl62Si7ai9D4djoH0K/KcSkvlyMExUnFyTGsYwWCL+kXdWvZEE7HTc73K62j5SVwF0WTd36D3w6S27rJnuMW9xxN59tHnGOE=
+	t=1716906050; cv=none; b=BfkxKWPvJ/WwLvmbDRD4zkG4oiC9dagvu9aunYytnGoM7E+4ZdKftNRi+ECh7gsPKbVBAQ1IfTOdb62/g9WD4xqFWSqfyWq28Jh/8LhWGo/riJwQKG1bvIUO9N4iMhtr/RT2GH0fAEFViwjyhZM40QnmTEEks2wMRT3oJnRo3BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716906048; c=relaxed/simple;
-	bh=QF68x+vMZHjMq9zYLgUVSZ+b3LIpttZDV0zyyy/wbQU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gFUgY4FK3z28JaD4o7KtHdqtr57t3o5AwOBdFcga/j0CzUG90kOvF6fQsAddKvZRGV0B5LQa4Oz33sfJByR/99K1wl7sx8fDRZsE58mh5XkWN9ehFEjddkXsb60wlMYhYXyOwRSBYhO7ZLxdMKn/MlAy9vL9d8sW3tmVgAdiH/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qLafSer+; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1716906050; c=relaxed/simple;
+	bh=ckK8HV/PJ4m/OmbtPxcBWpY4ly7ROI74ua0Gl+Joj7Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ghmsYqpmbTExnyGg9MCgEq2P2jI/xBjNxcR3ZL0UmYTZ1F1jhPLRexvRffoQDXI++5t3jAwI/DprafwLIhW1R4Z4InqAnu5GlGM/f1VvWQ9kpQFZxXEjII0j47g2hriynW7cz7UT5CYTDOdjiPWRSMZxOJqe6XT7JmloB6tAUCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YARx4o7q; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qLafSer+"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42101a2ac2cso7092245e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:20:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716906042; x=1717510842; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dZh5j2uCvXBtaNyL3cov+Xu0A8wLUMvvdwWCENNHfqE=;
-        b=qLafSer+PR7Q/A7HSmKK+UZMfpeEjtQDMMIF1OWU5jI6XJggDNZJoTmiB0nhDsSbZP
-         u832eM9Vj+weTF/UauxJD8REMBrr+EwuQuqd+dn7X9oRIwmolIUgY+xqsoSDq2H1fgvZ
-         +Y4epO8lw7QFKG+DwgFN7Rpybu1p7ddpVyUyKgBM6iEndooZgfwEJ/OdyP1gcrNrGl+Z
-         wlIjAmv6HtC8xL8ykIC4WYXkw9y35yMNf+ffu3al8oZm5zsXWalpeg/YhNwPxVkLaZj/
-         /rdnDde2SYIgvQ0j71a+esiDdEmi2ri02gAL4/taggBnHa6Ajw1FOy+aXpFH7W+cHcMN
-         yZng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716906042; x=1717510842;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dZh5j2uCvXBtaNyL3cov+Xu0A8wLUMvvdwWCENNHfqE=;
-        b=YEvg7ZBNS/50Bi2BLcF5LGBJ9dYuncwXDBLKpckWI2IVmN3O1oCFtxEz19mnHzqdHI
-         NDHhei0PRkbAcV008MaB4iESTieqXvkWBGUBPomCxdcGEco7EDVagBv8EKX6TYa/2xeJ
-         zltqtCFm/8vRV+3Lj4rHpRXwpr9gXlKkQ11+S8lqpPcdgAbNhTBI0qNGjnkHVcJNMIx2
-         nRp8EYCwA09mqKlK8c5jp8og8UOfT61mSoCLqA5RR2uENq+LTfEjL62tssve/Y9L3EfA
-         UYdwG1yAALSH2Vm5fSbj+PZ/yadb2h5LbSJmj/OcDNN1Y7Og0GmUdB1jO2QF0Za5oS4d
-         mfIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcd6M4E1cyoeAX1GQiGeQcplBJnRbfQDvcMFu9q7BsQWEj3VarT6L9jBzRyErVm8vlXOmqdBQof8i18EEpqV4GdYKh+CdS2X/0eG6J
-X-Gm-Message-State: AOJu0Yyj5E0ydDNRwZRCXPnLzXH6Lw1GgV3d/YESfsC3JHoHsw9Z+He8
-	zlhaVbH6WVNVQa6892bSplgCYMWJNnXUGRWzbkSCx73t2elY4tpIGEWw0h2d3Ws=
-X-Google-Smtp-Source: AGHT+IGnnuc64zTUf2E/L2uG0lvJ7iB0PRLj/xKheGG/foJ6wTIRxnf1Dapre87VE1Tlaab0q8TSIQ==
-X-Received: by 2002:a05:6000:1188:b0:356:50e7:e942 with SMTP id ffacd0b85a97d-35650e7eda5mr7250240f8f.61.1716906041995;
-        Tue, 28 May 2024 07:20:41 -0700 (PDT)
-Received: from [192.168.1.63] ([2a02:842a:d52e:6101:6fd0:6c4:5d68:f0a5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7db5esm11999275f8f.15.2024.05.28.07.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 07:20:41 -0700 (PDT)
-From: Julien Stephan <jstephan@baylibre.com>
-Date: Tue, 28 May 2024 16:20:32 +0200
-Subject: [PATCH v7 5/7] iio: adc: ad7380: prepare for parts with more
- channels
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YARx4o7q"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8C7BE24000B;
+	Tue, 28 May 2024 14:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716906044;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rcyQBhDqTkZo84eopnmm/cwcP4P/TkQC4sy913CIbEE=;
+	b=YARx4o7qJJytCR2QCrHYofS8SrVdgZB0rLESOVPUdLQSgYlhZY1DnRdzn7mNB5wlAy5N5z
+	GoyHLexz/t/I7kU6XLxln+czq7VRQrHPyl+HtWou1xajI7IhQ5dw0uZCBlKIg/Y6Su15Ax
+	qxzW/izSminS4TFc0b5867IS/Ohp1LiHvja+TRYxlUJZcCGYOLf8FfDcsAsIIrtxMSB9My
+	zGNiZiFV9BTWB85xjh3IVa3YnB0ZaS3w6LZn4psEWo1gYg3j2w2HsXmjP6fPiWKbAoUVne
+	C56a/qGKkS0jHBRVGhinmG29Q9Awag2y4UiMCCfm//p6iqYHvlCIS07LFmHHzg==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Subject: [PATCH wireless 0/3] wifi: wilc1000: revert SRCU to RCU conversion
+ series
+Date: Tue, 28 May 2024 16:20:27 +0200
+Message-Id: <20240528-wilc_revert_srcu_to_rcu-v1-0-bce096e0798c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,189 +40,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240528-adding-new-ad738x-driver-v7-5-4cd70a4c12c8@baylibre.com>
-References: <20240528-adding-new-ad738x-driver-v7-0-4cd70a4c12c8@baylibre.com>
-In-Reply-To: <20240528-adding-new-ad738x-driver-v7-0-4cd70a4c12c8@baylibre.com>
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- David Lechner <dlechner@baylibre.com>, Jonathan Cameron <jic23@kernel.org>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Julien Stephan <jstephan@baylibre.com>
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIACzoVWYC/x2MUQqEMAwFryL5tqDVuq5XESlSoxsQXRK1gnh3g
+ 1/DwLx3gSATCjTJBYwHCa2LSp4mEH79MqGhQR1sZsvM2dpEmoPXEnnzwmH32+oVxn1C1X/zoi5
+ KB7r+M450vs8tRGKcUQS6+34AybG6JXMAAAA=
+To: linux-wireless@vger.kernel.org
+Cc: Ajay Singh <ajay.kathat@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
 X-Mailer: b4 0.13.0
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-The current driver supports only parts with 2 channels.
-In order to prepare the support of new compatible ADCs with more
-channels, this commit:
-  - defines MAX_NUM_CHANNEL to specify the maximum number of
-    channels currently supported by the driver
-  - adds available_scan_mask member in ad7380_chip_info structure
-  - fixes spi xfer struct len depending on number of channels
-  - fixes scan_data.raw buffer size to handle more channels
-  - adds a timing specifications structure in ad7380_chip_info structure
+This series is a follow-up to the static analyzer warnings raised by Dan
+Carpenter ([1]), and the agreement to proceed with a revert ([2]) due to the
+difficulties involved in fixing the remaining issues.
 
-Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+The initial series aimed to simplify the driver by switching it to
+classical RCU, since there was no evidence of SRCU usage legitimity in it.
+The warnings raised after the merge are likely hinting at some technical
+constraints which eventually led to SRCU usage, so put it back.
+Additionally, the series adds some comments to document SRCU usage.
+
+Unfortunately the faulty series reached a tagged release, so this revert
+series targets the wireless tree (ie not the wireless-next).
+
+[1] https://lore.kernel.org/linux-wireless/3b46ec7c-baee-49fd-b760-3bc12fb12eaf@moroto.mountain/
+[2] https://lore.kernel.org/linux-wireless/878qzu8e4k.fsf@kernel.org/
+
 ---
- drivers/iio/adc/ad7380.c | 43 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 10 deletions(-)
+Alexis Lothoré (3):
+      Revert "wifi: wilc1000: convert list management to RCU"
+      Revert "wifi: wilc1000: set atomic flag on kmemdup in srcu critical section"
+      wifi: wilc1000: document SRCU usage instead of SRCU
 
-diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-index 4ad283cf970d..790d08c90ad0 100644
---- a/drivers/iio/adc/ad7380.c
-+++ b/drivers/iio/adc/ad7380.c
-@@ -27,6 +27,7 @@
- #include <linux/iio/trigger_consumer.h>
- #include <linux/iio/triggered_buffer.h>
- 
-+#define MAX_NUM_CHANNELS		2
- /* 2.5V internal reference voltage */
- #define AD7380_INTERNAL_REF_MV		2500
- 
-@@ -63,12 +64,19 @@
- #define AD7380_ALERT_LOW_TH		GENMASK(11, 0)
- #define AD7380_ALERT_HIGH_TH		GENMASK(11, 0)
- 
-+#define T_CONVERT_NS 190		/* conversion time */
-+struct ad7380_timing_specs {
-+	const unsigned int t_csh_ns;	/* CS minimum high time */
-+};
-+
- struct ad7380_chip_info {
- 	const char *name;
- 	const struct iio_chan_spec *channels;
- 	unsigned int num_channels;
- 	const char * const *vcm_supplies;
- 	unsigned int num_vcm_supplies;
-+	const unsigned long *available_scan_masks;
-+	const struct ad7380_timing_specs *timing_specs;
- };
- 
- #define AD7380_CHANNEL(index, bits, diff) {			\
-@@ -113,16 +121,24 @@ static const unsigned long ad7380_2_channel_scan_masks[] = {
- 	0
- };
- 
-+static const struct ad7380_timing_specs ad7380_timing = {
-+	.t_csh_ns = 10,
-+};
-+
- static const struct ad7380_chip_info ad7380_chip_info = {
- 	.name = "ad7380",
- 	.channels = ad7380_channels,
- 	.num_channels = ARRAY_SIZE(ad7380_channels),
-+	.available_scan_masks = ad7380_2_channel_scan_masks,
-+	.timing_specs = &ad7380_timing,
- };
- 
- static const struct ad7380_chip_info ad7381_chip_info = {
- 	.name = "ad7381",
- 	.channels = ad7381_channels,
- 	.num_channels = ARRAY_SIZE(ad7381_channels),
-+	.available_scan_masks = ad7380_2_channel_scan_masks,
-+	.timing_specs = &ad7380_timing,
- };
- 
- static const struct ad7380_chip_info ad7383_chip_info = {
-@@ -131,6 +147,8 @@ static const struct ad7380_chip_info ad7383_chip_info = {
- 	.num_channels = ARRAY_SIZE(ad7383_channels),
- 	.vcm_supplies = ad7380_2_channel_vcm_supplies,
- 	.num_vcm_supplies = ARRAY_SIZE(ad7380_2_channel_vcm_supplies),
-+	.available_scan_masks = ad7380_2_channel_scan_masks,
-+	.timing_specs = &ad7380_timing,
- };
- 
- static const struct ad7380_chip_info ad7384_chip_info = {
-@@ -139,6 +157,8 @@ static const struct ad7380_chip_info ad7384_chip_info = {
- 	.num_channels = ARRAY_SIZE(ad7384_channels),
- 	.vcm_supplies = ad7380_2_channel_vcm_supplies,
- 	.num_vcm_supplies = ARRAY_SIZE(ad7380_2_channel_vcm_supplies),
-+	.available_scan_masks = ad7380_2_channel_scan_masks,
-+	.timing_specs = &ad7380_timing,
- };
- 
- struct ad7380_state {
-@@ -146,15 +166,16 @@ struct ad7380_state {
- 	struct spi_device *spi;
- 	struct regmap *regmap;
- 	unsigned int vref_mv;
--	unsigned int vcm_mv[2];
-+	unsigned int vcm_mv[MAX_NUM_CHANNELS];
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
- 	 * transfer buffers to live in their own cache lines.
--	 * Make the buffer large enough for 2 16-bit samples and one 64-bit
-+	 * Make the buffer large enough for MAX_NUM_CHANNELS 16-bit samples and one 64-bit
- 	 * aligned 64 bit timestamp.
-+	 * As MAX_NUM_CHANNELS is 2 the layout of the structure is the same for all parts
- 	 */
- 	struct {
--		u16 raw[2];
-+		u16 raw[MAX_NUM_CHANNELS];
- 
- 		s64 ts __aligned(8);
- 	} scan_data __aligned(IIO_DMA_MINALIGN);
-@@ -192,7 +213,7 @@ static int ad7380_regmap_reg_read(void *context, unsigned int reg,
- 			.tx_buf = &st->tx,
- 			.cs_change = 1,
- 			.cs_change_delay = {
--				.value = 10, /* t[CSH] */
-+				.value = st->chip_info->timing_specs->t_csh_ns,
- 				.unit = SPI_DELAY_UNIT_NSECS,
- 			},
- 		}, {
-@@ -247,7 +268,8 @@ static irqreturn_t ad7380_trigger_handler(int irq, void *p)
- 	struct ad7380_state *st = iio_priv(indio_dev);
- 	struct spi_transfer xfer = {
- 		.bits_per_word = st->chip_info->channels[0].scan_type.realbits,
--		.len = 4,
-+		.len = (st->chip_info->num_channels - 1) *
-+		       BITS_TO_BYTES(st->chip_info->channels->scan_type.storagebits),
- 		.rx_buf = st->scan_data.raw,
- 	};
- 	int ret;
-@@ -274,21 +296,22 @@ static int ad7380_read_direct(struct ad7380_state *st,
- 			.speed_hz = AD7380_REG_WR_SPEED_HZ,
- 			.bits_per_word = chan->scan_type.realbits,
- 			.delay = {
--				.value = 190, /* t[CONVERT] */
-+				.value = T_CONVERT_NS,
- 				.unit = SPI_DELAY_UNIT_NSECS,
- 			},
- 			.cs_change = 1,
- 			.cs_change_delay = {
--				.value = 10, /* t[CSH] */
-+				.value = st->chip_info->timing_specs->t_csh_ns,
- 				.unit = SPI_DELAY_UNIT_NSECS,
- 			},
- 		},
--		/* then read both channels */
-+		/* then read all channels */
- 		{
- 			.speed_hz = AD7380_REG_WR_SPEED_HZ,
- 			.bits_per_word = chan->scan_type.realbits,
- 			.rx_buf = st->scan_data.raw,
--			.len = 4,
-+			.len = (st->chip_info->num_channels - 1) *
-+			       ((chan->scan_type.storagebits > 16) ? 4 : 2),
- 		},
- 	};
- 	int ret;
-@@ -469,7 +492,7 @@ static int ad7380_probe(struct spi_device *spi)
- 	indio_dev->name = st->chip_info->name;
- 	indio_dev->info = &ad7380_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
--	indio_dev->available_scan_masks = ad7380_2_channel_scan_masks;
-+	indio_dev->available_scan_masks = st->chip_info->available_scan_masks;
- 
- 	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
- 					      iio_pollfunc_store_time,
+ drivers/net/wireless/microchip/wilc1000/cfg80211.c | 41 ++++++++++++---------
+ drivers/net/wireless/microchip/wilc1000/hif.c      | 17 +++++----
+ drivers/net/wireless/microchip/wilc1000/netdev.c   | 43 +++++++++++++---------
+ drivers/net/wireless/microchip/wilc1000/netdev.h   | 12 +++++-
+ drivers/net/wireless/microchip/wilc1000/wlan.c     |  5 ++-
+ 5 files changed, 72 insertions(+), 46 deletions(-)
+---
+base-commit: 7e81b62cfb9abdd8177606f7c79a0585503bd7ae
+change-id: 20240528-wilc_revert_srcu_to_rcu-57c6a9138345
 
+Best regards,
 -- 
-2.44.0
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
