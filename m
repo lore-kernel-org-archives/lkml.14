@@ -1,96 +1,88 @@
-Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC5A7316E
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B83F7316E
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716900575; cv=none; b=sMvY1kleL9PQr0tR5d28/2IlvNJhdLe+xyLc1RlgYLpz9kE2FcOg/c0pC/QN0mFaZDrNopGs3Fy2cIAyCnxqwbsVI0IED/Tdx8qZdVcTbydW2l3o/JqYiOxWBaeaOYdIi0FaMbxGMw9g8BC9OwVpmoylGuCEqTOHdlbsPIKZa00=
+	t=1716900613; cv=none; b=rg71ZCfVDE7rK7Hf5ipI99wzYN6mrCBtBthmh8/PXlmYEhIdQek6+Tv0VuL4MvvShSKqe73WN7kvYlLmPc85acnXekjd830CTXuvZtB8CHG8BzjRgmUMTsSDbsjizdfAq8vKYeWPiG6luG0NUj6puRCX2eoHpjJoT3kWz3az1oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716900575; c=relaxed/simple;
-	bh=eskFZzuz0sBw+qow+jUURiVDJ/Ihsw3DjEQhU+Dwx+U=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=XRKaHKUV8uY74Zy/dCCzElu8l3oy+8dg7ulfViyguvYMqlIj3bhSCPd2QK35QeiLivE4A9ZhLrJcJNCO+LTx2BfDJcmSAWTxqYrFwsuYwqDYKo8E6jNb1mmC2s4UhCt8i8g44vhrAxB9feAI9yyEbraaxtweYypspOmJ+3pNLEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cfWiiXfu; arc=none smtp.client-ip=203.205.221.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cfWiiXfu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1716900563; bh=4X+71YgTs5RtTppyyiiPJcwtubGMqCcsHi1CEdzzrf8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cfWiiXfuJZrUG7kSjdNI6tDXqDVR/kbMP1ZqWHpZs0Qlvgu/RBAA8YSE+WYkPVDum
-	 /LJ/vf691TPep20cXJ0JL3gi8UKvsF/XXkLru29jbY2wdqJ5x/2XRbr2PlSLq+UUQZ
-	 iDVDGnVDVgzz63nsoYOvOfNVa9uoxj0AYmWWp2DE=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 734BD064; Tue, 28 May 2024 20:28:52 +0800
-X-QQ-mid: xmsmtpt1716899332tz6r2oqqd
-Message-ID: <tencent_9FA58DAAA5CF0D8B9250DDB2DDF4192FCF07@qq.com>
-X-QQ-XMAILINFO: MmPNY57tR1Xn1VYbDdYGMPX+WEO97G8eisA7LlPfqrz6o2XabzF3LLjtA4cueX
-	 Ruj8yLnj+hD5WrPYxdtbvR8FZ5GWGXe2D+13/qe6gd/jsOt3zKHV8G6SnnGKwQRaqno7JQlbnAIA
-	 TA3//bFXYzkV2Tev8ToHGXMqPbrGvWaJtMyv5gh9hW79tlQxQr3hUWtCIqLS/8Z0X5DdN5fWHtsc
-	 ObP+miZ1G5xVxzTVNANPYIVxsXqJHQpV+bmadvkwmg9o93zHbrxuEH0skcAcKlDcjmS1sWCt131p
-	 A6xhzvz+qE6pY/DMBJsdw8TBeYTaQol1Ur25uo/5A0QVOTSF65VYFlPvZQ4hAex2hhrhXi/S7mYt
-	 KFJ8e9Pn8a7MXDdEDmkO8uRIdHRdksHGjpzqf1bS9a7vXxjn+x4Ldwc5yVVx6JOgw37x+FYvKxo7
-	 7TEpp5fxRi/JStwjtLyczhVdUuKTeTspKD30Vfav6Znbh+Zhc30IJ/sC6xj/ETSW6uPvPzlK3ZpC
-	 Es9D13OSU1jB+UqXC26cjQPVevIO2xRyJdEde/yS82cwIFCjxOHHq41M/2EzIMz+9G37gL+lzCt9
-	 Y/AU1f0+4n4Mp5kRVdN8r0lpAONy+74B3ogfYB/a+/lsYClF49mLmqqjsrduzu1i11k0gBpYNlja
-	 J9JxuJqhyXkPD003jPZJYrk2nsw2vjBAGS2CClYKHSUjA6kFnpo55b9EH37FrUfPdQaXvpfyqhcY
-	 4XuxkJH16C9onCNBGQc3A2PZVxzsTvWda8VcGPG8EWrqAhkvni9J49JpeLCFiUp4NfRgND7rs8kJ
-	 aI4E1rtPPIijW8UtxQ4lcgkQkHVKhwrzUw2+DPAHWs+CfYM33FT/gUWiG+ev1SmCG6Pay7YyDo3w
-	 RDwQkqB5uWDGfy+mkZcwFbYR+7O5Fj/kf8F0tZWSy7AoQSl0WAtZUg64CMIdczFtzUMUQIAHgPfo
-	 ET4gcldK0=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+07762f019fd03d01f04c@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [input?] [usb?] KMSAN: uninit-value in asus_report_fixup
-Date: Tue, 28 May 2024 20:28:53 +0800
-X-OQ-MSGID: <20240528122852.1885479-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000915d550619389e8a@google.com>
-References: <000000000000915d550619389e8a@google.com>
+	s=arc-20240116; t=1716900613; c=relaxed/simple;
+	bh=IjmXFRto6+7z1Ill5fyeKjBggFVRl5YBHK585e6b8Ic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WgddQjZPwobMwPV0HDWYD4mjo3m7l2KYP4ymUbOtgen3J4+8Qw3y3cpFDYMtVhGgQUCxpwcO4pLeNKpuM4EtezqzanKzqoel3iaBv2uMEdyrdo7wiOl2giV44PE1ABh4YxPewV8C1jxZDUbaoL8J0d5Jg7vbPp7/PQe873XRhM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4VpX3J0tmFz9v7Hm
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 20:32:44 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 6A9A01404F7
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 20:49:55 +0800 (CST)
+Received: from [10.206.134.102] (unknown [10.206.134.102])
+	by APP2 (Coremail) with SMTP id GxC2BwDXwibl0lVm5WURCQ--.44389S2;
+	Tue, 28 May 2024 13:49:54 +0100 (CET)
+Message-ID: <dbcecf28-98e8-4f7e-957b-e73a4d811051@huaweicloud.com>
+Date: Tue, 28 May 2024 14:49:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH 4/4] tools/memory-model: Distinguish between
+ syntactic and semantic tags
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: paulmck@kernel.org, parri.andrea@gmail.com, will@kernel.org,
+ peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+ dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+ akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
+ urezki@gmail.com, quic_neeraju@quicinc.com, frederic@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240527152253.195956-1-jonas.oberhauser@huaweicloud.com>
+ <20240527152253.195956-5-jonas.oberhauser@huaweicloud.com>
+ <5ce0c8a3-bd9c-475a-9427-7edef47a90f2@rowland.harvard.edu>
+From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+In-Reply-To: <5ce0c8a3-bd9c-475a-9427-7edef47a90f2@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:GxC2BwDXwibl0lVm5WURCQ--.44389S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYU7kC6x804xWl14x267AKxVW5JVWrJwAF
+	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjc
+	xK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY
+	04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFDGOUU
+	UUU
+X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
 
-please test uv asus_report_fixup
+>> +let Mb = MB \ FailedRMW
+>> >>   (* Compute marked and plain memory accesses *)
+>> -let Marked = (~M) | IW | Once | Release | Acquire | domain(rmw) | range(rmw) |
+>> +let Marked = (~M) | IW | ONCE | RELEASE | ACQUIRE | MB | domain(rmw) | range(rmw) |
+> 
+> The new MB term isn't needed, because MB tags on memory accesses are
+> filtered out unless the access also belongs to domain(rmw) | range(rmw).
+> 
+> Alan
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 70ec81c2e2b4
 
-diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 02de2bf4f790..1a92392967fc 100644
---- a/drivers/hid/hid-asus.c
-+++ b/drivers/hid/hid-asus.c
-@@ -1204,8 +1204,9 @@ static __u8 *asus_report_fixup(struct hid_device *hdev, __u8 *rdesc,
- 	}
- 
- 	/* match many more n-key devices */
--	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
--		for (int i = 0; i < *rsize + 1; i++) {
-+	printk("rdesc: %c.%c.%c.%c.%c, %s\n", rdesc[0], rdesc[1], rdesc[2], rdesc[3], rdesc[4], __func__);
-+	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && *rsize > 15) {
-+		for (int i = 0; i < *rsize - 14; i++) {
- 			/* offset to the count from 0x5a report part always 14 */
- 			if (rdesc[i] == 0x85 && rdesc[i + 1] == 0x5a &&
- 			    rdesc[i + 14] == 0x95 && rdesc[i + 15] == 0x05) {
-diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-index a90ed2ceae84..9f0e09f667b1 100644
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -1029,7 +1029,7 @@ static int usbhid_parse(struct hid_device *hid)
- 		return -EINVAL;
- 	}
- 
--	rdesc = kmalloc(rsize, GFP_KERNEL);
-+	rdesc = kzalloc(rsize, GFP_KERNEL);
- 	if (!rdesc)
- 		return -ENOMEM;
- 
+Thanks for all the notes.
+I think on this one is needed though under the assumption that herd7 
+would no longer know internally to replace the MB with ONCE in case
+of failure.
+
+
+best wishes,
+
+   jonas
 
