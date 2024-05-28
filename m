@@ -1,57 +1,57 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7173F9DA;
-	Tue, 28 May 2024 00:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E012B17C6A;
+	Tue, 28 May 2024 00:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716857817; cv=none; b=ks/13UClbELNVDAT7v0k/CRcdbSGBJgzPm1xShf1nWy49qeMez1pZryLEGfhrBZhLswy7t82u4Qsq+lPSNbKwfskVP5Eq9iE/RCsvmCA8uQbKKNklfjfyk9jOmbRBgKRXETEJUClcCO/+OElpokHJGR/MvK30HDUorJaAsYOpCs=
+	t=1716857819; cv=none; b=uR+OG2xJWrYiB9qPfy0qk+mXHuU3j4I9hAgt3NjZgyTMAzHzpauZXONImIoPeCPbmSRWSY8st/Tjk9QINUc6YvPk8x6qI3efbM9eKBtiJi+BZ4LVIimMyJfcCLF0/m8KQAl4d551D+9HU7BhUlxVhDVUaL1uoDfUhMTkSDmY33A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716857817; c=relaxed/simple;
-	bh=7qVS8UMxVpau1VYoGwb9XSPupJnuEqyN9rb8Est3678=;
+	s=arc-20240116; t=1716857819; c=relaxed/simple;
+	bh=XviXIO66hJ4gYGo+wTqmxQ6eYLtqNAT+9ea+NoAhLJM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J9GfUjKnd1aB9eI1sh216fEIvfey3l0YfLmAZ0ryAWLZeG9KwP9R6zJ7mNXEMlmOUA5lfe4FuKPx9/Nlacj4MgmAQy6n6lDfDnH6lP7t1HtQPUjz4QpJCkOCB5NIYn+AGqGAbyK6xsREY+0TAacv1t1J5RbhDu4ubh3uUtFbj5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9xJIXQY; arc=none smtp.client-ip=209.85.128.172
+	 MIME-Version; b=SEgcHXvBID6LkGETY4wei+56AGbB5nlH7XqfJPN7Y55gts9pjC+0x11e+9PhijTlFvr1y5IXCThxgKxZkPj5+7J1y1fMOMFmKA6GulUauBjjbhI1DEM/zSnPhsGZ+On8EieJ8DHNeUu9T+Jk1XTOWJy73xW6sO4a7S3YWcjSpmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mBtBabPw; arc=none smtp.client-ip=209.85.128.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9xJIXQY"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62a0894f1d3so23278077b3.1;
-        Mon, 27 May 2024 17:56:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBtBabPw"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-62a0849f5a8so2825347b3.2;
+        Mon, 27 May 2024 17:56:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716857815; x=1717462615; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716857817; x=1717462617; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CnYdPTK2hjdSIrEV7sBehdeTDvZ879lf0pp/n//Br14=;
-        b=H9xJIXQYrS4535eHlqyht8GiXHWGuIwjWTFnKps2FS2fnYoaSMteRIwXUkVe3/upIp
-         Kxw1ua11A7KgJ5cAX42yIXarjYDL8yb28XlAI/MqVZqKGJM5mOMsVxWqkrE4vBy8KJiK
-         ijbddo3sNRSH0+ZM6UFRQ5yXO4h+VXWdkhozC9mL0TDVlwxTYmNfIs9TM3gth82FHMKk
-         W9wwjKGv1uLoEuVbEPT7dDHFLAuIm6PaLlmSQkCy0oK7MndwOhN5CNsnfw6QGMPYY6op
-         uoaudecc/9ESZAXoIQgwF7vlPU/Xj1KzXfvcMnrmtpB1Y1aFrVPDEOGKCiDTR7uLcxzc
-         Z/nQ==
+        bh=qHGYk8qXYj5JTpHSzZERaVZ+nE3cg/cmKUns2Hgwu4w=;
+        b=mBtBabPwcHHow5qM7+rnmnXOuGMct9bPRB7oHcQwn6bkhKR8cQYZkLRbRAASSdAdIp
+         LDn6eE0fmtU7Xpbhk01KfObx+NNOnMMIa9f50AFdU5qGq8IztjdzzKI4FTCjaXYbXbDH
+         new4zXe1p/FRUML1Hu77YsONaBlCNEWueSvOeu0QafxuRb/g8z7g10/kF7C831hC6P/V
+         BI9476ZmNLrT0ifMrNtP5Ut0oVxhqo9oHcdhP0S808Cp9dyRRNVKHf74VDWT7Ys+CRfW
+         FCA9hiPbyiiLcM9os1z140eeJNacfSMi7LVrmUebkrbAw3aERV170an6+dTedjFe2urX
+         V67w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716857815; x=1717462615;
+        d=1e100.net; s=20230601; t=1716857817; x=1717462617;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CnYdPTK2hjdSIrEV7sBehdeTDvZ879lf0pp/n//Br14=;
-        b=UtyL6l/SuKCYunCFSfpeZW610E5UTJpf8CCbMfAeY3lT72Hv27kbepb5knlCwB4N4p
-         0g8bXcdMD/GrRgE5S730Zl++ZF6vubtRyA+z1kZikfKwTyqHpS6uv/2i0bfqIwUY0+A2
-         UmdRhjPcD8Z0bkJLsg4eQn7s3thN/kOyTf+Y7dxJkGC/X82i3Xqa/EIlTKJATRB4XFbj
-         Pd8Kn9fYDdmtYSSszFuJVIyF1RkQ5RIMVKnrASrEdRmcWrE1DNvI63EkoBnl9OLfNkIB
-         Zh5TFtt10gJfZlCiYYd3RqM4dT59F28oSW6y5jwscCMx1bR7mhhBr/QLeUqCn/3W5sq9
-         HwJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXOkYEkakeG6Fo/WpS7sOpznOPc2x3se9gK8WbKcuqfhsH1UlTYfGw3hK0Z+04FTSFv757ZImpaP/SyN5EsiEPYW87K2omYRZwVlSocZdv4NGBtLYkMBMFa5lNU8YrESVCoJBTnqtMrMyOzNI2Nvax18DS2GZCC5kxzMy5n2DUQJQ==
-X-Gm-Message-State: AOJu0YwzVDuKsZeU0yWe1bjgrVdgaKmIg4grzdh4JkcpSJ2lOkIW5Pew
-	l70SEqTmnXuvjXP46u5GckEm35PyTSRL3bFBV9ff7P1drrR3ufPYvrz0uw==
-X-Google-Smtp-Source: AGHT+IGFLMTRC6NGdZAsWBDoDAamZt9sH7ju82xLanpo1xta++q9GRm1I/nDECPhqHpvKBSqNyQYiA==
-X-Received: by 2002:a05:690c:c99:b0:618:88d1:f15f with SMTP id 00721157ae682-627fb1ca4c5mr105218897b3.0.1716857814398;
-        Mon, 27 May 2024 17:56:54 -0700 (PDT)
+        bh=qHGYk8qXYj5JTpHSzZERaVZ+nE3cg/cmKUns2Hgwu4w=;
+        b=pDQ4VLf7Zf2VReTBj6q73lWSKtL6g8KRCAsgicjWSJvJcxJGwdp/py2onbrvxXcdj3
+         xn4na4Cp4ez1i8GGzCrwwyS9fC4nXvF1gdghyv8yOX3QAM3DhKBuFVfYli0Amm9cU5fc
+         vj+HK6ftvAyxIeX86VnQB2IF0modVAxTIu7F/6EBOrs6ZoBlDzYF1hRrjMHSju14bmt5
+         DM4mWRHycI7VZYfgM5eC6y46dThK5aSiucDb7vAc0hf8siT+xktmqxUzS2OW5fgr74tx
+         vqHNE37XZcIsZCrnLfOOyVdCcoE322V6a+z43wASypneTz9YEHdBP+BSSwBw4Jng/yoE
+         LgMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqBgd7m1RQlRMiUU2K6cQntA+F1ofruY7LRotfZOn61nn6+KVsozmQRqj3YeTbF78aaY/xMl0IsN9wix/OOcumvz4V5m25lMqKo9GJhDNPZbaB3ChqBM60DyyLYbJoWv4NvQBIF8ugIy7xFW1c7Ia2LrTIueau1czAZykDJDIV/A==
+X-Gm-Message-State: AOJu0YyJMuxevMiJZ2zFrqW3WMjhKcWxsGNOniXUrx8GS0WCMPlxuGNk
+	1I5HLkQJofUSjmhnOA/UI7E2KmoLebOuuokkj0fzt+f7hOLcNR5zLxhUMQ==
+X-Google-Smtp-Source: AGHT+IFQ1Cdt/C4ONuJ8/TbLF7uijtI1itlxg7F6r+jPWRUhsZaJ+tjQCHNvVKklYdjZsrys0pVIkA==
+X-Received: by 2002:a81:a052:0:b0:627:dfbd:89f with SMTP id 00721157ae682-62a08d291b9mr102632737b3.6.1716857816951;
+        Mon, 27 May 2024 17:56:56 -0700 (PDT)
 Received: from localhost ([2601:344:8301:57f0:35f3:16c3:302:8fdb])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a52eb60sm18506167b3.112.2024.05.27.17.56.53
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a4f0205sm18118607b3.84.2024.05.27.17.56.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 17:56:54 -0700 (PDT)
+        Mon, 27 May 2024 17:56:56 -0700 (PDT)
 From: Yury Norov <yury.norov@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	cgroups@vger.kernel.org,
@@ -79,11 +79,10 @@ Cc: Yury Norov <yury.norov@gmail.com>,
 	Ulf Hansson <ulf.hansson@linaro.org>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Viresh Kumar <viresh.kumar@linaro.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Yury Norov <yury.norov@nvidia.com>
-Subject: [PATCH 3/6] cpumask: split out include/linux/cpumask_types.h
-Date: Mon, 27 May 2024 17:56:45 -0700
-Message-Id: <20240528005648.182376-4-yury.norov@gmail.com>
+	Zefan Li <lizefan.x@bytedance.com>
+Subject: [PATCH 5/6] cpumask: cleanup core headers inclusion
+Date: Mon, 27 May 2024 17:56:47 -0700
+Message-Id: <20240528005648.182376-6-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240528005648.182376-1-yury.norov@gmail.com>
 References: <20240528005648.182376-1-yury.norov@gmail.com>
@@ -95,192 +94,142 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Yury Norov <yury.norov@nvidia.com>
-
-Many core headers, like sched.h, include cpumask.h mostly for struct cpumask
-and cpumask_var_t. Those are frequently used headers and shouldn't pull more
-than the bare minimum.
+Many core headers include cpumask.h for nothing. Drop it.
 
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- MAINTAINERS                   |  1 +
- include/linux/cpumask.h       | 56 +----------------------------
- include/linux/cpumask_types.h | 66 +++++++++++++++++++++++++++++++++++
- 3 files changed, 68 insertions(+), 55 deletions(-)
- create mode 100644 include/linux/cpumask_types.h
+ include/linux/cgroup.h      | 1 -
+ include/linux/cpu.h         | 1 -
+ include/linux/cpu_cooling.h | 1 -
+ include/linux/kernel_stat.h | 1 -
+ include/linux/node.h        | 1 -
+ include/linux/percpu.h      | 1 -
+ include/linux/profile.h     | 1 -
+ include/linux/rcupdate.h    | 1 -
+ include/linux/seq_file.h    | 1 -
+ include/linux/tracepoint.h  | 1 -
+ 10 files changed, 10 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6ae73aaee305..c4fa8f264156 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3731,6 +3731,7 @@ F:	include/linux/bitmap-str.h
- F:	include/linux/bitmap.h
- F:	include/linux/bits.h
- F:	include/linux/cpumask.h
-+F:	include/linux/cpumask_types.h
- F:	include/linux/find.h
- F:	include/linux/nodemask.h
- F:	include/linux/nodemask_types.h
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 18410acdbc9e..79262a9ef03b 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -9,25 +9,13 @@
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index 2150ca60394b..c60ba0ab1462 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -10,7 +10,6 @@
   */
- #include <linux/cleanup.h>
- #include <linux/kernel.h>
--#include <linux/threads.h>
- #include <linux/bitmap.h>
-+#include <linux/cpumask_types.h>
- #include <linux/atomic.h>
- #include <linux/bug.h>
- #include <linux/gfp_types.h>
- #include <linux/numa.h>
  
--/* Don't assign or return these: may not be this big! */
--typedef struct cpumask { DECLARE_BITMAP(bits, NR_CPUS); } cpumask_t;
--
--/**
-- * cpumask_bits - get the bits in a cpumask
-- * @maskp: the struct cpumask *
-- *
-- * You should only assume nr_cpu_ids bits of this mask are valid.  This is
-- * a macro so it's const-correct.
-- */
--#define cpumask_bits(maskp) ((maskp)->bits)
--
+ #include <linux/sched.h>
+-#include <linux/cpumask.h>
+ #include <linux/nodemask.h>
+ #include <linux/rculist.h>
+ #include <linux/cgroupstats.h>
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 861c3bfc5f17..ea6ac8f98e4a 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -16,7 +16,6 @@
+ 
+ #include <linux/node.h>
+ #include <linux/compiler.h>
+-#include <linux/cpumask.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/cpu_smt.h>
+ 
+diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
+index a3bdc8a98f2c..2c774fb3c091 100644
+--- a/include/linux/cpu_cooling.h
++++ b/include/linux/cpu_cooling.h
+@@ -15,7 +15,6 @@
+ 
+ #include <linux/of.h>
+ #include <linux/thermal.h>
+-#include <linux/cpumask.h>
+ 
+ struct cpufreq_policy;
+ 
+diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
+index 9c042c6384bb..b97ce2df376f 100644
+--- a/include/linux/kernel_stat.h
++++ b/include/linux/kernel_stat.h
+@@ -5,7 +5,6 @@
+ #include <linux/smp.h>
+ #include <linux/threads.h>
+ #include <linux/percpu.h>
+-#include <linux/cpumask.h>
+ #include <linux/interrupt.h>
+ #include <linux/sched.h>
+ #include <linux/vtime.h>
+diff --git a/include/linux/node.h b/include/linux/node.h
+index dfc004e4bee7..9a881c2208b3 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -16,7 +16,6 @@
+ #define _LINUX_NODE_H_
+ 
+ #include <linux/device.h>
+-#include <linux/cpumask.h>
+ #include <linux/list.h>
+ 
  /**
-  * cpumask_pr_args - printf args to output a cpumask
-  * @maskp: cpumask to be printed
-@@ -922,48 +910,7 @@ static inline unsigned int cpumask_size(void)
- 	return bitmap_size(large_cpumask_bits);
- }
+diff --git a/include/linux/percpu.h b/include/linux/percpu.h
+index 03053de557cf..4b2047b78b67 100644
+--- a/include/linux/percpu.h
++++ b/include/linux/percpu.h
+@@ -6,7 +6,6 @@
+ #include <linux/mmdebug.h>
+ #include <linux/preempt.h>
+ #include <linux/smp.h>
+-#include <linux/cpumask.h>
+ #include <linux/pfn.h>
+ #include <linux/init.h>
+ #include <linux/cleanup.h>
+diff --git a/include/linux/profile.h b/include/linux/profile.h
+index 04ae5ebcb637..2fb487f61d12 100644
+--- a/include/linux/profile.h
++++ b/include/linux/profile.h
+@@ -4,7 +4,6 @@
  
--/*
-- * cpumask_var_t: struct cpumask for stack usage.
-- *
-- * Oh, the wicked games we play!  In order to make kernel coding a
-- * little more difficult, we typedef cpumask_var_t to an array or a
-- * pointer: doing &mask on an array is a noop, so it still works.
-- *
-- * i.e.
-- *	cpumask_var_t tmpmask;
-- *	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
-- *		return -ENOMEM;
-- *
-- *	  ... use 'tmpmask' like a normal struct cpumask * ...
-- *
-- *	free_cpumask_var(tmpmask);
-- *
-- *
-- * However, one notable exception is there. alloc_cpumask_var() allocates
-- * only nr_cpumask_bits bits (in the other hand, real cpumask_t always has
-- * NR_CPUS bits). Therefore you don't have to dereference cpumask_var_t.
-- *
-- *	cpumask_var_t tmpmask;
-- *	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
-- *		return -ENOMEM;
-- *
-- *	var = *tmpmask;
-- *
-- * This code makes NR_CPUS length memcopy and brings to a memory corruption.
-- * cpumask_copy() provide safe copy functionality.
-- *
-- * Note that there is another evil here: If you define a cpumask_var_t
-- * as a percpu variable then the way to obtain the address of the cpumask
-- * structure differently influences what this_cpu_* operation needs to be
-- * used. Please use this_cpu_cpumask_var_t in those cases. The direct use
-- * of this_cpu_ptr() or this_cpu_read() will lead to failures when the
-- * other type of cpumask_var_t implementation is configured.
-- *
-- * Please also note that __cpumask_var_read_mostly can be used to declare
-- * a cpumask_var_t variable itself (not its content) as read mostly.
-- */
- #ifdef CONFIG_CPUMASK_OFFSTACK
--typedef struct cpumask *cpumask_var_t;
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+-#include <linux/cpumask.h>
+ #include <linux/cache.h>
  
- #define this_cpu_cpumask_var_ptr(x)	this_cpu_read(x)
- #define __cpumask_var_read_mostly	__read_mostly
-@@ -1010,7 +957,6 @@ static inline bool cpumask_available(cpumask_var_t mask)
- }
+ #include <asm/errno.h>
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index dfd2399f2cde..fb8ab4618d63 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -29,7 +29,6 @@
+ #include <linux/lockdep.h>
+ #include <linux/cleanup.h>
+ #include <asm/processor.h>
+-#include <linux/cpumask.h>
+ #include <linux/context_tracking_irq.h>
  
- #else
--typedef struct cpumask cpumask_var_t[1];
- 
- #define this_cpu_cpumask_var_ptr(x) this_cpu_ptr(x)
- #define __cpumask_var_read_mostly
-diff --git a/include/linux/cpumask_types.h b/include/linux/cpumask_types.h
-new file mode 100644
-index 000000000000..461ed1b6bcdb
---- /dev/null
-+++ b/include/linux/cpumask_types.h
-@@ -0,0 +1,66 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_CPUMASK_TYPES_H
-+#define __LINUX_CPUMASK_TYPES_H
-+
-+#include <linux/bitops.h>
-+#include <linux/threads.h>
-+
-+/* Don't assign or return these: may not be this big! */
-+typedef struct cpumask { DECLARE_BITMAP(bits, NR_CPUS); } cpumask_t;
-+
-+/**
-+ * cpumask_bits - get the bits in a cpumask
-+ * @maskp: the struct cpumask *
-+ *
-+ * You should only assume nr_cpu_ids bits of this mask are valid.  This is
-+ * a macro so it's const-correct.
-+ */
-+#define cpumask_bits(maskp) ((maskp)->bits)
-+
-+/*
-+ * cpumask_var_t: struct cpumask for stack usage.
-+ *
-+ * Oh, the wicked games we play!  In order to make kernel coding a
-+ * little more difficult, we typedef cpumask_var_t to an array or a
-+ * pointer: doing &mask on an array is a noop, so it still works.
-+ *
-+ * i.e.
-+ *	cpumask_var_t tmpmask;
-+ *	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
-+ *		return -ENOMEM;
-+ *
-+ *	  ... use 'tmpmask' like a normal struct cpumask * ...
-+ *
-+ *	free_cpumask_var(tmpmask);
-+ *
-+ *
-+ * However, one notable exception is there. alloc_cpumask_var() allocates
-+ * only nr_cpumask_bits bits (in the other hand, real cpumask_t always has
-+ * NR_CPUS bits). Therefore you don't have to dereference cpumask_var_t.
-+ *
-+ *	cpumask_var_t tmpmask;
-+ *	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
-+ *		return -ENOMEM;
-+ *
-+ *	var = *tmpmask;
-+ *
-+ * This code makes NR_CPUS length memcopy and brings to a memory corruption.
-+ * cpumask_copy() provide safe copy functionality.
-+ *
-+ * Note that there is another evil here: If you define a cpumask_var_t
-+ * as a percpu variable then the way to obtain the address of the cpumask
-+ * structure differently influences what this_cpu_* operation needs to be
-+ * used. Please use this_cpu_cpumask_var_t in those cases. The direct use
-+ * of this_cpu_ptr() or this_cpu_read() will lead to failures when the
-+ * other type of cpumask_var_t implementation is configured.
-+ *
-+ * Please also note that __cpumask_var_read_mostly can be used to declare
-+ * a cpumask_var_t variable itself (not its content) as read mostly.
-+ */
-+#ifdef CONFIG_CPUMASK_OFFSTACK
-+typedef struct cpumask *cpumask_var_t;
-+#else
-+typedef struct cpumask cpumask_var_t[1];
-+#endif /* CONFIG_CPUMASK_OFFSTACK */
-+
-+#endif /* __LINUX_CPUMASK_TYPES_H */
+ #define ULONG_CMP_GE(a, b)	(ULONG_MAX / 2 >= (a) - (b))
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index 8bd4fda6e027..2fb266ea69fa 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -7,7 +7,6 @@
+ #include <linux/string_helpers.h>
+ #include <linux/bug.h>
+ #include <linux/mutex.h>
+-#include <linux/cpumask.h>
+ #include <linux/nodemask.h>
+ #include <linux/fs.h>
+ #include <linux/cred.h>
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 689b6d71590e..6be396bb4297 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -16,7 +16,6 @@
+ #include <linux/srcu.h>
+ #include <linux/errno.h>
+ #include <linux/types.h>
+-#include <linux/cpumask.h>
+ #include <linux/rcupdate.h>
+ #include <linux/tracepoint-defs.h>
+ #include <linux/static_call.h>
 -- 
 2.40.1
 
