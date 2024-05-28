@@ -1,88 +1,83 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F03616ABC6;
-	Tue, 28 May 2024 10:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9517C16C6AC;
+	Tue, 28 May 2024 10:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716891886; cv=none; b=UYPT/bDPCA0/QZdazJiAfPyRF2izdmym93KMGdoT1wKQ36ZC7j0hYOuigVmrY+Y7nFnusTS2Cm2lR33ChB2JGSTh9fSA/UT3L8oiyGJntCWNKrZo24rhvlk1du2SMpWeLJyBcETFG6feUG/+C9VNllGzzbJK9xnNRHAskqeHkTo=
+	t=1716891891; cv=none; b=Bxvj4d4RPOj9xD4IrWt5lai+LXaBAei+TjL1898GIrsZnvGzVF3BqH3wJQTRi9LO3XAQY3ISa3+cRCYnxP7M3qdlih1pz3VLLRGaBOLvpDkdM3lgF8hE6voJTWfNfeXrmSXncITlJGiOdRa4B+SyOE64v1yZE4vxy3gZM+zyLMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716891886; c=relaxed/simple;
-	bh=D/i19GV6H88/mxlwtG4orLNiK9ojQnMQDqlOwTWuQU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OsRhKTv+aEvScPPqnmY79bvDzETwcjNeGmrPJ+6kE+Wa2hNptF03MRGOXELXAK3XP9iEznwY1zECidzUiDeguWCYq+6W9myVDXlf0xRLB9a5gM0YDZfvQwV+LeO2dyacHeGELfNtCQtgt8lCORbrD5lCMDhTU4J9wgmr4QfKkrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=gDfb6/La; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1716891891; c=relaxed/simple;
+	bh=eCwSK1GHrFnFt48tdaVfJXIdF4FWIhLcfBXFC1OraC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VVpj2pPss57uUex7FZNYvJyrunAiTYZM9akOHvuERHtIr3CN8V5qYRK0g2rZLWBo3t6tdPiotHmXf9PfyIIysiVogDEJP6+NNC5RmqikLdZC6k/18DtC3IdlUecPUtYonXbpU5cm+7rRgfw/nxGRW84NrUkCSX1qFrZps13eEjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=uXmoZx45; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gDfb6/La"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=O36LPsodbr+2D1LuW6n/mh2TD3fN2BTOqCrbAVe7KjQ=; b=gDfb6/LalxU55OpMYkI7ZZw5PA
-	pa6zDAdGyYDPpF4jr1O93jiILKaH6JB0fDzzYMMKoUz2JDGWJHsTVelvgnDjpcIhYRnFaQTHR0lrC
-	9YEaI3enubY6Aerfr5oFRqqGQZXkQAbjDJ2iirS1PX1GstNNEq4n6jF1q/KisjnxOw77yYlvXNSA+
-	I/nwWk+1JIT4hDHfREMujDorQqroyelNkYEtFLFzs86KcCPmBdetpOBeigq3A3AbtDU6jDmRSwO5z
-	+pjV1gqtMRhzuN/VKM1XN0QuKCtwU6+w8dig8X9OR9EG43+NDArukdzLifVQr8okHRnXuAo5V1f8L
-	snrqv0Rw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33096)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sBu0L-0004cr-1n;
-	Tue, 28 May 2024 11:24:29 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sBu0M-0003BW-RI; Tue, 28 May 2024 11:24:30 +0100
-Date: Tue, 28 May 2024 11:24:30 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org,
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net-next 1/3] net: stmmac: Prevent RGSMIIIS IRQs flood
-Message-ID: <ZlWw3hJdOARzdl2S@shell.armlinux.org.uk>
-References: <ZkDuJAx7atDXjf5m@shell.armlinux.org.uk>
- <20240524210304.9164-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uXmoZx45"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716891887;
+	bh=eCwSK1GHrFnFt48tdaVfJXIdF4FWIhLcfBXFC1OraC4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uXmoZx45jNRaFuP8GluwtX/dBcGxZBoC2sG3ztrO7Vw/mLyOgR6UHs5a39tVBZlII
+	 tjM15S11SxO8H3TJvsD6+Ut+EF5A3BM2RLN/3GySr33UwEqLb0DH+bSm9OtW2bwZHA
+	 ONOPOhmtKh8DTktxE/FsTqxmPJeVm6MBHGDwkenM9P9FvspUPB3kSMpokA5kqdtS7A
+	 xHSc80R/5YVbiW+DOYJ+5HEccTEXY+0rLu1ow14Qst+fqaeNEGn7iA4LEOg+joW6Re
+	 U2fA/SCgJqgv4hEz+heCV0YecgNueNj8a5r46HzdaJXIHE90lX7QeJNURxq0oM2/zN
+	 zarGK7OsgFw6g==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 962773782113;
+	Tue, 28 May 2024 10:24:46 +0000 (UTC)
+Message-ID: <26c862ec-1613-46fc-ba37-5649fd55e159@collabora.com>
+Date: Tue, 28 May 2024 12:24:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524210304.9164-1-fancer.lancer@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/8] mailbox: mtk-cmdq: Support GCE loop packets in
+ interrupt handler
+To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>,
+ Jassi Brar <jassisinghbrar@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+ Jason-ch Chen <jason-ch.chen@mediatek.com>,
+ Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
+ Shawn Sung <shawn.sung@mediatek.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, dri-devel@lists.freedesktop.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20240525230810.24623-1-jason-jh.lin@mediatek.com>
+ <20240525230810.24623-5-jason-jh.lin@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240525230810.24623-5-jason-jh.lin@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 25, 2024 at 12:02:57AM +0300, Serge Semin wrote:
-> Without reading the GMAC_RGSMIIIS/MAC_PHYIF_Control_Status the IRQ line
-> won't be de-asserted causing interrupt handler executed over and over. As
-> a quick-fix let's just dummy-read the CSR for now.
+Il 26/05/24 01:08, Jason-JH.Lin ha scritto:
+> 1. Add a loop flag for CMDQ packet struct.
+> CMDQ helper will use a loop flag to mark CMDQ packet as lopping command
+> and make current command buffer jumps to the beginning when GCE executes
+> to the end of command buffer.
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> 2. Add a looping task handle flow in irq handler.
+> GCE irq occurs when GCE executes to the end of command(EOC) instruction.
+> If the CMDQ packet is a loopping command, GCE irq handler can not
+> delete the CMDQ task and disable the GCE thread.
+> 
+> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+> Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-I think it would make sense to merge these into the patches that do the
-conversion to avoid a git bisect hitting on a patch that causes an
-interrupt storm. Any objection?
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-(I'm now converting these two in separate patches, so would need to
-split this patch...)
 
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
