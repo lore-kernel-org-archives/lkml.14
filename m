@@ -1,92 +1,85 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4BE16E894
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 13:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE4E1DFDE;
+	Tue, 28 May 2024 13:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716902913; cv=none; b=U37zfcrXkqMayB6nG1GMeLqIOZPEw4JlPVXBo5CYu4Hil2zL2o5Q3uG2Wy7Di0Wz6hsxEhfG89iKAM0Qflpo5DLwsSgaLm5aP2mEMdpVMVK9Ixhfvh5AqecleGURWzZu2lPTHxbf6pDULOu+93rw/z1Y1y+tiLC9FC+ooucPLik=
+	t=1716902947; cv=none; b=dFbU/CsdpgVsDjezpXmc85V8NEjr2El3yEczfuhpCpQWPUb2mkvETSN4oUbvZBoKMtuYlG4PkNkRsi2dkDoTcmJ+NOGIG304SrV23Lo9dg+rmdUwyK31pUjTvC7dQx+/dlFefQ8dUBCTWyeHogBzoGsL8ll2Qf72W+oEU/HUpjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716902913; c=relaxed/simple;
-	bh=PBBLOV4U2IFgFSKdFT4Y43aEoeT6Ow1hJwKRcZckZ7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AI/v1+qhLXZSuHiL+dI3xBlo+TPMGpfWeWQuCgJBQvseSJR18q4TPkptYonDvjLavklzumeDqABLo/yYA8MpnD5vBlPXSqKPFLTaqhjaiTWsNhoFGt5MPtAFuq6d+TUVwBWp/fOsLiRZSa1KnzT4cdMT5jyUMqLQ1ebwX4yTLCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Wm1QN3Ry; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1716902947; c=relaxed/simple;
+	bh=xyyTmTzN9d8hqo9iRE/ESmgFIUN4LB9umMa2nCS2waI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=F2PNTq0e9jfrXsytJRrAF8iN/7bX8xFfCZ8RNvFSeIpUmD3ymm1TaqvZ0B+URJ9kW2jQdYgFjPh2sgIprXRibTtUdiM8yAXZ47s7MxoKhR09QlrWiezPvZ2UI7UHb3xVOU8n1z/dULyAnPyb9M0dv301nrzVG7OvTcWQGMRgEyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3IC5dJR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Wm1QN3Ry"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6303e13ffeso98827166b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1716902910; x=1717507710; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PBBLOV4U2IFgFSKdFT4Y43aEoeT6Ow1hJwKRcZckZ7w=;
-        b=Wm1QN3RyfSowp3OP685y93x0QSYnT927aLF6A0cd+Dr/PPr3kY9GeQaKnWyWwIqKEi
-         kSOmSfvQGe/RlzTCV8BXz1hM78yQtJgcvRvsgU73ezbBBMY2GvU/lxelFVGj8Hm3F8R2
-         WtI+cRhoXatHfGMVm6zMu6kO2ofAGu6bZ0Hos=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716902910; x=1717507710;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PBBLOV4U2IFgFSKdFT4Y43aEoeT6Ow1hJwKRcZckZ7w=;
-        b=dSYmotZe+9AEa2T272aiRAJ0ef832bpaLkPP8yPJ4fabgzb58+gLDD+wNGHXHH5gBV
-         yzvcpsFhRXBILaPJ2JENH0uGLNZ+seDFWKz5G32YllyCaHseGAPBLf/VHN9km9kyqqAN
-         Vd3Ng1Jo4EcboSNFnXCK4y97rdFq1IqvSlmcnTUC/2hKmbmu89774X+IegEDRjhVffWv
-         AGG0EaNS7Y1CPATCOwC39C01UuXuJZgDvlewQ2R5DdDza+H3oJqOh4zM5i35swN9aFMJ
-         x5dDBezj9TuktDQU4UCCJSguVDhnRfwkwsOUgQC5rtgm/t4G0JHDn5sqVRjxaIqXPgrX
-         M+8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWGtz0CWQAvHReEdLkxme5E56XqhF4VXLkblX/dFriFr3SFmvt9nBD0eH7K3P9t+SP1UFNODucV5atLA3d+H+fdb0lS2gzPwGcEG+w9
-X-Gm-Message-State: AOJu0YyckyenYVku1cXdSqJmHfxltdlG4+di6yno50YmFuo3DLYpdDpi
-	PZLqqD6XgP4FkxLEG/yjBpgX6yVEbGdEng1d89TAdvx3EzYnS30O0Gpq9G52W1m6cXO3t9D39iC
-	6SBzBpAeRiikE2KmY59W9mJLgeLWGfdLhS0NsBQ==
-X-Google-Smtp-Source: AGHT+IET1YleTWVR5AXg8CRN1Esbkyz90K8kriJOg4HbyfAsDwmoVK/cGg98h3bhg32ByJBXHFEIavMxNd8QwGr8f7g=
-X-Received: by 2002:a17:906:788:b0:a59:adf8:a6e1 with SMTP id
- a640c23a62f3a-a62651144f1mr794014566b.47.1716902909983; Tue, 28 May 2024
- 06:28:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3IC5dJR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7143BC3277B;
+	Tue, 28 May 2024 13:29:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716902946;
+	bh=xyyTmTzN9d8hqo9iRE/ESmgFIUN4LB9umMa2nCS2waI=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=H3IC5dJRl7xG89iDpASrt8tZba/beNU9g20FeAZl2g/h0uH/mKw9uPEYDp37YBLQ8
+	 uHU9vl7Ou4ioTe0i2hq1xTz2WZ3rRXbyelwyvS9HxMftlXDkpwaM6Zwa3segTW6IU2
+	 YQ8m4cBvkljr5eFAVfeEuA0y4CKrdma+12FNxhFSAjldN5HnM3mOhYecpZwHCAZiJ9
+	 cN/5JZsLtPVDyT9p5vZaxAX3C/9ryOZUsqyG4ksR57pFiBtyhtK1byVx0eAdSG8VZQ
+	 9hXPyYtz0YO9uQO4fWwVXB5xA6KHbq/OUOpnKv4AVm/rIj0UEVBlbYUHxEJZgsTbSX
+	 HnmVMh5IiRMNQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <ZlMADupKkN0ITgG5@infradead.org> <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
- <ZlRy7EBaV04F2UaI@infradead.org> <20240527133430.ifjo2kksoehtuwrn@quack3>
- <ZlSzotIrVPGrC6vt@infradead.org> <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
- <ZlWVkJwwJ0-B-Zyl@infradead.org> <20240528-gesell-evakuieren-899c08cbfa06@brauner>
- <ZlW4IWMYxtwbeI7I@infradead.org> <20240528-gipfel-dilemma-948a590a36fd@brauner>
- <ZlXaj9Qv0bm9PAjX@infradead.org>
-In-Reply-To: <ZlXaj9Qv0bm9PAjX@infradead.org>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 28 May 2024 15:28:18 +0200
-Message-ID: <CAJfpegvznUGTYxxTzB5QQHWtNrCfSkWvGscacfZ67Gn+6XoD8w@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to name_to_handle_at(2)
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 28 May 2024 16:29:03 +0300
+Message-Id: <D1LBARSTFSFC.1DQSHTGGDL0C6@kernel.org>
+Cc: <linux-crypto@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] crypto: ecdsa: Fix the public key format description
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Stefan Berger"
+ <stefanb@linux.ibm.com>, "Herbert Xu" <herbert@gondor.apana.org.au>
+X-Mailer: aerc 0.17.0
+References: <20240527202840.4818-1-jarkko@kernel.org>
+ <D1KQDPOZRWCW.1763CCYF1B84X@kernel.org>
+ <D1KRILI1KRQ8.2CNPU7PFES0VI@kernel.org>
+ <D1KRXI87G4S0.1ROKTQENIZHT7@kernel.org>
+ <D1KS7LCALKD4.1J13QGYGZ6LBW@kernel.org>
+ <D1KSLKGUWGFO.21T4OBXQQ88D@kernel.org>
+ <D1KSSWD7FA94.5705Z3J7LKZA@kernel.org>
+ <b5ff9003-065f-437f-bf6b-7f1ae0a0364a@linux.ibm.com>
+ <D1LB8PVCTP1S.JDCEWNODTGTQ@kernel.org>
+In-Reply-To: <D1LB8PVCTP1S.JDCEWNODTGTQ@kernel.org>
 
-On Tue, 28 May 2024 at 15:24, Christoph Hellwig <hch@infradead.org> wrote:
+On Tue May 28, 2024 at 4:26 PM EEST, Jarkko Sakkinen wrote:
+> On Tue May 28, 2024 at 3:37 PM EEST, Stefan Berger wrote:
+> >      Signature Value:
+> >          30:45:02:21:00:d9:d7:64:ba:5d:03:07:ee:20:a0:12:16:46:
+> >          31:e6:8e:66:0c:17:0d:74:07:87:58:5a:13:fc:14:62:98:9a:
+> >          99:02:20:59:ff:29:9c:52:b9:0a:35:3c:4b:03:bb:47:0e:c8:
+> >          3e:2d:cb:3e:1c:d3:51:88:91:b1:40:e3:03:86:1b:2a:e8
+> >
+> > 30:45 =3D> sequence containing 69 bytes
+> >    02:21: =3D> first coordinate with 0x21 bytes
+> >      00:d9 =3D> 0x21 bytes of ASN.1 integer with leading 0 to make the=
+=20
+> > following 0x20-byte integer a positive number (its most significant bit=
+=20
+> > is set).
+> >    02:20: =3D> int with 0x20 bytes
+> >     ...
 >
-> On Tue, May 28, 2024 at 02:04:16PM +0200, Christian Brauner wrote:
-> > Can you please explain how opening an fd based on a handle returned from
-> > name_to_handle_at() and not using a mount file descriptor for
-> > open_by_handle_at() would work?
+> This actually helped me located the bug in my code: I had 32 bytes for
+> the first one, with no leading zero. I.e. total length was off-by-one.
 >
-> Same as NFS file handles:
->
-> name_to_handle_at returns a handle that includes a file system
-> identifier.
->
-> open_by_handle_at looks up the superblock based on that identifier.
+> So I'll just extend either or both based on msb?=20
 
-The open file needs a specific mount, holding the superblock is not sufficient.
+Actually I use a patch that I made for early version:
 
-Thanks,
-Miklos
+https://lore.kernel.org/linux-integrity/20240521152659.26438-3-jarkko@kerne=
+l.org/
+
+BR, Jarkko
