@@ -1,74 +1,41 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3178616D9AA;
-	Tue, 28 May 2024 12:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB94116D33C
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716898326; cv=none; b=GA07f/jGJeGzzmt8iCqmwxm0/zsMaAzF6fg78x7dvLL8oIcmpKmBLHfGjPyHev+FeVNbJkrVN5h0iWFiRxgUXy2d04hGKcUpQZGA616t/wgAzJYTtqaha/9hBbepxPYAoar5Y0m8rLVavNZiPlrE+Ac0HeqdfCLeqnSxY1WnIb8=
+	t=1716898346; cv=none; b=deL399l3f9ymyot4fF8cTzu+Up+rThR10yTDO+UJoU9Ik7TcaNZsA3r6co6HhAe8FE7GnniuMIenTFOQsFKgEcHKeKizcJ7Aa5jDt9c7WuhRengFlVyq65GpJXHejoGYKSNjbrdDpCH0GtmYknIc9IXn7+sm/2N9Iatk6POJAjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716898326; c=relaxed/simple;
-	bh=/ipaOxFtBwyfIXHF4ggyxVFLnpuptNMK5y8P54jR0Og=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HzdldbCUs4yn1annbkDmSyQHW7vdeN3ay0BQvWGuOMTQ776mh8zMOwU8xXv8HeBUqHPT+WPWVxqSwsShSKf1KU8DzjPiStmoxHpjBEOe3ZUmE3ZRtBqzzEcZEQzEw8dIOf5hmxeKLB7+UQAur0onNBoV3AGiulO5s4jyWzLbPQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z8GNfx7j; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716898346; c=relaxed/simple;
+	bh=nGSDS9vGtseFAPoPz3Fk0zZfldajpInUYLkCfgbvaEM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SahsbbNPM2wK1v8i1k309TS0bScWoBZhldszLMf1vFClKO/PYh8j5008iOxA4SCUo0qDPdad5lYnV/kqnVlf8n2bk7gV/qfOmPKp8M72e3AHSTFRPCnImdYTW4QNIYzqaxPd7GRPm9VsmVT2kDXG0+xLaMOxNy6NDF70T9iGnPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzy07cQ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8GNfx7j"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4210aa00c94so4894675e9.1;
-        Tue, 28 May 2024 05:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716898323; x=1717503123; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UYZXJmyumgms+Q7J/J6ShT1VOA9/iNpIXyrtMkKuYf0=;
-        b=Z8GNfx7jTkXKBMrX6gen1AHHctHOrpsSTOsRT6cvFeZR7SfG3FmWeuVJU9tP+2VV3P
-         JX14QrOcXWHtGd4GBARqjJRZsACl2EIMn+H2S3ISPgrzPLt/rR/warsOc7nC+iQa5l6h
-         QPuYU85DZcJUlA89pUrE7pSKPhKS22MiKlEArwfuy/ToiL/DB2hOgpoQBScX3Zsc2c9T
-         cY9aA3HxOB397QuNEC23B39lBrZrhfSkaHTTRUjBLy/649rFkZa/ryQKjG22SLBQ1gIx
-         Hbr3xK3mIUzm9L33kqeHYrRi1tOwmaJbU3f1MO5y8Twx/8qGXidN9bSknwx6F5FymiFw
-         sB3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716898323; x=1717503123;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UYZXJmyumgms+Q7J/J6ShT1VOA9/iNpIXyrtMkKuYf0=;
-        b=rWmKBd93VlwlcQ1dag7c7DACBz5Y7K4HezNNeKJ1M06MVbk3TALtj4W5VunmPOjklj
-         hiK6Lyv79v3S+pHqOJm7y16LERPDdZY0wla7grOW09QqaCqlxmA/2MHjWC+5DVgAq9C9
-         TAKYoMfexD36uj5OAXVjHWH5ybH6ETsorQV0+tP449iwkqgxjczrc4QRXUsaCb/YOXwY
-         m67pUxa8AB+dDyrj2fW1vlctBsf1etdFP49l8d0UEVqHzxnSSFFQe0VeBd2lmgPXgRrQ
-         yjqAzvgj0ODZoncX1MZ+eCxm2iMetG6MjRMZkb/wW0Nvy4JQ401otjhnWrJsFtAhg/sf
-         2UvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUW/U40vt/T6joa3Gnpm75bsc1VprGChKSe8F+LFXPZjMD9iY5dY9sND01ZEz5Val2wGnw/GdTaprI5X2I87ESoJLaCYuA0Rirx7XBfZp323hjuitD8VI6mvFKko8/Q+DfCrR00hdtbAIuKWCcK
-X-Gm-Message-State: AOJu0Yz7fRA3HbPosOxLulFIb3/2VP5o71Qvji9bfBJ72D25976YMHoe
-	7BKhG/iftkkuxAKfUHRgR5iM0DCiQaXgffYSVtW82oWML+AbsqmgjUAKmg==
-X-Google-Smtp-Source: AGHT+IFT1iIJjlzSvoYUAMuY1FlDD6EgzXr3GmIMeE4KKsPkc5VuKSEc/7DWXt1hjPQOBYg9GyPeUw==
-X-Received: by 2002:a05:600c:ac9:b0:41a:fa9a:d86b with SMTP id 5b1f17b1804b1-421089d3390mr100343155e9.11.1716898323449;
-        Tue, 28 May 2024 05:12:03 -0700 (PDT)
-Received: from turbo.teknoraver.net (net-5-94-218-116.cust.vodafonedsl.it. [5.94.218.116])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100f69850sm168281625e9.26.2024.05.28.05.12.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 05:12:03 -0700 (PDT)
-From: Matteo Croce <technoboy85@gmail.com>
-X-Google-Original-From: Matteo Croce <teknoraver@meta.com>
-To: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH net-next 2/2] selftests: net: tests net.core.{r,w}mem_{default,max} sysctls in a netns
-Date: Tue, 28 May 2024 14:11:39 +0200
-Message-ID: <20240528121139.38035-3-teknoraver@meta.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240528121139.38035-1-teknoraver@meta.com>
-References: <20240528121139.38035-1-teknoraver@meta.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzy07cQ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C76CEC3277B;
+	Tue, 28 May 2024 12:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716898346;
+	bh=nGSDS9vGtseFAPoPz3Fk0zZfldajpInUYLkCfgbvaEM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dzy07cQ6ygCTD+N1vSU/vY2eUn2/YQlKAlP0GcykKFV41MLs52JD4E1BRuId25n+z
+	 4F/LsiZN8zzAK7e2pjg699/eF4ODp4G5w+Zl2iSMTzq3V2xanZPBYpPzRvoDkfPY4M
+	 L/n6RWwN7gyEpAGrfQdAgOa0sfgD+dLrn7Dg7iQ1mLhbCBgMBOL2WMOulCx1Z6ph2B
+	 OR2bnfMJxpYeA7pnQuTS7eELRvTdOxfR3qax8g4DDsNHlQHH6ZunjThZ7seAcMCojY
+	 5AbGnh61Yd7+ghwYfkBrXEeaPSVRR0Fwf7jDsSF/DUDiu9RRz7HYIhcQq4eRzZrzPK
+	 VIlEb14Yn55GA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Alina Yu <alina_yu@richtek.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: rtq2208: remove unused rtq2208_regulator_ldo_ops
+Date: Tue, 28 May 2024 14:12:13 +0200
+Message-Id: <20240528121222.3675312-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,49 +44,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a selftest which checks that the sysctl is present in a netns,
-that the value is read from the init one, and that it's readonly.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Matteo Croce <teknoraver@meta.com>
+After the recent rework, the structure is no longer referenced
+anywhere and causes a build time warning:
+
+drivers/regulator/rtq2208-regulator.c:222:35: error: 'rtq2208_regulator_ldo_ops' defined but not used [-Werror=unused-const-variable=]
+  222 | static const struct regulator_ops rtq2208_regulator_ldo_ops = {
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+Remove it to get a clean build again.
+
+Fixes: 38bcec0e7cbb ("regulator: rtq2208: Fix LDO discharge register and add vsel setting")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- tools/testing/selftests/net/Makefile        |  1 +
- tools/testing/selftests/net/netns-sysctl.sh | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
- create mode 100755 tools/testing/selftests/net/netns-sysctl.sh
+I did not analyze the change to see if this is the only required change
+or if there should still have been a reference instead. Please review
+and confirm, or provide a different fix.
+---
+ drivers/regulator/rtq2208-regulator.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
-index bd01e4a0be2c..6da63d1831c1 100644
---- a/tools/testing/selftests/net/Makefile
-+++ b/tools/testing/selftests/net/Makefile
-@@ -53,6 +53,7 @@ TEST_PROGS += bind_bhash.sh
- TEST_PROGS += ip_local_port_range.sh
- TEST_PROGS += rps_default_mask.sh
- TEST_PROGS += big_tcp.sh
-+TEST_PROGS += netns-sysctl.sh
- TEST_PROGS_EXTENDED := toeplitz_client.sh toeplitz.sh
- TEST_GEN_FILES =  socket nettest
- TEST_GEN_FILES += psock_fanout psock_tpacket msg_zerocopy reuseport_addr_any
-diff --git a/tools/testing/selftests/net/netns-sysctl.sh b/tools/testing/selftests/net/netns-sysctl.sh
-new file mode 100755
-index 000000000000..b948ba67b13a
---- /dev/null
-+++ b/tools/testing/selftests/net/netns-sysctl.sh
-@@ -0,0 +1,15 @@
-+#!/bin/bash -e
-+
-+for sc in {r,w}mem_{default,max}; do
-+	# change the value in the host netns
-+	sysctl -qw "net.core.$sc=300000"
-+
-+	# check that the value is read from the init netns
-+	[ "$(unshare -n sysctl -n "net.core.$sc")" -eq 300000 ]
-+
-+	# check that this isn't writeable in a netns
-+	! unshare -n [ -w "/proc/sys/net/core/$sc" ]
-+	! unshare -n sysctl -w "net.core.$sc=100000"
-+done
-+
-+echo 'Test passed OK'
+diff --git a/drivers/regulator/rtq2208-regulator.c b/drivers/regulator/rtq2208-regulator.c
+index b90e53d922d6..5b49eff90a7f 100644
+--- a/drivers/regulator/rtq2208-regulator.c
++++ b/drivers/regulator/rtq2208-regulator.c
+@@ -219,15 +219,6 @@ static const struct regulator_ops rtq2208_regulator_buck_ops = {
+ 	.set_suspend_mode = rtq2208_set_suspend_mode,
+ };
+ 
+-static const struct regulator_ops rtq2208_regulator_ldo_ops = {
+-	.enable = regulator_enable_regmap,
+-	.disable = regulator_disable_regmap,
+-	.is_enabled = regulator_is_enabled_regmap,
+-	.set_active_discharge = regulator_set_active_discharge_regmap,
+-	.set_suspend_enable = rtq2208_set_suspend_enable,
+-	.set_suspend_disable = rtq2208_set_suspend_disable,
+-};
+-
+ static unsigned int rtq2208_of_map_mode(unsigned int mode)
+ {
+ 	switch (mode) {
 -- 
-2.45.1
+2.39.2
 
