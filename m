@@ -1,147 +1,292 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4994117B407
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 20:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8130D45024;
+	Tue, 28 May 2024 20:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716929261; cv=none; b=YTXbuB6N5+DSWuVBEJGsVFPsXeEEa0fPYdqUHSifbo9oP5idfPVAPnOWiISpgJMc+nAZI/rPN7/fJDVwRcO7m74YngjAAc2nUBhuBR7C2cHKDTQ04Mh8IRUQBxDwJ+FEeDdth/8yPgeZY8L+CRqMnSKmHsdwkfcFXBCDYMd7QhY=
+	t=1716929358; cv=none; b=VjFHb3RwjXK7CfdlYaeg8oFiYsn86pN6jwggVcsdmIFSs7ygMcpNUEBmdPzNFx38TdzSnSpoH300yn8H18/ziHKg5xvD8PpWbCIUYxYVeuoS2l577UvfbSWBoasitYpBWyAxDtU3z7LPbkOa/7jscKWNIdpb3Vw8NFmTl0R8eBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716929261; c=relaxed/simple;
-	bh=CJ0wRt39wry877MFi5yLNi/ccKGSRy4FwAIVIEaqIF4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=p9tVPEab8euce1NXcNYGNQJYD2FVR/ekaqVoW61ZoGjX3BSugoOpz2hGtGx1bV832S5K6xbWH2A8yFe0k6WZSzoIokol2hXk+RcIvNYGuOyhG2Zwizp7iqyOYNGvch/zeZtL8OOEZ8M6s2BE6753lCIOBvjuzGeljmErTmItYug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=IXtvp3bx; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1716929358; c=relaxed/simple;
+	bh=lgj/spm7RG5xxoefr3gCdjm12/1dHbjezBtdM193Rgc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nFSsI6XzPZE7pwE32u2uab84mvuaBD49wjoLNbiUFKutAyZNuHnrH/5CzS8IGaWMHQFRjG8YLKCdBX2sw+1qC1QjmwtQmww3Yfdb46AkZeOv96Oc+KPf2SBOROq4wbFxJ8Z8yEmICo1XYQp5w6yjVH2NMa16rxa7A0Jcu4aGBu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qU9LfOXH; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="IXtvp3bx"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CF79B2C02E0;
-	Wed, 29 May 2024 08:38:12 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1716928692;
-	bh=CJ0wRt39wry877MFi5yLNi/ccKGSRy4FwAIVIEaqIF4=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=IXtvp3bxuBBtDxhgwIhDwpa76JmTbmCqM5KyQLNPZJvRniJmAoZUFRDVqKg1t+NQx
-	 +mbtDasFYzQLVk09VJONheuxtxNSHYbed5IAHNbW+MjEYvpsPbvhQm5muzPrGRcM6g
-	 mlQiPa+0+TPLM1xRhgJz39QL5+qEBeHFu9Tq3zjEGq8hHDhDEM3tOzHs4rl06g32ap
-	 SusXAS9vgP/eZoOdQqMs+P3tJH48sSKR2TfvzHoC/7Ho+b9bZidJdfgy7kXlD6MRYH
-	 FYFG/8PM2TuSsDPGBrRvaQf7tjTMkOeJzZ1Z42qwPF24am/osa1AjvJGRYYoFjwRiZ
-	 j9YuXFla7MB9Q==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B665640b40001>; Wed, 29 May 2024 08:38:12 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1544.11; Wed, 29 May 2024 08:38:12 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.48; Wed, 29 May 2024 08:38:12 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.011; Wed, 29 May 2024 08:38:12 +1200
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Jon Hunter <jonathanh@nvidia.com>, Chuck Lever III
-	<chuck.lever@oracle.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Neil Brown
-	<neilb@suse.de>, linux-stable <stable@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>, "Linux Kernel Mailing
- List" <linux-kernel@vger.kernel.org>, Linus Torvalds
-	<torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>, "shuah@kernel.org" <shuah@kernel.org>,
-	"patches@kernelci.org" <patches@kernelci.org>, "lkft-triage@lists.linaro.org"
-	<lkft-triage@lists.linaro.org>, "pavel@denx.de" <pavel@denx.de>,
-	"f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sudipm.mukherjee@gmail.com"
-	<sudipm.mukherjee@gmail.com>, "srw@sladewatkins.net" <srw@sladewatkins.net>,
-	"rwarsow@gmx.de" <rwarsow@gmx.de>, "conor@kernel.org" <conor@kernel.org>,
-	"allen.lkml@gmail.com" <allen.lkml@gmail.com>, "broonie@kernel.org"
-	<broonie@kernel.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.15 00/23] 5.15.160-rc1 review
-Thread-Topic: [PATCH 5.15 00/23] 5.15.160-rc1 review
-Thread-Index: AQHasN4TfgxwqfFZfEKH0FZYU7evErGr1xiAgAARtgCAAGozAA==
-Date: Tue, 28 May 2024 20:38:12 +0000
-Message-ID: <d5adc4a4-81b6-46f6-bcf6-7debf48d2bbf@alliedtelesis.co.nz>
-References: <20240523130327.956341021@linuxfoundation.org>
- <8e60522f-22db-4308-bb7d-3c71a0c7d447@nvidia.com>
- <2024052541-likeness-banjo-e147@gregkh>
- <8ddb4da3-49e4-4d96-bec3-66a209bff71b@nvidia.com>
- <968E3378-1B38-4519-BB85-5B1C45E3A16A@oracle.com>
- <8b6fe99f-7fa9-493c-afe7-8e75b7f59852@nvidia.com>
-In-Reply-To: <8b6fe99f-7fa9-493c-afe7-8e75b7f59852@nvidia.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6E74215606E9154889788EFD7A709BB7@atlnz.lc>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qU9LfOXH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1716929348; x=1717534148; i=w_armin@gmx.de;
+	bh=/MoR4zs991DYMvTz8rBH16o4vXvcYUjLg0tOjYGFX7U=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=qU9LfOXH3kttrp82hwxTW+Wjqfa5WMs9IHG7lL0VH30GV+yssiXnajDr8/nhQToN
+	 bNqtLUPwrMMuqX3rfgkGV3n7ZkAFvVKwRQgHiPTl8NODO8DMLtBRhYmyZpAkfbbtd
+	 +GRr8rOLXusBSuPc1GGXXZkK5kJ8rrN13MpkufIoVvISq2ZHZTKHl7J+aq44FclTe
+	 qo69FAP0DAmgK5gSIvgbvgGJh1gM8uLRbSsKG+I3/0KKTejOk1kpncvw/Q3RENmzB
+	 w+pRowDc6hotPixXgDQvVrEil0WpQZvldqknR/jOjHoYDoQv/Tl5EWTdomvs0WQAg
+	 T1JIgpQbM7MEi6Vj4A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1M8QWA-1s7g2d3lQW-004PmO; Tue, 28 May 2024 22:49:07 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/x86: dell-smbios: Fix wrong token data in sysfs
+Date: Tue, 28 May 2024 22:49:02 +0200
+Message-Id: <20240528204903.445546-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=F9L0dbhN c=1 sm=1 tr=0 ts=665640b4 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=Ikd4Dj_1AAAA:8 a=VwQbUJbxAAAA:8 a=yDejyKqjGvIJSoj4HikA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-X-SEG-SpamProfiler-Score: 0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:RIu+x3Tr2dOcYnpYqC2S6AQeTLiKMoAzO3Re2OU/aMuaaANNRnp
+ a28RwAPVpGcRM8NFyCMXvXWvPOCWv9ZtPd5XijjsMWPsDv+/N2J4oAjIgNt9zzLlcaKAItr
+ z2bP2tfznnWEY41scMfyRzKVf5gpcOsJBuNyE5I3QnVlaVhwTaq3lUQqDEHehuhakSzqERk
+ NkdmKX7sWX9fFGmeBZHMg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:yRxcls1m9yE=;fk5kj66kEpRoN/4AgoTh6KnkR55
+ 0mdzv/TRnjOr3uAoJS3y1CRg4+/mUxUxh53Mw6Nrpml3lCLVKKJRB6Me/xFPmpw9xehW9sALX
+ 1+RKkyoqJiCC2joVmgBUfKQBBH71keIfXFeDlVG2dhdgB8DhbCmXb2N3Byz3Dm0HiRQ+lDXs3
+ uhCqGnY7xkfFHlaJskq6jXlNi1gYUVxmFICJ7MNGfjVF2iagpsrxF+mro8UbgWnrgt7x8NVfB
+ JHyuVAn3BrmglhC0bUMxe3uih8w2KqH+myK6t6ucLfaAGfc068YtVn+cQ8orK2Yao3XrZYzq7
+ YdD+bu9HDNPS8/uDaSqV4ou7kKXbBnGz7xdELDJy3Dd/O4T9V7d3vbot2Vyj86ceaCn4SWp9E
+ DcozyhRNevWQ/Z/aouXRIOqlLmdTZUZp1UiUMLMZ8IV4S2k6OBUbyhjwvNMfImVIKIsaQeQW1
+ PxRog3HOaQoZ0mkxhu3LAZmQjWy7OIVhjcz6Ch4SHFwjUa/KWYOGHCnYegN+DTa07La2ZUiCA
+ 8eo0i9ZwRQFp1uS/J+xr8uQb5sL9E+D0yTaTsW8w5TNKrSPw41Cfw+jPKgdD7A1WuScyvlPeI
+ U057XNz/e7G0TYIGC69xN8N9+FDp3QeI4xPPiJOrrHnmKfWGyqa+ARcUfMuAuZNVCL60Pd2tZ
+ d2QW+H/Hr/If8miZaV56ijXs3fvGfQAZ0Yb0SNjJrfpQBz334xMauIxBIBb98aUVw3SxX7gmT
+ 9tJxD5XmxMiAcw0ZsiaUR1iYGAVrTxuqCRtdeM/80qcBCGjuPlm4FY0dvCBCo72LZn6cjvAKa
+ alW5y+APj2bodhsMbBiYvpNF/AdHXn0cC+hqdOxU8ryoQ=
 
-DQpPbiAyOS8wNS8yNCAwMjoxOCwgSm9uIEh1bnRlciB3cm90ZToNCj4NCj4gT24gMjgvMDUvMjAy
-NCAxNDoxNCwgQ2h1Y2sgTGV2ZXIgSUlJIHdyb3RlOg0KPj4NCj4+DQo+Pj4gT24gTWF5IDI4LCAy
-MDI0LCBhdCA1OjA04oCvQU0sIEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPiB3cm90
-ZToNCj4+Pg0KPj4+DQo+Pj4gT24gMjUvMDUvMjAyNCAxNToyMCwgR3JlZyBLcm9haC1IYXJ0bWFu
-IHdyb3RlOg0KPj4+PiBPbiBTYXQsIE1heSAyNSwgMjAyNCBhdCAxMjoxMzoyOEFNICswMTAwLCBK
-b24gSHVudGVyIHdyb3RlOg0KPj4+Pj4gSGkgR3JlZywNCj4+Pj4+DQo+Pj4+PiBPbiAyMy8wNS8y
-MDI0IDE0OjEyLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6DQo+Pj4+Pj4gVGhpcyBpcyB0aGUg
-c3RhcnQgb2YgdGhlIHN0YWJsZSByZXZpZXcgY3ljbGUgZm9yIHRoZSA1LjE1LjE2MCANCj4+Pj4+
-PiByZWxlYXNlLg0KPj4+Pj4+IFRoZXJlIGFyZSAyMyBwYXRjaGVzIGluIHRoaXMgc2VyaWVzLCBh
-bGwgd2lsbCBiZSBwb3N0ZWQgYXMgYSANCj4+Pj4+PiByZXNwb25zZQ0KPj4+Pj4+IHRvIHRoaXMg
-b25lLsKgIElmIGFueW9uZSBoYXMgYW55IGlzc3VlcyB3aXRoIHRoZXNlIGJlaW5nIGFwcGxpZWQs
-IA0KPj4+Pj4+IHBsZWFzZQ0KPj4+Pj4+IGxldCBtZSBrbm93Lg0KPj4+Pj4+DQo+Pj4+Pj4gUmVz
-cG9uc2VzIHNob3VsZCBiZSBtYWRlIGJ5IFNhdCwgMjUgTWF5IDIwMjQgMTM6MDM6MTUgKzAwMDAu
-DQo+Pj4+Pj4gQW55dGhpbmcgcmVjZWl2ZWQgYWZ0ZXIgdGhhdCB0aW1lIG1pZ2h0IGJlIHRvbyBs
-YXRlLg0KPj4+Pj4+DQo+Pj4+Pj4gVGhlIHdob2xlIHBhdGNoIHNlcmllcyBjYW4gYmUgZm91bmQg
-aW4gb25lIHBhdGNoIGF0Og0KPj4+Pj4+IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvcHViL2xpbnV4
-L2tlcm5lbC92NS54L3N0YWJsZS1yZXZpZXcvcGF0Y2gtNS4xNS4xNjAtcmMxLmd6IA0KPj4+Pj4+
-DQo+Pj4+Pj4gb3IgaW4gdGhlIGdpdCB0cmVlIGFuZCBicmFuY2ggYXQ6DQo+Pj4+Pj4gZ2l0Oi8v
-Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3N0YWJsZS9saW51eC1zdGFi
-bGUtcmMuZ2l0IA0KPj4+Pj4+IGxpbnV4LTUuMTUueQ0KPj4+Pj4+IGFuZCB0aGUgZGlmZnN0YXQg
-Y2FuIGJlIGZvdW5kIGJlbG93Lg0KPj4+Pj4+DQo+Pj4+Pj4gdGhhbmtzLA0KPj4+Pj4+DQo+Pj4+
-Pj4gZ3JlZyBrLWgNCj4+Pj4+Pg0KPj4+Pj4+IC0tLS0tLS0tLS0tLS0NCj4+Pj4+PiBQc2V1ZG8t
-U2hvcnRsb2cgb2YgY29tbWl0czoNCj4+Pj4+DQo+Pj4+PiAuLi4NCj4+Pj4+DQo+Pj4+Pj4gTmVp
-bEJyb3duIDxuZWlsYkBzdXNlLmRlPg0KPj4+Pj4+IMKgwqDCoMKgwqAgbmZzZDogZG9uJ3QgYWxs
-b3cgbmZzZCB0aHJlYWRzIHRvIGJlIHNpZ25hbGxlZC4NCj4+Pj4+DQo+Pj4+Pg0KPj4+Pj4gSSBh
-bSBzZWVpbmcgYSBzdXNwZW5kIHJlZ3Jlc3Npb24gb24gYSBjb3VwbGUgYm9hcmRzIGFuZCBiaXNl
-Y3QgaXMgDQo+Pj4+PiBwb2ludGluZw0KPj4+Pj4gdG8gdGhlIGFib3ZlIGNvbW1pdC4gUmV2ZXJ0
-aW5nIHRoaXMgY29tbWl0IGRvZXMgZml4IHRoZSBpc3N1ZS4NCj4+Pj4gVWdoLCB0aGF0IGZpeGVz
-IHRoZSByZXBvcnQgZnJvbSBvdGhlcnMuwqAgQ2FuIHlvdSBjYzogZXZlcnlvbmUgb24gdGhhdA0K
-Pj4+PiBhbmQgZmlndXJlIG91dCB3aGF0IGlzIGdvaW5nIG9uLCBhcyB0aGlzIGtlZXBzIGdvaW5n
-IGJhY2sgYW5kIGZvcnRoLi4uDQo+Pj4NCj4+Pg0KPj4+IEFkZGluZyBDaHVjaywgTmVpbCBhbmQg
-Q2hyaXMgZnJvbSB0aGUgYnVnIHJlcG9ydCBoZXJlIFswXS4NCj4+Pg0KPj4+IFdpdGggdGhlIGFi
-b3ZlIGFwcGxpZWQgdG8gdjUuMTUueSwgSSBhbSBzZWVpbmcgc3VzcGVuZCBvbiAyIG9mIG91ciAN
-Cj4+PiBib2FyZHMgZmFpbC4gVGhlc2UgYm9hcmRzIGFyZSB1c2luZyBORlMgYW5kIG9uIGVudHJ5
-IHRvIHN1c3BlbmQgSSBhbSANCj4+PiBub3cgc2VlaW5nIC4uLg0KPj4+DQo+Pj4gRnJlZXppbmcg
-b2YgdGFza3MgZmFpbGVkIGFmdGVyIDIwLjAwMiBzZWNvbmRzICgxIHRhc2tzIHJlZnVzaW5nIHRv
-DQo+Pj4gZnJlZXplLCB3cV9idXN5PTApOg0KPj4+DQo+Pj4gVGhlIGJvYXJkcyBhcHBlYXIgdG8g
-aGFuZyBhdCB0aGF0IHBvaW50LiBTbyBtYXkgYmUgc29tZXRoaW5nIGVsc2UgDQo+Pj4gbWlzc2lu
-Zz8NCj4+DQo+PiBOb3RlIHRoYXQgd2UgZG9uJ3QgaGF2ZSBhY2Nlc3MgdG8gaGFyZHdhcmUgbGlr
-ZSB0aGlzLCBzbw0KPj4gd2UgaGF2ZW4ndCB0ZXN0ZWQgdGhhdCBwYXRjaCAoZXZlbiB0aGUgdXBz
-dHJlYW0gdmVyc2lvbikNCj4+IHdpdGggc3VzcGVuZCBvbiB0aGF0IGhhcmR3YXJlLg0KPg0KPg0K
-PiBObyBwcm9ibGVtLCBJIHdvdWxkIG5vdCBleHBlY3QgeW91IHRvIGhhdmUgdGhpcyBwYXJ0aWN1
-bGFyIGhhcmR3YXJlIDotKQ0KPg0KSXQncyBwcm9iYWJseSBub3QgbXVjaCBoZWxwIGJ1dCBmb3Ig
-dGhlIG9vcHMgSSBvcmlnaW5hbGx5IHJlcG9ydGVkIHdlJ3ZlIA0KYmVlbiBjYXJyeWluZyAibmZz
-ZDogZG9uJ3QgYWxsb3cgbmZzZCB0aHJlYWRzIHRvIGJlIHNpZ25hbGxlZCIgbG9jYWxseSANCmFu
-ZCB0aGF0IHJlc29sdmVkIGl0LiBOb3cgdGhhdCB3ZSd2ZSB1cGRhdGVkIHRvIDUuMTUuMTYwIGFu
-ZCBkcm9wcGVkIHRoZSANCmxvY2FsIHBhdGNoIGl0J3Mgc3RpbGwgcmVzb2x2ZWQgZm9yIHVzLiBP
-dXIgc3lzdGVtcyBkb24ndCBtYWtlIHVzZSBvZiANCnN1c3BlbmQgc28gdGhleSB3b24ndCBoaXQg
-YW55IGlzc3VlIHJlbGF0ZWQgdG8gdGhhdC4NCj4+IFNvLCBpdCBjb3VsZCBiZSBzb21ldGhpbmcg
-bWlzc2luZywgb3IgaXQgY291bGQgYmUgdGhhdA0KPj4gcGF0Y2ggaGFzIGEgcHJvYmxlbS4NCj4+
-DQo+PiBJdCB3b3VsZCBoZWxwIHVzIHRvIGtub3cgaWYgeW91IG9ic2VydmUgdGhlIHNhbWUgaXNz
-dWUNCj4+IHdpdGggYW4gdXBzdHJlYW0ga2VybmVsLCBpZiB0aGF0IGlzIHBvc3NpYmxlLg0KPg0K
-Pg0KPiBJIGRvbid0IG9ic2VydmUgdGhpcyB3aXRoIGVpdGhlciBtYWlubGluZSwgLW5leHQgb3Ig
-YW55IG90aGVyIHN0YWJsZSANCj4gYnJhbmNoLiBTbyB0aGF0IHdvdWxkIHN1Z2dlc3QgdGhhdCBz
-b21ldGhpbmcgZWxzZSBpcyBtaXNzaW5nIGZyb20gDQo+IGxpbnV4LTUuMTUueS4NCj4NCj4gSm9u
-DQo+
+When reading token data from sysfs on my Inspiron 3505, the token
+locations and values are wrong. This happens because match_attribute()
+blindly assumes that all entries in da_tokens have an associated
+entry in token_attrs.
+
+This however is not true as soon as da_tokens[] contains zeroed
+token entries. Those entries are being skipped when initialising
+token_attrs, breaking the core assumption of match_attribute().
+
+Fix this by defining an extra struct for each pair of token attributes
+and use container_of() to retrieve token information.
+
+Tested on a Dell Inspiron 3050.
+
+Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface for=
+ SMBIOS tokens")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v1:
+- remove style changes
+- improve sizeof() usage with pointer targets
+=2D--
+ drivers/platform/x86/dell/dell-smbios-base.c | 92 ++++++++------------
+ 1 file changed, 36 insertions(+), 56 deletions(-)
+
+diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platfo=
+rm/x86/dell/dell-smbios-base.c
+index e61bfaf8b5c4..86b95206cb1b 100644
+=2D-- a/drivers/platform/x86/dell/dell-smbios-base.c
++++ b/drivers/platform/x86/dell/dell-smbios-base.c
+@@ -11,6 +11,7 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
++#include <linux/container_of.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/capability.h>
+@@ -25,11 +26,16 @@ static u32 da_supported_commands;
+ static int da_num_tokens;
+ static struct platform_device *platform_device;
+ static struct calling_interface_token *da_tokens;
+-static struct device_attribute *token_location_attrs;
+-static struct device_attribute *token_value_attrs;
++static struct token_sysfs_data *token_entries;
+ static struct attribute **token_attrs;
+ static DEFINE_MUTEX(smbios_mutex);
+
++struct token_sysfs_data {
++	struct device_attribute location_attr;
++	struct device_attribute value_attr;
++	struct calling_interface_token *token;
++};
++
+ struct smbios_device {
+ 	struct list_head list;
+ 	struct device *device;
+@@ -416,47 +422,26 @@ static void __init find_tokens(const struct dmi_head=
+er *dm, void *dummy)
+ 	}
+ }
+
+-static int match_attribute(struct device *dev,
+-			   struct device_attribute *attr)
+-{
+-	int i;
+-
+-	for (i =3D 0; i < da_num_tokens * 2; i++) {
+-		if (!token_attrs[i])
+-			continue;
+-		if (strcmp(token_attrs[i]->name, attr->attr.name) =3D=3D 0)
+-			return i/2;
+-	}
+-	dev_dbg(dev, "couldn't match: %s\n", attr->attr.name);
+-	return -EINVAL;
+-}
+-
+ static ssize_t location_show(struct device *dev,
+ 			     struct device_attribute *attr, char *buf)
+ {
+-	int i;
++	struct token_sysfs_data *data =3D container_of(attr, struct token_sysfs_=
+data, location_attr);
+
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+
+-	i =3D match_attribute(dev, attr);
+-	if (i > 0)
+-		return sysfs_emit(buf, "%08x", da_tokens[i].location);
+-	return 0;
++	return sysfs_emit(buf, "%08x", data->token->location);
+ }
+
+ static ssize_t value_show(struct device *dev,
+ 			  struct device_attribute *attr, char *buf)
+ {
+-	int i;
++	struct token_sysfs_data *data =3D container_of(attr, struct token_sysfs_=
+data, value_attr);
+
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+
+-	i =3D match_attribute(dev, attr);
+-	if (i > 0)
+-		return sysfs_emit(buf, "%08x", da_tokens[i].value);
+-	return 0;
++	return sysfs_emit(buf, "%08x", data->token->value);
+ }
+
+ static struct attribute_group smbios_attribute_group =3D {
+@@ -473,22 +458,15 @@ static int build_tokens_sysfs(struct platform_device=
+ *dev)
+ {
+ 	char *location_name;
+ 	char *value_name;
+-	size_t size;
+ 	int ret;
+ 	int i, j;
+
+-	/* (number of tokens  + 1 for null terminated */
+-	size =3D sizeof(struct device_attribute) * (da_num_tokens + 1);
+-	token_location_attrs =3D kzalloc(size, GFP_KERNEL);
+-	if (!token_location_attrs)
++	token_entries =3D kcalloc(da_num_tokens, sizeof(*token_entries), GFP_KER=
+NEL);
++	if (!token_entries)
+ 		return -ENOMEM;
+-	token_value_attrs =3D kzalloc(size, GFP_KERNEL);
+-	if (!token_value_attrs)
+-		goto out_allocate_value;
+
+ 	/* need to store both location and value + terminator*/
+-	size =3D sizeof(struct attribute *) * ((2 * da_num_tokens) + 1);
+-	token_attrs =3D kzalloc(size, GFP_KERNEL);
++	token_attrs =3D kcalloc((2 * da_num_tokens) + 1, sizeof(*token_attrs), G=
+FP_KERNEL);
+ 	if (!token_attrs)
+ 		goto out_allocate_attrs;
+
+@@ -496,27 +474,32 @@ static int build_tokens_sysfs(struct platform_device=
+ *dev)
+ 		/* skip empty */
+ 		if (da_tokens[i].tokenID =3D=3D 0)
+ 			continue;
++
++		token_entries[i].token =3D &da_tokens[i];
++
+ 		/* add location */
+ 		location_name =3D kasprintf(GFP_KERNEL, "%04x_location",
+ 					  da_tokens[i].tokenID);
+ 		if (location_name =3D=3D NULL)
+ 			goto out_unwind_strings;
+-		sysfs_attr_init(&token_location_attrs[i].attr);
+-		token_location_attrs[i].attr.name =3D location_name;
+-		token_location_attrs[i].attr.mode =3D 0444;
+-		token_location_attrs[i].show =3D location_show;
+-		token_attrs[j++] =3D &token_location_attrs[i].attr;
++
++		sysfs_attr_init(&token_entries[i].location_attr.attr);
++		token_entries[i].location_attr.attr.name =3D location_name;
++		token_entries[i].location_attr.attr.mode =3D 0444;
++		token_entries[i].location_attr.show =3D location_show;
++		token_attrs[j++] =3D &token_entries[i].location_attr.attr;
+
+ 		/* add value */
+ 		value_name =3D kasprintf(GFP_KERNEL, "%04x_value",
+ 				       da_tokens[i].tokenID);
+ 		if (value_name =3D=3D NULL)
+ 			goto loop_fail_create_value;
+-		sysfs_attr_init(&token_value_attrs[i].attr);
+-		token_value_attrs[i].attr.name =3D value_name;
+-		token_value_attrs[i].attr.mode =3D 0444;
+-		token_value_attrs[i].show =3D value_show;
+-		token_attrs[j++] =3D &token_value_attrs[i].attr;
++
++		sysfs_attr_init(&token_entries[i].value_attr.attr);
++		token_entries[i].value_attr.attr.name =3D value_name;
++		token_entries[i].value_attr.attr.mode =3D 0444;
++		token_entries[i].value_attr.show =3D value_show;
++		token_attrs[j++] =3D &token_entries[i].value_attr.attr;
+ 		continue;
+
+ loop_fail_create_value:
+@@ -532,14 +515,12 @@ static int build_tokens_sysfs(struct platform_device=
+ *dev)
+
+ out_unwind_strings:
+ 	while (i--) {
+-		kfree(token_location_attrs[i].attr.name);
+-		kfree(token_value_attrs[i].attr.name);
++		kfree(token_entries[i].location_attr.attr.name);
++		kfree(token_entries[i].value_attr.attr.name);
+ 	}
+ 	kfree(token_attrs);
+ out_allocate_attrs:
+-	kfree(token_value_attrs);
+-out_allocate_value:
+-	kfree(token_location_attrs);
++	kfree(token_entries);
+
+ 	return -ENOMEM;
+ }
+@@ -551,12 +532,11 @@ static void free_group(struct platform_device *pdev)
+ 	sysfs_remove_group(&pdev->dev.kobj,
+ 				&smbios_attribute_group);
+ 	for (i =3D 0; i < da_num_tokens; i++) {
+-		kfree(token_location_attrs[i].attr.name);
+-		kfree(token_value_attrs[i].attr.name);
++		kfree(token_entries[i].location_attr.attr.name);
++		kfree(token_entries[i].value_attr.attr.name);
+ 	}
+ 	kfree(token_attrs);
+-	kfree(token_value_attrs);
+-	kfree(token_location_attrs);
++	kfree(token_entries);
+ }
+
+ static int __init dell_smbios_init(void)
+=2D-
+2.39.2
+
