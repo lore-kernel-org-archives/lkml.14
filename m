@@ -1,110 +1,117 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C0C16F287;
-	Tue, 28 May 2024 14:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9161D16F287;
+	Tue, 28 May 2024 14:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716905299; cv=none; b=B54j4kq4CNJ6SCu5B07eysL3ocFYD+IPQk8YZ9k658wGWSpm8+ubdgH1oJwoIHyObZtJFIBzKrXlB/TG+ju+ZKzlGO5m2Lywrbqz2PSWFkRby0qfD4z8MAjM5zmDsXL3erKx8N330bO279r/+86ZOd4VNPmofs5v3RFWBeyALtg=
+	t=1716905314; cv=none; b=IeZN2rTtCYIDW7L1gzd5W/eJLWkLjXFrBDDwvJ2KC3act7Py8Q+55c3DCwioGwkpiq8Tm18bFMoQcMz1SI+w+8si6NeXOcOk7rZ+ZrCSuEnzey29wYE77ye3QlVzcKEC7sE+sY3W9urUYN0fyhccPuy1bFt/DNyxZ+T6bdFI/BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716905299; c=relaxed/simple;
-	bh=kH6YiGjqeAZHMKBYiAmbjv7Lv6+d0htVBeb25bHqzbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=avtcfjkyMb9o58A44xN1+kxhD4xPwxO9wDqkyYiw/aaEPhFEKdo1HdKJLQsKlRnd3v/vSurZfl/vx4PHkTmRtsKRXlbbKPF+Wrlp8FlvPpKahpP4+qY6T9BxJ/76HoRuhm+cVpAeLRXP/ZnfZzS+yz8kGsGC19D+CWyro3o8Yyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=J54Gsd09; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1716905314; c=relaxed/simple;
+	bh=0kYRkuoifz238hYaa7+VBTksrIRPb0Qrje3MA74G5/Q=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WEOy97NY6KGIVwo1rh83q8pS1xtw5LxIzfFWTcta28Zylh12wT85ECcRXchSQgckHZSkuWkqpS0RnaPuEiRDJW74Y2oGMyqXhP2a3sS/6IvolWoXR2fyyv0MJYwMKzwR1qSNMIVvsfRzl09pEOmzKMTCIvMO/7J+JnBCSZjQO2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=iMdtq39P; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="J54Gsd09"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VpZ9R1Qx6z6Cnk95;
-	Tue, 28 May 2024 14:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1716905278; x=1719497279; bh=dR3ZvbYbJLA8JqSMp6syi4ns
-	5+ck4oQr0inj5+NavnA=; b=J54Gsd09VOPGv6hpJCmRRt25qr85iKrjgG3itku7
-	MkGP8xjPTJudQuNLFqJT1JMHsU8/nRRl7T+v+gR/WZdE/ooloV46oTdCczd1PYjU
-	wPiT6Td9kKxgYjXw9gxIJ7oiywUY/Tdd9iXUMdXjgW8Jg3BHd4dZZiR5a/35/iCR
-	XgavrtZrjswPTxAARrsP5h+llv5vBIU8M6SO4EMsyY+t3fOuJjopWi00f28/NAlJ
-	4ewCx06Ky7FFI9iqLsHXAKKc2C5EhbXaAOd2MoXnTXVLKYeAWQhIdC1kr1m2cjyr
-	WvHFrsXHqBmEClwusPD2KBTERNjrTGi6oqa4aiXhx4oEKg==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 5YpJGIeKyzj2; Tue, 28 May 2024 14:07:58 +0000 (UTC)
-Received: from [192.168.50.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VpZ974X95z6Cnk94;
-	Tue, 28 May 2024 14:07:55 +0000 (UTC)
-Message-ID: <95bcfe6a-f179-443a-92b6-98e512fec4fc@acm.org>
-Date: Tue, 28 May 2024 07:07:51 -0700
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="iMdtq39P"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SDhLnC025707;
+	Tue, 28 May 2024 16:08:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	WID1Xn8lAVeZgvgjfAvIZ5toir+39YNbyOYV1Sn5tIE=; b=iMdtq39PTNMpN5q0
+	qF5bJ4MgHOGVhw1mZ69E37DDykQPYq78VRyRC8xOcDTIiHo8t1p5l7oZahTlfk0f
+	62z7DDATzMDcsBvM9BD7OGFShvez3iYvQr5XabiKWFIxf1f0351qZxdZyFDmvnxd
+	GoPFlJ3hA3qQASc8S351Qr8UAwzmTx6IN8L35oG2mTJ8HBYVxzGT1rhCD04nT8Q3
+	Un5yiNA+05t0WBvnKJiWdURvtWfMNoYRiQhfDHpDPnRX1HTJLWWgH8tk29MRAEMF
+	ZUoMTJzQW5S2qMI0c3XwQT+lqG3Z0Ree23XiH4o8uAVgvMLxRZfRL4i2crNBTggv
+	eKlDiQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yb9yjuyq7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 16:08:05 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9A0824004B;
+	Tue, 28 May 2024 16:08:01 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D470621BF47;
+	Tue, 28 May 2024 16:07:23 +0200 (CEST)
+Received: from localhost (10.48.86.103) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 28 May
+ 2024 16:07:23 +0200
+From: Maxime MERE <maxime.mere@foss.st.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller"
+	<davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>
+CC: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob
+ Herring <robh@kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        =?UTF-8?q?Maxime=20M=C3=A9r=C3=A9?= <maxime.mere@foss.st.com>
+Subject: [PATCH v3 4/4] crypto: stm32/cryp - call finalize with bh disabled
+Date: Tue, 28 May 2024 16:05:48 +0200
+Message-ID: <20240528140548.1632562-5-maxime.mere@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240528140548.1632562-1-maxime.mere@foss.st.com>
+References: <20240528140548.1632562-1-maxime.mere@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
- and request layer.
-To: Hannes Reinecke <hare@suse.de>, Nitesh Shetty <nj.shetty@samsung.com>,
- Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
- Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>
-Cc: martin.petersen@oracle.com, david@fromorbit.com,
- damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
- nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-fsdevel@vger.kernel.org
-References: <20240520102033.9361-1-nj.shetty@samsung.com>
- <CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
- <20240520102033.9361-3-nj.shetty@samsung.com>
- <f54c770c-9a14-44d3-9949-37c4a08777e7@suse.de>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <f54c770c-9a14-44d3-9949-37c4a08777e7@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_10,2024-05-28_01,2024-05-17_01
 
-On 5/21/24 00:01, Hannes Reinecke wrote:
-> On 5/20/24 12:20, Nitesh Shetty wrote:
->> We add two new opcode REQ_OP_COPY_DST, REQ_OP_COPY_SRC.
->> Since copy is a composite operation involving src and dst sectors/lba,
->> each needs to be represented by a separate bio to make it compatible
->> with device mapper.
->> We expect caller to take a plug and send bio with destination 
->> information,
->> followed by bio with source information.
->> Once the dst bio arrives we form a request and wait for source
->> bio. Upon arrival of source bio we merge these two bio's and send
->> corresponding request down to device driver.
->> Merging non copy offload bio is avoided by checking for copy specific
->> opcodes in merge function.
->>
-> I am a bit unsure about leveraging 'merge' here. As Bart pointed out, 
-> this is arguably as mis-use of the 'merge' functionality as we don't
-> actually merge bios, but rather use the information from these bios to
-> form the actual request.
-> Wouldn't it be better to use bio_chain here, and send out the eventual
-> request from the end_io function of the bio chain?
+From: Maxime Méré <maxime.mere@foss.st.com>
 
-Let me formulate this a bit stronger: I think this patch series abuses
-the merge functionality and also that it should use another mechanism
-for combining REQ_OP_COPY_DST and REQ_OP_COPY_SRC. See also my email
-with concerns about using the merge functionality:
-https://lore.kernel.org/linux-block/eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org/.
+The finalize operation in interrupt mode produce a produces a spinlock
+recursion warning. The reason is the fact that BH must be disabled
+during this process.
 
-Thanks,
+Signed-off-by: Maxime Méré <maxime.mere@foss.st.com>
+---
+ drivers/crypto/stm32/stm32-cryp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Bart.
+diff --git a/drivers/crypto/stm32/stm32-cryp.c b/drivers/crypto/stm32/stm32-cryp.c
+index 445276b848ed..937f6dab8955 100644
+--- a/drivers/crypto/stm32/stm32-cryp.c
++++ b/drivers/crypto/stm32/stm32-cryp.c
+@@ -11,6 +11,7 @@
+ #include <crypto/internal/des.h>
+ #include <crypto/internal/skcipher.h>
+ #include <crypto/scatterwalk.h>
++#include <linux/bottom_half.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/dma-mapping.h>
+@@ -2203,8 +2204,11 @@ static irqreturn_t stm32_cryp_irq_thread(int irq, void *arg)
+ 		it_mask &= ~IMSCR_OUT;
+ 	stm32_cryp_write(cryp, cryp->caps->imsc, it_mask);
+ 
+-	if (!cryp->payload_in && !cryp->header_in && !cryp->payload_out)
++	if (!cryp->payload_in && !cryp->header_in && !cryp->payload_out) {
++		local_bh_disable();
+ 		stm32_cryp_finish_req(cryp, 0);
++		local_bh_enable();
++	}
+ 
+ 	return IRQ_HANDLED;
+ }
+-- 
+2.25.1
 
