@@ -1,73 +1,66 @@
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DCE6E614;
-	Tue, 28 May 2024 09:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716888317; cv=pass; b=RITR7svzLTlDevQRbOJWOfgT+Cyqbg4NqjIqUSFcZTS+sQ8fIGI7JZINBLwnv12YuzViSnI2VKsghNHLmTQSoB89BZxwmGWa9pST0J59rE51w/QHqqq0lTco/CAvfVoCZ3ZhrQMQycvMMby8mUhemJ1KxlUYG52Z8BSa+wlPgF8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716888317; c=relaxed/simple;
-	bh=Yxjxyi+/wzR+kE++P52jS3GR5UN/GbK8t5w5grkYLTU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD71153BF9
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 09:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716888340; cv=none; b=fZ6fMOoMqwQeG6shl1MMOZRs6BbEhcVs31qWTcc7VCht6Yr9uO3gIAM50fL/OQ6pw9tRJFcHGN1UhIkwT3Co5qTMZUcYgmbnUlkfOV7HnZV2/t4t4lfZV/UL43RDcdHZCSfYOkXfcFjjNujm1Q/D0aOeVRELj5xmzxdjTwiBk2c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716888340; c=relaxed/simple;
+	bh=OsYS7DkCn8nNtCFD65MUYsKRym72b+wJESsGapm9jiE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PemHkeyybfp1XoFqtbp3h5LOl1mJQ8g4qLBX6rcGItL+a9rA0BwmyxseAbdMPADgH5vB6QdRfpPz4m60peABHXNJn6/HxalQKNL72CBTEkZqCh2qCjCeOJr5qa31lmIXQyQT84eieTXmdXuNl2j0zKraOAAARcXq3PQCG40Nixg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=GasGNw9k; arc=pass smtp.client-ip=195.140.195.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	 Content-Type:Content-Disposition:In-Reply-To; b=jNmQFxX1nDybdoTE0M9vScvJsWpikcEwfKJ+bXBTaCtMja6HbUrpAHO79eJ49mz3uQNzj6Rm3C75b3T5h1Ksc3LYNz7o2sAlDANkXDr1ibi0FBrmSqd3n2+1SkDkns0TeGuwlhHAMZpnujeQ/c4qtMAJTtWCCub4TsJmV89lKV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f8LxA3gk; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="GasGNw9k"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-c641-1eff-feae-163c.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:c641:1eff:feae:163c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4VpRtv3CvhzyS6;
-	Tue, 28 May 2024 12:25:11 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1716888311;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9pxRuM1nEksI3+6016Wll7s/hQaWTfJSV71auwLa+Ms=;
-	b=GasGNw9kT1rAQDfbUaePGiBF3j7DIKVsne+6ouEFnjXOdIjctjRBLQfk5uZFRIqEsiRrVB
-	fzApkcn6DN6o8h4IlyCQul2cVZivnnn8aNu3HZYfWjvZNmauc10YbdFWxi0B5KBhOAz3gu
-	UcOf01z93Nh5fIbuIb1pDC02LVqGf8Y=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1716888311;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9pxRuM1nEksI3+6016Wll7s/hQaWTfJSV71auwLa+Ms=;
-	b=qoEvj1liM40zoNr6hvLHxrdv/+T+0QLPjarI7Bx9TyzfxWkBz6I5RuW3rzVeo2kwvy0bc6
-	D4NotM29GF5pnyq+hXDhYxkY5cu1p7jRvc+TTdfhEA/oSONjSF/JjAv3kif0SGB6slPPQi
-	E61GhtZIoXxOrmVt7X5xVDJnSpgJmlQ=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1716888311; a=rsa-sha256; cv=none;
-	b=CQjSvhVcoszbZywAjuxQLpGXVpZQiMOC08mq0jNN6NwTXp6+Jt+/MoKDsarnOKd0faRMrX
-	w+Nj2oMQ0cuVNM7arQOun4I9K05JvSA9Gswdwpqk2L5xD5VsnuEexFNYv0/cUqbx8UDpj0
-	GEKd0m20yBdkQjuSPdmgeA3Xk8+WGXI=
-Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 5D41A634C93;
-	Tue, 28 May 2024 12:22:10 +0300 (EEST)
-Date: Tue, 28 May 2024 09:22:09 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
-	benjamin.mugnier@foss.st.com, mchehab@kernel.org, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f8LxA3gk"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-529be98ad96so253442e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 02:25:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716888337; x=1717493137; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g7gzbi64k1Z/YC0Cdr+2B8FH5cQuGNXkpk1kzN13Mv8=;
+        b=f8LxA3gkjwRgFquSZRtlde46RPiEmCa0Xa/leBIivPx87yaOi16NtXH63Th5+1gqkk
+         avGS2yRH8cIGMuidHxp4LqZd7PJ0KRg8ATHCQ8u/yfKzTGPKJF6GB5LmpzAKiOsvRLMR
+         8Z5H0b67iLO6Q8TkvTL5XzTJJCFpdGaEM99kiArkz+e6HlrfrdrNL+DnxDErQ48flerS
+         Sn2HIvv7x1u+CAq8IgN6USeWLoJKoKAT8mjJef78N4sMnC54jpjB3PWsrntoZTBpmdfE
+         FnWiPTU+CLSAcBcxNxjJ17CTwJZaU7gfGuFQ85I+Sh4ZgcN0S1S/YahGgyp866lAI2Pa
+         0n1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716888337; x=1717493137;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g7gzbi64k1Z/YC0Cdr+2B8FH5cQuGNXkpk1kzN13Mv8=;
+        b=ak70vmoRjlSlKd+ZIU6zyRGHqT/IQ9KmTg2yDOAxoHzuXTYYsLbqdUhpQUJejFPWJZ
+         ITCl6G5K6ObfxUCXLeu2ktwNcq9rmxB/SYUAL3jiTIkHxfK0xakdoaw0WjXRtWXfFaH8
+         RqBXaekYkZHdVSKG/RyJetKchL21/gUrfnEjITlQiadYqtMIAmlWxE+ITxXP0MJ3bCaZ
+         ZyKG/rsV5v0EHOqvfevrHk/KnUVdDWJR1QBt+OYYiW5K7ykIkSy9dcC9jo1t8/kegrXw
+         ZA0qz8ounCbJkNLxwt7IqJCpjO2InqTYknSY1SVZ/UqLFMajZLiFGQ1Q4PgL35N9xjF4
+         FTMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAUyJmvioELeYhsx3Vby5w8adfCVyKp6AxPAw05cLYspI3fPYHKZ+j+tueARMgjVNmNqbZtCXJb+WZASrK33Wrb0YT+5C+7iiQ5Rb1
+X-Gm-Message-State: AOJu0YxTzSFdef17QHLZTNxM1K9sOCmZh3Zk0wspCPHo9c+K/geGStJY
+	18MObS+/i6AZ30c1UyUmUGIgCW38m9Y+eqB2bNCWnp2T4g3WjANbS33QdLbv3jM=
+X-Google-Smtp-Source: AGHT+IHp84txR1MlPRb+aUhMu7G2+lw7W/QUySdZsZd9yNkSp9JrXsZVz+sK5xQ4n6Nplmjdc1t8LA==
+X-Received: by 2002:a2e:9ad9:0:b0:2e4:e15d:40b0 with SMTP id 38308e7fff4ca-2e95b2566eemr77100521fa.32.1716888337212;
+        Tue, 28 May 2024 02:25:37 -0700 (PDT)
+Received: from myrica ([2.221.137.100])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a1c9570sm11072618f8f.68.2024.05.28.02.25.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 02:25:36 -0700 (PDT)
+Date: Tue, 28 May 2024 10:25:28 +0100
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>, iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD56G3 camera sensor
- binding
-Message-ID: <ZlWiQTfag5yTA4YM@valkosipuli.retiisi.eu>
-References: <20240521162950.6987-1-sylvain.petinot@foss.st.com>
- <20240521162950.6987-2-sylvain.petinot@foss.st.com>
- <8afe1888-5886-45fc-b576-98db3d392d37@linaro.org>
+Subject: Re: [PATCH 1/1] iommu: Return right value in iommu_sva_bind_device()
+Message-ID: <20240528092528.GA2482616@myrica>
+References: <20240528042528.71396-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,56 +69,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8afe1888-5886-45fc-b576-98db3d392d37@linaro.org>
+In-Reply-To: <20240528042528.71396-1-baolu.lu@linux.intel.com>
 
-Hi Krzysztof,
-
-On Mon, May 27, 2024 at 09:04:38PM +0200, Krzysztof Kozlowski wrote:
-> On 21/05/2024 18:29, Sylvain Petinot wrote:
-> > Add devicetree bindings Documentation for ST VD56G3 & ST VD66GY camera
-> > sensors. Update MAINTAINERS file.
-> > 
-> > Signed-off-by: Sylvain Petinot <sylvain.petinot@foss.st.com>
+On Tue, May 28, 2024 at 12:25:28PM +0800, Lu Baolu wrote:
+> iommu_sva_bind_device() should return either a sva bond handle or an
+> ERR_PTR value in error cases. Existing drivers (idxd and uacce) only
+> check the return value with IS_ERR(). This could potentially lead to
+> a kernel NULL pointer dereference issue if the function returns NULL
+> instead of an error pointer.
 > 
+> In reality, this doesn't cause any problems because iommu_sva_bind_device()
+> only returns NULL when the kernel is not configured with CONFIG_IOMMU_SVA.
+> In this case, iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA) will
+> return an error, and the device drivers won't call iommu_sva_bind_device()
+> at all.
 > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index ef6be9d95143..554e6861425b 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -20885,6 +20885,15 @@ S:	Maintained
-> >  F:	Documentation/hwmon/stpddc60.rst
-> >  F:	drivers/hwmon/pmbus/stpddc60.c
-> >  
-> > +ST VD56G3 DRIVER
+> Fixes: 26b25a2b98e4 ("iommu: Bind process address spaces to devices")
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-I might add this is a sensor, i.e. "ST VD653G IMAGE SENSOR DRIVER".
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-> > +M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-> > +M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
-> > +L:	linux-media@vger.kernel.org
-> > +S:	Maintained
-> > +T:	git git://linuxtv.org/media_tree.git
+> ---
+>  include/linux/iommu.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> This is a friendly reminder during the review process.
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 7bc8dff7cf6d..17b3f36ad843 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -1533,7 +1533,7 @@ struct iommu_domain *iommu_sva_domain_alloc(struct device *dev,
+>  static inline struct iommu_sva *
+>  iommu_sva_bind_device(struct device *dev, struct mm_struct *mm)
+>  {
+> -	return NULL;
+> +	return ERR_PTR(-ENODEV);
+>  }
+>  
+>  static inline void iommu_sva_unbind_device(struct iommu_sva *handle)
+> -- 
+> 2.34.1
 > 
-> It seems my or other reviewer's previous comments were not fully
-> addressed. Maybe the feedback got lost between the quotes, maybe you
-> just forgot to apply it. Please go back to the previous discussion and
-> either implement all requested changes or keep discussing them.
-
-The above MAINTAINERS entry is roughly in line with what else we have for
-the Media tree. I'm in favour of listing the people who would look after
-the driver, not just those who merge the patches (or even send PRs to
-Linus).
-
-In other words, I think the above entry is fine as-is.
-
-Sylvain: could you also add the file under "V4L2 CAMERA SENSOR DRIVERS"
-that lists myself as the maintainer?
-
-Thanks.
-
--- 
-Kind regards,
-
-Sakari Ailus
