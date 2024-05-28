@@ -1,133 +1,98 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C092628C
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE48176FBD;
+	Tue, 28 May 2024 19:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716925362; cv=none; b=gZKcyJUJbz58JMjeqNQu6m3DoE0KX4zgcLLdM1d+2XG/zvjhzR38spVDOzap++nMIGUwPYz53XWSIxkDN99xoGnu9P2kP/1wIwItvfUHtb/SuOtU8ryqBSaZ5MCCJ6lfM3ehoBDw7OwTOcm0nIMkFhCs0q+AlwWER2TOsIl1IoU=
+	t=1716925392; cv=none; b=puOxeGzA28m4lrzv7fOGNzJlJfIyNRv7zmBeHnO10L51cO5eOesdb1mVRjJdJY74wohgy5n2fXxk78NzmmnW4yUfykoYckxjt6iVWpdH27zWmq8h9nb0AJa2NQ0UyG5vyiRhrdg5Mvjga57ZCJvclJao8EKZB5ugsMRsJneB23o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716925362; c=relaxed/simple;
-	bh=k581Cx2OkQB8gaY0y6bcYlk/ITECUZ+zQX57Yhe7gKA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X67W250l6DcMlZjMCvPVu3tDVmbx+H/lZq+NmJoY0kjOT7AifP2MN1sxi5pwdx1+fYJLgvXa4LvoE8tq9gDoC356SzahtfBWVShQpaEioiyJt9fQje0e2md7UO9rUmyRP4rKXhPm+oD5PbK4DgEtlGB/N3SLhk1cuOnYD+cO9Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Uago/qVD; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1716925392; c=relaxed/simple;
+	bh=ThEsUIZg0oGl9jo2RSi+9PVPHwNBf83WEij7LLS/WDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o3KfyTYn5WhEx8KOlMsQXREAQAGq/t0Hmf98LgRfXIlTdcb91j31O9dErkpjpPlLs+xqFsfmpzUifgq7sRHaJdb8Xq2LoL9JQ+QjV+FB8G8Y/dExn9aa+XlxbfhBJwiDhzz17UMsUCfrvjk/r48LxiBqG8Z74dE6eo7+Jag0oS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P7AlGgMU; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Uago/qVD"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e95a74d51fso17747891fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:42:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7AlGgMU"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5b9b72c4e71so749229eaf.1;
+        Tue, 28 May 2024 12:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1716925359; x=1717530159; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tnSiUD2gH9HDmHjSHl2kkucSe6ethci8IQ5VxoD7g98=;
-        b=Uago/qVDhLLbip5iwuAtOJURVQ4cy0bw9HoD1LMgTqyebge23HKKr+erqaFZQKIsAe
-         M5U+mEbmvIenoELGmT63+SQuCtojBbqUrBoK8FQSsSwmhxKvKtM3g2+sy0FsJ+l2o1Tg
-         PnFKwvnRzPXaz47+BWqVLLbWuGzLHPqi3Ll+8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716925359; x=1717530159;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1716925390; x=1717530190; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tnSiUD2gH9HDmHjSHl2kkucSe6ethci8IQ5VxoD7g98=;
-        b=ZqIv9M2J4Rz4IHi267AFq0QHiExn8fwXTAm6mlE63MsGyaOWjpjDc0Vv/T5Bp/2jJ9
-         KeLLqRyLWveXOGzBTkIfoNlxL9u8G/kWooesSRlVWKfiO7js5Ivit6BZ7LNK4E2bwnf7
-         igGWfxt9QochiqGa06jD85TwPEpfJ2uf4h0yGw/s11SeiVHd2UvsuAkab0oli1Jp1jw2
-         2Grevdj7FW0TNeBAi4r2vA+2pnAMSfaGm18VC5AyduBzAzNZ6u3L5hqVIRzzYZyJ6qoy
-         AmQpgyFa4A1MfzrR5vDUbFqoJGnMiXixmcyE9EiLcnuiNuGeN0YuigSekE4a40OxG1v/
-         ATvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAc6FZL4Dvmk5UPS3HMBm+EWYEV41d4/3/F20RusBschEHEH2MLo6s6BP/iINVOfGQCZ8dAbxzdfXvAU8bo5pPlqORli9gVARQLgDg
-X-Gm-Message-State: AOJu0YxBTOrBLkvedJa3sM/mg7NEL5nuqICx6PAFyM7JrQrZloEdTmRz
-	U4+xLLfazps7qfNNs2xYC5uDvY/hCwUuFbq3Os2aM1wrZMfk952d+ydn5VJ93LG3mskKc2QoMoA
-	/628PdA==
-X-Google-Smtp-Source: AGHT+IGFztiQl3TD74fqd5GnB8ZCmjpDXC+GjULtmPxcqCQvyPLY0CwgVpe1ZjrEQDL5AwJrNhBzgQ==
-X-Received: by 2002:a2e:901a:0:b0:2e9:8b34:1163 with SMTP id 38308e7fff4ca-2e98b34121fmr17963901fa.37.1716925358625;
-        Tue, 28 May 2024 12:42:38 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95bcd8e21sm23471571fa.43.2024.05.28.12.42.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 May 2024 12:42:38 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e9819a630fso19559651fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:42:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9Vc+gI7+Gk/I1D1HH3bQ5TGpCtR9BJXDkW9Y00sxC+LXUcCkZNbGfk1MKga8d4wd11NkkF6a5i4quu+2442GjRqtFs2ONojekjUaC
-X-Received: by 2002:a19:6a05:0:b0:52a:7d01:84cd with SMTP id
- 2adb3069b0e04-52a7d0185c6mr39607e87.30.1716925357626; Tue, 28 May 2024
- 12:42:37 -0700 (PDT)
+        bh=/QuNdJaoaItLZOmxJxJS3BmtxeHxA8HRBPVP5gnc2IE=;
+        b=P7AlGgMU/cYpJV8sDRSn0TmxF+gQordROwlINalWrCV3PVe7HpfIlDiRv1s5xc1aUH
+         Nz/tpTaqwhu0EzYztoYXXoF2Jbgkojk8TNDXEyMVAhv8S6m/HQCLuTBmwxlDLdfV6C8h
+         TkXaLjxqF1SJZbUrOwNEruXN6OIz3toawMfYpsF5Ps09szLgyg3vVRl51JU30EiciDJd
+         XwDpygd2d01C7lRK2R5+Jv958rQOOPFa5RqrHWIANrvSVSC3OG6I59pXwEoQKTNSmC+H
+         0Kp/uZKdgzvhdORSxFmSSvT7rjO1P7R8sWmbqjduC6zM+itPCYI9n9JgkWHo11TQLjzF
+         qPIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716925390; x=1717530190;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/QuNdJaoaItLZOmxJxJS3BmtxeHxA8HRBPVP5gnc2IE=;
+        b=tJwLOT6IIluOKCTl61CQXebJ6C6nvmOXyP8GmyO5m3T1lOSrl/WHdESOasMOQ5hkpo
+         oerWq1Nj7KNisgyW23fe+zlLNjtLAxpADJNMEMFH3/3cxxUn9rhrdqFPvM6HOXjaKTsW
+         stFS+N1zjIe4aQn3wSmrqE3zpU39B+Iqr2BfVUR3j9SkapfxeWaN2an2B8BPcoVI3B6w
+         1W+TrR5mzW7Aqfrvye8/iLAX5pyX2Z2BXgnZntg144zosO5epsFsDQrNLtmNZOyODuzo
+         +SmPUaF5wr+8dqQBevnaM6p6crV8emXlt+3nCRL40ywhwUoJn0JhCIJNPHzGzJZZHAA7
+         P5qw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/XaqCpAvPDBmeq3osEcSUiHlSRzMIDDwJ/FQUi8RG57q6d5ELa9ZqiCJbUFneB2S9XvcxFm4F/YmwJFItva98zdhfBhYP6xgUa44xhMNCZZ7g9uwJGT31kGoiZ/GAsB0e8fFpNQ==
+X-Gm-Message-State: AOJu0YxxR4IuBoRzruTrwnFHkMUW9c/U+3tAHNJQT+ujK/E/LyXztIyj
+	sBbInttUOWAZqfQabJkAGPt7JaSYxMVq+yT62ODgvh0+ZAoJMJB1
+X-Google-Smtp-Source: AGHT+IFKo4BSozMj0AbdEJnOud+9Zr12zM68wz1B+h4zUwAhRheMyh20Ao6AFtJZ0FZgtIRZOgXH1w==
+X-Received: by 2002:a05:6358:668b:b0:186:249a:c8de with SMTP id e5c5f4694b2df-197e50caf7emr1663193755d.5.1716925389891;
+        Tue, 28 May 2024 12:43:09 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-682274ba9c8sm7929282a12.78.2024.05.28.12.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 12:43:09 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 28 May 2024 09:43:08 -1000
+From: Tejun Heo <tj@kernel.org>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: mkoutny@suse.com, Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, shakeel.butt@linux.dev,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cgroup: Fix /proc/cgroups count for v2
+Message-ID: <ZlYzzFYd0KgUnlso@slm.duckdns.org>
+References: <20240528163713.2024887-1-tjmercier@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525152927.665498-1-irogers@google.com> <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
- <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
- <20240527105842.GB33806@debian-dev> <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
- <CAHk-=wgcoODsCbba423uZwQqOjJ8r29GZyCd472K6L6Dt-NbPg@mail.gmail.com>
- <CAP-5=fUp+gSoLC90vT50X7So_SyAC9OprAMvh_Jj_8NTuO6j_w@mail.gmail.com>
- <CAHk-=wiDheOd3pdZ4vdLwrMbbVs3LUcSD=afASEWbND-HZhuPA@mail.gmail.com> <CAP-5=fVGF6A7fwZyF8o0Sz5nNhtXb0007JoCxaiL2XHCKS3=0A@mail.gmail.com>
-In-Reply-To: <CAP-5=fVGF6A7fwZyF8o0Sz5nNhtXb0007JoCxaiL2XHCKS3=0A@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 28 May 2024 12:42:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh2yboV-UtCO_NFV2TsbbMeHTw0Fqn4rnovbGQzkZLCJg@mail.gmail.com>
-Message-ID: <CAHk-=wh2yboV-UtCO_NFV2TsbbMeHTw0Fqn4rnovbGQzkZLCJg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
-To: Ian Rogers <irogers@google.com>
-Cc: Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528163713.2024887-1-tjmercier@google.com>
 
-On Tue, 28 May 2024 at 11:59, Ian Rogers <irogers@google.com> wrote:
->
-> But nobody else ever reported the issue, even ARM who maintain the PMU
-> driver whose event name conflicts. This hasn't been a problem for
-> anybody else.
+Hello,
 
-I'm not blaming you for having had a bug.
+On Tue, May 28, 2024 at 04:37:12PM +0000, T.J. Mercier wrote:
+> The number of cgroups using a controller is an important metric since
+> kernel memory is used for each cgroup, and some kernel operations scale
+> with the number of cgroups for some controllers (memory, io). So users
+> have an interest in minimizing/tracking the number of them.
 
-I'm blaming you for NOT DEALING WITH THE BUG APPROPRIATELY.
+I agree that this can be a useful metric but am not sure /proc/cgroups is
+the right place to put it. Its use of v1 controller names, listing of
+controllers that don't exist in v2 and the unnecessary column are rather
+ugly and unnecessary. Also, it isn't hierarchical which can make
+understanding where the css's are staying allocated difficult.
 
-I reported the bug and bisected it four days ago.
+In v2, cgroup.controllers and cgroup.subtree_control govern which
+controllers are available and enabled in the subtree. I think it would make
+sense to introduce something in a similar fashion. Can't think of a good
+name off the top of my head but add a cgroup. file which lists the
+controllers in the subtree along with the number of css's.
 
-Taking some time to fix the bug is fine.
+Thanks.
 
-But that's not what you've been doing.
-
-Since then, pretty much ALL you have done is argue about irrelevant
-thingas that weren't about the regression in question.
-
-The fact that you still don't agree, having broken documented
-behavior, and still argue against just having it fixed, I can't do
-anything about.
-
-> So I think the revert is a real regression for a larger user base.
-
-I didn't have much choice, did I? You refuse to even acknowledge the
-bug I hit. I'd have been happy if you had just fixed the bug. You
-didn't.  You just argued.
-
-> There is a testing issue here, not least I don't possess an Apple ARM
-> machine.
-
-This is not an Apple ARM machine. I have one of those too, but this
-isn't it. It's an Ampere Computing system, based on an ARM Neoverse N1
-(and the ARM PMU's both for the core and for the interconnect).
-
-But that is pretty much irrelevant by now.
-
-The issue is that you don't fix bugs you leave behind, forcing the revert.
-
-I'm happy to test any patches. But I'm done arguing. The "cycles"
-thing needs to work. This is not a "pretty please".
-
-This is a "if you can't understand that and acknowledge that without
-arguing, just work on something else, ok?"
-
-                  Linus
+-- 
+tejun
