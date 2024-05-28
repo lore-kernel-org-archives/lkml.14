@@ -1,57 +1,57 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460E38F6B;
-	Tue, 28 May 2024 00:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8368D13FEE;
+	Tue, 28 May 2024 00:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716857815; cv=none; b=XECxNl00HlGHjrsvzzYoSchsb1PBW+n8A7H8cNTMXSaSdFmpoGzYyRa0NGJLv241d0g1mX3TCRygj1CVrMnl27Pe/IW+sHKVBxQfoiZHTwFuQ//zBdG+fsqn8ul6ywydXuCcr0Oe3TupiiOIJbj8EeIfN0O78IHp4Cg5bEYSp8s=
+	t=1716857817; cv=none; b=sgSMirTudUBxRD0Y3as0LUX98JFFEsH+lhsiEWDOHvJNuJlqz+Pw3bvvs3j3ftjAOi3+zsdSUIYqGLnlPJ8S+M5pRUiBGz4vyUwbYI6pemaTf90ddDtCohINmH76SHy3YNJnMTWke45vnKwUwkVHC+8jqYAwcp9uA7OIMKQxQKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716857815; c=relaxed/simple;
-	bh=PvmXeWG0SnCHkNhBbrWqdrOlPRFIU9W0p/d1USU6NiM=;
+	s=arc-20240116; t=1716857817; c=relaxed/simple;
+	bh=GtclWTy0ASRdAy3fBHQ5+Eg7GjfSLLlKIztDtP6lJnc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hzADNJTcvSUa2UtrJ25Z2NyXfc2WaPpPKzCQ33LHb3GG9mC1dECHRUg31j3NzbFX7B4CBn1jA29FwucFs4SNvXFQHDMeoINAQn3lR4Xo1GBADezn1+sp2474cgFvmm5EyYhzzEnjUIK9HnJj8BkLFd+ys0Pi6MlRXtT6E7CRwwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQC+Y/9t; arc=none smtp.client-ip=209.85.128.176
+	 MIME-Version; b=qGhw3H2N/YCbXsjmJW8f4xlzv2Ptx+7/zcugc2YWKl9GPTOwYzdC7SHLGqjJJgtdeIBII8v0mN7d0tQC5ULiptaJ/jNFXYBSgNq9x5rtaCdUjL/KhxvJxBM1c0YBByWCzKe2H9XhfmesDKGCfZk13hOSf5lnpxn4G6wuS/qMK7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XzMXiKjs; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQC+Y/9t"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-627ea4e0becso2772557b3.0;
-        Mon, 27 May 2024 17:56:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzMXiKjs"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-627ebbe7720so2391647b3.0;
+        Mon, 27 May 2024 17:56:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716857813; x=1717462613; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716857815; x=1717462615; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2i8ZBq63RXzGfHsgGbqgssORCMraFAb6HrAbhKbhoNE=;
-        b=mQC+Y/9t4slyyfMRGcpahrhiiqWMRBwRTIRqDUgSmttHxON8w4owtDN8FV8g8r1PyY
-         QU2bwNKZy+0PFaV50eHbj4stf7A/CIkjoEiDnoeKkU2Iga1k0DdeVBtH3GrdMC7QFCBu
-         +ntJrKZBOySHGflauUkOVwtf12VTnUMSaVQU2qfVQVakT+UC39IeQc3zl8fzEJPaEPhV
-         OToa+tDWZQfHNlqRHzxxCOhGrJ/w1kuxwkVpZZq1GqAMwjC6ZnJaC2WAPwRfN5mlQM/P
-         oJVXU406VoX+uLP5+CrQWZ7PwhtB7NVPGhGztFh+F6l4lmdvQigWXnf6nfEhEs3OAWq/
-         HXHQ==
+        bh=XKPhButNX8xjaR4Wjw1GyI4VB8TnS9vBdoFs31kcATQ=;
+        b=XzMXiKjs/sd5joDlv+Jz2ejVs/1QPbnGCWbrUPSWnxDfZHMjqh7orYvZRVCgQOSqsn
+         SrpjVdF0C5YPQ26AbuFJGn2OSrGMu3Sjuh5QbcdR+EEQTuG9PAlpKPak2PThmsiiKUkW
+         cpPo275UawTg9z5IUigkk08bQyDe/vJXp7crFRZUsXaKhQTcg/XU1dClaNczPH5iJbt7
+         cqPxtU0YOdIWVzyWQ+OAbu6NRPgDyW7uD2JvaxrXsRc33vl0DuYfRKHaY9BEGKYvr9YQ
+         FxLJnDwJ068sAVpaGl9j0KYpgenGd1niPPyILP9zkuwUvzykvQl4aoMwEaTi1yroDQW0
+         g8lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716857813; x=1717462613;
+        d=1e100.net; s=20230601; t=1716857815; x=1717462615;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2i8ZBq63RXzGfHsgGbqgssORCMraFAb6HrAbhKbhoNE=;
-        b=Wh8SC/iPfgkLiWOGgD+kCFFKSA/eb24JEMHrMpq0ggEWuzCNaoV3zcPkQg262r9sQa
-         VcmVi+W0tCU1SoiwF+pShy2RjliLyKi31XINQ7cHpvWIl3wB2P2L2fMs6AbbN0lQegZ2
-         ra/Olz1DNYPJhMxPq6CH2B8Xegb5PhHQCtfZqAMH/DqhXA2nhTKIcYo105aaD3bDoqyN
-         h+Ixqcu80/B8AuNGNv4CmASrlB6qLFBmZVt4SOomHQkmgfGe7XIiGzvZ1iJAuSMRU8n1
-         nzxdYAXwgnqEHzSK41OIgxth9iugYrr0kaRljXWGNkZnoiJ4S1cz/oiAz6jvA96xhyZi
-         2nNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUndcLVEv0xHZywTup8TcO8NwAtD7JZkwlGNtbqAgfXZfgXAYCuIeQUgthN5o+8XrzSQZog47AZVyhDSRz+y1bF2Ttbv0N3EptqwuzziMJejFA5vjb0SocrW77tQ2nKq3lwY7ghHreAZUwBlgui7xJzy1JV6UFNPsC/DZxd9eWgGA==
-X-Gm-Message-State: AOJu0YzO4nBflnsAMpyrDB50aQW7b3b4dPwp4pnga28uxoUIVRBMOaQ2
-	11/Z2r9j3Syp5s3/3pU3c4gqY9YVEKbD4LIzcyB9CeW9B/Z4HRwTFalDCQ==
-X-Google-Smtp-Source: AGHT+IGanwN5puLfVgJdTwaNaX0ZijOyB3yt9T1U0vsxt/p9RAMkPTjCsnwW8VBWu9iPsjNHvtaDqQ==
-X-Received: by 2002:a0d:d954:0:b0:61a:999f:e499 with SMTP id 00721157ae682-62a08da8ef8mr105496297b3.22.1716857813196;
-        Mon, 27 May 2024 17:56:53 -0700 (PDT)
+        bh=XKPhButNX8xjaR4Wjw1GyI4VB8TnS9vBdoFs31kcATQ=;
+        b=tMIjfVPC6+bBC4QSJNnuY5Fzx30m5Zo/RCdvQgiWFS3M3fGnuhBb0m0hrl6QKb/rfk
+         5Jz/71kHXPnO4OqVCnnNmGemg5xqFpuNYUjAZECAgLmcS836/QJQI0mJvBvMBxZRQexb
+         chpoxw9s60MRVJ2aMMXGgPvd/AsobqNuuZvHjv/Q16khfFtKxk0phQrFZjWpHbNn7f1D
+         Lp93hETqYvPGB7mSQhG7Ld3dckkR16MXzZwO0fBPhOm4rQr1LNAwxJCQZmIWtu974h6K
+         dSVQ0pWpx3Ua4qpFr4HtQGBi59oYQ4THvbqMab+pt+1qx+zbsnXElquDt5KjNsI1IDLz
+         TNwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUl3unwSWP5T1KpnaytybtsKVw987TJRSPu+PeoDRo0OpNLXhGsOHgUbmVYUYZtrT5aqAJiEMJlzqKsDDJ/E7vzJRcVzjUGauqHxgJ42Bo8zKOPDVF8Z61xgkR9Y05l7UiLMLTkhJmwnrjC0PH35DcAYTPIfrBn9JH8XwdndbIEgw==
+X-Gm-Message-State: AOJu0YwzppLrp2snMCZSo4adelAfgcUGK7sj+0gJ9N6SZAp7d+ag4ES5
+	be/rP9+CbDeuKFdOx9Um8+c2/e8I/2km2SzWyo3YeA0/8OUveMHcCFuXlA==
+X-Google-Smtp-Source: AGHT+IFe5hc0HMbIYKV8GGca2K7UFivtrv6cj+FsXeO4rccoRk4EjlKGQ1bt+Bu1VPRdc4g49tpZhw==
+X-Received: by 2002:a0d:dfc9:0:b0:61b:3346:83ce with SMTP id 00721157ae682-62a08d83a1bmr114507497b3.15.1716857815579;
+        Mon, 27 May 2024 17:56:55 -0700 (PDT)
 Received: from localhost ([2601:344:8301:57f0:35f3:16c3:302:8fdb])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a5345b1sm18328627b3.120.2024.05.27.17.56.52
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a534cf7sm18415697b3.115.2024.05.27.17.56.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 17:56:52 -0700 (PDT)
+        Mon, 27 May 2024 17:56:55 -0700 (PDT)
 From: Yury Norov <yury.norov@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	cgroups@vger.kernel.org,
@@ -80,9 +80,9 @@ Cc: Yury Norov <yury.norov@gmail.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Viresh Kumar <viresh.kumar@linaro.org>,
 	Zefan Li <lizefan.x@bytedance.com>
-Subject: [PATCH 2/6] sched: avoid using ilog2() in sched.h
-Date: Mon, 27 May 2024 17:56:44 -0700
-Message-Id: <20240528005648.182376-3-yury.norov@gmail.com>
+Subject: [PATCH 4/6] sched: drop sched.h dependency on cpumask
+Date: Mon, 27 May 2024 17:56:46 -0700
+Message-Id: <20240528005648.182376-5-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240528005648.182376-1-yury.norov@gmail.com>
 References: <20240528005648.182376-1-yury.norov@gmail.com>
@@ -94,33 +94,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-<linux/sched.h> indirectly via cpumask.h path includes the ilog2.h header
-to calculate ilog2(TASK_REPORT_MAX). The following patches drops sched.h
-dependency on cpumask.h, and to have a successful build, the header has
-to be included explicitly.
+sched.h needs cpumask.h mostly for types declaration. Now that we have
+cpumask_types.h, which is a significantly smaller header, we can rely on
+it.
 
-sched.h is a frequently included header, and it's better to keep the
-dependency list as small as possible. So, instead of including ilog2.h
-for a single BUILD_BUG_ON() check, the same check may be implemented by
-taking exponent of the other part of equation.
+The only exception is UP stub for set_cpus_allowed_ptr(). The function
+needs to test bit #0 in a @new_mask, which can be trivially opencoded.
 
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- include/linux/sched.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/sched.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 61591ac6eab6..98abb07de149 100644
+index 98abb07de149..f2f907ef1389 100644
 --- a/include/linux/sched.h
 +++ b/include/linux/sched.h
-@@ -1604,7 +1604,7 @@ static inline char task_index_to_char(unsigned int state)
+@@ -13,7 +13,7 @@
+ #include <asm/processor.h>
+ #include <linux/thread_info.h>
+ #include <linux/preempt.h>
+-#include <linux/cpumask.h>
++#include <linux/cpumask_types.h>
+ 
+ #include <linux/cache.h>
+ #include <linux/irqflags_types.h>
+@@ -1778,7 +1778,8 @@ static inline void do_set_cpus_allowed(struct task_struct *p, const struct cpuma
+ }
+ static inline int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask *new_mask)
  {
- 	static const char state_char[] = "RSDTtXZPI";
- 
--	BUILD_BUG_ON(1 + ilog2(TASK_REPORT_MAX) != sizeof(state_char) - 1);
-+	BUILD_BUG_ON(TASK_REPORT_MAX * 2 != 1 << (sizeof(state_char) - 1));
- 
- 	return state_char[state];
+-	if (!cpumask_test_cpu(0, new_mask))
++	/* Opencoded cpumask_test_cpu(0, new_mask) to avoid dependency on cpumask.h */
++	if ((*cpumask_bits(new_mask) & 1) == 0)
+ 		return -EINVAL;
+ 	return 0;
  }
 -- 
 2.40.1
