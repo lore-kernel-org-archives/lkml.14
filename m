@@ -1,191 +1,165 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8523AC16;
-	Tue, 28 May 2024 01:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3AB446DB;
+	Tue, 28 May 2024 01:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716860226; cv=none; b=cS7TcyBfbeks+IPMDU1X9XySIJz/OAiPbpB/169chOkaPobsXrqHE0ooKzHRUlJLe7eeWtee+V0xr5nW6kgPnLul6EBdMTOSFE2EzWR3pSRu/B5Kd2U+Lmma+uwinjChzi2dM0AFohKkfu2NniZjbAVeCsx3q5QDvFTk5y/T/Ts=
+	t=1716860231; cv=none; b=rz0T2bsZ+G4Xp9EmEzX9y+G7RuBLEFtSFydZSz7ATZL1iHE2ekrURnm9waVK4WzNYxXapkh1hx2n3tZwbelHtQQxjMil1JVht7eHwBhh/nOR0VeWrjD35bnLZBcit3NosYZnXL8+WkB4myCB3tn3vuYRnxcg+G+bzSL6IxzP+Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716860226; c=relaxed/simple;
-	bh=aIav+5EECdqbJcYjdH5A+4TUj/fYjbell3xkt46zAls=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JWsHyv9FKLhz7CsmbNXTZaWd6KgKtHCCQnrqKw3IkgW3enhE2UtaAXE80b4FF0RgZ3x11KMN6WVS6lIy9b5pi0AslK46COI+AK5tSgBUkZL3JSbK4MD4YoaJlHZincG6wodxnJH+lzYUhCI6PuSISB10lYHpWkOLV4xVGvbG5FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=CMOEec67; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JD2WTgaR; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1716860231; c=relaxed/simple;
+	bh=gRy35OUeiPoftW5As7Ndowu/SYCpl1gyfvy0PbUawa8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TiIDWNRFppdpP9YsWKve2XxCM5Tg0lJxIG9ZlysuM5gZKHfo1Bj7/oSPd+dQmw8i1Vwu5ZACvbXzQIZr0hBUz0dYfVNSjIZM1cnwreLjonto/LkFoU9+7ezVI7VfrpA5YQycP+Ahas4cGX0CxL5jzt23G0O0PmVgnXNRLYqujqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KOyAWkg1; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="CMOEec67";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JD2WTgaR"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 8F0B51380142;
-	Mon, 27 May 2024 21:37:04 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 27 May 2024 21:37:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1716860224; x=
-	1716946624; bh=oUbMKxb/AnzUhw3GvwikoRj656Q1cIKAuZQGKv+i05A=; b=C
-	MOEec67Cywe9myr1q0v3AhliuPSqC3/HcbZzcCBthK/vUxcUPZKn1HxPv134QkyB
-	U2uCoaV4CXFo0sqUWsvIHRFvecsCrLncBjbtzDRUZDs6xr8u0EiGIovja1Or6RIl
-	U6UjLHlpDkM2WmmS0f7yITJaIDzrFRWeo9ssiP2zEfb6YuaZKM4rZkDSiOKx0fbA
-	G+B0Ff2gllI8coFUEOPcX4VlYcGu9f+dpyU+5arXyqmev4z/dBrqR9ITSrGoEG0K
-	Xp0ANRYFZiPHPlCZce+esI8OrziLxTNCI3CipMM+6oA8DLuWpsKOgwjdTFcY5fX0
-	V6XJDJ2QLW9Yh3fgxHPEw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716860224; x=
-	1716946624; bh=oUbMKxb/AnzUhw3GvwikoRj656Q1cIKAuZQGKv+i05A=; b=J
-	D2WTgaRELGS+RFOX6D/oY41aMTL7Jad52P2wJdGsRLn6dEHjqQ31l3Z3E2Z+JWU5
-	cJwYbUAbWDzeYLgfPkC4IXObC1100vJyztmMFhE0Dur6A5iI/f1Tdz0BTqvkawWk
-	QMcvljOn32e25Y4y0TTJ35r2PX/VjFwETpxyj1EE0pWtgr/mP7F40zyZoKY6/Tw6
-	WIr80INf3Cii0KcUfsroMQlFc9doT4bBFIhnJHoCB4GA74hxK+js0hAxavturfYD
-	DFOV2PvBv5KOA5g1wlc/1z+j8BDDhj+tCAGY4J7M4PXQC6FjvcTknYs2L0h+iUzb
-	pgxN8469U+vZ7bl0pi2NA==
-X-ME-Sender: <xms:QDVVZjNggA0afjrWUo6uVxAzKVemPEcTy7rf5eCJiQyiLFOc7mr92g>
-    <xme:QDVVZt_jEEc1CdyAHfgq5N6mlQEwEwWQbBQ8pWO7keLgMMqHhLixWKbdXPscqoDnc
-    209jjUHp-jeDmWkms0>
-X-ME-Received: <xmr:QDVVZiS439lzAfW-fpdh06NDWwmkm7f7oxNT7JQvIC-pMGHe-bf3dV00dO8v>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejhedggeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
-    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
-    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:QDVVZnsrxQGBNoPhEvga8LUyiTRYsnA8aFgDSbIY0ub8gGdfry4trg>
-    <xmx:QDVVZrfJq-FQyr3O7ScWKUcHjokz6xewKYklV1uvSKbMNLZu-ffpYA>
-    <xmx:QDVVZj3p-ZSPZHcyA1FeauOfTm3Kb5zRj_jNI7oupxWJijlJJtLXmA>
-    <xmx:QDVVZn-uzlJJs0Jg1kYsfuihNDTyrpqOd0AngZFgWFFY8cYHS4J-aQ>
-    <xmx:QDVVZsGzkO6vbamNEstTBbbn5tRu4eXLySkQki2OSyjsDi7w-048aIwP>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 May 2024 21:37:01 -0400 (EDT)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: hdegoede@redhat.com
-Cc: ilpo.jarvinen@linux.intel.com,
-	corentin.chary@gmail.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH 9/9] platform/x86: asus-wmi: add setting dGPU TGP
-Date: Tue, 28 May 2024 13:36:26 +1200
-Message-ID: <20240528013626.14066-10-luke@ljones.dev>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240528013626.14066-1-luke@ljones.dev>
-References: <20240528013626.14066-1-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOyAWkg1"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-6818811ef2dso213134a12.0;
+        Mon, 27 May 2024 18:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716860229; x=1717465029; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/zk9vV2YlMycmzWFDOTOhz2mFHoCHmz8RqkeX1scVZQ=;
+        b=KOyAWkg1FSgLxEdmUFfxE8KFAGuoVd/umysLOIDDPeCzSZl1nzZ72c8RC78fNYlwg+
+         x2XYPfiukf1v3UN5WkvEuP3QKDDGCledCZZA7KpOO1lD/ZTgBs7CZO5pO9seeuTtn/de
+         OlnWk9WcTX8TyrWdzU9z7A6wiC1DZjZah+BDhF1yVPNN7Cg6LJdJMTFy/Q2Am3W5o+RV
+         aDrpKyqZx3G0WIa0Iw4Ue1np6UT4RkRqulUGYahAAepSti2PNoFHNYSab+sBN9DiZRuF
+         JRGqMmK8zTEg5Mw9hbhD6/FGkxLEPrCTwKTWBr9Xf32wm+br7nnnDYgaCewcUxUFntcG
+         NHfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716860229; x=1717465029;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/zk9vV2YlMycmzWFDOTOhz2mFHoCHmz8RqkeX1scVZQ=;
+        b=Hopo+vw40qCTGvXVjp1dZ+XAK3qSpAqPLl3cFABmWAIz6PfEdujkNv49HTKBBCZ/hm
+         UKy5JcsT10ZBtzTs1ZT++dG1F9xB4zq6Hgg5JHPO3hgI216eUVZAOZsowkA4t9ufW4lu
+         sErOR9/Ar9jeYjfPs3pGxpzkNaxYYXGrQXeWijfIRRxoc/ZZRII7BJCnA0aFw1Uy8Twg
+         EYyczJpqE3z1nE8PQ3KmIF2qY2i9eAnJq+XPVrAMDrzcmZmxE0tCzaOVDCJa5qai06sc
+         VAREFRxlKtcqSlHwDsmj+Whda8U5a/VuCe/o5yh4+y4bQJO69ER9xY819OYElVoS5aQF
+         6Amg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcL5RQ6At5ai3stHy1hi/hAQktI6wz1LJxsOej9P6w/GUe8PxPmy67XbCj9gYAkUSgOW6zVN8sc1eeNaqiCKPLOuy0fAer7UP3bBgYDQCMoGJBj46ppL/1wRrI/WDv315G
+X-Gm-Message-State: AOJu0YxIX7dm3WQYggBycFEeQlL7eZy9WlTebXuUU1sioEf3hD9Thraw
+	xc8j2V4IsCp4PjODScZo/hh6Fz74msIL0sZXgIc4RlZXSwflL0xxgrDftNJklg0OcU/aCur5vZA
+	xlwG23itFrlU+kLc2iQQOrtC4uXu032/EltA+9Q==
+X-Google-Smtp-Source: AGHT+IHNo0JD5HYAnIvsWqv6//ds5GCpX9miQ/PSD8IvV39sh/7bXFiVDS6KX+8DFMu7bg9EoCp8gdSH3bmQsucVq2g=
+X-Received: by 2002:a17:90a:bb8c:b0:2bd:5deb:9d50 with SMTP id
+ 98e67ed59e1d1-2bf5f74e014mr9138711a91.39.1716860229503; Mon, 27 May 2024
+ 18:37:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240527012018.351223-1-zhouzhouyi@gmail.com> <c60b572e-12a8-49b1-a75a-b8a7b7ed674b@amd.com>
+In-Reply-To: <c60b572e-12a8-49b1-a75a-b8a7b7ed674b@amd.com>
+From: Zhouyi Zhou <zhouzhouyi@gmail.com>
+Date: Tue, 28 May 2024 09:36:58 +0800
+Message-ID: <CAABZP2zGfhcYrn6UOhmkXEgtCAPLcN7bgCdbzAi1r+aNrToHKQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon/r100: enhance error handling in r100_cp_init_microcode
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: alexander.deucher@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com, 
+	daniel@ffwll.ch, chris@chrisdown.name, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	rcu@vger.kernel.org, lance@osuosl.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The dGPU TGP can be set on a few ROG laptops. This gnerally needs some
-extra userspace inference to find the base and limit:
+Thanks for reviewing the patch
 
-- Find max-tgp from nvidia-smi
-- Find max-boost from nv_dynamic_boost_max (asus_wmi)
-- (max-tgp - max-boost - initial TGP) = base TGP
-- (max-tgp - max-boost - base TGP) = max additional TGP
+On Mon, May 27, 2024 at 3:58=E2=80=AFPM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 27.05.24 um 03:20 schrieb Zhouyi Zhou:
+> > In r100_cp_init_microcode, if rdev->family don't match any of
+> > if statement,  fw_name will be NULL, which will cause
+> > gcc (11.4.0 powerpc64le-linux-gnu) complain:
+> >
+> > In function =E2=80=98r100_cp_init_microcode=E2=80=99,
+> >      inlined from =E2=80=98r100_cp_init=E2=80=99 at drivers/gpu/drm/rad=
+eon/r100.c:1136:7:
+> > ./include/linux/printk.h:457:44: warning: =E2=80=98%s=E2=80=99 directiv=
+e argument is null [-Wformat-overflow=3D]
+> >    457 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__V=
+A_ARGS__)
+> >
+> > Above warning is emitted during the rcutorture test in
+> > in PPC VM of Opensource Lab of Oregon State Univerisity.
+> >
+> > Enhance error handling in r100_cp_init_microcode, let r100_cp_init_micr=
+ocode
+> > return with -EINVAL when none of chip families is matched.
+> >
+> > Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
+>
+> > ---
+> >   drivers/gpu/drm/radeon/r100.c | 7 +++++++
+> >   1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/radeon/r100.c b/drivers/gpu/drm/radeon/r10=
+0.c
+> > index 0b1e19345f43..4f8a1bdd9365 100644
+> > --- a/drivers/gpu/drm/radeon/r100.c
+> > +++ b/drivers/gpu/drm/radeon/r100.c
+> > @@ -1055,6 +1055,11 @@ static int r100_cp_init_microcode(struct radeon_=
+device *rdev)
+> >                  (rdev->family =3D=3D CHIP_RV570)) {
+> >               DRM_INFO("Loading R500 Microcode\n");
+> >               fw_name =3D FIRMWARE_R520;
+> > +     } else {
+> > +             pr_err("radeon_cp: Failed to load firmware \"%d\"\n",
+> > +                     rdev->family);
+> > +             err =3D -EINVAL;
+> > +             goto out;
+> >       }
+> >
+> >       err =3D request_firmware(&rdev->me_fw, fw_name, rdev->dev);
+> > @@ -1067,6 +1072,8 @@ static int r100_cp_init_microcode(struct radeon_d=
+evice *rdev)
+> >               release_firmware(rdev->me_fw);
+> >               rdev->me_fw =3D NULL;
+> >       }
+> > +
+> > +out:
+>
+> That looks superfluous, just return -EINVAL directly in the else case abo=
+ve.
+>
+> Apart from that this is for ~15year old hardware. I'm a bit reluctant
+> adding code for something that old even when this change here looks
+> harmless.
+>
+> Is there a plan to complain about that in an automated checker? If yes
+> then the change is probably justified, if no then I would rather not do i=
+t.
+The warning is emitted when I invoke following commands in ubuntu
+22.04 (ppc64le)
+linux$make allmodconfig
+linux$make drivers/gpu/drm/radeon/r100.o (a quick alternative to 'make -j$n=
+proc)
 
-On some laptops the dgpu_base_tgp may return 0, in which case the base
-TGP must be derived as above.
+But everything is OK when I invoke following commands in ubuntu 22.04 (ppc6=
+4le)
+linux$make allmodconfig LLVM=3D1
+linux$make drivers/gpu/drm/radeon/r100.o LLVM=3D1
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- .../ABI/testing/sysfs-platform-asus-wmi       | 19 +++++++++++++++++++
- drivers/platform/x86/asus-wmi.c               |  9 +++++++++
- include/linux/platform_data/x86/asus-wmi.h    |  3 +++
- 3 files changed, 31 insertions(+)
+And I can't reproduce the warning in the x86 environment, so I guess
+this phenomenon
+is toolchain related ;-)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index d221a3bc1a81..46df3452c9da 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -253,3 +253,22 @@ Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
- 		Set the maximum available system memory for the APU.
- 		  * Min=0, Max=8
-+
-+What:		/sys/devices/platform/<platform>/dgpu_tgp
-+Date:		Jun 2024
-+KernelVersion:	6.11
-+Contact:	"Luke Jones" <luke@ljones.dev>
-+Description:
-+		Read and set the extra TGP applied to the dGPU. This is applied on
-+		top of the dgpu_base_tgp.
-+
-+		If the dGPU maximum power including boost is 175 then we can calculate:
-+		175 - 25 (dynamic boost) - 70 (initial dgpu_tgp) = 80 (dgpu_base_tgp).
-+		For NVIDIA dGPU the max power can be found with nvidia-smi.
-+
-+What:		/sys/devices/platform/<platform>/dgpu_base_tgp
-+Date:		Jun 2024
-+KernelVersion:	6.11
-+Contact:	"Luke Jones" <luke@ljones.dev>
-+Description:
-+		Read the absolute base TGP of the dGPU.
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 4b5fbae8c563..4d291429e7a1 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -123,6 +123,7 @@ module_param(fnlock_default, bool, 0444);
- #define NVIDIA_BOOST_MAX	25
- #define NVIDIA_TEMP_MIN		75
- #define NVIDIA_TEMP_MAX		87
-+#define NVIDIA_GPU_POWER_MAX	70
- 
- #define ASUS_SCREENPAD_BRIGHT_MIN 20
- #define ASUS_SCREENPAD_BRIGHT_MAX 255
-@@ -797,6 +798,8 @@ WMI_ATTR_SIMPLE_RO(egpu_connected, ASUS_WMI_DEVID_EGPU_CONNECTED);
- WMI_ATTR_SIMPLE_RW(panel_od, 0, 1, ASUS_WMI_DEVID_PANEL_OD);
- WMI_ATTR_SIMPLE_RW(boot_sound, 0, 1, ASUS_WMI_DEVID_BOOT_SOUND);
- WMI_ATTR_SIMPLE_RO(charge_mode, ASUS_WMI_DEVID_CHARGE_MODE);
-+WMI_ATTR_SIMPLE_RO(dgpu_base_tgp, ASUS_WMI_DEVID_DGPU_BASE_TGP);
-+WMI_ATTR_SIMPLE_RW(dgpu_tgp, 0, NVIDIA_GPU_POWER_MAX, ASUS_WMI_DEVID_DGPU_SET_TGP);
- 
- static ssize_t panel_fhd_store(struct device *dev,
- 	struct device_attribute *attr, const char *buf, size_t count)
-@@ -4204,6 +4207,8 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_boot_sound.attr,
- 	&dev_attr_panel_od.attr,
- 	&dev_attr_panel_fhd.attr,
-+	&dev_attr_dgpu_base_tgp.attr,
-+	&dev_attr_dgpu_tgp.attr,
- 	&dev_attr_cores_enabled.attr,
- 	&dev_attr_cores_max.attr,
- 	&dev_attr_apu_mem.attr,
-@@ -4280,6 +4285,10 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		devid = ASUS_WMI_DEVID_PANEL_OD;
- 	else if (attr == &dev_attr_panel_fhd.attr)
- 		devid = ASUS_WMI_DEVID_PANEL_FHD;
-+	else if (attr == &dev_attr_dgpu_base_tgp.attr)
-+		devid = ASUS_WMI_DEVID_DGPU_BASE_TGP;
-+	else if (attr == &dev_attr_dgpu_tgp.attr)
-+		ok = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU_SET_TGP);
- 	else if (attr == &dev_attr_cores_enabled.attr
- 		|| attr == &dev_attr_cores_max.attr)
- 		ok = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CORES_SET);
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index efe608861e55..71833bd60f27 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -135,6 +135,9 @@
- /* dgpu on/off */
- #define ASUS_WMI_DEVID_DGPU		0x00090020
- 
-+#define ASUS_WMI_DEVID_DGPU_BASE_TGP	0x00120099
-+#define ASUS_WMI_DEVID_DGPU_SET_TGP	0x00120098
-+
- /* gpu mux switch, 0 = dGPU, 1 = Optimus */
- #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
- #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
--- 
-2.45.1
-
+Thanks again
+Regards,
+Zhouyi
+>
+> Regards,
+> Christian.
+>
+> >       return err;
+> >   }
+> >
+>
