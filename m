@@ -1,184 +1,209 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3366C6D1C8
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930E36F066
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716879393; cv=none; b=asv746rCj6YdyaTtmkhIrjw5w/mZxGL2IuMlrGnq2DHw3WpwCdtHXoMQ9dMPc3dHCP5ivwnITIn8bQi148j7ACf7GNFO8AcWzl1iU67MMe4g1V59jCSMm9W1ty0PJI4zAiXtnIbZZR6yutlfcp+lFdJnftXADQPZDQfb8abYJTY=
+	t=1716879419; cv=none; b=N9JADYkYOkbe5b+bmNZpCgr8Wk4yZvcLE2eJBbEqp2r2I7D8TkE/H9FCH8BKliFMzL5hHEp/lQhBS1Wr8hqhdDPRrRFNr3Ey3UALahGe7brJdanyC1qXJdzyNEqsVobwvUBqM5zG4e0RdWEa8i4cWSr/vgvO6Gcx1My5YFdp9JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716879393; c=relaxed/simple;
-	bh=xy04Y7Cl2ggATvVxFEFaLmatY5KPNXhFK1jAeCXe4uA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IYh1o5gYcHyg1qcs848Q0uqlGgybLFl6aX3phk9OtNjl8fGYtLq5Dxwgeo9sEjW32/sZjlY+b+RW3MzCl2jcbA0sccqQ+CTKcZ+6YDH/yxd2BNgraVICEzramoq03MrXy0CMs6c0h1yIWYGPvAeC+d4dDKknA58jFBY6ukfdonU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IGaxTv8G; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716879419; c=relaxed/simple;
+	bh=VHklIm/d1slFpHw4H0fGDmkRx7FbeR3jd6KKqB6xOrY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=E9biogd7B8AjvbSPkwhb/ACbNW5k3U0yvPLCnZUfSCcAxj6gWmyqKhW47WtwtBjabmgvjhQzOUsRYmZEC9cXHn0ay7yuRJui3yzG72XVOYyqQMRmK83Scqfy7QzBsO4jSUSMjlkZXQI4XJZHR9OWpAsX8b6yBb/TqqcIIGIqUEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=A6QX3l8B; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IGaxTv8G"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5788eaf5366so511613a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 23:56:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716879390; x=1717484190; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Rb4BnC8a2t0b1yzK8hj7Hksoqy02E3Bi5yA3QhBbns=;
-        b=IGaxTv8Gnn/jAe+eI5h3bTY0nUJ+hAPurnfFS3BpJx5iKOqS1zTz6aGV3ZA+v8Wgd1
-         HX9cijcPpB5W8XOEA5FBwRvD5LDnTI0TYeOfhWu1jbdwBYxrbgI61/oVmrB6P5dWhoj9
-         Jn6VaDujmEye0czfDyYoJtiydcwvbgbqGkG/NLnEmDcrtWV7fHYveEYwL6WA0LKKV8Kj
-         s1BRweOOug3SeNhchk004DFcqC+OlYIxTbtsX6BJahKTzoLvI4aLg8cT7N1on/OGaQdc
-         OFWSXAx2m5Ke1NynIlpd8d61kFKo0ZZDlTwZkRy167uBNSIjxSpzjUWkFONYrcvAuHQc
-         2EyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716879390; x=1717484190;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3Rb4BnC8a2t0b1yzK8hj7Hksoqy02E3Bi5yA3QhBbns=;
-        b=G3xPeu7VttYXnxARUkVXUIT1bQRP5v7oeb5AhOQ4OTNev6Q3jRR8bn9a4QbSA+FNM3
-         pMMGePyq0x+/4D2Iucu17+RbEO7YdDw3DYqJkHjfrQp3PtVf5Dh6dszE8XAo1mjGc1/G
-         /uptVMzoSZVHflFZ8cPxlHfPOxSZh0JWj+1FNBKvByIZpPYaaxcZD8sYz7pvvHAGS6sK
-         jsPPcagb0JIH/9w1Z3deTIymKvBIYkHmXfelRYxUm1nGMXjZfGAXGj4E8dYKHdlIQQnE
-         tSsE+WW34GhcaFENR/nmJuM/tWszKu7rZg0lSSjoinTTPkZghS6AIvY2EUb4x5anIhxm
-         45pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUV7z1fRQBkRk3nrilmZZLw3AN5MDQgaAwz9hH6SQCxUwRSWYph5k4NwZOwgAnEAWy2Oc4cMEho55k2tspbUOXmq4/tNLuXK61/bknl
-X-Gm-Message-State: AOJu0YyeN/BWtXlQ7i48Au1gyhDPIK01ah2fy+Y9hWoFDqiMm0ONqtY5
-	+SwhTGwHP2Iye6fkGeyn5Pe2V8yDD6t0toYOw2YD3L2grVvfbJ8DSp4Ov82XzWw=
-X-Google-Smtp-Source: AGHT+IFTXIMK3MGqjw5JBxjVm/t5m+pO925hK73Q5dswKeLkmGeXWf8u2S5zEl60ithy+Er0aizdjg==
-X-Received: by 2002:a17:906:314e:b0:a59:c319:f1dc with SMTP id a640c23a62f3a-a62642daa92mr764191366b.4.1716879390492;
-        Mon, 27 May 2024 23:56:30 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cda48e6sm573976666b.203.2024.05.27.23.56.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 May 2024 23:56:29 -0700 (PDT)
-Message-ID: <a9902865-afcb-4d58-934d-05d62a9e995d@linaro.org>
-Date: Tue, 28 May 2024 08:56:28 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A6QX3l8B"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240528065653epoutp0175b3068e24471884b18847850f67aa92~TlLru-cX42098120981epoutp01T
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:56:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240528065653epoutp0175b3068e24471884b18847850f67aa92~TlLru-cX42098120981epoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716879413;
+	bh=nAZx1LsOHkUtzRfjnw0sqmJkB2agzB/i6qclqjs+O2I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=A6QX3l8BIRem4hWQvpzZ3SdTCGJG8oFBQxAtoXUfhh6JWRyw5vGiUTkfGlzg61oG/
+	 zIPDj5UZ8SnBerbI5RNbJbjlFhpRhZ09n9uAyaL3qurd8qhyjNjmd7urty52Um3DQt
+	 8lzVnBgI8Ej5B2UVZDo11DTBKBpgxK8cVcFJMdpU=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240528065652epcas5p2d8319a1124923aaa87746d14bdf69f6a~TlLq5UvCH0185501855epcas5p2N;
+	Tue, 28 May 2024 06:56:52 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VpNbk5vG5z4x9QC; Tue, 28 May
+	2024 06:56:50 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	60.C8.09989.23085566; Tue, 28 May 2024 15:56:50 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240528060437epcas5p2587b9da4ba2e6f0beddcb42a9679e860~TkeCoTB6X0914209142epcas5p2L;
+	Tue, 28 May 2024 06:04:37 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240528060437epsmtrp2df0fb02a548747a950a44b275d53f541~TkeCm5zxE0102101021epsmtrp2O;
+	Tue, 28 May 2024 06:04:37 +0000 (GMT)
+X-AuditID: b6c32a4a-e57f970000002705-54-665580324bfc
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	9E.14.18846.4F375566; Tue, 28 May 2024 15:04:36 +0900 (KST)
+Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240528060433epsmtip20328e5dbd5f2ec8f001612a38afabaf3~Tkd-DQImr1951119511epsmtip2Z;
+	Tue, 28 May 2024 06:04:33 +0000 (GMT)
+Date: Tue, 28 May 2024 05:57:33 +0000
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
+	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
+	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
+	<hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
+	<kch@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+	Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	martin.petersen@oracle.com, bvanassche@acm.org, hare@suse.de,
+	damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
+	nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v20 05/12] fs/read_write: Enable copy_file_range for
+ block device.
+Message-ID: <20240528055733.kwmyx7f7u3w7gpon@nj.shetty@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] spi: dt-bindings: cadence: Add Marvell overlay
- bindings documentation for Cadence XSPI
-To: Witold Sadowski <wsadowski@marvell.com>, linux-kernel@vger.kernel.org,
- linux-spi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: broonie@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, pthombar@cadence.com
-References: <20240527084216.667380-1-wsadowski@marvell.com>
- <20240527084216.667380-4-wsadowski@marvell.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240527084216.667380-4-wsadowski@marvell.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <ZlJuDxhMEpJxKQHV@dread.disaster.area>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxzOubfcFiN4pRAPBSerExXCo7w8SFE3jLmZk7AMMjeTYQeXRyht
+	1xZR5kZ5OakPsFOcdbxxCGwQhC1FYUKFFgqERF6DQRkOBoyIDFQmDllLwfjf9/t+33d+rxwW
+	blfO5LDiRXJaKhIIucQmxi8P9rp5+CgiYryV9/egGoMOR+m5KziqGs0h0OyDBYDy5l/gaKL5
+	G4BedvfgqF5nBKioJJ+BhpobMNRYosJQRVUbhm5ez8BQ2+pjAqm0AwBN9qsx1DTsjorPlTFQ
+	Y1MHA/Xe/Z5AhT9MMlG5/hWGrpzvx5BmIg2g6tknDNQ+7IR6VvRWh5yo3r6jlKEEUg3qUSbV
+	Y6xlUL3dSdSdymyCqitLpabrbgDq3pCCoEovf2tFXcqYI6iGrDEr6p/JYQb15Nd+grpcXwmo
+	rqJWZhj70wR+HC2IpqUutChKHB0vig3mHv0oMiTSP8Cb58ELRPu4LiJBIh3MPfxBmMeReKFp
+	OVyXUwJhkokKE8hkXK8DfKk4SU67xIll8mAuLYkWSvwknjJBoixJFOspouX7ed7ePv4m4cmE
+	OLXeSEiK4enRpVKmApTZK4E1C5J+MO1CH6EEm1h25D0Aq1ueMS3BAoC3pwbB68C4OopvWKrG
+	fltXNQDYpWlbDxYBXF7WWZlVDHIXXB3sNtlZLIJ0h52rLDNtT7pClUqDm/U4WURAZVo1Zk6w
+	yeNwsXicYcY2ZAisrx0CFrwVdtyYWOOtSV/Y9HPHWkuQNFjD7yrKGZaWDkPthal1zIZ/6+uZ
+	FsyBi3NNhAUnw4qrtwmLORNA9aAaWBIHYZYhZ202nIyFE4356w9th9cMlu5w0hZeejmBWXgb
+	qCnYwDvhjzVF6wUc4cBSGmGeGJIU1J5zt2zlLwD7ZoxYLnhL/cZA6jfKWfB+mD2fbqU22XHS
+	CZa/YlngXlhz16sIWFUCR1oiS4ylZf4SHxGd/PrMUeLEO2Dtx7i9rwHjf8x7agHGAloAWTjX
+	3sa+4MMYO5towZkUWiqOlCYJaZkW+JsOdAXnOESJTV9OJI/k+QV6+wUEBPgF+gbwuNtsZrPy
+	o+3IWIGcTqBpCS3d8GEsa44Cy1kKoj5mF511zniB5T/tsWcbvrJLUbVXLxWrfqo89AVz907+
+	VM5JB8Pz5SParcey30vd3Mku9tg83vzo+JyX/sSxZ1n383Sh7wTNlLHjAlOn+a7O188o/9zj
+	PxL+r0KDPW3jLkYMdG9vURba8mpcp7ewog7Odp9QCpdCyQVdn/0499bjKU6Bo63CcWXRuS4m
+	ZCUlnbPr7VO7m8/WjglzvwwvxCQPWx1WnR9u86Ayb6mu6STWn4XnS3wTr7LPf87/7+vMm+F5
+	BQkHnp+eHdgRWncRzrRUJnzye2tet3PtxR3sEaB/t7RPlujDwDsjtI+St3QtjjCD5tsXYmEI
+	Z3Uf08j35DJkcQKeGy6VCf4HXkQjk7oEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCIsWRmVeSWpSXmKPExsWy7bCSvO6X4tA0g1vTTCzWnzrGbNE04S+z
+	xeq7/WwWrw9/YrSY9uEns8WTA+2MFr/Pnme22HLsHqPFgkVzWSxuHtjJZLFn0SQmi5WrjzJZ
+	zJ7ezGRx9P9bNotJh64xWjy9OovJYu8tbYuFbUtYLPbsPclicXnXHDaL+cueslssP/6PyWJi
+	x1Umix1PGhkt1r1+z2Jx4pa0xfm/x1kdpD0uX/H2OLVIwmPnrLvsHufvbWTxuHy21GPTqk42
+	j81L6j1ebJ7J6LH7ZgObx+K+yawevc3v2Dx2tt5n9fj49BaLx/t9V9k8+rasYvQ4s+AIe4Bw
+	FJdNSmpOZllqkb5dAlfGkmkfGAuuiVYcn3iQqYHxs2AXIyeHhICJxOr7N9i7GLk4hAS2M0pc
+	3tvCCJGQlFj29wgzhC0ssfLfc6iij4wSB94dYAFJsAioSvy/fhaogYODTUBb4vR/DpCwiICa
+	xKRJO5hB6pkFlrBJzLx0iRUkISwQIfF54UOwXl4BZ4ktG28yQgx9xigx/+x1JoiEoMTJmU/A
+	ipgFzCTmbX7IDLKAWUBaYvk/sAWcAsYSe7eeZJzAKDALSccsJB2zEDoWMDKvYhRNLSjOTc9N
+	LjDUK07MLS7NS9dLzs/dxAhOCFpBOxiXrf+rd4iRiYPxEKMEB7OSCK/IvMA0Id6UxMqq1KL8
+	+KLSnNTiQ4zSHCxK4rzKOZ0pQgLpiSWp2ampBalFMFkmDk6pBqZQiWu7vCT3br5wUlM2Uel2
+	6byl/IZmgse1Zx2+vUtbSF9ccvZ1tYzkVY8jdk7QqQ+tipmWaPWjfpIZe7rfbLVtTxlNVhZx
+	fhWK/CSSEiEQw1J1vCP1ydl1WrwWGtWyahnv2TL476/Pd3C0mWbH7M8ktP92i/kynYX66syC
+	3242pP3ZN/fRxpcKdd0CfocV/qSdndzzxZg5zOhXwstyvuULAu+WrEuzimDTnWv8687+87zG
+	p0TVix1/fLMw6869KVx/9IPpOrmjMi94GL5K/Ylt1DnodMWexTuJ4fxhnenbs06IRJVybjYu
+	vb14AUMxQ1xPWOGzz6XGs9bPSA9hqnVMqf/4ov+v8rInxXbaSizFGYmGWsxFxYkAAcvDiHcD
+	AAA=
+X-CMS-MailID: 20240528060437epcas5p2587b9da4ba2e6f0beddcb42a9679e860
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----u98hW3AvpxW_WMqzG8XaJinKydZ84Ygy6oP0sovTVoTPagnQ=_b7ed_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240520102917epcas5p1bda532309b9174bf2702081f6f58daf7
+References: <20240520102033.9361-1-nj.shetty@samsung.com>
+	<CGME20240520102917epcas5p1bda532309b9174bf2702081f6f58daf7@epcas5p1.samsung.com>
+	<20240520102033.9361-6-nj.shetty@samsung.com>
+	<ZlJuDxhMEpJxKQHV@dread.disaster.area>
 
-On 27/05/2024 10:42, Witold Sadowski wrote:
-> Add new bindings for the v2 Marvell xSPI overlay: marvell,cn10-xspi-nor
-> compatible string. This new compatible string distinguishes between the
-> original and modified xSPI block.
-> 
-> Also add an optional base for the xfer register set with an additional
-> reg field to allocate the xSPI Marvell overlay XFER block.
-> 
-> Signed-off-by: Witold Sadowski <wsadowski@marvell.com>
-> ---
->  .../devicetree/bindings/spi/cdns,xspi.yaml    | 38 +++++++++++++++----
->  1 file changed, 31 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/cdns,xspi.yaml b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> index eb0f92468185..d6b8b2a2ecf5 100644
-> --- a/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> @@ -15,33 +15,57 @@ description: |
->    single, dual, quad or octal wire transmission modes for
->    read/write access to slaves such as SPI-NOR flash.
->  
-> -allOf:
-> -  - $ref: spi-controller.yaml#
-> -
->  properties:
->    compatible:
-> -    const: cdns,xspi-nor
-> +    enum:
-> +      - cdns,xspi-nor
-> +      - marvell,cn10-xspi-nor
-> +
-> +  interrupts:
-> +    maxItems: 1
+------u98hW3AvpxW_WMqzG8XaJinKydZ84Ygy6oP0sovTVoTPagnQ=_b7ed_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Items got re-ordered. Keep previous order which matches expected style
-(see also DTS coding style).
+On 26/05/24 09:02AM, Dave Chinner wrote:
+>On Mon, May 20, 2024 at 03:50:18PM +0530, Nitesh Shetty wrote:
+>> From: Anuj Gupta <anuj20.g@samsung.com>
+>>
+>> This is a prep patch. Allow copy_file_range to work for block devices.
+>> Relaxing generic_copy_file_checks allows us to reuse the existing infra,
+>> instead of adding a new user interface for block copy offload.
+>> Change generic_copy_file_checks to use ->f_mapping->host for both inode_in
+>> and inode_out. Allow block device in generic_file_rw_checks.
+>>
+>> Reviewed-by: Hannes Reinecke <hare@suse.de>
+>> Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
+>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>> ---
+>>  fs/read_write.c | 8 +++++---
+>>  1 file changed, 5 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/read_write.c b/fs/read_write.c
+>> index ef6339391351..31645ca5ed58 100644
+>> --- a/fs/read_write.c
+>> +++ b/fs/read_write.c
+>> @@ -1413,8 +1413,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
+>>  				    struct file *file_out, loff_t pos_out,
+>>  				    size_t *req_count, unsigned int flags)
+>>  {
+>> -	struct inode *inode_in = file_inode(file_in);
+>> -	struct inode *inode_out = file_inode(file_out);
+>> +	struct inode *inode_in = file_in->f_mapping->host;
+>> +	struct inode *inode_out = file_out->f_mapping->host;
+>>  	uint64_t count = *req_count;
+>>  	loff_t size_in;
+>>  	int ret;
+>
+>Ok, so this changes from file->f_inode to file->mapping->host. No
+>doubt this is because of how bdev inode mappings are munged.
+>However, the first code that is run here is:
+>
+>	ret = generic_file_rw_checks(file_in, file_out);
+>
+>and that function still uses file_inode().
+>
+>Hence there checks:
+>
+>> @@ -1726,7 +1726,9 @@ int generic_file_rw_checks(struct file *file_in, struct file *file_out)
+>>  	/* Don't copy dirs, pipes, sockets... */
+>>  	if (S_ISDIR(inode_in->i_mode) || S_ISDIR(inode_out->i_mode))
+>>  		return -EISDIR;
+>> -	if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
+>> +	if (!S_ISREG(inode_in->i_mode) && !S_ISBLK(inode_in->i_mode))
+>> +		return -EINVAL;
+>> +	if ((inode_in->i_mode & S_IFMT) != (inode_out->i_mode & S_IFMT))
+>>  		return -EINVAL;
+>
+>.... are being done on different inodes to the rest of
+>generic_copy_file_checks() when block devices are used.
+>
+>Is this correct? If so, this needs a pair of comments (one for each
+>function) to explain why the specific inode used for these functions
+>is correct for block devices....
+>
+We were getting wrong size with file_inode() for block device, but we
+missed to do it here in generic_file_rw_checks.
+We will change the generic_file_rw_checks to use file->mapping->host
+to make it consistent.
 
->  
->    reg:
->      items:
->        - description: address and length of the controller register set
->        - description: address and length of the Slave DMA data port
->        - description: address and length of the auxiliary registers
-> +      - description: address and length of the xfer registers
-> +    minItems: 3
->  
->    reg-names:
->      items:
->        - const: io
->        - const: sdma
->        - const: aux
-> -
-> -  interrupts:
-> -    maxItems: 1
-> +      - const: xferbase
-> +    minItems: 3
->  
+Thank You,
+Nitesh Shetty
+
+------u98hW3AvpxW_WMqzG8XaJinKydZ84Ygy6oP0sovTVoTPagnQ=_b7ed_
+Content-Type: text/plain; charset="utf-8"
 
 
-Best regards,
-Krzysztof
-
+------u98hW3AvpxW_WMqzG8XaJinKydZ84Ygy6oP0sovTVoTPagnQ=_b7ed_--
