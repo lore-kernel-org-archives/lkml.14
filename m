@@ -1,202 +1,119 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2A13BB59
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A333BB59
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716886670; cv=none; b=aZbUI4ZFG0PWubC5P99ONrpkVaCvEdLFVOGGjLY6B3+/BSCqAx/OqPaqxkIP5wu9MR7NEFW91DWOCHU+gEAFM6lEd/2/U0u/gBLGCiVGscGe8JSW1suGHAGckHfQ3flT8+t7Pc892g1LDU4NFa4vyBTcNCHbGfHehMHT3fH9iO0=
+	t=1716886771; cv=none; b=QaNy+EACgwpFKB2IwsOB0B7/udKRU3e69MWSO1Cn+BYME2aVkofRYFYWAZy9tU4yVjPKp8aR96yn8YVi4sUWGLdnQR2VGbt6BR3vyAnXQ2Lvb4OXxqHlBG8lGJIE/jPwkX5l6gh93+/4P5xD1MRZCMAXKt7SXbuwmBB9EOJ7Ngo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716886670; c=relaxed/simple;
-	bh=Z2ZVzLCB1DLel0wDQ208lWGGxo/Ay96Am8WGQzDhPcE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=mOu/pcQjM2/JEk0CInyEOMaClWKGddbqW8gxTQsaduPuhPaAtEfuVpMgtNE52X1987Ac0ueLu7tu9OSrFKqBPGcDRLUa3kbx/hKYl23vdWHOTCI2r2NGtwsTEsF/YSicREksxrX6EWy/QXMtkz2b52q99+GKFqgFWFNHhk1kcDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=c5yGkcfT; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c5yGkcfT"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240528085745epoutp0237e82599e8585f160aabf6918d09d48e~Tm1NmGVX72056520565epoutp02V
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:57:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240528085745epoutp0237e82599e8585f160aabf6918d09d48e~Tm1NmGVX72056520565epoutp02V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716886665;
-	bh=Cpu9ZrpHLT33e+kzQYs6/leK8/1+IyQzeyr+U+VgPWk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c5yGkcfTKwG6DPcftPW7vrt42GIOFyvAxMcbeKyoQFgQWg6SSIsjB2+TqMNq+6Pd6
-	 7D5/gQ7PBwO+lkNMdxUBo6GPIaLVK7CgJo3om5kM8PSfEHNNFK39Q9L095nH02XYac
-	 fOPzdjxrFnYZj4InjfJcUVbt3KzoKLda4DvzY0Ps=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20240528085744epcas2p3abf3306c8cf83279c818e86be677dd03~Tm1M7iOkp1471314713epcas2p3g;
-	Tue, 28 May 2024 08:57:44 +0000 (GMT)
-Received: from epsmgec2p1.samsung.com (unknown [182.195.36.99]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4VpRHD1gjGz4x9Pv; Tue, 28 May
-	2024 08:57:44 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	18.F3.08613.88C95566; Tue, 28 May 2024 17:57:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240528085743epcas2p2d0114fa01dea187ada84609cc601d8ba~Tm1MJKiIP1279712797epcas2p2w;
-	Tue, 28 May 2024 08:57:43 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240528085743epsmtrp2d4f592fff53cca60b829e6c9922cb814~Tm1MIkTR80217702177epsmtrp28;
-	Tue, 28 May 2024 08:57:43 +0000 (GMT)
-X-AuditID: b6c32a43-af7ff700000021a5-5c-66559c884088
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	32.3D.08336.78C95566; Tue, 28 May 2024 17:57:43 +0900 (KST)
-Received: from ubuntu (unknown [10.229.95.128]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240528085743epsmtip10324d002be65f1b61e8a6ae724c7ee9d~Tm1L-jB_O0485504855epsmtip1X;
-	Tue, 28 May 2024 08:57:43 +0000 (GMT)
-Date: Tue, 28 May 2024 17:58:05 +0900
-From: Jung Daehwan <dh10.jung@samsung.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, "open list:USB XHCI DRIVER"
-	<linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Thinh
-	Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: Re: [PATCH] usb: host: Add a quirk for writing ERST in high-low
- order
-Message-ID: <20240528085805.GA80763@ubuntu>
+	s=arc-20240116; t=1716886771; c=relaxed/simple;
+	bh=6bH8a9apzDSH6HcTMdLFFoPclSJK5Gi2mkVdCuwKoao=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SQLHOb6IEEufxg4OEEGcr4ohmxk/Vb6QU9R3VJCXtjtAIXN8HuHwU4gh6EKTCX/EYqXhRyOOCEJdtrTDSsG24g7jrfVBXemUqNrf7ApE0TPuveoekx0jczefOoftg4CiPJyY0xKRAZKYskJqnXdBhA/g8pif+7bJQylBRZiDuwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VpRFS2mtVzPnc9;
+	Tue, 28 May 2024 16:56:12 +0800 (CST)
+Received: from kwepemm600017.china.huawei.com (unknown [7.193.23.234])
+	by mail.maildlp.com (Postfix) with ESMTPS id E62E6141EC8;
+	Tue, 28 May 2024 16:59:20 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 28 May 2024 16:59:18 +0800
+From: Tong Tiangen <tongtiangen@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, James Morse <james.morse@arm.com>, Robin Murphy
+	<robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
+ Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
+	<glider@google.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Aneesh
+ Kumar K.V <aneesh.kumar@kernel.org>, "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Tong Tiangen
+	<tongtiangen@huawei.com>, <wangkefeng.wang@huawei.com>, Guohanjun
+	<guohanjun@huawei.com>
+Subject: [PATCH v12 1/6] uaccess: add generic fallback version of copy_mc_to_user()
+Date: Tue, 28 May 2024 16:59:10 +0800
+Message-ID: <20240528085915.1955987-2-tongtiangen@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240528085915.1955987-1-tongtiangen@huawei.com>
+References: <20240528085915.1955987-1-tongtiangen@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <2024052838-fifth-liver-fb4e@gregkh>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjk+LIzCtJLcpLzFFi42LZdljTVLdjTmiawbMJnBbNi9ezWVzeNYfN
-	YtGyVmaL5k1TWC1WLTjA7sDqsXjPSyaP/XPXsHts2f+Z0ePzJrkAlqhsm4zUxJTUIoXUvOT8
-	lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zBygvUoKZYk5pUChgMTiYiV9O5ui
-	/NKSVIWM/OISW6XUgpScAvMCveLE3OLSvHS9vNQSK0MDAyNToMKE7IxZm+ezFfRKVTR/vcPU
-	wDhFtIuRk0NCwERi8pdGVhBbSGAHo8TSGSZdjFxA9idGie4zS6AS3xgl3t72gml4vOMCC0TR
-	XkaJjeca2CCcJ4wS73f9YwOpYhFQlXh2di8TiM0moCVx78cJZhBbRMBYov/sLHYQm1lgD6PE
-	wplCILawQIDE+i+bgHo5OHgFtCX6PxmDhHkFBCVOznzCAmJzChhKTF3QyQ5SIiqgIvHqYD3I
-	WgmBt+wS+6+fZ4Q4zkXi1MzFrBC2sMSr41vYIWwpic/v9rJB2MUSt54/Y4ZobmGUWPGqhRki
-	YSwx61k7I8RtGRLPe7qYQJZJCChLHLnFAhHmk+g4/JcdIswr0dEmBNGpLDH98gSotZISB1+f
-	g5roIbH8xF9mSPC8Y5SYc2Ai2wRG+VlIXpuFZBuErSOxYPcntllAK5gFpCWW/+OAMDUl1u/S
-	X8DIuopRLLWgODc9NdmowBAe1cn5uZsYwQlSy3kH45X5//QOMTJxMB5ilOBgVhLhPTMpNE2I
-	NyWxsiq1KD++qDQntfgQoykwmiYyS4km5wNTdF5JvKGJpYGJmZmhuZGpgbmSOO+91rkpQgLp
-	iSWp2ampBalFMH1MHJxSDUwOqkHuJkd7Hm1yit51/u2l+FOTswLcAyZwnZCb+Ev5/hvPmONr
-	s0Mup+Y0eN+oqTdqddBJ+fRiQt3PDbsYTltdeRXj4Th1UUmpaUJUMr8V03eJoxf1Sm5svL6+
-	U6jlTszRXzHMS58f8Xa8Pm/+5hyGCQtO3HQQzn6+5kAmc/3xecUvln77MCX8zc5tH88/+VDI
-	4nHZ9ej6Bt/bE/PPW0hduyF6pYxX+UdQwdcdXNWz4jhShR+9+2XC7addUlJht79073wVrWYG
-	7caVW39ufe+ix6auo8MsvL891H56uOOOtx0ryl58zb2w67nc6Wod27U1V8+6t3klxv1cdZ9z
-	03b9vhBXpWPfik+/eNll1OWmxFKckWioxVxUnAgAuzis/xkEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsWy7bCSnG77nNA0gx3tRhbNi9ezWVzeNYfN
-	YtGyVmaL5k1TWC1WLTjA7sDqsXjPSyaP/XPXsHts2f+Z0ePzJrkAligum5TUnMyy1CJ9uwSu
-	jC1fexgLzopXTP61lrWB8a1QFyMnh4SAicTjHRdYuhi5OIQEdjNKrP/3hhUiISmxdO4Ndghb
-	WOJ+yxFWiKJHjBItE3azgSRYBFQlnp3dywRiswloSdz7cYIZxBYRMJboPzuLHaSBWWAfo8SP
-	J5NYQBLCAn4S0x+uAbI5OHgFtCX6PxlDDH3HKDHlWDsjSA2vgKDEyZlPwOqZgYbe+PeSCaSe
-	WUBaYvk/DpAwp4ChxNQFnewgYVEBFYlXB+snMArOQtI8C0nzLITmBYzMqxglUwuKc9Nziw0L
-	DPNSy/WKE3OLS/PS9ZLzczcxgoNcS3MH4/ZVH/QOMTJxMB5ilOBgVhLhPTMpNE2INyWxsiq1
-	KD++qDQntfgQozQHi5I4r/iL3hQhgfTEktTs1NSC1CKYLBMHp1QD084Xas/+ND1pPnVtAfP/
-	eUaMiaVy5nMqeSXzxT9drLosr7dObkfYt8XfXpxwMnTxT+sRVns376noruNNcsUL5b9wlKhm
-	uJmfmKHVX3qTTeSqXIH7uuKk705fznelam/QP8kko/xz26rZZjWyTL81l5R+XhtdvK2M0XTV
-	iZvznrpkVsmuS54jeP5NyPOV/wqVQ66JTd7/8ueaw3lT/vuucG+4baz1Y3a0vR5fRdgX/vc9
-	zkXKDs6a80PWLM9ak7Z+4VwXCwfubQtT3rfOVs6uuVSkNv+DynRPrzOi7gtv2a1oDudxMv1p
-	/+5rZEaumGGJMOfHsFaPLzYms/ZFv8/XaFJ7knnrasnTHa8nV19sU2Ipzkg01GIuKk4EALbQ
-	rebhAgAA
-X-CMS-MailID: 20240528085743epcas2p2d0114fa01dea187ada84609cc601d8ba
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----9rvGp.wOoe8SBwNMBd7Hnn8uuLJro-MzoefNgNBE_LtzfeiS=_1c70e_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240528055659epcas2p4f86642d6647855747cea35b04f8a46cc
-References: <CGME20240528055659epcas2p4f86642d6647855747cea35b04f8a46cc@epcas2p4.samsung.com>
-	<1716875836-186791-1-git-send-email-dh10.jung@samsung.com>
-	<2024052814-exponent-domestic-6da2@gregkh>
-	<2024052838-fifth-liver-fb4e@gregkh>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600017.china.huawei.com (7.193.23.234)
 
-------9rvGp.wOoe8SBwNMBd7Hnn8uuLJro-MzoefNgNBE_LtzfeiS=_1c70e_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+x86/powerpc has it's implementation of copy_mc_to_user(), we add generic
+fallback in include/linux/uaccess.h prepare for other architechures to
+enable CONFIG_ARCH_HAS_COPY_MC.
 
-On Tue, May 28, 2024 at 09:30:34AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, May 28, 2024 at 09:23:43AM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, May 28, 2024 at 02:57:16PM +0900, Daehwan Jung wrote:
-> > > [Synopsys]- The host controller was design to support ERST setting
-> > > during the RUN state. But since there is a limitation in controller
-> > > in supporting separate ERSTBA_HI and ERSTBA_LO programming,
-> > > It is supported when the ERSTBA is programmed in 64bit,
-> > > or in 32 bit mode ERSTBA_HI before ERSTBA_LO
-> > > 
-> > > [Synopsys]- The internal initialization of event ring fetches
-> > > the "Event Ring Segment Table Entry" based on the indication of
-> > > ERSTBA_LO written.
-> > > 
-> > > Signed-off-by: Daehwan Jung <dh10.jung@samsung.com>
-> > > ---
-> > >  drivers/usb/host/xhci-mem.c | 5 ++++-
-> > >  drivers/usb/host/xhci.h     | 2 ++
-> > >  2 files changed, 6 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-> > > index 3100219..ef768e6 100644
-> > > --- a/drivers/usb/host/xhci-mem.c
-> > > +++ b/drivers/usb/host/xhci-mem.c
-> > > @@ -2325,7 +2325,10 @@ xhci_add_interrupter(struct xhci_hcd *xhci, struct xhci_interrupter *ir,
-> > >  	erst_base = xhci_read_64(xhci, &ir->ir_set->erst_base);
-> > >  	erst_base &= ERST_BASE_RSVDP;
-> > >  	erst_base |= ir->erst.erst_dma_addr & ~ERST_BASE_RSVDP;
-> > > -	xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
-> > > +	if (xhci->quirks & XHCI_WRITE_64_HI_LO)
-> > > +		hi_lo_writeq(erst_base, &ir->ir_set->erst_base);
-> > > +	else
-> > > +		xhci_write_64(xhci, erst_base, &ir->ir_set->erst_base);
-> > >  
-> > >  	/* Set the event ring dequeue address of this interrupter */
-> > >  	xhci_set_hc_event_deq(xhci, ir);
-> > > diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> > > index 3041515..8664dd1 100644
-> > > --- a/drivers/usb/host/xhci.h
-> > > +++ b/drivers/usb/host/xhci.h
-> > > @@ -17,6 +17,7 @@
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/usb/hcd.h>
-> > >  #include <linux/io-64-nonatomic-lo-hi.h>
-> > > +#include <linux/io-64-nonatomic-hi-lo.h>
-> 
-> Why not put this in the .c file?
+Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/include/asm/uaccess.h | 1 +
+ arch/x86/include/asm/uaccess.h     | 1 +
+ include/linux/uaccess.h            | 8 ++++++++
+ 3 files changed, 10 insertions(+)
 
-I add it following similar header file.
-#include <linux/io-64-nonatomic-lo-hi.h>
+diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+index de10437fd206..df42e6ad647f 100644
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -381,6 +381,7 @@ copy_mc_to_user(void __user *to, const void *from, unsigned long n)
+ 
+ 	return n;
+ }
++#define copy_mc_to_user copy_mc_to_user
+ #endif
+ 
+ extern long __copy_from_user_flushcache(void *dst, const void __user *src,
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 0f9bab92a43d..309f2439327e 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -497,6 +497,7 @@ copy_mc_to_kernel(void *to, const void *from, unsigned len);
+ 
+ unsigned long __must_check
+ copy_mc_to_user(void __user *to, const void *from, unsigned len);
++#define copy_mc_to_user copy_mc_to_user
+ #endif
+ 
+ /*
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 3064314f4832..0dfa9241b6ee 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -205,6 +205,14 @@ copy_mc_to_kernel(void *dst, const void *src, size_t cnt)
+ }
+ #endif
+ 
++#ifndef copy_mc_to_user
++static inline unsigned long __must_check
++copy_mc_to_user(void *dst, const void *src, size_t cnt)
++{
++	return copy_to_user(dst, src, cnt);
++}
++#endif
++
+ static __always_inline void pagefault_disabled_inc(void)
+ {
+ 	current->pagefault_disabled++;
+-- 
+2.25.1
 
-Do you think it should be put in .c file because .c file only uses it?
-If so, I will modify it in the next submission.
-
-> 
-> > >  /* Code sharing between pci-quirks and xhci hcd */
-> > >  #include	"xhci-ext-caps.h"
-> > > @@ -1627,6 +1628,7 @@ struct xhci_hcd {
-> > >  #define XHCI_RESET_TO_DEFAULT	BIT_ULL(44)
-> > >  #define XHCI_ZHAOXIN_TRB_FETCH	BIT_ULL(45)
-> > >  #define XHCI_ZHAOXIN_HOST	BIT_ULL(46)
-> > > +#define XHCI_WRITE_64_HI_LO	BIT_ULL(47)
-> 
-> Note, you define this, and check it, but it is never set, so this patch
-> is useless on its own and so we can not accept it as-is at all.
-> 
-> How was this tested?
-
-I got it. I will add other patches and send the patchset.
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
-------9rvGp.wOoe8SBwNMBd7Hnn8uuLJro-MzoefNgNBE_LtzfeiS=_1c70e_
-Content-Type: text/plain; charset="utf-8"
-
-
-------9rvGp.wOoe8SBwNMBd7Hnn8uuLJro-MzoefNgNBE_LtzfeiS=_1c70e_--
