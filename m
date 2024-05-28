@@ -1,124 +1,121 @@
-Received: from wfhigh7-smtp.messagingengine.com (wfhigh7-smtp.messagingengine.com [64.147.123.158])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA47C502B9
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E984B16D9A0;
+	Tue, 28 May 2024 12:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716899934; cv=none; b=aI2F01aJjFrvCnfCiGtpuHIpIKzhQxDagpAoc2ZHhOjgzHPV+wRH6/+51R2SsWc/+Kjt7cijHKZaHIi6Z74X7z2nC5qUJPBg9jUM178BIRldYkEFcLK4/zGnKmNWDVZA/RQAFOCuKK9t9LKGRZBgPPiDZPh0F1o071IBVOHVRBA=
+	t=1716899948; cv=none; b=rY3nJ1KIGVREtMvX50jW3wFuWuCiT9N1Xh3OCmbRt6JX5lNkUAEm3W6+0csUVQnVVw/1T21hmLM3WZi/K2ykm4eb2MkFfaD35ydM3d1pJpdubHW6bweWxCDhHPluJwdskEoQIgb53ZyuaWrJTW5diz0p2xm5i8I7cx6KukOwXcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716899934; c=relaxed/simple;
-	bh=dZXLjy8YgB1ZnNuK0/l9LMejKe3f6bEG1QoK9hx4eEU=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=V5xtwVIEUiAOsM91sCo1Vt9Ta0640o2f1EDmmXCnhUpMqRaBJwE9hYIIsRZghIjMzzfycROI6WkMTz/tAfT1PbLSXyTAIt0shgCpSmZ1U/qQLDprv1kEWa9ePCRWZfHywUv8Y4XsASLeCximq7aujICXRyspYwKmqMq8RvgzRA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=XAdJd7vj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EhutbxSO; arc=none smtp.client-ip=64.147.123.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="XAdJd7vj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EhutbxSO"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 8A1261800186;
-	Tue, 28 May 2024 08:38:51 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 28 May 2024 08:38:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1716899931; x=1716986331; bh=n14BlgCwO/
-	WHEr03j0wHCbykXhEI5vzMH7WTcucsq9I=; b=XAdJd7vjsSJLycXtD0gc3k/1Ar
-	3HHQa80OHdyk4Ft0d/I3GvVxSgcKZ8uZvB3Zm1kREuc6KXdUvTB0inHsDGl+Mq92
-	fekE+KTM5Pc2EUfnxd+jSzn+nk9CpYuKY4vqW/FlMH9aI8W3OvsubVBDhDKJpTkK
-	Q16WbD5JZ01fa6luVDd/j7TEaeDyyMqtRwDxS5DFlcfvJcKB0JbyeWiV9ekNOLQP
-	rgh7q3jlPgHAIP2PdEFICQBziyLenST5sGS7pqUqxyVhrvtV3loYpIFA5ms5d0U0
-	BDWETZqNIM018cVGvhs13hwoLabnk2DnIC7zsijiI6rZdLI68Ikb4QmYJX9w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1716899931; x=1716986331; bh=n14BlgCwO/WHEr03j0wHCbykXhEI
-	5vzMH7WTcucsq9I=; b=EhutbxSOpqlXxba0MLpUC+IriAhLgutepvjA3vwnvJnw
-	doiEUQg6y7SHiNZdN+VZSpm7lZG8wRs0h3mKHTKK7hULTLbmtUsjeXe8gfcwtBCr
-	RPR6plWygh9JRExU4h7189UQPc6naFppM63oXSpIUoow0ePK0QpX6dnCECzjA175
-	j/qUCZU9AdvA3yApIxBcaeqJtYnh/vUyeotO2GnWfipMpk/UucAVfCvRBPJNnstM
-	WN2j2eD2N7dLuKWlD3UYgIQwQW34wgn7eo7e5DdKsa3I8hBGOS835dqPYlBhfc7D
-	QGIuj4kjSksDgNDB6k5GvyT+pcAudywvIHj04gGj5Q==
-X-ME-Sender: <xms:WtBVZqeQqeyYbVSWtq17NxeF9UHyJ8oN4jkj4QjrHyI2dnSlzOsrNg>
-    <xme:WtBVZkO9EpA7OEBgc3j8pxxl3HeLNzv9C_efLDdS8YIsPVfuuyP6tRo1LzZDd-BPX
-    47R7B4BqwVjcaHu1Ng>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:WtBVZrgfKbmFa6vVeFLCj_7KeHGdSviicWJbu3MxinZ2j8j7VuILoA>
-    <xmx:WtBVZn89hduQw9PRUP-i-rK3RYPdbiHnykgmj5NH752HFLoOoonL7Q>
-    <xmx:WtBVZmsNUzzuXaUEhQre_Fly-dMjkGmVkFVlTrFARA9skALZMsZSIA>
-    <xmx:WtBVZuF09fZb1Jy5DUYaCWsWnMzpEQWzMcG5-X8s4gyqoQMoJq3gGw>
-    <xmx:W9BVZoVm13sVDpxtvz_tjQJQpYRh6vCU0NgiGsLmk-gtHSd9gXZKPsu0>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 62E0DB6008F; Tue, 28 May 2024 08:38:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	s=arc-20240116; t=1716899948; c=relaxed/simple;
+	bh=SwlaZwQTe+WOm3AHJ1DNVfrfD6aHDXuHVxx1381y2W8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RiDx/O/FWtuyw27a58fEOoqe3Qs9aM14NpGnS643opChnUTgmp5W0bZIIIxozbtIuvECg38y3iw7sDrJHblm3a6SDDfzyk8mnzF5oXPietJddRNXIdHk/W+z2C3U8FrHkKQHVN/HVUSc3xLCXSr1mEo+23KuTazGwjK74kSglkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VpXBG46h7z4f3jHg;
+	Tue, 28 May 2024 20:38:46 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id CF25D1A0568;
+	Tue, 28 May 2024 20:38:55 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RFd0FVmCNenNw--.15805S4;
+	Tue, 28 May 2024 20:38:55 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2] md: make md_flush_request() more readable
+Date: Wed, 29 May 2024 04:31:49 +0800
+Message-Id: <20240528203149.2383260-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <7391d6a4-0c0b-456f-a2ca-cf3dafa67c5a@app.fastmail.com>
-In-Reply-To: <70125571-5add-47d2-b127-c57e67c59df9@sirena.org.uk>
-References: <20240528121222.3675312-1-arnd@kernel.org>
- <70125571-5add-47d2-b127-c57e67c59df9@sirena.org.uk>
-Date: Tue, 28 May 2024 14:38:30 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Mark Brown" <broonie@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Liam Girdwood" <lgirdwood@gmail.com>, "Alina Yu" <alina_yu@richtek.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: rtq2208: remove unused rtq2208_regulator_ldo_ops
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn+RFd0FVmCNenNw--.15805S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFyfZw13Aw4rKr15GrWruFg_yoW8Wr4Up3
+	9akF93Zrs5Aws8Aw47JFykJ3Z8Wws3tFWDtrWavws3ZF15ZFn5Gw1SgryvqFykGryfurW3
+	Jrs5A3yrCay8ZwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
+	0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
+	wIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
+	Y4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRuMKZUUUUU
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-On Tue, May 28, 2024, at 14:25, Mark Brown wrote:
-> On Tue, May 28, 2024 at 02:12:13PM +0200, Arnd Bergmann wrote:
->
->> I did not analyze the change to see if this is the only required change
->> or if there should still have been a reference instead. Please review
->> and confirm, or provide a different fix.
->
-> Fairly sure there should be a reference in _init_regulator_desc().
+From: Li Nan <linan122@huawei.com>
 
-This is how 38bcec0e7cbb ("regulator: rtq2208: Fix
-LDO discharge register and add vsel setting")] changed
-the lines:
+Setting bio to NULL and checking 'if(!bio)' is redundant and looks strange,
+just consolidate them into one condition. There are no functional changes.
 
-@@ -427,14 +448,11 @@ static void rtq2208_init_regulator_desc(struct rtq2208_regulator_desc *rdesc, in
-                rdesc->suspend_mode_mask = RTQ2208_BUCK_STRMODE_MASK;
-        } else {
-                /* init ldo desc */
--               desc->enable_reg = curr_info->base;
--               desc->ops = &rtq2208_regulator_ldo_ops;
--               desc->n_voltages = 1;
--               desc->active_discharge_reg = LDO_RG_SHIFT(curr_info->base, 2);
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Li Nan <linan122@huawei.com>
+---
+v2: Rewrite the code according to Christoph's suggestion.
+
+ drivers/md/md.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index aff9118ff697..9598b4898ea9 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -654,24 +654,22 @@ bool md_flush_request(struct mddev *mddev, struct bio *bio)
+ 		WARN_ON(percpu_ref_is_zero(&mddev->active_io));
+ 		percpu_ref_get(&mddev->active_io);
+ 		mddev->flush_bio = bio;
+-		bio = NULL;
+-	}
+-	spin_unlock_irq(&mddev->lock);
 -
--               rtq2208_ldo_match[*ldo_idx].name = desc->name;
--               rtq2208_ldo_match[*ldo_idx].driver_data = rdesc;
--               rtq2208_ldo_match[(*ldo_idx)++].desc = desc;
-+               desc->active_discharge_reg = RTQ2208_REG_LDO_DVS_CTRL;
-+               desc->active_discharge_on = curr_info->dis_on;
-+               desc->active_discharge_mask = curr_info->dis_mask;
-+               desc->vsel_reg = RTQ2208_REG_LDO_DVS_CTRL;
-+               desc->vsel_mask = curr_info->vsel_mask;
+-	if (!bio) {
++		spin_unlock_irq(&mddev->lock);
+ 		INIT_WORK(&mddev->flush_work, submit_flushes);
+ 		queue_work(md_wq, &mddev->flush_work);
+-	} else {
+-		/* flush was performed for some other bio while we waited. */
+-		if (bio->bi_iter.bi_size == 0)
+-			/* an empty barrier - all done */
+-			bio_endio(bio);
+-		else {
+-			bio->bi_opf &= ~REQ_PREFLUSH;
+-			return false;
+-		}
++		return true;
+ 	}
+-	return true;
++
++	/* flush was performed for some other bio while we waited. */
++	spin_unlock_irq(&mddev->lock);
++	if (bio->bi_iter.bi_size == 0) {
++		/* pure flush without data - all done */
++		bio_endio(bio);
++		return true;
++	}
++
++	bio->bi_opf &= ~REQ_PREFLUSH;
++	return false;
+ }
+ EXPORT_SYMBOL(md_flush_request);
  
-                rdesc->suspend_config_reg = curr_info->base;
-                rdesc->suspend_enable_mask = RTQ2208_LDO_EN_STR_MASK;
+-- 
+2.39.2
 
-If the desc->ops was removed by accident, it seems
-likely that desc->n_voltages also needs to be reverted.
-
-     Arnd
