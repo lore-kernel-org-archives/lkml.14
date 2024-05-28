@@ -1,73 +1,68 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461AB73164;
-	Tue, 28 May 2024 07:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id E5CB171750
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716880530; cv=none; b=d+GFyiPTMuq18JNJB5P+yYyZMhj6hND1gVTgf/iS5uSu3cJz02//9X+IkR2rAX2nF84RFWViNdZDZybzpwCD5WbmgIPGu3A2ZGqmV4b7Y80i8SD6kNT+q5nAu7tyGluOiKTmVjkBVOA0fijBsVDZcV9iRWsgeg9VBUq8kLPLFlQ=
+	t=1716880551; cv=none; b=qwBDtcH6d3xm2Se/W/9kIFsO2/kjrT+9HVVCCWMaH7Cs674dfh2QDSgvCvpJuYgNHdo4H3M80xuCRIlwO1ihw0DpE4PpRqlg6EklmJbVxnYEFw4t1aRXTkvTt+WfatO5tFGJQhL2Q8ip80ejJsCh5iR3wL9bdanLhEH2VSrjMD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716880530; c=relaxed/simple;
-	bh=NjlB9HjaOzm7GFCCp1mog1GeOzYiA23MD7+v2ePYdq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MluGH6a+C/dD5nvfht5ooNjTH2HCwV6TdEo0x0wgstdxbxQhCor1NiLDfkbXX5VLsdMpBrJEAcuquF+lzcSfeoK0QpidF6d4n73KyTKnHavAwdO/w+BcXt9IZC8UMF+tJXoWOa+3Sn6MpO6klCWWKMirCI8Rh1fm/Y8ccPKrhiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=C4Wwmams; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="C4Wwmams"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1716880527;
-	bh=NjlB9HjaOzm7GFCCp1mog1GeOzYiA23MD7+v2ePYdq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C4Wwmams/C6BmEHgtSqsUf4ABEG3x9FouT0XOmS8ZLKOGcO1fshJdGTLGsN7Nn994
-	 Ns0lKZ5/b6w6BRZhvgQw8KotY3Q6vXQdY5EPRZmTgzVPM9Y8B+T1TAy+wkKMdlYxDk
-	 akXPVr+7UszijWMw5ZPrB3Hc613OgKLbfuHvGRW0=
-Date: Tue, 28 May 2024 09:15:27 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-	Benson Leung <bleung@chromium.org>, Lee Jones <lee@kernel.org>, Guenter Roeck <groeck@chromium.org>, 
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, chrome-platform@lists.linux.dev, 
-	Dustin Howett <dustin@howett.net>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Moritz Fischer <mdf@kernel.org>, Stephen Horvath <s.horvath@outlook.com.au>, 
-	Rajas Paranjpe <paranjperajas@gmail.com>
-Subject: Re: [PATCH v3 1/3] platform/chrome: cros_ec_proto: Introduce
- cros_ec_cmd_readmem()
-Message-ID: <c40d87cf-17b9-4500-ba87-35d14aeb1b4a@t-8ch.de>
-References: <20240527-cros_ec-hwmon-v3-0-e5cd5ab5ba37@weissschuh.net>
- <20240527-cros_ec-hwmon-v3-1-e5cd5ab5ba37@weissschuh.net>
- <ZlV8Bx0-FOYeeTO7@google.com>
+	s=arc-20240116; t=1716880551; c=relaxed/simple;
+	bh=63kmL1bSMZDegOF14Oz7zv6wc4NYKe2HUnMjWCJeKBs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=KKJPWBWtzwfTLY5AtwachzJ8pxzBXyKwyZTKqIVHtrMtBNtLAJdWFDYUEH8hJfYPz85eEAt8H6qYW0MCcqYCaTSJHJO6LmFOD6tSMpiAYyuygqYukgv56PqsV4R7PLXS+lGk8aEGCgUIGCDkovd+mUQxiqqqb0OeBE30nmDG3SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from localhost.localdomain (unknown [219.141.250.2])
+	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id 56E3462506E8B;
+	Tue, 28 May 2024 15:15:43 +0800 (CST)
+X-MD-Sfrom: zeming@nfschina.com
+X-MD-SrcIP: 219.141.250.2
+From: Li zeming <zeming@nfschina.com>
+To: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	Li zeming <zeming@nfschina.com>
+Subject: [PATCH] =?UTF-8?q?sched:=20core:=20Remove=20unnecessary=20?= =?UTF-8?q?=E2=80=98NULL=E2=80=99=20values=20from=20core=5Frq?=
+Date: Tue, 28 May 2024 15:14:46 +0800
+Message-Id: <20240528071446.59197-1-zeming@nfschina.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZlV8Bx0-FOYeeTO7@google.com>
 
-On 2024-05-28 06:39:03+0000, Tzung-Bi Shih wrote:
-> On Mon, May 27, 2024 at 10:58:31PM +0200, Thomas Weißschuh wrote:
-> > +/**
-> > + * cros_ec_cmd_readmem - Read from EC memory.
-> > + *
-> > + * @ec_dev: EC device
-> > + * @offset: Is within EC_LPC_ADDR_MEMMAP region.
-> > + * @size: Number of bytes to read. zero means "read a string" (including
-> > + *        the trailing '\0').
-> 
-> The behavior is cros_ec_lpc_readmem() only but not for cros_ec_cmd().
+core_rq is assigned first, so it does not need to initialize the
+assignment.
 
-Indeed.
-I thought I checked for this specifically, but got it wrong.
+Signed-off-by: Li zeming <zeming@nfschina.com>
+---
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'll drop the docs and add a
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e32fea8f5830..346159a24705 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6485,7 +6485,7 @@ static void sched_core_cpu_starting(unsigned int cpu)
+ static void sched_core_cpu_deactivate(unsigned int cpu)
+ {
+ 	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
+-	struct rq *rq = cpu_rq(cpu), *core_rq = NULL;
++	struct rq *rq = cpu_rq(cpu), *core_rq;
+ 	int t;
+ 
+ 	guard(core_lock)(&cpu);
+-- 
+2.18.2
 
-	if (!size)
-		return -EINVAL;
-
-to make sure nobody starts relying on that behaviour when writing a
-driver against an LPC EC.
