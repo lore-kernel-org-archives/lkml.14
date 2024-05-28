@@ -1,120 +1,76 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E17817106C
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7758C17167F;
+	Tue, 28 May 2024 15:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716909058; cv=none; b=EsVf6IbVfIpim6KAcPJUAxnfJb1GY6ha/w4en1diy29T/1qdpZjyHPjzMtiMvwohtwcfVDhmxP1KH0irJrFul1fUVpjFIGdjqNoYMbhQ8cXv135yOaPDzjs417CpS9USI4Tz/6t3rkN2JOEB1k+ZtsF43qhaZAaQMbqklqfaXyM=
+	t=1716909078; cv=none; b=o+8Hv43Ync2EXjzDxwnHb7JelJ0BYIUNKL3W5LT2TDF5qX1iB2C9WgPm/pgMWO+BGNzfBGKTYO4wBnU89s7qaVt7VpARG2pT9WirBeMavcN79bnox1EWgmw67ZQM3OnKrlQCorv+/Tx8xYi1U/bi9Gl63OjhRwv0AN5S8hbK6mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716909058; c=relaxed/simple;
-	bh=CJR5ijuAPP0OxGC2o3LndPnStx7BgQTf9sVBO3oNvzo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ke0jrh5/IUdKxzDYZ4qIxFW6TPUV0Q669yEqOU6qDfCCD2atmORC7Lp2lyGeCmbspwdgKPOPr4w+Gd9ouB6s7HI7CNqHyewfQrKoo+3usrlzar/uJGPmX2Txo54u4u5vv2S8E+2797TFQL6axu+en3wwAOUNo+7TchyjjGreB/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=m7/NlM3S; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1716909078; c=relaxed/simple;
+	bh=2MwryXS5DUCUlYI0P7wmmi6zhh9zR1IfbjFE/J6YL70=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=l40UpH+X76X/7m8r5Fw5mAWz0z/QWv27hbvG4fJ2IBd9nX/qMhnL2BsMRya/dhSBIbQ1VuAqHPlxYzwBlVE8rxPTqJ7O4fiuDWNAuRJDfqHZLE/Z2QcITCIfypDOLDhjOT4BgGxBkFFvHLDpS+3FmfvnH8gGi169VuXCZEQi8Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4oLIZTPy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lgAFt8/d; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="m7/NlM3S"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42101a2ac2cso7738145e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716909055; x=1717513855; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k0AGpQFir7bYkY6Hm/qOL+w8L3+MGNDSpFH+GMgURdQ=;
-        b=m7/NlM3SphncbkbnwVkDjnP9JpIRjqVX89ff5dRcH0RkRw7lXcjxigQcCZa7prbWje
-         almcX48vDmdlcWGaA1L6APIwY6fXRs+p/oUpW6MHwRz2N8v52uAh7e1zwAHu8LnjaLWE
-         F5j13D/UKuVIeTnPYGG370f78BrGISkWKjQ31ZF26YvN88IkIIoMiJ+I35JOL8zJbIPh
-         z07WreENbZHzt3Vd8KEkKhYKO3h5TTfQ0woJyalKc7+di4j/JYUh/9gY5v7nqsug+UNa
-         zvAXPjwqBoxac8zpbuD0oKvhoLa9BD8Hf79FmfgvIaBA+1hObTptoaAOsVR6JGSZD++f
-         RPiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716909055; x=1717513855;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k0AGpQFir7bYkY6Hm/qOL+w8L3+MGNDSpFH+GMgURdQ=;
-        b=gEWQYr0rlQ0YW4bYW9cMkvRoMGFpTVVInqiwwkyy0I+b2QJPZ7bvjy+JjlqM3+B3Tn
-         cmfc/Em37KAqO1BUf3eHUPcj2R1IzKGyEkEVmrQGR5KgDsuZf6u2XFBLZrN6qxSh3Gju
-         hVv8OyrI5ALrqtUgtthuNtkT1bG+m7DcbS+0AVLYO3UjNWcr+qkicL13FVYxRiTvAr2l
-         x7u09cZQg9GwRuHpq8soReGuNs1CTmbphxjrxgSoYBCZO/PdvrxqahRNbhRJKvMtY7lH
-         t3sD0TPlbpYHmvMr0coe5Xamv8iwNbizVT42Qqi+wrYXWAmavSYo7EGZy0/v3Y+dg0yG
-         xVtA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIvNpSv36goPR5GMwV4xwaWNI2xuEm47aawRKveZmdUJsJz4Xr1rLtPZ4GZoKL+XtNv0gMMSxlqF1T2SBH6Q9tyrhHxOpSg6Yu4nvy
-X-Gm-Message-State: AOJu0Yy/FwiTB9t6ac5888JgI5CCvAbmS8nlSnNjK/67/Np6qQSi+Ld1
-	bINw3yWrZkc9vceyEOqCPd10GXSjKIP4SQNfSX0RURVa1giljHE/G5WX1cY4akY=
-X-Google-Smtp-Source: AGHT+IHwEZnGvgBLJ+odBijV5gGLQhEjsnEBuwZ3zDPr0k4TFSH0yVpvuN/r5/6VstbLixDjb6DW3w==
-X-Received: by 2002:a05:600c:4703:b0:420:1fab:1798 with SMTP id 5b1f17b1804b1-421089fe2c2mr95474985e9.29.1716909054785;
-        Tue, 28 May 2024 08:10:54 -0700 (PDT)
-Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7da64sm12293475f8f.4.2024.05.28.08.10.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 08:10:54 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH 0/7] Zacas/Zabha support and qspinlocks
-Date: Tue, 28 May 2024 17:10:45 +0200
-Message-Id: <20240528151052.313031-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4oLIZTPy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lgAFt8/d"
+Date: Tue, 28 May 2024 17:11:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716909075;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=5+q2UDSKOGJCMS0+rKaAga5k3MaaB0k6nYqw8puocvQ=;
+	b=4oLIZTPy6HfQdRwOb9iZITA6fvKFl8oeJ+ZU0/GUSI9y8QAXBZZy/Mj7xXf/6FKVA7em3i
+	QHPrGlPZ4rJ7osKNNr7CdHZ4FdsRP2f9FteP6x5yy1PLUaKk+v2Tpt5WYOzvEFGM7A3kK1
+	i73tbd4nZp4tjHQiL4mM/L+DQQS2M3yXdXiRJu+SOSAG+6CeL/V19hM3f9D2cwbgl/uzvt
+	vbasMGhGYGmXIpbaiiSj3tk240sXRLMdvz6n3vlktXEE34mO8LCyoNCJWjhR61wHcADy0J
+	m7Uy0otzkEl6I+eV6Q7/5R4x1cz6SoSU87x+MtK9OuW03jdTTCl/rNQU80XJWQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716909075;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=5+q2UDSKOGJCMS0+rKaAga5k3MaaB0k6nYqw8puocvQ=;
+	b=lgAFt8/dgxRa/DbgxRG4e7l2O3DAx9Qf3zt9sqkwd9Wdju8LwuyyhC0Gqwk9Aef5uSIgI3
+	CZ5UglW5kR6Qp7Bw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: [ANNOUNCE] v6.10-rc1-rt1
+Message-ID: <20240528151114.oRD6WQKe@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-This implements [cmp]xchgXX() macros using Zacas and Zabha extensions
-and finally uses those newly introduced macros to add support for
-qspinlocks: note that this implementation of qspinlocks satisfies the
-forward progress guarantee.
+Dear RT folks!
 
-Thanks to Guo and Leonardo for their work!
+I'm pleased to announce the v6.10-rc1-rt1 patch set. 
 
-Alexandre Ghiti (5):
-  riscv: Implement cmpxchg32/64() using Zacas
-  riscv: Implement cmpxchg8/16() using Zabha
-  riscv: Implement arch_cmpxchg128() using Zacas
-  riscv: Implement xchg8/16() using Zabha
-  riscv: Add qspinlock support based on Zabha extension
+Changes since v6.9-rt5:
 
-Guo Ren (2):
-  asm-generic: ticket-lock: Reuse arch_spinlock_t of qspinlock
-  asm-generic: ticket-lock: Add separate ticket-lock.h
+  - Update to v6.10-rc1
 
- .../locking/queued-spinlocks/arch-support.txt |   2 +-
- arch/riscv/Kconfig                            |  35 ++++++
- arch/riscv/Makefile                           |  21 ++++
- arch/riscv/include/asm/Kbuild                 |   4 +-
- arch/riscv/include/asm/cmpxchg.h              | 114 ++++++++++++++++--
- arch/riscv/include/asm/hwcap.h                |   1 +
- arch/riscv/include/asm/spinlock.h             |  39 ++++++
- arch/riscv/kernel/cpufeature.c                |   1 +
- arch/riscv/kernel/setup.c                     |  18 +++
- include/asm-generic/qspinlock.h               |   2 +
- include/asm-generic/spinlock.h                |  87 +------------
- include/asm-generic/spinlock_types.h          |  12 +-
- include/asm-generic/ticket_spinlock.h         | 105 ++++++++++++++++
- 13 files changed, 336 insertions(+), 105 deletions(-)
- create mode 100644 arch/riscv/include/asm/spinlock.h
- create mode 100644 include/asm-generic/ticket_spinlock.h
+Known issues
+    None.
 
--- 
-2.39.2
+You can get this release via the git tree at:
 
+    https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v6.10-rc1-rt1
+
+The RT patch against v6.10-rc1 can be found here:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.10/older/patch-6.10-rc1-rt1.patch.xz
+
+The split quilt queue is available at:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.10/older/patches-6.10-rc1-rt1.tar.xz
+
+Sebastian
