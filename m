@@ -1,55 +1,57 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4D916F847;
-	Tue, 28 May 2024 14:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978BE16FF26;
+	Tue, 28 May 2024 14:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716906281; cv=none; b=tUWqCDad4oQZjPX+lnbBEj6zD9DIp2yDrFi0s7h5YbW90F4j9gv9rKa6dBeyUfh/N7anv0O5XmAX0SvrKOBCzOjDj8aCpf/76CdLSfYPaC/1Vu2Dswxmon2eW4VWw/UAUtu5zWmnghrMyBTrzOISRb08zk8FQHpScKRL9a45RNk=
+	t=1716906285; cv=none; b=EIdlNalr7Vb6oeJTXlE6pUqLcjNADq6orB2+MuJ+pY9hMgifoU6tquE2GyjoEVsDxTJ4brZw3LM41VfNhSx9Y3B6fy3fAupaqdOl7Qmz5PI5hsXOqQZfUVfXKg+36zFhsB1Jbn2N1YcH4lkFYydFUN+xk0STFA531/JJUaqE/5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716906281; c=relaxed/simple;
-	bh=CpNig8i04u7yArz56+Pq3EY0WGXOcEaavla8yaV6nNs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=RPIefTxD3cuu5hgyariMNG21c4TTBjinfoQPnb6+Z33A8X64/WBPjoU5bFrcHs2hSPo2Me0K0QO1PfIpLxyYn9/Jo7BnpfO5wWwmA8YMv0a8dgA+UHrglMB8/H3zwxPnGHbINH+puwW2PtfRzDjpExaoDpI2PC9uAIdStKzaHV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iMKx7CVe; arc=none smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1716906285; c=relaxed/simple;
+	bh=liDXXVG7+jQ8j+oBXW3RimuL4xRzdKCL+2zOICN0PdI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Cp/7JaXat8N5Ubm54UwekxKpttrScG7D2gRc3/oaM1WxfkZOgKJDzD1zYYqwHyv1UUyUvTuzpRY8PNIXCxHAc6foEX0zXEgySwtxRExG5yGFhItdDNKGGrHUBwNGth2yBIjGdEhXRcydEOZYSqJ2Y4Eus6r4MIhVawqipkRpSBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EsHs7Y2l; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMKx7CVe"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-578676a1b57so455935a12.3;
-        Tue, 28 May 2024 07:24:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsHs7Y2l"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a635c83bb7eso11152766b.0;
+        Tue, 28 May 2024 07:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716906278; x=1717511078; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HxA4xy7Sm7SYGJwpfTgxEx7SddTuAL9NNNge2TQxq9g=;
-        b=iMKx7CVeHFPSo8UXn9Edvdk3bDwF869lAsnVjwFpxbxsmTdQzp2ug+ZYDgemqjyfjz
-         E90a7sI41uFNQLmLaNU/3DDSKuzz9KcknOVIaoSHhhZFYjHG4Chjm/9gWrm5bH+uy/uD
-         skeAMayzh1aNfCd6I5XSpFg8piz8JpPiWUerN/XR/JMtOvPxYWt6CAgCG6pLYLoBKWuf
-         cn2NMkzlTmrNA1iNsjyAGOWM7ykdcfuNlpwGmuzXBP6zlUCCJ4UJ+zz5ZEwiVUhsBblt
-         jZJjTYCvf4DzbhnO+KmkdmPSojSo8L2i0iqDhUZwxlfBB/toNvuQpzJryZ0CI2e+rl9r
-         38aw==
+        d=gmail.com; s=20230601; t=1716906282; x=1717511082; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wseiunJrGIIyj8awYaIYhXek1PnSx7l5YTva15LcNDw=;
+        b=EsHs7Y2lsUUI4SW9sbynLLFx4q8F4c2jHw73TB73geEtpYw9bi0wQ1dBuI/6exmpNk
+         kWCtNYp7s+cyuCpY7R/ms/uPZN2Rl/68csX8vJ9HkghIPwLXpGb8w2uCeW6/Ka4A+8q6
+         7OVW01ldacDeSKLSRZJ/xUBYcNvT+xJDA9sj7umm7ep/t3CgGEehJ3rWXnCrrToMydiX
+         pFoeohWxUgaThrqvQRChEQWMIPXMm8CLZyayU643n5AfBheRrLSElumhcxQZ0kKJDFrs
+         7oUTwgBOb5fD2vFUPIQrnqASh6XhMP3V4iUgpvZWg75UJPxcZG2P9DtATQQUUyFiKzqd
+         uNaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716906278; x=1717511078;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HxA4xy7Sm7SYGJwpfTgxEx7SddTuAL9NNNge2TQxq9g=;
-        b=CWCvvHj3picXW14g6rtK2AHcXBtHVMBjsA5k/Nis42Z5I4PJQ9/vxOsAKpvIKIbbvu
-         YL328stXbMBoHVxv+3a5y8PghiCqt4WVt1h9c3/lOzixwbcdj7KmrpzUwESg6Q3au96D
-         qKTEtJdZPQbB9IJD5wTWWJZdS/+Z3UPe5lGiaQQVT81J2n0wmpjh08PYj0qXXswIfdfL
-         bUbjkVVQT0O4pZSgQjoNOVCM/elY+COfeCyz3tg7yJYD0ZwO1J0z/TrZjpOTv2ctr6M3
-         c9++kKEF4XEVoFj52FTb89i2vd/5PsoWTwneERLYv7Z7Jx8CGA1u3s4y4+UpDdZUIvfG
-         TxmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWx5nT5As/ETnC0MhvvrUUfphkrF/zsdOlrcO0VW/nYITGYpXAoeEyOJAAIcD4NFStINifYa2O0tsawAefX24cJmCuxTwk1WwcOFd2+Vr3K0UZKj/gwsTysBoPwIm6d36pDu1lugZ487Td+Nh6q2WJTw95pLdJ8mzPuEWV9aki48g==
-X-Gm-Message-State: AOJu0YyWcByMtokgH1Sj3f1H99FORUzkOqDHcGQnTjv9X9hsBKnKnNYq
-	n5Vqcl0+jjY3M5W7A0xoCQZES4jss3i5qfmqLsPC9JJGkjul6tg9TmLtWEbgMuI=
-X-Google-Smtp-Source: AGHT+IE8Lz5RyyighE7GKU2QlcjM001GtbOPd3AVNTQ1ZIurq+Ru0m+k3HReTwDzi/nkvE6Egp1GNw==
-X-Received: by 2002:a50:9f47:0:b0:578:ac24:7f7c with SMTP id 4fb4d7f45d1cf-578ac33c79bmr7822680a12.19.1716906277498;
-        Tue, 28 May 2024 07:24:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716906282; x=1717511082;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wseiunJrGIIyj8awYaIYhXek1PnSx7l5YTva15LcNDw=;
+        b=TIsc2ehkpuID6JdPf5Are8tKDWwATmEnK8D828yKP+G6kpheDelYioicBS6IYSTmbO
+         cBwEmj+pn9GBocFBfDxJDaJutpMG5h1BIE1C5RyqH/HSncbT+Fe89mMwkHsXR4rK+KSD
+         RQj80dCdSzyLKUwBhhKcCWExNj4MBItpCIxdaw11bU7P/eZ6p29e436O3kr1iIxDvj/+
+         gPyqDcYvSxadW7862IY1tY5rBWPKlmbPfRUHRJzY2VTlodfGekRwFWoP4lIvW33gv6RD
+         9pIx0Z+sqkk0LHYxSnm4Z81PtYYZZO1ZpuAlUPjrOVbvY01W6ZtzVVf7YHuSbOfGE5Iw
+         xPrg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3Yh7kp6SxIruFgRyzF/DNhCQR3oGNh4eAYH8ZbyhG1AjpRUSSR/P9NtPOQ06NYp8bS0bN3vi7cCs7GpSlbPuRcwWErXs8INYRRLTNQqPdjHfSKfF1CG3Ti/uiq7y0b2Ca5FViTn9KZ0K7X5Gye0VxuTp9pq9yfvwlY3qvk5O79g==
+X-Gm-Message-State: AOJu0YykBqzCp7AIHptdOKpbm+4oAk25okfIO7MP0qnf+4iYzA1uiBj4
+	uQqqX98dYBxKK02XarAuXT5QimG3vF07CWl2iNCYTXjaP/hAcSxaslUJroQ7QN8=
+X-Google-Smtp-Source: AGHT+IHvA08i8QamKiZ58gTTamfZdJV+p5hNUVrLMDt5dxAW5Q5YnomMPGo2zg0V1ndg055/dKoMGQ==
+X-Received: by 2002:a50:9e6a:0:b0:579:f196:487f with SMTP id 4fb4d7f45d1cf-579f1964978mr1951212a12.31.1716906281536;
+        Tue, 28 May 2024 07:24:41 -0700 (PDT)
 Received: from rbolboac.. ([2a02:2f0e:350b:4500:3736:ef2a:a857:c911])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579d7dc9efesm2495580a12.48.2024.05.28.07.24.36
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579d7dc9efesm2495580a12.48.2024.05.28.07.24.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 07:24:37 -0700 (PDT)
+        Tue, 28 May 2024 07:24:41 -0700 (PDT)
 From: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
 X-Google-Original-From: Ramona Gradinariu <ramona.gradinariu@analog.com>
 To: linux-kernel@vger.kernel.org,
@@ -62,41 +64,54 @@ To: linux-kernel@vger.kernel.org,
 	krzysztof.kozlowski+dt@linaro.org,
 	robh@kernel.org
 Cc: Ramona Gradinariu <ramona.gradinariu@analog.com>
-Subject: [PATCH v2 0/6] Add support for adis16545/47
-Date: Tue, 28 May 2024 17:24:03 +0300
-Message-Id: <20240528142409.239187-1-ramona.gradinariu@analog.com>
+Subject: [PATCH v2 3/6] dt-bindings: iio: imu: Add ADIS16545/47 compatibles
+Date: Tue, 28 May 2024 17:24:06 +0300
+Message-Id: <20240528142409.239187-4-ramona.gradinariu@analog.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240528142409.239187-1-ramona.gradinariu@analog.com>
+References: <20240528142409.239187-1-ramona.gradinariu@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add support for delta angle and delta velocity channels in adis16480 driver.
-Add support for ADIS16545/47 devices in already existing adis16480 driver.
-Add documentation for adis16480 driver.
+Add ADIS16545/47 compatibles. Each newly added device has a different
+angular velocity/linear acceleration scale combination, as follows:
+Accel dynamic range:
+- 8g: ADIS16545
+- 40g: ADIS16547
+Gyro dynamic range:
+- 125 deg/sec: ADIS1545-1, ADIS16547-1
+- 450 deg/sec: ADIS1545-2, ADIS16547-2
+- 2000 deg/sec: ADIS1545-3, ADIS16547-3
 
-Ramona Gradinariu (6):
-  iio: adis16480: make the burst_max_speed configurable
-  iio: imu: adis16480.c: Add delta angle and delta velocity channels
-  dt-bindings: iio: imu: Add ADIS16545/47 compatibles
-  iio: adis16480: add support for adis16545/7 families
-  docs: iio: add documentation for interfacing tools
-  docs: iio: add documentation for adis16480 driver
+Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+---
+changes in v2:
+ - updated commit message
+ .../devicetree/bindings/iio/imu/adi,adis16480.yaml          | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- .../bindings/iio/imu/adi,adis16480.yaml       |   6 +
- Documentation/iio/adis16475.rst               |  23 +-
- Documentation/iio/adis16480.rst               | 445 ++++++++++++++++++
- Documentation/iio/iio_tools.rst               |  27 ++
- Documentation/iio/index.rst                   |   2 +
- drivers/iio/imu/adis16480.c                   | 393 ++++++++++++++--
- 6 files changed, 825 insertions(+), 71 deletions(-)
- create mode 100644 Documentation/iio/adis16480.rst
- create mode 100644 Documentation/iio/iio_tools.rst
+diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.yaml b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.yaml
+index 56e0dc20f5e4..e3eec38897bf 100644
+--- a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.yaml
++++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.yaml
+@@ -23,6 +23,12 @@ properties:
+       - adi,adis16497-1
+       - adi,adis16497-2
+       - adi,adis16497-3
++      - adi,adis16545-1
++      - adi,adis16545-2
++      - adi,adis16545-3
++      - adi,adis16547-1
++      - adi,adis16547-2
++      - adi,adis16547-3
 
+   reg:
+     maxItems: 1
 --
 2.34.1
 
