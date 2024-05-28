@@ -1,130 +1,93 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B2017C7F;
-	Tue, 28 May 2024 13:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2894A17C7F
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 13:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716903168; cv=none; b=GpFpkI0OnT4vz7yk9KpPauB/0BgExGYyKVPOOvPmtnQrrcaLeYGuKZK/3AWhtqP0Qp0SsNjj+FE9g0wiU1QVA0g60fTevhhSkw31qYuwH3/ApceXa+RqFPUBxDpCS4QqKVtUzMKpM6DEpOPE+fViRH0XBD8laSYp1MPWCnVmbmA=
+	t=1716903178; cv=none; b=H77ZkDz05O7C3zf5yVEF8IQ7zI+m73UZM+1+NdjQhd0q33C6bDw6RquBU9IqogYu0CAR+NN/q+qzvP6DhdKhu/+cA+IrD8j6lMSy/ggGmiGMWTTmn9qDL1qTu9/G+62tuIimuSr2jAILbjZkSBjYvzK1fwbHwyE5LFSt2cdKzkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716903168; c=relaxed/simple;
-	bh=1PhnMJDZWj2BGHeJ5Cta1tAR85uMdgv9y7/GJ2QDmgI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=s+ov27bzAcK2MYSM4I60aKIDzDoRsIzs4pD9Wdo3OkfxIckZ3LDCkmcLyKcKa77+584d9broDBxm4yga8qYEn3xhPLm8La3N5KvnhP02tNQv0GZcMKie1uWp6huMstRCTPD4TFDMLIb14Q6cwv/s5vRsMTU4UfQlWVkquU7FCkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VpYNJ5Rjwz4f3jXt;
-	Tue, 28 May 2024 21:32:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 04F071A0568;
-	Tue, 28 May 2024 21:32:42 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgAXKwT43FVmvE2rNw--.10284S3;
-	Tue, 28 May 2024 21:32:41 +0800 (CST)
-Subject: Re: [PATCH v2] md: make md_flush_request() more readable
-To: linan666@huaweicloud.com, song@kernel.org
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240528203149.2383260-1-linan666@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <8dc33d99-4b50-fdb7-e81b-581939dadeaa@huaweicloud.com>
-Date: Tue, 28 May 2024 21:32:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1716903178; c=relaxed/simple;
+	bh=Dz+CC+JZWQtuG8vRgbBmaJAyi+jOVLXABQMl0q6O1kM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sg7kmU0Pi3QJoH4hhc9aj7i4/VqaKRYORoGibWbS3n2z5iw9iAKPDQ/KRkiHcW3QBL1wcLvo2hToYRbEBR86O0t8p+eUohLV2rQLVL61g4LqJHW8CmBl1PGjtmVtB8j7U1fwjVNXJuc2zWet4hpB4B7kzgvMKWTWv9BiaEqw/LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tyc6h+vy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tyc6h+vy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E656C3277B;
+	Tue, 28 May 2024 13:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716903177;
+	bh=Dz+CC+JZWQtuG8vRgbBmaJAyi+jOVLXABQMl0q6O1kM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Tyc6h+vyN/0ZtgmqlBVQivGgvzaHDwhnURTNTqAzCNT1CAUF4+XoAWWP9zIVozyWh
+	 JaEUiYWPKRClmYh7/hg8fx0BhqsyfmzRPFKrsIlNebfX4kyQkuA7VP1suJrYUwfiuq
+	 FcB2RZi/cn6mo1q8HsxG5a3nOV89f6WZN6sQpi1HI2LOy+ifhc8MWSrxO/X90ljkgR
+	 DRKZuzwiwHV3WpPXA4HWBW720Xyhrk/4Nmw+tB/JG4BNOGbFmsuo7HSMYxoN1j3tjG
+	 CjQgVM3G606etOfuHQc1B+i8n96rmS5SmhLVIR596pmD4YIGfOrWwc0cUs5Y2BclbN
+	 ujPRZU2Cl+dEQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Francois Dugast <francois.dugast@intel.com>,
+	Himal Prasad Ghimiray <himal.prasad.ghimiray@intel.com>,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/xe: replace format-less snprintf() with strscpy()
+Date: Tue, 28 May 2024 15:32:36 +0200
+Message-Id: <20240528133251.2310868-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240528203149.2383260-1-linan666@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAXKwT43FVmvE2rNw--.10284S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF13WF4DuFW7CrW3AFW8JFb_yoW8AF47p3
-	9akasxAr4rtw4DCw47JF4kJwn8Wa1SyFWUtFWaywn5ZFy3ZF1kGw1ag39YqFykGryfC3y8
-	JFs8A395Cay0vwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-	Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbU
-	UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-ÔÚ 2024/05/29 4:31, linan666@huaweicloud.com Ð´µÀ:
-> From: Li Nan <linan122@huawei.com>
-> 
-> Setting bio to NULL and checking 'if(!bio)' is redundant and looks strange,
-> just consolidate them into one condition. There are no functional changes.
-> 
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Li Nan <linan122@huawei.com>
-> ---
-> v2: Rewrite the code according to Christoph's suggestion.
-> 
->   drivers/md/md.c | 28 +++++++++++++---------------
->   1 file changed, 13 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index aff9118ff697..9598b4898ea9 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -654,24 +654,22 @@ bool md_flush_request(struct mddev *mddev, struct bio *bio)
->   		WARN_ON(percpu_ref_is_zero(&mddev->active_io));
->   		percpu_ref_get(&mddev->active_io);
->   		mddev->flush_bio = bio;
-> -		bio = NULL;
-> -	}
-> -	spin_unlock_irq(&mddev->lock);
-> -
-> -	if (!bio) {
-> +		spin_unlock_irq(&mddev->lock);
->   		INIT_WORK(&mddev->flush_work, submit_flushes);
->   		queue_work(md_wq, &mddev->flush_work);
-> -	} else {
-> -		/* flush was performed for some other bio while we waited. */
-> -		if (bio->bi_iter.bi_size == 0)
-> -			/* an empty barrier - all done */
-> -			bio_endio(bio);
-> -		else {
-> -			bio->bi_opf &= ~REQ_PREFLUSH;
-> -			return false;
-> -		}
-> +		return true;
->   	}
-> -	return true;
-> +
-> +	/* flush was performed for some other bio while we waited. */
-> +	spin_unlock_irq(&mddev->lock);
-> +	if (bio->bi_iter.bi_size == 0) {
+Using snprintf() with a format string from task->comm is a bit
+dangerous since the string may be controlled by unprivileged
+userspace:
 
-It's better to use bio_sectors() here.
+drivers/gpu/drm/xe/xe_devcoredump.c: In function 'devcoredump_snapshot':
+drivers/gpu/drm/xe/xe_devcoredump.c:184:9: error: format not a string literal and no format arguments [-Werror=format-security]
+  184 |         snprintf(ss->process_name, sizeof(ss->process_name), process_name);
+      |         ^~~~~~~~
 
-Thanks,
-Kuai
+In this case there is no reason for an snprintf(), so use a simpler
+string copy.
 
-> +		/* pure flush without data - all done */
-> +		bio_endio(bio);
-> +		return true;
-> +	}
-> +
-> +	bio->bi_opf &= ~REQ_PREFLUSH;
-> +	return false;
->   }
->   EXPORT_SYMBOL(md_flush_request);
->   
-> 
+Fixes: b10d0c5e9df7 ("drm/xe: Add process name to devcoredump")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/xe/xe_devcoredump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/xe/xe_devcoredump.c b/drivers/gpu/drm/xe/xe_devcoredump.c
+index 1643d44f8bc4..1973bfaece40 100644
+--- a/drivers/gpu/drm/xe/xe_devcoredump.c
++++ b/drivers/gpu/drm/xe/xe_devcoredump.c
+@@ -181,7 +181,7 @@ static void devcoredump_snapshot(struct xe_devcoredump *coredump,
+ 		if (task)
+ 			process_name = task->comm;
+ 	}
+-	snprintf(ss->process_name, sizeof(ss->process_name), process_name);
++	strscpy(ss->process_name, process_name);
+ 	if (task)
+ 		put_task_struct(task);
+ 
+-- 
+2.39.2
 
