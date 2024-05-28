@@ -1,104 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1E7161321
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788DA71753;
+	Tue, 28 May 2024 12:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716898139; cv=none; b=tljomjEEpmw1YYIXBGMT4TswkecrzRUPOQM1sRyXc/dMaY4dwzgEpFVvz/ExCZYsb2j5nIWBggyw9lLmIJ7oKDuXfHAXjcmDjYM0KbA+5getupnms8cmVnskpYhSxYPNEtimmnHIVhztsn17JPyH4tMHamX4hyWt97MmiIlD+u0=
+	t=1716898188; cv=none; b=WpGGRNY0Q1/YeokMwVFVJPoQ04tOud82yhL7OgN0wiDRGb2iMXjBIVuehGjUf7mdfV4tsuYMNBXM7q6qx0FVYlazFrzAptUjoYhA5UhlUYphwXvE/AG2x7Epm4XYd6vPLSAkSzI+dpsfacYgxuwyB8rIXab4AJXkYxHJDM7LyMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716898139; c=relaxed/simple;
-	bh=w6udFbCiRu8HpcofWpGaBLqg07cyLn7e+XFXRMvBuRg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GSdEuvNyGlwgUbNzITAk1izbmtYWy1DYvmsRCmJEIAjQU7RjrnZGmVSX3/P9At0ipr+Yf3OJfV7x10yUQmxyOXclYTyWXQX2ROnsFYL5SI8nTfvQWwmSorgDgUzY1d2mTvmgn3ACQP0iNsjf9hpUbNP6cBSzUJuZu2I5bmoWVNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7qh64kG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716898188; c=relaxed/simple;
+	bh=fo/eQlCwe1cy2Moyf0G+7NTSc2277UXsnpEILM0Ot2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Or0HPXvJuT6EM8WK5zx3JO38J2RwO8wHrZfO9r4Nl5Dqfko5ZnAFLIUkVy1Fkc7ZFvYqWDkiF/3/WWu0v15wS9lmTpEhG4IICmTWe4n/HBXdCOa+p9rXESeBUPUYQV88PwPdEveNHlRzdrAULqQZexKQwLnJSXUIUekiB2g+vnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPZENJsp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7qh64kG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D338BC3277B;
-	Tue, 28 May 2024 12:08:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPZENJsp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852DEC3277B;
+	Tue, 28 May 2024 12:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716898139;
-	bh=w6udFbCiRu8HpcofWpGaBLqg07cyLn7e+XFXRMvBuRg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l7qh64kGo19wQmwy4mvyYsNucOOD2AdVlNj5Zx8SNaH6r+YPNDmtHhGiy9ujL7f60
-	 LFNY72jG1FwLRJNoCPlY7pegh26Xzt5fyc4dWzGZE5QXXZ/jXsAtppnCRP2owMbe+1
-	 5vrFWk5sFX57q++nxRYbjsHfBlzglwBJQgNilJpM2V04q4rBKqqINjZis2Edn24kLX
-	 AVtsq1edSttUuphVxbO0EfUGgqc26HsvKtBHkJuxutqU2H0D5+Huj+chLfGghQ9kyY
-	 PE+x2XXgk8yFvwx/t47QZKDdn4gLwXzxhBlkU4JhqMHApjG79dPrRUHMBrr8RV60ex
-	 S3hyq660tEwpA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Baoquan He <bhe@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64/io: add constant-argument check
-Date: Tue, 28 May 2024 14:08:38 +0200
-Message-Id: <20240528120844.3523915-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=k20201202; t=1716898188;
+	bh=fo/eQlCwe1cy2Moyf0G+7NTSc2277UXsnpEILM0Ot2Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GPZENJspXF1cekh0/6zssWOaKbbXcox0NfLSFBCBcIxK/1wgrUNW6+B5TpPAQGX37
+	 WmbbnwrZFVxHBJh45ajSlXgGdU3MWsYso4WSjnpHInKPd6oslP4kpN9deRlVcT7I7D
+	 hbt3c6viLR8Q9E06XPBjB4I5j87pm9iMVEs1gyFL8iaMxqN2qtfAFkHQ8q45NFRDf9
+	 vF5i5RKCwx/e9UQ3J1WbZesEsJ6tKhUro9zDP2G+7TuUUfFn1XsivWGii5OJ3RT3AG
+	 j/g5fWfnxncasF1FCrGoeEIbGLyuFFPx6ZMblae/jA1hRTca0+EZ2iSauMu71ACdU5
+	 2Zm1hHNhcM5NA==
+Message-ID: <4774e4c9-55f5-4ce9-9433-86f9ae1bc610@kernel.org>
+Date: Tue, 28 May 2024 15:09:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/7] arm64: dts: ti: k3-j722s-main: Add support for
+ SERDES0
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, nm@ti.com, vigneshr@ti.com,
+ afd@ti.com, kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, u-kumar1@ti.com, danishanwar@ti.com,
+ srk@ti.com
+References: <20240524090514.152727-1-s-vadapalli@ti.com>
+ <20240524090514.152727-2-s-vadapalli@ti.com>
+Content-Language: en-US
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <20240524090514.152727-2-s-vadapalli@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-In some configurations __const_iowrite32_copy() does not get inlined
-and gcc runs into the BUILD_BUG():
 
-In file included from <command-line>:
-In function '__const_memcpy_toio_aligned32',
-    inlined from '__const_iowrite32_copy' at arch/arm64/include/asm/io.h:203:3,
-    inlined from '__const_iowrite32_copy' at arch/arm64/include/asm/io.h:199:20:
-include/linux/compiler_types.h:487:45: error: call to '__compiletime_assert_538' declared with attribute error: BUILD_BUG failed
-  487 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                             ^
-include/linux/compiler_types.h:468:25: note: in definition of macro '__compiletime_assert'
-  468 |                         prefix ## suffix();                             \
-      |                         ^~~~~~
-include/linux/compiler_types.h:487:9: note: in expansion of macro '_compiletime_assert'
-  487 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |         ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
-      |                     ^~~~~~~~~~~~~~~~
-arch/arm64/include/asm/io.h:193:17: note: in expansion of macro 'BUILD_BUG'
-  193 |                 BUILD_BUG();
-      |                 ^~~~~~~~~
+On 24/05/2024 12:05, Siddharth Vadapalli wrote:
+> From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+> 
+> AM62P's DT source files are reused for J722S inorder to
 
-Add a check to ensure that the argument is in fact a constant before
-calling into __const_memcpy_toio_aligned32().
+inorder/in order
 
-Fixes: ead79118dae6 ("arm64/io: Provide a WC friendly __iowriteXX_copy()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm64/include/asm/io.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> avoid duplication of nodes. But J722S has additional
+> peripherals that are not present in AM62P.
+> 
+> Introduce a -main.dtsi to define such additional main
+> domain peripherals and define the SERDES0 node.
+> 
+> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> v2:
+> https://lore.kernel.org/r/20240513114443.16350-2-r-gunasekaran@ti.com/
+> Changes since v2:
+> - Renamed serdes0_ln_ctrl to serdes_ln_ctrl to keep the format
+>   consistent across SoCs where a single node is sufficient to
+>   represent the Lane-Muxing for all instances of the Serdes.
+> 
+> v1:
+> https://lore.kernel.org/r/20240429120932.11456-2-r-gunasekaran@ti.com/
+> Changes since v1:
+> - Newly introduced k3-j722s-main.dtsi to add main domain peripherals
+>   that are additionally present in J722S.
+> - Used generic node names - renamed "clock-cmnrefclk" to "clk-0",
+>   "wiz@f000000" to "phy@f000000"
+> 
+>  arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 64 +++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> new file mode 100644
+> index 000000000000..0dac8f1e1291
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> @@ -0,0 +1,64 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * Device Tree file for the J722S main domain peripherals
+> + * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
+> + */
+> +
+> +#include <dt-bindings/phy/phy-ti.h>
+> +
+> +/ {
+> +	serdes_refclk: clk-0 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <0>;
+> +	};
+> +};
+> +
+> +&cbass_main {
+> +	serdes_wiz0: phy@f000000 {
+> +		compatible = "ti,am64-wiz-10g";
+> +		ranges = <0x0f000000 0x0 0x0f000000 0x00010000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		power-domains = <&k3_pds 279 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 279 0>, <&k3_clks 279 1>, <&serdes_refclk>;
+> +		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
+> +		num-lanes = <1>;
+> +		#reset-cells = <1>;
+> +		#clock-cells = <1>;
+> +
+> +		assigned-clocks = <&k3_clks 279 1>;
+> +		assigned-clock-parents = <&k3_clks 279 5>;
+> +
+> +		serdes0: serdes@f000000 {
+> +			compatible = "ti,j721e-serdes-10g";
+> +			reg = <0x0f000000 0x00010000>;
+> +			reg-names = "torrent_phy";
+> +			resets = <&serdes_wiz0 0>;
+> +			reset-names = "torrent_reset";
+> +			clocks = <&serdes_wiz0 TI_WIZ_PLL0_REFCLK>,
+> +				 <&serdes_wiz0 TI_WIZ_PHY_EN_REFCLK>;
+> +			clock-names = "refclk", "phy_en_refclk";
+> +			assigned-clocks = <&serdes_wiz0 TI_WIZ_PLL0_REFCLK>,
+> +					  <&serdes_wiz0 TI_WIZ_PLL1_REFCLK>,
+> +					  <&serdes_wiz0 TI_WIZ_REFCLK_DIG>;
+> +			assigned-clock-parents = <&k3_clks 279 1>,
+> +						 <&k3_clks 279 1>,
+> +						 <&k3_clks 279 1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			#clock-cells = <1>;
+> +
+> +			status = "disabled"; /* Needs lane config */
+> +		};
+> +	};
+> +};
+> +
+> +&main_conf {
+> +	serdes_ln_ctrl: mux-controller@4080 {
+> +		compatible = "reg-mux";
+> +		reg = <0x4080 0x4>;
+> +		#mux-control-cells = <1>;
+> +		mux-reg-masks = <0x0 0x3>; /* SERDES0 lane0 select */
+> +	};
+> +};
 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 4ff0ae3f6d66..44913f227060 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -199,7 +199,8 @@ void __iowrite32_copy_full(void __iomem *to, const void *from, size_t count);
- static inline void __const_iowrite32_copy(void __iomem *to, const void *from,
- 					  size_t count)
- {
--	if (count == 8 || count == 4 || count == 2 || count == 1) {
-+	if (__builtin_constant_p(count) &&
-+	    (count == 8 || count == 4 || count == 2 || count == 1)) {
- 		__const_memcpy_toio_aligned32(to, from, count);
- 		dgh();
- 	} else {
 -- 
-2.39.2
-
+cheers,
+-roger
