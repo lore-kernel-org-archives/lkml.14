@@ -1,95 +1,119 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C020D13D89B;
-	Tue, 28 May 2024 09:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EA0155A4F;
+	Tue, 28 May 2024 09:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716889989; cv=none; b=L9SjFhrVd3KXG5iRAFYQ+cqvOrFJKdNPO04vmDWTnqKJ03ixQYiVoD0qmgZm3Plvp6fIsSjXmrs8HuUXYAfW3b87ToyCv/zBawvZgNT/cbY4UsWsib/yoJAZeJSHuWwDXvarPU+x41xmEoIsCzyGYB5O/eyktelNTffc9AtcbrE=
+	t=1716890021; cv=none; b=KO05OR4DxBPJ9bOYY4BMgUXZgBc3OlNY5zm9NC7M73LY0AJLPgOoYRFoUSWXHIOm3p0zIwFBoPB9cfHyWg4h6tNXlBIWfoduaKKI8joLuiACIOGeZLt9UlG96S0fe+Jfh1LVwp+3iYxb81mDsFt9DdnNtXxn9e8ebrREPiiH6WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716889989; c=relaxed/simple;
-	bh=w7VJZ0cKWwjQ3VbY/fJF02GZdaxEQ3KlxTZ+whkRYsQ=;
+	s=arc-20240116; t=1716890021; c=relaxed/simple;
+	bh=DwfIAvsMEGgL3IsgcE5uTNC+iW2pyzp8jO+8/qVFFIU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X9yTkJHLvXl0Orc4fq8H5WMwJLm3JcJMlKkzzAhvS22Pp8nnyOMVAsyx0phVKKHrOn9Ewlu3gU5G9wCIhv12H7M8r5XXiPbRiORS5yxBx9xfS6rtR+0euf/qpnFQlW4csrv+I4axVrJt/5BGqmCTFihROSzFImuZXVfccEtezxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ijPY4OqH; arc=none smtp.client-ip=209.85.218.44
+	 To:Cc:Content-Type; b=TGV/xiPAChJ6Ran5P76sAwLjfZ3284b1KMzFYDkYKFoFzk6htGqu2MzvdsVw8sZevW8i67M6IVRhWR10hqjDBCY+vpXx+SIbMeOtM9J/7DwPGsX7g8a6SNRBQUJvtDKq5w2RxBmS9id7nN8yL8t8RWs4QIUcHLL9O4WOi7nrab4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JhvQPAU5; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijPY4OqH"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a5d67064885so89014366b.1;
-        Tue, 28 May 2024 02:53:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhvQPAU5"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2bdf439c664so135062a91.3;
+        Tue, 28 May 2024 02:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716889986; x=1717494786; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716890020; x=1717494820; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w7VJZ0cKWwjQ3VbY/fJF02GZdaxEQ3KlxTZ+whkRYsQ=;
-        b=ijPY4OqH68KPSIH6pYFEYNkCr+Uw0bQ9gjWa3u/bba5hf5eEAiaMTc5LK1/3bV7noN
-         5DprflwHXvEU2SGCYzXtTmosWJCCMQ5o83VKwoe1genwiIURqUIu1tnB5P9IdrtGgjNB
-         5nBJlWmd+vveYimx0SWOJfA4RAMS3uXIZM1T0GrG8DDYToN8YRvmm1bO+ECUYkad2rgH
-         9eiKdewV22bzKpKsN9+m5on1+xWpTJOqKPdprcWuzYpU8aaC07gCv3ptEpD7A8AxplFD
-         phAuB4Whd9FdSUKX2P3A8iDIm/o+KJQ1nEhc1bHyJVjHx5vzbM64Nbpy/ugymzJLlQ//
-         ysOQ==
+        bh=e+CCht/uzDQdeE2w0O397gKXPjOgO9WVTzuCP3Dzrjg=;
+        b=JhvQPAU5FXyR85iBSNtkrpU/lo8Nfm3lqm4JOH4796EZw8Pt0SvzqXl0zufjtm6uDP
+         4bep6iIUyOvlpchLXb7BDtl7ofxlxZfF9hG1I1v7U80dLxte5f8emWaVAG6oG6MEWb7i
+         Mlp3DfYK7JVqBaF9QTHrCYZolgHEopNdrxIY3scev0wLic3yTCuHkIZZuhXyQOzUXzdg
+         zwVsAM2uXppMQ0/QIeSAIxmudXB4RPLN4en9rtjQjsOsG58pmSOqAX3Hq2YDUjF07jFe
+         zHNlHHUVhx+140bfQQChaSpocYt/FiZlAk6k6Ibt5I+2CUgkTWpnbmDamBACVzOi1wLC
+         5pzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716889986; x=1717494786;
+        d=1e100.net; s=20230601; t=1716890020; x=1717494820;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w7VJZ0cKWwjQ3VbY/fJF02GZdaxEQ3KlxTZ+whkRYsQ=;
-        b=A8rAlw5Foy1C7Vx/e7O4IVM/MPKloawgKvN1nRTeLgkrA5KfQmUfbeQ6FAOOhrCgSN
-         FxDKjq2OwIJYuLnVgsD1NhjJb5T1pqhTX0h1dXGzFYta1Yd+wVXzTOWRi94zwJcFinF7
-         V/D+6RhGvZYkKAl8MNPGyP3BT1o4clFzQfmC6Hrv3/qPEM5f9Ls3CXPtqhAM/jgv2rit
-         64Ft0dJSOLfPegFnnp5HpOZko3FohaGp4tB9tC6AI2hVyxi3DUDN1tYxZ5WcI54Z6zug
-         Uonn0eQc6ccEmwtbLotCAkFqQsXMUV1MVsOkW+cSXfVRQs0wfaj7R3Qy7i53CXSlC+Hc
-         9Myw==
-X-Forwarded-Encrypted: i=1; AJvYcCXj7C0ZoUiplYf1StWLH/4MI7PNJ2a1r3e5uNr9QfjASCM+9PiplBlHcmW72bkh8Mv2yTtsWpAUZ8BkN0u/SZTXigG+z86j3TUmMrWEgm7pcKuOu+B/GF3mSAYmfdRGVSDPzlLgDkNADg==
-X-Gm-Message-State: AOJu0YznddAb6xP3kOKUyzYxzKgL+sCsEBc7pv1y6BDiLB2AOdXnZoX2
-	CbVDCdwuNKFXSYfcctoI8ShYWc4lrInu+W4rLhn7T9zCLMFAFRq2pDHZICpvAYE8G8Cekh0QhE2
-	pSYn7Y6uNe80QSgHPoLFdcHLc1Sk=
-X-Google-Smtp-Source: AGHT+IF8aVYcQYVGlXYdgjNwO2xeFVRdGHyx9scEp3Sd4m9SUmEO4DJP72Uo1Uf/CGfjFcj6oJY/ORHS3GuzC/ZLq5E=
-X-Received: by 2002:a17:906:3505:b0:a5a:5b23:c150 with SMTP id
- a640c23a62f3a-a62646d591bmr1222043966b.41.1716889985903; Tue, 28 May 2024
- 02:53:05 -0700 (PDT)
+        bh=e+CCht/uzDQdeE2w0O397gKXPjOgO9WVTzuCP3Dzrjg=;
+        b=V70WMS4ttYbC/6wmfYUd8Q6BWnaiYmD+pdVtns0F5RDEjhiL96jWHBa+yuHPWjayrm
+         9D/x+21bWzaLrEte2/KsWuNsJUThwBaLzIIogSLREceRUDA0DQ0aqeIVgvyuMzbOXJKO
+         BrHdlSJckitjpwaeCoHba7+UlxIrF6TzPJJ5gH6eZ2tMU4Hp8xJzKn2vlWUFGdVOCNe2
+         FC9/npE0p9dhFuMuB3M+M9BjczuzlFoYYDVEmX3nBEtS3AOgJE7T9qN6+44JmyDwVjrX
+         oBs+CuH+S+savg/hFnjLQ6L3gO7wCfiHft7XAAP46Y4oaIOZZmUzhhhK6rnDCez7swEK
+         Ugyw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAxRVIb/4GNEoS4P71gle34B/SGfq0KG6iQGAeFi4LKQM1sA0C8OkQfVqszsl7LhbYfJ3h7TvN476yL32mvcb2s2wDH8F71a0kEYAIuZuIjd76FmvQZfE5ifllHaJoOeHtuX53pbz/pIhN0Fm+ec1KaFRS9jERzhQfn8wEaTjt
+X-Gm-Message-State: AOJu0Yy7gkxExiyGHpBKdJ7YPKT1+KTaR8iwyR65keOmnXimmMh9bpe8
+	Bowi8uWWPEKfhzx4Eisep22ankZDmDF6Jmcfq5yIHIR/acYYP6L6TLx/M+3HmN9vUFNSalbXX61
+	ePmDvKUg4Ow44tgKWtT/pdG0H+eM=
+X-Google-Smtp-Source: AGHT+IHcgkhWTP7zQpBfwy/dk/Ap1StaEOdZbXvZcs6NZFmo8RT5MAGq+ZerxzKxqaHRUdfdyOHLY45RAzsh7bwMmpo=
+X-Received: by 2002:a17:90b:1c85:b0:2bf:eddc:590b with SMTP id
+ 98e67ed59e1d1-2bfedeb9d57mr3176120a91.1.1716890019935; Tue, 28 May 2024
+ 02:53:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527202424.1430103-1-andy.shevchenko@gmail.com> <CAJZ5v0i8N-SuKyzm1o601G-G9Jis4uciu3gxO-08GN-X-z0LUA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i8N-SuKyzm1o601G-G9Jis4uciu3gxO-08GN-X-z0LUA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 28 May 2024 12:52:28 +0300
-Message-ID: <CAHp75VeOX3NqPxFWduRAXGhw8zDA1a4E1jk6L3DzvfjKX-KjVA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] PNP: Export pnp_bus_type for modules
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Guanbing Huang <albanhuang@outlook.com>, 
-	Guanbing Huang <albanhuang@tencent.com>, Woody Suwalski <terraluna977@gmail.com>
+References: <20240528033136.14102-1-ki.chiang65@gmail.com> <20240528033136.14102-2-ki.chiang65@gmail.com>
+ <40d075d0-7075-6ece-ffe3-797d7b49db4a@gmail.com>
+In-Reply-To: <40d075d0-7075-6ece-ffe3-797d7b49db4a@gmail.com>
+From: =?UTF-8?B?6JSj5YWJ55uK?= <ki.chiang65@gmail.com>
+Date: Tue, 28 May 2024 17:53:28 +0800
+Message-ID: <CAHN5xi00mi7T2M9Bj+r9b1gpw2YX5bfXbUzj5ocTSFLBQjpfuw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] xhci: Apply reset resume quirk to Etron EJ188 xHCI host
+To: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 28, 2024 at 12:42=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
-rg> wrote:
-> On Mon, May 27, 2024 at 10:24=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > Since we have dev_is_pnp() macro that utilises the address of pnp_bus_t=
-ype
-> > variable, the users, which can be compiled as modules, will be failed t=
-o
-> > build. Export the variable to the modules to prevent build breakage.
+Hi Sergey,
 
-...
-
-> > +EXPORT_SYMBOL(pnp_bus_type);
+Sergei Shtylyov <sergei.shtylyov@gmail.com> =E6=96=BC 2024=E5=B9=B45=E6=9C=
+=8828=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:36=E5=AF=AB=E9=81=93=
+=EF=BC=9A
 >
-> Why not EXPORT_SYMBOL_GPL()?
+> On 5/28/24 6:31 AM, Kuangyi Chiang wrote:
+>
+> > As described in commit c877b3b2ad5c ("xhci: Add reset on resume quirk f=
+or
+> > asrock p67 host"), EJ188 have the same issue as EJ168, where completely
+> > dies on resume. So apply XHCI_RESET_ON_RESUME quirk to EJ188 as well.
+> >
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Kuangyi Chiang <ki.chiang65@gmail.com>
+> > ---
+> > Changes in v2:
+> > - Porting to latest release
+> >
+> >  drivers/usb/host/xhci-pci.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> > index c040d816e626..b47d57d80b96 100644
+> > --- a/drivers/usb/host/xhci-pci.c
+> > +++ b/drivers/usb/host/xhci-pci.c
+> [...]
+> > @@ -395,6 +396,10 @@ static void xhci_pci_quirks(struct device *dev, st=
+ruct xhci_hcd *xhci)
+> >               xhci->quirks |=3D XHCI_RESET_ON_RESUME;
+> >               xhci->quirks |=3D XHCI_BROKEN_STREAMS;
+> >       }
+> > +     if (pdev->vendor =3D=3D PCI_VENDOR_ID_ETRON &&
+> > +                     pdev->device =3D=3D PCI_DEVICE_ID_EJ188) {
+> > +             xhci->quirks |=3D XHCI_RESET_ON_RESUME;
+> > +     }
+>
+>    You don't need {} around a single statement, according to CodingStyle.
+>
+> [...]
+>
+> MBR, Sergey
 
-To be consistent with the rest, but in any case Christoph suggested
-something else, where _GPL is assumed to be.
+Got it, I'll modify it and resend patches.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Kuangyi Chiang
