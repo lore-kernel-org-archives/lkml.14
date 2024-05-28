@@ -1,366 +1,140 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A257172F
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E407073465
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716880735; cv=none; b=r5yUNmQDG7Qam/D36p3tzjUADn+yPKs80XtvLP10xfeGYzo4ZjHxpUBXbAhILMfVz7rfEO4jq9y2GKGqSMMN7saDoaxNEcgnWdkCr4TFT+q7W6hwmwQh8Jn1mTQQ4YD3aKwvVwURSL2dU00vPPQMlan/mJdZ0iGS81v0JO85Psg=
+	t=1716880753; cv=none; b=bybUH865kxbocA1IbLP2cfSH3Mm9RZFfrAgH+mweTZCbI2JVB7gllsmAXtZAM21ondvo4Ww8RSxUqMdK18ONR+c+LLOGLH1gxSrVY/rNuZA4UhjzTt+1Nwso1Izv9Hy9AA0SBjgzvNd+U9HUp0Ux+GPwwO6AEEG1CR6EjdBlAns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716880735; c=relaxed/simple;
-	bh=gj2J0ca5uywAni3lh5rRWUwLV5CRBnEGlpaBGP/pIkI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Ucs5YspVzDWXyNarjYqataNroeB/a6QQFSv3tL2jJ7Vd+YoYqYRf38nxnVDdvziLGXRHHavSGIWLPxkZG0teIO0say8KxgnbZ9eITdhCMcdor1QFc+3toqfBt7zfO1qxUeCQh3aXXznmiEL+D9R1kYIilQZFE4gCb1rSppS9FRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V4GLmUHY; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716880753; c=relaxed/simple;
+	bh=kYF5IHcfckC0APtkdja1Ko0BdMw5bz3HKSZAuIfw6hQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dwGUMyWFjNAzzh/t5mPMu3TctRgIGan/qmPUettsks7RqZn2Xo3AbboUO3R/RBj0y7robCjrX9tF0S3m6U+C8W8utzvW5IXZ6H2ztJkCYhB7Ugnrc409aw/dhkIdMK47JxV8UnD3p2owfm8lXo7SLIxNdfKzWWs7uQpDWLK1mbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=BScC7aYW; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4GLmUHY"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ad7a2f8715so5120616d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 00:18:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="BScC7aYW"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5b53bb4bebaso302103eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 00:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716880733; x=1717485533; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1716880751; x=1717485551; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9kbd+GIXBG1LSJLPSDlm8BoJllGvNCDJqQTnUMkYgis=;
-        b=V4GLmUHY3TFGHftTyil/KrQHcf4pXCfN9s+ikJjI0dUQq3mAH3HKxYl/Ai6466vUas
-         /aHTespzLjDH6W440b6Wc7SL9jCp8pKXptzkINBIt6e5dLWcHPWdl2vYWWI/21HRwLeK
-         8G6FsfwQOAgstQMxEKGqc7FBSNUu1RIKTH0WXvOZWHe+ng1rKRy6IT81nHVgVTRoay9f
-         I+rmRx2CqkRfF3hC3fm2E0NsxPR3Q+lmTCbOtXk+YL4PSR8+NRtFuvsNjw2aGDQIf6vb
-         5DdaU8Msvqe3KxP2oLqFB8y1ii/kABtz+GZ1h4B9KLbylegbJOpG8Hl7wMXVRC3r+xVf
-         6mWQ==
+        bh=kYF5IHcfckC0APtkdja1Ko0BdMw5bz3HKSZAuIfw6hQ=;
+        b=BScC7aYW+pWEr+qyvBUu7rIL+dfHBF7G9E3ZTNqxbE8aY9Ckid1yxyiEMKvfRTmTOR
+         +7YW42PjkuMmD132/MXED/ZiMITE1SCaRzihRTP7gwAUOKVCrLCjj6rRrhPWEzMebsDM
+         8P4p4YXeFIAbFjOT2ToDGKeLIYvPJt7kMFIDHK3lpugGJXRLOfhKIiyx6OGNMyCpVN20
+         rtbRJLu+rxEccJzU7Um2xnarGDlN/9QqYyFGdOrYDVXJxDfQi+KdjdQ4mbUnv82rvCmL
+         SxVUJ7x5t1HnMImzO/aN6GfyA3KznD42WfPorVEi1MkZD9h6/VYu+Zw2oVPoWyILTUBa
+         viVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716880733; x=1717485533;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716880751; x=1717485551;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9kbd+GIXBG1LSJLPSDlm8BoJllGvNCDJqQTnUMkYgis=;
-        b=BaK0LdNhEPBCmf2ecitkyIW0uOQY6I2IlY7KgX6jvyTKg3FF/O5bswXpQh0QsUHty4
-         GEkJ4oF1RD9hjGvlxIlR+rJU7Aea3WTNn3yg2D2mLUOEgL5B6e6kUfpt2lB8ILFpyB0i
-         siMHch/tUx7jMJA4icUOPWCwGSyLmRswoBXKX0gGDxet3uCwhR6wTPXEBrBaejBhb9XB
-         eu5gu6XWNU4bQF3YAue0Xx6HaDuubsrGqsfraqt1bUE2EX0+ftRhei1yixl2IlSKqN6Z
-         TL7HDDRWebjJFiqXgmFSVNQZKIknhFhT3W858upr9kUPrYdDCnXsgcsfcMP5qdl3jhSn
-         UN7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV+nLS2wbW3HFV0/Yi+DrskO3Zo4e8Ym5QLlIOwfQTytWBoq6jluS7s6G0JqZzGi+R5TUVYnaMoObbhUWDQzJAHGdvuocK5y3y0ADk8
-X-Gm-Message-State: AOJu0YxW/m0X/Xj0/pPcz1W0rDd7M0hLsR7ZCnal0kckIxUih2yEHl8c
-	xhZIVFUiwJQO5ickKAqp6B04oiZ+f0WhZuyHByCK8UEjZYrBZX3z
-X-Google-Smtp-Source: AGHT+IHWWbIKBstmgkhBOSYbYu7SP29DEV6zLhYPrzaktkDLXhGVHERcfdooCgf96qpACEnlcNk5Fw==
-X-Received: by 2002:ad4:4eec:0:b0:6ad:7a01:1980 with SMTP id 6a1803df08f44-6ad7a011a85mr99704126d6.2.1716880732631;
-        Tue, 28 May 2024 00:18:52 -0700 (PDT)
-Received: from smtpclient.apple (174.137.59.200.16clouds.com. [174.137.59.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ad77430c57sm24438516d6.38.2024.05.28.00.18.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2024 00:18:52 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+        bh=kYF5IHcfckC0APtkdja1Ko0BdMw5bz3HKSZAuIfw6hQ=;
+        b=UU7Id9pEO4qf3OaxORnC8oWKfdMcrOXfZgUKbRUCFO0nKY86+C3WfVC0Ro+5Fpap3X
+         qTc2CxDYqP0vJz8OA64/m0g2HXVvRyQ5llY7dIIH1SqUu/FOpr3iFROQ/RNtTUv08gpA
+         YzhXs9PXWh8a5TWAdGMi3QVDhmwErbRfz0Pmdg4HJB7QZXpoPNONFcHJWZwnwGQfnvU7
+         1m2l/wRY0dAp5hcYJ8tQ1dj7RO5C/GLpJr8+myQg8TI5DNYao9tfbguPaHyahw3Ljcnb
+         tgDnnWZXXUW7e/cOo1T8M7KGfNjP2qlI40FVz037HgF2+QJwq4dzHjO2eaHUjasIOrD4
+         38hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSP9ZRlu/VkOJjHItcYoHde64PW4Ma/CWW3zE3DLopKFe1fJVc1k7Rbu9mxxBRPTlU0pL0GTUEeWvrXJBT308RJSLAuaxpVpKtqLtU
+X-Gm-Message-State: AOJu0YyGuZESsWiZpFYIvuyqG1vK7xYPL0JegpHAw0/2KVjPmp6zLt8Q
+	0hObxn96fbNEBJL8+XaxqW2VxT3HHofK+037roRUn5cEUIctCbD26iCUwUnslk5pFI4dnu7lQR9
+	rAj0=
+X-Google-Smtp-Source: AGHT+IE1aKv7uBgkS/HjzlS6fWXXb4CP/71HeAZDAtaMPcQF0udrzy88blNjX1GxxNNrobvOvqeWXw==
+X-Received: by 2002:a05:6820:1ac1:b0:5b8:75ce:1787 with SMTP id 006d021491bc7-5b961fa50c9mr12941975eaf.6.1716880750833;
+        Tue, 28 May 2024 00:19:10 -0700 (PDT)
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com. [209.85.167.176])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b96c4afb24sm2095340eaf.12.2024.05.28.00.19.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 00:19:10 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3d1b7ad2283so265819b6e.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 00:19:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX+FR+5n4k1FLdJR1pMrGYRWSYppYa+vvtX/UNhkOgrWRZc3nz9uOMpKLotnWCQNti1d+dQcF3v4UcybmrjDTplF69s1cIC2wOoCZSo
+X-Received: by 2002:a81:49cf:0:b0:61b:3346:eb60 with SMTP id
+ 00721157ae682-62a08d87da6mr111183687b3.22.1716880416501; Tue, 28 May 2024
+ 00:13:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH] sched/fair: Reschedule the cfs_rq when current is
- ineligible
-From: Chunxin Zang <spring.cxz@gmail.com>
-In-Reply-To: <cf8fdb86-194b-34c4-f5e8-dd7ddc56d8d9@amd.com>
-Date: Tue, 28 May 2024 15:18:35 +0800
-Cc: Chen Yu <yu.c.chen@intel.com>,
- mingo@redhat.com,
- Peter Zijlstra <peterz@infradead.org>,
- juri.lelli@redhat.com,
- vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com,
- rostedt@goodmis.org,
- bsegall@google.com,
- mgorman@suse.de,
- bristot@redhat.com,
- vschneid@redhat.com,
- linux-kernel@vger.kernel.org,
- yangchen11@lixiang.com,
- zhouchunhua@lixiang.com,
- zangchunxin@lixiang.com,
- Balakumaran Kannan <kumaran.4353@gmail.com>,
- Mike Galbraith <efault@gmx.de>
+MIME-Version: 1.0
+References: <CAAObsKAw174AhGaA13Hyw0ANW=TxJHpK10+OwQGNMVca85Urdg@mail.gmail.com>
+ <ZkyPoIXBeBUqFJ48@phenom.ffwll.local>
+In-Reply-To: <ZkyPoIXBeBUqFJ48@phenom.ffwll.local>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Tue, 28 May 2024 09:13:25 +0200
+X-Gmail-Original-Message-ID: <CAAObsKBdpoGF0B9XgQxbG0P4JXAXSdLLdhzhrdAkt7J7rtCZ6Q@mail.gmail.com>
+Message-ID: <CAAObsKBdpoGF0B9XgQxbG0P4JXAXSdLLdhzhrdAkt7J7rtCZ6Q@mail.gmail.com>
+Subject: Re: DRM Accel BoF at Linux Plumbers
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, open list <linux-kernel@vger.kernel.org>, 
+	dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@gmail.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, 
+	Oded Gabbay <ogabbay@kernel.org>, Olof Johansson <olof@lixom.net>, 
+	Lucas Stach <l.stach@pengutronix.de>, Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc: Cancan Chang <Cancan.Chang@amlogic.com>, Jiho Chu <jiho.chu@samsung.com>, 
+	MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, 
+	Dejia Shang <Dejia.Shang@armchina.com>, Toby Huang <toby.huang@armchina.com>, 
+	Chengkun Sun <CK.Sun@armchina.com>, Cai Huoqing <cai.huoqing@linux.dev>, matthew.bentham@arm.com, 
+	Kieran Bingham <kieran.bingham@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <6D065A1B-7220-4575-B0D9-3442A623E5F6@gmail.com>
-References: <20240524134011.270861-1-spring.cxz@gmail.com>
- <ZlCyhDspcZQhxlNk@chenyu5-mobl2>
- <06649B84-DA1D-4360-B0C4-79C81A34BC08@gmail.com>
- <cf8fdb86-194b-34c4-f5e8-dd7ddc56d8d9@amd.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-X-Mailer: Apple Mail (2.3731.700.6)
 
-Hi Prateek
+On Tue, May 21, 2024 at 2:12=E2=80=AFPM Daniel Vetter <daniel@ffwll.ch> wro=
+te:
+>
+> On Sat, May 18, 2024 at 10:46:01AM +0200, Tomeu Vizoso wrote:
+> > Hi,
+> >
+> > I would like to use the chance at the next Plumbers to discuss the
+> > present challenges related to ML accelerators in mainline.
+> >
+> > I'm myself more oriented towards edge-oriented deployments, and don't
+> > know enough about how these accelerators are being used in the cloud
+> > (and maybe desktop?) to tell if there is enough overlap to warrant a
+> > common BoF.
+> >
+> > In any case, these are the topics I would like to discuss, some
+> > probably more relevant to the edge than to the cloud or desktop:
+> >
+> > * What is stopping vendors from mainlining their drivers?
+> >
+> > * How could we make it easier for them?
+> >
+> > * Userspace API: how close are we from a common API that we can ask
+> > userspace drivers to implement? What can be done to further this goal?
+> >
+> > * Automated testing: DRM CI can be used, but would be good to have a
+> > common test suite to run there. This is probably dependent on a common
+> > userspace API.
+> >
+> > * Other shared userspace infrastructure (compiler, execution,
+> > synchronization, virtualization, ...)
+> >
+> > * Firmware-mediated IP: what should we do about it, if anything?
+> >
+> > * Any standing issues in DRM infra (GEM, gpu scheduler, DMABuf, etc)
+> > that are hurting accel drivers?
+> >
+> > What do people think, should we have a drivers/accel-wide BoF at
+> > Plumbers? If so, what other topics should we have in the agenda?
+>
+> Yeah sounds good, and I'll try to at least attend lpc this year since it'=
+s
+> rather close ... Might be good to explicitly ping teams of merged and
+> in-flight drivers we have in accel already.
 
-> On May 28, 2024, at 13:02, K Prateek Nayak <kprateek.nayak@amd.com> =
-wrote:
->=20
-> Hello Chunxin,
->=20
-> On 5/28/2024 8:12 AM, Chunxin Zang wrote:
->>=20
->>> On May 24, 2024, at 23:30, Chen Yu <yu.c.chen@intel.com> wrote:
->>>=20
->>> On 2024-05-24 at 21:40:11 +0800, Chunxin Zang wrote:
->>>> I found that some tasks have been running for a long enough time =
-and
->>>> have become illegal, but they are still not releasing the CPU. This
->>>> will increase the scheduling delay of other processes. Therefore, I
->>>> tried checking the current process in wakeup_preempt and =
-entity_tick,
->>>> and if it is illegal, reschedule that cfs queue.
->>>>=20
->>>> The modification can reduce the scheduling delay by about 30% when
->>>> RUN_TO_PARITY is enabled.
->>>> So far, it has been running well in my test environment, and I have
->>>> pasted some test results below.
->>>>=20
->>>=20
->>> Interesting, besides hackbench, I assume that you have workload in
->>> real production environment that is sensitive to wakeup latency?
->>=20
->> Hi Chen
->>=20
->> Yes, my workload  are quite sensitive to wakeup latency .
->>>=20
->>>>=20
->>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>> index 03be0d1330a6..a0005d240db5 100644
->>>> --- a/kernel/sched/fair.c
->>>> +++ b/kernel/sched/fair.c
->>>> @@ -5523,6 +5523,9 @@ entity_tick(struct cfs_rq *cfs_rq, struct =
-sched_entity *curr, int queued)
->>>> hrtimer_active(&rq_of(cfs_rq)->hrtick_timer))
->>>> return;
->>>> #endif
->>>> +
->>>> + if (!entity_eligible(cfs_rq, curr))
->>>> + resched_curr(rq_of(cfs_rq));
->>>> }
->>>>=20
->>>=20
->>> entity_tick() -> update_curr() -> update_deadline():
->>> se->vruntime >=3D se->deadline ? resched_curr()
->>> only current has expired its slice will it be scheduled out.
->>>=20
->>> So here you want to schedule current out if its lag becomes 0.
->>>=20
->>> In lastest sched/eevdf branch, it is controlled by two sched =
-features:
->>> RESPECT_SLICE: Inhibit preemption until the current task has =
-exhausted it's slice.
->>> RUN_TO_PARITY: Relax RESPECT_SLICE and only protect current until =
-0-lag.
->>> =
-https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/commit/?h=
-=3Dsched/eevdf&id=3De04f5454d68590a239092a700e9bbaf84270397c
->>>=20
->>> Maybe something like this can achieve your goal
->>> if (sched_feat(RUN_TOPARITY) && !entity_eligible(cfs_rq, curr))
->>> resched_curr
->>>=20
->>>>=20
->>>> @@ -8325,6 +8328,9 @@ static void check_preempt_wakeup_fair(struct =
-rq *rq, struct task_struct *p, int
->>>> if (unlikely(p->policy !=3D SCHED_NORMAL) || =
-!sched_feat(WAKEUP_PREEMPTION))
->>>> return;
->>>>=20
->>>> + if (!entity_eligible(cfs_rq, se))
->>>> + goto preempt;
->>>> +
->>>=20
->>> Not sure if this is applicable, later in this function, pick_eevdf() =
-checks
->>> if the current is eligible, !entity_eligible(cfs_rq, curr), if not, =
-curr will
->>> be evicted. And this change does not consider the cgroup hierarchy.
->=20
-> The above line will be referred to as [1] below.
->=20
->>>=20
->>> Besides, the check of current eligiblity can get false negative =
-result,
->>> if the enqueued entity has a positive lag. Prateek proposed to
->>> remove the check of current's eligibility in pick_eevdf():
->>> =
-https://lore.kernel.org/lkml/20240325060226.1540-2-kprateek.nayak@amd.com/=
+Good point, I'm adding a bunch of people to CC, but I will be for sure
+missing at least some, so I would be glad if people can check that
+those that they know weren't missed.
 
->>=20
->> Thank you for letting me know about Peter's latest updates and =
-thoughts.
->> Actually, the original intention of my modification was to minimize =
-the
->> traversal of the rb-tree as much as possible. For example, in the =
-following
->> scenario, if 'curr' is ineligible, the system would still traverse =
-the rb-tree in
->> 'pick_eevdf' to return an optimal 'se', and then trigger  =
-'resched_curr'. After
->> resched, the scheduler will call 'pick_eevdf' again, traversing the
->> rb-tree once more. This ultimately results in the rb-tree being =
-traversed
->> twice. If it's possible to determine that 'curr' is ineligible within =
-'wakeup_preempt'
->> and directly trigger a 'resched', it would reduce the traversal of =
-the rb-tree
->> by one time.
->>=20
->>=20
->> wakeup_preempt-> pick_eevdf                                      -> =
-resched_curr
->>                                                 |->'traverse the =
-rb-tree'  |
->> schedule->pick_eevdf
->>                                   |->'traverse the rb-tree'
->=20
-> I see what you mean but a couple of things:
->=20
-> (I'm adding the check_preempt_wakeup_fair() hunk from the original =
-patch
-> below for ease of interpretation)
->=20
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 03be0d1330a6..a0005d240db5 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -8325,6 +8328,9 @@ static void check_preempt_wakeup_fair(struct rq =
-*rq, struct task_struct *p, int
->> if (unlikely(p->policy !=3D SCHED_NORMAL) || =
-!sched_feat(WAKEUP_PREEMPTION))
->> return;
->>=20
->> + if (!entity_eligible(cfs_rq, se))
->> + goto preempt;
->> +
->=20
-> This check uses the root cfs_rq since "task_cfs_rq()" returns the
-> "rq->cfs" of the runqueue the task is on. In presence of cgroups or
-> CONFIG_SCHED_AUTOGROUP, there is a good chance this the task is queued
-> on a higher order cfs_rq and this entity_eligible() calculation might
-> not be valid since the vruntime calculation for the "se" is relative =
-to
-> the "cfs_rq" where it is queued on. Please correct me if I'm wrong but
-> I believe that is what Chenyu was referring to in [1].
+Thanks,
 
-=20
-Thank you for explaining so much to me; I am trying to understand all of =
-this. :)
-
->=20
->> find_matching_se(&se, &pse);
->> WARN_ON_ONCE(!pse);
->>=20
->> --=20
->=20
-> In addition to that, There is an update_curr() call below for the =
-first
-> cfs_rq where both the entities' hierarchy is queued which is found by
-> find_matching_se(). I believe that is required too to update the
-> vruntime and deadline of the entity where preemption can happen.
->=20
-> If you want to circumvent a second call to pick_eevdf(), could you
-> perhaps do:
->=20
-> (Only build tested)
->=20
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 9eb63573110c..653b1bee1e62 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8407,9 +8407,13 @@ static void check_preempt_wakeup_fair(struct rq =
-*rq, struct task_struct *p, int
-> update_curr(cfs_rq);
->=20
-> /*
-> -  * XXX pick_eevdf(cfs_rq) !=3D se ?
-> +  * If the hierarchy of current task is ineligible at the common
-> +  * point on the newly woken entity, there is a good chance of
-> +  * wakeup preemption by the newly woken entity. Mark for resched
-> +  * and allow pick_eevdf() in schedule() to judge which task to
-> +  * run next.
->  */
-> - if (pick_eevdf(cfs_rq) =3D=3D pse)
-> + if (!entity_eligible(cfs_rq, se))
-> goto preempt;
->=20
-> return;
->=20
-> --
->=20
-> There are other implications here which is specifically highlighted by
-> the "XXX pick_eevdf(cfs_rq) !=3D se ?" comment. If the current waking
-> entity is not the entity with the earliest eligible virtual deadline,
-> the current task is still preempted if any other entity has the EEVD.
->=20
-> Mike's box gave switching to above two thumbs up; I have to check what
-> my box says :)
->=20
-> Following are DeathStarBench results with your original patch compared
-> to v6.9-rc5 based tip:sched/core:
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Test          : DeathStarBench
-> Why?       : Some tasks here do no like aggressive preemption
-> Units         : Normalized throughput
-> Interpretation: Higher is better
-> Statistic     : Mean
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Pinning      scaling     tip            eager_preempt (pct imp)
-> 1CCD           1       1.00            0.99 (%diff: -1.13%)
-> 2CCD           2       1.00            0.97 (%diff: -3.21%)
-> 4CCD           3       1.00            0.97 (%diff: -3.41%)
-> 8CCD           6       1.00            0.97 (%diff: -3.20%)
-> --
-
-Please forgive me as I have not used the DeathStarBench suite before. =
-Does
-this test result indicate that my modifications have resulted in tasks =
-that do no
-like aggressive preemption being even less likely to be preempted?
-
-thanks
-Chunxin
-
-> I'll give the variants mentioned in the thread a try too to see if
-> some of my assumptions around heavy preemption hold good. I was also
-> able to dig up an old patch by Balakumaran Kannan which skipped
-> pick_eevdf() altogether if "pse" is ineligible which also seems like
-> a good optimization based on current check in
-> check_preempt_wakeup_fair() but it perhaps doesn't help the case of=20
-> wakeup-latency sensitivity you are optimizing for; only reduces
-> rb-tree traversal if there is no chance of pick_eevdf() returning =
-"pse"=20
-> =
-https://lore.kernel.org/lkml/20240301130100.267727-1-kumaran.4353@gmail.co=
-m/=20
->=20
-> --
-> Thanks and Regards,
-> Prateek
->=20
->>=20
->>=20
->> Of course, this would break the semantics of RESPECT_SLICE as well as
->> RUN_TO_PARITY. So, this might be considered a performance enhancement
->> for scenarios without NO_RESPECT_SLICE/NO_RUN_TO_PARITY.
->>=20
->> thanks=20
->> Chunxin
->>=20
->>=20
->>> If I understand your requirement correctly, you want to reduce the =
-wakeup
->>> latency. There are some codes under developed by Peter, which could
->>> customized task's wakeup latency via setting its slice:
->>> https://lore.kernel.org/lkml/20240405110010.934104715@infradead.org/
->>>=20
->>> thanks,
->>> Chenyu
-
-
+Tomeu
