@@ -1,209 +1,457 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB86413E3E7;
-	Tue, 28 May 2024 23:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA5013D88B;
+	Tue, 28 May 2024 23:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716937925; cv=none; b=Lu6dbs6B//piOcsZcje7QCJ5B8kNHCxuRdMFpC2Eo3d3+gzYWOudHSPY4r2+PrAQ3RccDrTfuQ/nNoXEZOu0nycpnuhNHjjvsY1gYlQJnu+vyx/ivoHh5OENlnOfGNwcXhKo92TQJawTI/CZKzZV1V5ccbOXK05EXjAsJd0+BQ0=
+	t=1716938167; cv=none; b=DIQyDYBbzjI5G8sxpKALW7zPKMOa8HUrXLEEBbQW79vETOoHeavvRIMXbU49xkY8x17uR2Wwba2cd9Skl/cEFtfooLchb6EnDfc81jddEOmoBWaF3e2YaLtBdtupJ+qm1LGP/1wPgRXDryWscWSv7ixASVT5TSiHkAF11ywIi7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716937925; c=relaxed/simple;
-	bh=r77ZwpbD5kVI2FcMc87+IC9CALwP9+VlEff4OSQCUTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJrCgUkUrA4MV2trRlz1ti4CUWsVrPSWZpRiNocrMZMx1bGMqB7q7YeVhFYEfyGZNX7J7s/yu2Anw62L1q1dMyhCEexJjq2wJqD9Ie9CeCWWyubLj+ELpGh2yu6rjdjh5V6d6L6vwlRY4xVqALJ6UV9TI5oRFOb22GnhJ8BzD00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g+jemmQP; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716938167; c=relaxed/simple;
+	bh=NJvN2os/eSTdnSwTQAlcmvzO1kk2mWn/Kuw6bpb2T3M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gNGvR570pqMIcRTh7953KAa+XNzmxY8Q4st0Q7Rk/twDCkBYR5dMx9yodbufrCydle/6sDthHuJGNcU2nuD3FIHa1G6e5Rqy9KFQiSpEcQ18HCCw/dJpjI+B93Uep9WBF/wwruIvVU7qSRCZbxbTYsc2AFi5OkdXhxQbsCjJcCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rzdCzKHi; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g+jemmQP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716937924; x=1748473924;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=r77ZwpbD5kVI2FcMc87+IC9CALwP9+VlEff4OSQCUTw=;
-  b=g+jemmQPj8jz2jdEfYereQ1G6CliKR3YXH52/+7LulLSB5ifNbawIZ4c
-   WKvgVF6hE2UMqzLd1rOTGuyLJ9wxIVtFPj+Py7XweZ/MANNEeRaYmv14O
-   ADq4dEeyrdDzWDDqsdlSJOriw8vlDwKktyTmeHiNLgWge2yljW8MY0dbv
-   8ROwDe+G+V7WNvalqW/cbRvx0TJukd/G5CIoavlfgv7V+5l8RaMf43v+L
-   nNTdNkqU20m1FhV3y4ymepp+BkqTjDW9yyJZFifZfwyuYLysEPZiFLWlH
-   enziwmeyMUizwZViwvlc/4Pqm14NSeHL5K1uUkuh4F5+zeSB//pFcVhAl
-   A==;
-X-CSE-ConnectionGUID: Gjqw0NxeTbCczA5Yk4l9DA==
-X-CSE-MsgGUID: McdugWWQR66Hrk9oZvThIA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="30840753"
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="30840753"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 16:12:03 -0700
-X-CSE-ConnectionGUID: 9vGfEpv5SSOht6al1I5yBA==
-X-CSE-MsgGUID: /P1axXlDR0adAjBrmPJhYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="35298493"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 28 May 2024 16:11:59 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sC5z1-000Cr1-2r;
-	Tue, 28 May 2024 23:11:55 +0000
-Date: Wed, 29 May 2024 07:11:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: "T.J. Mercier" <tjmercier@google.com>, mkoutny@suse.com,
-	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>
-Cc: oe-kbuild-all@lists.linux.dev, shakeel.butt@linux.dev,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] cgroup: Remove nr_cgrps
-Message-ID: <202405290609.I4LQ4GZ3-lkp@intel.com>
-References: <20240528163750.2025330-1-tjmercier@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rzdCzKHi"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44SMwJ1v003386;
+	Tue, 28 May 2024 23:15:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pp1;
+ bh=bfHOSuq9lj+bRqOXKhPLNPxdtVsXTjW5tabNx0zKrT0=;
+ b=rzdCzKHi2mVDoLtgBG2FbRQRDtptvs/wA5s6aJ0vhAzANa+abCVhEOCvJOWLnl0J+0m9
+ 1wRyhco3233H2k9WVSFAJ22E7V5HID4ruaUeVpmSb2MoiBRROu66VcAQfzxnQJRSmzJ3
+ xTFv3nqvwQzgUNTY7bxkGE5zEVg7XHCmFUoTAO6WqTESlqYhTym4KMHz1EXNWMmge+P+
+ ncJzD4kaspsrk+7ZuvedAZWPpOCKX8AIYyf48wBdWn3tcsg+fKDYQS8qd1mjDtudNJGS
+ 5XSOZ/blJWsQI+h9bO3hsm+rum39EbdoBmcQHcAiFIcLdkgRfiMVpGPdDaWA+zzJOp74 yw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ydr2t02wq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 23:15:44 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44SNFhV8027768;
+	Tue, 28 May 2024 23:15:43 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ydr2t02wn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 23:15:43 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44SKRp4c002364;
+	Tue, 28 May 2024 23:15:42 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ydpb0gna4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 23:15:42 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44SNFdZN30081352
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 28 May 2024 23:15:42 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D4BAE58067;
+	Tue, 28 May 2024 23:15:39 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 44FC15805B;
+	Tue, 28 May 2024 23:15:38 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 28 May 2024 23:15:38 +0000 (GMT)
+Message-ID: <ce1d3188-046d-42c1-b8a7-17325d791ec5@linux.ibm.com>
+Date: Tue, 28 May 2024 19:15:37 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528163750.2025330-1-tjmercier@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 5/5] keys: asymmetric: Add tpm2_key_ecdsa
+To: Jarkko Sakkinen <jarkko@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Andreas.Fuchs@infineon.com, James Prestwood <prestwoj@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-crypto@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        David Howells
+ <dhowells@redhat.com>, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Ard Biesheuvel <ardb@kernel.org>,
+        Mario Limonciello <mario.limonciello@amd.com>
+References: <20240528210823.28798-1-jarkko@kernel.org>
+ <20240528210823.28798-6-jarkko@kernel.org>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20240528210823.28798-6-jarkko@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: KnIsXn6F84IouzTxgsW5fXZ04P0_hbkH
+X-Proofpoint-GUID: SdHgyK24q7evp5TVwNqIkF2g9_9iujvs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_14,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 clxscore=1011 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405280172
 
-Hi Mercier,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 6fbf71854e2ddea7c99397772fbbb3783bfe15b5]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/T-J-Mercier/cgroup-Remove-nr_cgrps/20240529-004057
-base:   6fbf71854e2ddea7c99397772fbbb3783bfe15b5
-patch link:    https://lore.kernel.org/r/20240528163750.2025330-1-tjmercier%40google.com
-patch subject: [PATCH 2/2] cgroup: Remove nr_cgrps
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240529/202405290609.I4LQ4GZ3-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240529/202405290609.I4LQ4GZ3-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405290609.I4LQ4GZ3-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   kernel/cgroup/cgroup.c: In function 'cgroup_setup_root':
->> kernel/cgroup/cgroup.c:2071:31: warning: variable 'ss' set but not used [-Wunused-but-set-variable]
-    2071 |         struct cgroup_subsys *ss;
-         |                               ^~
 
 
-vim +/ss +2071 kernel/cgroup/cgroup.c
+On 5/28/24 17:08, Jarkko Sakkinen wrote:
+> * Asymmetric TPM2 ECDSA key with signing and verification.
+> * Enabled with CONFIG_ASYMMETRIC_TPM2_KEY_ECDSA_SUBTYPE.
+> 
+> Cc: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> ---
+> v7:
+> * Rewrote the signature encoder.
+> * Added the missing sha256() call to the signature verifier.
+> v6:
+> * The very first version.
+> * Stefan: any idea why the signature give -EKEYREJECTED?
+> ---
+>   crypto/asymmetric_keys/Kconfig          |  15 +
+>   crypto/asymmetric_keys/Makefile         |   1 +
+>   crypto/asymmetric_keys/tpm2_key_ecdsa.c | 462 ++++++++++++++++++++++++
+>   crypto/ecdsa.c                          |   1 -
+>   drivers/char/tpm/tpm-buf.c              |   2 +-
+>   include/linux/tpm.h                     |   7 +
+>   6 files changed, 486 insertions(+), 2 deletions(-)
+>   create mode 100644 crypto/asymmetric_keys/tpm2_key_ecdsa.c
+> 
+> diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
+> index 9d88c1190621..c97f11e0340c 100644
+> --- a/crypto/asymmetric_keys/Kconfig
+> +++ b/crypto/asymmetric_keys/Kconfig
+> @@ -24,6 +24,21 @@ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+>   	  appropriate hash algorithms (such as SHA-1) must be available.
+>   	  ENOPKG will be reported if the requisite algorithm is unavailable.
+>   
+> +config ASYMMETRIC_TPM2_KEY_ECDSA_SUBTYPE
+> +	tristate "Asymmetric TPM2 ECDSA crypto algorithm subtype"
+> +	depends on TCG_TPM
+> +	select CRYPTO_ECDSA
+> +	select CRYPTO_SHA256
+> +	select CRYPTO_HASH_INFO
+> +	select CRYPTO_TPM2_KEY
+> +	select ASN1
+> +	select ASN1_ENCODER
+> +	help
+> +	  This option provides support for asymmetric TPM2 key type handling.
+> +	  If signature generation and/or verification are to be used,
+> +	  appropriate hash algorithms (such as SHA-256) must be available.
+> +	  ENOPKG will be reported if the requisite algorithm is unavailable.
+> +
+>   config ASYMMETRIC_TPM2_KEY_RSA_SUBTYPE
+>   	tristate "Asymmetric TPM2 RSA crypto algorithm subtype"
+>   	depends on TCG_TPM
+> diff --git a/crypto/asymmetric_keys/Makefile b/crypto/asymmetric_keys/Makefile
+> index c6da84607824..0843d2268a69 100644
+> --- a/crypto/asymmetric_keys/Makefile
+> +++ b/crypto/asymmetric_keys/Makefile
+> @@ -11,6 +11,7 @@ asymmetric_keys-y := \
+>   	signature.o
+>   
+>   obj-$(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE) += public_key.o
+> +obj-$(CONFIG_ASYMMETRIC_TPM2_KEY_ECDSA_SUBTYPE) += tpm2_key_ecdsa.o
+>   obj-$(CONFIG_ASYMMETRIC_TPM2_KEY_RSA_SUBTYPE) += tpm2_key_rsa.o
+>   
+>   #
+> diff --git a/crypto/asymmetric_keys/tpm2_key_ecdsa.c b/crypto/asymmetric_keys/tpm2_key_ecdsa.c
+> new file mode 100644
+> index 000000000000..e2f599a0ffe0
+> --- /dev/null
+> +++ b/crypto/asymmetric_keys/tpm2_key_ecdsa.c
+> @@ -0,0 +1,462 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/* Asymmetric TPM2 ECDSA key subtype.
+> + *
+> + * See Documentation/crypto/asymmetric-keys.rst
+> + */
+> +
+> +#include <asm/unaligned.h>
+> +#include <crypto/internal/ecc.h>
+> +#include <crypto/akcipher.h>
+> +#include <crypto/sha2.h>
+> +#include <crypto/public_key.h>
+> +#include <crypto/tpm2_key.h>
+> +#include <keys/asymmetric-parser.h>
+> +#include <keys/asymmetric-subtype.h>
+> +#include <linux/asn1_encoder.h>
+> +#include <linux/keyctl.h>
+> +#include <linux/module.h>
+> +#include <linux/scatterlist.h>
+> +#include <linux/slab.h>
+> +#include <linux/tpm.h>
+> +
+> +#undef pr_fmt
+> +#define pr_fmt(fmt) "tpm2_key_ecdsa: "fmt
+> +
+> +struct tpm2_ecc_parms {
+> +	__be16 symmetric;
+> +	__be16 scheme;
+> +	__be16 ecc;
+> +	__be16 kdf;
+> +};
+> +
+> +static const u8 *tpm2_key_ecdsa_ecc_x(const struct tpm2_key *key)
+> +{
+> +	const off_t o = key->priv_len + 2 + sizeof(*key->desc);
+> +
+> +	return &key->data[o + sizeof(struct tpm2_ecc_parms)];
+> +}
+> +
+> +static const u8 *tpm2_key_ecdsa_ecc_y(const struct tpm2_key *key)
+> +{
+> +	const u8 *x = tpm2_key_ecdsa_ecc_x(key);
+> +	u16 x_size = get_unaligned_be16(&x[0]);
+> +
+> +	/* +2 from the size field: */
+> +	return &x[2 + x_size];
+> +}
+> +
+> +static void tpm2_key_ecdsa_describe(const struct key *asymmetric_key,
+> +				    struct seq_file *m)
+> +{
+> +	struct tpm2_key *key = asymmetric_key->payload.data[asym_crypto];
+> +
+> +	if (!key) {
+> +		pr_err("key missing");
+> +		return;
+> +	}
+> +
+> +	seq_puts(m, "TPM2/ECDSA");
+> +}
+> +
+> +static void tpm2_key_ecdsa_destroy(void *payload0, void *payload3)
+> +{
+> +	struct tpm2_key *key = payload0;
+> +
+> +	if (!key)
+> +		return;
+> +
+> +	kfree(key);
+> +}
+> +
+> +static const char *tpm2_ecc_name(u16 ecc)
+> +{
+> +	const char *name;
+> +
+> +	switch (ecc) {
+> +	case TPM2_ECC_NIST_P521:
+> +		name = "ecdsa-nist-p521";
+> +		break;
+> +	case TPM2_ECC_NIST_P384:
+> +		name = "ecdsa-nist-p384";
+> +		break;
+> +	default:
+> +		name = "ecdsa-nist-p256";
+> +		break;
+> +	}
+> +
+> +	return name;
+> +}
+> +
+> +static int tpm2_key_ecdsa_query(const struct kernel_pkey_params *params,
+> +				struct kernel_pkey_query *info)
+> +{
+> +	const struct tpm2_key *key = params->key->payload.data[asym_crypto];
+> +	const off_t o = key->priv_len + 2 + sizeof(*key->desc);
+> +	const struct tpm2_ecc_parms *p =
+> +		(const struct tpm2_ecc_parms *)&key->data[o];
+> +	u16 ecc = be16_to_cpu(p->ecc);
+> +	const char *ecc_name = tpm2_ecc_name(ecc);
+> +	const u8 *x = tpm2_key_ecdsa_ecc_x(key);
+> +	u16 x_size = get_unaligned_be16(&x[0]);
+> +	struct crypto_akcipher *tfm;
+> +	char data[256];
 
-  2065	
-  2066	int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask)
-  2067	{
-  2068		LIST_HEAD(tmp_links);
-  2069		struct cgroup *root_cgrp = &root->cgrp;
-  2070		struct kernfs_syscall_ops *kf_sops;
-> 2071		struct cgroup_subsys *ss;
-  2072		struct css_set *cset;
-  2073		int i, ret;
-  2074	
-  2075		lockdep_assert_held(&cgroup_mutex);
-  2076	
-  2077		ret = percpu_ref_init(&root_cgrp->self.refcnt, css_release,
-  2078				      0, GFP_KERNEL);
-  2079		if (ret)
-  2080			goto out;
-  2081	
-  2082		/*
-  2083		 * We're accessing css_set_count without locking css_set_lock here,
-  2084		 * but that's OK - it can only be increased by someone holding
-  2085		 * cgroup_lock, and that's us.  Later rebinding may disable
-  2086		 * controllers on the default hierarchy and thus create new csets,
-  2087		 * which can't be more than the existing ones.  Allocate 2x.
-  2088		 */
-  2089		ret = allocate_cgrp_cset_links(2 * css_set_count, &tmp_links);
-  2090		if (ret)
-  2091			goto cancel_ref;
-  2092	
-  2093		ret = cgroup_init_root_id(root);
-  2094		if (ret)
-  2095			goto cancel_ref;
-  2096	
-  2097		kf_sops = root == &cgrp_dfl_root ?
-  2098			&cgroup_kf_syscall_ops : &cgroup1_kf_syscall_ops;
-  2099	
-  2100		root->kf_root = kernfs_create_root(kf_sops,
-  2101						   KERNFS_ROOT_CREATE_DEACTIVATED |
-  2102						   KERNFS_ROOT_SUPPORT_EXPORTOP |
-  2103						   KERNFS_ROOT_SUPPORT_USER_XATTR,
-  2104						   root_cgrp);
-  2105		if (IS_ERR(root->kf_root)) {
-  2106			ret = PTR_ERR(root->kf_root);
-  2107			goto exit_root_id;
-  2108		}
-  2109		root_cgrp->kn = kernfs_root_to_node(root->kf_root);
-  2110		WARN_ON_ONCE(cgroup_ino(root_cgrp) != 1);
-  2111		root_cgrp->ancestors[0] = root_cgrp;
-  2112	
-  2113		ret = css_populate_dir(&root_cgrp->self);
-  2114		if (ret)
-  2115			goto destroy_root;
-  2116	
-  2117		ret = cgroup_rstat_init(root_cgrp);
-  2118		if (ret)
-  2119			goto destroy_root;
-  2120	
-  2121		ret = rebind_subsystems(root, ss_mask);
-  2122		if (ret)
-  2123			goto exit_stats;
-  2124	
-  2125		ret = cgroup_bpf_inherit(root_cgrp);
-  2126		WARN_ON_ONCE(ret);
-  2127	
-  2128		trace_cgroup_setup_root(root);
-  2129	
-  2130		/*
-  2131		 * There must be no failure case after here, since rebinding takes
-  2132		 * care of subsystems' refcounts, which are explicitly dropped in
-  2133		 * the failure exit path.
-  2134		 */
-  2135		list_add_rcu(&root->root_list, &cgroup_roots);
-  2136		cgroup_root_count++;
-  2137	
-  2138		/*
-  2139		 * Link the root cgroup in this hierarchy into all the css_set
-  2140		 * objects.
-  2141		 */
-  2142		spin_lock_irq(&css_set_lock);
-  2143		hash_for_each(css_set_table, i, cset, hlist) {
-  2144			link_css_set(&tmp_links, cset, root_cgrp);
-  2145			if (css_set_populated(cset))
-  2146				cgroup_update_populated(root_cgrp, true);
-  2147		}
-  2148		spin_unlock_irq(&css_set_lock);
-  2149	
-  2150		BUG_ON(!list_empty(&root_cgrp->self.children));
-  2151		do_each_subsys_mask(ss, i, ss_mask) {
-  2152			BUG_ON(atomic_read(&root->nr_css[i]) != 1);
-  2153		} while_each_subsys_mask();
-  2154	
-  2155		ret = 0;
-  2156		goto out;
-  2157	
-  2158	exit_stats:
-  2159		cgroup_rstat_exit(root_cgrp);
-  2160	destroy_root:
-  2161		kernfs_destroy_root(root->kf_root);
-  2162		root->kf_root = NULL;
-  2163	exit_root_id:
-  2164		cgroup_exit_root_id(root);
-  2165	cancel_ref:
-  2166		percpu_ref_exit(&root_cgrp->self.refcnt);
-  2167	out:
-  2168		free_cgrp_cset_links(&tmp_links);
-  2169		return ret;
-  2170	}
-  2171	
+Due to NIST p521   1 + 2 * 66 = 133 should be enough.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If x_size exceeeds 66 then something is wrong.
+
+> +	u8 *ptr;
+> +	int ret;
+> +
+> +	memset(data, 0, sizeof(data));
+> +
+> +	tfm = crypto_alloc_akcipher(ecc_name, 0, 0);
+> +	if (IS_ERR(tfm))
+> +		return PTR_ERR(tfm);
+> +
+> +	/* Probe for ecdsa_set_pub_key(): */
+> +	ptr = &data[0];
+> +	*ptr++ = 0x04; /* uncompressed */
+> +	memcpy(&ptr[0], &x[2], x_size);
+> +	memcpy(&ptr[x_size], &x[2 + x_size + 2], x_size);
+> +	ret = crypto_akcipher_set_pub_key(tfm, data, 2 * x_size + 1);
+> +	crypto_free_akcipher(tfm);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	info->max_sig_size = 256;
+> +	info->key_size = 256;
+> +	info->max_data_size = 256;
+> +	info->supported_ops = KEYCTL_SUPPORTS_SIGN | KEYCTL_SUPPORTS_VERIFY;
+> +	return ret;
+> +}
+> +
+> +static int tpm2_key_ecdsa_sign(struct tpm_chip *chip, struct tpm2_key *key,
+> +			       struct kernel_pkey_params *params,
+> +			       const void *in, void *out)
+> +{
+> +	u8 r[SHA256_DIGEST_SIZE], s[SHA256_DIGEST_SIZE];
+> +	u32 in_len = params->in_len;
+> +	bool r_0, s_0;
+> +	struct tpm_header *head;
+> +	struct tpm_buf buf;
+> +	u32 key_handle;
+> +	u8 *ptr = out;
+> +	off_t offset;
+> +	int ret;
+> +
+> +
+> +	/* Require explicit hash algorithm: */
+> +	if (!params->hash_algo)
+> +		return -EINVAL;
+> +
+> +	/* Currently only support SHA256: */
+> +	if (!!strcmp(params->hash_algo, "sha256"))
+> +		return -EINVAL;
+> +
+> +	ret = tpm_try_get_ops(chip);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = tpm2_start_auth_session(chip);
+> +	if (ret)
+> +		goto err_ops;
+> +
+> +	ret = tpm_buf_init(&buf, TPM2_ST_SESSIONS, TPM2_CC_LOAD);
+> +	if (ret < 0) {
+> +		tpm2_end_auth_session(chip);
+> +		goto err_ops;
+> +	}
+> +
+> +	tpm_buf_append_name(chip, &buf, key->parent, NULL);
+> +	tpm_buf_append_hmac_session(chip, &buf, TPM2_SA_CONTINUE_SESSION |
+> +				    TPM2_SA_ENCRYPT, NULL, 0);
+> +	tpm_buf_append(&buf, &key->data[0], key->priv_len + key->pub_len);
+> +	if (buf.flags & TPM_BUF_OVERFLOW) {
+> +		tpm2_end_auth_session(chip);
+> +		ret = -E2BIG;
+> +		goto err_buf;
+> +	}
+> +	tpm_buf_fill_hmac_session(chip, &buf);
+> +	ret = tpm_transmit_cmd(chip, &buf, 4, "ECDSA loading");
+> +	ret = tpm_buf_check_hmac_response(chip, &buf, ret);
+> +	if (ret) {
+> +		tpm2_end_auth_session(chip);
+> +		ret = -EIO;
+> +		goto err_buf;
+> +	}
+> +
+> +	key_handle = be32_to_cpup((__be32 *)&buf.data[TPM_HEADER_SIZE]);
+> +
+> +	tpm_buf_reset(&buf, TPM2_ST_SESSIONS, TPM2_CC_SIGN);
+> +	tpm_buf_append_name(chip, &buf, key_handle, NULL);
+> +	tpm_buf_append_hmac_session(chip, &buf, TPM2_SA_DECRYPT, NULL, 0);
+> +
+> +	sha256(in, in_len, r);
+> +	tpm_buf_append_u16(&buf, SHA256_DIGEST_SIZE);
+> +	tpm_buf_append(&buf, r, SHA256_DIGEST_SIZE);
+> +	tpm_buf_append_u16(&buf, TPM_ALG_ECDSA);
+> +	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
+> +
+> +	/* 10.7.2 A NULL Ticket */
+> +	tpm_buf_append_u16(&buf, TPM2_ST_HASHCHECK);
+> +	tpm_buf_append_u32(&buf, TPM2_RH_NULL);
+> +	tpm_buf_append_u16(&buf, 0);
+> +
+> +	tpm_buf_fill_hmac_session(chip, &buf);
+> +	ret = tpm_transmit_cmd(chip, &buf, 4, "ECDSA signing");
+> +	ret = tpm_buf_check_hmac_response(chip, &buf, ret);
+> +	if (ret) {
+> +		tpm2_end_auth_session(chip);
+> +		ret = -EIO;
+> +		goto err_key_handle;
+> +	}
+> +
+> +	/* Move to parameters: */
+> +	head = (struct tpm_header *)buf.data;
+> +	offset = sizeof(*head);
+> +	if (be16_to_cpu(head->tag) == TPM2_ST_SESSIONS)
+> +		offset += 4;
+> +
+> +	ret = -EIO;
+> +
+> +	/* Copy R: */
+> +	if (tpm_buf_read_u16(&buf, &offset) != TPM_ALG_ECDSA ||
+> +	    tpm_buf_read_u16(&buf, &offset) != TPM_ALG_SHA256 ||
+> +	    tpm_buf_read_u16(&buf, &offset) != SHA256_DIGEST_SIZE) {
+> +		pr_warn("offset=%u\n", offset);
+> +		goto err_key_handle;
+> +	}
+> +
+> +	tpm_buf_read(&buf, &offset, SHA256_DIGEST_SIZE, r);
+> +	r_0 = (r[0] & 0x80) != 0;
+> +	pr_info("r_0=%d\n", r_0);
+> +
+> +	/* Copy S: */
+> +	if (tpm_buf_read_u16(&buf, &offset) != SHA256_DIGEST_SIZE) {
+> +		pr_warn("offset=%u\n", offset);
+> +		goto err_key_handle;
+> +	}
+> +
+> +	tpm_buf_read(&buf, &offset, SHA256_DIGEST_SIZE, s);
+> +	s_0 = (r[0] & 0x80) != 0;
+> +	pr_info("s_0=%d\n", r_0);
+> +
+> +	/* Encode the ASN.1 signature: */
+> +#define TPM2_KEY_ECDSA_SIG_SIZE		(2 + 2 * (2 + SHA256_DIGEST_SIZE) + r_0 + s_0)
+> +	pr_info("sig_size=%d\n", TPM2_KEY_ECDSA_SIG_SIZE);
+> +	ptr[0] = 0x30; /* SEQUENCE */
+> +	ptr[1] = TPM2_KEY_ECDSA_SIG_SIZE - 2;
+> +#define TPM2_KEY_ECDSA_SIG_R_TAG	2
+> +#define TPM2_KEY_ECDSA_SIG_R_SIZE	3
+> +#define TPM2_KEY_ECDSA_SIG_R_BODY	4
+> +	ptr[TPM2_KEY_ECDSA_SIG_R_TAG] = 0x02; /* INTEGER */
+> +	ptr[TPM2_KEY_ECDSA_SIG_R_SIZE] = SHA256_DIGEST_SIZE + r_0;
+
+The size of the signature has nothing to do with the size of the hash. 
+SHA256_DIGEST_SIZE (32) happens to match the number of bytes of a 
+coordinate of prime256v1 / NIST p256 but should fail when you use 
+secp521r1 / NIST p521 since then r or s may then be 66 or 67 bytes (if 
+most sign. bit is set) long.
+
+> +	ptr[TPM2_KEY_ECDSA_SIG_R_BODY] = 0x00; /* maybe dummy write */
+> +	memcpy(&ptr[TPM2_KEY_ECDSA_SIG_R_BODY + r_0], r, SHA256_DIGEST_SIZE);
+> +#define TPM2_KEY_ECDSA_SIG_S_TAG	(4 + r_0 + SHA256_DIGEST_SIZE)
+> +#define TPM2_KEY_ECDSA_SIG_S_SIZE	(5 + r_0 + SHA256_DIGEST_SIZE)
+> +#define TPM2_KEY_ECDSA_SIG_S_BODY	(6 + r_0 + SHA256_DIGEST_SIZE)
+> +	ptr[TPM2_KEY_ECDSA_SIG_S_TAG] = 0x02; /* INTEGER */
+> +	ptr[TPM2_KEY_ECDSA_SIG_S_SIZE] = SHA256_DIGEST_SIZE + s_0;
+> +	ptr[TPM2_KEY_ECDSA_SIG_S_BODY] = 0x00; /* maybe dummy write */
+> +	memcpy(&ptr[TPM2_KEY_ECDSA_SIG_S_BODY + s_0], s, SHA256_DIGEST_SIZE);
+> +	ret = TPM2_KEY_ECDSA_SIG_SIZE;
+> +
+> +err_key_handle:
+> +	tpm2_flush_context(chip, key_handle);
+> +
+> +err_buf:
+> +	tpm_buf_destroy(&buf);
+> +
+> +err_ops:
+> +	tpm_put_ops(chip);
+> +	return ret;
+> +}
+> +
