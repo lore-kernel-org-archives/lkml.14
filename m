@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B4E17BA2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1293713C807;
 	Tue, 28 May 2024 00:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716854430; cv=none; b=OSM85fXUJh+h6yZGUgwNOt1tyjKGMrPdJIN0jQQFJnsYx9r7Si1NAaJhYXtkdaOTRFBA9HfrirS3W1qEP4ahhJmhNIbdzK81uAlcI0hMgXiYHkg658OsKvk5Q5ALB+NlhfgFBVLc9DwlBAh3Blx8G9fHblXPghTmjjLlgqlGpWU=
+	t=1716854431; cv=none; b=bNYxJYzvRDvoNmZw378haFGNzjV0u95GHENu3ng5ZxtZhRPvK455y+k6n2ywqjv4WF3GFV0Tuz3Ywa5OafXxKCgB6f5ElMeKFjq9f7w0TJnwjiZZL0CT8Wn8CWMtg6r6HUsVuyWOWf+7+WCQgImXgCY4j6aQyD5canPsMmTuGH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716854430; c=relaxed/simple;
-	bh=p/Ids7iJ/P4qpO7RCzP9/JpwQD2AHXNA87vte2+uDC8=;
+	s=arc-20240116; t=1716854431; c=relaxed/simple;
+	bh=KnOCp2qhtwB51yC8a+Iale1moRumwnl3EQ9O+oTkxCM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=X/NOdODn0qU46OnocHv7K6UHToCzRKA31cP5ex8opY8BcvmC3AUcSZPJV1FLKEzGrBtUrKs6OyFciCPw/qGS4yzlXDeQNjxeX0/I3Z/K+0kNQopWc+9FZj2zXSfvS/wJR1jYW4neHqfPWO8nspszn28NOIDMPcXScx1kLrmdIYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sA7vnbgy; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ejSmpyC0ci+1Stvmswg2c7CAl78wKgqDj6sOJAfIepU9r1O3O176+BUJYuDuQBJi5wiNnZFbl00LJc7kjOidBy5A93AriGGwClokgQNGD1Kly5X9DppEj2FutxVCu3fjIdpuYPIfDDpbbG/QWJhp9FKLrS1ExSZQyoq6dy0589w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1loUf65; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sA7vnbgy"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 44EA4C32786;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1loUf65"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 57F70C32789;
 	Tue, 28 May 2024 00:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716854430;
-	bh=p/Ids7iJ/P4qpO7RCzP9/JpwQD2AHXNA87vte2+uDC8=;
+	bh=KnOCp2qhtwB51yC8a+Iale1moRumwnl3EQ9O+oTkxCM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=sA7vnbgy08cZWMj66YCXZdf1IwytxqVcNfT4j+rInX7njWEfHykrD9/wo8s7rQCFs
-	 7nXE79dOdELRPVHCDGf+tFttW1JQZaJdC2j5tL1rZdx9OW9FfA4u8S2EuNFOEatGrU
-	 kOfL0ivF7VZOWZq2zOLXbAI4EgGoM8MMgA2jDnkOJm6xULIjFJQtzCnSXO3A/Zgqb4
-	 oZsbQ+LQwkrWNatyexllhAJpGsq2RgNodAAFvd7jXp9LzsYwoX47s+6/jpras8woSz
-	 6VH9hfOf1H4fRHsn8pfT+tbqDcC2TYymD43lr1JV6AyQN0JQ2OCemw0Id/ZIb37mf3
-	 6mq+Bj+funsBA==
+	b=j1loUf655B/12OXxmz6XPk1DzVfz+SJQkxtzId1vXSOuCaGKIj2udpntUcyywQc3E
+	 NpqrQEfcE3rCVGqHE/mWnUeXUWuyModqdUSEA7JYsAs89XnMMjcm+0koEuMYDKRNcY
+	 oofkqkWTsJS5LFtMZOaHCBa+iv7ZWvPIcfJptNU/3twSW8cqDLJzN6zEaVmNJ9b2XI
+	 bwyFW7AWZuhbJAT5N/7cwjg18bLpjy03WgPpeh/NmFsuPffmWYe1nSgZ1ZjUgasPyo
+	 3AZKaqkVwnt9wv31KK36JyjVOIMCp+DE3jCY1GxFxPuw19uywQddfBCUEFiVFXGQM5
+	 75uT42PW+voVQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 31BB7CF21F8;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 41836D40196;
 	Tue, 28 May 2024 00:00:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,14 +37,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] dt-bindings: net: pse-pd: microchip,pd692x0: Fix missing
+Subject: Re: [PATCH net] dt-bindings: net: pse-pd: ti,tps23881: Fix missing
  "additionalProperties" constraints
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171685443020.27081.631455049098356051.git-patchwork-notify@kernel.org>
+ <171685443026.27081.17116209068347534643.git-patchwork-notify@kernel.org>
 Date: Tue, 28 May 2024 00:00:30 +0000
-References: <20240523171732.2836880-1-robh@kernel.org>
-In-Reply-To: <20240523171732.2836880-1-robh@kernel.org>
+References: <20240523171750.2837331-1-robh@kernel.org>
+In-Reply-To: <20240523171750.2837331-1-robh@kernel.org>
 To: Rob Herring (Arm) <robh@kernel.org>
 Cc: o.rempel@pengutronix.de, kory.maincent@bootlin.com, davem@davemloft.net,
  edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org,
@@ -56,20 +56,19 @@ Hello:
 This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 23 May 2024 12:17:31 -0500 you wrote:
+On Thu, 23 May 2024 12:17:50 -0500 you wrote:
 > The child nodes are missing "additionalProperties" constraints which
 > means any undocumented properties or child nodes are allowed. Add the
-> constraints, and fix the fallout of wrong manager node regex and
-> missing properties.
+> constraints and all the undocumented properties exposed by the fix.
 > 
-> Fixes: 9c1de033afad ("dt-bindings: net: pse-pd: Add bindings for PD692x0 PSE controller")
+> Fixes: f562202fedad ("dt-bindings: net: pse-pd: Add bindings for TPS23881 PSE controller")
 > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > 
 > [...]
 
 Here is the summary with links:
-  - [net] dt-bindings: net: pse-pd: microchip,pd692x0: Fix missing "additionalProperties" constraints
-    https://git.kernel.org/netdev/net/c/0fe53c0ab018
+  - [net] dt-bindings: net: pse-pd: ti,tps23881: Fix missing "additionalProperties" constraints
+    https://git.kernel.org/netdev/net/c/12f86b9af96a
 
 You are awesome, thank you!
 -- 
