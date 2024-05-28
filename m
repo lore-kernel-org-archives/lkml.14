@@ -1,328 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D459316DEB9;
-	Tue, 28 May 2024 09:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716890159; cv=none; b=hYe+Iqsz8fj+ZunbSrKqCJMjW+QPje1GrcxibnC4sKjvXCGTFbGtQSPblC+HEZT5K45YANHLyfdvyfkjYcV9JPX5QTO/mxtxpJzRn1HQWvSJbuEQuQ4YZ9zoPNyuZ+rr7i8gsi0WBXgXlMxp0Wrg5ZGrn5Oi6C7obZ/1Y6DXpUw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716890159; c=relaxed/simple;
-	bh=ECdX67CT706dj0mlzCOMRqGiltd61ccVv16An5RaII4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ur3Lsnd0s9+O3U1Nz5uCGa8qDqy+o1SzQColRzNqNRRSgPg+c6q1aQw77C7J+UogW6WvvDUmcejpWN+cQbcOjOxxY2B+HmREaRe/FULnSGr43uKa4dhwNbGbtNS6CI94fPFlXM++xbnCXr/8T4dTVC3/a2e6de6/cVMHs1FSgCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dUDkn9ro; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dUDkn9ro"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716890157; x=1748426157;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ECdX67CT706dj0mlzCOMRqGiltd61ccVv16An5RaII4=;
-  b=dUDkn9rowcu+61xi9svNIkFuP5zzUbqZW9TcN/pKMCtVzXTrbTzzExcd
-   fYmVbCDDWmm5W4kR7ba2J88V0rhAbvdkapoe6oCufqTGDp9zTjK2Fxg7u
-   ahakaoQFVmGeuIn98nKHEZNY86bOVpR8kLPaWe7IQ9QPh02HLr6nsbS35
-   p69xDiPb7iAFpP1AYtwbcoprx7TH3Zps6fvUW/L8x1oH1aS+BAzYbmGSs
-   vvVxj7qXOKlgCXMhFYkzzTd6/6zHWhZ1yeGVYaEl420x111w1g8Hf4SPI
-   NxpHcvAprIf/8utX5u2OJl/XNznFrGXAJKoITbuhuz8g2k+nVvn/tQv+/
-   Q==;
-X-CSE-ConnectionGUID: gdx7tdD/T8KOw2ua7yrTiA==
-X-CSE-MsgGUID: 23gh/B6NQrq/PEFxuxBfag==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13172209"
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="13172209"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 02:55:41 -0700
-X-CSE-ConnectionGUID: yBhy+KvbRWy8mZbcDepX4A==
-X-CSE-MsgGUID: 9nRbDhTcQm+Cu80VC7v3pg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="39984755"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 28 May 2024 02:55:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 8F0826B7; Tue, 28 May 2024 12:55:26 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Tao Liu <ltao@redhat.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: [PATCHv11 07/19] x86/mm: Make x86_platform.guest.enc_status_change_*() return errno
-Date: Tue, 28 May 2024 12:55:10 +0300
-Message-ID: <20240528095522.509667-8-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C95E16F856;
+	Tue, 28 May 2024 09:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716890174; cv=fail; b=l5zUd4NvCBuWhOuec3m+xN7sKKy1SaAMOriJz4NV4Wr/d9ClvMcUeTc3igbgbq26pYIOrYzapNyuoPngFNfQT+AVvmza0Hkhab4OM5Sk8GqrKV5qFjjV0FAIVZaVj724T5X/9DzYOp62t9oaGn1scqYsMF1XKkPN1cl2cOffV4k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716890174; c=relaxed/simple;
+	bh=9za4wgxrllEkneZXsAzTL6myc6vBc5jFctGPodWBpEw=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UWlVw09HfLMh7KQ/JV9oJOvWqLIdQlMKWTtHIVbCKBDH054XnDBViqj5v/Nspr4vaew/8Uej2IrBYOJeWmJEde4QufSUlgJWLlFMh3O35g+JUzIxEtydg2CGLrIzEPoYnmPzcqDbAJd8hdx22k58NYuJpXukbKz6+FKKkD99Olw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44S7wqWw002784;
+	Tue, 28 May 2024 09:55:33 GMT
+DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
+ =?UTF-8?Q?=3Dcontent-transfer-encoding:content-type:date:from:in-reply-to?=
+ =?UTF-8?Q?:message-id:mime-version:references:subject:to;_s=3Dcorp-2023-1?=
+ =?UTF-8?Q?1-20;_bh=3D6hjlNR8BacESIza6/03CHyRAOUDSIggbOUb9zbCXAn8=3D;_b=3D?=
+ =?UTF-8?Q?LkrmsELPcngpt0hiER8Bot8sM+DtptSBofls6XE8iuU8BtCXNilC3FnxlcG9eaL?=
+ =?UTF-8?Q?QxKK+_X+NqrhEai/RRLqM9Xv6y8FRjNvTbazjhnk7A2VJ9jA84XDzlcfyyGWTql?=
+ =?UTF-8?Q?/gaXw21H6a7_LrqIhgK/WoYUlHPRi4ur5r+hScz3z60bH6JErgZerWWnSvGQ0wn?=
+ =?UTF-8?Q?1cOlRkMBsTGVEYQD5_UIxI8qV6501h76o8nUvP3iUt7dl/rzk+eOy7FqEvs4ykI?=
+ =?UTF-8?Q?3UBBTMqp8mcRUTC8Qy52paE_pOPSBLGTQ9PS6u6HXOS4yYFjeeg7iIOSqdNyZp9?=
+ =?UTF-8?Q?DvK7KUee646HY1SBRLSuHQvOpuFcL_Lw=3D=3D_?=
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8g9kyx1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 28 May 2024 09:55:32 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44S7aUmH025792;
+	Tue, 28 May 2024 09:55:31 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2100.outbound.protection.outlook.com [104.47.70.100])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50pmk49-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 28 May 2024 09:55:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yj3eODGM8FcU3x37AKm63CUIovkpP0kdjk4sPGR7d+DQ8AIcqi60gDLtO6y+LXfhIB6MWFPhWQMkIAcSXRd2ZfdHkTh+D3GAFTe1qclYSMAx6Tkiw4OROq28eIZYutud2oi3AempSNe6Ja0/i/v1z4R+fc7BvqduYzKv84KlbjNbMHY1eXefwOnHENg+7ugzgCFEbTkGSy4TatXaXZT0NbkCJr6rrfC6ZbRr9Ulzp7Eld/BmvCCB7pdilHH8fJSuki5ewpFNjojewTPebH1XEkUFUDQPcG1Qsb6PqD0gBeLgzf34y7eIXbsSBDEV3LZLWEKtc+INQvnXEIjf9sf69Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6hjlNR8BacESIza6/03CHyRAOUDSIggbOUb9zbCXAn8=;
+ b=Js3V/q9zScrv5D7mVRXxB/RSxfBz7bL6QVlSQ78JRk5sES6mEM8KSW+XdR4Ahh24d1f/RFnAAjamu63HpQYn7aSJWxw3EkpxhOZ98co2h9wKKhmxymHs/OstF20QnB1rcM6Xjl4Y1haXO5ilThu0II/CipETLEe/0GxZHl1rMB/etrDluer5i05+NTYVHFxgNNI7g8Xz5SAhBtg0XMhmsYY3JGGNXqKwzfQGIH3oAJdl7sHQwuuj70TG6bXXCR8AKf1AGkDEtMeChDQjXjAk0D+EkGs723ImkdmX8eiWHX3YVlZ4OBv1Nl43h4cRofddAyMmqH9FW/Oe6lVByy56Jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6hjlNR8BacESIza6/03CHyRAOUDSIggbOUb9zbCXAn8=;
+ b=jdUU+ZjU9P5VISKHpZMO3lgKxQXCbKdTEmfD1G3eEzKAaefB7JUGcVMSzwtYh5oGc1ekdbYcSSVZXg31JVpsVO4QcbIdxPbdouf8I0VGTDo7i8vVZfVb0X4eyMl75BHXxZ3cyP7lAVmYbMpxJT+2Y8zAe51s9NmDGvN6Od5WQwI=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by IA1PR10MB6880.namprd10.prod.outlook.com (2603:10b6:208:420::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.20; Tue, 28 May
+ 2024 09:55:29 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.7611.030; Tue, 28 May 2024
+ 09:55:29 +0000
+Message-ID: <4b825fe5-c787-4e10-b771-536b6370311c@oracle.com>
+Date: Tue, 28 May 2024 10:55:24 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] perf jevents: Use name for special find value
+To: Ian Rogers <irogers@google.com>, Weilin Wang <weilin.wang@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Sandipan Das
+ <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20240525013021.436430-1-irogers@google.com>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20240525013021.436430-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AS4P190CA0043.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d1::14) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|IA1PR10MB6880:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27b10740-3898-4a7b-dccd-08dc7efc4e5c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230031|366007|7416005|376005|1800799015|921011;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?dUxQNk5YV0N5OGtnanNaQlkxVHNzL1JqazhRV0pOdkkzd01DM0k4RlNuVHY3?=
+ =?utf-8?B?N2tyYXc4NVpLUStNZExqV000b1RIcHR2RXpWTGphdGRTUjBxejN3cEwwclgv?=
+ =?utf-8?B?R01WcXdnSEVERk9ydm9nYzIxNWFwSmErZUlyREZTUlpBL0lZUmhKanhDK000?=
+ =?utf-8?B?TTBSS0dzbzg2VW5jaVhHQVpnKzB3RE96bU9jZDJzR25CdjhFdEFjeDFFdGFH?=
+ =?utf-8?B?N0xNd0cvQnlHZUtON1pyejcvajVzZG1VQnlHeldJRDVTY0x3a0VOY1IzMWc0?=
+ =?utf-8?B?V085SlJuaklIcGhKamkxSUwrdms5dldLMjFOczhReG9XWDQ0ZVNzcWNvbmg5?=
+ =?utf-8?B?UWxIQ0NLUEtZRHB0c3pZTEFUQ3FEUWMrMk9nTG9ZM0xNWitrOERja3YrbFNx?=
+ =?utf-8?B?M3FJSkJ3TEU5QllHb1FGRVZRSWVVU3NmcmpNTjZvcVBwUVpFVzhXaXE0dXZj?=
+ =?utf-8?B?bmNGV2RNN1hxTDFTeEJKRTFhaTU3VXJHcUNicmhBSnlaU0gva0VYYXZ1R25X?=
+ =?utf-8?B?Y3YxL0diZmFWT0E1MjFjOHJ2WkxnQ2s4czJZdmtMNVVZVkJOREdJWjBGZXJx?=
+ =?utf-8?B?dzZKa0kzTWR6ZTBHbVZqcW5HK2Fkb0tiL0hnZUMyVVpjREdtSjEwOWkvLy84?=
+ =?utf-8?B?b0t3cGIzd3lHTExLTXFsdVpWTnFqbEFiNG9zNDJ1WlZmTHZGb3VtZk1Ndlg1?=
+ =?utf-8?B?TDVrM0p4S3Z3WG1tY2t6MHJ4MnVNQTVEL1Qrd1piemU4cUx3cFFUR1piKzF4?=
+ =?utf-8?B?OVJ2eFg3MlYrQ1c3MGErbjIvRnJ1UDlqamRwMFZUWjFwa09rMStiU3loWUVw?=
+ =?utf-8?B?OEo3OGgwQ1lLWnJnekY1RDM0YmdiNkcrbHhTOTE4YktzQUFGejBHOXhvdUJO?=
+ =?utf-8?B?Zm5qZ29aRnlBNTdzZGw0R1VHM2M4ZkxyU3BqQ01UeW9kaHVhaC9aWUp5WjZj?=
+ =?utf-8?B?RXRkR1kyU2ZTdGR3VEdWcTNhajFpQ2R2OEdRVUtRRmtQeHF4MUJ1ZXZQdWNh?=
+ =?utf-8?B?RC80ZzMreXJEaHBIQjhGdnFsT2VUMnFJR2pvVWNnd0dDQTVnUjdWMm1Sa1pv?=
+ =?utf-8?B?ZFRzWWdOY3I5WEJ0VjBVdWgxZyt5UE5HMWdsanB2WllTRUl6ZG9LRkh3K080?=
+ =?utf-8?B?bGpnU3hZdFNpV2FOZk1JTk5VMmRkdmczMHk2NVNjN1E1OGZxblIzeWlGTWZX?=
+ =?utf-8?B?cnZWNVpvdlpaT2xRb0FrK0JhSUo2Wmoyb2JOVGJQVi9SM3NqeHJFRTVBWXNX?=
+ =?utf-8?B?V0hGRm9VRE1RVHZWODRPVXBySm1FcVY2QXZ5NyttODUweUxMaU4yVW5UZ0JL?=
+ =?utf-8?B?VXBDbGRyWUozT0JXRzRjY3FKOXRCQXVoK1NLd0x2dEp6NGlpWE5aTHpqcnk5?=
+ =?utf-8?B?LzE5ZUxyWVhtZjhQdytNbUJYZ2dldXFWcjk0ZFJMbXIyR1VadEZLd3hlWk8r?=
+ =?utf-8?B?WkhvZ3c0enl5dk13M0JScUhkM1RrOUU0UU14UUFNbm5IVFpKMDBUdUlXRDZi?=
+ =?utf-8?B?Y0s0Uk9BRlZRbnlVLzRZd2g4SWNNRnliQTFnaVhXQVdKM08vT1IwQncrQ1VT?=
+ =?utf-8?B?V2x6Rk16Unp4dTVXWllVM2pNVG1kOGJQalVQbTUyY1VwTCtYSERMVHVPWEpG?=
+ =?utf-8?B?MEovcFUveDhudjdTWlpzTWdCa2xkOTd0TzhOT1BrWWEycFRJUXFzcmhjcWo5?=
+ =?utf-8?B?dSswbml0UnJrUUFQTUtvTG1Kc3B1dUJOTmswNUJ2YjZVNUZ6Ui9UNHptSlln?=
+ =?utf-8?Q?rjMc7Ycx4OzJ+upb0UQ+XxNstTu0EqkFrkxOoM8?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?NHFBYVkxV004c3RWUVplM3M3bm92VVFmR21PWEhwQTNJSC92RzhSenJ4d3Y4?=
+ =?utf-8?B?dzN0eUk1bW1Wb2pqN3pWcnppQ25XT2hRZExwaHJFS2FsYmp0dEE4Y2RFR1BK?=
+ =?utf-8?B?bUU4SWxUQmVQK05KOGJMNUR6SjM5ZlNVajVxZVRnb1BEZ2FVRWp1VGRpTHVI?=
+ =?utf-8?B?b0lSTWdCNy9ScnFuM2RSMUxWd0pLaXJaQ2RVQXFzNWg1QjdCTXlnVklZVXhx?=
+ =?utf-8?B?UnF4TWZsa3VWZHMxOXNNWjY2cGdCaVByYjBJaEQvM2VqOUREMUR0SlJPMXpD?=
+ =?utf-8?B?YUxUVkNlRHkyMTV1M3BGazk3bnNFNmVoNDd1enV1NXNzZGM5OGdkOStMWCt4?=
+ =?utf-8?B?clgrOTlYRnZUelZ0aGd2VVlLbFZRYWhHdHJJNmF3Vlg3b3M3WDl0NUxweHVr?=
+ =?utf-8?B?TDFwcW5mMDB5SG8rZnY5eElUV0R3Z3lMcWZ5RzhCRDhHUkVSb2hsUy9JejJO?=
+ =?utf-8?B?YjJnRHJqUHllSmRXRVlTV0d1UXczclVkQzlCdGk3VHlOQ3dGT2hMVWN6eUhs?=
+ =?utf-8?B?dHgyMVFsN2ticGszYXU5Z2YzcDEwaGQ4OVlCVXV5STN1SFYwQU1ycGlKVUZm?=
+ =?utf-8?B?bTJENlRRRVRyQk5Rdk50aCt3OVNSOUw5MFl6ZnhuSEVXbnpyZ0YzZ2NZM3g1?=
+ =?utf-8?B?U1NrVUFKRHdwNlQvQlZzVlBrdVdSL0VPWFBXejNDMWN3OHpFbHZmSjArVExE?=
+ =?utf-8?B?UENRaUVhMUZzUjNVN1lJdnRVdE1KV1FYVmtYL3hCV3ZqY1EzMjRzellhNkZN?=
+ =?utf-8?B?ekNlZitNUzhOazQ5bFVWbkdBY3BRSkRNRzI2M2F0emZkVDdYU0FSUVFJdGZB?=
+ =?utf-8?B?Q3ROUVN6N1pwejZkUEtpY3RyZGg1SWJoWE5NcmR3ZzZ3TXFuZURFU01hWVBp?=
+ =?utf-8?B?K2NsNFZSVmV4cHZjamFKL2dhaE5obldPWWNBanVGY1cxV2plN1hBM1FuNFdN?=
+ =?utf-8?B?NXJzemlocUdqbVJXdEgxWUpQYU5HNzRSLzdpc0hkZHZuQ2k5YlZRcFFXQzc0?=
+ =?utf-8?B?VTlXNjRkYVpJc1ZmL0Vaanl3VDBuOVJuK1JTUis4MjI2Wk5oMDB0YjlUVXhZ?=
+ =?utf-8?B?cXVYQjhGYjIrZzh1dzY3cnk4K0FEVW40azFTRTE3QnNtZ1ZPRFFHV2ZqM0Fm?=
+ =?utf-8?B?aWNRUjFISmZtWDBBeDVKY3NwZ25rbFptMHZ6cXdpenZRempFRXJFZ3lZdVYw?=
+ =?utf-8?B?bUpFNy9HNGJ2dFlKUlBJVVlMK0ZzSHpGL0NkQlRUQWcvWExVaTVCbVZVbWFY?=
+ =?utf-8?B?Wkw0RGhSbS8zdnYzSU5lQjlaYUZwMElWbE9TTmx2bW5CUldGNFNsN1B0WHJN?=
+ =?utf-8?B?cmdjeGZBMk8vcnBXOTlpQ3diYWFCQ3Q4TkNxeG5Gc0d6MElJenF6dGx3VG9q?=
+ =?utf-8?B?SjBQWERDallncVVMSmhtVnJmS0V6UndkMEg4M0hiK1IzZkIzajV0K3dHQzZ6?=
+ =?utf-8?B?S3RESy9DdWF6SnM1S215WGNydzNJRXg3VEw4VFNLZkJrdDJ5ZnRtdXRxWGEy?=
+ =?utf-8?B?cVVHSHhucEJVZ29wbW03UzlRblJnT0cvc1JEU3I2V3ZkWE9WNHdkcEpVS0VC?=
+ =?utf-8?B?WW9BSDEwSVhMRk9GUE5RdjRvc3MxWGFEYi9mWUJMbXpmTERvR1BxZEJsNTd1?=
+ =?utf-8?B?YkhNSVFDYnBZMGp0NnM0KytQRzAycVhreERwNVEzbDZpV2w3d3hneURQN0Q2?=
+ =?utf-8?B?V20wVHJzRUV4UEp0Mk5EVlVBbnE0OHl6MXJyaHJVN2lLWDd5R3JsTlp5RjBY?=
+ =?utf-8?B?WWYyQ1prWk8yaERMT0pweGlDZ2RwcmFWengvMTVmcVJPaHVSVjVOa3dKcWs5?=
+ =?utf-8?B?QmU1bmd2S29oRSsrRC9rdGhIcWNLd3h0aUhzclNWYTIybGtMYWtIZzNHQXA0?=
+ =?utf-8?B?Tnd5Lytsd2dVYVoxa1BMTDNJT2pzZ3JQeThKUW0wVE1DR09TaEdPK1ZaVTZ5?=
+ =?utf-8?B?b1VwbmVTSjhBUFQ0ME5VTkFpQlhoWit4T2F1L1hlL3dnQVpUem8xY2NraHkr?=
+ =?utf-8?B?S1UrUHY3c20yUDZCSUI4YjJMR3hqdDVuZVEzQlpVMG1VeDFjcDFGanJuaFY5?=
+ =?utf-8?B?cnh6SUhHSUtENjFDcjhpcUZ4OXpwL1Evcm9RUFBvOHVJMUFIVU5sS3dOQTNz?=
+ =?utf-8?B?a0Y5Wnp4YUNWWU5FbE9hYVpUb21tNkZDd2dLVVlEbzdJbmVMa25vOHJRN1lF?=
+ =?utf-8?B?UUE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	NUeFn5B9tlA5l/XEhG0pL7BSbYgmrs/bA4DiMRz5RCT6kf5Vpmn5vAdJ9bunL+BFt7KvDyKGxhy567znuw2i6Jq3GTHMN51OpQd37lx2ne4GPRPNTpBrsSjAOZXraeSyz6cspzbMyafWzhRwG3uy62kfd2uyXExSMYqotpcttV+Q+1Bws58+EOhiomXASa88RF9ACe9qQm/A0d0k8CJW0eDK5dXtPpwnpqM+o4O8xHC9NsANzQq4OeWvPfok3KhPekV+jhiQN/1ay5aogx/p/zunig8RlM5xDAvZFgPK9T5Ga952WEpU/KKCsxdqIFwGOoAYHal+UUbdxlgq3e10t/NmrwHPJF62i7ne3nTUoCUz/gBQIWC2cqxXQfOrkgIdXcm05Xxftgz+A/RZoUPCmkjmNPLtm8VzhWzriUiqc0hEMCmbJ8zvzeKHVtlbezxb0PbxIMl8+cB8Od6ieSU3+JYWlDouxeFYdIfNDEOMf9RRxtpUyVIiovl4EA35CsoVRbInZUeKp7mSuxN7ghtt9+Vw/nJg5VOUteOIXIbjQZdrCSpEthxZHxAV7sMXsTZ3A5+FRpVk1l9uAL21PHn12ygksR0VRSIC8xh54rmqQXM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27b10740-3898-4a7b-dccd-08dc7efc4e5c
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 09:55:29.3597
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jrWfrkSYIT4JU2gaOnhKl2x2dfelg6jycLK7XCa3X2mUQkau1Y0xNBJioahzPHgtMPKaPKnfdxMNmTMEQpYwlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6880
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_05,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405280073
+X-Proofpoint-GUID: UT3CheZFUTho6X4415JdDiq03fKv-nM3
+X-Proofpoint-ORIG-GUID: UT3CheZFUTho6X4415JdDiq03fKv-nM3
 
-TDX is going to have more than one reason to fail
-enc_status_change_prepare().
+On 25/05/2024 02:30, Ian Rogers wrote:
+> -1000 was used as a special value added in Commit 3d5045492ab2 ("perf
+> pmu-events: Add pmu_events_table__find_event()") to show that 1 table
+> lacked a PMU/event but that didn't terminate the search in other
+> tables. Add a new constant PMU_EVENTS__NOT_FOUND for this value and
+> use it.
+> 
+> Signed-off-by: Ian Rogers<irogers@google.com>
 
-Change the callback to return errno instead of assuming -EIO;
-enc_status_change_finish() changed too to keep the interface symmetric.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Tested-by: Tao Liu <ltao@redhat.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
----
- arch/x86/coco/tdx/tdx.c         | 20 +++++++++++---------
- arch/x86/hyperv/ivm.c           | 22 ++++++++++------------
- arch/x86/include/asm/x86_init.h |  4 ++--
- arch/x86/kernel/x86_init.c      |  4 ++--
- arch/x86/mm/mem_encrypt_amd.c   |  8 ++++----
- arch/x86/mm/pat/set_memory.c    | 12 +++++++-----
- 6 files changed, 36 insertions(+), 34 deletions(-)
-
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index c1cb90369915..26fa47db5782 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -798,28 +798,30 @@ static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
- 	return true;
- }
- 
--static bool tdx_enc_status_change_prepare(unsigned long vaddr, int numpages,
--					  bool enc)
-+static int tdx_enc_status_change_prepare(unsigned long vaddr, int numpages,
-+					 bool enc)
- {
- 	/*
- 	 * Only handle shared->private conversion here.
- 	 * See the comment in tdx_early_init().
- 	 */
--	if (enc)
--		return tdx_enc_status_changed(vaddr, numpages, enc);
--	return true;
-+	if (enc && !tdx_enc_status_changed(vaddr, numpages, enc))
-+		return -EIO;
-+
-+	return 0;
- }
- 
--static bool tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
-+static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
- 					 bool enc)
- {
- 	/*
- 	 * Only handle private->shared conversion here.
- 	 * See the comment in tdx_early_init().
- 	 */
--	if (!enc)
--		return tdx_enc_status_changed(vaddr, numpages, enc);
--	return true;
-+	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
-+		return -EIO;
-+
-+	return 0;
- }
- 
- void __init tdx_early_init(void)
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 768d73de0d09..b4a851d27c7c 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -523,9 +523,9 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
-  * transition is complete, hv_vtom_set_host_visibility() marks the pages
-  * as "present" again.
-  */
--static bool hv_vtom_clear_present(unsigned long kbuffer, int pagecount, bool enc)
-+static int hv_vtom_clear_present(unsigned long kbuffer, int pagecount, bool enc)
- {
--	return !set_memory_np(kbuffer, pagecount);
-+	return set_memory_np(kbuffer, pagecount);
- }
- 
- /*
-@@ -536,20 +536,19 @@ static bool hv_vtom_clear_present(unsigned long kbuffer, int pagecount, bool enc
-  * with host. This function works as wrap of hv_mark_gpa_visibility()
-  * with memory base and size.
-  */
--static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bool enc)
-+static int hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bool enc)
- {
- 	enum hv_mem_host_visibility visibility = enc ?
- 			VMBUS_PAGE_NOT_VISIBLE : VMBUS_PAGE_VISIBLE_READ_WRITE;
- 	u64 *pfn_array;
- 	phys_addr_t paddr;
-+	int i, pfn, err;
- 	void *vaddr;
- 	int ret = 0;
--	bool result = true;
--	int i, pfn;
- 
- 	pfn_array = kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
- 	if (!pfn_array) {
--		result = false;
-+		ret = -ENOMEM;
- 		goto err_set_memory_p;
- 	}
- 
-@@ -568,10 +567,8 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
- 		if (pfn == HV_MAX_MODIFY_GPA_REP_COUNT || i == pagecount - 1) {
- 			ret = hv_mark_gpa_visibility(pfn, pfn_array,
- 						     visibility);
--			if (ret) {
--				result = false;
-+			if (ret)
- 				goto err_free_pfn_array;
--			}
- 			pfn = 0;
- 		}
- 	}
-@@ -586,10 +583,11 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
- 	 * order to avoid leaving the memory range in a "broken" state. Setting
- 	 * the PRESENT bits shouldn't fail, but return an error if it does.
- 	 */
--	if (set_memory_p(kbuffer, pagecount))
--		result = false;
-+	err = set_memory_p(kbuffer, pagecount);
-+	if (err && !ret)
-+		ret = err;
- 
--	return result;
-+	return ret;
- }
- 
- static bool hv_vtom_tlb_flush_required(bool private)
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index 6149eabe200f..28ac3cb9b987 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -151,8 +151,8 @@ struct x86_init_acpi {
-  * @enc_cache_flush_required	Returns true if a cache flush is needed before changing page encryption status
-  */
- struct x86_guest {
--	bool (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
--	bool (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
-+	int (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
-+	int (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
- 	bool (*enc_tlb_flush_required)(bool enc);
- 	bool (*enc_cache_flush_required)(void);
- };
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index d5dc5a92635a..a7143bb7dd93 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -134,8 +134,8 @@ struct x86_cpuinit_ops x86_cpuinit = {
- 
- static void default_nmi_init(void) { };
- 
--static bool enc_status_change_prepare_noop(unsigned long vaddr, int npages, bool enc) { return true; }
--static bool enc_status_change_finish_noop(unsigned long vaddr, int npages, bool enc) { return true; }
-+static int enc_status_change_prepare_noop(unsigned long vaddr, int npages, bool enc) { return 0; }
-+static int enc_status_change_finish_noop(unsigned long vaddr, int npages, bool enc) { return 0; }
- static bool enc_tlb_flush_required_noop(bool enc) { return false; }
- static bool enc_cache_flush_required_noop(void) { return false; }
- static bool is_private_mmio_noop(u64 addr) {return false; }
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index 422602f6039b..e7b67519ddb5 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -283,7 +283,7 @@ static void enc_dec_hypercall(unsigned long vaddr, unsigned long size, bool enc)
- #endif
- }
- 
--static bool amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
-+static int amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
- {
- 	/*
- 	 * To maintain the security guarantees of SEV-SNP guests, make sure
-@@ -292,11 +292,11 @@ static bool amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool
- 	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP) && !enc)
- 		snp_set_memory_shared(vaddr, npages);
- 
--	return true;
-+	return 0;
- }
- 
- /* Return true unconditionally: return value doesn't matter for the SEV side */
--static bool amd_enc_status_change_finish(unsigned long vaddr, int npages, bool enc)
-+static int amd_enc_status_change_finish(unsigned long vaddr, int npages, bool enc)
- {
- 	/*
- 	 * After memory is mapped encrypted in the page table, validate it
-@@ -308,7 +308,7 @@ static bool amd_enc_status_change_finish(unsigned long vaddr, int npages, bool e
- 	if (!cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT))
- 		enc_dec_hypercall(vaddr, npages << PAGE_SHIFT, enc);
- 
--	return true;
-+	return 0;
- }
- 
- static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 19fdfbb171ed..498812f067cd 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2196,7 +2196,8 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 		cpa_flush(&cpa, x86_platform.guest.enc_cache_flush_required());
- 
- 	/* Notify hypervisor that we are about to set/clr encryption attribute. */
--	if (!x86_platform.guest.enc_status_change_prepare(addr, numpages, enc))
-+	ret = x86_platform.guest.enc_status_change_prepare(addr, numpages, enc);
-+	if (ret)
- 		goto vmm_fail;
- 
- 	ret = __change_page_attr_set_clr(&cpa, 1);
-@@ -2214,16 +2215,17 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 		return ret;
- 
- 	/* Notify hypervisor that we have successfully set/clr encryption attribute. */
--	if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
-+	ret = x86_platform.guest.enc_status_change_finish(addr, numpages, enc);
-+	if (ret)
- 		goto vmm_fail;
- 
- 	return 0;
- 
- vmm_fail:
--	WARN_ONCE(1, "CPA VMM failure to convert memory (addr=%p, numpages=%d) to %s.\n",
--		  (void *)addr, numpages, enc ? "private" : "shared");
-+	WARN_ONCE(1, "CPA VMM failure to convert memory (addr=%p, numpages=%d) to %s: %d\n",
-+		  (void *)addr, numpages, enc ? "private" : "shared", ret);
- 
--	return -EIO;
-+	return ret;
- }
- 
- static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
--- 
-2.43.0
-
+Reviewed-by: John Garry <john.g.garry@oracle.com>
