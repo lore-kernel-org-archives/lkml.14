@@ -1,562 +1,354 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B04C13AD30;
-	Tue, 28 May 2024 12:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA4316D4E9
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716899063; cv=none; b=hYy6egabh0kXOuaPB511BZm/5aEvfPQsF9M7/kKOCvHbteplVzlWL87fdOrpMD82pe07tTenyvKmWxtMcyZOkzehxAihOXoZFYoQc9FirTMnZdIy8PiP9zCmEraCPLpWdDjSb/RJxxLhIQzbBqgzIjDYMk0uqST8AkKfhOPiuY8=
+	t=1716899072; cv=none; b=JNDUhu/gahZy3bcS+6SEawAtXzMnzeDwtDytKk1rAygk9vkCtL2TR0O74gVFqt/aGLFEngFj8r65dT3SFaKOAYv025/UtkbAr5O5eI5a3GKGdstwv4yVAZ8a9LJ+w1nGHVU/kfZs5UXci47VLzWY884Ngc0q3oKgLbPfVeT4gHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716899063; c=relaxed/simple;
-	bh=v5WZPdOrh7HRnEuYcHIFHULUqMTMz/MKSGsOCHPzqo0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UcxZMIrVAQt7QAoWFs7ODfF+b9Hbz9HRJl2rXsTxgKaDDKKRjU5ShfN+I9t1HesnsnA7hApAupE+w0xFVILJQQPj2kP8GyVKI4LDsVH+KskSQmYR8JzGny2EMqZ7IcBjMKtg9bk2b51SGygTyRoCSHeqkQsbDmF5wHJNNP/0KUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=gV2pysJH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716899072; c=relaxed/simple;
+	bh=lngy222+7dOmVcElbgZl6/B12O/of3XGDMDS/ih5cdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+KbJIqTsakSalGxvVS3hnAhCBTIhyZiqvDBxRhTRSRWohakJFaNc3c0hGS0w7VsaQT0iBRE4EAvv9OYVWXFutTxuKyiAJT49VDqbtsuac6/TjqyfkLUhmfWzNRgVh3xKXxYCoMgfyN9n3dTXmlHJJsabflW7YuuP/yY7AbqL1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PC402Fee; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="gV2pysJH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2997C32782;
-	Tue, 28 May 2024 12:24:21 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="gV2pysJH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1716899060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mnl+nFO7w48h6ocYxDZtycdZ0uLsyH01qt6FKa16wMg=;
-	b=gV2pysJHVu9+TBY0LCjTYzC7/T1gWLROvTWe7WvK4oLKXvxVTDfrIomP5NJiz58pMSSVhM
-	YBfWIO1iC0/wbcPSu1jG+tN7EBgpJa4hMBzyNNO6MwIvXMC3TpybKR9m+mgjMvwApsQfvg
-	hCEjD7uaR2UIwG5HZi8Vj7DUMkKkn2o=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 87d86a37 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 28 May 2024 12:24:20 +0000 (UTC)
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	tglx@linutronix.de
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-	linux-crypto@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	x86@kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
-	Carlos O'Donell <carlos@redhat.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jann Horn <jannh@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Samuel Neves <sneves@dei.uc.pt>
-Subject: [PATCH v16 5/5] x86: vdso: Wire up getrandom() vDSO implementation
-Date: Tue, 28 May 2024 14:19:54 +0200
-Message-ID: <20240528122352.2485958-6-Jason@zx2c4.com>
-In-Reply-To: <20240528122352.2485958-1-Jason@zx2c4.com>
-References: <20240528122352.2485958-1-Jason@zx2c4.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PC402Fee"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5295bcb9bc1so875043e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 05:24:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716899069; x=1717503869; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Di6SdGB5s7pnaFriyI9w6u5jFLJd1Zjb6bS1MKEpNlQ=;
+        b=PC402FeelN46kFtmKdFxah+KIOZo8Wv4QOWCwdxXhHvBuNZca2UpKoiEOucqaeXym8
+         KwEHO0X4H3G2j50ckA6ogA1YpQ2QaX71GuoeckqZuVf5VvJsdRtKHQf6Xr0WfVB7s0wO
+         rnBYxcS1176q8aq8iQH9oiGmzJ4QN510yv7dbxEHyX8ATcIE/ZLMtxUdfPuImf5/uNSt
+         O/HlUQ2qkXEseqSL/h6a1U1jpVDyQSJR/jSqtd/entmRJY9+WrbXfgu6HLWUZqPUb9wX
+         tcGtEt7ZQ/o3XXYRWA6Yz9Hpl9ZmASYQQUci19YoMJIbCjhOHvpViv77Djt4Z5gVB+Mq
+         HCAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716899069; x=1717503869;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Di6SdGB5s7pnaFriyI9w6u5jFLJd1Zjb6bS1MKEpNlQ=;
+        b=BGDpBHGrvjeEBEItW3jYzRyZNcewqt7f8oVqVxN3A+gdMKCdOONK1oWKOmUKO+SyAJ
+         SLTLfCGpxixuZymrjVze+Skc/9Um0VCmy8CRbt2aRm3tnkY+2BtN+x0mnv6yUk8SrpIF
+         R5VseEjuMZSTyO/7LSymfAKFsGn7Mb0rnsn5133mxjaQV7ga1bxQImlVbwDukWEz6dyu
+         10oFoDIxtDQcdJkESeaXodIeTcG5/+gypGsi8SvmQXfXu6/UAoezjPjLJ5Kdiv71RMhi
+         NIKBEJ13dBN10fd/OZTXaHnd//7zuiPi9dOxvgELybkoP6s83tUl4sFWVmsfxQG0zvqe
+         45aA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuOWW/NIhhtIc6bZ1+5n9tsJfaTjKLRlDOyPvEqencz1exIDFtJC8XMecOODbw9APVWtf6SWU2JtOEEfexVEBd1Sz4Y+LCDjO9hNIb
+X-Gm-Message-State: AOJu0YzrTOaApyBv3qQLaGf4XdAPDfHwyE+HMDpN42lgFm6qrE+Zw53N
+	lXURZ9wOrr8rwyJynhZnQzGHwWg26T694vGiVeZMq1lvuzOJpMrgoOb2As/rOrw=
+X-Google-Smtp-Source: AGHT+IH25P3O1pwMX+tHbHDiDoML+rIJk2MHKjp6pdNOrYIDPRwvFXe6e2J1AJISL4DyC/Illc0BEw==
+X-Received: by 2002:ac2:5e73:0:b0:516:d219:3779 with SMTP id 2adb3069b0e04-52966e9b002mr6817353e87.58.1716899068704;
+        Tue, 28 May 2024 05:24:28 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52970d2a1f6sm942885e87.220.2024.05.28.05.24.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 05:24:28 -0700 (PDT)
+Date: Tue, 28 May 2024 15:24:26 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>
+Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
+	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
+	quic_chennak@quicinc.com
+Subject: Re: [PATCH v2 3/8] misc: fastrpc: Add support to save and restore
+Message-ID: <un4ofkcenwpkpj2jrasm6duty5ttlva333zqwiw5doabi7zhmu@gqgy5q7lrchk>
+References: <20240528112956.5979-1-quic_ekangupt@quicinc.com>
+ <20240528112956.5979-4-quic_ekangupt@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528112956.5979-4-quic_ekangupt@quicinc.com>
 
-Hook up the generic vDSO implementation to the x86 vDSO data page. Since
-the existing vDSO infrastructure is heavily based on the timekeeping
-functionality, which works over arrays of bases, a new macro is
-introduced for vvars that are not arrays.
+On Tue, May 28, 2024 at 04:59:49PM +0530, Ekansh Gupta wrote:
+> For any remote call, driver sends a message to DSP using RPMSG
+> framework. After message is sent, there is a wait on a completion
+> object at driver which is completed when DSP response is received.
+> 
+> There is a possibility that a signal is received while waiting
+> causing the wait function to return -ERESTARTSYS. In this case
+> the context should be saved and it should get restored for the
+> next invocation for the thread.
 
-The vDSO function requires a ChaCha20 implementation that does not write
-to the stack, yet can still do an entire ChaCha20 permutation, so
-provide this using SSE2, since this is userland code that must work on
-all x86-64 processors. There's a simple test for this code as well.
+Usually a reaction to ERESTARTSYS should be to cancel current task and
+return control to userspace, so that it is actually possible to kill the
+userspace. Is this the case for FastRPC?
 
-Reviewed-by: Samuel Neves <sneves@dei.uc.pt> # for vgetrandom-chacha.S
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- arch/x86/Kconfig                              |   1 +
- arch/x86/entry/vdso/Makefile                  |   3 +-
- arch/x86/entry/vdso/vdso.lds.S                |   2 +
- arch/x86/entry/vdso/vgetrandom-chacha.S       | 178 ++++++++++++++++++
- arch/x86/entry/vdso/vgetrandom.c              |  17 ++
- arch/x86/include/asm/vdso/getrandom.h         |  55 ++++++
- arch/x86/include/asm/vdso/vsyscall.h          |   2 +
- arch/x86/include/asm/vvar.h                   |  16 ++
- tools/testing/selftests/vDSO/.gitignore       |   1 +
- tools/testing/selftests/vDSO/Makefile         |   9 +
- .../testing/selftests/vDSO/vdso_test_chacha.c |  43 +++++
- 11 files changed, 326 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/entry/vdso/vgetrandom-chacha.S
- create mode 100644 arch/x86/entry/vdso/vgetrandom.c
- create mode 100644 arch/x86/include/asm/vdso/getrandom.h
- create mode 100644 tools/testing/selftests/vDSO/vdso_test_chacha.c
+> 
+> Adding changes to support saving and restoring of interrupted
+> fastrpc contexts.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 671bc6fd557c..94feb2db64c8 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -286,6 +286,7 @@ config X86
- 	select HAVE_UNSTABLE_SCHED_CLOCK
- 	select HAVE_USER_RETURN_NOTIFIER
- 	select HAVE_GENERIC_VDSO
-+	select VDSO_GETRANDOM			if X86_64
- 	select HOTPLUG_PARALLEL			if SMP && X86_64
- 	select HOTPLUG_SMT			if SMP
- 	select HOTPLUG_SPLIT_STARTUP		if SMP && X86_32
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 215a1b202a91..c9216ac4fb1e 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -7,7 +7,7 @@
- include $(srctree)/lib/vdso/Makefile
- 
- # Files to link into the vDSO:
--vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
-+vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o vgetrandom.o vgetrandom-chacha.o
- vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
- vobjs32-y += vdso32/vclock_gettime.o vdso32/vgetcpu.o
- vobjs-$(CONFIG_X86_SGX)	+= vsgx.o
-@@ -73,6 +73,7 @@ CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
- CFLAGS_REMOVE_vgetcpu.o = -pg
- CFLAGS_REMOVE_vdso32/vgetcpu.o = -pg
- CFLAGS_REMOVE_vsgx.o = -pg
-+CFLAGS_REMOVE_vgetrandom.o = -pg
- 
- #
- # X32 processes use x32 vDSO to access 64bit kernel data.
-diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
-index e8c60ae7a7c8..0bab5f4af6d1 100644
---- a/arch/x86/entry/vdso/vdso.lds.S
-+++ b/arch/x86/entry/vdso/vdso.lds.S
-@@ -30,6 +30,8 @@ VERSION {
- #ifdef CONFIG_X86_SGX
- 		__vdso_sgx_enter_enclave;
- #endif
-+		getrandom;
-+		__vdso_getrandom;
- 	local: *;
- 	};
- }
-diff --git a/arch/x86/entry/vdso/vgetrandom-chacha.S b/arch/x86/entry/vdso/vgetrandom-chacha.S
-new file mode 100644
-index 000000000000..d79e2bd97598
---- /dev/null
-+++ b/arch/x86/entry/vdso/vgetrandom-chacha.S
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2022 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+
-+#include <linux/linkage.h>
-+#include <asm/frame.h>
-+
-+.section	.rodata, "a"
-+.align 16
-+CONSTANTS:	.octa 0x6b20657479622d323320646e61707865
-+.text
-+
-+/*
-+ * Very basic SSE2 implementation of ChaCha20. Produces a given positive number
-+ * of blocks of output with a nonce of 0, taking an input key and 8-byte
-+ * counter. Importantly does not spill to the stack. Its arguments are:
-+ *
-+ *	rdi: output bytes
-+ *	rsi: 32-byte key input
-+ *	rdx: 8-byte counter input/output
-+ *	rcx: number of 64-byte blocks to write to output
-+ */
-+SYM_FUNC_START(__arch_chacha20_blocks_nostack)
-+
-+.set	output,		%rdi
-+.set	key,		%rsi
-+.set	counter,	%rdx
-+.set	nblocks,	%rcx
-+.set	i,		%al
-+/* xmm registers are *not* callee-save. */
-+.set	state0,		%xmm0
-+.set	state1,		%xmm1
-+.set	state2,		%xmm2
-+.set	state3,		%xmm3
-+.set	copy0,		%xmm4
-+.set	copy1,		%xmm5
-+.set	copy2,		%xmm6
-+.set	copy3,		%xmm7
-+.set	temp,		%xmm8
-+.set	one,		%xmm9
-+
-+	/* copy0 = "expand 32-byte k" */
-+	movaps		CONSTANTS(%rip),copy0
-+	/* copy1,copy2 = key */
-+	movups		0x00(key),copy1
-+	movups		0x10(key),copy2
-+	/* copy3 = counter || zero nonce */
-+	movq		0x00(counter),copy3
-+	/* one = 1 || 0 */
-+	movq		$1,%rax
-+	movq		%rax,one
-+
-+.Lblock:
-+	/* state0,state1,state2,state3 = copy0,copy1,copy2,copy3 */
-+	movdqa		copy0,state0
-+	movdqa		copy1,state1
-+	movdqa		copy2,state2
-+	movdqa		copy3,state3
-+
-+	movb		$10,i
-+.Lpermute:
-+	/* state0 += state1, state3 = rotl32(state3 ^ state0, 16) */
-+	paddd		state1,state0
-+	pxor		state0,state3
-+	movdqa		state3,temp
-+	pslld		$16,temp
-+	psrld		$16,state3
-+	por		temp,state3
-+
-+	/* state2 += state3, state1 = rotl32(state1 ^ state2, 12) */
-+	paddd		state3,state2
-+	pxor		state2,state1
-+	movdqa		state1,temp
-+	pslld		$12,temp
-+	psrld		$20,state1
-+	por		temp,state1
-+
-+	/* state0 += state1, state3 = rotl32(state3 ^ state0, 8) */
-+	paddd		state1,state0
-+	pxor		state0,state3
-+	movdqa		state3,temp
-+	pslld		$8,temp
-+	psrld		$24,state3
-+	por		temp,state3
-+
-+	/* state2 += state3, state1 = rotl32(state1 ^ state2, 7) */
-+	paddd		state3,state2
-+	pxor		state2,state1
-+	movdqa		state1,temp
-+	pslld		$7,temp
-+	psrld		$25,state1
-+	por		temp,state1
-+
-+	/* state1[0,1,2,3] = state1[1,2,3,0] */
-+	pshufd		$0x39,state1,state1
-+	/* state2[0,1,2,3] = state2[2,3,0,1] */
-+	pshufd		$0x4e,state2,state2
-+	/* state3[0,1,2,3] = state3[3,0,1,2] */
-+	pshufd		$0x93,state3,state3
-+
-+	/* state0 += state1, state3 = rotl32(state3 ^ state0, 16) */
-+	paddd		state1,state0
-+	pxor		state0,state3
-+	movdqa		state3,temp
-+	pslld		$16,temp
-+	psrld		$16,state3
-+	por		temp,state3
-+
-+	/* state2 += state3, state1 = rotl32(state1 ^ state2, 12) */
-+	paddd		state3,state2
-+	pxor		state2,state1
-+	movdqa		state1,temp
-+	pslld		$12,temp
-+	psrld		$20,state1
-+	por		temp,state1
-+
-+	/* state0 += state1, state3 = rotl32(state3 ^ state0, 8) */
-+	paddd		state1,state0
-+	pxor		state0,state3
-+	movdqa		state3,temp
-+	pslld		$8,temp
-+	psrld		$24,state3
-+	por		temp,state3
-+
-+	/* state2 += state3, state1 = rotl32(state1 ^ state2, 7) */
-+	paddd		state3,state2
-+	pxor		state2,state1
-+	movdqa		state1,temp
-+	pslld		$7,temp
-+	psrld		$25,state1
-+	por		temp,state1
-+
-+	/* state1[0,1,2,3] = state1[3,0,1,2] */
-+	pshufd		$0x93,state1,state1
-+	/* state2[0,1,2,3] = state2[2,3,0,1] */
-+	pshufd		$0x4e,state2,state2
-+	/* state3[0,1,2,3] = state3[1,2,3,0] */
-+	pshufd		$0x39,state3,state3
-+
-+	decb		i
-+	jnz		.Lpermute
-+
-+	/* output0 = state0 + copy0 */
-+	paddd		copy0,state0
-+	movups		state0,0x00(output)
-+	/* output1 = state1 + copy1 */
-+	paddd		copy1,state1
-+	movups		state1,0x10(output)
-+	/* output2 = state2 + copy2 */
-+	paddd		copy2,state2
-+	movups		state2,0x20(output)
-+	/* output3 = state3 + copy3 */
-+	paddd		copy3,state3
-+	movups		state3,0x30(output)
-+
-+	/* ++copy3.counter */
-+	paddq		one,copy3
-+
-+	/* output += 64, --nblocks */
-+	addq		$64,output
-+	decq		nblocks
-+	jnz		.Lblock
-+
-+	/* counter = copy3.counter */
-+	movq		copy3,0x00(counter)
-+
-+	/* Zero out the potentially sensitive regs, in case nothing uses these again. */
-+	pxor		state0,state0
-+	pxor		state1,state1
-+	pxor		state2,state2
-+	pxor		state3,state3
-+	pxor		copy1,copy1
-+	pxor		copy2,copy2
-+	pxor		temp,temp
-+
-+	ret
-+SYM_FUNC_END(__arch_chacha20_blocks_nostack)
-diff --git a/arch/x86/entry/vdso/vgetrandom.c b/arch/x86/entry/vdso/vgetrandom.c
-new file mode 100644
-index 000000000000..6045ded5da90
---- /dev/null
-+++ b/arch/x86/entry/vdso/vgetrandom.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2022 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+#include <linux/types.h>
-+
-+#include "../../../../lib/vdso/getrandom.c"
-+
-+ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags, void *state);
-+
-+ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags, void *state)
-+{
-+	return __cvdso_getrandom(buffer, len, flags, state);
-+}
-+
-+ssize_t getrandom(void *, size_t, unsigned int, void *)
-+	__attribute__((weak, alias("__vdso_getrandom")));
-diff --git a/arch/x86/include/asm/vdso/getrandom.h b/arch/x86/include/asm/vdso/getrandom.h
-new file mode 100644
-index 000000000000..46f99d735ae6
---- /dev/null
-+++ b/arch/x86/include/asm/vdso/getrandom.h
-@@ -0,0 +1,55 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2022 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+#ifndef __ASM_VDSO_GETRANDOM_H
-+#define __ASM_VDSO_GETRANDOM_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <asm/unistd.h>
-+#include <asm/vvar.h>
-+
-+/**
-+ * getrandom_syscall - Invoke the getrandom() syscall.
-+ * @buffer:	Destination buffer to fill with random bytes.
-+ * @len:	Size of @buffer in bytes.
-+ * @flags:	Zero or more GRND_* flags.
-+ * Returns the number of random bytes written to @buffer, or a negative value indicating an error.
-+ */
-+static __always_inline ssize_t getrandom_syscall(void *buffer, size_t len, unsigned int flags)
-+{
-+	long ret;
-+
-+	asm ("syscall" : "=a" (ret) :
-+	     "0" (__NR_getrandom), "D" (buffer), "S" (len), "d" (flags) :
-+	     "rcx", "r11", "memory");
-+
-+	return ret;
-+}
-+
-+#define __vdso_rng_data (VVAR(_vdso_rng_data))
-+
-+static __always_inline const struct vdso_rng_data *__arch_get_vdso_rng_data(void)
-+{
-+	if (__vdso_data->clock_mode == VDSO_CLOCKMODE_TIMENS)
-+		return (void *)&__vdso_rng_data + ((void *)&__timens_vdso_data - (void *)&__vdso_data);
-+	return &__vdso_rng_data;
-+}
-+
-+/**
-+ * __arch_chacha20_blocks_nostack - Generate ChaCha20 stream without using the stack.
-+ * @dst_bytes:	Destination buffer to hold @nblocks * 64 bytes of output.
-+ * @key:	32-byte input key.
-+ * @counter:	8-byte counter, read on input and updated on return.
-+ * @nblocks:	Number of blocks to generate.
-+ *
-+ * Generates a given positive number of blocks of ChaCha20 output with nonce=0, and does not write
-+ * to any stack or memory outside of the parameters passed to it, in order to mitigate stack data
-+ * leaking into forked child processes.
-+ */
-+extern void __arch_chacha20_blocks_nostack(u8 *dst_bytes, const u32 *key, u32 *counter, size_t nblocks);
-+
-+#endif /* !__ASSEMBLY__ */
-+
-+#endif /* __ASM_VDSO_GETRANDOM_H */
-diff --git a/arch/x86/include/asm/vdso/vsyscall.h b/arch/x86/include/asm/vdso/vsyscall.h
-index be199a9b2676..71c56586a22f 100644
---- a/arch/x86/include/asm/vdso/vsyscall.h
-+++ b/arch/x86/include/asm/vdso/vsyscall.h
-@@ -11,6 +11,8 @@
- #include <asm/vvar.h>
- 
- DEFINE_VVAR(struct vdso_data, _vdso_data);
-+DEFINE_VVAR_SINGLE(struct vdso_rng_data, _vdso_rng_data);
-+
- /*
-  * Update the vDSO data page to keep in sync with kernel timekeeping.
-  */
-diff --git a/arch/x86/include/asm/vvar.h b/arch/x86/include/asm/vvar.h
-index 183e98e49ab9..9d9af37f7cab 100644
---- a/arch/x86/include/asm/vvar.h
-+++ b/arch/x86/include/asm/vvar.h
-@@ -26,6 +26,8 @@
-  */
- #define DECLARE_VVAR(offset, type, name) \
- 	EMIT_VVAR(name, offset)
-+#define DECLARE_VVAR_SINGLE(offset, type, name) \
-+	EMIT_VVAR(name, offset)
- 
- #else
- 
-@@ -37,6 +39,10 @@ extern char __vvar_page;
- 	extern type timens_ ## name[CS_BASES]				\
- 	__attribute__((visibility("hidden")));				\
- 
-+#define DECLARE_VVAR_SINGLE(offset, type, name)				\
-+	extern type vvar_ ## name					\
-+	__attribute__((visibility("hidden")));				\
-+
- #define VVAR(name) (vvar_ ## name)
- #define TIMENS(name) (timens_ ## name)
- 
-@@ -44,12 +50,22 @@ extern char __vvar_page;
- 	type name[CS_BASES]						\
- 	__attribute__((section(".vvar_" #name), aligned(16))) __visible
- 
-+#define DEFINE_VVAR_SINGLE(type, name)					\
-+	type name							\
-+	__attribute__((section(".vvar_" #name), aligned(16))) __visible
-+
- #endif
- 
- /* DECLARE_VVAR(offset, type, name) */
- 
- DECLARE_VVAR(128, struct vdso_data, _vdso_data)
- 
-+#if !defined(_SINGLE_DATA)
-+#define _SINGLE_DATA
-+DECLARE_VVAR_SINGLE(640, struct vdso_rng_data, _vdso_rng_data)
-+#endif
-+
- #undef DECLARE_VVAR
-+#undef DECLARE_VVAR_SINGLE
- 
- #endif
-diff --git a/tools/testing/selftests/vDSO/.gitignore b/tools/testing/selftests/vDSO/.gitignore
-index 7dbfdec53f3d..30d5c8f0e5c7 100644
---- a/tools/testing/selftests/vDSO/.gitignore
-+++ b/tools/testing/selftests/vDSO/.gitignore
-@@ -7,3 +7,4 @@ vdso_test_gettimeofday
- vdso_test_getcpu
- vdso_standalone_test_x86
- vdso_test_getrandom
-+vdso_test_chacha
-diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
-index a33b4d200a32..54a015afe60c 100644
---- a/tools/testing/selftests/vDSO/Makefile
-+++ b/tools/testing/selftests/vDSO/Makefile
-@@ -3,6 +3,7 @@ include ../lib.mk
- 
- uname_M := $(shell uname -m 2>/dev/null || echo not)
- ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
-+SODIUM := $(shell pkg-config --libs libsodium 2>/dev/null)
- 
- TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday $(OUTPUT)/vdso_test_getcpu
- TEST_GEN_PROGS += $(OUTPUT)/vdso_test_abi
-@@ -12,9 +13,15 @@ TEST_GEN_PROGS += $(OUTPUT)/vdso_standalone_test_x86
- endif
- TEST_GEN_PROGS += $(OUTPUT)/vdso_test_correctness
- TEST_GEN_PROGS += $(OUTPUT)/vdso_test_getrandom
-+ifeq ($(uname_M),x86_64)
-+ifneq ($(SODIUM),)
-+TEST_GEN_PROGS += $(OUTPUT)/vdso_test_chacha
-+endif
-+endif
- 
- CFLAGS := -std=gnu99
- CFLAGS_vdso_standalone_test_x86 := -nostdlib -fno-asynchronous-unwind-tables -fno-stack-protector
-+CFLAGS_vdso_test_chacha := $(SODIUM) -idirafter $(top_srcdir)/include -idirafter $(top_srcdir)/arch/$(ARCH)/include -D__ASSEMBLY__ -DBULID_VDSO -DCONFIG_FUNCTION_ALIGNMENT=0 -Wa,--noexecstack
- LDFLAGS_vdso_test_correctness := -ldl
- ifeq ($(CONFIG_X86_32),y)
- LDLIBS += -lgcc_s
-@@ -35,3 +42,5 @@ $(OUTPUT)/vdso_test_correctness: vdso_test_correctness.c
- 		-o $@ \
- 		$(LDFLAGS_vdso_test_correctness)
- $(OUTPUT)/vdso_test_getrandom: parse_vdso.c
-+$(OUTPUT)/vdso_test_chacha: CFLAGS += $(CFLAGS_vdso_test_chacha)
-+$(OUTPUT)/vdso_test_chacha: $(top_srcdir)/arch/$(ARCH)/entry/vdso/vgetrandom-chacha.S
-diff --git a/tools/testing/selftests/vDSO/vdso_test_chacha.c b/tools/testing/selftests/vDSO/vdso_test_chacha.c
-new file mode 100644
-index 000000000000..bce7a7752b11
---- /dev/null
-+++ b/tools/testing/selftests/vDSO/vdso_test_chacha.c
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2022 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+
-+#include <sodium/crypto_stream_chacha20.h>
-+#include <sys/random.h>
-+#include <string.h>
-+#include <stdint.h>
-+#include "../kselftest.h"
-+
-+extern void __arch_chacha20_blocks_nostack(uint8_t *dst_bytes, const uint8_t *key, uint32_t *counter, size_t nblocks);
-+
-+int main(int argc, char *argv[])
-+{
-+	enum { TRIALS = 1000, BLOCKS = 128, BLOCK_SIZE = 64 };
-+	static const uint8_t nonce[8] = { 0 };
-+	uint32_t counter[2];
-+	uint8_t key[32];
-+	uint8_t output1[BLOCK_SIZE * BLOCKS], output2[BLOCK_SIZE * BLOCKS];
-+
-+	ksft_print_header();
-+	ksft_set_plan(1);
-+
-+	for (unsigned int trial = 0; trial < TRIALS; ++trial) {
-+		if (getrandom(key, sizeof(key), 0) != sizeof(key)) {
-+			printf("getrandom() failed!\n");
-+			return KSFT_SKIP;
-+		}
-+		crypto_stream_chacha20(output1, sizeof(output1), nonce, key);
-+		for (unsigned int split = 0; split < BLOCKS; ++split) {
-+			memset(output2, 'X', sizeof(output2));
-+			memset(counter, 0, sizeof(counter));
-+			if (split)
-+				__arch_chacha20_blocks_nostack(output2, key, counter, split);
-+			__arch_chacha20_blocks_nostack(output2 + split * BLOCK_SIZE, key, counter, BLOCKS - split);
-+			if (memcmp(output1, output2, sizeof(output1)))
-+				return KSFT_FAIL;
-+		}
-+	}
-+	ksft_test_result_pass("chacha: PASS\n");
-+	return KSFT_PASS;
-+}
+Please see Documentation/process/submitting-patches.rst for a suggested
+language.
+
+> 
+> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+> ---
+>  drivers/misc/fastrpc.c | 105 +++++++++++++++++++++++++++--------------
+>  1 file changed, 69 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> index 3e1ab58038ed..6556c63c4ad7 100644
+> --- a/drivers/misc/fastrpc.c
+> +++ b/drivers/misc/fastrpc.c
+> @@ -241,7 +241,6 @@ struct fastrpc_invoke_ctx {
+>  	struct kref refcount;
+>  	struct list_head node; /* list of ctxs */
+>  	struct completion work;
+> -	struct work_struct put_work;
+>  	struct fastrpc_msg msg;
+>  	struct fastrpc_user *fl;
+>  	union fastrpc_remote_arg *rpra;
+> @@ -276,7 +275,6 @@ struct fastrpc_channel_ctx {
+>  	struct fastrpc_device *secure_fdevice;
+>  	struct fastrpc_device *fdevice;
+>  	struct fastrpc_buf *remote_heap;
+> -	struct list_head invoke_interrupted_mmaps;
+>  	bool secure;
+>  	bool unsigned_support;
+>  	u64 dma_mask;
+> @@ -292,6 +290,7 @@ struct fastrpc_user {
+>  	struct list_head user;
+>  	struct list_head maps;
+>  	struct list_head pending;
+> +	struct list_head interrupted;
+>  	struct list_head mmaps;
+>  
+>  	struct fastrpc_channel_ctx *cctx;
+> @@ -513,14 +512,6 @@ static void fastrpc_context_put(struct fastrpc_invoke_ctx *ctx)
+>  	kref_put(&ctx->refcount, fastrpc_context_free);
+>  }
+>  
+> -static void fastrpc_context_put_wq(struct work_struct *work)
+> -{
+> -	struct fastrpc_invoke_ctx *ctx =
+> -			container_of(work, struct fastrpc_invoke_ctx, put_work);
+> -
+> -	fastrpc_context_put(ctx);
+> -}
+> -
+>  #define CMP(aa, bb) ((aa) == (bb) ? 0 : (aa) < (bb) ? -1 : 1)
+>  static int olaps_cmp(const void *a, const void *b)
+>  {
+> @@ -616,7 +607,6 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
+>  	ctx->tgid = user->tgid;
+>  	ctx->cctx = cctx;
+>  	init_completion(&ctx->work);
+> -	INIT_WORK(&ctx->put_work, fastrpc_context_put_wq);
+>  
+>  	spin_lock(&user->lock);
+>  	list_add_tail(&ctx->node, &user->pending);
+> @@ -647,6 +637,40 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
+>  	return ERR_PTR(ret);
+>  }
+>  
+> +static struct fastrpc_invoke_ctx *fastrpc_context_restore_interrupted(
+> +			struct fastrpc_user *fl, u32 sc)
+
+The naming looks misleading. Context is usually some side data which
+needs to be saved and restored, while you instead are moving the
+context between lists.
+
+> +{
+> +	struct fastrpc_invoke_ctx *ctx = NULL, *ictx = NULL, *n;
+> +
+> +	spin_lock(&fl->lock);
+> +	list_for_each_entry_safe(ictx, n, &fl->interrupted, node) {
+> +		if (ictx->pid == current->pid) {
+> +			if (sc != ictx->sc || ictx->fl != fl) {
+> +				dev_err(ictx->fl->sctx->dev,
+> +					"interrupted sc (0x%x) or fl (%pK) does not match with invoke sc (0x%x) or fl (%pK)\n",
+> +					ictx->sc, ictx->fl, sc, fl);
+> +				spin_unlock(&fl->lock);
+> +				return ERR_PTR(-EINVAL);
+> +			}
+> +			ctx = ictx;
+> +			list_del(&ctx->node);
+> +			list_add_tail(&ctx->node, &fl->pending);
+> +			break;
+> +		}
+> +	}
+> +	spin_unlock(&fl->lock);
+> +	return ctx;
+> +}
+> +
+> +static void fastrpc_context_save_interrupted(
+> +			struct fastrpc_invoke_ctx *ctx)
+> +{
+> +	spin_lock(&ctx->fl->lock);
+> +	list_del(&ctx->node);
+> +	list_add_tail(&ctx->node, &ctx->fl->interrupted);
+> +	spin_unlock(&ctx->fl->lock);
+> +}
+> +
+>  static struct sg_table *
+>  fastrpc_map_dma_buf(struct dma_buf_attachment *attachment,
+>  		    enum dma_data_direction dir)
+> @@ -1138,7 +1162,6 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+>  				   struct fastrpc_invoke_args *args)
+>  {
+>  	struct fastrpc_invoke_ctx *ctx = NULL;
+> -	struct fastrpc_buf *buf, *b;
+>  
+>  	int err = 0;
+>  
+> @@ -1153,6 +1176,14 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+>  		return -EPERM;
+>  	}
+>  
+> +	if (!kernel) {
+> +		ctx = fastrpc_context_restore_interrupted(fl, sc);
+> +		if (IS_ERR(ctx))
+> +			return PTR_ERR(ctx);
+> +		if (ctx)
+> +			goto wait;
+> +	}
+> +
+>  	ctx = fastrpc_context_alloc(fl, kernel, sc, args);
+>  	if (IS_ERR(ctx))
+>  		return PTR_ERR(ctx);
+> @@ -1168,6 +1199,7 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+>  	if (err)
+>  		goto bail;
+>  
+> +wait:
+>  	if (kernel) {
+>  		if (!wait_for_completion_timeout(&ctx->work, 10 * HZ))
+>  			err = -ETIMEDOUT;
+> @@ -1191,7 +1223,9 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+>  		goto bail;
+>  
+>  bail:
+> -	if (err != -ERESTARTSYS && err != -ETIMEDOUT) {
+> +	if (ctx && err == -ERESTARTSYS) {
+> +		fastrpc_context_save_interrupted(ctx);
+> +	} else if (ctx) {
+>  		/* We are done with this compute context */
+>  		spin_lock(&fl->lock);
+>  		list_del(&ctx->node);
+> @@ -1199,13 +1233,6 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+>  		fastrpc_context_put(ctx);
+>  	}
+>  
+> -	if (err == -ERESTARTSYS) {
+> -		list_for_each_entry_safe(buf, b, &fl->mmaps, node) {
+> -			list_del(&buf->node);
+> -			list_add_tail(&buf->node, &fl->cctx->invoke_interrupted_mmaps);
+> -		}
+> -	}
+> -
+>  	if (err)
+>  		dev_dbg(fl->sctx->dev, "Error: Invoke Failed %d\n", err);
+>  
+> @@ -1496,6 +1523,25 @@ static void fastrpc_session_free(struct fastrpc_channel_ctx *cctx,
+>  	spin_unlock_irqrestore(&cctx->lock, flags);
+>  }
+>  
+> +static void fastrpc_context_list_free(struct fastrpc_user *fl)
+> +{
+> +	struct fastrpc_invoke_ctx *ctx, *n;
+> +
+> +	list_for_each_entry_safe(ctx, n, &fl->interrupted, node) {
+> +		spin_lock(&fl->lock);
+> +		list_del(&ctx->node);
+> +		spin_unlock(&fl->lock);
+> +		fastrpc_context_put(ctx);
+> +	}
+> +
+> +	list_for_each_entry_safe(ctx, n, &fl->pending, node) {
+> +		spin_lock(&fl->lock);
+> +		list_del(&ctx->node);
+> +		spin_unlock(&fl->lock);
+> +		fastrpc_context_put(ctx);
+> +	}
+> +}
+> +
+>  static int fastrpc_release_current_dsp_process(struct fastrpc_user *fl)
+>  {
+>  	struct fastrpc_invoke_args args[1];
+> @@ -1516,7 +1562,6 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
+>  {
+>  	struct fastrpc_user *fl = (struct fastrpc_user *)file->private_data;
+>  	struct fastrpc_channel_ctx *cctx = fl->cctx;
+> -	struct fastrpc_invoke_ctx *ctx, *n;
+>  	struct fastrpc_map *map, *m;
+>  	struct fastrpc_buf *buf, *b;
+>  	unsigned long flags;
+> @@ -1530,10 +1575,7 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
+>  	if (fl->init_mem)
+>  		fastrpc_buf_free(fl->init_mem);
+>  
+> -	list_for_each_entry_safe(ctx, n, &fl->pending, node) {
+> -		list_del(&ctx->node);
+> -		fastrpc_context_put(ctx);
+> -	}
+> +	fastrpc_context_list_free(fl);
+>  
+>  	list_for_each_entry_safe(map, m, &fl->maps, node)
+>  		fastrpc_map_put(map);
+> @@ -1574,6 +1616,7 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
+>  	spin_lock_init(&fl->lock);
+>  	mutex_init(&fl->mutex);
+>  	INIT_LIST_HEAD(&fl->pending);
+> +	INIT_LIST_HEAD(&fl->interrupted);
+>  	INIT_LIST_HEAD(&fl->maps);
+>  	INIT_LIST_HEAD(&fl->mmaps);
+>  	INIT_LIST_HEAD(&fl->user);
+> @@ -2332,7 +2375,6 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>  	rdev->dma_mask = &data->dma_mask;
+>  	dma_set_mask_and_coherent(rdev, DMA_BIT_MASK(32));
+>  	INIT_LIST_HEAD(&data->users);
+> -	INIT_LIST_HEAD(&data->invoke_interrupted_mmaps);
+>  	spin_lock_init(&data->lock);
+>  	idr_init(&data->ctx_idr);
+>  	data->domain_id = domain_id;
+> @@ -2370,7 +2412,6 @@ static void fastrpc_notify_users(struct fastrpc_user *user)
+>  static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+>  {
+>  	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
+> -	struct fastrpc_buf *buf, *b;
+>  	struct fastrpc_user *user;
+>  	unsigned long flags;
+>  
+> @@ -2387,9 +2428,6 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+>  	if (cctx->secure_fdevice)
+>  		misc_deregister(&cctx->secure_fdevice->miscdev);
+>  
+> -	list_for_each_entry_safe(buf, b, &cctx->invoke_interrupted_mmaps, node)
+> -		list_del(&buf->node);
+> -
+>  	if (cctx->remote_heap)
+>  		fastrpc_buf_free(cctx->remote_heap);
+>  
+> @@ -2424,12 +2462,7 @@ static int fastrpc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
+>  	ctx->retval = rsp->retval;
+>  	complete(&ctx->work);
+>  
+> -	/*
+> -	 * The DMA buffer associated with the context cannot be freed in
+> -	 * interrupt context so schedule it through a worker thread to
+> -	 * avoid a kernel BUG.
+> -	 */
+> -	schedule_work(&ctx->put_work);
+> +	fastrpc_context_put(ctx);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.43.0
+> 
+
 -- 
-2.44.0
-
+With best wishes
+Dmitry
