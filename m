@@ -1,107 +1,76 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C1613AA32
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B0873441;
+	Tue, 28 May 2024 08:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716884385; cv=none; b=C4n8M9mh7x2yDYLizNff3uf7kZqvLcDQ9X+ZNTg/0b3WIu5+EPsQHT8FzK3IOaiPZZ4FN9IzjHcpPLHSPxaZb0x509t05SMLSZC7l69UU27J6uuGPQon42g9MIqjTdWhgBNctzYJrMBUzbUXySTGOH+9qXbUzlVGg0k3HM8ipz8=
+	t=1716884428; cv=none; b=MRq4bDo2Jv/XYbrXLXKTl27dG7OkFZh819CccitKel6yR4KPy5Tm74DmBQ8g4tPojGgZgp3nHNd58Eek6/y2tC5AbnQYutJu5jXSDHtde0Duvk6wTcTQ82eCAz5FDp8/lG/YdYOMkN9/jmrfws//Vpa3rzk9l5Poa1XLi6ZiNpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716884385; c=relaxed/simple;
-	bh=APKFV9eb2v+VaT8bLUdlycdrBfJ2rlkBUd7qW2g0UHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XCHgS6ZOwbDaVElNzFTNUTip2r2IwU7iXLaX60kL3p2DyiAGybo40I5RwWb7r9RPIC4HqDbe/ZIMyDNeFVgWTKrsbshMuoW1GcI27rt4PgcPV9VRkB4HvSP50ValA8n2PKNLAwLVow8UIBU5rwz3w3IpcDsCsBkgaez+bLxL3js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ISvD7liY; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716884428; c=relaxed/simple;
+	bh=ef2GWcgmaUf0AdMfddAKzFxmIGHc4piX3DIDo9nhUc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZsgnG+Nr52vLQ8fTkrAYwzkieikBCg+Jy6YbXS9KdQDbemP939onNCNdY+tdzTzHb0igFddxm8WBN0my9FCuGAJPxbqU4uVPY5sCD1dAym6zcYco8rAso3QoKjwn08U1c9WgsH9C5eUUXT0yF5Dd1GXYU6tiMSeM4YAxdB3Wik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLomtxRc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ISvD7liY"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6ab9ce64683so3410176d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 01:19:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716884383; x=1717489183; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=APKFV9eb2v+VaT8bLUdlycdrBfJ2rlkBUd7qW2g0UHk=;
-        b=ISvD7liYK1sLfzoTUpCqHA+K/e2a9dfp8hMeBD/sByy7tzypcXcD9vov3UIhnInSSN
-         z2PzxiLcOCspIsSqASDG59X6x8JCyVBatdgPYkUzIxsabctzw8UA2pH2HolEAzwFdraC
-         NZWwkirqlxr8nyPY3iejFeN8N4d2zASwpuUqHxY4PGzzA4ROG7YdZYVJ7MccGWcmGnnD
-         lvkMt/y90mdCpQ12Yi1AlZe0vNvNwFim8B7JPwB4v9Y4r9AdJsY+0VBuEkQWv59vpr/e
-         1L2UeYxklQ1LZsOYqsHutTY+XI+kD/P77psBapIMa91iBY7U716xFGEXMFM058GKcM0p
-         UB3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716884383; x=1717489183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=APKFV9eb2v+VaT8bLUdlycdrBfJ2rlkBUd7qW2g0UHk=;
-        b=SsQLijwq6Md7Qrox2b3LovclcuCa6GUYKYt0CL7h8Ie0qMQylJzZrzBmY6ccqyx/Cu
-         67lgihf3DwZ889yNnvCeoYo9gVAPMMu3WwmYf53LDOFs8QZV/WvSiJ4Vc9F+NbFjoJI2
-         FP9ssVC7OElMpQHECBcXTwu/hVWIVJo1DDnticqCMn47F6oi359JjfIcZTGZOKGdGzgH
-         Qq7y4MGI71fpudi83imm7p+4H1t5DcmLLM3UKsROVsdT7PbE/RWaeUrw+7rkGjKgAYMo
-         4wW4Rkv+ge/KkI9XKwYU2FB0EPmxmD1q28c5h1ZMevys9f8LHwQrqzBB/v758U1Qg/v4
-         OY+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXPtpUtGTZA/2wPmHyaayqCQGRhdRgsB5N/5FMoaCFEq9kSvrhORvbLdpGOr2aRHwVL3aZlQSiXtfmlZX83Ybyjwz4A/vwsKEmGi102
-X-Gm-Message-State: AOJu0YwFDAsw8C7k872N+9qSoNxmQJXQMaXbOtT26HtxUoDY3NqodYvZ
-	n8E2pBsbN1H2WkgXHGyg2uG+VCm1//9PFx+L/dl7KNXnPC6wfGrnn7RobPRJGpPibd8ySoitvPa
-	b8QMzUpGAouEoeDVxGksVUTZ/k0oZT273Ilvj1B4EzF3l2STlbp/l
-X-Google-Smtp-Source: AGHT+IG9kXoWpuC4Ix7V4wPnSa5HxxGbI3O7kucQ+Z4K1uR5nDxN08cLZOYJo2Jd8QQ3aZOHyTkIGsHohuSwHfrZh+0=
-X-Received: by 2002:a0c:fe8e:0:b0:6ad:16a5:4842 with SMTP id
- 6a1803df08f44-6ad16a54a20mr114449566d6.15.1716884382871; Tue, 28 May 2024
- 01:19:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLomtxRc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94264C3277B;
+	Tue, 28 May 2024 08:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716884427;
+	bh=ef2GWcgmaUf0AdMfddAKzFxmIGHc4piX3DIDo9nhUc0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mLomtxRcgnHVYUBmz5vFSVIxsxx1PZp4qr26Wmz7Liw21xHXDkjzoB1HlL7xhW+be
+	 EbcV452bPfpBt3tb1DNoLXvSaCS79QpKlD7mZAJ73dayzbUgFh0mhIdMP+HFocJTE8
+	 J/1G+tULvUsHtvprZmNiuN9rvW4wShG+a34wfgp8YkXi0rpJ82OF+CHXMUbB6fzBgR
+	 aQk5nmm1cOXlcANGqqYN3JLLklGLKPYWt7dJhYHMviF5pEJBcTiDj/tp2IlXT1PMPA
+	 z2d6WpkNmVLMZVwm0AGxC3T5Z4QbpB/IQCmo0SkE2mWMEitf4PD/Ow8u5ZzGRFIa22
+	 oULuaZSQjSCpQ==
+Date: Tue, 28 May 2024 10:20:21 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
+References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+ <ZlMADupKkN0ITgG5@infradead.org>
+ <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
+ <ZlRy7EBaV04F2UaI@infradead.org>
+ <20240527133430.ifjo2kksoehtuwrn@quack3>
+ <ZlSzotIrVPGrC6vt@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0000000000009f9447061833d477@google.com> <jgtxdyooy6zyettrj53qi7s7z5fs5zpnwdjm7eqpihwo32lxzx@v2234ezsba4d>
- <CAG_fn=WmDCOXxAzaEJtDYuEY4b3Nq99Z7=1-tmwTx9Ox7BG0AA@mail.gmail.com>
-In-Reply-To: <CAG_fn=WmDCOXxAzaEJtDYuEY4b3Nq99Z7=1-tmwTx9Ox7BG0AA@mail.gmail.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 28 May 2024 10:19:02 +0200
-Message-ID: <CAG_fn=WZ=i2WLAVcLGhXkfm_9CouEf8v9PoLL-zJ0TJZZSXZ6Q@mail.gmail.com>
-Subject: Re: [syzbot] [bcachefs?] KMSAN: uninit-value in bch2_extent_update_i_size_sectors
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: syzbot <syzbot+eceea46e8838baeeba67@syzkaller.appspotmail.com>, 
-	bfoster@redhat.com, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZlSzotIrVPGrC6vt@infradead.org>
 
-On Thu, May 23, 2024 at 10:15=E2=80=AFAM Alexander Potapenko <glider@google=
-.com> wrote:
->
-> On Thu, May 23, 2024 at 1:49=E2=80=AFAM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> >
-> > This (and a few others I've looked at) look more likely to be bugs in
-> > KMSAN, not bcachefs.
->
-> Yeah, this is possible if we are missing some initialization.
->
-> >
-> > here, the supposedly uninitialized key was read in from disk, so the ke=
-y
-> > couldn't possibly have been legitimately marked uninitialized.
->
-> Am I right that the key is supposed to be initialized before the first
-> call of memcpy_u64s_small() (the _lower_ "Uninit was stored to memory
-> at:" stack trace)?
-> Do you have an idea what code performed the actual load of the data from =
-disk?
-> If that load was done by some assembly routine, we could've easily
-> missed that - in that case we'll need to annotate it to fix the false
-> positives.
+> Well, how about we fix the thing for real:
+> 
+>  - allow file systems to provide a uniqueu identifier of at least
+>    uuid size (16 bytes) in the superblock or through an export operation
+>  - for non-persistent file systems allow to generate one at boot time
+>    using the normal uuid generation helpers
+>  - add a new flag to name_to_handle_at/open_by_handle_at to include it
+>    in the file handle, and thus make the file handle work more like
+>    the normal file handle
+>  - add code to nfsd to directly make use of this
+> 
+> This would solve all the problems in this proposal as well as all the
+> obvious ones it doesn't solve.
 
-I thought the initialization here was done by constructing a `struct
-bio` in fs/bcachefs/btree_io.c and passing it to
-submit_bio()/submit_bio_wait(), but I couldn't see return values of
-btree_bounce_alloc() being used in bio_vec elements.
-Are there other places that perform disk I/O?
+As I've said multiple times on the thread I agree that this is what we
+should do next and I would be happy to take patches for this. But
+exposing the 64bit mount id doesn't impede or complicate that work. It's
+a simple and useful addition that can be done now and doesn't prevent us
+from doing the proposed work.
 
-We need something similar to kmsan_handle_dma()
-(https://elixir.bootlin.com/linux/latest/source/mm/kmsan/hooks.c#L328),
-but for block IO, so that data copied from the device can be marked as
-initialized.
+Hell, if you twist my arm I'll even write the patches for this.
