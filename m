@@ -1,159 +1,75 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE21016C840;
-	Tue, 28 May 2024 11:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF33B16C87C;
+	Tue, 28 May 2024 11:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716896161; cv=none; b=sBV+DNm89c5CsMu/UZBvOk9kwbueFO3HRm7rV817xu0BkNzCnCBBVu55btY1Rgq9cati+9Ooq3gPkkNxAt0Z3vRYOiKPWZFeqFIb1DGy2QSdN/LpcvlmvBe7JZiYiCHNnReF9s7ksdW1nWpAs9tPDWxsTuX+slO0kMtQytvJuaw=
+	t=1716896164; cv=none; b=fVKn/y43/Vp42jEmejAB8M7WxTzYbsB1sTN1acamIrvSW1nrJXsAPnCgjJllVVXXfd2M6vxUKRdhP7GyInZad42ZyfCP2pfHFzGsXynqfA7oVaCe6d31CIfgwozDLkn/d1cu053DJ5DdxJ45WLxGbvEXhvzRGNd00VA7tucegOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716896161; c=relaxed/simple;
-	bh=jFZXicEE6r2ZgbR45j79punfT8HXTNnMc7smmAivjRA=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=T96+OB4h9FrfN4m67zFff3hCiqI9+aI2eruBtOGAXnl4330WtAMfUamubHsvfLesI1e2iaBW0wOqwn5UZHzGjUFKBnRTFUouuyWPhPQGj6lIT7cNZWawLTOxbo/QO1zyBt5B5pEPjknjid9ugDxIB4rb82c3oWYzD9huxYdvPtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=hZ78wS4o; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LKdIValk; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1716896164; c=relaxed/simple;
+	bh=U9gFCkMWya+ry4Kiu+T18mTeq5AtTLdpRjpaXQOZEes=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=heGMoSMk+nHWntia7PAi4aB0KD8Qu9ZFpgjTeCswymLmcb0tbNg0O5V3TCkdAci9x4YsF/muY1L8gF1RHxnmMVBhtealelJod8kSeiJOsbQhuSysMQSq0JrJblce+WvzfL7Fzg3wykpvu59GQSEdNTbAW9VMZQI2cW8ZFAj54xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VW7XZVeg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="hZ78wS4o";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LKdIValk"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id B54BD1C00179;
-	Tue, 28 May 2024 07:35:57 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 28 May 2024 07:35:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1716896157; x=1716982557; bh=Ol7jO+/V1Y
-	fPpFVSV5jUah0yPkjfrGrX9WAAgHtbTLo=; b=hZ78wS4owIYvRnqNcJ9zGfh2iV
-	29FeERqf3tpc8bFg+119EFqupV4BcHaAixDPQ47HIBf8Va8r8u53824y7iiTbej1
-	MQ3Ke5XbklsNLFtST6f7l9RTYPqbHEMJDAnZMzX+kGBk2MB4d0k1z23r2WDbgVrg
-	UBwkOCAHYD6SFAULTM/yWP6U78j89HNt7iI/+Y7q2Ql1c161o27u5Yxhmp2v7ARr
-	sDFdO+96dQ225yu/Ii5e1lTtKoyOYwfIHiI0XWKmHqgqj+YGIYByqaYCNfpJ93lc
-	6ArP5tRztJw096mbCSMpnzOeYGRcjCLM7nqvtXrhnSd9twjdWIjJsh2HIgPg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1716896157; x=1716982557; bh=Ol7jO+/V1YfPpFVSV5jUah0yPkjf
-	rGrX9WAAgHtbTLo=; b=LKdIValkUX29uWFgX5KgpSQVm0yXzqOkReHvvYMzUm+9
-	ExhSup/6OzeBkUR5DXy+puro6xhfaLxUZNx5kvtYDBYfZpzZohrP2PCuNxR4ajSj
-	Yn8uN3xZrTiaHZTTbtcarB8EATSdnFlQDCsoDm9F4Q6C+GmHBQBddku2wu+j9mMz
-	80l4SOr4R47zcy1jIrfdPP5IZ0Nv7r+gELqY+vT8cpZr9xUny9sw+a4Kw2Lna5hZ
-	0u2zN6Hi/VqUTAC2yQ/YYLXNxm4kwQfPFOjMAtvV27r6StED/Snt/kUe/ZjuK49B
-	B6DnjNG/4ycIwMX+mgoY6uhuCE+OaoncVm8mviv19w==
-X-ME-Sender: <xms:ncFVZusps8MWQSH-dHY1h1l4dzkxCQLLuGf_MNovm0bEnohNg2dIew>
-    <xme:ncFVZjcXjAHp9BIQ7PIuZNTVMSHLHXqyTmQFaQ13zDAW4-2Xw4yw0zoKX84WoEr6p
-    YfNFIG9wDZPl0dlRwI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedgudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:ncFVZpyklZXOsQhzaV6ANYCsXeccqVs3Qr8cqaVu5DBISxWaL73cTg>
-    <xmx:ncFVZpOqTm-o2yGPweFMDRnQKihWkkr1yN13tbT-4E629rk7U107-g>
-    <xmx:ncFVZu92hgdGZ9Sd9pAnhRvscY6gMI_tRQAJXJpzKTU8NEIxHi0cYA>
-    <xmx:ncFVZhX6VWqtl6iOxPyjzhjQtS9-6ohJJZC8wITAuShIC0Pfs6PZow>
-    <xmx:ncFVZiaxhTGGmMouGpEhLsmQCUxA_yjYOeP91tCDt2Dcj3G1zmLeKALI>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 116C4B6008D; Tue, 28 May 2024 07:35:56 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VW7XZVeg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BADCDC32781;
+	Tue, 28 May 2024 11:36:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716896163;
+	bh=U9gFCkMWya+ry4Kiu+T18mTeq5AtTLdpRjpaXQOZEes=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VW7XZVegE8FtPMBbS75NLk8DYqs++BK4z91RrBoZR9Xu7fd2gDOrZ8olygjjXfqEV
+	 sxcNWBPYymECHRNz3We2E8ap3gjbikMQw1RdblIXZeW1M6D8Q7Bx+PTo6xqtS34Uxz
+	 hyk6GXMoFOtBU1GDEJcWLnPM4I4wNMxuH64+V2v2w6dO7hhZfjw2LpoLN1M24KNjr1
+	 kzhu+7wpluYL4eRLHNq+26YLOsm19KEo/wSSFK6ADmrGGxq/jn0dNnOVZf1T62VE2a
+	 CqJX2dbCBLwARc8HaamWR6iLkVir4XVnTr1mu+T7g7xQOSbusSCPaLA/pZxlDPbMdN
+	 jQZrjunq5fPCg==
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] fs: hfs: add MODULE_DESCRIPTION()
+Date: Tue, 28 May 2024 13:35:47 +0200
+Message-ID: <20240528-massieren-rekord-0836253ed999@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240527-md-fs-hfs-v1-1-4be79ef7e187@quicinc.com>
+References: <20240527-md-fs-hfs-v1-1-4be79ef7e187@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <0e8dee26-41cc-41ae-9493-10cd1a8e3268@app.fastmail.com>
-In-Reply-To: <20240506133544.2861555-2-masahiroy@kernel.org>
-References: <20240506133544.2861555-1-masahiroy@kernel.org>
- <20240506133544.2861555-2-masahiroy@kernel.org>
-Date: Tue, 28 May 2024 13:35:10 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Masahiro Yamada" <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org,
- "Kees Cook" <keescook@chromium.org>
-Subject: Re: [PATCH 1/3] kbuild: provide reasonable defaults for tool coverage
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=910; i=brauner@kernel.org; h=from:subject:message-id; bh=U9gFCkMWya+ry4Kiu+T18mTeq5AtTLdpRjpaXQOZEes=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSFHpyzzqf5kvO5+6a2Zzf/c3x8u/ORntnfypBjcp6eq g+UgtKndpSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzE4wTD/6qXRb5TvzdsvXL9 h3OtcabJy4Mqk0vKvUsYzix1/rWnu5Dhf+lhyYOLp3rM4q0Tl3juV1Ny2SLYMLzniM1p9vq7RaJ 32AA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 6, 2024, at 15:35, Masahiro Yamada wrote:
-> The objtool, sanitizers (KASAN, UBSAN, etc.), and profilers (GCOV, etc.)
-> are intended for kernel space objects. To exclude objects from their
-> coverage, you need to set variables such as OBJECT_FILES_NON_STNDARD=y,
-> KASAN_SANITIZE=n, etc.
->
-> For instance, the following are not kernel objects, and therefore should
-> opt out of coverage:
->
->   - vDSO
->   - purgatory
->   - bootloader (arch/*/boot/)
->
-> Kbuild can detect these cases without relying on such variables because
-> objects not directly linked to vmlinux or modules are considered
-> "non-standard objects".
->
-> Detecting objects linked to vmlinux or modules is straightforward:
->
->   - objects added to obj-y are linked to vmlinux
->   - objects added to lib-y are linked to vmlinux
->   - objects added to obj-m are linked to modules
->
+On Mon, 27 May 2024 10:53:08 -0700, Jeff Johnson wrote:
+> Fix the 'make W=1' warning:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/hfs/hfs.o
+> 
+> 
 
-I noticed new randconfig build warnings and bisected them
-down to this patch:
+Applied to the v6.10-rc1 branch of the vfs/vfs.git tree.
+Patches in the v6.10-rc1 branch should appear in linux-next soon.
 
-warning: unsafe memchr_inv() usage lacked '__read_overflow' symbol in lib/test_fortify/read_overflow-memchr_inv.c
-warning: unsafe memchr() usage lacked '__read_overflow' warning in lib/test_fortify/read_overflow-memchr.c
-warning: unsafe memscan() usage lacked '__read_overflow' symbol in lib/test_fortify/read_overflow-memscan.c
-warning: unsafe memcmp() usage lacked '__read_overflow' warning in lib/test_fortify/read_overflow-memcmp.c
-warning: unsafe memcpy() usage lacked '__read_overflow2' symbol in lib/test_fortify/read_overflow2-memcpy.c
-warning: unsafe memcmp() usage lacked '__read_overflow2' warning in lib/test_fortify/read_overflow2-memcmp.c
-warning: unsafe memmove() usage lacked '__read_overflow2' symbol in lib/test_fortify/read_overflow2-memmove.c
-warning: unsafe memcpy() usage lacked '__read_overflow2_field' symbol in lib/test_fortify/read_overflow2_field-memcpy.c
-warning: unsafe memmove() usage lacked '__read_overflow2_field' symbol in lib/test_fortify/read_overflow2_field-memmove.c
-warning: unsafe memcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-memcpy.c
-warning: unsafe memmove() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-memmove.c
-warning: unsafe memset() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-memset.c
-warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strcpy-lit.c
-warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strcpy.c
-warning: unsafe strncpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strncpy-src.c
-warning: unsafe strncpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strncpy.c
-warning: unsafe strscpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strscpy.c
-warning: unsafe memcpy() usage lacked '__write_overflow_field' symbol in lib/test_fortify/write_overflow_field-memcpy.c
-warning: unsafe memmove() usage lacked '__write_overflow_field' symbol in lib/test_fortify/write_overflow_field-memmove.c
-warning: unsafe memset() usage lacked '__write_overflow_field' symbol in lib/test_fortify/write_overflow_field-memset.c
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-I don't understand the nature of this warning, but I see
-that your patch ended up dropping -fsanitize=kernel-address
-from the compiler flags because the lib/test_fortify/*.c files
-don't match the $(is-kernel-object) rule. Adding back
--fsanitize=kernel-address shuts up these warnings.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-I've applied a local workaround in my randconfig tree
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-diff --git a/lib/Makefile b/lib/Makefile
-index ddcb76b294b5..d7b8fab64068 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -425,5 +425,7 @@ $(obj)/$(TEST_FORTIFY_LOG): $(addprefix $(obj)/, $(TEST_FORTIFY_LOGS)) FORCE
- 
- # Fake dependency to trigger the fortify tests.
- ifeq ($(CONFIG_FORTIFY_SOURCE),y)
-+ifndef CONFIG_KASAN
- $(obj)/string.o: $(obj)/$(TEST_FORTIFY_LOG)
-+endif
- endif
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: v6.10-rc1
 
-
-which I don't think we want upstream. Can you and Kees come
-up with a proper fix instead?
-
-     Arnd
+[1/1] fs: hfs: add MODULE_DESCRIPTION()
+      https://git.kernel.org/vfs/vfs/c/7c50209f1e6a
