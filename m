@@ -1,143 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9E416D4E1;
-	Tue, 28 May 2024 12:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F45616D9AE
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716900870; cv=none; b=asNBoRVPSYm4OXIRhwLWpsg/aBHzUzXo8ZdVHeR4qTQFzt/0EyVWB3jdJAgdwDSJcDd4k9QFE91g7AjEPmkj4sVMG4LD/EQ14LtQDEeCIaEw7nnYyOshK5v1rR0UsVDxgXOMMjdLho6eD6tkNIfEl2hmp4Dq65L6LpYWutu1yVs=
+	t=1716900880; cv=none; b=rfezg2OG8lPhfNblxo/XsKFSpJ+SjADUcg3AKno8NDB3zUMtEvpMSH+AVFYDduLk9nwL7WanU+JHr33DMJKJUXa6N1AMcYRtErqy3wNH+8nA9+DmiKiYvEyfMi/l1A+V2pr3TXFPLu86Ta17AXxMijhB1ea1g7MUwM3HfgfYNPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716900870; c=relaxed/simple;
-	bh=zhjmPwGF/MUJ8NPPpqQPbAB7QBimAAKgje5xk8TXdTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uDt9OCjOCJSSOMFcrT5ajrPUPLRPQraTv0DEnQOiGTpzhuikMA5o4i9T+Ri1jmtdZpVWEgDgQghLoYkNuRwBuPsY5bOmF7Zn44CCik9sCV4uxvzfD3ZrH/Cwqa7VkDbe4NjKC+sGzYo1Xzd7GqDpOIbLp3QLYCGaCruWuMhBC0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DkmElAN3; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716900880; c=relaxed/simple;
+	bh=WHYs4O7Fu2CjoBdYG4P4R2/1sEZnwQQz0IAl+4b3tVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gn1DI30RAx+zsgyFa8N1Kw/drDp7ZEhvye6dHFr7l1GmgJIk1KZdI5hlaMamvcEyS4lk3t6IpYfK2IMo6UzX1ZGJmVR3xvfUzs/Qnns/cuIrzMhRo295HHvcCcbjNnDXrjDNfbx4o9JTZUjedt/seGX1IdeW6P1kxiLd702rLAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UJ9tn6zT; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DkmElAN3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716900868; x=1748436868;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zhjmPwGF/MUJ8NPPpqQPbAB7QBimAAKgje5xk8TXdTc=;
-  b=DkmElAN3Nm1lYTMx9PSrokKnmoIp46AXMDKJDeG19P3cp04zlPJHAfa2
-   ECUOuM7MFpRVePWFYgNV0tXpePSsUKKit7RBao1bZQ26DUZWu+pwymCvD
-   FyO+IZzjSB9YxrNnC0gOtxVMXF4xZVq7C4DxauDFuIL8WFommnVgDOrst
-   +tJXxLuP7Qx0yDmICIs0zAsr3p3BGvROG2HZQvqzrD/BMvi0B1Q85swo3
-   koFRTNpxXLTsR4dcR3oZU84ZrrUgs5PfL83kCHKAD0UKQ1oqpPd+iaX6A
-   GTUNYlZDSRw7Ec9AEG2WoavcK3pUy29gcCbbYtjxD8cOSfFme1gwtA0E1
-   g==;
-X-CSE-ConnectionGUID: vfV8GPkGQAi9R3iJlm5B1Q==
-X-CSE-MsgGUID: gC3uA4/qSpKqIuC8ioO4UQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="38624677"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="38624677"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 05:54:23 -0700
-X-CSE-ConnectionGUID: e4TLYlnHQJ+cnQSAui0hEA==
-X-CSE-MsgGUID: vFAolv0hRqCm6fOxmKrqnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="35085290"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 28 May 2024 05:54:21 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sBwLL-000CCR-1P;
-	Tue, 28 May 2024 12:54:19 +0000
-Date: Tue, 28 May 2024 20:53:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Naresh Solanki <naresh.solanki@9elements.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] hwmon: (max6639) : Update hwmon init using info
-Message-ID: <202405282012.UaQ1329z-lkp@intel.com>
-References: <20240528091808.863702-1-naresh.solanki@9elements.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UJ9tn6zT"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-529614b8c29so1318095e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 05:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716900877; x=1717505677; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aSTrlh2SCKUUASbHMjU/dT8MYXK+NpaxB9pLENdcjzo=;
+        b=UJ9tn6zTZtjtDDJVKJOZNoN5vJLiF6HgDNi2dXGKtoh3QBCjF+mASVELB1MTDaM9Fy
+         kGgoeNJL95gXpwYTUTJvwCwTY1bebAYN+7IZHiVa5wltBwQJh6wpl2uoSVCppVpZizOk
+         cmW/1GS7YJD1eQJ8C16uehKC/akUI3L+R0tMniPIIG/UhDpmP44Um1GJZosCU7CqmD/v
+         +/YxlEZJRnIStyjyqACRCxuX3BjQEIMHZIfjO7NA+4YKKBaO2ssIth3nbau3Zd1pL7GW
+         bFZxBoUIRuFXkYvJOSh0XWCuwQAOG16/HSVVK3EEkL1L8c5j/NcLNcsnaR8SNsLDKyZ6
+         QcWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716900877; x=1717505677;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSTrlh2SCKUUASbHMjU/dT8MYXK+NpaxB9pLENdcjzo=;
+        b=waQYqOpUZOhyuXLRB3JBwmj0WFMu2fzxBvPyzEAfnJnqvL96NTWIp8jDZMGKebnNNE
+         LOif1KcWfKbSLc9pFeVx/4ksE2NTWQUERAEtE6l/ArtjEskPn7w45YlS+qqmJRAInLJL
+         iVrSJ4c1hxR9MXy6GzQndVFXVmYIL6tt2hvcrdo4gCM363eXrkwf+1Xer855UQO3KaLm
+         fgSuVYsyNj3MYVKTNQApEeoZHtMD/V2h/imXVaAWOFoHbZsrNysim6I/IwiNT0rQclQU
+         EVygIhNc9vMjt/44BRJUr0NefQfEc95UcT8LWiivXdl05UDdGvXfILeX/kaj/4EaNgmc
+         iieA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTYy+9SrkbBwpEY/HRZ6sVHVm5OZNNXcSWN5eSkxLz3iJUBNUSufBQZGsAodbkOFnstT/WnO3Wd0893asapwwMewQ+yGheUt1Ejq0U
+X-Gm-Message-State: AOJu0YwGDclGTTV/zfQtIzjxrCrmFN4JHL6yG2yqC7piBp8GAFIDncdv
+	1L8ml1sQC16vWZDO7IG4GiHB+Us54JdNm71RmOWuDGp8rLzOHpFbRMEKFIJXxew=
+X-Google-Smtp-Source: AGHT+IGKzu2XIOmakywBVvQVCXPjCqQFFHQbzz7rGWhc+7VQYk4Q9VgfwbtHKoxlTZxsKpchLq1WnA==
+X-Received: by 2002:a19:ad07:0:b0:524:3ce:d4ca with SMTP id 2adb3069b0e04-52966005aadmr9313303e87.37.1716900876850;
+        Tue, 28 May 2024 05:54:36 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:c97:23a9:35bc:df2e:d894:2c76? ([2a00:f41:c97:23a9:35bc:df2e:d894:2c76])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5296e8877a3sm952106e87.36.2024.05.28.05.54.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 05:54:35 -0700 (PDT)
+Message-ID: <68593878-fd39-4961-b7c2-cc33553d6fca@linaro.org>
+Date: Tue, 28 May 2024 14:54:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528091808.863702-1-naresh.solanki@9elements.com>
-
-Hi Naresh,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 5fbf8734fb36cf67339f599f0e51747a6aff690c]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Naresh-Solanki/hwmon-max6639-Update-hwmon-init-using-info/20240528-172245
-base:   5fbf8734fb36cf67339f599f0e51747a6aff690c
-patch link:    https://lore.kernel.org/r/20240528091808.863702-1-naresh.solanki%409elements.com
-patch subject: [PATCH v2] hwmon: (max6639) : Update hwmon init using info
-config: i386-buildonly-randconfig-003-20240528 (https://download.01.org/0day-ci/archive/20240528/202405282012.UaQ1329z-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240528/202405282012.UaQ1329z-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405282012.UaQ1329z-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/hwmon/max6639.c:291:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
-     291 |                 u8 x;
-         |                 ^
-   drivers/hwmon/max6639.c:328:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
-     328 |                 u8 x;
-         |                 ^
-   2 warnings generated.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/10] arm64: dts: qcom: sc8180x-primus: Enable the two MP
+ USB ports
+To: Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-usb@vger.kernel.org,
+ Bjorn Andersson <quic_bjorande@quicinc.com>
+References: <20240525-sc8180x-usb-mp-v1-0-60a904392438@quicinc.com>
+ <20240525-sc8180x-usb-mp-v1-9-60a904392438@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240525-sc8180x-usb-mp-v1-9-60a904392438@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-vim +291 drivers/hwmon/max6639.c
 
-   275	
-   276	static int max6639_read_pwm(struct device *dev, u32 attr, int channel,
-   277				    long *pwm_val)
-   278	{
-   279		struct max6639_data *data = dev_get_drvdata(dev);
-   280		unsigned int val, res;
-   281	
-   282		if (IS_ERR(data))
-   283			return PTR_ERR(data);
-   284	
-   285		switch (attr) {
-   286		case hwmon_pwm_input:
-   287			res = regmap_read(data->regmap, MAX6639_REG_TARGTDUTY(channel), &val);
-   288			*pwm_val = val * 255 / 120;
-   289			return 0;
-   290		case hwmon_pwm_freq:
- > 291			u8 x;
-   292	
-   293			res = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG3(channel), &val);
-   294			if (res < 0)
-   295				return res;
-   296			x = val & MAX6639_FAN_CONFIG3_FREQ_MASK;
-   297	
-   298			res = regmap_read(data->regmap, MAX6639_REG_GCONFIG, &val);
-   299			if (res < 0)
-   300				return res;
-   301	
-   302			if (val & MAX6639_GCONFIG_PWM_FREQ_HI)
-   303				x |= 0x4;
-   304			x &= 0x7;
-   305			*pwm_val = freq_table[x];
-   306			return res;
-   307		default:
-   308			return -EOPNOTSUPP;
-   309		}
-   310	}
-   311	
+On 5/25/24 20:04, Bjorn Andersson wrote:
+> From: Bjorn Andersson <quic_bjorande@quicinc.com>
+> 
+> The SC8180X Primus comes with an AUX card with two USB ports, fed by the
+> two multiport ports.
+> 
+> Enable the involved nodes and define two always-on regulators to enable
+> VBUS for these ports.
+> 
+> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> ---
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[...]
+
+> +		gpio = <&pmc8180_1_gpios 9 0>;
+
+GPIO_ACTIVE_HIGH?
+
+> +		enable-active-high;
+> +
+> +		regulator-always-on;
+> +	};
+> +
+> +	vreg_usb3_host_en: regulator-usb3-host-en {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb3_host_en";
+> +
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +
+> +		gpio = <&pmc8180_2_gpios 9 0>;
+
+GPIO_ACTIVE_HIGH
+
+with that:
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
