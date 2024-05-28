@@ -1,61 +1,61 @@
 Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811E516F85A
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:20:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B49116FF59
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:20:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716906044; cv=none; b=lhRWWpxgRwH6wqlJbCrAn9Kg6F6hW6UUXqEbqzG7D67v9661Zi8mYYgyiajVmCZGBFEtjug1o0i6k54nYx+nhAynw3lFyYqxcbr+pcglR9Ocx3UAo13YA9vizdEluVn+bmlvXjvmL5JOno5gBKNZCmH32upMFLKKYTisHCZkzkc=
+	t=1716906047; cv=none; b=WRq97DpU5o8ioCroKl1mGKn+sit+MvyoCqoJi5e/jPowq4OTg9B94BZN2ck1hkbyFWe78/Qm37DRxxyS+Ol9JpIQas0VzP4ucUQDAes8N37t1zJbG6dcgRxfqOPU4z6Cc+Gtu8+IO13f7zdzOBrJFetewQj29xIwdS6m7lUgCSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716906044; c=relaxed/simple;
-	bh=GyOt6fap9XtxKOu2kTSLmUnNL+xLHReYGC7Mcyovo7g=;
+	s=arc-20240116; t=1716906047; c=relaxed/simple;
+	bh=VQ4RPFjraeg9QG+WtxUK0LxObNrAlrRgeIFZywlwUq0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WhUdTno56D66EcFUdDdQzCC+WDv63j441O8hWitHOP/GZrjJoZw6Bh2qG9e/8c+q7x+JlHgKWp75AEX7wQ1DjTm9Phw2fide6f00xi/xzK83RKFOUdbUltoE0aY4Uf4djD2bH0PPjAekYFxyy3oxXXvyEYY0YwIspUJ8qt2UUw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QfLXupUr; arc=none smtp.client-ip=209.85.221.65
+	 In-Reply-To:To:Cc; b=ldqRqWA0RBFgjBbHveUch35DsN4W3wgwGaOztPM9caAypSDGy28ooY/FXNRtaRQeM6mKU1uldjS/R8osnt0azsDPsLVkrHK5dewV9KqxAq+FCbCtzzNXk0Zq2Zb5lhDi95jYqNlTEzSsIsjx31u2B4fSCubRPqsLi3gRlJ1BDNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wFwd0Maw; arc=none smtp.client-ip=209.85.221.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QfLXupUr"
-Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-35bf77ba951so229257f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:20:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wFwd0Maw"
+Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-354de97586cso1079431f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716906041; x=1717510841; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716906043; x=1717510843; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yckqe26W9iPZGQmV4Ijp5QzBcbOV6EvrsiuvLN1du88=;
-        b=QfLXupUr78Y/usbUWypTZ/Nh/H5BXST4qPEMsXlhEbumFfwv1w5BrDTbcCwq2sydpw
-         oTuqOGfOeIP4uzfr9iLPrU49AEjzPxbAcMiLm+BtxoGWZfRr/17784ZMzr8gTEiRVETo
-         eacZtj79tASTYvlegjVWCvwT3MplFudf8z40TP7EoWZSjOHW88m+GmCTk/QluAIo6F4A
-         ZXsoff3ZSbCPHKrdzo1qd1zNbFAcUP7Dt9Uy612i30DjXn/ctLiabvQ9OGnm5yn3pLo5
-         jJQchpqJTtiDXDu7U79iIb6hlz5JtKTHyWYNn9BXSECTrc2NcH8hV97/3X2p/oIqfscA
-         Se8Q==
+        bh=7kVmMiAww/1MNzSxxAk2mzn+IJ9yIpCfeirFaQBWWao=;
+        b=wFwd0Maw8rJdEgBMSEk7MsgOfZsAd3dGyixE4aEcmnTLXRfXGfuwQ3MBvl3Gms+Es+
+         ifETO1YlnDHSS4qNA7DMf1uxP/VkOxN4UJpOi4GQZtaCAn7DjnjKLsWFnYP1RD2Zud0t
+         1bfoYrW+W9WgxFjitMGTgunioGs7FdO4WLwY3TgWcDqDOekMAUP5tCxiBlwvZcFgzR9z
+         Gql8XZfJmyR3QCmGlUWWY12j+48RWqT+umTsBykDM6ZPMx/9MTnErU6JiypyUtH0sIRi
+         6xqex9hnWek1IPfrfE4w4EfMMTUO9Zf8RjZYOnF/gqomt/64+yrR3zPoeTwpBLPBS5Fr
+         bR/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716906041; x=1717510841;
+        d=1e100.net; s=20230601; t=1716906043; x=1717510843;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yckqe26W9iPZGQmV4Ijp5QzBcbOV6EvrsiuvLN1du88=;
-        b=nOBB3ktILGe3bYsNZ2pzXie/YKEJWacw6k9sXLBHe0C26qX5S5BJNYh1vzi/glRgDR
-         A6RKCCsmpfd7I7sDifSwUsqSr5hGUFBvwgtZuoEqVSI7+ChmrHdw8cifjgDyJavm2Bv8
-         CwGxzr5RuuIc3LBpV2oZXtL72wbMKwz/GEKbkN5fs/K2qcN+4tVsN0uJDzkV/41StChO
-         izpuFBBrqMUK2qIou83HbxBVCcLDbXx5U5JdNshu90ZAUfP7y7fYewBWgAVm2ehGbVjE
-         QjfnWJfmcmNMKEijz8loi6sFtI784xLm59LNbz93BAp7PawGrOWHzHFl83mOO/Sh2SDw
-         WCCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXK0krZEYFMUzBrE/HfN2+Q32LWwsVn9IbY3A1KvUxCreZ1tbyMVkFcA2NkQEMsq321khQefcTMoA3QCRz84EX9M7jOwre1Cmt6esx
-X-Gm-Message-State: AOJu0YzJi7KxsPoZfCK/uaG0Zc/TtekpAAqn1nKPjD0cIsx/2F82+lvT
-	Rl1uGxwRa1WzuBAuDWl4vteu1YYVxQwD/j+1B5T8yApOzc4liUlN81CIiu9EGb4=
-X-Google-Smtp-Source: AGHT+IHTyeQ5Em7hPe0HI1+coYtjY8PTddP96gBSMgaHxibz5eMPdMm3Jbj/NqYdo2vPYRu5wkiorA==
-X-Received: by 2002:a5d:4684:0:b0:354:fc65:39d6 with SMTP id ffacd0b85a97d-35526c70f51mr8614510f8f.26.1716906040857;
-        Tue, 28 May 2024 07:20:40 -0700 (PDT)
+        bh=7kVmMiAww/1MNzSxxAk2mzn+IJ9yIpCfeirFaQBWWao=;
+        b=nvC1Ifw3IcRU7yR7lVHbzf4NmIxw6zj1Pnrk7DgTiRKeysgzOAsMdaLROM3TRUOKP6
+         XSHVVEom3XgZofxrz5KkSo6KeQDU1a1SkEH1LRcgHqxV4tL097Y81rPTiaWXFtOUAdWg
+         YmnAGYMzV/0PdGvRId6RKaJNmUdUfyw0dWTXjSBVbTtprgFp3Nse1dGf5oj0F0N/njMC
+         tyGTD1ZqV29a7T28MEHQSFV3t8VBitWo8shgEPRHiv4fbnUniKCiuNkdlP/Th+DW/44h
+         QSuLr03T1yeBVX8oS6+LOpcH1ZW3Snmf4fJJYljznfpQm0tVizrzGODAGaOY8qZjXsNx
+         al2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWBpXj1eBkMVmeh7SNnjwfnBDQ5g7QDLSa0XSweAfki8LCgHRZt6LdcSiUVd7hYHymCL74GoOq0lndngWI6Ex7pMpJVVAeyCt6tW9cx
+X-Gm-Message-State: AOJu0YywNB/M69lw8MvrNLNxniB/PaBnbeKoHC2bvipjIpZeaUVoHNLD
+	wdHIbm4G28m3CV110H27NfCPdwcGaIjH2sxwXm9bbpKGMJs5U/W+06rnWIE8cjQ=
+X-Google-Smtp-Source: AGHT+IFP31QoKYFXOEzwlSrrEb3FVw4HSZ2x5WtfZZWQ7ssD6CTt6H9FKMLjuILaLjqwIF9nhUApUA==
+X-Received: by 2002:a5d:49cc:0:b0:354:db85:3039 with SMTP id ffacd0b85a97d-3552fe19407mr8128986f8f.44.1716906042936;
+        Tue, 28 May 2024 07:20:42 -0700 (PDT)
 Received: from [192.168.1.63] ([2a02:842a:d52e:6101:6fd0:6c4:5d68:f0a5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7db5esm11999275f8f.15.2024.05.28.07.20.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7db5esm11999275f8f.15.2024.05.28.07.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 07:20:40 -0700 (PDT)
+        Tue, 28 May 2024 07:20:42 -0700 (PDT)
 From: Julien Stephan <jstephan@baylibre.com>
-Date: Tue, 28 May 2024 16:20:31 +0200
-Subject: [PATCH v7 4/7] iio: adc: ad7380: add support for
- pseudo-differential parts
+Date: Tue, 28 May 2024 16:20:33 +0200
+Subject: [PATCH v7 6/7] dt-bindings: iio: adc: ad7380: add support for
+ ad738x-4 4 channels variants
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,8 +63,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240528-adding-new-ad738x-driver-v7-4-4cd70a4c12c8@baylibre.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240528-adding-new-ad738x-driver-v7-6-4cd70a4c12c8@baylibre.com>
 References: <20240528-adding-new-ad738x-driver-v7-0-4cd70a4c12c8@baylibre.com>
 In-Reply-To: <20240528-adding-new-ad738x-driver-v7-0-4cd70a4c12c8@baylibre.com>
 To: Lars-Peter Clausen <lars@metafoo.de>, 
@@ -77,214 +77,92 @@ To: Lars-Peter Clausen <lars@metafoo.de>,
  Mark Brown <broonie@kernel.org>
 Cc: kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Julien Stephan <jstephan@baylibre.com>
+ Julien Stephan <jstephan@baylibre.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
 X-Mailer: b4 0.13.0
 
-From: David Lechner <dlechner@baylibre.com>
+Add compatible support for ad7380/1/3/4-4 parts which are 4 channels
+variants from ad7380/1/3/4
 
-Add support for AD7383, AD7384 pseudo-differential compatible parts.
-Pseudo differential parts require common mode voltage supplies so add
-the support for them and add the support of IIO_CHAN_INFO_OFFSET to
-retrieve the offset
-
-Signed-off-by: David Lechner <dlechner@baylibre.com>
 Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/iio/adc/ad7380.c | 110 ++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 94 insertions(+), 16 deletions(-)
+ .../devicetree/bindings/iio/adc/adi,ad7380.yaml    | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-index dac7e11755ff..4ad283cf970d 100644
---- a/drivers/iio/adc/ad7380.c
-+++ b/drivers/iio/adc/ad7380.c
-@@ -7,6 +7,7 @@
-  *
-  * Datasheets of supported parts:
-  * ad7380/1 : https://www.analog.com/media/en/technical-documentation/data-sheets/AD7380-7381.pdf
-+ * ad7383/4 : https://www.analog.com/media/en/technical-documentation/data-sheets/ad7383-7384.pdf
-  */
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7380.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7380.yaml
+index de3d28a021ae..899b777017ce 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7380.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7380.yaml
+@@ -15,6 +15,10 @@ description: |
+   * https://www.analog.com/en/products/ad7381.html
+   * https://www.analog.com/en/products/ad7383.html
+   * https://www.analog.com/en/products/ad7384.html
++  * https://www.analog.com/en/products/ad7380-4.html
++  * https://www.analog.com/en/products/ad7381-4.html
++  * https://www.analog.com/en/products/ad7383-4.html
++  * https://www.analog.com/en/products/ad7384-4.html
  
- #include <linux/bitfield.h>
-@@ -66,16 +67,19 @@ struct ad7380_chip_info {
- 	const char *name;
- 	const struct iio_chan_spec *channels;
- 	unsigned int num_channels;
-+	const char * const *vcm_supplies;
-+	unsigned int num_vcm_supplies;
- };
+ $ref: /schemas/spi/spi-peripheral-props.yaml#
  
--#define AD7380_CHANNEL(index, bits) {				\
-+#define AD7380_CHANNEL(index, bits, diff) {			\
- 	.type = IIO_VOLTAGE,					\
--	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
-+		((diff) ? 0 : BIT(IIO_CHAN_INFO_OFFSET)),	\
- 	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
- 	.indexed = 1,						\
--	.differential = 1,					\
--	.channel = 2 * (index),					\
--	.channel2 = 2 * (index) + 1,				\
-+	.differential = (diff),					\
-+	.channel = (diff) ? (2 * (index)) : (index),		\
-+	.channel2 = (diff) ? (2 * (index) + 1) : 0,		\
- 	.scan_index = (index),					\
- 	.scan_type = {						\
- 		.sign = 's',					\
-@@ -85,15 +89,23 @@ struct ad7380_chip_info {
- 	},							\
- }
+@@ -25,6 +29,10 @@ properties:
+       - adi,ad7381
+       - adi,ad7383
+       - adi,ad7384
++      - adi,ad7380-4
++      - adi,ad7381-4
++      - adi,ad7383-4
++      - adi,ad7384-4
  
--#define DEFINE_AD7380_2_CHANNEL(name, bits)	\
--static const struct iio_chan_spec name[] = {	\
--	AD7380_CHANNEL(0, bits),		\
--	AD7380_CHANNEL(1, bits),		\
--	IIO_CHAN_SOFT_TIMESTAMP(2),		\
-+#define DEFINE_AD7380_2_CHANNEL(name, bits, diff)	\
-+static const struct iio_chan_spec name[] = {		\
-+	AD7380_CHANNEL(0, bits, diff),			\
-+	AD7380_CHANNEL(1, bits, diff),			\
-+	IIO_CHAN_SOFT_TIMESTAMP(2),			\
- }
+   reg:
+     maxItems: 1
+@@ -56,6 +64,16 @@ properties:
+       The common mode voltage supply for the AINB- pin on pseudo-differential
+       chips.
  
--DEFINE_AD7380_2_CHANNEL(ad7380_channels, 16);
--DEFINE_AD7380_2_CHANNEL(ad7381_channels, 14);
-+/* fully differential */
-+DEFINE_AD7380_2_CHANNEL(ad7380_channels, 16, 1);
-+DEFINE_AD7380_2_CHANNEL(ad7381_channels, 14, 1);
-+/* pseudo differential */
-+DEFINE_AD7380_2_CHANNEL(ad7383_channels, 16, 0);
-+DEFINE_AD7380_2_CHANNEL(ad7384_channels, 14, 0);
++  ainc-supply:
++    description:
++      The common mode voltage supply for the AINC- pin on pseudo-differential
++      chips.
 +
-+static const char * const ad7380_2_channel_vcm_supplies[] = {
-+	"aina", "ainb",
-+};
++  aind-supply:
++    description:
++      The common mode voltage supply for the AIND- pin on pseudo-differential
++      chips.
++
+   interrupts:
+     description:
+       When the device is using 1-wire mode, this property is used to optionally
+@@ -79,6 +97,8 @@ allOf:
+           enum:
+             - adi,ad7383
+             - adi,ad7384
++            - adi,ad7383-4
++            - adi,ad7384-4
+     then:
+       required:
+         - aina-supply
+@@ -87,6 +107,20 @@ allOf:
+       properties:
+         aina-supply: false
+         ainb-supply: false
++  - if:
++      properties:
++        compatible:
++          enum:
++            - adi,ad7383-4
++            - adi,ad7384-4
++    then:
++      required:
++        - ainc-supply
++        - aind-supply
++    else:
++      properties:
++        ainc-supply: false
++        aind-supply: false
  
- /* Since this is simultaneous sampling, we don't allow individual channels. */
- static const unsigned long ad7380_2_channel_scan_masks[] = {
-@@ -113,11 +125,28 @@ static const struct ad7380_chip_info ad7381_chip_info = {
- 	.num_channels = ARRAY_SIZE(ad7381_channels),
- };
- 
-+static const struct ad7380_chip_info ad7383_chip_info = {
-+	.name = "ad7383",
-+	.channels = ad7383_channels,
-+	.num_channels = ARRAY_SIZE(ad7383_channels),
-+	.vcm_supplies = ad7380_2_channel_vcm_supplies,
-+	.num_vcm_supplies = ARRAY_SIZE(ad7380_2_channel_vcm_supplies),
-+};
-+
-+static const struct ad7380_chip_info ad7384_chip_info = {
-+	.name = "ad7384",
-+	.channels = ad7384_channels,
-+	.num_channels = ARRAY_SIZE(ad7384_channels),
-+	.vcm_supplies = ad7380_2_channel_vcm_supplies,
-+	.num_vcm_supplies = ARRAY_SIZE(ad7380_2_channel_vcm_supplies),
-+};
-+
- struct ad7380_state {
- 	const struct ad7380_chip_info *chip_info;
- 	struct spi_device *spi;
- 	struct regmap *regmap;
- 	unsigned int vref_mv;
-+	unsigned int vcm_mv[2];
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
- 	 * transfer buffers to live in their own cache lines.
-@@ -288,13 +317,24 @@ static int ad7380_read_raw(struct iio_dev *indio_dev,
- 		unreachable();
- 	case IIO_CHAN_INFO_SCALE:
- 		/*
--		 * According to the datasheet, the LSB size for fully differential ADC is
--		 * (2 × VREF) / 2^N, where N is the ADC resolution (i.e realbits)
-+		 * According to the datasheet, the LSB size is:
-+		 *    * (2 × VREF) / 2^N, for differential chips
-+		 *    * VREF / 2^N, for pseudo-differential chips
-+		 * where N is the ADC resolution (i.e realbits)
- 		 */
- 		*val = st->vref_mv;
--		*val2 = chan->scan_type.realbits - 1;
-+		*val2 = chan->scan_type.realbits - chan->differential;
- 
- 		return IIO_VAL_FRACTIONAL_LOG2;
-+	case IIO_CHAN_INFO_OFFSET:
-+		/*
-+		 * According to IIO ABI, offset is applied before scale,
-+		 * so offset is: vcm_mv / scale
-+		 */
-+		*val = st->vcm_mv[chan->channel] * (1 << chan->scan_type.realbits)
-+			/ st->vref_mv;
-+
-+		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -341,7 +381,7 @@ static int ad7380_probe(struct spi_device *spi)
- 	struct iio_dev *indio_dev;
- 	struct ad7380_state *st;
- 	struct regulator *vref;
--	int ret;
-+	int ret, i;
- 
- 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
- 	if (!indio_dev)
-@@ -385,6 +425,40 @@ static int ad7380_probe(struct spi_device *spi)
- 		st->vref_mv = AD7380_INTERNAL_REF_MV;
- 	}
- 
-+	if (st->chip_info->num_vcm_supplies > ARRAY_SIZE(st->vcm_mv))
-+		return dev_err_probe(&spi->dev, -EINVAL,
-+				     "invalid number of VCM supplies\n");
-+
-+	/*
-+	 * pseudo-differential chips have common mode supplies for the negative
-+	 * input pin.
-+	 */
-+	for (i = 0; i < st->chip_info->num_vcm_supplies; i++) {
-+		struct regulator *vcm;
-+
-+		vcm = devm_regulator_get(&spi->dev,
-+					 st->chip_info->vcm_supplies[i]);
-+		if (IS_ERR(vcm))
-+			return dev_err_probe(&spi->dev, PTR_ERR(vcm),
-+					     "Failed to get %s regulator\n",
-+					     st->chip_info->vcm_supplies[i]);
-+
-+		ret = regulator_enable(vcm);
-+		if (ret)
-+			return ret;
-+
-+		ret = devm_add_action_or_reset(&spi->dev,
-+					       ad7380_regulator_disable, vcm);
-+		if (ret)
-+			return ret;
-+
-+		ret = regulator_get_voltage(vcm);
-+		if (ret < 0)
-+			return ret;
-+
-+		st->vcm_mv[i] = ret / 1000;
-+	}
-+
- 	st->regmap = devm_regmap_init(&spi->dev, NULL, st, &ad7380_regmap_config);
- 	if (IS_ERR(st->regmap))
- 		return dev_err_probe(&spi->dev, PTR_ERR(st->regmap),
-@@ -413,12 +487,16 @@ static int ad7380_probe(struct spi_device *spi)
- static const struct of_device_id ad7380_of_match_table[] = {
- 	{ .compatible = "adi,ad7380", .data = &ad7380_chip_info },
- 	{ .compatible = "adi,ad7381", .data = &ad7381_chip_info },
-+	{ .compatible = "adi,ad7383", .data = &ad7383_chip_info },
-+	{ .compatible = "adi,ad7384", .data = &ad7384_chip_info },
- 	{ }
- };
- 
- static const struct spi_device_id ad7380_id_table[] = {
- 	{ "ad7380", (kernel_ulong_t)&ad7380_chip_info },
- 	{ "ad7381", (kernel_ulong_t)&ad7381_chip_info },
-+	{ "ad7383", (kernel_ulong_t)&ad7383_chip_info },
-+	{ "ad7384", (kernel_ulong_t)&ad7384_chip_info },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, ad7380_id_table);
+ examples:
+   - |
 
 -- 
 2.44.0
