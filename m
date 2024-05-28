@@ -1,150 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C62F1094E;
-	Tue, 28 May 2024 15:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3562E79F6;
+	Tue, 28 May 2024 15:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716908443; cv=none; b=ewedt+CrrbHf/rwrxhU/45B2+VyHuGB6xa3M66Cc/yl8Fpxtu7ui7ophWzWo2l2G49dGgEgbuQ4tZ5AYv282nLjG9a6HK1LRXz3P4DnmuMorhs+jHGv99AgcmP4FsDen1jnPkfRDQSHG1JLHrPK7P1e7YcPOfR6ZaBU1ADrTjlM=
+	t=1716908469; cv=none; b=VM2x7ZAaI3Zr5AZLwRmu8yAHwRMT7MjsdhWHL0HnQ0qI/SfNJN0tZsa6woW6/Z16GZIdA0UxN3Fg2411QzM8bOy0fDFG4K1RuRV5Zxl3IziUp+U9p+fYMJfgt4kXqte7yfLg18uK8k3f/Ixt1CxJekZ1GyKh2K1dLAXrdQg8+L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716908443; c=relaxed/simple;
-	bh=vVMIytHSqDzGQIHQa79FWs3ijJZgV/ZUXRTkNM6Pl4w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=gRG5ueTak4uMISHPZ0cwcBhx+MSuJRaOXHUXwrL0uOBexuD8icvKnZQjvx6kDO1aoc7fHIgF7Au0LxdugRXn4m0+HvxEWj+SAN+co3vXQIQKfGUZLewfFGUQ+3waqdH6AgL5TnhFB/dGtjclgmfU8TXRglGHMfCe93jGmUIc/nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FC2F339;
-	Tue, 28 May 2024 08:01:02 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 267863F762;
-	Tue, 28 May 2024 08:00:36 -0700 (PDT)
-Message-ID: <1f5f1eed-1feb-4a51-92b7-12c1fd195708@arm.com>
-Date: Tue, 28 May 2024 16:00:37 +0100
+	s=arc-20240116; t=1716908469; c=relaxed/simple;
+	bh=griTV/d48tFOAXbKZWjbvzau5IV3Ow0cB3k5rjAzDCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b3FcH/0LZvFhZf3oaqYqhhPZB073QYXNPxFf8HNv4iJEebB9rP8nxBJP5lKv8sw6eb2uDGuJ1WL3oBHp5Fu2+oABMsYsJid+jWRKH+iXxfFeSgVuZrk/FrMKmOol9LKtUPQGsuVOj5SdgSV7+SJPo4Ld0TKu3evLeUAzRVayOIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhadhZBe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhadhZBe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70411C3277B;
+	Tue, 28 May 2024 15:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716908468;
+	bh=griTV/d48tFOAXbKZWjbvzau5IV3Ow0cB3k5rjAzDCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EhadhZBeE18WbKLGgiooW0VxGSBMEhOGF0MwqnuuP6kyWUWmWddS1L6G9AB8+8lm5
+	 jd1V5dCU0ZRklMWsON+LU9+l0O1ByZ/Y/GmZcuj+JmkXJ4KJgwz7ebYT+N0RXxE8Ho
+	 RYFvX1N6JjSPzDnv+ut2SQFeIBGkeyW1blw4RemLnIUH0d/6ZH6f4/2NPFmLXfsiEJ
+	 4bf9tDYqxR3zJ40ngwSx60e5oa/NG0NRfU5cYq8NB2LXw9ECQLxIAXSdmyIMlO58s4
+	 i8JBbcvamnRvXTHGyIgoaPbSQs2UO3v5DCr+FVPkSJNsHSi2QUHSpSBXpUn9MlF49l
+	 fsEWFwyBrCeKw==
+Date: Tue, 28 May 2024 16:01:03 +0100
+From: Conor Dooley <conor@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: boris.brezillon@collabora.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	daniel@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, steven.price@arm.com, matthias.bgg@gmail.com,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: gpu: mali-bifrost: Add compatible for
+ MT8188 SoC
+Message-ID: <20240528-flattop-foe-05d6ba73cc06@spud>
+References: <20240527092513.91385-1-angelogioacchino.delregno@collabora.com>
+ <20240527092513.91385-2-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] perf maps: Sort kcore maps
-To: Leo Yan <leo.yan@arm.com>, Adrian Hunter <adrian.hunter@intel.com>
-References: <20240520090647.949371-1-leo.yan@arm.com>
- <20240520090647.949371-2-leo.yan@arm.com>
- <2f4fce9f-6283-40ad-8adc-c370e98627da@intel.com>
- <02fbb30f-19cf-4822-9676-35d3e51d99b1@arm.com>
-Content-Language: en-US
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <02fbb30f-19cf-4822-9676-35d3e51d99b1@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lmQ6jMLH/WOT5YCV"
+Content-Disposition: inline
+In-Reply-To: <20240527092513.91385-2-angelogioacchino.delregno@collabora.com>
 
 
+--lmQ6jMLH/WOT5YCV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 25/05/2024 10:29, Leo Yan wrote:
-> Hi Adrian,
-> 
-> On 5/22/2024 11:31 AM, Adrian Hunter wrote:
->> On 20/05/24 12:06, Leo Yan wrote:
->>> When merging kcore maps into the kernel maps, it has an implicit
->>> requirement for the kcore maps ordering, otherwise, some sections
->>> delivered by the kcore maps will be ignored.
->>
->> perf treats the kernel text map as a special case.  The problem
->> is that the kcore loading logic did not cater for there being 2
->> maps that covered the kernel mapping.
->>
->> The workaround was to choose the smaller mapping, but then that
->> still only worked if that was the first.
-> 
-> You could see below are Kcore maps dumped on Arm64:
-> 
-> kore map start: ffff000000000000 end: ffff00001ac00000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff00001ad88000 end: ffff000032000000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff000032101000 end: ffff00003e000000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff000040000000 end: ffff000089b80000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff000089cc0000 end: ffff0000b9ab0000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff0000b9ad0000 end: ffff0000b9bb0000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff0000b9c50000 end: ffff0000b9d50000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff0000ba114000 end: ffff0000bf130000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff0000bf180000 end: ffff0000e0000000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff000200000000 end: ffff000220000000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff800000000000 end: ffff800080000000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff800080000000 end: ffff8000822f0000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: ffff800080000000 end: fffffdffbf800000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc0000000 end: fffffdffc06b0000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc06b6000 end: fffffdffc0c80000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc0c84000 end: fffffdffc0f80000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc1000000 end: fffffdffc226e000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc2273000 end: fffffdffc2e6b000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc2e6b000 end: fffffdffc2e6f000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc2e71000 end: fffffdffc2e76000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc2e84000 end: fffffdffc2fc5000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc2fc6000 end: fffffdffc3800000 name: [kernel.kallsyms]
-> refcnt: 1
-> kore map start: fffffdffc8000000 end: fffffdffc8800000 name: [kernel.kallsyms]
-> refcnt: 1
-> 
-> You could see it's much more complex rather than only for kernel text section
-> and vmalloc region. We cannot only handle the case for the overlapping between
-> the text section and vmalloc region, it is possible for other maps to be
-> overlapping with each other.
-> 
-> And different arches have their own definition for the Kcore maps. This is why
-> I want to sort maps in this patch, it can allow us to find a reliable way to
-> append the kcore maps.
-> 
->> James essentially fixed that by ensuring the kernel "replacement"
->> map is inserted first.
-> 
-> Yeah, I agreed James' patch has fixed the kernel "replacement" map. But as I
-> elaborated above, there still have other maps might overlap with each other,
-> my understanding is we don't handle all cases.
->> In other respects, the ordering of the maps does not matter, so
->> I am not sure it is worth this extra processing.
-> 
-> To sell my patch, I have another point for why we need sorting Kcore maps.
-> 
-> Now Perf verifies the map in the function check_invariants(), this function
-> reports the broken issue, but we still have no clue how the broken issue happens.
-> 
-> If we can sort the Kcore maps in kcore_mapfn(), then we have chance to detect
-> the overlapping within maps, and then it can reports the overlapping in the
-> first place and this would be helpful for debugging and locating the failures.
-> 
+On Mon, May 27, 2024 at 11:25:12AM +0200, AngeloGioacchino Del Regno wrote:
+> Add a compatible for the MediaTek MT8188 SoC, with an integrated
+> ARM Mali G57 MC3 (Valhall-JM) GPU.
+>=20
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
 
-+1 for this point. If check_invariants() insists on sorted maps, then
-keeping them sorted as early as possible is better.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Debugging future issues will be easier if the assert is closer to the
-source of the problem.
+Chers,
+Conor.
 
-James
+--lmQ6jMLH/WOT5YCV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlXxrwAKCRB4tDGHoIJi
+0gxEAQCJxm0YW/F3sE3EG2ygW0Xz2I0KMa2JKGoLWElXy5gVRgEA4qAauCj9sAWK
+GjEwoDHxelJzjM0hfALT/Qy2rP/GQQg=
+=atEx
+-----END PGP SIGNATURE-----
+
+--lmQ6jMLH/WOT5YCV--
