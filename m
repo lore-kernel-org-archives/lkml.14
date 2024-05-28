@@ -1,135 +1,142 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732A916DEA5
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 13:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A539754273;
+	Tue, 28 May 2024 13:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716902092; cv=none; b=AbVz+r8GKlR+O/TDozRqvlwYfwIp5kHJoLqo77bysb+seyslbB8m0BplY1hmItI921oepEOSCc7pablKQ7ZwgXPGAoMAjwIwI9ERvCfUZPV43CqDyUHtHLtBVj+bNmhvjRn9+IQslNiYvfroJMsY4v0XV7MqcMb76hbgwfWobas=
+	t=1716902116; cv=none; b=cQayZ5OSPN/bLuy9idfrHIvSiiXl020vh+DhIPXlRA8y7jo4CC5LnipqeLTIXPunedkCGiCSMZAbXdZFoApTSIKrdzd3nZXrW0kn5TaHMijzj1mxPJSpoyCM8XL/iXsVcptJHcCzTd3JNpO39qYux0Om7IIG6WjzLorxDE3CQto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716902092; c=relaxed/simple;
-	bh=SeWXVvF22D9ZJf9IgluXoTCpCnkYe9ToAThBJHwIzY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U26kfyNsygcD7NEQT/Hvm87KehiRkb7F/Hs0Mi41PtKA9vdZimQzuBgRnSaxjw3ZklHq9yWmac0f427wIUvbqFKW0zIekYRaKTk/haLB6t98fArjVI9QJdhzB6AB/1p8LujCqPcKfnW5fXLusnvW5NxYmI/5HX6MTT/5jZUyUnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wcSp2+pt; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716902116; c=relaxed/simple;
+	bh=0Dcn58QocAp13x/HKMAWs8UCUi2lZdKM2fgg3VBlWsI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JyLeSjPK2zG3BLY256Dk4QHhTibSRlo/Xa57OKLc+XIQdhtZnyv2K62AZBRnXyUuV/4DT3wpYn+YeOVlyad6xUFvQK8yVWXEyzz+Km3nUf4sb3EEYwEhkR3WHIZk+vmaqtLWQTYdbDnH5QQheDKFaW3nmpJ6ZelpgurYvIETR8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=th/8RrG3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wcSp2+pt"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-529661f2552so1050331e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716902089; x=1717506889; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6gaAjPPNW+1o8Nq5Xk3MdnoecgKTcrll+0FrMoJS3ho=;
-        b=wcSp2+ptffLfjHTyNtjcjZc/W5nZ1N+1skE5toYnRLFsi47xpXEeC7knoKy6CGiPUH
-         klgx1HHIWUByaYtdggLq+ixvYdK0Eds6/n9E+hK5QRgmmqcMbF5GRpR0pV4QRYjj3xLJ
-         itMaD1Tuo/Y9HTbhNn5Q3k0bqKVej6MSEu/uwEV4mKhpBMlBtDBhhYJe1Tooq/JCR9uj
-         /PAHCPUrJGCgw+9BWjFc38wYZGjS24iXdTGwYy/BDPHzewfBZahRnIDkoyG5OGq627J0
-         TkxXP0oXeoour2671cnQlvEuzw4w/BEmb4YOm5XhlShXWpJN/1qODfMmzqF/XBymMOHY
-         FqrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716902089; x=1717506889;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6gaAjPPNW+1o8Nq5Xk3MdnoecgKTcrll+0FrMoJS3ho=;
-        b=PR1iilRzCal5g2uTB/wmhpf7hDNyOqPTEqeJB0zbvUrH9BXt9PQJaOhaBkheP/GLck
-         HinWFS7nUQQFcaxN2zPKtuOQz2mQvcOStABvHi9pOtPbYPUCMrTKlHStvyG0VBwrGMip
-         moIwW/DUYlnZqirAC5da0tJy8lIhyR4TiEgEx8rqL35WC4dvtp9SJUwSVh78XT68wNAO
-         SXH+Et9XCivjud7sr8iDHimHfRQzcp+tzQcpXkrG/dkybJhE15pzX2X2RUY5UjbyMqL+
-         v1nUUDJl49F+bh/bqXaBQOTDWnBwxLyyumsOgbDvID2nhKqTirEse+TBR9mIZeFwec6r
-         Mx2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCtHEXwDvA43cgJGAENVrn0aF0rb+rcnf5bdOUTQVCM2QuZ4nmf8X5Vu+eKcqlXBN8S4EAx35HyFdCumBjSoqlqZuBpiCLS11lzfWX
-X-Gm-Message-State: AOJu0YwQxdqLJaxN7NkQFeuwOQ3aGhSSe7yg0zpSzFGibZKM9uWVHUBx
-	xquP04xoRQqcV5dBcTxurlIV8Cs6Ca7Ph1mtXDFW2B1WtmQPaXz1qL0ggLh3sXo=
-X-Google-Smtp-Source: AGHT+IECgbuCJq5CH9I+wOKcyKpG4gk5FMiLo2gVoFRgQ/xpYXkdBwseE2GUt86zkny6KhanGzA4zg==
-X-Received: by 2002:a05:6512:2017:b0:520:dc1c:3c5d with SMTP id 2adb3069b0e04-529668c9cc9mr6763082e87.42.1716902088640;
-        Tue, 28 May 2024 06:14:48 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529b72ca748sm404584e87.285.2024.05.28.06.14.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 06:14:47 -0700 (PDT)
-Date: Tue, 28 May 2024 16:14:46 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ajit Pandey <quic_ajipan@quicinc.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Vinod Koul <vkoul@kernel.org>, Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>, 
-	Jagadeesh Kona <quic_jkona@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, 
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Subject: Re: [PATCH V3 0/8] clk: qcom: Add support for DISPCC, CAMCC and
- GPUCC on SM4450
-Message-ID: <5ppxcqdtyn7a3tyaorzlxhaxhqtse5xvjpecppjcmbxodmsz3m@5kr7uacez7u4>
-References: <20240528114254.3147988-1-quic_ajipan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="th/8RrG3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB60C3277B;
+	Tue, 28 May 2024 13:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716902116;
+	bh=0Dcn58QocAp13x/HKMAWs8UCUi2lZdKM2fgg3VBlWsI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=th/8RrG3PUVODqQz0mxOTkhmpMEhIdLqHs2HtYkvimpc5RaRo3dow+yQOXVht6/yI
+	 YyznpVreXGaYrk49R8YSZFIzxBEmwot8VoNvMvcoeziCkRHgiEnsuSlGGtbxr7XQZa
+	 En2VTzHkn+c/Xz8KdtlyvNgR26B1DmzTo1Ta1sjVKT8iNj3yjAdRLopJagnASkgIv/
+	 gV3sjTrjSZphLPEh520IiHt9eGFp8bJPaqwHR2UIUoSWYNRM19ifezE3aKduJWrJKw
+	 9cSYtpEViD1eFSdJfB50SRpOMwXkkZSX7m7tZnTa+N2Nx3MACiDIhz2dC2uqlBKvg0
+	 zpfTfPqTS4u7A==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Subject: [PATCH HID 00/13] HID: convert HID-BPF into using bpf_struct_ops
+Date: Tue, 28 May 2024 15:14:38 +0200
+Message-Id: <20240528-hid_bpf_struct_ops-v1-0-8c6663df27d8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528114254.3147988-1-quic_ajipan@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL7YVWYC/x3MsQ5AMBCA4VeRmzXRo4vZwDOINNThFpoeIpG+u
+ 8b4Df//glBgEqizFwLdLHzsCTrPwG3jvpLiORmwwKowulQbz3byi5UzXO60hxdFJWocEStjDKT
+ QB1r4+ac9tF0DQ4wfWb0XNGkAAAA=
+To: Shuah Khan <shuah@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Alexei Starovoitov <ast@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Benjamin Tissoires <bentiss@kernel.org>, 
+ Peter Hutterer <peter.hutterer@who-t.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716902113; l=4153;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=0Dcn58QocAp13x/HKMAWs8UCUi2lZdKM2fgg3VBlWsI=;
+ b=5OTc7Q/Kj2wC43pxEQ7g78VU4O61ffAXopWwD3goDMpArfdWtuj8yPL62UFZxePJv1VYf+E1J
+ eDTFAFt7z1dCB0A1JjtYwTb17ZU++YK55wRcRBhGMgglxrD3wQF6apa
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-On Tue, May 28, 2024 at 05:12:46PM +0530, Ajit Pandey wrote:
-> This patch series add dt-bindings, driver and device tree support for DISPCC, CAMCC
-> and GPUCC on QCOM SM4450 platform and also includes a fix related to LUCID EVO PLL
-> config issue in clk-alpha-pll driver which is required for correct scaling of few
-> supported frequencies in graphics clock controllers on SM4450.
-> 
-> Changes in V3:
-> - [PATCH 1/8]: Updated commit tags order and added Reviewed-by: tags
-> - [PATCH 3/8]: Fixed reusing of pll0_config and added Reviewed-by: tags 
-> - [PATCH 6/8]: Updated commit text and added Reviewed-by tags
-> - [PATCH 8/8]: Updated node order for gpucc.
-> - Link to v2: https://lore.kernel.org/all/20240416182005.75422-1-quic_ajipan@quicinc.com/ 
+The purpose of this series is to rethink how HID-BPF is invoked.
+Currently it implies a jmp table, a prog fd bpf_map, a preloaded tracing
+bpf program and a lot of manual work for handling the bpf program
+lifetime and addition/removal.
 
-Nit: in future please retain previous changelogs too.
+OTOH, bpf_struct_ops take care of most of the bpf handling leaving us
+with a simple list of ops pointers, and we can directly call the
+struct_ops program from the kernel as a regular function.
 
-> 
-> Ajit Pandey (8):
->   clk: qcom: clk-alpha-pll: Fix CAL_L_VAL override for LUCID EVO PLL
->   dt-bindings: clock: qcom: add DISPCC clocks on SM4450
->   clk: qcom: Add DISPCC driver support for SM4450
->   dt-bindings: clock: qcom: add CAMCC clocks on SM4450
->   clk: qcom: Add CAMCC driver support for SM4450
->   dt-bindings: clock: qcom: add GPUCC clocks on SM4450
->   clk: qcom: Add GPUCC driver support for SM4450
->   arm64: dts: qcom: sm4450: add camera, display and gpu clock controller
-> 
->  .../bindings/clock/qcom,sm4450-camcc.yaml     |   63 +
->  .../bindings/clock/qcom,sm4450-dispcc.yaml    |   71 +
->  .../bindings/clock/qcom,sm8450-gpucc.yaml     |    2 +
->  arch/arm64/boot/dts/qcom/sm4450.dtsi          |   38 +
->  drivers/clk/qcom/Kconfig                      |   27 +
->  drivers/clk/qcom/Makefile                     |    3 +
->  drivers/clk/qcom/camcc-sm4450.c               | 1688 +++++++++++++++++
->  drivers/clk/qcom/clk-alpha-pll.c              |    2 +-
->  drivers/clk/qcom/dispcc-sm4450.c              |  770 ++++++++
->  drivers/clk/qcom/gpucc-sm4450.c               |  805 ++++++++
->  include/dt-bindings/clock/qcom,sm4450-camcc.h |  106 ++
->  .../dt-bindings/clock/qcom,sm4450-dispcc.h    |   51 +
->  include/dt-bindings/clock/qcom,sm4450-gpucc.h |   62 +
->  13 files changed, 3687 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm4450-camcc.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm4450-dispcc.yaml
->  create mode 100644 drivers/clk/qcom/camcc-sm4450.c
->  create mode 100644 drivers/clk/qcom/dispcc-sm4450.c
->  create mode 100644 drivers/clk/qcom/gpucc-sm4450.c
->  create mode 100644 include/dt-bindings/clock/qcom,sm4450-camcc.h
->  create mode 100644 include/dt-bindings/clock/qcom,sm4450-dispcc.h
->  create mode 100644 include/dt-bindings/clock/qcom,sm4450-gpucc.h
-> 
-> -- 
-> 2.25.1
-> 
+The net gain right now is in term of code simplicity and lines of code
+removal (though is an API breakage), but udev-hid-bpf is able to handle
+such breakages.
 
+In the near future, we will be able to extend the HID-BPF struct_ops
+with entrypoints for hid_hw_raw_request() and hid_hw_output_report(),
+allowing for covering all of the initial use cases:
+- firewalling a HID device
+- fixing all of the HID device interactions (not just device events as
+  it is right now).
+
+The matching user-space loader (udev-hid-bpf) MR is at
+https://gitlab.freedesktop.org/libevdev/udev-hid-bpf/-/merge_requests/86
+
+I'll put it out of draft once this is merged.
+
+Cheers,
+Benjamin
+
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+---
+Benjamin Tissoires (13):
+      HID: rename struct hid_bpf_ops into hid_ops
+      HID: bpf: add hid_get/put_device() helpers
+      HID: bpf: implement HID-BPF through bpf_struct_ops
+      selftests/hid: convert the hid_bpf selftests with struct_ops
+      HID: samples: convert the 2 HID-BPF samples into struct_ops
+      HID: bpf: add defines for HID-BPF SEC in in-tree bpf fixes
+      HID: bpf: convert in-tree fixes into struct_ops
+      HID: bpf: remove tracing HID-BPF capability
+      selftests/hid: add subprog call test
+      Documentation: HID: amend HID-BPF for struct_ops
+      Documentation: HID: add a small blurb on udev-hid-bpf
+      HID: bpf: Artist24: remove unused variable
+      HID: bpf: error on warnings when compiling bpf objects
+
+ Documentation/hid/hid-bpf.rst                      | 162 +++---
+ drivers/hid/bpf/Makefile                           |   2 +-
+ drivers/hid/bpf/entrypoints/Makefile               |  93 ----
+ drivers/hid/bpf/entrypoints/README                 |   4 -
+ drivers/hid/bpf/entrypoints/entrypoints.bpf.c      |  25 -
+ drivers/hid/bpf/entrypoints/entrypoints.lskel.h    | 248 ---------
+ drivers/hid/bpf/hid_bpf_dispatch.c                 | 266 +++-------
+ drivers/hid/bpf/hid_bpf_dispatch.h                 |  12 +-
+ drivers/hid/bpf/hid_bpf_jmp_table.c                | 565 ---------------------
+ drivers/hid/bpf/hid_bpf_struct_ops.c               | 246 +++++++++
+ drivers/hid/bpf/progs/FR-TEC__Raptor-Mach-2.bpf.c  |   9 +-
+ drivers/hid/bpf/progs/HP__Elite-Presenter.bpf.c    |   6 +-
+ drivers/hid/bpf/progs/Huion__Kamvas-Pro-19.bpf.c   |   9 +-
+ .../hid/bpf/progs/IOGEAR__Kaliber-MMOmentum.bpf.c  |   6 +-
+ drivers/hid/bpf/progs/Makefile                     |   2 +-
+ .../hid/bpf/progs/Microsoft__XBox-Elite-2.bpf.c    |   6 +-
+ drivers/hid/bpf/progs/Wacom__ArtPen.bpf.c          |   6 +-
+ drivers/hid/bpf/progs/XPPen__Artist24.bpf.c        |  10 +-
+ drivers/hid/bpf/progs/XPPen__ArtistPro16Gen2.bpf.c |  24 +-
+ drivers/hid/bpf/progs/hid_bpf.h                    |   5 +
+ drivers/hid/hid-core.c                             |   6 +-
+ include/linux/hid_bpf.h                            | 109 ++--
+ samples/hid/Makefile                               |   5 +-
+ samples/hid/hid_bpf_attach.bpf.c                   |  18 -
+ samples/hid/hid_bpf_attach.h                       |  14 -
+ samples/hid/hid_mouse.bpf.c                        |  26 +-
+ samples/hid/hid_mouse.c                            |  39 +-
+ samples/hid/hid_surface_dial.bpf.c                 |  10 +-
+ samples/hid/hid_surface_dial.c                     |  53 +-
+ tools/testing/selftests/hid/hid_bpf.c              | 100 +++-
+ tools/testing/selftests/hid/progs/hid.c            | 100 +++-
+ 31 files changed, 744 insertions(+), 1442 deletions(-)
+---
+base-commit: 70ec81c2e2b4005465ad0d042e90b36087c36104
+change-id: 20240513-hid_bpf_struct_ops-e3212a224555
+
+Best regards,
 -- 
-With best wishes
-Dmitry
+Benjamin Tissoires <bentiss@kernel.org>
+
