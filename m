@@ -1,146 +1,109 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F77816ABCC
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5525A16C854
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716896215; cv=none; b=c5c+/2QaD9DjF34LDC1fchCor2T3O0C0qpbbWFBwcsgJ8HhwEqtMm//PEDTcgTz3hqmFclRDlwILBfyNpRaYwM+90QB3/llHl+sDoRgG7YJCaqWUeqw+PtmxVRdlMS8TKwbmPX2QkQcTOY01MO8e9ALdlnbO3mGFesqqRyE6P0I=
+	t=1716896280; cv=none; b=pdacealmDCfsHI/xqCJFdDxcRVxFYdjsbq3cBVokf3ljhzMQLuN2DPIG13PaxNfeP9faRfsW+uv7iMR8KltLWYWnL6vZe1F+D7JiNM1zfslXB/ZoUB94TI/JKEbZpdNpVPJ7sak9wJ9gsgUffCzxO7yiuEb9L0eg4VvQ8Y5TQn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716896215; c=relaxed/simple;
-	bh=M0MaGrmyVgPDZ5O+a4ObngblY3U7Ng60oW1EiVKZdNs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VW+Yld+OX/0SuzyHp7dq5G/BJjW64xByzUOL6voSo8GHAAGW8RjpNLdf3Yrw3MSwgOj310PBQxA0+8F1Hwl19YcFaoM4J9fAW2p5lDd5Lvo4MWKZn22uIOaNT1ziQYFa8+rIIQBEbnsOXu6JLhUxaXDQv2u7HDt1zRQlSgRL8Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v4i+jrAp; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716896280; c=relaxed/simple;
+	bh=qsUEMsJeSS+IBw2BPZZTlJN3EV1oMrAZQyqKVRUbvtE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bzU11THBcs7lKoxdA+N6FOBWCwCtkJ4N8hRwHriqQst84TBzrbibvjgwVx+MnY3p3Lv4FDaleprzfvdmz4Q1sH3kSYt3SSWblnvlRbwSwtneaxvZWjjzP2XAlenm3WJkdCzAtujroGru4ugcdFarwhqvP6GLjsLjlOdRBL7j3ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hzHHvYxp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v4i+jrAp"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6ab9d01cb11so4202196d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 04:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716896213; x=1717501013; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5+fy7bxhmTSYRqmL4m3IRHCvKHkrSDKxVpOHKJ74CWc=;
-        b=v4i+jrApphkfH7mcoJKI5zVjB4itgKSGZ2HFlkTD7h43d56AyRZq3dltB/wJ0IAh+E
-         cpIidJBaGW6SkbWx3lRACVkNXrHKlk77GQdLzBHDdu9uHEazyYA4qMWxCVv6v05/Bypg
-         PO+zf+ggzh4C8GGEK2UDbHu461Yf7CpQVztYPCXHpbInUFGkkc7NLVSW1iLv0COcXHFH
-         SaKhx3EcEIaxcjJmtZbsBbBFqa9vK8+JymgrK9DZa/yWz0OaiYL0JGofLtqgAREm3TpV
-         EFCCwIqDTNEmJSeisn3DjZlGbfC4DUhX7doQKqB93Up12YmM3bpPaIUzKUsY8hsMzgUz
-         uNTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716896213; x=1717501013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5+fy7bxhmTSYRqmL4m3IRHCvKHkrSDKxVpOHKJ74CWc=;
-        b=og7DwptlkVjGtxv0bD55GGfDvvO013789xzYkTyvbApASoVzq57w9iJ0F4MnYyPL61
-         aqeuz2zSabujNcxpj9sanmvzvR6wt/HLbaVInDAfm5Gq9Sbs5kaRiJmeNepPwjPlwURk
-         +I19l1H9JtsZmi8UfWcPA95s8VvFvmvt3E4W1LPwY64nZEykN+6LpqMVyb5cvgjPWB+H
-         g2Nz4N72kD2VD1BnQG5rANYzS7vnWEm2XEg9u344dvDn706sasdkthCwMK0MtKy0XELZ
-         j+nZUXRgole4actXWugbqZ0kJ+r2KRnhOtYaWBk+wt43f7cELbgO0jyP8a+2S+j0UIpX
-         S54Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWAaS7ydFCo4zGPLOmpVpNEZ8yxNxaV3lk26x/kbVRyh+WdBSszpNOOQA5+8QX0tEs0S5p7kcsifB1JHz0TyXGQ6hC5uKzPR0GNWX+O
-X-Gm-Message-State: AOJu0Ywpx/MkmLjKXQuZPOOnSFmBrxBnG4FDbkCYDL7nfTEUM7GMFKpO
-	WD7LuVDfEfZbPzaL/ZVa6OSkxG2+T0lujeMnc7Oa7hwZZusvHFQiCaga5QBYy3AE3ycYb/q0NfW
-	ualwFVX5A+xt/z803/pwkyY8GBliLgOer8stf
-X-Google-Smtp-Source: AGHT+IEg6PbfYyP0aS02Mv0srCCx6EfAtwyybRhD4r3hX01VAgUGGxblt8OUbvO4llpryD8LyAH3/0ceqAYcq/6J4a4=
-X-Received: by 2002:a05:6214:4602:b0:6ab:92b7:5903 with SMTP id
- 6a1803df08f44-6abbbcb0b35mr137433736d6.21.1716896213239; Tue, 28 May 2024
- 04:36:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzHHvYxp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716896278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cR2bt1k7HyvsTYH0cB1zhL4rvahDLosFkY2Z9XJBKj4=;
+	b=hzHHvYxpq+FsTLqXvk3EO71TXhDzb/11TYP/7H1pbeIf1JguOJj3t2OWxrjQOSW8AFMyZm
+	spfYLgnOoN1/U+03z99VxT0EaXKu16Xn82NN8q5zi6ZJ/8jXnRTZG8vow+b/Fg0CJnr6fh
+	ufaUx7n9EFhEHvIiqq6XF0aw4f0CEsU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-584-t2Ce_dVVNM-Zrr8EG9E22Q-1; Tue, 28 May 2024 07:37:54 -0400
+X-MC-Unique: t2Ce_dVVNM-Zrr8EG9E22Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B007881227E;
+	Tue, 28 May 2024 11:37:53 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E44710004FF;
+	Tue, 28 May 2024 11:37:53 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id 872D230C1C33; Tue, 28 May 2024 11:37:53 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 8623A43520;
+	Tue, 28 May 2024 13:37:53 +0200 (CEST)
+Date: Tue, 28 May 2024 13:37:53 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Mike Snitzer <snitzer@kernel.org>
+cc: Benjamin Marzinski <bmarzins@redhat.com>, Yang Yang <yang.yang@vivo.com>, 
+    Alasdair Kergon <agk@redhat.com>, dm-devel@lists.linux.dev, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dm: optimize flushes
+In-Reply-To: <Zk-EtZE4C7bndEYn@kernel.org>
+Message-ID: <96148bb3-42e3-a5e2-63fb-ad7f67ba4fea@redhat.com>
+References: <20240514090445.2847-1-yang.yang@vivo.com> <20240514090445.2847-4-yang.yang@vivo.com> <ZkTXzG1yrPmW64Z6@redhat.com> <60bd4b9-8edd-7e22-ce8b-e5d0e43da195@redhat.com> <90f4beb-2e15-3f9-4bc2-0d13872e8ea@redhat.com> <Zk4Y6DMgK71UuoKd@kernel.org>
+ <44afd6c8-d36a-4b9d-e77f-fca269a9897b@redhat.com> <Zk-EtZE4C7bndEYn@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <986294ee-8bb1-4bf4-9f23-2bc25dbad561@efficios.com>
- <vu7w6if47tv3kwnbbbsdchu3wpsbkqlvlkvewtvjx5hkq57fya@rgl6bp33eizt>
- <944d79b5-177d-43ea-a130-25bd62fc787f@efficios.com> <7236a148-c513-4053-9778-0bce6657e358@efficios.com>
- <jqj6do7lodrrvpjmk6vlhasdigs23jkyvznniudhebcizstsn7@6cetkluh4ehl>
-In-Reply-To: <jqj6do7lodrrvpjmk6vlhasdigs23jkyvznniudhebcizstsn7@6cetkluh4ehl>
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 28 May 2024 13:36:11 +0200
-Message-ID: <CAG_fn=Vp+WoxWw_aA9vr9yf_4qRvu1zqfLDWafR8J41Zd9tX5g@mail.gmail.com>
-Subject: Re: Use of zero-length arrays in bcachefs structures inner fields
-To: Kent Overstreet <kent.overstreet@linux.dev>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Brian Foster <bfoster@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-bcachefs@vger.kernel.org, 
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On Fri, May 24, 2024 at 7:30=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Fri, May 24, 2024 at 12:04:11PM -0400, Mathieu Desnoyers wrote:
-> > On 2024-05-24 11:35, Mathieu Desnoyers wrote:
-> > > [ Adding clang/llvm and KMSAN maintainers/reviewers in CC. ]
-> > >
-> > > On 2024-05-24 11:28, Kent Overstreet wrote:
-> > > > On Thu, May 23, 2024 at 01:53:42PM -0400, Mathieu Desnoyers wrote:
-> > > > > Hi Kent,
-> > > > >
-> > > > > Looking around in the bcachefs code for possible causes of this K=
-MSAN
-> > > > > bug report:
-> > > > >
-> > > > > https://lore.kernel.org/lkml/000000000000fd5e7006191f78dc@google.=
-com/
-> > > > >
-> > > > > I notice the following pattern in the bcachefs structures: zero-l=
-ength
-> > > > > arrays members are inserted in structures (not always at the end)=
-,
-> > > > > seemingly to achieve a result similar to what could be done with =
-a
-> > > > > union:
-> > > > >
-> > > > > fs/bcachefs/bcachefs_format.h:
-> > > > >
-> > > > > struct bkey_packed {
-> > > > >          __u64           _data[0];
-> > > > >
-> > > > >          /* Size of combined key and value, in u64s */
-> > > > >          __u8            u64s;
-> > > > > [...]
-> > > > > };
-> > > > >
-> > > > > likewise:
-> > > > >
-> > > > > struct bkey_i {
-> > > > >          __u64                   _data[0];
-> > > > >
-> > > > >          struct bkey     k;
-> > > > >          struct bch_val  v;
-> > > > > };
 
-I took a glance at the LLVM IR for fs/bcachefs/bset.c, and it defines
-struct bkey_packed and bkey_i as:
 
-    %struct.bkey_packed =3D type { [0 x i64], i8, i8, i8, [0 x i8], [37 x i=
-8] }
-    %struct.bkey_i =3D type { [0 x i64], %struct.bkey, %struct.bch_val }
+On Thu, 23 May 2024, Mike Snitzer wrote:
 
-, which more or less looks as expected, so I don't think it could be
-causing problems with KMSAN right now.
-Moreover, there are cases in e.g. include/linux/skbuff.h where
-zero-length arrays are used for the same purpose, and KMSAN handles
-them just fine.
+> On Thu, May 23, 2024 at 07:46:25PM +0200, Mikulas Patocka wrote:
+> > Hi
+> > 
+> > Here I'm resending the patch, with more comments and explanations added.
+> > 
+> > Mikulas
+> > 
+> > 
+> > From: Mikulas Patocka <mpatocka@redhat.com>
+> > 
+> > Device mapper sends flush bios to all the targets and the targets send it
+> > to the underlying device. That may be inefficient, for example if a table
+> > contains 10 linear targets pointing to the same physical device, then
+> > device mapper would send 10 flush bios to that device - despite the fact
+> > that only one bio would be sufficient.
+> > 
+> > This commit optimizes the flush behavior. It introduces a per-target
+> > variable flush_bypasses_map - it is set when the target supports flush
+> > optimization - currently, the dm-linear and dm-stripe targets support it.
+> > When all the targets in a table have flush_bypasses_map,
+> > flush_bypasses_map on the table is set. __send_empty_flush tests if the
+> > table has flush_bypasses_map - and if it has, no flush bios are sent to
+> > the targets via the "map" method and the list dm_table->devices is
+> > iterated and the flush bios are sent to each member of the list.
+> > 
+> > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> > Suggested-by: Yang Yang <yang.yang@vivo.com>
+> 
+> Nicely done, please feel free to stage for 6.11 (create a new
+> 'dm-6.11' branch starting from 'dm-6.10' -- we'll need to rebase
+> dm-6.11 to 6.10-rc2 or so but at least we'll get this commit in the
+> pipeline, push to 'for-next').
+> 
+> Reviewed-by: Mike Snitzer <snitzer@kernel.org>
 
-Yet I want to point out that even GCC discourages the use of
-zero-length arrays in the middle of a struct:
-https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html, so Clang is not
-unique here.
+OK, done.
 
-Regarding the original KMSAN bug, as noted in
-https://lore.kernel.org/all/0000000000009f9447061833d477@google.com/T/,
-we might be missing the event of copying data from the disk to
-bcachefs structs.
-I'd appreciate help from someone knowledgeable about how disk I/O is
-implemented in the kernel.
+Mikulas
+
