@@ -1,233 +1,173 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A91173346;
-	Tue, 28 May 2024 16:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D3016C688;
+	Tue, 28 May 2024 16:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716912115; cv=none; b=i/DvQODccFVYl0gs5/f9Scg8aiOI3XynZAU0EjY6Y6TCSdW2FId+64aMyTbkXs2yjZK2QI46Kzs++rYQ21V+G7pfDjwIWzoD1VeFCcGioe83fCsZ8LpCof8+LXxVJVdpwwH2togKf0UtPFMQMbbAVARtbWkDjUq4JC58sc8hASA=
+	t=1716912173; cv=none; b=lNbW+5LXZLXcV82mUkDJgicDFLsKQ/r7xN3GWT6b9GqBl/AFlXUssYySlrOpw4jb9yCkX9OfhMfgDIa5jQOUGkQnT0DMO49E+jhDd22ya6DF5kgLCDits7DxRKOh2heTIaa6tz2TwzbL71R3ZuKi5VaVicAs5Ps5+r87oXB5IXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716912115; c=relaxed/simple;
-	bh=93/ZAcDJU7tMCrl1u6rFqplJEb56C7KgT8AcIidewh0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kezLp8JjI05rfJagquDliXAjsGdtWKRhFfD7GUKHYOmRyPSO9M3jg8Xu3dZOI4pxeKlD+E56j4JEFbdbFaDqUgooR/TCJ+inubav5Etpumst41HXsFKYZlsh/tPh4OddJzy2rhSqavFvmZpONpy+JaF4sq+QiFUYtBwTk4CCUWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gnpKWxVg; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716912173; c=relaxed/simple;
+	bh=pTd9+3ADyKSsLJxka8UR2Fi7CwtGAZ/fPYypqOBGFKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qs20/vT9OFW8PsXXROHrjIkOd2oKvqzJgyqjHJgkavnEOFm9mKa6/a/sNFv6jM7CAm2hTghOj2qr4xb/tQRfSKPefUko6EL/CipOXW5cB1jZUQH91ZE2Quj42e8QIEfQrzDj51hgHWZI8CYXkG1qNw7d8gost+131d/bRKT0+hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=abhkWOWA; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnpKWxVg"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5786988ae9bso1319429a12.3;
-        Tue, 28 May 2024 09:01:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716912112; x=1717516912; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AsjOHizdrvfqmJxqxDMpN3lCIsfUt5pRyM4spPwkenU=;
-        b=gnpKWxVgLqlF2x5Rt0c9Y8L+HuPOttAkRxIdffJs+6puqgTCXd4APO2GK7e+RbmfdI
-         WBZNvk+d7/nL5XkerU/ClRM+Sappb20vePT6toHyJ7hgvT/nTih8A2svHpufvEvoceuU
-         pPngiFyEHKJWL8t5nw9pszgK1SJLb/8niTs3wiF5p3+5WEP/k/rfmNHLY0mnIGTVr4en
-         s68+2YXMCanz3fDU+l53/4F9b/hNceI543eh1KFoGMx8ehenxkSadlFPzCc8sEa+ka9L
-         9p1BHnixyXMZeHynnkZtJ+eFdFa9eslJG4NdIWn32BEe0+g0KGvKrcsNu/dsAE1DO+iB
-         CW+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716912112; x=1717516912;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AsjOHizdrvfqmJxqxDMpN3lCIsfUt5pRyM4spPwkenU=;
-        b=Hfy7HDUajLIc3KY2CVh9G6ZI+tNcdX5wPI3uT30agJOOcuAxK19YJbYmIXJSB9eYbQ
-         I6QiAZvpTjXcaaxHYmJdap/t8b+SjRKzAaJnW0W3F4aHhUw4rUJ78cEjI+xT80X2p8XB
-         sD9GI+5EErdaHufWSNFpDgMM02oVpZvNTt6zs54xPX/7hK2HR6jCVEH056Wnz06xRynM
-         nXU8QshKLIOF3FqJtNoBmrqUBJFQxCOk0ND8evmRMtTh2e9/9MN5hgIrAgo4zThTGbjy
-         RERij+UqKFZ2+Tmcl+xdDRG3DCItYjwckvwk7gyq9Rj/KOxnNy3yoMmxQj2HI7S6D4YE
-         KINw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUvUB7E8RmjQOkmWdUg/bzdJL9jMrd1MzHiQTv4FcPNIroUN59kos0eYhNGkAVZXcOQMWtGgyDrD2IHNF+D7i7AQX7eX8u8qFBN2B2h6lxWeGeSbXcZXH7iZFVgnzMt6aNL8YVNzpXoQ==
-X-Gm-Message-State: AOJu0Yw6xQKgoeAKd3aI0zil4/0wQKrDyeT8j3zn6H2TI45jhV0zki8X
-	He8D8aAbpiFp8M32hgZME9+WMSURbZ/KKp5VPhBGxeSxycd1BtM5butPdOF+vCj7StKRl4WNhq2
-	ELRrnugAqoEQEyLUQcOBrqnRez40=
-X-Google-Smtp-Source: AGHT+IHNuE7nLtgH5tbabZBoP5F4JkJPXbp/M6maPBMqXy141pqHfqme/UZVDsjVlC/xrsMnW/wR2sqSs0md2gDnT0U=
-X-Received: by 2002:a17:906:cc4d:b0:a59:ba2b:590b with SMTP id
- a640c23a62f3a-a62650118f2mr833227266b.71.1716912112089; Tue, 28 May 2024
- 09:01:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="abhkWOWA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716912172; x=1748448172;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pTd9+3ADyKSsLJxka8UR2Fi7CwtGAZ/fPYypqOBGFKc=;
+  b=abhkWOWAD1lxiykExf0AanWLAg6TFaYNyCFc9FvvApP3icMM+bOUapEu
+   Rr0FfW4Iemc+tSIGEWjBEb4S3O+2xdAhehDOISt2m81q0gaWL7W2mqeZN
+   aXR7diHg/Y0L96ZTalbtGwA0Kd+KUqqX55H0zmKxxcxr/pt9K2w5/allY
+   fcf58jEE1a7mAdQnBaNTVEzqY71gZumR8lYrjMZ7BB7jWxIxONxhKf5DU
+   pTQGw5fld0uP/ioxYMz/8XzUwvMWtykED5yCh7YgTmNluUsPGBf+pu/5H
+   qxYL07epgZO6NQpnXGd/Vr4Jhyvfi3WooM/taYLYQxFDxiGhDA9jBOMOg
+   A==;
+X-CSE-ConnectionGUID: 4prBDivWRuWg9mOrDuWOYA==
+X-CSE-MsgGUID: Ia+WtwlaQGOGpMUjfFaSRg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24685042"
+X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
+   d="scan'208";a="24685042"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 09:02:51 -0700
+X-CSE-ConnectionGUID: QSrT1CW1R4GH1zOmD3LUKQ==
+X-CSE-MsgGUID: BcsEDqCiSmGGBf/FMWktww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
+   d="scan'208";a="35208558"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 28 May 2024 09:02:50 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sBzHj-000CQD-0P;
+	Tue, 28 May 2024 16:02:47 +0000
+Date: Wed, 29 May 2024 00:02:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Naresh Solanki <naresh.solanki@9elements.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] hwmon: (max6639) : Update hwmon init using info
+Message-ID: <202405282323.3IOCxxpg-lkp@intel.com>
+References: <20240528091808.863702-1-naresh.solanki@9elements.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
- <5122636.irdbgypaU6@phil> <8727e1c29bd6f562a7fc3de0ddac62cf@manjaro.org> <6230150.aeNJFYEL58@phil>
-In-Reply-To: <6230150.aeNJFYEL58@phil>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Tue, 28 May 2024 20:01:39 +0400
-Message-ID: <CABjd4YysYZ5o17-nhRjyKqAw2sWi=GR1Q_OSHzAFOHLF5vh9GQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] RK3588 and Rock 5B dts additions: thermal, OPP and fan
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Dragan Simic <dsimic@manjaro.org>, Quentin Schulz <quentin.schulz@cherry.de>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Chen-Yu Tsai <wens@kernel.org>, Diederik de Haas <didi.debian@cknow.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528091808.863702-1-naresh.solanki@9elements.com>
 
-[sorry if you get this twice: I messed up and sent the previous one in
-HTML instead of plain text - resending now]
+Hi Naresh,
 
-On Tue, May 28, 2024 at 7:16=E2=80=AFPM Heiko Stuebner <heiko@sntech.de> wr=
-ote:
->
-> Am Dienstag, 28. Mai 2024, 17:01:48 CEST schrieb Dragan Simic:
-> > On 2024-05-28 16:34, Heiko Stuebner wrote:
-> > > Am Dienstag, 28. Mai 2024, 16:05:04 CEST schrieb Dragan Simic:
-> > >> On 2024-05-28 11:49, Alexey Charkov wrote:
-> > >> > On Mon, May 6, 2024 at 1:37=E2=80=AFPM Alexey Charkov <alchark@gma=
-il.com>
-> > >> > wrote:
-> > >> >>
-> > >> >> This enables thermal monitoring and CPU DVFS on RK3588(s), as wel=
-l as
-> > >> >> active cooling on Radxa Rock 5B via the provided PWM fan.
-> > >> >>
-> > >> >> Some RK3588 boards use separate regulators to supply CPUs and the=
-ir
-> > >> >> respective memory interfaces, so this is handled by coupling thos=
-e
-> > >> >> regulators in affected boards' device trees to ensure that their
-> > >> >> voltage is adjusted in step.
-> > >> >>
-> > >> >> This also enables the built-in thermal sensor (TSADC) for all boa=
-rds
-> > >> >> that don't currently have it enabled, using the default CRU based
-> > >> >> emergency thermal reset. This default configuration only uses on-=
-SoC
-> > >> >> devices and doesn't rely on any external wiring, thus it should w=
-ork
-> > >> >> for all devices (tested only on Rock 5B though).
-> > >> >>
-> > >> >> The boards that have TSADC_SHUT signal wired to the PMIC reset li=
-ne
-> > >> >> can choose to override the default reset logic in favour of GPIO
-> > >> >> driven (PMIC assisted) reset, but in my testing it didn't work on
-> > >> >> Radxa Rock 5B - maybe I'm reading the schematic wrong and it does=
-n't
-> > >> >> support PMIC assisted reset after all.
-> > >> >>
-> > >> >> Fan control on Rock 5B has been split into two intervals: let it =
-spin
-> > >> >> at the minimum cooling state between 55C and 65C, and then accele=
-rate
-> > >> >> if the system crosses the 65C mark - thanks to Dragan for suggest=
-ing.
-> > >> >> This lets some cooling setups with beefier heatsinks and/or large=
-r
-> > >> >> fan fins to stay in the quietest non-zero fan state while still
-> > >> >> gaining potential benefits from the airflow it generates, and
-> > >> >> possibly avoiding noisy speeds altogether for some workloads.
-> > >> >>
-> > >> >> OPPs help actually scale CPU frequencies up and down for both coo=
-ling
-> > >> >> and performance - tested on Rock 5B under varied loads. I've drop=
-ped
-> > >> >> those OPPs that cause frequency reductions without accompanying
-> > >> >> decrease
-> > >> >> in CPU voltage, as they don't seem to be adding much benefit in d=
-ay to
-> > >> >> day use, while the kernel log gets a number of "OPP is inefficien=
-t"
-> > >> >> lines.
-> > >> >>
-> > >> >> Note that this submission doesn't touch the SRAM read margin upda=
-tes
-> > >> >> or
-> > >> >> the OPP calibration based on silicon quality which the downstream
-> > >> >> driver
-> > >> >> does and which were mentioned in [1]. It works as it is (also
-> > >> >> confirmed by
-> > >> >> Sebastian in his follow-up message [2]), and it is stable in my
-> > >> >> testing on
-> > >> >> Rock 5B, so it sounds better to merge a simple version first and =
-then
-> > >> >> extend when/if required.
-> > >> >>
-> > >> >> [1]
-> > >> >> https://lore.kernel.org/linux-rockchip/CABjd4YzTL=3D5S7cS8ACNAYVa=
-730WA3iGd5L_wP1Vn9=3Df83RCORA@mail.gmail.com/
-> > >> >> [2]
-> > >> >> https://lore.kernel.org/linux-rockchip/pkyne4g2cln27dcdu3jm7bqdqp=
-md2kwkbguiolmozntjuiajrb@gvq4nupzna4o/
-> > >> >>
-> > >> >> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > >> >> ---
-> > >> >
-> > >> > Hi Heiko,
-> > >> >
-> > >> > Do you think this can be merged for 6.11? Looks like there hasn't =
-been
-> > >> > any new feedback in a while, and it would be good to have frequenc=
-y
-> > >> > scaling in place for RK3588.
-> > >> >
-> > >> > Please let me know if you have any reservations or if we need any
-> > >> > broader discussion.
-> > >
-> > > not really reservations, more like there was still discussion going o=
-n
-> > > around the OPPs. Meanwhile we had more discussions regarding the whol=
-e
-> > > speed binning Rockchip seems to do for rk3588 variants.
-> > >
-> > > And waiting for the testing Dragan wanted to do ;-) .
-> >
-> > I'm sorry for the delays.
->
-> Was definitly _not_ meant as blame ;-) .
->
-> The series has just too many discussions threads to unravel on half
-> an afternoon.
+kernel test robot noticed the following build errors:
 
-FWIW, I think the latest exchange we had with Quentin regarding the
-OPPs concluded in =E2=80=9Cfalse alarm=E2=80=9D, given that this version of=
- the series
-only introduces a subset of them which should apply to all RK3588(s)
+[auto build test ERROR on 5fbf8734fb36cf67339f599f0e51747a6aff690c]
 
-Performance binning here is more geared towards how low the voltages
-can go for a given frequency, and right now we=E2=80=99re only introducing =
-the
-highest-voltage setting for each OPP. Thus the binning and/or
-intermediate frequencies should be possible to introduce at a later
-stage in a backwards compatible way (if deemed relevant).
+url:    https://github.com/intel-lab-lkp/linux/commits/Naresh-Solanki/hwmon-max6639-Update-hwmon-init-using-info/20240528-172245
+base:   5fbf8734fb36cf67339f599f0e51747a6aff690c
+patch link:    https://lore.kernel.org/r/20240528091808.863702-1-naresh.solanki%409elements.com
+patch subject: [PATCH v2] hwmon: (max6639) : Update hwmon init using info
+config: arm64-randconfig-002-20240528 (https://download.01.org/0day-ci/archive/20240528/202405282323.3IOCxxpg-lkp@intel.com/config)
+compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240528/202405282323.3IOCxxpg-lkp@intel.com/reproduce)
 
-> > > So this should definitly make it into 6.11 though, as there is still
-> > > a lot of time.
-> > >
-> > >> As I promised earlier, I was going to test this patch series in
-> > >> detail.
-> > >> Alas, I haven't managed to do that yet, :/ due to many reasons, but
-> > >> I still remain firmly committed to doing that.
-> > >>
-> > >> Is -rc4 the cutoff for 6.11?  If so, there's still time and I'll do =
-my
-> > >> best to test and review these patches as soon as possible.
-> > >
-> > > As early as possible, the hard cutoff would be -rc6 though.
-> > > I guess I'll just start picking the easy patches from the series.
-> >
-> > I'll do my best to have the patches tested and reviewed in detail ASAP.
-> > As a suggestion, perhaps it would be better to take the series as a
-> > whole,
-> > so we don't bring partial merging into the mix.
->
-> Patches need to work individually anyway (in correct order of course),
-> so like starting at the top with the general thermal stuff should not
-> create issues ;-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405282323.3IOCxxpg-lkp@intel.com/
 
-Indeed, those are self-contained and can be merged independently of
-the OPPs. Having OPPs without thermal is more risky though, but that
-doesn=E2=80=99t sound like what we=E2=80=99re after here :)
+All errors (new ones prefixed by >>):
 
-Best regards,
-Alexey
+>> drivers/hwmon/max6639.c:291:3: error: expected expression
+                   u8 x;
+                   ^
+>> drivers/hwmon/max6639.c:296:3: error: use of undeclared identifier 'x'
+                   x = val & MAX6639_FAN_CONFIG3_FREQ_MASK;
+                   ^
+   drivers/hwmon/max6639.c:303:4: error: use of undeclared identifier 'x'
+                           x |= 0x4;
+                           ^
+   drivers/hwmon/max6639.c:304:3: error: use of undeclared identifier 'x'
+                   x &= 0x7;
+                   ^
+   drivers/hwmon/max6639.c:305:25: error: use of undeclared identifier 'x'
+                   *pwm_val = freq_table[x];
+                                         ^
+   drivers/hwmon/max6639.c:328:3: error: expected expression
+                   u8 x;
+                   ^
+   drivers/hwmon/max6639.c:332:8: error: use of undeclared identifier 'x'
+                   for (x = 0; x < sizeof(freq_table); x++)
+                        ^
+   drivers/hwmon/max6639.c:332:15: error: use of undeclared identifier 'x'
+                   for (x = 0; x < sizeof(freq_table); x++)
+                               ^
+   drivers/hwmon/max6639.c:332:39: error: use of undeclared identifier 'x'
+                   for (x = 0; x < sizeof(freq_table); x++)
+                                                       ^
+   drivers/hwmon/max6639.c:333:26: error: use of undeclared identifier 'x'
+                           if (val <= freq_table[x])
+                                                 ^
+   drivers/hwmon/max6639.c:337:38: error: use of undeclared identifier 'x'
+                                            MAX6639_FAN_CONFIG3_FREQ_MASK, x);
+                                                                           ^
+   drivers/hwmon/max6639.c:341:7: error: use of undeclared identifier 'x'
+                   if (x >> 2)
+                       ^
+   12 errors generated.
+
+
+vim +291 drivers/hwmon/max6639.c
+
+   275	
+   276	static int max6639_read_pwm(struct device *dev, u32 attr, int channel,
+   277				    long *pwm_val)
+   278	{
+   279		struct max6639_data *data = dev_get_drvdata(dev);
+   280		unsigned int val, res;
+   281	
+   282		if (IS_ERR(data))
+   283			return PTR_ERR(data);
+   284	
+   285		switch (attr) {
+   286		case hwmon_pwm_input:
+   287			res = regmap_read(data->regmap, MAX6639_REG_TARGTDUTY(channel), &val);
+   288			*pwm_val = val * 255 / 120;
+   289			return 0;
+   290		case hwmon_pwm_freq:
+ > 291			u8 x;
+   292	
+   293			res = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG3(channel), &val);
+   294			if (res < 0)
+   295				return res;
+ > 296			x = val & MAX6639_FAN_CONFIG3_FREQ_MASK;
+   297	
+   298			res = regmap_read(data->regmap, MAX6639_REG_GCONFIG, &val);
+   299			if (res < 0)
+   300				return res;
+   301	
+   302			if (val & MAX6639_GCONFIG_PWM_FREQ_HI)
+   303				x |= 0x4;
+   304			x &= 0x7;
+   305			*pwm_val = freq_table[x];
+   306			return res;
+   307		default:
+   308			return -EOPNOTSUPP;
+   309		}
+   310	}
+   311	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
