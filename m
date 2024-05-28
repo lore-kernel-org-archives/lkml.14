@@ -1,221 +1,204 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2041.outbound.protection.outlook.com [40.107.94.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29C317BB08;
-	Tue, 28 May 2024 21:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716932276; cv=none; b=uKEkzD/Bs2fo+d69li+ax72IBWNXAMT/iYfHzGvaSaEbxka2ClwCoBBt5xVpllqnxhngs/U35eqrgkJ1M2y1mMtK1I2pTiBb4BpTb0YyMidbiuXLjKU2UgRo31xlQHAP8z1qHVYd+1vM9okoqzMzSPJbAdWFHq4ojXLUpLqu6zk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716932276; c=relaxed/simple;
-	bh=R/HsicMJlYLrjtAfiU+F9j/7/gZohzq4BEe82lohKfM=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=hGn0DmivUQanfEdMuDv8dJduJqvDA44rXQ6yIN7++pN5CDkzHhE1jzLZOaSDAQckSyvCxf66jBmSwkfh2aVYV2B5579RKaxBK1yUw3EYj3Q4lmWCcx54bkZOz1uUx/ObrMeEdm+OT+vqyvq7UArflHgRsQu+nnR3IcDO402yDIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=IPDeRljL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hve18XNY; arc=none smtp.client-ip=64.147.123.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88D917BB3C;
+	Tue, 28 May 2024 21:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716932282; cv=fail; b=W79fiP4TC+1JbUwgpSPz8RxIL+PQBggy+akxoQpPNY6z8lPZ9EnXbMwDpC9Y6ef06o19qdZ8r235yqvVe1hNsosf/jGJi22sxptIuz8+++2SlbD1AaLItr7fcdnMkRpmd9sxRG0fdCLxyNX5FHuCbf/QZyx2q16rSjnVDbIVoaM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716932282; c=relaxed/simple;
+	bh=CWIrxfqnk3E/Hp0MiBK8AkBHAD4VZcyPmI4qZmNumE8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BMRABNhYNVXdxxowDWt14ktBW0KlKDo8i1azj9M7NAkOZ/NqHDqS77I3yuLaFov1zYPm5KJQmglab/V4aSYuwOi3+gOLSZCeWsON3Df+5UILHaQVSS6Xx1PP/3T2E3MEZMsJEKhOpPj6DAjAp4ggkEoe3N+bU22RZH1s9ZEOJ5k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Xffkibkd; arc=fail smtp.client-ip=40.107.94.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="IPDeRljL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hve18XNY"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.west.internal (Postfix) with ESMTP id C595B18000C8;
-	Tue, 28 May 2024 17:37:53 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Tue, 28 May 2024 17:37:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1716932273;
-	 x=1717018673; bh=Z4gInH7+jobeFXZ5owoWpleJ3cPNt4nDoKMyy5VdAto=; b=
-	IPDeRljLBbVgK6Hkj/L5hKqpEg49aeMT80ZYbtMB4KxwC1WalCRo+zWeT44Nrfam
-	BEKFoRDwlteTSBuFANbQVt1ADXWL6bnDHDU1aSDkczZBeQYchmcvWK+A5ykozDIy
-	fNrrj1mMW7rxTDRtYmNVT1WlJojKiKbSfBNUf+S/p6VMfHKwJYFLc2M3DBuWGWHq
-	Z8iWbk7iLGUfRUFcpyhS3/rfzBTHLQ45SinRbHqAZh4OBUbnh6Pz5f0UToNnitT7
-	g9ej8yUl/0HWKqzuNr9TbMEmxilW8dHNgM7CbS1gX6oNc3ijOtq03yaMStIxYJRh
-	11e2jMCdfheCvIWohg7+Rg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716932273; x=
-	1717018673; bh=Z4gInH7+jobeFXZ5owoWpleJ3cPNt4nDoKMyy5VdAto=; b=h
-	ve18XNYgcbOos429JBHVkUpBUlJgtyD4O22Nh0UIOSLX64USBdm6YlAkz+iYqMDX
-	c2/HnK3ew3ILwRGjmZYaPW+v+o+95QZtVSnTcPK+BWwxNupQHlE8KF5FIQsZVXmG
-	5qWYT7T23Gvvgv9CxNbXR605wq0dLsAYZsECF9cTO5aGuCkmmildgmmFw/s8rzkc
-	zri8LOMStLypT/gLZjOmo7FPUPfWDwZEd12TZSQwRofhSB9vO4Dckjq4J9ch+/T3
-	zwqFOPQPst61ZdUnFS1xqBfU9/lGiH57X4ihGy9sAeuKH7KoNMvyin6Hr2vAMjvL
-	q8JUFEYEcuUVgdkyYil6Q==
-X-ME-Sender: <xms:sU5WZohDSsTr8NjdHT6nXV5CYxQXGIqwzhC0zltnB0i7uP-00sxQQg>
-    <xme:sU5WZhANocVYCckUIVNG1AkfclCb-trSGVKhIxFi5_sph7f9WQXSpd0FSECk9VEUx
-    PpBAOeWgxDjs-7YY50>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejlecutefuodetggdotefrodftvfcurf
-    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedfnfhukhgv
-    ucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
-    hnpeefuefghfdvueefheeiledvgeefffevgeelhedtvdehgeekteeugedtgeeuhedvleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
-    eslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:sU5WZgFIb7l-S2ekLIQmYlGFX_ljRz-2ZEuXPTnPcFujoEyGxUD3Hw>
-    <xmx:sU5WZpT64XKKTUpegcsgNZpdYuUZ35y4rBjB4ab14Q7-3boDxr-Ztg>
-    <xmx:sU5WZlxtDIbBuI5JwTbcaFEDKO21XHFSckvNoAN8csyodQQLiK8kww>
-    <xmx:sU5WZn7UQVenBlEBCYpaFFcHNHye1kScNi3kF-WLq2Dq2nG2t8To0A>
-    <xmx:sU5WZt8LVQCcGsC3uw1D5ktiW5UlO7OOeHEuqCjBpRVkucBZEXq9NIfw>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 128EA2340080; Tue, 28 May 2024 17:37:53 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Xffkibkd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MtqW5hFlIrj4HMJeRxghe987FCYtdkpZ0iT4w5DGINSvztY/YWDSaODmWQCEiC/rpJUNBp9L4XRrf5XGZCL9q5ug0A+GXyDzATaa+Q7ooZbSklFp21PTySuKzsMpcjF410CuSE3fmOvEaW81qaiOUPkE8ZGLmrYAcgqad1WihTMWsocytRAM5MKOYP90+TC4h5bkWM9O/oNHM5kvm1j+ScNiSZWSywIBbL/hMyIjKfmohReV+11a3r3tJrK9crVADcOjI8gmQy2JBAdl5SoK20h937vJ9gss5SRqr+Ec228kg5czV2uCVXR4rzFXI1+1IFU11DkVnXVx1ql+pluhFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xEWL/cSvlQ6Qy6U2X4FW5FNKCUXON89uZtVTgjyjT+0=;
+ b=ITVSwZAsDPOYYvKV012spDLAi3NtUe2EKY8H3SLsmmS/aVAIvlOQTLdKR11Vb2cpHyBOlCt544FX2Fnm+XwY0kIeu9Fs7fckv0mZB82mwsKyEXK+XiOlH1AmZs+OT+zVbw+zB2S8xFTPsouOuXK257mnZKSDUOlqKFBLbewWr1jmxzEjMOz+5+8A7YdZaVlDzBjZw8mvQOWeBJNE27+bQmppmC/aWP5N4OjFHYKVlooMmrJN1eH86lTkN7EdqzGmECdynN9YJiibymAdPupiY3mqITCOETbrJS6fS7TcFuqOVooFt/z62WMsbD83DqMciIDLptfVP2rjGcnTmXsa0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xEWL/cSvlQ6Qy6U2X4FW5FNKCUXON89uZtVTgjyjT+0=;
+ b=Xffkibkdac/efeOhdqbtmSkeECrnEyUPHfqlwYgOYhDSO8imveQxENRuourUPtKZj97CfrbMpSoGNvfPWIp5kwvoi4+m/YN/2ml6hGtJYEAtiOWtzsPKEzVVGauLBpdjCXFvJidwgtb6At6Fzk/c3dF7bdiNWINDL9JlGts/z40=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ1PR12MB6220.namprd12.prod.outlook.com (2603:10b6:a03:455::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Tue, 28 May
+ 2024 21:37:58 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7611.030; Tue, 28 May 2024
+ 21:37:58 +0000
+Message-ID: <1a33c7a6-a04d-4c53-b8f2-02431a1073b3@amd.com>
+Date: Tue, 28 May 2024 16:37:56 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 8/9] platform/x86: asus-wmi: add apu_mem setting
+To: Luke Jones <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, richard@hughsie.com
+References: <20240528013626.14066-1-luke@ljones.dev>
+ <20240528013626.14066-9-luke@ljones.dev>
+ <6f4bc109-00d0-47b0-a581-b96a6152545c@amd.com>
+ <4d6b9171-7248-4937-87de-7e921ed8e507@app.fastmail.com>
+ <5f4799b1-0606-46a9-a347-5a03738db341@amd.com>
+ <ac597520-fb5b-40e5-ae1f-de825450d2db@app.fastmail.com>
+ <371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com>
+ <6d4e7f1e-ccd0-4ac5-b450-f9c5f8d5c90e@app.fastmail.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <6d4e7f1e-ccd0-4ac5-b450-f9c5f8d5c90e@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0116.namprd13.prod.outlook.com
+ (2603:10b6:806:24::31) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a476aebc-fb31-4236-81cf-70a9e1e564a3@app.fastmail.com>
-In-Reply-To: <4660daf1-f42f-9b65-eaf5-30daf2931058@linux.intel.com>
-References: <20240528013626.14066-1-luke@ljones.dev>
- <20240528013626.14066-8-luke@ljones.dev>
- <4660daf1-f42f-9b65-eaf5-30daf2931058@linux.intel.com>
-Date: Wed, 29 May 2024 09:37:32 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>
-Cc: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 7/9] platform/x86: asus-wmi: add enable/disable CPU cores
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ1PR12MB6220:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32a3a304-d821-463d-9251-08dc7f5e7113
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NUpRK3crNHpIZG1la2p5ckFnUlZpeDZDUWVYdVhqNkJnVnF3TGlGSUhJTGx5?=
+ =?utf-8?B?YlhJQzdaMWxrK0VqNHpESnVNRUt0b1d6R3VtNnRxL2I1b2QydUFMb2tXUGVN?=
+ =?utf-8?B?QWVSY1R0aW1xNGx6Qk5aKzJSTlY2enBQeE05UXU3OHEzdmYrSmlMc3ErdHds?=
+ =?utf-8?B?MXBUTjBzZE5YM3NpMEFhc25QY0J2RVJvdU1IRmo5Y2xzQmVibUc5d3JPSVhN?=
+ =?utf-8?B?U09zcHlLM0t4aWE3YW82WC9VdTVVdzIwUy9TcVVja1RobGFYYzN6d0tiZjg5?=
+ =?utf-8?B?empDanEwTnZUMHh4bkU1cmZIbDV2S0ErOFkreXM4ZjZqbkJLKy91NnhybGl4?=
+ =?utf-8?B?NnU4NGhsa1k4S29pSXY4VXNEVU42NVRoK1ZYNXR1WWZCTTNEN1VXdnJhVE1v?=
+ =?utf-8?B?QmcwREo1MFk1enhYRzd4RzI5YnA3aGhVSVgxaDlDeFF5VmJXR2tMazdzUEl2?=
+ =?utf-8?B?dHRrOTVYam1KMmwvRkpwM1VyRGRWeCtNNnBNc0hyYm9nVTF1V0dwWDMzQmMx?=
+ =?utf-8?B?YzBFbEM1ajRXRmdDMGZYV1F0bkZ0U2U4eXV0SjFoMkdCS0VabG5KaXkwbkdW?=
+ =?utf-8?B?cjFnMHBnWmxpa1pUOEVrWi9mSUtQRFZuWHU2RzlTZG50dVFydjBrNXl3c0Zq?=
+ =?utf-8?B?eHdRa1NUa3pOOTRpTFg2Q3RMUFQwcTVqc2NmNTZHNG1ib0gzZmlONlo4TWlL?=
+ =?utf-8?B?YSthaVM5cUsra2hMTUV4RDkySlBYa2R1YnZWSFZPaXY0emVYTTNzSFFycXV4?=
+ =?utf-8?B?dkRTZXpBd05NVHNsZ0ZXYWpwQkVFeTFjWHpoNnRLVkNpclBiMWtnZGZHQWZH?=
+ =?utf-8?B?TXFHZTVGVzVCQ2ZhVlJoQWFxWExsU2k4cnFZVzZUNUVqcVZGWlFHc2tsbTc1?=
+ =?utf-8?B?SFNWWERnK2FrRUttS2pGR09zYk9sT0kzQkhNaFhPM1VCYlZuYnZnZGY5UXlY?=
+ =?utf-8?B?TlNSNS91Z3FwWWljcGVXTm1aTlMzSkltblpSYzFyVk1keTVtSTd6VUV6TTAz?=
+ =?utf-8?B?TlNxT0ZDMElMUXo3VS9XV05PTTFNZkFMVW9qdVhudEFOUXVON0ZsaFQ1dkgy?=
+ =?utf-8?B?dlE2bHVTVzNPZTZHSVkzQkxHNHdmRFM5VFZoc3lGYjZXTDZFUElDQzNJcUF6?=
+ =?utf-8?B?MHZZcVZ0UHFnU0srYjdIanN4NDQ3WWhVWGZtbTJQekxvUU9xc1FhNElyRVVp?=
+ =?utf-8?B?ZzZYWEVZWDArUldoYnFHWlVSaWVGNHpRWGowNmxUdk1pdWF2ajgwaUZQbUp5?=
+ =?utf-8?B?L0Jva2xWeThkbElRQTVGU0R3ci9aMUs3blkwdGR0cFV2MlhGR3JHMUlyZjFS?=
+ =?utf-8?B?d2xSbmpyMlRCNnVPTWZOeFhPQUFPdEttendUcEZ6UFptNEs5ckRFVnl3ZmhV?=
+ =?utf-8?B?NWhjdzdDdXJLSGE5SS9ObjFDd2lHWXVqOFViY2x1RDlTdFpSSmVMMnZpU1p0?=
+ =?utf-8?B?d0ZSOHR3NlErMTZzV0xBbFp4OG8zcWtiTEtuRUhYOGxaSlRGZkpNNzdUSml0?=
+ =?utf-8?B?NysxdkFLd053UUhLRmZ6VGlXcndqU01BK0dQalZkUXZ3U2NCcTFWQlNHUUg2?=
+ =?utf-8?B?SzQvS3NaQTdaU0J1bDZYSkJ0bkJEVnBINmFKUDhjcFUwL1RlUUphaUpFR05O?=
+ =?utf-8?B?alNSMkQwWm1SWEdPSkh4S1g2UU1tN0s5bUNxWVJrWS9LYzA5Q2sxWU1PbDBy?=
+ =?utf-8?B?WXFJMG5rRFNmd21yL3VKM3ZVcmVERVVHdy94SGJDSlk4cysrQ04wMnRRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZmM3NmNDcmZhTDZnZlZXVlNsYiswVWV3YzFRUHJjMWlYWUlWdkpvWVhiT0k5?=
+ =?utf-8?B?eWxlZDBqZHZscS9JZzJCZlMwWGhMVTYvTmhZVGRobGRDRy9VUWtKUzlVUGQw?=
+ =?utf-8?B?a2I5d1doeHB1RGRNVEN1UFhHWWVrMzhucW9tUVNpOG5mNEg2S2VQeFIwV1J5?=
+ =?utf-8?B?K3VUMmVsWXprdVpnR1pzZnpramZ0MnZWUWU3ZkZIeXpVbDNTRk5SWFNxKzNm?=
+ =?utf-8?B?SWp3Q1RaWklSMktWNGNhVFhicXB0WmdGcGpva29TVDdQam5xUDUveVlNSURn?=
+ =?utf-8?B?cjd4a0N2TWZYdTZ2dUFjc0UwdlJUL1lyRDFkNnoycW40cmxpcjVWZVppd2JJ?=
+ =?utf-8?B?VW01cFhvMGlHZWdMWVVQYXI5NTZkMVRKTzUvUmRjOFZVRHlSVzJlUWJRZzlr?=
+ =?utf-8?B?MTVvNk5KNzZmQzZhYlk3aXV2L0dyWnFWU0hvV3d5UjNvNW9ycTcyNWR4clpq?=
+ =?utf-8?B?Nzl3OWRWYko0RVI3VnRZUmRqdFlnU3gyMExZd3NZTUVRMi9sWFhTSHdrZU1u?=
+ =?utf-8?B?Z1NqdXRFR05xTWRiNWw2MzJHUGViZnFBQ1d4c284TEdLbzk4ZUZ3SGZ5Q0pB?=
+ =?utf-8?B?dlpvM3kybnhZKzFzdFpTY25meHp0MkFuRVMvbHJybExNL0VTOVZOV3JCbS8y?=
+ =?utf-8?B?WkxFUnBlWDFyaC9BRGxySFRLcXo2NFI1YTlOYkdRcjBISW1nd1dRdThzZXRz?=
+ =?utf-8?B?dEJUVG9VYzJqbWhkYk1GZE5DUkNaMkVSYnhBNWFPQnN3V3VkeFhSeU5RWXRi?=
+ =?utf-8?B?a0VaUndaQjh6NGNwM2lJdGo1em1KWkV6aUpHTWFGYlB5bFE4WFlSdW1LTzVB?=
+ =?utf-8?B?azUwMUphRExtWW1QSjVERGsrZXpDR2txTG4xSitIQUhHK3ljcnlobGVzeEFC?=
+ =?utf-8?B?ZEVSbktVSDVLOTA5S2JhNy9JYXBaL0JhUXBoaFZVNFAyUXlnd1NqK0lmSUU0?=
+ =?utf-8?B?U3dQc0UyZDZuVHA4dGNMTkUyaFgvME1CNU9lT2lOTVVQMlgwQ21CR2FwbGJ2?=
+ =?utf-8?B?MVIyVTJBUVpyQTgwUDBiWjJNUE8yOTE1cStKdnk0SkpuSlVHdDVCdHFPU0Fn?=
+ =?utf-8?B?ZWpzbWlqZEJaRUV1bHcwcEFMZHpqdm1Xelo3T0wyWTUwdW5tQnlkRjltWGhP?=
+ =?utf-8?B?Z1QxSkhRL1lyYkRHaDBqQ2pPZWY1ZnFhZlpRbkpOT2xHcDZ5NlovdW4zQkZZ?=
+ =?utf-8?B?SFNlaGJWaGU3UEUwa2d1T21WZzRYWTZDSldXdWdqTFNvazBJYzVUSXV0QXk1?=
+ =?utf-8?B?OEVyYko5V2JIYkVmcXQ3RDdXZXp1QnNiSS9ZVUs2bmNUcmo5OG10M1B0UUlu?=
+ =?utf-8?B?cjBhcUd1VVNVVWt1STlONjlpek8xMXNDQ0FZRytZcUhiS3QwaEZ2WHMvd2JM?=
+ =?utf-8?B?YWtuL0l3VFJ4MEhZNjVSTUZNbnFnbnFFWDJFSmUrMkRkQXRkQ3ZoNnV2L3g3?=
+ =?utf-8?B?WGswelg5aVVIR2k5b3ZEK05oNDJlNEtqUS9nUFcxMlgwWjNpT3hrZkRwUThv?=
+ =?utf-8?B?RDhoSGFVOURJNUZuL2piM2o1YVVlTkRkM0VEVG9PSXZzcVpRMXVlMDlINWV6?=
+ =?utf-8?B?QkVnZ1BuUUx6cTlBcEJUejZuMGMrTlRpeEFWQUVpOG43akhwekFVMENDMVpt?=
+ =?utf-8?B?OGs5MUZjUkh4V3d3VU9xd0lJVVFrSWVNT1pSWVZ5ZXNwTGptVXpzczZ5QnAx?=
+ =?utf-8?B?elZObHlZWWdrelZOdlVjMjl5c0hZeUFxaGliQlRXcGFxdkhaZHdJeWhIcVBh?=
+ =?utf-8?B?QlR4Tm95b0h0OGg5b3cxZUV5Qkt6MUN6NW5sb2YzV3JtemZYQi9NSlYzNnJY?=
+ =?utf-8?B?NmNjb1QyNG9yY1lzZndqV2lyZDcxR1ptN0JEN25hdTcrSFpKek5LemhiUkxa?=
+ =?utf-8?B?SDREZHA3TmZ5Yk1JaVR0aVJJTmpSSEJzbHoxdCttdUFPVkxGMEdtbWVCcSsx?=
+ =?utf-8?B?MW1JeG1tcFQ0V0tXcDRiQWtMTHViQWpzckNUb210L3Y4TWc1Z2dVcTYrdzBH?=
+ =?utf-8?B?Y3VQWHNPcFN3NVJhZ3JlRlMvS0lIZmxjVjFreGlPNUhuaWM2SFphdWcyMkVY?=
+ =?utf-8?B?SjhSUWpRVXN3VkhvU0I0b1ZGTWE0ek9aSFV1QmFKYTk1MzdjVEVKNUVUSXRh?=
+ =?utf-8?Q?ouP/wqgZmRAF99zspn3JW6R9c?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32a3a304-d821-463d-9251-08dc7f5e7113
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 21:37:58.1571
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9+30OgjTZDCEsx1GqtPZB6lAyMPXD6qJy+0lmOLjuk2Vjdi9Lt14SBzIESivsg0wSQ4MORc6dchUq00o4MYZUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6220
+
+On 5/28/2024 16:34, Luke Jones wrote:
+> 
+> 
+> On Wed, 29 May 2024, at 9:16 AM, Mario Limonciello wrote:
+>>>> For any "new" attributes it's better to put them in that API than code
+>>>> duplication of the BIOS attributes API as well as a random sysfs file
+>>>> API that you can never discard.
+>>>
+>>> Do you mean the firmware_attributes API? If so, I'm not opposed to adding all the existing ROG attributes to it also.
+>>>
+>>> If I'm understanding the docs correctly, for example this apu_mem attr would then become:
+>>> - /sys/class/firmware-attributes/asus-bios/attributes/apu_mem/type
+>>> - /sys/class/firmware-attributes/*/attributes/apu_mem/current_value
+>>> - /sys/class/firmware-attributes/*/attributes/apu_mem/default_value
+>>> - /sys/class/firmware-attributes/*/attributes/apu_mem/display_name
+>>> - /sys/class/firmware-attributes/*/attributes/apu_mem/possible_values
+>>> - ..etc
+>>>
+>>> That's absolutely much better than what I've been doing and I wish I'd known about it sooner.
+>>
+>> Yup!  And even better "fwupdmgr get-bios-setting" and "fwupdmgr
+>> set-bios-setting" [1] will work with bash completion too.
+>>
+>> If you want to build a GUI around it, it could use the fwupd dbus
+>> interface for getting those settings and manipulating them.
+> 
+> My existing GUI effort revolves around me adding these attrs to both kernel and a dbus interface. So if I can drop that then all the better
+
+Awesome!  You can either use libfwupd or the dbus interface.  After 
+you're done with the kernel work ping me or Richard if you have problems.
+
+> 
+>> The dbus
+>> interface policy is protected by PK.
+> 
+> What is PK? And I'm guessing this restricts users to requiring permissions to change settings?
+>   
+
+Whoops forgot to respond to these.
+
+PK = PolicyKit.
 
 
-
-On Tue, 28 May 2024, at 9:27 PM, Ilpo J=C3=A4rvinen wrote:
-> Hi,
->=20
-> Hans, please check my question below.
->=20
-> On Tue, 28 May 2024, Luke D. Jones wrote:
->=20
-> > Exposes the WMI functions for enable/disable of performance and
-> > efficiency cores on some laptop models (largely Intel only).
-> >=20
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > ---
->=20
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Doc=
-umentation/ABI/testing/sysfs-platform-asus-wmi
-> > index 3b4eeea75b7b..ac881e72e374 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> > +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> > @@ -226,3 +226,22 @@ Description:
-> >  Set panel to UHD or FHD mode
-> >  * 0 - UHD,
-> >  * 1 - FHD
-> > +
-> > +What: /sys/devices/platform/<platform>/cores_enabled
-> > +Date: Jun 2024
-> > +KernelVersion: 6.11
-> > +Contact: "Luke Jones" <luke@ljones.dev>
-> > +Description:
-> > + Enable/disable efficiency and performance cores. The format is
-> > + 0x[E][P] where [E] is the efficiency core count, and [P] is
-> > + the perfromance core count. If the core count is a single digit
->=20
-> performance
->=20
-> > + it is preceded by a 0 such as 0x0406; E=3D4, P=3D6, 0x1006; E=3D10=
-, P=3D6
-> > +
-> > +What: /sys/devices/platform/<platform>/cores_max
-> > +Date: Jun 2024
-> > +KernelVersion: 6.11
-> > +Contact: "Luke Jones" <luke@ljones.dev>
-> > +Description:
-> > + Show the maximum performance and efficiency core countin format
-> > + 0x[E][P] where [E] is the efficiency core count, and [P] is
-> > + the perfromance core count.
->=20
-> performance
->=20
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
-asus-wmi.c
-> > index 4b045f1828f1..f62a36dfcd4b 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -815,6 +815,46 @@ static ssize_t panel_fhd_store(struct device *d=
-ev,
-> >  WMI_SIMPLE_SHOW(panel_fhd, "%d\n", ASUS_WMI_DEVID_PANEL_FHD);
-> >  static DEVICE_ATTR_RW(panel_fhd);
-> > =20
-> > +/* Efficiency and Performance core control ************************=
-**********/
-> > +static ssize_t cores_enabled_store(struct device *dev,
-> > +     struct device_attribute *attr,
-> > +     const char *buf, size_t count)
-> > +{
-> > + struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> > + int result, err;
-> > + u32 cores, max;
-> > +
-> > + result =3D kstrtou32(buf, 16, &cores);
-> > + if (result)
-> > + return result;
-> > +
-> > + err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CORES_MAX, &max=
-);
-> > + if (err < 0)
-> > + return err;
-> > +
-> > + if (cores > max) {
->=20
-> This only checks one part of it and the P part can contain whatever=20
-> garbage as long as E is small enough?
->=20
-> But I'm not sure if it's good idea to have these two changed through t=
-he=20
-> same sysfs file, I'm leaning more on that it would be better to split =
-the=20
-> interface for P and E.
->=20
-> Hans, what you think about this?
-
-I'm inclined to agree. It's no issue to change it.
-
-Ack all reviews. I'll work through them over the week but with a lower p=
-riority while I await both yours and Hans response in other replies with=
- Mario regarding the firmware_attributes change/use.
-
->=20
-> > + pr_warn("Core count 0x%x exceeds max: 0x%x\n", cores, max);
-> > + return -EIO;
-> > + }
-> > +
-> > + err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_CORES_SET, cores, &re=
-sult);
-> > + if (err) {
-> > + pr_warn("Failed to set cores_enabled: %d\n", err);
-> > + return err;
-> > + }
-> > +
-> > + pr_info("Enabled core count changed, reboot required\n");
-> > + sysfs_notify(&asus->platform_device->dev.kobj, NULL, "cores_enable=
-d");
-> > +
-> > + return count;
-> > +}
->=20
-> > @@ -4131,6 +4173,9 @@ static umode_t asus_sysfs_is_visible(struct ko=
-bject *kobj,
-> >  devid =3D ASUS_WMI_DEVID_PANEL_OD;
-> >  else if (attr =3D=3D &dev_attr_panel_fhd.attr)
-> >  devid =3D ASUS_WMI_DEVID_PANEL_FHD;
-> > + else if (attr =3D=3D &dev_attr_cores_enabled.attr
-> > + || attr =3D=3D &dev_attr_cores_max.attr)
->=20
-> Wrong alignment.
->=20
-> --=20
-> i.
->=20
->=20
