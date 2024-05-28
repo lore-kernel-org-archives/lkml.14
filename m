@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1FF173;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E238364;
 	Tue, 28 May 2024 00:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716855028; cv=none; b=aTsX/EgZPfyMH8W7EiRFPDwJxJAqNBUc7X2em5dOrdyjVHYMTqKp1O9JTWjvxcNNhTU5ErYtg+jOApuy5za3Y97LcRGKqkE9j4/3KA4hQXWHhHi88WLG3XICPa9uxKDCTRFJ4ttSAf7CAhS610Ndrk69yzEFqONsO9i+d7RkxQE=
+	t=1716855028; cv=none; b=kUAi9OUflkSlXdOX3XvCnE0E2zG0ViFGX7raQzyHsz+UbiXzVPZ8cEH1FjkCsE9z0TspwDm/LZDkqEtfKAhni142KilD54UU3oO/2MQdikHw0qfE2ZArOQd5elJy5dEJL2BF55lFrNdInfjcHE7yIrLfDlT5Kd5n2I3Qo2pq3YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716855028; c=relaxed/simple;
-	bh=zqCQMb/5/zaLMgTKGUA2fzUjXj58vovEe5sP4RrPq0M=;
+	bh=O3cV/uZ7xVsQdZtKNy1BfIKT5MdgMzkJksLWxGkG/8Q=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=l6TwrkI8JlB1IBpwYEgiVr0Os+JuEC+MIdn6nUIL2ddvVjhEiKGtWkAltyb8euNXkPRypHL97scU46ErYYnjTxuTCxKcPbctgU7u75XOoBKYod/frVyZv76PsqGn2pRyq2fP2bOtptoCpihesGDebdX3HcLMUSRcWsr5nd+T1qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxI4BYyo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=QEGPVBEAqwGlWNxc+wKnJwCt3Wtthpr4XWBKI82BwtyfINokSkFZX1iQchHkRxn9NjMlBHhDaPVNp/ya+bRCQWARk8LMwbV/aL3+R0+El1GSQFBs5CmR2MlU187HrFW5Ij2hoIj4CGBCPbPHRQXDLJcmezPl2CEJLdzR/mr72CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOyaBFqt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxI4BYyo"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 16AA7C32781;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOyaBFqt"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 49E5EC4AF0B;
 	Tue, 28 May 2024 00:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716855028;
-	bh=zqCQMb/5/zaLMgTKGUA2fzUjXj58vovEe5sP4RrPq0M=;
+	bh=O3cV/uZ7xVsQdZtKNy1BfIKT5MdgMzkJksLWxGkG/8Q=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hxI4BYyoljCelInixMvrJKUUAm7QRubpoRdbx4ge0C6cFVPnH697k8VmPsNbmWykf
-	 xRXTj9lfFlBeEG8wvUJqsQx9VkqUp3pCzJgY6qizcBimuFxoYu6w9gQs1Q5SArRFMa
-	 lcgv+4sykZcaLmv3mxBN6zzY6JZaaCKFXxmFiFvZNPRZKEy6XIaHrxr6en36xV/neZ
-	 cB5qmeBhMATYbUWQGIRw+4pR/XcQet3lraozsvbGXYfxL9kUfPmrYuZvuQ1MkyC8WH
-	 9WeVeIClI6i1klCeGW7Q4O0gktSst253FvnMXj8ijqfUp07NQjqAAdYEpC43akLyUV
-	 1c5KWukbxNxxg==
+	b=sOyaBFqtW+ihedqwMjPgp6JLJyPMfzRSpM9z4jwhNSDX//vN/N1cOJNQvK/s8bU2Y
+	 YFDvipIqpnCxWZZIFBEeELtldIOyrpYlueDS/Ricf1yaSw62PNkmTg+39HRS+ibA73
+	 S6Zf128i4JsOlO45EJX2DoLnbKzDkoX0OtJpTRSkst5nft8MQz65PL0qVYllEM/zVi
+	 Qe8HClt08Hw3hxVK8eL7uERckhyNmRL5oyGMi0rXagfD7xVh1VFm4OQcanCk8xOSlf
+	 WElMUkbo2pDBCLRryPi/oUl05adnnMlRvP1CY/xWqr9GSVMXjlAP9KDBewIXyo4CN9
+	 xCA75q5q98zUA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 07CD7CF21F7;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3B81FD40192;
 	Tue, 28 May 2024 00:10:28 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,40 +37,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] net: micrel: Fix lan8841_config_intr after getting out
- of sleep mode
+Subject: Re: [PATCH] mISDN: remove unused struct 'bf_ctx'
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171685502802.31992.3882528971800266097.git-patchwork-notify@kernel.org>
+ <171685502824.31992.3352926230597985160.git-patchwork-notify@kernel.org>
 Date: Tue, 28 May 2024 00:10:28 +0000
-References: <20240524085350.359812-1-horatiu.vultur@microchip.com>
-In-Reply-To: <20240524085350.359812-1-horatiu.vultur@microchip.com>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- sumang@marvell.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240523155922.67329-1-linux@treblig.org>
+In-Reply-To: <20240523155922.67329-1-linux@treblig.org>
+To: Dr. David Alan Gilbert <linux@treblig.org>
+Cc: isdn@linux-pingi.de, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 24 May 2024 10:53:50 +0200 you wrote:
-> When the interrupt is enabled, the function lan8841_config_intr tries to
-> clear any pending interrupts by reading the interrupt status, then
-> checks the return value for errors and then continue to enable the
-> interrupt. It has been seen that once the system gets out of sleep mode,
-> the interrupt status has the value 0x400 meaning that the PHY detected
-> that the link was in low power. That is correct value but the problem is
-> that the check is wrong.  We try to check for errors but we return an
-> error also in this case which is not an error. Therefore fix this by
-> returning only when there is an error.
+On Thu, 23 May 2024 16:59:22 +0100 you wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> 'bf_ctx' appears unused since the original
+> commit 960366cf8dbb ("Add mISDN DSP").
+> 
+> Remove it.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,v2] net: micrel: Fix lan8841_config_intr after getting out of sleep mode
-    https://git.kernel.org/netdev/net/c/4fb679040d9f
+  - mISDN: remove unused struct 'bf_ctx'
+    https://git.kernel.org/netdev/net-next/c/5233a55a5254
 
 You are awesome, thank you!
 -- 
