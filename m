@@ -1,98 +1,153 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DAB16D32E
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4778E13A242;
+	Tue, 28 May 2024 12:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716897635; cv=none; b=BwpwY2Bkp/TdEdVzKsAaSy7hXJxMklDCgne0qiS9pzL09PtMn1i9ep3QTLnYJYduUIiJ/2maPksWhI2bt14sZ7lgWa4cKYzFSLtCNS8ifR9o/myHKSx43SgbKedyW0mjY8JcUynRtDV2dF8tyjjwStdMLZfOOX/Brb5IgTy6PFk=
+	t=1716897679; cv=none; b=e0sUh2FGWOEFAFVkYq+caiumDOnoOWzWyRuR37e9296kHfQxz6+VCRHUTJ6BcFcMnD+VmO7Taw2beksLwgMShX1FIOWj2Rg98Y005rK7OALFgTvcvdlCq3Tz8d8tuFTofVp8qRPsli2DiCLhpf9J/jo0jIUDfXC7o+W6FTvUczc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716897635; c=relaxed/simple;
-	bh=r2qGhKgIPxmZe1bCE3EZ7bsyWeKHkaPXMLK/hUlbeWE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PV3RA1Rr6rP6GU3BEpASZ69r174fLTYprgloySdQ9zNuAyX/+ZtRA8Sznz4KvZ1Pc2txcrPCI0gT+k8pc/Lkv5QNi4UgQwd/+IXsHN4a/+YM8rKP2reB5BqqJ3FFgGUpYfzG4Rhmz1SLKsYgj1sn91urEZgJlUSSxRK0uAENx3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=epIAW6la; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1716897679; c=relaxed/simple;
+	bh=8WRHDTUZ0RTZvELeR+4+qbfh9ozH4kaFF8ljxt36pEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gku19gd/XCFfBfmV9UeKRPhyeZnpAMv3/zua1HcEC13+9aCWqNy2u8Okx02pmEeXdpD70vwctyFylLiI5j+2MhsOqGawfpzApQ/dXOYPBmvsw6MCuL8gtwWTYyaL/D8TcRpiEhTc/g2cR4yf9i2rMVSdKXv+vx8Dej6H14o4jHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kbKZgCgM; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="epIAW6la"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a626776cc50so84190066b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 05:00:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbKZgCgM"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5785d466c82so889381a12.3;
+        Tue, 28 May 2024 05:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716897632; x=1717502432; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vd47idOkVXMEAeeUtocPVrfuJGOdG0xjElnNSFv+0/A=;
-        b=epIAW6la0hQFqVdFHL7npFAImvZ6vijzR0p8KTPD3pmydhe3dMT5Wliwt3R0FMfkit
-         gXxJa9uolvRsPASL5O+3PTrF5CTezDlqu4sMhF2FhjIJlBXz1yUGP8ws9eQ74q/xSYrV
-         8so0khWokUK9IAY6D4kok4ffDX6YBMDPbhAgF4QHE2vvFe0eGybMf3CgOziI4ZY5VLgQ
-         ifKoJAw5it0JChWQr4AnUa3ITPQQ2NuIAVhC0Ao4OouEKuOb7lNad583FYa58acIaZnp
-         Y8qD5ghcm6Drr/QwerzBpZ5PX1dJ6QLpqlX+JITCSICL5TKLs+Xzjr6sgWxJDU4vrIrt
-         a65Q==
+        d=gmail.com; s=20230601; t=1716897676; x=1717502476; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NAgN1LldmRrlrSvzizrGCKqLHlKjnztSUaZS5Nc7Gtg=;
+        b=kbKZgCgMiVQU6z+wB7b/hCP1+KtZ/23hcZjyWvmXE8IPeQHgM7XVzwbrwxj5W9Liil
+         ZG38VIa9LRpT2hoEKkVRz7gz/oMWh8tRkKeeUBNzIM468+XbCc1aB8KQNVolRQ7dh2yr
+         dw3hZUIy3Pf8N/65q6MRdK6uPhpv1olPLHdHwr8Z5KnnwvVsIHjmhhYmmRWEEmW6OYHW
+         VYanJNqOdJuMrNAuWb17q8vcShCNImy5+wpW9I1aIcGoyXP3vqfhOYeDrbZaLetG9wEc
+         nNl2e6MZFYpvQfRoSXE0kB0OfN/wT9D4i1nwjW6+42uLqkvbLW9S/gttcSYCDGfjAH7n
+         j8qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716897632; x=1717502432;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vd47idOkVXMEAeeUtocPVrfuJGOdG0xjElnNSFv+0/A=;
-        b=C6YqBv6/HBjwxPpXmjqeyJT9nHdCLQBgg4BEDWfE3eMMnDx3XowJbQ62doQbuDxOtu
-         JH7uHHGW2f+o84LaDVtJDLe2UVW9ZISDqQiy/dKeVZwA90DCWm+cxvKCNAPw0Ru+7Xa7
-         M8QPlBKdrU4vOtStr0T+jumT2AS8vA5xqYPA3iT5X04ED2ZnkvKRZ/xq7owiWujLCMNM
-         E4ou9IX/aevk55hDd5LXr8bHLpHlpzuqzs8cLS3J8jdO9frtYblB/6aHJW4YyCWVSJdH
-         8XvVb8WLhYv4+bkmgOhQuxPDNWSqNutM3+0m3HMOhwFRaMNfa5ontFERXjNxpTHWxerw
-         Nyig==
-X-Gm-Message-State: AOJu0YyomJhcDi5e/Jt2EgeTKFpGEJ5Rzev0+6tU818ufEuFvE7Gw9jQ
-	I8jBiX9rQQM6hvv8V1zO91OEO/mQz/tWIRHV1wO9brNeNL8yx5Og8E1/tMh7JyM=
-X-Google-Smtp-Source: AGHT+IF4WO5yygEASqtNmbAhKWOJT9TRh3VYjDi9FBpdAcuY93yYSViR3TjJhPYshCJ8QpWhz3D46A==
-X-Received: by 2002:a17:906:fe06:b0:a5c:d67a:e8ef with SMTP id a640c23a62f3a-a62642d49bdmr1033839966b.31.1716897632047;
-        Tue, 28 May 2024 05:00:32 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a63534935f9sm27970566b.146.2024.05.28.05.00.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 05:00:31 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [RESEND PATCH] lockdep: Use str_plural() to fix Coccinelle warning
-Date: Tue, 28 May 2024 14:00:09 +0200
-Message-ID: <20240528120008.403511-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.1
+        d=1e100.net; s=20230601; t=1716897676; x=1717502476;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NAgN1LldmRrlrSvzizrGCKqLHlKjnztSUaZS5Nc7Gtg=;
+        b=F+0TrEmqexeeHiPEZO4iCgdkLkhZ9K7Omiy4u/cTBXnlU0OK4vlwyDSZEh09u8Mwa9
+         TM+WOehEqqm74ILKyt+9wPziijx/8SLb9+p38iETvDgZcW6uuCalR0ZeV1ssOWbVI9xO
+         55co0dmW7kOJvngoTNoUK+Rfo/9/RkF5qRSyNivao9nrtoG2aqtJwo5oSmBEjZ7ZUVjL
+         yBArVtlXZ68543I7RL/K+ftk0udlTO1fprIfSijR47JkkHt60HzRk7JwznJseadEAMY9
+         SQGJT0N+ZuAyIMeVHONaRSfPODIuYYwIm9bUIHEHKPmbSEKzmQgHRa/Nvyc7q5rIMSkx
+         J+YA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhgCeoFdn8EcVEAkj65GiVbFmNvNaY+ykaBNq+LykukoaCHjnnTZcp6QV0HUBIyVdcsxln63Qc2OVvZR2xxjXm+u+EWBkBTDfxGcAr+9qcYtADBOUnHp1PiphQwjETponsDxnBf66dXg==
+X-Gm-Message-State: AOJu0Yw1V29ouZIxLq0yeysI/4w5G4aOb14guGKZaubkyZ95E35SpxE0
+	BT6JaVT6Y7EcEDt6j0xGnExq9kxfc/i34bpfwwmdvS6O7NLzoADniXJbVMhowam4nQihktD35m7
+	6o157emKGs7JMZTnc65k1HGexACc=
+X-Google-Smtp-Source: AGHT+IGWXAZnzJq/outpGdrrF+BzVco1qSOLCnXc5XWK+E8bGR9GWy0ZahU9VxoRM4PaeRGMN+5E3TDdnybOYtKZhcQ=
+X-Received: by 2002:a17:906:cb8b:b0:a59:c3d0:550c with SMTP id
+ a640c23a62f3a-a62643e4d86mr656965266b.43.1716897676330; Tue, 28 May 2024
+ 05:01:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240527022036.31985-1-user@blabla> <9abb1d5e-fdac-4500-9218-fb9f28ff2c05@web.de>
+In-Reply-To: <9abb1d5e-fdac-4500-9218-fb9f28ff2c05@web.de>
+From: =?UTF-8?B?5p2O57u06LGq?= <cn.liweihao@gmail.com>
+Date: Tue, 28 May 2024 20:01:04 +0800
+Message-ID: <CAPEOAkRjKm_bcfX4CJe3HON=6abcfzBGjXo6VpcnhR-u9OCHzg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ralink: mt76x8: fix pinmux function
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org, 
+	Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	=?UTF-8?B?QXLEsW7DpyDDnG5hbA==?= <arinc.unal@arinc9.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	Sean Wang <sean.wang@kernel.org>, Sergio Paracuellos <sergio.paracuellos@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes the following Coccinelle/coccicheck warning reported by
-string_choices.cocci:
+Markus Elfring <Markus.Elfring@web.de> =E4=BA=8E2024=E5=B9=B45=E6=9C=8828=
+=E6=97=A5=E5=91=A8=E4=BA=8C 19:37=E5=86=99=E9=81=93=EF=BC=9A
+>
+> =E2=80=A6
+> > There are some same function name in different pin groups, =E2=80=A6
+>
+>                                names?
+>
 
-	opportunity for str_plural(depth)
+refclk [0][1], pwm [2][3] and some others. For example, without this
+patch, part of the pinmux-functions in the kernel debug fs looks like
+this
 
-Acked-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/locking/lockdep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+root@mt7628:/sys/kernel/debug/pinctrl/pinctrl-ralink-pinmux# cat
+pinmux-functions
+function 0: gpio, groups =3D [ pwm1 pwm0 uart2 uart1 i2c refclk perst
+wdt spi sdmode uart0 i2s spi cs1 spis gpio0 wled_an p0led_an p1led_an
+p2led_an p3led_an p4led_an wled_kn p0led_kn p1led_kn p2led_kn p3led_kn
+p4led_kn ]
+function 1: sdxc d6, groups =3D [ pwm1 ]
+function 2: utif, groups =3D [ pwm1 ]
+function 3: gpio, groups =3D [ pwm1 ]
+function 4: pwm1, groups =3D [ pwm1 ]
+function 5: sdxc d7, groups =3D [ pwm0 ]
+function 6: utif, groups =3D [ pwm0 ]
+function 7: gpio, groups =3D [ pwm0 ]
+function 8: pwm0, groups =3D [ pwm0 ]
+function 9: sdxc d5 d4, groups =3D [ uart2 ]
+function 10: pwm, groups =3D [ uart2 ]
+function 11: gpio, groups =3D [ uart2 ]
+function 12: uart2, groups =3D [ uart2 ]
+function 13: sw_r, groups =3D [ uart1 ]
+function 14: pwm, groups =3D [ uart1 ]
+function 15: gpio, groups =3D [ uart1 ]
+function 16: uart1, groups =3D [ uart1 ]
+function 17: -, groups =3D [ i2c ]
+function 18: debug, groups =3D [ i2c ]
+function 19: gpio, groups =3D [ i2c ]
+function 20: i2c, groups =3D [ i2c ]
+function 21: refclk, groups =3D [ refclk ]
+function 22: perst, groups =3D [ perst ]
+function 23: wdt, groups =3D [ wdt ]
+function 24: spi, groups =3D [ spi ]
+function 25: jtag, groups =3D [ sdmode ]
+function 26: utif, groups =3D [ sdmode ]
+function 27: gpio, groups =3D [ sdmode ]
+function 28: sdxc, groups =3D [ sdmode ]
+function 29: -, groups =3D [ uart0 ]
+function 30: -, groups =3D [ uart0 ]
+function 31: gpio, groups =3D [ uart0 ]
+function 32: uart0, groups =3D [ uart0 ]
+function 33: antenna, groups =3D [ i2s ]
+function 34: pcm, groups =3D [ i2s ]
+function 35: gpio, groups =3D [ i2s ]
+function 36: i2s, groups =3D [ i2s ]
+function 37: -, groups =3D [ spi cs1 ]
+function 38: refclk, groups =3D [ spi cs1 ]
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3de5936..31d7720c9b8d 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -786,7 +786,7 @@ static void lockdep_print_held_locks(struct task_struct *p)
- 		printk("no locks held by %s/%d.\n", p->comm, task_pid_nr(p));
- 	else
- 		printk("%d lock%s held by %s/%d:\n", depth,
--		       depth > 1 ? "s" : "", p->comm, task_pid_nr(p));
-+		       str_plural(depth), p->comm, task_pid_nr(p));
- 	/*
- 	 * It's not reliable to print a task's held locks if it's not sleeping
- 	 * and it's not the current task.
--- 
-2.45.1
 
+>
+> =E2=80=A6
+> > To solve this problem, a simple way is just add a pingrp refix to
+>
+>                                                     pin group prefix?
+>
+
+Yes. Just add a pin group prefix like pinctrl-mt7620.c does.
+
+> Regards,
+> Markus
+
+[0] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/mediatek=
+/pinctrl-mt76x8.c#L73
+[1] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/mediatek=
+/pinctrl-mt76x8.c#L101
+[2] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/mediatek=
+/pinctrl-mt76x8.c#L54
+[3] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/mediatek=
+/pinctrl-mt76x8.c#L61
