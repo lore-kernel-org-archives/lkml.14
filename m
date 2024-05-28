@@ -1,100 +1,90 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122632563;
-	Tue, 28 May 2024 03:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F5014A81;
+	Tue, 28 May 2024 03:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716867143; cv=none; b=MiknGawno85JSsbdO1KanYalcuO92O/I/rlXoQC0y+EwfIDdFo5E3TUo4sqW2pJH1evRsL6hrkYS1tIvMog8QjyIuMVdfk3aKaaO5ZWEgLtuSlYw/ZSAk0DAs/wlLzbdgMX7jD6TwRMupP2R/+lZydYFKR9ApNonhFnrqTOK+yM=
+	t=1716867161; cv=none; b=e1erAtVSMdoBKVM3wqd0BDAWqSiHsttYcrjD64ViiVlyY4st3J8hy6awtV5kSfdETKV+kCpuhII1uYdRUk1nrunnZk2D7eNG0EBCQesZXepOk9aw3bKmgiv6TiOnl8vC2mRErjI/UQwrAaAQ08CB93hC87Xzxknfnwa18btyzcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716867143; c=relaxed/simple;
-	bh=ny8m4xCBhnV/0UIeJvOKqCsXclSGkQHmtW+lTaQqHV8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GmsT7trDr9xa1+/GCDuvsZf/ihnwXXedu58xLvEJoUgbKOq7GfIjBFqs+xqOvIQrCV/mZIot0WBUgKP0sXwENbV7KAfuVw/K21FEwNOWqewwRtLehD9hyR6dy/Pmxc2MP7xEGNouvqRuucfk07sMORnJu1/R5PBBJTsTRIOVdCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z2nQCujp; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716867161; c=relaxed/simple;
+	bh=ITVmDH7VJaoEg2XKzY//RgBj1ab2sf6hRESd42NWe3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G8iCmOg++fIEXQzcSG24OHblox/ZApNsbQLjHpT0A1PNSA2YuDfyJgEdwlx5bMWB4st7MoyXEX9X7Ecol/pW9OfoBA5GlIPQBYJjlTOv2gdp0TUxRFbCi7u5d2Q20T5MO+ELo2TfggwDp4q5QI2v2Qwsp4J78mO8BxppziJBG+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7zU4TmQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2nQCujp"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6fbd713a4a1so5815b3a.1;
-        Mon, 27 May 2024 20:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716867141; x=1717471941; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IdqVzW0uYQzAgGRGuUdCNdfOkC+1NS25yKoubiH4Tn0=;
-        b=Z2nQCujp2wTqltCY7sHV4JJuz8YhlWZj4qXZBe6POKXuDdq9mMIPTPh7/ks3MaYND5
-         p90GSWyxjiP5qDAvXR6GDhthD+/jBl5+YDxcAOKo/31GpfCtYhp6JQxesU+KtElJih2W
-         STMrXoPNGyFGg1jP7AM5/YQ2lHOhbNzXLxxdTWbnAYZxYtXcqADxrW7s3lV9YUgglVS+
-         qch51sTmcZmHv20HX4lbHA3yk4aM4ozSxOBbDepq9m+Voqwa9BrkzZmWliw7S0aDsYW4
-         LsrvYblgEtmlYrODr+7kv0f1y2Igela0PKlD2OkvzlXeugwhnFg6oU1Tuks8DMFGn7Pk
-         8GuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716867141; x=1717471941;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IdqVzW0uYQzAgGRGuUdCNdfOkC+1NS25yKoubiH4Tn0=;
-        b=n2Yvq6u2/9r+9SOVA7X1U5x8BMqeDc4EixHu6gHiZW9yOZhGOKcabQK/qslvrFE/q6
-         SbSGbTX+k3PwX/Jg9J8dKW6qACXLqM3UCgRcLe2JK6K1MTM0rWvgLQaUsxIa0i6N6vdC
-         h7ErwH8tvMesjCqk1zCuIoDyHf/WfKJaCgGfwvl7GVZVtDgKAZwDU6LbsEcg/cbhTAAP
-         PWtf19OZ5VUrmRsyMvULsa4PNty/p2lWvPKnCWR+A3vFej1w9Kx0VblnXCrifnRpkoFy
-         tH0f21Yv1N0gY3SqGN96FXHAeYbpyF6hbI+z0Lz9JTMdBJLTLEs3KYGEC85mx+HzVQGd
-         o8pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMn4gC0MTwka2qZbrtJu9b03IcgfCpZsATPAQAlLbf2a8DMMZ8Y5SZM0nXJP8IbZlwH8/yqstF7G5Iu4Qni/37uccsol05Z+gZP5wwIhMJjQ98Fs6a8pG2x8EnS/M+J/14Xb9g
-X-Gm-Message-State: AOJu0YxdmURmWNowNlG8ZL9mpFd/fqXtzAC9RyGTLmwowY7OPD8kKFQk
-	19C+V0h7exLF4EsuRIuDKF/cqIyzgek14/+QD8pFxNA2ludVJIIq
-X-Google-Smtp-Source: AGHT+IHrcNbVZgElQpq35gSfeTumdbcaSXxticMkDbkmuD8NrdmPjwtGDqQ1qdz2uJUgC3TvjUkgaA==
-X-Received: by 2002:a05:6a00:4a10:b0:6f3:e9c0:a197 with SMTP id d2e1a72fcca58-6f8f184be18mr11713794b3a.0.1716867141321;
-        Mon, 27 May 2024 20:32:21 -0700 (PDT)
-Received: from localhost.localdomain (122-117-151-175.hinet-ip.hinet.net. [122.117.151.175])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbec62fsm5909651b3a.133.2024.05.27.20.32.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 20:32:20 -0700 (PDT)
-From: Kuangyi Chiang <ki.chiang65@gmail.com>
-To: mathias.nyman@intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ki.chiang65@gmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] xhci: Apply broken streams quirk to Etron EJ188 xHCI host
-Date: Tue, 28 May 2024 11:31:35 +0800
-Message-Id: <20240528033136.14102-1-ki.chiang65@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7zU4TmQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C555C3277B;
+	Tue, 28 May 2024 03:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716867160;
+	bh=ITVmDH7VJaoEg2XKzY//RgBj1ab2sf6hRESd42NWe3k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Z7zU4TmQpwldrjEkzIUM6a807er/kTBA7VwEnu5HyPlBi6GrVl9ajxezci4ncNLDg
+	 ZZKNCMB7VF2+NR25SZXZdIS4ZrZ51Ko2CADeqqVReGJ9Kdvu2mAfwDczZuYYO8+8qr
+	 uFE29zAMf928OogM9b4oGsAesgvvVxhTgz27SLYLO7m1q3X4AdUKmk8gnBAqWKvB19
+	 D19SFfM4LhQWBuWeGK/r98zlIxiOBCoxlzrY5PQJC3r0W/gdcpJvC9f1qcJQYIWUPB
+	 r90NPxkmjsfAy6vf1OluomgY0TgKi8Lca8R5LbVhEUqTlNuEq8LvmutXW7HwITwIHe
+	 5qn4yVb9wAdWQ==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Adam Skladowski <a39.skl@gmail.com>
+Cc: phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Gross <agross@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krishna Manikandan <quic_mkrishn@quicinc.com>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH 0/8] MSM8976 MDSS/GPU/WCNSS support
+Date: Mon, 27 May 2024 22:32:07 -0500
+Message-ID: <171686715139.523693.1894869664497791698.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240121194221.13513-1-a39.skl@gmail.com>
+References: <20240121194221.13513-1-a39.skl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-As described in commit 8f873c1ff4ca ("xhci: Blacklist using streams on the
-Etron EJ168 controller"), EJ188 have the same issue as EJ168, where Streams
-do not work reliable on EJ188. So apply XHCI_BROKEN_STREAMS quirk to EJ188
-as well.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Kuangyi Chiang <ki.chiang65@gmail.com>
----
-Changes in v2:
-- Porting to latest release
+On Sun, 21 Jan 2024 20:40:58 +0100, Adam Skladowski wrote:
+> This patch series provide support for display subsystem, gpu
+> and also adds wireless connectivity subsystem support.
+> 
+> Adam Skladowski (8):
+>   arm64: dts: qcom: msm8976: Add IOMMU nodes
+>   dt-bindings: dsi-controller-main: Document missing msm8976 compatible
+>   dt-bindings: msm: qcom,mdss: Include ommited fam-b compatible
+>   arm64: dts: qcom: msm8976: Add MDSS nodes
+>   dt-bindings: drm/msm/gpu: Document AON clock for A506/A510
+>   arm64: dts: qcom: msm8976: Add Adreno GPU
+>   arm64: dts: qcom: msm8976: Declare and wire SDC pins
+>   arm64: dts: qcom: msm8976: Add WCNSS node
+> 
+> [...]
 
- drivers/usb/host/xhci-pci.c | 1 +
- 1 file changed, 1 insertion(+)
+Applied, thanks!
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index b47d57d80b96..effeec5cf1fa 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -399,6 +399,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
- 	if (pdev->vendor == PCI_VENDOR_ID_ETRON &&
- 			pdev->device == PCI_DEVICE_ID_EJ188) {
- 		xhci->quirks |= XHCI_RESET_ON_RESUME;
-+		xhci->quirks |= XHCI_BROKEN_STREAMS;
- 	}
- 	if (pdev->vendor == PCI_VENDOR_ID_RENESAS &&
- 	    pdev->device == 0x0014) {
+[1/8] arm64: dts: qcom: msm8976: Add IOMMU nodes
+      commit: 418c2ffd7df9bfc25c21172bd881b78d7569fb4d
+
+Best regards,
 -- 
-2.25.1
-
+Bjorn Andersson <andersson@kernel.org>
