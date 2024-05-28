@@ -1,75 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74666EB7D;
-	Tue, 28 May 2024 06:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD09D5339B
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716879237; cv=none; b=c6XjeuPyJ16ivHYl2HlTR+R/qDBVVEAhDu8xQYinJJSGwNGQqTFF9xfYdP5tcv6dDdksoJ0DxNmo66lyaPUInjk4FSH0j3IRO5hu5AdRcwz6Kso51aR8zRSuGxYcb5dr8NjChVGvYKz81ZCqMuEnqI/kh/L0f90dbz/3T6blju0=
+	t=1716879301; cv=none; b=UdPdauH209Joii1xCXLb/jUS6gTZp/FW8ky77MacSmhode3eta7R832adZpXKLn6qfYfjsUSDCpA1XhJyKxwWOuA7TuT+I9xrsdrsYoZS3pYPXZtbGdSiPcRBeg1ISsTxxoErlUgsOKQKaRmEFOGD+IaXmCgmLU30PeDNZUvQ1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716879237; c=relaxed/simple;
-	bh=VVzEUWBFG5vVHZ3d6fNOxVhRwLW4JBRdhZdGeDgS+jA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M1K+N+p1ywMnm92jsbNon6KYoOeSyJgr0xjFqRwMGXcGwaI/8qL10GBm/KtTaYdGuxXCFEMaAB2JcCi3NCStVaHDqHIb6GnQYxxk08HdMi2PpkuhRIFG9MFYMn81j1l+8GEGYN9MKc+P4enq5aur2XShT9Lo7DW+1GEFom2THYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bi5qfLeb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bi5qfLeb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 899CCC3277B;
-	Tue, 28 May 2024 06:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716879237;
-	bh=VVzEUWBFG5vVHZ3d6fNOxVhRwLW4JBRdhZdGeDgS+jA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bi5qfLebcIuaIxEcz2CjI+km5F/mUgIgK7Lkmz7SFlS6oVIfMcEnTDyTUxrylLX8c
-	 rXsehHXCdUzwdYIUhhGVE/FR2ff5mhPhYGcEEfIfipt6cMIlljYvclMNK15H+VCTmu
-	 etpxI84j/WKhBjNjqmhjTQ/gG4C6zqnSHD+99tKLj2C0VXjrS5rCbWj7tB1V3/ibVD
-	 b69P5ijzs6zWOoDQ9QBA9yDK9oV9Xe641xKm6AMN03a7W7afXsXNyrycFsgmu61TNg
-	 HiCxQKNBjkxPOzOXH7G/Ot85ns3tpI64t7V/dIT/t7JIdhl/Ae8hNYEttwIQ4Ixp1z
-	 Sxp6bQef8MORA==
-Date: Tue, 28 May 2024 06:53:53 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>, Pavel Machek <pavel@ucw.cz>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Dustin Howett <dustin@howett.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	linux-leds@vger.kernel.org,
-	Rajas Paranjpe <paranjperajas@gmail.com>
-Subject: Re: [PATCH v3 3/4] platform/chrome: cros_kbd_led_backlight: allow
- binding through mfd device
-Message-ID: <ZlV_gV5HOyz6VipT@google.com>
-References: <20240526-cros_ec-kbd-led-framework-v3-0-ee577415a521@weissschuh.net>
- <20240526-cros_ec-kbd-led-framework-v3-3-ee577415a521@weissschuh.net>
- <ZlVtnF-ZZ72N2PAG@google.com>
- <4b5d7db0-4454-4c69-b2c4-9ad652eade76@t-8ch.de>
+	s=arc-20240116; t=1716879301; c=relaxed/simple;
+	bh=k/kiyNBZ/CQQZm9441hQ2gzjm+HeVypZQxq7MFeGzuU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ChBeZg8nA7mqRDZ1KvfII0JPwTMs3xRvWb6KF0BxNzGUYnQf8jTdaF2im2CxvuR/GBfTK9NN58moytahw/q1P3gkSUT/H6MMuojApv6RgQM0uHZ+qKkud/KmUJNddryWz/5Lh9xVeHORrV2Jg+7MP07eRvCg+i1M6TgVo7UXIUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1716878322-1eb14e15750e370001-xx1T2L
+Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id gd8N2tgmRDCGMwi7 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 28 May 2024 14:38:42 +0800 (CST)
+X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX3.zhaoxin.com
+ (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 28 May
+ 2024 14:38:41 +0800
+Received: from localhost.localdomain (10.32.65.162) by ZXBJMBX03.zhaoxin.com
+ (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 28 May
+ 2024 14:38:37 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.7
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+	<keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+	<mat.jonczyk@o2.pl>, <rdunlap@infradead.org>,
+	<alexandre.belloni@bootlin.com>, <mario.limonciello@amd.com>,
+	<TonyWWang-oc@zhaoxin.com>, <yaolu@kylinos.cn>, <bhelgaas@google.com>,
+	<justinstitt@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+CC: <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>
+Subject: [PATCH] x86/hpet: Read HPET directly if panic in progress
+Date: Tue, 28 May 2024 14:38:36 +0800
+X-ASG-Orig-Subj: [PATCH] x86/hpet: Read HPET directly if panic in progress
+Message-ID: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b5d7db0-4454-4c69-b2c4-9ad652eade76@t-8ch.de>
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
+X-Barracuda-Start-Time: 1716878322
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1321
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.125447
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-On Tue, May 28, 2024 at 07:41:09AM +0200, Thomas Weißschuh wrote:
-> On 2024-05-28 05:37:32+0000, Tzung-Bi Shih wrote:
-> > On Sun, May 26, 2024 at 08:17:17PM +0200, Thomas Weißschuh wrote:
-> > > +#if IS_ENABLED(CONFIG_MFD_CROS_EC_DEV)
-> > [...]
-> > > +static const struct keyboard_led_drvdata keyboard_led_drvdata_ec_pwm_mfd = {
-> > > +	.init = keyboard_led_init_ec_pwm_mfd,
-> > > +	.brightness_set_blocking = keyboard_led_set_brightness_ec_pwm,
-> > > +	.brightness_get = keyboard_led_get_brightness_ec_pwm,
-> > 
-> > They are only available if IS_ENABLED(CONFIG_CROS_EC).
-> 
-> config MFD_CROS_EC_DEV
-> 	depends on CROS_EC
-> 
-> Do you prefer this to be spelled out explicitly somewhere?
+When the clocksource of the system is HPETï¼Œa CPU executing read_hpet
+might be interrupted by exceptions to executing the panicï¼Œthis may
+lead to read_hpet dead loops:
 
-I see.  I missed the part.  The dependency is not obvious from only reading
-the C file though.
+CPU x				    CPU x
+----                                ----
+read_hpet()
+  arch_spin_trylock(&hpet.lock)
+  [CPU x got the hpet.lock]         #MCE happened
+				    do_machine_check()
+				      mce_panic()
+				        panic()
+					  kmsg_dump()
+					    pstore_dump()
+					      pstore_record_init()
+						ktime_get_real_fast_ns()
+						  read_hpet()
+						  [dead loops]
+
+To avoid this dead loops, read HPET directly if panic in progress.
+
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ arch/x86/kernel/hpet.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index c96ae8fee95e..ecadd0698d6a 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -804,6 +804,12 @@ static u64 read_hpet(struct clocksource *cs)
+ 	if (in_nmi())
+ 		return (u64)hpet_readl(HPET_COUNTER);
+ 
++	/*
++	 * Read HPET directly if panic in progress.
++	 */
++	if (unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID))
++		return (u64)hpet_readl(HPET_COUNTER);
++
+ 	/*
+ 	 * Read the current state of the lock and HPET value atomically.
+ 	 */
+-- 
+2.25.1
+
