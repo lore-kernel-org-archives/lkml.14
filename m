@@ -1,127 +1,593 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1449C16B738;
-	Tue, 28 May 2024 10:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA6817E8F0
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 10:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716893035; cv=none; b=glHQSoe5u+pSPdAQAYj76H25lfkH0JLMkZ7ivlAsATezsbi7RlHnjlH/ckl2CO6BrLGeMOg2wiSZWl3c+h7noMdRD2JZq2JT9eDGnPOHFv8su1RtWpvhHF/U7CDtWwFljF2f7zOfJhDhcH88jU6+h3UxOLZYU3J63a11Ht7G1Ys=
+	t=1716893210; cv=none; b=RGk+h0DG6iJmHsZ/0hafpMUigp8z7bv3DPGPcb3gdpCkadzNwvCvESdm71ug0xmNPB4h4C/uxe5wi9r7yghLRj+qs/RCZFTb2mSlq30YbKQSmxldZoJt2iUxZ8MGPBJlh0CKTtbqDLNY8qqWwXQnmhT8kFo2aqaWHLGOOdK4+iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716893035; c=relaxed/simple;
-	bh=faO5qzmy4SrjD0t39u78b/WW8X2p7Mw4t5HKMKNoD2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cuEPmMwv+m+C5YbuxJhk4q8Qb/QHsIKSpnqQLIhWZfT7Kj6gS+7poW+Whi6F4K2yIPC8B2VRnCBNcMO5B6xjpvKZGKTfBBSWB+HXYheRcfdV3XcQeqBoVi0MLjE7PoL+dLHwssKlCoQvAIcHcnzuxp6iYtyHLbsOeTeq4RU5tW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UxkFMBy8; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716893210; c=relaxed/simple;
+	bh=+LFqwk0T9BTpho0w/5hCjt8lu0k/iXZRaB2kk5rGlbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ajc92pI/4HZCObZEU938GeIu0Y4AdF2syDEcPENg2LVYGAkCg1oV7OeE//FJSYq5r5reCClG7dxi5OH/o1VEQmW5Yh62cby71X/uK9ymclG9jZsYvnB964UUtTp8R5HcaYWKaoAyt6XDY3p0u040eL8CvFnhM6CaTdqyo992c5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=VKUjT7ya; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UxkFMBy8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716893034; x=1748429034;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=faO5qzmy4SrjD0t39u78b/WW8X2p7Mw4t5HKMKNoD2A=;
-  b=UxkFMBy81gH3XgmBlT3qS3FqmE0jS3VXRq6BECZZ+el63HmdzBYxznfe
-   CP0S/goHHgsqDWJHNun6UYpOKH4Nz1d5a0PjEzIo9lrf/P7Yx6g9ZOquH
-   Z9gi4l0JOZRcQWcqfFJpMKdeEvU1AM5qNXmG+YX2n7c99s75PbijPZNCO
-   24D/+Yp0DZkcF+/4pd8VNtW+lTD0flt4DQjco9r/6hilBeBKfxP3zszsz
-   i4WS6hzYUlpA2v+ElUq9ms9+MwXkyX+3HhZB5lUeFPxONzB+j+8QUCx31
-   2m3jNbOIh14Ke3g7QW43FQ/olGZyjLNJu0MdHC4XfZrX2bkgTseup27mZ
-   w==;
-X-CSE-ConnectionGUID: Qy+3qRuvRyOaJMgfVeI/4A==
-X-CSE-MsgGUID: G0fpYyCrQtqbDyRwYFChOA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13001688"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="13001688"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 03:43:53 -0700
-X-CSE-ConnectionGUID: jj070PvSQhKUAU35PmDPIA==
-X-CSE-MsgGUID: X5hnXjsSSeulPrJQrCdEKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="39470586"
-Received: from unknown (HELO mev-dev) ([10.237.112.144])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 03:43:50 -0700
-Date: Tue, 28 May 2024 12:43:02 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Ricky Wu <en-wei.wu@canonical.com>
-Cc: jesse.brandeburg@intel.com, intel-wired-lan@lists.osuosl.org,
-	rickywu0421@gmail.com, linux-kernel@vger.kernel.org,
-	edumazet@google.com, anthony.l.nguyen@intel.com,
-	netdev@vger.kernel.org, kuba@kernel.org, pabeni@redhat.com,
-	davem@davemloft.net
-Subject: Re: [Intel-wired-lan] [PATCH] ice: irdma hardware init failed after
- suspend/resume
-Message-ID: <ZlW1NiQOpf6497Tg@mev-dev>
-References: <20240528100315.24290-1-en-wei.wu@canonical.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="VKUjT7ya"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57857e0f45cso785244a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 03:46:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716893206; x=1717498006; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DYUMG/oOF7KzG2twqtpaluS6EY8hWEw6iX5ET7GP+pc=;
+        b=VKUjT7yaRIXJUBYRsy0RAguwL620vlLfGO0MOOQXKwEKKgLSlRLaefxaEs+nTx146M
+         R8gZq8Mt3iS83CyQW4qbLHk1KpjEApuqjRGSpRp/da3/e7Oz1NQCFQHmbwikKxe0o3fM
+         yW30pkRjIBE0DIkOsZoP6kbBUS8Gf68CtLjxvaDASJyfhkIislA1OyODrG8yjaNEVnkL
+         mqfp25AAntgKk15MkFernFtcFTdqADyJQFLpelmT1NhwoJc42WN4vNWYvnJ5HVa6qIeF
+         utXaCLs8fbRlq0BAWYKzzmhXBwb5FwBFQJB8/CnbHuCLITo2q2/jHNTJObU89VWGNd3H
+         1koA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716893206; x=1717498006;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DYUMG/oOF7KzG2twqtpaluS6EY8hWEw6iX5ET7GP+pc=;
+        b=OXpZBjqs7q0Za9OnYnxJEnlRRgnLG17qg41JDVCNwcDUh8WvoCVmBFnIbzXLd/Mi8U
+         djsmf/ZAfCdrk/S7x0XOWSTO9RWpMEy1pcN+b/Kff6p39qfOXU7Qj4OhOq9CGZ/TbRFL
+         z0iOc9s1TRRTPQRWYFnNlJyxBQaOBbfx2tjQXhQf79CGb2dVxbcArfC8ltBC7ZELvzAA
+         ONeP73eRFJgqNVMBjnm3FyZjLr1bYsJWde4XnID2R9mCOnUi5e1Cr4uD0sq6UVeh3Pnq
+         SSEA1vKgnzxSrRnj/EWkH+Htf/j6niHR+qj4VR77UorUHCLxfn7XQXZ6g9cRoYWQdqXz
+         2FHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpbhAPXZfnFkkmvm+nPZPSznooZw6XpU3FlgmpBZR6GJuxNUPiUXMyMGGI0ZUf7lFNEL8tBmIu2aiU9biAU/7GrMDBIlaxVyONl5sA
+X-Gm-Message-State: AOJu0Ywejgdm/1bmvioeqDY2gtyD4mH57IDx5sE7pkXeYiuCrrBN4N7s
+	bxEMbbsIdBfRie3bwc9emrIlWpDoeSocMKU2CNgsiyPM+bhUdWyoHd5lH5AzuA8=
+X-Google-Smtp-Source: AGHT+IFCq3BGFnBCOMmFqQbYIc5KnY2WOKVg/eJ/ReLEk3aHXa6LHqk/D2w+ilJW4ls3mZ9969tt/Q==
+X-Received: by 2002:a17:907:971c:b0:a62:cecd:26e3 with SMTP id a640c23a62f3a-a62cecd2767mr552224866b.39.1716893205894;
+        Tue, 28 May 2024 03:46:45 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cda1a97sm601160066b.188.2024.05.28.03.46.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 03:46:45 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Nicolas Pitre <nico@fluxnic.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Breno Leitao <leitao@debian.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Andrew Lunn <andrew@lunn.ch>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH net-next] net: smc91x: Refactor SMC_* macros
+Date: Tue, 28 May 2024 12:44:23 +0200
+Message-ID: <20240528104421.399885-3-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528100315.24290-1-en-wei.wu@canonical.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 28, 2024 at 06:03:15PM +0800, Ricky Wu wrote:
-> A bug in https://bugzilla.kernel.org/show_bug.cgi?id=218906 describes
-> that irdma would break and report hardware initialization failed after
-> suspend/resume with Intel E810 NIC (tested on 6.9.0-rc5).
-> 
-> The problem is caused due to the collision between the irq numbers
-> requested in irdma and the irq numbers requested in other drivers
-> after suspend/resume.
-> 
-> The irq numbers used by irdma are derived from ice's ice_pf->msix_entries
-> which stores mappings between MSI-X index and Linux interrupt number.
-> It's supposed to be cleaned up when suspend and rebuilt in resume but
-> it's not, causing irdma using the old irq numbers stored in the old
-> ice_pf->msix_entries to request_irq() when resume. And eventually
-> collide with other drivers.
-> 
-> This patch fixes this problem. On suspend, we call ice_deinit_rdma() to
-> clean up the ice_pf->msix_entries (and free the MSI-X vectors used by
-> irdma if we've dynamically allocated them). On Resume, we call
-> ice_init_rdma() to rebuild the ice_pf->msix_entries (and allocate the
-> MSI-X vectors if we would like to dynamically allocate them).
-> 
-> Signed-off-by: Ricky Wu <en-wei.wu@canonical.com>
-> ---
->  drivers/net/ethernet/intel/ice/ice_main.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-> index f60c022f7960..ec3cbadaa162 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_main.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
-> @@ -5544,7 +5544,7 @@ static int ice_suspend(struct device *dev)
->  	 */
->  	disabled = ice_service_task_stop(pf);
->  
-> -	ice_unplug_aux_dev(pf);
-> +	ice_deinit_rdma(pf);
->  
->  	/* Already suspended?, then there is nothing to do */
->  	if (test_and_set_bit(ICE_SUSPENDED, pf->state)) {
-> @@ -5624,6 +5624,10 @@ static int ice_resume(struct device *dev)
->  	if (ret)
->  		dev_err(dev, "Cannot restore interrupt scheme: %d\n", ret);
->  
-> +	ret = ice_init_rdma(pf);
-> +	if (ret)
-> +		dev_err(dev, "Reinitialize RDMA during resume failed: %d\n", ret);
-> +
->  	clear_bit(ICE_DOWN, pf->state);
->  	/* Now perform PF reset and rebuild */
->  	reset_type = ICE_RESET_PFR;
+Use the macro parameter lp directly instead of relying on ioaddr being
+defined in the surrounding scope.
 
-Looks fine, thanks for the fix. You can add fixes tag and target it to a
-net tree.
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/ethernet/smsc/smc91x.c |  24 +----
+ drivers/net/ethernet/smsc/smc91x.h | 152 ++++++++++++++---------------
+ 2 files changed, 77 insertions(+), 99 deletions(-)
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 78ff3af7911a..2518953fe565 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -239,7 +239,6 @@ static inline void PRINT_PKT(u_char *buf, int length) { }
+ static void smc_reset(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int ctl, cfg;
+ 	struct sk_buff *pending_skb;
+ 
+@@ -333,7 +332,6 @@ static void smc_reset(struct net_device *dev)
+ static void smc_enable(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	int mask;
+ 
+ 	DBG(2, dev, "%s\n", __func__);
+@@ -367,7 +365,6 @@ static void smc_enable(struct net_device *dev)
+ static void smc_shutdown(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	struct sk_buff *pending_skb;
+ 
+ 	DBG(2, dev, "%s: %s\n", CARDNAME, __func__);
+@@ -399,7 +396,6 @@ static void smc_shutdown(struct net_device *dev)
+ static inline void  smc_rcv(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int packet_number, status, packet_len;
+ 
+ 	DBG(3, dev, "%s\n", __func__);
+@@ -540,7 +536,6 @@ static void smc_hardware_send_pkt(struct tasklet_struct *t)
+ {
+ 	struct smc_local *lp = from_tasklet(lp, t, tx_task);
+ 	struct net_device *dev = lp->dev;
+-	void __iomem *ioaddr = lp->base;
+ 	struct sk_buff *skb;
+ 	unsigned int packet_no, len;
+ 	unsigned char *buf;
+@@ -590,7 +585,7 @@ static void smc_hardware_send_pkt(struct tasklet_struct *t)
+ 	SMC_PUSH_DATA(lp, buf, len & ~1);
+ 
+ 	/* Send final ctl word with the last byte if there is one */
+-	SMC_outw(lp, ((len & 1) ? (0x2000 | buf[len - 1]) : 0), ioaddr,
++	SMC_outw(lp, ((len & 1) ? (0x2000 | buf[len - 1]) : 0), lp->base,
+ 		 DATA_REG(lp));
+ 
+ 	/*
+@@ -630,7 +625,6 @@ static netdev_tx_t
+ smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int numPages, poll_count, status;
+ 	unsigned long flags;
+ 
+@@ -703,7 +697,6 @@ smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ static void smc_tx(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int saved_packet, packet_no, tx_status;
+ 	unsigned int pkt_len __always_unused;
+ 
+@@ -762,7 +755,6 @@ static void smc_tx(struct net_device *dev)
+ static void smc_mii_out(struct net_device *dev, unsigned int val, int bits)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int mii_reg, mask;
+ 
+ 	mii_reg = SMC_GET_MII(lp) & ~(MII_MCLK | MII_MDOE | MII_MDO);
+@@ -784,7 +776,6 @@ static void smc_mii_out(struct net_device *dev, unsigned int val, int bits)
+ static unsigned int smc_mii_in(struct net_device *dev, int bits)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int mii_reg, mask, val;
+ 
+ 	mii_reg = SMC_GET_MII(lp) & ~(MII_MCLK | MII_MDOE | MII_MDO);
+@@ -809,7 +800,6 @@ static unsigned int smc_mii_in(struct net_device *dev, int bits)
+ static int smc_phy_read(struct net_device *dev, int phyaddr, int phyreg)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int phydata;
+ 
+ 	SMC_SELECT_BANK(lp, 3);
+@@ -840,7 +830,6 @@ static void smc_phy_write(struct net_device *dev, int phyaddr, int phyreg,
+ 			  int phydata)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 
+ 	SMC_SELECT_BANK(lp, 3);
+ 
+@@ -902,7 +891,6 @@ static void smc_phy_detect(struct net_device *dev)
+ static int smc_phy_fixed(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	int phyaddr = lp->mii.phy_id;
+ 	int bmcr, cfg1;
+ 
+@@ -1005,7 +993,6 @@ static void smc_phy_powerdown(struct net_device *dev)
+ static void smc_phy_check_media(struct net_device *dev, int init)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 
+ 	if (mii_check_media(&lp->mii, netif_msg_link(lp), init)) {
+ 		/* duplex state has changed */
+@@ -1034,7 +1021,6 @@ static void smc_phy_configure(struct work_struct *work)
+ 	struct smc_local *lp =
+ 		container_of(work, struct smc_local, phy_configure);
+ 	struct net_device *dev = lp->dev;
+-	void __iomem *ioaddr = lp->base;
+ 	int phyaddr = lp->mii.phy_id;
+ 	int my_phy_caps; /* My PHY capabilities */
+ 	int my_ad_caps; /* My Advertised capabilities */
+@@ -1158,7 +1144,6 @@ static void smc_phy_interrupt(struct net_device *dev)
+ static void smc_10bt_check_media(struct net_device *dev, int init)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int old_carrier, new_carrier;
+ 
+ 	old_carrier = netif_carrier_ok(dev) ? 1 : 0;
+@@ -1182,7 +1167,6 @@ static void smc_10bt_check_media(struct net_device *dev, int init)
+ static void smc_eph_interrupt(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int ctl;
+ 
+ 	smc_10bt_check_media(dev, 0);
+@@ -1202,7 +1186,6 @@ static irqreturn_t smc_interrupt(int irq, void *dev_id)
+ {
+ 	struct net_device *dev = dev_id;
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	int status, mask, timeout, card_stats;
+ 	int saved_pointer;
+ 
+@@ -1325,7 +1308,6 @@ static void smc_poll_controller(struct net_device *dev)
+ static void smc_timeout(struct net_device *dev, unsigned int txqueue)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	int status, mask, eph_st, meminfo, fifo;
+ 
+ 	DBG(2, dev, "%s\n", __func__);
+@@ -1367,7 +1349,6 @@ static void smc_timeout(struct net_device *dev, unsigned int txqueue)
+ static void smc_set_multicast_list(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned char multicast_table[8];
+ 	int update_multicast = 0;
+ 
+@@ -1625,7 +1606,6 @@ static int smc_write_eeprom_word(struct net_device *dev, u16 addr, u16 word)
+ {
+ 	u16 ctl;
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 
+ 	spin_lock_irq(&lp->lock);
+ 	/* load word into GP register */
+@@ -1653,7 +1633,6 @@ static int smc_read_eeprom_word(struct net_device *dev, u16 addr, u16 *word)
+ {
+ 	u16 ctl;
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 
+ 	spin_lock_irq(&lp->lock);
+ 	/* set the EEPROM address to get the data from */
+@@ -1773,7 +1752,6 @@ static const struct net_device_ops smc_netdev_ops = {
+  */
+ static int smc_findirq(struct smc_local *lp)
+ {
+-	void __iomem *ioaddr = lp->base;
+ 	int timeout = 20;
+ 	unsigned long cookie;
+ 
+diff --git a/drivers/net/ethernet/smsc/smc91x.h b/drivers/net/ethernet/smsc/smc91x.h
+index 38aa4374e813..2be9ea33a36c 100644
+--- a/drivers/net/ethernet/smsc/smc91x.h
++++ b/drivers/net/ethernet/smsc/smc91x.h
+@@ -839,190 +839,190 @@ static const char * chip_ids[ 16 ] =  {
+ #define SMC_MUST_ALIGN_WRITE(lp)	SMC_32BIT(lp)
+ 
+ #define SMC_GET_PN(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, PN_REG(lp)))	\
+-				: (SMC_inw(ioaddr, PN_REG(lp)) & 0xFF))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, PN_REG(lp)))	\
++				: (SMC_inw(lp->base, PN_REG(lp)) & 0xFF))
+ 
+ #define SMC_SET_PN(lp, x)						\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 0, 2));	\
++			SMC_outl((x)<<16, lp->base, SMC_REG(lp, 0, 2));	\
+ 		else if (SMC_8BIT(lp))				\
+-			SMC_outb(x, ioaddr, PN_REG(lp));		\
++			SMC_outb(x, lp->base, PN_REG(lp));		\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, PN_REG(lp));		\
++			SMC_outw(lp, x, lp->base, PN_REG(lp));		\
+ 	} while (0)
+ 
+ #define SMC_GET_AR(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, AR_REG(lp)))	\
+-				: (SMC_inw(ioaddr, PN_REG(lp)) >> 8))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, AR_REG(lp)))	\
++				: (SMC_inw(lp->base, PN_REG(lp)) >> 8))
+ 
+ #define SMC_GET_TXFIFO(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, TXFIFO_REG(lp)))	\
+-				: (SMC_inw(ioaddr, TXFIFO_REG(lp)) & 0xFF))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, TXFIFO_REG(lp)))	\
++				: (SMC_inw(lp->base, TXFIFO_REG(lp)) & 0xFF))
+ 
+ #define SMC_GET_RXFIFO(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, RXFIFO_REG(lp)))	\
+-				: (SMC_inw(ioaddr, TXFIFO_REG(lp)) >> 8))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, RXFIFO_REG(lp)))	\
++				: (SMC_inw(lp->base, TXFIFO_REG(lp)) >> 8))
+ 
+ #define SMC_GET_INT(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, INT_REG(lp)))	\
+-				: (SMC_inw(ioaddr, INT_REG(lp)) & 0xFF))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, INT_REG(lp)))	\
++				: (SMC_inw(lp->base, INT_REG(lp)) & 0xFF))
+ 
+ #define SMC_ACK_INT(lp, x)						\
+ 	do {								\
+ 		if (SMC_8BIT(lp))					\
+-			SMC_outb(x, ioaddr, INT_REG(lp));		\
++			SMC_outb(x, lp->base, INT_REG(lp));		\
+ 		else {							\
+ 			unsigned long __flags;				\
+ 			int __mask;					\
+ 			local_irq_save(__flags);			\
+-			__mask = SMC_inw(ioaddr, INT_REG(lp)) & ~0xff; \
+-			SMC_outw(lp, __mask | (x), ioaddr, INT_REG(lp)); \
++			__mask = SMC_inw(lp->base, INT_REG(lp)) & ~0xff; \
++			SMC_outw(lp, __mask | (x), lp->base, INT_REG(lp)); \
+ 			local_irq_restore(__flags);			\
+ 		}							\
+ 	} while (0)
+ 
+ #define SMC_GET_INT_MASK(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, IM_REG(lp)))	\
+-				: (SMC_inw(ioaddr, INT_REG(lp)) >> 8))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, IM_REG(lp)))	\
++				: (SMC_inw(lp->base, INT_REG(lp)) >> 8))
+ 
+ #define SMC_SET_INT_MASK(lp, x)					\
+ 	do {								\
+ 		if (SMC_8BIT(lp))					\
+-			SMC_outb(x, ioaddr, IM_REG(lp));		\
++			SMC_outb(x, lp->base, IM_REG(lp));		\
+ 		else							\
+-			SMC_outw(lp, (x) << 8, ioaddr, INT_REG(lp));	\
++			SMC_outw(lp, (x) << 8, lp->base, INT_REG(lp));	\
+ 	} while (0)
+ 
+-#define SMC_CURRENT_BANK(lp)	SMC_inw(ioaddr, BANK_SELECT)
++#define SMC_CURRENT_BANK(lp)	SMC_inw(lp->base, BANK_SELECT)
+ 
+ #define SMC_SELECT_BANK(lp, x)					\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, 12<<SMC_IO_SHIFT);	\
++			SMC_outl((x)<<16, lp->base, 12<<SMC_IO_SHIFT);	\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, BANK_SELECT);		\
++			SMC_outw(lp, x, lp->base, BANK_SELECT);		\
+ 	} while (0)
+ 
+-#define SMC_GET_BASE(lp)		SMC_inw(ioaddr, BASE_REG(lp))
++#define SMC_GET_BASE(lp)		SMC_inw(lp->base, BASE_REG(lp))
+ 
+-#define SMC_SET_BASE(lp, x)	SMC_outw(lp, x, ioaddr, BASE_REG(lp))
++#define SMC_SET_BASE(lp, x)	SMC_outw(lp, x, lp->base, BASE_REG(lp))
+ 
+-#define SMC_GET_CONFIG(lp)	SMC_inw(ioaddr, CONFIG_REG(lp))
++#define SMC_GET_CONFIG(lp)	SMC_inw(lp->base, CONFIG_REG(lp))
+ 
+-#define SMC_SET_CONFIG(lp, x)	SMC_outw(lp, x, ioaddr, CONFIG_REG(lp))
++#define SMC_SET_CONFIG(lp, x)	SMC_outw(lp, x, lp->base, CONFIG_REG(lp))
+ 
+-#define SMC_GET_COUNTER(lp)	SMC_inw(ioaddr, COUNTER_REG(lp))
++#define SMC_GET_COUNTER(lp)	SMC_inw(lp->base, COUNTER_REG(lp))
+ 
+-#define SMC_GET_CTL(lp)		SMC_inw(ioaddr, CTL_REG(lp))
++#define SMC_GET_CTL(lp)		SMC_inw(lp->base, CTL_REG(lp))
+ 
+-#define SMC_SET_CTL(lp, x)	SMC_outw(lp, x, ioaddr, CTL_REG(lp))
++#define SMC_SET_CTL(lp, x)	SMC_outw(lp, x, lp->base, CTL_REG(lp))
+ 
+-#define SMC_GET_MII(lp)		SMC_inw(ioaddr, MII_REG(lp))
++#define SMC_GET_MII(lp)		SMC_inw(lp->base, MII_REG(lp))
+ 
+-#define SMC_GET_GP(lp)		SMC_inw(ioaddr, GP_REG(lp))
++#define SMC_GET_GP(lp)		SMC_inw(lp->base, GP_REG(lp))
+ 
+ #define SMC_SET_GP(lp, x)						\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 8, 1));	\
++			SMC_outl((x)<<16, lp->base, SMC_REG(lp, 8, 1));	\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, GP_REG(lp));		\
++			SMC_outw(lp, x, lp->base, GP_REG(lp));		\
+ 	} while (0)
+ 
+-#define SMC_SET_MII(lp, x)	SMC_outw(lp, x, ioaddr, MII_REG(lp))
++#define SMC_SET_MII(lp, x)	SMC_outw(lp, x, lp->base, MII_REG(lp))
+ 
+-#define SMC_GET_MIR(lp)		SMC_inw(ioaddr, MIR_REG(lp))
++#define SMC_GET_MIR(lp)		SMC_inw(lp->base, MIR_REG(lp))
+ 
+-#define SMC_SET_MIR(lp, x)	SMC_outw(lp, x, ioaddr, MIR_REG(lp))
++#define SMC_SET_MIR(lp, x)	SMC_outw(lp, x, lp->base, MIR_REG(lp))
+ 
+-#define SMC_GET_MMU_CMD(lp)	SMC_inw(ioaddr, MMU_CMD_REG(lp))
++#define SMC_GET_MMU_CMD(lp)	SMC_inw(lp->base, MMU_CMD_REG(lp))
+ 
+-#define SMC_SET_MMU_CMD(lp, x)	SMC_outw(lp, x, ioaddr, MMU_CMD_REG(lp))
++#define SMC_SET_MMU_CMD(lp, x)	SMC_outw(lp, x, lp->base, MMU_CMD_REG(lp))
+ 
+-#define SMC_GET_FIFO(lp)	SMC_inw(ioaddr, FIFO_REG(lp))
++#define SMC_GET_FIFO(lp)	SMC_inw(lp->base, FIFO_REG(lp))
+ 
+-#define SMC_GET_PTR(lp)		SMC_inw(ioaddr, PTR_REG(lp))
++#define SMC_GET_PTR(lp)		SMC_inw(lp->base, PTR_REG(lp))
+ 
+ #define SMC_SET_PTR(lp, x)						\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 4, 2));	\
++			SMC_outl((x)<<16, lp->base, SMC_REG(lp, 4, 2));	\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, PTR_REG(lp));		\
++			SMC_outw(lp, x, lp->base, PTR_REG(lp));		\
+ 	} while (0)
+ 
+-#define SMC_GET_EPH_STATUS(lp)	SMC_inw(ioaddr, EPH_STATUS_REG(lp))
++#define SMC_GET_EPH_STATUS(lp)	SMC_inw(lp->base, EPH_STATUS_REG(lp))
+ 
+-#define SMC_GET_RCR(lp)		SMC_inw(ioaddr, RCR_REG(lp))
++#define SMC_GET_RCR(lp)		SMC_inw(lp->base, RCR_REG(lp))
+ 
+-#define SMC_SET_RCR(lp, x)		SMC_outw(lp, x, ioaddr, RCR_REG(lp))
++#define SMC_SET_RCR(lp, x)		SMC_outw(lp, x, lp->base, RCR_REG(lp))
+ 
+-#define SMC_GET_REV(lp)		SMC_inw(ioaddr, REV_REG(lp))
++#define SMC_GET_REV(lp)		SMC_inw(lp->base, REV_REG(lp))
+ 
+-#define SMC_GET_RPC(lp)		SMC_inw(ioaddr, RPC_REG(lp))
++#define SMC_GET_RPC(lp)		SMC_inw(lp->base, RPC_REG(lp))
+ 
+ #define SMC_SET_RPC(lp, x)						\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 8, 0));	\
++			SMC_outl((x)<<16, lp->base, SMC_REG(lp, 8, 0));	\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, RPC_REG(lp));		\
++			SMC_outw(lp, x, lp->base, RPC_REG(lp));		\
+ 	} while (0)
+ 
+-#define SMC_GET_TCR(lp)		SMC_inw(ioaddr, TCR_REG(lp))
++#define SMC_GET_TCR(lp)		SMC_inw(lp->base, TCR_REG(lp))
+ 
+-#define SMC_SET_TCR(lp, x)	SMC_outw(lp, x, ioaddr, TCR_REG(lp))
++#define SMC_SET_TCR(lp, x)	SMC_outw(lp, x, lp->base, TCR_REG(lp))
+ 
+ #ifndef SMC_GET_MAC_ADDR
+ #define SMC_GET_MAC_ADDR(lp, addr)					\
+ 	do {								\
+ 		unsigned int __v;					\
+-		__v = SMC_inw(ioaddr, ADDR0_REG(lp));			\
++		__v = SMC_inw(lp->base, ADDR0_REG(lp));			\
+ 		addr[0] = __v; addr[1] = __v >> 8;			\
+-		__v = SMC_inw(ioaddr, ADDR1_REG(lp));			\
++		__v = SMC_inw(lp->base, ADDR1_REG(lp));			\
+ 		addr[2] = __v; addr[3] = __v >> 8;			\
+-		__v = SMC_inw(ioaddr, ADDR2_REG(lp));			\
++		__v = SMC_inw(lp->base, ADDR2_REG(lp));			\
+ 		addr[4] = __v; addr[5] = __v >> 8;			\
+ 	} while (0)
+ #endif
+ 
+ #define SMC_SET_MAC_ADDR(lp, addr)					\
+ 	do {								\
+-		SMC_outw(lp, addr[0] | (addr[1] << 8), ioaddr, ADDR0_REG(lp)); \
+-		SMC_outw(lp, addr[2] | (addr[3] << 8), ioaddr, ADDR1_REG(lp)); \
+-		SMC_outw(lp, addr[4] | (addr[5] << 8), ioaddr, ADDR2_REG(lp)); \
++		SMC_outw(lp, addr[0] | (addr[1] << 8), lp->base, ADDR0_REG(lp)); \
++		SMC_outw(lp, addr[2] | (addr[3] << 8), lp->base, ADDR1_REG(lp)); \
++		SMC_outw(lp, addr[4] | (addr[5] << 8), lp->base, ADDR2_REG(lp)); \
+ 	} while (0)
+ 
+ #define SMC_SET_MCAST(lp, x)						\
+ 	do {								\
+ 		const unsigned char *mt = (x);				\
+-		SMC_outw(lp, mt[0] | (mt[1] << 8), ioaddr, MCAST_REG1(lp)); \
+-		SMC_outw(lp, mt[2] | (mt[3] << 8), ioaddr, MCAST_REG2(lp)); \
+-		SMC_outw(lp, mt[4] | (mt[5] << 8), ioaddr, MCAST_REG3(lp)); \
+-		SMC_outw(lp, mt[6] | (mt[7] << 8), ioaddr, MCAST_REG4(lp)); \
++		SMC_outw(lp, mt[0] | (mt[1] << 8), lp->base, MCAST_REG1(lp)); \
++		SMC_outw(lp, mt[2] | (mt[3] << 8), lp->base, MCAST_REG2(lp)); \
++		SMC_outw(lp, mt[4] | (mt[5] << 8), lp->base, MCAST_REG3(lp)); \
++		SMC_outw(lp, mt[6] | (mt[7] << 8), lp->base, MCAST_REG4(lp)); \
+ 	} while (0)
+ 
+ #define SMC_PUT_PKT_HDR(lp, status, length)				\
+ 	do {								\
+ 		if (SMC_32BIT(lp))					\
+-			SMC_outl((status) | (length)<<16, ioaddr,	\
++			SMC_outl((status) | (length)<<16, lp->base,	\
+ 				 DATA_REG(lp));			\
+ 		else {							\
+-			SMC_outw(lp, status, ioaddr, DATA_REG(lp));	\
+-			SMC_outw(lp, length, ioaddr, DATA_REG(lp));	\
++			SMC_outw(lp, status, lp->base, DATA_REG(lp));	\
++			SMC_outw(lp, length, lp->base, DATA_REG(lp));	\
+ 		}							\
+ 	} while (0)
+ 
+ #define SMC_GET_PKT_HDR(lp, status, length)				\
+ 	do {								\
+ 		if (SMC_32BIT(lp)) {				\
+-			unsigned int __val = SMC_inl(ioaddr, DATA_REG(lp)); \
++			unsigned int __val = SMC_inl(lp->base, DATA_REG(lp)); \
+ 			(status) = __val & 0xffff;			\
+ 			(length) = __val >> 16;				\
+ 		} else {						\
+-			(status) = SMC_inw(ioaddr, DATA_REG(lp));	\
+-			(length) = SMC_inw(ioaddr, DATA_REG(lp));	\
++			(status) = SMC_inw(lp->base, DATA_REG(lp));	\
++			(length) = SMC_inw(lp->base, DATA_REG(lp));	\
+ 		}							\
+ 	} while (0)
+ 
+@@ -1031,10 +1031,10 @@ static const char * chip_ids[ 16 ] =  {
+ 		if (SMC_32BIT(lp)) {				\
+ 			void *__ptr = (p);				\
+ 			int __len = (l);				\
+-			void __iomem *__ioaddr = ioaddr;		\
++			void __iomem *__ioaddr = lp->base;		\
+ 			if (__len >= 2 && (unsigned long)__ptr & 2) {	\
+ 				__len -= 2;				\
+-				SMC_outsw(ioaddr, DATA_REG(lp), __ptr, 1); \
++				SMC_outsw(lp->base, DATA_REG(lp), __ptr, 1); \
+ 				__ptr += 2;				\
+ 			}						\
+ 			if (SMC_CAN_USE_DATACS && lp->datacs)		\
+@@ -1042,12 +1042,12 @@ static const char * chip_ids[ 16 ] =  {
+ 			SMC_outsl(__ioaddr, DATA_REG(lp), __ptr, __len>>2); \
+ 			if (__len & 2) {				\
+ 				__ptr += (__len & ~3);			\
+-				SMC_outsw(ioaddr, DATA_REG(lp), __ptr, 1); \
++				SMC_outsw(lp->base, DATA_REG(lp), __ptr, 1); \
+ 			}						\
+ 		} else if (SMC_16BIT(lp))				\
+-			SMC_outsw(ioaddr, DATA_REG(lp), p, (l) >> 1);	\
++			SMC_outsw(lp->base, DATA_REG(lp), p, (l) >> 1);	\
+ 		else if (SMC_8BIT(lp))				\
+-			SMC_outsb(ioaddr, DATA_REG(lp), p, l);	\
++			SMC_outsb(lp->base, DATA_REG(lp), p, l);	\
+ 	} while (0)
+ 
+ #define SMC_PULL_DATA(lp, p, l)					\
+@@ -1055,7 +1055,7 @@ static const char * chip_ids[ 16 ] =  {
+ 		if (SMC_32BIT(lp)) {				\
+ 			void *__ptr = (p);				\
+ 			int __len = (l);				\
+-			void __iomem *__ioaddr = ioaddr;		\
++			void __iomem *__ioaddr = lp->base;		\
+ 			if ((unsigned long)__ptr & 2) {			\
+ 				/*					\
+ 				 * We want 32bit alignment here.	\
+@@ -1080,9 +1080,9 @@ static const char * chip_ids[ 16 ] =  {
+ 			__len += 2;					\
+ 			SMC_insl(__ioaddr, DATA_REG(lp), __ptr, __len>>2); \
+ 		} else if (SMC_16BIT(lp))				\
+-			SMC_insw(ioaddr, DATA_REG(lp), p, (l) >> 1);	\
++			SMC_insw(lp->base, DATA_REG(lp), p, (l) >> 1);	\
+ 		else if (SMC_8BIT(lp))				\
+-			SMC_insb(ioaddr, DATA_REG(lp), p, l);		\
++			SMC_insb(lp->base, DATA_REG(lp), p, l);		\
+ 	} while (0)
+ 
+ #endif  /* _SMC91X_H_ */
+-- 
+2.45.1
 
-> -- 
-> 2.43.0
-> 
