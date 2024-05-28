@@ -1,137 +1,133 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A864D75809
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14AD6CDBA;
+	Tue, 28 May 2024 07:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716880686; cv=none; b=UxOdyVyd5a+6u+HryjszIjkC2x1SdxoU1N9ceu9F9SKxDvcCR2lzEMdfX+Cptm/lXSSKvuEq7mKTjhb/yXzhsiGTdztjsqyYXeaosA1ruqDT0sUwLZzsEKwOfhqSONpiV4cN8cXiYHEX/xyt+vHR9ZHHqkDwKfB7/SKIK+zffTQ=
+	t=1716880721; cv=none; b=LPmEEsh07UyIlUK29WfjYISDtdewZzZ/QSjnJV8z9i/r6zbDfMggqzQkNAWzO3/FlqT4V17I414aWJOjDrTV5/xRLGbDiQaWXGyaO6hyId7J0U502A6aCK1coypi73zaSdowSfAsaJCLPBI1TEPBdmajwkLp+pQ8HSQOV7HnSQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716880686; c=relaxed/simple;
-	bh=+rkgEJu+y9vxTpB/JnC+X49HMuwavO1IjQ2oUQ25XPg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m0JJAUsmTy1W21OjbSkSjJafdw7l6SUY5K+WFXINulxfWpdtmyqNs0EpwY2y1rOhlRqv84oMI2tW7zAFwaGdHe+oT244QtsGJJtkxfC5xpxDSucniNLROLTa+7m07NBHH1p+6Wjke0F4DGFk1vdkicYAi51UM6mcSsCKbmMzQsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GIZhwNmj; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GIZhwNmj"
-X-Envelope-To: vbabka@suse.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716880683;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6mzSTL6xyZKONSteLTPcFdPTWlXRiPL9M+VrIHD2DrE=;
-	b=GIZhwNmjd1A4KLiPMPJMJwLEdtYLjZEWMLDVF/mgiQC7dRxnpaGjt8gm2zEBpZ2YwPpjxc
-	lWXClyUiDYKdNBioPOdE539JD1qfT7toEdPMJALk9hyrilyE2wagz0Qmcv4485nsKcJPEb
-	ycRsxGC3SmhpkK1K0MSpAgxvwJFsfYw=
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: roman.gushchin@linux.dev
-X-Envelope-To: 42.hyeyoo@gmail.com
-X-Envelope-To: iamjoonsoo.kim@lge.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: rientjes@google.com
-X-Envelope-To: zhouchengming@bytedance.com
-X-Envelope-To: penberg@kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: feng.tang@intel.com
-X-Envelope-To: cl@linux.com
-X-Envelope-To: chengming.zhou@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-Date: Tue, 28 May 2024 15:16:48 +0800
-Subject: [PATCH 3/3] slab: delete useless RED_INACTIVE and RED_ACTIVE
+	s=arc-20240116; t=1716880721; c=relaxed/simple;
+	bh=eG4LXGkkd6GmLi3x6o1Z6RIyQtsF9v/WsFvQ4zoy1IM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JxzVMlhTw9SzZp+S6uopcZtDUD6jOhiBgTGJ9Vhwq4vtwJ1maOkY33GRuWqZz/DmFLlMkqZba5RCcHwLqGoriyo2RFoXai8Wlc2baWIfXaMFjjn+mk56NB6f+zAJsmwRFeBidLoMt/9X98WlBKzbCh+si9YilaqTezbgoFaj4o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-62a0849f8e5so4500907b3.2;
+        Tue, 28 May 2024 00:18:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716880717; x=1717485517;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X4vWByfoXKu7LePUaFaZdnCiQrprLNnYlLwjH2lySYo=;
+        b=Iv+WcHf4rXeW0D9OnlturhWk9uyrp62bRM/djD9azEPCNrrHG/Iwxp6wlEe82X9K3l
+         GuVB4cvA4Wr0fN/u0zdkCek1rJgHBvAmKlnwxcUqWo872Ge2mIWACGbQce7YXiupDbuH
+         4HdpkXixDFxqQniuqgEVIwkyc2lBOJPzhjz5vq/j7masNgj4Gbm5zBJrtIO4FKYqjbQx
+         nmw0lFXl23Ouk4Yb74Fs3H7E1HTpClK8kc4QkBU8lnwyPPAPj9wF0qPOcQAwT8miJB5G
+         piWq4VVSvA2G77OFbrE9Jqd0fCDXFb7mT1aa5K/9BK1YAJalGQgFu6K/lqPKAP8vVcWV
+         yKkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWChC7ATqaC7awHiTB1hbgKvWHUbpGTmqgHhnFRRqe4j/Y4xzeo/6cWXGAud4rghj3r1tNsWXW7A5e4Zy96TeM5glHg3QUJDtavMmRu1cx88hDTqjiabKYTNZfBYsEcBbBbv0M3Nl0KvVvrKTTxcn2WFBsYRtt6DxbJYgRl1dDv9zkcB4yepCb1K4Ff
+X-Gm-Message-State: AOJu0YyZlTQIKDVqmMO3xTIYg48VlJyuufjv56nJnzNZ1xBUGQXVrW2+
+	47CtMh7cXZ8cOU/0zp+SLmRjYjhsI6sH1+xRKD4iOHkM71ZtWDApOINuXWRs
+X-Google-Smtp-Source: AGHT+IEKtwcEGIgNzN4R2vyyvTLuJM6McQgqdQfXnTgWUFOH77n1grT/1HRTLF0Dtf94hgZLG2rxpg==
+X-Received: by 2002:a81:431b:0:b0:627:96bd:b1d with SMTP id 00721157ae682-62a08db7105mr110276367b3.26.1716880716978;
+        Tue, 28 May 2024 00:18:36 -0700 (PDT)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a3c329dsm19498887b3.36.2024.05.28.00.18.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 00:18:36 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-df4e346e36fso537344276.1;
+        Tue, 28 May 2024 00:18:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSSQbRZyyjy/JRUgGdS/0MUhXNtWWf4DDI46SN2U36Hq2eUOnBjMblkK0BQqSn/aDtOLIXVu71WF8z7jFdEC2tL5Z7Py1A7RzGfh7kb3hGMn4vQK+TLEvim02GEPsVa+N427Wu0iTB7AeYvsI0K7fqpmMhGwIJg9N1ITK2D1jwzrf/P4toa5NdchE3
+X-Received: by 2002:a25:c788:0:b0:df4:e621:d2e5 with SMTP id
+ 3f1490d57ef6-df772222b88mr10773188276.41.1716880716231; Tue, 28 May 2024
+ 00:18:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240528-b4-slab-debug-v1-3-8694ef4802df@linux.dev>
-References: <20240528-b4-slab-debug-v1-0-8694ef4802df@linux.dev>
-In-Reply-To: <20240528-b4-slab-debug-v1-0-8694ef4802df@linux.dev>
-To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
- Roman Gushchin <roman.gushchin@linux.dev>, 
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- zhouchengming@bytedance.com, Chengming Zhou <chengming.zhou@linux.dev>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716880668; l=2445;
- i=chengming.zhou@linux.dev; s=20240508; h=from:subject:message-id;
- bh=+rkgEJu+y9vxTpB/JnC+X49HMuwavO1IjQ2oUQ25XPg=;
- b=p/Psm2cQFQg7eXrJTvAMRypLyeXst5Pvu3ic2rgJ9awXVqHSyYAR8OY0r0xAZL//twzZAOluA
- tjn4CHCQYdgDf6pSTcOuq72rE4nnzdl+0iwbtPtXtAT5aFmXeza/3jp
-X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
- pk=kx40VUetZeR6MuiqrM7kPCcGakk1md0Az5qHwb6gBdU=
-X-Migadu-Flow: FLOW_OUT
+References: <zhtllemg2gcex7hwybjzoavzrsnrwheuxtswqyo3mn2dlhsxbx@dkfnr5zx3r2x> <202405191921.C218169@keescook>
+In-Reply-To: <202405191921.C218169@keescook>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 28 May 2024 09:18:24 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUUTy7G6fUa7+P+ZionsiYag-ni_K4smcp6j=gFb9RJJg@mail.gmail.com>
+Message-ID: <CAMuHMdUUTy7G6fUa7+P+ZionsiYag-ni_K4smcp6j=gFb9RJJg@mail.gmail.com>
+Subject: Re: [GIT PULL] bcachefs updates fro 6.10-rc1
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Kees Cook <keescook@chromium.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-These seem useless since we use the SLUB_RED_INACTIVE and SLUB_RED_ACTIVE,
-so just delete them, no functional change.
+Hi Kent,
 
-Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
----
- include/linux/poison.h       | 7 ++-----
- mm/slub.c                    | 4 ++--
- tools/include/linux/poison.h | 7 ++-----
- 3 files changed, 6 insertions(+), 12 deletions(-)
+On Mon, May 20, 2024 at 4:39=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
+> On Sun, May 19, 2024 at 12:14:34PM -0400, Kent Overstreet wrote:
+> > [...]
+> > bcachefs changes for 6.10-rc1
+> > [...]
+> >       bcachefs: bch2_btree_path_to_text()
+>
+> Hi Kent,
+>
+> I've asked after this before[1], but there continues to be a lot of
+> bcachefs development going on that is only visible when it appears in
+> -next or during the merge window. I cannot find the above commit on
+> any mailing list on lore.kernel.org[2]. The rules for -next are clear:
+> patches _must_ appear on a list _somewhere_ before they land in -next
+> (much less Linus's tree). The point is to get additional reviews, and
+> to serve as a focal point for any discussions that pop up over a given
+> change. Please adjust the bcachefs development workflow to address this.
 
-diff --git a/include/linux/poison.h b/include/linux/poison.h
-index 1f0ee2459f2a..9c1a035af97c 100644
---- a/include/linux/poison.h
-+++ b/include/linux/poison.h
-@@ -38,11 +38,8 @@
-  * Magic nums for obj red zoning.
-  * Placed in the first word before and the first word after an obj.
-  */
--#define	RED_INACTIVE	0x09F911029D74E35BULL	/* when obj is inactive */
--#define	RED_ACTIVE	0xD84156C5635688C0ULL	/* when obj is active */
--
--#define SLUB_RED_INACTIVE	0xbb
--#define SLUB_RED_ACTIVE		0xcc
-+#define SLUB_RED_INACTIVE	0xbb	/* when obj is inactive */
-+#define SLUB_RED_ACTIVE		0xcc	/* when obj is active */
- 
- /* ...and for poisoning */
- #define	POISON_INUSE	0x5a	/* for use-uninitialised poisoning */
-diff --git a/mm/slub.c b/mm/slub.c
-index b92d9a557852..9af868fa68a4 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1216,8 +1216,8 @@ static int check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
-  * 	Padding is extended by another word if Redzoning is enabled and
-  * 	object_size == inuse.
-  *
-- * 	We fill with 0xbb (RED_INACTIVE) for inactive objects and with
-- * 	0xcc (RED_ACTIVE) for objects in use.
-+ * 	We fill with 0xbb (SLUB_RED_INACTIVE) for inactive objects and with
-+ * 	0xcc (SLUB_RED_ACTIVE) for objects in use.
-  *
-  * object + s->inuse
-  * 	Meta data starts here.
-diff --git a/tools/include/linux/poison.h b/tools/include/linux/poison.h
-index 2e6338ac5eed..e530e54046c9 100644
---- a/tools/include/linux/poison.h
-+++ b/tools/include/linux/poison.h
-@@ -47,11 +47,8 @@
-  * Magic nums for obj red zoning.
-  * Placed in the first word before and the first word after an obj.
-  */
--#define	RED_INACTIVE	0x09F911029D74E35BULL	/* when obj is inactive */
--#define	RED_ACTIVE	0xD84156C5635688C0ULL	/* when obj is active */
--
--#define SLUB_RED_INACTIVE	0xbb
--#define SLUB_RED_ACTIVE		0xcc
-+#define SLUB_RED_INACTIVE	0xbb	/* when obj is inactive */
-+#define SLUB_RED_ACTIVE		0xcc	/* when obj is active */
- 
- /* ...and for poisoning */
- #define	POISON_INUSE	0x5a	/* for use-uninitialised poisoning */
+This morning, the kisskb build service informed me about several build
+failures on m68k (e.g. [1]).
 
--- 
-2.45.1
+In fact, the kernel test robot had already detected them on multiple 32-bit
+platforms 4 days ago:
+  - Subject: [bcachefs:bcachefs-testing 21/23] fs/bcachefs/btree_io.c:542:7=
+:
+    warning: format specifies type 'size_t' (aka 'unsigned int') but the
+    argument has type 'unsigned long'[2]
+  - Subject: [bcachefs:bcachefs-testing 21/23] fs/bcachefs/btree_io.c:541:3=
+3:
+    warning: format '%zu' expects argument of type 'size_t', but argument
+    3 has type 'long unsigned int'[3]
 
+These are caused by commit 1d34085cde461893 ("bcachefs:
+Plumb bkey into __btree_err()"), which is nowhere to be found on
+any public mailing list archived by lore.
+
++               prt_printf(out, " bset byte offset %zu",
++                          (unsigned long)(void *)k -
++                          ((unsigned long)(void *)i & ~511UL));
+
+Please stop committing private unreviewed patches to linux-next,
+as I have asked before [4].
+Thank you!
+
+[1]http://kisskb.ellerman.id.au/kisskb/buildresult/15176487/
+[2] https://lore.kernel.org/all/202405250948.JeFBsoxZ-lkp@intel.com/
+[3] https://lore.kernel.org/all/202405250757.U8G0SdUV-lkp@intel.com/
+[4] https://lore.kernel.org/all/CAMuHMdX04q-af8BVWqGgeG5gkZrrDJWsnrJh5j=3DX=
+G97vrdTQrg@mail.gmail.com/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
