@@ -1,202 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A9C18AF9
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B1438384;
+	Tue, 28 May 2024 19:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716922843; cv=none; b=Cfo70XoVNCAm6IigWLn1kbYsPqUt4Lmsr82Cxj80kDESG52xZVab9Ym9UwjgpCMggAZ9Q4EjQvbRByrfuDXGQWGeL1zXwSfO/Y+VDWqUA5k6NYIPFqTIOS4v/XaHNlE4i0jM/8WYob54kto5J+nfXCUqTRrOfkXJLtZGQRRqzO0=
+	t=1716922869; cv=none; b=iw0C/VllGa8VZcgOcI80yIdE918TmJ8UYcgbkF28lrYjCf0bgJ0DKSt8qHqEt90GlHQlJQ2HsvJDn5a1rw1aS282vvVzUMox42w9cL5VXe2SEPJJ+lsKDjBVFBUEuyngccv63U6yV1QhVnmG+Oon62YnGUtt2CUMeHioM0V7eSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716922843; c=relaxed/simple;
-	bh=f+voVYQgJ6rLsoG7iQDzb3odNjuXcpx3jZ1qlcYa4aY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=udYPlf30K0663EWEz5Dh3p7WS1C6blCvHv0neZIHwa0BHPUCNkwKCF4UDbg5DthiKHDtUNdRsHjwzAqBfbO/k2lH2S2+AQ4FZyhUlOGuHlMbQd31T3SMkMYqIQEUyYkUeNy/SXFgdxyHxbDhx1Uo9gMQsAO8OOvNYNw4ni4AgGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hOIgLuYM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716922869; c=relaxed/simple;
+	bh=v2Ps8vw965nwPRGF+CGbeADDlCaTl8TAmm5pcwPfnYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qMrAb1aJndJM9KV3H0i/mueVppakBIdJE04nHtb+gmVh4idlSrUVUoC3f2iIjDdYoB3k+beh55gmsgCQcw9aPq05IF0WLbUGwqif9BkwleQaWGNwEEkeaY3tVowOJ0b3oIBl8zCM8ExsRDwVVlofZsvupiqA9xOxjxzMlswher0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AUkN9NUF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hOIgLuYM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716922840;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EroyhAMtYZlwFiF+i06GpFh0h6zXLI4AvXcFdjRTODk=;
-	b=hOIgLuYM6j3Kye4aK1BFeprbsK2/nuRSV0y7rIVIxe+PlOZrFh3/VVFEHLeLCs7xMAeVJ9
-	FAlQYDf5x2fLczpEfKJWk45V1B1/xzMo8OT6nqdqARPp88MghRlQB3wLYiZp9rIMi3Z58F
-	RlOwWsBO5yVqEfMHlc5xY6LiKIJNwR8=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-209-gPpSsU1BOmm5dlgNF8H8ag-1; Tue, 28 May 2024 15:00:39 -0400
-X-MC-Unique: gPpSsU1BOmm5dlgNF8H8ag-1
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-43fc7d851f5so12373901cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:00:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716922838; x=1717527638;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EroyhAMtYZlwFiF+i06GpFh0h6zXLI4AvXcFdjRTODk=;
-        b=UsEGRzWs3sEytqFDmzG97qnLoqOLYRUWxmzSIEgu2Rl3qbIbe3fYdRhBYAh2dd0idc
-         IhZFh/tRtcLkh0Y98JMFTJ5nm9rcUphy8IF0rxX/gW6CQNhyFij2Db/gWNcGX8hRsFuM
-         g0lajkvr8gMc4YEOjtq7BRqyyAS7ozSFooihTsALntskjOlQ48gkdm3vVI8wHnsgAFNW
-         xJFARKvpXGYPm6w7Su2+CC8wEcRWVINAN8mD4fMytBAiZ62vOkQbV74NXzHVVLkCNnZl
-         qa5EWMfUPUQ1Gz46CFGOhihkCT5kOzmh4RH+VvXjaHPWND/O9Q1940ntQTMJJiHpnksh
-         AS2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVAdJzRXCNRBnacQ/+NDW+BPvrEsNYWbxIDQkYnt+XNDf9IfhNDe94tyzzc1HKa6fhHQ1ejnr5zGB83xYd7piiWYLN8UM7+oH5Eamic
-X-Gm-Message-State: AOJu0Yz/wOfdBXZT6nEtmftp9R6oNqghlE8sX7EZoH1J82gcITJ+X6Zw
-	Yr8Vh1+AuJD4h1ozFkspbw9bai8OrZnGs/V1ndEFR0nf6ORtpl5xTBGc798As2q0+9GHXO/+lx8
-	TFNt7u4coF0BKatHQQNE65ouix2Yjqde8aOcm3Jj0DTNSfkqcqgJtBq3MK/ykxw==
-X-Received: by 2002:a05:622a:10a:b0:43e:34ea:80ee with SMTP id d75a77b69052e-43fb0e8d809mr134383951cf.29.1716922837921;
-        Tue, 28 May 2024 12:00:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHLHIs0G4ODwLtaTgMc9fP7BM4N2EDamkPS2f5rSvXhQ/RuodqmrywBv65gQp5ZlO5A4PV4Ug==
-X-Received: by 2002:a05:622a:10a:b0:43e:34ea:80ee with SMTP id d75a77b69052e-43fb0e8d809mr134383451cf.29.1716922837199;
-        Tue, 28 May 2024 12:00:37 -0700 (PDT)
-Received: from localhost (pool-71-184-142-128.bstnma.fios.verizon.net. [71.184.142.128])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fb17f69ddsm44981881cf.41.2024.05.28.12.00.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 12:00:36 -0700 (PDT)
-From: Eric Chanudet <echanude@redhat.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nick Piggin <npiggin@gmail.com>
-Cc: x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Eric Chanudet <echanude@redhat.com>
-Subject: [PATCH v3] mm/mm_init: use node's number of cpus in deferred_page_init_max_threads
-Date: Tue, 28 May 2024 14:54:58 -0400
-Message-ID: <20240528185455.643227-4-echanude@redhat.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AUkN9NUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E68C3277B;
+	Tue, 28 May 2024 19:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716922869;
+	bh=v2Ps8vw965nwPRGF+CGbeADDlCaTl8TAmm5pcwPfnYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AUkN9NUFe+w/vVL6Aim3THJLe+QCMfmGdrQcsIluv2mJ7n0Mc2IZQWLa3wL59hV8D
+	 d9QBNXQS7qXDGEQ+LSbm3B7h/zDEnbg8FP6L9FUfkrGa3D3TNkdLQGQVG//tqXZGbK
+	 ChsHBC1kpfDiQyi0RS9Q2gX+Z/lNfMlq528mOwnA=
+Date: Tue, 28 May 2024 21:01:13 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Gabriel Krisman Bertazi <krisman@suse.de>
+Cc: linux-cve-announce@vger.kernel.org, cve@kernel.org,
+	linux-kernel@vger.kernel.org, keescook@chromium.org
+Subject: Re: CVE-2023-52685: pstore: ram_core: fix possible overflow in
+ persistent_ram_init_ecc()
+Message-ID: <2024052811-cornfield-monday-8bb9@gregkh>
+References: <2024051752-CVE-2023-52685-64c5@gregkh>
+ <87jzjeojwp.fsf@mailhost.krisman.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87jzjeojwp.fsf@mailhost.krisman.be>
 
-When DEFERRED_STRUCT_PAGE_INIT=y, use a node's cpu count as maximum
-thread count for the deferred initialization of struct pages via padata.
-This should result in shorter boot times for these configurations by
-going through page_alloc_init_late() faster as systems tend not to be
-under heavy load that early in the bootstrap.
+On Mon, May 27, 2024 at 08:32:54PM -0400, Gabriel Krisman Bertazi wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> 
+> > Description
+> > ===========
+> >
+> > In the Linux kernel, the following vulnerability has been resolved:
+> >
+> > pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
+> >
+> > In persistent_ram_init_ecc(), on 64-bit arches DIV_ROUND_UP() will return
+> > 64-bit value since persistent_ram_zone::buffer_size has type size_t which
+> > is derived from the 64-bit *unsigned long*, while the ecc_blocks variable
+> > this value gets assigned to has (always 32-bit) *int* type.  Even if that
+> > value fits into *int* type, an overflow is still possible when calculating
+> > the size_t typed ecc_total variable further below since there's no cast to
+> > any 64-bit type before multiplication.  Declaring the ecc_blocks variable
+> > as *size_t* should fix this mess...
+> >
+> > Found by Linux Verification Center (linuxtesting.org) with the SVACE static
+> > analysis tool.
+> 
+> Hi Greg,
+> 
+> [Cc'ing Kees, who is listed as the pstore maintainer]
+> 
+> I want to dispute this CVE.  The overflow is in the module
+> initialization path, and can only happen at boot time or if the module
+> is loaded with specific parameters or due to specific acpi/device tree
+> data.  Either way, it would require root privileges to trigger.
 
-Only x86_64 does that now. Make it archs agnostic when
-DEFERRED_STRUCT_PAGE_INIT is set. With the default defconfigs, that
-includes powerpc and s390.
+Normally root privileges isn't the issue, as many containers allow root
+to do things (including loading modules, crazy systems...)
 
-It used to be so before offering archs to override the function for
-tuning with commit ecd096506922 ("mm: make deferred init's max threads
-arch-specific").
+Anyway, I'll defer to Kees as to if this should be revoked or not.
 
-Setting DEFERRED_STRUCT_PAGE_INIT and testing on a few arm64 platforms
-shows faster deferred_init_memmap completions:
-|         | x13s        | SA8775p-ride | Ampere R137-P31 | Ampere HR330 |
-|         | Metal, 32GB | VM, 36GB     | VM, 58GB        | Metal, 128GB |
-|         | 8cpus       | 8cpus        | 8cpus           | 32cpus       |
-|---------|-------------|--------------|-----------------|--------------|
-| threads |  ms     (%) | ms       (%) |  ms         (%) |  ms      (%) |
-|---------|-------------|--------------|-----------------|--------------|
-| 1       | 108    (0%) | 72      (0%) | 224        (0%) | 324     (0%) |
-| cpus    |  24  (-77%) | 36    (-50%) |  40      (-82%) |  56   (-82%) |
+thanks,
 
-Michael Ellerman on a powerpc machine (1TB, 40 cores, 4KB pages) reports
-faster deferred_init_memmap from 210-240ms to 90-110ms between nodes.
+gre gk-h
 
-Signed-off-by: Eric Chanudet <echanude@redhat.com>
-Tested-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-
----
-- v1: https://lore.kernel.org/linux-arm-kernel/20240520231555.395979-5-echanude@redhat.com
-- Changes since v1:
- - Make the generic function return the number of cpus of the node as
-   max threads limit instead overriding it for arm64.
- - Drop Baoquan He's R-b on v1 since the logic changed.
- - Add CCs according to patch changes (ppc and s390 set
-   DEFERRED_STRUCT_PAGE_INIT by default).
-
-- v2: https://lore.kernel.org/linux-arm-kernel/20240522203758.626932-4-echanude@redhat.com/
-- Changes since v2:
- - deferred_page_init_max_threads returns unsigned and use max instead
-   of max_t.
- - Make deferred_page_init_max_threads static since there are no more
-   override.
- - Rephrase description.
- - Add T-b and report from Michael Ellerman.
-
- arch/x86/mm/init_64.c    | 12 ------------
- include/linux/memblock.h |  2 --
- mm/mm_init.c             |  5 ++---
- 3 files changed, 2 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 7e177856ee4f..adec42928ec1 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1354,18 +1354,6 @@ void __init mem_init(void)
- 	preallocate_vmalloc_pages();
- }
- 
--#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
--int __init deferred_page_init_max_threads(const struct cpumask *node_cpumask)
--{
--	/*
--	 * More CPUs always led to greater speedups on tested systems, up to
--	 * all the nodes' CPUs.  Use all since the system is otherwise idle
--	 * now.
--	 */
--	return max_t(int, cpumask_weight(node_cpumask), 1);
--}
--#endif
--
- int kernel_set_to_readonly;
- 
- void mark_rodata_ro(void)
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index e2082240586d..40c62aca36ec 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -335,8 +335,6 @@ void __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
- 	for (; i != U64_MAX;					  \
- 	     __next_mem_pfn_range_in_zone(&i, zone, p_start, p_end))
- 
--int __init deferred_page_init_max_threads(const struct cpumask *node_cpumask);
--
- #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
- 
- /**
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index f72b852bd5b8..acfeba508796 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -2122,11 +2122,10 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
- 	}
- }
- 
--/* An arch may override for more concurrency. */
--__weak int __init
-+static unsigned int __init
- deferred_page_init_max_threads(const struct cpumask *node_cpumask)
- {
--	return 1;
-+	return max(cpumask_weight(node_cpumask), 1U);
- }
- 
- /* Initialise remaining memory on a node */
--- 
-2.44.0
-
+> 
+> -- 
+> Gabriel Krisman Bertazi
