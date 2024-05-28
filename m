@@ -1,178 +1,98 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F1A16DED4;
-	Tue, 28 May 2024 15:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DD916DED4
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716911339; cv=none; b=P06/Bey1SgCZlYjXgHdK5uUKvN4dTMqSaqEILZXe4o00JopZ0Pt33fKkjkKlQ638RWuxn8XUdEOjVNts6OwOL8Fy0U3X6MuLCiVngT4jGYfHPwEkNG2wUZLIG4LfnVqK1y+tuF4ia6LfA5z1PxFXVTGLGrUtX0LOntSuwubNk78=
+	t=1716911448; cv=none; b=A65CaI0fmuLz6e1eE5M7SjknoJXm1vVoh6IgzKtWT3GxcKkJ37AooHI18xmhB19t/LOLq9FHLOzRJFR6GPVreX34SiGSuUAWhNdhlQ6hOcn1KFk15Qpt2wVF58fq9jZbADhwBw9CZpmCmns/u70cBp05zQ1CqfTtu++rZitacxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716911339; c=relaxed/simple;
-	bh=OVSOTiBiIWojZQscsvd9k/Hmwk2QKxcN28eLBmzzx0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bjdblR4Z9V7s/sC9/7GvXyWsWXnI0wQdrzklQnV5ncAwoLzTb+Gn+LN8J+x/aZjQguigPq/GGuW35LHIkJeeQn0MqFKaRuqrcjMzoH8q/q72wzgjBbAkJ7M4HMvYWgnKXJgEV3Ia4dDcR05wHx8YdjMKMu93nR1bSf4nRXIpxtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=pHu/gEqc; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1716911448; c=relaxed/simple;
+	bh=MEpI9cbiuyp4XqZwjDIfCb+8/tqlEMab6Gbx7NbkZgU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sVcf07vqMrzUlxt/VLYm/igoZUzF3mnVyGLkJJblYtxXhFh5YSWXJ5qGbUQkiqi9q+t17Vs0DhNknLL9jrQHlPu2lFyF/J0YBsG0lyILQarrp36diT/Xuz9FayWdgII+tL1kG5BJWYiTnmgaH/9gjt4tK9YLgKG0/Ah8T8TKNQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartandconnective.com; spf=pass smtp.mailfrom=smartandconnective.com; dkim=pass (1024-bit key) header.d=smartandconnective.com header.i=@smartandconnective.com header.b=kza+oIZP; arc=none smtp.client-ip=84.16.66.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartandconnective.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smartandconnective.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="pHu/gEqc"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sBz4I-008956-2A;
-	Tue, 28 May 2024 17:48:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2yQ84xH5mxakr7bpMaf2pLZp1+Jqinzbho1ejP4o1eA=; b=pHu/gEqc1rt2T00JZsGyAQV9CF
-	H2z8IXY5CPTEL4mKz4Mn/ZGQPllYvOW6+cT/oQRMxonkbh5BXbBC5H4jN4rl7uhGLdLTkJYiLHiOH
-	GXCnEEh86CYYpyM1MN6yR3LRg1qm4GSb+X8bCPUZ3Z9vFDxR/y7kRosiyhNwrezkjAe6penFw9WNa
-	wj9ar87T6IMrkSwA75jlRTSyzZMptm96a8A7GtNTaAWrSYlmqUBOnPkq1OlIN1DN76WJX49KTJzM2
-	S1WpuDu5jJ0C1yAEI/Nqx0OIHJ4iE0d+aWWmsLVeflQyeBtvz6alKgrek2MIt2eMC+cK3Uwi52BZq
-	pqrrZ/xQ==;
-Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sBz4E-001uCs-29;
-	Tue, 28 May 2024 17:48:52 +0200
-Date: Tue, 28 May 2024 17:48:49 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Conor Dooley <conor@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, lee@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, lgirdwood@gmail.com,
- broonie@kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [RFC PATCH] dt-bindings: regulator: twl-regulator: convert to
- yaml
-Message-ID: <20240528174849.6945343a@aktux>
-In-Reply-To: <20240528-unimpeded-dealing-0128abb54272@spud>
-References: <20240528065756.1962482-1-andreas@kemnade.info>
-	<e497498c-f3da-4ab9-b6d4-f9723c10471c@kernel.org>
-	<20240528131622.4b4f8d03@aktux>
-	<f288a1c9-762c-4c66-8611-9a08d6c09bac@kernel.org>
-	<20240528150647.40385d08@aktux>
-	<3a29c775-4131-4047-9777-4146e6c8eed0@kernel.org>
-	<20240528-unimpeded-dealing-0128abb54272@spud>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=smartandconnective.com header.i=@smartandconnective.com header.b="kza+oIZP"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Vpbf94QnDz7nG;
+	Tue, 28 May 2024 17:14:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=smartandconnective.com; s=20191114; t=1716909281;
+	bh=3bUxCMue09hBn28f4SiBpgvkHgQHBTwNx6pE/uKig6Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kza+oIZPTVXxTlz1ZM527xyVxTPuxb24dIH12C62NsMEr607xEiPUZK5N/0uLvg2I
+	 aY5B53xN9B1qGCLHD06MGeXb0NirMpTrwHbuYeTp32wF4S97bEvcVYeUlN6F7Qi05A
+	 X4VdQMGMIkID7DIJjJyyaOzQBH4QaWHt+PShHhc8=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Vpbf83S5Qzw36;
+	Tue, 28 May 2024 17:14:40 +0200 (CEST)
+From: Sebastien Laveze <slaveze@smartandconnective.com>
+To: Abel Vesa <abelvesa@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Lee Jones <lee@kernel.org>
+Cc: Sebastien Laveze <slaveze@smartandconnective.com>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	linux-clk@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: imx: imx6ul: fix default parent for enet*_ref_sel
+Date: Tue, 28 May 2024 17:14:33 +0200
+Message-Id: <20240528151434.227602-1-slaveze@smartandconnective.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Tue, 28 May 2024 15:36:40 +0100
-Conor Dooley <conor@kernel.org> wrote:
+The clk_set_parent for "enet1_ref_sel" and  "enet2_ref_sel" are
+incorrect, therefore the original requirements to have "enet_clk_ref" as
+output sourced by iMX ENET PLL as a default config is not met.
 
-> On Tue, May 28, 2024 at 03:54:05PM +0200, Krzysztof Kozlowski wrote:
-> > On 28/05/2024 15:06, Andreas Kemnade wrote:  
-> > > On Tue, 28 May 2024 13:25:29 +0200
-> > > Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >   
-> > >> On 28/05/2024 13:16, Andreas Kemnade wrote:  
-> > >>> On Tue, 28 May 2024 12:04:22 +0200
-> > >>> Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >>>     
-> > >>>> On 28/05/2024 08:57, Andreas Kemnade wrote:    
-> > >>>>> Convert the regulator bindings to yaml files. To allow only the regulator
-> > >>>>> compatible corresponding to the toplevel mfd compatible, split the file
-> > >>>>> into one per device.
-> > >>>>>
-> > >>>>> To not need to allow any subnode name, specify clearly node names
-> > >>>>> for all the regulators.
-> > >>>>>
-> > >>>>> Drop one twl5030 compatible due to no documentation on mfd side and no
-> > >>>>> users of the twl5030.
-> > >>>>>
-> > >>>>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > >>>>> ---
-> > >>>>> Reason for being RFC:
-> > >>>>> the integration into ti,twl.yaml seems not to work as expected
-> > >>>>> make dt_binding_check crashes without any clear error message
-> > >>>>> if used on the ti,twl.yaml
-> > >>>>>
-> > >>>>>  .../devicetree/bindings/mfd/ti,twl.yaml       |   4 +-
-> > >>>>>  .../regulator/ti,twl4030-regulator.yaml       | 402 ++++++++++++++++++
-> > >>>>>  .../regulator/ti,twl6030-regulator.yaml       | 292 +++++++++++++
-> > >>>>>  .../regulator/ti,twl6032-regulator.yaml       | 238 +++++++++++
-> > >>>>>  .../bindings/regulator/twl-regulator.txt      |  80 ----
-> > >>>>>  5 files changed, 935 insertions(+), 81 deletions(-)
-> > >>>>>  create mode 100644 Documentation/devicetree/bindings/regulator/ti,twl4030-regulator.yaml
-> > >>>>>  create mode 100644 Documentation/devicetree/bindings/regulator/ti,twl6030-regulator.yaml
-> > >>>>>  create mode 100644 Documentation/devicetree/bindings/regulator/ti,twl6032-regulator.yaml
-> > >>>>>  delete mode 100644 Documentation/devicetree/bindings/regulator/twl-regulator.txt
-> > >>>>>
-> > >>>>> diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-> > >>>>> index c2357fecb56cc..4ced6e471d338 100644
-> > >>>>> --- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-> > >>>>> +++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-> > >>>>> @@ -50,7 +50,7 @@ allOf:
-> > >>>>>            properties:
-> > >>>>>              compatible:
-> > >>>>>                const: ti,twl4030-wdt
-> > >>>>> -
-> > >>>>> +        $ref: /schemas/regulator/ti,twl4030-regulator.yaml      
-> > >>>>
-> > >>>> That's not needed, just like othehr refs below.
-> > >>>>    
-> > >>> but how to prevent error messages like this:
-> > >>>
-> > >>> arch/arm/boot/dts/ti/omap/omap2430-sdp.dtb: twl@48: Unevaluated properties are not allowed ('gpio', 'keypad', 'pwm', 'pwmled', 'regulator-vaux1', 'regulator-vaux2', 'regulator-vaux3', 'regulator-vaux4', 'regulator-vdac', 'regulator-vdd1', 'regulator-vintana1', 'regulator-vintana2', 'regulator-vintdig', 'regulator-vio', 'regulator-vmmc1', 'regulator-vmmc2', 'regulator-vpll1', 'regulator-vpll2', 'regulator-vsim', 'regulator-vusb1v5', 'regulator-vusb1v8', 'regulator-vusb3v1
-> > >>>
-> > >>> esp. the regulator parts without adding stuff to ti,twl.yaml?    
-> > >>
-> > >> Eh? That's a watchdog, not regulator. Why do you add ref to regulator?
-> > >>  
-> > > hmm, wrongly indented? At what level doet it belong? But as the regualor.yaml stuff can
-> > > be shortened, maybe just add it directly to ti,twl.yaml to avoid that trouble.  
-> > 
-> > I don't follow. The diff here and in other two places suggest you add
-> > twl-regulator reference to wdt/gpio/whatnot nodes, not to regulators.  
-> 
-> The diff may look like that, but I think they're just trying to add it
-> as a subnode of the pmic. There are other nodes, like the madc that do
-> this in the same file:
->         madc:
->           type: object
->           $ref: /schemas/iio/adc/ti,twl4030-madc.yaml
->           unevaluatedProperties: false
-> 
-> I guess this is what was being attempted, albeit incorrectly.
+Only "enet[1,2]_ref_125m" "enet[1,2]_ref_pad" are possible parents for
+"enet1_ref_sel" and "enet2_ref_sel".
 
-correct. No regulators node, just everything directly as a subnode of
-the pmic. Well, I have now something using patternProperties directly itn ti,twl.yaml
-including a more detailed example which does not upset dt_binding_check.
-I am running dtbs_check to check if anything is odd. the 4030 variant seems
-to be ok, waiting for some dtbs containing 603X now.
+This was observed as a regression using a custom device tree which was
+expecting this default config.
 
-But somehow I would feel better if I would understand what was syntactically
-wrong with my original proposal. I have totally no idea yet.
+This can be fixed at the device tree level but having a default config
+matching the original behavior (before refclock mux) will avoid breaking
+existing configs.
 
-The error message of dt_binding_check is also meaningless:
- CHKDT   Documentation/devicetree/bindings
-Traceback (most recent call last):
-  File "/home/andi/.local/bin/dt-doc-validate", line 64, in <module>
-    ret |= check_doc(f)
-           ^^^^^^^^^^^^
-  File "/home/andi/.local/bin/dt-doc-validate", line 32, in check_doc
-    for error in sorted(dtsch.iter_errors(), key=lambda e: e.linecol):
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/andi/.local/pipx/venvs/dtschema/lib/python3.11/site-packages/dtschema/schema.py", line 125, in iter_errors
-    self.annotate_error(scherr, meta_schema, scherr.schema_path)
-  File "/home/andi/.local/pipx/venvs/dtschema/lib/python3.11/site-packages/dtschema/schema.py", line 104, in annotate_error
-    schema = schema[p]
-             ~~~~~~^^^
-KeyError: 'type'
-  LINT    Documentation/devicetree/bindings
+Fixes: 4e197ee880c2 ("clk: imx6ul: add ethernet refclock mux support")
+Link: https://lore.kernel.org/lkml/20230306020226.GC143566@dragon/T/
+Signed-off-by: Sebastien Laveze <slaveze@smartandconnective.com>
+---
+ drivers/clk/imx/clk-imx6ul.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-IMHO this should be improved.
-	
-Regards,
-Andreas
+diff --git a/drivers/clk/imx/clk-imx6ul.c b/drivers/clk/imx/clk-imx6ul.c
+index f9394e94f69d..05c7a82b751f 100644
+--- a/drivers/clk/imx/clk-imx6ul.c
++++ b/drivers/clk/imx/clk-imx6ul.c
+@@ -542,8 +542,8 @@ static void __init imx6ul_clocks_init(struct device_node *ccm_node)
+ 
+ 	clk_set_parent(hws[IMX6UL_CLK_ENFC_SEL]->clk, hws[IMX6UL_CLK_PLL2_PFD2]->clk);
+ 
+-	clk_set_parent(hws[IMX6UL_CLK_ENET1_REF_SEL]->clk, hws[IMX6UL_CLK_ENET_REF]->clk);
+-	clk_set_parent(hws[IMX6UL_CLK_ENET2_REF_SEL]->clk, hws[IMX6UL_CLK_ENET2_REF]->clk);
++	clk_set_parent(hws[IMX6UL_CLK_ENET1_REF_SEL]->clk, hws[IMX6UL_CLK_ENET1_REF_125M]->clk);
++	clk_set_parent(hws[IMX6UL_CLK_ENET2_REF_SEL]->clk, hws[IMX6UL_CLK_ENET2_REF_125M]->clk);
+ 
+ 	imx_register_uart_clocks();
+ }
+-- 
+2.34.1
+
