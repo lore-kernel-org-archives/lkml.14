@@ -1,121 +1,146 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A427616426;
-	Tue, 28 May 2024 03:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43220171A7;
+	Tue, 28 May 2024 03:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716866363; cv=none; b=X4RPCyzQPx2q3APhiriWRxtQVlmQkzn1t77cIeYfy10m5LsSEZbuGWFLNRn0c+IojR59GXeG//D/91Pryn/YtsQQqkY88N3YaJ2k3HUkNSOLo/501w4zMQYJ6FQ8P3KPpelBY11f3XoPzE8BWKpKDkxn8aEwy/I+3EzEdmhaDxI=
+	t=1716866366; cv=none; b=Ix0Fsr892SugVV6IP9MzqFhj1zQAxr07p88MPkU5B7PV6LnPavGdbUfp+GPs9ebLThaODEYviI1RkJsMZ89Iuz6stDLCFv1q+e4i1bfKGHqMb6t1nSDRg9vsViSzNam7kJu9OTgsrRWfdzpb9b7rpThUPFqA5QSL0aoBia4xXRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716866363; c=relaxed/simple;
-	bh=VWJNgBha+MdLZW4KuBTIsRu3l1hPwoNUzhpFf4na7Ks=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JO9eHH9W+WKD2gNUX7TkhV8JXAbrKDMRnFVxg/VfsH0EFqcpsZHiE4jnpqQDXs6X8Sp7u03I9kX06sA8qkmIfWjnqsFlYhxtrynVRw0ESSEojbUr/77hFE3ACWRM3XloqYDTef5xZ3d9tGRMZr2FuHbSJ6DQgvbM6Zvzo/ogt6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l6IbzZrC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l6IbzZrC"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44RJasUK022704;
-	Tue, 28 May 2024 03:19:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	qcppdkim1; bh=Pe5ZMcYeU7gDMNUUWz1AxChcullgJDypFw+3sEWfQ+4=; b=l6
-	IbzZrCSYcfmOO4Hj1ive4IR75F199K9fEyuaqpNqTmD5GLRFBs+WkoHWCf2nYllm
-	4zI42afiW4TgjKIz7LupqtSICba+6O9YrLzYbw/kx3a/dPl8mEHe864E/uBLfzbj
-	8X7oXnu05WgG8pGx0MX5khKjIcMBWjFPvvXYkIxJ4VLv6AIzBfsoTKNgjD8+6WoV
-	dtHZYNH3L2Yz7RiTkHBTehJo6GR1e2R2Mb1jBgkwYQTgbHVGU31HFdVY5dXyaAvt
-	2GDN+V9LS9pk8dq27oBifmMh1Vtrd9MwhPCz2Y/HlU9zew4bzqwluSCCmTxyoqOc
-	oM15eh0H0k7EPvl16oQQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yb9yj513b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 03:19:14 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44S3JDXq030865
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 03:19:13 GMT
-Received: from zijuhu-gv.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 27 May 2024 20:19:10 -0700
-From: Zijun Hu <quic_zijuhu@quicinc.com>
-To: <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
-        <akpm@linux-foundation.org>, <dmitry.torokhov@gmail.com>
-CC: <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Zijun Hu
-	<quic_zijuhu@quicinc.com>
-Subject: [PATCH v2] kobject_uevent: Fix OOB access within zap_modalias_env()
-Date: Tue, 28 May 2024 11:19:07 +0800
-Message-ID: <1716866347-11229-1-git-send-email-quic_zijuhu@quicinc.com>
+	s=arc-20240116; t=1716866366; c=relaxed/simple;
+	bh=BCjgtX7qnroMhhttvjYYhYxVp0B4QNrMVcp4hig0gvQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=NzwZrcvzAUudgbR8pCyKZJkqN5hGrNFpUtawnP3MsfiShTkOVePyY1PlBlGgOrreDL1g6hO9UOX/7QhXLbd+zl8Zub1/4t9LbUiXNHKQxd00McfxGv1/9Yi28mUkmhMOnpysvq++zhdMhXM62Ti9MGIxw0Xzs/T523+okJtM0A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2F1CF201D3C;
+	Tue, 28 May 2024 05:19:17 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A99EF2011C0;
+	Tue, 28 May 2024 05:19:16 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id B4DC7180222F;
+	Tue, 28 May 2024 11:19:14 +0800 (+08)
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: conor@kernel.org,
+	vkoul@kernel.org,
+	kishon@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	frank.li@nxp.com,
+	conor+dt@kernel.org
+Cc: hongxing.zhu@nxp.com,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de,
+	imx@lists.linux.dev
+Subject: [PATCH v6 0/2] Add i.MX8Q HSIO PHY support
+Date: Tue, 28 May 2024 10:59:12 +0800
+Message-Id: <1716865154-25044-1-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: -dMAhVfl2qXrg3So5GHQq4jY2Eo-3Gtw
-X-Proofpoint-ORIG-GUID: -dMAhVfl2qXrg3So5GHQq4jY2Eo-3Gtw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-27_06,2024-05-27_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=784 spamscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405280024
 
-zap_modalias_env() wrongly calculates size of memory block to move, so
-will cause OOB memory access issue if variable MODALIAS is not the last
-one within its @env parameter, fixed by correcting size to memmove.
+v6 changes:
+- Correct the spell mistake in binding document.
+- Change the "fsl,hsio-cfg" property to an enum strings too.
 
-Fixes: 9b3fa47d4a76 ("kobject: fix suppressing modalias in uevents delivered over netlink")
-Cc: stable@vger.kernel.org
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
-V1 -> V2: Correct commit messages and add inline comments
+v5:https://patchwork.kernel.org/project/linux-phy/cover/1715563324-6391-1-git-send-email-hongxing.zhu@nxp.com/
 
-V1 discussion link:
-https://lore.kernel.org/lkml/0b916393-eb39-4467-9c99-ac1bc9746512@quicinc.com/T/#m8d80165294640dbac72f5c48d14b7ca4f097b5c7
+v5 changes:
+dt-binding
+- Fix dt_binding_check errors of fsl,refclk-pad-mode.
+  And, add the unused description of this property.
+- Add description for each register entry.
+- Add fsl,hsio-cfg description.
+- Other minor refine changes.
 
- lib/kobject_uevent.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+PHY driver
+- To make codes safe enough in multi instances probe, use scoped_guard()
+to replace the atomic_###() callbacks.
 
-diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
-index 03b427e2707e..f22366be020c 100644
---- a/lib/kobject_uevent.c
-+++ b/lib/kobject_uevent.c
-@@ -433,8 +433,23 @@ static void zap_modalias_env(struct kobj_uevent_env *env)
- 		len = strlen(env->envp[i]) + 1;
- 
- 		if (i != env->envp_idx - 1) {
-+			/* @env->envp[] contains pointers to @env->buf[]
-+			 * with @env->buflen elements, and we want to
-+			 * remove variable MODALIAS pointed by
-+			 * @env->envp[i] with length @len as shown below:
-+			 *
-+			 * 0          @env->buf[]      @env->buflen
-+			 * ----------------------------------------
-+			 *      ^              ^                  ^
-+			 *      |->   @len   <-|   target block   |
-+			 * @env->envp[i]  @env->envp[i+1]
-+			 *
-+			 * so the "target block" indicated above is moved
-+			 * backward by @len, and its right size is
-+			 * (@env->buf + @env->buflen - @env->envp[i + 1]).
-+			 */
- 			memmove(env->envp[i], env->envp[i + 1],
--				env->buflen - len);
-+				env->buf + env->buflen - env->envp[i + 1]);
- 
- 			for (j = i; j < env->envp_idx - 1; j++)
- 				env->envp[j] = env->envp[j + 1] - len;
--- 
-2.7.4
+v4:https://patchwork.kernel.org/project/linux-phy/cover/1715234181-672-1-git-send-email-hongxing.zhu@nxp.com/
 
+v4 changes:
+- Re-format the "phy-cells" as <&hsio_phy lane_id phy_mode controller_id>
+- Use each lane as a phys entry, suggested by Rob.
+PCIEA:
+phys = <&hsio_phy 0 PHY_MODE_PCIE>;
+or:
+phys = <&hsio_phy 0 PHY_MODE_PCIE>, <&hsio_phy 1 PHY_MODE_PCIE>;
+
+PCIEB:
+phys = <&hsio_phy 1 PHY_MODE_PCIE>;
+or:
+phys = <&hsio_phy 2 PHY_MODE_PCIE>;
+
+SATA:
+phys = <&hsio_phy 2 PHY_MODE_SATA>;
+
+- Add a new propery "fsl,hsio-cfg".
+The HSIO configuration (fsl,hsio-cfg) is one global state.
+It should be known and used to set global setting: PCIE_AB_SELECT and
+PHY_X1_EPCS_SEL at the begin of HSIO initialization like this listed below.
+
+ +-------------------------------------------------------------+
+ |CRR(SYS.CSR) register|PCIAx2 and|PCIEAx1, PCIEBx1|PCIEAx2 and|
+ |                     |SATA      |SATA            |PCIEBx1    |
+ |---------------------|----------|----------------|-----------|
+ |PCIE_AB_SELECT       | 0        | 1              | 1         |
+ |---------------------|----------|----------------|-----------|
+ |PHY_X1_EPCS_SEL      | 1        | 1              | 0         |
+ +-------------------------------------------------------------+
+When first PHY instance is probed, PHY driver can't get a global view of the
+HSIO use case and doesn't know how to set global setting: PCIE_AB_SELECT and
+PHYX1_EPCS_SEL.
+Because first PHY instance doesn't know followed PHY instance use mode.
+
+So, one property named "fsl,hsio-cfg" has to be introduced here to specify the
+setting of the global setting: PCIE_AB_SELECT and PHY_X1_EPCS_SEL.
+
+Here is the discussion about this.
+https://lkml.org/lkml/2024/4/26/231
+
+- Address Conor's comments about the "fsl,refclk-pad-mode".
+fsl,refclk-pad-mode:
+  description:
+    ...
+  enum: ["input", "output"].
+
+v3:https://patchwork.kernel.org/project/linux-phy/cover/1713939683-15328-1-git-send-email-hongxing.zhu@nxp.com/
+
+v3 changes:
+Refer to Conor's comments.
+- Let filename match a compatible
+- Refine description of the fsl,refclk-pad-mode.
+- Remove power-domains description.
+- Keep clock ording for two devices.
+- Drop the unused label and status.
+Refer to Rob's comments.
+- Use standard phy mode defines.
+- Correct the spell mistakes in the binding document.
+
+v2:https://patchwork.kernel.org/project/linux-phy/cover/1712036704-21064-1-git-send-email-hongxing.zhu@nxp.com/ 
+
+v2 changes:
+- Place the dt-bindings header file changes as the first one
+in the patch-set, make the annotation more clear, and add
+Frank's Reviewed-by tag.
+
+v1:https://patchwork.kernel.org/project/linux-phy/cover/1711699790-16494-1-git-send-email-hongxing.zhu@nxp.com/
+
+[PATCH v6 1/2] dt-bindings: phy: Add i.MX8Q HSIO SerDes PHY binding
+[PATCH v6 2/2] phy: freescale: imx8qm-hsio: Add i.MX8QM HSIO PHY
+
+Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml | 164 ++++++++++++++++++++++
+drivers/phy/freescale/Kconfig                              |   8 ++
+drivers/phy/freescale/Makefile                             |   1 +
+drivers/phy/freescale/phy-fsl-imx8qm-hsio.c                | 612 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4 files changed, 785 insertions(+)
