@@ -1,109 +1,133 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8043313C3E7
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C74172BDB
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716925093; cv=none; b=HVV1vxO7FhU3gXbS9Kuzh3dm1ygl2IlLj630gHmy0EEJrvvKDRsKXWrQTuqW2NhyntYLOsR6Z2JFpW4Khz2cTz5OF9u43a1RsNEOQ9tJlyETE0K8AivdLAWbzLMGXWteriQfW9Eq7+kmhY1T8zLoikmtHAQuTGpGbiBGUZng+/A=
+	t=1716925164; cv=none; b=WWlFCqVoloxxTQlz9l4dVgBix65E4wTPZc3sMwkJHN1enRDXb8pmPUOKEuNA5RuM9Ey+2FvdZro9mQ1Z/A9mdzoA82PLit3tS4+fgdZwT6At4pFiZFVuKjTrfckIeGoTtZi2rU2IJf3jXOZrXUm+3OKjXKp5/po6/XlnAiBQB7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716925093; c=relaxed/simple;
-	bh=C+E+TFaQOMPAjrjGZuvwR94cq5624yFiJBlvO7VitAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tMiRXZJqreW8teXyzkq2Zpa+MKsiHn9P69vlmJomnwvO1VnZ6ENvPUR/sHh2Yu/7Wry31gDnKTalfU2mejfGFlOqiCfMwfuKiymw1yHtvQ8Sdz9MdwvBjOO8mmS2H6bt4YLB4bYcfgAWVcxM0sbdzz2nB2Op8fL09JXy5Vt25HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ugVKToeA; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1716925164; c=relaxed/simple;
+	bh=JpBownv2A/v5s9u+r2T7bmswrFK7bcF3CJY4XHaV/rs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=As4cBl0ToDZTrNt7GA0JAmqUn2JVyJUoReFEN6/GZGZABB5IUElNrQmdvhBAsUIDPFTCDXbmHY7DGZm7Uhap0wkq/8TzGs4Dr6lF3sTQoC98Aklfb0yONeZvORlL046U+5cL8bsvFdfCq5C8jqqpPaeKcIXL53w9a5PWOmBF7eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n7vk3fRU; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ugVKToeA"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f693fb0ab6so1072793b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:38:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n7vk3fRU"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52a54d664e3so72927e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716925092; x=1717529892; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VVddBXQV2grY6+Zbi//5IkKUEc11Yvlxas92w+1BWrY=;
-        b=ugVKToeAEzEKQLtDNRtPB9QLKLNrVx4xu/54PuP8nlYJUQi+UDTDk9P0erPCG43/RA
-         vmVipNbWBFniVBtUA0D7URPq3Sk3G5rzYYHLcJBB/8GXlL6rpNZSReT9F3kXiofwz6mQ
-         jjXJ8qRPVxRO2PIF5pmeBDeyoq9L1Q+4cjvkOJhFFiC/eYz7YwSnzuGutFSIAoTnUU3r
-         HL7cFzpE8pfvamRurRj0rGgTd4AT8Ul92XaG+OwvEvPOcolTT8aslJeyx3Uc2QpS+4Sf
-         uPYtYlJVBWhnzZ+0GKbLMoSmQZir1scINLQk4vkj5nkZpM62ut0uN8zB9R/v+zWaJ06x
-         aRVg==
+        d=linaro.org; s=google; t=1716925161; x=1717529961; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OMzDrUPXBetRBxhwNhxvFwAUk90y+ybpda/UwhIo+Wg=;
+        b=n7vk3fRUxPu7g9bW9fCzevvKqsReTNA35k9QvFKUV5eu3KCw7uGGLvVPbuWACT3Gn+
+         z+fDGep77RNN0f6tK7CgOfX59YEPTvpnCzshidvQtOh5o+eXXdJTvtPxNaxZ9iduGXNT
+         uaz9JnRZLm+Uwij+I0PWdlVtZPJ7j/Co7bcp6tnkB7ySUBD3Dyf9I1pr7yn7XDA1aSeb
+         GUfyHnLruXqSEIhE1pau/VRqK9XuZLhSwlgGaNEF/Jn8RRe+S54FVJhMTvtUw1+H6cR/
+         HyWkU62KyUlGS/84gxAjP4KGZjPBusrd8hXix4iyNPWBYyw/PTclqvj59fd0PxhpfaRe
+         Tm0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716925092; x=1717529892;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VVddBXQV2grY6+Zbi//5IkKUEc11Yvlxas92w+1BWrY=;
-        b=qTCYd3S0joj4mmz3LMjHNfj4D+7kWo0JgGCHf2eyNyuoXWUpalgw3/WrXHSeq5EYDg
-         poKKBvvQ9pHQrQlFFwqtNM3ikLLUsqt9pfc9ybqGlqFApGH73tKZYYEKTpeY2NvwPMDo
-         IVY1ShAm5cFvXil8BcpbshZtNoRA4fW/27Lcq0M8JCTCbmd/HmrJ346ec+SSIu3gJpK4
-         A/9J8/QejaUQTyHLsJ6ycnwirbCXKDu6PqcXC8ueBS3W8gsV40seUkK9+XKSEUhxyY2n
-         KRKTqD36fG0VSDvP+NLUa5v93yrg9ykCkL8miYPc41BZRLzO7J9spYSHJqcka+OwfR7w
-         UlPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxpKUZAMxD83dqOribvifDmvFti/wYfSz8VAGTUyOzYGS0lE7Wghfl3qUFH24rw49Y4sZ3uxL8QQ+8sylBjXz1lhvJ+6dBqqMHpcwN
-X-Gm-Message-State: AOJu0YwFtv1s7he/NzGHzCr2FubzzgSd5CEOkoxWIVnDa1kW0eFQ55YZ
-	MmDxHO6Eyf3uoI5/KIMKdWzGE40YB/EIotcfeIYN1GbKVsic9bUrh+X7qc1/ifbdtF/xtllnjCK
-	I
-X-Google-Smtp-Source: AGHT+IEr6rxeqSRwySiQWxujQNR2NB+err9HDuAKFDWjAoR3nXctqIoryjD4z/+vQ37/3/hSHtZ01g==
-X-Received: by 2002:a05:6a20:7f9f:b0:1a8:2cc0:290a with SMTP id adf61e73a8af0-1b212d3be66mr14145846637.30.1716925091781;
-        Tue, 28 May 2024 12:38:11 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:4c7:2691:aa4a:e6b7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fc373c92sm6948650b3a.96.2024.05.28.12.38.10
+        d=1e100.net; s=20230601; t=1716925161; x=1717529961;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OMzDrUPXBetRBxhwNhxvFwAUk90y+ybpda/UwhIo+Wg=;
+        b=TlKcHtzoueVvU1/nvGYMZSr/JMeHy8pno9PSh9KhHn1kQO24yhgTSln28nC84rA1zE
+         /XcdooAtslI4qI4kKlR62PC7iWrO1u9YH5fb0FismykDkYh+XsdlsMEwoV+Hexg9Bo9G
+         28YOmkTHCuKNhr8Sq1AwIDbvReN1ZzLTX64CG9tgy1Cz/8mzJTXR1hItEm6/O/8dOOOd
+         Lxu7brCsFSneVE9eRjtXQg5pqxtvdMIkIVrBiLPq2z2lr+i61i6F1t7tTMncjMqf5PTr
+         KAZOmijVPsGeEE9k1oyNGifZqeILPOAyREG4I0hBLWFK1JUXR2YzjpAZ4YayKgu1eN+3
+         6yvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPeABwMLV1Gc093v2WTWhrkr/UnT8QT0UgDiJdej9tKVJr1Y3ovwtVYLvzF4ZefV5Jfjv8FwG9axrQfWj72UicHsto6xmG/Y+I1iQm
+X-Gm-Message-State: AOJu0Yyb+tvhDgsDXyp8V2+I4mO65MjvGAJT1G+z4BkA88hTtThaM7r6
+	F2WL8hjJWAAHuOmS7gWLKu+5PKiHfBPH20ZTmFinKsnKo0kOO7pvu4rAzPD6PP4=
+X-Google-Smtp-Source: AGHT+IErWuce9aRTgzYsOItaSivJAYEUeHJGEILEAjjDTx4aWbFd8+75S49CKu4CNqVt+Ys3JPc30Q==
+X-Received: by 2002:ac2:561c:0:b0:523:88aa:237 with SMTP id 2adb3069b0e04-52964caab7cmr7869500e87.33.1716925161160;
+        Tue, 28 May 2024 12:39:21 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529711f96c9sm1045234e87.245.2024.05.28.12.39.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 12:38:11 -0700 (PDT)
-Date: Tue, 28 May 2024 13:38:09 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Gwenael Treuveur <gwenael.treuveur@foss.st.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Subject: Re: [PATCH] remoteproc: stm32_rproc: Fix mailbox interrupts queuing
-Message-ID: <ZlYyoZzOlXylkQqC@p14s>
-References: <20240521162316.156259-1-gwenael.treuveur@foss.st.com>
+        Tue, 28 May 2024 12:39:20 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 28 May 2024 22:39:18 +0300
+Subject: [PATCH v4 1/3] drm/panel/lg-sw43408: select
+ CONFIG_DRM_DISPLAY_DP_HELPER
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240521162316.156259-1-gwenael.treuveur@foss.st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240528-panel-sw43408-fix-v4-1-330b42445bcc@linaro.org>
+References: <20240528-panel-sw43408-fix-v4-0-330b42445bcc@linaro.org>
+In-Reply-To: <20240528-panel-sw43408-fix-v4-0-330b42445bcc@linaro.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ Caleb Connolly <caleb.connolly@linaro.org>, 
+ Alex Deucher <alexander.deucher@amd.com>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jani Nikula <jani.nikula@linux.intel.com>, 
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Tvrtko Ursulin <tursulin@ursulin.net>, Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ Vinod Koul <vkoul@kernel.org>, Caleb Connolly <caleb@connolly.tech>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+ kernel test robot <lkp@intel.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1108;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=JpBownv2A/v5s9u+r2T7bmswrFK7bcF3CJY4XHaV/rs=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmVjLm9PT4rgSufs1N1DQ9nR+ydH1+hIK4hVb0O
+ UFdMizG9E6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZlYy5gAKCRCLPIo+Aiko
+ 1WTGB/9oJhsxnoP8SaNvbslvwO4vwB8P5YM1pgHeTK4f5awBy1BrzWHcn24PItaIkNG3cJQ9C6G
+ Aq5N0gZ+eFpDMlgog7O6er+IxajzglH+FexACjtnCGhtaLUCCEXIYcxfO759My0X2E7HlKY3Ytb
+ S7Ba3tcWJMb1w0kWduqhEKFVogO0HzdB8tpoLvGVdtS2tkTnGFy5sHGgFZbGfdABLI8ifeddA9D
+ SuArUCPBtWwPNypPH9qgK2zNjOase6dyf2pswXwVuUbrIUPZ5frqzOQSGmqcizEZS7GbM32Z8DN
+ it0a1IQmiGb7yAC3rakxmf03wLnnLWjvrp3WUKIoeZs+0Tra
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Tue, May 21, 2024 at 06:23:16PM +0200, Gwenael Treuveur wrote:
-> Manage interrupt coming from coprocessor also when state is
-> ATTACHED.
-> 
-> Fixes: 35bdafda40cc ("remoteproc: stm32_rproc: Add mutex protection for workqueue")
-> Signed-off-by: Gwenael Treuveur <gwenael.treuveur@foss.st.com>
-> Acked-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+This panel driver uses DSC PPS functions and as such depends on the
+DRM_DISPLAY_DP_HELPER. Select this symbol to make required functions
+available to the driver.
 
-I will pickup this patch but this time only - next time all reviews and tagging
-need to happend on the mailing list.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202404200800.kYsRYyli-lkp@intel.com/
+Fixes: 069a6c0e94f9 ("drm: panel: Add LG sw43408 panel driver")
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/gpu/drm/panel/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Mathieu
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index 982324ef5a41..2ae0eb0638f3 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -340,6 +340,8 @@ config DRM_PANEL_LG_SW43408
+ 	depends on OF
+ 	depends on DRM_MIPI_DSI
+ 	depends on BACKLIGHT_CLASS_DEVICE
++	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_HELPER
+ 	help
+ 	  Say Y here if you want to enable support for LG sw43408 panel.
+ 	  The panel has a 1080x2160@60Hz resolution and uses 24 bit RGB per
 
-> ---
->  drivers/remoteproc/stm32_rproc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> index 88623df7d0c3..8c7f7950b80e 100644
-> --- a/drivers/remoteproc/stm32_rproc.c
-> +++ b/drivers/remoteproc/stm32_rproc.c
-> @@ -294,7 +294,7 @@ static void stm32_rproc_mb_vq_work(struct work_struct *work)
->  
->  	mutex_lock(&rproc->lock);
->  
-> -	if (rproc->state != RPROC_RUNNING)
-> +	if (rproc->state != RPROC_RUNNING && rproc->state != RPROC_ATTACHED)
->  		goto unlock_mutex;
->  
->  	if (rproc_vq_interrupt(rproc, mb->vq_id) == IRQ_NONE)
-> 
-> base-commit: 4d5ba6ead1dc9fa298d727e92db40cd98564d1ac
-> -- 
-> 2.25.1
-> 
+-- 
+2.39.2
+
