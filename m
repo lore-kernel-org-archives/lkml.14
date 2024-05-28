@@ -1,91 +1,200 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77AF16C6B1;
-	Tue, 28 May 2024 11:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EF216C6BA;
+	Tue, 28 May 2024 11:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716896286; cv=none; b=nHY4GHJUcg0vUSjjPgqxtdrWxKtiYBItiKM/G7ISFSZoR05OJbEYN0kpCWfCKWSjpLoaVWz7cAOrSjMzkR+ndXjDJOGvIKfTiKc9aXxyFTk+MdAJcAK7fly/ELVAfvFK6hLuhrAZLIXJyJjM5nCHnlLFwAYbduamN/DhlnWt0SY=
+	t=1716896287; cv=none; b=HafRInYrHjPX7XrdmGbe7yJO2EF07FofSSRyeEht6QDTS4XBrSPQ4Lv5+hK3ZmDFr9h/+MFpKrXN5VWxt2M2340qfuGVCN5qPHHx1fDr0N5jBzi5PK6OB52d2bIRoCclGvpY2ka0q03DXOUbCQ+wvo8umt5qEINPeF/xMqWitAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716896286; c=relaxed/simple;
-	bh=iIEfkaLcBZrLnXPb98Krsanziumo17QkX9cbSc6RakU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=PbaUgLva9KBWDXjotCh32Eywjd9wRWHU1h8A7lelIQoASEMIaawLkA9L8Ll0ah0kvHZg2+e2vZMtNLDPfgdsFgi09P6Sa97Qukfl6TyIVeFQLq2VVSDZCL6/R1eNF8tWpnU+mfnVNTpUdQYZzoqJK8whesNi64zQzC0CR/6TqNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=TWgNXuMv; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716896287; c=relaxed/simple;
+	bh=1GOs0V5vkUAru8HsFj4lU5eksk/gcq+KKbo6Dw+VDTg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S35BVszDl9olm/DUCRCeAPhs3gOO7CqBH2jDVkKtameHeOBXTK+kK0a8AX9dDFrsuY++CMigUfpwv28stMtMfdGTUzh6NESB1RbjnrdOnvrUk/8Rg0dZaqahFDiG8VSL5wHoKlIikU9SsXmHczmxkYHW4jkVfZ2Q9eOrMpxXMis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=u+x0QwAp; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="TWgNXuMv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716896259; x=1717501059; i=markus.elfring@web.de;
-	bh=TDvFBcJGyPwRaT6zbKz3iL8MSVk3ipgQOdseEeqP3Oo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=TWgNXuMvD9jrT87vwEeAqB6F/Y1R3BBMFNEmuFE3hWpNBkauYtFT3ijCfkXfWw/2
-	 QA+0x+wWGG0oCylh1hvtgEoWuZO0aiCZu3tXm6P2eY6/NX9MGbIHZSERumye5rS0g
-	 6s3eyLcutS+H4gWKliP+8uAKu4xv3VMJANFmFA4AG1uyJbX3YhKuduvPg6HGRZugX
-	 iRm/TavfTS+shBwmilOzdNMCCRcp4C4el8b8xQUZoEEN0qG59VC5Q1mQkb2N94lIG
-	 j5kiD/2XF4cHV1Nqqnk5rrUKiNo6t8nuZ1+Sh7HqZThD4kKm3zA/Iqyd2xu+CN4Gf
-	 w+3eSx9ZeFFL5X0zDA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MyvBA-1sPTn731G6-00vx4O; Tue, 28
- May 2024 13:37:39 +0200
-Message-ID: <9abb1d5e-fdac-4500-9218-fb9f28ff2c05@web.de>
-Date: Tue, 28 May 2024 13:37:33 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u+x0QwAp"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44SBbcBn029369;
+	Tue, 28 May 2024 06:37:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716896258;
+	bh=PlMtN9GGldukZUavhgPKY/mk0lJcI85tsEjsfxAERq8=;
+	h=From:To:CC:Subject:Date;
+	b=u+x0QwApDHsMHZy7SScnRt4M4WtaOSPczTbTGe5HCuxdGTHgLV50jdZ013oTDE5GU
+	 N2JdR/GleUmOTWs7t6unJHlV9bKSlDdkoMyAAiieBdvgOJ6nfqmPQCUmzlXjzNCRFN
+	 I+iycxSWBytdbZnHZrJfuwODuhI71Pvnh3zSVR8o=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44SBbcqL055021
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 28 May 2024 06:37:38 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 28
+ May 2024 06:37:37 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 28 May 2024 06:37:37 -0500
+Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44SBbbsA083802;
+	Tue, 28 May 2024 06:37:37 -0500
+Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 44SBbaC7007889;
+	Tue, 28 May 2024 06:37:37 -0500
+From: MD Danish Anwar <danishanwar@ti.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+        Jan Kiszka
+	<jan.kiszka@siemens.com>, Simon Horman <horms@kernel.org>,
+        Andrew Lunn
+	<andrew@lunn.ch>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Wolfram Sang
+	<wsa+renesas@sang-engineering.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Diogo Ivo <diogo.ivo@siemens.com>,
+        Roger
+ Quadros <rogerq@kernel.org>,
+        MD Danish Anwar <danishanwar@ti.com>, Paolo
+ Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+	<edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC: <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <srk@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+Subject: [PATCH net-next v6 0/3] Introduce switch mode support for ICSSG driver
+Date: Tue, 28 May 2024 17:07:31 +0530
+Message-ID: <20240528113734.379422-1-danishanwar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Weihao Li <cn.liweihao@gmail.com>, linux-gpio@vger.kernel.org,
- linux-mips@vger.kernel.org,
- Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?B?QXLEsW7DpyDDnG5hbA==?= <arinc.unal@arinc9.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>,
- Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240527022036.31985-1-user@blabla>
-Subject: Re: [PATCH] pinctrl: ralink: mt76x8: fix pinmux function
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240527022036.31985-1-user@blabla>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5QkSmp5bnBaXcyDYB3+Ih3oVkyDJtxHb/IzWgk/DY8NzsXDVZg6
- QWk3eZqikcrEs8miOgajsxVgKq+rlIOuLQtMCPj9jKFJSjGTUZTagp/PxcHPA0rDgNTMFnJ
- 9fffCIAM/h4Nxfe7lYa2sDjpUuYfPlm4aNm8KX0dqnDpnmGhAqF0f10WEdxcEX63N0VLXVs
- JGGNeQlNRKTwSQnLaDZ2A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:V7J8FSJ60RI=;BPsXQDfKwdHj7znD2lR8xkEVM4G
- MTgW1lUc2eByEVsKs+jfIGQWsJ5XF+09sJtvksTq72coBXuW5W8ZZ0IIjdsQXN829BCPPckje
- 4lMphmJH3SRDGB1aZoDZ2vXakerGWL0OrBtlIXyxk2gyAi77FDkbtVZUKdL/5VV1t+Pg+9hAA
- 40atqIs60e9vYXd6LOmelQkP3I5drwPMLJjdhz21who7qcyVHXQfhyr8bp35eoOGnn3zZtZ5e
- y3XA+CoEPSY9q+Hs5zm8PjUI/c8PcHxQn+NloqQ8fxxrymF9cKwjLjjDuFuYcobRt4XnVVJzq
- DOG8T/Iqx8b/WjoGke/GVpyVncHtEVdsvxH4ufAi7bbFCBJ37EyAvDJ3dSXSIAjc+fYkT60lc
- 7kRCOvpoaLg+abEKpWIJEYYtsuIxuAsoU7hp0CY+9sdQ2Z+eDeEPWuvwEmSvoxk+ZkIzgPUzc
- TjoOsfMXlFCOrh3n5uN8xPEIzYEysVAdXa+73b3ZzkSQqNk4gPnb/KQtX2YQjRW4HM32awVrO
- xqVHBYZH1CvIN0AUBUcZynt9gDIQWbPopvh7qtXh4TrFeG9tb6vNDel3jtMY15H3nYWHvHFz3
- WQwXMb4ByE7Ruy6Jbqpi3gf5cQ8LIJ25M7OAlKu2N9TCBkdkWSqLnUlfctJjcc4mUmPTYt5/7
- zyCcMjuXToXeEL+f2O8o3+Va5ZuC7zuJnuwyw0xcXzrYMLuCZ5Di4FrHMp3KrUDgS+l14+ryo
- EXP9PuUJg6nKZehG+ww9+R3aK9teE3Iy/eK8Ohw5UIN665blXy/WLsb6X3veVhWomjsw3WU7k
- GCTba0XjzbV+gdBFztJyI9yY1Hgy0v8iXP5GpRkn2ZIQk=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-=E2=80=A6
-> There are some same function name in different pin groups, =E2=80=A6
+This series adds support for switch-mode for ICSSG driver. This series
+also introduces helper APIs to configure firmware maintained FDB
+(Forwarding Database) and VLAN tables. These APIs are later used by ICSSG
+driver in switch mode.
 
-                               names?
+Now the driver will boot by default in dual EMAC mode. When first ICSSG
+interface is added to bridge driver will still be in EMAC mode. As soon as
+second ICSSG interface is added to same bridge, switch-mode will be
+enabled and switch firmwares will be loaded to PRU cores. The driver will
+remain in dual EMAC mode if ICSSG interfaces are added to two different
+bridges or if two different interfaces (One ICSSG, one other) is added to
+the same bridge. We'll only enable is_switch_mode flag when two ICSSG
+interfaces are added to same bridge.
+
+We start in dual MAC mode. Let's say lan0 and lan1 are ICSSG interfaces
+
+ip link add name br0 type bridge
+ip link set lan0 master br0
+
+At this point, we get a CHANGEUPPER event. Only one port is a member of
+the bridge, so we will still be in dual MAC mode.
+
+ip link set lan1 master br0
+
+We get a second CHANGEUPPER event, the second interface lan1 is also ICSSG
+interface so we will set the is_switch_mode flag and when interfaces are
+brought up again, ICSSG switch firmwares will be loaded to PRU Cores.
+
+There are some other cases to consider as well. 
+
+ip link add name br0 type bridge
+ip link add name br1 type bridge
+
+ip link set lan0 master br0
+ip link set ppp0 master br0
+
+Here we are adding lan0 (ICSSG) and ppp0 (non ICSSG) to same bridge, as
+they both are not ICSSG, we will still be running in dual EMAC mode.
+
+ip link set lan1 master br1
+ip link set vpn0 master br1
+
+Here we are adding lan1 (ICSSG) and vpn0 (non ICSSG) to same bridge, as
+they both are not ICSSG, we will still be running in dual EMAC mode.
+
+This is v6 of the series.
+
+Changes from v5 to v6:
+*) Removed __packed from structures in icssg_config.h file. 
+*) Added RB tags of Andrew Lunn <andrew@lunn.ch> to patch 2/3 and patch
+   3/3 of this series.
+
+Changes from v4 to v5:
+*) Rebased on 6.10-rc1.
+*) Dropped the RFC tag.
+
+Changes from v3 to v4:
+*) Added RFC tag as net-next is closed now.
+*) Modified the driver to remove the need of bringing interfaces up / down
+   for enabling / disabling switch mode. Now switch mode can be enabled
+   without bringig interfaces up / down as requested by Andrew Lunn
+   <andrew@lunn.ch>
+*) Modified commit message of patch 3/3.
+
+Changes from v2 to v3:
+*) Dropped RFC tag.
+*) Used ether_addr_copy() instead of manually copying mac address using
+   for loop in patch 1/3 as suggested by Andrew Lunn <andrew@lunn.ch>
+*) Added helper API icssg_fdb_setup() in patch 1/3 to reduce code
+   duplication as suggested by Andrew Lunn <andrew@lunn.ch>
+*) In prueth_switchdev_stp_state_set() removed BR_STATE_LEARNING as
+   learning without forwarding is not supported by ICSSG firmware.
+*) Used ether_addr_equal() wherever possible in patch 2/3 as suggested
+   by Andrew Lunn <andrew@lunn.ch>
+*) Fixed typo "nit: s/prueth_switchdevice_nb/prueth_switchdev_nb/" in
+   patch 2/3 as suggested by Simon Horman <horms@kernel.org>
+*) Squashed "#include "icssg_mii_rt.h" to patch 2/3 from patch 3/3 as
+   suggested by Simon Horman <horms@kernel.org>
+*) Rebased on latest net-next/main.
+
+Changes from v1 to v2:
+*) Removed TAPRIO support patch from this series.
+*) Stopped using devlink for enabling switch-mode as suggested by Andrew L
+*) Added read_poll_timeout() in patch 1 / 3 as suggested by Andrew L.
+
+v1 https://lore.kernel.org/all/20230830110847.1219515-4-danishanwar@ti.com/
+v2 https://lore.kernel.org/all/20240118071005.1514498-1-danishanwar@ti.com/
+v3 https://lore.kernel.org/all/20240327114054.1907278-1-danishanwar@ti.com/
+v4 https://lore.kernel.org/all/20240515060320.2783244-1-danishanwar@ti.com/
+v5 https://lore.kernel.org/all/20240527052738.152821-1-danishanwar@ti.com/
+
+Thanks and Regards,
+Md Danish Anwar
+
+MD Danish Anwar (3):
+  net: ti: icssg-prueth: Add helper functions to configure FDB
+  net: ti: icssg-switch: Add switchdev based driver for ethernet switch
+    support
+  net: ti: icssg-prueth: Add support for ICSSG switch firmware
+
+ drivers/net/ethernet/ti/Kconfig               |   1 +
+ drivers/net/ethernet/ti/Makefile              |   3 +-
+ .../net/ethernet/ti/icssg/icssg_classifier.c  |   2 +-
+ drivers/net/ethernet/ti/icssg/icssg_common.c  |   2 +
+ drivers/net/ethernet/ti/icssg/icssg_config.c  | 322 +++++++++++-
+ drivers/net/ethernet/ti/icssg/icssg_config.h  |  26 +
+ drivers/net/ethernet/ti/icssg/icssg_prueth.c  | 250 ++++++++-
+ drivers/net/ethernet/ti/icssg/icssg_prueth.h  |  36 ++
+ .../net/ethernet/ti/icssg/icssg_switchdev.c   | 477 ++++++++++++++++++
+ .../net/ethernet/ti/icssg/icssg_switchdev.h   |  13 +
+ 10 files changed, 1113 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/net/ethernet/ti/icssg/icssg_switchdev.c
+ create mode 100644 drivers/net/ethernet/ti/icssg/icssg_switchdev.h
 
 
-=E2=80=A6
-> To solve this problem, a simple way is just add a pingrp refix to
+base-commit: 5233a55a5254ea38dcdd8d836a0f9ee886c3df51
+-- 
+2.34.1
 
-                                                    pin group prefix?
-
-Regards,
-Markus
