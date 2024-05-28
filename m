@@ -1,74 +1,132 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0406717166A
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B143D17167A
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716908544; cv=none; b=e2OOoLuiSZAab2Yx0Wh4BDNfnVsUWmJDAFJpDpNHTXiV+I5KJ/QELHskedp0jgbTGb6ayrSbJ6afTQgFarze9Wk51N1eVCw3MHSVmwE8j04D4eBEgUCFm0zLiBPOZGGzbScRtTS6Y3wz/yBVMoD7KUcAY1+3uFVZZSAaEVLAoVs=
+	t=1716908554; cv=none; b=iO1qyjo2j6+bdLJ9z6Z34BfSyQL7x1Bv+66kR55ia6OyXNdU43CB+FqfX5ifvaF0dcvYigFBv3gwjqfGezJtKAWvOxFSAMU/wG8dug9CHk2vdRTDIxq0lgx2tMma7KbWhp9YHC3BmMVsUmX01Jfdeo+FGvH1n+nHSWcxygDvPjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716908544; c=relaxed/simple;
-	bh=Lzp4sRKgxiIvRGFx9BiDXQxvVArzAz4MDOwKv4i6N+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RRQ0RPai1x0znYKDIKDwQbtJL2fPRR1MPZMKTH21olWD6tej2BwrPdgC2CC/GUMha1eE0ssPULiRpLxuyIX5o+aAYmny0ArOZ2+xQy6+bxijY60q1fvyTjuMeaz/nrfPL2A1QV5yNB53rh/eYrOzlgjYvvAqqW7IXEpRQzGOM28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dVIFM7DZ; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716908554; c=relaxed/simple;
+	bh=2UNAaQ/30oJpeCNFCKdqMqQ017Ee3JxN1z//WtgKcuo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VZh6+4j0fgJHBrdT/imB0y6aKYCwLy8RzBuj8scuZfK+m3JbtZ4NM+rExoKVH76Ie1qub6mUAroTrGhmaELAH07l3F8nslgYWLjtA1UBKi6Yi8jX6qkwooNh7dXW/LbOZORdSIyrgsl445ZA8xS50z4YKoedd2Q/U3tRbEx9WbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hu4hsQNM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dVIFM7DZ"
-X-Envelope-To: technoboy85@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716908541;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hu4hsQNM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716908551;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4E6/alJ1dW3jtDGeelSkZhj/r51bIr/djlPIaSzGDLI=;
-	b=dVIFM7DZIoaSoZguZrOcx4emS0kHYbSk50Q7xp3ITtWQKViBHfc4hrAsd9zDMoD4CrPnm8
-	ReQQEqhY1ujZVf42DgklW6YeM4lzKCynqyRjz3Din4rbZRdg5l1bPlQoG4WhwhNkA4LXhu
-	tI9A/zKo3Eu14EKe4lA6BU+M+0f5X9E=
-X-Envelope-To: netdev@vger.kernel.org
-X-Envelope-To: davem@davemloft.net
-X-Envelope-To: edumazet@google.com
-X-Envelope-To: kuba@kernel.org
-X-Envelope-To: pabeni@redhat.com
-X-Envelope-To: shuah@kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-kselftest@vger.kernel.org
-Date: Tue, 28 May 2024 08:02:14 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Matteo Croce <technoboy85@gmail.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next 1/2] net: make net.core.{r,w}mem_{default,max}
- namespaced
-Message-ID: <hydlaj3xarekyqxf2bmlsudf5wbhghorrl54reora4gldm4lqn@xt4xdw7gi34k>
-References: <20240528121139.38035-1-teknoraver@meta.com>
- <20240528121139.38035-2-teknoraver@meta.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=C3+ZIRNnT7WCQphjrDbOHHUSbOz2wS7xfoUOS89MF08=;
+	b=hu4hsQNMjXIoZZGDLrHPwNXVO/kEiCnfcum+Asa1llEo7HHjOboESCA25agG6GRQky20ov
+	WGRn1c66qS2Hlbh5h7/c1RDfxFzqA1TF7eAm7pPKbXO0UUaDgySMntdtNHnVuMA3yE+5OB
+	YVUE2kxS7F12moQu5lpD5PuY1a2riWY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-620-DjOuceJ6PYu8wpVAvTKG1g-1; Tue, 28 May 2024 11:02:28 -0400
+X-MC-Unique: DjOuceJ6PYu8wpVAvTKG1g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D2010812296;
+	Tue, 28 May 2024 15:02:26 +0000 (UTC)
+Received: from ksundara-mac.redhat.com (unknown [10.74.17.97])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 297AE2873;
+	Tue, 28 May 2024 15:02:18 +0000 (UTC)
+From: Karthik Sundaravel <ksundara@redhat.com>
+To: jesse.brandeburg@intel.com,
+	wojciech.drewek@intel.com,
+	sumang@marvell.com,
+	jacob.e.keller@intel.com,
+	anthony.l.nguyen@intel.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org
+Cc: pmenzel@molgen.mpg.de,
+	jiri@resnulli.us,
+	michal.swiatkowski@linux.intel.com,
+	bcreeley@amd.com,
+	rjarry@redhat.com,
+	aharivel@redhat.com,
+	vchundur@redhat.com,
+	ksundara@redhat.com,
+	cfontain@redhat.com
+Subject: [PATCH iwl-next v12] ice: Add get/set hw address for VFs using devlink commands
+Date: Tue, 28 May 2024 20:32:12 +0530
+Message-Id: <20240528150213.16771-1-ksundara@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528121139.38035-2-teknoraver@meta.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Tue, May 28, 2024 at 02:11:38PM GMT, Matteo Croce wrote:
-> The following sysctl are global and can't be read from a netns:
-> 
-> net.core.rmem_default
-> net.core.rmem_max
-> net.core.wmem_default
-> net.core.wmem_max
-> 
-> Make the following sysctl parameters available readonly from within a
-> network namespace, allowing a container to read them.
-> 
-> Signed-off-by: Matteo Croce <teknoraver@meta.com>
+Dear Maintainers,
+    Thanks for the review and suggestions for my patch.
+v11 -> v12
+----------
+- Fix kernel-doc warnings
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+v10 -> v11
+----------
+- rename the function ice_set_vf_mac_fn() to __ice_set_vf_mac()
+
+v9 -> v10
+--------
+- Refactor ice_set_vf_mac() to use reuse the common code blocks
+  for setting the MAC addresses in both netdev and devlink flow.
+
+v8 -> v9
+--------
+- Rebasing against dev-queue branch of next-queue tree
+
+v7 -> v8
+--------
+- Added const keyword for the parameter ``mac`` in ice_set_vf_fn_mac()
+
+v6 -> v7
+--------
+- Addressed Smatch and checkpatch issues
+
+v5 -> v6
+--------
+- Changed data type of vf_id to u16
+- Used container_of(port, struct ice_vf, devlink_port) to
+  get the vf instead of ice_get_vf_by_id()/ice_put_vf()
+
+v4 -> v5
+--------
+- Cloned ice_set_vf_mac() to ice_set_vf_fn_mac() so that the
+  parameter ice_pf is used instead of net_device of vf
+- removed redundant error handling
+
+v3 -> v4
+--------
+- Released the vf device by calling ice_put_vf()
+
+v2 -> v3
+--------
+- Fill the extack message instead of dev_err()
+
+v1 -> v2
+--------
+- called ice_set_vf_mac() directly from the devlink port function
+  handlers.
+
+RFC -> v1
+---------
+- Add the function handlers to set and get the HW address for the
+  VF representor ports.
+
