@@ -1,93 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DAB13CABD;
-	Tue, 28 May 2024 10:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAA44D59B
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 10:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716892140; cv=none; b=Pz4wc+FKkpAAImUAtmudljcCeKYDNX321MAoLGQNxli8NfXPZl7HVdRPT0nuLO4vkXa62ozlVHhZDKb8vTCo9EPvTDm8BK21kiMjEYWSRMAWZxaFLOvrMAzLwGDDLmTRepUiM2vLb0T+OgpGA23CxeXUWUJuKU9/d5B5jCwq7w0=
+	t=1716892233; cv=none; b=IDHCuIilhuC0OfaesFCC1mNDXTBoHmbvbVxlffw/WcZ3hc5KBGkKm33bUldLO5N9BAGWIZIqPe4YwObbQmyphJt7u6HClFj7kVf53fK6myaHuGU5RtYdDNZCo40R2U3HOuAoJ1+JO/tC2Hn0QXVCW95r1SL93JGuJ/AD46hhFJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716892140; c=relaxed/simple;
-	bh=2tllxKCFXVlZmMchKrFmmyFaiwTKz5SDQsRsrUjsJUQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To; b=fuZ6TsRy3LDqHQA3dP/5GH+B1kvcqD7NIJCvbUwW/3n6XCza5ieXb/6bUHbxPQWB/Q2EMXAUC8eLMI8akwv5awZizQRmDtkE314URuk4uW77Ea0sPrT94CgguNuBtjs7N6AgLbSIbhqrQVjqfMUmw2H2p3RwzETfVXbKfV+7jLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmZAJ0vr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmZAJ0vr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D332C3277B;
-	Tue, 28 May 2024 10:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716892140;
-	bh=2tllxKCFXVlZmMchKrFmmyFaiwTKz5SDQsRsrUjsJUQ=;
-	h=Date:Cc:Subject:From:To:From;
-	b=cmZAJ0vrr4PVHYgEixnoGK86FFq5NzMMyUA+uvIlXb2LbmFg2ob0NfUT96DYIvD/8
-	 a55kaNvah8aBiqs9pMlKSDBFBwA/SL5Si5NX9f29e46DKxmR6fiM66mpELbU2Rw3Z6
-	 xr29ISTvsz3hs7AejahI82DWK7rGG750/ANXOJM+3EfDZRnLq6NmrfO3TkdTC7jHF2
-	 wK+iuhdOJPDG7Kiuq8HHREHNXf9jPfYGQSawFb0Xrs6vmrXmA1PSgQVdLga3KEQM3M
-	 jjhh5VYs90ltkWpQjqq7AJ2it+eqgb/AgVVvSxA2OYMbFD0Vp3FuDiVZbGgxsuhLeA
-	 JY72UrxJQyHJA==
+	s=arc-20240116; t=1716892233; c=relaxed/simple;
+	bh=m2xLQ4LCjpYiulwHCl7+pHf3KWKMiBRwWIdPLUxEUno=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OngCQYAjt2gVGCzBKy0ce3W9xuLcK+7YOz475pzHDvL9Su8+jlM1OsXQ3ubcWFMQXoj0oX14dd1ZwR0cE2T8G3cjOUyWfMEko39Zn9h0za0dj+mrwyIxhRu3MfV1QFf8ApPfhygmKQ+oco+DiWg1PAJ6Y1ayEkr8t3Emnh9Fuh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1716891601-086e23110611970001-xx1T2L
+Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id CCGBquudrnAo6hvN (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 28 May 2024 18:20:01 +0800 (CST)
+X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX3.zhaoxin.com
+ (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 28 May
+ 2024 18:20:00 +0800
+Received: from localhost.localdomain (10.32.65.162) by ZXBJMBX02.zhaoxin.com
+ (10.29.252.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 28 May
+ 2024 18:19:59 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.6
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+	<x86@kernel.org>, <jpoimboe@kernel.org>, <vlovejoy@redhat.com>,
+	<gregkh@linuxfoundation.org>, <oleg@redhat.com>, <TonyWWang-oc@zhaoxin.com>,
+	<linux-kernel@vger.kernel.org>
+CC: <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>
+Subject: [PATCH] linux-4.19.y/printk: Avoid logbuf_lock deadlock in oops_end()
+Date: Tue, 28 May 2024 18:19:57 +0800
+X-ASG-Orig-Subj: [PATCH] linux-4.19.y/printk: Avoid logbuf_lock deadlock in oops_end()
+Message-ID: <20240528101957.7277-1-TonyWWang-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 28 May 2024 13:28:57 +0300
-Message-Id: <D1L7GV7M5K0E.2OPVM82VLFT10@kernel.org>
-Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
- "David Howells" <dhowells@redhat.com>, <keyrings@vger.kernel.org>,
- <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] TPM DEVICE DRIVER: tpmdd-next-6.10-rc2
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-X-Mailer: aerc 0.17.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
+X-Barracuda-Start-Time: 1716891601
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1555
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.125455
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-The following changes since commit 2bfcfd584ff5ccc8bb7acde19b42570414bf880b=
-:
+A CPU executing vprintk_emit might be interrupted by #PF exception,
+this may leads to logbuf_lock deadlock:
 
-  Merge tag 'pmdomain-v6.10-rc1' of git://git.kernel.org/pub/scm/linux/kern=
-el/git/ulfh/linux-pm (2024-05-27 08:18:31 -0700)
+CPU x:                            CPU x:
+----                              ----
+vprintk_emit()
+  logbuf_lock_irqsave()
+    printk_safe_enter_irqsave()
+A:  raw_spin_lock(&logbuf_lock)
+  vprintk_store()                 #PF
+                                  do_page_fault
+                                    ...
+                                    oops_end
+                                      bust_spinlocks(0)
+                                        console_unlock()
+                                          ...
+                                          printk_safe_enter_irqsave()
+B:                                        raw_spin_lock(&logbuf_lock)
 
-are available in the Git repository at:
+logbuf_lock is taken at A and the deadlock happends at B.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git tags=
-/tpmdd-next-6.10-rc2
+Pass 1 to bust_spinlocks() in the oops_end() to avoid this deadlock.
 
-for you to fetch changes up to d3e43a8fa43effdbb62c7edc206df7ac67772205:
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ arch/x86/kernel/dumpstack.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  tpm: Enable TCG_TPM2_HMAC by default only for X86_64 (2024-05-28 13:14:29=
- +0300)
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index 7e698c45760c..b4c145ee9536 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -336,7 +336,7 @@ void oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+ 	if (regs && kexec_should_crash(current))
+ 		crash_kexec(regs);
+ 
+-	bust_spinlocks(0);
++	bust_spinlocks(1);
+ 	die_owner = -1;
+ 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
+ 	die_nest_count--;
+-- 
+2.25.1
 
-----------------------------------------------------------------
-Hi,
-
-This PR fixes two unaddressed review comments for the HMAC encryption
-patch set. They are cosmetic but we are better off, if such unnecessary
-glitches do not exist in the release.
-
-The priority part of this PR is enabling the HMAC encryption by default
-only on x86-64 because that is the only sufficiently tested arch.
-
-Finally, there is a bug fix for SPI transfer buffer allocation, which
-did not take into account the SPI header size.
-
-BR, Jarkko
-
-----------------------------------------------------------------
-Jarkko Sakkinen (3):
-      tpm: Open code tpm_buf_parameters()
-      tpm: Rename TPM2_OA_TMPL to TPM2_OA_NULL_KEY and make it local
-      tpm: Enable TCG_TPM2_HMAC by default only for X86_64
-
-Matthew R. Ochs (1):
-      tpm_tis_spi: Account for SPI header when allocating TPM SPI xfer buff=
-er
-
- drivers/char/tpm/Kconfig            |  2 +-
- drivers/char/tpm/tpm-buf.c          | 26 --------------------------
- drivers/char/tpm/tpm2-cmd.c         | 10 +++++++++-
- drivers/char/tpm/tpm2-sessions.c    | 21 +++++++++++++++++++--
- drivers/char/tpm/tpm_tis_spi_main.c |  3 ++-
- include/linux/tpm.h                 | 17 -----------------
- 6 files changed, 31 insertions(+), 48 deletions(-)
