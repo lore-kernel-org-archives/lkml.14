@@ -1,26 +1,27 @@
 Received: from EX-PRD-EDGE02.vmware.com (ex-prd-edge02.vmware.com [208.91.3.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50258140368;
-	Tue, 28 May 2024 23:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53D3143868;
+	Tue, 28 May 2024 23:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.91.3.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716940488; cv=none; b=iRhKYyPPySpgxVhSrnA+tX9j4n4XxUpLy99tDJqYy7QageTaqEBdikMofnj3KfgE1ckVe6KSSjtoCvfVRyQLMFkwrUxs+mHqSgr+s6qy328aoL5yrvrqcldPh+48Watfnenh4iiJFzQKqXthtdl7p9C8c/YkkzkDgjYEIrFkXSU=
+	t=1716940492; cv=none; b=B5cOHRNP5yMzcGIYAJ0ZbCUzf3aSl/YrURSzU2o0Bw/UL39ZY75YlVQHlGDTF9o46JbGpGaOYABUPFesATfFvZ5gDngLnekGSwfNnjRHPuy7PEHJX+p7HZId++AtPeN/UZdHL3Be0/xmGVlTVUsMlkW8UadScbLnBSGKFuN82N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716940488; c=relaxed/simple;
-	bh=iScNUZYj9Hl1o8qjxZ4rUlNZplDHdR3KDhNBZxjSiWI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JEoO0sm9ZGAVFyTDGafPzsqU5/XzUdcbM+v3Zlq+PuaCN9NmtWxLlHaExcEhTD8Beu2IJJm12+iDQRA999IGhEdTJC+ViXe2lVc3sk1ZhC+MIon21EDC6fliEC1Xt/d3jM/0ifvV6LfIV3D+bksGjqG6efb+KNp2V9m+4D+UKwg=
+	s=arc-20240116; t=1716940492; c=relaxed/simple;
+	bh=2+fysG0Du4d/s61FaL2qUIhRstpR34hy/uZrTBVGS8I=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bFPWmj4U6+kmL29oEIAdE4fZ7Ojz5ev7Grz1cmqiuYFynIVGTKSbDyqI3TtfQ5v+dIgnlSie88RO1w0SO66yJH3049TQocfbmvRJzDHZWcREYEdhHaZiMKNyrtMFLVCxfHS38Yt1D3tqzTD08eDunsJPGR+pC40DIAgv4psYpB8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=broadcom.com; spf=pass smtp.mailfrom=vmware.com; arc=none smtp.client-ip=208.91.3.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vmware.com
 Received: from sc9-mailhost1.vmware.com (10.113.161.71) by
  EX-PRD-EDGE02.vmware.com (10.188.245.7) with Microsoft SMTP Server id
- 15.1.2375.34; Tue, 28 May 2024 16:38:58 -0700
+ 15.1.2375.34; Tue, 28 May 2024 16:39:02 -0700
 Received: from htb-1n-eng-dhcp122.eng.vmware.com (unknown [10.172.6.252])
-	by sc9-mailhost1.vmware.com (Postfix) with ESMTP id BBACD201E4;
-	Tue, 28 May 2024 16:39:17 -0700 (PDT)
+	by sc9-mailhost1.vmware.com (Postfix) with ESMTP id 70A90201E4;
+	Tue, 28 May 2024 16:39:21 -0700 (PDT)
 Received: by htb-1n-eng-dhcp122.eng.vmware.com (Postfix, from userid 0)
-	id B54C6B04C9; Tue, 28 May 2024 16:39:17 -0700 (PDT)
+	id 6EAEBB04C9; Tue, 28 May 2024 16:39:21 -0700 (PDT)
 From: Ronak Doshi <ronak.doshi@broadcom.com>
 To: <netdev@vger.kernel.org>
 CC: Ronak Doshi <ronak.doshi@broadcom.com>, Broadcom internal kernel review
@@ -28,10 +29,12 @@ CC: Ronak Doshi <ronak.doshi@broadcom.com>, Broadcom internal kernel review
 	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
 	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, open list
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 net-next 0/4] vmxnet3: upgrade to version 9
-Date: Tue, 28 May 2024 16:39:02 -0700
-Message-ID: <20240528233907.2674-1-ronak.doshi@broadcom.com>
+Subject: [PATCH v1 net-next 4/4] vmxnet3: update to version 9
+Date: Tue, 28 May 2024 16:39:06 -0700
+Message-ID: <20240528233907.2674-5-ronak.doshi@broadcom.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20240528233907.2674-1-ronak.doshi@broadcom.com>
+References: <20240528233907.2674-1-ronak.doshi@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,56 +46,100 @@ Received-SPF: SoftFail (EX-PRD-EDGE02.vmware.com: domain of transitioning
  ronak.doshi@broadcom.com discourages use of 10.113.161.71 as permitted
  sender)
 
-vmxnet3 emulation has recently added timestamping feature which allows the
-hypervisor (ESXi) to calculate latency from guest virtual NIC driver to all
-the way up to the physical NIC. This patch series extends vmxnet3 driver
-to leverage these new feature.
+With all vmxnet3 version 9 changes incorporated in the vmxnet3 driver,
+the driver can configure emulation to run at vmxnet3 version 9, provided
+the emulation advertises support for version 9.
 
-Compatibility is maintained using existing vmxnet3 versioning mechanism as
-follows:
-- new features added to vmxnet3 emulation are associated with new vmxnet3
-   version viz. vmxnet3 version 9.
-- emulation advertises all the versions it supports to the driver.
-- during initialization, vmxnet3 driver picks the highest version number
-supported by both the emulation and the driver and configures emulation
-to run at that version.
+Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
+Acked-by: Guolin Yang <guolin.yang@broadcom.com>
+---
+ drivers/net/vmxnet3/vmxnet3_drv.c | 46 ++++++++-------------------------------
+ drivers/net/vmxnet3/vmxnet3_int.h |  4 ++--
+ 2 files changed, 11 insertions(+), 39 deletions(-)
 
-In particular, following changes are introduced:
-
-Patch 1:
-  This patch introduces utility macros for vmxnet3 version 9 comparison
-  and updates Copyright information.
-
-Patch 2:
-  This patch adds support to timestamp the packets so as to allow latency
-  measurement in the ESXi.
-
-Patch 3:
-  This patch adds support to disable certain offloads on the device based
-  on the request specified by the user in the VM configuration.
-
-Patch 4:
-  With all vmxnet3 version 9 changes incorporated in the vmxnet3 driver,
-  with this patch, the driver can configure emulation to run at vmxnet3
-  version 9.
-
-Changes in v1:
-  - make latency measurement and rdpmc read x86 specific in patch 2.
-  - use BIT macro.
-
-Ronak Doshi (4):
-  vmxnet3: prepare for version 9 changes
-  vmxnet3: add latency measurement support in vmxnet3
-  vmxnet3: add command to allow disabling of offloads
-  vmxnet3: update to version 9
-
- drivers/net/vmxnet3/Makefile          |   2 +-
- drivers/net/vmxnet3/vmxnet3_defs.h    |  61 +++++++++-
- drivers/net/vmxnet3/vmxnet3_drv.c     | 222 +++++++++++++++++++++++++++-------
- drivers/net/vmxnet3/vmxnet3_ethtool.c |  10 +-
- drivers/net/vmxnet3/vmxnet3_int.h     |  33 ++++-
- 5 files changed, 279 insertions(+), 49 deletions(-)
-
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index 0fe55234f2bf..49e920bc0061 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -3955,7 +3955,7 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 	struct net_device *netdev;
+ 	struct vmxnet3_adapter *adapter;
+ 	u8 mac[ETH_ALEN];
+-	int size;
++	int size, i;
+ 	int num_tx_queues;
+ 	int num_rx_queues;
+ 	int queues;
+@@ -4022,42 +4022,14 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 		goto err_alloc_pci;
+ 
+ 	ver = VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_VRRS);
+-	if (ver & (1 << VMXNET3_REV_7)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_7);
+-		adapter->version = VMXNET3_REV_7 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_6)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_6);
+-		adapter->version = VMXNET3_REV_6 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_5)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_5);
+-		adapter->version = VMXNET3_REV_5 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_4)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_4);
+-		adapter->version = VMXNET3_REV_4 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_3)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_3);
+-		adapter->version = VMXNET3_REV_3 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_2)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_2);
+-		adapter->version = VMXNET3_REV_2 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_1)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_1);
+-		adapter->version = VMXNET3_REV_1 + 1;
+-	} else {
++	for (i = VMXNET3_REV_9; i >= VMXNET3_REV_1; i--) {
++		if (ver & (1 << i)) {
++			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_VRRS, 1 << i);
++			adapter->version = i + 1;
++			break;
++		}
++	}
++	if (i < VMXNET3_REV_1) {
+ 		dev_err(&pdev->dev,
+ 			"Incompatible h/w version (0x%x) for adapter\n", ver);
+ 		err = -EBUSY;
+diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
+index 31e8db568db2..9f24d66dbb27 100644
+--- a/drivers/net/vmxnet3/vmxnet3_int.h
++++ b/drivers/net/vmxnet3/vmxnet3_int.h
+@@ -72,12 +72,12 @@
+ /*
+  * Version numbers
+  */
+-#define VMXNET3_DRIVER_VERSION_STRING   "1.7.0.0-k"
++#define VMXNET3_DRIVER_VERSION_STRING   "1.9.0.0-k"
+ 
+ /* Each byte of this 32-bit integer encodes a version number in
+  * VMXNET3_DRIVER_VERSION_STRING.
+  */
+-#define VMXNET3_DRIVER_VERSION_NUM      0x01070000
++#define VMXNET3_DRIVER_VERSION_NUM      0x01090000
+ 
+ #if defined(CONFIG_PCI_MSI)
+ 	/* RSS only makes sense if MSI-X is supported. */
 -- 
 2.11.0
 
