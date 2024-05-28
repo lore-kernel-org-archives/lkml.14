@@ -1,125 +1,107 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB7D2FB2
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 20:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9446C1327E5;
+	Tue, 28 May 2024 20:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716927694; cv=none; b=fkRbaLbV382JwgU83UAesoeOs7TVhwqcqYKlXTeyorVuGD4MRHJOVnA4ob9zdV1bvlb6yzBWzYZ2oih/NHF41LPiAJVCzCYSnt3sNDLBl7wP6dz0T0a+XiH19SpNBE9DzNH58IJ5CGMh/us7Yv3IUk2aKfg7xp4st8JHKsXW84A=
+	t=1716927695; cv=none; b=TvCje1adDESTwDIkKrmDbJcFTrsqxg+gEomgTKd76UPHUYr5Fmqsk1WLa6nItW2bk2AvWo7xCY5vFP8nJFiLCO3PaiB6jH/mTbzyMKnCccpVgplMgIcuHy69e/D8WhNVJXMX5Xb2vbKV2RhTOEUf4ICb8TkMRFw76gl9uoON/sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716927694; c=relaxed/simple;
-	bh=GcC1nM0KPHMi8J+HZspHXls7Ljq3h3rbKXZ9orPDqxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fWUgt+XVfcxABBAi4gqlDqaXj/4cVXjOGQAi5uN4UKeCHeih52EagMfpI7u8BXD8jvxr5WdH94nixwmWAX7/ZTgJvW3nSu1PaOkpYNles4lYMej8nWHXAz3UeWMhbcZs69QQvQIk0SfkjbC1a3euWbTCddaZ8HZBK9JMv8nkV7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kXZSc8P/; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716927695; c=relaxed/simple;
+	bh=4FCBurm5/GQckynXeIquujhqJWTZpUak7MuyxMQJ6j0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nXqTbew9u39yaMUAJk1TBUlur8CIQbarOx8xMV3lvunbxdk24jXIMTU/3wnTvmnGHM/EkahlphV4BsiInkfRwArCTQbgct72nHnQeEgUQMzt4SnQoBk0EacbVr4cgU4hr6FSC2f0Dp4RhJpLjuPwijheVC7BOLZjqJrHYpwm0yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1KK6qtsy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=onkV9rr1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kXZSc8P/"
-X-Envelope-To: akpm@linux-foundation.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716927690;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1KK6qtsy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="onkV9rr1"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716927692;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=skdB+ennJA28iFKwvEIuJBTK1zA9kQ9+RV54OQgd+d4=;
-	b=kXZSc8P/l1zrFGRit40gHI3whujSvruQH3YhSlwEZ1uUMcCozwIdWfL6qDEkcRm9QzDSVc
-	UHRXLckf864TfJOmD04sKC+D6vsPTG6HnILGtUgBzBbnRKJRSLW+ud56nXyAeDqTjFyNeV
-	B/HrZW4NnMEMOrjHq8VMrBAJkpsXtPo=
-X-Envelope-To: muchun.song@linux.dev
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: mhocko@kernel.org
-X-Envelope-To: shakeel.butt@linux.dev
-X-Envelope-To: willy@infradead.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: roman.gushchin@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <muchun.song@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Matthew Wilcox <willy@infradead.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Roman Gushchin <roman.gushchin@linux.dev>
-Subject: [PATCH v1 01/14] mm: memcg: introduce memcontrol-v1.c
-Date: Tue, 28 May 2024 13:20:53 -0700
-Message-ID: <20240528202101.3099300-2-roman.gushchin@linux.dev>
-In-Reply-To: <20240528202101.3099300-1-roman.gushchin@linux.dev>
-References: <20240528202101.3099300-1-roman.gushchin@linux.dev>
+	bh=mPuiTTglKo245MRT1O0rauosEqwWPFYkeow/Wj3djDI=;
+	b=1KK6qtsycWyZWGYpIomFB0szOY8nGoEB5Ho2mCbA55fKgFaSs7RGX7qObRS4Vr34H2NNL4
+	dTwHaRTjwRAbT0K+qmfcYYSQZpB+bqLPieRrry5oZF/ioD/3tCkzpqeJ5bdd8LKSNmQYcJ
+	lVUTg785uzh3QYihRvdMb4wCcU1ZRclkHfXho+rO7iTqZhoygmvPpQwfSzAI4ge6eQtbB3
+	6ijCTEommEj3xsH0wYBjzH6OBeQA/IY314vhiUTDsTdEkoE0cY3XdFPrr9XWMmjtqHRCSM
+	KYrcPKFN0IN/79Gc1nT/L6YiSu818F1V7SGe8bdc6jNyGjNwUd0R8YhHMtbyqQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716927692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mPuiTTglKo245MRT1O0rauosEqwWPFYkeow/Wj3djDI=;
+	b=onkV9rr1RYQxxpwZ1a6f5K/ty3kcZzvXUY/KzPXc+FfHSSIyW8BLZEm05H8keZCjPhNA5Z
+	RSv5pSbMZXKyOYBg==
+To: Tim Teichmann <teichmanntim@outlook.de>
+Cc: Christian Heusel <christian@heusel.eu>, regressions@lists.linux.dev,
+ x86@kernel.org, stable@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>
+Subject: [PATCH Resend] x86/topology/amd: Evaluate SMT in CPUID leaf 0x8000001e
+ only on family 0x17 and greater
+In-Reply-To: <87bk4pbve8.ffs@tglx>
+References: <7skhx6mwe4hxiul64v6azhlxnokheorksqsdbp7qw6g2jduf6c@7b5pvomauugk>
+ <87r0dqdf0r.ffs@tglx>
+ <gtgsklvltu5pzeiqn7fwaktdsywk2re75unapgbcarlmqkya5a@mt7pi4j2f7b3>
+ <87h6ejd0wt.ffs@tglx>
+ <PR3PR02MB6012CB03006F1EEE8E8B5D69B3F02@PR3PR02MB6012.eurprd02.prod.outlook.com>
+ <874jajcn9r.ffs@tglx>
+ <PR3PR02MB6012EDF7EBA8045FBB03C434B3F02@PR3PR02MB6012.eurprd02.prod.outlook.com>
+ <87msobb2dp.ffs@tglx>
+ <PR3PR02MB6012D4B2D513F6FA9D29BE5EB3F12@PR3PR02MB6012.eurprd02.prod.outlook.com>
+ <87bk4pbve8.ffs@tglx>
+Date: Tue, 28 May 2024 22:21:31 +0200
+Message-ID: <8734q1bsc4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-This patch introduces the mm/memcontrol-v1.c source file which will be used for
-all legacy (cgroup v1) memory cgroup code. It also introduces mm/memcontrol-v1.h
-to keep declarations shared between mm/memcontrol.c and mm/memcontrol-v1.c.
+The new AMD/HYGON topology parser evaluates the SMT information in CPUID
+leaf 0x8000001e unconditionally while the original code restricted it to
+CPUs with family 0x17 and greater.
 
-As of now, let's compile it if CONFIG_MEMCG is set, similar to mm/memcontrol.c.
-Later on it can be switched to use a separate config option, so that the legacy
-code won't be compiled if not required.
+This breaks family 0x15 CPUs which advertise that leaf and have a non-zero
+value in the SMT section. The machine boots, but the scheduler complains
+loudly about the mismatch of the core IDs:
 
-Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+  WARNING: CPU: 1 PID: 0 at kernel/sched/core.c:6482 sched_cpu_starting+0x183/0x250
+  WARNING: CPU: 0 PID: 1 at kernel/sched/topology.c:2408 build_sched_domains+0x76b/0x12b0
+
+Add the condition back to cure it.
+
+Fixes: f7fb3b2dd92c ("x86/cpu: Provide an AMD/HYGON specific topology parser")
+Reported-by: Tim Teichmann <teichmanntim@outlook.de>
+Bisected-by: Christian Heusel <christian@heusel.eu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Tim Teichmann <teichmanntim@outlook.de>
+Cc: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org
+Closes: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/56
 ---
- mm/Makefile        | 3 ++-
- mm/memcontrol-v1.c | 3 +++
- mm/memcontrol-v1.h | 7 +++++++
- 3 files changed, 12 insertions(+), 1 deletion(-)
- create mode 100644 mm/memcontrol-v1.c
- create mode 100644 mm/memcontrol-v1.h
+Resend with LKML in Cc. Sorry for the noise.
+---
+ arch/x86/kernel/cpu/topology_amd.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/Makefile b/mm/Makefile
-index 8fb85acda1b1c..124d4dea20351 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -26,6 +26,7 @@ KCOV_INSTRUMENT_page_alloc.o := n
- KCOV_INSTRUMENT_debug-pagealloc.o := n
- KCOV_INSTRUMENT_kmemleak.o := n
- KCOV_INSTRUMENT_memcontrol.o := n
-+KCOV_INSTRUMENT_memcontrol-v1.o := n
- KCOV_INSTRUMENT_mmzone.o := n
- KCOV_INSTRUMENT_vmstat.o := n
- KCOV_INSTRUMENT_failslab.o := n
-@@ -95,7 +96,7 @@ obj-$(CONFIG_NUMA) += memory-tiers.o
- obj-$(CONFIG_DEVICE_MIGRATION) += migrate_device.o
- obj-$(CONFIG_TRANSPARENT_HUGEPAGE) += huge_memory.o khugepaged.o
- obj-$(CONFIG_PAGE_COUNTER) += page_counter.o
--obj-$(CONFIG_MEMCG) += memcontrol.o vmpressure.o
-+obj-$(CONFIG_MEMCG) += memcontrol.o memcontrol-v1.o vmpressure.o
- ifdef CONFIG_SWAP
- obj-$(CONFIG_MEMCG) += swap_cgroup.o
- endif
-diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
-new file mode 100644
-index 0000000000000..a941446ba575b
---- /dev/null
-+++ b/mm/memcontrol-v1.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include "memcontrol-v1.h"
-diff --git a/mm/memcontrol-v1.h b/mm/memcontrol-v1.h
-new file mode 100644
-index 0000000000000..7c5f094755ff8
---- /dev/null
-+++ b/mm/memcontrol-v1.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+#ifndef __MM_MEMCONTROL_V1_H
-+#define __MM_MEMCONTROL_V1_H
-+
-+
-+#endif	/* __MM_MEMCONTROL_V1_H */
--- 
-2.45.1
-
+--- a/arch/x86/kernel/cpu/topology_amd.c
++++ b/arch/x86/kernel/cpu/topology_amd.c
+@@ -84,9 +84,9 @@ static bool parse_8000_001e(struct topo_
+ 
+ 	/*
+ 	 * If leaf 0xb is available, then the domain shifts are set
+-	 * already and nothing to do here.
++	 * already and nothing to do here. Only valid for family >= 0x17.
+ 	 */
+-	if (!has_topoext) {
++	if (!has_topoext && c->x86 >= 0x17) {
+ 		/*
+ 		 * Leaf 0x80000008 set the CORE domain shift already.
+ 		 * Update the SMT domain, but do not propagate it.
