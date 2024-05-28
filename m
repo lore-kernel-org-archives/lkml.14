@@ -1,147 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8599316D4EA
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC6716B722;
+	Tue, 28 May 2024 12:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716899202; cv=none; b=IR+I/LDpgaLjPT8fzA4oTQiGhdI5T+dhTNOb8aBKW0J9RJ3mqtbKwSZtJuJ/f4dO0RXmYKvSu64NNYtCv469NRnJoASiSTIa2BoCzqZgasrazLd2NTWSav5gLMgK4its43IwPOILgXgA7+ESzanRhjgnV69G/1ZkwXmUXdRiwFQ=
+	t=1716899270; cv=none; b=LWZQNFU1yLMsuMbh48gVHuC/fEtM3Pt1FRsE635QHdeTjrAgMGYt1loYYlYbcp5Kvr10TGRBOyg32fdtz7quteT3rJ9PTa5xaPJesztYJxDtSTbohXO/sviKqmj9h72D2T2SBJsa1NDWtNFTQNhVBBRKMJfBQTzpMDyyLV4f9LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716899202; c=relaxed/simple;
-	bh=q7jyQ90CDbKjDFVOMbX7rUGfXAM/w2kLEYKvfcuzvWY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ATTfOQ7l9rSqM+XQToBun9wJH3F7d7XgZDLDECi1Wxq9w2gJHZTuVcXvSNW/C38qKPjNxvjKB8l9gb3wwG2VjwQxP1AMsWgu5nzUxeKKY/ipqvFRGl7ksdkYMmQ1FJ1vHF+mlRaTO0uDRfSa+Wbu3hJeF9fTxDg3vwqzjC4koAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ya9o9XQV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716899270; c=relaxed/simple;
+	bh=I8xyTDSo2DdUfwiGqFmJGZhy5ikIjBhPpjVahgmEH2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dFjtME/UzMqLIWHj350d2pfRxkMr220bemSSMu1p/UV3JnXiXf92GjU2hRXDFSGt2v+AOEvgTAFa9nSlophK0pflGI9rXcDuSjlvyfDWWZf/dJ88BUUm1CSRLP6N9HRAhtecdSV4i0XpUwgVuehevzMx0Cbl2qgJbvV+de0/2SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=kDdVQQAG; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ya9o9XQV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716899198;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZXftqT8nCmYhEAaMlOtfkkpZWNhGkvnCDmr6/EFeHBo=;
-	b=Ya9o9XQVVwaqHYwBrJHERGJWiYCOwpkFlv1HakeJzrMHptEDv7xRzfdWZ5W2jTb1PX2qdp
-	hz1jqszGK5HFx1uDeKtbK8NcbZadBt85JMqtFiNtLMXfCb3r5jZSoSPcRSud3xiB5cMRyJ
-	WXbstKKMnhnxIG5kJIN8kB1J/WyJL8c=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-O__MSQOFMlChS1wyBCkRaQ-1; Tue, 28 May 2024 08:26:36 -0400
-X-MC-Unique: O__MSQOFMlChS1wyBCkRaQ-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2bf5bb47573so697693a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 05:26:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716899196; x=1717503996;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZXftqT8nCmYhEAaMlOtfkkpZWNhGkvnCDmr6/EFeHBo=;
-        b=TMW9mCp+djdSRtv3xRIW5CBBhIJO/52qqGUYE/8YBGgo5sX5pyMCMxneYLTxFenR+m
-         rBnaxkkfvwocoHWlPkVzRA3AV2VUboo5LiDeQdd2DZyU/fXGSvDxQAnmF+ix4lVOiv68
-         mIoOrrjrRhHKDVhWNzpQnfPZtx3ABYVGdYhC5MAn15MPFGRkuoYl7bNF7blVKempcI8G
-         zSkqWzP6d3oJZ4LDZmXvyQfqMpozm5jgwVHzA1rRmDxIY7ur/eQNdd8WKt5Jb6rfK2nJ
-         CLfpA95nEPd1TvVuCiPk85GyZtTZrRmRMAtzoioS841hGyMyLQ3WDnOuuuTnxyw77tg/
-         /sgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvbdGwrE7o6SVhQsmEV476vcSZvFlo5r0mwSW7cyy9CTYUkVRON7KKkrweG69o2akdmI5kLJ6rcEOfd+Z3CINnSpBY8bMwKtF/5Vky
-X-Gm-Message-State: AOJu0YweC3xrfKhNoiNOdJ1Umq2XrVIt9wiy74MIgS2uxtH7Q+WGTWaa
-	K6UHmn2YQLLgdA8VrdEHYbw91kE1Z7QYIxPFaUN4q9EEj4tb4usw6k85428zwYXxJJ6u0LA2C9Q
-	zLTeU/D7ljOOTkFUB1k7D0+qXXR5+qNkHzBfbRb3yIU4rzsIneauVfwPsWzNYbq8N4GXG4ngLRi
-	fKxPba5gCmfybwIXlkAQvIkoQCO620JWkxK2MT
-X-Received: by 2002:a17:90b:120e:b0:2bd:ebd5:8bf5 with SMTP id 98e67ed59e1d1-2bf5f207c7cmr9892306a91.32.1716899195779;
-        Tue, 28 May 2024 05:26:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHnILb8oyVRwey22n3VxpJpZdj/JuBx4Cip4MEcNZcih+aIp+8+qLH1y0azOTTP7yl0A47rV3aFPZjtYcwbU/c=
-X-Received: by 2002:a17:90b:120e:b0:2bd:ebd5:8bf5 with SMTP id
- 98e67ed59e1d1-2bf5f207c7cmr9892286a91.32.1716899195378; Tue, 28 May 2024
- 05:26:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kDdVQQAG"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 601208D0;
+	Tue, 28 May 2024 14:27:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1716899263;
+	bh=I8xyTDSo2DdUfwiGqFmJGZhy5ikIjBhPpjVahgmEH2k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kDdVQQAGaDRMwpDxn+N+kHyvAbTb3NMVBSx1ViZ2jWmu7ZOqZ9f40Yare7Sa1PKn/
+	 FLia8QxHpNUngQuB05RXVCkUKKd0gNFCumWF9F2WeLpez3uNuZHEGjeAArYBxQaJcd
+	 pCitUJFW/MXne08UYXX9iudRsw0LEBRUOUymRwZ0=
+Date: Tue, 28 May 2024 15:27:34 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Alexandru Ardelean <alexandru.ardelean@analog.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Haibo Chen <haibo.chen@nxp.com>
+Subject: Re: [PATCH 4/5] gpio: adp5585: Add Analog Devices ADP5585 support
+Message-ID: <20240528122734.GA29970@pendragon.ideasonboard.com>
+References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
+ <20240520195942.11582-5-laurent.pinchart@ideasonboard.com>
+ <CACRpkdbAq1Cqr4X8fjEjOTxw7ky9b6V0ye1NYKfDy5E1BmAX6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528090244.6746-1-ecurtin@redhat.com> <CAJfpegvoao1jd7HhoPEeWCdS8jWEXhKTENbwvLdo=aMiNaLKQQ@mail.gmail.com>
- <CAOgh=FyHFE7qjfYq4BqGc20SYJ5FebhN2iYpJSsYYatO1TkqBw@mail.gmail.com>
- <CAJfpegu+z2Nxvk2H9vfZ3nfzEEixUG4kEthVGHWUYw0wX5bgMg@mail.gmail.com> <CAL7ro1Hm7EOxKUv9U5vEMbe2Ui2oaCdM0b2Xbm0wbdZ52+JV2w@mail.gmail.com>
-In-Reply-To: <CAL7ro1Hm7EOxKUv9U5vEMbe2Ui2oaCdM0b2Xbm0wbdZ52+JV2w@mail.gmail.com>
-From: Eric Curtin <ecurtin@redhat.com>
-Date: Tue, 28 May 2024 13:25:59 +0100
-Message-ID: <CAOgh=FygeLw0jBLvPKiaBCxKkfoQXmwf=sfvyJHs4Hyy_7wDSw@mail.gmail.com>
-Subject: Re: [PATCH] ovl: change error message to info for empty lowerdir
-To: Alexander Larsson <alexl@redhat.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	"open list:OVERLAY FILESYSTEM" <linux-unionfs@vger.kernel.org>, Wei Wang <weiwang@redhat.com>, 
-	Amir Goldstein <amir73il@gmail.com>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdbAq1Cqr4X8fjEjOTxw7ky9b6V0ye1NYKfDy5E1BmAX6g@mail.gmail.com>
 
-On Tue, 28 May 2024 at 13:23, Alexander Larsson <alexl@redhat.com> wrote:
->
->
->
-> On Tue, May 28, 2024 at 1:34=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu=
-> wrote:
->>
->> On Tue, 28 May 2024 at 12:55, Eric Curtin <ecurtin@redhat.com> wrote:
->> >
->> > On Tue, 28 May 2024 at 11:34, Miklos Szeredi <miklos@szeredi.hu> wrote=
-:
->> > >
->> > > On Tue, 28 May 2024 at 11:03, Eric Curtin <ecurtin@redhat.com> wrote=
-:
->> > > >
->> > > > In some deployments, an empty lowerdir is not considered an error.
->> > >
->> > > I don't think this can be triggered in upstream kernel and can be
->> > > removed completely.
->> >
->> > True... Just switched to Fedora Rawhide and instead we just see this o=
-ne:
->> >
->> > pr_err("cannot append lower layer");
->> >
->> > >
->> > > Or do you have a reproducer?
->> >
->> > Run one of these vms:
->> >
->> > https://github.com/osbuild/bootc-image-builder
->>
->> Apparently it is using the legacy lowerdir append mode
->> "lowerdir=3D:foo".  This works only on 6.5.
->>
->> In 6.6 and later the same can be achieved with "lowerdir+=3Dfoo".
->>
->> It's strange that there are not side effects other then the error messag=
-e.
->
->
-> The code tries to use the new mode, but then falls back on ENOSYS:
->
-> https://github.com/containers/composefs/blob/main/libcomposefs/lcfs-mount=
-.c#L431
->
-> So, I guess with a more recent kernel it will not print the warning.
->
-> --
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
->  Alexander Larsson                                Red Hat, Inc
->        alexl@redhat.com         alexander.larsson@gmail.com
+Hi Linus,
 
-I realized I never posted the version of the kernel producing this
-error message:
+On Tue, May 28, 2024 at 01:54:29PM +0200, Linus Walleij wrote:
+> On Mon, May 20, 2024 at 9:59 PM Laurent Pinchart wrote:
+> 
+> > From: Haibo Chen <haibo.chen@nxp.com>
+> >
+> > The ADP5585 is a 10/11 input/output port expander with a built in keypad
+> > matrix decoder, programmable logic, reset generator, and PWM generator.
+> > This driver supports the GPIO function using the platform device
+> > registered by the core MFD driver.
+> >
+> > The driver is derived from an initial implementation from NXP, available
+> > in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
+> > adp5585-gpio support") in their BSP kernel tree. It has been extensively
+> > rewritten.
+> >
+> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> (...)
+> 
+> > +static int adp5585_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
+> > +{
+> > +       struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
+> > +       unsigned int bank = ADP5585_BANK(off);
+> > +       unsigned int bit = ADP5585_BIT(off);
+> > +
+> > +       guard(mutex)(&adp5585_gpio->lock);
+> > +
+> > +       return regmap_update_bits(adp5585_gpio->regmap,
+> > +                                 ADP5585_GPIO_DIRECTION_A + bank,
+> > +                                 bit, 0);
+> 
+> First, I love the guarded mutex!
 
-pr_err("cannot append lower layer");
+Yes, it's neat :-)
 
-So just for clarity in general, that was this one:
+> But doesn't regmap already contain a mutex? Or is this one of those
+> cases where regmap has been instantiated without a lock?
 
-Linux fedora 6.9.0-64.fc41.x86_64 #1 SMP PREEMPT_DYNAMIC Mon May 13
-11:58:46 UTC 2024 x86_64 GNU/Linux
+regmap indeed includes a lock, but it will lock each register access
+independently. In adp5585_gpio_get_value() we need to read two
+registers atomically, so we need to cover them by a single lock.
 
-Is mise le meas/Regards,
+I could drop the lock from regmap, but I would then likely need to
+introduce a lock in the parent mfd device that both the PWM and GPIO
+children would use to protect bus access. That may make sense in the
+future, but is a bit overkill for now I think.
 
-Eric Curtin
+> > +       gc = &adp5585_gpio->gpio_chip;
+> > +       gc->parent = dev;
+> > +       gc->direction_input  = adp5585_gpio_direction_input;
+> > +       gc->direction_output = adp5585_gpio_direction_output;
+> 
+> And chance to implemen ->get_direction()?
 
+Sure, I'll add that to v2.
+
+> Other than this I think the driver is ready for merge, so with the
+> comments fixed or addressed:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thank you.
+
+-- 
+Regards,
+
+Laurent Pinchart
