@@ -1,194 +1,164 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422141667FE
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 10:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D3D1667FE
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 10:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716891659; cv=none; b=oNKgWXi/5O/78q7yiqFUs1jlONR+5Z+AI7zlA41qsVUfRn3VA8zu53tIEqrD7e92DNaUNHG1cxkSqnfcoF1cX2Xmn+f/03JFvoTL2kI+q1oVHXtrk8jVNPqgtx8L1cRVXJthK28x/zxhFeFL8O5ojU3UWy5t72VbCfwa4FWYuk8=
+	t=1716891668; cv=none; b=VP2Lttuo9jOT9he2EaL53yTNN0IMCEqE8EDyO4L9OndXvLaSM0bWkUhI9VCwTLJzNohbQX5hqWNX3cyYUFj8AbJY2dk/4SGMThKm1bx33/Sf0urFiOo4LqCP7PfFbYs9h+i36JrltGo/zOuVblCnJU1zdw+NwNd5Hc3ssm6z4FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716891659; c=relaxed/simple;
-	bh=RIajptdCcq/rafFhvv82Wc0kj1l/1DfJzTJxG03pLEE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jnbH+CEVIgxwL6svNFAauX/mQgoG7xA09Ws2HzAtR7S1dqoiCl+DCj0muMzd7Q+JSPgZYE6fcHLGrrjQvaLmljuwaGdQFdPf2TRPUdWeKLyiE1GJ5OnOMLH68SsCB+u7LmtSbP0HrVPu3FIZvrVCgxyIfm63iqK7/q9o+RyFLxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nnq0Z0NU; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716891668; c=relaxed/simple;
+	bh=5vFNElkdAUyolYsOKXvEn8wCDhpVG0vf+KTOYWYGHRg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=arLC35wg6Z3tUQoB5Kxw3233TJQAo3UNxayA983bE59ckBb2Zzct1KK1T7GoCyLiMm/XLyglYVz+Tc8wr8LuRo7WmA3ZCubQdwsSN/oLYdCa5c14mV4fyY39WSfMIRj8nWF4i3nrM1FJubGIcXrLaSbcTpvmun6logPXei26+tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFrT9xP9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nnq0Z0NU"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-62a08b1a81bso5911747b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 03:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716891657; x=1717496457; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gL61El2MUvMXM1QO7xxPZA2/oELsPgEiA0VxGFI8MCw=;
-        b=nnq0Z0NU7GaT7doqKlPYzZSxwkd7cs1mtUEq5YZii4yyI0jSWAfw+KW+aYEwpGEJWC
-         hJeVpwgPnLsZ2WhL4UO0516YTJEyJ6ngmGIDavxSxymEfEy72egI9tidrEgjz6KgpwIV
-         lUcvxWQHe01cJHpjfMTFmAGyEWBHwKKQ1qLMIIVfNU4Yg7yEkxcWCfnncVKkqW1tx8n7
-         PV2nFZUGQAhg5ZSLoPiZgC2bohiDOtQVI8UkKRCvEmTNFyTpmpjnyCcpIhlnAdU7DSk4
-         9vy452L2AIYRZnMMXjkzCJHrd1lxLqikDBrgDnhgSbUo1yht1N/tELksWUJI2WZFAUmS
-         sffA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716891657; x=1717496457;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gL61El2MUvMXM1QO7xxPZA2/oELsPgEiA0VxGFI8MCw=;
-        b=LV014wD868pJBbRLK3kxY/hVGzHdSl239Q6C0EBYNVX97FiImZwk8AnqgCXxUCuP0h
-         BdQa10Egrexh39MhOXtOJ/k3KvtCAnER9zYyf7YdWsIAKY5xA7Hrioq89MT3np8j+K0D
-         iZ2D2tziZL5GizqaSWij+k5jsPx/8uBHmOl0LYdGfb4LfSQXK0WU/g6QEsvtKQPfdid3
-         59Ux7MGa8G1Ne6Wi2ZqdL0tIOYP+m+q/Oljfw88yjnMMgk0+CEAT/IutBKdMhMb9JKoy
-         dUqcQG6gmYoMHcsB4oHiPxsBl/kaC6pc83ZXb9aw5guQWlhMnYjd5bM8+UjjAkh/a0YG
-         gIZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcCy5OAeBkrrSMBAm1n5GuEVLKEjGyXg5r37ycRZAdErdJn76zCjAHsAir+DV7jbaE5Hp4Go+3e3pMVOuWmZcu1dxlosjmw29WUy6R
-X-Gm-Message-State: AOJu0Yz5b8Oe5RihNcpuAkGzN23s+024ALAR6VhUjHqbIad/xdxPXTF6
-	sF8ogSkEputAzk8ePFLq2iHPzt7aO0clwpl9T80UgDRHrXRGUVagShZopaNaPBXu/x2FLhi3PAB
-	gO0y1JsvYD7llKCgmrI1mKw5Zpmb+RkYdjFKn
-X-Google-Smtp-Source: AGHT+IGVefpydQUP287F0eKALWCJSpkCj+j+25zdNrdIpDbUXLUcnBDJt6zW3qBe07KpY0NpzvdOvUjXQ8IToL/ELxo=
-X-Received: by 2002:a25:ad0b:0:b0:df4:db5c:99f4 with SMTP id
- 3f1490d57ef6-df77224071fmr10979349276.53.1716891656941; Tue, 28 May 2024
- 03:20:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFrT9xP9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70F8EC3277B;
+	Tue, 28 May 2024 10:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716891668;
+	bh=5vFNElkdAUyolYsOKXvEn8wCDhpVG0vf+KTOYWYGHRg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tFrT9xP9ODXnXrXSB8j5uw+Qrgvt8m9hlAz8Nvwcon4f/58q6ocO/keRapJLTAMCL
+	 cWTqZubo4PJXQcIBe7eo+7uN0WLw5zyct7gdM7KMdJu9S22Ogw/MqmNPXnthMSxvq4
+	 unEu1UbRq0xbl/tXNZsTpENpeMyqAgJsArdLQbG/Y8qmIA+Er9c8jqwtncXJn02cck
+	 8HZd4caZLFcduTkfQ8eJqBnalIHqXpWQbFfESn6lUbbxYCj2VUH8RvdNwbYi29t+uY
+	 TcUaKh0SFN3BJPACBUemnopxs4siptPpRgwWROftUeuXqubglRfB3HI0suJOMOGu1A
+	 2KCJu76RpOH5w==
+Message-ID: <ccdacf52-1b31-43a1-a8fd-33a252e24d51@kernel.org>
+Date: Tue, 28 May 2024 12:21:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524232804.1984355-1-bjohannesmeyer@gmail.com>
-In-Reply-To: <20240524232804.1984355-1-bjohannesmeyer@gmail.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 28 May 2024 12:20:15 +0200
-Message-ID: <CAG_fn=U2U5j8VxrkKGHEOdbpheVXM08ExFwkqNhz4qv2EtTjWg@mail.gmail.com>
-Subject: Re: [PATCH] kmsan: introduce test_unpoison_memory()
-To: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Cc: Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] memory: fsl_ifc: Make FSL_IFC config visible and
+ selectable
+To: Esben Haabendal <esben@geanix.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+References: <20240523-fsl-ifc-config-v1-1-6eff73bdc7e6@geanix.com>
+ <979fd913-050b-445d-9ca8-0ec6906ce3ea@kernel.org> <87cypc38gu.fsf@geanix.com>
+ <9a7f73f4-f5dc-4342-855b-08df6a839bb5@kernel.org> <87le3zoatn.fsf@geanix.com>
+ <6c166ad5-8004-4bc4-9107-a47ba9a72161@kernel.org> <87ttijaglp.fsf@geanix.com>
+ <c045f1a4-9ddf-4c53-a69b-22ceb68a1ce8@kernel.org> <87msobaes6.fsf@geanix.com>
+ <87ikyzae7v.fsf@geanix.com> <e3aa72af-c824-4b71-a99d-c0b9294bfd8a@kernel.org>
+ <87y17ul0cb.fsf@geanix.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <87y17ul0cb.fsf@geanix.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 25, 2024 at 1:28=E2=80=AFAM Brian Johannesmeyer
-<bjohannesmeyer@gmail.com> wrote:
->
-> Add a regression test to ensure that kmsan_unpoison_memory() works the sa=
-me
-> as an unpoisoning operation added by the instrumentation. (Of course,
-> please correct me if I'm misunderstanding how these should work).
->
-> The test has two subtests: one that checks the instrumentation, and one
-> that checks kmsan_unpoison_memory(). Each subtest initializes the first
-> byte of a 4-byte buffer, then checks that the other 3 bytes are
-> uninitialized. Unfortunately, the test for kmsan_unpoison_memory() fails =
-to
-> identify the 3 bytes as uninitialized (i.e., the line with the comment
-> "Fail: No UMR report").
->
-> As to my guess why this is happening: From kmsan_unpoison_memory(), the
-> backing shadow is indeed correctly overwritten in
-> kmsan_internal_set_shadow_origin() via `__memset(shadow_start, b, size);`=
-.
-> Instead, the issue seems to stem from overwriting the backing origin, in
-> the following `origin_start[i] =3D origin;` loop; if we return before tha=
-t
-> loop on this specific call to kmsan_unpoison_memory(), then the test
-> passes.
+On 28/05/2024 12:03, Esben Haabendal wrote:
+> Krzysztof Kozlowski <krzk@kernel.org> writes:
+> 
+>> On 27/05/2024 09:47, Esben Haabendal wrote:
+>>>
+>>> Ok, I seem to still be confused as to what you want from me. If you are
+>>> saying that the kernel is not supposed to care about out-of-tree DTS
+>>> (and thereby any bootloader provided DTB), I would like to bring your
+>>> attention to arch/arm/boot/dts/nxp/ls/ls1021a-twr.dts in upstream:
+>>>
+>>> &ifc {
+>>>         #address-cells = <2>;
+>>>         #size-cells = <1>;
+>>>         /* NOR Flash on board */
+>>>         ranges = <0x0 0x0 0x0 0x60000000 0x08000000>;
+>>>         status = "okay";
+>>>
+>>>         nor@0,0 {
+>>>                 #address-cells = <1>;
+>>>                 #size-cells = <1>;
+>>>                 compatible = "cfi-flash";
+>>>                 reg = <0x0 0x0 0x8000000>;
+>>>                 big-endian;
+>>>                 bank-width = <2>;
+>>>                 device-width = <1>;
+>>>         };
+>>> };
+>>>
+>>
+>> I don't understand why it took so many emails to answer that (my first)
+>> question...
+> 
+> Because I did not understand the question. Primarely because I was (and
+> is) surprised that out-of-tree DTS is not supported. I was convinced
+> that out-of-tree DTS was the right way for hardware which is not
+> commonly available.
 
-Hi Brian,
+Even some non-GA hardware could, and IMHO should, be upstreamed, at
+least some parts of it. This gives the user/upstreamer reason to do
+changes. Otherwise you might get questions for contributions: why you
+are doing and why this is worth?
 
-You are right with your analysis.
-KMSAN stores a single origin for every aligned four-byte granule of
-memory, so we lose some information when more than one uninitialized
-value is combined in that granule.
-When writing an uninitialized value to memory, a viable strategy is to
-always update the origin. But if we partially initialize the granule
-with a store, it is better to preserve that granule's origin to
-prevent false negatives, so we need to check the resulting shadow slot
-before updating the origin.
-This is what the compiler instrumentation does, so
-kmsan_internal_set_shadow_origin() should behave in the same way.
-I found a similar bug in kmsan_internal_memmove_metadata() last year,
-but missed this one.
-
-I am going to send a patch fixing this along with your test (with an
-updated description), if you don't object.
-
-> Signed-off-by: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-> ---
->  mm/kmsan/kmsan_test.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->
-> diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
-> index 07d3a3a5a9c5..c3ab90df0abf 100644
-> --- a/mm/kmsan/kmsan_test.c
-> +++ b/mm/kmsan/kmsan_test.c
-> @@ -614,6 +614,30 @@ static void test_stackdepot_roundtrip(struct kunit *=
-test)
->         KUNIT_EXPECT_TRUE(test, report_matches(&expect));
->  }
->
-> +/*
-> + * Test case: ensure that kmsan_unpoison_memory() and the instrumentatio=
-n work
-> + * the same
-> + */
-> +static void test_unpoison_memory(struct kunit *test)
-> +{
-> +       EXPECTATION_UNINIT_VALUE_FN(expect, "test_unpoison_memory");
-> +       volatile char a[4], b[4];
-> +
-> +       kunit_info(
-> +               test,
-> +               "unpoisoning via the instrumentation vs. kmsan_unpoison_m=
-emory() (2 UMR reports)\n");
-> +
-> +       a[0] =3D 0;                                     // Initialize a[0=
-]
-> +       kmsan_check_memory((char *)&a[1], 3);         // Check a[1]--a[3]
-> +       KUNIT_EXPECT_TRUE(test, report_matches(&expect)); // Pass: UMR re=
-port
-> +
-> +       report_reset();
-> +
-> +       kmsan_unpoison_memory((char *)&b[0], 1);  // Initialize b[0]
-> +       kmsan_check_memory((char *)&b[1], 3);     // Check b[1]--b[3]
-> +       KUNIT_EXPECT_TRUE(test, report_matches(&expect)); // Fail: No UMR=
- report
-> +}
-> +
->  static struct kunit_case kmsan_test_cases[] =3D {
->         KUNIT_CASE(test_uninit_kmalloc),
->         KUNIT_CASE(test_init_kmalloc),
-> @@ -637,6 +661,7 @@ static struct kunit_case kmsan_test_cases[] =3D {
->         KUNIT_CASE(test_memset64),
->         KUNIT_CASE(test_long_origin_chain),
->         KUNIT_CASE(test_stackdepot_roundtrip),
-> +       KUNIT_CASE(test_unpoison_memory),
->         {},
->  };
->
-> --
-> 2.34.1
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/kasan-dev/20240524232804.1984355-1-bjohannesmeyer%40gmail.com.
+Downstream or any fork is not really answer to such questions, because
+they are allowed to make whatever stupid choices they want (not saying
+it was done here, but in general), which should not be a reason to do
+anything upstream. If downstream creates wrong DTS files, shall we
+create wrong device drivers or bindings for them? No.
 
 
+> 
+>> Sounds good, however you did not update the existing select.
+>> Drivers are not supposed to select user-visible symbols (leads to
+>> issues), so you need to change it to depends and update defconfigs.
+> 
+> Do you wan this split into multiple commits, or a single commit changing
+> the Kconfig to make FSL_IFC user-visible, and changing select of it to
+> DEPENDS, and updating the related defconfig(s)?
 
---=20
-Alexander Potapenko
-Software Engineer
+One commit for Kconfigs (nand and memory), additional commits for
+defconfigs, one per each arch, because defconfigs might go via arch tree.
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+Best regards,
+Krzysztof
+
