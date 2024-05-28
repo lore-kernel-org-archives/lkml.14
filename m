@@ -1,80 +1,124 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4263DF6B;
-	Tue, 28 May 2024 06:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E876DF6B;
+	Tue, 28 May 2024 06:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716876464; cv=none; b=g9BfAIAcd+BTmI52es6fWoZmeykLHFGgvNAF0VkJTMYiMQO6OvNXvKc2dXQopuDxUbyy++NOvt78M4FUASO0UVgy176ehNfrAWOLS1FBGyWZWVOKWM82JmdWLJS0gzfxe0Tclri5pe3f/A16B7/VGqTDp9VZBPLOJljwucFY0zo=
+	t=1716876565; cv=none; b=tyjcgKRmZJ/ZxJ3efVVNCBldLnTW0YciY+QP5v94VtdIAqh7Vj9E/g2P3P8dmdaVYGc24bdYntN+51YW7eo4sMRcGvocFxOK5k+Kxmyjj2w2hkLcv+sXsyYMOTFEZ5mRTEXPcTRluL/FVhiWqOVcNlJXKiE/CwFEMIImesKKO14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716876464; c=relaxed/simple;
-	bh=YgEFGeEPZxT8s1YqnsK/q7F3fNmn1mUVIATqD2QD4Zs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qMnfJDD4eTFsEIybg5aCEGLszhi8TnHZJ/bTsZ/aY3OSGj4qmCqXN7olGolNdK/Z+8J9nOPP7avzYIsDMSahwF8fL9omXlelIEZ4H383M6shyiRpgvICF4nzIRnk4tjVCxoFas6j8QbxCcXVKkeE+EfUIE+Pr0CH6+q1Hc5Pcfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=LA4JevOo; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+	s=arc-20240116; t=1716876565; c=relaxed/simple;
+	bh=nKrlwxVQZ9JWwpGEnhgFrcVm0BXTkJ1KgeGuEWOqKj8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hT9IZvq1fw6v3LHjyco15exRiw+S9mCywojOab/KqecPcktfp89ZPR30TQ0n8iOC/oEldWsgNAph6sVV+QrZEdhUl+X+0GdcWPIosNhtaOtKQR2Rk+HMTYRO85oHVdvFOd29C6g+uXboawWe5nlfqG/Z6ixHOjw84YiE0WQfHeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=in+WL5mo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="LA4JevOo"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1716876460;
-	bh=bmYKOtO6JYSDgXLf6T9Jhwa1FRSIr29gYNytPNeRSvk=; l=777;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=LA4JevOoc6pR1oBoS21xHhXky4ADt13fvE623gJ+o8plPn/QxxysbYe1ztfras7ry
-	 i5VroJ2cr9J7AVYKIB7H8YXkxaF+POr8ex9omf3tpbhNsDQ0lE6VqRx0bVEWw0ZY09
-	 rnR+c4xDd99UHeTPQYSAebvSdGogzu2p6a6dOcPGUq7ZTVN+DDJSy2/wv89ZZdqg6o
-	 WKp2yjYqyTasa5aRjbOj/mJsJGL3sVFTK7xxIfPPglWn8+URk/LYOR+YBxNxqDWCWr
-	 AUO4V3NhGzQv+xEaBR7Tu185jLHQnawkpimf6Rz28Xmr9N099C0EO0ahxUODfJyxdY
-	 nROc5fB0iwC0Q==
-Received: from 192.168.10.46
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(3213223:0:AUTH_RELAY)
-	(envelope-from <alina_yu@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Tue, 28 May 2024 14:07:32 +0800 (CST)
-Received: from ex3.rt.l (192.168.10.46) by ex3.rt.l (192.168.10.46) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 28 May
- 2024 14:07:31 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex3.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 28 May 2024 14:07:31 +0800
-Date: Tue, 28 May 2024 14:07:31 +0800
-From: Alina Yu <alina_yu@richtek.com>
-To: Mark Brown <broonie@kernel.org>
-CC: <lgirdwood@gmail.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<cy_huang@richtek.com>
-Subject: Re: [PATCH 1/2] regulator: rtq2208: Add fixed LDO VOUT property and
- check that matches the constraints
-Message-ID: <20240528060731.GA25526@linuxcarl2.richtek.com>
-References: <cover.1715846612.git.alina_yu@richtek.com>
- <7c28d2e61d2fc13066ba4814d1ecfab8f344aaad.1715846612.git.alina_yu@richtek.com>
- <c0c7a63d-e435-4778-ad4c-3d93f0215116@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="in+WL5mo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CAA5FC32786;
+	Tue, 28 May 2024 06:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716876564;
+	bh=nKrlwxVQZ9JWwpGEnhgFrcVm0BXTkJ1KgeGuEWOqKj8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=in+WL5mous3ATfr/+7DOLw07nAg78gfEuavJmC7UPmOOqUNO5ut+txv2j8/x/v8CM
+	 l6L66bVFW3OEw1wWmjkVOcT6BPfcWwoed7+aa2yO0SwYJ0xFQ7CxGrleb+FNWh/vMw
+	 oh7MFiQslGW9M6ZtuDlNJ9ipZme6TaQTfWLC6YTet0uOV8fdbAZhaNB3Fgveb3lL8F
+	 y/2DT7JD+xYa/sX3fPuz0aZGFTB8gAfkTctUWQyaeB54e4naMO/p2XntKKytg7MYej
+	 82iIbErXcihXmOErJy43MpZ3S7eZBH/LCi2gS3EXmV3GSRURPVVJdLfn1a07C0kxIW
+	 DDAei6h2fBHrQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E2AC25B7E;
+	Tue, 28 May 2024 06:09:24 +0000 (UTC)
+From: Nikita Shubin via B4 Relay <devnull+n.shubin.yadro.com@kernel.org>
+Date: Tue, 28 May 2024 09:09:23 +0300
+Subject: [PATCH v2 1/3] dmaengine: ioatdma: Fix leaking on version mismatch
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <c0c7a63d-e435-4778-ad4c-3d93f0215116@sirena.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240528-ioatdma-fixes-v2-1-a9f2fbe26ab1@yadro.com>
+References: <20240528-ioatdma-fixes-v2-0-a9f2fbe26ab1@yadro.com>
+In-Reply-To: <20240528-ioatdma-fixes-v2-0-a9f2fbe26ab1@yadro.com>
+To: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
+ Logan Gunthorpe <logang@deltatee.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+ Nikita Shubin <nikita.shubin@maquefel.me>, dmaengine@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux@yadro.com, 
+ Nikita Shubin <n.shubin@yadro.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716876563; l=1829;
+ i=n.shubin@yadro.com; s=20230718; h=from:subject:message-id;
+ bh=ASVt6+nzAUVivKjUfhTrAzVsAPEzKEYVziXwIRDAuFU=;
+ b=vpo6veO0EiOXKv0hYhTJJNEvRbRU1sbfQMuG2vWjy3lqgJHqU2tqnTVFSN2z+ubGZBVJX9qAa3xx
+ v7zI2MRnCM0apPH/L8dPZb4icGLoAUz5mBQ0Q4nL3QtIGKaDJ/Yy
+X-Developer-Key: i=n.shubin@yadro.com; a=ed25519;
+ pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
+X-Endpoint-Received: by B4 Relay for n.shubin@yadro.com/20230718 with
+ auth_id=161
+X-Original-From: Nikita Shubin <n.shubin@yadro.com>
+Reply-To: n.shubin@yadro.com
 
-On Mon, May 27, 2024 at 02:00:47PM +0100, Mark Brown wrote:
-> On Thu, May 16, 2024 at 05:20:33PM +0800, Alina Yu wrote:
-> > A fixed LDO VOUT property has been added to specify the fixed_uV of the regulator_desc.
-> > Additionally, a check has been included in this version
-> > to ensure that the fixed_uV matches the constraints.
-> 
-> This doesn't apply against current code, please check and resend.
+From: Nikita Shubin <n.shubin@yadro.com>
 
-Sorry, I didn't notice these links missed in linux-next tree:
+Fix leaking ioatdma_device if I/OAT version is less than IOAT_VER_3_0.
 
-https://lore.kernel.org/all/a1e19b4026d7fea27526ba94c398500a3826b282.1714467553.git.alina_yu@richtek.com/
+Fixes: bf453a0a18b2 ("dmaengine: ioat: Support in-use unbind")
+Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
+---
+ drivers/dma/ioat/init.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-https://lore.kernel.org/all/ffeecd61c194df1f7f049bd50cb2bbbad3cf1025.1714467553.git.alina_yu@richtek.com/
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index 9c364e92cb82..e76e507ae898 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -1350,6 +1350,7 @@ static int ioat_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	void __iomem * const *iomap;
+ 	struct device *dev = &pdev->dev;
+ 	struct ioatdma_device *device;
++	u8 version;
+ 	int err;
+ 
+ 	err = pcim_enable_device(pdev);
+@@ -1363,6 +1364,10 @@ static int ioat_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (!iomap)
+ 		return -ENOMEM;
+ 
++	version = readb(iomap[IOAT_MMIO_BAR] + IOAT_VER_OFFSET);
++	if (version < IOAT_VER_3_0)
++		return -ENODEV;
++
+ 	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+ 	if (err)
+ 		return err;
+@@ -1373,16 +1378,14 @@ static int ioat_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	pci_set_master(pdev);
+ 	pci_set_drvdata(pdev, device);
+ 
+-	device->version = readb(device->reg_base + IOAT_VER_OFFSET);
++	device->version = version;
+ 	if (device->version >= IOAT_VER_3_4)
+ 		ioat_dca_enabled = 0;
+-	if (device->version >= IOAT_VER_3_0) {
+-		if (is_skx_ioat(pdev))
+-			device->version = IOAT_VER_3_2;
+-		err = ioat3_dma_probe(device, ioat_dca_enabled);
+-	} else
+-		return -ENODEV;
+ 
++	if (is_skx_ioat(pdev))
++		device->version = IOAT_VER_3_2;
++
++	err = ioat3_dma_probe(device, ioat_dca_enabled);
+ 	if (err) {
+ 		dev_err(dev, "Intel(R) I/OAT DMA Engine init failed\n");
+ 		return -ENODEV;
 
-I have now integrated these missing parts into the resent patches.
+-- 
+2.43.2
 
-Thanks,
-Alina
+
