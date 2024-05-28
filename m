@@ -1,143 +1,96 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB98517E8F3;
-	Tue, 28 May 2024 22:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3C113E054
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 22:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716936601; cv=none; b=hYuJCgDlRoCRpVWaiManOuDIyeRKc7cEFkDdRB5ZG3noake4aQOqB8LenFYcyWvOHyGExYStPv/MD1PYVrOGDrUWHNrgw1UI2jtR8Bq5aTPBZXnSEUMBzs9hdmLKRBPeVPtsynmU45Cxlc3gbC3WsxbgTry6NEkWFSsnVk3rNuU=
+	t=1716936635; cv=none; b=DTISS8v0aHc3kQ4L7AIRAijRZj/70ZVzLOX8G+7hvmtz/jRbDdGrdmTrSiyD/EGD6dmicpmJlD2JjHys6m1aXfpKhLzgC08ufHSAArtvWBExdrDjF+1NqGWFMJ+Ms2UgALbghA9dUguuYDQabbCtPZvQ87X+FDbp4jYO8YaUnYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716936601; c=relaxed/simple;
-	bh=HVjwQji1/JSYOgzcTRTitZ6Txsm6oHkimP7gpL4FetY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HOydRwh8QHu7foCcTNJftdB0ekeG9PJ6CrZJPoA0yiD5OfZqd/JOfBXhITZu0iT/eFMgn2c0uwQjEdVLhDs9urD1WS2rfXQffic8tsYCMXPuBznCxXC9M66olZ4OB6isDCzgMnZLTfl0TdswRwcFYL2ESf32P6pti/umstcxEF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hnMf/AG8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1716936635; c=relaxed/simple;
+	bh=gHbpfeSgkDfVxwkYwenrZjhrUWC3V/PMjbQDgO81FQk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dTjt5DMHOo+HELVI0LKyOJcc8egP2c2Sbbl1/Hn/XXCKzm5JPGKyZtRkSQyinzHRQCxyPTTIZnHN5jYfAuT105dY1ltxXlv52oqK4hML2AOCxb/N4/nrMZTBRdZXDTqIqhchNpDLneR35D1yy3wV/07uULTUV0AigAIKVba852g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L6idNiH3; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hnMf/AG8"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SMZorS023663;
-	Tue, 28 May 2024 22:49:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=NsdqQeT1UR+7rNbM816y0Mg+ijPLk+fw56v
-	3sT9xdZ4=; b=hnMf/AG8fdQqIiE9JuRjHJipfkgbFdFoFmkWAxAYYzgQkBSG5kO
-	RoUAIZrH01bcAMak22hdoIwjsNeG6GJNAGvtvpy3II3Ee690t4icCVYGX02zGgsj
-	XzbLH4vpF6MJQE/Ojl6iDFbL5A8HK/5fDmUMBkNoSVcQDnxKvaVmjmukTkY/Wxtu
-	pSHNthfwiSfg3QbX4njNepyoHKIOcZszPKsbPHbOIun8EAPwlBNn68W32IzMadKQ
-	3zXFYtnibH1ml3bE6f22zONcGNPwK7GzaqkUoNWK42TKmEXwf1nlZ3wEf0XnO8Ep
-	u3sGtBNRUdGK8M5lOYfsI9hVXZXg2Yuge1w==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2pqhcs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 22:49:38 +0000 (GMT)
-Received: from pps.filterd (NALASPPMTA03.qualcomm.com [127.0.0.1])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 44SMnbRn028559;
-	Tue, 28 May 2024 22:49:37 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by NALASPPMTA03.qualcomm.com (PPS) with ESMTPS id 3ydm24snq6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 22:49:37 +0000
-Received: from NALASPPMTA03.qualcomm.com (NALASPPMTA03.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44SMnb5J028552;
-	Tue, 28 May 2024 22:49:37 GMT
-Received: from hu-devc-lv-u20-a-new.qualcomm.com (hu-abchauha-lv.qualcomm.com [10.81.25.35])
-	by NALASPPMTA03.qualcomm.com (PPS) with ESMTPS id 44SMnaHL028547
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 22:49:37 +0000
-Received: by hu-devc-lv-u20-a-new.qualcomm.com (Postfix, from userid 214165)
-	id 9E1AC220EE; Tue, 28 May 2024 15:49:35 -0700 (PDT)
-From: Abhishek Chauhan <quic_abchauha@quicinc.com>
-To: "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andrew Halaney <ahalaney@redhat.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin KaFai Lau <martin.lau@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
-Cc: kernel@quicinc.com, syzbot+d7b227731ec589e7f4f0@syzkaller.appspotmail.com,
-        syzbot+30a35a2e9c5067cc43fa@syzkaller.appspotmail.com
-Subject: [PATCH net] net: validate SO_TXTIME clockid coming from  userspace
-Date: Tue, 28 May 2024 15:49:35 -0700
-Message-Id: <20240528224935.1020828-1-quic_abchauha@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L6idNiH3"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6f8f34babd4so209107b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716936634; x=1717541434; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UTOH3e/EfW+pY1lF/i3FXaQ/pSIJmaxop4NhBeQiFYU=;
+        b=L6idNiH37diLwjehmgo9dJ6wWrSW9rJ7seR9p+j2RMPPcVAX75e8svzoPFzRna/t51
+         KM1vC5iBhZ4RAhXLnsSBdGjfXet+EZG015rWVYzs5ASva4MBXrpDfExe12GHKbX4S2rP
+         fLYaICQw2lb5QdqTMVtzZGzZuj6GSzmw623mGTQDRWiHj/cKEICImwwpeO5sqoI2XFJR
+         ptTr/CsuTKWuIXgiqra0KGnGHTqaKJiVCtLJ0nIVhv4v2xo5qno0f8uMmSbcl5RmNW3b
+         1LkRaeEogfnX03hk4Y0yPC09gXOj9DTqf9jbp2tSyfyXfSs9sFIEkFRv3yOxKkPz2PDf
+         a8ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716936634; x=1717541434;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UTOH3e/EfW+pY1lF/i3FXaQ/pSIJmaxop4NhBeQiFYU=;
+        b=Up+kfhNPMyG1McSZfbCb7DVRCBJlAooA9HIWNHGd2TvMaxhI/J8BcDzehLFGLrHbG4
+         EtJv+dx1TDq4KQxXBWmXWW5Odr6LPGcSKZ5kg7ZZYRw0JuXPwgjOcBNmINzh20+PcnxF
+         2oeXxQCcAnOwD+IOcpe5xGTS+jpMQYRcVCwbTfn0bVQ4PIQNv4jLkwOE8gDOVC1zZDcO
+         BewcIrxXYr91DU+YMrtxdHmsapGNvD3mv1lIUNl9PD92PGKbTvCDv4bEzEYZy8Tqm0Ax
+         SyHw93ZrTh+Vdm1ct+F9n/KB6irkk4LBpIG6ZUgIcUnrssSYJhWYHtPeqvmUhSsdRZQS
+         kjaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWpjtpBuR89mzXJRlqGHw0WG/bxUQSJhCj3vb3zerV3KRrOL7z2qR57+xfhxLHLZdHq3sNKcoupGhPJ4sHbtTnmp3q8+g1SNsOUuTGb
+X-Gm-Message-State: AOJu0YxIqnr98/pEXF/RvomofJXfBxj01ETC/zTa8UQGe62uEVLKnUpk
+	oi99qAFAt661/V2umD1BddkK/kGuItJXcikfe86CdBKUPW+YE0Rne8Lj0BrRuxp/obFvbbFiVMm
+	6KQ==
+X-Google-Smtp-Source: AGHT+IE3ANcFSo4euu0zbXpca3MbcUJ+ZlvRED7hUs1VWjND6y66XDhsptVuXUjsU+9B6EI4YXgVUsKh6U8=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:28cf:b0:6ea:df4b:86d0 with SMTP id
+ d2e1a72fcca58-7020306b721mr1477b3a.2.1716936633742; Tue, 28 May 2024 15:50:33
+ -0700 (PDT)
+Date: Tue, 28 May 2024 15:50:32 -0700
+In-Reply-To: <2d873eb4-67d2-446d-8208-a43a4a8aba14@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: EGWJLU9TFkbIRV3A3z9Zb-IzLC_f9TYE
-X-Proofpoint-ORIG-GUID: EGWJLU9TFkbIRV3A3z9Zb-IzLC_f9TYE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_14,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 spamscore=0 adultscore=0 clxscore=1011 bulkscore=0
- mlxscore=0 suspectscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405280169
+Mime-Version: 1.0
+References: <20240522022827.1690416-1-seanjc@google.com> <20240522022827.1690416-5-seanjc@google.com>
+ <2d873eb4-67d2-446d-8208-a43a4a8aba14@intel.com>
+Message-ID: <ZlZfuCI77O9wmHh0@google.com>
+Subject: Re: [PATCH v2 4/6] KVM: Add arch hooks for enabling/disabling virtualization
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Chao Gao <chao.gao@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Currently there are no strict checks while setting SO_TXTIME
-from userspace. With the recent development in skb->tstamp_type
-clockid with unsupported clocks results in warn_on_once, which causes
-unnecessary aborts in some systems which enables panic on warns.
+On Thu, May 23, 2024, Kai Huang wrote:
+> On 22/05/2024 2:28 pm, Sean Christopherson wrote:
+> >   static int __kvm_enable_virtualization(void)
+> >   {
+> >   	if (__this_cpu_read(hardware_enabled))
+> > @@ -5604,6 +5614,8 @@ static int kvm_enable_virtualization(void)
+> >   	if (kvm_usage_count++)
+> >   		return 0;
+> > +	kvm_arch_enable_virtualization();
+> > +
+> >   	r = cpuhp_setup_state(CPUHP_AP_KVM_ONLINE, "kvm/cpu:online",
+> >   			      kvm_online_cpu, kvm_offline_cpu);
+> 
+> 
+> Nit:  is kvm_arch_pre_enable_virtualization() a better name?
 
-Add validation in setsockopt to support only CLOCK_REALTIME,
-CLOCK_MONOTONIC and CLOCK_TAI to be set from userspace.
+Hmm, yes?  I don't have a strong preference either way.  I did consider a more
+verbose name, but omitted the "pre" because the hook is called only on the 0=>1
+transition of kvm_usage_count, and for some reason that made me think "pre" would
+be confusing.
 
-Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
-Link: https://lore.kernel.org/lkml/20240509211834.3235191-1-quic_abchauha@quicinc.com/
-Fixes: 1693c5db6ab8 ("net: Add additional bit to support clockid_t timestamp type")
-Reported-by: syzbot+d7b227731ec589e7f4f0@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=d7b227731ec589e7f4f0
-Reported-by: syzbot+30a35a2e9c5067cc43fa@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=30a35a2e9c5067cc43fa
-Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
----
- net/core/sock.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On the other hand, "pre" very clearly communicates that the hook is invoked,
+and _needs_ to be invoked (for x86), before KVM enables virtualization.
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 8629f9aecf91..f8374be9d8c9 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1083,6 +1083,17 @@ bool sockopt_capable(int cap)
- }
- EXPORT_SYMBOL(sockopt_capable);
- 
-+static int sockopt_validate_clockid(int value)
-+{
-+	switch (value) {
-+	case CLOCK_REALTIME:
-+	case CLOCK_MONOTONIC:
-+	case CLOCK_TAI:
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
- /*
-  *	This is meant for all protocols to use and covers goings on
-  *	at the socket level. Everything here is generic.
-@@ -1497,6 +1508,11 @@ int sk_setsockopt(struct sock *sk, int level, int optname,
- 			ret = -EPERM;
- 			break;
- 		}
-+
-+		ret = sockopt_validate_clockid(sk_txtime.clockid);
-+		if (ret)
-+			break;
-+
- 		sock_valbool_flag(sk, SOCK_TXTIME, true);
- 		sk->sk_clockid = sk_txtime.clockid;
- 		sk->sk_txtime_deadline_mode =
--- 
-2.25.1
+So I'm leaning towards kvm_arch_pre_enable_virtualization().
 
+Anyone else have an opinion?
