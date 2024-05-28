@@ -1,1758 +1,222 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D5617967E
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 21:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716932702; cv=none; b=n5wNRt2ouFNmfBS+F4VXAZXOgOoF+NW50ZaSVesKCEFXJ00wOfzCx0pK9A3rPR/DhHE/MoP6+QjeXd16SjUlEryF4z2er31QBoP4v97TcXAqoWk+BTbF8Kz0jw6ltk3ygSNo0tvgWvkLPyuy6MdpuH37wWHWUwCefkAy6Kv0O8Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716932702; c=relaxed/simple;
-	bh=ifARHejyCyVnFAxZ5qyZ1uKCO9+9UoLGoAFTruSQxYE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bsiuKx/sZtENxIbfsdeJ50hJarFJRE3iqIfSXrX09TXKsZvdhAKX6jtmTGWGNPVT7Cg8CoDXzX66VnazEBI5mI9KA1+gEljlRGBV0RXIdxN4uab3+cvSwxUhrAPz3U0p8nfJzP2XDk1Xzzd/sNRTUo4JELAWvLtKVefntMvge1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FK8rC5UK; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F101DA23;
+	Tue, 28 May 2024 21:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716932933; cv=fail; b=Lmqh02n8c3F57Xczjqs+snDV3GCawEhUjqGWrOVtsZ4R2xLrjRDesCXKgi4iaevHLybNqcFtNDwDLfx7zvJFaci1Djj77Vss16tr6Uiz9uQwGzPW8TOR77A0p+MGhhSdYZl25jf2pCxLk1m3sVywf4PN8nAEpzCbL/2V7m5Avwc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716932933; c=relaxed/simple;
+	bh=IKKsX65JCx6f00EnGlAR0bBOILn8AYR7KHRjtV89qPk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sj+vVdG7Ut3Mhkn7hdsIPD7op7v/cRheu9efwDnxepFllTIXeL3O/dE+AYp1CB4dYdaT70pXt4LMbN+Rrj7Ii3JFMuMggrMxHAd4OFVuvv8QkL2WYIl3X8wzTbq++IFEUul86ph0It8ppNDkjMu6DIzJId2cUw4xYO2iLsECQzM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FcV1UE2+; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FK8rC5UK"
-X-Envelope-To: akpm@linux-foundation.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716932695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wb5xoxtsKPiXoxB44ZAx2H0nu1mCBAYBnQVJ0gBrFu4=;
-	b=FK8rC5UKcyrXb1lhCwK6ladqhPlSBTRYDkDC+ulfy9+KsKyKpp7cZZdPzkREqX7MnnRtSR
-	y+OvNp+9njjNZarCe579GeA37Jnhaj7ekB6g32wMkW/Ub3UMxh7ryArFQqwfZTN8c8K8XN
-	ZM/KxrD5h4ZoCvS+hbCkpB/OWz8/yzg=
-X-Envelope-To: muchun.song@linux.dev
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: mhocko@kernel.org
-X-Envelope-To: shakeel.butt@linux.dev
-X-Envelope-To: willy@infradead.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: roman.gushchin@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <muchun.song@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Matthew Wilcox <willy@infradead.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Roman Gushchin <roman.gushchin@linux.dev>
-Subject: [PATCH v1 10/14] mm: memcg: move cgroup v1 interface files to memcontrol-v1.c
-Date: Tue, 28 May 2024 14:44:31 -0700
-Message-ID: <20240528214435.3125304-1-roman.gushchin@linux.dev>
-In-Reply-To: <20240528202101.3099300-1-roman.gushchin@linux.dev>
-References: <20240528202101.3099300-1-roman.gushchin@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FcV1UE2+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716932932; x=1748468932;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=IKKsX65JCx6f00EnGlAR0bBOILn8AYR7KHRjtV89qPk=;
+  b=FcV1UE2+rnf4l58XuDMGFXxaWNqSwgmQ1f2R056vu9B0h3Ehqjg6jjyr
+   72YdiNi1nVFAi5SjI9TlZ2xx1bOD0L5sqaK09W+CDQPGsOe+S4FWt86lY
+   /hYPWM4pr5oLd8cPXe+wCpqO1BKR2KdNNXhRONTcbS3sgfntPJqwzSflo
+   9mazdZJUc/oQe4xNjq3cTfjFByg1feEdeAxdVKz/fa1dRVaXQjAj4m6Q7
+   Mv2CwiNGB8dAuNNIVtgmHQ3viP7jPqy0lGgLzm7OxJunmZJTCqsDKPdLy
+   xkQdJYumfu23ZBgW5ub5WZ/sqbrIB2JcznfHny4FqQhL/Ykm+aGx7Zd85
+   Q==;
+X-CSE-ConnectionGUID: ZcBoOrjxTXyRjbTDAt7/Rg==
+X-CSE-MsgGUID: lstJBVPyQdWHrn2mCTj/QQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24436197"
+X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
+   d="scan'208";a="24436197"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 14:48:51 -0700
+X-CSE-ConnectionGUID: XICFB211QpKxGAAd9ErLXg==
+X-CSE-MsgGUID: wwhpQSo1Rdy+koo4rqhEDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
+   d="scan'208";a="39728627"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 May 2024 14:48:49 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 28 May 2024 14:48:49 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 28 May 2024 14:48:48 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 28 May 2024 14:48:48 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.175)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 28 May 2024 14:48:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VcHajO9npWlu+QoHJLksvpw3lRRh/J3380Wy0OmAl7PjsLHoDDtJbtHCB7rklT6VMcOU5JbBBdTjm5DGX5zCAkuv/vxcBCVzlAjeL5TE/klLENRJM93drCzPrj7tb/p1X75YNaRYx2f7sVjJ0RfsYj6Q6393QTVc9BYI0S36U9gLzJvOgX/Kldp60yckJLLNLqCLpjt3QLihqn2t4X1msivyw3erVbdWBmPJbgFcV+QkXdP+2qNiyT9MSEGePqR5ZE+bGiTEt8h81fa02bFTu+Gior651QrcwWw9vq4t/gp5aPUDgoHpTRiSOmep8VFMCjzKQSvyhl+q6jPNIdVqJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IKKsX65JCx6f00EnGlAR0bBOILn8AYR7KHRjtV89qPk=;
+ b=RU/YTRCvebTUl6yr2PoQAPGDxDXI5BNdAp0RISraox3qDRCRnuW7c7M7IimMiDoJO2JAIzq25ab1ZC3r2vfpIMi/BhTgHwJv70nTHZK7Xo03bAoSyG6vO1IhcxJyyZNIcdglOQ8dYfQx05nseOqQeR0m12shQ7oP3d2y+vR7XDuk7r9U53heZXyQsxLM5oUWAkusftZnRJyWGkptuEHakebdEKG1xM2fYuwMZIlZbYUDWx5ZBDP43rmsaxACRvFVSUtYutEGlloENQZBYbfDuhCTjmhPkALv9oyGe1tsWE32fOe7M5vfNeoq2JH4bqr4oCZ28AUkiFRisx4tQboScg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by DS0PR11MB8136.namprd11.prod.outlook.com (2603:10b6:8:159::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.17; Tue, 28 May
+ 2024 21:48:45 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9%3]) with mapi id 15.20.7611.030; Tue, 28 May 2024
+ 21:48:45 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "Yamahata, Isaku" <isaku.yamahata@intel.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"seanjc@google.com" <seanjc@google.com>, "sagis@google.com"
+	<sagis@google.com>, "isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
+	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "Aktas, Erdem" <erdemaktas@google.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "dmatlack@google.com" <dmatlack@google.com>
+Subject: Re: [PATCH 10/16] KVM: x86/tdp_mmu: Support TDX private mapping for
+ TDP MMU
+Thread-Topic: [PATCH 10/16] KVM: x86/tdp_mmu: Support TDX private mapping for
+ TDP MMU
+Thread-Index: AQHapmNTP3XGfqhyyEaM/KHu10XBU7GlgQuAgACYjACABytBAA==
+Date: Tue, 28 May 2024 21:48:45 +0000
+Message-ID: <c8cb0829c74596ff660532f9662941dea9aa35f4.camel@intel.com>
+References: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
+	 <20240515005952.3410568-11-rick.p.edgecombe@intel.com>
+	 <6273a3de68722ddbb453cab83fe8f155eff7009a.camel@intel.com>
+	 <20240524082006.GG212599@ls.amr.corp.intel.com>
+In-Reply-To: <20240524082006.GG212599@ls.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|DS0PR11MB8136:EE_
+x-ms-office365-filtering-correlation-id: 4f503bb6-07bf-46be-aaca-08dc7f5ff2e3
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|1800799015|376005|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?Y1d4LzJUTnltY2JRZmk2TXZ1aFBiZTVOWDhQZmpSdHZDWWRxNnlnbjR3T2pO?=
+ =?utf-8?B?Mm9SU3ZoK0gxd3NDem5oMmdGK0VaL3JLSFVmb3pOU0plU01iTURPQ1Y0OHlj?=
+ =?utf-8?B?MjhJbmE3aEdidU9SdzJGczZiZURuK2FSMXhNMWk4eGZZWHdlTTA3RndVSUNl?=
+ =?utf-8?B?NmlNZnlZMU1PY0Vrd2ZNUDVsdW5vYUpxNS9mTWJvOGlzMW5SMkc5bmxIdDFT?=
+ =?utf-8?B?SCtFbGczazVlVklzWnI5dGJ6aGh5NU9aMXcyejl2MXM4K1hPbytZT3JIOTFO?=
+ =?utf-8?B?Z3I2N1VFUXlCR0FSUzFreVZTVTkyR0JtQjRlaG9xWnN0Rzg1OWJqRUhWd1Nt?=
+ =?utf-8?B?RHBlUFhBNnE0V2tnMnFZcWQzTURhaytqUDBQWXBqdmVrRGs1UDZ0NkJHcEF3?=
+ =?utf-8?B?NFJ4S0c1REcwcFc2MllhNHlqS2IrcE0xQkllV3l2d0Q0V1d2ejVmL1hyU2hJ?=
+ =?utf-8?B?YkJOTVM1VlcwS3VRQXdiVEp2aHRFRlBVcDBXd3JDYkVCTktkSEM2M3BBZm5k?=
+ =?utf-8?B?RDZzMmlGNTFBMUdBUnR4K1RpRzRpdUYvSlVGdzZ5aG5XSUNlbE1aYVUzRXBG?=
+ =?utf-8?B?SGh4VEd5N3VqNkpJeHBFeFNqRDhEL3FoekFtRDlONGsvYlg0MjI4aVYwTUFT?=
+ =?utf-8?B?SVY0RUFFb3NySEZ3OU5reEZKOEJEdTBRT2ZOSUkxQVo5WUZ1aXVtcW5vc2Q2?=
+ =?utf-8?B?OG9EVUpwNVJyOG1pUkhOdmVzZFYxdm9LZnVpMStwVWdmN1BIeldMTmQzMEVH?=
+ =?utf-8?B?UER0WWViSjBaNGtFRTMrME8wZkpFVUZjeW82UnRsRGQranZDeTFGME5uTHNF?=
+ =?utf-8?B?OHVJTVRVVDIrT3Bxb3dTa2gxUURnNGlOUXhqMHBqUnhxeHMwUXI2ZXRicitI?=
+ =?utf-8?B?QmhCUW1IZ1RGSDNZeTd2aVlZOWNOSHdrQ056RmEraURRb2E0ZDVWYkZYb0pM?=
+ =?utf-8?B?YytEYkE1UVdQTHVHZTkrYUtIek9aOE51M244bjR0VzVvbWFXNWVrVk9nYnNV?=
+ =?utf-8?B?U2U3eXA5dGU1cFFpNTRRZHcxV3hGTW5BM0duRmRXbUFzSnhSMW9hbDVEZFc5?=
+ =?utf-8?B?amNGZHJtVWRMWWpVc0F3dmp4UkdzSTc0QXNuSHNaUGkwRGdTeldnOHB3THdV?=
+ =?utf-8?B?VnUxT0FjWmxOY0VLc1dRT2QzNlo1b2VBcU1jTnBGQjZraGVlUGUxWUJKMlI0?=
+ =?utf-8?B?bXBZWXFzQ2FHY1lmV1RHY0dKVTZXQjUwZDY4cU5SV0M4WlRPOHBtcjR0clFD?=
+ =?utf-8?B?bVRiUWpmWEIxSk1EQjZ1TmFtNVNHZ2VGa013dTZBNEg3NjJnZ21jZDFxbWlw?=
+ =?utf-8?B?dmMwSU5NNVRqL1NId001ZitGdWRYZitQdDJXeWY0RXpPbW5CK1RkVW5BVnI3?=
+ =?utf-8?B?U29XNUMwdWd0c1NpY3ZRYlpjc1V3dWlLNFhxMTFXZEVncktOeG5Mam9FRVpa?=
+ =?utf-8?B?ZVVoWXo4bXU4RGkrWkFha01GR1V3NW5qTmhhSWZyeVh6bGQ4ak5RRlBaRi9q?=
+ =?utf-8?B?TThXaHZkbWpQSTU3YTZSVWcvVmpweVdINlNSc25pL1dDYm9wSzdZb0ZnVVUy?=
+ =?utf-8?B?TTVXYVpjVEZWMzZyMkJhL09EeHdSK0RuTGlEUWl4Z0tJSEROSkMrSkxqMzJT?=
+ =?utf-8?B?cGNUZmhZQ29HdDdpWnB2ZEwxYWsxY3JxZjhWUDFvblVHY0llR0NYVjBSMWM3?=
+ =?utf-8?B?TmRndUNtUHprMnhQNGIrWEpKZXRPVDVaVitpNFdiL0VBRlUvL2VSNlU3SDdS?=
+ =?utf-8?B?REpqRGJLMTN6dzNuNFZhT1lWZjFyYXRNY2Y0K0xaOFpqQ3ROYk9ha3loMm1k?=
+ =?utf-8?B?Y1o0RTV3dlVLSnM0VTRvdz09?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?M2ROL0pkTTA4YTFhK1RVUEY1bU9QUE5GS0RWQ3puTmJBT21aTWJ1SVpZcGpD?=
+ =?utf-8?B?aGRwSS9USnBxeStSb3JDSG9CV0YrcUJBaDZqQ2s4V3FDTlcwV1hTWC9TRXZL?=
+ =?utf-8?B?LzBjU0owVWM5K3lkZW4yY1hzVjNQNm82aS8yQXZ3dER6MEtINktYQkhid3Rv?=
+ =?utf-8?B?ZDBGMHlXTU1GeFpxaERQRTB5dE16QVR3UDhFaVRqaVVYRTdDM1VCRUJsa2lX?=
+ =?utf-8?B?OGt6R1hZRDByNEZQNXpESTdkbVhZeHBVRDhROEZSTEszZE5LMmxCUzh2QTlm?=
+ =?utf-8?B?cGRXS25tVkZCVjliMkJyUnJ2dC82YWhoNDVwcmZ3NFJqTjJBYnNWRUN4a0hK?=
+ =?utf-8?B?N3d6L2ExQjdKbnd3bGxod0lzS0R5UENIYzhjcEw5MEcrVm9tOWZOSldld1Zn?=
+ =?utf-8?B?RDRLdS95K2VjSlg1N0Y2KytMODRNL1pTZmhMUjhzcGhsaTI2c2xiT1ZmcEFJ?=
+ =?utf-8?B?eDE2QXhVWEpTLzZGSWZmRHh2TzNRSjRHM3NiUS84YlNyMXVtcXptS3NGc2F6?=
+ =?utf-8?B?cE54R2FxdWdQbnB4eEpmYWt2YXJ3MW55eExRVFk4WlErRERybXdzTDZzMko3?=
+ =?utf-8?B?MHRmTDdOTzhiT2VWSlA0THNES2ZVbHlITkh1SWhZNXlnM2JacVcwUy9la2lp?=
+ =?utf-8?B?ZHdlcllVd3FldXcyYkZGakRpVzgxZ2dTQUN0djlhVlZzdUZNajRuM2o4R0dz?=
+ =?utf-8?B?TkY1dnV2STVCam1ZVUtCS0Zya0Y3UU56QlVBanphZHRoWHBwbkF6cmNOdXhQ?=
+ =?utf-8?B?bnc4cm1kMi8zeTdoazF5c2V6SGQwemVyeWJ3UFNpTXdMbTI4OEt4SUhTMkxQ?=
+ =?utf-8?B?YWxXcUdUanpIOGptc1pZSVdtU2piMS9xSkt4dU9hRjBKZVVLS1grLzlWemIz?=
+ =?utf-8?B?ZnhXZk5MeUVEZWxPK3lTb3JlKzBNYjl6LzlIQ3dRWjlZTVlLNzVFSWxNSjZU?=
+ =?utf-8?B?VVdDRmUvc0Z0T3B6L1JjNTZGcmdaU1JlS2lGTFc2ejQwVDRYaFdpUS9zYjFC?=
+ =?utf-8?B?cUNSNTY4TEFzM3owaTV3RnMvMDlibUU4SUFndjJaelNBemZMN0RBNUFWVEw2?=
+ =?utf-8?B?T282UHA5bDVSY0pLT2JHeE5XaWNIeXh1K1pBdWY3c3R4Z0JEWEFxY1h1MjZX?=
+ =?utf-8?B?bEk4MWJ1YjVzVHlUc0lzcmQwaWJHNjdrUHZSSUJ3WlI0MDVsSWhqRnlKY285?=
+ =?utf-8?B?bXdWZU5ZTEQzT2xmZ2NYdHpKa29Wb0Z6ZlExWm1MSDRVTmpiRXhIMWhqWXph?=
+ =?utf-8?B?RU1qWXc5UDhzMjV5U3k2VmFPYi9sNnhRWHNPTjJTZU9sS1h6Z0U4OEp3WWVn?=
+ =?utf-8?B?QnNsdmgvRmhyMkd2MXh4R21Hdzg2c3RJR2IvMTFFdUQvU0htWGRRZm83WEEy?=
+ =?utf-8?B?c3BQNS8rSllVUVZacU5iVS81N1Z2SmdUYklHR3BOcWd3RVJ2NEoxemczc0N5?=
+ =?utf-8?B?bXlCVmdhTW1GcGdTcGNPSlBnS1BuVDBuOENLdGZDcmNrc2Fib0pQWmt2eHBr?=
+ =?utf-8?B?TE1YOFhaQnF6TmZ4Y1hOZkhyUCtZNTJPa3RmOTdWWEtoaXVnQlBkQjNHMnAw?=
+ =?utf-8?B?amoyYzFTL2JGbDBjMDhLUHREaXpUQTdpUTNQRnRadm0vNDhhRElLTWcwVWxi?=
+ =?utf-8?B?dXYxd3BtU2YwWFQyY1BFK2xJcTYxQ2ExeVhNTFhZSmEyRyszOFZIOGh2R2Ex?=
+ =?utf-8?B?UTFVU3hZKytVUFlOM1NoS21zTnN4M0I2ZFNzc3BWRGVSbHBXbU12L2ZSZ3pG?=
+ =?utf-8?B?Q29mZ3dHYWpmTW5RYkxFWlZTb0FYK3BMRnZBK1E1UEhuaFU0TDV5aTEzVm5D?=
+ =?utf-8?B?L0tHZXJhQWZaeGljMjN2NEk5UmtvVkJhM1dmK2tEQWR6KzVlM09uOFNZQmJm?=
+ =?utf-8?B?VnJjS2h6M3BRL1UzSy92UkQxWkpkWEszOExFL3ExRzBRbVVDRE5nUE9CNVMz?=
+ =?utf-8?B?Y1dOK0NqZFozYW42VXJtMklSWE1mbGkrMnd3dTJ6Smhkckpxb1h2cTg1VXo4?=
+ =?utf-8?B?NEZFWm01NlZtYm1ud1MzNmJOdG8xSzdtL3c1R3hPTmJUTHdyOW1sRTcwdGNL?=
+ =?utf-8?B?QzV2N3MvZUFQdENUT1NUOGFkT3RZSXJvTVBEZ0U5Sjc5a1d1UVV0Z2ZaZTZJ?=
+ =?utf-8?B?QjZyODRoQWZRS2MvbWRzckJhT0E5Y2RTT0hiU3Y2R0w0eDU0TkpUNWRhSDI3?=
+ =?utf-8?B?aFE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A13C8DD0F8CEFB429E94C7457E2FEF41@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f503bb6-07bf-46be-aaca-08dc7f5ff2e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2024 21:48:45.2903
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yAnu4INqDNag1VCJ6QK8PqzkqFiLZVaUDxWI4VEhNDYAYr87rommxETvIgnWrd8381MlgoOsl3NSra4Qj1DyVLPXKHis1QbBsSxz8cS7nZQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8136
+X-OriginatorOrg: intel.com
 
-Move legacy cgroup v1 memory controller interfaces and corresponding
-code into memcontrol-v1.c.
-
-Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
----
- mm/memcontrol-v1.c | 739 ++++++++++++++++++++++++++++++++++++++++++++-
- mm/memcontrol-v1.h |  29 +-
- mm/memcontrol.c    | 721 +------------------------------------------
- 3 files changed, 767 insertions(+), 722 deletions(-)
-
-diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
-index f73551ff8b2d1..3972172f83624 100644
---- a/mm/memcontrol-v1.c
-+++ b/mm/memcontrol-v1.c
-@@ -10,6 +10,7 @@
- #include <linux/poll.h>
- #include <linux/sort.h>
- #include <linux/file.h>
-+#include <linux/seq_buf.h>
- 
- #include "internal.h"
- #include "swap.h"
-@@ -110,6 +111,18 @@ struct mem_cgroup_event {
- 	struct work_struct remove;
- };
- 
-+#define MEMFILE_PRIVATE(x, val)	((x) << 16 | (val))
-+#define MEMFILE_TYPE(val)	((val) >> 16 & 0xffff)
-+#define MEMFILE_ATTR(val)	((val) & 0xffff)
-+
-+enum {
-+	RES_USAGE,
-+	RES_LIMIT,
-+	RES_MAX_USAGE,
-+	RES_FAILCNT,
-+	RES_SOFT_LIMIT,
-+};
-+
- #ifdef CONFIG_LOCKDEP
- static struct lockdep_map memcg_oom_lock_dep_map = {
- 	.name = "memcg_oom_lock",
-@@ -577,14 +590,14 @@ static inline int mem_cgroup_move_swap_account(swp_entry_t entry,
- }
- #endif
- 
--u64 mem_cgroup_move_charge_read(struct cgroup_subsys_state *css,
-+static u64 mem_cgroup_move_charge_read(struct cgroup_subsys_state *css,
- 				struct cftype *cft)
- {
- 	return mem_cgroup_from_css(css)->move_charge_at_immigrate;
- }
- 
- #ifdef CONFIG_MMU
--int mem_cgroup_move_charge_write(struct cgroup_subsys_state *css,
-+static int mem_cgroup_move_charge_write(struct cgroup_subsys_state *css,
- 				 struct cftype *cft, u64 val)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-@@ -606,7 +619,7 @@ int mem_cgroup_move_charge_write(struct cgroup_subsys_state *css,
- 	return 0;
- }
- #else
--int mem_cgroup_move_charge_write(struct cgroup_subsys_state *css,
-+static int mem_cgroup_move_charge_write(struct cgroup_subsys_state *css,
- 				 struct cftype *cft, u64 val)
- {
- 	return -ENOSYS;
-@@ -1803,8 +1816,8 @@ static void memcg_event_ptable_queue_proc(struct file *file,
-  * Input must be in format '<event_fd> <control_fd> <args>'.
-  * Interpretation of args is defined by control file implementation.
-  */
--ssize_t memcg_write_event_control(struct kernfs_open_file *of,
--				  char *buf, size_t nbytes, loff_t off)
-+static ssize_t memcg_write_event_control(struct kernfs_open_file *of,
-+					 char *buf, size_t nbytes, loff_t off)
- {
- 	struct cgroup_subsys_state *css = of_css(of);
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-@@ -2184,6 +2197,722 @@ void memcg1_oom_finish(struct mem_cgroup *memcg, bool locked)
- 		mem_cgroup_oom_unlock(memcg);
- }
- 
-+static DEFINE_MUTEX(memcg_max_mutex);
-+
-+static int mem_cgroup_resize_max(struct mem_cgroup *memcg,
-+				 unsigned long max, bool memsw)
-+{
-+	bool enlarge = false;
-+	bool drained = false;
-+	int ret;
-+	bool limits_invariant;
-+	struct page_counter *counter = memsw ? &memcg->memsw : &memcg->memory;
-+
-+	do {
-+		if (signal_pending(current)) {
-+			ret = -EINTR;
-+			break;
-+		}
-+
-+		mutex_lock(&memcg_max_mutex);
-+		/*
-+		 * Make sure that the new limit (memsw or memory limit) doesn't
-+		 * break our basic invariant rule memory.max <= memsw.max.
-+		 */
-+		limits_invariant = memsw ? max >= READ_ONCE(memcg->memory.max) :
-+					   max <= memcg->memsw.max;
-+		if (!limits_invariant) {
-+			mutex_unlock(&memcg_max_mutex);
-+			ret = -EINVAL;
-+			break;
-+		}
-+		if (max > counter->max)
-+			enlarge = true;
-+		ret = page_counter_set_max(counter, max);
-+		mutex_unlock(&memcg_max_mutex);
-+
-+		if (!ret)
-+			break;
-+
-+		if (!drained) {
-+			drain_all_stock(memcg);
-+			drained = true;
-+			continue;
-+		}
-+
-+		if (!try_to_free_mem_cgroup_pages(memcg, 1, GFP_KERNEL,
-+						  memsw ? 0 : MEMCG_RECLAIM_MAY_SWAP, NULL)) {
-+			ret = -EBUSY;
-+			break;
-+		}
-+	} while (true);
-+
-+	if (!ret && enlarge)
-+		memcg1_oom_recover(memcg);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Reclaims as many pages from the given memcg as possible.
-+ *
-+ * Caller is responsible for holding css reference for memcg.
-+ */
-+static int mem_cgroup_force_empty(struct mem_cgroup *memcg)
-+{
-+	int nr_retries = MAX_RECLAIM_RETRIES;
-+
-+	/* we call try-to-free pages for make this cgroup empty */
-+	lru_add_drain_all();
-+
-+	drain_all_stock(memcg);
-+
-+	/* try to free all pages in this cgroup */
-+	while (nr_retries && page_counter_read(&memcg->memory)) {
-+		if (signal_pending(current))
-+			return -EINTR;
-+
-+		if (!try_to_free_mem_cgroup_pages(memcg, 1, GFP_KERNEL,
-+						  MEMCG_RECLAIM_MAY_SWAP, NULL))
-+			nr_retries--;
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t mem_cgroup_force_empty_write(struct kernfs_open_file *of,
-+					    char *buf, size_t nbytes,
-+					    loff_t off)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-+
-+	if (mem_cgroup_is_root(memcg))
-+		return -EINVAL;
-+	return mem_cgroup_force_empty(memcg) ?: nbytes;
-+}
-+
-+static u64 mem_cgroup_hierarchy_read(struct cgroup_subsys_state *css,
-+				     struct cftype *cft)
-+{
-+	return 1;
-+}
-+
-+static int mem_cgroup_hierarchy_write(struct cgroup_subsys_state *css,
-+				      struct cftype *cft, u64 val)
-+{
-+	if (val == 1)
-+		return 0;
-+
-+	pr_warn_once("Non-hierarchical mode is deprecated. "
-+		     "Please report your usecase to linux-mm@kvack.org if you "
-+		     "depend on this functionality.\n");
-+
-+	return -EINVAL;
-+}
-+
-+static u64 mem_cgroup_read_u64(struct cgroup_subsys_state *css,
-+			       struct cftype *cft)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-+	struct page_counter *counter;
-+
-+	switch (MEMFILE_TYPE(cft->private)) {
-+	case _MEM:
-+		counter = &memcg->memory;
-+		break;
-+	case _MEMSWAP:
-+		counter = &memcg->memsw;
-+		break;
-+	case _KMEM:
-+		counter = &memcg->kmem;
-+		break;
-+	case _TCP:
-+		counter = &memcg->tcpmem;
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	switch (MEMFILE_ATTR(cft->private)) {
-+	case RES_USAGE:
-+		if (counter == &memcg->memory)
-+			return (u64)mem_cgroup_usage(memcg, false) * PAGE_SIZE;
-+		if (counter == &memcg->memsw)
-+			return (u64)mem_cgroup_usage(memcg, true) * PAGE_SIZE;
-+		return (u64)page_counter_read(counter) * PAGE_SIZE;
-+	case RES_LIMIT:
-+		return (u64)counter->max * PAGE_SIZE;
-+	case RES_MAX_USAGE:
-+		return (u64)counter->watermark * PAGE_SIZE;
-+	case RES_FAILCNT:
-+		return counter->failcnt;
-+	case RES_SOFT_LIMIT:
-+		return (u64)READ_ONCE(memcg->soft_limit) * PAGE_SIZE;
-+	default:
-+		BUG();
-+	}
-+}
-+
-+/*
-+ * This function doesn't do anything useful. Its only job is to provide a read
-+ * handler for a file so that cgroup_file_mode() will add read permissions.
-+ */
-+static int mem_cgroup_dummy_seq_show(__always_unused struct seq_file *m,
-+				     __always_unused void *v)
-+{
-+	return -EINVAL;
-+}
-+
-+static int memcg_update_tcp_max(struct mem_cgroup *memcg, unsigned long max)
-+{
-+	int ret;
-+
-+	mutex_lock(&memcg_max_mutex);
-+
-+	ret = page_counter_set_max(&memcg->tcpmem, max);
-+	if (ret)
-+		goto out;
-+
-+	if (!memcg->tcpmem_active) {
-+		/*
-+		 * The active flag needs to be written after the static_key
-+		 * update. This is what guarantees that the socket activation
-+		 * function is the last one to run. See mem_cgroup_sk_alloc()
-+		 * for details, and note that we don't mark any socket as
-+		 * belonging to this memcg until that flag is up.
-+		 *
-+		 * We need to do this, because static_keys will span multiple
-+		 * sites, but we can't control their order. If we mark a socket
-+		 * as accounted, but the accounting functions are not patched in
-+		 * yet, we'll lose accounting.
-+		 *
-+		 * We never race with the readers in mem_cgroup_sk_alloc(),
-+		 * because when this value change, the code to process it is not
-+		 * patched in yet.
-+		 */
-+		static_branch_inc(&memcg_sockets_enabled_key);
-+		memcg->tcpmem_active = true;
-+	}
-+out:
-+	mutex_unlock(&memcg_max_mutex);
-+	return ret;
-+}
-+
-+/*
-+ * The user of this function is...
-+ * RES_LIMIT.
-+ */
-+static ssize_t mem_cgroup_write(struct kernfs_open_file *of,
-+				char *buf, size_t nbytes, loff_t off)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-+	unsigned long nr_pages;
-+	int ret;
-+
-+	buf = strstrip(buf);
-+	ret = page_counter_memparse(buf, "-1", &nr_pages);
-+	if (ret)
-+		return ret;
-+
-+	switch (MEMFILE_ATTR(of_cft(of)->private)) {
-+	case RES_LIMIT:
-+		if (mem_cgroup_is_root(memcg)) { /* Can't set limit on root */
-+			ret = -EINVAL;
-+			break;
-+		}
-+		switch (MEMFILE_TYPE(of_cft(of)->private)) {
-+		case _MEM:
-+			ret = mem_cgroup_resize_max(memcg, nr_pages, false);
-+			break;
-+		case _MEMSWAP:
-+			ret = mem_cgroup_resize_max(memcg, nr_pages, true);
-+			break;
-+		case _KMEM:
-+			pr_warn_once("kmem.limit_in_bytes is deprecated and will be removed. "
-+				     "Writing any value to this file has no effect. "
-+				     "Please report your usecase to linux-mm@kvack.org if you "
-+				     "depend on this functionality.\n");
-+			ret = 0;
-+			break;
-+		case _TCP:
-+			ret = memcg_update_tcp_max(memcg, nr_pages);
-+			break;
-+		}
-+		break;
-+	case RES_SOFT_LIMIT:
-+		if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
-+			ret = -EOPNOTSUPP;
-+		} else {
-+			WRITE_ONCE(memcg->soft_limit, nr_pages);
-+			ret = 0;
-+		}
-+		break;
-+	}
-+	return ret ?: nbytes;
-+}
-+
-+static ssize_t mem_cgroup_reset(struct kernfs_open_file *of, char *buf,
-+				size_t nbytes, loff_t off)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-+	struct page_counter *counter;
-+
-+	switch (MEMFILE_TYPE(of_cft(of)->private)) {
-+	case _MEM:
-+		counter = &memcg->memory;
-+		break;
-+	case _MEMSWAP:
-+		counter = &memcg->memsw;
-+		break;
-+	case _KMEM:
-+		counter = &memcg->kmem;
-+		break;
-+	case _TCP:
-+		counter = &memcg->tcpmem;
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	switch (MEMFILE_ATTR(of_cft(of)->private)) {
-+	case RES_MAX_USAGE:
-+		page_counter_reset_watermark(counter);
-+		break;
-+	case RES_FAILCNT:
-+		counter->failcnt = 0;
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	return nbytes;
-+}
-+
-+#ifdef CONFIG_NUMA
-+
-+#define LRU_ALL_FILE (BIT(LRU_INACTIVE_FILE) | BIT(LRU_ACTIVE_FILE))
-+#define LRU_ALL_ANON (BIT(LRU_INACTIVE_ANON) | BIT(LRU_ACTIVE_ANON))
-+#define LRU_ALL	     ((1 << NR_LRU_LISTS) - 1)
-+
-+/* static unsigned long mem_cgroup_node_nr_lru_pages(struct mem_cgroup *memcg, */
-+/* 				int nid, unsigned int lru_mask, bool tree) */
-+/* { */
-+/* 	struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid)); */
-+/* 	unsigned long nr = 0; */
-+/* 	enum lru_list lru; */
-+
-+/* 	VM_BUG_ON((unsigned)nid >= nr_node_ids); */
-+
-+/* 	for_each_lru(lru) { */
-+/* 		if (!(BIT(lru) & lru_mask)) */
-+/* 			continue; */
-+/* 		if (tree) */
-+/* 			nr += lruvec_page_state(lruvec, NR_LRU_BASE + lru); */
-+/* 		else */
-+/* 			nr += lruvec_page_state_local(lruvec, NR_LRU_BASE + lru); */
-+/* 	} */
-+/* 	return nr; */
-+/* } */
-+
-+/* static unsigned long mem_cgroup_nr_lru_pages(struct mem_cgroup *memcg, */
-+/* 					     unsigned int lru_mask, */
-+/* 					     bool tree) */
-+/* { */
-+/* 	unsigned long nr = 0; */
-+/* 	enum lru_list lru; */
-+
-+/* 	for_each_lru(lru) { */
-+/* 		if (!(BIT(lru) & lru_mask)) */
-+/* 			continue; */
-+/* 		if (tree) */
-+/* 			nr += memcg_page_state(memcg, NR_LRU_BASE + lru); */
-+/* 		else */
-+/* 			nr += memcg_page_state_local(memcg, NR_LRU_BASE + lru); */
-+/* 	} */
-+/* 	return nr; */
-+/* } */
-+
-+static int memcg_numa_stat_show(struct seq_file *m, void *v)
-+{
-+	struct numa_stat {
-+		const char *name;
-+		unsigned int lru_mask;
-+	};
-+
-+	static const struct numa_stat stats[] = {
-+		{ "total", LRU_ALL },
-+		{ "file", LRU_ALL_FILE },
-+		{ "anon", LRU_ALL_ANON },
-+		{ "unevictable", BIT(LRU_UNEVICTABLE) },
-+	};
-+	const struct numa_stat *stat;
-+	int nid;
-+	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
-+
-+	mem_cgroup_flush_stats(memcg);
-+
-+	for (stat = stats; stat < stats + ARRAY_SIZE(stats); stat++) {
-+		seq_printf(m, "%s=%lu", stat->name,
-+			   mem_cgroup_nr_lru_pages(memcg, stat->lru_mask,
-+						   false));
-+		for_each_node_state(nid, N_MEMORY)
-+			seq_printf(m, " N%d=%lu", nid,
-+				   mem_cgroup_node_nr_lru_pages(memcg, nid,
-+							stat->lru_mask, false));
-+		seq_putc(m, '\n');
-+	}
-+
-+	for (stat = stats; stat < stats + ARRAY_SIZE(stats); stat++) {
-+
-+		seq_printf(m, "hierarchical_%s=%lu", stat->name,
-+			   mem_cgroup_nr_lru_pages(memcg, stat->lru_mask,
-+						   true));
-+		for_each_node_state(nid, N_MEMORY)
-+			seq_printf(m, " N%d=%lu", nid,
-+				   mem_cgroup_node_nr_lru_pages(memcg, nid,
-+							stat->lru_mask, true));
-+		seq_putc(m, '\n');
-+	}
-+
-+	return 0;
-+}
-+#endif /* CONFIG_NUMA */
-+
-+static const unsigned int memcg1_stats[] = {
-+	NR_FILE_PAGES,
-+	NR_ANON_MAPPED,
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	NR_ANON_THPS,
-+#endif
-+	NR_SHMEM,
-+	NR_FILE_MAPPED,
-+	NR_FILE_DIRTY,
-+	NR_WRITEBACK,
-+	WORKINGSET_REFAULT_ANON,
-+	WORKINGSET_REFAULT_FILE,
-+#ifdef CONFIG_SWAP
-+	MEMCG_SWAP,
-+	NR_SWAPCACHE,
-+#endif
-+};
-+
-+static const char *const memcg1_stat_names[] = {
-+	"cache",
-+	"rss",
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	"rss_huge",
-+#endif
-+	"shmem",
-+	"mapped_file",
-+	"dirty",
-+	"writeback",
-+	"workingset_refault_anon",
-+	"workingset_refault_file",
-+#ifdef CONFIG_SWAP
-+	"swap",
-+	"swapcached",
-+#endif
-+};
-+
-+/* Universal VM events cgroup1 shows, original sort order */
-+static const unsigned int memcg1_events[] = {
-+	PGPGIN,
-+	PGPGOUT,
-+	PGFAULT,
-+	PGMAJFAULT,
-+};
-+
-+void memcg1_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
-+{
-+	unsigned long memory, memsw;
-+	struct mem_cgroup *mi;
-+	unsigned int i;
-+
-+	BUILD_BUG_ON(ARRAY_SIZE(memcg1_stat_names) != ARRAY_SIZE(memcg1_stats));
-+
-+	mem_cgroup_flush_stats(memcg);
-+
-+	for (i = 0; i < ARRAY_SIZE(memcg1_stats); i++) {
-+		unsigned long nr;
-+
-+		nr = memcg_page_state_local_output(memcg, memcg1_stats[i]);
-+		seq_buf_printf(s, "%s %lu\n", memcg1_stat_names[i], nr);
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(memcg1_events); i++)
-+		seq_buf_printf(s, "%s %lu\n", vm_event_name(memcg1_events[i]),
-+			       memcg_events_local(memcg, memcg1_events[i]));
-+
-+	for (i = 0; i < NR_LRU_LISTS; i++)
-+		seq_buf_printf(s, "%s %lu\n", lru_list_name(i),
-+			       memcg_page_state_local(memcg, NR_LRU_BASE + i) *
-+			       PAGE_SIZE);
-+
-+	/* Hierarchical information */
-+	memory = memsw = PAGE_COUNTER_MAX;
-+	for (mi = memcg; mi; mi = parent_mem_cgroup(mi)) {
-+		memory = min(memory, READ_ONCE(mi->memory.max));
-+		memsw = min(memsw, READ_ONCE(mi->memsw.max));
-+	}
-+	seq_buf_printf(s, "hierarchical_memory_limit %llu\n",
-+		       (u64)memory * PAGE_SIZE);
-+	seq_buf_printf(s, "hierarchical_memsw_limit %llu\n",
-+		       (u64)memsw * PAGE_SIZE);
-+
-+	for (i = 0; i < ARRAY_SIZE(memcg1_stats); i++) {
-+		unsigned long nr;
-+
-+		nr = memcg_page_state_output(memcg, memcg1_stats[i]);
-+		seq_buf_printf(s, "total_%s %llu\n", memcg1_stat_names[i],
-+			       (u64)nr);
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(memcg1_events); i++)
-+		seq_buf_printf(s, "total_%s %llu\n",
-+			       vm_event_name(memcg1_events[i]),
-+			       (u64)memcg_events(memcg, memcg1_events[i]));
-+
-+	for (i = 0; i < NR_LRU_LISTS; i++)
-+		seq_buf_printf(s, "total_%s %llu\n", lru_list_name(i),
-+			       (u64)memcg_page_state(memcg, NR_LRU_BASE + i) *
-+			       PAGE_SIZE);
-+
-+#ifdef CONFIG_DEBUG_VM
-+	{
-+		pg_data_t *pgdat;
-+		struct mem_cgroup_per_node *mz;
-+		unsigned long anon_cost = 0;
-+		unsigned long file_cost = 0;
-+
-+		for_each_online_pgdat(pgdat) {
-+			mz = memcg->nodeinfo[pgdat->node_id];
-+
-+			anon_cost += mz->lruvec.anon_cost;
-+			file_cost += mz->lruvec.file_cost;
-+		}
-+		seq_buf_printf(s, "anon_cost %lu\n", anon_cost);
-+		seq_buf_printf(s, "file_cost %lu\n", file_cost);
-+	}
-+#endif
-+}
-+
-+static u64 mem_cgroup_swappiness_read(struct cgroup_subsys_state *css,
-+				      struct cftype *cft)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-+
-+	return mem_cgroup_swappiness(memcg);
-+}
-+
-+static int mem_cgroup_swappiness_write(struct cgroup_subsys_state *css,
-+				       struct cftype *cft, u64 val)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-+
-+	if (val > MAX_SWAPPINESS)
-+		return -EINVAL;
-+
-+	if (!mem_cgroup_is_root(memcg))
-+		WRITE_ONCE(memcg->swappiness, val);
-+	else
-+		WRITE_ONCE(vm_swappiness, val);
-+
-+	return 0;
-+}
-+
-+static int mem_cgroup_oom_control_read(struct seq_file *sf, void *v)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_seq(sf);
-+
-+	seq_printf(sf, "oom_kill_disable %d\n", READ_ONCE(memcg->oom_kill_disable));
-+	seq_printf(sf, "under_oom %d\n", (bool)memcg->under_oom);
-+	seq_printf(sf, "oom_kill %lu\n",
-+		   atomic_long_read(&memcg->memory_events[MEMCG_OOM_KILL]));
-+	return 0;
-+}
-+
-+static int mem_cgroup_oom_control_write(struct cgroup_subsys_state *css,
-+	struct cftype *cft, u64 val)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-+
-+	/* cannot set to root cgroup and only 0 and 1 are allowed */
-+	if (mem_cgroup_is_root(memcg) || !((val == 0) || (val == 1)))
-+		return -EINVAL;
-+
-+	WRITE_ONCE(memcg->oom_kill_disable, val);
-+	if (!val)
-+		memcg1_oom_recover(memcg);
-+
-+	return 0;
-+}
-+
-+#if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_SLUB_DEBUG)
-+static int mem_cgroup_slab_show(struct seq_file *m, void *p)
-+{
-+	/*
-+	 * Deprecated.
-+	 * Please, take a look at tools/cgroup/memcg_slabinfo.py .
-+	 */
-+	return 0;
-+}
-+#endif
-+
-+struct cftype mem_cgroup_legacy_files[] = {
-+	{
-+		.name = "usage_in_bytes",
-+		.private = MEMFILE_PRIVATE(_MEM, RES_USAGE),
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "max_usage_in_bytes",
-+		.private = MEMFILE_PRIVATE(_MEM, RES_MAX_USAGE),
-+		.write = mem_cgroup_reset,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "limit_in_bytes",
-+		.private = MEMFILE_PRIVATE(_MEM, RES_LIMIT),
-+		.write = mem_cgroup_write,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "soft_limit_in_bytes",
-+		.private = MEMFILE_PRIVATE(_MEM, RES_SOFT_LIMIT),
-+		.write = mem_cgroup_write,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "failcnt",
-+		.private = MEMFILE_PRIVATE(_MEM, RES_FAILCNT),
-+		.write = mem_cgroup_reset,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "stat",
-+		.seq_show = memory_stat_show,
-+	},
-+	{
-+		.name = "force_empty",
-+		.write = mem_cgroup_force_empty_write,
-+	},
-+	{
-+		.name = "use_hierarchy",
-+		.write_u64 = mem_cgroup_hierarchy_write,
-+		.read_u64 = mem_cgroup_hierarchy_read,
-+	},
-+	{
-+		.name = "cgroup.event_control",		/* XXX: for compat */
-+		.write = memcg_write_event_control,
-+		.flags = CFTYPE_NO_PREFIX | CFTYPE_WORLD_WRITABLE,
-+	},
-+	{
-+		.name = "swappiness",
-+		.read_u64 = mem_cgroup_swappiness_read,
-+		.write_u64 = mem_cgroup_swappiness_write,
-+	},
-+	{
-+		.name = "move_charge_at_immigrate",
-+		.read_u64 = mem_cgroup_move_charge_read,
-+		.write_u64 = mem_cgroup_move_charge_write,
-+	},
-+	{
-+		.name = "oom_control",
-+		.seq_show = mem_cgroup_oom_control_read,
-+		.write_u64 = mem_cgroup_oom_control_write,
-+	},
-+	{
-+		.name = "pressure_level",
-+		.seq_show = mem_cgroup_dummy_seq_show,
-+	},
-+#ifdef CONFIG_NUMA
-+	{
-+		.name = "numa_stat",
-+		.seq_show = memcg_numa_stat_show,
-+	},
-+#endif
-+	{
-+		.name = "kmem.limit_in_bytes",
-+		.private = MEMFILE_PRIVATE(_KMEM, RES_LIMIT),
-+		.write = mem_cgroup_write,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "kmem.usage_in_bytes",
-+		.private = MEMFILE_PRIVATE(_KMEM, RES_USAGE),
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "kmem.failcnt",
-+		.private = MEMFILE_PRIVATE(_KMEM, RES_FAILCNT),
-+		.write = mem_cgroup_reset,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "kmem.max_usage_in_bytes",
-+		.private = MEMFILE_PRIVATE(_KMEM, RES_MAX_USAGE),
-+		.write = mem_cgroup_reset,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+#if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_SLUB_DEBUG)
-+	{
-+		.name = "kmem.slabinfo",
-+		.seq_show = mem_cgroup_slab_show,
-+	},
-+#endif
-+	{
-+		.name = "kmem.tcp.limit_in_bytes",
-+		.private = MEMFILE_PRIVATE(_TCP, RES_LIMIT),
-+		.write = mem_cgroup_write,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "kmem.tcp.usage_in_bytes",
-+		.private = MEMFILE_PRIVATE(_TCP, RES_USAGE),
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "kmem.tcp.failcnt",
-+		.private = MEMFILE_PRIVATE(_TCP, RES_FAILCNT),
-+		.write = mem_cgroup_reset,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "kmem.tcp.max_usage_in_bytes",
-+		.private = MEMFILE_PRIVATE(_TCP, RES_MAX_USAGE),
-+		.write = mem_cgroup_reset,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{ },	/* terminate */
-+};
-+
-+struct cftype memsw_files[] = {
-+	{
-+		.name = "memsw.usage_in_bytes",
-+		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_USAGE),
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "memsw.max_usage_in_bytes",
-+		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_MAX_USAGE),
-+		.write = mem_cgroup_reset,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "memsw.limit_in_bytes",
-+		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_LIMIT),
-+		.write = mem_cgroup_write,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{
-+		.name = "memsw.failcnt",
-+		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_FAILCNT),
-+		.write = mem_cgroup_reset,
-+		.read_u64 = mem_cgroup_read_u64,
-+	},
-+	{ },	/* terminate */
-+};
-+
- static int __init memcg1_init(void)
- {
- 	int node;
-diff --git a/mm/memcontrol-v1.h b/mm/memcontrol-v1.h
-index 972c493a8ae32..7be4670d9abbb 100644
---- a/mm/memcontrol-v1.h
-+++ b/mm/memcontrol-v1.h
-@@ -3,6 +3,8 @@
- #ifndef __MM_MEMCONTROL_V1_H
- #define __MM_MEMCONTROL_V1_H
- 
-+#include <linux/cgroup-defs.h>
-+
- void memcg1_update_tree(struct mem_cgroup *memcg, int nid);
- void memcg1_remove_from_trees(struct mem_cgroup *memcg);
- 
-@@ -34,12 +36,6 @@ int memcg1_can_attach(struct cgroup_taskset *tset);
- void memcg1_cancel_attach(struct cgroup_taskset *tset);
- void memcg1_move_task(void);
- 
--struct cftype;
--u64 mem_cgroup_move_charge_read(struct cgroup_subsys_state *css,
--				struct cftype *cft);
--int mem_cgroup_move_charge_write(struct cgroup_subsys_state *css,
--				 struct cftype *cft, u64 val);
--
- /*
-  * Per memcg event counter is incremented at every pagein/pageout. With THP,
-  * it will be incremented by the number of pages. This counter is used
-@@ -86,11 +82,28 @@ enum res_type {
- bool mem_cgroup_event_ratelimit(struct mem_cgroup *memcg,
- 				enum mem_cgroup_events_target target);
- unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap);
--ssize_t memcg_write_event_control(struct kernfs_open_file *of,
--				  char *buf, size_t nbytes, loff_t off);
- 
- bool memcg1_oom_prepare(struct mem_cgroup *memcg, bool *locked);
- void memcg1_oom_finish(struct mem_cgroup *memcg, bool locked);
- void memcg1_oom_recover(struct mem_cgroup *memcg);
- 
-+void drain_all_stock(struct mem_cgroup *root_memcg);
-+unsigned long mem_cgroup_nr_lru_pages(struct mem_cgroup *memcg,
-+				      unsigned int lru_mask, bool tree);
-+unsigned long mem_cgroup_node_nr_lru_pages(struct mem_cgroup *memcg,
-+					   int nid, unsigned int lru_mask,
-+					   bool tree);
-+
-+unsigned long memcg_events(struct mem_cgroup *memcg, int event);
-+unsigned long memcg_events_local(struct mem_cgroup *memcg, int event);
-+unsigned long memcg_page_state_local(struct mem_cgroup *memcg, int idx);
-+unsigned long memcg_page_state_output(struct mem_cgroup *memcg, int item);
-+unsigned long memcg_page_state_local_output(struct mem_cgroup *memcg, int item);
-+int memory_stat_show(struct seq_file *m, void *v);
-+
-+void memcg1_stat_format(struct mem_cgroup *memcg, struct seq_buf *s);
-+
-+extern struct cftype memsw_files[];
-+extern struct cftype mem_cgroup_legacy_files[];
-+
- #endif	/* __MM_MEMCONTROL_V1_H */
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 1622086cab274..8a28ba4ca93ea 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -96,10 +96,6 @@ static DECLARE_WAIT_QUEUE_HEAD(memcg_cgwb_frn_waitq);
- #define THRESHOLDS_EVENTS_TARGET 128
- #define SOFTLIMIT_EVENTS_TARGET 1024
- 
--#define MEMFILE_PRIVATE(x, val)	((x) << 16 | (val))
--#define MEMFILE_TYPE(val)	((val) >> 16 & 0xffff)
--#define MEMFILE_ATTR(val)	((val) & 0xffff)
--
- static inline bool task_is_dying(void)
- {
- 	return tsk_is_oom_victim(current) || fatal_signal_pending(current) ||
-@@ -676,7 +672,7 @@ void __mod_memcg_state(struct mem_cgroup *memcg, enum memcg_stat_item idx,
- }
- 
- /* idx can be of type enum memcg_stat_item or node_stat_item. */
--static unsigned long memcg_page_state_local(struct mem_cgroup *memcg, int idx)
-+unsigned long memcg_page_state_local(struct mem_cgroup *memcg, int idx)
- {
- 	long x;
- 	int i = memcg_stats_index(idx);
-@@ -825,7 +821,7 @@ void __count_memcg_events(struct mem_cgroup *memcg, enum vm_event_item idx,
- 	memcg_stats_unlock();
- }
- 
--static unsigned long memcg_events(struct mem_cgroup *memcg, int event)
-+unsigned long memcg_events(struct mem_cgroup *memcg, int event)
- {
- 	int i = memcg_events_index(event);
- 
-@@ -835,7 +831,7 @@ static unsigned long memcg_events(struct mem_cgroup *memcg, int event)
- 	return READ_ONCE(memcg->vmstats->events[i]);
- }
- 
--static unsigned long memcg_events_local(struct mem_cgroup *memcg, int event)
-+unsigned long memcg_events_local(struct mem_cgroup *memcg, int event)
- {
- 	int i = memcg_events_index(event);
- 
-@@ -1420,15 +1416,13 @@ static int memcg_page_state_output_unit(int item)
- 	}
- }
- 
--static inline unsigned long memcg_page_state_output(struct mem_cgroup *memcg,
--						    int item)
-+unsigned long memcg_page_state_output(struct mem_cgroup *memcg, int item)
- {
- 	return memcg_page_state(memcg, item) *
- 		memcg_page_state_output_unit(item);
- }
- 
--static inline unsigned long memcg_page_state_local_output(
--		struct mem_cgroup *memcg, int item)
-+unsigned long memcg_page_state_local_output(struct mem_cgroup *memcg, int item)
- {
- 	return memcg_page_state_local(memcg, item) *
- 		memcg_page_state_output_unit(item);
-@@ -1487,8 +1481,6 @@ static void memcg_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
- 	WARN_ON_ONCE(seq_buf_has_overflowed(s));
- }
- 
--static void memcg1_stat_format(struct mem_cgroup *memcg, struct seq_buf *s);
--
- static void memory_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
- {
- 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
-@@ -1861,7 +1853,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
-  * Drains all per-CPU charge caches for given root_memcg resp. subtree
-  * of the hierarchy under it.
-  */
--static void drain_all_stock(struct mem_cgroup *root_memcg)
-+void drain_all_stock(struct mem_cgroup *root_memcg)
- {
- 	int cpu, curcpu;
- 
-@@ -3117,120 +3109,6 @@ void split_page_memcg(struct page *head, int old_order, int new_order)
- 		css_get_many(&memcg->css, old_nr / new_nr - 1);
- }
- 
--
--static DEFINE_MUTEX(memcg_max_mutex);
--
--static int mem_cgroup_resize_max(struct mem_cgroup *memcg,
--				 unsigned long max, bool memsw)
--{
--	bool enlarge = false;
--	bool drained = false;
--	int ret;
--	bool limits_invariant;
--	struct page_counter *counter = memsw ? &memcg->memsw : &memcg->memory;
--
--	do {
--		if (signal_pending(current)) {
--			ret = -EINTR;
--			break;
--		}
--
--		mutex_lock(&memcg_max_mutex);
--		/*
--		 * Make sure that the new limit (memsw or memory limit) doesn't
--		 * break our basic invariant rule memory.max <= memsw.max.
--		 */
--		limits_invariant = memsw ? max >= READ_ONCE(memcg->memory.max) :
--					   max <= memcg->memsw.max;
--		if (!limits_invariant) {
--			mutex_unlock(&memcg_max_mutex);
--			ret = -EINVAL;
--			break;
--		}
--		if (max > counter->max)
--			enlarge = true;
--		ret = page_counter_set_max(counter, max);
--		mutex_unlock(&memcg_max_mutex);
--
--		if (!ret)
--			break;
--
--		if (!drained) {
--			drain_all_stock(memcg);
--			drained = true;
--			continue;
--		}
--
--		if (!try_to_free_mem_cgroup_pages(memcg, 1, GFP_KERNEL,
--					memsw ? 0 : MEMCG_RECLAIM_MAY_SWAP, NULL)) {
--			ret = -EBUSY;
--			break;
--		}
--	} while (true);
--
--	if (!ret && enlarge)
--		memcg1_oom_recover(memcg);
--
--	return ret;
--}
--
--/*
-- * Reclaims as many pages from the given memcg as possible.
-- *
-- * Caller is responsible for holding css reference for memcg.
-- */
--static int mem_cgroup_force_empty(struct mem_cgroup *memcg)
--{
--	int nr_retries = MAX_RECLAIM_RETRIES;
--
--	/* we call try-to-free pages for make this cgroup empty */
--	lru_add_drain_all();
--
--	drain_all_stock(memcg);
--
--	/* try to free all pages in this cgroup */
--	while (nr_retries && page_counter_read(&memcg->memory)) {
--		if (signal_pending(current))
--			return -EINTR;
--
--		if (!try_to_free_mem_cgroup_pages(memcg, 1, GFP_KERNEL,
--						  MEMCG_RECLAIM_MAY_SWAP, NULL))
--			nr_retries--;
--	}
--
--	return 0;
--}
--
--static ssize_t mem_cgroup_force_empty_write(struct kernfs_open_file *of,
--					    char *buf, size_t nbytes,
--					    loff_t off)
--{
--	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
--
--	if (mem_cgroup_is_root(memcg))
--		return -EINVAL;
--	return mem_cgroup_force_empty(memcg) ?: nbytes;
--}
--
--static u64 mem_cgroup_hierarchy_read(struct cgroup_subsys_state *css,
--				     struct cftype *cft)
--{
--	return 1;
--}
--
--static int mem_cgroup_hierarchy_write(struct cgroup_subsys_state *css,
--				      struct cftype *cft, u64 val)
--{
--	if (val == 1)
--		return 0;
--
--	pr_warn_once("Non-hierarchical mode is deprecated. "
--		     "Please report your usecase to linux-mm@kvack.org if you "
--		     "depend on this functionality.\n");
--
--	return -EINVAL;
--}
--
- unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap)
- {
- 	unsigned long val;
-@@ -3253,67 +3131,6 @@ unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap)
- 	return val;
- }
- 
--enum {
--	RES_USAGE,
--	RES_LIMIT,
--	RES_MAX_USAGE,
--	RES_FAILCNT,
--	RES_SOFT_LIMIT,
--};
--
--static u64 mem_cgroup_read_u64(struct cgroup_subsys_state *css,
--			       struct cftype *cft)
--{
--	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
--	struct page_counter *counter;
--
--	switch (MEMFILE_TYPE(cft->private)) {
--	case _MEM:
--		counter = &memcg->memory;
--		break;
--	case _MEMSWAP:
--		counter = &memcg->memsw;
--		break;
--	case _KMEM:
--		counter = &memcg->kmem;
--		break;
--	case _TCP:
--		counter = &memcg->tcpmem;
--		break;
--	default:
--		BUG();
--	}
--
--	switch (MEMFILE_ATTR(cft->private)) {
--	case RES_USAGE:
--		if (counter == &memcg->memory)
--			return (u64)mem_cgroup_usage(memcg, false) * PAGE_SIZE;
--		if (counter == &memcg->memsw)
--			return (u64)mem_cgroup_usage(memcg, true) * PAGE_SIZE;
--		return (u64)page_counter_read(counter) * PAGE_SIZE;
--	case RES_LIMIT:
--		return (u64)counter->max * PAGE_SIZE;
--	case RES_MAX_USAGE:
--		return (u64)counter->watermark * PAGE_SIZE;
--	case RES_FAILCNT:
--		return counter->failcnt;
--	case RES_SOFT_LIMIT:
--		return (u64)READ_ONCE(memcg->soft_limit) * PAGE_SIZE;
--	default:
--		BUG();
--	}
--}
--
--/*
-- * This function doesn't do anything useful. Its only job is to provide a read
-- * handler for a file so that cgroup_file_mode() will add read permissions.
-- */
--static int mem_cgroup_dummy_seq_show(__always_unused struct seq_file *m,
--				     __always_unused void *v)
--{
--	return -EINVAL;
--}
--
- #ifdef CONFIG_MEMCG_KMEM
- static int memcg_online_kmem(struct mem_cgroup *memcg)
- {
-@@ -3375,139 +3192,9 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
- }
- #endif /* CONFIG_MEMCG_KMEM */
- 
--static int memcg_update_tcp_max(struct mem_cgroup *memcg, unsigned long max)
--{
--	int ret;
--
--	mutex_lock(&memcg_max_mutex);
--
--	ret = page_counter_set_max(&memcg->tcpmem, max);
--	if (ret)
--		goto out;
--
--	if (!memcg->tcpmem_active) {
--		/*
--		 * The active flag needs to be written after the static_key
--		 * update. This is what guarantees that the socket activation
--		 * function is the last one to run. See mem_cgroup_sk_alloc()
--		 * for details, and note that we don't mark any socket as
--		 * belonging to this memcg until that flag is up.
--		 *
--		 * We need to do this, because static_keys will span multiple
--		 * sites, but we can't control their order. If we mark a socket
--		 * as accounted, but the accounting functions are not patched in
--		 * yet, we'll lose accounting.
--		 *
--		 * We never race with the readers in mem_cgroup_sk_alloc(),
--		 * because when this value change, the code to process it is not
--		 * patched in yet.
--		 */
--		static_branch_inc(&memcg_sockets_enabled_key);
--		memcg->tcpmem_active = true;
--	}
--out:
--	mutex_unlock(&memcg_max_mutex);
--	return ret;
--}
--
--/*
-- * The user of this function is...
-- * RES_LIMIT.
-- */
--static ssize_t mem_cgroup_write(struct kernfs_open_file *of,
--				char *buf, size_t nbytes, loff_t off)
--{
--	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
--	unsigned long nr_pages;
--	int ret;
--
--	buf = strstrip(buf);
--	ret = page_counter_memparse(buf, "-1", &nr_pages);
--	if (ret)
--		return ret;
--
--	switch (MEMFILE_ATTR(of_cft(of)->private)) {
--	case RES_LIMIT:
--		if (mem_cgroup_is_root(memcg)) { /* Can't set limit on root */
--			ret = -EINVAL;
--			break;
--		}
--		switch (MEMFILE_TYPE(of_cft(of)->private)) {
--		case _MEM:
--			ret = mem_cgroup_resize_max(memcg, nr_pages, false);
--			break;
--		case _MEMSWAP:
--			ret = mem_cgroup_resize_max(memcg, nr_pages, true);
--			break;
--		case _KMEM:
--			pr_warn_once("kmem.limit_in_bytes is deprecated and will be removed. "
--				     "Writing any value to this file has no effect. "
--				     "Please report your usecase to linux-mm@kvack.org if you "
--				     "depend on this functionality.\n");
--			ret = 0;
--			break;
--		case _TCP:
--			ret = memcg_update_tcp_max(memcg, nr_pages);
--			break;
--		}
--		break;
--	case RES_SOFT_LIMIT:
--		if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
--			ret = -EOPNOTSUPP;
--		} else {
--			WRITE_ONCE(memcg->soft_limit, nr_pages);
--			ret = 0;
--		}
--		break;
--	}
--	return ret ?: nbytes;
--}
--
--static ssize_t mem_cgroup_reset(struct kernfs_open_file *of, char *buf,
--				size_t nbytes, loff_t off)
--{
--	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
--	struct page_counter *counter;
--
--	switch (MEMFILE_TYPE(of_cft(of)->private)) {
--	case _MEM:
--		counter = &memcg->memory;
--		break;
--	case _MEMSWAP:
--		counter = &memcg->memsw;
--		break;
--	case _KMEM:
--		counter = &memcg->kmem;
--		break;
--	case _TCP:
--		counter = &memcg->tcpmem;
--		break;
--	default:
--		BUG();
--	}
--
--	switch (MEMFILE_ATTR(of_cft(of)->private)) {
--	case RES_MAX_USAGE:
--		page_counter_reset_watermark(counter);
--		break;
--	case RES_FAILCNT:
--		counter->failcnt = 0;
--		break;
--	default:
--		BUG();
--	}
--
--	return nbytes;
--}
--
--#ifdef CONFIG_NUMA
--
--#define LRU_ALL_FILE (BIT(LRU_INACTIVE_FILE) | BIT(LRU_ACTIVE_FILE))
--#define LRU_ALL_ANON (BIT(LRU_INACTIVE_ANON) | BIT(LRU_ACTIVE_ANON))
--#define LRU_ALL	     ((1 << NR_LRU_LISTS) - 1)
--
--static unsigned long mem_cgroup_node_nr_lru_pages(struct mem_cgroup *memcg,
--				int nid, unsigned int lru_mask, bool tree)
-+unsigned long mem_cgroup_node_nr_lru_pages(struct mem_cgroup *memcg,
-+					   int nid, unsigned int lru_mask,
-+					   bool tree)
- {
- 	struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid));
- 	unsigned long nr = 0;
-@@ -3526,9 +3213,8 @@ static unsigned long mem_cgroup_node_nr_lru_pages(struct mem_cgroup *memcg,
- 	return nr;
- }
- 
--static unsigned long mem_cgroup_nr_lru_pages(struct mem_cgroup *memcg,
--					     unsigned int lru_mask,
--					     bool tree)
-+unsigned long mem_cgroup_nr_lru_pages(struct mem_cgroup *memcg,
-+				      unsigned int lru_mask, bool tree)
- {
- 	unsigned long nr = 0;
- 	enum lru_list lru;
-@@ -3544,221 +3230,6 @@ static unsigned long mem_cgroup_nr_lru_pages(struct mem_cgroup *memcg,
- 	return nr;
- }
- 
--static int memcg_numa_stat_show(struct seq_file *m, void *v)
--{
--	struct numa_stat {
--		const char *name;
--		unsigned int lru_mask;
--	};
--
--	static const struct numa_stat stats[] = {
--		{ "total", LRU_ALL },
--		{ "file", LRU_ALL_FILE },
--		{ "anon", LRU_ALL_ANON },
--		{ "unevictable", BIT(LRU_UNEVICTABLE) },
--	};
--	const struct numa_stat *stat;
--	int nid;
--	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
--
--	mem_cgroup_flush_stats(memcg);
--
--	for (stat = stats; stat < stats + ARRAY_SIZE(stats); stat++) {
--		seq_printf(m, "%s=%lu", stat->name,
--			   mem_cgroup_nr_lru_pages(memcg, stat->lru_mask,
--						   false));
--		for_each_node_state(nid, N_MEMORY)
--			seq_printf(m, " N%d=%lu", nid,
--				   mem_cgroup_node_nr_lru_pages(memcg, nid,
--							stat->lru_mask, false));
--		seq_putc(m, '\n');
--	}
--
--	for (stat = stats; stat < stats + ARRAY_SIZE(stats); stat++) {
--
--		seq_printf(m, "hierarchical_%s=%lu", stat->name,
--			   mem_cgroup_nr_lru_pages(memcg, stat->lru_mask,
--						   true));
--		for_each_node_state(nid, N_MEMORY)
--			seq_printf(m, " N%d=%lu", nid,
--				   mem_cgroup_node_nr_lru_pages(memcg, nid,
--							stat->lru_mask, true));
--		seq_putc(m, '\n');
--	}
--
--	return 0;
--}
--#endif /* CONFIG_NUMA */
--
--static const unsigned int memcg1_stats[] = {
--	NR_FILE_PAGES,
--	NR_ANON_MAPPED,
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	NR_ANON_THPS,
--#endif
--	NR_SHMEM,
--	NR_FILE_MAPPED,
--	NR_FILE_DIRTY,
--	NR_WRITEBACK,
--	WORKINGSET_REFAULT_ANON,
--	WORKINGSET_REFAULT_FILE,
--#ifdef CONFIG_SWAP
--	MEMCG_SWAP,
--	NR_SWAPCACHE,
--#endif
--};
--
--static const char *const memcg1_stat_names[] = {
--	"cache",
--	"rss",
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	"rss_huge",
--#endif
--	"shmem",
--	"mapped_file",
--	"dirty",
--	"writeback",
--	"workingset_refault_anon",
--	"workingset_refault_file",
--#ifdef CONFIG_SWAP
--	"swap",
--	"swapcached",
--#endif
--};
--
--/* Universal VM events cgroup1 shows, original sort order */
--static const unsigned int memcg1_events[] = {
--	PGPGIN,
--	PGPGOUT,
--	PGFAULT,
--	PGMAJFAULT,
--};
--
--static void memcg1_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
--{
--	unsigned long memory, memsw;
--	struct mem_cgroup *mi;
--	unsigned int i;
--
--	BUILD_BUG_ON(ARRAY_SIZE(memcg1_stat_names) != ARRAY_SIZE(memcg1_stats));
--
--	mem_cgroup_flush_stats(memcg);
--
--	for (i = 0; i < ARRAY_SIZE(memcg1_stats); i++) {
--		unsigned long nr;
--
--		nr = memcg_page_state_local_output(memcg, memcg1_stats[i]);
--		seq_buf_printf(s, "%s %lu\n", memcg1_stat_names[i], nr);
--	}
--
--	for (i = 0; i < ARRAY_SIZE(memcg1_events); i++)
--		seq_buf_printf(s, "%s %lu\n", vm_event_name(memcg1_events[i]),
--			       memcg_events_local(memcg, memcg1_events[i]));
--
--	for (i = 0; i < NR_LRU_LISTS; i++)
--		seq_buf_printf(s, "%s %lu\n", lru_list_name(i),
--			       memcg_page_state_local(memcg, NR_LRU_BASE + i) *
--			       PAGE_SIZE);
--
--	/* Hierarchical information */
--	memory = memsw = PAGE_COUNTER_MAX;
--	for (mi = memcg; mi; mi = parent_mem_cgroup(mi)) {
--		memory = min(memory, READ_ONCE(mi->memory.max));
--		memsw = min(memsw, READ_ONCE(mi->memsw.max));
--	}
--	seq_buf_printf(s, "hierarchical_memory_limit %llu\n",
--		       (u64)memory * PAGE_SIZE);
--	seq_buf_printf(s, "hierarchical_memsw_limit %llu\n",
--		       (u64)memsw * PAGE_SIZE);
--
--	for (i = 0; i < ARRAY_SIZE(memcg1_stats); i++) {
--		unsigned long nr;
--
--		nr = memcg_page_state_output(memcg, memcg1_stats[i]);
--		seq_buf_printf(s, "total_%s %llu\n", memcg1_stat_names[i],
--			       (u64)nr);
--	}
--
--	for (i = 0; i < ARRAY_SIZE(memcg1_events); i++)
--		seq_buf_printf(s, "total_%s %llu\n",
--			       vm_event_name(memcg1_events[i]),
--			       (u64)memcg_events(memcg, memcg1_events[i]));
--
--	for (i = 0; i < NR_LRU_LISTS; i++)
--		seq_buf_printf(s, "total_%s %llu\n", lru_list_name(i),
--			       (u64)memcg_page_state(memcg, NR_LRU_BASE + i) *
--			       PAGE_SIZE);
--
--#ifdef CONFIG_DEBUG_VM
--	{
--		pg_data_t *pgdat;
--		struct mem_cgroup_per_node *mz;
--		unsigned long anon_cost = 0;
--		unsigned long file_cost = 0;
--
--		for_each_online_pgdat(pgdat) {
--			mz = memcg->nodeinfo[pgdat->node_id];
--
--			anon_cost += mz->lruvec.anon_cost;
--			file_cost += mz->lruvec.file_cost;
--		}
--		seq_buf_printf(s, "anon_cost %lu\n", anon_cost);
--		seq_buf_printf(s, "file_cost %lu\n", file_cost);
--	}
--#endif
--}
--
--static u64 mem_cgroup_swappiness_read(struct cgroup_subsys_state *css,
--				      struct cftype *cft)
--{
--	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
--
--	return mem_cgroup_swappiness(memcg);
--}
--
--static int mem_cgroup_swappiness_write(struct cgroup_subsys_state *css,
--				       struct cftype *cft, u64 val)
--{
--	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
--
--	if (val > MAX_SWAPPINESS)
--		return -EINVAL;
--
--	if (!mem_cgroup_is_root(memcg))
--		WRITE_ONCE(memcg->swappiness, val);
--	else
--		WRITE_ONCE(vm_swappiness, val);
--
--	return 0;
--}
--
--static int mem_cgroup_oom_control_read(struct seq_file *sf, void *v)
--{
--	struct mem_cgroup *memcg = mem_cgroup_from_seq(sf);
--
--	seq_printf(sf, "oom_kill_disable %d\n", READ_ONCE(memcg->oom_kill_disable));
--	seq_printf(sf, "under_oom %d\n", (bool)memcg->under_oom);
--	seq_printf(sf, "oom_kill %lu\n",
--		   atomic_long_read(&memcg->memory_events[MEMCG_OOM_KILL]));
--	return 0;
--}
--
--static int mem_cgroup_oom_control_write(struct cgroup_subsys_state *css,
--	struct cftype *cft, u64 val)
--{
--	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
--
--	/* cannot set to root cgroup and only 0 and 1 are allowed */
--	if (mem_cgroup_is_root(memcg) || !((val == 0) || (val == 1)))
--		return -EINVAL;
--
--	WRITE_ONCE(memcg->oom_kill_disable, val);
--	if (!val)
--		memcg1_oom_recover(memcg);
--
--	return 0;
--}
--
- #ifdef CONFIG_CGROUP_WRITEBACK
- 
- #include <trace/events/writeback.h>
-@@ -3972,147 +3443,6 @@ static void memcg_wb_domain_size_changed(struct mem_cgroup *memcg)
- 
- #endif	/* CONFIG_CGROUP_WRITEBACK */
- 
--#if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_SLUB_DEBUG)
--static int mem_cgroup_slab_show(struct seq_file *m, void *p)
--{
--	/*
--	 * Deprecated.
--	 * Please, take a look at tools/cgroup/memcg_slabinfo.py .
--	 */
--	return 0;
--}
--#endif
--
--static int memory_stat_show(struct seq_file *m, void *v);
--
--static struct cftype mem_cgroup_legacy_files[] = {
--	{
--		.name = "usage_in_bytes",
--		.private = MEMFILE_PRIVATE(_MEM, RES_USAGE),
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "max_usage_in_bytes",
--		.private = MEMFILE_PRIVATE(_MEM, RES_MAX_USAGE),
--		.write = mem_cgroup_reset,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "limit_in_bytes",
--		.private = MEMFILE_PRIVATE(_MEM, RES_LIMIT),
--		.write = mem_cgroup_write,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "soft_limit_in_bytes",
--		.private = MEMFILE_PRIVATE(_MEM, RES_SOFT_LIMIT),
--		.write = mem_cgroup_write,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "failcnt",
--		.private = MEMFILE_PRIVATE(_MEM, RES_FAILCNT),
--		.write = mem_cgroup_reset,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "stat",
--		.seq_show = memory_stat_show,
--	},
--	{
--		.name = "force_empty",
--		.write = mem_cgroup_force_empty_write,
--	},
--	{
--		.name = "use_hierarchy",
--		.write_u64 = mem_cgroup_hierarchy_write,
--		.read_u64 = mem_cgroup_hierarchy_read,
--	},
--	{
--		.name = "cgroup.event_control",		/* XXX: for compat */
--		.write = memcg_write_event_control,
--		.flags = CFTYPE_NO_PREFIX | CFTYPE_WORLD_WRITABLE,
--	},
--	{
--		.name = "swappiness",
--		.read_u64 = mem_cgroup_swappiness_read,
--		.write_u64 = mem_cgroup_swappiness_write,
--	},
--	{
--		.name = "move_charge_at_immigrate",
--		.read_u64 = mem_cgroup_move_charge_read,
--		.write_u64 = mem_cgroup_move_charge_write,
--	},
--	{
--		.name = "oom_control",
--		.seq_show = mem_cgroup_oom_control_read,
--		.write_u64 = mem_cgroup_oom_control_write,
--	},
--	{
--		.name = "pressure_level",
--		.seq_show = mem_cgroup_dummy_seq_show,
--	},
--#ifdef CONFIG_NUMA
--	{
--		.name = "numa_stat",
--		.seq_show = memcg_numa_stat_show,
--	},
--#endif
--	{
--		.name = "kmem.limit_in_bytes",
--		.private = MEMFILE_PRIVATE(_KMEM, RES_LIMIT),
--		.write = mem_cgroup_write,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "kmem.usage_in_bytes",
--		.private = MEMFILE_PRIVATE(_KMEM, RES_USAGE),
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "kmem.failcnt",
--		.private = MEMFILE_PRIVATE(_KMEM, RES_FAILCNT),
--		.write = mem_cgroup_reset,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "kmem.max_usage_in_bytes",
--		.private = MEMFILE_PRIVATE(_KMEM, RES_MAX_USAGE),
--		.write = mem_cgroup_reset,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--#if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_SLUB_DEBUG)
--	{
--		.name = "kmem.slabinfo",
--		.seq_show = mem_cgroup_slab_show,
--	},
--#endif
--	{
--		.name = "kmem.tcp.limit_in_bytes",
--		.private = MEMFILE_PRIVATE(_TCP, RES_LIMIT),
--		.write = mem_cgroup_write,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "kmem.tcp.usage_in_bytes",
--		.private = MEMFILE_PRIVATE(_TCP, RES_USAGE),
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "kmem.tcp.failcnt",
--		.private = MEMFILE_PRIVATE(_TCP, RES_FAILCNT),
--		.write = mem_cgroup_reset,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "kmem.tcp.max_usage_in_bytes",
--		.private = MEMFILE_PRIVATE(_TCP, RES_MAX_USAGE),
--		.write = mem_cgroup_reset,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{ },	/* terminate */
--};
--
- /*
-  * Private memory cgroup IDR
-  *
-@@ -4904,7 +4234,7 @@ static int memory_events_local_show(struct seq_file *m, void *v)
- 	return 0;
- }
- 
--static int memory_stat_show(struct seq_file *m, void *v)
-+int memory_stat_show(struct seq_file *m, void *v)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
- 	char *buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-@@ -6135,33 +5465,6 @@ static struct cftype swap_files[] = {
- 	{ }	/* terminate */
- };
- 
--static struct cftype memsw_files[] = {
--	{
--		.name = "memsw.usage_in_bytes",
--		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_USAGE),
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "memsw.max_usage_in_bytes",
--		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_MAX_USAGE),
--		.write = mem_cgroup_reset,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "memsw.limit_in_bytes",
--		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_LIMIT),
--		.write = mem_cgroup_write,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{
--		.name = "memsw.failcnt",
--		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_FAILCNT),
--		.write = mem_cgroup_reset,
--		.read_u64 = mem_cgroup_read_u64,
--	},
--	{ },	/* terminate */
--};
--
- #if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_ZSWAP)
- /**
-  * obj_cgroup_may_zswap - check if this cgroup can zswap
--- 
-2.45.1
-
+T24gRnJpLCAyMDI0LTA1LTI0IGF0IDAxOjIwIC0wNzAwLCBJc2FrdSBZYW1haGF0YSB3cm90ZToN
+Cj4gPiANCj4gPiBJIGRvbid0IHNlZSB3aHkgdGhlc2UgKHphcF9wcml2YXRlX3NwdGUgYW5kIHJl
+bW92ZV9wcml2YXRlX3NwdGUpIGNhbid0IGJlIGENCj4gPiBzaW5nbGUgb3AuIFdhcyBpdCB0byBw
+cmVwYXJlIGZvciBodWdlIHBhZ2VzIHN1cHBvcnQgb3Igc29tZXRoaW5nPyBJbiB0aGUNCj4gPiBi
+YXNlDQo+ID4gc2VyaWVzIHRoZXkgYXJlIGJvdGggb25seSBjYWxsZWQgb25jZS4NCj4gDQo+IFRo
+YXQgaXMgZm9yIGxhcmdlIHBhZ2Ugc3VwcG9ydC4gVGhlIHN0ZXAgdG8gbWVyZ2Ugb3Igc3BsaXQg
+bGFyZ2UgcGFnZSBpcw0KPiAxLiB6YXBfcHJpdmF0ZV9zcHRlKCkNCj4gMi4gdGxiIHNob290IGRv
+d24NCj4gMy4gbWVyZ2Uvc3BsaXRfcHJpdmF0ZV9zcHRlKCkNCg0KSSB0aGluayB3ZSBjYW4gc2lt
+cGxpZnkgaXQgZm9yIG5vdy4gT3RoZXJ3aXNlIHdlIGNhbid0IGp1c3RpZnkgaXQgd2l0aG91dA0K
+Z2V0dGluZyBpbnRvIHRoZSBodWdlIHBhZ2Ugc3VwcG9ydC4NCg0KTG9va2luZyBhdCBob3cgdG8g
+Y3JlYXRlIHNvbWUgbW9yZSBleHBsYWluYWJsZSBjb2RlIGhlcmUsIEknbSBhbHNvIHdvbmRlcmlu
+Zw0KYWJvdXQgdGhlIHRkeF90cmFjaygpIGNhbGwgaW4gdGR4X3NlcHRfcmVtb3ZlX3ByaXZhdGVf
+c3B0ZSgpLiBJIGRpZG4ndCByZWFsaXplDQppdCB3aWxsIHNlbmQgSVBJcyB0byBlYWNoIHZjcHUg
+Zm9yICplYWNoKiBwYWdlIGdldHRpbmcgemFwcGVkLiBBbm90aGVyIG9uZSBpbg0KdGhlICJ0byBv
+cHRpbWl6ZSBsYXRlciIgYnVja2V0IEkgZ3Vlc3MuIEFuZCBJIGd1ZXNzIGl0IHdvbid0IGhhcHBl
+biB2ZXJ5IG9mdGVuLg0K
