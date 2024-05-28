@@ -1,150 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5E316F283;
-	Tue, 28 May 2024 13:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42AF16F0EE
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 13:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716903143; cv=none; b=ZOgs7yQCMf0IUsq188NXEI4X7UZaVSJOtpi0XeKnI2jESJQ1FB2ob5LgM2pdVmAlvBx2uVRwegTH9mDU+6zzFkV0apBJSidJ5dh82j02zC4T31nVkLcxFqnctRPJs+RKxwtA4FwZSTFLQOrrly6foH+CN2ohL3kww4GvJPouUEU=
+	t=1716903151; cv=none; b=CQWOD65ztWZiXvF602iRKBx8s8+Vr90/My5nfPSUnZpxsQZ7u6ZC+1VMpykXejV796SheGto1tRDp4xmtJU0N0MfIQFKZ2np6lAmDn2xH2IL/HLkDKMziGw2oZoXrG9JHpFkQnLbjZnQtpysNAAoi/fPpTC8+ik2SPoMrwuOVp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716903143; c=relaxed/simple;
-	bh=ct9g6aL365D3+hInh1Gk/WqHw7JZf/efL1FKIUE7YWs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VEM3m78WGws2DXrddYhjSmSOElQ9T5QK9lwl2i1X5BXv01pXeiYq9iLXQnW+kx9s9WADjcPB81ou4r6+3Lc3oXpW8utdfQMc++FochTyhSMIlBmQarqw//FH3ec4zDI9paQnFXB0C60YotQOFvYhPVEsYPI2UtTm3NgYwLPN9Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJcfJq+T; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJcfJq+T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BC05C32782;
-	Tue, 28 May 2024 13:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716903143;
-	bh=ct9g6aL365D3+hInh1Gk/WqHw7JZf/efL1FKIUE7YWs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XJcfJq+T4o5G6EHYfseBLctsXxdk7SSpPxJtfFNMYmPfcbJeYkP5elcEBSsm82qMl
-	 ujzsjfAMuoxivWv5xW+wy/rKlKtDGY4EL3B8inoBnbcqtbZjH+zBik4toSlSglIQxL
-	 kwJqHgWm4H1TLBq7VlSkxfo3gI4JlDt3HBhb5rKucBt2TYrXBP8s2pYq6FJP6AoMZJ
-	 ZDNxoAkzNIwMWy9zkeRlDIC5rU3XL4EDQLWx18HwBUhrSU89DxOS5MMOwt+qc64jUs
-	 JN5vI56LPQKK8P/AuHPgdOwyE+xM780R53jOVJBC6/BcdJTed5ARFcOjZoCxulu1xk
-	 r+j603nExc4qw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Dmitry Rokosov <ddrokosov@salutedevices.com>,
-	Igor Prusov <ivprusov@salutedevices.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: amlogic: ad402: move thermal-zones to top node
-Date: Tue, 28 May 2024 15:31:59 +0200
-Message-Id: <20240528133215.2266419-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1716903151; c=relaxed/simple;
+	bh=Hcf6/+K0cr2AEWIBn+Ow6WDFFhALJcCW+K/xMomulBg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=nYzNJ718XVeIQvVkc3Qd1x+7jTxtjtLVhIfFC1XlaXqIb6C96iNTPUiXR/YoJLx7TKRdgIl2SHkhz23CZyI9CBjACXmouJEVkGbDc8re0VZ3l4C+xZe2RkKFrqUTIOBMWJTOqHM2WR0UojVHpvkT71UHXH0uAanPkm8EikrDHCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7ea87fb4fdfso83959039f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:32:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716903149; x=1717507949;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E9WW/RlwC054vVaIwA33rGavwmt7/1xkbxwnwhy0KHg=;
+        b=eqe8Qu79Br2uPhLyVc4ShN2Lk1cDzd/xL/8cmOCBfiCDJRWikzxfol7VYHlF0KcjSL
+         HQuTchU8Fkrtp8wUrunwXsv3vOlS8OJadL7ft59V4KJx1QCuDfolxev55VmPexuNavzx
+         R3jIBSf96d1ejHerDWJkwMa+tfAsU1OCRQlhJDH3iT8fZX7WyAaivE6BUxYdO5tJsDuM
+         2v6IncQFYKVldl8OHd+6FvhXJUp1CFeSBxHxCFbkAV3NvJxQ7qte9X8qoKGq6eVLR9XA
+         ISLzVKqh3zgzRvym83ka2S7P8A0xW+kyqbXFiQveWKLRvj1CDmnhSK/9FdQqnpCcQQ4o
+         sG3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWkPjLyzi+UQuPl2aFem5BrBlkK9n6ebNPzOXymQpDC4SqwFxgLwellgT2e4wW1qc0SkC5WYuHYcv0ZiVS6mFoicpGuyhjgz/l+Xydb
+X-Gm-Message-State: AOJu0Yzk8+IhpDg6psna0QdQEfPJYSC1S1SH/KFtH5gyYk/uKTt4Oody
+	BpqfOKsvbsgjJzSxRjdMfoCqd/tdOZuZwb3dLvpW/+rclQkNs/TYlGy5dMVh8gh37BNv3XllIPM
+	LQ9vk9v19ls5Iz0/DTbJm//dhvqP/ugK/OwW5ZAq2irmWYPyZmdhsJXg=
+X-Google-Smtp-Source: AGHT+IH061RFAZP5YJwlyjhet5L6Lhz0vPfet8cSLde+5yUFzBiat/Nf9XpP1xQqQsbpV3KVzb5TybgLokh3j5tvvV8FjtjlUTsk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:3f94:b0:7cc:cc9:4332 with SMTP id
+ ca18e2360f4ac-7e8c75d37d9mr46784539f.4.1716903149092; Tue, 28 May 2024
+ 06:32:29 -0700 (PDT)
+Date: Tue, 28 May 2024 06:32:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000050d101061983aa9c@google.com>
+Subject: [syzbot] [bpf?] [net?] INFO: rcu detected stall in sys_bpf (9)
+From: syzbot <syzbot+4fe86fa6110c580ea1f5@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
+	sdf@google.com, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hello,
 
-It appears that this accidentally got added into the spi node, causing
-a warning.
+syzbot found the following issue on:
 
-arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts:119.16-161.4: Warning (spi_bus_reg): /soc/spi@fd000400/thermal-zones: missing or empty reg property
+HEAD commit:    124cfbcd6d18 Add linux-next specific files for 20240521
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=15c02784980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2c3a67a38201bdf7
+dashboard link: https://syzkaller.appspot.com/bug?extid=4fe86fa6110c580ea1f5
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a8297c980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10b60342980000
 
-Fixes: 593ab951232b ("arm64: dts: amlogic: ad402: setup thermal-zones")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ff8e45d8b821/disk-124cfbcd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6aeeec759cde/vmlinux-124cfbcd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9e7d931d0a4b/bzImage-124cfbcd.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4fe86fa6110c580ea1f5@syzkaller.appspotmail.com
+
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1): P5156
+rcu: 	(detected by 0, t=10503 jiffies, g=9261, q=651 ncpus=2)
+task:syz-executor302 state:R  running task     stack:23696 pid:5156  tgid:5156  ppid:5104   flags:0x00004002
+Call Trace:
+ <IRQ>
+ sched_show_task+0x50c/0x6d0 kernel/sched/core.c:9191
+ rcu_print_detail_task_stall_rnp kernel/rcu/tree_stall.h:262 [inline]
+ print_other_cpu_stall+0x122d/0x15e0 kernel/rcu/tree_stall.h:639
+ check_cpu_stall kernel/rcu/tree_stall.h:799 [inline]
+ rcu_pending kernel/rcu/tree.c:4309 [inline]
+ rcu_sched_clock_irq+0x9f4/0x10a0 kernel/rcu/tree.c:2636
+ update_process_times+0x1ce/0x230 kernel/time/timer.c:2485
+ tick_sched_handle kernel/time/tick-sched.c:276 [inline]
+ tick_nohz_handler+0x37c/0x500 kernel/time/tick-sched.c:297
+ __run_hrtimer kernel/time/hrtimer.c:1687 [inline]
+ __hrtimer_run_queues+0x55b/0xd50 kernel/time/hrtimer.c:1751
+ hrtimer_interrupt+0x396/0x990 kernel/time/hrtimer.c:1813
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1032 [inline]
+ __sysvec_apic_timer_interrupt+0x110/0x3f0 arch/x86/kernel/apic/apic.c:1049
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+ sysvec_apic_timer_interrupt+0xa1/0xc0 arch/x86/kernel/apic/apic.c:1043
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
+RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
+RIP: 0010:rcu_dynticks_curr_cpu_in_eqs include/linux/context_tracking.h:122 [inline]
+RIP: 0010:rcu_is_watching+0x5e/0xb0 kernel/rcu/tree.c:724
+Code: 03 42 80 3c 38 00 74 08 4c 89 f7 e8 bc bb 7f 00 48 c7 c3 08 7d 03 00 49 03 1e 48 89 d8 48 c1 e8 03 42 0f b6 04 38 84 c0 75 22 <8b> 03 65 ff 0d 91 46 87 7e 74 10 83 e0 04 c1 e8 02 5b 41 5e 41 5f
+RSP: 0018:ffffc900044070e8 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: ffff8880b9437d08 RCX: dffffc0000000000
+RDX: ffff8880223cbc00 RSI: ffffffff8c1fe2e0 RDI: ffffffff8c1fe2a0
+RBP: 0000000000000001 R08: ffffffff8100b50d R09: ffffffff814128cf
+R10: 0000000000000003 R11: ffff8880223cbc00 R12: ffff8880223cbc00
+R13: ffffffff81821c30 R14: ffffffff8ddbb9e0 R15: dffffc0000000000
+ kernel_text_address+0x82/0xe0 kernel/extable.c:113
+ __kernel_text_address+0xd/0x40 kernel/extable.c:79
+ unwind_get_return_address+0x5d/0xc0 arch/x86/kernel/unwind_orc.c:369
+ arch_stack_walk+0x125/0x1b0 arch/x86/kernel/stacktrace.c:26
+ stack_trace_save+0x118/0x1d0 kernel/stacktrace.c:122
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:312 [inline]
+ __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:338
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3940 [inline]
+ slab_alloc_node mm/slub.c:4000 [inline]
+ kmem_cache_alloc_node_noprof+0x16b/0x320 mm/slub.c:4043
+ kmalloc_reserve+0xa8/0x2a0 net/core/skbuff.c:575
+ pskb_expand_head+0x202/0x1390 net/core/skbuff.c:2240
+ __bpf_try_make_writable net/core/filter.c:1668 [inline]
+ bpf_try_make_writable net/core/filter.c:1674 [inline]
+ bpf_try_make_head_writable net/core/filter.c:1682 [inline]
+ ____bpf_clone_redirect net/core/filter.c:2456 [inline]
+ bpf_clone_redirect+0x119/0x370 net/core/filter.c:2434
+ bpf_prog_de5959beb1c8948f+0x5a/0x5f
+ bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
+ __bpf_prog_run include/linux/filter.h:691 [inline]
+ bpf_prog_run include/linux/filter.h:698 [inline]
+ bpf_test_run+0x409/0x910 net/bpf/test_run.c:425
+ bpf_prog_test_run_skb+0xafa/0x13a0 net/bpf/test_run.c:1066
+ bpf_prog_test_run+0x33a/0x3b0 kernel/bpf/syscall.c:4291
+ __sys_bpf+0x48d/0x810 kernel/bpf/syscall.c:5705
+ __do_sys_bpf kernel/bpf/syscall.c:5794 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5792 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5792
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ffa8dbee859
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 d1 19 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe8675d058 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007ffa8dbee859
+RDX: 0000000000000050 RSI: 0000000020000080 RDI: 000000000000000a
+RBP: 0000000000000000 R08: 0000000100000000 R09: 0000000100000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+rcu: rcu_preempt kthread starved for 10553 jiffies! g9261 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
+rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+rcu: RCU grace-period kthread stack dump:
+task:rcu_preempt     state:R  running task     stack:26512 pid:17    tgid:17    ppid:2      flags:0x00004000
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a50 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_timeout+0x1be/0x310 kernel/time/timer.c:2581
+ rcu_gp_fqs_loop+0x2df/0x1370 kernel/rcu/tree.c:2000
+ rcu_gp_kthread+0xa7/0x3b0 kernel/rcu/tree.c:2202
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+rcu: Stack dump where RCU GP kthread last ran:
+CPU: 0 PID: 5156 Comm: syz-executor302 Not tainted 6.9.0-next-20240521-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
+RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
+RIP: 0010:rcu_dynticks_curr_cpu_in_eqs include/linux/context_tracking.h:122 [inline]
+RIP: 0010:rcu_is_watching+0x5e/0xb0 kernel/rcu/tree.c:724
+Code: 03 42 80 3c 38 00 74 08 4c 89 f7 e8 bc bb 7f 00 48 c7 c3 08 7d 03 00 49 03 1e 48 89 d8 48 c1 e8 03 42 0f b6 04 38 84 c0 75 22 <8b> 03 65 ff 0d 91 46 87 7e 74 10 83 e0 04 c1 e8 02 5b 41 5e 41 5f
+RSP: 0018:ffffc900044070e8 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: ffff8880b9437d08 RCX: dffffc0000000000
+RDX: ffff8880223cbc00 RSI: ffffffff8c1fe2e0 RDI: ffffffff8c1fe2a0
+RBP: 0000000000000001 R08: ffffffff8100b50d R09: ffffffff814128cf
+R10: 0000000000000003 R11: ffff8880223cbc00 R12: ffff8880223cbc00
+R13: ffffffff81821c30 R14: ffffffff8ddbb9e0 R15: dffffc0000000000
+FS:  000055557e93c380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffa8dc6b0f0 CR3: 000000007b0de000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ </IRQ>
+ <TASK>
+ kernel_text_address+0x82/0xe0 kernel/extable.c:113
+ __kernel_text_address+0xd/0x40 kernel/extable.c:79
+ unwind_get_return_address+0x5d/0xc0 arch/x86/kernel/unwind_orc.c:369
+ arch_stack_walk+0x125/0x1b0 arch/x86/kernel/stacktrace.c:26
+ stack_trace_save+0x118/0x1d0 kernel/stacktrace.c:122
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:312 [inline]
+ __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:338
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3940 [inline]
+ slab_alloc_node mm/slub.c:4000 [inline]
+ kmem_cache_alloc_node_noprof+0x16b/0x320 mm/slub.c:4043
+ kmalloc_reserve+0xa8/0x2a0 net/core/skbuff.c:575
+ pskb_expand_head+0x202/0x1390 net/core/skbuff.c:2240
+ __bpf_try_make_writable net/core/filter.c:1668 [inline]
+ bpf_try_make_writable net/core/filter.c:1674 [inline]
+ bpf_try_make_head_writable net/core/filter.c:1682 [inline]
+ ____bpf_clone_redirect net/core/filter.c:2456 [inline]
+ bpf_clone_redirect+0x119/0x370 net/core/filter.c:2434
+ bpf_prog_de5959beb1c8948f+0x5a/0x5f
+ bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
+ __bpf_prog_run include/linux/filter.h:691 [inline]
+ bpf_prog_run include/linux/filter.h:698 [inline]
+ bpf_test_run+0x409/0x910 net/bpf/test_run.c:425
+ bpf_prog_test_run_skb+0xafa/0x13a0 net/bpf/test_run.c:1066
+ bpf_prog_test_run+0x33a/0x3b0 kernel/bpf/syscall.c:4291
+ __sys_bpf+0x48d/0x810 kernel/bpf/syscall.c:5705
+ __do_sys_bpf kernel/bpf/syscall.c:5794 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5792 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5792
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ffa8dbee859
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 d1 19 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe8675d058 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007ffa8dbee859
+RDX: 0000000000000050 RSI: 0000000020000080 RDI: 000000000000000a
+RBP: 0000000000000000 R08: 0000000100000000 R09: 0000000100000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+sched: RT throttling activated
+
+
 ---
- .../arm64/boot/dts/amlogic/meson-a1-ad402.dts | 62 +++++++++----------
- 1 file changed, 31 insertions(+), 31 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-index c8579b6e67cf..6883471a93b4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-@@ -84,37 +84,6 @@ vddio_1v8: regulator-vddio-1v8 {
- 		vin-supply = <&vddao_3v3>;
- 		regulator-always-on;
- 	};
--};
--
--/* Bluetooth HCI H4 */
--&uart_AO {
--	status = "okay";
--	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
--	pinctrl-names = "default";
--};
--
--&uart_AO_B {
--	status = "okay";
--};
--
--&saradc {
--	status = "okay";
--	vref-supply = <&vddio_1v8>;
--};
--
--&spifc {
--	status = "okay";
--	pinctrl-0 = <&spifc_pins>;
--	pinctrl-names = "default";
--
--	flash@0 {
--		compatible = "spi-nand";
--		status = "okay";
--		reg = <0>;
--		spi-max-frequency = <96000000>;
--		spi-tx-bus-width = <4>;
--		spi-rx-bus-width = <4>;
--	};
- 
- 	thermal-zones {
- 		soc_thermal: soc_thermal {
-@@ -161,6 +130,37 @@ map1 {
- 	};
- };
- 
-+/* Bluetooth HCI H4 */
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&uart_AO_B {
-+	status = "okay";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_1v8>;
-+};
-+
-+&spifc {
-+	status = "okay";
-+	pinctrl-0 = <&spifc_pins>;
-+	pinctrl-names = "default";
-+
-+	flash@0 {
-+		compatible = "spi-nand";
-+		status = "okay";
-+		reg = <0>;
-+		spi-max-frequency = <96000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+	};
-+};
-+
- &usb2_phy1 {
- 	phy-supply = <&vcc_3v3>;
- };
--- 
-2.39.2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
