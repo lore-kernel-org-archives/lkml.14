@@ -1,40 +1,35 @@
-Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341817E912
-	for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 23:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6109A954;
+	Tue, 28 May 2024 00:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716854261; cv=none; b=L0J04w5DXepgBfXtDTMIRoh4aYh6Dzexf8n3KAOeHSvLcInjvDzlnIgFUSX4DMvtSgSmew8wyhcTqXAncdr8RorfKLeQApfDkFCJDDDqAVtfJF2Jmo2GNvGzjhT/UHmQ7OaR7Rx8dMHnNZRBXfO5gZf1DHf1EydDdF2OYYx0inE=
+	t=1716854430; cv=none; b=qUU5j6oH+qcyuxNwr9K5M109Zv0TlDR8UVT4dEugUBXR4IDOXylf9BVdN/TJLgtwe2lNH5OtSZezH1h+h3cSDJK6TxTVvZsoLgRuoiwldRoUIddfEV+ipm+ofp7slLkJOsU6F9U+iY2aD4s4q/2DvmGKLuBW8La0jlFSj8TlrAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716854261; c=relaxed/simple;
-	bh=eBy7/C2nvx6ptlpgjMKipDZUULm3tHFWinQpj/iOXzs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mFJCx/pic6rOhCrDNvoQwEpvEuKFRaEFa53uB7/f6esunqhWDFTfqf09VXQ0rJy1IvTwNdXFTlqI1luM5H+EBHUo53Ng5nPMsVa2U+qcBVHsGDFjYXPomeFm04fj6u4G0/zeGvfeCQBmrRQGT7i6zytC8T0B2O/MlztgurNxah4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.66.255])
-	by sina.com (172.16.235.24) with ESMTP
-	id 66551DEA000074B0; Mon, 28 May 2024 07:57:33 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 12261845089259
-X-SMAIL-UIID: 3EDD15FBE5E74D039590144CA24D506A-20240528-075733-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+5d34cc6474499a5ff516@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] KASAN: slab-use-after-free Read in chrdev_open
-Date: Tue, 28 May 2024 07:57:21 +0800
-Message-Id: <20240527235721.2643-1-hdanton@sina.com>
-In-Reply-To: <000000000000f386f90616fea5ef@google.com>
-References: 
+	s=arc-20240116; t=1716854430; c=relaxed/simple;
+	bh=TkeI3JIJvfkemQRWIxPmdnV4KioeLN3NQXGMEsBVYeQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=t+X90RK2Ix2+iZ4Ngt6MIgQ9SrD5GfapY+0jEjMVJwgtJu+aaioveQxBorrAXmopsySgENUT1RYEyJAoSalHn9wgAlkn45LqaKCS6JUN2YkDijkqsllCB69YU7gNCqOdR6GWoy3KHdmozWn0/+aT4JbxwrDpLbQPNP/KuMeAHpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpSdIvO5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpSdIvO5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B2E6C32781;
+	Tue, 28 May 2024 00:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716854430;
+	bh=TkeI3JIJvfkemQRWIxPmdnV4KioeLN3NQXGMEsBVYeQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=QpSdIvO5hMryeB7v7ObpsjZfQwaaq7OESGD38UMfYq7UFf/CjqnUCXqLOAcAecDqL
+	 4+ZBWyrKE0lMWzDAH9XH21kCUUa/bxJWXJtMDjCG5DM80sVJDRgNduo/yTkiOMPPkX
+	 j8Khtsi053UmhU0pzg7/2GAlSrI6LpUJMYzKHSRAzSx4moCroQA9XEnen85XEPrOWx
+	 ZRbTXXR9KdZZaNKXtCezHZz5i08vLspKSAhzcUOQJbFJOt1+OkaXJ4Lz9rArwYJcAA
+	 wvvW4RenAzqHhPXkCE7IhUSnj7X0ZrL6NnE/V5P/Nkj7LJ+ysk4N5aeI+lafQUhFu2
+	 XMI+BN86AU9dg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2A16DD40192;
+	Tue, 28 May 2024 00:00:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,33 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [net v3 PATCH] net:fec: Add fec_enet_deinit()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171685443016.27081.2425155450906733033.git-patchwork-notify@kernel.org>
+Date: Tue, 28 May 2024 00:00:30 +0000
+References: <20240524050528.4115581-1-xiaolei.wang@windriver.com>
+In-Reply-To: <20240524050528.4115581-1-xiaolei.wang@windriver.com>
+To: Xiaolei Wang <xiaolei.wang@windriver.com>
+Cc: wei.fang@nxp.com, andrew@lunn.ch, shenwei.wang@nxp.com,
+ xiaoning.wang@nxp.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, imx@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
+Hello:
 
---- x/fs/open.c
-+++ y/fs/open.c
-@@ -907,6 +907,7 @@ static int do_dentry_open(struct file *f
- 	static const struct file_operations empty_fops = {};
- 	struct inode *inode = f->f_path.dentry->d_inode;
- 	int error;
-+	struct super_block *sb = inode->i_sb;
- 
- 	path_get(&f->f_path);
- 	f->f_inode = inode;
-@@ -929,6 +930,7 @@ static int do_dentry_open(struct file *f
- 		f->f_mode |= FMODE_WRITER;
- 	}
- 
-+	down_read(&sb->s_umount);
- 	/* POSIX.1-2008/SUSv4 Section XSI 2.9.7 */
- 	if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode))
- 		f->f_mode |= FMODE_ATOMIC_POS;
-@@ -956,6 +958,7 @@ static int do_dentry_open(struct file *f
- 		if (error)
- 			goto cleanup_all;
- 	}
-+	up_read(&sb->s_umount);
- 	f->f_mode |= FMODE_OPENED;
- 	if ((f->f_mode & FMODE_READ) &&
- 	     likely(f->f_op->read || f->f_op->read_iter))
---
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri, 24 May 2024 13:05:28 +0800 you wrote:
+> When fec_probe() fails or fec_drv_remove() needs to release the
+> fec queue and remove a NAPI context, therefore add a function
+> corresponding to fec_enet_init() and call fec_enet_deinit() which
+> does the opposite to release memory and remove a NAPI context.
+> 
+> Fixes: 59d0f7465644 ("net: fec: init multi queue date structure")
+> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+> Reviewed-by: Wei Fang <wei.fang@nxp.com>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v3] net:fec: Add fec_enet_deinit()
+    https://git.kernel.org/netdev/net/c/bf0497f53c85
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
