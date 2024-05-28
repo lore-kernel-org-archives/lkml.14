@@ -1,247 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49E3F9D6;
-	Tue, 28 May 2024 16:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CF416F27C;
+	Tue, 28 May 2024 16:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716914177; cv=none; b=llyLSHZF3zG/lcmEOgrbf6HywGnJGrlCPyHS5+gOUdvA7t3HTsFcgxY79WEH4I9JXN60Uwn1MPQ7K768bDPp/883GUYA8kUknlLAFJUz4pSezdvHGV6LwWzqRSOprm6EA+7UbpgWsqIksXav8kgMDQ7+yFaF38EIU4rIsgORd7s=
+	t=1716914213; cv=none; b=MvFROseAHrEl6GEU+Qc/6WbPvmVXDJt3bGiHq3YqkwU9CmMtGs+fDTorVRrkFsA7AlorNgIlGfpQ9LmjV4LILobqCh2kXzuoR1qLulE/wxABo2ka0twB+61kDfJtofPZWsGK4tPRHP29pP0qKi9Hj8sUQJR97pAMhp4OAP3TJaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716914177; c=relaxed/simple;
-	bh=NuefzrUj9FO/t6wc3pR2TCeJn0nDqx9DSuM502grMnQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rRAudfS+efjJ9IkVpT9/10vZneEXEFTgC5Jdjzxw45kf7VeOM4WNZDCkmAQ/m5dj9o/qDejxw6VVkYWF2/hyJUWAoU5lEkIkPoLjB1mFvsreFMYdRfM93N4ZDF5J+SGhHviof7hNLKS4yeKCN26rCaSGHaBa/+a2ZLR3yQtat6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=to9eUQna; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="to9eUQna"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BBF4C3277B;
-	Tue, 28 May 2024 16:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716914177;
-	bh=NuefzrUj9FO/t6wc3pR2TCeJn0nDqx9DSuM502grMnQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=to9eUQnaJbyB7NCzJ2G4rbqeNYs95A7m70tx9yOFS+k39aec+WOxXgptyeEFQ9uIV
-	 PBt5BTLemlb5fAei1Sh+nhoO4t2l4X/AZnerO88r0qBjBI68FlKOWAoInpfg1nBivx
-	 dGKkV2d+D4Dwf+exD/Wn3qPLgzxjnLLZlFu3en8GHPagFjuW2tFsL+7u2GiA/3D/ZL
-	 FnXeRLtkz4FVYOH0kLVoOKKZuPkN2ZxX2bvLk87+LryQQxoiNuO9qc2ja4uRPYL2k7
-	 F/KsXvNzc4kX+h4zWwx4yx9ZN2zU6e9wH/nMACyNnKlWxWfhZS/lyk1aQF2olZQ983
-	 s3xGwztL+4Rrw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sBzo6-00GNJS-Sr;
-	Tue, 28 May 2024 17:36:15 +0100
-Date: Tue, 28 May 2024 17:36:14 +0100
-Message-ID: <86ed9lnbb5.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v4] of: property: Add fw_devlink support for interrupt-map property
-In-Reply-To: <20240509120820.1430587-1-apatel@ventanamicro.com>
-References: <20240509120820.1430587-1-apatel@ventanamicro.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1716914213; c=relaxed/simple;
+	bh=CgRqHPr7XcQJWMZvGLmyA/6G5iR05+i//IJnCIrWbJ0=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uIt1uzoaggaX5/sUucxrCkqZd/uMYNxb3HGSd3nbS6cCppq+pD1o4dfv3A23jdaz54/BairhRteEN2/xApWjluJamv+WHafGSRpVSNXhHy+fwkAFWg3Hch9TfLQbfBSLLyH+b3ZbDJ+auUkQyV9M5Y/J1WNB/VwuJNzdW/CmtsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.78.2) by msexch01.omp.ru (10.188.4.12)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 28 May
+ 2024 19:21:22 +0300
+Subject: Re: [net-next PATCH v4 1/7] net: ravb: Simplify poll & receive
+ functions
+To: Paul Barker <paul.barker.ct@bp.renesas.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	=?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+CC: Biju Das <biju.das.jz@bp.renesas.com>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>, Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>, <netdev@vger.kernel.org>,
+	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240528150339.6791-1-paul.barker.ct@bp.renesas.com>
+ <20240528150339.6791-2-paul.barker.ct@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <271dcdf4-a6f9-3fab-5009-89766082e348@omp.ru>
+Date: Tue, 28 May 2024 19:21:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: apatel@ventanamicro.com, robh@kernel.org, saravanak@google.com, palmer@dabbelt.com, paul.walmsley@sifive.com, atishp@atishpatra.org, ajones@ventanamicro.com, sunilvl@ventanamicro.com, anup@brainfault.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+In-Reply-To: <20240528150339.6791-2-paul.barker.ct@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 05/28/2024 16:07:02
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 185549 [May 28 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 20 0.3.20
+ 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.78.2 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.78.2 in (user) dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.78.2
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 05/28/2024 16:11:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 5/28/2024 12:09:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Thu, 09 May 2024 13:08:20 +0100,
-Anup Patel <apatel@ventanamicro.com> wrote:
+On 5/28/24 6:03 PM, Paul Barker wrote:
+
+> We don't need to pass the work budget to ravb_rx() by reference, it's
+> cleaner to pass this by value and return the amount of work done. This
+> allows us to simplify the ravb_poll() function and use the common
+> `work_done` variable name seen in other network drivers for consistency
+> and ease of understanding.
 > 
-> Some of the PCI host controllers (such as generic PCI host controller)
-> use "interrupt-map" DT property to describe the mapping between PCI
-> endpoints and PCI interrupt pins. This is the only case where the
-> interrupts are not described in DT.
+> This is a pure refactor and should not affect behaviour.
 > 
-> Currently, there is no fw_devlink created based on "interrupt-map"
-> DT property so interrupt controller is not guaranteed to be probed
-> before the PCI host controller. This affects every platform where
-> both PCI host controller and interrupt controllers are probed as
-> regular platform devices.
-> 
-> This creates fw_devlink between consumers (PCI host controller) and
-> supplier (interrupt controller) based on "interrupt-map" DT property.
-> 
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> Reviewed-by: Saravana Kannan <saravanak@google.com>
-> ---
-> Changes since v3:
-> - Added a comment about of_irq_parse_raw()
-> - Removed redundant NULL assignments to sup_args.np
-> Changes since v2:
-> - No need for a loop to find #interrupt-cells property value
-> - Fix node de-reference leak when index is greater than number
->   of entries in interrupt-map property
-> Changes since v1:
-> - Updated commit description based on Rob's suggestion
-> - Use of_irq_parse_raw() for parsing interrupt-map DT property
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 
-This patch breaks badly on my M1 Mini, with a continuous stream of
-boot time warnings lasting about 100 seconds:
+[...]
 
-[   97.832335] ------------[ cut here ]------------
-[   97.836955] /soc/pcie@690000000/pci@2,0 interrupt-map failed, using interrupt-controller
-[   97.845072] WARNING: CPU: 0 PID: 1 at drivers/of/irq.c:277 of_irq_parse_raw+0x620/0x730
-[   97.853087] Modules linked in:
-[   97.856139] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.10.0-rc1 #2915
-[   97.864163] Hardware name: Apple Mac mini (M1, 2020) (DT)
-[   97.869570] pstate: 61400009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[   97.876546] pc : of_irq_parse_raw+0x620/0x730
-[   97.880907] lr : of_irq_parse_raw+0x620/0x730
-[   97.885267] sp : ffffc000800538a0
-[   97.888581] x29: ffffc000800538a0 x28: 0000000000000000 x27: ffffffffff5ffc68
-[   97.895732] x26: ffffc000800539a4 x25: ffffffffff5ffbbc x24: ffffc00080053a48
-[   97.902883] x23: ffffe3ff73284e68 x22: ffffb7889aede6d0 x21: ffffe3ff735f9320
-[   97.910034] x20: ffffc00080053964 x19: ffffb7889aede6d0 x18: ffffffffffffffff
-[   97.917185] x17: 7075727265746e69 x16: 20676e697375202c x15: 64656c6961662070
-[   97.924336] x14: 616d2d7470757272 x13: 72656c6c6f72746e x12: 6f632d7470757272
-[   97.931487] x11: 65746e6920676e69 x10: ffffe3ff740bcb68 x9 : ffffe3ff72335b38
-[   97.938639] x8 : 00000001000028a4 x7 : ffffe3ff740afc08 x6 : 00000000000038a4
-[   97.945789] x5 : 00000000000067b0 x4 : c0000001000028a4 x3 : 0000000000000000
-[   97.952940] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffffb784c16ade00
-[   97.960092] Call trace:
-[   97.962534]  of_irq_parse_raw+0x620/0x730
-[   97.966545]  parse_interrupt_map+0xfc/0x188
-[   97.970731]  of_fwnode_add_links+0x170/0x1e0
-[   97.975004]  fw_devlink_parse_fwtree+0x44/0x98
-[   97.979452]  fw_devlink_parse_fwtree+0x6c/0x98
-[   97.983899]  fw_devlink_parse_fwtree+0x6c/0x98
-[   97.988347]  device_add+0x610/0x6a8
-[   97.991836]  of_device_add+0x4c/0x70
-[   97.995411]  of_platform_device_create_pdata+0xa0/0x160
-[   98.000644]  of_platform_bus_create+0x184/0x370
-[   98.005178]  of_platform_populate+0x68/0x160
-[   98.009451]  of_platform_default_populate_init+0xf4/0x118
-[   98.014859]  do_one_initcall+0x4c/0x320
-[   98.018695]  do_initcalls+0xf4/0x1d8
-[   98.022271]  kernel_init_freeable+0x12c/0x280
-[   98.026632]  kernel_init+0x2c/0x1f8
-[   98.030120]  ret_from_fork+0x10/0x20
-[   98.033696] ---[ end trace 0000000000000000 ]---
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 
-which comes from 10a20b34d735f ("of/irq: Don't ignore
-interrupt-controller when interrupt-map failed").
-
-Each of the 3 PCIe ports are described as such:
-
-	port02: pci@2,0 {
-		device_type = "pci";
-		reg = <0x1000 0x0 0x0 0x0 0x0>;
-		reset-gpios = <&pinctrl_ap 33 GPIO_ACTIVE_LOW>;
-
-		#address-cells = <3>;
-		#size-cells = <2>;
-		ranges;
-
-		interrupt-controller;
-		#interrupt-cells = <1>;
-
-		interrupt-map-mask = <0 0 0 7>;
-		interrupt-map = <0 0 0 1 &port02 0 0 0 0>,
-				<0 0 0 2 &port02 0 0 0 1>,
-				<0 0 0 3 &port02 0 0 0 2>,
-				<0 0 0 4 &port02 0 0 0 3>;
-		status = "disabled";
-	};
-
-and get probed *972 times*, which seem... excessive, given that there
-are only 4 entries per port.
-
-> ---
->  drivers/of/property.c | 52 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
-> 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index a6358ee99b74..2d749a18b037 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1311,6 +1311,57 @@ static struct device_node *parse_interrupts(struct device_node *np,
->  	return of_irq_parse_one(np, index, &sup_args) ? NULL : sup_args.np;
->  }
->  
-> +static struct device_node *parse_interrupt_map(struct device_node *np,
-> +					       const char *prop_name, int index)
-> +{
-> +	const __be32 *imap, *imap_end, *addr;
-> +	struct of_phandle_args sup_args;
-> +	u32 addrcells, intcells;
-> +	int i, imaplen;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF_IRQ))
-> +		return NULL;
-> +
-> +	if (strcmp(prop_name, "interrupt-map"))
-> +		return NULL;
-> +
-> +	if (of_property_read_u32(np, "#interrupt-cells", &intcells))
-> +		return NULL;
-> +	addrcells = of_bus_n_addr_cells(np);
-> +
-> +	imap = of_get_property(np, "interrupt-map", &imaplen);
-> +	if (!imap || imaplen <= (addrcells + intcells))
-
-This is "interesting". You compare a number of *bytes* with a number
-of cells. Only off by a factor of 4...
-
-Also, you need a minimum of one extra cell to hold the phandle, and a
-yet unknown number of cells for whatever follows the phandle.
-
-> +		return NULL;
-> +	imap_end = imap + imaplen;
-
-Same problem, with pointer arithmetic this time.
-
-> +
-> +	while (imap < imap_end) {
-> +		addr = imap;
-> +		imap += addrcells;
-> +
-> +		sup_args.np = np;
-> +		sup_args.args_count = intcells;
-> +		for (i = 0; i < intcells; i++)
-> +			sup_args.args[i] = be32_to_cpu(imap[i]);
-> +		imap += intcells;
-> +
-> +		/*
-> +		 * Upon success, the function of_irq_parse_raw() returns
-> +		 * interrupt controller DT node pointer in sup_args.np.
-> +		 */
-> +		if (of_irq_parse_raw(addr, &sup_args))
-> +			return NULL;
-> +
-> +		if (!index)
-> +			return sup_args.np;
-> +
-> +		of_node_put(sup_args.np);
-> +		imap += sup_args.args_count + 1;
-
-This really doesn't map (pun intended) to the way the interrupt-map
-entries are built. You need to account for the parent address size as
-well.
-
-I'll post a patch fixing both issues.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+MBR, Sergey
