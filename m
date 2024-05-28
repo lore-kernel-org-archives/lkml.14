@@ -1,230 +1,207 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B189216F8F9;
-	Tue, 28 May 2024 14:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9213416F84F
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716906011; cv=none; b=PkUKYs6P90GliI3/A2PKCfyqdO18RG4sg3fLVYXWW3XpeGYbvCnxF1YOO6mRyO7CUc2gBqeabUlvyz5ydltK6PepC0zC43qP3JOi1+K9pEV7eeQS1+jyneXgFxkM2sNj0johqk3gFiH1109/SN6WdEZ1eB0TYFtXAVdgcbFoKoI=
+	t=1716906041; cv=none; b=LtAJkdP9JayaMPbvRQQJXFborrUKMcWDDjFXhLsj5sEEgueeaej3VNAUTzZi1xT2Krwjuzl4xWXf1i5AJSMKyqoKo5xhK0FHEjPL0GcilQdvIYyer6R1aw+lkFzWqeTsbzccrnmj6t77DAEdBpTHgPPi4/mGlNz6pAVtX8/PshU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716906011; c=relaxed/simple;
-	bh=1+rOQCPzQu4wnm8yOqRMSgFlDz1Ezy+l2FUt3lEFBhM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=JUc1DWo2ZxmT6lZczHVPulEnMkinHle1CabPZrNeQnfNxq269wpeEkaJfhWuLjMm4Bp1DDmgHLOLAJ43wGLy4E03NFJBknQg/HyOds/t218wVi6VbxY7rmSx21Ce5N5LboiPPzL2B0b+hGKGzPPvH0/Z+N+nIbRIrVuFLi+J9FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GFRrkoTJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1716906041; c=relaxed/simple;
+	bh=683ZTRUzgOFpnsYMQxwIT3dRKS4VdbeBjXmV0/zmGIw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dUK/lfNoIT1r9UBlbi1+96ZXUNo4VgMZ1YyZWrOnPDE5UoDZCs/YOVpi6byqruUz8OEQIonW0uQzcUCL8XU5FcD8K8lMoPFetHZS0SzaHzMRgp/c6KdDc/mt+tuGeXf3LX4rtm4GALYP1mO92bCYjJB5qg8rNPidMsPAGp2omQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=A/JoJJPe; arc=none smtp.client-ip=209.85.221.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GFRrkoTJ"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SABn8I004417;
-	Tue, 28 May 2024 14:20:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:date:from:in-reply-to:message-id:references:subject:to; s=
-	qcppdkim1; bh=vKGPqik3ovC6mzbEe2S8aeqPg5Uz19n7KBUYuqPmDec=; b=GF
-	RrkoTJ4bh9Rl9vlkCwPXrPyfOafogozd1rUXWVNLA3f41kVGUgtq331NlewNxHfe
-	T3y9AYL4YjIxDzMb4LY99oIWG5pVNNhMzC/uYwfQ3Hpcg5fzNHbZ6wS8zi8xRlNi
-	b8DDDs83BN8QhgVvJa8fWF/AjjW3juJhDcaStuy8igrmS7wQeSo4qKROjPdWI4UL
-	/JicOIFxzQbJF8JEigOJ+pPaHf/cTKTurG+vQM93MeAPUVqkvtNLjZBO4JloNIZc
-	6ugb1h8/FiNEh+Dy/yCscTNztOG/VW5gzOJHCxK6Gz/muKJpWJHGWsPCD7tuUJMJ
-	oHkr7FiRuhEZ7mCBXqzw==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2ppbdt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 14:20:03 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 44SEK0oj012595;
-	Tue, 28 May 2024 14:20:00 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3yb92kpxd6-1;
-	Tue, 28 May 2024 14:20:00 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44SEK0kJ012590;
-	Tue, 28 May 2024 14:20:00 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-vvalluru-hyd.qualcomm.com [10.213.106.176])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 44SEJxhd012587;
-	Tue, 28 May 2024 14:20:00 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 482827)
-	id 85FF152D383; Tue, 28 May 2024 19:49:58 +0530 (+0530)
-From: Venkata Prahlad Valluru <quic_vvalluru@quicinc.com>
-To: dmitry.baryshkov@linaro.org
-Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
-        konrad.dybcio@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_abhinavk@quicinc.com, quic_nankam@quicinc.com,
-        quic_vvalluru@quicinc.com, robh@kernel.org
-Subject: [PATCH v4] arm64: dts: qcom: qcs6490-rb3gen2: enable hdmi bridge
-Date: Tue, 28 May 2024 19:49:54 +0530
-Message-Id: <20240528141954.7567-1-quic_vvalluru@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAA8EJpo=Q4_=JU83-9ooSqiSr=xUeHh2awDhzq9q3Xd56h83zw@mail.gmail.com>
-References: <CAA8EJpo=Q4_=JU83-9ooSqiSr=xUeHh2awDhzq9q3Xd56h83zw@mail.gmail.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: y2GYyrNt7T8FJHTpc8MuI1cFFEH0RmXn
-X-Proofpoint-ORIG-GUID: y2GYyrNt7T8FJHTpc8MuI1cFFEH0RmXn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_10,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 spamscore=0 adultscore=0 clxscore=1015 bulkscore=0
- mlxscore=0 suspectscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405280108
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="A/JoJJPe"
+Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-354c5b7fafaso675410f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716906038; x=1717510838; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lJIq545QK9y8AX4JlRGPouvkbkoDYm+eR9amBtMPUNM=;
+        b=A/JoJJPejPsOxwB8IuiucbI6ezfVIjX/17Q/nvLzQWRHqxYRShm8ihE1HLxkfdzhzI
+         nbPs623yHIs92fW+pquLICyr0TyCNqnsVs4i4FYXm2LChdBSa6sDQNwx6XMCM1AgCwRB
+         Evp0MoQNd9wvJs5hhUfuRghMZnHQhfAWati1lI4w/FxbCLbqlE8Rxby8h6Krl1bgNkuM
+         bCGcc/lBDxkIyahSA0aCO1ERKcb9fwI/iK7KUVU2e2UH+RXfeyYGL1RuNpw4Kevyu+VV
+         1TDrp45/+L/cS+Hn1v/wy5jRFl72rYO0EyNiiD4UKEtCd1ADFgfRJ7Cb5D/0UUmNGIEi
+         abpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716906038; x=1717510838;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lJIq545QK9y8AX4JlRGPouvkbkoDYm+eR9amBtMPUNM=;
+        b=daCBevazADqlzd6L2bjbRhKZrog4whPhjKpWIN2U4wdgPUwgqmiZAyWKoT98MpPxm6
+         oJI5ThPPODUJk1PwHJonLtuarThGvTOat0gk4bjqS7TG65wOAFb8t1BWtDsV3IUBXAvh
+         htVpRwqYnlRyQKckNn9mndRgVjz5jYrX8y7Oy0bFbedVhXPIPT5G3vnEI81QTwKR5y8F
+         0gpyJ0oZE23bbdqcicjV3zM/ny3IqwL0jZ158srURlKW0huylqRYMmAdqgTJxhRHg5FR
+         8gCuQt8edmbtKkVHY/Od7eHKgEmz4vgX2+VGnnP8DMb442xrtB2xX9qwrwAC/aq+QlEl
+         ZEfg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7r/RHOqjiAxPu4ntVptzRnqYEFVSsqAEedqc0URukJo6Sm2IYo/Gth+sajcqDuKAMHfIsaWy2VA7rOoFTRIaZpaGXBuMsaFmvoXjz
+X-Gm-Message-State: AOJu0Yx8HVbk8Uo8HTrvPX9CGl74AT6Fa5SlIqJ+tPSqN68K/eazr6eG
+	BK0heXN7Km6BfKb9QPkdFUz6EvxLjl0ZTv3FgIzJMgKkS4l1uJJWKdnK053FgnQ=
+X-Google-Smtp-Source: AGHT+IF3FvDi4jMOALZ3OiK9MgNpFVAhQ84sNI68o78zApuPB0dqYxkHxn+M0cNd9xu6BiJS20mTsg==
+X-Received: by 2002:adf:f585:0:b0:355:361:5672 with SMTP id ffacd0b85a97d-3552fdfa501mr8561849f8f.66.1716906037880;
+        Tue, 28 May 2024 07:20:37 -0700 (PDT)
+Received: from [192.168.1.63] ([2a02:842a:d52e:6101:6fd0:6c4:5d68:f0a5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7db5esm11999275f8f.15.2024.05.28.07.20.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 07:20:37 -0700 (PDT)
+From: Julien Stephan <jstephan@baylibre.com>
+Date: Tue, 28 May 2024 16:20:28 +0200
+Subject: [PATCH v7 1/7] dt-bindings: iio: adc: Add binding for AD7380 ADCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240528-adding-new-ad738x-driver-v7-1-4cd70a4c12c8@baylibre.com>
+References: <20240528-adding-new-ad738x-driver-v7-0-4cd70a4c12c8@baylibre.com>
+In-Reply-To: <20240528-adding-new-ad738x-driver-v7-0-4cd70a4c12c8@baylibre.com>
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ David Lechner <dlechner@baylibre.com>, Jonathan Cameron <jic23@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Julien Stephan <jstephan@baylibre.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.13.0
 
-Rb3Gen2 has a lt9611uxc DSI-to-HDMI bridge on i2c0, with
-reset gpio from pm7250b gpio2 and irq gpio from tlmm gpio24.
-Bridge supplies are Vdd connected to input supply directly
-and vcc to L11c. Enable HDMI output, bridge and corresponding
-DSI output.
+From: David Lechner <dlechner@baylibre.com>
 
-Signed-off-by: Venkata Prahlad Valluru <quic_vvalluru@quicinc.com>
+This adds a binding specification for the Analog Devices Inc. AD7380
+family of ADCs.
+
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
-v4: added fixed regulator for vdd
+ .../devicetree/bindings/iio/adc/adi,ad7380.yaml    | 82 ++++++++++++++++++++++
+ MAINTAINERS                                        |  9 +++
+ 2 files changed, 91 insertions(+)
 
-v3: - Updated commit text
-    - Arranged nodes in alphabetical order
-    - Fixed signoff
-    - Fixed drive strength for lt9611_irq_pin
-    - Removed 'label' from hdmi-connector, which is optional
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7380.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7380.yaml
+new file mode 100644
+index 000000000000..5e1ee0ebe0a2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7380.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7380.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices Simultaneous Sampling Analog to Digital Converters
++
++maintainers:
++  - Michael Hennerich <Michael.Hennerich@analog.com>
++  - Nuno Sá <nuno.sa@analog.com>
++
++description: |
++  * https://www.analog.com/en/products/ad7380.html
++  * https://www.analog.com/en/products/ad7381.html
++
++$ref: /schemas/spi/spi-peripheral-props.yaml#
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7380
++      - adi,ad7381
++
++  reg:
++    maxItems: 1
++
++  spi-max-frequency:
++    maximum: 80000000
++  spi-cpol: true
++  spi-cpha: true
++
++  vcc-supply:
++    description: A 3V to 3.6V supply that powers the chip.
++
++  vlogic-supply:
++    description:
++      A 1.65V to 3.6V supply for the logic pins.
++
++  refio-supply:
++    description:
++      A 2.5V to 3.3V supply for the external reference voltage. When omitted,
++      the internal 2.5V reference is used.
++
++  interrupts:
++    description:
++      When the device is using 1-wire mode, this property is used to optionally
++      specify the ALERT interrupt.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - vcc-supply
++  - vlogic-supply
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++            compatible = "adi,ad7380";
++            reg = <0>;
++
++            spi-cpol;
++            spi-cpha;
++            spi-max-frequency = <80000000>;
++
++            interrupts = <27 IRQ_TYPE_EDGE_FALLING>;
++            interrupt-parent = <&gpio0>;
++
++            vcc-supply = <&supply_3_3V>;
++            vlogic-supply = <&supply_3_3V>;
++            refio-supply = <&supply_2_5V>;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 758c202ec712..4f162600e982 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -427,6 +427,15 @@ W:	http://wiki.analog.com/AD7142
+ W:	https://ez.analog.com/linux-software-drivers
+ F:	drivers/input/misc/ad714x.c
+ 
++AD738X ADC DRIVER (AD7380/1/2/4)
++M:	Michael Hennerich <michael.hennerich@analog.com>
++M:	Nuno Sá <nuno.sa@analog.com>
++R:	David Lechner <dlechner@baylibre.com>
++S:	Supported
++W:	https://wiki.analog.com/resources/tools-software/linux-drivers/iio-adc/ad738x
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad7380.yaml
++
+ AD7877 TOUCHSCREEN DRIVER
+ M:	Michael Hennerich <michael.hennerich@analog.com>
+ S:	Supported
 
-v2: Addressed dtschema errors
-	- Fixed lt9611-irq
-	- vdd-supply error to be ignored, as it is connected to
-	  input supply directly, on rb3gen2
----
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 94 ++++++++++++++++++++
- 1 file changed, 94 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-index a085ff5b5fb2..7f00fca131a2 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-@@ -52,6 +52,25 @@
- 		};
- 	};
- 
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&lt9611_out>;
-+			};
-+		};
-+	};
-+
-+	lt9611_1v2: lt9611-vdd12-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "LT9611_1V2";
-+
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+	};
-+
- 	reserved-memory {
- 		xbl_mem: xbl@80700000 {
- 			reg = <0x0 0x80700000 0x0 0x100000>;
-@@ -530,6 +549,46 @@
- 			   <GCC_WPSS_RSCP_CLK>;
- };
- 
-+&i2c0 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	lt9611_codec: hdmi-bridge@2b {
-+		compatible = "lontium,lt9611uxc";
-+		reg = <0x2b>;
-+
-+		interrupts-extended = <&tlmm 24 IRQ_TYPE_EDGE_FALLING>;
-+		reset-gpios = <&pm7250b_gpios 2 GPIO_ACTIVE_HIGH>;
-+
-+		vdd-supply = <&lt9611_1v2>;
-+		vcc-supply = <&vreg_l11c_2p8>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lt9611_irq_pin &lt9611_rst_pin>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lt9611_a: endpoint {
-+					remote-endpoint = <&mdss_dsi0_out>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+
-+				lt9611_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 
-@@ -587,6 +646,21 @@
- 	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
- };
- 
-+&mdss_dsi {
-+	vdda-supply = <&vreg_l6b_1p2>;
-+	status = "okay";
-+};
-+
-+&mdss_dsi0_out {
-+	remote-endpoint = <&lt9611_a>;
-+	data-lanes = <0 1 2 3>;
-+};
-+
-+&mdss_dsi_phy {
-+	vdds-supply = <&vreg_l10c_0p88>;
-+	status = "okay";
-+};
-+
- &mdss_edp {
- 	status = "okay";
- };
-@@ -711,3 +785,23 @@
- 	function = "gpio";
- 	bias-disable;
- };
-+
-+&pm7250b_gpios {
-+	lt9611_rst_pin: lt9611-rst-state {
-+		pins = "gpio2";
-+		function = "normal";
-+
-+		output-high;
-+		input-disable;
-+		power-source = <0>;
-+	};
-+};
-+
-+&tlmm {
-+	lt9611_irq_pin: lt9611-irq-state {
-+		pins = "gpio24";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
 -- 
-2.17.1
+2.44.0
 
