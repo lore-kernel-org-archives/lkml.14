@@ -1,43 +1,45 @@
 Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2DF16F85A;
-	Tue, 28 May 2024 13:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B4A16F85B;
+	Tue, 28 May 2024 13:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716904474; cv=none; b=icjzKg/82UxFgDFbXD5HgoIEkeohzkYzGy4w/g5YeqdIQ7oU4Fw+oVoLEBmnxxHsSML9j7KhbIaE3e6ztb3q+XKXw1r98B0SdB2sVkLy28lhkxraM6kq5YNonjEOCOIKOu1QwlRMQ0751SMLrB9oRcwFVmTxuHrHM/qT8TR5oNo=
+	t=1716904476; cv=none; b=nnxAI5oLg+1ZYeqUnrUtLC+nC9OzhokQauWUE5Ru0WM2yAgyeH0epd/T4L1kYZ85q+GzZ8D8WpnDwNkxCeaEr/LxvDNTQnFx1NJBuIt6qCCl8XWSy1yGhpYPO613IMUMY9+rn90dcl9d8ZOT3x8PzqFanfq4FbNek94ualwFX6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716904474; c=relaxed/simple;
-	bh=aTNitRTEq8LxWL9GsV6RBq6ctCaBr1C9Kqq0gYMZKTQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LlfQuiGBM5PW5wcBmAb5H5ELstrd/GA8usT9LBtbA0E0TnQqiBcp3SbuGw7QWvuMSPyXNRWptZ8UtCto5+j+hRmi/ctrXx3t4qhXni3XbkpSS9BGKv1sFsIlRhgTG5Du2EhEe48mFpUsGyWkKR2wTvm1W2Bb4srb9P4EejD1nY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=P3WICmjA; arc=none smtp.client-ip=67.231.148.174
+	s=arc-20240116; t=1716904476; c=relaxed/simple;
+	bh=ZEjE5gSDkEnEEHSk+YaLYsjF06BS6AizX0EEg8MHbos=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jg7ZawPBxliOtGP/G0rZCcmLlAEIZPu2Uyig5e2SkNuDS8UGr7j5vbXPCwUkmVpOtM3iMFk6JG+MHNsib6V4+9OvfxZBNfvOtYZljJ8QG6K7HvKJUxI0ULLPDKaJURy+i7/pcbMpQPxA3pRwvHBEz2fXRMoLsVlyv5Mujj18688=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=ANG9LWO3; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="P3WICmjA"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ANG9LWO3"
 Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SCK9iG002508;
-	Tue, 28 May 2024 06:54:03 -0700
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SCK9gB002481;
+	Tue, 28 May 2024 06:54:10 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=lLzcGd0RY77b7ZieeDHsKT4
-	tefb5KeLJao+qGnQBkxg=; b=P3WICmjAeLIeQrmUEhaM4HvpfKkaD7DLX2lO0Kb
-	jomT4mTX1aZ9Wux0A8WY5GyQsUXmIOqho6ZW0xWPYfN8niVZrbvfL/+6fzki1Cvl
-	EF6XfdZPi7V3JrNzKeG0zZMVGSG8tQ2utXpJtub3TuV0hMJ38ujRtZMcJGsKi9Qb
-	dbW4kfY0oiD2WAtyHdxJ897QUtdEhS2vVbWxi9nrtlsPQqT5IZ9/e/x3RV57SPv3
-	nGmZKowC2leZG7R+DTVgwgACquvZ99XlnhnsC880tMZdh/taST6Oru8kCOfMRgwp
-	8zLoRX/ZCuo1XFf+A8yRwCujsMonTH8CqYCgQ1VHKx+f9ZQ==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=n
+	3ThqkvFOjh8sW3y6L5JjcHLygVz7+TBKbfwXf77C6w=; b=ANG9LWO3k9EQ0K8qL
+	Zj1BJNOTYcxb0OBdXYbNnq+9E/Y3O2otN85eDewO9Li2YnVtlD5jnum8xkEDTqp5
+	gSTQH0fNIRYw0Tr9gl1tx0gLVUjPJ/iJJ2a1/Q7sEuMQenSdO1iDIH3hrEhCOZT4
+	ncSiU75DXiIrx3sQIwo8ibCC4hlkfa49WCir3s1KxUm3m/L7z9DtK7AOUQbvrYMy
+	2+8e825hNoSBAoBdxc5TrjR0VBScOt8svTu+DlQVSm/Np3guCcOHu+CDLMdE7UYz
+	ujt4ovaKFV1frcxJ4+zrxKW8o87bNavjZVgoLcoGY/3sgPB07o/eYmjFDdL/2AzX
+	Pn7xA==
 Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yddn58pda-1
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yddn58pe8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 06:54:01 -0700 (PDT)
+	Tue, 28 May 2024 06:54:09 -0700 (PDT)
 Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
  DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 28 May 2024 06:53:57 -0700
+ 15.2.1544.4; Tue, 28 May 2024 06:54:08 -0700
 Received: from bharat-OptiPlex-3070.marvell.com (10.69.176.80) by
  DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server id
- 15.2.1544.4 via Frontend Transport; Tue, 28 May 2024 06:53:52 -0700
+ 15.2.1544.4 via Frontend Transport; Tue, 28 May 2024 06:54:03 -0700
 From: Bharat Bhushan <bbhushan2@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <sgoutham@marvell.com>, <gakula@marvell.com>, <sbhatta@marvell.com>,
@@ -45,10 +47,12 @@ To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <kuba@kernel.org>, <pabeni@redhat.com>, <jerinj@marvell.com>,
         <lcherian@marvell.com>, <richardcochran@gmail.com>
 CC: <bbhushan2@marvell.com>
-Subject: [net-next,v3 0/8] cn10k-ipsec: Add outbound inline ipsec support
-Date: Tue, 28 May 2024 19:23:41 +0530
-Message-ID: <20240528135349.932669-1-bbhushan2@marvell.com>
+Subject: [net-next,v3 2/8] octeontx2-pf: Move skb fragment map/unmap to common code
+Date: Tue, 28 May 2024 19:23:43 +0530
+Message-ID: <20240528135349.932669-3-bbhushan2@marvell.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240528135349.932669-1-bbhushan2@marvell.com>
+References: <20240528135349.932669-1-bbhushan2@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,64 +61,117 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: 7azj7_d5ZmQZFnhDAFhtOxc4eZnjIotb
-X-Proofpoint-ORIG-GUID: 7azj7_d5ZmQZFnhDAFhtOxc4eZnjIotb
+X-Proofpoint-GUID: NfQ7LO6vBRRHwXo79l2dU2CPsriIfjv5
+X-Proofpoint-ORIG-GUID: NfQ7LO6vBRRHwXo79l2dU2CPsriIfjv5
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
  definitions=2024-05-28_09,2024-05-28_01,2024-05-17_01
 
-This patch series adds outbound inline ipsec support on Marvell
-cn10k series of platform. One crypto hardware logical function
-(cpt-lf) per netdev is required for inline ipsec outbound
-functionality. Software prepare and submit crypto hardware
-(CPT) instruction for outbound inline ipsec crypto mode offload.
-The CPT instruction have details for encryption and authentication
-Crypto hardware encrypt, authenticate and provide the ESP packet
-to network hardware logic to transmit ipsec packet.
-  
-First patch makes dma memory writable for in-place encryption,
-Second patch moves code to common file, Third patch disable
-backpressure on crypto (CPT) and network (NIX) hardware.
-Patch four onwards enables inline outbound ipsec.  
+Move skb fragment map/unmap function to common file
+so as to re-use same for inline ipsec transmit
 
-v2->v3:
- - Fix smatch and sparse erros (Comment from Simon Horman)
- - Fix build error with W=1 (Comment from Simon Horman)
-   https://patchwork.kernel.org/project/netdevbpf/patch/20240513105446.297451-6-bbhushan2@marvell.com/
- - Some other minor cleanup as per comment
-   https://www.spinics.net/lists/netdev/msg997197.html   
+Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
+---
+ .../marvell/octeontx2/nic/otx2_common.c       | 32 +++++++++++++++++++
+ .../marvell/octeontx2/nic/otx2_common.h       |  3 ++
+ .../marvell/octeontx2/nic/otx2_txrx.c         | 32 -------------------
+ 3 files changed, 35 insertions(+), 32 deletions(-)
 
-v1->v2:
- - Fix compilation error to build driver a module 
- - Use dma_wmb() instead of architecture specific barrier
- - Fix couple of other compilation warnings    
-
-Bharat Bhushan (8):
-  octeontx2-pf: map skb data as device writeable
-  octeontx2-pf: Move skb fragment map/unmap to common code
-  octeontx2-af: Disable backpressure between CPT and NIX
-  cn10k-ipsec: Initialize crypto hardware for outb inline ipsec
-  cn10k-ipsec: Add SA add/delete support for outb inline ipsec
-  cn10k-ipsec: Process inline ipsec transmit offload
-  cn10k-ipsec: Allow inline ipsec offload for skb with SA
-  cn10k-ipsec: Enable outbound inline ipsec offload
-
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |    4 +
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   |   68 +-
- .../ethernet/marvell/octeontx2/nic/Makefile   |    1 +
- .../marvell/octeontx2/nic/cn10k_ipsec.c       | 1084 +++++++++++++++++
- .../marvell/octeontx2/nic/cn10k_ipsec.h       |  258 ++++
- .../marvell/octeontx2/nic/otx2_common.c       |   99 +-
- .../marvell/octeontx2/nic/otx2_common.h       |   25 +
- .../marvell/octeontx2/nic/otx2_dcbnl.c        |    3 +
- .../ethernet/marvell/octeontx2/nic/otx2_pf.c  |   19 +-
- .../marvell/octeontx2/nic/otx2_txrx.c         |   65 +-
- .../marvell/octeontx2/nic/otx2_txrx.h         |    3 +
- .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |   10 +-
- 12 files changed, 1585 insertions(+), 54 deletions(-)
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.h
-
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+index a85ac039d779..7ec99c8d610c 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+@@ -1911,3 +1911,35 @@ EXPORT_SYMBOL(otx2_mbox_up_handler_ ## _fn_name);
+ MBOX_UP_CGX_MESSAGES
+ MBOX_UP_MCS_MESSAGES
+ #undef M
++
++dma_addr_t otx2_dma_map_skb_frag(struct otx2_nic *pfvf,
++				 struct sk_buff *skb, int seg, int *len)
++{
++	const skb_frag_t *frag;
++	struct page *page;
++	int offset;
++
++	/* First segment is always skb->data */
++	if (!seg) {
++		page = virt_to_page(skb->data);
++		offset = offset_in_page(skb->data);
++		*len = skb_headlen(skb);
++	} else {
++		frag = &skb_shinfo(skb)->frags[seg - 1];
++		page = skb_frag_page(frag);
++		offset = skb_frag_off(frag);
++		*len = skb_frag_size(frag);
++	}
++	return otx2_dma_map_page(pfvf, page, offset, *len, DMA_BIDIRECTIONAL);
++}
++
++void otx2_dma_unmap_skb_frags(struct otx2_nic *pfvf, struct sg_list *sg)
++{
++	int seg;
++
++	for (seg = 0; seg < sg->num_segs; seg++) {
++		otx2_dma_unmap_page(pfvf, sg->dma_addr[seg],
++				    sg->size[seg], DMA_BIDIRECTIONAL);
++	}
++	sg->num_segs = 0;
++}
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+index 24fbbef265a6..99b480e21e1c 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+@@ -1128,4 +1128,7 @@ u16 otx2_select_queue(struct net_device *netdev, struct sk_buff *skb,
+ int otx2_get_txq_by_classid(struct otx2_nic *pfvf, u16 classid);
+ void otx2_qos_config_txschq(struct otx2_nic *pfvf);
+ void otx2_clean_qos_queues(struct otx2_nic *pfvf);
++dma_addr_t otx2_dma_map_skb_frag(struct otx2_nic *pfvf,
++				 struct sk_buff *skb, int seg, int *len);
++void otx2_dma_unmap_skb_frags(struct otx2_nic *pfvf, struct sg_list *sg);
+ #endif /* OTX2_COMMON_H */
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+index 847052b57d9b..f368eac28fdd 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+@@ -80,38 +80,6 @@ static unsigned int frag_num(unsigned int i)
+ #endif
+ }
+ 
+-static dma_addr_t otx2_dma_map_skb_frag(struct otx2_nic *pfvf,
+-					struct sk_buff *skb, int seg, int *len)
+-{
+-	const skb_frag_t *frag;
+-	struct page *page;
+-	int offset;
+-
+-	/* First segment is always skb->data */
+-	if (!seg) {
+-		page = virt_to_page(skb->data);
+-		offset = offset_in_page(skb->data);
+-		*len = skb_headlen(skb);
+-	} else {
+-		frag = &skb_shinfo(skb)->frags[seg - 1];
+-		page = skb_frag_page(frag);
+-		offset = skb_frag_off(frag);
+-		*len = skb_frag_size(frag);
+-	}
+-	return otx2_dma_map_page(pfvf, page, offset, *len, DMA_BIDIRECTIONAL);
+-}
+-
+-static void otx2_dma_unmap_skb_frags(struct otx2_nic *pfvf, struct sg_list *sg)
+-{
+-	int seg;
+-
+-	for (seg = 0; seg < sg->num_segs; seg++) {
+-		otx2_dma_unmap_page(pfvf, sg->dma_addr[seg],
+-				    sg->size[seg], DMA_BIDIRECTIONAL);
+-	}
+-	sg->num_segs = 0;
+-}
+-
+ static void otx2_xdp_snd_pkt_handler(struct otx2_nic *pfvf,
+ 				     struct otx2_snd_queue *sq,
+ 				 struct nix_cqe_tx_s *cqe)
 -- 
 2.34.1
 
