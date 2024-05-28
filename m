@@ -1,51 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D6D13D8A2;
-	Tue, 28 May 2024 22:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B626B13E028;
+	Tue, 28 May 2024 22:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716935805; cv=none; b=ayshP10C34f85CiP7YXPsnF04ThhhFYVXrQmnZaVeSE6v3Tt+n0Yq2nWBmUMaaYQHwZ/0A6NUVMayQwy96ZSs6xJy1KdT5Hv311Elb3w2OygZ/jik3xnttNDvHtTrpxGGB6SMls6mNgvSMeIz4g4VtTszcmkBq5Y+Z+EJY2+tbs=
+	t=1716935844; cv=none; b=rp0TOrHzx0KlvHbo2nOct2rukoY72Y7sb5gsPlRKyXpGonXzFyQIJ2mU58kWIwjhKhlGYEQSKuakd6hs0yxrKoDQrZ76QoZuWWlbdH50U2Uc+wsLmYZaabNTvtwf+m0LlyYVkqoo6qTxb+FyCoGFHwe+9QPbMScCJG02HeUGLqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716935805; c=relaxed/simple;
-	bh=3gdE/E0U3clBk6Jp0GUhaEaCZOEY/6pMB88YdJtj9tQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GBVbwsTS3Rrvp0f+NfVqVlG/KdRfvEHXjaxhXl9v/7VU8vbfy8SPUcJZiRCi6emccQFCLIIQ9S6ToE1KeDWvKEFLIvFHh6sLXRHL7btidrQDXOvsazSfxMyEpFN/sMKC3FtkMQ8WqHf6vw2vgI/DV3gOMQYFmDoHEVY3dSS+m3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYNQRc2m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716935844; c=relaxed/simple;
+	bh=f/wMmYi6UZRy8QxejzPHagMItqPx2bLrAyn1NdDAVOA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sY/DBeZK7DmIWJjCeYeT1/+cLq0L12Xq5zNOjGTpnDyVquMhdTXiZeWLssqjbNbcaDYmSh8ODJGeHrk1isi7ocLVZnxyIE0oqo15+89t8hm7riHinfFT16y/JEPghVJpsTq2mcY9Ms+yqbj36hd8e0WJYChL395ZLhyZRoPuRgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WXl+ZJYg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYNQRc2m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 577C2C32781;
-	Tue, 28 May 2024 22:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716935804;
-	bh=3gdE/E0U3clBk6Jp0GUhaEaCZOEY/6pMB88YdJtj9tQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oYNQRc2mUDbMRiEVX/3WzyEHrXI/IslbIEWbB1RRoCBpSx2gdnPi/VJat0le/vVuN
-	 Aa/KVAEEIvsO8rkdgTRNP96XxAzv5QmYgWLTtnwDnDtn8fm5HbRPA76sWmgYHKBE3q
-	 41Er7hgclneNsdv2BrRQTR8u1r7fYd+/jgCQ5pr9MN08TWkqXH0wFTamKprTq3bsDp
-	 m3sdgY1vq+BwflauNKmazylhx+Pvi96jimE3Zs9Yx9KzPpBCYokXfRex/XMhgzN1+b
-	 EJfZrjJWBjGRB5roZJbM920KTBkD9etHotvcLeZPhT42vSVT8ffyjSYIz7cML7BhCz
-	 mPn+WyFF6sBZg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	bpf@vger.kernel.org,
-	Aleksei Shchekotikhin <alekseis@google.com>,
-	Nilay Vaish <nilayvaish@google.com>
-Subject: [PATCH] bpf: Allocate bpf_event_entry with node info
-Date: Tue, 28 May 2024 15:36:43 -0700
-Message-ID: <20240528223643.1166776-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WXl+ZJYg"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SK210b023160;
+	Tue, 28 May 2024 22:37:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TYrVUge4E6wCMx/VszD8q2aUwvXf9s6S+k2yI28riOs=; b=WXl+ZJYgDwQTysNH
+	+9rQc0HsxPPP64UOSj8cXWCj3GEccCCJbWezT1TeLw/y5vVs6nLJsKHBXzLjzDsY
+	Ka8kwneJp9Wuvnf5Ztz6oS+sIamniGIOfiqpkbyW7M1RbymCKrBML+cSGPQ1Ca7R
+	XVY4HjGGRoPh2xcv13RezdN35zmZb752M/YsX9mmDptc1l5HC0FGVcNNG62wrPhb
+	95L0Zj3Nc67agfEer7wESlBGpQN9q8vRckIGVpKZu3ZlOQUKrL6MlNzZoyIRllXa
+	eTF7AKYJqmM0kF4g/ebSrrnhBckrRuk61q8nWD66qxpiGsgQxGfqZ03NaNieifka
+	EH4q/g==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2pqgre-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 22:37:08 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SMb7WR012676
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 22:37:07 GMT
+Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 28 May 2024 15:37:04 -0700
+From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+To: <robh@kernel.org>, <saravanak@google.com>, <hch@lst.de>,
+        <m.szyprowski@samsung.com>, <robin.murphy@arm.com>, <will@kernel.org>,
+        <catalin.marinas@arm.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux.dev>, <kernel@quicinc.com>,
+        Oreoluwa Babatunde
+	<quic_obabatun@quicinc.com>
+Subject: [PATCH v6 4/4] of: reserved_mem: Rename fdt_* functions to refelct the change from using fdt APIs
+Date: Tue, 28 May 2024 15:36:50 -0700
+Message-ID: <20240528223650.619532-5-quic_obabatun@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240528223650.619532-1-quic_obabatun@quicinc.com>
+References: <20240528223650.619532-1-quic_obabatun@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,42 +62,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: wyv7XFpnzhLojwKF4wVgPuz5z9ucbnPR
+X-Proofpoint-ORIG-GUID: wyv7XFpnzhLojwKF4wVgPuz5z9ucbnPR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_14,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 spamscore=0 adultscore=0 clxscore=1015 bulkscore=0
+ mlxscore=0 suspectscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405280167
 
-It was reported that accessing perf_event map entry caused pretty high
-LLC misses in get_map_perf_counter().  As reading perf_event is allowed
-for the local CPU only, I think we can use the target CPU of the event
-as hint for the allocation like in perf_event_alloc() so that the event
-and the entry can be in the same node at least.
+Rename the relevant reserved_mem functions to account for them no longer
+using the flattened devicetree (fdt) APIs.
 
-Reported-by: Aleksei Shchekotikhin <alekseis@google.com>
-Reported-by: Nilay Vaish <nilayvaish@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 ---
- kernel/bpf/arraymap.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/of/fdt.c             |  2 +-
+ drivers/of/of_private.h      |  2 +-
+ drivers/of/of_reserved_mem.c | 22 +++++++++++-----------
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index feabc0193852..3f7718c261d7 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -1194,10 +1194,15 @@ static struct bpf_event_entry *bpf_event_entry_gen(struct file *perf_file,
- 						   struct file *map_file)
- {
- 	struct bpf_event_entry *ee;
-+	struct perf_event *event = perf_file->private_data;
-+	int node = -1;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 527e6bc1c096..79b7348ea7a4 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1259,7 +1259,7 @@ void __init unflatten_device_tree(void)
+ 	unittest_unflatten_overlay_base();
  
--	ee = kzalloc(sizeof(*ee), GFP_KERNEL);
-+	if (event->cpu >= 0)
-+		node = cpu_to_node(cpu);
-+
-+	ee = kzalloc_node(sizeof(*ee), GFP_KERNEL, node);
- 	if (ee) {
--		ee->event = perf_file->private_data;
-+		ee->event = event;
- 		ee->perf_file = perf_file;
- 		ee->map_file = map_file;
+ 	/* initialize the reserved memory regions */
+-	fdt_init_reserved_mem();
++	of_init_reserved_mem();
+ }
+ 
+ /**
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index d889b8c17ca3..7a744336084b 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -178,7 +178,7 @@ static inline struct device_node *__of_get_dma_parent(const struct device_node *
+ #endif
+ 
+ int fdt_scan_reserved_mem(void);
+-void fdt_init_reserved_mem(void);
++void of_init_reserved_mem(void);
+ 
+ bool of_fdt_device_is_available(const void *blob, unsigned long node);
+ 
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 05283cd24c3b..e326bbef0a13 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -98,10 +98,10 @@ static void __init alloc_reserved_mem_array(void)
+ }
+ 
+ /*
+- * fdt_reserved_mem_save_node() - save fdt node for second pass initialization
++ * of_reserved_mem_save_node() - save fdt node for second pass initialization
+  */
+-static void __init fdt_reserved_mem_save_node(struct device_node *node, const char *uname,
+-					      phys_addr_t base, phys_addr_t size)
++static void __init of_reserved_mem_save_node(struct device_node *node, const char *uname,
++					     phys_addr_t base, phys_addr_t size)
+ {
+ 	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
+ 
+@@ -231,16 +231,16 @@ static int __init of_reserved_mem_check_root(struct device_node *node)
+ }
+ 
+ /**
+- * fdt_scan_reserved_mem_reg_nodes() - Store info for the "reg" defined
++ * of_scan_reserved_mem_reg_nodes() - Store info for the "reg" defined
+  * reserved memory regions.
+  *
+  * This function is used to scan through the DT and store the
+  * information for the reserved memory regions that are defined using
+  * the "reg" property. The region node number, name, base address, and
+  * size are all stored in the reserved_mem array by calling the
+- * fdt_reserved_mem_save_node() function.
++ * of_reserved_mem_save_node() function.
+  */
+-static void __init fdt_scan_reserved_mem_reg_nodes(void)
++static void __init of_scan_reserved_mem_reg_nodes(void)
+ {
+ 	struct device_node *node, *child;
+ 	phys_addr_t base, size;
+@@ -278,7 +278,7 @@ static void __init fdt_scan_reserved_mem_reg_nodes(void)
+ 		size = res.end - res.start + 1;
+ 
+ 		if (size)
+-			fdt_reserved_mem_save_node(child, uname, base, size);
++			of_reserved_mem_save_node(child, uname, base, size);
  	}
+ }
+ 
+@@ -476,7 +476,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node, const char *unam
+ 		       uname, (unsigned long)(size / SZ_1M));
+ 		return -ENOMEM;
+ 	}
+-	fdt_reserved_mem_save_node(NULL, uname, base, size);
++	of_reserved_mem_save_node(NULL, uname, base, size);
+ 	return 0;
+ }
+ 
+@@ -560,15 +560,15 @@ static void __init __rmem_check_for_overlap(void)
+ }
+ 
+ /**
+- * fdt_init_reserved_mem() - allocate and init all saved reserved memory regions
++ * of_init_reserved_mem() - allocate and init all saved reserved memory regions
+  */
+-void __init fdt_init_reserved_mem(void)
++void __init of_init_reserved_mem(void)
+ {
+ 	int i;
+ 
+ 	alloc_reserved_mem_array();
+ 
+-	fdt_scan_reserved_mem_reg_nodes();
++	of_scan_reserved_mem_reg_nodes();
+ 
+ 	/* check for overlapping reserved regions */
+ 	__rmem_check_for_overlap();
 -- 
-2.45.1.288.g0e0cd299f1-goog
+2.34.1
 
