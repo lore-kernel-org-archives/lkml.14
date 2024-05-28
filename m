@@ -1,173 +1,123 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2527416FF5E
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4923616F8E0
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716909302; cv=none; b=mpHmuxW/724QC3G/kpFkEOHW1XMVu2AHmMVmVTdJtOxm8iXbGfFNxcyC4dUbpZkwvZZMphmYKzsfeatL2k16aQgrwhGRddXL+PFEfL9Ep0Y0B3NX7c/qYcrsSHxlFgYUkxR7H+KTQEyCRqgwR78uHI0s4ShDQ396f8vpJx1K/+s=
+	t=1716909314; cv=none; b=sN0bsTE2O0fMjIFrTQwLGdNR8R8DyeGdsv5SJFl+lMgdXzlD4vb/k67N/rDGKp90M4D6imbVhEtglSFOumiJ3zmnZUgTupQMI2xbFTQ9rxKy5PqYW415OoI7aruiUFDREZWpNDZtacTVl/YYQc2rr90sZS2oFtaHvZBoyNpGoJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716909302; c=relaxed/simple;
-	bh=byVCn7vyyoWVCExOcLktbP9jgpsI9hB8fTXW6dyI5l4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qbUfbkl9n6ls4n9qUtgEx0yrDC2sI0G6uM0tfC9nCrvPe1ypSXiMDE+lGhNyJ+WQJQeuuviL3tOQRDjNlcYhRL1ti2dcJhY+aVrdjYw8/qYrnD7CHAABW9HOK2e4LUpY5v82GmatxOELDYgNDUeY6V85HbG6C4NZaXnDpgUEe3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=yntQABQd; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1716909314; c=relaxed/simple;
+	bh=tqLiPN5amlvHA7fWTBc4Bily8zs9asXJlXwi5CKHC2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nOtFNx1n3W6N47SffQZqJb9DJ7SDVDsDWHTj55+IKkgERMtgI240mLkchki8iHmaZxcCWrxyBzqZl5CDsj9czUftSFapD9Tlz6i5RSyWoDr5L41uCQtawiMqNkM50WXR/XAYb8aDUaQIbcV13r49agv8XacH7ZwtP+37K7swnKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jZ092uL/; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="yntQABQd"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e964acff1aso9771961fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:15:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZ092uL/"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-df4d9b16348so980953276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716909299; x=1717514099; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QJ9jfwQtVSCqEew5FGQUfrRX44QJ3TNBiU9EdF5jARo=;
-        b=yntQABQd2Un8Wr1ZeQtRfwEySXNs4PXXc/bgKeXzgUEt1lh/x8IbAJLtmuIRWveMrI
-         dKQkyxJ3VIo2a0vAt5uDvuhz6zyhhA2RNlNP/eW+BWUVr5rT0Ww02jxkXbdFQR+Q8yx4
-         raDEp09sVL4gbBA1DccmNWhyl7gTdZXJvbzruYtfURxWL+hMZc6CcpOf09ku3qW6Cwtu
-         aZoJ1pnA3C1kztX0H8fCuHbLIBtxvZv8Bw/w5xr378I3F4yLwuNSPJzcxSSHH5EMM2Xx
-         IZKSVfSsogKL7bB73qRmhm7xTNzRnMgfVIPLjDylZX4XTRfQ8OesccCwwMZKIXZXlWZ8
-         93sA==
+        d=linaro.org; s=google; t=1716909312; x=1717514112; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DZlgz6rpKv8RDjntoQGkTFXF4S8SzOpaXSeRL3rg2Vs=;
+        b=jZ092uL/ktNAxltzv+uss3nbb86PxxbCer1Qztc69hNlVsnvdrNkyd8VXeok1U03xS
+         ICGUEwxnVSMgzgM8pYI3bkvravmkWJNd++XhBxtLCRBsV4iW78yd/v+zDM+3PeSMlv4J
+         h9s+MO5/x2g2er9R3wY4F5OLX+xlDJCR3OegzgbYorNPuTkCDODBCC7wAQe66QZ4zLOv
+         ojQEIPzFXKdk7MVnn01EzGKAyMQq8Nk+3awa8Te63YKQMdJzLmYJQ2Gs9fQ/KM21ciyp
+         dTlDCTLsh17NzEbdhy9PWgnfAyNIMrOCtZIrM35uITDc7VRoKfRykRigVY1xVzjRlOAh
+         tE6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716909299; x=1717514099;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QJ9jfwQtVSCqEew5FGQUfrRX44QJ3TNBiU9EdF5jARo=;
-        b=bfMwXo5Qx7/ap6l586OKNp4ymY3kARobk1ifYQLy49ferfzMPlIxy7t3PyvXEJmzwP
-         DfYhFZE+oKifOhlQwsloJcQqWULbY0RAva1wTHDMWaoA/wYrwzg/VZtNzmN1kaeOxcLb
-         FrF1yJQs9gvvV8XDEvyVGugF2HJcdqMcaVN1Tg28eIjNMmIFVyLT6gPTmUOMoyss/ytj
-         aolXgt71ktMe4pVhKQcSBmBCW8ajwF7PrnBjZ50lWwZ3GF7mNErLM2HFif6FYlfTp1N9
-         LRte8izEmkpxQzDv82RWpVBBSihlbT3hWqAg3Ddi5SlZIKi82rMyWHuQ3mb90LpftdwP
-         csNg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3577zn4hT2anrOODMRnwROnvYEqY6BcFRLekK0wq68BUS92ac5naPz+wo41eoLZrSxnXDSYbH0beQ4L2S8be819N8bEHNtxs94PMf
-X-Gm-Message-State: AOJu0YzLHCChDx5zIY3YdRFzXoGL3XyqUu6eHk1ixYJ6VB34a/TiZuZK
-	OzAdJsRWWFVcqxpqD6AAea8dnmGBljw96RE/MfGEnhueZ8upKb4ibwexetMUXzs=
-X-Google-Smtp-Source: AGHT+IE9xnl9B6iLJUPGftImcREYfkzUqsxyaCtbYNOO7bdA0+3T64EEnX3IW7R8WIRTpy4sMb+IqA==
-X-Received: by 2002:a2e:a7c3:0:b0:2e9:546c:544a with SMTP id 38308e7fff4ca-2e95b28ae5emr87639391fa.34.1716909299278;
-        Tue, 28 May 2024 08:14:59 -0700 (PDT)
-Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089708f8sm143918715e9.20.2024.05.28.08.14.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 08:14:58 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH 4/7] riscv: Implement xchg8/16() using Zabha
-Date: Tue, 28 May 2024 17:10:49 +0200
-Message-Id: <20240528151052.313031-5-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240528151052.313031-1-alexghiti@rivosinc.com>
-References: <20240528151052.313031-1-alexghiti@rivosinc.com>
+        d=1e100.net; s=20230601; t=1716909312; x=1717514112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DZlgz6rpKv8RDjntoQGkTFXF4S8SzOpaXSeRL3rg2Vs=;
+        b=lx7D3CyLncGFkIqnJOwSzVe4qScs3eLfK6eO1Xf1BZ0C0r4/rzwZxfHGskQ+XBqDuG
+         qj3qlPL8EO8IM9QVTBr9M06MQ+avvV6g1cRWUAm0JhXOJUn4ebLeO4RsthbUyyWIlXAE
+         QM/URhr/nVpAb9tiwU7yMbuoYAAzpVKGXRDJrMPadah/MOpCUahF7SSe2ThobWyV4B36
+         Moww8funDy3Oc3IPiCumzjW7iBCUM+zW1N7nlSK33kynNX66ygBktk0uNVlaXNkG7gYh
+         a2C0L8Zrfau8ixJOoTzaLpTsuzOjVjU7Okzt0CJXsTG3d+wwvpjMZkvPRcUPpRLWswJc
+         E6zg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwZuWnh3r9ZHR9RtUXcjUle9l9AO7jGP5DjaNAL6u7XMaxIvDxpX5M0YiC1ulEPLfOQVixAUcRHF6+FolpolEGUg3X7p0taF4T96lN
+X-Gm-Message-State: AOJu0Yzg/lGf3Inu66qotfOae/xzjn0Rfu45gTXTLMtiH//uz63F+9/R
+	Tj+p1E1tvUaDUTmxtAsFswdrRctRyu7L4qPjsu9o/xKv4OHYP0g2zWE4HAN14Elr5uNC86/bDIi
+	L4drKVibZbdY1QXIjkyJh0D7xAFfnaTXcghfW1MDOumEfZTrKYB5dFJU6
+X-Google-Smtp-Source: AGHT+IEKk+jMfb4UjQ2vLhkVRwJcPbBfG+1IZvWjYuTzuxuXisQPVm0zrHIomjE5POF4/tmNCe9LlwLUsAzYUZawgkQ=
+X-Received: by 2002:a05:6902:507:b0:df4:d692:93b7 with SMTP id
+ 3f1490d57ef6-df772266789mr12143479276.44.1716909312385; Tue, 28 May 2024
+ 08:15:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAMSo37UyC-JRfZjd83Vx2+W-K-WqxAN9sHJ88Jev67Fnwci_pg@mail.gmail.com>
+ <20240528091831.13674-1-jtornosm@redhat.com>
+In-Reply-To: <20240528091831.13674-1-jtornosm@redhat.com>
+From: Yongqin Liu <yongqin.liu@linaro.org>
+Date: Tue, 28 May 2024 23:15:00 +0800
+Message-ID: <CAMSo37U3Pree8XbHNBOzNXhFAiPss+8FQms1bLy06xeMeWfTcg@mail.gmail.com>
+Subject: Re: [PATCH] net: usb: ax88179_178a: fix link status when link is set
+ to down/up
+To: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+Cc: davem@davemloft.net, edumazet@google.com, inventor500@vivaldi.net, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, stable@vger.kernel.org, 
+	Sumit Semwal <sumit.semwal@linaro.org>, John Stultz <jstultz@google.com>, 
+	Amit Pundir <amit.pundir@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-This adds runtime support for Zabha in xchg8/16() operations.
+On Tue, 28 May 2024 at 17:18, Jose Ignacio Tornos Martinez
+<jtornosm@redhat.com> wrote:
+>
+> Hello Yongqin,
+>
+> > When I tried the down and up operations manually from the command line,
+> > it worked.
+> > But it only worked after I ran the down and up operations after the boot.
+> > It fails to work by default after the boot for both the fresh deployment,
+> > and for the later reboot
+> Ok, so it works as well for you after the initialization.
+>
+> > One thing I noticed is that the following message was printed twice
+> >     "ax88179_178a 2-3:1.0 eth0: ax88179 - Link status is: 1"
+> > after I ran the up operation,
+> >
+> > Is that expected?
+> >
+> > For details, please check the log here:
+> > https://gist.github.com/liuyq/be8f5305d538067a344001f1d35f677b
+> That is another thing that I am analyzing, to clean those spurious.
+> But they are appearing in my case too, and I am not modifying anything at
+> boot time.
+>
+> > The scripts are simple, here are the two scripts for Android build:
+> >    https://android.googlesource.com/device/linaro/dragonboard/+/refs/heads/main/shared/utils/ethaddr/ethaddr.rc
+> >    https://android.googlesource.com/device/linaro/dragonboard/+/refs/heads/main/shared/utils/ethaddr/set_ethaddr.sh
+> >
+> > Is the one to run the down/change mac/up operations script.
+> >
+> > Not sure why the up in the script does not work, but works when run manually.
+> Ok, I am not working with Android but it doesn't seem spscial, the only
+> doubt is when the script is executed, if the driver initialization is
+> complete, ...
+ is there any message that I could check to make sure if the
+initialization is finished?
+or like with adding some printk lines for some kernel functions to hack
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/cmpxchg.h | 24 ++++++++++++++++++++++--
- arch/riscv/include/asm/hwcap.h   |  1 +
- arch/riscv/kernel/cpufeature.c   |  1 +
- 3 files changed, 24 insertions(+), 2 deletions(-)
+> Anyway, I will try to reproduce here and analyze it.
 
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index 0789fbe38b23..43696d9e13aa 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -11,8 +11,14 @@
- #include <asm/fence.h>
- #include <asm/alternative.h>
- 
--#define __arch_xchg_masked(prepend, append, r, p, n)			\
-+#define __arch_xchg_masked(swap_sfx, prepend, append, r, p, n)		\
- ({									\
-+	__label__ zabha, end;						\
-+									\
-+	asm goto(ALTERNATIVE("nop", "j %[zabha]", 0,			\
-+			     RISCV_ISA_EXT_ZABHA, 1)			\
-+			: : : : zabha);					\
-+									\
- 	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
- 	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
- 	ulong __mask = GENMASK(((sizeof(*p)) * BITS_PER_BYTE) - 1, 0)	\
-@@ -34,6 +40,17 @@
- 	       : "memory");						\
- 									\
- 	r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
-+	goto end;							\
-+									\
-+zabha:									\
-+	__asm__ __volatile__ (						\
-+		prepend							\
-+		"	amoswap" swap_sfx " %0, %z2, %1\n"		\
-+		append							\
-+		: "=&r" (r), "+A" (*(p))				\
-+		: "rJ" (n)						\
-+		: "memory");						\
-+end:									\
- })
- 
- #define __arch_xchg(sfx, prepend, append, r, p, n)			\
-@@ -55,8 +72,11 @@
- 									\
- 	switch (sizeof(*__ptr)) {					\
- 	case 1:								\
-+		__arch_xchg_masked(".b" sfx, prepend, append,		\
-+				   __ret, __ptr, __new);		\
-+		break;							\
- 	case 2:								\
--		__arch_xchg_masked(prepend, append,			\
-+		__arch_xchg_masked(".h" sfx, prepend, append,		\
- 				   __ret, __ptr, __new);		\
- 		break;							\
- 	case 4:								\
-diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-index e17d0078a651..f71ddd2ca163 100644
---- a/arch/riscv/include/asm/hwcap.h
-+++ b/arch/riscv/include/asm/hwcap.h
-@@ -81,6 +81,7 @@
- #define RISCV_ISA_EXT_ZTSO		72
- #define RISCV_ISA_EXT_ZACAS		73
- #define RISCV_ISA_EXT_XANDESPMU		74
-+#define RISCV_ISA_EXT_ZABHA		75
- 
- #define RISCV_ISA_EXT_XLINUXENVCFG	127
- 
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index 3ed2359eae35..8d0f56dd2f53 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -257,6 +257,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
- 	__RISCV_ISA_EXT_DATA(zihintpause, RISCV_ISA_EXT_ZIHINTPAUSE),
- 	__RISCV_ISA_EXT_DATA(zihpm, RISCV_ISA_EXT_ZIHPM),
- 	__RISCV_ISA_EXT_DATA(zacas, RISCV_ISA_EXT_ZACAS),
-+	__RISCV_ISA_EXT_DATA(zabha, RISCV_ISA_EXT_ZABHA),
- 	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
- 	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
- 	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
+Thanks very much! And please feel free to let me know if there is
+anything I could help with on the Android build.
+
 -- 
-2.39.2
-
+Best Regards,
+Yongqin Liu
+---------------------------------------------------------------
+#mailing list
+linaro-android@lists.linaro.org
+http://lists.linaro.org/mailman/listinfo/linaro-android
