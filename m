@@ -1,89 +1,83 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF0916D9A8
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88B916B743;
+	Tue, 28 May 2024 12:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716897867; cv=none; b=uyqsT8fzqv2NVtKqPoB4cPe4LB9mwXkMJ2/cuHoOxpMAzj1QtGMZysBwqOorxZ+tQD+5Skp0TXCcDk343hNLyuGqIORjxn6yzPCmzhqObDOxh94uto/pmSP5Y6n4tMb60uGC8ekcDMXgIlLa6nYbPUowhWtzkk5rX/iFkpetd3g=
+	t=1716897872; cv=none; b=pCX5dolmBWQdARLWazFI1pIf6sKbiT4z0Yyf/7X5A3RVZTEIGNVR+qSuanqEsC+9JnpiTVVe60uFq/WTCPw8532RLcKvZa0dIE2vCS5g1dWEiqMYhKgSPo61HVyl8O3duoxHfSNBPwoEUBudZCYto7vVLoPRKeO+AY8IpErzCoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716897867; c=relaxed/simple;
-	bh=0Ij/KINcYLHPBuKsXbihOyL1OmkuLW0/wwn/yRXpAPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QIRCNUGNAeCYhTX3AAHNdqtrgSHvhzM0tdpxfZ6S+fz/jgKNTPf4VE4k1ULhVmxQ5+J4E/TV6dK3Y3rMwI+MSyJv0RDfSGRqi37LEFXkbAzZWtxHmDw9lo+p4Z/zTUOPIEwpMQ2IkpdqRjqQO43Od7HLX4S38kjmHKDdMdusdH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M7A6YcIO; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716897872; c=relaxed/simple;
+	bh=geFzxgDm7W4HA50i8vXt3CLQRJwI4FU8uG+93ofHFxY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EFuU6234aGJNUbhvm+8mJcS/C0Amb74pHbyCO8FUNTMTqdoBZ4ILNsQ4Im+Pjg9rOLyoukqO7oruJAb/I1WMpunZUJE446+mVGAvgdlseUwnX7ihNrNSNuM4NJi6lvOAK6Ts8Dz6qDIjww9eOVPVO2cliue88MbJN2ihP6mH0sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWj8ZvqO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M7A6YcIO"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-529be98ad96so460439e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 05:04:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716897864; x=1717502664; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=k2n1mamSB8aQSoN8jQVWr+bWDjxdAuW2QMP/FZUKGCc=;
-        b=M7A6YcIO3qiC7ut2bLihDd1x9duWN01yTvxox4yDOaqnlicjikjPJZfn33RHvrZukE
-         oCuNNEHcr2L7I2E7z8+MTjjId/rA/iG3EPUcCbcobX1aLvkAN+8R+n8HVzioTz4SEz8J
-         KRoz0Tl2yE1mYkIwGCV8e5ZoaUDB56u1C2eaMNRbCLbS95TxrvN8qvS1NidWbXx5uDhc
-         euxjrMbPyoLFDjRxvX8tcNLioYeVm+Ovb0ZnwkyeQ9Qk8KJChSyMmx0ERYMZd8O/pdGS
-         icEl+AsfT0DKHg9l90bmzjAQ8Yt7kH1OXhilU9HemtlO3pRTiD2O7H69jG7C/pcT08Pr
-         InRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716897864; x=1717502664;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k2n1mamSB8aQSoN8jQVWr+bWDjxdAuW2QMP/FZUKGCc=;
-        b=C8d0qsHrZScmDX/7qdJnzvn7cghNuGecXWBubyiUuvTORfOFrcNRs37dCgp7NjnXdT
-         udUdNHQQkD12O3e3ePtbVDYZW2X8q/U4K1CgJ7PCRuKfFLzZJDFOlOjWQHExA0iyhvTL
-         DDXCIoEBlxGC3X6sMq31WRDgyqId5pH4BsCjpUHowuAlMB4rd6nz9rwmfjHNhXwt7BgZ
-         LFtpAwdPG1gzq0luR6bvpRi/tNGcJlfzHtnqhcvaoZ7tH0vbQuunuJcTyxfN9agaHcvk
-         9nLV7rvcB3xZDVL4wawAeUlRJDsQAEOV++dYZ+2EB/CV5dCVONj6IrpV71IA17u7XY+g
-         sHfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWj+uWC1eAH0ftUIwTgyB1tg/dnMt33LhvQkLH98T4BEXDpe/2H89JhUMyVOY8rE7Vv3hH0ODmzJ+kdDaC45uf4H7M7sGrsEM4YlZ11
-X-Gm-Message-State: AOJu0YyyRpyNojQ71HF/EWILz5XRqKX4ZsYRMBnTONmeg3e6aVFMD8ze
-	HsN2cnsXdK9DMRy0x1MG30WDCTfS4BUpgxV9vEd2MWd6ReuWoLLPx9Ly5bgOvik=
-X-Google-Smtp-Source: AGHT+IEIY8A2npesmQ3mUf/n2t3PJAROyuphDhmkYyXfqog/2OjGf7gOc5Dbz4rYw0IFdScb/Le5lg==
-X-Received: by 2002:ac2:4e94:0:b0:524:6cb:586b with SMTP id 2adb3069b0e04-52964baf2ecmr5596283e87.23.1716897863607;
-        Tue, 28 May 2024 05:04:23 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52970c33106sm937924e87.190.2024.05.28.05.04.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 05:04:23 -0700 (PDT)
-Date: Tue, 28 May 2024 15:04:21 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>
-Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
-	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
-	quic_chennak@quicinc.com
-Subject: Re: [PATCH v2 1/8] misc: fastrpc: Add missing dev_err newlines
-Message-ID: <shdxqx4x5mghqt3dcvrum73ox4ygm4xv2cclkjnbvqqbe2y465@uboh3rl6kbt6>
-References: <20240528112956.5979-1-quic_ekangupt@quicinc.com>
- <20240528112956.5979-2-quic_ekangupt@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWj8ZvqO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83895C32782;
+	Tue, 28 May 2024 12:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716897871;
+	bh=geFzxgDm7W4HA50i8vXt3CLQRJwI4FU8uG+93ofHFxY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nWj8ZvqO4QYiburakoYAcexvxmbveCbUU//HDUl7nERTKp6g9s8UoYzLPvtik1c9r
+	 E5dkiPoJgdwlZc342vma5XxmBxFTDLj05IzI1+cP/U6Ie6kKKJkq+Jc20mISDYZ+/F
+	 NiEG85XE+an8l0XRshU6+Yl0Ox0nOjpi5TKuBgNMGOXABd24d6MMfC9J4geeb5BaUM
+	 nChOeg0guxtb9N0GmRqjF2G2xqdJkoo2v3/8tyqtEppXWWmtKCeWv65l28h8pt8Zjl
+	 N43yo6BdlcQ8etlQ24KYJz5KJQ20Q3v7sSTUFXtKY8bnYrKwOGvxtU6GPXzuK9l8zi
+	 O4hDR15XJkplg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: dsa: realtek: add LEDS_CLASS dependency
+Date: Tue, 28 May 2024 14:03:46 +0200
+Message-Id: <20240528120424.3353880-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528112956.5979-2-quic_ekangupt@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 28, 2024 at 04:59:47PM +0530, Ekansh Gupta wrote:
-> Few dev_err calls are missing newlines. This can result in unrelated
-> lines getting appended which might make logs difficult to understand.
-> Add trailing newlines to avoid this.
-> 
-> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> ---
->  drivers/misc/fastrpc.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
+From: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+This driver fails to link when LED support is disabled:
 
+ERROR: modpost: "led_init_default_state_get" [drivers/net/dsa/realtek/rtl8366.ko] undefined!
+ERROR: modpost: "devm_led_classdev_register_ext" [drivers/net/dsa/realtek/rtl8366.ko] undefined!
+
+Add a dependency that prevents this configuration.
+
+Fixes: 32d617005475 ("net: dsa: realtek: add LED drivers for rtl8366rb")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/dsa/realtek/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/dsa/realtek/Kconfig b/drivers/net/dsa/realtek/Kconfig
+index 6989972eebc3..6c90a83c71da 100644
+--- a/drivers/net/dsa/realtek/Kconfig
++++ b/drivers/net/dsa/realtek/Kconfig
+@@ -39,6 +39,7 @@ config NET_DSA_REALTEK_RTL8365MB
+ config NET_DSA_REALTEK_RTL8366RB
+ 	tristate "Realtek RTL8366RB switch driver"
+ 	depends on NET_DSA_REALTEK_SMI || NET_DSA_REALTEK_MDIO
++	depends on LEDS_CLASS
+ 	select NET_DSA_TAG_RTL4_A
+ 	help
+ 	  Select to enable support for Realtek RTL8366RB.
 -- 
-With best wishes
-Dmitry
+2.39.2
+
