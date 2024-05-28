@@ -1,70 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219EC4C627;
-	Tue, 28 May 2024 20:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4994117B407
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 20:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716929232; cv=none; b=OicbDwzO+LMVscqo644GgWyfl+P17ASIJrT9qpgJCPTVtuboT6Rx91yyAg4V2z1rNbfId8YBdJgd/jQuawQy5yA/qd8IEwLT7KvK8T/aMVQ0YaEl88Nz0VJM4Zab/gHiBEO9G5UsKBb/nx+CgJ0j3M2An4UnFfntjiCmObt2HCg=
+	t=1716929261; cv=none; b=YTXbuB6N5+DSWuVBEJGsVFPsXeEEa0fPYdqUHSifbo9oP5idfPVAPnOWiISpgJMc+nAZI/rPN7/fJDVwRcO7m74YngjAAc2nUBhuBR7C2cHKDTQ04Mh8IRUQBxDwJ+FEeDdth/8yPgeZY8L+CRqMnSKmHsdwkfcFXBCDYMd7QhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716929232; c=relaxed/simple;
-	bh=+FHTxvrxb/K2pN9sj74X9J/5rkzbc2QPqTsan5+1vp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XlaCB3aZ8SRNU9IRhidE1pzPg6osphiU06GXni7AoSghF7Znt1UzS8RlMAZlwSNISSor01X9P3bWT3SH/AhCTmMWbNC0RD9lx7puhq5K3yTZF/ujIn9opqqHF3DvpNiN2hLl5x5o3+YuDaHLxCAcRaWqHRjx1419JRkonkNF6S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tqk/JnQm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716929261; c=relaxed/simple;
+	bh=CJ0wRt39wry877MFi5yLNi/ccKGSRy4FwAIVIEaqIF4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=p9tVPEab8euce1NXcNYGNQJYD2FVR/ekaqVoW61ZoGjX3BSugoOpz2hGtGx1bV832S5K6xbWH2A8yFe0k6WZSzoIokol2hXk+RcIvNYGuOyhG2Zwizp7iqyOYNGvch/zeZtL8OOEZ8M6s2BE6753lCIOBvjuzGeljmErTmItYug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=IXtvp3bx; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tqk/JnQm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 888D6C32781;
-	Tue, 28 May 2024 20:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716929231;
-	bh=+FHTxvrxb/K2pN9sj74X9J/5rkzbc2QPqTsan5+1vp4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tqk/JnQm3S9KA6oETP4bgWp5MAdRKA/WS+Fk+PpGsZcsjifWyBp9m3m3dj/pXjPFd
-	 mVqSmhBD15HV+qLIzDv4YoXRutQqMArltwqc4ydqCY+UL2tsO9rjHW0gdBBD/PcUZD
-	 +VStgsLdCJSc5K3adbJOUkdT2d1kHn+3AIVtqG2dWaLJc2rMreDV6Pjz6VeTvVJi1l
-	 5rdp8+rJVNCpAOdgy3nShQ5WL2NODaqnCTJLUdZX+tL7phQDr/5ZtyQODgr2VXCv1+
-	 KuWZhhbu+RAvb31hz/nS1OeqHCnKKEgLtYnC0u1Y1pFcD1Q3VjIU6OkeyK7Yp9ir8c
-	 3as/DFKv7nPpg==
-Date: Tue, 28 May 2024 15:47:10 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Ryan Walklin <ryan@testtoast.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-sunxi@lists.linux.dev,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Ripard <mripard@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: arm: sunxi: Fix incorrect '-' usage
-Message-ID: <171692919272.1968303.16565844333250152320.robh@kernel.org>
-References: <20240503154402.967632-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="IXtvp3bx"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CF79B2C02E0;
+	Wed, 29 May 2024 08:38:12 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1716928692;
+	bh=CJ0wRt39wry877MFi5yLNi/ccKGSRy4FwAIVIEaqIF4=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=IXtvp3bxuBBtDxhgwIhDwpa76JmTbmCqM5KyQLNPZJvRniJmAoZUFRDVqKg1t+NQx
+	 +mbtDasFYzQLVk09VJONheuxtxNSHYbed5IAHNbW+MjEYvpsPbvhQm5muzPrGRcM6g
+	 mlQiPa+0+TPLM1xRhgJz39QL5+qEBeHFu9Tq3zjEGq8hHDhDEM3tOzHs4rl06g32ap
+	 SusXAS9vgP/eZoOdQqMs+P3tJH48sSKR2TfvzHoC/7Ho+b9bZidJdfgy7kXlD6MRYH
+	 FYFG/8PM2TuSsDPGBrRvaQf7tjTMkOeJzZ1Z42qwPF24am/osa1AjvJGRYYoFjwRiZ
+	 j9YuXFla7MB9Q==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B665640b40001>; Wed, 29 May 2024 08:38:12 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.1544.11; Wed, 29 May 2024 08:38:12 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.48; Wed, 29 May 2024 08:38:12 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.011; Wed, 29 May 2024 08:38:12 +1200
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: Jon Hunter <jonathanh@nvidia.com>, Chuck Lever III
+	<chuck.lever@oracle.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Neil Brown
+	<neilb@suse.de>, linux-stable <stable@vger.kernel.org>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>, "Linux Kernel Mailing
+ List" <linux-kernel@vger.kernel.org>, Linus Torvalds
+	<torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Guenter Roeck <linux@roeck-us.net>, "shuah@kernel.org" <shuah@kernel.org>,
+	"patches@kernelci.org" <patches@kernelci.org>, "lkft-triage@lists.linaro.org"
+	<lkft-triage@lists.linaro.org>, "pavel@denx.de" <pavel@denx.de>,
+	"f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sudipm.mukherjee@gmail.com"
+	<sudipm.mukherjee@gmail.com>, "srw@sladewatkins.net" <srw@sladewatkins.net>,
+	"rwarsow@gmx.de" <rwarsow@gmx.de>, "conor@kernel.org" <conor@kernel.org>,
+	"allen.lkml@gmail.com" <allen.lkml@gmail.com>, "broonie@kernel.org"
+	<broonie@kernel.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.15 00/23] 5.15.160-rc1 review
+Thread-Topic: [PATCH 5.15 00/23] 5.15.160-rc1 review
+Thread-Index: AQHasN4TfgxwqfFZfEKH0FZYU7evErGr1xiAgAARtgCAAGozAA==
+Date: Tue, 28 May 2024 20:38:12 +0000
+Message-ID: <d5adc4a4-81b6-46f6-bcf6-7debf48d2bbf@alliedtelesis.co.nz>
+References: <20240523130327.956341021@linuxfoundation.org>
+ <8e60522f-22db-4308-bb7d-3c71a0c7d447@nvidia.com>
+ <2024052541-likeness-banjo-e147@gregkh>
+ <8ddb4da3-49e4-4d96-bec3-66a209bff71b@nvidia.com>
+ <968E3378-1B38-4519-BB85-5B1C45E3A16A@oracle.com>
+ <8b6fe99f-7fa9-493c-afe7-8e75b7f59852@nvidia.com>
+In-Reply-To: <8b6fe99f-7fa9-493c-afe7-8e75b7f59852@nvidia.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6E74215606E9154889788EFD7A709BB7@atlnz.lc>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503154402.967632-1-robh@kernel.org>
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=F9L0dbhN c=1 sm=1 tr=0 ts=665640b4 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=Ikd4Dj_1AAAA:8 a=VwQbUJbxAAAA:8 a=yDejyKqjGvIJSoj4HikA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+X-SEG-SpamProfiler-Score: 0
 
-
-On Fri, 03 May 2024 10:44:02 -0500, Rob Herring (Arm) wrote:
-> Commit 6bc6bf8a940a ("dt-bindings: arm: sunxi: document Anbernic RG35XX
-> handheld gaming device variants") mistakenly added '-' on each line
-> which created empty (i.e. description only) schemas matching anything.
-> This causes validation to fail on all the root node compatibles as
-> there are multiple oneOf clauses passing.
-> 
-> Fixes: 6bc6bf8a940a ("dt-bindings: arm: sunxi: document Anbernic RG35XX handheld gaming device variants")
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/sunxi.yaml | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-
-No one has picked this up yet, so I have. Applied, thanks!
-
+DQpPbiAyOS8wNS8yNCAwMjoxOCwgSm9uIEh1bnRlciB3cm90ZToNCj4NCj4gT24gMjgvMDUvMjAy
+NCAxNDoxNCwgQ2h1Y2sgTGV2ZXIgSUlJIHdyb3RlOg0KPj4NCj4+DQo+Pj4gT24gTWF5IDI4LCAy
+MDI0LCBhdCA1OjA04oCvQU0sIEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPiB3cm90
+ZToNCj4+Pg0KPj4+DQo+Pj4gT24gMjUvMDUvMjAyNCAxNToyMCwgR3JlZyBLcm9haC1IYXJ0bWFu
+IHdyb3RlOg0KPj4+PiBPbiBTYXQsIE1heSAyNSwgMjAyNCBhdCAxMjoxMzoyOEFNICswMTAwLCBK
+b24gSHVudGVyIHdyb3RlOg0KPj4+Pj4gSGkgR3JlZywNCj4+Pj4+DQo+Pj4+PiBPbiAyMy8wNS8y
+MDI0IDE0OjEyLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6DQo+Pj4+Pj4gVGhpcyBpcyB0aGUg
+c3RhcnQgb2YgdGhlIHN0YWJsZSByZXZpZXcgY3ljbGUgZm9yIHRoZSA1LjE1LjE2MCANCj4+Pj4+
+PiByZWxlYXNlLg0KPj4+Pj4+IFRoZXJlIGFyZSAyMyBwYXRjaGVzIGluIHRoaXMgc2VyaWVzLCBh
+bGwgd2lsbCBiZSBwb3N0ZWQgYXMgYSANCj4+Pj4+PiByZXNwb25zZQ0KPj4+Pj4+IHRvIHRoaXMg
+b25lLsKgIElmIGFueW9uZSBoYXMgYW55IGlzc3VlcyB3aXRoIHRoZXNlIGJlaW5nIGFwcGxpZWQs
+IA0KPj4+Pj4+IHBsZWFzZQ0KPj4+Pj4+IGxldCBtZSBrbm93Lg0KPj4+Pj4+DQo+Pj4+Pj4gUmVz
+cG9uc2VzIHNob3VsZCBiZSBtYWRlIGJ5IFNhdCwgMjUgTWF5IDIwMjQgMTM6MDM6MTUgKzAwMDAu
+DQo+Pj4+Pj4gQW55dGhpbmcgcmVjZWl2ZWQgYWZ0ZXIgdGhhdCB0aW1lIG1pZ2h0IGJlIHRvbyBs
+YXRlLg0KPj4+Pj4+DQo+Pj4+Pj4gVGhlIHdob2xlIHBhdGNoIHNlcmllcyBjYW4gYmUgZm91bmQg
+aW4gb25lIHBhdGNoIGF0Og0KPj4+Pj4+IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvcHViL2xpbnV4
+L2tlcm5lbC92NS54L3N0YWJsZS1yZXZpZXcvcGF0Y2gtNS4xNS4xNjAtcmMxLmd6IA0KPj4+Pj4+
+DQo+Pj4+Pj4gb3IgaW4gdGhlIGdpdCB0cmVlIGFuZCBicmFuY2ggYXQ6DQo+Pj4+Pj4gZ2l0Oi8v
+Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3N0YWJsZS9saW51eC1zdGFi
+bGUtcmMuZ2l0IA0KPj4+Pj4+IGxpbnV4LTUuMTUueQ0KPj4+Pj4+IGFuZCB0aGUgZGlmZnN0YXQg
+Y2FuIGJlIGZvdW5kIGJlbG93Lg0KPj4+Pj4+DQo+Pj4+Pj4gdGhhbmtzLA0KPj4+Pj4+DQo+Pj4+
+Pj4gZ3JlZyBrLWgNCj4+Pj4+Pg0KPj4+Pj4+IC0tLS0tLS0tLS0tLS0NCj4+Pj4+PiBQc2V1ZG8t
+U2hvcnRsb2cgb2YgY29tbWl0czoNCj4+Pj4+DQo+Pj4+PiAuLi4NCj4+Pj4+DQo+Pj4+Pj4gTmVp
+bEJyb3duIDxuZWlsYkBzdXNlLmRlPg0KPj4+Pj4+IMKgwqDCoMKgwqAgbmZzZDogZG9uJ3QgYWxs
+b3cgbmZzZCB0aHJlYWRzIHRvIGJlIHNpZ25hbGxlZC4NCj4+Pj4+DQo+Pj4+Pg0KPj4+Pj4gSSBh
+bSBzZWVpbmcgYSBzdXNwZW5kIHJlZ3Jlc3Npb24gb24gYSBjb3VwbGUgYm9hcmRzIGFuZCBiaXNl
+Y3QgaXMgDQo+Pj4+PiBwb2ludGluZw0KPj4+Pj4gdG8gdGhlIGFib3ZlIGNvbW1pdC4gUmV2ZXJ0
+aW5nIHRoaXMgY29tbWl0IGRvZXMgZml4IHRoZSBpc3N1ZS4NCj4+Pj4gVWdoLCB0aGF0IGZpeGVz
+IHRoZSByZXBvcnQgZnJvbSBvdGhlcnMuwqAgQ2FuIHlvdSBjYzogZXZlcnlvbmUgb24gdGhhdA0K
+Pj4+PiBhbmQgZmlndXJlIG91dCB3aGF0IGlzIGdvaW5nIG9uLCBhcyB0aGlzIGtlZXBzIGdvaW5n
+IGJhY2sgYW5kIGZvcnRoLi4uDQo+Pj4NCj4+Pg0KPj4+IEFkZGluZyBDaHVjaywgTmVpbCBhbmQg
+Q2hyaXMgZnJvbSB0aGUgYnVnIHJlcG9ydCBoZXJlIFswXS4NCj4+Pg0KPj4+IFdpdGggdGhlIGFi
+b3ZlIGFwcGxpZWQgdG8gdjUuMTUueSwgSSBhbSBzZWVpbmcgc3VzcGVuZCBvbiAyIG9mIG91ciAN
+Cj4+PiBib2FyZHMgZmFpbC4gVGhlc2UgYm9hcmRzIGFyZSB1c2luZyBORlMgYW5kIG9uIGVudHJ5
+IHRvIHN1c3BlbmQgSSBhbSANCj4+PiBub3cgc2VlaW5nIC4uLg0KPj4+DQo+Pj4gRnJlZXppbmcg
+b2YgdGFza3MgZmFpbGVkIGFmdGVyIDIwLjAwMiBzZWNvbmRzICgxIHRhc2tzIHJlZnVzaW5nIHRv
+DQo+Pj4gZnJlZXplLCB3cV9idXN5PTApOg0KPj4+DQo+Pj4gVGhlIGJvYXJkcyBhcHBlYXIgdG8g
+aGFuZyBhdCB0aGF0IHBvaW50LiBTbyBtYXkgYmUgc29tZXRoaW5nIGVsc2UgDQo+Pj4gbWlzc2lu
+Zz8NCj4+DQo+PiBOb3RlIHRoYXQgd2UgZG9uJ3QgaGF2ZSBhY2Nlc3MgdG8gaGFyZHdhcmUgbGlr
+ZSB0aGlzLCBzbw0KPj4gd2UgaGF2ZW4ndCB0ZXN0ZWQgdGhhdCBwYXRjaCAoZXZlbiB0aGUgdXBz
+dHJlYW0gdmVyc2lvbikNCj4+IHdpdGggc3VzcGVuZCBvbiB0aGF0IGhhcmR3YXJlLg0KPg0KPg0K
+PiBObyBwcm9ibGVtLCBJIHdvdWxkIG5vdCBleHBlY3QgeW91IHRvIGhhdmUgdGhpcyBwYXJ0aWN1
+bGFyIGhhcmR3YXJlIDotKQ0KPg0KSXQncyBwcm9iYWJseSBub3QgbXVjaCBoZWxwIGJ1dCBmb3Ig
+dGhlIG9vcHMgSSBvcmlnaW5hbGx5IHJlcG9ydGVkIHdlJ3ZlIA0KYmVlbiBjYXJyeWluZyAibmZz
+ZDogZG9uJ3QgYWxsb3cgbmZzZCB0aHJlYWRzIHRvIGJlIHNpZ25hbGxlZCIgbG9jYWxseSANCmFu
+ZCB0aGF0IHJlc29sdmVkIGl0LiBOb3cgdGhhdCB3ZSd2ZSB1cGRhdGVkIHRvIDUuMTUuMTYwIGFu
+ZCBkcm9wcGVkIHRoZSANCmxvY2FsIHBhdGNoIGl0J3Mgc3RpbGwgcmVzb2x2ZWQgZm9yIHVzLiBP
+dXIgc3lzdGVtcyBkb24ndCBtYWtlIHVzZSBvZiANCnN1c3BlbmQgc28gdGhleSB3b24ndCBoaXQg
+YW55IGlzc3VlIHJlbGF0ZWQgdG8gdGhhdC4NCj4+IFNvLCBpdCBjb3VsZCBiZSBzb21ldGhpbmcg
+bWlzc2luZywgb3IgaXQgY291bGQgYmUgdGhhdA0KPj4gcGF0Y2ggaGFzIGEgcHJvYmxlbS4NCj4+
+DQo+PiBJdCB3b3VsZCBoZWxwIHVzIHRvIGtub3cgaWYgeW91IG9ic2VydmUgdGhlIHNhbWUgaXNz
+dWUNCj4+IHdpdGggYW4gdXBzdHJlYW0ga2VybmVsLCBpZiB0aGF0IGlzIHBvc3NpYmxlLg0KPg0K
+Pg0KPiBJIGRvbid0IG9ic2VydmUgdGhpcyB3aXRoIGVpdGhlciBtYWlubGluZSwgLW5leHQgb3Ig
+YW55IG90aGVyIHN0YWJsZSANCj4gYnJhbmNoLiBTbyB0aGF0IHdvdWxkIHN1Z2dlc3QgdGhhdCBz
+b21ldGhpbmcgZWxzZSBpcyBtaXNzaW5nIGZyb20gDQo+IGxpbnV4LTUuMTUueS4NCj4NCj4gSm9u
+DQo+
