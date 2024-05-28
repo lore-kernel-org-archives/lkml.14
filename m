@@ -1,128 +1,135 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E06016415
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 13:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732A916DEA5
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 13:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716902030; cv=none; b=ki+Im9WDJBhDGzJeF3g4yRaVfj0Zga6hd33VnkxyKEQHkkhMgTEPjYoyeqD13ImD/ezp8ZMv3H+fX/ZGE9nCFYsiuqQSKgXUCMEFTDaYnA/1LlQojOIEDoHV0bNgUUex57bSSPDfS4+EQrtiP2byo4EQAwqPkiCwrvVu3ZdFPZs=
+	t=1716902092; cv=none; b=AbVz+r8GKlR+O/TDozRqvlwYfwIp5kHJoLqo77bysb+seyslbB8m0BplY1hmItI921oepEOSCc7pablKQ7ZwgXPGAoMAjwIwI9ERvCfUZPV43CqDyUHtHLtBVj+bNmhvjRn9+IQslNiYvfroJMsY4v0XV7MqcMb76hbgwfWobas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716902030; c=relaxed/simple;
-	bh=VMcndx1MyOn/tzGp7W1bciJqyD0f9IArD3yPKz887Vo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EfvBLYBAOWhbT/CnOTp8JtA1MzGHACC/4Kv21Om50ia860RxODPnreWfMRp88XK0ZC5RsjmBGHTQinlg2kVY4Xug9w1X46l6o9VKd+vOkHHjqI2bicDGX+HJMrHwfJUg6gH0oFU9PrEUz/rVEOH9rtqUhNVXkBqTRQceouGP8qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=f6/Unv9K; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1716902092; c=relaxed/simple;
+	bh=SeWXVvF22D9ZJf9IgluXoTCpCnkYe9ToAThBJHwIzY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U26kfyNsygcD7NEQT/Hvm87KehiRkb7F/Hs0Mi41PtKA9vdZimQzuBgRnSaxjw3ZklHq9yWmac0f427wIUvbqFKW0zIekYRaKTk/haLB6t98fArjVI9QJdhzB6AB/1p8LujCqPcKfnW5fXLusnvW5NxYmI/5HX6MTT/5jZUyUnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wcSp2+pt; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="f6/Unv9K"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-354ba5663c9so635397f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:13:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wcSp2+pt"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-529661f2552so1050331e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 06:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716902026; x=1717506826; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VMcndx1MyOn/tzGp7W1bciJqyD0f9IArD3yPKz887Vo=;
-        b=f6/Unv9KSppWLD+eLp3eZolgWr89/fGuBvcmovpV1JEsk1WN/Fqu4sDyaOXqvXU5Q/
-         zIMLBxdaUqYYHTR/Bpgx1bJUunaMepxEHSvO3irN7dFy6xn0SOJ9UZhI/j8A3KUOo0bl
-         pQZoWLQvFQFxMYhGulijP/K0VLl8tnP9U00b8HlmzX6FyOp2ayb3QUJODJubgjvzpnN4
-         jU0PXcilXj6NkqlXcEjS5ZFL0Lz5+i+HkCGZbvXKqhMp9ur9pZO41xnZBnAsaLClfl6R
-         XLrofjrYr41FYlMnaII71OuwHaRF6pliGaKXOyK6LWU22+9vBJI1BTBJUcEhfB8wpMHW
-         mAcg==
+        d=linaro.org; s=google; t=1716902089; x=1717506889; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6gaAjPPNW+1o8Nq5Xk3MdnoecgKTcrll+0FrMoJS3ho=;
+        b=wcSp2+ptffLfjHTyNtjcjZc/W5nZ1N+1skE5toYnRLFsi47xpXEeC7knoKy6CGiPUH
+         klgx1HHIWUByaYtdggLq+ixvYdK0Eds6/n9E+hK5QRgmmqcMbF5GRpR0pV4QRYjj3xLJ
+         itMaD1Tuo/Y9HTbhNn5Q3k0bqKVej6MSEu/uwEV4mKhpBMlBtDBhhYJe1Tooq/JCR9uj
+         /PAHCPUrJGCgw+9BWjFc38wYZGjS24iXdTGwYy/BDPHzewfBZahRnIDkoyG5OGq627J0
+         TkxXP0oXeoour2671cnQlvEuzw4w/BEmb4YOm5XhlShXWpJN/1qODfMmzqF/XBymMOHY
+         FqrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716902026; x=1717506826;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VMcndx1MyOn/tzGp7W1bciJqyD0f9IArD3yPKz887Vo=;
-        b=hUuZr+mnHz0MYlk3+QwSbhQTrL7Ek/NGXsVBrK6GTI8gl5F5dL+XnLNe4sMt+kCFDK
-         itSjGc6yDGNm9zD/jWckBsfK4Kxcmlu83gMAyiQw5bbKqET3+LK8i9Rvg6+ZSNqp2Sb/
-         dxc8LrHEURKCdKUYmKyotptFKyZ+4KurKiikRjuwSTFAxubHAZyR1hvxeijHzBflckER
-         Pce000PgCS2MSSmIoEr3qT6AXY4vSaAnQFODiOnjMpMOsZrtFe23jAvGP3DIOK1Rv6z3
-         TmylK5diu3adMQ9XtS+31ek8/maD0WypZZcyxoW4wvzmHa4LnzsrCrER8xQKWakaJmHp
-         +xRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGBrb5nLKrmb2MSSaCP60n3ZQjgfgw4okFWk9l0CG0XchPUrL7j/ijIEGr3ayIeiq4nv6OBmSOnz0UfqB0G6/83IWw3C7pXYbDwr9O
-X-Gm-Message-State: AOJu0Yx63j9nanw7fTkM70ud2msDXSl7MtWT6+J1BdTcguNwQVsgC/nU
-	1cx0K57XqGVLA+s/Vu+sbWKdKFlOUk4U20xY6lek0v62Uzi4UI7JSwRnIqT2SxQ=
-X-Google-Smtp-Source: AGHT+IFcjZPdSjwdhRZc+nZsDK1tBXTV9ToeKuYOV9I7MWvMKdFyTLe3sxT6lJtaaMcKP9OprZr8vQ==
-X-Received: by 2002:adf:e648:0:b0:357:40e8:e574 with SMTP id ffacd0b85a97d-35740e8e60amr5679648f8f.37.1716902025896;
-        Tue, 28 May 2024 06:13:45 -0700 (PDT)
-Received: from [10.3.5.161] (laubervilliers-657-1-248-155.w90-24.abo.wanadoo.fr. [90.24.137.155])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a090805sm11546560f8f.48.2024.05.28.06.13.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 May 2024 06:13:45 -0700 (PDT)
-Message-ID: <2e872daa-a9d8-430f-9a6c-90001dd3391e@baylibre.com>
-Date: Tue, 28 May 2024 15:13:43 +0200
+        d=1e100.net; s=20230601; t=1716902089; x=1717506889;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6gaAjPPNW+1o8Nq5Xk3MdnoecgKTcrll+0FrMoJS3ho=;
+        b=PR1iilRzCal5g2uTB/wmhpf7hDNyOqPTEqeJB0zbvUrH9BXt9PQJaOhaBkheP/GLck
+         HinWFS7nUQQFcaxN2zPKtuOQz2mQvcOStABvHi9pOtPbYPUCMrTKlHStvyG0VBwrGMip
+         moIwW/DUYlnZqirAC5da0tJy8lIhyR4TiEgEx8rqL35WC4dvtp9SJUwSVh78XT68wNAO
+         SXH+Et9XCivjud7sr8iDHimHfRQzcp+tzQcpXkrG/dkybJhE15pzX2X2RUY5UjbyMqL+
+         v1nUUDJl49F+bh/bqXaBQOTDWnBwxLyyumsOgbDvID2nhKqTirEse+TBR9mIZeFwec6r
+         Mx2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVCtHEXwDvA43cgJGAENVrn0aF0rb+rcnf5bdOUTQVCM2QuZ4nmf8X5Vu+eKcqlXBN8S4EAx35HyFdCumBjSoqlqZuBpiCLS11lzfWX
+X-Gm-Message-State: AOJu0YwQxdqLJaxN7NkQFeuwOQ3aGhSSe7yg0zpSzFGibZKM9uWVHUBx
+	xquP04xoRQqcV5dBcTxurlIV8Cs6Ca7Ph1mtXDFW2B1WtmQPaXz1qL0ggLh3sXo=
+X-Google-Smtp-Source: AGHT+IECgbuCJq5CH9I+wOKcyKpG4gk5FMiLo2gVoFRgQ/xpYXkdBwseE2GUt86zkny6KhanGzA4zg==
+X-Received: by 2002:a05:6512:2017:b0:520:dc1c:3c5d with SMTP id 2adb3069b0e04-529668c9cc9mr6763082e87.42.1716902088640;
+        Tue, 28 May 2024 06:14:48 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529b72ca748sm404584e87.285.2024.05.28.06.14.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 06:14:47 -0700 (PDT)
+Date: Tue, 28 May 2024 16:14:46 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ajit Pandey <quic_ajipan@quicinc.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Vinod Koul <vkoul@kernel.org>, Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>, 
+	Jagadeesh Kona <quic_jkona@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, 
+	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Subject: Re: [PATCH V3 0/8] clk: qcom: Add support for DISPCC, CAMCC and
+ GPUCC on SM4450
+Message-ID: <5ppxcqdtyn7a3tyaorzlxhaxhqtse5xvjpecppjcmbxodmsz3m@5kr7uacez7u4>
+References: <20240528114254.3147988-1-quic_ajipan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] arm64: dts: mediatek: mt8188: Add support for Mali
- GPU on Panfrost
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-mediatek@lists.infradead.org
-Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, mandyjh.liu@mediatek.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-References: <20240527093908.97574-1-angelogioacchino.delregno@collabora.com>
- <20240527093908.97574-6-angelogioacchino.delregno@collabora.com>
- <f553b3f2-d895-446a-a741-7a151ebeb3ed@baylibre.com>
- <4715d477-5f66-47db-973f-af64a3009113@collabora.com>
-Content-Language: en-US
-From: Julien Panis <jpanis@baylibre.com>
-In-Reply-To: <4715d477-5f66-47db-973f-af64a3009113@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528114254.3147988-1-quic_ajipan@quicinc.com>
 
-On 5/28/24 12:36, AngeloGioacchino Del Regno wrote:
-> Il 27/05/24 16:53, Julien Panis ha scritto:
->> On 5/27/24 11:39, AngeloGioacchino Del Regno wrote:
->>> Add the necessary OPP table for the GPU and also add a GPU node
->>> to enable support for the Valhall-JM G57 MC3 found on this SoC,
->>> using the Panfrost driver.
->>>
->>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>> ---
->>
->> [...]
->>
->>> +        gpu: gpu@13000000 {
->>> +            compatible = "mediatek,mt8188-mali", "arm,mali-valhall-jm";
->>> +            reg = <0 0x13000000 0 0x4000>;
->>> +
->>> +            clocks = <&mfgcfg CLK_MFGCFG_BG3D>;
->>> +            interrupts = <GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH 0>,
->>> +                     <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH 0>,
->>> +                     <GIC_SPI 381 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +            interrupt-names = "job", "mmu", "gpu";
->>> +            operating-points-v2 = <&gpu_opp_table>;
->>> +            power-domains = <&spm MT8188_POWER_DOMAIN_MFG2>,
->>> +                    <&spm MT8188_POWER_DOMAIN_MFG3>,
->>> +                    <&spm MT8188_POWER_DOMAIN_MFG4>;
->>> +            power-domain-names = "core0", "core1", "core2";
->>
->> Hi Angelo,
->>
->> I think you should add something like that here:
->> #cooling-cells = <2>;
->> (the warning is raised when I run 'make dtbs_check')
->>
->> Julien
->>
->
-> I can either add it to a v2 of this series, or you can add it in your patch where
-> you're actually adding the thermal support.
->
-> I have no preferences about who adds it, and I agree that cooling-cells should
-> eventually get there, so I'll leave the choice to you :-)
->
-> Cheers,
-> Angelo
+On Tue, May 28, 2024 at 05:12:46PM +0530, Ajit Pandey wrote:
+> This patch series add dt-bindings, driver and device tree support for DISPCC, CAMCC
+> and GPUCC on QCOM SM4450 platform and also includes a fix related to LUCID EVO PLL
+> config issue in clk-alpha-pll driver which is required for correct scaling of few
+> supported frequencies in graphics clock controllers on SM4450.
+> 
+> Changes in V3:
+> - [PATCH 1/8]: Updated commit tags order and added Reviewed-by: tags
+> - [PATCH 3/8]: Fixed reusing of pll0_config and added Reviewed-by: tags 
+> - [PATCH 6/8]: Updated commit text and added Reviewed-by tags
+> - [PATCH 8/8]: Updated node order for gpucc.
+> - Link to v2: https://lore.kernel.org/all/20240416182005.75422-1-quic_ajipan@quicinc.com/ 
 
-I will add it to my patch.
-Julien
+Nit: in future please retain previous changelogs too.
+
+> 
+> Ajit Pandey (8):
+>   clk: qcom: clk-alpha-pll: Fix CAL_L_VAL override for LUCID EVO PLL
+>   dt-bindings: clock: qcom: add DISPCC clocks on SM4450
+>   clk: qcom: Add DISPCC driver support for SM4450
+>   dt-bindings: clock: qcom: add CAMCC clocks on SM4450
+>   clk: qcom: Add CAMCC driver support for SM4450
+>   dt-bindings: clock: qcom: add GPUCC clocks on SM4450
+>   clk: qcom: Add GPUCC driver support for SM4450
+>   arm64: dts: qcom: sm4450: add camera, display and gpu clock controller
+> 
+>  .../bindings/clock/qcom,sm4450-camcc.yaml     |   63 +
+>  .../bindings/clock/qcom,sm4450-dispcc.yaml    |   71 +
+>  .../bindings/clock/qcom,sm8450-gpucc.yaml     |    2 +
+>  arch/arm64/boot/dts/qcom/sm4450.dtsi          |   38 +
+>  drivers/clk/qcom/Kconfig                      |   27 +
+>  drivers/clk/qcom/Makefile                     |    3 +
+>  drivers/clk/qcom/camcc-sm4450.c               | 1688 +++++++++++++++++
+>  drivers/clk/qcom/clk-alpha-pll.c              |    2 +-
+>  drivers/clk/qcom/dispcc-sm4450.c              |  770 ++++++++
+>  drivers/clk/qcom/gpucc-sm4450.c               |  805 ++++++++
+>  include/dt-bindings/clock/qcom,sm4450-camcc.h |  106 ++
+>  .../dt-bindings/clock/qcom,sm4450-dispcc.h    |   51 +
+>  include/dt-bindings/clock/qcom,sm4450-gpucc.h |   62 +
+>  13 files changed, 3687 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm4450-camcc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm4450-dispcc.yaml
+>  create mode 100644 drivers/clk/qcom/camcc-sm4450.c
+>  create mode 100644 drivers/clk/qcom/dispcc-sm4450.c
+>  create mode 100644 drivers/clk/qcom/gpucc-sm4450.c
+>  create mode 100644 include/dt-bindings/clock/qcom,sm4450-camcc.h
+>  create mode 100644 include/dt-bindings/clock/qcom,sm4450-dispcc.h
+>  create mode 100644 include/dt-bindings/clock/qcom,sm4450-gpucc.h
+> 
+> -- 
+> 2.25.1
+> 
+
+-- 
+With best wishes
+Dmitry
