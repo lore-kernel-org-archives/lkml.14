@@ -1,23 +1,23 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F0B17838B
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7752178CF5
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716925801; cv=none; b=eXoRLMIUYolYsMFVddAT5Vr7SrBXY0/ducgvpLph6Ga6g90VXmH6yqIvjvIPJnCPLD6Or6aYWOPmBp7DwrldNw3LaBTFcmLath8JAI6ctsOrgbdl2mU+tgIDaPdG4qIdDoK+0+54bMZyhc0fC/oIRRZCPF9fGSIN4s7ddS983t0=
+	t=1716925805; cv=none; b=VjJHP+WApW5S6YskT1cm+mWh9ig2unDZ9q5Ez9R8WBAmAct6jsw6gUinlvuUhFaul++6PJeQlmfXL0v/YcqEO2vLzAWsxIwIVVOjidKzSYkuaPXvz3lwTMdAURC/byYJfnAINq8fQEVsKnhhcYRYK7vphdz/1eeplf+mCx+7Tqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716925801; c=relaxed/simple;
-	bh=UUNlZAPD7ufWrtpQqrGWyMeB5Qmh9EtgLPVDRPhTSwU=;
+	s=arc-20240116; t=1716925805; c=relaxed/simple;
+	bh=A072AS2lgROf98Pwf8Fyliy4tqTS+ybyUetYZctK3UE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oyCvU5H+rbiJVwM8nd6CNekGYNjA2vaMDcXikUlfWmm65djT1pnAFQBpdMLOLfH54bBoKTKmCnYSl4R/thh7/rD9tGcKiDxYBX/bzgUn47THZnor3lUiKoOTPPw8ffrT0fRXkMWhYCBK4Gw/dMcCrH5dxUpV+fyGU+nxCR9nYz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+	 MIME-Version; b=mRy2hlhXi0QIPU2ajTHO26WvuBmNek/Qd5fNP6HjKalKi0crVDCNaQ8kdrk3KXy0HLn2YQvZ/fLssnARvrh7y0jwVlfVH7QSaat11fmF6hc1r3Sxa3M8Iqw9bCEzlhdZebB/4xnURCG+5i1T1RHOD2jclo+acUTw+bQaVFMI6Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 76055e70-1d2b-11ef-8d3a-005056bd6ce9;
-	Tue, 28 May 2024 22:49:57 +0300 (EEST)
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id 7893f7c5-1d2b-11ef-8e2b-005056bdf889;
+	Tue, 28 May 2024 22:50:01 +0300 (EEST)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -40,9 +40,9 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	Paul Cercueil <paul@crapouillou.net>,
 	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v2 02/11] pinctrl: equilibrium: Make use of struct pinfunction
-Date: Tue, 28 May 2024 22:44:53 +0300
-Message-ID: <20240528194951.1489887-3-andy.shevchenko@gmail.com>
+Subject: [PATCH v2 05/11] pinctrl: pinmux: Add a convenient define PINCTRL_FUNCTION_DESC()
+Date: Tue, 28 May 2024 22:44:56 +0300
+Message-ID: <20240528194951.1489887-6-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240528194951.1489887-1-andy.shevchenko@gmail.com>
 References: <20240528194951.1489887-1-andy.shevchenko@gmail.com>
@@ -56,120 +56,91 @@ Content-Transfer-Encoding: 8bit
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Since pin control provides a generic data type for the pin function,
-use it in the driver.
+Add PINCTRL_FUNCTION_DESC() macro for inline use.
+
+While at it, fix adjective form in the comment of PINCTRL_GROUP_DESC().
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/pinctrl-equilibrium.c | 24 +++++++++++++-----------
- drivers/pinctrl/pinctrl-equilibrium.h | 12 ------------
- 2 files changed, 13 insertions(+), 23 deletions(-)
+ drivers/pinctrl/core.h   |  2 +-
+ drivers/pinctrl/pinmux.c |  9 +++------
+ drivers/pinctrl/pinmux.h | 11 ++++++++++-
+ 3 files changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-equilibrium.c b/drivers/pinctrl/pinctrl-equilibrium.c
-index 6e1be38865c3..a6d089eaaae5 100644
---- a/drivers/pinctrl/pinctrl-equilibrium.c
-+++ b/drivers/pinctrl/pinctrl-equilibrium.c
-@@ -566,8 +566,8 @@ static const struct pinconf_ops eqbr_pinconf_ops = {
- 	.pin_config_config_dbg_show	= pinconf_generic_dump_config,
+diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+index 837fd5bd903d..4e07707d2435 100644
+--- a/drivers/pinctrl/core.h
++++ b/drivers/pinctrl/core.h
+@@ -206,7 +206,7 @@ struct group_desc {
+ 	void *data;
  };
  
--static bool is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
--			 unsigned int nr_funcs, unsigned int *idx)
-+static bool is_func_exist(struct pinfunction *funcs, const char *name,
-+			  unsigned int nr_funcs, unsigned int *idx)
+-/* Convenience macro to define a generic pin group descriptor */
++/* Convenient macro to define a generic pin group descriptor */
+ #define PINCTRL_GROUP_DESC(_name, _pins, _num_pins, _data)	\
+ (struct group_desc) {						\
+ 	.grp = PINCTRL_PINGROUP(_name, _pins, _num_pins),	\
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index addba55334d9..8d69fa1b0bff 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -852,13 +852,13 @@ EXPORT_SYMBOL_GPL(pinmux_generic_get_function);
+  * @pctldev: pin controller device
+  * @name: name of the function
+  * @groups: array of pin groups
+- * @num_groups: number of pin groups
++ * @ngroups: number of pin groups
+  * @data: pin controller driver specific data
+  */
+ int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+ 				const char *name,
+ 				const char * const *groups,
+-				const unsigned int num_groups,
++				const unsigned int ngroups,
+ 				void *data)
  {
- 	int i;
+ 	struct function_desc *function;
+@@ -877,10 +877,7 @@ int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+ 	if (!function)
+ 		return -ENOMEM;
  
-@@ -584,13 +584,14 @@ static bool is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
- 	return false;
- }
+-	function->name = name;
+-	function->group_names = groups;
+-	function->num_group_names = num_groups;
+-	function->data = data;
++	*function = PINCTRL_FUNCTION_DESC(name, groups, ngroups, data);
  
--static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
-+static int funcs_utils(struct device *dev, struct pinfunction *funcs,
- 		       unsigned int *nr_funcs, funcs_util_ops op)
- {
- 	struct device_node *node = dev->of_node;
- 	struct device_node *np;
- 	struct property *prop;
- 	const char *fn_name;
-+	const char **groups;
- 	unsigned int fid;
- 	int i, j;
- 
-@@ -620,15 +621,16 @@ static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
- 
- 		case OP_COUNT_NR_FUNC_GRPS:
- 			if (is_func_exist(funcs, fn_name, *nr_funcs, &fid))
--				funcs[fid].nr_groups++;
-+				funcs[fid].ngroups++;
- 			break;
- 
- 		case OP_ADD_FUNC_GRPS:
- 			if (is_func_exist(funcs, fn_name, *nr_funcs, &fid)) {
--				for (j = 0; j < funcs[fid].nr_groups; j++)
--					if (!funcs[fid].groups[j])
-+				groups = (const char **)funcs[fid].groups;
-+				for (j = 0; j < funcs[fid].ngroups; j++)
-+					if (!groups[j])
- 						break;
--				funcs[fid].groups[j] = prop->value;
-+				groups[j] = prop->value;
- 			}
- 			break;
- 
-@@ -645,7 +647,7 @@ static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
- static int eqbr_build_functions(struct eqbr_pinctrl_drv_data *drvdata)
- {
- 	struct device *dev = drvdata->dev;
--	struct eqbr_pmx_func *funcs = NULL;
-+	struct pinfunction *funcs = NULL;
- 	unsigned int nr_funcs = 0;
- 	int i, ret;
- 
-@@ -666,9 +668,9 @@ static int eqbr_build_functions(struct eqbr_pinctrl_drv_data *drvdata)
- 		return ret;
- 
- 	for (i = 0; i < nr_funcs; i++) {
--		if (!funcs[i].nr_groups)
-+		if (!funcs[i].ngroups)
- 			continue;
--		funcs[i].groups = devm_kcalloc(dev, funcs[i].nr_groups,
-+		funcs[i].groups = devm_kcalloc(dev, funcs[i].ngroups,
- 					       sizeof(*(funcs[i].groups)),
- 					       GFP_KERNEL);
- 		if (!funcs[i].groups)
-@@ -688,7 +690,7 @@ static int eqbr_build_functions(struct eqbr_pinctrl_drv_data *drvdata)
- 		ret = pinmux_generic_add_function(drvdata->pctl_dev,
- 						  funcs[i].name,
- 						  funcs[i].groups,
--						  funcs[i].nr_groups,
-+						  funcs[i].ngroups,
- 						  drvdata);
- 		if (ret < 0) {
- 			dev_err(dev, "Failed to register function %s\n",
-diff --git a/drivers/pinctrl/pinctrl-equilibrium.h b/drivers/pinctrl/pinctrl-equilibrium.h
-index 83768cc8b3db..b4d149bde39d 100644
---- a/drivers/pinctrl/pinctrl-equilibrium.h
-+++ b/drivers/pinctrl/pinctrl-equilibrium.h
-@@ -67,18 +67,6 @@ struct gpio_irq_type {
- 	unsigned int logic_type;
+ 	error = radix_tree_insert(&pctldev->pin_function_tree, selector, function);
+ 	if (error)
+diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
+index 7c8aa25ccc80..52e6e4db88b4 100644
+--- a/drivers/pinctrl/pinmux.h
++++ b/drivers/pinctrl/pinmux.h
+@@ -145,6 +145,15 @@ struct function_desc {
+ 	void *data;
  };
  
--/**
-- * struct eqbr_pmx_func: represent a pin function.
-- * @name: name of the pin function, used to lookup the function.
-- * @groups: one or more names of pin groups that provide this function.
-- * @nr_groups: number of groups included in @groups.
-- */
--struct eqbr_pmx_func {
--	const char		*name;
--	const char		**groups;
--	unsigned int		nr_groups;
--};
--
- /**
-  * struct eqbr_pin_bank: represent a pin bank.
-  * @membase: base address of the pin bank register.
++/* Convenient macro to define a generic pin function descriptor */
++#define PINCTRL_FUNCTION_DESC(_name, _grps, _num_grps, _data)	\
++(struct function_desc) {					\
++	.name = _name,						\
++	.group_names = _grps,					\
++	.num_group_names = _num_grps,				\
++	.data = _data,						\
++}
++
+ int pinmux_generic_get_function_count(struct pinctrl_dev *pctldev);
+ 
+ const char *
+@@ -162,7 +171,7 @@ struct function_desc *pinmux_generic_get_function(struct pinctrl_dev *pctldev,
+ int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+ 				const char *name,
+ 				const char * const *groups,
+-				unsigned int const num_groups,
++				unsigned int const ngroups,
+ 				void *data);
+ 
+ int pinmux_generic_remove_function(struct pinctrl_dev *pctldev,
 -- 
 2.45.1
 
