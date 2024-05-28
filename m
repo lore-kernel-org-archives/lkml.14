@@ -1,53 +1,53 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDE6182B3;
-	Tue, 28 May 2024 11:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE59D7D07D;
+	Tue, 28 May 2024 11:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716895816; cv=none; b=TmkyPWoDvCgLUkl427rkVJPyLfYrT0HpRr2ZuRYcSTCbBd0JX3niRapHV21GcVwubFVc682YiLZ65BTNXTpNgvRhInfB3pN/dBQLUrjnpGsw58hzNXKHbUwKL06Ugeb9PUD5hWGXw/hXb/OLiKd7t1XqDBZIdgNb3VSBebC8BWQ=
+	t=1716895825; cv=none; b=IVjsT/PwWZ33jmWpZL/sWzsu95O3Q8oZvJIIkxwgPWWmSyojBc3qg9kwxeBFWW1QOXWMhbmas7+ue96X042js33QXfEtMYQXVj5Iq2vdmCJOjQVTkyoagOfX3YeR5T5HK9Hdmb/VzGqNj0uRYdIv/EM1U8F8TJF7e4hfI97WtQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716895816; c=relaxed/simple;
-	bh=RWIsEqPeVlOmF7FXwHF2Q/qHk0T/3X6I1ml83lchXR8=;
+	s=arc-20240116; t=1716895825; c=relaxed/simple;
+	bh=stEOMRE5qaaxUEKxC9KKoTrg2An3XsDVIS1rT20bowY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sKFlnFYqK+p4T2vd4OTJoZKs4Sd9fIDQFOMonDU52M/7ElA4sRTo+VQrZPtgFFijMoBLfuP0TAaUPfMmMrj+ZoAd+USZdktd0cYv6oPgtTdEzZuuf+lHRQE19QkAaq0BXg7M4C160t01+TRGYFGdGTPs6+J9HiVfQiCzoK9a1aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mcKOA1mh; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=ZofWZPaW5qvsa1orHkGvC4fkmXb6vvXAIi8ZOUyFGkvJne3gnXGeWuey+Pga+95PJzr5MR7o/EdP8tEe3gDrwUb/DXBwc3BU4O/HH4PM97ER45Bj1DYW5IiavlaOt9SMax4MSKuvnf+v8cJrMbcrnq/mrHnoU5BRLmevpGAR8yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mk1TvVJs; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mcKOA1mh"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SAwQdj022257;
-	Tue, 28 May 2024 11:30:11 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mk1TvVJs"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SA5AsD001837;
+	Tue, 28 May 2024 11:30:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zar8uZesiyIz13yi/Q7CM/fVi8HkaqVyoZ/iInraejo=; b=mcKOA1mhX8YVQbjh
-	dw8DHzJ7wotGuOgxvfiEQjoEHvuMAQO3v3S1w1U/kA/sKbEevbjVDvtZq2B8SyT/
-	5tJOZQ2lp1mn4/apbQr198JIXeOgnTuafYtFULAJzS2fAaP/FRr8MrPQEHZnkXda
-	bWfyhcYZnthNuHfnNmEr/huzNW3OWpD5woGZaxhWSST5ZX0lk7BEkB1utT29eaiU
-	R+B7buUFQ64KBWFE4dBRuwMZ9ILprrW5lWDFsemLLoqE4X0KoIesCV85o1aPVti4
-	o0GQL5naejyeq1nnDanQkIkj/EqVSTPvjz509/22QGsgTLXHbxI7gWZedLcfqdBY
-	De26ig==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba1k5wcj-1
+	cC1hDyz2CCa8jeJyKNelkqAicu2gVEEwkU7DAVmLdpM=; b=mk1TvVJsi2L4NtxN
+	rBhmarM22HKlq50ft+40zOr/foErBrcoQpJEd1dfPi5NYJ4irMA6DGeewBCnQBxK
+	0PtJYWrltcVUxj7yY+0286rC5Y79QnkPVQ97cbTRNy/P4ti1Gw70J86sOHO9TSTg
+	DpaZkGiIX0vw9ZjU1jWzwZNTnpcwYlhBKCiCn3b8aQw+eeftvdaNuMURTqs0bINB
+	5d0XHrcX3U5lfamBfWiRKIdi2eV9UBl0AGG6PVt7JHPrHQTkl5f6n8VSrhtu+YK7
+	IdwyfkOPufSCNLkg3SNavn77vk7doQKDzS6NPfkpktEmdBykwyyvjJkIHd7azEaF
+	TcmPWw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0g5yfe-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 11:30:11 +0000 (GMT)
+	Tue, 28 May 2024 11:30:20 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SBUAR3007523
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SBUIcr021829
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 May 2024 11:30:10 GMT
+	Tue, 28 May 2024 11:30:18 GMT
 Received: from hu-ekangupt-hyd.qualcomm.com (10.80.80.8) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 28 May 2024 04:30:07 -0700
+ 15.2.1544.9; Tue, 28 May 2024 04:30:15 -0700
 From: Ekansh Gupta <quic_ekangupt@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>
 CC: <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
         <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>
-Subject: [PATCH v2 1/8] misc: fastrpc: Add missing dev_err newlines
-Date: Tue, 28 May 2024 16:59:47 +0530
-Message-ID: <20240528112956.5979-2-quic_ekangupt@quicinc.com>
+Subject: [PATCH v2 4/8] misc: fastrpc: Add static PD restart support
+Date: Tue, 28 May 2024 16:59:50 +0530
+Message-ID: <20240528112956.5979-5-quic_ekangupt@quicinc.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240528112956.5979-1-quic_ekangupt@quicinc.com>
 References: <20240528112956.5979-1-quic_ekangupt@quicinc.com>
@@ -63,75 +63,375 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zG7c15ugTVzNi9gst-AIW11dVKKW-D9W
-X-Proofpoint-GUID: zG7c15ugTVzNi9gst-AIW11dVKKW-D9W
+X-Proofpoint-GUID: KCmnxBIlYrWYjPXuyGLUoLRR9YCxCHIS
+X-Proofpoint-ORIG-GUID: KCmnxBIlYrWYjPXuyGLUoLRR9YCxCHIS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
  definitions=2024-05-28_07,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- suspectscore=0 phishscore=0 clxscore=1011 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 adultscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405170001 definitions=main-2405280087
 
-Few dev_err calls are missing newlines. This can result in unrelated
-lines getting appended which might make logs difficult to understand.
-Add trailing newlines to avoid this.
+Static PDs on the audio and sensor domains are expected to support
+PD restart. The kernel resource handling for the PDs are expected
+to be handled by fastrpc driver. For this, there is a requirement
+of PD service locator to get the event notifications for static PD
+services. Also when events are received, the driver needs to handle
+based on PD states. Added changes to add service locator for audio
+and sensor domain static PDs and handle the PD restart sequence.
 
 Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
 ---
- drivers/misc/fastrpc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/misc/Kconfig   |   2 +
+ drivers/misc/fastrpc.c | 205 ++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 195 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index faf983680040..e2d83cd085b5 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -280,8 +280,10 @@ config QCOM_FASTRPC
+ 	tristate "Qualcomm FastRPC"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+ 	depends on RPMSG
++	depends on NET
+ 	select DMA_SHARED_BUFFER
+ 	select QCOM_SCM
++	select QCOM_PDR_HELPERS
+ 	help
+ 	  Provides a communication mechanism that allows for clients to
+ 	  make remote method invocations across processor boundary to
 diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 4c67e2c5a82e..4028cb96bcf2 100644
+index 6556c63c4ad7..7796b743cc45 100644
 --- a/drivers/misc/fastrpc.c
 +++ b/drivers/misc/fastrpc.c
-@@ -325,7 +325,7 @@ static void fastrpc_free_map(struct kref *ref)
- 			err = qcom_scm_assign_mem(map->phys, map->size,
- 				&src_perms, &perm, 1);
- 			if (err) {
--				dev_err(map->fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d",
-+				dev_err(map->fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
- 						map->phys, map->size, err);
- 				return;
- 			}
-@@ -816,7 +816,7 @@ static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
- 		map->attr = attr;
- 		err = qcom_scm_assign_mem(map->phys, (u64)map->size, &src_perms, dst_perms, 2);
- 		if (err) {
--			dev_err(sess->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d",
-+			dev_err(sess->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d\n",
- 					map->phys, map->size, err);
- 			goto map_err;
- 		}
-@@ -1222,7 +1222,7 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
- 		 * that does not support unsigned PD offload
- 		 */
- 		if (!fl->cctx->unsigned_support || !unsigned_pd_request) {
--			dev_err(&fl->cctx->rpdev->dev, "Error: Untrusted application trying to offload to signed PD");
-+			dev_err(&fl->cctx->rpdev->dev, "Error: Untrusted application trying to offload to signed PD\n");
- 			return true;
- 		}
+@@ -22,6 +22,7 @@
+ #include <linux/firmware/qcom/qcom_scm.h>
+ #include <uapi/misc/fastrpc.h>
+ #include <linux/of_reserved_mem.h>
++#include <linux/soc/qcom/pdr.h>
+ 
+ #define ADSP_DOMAIN_ID (0)
+ #define MDSP_DOMAIN_ID (1)
+@@ -29,6 +30,7 @@
+ #define CDSP_DOMAIN_ID (3)
+ #define FASTRPC_DEV_MAX		4 /* adsp, mdsp, slpi, cdsp*/
+ #define FASTRPC_MAX_SESSIONS	14
++#define FASTRPC_MAX_SPD		4
+ #define FASTRPC_MAX_VMIDS	16
+ #define FASTRPC_ALIGN		128
+ #define FASTRPC_MAX_FDLIST	16
+@@ -105,6 +107,18 @@
+ 
+ #define miscdev_to_fdevice(d) container_of(d, struct fastrpc_device, miscdev)
+ 
++#define AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME   "audio_pdr_adsp"
++#define AUDIO_PDR_ADSP_SERVICE_NAME              "avs/audio"
++#define ADSP_AUDIOPD_NAME                        "msm/adsp/audio_pd"
++
++#define SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME   "sensors_pdr_adsp"
++#define SENSORS_PDR_ADSP_SERVICE_NAME              "tms/servreg"
++#define ADSP_SENSORPD_NAME                       "msm/adsp/sensor_pd"
++
++#define SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME "sensors_pdr_slpi"
++#define SENSORS_PDR_SLPI_SERVICE_NAME            SENSORS_PDR_ADSP_SERVICE_NAME
++#define SLPI_SENSORPD_NAME                       "msm/slpi/sensor_pd"
++
+ static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
+ 						"sdsp", "cdsp"};
+ struct fastrpc_phy_page {
+@@ -258,6 +272,15 @@ struct fastrpc_session_ctx {
+ 	bool valid;
+ };
+ 
++struct fastrpc_static_pd {
++	char *servloc_name;
++	char *spdname;
++	void *pdrhandle;
++	struct fastrpc_channel_ctx *cctx;
++	struct fastrpc_user *fl;
++	bool ispdup;
++};
++
+ struct fastrpc_channel_ctx {
+ 	int domain_id;
+ 	int sesscount;
+@@ -265,6 +288,7 @@ struct fastrpc_channel_ctx {
+ 	struct qcom_scm_vmperm vmperms[FASTRPC_MAX_VMIDS];
+ 	struct rpmsg_device *rpdev;
+ 	struct fastrpc_session_ctx session[FASTRPC_MAX_SESSIONS];
++	struct fastrpc_static_pd spd[FASTRPC_MAX_SPD];
+ 	spinlock_t lock;
+ 	struct idr ctx_idr;
+ 	struct list_head users;
+@@ -296,10 +320,12 @@ struct fastrpc_user {
+ 	struct fastrpc_channel_ctx *cctx;
+ 	struct fastrpc_session_ctx *sctx;
+ 	struct fastrpc_buf *init_mem;
++	struct fastrpc_static_pd *spd;
+ 
+ 	int tgid;
+ 	int pd;
+ 	bool is_secure_dev;
++	char *servloc_name;
+ 	/* Lock for lists */
+ 	spinlock_t lock;
+ 	/* lock for allocations */
+@@ -1257,12 +1283,33 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
+ 	return false;
+ }
+ 
++static struct fastrpc_static_pd *fastrpc_get_spd_session(
++				struct fastrpc_user *fl)
++{
++	int i;
++	struct fastrpc_static_pd *spd = NULL;
++	struct fastrpc_channel_ctx *cctx = fl->cctx;
++
++	for (i = 0; i < FASTRPC_MAX_SPD ; i++) {
++		if (!cctx->spd[i].servloc_name)
++			continue;
++		if (!strcmp(fl->servloc_name, cctx->spd[i].servloc_name)) {
++			spd = &cctx->spd[i];
++			spd->fl = fl;
++			break;
++		}
++	}
++
++	return spd;
++}
++
+ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+ 					      char __user *argp)
+ {
+ 	struct fastrpc_init_create_static init;
+ 	struct fastrpc_invoke_args *args;
+ 	struct fastrpc_phy_page pages[1];
++	struct fastrpc_static_pd *spd = NULL;
+ 	char *name;
+ 	int err;
+ 	struct {
+@@ -1297,6 +1344,19 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+ 		goto err_name;
  	}
-@@ -1285,7 +1285,7 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
- 							&src_perms,
- 							fl->cctx->vmperms, fl->cctx->vmcount);
- 			if (err) {
--				dev_err(fl->sctx->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d",
-+				dev_err(fl->sctx->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d\n",
- 					fl->cctx->remote_heap->phys, fl->cctx->remote_heap->size, err);
- 				goto err_map;
- 			}
-@@ -1337,7 +1337,7 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
- 						(u64)fl->cctx->remote_heap->size,
- 						&src_perms, &dst_perms, 1);
- 		if (err)
--			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d",
-+			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
- 				fl->cctx->remote_heap->phys, fl->cctx->remote_heap->size, err);
+ 
++	fl->servloc_name = AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME;
++
++	spd = fastrpc_get_spd_session(fl);
++	if (!spd) {
++		err = -EUSERS;
++		goto err_name;
++	}
++
++	if (!spd->ispdup) {
++		err = -ENOTCONN;
++		goto err_name;
++	}
++	fl->spd = spd;
+ 	if (!fl->cctx->remote_heap) {
+ 		err = fastrpc_remote_heap_alloc(fl, fl->sctx->dev, init.memlen,
+ 						&fl->cctx->remote_heap);
+@@ -1688,6 +1748,7 @@ static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char __user *argp)
+ static int fastrpc_init_attach(struct fastrpc_user *fl, int pd)
+ {
+ 	struct fastrpc_invoke_args args[1];
++	struct fastrpc_static_pd *spd = NULL;
+ 	int tgid = fl->tgid;
+ 	u32 sc;
+ 
+@@ -1697,6 +1758,22 @@ static int fastrpc_init_attach(struct fastrpc_user *fl, int pd)
+ 	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_ATTACH, 1, 0);
+ 	fl->pd = pd;
+ 
++	if (pd == SENSORS_PD) {
++		if (fl->cctx->domain_id == ADSP_DOMAIN_ID)
++			fl->servloc_name = SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME;
++		else if (fl->cctx->domain_id == SDSP_DOMAIN_ID)
++			fl->servloc_name = SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME;
++
++		spd = fastrpc_get_spd_session(fl);
++		if (!spd)
++			return -EUSERS;
++
++		if (!spd->ispdup)
++			return -ENOTCONN;
++
++		fl->spd = spd;
++	}
++
+ 	return fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE,
+ 				       sc, &args[0]);
+ }
+@@ -2172,6 +2249,64 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
+ 	return err;
+ }
+ 
++static void fastrpc_notify_users(struct fastrpc_user *user)
++{
++	struct fastrpc_invoke_ctx *ctx;
++
++	spin_lock(&user->lock);
++	list_for_each_entry(ctx, &user->pending, node) {
++		ctx->retval = -EPIPE;
++		complete(&ctx->work);
++	}
++	spin_unlock(&user->lock);
++}
++
++static void fastrpc_notify_pdr_drivers(struct fastrpc_channel_ctx *cctx,
++		char *servloc_name)
++{
++	struct fastrpc_user *fl;
++	unsigned long flags;
++
++	spin_lock_irqsave(&cctx->lock, flags);
++	list_for_each_entry(fl, &cctx->users, user) {
++		if (fl->servloc_name && !strcmp(servloc_name, fl->servloc_name))
++			fastrpc_notify_users(fl);
++	}
++	spin_unlock_irqrestore(&cctx->lock, flags);
++}
++
++static void fastrpc_pdr_cb(int state, char *service_path, void *priv)
++{
++	struct fastrpc_static_pd *spd = (struct fastrpc_static_pd *)priv;
++	struct fastrpc_channel_ctx *cctx;
++
++	if (!spd)
++		return;
++
++	cctx = spd->cctx;
++	switch (state) {
++	case SERVREG_SERVICE_STATE_DOWN:
++		dev_info(&cctx->rpdev->dev,
++			"%s: %s (%s) is down for PDR on %s\n",
++			__func__, spd->spdname,
++			spd->servloc_name,
++			domains[cctx->domain_id]);
++		spd->ispdup = false;
++		fastrpc_notify_pdr_drivers(cctx, spd->servloc_name);
++		break;
++	case SERVREG_SERVICE_STATE_UP:
++		dev_info(&cctx->rpdev->dev,
++			"%s: %s (%s) is up for PDR on %s\n",
++			__func__, spd->spdname,
++			spd->servloc_name,
++			domains[cctx->domain_id]);
++		spd->ispdup = true;
++		break;
++	default:
++		break;
++	}
++}
++
+ static const struct file_operations fastrpc_fops = {
+ 	.open = fastrpc_device_open,
+ 	.release = fastrpc_device_release,
+@@ -2291,6 +2426,39 @@ static int fastrpc_device_register(struct device *dev, struct fastrpc_channel_ct
+ 	return err;
+ }
+ 
++static int fastrpc_setup_service_locator(struct fastrpc_channel_ctx *cctx, char *client_name,
++			char *service_name, char *service_path, int domain, int spd_session)
++{
++	int err = 0;
++	struct pdr_handle *handle = NULL;
++	struct pdr_service *service = NULL;
++
++	/* Register the service locator's callback function */
++	handle = pdr_handle_alloc(fastrpc_pdr_cb, &cctx->spd[spd_session]);
++	if (IS_ERR(handle)) {
++		err = PTR_ERR(handle);
++		goto bail;
++	}
++	cctx->spd[spd_session].pdrhandle = handle;
++	cctx->spd[spd_session].servloc_name = client_name;
++	cctx->spd[spd_session].spdname = service_path;
++	cctx->spd[spd_session].cctx = cctx;
++	service = pdr_add_lookup(handle, service_name, service_path);
++	if (IS_ERR(service)) {
++		err = PTR_ERR(service);
++		goto bail;
++	}
++	pr_info("fastrpc: %s: pdr_add_lookup enabled for %s (%s, %s)\n",
++		__func__, service_name, client_name, service_path);
++
++bail:
++	if (err) {
++		pr_warn("fastrpc: %s: failed for %s (%s, %s)with err %d\n",
++				__func__, service_name, client_name, service_path, err);
++	}
++	return err;
++}
++
+ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+ {
+ 	struct device *rdev = &rpdev->dev;
+@@ -2369,6 +2537,25 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+ 		goto fdev_error;
  	}
- err_map:
+ 
++	if (domain_id == ADSP_DOMAIN_ID) {
++		err = fastrpc_setup_service_locator(data, AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME,
++			AUDIO_PDR_ADSP_SERVICE_NAME, ADSP_AUDIOPD_NAME, domain_id, 0);
++		if (err)
++			goto populate_error;
++
++		err = fastrpc_setup_service_locator(data,
++			SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME,
++			SENSORS_PDR_ADSP_SERVICE_NAME, ADSP_SENSORPD_NAME, domain_id, 1);
++		if (err)
++			goto populate_error;
++	} else if (domain_id == SDSP_DOMAIN_ID) {
++		err = fastrpc_setup_service_locator(data,
++			SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME,
++			SENSORS_PDR_SLPI_SERVICE_NAME, SLPI_SENSORPD_NAME, domain_id, 0);
++		if (err)
++			goto populate_error;
++	}
++
+ 	kref_init(&data->refcount);
+ 
+ 	dev_set_drvdata(&rpdev->dev, data);
+@@ -2397,23 +2584,12 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+ 	return err;
+ }
+ 
+-static void fastrpc_notify_users(struct fastrpc_user *user)
+-{
+-	struct fastrpc_invoke_ctx *ctx;
+-
+-	spin_lock(&user->lock);
+-	list_for_each_entry(ctx, &user->pending, node) {
+-		ctx->retval = -EPIPE;
+-		complete(&ctx->work);
+-	}
+-	spin_unlock(&user->lock);
+-}
+-
+ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+ {
+ 	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
+ 	struct fastrpc_user *user;
+ 	unsigned long flags;
++	int i;
+ 
+ 	/* No invocations past this point */
+ 	spin_lock_irqsave(&cctx->lock, flags);
+@@ -2431,6 +2607,11 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+ 	if (cctx->remote_heap)
+ 		fastrpc_buf_free(cctx->remote_heap);
+ 
++	for (i = 0; i < FASTRPC_MAX_SPD; i++) {
++		if (cctx->spd[i].pdrhandle)
++			pdr_handle_release(cctx->spd[i].pdrhandle);
++	}
++
+ 	of_platform_depopulate(&rpdev->dev);
+ 
+ 	fastrpc_channel_ctx_put(cctx);
 -- 
 2.43.0
 
