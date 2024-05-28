@@ -1,243 +1,202 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7282563
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 18:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A9C18AF9
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716922754; cv=none; b=CkVX3ssDtbqgR9DHehlvtah2Td3mNAigOZYRRs0DfnMfsy40K5DbLEGz41hYOnIE5KeYXwK0S9ZoPo+1HwfgDnfsHVX4wpfdYLCdarigT7UvmLlx3R289n8vORpsZFuOX1iliyIMQVeuLNQPNibzMIPd/TtxhJZoDQfWDxOynco=
+	t=1716922843; cv=none; b=Cfo70XoVNCAm6IigWLn1kbYsPqUt4Lmsr82Cxj80kDESG52xZVab9Ym9UwjgpCMggAZ9Q4EjQvbRByrfuDXGQWGeL1zXwSfO/Y+VDWqUA5k6NYIPFqTIOS4v/XaHNlE4i0jM/8WYob54kto5J+nfXCUqTRrOfkXJLtZGQRRqzO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716922754; c=relaxed/simple;
-	bh=JugizINjHqR9cpFF0CnjW8t70zU3RksmSvm7HZuLe+M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kqX4POZOemWrWCjpC0rXJkcR/Q2Be9R2faGvylO01KX9RIeBDR7IhbOwHaQnzlWNuaxhOdUqYz1aaUkD/N0wUGyrnPPdW+2Ji+Q96OWVfkTjSb1kzAO++F8txT56UBmSnGokguhp81FdQN82WCdNTR+sMxIJPltEMdYjyF4jddw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VnlRwlYn; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716922843; c=relaxed/simple;
+	bh=f+voVYQgJ6rLsoG7iQDzb3odNjuXcpx3jZ1qlcYa4aY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=udYPlf30K0663EWEz5Dh3p7WS1C6blCvHv0neZIHwa0BHPUCNkwKCF4UDbg5DthiKHDtUNdRsHjwzAqBfbO/k2lH2S2+AQ4FZyhUlOGuHlMbQd31T3SMkMYqIQEUyYkUeNy/SXFgdxyHxbDhx1Uo9gMQsAO8OOvNYNw4ni4AgGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hOIgLuYM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VnlRwlYn"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-43dfe020675so97231cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716922752; x=1717527552; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ELD/2chU87F21aDYaAH3EcQFIS5J1igS3MiO/QHUtns=;
-        b=VnlRwlYngljvmFF/6OmFFb9TNFCmIbL/c8gCfKzGqTS25EnMoocjHx/Wy2XirzRCDn
-         QtxFqve5IjRl/xX8bJXsFuMxRgsCMWS9mt4k22uYU7o2btVp9rrarSlPIXO20L6mPYuV
-         MISvB0dbXS3jvu0mWCgUCH9NsN33bfO56XvCPKSBfwr+devMWLY6vvWSjwvhAL8aIOPm
-         EdRcyROt8BH5CpmVvmL80nb/0JZHd6PhuwI6D8YI+Ar/bA+V+l8qAoKvR88u5jbyVJHV
-         kxfW8JV9cTKZWcOJ7hdBLjqblnPP0WAmzCHQ0eA8AqoDXzO5yH7WtDvo9Ya9TBCIFMQk
-         v+rg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hOIgLuYM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716922840;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EroyhAMtYZlwFiF+i06GpFh0h6zXLI4AvXcFdjRTODk=;
+	b=hOIgLuYM6j3Kye4aK1BFeprbsK2/nuRSV0y7rIVIxe+PlOZrFh3/VVFEHLeLCs7xMAeVJ9
+	FAlQYDf5x2fLczpEfKJWk45V1B1/xzMo8OT6nqdqARPp88MghRlQB3wLYiZp9rIMi3Z58F
+	RlOwWsBO5yVqEfMHlc5xY6LiKIJNwR8=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-209-gPpSsU1BOmm5dlgNF8H8ag-1; Tue, 28 May 2024 15:00:39 -0400
+X-MC-Unique: gPpSsU1BOmm5dlgNF8H8ag-1
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-43fc7d851f5so12373901cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 12:00:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716922752; x=1717527552;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ELD/2chU87F21aDYaAH3EcQFIS5J1igS3MiO/QHUtns=;
-        b=gaZu3/d97CpGadSVfZfkDqiFDtuu2Sk/Mc3fR5kUjDFqRQYl7I4Ssdrq9p7oCiDTtG
-         /jBcLlqWweaWqUN7FhteYA7NH0NWV23bQ0hidl6rPhPZESLLnq9x13qXdW8fXTosMnZj
-         PoM2FAXxtqAvLJ6ml25G1Nmf/RFpGcKNhlSQ/LfukqV+D4d46m64guzigMvgcAssvv+O
-         DWdnOX96i35aKZGIC2UkdwJIGT351bsBXLNi070+n+8x++4TIV0MO8cvM8T3+P6uR/HK
-         22kBpe8m0/CBMzCrw5xjcABAxlfcTbA5KpBmjfZlX9Hcp/liMirz9ZLoJOfpHk+o97YR
-         RsGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVBuRqYrx40Waog/ZtYIbvNf2H0yrU+61sBY795e8ZgXlZjXd0VI+Zux4ZNIY0rgxJbuIgkTDbSzSWZnvRRkFKCPU7UpsdBYmRN9le
-X-Gm-Message-State: AOJu0YzyUw1I/eAz41eK5vVmWBqXXDeTgAXk+50tOuydNdA2WBFWkayH
-	vQakoOPLtUhG1rBaURzuxPaOa+6Pw0Ay47exq1rzQvFu5X06Wk5yKhuHKyUj2jhCv30rEn4sen+
-	SHVbiR6Hgyi4fPCOT5acYx3EF8tUvuJgGXBfIaGP3nITXoeqpJHgbehM=
-X-Google-Smtp-Source: AGHT+IGnNIRgwwM8j0F+3ahcPSXWF53AQe7JkGqjY5dz35qv2JbOIoODEI7twGYMBh4iLOF1jVuRR7Pdc56bxdiA80U=
-X-Received: by 2002:a05:622a:5106:b0:43e:e09:d346 with SMTP id
- d75a77b69052e-43fe0d85cdemr201621cf.5.1716922751982; Tue, 28 May 2024
- 11:59:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716922838; x=1717527638;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EroyhAMtYZlwFiF+i06GpFh0h6zXLI4AvXcFdjRTODk=;
+        b=UsEGRzWs3sEytqFDmzG97qnLoqOLYRUWxmzSIEgu2Rl3qbIbe3fYdRhBYAh2dd0idc
+         IhZFh/tRtcLkh0Y98JMFTJ5nm9rcUphy8IF0rxX/gW6CQNhyFij2Db/gWNcGX8hRsFuM
+         g0lajkvr8gMc4YEOjtq7BRqyyAS7ozSFooihTsALntskjOlQ48gkdm3vVI8wHnsgAFNW
+         xJFARKvpXGYPm6w7Su2+CC8wEcRWVINAN8mD4fMytBAiZ62vOkQbV74NXzHVVLkCNnZl
+         qa5EWMfUPUQ1Gz46CFGOhihkCT5kOzmh4RH+VvXjaHPWND/O9Q1940ntQTMJJiHpnksh
+         AS2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVAdJzRXCNRBnacQ/+NDW+BPvrEsNYWbxIDQkYnt+XNDf9IfhNDe94tyzzc1HKa6fhHQ1ejnr5zGB83xYd7piiWYLN8UM7+oH5Eamic
+X-Gm-Message-State: AOJu0Yz/wOfdBXZT6nEtmftp9R6oNqghlE8sX7EZoH1J82gcITJ+X6Zw
+	Yr8Vh1+AuJD4h1ozFkspbw9bai8OrZnGs/V1ndEFR0nf6ORtpl5xTBGc798As2q0+9GHXO/+lx8
+	TFNt7u4coF0BKatHQQNE65ouix2Yjqde8aOcm3Jj0DTNSfkqcqgJtBq3MK/ykxw==
+X-Received: by 2002:a05:622a:10a:b0:43e:34ea:80ee with SMTP id d75a77b69052e-43fb0e8d809mr134383951cf.29.1716922837921;
+        Tue, 28 May 2024 12:00:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHLHIs0G4ODwLtaTgMc9fP7BM4N2EDamkPS2f5rSvXhQ/RuodqmrywBv65gQp5ZlO5A4PV4Ug==
+X-Received: by 2002:a05:622a:10a:b0:43e:34ea:80ee with SMTP id d75a77b69052e-43fb0e8d809mr134383451cf.29.1716922837199;
+        Tue, 28 May 2024 12:00:37 -0700 (PDT)
+Received: from localhost (pool-71-184-142-128.bstnma.fios.verizon.net. [71.184.142.128])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fb17f69ddsm44981881cf.41.2024.05.28.12.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 12:00:36 -0700 (PDT)
+From: Eric Chanudet <echanude@redhat.com>
+To: Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nick Piggin <npiggin@gmail.com>
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Eric Chanudet <echanude@redhat.com>
+Subject: [PATCH v3] mm/mm_init: use node's number of cpus in deferred_page_init_max_threads
+Date: Tue, 28 May 2024 14:54:58 -0400
+Message-ID: <20240528185455.643227-4-echanude@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525152927.665498-1-irogers@google.com> <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
- <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
- <20240527105842.GB33806@debian-dev> <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
- <CAHk-=wgcoODsCbba423uZwQqOjJ8r29GZyCd472K6L6Dt-NbPg@mail.gmail.com>
- <CAP-5=fUp+gSoLC90vT50X7So_SyAC9OprAMvh_Jj_8NTuO6j_w@mail.gmail.com> <CAHk-=wiDheOd3pdZ4vdLwrMbbVs3LUcSD=afASEWbND-HZhuPA@mail.gmail.com>
-In-Reply-To: <CAHk-=wiDheOd3pdZ4vdLwrMbbVs3LUcSD=afASEWbND-HZhuPA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 28 May 2024 11:58:57 -0700
-Message-ID: <CAP-5=fVGF6A7fwZyF8o0Sz5nNhtXb0007JoCxaiL2XHCKS3=0A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 28, 2024 at 11:13=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 28 May 2024 at 10:40, Ian Rogers <irogers@google.com> wrote:
-> >
-> > I agree it picked the wrong PMU for default events. This was a problem
-> > on no systems that anybody was bothering to test with. Having been
-> > made aware of the issue I fixed it in this patch, you're welcome.
->
-> You didn't just pick it for default events. You also picked it for
-> when the user explicitly asks for "profile for cycles"
->
-> > What is still not clear from this is what should the behavior be of:
-> >
-> > $ perf record -e cycles ...
->
-> Why do you claim that?
->
-> I've already told you that CLEARLY it's wrong to pick a cycles event
-> that doesn't support 'record'.
->
-> I've also suggested that you might look at core only PMUs.
->
-> But more importantly, you should look at documented and historical behavi=
-or.
->
-> So what is your argument? Because from where I'm sitting, you keep
-> making irrelevant arguments about *other* events, not about "cycles".
->
-> It used to work. It doesn't any more.
->
-> > Should it wildcard all events and open them on all PMUs potentially
-> > failing? Well this has always been perf's behavior were the event:
-> >
-> > $ perf record -e inst_retired.any ...
->
-> You keep making up irrelevant arguments.
->
-> Lookie here: I do "perf list" to just see the events, and what do I
-> get? Let me quote that for you:
->
->     List of pre-defined events (to be used in -e or -M):
->     ...
->       cpu-cycles OR cycles                               [Hardware event]
->
-> and then later on in the list I get
->
->     general:
->       cpu_cycles
->            [Cycle. Unit: armv8_pmuv3_0]
->
-> and dammit, your patch broke the DOCUMENTED way to get  the most
-> obvious profiling data: cycles.
->
-> So stop making shit up. All your arguments have been bogus garbage
-> that have been talking about entirely different things than the one
-> thing I reported was broken.
->
-> And you *keep* doing that. Days into this, you keep making shit up
-> that isn't about this very simple thing.
->
-> Every single time I tell you what the problem is, you try to twist to
-> be about something entirely different. Either a different 'perf'
-> command entirely, or about a different event that is ENTIRELY
-> IRRELEVANT.
->
-> What the hell is your problem? Why can't you just admit that you
-> f*cked up, and fix the thing I told you was broken, and that is very
-> clearly broken and there is no "what about" issues AT ALL.
->
-> So stop the idiocy already. Face the actual issue. Don't make up other th=
-ings.
->
-> Dammit, if I wanted "arm_dsu_58/cycles/", I would SAY so. I didn't. I
-> said "cycles", which is the thing that has always worked across
-> architectures, that is DOCUMENTED to be the same as "cpu-cycles", and
-> that used to work just fine.
->
-> It's literally RIGHT THERE in "perf list". Using "-e cycles" is
-> literally also what the man-pages say. This is not me doing something
-> odd.
+When DEFERRED_STRUCT_PAGE_INIT=y, use a node's cpu count as maximum
+thread count for the deferred initialization of struct pages via padata.
+This should result in shorter boot times for these configurations by
+going through page_alloc_init_late() faster as systems tend not to be
+under heavy load that early in the bootstrap.
 
-But nobody else ever reported the issue, even ARM who maintain the PMU
-driver whose event name conflicts. This hasn't been a problem for
-anybody else.
+Only x86_64 does that now. Make it archs agnostic when
+DEFERRED_STRUCT_PAGE_INIT is set. With the default defconfigs, that
+includes powerpc and s390.
 
-> And yes, I use an explicit "-e cycles:pp" because the default is not
-> that. and "cycles:pp" does better than the default.
+It used to be so before offering archs to override the function for
+tuning with commit ecd096506922 ("mm: make deferred init's max threads
+arch-specific").
 
-This is wrong. cycles:P means use the maximum precision, so if the PMU
-supports it it will use cycles:ppp and on x86 this is often the case.
-The number of 'p's used after the event with :P is read from sysfs:
-```
-$ cat /sys/devices/cpu/caps/max_precise
-3
-```
-The default using cycles:P is intentional and better than cycles:pp.
-If `/sys/devices/cpu/caps/max_precise` is wrong for your PMU driver
-then that should get fixed.
+Setting DEFERRED_STRUCT_PAGE_INIT and testing on a few arm64 platforms
+shows faster deferred_init_memmap completions:
+|         | x13s        | SA8775p-ride | Ampere R137-P31 | Ampere HR330 |
+|         | Metal, 32GB | VM, 36GB     | VM, 58GB        | Metal, 128GB |
+|         | 8cpus       | 8cpus        | 8cpus           | 32cpus       |
+|---------|-------------|--------------|-----------------|--------------|
+| threads |  ms     (%) | ms       (%) |  ms         (%) |  ms      (%) |
+|---------|-------------|--------------|-----------------|--------------|
+| 1       | 108    (0%) | 72      (0%) | 224        (0%) | 324     (0%) |
+| cpus    |  24  (-77%) | 36    (-50%) |  40      (-82%) |  56   (-82%) |
 
-> Again, this is all documented, with "man perf-record" literally
-> talking about "-e cycles" and then pointing to "man perf-list" for the
-> modifier details, which detail that 'pp' as meaning "use maximum
-> detected precise level". Which is exactly what I want (even if on this
-> machine, it turns out that "p" and "pp" are the same because the armv8
-> pmuv3  doesn't have that "correct for instruction drift" that Intel
-> does on x86).
->
-> Why is this simple thing so hard for you to understand?
->
-> The fact is, if you make "cycles" mean ANYTHING ELSE than the
-> long-documented actual obvious thing, you have broken perf. It's that
-> simple.
->
-> So stop the excuses already. Stop making up other stuff that isn't
-> relevant. Stop bringing up events or PMU's that are simply not the
-> issue.
->
-> Face your bug head on, instead of making me have to tell you the same
-> thing over and over and over again.
+Michael Ellerman on a powerpc machine (1TB, 40 cores, 4KB pages) reports
+faster deferred_init_memmap from 210-240ms to 90-110ms between nodes.
 
-I keep saying the same thing as I don't agree with you, you have
-broken perf in 6.10 and are presumably looking to me to pick up the
-pieces. To work around the naming conflict on systems with
-arm_dsu_*/events/cycles/ I don't think it is unreasonable to specify
-armv8_pmuv3_0/cycles/, the blame for this lies with ARM's event name
-within the arm_dsu_* PMU driver, admittedly they didn't know this
-would be an issue given perf's non-uniform handling of legacy events.
-When ARM requested that legacy events be a lower priority than
-sysfs/json then the ball was set in motion for this problem. This was
-done to work around an ARM PMU problem on Apple ARM CPUs.
+Signed-off-by: Eric Chanudet <echanude@redhat.com>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Let's say an Apple CPU has a PMU called armv8_pmuv3_0. If you try to
-program a legacy event on it then it will be broken - I lack a system
-to test this but I'm reliably informed (user bugs and by ARM) and heck
-it was a bunch of work to get this working if it was for nobody. To
-fix this perf must read event data for armv8_pmuv3_0/cycles/ from
-sysfs. If you don't specify a PMU then perf will try to program a
-legacy event. This is the behavior in Linux 6.9. Oh, but legacy events
-are broken on my Apple ARM CPU. The change made it so when you don't
-specify a PMU you will use the sysfs/json one first instead of the
-legacy one. Viola, your favorite `perf record -e cycles:pp ..` should
-be fixed on Apple ARM CPUs.
+---
+- v1: https://lore.kernel.org/linux-arm-kernel/20240520231555.395979-5-echanude@redhat.com
+- Changes since v1:
+ - Make the generic function return the number of cpus of the node as
+   max threads limit instead overriding it for arm64.
+ - Drop Baoquan He's R-b on v1 since the logic changed.
+ - Add CCs according to patch changes (ppc and s390 set
+   DEFERRED_STRUCT_PAGE_INIT by default).
 
-So I think the revert is a real regression for a larger user base.
-There is a testing issue here, not least I don't possess an Apple ARM
-machine. All of these issues revolve around ARM and yet they do
-minimal to try to fix them, beside complain that I should fix the
-legacy/sysfs/json issue which is how we got here.
+- v2: https://lore.kernel.org/linux-arm-kernel/20240522203758.626932-4-echanude@redhat.com/
+- Changes since v2:
+ - deferred_page_init_max_threads returns unsigned and use max instead
+   of max_t.
+ - Make deferred_page_init_max_threads static since there are no more
+   override.
+ - Rephrase description.
+ - Add T-b and report from Michael Ellerman.
 
-There's of course the alternate universe view that I need to admit I'm
-wrong and I should stop going out of my way to break people. Hello
-alternate universe, I admit it, I'm wrong and a terrible person please
-accept my most sincere apologies. Please alternate universe, can you
-tell me how to wild card event names and make them work across PMUs
-without the behavior being specific to certain perf comands or event
-names (which I think is worse than having to specify which PMU you
-think the event should apply)?
+ arch/x86/mm/init_64.c    | 12 ------------
+ include/linux/memblock.h |  2 --
+ mm/mm_init.c             |  5 ++---
+ 3 files changed, 2 insertions(+), 17 deletions(-)
 
-Thanks,
-Ian
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 7e177856ee4f..adec42928ec1 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1354,18 +1354,6 @@ void __init mem_init(void)
+ 	preallocate_vmalloc_pages();
+ }
+ 
+-#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+-int __init deferred_page_init_max_threads(const struct cpumask *node_cpumask)
+-{
+-	/*
+-	 * More CPUs always led to greater speedups on tested systems, up to
+-	 * all the nodes' CPUs.  Use all since the system is otherwise idle
+-	 * now.
+-	 */
+-	return max_t(int, cpumask_weight(node_cpumask), 1);
+-}
+-#endif
+-
+ int kernel_set_to_readonly;
+ 
+ void mark_rodata_ro(void)
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index e2082240586d..40c62aca36ec 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -335,8 +335,6 @@ void __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+ 	for (; i != U64_MAX;					  \
+ 	     __next_mem_pfn_range_in_zone(&i, zone, p_start, p_end))
+ 
+-int __init deferred_page_init_max_threads(const struct cpumask *node_cpumask);
+-
+ #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+ 
+ /**
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index f72b852bd5b8..acfeba508796 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -2122,11 +2122,10 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
+ 	}
+ }
+ 
+-/* An arch may override for more concurrency. */
+-__weak int __init
++static unsigned int __init
+ deferred_page_init_max_threads(const struct cpumask *node_cpumask)
+ {
+-	return 1;
++	return max(cpumask_weight(node_cpumask), 1U);
+ }
+ 
+ /* Initialise remaining memory on a node */
+-- 
+2.44.0
 
->                    Linus
->
