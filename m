@@ -1,466 +1,225 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2093.outbound.protection.outlook.com [40.107.255.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B680413DB9C
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716886777; cv=none; b=PRnLSx7m0LL3jhzSF9TOm+TLC6uMqFfJtzJDGzQ0aeJEIC/G488JCg2d7kasOJtLrX1zK7uwsfT95m9y3jOHhsEzQ85WLUQuEDlbyK3FP8VKxTzPcNgDy8y5R6KiukvXGOyMok9xcK+eTqUsR+FZf1CbeT9PDIiqBo9hlE/Kjng=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716886777; c=relaxed/simple;
-	bh=rndKYEd/BB7PiS0ywRAW6Lj5Nzx/59roW7F2C+8rEXk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nEPg1pQ/omO7OBngWd04vvWBu0+8pxEyTYsneEhYYgY4Lj5zCdxtGmg45Tcx6r8uy1akUPZTHNzsyiQ67B2SNIRgGgQYKs1FRASU0qJdaebeNx0CnFxBiqIKrFPQa5VGzK7CYCV28Eim+lwyHJA7ciVauMMq3KNy1KMwOdklX1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VpRF371t1z1S5xH;
-	Tue, 28 May 2024 16:55:51 +0800 (CST)
-Received: from kwepemm600017.china.huawei.com (unknown [7.193.23.234])
-	by mail.maildlp.com (Postfix) with ESMTPS id 83FFC1A016C;
-	Tue, 28 May 2024 16:59:26 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 28 May 2024 16:59:24 +0800
-From: Tong Tiangen <tongtiangen@huawei.com>
-To: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, James Morse <james.morse@arm.com>, Robin Murphy
-	<robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
- Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
-	<glider@google.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Aneesh
- Kumar K.V <aneesh.kumar@kernel.org>, "Naveen N. Rao"
-	<naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Tong Tiangen
-	<tongtiangen@huawei.com>, <wangkefeng.wang@huawei.com>, Guohanjun
-	<guohanjun@huawei.com>
-Subject: [PATCH v12 4/6] arm64: support copy_mc_[user]_highpage()
-Date: Tue, 28 May 2024 16:59:13 +0800
-Message-ID: <20240528085915.1955987-5-tongtiangen@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240528085915.1955987-1-tongtiangen@huawei.com>
-References: <20240528085915.1955987-1-tongtiangen@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2463571722;
+	Tue, 28 May 2024 09:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.93
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716886827; cv=fail; b=MfyBd2eBTjm9bbkPIOjg5QL9c2Hu2MlONsIDu5IEh2KsUkhE64sAHhJJdUMlyTWmZxNsP+Fsq9v+dZJaS7R1Xy/nhUbtYDwxvpHtBk8unPROtsrF6TYr1L0q49t8oAg9mpQMLreNbCmGvEr0A9SYnccwkW1Z7WWNs4CTzFr/mos=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716886827; c=relaxed/simple;
+	bh=AzMz0zvHd18RMnAAkkzUMCpwpMtPT2fvkntZhM5L7es=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gOFCJXhfKfGaCUcOvvI0SYOXRaje/q1lw31esirZpp2BgbYoUdpDJ4pCbpXnIqNtQ1oLiUWFMUU+Nibu73KQtoyy5+YptOWVZ+zfI7z43mVZlO8Pl85PUWnfSfmH33ISKt7kQraknaa6o47ap3nHLmdX9Mx8tBnAgH/03xPYKiA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=hyBhgICZ; arc=fail smtp.client-ip=40.107.255.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="hyBhgICZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g8WXU1LmhWg5p7SnicfQZbJcXI/WF5GFt/ACjtOT1W5tMMdW8gacjDb6SBm6XvRFMIdwfN83jMqTPsDfOGzOEDu0hb5E6Uy9jZIAvmC2lWjjYj+WHrWNRrqlbIOs/VF4d7cjNCGkCRqr95v7UFu8Rkz45z3EukB+lmiEGUssCR5NlzPbK/tiejbl9mtwinq4/qzaLcKabdwfUvLF9c5/nmzMEvSz4wfDOnpOhLhf1XUKFEiaPKj9L3qp56HKCVCyAU78Mv7zxXsyBiUFvLOI8g+KtDZTcNbseYvtD/gMMw/+iuYf3um3L/cOAjif0zeUpgvJptovKYTtyZUNq5rt3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cz5ZTBFr/qQXbbhalF4s/r7kv6rEf2oMmdLi0gbUveg=;
+ b=ImQ9H2MmByszFkRsFwWmOPUWFtpGJf5sShxD3a1Y68JQSlM3v0k4RIX0JUPdG+18ikY8kGRhNYhEM4UYhenPIiY5GNbnBse9q3YOVv+0Pn6Q3cuQs4BGHugJpZyrUd75/ciXY3/oreGyem7yovEgVOId2ursVsboRmtaJScLRXNoEYKDi19/NbH85nU2ozw7FdwDHs/2bp08IG3Xman+hp7kcotgVOutmIYCHawGNwYYjwfwKVUe38MRrSjdd1JLfgfamQ5bTdR9gxoVvWJ+CRJACu8bfM03V81Mgawxti6RFpe0Vb+fgGeskAc6a9WjJaddXH5g3NZN0TX8VYRocg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cz5ZTBFr/qQXbbhalF4s/r7kv6rEf2oMmdLi0gbUveg=;
+ b=hyBhgICZUrDxpr9MKmG9Kb7AK6aF2ZJWTfd7pukuukLBsZvgT6gx/eutUk3WWUPtwPEFf89ZqAfdBfebRDuGfUHsH6/aXRkC/EQm0Nwf+MPZvNXQ4L2FyPEG9t8xwTsxIiRLpdgbB6ikfvmsmZgPvQi3IJo+fdSbMgXhRqrV7do1PrDLaPe2b19pS/95Zwf9OPOsBnTNbkfbtn7GVNUzH8SfDPz9JgTj+B8q9/ZVJ53cwORBdHWDNYk6ETJx+gZ/sOJ2vy/iBvsoUAMcuoEavG5uDS+1ppY17r0UTCyUPMss10r9evQTxKookl8lyDM7Dri/mj30iuBwVkwG4uOuEQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by TYZPR03MB7290.apcprd03.prod.outlook.com (2603:1096:400:422::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.17; Tue, 28 May
+ 2024 09:00:17 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%7]) with mapi id 15.20.7633.001; Tue, 28 May 2024
+ 09:00:16 +0000
+Message-ID: <70083d10-483e-4daf-a408-020f0147c5cf@amlogic.com>
+Date: Tue, 28 May 2024 17:00:11 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] arm64: dts: amlogic: a4: add power domain controller
+ node
+Content-Language: en-US
+To: neil.armstrong@linaro.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Jianxin Pan <jianxin.pan@amlogic.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+References: <20240528-a4_secpowerdomain-v1-0-2a9d7df9b128@amlogic.com>
+ <20240528-a4_secpowerdomain-v1-3-2a9d7df9b128@amlogic.com>
+ <c97b12bb-8b56-4129-a292-588226a0ec42@linaro.org>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <c97b12bb-8b56-4129-a292-588226a0ec42@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SGBP274CA0004.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::16)
+ To TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600017.china.huawei.com (7.193.23.234)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|TYZPR03MB7290:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b584415-e1d9-46ea-6842-08dc7ef497ec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|7416005|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Ym4wYUMvOW81TGJmVm5VMzRuN1I5UFJZRDJrNFVrNUJQanJWa0xPUzQzSjhD?=
+ =?utf-8?B?enMyUXY1MXF2UlZPczlCS29Qc0RkcDUveUw4bkRqY0NBRmxRcFNwbEZ6UWQw?=
+ =?utf-8?B?MTM5aWJBNVN6RjJSNXMzMnVIdU50NE5oc0IwU0Y2NVNvM1pGNHYrQXM2VWww?=
+ =?utf-8?B?QTcrRHR1bmgwUUVyYUVFeXdtcE1JK05GcGhtbDB3T2Y5anIxajM4UTNvd21J?=
+ =?utf-8?B?a2JBdncxM1lHYStmMW45M2kyY3QrTGZJY1kzYXlVY2JyQURVRXJrS2grY2dp?=
+ =?utf-8?B?S0NZUk5YbkxUMWRYaWp1SkZScmtKdFBPQVBlZk5zR3ZlR0lxbmE2aTkyNm5R?=
+ =?utf-8?B?UVlKZzY1YzFLVlAxWDRFdFpsa1FVL0dWR0FNK0xzbVpHMnE2OW92R053LzFC?=
+ =?utf-8?B?THZuK1A4Rm1NQlExUnFEWnNsR0hseFkxcDRzNWJMdUxhdzBWK2hsMXlxMkNi?=
+ =?utf-8?B?dUxBL0hZRk9Qd1FWc2lCZjdEWEhUcW9jZmtkc1VwZnlGM2t3MDNSdFZCRy83?=
+ =?utf-8?B?M1VJRTdUNDdnRnhDaUx1OHV5T1p3a2RNcnhxSjYwOFI5WkcySVdhdVEwMitG?=
+ =?utf-8?B?OGhtZTd3amcxQUZBRWZkRk1aQ2hvZGc0Y0lOUGlCOWVGRkViY01uZC9ocDJy?=
+ =?utf-8?B?ZWtHSGthQmZ5L2ZPT1JzMFloc1lFMGkrZTR3eTRyNy9xYkdmRjQraXE3bVky?=
+ =?utf-8?B?eFFRUlhvVGoyWW9ncUFhYzNjUVRiRmFtRmdoMTEvLy90RVgxeG5qV1I5cnZP?=
+ =?utf-8?B?cFU5dWhFN1ZDNHZ5R2NxOTIyTm4wNzUrYitjMEx5cThWOXUwbGZVd1FWN1dF?=
+ =?utf-8?B?WnlLMnp5R0g3SHJqUEFOS3JlNnh3M0p2RjliK1VHWllFRzZjS1lOMWE5VGd2?=
+ =?utf-8?B?cE9vUDZ1dE1pWUZpSU8rVk1DL29rcFZFMzlNdVJZMG1GVjkxSDZQV3ZLcjgr?=
+ =?utf-8?B?eWxCY0FpcUw4SW9zcGhtOE9XbFVZcWVnWnVyeHNKY21IMWNzemt5bU9VWDJZ?=
+ =?utf-8?B?MFdrT1Nyc1FEL25ieEE5Q2ZtYXBnN05ZSzd4a2p0b2puMWNKSWdVb2ppNzli?=
+ =?utf-8?B?WW1KZjhkaStMQ2lQbEFDUTErYmd1RjVheUhKb3V5NVZNUTQ1dDd0VGRzNHlD?=
+ =?utf-8?B?YVZDTi9JWG5FcEdHaFZEc05nVmlYVWoxUkc4SWNObDZNb0VGT3VEd0pNUlA4?=
+ =?utf-8?B?QzFTc1ZNYW96OWEwN2pSK1NwUmJ4K1pMWUQ4MDdpb3h2QUkyRk9kTFNMQmFq?=
+ =?utf-8?B?ck1tWGw2c21QZzNxQXdtMkl2VGswSlZwMDdWamwvb0M1RGhMWGdqdlRwbk5w?=
+ =?utf-8?B?b2RQZUUyekVBRkNIUmtMNDV6S0d5MkRSSFFkM0J0S0NGa1pJNC9XZjhvdTd4?=
+ =?utf-8?B?VWNTTkY2b25JbFZoNHlzc213Rmc3Q2IvbUZpTCtabnVybktSaW5QTXAxajRn?=
+ =?utf-8?B?YVFQOFBHTy91Z0dLTE1XaFhvZzdueXpOTDFnbi90dFZNMkRyZDZ1Z2Z5UVVK?=
+ =?utf-8?B?eWpFM0ZxV1ZGdFVMdlI2aGtmdCtXZE04a3pSYllFc2ZPaHh0cDVjM1Baa1Y5?=
+ =?utf-8?B?ZVE5bEVzQmlTbTAzR1p2MXpiUnMzTUdVVE1ubU5EMnBiYkMrTFhEQmMxS1FU?=
+ =?utf-8?B?VEhmbnQ0a2s5dHU5eE9Lc3R4RzhmaCtDN2VHVDVPOUo4NXp5b0RTZmdZWjdK?=
+ =?utf-8?B?SHpmVjRjMG5QZ0ltbDZrZ3haL21MMDJzSTBsWXVOSmkyTkdta29hWXJ3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SURUMnEvMWNpRGV5TmVadllTQ0RheTNvTG0rcGdTUktoK0t2Rlc1aThXWVY1?=
+ =?utf-8?B?RC9rYXBTMUsxMDhWMy9FdWpGQzFUeUE1cVJISlVDd1VXYW8wUlN6VEJUVkYw?=
+ =?utf-8?B?VWwrUWRlT1Z4WFpTRUYzNjdKdXFIajlpL1E1UzI2K2dQYysyTE1aWk9kVzV0?=
+ =?utf-8?B?dXR0bDExdWRqZFBpb3B0Y3YzQnpMT01rWG5YL3h5bjgxdlI4Ty8vUW1jcTMv?=
+ =?utf-8?B?Y2VHNzFQQlk4OXB6alBOa1VzWEJYOXNpZkx0RDUzaGo5Y2Q0K3pnSG9UUmlu?=
+ =?utf-8?B?WmxqVWh3VG1GdlVWYWdQN2oxVEJubUZCUEhITnJJajFUSjAzeWVKL2ZKTjhU?=
+ =?utf-8?B?Z0FlTUhlY3Z0dU9JYUFTc0NvM2NoZ205bTV2VWZES2F0WkhRbmI0dnBRTlZX?=
+ =?utf-8?B?VlhmRkR4bEVoeVpxNDhuUUpBSXBncTRISnl6WDlHLysxWk1zYlhrVjZFRk5O?=
+ =?utf-8?B?WW5Jd1lYWHlGaXg4T0w1bDdKNHpPZ01Vb0EvL2tiNENYMEY2YVZVUUpVVEZJ?=
+ =?utf-8?B?a0xSc1dFNE1PSHowOGhHd2VQeHpiNWgzUWZpT05YU0Q5OUYvYzJXcFZKSUxw?=
+ =?utf-8?B?TzE0UnU3SG91Q1ozK2NSZEQrVE9Ka1BJYStwaTN0aU10dGx3bTN2c0drcktk?=
+ =?utf-8?B?aE5mMVFnaEQzU205UmFITlIzNWh0dEVYQVBuQktTbHowbjI0SENRWGNWMVZV?=
+ =?utf-8?B?RDBBNWYxWjJoc0dmVTU1aHdEK29hUW1XcXJ5akxhRldnY2tzUWVTaHFvb1Rq?=
+ =?utf-8?B?OUlraW80TEhUUEtKSXBqNEZSTldMU2tUQWtrRFljcTlqN0tsT3BlOEpQOWJy?=
+ =?utf-8?B?OWRWQ3l4STRCVzBiSElTWkZVMUlaZmFtWEZncnE1ck0wN3JuSWtramFPREh5?=
+ =?utf-8?B?WHZEZ1dXZVJORnduWFlHOHdkZ1kvODhoa3psREx3Qk9tRDBZN3JNdlBRdGx3?=
+ =?utf-8?B?RUdFS2RjRi8vZmV4SWNxTnlMTjlCck5EMDVKRm1RM0JWekJYYndiM3pSZlNW?=
+ =?utf-8?B?UnlkSHVveHVEVWJzOWhkRG9HQ055bHppWEtzREREU01KNHFoemgydGpXakFX?=
+ =?utf-8?B?bWJZREprOTdQd3lJYnBqMnFXOGZKWmlCdFhiT3NEUFl4Z3ZHNVloOXFLMVhz?=
+ =?utf-8?B?T2R5dXpGN1BTYkxJREJFeXBFYlBrbElCdHArMktsNmg2aUlSOGl4QjQ5Z3l4?=
+ =?utf-8?B?YTRDQUFrUjluTnlENUhnL3gyKzFJaktWQlMyV3Fxc0MxbGZPdE9iSUlaR2J6?=
+ =?utf-8?B?aXNkT3NEUklzVldMMUVIcEJDRnl1YytrWEsvbEhvRDNIOENRU1ZWblN1Y1Jt?=
+ =?utf-8?B?QnJzYjRaRnkrTTVmckVNOUJjNEZQbUNvNGs4M3BhNExKUW9zM01mUDVIK3pQ?=
+ =?utf-8?B?dVBWb2lpajVFMlQzMWVjWXhtRFQwR2FtVWsxVlFjWmVKc2lXWkk2d2FSNTI5?=
+ =?utf-8?B?RXZEWXJJTWpoTC9mZ1BnWTBaSEV3VEdHZXZlT1RRNjNad1dRT1Nsc0tTNFVM?=
+ =?utf-8?B?TnlpSCtTQ1hSTnRnWG1SSXZlN0dDT0pTZ1Y0bVRVb0dKVzFjRm1zUkMvRElL?=
+ =?utf-8?B?V2NpS2tBSHp3bzFaZkFZN0cwczg4bEpaR1VlbVJCNm94ZktiSnRjTHNxVUhZ?=
+ =?utf-8?B?TzJsbmx1bUl0Nit6QXY3UFlrYi9vL3d6blFRRmUyYTVnUHgrV3RqSmdvMGRU?=
+ =?utf-8?B?YWxVNW9BM3F2Z0hWOW5haTc0WDR0UGVLV0l2M2NsSHZqTFNEaDlvVTdaTWpv?=
+ =?utf-8?B?cEI4WitlZzVBMmlOU1BCSzNncW41S3FRQVVCZzcwNEZseng5a3kxc2l1aGw1?=
+ =?utf-8?B?QnQwUlpLMzZoclRrSnh5cVphOFhmV01uNXoycUk4Ukx6NnFHK2IzNTE5TEgx?=
+ =?utf-8?B?UzMvNHQxaUwvQW05MnNpb0p2Z1BRZTNYTWd1bFZWdFV5bVYxZ2NpMzh4MjJo?=
+ =?utf-8?B?VHQydllSS0lkN1dYbXpLeTk3V1dkcFM5eFJ0SS9zLyt6T0U5WG94a2VNMjR4?=
+ =?utf-8?B?OUZIZzQ0RzFGMzUyNlRLS0NuZ3ZteisxUGorN3Qrdy9xS2FOaGhwTnNRR3Fw?=
+ =?utf-8?B?N3hlb05hVEVDdkhxeXBzQ3dOdXZzK0s4c1pYOTFINnl4UHJ5VGpLa3E5Z3Jk?=
+ =?utf-8?B?L09SMVF3bjhncGNUK3VRd3orSHc0cnE2L2tpM0Z3Ylc2OWY4dkVmZnNhbHN5?=
+ =?utf-8?B?Qmc9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b584415-e1d9-46ea-6842-08dc7ef497ec
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 09:00:16.7767
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mSlISDqZNwDticQWI35iLs0bIcJwFR5oQwR8CYg1CGKJjM4sQxerU8xl18kJaWkTfEhhpv2yxce012TMHKqpQi51wyDJgjOwFt6FrlAp0kk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB7290
 
-Currently, many scenarios that can tolerate memory errors when copying page
-have been supported in the kernel[1~5], all of which are implemented by
-copy_mc_[user]_highpage(). arm64 should also support this mechanism.
+Hi Neil,
+    Thanks for your quickly reply.
 
-Due to mte, arm64 needs to have its own copy_mc_[user]_highpage()
-architecture implementation, macros __HAVE_ARCH_COPY_MC_HIGHPAGE and
-__HAVE_ARCH_COPY_MC_USER_HIGHPAGE have been added to control it.
+On 2024/5/28 16:46, Neil Armstrong wrote:
+> [ EXTERNAL EMAIL ]
+> 
+> On 28/05/2024 10:39, Xianwei Zhao via B4 Relay wrote:
+>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>
+>> Add power domain controller node for Amlogic A4 SoC
+>>
+>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> ---
+>>   arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi | 4 ++++
+>>   arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        | 5 +++++
+>>   2 files changed, 9 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi 
+>> b/arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi
+>> index b6106ad4a072..eebde77ae5b4 100644
+>> --- a/arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi
+>> @@ -27,6 +27,10 @@ xtal: xtal-clk {
+>>               #clock-cells = <0>;
+>>       };
+>>
+>> +     sm: secure-monitor {
+>> +             compatible = "amlogic,meson-gxbb-sm";
+>> +     };
+>> +
+>>       soc {
+>>               compatible = "simple-bus";
+>>               #address-cells = <2>;
+>> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi 
+>> b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+>> index 73ca1d7eed81..917c05219b9c 100644
+>> --- a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+>> @@ -37,4 +37,9 @@ cpu3: cpu@3 {
+>>                       enable-method = "psci";
+>>               };
+>>       };
+>> +
+>> +     pwrc: power-controller {
+>> +             compatible = "amlogic,a4-pwrc";
+>> +             #power-domain-cells = <1>;
+>> +     };
+> 
+> pwrc is supposed to be a child of secure-monitor.
+> 
+Considered writing it like this when I wrote this.
 
-Add new helper copy_mc_page() which provide a page copy implementation with
-hardware memory error safe. The code logic of copy_mc_page() is the same as
-copy_page(), the main difference is that the ldp insn of copy_mc_page()
-contains the fixup type EX_TYPE_KACCESS_ERR_ZERO_ME_SAFE, therefore, the
-main logic is extracted to copy_page_template.S.
+Here are two approaches: one is to include secure-monitor in the comm 
+dtsi and fill power-controller by aliases in dtsi of each chip, while 
+the other is to directly include secure-monitor in the dtsi of each 
+chip. Which one do you suggest?
 
-[1] commit d302c2398ba2 ("mm, hwpoison: when copy-on-write hits poison, take page offline")
-[2] commit 1cb9dc4b475c ("mm: hwpoison: support recovery from HugePage copy-on-write faults")
-[3] commit 6b970599e807 ("mm: hwpoison: support recovery from ksm_might_need_to_copy()")
-[4] commit 98c76c9f1ef7 ("mm/khugepaged: recover from poisoned anonymous memory")
-[5] commit 12904d953364 ("mm/khugepaged: recover from poisoned file-backed memory")
-
-Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
----
- arch/arm64/include/asm/mte.h        |  9 +++++
- arch/arm64/include/asm/page.h       | 10 ++++++
- arch/arm64/lib/Makefile             |  2 ++
- arch/arm64/lib/copy_mc_page.S       | 35 ++++++++++++++++++
- arch/arm64/lib/copy_page.S          | 50 +++-----------------------
- arch/arm64/lib/copy_page_template.S | 56 +++++++++++++++++++++++++++++
- arch/arm64/lib/mte.S                | 29 +++++++++++++++
- arch/arm64/mm/copypage.c            | 45 +++++++++++++++++++++++
- include/linux/highmem.h             |  8 +++++
- 9 files changed, 199 insertions(+), 45 deletions(-)
- create mode 100644 arch/arm64/lib/copy_mc_page.S
- create mode 100644 arch/arm64/lib/copy_page_template.S
-
-diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
-index 91fbd5c8a391..dc68337c2623 100644
---- a/arch/arm64/include/asm/mte.h
-+++ b/arch/arm64/include/asm/mte.h
-@@ -92,6 +92,11 @@ static inline bool try_page_mte_tagging(struct page *page)
- void mte_zero_clear_page_tags(void *addr);
- void mte_sync_tags(pte_t pte, unsigned int nr_pages);
- void mte_copy_page_tags(void *kto, const void *kfrom);
-+
-+#ifdef CONFIG_ARCH_HAS_COPY_MC
-+int mte_copy_mc_page_tags(void *kto, const void *kfrom);
-+#endif
-+
- void mte_thread_init_user(void);
- void mte_thread_switch(struct task_struct *next);
- void mte_cpu_setup(void);
-@@ -128,6 +133,10 @@ static inline void mte_sync_tags(pte_t pte, unsigned int nr_pages)
- static inline void mte_copy_page_tags(void *kto, const void *kfrom)
- {
- }
-+static inline int mte_copy_mc_page_tags(void *kto, const void *kfrom)
-+{
-+	return 0;
-+}
- static inline void mte_thread_init_user(void)
- {
- }
-diff --git a/arch/arm64/include/asm/page.h b/arch/arm64/include/asm/page.h
-index 2312e6ee595f..304cc86b8a10 100644
---- a/arch/arm64/include/asm/page.h
-+++ b/arch/arm64/include/asm/page.h
-@@ -29,6 +29,16 @@ void copy_user_highpage(struct page *to, struct page *from,
- void copy_highpage(struct page *to, struct page *from);
- #define __HAVE_ARCH_COPY_HIGHPAGE
- 
-+#ifdef CONFIG_ARCH_HAS_COPY_MC
-+int copy_mc_page(void *to, const void *from);
-+int copy_mc_highpage(struct page *to, struct page *from);
-+#define __HAVE_ARCH_COPY_MC_HIGHPAGE
-+
-+int copy_mc_user_highpage(struct page *to, struct page *from,
-+		unsigned long vaddr, struct vm_area_struct *vma);
-+#define __HAVE_ARCH_COPY_MC_USER_HIGHPAGE
-+#endif
-+
- struct folio *vma_alloc_zeroed_movable_folio(struct vm_area_struct *vma,
- 						unsigned long vaddr);
- #define vma_alloc_zeroed_movable_folio vma_alloc_zeroed_movable_folio
-diff --git a/arch/arm64/lib/Makefile b/arch/arm64/lib/Makefile
-index 13e6a2829116..65ec3d24d32d 100644
---- a/arch/arm64/lib/Makefile
-+++ b/arch/arm64/lib/Makefile
-@@ -13,6 +13,8 @@ endif
- 
- lib-$(CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE) += uaccess_flushcache.o
- 
-+lib-$(CONFIG_ARCH_HAS_COPY_MC) += copy_mc_page.o
-+
- obj-$(CONFIG_CRC32) += crc32.o
- 
- obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
-diff --git a/arch/arm64/lib/copy_mc_page.S b/arch/arm64/lib/copy_mc_page.S
-new file mode 100644
-index 000000000000..7e633a6aa89f
---- /dev/null
-+++ b/arch/arm64/lib/copy_mc_page.S
-@@ -0,0 +1,35 @@
-+#include <linux/linkage.h>
-+#include <linux/const.h>
-+#include <asm/assembler.h>
-+#include <asm/page.h>
-+#include <asm/cpufeature.h>
-+#include <asm/alternative.h>
-+#include <asm/asm-extable.h>
-+#include <asm/asm-uaccess.h>
-+
-+/*
-+ * Copy a page from src to dest (both are page aligned) with memory error safe
-+ *
-+ * Parameters:
-+ *	x0 - dest
-+ *	x1 - src
-+ * Returns:
-+ * 	x0 - Return 0 if copy success, or -EFAULT if anything goes wrong
-+ *	     while copying.
-+ */
-+	.macro ldp1 reg1, reg2, ptr, val
-+	KERNEL_ME_SAFE(9998f, ldp \reg1, \reg2, [\ptr, \val])
-+	.endm
-+
-+SYM_FUNC_START(__pi_copy_mc_page)
-+#include "copy_page_template.S"
-+
-+	mov x0, #0
-+	ret
-+
-+9998:	mov x0, #-EFAULT
-+	ret
-+
-+SYM_FUNC_END(__pi_copy_mc_page)
-+SYM_FUNC_ALIAS(copy_mc_page, __pi_copy_mc_page)
-+EXPORT_SYMBOL(copy_mc_page)
-diff --git a/arch/arm64/lib/copy_page.S b/arch/arm64/lib/copy_page.S
-index 6a56d7cf309d..5499f507bb75 100644
---- a/arch/arm64/lib/copy_page.S
-+++ b/arch/arm64/lib/copy_page.S
-@@ -17,52 +17,12 @@
-  *	x0 - dest
-  *	x1 - src
-  */
--SYM_FUNC_START(__pi_copy_page)
--	ldp	x2, x3, [x1]
--	ldp	x4, x5, [x1, #16]
--	ldp	x6, x7, [x1, #32]
--	ldp	x8, x9, [x1, #48]
--	ldp	x10, x11, [x1, #64]
--	ldp	x12, x13, [x1, #80]
--	ldp	x14, x15, [x1, #96]
--	ldp	x16, x17, [x1, #112]
--
--	add	x0, x0, #256
--	add	x1, x1, #128
--1:
--	tst	x0, #(PAGE_SIZE - 1)
--
--	stnp	x2, x3, [x0, #-256]
--	ldp	x2, x3, [x1]
--	stnp	x4, x5, [x0, #16 - 256]
--	ldp	x4, x5, [x1, #16]
--	stnp	x6, x7, [x0, #32 - 256]
--	ldp	x6, x7, [x1, #32]
--	stnp	x8, x9, [x0, #48 - 256]
--	ldp	x8, x9, [x1, #48]
--	stnp	x10, x11, [x0, #64 - 256]
--	ldp	x10, x11, [x1, #64]
--	stnp	x12, x13, [x0, #80 - 256]
--	ldp	x12, x13, [x1, #80]
--	stnp	x14, x15, [x0, #96 - 256]
--	ldp	x14, x15, [x1, #96]
--	stnp	x16, x17, [x0, #112 - 256]
--	ldp	x16, x17, [x1, #112]
--
--	add	x0, x0, #128
--	add	x1, x1, #128
--
--	b.ne	1b
--
--	stnp	x2, x3, [x0, #-256]
--	stnp	x4, x5, [x0, #16 - 256]
--	stnp	x6, x7, [x0, #32 - 256]
--	stnp	x8, x9, [x0, #48 - 256]
--	stnp	x10, x11, [x0, #64 - 256]
--	stnp	x12, x13, [x0, #80 - 256]
--	stnp	x14, x15, [x0, #96 - 256]
--	stnp	x16, x17, [x0, #112 - 256]
-+	.macro ldp1 reg1, reg2, ptr, val
-+	ldp \reg1, \reg2, [\ptr, \val]
-+	.endm
- 
-+SYM_FUNC_START(__pi_copy_page)
-+#include "copy_page_template.S"
- 	ret
- SYM_FUNC_END(__pi_copy_page)
- SYM_FUNC_ALIAS(copy_page, __pi_copy_page)
-diff --git a/arch/arm64/lib/copy_page_template.S b/arch/arm64/lib/copy_page_template.S
-new file mode 100644
-index 000000000000..b3ddec2c7a27
---- /dev/null
-+++ b/arch/arm64/lib/copy_page_template.S
-@@ -0,0 +1,56 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2012 ARM Ltd.
-+ */
-+
-+/*
-+ * Copy a page from src to dest (both are page aligned)
-+ *
-+ * Parameters:
-+ *	x0 - dest
-+ *	x1 - src
-+ */
-+	ldp1	x2, x3, x1, #0
-+	ldp1	x4, x5, x1, #16
-+	ldp1	x6, x7, x1, #32
-+	ldp1	x8, x9, x1, #48
-+	ldp1	x10, x11, x1, #64
-+	ldp1	x12, x13, x1, #80
-+	ldp1	x14, x15, x1, #96
-+	ldp1	x16, x17, x1, #112
-+
-+	add	x0, x0, #256
-+	add	x1, x1, #128
-+1:
-+	tst	x0, #(PAGE_SIZE - 1)
-+
-+	stnp	x2, x3, [x0, #-256]
-+	ldp1	x2, x3, x1, #0
-+	stnp	x4, x5, [x0, #16 - 256]
-+	ldp1	x4, x5, x1, #16
-+	stnp	x6, x7, [x0, #32 - 256]
-+	ldp1	x6, x7, x1, #32
-+	stnp	x8, x9, [x0, #48 - 256]
-+	ldp1	x8, x9, x1, #48
-+	stnp	x10, x11, [x0, #64 - 256]
-+	ldp1	x10, x11, x1, #64
-+	stnp	x12, x13, [x0, #80 - 256]
-+	ldp1	x12, x13, x1, #80
-+	stnp	x14, x15, [x0, #96 - 256]
-+	ldp1	x14, x15, x1, #96
-+	stnp	x16, x17, [x0, #112 - 256]
-+	ldp1	x16, x17, x1, #112
-+
-+	add	x0, x0, #128
-+	add	x1, x1, #128
-+
-+	b.ne	1b
-+
-+	stnp	x2, x3, [x0, #-256]
-+	stnp	x4, x5, [x0, #16 - 256]
-+	stnp	x6, x7, [x0, #32 - 256]
-+	stnp	x8, x9, [x0, #48 - 256]
-+	stnp	x10, x11, [x0, #64 - 256]
-+	stnp	x12, x13, [x0, #80 - 256]
-+	stnp	x14, x15, [x0, #96 - 256]
-+	stnp	x16, x17, [x0, #112 - 256]
-diff --git a/arch/arm64/lib/mte.S b/arch/arm64/lib/mte.S
-index 5018ac03b6bf..50ef24318281 100644
---- a/arch/arm64/lib/mte.S
-+++ b/arch/arm64/lib/mte.S
-@@ -80,6 +80,35 @@ SYM_FUNC_START(mte_copy_page_tags)
- 	ret
- SYM_FUNC_END(mte_copy_page_tags)
- 
-+#ifdef CONFIG_ARCH_HAS_COPY_MC
-+/*
-+ * Copy the tags from the source page to the destination one wiht machine check safe
-+ *   x0 - address of the destination page
-+ *   x1 - address of the source page
-+ * Returns:
-+ *   x0 - Return 0 if copy success, or
-+ *        -EFAULT if anything goes wrong while copying.
-+ */
-+SYM_FUNC_START(mte_copy_mc_page_tags)
-+	mov	x2, x0
-+	mov	x3, x1
-+	multitag_transfer_size x5, x6
-+1:
-+KERNEL_ME_SAFE(2f, ldgm	x4, [x3])
-+	stgm	x4, [x2]
-+	add	x2, x2, x5
-+	add	x3, x3, x5
-+	tst	x2, #(PAGE_SIZE - 1)
-+	b.ne	1b
-+
-+	mov x0, #0
-+	ret
-+
-+2:	mov x0, #-EFAULT
-+	ret
-+SYM_FUNC_END(mte_copy_mc_page_tags)
-+#endif
-+
- /*
-  * Read tags from a user buffer (one tag per byte) and set the corresponding
-  * tags at the given kernel address. Used by PTRACE_POKEMTETAGS.
-diff --git a/arch/arm64/mm/copypage.c b/arch/arm64/mm/copypage.c
-index a7bb20055ce0..ff0d9ceea2a4 100644
---- a/arch/arm64/mm/copypage.c
-+++ b/arch/arm64/mm/copypage.c
-@@ -40,3 +40,48 @@ void copy_user_highpage(struct page *to, struct page *from,
- 	flush_dcache_page(to);
- }
- EXPORT_SYMBOL_GPL(copy_user_highpage);
-+
-+#ifdef CONFIG_ARCH_HAS_COPY_MC
-+/*
-+ * Return -EFAULT if anything goes wrong while copying page or mte.
-+ */
-+int copy_mc_highpage(struct page *to, struct page *from)
-+{
-+	void *kto = page_address(to);
-+	void *kfrom = page_address(from);
-+	int ret;
-+
-+	ret = copy_mc_page(kto, kfrom);
-+	if (ret)
-+		return -EFAULT;
-+
-+	if (kasan_hw_tags_enabled())
-+		page_kasan_tag_reset(to);
-+
-+	if (system_supports_mte() && page_mte_tagged(from)) {
-+		/* It's a new page, shouldn't have been tagged yet */
-+		WARN_ON_ONCE(!try_page_mte_tagging(to));
-+		ret = mte_copy_mc_page_tags(kto, kfrom);
-+		if (ret)
-+			return -EFAULT;
-+
-+		set_page_mte_tagged(to);
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(copy_mc_highpage);
-+
-+int copy_mc_user_highpage(struct page *to, struct page *from,
-+			unsigned long vaddr, struct vm_area_struct *vma)
-+{
-+	int ret;
-+
-+	ret = copy_mc_highpage(to, from);
-+	if (!ret)
-+		flush_dcache_page(to);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(copy_mc_user_highpage);
-+#endif
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index 64a567d5ad6f..7a8ddb2b67e6 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -332,6 +332,7 @@ static inline void copy_highpage(struct page *to, struct page *from)
- #endif
- 
- #ifdef copy_mc_to_kernel
-+#ifndef __HAVE_ARCH_COPY_MC_USER_HIGHPAGE
- /*
-  * If architecture supports machine check exception handling, define the
-  * #MC versions of copy_user_highpage and copy_highpage. They copy a memory
-@@ -354,7 +355,9 @@ static inline int copy_mc_user_highpage(struct page *to, struct page *from,
- 
- 	return ret ? -EFAULT : 0;
- }
-+#endif
- 
-+#ifndef __HAVE_ARCH_COPY_MC_HIGHPAGE
- static inline int copy_mc_highpage(struct page *to, struct page *from)
- {
- 	unsigned long ret;
-@@ -370,20 +373,25 @@ static inline int copy_mc_highpage(struct page *to, struct page *from)
- 
- 	return ret ? -EFAULT : 0;
- }
-+#endif
- #else
-+#ifndef __HAVE_ARCH_COPY_MC_USER_HIGHPAGE
- static inline int copy_mc_user_highpage(struct page *to, struct page *from,
- 					unsigned long vaddr, struct vm_area_struct *vma)
- {
- 	copy_user_highpage(to, from, vaddr, vma);
- 	return 0;
- }
-+#endif
- 
-+#ifndef __HAVE_ARCH_COPY_MC_HIGHPAGE
- static inline int copy_mc_highpage(struct page *to, struct page *from)
- {
- 	copy_highpage(to, from);
- 	return 0;
- }
- #endif
-+#endif
- 
- static inline void memcpy_page(struct page *dst_page, size_t dst_off,
- 			       struct page *src_page, size_t src_off,
--- 
-2.25.1
-
+> Neil
+> 
+>>   };
+>>
+> 
