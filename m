@@ -1,215 +1,86 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881F316DEA0;
-	Tue, 28 May 2024 13:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21F717E8F0
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 13:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716901370; cv=none; b=KoE7mCatbBJXN9RHBHOcKXMf7nw+Kh07cbPm/OyLRE0vDpT9BXR5shT7y4Upqhnt/XCJQbQZwryBHYia1pdPRcoOapZvBu3Ho7xXQ3ajBEXckUiiapcN3mSpKz8Kp4FONWWLY+xMC71KP2JZhoX2HGQxR0EKYWgx7S5UmJsjyG4=
+	t=1716901410; cv=none; b=URLUCD1AFD5a82KQyIcsNcGlUyk1nSS+FgeSK6OKQ9mBMWAAN1IxBlq6SmPqeTMbW0nMn4Q1DH1O9nMHUTlDLLns9ZEBj7g5oSH/Xicwvaem7rX2ZvHp+vhJ//k9/vpfAK1TvCX5Lu4gh5+EWeciiqPspFfuIY9o803NGDF+Zno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716901370; c=relaxed/simple;
-	bh=BlS+RNoJZf7uRqH8yZdZgXZub+cVsj79b4zET2aARhg=;
+	s=arc-20240116; t=1716901410; c=relaxed/simple;
+	bh=9v4W6iOSUjtGZaBCccF+kLlyiZYLVuG5P+57Ga/1odQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L63zuDOHKdshXj0GrTi93p+DJIcyUQQK+PC3BmTgZkLrPyZzDNK/Hn1TqmtEeNlngCAdCT8QwsB9ol95GKyI3D540CdoX0Ytphv7dYHxI+W/gRJZ2swiwq2NQrbEVzobBfZIZjTywPx6UBcwGgM0ZuGFSRUey4YGYiM6Nodc2bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=6V1EhJmy; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=U9Qh+QceAY/HRmBqaT0xCo3XOxweTrIUWxxd+fTc3pB5At+uLIoki5U1meFsnVZE3zSR/2vx+3kpw0Bxu0Rxq1pHxI6lUr+cGj3kvTM2H/Pzu4raIdYiSOHH9wwCJOInB9KgM7a7b5f6EnvtSF2NNfnsSoepENgOwqc2LqhzyR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMyk3/ER; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6V1EhJmy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=+woYX1uxkRDOXtBX1F1Aj3xr5QPBx2mr8y8wsI+bzIE=; b=6V1EhJmyF5HfLnX+zuf7uLpRue
-	nlyqWF2L8F2B3o2iUCjLTwVrj9Gr6/QiCMSZmIJpMa/0oaAZQ2K96tk7ylb+MYbuE+XJjAzlezgkF
-	dSa55z+3D/HDINRKUK0OZS/AsebKBWHMMOlEm+MINfSyPY+d/VuH9uqfbJJu+5xWLlNU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sBwT3-00G9k6-EI; Tue, 28 May 2024 15:02:17 +0200
-Date: Tue, 28 May 2024 15:02:17 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Ng, Boon Khai" <boon.khai.ng@intel.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Ang, Tien Sung" <tien.sung.ang@intel.com>,
-	"G Thomas, Rohan" <rohan.g.thomas@intel.com>,
-	"Looi, Hong Aun" <hong.aun.looi@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [Enable Designware XGMAC VLAN Stripping Feature v2 1/1] net:
- stmmac: dwxgmac2: Add support for HW-accelerated VLAN Stripping
-Message-ID: <48673551-cada-4194-865f-bc04c1e19c29@lunn.ch>
-References: <20240527093339.30883-1-boon.khai.ng@intel.com>
- <20240527093339.30883-2-boon.khai.ng@intel.com>
- <48176576-e1d2-4c45-967a-91cabb982a21@lunn.ch>
- <DM8PR11MB5751469FAA2B01EB6CEB7B50C1F12@DM8PR11MB5751.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMyk3/ER"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B9AC32782;
+	Tue, 28 May 2024 13:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716901410;
+	bh=9v4W6iOSUjtGZaBCccF+kLlyiZYLVuG5P+57Ga/1odQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cMyk3/ERiSHEgU0VZs0WGbWEaoNlPMX74d/mMZrBLgxcpB5wc3XcMtwFiVJZW5fh+
+	 f7gNDIEwQ2B1kRoJR8DW7p0QhwmZ8pBVSozHTprp2fXNLJQTKQOJNzLACaPaasV7fh
+	 B8dzEQoypqqE5+utX+o5HgQySc8TuJPsuPNdojl978DYs9TpUbL3XWyUYVq0+uAwgl
+	 ulIyR4if5KcWn8FeWFjzKbBGGQt0q2x3HHIXA6GCyOWV/hje+JQL7E1b2RT3p2dAcz
+	 uvc2dv/kTKgcIDR9O193xpTFduVJyWzXOZj6rLUW9xRgXyqAe4iSvHi9FfbAMheO8x
+	 p6TRHUIIUeuPQ==
+Date: Tue, 28 May 2024 14:03:26 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Alina Yu <alina_yu@richtek.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: rtq2208: remove unused
+ rtq2208_regulator_ldo_ops
+Message-ID: <56b9bccf-b9fc-494a-97f1-40b5bb0f6767@sirena.org.uk>
+References: <20240528121222.3675312-1-arnd@kernel.org>
+ <70125571-5add-47d2-b127-c57e67c59df9@sirena.org.uk>
+ <7391d6a4-0c0b-456f-a2ca-cf3dafa67c5a@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nULyeNePWk0eNBQy"
+Content-Disposition: inline
+In-Reply-To: <7391d6a4-0c0b-456f-a2ca-cf3dafa67c5a@app.fastmail.com>
+X-Cookie: How do I get HOME?
+
+
+--nULyeNePWk0eNBQy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM8PR11MB5751469FAA2B01EB6CEB7B50C1F12@DM8PR11MB5751.namprd11.prod.outlook.com>
 
-> So, for this XGMAC VLAN patch, the idea of getting the VLAN id from the descriptor is the same, but 
-> The register bit filed of getting the VLAN packet VALID is different. Thus, it need to be implemented separately. 
+On Tue, May 28, 2024 at 02:38:30PM +0200, Arnd Bergmann wrote:
+> On Tue, May 28, 2024, at 14:25, Mark Brown wrote:
 
-Please wrap your emails to around 78 characters.
+> > Fairly sure there should be a reference in _init_regulator_desc().
 
-It is well know this driver is a mess. I just wanted to check you are
-not adding to be mess by simply cut/pasting rather than refactoring
-code.
+> This is how 38bcec0e7cbb ("regulator: rtq2208: Fix
+> LDO discharge register and add vsel setting")] changed
+> the lines:
 
-Lets look at the code. From your patch:
+In fact there's a series in flight which adds support for fixed voltage
+mode and fixes this, though we'll need a separate fix for v6.10.
 
-+static void dwxgmac2_rx_hw_vlan(struct mac_device_info *hw,
-+				struct dma_desc *rx_desc, struct sk_buff *skb)
-+{
-+	if (hw->desc->get_rx_vlan_valid(rx_desc)) {
-+		u16 vid = hw->desc->get_rx_vlan_tci(rx_desc);
-+
-+		__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vid);
-+	}
-+}
-+
+--nULyeNePWk0eNBQy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-and
+-----BEGIN PGP SIGNATURE-----
 
-static void dwmac4_rx_hw_vlan(struct mac_device_info *hw,
-                              struct dma_desc *rx_desc, struct sk_buff *skb)
-{
-        if (hw->desc->get_rx_vlan_valid(rx_desc)) {
-                u16 vid = hw->desc->get_rx_vlan_tci(rx_desc);
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZV1h0ACgkQJNaLcl1U
+h9BkWAf+JPFSscJ/OSF/r2NYE1MrG5Kkyepxht/TlcWy01ETWuAU4oKScrCcZREj
+KP7Oyf0KzVp+x8ZfS7KNA25gcIvfuJ8bKWT7FoCbgrIu02LsrZhvTCyiQeO1nSKb
+7wMORHV0qSzW85zngupDxGFr6/J9YxWfhadELkAEXWuGOSDt5XDQZymxbVeIbWTk
+yZGOri9kaX8+lntjx9ng8A8B0jmAGKA8ZHhe0NmWz3fIeTbPJej+HlcqPZHh/kOw
+sw6YeSY+pkCXz8GFrFNvPQAiVwKNPkOE+eqZ2LPVJR21PnHHI692OKHdlx+NqjCQ
+hqiQ+yPzO2BUkmJLBX9mWMAeOLa05w==
+=kfwu
+-----END PGP SIGNATURE-----
 
-                __vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vid);
-        }
-}
-
-Looks identical to me.
-
-From your patch:
-
-static void dwxgmac2_set_hw_vlan_mode(struct mac_device_info *hw)
-+{
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 val = readl(ioaddr + XGMAC_VLAN_TAG);
-+
-+	val &= ~XGMAC_VLAN_TAG_CTRL_EVLS_MASK;
-+
-+	if (hw->hw_vlan_en)
-+		/* Always strip VLAN on Receive */
-+		val |= XGMAC_VLAN_TAG_STRIP_ALL;
-+	else
-+		/* Do not strip VLAN on Receive */
-+		val |= XGMAC_VLAN_TAG_STRIP_NONE;
-+
-+	/* Enable outer VLAN Tag in Rx DMA descriptro */
-+	val |= XGMAC_VLAN_TAG_CTRL_EVLRXS;
-+	writel(val, ioaddr + XGMAC_VLAN_TAG);
-+}
-
-static void dwmac4_set_hw_vlan_mode(struct mac_device_info *hw)
-{
-        void __iomem *ioaddr = hw->pcsr;
-        u32 value = readl(ioaddr + GMAC_VLAN_TAG);
-
-        value &= ~GMAC_VLAN_TAG_CTRL_EVLS_MASK;
-
-        if (hw->hw_vlan_en)
-                /* Always strip VLAN on Receive */
-                value |= GMAC_VLAN_TAG_STRIP_ALL;
-        else
-                /* Do not strip VLAN on Receive */
-                value |= GMAC_VLAN_TAG_STRIP_NONE;
-
-        /* Enable outer VLAN Tag in Rx DMA descriptor */
-        value |= GMAC_VLAN_TAG_CTRL_EVLRXS;
-        writel(value, ioaddr + GMAC_VLAN_TAG);
-}
-
-The basic flow is the same. Lets look at the #defines:
-
-#define XGMAC_VLAN_TAG			0x00000050
-#define GMAC_VLAN_TAG			0x00000050
-
-#define GMAC_VLAN_TAG_CTRL_EVLS_MASK	GENMASK(22, 21)
-#define GMAC_VLAN_TAG_CTRL_EVLS_SHIFT	21
-+#define XGMAC_VLAN_TAG_CTRL_EVLS_MASK	GENMASK(22, 21)
-+#define XGMAC_VLAN_TAG_CTRL_EVLS_SHIFT	21
-
-+#define XGMAC_VLAN_TAG_STRIP_NONE	FIELD_PREP(XGMAC_VLAN_TAG_CTRL_EVLS_MASK, 0x0)
-+#define XGMAC_VLAN_TAG_STRIP_PASS	FIELD_PREP(XGMAC_VLAN_TAG_CTRL_EVLS_MASK, 0x1)
-+#define XGMAC_VLAN_TAG_STRIP_FAIL	FIELD_PREP(XGMAC_VLAN_TAG_CTRL_EVLS_MASK, 0x2)
-+#define XGMAC_VLAN_TAG_STRIP_ALL	FIELD_PREP(XGMAC_VLAN_TAG_CTRL_EVLS_MASK, 0x3)
-#define GMAC_VLAN_TAG_STRIP_NONE        (0x0 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
-#define GMAC_VLAN_TAG_STRIP_PASS        (0x1 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
-#define GMAC_VLAN_TAG_STRIP_FAIL        (0x2 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
-#define GMAC_VLAN_TAG_STRIP_ALL         (0x3 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
-
-This is less obvious a straight cut/paste, but they are in fact
-identical.
-
-#define GMAC_VLAN_TAG_CTRL_EVLRXS       BIT(24)
-#define XGMAC_VLAN_TAG_CTRL_EVLRXS	BIT(24)
-
-So this also looks identical to me, but maybe i'm missing something
-subtle.
-
-+static inline u16 dwxgmac2_wrback_get_rx_vlan_tci(struct dma_desc *p)
-+{
-+	return le32_to_cpu(p->des0) & XGMAC_RDES0_VLAN_TAG_MASK;
-+}
-+
-
-static u16 dwmac4_wrback_get_rx_vlan_tci(struct dma_desc *p)
-{
-        return (le32_to_cpu(p->des0) & RDES0_VLAN_TAG_MASK);
-}
-
-#define RDES0_VLAN_TAG_MASK		GENMASK(15, 0)
-#define XGMAC_RDES0_VLAN_TAG_MASK	GENMASK(15, 0)
-
-More identical code.
-
-+static inline bool dwxgmac2_wrback_get_rx_vlan_valid(struct dma_desc *p)
-+{
-+	u32 et_lt;
-+
-+	et_lt = FIELD_GET(XGMAC_RDES3_ET_LT, le32_to_cpu(p->des3));
-+
-+	return et_lt >= XGMAC_ET_LT_VLAN_STAG &&
-+	       et_lt <= XGMAC_ET_LT_DVLAN_STAG_CTAG;
-+}
-
-static bool dwmac4_wrback_get_rx_vlan_valid(struct dma_desc *p)
-{
-        return ((le32_to_cpu(p->des3) & RDES3_LAST_DESCRIPTOR) &&
-                (le32_to_cpu(p->des3) & RDES3_RDES0_VALID));
-}
-
-#define RDES3_RDES0_VALID		BIT(25)
-#define RDES3_LAST_DESCRIPTOR		BIT(28)
-
-#define XGMAC_RDES3_ET_LT		GENMASK(19, 16)
-+#define XGMAC_ET_LT_VLAN_STAG		8
-+#define XGMAC_ET_LT_VLAN_CTAG		9
-+#define XGMAC_ET_LT_DVLAN_CTAG_CTAG	10
-
-This does actually look different.
-
-Please take a step back and see if you can help clean up some of the
-mess in this driver by refactoring bits of identical code, rather than
-copy/pasting it.
-
-	Andrew
+--nULyeNePWk0eNBQy--
