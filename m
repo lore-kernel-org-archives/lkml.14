@@ -1,141 +1,202 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620631DFD2
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 22:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78A913DDA1;
+	Tue, 28 May 2024 22:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716934296; cv=none; b=CrCiu4pNoSiOS1mIhEvOW9UH8RVHl/cNfSUg17attoYvcHmu9beBH68qMsoPveHob6wOjqdRcRfYaRSrdPzlOCtF3cpEuFNWtN+JtatVze2UerSjBiCushQ4aGDNdVKjOYISEtpPTVmoOWUhG8xQ5t8f+bDMMos9uqTcg7woMXo=
+	t=1716934368; cv=none; b=d6krU/cLQRfbqsnAYUSIQ2QMXa3iWMmic/HQRgPcfLVmm+p0FhltNJYO99KW0F3+3xFsI+W5pK5kbKqUuNZ208WdVRDG194Syn979uqJTI12AEEkGDD+hzgrgtQOCtG7C5lVmUqnP8MbGIn8ZYAjl4Dcktskpc0FffGp8TW5AFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716934296; c=relaxed/simple;
-	bh=s6gGGoGa28fqfAB8/9ayz7igSKloxSfHhA3lG6vLIng=;
-	h=From:Message-Id:Content-Type:Mime-Version:Subject:Date:
-	 In-Reply-To:Cc:To:References; b=uryCYJ+8pBChyJensoQp+XG7dF2g+77zaFSfVWta56POOPVNU8Dipr9XGrLP/dgHlu53YGtem6p7slu6aw69TgZ6fJT0FAw+Rf7GrL5chiNwQY5eWq5DU50GPn5jVlBaYaBYidG26lIrooDgJFvjECHBoheDU9ORNrypmi8gefo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca; spf=pass smtp.mailfrom=dilger.ca; dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b=GM8b6H/N; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dilger.ca
+	s=arc-20240116; t=1716934368; c=relaxed/simple;
+	bh=1hLjs6HYpgIThhhT9gGLIDRvVYnA1jimJtxl/FXjhzA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Lh29IKxvkF9yG6EGNTPToN2I+szaKEmquXXXbO/macn/TiIKvnCjzw6+XDuAJ9M27LvOzYVYKmyWjsMO+IIqHtkn3jPNelJ6934TO+iuOCFM5g+/Gc9QuVsAZ9LddZ7edu/NgTqHARrfFtdca40ygQG3RE53upUXefNGCXg7brM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=10EpJ6hN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YNfAxC6G; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b="GM8b6H/N"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f44b51b367so10323785ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20230601.gappssmtp.com; s=20230601; t=1716934294; x=1717539094; darn=vger.kernel.org;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/EZSjBSMpKdz0TS6eS7VGV2URZV9D9zcT9BZtnUab0=;
-        b=GM8b6H/NI/J4Qf9kM2wuhid9bqfPp8E5toF/bXilsxb6fd1ucDnvHhFIG6rlrXHKHj
-         7lSWnUYoIoBYChzDyl1SOPrh2aEUFSyLGGjn8keuFlHwG8xNe2Z/HJyIC9pBvkCw9DR4
-         ExDIJuoVDAt2FwfYKLgXzh8Jg2RqrKxDwy0iQED8OUTYJ7YGH9CZP/tyspDgDNNfDKNx
-         jj12Tio7nhH7DbmtucCRpea3IjT6KZ6mQEdAZIimzILqwGkC1pjTaUoY9k6WgZ9VgUNs
-         qjg0/+PA13xi3YFTNgzMUj4C/nmI28WUyreMQ24epQw8GWORAnga+LrAcF5bxk98HjyF
-         zLDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716934294; x=1717539094;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/EZSjBSMpKdz0TS6eS7VGV2URZV9D9zcT9BZtnUab0=;
-        b=AOZGXkHU4ozQKMDnSUDmnLvdSnRs8CAnbVKS6pJKpaI+wROaVmTGNqGMmz29xebn5B
-         98GIvoJrROqDejBXVEdu7PJ4LfZEwfIENqzWcwzanweDZIESW/L/9J+cACq0oQPojJR9
-         JCSJeaBgBhosCPgUl72O8pqbWht7jiCsk/8HX44TkUr8BAI0kMQ4aBiXMxBbFCmiKH8K
-         rdpVaaXV7K1XPwU8Gkn5BeQJHYlWoakQqeWa8TJN3w0tki4HfRZRkE9YhSLmgpMwIonY
-         E9LSdgwctIlDvIHmHxTKtSmFBSK1mIP0VR1Km6BFx2vLWSEy1WZq6FjC7rkQkpEc88bT
-         huXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKFn9D5agdIdQuM1tkuj94fc6uXZqwnJUJ83LYXidvJ38weYqjpv11sUbd5cxQc23OL5F5nAJUCCJ+hfZh0aj3+z4uzfzU7nQXeA/e
-X-Gm-Message-State: AOJu0YxZYhiG4VidKUejtv0YO1coEjdDWCNNQRxl9NT0+xCgLps/D6IC
-	p7qjHtOyZkSy1zOgDmT73l0++M70FVD/du4/QotQ/JV8K1NDDmHOSyo+knQk5Ug=
-X-Google-Smtp-Source: AGHT+IHTQU8PmmECMD1h64ue4/AGFuh/+UzLJOnETMdIzBo20vXZf/4EqQUrQxxJsMIbVfq9H8iR4w==
-X-Received: by 2002:a17:903:186:b0:1f3:3a05:1adf with SMTP id d9443c01a7336-1f4499092d7mr162326705ad.66.1716934293612;
-        Tue, 28 May 2024 15:11:33 -0700 (PDT)
-Received: from cabot.adilger.int (S01068c763f81ca4b.cg.shawcable.net. [70.77.200.158])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6822198909bsm8028841a12.25.2024.05.28.15.11.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2024 15:11:32 -0700 (PDT)
-From: Andreas Dilger <adilger@dilger.ca>
-Message-Id: <24829B5A-5F68-4B3A-AD4E-1AD9EFDE1D0E@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_5446AB5F-C01D-4F26-BF4D-BD52D8E1B75D";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="10EpJ6hN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YNfAxC6G"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716934363;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GZub3AKGtf3m0WqaMw01L0KFTwsMRo2LAh+Cg+JRsv0=;
+	b=10EpJ6hNlROGnXgv687DoZ4wgrzIzfraguXluq2TvrA53ZzXTtjgzsRZ2ntZiDyk/sEXUR
+	Nry6KMgOAzHcXuIvuzVYZcK2ArTMU644G4vdAqqpMa7EGFNWM2+ykO/VkE0EUGG+baruFQ
+	uARHLnUAFKHBRj9jbK+VoQMcupN5KkiEtvvBoEv8ucRCCaVzBClfoAllvSCUD624cvx3WL
+	sYSpqCgfwZ0p/Wa2yVukWBPO8bTtq1QQYE6d7jaCm9Yw/QDsmUFZaX8zF5nzOnxkDInZD3
+	lwyfDDNg6YQpvUUtQYdcs4tpGO9dpGHdzYj+FURtGK+em5+saXBYVYImnLD1Sg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716934363;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GZub3AKGtf3m0WqaMw01L0KFTwsMRo2LAh+Cg+JRsv0=;
+	b=YNfAxC6G+tEJE6ZRI9e2UBKdG84tVoH4nusCdtPdZV2AGpGAdsn5bo+qXBR8qrsZa1LCZY
+	AFQ1L/bahS1cvKDg==
+To: Dave Hansen <dave.hansen@intel.com>, Tony W Wang-oc
+ <TonyWWang-oc@zhaoxin.com>, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+ mat.jonczyk@o2.pl, rdunlap@infradead.org, alexandre.belloni@bootlin.com,
+ mario.limonciello@amd.com, yaolu@kylinos.cn, bhelgaas@google.com,
+ justinstitt@google.com, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Cc: CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com, Linus
+ Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
+In-Reply-To: <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com>
+References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
+ <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com>
+Date: Wed, 29 May 2024 00:12:43 +0200
+Message-ID: <87wmnda8mc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH v2] statx: stx_subvol
-Date: Tue, 28 May 2024 16:11:28 -0600
-In-Reply-To: <b3b02658-ffc4-4bd9-b77a-af65ae359474@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- linux-bcachefs@vger.kernel.org,
- linux-btrfs <linux-btrfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Josef Bacik <josef@toxicpanda.com>,
- Miklos Szeredi <mszeredi@redhat.com>,
- Christian Brauner <brauner@kernel.org>,
- David Howells <dhowells@redhat.com>
-To: John Garry <john.g.garry@oracle.com>
-References: <20240308022914.196982-1-kent.overstreet@linux.dev>
- <20240312021308.GA1182@sol.localdomain>
- <b3b02658-ffc4-4bd9-b77a-af65ae359474@oracle.com>
-X-Mailer: Apple Mail (2.3273)
+MIME-Version: 1.0
+Content-Type: text/plain
 
+On Tue, May 28 2024 at 07:18, Dave Hansen wrote:
+> On 5/27/24 23:38, Tony W Wang-oc wrote:
+> ...> diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+>> index c96ae8fee95e..ecadd0698d6a 100644
+>> --- a/arch/x86/kernel/hpet.c
+>> +++ b/arch/x86/kernel/hpet.c
+>> @@ -804,6 +804,12 @@ static u64 read_hpet(struct clocksource *cs)
+>>  	if (in_nmi())
+>>  		return (u64)hpet_readl(HPET_COUNTER);
+>>  
+>> +	/*
+>> +	 * Read HPET directly if panic in progress.
+>> +	 */
+>> +	if (unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID))
+>> +		return (u64)hpet_readl(HPET_COUNTER);
+>> +
+>
+> There is literally one other piece of the code in the kernel doing
+> something similar: the printk() implementation.  There's no other
+> clocksource or timekeeping code that does this on any architecture.
+>
+> Why doesn't this problem apply to any other clock sources?
 
---Apple-Mail=_5446AB5F-C01D-4F26-BF4D-BD52D8E1B75D
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+I principle it applies to any clocksource which needs a spinlock to
+serialize access. HPET is not the only insanity here.
 
+Think about i8253 :)
 
-> On May 28, 2024, at 6:46 AM, John Garry <john.g.garry@oracle.com> wrote:
-> 
-> On 12/03/2024 02:13, Eric Biggers wrote:
->> On Thu, Mar 07, 2024 at 09:29:12PM -0500, Kent Overstreet wrote:
->>>  	__u32	stx_dio_mem_align;	/* Memory buffer alignment for direct I/O */
->>>  	__u32	stx_dio_offset_align;	/* File offset alignment for direct I/O */
->>> +	__u64	stx_subvol;	/* Subvolume identifier */
->>>  	/* 0xa0 */
->>> -	__u64	__spare3[12];	/* Spare space for future expansion */
->>> +	__u64	__spare3[11];	/* Spare space for future expansion */
->>>  	/* 0x100 */
->> The /* 0xa0 */ comment needs to be updated (or deleted).
-> 
-> I would tend to agree. Was this intentionally not updated (or deleted)?
+Most real clocksources, like TSC and the majority of the preferred clock
+sources on other architectures are perfectly fine. They just read and be
+done.
 
-More correct would be to add the new stx_subvol field after the "0xa0"
-comment so that it is clear at what offset in the struct this field is.
+> Why should the problem be fixed in the clock sources themselves?  Why
+> doesn't printk() deadlock on systems using the HPET?
 
-Cheers, Andreas
+Because regular printk()s are deferred to irq work when in NMI and
+similar contexts, but that obviously does not apply to panic
+situations. Also NMI is treated special even in the HPET code. See
+below.
 
+> In other words, I think we should fix pstore to be more like printk
+> rather than hacking around this in each clock source.
 
+pstore is perfectly fine. It uses a NMI safe time accessor function
+which is then tripping over the HPET lock. That's really a HPET specific
+problem.
 
+Though what I read out of the changelog is that the MCE hits the same
+CPU 'x' which holds the lock. But that's fairy tale material as you can
+see in the patch above:
 
+  	if (in_nmi())
+  		return (u64)hpet_readl(HPET_COUNTER);
 
+For that particular case the dead lock, which would actually be a live
+lock, cannot happen because in kernel MCEs are NMI class exceptions and
+therefore in_nmi() evaluates to true and that new voodoo can't be
+reached at all.
 
---Apple-Mail=_5446AB5F-C01D-4F26-BF4D-BD52D8E1B75D
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+Now there are two other scenarios which really can make that happen:
 
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
+ 1) A non-NMI class exception within the lock held region
 
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmZWVpAACgkQcqXauRfM
-H+A4QQ/+IFC+ipn32WPm2mM14CNmiYmrhv5RCNPU8Ectk5pHJQGow3HzwXGSGKRv
-M4tj97Xw5Au3K9qP9s3QSNLpDrc3+KumXrr8vzg33XpnRXcSzNMxtcXdht3/DGYO
-zqltGBq7u+Wm2S1yoRZwORU1YS/dq90ec0m6IBhszI3FAvLCH/tMj7dlTrTE3gSu
-xWen9XZBYiTbj3m81J5nlppuqEsr3tF7LtJRyHUw5xqgpe47kv0GFohyCp3pv8et
-r5fbv5I8uCNx6iSBk/o5ORLr8VVZJ4K5/0t96u0sPDLN9wOCV8NpYPXLeSUqPVr7
-KGxIcTSFAUkUMQXi2NGkpkHm5aAGmpXH2QQSdKbQbXrKXEbo4rAe+4jJjNtiYMK4
-vU7R0/6YGT+KBmL9J0/yvfshZNNb5l7ghzAq3x2Wt3TCPFGg0N6em1QKSb67IdbS
-nCmsQ38n589juroHPFs4yEq2Lad+g05CT5Lml7UNVCj5Fg4Wq+2sL0/6tnrx9/Xu
-Sh/knYTEPZy3Yevg0t4eol4TzLVzKm5PlKIVzctm4pAm5mNMXsS0OygEgpV57LXY
-84UCpWL80GT7PHpeo8KzNuN14oYS2BW1aZdBgfSnyxhhSuKGbFDCLcr/N+leNeZr
-M3rRe35/SHqXbzs2kpSz/mlf1m98bHjjsyRMKmPj2/a1tevPQg0=
-=vnHt
------END PGP SIGNATURE-----
+    CPU A
+    acquire(hpet_lock);
+    ...                 <- #PF, #GP, #DE, ... -> panic()
 
---Apple-Mail=_5446AB5F-C01D-4F26-BF4D-BD52D8E1B75D--
+    If any of that happens within that lock held section then the live
+    lock on the hpet_lock is the least of your worries. Seriously, I
+    don't care about this at all.
+
+ 2) The actual scenario is:
+
+    CPU A                       CPU B
+    lock(hpet_lock)
+                                MCE hits user space
+                                ...
+                                exc_machine_check_user()
+                                  irqentry_enter_from_user_mode(regs);
+
+    irqentry_enter_from_user_mode() obviously does not mark the
+    exception as NMI class, so in_nmi() evaluates to false. That would
+    actually dead lock if CPU A is not making progress and releases
+    hpet_lock.
+
+    Sounds unlikely to happen, right? But in reality it can because of
+    MCE broadcast. Assume that both CPUs go into MCE:
+
+    CPU A                       CPU B
+    lock(hpet_lock)
+                                exc_machine_check_user()
+                                  irqentry_enter_from_user_mode();
+    exc_machine_check_kernel()    do_machine_check()
+      irqentry_nmi_enter();         mce_panic()
+      do_machine_check()            if (atomic_inc_return(&mce_panicked) > 1)
+        mce_panic()                     wait_for_panic(); <- Not taken
+
+        if (atomic_inc_return(&mce_panicked) > 1)
+            wait_for_panic(); <- Taken
+
+                                    ....
+                                    hpet_read()
+
+    -> Dead lock because in_nmi() evaluates to false on CPU B and CPU A
+       obviously can't release the lock.
+
+So the proposed patch makes sense to some extent. But it only cures the
+symptom. The real underlying questions are:
+
+  1) Should we provide a panic mode read callback for clocksources which
+     are affected by this?
+
+  2) Is it correct to claim that a MCE which hits user space and ends up in
+     mce_panic() is still just a regular exception or should we upgrade to
+     NMI class context when we enter mce_panic() or even go as far to
+     upgrade to NMI class context for any panic() invocation?
+
+#1 Solves it at the clocksource level. It still needs HPET specific
+   changes.
+
+#2 Solves a whole class of issues
+
+   ... while potentially introducing new ones :)
+
+   To me upgrading any panic() invocation to NMI class context makes a
+   lot of sense because in that case all bets are off.
+
+   in_nmi() is used in quite some places to avoid such problems. IOW,
+   that would kill a whole class of issues instead of "curing" the HPET
+   problem locally for the price of an extra conditional. Not that the
+   extra conditional matters much if HPET is the clocksource as that's
+   awfully slow anyway and I really don't care about that.
+
+   But I very much care about avoiding to sprinkle panic_cpu checks all
+   over the place.
+
+Thanks,
+
+        tglx
