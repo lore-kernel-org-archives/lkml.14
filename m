@@ -1,112 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3F532C60;
-	Tue, 28 May 2024 16:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E11172799;
+	Tue, 28 May 2024 16:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716912510; cv=none; b=nwEFIh9zWiMctRGrwxoOn0COii8hP5sDO1jAlAfreWozQ8RIaXpcz5ly/LygMKDTsSjw0MSV9YNF4nyDd6f1NXn7bdV1ObYsaBi7V0j1OEebCr6q2kImeL/88ap5KCFe7qL+AwfVFdydPrQ9p0g3DedYWZGsyy5M01VzYRRICVk=
+	t=1716912515; cv=none; b=uOeJybyxlDtO2EGGRfjvRc0Ko2N8LDSkfm1FZYWHdzj/OlmJFU0ywAJfHmm3+LycG6GpQNIMw7noJvIic8E6nu1RxX2yScUnNisi3QNoPvx0tCJ+DH628qajdr+iK2haG1VWM5x8h5Odd7lbbcAMvU4LPAXc03e8PD35JGTL8uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716912510; c=relaxed/simple;
-	bh=sy28UyA1Z9nAsKXnFVtW4DjGYuNsglWfo2Z5ihJ2kko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O4kuCRUec+xf44St901kaY6wTKwAjTplyNl6U5MimK+xeFH1Al/FaqPdKXLkL4DzbvTAh398kYeUmpGEDVuCLC9L1LJ9oI6QUkcmENzckzQ56fUkXzwefoiIqnxwPt7/0kBmJ4+t44t1rGsxGmJDJbnudNn11TlokyeYSgGhfw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jbYIw3zi; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716912515; c=relaxed/simple;
+	bh=dZre33+kTvP3qNM6Wq68jjxZ1j/0HNMDQQ574/KywCs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JPQ7iE7Swl8oXpqPxERhQkJhyZQM/hGPu6ypyODhHW4LboBfBOj84YoPzDU6aHzWIXeaKmtW3Hmlt16y4DIqsbIsX4sqLrOobtIqxw7pRFTv7iSrNFdtOkeRQmNXuerKwHoV2uGjsb3g54ig0yLAHwwnpjSAklziWWmyvZEMkYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/lBnBuH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jbYIw3zi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716912509; x=1748448509;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sy28UyA1Z9nAsKXnFVtW4DjGYuNsglWfo2Z5ihJ2kko=;
-  b=jbYIw3zinoKjz4Nr3uXisRD4s7jjASzYX6o/hd3x+XKANbuC2lPw1N3j
-   mxsIbRKZEAC+HUOP5A0A6vG2Z4MioK656glnMTZubdvcDfp1hxfrFtDKI
-   iSc1FCzpsIM36AOKDIlA95AwmwDJscFBufpY5zCifV3B2tMQiLZykOlTo
-   JuOyTjbjcfs9VGKynIdbVqWZtQFus7GaIRpc/LfQ0ekhwhLQHmFbvhVlb
-   orUtNc8eO03iE3+VZoi6l2PMOsxmPo52AoZmMLWjpJhdp6sPIyY6z42Fo
-   WDsz4W5IujVtGB6HITHW0LEOSvSliszI89pFEYFnIfU3zE7zZVyYDVvrn
-   Q==;
-X-CSE-ConnectionGUID: I7GEJfr1QhWdknWotClIew==
-X-CSE-MsgGUID: D9lZsJF2RGG6p1YTCuFPlw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24397439"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="24397439"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 09:08:28 -0700
-X-CSE-ConnectionGUID: 6buhvu1HQtmmxZ4l/ht5Wg==
-X-CSE-MsgGUID: mJA3CBa+QfCI9+JfLKAp0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="35067472"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.9]) ([10.125.111.9])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 09:08:29 -0700
-Message-ID: <e3ec5070-abb7-4adc-9cd1-c459ca27b531@intel.com>
-Date: Tue, 28 May 2024 09:08:09 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/lBnBuH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B34C3277B;
+	Tue, 28 May 2024 16:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716912515;
+	bh=dZre33+kTvP3qNM6Wq68jjxZ1j/0HNMDQQ574/KywCs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=m/lBnBuHh1e49A8BbMkgzPdBTO4YlWs56vwiUB70FI+UAdMzbD87ggPUiDe/tlJZ6
+	 PV6wYrU8I0Sophj7v7/d6/PDU6G9Q7WbjieXoDj0sBU0LdV9oawFu5EXg9IX0fLXrO
+	 xll2PZnFhUcZbiCZ4+B8MJK/zrQ8WkD5NCVSRC2yEWNo1X8YVYPP4+qTkqzoe7wX+I
+	 oBbWKe75ScEVIXzDIQkgqYTvgIhHLkzJTOlknl2Hjqh05MGSUkSbNzKdOx+d9ms2WG
+	 DOPwIn8/xYplVL56+rPX/7rUUW+UB8+1TgCphkWayA/MJVNY0ecXnS9WhvOsrTyZkc
+	 x/n0JhI39F2OQ==
+From: SeongJae Park <sj@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	stable@vger.kernel.org,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com,
+	broonie@kernel.org,
+	damon@lists.linux.dev
+Subject: Re: [PATCH 6.9 000/427] 6.9.3-rc1 review
+Date: Tue, 28 May 2024 09:08:31 -0700
+Message-Id: <20240528160831.150674-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240527185601.713589927@linuxfoundation.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] dmaengine: ioatdma: Fix mem leakage series
-To: n.shubin@yadro.com, Vinod Koul <vkoul@kernel.org>,
- Logan Gunthorpe <logang@deltatee.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Nikita Shubin <nikita.shubin@maquefel.me>, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux@yadro.com
-References: <20240528-ioatdma-fixes-v2-0-a9f2fbe26ab1@yadro.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240528-ioatdma-fixes-v2-0-a9f2fbe26ab1@yadro.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hello,
 
+On Mon, 27 May 2024 20:50:47 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-On 5/27/24 11:09 PM, Nikita Shubin via B4 Relay wrote:
-> Started with observing leakage in patch 3, investigating revealed much
-> more problems in probing error path.
+> This is the start of the stable review cycle for the 6.9.3 release.
+> There are 427 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Andy you are always welcome to review if you have a spare time.
+> Responses should be made by Wed, 29 May 2024 18:53:20 +0000.
+> Anything received after that time might be too late.
 > 
-> Thank you Andy and Markus for your comments.
-> 
-> Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
-> ---
-> Changes in v2:
-> - dmaengine: ioatdma: Fix error path in ioat3_dma_probe():
->   Markus:
->     - fix typo
-> 
-> - dmaengine: ioatdma: Fix kmemleak in ioat_pci_probe()
->   Andy:
->     - s/int/unsigned int/
->     - fix spelling errors
->     - trimmed kmemleak reports
-> 
-> - Link to v1: https://lore.kernel.org/r/20240524-ioatdma-fixes-v1-0-b785f1f7accc@yadro.com
-> 
-> ---
-> Nikita Shubin (3):
->       dmaengine: ioatdma: Fix leaking on version mismatch
->       dmaengine: ioatdma: Fix error path in ioat3_dma_probe()
->       dmaengine: ioatdma: Fix kmemleak in ioat_pci_probe()
-> 
->  drivers/dma/ioat/init.c | 54 ++++++++++++++++++++++++++-----------------------
->  1 file changed, 29 insertions(+), 25 deletions(-)
-> ---
-> base-commit: 6d69b6c12fce479fde7bc06f686212451688a102
-> change-id: 20240524-ioatdma-fixes-a8fccda9bd79
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.3-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
+> and the diffstat can be found below.
 
-Thanks for the fixes. 
+This rc kernel passes DAMON functionality test[1] on my test machine.
+Attaching the test results summary below.  Please note that I retrieved the
+kernel from linux-stable-rc tree[2].
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com> for the series
+Tested-by: SeongJae Park <sj@kernel.org>
 
-Would be nice if someone wants to move everything to the devm_* management APIs. Would make this a lot less messy. Probably not worth the effort though given how old the driver is and no more devices are being created to use this driver. 
+[1] https://github.com/awslabs/damon-tests/tree/next/corr
+[2] c1009266618d ("Linux 6.9.3-rc1")
 
-> 
-> Best regards,
+Thanks,
+SJ
+
+[...]
+
+---
+
+ok 6 selftests: damon: debugfs_duplicate_context_creation.sh
+ok 7 selftests: damon: debugfs_rm_non_contexts.sh
+ok 8 selftests: damon: debugfs_target_ids_read_before_terminate_race.sh
+ok 9 selftests: damon: debugfs_target_ids_pid_leak.sh
+ok 10 selftests: damon: sysfs.sh
+ok 11 selftests: damon: sysfs_update_removed_scheme_dir.sh
+ok 12 selftests: damon: sysfs_update_schemes_tried_regions_hang.py
+ok 13 selftests: damon: sysfs_update_schemes_tried_regions_wss_estimation.py
+ok 14 selftests: damon: damos_quota.py
+ok 15 selftests: damon: damos_apply_interval.py
+ok 16 selftests: damon: reclaim.sh
+ok 17 selftests: damon: lru_sort.sh
+ok 1 selftests: damon-tests: kunit.sh
+ok 2 selftests: damon-tests: huge_count_read_write.sh
+ok 3 selftests: damon-tests: buffer_overflow.sh
+ok 4 selftests: damon-tests: rm_contexts.sh
+ok 5 selftests: damon-tests: record_null_deref.sh
+ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
+ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
+ok 8 selftests: damon-tests: damo_tests.sh
+ok 9 selftests: damon-tests: masim-record.sh
+ok 10 selftests: damon-tests: build_i386.sh
+ok 11 selftests: damon-tests: build_arm64.sh
+ok 12 selftests: damon-tests: build_m68k.sh
+ok 13 selftests: damon-tests: build_i386_idle_flag.sh
+ok 14 selftests: damon-tests: build_i386_highpte.sh
+ok 15 selftests: damon-tests: build_nomemcg.sh
+ [33m
+ [92mPASS [39m
