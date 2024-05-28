@@ -1,99 +1,99 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C323311CB8;
-	Tue, 28 May 2024 04:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8818418E25;
+	Tue, 28 May 2024 04:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716868950; cv=none; b=TejucEux2POXWcT+BG1b9B7O/aXU+EaAE7V9hDPRyBCa54yhG/QSM99uPaKcOA1SeMd1lJIHOhM0vu0zTbbVtYUouY9LYEJZ32ZWaawvoNU9vKEXQqfx2VqioGwfkTxtP00cIqQfbGKeiW4XyyWHbThJP4aGnJAvN+m/T0kqGHQ=
+	t=1716868975; cv=none; b=uwRTypTMHeuHNF2GQY+KsaCULlccgTZyzLQ98M8XitwP7saCxYq5fLw6RUXenaI5pYPXFFqyERT5IdVAKlWlARF7IjJszxtpN1M3Y57o6ODVIFTLjCSDMN8ZqrLO05RaKPca2HvWTwCs19DYU0Sv3SGkBUU2ezNOc2XZ8rlJB1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716868950; c=relaxed/simple;
-	bh=RkyzJwALhBYm7jbYo/1FMaotEaFywVBZ2f1aO0c2YCU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PwwYgIL6zlxFQ600uxGa2V72gIXjsqzveFPHCjIWOT7F2VSc4rDSrEpIVElgpowzPC2NBK46qL1hgrOdeOx9nalgc98PgCYQyjqUgYL0eb6UTFyyRHHox+y6To88hoRuyzJyVFTf54iLdHhPO15mCm6LBllIh/PftqR7wZECMto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uK2DVuGm; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1716868975; c=relaxed/simple;
+	bh=RUryWDZM8/CxUIrss5UeEa11d04TB5ISYy47F+40c0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hR7Os1E1C8St044+1Do3m2dtK5ZxI39MzfbQuphwqh1nc8eR82/q8IlqR5sTHnmzpHkvSa8ufkoKQ4DRFmLFaJ3L/kH7w2cMARKdoY9zQ2X06olodTYMmsCOtMeZYxruxRnbxBsK7wxkgmCqbydwCz6hciOYxaFYbVWHYY+9vSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=G22W+gZa; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uK2DVuGm"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44S425u8055371;
-	Mon, 27 May 2024 23:02:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716868925;
-	bh=1R6SAPxsYM/7puz0eluIm4xcL2IBinsyRIHhoBFXMrE=;
-	h=From:To:CC:Subject:Date;
-	b=uK2DVuGmjhX//PIMFHuwJg3QnidGPdyHr849yJgnH/1fEFkMVS+MCZd9E7MP8RhyO
-	 1/nkox4mTXzv1KKAPJpMqmvuMkQgD80ZQv/G0JumpvOs0YjGs8bBnFPTgTG2zH2XrN
-	 8BtUrV4+0p7HaWlUuRRC2IPKL7BWH0q5FkBuhkiA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44S4258t093018
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 27 May 2024 23:02:05 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 27
- May 2024 23:02:05 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 27 May 2024 23:02:05 -0500
-Received: from a0497641-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.36])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44S420Ox028431;
-	Mon, 27 May 2024 23:02:00 -0500
-From: Neha Malcom Francis <n-francis@ti.com>
-To: <robh@kernel.org>, <conor+dt@kernel.org>, <krzk+dt@kernel.org>,
-        <kristo@kernel.org>, <vigneshr@ti.com>, <nm@ti.com>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>
-CC: <marten.lindahl@axis.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, <n-francis@ti.com>
-Subject: [PATCH v3 0/3] arm64: ti: Add TPS6287 nodes
-Date: Tue, 28 May 2024 09:31:56 +0530
-Message-ID: <20240528040159.3919652-1-n-francis@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="G22W+gZa"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1716868969; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Ufbccdg7n9u75JgmNDr4YagbSZ/oALnqCYROgJ4t6Ks=;
+	b=G22W+gZaqt6axuVFxTgBZS047Swa+2n8LDbTYPYY7FF8N/f7MO9AMCIIIGHVklA8Cims+rm7Ej7hntpejd100Cnufwfa2vbr+it7s1YB2RHqMFX/iAO6RhTlML2uYpCXAa63vP9hYHsPX0TsL3xHagNnR8V3BXxzaTjx+XRyRTg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W7OKPNz_1716868966;
+Received: from 30.97.48.200(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7OKPNz_1716868966)
+          by smtp.aliyun-inc.com;
+          Tue, 28 May 2024 12:02:48 +0800
+Message-ID: <ce886be9-41d3-47b6-82e9-57d8f1f3421f@linux.alibaba.com>
+Date: Tue, 28 May 2024 12:02:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 0/2] fuse: introduce fuse server recovery mechanism
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, Miklos Szeredi
+ <miklos@szeredi.hu>, Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ winters.zc@antgroup.com
+References: <20240524064030.4944-1-jefflexu@linux.alibaba.com>
+ <CAJfpeguS3PBi-rNtnR2KH1ZS1t4s2HnB_pt4UvnN1orvkhpMew@mail.gmail.com>
+ <858d23ec-ea81-45cb-9629-ace5d6c2f6d9@linux.alibaba.com>
+ <6a3c3035-b4c4-41d9-a7b0-65f72f479571@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <6a3c3035-b4c4-41d9-a7b0-65f72f479571@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add nodes for TPS6287x present in AM68 SK, AM69 SK and J784S4 EVM. They
-are a family of synchronous step-down DC/DC converters. These converters
-are used to enable AVS (Adaptive Voltage Scaling) for these devices.
 
-Also since AM68 SK lacks DT node of it's PMIC, LP8733; make use of this
-series to add that in as well.
 
-Data sheet: https://www.ti.com/lit/ds/slvsgc5a/slvsgc5a.pdf
-Boot logs (v2): https://gist.github.com/nehamalcom/1a288f534d730e8af43c48a175919b19 
+On 2024/5/28 11:08, Jingbo Xu wrote:
+> 
+> 
+> On 5/28/24 10:45 AM, Jingbo Xu wrote:
+>>
+>>
+>> On 5/27/24 11:16 PM, Miklos Szeredi wrote:
+>>> On Fri, 24 May 2024 at 08:40, Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
+>>>
+>>>> 3. I don't know if a kernel based recovery mechanism is welcome on the
+>>>> community side.  Any comment is welcome.  Thanks!
+>>>
+>>> I'd prefer something external to fuse.
+>>
+>> Okay, understood.
+>>
+>>>
+>>> Maybe a kernel based fdstore (lifetime connected to that of the
+>>> container) would a useful service more generally?
+>>
+>> Yeah I indeed had considered this, but I'm afraid VFS guys would be
+>> concerned about why we do this on kernel side rather than in user space.
 
-Changes since v2:
-https://lore.kernel.org/all/20240527124422.3553828-1-n-francis@ti.com/
-- modified subject prefixes, order of properties and node names to
-  adhere to the DTS coding style (Krzysztof)
-- no change to boot logs (not affected)
+Just from my own perspective, even if it's in FUSE, the concern is
+almost the same.
 
-Changes since v1:
-https://lore.kernel.org/all/20240507122158.3739291-1-n-francis@ti.com/
-- remove changing the compatibility of the existing driver (Rob and
-  Mark)
-- remove unnecessary bootph-pre-ram, have them only for VDD_CPU_AVS
-  (Udit)
+I wonder if on-demand cachefiles can keep fds too in the future
+(thus e.g. daemonless feature could even be implemented entirely
+with kernel fdstore) but it still has the same concern or it's
+a source of duplication.
 
-Neha Malcom Francis (3):
-  arm64: dts: ti: k3-am68-sk-base-board: Add LP8733 and TPS6287 nodes
-  arm64: dts: ti: k3-am69-sk: Add TPS62873 node
-  arm64: dts: ti: k3-j784s4-evm: Add TPS62873 node
+Thanks,
+Gao Xiang
 
- .../boot/dts/ti/k3-am68-sk-base-board.dts     | 76 +++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am69-sk.dts         | 21 +++++
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      | 21 +++++
- 3 files changed, 118 insertions(+)
-
--- 
-2.34.1
-
+>>
+>> I'm not sure what the VFS guys think about this and if the kernel side
+>> shall care about this.
+>>
+> 
+> There was an RFC for kernel-side fdstore [1], though it's also
+> implemented upon FUSE.
+> 
+> [1]
+> https://lore.kernel.org/all/CA+a=Yy5rnqLqH2iR-ZY6AUkNJy48mroVV3Exmhmt-pfTi82kXA@mail.gmail.com/T/
+> 
+> 
+> 
