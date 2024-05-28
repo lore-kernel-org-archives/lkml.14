@@ -1,116 +1,82 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0E2131E3C;
-	Tue, 28 May 2024 13:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6523C1DFEB;
+	Tue, 28 May 2024 13:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716904101; cv=none; b=qH2m6rmoNgNJrhacGbH1haptkTA6sHEcOpBXtnkiKc/Z4nGX2QheQwfB8ciyOZk1AD+4oNzA7ymgfnwyzY78WPHHt5geCFhSiKxQD84DOEShtuYaS5GN4jJPn+AMX2yeOOcZcVT58ZgTDY38CPXnQ4XbWET3Cn4FbXO93lhwQtA=
+	t=1716904116; cv=none; b=gFW5Ow7o9BV3BUnS/tIeBZ+k/HNKfxKs9jXjOoCyvPPvLJGRiSDmM0WrwgfSzHbBW0h7fdz9Ydeuj8uXjkEqaW/OKEsc6pwb8kAOUatyLOdF4sBRDFu8jyoXYLtMDsZilxMveSOXbqe4Vs05k57asoPOJZATHn97oiZvDqyf7oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716904101; c=relaxed/simple;
-	bh=9aFLJYx1hIAqcxpFsUeOvsy64ziF3w0rQBQVlCme1Ck=;
+	s=arc-20240116; t=1716904116; c=relaxed/simple;
+	bh=DoTWcxfPd6ZXM5trbPl344BcOXMoZdGGkPQSwjH/RWw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A3vOtPbV+rSNjmQ7n76IDhFOZWWm9Ahs2YJx+p8C3XXsvoo1OqYa2c7/sQQ0ujKVAAXcPkJWZFfkdLhmk5kIxI9W1VMNDx0xX5KhZfU5nszhHKB2dTNVwMTfTrOCG7EJaVV7yrnRRKuMWnX7nE5MhjSTB0qVOLX1DO8gB+X71xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UHVe+VJL; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=St7NU+NECVdKw4MSRH5L2ZVFXkbTA8UQvv7J/L9GMSESvuDRW66xh3v38Dlgwn5WhAcuW9smUvxHBZZGChI7hz0vyvdoG5rr56LHMtl6qbLtOLEEVEGMfiB/kGHgyEQ2W2oe2FnBxOCFLYm6MOU8/kUJKXgXoG6N96SR2x5wyi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qV2JvCao; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UHVe+VJL"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7FD7E40E01E8;
-	Tue, 28 May 2024 13:48:10 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id CWC8d6f-MDCs; Tue, 28 May 2024 13:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1716904086; bh=Guy/h4AS3sgPsJ1ZoSa+dXWo2WOj/mHMhGiRjv7+LKw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qV2JvCao"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E332FC3277B;
+	Tue, 28 May 2024 13:48:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716904115;
+	bh=DoTWcxfPd6ZXM5trbPl344BcOXMoZdGGkPQSwjH/RWw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UHVe+VJLKxqmmtkpxms4dUr0g/20OaUMpQ+JRwZRuN1GSfREbHsKJk+wWNo3sBASH
-	 vViwlJqr0X3E50WR/RV2rb9br0vG7P4HHCH+X992vEcu8o8VsXdOmeuyfkfzoRk5Id
-	 mgzRod/x6CXL2OrgSEKzUVLq8Uu+vHMoXNjAgq196nD2B3h+A/Tw27OwxJebUsH6uE
-	 ijScMkhRN+y/S96jP/wtRYQSKM/SYysV+8dzCx6FOYVYob4GUH/b9wd0fB5Hg5CtQ6
-	 IKtuoxENR6sgoU7MP53+xCfRN09gw1R31Hzmebne7xKPw0EUGPFOJZrOO1HX1X6Tq6
-	 Bqct9q38hnC59egLzl+drAo7XKWQqQTUBT5/DjFEO036M7T0dZKdEadmeKJPsX6qXo
-	 39ffhazzPIfSkpdril9twBshfoyvbb1EPnKelclQpzgWk0dl27wyKIn76sUM1R95Xq
-	 ss4FKsfTLH7ncDroEpTC6jg8+W17ilVa/IviXbOgLEZTADalBxOE/TQEoEEy/LWHI3
-	 lIlJ10Yqxydv1RkkysonL81mOsbiVkj0UQ2B01qSOiVfNrB8x2TMWJ9mGUzbujVkb9
-	 bEbNGx+hklBRDxaaRRN1F5gGFwwkpY94w/BnLkhbtNxmwdA2zwdecVb4DnRC2XzFjU
-	 DMFJEQBguDr6la4S4voQfyOU=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0A1B840E0177;
-	Tue, 28 May 2024 13:47:39 +0000 (UTC)
-Date: Tue, 28 May 2024 15:47:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv11 01/19] x86/acpi: Extract ACPI MADT wakeup code into a
- separate file
-Message-ID: <20240528134732.GHZlXgdO88f3j0Biu9@fat_crate.local>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-2-kirill.shutemov@linux.intel.com>
+	b=qV2JvCaoWDpXgFGwXQMX/wBqV7LbRdk8dAwfrWp8Alhoo43rJMx/Q3Hp0rS1P9Kao
+	 ZTgbPEMUu4ivrI9JU3zpLxcZo/NnyfuEPXRM2BK+IqRQtrVXpP/20Mi+QU2CHNhnVJ
+	 Wh4moUeV6b3EDAh05vasMik0jRZraX6s5NwqrSoO8hUjr6sBpJyeAXIbDqnWe7bp+2
+	 heQR990QJszNbZngqv5b+OeakkEjNGBQW+62ztLRkVmfqmLp/oS7EGDlanDc0O5P0a
+	 J46zpE7fh1fpLxMcVSMob1z1xpT/F/ptPkiZ5ml0IhAzvinmUpiLtGDNHYReiT+dmc
+	 PB1wqi/C/iYqg==
+Date: Tue, 28 May 2024 08:48:33 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] arm64: qcom: allow up to 4 lanes for the Type-C
+ DisplayPort Altmode
+Message-ID: <wipu6tdqjbjlrv2sbljgzvoxvpjvkoaz6ic3keq24n3v4tap4j@entxhnd42rml>
+References: <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-0-a03e68d7b8fc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528095522.509667-2-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-0-a03e68d7b8fc@linaro.org>
 
-On Tue, May 28, 2024 at 12:55:04PM +0300, Kirill A. Shutemov wrote:
-> In order to prepare for the expansion of support for the ACPI MADT
-> wakeup method, move the relevant code into a separate file.
+On Mon, May 27, 2024 at 10:42:32AM GMT, Neil Armstrong wrote:
+> Register a typec mux in order to change the PHY mode on the Type-C
+> mux events depending on the mode and the svid when in Altmode setup.
 > 
-> Introduce a new configuration option to clearly indicate dependencies
-> without the use of ifdefs.
+> The DisplayPort phy should be left enabled if is still powered on
+> by the DRM DisplayPort controller, so bail out until the DisplayPort
+> PHY is not powered off.
 > 
-> There have been no functional changes.
+> The Type-C Mode/SVID only changes on plug/unplug, and USB SAFE states
+> will be set in between of USB-Only, Combo and DisplayPort Only so
+> this will leave enough time to the DRM DisplayPort controller to
+> turn of the DisplayPort PHY.
 > 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Kai Huang <kai.huang@intel.com>
-> Reviewed-by: Baoquan He <bhe@redhat.com>
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> Tested-by: Tao Liu <ltao@redhat.com>
-> ---
->  arch/x86/Kconfig                   |  7 +++
->  arch/x86/include/asm/acpi.h        |  5 ++
->  arch/x86/kernel/acpi/Makefile      |  1 +
->  arch/x86/kernel/acpi/boot.c        | 86 +-----------------------------
->  arch/x86/kernel/acpi/madt_wakeup.c | 82 ++++++++++++++++++++++++++++
->  5 files changed, 96 insertions(+), 85 deletions(-)
->  create mode 100644 arch/x86/kernel/acpi/madt_wakeup.c
+> The patchset also includes bindings changes and DT changes.
+> 
+> This has been successfully tested on an SM8550 board, but the
+> Thinkpad X13s deserved testing between non-PD USB, non-PD DisplayPort,
+> PD USB Hubs and PD Altmode Dongles to make sure the switch works
+> as expected.
+> 
+> The DisplayPort 4 lanes setup can be check with:
+> $ cat /sys/kernel/debug/dri/ae01000.display-controller/DP-1/dp_debug
+> 	name = msm_dp
+> 	drm_dp_link
+> 		rate = 540000
+> 		num_lanes = 4
 
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+Has the issue with the USB controller dying on us been resolved?
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards,
+Bjorn
