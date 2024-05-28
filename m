@@ -1,87 +1,245 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AF916ABEA
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 11:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDAC16D4D1;
+	Tue, 28 May 2024 11:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716896646; cv=none; b=JM/3KmklOf5KzB/X5PIgLyELDGEVbUsW+itrDFLovqPwFN31FHscInpDjQqdHUu2WHRuOe/gOUtIXL7zW6Rsa2q3JhMfawfRq7O/eVMcKU6bRg3Cy9VLXZS5RITP8lR7idwZlAgDm+bXKvnMlnsWLzyHOqnGWgHhltu30EVaEZc=
+	t=1716896648; cv=none; b=DwB8I6WB8huHqoOyKKW/L9571VgQrfudyIAGfOL+8g9o/oB43u1FHb0uht3daOjrzBzdNYHjjDXPHXjOD4Sww+rXAPIi8HcBWIEhiZTyiaPYcCB1nwbqcTHr0gMz/BP8PYSuLtjWgxR1TMqDPuivirg2EuB/rxXykLF0glu4Q9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716896646; c=relaxed/simple;
-	bh=yOEmwDlZd2rxD+/L1uaF/14KWl2R7msUoWWl9sQJuMA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Na7HF6lDtDB2qiHCV+XTkqkGoFH3LOdwP/XJIkep1z1IEk4rRT+6vKJSD4N2BQQFzwdS7bQ2/2Ah1WqG0hWaGWq4fEBIhaRp+1u278G2RTSsiVb2bEqxg3qfq8qUDdgMh/pRRWrtVnf4U/1p/bKe7CUEeVci01r8C4kostySd00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pLVLPC4F; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716896648; c=relaxed/simple;
+	bh=XoU2lFGtX1inJYtEwpPlKRKiu5JpMxsymzMVmp4wakU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PeTrH8lZFkvYwmAuvPVC4d1HdeU2I859JnKKR2g7xka4gv+Uh3ZDa7aTeSupg2CNPM0CV3bvXIrtS0jwsWEWzMwhbFdEmQ5YemLdETHVQSoUA3brgbthyGqoY26BthkPcMDr0Cu/eaFkqWozyZbTFcAaS6zXW/Rq2E3MsQNErcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OINdHEGy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pLVLPC4F"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-df78acd5bb6so728999276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 04:44:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716896640; x=1717501440; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PDCC8CEGZqZAB2Msg7Dc9A4feCAIq5W2zp1AC6fm/sY=;
-        b=pLVLPC4Fhu25amY65NRpnDSircVt3aVW7uz5g4EfjbJdsgOBiYSsn+W/REZHto1lDe
-         nVBnyFiYUGMKyhq6Kte5sIrUegMkDf1Dpcyp1hoyVE8GjbbikHXkTeCkZXP483ZRj1xU
-         VK77wqXKG4z9a9tTQ4bQzS1QTWHxM/ZY+amuPNR0/Hv+/pJKWuakGpi/Ub2J/dl8UVxT
-         68wuMO7ikCC86BKfq9YsglwDRT4R34StAwE85B4aoxIvJPuFXCJy9TZLgMvaJa6GJWvH
-         LieOOcXXH4Q1woLFZEmjmRLhrJsCvxwF+tjRz7Ouzp9PaBtzfCrGPO+VXwgpNSQTbz0M
-         6F3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716896640; x=1717501440;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PDCC8CEGZqZAB2Msg7Dc9A4feCAIq5W2zp1AC6fm/sY=;
-        b=hyluMLdnOlESy4uuEs4KrWjAqulJvYg/UcRslQEOZVp+GSjq0M4p+1QPxyDdCaORWg
-         Mp6VVi1v33rhWMwL4ZrRXgCI8FoPLCtXgphVxPSqyNWRqscVJmidi6TxramRcuB+3URd
-         0XvjgH04VrQ/uZbo5tOAiYktVwc+9Vcp3szwA0XKKU+aw2OEE3ZHQePmwOlzNolklgOx
-         QZIfAN7s1Frgx99IkJaTJdWLVpntUHNSH6LpkCWnOW+fwitlrZdT87/1Tt+7DjTENL54
-         zyCV6p2K1UYth76/Ty9q1INCMcn69jEOaejlAhfbCtf/YcxQv7G3XipSuvu4txqzU1v8
-         HgXA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1FY7TPFmiDnEq7hjaz0S6ZvRKUnG12bfcZ7AqEI2w2VP2I0VbE5VJMbghyDvv+RRjuo1REFg8q4typloozSlceOhCJoSuzwgT2wIz
-X-Gm-Message-State: AOJu0YzUyL4SjR5YXuUhdMH3Os4XABbY9ua6G+j2i3P5oXemxS+DDYGQ
-	KIDT31IJf4f/udcTFfCC7z9Z28LG6eiLHMj4wu9pvWduvsJCGQHnNQX1US5ApF5IyE6/TItIFke
-	5Qzko7Cv9GNliQweErQa9EYPoowP7MA9JLwJwZgIqDC82SE4eaCmYWu3q
-X-Google-Smtp-Source: AGHT+IGAlEjh+hwoEoU8O0CZzP7G3ESAVthO5rQ3B4MUj+UE7U4isFNhiJtbVLHDWwHzyej5tQV+REwk0Y5mZnpxIBg=
-X-Received: by 2002:a5b:d0d:0:b0:deb:9e3f:8c7b with SMTP id
- 3f1490d57ef6-df77223c93emr10443794276.60.1716896639907; Tue, 28 May 2024
- 04:43:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OINdHEGy"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SB883m019859;
+	Tue, 28 May 2024 11:44:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GkrTVHJ1MbdfRvlawKI4mzmoPypgVOh2jU/egsI6inc=; b=OINdHEGyfoJVVi5M
+	dCgluhrIUfJ81LFE7pfutQCi47YUVXij835fG/JOxzj5WxRL1aMAyGqdXBSLuBEx
+	U5NwJQNy6AktIl9LcRU2RQTbbPvxV4Qyi+6M70Ot8FB2P0HoUhLRsTx2oEW+ttxu
+	zYQPYcD3mVHS7pAEondIaLdEq4F2Y/p3pLf3aLxSvJJIaCwtLlOgHmTlv1qDoChw
+	phrBBKDhsj2NSGfwr7tEVkzXqZCvKPy2ugdzwehkmVvC6dcIU9i4OzmHbTz7v8HG
+	ZAsmitX66PndEm15J64FG78lqOAmhPNiImuIMaGYqcHNiP28AOXeiwKeCFcM+amV
+	Z5z6ng==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0qdvd4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 11:44:02 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SBi1FU018937
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 11:44:01 GMT
+Received: from hu-ajipan-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 28 May 2024 04:43:55 -0700
+From: Ajit Pandey <quic_ajipan@quicinc.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vladimir Zapolskiy
+	<vladimir.zapolskiy@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Taniya Das
+	<quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH V3 2/8] dt-bindings: clock: qcom: add DISPCC clocks on SM4450
+Date: Tue, 28 May 2024 17:12:48 +0530
+Message-ID: <20240528114254.3147988-3-quic_ajipan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240528114254.3147988-1-quic_ajipan@quicinc.com>
+References: <20240528114254.3147988-1-quic_ajipan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zktwd4Y8zu6XSGaE@Z926fQmE5jqhFMgp6>
-In-Reply-To: <Zktwd4Y8zu6XSGaE@Z926fQmE5jqhFMgp6>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 28 May 2024 13:43:48 +0200
-Message-ID: <CACRpkdZd_aXy5Dv_pZw5ue+T=1i8_ERP1Anc5Y_mu=cyd_hbxA@mail.gmail.com>
-Subject: Re: [PATCH] gpio-syscon: do not report bogus error
-To: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, etienne.buira@free.fr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 7Gd_ZFvWr2QD3ZS5j0yydOYdDS7leucB
+X-Proofpoint-ORIG-GUID: 7Gd_ZFvWr2QD3ZS5j0yydOYdDS7leucB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_07,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405280087
 
-On Mon, May 20, 2024 at 5:48=E2=80=AFPM Etienne Buira <etienne.buira@free.f=
-r> wrote:
+Add device tree bindings for the display clock controller on
+Qualcomm SM4450 platform.
 
-> Do not issue "can't read the data register offset!" when gpio,syscon-dev
-> is not set albeit unneeded.  gpio-syscon is used with rk3328 chip, but
-> this iomem region is documented in
-> Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
-> does not require gpio,syscon-dev setting.
->
-> v3:
->   - moved from flag to parent regmap detection
->
-> Signed-off-by: Etienne Buira <etienne.buira@free.fr>
+Signed-off-by: Ajit Pandey <quic_ajipan@quicinc.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../bindings/clock/qcom,sm4450-dispcc.yaml    | 71 +++++++++++++++++++
+ .../dt-bindings/clock/qcom,sm4450-dispcc.h    | 51 +++++++++++++
+ 2 files changed, 122 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm4450-dispcc.yaml
+ create mode 100644 include/dt-bindings/clock/qcom,sm4450-dispcc.h
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sm4450-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm4450-dispcc.yaml
+new file mode 100644
+index 000000000000..2aa05353eff1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,sm4450-dispcc.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/qcom,sm4450-dispcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Display Clock & Reset Controller on SM4450
++
++maintainers:
++  - Ajit Pandey <quic_ajipan@quicinc.com>
++  - Taniya Das <quic_tdas@quicinc.com>
++
++description: |
++  Qualcomm display clock control module provides the clocks, resets and power
++  domains on SM4450
++
++  See also:: include/dt-bindings/clock/qcom,sm4450-dispcc.h
++
++properties:
++  compatible:
++    const: qcom,sm4450-dispcc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Board XO source
++      - description: Board active XO source
++      - description: Display AHB clock source from GCC
++      - description: sleep clock source
++      - description: Byte clock from DSI PHY0
++      - description: Pixel clock from DSI PHY0
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    #include <dt-bindings/clock/qcom,sm4450-gcc.h>
++    clock-controller@af00000 {
++      compatible = "qcom,sm4450-dispcc";
++      reg = <0x0af00000 0x20000>;
++      clocks = <&rpmhcc RPMH_CXO_CLK>,
++               <&rpmhcc RPMH_CXO_CLK_A>,
++               <&gcc GCC_DISP_AHB_CLK>,
++               <&sleep_clk>,
++               <&dsi0_phy_pll_out_byteclk>,
++               <&dsi0_phy_pll_out_dsiclk>;
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+diff --git a/include/dt-bindings/clock/qcom,sm4450-dispcc.h b/include/dt-bindings/clock/qcom,sm4450-dispcc.h
+new file mode 100644
+index 000000000000..ca6f2ef90157
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,sm4450-dispcc.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_CLK_QCOM_DISP_CC_SM4450_H
++#define _DT_BINDINGS_CLK_QCOM_DISP_CC_SM4450_H
++
++/* DISP_CC clocks */
++#define DISP_CC_MDSS_AHB1_CLK					0
++#define DISP_CC_MDSS_AHB_CLK					1
++#define DISP_CC_MDSS_AHB_CLK_SRC				2
++#define DISP_CC_MDSS_BYTE0_CLK					3
++#define DISP_CC_MDSS_BYTE0_CLK_SRC				4
++#define DISP_CC_MDSS_BYTE0_DIV_CLK_SRC				5
++#define DISP_CC_MDSS_BYTE0_INTF_CLK				6
++#define DISP_CC_MDSS_ESC0_CLK					7
++#define DISP_CC_MDSS_ESC0_CLK_SRC				8
++#define DISP_CC_MDSS_MDP1_CLK					9
++#define DISP_CC_MDSS_MDP_CLK					10
++#define DISP_CC_MDSS_MDP_CLK_SRC				11
++#define DISP_CC_MDSS_MDP_LUT1_CLK				12
++#define DISP_CC_MDSS_MDP_LUT_CLK				13
++#define DISP_CC_MDSS_NON_GDSC_AHB_CLK				14
++#define DISP_CC_MDSS_PCLK0_CLK					15
++#define DISP_CC_MDSS_PCLK0_CLK_SRC				16
++#define DISP_CC_MDSS_ROT1_CLK					17
++#define DISP_CC_MDSS_ROT_CLK					18
++#define DISP_CC_MDSS_ROT_CLK_SRC				19
++#define DISP_CC_MDSS_RSCC_AHB_CLK				20
++#define DISP_CC_MDSS_RSCC_VSYNC_CLK				21
++#define DISP_CC_MDSS_VSYNC1_CLK					22
++#define DISP_CC_MDSS_VSYNC_CLK					23
++#define DISP_CC_MDSS_VSYNC_CLK_SRC				24
++#define DISP_CC_PLL0						25
++#define DISP_CC_PLL1						26
++#define DISP_CC_SLEEP_CLK					27
++#define DISP_CC_SLEEP_CLK_SRC					28
++#define DISP_CC_XO_CLK						29
++#define DISP_CC_XO_CLK_SRC					30
++
++/* DISP_CC power domains */
++#define DISP_CC_MDSS_CORE_GDSC					0
++#define DISP_CC_MDSS_CORE_INT2_GDSC				1
++
++/* DISP_CC resets */
++#define DISP_CC_MDSS_CORE_BCR					0
++#define DISP_CC_MDSS_CORE_INT2_BCR				1
++#define DISP_CC_MDSS_RSCC_BCR					2
++
++#endif
+-- 
+2.25.1
 
-Yours,
-Linus Walleij
