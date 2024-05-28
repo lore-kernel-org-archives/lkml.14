@@ -1,125 +1,122 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC6716B722;
-	Tue, 28 May 2024 12:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46A416B722;
+	Tue, 28 May 2024 12:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716899270; cv=none; b=LWZQNFU1yLMsuMbh48gVHuC/fEtM3Pt1FRsE635QHdeTjrAgMGYt1loYYlYbcp5Kvr10TGRBOyg32fdtz7quteT3rJ9PTa5xaPJesztYJxDtSTbohXO/sviKqmj9h72D2T2SBJsa1NDWtNFTQNhVBBRKMJfBQTzpMDyyLV4f9LY=
+	t=1716899283; cv=none; b=c/z2wZz513oK2gHum//aswy6+0KWh5Y6aCds05YtcD/3XzytTS3m/s4Te71RR6xZHM/oRp/H3UvH+oVtTMldMOGT3jaUE+ySXUfRXzy+WIe9vDogToc+B8vq0b4GVa1dOLKYM95DB3msTAFdwKkbLv40KUP5+yrJZSq8zkzf1Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716899270; c=relaxed/simple;
-	bh=I8xyTDSo2DdUfwiGqFmJGZhy5ikIjBhPpjVahgmEH2k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFjtME/UzMqLIWHj350d2pfRxkMr220bemSSMu1p/UV3JnXiXf92GjU2hRXDFSGt2v+AOEvgTAFa9nSlophK0pflGI9rXcDuSjlvyfDWWZf/dJ88BUUm1CSRLP6N9HRAhtecdSV4i0XpUwgVuehevzMx0Cbl2qgJbvV+de0/2SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=kDdVQQAG; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1716899283; c=relaxed/simple;
+	bh=TN6B4wemPGFuM+0dEnL3oARir5uEmA9oNtVFIzk/oZY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XKqVGt7VbcOvL98+6lQkDPmBXT7Sp3j4QhuUhiiL/DmgqIj0TxbWahZmf1NIrunNkPL46O52eKY/uGXZ1e3bH2TZcETOmhyScfEqsbt4hALaBO2utsM5RUWkv0bwbPmRr+5HZlLg8hT9GHB/S2nirxUO6a/cYSgA95KGd9jvVQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XPv1mMSZ; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kDdVQQAG"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 601208D0;
-	Tue, 28 May 2024 14:27:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716899263;
-	bh=I8xyTDSo2DdUfwiGqFmJGZhy5ikIjBhPpjVahgmEH2k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kDdVQQAGaDRMwpDxn+N+kHyvAbTb3NMVBSx1ViZ2jWmu7ZOqZ9f40Yare7Sa1PKn/
-	 FLia8QxHpNUngQuB05RXVCkUKKd0gNFCumWF9F2WeLpez3uNuZHEGjeAArYBxQaJcd
-	 pCitUJFW/MXne08UYXX9iudRsw0LEBRUOUymRwZ0=
-Date: Tue, 28 May 2024 15:27:34 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH 4/5] gpio: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <20240528122734.GA29970@pendragon.ideasonboard.com>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-5-laurent.pinchart@ideasonboard.com>
- <CACRpkdbAq1Cqr4X8fjEjOTxw7ky9b6V0ye1NYKfDy5E1BmAX6g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPv1mMSZ"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57857e0f462so930686a12.0;
+        Tue, 28 May 2024 05:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716899280; x=1717504080; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tjBueRK+9PNOBq1jnz2aw5WpDDizWgajIzb98OM4pio=;
+        b=XPv1mMSZtbrT2+SwAKby+NYTIj1GAsvvVsw3Q7jAT1MFuH6H/haVsHmujbwsps1Ddq
+         BHNFORni0UGKzxJ396yxyHLBmLxiXzxk+k4i86Cj/lwax3IW7aFUkGAnLux8QXkOdw8N
+         o8kMDKUCESOSN8kRX+Y45HG/Uy73xCZ5oBI+2DGyJBv2WgwuSG/1vXBHyoN8geAKhYGD
+         vuH8OjuRI4J8J/HC3iomXB21WgvumBs9zndk3XfG3cH8g48YwD6v8gJLbF3WZA6UkS6J
+         GoJBlV4RhdPOrRsQlbrk7nDlnbw+RNsys5zYVGTmqwMyWD2UReDAEYbHMcng5ZxCqQEO
+         5Haw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716899280; x=1717504080;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tjBueRK+9PNOBq1jnz2aw5WpDDizWgajIzb98OM4pio=;
+        b=qUJ6uxd72OF8ReIGiVt57L9o3SCFzqCMUpVRqlfuE9M+JLc8eQzzBQB39Ufn15FqW3
+         zKObmK8LlhQhSHjNI3XWKHsQLeZmg82BEgg959netY1pC3Tmae09oZbH0+r01w8iM9s9
+         2rHeBw71L66P2YrmAvVhpEEJQfGCss+GJ19io1XMwiBQqG29u6+1vZPc+maBjHmGutA+
+         XFOz2ZQ3StbYtmzxImj2PsdcnEdWdSSHAaTG+HOySRSUP3MVGfTs9Ot2+ZQu2BJh/p1m
+         oEK3gOJ+19JramRj4eXoKUL/Hq40Ju42HRkz+emoUTFhCznv8+JCGfCS2O4QX+3qiL7E
+         VUjA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3a6vPk+Ley+nzy8mPEdI1hoCJanvnu1IomSZ5DWw/VcxOjJAWvHTrOp5Fe5oXemJKUiohbBjkRmIWePTTdz4B0kfCvgfVF2pdxw210A3yfxKCXI2lGvj2tDyorKJR9P+eXzKi
+X-Gm-Message-State: AOJu0Yzalb7A2kbhwjoZDx9PWlyL3sh5+r/JPw5h3f7C+9CUp4vpdXTq
+	On0Z7G8EuvS2Rm5iDu6teyyiPJHHpqAS1zv29UmwqBwUpVvqATqN
+X-Google-Smtp-Source: AGHT+IEeKIeslF9UUaFTayvvIRx7EUYUl2mXEus+Ohn9HxMLrFCJp8GUxWFrs7BdkBOiVulaUmFtrg==
+X-Received: by 2002:a50:f60b:0:b0:578:610d:b889 with SMTP id 4fb4d7f45d1cf-578610db9f0mr7322307a12.24.1716899279615;
+        Tue, 28 May 2024 05:27:59 -0700 (PDT)
+Received: from LPPLJK6X5M3.. (dynamic-78-8-96-206.ssp.dialog.net.pl. [78.8.96.206])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579d65934ddsm2555316a12.38.2024.05.28.05.27.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 05:27:58 -0700 (PDT)
+From: Radoslaw Zielonek <radoslaw.zielonek@gmail.com>
+To: vladimir.oltean@nxp.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	syzbot+a7d2b1d5d1af83035567@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com,
+	vinicius.gomes@intel.com,
+	willemdebruijn.kernel@gmail.com,
+	Radoslaw Zielonek <radoslaw.zielonek@gmail.com>
+Subject: Re: [syzbot] [net?] INFO: rcu detected stall in packet_release
+Date: Tue, 28 May 2024 14:25:58 +0200
+Message-ID: <20240528122610.21393-2-radoslaw.zielonek@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240527140145.tlkyayvvmsmnid32@skbuf>
+References: <20240527140145.tlkyayvvmsmnid32@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbAq1Cqr4X8fjEjOTxw7ky9b6V0ye1NYKfDy5E1BmAX6g@mail.gmail.com>
 
-Hi Linus,
+Hello,
 
-On Tue, May 28, 2024 at 01:54:29PM +0200, Linus Walleij wrote:
-> On Mon, May 20, 2024 at 9:59 PM Laurent Pinchart wrote:
-> 
-> > From: Haibo Chen <haibo.chen@nxp.com>
-> >
-> > The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> > matrix decoder, programmable logic, reset generator, and PWM generator.
-> > This driver supports the GPIO function using the platform device
-> > registered by the core MFD driver.
-> >
-> > The driver is derived from an initial implementation from NXP, available
-> > in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
-> > adp5585-gpio support") in their BSP kernel tree. It has been extensively
-> > rewritten.
-> >
-> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> (...)
-> 
-> > +static int adp5585_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
-> > +{
-> > +       struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-> > +       unsigned int bank = ADP5585_BANK(off);
-> > +       unsigned int bit = ADP5585_BIT(off);
-> > +
-> > +       guard(mutex)(&adp5585_gpio->lock);
-> > +
-> > +       return regmap_update_bits(adp5585_gpio->regmap,
-> > +                                 ADP5585_GPIO_DIRECTION_A + bank,
-> > +                                 bit, 0);
-> 
-> First, I love the guarded mutex!
+I'm working on similar taprio bug:
+	https://syzkaller.appspot.com/bug?extid=c4c6c3dc10cc96bcf723 
+I think I know what is the root cause.
 
-Yes, it's neat :-)
+The function advance_sched()
+[https://elixir.bootlin.com/linux/v5.10.173/source/net/sched/sch_taprio.c#L696]
+runs repeatedly. It is executed using HRTimer.
+In every call to advance_sched(), end_time is calculated,
+and the timer is set so that the next execution will be at end_time.
+To achieve this, first, the expiration time is set using hrtimer_set_expires(),
+and second, HRTIMER_RESTART is returned.
+This means that the timer is re-enqueued with the adjusted expiration time.
+The issue is that end_time is set far before the current time (now),
+causing advance_sched() to execute immediately without a context switch.
 
-> But doesn't regmap already contain a mutex? Or is this one of those
-> cases where regmap has been instantiated without a lock?
+__hrtimer_run_queues()
+[https://elixir.bootlin.com/linux/v5.10.173/source/kernel/time/hrtimer.c#L1615]
+is a function with a long loop.
+First, please note that now is calculated once and not updated within this function.
+We can see the statement basenow = now + base->offset,
+but this statement is outside the loop (and in my case, the offset is 0).
+The loop will terminate when the queue is empty or the next entry in the queue
+has an expiration time in the future.
+The issue here is that the queue can be updated within __run_timer().
+In my case, __run_timer() adds a new entry to the queue with advance_sched() function.
+Since the expiration time is before now, we need to execute advance_sched() again.
+The loop is very long because, in our case, the cycle is set to 3ns.
 
-regmap indeed includes a lock, but it will lock each register access
-independently. In adp5585_gpio_get_value() we need to read two
-registers atomically, so we need to cover them by a single lock.
+My idea is to create throttling mechanism.
+When advance_sched() sets the hrtimer expiration time to before the current time
+for X consecutive times, we can postpone the new advance_sched().
+You can see my PoC here: https://lore.kernel.org/all/00000000000089...@google.com/T/
 
-I could drop the lock from regmap, but I would then likely need to
-introduce a lock in the parent mfd device that both the PWM and GPIO
-children would use to protect bus access. That may make sense in the
-future, but is a bit overkill for now I think.
+Could you take a look at it? What do you think?
+Is it acceptable, or is it too aggressive with too much impact on the TAPRIO scheduler?
 
-> > +       gc = &adp5585_gpio->gpio_chip;
-> > +       gc->parent = dev;
-> > +       gc->direction_input  = adp5585_gpio_direction_input;
-> > +       gc->direction_output = adp5585_gpio_direction_output;
-> 
-> And chance to implemen ->get_direction()?
+Radosław.
 
-Sure, I'll add that to v2.
-
-> Other than this I think the driver is ready for merge, so with the
-> comments fixed or addressed:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Thank you.
-
--- 
-Regards,
-
-Laurent Pinchart
