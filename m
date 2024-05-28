@@ -1,126 +1,144 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5B97D07D;
-	Tue, 28 May 2024 17:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42DD17332F
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 17:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716917079; cv=none; b=maui89gzaBihvKVQ6LZnStWFRMiu83n9P54orIOdWUYsTTH0YKEmSX6l/VC0zqfsieFE6MX/n81L/fjIZGOQbkKSBgAFzAKXycrkCCbqFWqzGmjsjKWBtLnyJ5Jmt72uuQVrmDEXTcOJopF99XdNOK+aBmm1htpdigbDrNHDwLw=
+	t=1716917087; cv=none; b=pKW75GFO7GJAxNFn6FUcUpp0/wuN7icyPOKvBQ/QuaCJb/ooFtQ1A284GMpBfzSUsjucOMm34VxNQm1dULLPUO3MKgDv6T7aJAKJAlpGywQs+IZF5NCwxdo+TQIx3dfeC8652O9X7Ew66IutYto6VX6FnIr/99vp8ybEfSvNeTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716917079; c=relaxed/simple;
-	bh=JpfOrfm/RN6ZNydj18l4u8gIZn6ywPDO/Ii8ISAxU9g=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=JNeIB/LRvk4rimzHQwPK34YoX9IBUPra9/atBWDSAVQ8/6Xh6oKdlz0Qoxu69Ay9r8gK+VdniCwq9v0uZp9mzKsIQ1rfH40AMrvt7AyeYXhMhUq2t22tKXXpW2ZC/93Lc9Gbmd3K5jfpHFkwIVTLSitJ9sBhiZVJtEKSUjr90RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mok5sHVq; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716917087; c=relaxed/simple;
+	bh=BYOBM/Qgb1pPbXOKQyDM68LLkkFSrrz6a8nkyDmMy/U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IZDDmMQYEEMrKfVMYs35LpMBKOxZEpdtKTl+G8u0m4F3AbqXWG9lnKd0pRZ3qeE7pzBnlm9xtNe3ohkwl9FR9gvla3ML5JID6FN8QXZCg5mrq7vyTKcQfN65gNUePBwfQPLuTCE1+jzbQm/BFNfuw/8D+hco3HRTTyJ1Pmfux3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HGUOH8TK; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mok5sHVq"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-43fb094da40so297991cf.0;
-        Tue, 28 May 2024 10:24:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HGUOH8TK"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43dfe020675so33121cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 10:24:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716917076; x=1717521876; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1716917085; x=1717521885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ThOVm46gYp9/Cn7ASNZ0mQAfmQpKcIWWQc+98ymb318=;
-        b=Mok5sHVqgQRDScxstnDJJladEh+s+Hgi9F7K+UcKsm4+c0CCtlAIvVaB7mlH6MljXl
-         GRH7ISpBI6cRao3nrXJWUgPdGuIFjGZgde9OZBMsbsaCFyp7gxvT8Wl7m77Iu4pIxfWS
-         5yUnOPJOuQdjnHv99FTPV09R5QBaxMEWPjaSTnPS7blSvmOi/dscHTG7Rfk8w6CGPzle
-         sHEqEDXufY09efL5D2AY0PWUJLzl1kohW3AVZE1/TL4cZ8g/1Rw+w8eWDTDpMLdxTPK5
-         3v0q1m3XphWnS3oar5UxG74fEMF2ink+suib3w5dURhqJ1cj/1UPfWodF7kbnNaGOi1l
-         TVoA==
+        bh=s/zJPbXyQmRdniGVZf4TSPPBc/ZwEN1OkaaD+bjWerY=;
+        b=HGUOH8TKgMETbqRvcrd8gq1AjAgS0TLYGukfllplzgE7Yy9RJyucWjruOvAgSmy4UB
+         UnfheKuEpRUs8dourh7NaHkCVqF/b5UdLVlEpGdjPjOY5NtNvK7krDmwpqKrx92qTcQp
+         Mprfmy9JVpQPfs/lkdaTPJokWxYD6d634KvzRi0ffL2mYus7+KOzX78LRyn76B62ea09
+         MSScK8CU8o8NU0Vppb2jAWQAZnKVHf3zEU3vXgknWudvvPvU2enkf48Amy2bHbjg6/oA
+         0XiRSszGUAY0rH7twI/PcqI4uKfmyZxToAF+MoxsHVBycOH84ktWUop+2di0ajQ6u52C
+         1wlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716917076; x=1717521876;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ThOVm46gYp9/Cn7ASNZ0mQAfmQpKcIWWQc+98ymb318=;
-        b=rnku5NdqDYxdA86Eda/FR7n9q2pnN26rW9QbJQfagdF9KUcbi2rYiGw9ITbpjOUp8M
-         0x/S3nQAYLSPH2EPzS/ABvvLv5Mk2dQByX0Ov8a9pFjbJgIL85xAAqvSlwtj0nfsJ7aW
-         UI6jugaiaSS+tGWSUUmmHEd8HiOywDRI7so/JRfuUEednmS6c42Pgc6S0a1E1RmU4QsR
-         dauQZ7mNKCs3XF8L3Rcqbis01/6biri06fnREf9bk+dB68elrcsGqQblWmz498nCzBoj
-         EpFUrfRlmnR+DMwk3Up8vZHb/qQR4liS6Mcc4cgLU3htOLy19PHM0ksVPoutdCUImm+V
-         g63Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX4EQnptR0KGOKDvepvOK0RsvKKbknRtyh1aiMK3ZnL+inlshb1cKu4Ixfg+J+xhuIzUzvCr+DYqYBGP4XuhxAHsjq3kcJ7vQmegjJbFsT8bIYJNBdRC2bxQ7WSuicc4Nw23bv25MQAECm2i2BUaKfs+IrBy4hwgs4q
-X-Gm-Message-State: AOJu0YytZaukA/uvgOBVqgptJGCkvrDQp9+VwtpEIgYf4pukgb9v0kgr
-	KPlUuLIIzi71aRN6to1XEdXj4wqfLvh2lIAP9BFwbKjiJgyz6nBu
-X-Google-Smtp-Source: AGHT+IHmE7KwWW/A6BnWKuk+2M8Ye5aS8UEuzeJBkO8gGRyfB9v09wmMfK5BrpYl8vMuNh2Iux6GXg==
-X-Received: by 2002:a05:622a:1346:b0:43c:7755:961c with SMTP id d75a77b69052e-43fa7431750mr305065511cf.5.1716917076577;
-        Tue, 28 May 2024 10:24:36 -0700 (PDT)
-Received: from localhost (112.49.199.35.bc.googleusercontent.com. [35.199.49.112])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fd54f4a5dsm11821051cf.97.2024.05.28.10.24.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 10:24:35 -0700 (PDT)
-Date: Tue, 28 May 2024 13:24:35 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Andrew Halaney <ahalaney@redhat.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Martin KaFai Lau <martin.lau@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- bpf <bpf@vger.kernel.org>
-Cc: kernel@quicinc.com, 
- Willem de Bruijn <willemb@google.com>
-Message-ID: <665613536e82e_2a1fb929437@willemb.c.googlers.com.notmuch>
-In-Reply-To: <6bdba7b6-fd22-4ea5-a356-12268674def1@quicinc.com>
-References: <20240509211834.3235191-1-quic_abchauha@quicinc.com>
- <20240509211834.3235191-2-quic_abchauha@quicinc.com>
- <6bdba7b6-fd22-4ea5-a356-12268674def1@quicinc.com>
-Subject: Re: [PATCH bpf-next v8 1/3] net: Rename mono_delivery_time to
- tstamp_type for scalabilty
+        d=1e100.net; s=20230601; t=1716917085; x=1717521885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s/zJPbXyQmRdniGVZf4TSPPBc/ZwEN1OkaaD+bjWerY=;
+        b=E63qcsV9ld7Ly2qIwS2RRUSX23iP04a2yVMyCHFjtHfAkMxjqUorviYvHqBeVXrT/w
+         CpKEe19pn2vnbFFw7zUHAB7y5ghrVYUelzRjafSpXf+V4vWQjgVWgUP4Wf6wT9BYnsJd
+         Q6MHNWG0SN04l2fQRj2a6+SK2PzIX/IVUFvvNEHCLtjVN7X1BKZ7QtPhoQuj+a9fw51d
+         CITvTHi4O8Mevwt7Tt8UFcIJp2T7Yz+AOb5zYZsifG9pfmkjoowaLukVoLippZxIp2Uw
+         hKuNbRoZo0DYRqBuEIAR8JmB+uVpwqbzUrBc60CXSRQl/p0gWbYyPMHHp2sBx1ty48ln
+         xCXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdAa9RO9hoT4lb+mKimAytdrtakC27RzwHS3tt9Ksp7/b2bt4UQyyXy3yMjlLhRthSZdizoY4+IRJSm7jiQI1kfXhh7GnTuKRY+y56
+X-Gm-Message-State: AOJu0Yzv2NNmHInQZoZOaPBRXOVu/dNnQfsHYugZ+Io0z6BZTfMT2sSy
+	lqVxRNJAC/misnt15+qC6mfAbPAEB4zdBviht0A12ZHU9ZQ4za12r/rH4iTdOsNjU5gj8SdZOSo
+	hvnoDbuJd7I0K8l+qoaFgtKttyVivCpl/a7ya
+X-Google-Smtp-Source: AGHT+IHOOURY6/R8zKLRs0+9b0KCEvabYkkR5HlqFkHzn0eIA34VYFPXTS30jDv55131zHsyX8c1BLRfOrGstkj0xBk=
+X-Received: by 2002:a05:622a:400d:b0:43f:b1dd:11fc with SMTP id
+ d75a77b69052e-43fb9f9ac98mr7220561cf.18.1716917084620; Tue, 28 May 2024
+ 10:24:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240528164132.2451685-1-maz@kernel.org>
+In-Reply-To: <20240528164132.2451685-1-maz@kernel.org>
+From: Saravana Kannan <saravanak@google.com>
+Date: Tue, 28 May 2024 19:23:39 +0200
+Message-ID: <CAGETcx-ZbK3P+CoPb1szjWNBbM7kN0j_p6QzT4iqPrYHqvWjRw@mail.gmail.com>
+Subject: Re: [PATCH] of: property: Fix fw_devlink handling of interrupt-map
+To: Marc Zyngier <maz@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	Anup Patel <apatel@ventanamicro.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Abhishek Chauhan (ABC) wrote:
+On Tue, May 28, 2024 at 6:41=E2=80=AFPM Marc Zyngier <maz@kernel.org> wrote=
+:
+>
+> Commit d976c6f4b32c ("of: property: Add fw_devlink support for
+> interrupt-map property") tried to do what it says on the tin,
+> but failed on a couple of points:
+>
+> - it confuses bytes and cells. Not a huge deal, except when it
+>   comes to pointer arithmetic
+>
+> - it doesn't really handle anything but interrupt-maps that have
+>   their parent #address-cells set to 0
+>
+> The combinations of the two leads to some serious fun on my M1
+> box, with plenty of WARN-ON() firing all over the shop, and
+> amusing values being generated for interrupt specifiers.
+>
+> Address both issues so that I can boot my machines again.
+>
+> Fixes: d976c6f4b32c ("of: property: Add fw_devlink support for interrupt-=
+map property")
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Cc: Anup Patel <apatel@ventanamicro.com>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  drivers/of/property.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 1c83e68f805b..9adebc63bea9 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1322,7 +1322,13 @@ static struct device_node *parse_interrupt_map(str=
+uct device_node *np,
+>         addrcells =3D of_bus_n_addr_cells(np);
+>
+>         imap =3D of_get_property(np, "interrupt-map", &imaplen);
+> -       if (!imap || imaplen <=3D (addrcells + intcells))
+> +       imaplen /=3D sizeof(*imap);
+> +
+> +       /*
+> +        * Check that we have enough runway for the child unit interrupt
+> +        * specifier and a phandle. That's the bare minimum we can expect=
+.
+> +        */
+> +       if (!imap || imaplen <=3D (addrcells + intcells + 1))
+>                 return NULL;
+>         imap_end =3D imap + imaplen;
+>
+> @@ -1346,8 +1352,14 @@ static struct device_node *parse_interrupt_map(str=
+uct device_node *np,
+>                 if (!index)
+>                         return sup_args.np;
+>
+> -               of_node_put(sup_args.np);
+> +               /*
+> +                * Account for the full parent unit interrupt specifier
+> +                * (address cells, interrupt cells, and phandle).
+> +                */
+> +               imap +=3D of_bus_n_addr_cells(sup_args.np);
+>                 imap +=3D sup_args.args_count + 1;
+> +
+> +               of_node_put(sup_args.np);
+>                 index--;
+>         }
+>
 
-> > +static inline void skb_set_delivery_type_by_clockid(struct sk_buff *skb,
-> > +						    ktime_t kt, clockid_t clockid)
-> > +{
-> > +	u8 tstamp_type = SKB_CLOCK_REALTIME;
-> > +
-> > +	switch (clockid) {
-> > +	case CLOCK_REALTIME:
-> > +		break;
-> > +	case CLOCK_MONOTONIC:
-> > +		tstamp_type = SKB_CLOCK_MONOTONIC;
-> > +		break;
-> > +	default:
-> 
-> Willem and Martin, I was thinking we should remove this warn_on_once from below line. Some systems also use panic on warn. 
-> So i think this might result in unnecessary crashes. 
-> 
-> Let me know what you think. 
-> 
-> Logs which are complaining. 
-> https://syzkaller.appspot.com/x/log.txt?x=118c3ae8980000
+Thanks Marc! And sorry for not catching this in my earlier review!
 
-I received reports too. Agreed that we need to fix these reports.
+Acked-by: Saravana Kannan <saravanak@google.com>
 
-The alternative is to limit sk_clockid to supported ones, by failing
-setsockopt SO_TXTIME on an unsupported clock.
-
-That changes established ABI behavior. But I don't see how another
-clock can be used in any realistic way anyway.
-
-Putting it out there as an option. It's riskier, but in the end I
-believe a better fix than just allowing this state to continue.
-
-A third option would be to not fail the system call, but silently
-fall back to CLOCK_REALTIME. Essentially what happens in the datapath
-in skb_set_delivery_type_by_clockid now. That is surprising behavior,
-we should not do that.
+-Saravana
