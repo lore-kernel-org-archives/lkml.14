@@ -1,131 +1,93 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A182B171E5A;
-	Tue, 28 May 2024 15:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803C315E86
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 15:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716908476; cv=none; b=WQShctUmjjrzMy5L8ekOA48nxlRtMSZ2G+u8Ux92VV8IfAd/7/zWeZ7jzysl5Re0hriHJPXwlT3JwDJ6MyP/0HCsL61FLAM6O9cNtT0GWaLePS+9WiC2A5+xX9R2zMRi77qOf6pjtOxrUT/mlYjD/Ml0QRWYOfv+7mEpu/Om9mE=
+	t=1716908494; cv=none; b=Q5b0XsQejA6gmqD6JuXQXHvVsF1i/cO7SOIr7sV8MAZ6+9hVdKAADXvXy8bcmHHSkpHs48vXLEQysMgs+hFOYZm1HEGoIXGCDZ2+kfJ79ONgwjRtmYa65vvo8aftEOlva2ILtsrOTge/m5bDfCir5HhKTr7RVYzNagHwGrBMDXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716908476; c=relaxed/simple;
-	bh=FSNgCECoeipF7QJrKj0OQsIro4RU4GPgTuHQfjCTmdY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ghwr9SqeT60UCBNdSk2oq8BqVEoDNEgUpz5zaPE4Yja92yKKSnJBDJYc1uK1aFYUlXFPA+kddR8a3apMLuGv4T58tWREf/ntavo0E1LaVI+GVmUi7JdB52b8mATK94/Jxic7MuGSp8BNdP5ppkl8DAE1U2zNY5qbXl3kPJIwKt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=R/EZWHZH reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1716908494; c=relaxed/simple;
+	bh=LlvRFJOILCzbgT7NNvYggBjSUHVYjQn217GQwoLyvGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ucPBqZDfrgySe3Oq+7RFiqN2lLsvajuQxVCOFK3z5QwYdqcAmzFO2AyLHLmOotD1WbgKpMqlgobTJ6czh2opcvpLgcK884fTkuDJ8qD2plLy4y/AYL/b0ltvGUHl182hDJlrmayEBDXlWJd0vyxcPzZnTSPueaCIIBCVztJaqVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LGuNQzaa; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="R/EZWHZH"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.1.0)
- id 4b9514b018a67f6a; Tue, 28 May 2024 17:01:06 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 3EF996A5015;
-	Tue, 28 May 2024 17:01:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1716908466;
-	bh=FSNgCECoeipF7QJrKj0OQsIro4RU4GPgTuHQfjCTmdY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=R/EZWHZHf6ejzo2gyftXS9K4ildPLTfkd8YoNdpusaqlm0xQVf4nmDJ1yKWlTs9FN
-	 eNGGI1Jd702nVdpys2NsD8Am10d38qPUVMFCh7qN5zCT0BFb4xpEqFj2d/VthvDo5a
-	 PdQFV2r1hunZ14uI+Cus3l47a4dSk7GS8U7SKteS5dgQ2+BNgy4n6IIMmW7hNRiI90
-	 mHMHq8etAoJFjS8Y3FVtr3YpDmTVuDDaIWeRFfQh//Il5nfixKesQ0i91qdKc7N+Fb
-	 SjXxCTQyWDEIzPK793E5x351rZFsSp2VzudkFvcnQ+9/ISkGLUB8+vgurSYEVHIdC1
-	 EabAYVHLPIgqw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject:
- [PATCH v2 1/8] thermal/debugfs: Use helper to update trip point overstepping
- duration
-Date: Tue, 28 May 2024 16:52:50 +0200
-Message-ID: <4933647.31r3eYUQgx@kreacher>
-In-Reply-To: <5794974.DvuYhMxLoT@kreacher>
-References: <5794974.DvuYhMxLoT@kreacher>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LGuNQzaa"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a626919d19dso699026766b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 08:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1716908490; x=1717513290; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AZpXRomCophLuh4kP0Z7OM4gjJuOz191Vdv0Rm3MAJs=;
+        b=LGuNQzaaX9qwTzTPWDHCllYkFttcLNJqr8FAVGDK/ue0zZsCxbwkQrul0ApRu4y9Us
+         k/vc6S2Oo7gCifyIJEKByxkv5PY9t+xQMVIzbbyMXI93CwrV/lDgiB8JsOfVwa2yaix/
+         E7ZWv9pb0p5zW6IJ08DW+5Dg8aLena3i8+ZajwBrGdGzPHx7/0gK5Ili+aR7Ak9ketts
+         eMD/4dT1Setm+E5kZWpSjyuoyI5NdCJcojQfa15oevtQr96+ZKQ2hV2v0hySgHSzaPJm
+         jsNJXTEafCbgrsf43XbHXhmH4ZXnxEvklYSL4XVkYq3RuE/54q+2tt2Row6pmT7ANVqx
+         gDbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716908490; x=1717513290;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZpXRomCophLuh4kP0Z7OM4gjJuOz191Vdv0Rm3MAJs=;
+        b=irvcoDpEwVSQoz3cRW/gmtB8MRojPYgpTAU8bvk98St29wFRXzMUSh595ZbzheDQ1g
+         sgTOrPx9Q3Bg1KrBXy2ikgxW43pak5OOdRtBvGo9PwdZl1vqTbcGIEFWqJAFrpmDK96F
+         u18XREhbiIafrIolNyFcL1FPr0FsYmDGukNqXGHFEWdPApKLRmxK3EIKaNxf2lLelRFH
+         yCcTGYBI0HhEUFimV/az6VeR+pyea83xP4oGnT4vcaKS9EPnf8CM009gpWcwx2Ezh5m7
+         2rgENl3gvGy/cAhMKeSXphWMeMKF71IeCz/9zqSp6ZFWlx1895wrM/lYnRhEHKQ/dHJ+
+         WVsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzeoQBTP8+JgI/7IRGFuYac+xbMtY3jWBTpxAxw2/iHrumUvrE2fvsufyMfcnh/1mwqknZCocNVRFmCe9At+yylGoDxy8gpV/ZKlHn
+X-Gm-Message-State: AOJu0YwXewJ4VT2QfZN/kJaisQyvhWqWlOPx20symBYneoCEQ+Gc4JkX
+	SROf/XQeUzrd2eQ7IrDTVFSW9lOhzAQSYhBsDQIS+YJ6M0OBCr6fJ/7/J4+qsM4=
+X-Google-Smtp-Source: AGHT+IGjXdR1wwIB/XQSuS/su8bySQhPGF1f9VfG551f27pX864NaKYfbnoT+xMu5gTVpvnmh+tb7A==
+X-Received: by 2002:a17:906:1f06:b0:a59:f2d2:49b1 with SMTP id a640c23a62f3a-a6261f91570mr1034023166b.9.1716908489852;
+        Tue, 28 May 2024 08:01:29 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cda6d74sm619241766b.201.2024.05.28.08.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 08:01:29 -0700 (PDT)
+Date: Tue, 28 May 2024 17:01:28 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, live-patching@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests: livepatch: Test atomic replace against
+ multiple modules
+Message-ID: <ZlXxyIMNA64Wy395@pathway.suse.cz>
+References: <20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedgheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohephedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com>
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Sat 2024-05-25 11:34:08, Marcos Paulo de Souza wrote:
+> Adapt the current test-livepatch.sh script to account the number of
+> applied livepatches and ensure that an atomic replace livepatch disables
+> all previously applied livepatches.
+> 
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-Add a helper for updating trip point overstepping duration to be called
-from thermal_debug_tz_trip_down().
+I am not completely sure if it is a good idea to test so many
+aspects and use so many different test modules in a single test.
+It might be harder to maintain and analyze eventual problems.
 
-Subsequently, it will also be used during resume from system-wide
-suspend.
+But the change will help to catch more problems which is good.
+I am fine with it:
 
-No intentional functional impact.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-v1 -> v2: Rebase.
-
----
- drivers/thermal/thermal_debugfs.c |   22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
-
-Index: linux-pm/drivers/thermal/thermal_debugfs.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_debugfs.c
-+++ linux-pm/drivers/thermal/thermal_debugfs.c
-@@ -653,14 +653,24 @@ unlock:
- 	mutex_unlock(&thermal_dbg->lock);
- }
- 
-+static void tz_episode_close_trip(struct tz_episode *tze, int trip_id, ktime_t now)
-+{
-+	struct trip_stats *trip_stats = &tze->trip_stats[trip_id];
-+	ktime_t delta = ktime_sub(now, trip_stats->timestamp);
-+
-+	trip_stats->duration = ktime_add(delta, trip_stats->duration);
-+	/* Mark the end of mitigation for this trip point. */
-+	trip_stats->timestamp = KTIME_MAX;
-+}
-+
- void thermal_debug_tz_trip_down(struct thermal_zone_device *tz,
- 				const struct thermal_trip *trip)
- {
- 	struct thermal_debugfs *thermal_dbg = tz->debugfs;
-+	int trip_id = thermal_zone_trip_id(tz, trip);
-+	ktime_t now = ktime_get();
- 	struct tz_episode *tze;
- 	struct tz_debugfs *tz_dbg;
--	ktime_t delta, now = ktime_get();
--	int trip_id = thermal_zone_trip_id(tz, trip);
- 	int i;
- 
- 	if (!thermal_dbg)
-@@ -695,13 +705,7 @@ void thermal_debug_tz_trip_down(struct t
- 
- 	tze = list_first_entry(&tz_dbg->tz_episodes, struct tz_episode, node);
- 
--	delta = ktime_sub(now, tze->trip_stats[trip_id].timestamp);
--
--	tze->trip_stats[trip_id].duration =
--		ktime_add(delta, tze->trip_stats[trip_id].duration);
--
--	/* Mark the end of mitigation for this trip point. */
--	tze->trip_stats[trip_id].timestamp = KTIME_MAX;
-+	tz_episode_close_trip(tze, trip_id, now);
- 
- 	/*
- 	 * This event closes the mitigation as we are crossing the
-
-
-
+Best Regards,
+Petr
