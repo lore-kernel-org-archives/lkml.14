@@ -1,133 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A390179954;
-	Tue, 28 May 2024 18:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF432E639;
+	Tue, 28 May 2024 18:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716922066; cv=none; b=hXjT8cuvHc+m4rB1yod6GaZFBpNlCWERDaG3IZCCJyXeVcIDgA/LY4Q14Ddo2JL2BpFLeWJ/E204qSmJd59cUQp88cQg2AuOIyIjd0oy4B/SxvCwsaknG6E7aSiZIEpyt7eE9w34jUxihQgG1kTVjdXYg+y5fbZ4JjZComXmPHU=
+	t=1716922098; cv=none; b=KEhY1wnURjTJrIoAalGSJ11dUCeKg46iyX6paajBNr5WE6GufCd0m1r4aUKYrxgaglp7zZV1PpvyrI/GXaWukixqqbAUL8zFapVe3vGQ7RigSkAvJouXkx5qc3O8qb/6ffVjeRmJCNGZxFXU14DyOhVGcrHH6EGldPrNpRF6Md8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716922066; c=relaxed/simple;
-	bh=hwmeUbItsm+bV91/Ve29xLJ4dPvWDPNLCD48sqQOZYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SZMb1b37WGl3Iyi677JGjgRunJL0iTxwtz+pR0d4Ktr+y46q5jKdd6obinyJpxBXFnuJx98VAEuFcvNZw/e69hW/qAlr/oVhQbxnzoQWTdUwdUXDCENwLH6XrChXm3HfLgMGyiIdSCXYW53gTmqmcFzAPETNmetaF5qtXsPxDuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D691C32781;
-	Tue, 28 May 2024 18:47:45 +0000 (UTC)
-Date: Tue, 28 May 2024 14:47:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Cc: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Linux regressions mailing list
- <regressions@lists.linux.dev>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-Message-ID: <20240528144743.149e351b@rorschach.local.home>
-In-Reply-To: <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
- <20240527183139.42b6123c@rorschach.local.home>
- <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1716922098; c=relaxed/simple;
+	bh=MRChlc3fno+fgWLT1UD9zMfX7V7oZsD0KEIC9Fr5KPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RHWPWOKAhfbmVKjTyFYkkeNF75l46+4X0+T1idcBdpn7I25iOXftjz0APARDPOodYx7ZmQ+9CqD1WjJgiqlY6if6vNEQ7/k2dce6OfTJ2d5TLER6LmLI4c2YvORuIM1jc6anuCWoXzKondML+cv5MDtyj4HpvbG9/NuBa3MfHC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B/Cq38XZ; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/Cq38XZ"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4e4eff99f16so372054e0c.1;
+        Tue, 28 May 2024 11:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716922096; x=1717526896; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bxlvn5Oq9LbYwfLCGxNQLz0UZ5j1MQaP4pgY98KDpRk=;
+        b=B/Cq38XZ/hShv/h3v17RcYM5+cZzKn8uI4ZinvzHxsND4zNIU2Q4ooucJccj9I+QtA
+         EMwbGbPr6NRKulqPi3he6L2/ePrfDWRysVBx8wuaRBmly3dTI8adRiI8c09l9P18JOFP
+         jS6166nNcoin8QYvDwoEiHP++x/ddV+wqhi/KaCqFo3iwzVwMzi3eAe4OSYwN0Ia7Yv4
+         JVrofvEWa3B4skFlo3fjGaXTVcjExHlP0UxX1k8wgKP40Ao6i5DYZ80zIj1/fHYzuZmd
+         e/CVrLeCetK/obB02bYxY8y4E9no9gMjlkDUgjlPGfH0fLNz71mWePrfg/QV76c/k0aa
+         fFuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716922096; x=1717526896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bxlvn5Oq9LbYwfLCGxNQLz0UZ5j1MQaP4pgY98KDpRk=;
+        b=FzizrR3qxbMH061iZezYxPZ+hjbJ3OgJ4Ef6ZkafuKyvkUzeAV8aIKUxkHcwFDHNW2
+         TFwmIDYMJDEV/7EuNuCn/ykgtaNN4oDMUCuiWtM08HK/b0Uz9MZMq1vwdX7WoCmC+/KM
+         82nwvoUo2UPnfTd0rXwMAbdfwftnzPY30S/sR5Rd2QsI+0+4Uc/niW8/yV0vl8csqdCJ
+         ak4w+lgwj4jEdxPq18wcHZvXk/jZhiI90xlv6J9pz8H7LkhnGuXDGazfhVDVT1XSCR0f
+         gOnYIdrY6tPTOgnbk2U44xXfuURDa5Wujm5osVkkebozcH+NX6cx+UwEJ/iFBFEqJ2HG
+         /B9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWR5oXylYlqxbm1IYZX71K+M5RH53sFOj75JSY4Cbkz7zFgmJqednIiqJzuli+Zsmgj58Xt7E0jqO7T5MoCvEjc3gPQqk9KEy+BTzM5/XRDmaO162pl0Pml7yj8v/7cFg6g0Io/5HnXEGZhIoqJ8+O7B3HbCHNXe5E99Dyzcp+CDNhH3TGRz6PhgcFjoBPB3c0UqWlenynIGzbKA3v63VLUWg2OUFUa+Q==
+X-Gm-Message-State: AOJu0Yy3pP36ir7aTeyDf+GwTDBg9mDmhDVEULTf8lF0d9b4RWEMBDPF
+	m7noDmakF9tnNPBuMBiGF2AMN9aveBwU2m+39LsHWjEhe7p89aOxrf/1+8b3rL/2a/LaWETZbmw
+	Co2Rd7c/c70+iq4NTsHxIenoJbBk=
+X-Google-Smtp-Source: AGHT+IE9trmXEg3oEOdmSAsRssG2a/Bs2cLxXZv1lQZLY6SJ5JxtgyKLzQTyBQReU97+ZhJRjwN1iYkNyibCrLnWAuk=
+X-Received: by 2002:a05:6122:4127:b0:4e4:eda9:ec32 with SMTP id
+ 71dfb90a1353d-4e4f02d0410mr13536269e0c.10.1716922095852; Tue, 28 May 2024
+ 11:48:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240423175900.702640-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXUM-s5RQXgKQUtqu5=fVTFk5Ajg2WNZ2eAiy5Lr-tX5A@mail.gmail.com>
+In-Reply-To: <CAMuHMdXUM-s5RQXgKQUtqu5=fVTFk5Ajg2WNZ2eAiy5Lr-tX5A@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 28 May 2024 19:47:04 +0100
+Message-ID: <CA+V-a8vbV0LZ0XkHEOYLww4mpgiaSzfGDCi+Hi45XNSSgSRnfA@mail.gmail.com>
+Subject: Re: [PATCH v2 03/13] pinctrl: renesas: pinctrl-rzg2l: Allow more bits
+ for pin configuration
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 28 May 2024 07:51:30 +0300
-Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
+Hi Geert,
 
-> yeah, the cache_from_obj tracing bug (without panic) has been
-> displayed quite some time now - maybe even since 6.7.x or so. I could
-> try checking a few versions back for this and try bisecting it if I
-> can find when this started.
->=20
+Thank you for the review.
 
-OK, so I don't think the commit your last bisect hit is the cause of
-the bug. It added a delay (via RCU) and is causing the real bug to blow
-up more.
+On Wed, May 22, 2024 at 11:19=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The pin configuration bits have been growing for every new SoCs being
+> > added for the pinctrl-rzg2l driver which would mean updating the macros
+> > every time for each new configuration. To avoid this allocate additiona=
+l
+> > bits for pin configuration by relocating the known fixed bits to the ve=
+ry
+> > end of the configuration.
+> >
+> > Also update the size of 'cfg' to 'u64' to allow more configuration bits=
+ in
+> > the 'struct rzg2l_variable_pin_cfg'.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > RFC->v2
+> > - Merged the macros and rzg2l_variable_pin_cfg changes into single patc=
+h
+> > - Updated types for the config changes
+>
+> Thanks for the update!
+>
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > @@ -78,9 +78,9 @@
+> >                                          PIN_CFG_FILNUM | \
+> >                                          PIN_CFG_FILCLKSEL)
+> >
+> > -#define PIN_CFG_PIN_MAP_MASK           GENMASK_ULL(35, 28)
+> > -#define PIN_CFG_PIN_REG_MASK           GENMASK(27, 20)
+> > -#define PIN_CFG_MASK                   GENMASK(19, 0)
+> > +#define PIN_CFG_PIN_MAP_MASK           GENMASK_ULL(62, 55)
+> > +#define PIN_CFG_PIN_REG_MASK           GENMASK_ULL(54, 47)
+> > +#define PIN_CFG_MASK                   GENMASK_ULL(46, 0)
+> >
+> >  /*
+> >   * m indicates the bitmap of supported pins, a is the register index
+>
+> > @@ -241,9 +241,9 @@ struct rzg2l_dedicated_configs {
+> >   * @pin: port pin
+> >   */
+> >  struct rzg2l_variable_pin_cfg {
+> > -       u32 cfg:20;
+> > -       u32 port:5;
+> > -       u32 pin:3;
+> > +       u64 cfg:46;
+>
+> 47, to match PIN_CFG_MASK()?
+>
+Oops, I missed that.
 
-Can you add this patch to v6.9.2 and hopefully it crashes in a better
-location that we can find where the mixup happened.
+> > +       u64 port:5;
+> > +       u64 pin:3;
+> >  };
+>
+> To avoid such mistakes, and to increase uniformity, I think it would
+> be good to get rid of this structure, and replace it by masks, to be
+> used with FIELD_GET() and FIELD_PREP_CONST().
+>
+Agreed, I will make a patch on top of this patch (so that its easier
+for review).
 
-You may need to add the other commit (too if this doesn't trigger.
-
-Thanks,
-
--- Steve
-
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 417c840e6403..7af3f696696d 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -50,6 +50,7 @@ static struct inode *tracefs_alloc_inode(struct super_blo=
-ck *sb)
- 	list_add_rcu(&ti->list, &tracefs_inodes);
- 	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
-=20
-+	ti->magic =3D 20240823;
- 	return &ti->vfs_inode;
- }
-=20
-@@ -66,6 +67,7 @@ static void tracefs_free_inode(struct inode *inode)
- 	struct tracefs_inode *ti =3D get_tracefs(inode);
- 	unsigned long flags;
-=20
-+	BUG_ON(ti->magic !=3D 20240823);
- 	spin_lock_irqsave(&tracefs_inode_lock, flags);
- 	list_del_rcu(&ti->list);
- 	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
-@@ -271,16 +273,6 @@ static const struct inode_operations tracefs_file_inod=
-e_operations =3D {
- 	.setattr	=3D tracefs_setattr,
- };
-=20
--struct inode *tracefs_get_inode(struct super_block *sb)
--{
--	struct inode *inode =3D new_inode(sb);
--	if (inode) {
--		inode->i_ino =3D get_next_ino();
--		simple_inode_init_ts(inode);
--	}
--	return inode;
--}
--
- struct tracefs_mount_opts {
- 	kuid_t uid;
- 	kgid_t gid;
-@@ -448,6 +440,17 @@ static const struct super_operations tracefs_super_ope=
-rations =3D {
- 	.show_options	=3D tracefs_show_options,
- };
-=20
-+struct inode *tracefs_get_inode(struct super_block *sb)
-+{
-+	struct inode *inode =3D new_inode(sb);
-+	BUG_ON(sb->s_op !=3D &tracefs_super_operations);
-+	if (inode) {
-+		inode->i_ino =3D get_next_ino();
-+		simple_inode_init_ts(inode);
-+	}
-+	return inode;
-+}
-+
- /*
-  * It would be cleaner if eventfs had its own dentry ops.
-  *
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index f704d8348357..dda7d2708e30 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -16,6 +16,7 @@ struct tracefs_inode {
- 	};
- 	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
- 	struct list_head	list;
-+	unsigned long		magic;
- 	unsigned long           flags;
- 	void                    *private;
- };
+Cheers,
+Prabhakar
