@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00691142E77
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 22:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA28A143754
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 22:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716934828; cv=none; b=rA3OTOLlQ/p1VWvK5EZ825acyhTWZHZhHEKBZI9LIcYw0AWMKidd0vG2xB5dJbfrGRaZbQ046PT6faZKC2yyc6UjQ19C2/T7VTY78DI2cJaMNJldxf5WUszHFDR932xu9UB/XU9fX1AoIx3AJ9eyFvvTVLnATvJ7LccFjB1p9+8=
+	t=1716934829; cv=none; b=kZgHZCjScjXQACNJn93LWBgTi/3RgSiQY9LR8Mxqv99h4K3fezOQIIHoU7WgaREwxVd33ztR5EN0axyLD3rQM/l5EboWjlOGM5tPDs503KcUxnk5DXa0pJ7viShpRDpQ/QMWOqn3ibsUkzWJ0JKc6eCNpAuUmXgG3ZDVEuxH4VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716934828; c=relaxed/simple;
-	bh=gvFMDpgaVv7QnSj3PgD23X9RCDFZmZbHhJTigmpS9f8=;
+	s=arc-20240116; t=1716934829; c=relaxed/simple;
+	bh=ae2net2an2bG2zA//O2uZIIe0Gsj90vooANwSwQeDp0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NFF/+FCcACV/IOGkdwdaFKaYNFvpE4BiITLpmC64FqIEMFydOtD8d8lDoiKDbyLZqKfc9G+qFwmZw1aR2gTx87RDlE/zUzigJjzubwbEP9pqlwTNIcJZs3Ed9Qdoy/35OS5ZDKiPHZGvUMGRdUnNN0rDP2FHEFKKPQWBdjfDsJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S1mCZelC; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=qDi0n18UOOQKwpMqXKBE5vISY+hPLL21x0sXAgRawiMRfwyHeEfAaPnBScfjOCXrbUotHR43UHryQmyA6S1AmNAkE1qGjtHi52aTua8MsEwJwGjKvMMogz1sVG2/s5sz089jpoXhtgCjGRkkzNE8y8hBZ35PRNpyeNzWXMPQCgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H18qe2s+; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S1mCZelC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H18qe2s+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716934827; x=1748470827;
+  t=1716934828; x=1748470828;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gvFMDpgaVv7QnSj3PgD23X9RCDFZmZbHhJTigmpS9f8=;
-  b=S1mCZelCEypzYX/XXx7cVTZI3KRlHtWgNu0398hqdMmB6US20W28kbBK
-   5aTJu2TF8/GPEaTVvlhdffaYBgJ+KV1sWxKBrLQa7vLtBzRmhmoLAOrCI
-   obt9veS1XuLQYlzst4HDr9oz8eFU2KiCDImsTCE6UAs0uHdKMHuNL0Cx1
-   g9YwiyvZZrJZaXIzMvEiK3c1m132l+buQv1Bvkusji+5uHNNld7i/aHkH
-   LbZsQ/c2IyEGVlhfoZoSsEgDf3XIAJ+ur9FqV2z2FVs3AaCWR6+pdzzbq
-   nie++8CZR+6h2Kt2nQxA3Y+uuSS/ZkARlzUxx3baklqCGJhgC/K92U1lF
-   Q==;
-X-CSE-ConnectionGUID: IFEIzD/9RZa9zAb47y2Tig==
-X-CSE-MsgGUID: ezQ9NuekS2OUG6PpPTnVCw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="30812240"
+  bh=ae2net2an2bG2zA//O2uZIIe0Gsj90vooANwSwQeDp0=;
+  b=H18qe2s+HPeMwv+pu72wa/kVE0f8qaoTG/uiH2p3ub26RW2r6ptvbZXz
+   9SfJYIfipC8Uc82sE8pCw9GtmYWml15MmAzxi159utnBV4aS0QjFxEkLg
+   PK/NFbE3Z6y4fAMKPzHdM5PM6GkR4ovhG8gU/p7jxymwPofm4aHG5sO87
+   Ww/RjSHimQ987l7S56Q8rBt0hTd27X5ShaekQoYXHRGxNMRV5QSdLF0Oh
+   mtnKCKm4qXg2y9vPrm5rI6O4xd8osYcuO23w/IfeCBIJ7RcYqZ8pAZ1ak
+   /H+Tbx3b5sq4ilp3ox+DwL+HwQv+lR1WYhgVaDIpXJuTpPsL2qjbnjiIj
+   w==;
+X-CSE-ConnectionGUID: 5tn2roWBTmWGmtMGa7RMUw==
+X-CSE-MsgGUID: 6IaNmqx3Tp+svNdFesGIJA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="30812254"
 X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="30812240"
+   d="scan'208";a="30812254"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 15:20:19 -0700
-X-CSE-ConnectionGUID: j6MTe7BOQAqwVFNC29tC8g==
-X-CSE-MsgGUID: 2qrs8swnQWSYsoRuuKSojw==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 15:20:20 -0700
+X-CSE-ConnectionGUID: QD3PTiOTSc2KlcgwAcUijA==
+X-CSE-MsgGUID: 7T08vKT8SCKRDTa9rx+H2Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="40090761"
+   d="scan'208";a="40090773"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 15:20:18 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 15:20:19 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghua.yu@intel.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -56,9 +56,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v19 15/20] x86/resctrl: Pass two extra arguments to resctrl_arch_rmid_read()
-Date: Tue, 28 May 2024 15:20:00 -0700
-Message-ID: <20240528222006.58283-16-tony.luck@intel.com>
+Subject: [PATCH v19 17/20] x86/resctrl: Update CPU sanity checks when reading RMID counters
+Date: Tue, 28 May 2024 15:20:02 -0700
+Message-ID: <20240528222006.58283-18-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240528222006.58283-1-tony.luck@intel.com>
 References: <20240528222006.58283-1-tony.luck@intel.com>
@@ -70,74 +70,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For backwards compatibility on Sub-NUMA Cluster (SNC) systems the legacy
-files in the mon_L3_XX directories must report the sum of data from each
-SNC node sharing that L3 cache instance.
+When reading from a single domain the existing check that current CPU is
+in the domain is accurate.
 
-To make this possible, pass the "sumdomains" and "ci" fields from
-rmid_read structure as extra arguments to resctrl_arch_rmid_read().
+But when summing across multiple domains that share an L3 cache instance
+it is sufficient to run on any CPU in the shared_map for that cache.
 
-Note that the call from check_limbo() never operates on a "sum" basis,
-so pass sumdomains=false, ci=NULL.
+Split the check into the two separate cases.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- include/linux/resctrl.h               | 4 +++-
- arch/x86/kernel/cpu/resctrl/monitor.c | 5 +++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/resctrl/monitor.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index d733e1f6485d..d0281c93229d 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -276,6 +276,8 @@ void resctrl_offline_cpu(unsigned int cpu);
-  * @rmid:		rmid of the counter to read.
-  * @eventid:		eventid to read, e.g. L3 occupancy.
-  * @val:		result of the counter read in bytes.
-+ * @sum:		sum across all domains sharing an L3 cache instance
-+ * @ci:			cacheinfo structure for the cache when @sum is true
-  * @arch_mon_ctx:	An architecture specific value from
-  *			resctrl_arch_mon_ctx_alloc(), for MPAM this identifies
-  *			the hardware monitor allocated for this read request.
-@@ -292,7 +294,7 @@ void resctrl_offline_cpu(unsigned int cpu);
-  */
- int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
- 			   u32 closid, u32 rmid, enum resctrl_event_id eventid,
--			   u64 *val, void *arch_mon_ctx);
-+			   u64 *val, bool sum, struct cacheinfo *ci, void *arch_mon_ctx);
- 
- /**
-  * resctrl_arch_rmid_read_context_check()  - warn about invalid contexts
 diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index b9b4d2b5ca82..5f89ed4823ee 100644
+index c9dd6ec68fcd..e7a8e96821e5 100644
 --- a/arch/x86/kernel/cpu/resctrl/monitor.c
 +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -300,7 +300,7 @@ static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr, unsigned int width)
+@@ -308,9 +308,6 @@ static int resctrl_arch_rmid_read_one(struct rdt_resource *r, struct rdt_mon_dom
  
- int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
- 			   u32 unused, u32 rmid, enum resctrl_event_id eventid,
--			   u64 *val, void *ignored)
-+			   u64 *val, bool sum, struct cacheinfo *ci, void *ignored)
- {
- 	struct rdt_hw_mon_domain *hw_dom = resctrl_to_arch_mon_dom(d);
- 	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
-@@ -380,6 +380,7 @@ void __check_limbo(struct rdt_mon_domain *d, bool force_free)
- 		entry = __rmid_entry(idx);
- 		if (resctrl_arch_rmid_read(r, d, entry->closid, entry->rmid,
- 					   QOS_L3_OCCUP_EVENT_ID, &val,
-+					   false, NULL,
- 					   arch_mon_ctx)) {
- 			rmid_dirty = true;
- 		} else {
-@@ -589,7 +590,7 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
- 	}
+ 	resctrl_arch_rmid_read_context_check();
  
- 	rr->err = resctrl_arch_rmid_read(rr->r, rr->d, closid, rmid, rr->evtid,
--					 &tval, rr->arch_mon_ctx);
-+					 &tval, rr->sumdomains, rr->ci, rr->arch_mon_ctx);
- 	if (rr->err)
- 		return rr->err;
+-	if (!cpumask_test_cpu(smp_processor_id(), &d->hdr.cpu_mask))
+-		return -EINVAL;
+-
+ 	ret = __rmid_read(cpu, rmid, eventid, &msr_val);
+ 	if (ret)
+ 		return ret;
+@@ -338,8 +335,15 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
+ 	int ret;
  
+ 	*val = 0;
+-	if (!sum)
++	if (!sum) {
++		if (!cpumask_test_cpu(cpu, &d->hdr.cpu_mask))
++			return -EINVAL;
++
+ 		return resctrl_arch_rmid_read_one(r, d, cpu, rmid, eventid, val);
++	}
++
++	if (!cpumask_test_cpu(cpu, &ci->shared_cpu_map))
++		return -EINVAL;
+ 
+ 	list_for_each_entry(d, &r->mon_domains, hdr.list) {
+ 		if (d->ci->id != ci->id)
 -- 
 2.45.0
 
