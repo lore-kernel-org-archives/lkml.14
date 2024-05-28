@@ -1,86 +1,99 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7573217C68;
-	Tue, 28 May 2024 03:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2BA1C68E;
+	Tue, 28 May 2024 03:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716865707; cv=none; b=rafL2Y3VAyjtN8TqDF1wOYs+ROaz76pTv906eK4oBdHTp0ZZQbVCHWLs11CzYxJtN1X9i6mjUyLFWm09pSw1zaiLAL2NG4aryAfB82eWO389I0R2uRn6kAT8l3CBQU0dL17XZ4zYByegDzl+cg8yw/p7s+7voHh0SWikOCCF9Y4=
+	t=1716865720; cv=none; b=FHwZwpCwFoCYzMeVVdMEabmep2mk9SQwXELrYZ5Mp2E/k6L8ClcHqyPTVlz3wPa1i41Rcnfz+te9UmVj0GGtcWxttylex7S9K4ICGjlXsjFXMsIoYME6hEPomOD09Zzw51HINEdtW7aLeq2ADq09oWoLPzTbKNaGMzjt15vSmW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716865707; c=relaxed/simple;
-	bh=roCSdQxbUY29rDE38xzKqghaprNify5fn1VLno9bEVU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jiFXe/RlaMyTwvhdZvWrhOEiLMe33BCjWnhPy8KFVXXMtVK69CE+bgYH6JBhSvUBuyhGTGWXNSoHLpsW9W5o9ur2svKPTcViHzSbMUTaYkfJPqb85D6pVZ1XEehn8ikMBJZc1yD1QQseAKSVk6qVEUQJfaY75vj5EHWL3fBgmIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vfItW0BZ; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1716865720; c=relaxed/simple;
+	bh=d7d5F6caD9/yJ3kRjdZS1IPLThXJka7WSNS5A4PF+fI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZpnnAxqKmWdoeux2PNYKnKsSuBqdq3wvf9WO1jTJjPVy8A0uiQMWp4IlO+hAeF38DiSt20xh3VHG50mVCnObW15DAc8Y7HgZMknQlJak441gsfbKkVJdhaFO5BJgTEgcUvH30lJTQe3R2QFzc9HmsKN7ar463UqoUMI3OSWB2Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvHwy407; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vfItW0BZ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716865702; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=0Pw1BUiofgno3cSLLGLqrBjiIZ9UhCXpPdHKClzv11Q=;
-	b=vfItW0BZML/SURhR9K3Fv/tGopu80c1gS0ykbC6ehSX2y3NGT4dO6gSwtEy6rUpNsSa0OV725kHX1sfJiF8E5fk05cGnjyb7L4SN2aDnm/V4qWCe8LifNCQ4MLYUItAyFoXXmN/u0v4dkRzuH08JxZlGO+h3nM8IZfJ1YKchyvE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W7O7xhR_1716865700;
-Received: from 30.221.144.199(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W7O7xhR_1716865700)
-          by smtp.aliyun-inc.com;
-          Tue, 28 May 2024 11:08:21 +0800
-Message-ID: <6a3c3035-b4c4-41d9-a7b0-65f72f479571@linux.alibaba.com>
-Date: Tue, 28 May 2024 11:08:19 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvHwy407"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 784D4C2BBFC;
+	Tue, 28 May 2024 03:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716865719;
+	bh=d7d5F6caD9/yJ3kRjdZS1IPLThXJka7WSNS5A4PF+fI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RvHwy407wYBqxzTnTcA53k/E8zgm1pDTTfjIQXaUzK3/TpImMrDDUZB3odnqXQyhC
+	 6vPE23w45KBrQ7BtUzZMuThb1bl84dr2YscivnKnXTQsQ0ufMMW14rDEm9Tx3uh+uG
+	 Kdy+HSAyRxk4vCvBNnr5NsOtQqD8eHQeXkA/i+WQIv2z/Cmr5KTX87daCqpAep3H69
+	 18g3xUEkP/CgatryUq61t91zjQcjhHPVr4sGLQwYdGooaF8aaXXMk8dQe9yf2FCEFB
+	 weRefEEoI9zmePnNV7pachBaw4yKpdfeawo9LDU1l0PaaeKZek1vNkkzwv/Zbk+JDK
+	 ZGpzDkDUsEhfA==
+Date: Tue, 28 May 2024 03:08:36 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Ben Walsh <ben@jubnut.com>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+	"Dustin L. Howett" <dustin@howett.net>,
+	Kieran Levin <ktl@frame.work>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] platform/chrome: cros_ec_lpc: Correct ACPI name for
+ Framework Laptop
+Message-ID: <ZlVKtL7GUHRWkFpf@google.com>
+References: <20240515055631.5775-1-ben@jubnut.com>
+ <20240515055631.5775-6-ben@jubnut.com>
+ <ZkscFnmHeWWma7Nb@google.com>
+ <87jzjk1ibr.fsf@jubnut.com>
+ <Zk_63rrDJFhN1Y1q@google.com>
+ <87cypb12j9.fsf@jubnut.com>
+ <ZlKPwlF86Oe8OPK9@google.com>
+ <877cff2kpb.fsf@jubnut.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 0/2] fuse: introduce fuse server recovery mechanism
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- winters.zc@antgroup.com
-References: <20240524064030.4944-1-jefflexu@linux.alibaba.com>
- <CAJfpeguS3PBi-rNtnR2KH1ZS1t4s2HnB_pt4UvnN1orvkhpMew@mail.gmail.com>
- <858d23ec-ea81-45cb-9629-ace5d6c2f6d9@linux.alibaba.com>
-Content-Language: en-US
-In-Reply-To: <858d23ec-ea81-45cb-9629-ace5d6c2f6d9@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877cff2kpb.fsf@jubnut.com>
 
-
-
-On 5/28/24 10:45 AM, Jingbo Xu wrote:
+On Mon, May 27, 2024 at 07:06:40PM +0100, Ben Walsh wrote:
+> Tzung-Bi Shih <tzungbi@kernel.org> writes:
 > 
+> > On Fri, May 24, 2024 at 07:35:22PM +0100, Ben Walsh wrote:
 > 
-> On 5/27/24 11:16 PM, Miklos Szeredi wrote:
->> On Fri, 24 May 2024 at 08:40, Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
->>
->>> 3. I don't know if a kernel based recovery mechanism is welcome on the
->>> community side.  Any comment is welcome.  Thanks!
->>
->> I'd prefer something external to fuse.
+> >> I could add a new quirk which provides an alternative ACPI match table
+> >> to be used instead of the default. In the default case the match_table
+> >> will contain only "GOOG0004" as before. But in the Framework EC case the
+> >> match table will be "PNP0C09".
+> >
+> > I think it doesn't work as the current quirk is handling in
+> > cros_ec_lpc_probe() which is after matching.
 > 
-> Okay, understood.
-> 
->>
->> Maybe a kernel based fdstore (lifetime connected to that of the
->> container) would a useful service more generally?
-> 
-> Yeah I indeed had considered this, but I'm afraid VFS guys would be
-> concerned about why we do this on kernel side rather than in user space.
-> 
-> I'm not sure what the VFS guys think about this and if the kernel side
-> shall care about this.
-> 
+> I was thinking of a new quirk called CROS_EC_LPC_QUIRK_ACPI_MATCH, and
+> putting it in cros_ec_lpc_init(), not cros_ec_lpc_probe(). Do we have to
+> do all quirk handling in cros_ec_lpc_probe()?
 
-There was an RFC for kernel-side fdstore [1], though it's also
-implemented upon FUSE.
+No, but there is already code in cros_ec_lpc_probe() for handling quirks and
+we would like to reuse them if we could.
 
-[1]
-https://lore.kernel.org/all/CA+a=Yy5rnqLqH2iR-ZY6AUkNJy48mroVV3Exmhmt-pfTi82kXA@mail.gmail.com/T/
+Also a possible issue: MODULE_DEVICE_TABLE() wouldn't work if the table changes
+during runtime.
 
+> 
+> > My original idea: would it be possible to get the `adev` in cros_ec_lpc_probe()
+> > via any lookup API?  If yes, it could still use DMI match and get `adev` if
+> > required.
+> 
+> That works; I've tested it.
+> 
+> In this scenario we're not using the existing PNP0C09 platform device,
+> which means I can't look at
+> /sys/bus/acpi/devices/PNP0C09\:00/physical_node/driver and see the
+> driver. Is this OK?
+> 
+> (Note that ACPI_COMPANION_SET() doesn't fix this. You can use
+> acpi_bind_one() but that seems more like internal plumbing).
 
-
--- 
-Thanks,
-Jingbo
+As long as ACPI_COMPANION() in the driver can get the correct `adev`, I guess
+it's fine.  Otherwise, put the `adev` to somewhere device specific (e.g.
+struct cros_ec_lpc) should also work.
