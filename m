@@ -1,93 +1,44 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EC431A89;
-	Tue, 28 May 2024 18:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795CC31A89;
+	Tue, 28 May 2024 18:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716919301; cv=none; b=YcsBPBIo0H0TXeYhyDYuQSsEAjEg8+s0rsG4TatpnWYpgl6dzg9Bwn8ayawveRjIbB+F2WY8BR3tso0wboOqoRlon77NPuLfd/LNqljzxTRVyeAtPRrrcqpzcGyA982DTiVD+i8lhVosDWDH3HslA0i6+9ugBk26cceMB95IYc8=
+	t=1716919435; cv=none; b=EUq6VYFHy1+a6oy7o09Atv2vEOuTPUUQ0kOLa4Gie8kSRU7OVdtOwx07emeX+8L5d7iclH374IimXZWBU6/pE7Bewao06v27gLrp0KwAqCOY77s2hE9vxeqPqdKvPnbZll+4dHpm4GrgrQ0aVMJn8aLRrQ1WD3oI6uIqUL5Ly1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716919301; c=relaxed/simple;
-	bh=GCsCBkj4fvi/PkMdjWR0qYhZOtkq2Z5Qohz8EvhenNk=;
+	s=arc-20240116; t=1716919435; c=relaxed/simple;
+	bh=/j1IUjr35lFJqMmnOuoDoQFcoTuliNZna5PrE9w03YI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ae/zeNcizx64WNd5i+59XzYQFYQVWfB8vweOr+ZlMob05HsMvYeEs2Hgz5EEr4bbCndI8e8NWKXXDmHW3rg/0Neu6Nwzwoz3odsxNkVS7pIAZ+kQqNXTvnu/nOBfCVoPqWOG1zbD1lAZiFUEvOvpYl7kVG1Sb5pt+zWHETuatQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GnSuDa3J; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NzbAyUvp2jrk2Zy7gkztAehiiiiQHPgqGJST3S1AUw8aSelhNYqCn5ky6lGV0vJCafHe2oocJ/40vrflIBNH9vXJKVcqFJ8svQ/mjQGY0JF+Ltef79O4ZWOWql2L7DG0jpQnF1lrXFhCgDGgdxmuQiDy/KSX988Dxrr7Rg1CAzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=u5KdfSxa; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnSuDa3J"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-794ab20699cso79072685a.2;
-        Tue, 28 May 2024 11:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716919299; x=1717524099; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sONTQW+N8gItfOL0odDu1qGNxZ7K2PPzXhcFBElLPTM=;
-        b=GnSuDa3JpCer8LYq938hzi+YVlMOBXsMwcH57Ou8xDEomT/RS5wjBF/Ae1sYfZe/Je
-         iIw3n+tLOKmgtqCHCmtfdgDofAlSejdMGmvhBGv7315TJE0qXDgPAQf/2Q5agWJ7DAG/
-         quk+F8FpWip8YSYZf+WboodzQd2Ywiqwme05td4up3Qjvp2U3PD5Q9641ZmpflhtYvai
-         B7gUcHQlKPidYk+eVWQQ4XOVC6BgpDI/Cifqqyo7xCOaT4Xfx3MHuWo17j/2PWTsk5Jv
-         8eLfS8oNPWfyjpXgQIIBVg+vsg9U6iOZq6D7du1SoR4WcyMt6mPdRWuc09wHQBS5ZUrK
-         WgGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716919299; x=1717524099;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sONTQW+N8gItfOL0odDu1qGNxZ7K2PPzXhcFBElLPTM=;
-        b=Rk/rh6zNtamRenG3sRr0gD+R6fa/vkWW/HmYgljgl6lQ4s4OJEGsFAhD/sbdLWI0SW
-         gdn8rKMzsTZXaJmxp+f3yJBTaUYAyKqMp2LoxIs3SlEiDmRXsQ2qIqMqgm56zvVLPCUP
-         MqrhG/iMJYqQuRbDm+zPYbEyhSZD/ah9qYGorQMJI9ULn1hQmQXIibhP9ExTVAIEJuvn
-         9d4E1nFDHg55noQDsgsTmAkUNJSGiVpowO/2eWKDJMlZjMoNnyx3uyjWjaOzLvWLfRnu
-         dS1I6853Rm12YrteZI5enHK3KnpXjoMyZ82C3MeoFTcEwARhCorQ55flRy2dW6ECncX/
-         lAHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVczsrTAyMXVlREEEuMS/jgKYLpmoiQeEyO/ofTA14szmeKNG9ZXebNk4tPLEULzzErYLqGOY8Yqo+YbIQxjJhEbwV2CyPvYB7Mij6PvL1WtM9YTozCnZy4KC9Khe4PNFa6Y5F9p0UiJqbp7wZz
-X-Gm-Message-State: AOJu0YxqYdDZmo+R5RGDB0QIOvnF6s3eqBmBE1fqf/aLeeqWifO7Snvn
-	83b1iRSIN1y61vDau5YONgD+VhTiRSPbRhgMzd8Y42EVCzTVe73pq+m3dA==
-X-Google-Smtp-Source: AGHT+IGQoPnAGypwX43waSjSxqHn7PsPw4Fk92sfKXBSE0ozT5Yw0eJjYkPzDttzVwmE4RY9wGiJbw==
-X-Received: by 2002:a05:620a:11ba:b0:792:9741:ca86 with SMTP id af79cd13be357-794ab057bbbmr1522417585a.11.1716919299251;
-        Tue, 28 May 2024 11:01:39 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-794abd32585sm399063285a.107.2024.05.28.11.01.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 11:01:11 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 977531200032;
-	Tue, 28 May 2024 14:00:58 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 28 May 2024 14:00:58 -0400
-X-ME-Sender: <xms:2htWZu9z4pDGButKbrS6FoI2Nsehrate_IXwMDHwogiAXMGPijdCYw>
-    <xme:2htWZusy3o6o2T-edMk0tF7t2ZC8WReOUM36IuYfZuQfkzPPnj1Ow6bfv7yf4JPJI
-    ddsSXaaMHJuUBnLJQ>
-X-ME-Received: <xmr:2htWZkAoXyjY6zy0w6ZnKU-v9xcvD_LpxvF6lBSK9ncdKFarSLK-8243bl4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedgledvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
-    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:2htWZmcPkY5GU1VLzJNI_Bc2eXdnIe8Eg5SJq6uDnrdNNzos3gaB2Q>
-    <xmx:2htWZjPd0cixqFRysOdOhvQFnYTiYEg6YOrhhxk3derYyhPIgW_5Lw>
-    <xmx:2htWZgmdAbTQV4iHThJq4ByLvjssV0ikUOhPBFUlHTa7ocijhb36AQ>
-    <xmx:2htWZluErxy0T7-s4GJqLUdesvb09R09SUMnjoL1wvMG61Ws-mzWlg>
-    <xmx:2htWZpvpOd4oUy-yUhkchFx8lH0fw7cutEJ45XBNgQ1sO8u6RRexpwxn>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 28 May 2024 14:00:57 -0400 (EDT)
-Date: Tue, 28 May 2024 11:00:18 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] locking/ww_mutex/test: add MODULE_DESCRIPTION()
-Message-ID: <ZlYbst1xppRKBxwm@boqun-archlinux>
-References: <20240524-md-test-ww_mutex-v1-1-4fb8c106fe21@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="u5KdfSxa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PQA5T3SuEDuXN0oaw3uvLJ8JZyZw0rtYCLSIm8NIRPc=; b=u5KdfSxa4k6ljBqG3fGTcMGRGu
+	HN+tG+VleU9vWJMJsAsYGG8/1kN/n2NFvVprfYtDvC32WaItYAT5vYlclWk4k4zA0cKAK6UvIORJ0
+	B2fdm/zsCk3cz91zf/R7ffPZJMYMbFXyzDl68Hq6MBVZzHGXovquugPH2Sr8namfxaSR/LoJQ4Nvk
+	cHXPtuIQyuPMXpN0fBTUhfN535/Yn/10pfGvxW+9MpKGXrYul9+u2gWBlshmh7NhydDwptbNfpe0y
+	oMFyp8z0HsrljZeYpGQRS0R5KxouQFhtuxeM4Xk48DgAtJt3jAj7nAot15iUp4AEDDvYcPrhnQcBD
+	5TYyP7Rw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1sC1Ao-000u1L-0I;
+	Tue, 28 May 2024 18:03:46 +0000
+Date: Tue, 28 May 2024 19:03:46 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, linux-fsdevel@vger.kernel.org,
+	autofs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, Ian Kent <raven@themaw.net>
+Subject: Re: [PATCH] fs: autofs: add MODULE_DESCRIPTION()
+Message-ID: <20240528180346.GG2118490@ZenIV>
+References: <20240527-md-fs-autofs-v1-1-e06db1951bd1@quicinc.com>
+ <20240528-ausnimmt-leise-4feb91054db2@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,38 +47,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240524-md-test-ww_mutex-v1-1-4fb8c106fe21@quicinc.com>
+In-Reply-To: <20240528-ausnimmt-leise-4feb91054db2@brauner>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Fri, May 24, 2024 at 05:18:11PM -0700, Jeff Johnson wrote:
-> Fix the 'make W=1' warning:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/test-ww_mutex.o
+On Tue, May 28, 2024 at 01:39:03PM +0200, Christian Brauner wrote:
+> On Mon, 27 May 2024 12:22:16 -0700, Jeff Johnson wrote:
+> > Fix the 'make W=1' warning:
+> > WARNING: modpost: missing MODULE_DESCRIPTION() in fs/autofs/autofs4.o
+> > 
+> > 
 > 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
->  kernel/locking/test-ww_mutex.c | 1 +
->  1 file changed, 1 insertion(+)
+> Applied to the v6.10-rc1 branch of the vfs/vfs.git tree.
+> Patches in the v6.10-rc1 branch should appear in linux-next soon.
 > 
-> diff --git a/kernel/locking/test-ww_mutex.c b/kernel/locking/test-ww_mutex.c
-> index 78719e1ef1b1..0fab96137ddb 100644
-> --- a/kernel/locking/test-ww_mutex.c
-> +++ b/kernel/locking/test-ww_mutex.c
-> @@ -695,5 +695,6 @@ static void __exit test_ww_mutex_exit(void)
->  module_init(test_ww_mutex_init);
->  module_exit(test_ww_mutex_exit);
->  
-> +MODULE_DESCRIPTION("API test facility for ww_mutexes");
-
-
-This looks good to me, but seems to me MODULE_DESCRIPTION() is usually
-placed after MODULE_AUTHOR(), could you reorder it a bit? Thanks!
-
-Regards,
-Boqun
-
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Intel Corporation");
+> Please report any outstanding bugs that were missed during review in a
+> new review to the original patch series allowing us to drop it.
 > 
-> ---
-> base-commit: 07506d1011521a4a0deec1c69721c7405c40049b
-> change-id: 20240524-md-test-ww_mutex-c18c263bc483
+> It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> patch has now been applied. If possible patch trailers will be updated.
 > 
+> Note that commit hashes shown below are subject to change due to rebase,
+> trailer updates or similar. If in doubt, please check the listed branch.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> branch: v6.10-rc1
+
+*Ugh*
+
+Free advice: avoid mixing tag and branch names.  git tries to do the
+right thing when it runs into ambiguities, but it's really asking for
+headache.
