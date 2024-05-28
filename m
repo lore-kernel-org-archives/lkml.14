@@ -1,480 +1,138 @@
-Received: from mail-lj1-f202.google.com (mail-lj1-f202.google.com [209.85.208.202])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C30171662
-	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A81F16FF26
+	for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 14:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716908309; cv=none; b=CL1LHQIW3olEtIVwfILTUBrldGNGyyKckSQcc2I50v9eFR8dkc+DERG1PXKAk4JUoNiMJqcIa39J5Mb1JACZmDKXjc8pYZ0jrwMOKEn3Fq/Oz8hshZzBL3bzjR2Y4+A/T1bYgoXOp/3K6QzvxDQQEqoT8/VYoi6WlL92jA/bXr8=
+	t=1716908372; cv=none; b=F0CFXUgtBZFqxL1PqUpmp2aa/ftRY6Wg+35nQBqZx3Er8Y3Hfow0jrcl8wmwjBPRvFvDoHEqwqFK+YlbYhb30LxUnp+hfos7l0hzapDj344eX/35XcwV4fN/aK74TRG+1zGPfR1xrY64SRKupa5OI/hukExXon6hAMkcUMfGbFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716908309; c=relaxed/simple;
-	bh=/HE8lkngIqgSFXOtkqfoTmQKkoPIxutv/DByz3hii1k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=c1pgyUFxBDop2RzhV13hiOwHKMtYmJN2FQtg7CRSDhgPCzGlu9y4f6ENyO/Q4pGjA0Pii/v9fmMPLJ4JabDLKlEJAqe7ga0sb6kIpXM46olL+SLV0UY5stwdZTv/ATI6Q9Rm/GECb/j0M67dAZFp2wlE/fE1TsGuA0gvqw1UPNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qgc3zJ3G; arc=none smtp.client-ip=209.85.208.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qgc3zJ3G"
-Received: by mail-lj1-f202.google.com with SMTP id 38308e7fff4ca-2e95ad43e9fso6392861fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716908305; x=1717513105; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eO05l42JzpfeTNPK2MRvp86M9FhFhNRtSy4S1tjVhus=;
-        b=Qgc3zJ3GYsnur+WEgkbHZGn8z61m9aXvhvxXSRQKEtKmbf1eod9PQpwYSX7CcMuXzK
-         Vik7nn7qNvJ7REJbs4vb/iAW/fQFRkZWccyLfdVd4cywGZgXD27ZEVEZDCyCJPvbWGRj
-         H6VRYmJpYgfO3go/xsAufLiWyGyLKkZ+wzf6/uKsbL9azbbLwED74spI3aXqb7SL5pa2
-         fO0kPB4PojyJ6dS4/VYQaryCfB6bjrpWTAbSULkDCAnDJhM2aPp7IELfYCT1djtRjX1Q
-         WG/qcCW6/kXRFGrqCmrVGdEZqedjvTtS2jLUhB8V+B+7+NP1PaMe/4TbhXNI31l3xN6t
-         H7Ew==
+	s=arc-20240116; t=1716908372; c=relaxed/simple;
+	bh=9fEbcK6Ji5F/hsoLdQuzaVFpQ27ana8T35CD8IKHdYU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=FZpBlMUmaPdkcmkyLL3iMPmkiE68EMGhtLPNgpIHGQowEE6GVioc8Qjpjvjk2SL8h5KXYTJ9AWZnvjgahQwIpaqElXRL27jhrSGYI8MNfSYyL/Nu3e2A6o65+jba9a3MpEQNfhdQC3DCWVb8aIZH9rQIcdNS0r8sHfM8lpgVfFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-373809cc942so10856705ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 07:59:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716908305; x=1717513105;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eO05l42JzpfeTNPK2MRvp86M9FhFhNRtSy4S1tjVhus=;
-        b=X5cb5k2J2lGVufqFwlbTJcQj7nLzP0dvO7M8pc+0eWKZFZiEl4c0+sQ064lUHlKMaK
-         JY6+8v58QjkRIAnYY1s+gQsf02fwKf5zmR9CHNpQSwLB59AYcnOF5REGhF61GkdAgD9R
-         0Tc8ngONsziBMKSLrNEbkM8bK2Oi0waSVX+IydujZ0+JU+4+nrVjT7o6dr7VVwT5o2Pb
-         NpHP5skTLNNPHpbpswh0qIQ98hv5x3JCaWDSxKwWGs/9SkPbdG3FUN8BYjLYRZ/LVmvi
-         7RynBHiShZKTmgg1r5Kirgxg8XxUoxGO513XsgT4dpL1a6R4sefTnB37tXhScL8z5t1J
-         xMoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+nqu3w5npKN9ZbeiS8UGc6EkKRuY9TpfZ46zlyzHyRx8YEynFA2nRAE3egGLmXztr2rGqBazWf/Fw74qisT9q0vyiaPZAK1/zUjwC
-X-Gm-Message-State: AOJu0YxITF8uKiAOWLygRtExl+bs8bbyhDeQebgDsU2sXAQ407N3hItB
-	TKqg2HVVcm04bn6+szQGJW3Z207zNyxMQd7sfTGBBHDFe1CG5vvWB6d03v40O1qgigEZreptoTn
-	YAl7fGwRH0cBepg==
-X-Google-Smtp-Source: AGHT+IEOF4n7i+XUKYEBH94ipp8W/G8bUc6RNmidal0r91mtpuFIe9xOXChYEoPu4AGoMAK43jNu8IHHgNDq/Yo=
-X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:a05:6512:32d3:b0:51d:5f9c:50ad with SMTP
- id 2adb3069b0e04-529666c4680mr10952e87.12.1716908305169; Tue, 28 May 2024
- 07:58:25 -0700 (PDT)
-Date: Tue, 28 May 2024 14:58:05 +0000
-In-Reply-To: <20240528-alice-mm-v7-0-78222c31b8f4@google.com>
+        d=1e100.net; s=20230601; t=1716908370; x=1717513170;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WMsMUaD7ww793f11rGFv6mx1W6SMkIrkC4gxidkFHnY=;
+        b=wGx66Yvi163DTBJC5+Q8WUOhxxyggz0L7FFqmdydmulFvdG3Js4QyQWP3zVkexkSdw
+         9FcNXgk5NRwzmZgGnOsqTVbpOQ7EuzqCAz7ZiSLQqFkkUddzhKmL1IWLy/Fgr1FkMX9h
+         CqVod6523ec+iAiWAUXekipgHFhGogY8wUVHcOxEI/4Kz/uPbAcY5xrJoGeKkUU3QHN4
+         S2I9Jm3I9F+pzZ7kcqXqMhFKYkvi2UN7d/TPAH5+s4iUCgcx5c/KknkNtf8PXl8Cuui+
+         dXIudNdoaASecYMr28C+Otwmm/22jvNVgPLyPhIoOzVNEj5a09Mc3WhNTcAqI8XFSL94
+         oMfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUq+IuLbB9Tx8+iVwxCWRFCxlWZx0NuNMDTFUZstlVVQ8fZH4d7+NRk5F7ejK/q3KYXJpEI2aK8papoxWoZYKWMa5tjgKPrjUCsTeUE
+X-Gm-Message-State: AOJu0YyOKg32jdyCWBDCTv7CEB9xYDzx0eErdoqsGrsWTCoz39o7c1Z3
+	F8IOo7gTk8+322/o/KC1oAO2h+B2uUNGlnkPYHblCoEeK8q+m7grn7NQADUOuk6FTqRNPL8KMfn
+	yRIEMuXlRTZWnYVBllVj2GFtYlt+SaGy17uMM6GGIf84YnsDnC74US3Y=
+X-Google-Smtp-Source: AGHT+IGNaRyDRbzL6cLWekgvrOX2suNA4KhlAx38P9MDOZUiJPMFeXQzg+ndOlxXuLRqSSVwi/NldVGTNvP7FzmomBkQJB5FDMv6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240528-alice-mm-v7-0-78222c31b8f4@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=16077; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=/HE8lkngIqgSFXOtkqfoTmQKkoPIxutv/DByz3hii1k=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmVfECAVuTTj15038Ew2DTzS3KESwLDvumYApMa
- eZb1p+NiP+JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZlXxAgAKCRAEWL7uWMY5
- Rs9lD/wLFlIa+NMQSL+XMbCYpTDJQVbp+7DZpIvygiwW1JH34lbNywTpBNp3IjSEx7IgKIZUwoF
- kMBSbh+5TLnO+MIt7RBsY7Yn6V3Lvkhchd8wVGOtzIvmj1kpcvvqVCqvttpFMSR1QAeDnLfZjX/
- uo07YYKK7D+J6grc/ZIv12/HP4CtFBTE0dPyW2h0FgbrVItek7+rZ8f7bB8HpKaF6+NEM+QP9JM
- qZjIl6j0deYWCQWDWo/wFsab9voyLxhzZ/E9YdE1tKjzw0/GSoaU/PmJ5a/eI8I1eCMmUMMCPFO
- CBTheF4vo8iwkb5e1YeCot0wTD+nGkmNaGx69RensXoGwEjKsfHa1lt3717UMZ44CWyeAWO5y52
- 8BWzcbqDjf93IDGHHUUVYNVzge4NJ1X2nPjtNwNniUow8yX6DmL3ZS9m46Pv+GWM9gzbZySJ82n
- umQAWuDZnhs0gmNxNfjb3v5Hu7KdbtbhBfBMFmMPtFnfhMLCcDptTiwbOLCWQ4E4km7PfVvvcB9
- VDq5ao+YdwiAcPS0LZe7Pw56pHdFynJWMwXQ4/6xfy2JwbbKY38O21FOAQh52cVxRfgRd1woFBT
- pYGjdKWyrYxNnCZe1Gec4b2THgA6zK3Qd7kfvLGNaxMQxusI2VYvkn9dSmKF1Oa+fw+FAZ7mzJ0 Wqjz3DW/CXKlOJw==
-X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240528-alice-mm-v7-4-78222c31b8f4@google.com>
-Subject: [PATCH v7 4/4] rust: add abstraction for `struct page`
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
-	Kees Cook <keescook@chromium.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?utf-8?q?Arve_Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, Trevor Gross <tmgross@umich.edu>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1a42:b0:374:5315:95de with SMTP id
+ e9e14a558f8ab-3745315971bmr5140735ab.6.1716908370275; Tue, 28 May 2024
+ 07:59:30 -0700 (PDT)
+Date: Tue, 28 May 2024 07:59:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000085bb82061984e155@google.com>
+Subject: [syzbot] [kvm?] WARNING in __kvm_gpc_refresh (2)
+From: syzbot <syzbot+fd555292a1da3180fc82@syzkaller.appspotmail.com>
+To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Adds a new struct called `Page` that wraps a pointer to `struct page`.
-This struct is assumed to hold ownership over the page, so that Rust
-code can allocate and manage pages directly.
+Hello,
 
-The page type has various methods for reading and writing into the page.
-These methods will temporarily map the page to allow the operation. All
-of these methods use a helper that takes an offset and length, performs
-bounds checks, and returns a pointer to the given offset in the page.
+syzbot found the following issue on:
 
-This patch only adds support for pages of order zero, as that is all
-Rust Binder needs. However, it is written to make it easy to add support
-for higher-order pages in the future. To do that, you would add a const
-generic parameter to `Page` that specifies the order. Most of the
-methods do not need to be adjusted, as the logic for dealing with
-mapping multiple pages at once can be isolated to just the
-`with_pointer_into_page` method.
+HEAD commit:    2bfcfd584ff5 Merge tag 'pmdomain-v6.10-rc1' of git://git.k..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=177b913a980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b9016f104992d69c
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd555292a1da3180fc82
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16f436ec980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c7463a980000
 
-Rust Binder needs to manage pages directly as that is how transactions
-are delivered: Each process has an mmap'd region for incoming
-transactions. When an incoming transaction arrives, the Binder driver
-will choose a region in the mmap, allocate and map the relevant pages
-manually, and copy the incoming transaction directly into the page. This
-architecture allows the driver to copy transactions directly from the
-address space of one process to another, without an intermediate copy
-to a kernel buffer.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b18ff1cae231/disk-2bfcfd58.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/53ed72a5c174/vmlinux-2bfcfd58.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/230e68bda335/bzImage-2bfcfd58.xz
 
-This code is based on Wedson's page abstractions from the old rust
-branch, but it has been modified by Alice by removing the incomplete
-support for higher-order pages, by introducing the `with_*` helpers
-to consolidate the bounds checking logic into a single place, and
-various other changes.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fd555292a1da3180fc82@syzkaller.appspotmail.com
 
-Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-Reviewed-by: Andreas Hindborg <a.hindborg@samsung.com>
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5090 at arch/x86/kvm/../../../virt/kvm/pfncache.c:259 __kvm_gpc_refresh+0xf17/0x1090 arch/x86/kvm/../../../virt/kvm/pfncache.c:259
+Modules linked in:
+CPU: 0 PID: 5090 Comm: syz-executor403 Not tainted 6.10.0-rc1-syzkaller-00013-g2bfcfd584ff5 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+RIP: 0010:__kvm_gpc_refresh+0xf17/0x1090 arch/x86/kvm/../../../virt/kvm/pfncache.c:259
+Code: c6 05 82 51 8a 0e 01 48 c7 c7 40 e6 c1 8b be 03 04 00 00 48 c7 c2 80 e6 c1 8b e8 04 72 65 00 e9 cd f3 ff ff e8 9a d2 88 00 90 <0f> 0b 90 41 bf ea ff ff ff e9 c2 fe ff ff e8 86 d2 88 00 90 0f 0b
+RSP: 0018:ffffc90003e57430 EFLAGS: 00010293
+RAX: ffffffff810d43e6 RBX: ffffffffffffff01 RCX: ffff888078a31e00
+RDX: 0000000000000000 RSI: fffffffe00000000 RDI: ffff887fffffffff
+RBP: ffff88807e301148 R08: ffffffff810d351f R09: 1ffffffff25f50c9
+R10: dffffc0000000000 R11: fffffbfff25f50ca R12: fffffffe00000000
+R13: ffff88807e3010d0 R14: ffff88807e3010d0 R15: ffff887fffffffff
+FS:  00005555630c7380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffce7710df0 CR3: 000000001f254000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __kvm_gpc_activate+0xdc/0x400 arch/x86/kvm/../../../virt/kvm/pfncache.c:416
+ kvm_xen_vcpu_set_attr+0x1c1/0x11c0 arch/x86/kvm/xen.c:890
+ kvm_arch_vcpu_ioctl+0x16b7/0x2cd0 arch/x86/kvm/x86.c:6280
+ kvm_vcpu_ioctl+0x6e0/0xd00 arch/x86/kvm/../../../virt/kvm/kvm_main.c:4578
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f628f30b6e9
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff93337768 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fff93337770 RCX: 00007f628f30b6e9
+RDX: 0000000020000040 RSI: 000000004048aecb RDI: 000000000000000d
+RBP: 00007f628f37e610 R08: 65732f636f72702f R09: 65732f636f72702f
+R10: 65732f636f72702f R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff933379a8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
 ---
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers.c                  |  20 ++++
- rust/kernel/alloc.rs            |   7 ++
- rust/kernel/lib.rs              |   1 +
- rust/kernel/page.rs             | 250 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 279 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ddb5644d4fd9..0862261cfbed 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -20,6 +20,7 @@
- 
- /* `bindgen` gets confused at certain things. */
- const size_t RUST_CONST_HELPER_ARCH_SLAB_MINALIGN = ARCH_SLAB_MINALIGN;
-+const size_t RUST_CONST_HELPER_PAGE_SIZE = PAGE_SIZE;
- const gfp_t RUST_CONST_HELPER_GFP_ATOMIC = GFP_ATOMIC;
- const gfp_t RUST_CONST_HELPER_GFP_KERNEL = GFP_KERNEL;
- const gfp_t RUST_CONST_HELPER_GFP_KERNEL_ACCOUNT = GFP_KERNEL_ACCOUNT;
-diff --git a/rust/helpers.c b/rust/helpers.c
-index d6abe4bd45d9..305f0577fae9 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -25,6 +25,8 @@
- #include <linux/build_bug.h>
- #include <linux/err.h>
- #include <linux/errname.h>
-+#include <linux/gfp.h>
-+#include <linux/highmem.h>
- #include <linux/mutex.h>
- #include <linux/refcount.h>
- #include <linux/sched/signal.h>
-@@ -94,6 +96,24 @@ int rust_helper_signal_pending(struct task_struct *t)
- }
- EXPORT_SYMBOL_GPL(rust_helper_signal_pending);
- 
-+struct page *rust_helper_alloc_pages(gfp_t gfp_mask, unsigned int order)
-+{
-+	return alloc_pages(gfp_mask, order);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_alloc_pages);
-+
-+void *rust_helper_kmap_local_page(struct page *page)
-+{
-+	return kmap_local_page(page);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_kmap_local_page);
-+
-+void rust_helper_kunmap_local(const void *addr)
-+{
-+	kunmap_local(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_kunmap_local);
-+
- refcount_t rust_helper_REFCOUNT_INIT(int n)
- {
- 	return (refcount_t)REFCOUNT_INIT(n);
-diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
-index 531b5e471cb1..72f475e44144 100644
---- a/rust/kernel/alloc.rs
-+++ b/rust/kernel/alloc.rs
-@@ -20,6 +20,13 @@
- #[derive(Clone, Copy)]
- pub struct Flags(u32);
- 
-+impl Flags {
-+    /// Get the raw representation of this flag.
-+    pub(crate) fn as_raw(self) -> u32 {
-+        self.0
-+    }
-+}
-+
- impl core::ops::BitOr for Flags {
-     type Output = Self;
-     fn bitor(self, rhs: Self) -> Self::Output {
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 767026db068e..5d310e79485f 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -35,6 +35,7 @@
- pub mod kunit;
- #[cfg(CONFIG_NET)]
- pub mod net;
-+pub mod page;
- pub mod prelude;
- pub mod print;
- mod static_assert;
-diff --git a/rust/kernel/page.rs b/rust/kernel/page.rs
-new file mode 100644
-index 000000000000..121d20066645
---- /dev/null
-+++ b/rust/kernel/page.rs
-@@ -0,0 +1,250 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Kernel page allocation and management.
-+
-+use crate::{
-+    alloc::{AllocError, Flags},
-+    bindings,
-+    error::code::*,
-+    error::Result,
-+    uaccess::UserSliceReader,
-+};
-+use core::ptr::{self, NonNull};
-+
-+/// A bitwise shift for the page size.
-+pub const PAGE_SHIFT: usize = bindings::PAGE_SHIFT as usize;
-+
-+/// The number of bytes in a page.
-+pub const PAGE_SIZE: usize = bindings::PAGE_SIZE;
-+
-+/// A bitmask that gives the page containing a given address.
-+pub const PAGE_MASK: usize = !(PAGE_SIZE - 1);
-+
-+/// A pointer to a page that owns the page allocation.
-+///
-+/// # Invariants
-+///
-+/// The pointer is valid, and has ownership over the page.
-+pub struct Page {
-+    page: NonNull<bindings::page>,
-+}
-+
-+// SAFETY: Pages have no logic that relies on them staying on a given thread, so moving them across
-+// threads is safe.
-+unsafe impl Send for Page {}
-+
-+// SAFETY: Pages have no logic that relies on them not being accessed concurrently, so accessing
-+// them concurrently is safe.
-+unsafe impl Sync for Page {}
-+
-+impl Page {
-+    /// Allocates a new page.
-+    ///
-+    /// # Examples
-+    ///
-+    /// Allocate memory for a page.
-+    ///
-+    /// ```
-+    /// use kernel::page::Page;
-+    ///
-+    /// # fn dox() -> Result<(), kernel::alloc::AllocError> {
-+    /// let page = Page::alloc_page(GFP_KERNEL)?;
-+    /// # Ok(()) }
-+    /// ```
-+    ///
-+    /// Allocate memory for a page and zero its contents.
-+    ///
-+    /// ```
-+    /// use kernel::page::Page;
-+    ///
-+    /// # fn dox() -> Result<(), kernel::alloc::AllocError> {
-+    /// let page = Page::alloc_page(GFP_KERNEL | __GFP_ZERO)?;
-+    /// # Ok(()) }
-+    /// ```
-+    pub fn alloc_page(flags: Flags) -> Result<Self, AllocError> {
-+        // SAFETY: Depending on the value of `gfp_flags`, this call may sleep. Other than that, it
-+        // is always safe to call this method.
-+        let page = unsafe { bindings::alloc_pages(flags.as_raw(), 0) };
-+        let page = NonNull::new(page).ok_or(AllocError)?;
-+        // INVARIANT: We just successfully allocated a page, so we now have ownership of the newly
-+        // allocated page. We transfer that ownership to the new `Page` object.
-+        Ok(Self { page })
-+    }
-+
-+    /// Returns a raw pointer to the page.
-+    pub fn as_ptr(&self) -> *mut bindings::page {
-+        self.page.as_ptr()
-+    }
-+
-+    /// Runs a piece of code with this page mapped to an address.
-+    ///
-+    /// The page is unmapped when this call returns.
-+    ///
-+    /// # Using the raw pointer
-+    ///
-+    /// It is up to the caller to use the provided raw pointer correctly. The pointer is valid for
-+    /// `PAGE_SIZE` bytes and for the duration in which the closure is called. The pointer might
-+    /// only be mapped on the current thread, and when that is the case, dereferencing it on other
-+    /// threads is UB. Other than that, the usual rules for dereferencing a raw pointer apply: don't
-+    /// cause data races, the memory may be uninitialized, and so on.
-+    ///
-+    /// If multiple threads map the same page at the same time, then they may reference with
-+    /// different addresses. However, even if the addresses are different, the underlying memory is
-+    /// still the same for these purposes (e.g., it's still a data race if they both write to the
-+    /// same underlying byte at the same time).
-+    fn with_page_mapped<T>(&self, f: impl FnOnce(*mut u8) -> T) -> T {
-+        // SAFETY: `page` is valid due to the type invariants on `Page`.
-+        let mapped_addr = unsafe { bindings::kmap_local_page(self.as_ptr()) };
-+
-+        let res = f(mapped_addr.cast());
-+
-+        // This unmaps the page mapped above.
-+        //
-+        // SAFETY: Since this API takes the user code as a closure, it can only be used in a manner
-+        // where the pages are unmapped in reverse order. This is as required by `kunmap_local`.
-+        //
-+        // In other words, if this call to `kunmap_local` happens when a different page should be
-+        // unmapped first, then there must necessarily be a call to `kmap_local_page` other than the
-+        // call just above in `with_page_mapped` that made that possible. In this case, it is the
-+        // unsafe block that wraps that other call that is incorrect.
-+        unsafe { bindings::kunmap_local(mapped_addr) };
-+
-+        res
-+    }
-+
-+    /// Runs a piece of code with a raw pointer to a slice of this page, with bounds checking.
-+    ///
-+    /// If `f` is called, then it will be called with a pointer that points at `off` bytes into the
-+    /// page, and the pointer will be valid for at least `len` bytes. The pointer is only valid on
-+    /// this task, as this method uses a local mapping.
-+    ///
-+    /// If `off` and `len` refers to a region outside of this page, then this method returns
-+    /// `EINVAL` and does not call `f`.
-+    ///
-+    /// # Using the raw pointer
-+    ///
-+    /// It is up to the caller to use the provided raw pointer correctly. The pointer is valid for
-+    /// `len` bytes and for the duration in which the closure is called. The pointer might only be
-+    /// mapped on the current thread, and when that is the case, dereferencing it on other threads
-+    /// is UB. Other than that, the usual rules for dereferencing a raw pointer apply: don't cause
-+    /// data races, the memory may be uninitialized, and so on.
-+    ///
-+    /// If multiple threads map the same page at the same time, then they may reference with
-+    /// different addresses. However, even if the addresses are different, the underlying memory is
-+    /// still the same for these purposes (e.g., it's still a data race if they both write to the
-+    /// same underlying byte at the same time).
-+    fn with_pointer_into_page<T>(
-+        &self,
-+        off: usize,
-+        len: usize,
-+        f: impl FnOnce(*mut u8) -> Result<T>,
-+    ) -> Result<T> {
-+        let bounds_ok = off <= PAGE_SIZE && len <= PAGE_SIZE && (off + len) <= PAGE_SIZE;
-+
-+        if bounds_ok {
-+            self.with_page_mapped(move |page_addr| {
-+                // SAFETY: The `off` integer is at most `PAGE_SIZE`, so this pointer offset will
-+                // result in a pointer that is in bounds or one off the end of the page.
-+                f(unsafe { page_addr.add(off) })
-+            })
-+        } else {
-+            Err(EINVAL)
-+        }
-+    }
-+
-+    /// Maps the page and reads from it into the given buffer.
-+    ///
-+    /// This method will perform bounds checks on the page offset. If `offset .. offset+len` goes
-+    /// outside ot the page, then this call returns `EINVAL`.
-+    ///
-+    /// # Safety
-+    ///
-+    /// * Callers must ensure that `dst` is valid for writing `len` bytes.
-+    /// * Callers must ensure that this call does not race with a write to the same page that
-+    ///   overlaps with this read.
-+    pub unsafe fn read_raw(&self, dst: *mut u8, offset: usize, len: usize) -> Result {
-+        self.with_pointer_into_page(offset, len, move |src| {
-+            // SAFETY: If `with_pointer_into_page` calls into this closure, then
-+            // it has performed a bounds check and guarantees that `src` is
-+            // valid for `len` bytes.
-+            //
-+            // There caller guarantees that there is no data race.
-+            unsafe { ptr::copy_nonoverlapping(src, dst, len) };
-+            Ok(())
-+        })
-+    }
-+
-+    /// Maps the page and writes into it from the given buffer.
-+    ///
-+    /// This method will perform bounds checks on the page offset. If `offset .. offset+len` goes
-+    /// outside ot the page, then this call returns `EINVAL`.
-+    ///
-+    /// # Safety
-+    ///
-+    /// * Callers must ensure that `src` is valid for reading `len` bytes.
-+    /// * Callers must ensure that this call does not race with a read or write to the same page
-+    ///   that overlaps with this write.
-+    pub unsafe fn write_raw(&self, src: *const u8, offset: usize, len: usize) -> Result {
-+        self.with_pointer_into_page(offset, len, move |dst| {
-+            // SAFETY: If `with_pointer_into_page` calls into this closure, then it has performed a
-+            // bounds check and guarantees that `dst` is valid for `len` bytes.
-+            //
-+            // There caller guarantees that there is no data race.
-+            unsafe { ptr::copy_nonoverlapping(src, dst, len) };
-+            Ok(())
-+        })
-+    }
-+
-+    /// Maps the page and zeroes the given slice.
-+    ///
-+    /// This method will perform bounds checks on the page offset. If `offset .. offset+len` goes
-+    /// outside ot the page, then this call returns `EINVAL`.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that this call does not race with a read or write to the same page that
-+    /// overlaps with this write.
-+    pub unsafe fn fill_zero_raw(&self, offset: usize, len: usize) -> Result {
-+        self.with_pointer_into_page(offset, len, move |dst| {
-+            // SAFETY: If `with_pointer_into_page` calls into this closure, then it has performed a
-+            // bounds check and guarantees that `dst` is valid for `len` bytes.
-+            //
-+            // There caller guarantees that there is no data race.
-+            unsafe { ptr::write_bytes(dst, 0u8, len) };
-+            Ok(())
-+        })
-+    }
-+
-+    /// Copies data from userspace into this page.
-+    ///
-+    /// This method will perform bounds checks on the page offset. If `offset .. offset+len` goes
-+    /// outside ot the page, then this call returns `EINVAL`.
-+    ///
-+    /// Like the other `UserSliceReader` methods, data races are allowed on the userspace address.
-+    /// However, they are not allowed on the page you are copying into.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that this call does not race with a read or write to the same page that
-+    /// overlaps with this write.
-+    pub unsafe fn copy_from_user_slice_raw(
-+        &self,
-+        reader: &mut UserSliceReader,
-+        offset: usize,
-+        len: usize,
-+    ) -> Result {
-+        self.with_pointer_into_page(offset, len, move |dst| {
-+            // SAFETY: If `with_pointer_into_page` calls into this closure, then it has performed a
-+            // bounds check and guarantees that `dst` is valid for `len` bytes. Furthermore, we have
-+            // exclusive access to the slice since the caller guarantees that there are no races.
-+            reader.read_raw(unsafe { core::slice::from_raw_parts_mut(dst.cast(), len) })
-+        })
-+    }
-+}
-+
-+impl Drop for Page {
-+    fn drop(&mut self) {
-+        // SAFETY: By the type invariants, we have ownership of the page and can free it.
-+        unsafe { bindings::__free_pages(self.page.as_ptr(), 0) };
-+    }
-+}
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
--- 
-2.45.1.288.g0e0cd299f1-goog
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
