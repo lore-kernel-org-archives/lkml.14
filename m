@@ -1,46 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD48E4C97;
-	Tue, 28 May 2024 11:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660E271753;
+	Tue, 28 May 2024 12:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716897585; cv=none; b=NjXZQcbfroR8K55f0XT6bvzgInRMELDnjPLrtCvzCwLlMaeUkR4CP6BT8nxUH/BOjlU+COb7oqd9XiSbhA8lZk1G8NhNVZIfL1DNTDDKzRakLalfi5jFNnZQZN2UG+TT7TLgAsObA6IC7w6u0Hv8LJvNkSoKw/pApKWcdlRfFos=
+	t=1716897632; cv=none; b=b+lcK1Jx+bSIGJAAEhQQ5e/N8g8oYZgb2FKHnzNLOa0CMy6QmBejHGuiq9M19r1fo/Bzc6AZYeL9/w2xIFido1ZsrKx9EhQ7TCPFkqHlde5jFfvRdvb1If3Rf9TQVOiNJ/FXpmQ6ZqAIBgX6UphstYY387K+o3F/RgWxL5vSbv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716897585; c=relaxed/simple;
-	bh=PJ6dm+ojt4tB8KatVUHmNd4ox8+zoZGcn/Tu/Vumpvg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dbLnErrhZaoh3eU9/VfKrr1Zxa/pisvbnj6Mn+02J2K3qlxpSCBxU3fs0+sipLiek0TmxLiKK8BUcDdcan8L2LTBGgtxKetyeQG9ytpEAgCJaQe1m351/Y1rKWsDHnzHtcgq+kuZMSTXqlo8FLe97NJKD2E50L3A/rWAeWx2GoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSw92NH1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716897632; c=relaxed/simple;
+	bh=+J0aDbdoJf+gZfdTIwotMwK8JZuvHa/CmdbEGGaA0aM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=RWTZTLwkvKS1GX3RjkmZSEMkZUA9jvF250HQQUQcv8zOIAV8qMeduQXq2BtGFsjPox07nNw0nfu5ee8KnzoFElUKGlpzwJAYVnEVbUWu67mjaQQiZR99JjKvaqSotCICHmcCNsAdtk0vg/BwR9Uei2Y46lcC/gceNrm8Ecb0D9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BHVYqAur; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSw92NH1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F9F9C3277B;
-	Tue, 28 May 2024 11:59:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BHVYqAur"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D77F0C32781;
+	Tue, 28 May 2024 12:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716897585;
-	bh=PJ6dm+ojt4tB8KatVUHmNd4ox8+zoZGcn/Tu/Vumpvg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fSw92NH1+IcaGXB0/E0EVitFVJAe5MUKtDUk5DgyUoNRo9eTzpU4uZeji57srdptp
-	 Ef4rEKITaSAdxJjddldsfiqdw5n0/Nm2dtbiAIb/Zyan8txG45YavEwGtua76O0beX
-	 31wSslTX2Tz42exe4ZWoDeRYdEioaxRhXMAkwm1iih54n/6y71QpqXlKixcyzondFw
-	 2D471jjJ54e09DZf2aw2LVYTBDzF57xIpftc5GcT1dkkLDV1cdWauKqbTWmG4hz+BK
-	 dhac6CYFGxEloxMRni/G95Cga+XRbkkPPJKbjdxS0Wk+DdfqnhDpilsvqQrby+/ssG
-	 ZwCLl7SvRmfOA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Armin Wolf <W_Armin@gmx.de>,
-	SungHwan Jung <onenowy@gmail.com>,
-	Henning Schild <henning.schild@siemens.com>,
-	Ai Chao <aichao@kylinos.cn>,
-	Robert Joslyn <robert.joslyn@redrectangle.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: yt2-1380: add CONFIG_EXTCON dependency
-Date: Tue, 28 May 2024 13:59:33 +0200
-Message-Id: <20240528115940.3169455-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=k20201202; t=1716897630;
+	bh=+J0aDbdoJf+gZfdTIwotMwK8JZuvHa/CmdbEGGaA0aM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BHVYqAurKXiBZko4m3/x2SC+UmWAgzVX2EjmA9cqVqjzLMzljzIx/SwmkvDNJHnTx
+	 hggjhDSc3HbMl6T4B8ihKq1AFr8MBL1mfOKe05n9TmtjyQSe1CQhxdxG6U5REytHkg
+	 LXUpDsbsyzhH0vzsgSnxsGFu/QJOh8aG8qZXe2mRHiakjiJC13Peega/75KqfC3+4P
+	 AGBaZWP9Jfcyj4ryOv9hykYU2xF6LscivzY+oV6+0Aa7JW35MYxY5pcs8MPby5tTVx
+	 VziPFXToUUqkUABceQx26KaFZCKWN/CfwVCiSFsAzAef0YoaIuLIjNbQj0CT/RrIAO
+	 icqghQK+3VdHw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B9D8BC4361B;
+	Tue, 28 May 2024 12:00:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,39 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 1/2] net/core: remove redundant sk_callback_lock
+ initialization
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171689763075.20900.865720577664819841.git-patchwork-notify@kernel.org>
+Date: Tue, 28 May 2024 12:00:30 +0000
+References: <20240526145718.9542-1-gouhao@uniontech.com>
+In-Reply-To: <20240526145718.9542-1-gouhao@uniontech.com>
+To: Gou Hao <gouhao@uniontech.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, kuniyu@amazon.com, wuyun.abel@bytedance.com,
+ leitao@debian.org, alexander@mihalicyn.com, dhowells@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, zhanjun@uniontech.com,
+ gouhaojake@163.com
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hello:
 
-This driver uses the extcon subsystem and fails to build
-when it cannot call into that subsystem:
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-x86_64-linux-ld: vmlinux.o: in function `yt2_1380_fc_worker':
-lenovo-yoga-tab2-pro-1380-fastcharger.c:(.text+0xa9d819): undefined reference to `extcon_get_state'
-x86_64-linux-ld: lenovo-yoga-tab2-pro-1380-fastcharger.c:(.text+0xa9d853): undefined reference to `extcon_get_state'
-x86_64-linux-ld: vmlinux.o: in function `yt2_1380_fc_serdev_probe':
-lenovo-yoga-tab2-pro-1380-fastcharger.c:(.text+0xa9da22): undefined reference to `extcon_get_extcon_dev'
-x86_64-linux-ld: lenovo-yoga-tab2-pro-1380-fastcharger.c:(.text+0xa9dc0c): undefined reference to `devm_extcon_register_notifier_all'
+On Sun, 26 May 2024 22:57:17 +0800 you wrote:
+> sk_callback_lock has already been initialized in sk_init_common().
+> 
+> Signed-off-by: Gou Hao <gouhao@uniontech.com>
+> ---
+>  net/core/sock.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Add a Kconfig dependency to make it it always builds correctly.
+Here is the summary with links:
+  - [1/2] net/core: remove redundant sk_callback_lock initialization
+    https://git.kernel.org/netdev/net-next/c/c65b6521115e
+  - [2/2] net/core: move the lockdep-init of sk_callback_lock to sk_init_common()
+    https://git.kernel.org/netdev/net-next/c/de31e96cf423
 
-Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 809888e4c1e7..9f850e4617bf 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -136,6 +136,7 @@ config YOGABOOK
- config YT2_1380
- 	tristate "Lenovo Yoga Tablet 2 1380 fast charge driver"
- 	depends on SERIAL_DEV_BUS
-+	depends on EXTCON
- 	depends on ACPI
- 	help
- 	  Say Y here to enable support for the custom fast charging protocol
+You are awesome, thank you!
 -- 
-2.39.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
