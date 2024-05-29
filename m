@@ -1,174 +1,159 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE7B1CA85;
-	Wed, 29 May 2024 13:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4997018EA8;
+	Wed, 29 May 2024 13:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990248; cv=none; b=V6l03J52CD+XCFlUFufv9Ya8Q3o8Bj3NFGtsHpuOGu/Qh0qcmrV+ccqBf430mKfDS0MfRTTZbsKUBnAmAKmAHvR42AEmsxyY1amwt7oiqOQA0RKpGeHP5XGny8nXFBcgyI+scBltv1iIbau1OLzFgJ+Wvz/jM9Tx+oCw4OsApFQ=
+	t=1716990263; cv=none; b=aNs8WGrg5DLfd9UfyXWggLVwymFWUXCnBXBoZMDDRW2eRvTjyAt9ZC++1D5Mty51Irs8gvAmKMdeQv4fv4tjj4gbBXmYJgf3t6LRf2+A2h5ZoViRFSZBBPTGr0LS45RSHO2jKMQm5Ue1DoIwkT3pcSj38GuEuiAJs6lZ2OQqfqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990248; c=relaxed/simple;
-	bh=Ungk2MTzXqsgKbQ1bn1Ua84urpmlBui+Hp+rdtFMfpM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lo8VF04ypolLftHXMT7sNr/kkVckPTJN0BcYXwq+0DMrzxsn4i5jxD3BHrElkUDK25pyAefDKViceazs1hGozx3d9eA3tJSKoxdYoBFIcSGoMP7kYJWoxzu85VlUHEp0Ts+BVRLlk22XvGeBqD0CVMC9wlHUAUbotEaDgHpU36I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vq9VG2TsQz6J6mf;
-	Wed, 29 May 2024 21:39:50 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 21F2B140CF4;
-	Wed, 29 May 2024 21:44:04 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 29 May 2024 14:44:03 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, Catalin
- Marinas <catalin.marinas@arm.com>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>, <loongarch@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin
- Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v10 18/19] arm64: document virtual CPU hotplug's expectations
-Date: Wed, 29 May 2024 14:34:45 +0100
-Message-ID: <20240529133446.28446-19-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
-References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1716990263; c=relaxed/simple;
+	bh=VQgHFgqP/4XpqkYAK/f5SZ2pHbIQPnlx3L/xfDABSkk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K6yu8XpyX9i5SWL3Cx3N9UyEYad5ybpw+zin4+qgyslcoxSnm0sY+YQ0g9bde85RLIRBHnliRD56J77CXdipLZqgeoE7E47jfI3Qr72B+R2gX6Kvql8sNtSCKdAS3g8FunMapSA+LfMD8PoxZM3WVlVJl5qIJIKafjdoqHiuTdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ldh1lFQN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ldh1lFQN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7183C2BD10;
+	Wed, 29 May 2024 13:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716990262;
+	bh=VQgHFgqP/4XpqkYAK/f5SZ2pHbIQPnlx3L/xfDABSkk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ldh1lFQNlkJoGyhqSYbTknan/c+BczYYSyD6Dl3BgcEUWCOZ87MwiAWLKR4tUy+N4
+	 jUA6HeGMzjStli3t6Q5eBVfzUrSLfn/xpRvEfHXb4JRxbnSwbTYCrRU1ZRauZzLNkF
+	 bWJrRc2F3r3bpb5TDf2V5A5jQaZKYH9JxWdqGMghLxaDhX0qM1APNyXASJO3LMaRWa
+	 /dVznUDRS7a9lQvvbB93Zg92qPDAOlHv8prYAoxsWbDCdKffDpimglaSF/sDYZzhPI
+	 aJrwp/+tL0PgjuOU6tY+ISPVNZv6Pvikg5s+C2tEdihX61SC5626QlZD0vHLZWIEz2
+	 /USnH1kCu+D4Q==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5295dada905so721262e87.1;
+        Wed, 29 May 2024 06:44:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXOQpy82QVKJPd9qU0UyyS2dYRS0oq/HwyJLMyWbeqsJujXLXIr9k/pi4oEMnn4L4uEQ8txxgOkh9udVBWNkyEPLCFVOrdjd7IZa4+HG8GHgUql6BYJxTG6oSm22XXLBETw7ag2qvLBig==
+X-Gm-Message-State: AOJu0YxZXMxkdW08ezpwFz2ecOZIJuBptqDXKOZeXGe9euZ3Is9B9CHj
+	7dpiKVYpbeMvvBjp9Bdpu79SWAbZ5j/eOWsUrgvHSqdREhbbbbqKTrglpPe7bPNghCR+2gw4DbQ
+	eScOcZAsaisE4MXhltNFx9c5Uog==
+X-Google-Smtp-Source: AGHT+IG0Twsuzy3G15biXOtdBIc6ZH3RX7c1OUW5xcm5mEL/8kjZupd/YmgZJOtQEJePvqdfFd0WJ/312vXzKdPlv50=
+X-Received: by 2002:a05:6512:2148:b0:52b:7a62:7600 with SMTP id
+ 2adb3069b0e04-52b7a627762mr1520e87.16.1716990261135; Wed, 29 May 2024
+ 06:44:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <20240528164132.2451685-1-maz@kernel.org> <CAK9=C2XNPJP0X=pg5TSrQbsuouDD3jP-gy2Sm4BXNJp0ZiWp+A@mail.gmail.com>
+ <86bk4pm8j1.wl-maz@kernel.org>
+In-Reply-To: <86bk4pm8j1.wl-maz@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 29 May 2024 08:44:07 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKOxYeNh026wmYH2JDYbR-FGjc=9gv-taB09pC4fyXKCA@mail.gmail.com>
+Message-ID: <CAL_JsqKOxYeNh026wmYH2JDYbR-FGjc=9gv-taB09pC4fyXKCA@mail.gmail.com>
+Subject: Re: [PATCH] of: property: Fix fw_devlink handling of interrupt-map
+To: Marc Zyngier <maz@kernel.org>
+Cc: Anup Patel <apatel@ventanamicro.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: James Morse <james.morse@arm.com>
+On Wed, May 29, 2024 at 1:33=E2=80=AFAM Marc Zyngier <maz@kernel.org> wrote=
+:
+>
+> On Wed, 29 May 2024 06:15:52 +0100,
+> Anup Patel <apatel@ventanamicro.com> wrote:
+> >
+> > On Tue, May 28, 2024 at 10:11=E2=80=AFPM Marc Zyngier <maz@kernel.org> =
+wrote:
+> > >
+> > > Commit d976c6f4b32c ("of: property: Add fw_devlink support for
+> > > interrupt-map property") tried to do what it says on the tin,
+> > > but failed on a couple of points:
+> > >
+> > > - it confuses bytes and cells. Not a huge deal, except when it
+> > >   comes to pointer arithmetic
+> > >
+> > > - it doesn't really handle anything but interrupt-maps that have
+> > >   their parent #address-cells set to 0
+> > >
+> > > The combinations of the two leads to some serious fun on my M1
+> > > box, with plenty of WARN-ON() firing all over the shop, and
+> > > amusing values being generated for interrupt specifiers.
+> > >
+> > > Address both issues so that I can boot my machines again.
+> > >
+> > > Fixes: d976c6f4b32c ("of: property: Add fw_devlink support for interr=
+upt-map property")
+> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > > Cc: Anup Patel <apatel@ventanamicro.com>
+> > > Cc: Saravana Kannan <saravanak@google.com>
+> > > Cc: Rob Herring (Arm) <robh@kernel.org>
+> >
+> > Thanks for the fix patch but unfortunately it breaks for RISC-V.
+> >
+> > > ---
+> > >  drivers/of/property.c | 16 ++++++++++++++--
+> > >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > > index 1c83e68f805b..9adebc63bea9 100644
+> > > --- a/drivers/of/property.c
+> > > +++ b/drivers/of/property.c
+> > > @@ -1322,7 +1322,13 @@ static struct device_node *parse_interrupt_map=
+(struct device_node *np,
+> > >         addrcells =3D of_bus_n_addr_cells(np);
+> > >
+> > >         imap =3D of_get_property(np, "interrupt-map", &imaplen);
+> > > -       if (!imap || imaplen <=3D (addrcells + intcells))
+> > > +       imaplen /=3D sizeof(*imap);
+> > > +
+> > > +       /*
+> > > +        * Check that we have enough runway for the child unit interr=
+upt
+> > > +        * specifier and a phandle. That's the bare minimum we can ex=
+pect.
+> > > +        */
+> > > +       if (!imap || imaplen <=3D (addrcells + intcells + 1))
+> > >                 return NULL;
+> > >         imap_end =3D imap + imaplen;
+> > >
+> > > @@ -1346,8 +1352,14 @@ static struct device_node *parse_interrupt_map=
+(struct device_node *np,
+> > >                 if (!index)
+> > >                         return sup_args.np;
+> > >
+> > > -               of_node_put(sup_args.np);
+> > > +               /*
+> > > +                * Account for the full parent unit interrupt specifi=
+er
+> > > +                * (address cells, interrupt cells, and phandle).
+> > > +                */
+> > > +               imap +=3D of_bus_n_addr_cells(sup_args.np);
+> >
+> > This breaks for RISC-V because we don't have "#address-cells"
+> > property in interrupt controller DT node and of_bus_n_addr_cells()
+> > retrieves "#address-cells" from the parent of interrupt controller.
+>
+> That's a feature, not a bug. #address-cells, AFAICT, applies to all
+> child nodes until you set it otherwise.
 
-Add a description of physical and virtual CPU hotplug, explain the
-differences and elaborate on what is required in ACPI for a working
-virtual hotplug system.
+That may be supported in some places, but only because of buggy DTs
+(we're talking 2000 era). Current dtc should warn if an interrupt
+controller node doesn't have #address-cells AND is referred to by
+interrupt-map.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- Documentation/arch/arm64/cpu-hotplug.rst | 79 ++++++++++++++++++++++++
- Documentation/arch/arm64/index.rst       |  1 +
- 2 files changed, 80 insertions(+)
+There's also the notion of default root values, but that's broken as
+well. dtc and the kernel don't even agree on the default for some
+arches. Fortunately, that's been a dtc warning longer than I've worked
+on DT.
 
-diff --git a/Documentation/arch/arm64/cpu-hotplug.rst b/Documentation/arch/arm64/cpu-hotplug.rst
-new file mode 100644
-index 000000000000..76ba8d932c72
---- /dev/null
-+++ b/Documentation/arch/arm64/cpu-hotplug.rst
-@@ -0,0 +1,79 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. _cpuhp_index:
-+
-+====================
-+CPU Hotplug and ACPI
-+====================
-+
-+CPU hotplug in the arm64 world is commonly used to describe the kernel taking
-+CPUs online/offline using PSCI. This document is about ACPI firmware allowing
-+CPUs that were not available during boot to be added to the system later.
-+
-+``possible`` and ``present`` refer to the state of the CPU as seen by linux.
-+
-+
-+CPU Hotplug on physical systems - CPUs not present at boot
-+----------------------------------------------------------
-+
-+Physical systems need to mark a CPU that is ``possible`` but not ``present`` as
-+being ``present``. An example would be a dual socket machine, where the package
-+in one of the sockets can be replaced while the system is running.
-+
-+This is not supported.
-+
-+In the arm64 world CPUs are not a single device but a slice of the system.
-+There are no systems that support the physical addition (or removal) of CPUs
-+while the system is running, and ACPI is not able to sufficiently describe
-+them.
-+
-+e.g. New CPUs come with new caches, but the platform's cache toplogy is
-+described in a static table, the PPTT. How caches are shared between CPUs is
-+not discoverable, and must be described by firmware.
-+
-+e.g. The GIC redistributor for each CPU must be accessed by the driver during
-+boot to discover the system wide supported features. ACPI's MADT GICC
-+structures can describe a redistributor associated with a disabled CPU, but
-+can't describe whether the redistributor is accessible, only that it is not
-+'always on'.
-+
-+arm64's ACPI tables assume that everything described is ``present``.
-+
-+
-+CPU Hotplug on virtual systems - CPUs not enabled at boot
-+---------------------------------------------------------
-+
-+Virtual systems have the advantage that all the properties the system will
-+ever have can be described at boot. There are no power-domain considerations
-+as such devices are emulated.
-+
-+CPU Hotplug on virtual systems is supported. It is distinct from physical
-+CPU Hotplug as all resources are described as ``present``, but CPUs may be
-+marked as disabled by firmware. Only the CPU's online/offline behaviour is
-+influenced by firmware. An example is where a virtual machine boots with a
-+single CPU, and additional CPUs are added once a cloud orchestrator deploys
-+the workload.
-+
-+For a virtual machine, the VMM (e.g. Qemu) plays the part of firmware.
-+
-+Virtual hotplug is implemented as a firmware policy affecting which CPUs can be
-+brought online. Firmware can enforce its policy via PSCI's return codes. e.g.
-+``DENIED``.
-+
-+The ACPI tables must describe all the resources of the virtual machine. CPUs
-+that firmware wishes to disable either from boot (or later) should not be
-+``enabled`` in the MADT GICC structures, but should have the ``online capable``
-+bit set, to indicate they can be enabled later. The boot CPU must be marked as
-+``enabled``.  The 'always on' GICR structure must be used to describe the
-+redistributors.
-+
-+CPUs described as ``online capable`` but not ``enabled`` can be set to enabled
-+by the DSDT's Processor object's _STA method. On virtual systems the _STA method
-+must always report the CPU as ``present``. Changes to the firmware policy can
-+be notified to the OS via device-check or eject-request.
-+
-+CPUs described as ``enabled`` in the static table, should not have their _STA
-+modified dynamically by firmware. Soft-restart features such as kexec will
-+re-read the static properties of the system from these static tables, and
-+may malfunction if these no longer describe the running system. Linux will
-+re-discover the dynamic properties of the system from the _STA method later
-+during boot.
-diff --git a/Documentation/arch/arm64/index.rst b/Documentation/arch/arm64/index.rst
-index d08e924204bf..78544de0a8a9 100644
---- a/Documentation/arch/arm64/index.rst
-+++ b/Documentation/arch/arm64/index.rst
-@@ -13,6 +13,7 @@ ARM64 Architecture
-     asymmetric-32bit
-     booting
-     cpu-feature-registers
-+    cpu-hotplug
-     elf_hwcaps
-     hugetlbpage
-     kdump
--- 
-2.39.2
 
+> > The of_irq_parse_raw() looks for "#address-cells" property
+> > in the interrupt controller DT node only so we should do a
+> > similar thing here as well.
+>
+> This looks more like a of_irq_parse_raw() bug than anything else.
+
+Nope.
+
+Rob
