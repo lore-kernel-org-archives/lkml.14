@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CFE194C63;
-	Wed, 29 May 2024 16:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE86619067D;
+	Wed, 29 May 2024 16:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717000180; cv=none; b=oqRyLFJfsct/V49SYZ916/cHQ1ib97pFxTFHkWbe0qQRe4nXYHmjEtZhXPP7VqSHHxY1qsbhbHBkXauHWvtAWBiBZBjjbholOSRSThsavAKh6UNzt9QgwN4DnOSORSwpWVFqdt/GG1aWKRepGERTzIqC+hksAMq3XcNxGz9azGQ=
+	t=1717000179; cv=none; b=Nn68iV8k6vTCD1v40vnyi1DryutgXx6G13FDP1EAKcoXN+1lIKGtpzrtdeUdnAlSV6aYwboAbzWA5BFGyx7d5QNEQqKgynjuhyFRdcTAY5WrzSmHKRprX2fTBZRusxJXd12SCuFlL+zp+SHaT/Idu1in5HHwvbGqSgwYwWlfW4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717000180; c=relaxed/simple;
-	bh=eD4dt4fw0aatk5xk1+CFhA4XLqiGzZDl6PGjHb3adRQ=;
+	s=arc-20240116; t=1717000179; c=relaxed/simple;
+	bh=+x9DQd7KqwkYQ1bgShD+qKWpEAz5ME5eTGkkafsEoWo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S90+dTOFkDIYpzT17sm2hDY0lDnPMbNVD6sViz4hboUBp4QmZu4CDzoUHXAAVwB82lZo+OazUsQm8RdNJgG1y2U0Wy+bvU1voUArUzvK97CpdkhX1MFhQxVXr3JH+suSNJVKb8JpX9plCEmEVBZHdU2owaO9w5pZIP69G65yahA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T9AFMmLO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T5N82QIl; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=TAVbptu/++TgfeOZ9350DrHJ9CmfaoZgWzQbhhC+pX4LvDjf099aO4Wd9F5qVEH36tEdfN5W/LStojBq+PCEAKGOMk+aK/0rHzhr9pLbkv6EFDA9JlmUH8aOo8yYMrPb7LgU0HJWWuiVhjIdpN93nao86fJqqLucLTlPizOzBFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pJ9I6m9n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L466bI5N; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T9AFMmLO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T5N82QIl"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pJ9I6m9n";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L466bI5N"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717000176;
+	s=2020; t=1717000174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0YzaWGKH4pdlOZgRx7nAozero4nCYBfUB40Jz5/zFVM=;
-	b=T9AFMmLONOInuX5MJfFRMZu6WDgFhryOW/Py2vjdI0D0GBfDP5dP2ZQrZuTDqhZi5tgwt6
-	vDzB8Vq1Tk2lC2Xlhs6A4ZqsIBryyIg7i6VD5euS9l7uiHwiEuReCDRTOvP0GQmLYqCvDi
-	+mz4og4AWSLG2gpKa8Bhg4MTHiYYvFRnQI1NdhUDr4+OruOiP6ltm86isEF2tn5L4RHaKE
-	rawdWwYh844fLpbqIH57mjSMFrS0s4wGqi7v8ss9KB6ffJIM7rQ7qJ9/gaTyxNsWTnJedg
-	WeQj8VpSNuWJnrUEH+6VyNL6nZb727UV5ef+UddolHI2KXLhYt15IPCtI4JmLg==
+	bh=CJeYTIv57cozwpPfPkR5Rxm28jZwxXFq0rv+rRq51Co=;
+	b=pJ9I6m9nmzYtGXYvX2gwEHuRTvpsLVtx67hzCP3/AowC4uGologEeKog/ETzts6kRySnYN
+	uNcKdBxpdJNcx4Z+wKsgVNhWaaay9DYfm5MYIP52+cZGg6A2DW7bVUoMrkfkowyvzwmq71
+	ndKxNRustNKTyA8zB9O2sLtVEk0upda5Jx3Gi49PdYyPkW02DjUj/A5aXJ/QscfhbLDp2R
+	NwMkCwV/ezOtZYTDqgxhsIT7B/2gpmx2/9CwrnG3h2eKs6TDDhBmM70u3dCJnxw8lGxeEf
+	cRO5NRyS8AlUcT2mUGRtLuSEoug/wrIogZCBQRCsM7XVbrHHvwkNbYYSy0lSxQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717000176;
+	s=2020e; t=1717000174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0YzaWGKH4pdlOZgRx7nAozero4nCYBfUB40Jz5/zFVM=;
-	b=T5N82QIl5kRvLxQdJCnBc/LwR5aYjwjOTivXE3vyZPU0nVcZtkHl2brwh35Huo42ojmZcs
-	XuAD91f2/UcHL6Bw==
+	bh=CJeYTIv57cozwpPfPkR5Rxm28jZwxXFq0rv+rRq51Co=;
+	b=L466bI5NTQxxcD4zGCKsURmn5BbwiD6UH99vgjqSkHp+bN0gmy7fBVrqZyhPv1wLG/JsT6
+	hvsKUtg8J2bkviBw==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -53,10 +53,11 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v3 net-next 09/15] dev: Remove PREEMPT_RT ifdefs from backlog_lock.*().
-Date: Wed, 29 May 2024 18:02:32 +0200
-Message-ID: <20240529162927.403425-10-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	David Ahern <dsahern@kernel.org>
+Subject: [PATCH v3 net-next 05/15] net/tcp_sigpool: Use nested-BH locking for sigpool_scratch.
+Date: Wed, 29 May 2024 18:02:28 +0200
+Message-ID: <20240529162927.403425-6-bigeasy@linutronix.de>
 In-Reply-To: <20240529162927.403425-1-bigeasy@linutronix.de>
 References: <20240529162927.403425-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -67,67 +68,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The backlog_napi locking (previously RPS) relies on explicit locking if
-either RPS or backlog NAPI is enabled. If both are disabled then locking
-was achieved by disabling interrupts except on PREEMPT_RT. PREEMPT_RT
-was excluded because the needed synchronisation was already provided
-local_bh_disable().
+sigpool_scratch is a per-CPU variable and relies on disabled BH for its
+locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
+this data structure requires explicit locking.
 
-Since the introduction of backlog NAPI and making it mandatory for
-PREEMPT_RT the ifdef within backlog_lock.*() is obsolete and can be
-removed.
+Make a struct with a pad member (original sigpool_scratch) and a
+local_lock_t and use local_lock_nested_bh() for locking. This change
+adds only lockdep coverage and does not alter the functional behaviour
+for !PREEMPT_RT.
 
-Remove the ifdefs in backlog_lock.*().
-
+Cc: David Ahern <dsahern@kernel.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- net/core/dev.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/ipv4/tcp_sigpool.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 85fe8138f3e4e..a66e4e744bbb4 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -229,7 +229,7 @@ static inline void backlog_lock_irq_save(struct softnet=
-_data *sd,
- {
- 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
- 		spin_lock_irqsave(&sd->input_pkt_queue.lock, *flags);
--	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+	else
- 		local_irq_save(*flags);
- }
+diff --git a/net/ipv4/tcp_sigpool.c b/net/ipv4/tcp_sigpool.c
+index 8512cb09ebc09..d8a4f192873a2 100644
+--- a/net/ipv4/tcp_sigpool.c
++++ b/net/ipv4/tcp_sigpool.c
+@@ -10,7 +10,14 @@
+ #include <net/tcp.h>
 =20
-@@ -237,7 +237,7 @@ static inline void backlog_lock_irq_disable(struct soft=
-net_data *sd)
- {
- 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
- 		spin_lock_irq(&sd->input_pkt_queue.lock);
--	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+	else
- 		local_irq_disable();
- }
+ static size_t __scratch_size;
+-static DEFINE_PER_CPU(void __rcu *, sigpool_scratch);
++struct sigpool_scratch {
++	local_lock_t bh_lock;
++	void __rcu *pad;
++};
++
++static DEFINE_PER_CPU(struct sigpool_scratch, sigpool_scratch) =3D {
++	.bh_lock =3D INIT_LOCAL_LOCK(bh_lock),
++};
 =20
-@@ -246,7 +246,7 @@ static inline void backlog_unlock_irq_restore(struct so=
-ftnet_data *sd,
- {
- 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
- 		spin_unlock_irqrestore(&sd->input_pkt_queue.lock, *flags);
--	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+	else
- 		local_irq_restore(*flags);
- }
+ struct sigpool_entry {
+ 	struct crypto_ahash	*hash;
+@@ -72,7 +79,7 @@ static int sigpool_reserve_scratch(size_t size)
+ 			break;
+ 		}
 =20
-@@ -254,7 +254,7 @@ static inline void backlog_unlock_irq_enable(struct sof=
-tnet_data *sd)
- {
- 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
- 		spin_unlock_irq(&sd->input_pkt_queue.lock);
--	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+	else
- 		local_irq_enable();
- }
+-		old_scratch =3D rcu_replace_pointer(per_cpu(sigpool_scratch, cpu),
++		old_scratch =3D rcu_replace_pointer(per_cpu(sigpool_scratch.pad, cpu),
+ 					scratch, lockdep_is_held(&cpool_mutex));
+ 		if (!cpu_online(cpu) || !old_scratch) {
+ 			kfree(old_scratch);
+@@ -93,7 +100,7 @@ static void sigpool_scratch_free(void)
+ 	int cpu;
 =20
+ 	for_each_possible_cpu(cpu)
+-		kfree(rcu_replace_pointer(per_cpu(sigpool_scratch, cpu),
++		kfree(rcu_replace_pointer(per_cpu(sigpool_scratch.pad, cpu),
+ 					  NULL, lockdep_is_held(&cpool_mutex)));
+ 	__scratch_size =3D 0;
+ }
+@@ -277,7 +284,8 @@ int tcp_sigpool_start(unsigned int id, struct tcp_sigpo=
+ol *c) __cond_acquires(RC
+ 	/* Pairs with tcp_sigpool_reserve_scratch(), scratch area is
+ 	 * valid (allocated) until tcp_sigpool_end().
+ 	 */
+-	c->scratch =3D rcu_dereference_bh(*this_cpu_ptr(&sigpool_scratch));
++	local_lock_nested_bh(&sigpool_scratch.bh_lock);
++	c->scratch =3D rcu_dereference_bh(*this_cpu_ptr(&sigpool_scratch.pad));
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(tcp_sigpool_start);
+@@ -286,6 +294,7 @@ void tcp_sigpool_end(struct tcp_sigpool *c) __releases(=
+RCU_BH)
+ {
+ 	struct crypto_ahash *hash =3D crypto_ahash_reqtfm(c->req);
+=20
++	local_unlock_nested_bh(&sigpool_scratch.bh_lock);
+ 	rcu_read_unlock_bh();
+ 	ahash_request_free(c->req);
+ 	crypto_free_ahash(hash);
 --=20
 2.45.1
 
