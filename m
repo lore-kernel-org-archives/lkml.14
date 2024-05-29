@@ -1,194 +1,122 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2124.outbound.protection.outlook.com [40.107.6.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D253917BB2F
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716993794; cv=fail; b=ZDOCTT44nmOglsDGJeoNHhnUqCRDJZ4unDhJgBphDou2YoFKmHKvYDn2D6Y0VHXDVHjxlzGGOiE3W69e0TFWeF4FD298dQozxi+T3Ojx8sRGNH1j/kbvGoWRp9afPeN5YNmuPi/NXlTwOSsYLI754VtYwiHplxdha9hTkC4EHgg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716993794; c=relaxed/simple;
-	bh=5r36wtFuMjOKdGbwbpGTJiPH2SBkc3GShmj39rlkRQY=;
-	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=qRHBAdbdPGHYkh/NWaLZPiGc3HRjNuBqKfkDwvvK9UjPt/Ye2rOquoHg5FF1kEifdNOaObNLUyaY6xFQmXCJ/G2/1gGVn5o26DUhRy0Ib1K3LExtnPmuP2pgMfsCz03NgXRP3IFm8es7aBVMAiCNYc74/snJWlgjDsLoXglOMgk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=GE1TpE3E; arc=fail smtp.client-ip=40.107.6.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7AB1581E9;
+	Wed, 29 May 2024 14:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716993881; cv=none; b=g3RqQkb7wnD+quKa8SYbJyarJ5UQwbTAfssPtwu/Ra9Yohplw8uYNZg1CRq8QA6oepanLO2rHNRFRRpfvTZtXgKU4uM1kAjBmmOXzu4qpTUHrtMhGGkW0ClgheuMdGO39pUcnEz3w7U0u6MMSTJZzmqnpAQMbYNgzYOIjWYH+PM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716993881; c=relaxed/simple;
+	bh=gCT8PDxsy7chYSyUoW1k8QcPJdu1mk37WMs2Qzi/GIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MsVH9LzQHnOHLZfyi6OjKC5wPZnsLX9PBhL1IKQVz1oiSavsxao3QGTzL9cFGTeG7nAo7Gtsz9jcpXxHEXL0PGfmrv5kJjHke07Maheyv9nidpv7oKZKqAGI1nLqj5LFp+OObkdAHYm7/TM3f78DSsRBHyM7+lq0IxIqF/ZrzKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=acvxl+jF; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="GE1TpE3E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gz0BiGc4dUgdFSSIxInoggRrEQRyg9EeMCELzUR/ewlAFs3lf2RIdeRKagCvQYp62XH78lqURyrrdNWHJRouSdOsBjU0cGQAAwSW6CgveIVhW4+UQe8RhSlbCNos322TJL7q2Jy20C/yiuIgUu/7mSUl4Qt+UnYYJqBykYHmbCiOjqA/APAVPBZViuuQdmciQiCR0LhoR1t+qNeiqHwQX2dDi+YLKSSFMQ49tFqGpP7az9iFdMc5QP38GEk1yPIhFxJUhhwIR2WKrcR0B7wkpDY3G8oIlMskYfgluDu2WFlemW0uTuqzM8dFl61xHkg3jF+QJC4yhipwnWo7Rry4+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jn32+tMJ0dEmaEnJ9x3K5PQSu0DSMQcGVcLoYoN/GwE=;
- b=CfIz7PgaFSyzr0STF4InlO0z7+RfXgYsVcEHQzo8eUXjOmQonFZcL/vHQ/AsaNSFddtXMSmTGex3zGPO+WLkQA0R0yw+n2kf5TrhPXMzIFA8EsuAxx97FVA0aoHK/udFb9uqDLLHQmoLX6WT67XxbIwO1LEn2+3gNXqQg2iHnbKx1wa0LM4gdItLKN7LGH+tqRgE+2XxZztK5+S+kjZRN8FRunpFF2Cx+X1HqMo7pDuFk701P9aj8jMsMNPnlIO4Fp3CpbhjMSh7vAasY+VPouA9/9DxVUsASTZhR10SFzNfiGz7HYQ3ZTN0GiNGvFGOWrK/RoqSBUNxBqp25ZtjwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wolfvision.net; dmarc=pass action=none
- header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jn32+tMJ0dEmaEnJ9x3K5PQSu0DSMQcGVcLoYoN/GwE=;
- b=GE1TpE3E8D9m00fFVS68SqBfDUzjGApmcfqS5vYSutPoVgS41tt7rWiHXJ9qfeCR+XTECLyIJmEiMVUcx+OgwPFRyKi9oImZyFhh0p2k7x9uNF7YvovXT161/EazkHi+wN1Yn+q5mS2p8QxP75ygs/LF9JZc964vMqazKfZ58Uc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wolfvision.net;
-Received: from DBBPR08MB4539.eurprd08.prod.outlook.com (2603:10a6:10:cf::22)
- by PAWPR08MB9032.eurprd08.prod.outlook.com (2603:10a6:102:335::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Wed, 29 May
- 2024 14:42:56 +0000
-Received: from DBBPR08MB4539.eurprd08.prod.outlook.com
- ([fe80::87a9:a8d0:96fa:19e1]) by DBBPR08MB4539.eurprd08.prod.outlook.com
- ([fe80::87a9:a8d0:96fa:19e1%6]) with mapi id 15.20.7611.030; Wed, 29 May 2024
- 14:42:56 +0000
-From: Gerald Loacker <gerald.loacker@wolfvision.net>
-Subject: [PATCH v2 0/3] drm/panel: sitronix-st7789v: fixes for
- jt240mhqs_hwt_ek_e3 panel
-Date: Wed, 29 May 2024 16:42:44 +0200
-Message-Id: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-0-e4821802443d@wolfvision.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOQ+V2YC/5WPTQ6CMBSEr2K69plSCD+uvIchpC2vtApF2wIaw
- t2teAKX3yy+mVmJR2fQk/NhJQ5n481oI7DjgUjNbYdg2siEUZbRjFYgpk6ZF9xC5EE/faOX0OC
- 9wRSCGYztoGV5VaYFTQUrSPQI7hGE41bqaLJT38fw4TBq9uJrHVkbH0b33nfMyTf9p3JOgIKqp
- FQ5Frwsk8sy9ur35mQxkHrbtg/UhZgX7AAAAA==
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Gerald Loacker <gerald.loacker@wolfvision.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716993775; l=1022;
- i=gerald.loacker@wolfvision.net; s=20230502; h=from:subject:message-id;
- bh=5r36wtFuMjOKdGbwbpGTJiPH2SBkc3GShmj39rlkRQY=;
- b=hPkq+Zjm30YOObk6q8ekZz1vcbtb87BBrR5CGQL3Og1vLAf5vBmv5RzO0zNPCW2Jfz4cb43it
- YmllavkiismAji7vKT+5oWYRayfED1T0VnqsDjsbSzTbhJgeZH32X02
-X-Developer-Key: i=gerald.loacker@wolfvision.net; a=ed25519;
- pk=UXhp+obGMUOjknszonesnb29P6a2Kk/K5eBuz62ggVE=
-X-ClientProxiedBy: VI1P190CA0041.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:800:1bb::8) To DBBPR08MB4539.eurprd08.prod.outlook.com
- (2603:10a6:10:cf::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="acvxl+jF"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52388d9ca98so3367348e87.0;
+        Wed, 29 May 2024 07:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716993878; x=1717598678; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wmg0Xdln3CoQgJ9NVNuMFs06AxZyiuM9wtNOUDPn1Ws=;
+        b=acvxl+jF4l1Fn445EpMyDJP7HLvePAY76vT08rr+n5PrrEaEprEfFmSgpJMCphR3Z1
+         l+Z7Jw605mq+zZo3VJ/nHFalbQVJ1xv1fzt59aMc+/ag00PfgZVRcDuGRvHCezYzHUk5
+         j8ZEqCp9Wrp3D+lEmqygIxXYhBhD0Q7PmTLVQD5hfEA7GNrzmKxfdG6bCz52esbBdkjT
+         lNYNFNhed1sbnhl9wKCjZ0JjXOPVYKt75evVtme3ROxoqY/aaiJi/v7vzCxN/RfSWeVV
+         52CxTe2or+iZTLtt2C4cTh32a9mXkDYCKFKBZGh+6c0SCdM/lNLXzMT991t+UqNpkRfU
+         uI0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716993878; x=1717598678;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wmg0Xdln3CoQgJ9NVNuMFs06AxZyiuM9wtNOUDPn1Ws=;
+        b=qpHHsFvdEGGQXfpiC9fWOKcI+kFScZ1ptqfT6jEk46qRzXD2Ys0lcjHDjNJwkg/V8o
+         BGafz4FibddZn7G2ohJfr7KjejZ/PA1mszuclbyxy9HzoR8Ijq98ojTwD5Sna3eKUlKa
+         Wzbdph2rj3hQeRcu3ZttVOpE4IWcoWRSQMQTZdZ16z+HLlwZb8fFqaP1edHR+rdJ3Day
+         FHFB/VSnV9vIn1qt4Clkj1Z8hE/ezQLQ1UHctOh3SMWssgMHV3wyorALr4yKZMi1/mZ7
+         1CSbrSbYCn+jxT6NIZtwI7xpgSA3PIrc3/eA6NOBbOv0oMRLYSOvLwrB9P3mrfIl9MEX
+         AxIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjEP5Nv3Q1fn0v1HZDomj4euS6o0oVm94bz+qmNLbeKEBJOVWcPRQsPFU/2mRR5KQ7+Y/84qyLJYOb9682klykMSvAwbj3pn1iZId0JxiCRsxOKMOjMvMHd9G6AaxlBl5Xx+v8bGrvvQztc/JONyJrJazwEd55vMazGx9sP2D8wYTJI0I=
+X-Gm-Message-State: AOJu0YyxXfvkBe/lQRWElPFILY7QcNWGI33Fmkz7Y5rzEu/cM/nDonsr
+	pGJPb23zYXC7Qqc3Ko2HXu8/7C4GSp0uE9hqekanNop001fBDuL0
+X-Google-Smtp-Source: AGHT+IEmeGBP4gSt953JX9l/IvekTaw0WinbNkSEyrZcdumRfTqWxO7Errv9yS6JwzWsqMFJg0mUOw==
+X-Received: by 2002:ac2:5dc1:0:b0:522:8352:ff29 with SMTP id 2adb3069b0e04-5296736bb86mr12370567e87.42.1716993877840;
+        Wed, 29 May 2024 07:44:37 -0700 (PDT)
+Received: from yoga-710.tas.nnz-ipc.net ([178.218.200.115])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529ac903bd9sm928915e87.236.2024.05.29.07.44.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 07:44:37 -0700 (PDT)
+From: Dmitry Yashin <dmt.yashin@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Jianqun Xu <jay.xu@rock-chips.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Yashin <dmt.yashin@gmail.com>
+Subject: [PATCH v2 0/2] pinctrl: rockchip: add rk3308b SoC support
+Date: Wed, 29 May 2024 19:35:32 +0500
+Message-ID: <20240529143534.32402-1-dmt.yashin@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBPR08MB4539:EE_|PAWPR08MB9032:EE_
-X-MS-Office365-Filtering-Correlation-Id: 30b86438-db53-4fa4-a3c9-08dc7feda0b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|1800799015|52116005|376005|7416005|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L1hhNGkxVEVtcVVOdXkrUnRQTmtzOEVtdWhLb0pybkxPcC81Qk1zSmQxcTMy?=
- =?utf-8?B?bTJydENqdEFvT2tRWFJRcHlVMWx4N2U5dVl2azFIbjI2OUdjcVI5a2U2QTRM?=
- =?utf-8?B?SWpaZzZLdlJZQlA2VEh4QWY0RnlXUmgvd2M2eVA3YTFTSXVFeElFaHpmcnpv?=
- =?utf-8?B?MllNSlNSdkYvRkhXc1k4OG00NHRVelpzN2xta3hDYUU0S3orekRhb0lRRmJk?=
- =?utf-8?B?ZmhPSVVBTFhrZmQwUFpHUXc5NVpTNG9LMjE1eDh2S2QyNDV6QWpXN1MwTERD?=
- =?utf-8?B?MjRKazgwRG1XanpoekdBUmZtN1JaMWh4UjdabVQ5WGpSZTBiS3llMzhzcVk5?=
- =?utf-8?B?TTg1amdIcXdjWU5hY3JTSU5Xdk94Nk1KWkJ0WUxzdk9yK1NBWFkwYXFqbmZI?=
- =?utf-8?B?cHcvekNpNDZKbng5blV1ZUxnMU9hMENZYWg5SmlXbkpvdmRSZDBrQTgyMGhX?=
- =?utf-8?B?Tk5ZUm1NWTJJOEpKMmtCQnFKTmZsZnRCdXlqQVhQd080UlJ6dkpGTkRnenFj?=
- =?utf-8?B?VWZ4bGlrdTczVHROMjI0WXd4WDUvRk82ejNNeVo3WVBVRmFEUUVvMVMwUE1z?=
- =?utf-8?B?L3lZK0Z6TWxBWFVrZ2ZQSE0zRFdGQlQrbGQ5Y0RuR1VUSHBKVWFBVmdzTzdk?=
- =?utf-8?B?RkM5cVpOUDhvTVJxYnpSR0lpRGswTWxOZ0xxTUNXc1d5SHFoM2dUdm5Md1Ev?=
- =?utf-8?B?KzdhUHY5WWhIKzF6K3lLaEpYeVVocmE1c1ZvTEVUZjFLQzlVTlZLNWRkeE1X?=
- =?utf-8?B?Z3h1UmlWTUw5bHZHbmVTZXBIU1pFOVdzZFdNazJzSVd5N1QxZFRXRk5la1RH?=
- =?utf-8?B?aDhjVU56L0lmMVBRcmRXQmVrNm1FUzE1WXozZWhGM09Wb1Q4dTV2OVM2VXlw?=
- =?utf-8?B?SXVxRzJGUk9XRzVjQ2N3Q2tPMWswb05nVDE5SVhiWDM2WXExVXpObEV1V2F0?=
- =?utf-8?B?NUN6YVNLQXR6WlNEenNHZm9NTCtsUE9hODNOUURXREV6TE43YzN4K0s4R1N6?=
- =?utf-8?B?bzBRR0RMbXFKUTNQTWpVTHJ0NmV2Q1ZoMExnNTFnZHdiOWNvNEwrMWVLQXV0?=
- =?utf-8?B?WHFiNE1laEtKMS95M3JCZzVTc2I5R1J1UUNNRk9OTmY4TEdpYjlYUFdKZzE1?=
- =?utf-8?B?a29hcGRkbzdHRlBBdVRzbE1EM05XbnJwVkw0SHRORkZpNG10azEwRVhhK044?=
- =?utf-8?B?b2xmeUFvckRuVGZjQ3ZHVFFueUVFSjBLTXhaM2xrKzZIVlZpMjlPQU1iSExS?=
- =?utf-8?B?b1k2VUJLVUlONkovVlJKUC9ZeWFpUzZ1UWkycTI2L0ovSDdpSTlKWktvM2JB?=
- =?utf-8?B?d1JrZmFQbm5GY3dpRFMwb2RVanhnT2lQc0h3V2ttVFZqaElHZC9tYWl3U2hK?=
- =?utf-8?B?MlhnOVc1alduMTI3N1Z1YkozSGswYTlSay9FblFBR3phcWYwc1IvNFhpZ3Nt?=
- =?utf-8?B?YUJxSlFsZGxQOUl2MGJRQTdJUVd0UXgzS240NTFWL3NMWHVtZy9hcU4yQ3g0?=
- =?utf-8?B?MGczV3lGclVDVFJ6WU5FNy9RWDRHUDY0MjFmcWNyRWpNNDIvSXRVM3FHRVRD?=
- =?utf-8?B?L09OMEJZVmZ6VGRvUUxUWnpmcFFZZkVnYnR1NjJrWWpIL0dYM1RPREtKTUV1?=
- =?utf-8?B?TjdoTElaZkZLbzZZVGQrN0psQ2ZWMWxuNzk0T2FFRlQ0aE1lUFlEVUpDekZB?=
- =?utf-8?B?TWVBd2dMYVdMT3NsNXhxdlZwY3llcVAzdytwWW5RUTZ0b1ZqeENMRExRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4539.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(52116005)(376005)(7416005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SXFRRTRMMlJFUW9PNjM2WS9tSy9RZzhsY3hrYTIwcTJUcFJJazUrcVRIMkNP?=
- =?utf-8?B?cFlsZ0pDUVh1Q1o5Mk9sa01sTkxSejkvbHpFZzdlU05wQmF1ZlJrUlROVlVB?=
- =?utf-8?B?SHFsR3FFd21NdGwxRlA0RnVvekxSMVRGK2lBOGRUYm9YZVpVM1lQOE5yaEJ4?=
- =?utf-8?B?a3Nsc3JLVk9zS1RNckFlME1FYzBuQzJmd2hXYTdiNHpYQm1Yc2dhYXhzNFdW?=
- =?utf-8?B?OFNNVTR0bTJYRkM4VlR1cFRtVXJvclAwcytkc0srRlg3TzYxSDl4ekkvajI5?=
- =?utf-8?B?eWZvVUZxNVByQThDbHZRdTZGT0FlYlN4QUtaR1BFNDNFbTRLZm9LMHNtTEVq?=
- =?utf-8?B?dmlJdlE3Q0JHa0dGa21WNEgyaVNIdUczbnpBU3I5ZW8xUzNHQXpoSGtqekxY?=
- =?utf-8?B?U29ieDFCSjFFSzl0Y0dteisvWDErRXp4YTZhb0NXamZoVTRHY29CWWpGZ2kx?=
- =?utf-8?B?VGMzcVJobEpmNlF3S3o4WHk0aVBFbjZSUVZqclVENEx2aUhhcXBTbGR6bHl3?=
- =?utf-8?B?bHRJSzRyMm5LQXRNVzF6TWU4WXZTSjYvamRpZVlqYWV3M2h4dzZ5Q1VqNmFM?=
- =?utf-8?B?UlNVUWNrSS9lWDdEeGFXZ216M2o3M29RV0oyNlVjcExVNHlkbithRFlBY3JJ?=
- =?utf-8?B?aENrRWUyZ0hFa0Y0Yi8vSXVjTFZ5Q3dSL2F4amloR2F5OGhxQ3lPaTJhVHRU?=
- =?utf-8?B?clJoVW5TdTRWejZ1VTRiOXRVQTVoZEVqVU9qdU9XNFg5QitwTHNPVkdBdDB5?=
- =?utf-8?B?SjZpMEdLMmdqMHYzVDlYSlJUenZVdm16VnlKZFAvQTVHQ2hmdy9uc2JVdnk1?=
- =?utf-8?B?MDhVbmlocVZteEtqQlU1ZDRSNjZwR3VoOU1wSGtPZUVmRkRiY1doZTEzQkJZ?=
- =?utf-8?B?ZThZTXY1RDh3dTQ5bmpnZ2tFdkFHVVRUdHJQQUdLK0J1YlJ2d0NNVnpwQ2gr?=
- =?utf-8?B?cjVkaEVJbjVEY0VSRjJZYThjVmhLWlFZZVJSVDNhMEVBZHlpVm9mQXQyUU04?=
- =?utf-8?B?NzArTlA0a3l6QWRxZk0vck5MbkZHYWNLajRSUjczZHgxbDVXYk5NQmJmMTc1?=
- =?utf-8?B?U0pqdloxQTJrKzJ4eFBRZkREa1VXNFlCVjM3SHV3ZUx2UWZCUm90elhzejJM?=
- =?utf-8?B?alExelNuamRPblBpaWNkRWdQR0FzRnBlNTVSem9XNUhYWHFBTjZidTBPcHBy?=
- =?utf-8?B?U3dsK0xMR0M3bzA2djdxNDVwR2ZBYVozN3hudTNpWHZWK01ScHBBd0JWRndU?=
- =?utf-8?B?Y0dCc1hzblJwMXRUY0Uxa0JCUE1BdU9vOVZJWktOTFJ1cDBjekRESGpwL0cw?=
- =?utf-8?B?RFV0eTdiTHBPby9jU1hwUnZnK09EenZSN3hpZDJaMzdGV25BM1RuVXA3OTM0?=
- =?utf-8?B?dHcvTVJmRWJ1OEVXbHAwdmo1NnpEa3ZPdzJpK1NkaCszQUJ1TTdvdVQ2WFk0?=
- =?utf-8?B?ZytVU0NGamlHOXpHelp6b3VJUHRxS2c4RCsxaHNwSFVuWmVHemRQTkIvdU1R?=
- =?utf-8?B?VVNWSWpEdFM2QklsOCs2MU5CTkNnYVdpVDZYb2pjcjhMbnZueitQeTZYK1hB?=
- =?utf-8?B?Z1ZxbDRjTXQ4NjNlTHVXaDNGWkdxUG56WklqcEd4VXU3aC9CQkU0YlpjMFpM?=
- =?utf-8?B?VlRVNm9Ta3ExMnQzdEJ5eU1lTFFxa2VPMytHZWRPVVNJMHVQRGxvYnBoZlVq?=
- =?utf-8?B?bkRBRzR5MlVYREtXc0hMSU1OL2dJL3ptOXpqQVgvQ0ZUTzAzaXk5NzhTaEx6?=
- =?utf-8?B?ckJXWFBVSUtkTVVKbUFDWHBoR1JUNXlsMmtGL2ttOGJnNmxFWVpRNUhGbDla?=
- =?utf-8?B?SENXS3VpZmhmSW0xeWl5emlndGFqSHFlbUNGRCtYNTNJOE9tait1T3JmQUd0?=
- =?utf-8?B?SExrcnI3bUV5aU5XWnA3YmZoOE1YM2pzdzJPSjc0dUdrUkVnM0tna1E4THps?=
- =?utf-8?B?b3FQREp5OTJneFVwejRtaUtNQ0RTeVFWQWZDbjRlczYzelg4dTZkNTlCU01n?=
- =?utf-8?B?UDh3TjFvS0R1eGJleFJBeURwZ3FSOGg5MDJscFBWazliUmI4T2FESHVCQU8w?=
- =?utf-8?B?UVlvWi9OL3JqWUtoUW02VHRvZ2c4cy91VzE3N1hnaDVFdk1vV0hob0tLYjJ3?=
- =?utf-8?B?MncvaU82YnFEREozNVQ4ejA3OGFpZWF0c092bFF5Q0V6Z1ZVNzNIUElMeDUv?=
- =?utf-8?B?M0E9PQ==?=
-X-OriginatorOrg: wolfvision.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30b86438-db53-4fa4-a3c9-08dc7feda0b1
-X-MS-Exchange-CrossTenant-AuthSource: DBBPR08MB4539.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 14:42:56.0709
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v3wpT9Ymh9/PVyDSIaC6KU1c0DBve2sPfopSK4kB9Z60nC1iJEoBKsH3z7iBAQpkJI5s5+jdRVXb/THidjT34lSVBTGMIAa3AK+QSCLvMFs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9032
+Content-Transfer-Encoding: 8bit
 
-At the jt240mhqs_hwt_ek_e3 panel, noticeable flickering occurs. This is
-addressed by patch 1, which adjusts the vertical timing. Patch 2 and 3 are
-two more minor fixes for timing and dimension.
+This patch series and adds support for pin controller found on rk3308b.
+According to rk3308b TRM, this pinctrl much the same as rk3308's,
+but with additional iomux routes and 3bit iomuxes selected via
+gpio##_sel_src_ctrl registers.
 
-Signed-off-by: Gerald Loacker <gerald.loacker@wolfvision.net>
----
+Downstream kernel [1] managed this SoC's with rk3308b_soc_data_init,
+wich picked configuration based on cpuid. Upstream pinctrl patches
+droped soc init function.
+
+The function rk3308b_soc_sel_src_init sets up gpio##_sel_src_ctrl
+registers, making SoC to use 3bit iomuxes over some 2bit old ones.
+
+These patches have been tested on Radxa's ROCK Pi S, one based on rk3308
+and the other on rk3308b (from the latest batches). For the new boards it
+fixes broken spi1 clk.
+
+Similar effort [2] was made several years ago, but without keeping base
+rk3308 SoC pinctrl support.
+
+Based on feedback from Luca, Heiko and Jonas, the v2 series droped dt
+binding in the favor of runtime SoC detection, so iomux_recalced and
+iomux_routes updated for the new SoC's and patch 1 delays recalced_mask
+and route_mask init.
+
+[1] https://github.com/radxa/kernel/blob/stable-4.4-rockpis/drivers/pinctrl/pinctrl-rockchip.c#L4388
+[2] https://lore.kernel.org/linux-rockchip/20220930102620.1568864-1-jay.xu@rock-chips.com/
+
+v1 Link: https://lore.kernel.org/all/20240515121634.23945-1-dmt.yashin@gmail.com/
+
 Changes in v2:
-- Added fixes tag to patches 1-3
-- Link to v1: https://lore.kernel.org/r/20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v1-0-f9ccf6e7a881@wolfvision.net
+- Drop routes fixup patch, already applied
+- Drop dt binding patch
+- Add new patch to delay recalced_mask and route_mask init
+- Rework last patch from dt to runtime setup with rk3308_soc_data_update
 
----
-Gerald Loacker (3):
-      drm/panel: sitronix-st7789v: fix timing for jt240mhqs_hwt_ek_e3 panel
-      drm/panel: sitronix-st7789v: tweak timing for jt240mhqs_hwt_ek_e3 panel
-      drm/panel: sitronix-st7789v: fix display size for jt240mhqs_hwt_ek_e3 panel
+Dmitry Yashin (2):
+  pinctrl: rockchip: delay recalced_mask and route_mask init
+  pinctrl: rockchip: add rk3308b SoC support
 
- drivers/gpu/drm/panel/panel-sitronix-st7789v.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
----
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-change-id: 20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-d26983703b27
+ drivers/pinctrl/pinctrl-rockchip.c | 286 +++++++++++++++++++++++++++--
+ drivers/pinctrl/pinctrl-rockchip.h |   1 +
+ 2 files changed, 267 insertions(+), 20 deletions(-)
 
-Best regards,
 -- 
-Gerald Loacker <gerald.loacker@wolfvision.net>
+2.39.2
 
