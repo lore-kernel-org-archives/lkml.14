@@ -1,295 +1,110 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B691F5F6;
-	Wed, 29 May 2024 14:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4DF13777A;
+	Wed, 29 May 2024 14:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716991784; cv=none; b=Y7lH7rlTtrLUictwe9t5EXKlzcb9pnL+P3vKPG1etmHguBRMkTu3mncLaCdtBlRocxLtRJki2AnNS3WaTAMvv/RyzAySaq01HsHxsmiS/HtCrL78qiT+56Kz1h5LylwRjh1SgZPMyWpWiilGwHZemeDnIhBvuwIPRlO74wb049M=
+	t=1716991837; cv=none; b=bP/NbkxNAP9o87dZHnFjgwpFmd+5ZmmxJy5k5MJq0V7ZNv3pRnz9+3ho5bD8IUzt030pD8KQ7cK2mVeeufB/oXjebfN5i/V7Ot2FVAaQ8j3UnWx3UT0ZAOBSaEACpuN/fiIE/R2V1/2T9qMN0zJhEpHRFo7jBkBGdgFSBB/2CNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716991784; c=relaxed/simple;
-	bh=dWt0+KRRjy3rE0jXtXtL3sGVHSL4Kd130bmGWzBJSmM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WBIGatPrKOBA9AMIFmswGypukLafKSxCSc4YtDArAgQRPxl/WcBi5ZpKV7qfYNou5TvBHpxbPyIS8QfFv4pdt9xMkKGzwEmeaIk9ki/zTR/htKPFXcMiHE/ZheKyEdhHVD1sXZhxwQZbry1Tmvj5OGVgtnd+qwA24nOmvKbW4ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pxNLvIe2; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1716991837; c=relaxed/simple;
+	bh=xGxCwNAa3h6hUSat+wLsUt/LFxDta4PN8t++ItIHRgA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CtdiObD85bixg0jk+RHy6XntRe9zjIfJ8RuXt5+/Sbbect+ivU4CnmncmJT8oS3J9uydaiqoLJtPB++PlP38mUGA1fnynsKut6dG7JCIph9TBauIE/TvnU+7Km5cbN6Le5GR8U73oxUMGAOrATZ8pWHSat1uAvDY4BmrgfzWIT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TDbMD5gf; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pxNLvIe2"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 073D340013;
-	Wed, 29 May 2024 14:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716991780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yZO88xtC56xKY5roWDT00Bzj+hSNHbnhaJYEU2ZQZkU=;
-	b=pxNLvIe21tffg/oFOoys88UPUTrlyvebJGg5iC1mvNYGmW0qDXDboWhgwJfCzLtkR0pdkQ
-	931ajtT2yIHqdSWkvH2pny6XHApLA2JUAOADPdklgGiDQ06G2ZaJxX2xwKFZpWAY+xrRCE
-	QpLvez7RhJpIbdYZge6R8Xl6lEr6XgBxeI2IJ42ez5iVfBE5nQGEPkETdJsZKIT3dYCUkf
-	xI8rXFbuadccSTik017gn642Ije5YCxDr4+fWpISDhgjfQEYwmKXDAox11gr0dkclZUdzx
-	AEedK/9STOS87zgLMHd3xYjBBp3pUOAn1K220THTyUXuF1uPRaU7H3RJt/l7ig==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Wed, 29 May 2024 16:09:35 +0200
-Subject: [PATCH 8/8] net: pse-pd: pd692x0: Enhance with new current limit
- and voltage read callbacks
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDbMD5gf"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a63359aaaa6so270955966b.2;
+        Wed, 29 May 2024 07:10:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716991835; x=1717596635; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=seHfK1T0CIDoh74FZ9rFB1MYhs/7Ky7lSWNsiaH4Ato=;
+        b=TDbMD5gfEUSrwuIJ6bfB/KYwtJA0lpqUQwP/HEeFmp22n4pxRYSMhfXW83td77dmxR
+         wcy6DbGIpWgBMH4vjFishbYOvB9EBT2THOx2dOsnrGU52k5315QbGqBzNvlfIgYHPa3v
+         P09dJa6nydqU8ihxowbqL1q4wwI2X3iLDQ4ZiqtWMZwqqLDRIppcQ5G3MzgUrI2h9jR9
+         hK/vA47WZ7Mf4S3cfA/mDErH+9tLU1NWQ5bT4hUt6rdWb8CXzUH7kJvG8o6ZYg0qTsbj
+         Vqq3ol1CwN/UzBwrvzV3ASoYgGAcIYIayHwqG50K9pZSLnubZvgUooryaN2be9FqQHM6
+         TbKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716991835; x=1717596635;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=seHfK1T0CIDoh74FZ9rFB1MYhs/7Ky7lSWNsiaH4Ato=;
+        b=FnYos2ZB322wkv2wm2hTwuUT96NA9vYPFgUyUZGyQ08YMQKdvwGRWnYHnR+hoEMKHt
+         zCJBDz/2jfOuAPChdCKhCGnC5mfGOVlfTyakzuCBHDp5iAuVpha5HnU+6y5lO0QwVksK
+         1cN2NIFHh0IU+1bTvhdzsuutOmTvJIHQBMlh41aS/3thlZHk/8tGpv8HH/hdPpYKL76p
+         xLDWy62GV1Aj7RsLyQoiGZGe9/iR+q4nMgS5O98uDDEKE/8SKxLrQPKbBwX92mO5k+fl
+         qkgMHTKwv4446AxkLZAlIe6Tc2EohLWRX81adEfcc79h1jBPL1y6lw/YuKPYsE41Q1Tv
+         zYsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDGpkDlO+lPPZ7FnYZ3yir4gPec8Y00jsbkdEuGXJcEYYFoHNvw+SqxnFkoN/aMDAc3Llz+nLMZs3QVSgKAceHv/Pw02WcwBN7Lz0i/YEzJ2vq53axZ2wlIcYGDhSHihPEhAhOWmtf9w0=
+X-Gm-Message-State: AOJu0YxYuDAbikt6nS4DlG7MgG01KAGsA5BeFOK5/gS3v82jUtFPzOLA
+	am/Idwgfr5X7JeAuffPD7MiKi7bGE/ZQpIp4B6ibLUcVERdRhed8
+X-Google-Smtp-Source: AGHT+IER8t7cuMdH3WgXBrJavuAe0qg/yrQsSI5WtFPMXA+CURNazRJm23qelZOFl3U7mrYlhQ6UcQ==
+X-Received: by 2002:a17:907:6d22:b0:a62:9699:5125 with SMTP id a640c23a62f3a-a6296995222mr1042831266b.14.1716991834383;
+        Wed, 29 May 2024 07:10:34 -0700 (PDT)
+Received: from localhost (host-95-246-50-43.retail.telecomitalia.it. [95.246.50.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6357bf05f6sm130830066b.206.2024.05.29.07.10.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 07:10:34 -0700 (PDT)
+From: Matteo Martelli <matteomartelli3@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Marcus Cooper <codekipper@gmail.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Cc: Matteo Martelli <matteomartelli3@gmail.com>,
+	linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] ASoC: sunxi: sun4i-i2s: fix LRCLK polarity in i2s mode
+Date: Wed, 29 May 2024 16:00:14 +0200
+Message-ID: <20240529140658.180966-2-matteomartelli3@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-feature_poe_power_cap-v1-8-0c4b1d5953b8@bootlin.com>
-References: <20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com>
-In-Reply-To: <20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
- Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.14-dev
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
+I found an issue on the sunxi i2s controller driver while doing some
+tests with a Pine64 A64 host board and an external codec (ES8311).
+The A64 i2s controller is compatible with the sun8i-h3-i2s driver.
+The LRCLK was being inverted when the bus was operated in i2s mode:
+normally should be left channel on low LRCLK and right channel on high
+LRCLK, but it was the opposite instead.
+I noticed this issue due to the playback being addressed on the wrong
+codec channel, then confirmed by analyzing the clock signal with a logic
+analyzer.
 
-This patch expands PSE callbacks with newly introduced
-pi_get/set_current_limit() and pi_get_voltage() callback.
-The only way to set ps692x0 port power limit is by configure the power
-class plus a small power supplement which maximum depends on each class.
+Note that this fix applies for all the i2s controllers compatible with
+sun8i-h3-i2s and sun50i-h6-i2s, but I could test it only for the A64.
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
- drivers/net/pse-pd/pd692x0.c | 167 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 165 insertions(+), 2 deletions(-)
+The issue had likely been introduced in commit dd657eae8164 ("ASoC:
+sun4i-i2s: Fix the LRCK polarity") due to a misinterpreted bit in the H3
+or H6 User Manual. I suppose that the i2s mode had not been tested at
+that time. Can this be confirmed? Otherwise there is something else
+going on and this patch should not be applied as is.
 
-diff --git a/drivers/net/pse-pd/pd692x0.c b/drivers/net/pse-pd/pd692x0.c
-index 017a8efc43c4..c5fd4964d7bd 100644
---- a/drivers/net/pse-pd/pd692x0.c
-+++ b/drivers/net/pse-pd/pd692x0.c
-@@ -74,6 +74,8 @@ enum {
- 	PD692X0_MSG_GET_PORT_STATUS,
- 	PD692X0_MSG_DOWNLOAD_CMD,
- 	PD692X0_MSG_GET_PORT_CLASS,
-+	PD692X0_MSG_GET_PORT_MEAS,
-+	PD692X0_MSG_GET_PORT_PARAM,
- 
- 	/* add new message above here */
- 	PD692X0_MSG_CNT
-@@ -135,7 +137,7 @@ static const struct pd692x0_msg pd692x0_msg_template_list[PD692X0_MSG_CNT] = {
- 	[PD692X0_MSG_SET_PORT_PARAM] = {
- 		.key = PD692X0_KEY_CMD,
- 		.sub = {0x05, 0xc0},
--		.data = {   0, 0xff, 0xff, 0xff,
-+		.data = { 0xf, 0xff, 0xff, 0xff,
- 			 0x4e, 0x4e, 0x4e, 0x4e},
- 	},
- 	[PD692X0_MSG_GET_PORT_STATUS] = {
-@@ -156,6 +158,18 @@ static const struct pd692x0_msg pd692x0_msg_template_list[PD692X0_MSG_CNT] = {
- 		.data = {0x4e, 0x4e, 0x4e, 0x4e,
- 			 0x4e, 0x4e, 0x4e, 0x4e},
- 	},
-+	[PD692X0_MSG_GET_PORT_MEAS] = {
-+		.key = PD692X0_KEY_REQ,
-+		.sub = {0x05, 0xc5},
-+		.data = {0x4e, 0x4e, 0x4e, 0x4e,
-+			 0x4e, 0x4e, 0x4e, 0x4e},
-+	},
-+	[PD692X0_MSG_GET_PORT_PARAM] = {
-+		.key = PD692X0_KEY_REQ,
-+		.sub = {0x05, 0xc0},
-+		.data = {0x4e, 0x4e, 0x4e, 0x4e,
-+			 0x4e, 0x4e, 0x4e, 0x4e},
-+	},
- };
- 
- static u8 pd692x0_build_msg(struct pd692x0_msg *msg, u8 echo)
-@@ -515,6 +529,68 @@ static const char *pd692x0_get_status_msg(int id)
- 	return NULL;
- }
- 
-+struct pd692x0_class_pw {
-+	int class;
-+	int class_cfg_value;
-+	int class_pw;
-+	int max_added_class_pw;
-+};
-+
-+/* 4/2 pairs class configuration power table in compliance mode.
-+ * Need to be arranged in ascending order of power support.
-+ */
-+static const struct pd692x0_class_pw pd692x0_class_pw_table[] = {
-+	{.class = 3, .class_cfg_value = 0x3, .class_pw = 15000, .max_added_class_pw = 3100},
-+	{.class = 4, .class_cfg_value = 0x2, .class_pw = 30000, .max_added_class_pw = 8000},
-+	{.class = 6, .class_cfg_value = 0x1, .class_pw = 60000, .max_added_class_pw = 5000},
-+	{.class = 8, .class_cfg_value = 0x0, .class_pw = 90000, .max_added_class_pw = 7500},
-+	{ /* sentinel */ }
-+};
-+
-+static int pd692x0_pi_get_pw_from_table(int op_mode, int added_pw)
-+{
-+	const struct pd692x0_class_pw *pw_table;
-+
-+	pw_table = pd692x0_class_pw_table;
-+	while (pw_table->class) {
-+		if (pw_table->class_cfg_value == op_mode)
-+			return pw_table->class_pw + added_pw * 100;
-+
-+		pw_table++;
-+	}
-+
-+	return -ERANGE;
-+}
-+
-+static int pd692x0_pi_set_pw_from_table(struct pd692x0_msg *msg, int pw)
-+{
-+	const struct pd692x0_class_pw *pw_table;
-+
-+	pw_table = pd692x0_class_pw_table;
-+	while (pw_table->class) {
-+		if (pw <= (pw_table->class_pw + pw_table->max_added_class_pw)) {
-+			int added_pw;
-+
-+			msg->data[2] = pw_table->class_cfg_value;
-+			added_pw = (pw - pw_table->class_pw) / 100;
-+			if (added_pw > 0)
-+				msg->data[3] = added_pw;
-+			else
-+				msg->data[3] = 0;
-+
-+			return 0;
-+		}
-+
-+		pw_table++;
-+	}
-+
-+	/* Set max power ie. last line of pd692x0_class_pw_table */
-+	pw_table--;
-+	msg->data[2] = pw_table->class_cfg_value;
-+	msg->data[3] = pw_table->max_added_class_pw;
-+	return 0;
-+}
-+
- static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
- 				      unsigned long id,
- 				      struct netlink_ext_ack *extack,
-@@ -553,9 +629,20 @@ static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
- 	priv->admin_state[id] = status->c33_admin_state;
- 
- 	status->c33_pw_status_msg = pd692x0_get_status_msg(buf.sub[0]);
--
- 	status->c33_actual_pw = (buf.data[0] << 4 | buf.data[1]) * 100;
- 
-+	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_PORT_PARAM];
-+	msg.sub[2] = id;
-+	memset(&buf, 0, sizeof(buf));
-+	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = pd692x0_pi_get_pw_from_table(buf.data[0], buf.data[1]);
-+	if (ret < 0)
-+		return ret;
-+	status->c33_pw_limit = ret;
-+
- 	memset(&buf, 0, sizeof(buf));
- 	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_PORT_CLASS];
- 	msg.sub[2] = id;
-@@ -845,12 +932,88 @@ static int pd692x0_setup_pi_matrix(struct pse_controller_dev *pcdev)
- 	return ret;
- }
- 
-+static int pd692x0_pi_get_voltage(struct pse_controller_dev *pcdev, int id)
-+{
-+	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
-+	struct pd692x0_msg msg, buf = {0};
-+	int ret;
-+
-+	ret = pd692x0_fw_unavailable(priv);
-+	if (ret)
-+		return ret;
-+
-+	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_PORT_MEAS];
-+	msg.sub[2] = id;
-+	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Convert 0.1V unit to mV */
-+	return (buf.sub[0] << 8 | buf.sub[1]) * 100;
-+}
-+
-+static int pd692x0_pi_get_current_limit(struct pse_controller_dev *pcdev,
-+					int id)
-+{
-+	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
-+	struct pd692x0_msg msg, buf = {0};
-+	int mW, mV, mA, ret;
-+
-+	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_PORT_PARAM];
-+	msg.sub[2] = id;
-+	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = pd692x0_pi_get_pw_from_table(buf.data[2], buf.data[3]);
-+	if (ret < 0)
-+		return ret;
-+	mW = ret;
-+
-+	ret = pd692x0_pi_get_voltage(pcdev, id);
-+	if (ret < 0)
-+		return ret;
-+	mV = ret;
-+
-+	mA = mW * 1000 / mV;
-+	return mA;
-+}
-+
-+static int pd692x0_pi_set_current_limit(struct pse_controller_dev *pcdev,
-+					int id, int max_mA)
-+{
-+	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
-+	struct pd692x0_msg msg, buf = {0};
-+	int mV, ret;
-+
-+	ret = pd692x0_fw_unavailable(priv);
-+	if (ret)
-+		return ret;
-+
-+	/* If */
-+	if (max_mA == MAX_PI_CURRENT)
-+		return 0;
-+
-+	ret = pd692x0_pi_get_voltage(pcdev, id);
-+	if (ret < 0)
-+		return ret;
-+	mV = ret;
-+
-+	msg = pd692x0_msg_template_list[PD692X0_MSG_SET_PORT_PARAM];
-+	msg.sub[2] = id;
-+	pd692x0_pi_set_pw_from_table(&msg, mV * max_mA / 1000);
-+	return pd692x0_sendrecv_msg(priv, &msg, &buf);
-+}
-+
- static const struct pse_controller_ops pd692x0_ops = {
- 	.setup_pi_matrix = pd692x0_setup_pi_matrix,
- 	.ethtool_get_status = pd692x0_ethtool_get_status,
- 	.pi_enable = pd692x0_pi_enable,
- 	.pi_disable = pd692x0_pi_disable,
- 	.pi_is_enabled = pd692x0_pi_is_enabled,
-+	.pi_get_voltage = pd692x0_pi_get_voltage,
-+	.pi_get_current_limit = pd692x0_pi_get_current_limit,
-+	.pi_set_current_limit = pd692x0_pi_set_current_limit,
- };
- 
- #define PD692X0_FW_LINE_MAX_SZ 0xff
+Matteo Martelli (1):
+  ASoC: sunxi: sun4i-i2s: fix LRCLK polarity in i2s mode
 
+ sound/soc/sunxi/sun4i-i2s.c | 143 ++++++++++++++++++------------------
+ 1 file changed, 73 insertions(+), 70 deletions(-)
+
+
+base-commit: 47d09270d7776e46858a161f94b735640b2fb056
 -- 
-2.34.1
+2.45.1
 
