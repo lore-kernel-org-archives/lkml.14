@@ -1,167 +1,189 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE63180A82;
-	Wed, 29 May 2024 11:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185C21802CD
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716982625; cv=none; b=rYvTVMRecU+7DSn4cVfWMeOELT+ZcUPIgHP0Uc5vQv5KXsNafmMTUEGyTsD61b1ByZ7Y9RPIipHuheCRQnPsGwSki6507uwTcB/uJVAmbRblxd/jjkRKZBogmawkBoycMqeStpGF/FdavHXcwYjNApUm4+foWjKM45wgnlZcacw=
+	t=1716982642; cv=none; b=qWWga4No/+W0QWc4m54rrusMX/ABVCSTZZEJecbN5Xviq376WXxh4eIppxiUQi8zrxGeDO/G4Qh5gjr56hsTJELdkJdmjuu8m7bPlXRiAFJh0q6e4/R28gG1VZKB78oR2HvJXW+lKW7kRFWuXbuh9zmPPRq4D50I07saAArzEho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716982625; c=relaxed/simple;
-	bh=kmttkYcl7RaIqBVfs1vIdHpH/R3f9A14cvLyhdB1rck=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dOHTsd+n8hkakPEIeR64wVnvaSaR+psa/gDUFcQugXlIVv9RRKsBm0uKfIYSCLgs8gy7AWtrxobMyxHKPQrR/gQJDDFvfSajK9d5JzkM1Pu5heC7ZPTarz9D082Qmb52meKZVnSAcHIFiNiSzXDcIdJmUiM0PPFFZqct+N7O6IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pguluGcq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pguluGcq"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44TBDpON005211;
-	Wed, 29 May 2024 11:37:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pp1;
- bh=LTrthfU6+VvQnNM7AhQqXcpa/YUXxL1CYEpRBlk6l6E=;
- b=pguluGcqrLKZ8SkhT+RtyY1YVxI7A+iPs21xPhmPSZ+tjZk5rJe6AW0NSUnbXza6IvnD
- +KoYC8FDZC8mSmaraeMXMPxjo8b35ykv/6dYlKVwBXFrvqbd+70LbDOGAZEbPk+GA43k
- n1qR6pWqLnh16lrDgZ0qd06bgBKPUzKPKLfHtFSQoeDe/6kfYDzds+9fBonbgexGpgpC
- A5DdlCoIkwuD2Xmcp5gH4l9MsrD7IZ7JWMu/1rJEBvUEMk6CzMe35S9djX5hBuPnTcar
- KBLBPxOh1C7nI15p2OK3mcjyuQAogjD0nGTMPFzdOXKYuQTz0oam7954nie9wx/zIkC7 6g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ye39cr1n8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 11:37:01 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44TBaHug007440;
-	Wed, 29 May 2024 11:37:01 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ye39cr1n5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 11:37:01 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44T82ufB028984;
-	Wed, 29 May 2024 11:37:00 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ydpaykgwc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 11:37:00 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44TBauuD33751328
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 May 2024 11:36:59 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DB88058074;
-	Wed, 29 May 2024 11:36:54 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8C0515805B;
-	Wed, 29 May 2024 11:36:52 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 29 May 2024 11:36:52 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-Date: Wed, 29 May 2024 13:36:24 +0200
-Subject: [PATCH v3 1/3] s390/pci: Fix s390_mmio_read/write syscall page
- fault handling
+	s=arc-20240116; t=1716982642; c=relaxed/simple;
+	bh=oAG1h0r+hnSIGhHxm+D/VLfwSXAZLi5hh6ALXv7pu/Q=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qGZ/2a/acUlG7AAiyxyAPoYYAGzbcRLsq6E11eKWlGMuu9vUqgu5UdNWTYkEldR/7zd/ByUBnqr7zRxKP1Gigg3SMoogt94UhwbaU+XFURTZ2u9Xq+3Z32qDwc1P7FxbKMKPhwOo19i1HWK+c1bBc6ZXpoz4GatDNNu0XulLBTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7e92491e750so80286839f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 04:37:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716982640; x=1717587440;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=guInrQclf5fwu1l7pfAp9j5yGk+WubFjiJRZ6ShZ0ww=;
+        b=eFyiOxTsyMnaPc6dKRvzInBgPw+AyzLHxufgR7IpChhMob21K3r3F6zNWSuLLyq3zp
+         C5F1iaY4IK+CdxADV9wyxsNlxUVJGzkQxK8QuTiGxaZYGnxh0KgO+VqICikBIQ9sg6L8
+         Ow7l+yzljocssE4tD+j844jROdLS1mTxxApWFuBNuo6Dh9ljV03sl7Lu3WkheNnWZESM
+         wgtQUdpFMNJoMRPRRi8bx1wmeFLrBa1LETZxoQ6HzeSOZNf59DdBC7vQSr/ZNEVb6id+
+         2vbkaI+QGuJAexy/3OXyiJNVlaSHJkHTvxr/zjOpG44XaNqi7GNIx6NMErJ2L8XLG6qU
+         5nHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPSMsNcEx3Hn7gswFajL6GM4faKVyEaT4ec2DgKj9vp2FNJCahNr15uQ5eiNvmG97XvItccDiSYY5ouIszBDkHXXILUWpE86aAJdR6
+X-Gm-Message-State: AOJu0YzZU1y8H92kuYeXrhpU15ZH7ciUd03/20/33r9gK8T1HtYXe5yR
+	hQJDE99w76U6Mv/LTWUzwC1ySH/Aiafn53KxeXjVpS3n7sXJs2miKVMNehV1mdMB6xo4OVTZKS6
+	C24MVNLsBu8ENx+YOHEy9mtMlOgEPrlFC61QkA7JHhzEoeACXmCakF90=
+X-Google-Smtp-Source: AGHT+IE6cbWOqYPtOGW353usc29WtMxEid9kOPAacp74u7Zl3dHWClyaCxJW0IjKFfqr+2fmDSW9KzL+jyf20Bhex7ZRzqBGoqi/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-vfio_pci_mmap-v3-1-cd217d019218@linux.ibm.com>
-References: <20240529-vfio_pci_mmap-v3-0-cd217d019218@linux.ibm.com>
-In-Reply-To: <20240529-vfio_pci_mmap-v3-0-cd217d019218@linux.ibm.com>
-To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1957;
- i=schnelle@linux.ibm.com; h=from:subject:message-id;
- bh=kmttkYcl7RaIqBVfs1vIdHpH/R3f9A14cvLyhdB1rck=;
- b=owGbwMvMwCH2Wz534YHOJ2GMp9WSGNLChR1M1t4JTg+8vrHIxvrJ9ybJHXH3dHtdX527t/b7z
- GO+8c0/O0pZGMQ4GGTFFFkWdTn7rSuYYronqL8DZg4rE8gQBi5OAZiIYSfDX6krwWL/eBL9lm8p
- aa+a8bn/fXrzXr8dF+/sm8Dldk+rYh4jw2GmJD6ZPzsS/9kXaH3JZH+2/uG+sFxmG8lQoa4tXOY
- yjAA=
-X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
- fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 2JRiljfBl3hdHKTx1iHIh_9E1EXsoUiP
-X-Proofpoint-ORIG-GUID: EUrSTaRqNyfi2MMyxOBcsN5HH5SwKS8D
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-29_07,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 mlxlogscore=999 phishscore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 bulkscore=0 impostorscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405290079
+X-Received: by 2002:a05:6638:808c:b0:4af:ed6c:d8d7 with SMTP id
+ 8926c6da1cb9f-4b11cd84d43mr33605173.0.1716982640304; Wed, 29 May 2024
+ 04:37:20 -0700 (PDT)
+Date: Wed, 29 May 2024 04:37:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005c792d0619962ca1@google.com>
+Subject: [syzbot] [btrfs?] KMSAN: uninit-value in btrfs_compress_heuristic
+From: syzbot <syzbot+ca895d3f00092ebf1408@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The s390 MMIO syscalls when using the classic PCI instructions do not
-cause a page fault when follow_pte() fails due to the page not being
-present. Besides being a general deficiency this breaks vfio-pci's mmap()
-handling once VFIO_PCI_MMAP gets enabled as this lazily maps on first
-access. Fix this by following a failed follow_pte() with
-fixup_user_page() and retrying the follow_pte().
+Hello,
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+syzbot found the following issue on:
+
+HEAD commit:    614da38e2f7a Merge tag 'hid-for-linus-2024051401' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14573014980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f5d2cbf33633f507
+dashboard link: https://syzkaller.appspot.com/bug?extid=ca895d3f00092ebf1408
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/89eafb874b71/disk-614da38e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/356000512ad9/vmlinux-614da38e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/839c73939115/bzImage-614da38e.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ca895d3f00092ebf1408@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in btrfs_compress_heuristic+0xb34/0x31f0 fs/btrfs/compression.c:1507
+ btrfs_compress_heuristic+0xb34/0x31f0 fs/btrfs/compression.c:1507
+ inode_need_compress fs/btrfs/inode.c:812 [inline]
+ btrfs_run_delalloc_range+0x158f/0x16e0 fs/btrfs/inode.c:2281
+ writepage_delalloc+0x244/0x6b0 fs/btrfs/extent_io.c:1213
+ __extent_writepage fs/btrfs/extent_io.c:1465 [inline]
+ extent_write_cache_pages fs/btrfs/extent_io.c:2142 [inline]
+ extent_writepages+0x1c01/0x3850 fs/btrfs/extent_io.c:2264
+ btrfs_writepages+0x35/0x40 fs/btrfs/inode.c:7929
+ do_writepages+0x427/0xc30 mm/page-writeback.c:2613
+ filemap_fdatawrite_wbc+0x1d8/0x270 mm/filemap.c:397
+ start_delalloc_inodes+0xb02/0x17c0 fs/btrfs/inode.c:9404
+ btrfs_start_delalloc_roots+0x89e/0x1030 fs/btrfs/inode.c:9481
+ shrink_delalloc fs/btrfs/space-info.c:648 [inline]
+ flush_space+0xbd6/0x16d0 fs/btrfs/space-info.c:758
+ btrfs_async_reclaim_metadata_space+0x76d/0x9c0 fs/btrfs/space-info.c:1088
+ process_one_work kernel/workqueue.c:3267 [inline]
+ process_scheduled_works+0xa81/0x1bd0 kernel/workqueue.c:3348
+ worker_thread+0xea5/0x1560 kernel/workqueue.c:3429
+ kthread+0x3e2/0x540 kernel/kthread.c:389
+ ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Uninit was stored to memory at:
+ heuristic_collect_sample fs/btrfs/compression.c:1461 [inline]
+ btrfs_compress_heuristic+0x303/0x31f0 fs/btrfs/compression.c:1496
+ inode_need_compress fs/btrfs/inode.c:812 [inline]
+ btrfs_run_delalloc_range+0x158f/0x16e0 fs/btrfs/inode.c:2281
+ writepage_delalloc+0x244/0x6b0 fs/btrfs/extent_io.c:1213
+ __extent_writepage fs/btrfs/extent_io.c:1465 [inline]
+ extent_write_cache_pages fs/btrfs/extent_io.c:2142 [inline]
+ extent_writepages+0x1c01/0x3850 fs/btrfs/extent_io.c:2264
+ btrfs_writepages+0x35/0x40 fs/btrfs/inode.c:7929
+ do_writepages+0x427/0xc30 mm/page-writeback.c:2613
+ filemap_fdatawrite_wbc+0x1d8/0x270 mm/filemap.c:397
+ start_delalloc_inodes+0xb02/0x17c0 fs/btrfs/inode.c:9404
+ btrfs_start_delalloc_roots+0x89e/0x1030 fs/btrfs/inode.c:9481
+ shrink_delalloc fs/btrfs/space-info.c:648 [inline]
+ flush_space+0xbd6/0x16d0 fs/btrfs/space-info.c:758
+ btrfs_async_reclaim_metadata_space+0x76d/0x9c0 fs/btrfs/space-info.c:1088
+ process_one_work kernel/workqueue.c:3267 [inline]
+ process_scheduled_works+0xa81/0x1bd0 kernel/workqueue.c:3348
+ worker_thread+0xea5/0x1560 kernel/workqueue.c:3429
+ kthread+0x3e2/0x540 kernel/kthread.c:389
+ ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Uninit was stored to memory at:
+ memcpy_from_iter lib/iov_iter.c:73 [inline]
+ iterate_bvec include/linux/iov_iter.h:122 [inline]
+ iterate_and_advance2 include/linux/iov_iter.h:249 [inline]
+ iterate_and_advance include/linux/iov_iter.h:271 [inline]
+ __copy_from_iter lib/iov_iter.c:249 [inline]
+ copy_page_from_iter_atomic+0x12b7/0x2ae0 lib/iov_iter.c:481
+ btrfs_copy_from_user+0x176/0x4c0 fs/btrfs/file.c:59
+ btrfs_buffered_write+0x119a/0x2ab0 fs/btrfs/file.c:1339
+ btrfs_do_write_iter+0x395/0x2270 fs/btrfs/file.c:1688
+ btrfs_file_write_iter+0x38/0x50 fs/btrfs/file.c:1705
+ __kernel_write_iter+0x64d/0xc80 fs/read_write.c:523
+ dump_emit_page fs/coredump.c:895 [inline]
+ dump_user_range+0x8dc/0xee0 fs/coredump.c:956
+ elf_core_dump+0x57c7/0x5ae0 fs/binfmt_elf.c:2083
+ do_coredump+0x32d5/0x4920 fs/coredump.c:769
+ get_signal+0x267e/0x2d00 kernel/signal.c:2896
+ arch_do_signal_or_restart+0x53/0xcb0 arch/x86/kernel/signal.c:310
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x5d/0x160 kernel/entry/common.c:218
+ do_syscall_64+0xdc/0x1e0 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was created at:
+ __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
+ alloc_pages_mpol+0x299/0x990 mm/mempolicy.c:2264
+ alloc_pages+0x1bf/0x1e0 mm/mempolicy.c:2335
+ dump_user_range+0x4a/0xee0 fs/coredump.c:940
+ elf_core_dump+0x57c7/0x5ae0 fs/binfmt_elf.c:2083
+ do_coredump+0x32d5/0x4920 fs/coredump.c:769
+ get_signal+0x267e/0x2d00 kernel/signal.c:2896
+ arch_do_signal_or_restart+0x53/0xcb0 arch/x86/kernel/signal.c:310
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x5d/0x160 kernel/entry/common.c:218
+ do_syscall_64+0xdc/0x1e0 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 PID: 3751 Comm: kworker/u8:28 Not tainted 6.9.0-syzkaller-02707-g614da38e2f7a #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+Workqueue: events_unbound btrfs_async_reclaim_metadata_space
+=====================================================
+
+
 ---
- arch/s390/pci/pci_mmio.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/s390/pci/pci_mmio.c b/arch/s390/pci/pci_mmio.c
-index 5398729bfe1b..80c21b1a101c 100644
---- a/arch/s390/pci/pci_mmio.c
-+++ b/arch/s390/pci/pci_mmio.c
-@@ -170,8 +170,12 @@ SYSCALL_DEFINE3(s390_pci_mmio_write, unsigned long, mmio_addr,
- 		goto out_unlock_mmap;
- 
- 	ret = follow_pte(vma, mmio_addr, &ptep, &ptl);
--	if (ret)
--		goto out_unlock_mmap;
-+	if (ret) {
-+		fixup_user_fault(current->mm, mmio_addr, FAULT_FLAG_WRITE, NULL);
-+		ret = follow_pte(vma, mmio_addr, &ptep, &ptl);
-+		if (ret)
-+			goto out_unlock_mmap;
-+	}
- 
- 	io_addr = (void __iomem *)((pte_pfn(*ptep) << PAGE_SHIFT) |
- 			(mmio_addr & ~PAGE_MASK));
-@@ -305,12 +309,16 @@ SYSCALL_DEFINE3(s390_pci_mmio_read, unsigned long, mmio_addr,
- 	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP)))
- 		goto out_unlock_mmap;
- 	ret = -EACCES;
--	if (!(vma->vm_flags & VM_WRITE))
-+	if (!(vma->vm_flags & VM_READ))
- 		goto out_unlock_mmap;
- 
- 	ret = follow_pte(vma, mmio_addr, &ptep, &ptl);
--	if (ret)
--		goto out_unlock_mmap;
-+	if (ret) {
-+		fixup_user_fault(current->mm, mmio_addr, 0, NULL);
-+		ret = follow_pte(vma, mmio_addr, &ptep, &ptl);
-+		if (ret)
-+			goto out_unlock_mmap;
-+	}
- 
- 	io_addr = (void __iomem *)((pte_pfn(*ptep) << PAGE_SHIFT) |
- 			(mmio_addr & ~PAGE_MASK));
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
--- 
-2.40.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
