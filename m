@@ -1,111 +1,123 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFEA17BA0
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CF911CAB;
+	Wed, 29 May 2024 13:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716988929; cv=none; b=RJXulkyIktRK8j6JWZU6dsZGjZzAuf65rTYH4jWf7gTJOJV17MFwgJul5JRQkBzCk6cuV19WEm2aINMwyl07NDmTUWIBivHfmu97MdKz1xgMnRL5sJh57xfCiDaSJEE/8G+Jvi7aMqUwR7CQrcgxD4teHpJn+gNlIpTAl5eubJo=
+	t=1716989278; cv=none; b=laZLLRZeyFH0+qmkqk1CLe1bcSLwIQmtQgVoNzJzewMIz6aFdZh0iEH7y5Fw2e0vN91pnvY5mTvUcdnGlijM7XRMrj6aLhMsock0gzg+R3mNR12PduiS2PkEcl8xypVfoSzQNzOkaZzxWLhbx98hHK2dbNqUSVCYvOlsOT0SI9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716988929; c=relaxed/simple;
-	bh=LmG0Zbh1S2hp91Sn/hvYhhZTKcmSBk443WWO2UHQ6UA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Re6i07Dq5VuOoIcOF4jEotmUbzckux9UiUCV02xV5reLZdb9QiFt5kZq9tGREiFOzt7gLGq5AWIg1k/ONnNx2gZoyE6rsybvSHYoUTkvCw3IN+mESJ1rso4n7P2aSkB27qrS36VTB48NPm+sLArjLbAV9/ofTUEEMnSKqPmGA2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fzSHFS/0; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1716989278; c=relaxed/simple;
+	bh=q/QcWkL0UB/TfKnBBxD16bQnT3JzTfVI78kmbn9Sk7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MGQcR/bcedAvHSXfDVQs8GBGPX9WcRialhPE8d96yUIQHSdlKlsFG5+R/GNFo0k3fXMZOYyVmrEq0VP4FpA+PUGxplGBI0rca6tXUknLUrH3lXA8pMwmTaTBh9Q0vYgDw+WYwf0ucXzTNwVflB+6uYZEGmGnciWrmwcL05rcu1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l7oxhbXM; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzSHFS/0"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f4a52b94c3so18163505ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:22:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7oxhbXM"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4211fb904a8so2870555e9.2;
+        Wed, 29 May 2024 06:27:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716988928; x=1717593728; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Kur8IddoyK7auUB0DpsJfjxMjtBncw932qUbr08xEk=;
-        b=fzSHFS/03V9O8i8d5AwbAsBVfHmg3EWS2p6P8+/E4jK50I1uNue0PvcFBeSplWRvqJ
-         +sixaJI8XCHcT9W4P+hnHZ1Y7VzdMMbpagWLGa7IaZ6UrGrWylum3qAzFbYx1Ej6QOgM
-         43OQqg+uLIwDj0ZF1f9xXqQ0d8B4RTzw7LntQtaubmp44yf28M3V70vRXipdktrDp5fb
-         PAaEC5CQNbNmnUQRa3OIWp6P/SCVzF7oJ6ZWO2E/m6gD/uhimmOZ15Ocu6UEArBIbpPf
-         ho5Y9Ys8O/94IU6yDNB7Y2pp2p0fcbAb2z4H72ZfrfDOKbpfys4+tMNvya5ucYvBHmyo
-         /hXw==
+        d=gmail.com; s=20230601; t=1716989275; x=1717594075; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TH9AZVvcxUJR/4QUCNHDouLCDuH+SVSmkfVCXWmBq4Q=;
+        b=l7oxhbXMiL2Vl1WY3/xaCvIigZwDbMAHfL95WZ8ROh4JOQ5vmWwnxbHIkzdBEVv8s8
+         S4dRuTWaHCKe9bNzDu/wU7ZvvKkyCNBCG+cCw+iNrP0scxUResY0EtAZhvudiIcZS98o
+         IJMU2TC1/SzeHLEAlMiB1D/YwFClIpZ8yn+8nxoTIYLgkp9RexgKRvbsSB9Iq65n0Ix6
+         v/cH3zr8M/7/H7EoRwA0artA9R74mgwHt+jTvCnBH/841xXS1YfSNjyZnenjyTf4M6+D
+         eZVGg7/+4f55oqqb615kiogcweW8T0jEgjqfK++5nKR1H7STcGw5QXdn13HnEMJpLkf0
+         f/Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716988928; x=1717593728;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0Kur8IddoyK7auUB0DpsJfjxMjtBncw932qUbr08xEk=;
-        b=pjcPLZ1eNPrbwvgi2U2bqJMZESJ1gxevPWrThQTxgxfuuR+0z6j0pT/Ze0v9+5w1yl
-         E/YdO0/HHwe6nMbk9p5BqjOa1KIq9tyuLFWuz00K1pLNJWa1T7EHUR2UeEZZeybWW0JP
-         LKeI2ouIZNfzBwDpM89rcCVQ3veXDN0wxig3DlZHwY1DrAn3d+CyDTd8bOTYcjIHDPlq
-         lQhBNT4pJWYv+KQu/HbZwHwBo6D/ZpT9bCUpDrYKtx6WYX+PWM+xZ3EfUo4TC/3aQu6V
-         EA4typyxdjjNggD7j3HJ+OkudLFXZJFj57Df1xVaxbqVGWwLAdJ6tzo5Jy/Qy5HHCcUB
-         uqdg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQh6NUXbRZZ9vOCeUq4gVbOgZzfZA3FSdgX5f+EWIA13NglL62DU2Md3Fh/CbPiB/l5/Xn3nMJbjJoVhYuzvH18rQvtzBnnFwj23LG
-X-Gm-Message-State: AOJu0YwF9KMoL4fvrR6KHqrTaJ1pCnRC9vx8ys8k2kEApQdGYkIpy6Xz
-	gGqygWfGLEmhu6+9Kw5IxlWKpn8pgVnsgAVb1djcgJcDswYjiTAT
-X-Google-Smtp-Source: AGHT+IEsBv5bIxgTY/q47JQPTYogoxqv6LI2GlfX+nm0L8UY7lG45NwaKZRAtWholBUpgq2B4dfkIg==
-X-Received: by 2002:a17:902:e84f:b0:1f4:990c:5ef1 with SMTP id d9443c01a7336-1f4990c5fecmr96953905ad.31.1716988927615;
-        Wed, 29 May 2024 06:22:07 -0700 (PDT)
-Received: from paran-QEMU-Virtual-Machine.. ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c760a21sm99183205ad.4.2024.05.29.06.22.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 06:22:07 -0700 (PDT)
-From: yskelg@gmail.com
-To: Stefano Stabellini <sstabellini@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: skhan@linuxfoundation.org,
-	sj@kernel.org,
-	Austin Kim <austindh.kim@gmail.com>,
-	shjy180909@gmail.com,
-	linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Yunseong Kim <yskelg@gmail.com>
-Subject: [PATCH] xen/xenbus: handle pointer to NULL in alloc/free_pdev
-Date: Wed, 29 May 2024 22:19:28 +0900
-Message-Id: <20240529131926.29590-1-yskelg@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1716989275; x=1717594075;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TH9AZVvcxUJR/4QUCNHDouLCDuH+SVSmkfVCXWmBq4Q=;
+        b=L6E1PvDtpwn1ChOyu97l0DinF26DANtMAy+FNWqjgC19mte5NgS8LjwNvuMyt6AeSJ
+         +OKic7GivQAoY9kDno3iYgIMFjNqhfrnIDvupxj4h1Sb8xaxiPDQ8/MFBQlktYdI6agF
+         ZksvpN2wn0+4R3qBzXx7bHHnUrJFS3Z+o9ARDOio2AFXZHGsHiR/BJwoMxxDVRweB6Fz
+         m6iFcEIbHmLLlmfgjNJa02DnDviJLoLrlU6/bF5am4qP6JR/nTASLORUomYI2QrNKHN8
+         PD5HswvULaW0mN/oRBQPvuiWQh6XNijO7NPbOverGo9zdoBX3Yqffpp5JUlyEt4y0xWH
+         97Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGg4X3WgLlxpU4pc0FVvoOgze3IWRf+NKTiFlnvr9Qc0g6NpDXV8FERoVI9QK2o6QssfguCBH/Kp/FWrgFswhgFHzVkHnkqQLW4/HX+i8RafQqCP8OUS/U89rkugRBdxfnr/pO4ViMABLfIqMU
+X-Gm-Message-State: AOJu0Yy3zrIgCKU2BooupbNlRo0DqYYdj4Pf+/ddY9P3Vx4pywVq5iqf
+	eWvnAv8NBp/ROsLZyKowJeek5U5mB6K2pADOtXx0rRnp/MsHc27B
+X-Google-Smtp-Source: AGHT+IH/SbtgIvQhfBhQNi+oTOhxI4TBXpdbu6t7iqfcccSs7tfoKygTsnIgdKm44287Hv5UXHMOZA==
+X-Received: by 2002:a05:600c:1d25:b0:419:f241:6336 with SMTP id 5b1f17b1804b1-421089f9e0bmr119003405e9.1.1716989274954;
+        Wed, 29 May 2024 06:27:54 -0700 (PDT)
+Received: from [172.16.102.219] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089ae96bsm179889945e9.35.2024.05.29.06.27.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 06:27:54 -0700 (PDT)
+Message-ID: <11b57fcc-9e30-46c8-96fc-c0d8131a7959@gmail.com>
+Date: Wed, 29 May 2024 14:27:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] kunit: Cover 'assert.c' with tests
+To: Rae Moar <rmoar@google.com>
+Cc: brendan.higgins@linux.dev, davidgow@google.com,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kunit-dev@googlegroups.com, skhan@linuxfoundation.org
+References: <20240516211731.1635930-1-ivan.orlov0322@gmail.com>
+ <CA+GJov7Az+hovuTou=c=SLiB0N9vwT8HD_GDR-h_kA+Nk=TN2w@mail.gmail.com>
+Content-Language: en-US
+From: Ivan Orlov <ivan.orlov0322@gmail.com>
+In-Reply-To: <CA+GJov7Az+hovuTou=c=SLiB0N9vwT8HD_GDR-h_kA+Nk=TN2w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Yunseong Kim <yskelg@gmail.com>
+On 5/20/24 22:12, Rae Moar wrote:
+> On Thu, May 16, 2024 at 11:17 PM Ivan Orlov <ivan.orlov0322@gmail.com> wrote:
+>>
+>> There are multiple assertion formatting functions in the `assert.c`
+>> file, which are not covered with tests yet. Implement the KUnit test
+>> for these functions.
+>>
+>> The test consists of 11 test cases for the following functions:
+>>
+>> 1) 'is_literal'
+>> 2) 'is_str_literal'
+>> 3) 'kunit_assert_prologue', test case for multiple assert types
+>> 4) 'kunit_assert_print_msg'
+>> 5) 'kunit_unary_assert_format'
+>> 6) 'kunit_ptr_not_err_assert_format'
+>> 7) 'kunit_binary_assert_format'
+>> 8) 'kunit_binary_ptr_assert_format'
+>> 9) 'kunit_binary_str_assert_format'
+>> 10) 'kunit_assert_hexdump'
+>> 11) 'kunit_mem_assert_format'
+>>
+>> The test aims at maximizing the branch coverage for the assertion
+>> formatting functions.
+>>
+>> As you can see, it covers some of the static helper functions as
+>> well, so mark the static functions in `assert.c` as 'VISIBLE_IF_KUNIT'
+>> and conditionally export them with EXPORT_SYMBOL_IF_KUNIT. Add the
+>> corresponding definitions to `assert.h`.
+>>
+>> Build the assert test when CONFIG_KUNIT_TEST is enabled, similar to
+>> how it is done for the string stream test.
+>>
+>> Signed-off-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+> 
+> Hi! This looks great to me!
+> 
+> Reviewed-by: Rae Moar <rmoar@google.com>
+> 
 
-Modify 'alloc_pdev()' to set 'pdev->xdev' to NULL
-if 'xen_pcibk_init_devices()' fails. This ensures that 'pdev->xdev' does
-not point to 'xdev' when 'pdev' is freed.
-And modify 'free_pdev()' to set 'pdev' to NULL.
+Hi Rae,
 
-Signed-off-by: Yunseong Kim <yskelg@gmail.com>
----
- drivers/xen/xen-pciback/xenbus.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thank you so much for the review and sorry for the late reply :)
 
-diff --git a/drivers/xen/xen-pciback/xenbus.c b/drivers/xen/xen-pciback/xenbus.c
-index b11e401f1b1e..f1709b8e284a 100644
---- a/drivers/xen/xen-pciback/xenbus.c
-+++ b/drivers/xen/xen-pciback/xenbus.c
-@@ -54,6 +54,7 @@ static struct xen_pcibk_device *alloc_pdev(struct xenbus_device *xdev)
- 	INIT_WORK(&pdev->op_work, xen_pcibk_do_op);
- 
- 	if (xen_pcibk_init_devices(pdev)) {
-+		pdev->xdev = NULL;
- 		kfree(pdev);
- 		pdev = NULL;
- 	}
-@@ -102,6 +103,7 @@ static void free_pdev(struct xen_pcibk_device *pdev)
- 	pdev->xdev = NULL;
- 
- 	kfree(pdev);
-+	pdev = NULL;
- }
- 
- static int xen_pcibk_do_attach(struct xen_pcibk_device *pdev, int gnt_ref,
 -- 
-2.34.1
+Kind regards,
+Ivan Orlov
 
