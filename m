@@ -1,203 +1,101 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6A717DE23;
-	Wed, 29 May 2024 11:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3FD13DDB1
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716982384; cv=none; b=Xt3Cbm6r8EiCwWFDVYhQyaMNhhXpmXtZ2h8/8P8QZqhWnU8h/LmEaag2HWZVguOFxg7Mjojt9RV1y2HhvHgleiVXSMgBUxssy5x1VLZY/RwBRJw7KOa2BE/4p5YgB3bknui9fTsg8aKNJaBef6E4lBe7yrWfJ1D45gTRrbdoPAk=
+	t=1716982524; cv=none; b=QV7o40/TqvYVEeapDJgAqOriJRRSs3n8ws5NvB5zEZEBqm1n7br1J92t+s2rIXkxF0xgPRhGDnUtl6FuHhVou2TA7YX0sudMNletMg1lDx0CKXojTK+femqzgiRh4Q5XW7R52lvzQG33a7zGulqQBvrv5gFEwOPthaYg4p9Dqsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716982384; c=relaxed/simple;
-	bh=ruQRWCCZf8B8ww4BsJjOV7mk4YxiLsCQNQSSS+0ddos=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=CjgEF2g7y/O8uuWI6eomb8AQf10VDvw9Y8G6HFrKuc2gxj3nR+m4rT85eOhPPubwTNwKZ/pieWqOcNTdDaCA28vt1UlUARU0W+fGs/QOKha3ZYlmMGgyqbgPfhEoIljFnie1pV0bvOQ8F8mx1p3kLkZdQyPggOJNN/GoQGqALHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=jX0GXW6x; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1716982524; c=relaxed/simple;
+	bh=+s/zTG1LDxy2tM6GCpUn5dZ4rmquBvTGJz3MZEDzauQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8BDd5WLG6+9dGPyOQhvbgRyEDtkRIGSJthjHAYlZeGgbVagfNMfWnfaCcneDboV28qMrYx4ExfVUfLCUdxvbD7p5lql6H1H9+L/i94PlS2gz3J2fEFonLf3dpT7WnuONNZ8qpijx4+7x7syBVdrq/ii+J5WQJHB4cgy/kZpcZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GgUCGz1j; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="jX0GXW6x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgUCGz1j"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59a609dd3fso150165666b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 04:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716982521; x=1717587321; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RaZ0HEw3uCZrywbX70ICVYelWaf+GMvEHuM+/bfOC6k=;
+        b=GgUCGz1jaGZTCsNZ8El8TjKqlsRcorI2RBAfKEAaQy9P2C11aaC5HoNkfEqVdHVzP+
+         sn9Th9t4KphPvLLx8hs/1zs7GFGZ6T3aiMgVUQ3m46wUWrdkMPe2DpFaLavdKwGZdngs
+         Rry3WBxIhN+/otJMjClDw/6Afrh9Ya6dHWtXDPAPgW1g+qRgbFlE6ue4lS9+8xgg8tp/
+         DtOuBG9n8V2XEZu8IArfScEvHareVT2aAUsOv8cDpOCxT6CSaz4sMEpYf/OgfrKFeABJ
+         WG7Pf7NsPt2QZyxJGv24743GEcp5z+FCntutPT4FCvNTz2ozubEq+yb/qN4SAG8AEprK
+         Wo9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716982521; x=1717587321;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RaZ0HEw3uCZrywbX70ICVYelWaf+GMvEHuM+/bfOC6k=;
+        b=o4qP3EZTH4eTl5Ao4/C2thSUpV5HcogEIHkvz3l9BfO5j6TDaMSKVUyik6PZlcEpNM
+         qYIDfKXwiQSr+Zz7ybFLILu04dNznoVQnxu0uH9JBW00qDBfGrlk2HR4N50whwHfqQDq
+         Ci5pnEx//WL4Kl5J2F9atrVGdVxTOzq+DOQDlTJiRZ+54LY+Xns+IIkI7riLlX76N0OW
+         TlxY1zdhRhBYrFD6Upy+rW06+xoq5KeKy6qzWjwctnUdsJwzEn7RADNzM5mG1a4gsY0P
+         aqTdQjuOZHRkn5PogL2RbOl+eOtV1637pgTau6ciEgQIgh0ihGDjJIvWY8ioEX2J1m0m
+         gAvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUumqSENwouO0Lo7wo4VhmY+ObvHS2w+3DuevSG81qyJcblP4gmHfIYLBVj8XgRvrRsvvQTPOF7XGqfNNaJvIY8oEDgRut9ogKRnIIp
+X-Gm-Message-State: AOJu0Yw+XiQdFCV+n3jMsF3DyWAzQVmHX3wbfG89x56euUgMrybU7zO0
+	3AZF9//u5XvO7S4a3CDxdQo/uqTGYYztRp0EBq/FziY3hJ1yZQ6y
+X-Google-Smtp-Source: AGHT+IEiGv3hutMKSC1rloebfmzA6esk3dW4bCsDLRM3vlWCKEVWThDAnq/otQ1LfTA9aSlTBUtRWw==
+X-Received: by 2002:a17:906:48d6:b0:a59:cf0d:d7c8 with SMTP id a640c23a62f3a-a642d37e9cfmr155732666b.15.1716982520871;
+        Wed, 29 May 2024 04:35:20 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c933e7dsm708471366b.46.2024.05.29.04.35.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2024 04:35:20 -0700 (PDT)
+Date: Wed, 29 May 2024 11:35:19 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Jaewon Kim <jaewon31.kim@samsung.com>
+Cc: Mike Rapoport <rppt@kernel.org>, "vbabka@suse.cz" <vbabka@suse.cz>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>,
+	"tkjos@google.com" <tkjos@google.com>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	Pintu Agarwal <pintu.ping@gmail.com>
+Subject: Re: (2) [RESEND PATCH 00/10] memblock: introduce memsize showing
+ reserved memory
+Message-ID: <20240529113519.jupuazcf754zjxzy@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <ZlM_Ndng_JstAee3@kernel.org>
+ <Zk9UCsZdizqC1_36@kernel.org>
+ <ZkxN0yQ7Fb0X26hT@kernel.org>
+ <20240521023957.2587005-1-jaewon31.kim@samsung.com>
+ <20240521025329epcms1p6ce11064c0f0608a0156d82fda7ef285c@epcms1p6>
+ <20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1@epcms1p5>
+ <20240524090715epcms1p274939a1d5954be3423f6ce14a3df6f92@epcms1p2>
+ <20240527013504epcms1p22bec7b83f2a42e76877b97ed0d769009@epcms1p2>
+ <CGME20240521024009epcas1p10ed9f9b929203183a29f79508e79bb76@epcms1p7>
+ <20240529095119epcms1p73f0e9ff756bcb2ee6a14db459128a644@epcms1p7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1716982380;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XD6qFBUR2LMAzuud7DLI1RG/etW0Y6sDMxEesleKjgM=;
-	b=jX0GXW6xG4OGQpfXVaa2sVekk2pzKX9V22lDNuH2xkO1eEhPzR+XCEwcjbqDnRQJoBmhgH
-	gDxGB6fMJCDAJIGqeUlhzf8nN0IjDv37RkhOsD3lAcW4DN6nieWj3KU2ZM+MCZeRzvSXI+
-	iHtTKvtT6xta9SjbVxY+Kmm2enP2DEQBqQXDo9gCuWgS6VnskSNBFRa35qkMLiOlINYNzp
-	fIy+yCV3KAGaoscZeZ3W5mbl3b6KhnI4H2TaeOhsdIbWi325MkOOXACXYo0am9TZYPqXI0
-	nOg5MZRRI6FV8wiGAUOL3cZZUnYpkX0arGlObQex2DenoNH/tDHdOz5RdtOWGQ==
-Date: Wed, 29 May 2024 13:33:00 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Diederik de Haas <didi.debian@cknow.org>
-Cc: Alexey Charkov <alchark@gmail.com>, linux-rockchip@lists.infradead.org,
- heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, robh+dt@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linux-kernel@vger.kernel.org, quentin.schulz@cherry.de,
- wens@kernel.org, daniel.lezcano@linaro.org,
- krzysztof.kozlowski+dt@linaro.org, viresh.kumar@linaro.org
-Subject: Re: [RFC PATCH] arm64: dts: rockchip: Make preparations for
- per-RK3588-variant OPPs
-In-Reply-To: <9996796.SDjBYy7pSV@bagend>
-References: <673dcf47596e7bc8ba065034e339bb1bbf9cdcb0.1716948159.git.dsimic@manjaro.org>
- <CABjd4YxD41DEkBCZfkznLboEY9ZVOfTCLcj4S_kkcsVswbANyQ@mail.gmail.com>
- <9996796.SDjBYy7pSV@bagend>
-Message-ID: <511137f077495007f467d5927f42f85d@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529095119epcms1p73f0e9ff756bcb2ee6a14db459128a644@epcms1p7>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-Hello Diederik,
+On Wed, May 29, 2024 at 06:51:19PM +0900, Jaewon Kim wrote:
+><!DOCTYPE html>
+><html>
+><head>
+...
 
-On 2024-05-29 13:09, Diederik de Haas wrote:
-> Hi Dragan,
-> 
-> I think the idea is very good.
-> I do have some remarks about its implementation though.
+Would you mind sending it in pure text again?
 
-Thanks for your feedback!
-
-> title: s/Make preparations/Prepare/
-
-Or even better: "Prepare RK3588 SoC dtsi files for per-variant OPPs"
-
-> On Wednesday, 29 May 2024 11:57:45 CEST Alexey Charkov wrote:
->> On Wed, May 29, 2024 at 6:14 AM Dragan Simic <dsimic@manjaro.org> 
->> wrote:
->> > Rename and modify the RK3588 dtsi files a bit, to make preparations for
->> > the ability to specify different CPU and GPU OPPs for each of the
->> > supported RK3588 SoC variants, including the RK3588J.
-> 
-> "Rename the RK3588 dtsi files in preparation of the ability to specify
-> different
-> CPU and GPU OPPs combinations for all the supported RK3588 SoC 
-> variants."?
-> 
-> There's no partial renaming of things. That you then also change the 
-> include
-> files to match, is implied.
-> The "modify ... a bit" implies you'll do something else (too), which 
-> should be
-> in its own separate patch (if that were actually the case).
-
-Oh, the entire description of the patch was cobbled together in a rather
-"relaxed" way, because it was past 2 AM over here, :) and because it's 
-just
-an RFC patch.  For the final version of the patch, if we agree upon 
-moving
-it forward from the RFC status, I'll prepare a more "formal" description
-that will be much more detailed and more accurate.
-
-> If you mention one variant but not (any) others, makes people like me 
-> wonder:
-> why is RK3588J treated differently then f.e. RK3588M?
-> In this case I don't see a reason to single out one variant.
-
-Good remark.  Will be described in the final patch description.
-
->> > As already discussed, [1][2][3] some of the different RK3588 SoC variants
->> > require different OPPs, and it makes more sense to have the OPPs already
->> > defined when a board dts includes one of the SoC dtsi files (rk3588.dtsi,
->> > rk3588j.dtsi or rk3588s.dtsi), rather than requiring the board dts file to
->> > also include a separate rk3588*-opp.dtsi file.
->> 
->> Indeed, including just one .dtsi for the correct SoC variant and not
->> having to bother about what other bits and pieces are required to use
->> the full SoC functionality sounds great! Thanks for putting this
->> together so promptly!
-> 
-> Indeed :)
-
-Thanks. :)
-
->> > No intended functional changes are introduced.
-> 
-> ...
-> 
->> >  ...inctrl.dtsi => rk3588-common-pinctrl.dtsi} |    0
->> 
->> Renaming the pinctrl includes seems superfluous - maybe keep them as
->> they were to minimize churn?
-> 
-> The reason for that wasn't clear to me either. If there is a good 
-> reason for
-> it, then a (git commit) message specify *why* is appreciated.
-
-Another good remark.  Will be addressed in the final patch description.
-
->> >  .../{rk3588s.dtsi => rk3588-common.dtsi}      |    2 +-
->> >  ...nctrl.dtsi => rk3588-fullfat-pinctrl.dtsi} |    0
->> >  .../{rk3588.dtsi => rk3588-fullfat.dtsi}      |    4 +-
->> 
->> To me, "fullfat" doesn't look super descriptive, albeit fun :)
-> 
-> Agreed with the non-descriptive part. Please choose a different name.
-
-I'll think about it.  I'm not crazy about "fullfat" either.
-
-> And document in the git commit message why it was renamed and what is 
-> expected
-> to be in the new dtsi file, but would be incorrect for the old dtsi 
-> file.
-> 
-> That you went from rk3588s.dtsi to rk3588-common.dtsi (I miss the 's') 
-> should
-> be described (assuming that was intentional and not a typo).
-
-Omitting the "s" wasn't a typo.  It's just that rk3588s.dtsi served as
-the base for other .dtsi files before, but it's now called 
-rk3588-common.dtsi,
-which makes its purpose a bit more self-descriptive, and separates it
-from the actual SoC variants (S, J, M), which should also help a bit
-with its self-descriptiveness.
-
-Note that "common" is already used in the .dtsi filenames for some other
-SoC families, which I actually took inspiration from.
-
-> IOW: let this commit (message) describe what should and should not go 
-> in the
-> respective dtsi files, which can then be used as reference for future 
-> rk3588
-> board additions.
-
-Of course.  Again, more material for the final patch description.
-
->> How about we rename the existing rk3588.dtsi and rk3588s.dtsi to
->> something like rk3588-devices.dtsi and rk3588s-devices.dtsi
-> 
-> Whether it's '-devices' or '-common', I think it's impossible for a 
-> (short)
-> name to be fully self-descriptive.
-> Thus document what you mean by it in the commit message.
-
-Agreed.  Once again, more material for the final patch description.
-
-> Then we can use those 'rules' to consistently apply them.
-> 
->> >  arch/arm64/boot/dts/rockchip/rk3588.dtsi      |  414 +--
->> >  arch/arm64/boot/dts/rockchip/rk3588j.dtsi     |    6 +-
->> >  arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 2671 +----------------
->> 
->> Rename detection didn't do a particularly great job here - wonder if
->> we can do anything about it to minimize the patch size and ensure that
->> the change history is preserved for git blame...
-> 
-> +1
-> The diff does look awfully big for a rename operation, which was 
-> supposed to
-> (also only) "modify ... a bit".
-
-I also don't like the size of the patch.  I just tried playing with
-specifying different values for the --find-renames and --find-copies
-options, but with no good results.  I'll have a look into the Git
-source later, to see what's actually going on with those options.
+-- 
+Wei Yang
+Help you, Help me
