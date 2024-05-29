@@ -1,143 +1,156 @@
-Received: from wfhigh7-smtp.messagingengine.com (wfhigh7-smtp.messagingengine.com [64.147.123.158])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078121384BF;
-	Wed, 29 May 2024 14:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCFC13792B
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716992066; cv=none; b=OfaSZExTG1inXzlksJkqHrlTUdxsMLueKC5Hk8twzSJ3cKODY8CgLrhyjKNVq938RPSgX2SFiqucrP2QPuWBNpq4F00A9+258jOQ4c/ooTxFfVdlMWOQ0wrau+PJR2KbAJnth/02HCw5BEe5yFBaE1UTFrtyLFhXEug9htJfcJQ=
+	t=1716992094; cv=none; b=P3qkTcVsUC1caqTsaLAfO52FwcaC2kPjQNw9Ov2oZtQ/lk0kMMc2CPJ2EQ8JiLF/jVdC6uba1vC8rL3IfGhvURfz+RvFjQhyl76IxoiSrpCmmDi9hEhBu9R4KmZeQsKnDxMrQh0iP+KdWrJEyYbor6s/Ngeg5q4jsNlCQFTmdlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716992066; c=relaxed/simple;
-	bh=W22hC2Zv+Foa0qgUlAk4AdngF7rx6T8UVXQlXFr2Ybw=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=FlJkQjbMUCBIVqoglC29OSfv0sI1BM+yC/o0Q8r2yxPIN3Hhl8BdiGuPxPCtPu3sZTOWhEbzKcqYo+Xjmj1QvCpjMU5CmZIGZeqJUXFlViouSI+p5k6gV/FHxy3zQlrHhfw16voQ+oZegmcqoVIw8V/YHDHpkTBlL1eIx3LUjoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bI1zbr1E; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IVmMjRdp; arc=none smtp.client-ip=64.147.123.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1716992094; c=relaxed/simple;
+	bh=91LqUhcqm7aQDNXFER1289HrXrJMi31z3CJTTjdUUdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tQH7onyCXg7lqJHtWtBYKiwLmNT5y0B37L8gWpvRS5L7dwda+xC/pSxoWOHI/ud+PnkroPF4o2rrp/M1Qo7huADwxNXZaH8jEIYeCj/CM7QmAW9CB3bl0UADrfGMLA1BFb8bpMxIODp3hPYnZR9S5by43ECxj5XqWsxKlKMuHNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hRFRYPhZ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bI1zbr1E";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IVmMjRdp"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id C56691800110;
-	Wed, 29 May 2024 10:14:23 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 29 May 2024 10:14:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1716992063;
-	 x=1717078463; bh=eY7afOORxV4hOLeuj409JKFKJJHZi+ceauiiRURn6p0=; b=
-	bI1zbr1Eb+X1iMahPtzHX/yHgNrHIdjzD3VaSIgED2LkcqzEANSnJ1go5m3UqMGT
-	9+vkPva0paWhLAtf0nXq3Pc1WKmN07H5Z4refYIiZhCCJoT5DBwdtElPP4tI03cY
-	DxnQhbEPjGLZT/nHLk6w7HCIf/9FOeU3W6v13BrJL/0KLnFd+/inGqYqzdLCNsdv
-	wgC+paVBRdzqtdkIuyTiruJPSJ/UGWDTzS2nGFpuZrugrlAn2J0WFGFGQDha5Owu
-	IDKLp3G1NyUVyWI1i9aoosARcXRHiFe/GyCioZcx8TB923OyUTbWIWCwjWNIdGnk
-	+GyU3nf2OIjOEGRzCKOPFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716992063; x=
-	1717078463; bh=eY7afOORxV4hOLeuj409JKFKJJHZi+ceauiiRURn6p0=; b=I
-	VmMjRdp6zSIXUpPEqQWlVXQCwmiB0e1D1LTqDIN46bb1VsgHQB5z2mLLcF67KwO+
-	SGxniaTxoon8DUR0w7TqGud/g8yqHeHZEP9MLcICCR/YFWIRpZfN2N1RJ40qjE4u
-	KqfD6Mttdvk0F586BCTmac/P2GWRY+LUSsCv3Gkt920hci1zHDv3nl9SHGueBxj/
-	8fd86otV4tdKL5ci3AWhLtbyCYToLgU4Ycp3xPd+pOtrCDs0ebBta+jXICuMElYt
-	2XBkZZhnnOcZORUsJRiyBCFKReDIiYgDSUliNH1ARERcxGY7bZcpuQp5H8jOqSIH
-	kKX2/i6UjldcQp2kHmo2A==
-X-ME-Sender: <xms:PzhXZjZ_xcl8Quhl_JiO65RwGo7KYNl0IBFQh2FFtDlRZ_JRAVTfFg>
-    <xme:PzhXZibKH7u9T7SLRNvYuf4XLG6Bqq5TwPZP0lQIS6v0jLVWZKcH2qYrPbcfqrKXl
-    jxAjuOnl_vZTfbQpVY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekuddgjeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:PzhXZl-Oj4JxwLGV06iFYzauzjMooXMBN45ZIQ5H5DbqtqjVt9Nlyw>
-    <xmx:PzhXZppkgHf-kuSBZSpBmACSe3hSYaMiJwzw8WTMDNqPOJKMCkHdDw>
-    <xmx:PzhXZur1SMKx1xj9mrxPLO0LosZlpwziV2r858lVjq0kohwLebeqeA>
-    <xmx:PzhXZvSMn2YPUWmnEbUBKwAQGD7XWLq1Ce5jIezdu180kdhTw0ch1Q>
-    <xmx:PzhXZvcdCVZPDoVPlmz0R0duefKXkhr4ZgfmvdWbvwHrxdPWFvI02mBx>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D4196B6008D; Wed, 29 May 2024 10:14:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hRFRYPhZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716992093; x=1748528093;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=91LqUhcqm7aQDNXFER1289HrXrJMi31z3CJTTjdUUdg=;
+  b=hRFRYPhZPi7l0/Caa2Kw/Nv9CQF/+KE2j82zvK2YPqR+2Xe3oQs0hGVM
+   aBA4XqUGYfFrvlHiZ8J8JpP1dm5vjnqy/GENxJLYQ019Kjayr7bjtqLsA
+   yvHXUYBobEEYHLtAheJ+NVh6G1+XgCnvR/QHTD423rRHFvo5W21IqE7+A
+   Nhh0+V7KS3C6fWDxo5DhjN9//4QYsvrKxdNPVREq4+OumgfIpYu3i/IUg
+   ADbtNQz3Jx9DjIb9CGBe2H74z93zurr+Lrf2hgTMXE175nTWCUxipiIdD
+   ab48kS4pctrjnLsYtgKTJkXJTrr8JRcFBoQgGG80hSPt7F/PHm0TxI0OS
+   Q==;
+X-CSE-ConnectionGUID: tfV5zf5VRt+f9fd53aIJrg==
+X-CSE-MsgGUID: aud1bOnDSHiEzehezjGyCw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13346251"
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="13346251"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 07:14:52 -0700
+X-CSE-ConnectionGUID: gfjwUD+ETqqOi74aEUnPvw==
+X-CSE-MsgGUID: TKPn6DtTQy2SMKQYEMVB8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="35419053"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by fmviesa008.fm.intel.com with SMTP; 29 May 2024 07:14:48 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 29 May 2024 17:14:47 +0300
+Date: Wed, 29 May 2024 17:14:47 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	linux-kernel@vger.kernel.org,
+	Chris Bainbridge <chris.bainbridge@gmail.com>, hughsient@gmail.com
+Subject: Re: [PATCH v2] drm/client: Detect when ACPI lid is closed during
+ initialization
+Message-ID: <Zlc4V1goFvU2antl@intel.com>
+References: <20240528210319.1242-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <436667b5-308a-4a0b-b66e-230667ce0cc3@app.fastmail.com>
-In-Reply-To: 
- <CAHp75VdRuK_sOF=25xP0azp8sOJ8DY_SRpLq9mUSaNEmWj5EAg@mail.gmail.com>
-References: <20240529095009.1895618-1-arnd@kernel.org>
- <CAHp75VdRuK_sOF=25xP0azp8sOJ8DY_SRpLq9mUSaNEmWj5EAg@mail.gmail.com>
-Date: Wed, 29 May 2024 16:13:57 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andy.shevchenko@gmail.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Daniel Scally" <djrscally@gmail.com>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: int3472: make common part a separate module
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240528210319.1242-1-mario.limonciello@amd.com>
+X-Patchwork-Hint: comment
 
-On Wed, May 29, 2024, at 15:41, Andy Shevchenko wrote:
-> On Wed, May 29, 2024 at 12:50=E2=80=AFPM Arnd Bergmann <arnd@kernel.or=
-g> wrote:
->>
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> Linking an object file into multiple modules is not supported
->> and causes a W=3D1 warning:
->>
->> scripts/Makefile.build:236: drivers/platform/x86/intel/int3472/Makefi=
-le: common.o is added to multiple modules: intel_skl_int3472_discrete in=
-tel_skl_int3472_tps68470
->>
->> Split out the common part here into a separate module to make it
->> more reliable.
->
-> ...
->
->>  obj-$(CONFIG_INTEL_SKL_INT3472)                +=3D intel_skl_int347=
-2_discrete.o \
->> -                                          intel_skl_int3472_tps68470=
-.o
->
->> +                                          intel_skl_int3472_tps68470=
-.o \
->> +                                          intel_skl_int3472_common.o
->
-> A nit: Can this be put above instead?
+On Tue, May 28, 2024 at 04:03:19PM -0500, Mario Limonciello wrote:
+> If the lid on a laptop is closed when eDP connectors are populated
+> then it remains enabled when the initial framebuffer configuration
+> is built.
+> 
+> When creating the initial framebuffer configuration detect the ACPI
+> lid status and if it's closed disable any eDP connectors.
+> 
+> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3349
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> Cc: hughsient@gmail.com
+> v1->v2:
+>  * Match LVDS as well
+> ---
+>  drivers/gpu/drm/drm_client_modeset.c | 30 ++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+> index 31af5cf37a09..0b0411086e76 100644
+> --- a/drivers/gpu/drm/drm_client_modeset.c
+> +++ b/drivers/gpu/drm/drm_client_modeset.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include "drm/drm_modeset_lock.h"
+> +#include <acpi/button.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/slab.h>
+> @@ -257,6 +258,34 @@ static void drm_client_connectors_enabled(struct drm_connector **connectors,
+>  		enabled[i] = drm_connector_enabled(connectors[i], false);
+>  }
+>  
+> +static void drm_client_match_edp_lid(struct drm_device *dev,
+> +				     struct drm_connector **connectors,
+> +				     unsigned int connector_count,
+> +				     bool *enabled)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < connector_count; i++) {
+> +		struct drm_connector *connector = connectors[i];
+> +
+> +		switch (connector->connector_type) {
+> +		case DRM_MODE_CONNECTOR_LVDS:
+> +		case DRM_MODE_CONNECTOR_eDP:
+> +			if (!enabled[i])
+> +				continue;
+> +			break;
+> +		default:
+> +			continue;
+> +		}
+> +
+> +		if (!acpi_lid_open()) {
+> +			drm_dbg_kms(dev, "[CONNECTOR:%d:%s] lid is closed, disabling\n",
+> +				    connector->base.id, connector->name);
+> +			enabled[i] = false;
+> +		}
+> +	}
+> +}
 
-I've changed it like this now, is that what you meant?
+If you don't hook into some lid notify event how is one supposed to get
+the display back to life after opening the lid?
 
+> +
+>  static bool drm_client_target_cloned(struct drm_device *dev,
+>  				     struct drm_connector **connectors,
+>  				     unsigned int connector_count,
+> @@ -844,6 +873,7 @@ int drm_client_modeset_probe(struct drm_client_dev *client, unsigned int width,
+>  		memset(crtcs, 0, connector_count * sizeof(*crtcs));
+>  		memset(offsets, 0, connector_count * sizeof(*offsets));
+>  
+> +		drm_client_match_edp_lid(dev, connectors, connector_count, enabled);
+>  		if (!drm_client_target_cloned(dev, connectors, connector_count, modes,
+>  					      offsets, enabled, width, height) &&
+>  		    !drm_client_target_preferred(dev, connectors, connector_count, modes,
+> -- 
+> 2.43.0
 
-obj-$(CONFIG_INTEL_SKL_INT3472)         +=3D intel_skl_int3472_common.o \
-                                           intel_skl_int3472_discrete.o \
-                                           intel_skl_int3472_tps68470.o \
-
-intel_skl_int3472_common-y      +=3D common.o
-intel_skl_int3472_discrete-y    :=3D discrete.o clk_and_regulator.o led.o
-intel_skl_int3472_tps68470-y    :=3D tps68470.o tps68470_board_data.o
-
-> ...
->
->> +EXPORT_SYMBOL_GPL(skl_int3472_get_sensor_adev_and_name);
->
-> Are these namespaced?
-
-No, is there any advantage to making them namespaced?
-
-It's only a few symbols and they have proper prefixes.
-
-     Arnd
+-- 
+Ville Syrjälä
+Intel
