@@ -1,165 +1,156 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7701C0DFB;
-	Wed, 29 May 2024 18:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF55B15B575;
+	Wed, 29 May 2024 18:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717006222; cv=none; b=ru15gCmbUe/f1lzYRhhbXK43NafSmnYo74X3Pde7QuNYDgsNUlaamzz5xiIKL38vBTzDsgj81bAcMbJFhoCVBA26yHW3AlAUISCPoBlzxT1MKn0WrftKxl8KbbS6BSwIIZw5oY0dS7SsqGE1CG22oRgOSn0eis5gbh418voZSvA=
+	t=1717006619; cv=none; b=RIH8Xp8g6aneMw3swPEBMilkC1LqP9q5KPyVgBFUKzdc0pjb+fSE6BITQy6kpONnMX+ZbrYIsYCqeZvmELmGbB/XA91788daXmazrwVzsJX12dZrCaENgtv11sxNH0kaXSQrtCblpgCNxH695cg5qsNEPUauHtdiYE6UwEVho1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717006222; c=relaxed/simple;
-	bh=vGabm37tC269RBMvbuwrjb2bM7+ngBO/85FI8CiwzQY=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=BeM1f3JVYf7gGbp/BXOyTVAPFhMtkzygQsYN2OnqS8SFaq0fvoJDBXkWbapXyVCIs3iuYvRaeUjUkHtfvSz2Ur8zhVDbA6YRKLA/He1u6zMSH7w13VSO4QIND8AHpQjRtIsOl787jU9PoDP5SAe568LKZ55hTm94Lf5xL6ZXoWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kWuseCyp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717006619; c=relaxed/simple;
+	bh=bBxK7oGH7Qc+v5OVBzgZ/gYfy8r6SkX1r3Lg7bTGGck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rcAsA6WF1ivQcbBRbb6uT/hVjgnQsAghApk/J8Q/DsTLTzpQJxeg2zDj3dozzc9NcOQBCp+sP5L+Co3hcSi7Oftlgg9/mcdj29Q2nXLiYZ4blUDzTddKicV1ihuMiDxQOREm3SbQp0q1QpCCh3020f7DZJxwP+rBhft6hoqpMng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Om1FB3e+; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kWuseCyp"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44TAm8km023423;
-	Wed, 29 May 2024 18:10:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=iG3MTIFwvWdFAw8PEShyLw
-	jKjHSMW7X/BW138vB+qfI=; b=kWuseCypNhVn0/ZyhrJAMXCjQGZdrDBhbpVkTb
-	8VkZOdQaA7eWNqUAkx05OfMgv+e9hJYAGyqhkoyNVAiMRg0eFDdZH16YpV5KvzPz
-	6PSe6mrm6wwWK2T985P2ff6fmMIc4udI3ClB1qoos+dJ7swhJe5dlGyH44j+T8Wf
-	bfqtu44NjfQuePIdiQ1+aSmQAxsQEFcg6Jr9WRSIbXN8pVzv8/tkL2Nj9TkDudUf
-	wgKEwOOLkikQt+1DkGJiCEycJkUtQ6tXFPBIilhK4RNgL+V3yR9Jp+0tSL520yJD
-	Ha2FYYklDAz3N/jlUgiU4amGubmuGeqOUpCqMzR/Ugy5eeGA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yb9yj9xbb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 18:10:01 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TI9xCG003967
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 18:09:59 GMT
-Received: from hu-clew-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 29 May 2024 11:09:59 -0700
-From: Chris Lew <quic_clew@quicinc.com>
-Subject: [PATCH v3 0/4] Add support for hwspinlock bust
-Date: Wed, 29 May 2024 11:09:54 -0700
-Message-ID: <20240529-hwspinlock-bust-v3-0-c8b924ffa5a2@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Om1FB3e+"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f44b5d0c50so308235ad.2;
+        Wed, 29 May 2024 11:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717006617; x=1717611417; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iXEkR867jEs+moBzGXY8ULu3YeFsr12ik86Lu88hpJM=;
+        b=Om1FB3e+VTMeUoOhnE7yMedx7f8rz9HQ/AvmptyH/LCZzpvEvQSAmkp+f2ar4YNLWC
+         E9KDqj3vIRwmOZvrwDnEEZm0ndSlJR54B0C/Ol8FzQEQJdTaFN1tMXtqpMVVQnxR15ac
+         MJBcUtyMi5gcGEhxux1a1jaxfihKdhdipYiQKKEfTitz5+MWW1NEGXxCSSvW820MHEYX
+         XC0Nz8kF543N8PaWZBGK4Qn2zuiynKtF2/Snn+sErcqcTCgXav6hY1OJbz7rJqbinwch
+         iL4LYD6Jh58C1ptSC6uDdCbJwBCaSxxpa4f7r8qd5UPlILngvUhOhW945xI6XZx/k85X
+         ZLhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717006617; x=1717611417;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iXEkR867jEs+moBzGXY8ULu3YeFsr12ik86Lu88hpJM=;
+        b=fpjXDCEXy59ex1BURNRV/ODl2prESX/O+oVlPYIxg8ATVBXP+6xwBAJoej8O1Rozfe
+         R7XZQIwIJJCBUETqI0NNrAKeITO/qSbmwKsblpml6FtryHG+M1ISRp4vf2u+XMlP9a0x
+         BPG4iXykf1xR+azUrgfmhmZ3zqkfGmc+ovmF9L/j6sDKkENeKo+6NKndnAbt8TrpjjUp
+         W9oLU3y2lLqMMg3R6CCADB6sGJn+DVhmOAupzKTrbJhG+lLxb58nIpfa9RgQ1gx5PKZl
+         sUfmHh7ey7rdVD9BWyxVkZwIOUPh1aqhOtZIdr0eutagKu3SeWbP5aqi7BWNjoiNoJH7
+         gidQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkIl5hH343Ld2WHBq4jqqxgQ/ZilhhU8T3otIIso4BMJxo24yQBsj064DjXhtVIoO+h99gu9GsNWaSq+FWrxRjb29dlgvjTg30fOoXUyeKdC43n+1yiXktq0zNWL8cOJj0qLXGbPSuWvQWmyeK
+X-Gm-Message-State: AOJu0YwRsRiH3+GvQI7WEluQp9cMlyrVTU1tg9kgeV+dYUDxJrB3G2Fl
+	2p2SHkHBTbeHNdAZAiLKRZCboaCd+6QhDQWWkISA+YYmNFEXtAlO
+X-Google-Smtp-Source: AGHT+IEX452clUdy+2NK2IX+qUe8wBeDObu8s6wfNc0sKgoaVuLMAuhtbZnjhqa4qhDIJRoL4CRqTA==
+X-Received: by 2002:a17:902:dacc:b0:1f4:be9b:d306 with SMTP id d9443c01a7336-1f4be9bd71dmr75508835ad.31.1717006616911;
+        Wed, 29 May 2024 11:16:56 -0700 (PDT)
+Received: from Gatlins-MacBook-Pro.local ([131.252.142.255])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c7592e6sm102718815ad.45.2024.05.29.11.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 11:16:56 -0700 (PDT)
+Date: Wed, 29 May 2024 11:16:55 -0700
+From: Gatlin Newhouse <gatlin.newhouse@gmail.com>
+To: Marco Elver <elver@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Changbin Du <changbin.du@huawei.com>, 
+	Pengfei Xu <pengfei.xu@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Xin Li <xin3.li@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] x86/traps: Enable UBSAN traps on x86
+Message-ID: <2j6nkzn2tfdwdqhoal5o56ds2hqg2sqk5diolv23l5nzteypzh@fi53ovwjjl3w>
+References: <20240529022043.3661757-1-gatlin.newhouse@gmail.com>
+ <CANpmjNM2S2whk31nfNGSBO5MFPPUHX7FPuHBJn1nN9zdP63xTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHNvV2YC/22OQQ6CMBBFr0K6tmZairSuvIdxUUqRiVqQAmoId
- 7egCwku3yTv/RmItw1aT/bRQBrbo8fKBYg3ETGldmdLMQ9MOHABCShaPnyN7lqZC80639JcqFS
- nYJiONQlW3dgCn3PxeApcom+r5jUP9Hy6flsMVq2eU6BJpqUREpjM1eHeoUFntqa6TfGPycV/s
- 8ikLHKWGg3Zwpz+6Nnv9m5dYKEgUq1Ay0TxWC4L4zi+ASLEnPQsAQAA
-To: Bjorn Andersson <andersson@kernel.org>,
-        Baolin Wang
-	<baolin.wang@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ingo
- Molnar" <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Waiman Long
-	<longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-        Jonathan Corbet
-	<corbet@lwn.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Chris Lew <quic_clew@quicinc.com>,
-        "Richard
- Maina" <quic_rmaina@quicinc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717006199; l=2680;
- i=quic_clew@quicinc.com; s=20240508; h=from:subject:message-id;
- bh=vGabm37tC269RBMvbuwrjb2bM7+ngBO/85FI8CiwzQY=;
- b=L44KNjGru1XSqCRGaXQsV0aSR7QuWYj0hVBs5xma6PClnv6uww54NOfsT2+2gLpR/FxT/Ea03
- a7LRYMPphxVD45NkriJA9bhm2EOS9EHTTC4gqxGjXNSC0drnjuObvgC
-X-Developer-Key: i=quic_clew@quicinc.com; a=ed25519;
- pk=lEYKFaL1H5dMC33BEeOULLcHAwjKyHkTLdLZQRDTKV4=
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9Y-tH7HSJOzxgARNPd5dRV2MqWjkSk19
-X-Proofpoint-ORIG-GUID: 9Y-tH7HSJOzxgARNPd5dRV2MqWjkSk19
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-29_14,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=913 spamscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405290127
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNM2S2whk31nfNGSBO5MFPPUHX7FPuHBJn1nN9zdP63xTw@mail.gmail.com>
 
-hwspinlocks can be acquired by many devices on the SoC. If any of these
-devices go into a bad state before the device releases the hwspinlock,
-then that hwspinlock may end up in an unusable state.
+On Wed, May 29, 2024 at 09:25:21AM UTC, Marco Elver wrote:
+> On Wed, 29 May 2024 at 04:20, Gatlin Newhouse <gatlin.newhouse@gmail.com> wrote:
+> [...]
+> >         if (regs->flags & X86_EFLAGS_IF)
+> >                 raw_local_irq_enable();
+> > -       if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> > -           handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> > -               regs->ip += LEN_UD2;
+> > -               handled = true;
+> > +
+> > +       if (insn == INSN_UD2) {
+> > +               if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> > +               handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> > +                       regs->ip += LEN_UD2;
+> > +                       handled = true;
+> > +               }
+> > +       } else {
+> > +               if (handle_ubsan_failure(regs, insn) == BUG_TRAP_TYPE_WARN) {
+> 
+> handle_ubsan_failure currently only returns BUG_TRAP_TYPE_NONE?
+> 
+> > +                       if (insn == INSN_REX)
+> > +                               regs->ip += LEN_REX;
+> > +                       regs->ip += LEN_UD1;
+> > +                       handled = true;
+> > +               }
+> >         }
+> >         if (regs->flags & X86_EFLAGS_IF)
+> >                 raw_local_irq_disable();
+> > diff --git a/arch/x86/kernel/ubsan.c b/arch/x86/kernel/ubsan.c
+> > new file mode 100644
+> > index 000000000000..6cae11f4fe23
+> > --- /dev/null
+> > +++ b/arch/x86/kernel/ubsan.c
+> > @@ -0,0 +1,32 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Clang Undefined Behavior Sanitizer trap mode support.
+> > + */
+> > +#include <linux/bug.h>
+> > +#include <linux/string.h>
+> > +#include <linux/printk.h>
+> > +#include <linux/ubsan.h>
+> > +#include <asm/ptrace.h>
+> > +#include <asm/ubsan.h>
+> > +
+> > +/*
+> > + * Checks for the information embedded in the UD1 trap instruction
+> > + * for the UB Sanitizer in order to pass along debugging output.
+> > + */
+> > +enum bug_trap_type handle_ubsan_failure(struct pt_regs *regs, int insn)
+> > +{
+> > +       u32 type = 0;
+> > +
+> > +       if (insn == INSN_REX) {
+> > +               type = (*(u16 *)(regs->ip + LEN_REX + LEN_UD1));
+> > +               if ((type & 0xFF) == 0x40)
+> > +                       type = (type >> 8) & 0xFF;
+> > +       } else {
+> > +               type = (*(u16 *)(regs->ip + LEN_UD1));
+> > +               if ((type & 0xFF) == 0x40)
+> > +                       type = (type >> 8) & 0xFF;
+> > +       }
+> > +       pr_crit("%s at %pS\n", report_ubsan_failure(regs, type), (void *)regs->ip);
+> > +
+> > +       return BUG_TRAP_TYPE_NONE;
+> > +}
+> 
+> Shouldn't this return BUG_TRAP_TYPE_WARN?
 
-In the case of smem, each remoteproc takes a hwspinlock before trying to
-allocate an smem item. If the remoteproc were to suddenly crash without
-releasing this, it would be impossible for other remoteprocs to allocate
-any smem items.
-
-We propose a new api to bust a hwspinlock. A driver can use the
-the bust api if it detects the device has gone into an error state, thus
-allowing other entities in the system to use the hwspinlock.
-
-These patches were tested on an sm8650 mtp using engineering cdsp
-firmware that triggers a watchdog with the smem hwspinlock acquired.
-
-Checked for error in dt-bindings with below.
- - make DT_CHECKER_FLAGS=-m DT_SCHEMA_FILES=remoteproc/qcom,pas-common.yaml dt_binding_check
- - make qcom/sm8650-mtp.dtb CHECK_DTBS=1
-
-Signed-off-by: Chris Lew <quic_clew@quicinc.com>
----
-Changes in v3:
-- Fixed 80 char comment formatting and missing space suggested by Bjorn
-- Changed unsigned to unsigned int in smem apis from checkpatch warning
-- Removed null pointer check in smem bust api
-- Picked up reviewed-by trailers from Bjorn
-- Link to v2: https://lore.kernel.org/r/20240524-hwspinlock-bust-v2-0-fb88fd17ca0b@quicinc.com
-
-Changes in v2:
-- Remove extra print in qcom_q6v5_pas as suggested by Bryan
-- Expose SMEM API that remotproc can call to bust the smem hwlock as suggested by Krzysztof
-- Drop patches related to multiple references on a hwlock
-- Link to v1: https://lore.kernel.org/r/20240516-hwspinlock-bust-v1-0-47a90a859238@quicinc.com
-
----
-Chris Lew (1):
-      soc: qcom: smem: Add qcom_smem_bust_hwspin_lock_by_host()
-
-Richard Maina (3):
-      hwspinlock: Introduce hwspin_lock_bust()
-      hwspinlock: qcom: implement bust operation
-      remoteproc: qcom_q6v5_pas: Add hwspinlock bust on stop
-
- Documentation/locking/hwspinlock.rst     | 11 +++++++++++
- drivers/hwspinlock/hwspinlock_core.c     | 28 ++++++++++++++++++++++++++++
- drivers/hwspinlock/hwspinlock_internal.h |  3 +++
- drivers/hwspinlock/qcom_hwspinlock.c     | 25 +++++++++++++++++++++++++
- drivers/remoteproc/qcom_q6v5_pas.c       | 11 +++++++++++
- drivers/soc/qcom/smem.c                  | 26 ++++++++++++++++++++++++++
- include/linux/hwspinlock.h               |  6 ++++++
- include/linux/soc/qcom/smem.h            |  2 ++
- 8 files changed, 112 insertions(+)
----
-base-commit: e7b4ef8fffaca247809337bb78daceb406659f2d
-change-id: 20240509-hwspinlock-bust-d497a70c1a3a
-
-Best regards,
--- 
-Chris Lew <quic_clew@quicinc.com>
-
+So as far as I understand, UBSAN trap mode never warns. Perhaps it does on
+arm64, although it calls die() so I am unsure. Maybe the condition in
+handle_bug() should be rewritten in the case of UBSAN ud1s? Do you have any
+suggestions?
