@@ -1,82 +1,59 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FB01E86E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AC015A841;
 	Wed, 29 May 2024 01:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716946118; cv=none; b=jJaQw7WFui/8GgaXhN2s4n0nCAiG2hFrvBX2dS5A9ZGwsRpQ/3yl8cJfKyiTmqFxNuP/UVikHsB2Rj/V1KztMqL2CHWybCRH6wNx66HKxiEv3CLn6DyXi178Nfzo5JNjc6F+MOkygP5jrqa95ePBn4bh8AbV5ovt/pAh9+UZh04=
+	t=1716946122; cv=none; b=N02NJuVDiKBMtrus7u2Sxi4XDhOJUi6mRQSYK6P6XbBVLQwxmLLKYqATe3qQ720RuDtGl6daa1Vlm/lIPanSmDOdRTy3kAL+kj6WNf2Gy1d1o4fS6SNwt+72mCE84d7w/ug0Hv4MFQcnHxs9ur9pW0n6RPRPE5a+L31ISdJvnHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716946118; c=relaxed/simple;
-	bh=ZWosJ0fbkD48d2sZzTj9+El9CMbzfLfzV5S6oJTU+XY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Oxp9V09TsEbh2pbECetCfzbCykujTq2Mjn1jMahl0vHfokV4+8mngMTIXL8k1BIQEgmstXmgFcuDfPUTG1Smai2uYXTno0bs1cqC4+zUn7d8DSC2wZGG2pJWmJ9+uH6AT/cq541omfTOx32CNIyqvbNge/AClx4V+IFvsdi8BQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=Lg/nZYQq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=M4ruKhwf; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1716946122; c=relaxed/simple;
+	bh=j3htC+RmfS/MluEVClfrUS0wbKNXXr8GUemPYhAO0v0=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=NJe+8n9uiODh8P+O2qxXUIkXyQGqnXYYoy7VcYCFZ8KDYctkKI/Ex96EXIk4lDM2jXBDGq+x9LU6HxqJGlyY8eDzqtQ82yJnLTVNNH2hhVmnJtswTTcYxW5UL9dgZqODTwunL4Ku/Fvdq95LBVOHUnMCar0Y1lRvjIRl1iC+e8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=fBFPbQ6U; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="Lg/nZYQq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M4ruKhwf"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfout.west.internal (Postfix) with ESMTP id 130A51C0018C;
-	Tue, 28 May 2024 21:28:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 May 2024 21:28:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1716946115; x=1717032515; bh=B7nzPoEheZ64prYro48RW
-	JsH3qkc1hldm9XfgJ9HjO8=; b=Lg/nZYQq9v661uPB/359R44VKEGPu4UggDeaa
-	fyT2x4Vtgq7coGZgU/3Ty2iG1bszgedefVdQeE65AC3L2rMyAQgNpZwktmpiWX8W
-	Zy+2WewWGbNa58fRFQdf4gPsoY3GfsgSji8zV8jaIr+QKbDXSx/FvvJCCgAV5WZc
-	MVGV6rcO20U/+w20c/DtXni+lMtLx+9TJHNddG81NGQ/WFPquIl8IlD8cbgiYm6M
-	RsA/EjqwrnRLPRFZr/BopuDSciB456LQu2G3IG8+r9YkRS9pFDabL6+M5S2WmfFk
-	YIyU3NYGGRrAGIX92IqUeURc5FSEDkV1Q5IRHo6w4QvVKS2pQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1716946115; x=1717032515; bh=B7nzPoEheZ64prYro48RWJsH3qkc
-	1hldm9XfgJ9HjO8=; b=M4ruKhwfEKeln17/yhrDxsCZ0UZFY7R2/TSAoJ1yTM5r
-	YQE/ilpWUwCQVzNl7n7/7FhHnmeJbQmyqE9DCV0ybTj5b2Sha3zAMoEFGrgJNoj8
-	Sf/BunOyG7tPgBpwDI1XC/A22MlU2cS8M/xC3Jt32ooigSRkrU3sct66Vmo3mtwO
-	35aHyi1hskz3juk+YsEG6iMVPG5yAhI5cLHFOnA0KEgo4ApRxySRFZzmNoPDRcPU
-	ZDHNDhdTatx2JDCwIYvEri5ZPrJ9hKI8K0rpVQsJzj3Zw50v7XRmJuQ7OXnhg1fs
-	oMTIfV4peEmTgcvy+tubIPi/6oJFPIy4UpZEf2+9/A==
-X-ME-Sender: <xms:w4RWZjEJuP1xzh0gW4hdIge9oXgAuh9MF7FiaIDRzQI_nur_rWm6vg>
-    <xme:w4RWZgUMwJ6U2n6AHmrP7_if4S8ASR5PwV70NXZoufJIv9aKzr134aWG1lBKegF5K
-    0YmyEqkq4yNtSL5-28>
-X-ME-Received: <xmr:w4RWZlL0jYQ1lkwrLuoCBC7D4CR9I8vvAdc4KNrgz6DSRvZzvNFFc7Bxst7f>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejledggeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
-    nhgvshdruggvvheqnecuggftrfgrthhtvghrnheptdehkeeigeeggfelkeeufeefjeduvd
-    ejveduvdehtdegveeftdeugeetvdeltdejnecuffhomhgrihhnpehkvghrnhgvlhdrohhr
-    ghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
-    hkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:w4RWZhEfbpYPus4Hi4zvXX60nVxb0hquqXuDP73MNBaqLqDdNmViBg>
-    <xmx:w4RWZpVEvJpLncFDrDCVWB4JnsU1nRdPyFwW0D3AMJy_JT5mukWlVw>
-    <xmx:w4RWZsOtCfjb92otYYnATiJtrJZ2S_7iMIL3zTqXooFKgjE1S48l4Q>
-    <xmx:w4RWZo2_nQpdP31d4Dg05K-B_K-6gUVui5GWeQjifHnbz8lTrd2fWg>
-    <xmx:w4RWZlqVynADFDu5dJ2cNnX5FjV-5aO09vVlWoRzpA3C0jS4y15kZfa3>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 28 May 2024 21:28:32 -0400 (EDT)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: jikos@kernel.org
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	corentin.chary@gmail.com,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="fBFPbQ6U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1716946109; bh=OOjVQMK7W8tJWIF171tEGyp2a8xk0aKQ+MIa3W0Xb6s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=fBFPbQ6UAMbL/dqr0GXJu81N8umE1vc+k/9ZGL5SQQeODA9v2iIO8XHU1jqB+HuDO
+	 iWavkQyDfmJHgn5Gau0YEJ/nFBe4xxJCKPIPMEHXEqzRp/b1bcF8StrVJr+6knuW1D
+	 SMinDgrh41Mn+5j6jyuLS34xgecrnLH2FoYBqLao=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszc19-0.qq.com (NewEsmtp) with SMTP
+	id 3C1310D4; Wed, 29 May 2024 09:15:01 +0800
+X-QQ-mid: xmsmtpt1716945301tgjycg6rl
+Message-ID: <tencent_72297DA3B4444FF762977666C65361437E05@qq.com>
+X-QQ-XMAILINFO: M/NR0wiIuy70guOsM/HY0pDqYQRhlhcRAMO0baPQfpwTWUVC+XwO2+YZXLXkCd
+	 Ah6koRaVDbU5rMY7FURDqchAGTGzGkBCmgMe8MfydY2uIYFBzk/2WOnWW8gdnxzPbf1/HmnPVnZc
+	 vqFgrJqQye4W4tgTDazT6I0ityKM52D0mryV2A+eVamH8ciEL+OCwCg4+Oi2gAQwAURbk5DARsaS
+	 /kg5HoSn+sNuqkwP1/NACkkHHvYOhOzF/NylHkNJk1P5wDtQxDMcnQ1n+Pmuybdi9Mw6leQhtXDo
+	 VpK3dRWO2QjxQCtS8cSKOyaBN2K+UDQkly23VTjA2avWrATAeH7X/0jbrBsgxOgA/sGomb/LhUlh
+	 tHKW8lNq56zg3s8t29JFMDsumsBcTx8nFHOUF3xy2kLIbwOweUIbTyr9Yi5IYHWVomCM6O84GY9l
+	 0QEN1Q3ff5H9+TewKblnCYgBmRf7SKqRcwesH0YCylGHk6FMD278Dm65FAs5rzbakFQYnUX82bGp
+	 K9YNFRV67GSmBHRVE4AZxPN1aQytbWh14EnMLU0x5EBNvf4rCr7VwoTfXg0nozRvsks+eiB8h0iZ
+	 bLjdDhXUZpBtgzEBNd/1GDbTScGv6OPYNf2jxVZIsr9MCFFplFi2qAnooKACTtnTH+4Lu4Q6lVH0
+	 tYJarfKD3zHh4zXm1rMs4RNM1MeVe5vN+hcL24DZD+nFOxQrTJ3yRGgpk8Ebu4h33lLD2D1OB5WX
+	 p2fOrT/krxe5STcSyxLOAZBLvzfygbmHvmIShFzyPrjqtUqGhATsG8p+B2AWKHX7paQc/4FZ/D4G
+	 DzHwwdk9sD46F4aZ/in7SfJ8tMYzIqSPfD6IdyiHPHNvALPsbY/ulXnuDMTzQMCvEfCAiZB465ti
+	 /xIYWvgSSHIzh/eeOMKtWU42CyV5VVnqP9ouZidC9Sggwg5BiGWewwCcyDVn9eWZBuITLpkXRT
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+fe42a669c87e4a980051@syzkaller.appspotmail.com
+Cc: adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	bentiss@kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v1 0/2] asus wmi and hid: use HID LED for brightness
-Date: Wed, 29 May 2024 13:28:25 +1200
-Message-ID: <20240529012827.146005-1-luke@ljones.dev>
-X-Mailer: git-send-email 2.45.1
+	syzkaller-bugs@googlegroups.com,
+	tytso@mit.edu
+Subject: [PATCH] fs/dcache: fix warning in ext4_xattr_inode_lookup_create
+Date: Wed, 29 May 2024 09:15:02 +0800
+X-OQ-MSGID: <20240529011501.2190031-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000002b03350619853096@google.com>
+References: <0000000000002b03350619853096@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,24 +62,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changelog:
-- v1
-  - Split the patch in two
-  - Move function body to asus-wmi and export
-  - Use array of names and for loops
+ext4_xattr_inode_lookup_create() will use s_root, so set it to NULL
+after do_one_tree().
 
-History:
-- https://lore.kernel.org/linux-input/20240528013959.14661-1-luke@ljones.dev/T/#u
+Reported-and-tested-by: syzbot+fe42a669c87e4a980051@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/dcache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Luke D. Jones (2):
-  hid-asus: use hid for brightness control on keyboard
-  hid-asus: change the report_id used for HID LED control
-
- drivers/hid/hid-asus.c                     | 32 +++++++++++++++++++-
- drivers/platform/x86/asus-wmi.c            | 35 +++++++++++++++++++++-
- include/linux/platform_data/x86/asus-wmi.h | 10 +++++++
- 3 files changed, 75 insertions(+), 2 deletions(-)
-
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 407095188f83..e2f1a3f92ce9 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -1551,8 +1551,8 @@ void shrink_dcache_for_umount(struct super_block *sb)
+ 	WARN(down_read_trylock(&sb->s_umount), "s_umount should've been locked");
+ 
+ 	dentry = sb->s_root;
+-	sb->s_root = NULL;
+ 	do_one_tree(dentry);
++	sb->s_root = NULL;
+ 
+ 	while (!hlist_bl_empty(&sb->s_roots)) {
+ 		dentry = dget(hlist_bl_entry(hlist_bl_first(&sb->s_roots), struct dentry, d_hash));
 -- 
-2.45.1
+2.43.0
 
