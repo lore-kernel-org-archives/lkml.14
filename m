@@ -1,104 +1,219 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB5F16E866
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D49716F271
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716960993; cv=none; b=lX9EYBAJWz/C9TL4S+q+i16fPNUDGqXkBQLoU8xontrQ3IBX6vyJJiGCzgZdpwwpFLs42XIdu+EqQ6QcCcDJq7xD9z8dJpm5MDpXZ6IeEXUToP5tj1l3tbemG/tRy5wPcL3Fv6U+cJnke7+B2rBz4w7/I4WBd+3euKM69uqqfBI=
+	t=1716960999; cv=none; b=Kfgk2lSrxGWzC2v//SE9d+8R6qkOcAXNyubcWR5DZeFMvbHrnSU4BBhTbomul1iEcDpbSIXqXJoIUBtP9ggGHjvR3gyj9TShGzT3C1ZAHtWm4aRPjkIwf/Svz2bkFVrLcQzxa3H9YBzTWm+eWrlVdiNOiqlVX+63lv9ilVD0gMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716960993; c=relaxed/simple;
-	bh=VUHfqIpMLEJ72GmREl9aWEN3lHURkr2tcN/5lyxXj3o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W6lMDbIOF51HvOdXKbMroCGBp6lrspJ4RvGBJvTjNSbwmlUdlE83UrWixHfVkAONI8gjk14AWcVB3YAd/1oK4VfyOKLuh/nyIW1Kn4Brsq7+sHK0fFW1rK5F1djKS+yVFFQOYADz8W2/g/hDlh/qSgaF7k6OILoD4GQbM0MWa+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=xA1ZhFVx; arc=none smtp.client-ip=209.85.217.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
+	s=arc-20240116; t=1716960999; c=relaxed/simple;
+	bh=5KWn8VzkwrmikfdY6Ercb38rCkbe5TmNZrNn/P2jtlY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=q/SyQRR+zn5wfdhnlMc2eCxDnzH+hXTroWuHpwUj1yTvjcOjGAQPIwCJiSDL/mJmwRvVv70B4DCrCfm2huU5G8xY70sKBqtejiWe+BktAYX2MjFCJERihMLL4tdSxgoDtDylYMa8LqEzFwc97mN5bGrZSKN2yPdarx9TWyutRqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Klis21kM; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="xA1ZhFVx"
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-48b9c1ba14aso198956137.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 22:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1716960989; x=1717565789; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=59clAH+TNnE9vZy/uwPV+00ESbhoosRii3QZ8IXAsEg=;
-        b=xA1ZhFVxXD3v2hKmQa0qmB7+F/fvTd3z8N4n9ikE6vuaWcLTXd8Cl3Yw/lYi6QhGyh
-         o1s4Y2I5L2coCtbWVS/PhAfLIiK6Nw5mYp8ny/aRtplQsHA4p0H5YQ7rB0QU2DM6b3At
-         5/3WlhizTtUq4bRwoBp4slpjw4JVKWPZy8YOGPSxM0Oif2AI150rZhh/Svt3+opyGYDo
-         iyqq5IraWqhMEoj4zMdYLEhkHZI3CsA1eDfFxVVaLi25V4iBvGfkrQrfcUHFquxiDBid
-         CsqEQTZQq9kiw0QFsGram2TW9CRmhnbTEiV5BtGHHjXt85KbLEqjU5Eo4ZCJiK3VjrKF
-         tGCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716960989; x=1717565789;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=59clAH+TNnE9vZy/uwPV+00ESbhoosRii3QZ8IXAsEg=;
-        b=FFm/BpbY7DkDo/LRgIcMblsPJoSwbPdirXLFrkn7q2NuJBitoO9jlkXFovZ0zRtDAg
-         Sh0O4Pw3avgYkVCEUZsrf+DmNnRXtelsOJ6cH8z0/OarZFp03hdHvP1sY6tkp9nbGaiK
-         I1GY+ZjTkMcnOzQL0YkN4XolipT7c6Z/xLvOZTDU6PD2kVl6CD5VxL8bXIJzfXZB2P1B
-         rvllEsqWyT4DfoPmBM2K60iI080aYuPA0GuGKsvQ17oVYxNR8fvRhaUvAUi66sJeVie/
-         dDxHHohCC682o9+KkkyJqPUgGBZ95F0TWJzeovloxwpAKjd8VnASHJzRZgXSKOQsHLkW
-         mzgQ==
-X-Gm-Message-State: AOJu0Yx4kT1rZ3FRxhk0/J730wKT+q5Lfsh45BfE3gef9zdvz4o6nu/s
-	D25ehrFfLa8keiavSfMnd1maJANYMNgTDUGFZ/YQnX84GnrooWw0pnx8x51r4fI=
-X-Google-Smtp-Source: AGHT+IHi50YnmP4eqwBGVkxawc7m2GRD+0vuBM3Zf7HgW/Qb5VxPMg8AAhRusXsXfa+eQRRLQTyW1w==
-X-Received: by 2002:a67:f65a:0:b0:48a:3f49:7ccd with SMTP id ada2fe7eead31-48a3f497d0bmr12405967137.15.1716960989540;
-        Tue, 28 May 2024 22:36:29 -0700 (PDT)
-Received: from [192.168.0.50] (dhcp-24-53-241-2.cable.user.start.ca. [24.53.241.2])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fb16b7a06sm50380661cf.8.2024.05.28.22.36.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 May 2024 22:36:29 -0700 (PDT)
-Message-ID: <d7412ef9-8e25-4f55-aac9-8ec479fb6775@draconx.ca>
-Date: Wed, 29 May 2024 01:36:28 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Klis21kM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716960998; x=1748496998;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5KWn8VzkwrmikfdY6Ercb38rCkbe5TmNZrNn/P2jtlY=;
+  b=Klis21kMJD1gQdyxf0VTTacJhvx7ZkXK4XYj7AGY3NbocKHLMhxN1pNu
+   +Hc/MAPBsl2uNCo7ydLlU41AJw7aFYuFuQ6Rm9bLHeR6vxhR+kFXHscwa
+   XFnP+x+3xVsldYSrWKLvP5fBnDVuPvpPWJSIpjqXk53rDJUK/z6ugRX/p
+   ELY8SYSSp7+CIo5B34IKA1zDKBYdcjf3Ckdxi+Acu5uWMUA29gGf/T8jS
+   Sxnx94EEjR2iQMi86BwZkV/+AncbCrSlZplqFGBASFSnXvZ1jDX7ci/uu
+   KhBzPWgErURqQon262ZQU97SKWnS/WaeHrt3IY2DJP+R6165m/LEGvYxI
+   Q==;
+X-CSE-ConnectionGUID: uh8XYyvwRVKXeAVarmJRYA==
+X-CSE-MsgGUID: xo7gDOEZRo26Yz1N+FympA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13569114"
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="13569114"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 22:36:32 -0700
+X-CSE-ConnectionGUID: tfyd8XLnTFavgJ6eGMD+/g==
+X-CSE-MsgGUID: 8sz1WYkaSFSx14UMZlVbhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="35257798"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by fmviesa007.fm.intel.com with ESMTP; 28 May 2024 22:36:27 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>
+Cc: Yi Liu <yi.l.liu@intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	mst@redhat.com,
+	Jason Wang <jasowang@redhat.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	iommu@lists.linux.dev,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 19/20] iommu/vt-d: Remove domain_update_iommu_cap()
+Date: Wed, 29 May 2024 13:32:49 +0800
+Message-Id: <20240529053250.91284-20-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240529053250.91284-1-baolu.lu@linux.intel.com>
+References: <20240529053250.91284-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: kbd busted in linux 6.10-rc1 (regression)
-Content-Language: en-US
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Alexey Gladkov <legion@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <ad4e561c-1d49-4f25-882c-7a36c6b1b5c0@draconx.ca>
- <20240529052543.GL2118490@ZenIV>
-From: Nick Bowler <nbowler@draconx.ca>
-In-Reply-To: <20240529052543.GL2118490@ZenIV>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024-05-29 01:25, Al Viro wrote:
-> On Wed, May 29, 2024 at 12:45:56AM -0400, Nick Bowler quoted:
-> 
->>        All other headers use _IOC() macros to describe ioctls for a long time
->>        now. This header is stuck in the last century.
->>    
->>        Simply use the _IO() macro. No other changes.
-> 
-> ... are needed, since _IO() is arch-dependent; this is quite enough to fuck
-> alpha and sparc over.  _IO(x,y) is (1<<29) + 256*x + y there; both ports
-> got started with compat userland support, so _IO...() family there is
-> modelled after OSF/1 and Solaris resp.
->
-> kbd ioctls predate all of that.
-> 
-> Please, revert 8c467f330059 - commit in question breaks userland on alpha
-> and on sparc for no reason whatsoever.  Might be worth adding a comment
-> to those definitions at some point, but that can go on top of revert.
+The attributes of a paging domain are initialized during the allocation
+process, and any attempt to attach a domain that is not compatible will
+result in a failure. Therefore, there is no need to update the domain
+attributes at the time of domain attachment.
 
-FWIW I see exactly the same problem with 6.10-rc1 on powerpc too.
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/intel/iommu.c | 86 +------------------------------------
+ 1 file changed, 2 insertions(+), 84 deletions(-)
 
-> Folks, 0xXYZW is *not* an uncool way to spell _IO(0xXY,0xZW) - if there's
-> any chance that those definitions are seen on all architectures, they
-> should be left alone.
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index e9393f5c2c50..74e005b1c4b4 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -366,36 +366,6 @@ static bool iommu_paging_structure_coherency(struct intel_iommu *iommu)
+ 			ecap_smpwc(iommu->ecap) : ecap_coherent(iommu->ecap);
+ }
+ 
+-static void domain_update_iommu_coherency(struct dmar_domain *domain)
+-{
+-	struct iommu_domain_info *info;
+-	struct dmar_drhd_unit *drhd;
+-	struct intel_iommu *iommu;
+-	bool found = false;
+-	unsigned long i;
+-
+-	domain->iommu_coherency = true;
+-	xa_for_each(&domain->iommu_array, i, info) {
+-		found = true;
+-		if (!iommu_paging_structure_coherency(info->iommu)) {
+-			domain->iommu_coherency = false;
+-			break;
+-		}
+-	}
+-	if (found)
+-		return;
+-
+-	/* No hardware attached; use lowest common denominator */
+-	rcu_read_lock();
+-	for_each_active_iommu(iommu, drhd) {
+-		if (!iommu_paging_structure_coherency(iommu)) {
+-			domain->iommu_coherency = false;
+-			break;
+-		}
+-	}
+-	rcu_read_unlock();
+-}
+-
+ static int domain_update_iommu_superpage(struct dmar_domain *domain,
+ 					 struct intel_iommu *skip)
+ {
+@@ -426,29 +396,6 @@ static int domain_update_iommu_superpage(struct dmar_domain *domain,
+ 	return fls(mask);
+ }
+ 
+-static int domain_update_device_node(struct dmar_domain *domain)
+-{
+-	struct device_domain_info *info;
+-	int nid = NUMA_NO_NODE;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&domain->lock, flags);
+-	list_for_each_entry(info, &domain->devices, link) {
+-		/*
+-		 * There could possibly be multiple device numa nodes as devices
+-		 * within the same domain may sit behind different IOMMUs. There
+-		 * isn't perfect answer in such situation, so we select first
+-		 * come first served policy.
+-		 */
+-		nid = dev_to_node(info->dev);
+-		if (nid != NUMA_NO_NODE)
+-			break;
+-	}
+-	spin_unlock_irqrestore(&domain->lock, flags);
+-
+-	return nid;
+-}
+-
+ /* Return the super pagesize bitmap if supported. */
+ static unsigned long domain_super_pgsize_bitmap(struct dmar_domain *domain)
+ {
+@@ -466,35 +413,6 @@ static unsigned long domain_super_pgsize_bitmap(struct dmar_domain *domain)
+ 	return bitmap;
+ }
+ 
+-/* Some capabilities may be different across iommus */
+-void domain_update_iommu_cap(struct dmar_domain *domain)
+-{
+-	domain_update_iommu_coherency(domain);
+-	domain->iommu_superpage = domain_update_iommu_superpage(domain, NULL);
+-
+-	/*
+-	 * If RHSA is missing, we should default to the device numa domain
+-	 * as fall back.
+-	 */
+-	if (domain->nid == NUMA_NO_NODE)
+-		domain->nid = domain_update_device_node(domain);
+-
+-	/*
+-	 * First-level translation restricts the input-address to a
+-	 * canonical address (i.e., address bits 63:N have the same
+-	 * value as address bit [N-1], where N is 48-bits with 4-level
+-	 * paging and 57-bits with 5-level paging). Hence, skip bit
+-	 * [N-1].
+-	 */
+-	if (domain->use_first_level)
+-		domain->domain.geometry.aperture_end = __DOMAIN_MAX_ADDR(domain->gaw - 1);
+-	else
+-		domain->domain.geometry.aperture_end = __DOMAIN_MAX_ADDR(domain->gaw);
+-
+-	domain->domain.pgsize_bitmap |= domain_super_pgsize_bitmap(domain);
+-	domain_update_iotlb(domain);
+-}
+-
+ struct context_entry *iommu_context_addr(struct intel_iommu *iommu, u8 bus,
+ 					 u8 devfn, int alloc)
+ {
+@@ -1589,7 +1507,7 @@ int domain_attach_iommu(struct dmar_domain *domain, struct intel_iommu *iommu)
+ 		ret = xa_err(curr) ? : -EBUSY;
+ 		goto err_clear;
+ 	}
+-	domain_update_iommu_cap(domain);
++	domain_update_iotlb(domain);
+ 
+ 	spin_unlock(&iommu->lock);
+ 	return 0;
+@@ -1615,7 +1533,7 @@ void domain_detach_iommu(struct dmar_domain *domain, struct intel_iommu *iommu)
+ 		clear_bit(info->did, iommu->domain_ids);
+ 		xa_erase(&domain->iommu_array, iommu->seq_id);
+ 		domain->nid = NUMA_NO_NODE;
+-		domain_update_iommu_cap(domain);
++		domain_update_iotlb(domain);
+ 		kfree(info);
+ 	}
+ 	spin_unlock(&iommu->lock);
+-- 
+2.34.1
 
-Thanks,
-  Nick
