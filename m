@@ -1,81 +1,93 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 2DE661CFB5
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF731CA9E;
+	Wed, 29 May 2024 14:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716991672; cv=none; b=W1UP/wPq4QxT2235xGR13OFSaC6OM1uoA3K6Kaqj9NqSlmbJhi8LvK7pz4GFOczK2a3aSneF3C8wvdEK9EKDDBGsvtW6aZ7hat+tpAbW1b6v1wYMWWbjUkkKvlw2SHBYJ1mndfruLFGjGEqBmYbr8enz9X3thEV8Od77TkByS5U=
+	t=1716991781; cv=none; b=DnHeLf7VQ0bdZmLX94fjiW4vdTwRsXgwtl6eWrLniRM3cLN/pCQj+9VASA0UMMr49G0bFY4zrNqBXsY1HP2BRDsg7/9wFr8SUSr39vEhpCit2YiFvubJM3CNMwv2RKYAdzWfZBiYYjY8WJFE8HqFJ2HdeyvDzGVFqK79u44fywE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716991672; c=relaxed/simple;
-	bh=tDRMZ/xjppcv17Vv7I7IS1EiKe3ccUEx8QOpa9SHJOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nrqvq1Z/pmWYJ6ED12/QjkVZx2M2EbXPA/h0yWXBFbUVd2W5BM9icFqVAcnrpr14BoUz+e35oDxYXKgl/nT5f2/cw0LmghJmGzo6F4B0yGtqoo98MHuIJsoOeCIgWeXY9eZOSln1jssGTf2HYn2DrmQyCc4pOs8/xN6GvcMxrOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 724132 invoked by uid 1000); 29 May 2024 10:07:44 -0400
-Date: Wed, 29 May 2024 10:07:44 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Andrea Parri <parri.andrea@gmail.com>,
-  Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>, will@kernel.org,
-  peterz@infradead.org, npiggin@gmail.com, dhowells@redhat.com,
-  j.alglave@ucl.ac.uk, luc.maranget@inria.fr, paulmck@kernel.org,
-  akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
-  linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH] tools/memory-model: Document herd7 (internal)
- representation
-Message-ID: <b54575b9-ab29-4bcd-ae7a-6132d1e36195@rowland.harvard.edu>
-References: <20240524151356.236071-1-parri.andrea@gmail.com>
- <1a3c892c-903e-8fd3-24a6-2454c2a55302@huaweicloud.com>
- <ZlSKYA/Y/daiXzfy@andrea>
- <41bc01fa-ce02-4005-a3c2-abfabe1c6927@huaweicloud.com>
- <ZlYbXZSLPmjTKtaE@boqun-archlinux>
- <7e2963a3-d471-4593-9170-7f59aa1ce038@huaweicloud.com>
+	s=arc-20240116; t=1716991781; c=relaxed/simple;
+	bh=6RKhsjylzAiRwIo2wwjLgww6LdH42VeDcjmrpc0rXsc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ug9Ky95xfYdg11ckbFke8mLJ16kRuNRJVsQdqIawA313XlvIWwKyGHSaAJ/OkZvEdV5u542P3GDS1V+mHOCIyql8SZC0UdNvcRk7Tqpz4tUs7ILqmJEG2Qdqchp/2NWa/mbJfGyggfVdPUhkzpBT+Ftoycth6wxUJKARaEipYiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=p0IsSdNg; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="p0IsSdNg"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C09E340003;
+	Wed, 29 May 2024 14:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716991776;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7W8ecLudPpFqSbJRrJMLaE+hJjxzBDOvmHDTYNwekL0=;
+	b=p0IsSdNgW2U11l1ihWyP+asGoPBxFTkFCURBWvXZVSTU1Ijxyx+EG3b0RaAWff+tnFe4NJ
+	PGyFMZ/HAGfrNiSGZMr2rmg8oyZyUePFGQYK2vGYuRPFCYor/Wmkp0+2UcOqg+iUm/Cc3N
+	MBPbMYLh04CSY0hVeGXjYWfbsIKhbS7aHmWMg47UpGCJx0YsrxeHzyV6GXhhQMUoVRanUE
+	GVRTb966fFwAZzcbkzrcB8hKujx0rabAThxA3u5IZRr1shTMnN1l+fY0ESzsZ1YGSE1v7o
+	a4figyPqPm9LbE0CnTap9EgxMGdRgZD7fhfWIqhD0aLwqa5GsCfp5wQhewZJZw==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Wed, 29 May 2024 16:09:28 +0200
+Subject: [PATCH 1/8] net: pse-pd: Use EOPNOTSUPP error code instead of
+ ENOTSUPP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e2963a3-d471-4593-9170-7f59aa1ce038@huaweicloud.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240529-feature_poe_power_cap-v1-1-0c4b1d5953b8@bootlin.com>
+References: <20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com>
+In-Reply-To: <20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.14-dev
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Wed, May 29, 2024 at 02:37:30PM +0200, Jonas Oberhauser wrote:
-> 
-> 
-> Am 5/28/2024 um 7:58 PM schrieb Boqun Feng:
-> > This may not be trivial. Note that cmpxchg() is an expression (it has a
-> > value), so in .def, we want to define it as an expression. However, the
-> > C-like multiple-statement expression is not supported by herd parser, in
-> > other words we want:
-> > 
-> > 	{
-> > 		__fence{mb-successful-rmw};
-> > 		int tmp = __cmpxchg{once}(...);
-> > 		__fence{mb-successful-rmw};
-> > 		tmp;
-> > 	}
-> 
-> Oh, you're right. Then probably the rule I was violating is that
-> value-returning macros can not be defined with {} at all.
-> 
-> Given herd's other syntactic limitations, perhaps the best way would be to
-> introduce these macros as
-> 
-> 	x = cmpxchg(...) {
-> 		__fence{mb-successful-rmw};
->  		x = __cmpxchg{once}(...);
->  		__fence{mb-successful-rmw};
-> 	}
-> 
-> since I think x = M(...) is the only way we are allowed to use these macros
-> anyways.
+From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
 
-If we did this, how would the .cat file know to ignore the fence events 
-when the cmpxchg() fails?  It doesn't look like there's anything to 
-connect the two of them.
+ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP as reported by
+checkpatch script.
 
-Adding the MB tag to the cmpxchg itself seems like the only way forward.
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+ include/linux/pse-pd/pse.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Alan
+diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
+index 6d07c95dabb9..6eec24ffa866 100644
+--- a/include/linux/pse-pd/pse.h
++++ b/include/linux/pse-pd/pse.h
+@@ -167,14 +167,14 @@ static inline int pse_ethtool_get_status(struct pse_control *psec,
+ 					 struct netlink_ext_ack *extack,
+ 					 struct pse_control_status *status)
+ {
+-	return -ENOTSUPP;
++	return -EOPNOTSUPP;
+ }
+ 
+ static inline int pse_ethtool_set_config(struct pse_control *psec,
+ 					 struct netlink_ext_ack *extack,
+ 					 const struct pse_control_config *config)
+ {
+-	return -ENOTSUPP;
++	return -EOPNOTSUPP;
+ }
+ 
+ static inline bool pse_has_podl(struct pse_control *psec)
+
+-- 
+2.34.1
+
