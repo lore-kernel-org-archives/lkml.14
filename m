@@ -1,108 +1,181 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECE1838DE8;
-	Wed, 29 May 2024 06:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530FE46453;
+	Wed, 29 May 2024 06:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716964335; cv=none; b=Cq0dbbFIKYg748ccG0owm0E+u4lVrjrwQw4cC7WJntHYEvAgSwlfs2AET0uIuRMwIKQttRaCXffU4fGp9mnr2ktsJMkQ/GZdna0iwLqptSSYeYXsgLydQCs3gKjKsJKDkLjf8DK6LbpQz+FKibPW5SZRaI4Ujy8Mvx4Zuo6pX2o=
+	t=1716964437; cv=none; b=VLQorfdTKSOl2M2MWeaEFHqiERRYoEb9YkrmcCopfcZevSgbtwxsjfQYm+bmXlDUHWjpWZiMDqcwml3Z72L5jhsDkex/v3LPsli6fIP/2rVwG7HPW1VvIQJbtTCwSXxa4NfTSBtYMNsSFVfWp4YaIm9zlMavtB/OoZ/CaeTAptM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716964335; c=relaxed/simple;
-	bh=Xs98dxPvN8E+SI+7xNtVW3wrO5Cb9Zr5Ix8c8yFymWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZBvp5DR7iwBXktcJcHs6/OjxwnQxHE6gZJsFYvyYOjejk/wWjl20BhJYQiCIt0dUx/wZ87Z8b5BsvkNRFgaDGq7dX8d8BTQGtJDILvOasrLXPbRyujK6oHYrXsfFzh1Ilt4Rgsr+B4m7s+mU1cj6vBJ7c6phfLnxuLVM6jYpokU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx7erpy1ZmfgMBAA--.4358S3;
-	Wed, 29 May 2024 14:32:09 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxNMXoy1ZmY6YMAA--.22585S2;
-	Wed, 29 May 2024 14:32:08 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	rafael@kernel.org
-Cc: loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] LoongArch: Remove CONFIG_ACPI_TABLE_UPGRADE in platform_init()
-Date: Wed, 29 May 2024 14:32:06 +0800
-Message-ID: <20240529063206.30421-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1716964437; c=relaxed/simple;
+	bh=fxXSALfm/c/HrxXm8QMdN0iSEYCmwD7QCKfdmRnr0XQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=faWqiJMtfVSTMoMFzjcMOWP/UMqNatacGRWEPGx7/S4sHu+TVgBwtgxuD4FlA9jptE9wVvY5eCHugmQplHXGUEUJbxTmwb/tVYkFluAFV1JykWxKEirkvL/KhAO4cO9fusSaZz+eUedzYFotSYZdvUrL4ToFfrQRREN6zMzCx7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tVpSvj/O; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tVpSvj/O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C598EC2BD10;
+	Wed, 29 May 2024 06:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716964436;
+	bh=fxXSALfm/c/HrxXm8QMdN0iSEYCmwD7QCKfdmRnr0XQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tVpSvj/OVQ62qQPEyMQsW3zn89J5ul/51rrXGCGOJHaEr/csM+IwYCN5+qhCh+ThC
+	 DvtCSVC03Xz1TK4K8ExhZ3hXQQ5G2I13SeNE8ZYDBzQV/W+EL/zfsISpOIVk77bDqo
+	 Ak/WIGBHNqxLxkah0IDOtbVUVV9uR/vmnR4RbcKWWlwXGbHXOWMUhwqlbKigHNAfVd
+	 U5jMbbmQeKA5z0a2uIvD6IGD+upkjilFHUWGxyvIdKRw1hpmnouhmZlwh1vYhBLXH8
+	 BpczrsRIz2rFv1Kj8W0iqu8p0RPjNkY0USjjIG9PJHzwzwc1vE+ahJCQ4bcn2Frjjt
+	 CF8bgdn/dHGTg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sCCsk-00GVxc-Hn;
+	Wed, 29 May 2024 07:33:54 +0100
+Date: Wed, 29 May 2024 07:33:54 +0100
+Message-ID: <86bk4pm8j1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	Saravana Kannan <saravanak@google.com>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of: property: Fix fw_devlink handling of interrupt-map
+In-Reply-To: <CAK9=C2XNPJP0X=pg5TSrQbsuouDD3jP-gy2Sm4BXNJp0ZiWp+A@mail.gmail.com>
+References: <20240528164132.2451685-1-maz@kernel.org>
+	<CAK9=C2XNPJP0X=pg5TSrQbsuouDD3jP-gy2Sm4BXNJp0ZiWp+A@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxNMXoy1ZmY6YMAA--.22585S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7urW7uw1xXFy8GFW3AF1rKrX_yoW8XFyxpr
-	1Fyr4kKr45u3s7GFyUA3s5ur98trnFk34xXFWjkryrC3Z8Wr18XF4qgF9rZF1Fqw48Kw4I
-	v3WftF1agFW0kwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8yrW7UUUUU==
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: apatel@ventanamicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, saravanak@google.com, robh@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-acpi_table_upgrade() and acpi_boot_table_init() are defined as
-empty function under !CONFIG_ACPI_TABLE_UPGRADE and !CONFIG_ACPI
-in include/linux/acpi.h, there are no implicit declaration errors
-with various configs.
+On Wed, 29 May 2024 06:15:52 +0100,
+Anup Patel <apatel@ventanamicro.com> wrote:
+>=20
+> On Tue, May 28, 2024 at 10:11=E2=80=AFPM Marc Zyngier <maz@kernel.org> wr=
+ote:
+> >
+> > Commit d976c6f4b32c ("of: property: Add fw_devlink support for
+> > interrupt-map property") tried to do what it says on the tin,
+> > but failed on a couple of points:
+> >
+> > - it confuses bytes and cells. Not a huge deal, except when it
+> >   comes to pointer arithmetic
+> >
+> > - it doesn't really handle anything but interrupt-maps that have
+> >   their parent #address-cells set to 0
+> >
+> > The combinations of the two leads to some serious fun on my M1
+> > box, with plenty of WARN-ON() firing all over the shop, and
+> > amusing values being generated for interrupt specifiers.
+> >
+> > Address both issues so that I can boot my machines again.
+> >
+> > Fixes: d976c6f4b32c ("of: property: Add fw_devlink support for interrup=
+t-map property")
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > Cc: Anup Patel <apatel@ventanamicro.com>
+> > Cc: Saravana Kannan <saravanak@google.com>
+> > Cc: Rob Herring (Arm) <robh@kernel.org>
+>=20
+> Thanks for the fix patch but unfortunately it breaks for RISC-V.
+>=20
+> > ---
+> >  drivers/of/property.c | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > index 1c83e68f805b..9adebc63bea9 100644
+> > --- a/drivers/of/property.c
+> > +++ b/drivers/of/property.c
+> > @@ -1322,7 +1322,13 @@ static struct device_node *parse_interrupt_map(s=
+truct device_node *np,
+> >         addrcells =3D of_bus_n_addr_cells(np);
+> >
+> >         imap =3D of_get_property(np, "interrupt-map", &imaplen);
+> > -       if (!imap || imaplen <=3D (addrcells + intcells))
+> > +       imaplen /=3D sizeof(*imap);
+> > +
+> > +       /*
+> > +        * Check that we have enough runway for the child unit interrupt
+> > +        * specifier and a phandle. That's the bare minimum we can expe=
+ct.
+> > +        */
+> > +       if (!imap || imaplen <=3D (addrcells + intcells + 1))
+> >                 return NULL;
+> >         imap_end =3D imap + imaplen;
+> >
+> > @@ -1346,8 +1352,14 @@ static struct device_node *parse_interrupt_map(s=
+truct device_node *np,
+> >                 if (!index)
+> >                         return sup_args.np;
+> >
+> > -               of_node_put(sup_args.np);
+> > +               /*
+> > +                * Account for the full parent unit interrupt specifier
+> > +                * (address cells, interrupt cells, and phandle).
+> > +                */
+> > +               imap +=3D of_bus_n_addr_cells(sup_args.np);
+>=20
+> This breaks for RISC-V because we don't have "#address-cells"
+> property in interrupt controller DT node and of_bus_n_addr_cells()
+> retrieves "#address-cells" from the parent of interrupt controller.
 
-As Huacai suggested, CONFIG_ACPI_TABLE_UPGRADE is ugly and not
-necessary here, just remove it. At the same time, just keep
-CONFIG_ACPI to prevent build error and give a signal to tell
-us the code is ACPI-specific, and also put acpi_table_upgrade()
-under CONFIG_ACPI.
+That's a feature, not a bug. #address-cells, AFAICT, applies to all
+child nodes until you set it otherwise.
 
-  #ifdef CONFIG_ACPI_TABLE_UPGRADE
-  void acpi_table_upgrade(void);
-  #else
-  static inline void acpi_table_upgrade(void) { }
-  #endif
+>=20
+> The of_irq_parse_raw() looks for "#address-cells" property
+> in the interrupt controller DT node only so we should do a
+> similar thing here as well.
 
-  #ifdef	CONFIG_ACPI
-  ...
-  void acpi_boot_table_init (void);
-  ...
-  #else	/* !CONFIG_ACPI */
-  ...
-  static inline void acpi_boot_table_init(void)
-  {
-  }
-  ...
-  #endif	/* !CONFIG_ACPI */
+This looks more like a of_irq_parse_raw() bug than anything else.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/setup.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> The below change on top of this patch worked for me.
+>=20
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 9adebc63bea9..f54da2989ea9 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1308,7 +1308,7 @@ static struct device_node
+> *parse_interrupt_map(struct device_node *np,
+>  {
+>      const __be32 *imap, *imap_end, *addr;
+>      struct of_phandle_args sup_args;
+> -    u32 addrcells, intcells;
+> +    u32 addrcells, intcells, paddrcells;
+>      int i, imaplen;
+>=20
+>      if (!IS_ENABLED(CONFIG_OF_IRQ))
+> @@ -1356,7 +1356,8 @@ static struct device_node
+> *parse_interrupt_map(struct device_node *np,
+>           * Account for the full parent unit interrupt specifier
+>           * (address cells, interrupt cells, and phandle).
+>           */
+> -        imap +=3D of_bus_n_addr_cells(sup_args.np);
+> +        if (!of_property_read_u32(sup_args.np, "#address-cells", &paddrc=
+ells))
+> +            imap +=3D paddrcells;
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index ea6d5db6c878..08a077e4efd7 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -353,10 +353,8 @@ void __init platform_init(void)
- 	arch_reserve_vmcore();
- 	arch_reserve_crashkernel();
- 
--#ifdef CONFIG_ACPI_TABLE_UPGRADE
--	acpi_table_upgrade();
--#endif
- #ifdef CONFIG_ACPI
-+	acpi_table_upgrade();
- 	acpi_gbl_use_default_register_widths = false;
- 	acpi_boot_table_init();
- #endif
--- 
-2.42.0
+This looks wrong to me for the reason I outlined above: you need to
+look for a valid #address-cells all along the parent chain, not just
+in the interrupt-controller node.
 
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
