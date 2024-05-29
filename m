@@ -1,158 +1,102 @@
-Received: from sandeen.net (sandeen.net [63.231.237.45])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA321667DC;
-	Wed, 29 May 2024 20:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.231.237.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717015429; cv=none; b=BPv8xjFUGYZy3YLPCw4875ZblQ1P7gqlSBl2F0SGyeHmDCA+1SicyBPc3VxXBEfyWCzrj8dr05G8ajppEMJUArqlZBF6+yf5F0/b58RVOzscq6795L8NEIMwgZO94yLGXqizayO90znpj7srKJvhvNdw9iX9j4mtaGMsma+sP9g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717015429; c=relaxed/simple;
-	bh=oxKOEzuTFXm+4u/4nCbPs7Ta/eea2srIh+KxcoBneUU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qJ+soEkCTYs4ZrppZzOYYkLTuT/ad7TBa4/PNHg6zSsFgzsjgl3F9f7yhMzG66c6+NzizAl1uQ2Yp+hieTZezYGfsQAZpBi/KJkZ6u5H6ngowxO36d2RsBqTXeoLvUv5ToB1++CJjkf1/3r7RTjAGvXMMTP6+rvj8p1K/OdRV/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sandeen.net; spf=pass smtp.mailfrom=sandeen.net; dkim=pass (2048-bit key) header.d=sandeen.net header.i=@sandeen.net header.b=BzpZ688i; arc=none smtp.client-ip=63.231.237.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sandeen.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sandeen.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sandeen.net header.i=@sandeen.net header.b="BzpZ688i"
-Received: from [10.0.0.71] (usg [10.0.0.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sandeen.net (Postfix) with ESMTPSA id DA89A11656;
-	Wed, 29 May 2024 15:43:45 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 sandeen.net DA89A11656
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sandeen.net;
-	s=default; t=1717015426;
-	bh=E7QKq0WCihw1WClMAD9nDcjIQtM+P0EUnUc0UH+E07Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BzpZ688iwlrOfMIzxTCsgUc1XGaOfaqs3Sd/EdvJlFcIKV7Gknh9QXIoL2Sg6FM/Y
-	 BVyv25Ej1IY6mplO+O277lZIyaxNGtRB6D+AcGphQnm+0tHbqYJgzBRI8efS3Vme3k
-	 w93CKi6Kl15LQ6lEjidDUW11pNogi1iIUW67XOeGw7cyJoArKjC10LulLCKHc6sYyl
-	 MC9hrt//yfoNTyp1pL9EAc5+iBQRT4qKtObOhyNjMPxDRgui/5NTjdm/ESzKecy+Eh
-	 mLxXvWEs2fvev8Kl+J1H7wss0jpSDAkX1xGLHtP1n/y412dTOA/AKAZW2vBSwQZlEG
-	 EZGFdzzCEqfbw==
-Message-ID: <39a2d0a7-20f3-4a51-b2e0-1ade3eab14c5@sandeen.net>
-Date: Wed, 29 May 2024 15:43:45 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18ABBA48;
+	Wed, 29 May 2024 20:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717015545; cv=none; b=QWOfmkWJLMYv5KaVoQ+iEsigo1bMzmJ8EEOpj3XRmtt9QZ/ft2OUewq4MJ8zAeaD3hwVsRwBKogdBe8V286JrMXumjIOqnM2ddbhWeoT5j6seCFEx+LxkTNCmohjwsvRiJSblwK7xRUlCameeScOqGxhR1sa+kMyJSeDGKcE/4o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717015545; c=relaxed/simple;
+	bh=4ki7blp5JrFHd6o75yirTaNoR9qlBmHkYg2liLM/CLc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=lSF0fHgdof2nSR2fZnwRlKij05EjqLnCQCDDqjJw/iMUOFOFb2AVYsKYyiwOzm31wFGyywWBK5m965UCV3olCKDpHsvJoB0PgbC0OK7tF4wE7HLA4efNnXzsjLThJLyrUOrqB8Yc3W+QU8uhb0FuKITU3Dx2vwUaxOJ4N6CQgnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=M5otaLcI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="M5otaLcI"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44TBhx6C027634;
+	Wed, 29 May 2024 20:45:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=muVXLkYL4mVe1bD7GPQLZG
+	r3MdPXXZvWAWwGRgBXRdk=; b=M5otaLcIIqnRxe7aWej6yNO9DSIiKQ0cXlqsu9
+	ccktFB0XlArLhgO/xcglOTHcePIJoF8OHoiy1drfBFdWsiuV2Uotqgx9QWGwcXBq
+	1Rm9oTexaOJQkzOYMObgdDkcOk609OxpCWKQoLbstz8h0BTd11ZEN9BywaNOpvM5
+	s6Hant2Da5J2LuecHmd7UhiL2evWFq8oU1xcnVTXOC/gB6z9lnZU2PF9ALyXfLk7
+	E8mToX/n0gMYKz4377e/579ThL2bLzwgb8uAUPedyamwF8WBKr8JP9rSKsAPmBeo
+	LodJ9tvzVr1120JZFsi64m9Joj63Vx7+ZXbLLCLN6f8javsw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2njbry-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 20:45:41 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TKje5a006165
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 20:45:40 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 May
+ 2024 13:45:40 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Wed, 29 May 2024 13:45:40 -0700
+Subject: [PATCH] scftorture: make torture_type static
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] debugfs: ignore auto and noauto options if given
-To: Christian Brauner <brauner@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Eric Sandeen <sandeen@redhat.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, David Howells
- <dhowells@redhat.com>, linux-kernel@vger.kernel.org
-References: <20240522083851.37668-1-wsa+renesas@sang-engineering.com>
- <20240524-glasfaser-gerede-fdff887f8ae2@brauner>
-Content-Language: en-US
-From: Eric Sandeen <sandeen@sandeen.net>
-In-Reply-To: <20240524-glasfaser-gerede-fdff887f8ae2@brauner>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240529-static-scftorture-v1-1-b0ceaeefebaa@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAPOTV2YC/x3MywrCQAxG4VcpWRsYxwvWVxEX0/SvDehUkqkUS
+ t/d0eW3OGclhymcrs1Kho+6Trliv2tIxpQfYO2rKYZ4DKfYspdUVNhlKJOV2cByOUOkb3EIoNq
+ 9DYMu/+ftXt0lB3eWsoy/01PzvPAreYHRtn0Bp2QJw4IAAAA=
+To: "Paul E. McKenney" <paulmck@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: JaL1MCWP4AgtZsZfvPNQgNJzJNhkDN5l
+X-Proofpoint-GUID: JaL1MCWP4AgtZsZfvPNQgNJzJNhkDN5l
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-29_16,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=766 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2405290146
 
-On 5/24/24 8:55 AM, Christian Brauner wrote:
-> On Wed, May 22, 2024 at 10:38:51AM +0200, Wolfram Sang wrote:
->> The 'noauto' and 'auto' options were missed when migrating to the new
->> mount API. As a result, users with these in their fstab mount options
->> are now unable to mount debugfs filesystems, as they'll receive an
->> "Unknown parameter" error.
->>
->> This restores the old behaviour of ignoring noauto and auto if they're
->> given.
->>
->> Fixes: a20971c18752 ("vfs: Convert debugfs to use the new mount API")
->> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->> ---
->>
->> With current top-of-tree, debugfs remained empty on my boards triggering
->> the message "debugfs: Unknown parameter 'auto'". I applied a similar fix
->> which CIFS got and largely reused the commit message from 19d51588125f
->> ("cifs: ignore auto and noauto options if given").
->>
->> Given the comment in debugfs_parse_param(), I am not sure if this patch
->> is a complete fix or if there are more options to be ignored. This patch
->> makes it work for me(tm), however.
->>
->> From my light research, tracefs (which was converted to new mount API
->> together with debugfs) doesn't need the same fixing. But I am not
->> super-sure about that.
-> 
-> Afaict, the "auto" option has either never existent or it was removed before
-> the new mount api conversion time ago for debugfs. In any case, the root of the
-> issue is that we used to ignore unknown mount options in the old mount api so
-> you could pass anything that you would've wanted in there:
-> 
-> /*
->  * We might like to report bad mount options here;
->  * but traditionally debugfs has ignored all mount options
->  */
-> 
-> So there's two ways to fix this:
-> 
-> (1) We continue ignoring mount options completely when they're coming
->     from the new mount api.
-> (2) We continue ignoring mount options toto caelo.
-> 
-> The advantage of (1) is that we gain the liberty to report errors to
-> users on unknown mount options in the future but it will break on
-> mount(8) from util-linux that relies on the new mount api by default. So
-> I think what we need is (2) so something like:
+Fix the 'make C=1' warning:
+kernel/scftorture.c:71:6: warning: symbol 'torture_type' was not declared. Should it be static?
 
-Argh, sorry I missed this thread until now.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ kernel/scftorture.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-FWIW, I think the "ignore unknown mount options" was a weird old artifact;
-unknown options were only ignored originally because there were none at all,
-hence no parser to reject anything.
+diff --git a/kernel/scftorture.c b/kernel/scftorture.c
+index 59032aaccd18..13ad348143ca 100644
+--- a/kernel/scftorture.c
++++ b/kernel/scftorture.c
+@@ -67,7 +67,7 @@ torture_param(int, weight_many_wait, -1, "Testing weight for multi-CPU operation
+ torture_param(int, weight_all, -1, "Testing weight for all-CPU no-wait operations.");
+ torture_param(int, weight_all_wait, -1, "Testing weight for all-CPU operations.");
+ 
+-char *torture_type = "";
++static char *torture_type = "";
+ 
+ #ifdef MODULE
+ # define SCFTORT_SHUTDOWN 0
 
-Still, it seems odd to me that "auto/noauto" were ever passed to the kernel,
-I thought those were just a hint to userspace mount tools, no?
-
-And why wouldn't every other filesystem with rejection of unknown options
-fail in the same way?
-
-And indeed, if I add this line to my fstab on a fedora rawhide box with the
-latest upstream kernel that has the new mount API debugfs patch present
-
-debugfs /debugfs-test debugfs auto 0 0 
-
-and strace "mount -a" or "mount /debugfs-test" I do not see any "auto" options
-being passed to the kernel, and both commands succeed happily. Same if I change
-"auto" to "noauto"
-
-@Wolfram, what did your actual fstab line look like? I wonder what is actually
-trying to pass auto as a mount option, and why...
-
--Eric
-
-> diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-> index dc51df0b118d..713b6f76e75d 100644
-> --- a/fs/debugfs/inode.c
-> +++ b/fs/debugfs/inode.c
-> @@ -107,8 +107,16 @@ static int debugfs_parse_param(struct fs_context *fc, struct fs_parameter *param
->         int opt;
-> 
->         opt = fs_parse(fc, debugfs_param_specs, param, &result);
-> -       if (opt < 0)
-> +       if (opt < 0) {
-> +               /*
-> +                * We might like to report bad mount options here; but
-> +                * traditionally debugfs has ignored all mount options
-> +                */
-> +               if (opt == -ENOPARAM)
-> +                       return 0;
-> +
->                 return opt;
-> +       }
-> 
->         switch (opt) {
->         case Opt_uid:
-> 
-> 
-> Does that fix it for you?
-> 
+---
+base-commit: 4a4be1ad3a6efea16c56615f31117590fd881358
+change-id: 20240529-static-scftorture-c86eccd9e30e
 
