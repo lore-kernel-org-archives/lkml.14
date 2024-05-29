@@ -1,131 +1,94 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C2F16D9D9;
-	Wed, 29 May 2024 09:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9FC16A360
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 09:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976569; cv=none; b=D392FFLnOOp1iBK5kn5pwFS8c1jQQA3gluzHdVCmK3+mNRf23gukKrrvvIzsvnMr27Y65VHdhGQ7aRE8jSWFNVuU6Wme/U1s9wjZCXKfBFJD09LkXx9dIgtS9mlGTzcVvPIi8jfxbdczeTzAaTBa3BOXHBa6h7OjPS9tcqX/M1k=
+	t=1716976655; cv=none; b=dGGStKPTmUA3VVpBjJEro4SUlJ2EZWbwBvL0Q9Io/YSiH1X0L+pCZSXqJU6UrfdyjA4eiwgN6kXTy/fFNef/tFRudylhB60ANJ8vsfmVAhJ9M610F84nT9/vMKpHaZU2cVEJZQ1SLjHRJ0CtqLYdcdJw3eZJjbtLoHykwZCf3nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976569; c=relaxed/simple;
-	bh=dHqEPBaw5nSQKZiDPjBfxGzkUWeHJx2AEu+zXPtpOlg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kaX0S/i4y97kdC7XGEvKhhcQrDe0VUT8/9Dj+TJAG7Qfy/Xal+f5iIji7mCmKK0Rtn0EGpTEqCCCwv5Pwj0p4gYbSepGt5Bi8MH2N8xhlX8H3pUl3NdlDMBOg2iLMBfWeBtpIzPROoxuLTulBZiLjAauNRAQXaFqexN7nQKQewU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6F8B81A178D;
-	Wed, 29 May 2024 11:56:05 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 21D031A13BE;
-	Wed, 29 May 2024 11:56:05 +0200 (CEST)
-Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id DA2AA183AC0C;
-	Wed, 29 May 2024 17:56:02 +0800 (+08)
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	rohit.fule@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	ziniu.wang_1@nxp.com,
-	haibo.chen@nxp.com,
-	LnxRevLi@nxp.com
-Subject: [PATCH v3 2/2] Bluetooth: btnxpuart: Update firmware names
-Date: Wed, 29 May 2024 15:23:47 +0530
-Message-Id: <20240529095347.22186-3-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240529095347.22186-1-neeraj.sanjaykale@nxp.com>
-References: <20240529095347.22186-1-neeraj.sanjaykale@nxp.com>
+	s=arc-20240116; t=1716976655; c=relaxed/simple;
+	bh=6XgEyPsEN2NFoJlrtqnjT0UAsnXAycD0xgXGpmhOtc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vCBpo0YjfrbdNQ38MaeY70btbShbhbYC8Qt7bWSBenbcZRZ7ZmRtCIzCDApElSqRF6cO9deOCuK1GFQKyGy29HmYFI3zYEfKtI8neSq51GI8Fluk+663K3qX/e+Q9HFdaXKTtpjSmwBUcmoGxhyzJVROGM3P6jLvXQWOoaNHJVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVhPXxqk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVhPXxqk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE548C32786;
+	Wed, 29 May 2024 09:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716976654;
+	bh=6XgEyPsEN2NFoJlrtqnjT0UAsnXAycD0xgXGpmhOtc0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SVhPXxqkJ5iR85XHhjMyba0+veN+xlnvqZa+qCAzsIptXQyKKftc9Y65yuALp0f81
+	 I63nHeQrHyNb8jqIgbfNtleyQHR3S2IT12R8N2cmJ34u2bve/jKSB/F1tjOu/6lPHU
+	 5zaI5Owq88NkMMTglLDHon/Ftk/8zaIetimTAL506CD6L8US8qAEoGTuMzxtPxyH7s
+	 ZCYrOlnOrOM7MVwFjBFdiP+gVZQnOsED36Mt7GmZ7kk8ibouRzfHTzoXVlJaBKl/qx
+	 lGSXtZbzWGd9Ma56jSnm1eN69DZeUqefSU3NKaIQxhxLR1n0lf/9amdjkYgT2TQV8H
+	 Ns3vQOWIGQZCw==
+Message-ID: <19f53d36-0415-4b34-9b6b-e28ea19a44f0@kernel.org>
+Date: Wed, 29 May 2024 17:57:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] f2fs: fix to avoid use SSR allocate when do defragment
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ niuzhiguo84@gmail.com, ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com
+References: <1716976020-28757-1-git-send-email-zhiguo.niu@unisoc.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <1716976020-28757-1-git-send-email-zhiguo.niu@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This updates the firmware names of 3 chipsets: w8987, w8997, w9098.
-These changes are been done to standardize chip specific firmware
-file names.
-To allow user to use older firmware file names, a new device tree
-property has been introduced called firmware-name, which will override
-the hardcoded firmware names in the driver.
+On 2024/5/29 17:47, Zhiguo Niu wrote:
+> SSR allocate mode will be used when doing file defragment
+> if ATGC is working at the same time, that is because
+> set_page_private_gcing may make CURSEG_ALL_DATA_ATGC segment
+> type got in f2fs_allocate_data_block when defragment page
+> is writeback, which may cause file fragmentation is worse.
+> 
+> A file with 2 fragmentations is changed as following after defragment:
+> 
+> ----------------file info-------------------
+> sensorsdata :
+> --------------------------------------------
+> dev       [254:48]
+> ino       [0x    3029 : 12329]
+> mode      [0x    81b0 : 33200]
+> nlink     [0x       1 : 1]
+> uid       [0x    27e6 : 10214]
+> gid       [0x    27e6 : 10214]
+> size      [0x  242000 : 2367488]
+> blksize   [0x    1000 : 4096]
+> blocks    [0x    1210 : 4624]
+> --------------------------------------------
+> 
+> file_pos   start_blk     end_blk        blks
+>         0    11361121    11361207          87
+>    356352    11361215    11361216           2
+>    364544    11361218    11361218           1
+>    368640    11361220    11361221           2
+>    376832    11361224    11361225           2
+>    385024    11361227    11361238          12
+>    434176    11361240    11361252          13
+>    487424    11361254    11361254           1
+>    491520    11361271    11361279           9
+>    528384     3681794     3681795           2
+>    536576     3681797     3681797           1
+>    540672     3681799     3681799           1
+>    544768     3681803     3681803           1
+>    548864     3681805     3681805           1
+>    552960     3681807     3681807           1
+>    557056     3681809     3681809           1
+> 
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
 
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
----
-v2: Remove "nxp/" from all firmware name definitions to be inline with
-firware file name read from device tree file. (Krzysztof)
----
- drivers/bluetooth/btnxpuart.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+Reviewed-by: Chao Yu <chao@kernel.org>
 
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index 0b93c2ff29e4..4442d911eba8 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -33,16 +33,16 @@
- /* NXP HW err codes */
- #define BTNXPUART_IR_HW_ERR		0xb0
- 
--#define FIRMWARE_W8987		"nxp/uartuart8987_bt.bin"
--#define FIRMWARE_W8997		"nxp/uartuart8997_bt_v4.bin"
--#define FIRMWARE_W9098		"nxp/uartuart9098_bt_v1.bin"
--#define FIRMWARE_IW416		"nxp/uartiw416_bt_v0.bin"
--#define FIRMWARE_IW612		"nxp/uartspi_n61x_v1.bin.se"
--#define FIRMWARE_IW624		"nxp/uartiw624_bt.bin"
--#define FIRMWARE_SECURE_IW624	"nxp/uartiw624_bt.bin.se"
--#define FIRMWARE_AW693		"nxp/uartaw693_bt.bin"
--#define FIRMWARE_SECURE_AW693	"nxp/uartaw693_bt.bin.se"
--#define FIRMWARE_HELPER		"nxp/helper_uart_3000000.bin"
-+#define FIRMWARE_W8987		"uart8987_bt_v0.bin"
-+#define FIRMWARE_W8997		"uart8997_bt_v4.bin"
-+#define FIRMWARE_W9098		"uart9098_bt_v1.bin"
-+#define FIRMWARE_IW416		"uartiw416_bt_v0.bin"
-+#define FIRMWARE_IW612		"uartspi_n61x_v1.bin.se"
-+#define FIRMWARE_IW624		"uartiw624_bt.bin"
-+#define FIRMWARE_SECURE_IW624	"uartiw624_bt.bin.se"
-+#define FIRMWARE_AW693		"uartaw693_bt.bin"
-+#define FIRMWARE_SECURE_AW693	"uartaw693_bt.bin.se"
-+#define FIRMWARE_HELPER		"helper_uart_3000000.bin"
- 
- #define CHIP_ID_W9098		0x5c03
- #define CHIP_ID_IW416		0x7201
-@@ -685,13 +685,19 @@ static bool process_boot_signature(struct btnxpuart_dev *nxpdev)
- static int nxp_request_firmware(struct hci_dev *hdev, const char *fw_name)
- {
- 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
-+	const char *fw_name_dt;
- 	int err = 0;
- 
- 	if (!fw_name)
- 		return -ENOENT;
- 
- 	if (!strlen(nxpdev->fw_name)) {
--		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "%s", fw_name);
-+		if (strcmp(fw_name, FIRMWARE_HELPER) &&
-+		    !device_property_read_string(&nxpdev->serdev->dev,
-+						 "firmware-name",
-+						 &fw_name_dt))
-+			fw_name = fw_name_dt;
-+		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "nxp/%s", fw_name);
- 
- 		bt_dev_dbg(hdev, "Request Firmware: %s", nxpdev->fw_name);
- 		err = request_firmware(&nxpdev->fw, nxpdev->fw_name, &hdev->dev);
--- 
-2.34.1
-
+Thanks,
