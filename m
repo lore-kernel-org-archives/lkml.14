@@ -1,185 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03FA42069;
-	Wed, 29 May 2024 16:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6367139588;
+	Wed, 29 May 2024 16:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998507; cv=none; b=e61DfiiPENmVfqk6EbDeCgixYV78xKdpKpNp+H6BUdHmUnkSrZYEhdK6KX/jqPxvEGQrS5pXoN2NL094rXlB52RJyFcglto5VNUN1amxVcOxuCvH+OmtytNdmvFg0sIprbHJrEaVpvTSamxR1kSD8SWUfD8JamwjMvgJ+FTIbZo=
+	t=1716998666; cv=none; b=LgUpIjKm+P+cs1dOcp5nu9GsU554Phw5S7QorWQ3MaeSNR0KfK6W5wtdBwvRuWGgmw3vmL5/Fw8f1rYob1Tm7NUqwe8TFj3s6vN9hWHlloc/u450325mq0ux8OdOMrQmZWMFpfE6XyVkeKwCl0k7BWnI6ChPEaBgHwhMqtwEO84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998507; c=relaxed/simple;
-	bh=B0tHJXr521Nz5ptgu8zXMxt0ClW1L6gfaaq+puzVGvM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NxwfuSbGm1Dh0KTEvTWetBY1ZNs+Pqqgh6dmg3eJ716YkZLJGqBMh8uCWhys6yGvN/AgzmlUBwoW+KiEJLmMpcfmhJJa40GDveM8Kkn57yKonNc65GNIUCYzrmpc2BM6BKLSyiiadkVeYL0T9hnEg8T6XKEmgXSk2avjkwZiXmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kwDMf22p; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716998666; c=relaxed/simple;
+	bh=DWKbl03/nXco70baKk+AHssQc5Q/D3vG7XftkkCmshk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PjhP5r3vwBUFqVeIPsBD1e4lyvxyQAOscokcnHh8mN0GhmVcf5VDzNu/+TieZtBKZdnB2rxNIJTrVol7hZ2IvkFOsWq4wIg2fbTSF+IeG6S5Ik2SKqO5bpGoCyABFMb45EmlUXgRt8jCnlZvcdUXOuMYgDq/NbO+AIFZy+wiSI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WRm21IPB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kwDMf22p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716998506; x=1748534506;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=B0tHJXr521Nz5ptgu8zXMxt0ClW1L6gfaaq+puzVGvM=;
-  b=kwDMf22pWMxTrhB7WkQDVgE2M45cObhef+27rRR7/en0zZLoQxAD6cTH
-   ThfhS8jDkDsS+Fm5GWBoFQ4IZYvtaZic8VS80SvDmiIWBhUJE1PK3g69y
-   5J/iMU7XJzDf6BzQXDuZXhlf+uJCKGWgyVUgVBx3ywNQ+4s2UQQdVugFI
-   R6vTXfp2qLHUbGqL5O2BmpcH3eY3CoUX0bxbHhWPBXz5z4GzVaftkI1W/
-   StpQcAQJH7LFboPxBDFgRPtj7fMJ8XHhroDCAt10dJIHmLoNfe2DiuaLF
-   ZJipWSJqlmUZ28/tNx018u4dw+H8BKJ9WAnUBo6SRIxy0Qnyc03J6B2vS
-   A==;
-X-CSE-ConnectionGUID: +so+T2vcSpKmshgJXo1iPg==
-X-CSE-MsgGUID: 9JgoOJD6Tdu13dDWuiqW5g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13595386"
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="13595386"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 09:01:45 -0700
-X-CSE-ConnectionGUID: ZNxxFe1dT3GWUsmX+Tvi0g==
-X-CSE-MsgGUID: E8vuwEGmSLOGZthWHfIPhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="40339011"
-Received: from mdutta1-mobl1.amr.corp.intel.com ([10.213.167.110])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 09:01:44 -0700
-Message-ID: <3a7e679712fb47b6c75af84163b5d3ea252f4da9.camel@linux.intel.com>
-Subject: Re: [PATCH 0/3] tracing: Fix some selftest issues
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,  Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Date: Wed, 29 May 2024 11:01:43 -0500
-In-Reply-To: <20240529083818.b7835de167191d4567405ce6@kernel.org>
-References: <171671825710.39694.6859036369216249956.stgit@devnote2>
-	 <20240527192907.49c9220f@rorschach.local.home>
-	 <20240529014640.3a04f7301f12eb44738f9f2d@kernel.org>
-	 <20240529083818.b7835de167191d4567405ce6@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRm21IPB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26AE1C113CC;
+	Wed, 29 May 2024 16:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716998666;
+	bh=DWKbl03/nXco70baKk+AHssQc5Q/D3vG7XftkkCmshk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WRm21IPBmyqMapQh1CCFxQSxVoieejoEDj+RAl/vnlmcFMnXq8XWmNsMgR1Ki4N1M
+	 bL3Oyh3kjXr9tdyh2YTqkEUlLgLB56bEEh1nEeTgk+wNxxvivvCKUqc4vOjwJnTYFk
+	 tnsvy8dsaHrv9s5Pqn2SOb2Ipc5frnK9ORnmmKQEGExLlSRwUZH7U6G679vUNQ2P4P
+	 vilpJCEwTGsr8LfOoTS41m03bQtE33isFsLLCjhGCN2cjnqNGn/bNaHeOvw8baQ3Pm
+	 URjRZlPf7kV3G1retDhorzNl9tlVCcE0tsLCEN0+fR03ZGryT/miYM4b1HSQgx7XHf
+	 plyE080/zz/OA==
+Date: Wed, 29 May 2024 17:04:22 +0100
+From: Conor Dooley <conor@kernel.org>
+To: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+Cc: dumitru.ceclan@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] dt-bindings: adc: ad7173: add support for ad411x
+Message-ID: <20240529-slit-verse-0fb06f3556fb@spud>
+References: <20240527-ad4111-v3-0-7e9eddbbd3eb@analog.com>
+ <20240527-ad4111-v3-1-7e9eddbbd3eb@analog.com>
+ <20240527-arguably-said-361184ad848e@spud>
+ <d87ae6ef-090d-4e47-bde4-4d08fd445ac1@gmail.com>
+ <20240528-filtrate-cloning-b9152322a3da@spud>
+ <a1c75105-6447-4b67-b7d2-326ad9b19b82@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1fQrEwqMuWGtDjnv"
+Content-Disposition: inline
+In-Reply-To: <a1c75105-6447-4b67-b7d2-326ad9b19b82@gmail.com>
 
-Hi Masami,
 
-On Wed, 2024-05-29 at 08:38 +0900, Masami Hiramatsu wrote:
-> On Wed, 29 May 2024 01:46:40 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
->=20
-> > On Mon, 27 May 2024 19:29:07 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
+--1fQrEwqMuWGtDjnv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, May 29, 2024 at 04:38:53PM +0300, Ceclan, Dumitru wrote:
+> On 28/05/2024 20:52, Conor Dooley wrote:
+> > On Tue, May 28, 2024 at 03:16:07PM +0300, Ceclan, Dumitru wrote:
+> >> On 27/05/2024 20:48, Conor Dooley wrote:
+> >>> On Mon, May 27, 2024 at 08:02:34PM +0300, Dumitru Ceclan via B4 Relay=
+ wrote:
+> >>>> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+> >>>> +      adi,channel-type:
+> >>>> +        description:
+> >>>> +          Used to differentiate between different channel types as =
+the device
+> >>>> +           register configurations are the same for all usage types.
+> >>>> +          Both pseudo-differential and single-ended channels will u=
+se the
+> >>>> +           single-ended specifier.
+> >>>> +        $ref: /schemas/types.yaml#/definitions/string
+> >>>> +        enum:
+> >>>> +          - single-ended
+> >>>> +          - differential
+> >>>> +        default: differential
+> >>>
+> >>> I dunno if my brain just ain't workin' right today, or if this is not
+> >>> sufficiently explained, but why is this property needed? You've got
+> >>> diff-channels and single-channels already, why can you not infer the
+> >>> information you need from them? What should software do with this
+> >>> information?
+> >>> Additionally, "pseudo-differential" is not explained in this binding.
+> >>
+> >> In previous thread we arrived to the conclusion single-ended and
+> >> pseudo-differential channels should be marked with the flag
+> >> "differential=3Dfalse" in the IIO channel struct. This cannot
+> >> really be inferred as any input pair could be used in that
+> >> manner and the only difference would be in external wiring.
+> >>
+> >> Single-channels cannot be used to define such a channel as
+> >> two voltage inputs need to be selected. Also, we are already
+> >> using single-channel to define the current channels.
 > >=20
-> > > On Sun, 26 May 2024 19:10:57 +0900
-> > > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> > >=20
-> > > > Hi,
-> > > >=20
-> > > > Here is a series of some fixes/improvements for the test
-> > > > modules and boot
-> > > > time selftest of kprobe events. I found a WARNING message with
-> > > > some boot=20
-> > > > time selftest configuration, which came from the combination of
-> > > > embedded
-> > > > kprobe generate API tests module and ftrace boot-time selftest.
-> > > > So the main
-> > > > problem is that the test module should not be built-in. But I
-> > > > also think
-> > > > this WARNING message is useless (because there are warning
-> > > > messages already)
-> > > > and the cleanup code is redundant. This series fixes those
-> > > > issues.
-> > >=20
-> > > Note, when I enable trace tests as builtin instead of modules, I
-> > > just
-> > > disable the bootup self tests when it detects this. This helps
-> > > with
-> > > doing tests via config options than having to add user space code
-> > > that
-> > > loads modules.
-> > >=20
-> > > Could you do something similar?
+> > If I understand correctly, the property could be simplified to a flag
+> > then, since it's only the pseudo differential mode that you cannot be
+> > sure of?
+> > You know when you're single-ended based on single-channel, so the
+> > additional info you need is only in the pseudo-differential case.
 > >=20
-> > OK, in that case, I would like to move the test cleanup code in
-> > module_exit function into the end of module_init function.=20
-> > It looks there is no reason to split those into 2 parts.
->=20
-> Wait, I would like to hear Tom's opinion. I found following usage
-> comments
-> in the code.
->=20
-> =C2=A0* Following that are a few examples using the created events to tes=
-t
-> =C2=A0* various ways of tracing a synthetic event.
-> =C2=A0*
-> =C2=A0* To test, select CONFIG_SYNTH_EVENT_GEN_TEST and build the module.
-> =C2=A0* Then:
-> =C2=A0*
-> =C2=A0* # insmod kernel/trace/synth_event_gen_test.ko
-> =C2=A0* # cat /sys/kernel/tracing/trace
-> =C2=A0*
-> =C2=A0* You should see several events in the trace buffer -
-> =C2=A0* "create_synth_test", "empty_synth_test", and several instances of
-> =C2=A0* "gen_synth_test".
-> =C2=A0*
-> =C2=A0* To remove the events, remove the module:
-> =C2=A0*
-> =C2=A0* # rmmod synth_event_gen_test
->=20
-> Tom, is that intended behavior ? and are you expected to reuse these
-> events outside of the module? e.g. load the test module and run some
-> test script in user space which uses those events?
->=20
+> Yes, it could just be a boolean flag. The only thing I have against
+> that is the awkwardness of having both diff-channels and
+> differential=3Dfalse within a channel definition.
 
-Yeah, this module was meant as a sample module showing how to create
-and generate synthetic events in-kernel.
+What I was suggesting was more like "adi,pseudo-differential" (you don't
+need to set the =3Dfalse or w/e, flag properties work based on present/not
+present). I think that would avoid the awkwardness?
 
-So the interested user insmods the module, looks at the trace stream
-and sees, ok the events are there as expected, so it does work, great,
-let's remove the module to get rid of them and go write our own.
-
-Having both the creation and cleanup in module_init() wouldn't allow
-the user the opportunity to do that i.e. verify the results by reading
-the trace file.
-
-Tom=20
-
-> As far as I can see, those tests are not intended to be embedded in
-> the
-> kernel because those are expected to be removed.
->=20
-> Thank you,
->=20
+> >> As for explaining the pseudo-differential, should it be explained?
+> >> A voltage channel within the context of these families is actually
+> >> differential(as there are always two inputs selected).
+> >> The single-ended and pseudo-diff use case is actually wiring up a
+> >> constant voltage to the selected negative input.
+> >>
+> >> I did not consider that this should be described, as there is no
+> >> need for an attribute to describe it.
 > >=20
-> > Thank you,
+> > I dunno, adding an explanation of it in the text for the channel type
+> > seems trivial to do. "Both pseudo-differential mode (where the
+> > one of differential inputs is connected to a constant voltage) and
+> > single-ended channels will..."
+> >
+> >>> Also, what does "the device register configurations are the same for
+> >>> all uses types" mean? The description here implies that you'd be read=
+ing
+> >>> the registers to determine the configuration, but as far as I underst=
+and
+> >>> it's the job of drivers to actually configure devices.
+> >>> The only way I could interpret this that makes sense to me is that yo=
+u're
+> >>> trying to say that the device doesn't have registers that allow you to
+> >>> do runtime configuration detection - but that's the norm and I would =
+not
+> >>> call it out here.
+> >>
+> >> No, I meant that the same register configuration will be set for
+> >> both fully differential and single-ended.=20
+> >>
+> >> The user will set diff-channels =3D <0, 1>, bipolar(or not) and
+> >> then they can wire whatever to those pins:=20
+> >> - a differential signal
+> >> - AVSS to 1 and a single-ended signal to 0
+> >> - AVSS+offset to 1 and a single-ended signal to 0
+> >> 	(which is called pseudo-differential in some datasheets)
+> >>
+> >> All these cases will look the same in terms of configuration
 > >=20
-> > >=20
-> > > -- Steve
-> > >=20
-> > >=20
-> > > >=20
-> > > > Thank you,
-> > > >=20
-> > > > ---
-> > > >=20
-> > > > Masami Hiramatsu (Google) (3):
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tracing: Build event generation test=
-s only as modules
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tracing/kprobe: Remove unneeded WARN=
-_ON_ONCE() in
-> > > > selftests
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tracing/kprobe: Remove cleanup code =
-unrelated to selftest
-> > > >=20
-> >=20
-> >=20
-> > --=20
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
->=20
->=20
+> > In that case, I'd just remove this sentence from the description then.
+> > How you configure the registers to use the device doesn't really have
+> > anything to do with describing the configuration of the hardware.
+> > Given it isn't related to configuration detection at runtime, what
+> > you've got written here just makes it seem like the property is
+> > redundant because the register settings do not change.
+> >
+> > Instead, use the description to talk about when the property should be
+> > used and what software should use it to determine, e.g. "Software can
+> > use vendor,channel-type to determine whether or not the measured voltage
+> > is absolute or relative". I pulled that outta my ass, it might not
+> > be what you're actually doing, but I figure you just want to know if
+> > you're measuring from the origin or either side of it.
 
+> >It's more to the "software can this property to correctly mark the chann=
+el
+
+Your quoting is scuffed here, I didn't write this!
+
+> as differential or not". Hope this is acceptable. But got it, thanks.
+
+As long as you've got a description that tells the OS what the property
+actually represents, I'm happy.
+
+--1fQrEwqMuWGtDjnv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZldSBQAKCRB4tDGHoIJi
+0h+hAP9HgtxHzbYOpeOdlInP38k8mCjUNQ1jOet2R9xFvyi7KgD/awfrNzpr6Grq
+gw8D1Luo3VGZOSo+/h2GPMl/zY/iNgQ=
+=GSs9
+-----END PGP SIGNATURE-----
+
+--1fQrEwqMuWGtDjnv--
