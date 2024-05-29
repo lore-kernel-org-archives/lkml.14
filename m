@@ -1,64 +1,118 @@
-Received: from mail115-79.sinamail.sina.com.cn (mail115-79.sinamail.sina.com.cn [218.30.115.79])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14511BC57
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C931BC57;
+	Wed, 29 May 2024 11:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716983693; cv=none; b=pFiuCC/W8FbJVkYoOXhyfwixMvjR2sWYKg3Ev9TPDiy7WgRa9oRgYID5KAWaMegk2oz2eqkjQYZnk1sLuZuQpL2/NDM5tUxGclwvg4qVCjMLXXx32HD9EchFK3eaJodFrZ2FEdnjoO3u+9tGsCVy04Mb7xbRJuPgfIA3lUIR4b4=
+	t=1716983704; cv=none; b=ElPL/MbdLXQHnbRprbxCQ04mVpQ8Y0tgBPn1m/1cZgupbfS4dIAgej1g47+uUd5jx9dZtAtlIZfHq6CNIfg5FpPxsopmDV61Dy2ZF5Zv5tn82C7D5POm9SH/73KBidZ4UmeYtUWqTjL0fuTWEkt3fsK2KXncwDZ9PD7IRLa3oQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716983693; c=relaxed/simple;
-	bh=6sV6W3xEzbKwzUUXOHrOWUHZ1xLmAfdGarqfQ6waobc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lnJtWs/zrke16PwXHC0CAXuR5j60tCBKEVaonHaSkLeGUyRMi+2+wfddadfjyek/+yBHFeNZOemx3vNRHwFtIGXh+I/zPrWrsXE3UGMEQ9gvQoNwEbCyhPe5Qgoy/TK64bRnkR7ciuR8UIAffc1rjqsX/RARbyWzKiOjGySNWtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.24.9.5])
-	by sina.com (10.75.12.45) with ESMTP
-	id 6657163C00004C34; Wed, 29 May 2024 19:49:18 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 66334531458002
-X-SMAIL-UIID: 32EC0D550B704E8F8CDE9584ED7A08B1-20240529-194918-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+5d34cc6474499a5ff516@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] KASAN: slab-use-after-free Read in chrdev_open
-Date: Wed, 29 May 2024 19:49:06 +0800
-Message-Id: <20240529114906.2905-1-hdanton@sina.com>
-In-Reply-To: <000000000000f386f90616fea5ef@google.com>
-References: 
+	s=arc-20240116; t=1716983704; c=relaxed/simple;
+	bh=p7wQtzPc0gskeZlqdHZkaIR8z402TtfibTSQeobi72Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NRjPlttJQw+M8boY8Uf0wXr62AnVka4LCO+GNHDOeGX80JxflmawjXmmpp/RqcTYBiI8FqZNWKU3nJAA+A8LpKevYyZIgEjPjXGoPw/RHMRZy3tB5m6WSWc/crHg/dQEBNK8IINOIqxxmYsJ/SQA5rQ3BlEd29sLoGr3RCnlGBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QvAdy3Vk; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QvAdy3Vk"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44T9jhqN011441;
+	Wed, 29 May 2024 11:54:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SP7r+/9vOIiDhIdLbDBVBorrd8fvJYwJfnczReif0ZY=; b=QvAdy3Vks2lxWAdP
+	LKqn0Og9ORaR3o0voQdEmqpgtL7iXO6T4Vblm4lvFI2sna9dj85AA+pI0W1st3Hp
+	YFcuWUQPld5FcYs5f+g+pavKl35s/CgT18gmxEoUU8aMj7avrrH1+kU7JDTNJsdZ
+	I2p3TEzsJ4xDMeVTvHjxCEXdXoLT6rL9P+ih4aFBaexk6nR+t6G2soOpQI3EICl5
+	izAVJsfjs8RmZnHfDVhUgN1kYVVXDszHoP+jse8D2PnoEhvKVKH4ateE3CWYMqIw
+	VdAFmzzM4mu1MAqV+tXy+itVnpXpZyuOyG/Zs3VA9Rr8+LmPmy/Bz0x1K/4f3gqY
+	06oG5A==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0qgu95-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 11:54:58 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TBsvnQ011684
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 11:54:57 GMT
+Received: from [10.216.41.231] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 May
+ 2024 04:54:54 -0700
+Message-ID: <d85bf913-b6dc-e9fd-7c54-fe52b79c2593@quicinc.com>
+Date: Wed, 29 May 2024 17:24:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2] firmware: qcom_scm: Add a padded page to ensure DMA
+ memory from lower 4GB
+To: Bjorn Andersson <andersson@kernel.org>
+CC: <konrad.dybcio@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1716564705-9929-1-git-send-email-quic_mojha@quicinc.com>
+ <h6omxqre7pod3ztn7x3sckjbgcg32u4btfmtxwn2rkjw7uwsgd@ncdmu5ed4gm3>
+Content-Language: en-US
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <h6omxqre7pod3ztn7x3sckjbgcg32u4btfmtxwn2rkjw7uwsgd@ncdmu5ed4gm3>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aL52d0rawomMSiGPufVMQOfTYaQNQGXX
+X-Proofpoint-ORIG-GUID: aL52d0rawomMSiGPufVMQOfTYaQNQGXX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-29_07,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405290081
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
---- x/fs/open.c
-+++ y/fs/open.c
-@@ -906,9 +906,13 @@ static int do_dentry_open(struct file *f
- {
- 	static const struct file_operations empty_fops = {};
- 	struct inode *inode = f->f_path.dentry->d_inode;
-+	struct dentry *d = f->f_path.dentry;
- 	int error;
- 
-+	if (!lockref_get_not_zero(&d->d_lockref))
-+		return -ENODEV;
- 	path_get(&f->f_path);
-+	dput(d);
- 	f->f_inode = inode;
- 	f->f_mapping = inode->i_mapping;
- 	f->f_wb_err = filemap_sample_wb_err(f->f_mapping);
---
+
+On 5/27/2024 2:16 AM, Bjorn Andersson wrote:
+> On Fri, May 24, 2024 at 09:01:45PM GMT, Mukesh Ojha wrote:
+>> For SCM protection, memory allocation should be physically contiguous,
+>> 4K aligned, and non-cacheable to avoid XPU violations. This granularity
+>> of protection applies from the secure world. Additionally, it's possible
+>> that a 32-bit secure peripheral will access memory in SoCs like
+>> sm8{4|5|6}50 for some remote processors. Therefore, memory allocation
+>> needs to be done in the lower 4 GB range. To achieve this, Linux's CMA
+>> pool can be used with dma_alloc APIs.
+>>
+>> However, dma_alloc APIs will fall back to the buddy pool if the requested
+>> size is less than or equal to PAGE_SIZE. It's also possible that the remote
+>> processor's metadata blob size is less than a PAGE_SIZE. Even though the
+>> DMA APIs align the requested memory size to PAGE_SIZE, they can still fall
+>> back to the buddy allocator, which may fail if `CONFIG_ZONE_{DMA|DMA32}`
+>> is disabled.
+> 
+> Does "fail" here mean that the buddy heap returns a failure - in some
+> case where dma_alloc would have succeeded, or that it does give you
+> a PAGE_SIZE allocation which doesn't meeting your requirements?
+
+Yes, buddy will also try to allocate memory and may not get PAGE_SIZE 
+memory in lower 4GB(for 32bit capable device) if CONFIG_ZONE_{DMA|DMA32} 
+is disabled. However, DMA memory would have successful such case if
+padding is added to size to cross > PAGE_SIZE.
+
+> 
+>  From this I do find the behavior of dma_alloc unintuitive, do we know if
+> there's a reason for the "equal to PAGE_SIZE" case you describe here?
+
+I am not a memory expert but the reason i can think of could be, <= 
+PAGE_SIZE can anyway possible to be requested outside DMA coherent api's
+with kmalloc and friends api and that could be the reason it is falling
+back to buddy pool in DMA api.
+
+-Mukesh
