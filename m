@@ -1,118 +1,127 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E516156F38;
-	Wed, 29 May 2024 14:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF76157E9E;
+	Wed, 29 May 2024 14:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716992924; cv=none; b=a+C+SIxbfjAqS4LCgnTwjFWZQAuPsYyOJitE8B5Qm9l/ciYlG6hm2qdRD+AS7RsTlmkLy5boYrpAgkLLYbzXUNDESQUKk6oNQ3fm2ceW0OjwoSmV+P7w0B43V1EuQrmyXNhVW3XSf/o1kIg33rFMnrahOAXBHLoLqakBZ+MV3xU=
+	t=1716992925; cv=none; b=lG5Wf64G0OWSa50SYfQph0ZxKeCl8/hzR4dTrdaph6SlPmCJF3id9gNmlgY8W7yn5zCwKb6mEzoV9nO8M/NpvktBaSKi4OAOpdmV6BlCSZ/tHuzuKMo2Cyo9POCs/8SITow4SMieus5c7XsXv3IH1d3qU2qDBDsvGo23aVZyVug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716992924; c=relaxed/simple;
-	bh=YMQyhhaP6Gg3VRgatRDCJBiv0lWaUNKjwv78w6uHqZg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nmhMu8ikKxP4FwSntfSupSf8/xpxz8NWqAQl/mjgeJ4+TOg9TfZsVz1iiuNWZQaYUup5A+WW6DCR3FGz7yvWpKN83+OqKCCAnxn4EnuS7PSVqKSRHcaNech3Uu9Ur58ZGr6uFmxFNBxFRTBU+xSHtLA2LHXbPhi4u3F/CCDt+eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=mw8j/CgV; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1716992925; c=relaxed/simple;
+	bh=HuG35zW4Cif4/8q3V8npkUZQOn+01GHHL+f9PDDz84w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PPpSiCjFvmfWP+vYLYap5uXZZVuKt1TeHYF4Ly1w8uN1clnUf+pOET8O525tsNGclFAr1rbQDO2wvROgFtBg5AWqQarT2m55K+i74wouLmo8n7qN9JAmt/iFP7vQbJPhnulCDRxfZmODnX/Bgv3yT1uDzE29b8/DUY9t1hwIJYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NMp7bNM8; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="mw8j/CgV"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716992918; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Oje62Ov6FUBQ4DHAsaEy7GE8Yt2ouQ/knXBYAIm0bWE=;
-	b=mw8j/CgV/4aYJxy1mQgVGQg1YxAhvc0mxSSeSAgQkpRRCd8NaV8RXY7cZHl2bek/h80eaKAK/EREjWe/QcnSstPxHjDX2dqcXNIJM37g8RyFhapq4YpEzqu1IzVW140eEcv6y/OjkaAcJDdiiAYnt+0JiiJ+rh0L30NDQ4zl7Mo=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W7U1T.u_1716992916;
-Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7U1T.u_1716992916)
-          by smtp.aliyun-inc.com;
-          Wed, 29 May 2024 22:28:37 +0800
-Message-ID: <2dc48e89-cd3f-4736-8847-4d23bcad27e5@linux.alibaba.com>
-Date: Wed, 29 May 2024 22:28:35 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMp7bNM8"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5789733769dso16062a12.1;
+        Wed, 29 May 2024 07:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716992922; x=1717597722; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LqEY5U9mWqFpY7LFrJzI8LrdDM4tYViPg9IrN0Az+O4=;
+        b=NMp7bNM8LTIRb4Y07AieHhdnOZvg7znDuGU5wpVRAjtf2Yinxw+mfjT2vUsgN4EBiC
+         HVDpXCitl4PtRMxwkIDzNUp0KrI/kHCfl9ZVU1+BCyEFxczSV1+gGvlAZJmtU5/wj4F7
+         bVF4WadP4Pw1csXD9BE3qXSv0DtcsUIdJHh8GwCui++ge5J4agkARhFCq0UX5Np693Dh
+         X096P0OCKENHKL0FcOBDUSxcCSgLH+YUbZbyV6oNbJomkRaD5NHlapebsuS+zp3IKe/j
+         dGrkjoOSBbZEb72O1pzF9aVsImDTHc5RQBgBOqDARGmQJzQNRvsq/k4yJqSdTKD2majx
+         oEvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716992922; x=1717597722;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LqEY5U9mWqFpY7LFrJzI8LrdDM4tYViPg9IrN0Az+O4=;
+        b=qFWalxigHv6khL/rd2UmmioXHS7SqW5KmZcJWVAXvYdg1pyhf/jtOi89qXyhTFf6lI
+         XlHijUGiptVtb54sWG7MNbHwwxhYuZzJ5+n6AAFhsWqC4PMjq68Zyr0EbXPGrNT8WmfH
+         p4TZRbdP4gQXfbz1fa086cXhg0tp8G2Z8+/blpzPBp0TIn85akKwnWFnKkGuGym8MrcQ
+         1b5gVjeYVL6nG06uz96l9eK+vL+4LfjDwvY4VE0O5MSPcWxU/pcgY++XwumSsaRphj3i
+         qxaErQqJyKEJdVBnId1uzaTWP2tztKQRlOTehdiTA91o8ktbCt8q7z45MUU+sfelooc9
+         a8+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWv84TIn/UVSese9oT28c/BdyLT2YWpW/A+XsnXGm5VpYUox76zIvTJ9t/gc/KJHgmobiUU2LqvaHTBp7lmrKKgprKc4zgLG5UUpDLkOlhFbi3KJAt7bAhG9iLgczcUdyXY0E7DdTdbNnvrft4XYav8qg==
+X-Gm-Message-State: AOJu0Ywc3Vf1hmRp56O5+jaBEDb4+XOb/TLNN7eMDL0oX641ZKLI/cii
+	rxwS/9j/Gyrdiqd0YNvwGaaoBKEHflTbSLXIWwk5Jqntua/0KLzcg3Gp3amonk0UxLtcKJa/iHO
+	lF0RXVvZA9/hXBq53F/loP/5L0ZHyttd5
+X-Google-Smtp-Source: AGHT+IH9/qKwYyx5RhmP9F/H4tmfTr5GvPSYrRfdhTUQsmMUkwyQWqdd9fHZEjaf/TWJ6Quvdxzf/Jl/H44quOT9Y3M=
+X-Received: by 2002:a17:906:7013:b0:a62:5094:817 with SMTP id
+ a640c23a62f3a-a642d37e944mr191016366b.11.1716992921772; Wed, 29 May 2024
+ 07:28:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/12] cachefiles: some bugfixes and cleanups for
- ondemand requests
-To: Christian Brauner <brauner@kernel.org>, netfs@lists.linux.dev,
- dhowells@redhat.com, jlayton@kernel.org, libaokun@huaweicloud.com
-Cc: jefflexu@linux.alibaba.com, zhujia.zj@bytedance.com,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com,
- yukuai3@huawei.com, wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>,
- Gao Xiang <xiang@kernel.org>
-References: <20240522114308.2402121-1-libaokun@huaweicloud.com>
- <20240529-lehrling-verordnen-e5040aa65017@brauner>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240529-lehrling-verordnen-e5040aa65017@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240529095009.1895618-1-arnd@kernel.org> <CAHp75VdRuK_sOF=25xP0azp8sOJ8DY_SRpLq9mUSaNEmWj5EAg@mail.gmail.com>
+ <436667b5-308a-4a0b-b66e-230667ce0cc3@app.fastmail.com>
+In-Reply-To: <436667b5-308a-4a0b-b66e-230667ce0cc3@app.fastmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 29 May 2024 17:28:05 +0300
+Message-ID: <CAHp75VcVdwxv5Mm3GEv7SmsCiN3ZACpejNb7V_Ld1NBTxcXixQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: int3472: make common part a separate module
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Christian,
+On Wed, May 29, 2024 at 5:14=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+> On Wed, May 29, 2024, at 15:41, Andy Shevchenko wrote:
+> > On Wed, May 29, 2024 at 12:50=E2=80=AFPM Arnd Bergmann <arnd@kernel.org=
+> wrote:
 
-On 2024/5/29 19:07, Christian Brauner wrote:
-> On Wed, 22 May 2024 19:42:56 +0800, libaokun@huaweicloud.com wrote:
->> From: Baokun Li <libaokun1@huawei.com>
->>
->> Hi all!
->>
->> This is the third version of this patch series. The new version has no
->> functional changes compared to the previous one, so I've kept the previous
->> Acked-by and Reviewed-by, so please let me know if you have any objections.
->>
->> [...]
-> 
-> So I've taken that as a fixes series which should probably make it upstream
-> rather sooner than later. Correct?
+...
 
-Yeah, many thanks for picking these up!  AFAIK, they've already been
-landed downstream for a while so it'd be much better to address
-these upstream. :-)
+> >>  obj-$(CONFIG_INTEL_SKL_INT3472)                +=3D intel_skl_int3472=
+_discrete.o \
+> >> -                                          intel_skl_int3472_tps68470.=
+o
+> >
+> >> +                                          intel_skl_int3472_tps68470.=
+o \
+> >> +                                          intel_skl_int3472_common.o
+> >
+> > A nit: Can this be put above instead?
+>
+> I've changed it like this now, is that what you meant?
+>
+>
+> obj-$(CONFIG_INTEL_SKL_INT3472)         +=3D intel_skl_int3472_common.o \
+>                                            intel_skl_int3472_discrete.o \
+>                                            intel_skl_int3472_tps68470.o \
 
-Thanks,
-Gao Xiang
+Without the last trailing \, but yes.
 
-> 
-> ---
-> 
-> Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-> Patches in the vfs.fixes branch should appear in linux-next soon.
-> 
-> Please report any outstanding bugs that were missed during review in a
-> new review to the original patch series allowing us to drop it.
-> 
-> It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> patch has now been applied. If possible patch trailers will be updated.
-> 
-> Note that commit hashes shown below are subject to change due to rebase,
-> trailer updates or similar. If in doubt, please check the listed branch.
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> branch: vfs.fixes
-> 
-> [01/12] cachefiles: add output string to cachefiles_obj_[get|put]_ondemand_fd
->          https://git.kernel.org/vfs/vfs/c/cc5ac966f261
-> [02/12] cachefiles: remove requests from xarray during flushing requests
->          https://git.kernel.org/vfs/vfs/c/0fc75c5940fa
-> [03/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_get_fd()
->          https://git.kernel.org/vfs/vfs/c/de3e26f9e5b7
-> [04/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_daemon_read()
->          https://git.kernel.org/vfs/vfs/c/da4a82741606
-> [05/12] cachefiles: remove err_put_fd label in cachefiles_ondemand_daemon_read()
->          https://git.kernel.org/vfs/vfs/c/3e6d704f02aa
-> [06/12] cachefiles: add consistency check for copen/cread
->          https://git.kernel.org/vfs/vfs/c/a26dc49df37e
-> [07/12] cachefiles: add spin_lock for cachefiles_ondemand_info
->          https://git.kernel.org/vfs/vfs/c/0a790040838c
-> [08/12] cachefiles: never get a new anonymous fd if ondemand_id is valid
->          https://git.kernel.org/vfs/vfs/c/4988e35e95fc
-> [09/12] cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
->          https://git.kernel.org/vfs/vfs/c/4b4391e77a6b
-> [10/12] cachefiles: Set object to close if ondemand_id < 0 in copen
->          https://git.kernel.org/vfs/vfs/c/4f8703fb3482
-> [11/12] cachefiles: flush all requests after setting CACHEFILES_DEAD
->          https://git.kernel.org/vfs/vfs/c/85e833cd7243
-> [12/12] cachefiles: make on-demand read killable
->          https://git.kernel.org/vfs/vfs/c/bc9dde615546
+> intel_skl_int3472_common-y      +=3D common.o
+> intel_skl_int3472_discrete-y    :=3D discrete.o clk_and_regulator.o led.o
+> intel_skl_int3472_tps68470-y    :=3D tps68470.o tps68470_board_data.o
+
+...
+
+> >> +EXPORT_SYMBOL_GPL(skl_int3472_get_sensor_adev_and_name);
+> >
+> > Are these namespaced?
+>
+> No, is there any advantage to making them namespaced?
+
+Yes, to clean up the global namespace.
+
+> It's only a few symbols and they have proper prefixes.
+
+It's different from the exported namespace.
+The function prefixes are needed due to C language, as we can't have
+two functions named the same. The export OTOH is what used for linking
+modules and if there is no need to have it exported globally, if, for
+example, compiling in this one.
+
+So, can we move to the exported namespace at the same time?
+
+--=20
+With Best Regards,
+Andy Shevchenko
