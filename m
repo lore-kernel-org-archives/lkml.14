@@ -1,227 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBE7168C37
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088F216191E
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716970924; cv=none; b=Vh8MriZug5mLnVzX4JD50HEeBI0+a41wCKTnoSI2OANwdN9bm7sZ5GxqZeGhO3twvk5QV2EBcK2TzCaOGCnW+1BHJyf5OC9BtW3JSNa4Omxol7IC07ELszWiVVGLw8+WZW3lGgAcoFJkT2DbA+MciQJtfjm/KtJXJ+BRQHmtOpE=
+	t=1716970984; cv=none; b=Ys8EWeVe0vARXBw++9JvGWu9udLFn+36t7alsA6YSx2tIZF9DM2I7Hl1LA89tfj5QXUnTf70f+AhJJKkPAq/2ec++qroFo+NYsyurkui7XnUCx+BMEC0mXlPx0XfW9kuasCe7Tec6Jtdu9V13nfDibn7VejD9NtRZpDM31ie/4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716970924; c=relaxed/simple;
-	bh=JvJ/znY5aAJUH6CBtu3z63ozlDO6l7q/FWJId5WW5u8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rIw/yRRAMfdoYFIcGavPh2i7s1/4nE+TS01O2aF9Gc11YdVmUF9eNMQQC3+/0BZSC4XvJQGQFO419WcZlC+rB/kwDlSgdeaBJBU1QVUx1rsz1LlRoKje2o3cGEDeH570GBF5vUFsCiZ1DpOAiSt+S6DooVKHPF+0T8E/mpMDCHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VTyTFzHP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VTyTFzHP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716970922;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=saeEBWoWqmMbGp2rBntpWc8gNzVhRyq6SnG448wWm2U=;
-	b=VTyTFzHPZRos2RLOSBaFFYfjwCCvhOzyGo1YBSWSm6iZ6u+nYuNcF51R18W/kPdeUQfCYQ
-	TVOFlV/wdlR7WBOn3Ct/t0T4Db9jmAsE0iFcUpEe+yBeFFF3GoItraDYDjLV3I//+XVbMf
-	VOqs05CUvWOG74pVCzzU+sqU2gHUhsg=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-136-GhGWA2WxNgKulB6T5jZW5g-1; Wed, 29 May 2024 04:22:00 -0400
-X-MC-Unique: GhGWA2WxNgKulB6T5jZW5g-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a6265d3cb78so103803266b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 01:22:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716970919; x=1717575719;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=saeEBWoWqmMbGp2rBntpWc8gNzVhRyq6SnG448wWm2U=;
-        b=Bex4JrEamTsWy+njpfFDon8WP6G7EH6aAQD9Q8QTcMbFjOzjrZS/QUX8jPmI9miSig
-         1K54snNi4VHLxBs4PlWDp5DBOyNAT9uS6zQ4xe1pc7k60hjfAWSMysfT8BFTb06W49tZ
-         Ep9JF9v9Tsu0BQdVxPwoBzyOlfYni2A1jTpcUZUC+pFbb+lSdYlZAXkGMy+qx9tfiMPk
-         ZhBF7GPM6vNc1okUMsY7/PoqZGb0BeaqyQ1VK3tlv/HMbJl/Nu5yS3QTrw2Vb8FEu4na
-         p2OL1KpVVyFVnRgqP/zQuVMM5lp75RqOeQN/qnlFrn1mCMGtcevNLrEb96CB6QlZTUXW
-         mQ4w==
-X-Forwarded-Encrypted: i=1; AJvYcCU0adLwl0dFFLUcG4PPaAEAslDl9KjPX+BZSVvDWWD1FgC3NEi0xLwO7+4djNqNhiAnYfCB/GTtG1Ua7su6RHa33bwZC4TyKJAhTQ9e
-X-Gm-Message-State: AOJu0Yz8POzxsKwsrK4JbupT+DzoTVw1iNsJ07nIjlgfF2tH2OnixDun
-	6lKDnyHJFEBqCSEka4uoaeYOvBsaRY2DQ7L6T7yj5zM4RBjCpL0AY0Yu7geSRrmdkru7Nu6cuIe
-	xJp3G5vRvKwCyOZMB4EW2AqLEW/s0mQ14ApFh4BxKK1a5pZTGzQ5Dm3pSU0DlAQ==
-X-Received: by 2002:a17:906:63ca:b0:a59:a9c5:e73b with SMTP id a640c23a62f3a-a62647ce012mr862583366b.46.1716970919181;
-        Wed, 29 May 2024 01:21:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFWk3/1wjwfIXsCmZeoXQBLcPsIitG9Fxniw+cXvQl5pRhA/ibqHffOsf0ZrQrhKZTXW5UaYw==
-X-Received: by 2002:a17:906:63ca:b0:a59:a9c5:e73b with SMTP id a640c23a62f3a-a62647ce012mr862581266b.46.1716970918430;
-        Wed, 29 May 2024 01:21:58 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cc8a742sm686508566b.153.2024.05.29.01.21.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 01:21:57 -0700 (PDT)
-Message-ID: <fc082b9e-b6f7-457c-b9e5-6797a0285bc3@redhat.com>
-Date: Wed, 29 May 2024 10:21:56 +0200
+	s=arc-20240116; t=1716970984; c=relaxed/simple;
+	bh=6f8ItstMlch3RcPgy7vlb027QgO046tCJUhTEb1z/0Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pSO8GSxv5pZGOi0LRrxEwMfMtqCc7LnvNLz8OV3r2APFQrsJYiwBH1zf9Oofe1zoyBv39UP1nT1TuqU1IV5qXUAkF5wHQAi3XJ+kSbRGVyzgVUCWSq7XcrD09KTtZv26twjCRlk5JXs9o3cgQ1Th1324W4Uw38nWlOR8/TnH2Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 44T8MCFq075923;
+	Wed, 29 May 2024 16:22:12 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Vq2MQ1J15z2QjGgT;
+	Wed, 29 May 2024 16:18:26 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 29 May 2024 16:22:10 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <Hao_hao.Wang@unisoc.com>
+Subject: [PATCH] f2fs: fix to avoid use SSR allocate when do defragment
+Date: Wed, 29 May 2024 16:19:39 +0800
+Message-ID: <1716970779-27896-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] hid-asus: use hid for brightness control on
- keyboard
-To: "Luke D. Jones" <luke@ljones.dev>, jikos@kernel.org
-Cc: ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org, bentiss@kernel.org
-References: <20240529012827.146005-1-luke@ljones.dev>
- <20240529012827.146005-2-luke@ljones.dev>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240529012827.146005-2-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 44T8MCFq075923
 
-Hi Luke,
+SSR allocate mode will be used when doing file defragment
+if ATGC is working at the same time, that is because
+set_page_private_gcing may make CURSEG_ALL_DATA_ATGC segment
+type got in f2fs_allocate_data_block when defragment page
+is writeback, which may cause file fragmentation is worse.
 
-Thank you for the new version, much better.
+A file with 2 fragmentations is changed as following after defragment:
 
-On 5/29/24 3:28 AM, Luke D. Jones wrote:
-> On almost all ASUS ROG series laptops the MCU used for the USB keyboard
-> also has a HID packet used for setting the brightness. This is usually
-> the same as the WMI method. But in some laptops the WMI method either
-> is missing or doesn't work, so we should default to the HID control.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/hid/hid-asus.c                     |  6 ++++
->  drivers/platform/x86/asus-wmi.c            | 35 +++++++++++++++++++++-
->  include/linux/platform_data/x86/asus-wmi.h | 10 +++++++
->  3 files changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index 02de2bf4f790..4cba8e143031 100644
-> --- a/drivers/hid/hid-asus.c
-> +++ b/drivers/hid/hid-asus.c
-> @@ -492,12 +492,18 @@ static void asus_kbd_backlight_work(struct work_struct *work)
->   */
->  static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
->  {
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
->  	u32 value;
->  	int ret;
->  
->  	if (!IS_ENABLED(CONFIG_ASUS_WMI))
->  		return false;
->  
-> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_use_hid_led()) {
-> +		hid_info(hdev, "using HID for asus::kbd_backlight\n");
-> +		return false;
-> +	}
-> +
->  	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
->  				       ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
->  	hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3f9b6285c9a6..54cb07c79fcf 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -144,6 +144,15 @@ module_param(fnlock_default, bool, 0444);
->  
->  static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
->  
-> +static const char * const use_hid_led_matches[] = {
-> +	"ROG Zephyrus",
-> +	"ROG Strix",
-> +	"ROG Flow",
-> +	"GA403",
-> +	"GU605",
-> +	"RC71L",
-> +};
-> +
->  static int throttle_thermal_policy_write(struct asus_wmi *);
->  
->  static bool ashs_present(void)
-> @@ -1642,6 +1651,29 @@ static int micmute_led_set(struct led_classdev *led_cdev,
->  	return err < 0 ? err : 0;
->  }
->  
-> +bool asus_use_hid_led(void)
-> +{
-> +	const char *product, *board;
-> +	int i;
-> +
-> +	product = dmi_get_system_info(DMI_PRODUCT_FAMILY);
-> +	if (!product)
-> +		return false;
-> +
-> +	board = dmi_get_system_info(DMI_BOARD_NAME);
-> +	if (!board)
-> +		return false;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(use_hid_led_matches); i++) {
-> +		if (strstr(product, use_hid_led_matches[i]))
-> +			return true;
-> +		if (strstr(board, use_hid_led_matches[i]))
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +EXPORT_SYMBOL_GPL(asus_use_hid_led);
-> +
+----------------file info-------------------
+sensorsdata :
+--------------------------------------------
+dev       [254:48]
+ino       [0x    3029 : 12329]
+mode      [0x    81b0 : 33200]
+nlink     [0x       1 : 1]
+uid       [0x    27e6 : 10214]
+gid       [0x    27e6 : 10214]
+size      [0x  242000 : 2367488]
+blksize   [0x    1000 : 4096]
+blocks    [0x    1210 : 4624]
+--------------------------------------------
 
-With the new helper in this form you are pretty much re-inventing
-dmi_check_system().
+file_pos   start_blk     end_blk        blks
+       0    11361121    11361207          87
+  356352    11361215    11361216           2
+  364544    11361218    11361218           1
+  368640    11361220    11361221           2
+  376832    11361224    11361225           2
+  385024    11361227    11361238          12
+  434176    11361240    11361252          13
+  487424    11361254    11361254           1
+  491520    11361271    11361279           9
+  528384     3681794     3681795           2
+  536576     3681797     3681797           1
+  540672     3681799     3681799           1
+  544768     3681803     3681803           1
+  548864     3681805     3681805           1
+  552960     3681807     3681807           1
+  557056     3681809     3681809           1
 
-So IMHO you should just replace use_hid_led_matches[] with
-a dmi_system_id array and simplify asus_use_hid_led() to just
-a single "dmi_check_system(asus_use_hid_led_dmi_ids)" call.
+A new FI flag FI_DEFRAG_IN_PROGRESS is introduced to avoid
+this scenarios.
 
-Using dmi_system_id-s also allows you to specify if the string
-which is being matched should be matched against DMI_PRODUCT_FAMILY
-or DMI_BOARD_NAME. Note the normal DMI_MATCH() macro to fill in
-dmi_system_id array entries does non exact matching using strstr()
-just like you do above.
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+---
+ fs/f2fs/f2fs.h    | 1 +
+ fs/f2fs/file.c    | 2 ++
+ fs/f2fs/segment.c | 3 ++-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-Note you need to terminate the dmi_system_id array with an empty
-{} entry.
-
-
-
->  static void asus_wmi_led_exit(struct asus_wmi *asus)
->  {
->  	led_classdev_unregister(&asus->kbd_led);
-> @@ -1681,7 +1713,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->  			goto error;
->  	}
->  
-> -	if (!kbd_led_read(asus, &led_val, NULL)) {
-> +	if (!kbd_led_read(asus, &led_val, NULL) && !asus_use_hid_led()) {
-> +		pr_info("using asus-wmi for asus::kbd_backlight\n");
->  		asus->kbd_led_wk = led_val;
->  		asus->kbd_led.name = "asus::kbd_backlight";
->  		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 3eb5cd6773ad..6833035f7006 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -160,4 +160,14 @@ static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
->  }
->  #endif
->  
-> +/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
-> +#if IS_ENABLED(CONFIG_ASUS_WMI)
-> +bool asus_use_hid_led(void);
-> +#else
-> +static inline bool asus_use_hid_led(void)
-> +{
-> +	return true;
-> +}
-> +#endif
-> +
->  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
-
-Regards,
-
-Hans
-
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 4044e67..9281c5e 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -803,6 +803,7 @@ enum {
+ 	FI_COW_FILE,		/* indicate COW file */
+ 	FI_ATOMIC_COMMITTED,	/* indicate atomic commit completed except disk sync */
+ 	FI_ATOMIC_REPLACE,	/* indicate atomic replace */
++	FI_DEFRAG_IN_PROGRESS,	/* indicate file was defragmenting */
+ 	FI_MAX,			/* max flag, never be used */
+ };
+ 
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 5c0b281..93d2767 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2717,6 +2717,7 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
+ 		goto out;
+ 	}
+ 
++	set_inode_flag(inode, FI_DEFRAG_IN_PROGRESS);
+ 	map.m_lblk = pg_start;
+ 	map.m_len = pg_end - pg_start;
+ 	total = 0;
+@@ -2772,6 +2773,7 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
+ clear_out:
+ 	clear_inode_flag(inode, FI_SKIP_WRITES);
+ out:
++	clear_inode_flag(inode, FI_DEFRAG_IN_PROGRESS);
+ 	clear_inode_flag(inode, FI_OPU_WRITE);
+ unlock_out:
+ 	inode_unlock(inode);
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 7caf20a..dd6f8ac 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3482,7 +3482,8 @@ static int __get_segment_type_6(struct f2fs_io_info *fio)
+ 		if (page_private_gcing(fio->page)) {
+ 			if (fio->sbi->am.atgc_enabled &&
+ 				(fio->io_type == FS_DATA_IO) &&
+-				(fio->sbi->gc_mode != GC_URGENT_HIGH))
++				(fio->sbi->gc_mode != GC_URGENT_HIGH) &&
++				!is_inode_flag_set(inode, FI_DEFRAG_IN_PROGRESS))
+ 				return CURSEG_ALL_DATA_ATGC;
+ 			else
+ 				return CURSEG_COLD_DATA;
+-- 
+1.9.1
 
