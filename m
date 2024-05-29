@@ -1,121 +1,151 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD41A13D63B
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 20:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298CE14534D;
+	Wed, 29 May 2024 20:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717014259; cv=none; b=Xpu5qxHyo/gFIy2AWHycY7BQjKsLtpSAqaiGjVm8ZnpbXwnutkeyqGcNPEpoFgnHdTnC5mLR0jJvPpIkyoW8MbfU5GEzDPA9kVHKS+2t8FH+3kvaLU9tQCMi3SULNne9/yx29lubvx8qWJCCpn6xlveTJQK+N6phRXnXJUDqjbU=
+	t=1717014515; cv=none; b=G4Le+g19btxA9nUIjk+nRz/CzIi+OJlr8ZEmAKw0zIfwN1EMpfDPu+tnKEkp8qS+xq3mW+UAXYHXd2oLQQT+tINRVj9h9C7GrKBcuV1dIhqQN/66pzbBxLC4c2KL1FaG2ZV71tjWd+naBXG7GLk2JcgbA4R3jzX5dAxSEHh4nzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717014259; c=relaxed/simple;
-	bh=VqWS/6VyIDQ9XwIkJFJP3KRnkfBNBETeL06WEBD7Y2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fG1srz5iQ28i7+3Qb2B5bH/HKGAIYAGp9L+RtgmKbMcXGHR6V65440t0atdLLYsdgSs7yeR9Tc+5Yvg65WrLPof5orHUJ3CBbhl7OVeegALrCXcPUsSc7U+OfKZupsa2XOWEIOkOWDMKV0vIUMdqpeb1gzDLrEbrXzP3uW3WVLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=m5QQ9EY+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717014515; c=relaxed/simple;
+	bh=yxO+RouaVjt4hpv26MKV9LGR+GrQJeATy9q/u2t1Va0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Bw4IAudmuTj/JNM/S/+PWGGC7pGakaDmfy6Zn7Qmzk+d5GKOC0MuGNX+oYy9lBp7IhtNcohyhttBAp7KQFHtdouPzYSR4NZLlMhUmuBnLRBfCpftth8j/e47zZ7BCurLQ5VzyUnGKSM97Z6orNzzEd6VbBy5mrikpQeOWFLFH6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AaoojB2+; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="m5QQ9EY+"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44TKAS29019859;
-	Wed, 29 May 2024 20:24:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	15Q/WFvKJeSeWdTC0wHFvU6ZrvIrtGaXBSccicqqmJY=; b=m5QQ9EY+neU4Q2Qo
-	URE1T/mHgFSFYfHJIao3A9njHgZzZahI+iZsypk80WE7K1vaxMPbFt2CAlWIRCZ6
-	9rL5WanVsMnK4d0mB5c5NlWTdMzIlSGYBsjKoyl6VFtAx3grF8P2PCeyANMb+qxX
-	f+9I0FQ56dvyAdqBlwFChY5ovwpxtyZZnVfZ0+kkkzgi4mCG5wRrZ7+YxWeiCJ6U
-	s6rdHxJCvXxGYNY6Kw5k7mpbuKVwhot/2bzMdx/UvGLAhXac3L9/8Gn/D10NN4fN
-	aI7QTDKMOMdNm16FebCGtWQkzZkY6XBKaekYRf9kN37cfwc4YqSA+RX866Rjg3hG
-	ERHymQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0qj9vn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 20:24:05 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TKO4GT031058
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 20:24:04 GMT
-Received: from [10.71.108.229] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 May
- 2024 13:24:04 -0700
-Message-ID: <da0bb4ea-cc74-458d-8869-22bd127d9654@quicinc.com>
-Date: Wed, 29 May 2024 13:24:03 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AaoojB2+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717014513; x=1748550513;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yxO+RouaVjt4hpv26MKV9LGR+GrQJeATy9q/u2t1Va0=;
+  b=AaoojB2+gPMU0wRUBM/aaK/jsXP2EG1H/L7um2Hgy2aGKjgLC1aqivQ+
+   NUF2puYeraotqq3TQ6MrcIwVIBjbOopQshYWQDV4U0nzzAOylvzirqKqS
+   FihRM+McEskVMdONdzKRtdUzbkqnlZ3fSHF12CxkIJIX5EF1poxO9TqDU
+   zS2rcslI6Nz9NyTuiw4C5mB4yOgqW6md2K9slCRqk+zn2cunHyoXPIIFm
+   a3SAZChf9/RdCTyX0vUz8DL46oySIAaJJPMujo0E7YSS6Gb9HmdgggUxk
+   qdbJH6j5VSnrULNdi/gGYCdjbxme7EX0vDqXUtBEZ4RFJh+uLcEzugA7p
+   Q==;
+X-CSE-ConnectionGUID: rsIHlPHmQAC361o5WTfTFw==
+X-CSE-MsgGUID: zUdlCGePRSGzdZZR/xsJzQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13574522"
+X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
+   d="scan'208";a="13574522"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 13:28:32 -0700
+X-CSE-ConnectionGUID: HbFkC3PJSHGq0tVkSLmGDg==
+X-CSE-MsgGUID: Olioliv0Sy2umeEC2/k42w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
+   d="scan'208";a="35491261"
+Received: from jacob-builder.jf.intel.com ([10.54.39.125])
+  by fmviesa007.fm.intel.com with ESMTP; 29 May 2024 13:28:32 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: X86 Kernel <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Ingo Molnar" <mingo@redhat.com>,
+	"Borislav Petkov" <bp@alien8.de>,
+	linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <andi.kleen@intel.com>,
+	"Xin Li" <xin3.li@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH 0/6] Add support for NMI source reporting
+Date: Wed, 29 May 2024 13:33:19 -0700
+Message-Id: <20240529203325.3039243-1-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] drm/panel: sitronix-st7789v: fix display size for
- jt240mhqs_hwt_ek_e3 panel
-Content-Language: en-US
-To: Gerald Loacker <gerald.loacker@wolfvision.net>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-0-e4821802443d@wolfvision.net>
- <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-3-e4821802443d@wolfvision.net>
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-3-e4821802443d@wolfvision.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ryeOim6n8OyN9GzHpy5DBoJDYKXqgxLw
-X-Proofpoint-ORIG-GUID: ryeOim6n8OyN9GzHpy5DBoJDYKXqgxLw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-29_16,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 adultscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405290143
+Content-Transfer-Encoding: 8bit
+
+Hi Thomas and all,
+
+Non-Maskable Interrupts (NMIs) are routed to the local Advanced Programmable
+Interrupt Controller (APIC) using vector #2. Before the advent of the
+Flexible Return and Event Delivery (FRED)[1], the vector information set by
+the NMI initiator was disregarded or lost within the hardware, compelling
+system software to poll every registered NMI handler to pinpoint the source
+of the NMI[2]. This approach led to several issues:
+
+1.	Inefficiency due to the CPU's time spent polling all handlers.
+2.	Increased latency from the additional time taken to poll all handlers.
+3.	The occurrence of unnecessary NMIs if they are triggered shortly
+	after being processed by a different source.
+
+To tackle these challenges, Intel introduced NMI source reporting as a part
+of the FRED specification (detailed in Chapter 9). This CPU feature ensures
+that while all NMI sources are still aggregated into NMI vector (#2) for
+delivery, the source of the NMI is now conveyed through FRED event data
+(a 16-bit bitmap on the stack). This allows for the selective dispatch
+of the NMI source handler based on the bitmap, eliminating the need to
+invoke all NMI source handlers indiscriminately.
+
+In line with the hardware architecture, various interrupt sources can
+generate NMIs by encoding an NMI delivery mode. However, this patchset
+activates only the local NMI sources that are currently utilized by the
+Linux kernel, which includes:
+
+1.	Performance monitoring.
+2.	Inter-Processor Interrupts (IPIs) for functions like CPU backtrace,
+	machine check, Kernel GNU Debugger (KGDB), reboot, panic stop, and
+	self-test.
+
+Other NMI sources will continue to be handled as previously when the NMI
+source is not utilized or remains unidentified.
 
 
+[1] https://www.intel.com/content/www/us/en/content-details/779982/flexible-return-and-event-delivery-fred-specification.html
+[2] https://lore.kernel.org/lkml/171011362209.2468526.15187874627966416701.tglx@xen13/
 
-On 5/29/2024 7:42 AM, Gerald Loacker wrote:
-> This is a portrait mode display. Change the dimensions accordingly.
-> 
-> Fixes: 0fbbe96bfa08 ("drm/panel: sitronix-st7789v: add jasonic jt240mhqs-hwt-ek-e3 support")
-> Signed-off-by: Gerald Loacker <gerald.loacker@wolfvision.net>
+Thanks,
 
-Acked-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+Jacob
 
-> ---
->   drivers/gpu/drm/panel/panel-sitronix-st7789v.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-> index c7e3f1280404..e8f385b9c618 100644
-> --- a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-> +++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-> @@ -289,8 +289,8 @@ static const struct drm_display_mode jt240mhqs_hwt_ek_e3_mode = {
->   	.vsync_start = 280 + 48,
->   	.vsync_end = 280 + 48 + 4,
->   	.vtotal = 280 + 48 + 4 + 4,
-> -	.width_mm = 43,
-> -	.height_mm = 37,
-> +	.width_mm = 37,
-> +	.height_mm = 43,
->   	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
->   };
->   
-> 
-> -- 
-> 2.37.2
-> 
+Jacob Pan (6):
+  x86/irq: Add enumeration of NMI source reporting CPU feature
+  x86/irq: Extend NMI handler registration interface to include source
+  x86/irq: Factor out common NMI handling code
+  x86/irq: Process nmi sources in NMI handler
+  perf/x86: Enable NMI source reporting for perfmon
+  x86/irq: Enable NMI source on IPIs delivered as NMI
+
+ arch/x86/Kconfig                         |  9 +++
+ arch/x86/events/amd/ibs.c                |  2 +-
+ arch/x86/events/core.c                   | 11 ++-
+ arch/x86/events/intel/core.c             |  6 +-
+ arch/x86/include/asm/apic.h              |  1 +
+ arch/x86/include/asm/cpufeatures.h       |  1 +
+ arch/x86/include/asm/disabled-features.h |  8 ++-
+ arch/x86/include/asm/irq_vectors.h       | 31 ++++++++
+ arch/x86/include/asm/nmi.h               |  4 +-
+ arch/x86/kernel/apic/hw_nmi.c            |  5 +-
+ arch/x86/kernel/apic/ipi.c               |  4 +-
+ arch/x86/kernel/apic/local.h             | 18 +++--
+ arch/x86/kernel/cpu/cpuid-deps.c         |  1 +
+ arch/x86/kernel/cpu/mce/inject.c         |  4 +-
+ arch/x86/kernel/cpu/mshyperv.c           |  2 +-
+ arch/x86/kernel/kgdb.c                   |  6 +-
+ arch/x86/kernel/nmi.c                    | 92 ++++++++++++++++++++----
+ arch/x86/kernel/nmi_selftest.c           |  7 +-
+ arch/x86/kernel/reboot.c                 |  4 +-
+ arch/x86/kernel/smp.c                    |  4 +-
+ arch/x86/kernel/traps.c                  |  4 +-
+ arch/x86/platform/uv/uv_nmi.c            |  4 +-
+ drivers/acpi/apei/ghes.c                 |  2 +-
+ drivers/char/ipmi/ipmi_watchdog.c        |  2 +-
+ drivers/edac/igen6_edac.c                |  2 +-
+ drivers/watchdog/hpwdt.c                 |  6 +-
+ 26 files changed, 187 insertions(+), 53 deletions(-)
+
+-- 
+2.25.1
+
