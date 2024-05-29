@@ -1,94 +1,150 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742AC15B139
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 18:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5141C0DEE
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 18:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717008775; cv=none; b=EFsGRY6ny8eGjmghyu28NUksld2aMMXF7mZ7KXROIG3ImUvLnxGrAGMVPZnK+ademSvVmw+TSQmHJVxggVB1CblF0DG2dQSgTdaFHdp3bmFFdkCwnHz4q1B2g4SADuD4eimt3ip2ggL4zvtTERFbtJTtvXyDJBS2LfFonTq9KOk=
+	t=1717008874; cv=none; b=f/pJekA1lvIkRyW7xELoH+zcQSiBstEKd8DfUH0JN7deGI/wmWO0+ZTe5qiXhEsBPq/MbyBi56x0SjofywzrT8grHu0wqSbo8tRqlzy67rdqrvOeBJwLBtUdUt3Hk2EtFFK5PPc6EVmHrDP7ChLx7ZSDqSvC/htfOsa9xC2J/Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717008775; c=relaxed/simple;
-	bh=VCyLXfQw+vODJ+gWUnxnJTmwZOqAzSvyZikbefhPOtA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MXXXCQ5C5ReTkiP/kb73wRxr6VeH92diXV0sf1SJPOIXK9Edq82CTVPamYz8tAYE92LxfbzopAnavTx+hTQcth5yW8eR/trK52cxGCDZDGFGU9OlDfnaWWWP/qngL62jlyGc3u3xX1SH+L6if/9Pm+r8w5VI8QXvXa2MTMpxnHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zM9fjI1P; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717008874; c=relaxed/simple;
+	bh=vJl9tQ1Pqf9QGonXEZ2iQ0jeNMSCWZFnU88m6CXe9t8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LV2pu39+Q2q37iKfgpWkUxMLs+WuYLg4Em5IQ9k8Uuyl0T+JPmllQLdqsWOOWXv+S8q2cbVVGa4IPrV5cDLng7mZTdnNr4dfXikR8DmJxUbjn6zSC964o82jcNqowgJdWFyjRHypWSGjQYUw2bj+f54XKIDi96m9JJX5py32T6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=B7t1zk4w; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zM9fjI1P"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4211a86f124so518925e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:52:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="B7t1zk4w"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4201986d60aso296455e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717008772; x=1717613572; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VCyLXfQw+vODJ+gWUnxnJTmwZOqAzSvyZikbefhPOtA=;
-        b=zM9fjI1PJgVf3I5U58hFLJCvNWRJPeAU3ubFCxPJ/C9i/YmkT9YCRB3CyX8sJWXFwt
-         7PhBoBOIT6GLphMoAKOcmOJ4kyREu4XIDyZJeiHB6T233Cv/6fQHvH1iFc4u7kLmyuwH
-         Sc+VWcZxbgT7cNajydCbpt//Z35CXhMcVsesb0wRJi/keZ8Nq3WJkjjvYk703g3JHrtK
-         7augOOp21v0kxpHbqJjMJ/zDJNIcbD4+Ck+f4TYhpF3/VXDeLIS3IWmtnV++c7qAsE1Z
-         eGw7UsXgVpAfcqpMFIoTwMqp1CbWZxxKWU/xi9P5b5KkBpavQkpF7KhlW6ZZUZfXidZJ
-         xJXg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717008871; x=1717613671; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=688BMYms93lIkdSUxmL3fbJu+G2/bRYi5WNxrC0uGt8=;
+        b=B7t1zk4w+lS+6fejmWMRCnqIqLH+yDS/VC3D3KnHm37scq6XHxH5qT/r4oudrL2b62
+         y0txXlkoOmkbhKNguBGQboAjQqx/q5aDYEMYOAXei6xEAwCo0X3HYCZ3egLQIj6QrOxJ
+         AjFC0HLielbh/z6mHRrdIwikD6mNrdDH9tUXvJhGunfUlS2L0AvVr6KVjoClkAs+C1cc
+         K6DitnoI19YYp/NXX79oGrViR2KSexj/eRNVbsw53alWIqOTqv9CKPQpZun3I3mgtODV
+         t53WiPPHtQE5oasYrHspszZgqCJB0S8bhRdYiGZFNrVt2abPULeo1i/6bc12gFFaFSEb
+         L8WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717008772; x=1717613572;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VCyLXfQw+vODJ+gWUnxnJTmwZOqAzSvyZikbefhPOtA=;
-        b=QvqgkQXa+0l1dc3a3ApOgcEDQ2JnZ8ZMH2BHjcihmJgYhLcCa3QrknlPYfjiPu4v2A
-         vuS4yysTgHEHd+sHDowR1ZuJjyv7GDauUHdwf3lup2KIjTNnepeZI8O0GJIHYqdZi3MX
-         d/d7pLQLq5rkr9JXDo99GTqa0DfcpCVMkVUDtOEs2VndaSJyMF2e/j6VyIfWAtLC+eJd
-         iEx+zcpicwyDERkWEa+koPRTmpmLLEZQwdzo3FY2KNskytUwMA4Jph2Swa0ZwLrs1PBQ
-         10GBL5ejszDiSaGLg7P794ALaGEz1vXZjxycCNGYLc3bYUb+9W/pTdZ3hyqjVTtJSnYR
-         Hmxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVK4YAbar2yW39bho72YoJS5VZq+JP9MN59U1r/rvUS/OI4s4nUT62bCJl1dLFTUDGrCOxz0lKf6q1chWm+JLQibxl7+MsF6aloxDt
-X-Gm-Message-State: AOJu0YzO1BdQEeePR0t+ACQ3vLC6Ugo9C7+xWHVx0wXm9uvhRjTZCsR+
-	wZOh4q1bI2X+tKJ2ruDo2pRzV5h5+DN+XQ7aYE7n6RuIyeolWmD9SmGsRPhDDHQ=
-X-Google-Smtp-Source: AGHT+IFYV8lOdAq8BVnBAdwANSNE1at77ft2iuhi77Gbpa36U2AS+eGe4gpkadqc9c7yNfvtjizhyQ==
-X-Received: by 2002:a05:600c:4ecd:b0:420:1fd2:e611 with SMTP id 5b1f17b1804b1-421279294dcmr155055e9.27.1717008771805;
-        Wed, 29 May 2024 11:52:51 -0700 (PDT)
-Received: from [192.168.0.31] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-356c8daef27sm13465928f8f.115.2024.05.29.11.52.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 11:52:51 -0700 (PDT)
-Message-ID: <6caa0d27-3abf-4198-97a9-42b0e564bbba@linaro.org>
-Date: Wed, 29 May 2024 19:52:48 +0100
+        d=1e100.net; s=20230601; t=1717008871; x=1717613671;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=688BMYms93lIkdSUxmL3fbJu+G2/bRYi5WNxrC0uGt8=;
+        b=EiLKRFlIcIxWcmq3R2uXt8HOurkMT4/g3aAhQjpm6tCFKTZ58NjV/NRrdZ7Isxj4yb
+         2TDqdeEMR1FqtVi/mIAG9tDSIy763spvydujhBW/QCgqwphO+W/MYq9w/JVp8+JeYg4x
+         ebASNq9wRJrXL+BIk90hrkUtWo8s9vMYM9a0LOcZOodqzQJgzGvKReWDN0R3cOIUiGvX
+         ooHiCt/EpMKiyfYXN/vX58xmDSdMH+si0zd9vYBUKYO8jr8NYDtEOmllDRhfZqES+qvT
+         rNPO1EfzgFR7HvEHZAvQnxpZo+qYa6h5JpZjVqfKz028X5IEA8K1JQltUNTP4p+u9r9O
+         w7Qg==
+X-Gm-Message-State: AOJu0YxD/adLS1NqD1tFw3UzS4jLjzPWAPMKLAenp2aQLl58Kt5u+ErA
+	4qE3RbQE98hhzFCzq0ku+tTQKXsEa/4iCjt3GUZIkyvDAGIwW7mmYtzNJOB9el0tzSawuaSYdB/
+	p
+X-Google-Smtp-Source: AGHT+IFXjh/sO2hf9fpunrpzb5/Ur0BabTosyM0Or0Urw/4lUp/bZLnXNorWqgLPv7xYyl4q0uveYw==
+X-Received: by 2002:a05:600c:4ed0:b0:421:22c4:db60 with SMTP id 5b1f17b1804b1-4212781b273mr404635e9.23.1717008870867;
+        Wed, 29 May 2024 11:54:30 -0700 (PDT)
+Received: from rkanwal-XPS-15-9520.Home ([2a02:c7c:7527:ee00:7446:71c1:a41a:da9b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212706a23csm2787885e9.27.2024.05.29.11.54.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 11:54:30 -0700 (PDT)
+From: Rajnesh Kanwal <rkanwal@rivosinc.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	ajones@ventanamicro.com,
+	anup@brainfault.org,
+	acme@kernel.org,
+	atishp@rivosinc.com,
+	beeman@rivosinc.com,
+	brauner@kernel.org,
+	conor@kernel.org,
+	heiko@sntech.de,
+	irogers@google.com,
+	mingo@redhat.com,
+	james.clark@arm.com,
+	renyu.zj@linux.alibaba.com,
+	jolsa@kernel.org,
+	jisheng.teoh@starfivetech.com,
+	palmer@dabbelt.com,
+	tech-control-transfer-records@lists.riscv.org,
+	will@kernel.org,
+	kaiwenxue1@gmail.com,
+	Rajnesh Kanwal <rkanwal@rivosinc.com>
+Subject: [PATCH RFC 1/6] perf: Increase the maximum number of samples to 256.
+Date: Wed, 29 May 2024 19:53:32 +0100
+Message-Id: <20240529185337.182722-2-rkanwal@rivosinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240529185337.182722-1-rkanwal@rivosinc.com>
+References: <20240529185337.182722-1-rkanwal@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/13] mfd: pm8008: deassert reset on probe
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Das Srinagesh <quic_gurus@quicinc.com>,
- Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-4-johan+linaro@kernel.org>
- <4468becb-dc03-4832-aa03-5f597023fcb2@linaro.org>
- <ZjyX6iBqc50ic_oI@hovoldconsulting.com>
- <ZldU_LqjkU-4uphO@hovoldconsulting.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <ZldU_LqjkU-4uphO@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 29/05/2024 17:17, Johan Hovold wrote:
-> The irqchip registration will also fail if there's no from reply from
-> this address.
+RISCV CTR extension support a maximum depth of 256 last branch records.
+The 127 entries limit results in corrupting CTR entries for RISC-V if
+configured to be 256 entries. This will not impact any other architectures
+as it is just increasing maximum limit of possible entries.
 
-That's acceptable too.
-
+Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
 ---
-bod
+ tools/perf/util/machine.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 527517db3182..ec12f0199d46 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2254,25 +2254,32 @@ static void save_iterations(struct iterations *iter,
+ 		iter->cycles += be[i].flags.cycles;
+ }
+ 
+-#define CHASHSZ 127
+-#define CHASHBITS 7
+-#define NO_ENTRY 0xff
++#define CHASHBITS 8
++#define NO_ENTRY 0xffU
+ 
+-#define PERF_MAX_BRANCH_DEPTH 127
++#define PERF_MAX_BRANCH_DEPTH 256
+ 
+ /* Remove loops. */
++/* Note: Last entry (i==ff) will never be checked against NO_ENTRY
++ * so it's safe to have an unsigned char array to process 256 entries
++ * without causing clash between last entry and NO_ENTRY value.
++ */
+ static int remove_loops(struct branch_entry *l, int nr,
+ 			struct iterations *iter)
+ {
+ 	int i, j, off;
+-	unsigned char chash[CHASHSZ];
++	unsigned char chash[PERF_MAX_BRANCH_DEPTH];
+ 
+ 	memset(chash, NO_ENTRY, sizeof(chash));
+ 
+-	BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
++	BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
+ 
+ 	for (i = 0; i < nr; i++) {
+-		int h = hash_64(l[i].from, CHASHBITS) % CHASHSZ;
++		/* Remainder division by PERF_MAX_BRANCH_DEPTH is not
++		 * needed as hash_64 will anyway limit the hash
++		 * to CHASHBITS
++		 */
++		int h = hash_64(l[i].from, CHASHBITS);
+ 
+ 		/* no collision handling for now */
+ 		if (chash[h] == NO_ENTRY) {
+-- 
+2.34.1
+
