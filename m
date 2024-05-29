@@ -1,192 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5A6178CCD
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 10:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1306517B400;
+	Wed, 29 May 2024 10:01:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976871; cv=none; b=Trrs6NAbVDYbAp8YlZOdglx8Gn0czX8chg8KzNJ2UEpq/aQ6Pbsem4sSQ+aBe8MJhjbJ/xb6aoGDCPyOjGggr2t4i5dLNY9a9AhUff9hK0IcoHtyOSMGTi9s3c7fC8HkzMmCC0PGdnruuFQOAtJHoN+WE2ReVecGu/EkvtZ29ac=
+	t=1716976878; cv=none; b=MrtpCT8InvNzw3/xkTTW5kCfcMm55QfYqOhMeUiEs6BTVLrIUZSLsmWVsfLI3YPB5thG8JSm1eoAObJ6nCF+QoM1XYxEvmmjxFhL58lL/hgoxcG6rTOhfh1QsjTI5CpeaFx0/g3UhGzsipf9nbyArnFKy9qmr/4edUwUCretSng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976871; c=relaxed/simple;
-	bh=L7R4kCrVdkA/TC10eCp9qRWAc3qUaQIFe050f7cF73U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lq7X+9RUyHZFp4rVxlLUSYobS4B3hma0af8h6ICjUTnpk6/cMpAP3iLGaYG40GKQR/yTFzYneNP7tYPqbP5E9mdzNAFeHf+uMTcfUr0EUhPH3lSUhrQF1cvalXUZmgWQfgFwygGilmyxtERPQsCZ6p2BzRVQcoMXlS8vmGhNzX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BfbNOE2E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716976878; c=relaxed/simple;
+	bh=a91FxspxlRCfgSu57AGk4ebkLMPvGl9K4zWKW9UVBnU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iSL2ceikzjMKnnRVaO+vWpEtrcmzYjOn+iVQGW8HIthO3RDRzhNwr91E71Ndg5LCL0oIFJXSlWyWX7d6nDYYHmNhAZmtXEHlKo0yXqlQMUHRkwcXtOYpLwZpNCJi9iV5uEfkPh132aKl/SNmOKhLghKmomJwf3V2TLnONz5/GAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+lMm492; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfbNOE2E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 075F8C32781;
-	Wed, 29 May 2024 10:01:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+lMm492"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A2272C2BD10;
+	Wed, 29 May 2024 10:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716976871;
-	bh=L7R4kCrVdkA/TC10eCp9qRWAc3qUaQIFe050f7cF73U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BfbNOE2EwJ150dW1NbUWRK2354DfLSxWJs1lbcASlZb5gHhuG/g/xEFu7peFMyXz3
-	 MUOQ0/Eg37WklBN7V6ompNAq5r9WRqqIBGFepdl57/sbYnKGlbsVgIT6xdxPPTVtdo
-	 Oqs/j4YuMw2uw//COEEvDSX9c37reqZg4Muk8z3Y3qoSTffYzVc/hoslnZZ4kanfN4
-	 C7nwn1fOXM9KGSSOH5eUoCQn3Dzt7piLxMfLwkBRQfFXd2U5L2VOgWpozP8dc8DrTG
-	 px90Tk6pAErwd7NT+nwxl2GnYIOyBqNflSkESzg/dmu6bRGBLw5KFQeriGuwci33bD
-	 j3xM2DlRJ/v5g==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	chenyuwen <yuwen.chen@xjmz.com>
-Subject: [PATCH v2] f2fs: fix to truncate preallocated blocks in f2fs_file_open()
-Date: Wed, 29 May 2024 18:01:03 +0800
-Message-Id: <20240529100103.329778-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	s=k20201202; t=1716976877;
+	bh=a91FxspxlRCfgSu57AGk4ebkLMPvGl9K4zWKW9UVBnU=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=d+lMm492mXxD569WnYSsqnv7M7bM1QaWTk+8xuzoHl40aQi29EKTiI27LKYczrqQ4
+	 89dp7KxTmEgpmPaV6m5FqL3mQm2j6RbUYcwne3EMQFghoCFAnP+wvhzRVpENeofd9x
+	 wNs5Cu8fs8BxzF+T8fpn3kYUyEYHigyL0eMleborjI0K3h6TPavimgxDyJuzpdZRB+
+	 gnoorDSQyL5ABYGTTduKSO2qQlNiS6Tgh3j4nrnFZ4AbPD65MNEd0JmAs2a+ox2W4l
+	 brFX2gvc+4sZH/n2cBIIsHVBLwpW0vQXat0USkHz90jxRs4rJ/v7hJzbXwuflZ+BcQ
+	 HfX5HgrUdPKzw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FCEC27C43;
+	Wed, 29 May 2024 10:01:17 +0000 (UTC)
+From: Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>
+Subject: [PATCH v6 0/2] Add support for Amlogic S4 PWM
+Date: Wed, 29 May 2024 18:00:55 +0800
+Message-Id: <20240529-s4-pwm-v6-0-270f63049f20@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANf8VmYC/2WMQQrCMBBFr1JmbSQdk2pdeQ9xEZJJO2BNSSQqp
+ Xc37UIRl+/z35sgUWRKcKwmiJQ5cbgVaDYV2N7cOhLsCgNKVFKhEkmJ8TEIdHvZtofGGiIo5zG
+ S5+caOl8K95zuIb7WblbL+pfISkhBhEjeOyWdPJnhGjq2WxsGWCJZf0WN9UfURZS2rb32ZofW/
+ YrzPL8BBSOvPdcAAAA=
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Kelvin Zhang <kelvin.zhang@amlogic.com>, 
+ Junyi Zhao <junyi.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716976876; l=1140;
+ i=kelvin.zhang@amlogic.com; s=20240329; h=from:subject:message-id;
+ bh=a91FxspxlRCfgSu57AGk4ebkLMPvGl9K4zWKW9UVBnU=;
+ b=/SM+S10/vNZX/3yq/Vv/gVtGFkhrqyd951SBAMUefxD4hriwDQ+A5PQW7I5uW3k6gprCPivv7
+ CWOHQUlXHkZC6nYGzPJpAW4cp/lPI3y3ZfKAHt+qBWl+g5u6TG/gmuG
+X-Developer-Key: i=kelvin.zhang@amlogic.com; a=ed25519;
+ pk=pgnle7HTNvnNTcOoGejvtTC7BJT30HUNXfMHRRXSylI=
+X-Endpoint-Received: by B4 Relay for kelvin.zhang@amlogic.com/20240329 with
+ auth_id=148
+X-Original-From: Kelvin Zhang <kelvin.zhang@amlogic.com>
+Reply-To: kelvin.zhang@amlogic.com
 
-chenyuwen reports a f2fs bug as below:
+Add support for Amlogic S4 PWM, including the driver and DTS.
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000011
- fscrypt_set_bio_crypt_ctx+0x78/0x1e8
- f2fs_grab_read_bio+0x78/0x208
- f2fs_submit_page_read+0x44/0x154
- f2fs_get_read_data_page+0x288/0x5f4
- f2fs_get_lock_data_page+0x60/0x190
- truncate_partial_data_page+0x108/0x4fc
- f2fs_do_truncate_blocks+0x344/0x5f0
- f2fs_truncate_blocks+0x6c/0x134
- f2fs_truncate+0xd8/0x200
- f2fs_iget+0x20c/0x5ac
- do_garbage_collect+0x5d0/0xf6c
- f2fs_gc+0x22c/0x6a4
- f2fs_disable_checkpoint+0xc8/0x310
- f2fs_fill_super+0x14bc/0x1764
- mount_bdev+0x1b4/0x21c
- f2fs_mount+0x20/0x30
- legacy_get_tree+0x50/0xbc
- vfs_get_tree+0x5c/0x1b0
- do_new_mount+0x298/0x4cc
- path_mount+0x33c/0x5fc
- __arm64_sys_mount+0xcc/0x15c
- invoke_syscall+0x60/0x150
- el0_svc_common+0xb8/0xf8
- do_el0_svc+0x28/0xa0
- el0_svc+0x24/0x84
- el0t_64_sync_handler+0x88/0xec
-
-It is because inode.i_crypt_info is not initialized during below path:
-- mount
- - f2fs_fill_super
-  - f2fs_disable_checkpoint
-   - f2fs_gc
-    - f2fs_iget
-     - f2fs_truncate
-
-So, let's relocate truncation of preallocated blocks to f2fs_file_open(),
-after fscrypt_file_open().
-
-Fixes: d4dd19ec1ea0 ("f2fs: do not expose unwritten blocks to user by DIO")
-Reported-by: chenyuwen <yuwen.chen@xjmz.com>
-Closes: https://lore.kernel.org/linux-kernel/20240517085327.1188515-1-yuwen.chen@xjmz.com
-Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
 ---
-v2:
-- only handle FADVISE_TRUNC_BIT for first open()
- fs/f2fs/f2fs.h  |  1 +
- fs/f2fs/file.c  | 42 +++++++++++++++++++++++++++++++++++++++++-
- fs/f2fs/inode.c |  8 --------
- 3 files changed, 42 insertions(+), 9 deletions(-)
+Changes in v6:
+- Rename 'pwm_meson_s4_data' to 'pwm_s4_data'.
+- Rename 'meson_pwm_init_channels_meson_s4' to 'meson_pwm_init_channels_s4'.
+- Adjust the order of the device nodes according to their unit addresses.
+- Some minor improvements.
+- Link to v5: https://lore.kernel.org/r/20240521-s4-pwm-v5-0-0c91f5fa32cd@amlogic.com
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f463961b497c..9118a4e2db6d 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -803,6 +803,7 @@ enum {
- 	FI_COW_FILE,		/* indicate COW file */
- 	FI_ATOMIC_COMMITTED,	/* indicate atomic commit completed except disk sync */
- 	FI_ATOMIC_REPLACE,	/* indicate atomic replace */
-+	FI_OPENED_FILE,		/* indicate file has been opened */
- 	FI_MAX,			/* max flag, never be used */
- };
- 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 5c0b281a70f3..d35190994a67 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -554,6 +554,42 @@ static int f2fs_file_mmap(struct file *file, struct vm_area_struct *vma)
- 	return 0;
- }
- 
-+static int finish_preallocate_blocks(struct inode *inode)
-+{
-+	int ret;
-+
-+	inode_lock(inode);
-+	if (is_inode_flag_set(inode, FI_OPENED_FILE)) {
-+		inode_unlock(inode);
-+		return 0;
-+	}
-+
-+	if (!file_should_truncate(inode)) {
-+		set_inode_flag(inode, FI_OPENED_FILE);
-+		inode_unlock(inode);
-+		return 0;
-+	}
-+
-+	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
-+	filemap_invalidate_lock(inode->i_mapping);
-+
-+	truncate_setsize(inode, i_size_read(inode));
-+	ret = f2fs_truncate(inode);
-+
-+	filemap_invalidate_unlock(inode->i_mapping);
-+	f2fs_up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
-+
-+	if (!ret)
-+		set_inode_flag(inode, FI_OPENED_FILE);
-+
-+	inode_unlock(inode);
-+	if (ret)
-+		return ret;
-+
-+	file_dont_truncate(inode);
-+	return 0;
-+}
-+
- static int f2fs_file_open(struct inode *inode, struct file *filp)
- {
- 	int err = fscrypt_file_open(inode, filp);
-@@ -571,7 +607,11 @@ static int f2fs_file_open(struct inode *inode, struct file *filp)
- 	filp->f_mode |= FMODE_NOWAIT;
- 	filp->f_mode |= FMODE_CAN_ODIRECT;
- 
--	return dquot_file_open(inode, filp);
-+	err = dquot_file_open(inode, filp);
-+	if (err)
-+		return err;
-+
-+	return finish_preallocate_blocks(inode);
- }
- 
- void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 33b2778d5452..4b39aebd3c70 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -610,14 +610,6 @@ struct inode *f2fs_iget(struct super_block *sb, unsigned long ino)
- 	}
- 	f2fs_set_inode_flags(inode);
- 
--	if (file_should_truncate(inode) &&
--			!is_sbi_flag_set(sbi, SBI_POR_DOING)) {
--		ret = f2fs_truncate(inode);
--		if (ret)
--			goto bad_inode;
--		file_dont_truncate(inode);
--	}
--
- 	unlock_new_inode(inode);
- 	trace_f2fs_iget(inode);
- 	return inode;
+Changes in v5:
+- Add devm_add_action_or_reset for free clk when unloading.
+- Replace the underscores of node name with dashes.
+- Link to v4: https://lore.kernel.org/r/20240424-s4-pwm-v4-0-ee22effd40d0@amlogic.com
+
+---
+Junyi Zhao (2):
+      pwm: meson: Add support for Amlogic S4 PWM
+      arm64: dts: amlogic: Add Amlogic S4 PWM
+
+ arch/arm64/boot/dts/amlogic/meson-s4.dtsi | 207 ++++++++++++++++++++++++++++++
+ drivers/pwm/pwm-meson.c                   |  49 +++++++
+ 2 files changed, 256 insertions(+)
+---
+base-commit: 124cfbcd6d185d4f50be02d5f5afe61578916773
+change-id: 20240424-s4-pwm-2d709986caee
+
+Best regards,
 -- 
-2.40.1
+Kelvin Zhang <kelvin.zhang@amlogic.com>
+
 
