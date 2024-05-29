@@ -1,92 +1,74 @@
-Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84391D68F
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8881D68F;
+	Wed, 29 May 2024 07:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716968717; cv=none; b=ihKbBAMUP7rhn4BDFJcJuz35p5WnPzCS4IMazpIa7g2xZGBCZV6sKzX0pYs/rCGjz0km4kQIBv9qrCzGxf2yJc9LNqaIRVCqJQOm/5vB6U3kvTZCkee93Ri5bI6vABID1pJlDZorPkEWa6+FVqGbdTZgvD4KuX2mb4gtzwkGB0M=
+	t=1716968726; cv=none; b=XVPMXhP/t9Np90VYKp2l8CjKaMGSePii5sKZmCxKa1x6/bjDbDmCDPNJvIfTYEIXrkxS8szQEpTZS0+I+oGbu4uqn9sq4zZFYBi5MJH/He+D0O2EA7i1l9UHdqGFtmTX0xIq5xztK6sNYHIp5jHKR+e5ja6L+LILSTmWz7Y4D6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716968717; c=relaxed/simple;
-	bh=kNbYr8Szl5xh7JpaC8VsHuI6Og2jZTvKIc/4wjAEWnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tb4q1KZrM4taqduiG1Z92OTmha+uWC5LEBG+8tNaMVGgvzbkiFPEuE/qx65rq3op9pYMPPMG136Yj6C0KtQEqr1q8oD9yGg7TVrhRY2BcbHGrRRd0NJZ27Mt2RSzGYhNhNCf2R2aDlN6LVG1ep32/qGK+ISa4xnkJTB6TVwH7OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (2a02-a420-77-cc79-164f-8aff-fee4-5930.mobile6.kpn.net [IPv6:2a02:a420:77:cc79:164f:8aff:fee4:5930])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 04CB91F899;
-	Wed, 29 May 2024 09:26:59 +0200 (CEST)
-Date: Wed, 29 May 2024 09:26:58 +0200
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, Vinod Koul <vkoul@kernel.org>, 
-	Caleb Connolly <caleb@connolly.tech>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 1/3] drm/panel/lg-sw43408: select
- CONFIG_DRM_DISPLAY_DP_HELPER
-Message-ID: <livf7gwhypjxncqhw73nibavga4b4xeqe3pqgoidvnk5653yzw@dssrwsfruajv>
-References: <20240528-panel-sw43408-fix-v4-0-330b42445bcc@linaro.org>
- <20240528-panel-sw43408-fix-v4-1-330b42445bcc@linaro.org>
+	s=arc-20240116; t=1716968726; c=relaxed/simple;
+	bh=v6FAbaz9f1j/G5lLHBL8K04Ed2sbYL7jFU9Ly0m88VY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qrr0SaJhXwSfkgOowIh5m3ZjFvlFRg90ROVDsmdRDVw/NEg7z0/yFlcfzTaoRKSQ61cuN3ihaLQJ0unvJcIBUMHnWzK39YlkVTbufqJBCqSX/b0xque++SXKhOcPxABglhFgoajzmprea8TcspuGlFIXm0maTDg1mEmnh3/6FrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vhYz3Jsa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mrfnR8kQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vhYz3Jsa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mrfnR8kQ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716968723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v6FAbaz9f1j/G5lLHBL8K04Ed2sbYL7jFU9Ly0m88VY=;
+	b=vhYz3JsaR/FB9g4OsE74iv1r8AOGlE5G/PnLfuBYkHpEM8Su30LIhMkyb7JoEyeqMByGcs
+	uZ9ZXSqr47nUn3jTxz2If6xwnMA72TyDDtTHB65HiEMaDPES9HlsjvcqwFzFYSP/H0FPOD
+	6RfZeZ+mffFOclBBw7R43p2Mg0rXXwF6muOYsJDdivvSePrEKFHFTnYMXLg56RpBWUVOw8
+	IIxKccCQvwFSt/YoQLt/q20zcXLNrjpHGmxHJIw0ZfBt5+pjuCEQZ+/W+rGOun9q1LNfrI
+	RdWHo9vvLqrTfr86jin5r/V4maM1OdvU5Hj74hHOHRpM5SSEwFS2DIKxLYIYJA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716968723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v6FAbaz9f1j/G5lLHBL8K04Ed2sbYL7jFU9Ly0m88VY=;
+	b=mrfnR8kQlISi1x6fh4gKv2+CgjE7t8wsGPsovZ31Xa1OWO4Ex+B27zAaN8AzdUsSqGiIX4
+	b1Rc1HNnB0jICjDw==
+To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, Dave Hansen
+ <dave.hansen@intel.com>, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+ mat.jonczyk@o2.pl, rdunlap@infradead.org, alexandre.belloni@bootlin.com,
+ mario.limonciello@amd.com, yaolu@kylinos.cn, bhelgaas@google.com,
+ justinstitt@google.com, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Cc: CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com, Linus
+ Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
+In-Reply-To: <199ba55d-8eb8-47df-9f42-55a865b51ab7@zhaoxin.com>
+References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
+ <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com> <87wmnda8mc.ffs@tglx>
+ <2553dd17-f763-4894-89b7-5f76c03d3a37@zhaoxin.com>
+ <199ba55d-8eb8-47df-9f42-55a865b51ab7@zhaoxin.com>
+Date: Wed, 29 May 2024 09:45:22 +0200
+Message-ID: <87fru19i3x.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528-panel-sw43408-fix-v4-1-330b42445bcc@linaro.org>
+Content-Type: text/plain
 
-On 2024-05-28 22:39:18, Dmitry Baryshkov wrote:
-> This panel driver uses DSC PPS functions and as such depends on the
-> DRM_DISPLAY_DP_HELPER. Select this symbol to make required functions
-> available to the driver.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404200800.kYsRYyli-lkp@intel.com/
-> Fixes: 069a6c0e94f9 ("drm: panel: Add LG sw43408 panel driver")
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Wed, May 29 2024 at 14:44, Tony W Wang-oc wrote:
+> Actually, this scenario is what this patch is trying to solve.
+>
+> We encountered hpet_lock deadlock from the call path of the MCE handler,
+> and this hpet_lock deadlock scenario may happen when others exceptions'
+> handler like #PF/#GP... to call the panic. So read_hpet should avoid
+> deadlock if panic in progress.
 
-Maybe good context to mention that the DSC<->DP discrepancy will be resolved in
-the future, otherwise this patch is slightly unclear for anyone who isn't aware
-of the current patch series and its context.  Other than that, for the change
-itself:
-
-Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
-
-> ---
->  drivers/gpu/drm/panel/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index 982324ef5a41..2ae0eb0638f3 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -340,6 +340,8 @@ config DRM_PANEL_LG_SW43408
->  	depends on OF
->  	depends on DRM_MIPI_DSI
->  	depends on BACKLIGHT_CLASS_DEVICE
-> +	select DRM_DISPLAY_DP_HELPER
-> +	select DRM_DISPLAY_HELPER
->  	help
->  	  Say Y here if you want to enable support for LG sw43408 panel.
->  	  The panel has a 1080x2160@60Hz resolution and uses 24 bit RGB per
-> 
-> -- 
-> 2.39.2
-> 
+That's not what your changelog says.
