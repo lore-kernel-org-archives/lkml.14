@@ -1,138 +1,82 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4CF31A60;
-	Wed, 29 May 2024 10:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34989179970;
+	Wed, 29 May 2024 10:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716977187; cv=none; b=jExvA05/sTJWKShe426qj6C9+QZ2O0x+eZZgYmKauFCg2/O36antdn/+AO5UTjJr7pK3mnfkQBT0hBhCqSmbJmNTM7MAuqRfQMOKHVYhcy2Z53IPuqQATgo7jN+c/REXj5dOaTEYCpK/iSsvF10MEBT0v8n2v7j2gN8Qcmo0/GE=
+	t=1716977238; cv=none; b=Wi7ups7K7IeNE4d9/LZPEUnOHanMsl8nXV3iLfUdfqa6EhXeMP92jPgn3PdfcO4V+Kvs9nj4iejaKN2wIIITgdppfopKvOY72mOJCgbg49C3ZjnIUbEcJLpWS0jbDo4Sz0QXji7MVTh2uIQ6TEH0jDU705C4c/ssrYEgAXWu8+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716977187; c=relaxed/simple;
-	bh=G1Rk+7kEkFD09wELNnRj53zJwtqDGrgnZU8T7fnfjek=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KLQdI1tLIJE2JQiMec2wxw0VHutBTF3Yh0jmsoMNqKamK72U+/K2orPm5/A25o4QXcSg/oHCBvjy1FxIPcH23lUD8De6EtNboIidZmkskBwQ1zroQ7uXc5TADuI/9SkFFH58Zw4ciivK1YrS9/jw42UxVhpLgSygWFo/ciX+jG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.3] (ip5f5af7f7.dynamic.kabel-deutschland.de [95.90.247.247])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id ABB5461E5FE01;
-	Wed, 29 May 2024 12:05:43 +0200 (CEST)
-Message-ID: <52ccf0c1-e5dd-412b-9e47-7829ca0f6ffc@molgen.mpg.de>
-Date: Wed, 29 May 2024 12:05:42 +0200
+	s=arc-20240116; t=1716977238; c=relaxed/simple;
+	bh=jU0NjnEWLZP7qMvgt67CMX8Qo17uw3DQgTOfVNjliyg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dcVZmeqVeDYUb1qx/XLKHkeiADuZHB0Jx7kNQ69qPZTeo4n4BDUzChoBIbqJy3+jdIwnnlxaLNZcNueVOvtHwI+ODUxcWZUvcSe5we4WvVSd95BD24tXsXA2uUwX1L5ZqrBY6FiKeAx4h2QC0sAQ/br0WrQb98PaoRMNmUp3L/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1wqL0Xd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1wqL0Xd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E7B5C32781;
+	Wed, 29 May 2024 10:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716977238;
+	bh=jU0NjnEWLZP7qMvgt67CMX8Qo17uw3DQgTOfVNjliyg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=A1wqL0XdX9wMCS4dsyySs/MmlTc8LI7t28AKGgVfnjqyPYxeQZUnZfo1iv75TUihk
+	 Q7cwplSpI/GTrmX/IvZUbOZydfdu0wEi3yGdAnr8TtkL6FGvMbmgv6s47t2v/aYXo/
+	 YZzCxR7Zz0E2zu208LfNQ36vxtpquue8S1E15kI68DeWPxFTGONQ/+JOArTV6P3zip
+	 zPudOozPxuUDOFN3DEEaeiZxpNgJAEs1+IVRu7iZd8HhzBJ2TFAyyECdZh7sXfm0U3
+	 jZRYwHt5P5VVnt/NoJxPbpjSGDO4pge66uWb94Y/OOpVWb5twItFtzbiQTfs0DsOHI
+	 on9WnEwc6NW7A==
+From: Mark Brown <broonie@kernel.org>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: lgirdwood@gmail.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+In-Reply-To: <20240527101326.440345-1-ckeepax@opensource.cirrus.com>
+References: <20240527101326.440345-1-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH] MAINTAINERS: Remove James Schulman from Cirrus audio
+ maintainers
+Message-Id: <171697723476.23184.7362558841511719141.b4-ty@kernel.org>
+Date: Wed, 29 May 2024 11:07:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] Bluetooth: btnxpuart: Update firmware names
-To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, amitkumar.karwar@nxp.com, rohit.fule@nxp.com,
- sherry.sun@nxp.com, ziniu.wang_1@nxp.com, haibo.chen@nxp.com,
- LnxRevLi@nxp.com, regressions@lists.linux.dev
-References: <20240529095347.22186-1-neeraj.sanjaykale@nxp.com>
- <20240529095347.22186-3-neeraj.sanjaykale@nxp.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240529095347.22186-3-neeraj.sanjaykale@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev-2ee9f
 
-[Cc: regressions@]
-
-Dear Neeraj,
-
-
-Am 29.05.24 um 11:53 schrieb Neeraj Sanjay Kale:
-> This updates the firmware names of 3 chipsets: w8987, w8997, w9098.
-> These changes are been done to standardize chip specific firmware
-> file names.
-
-Can you please describe the new naming schema in the commit message?
-
-> To allow user to use older firmware file names, a new device tree
-> property has been introduced called firmware-name, which will override
-> the hardcoded firmware names in the driver.
-
-So users updating the Linux kernel but not updating the devicetree with 
-the new property are going to see a regression, right? I think this 
-violates Linux’ no regression policy. If so, please implement a way to 
-support old and new names.
-
-> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> ---
-> v2: Remove "nxp/" from all firmware name definitions to be inline with
-> firware file name read from device tree file. (Krzysztof)
-
-fir*m*ware
-
-> ---
->   drivers/bluetooth/btnxpuart.c | 28 +++++++++++++++++-----------
->   1 file changed, 17 insertions(+), 11 deletions(-)
+On Mon, 27 May 2024 11:13:26 +0100, Charles Keepax wrote:
+> James no longer works for Cirrus Logic, remove him from the list of
+> maintainers for the Cirrus audio CODEC drivers.
 > 
-> diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-> index 0b93c2ff29e4..4442d911eba8 100644
-> --- a/drivers/bluetooth/btnxpuart.c
-> +++ b/drivers/bluetooth/btnxpuart.c
-> @@ -33,16 +33,16 @@
->   /* NXP HW err codes */
->   #define BTNXPUART_IR_HW_ERR		0xb0
->   
-> -#define FIRMWARE_W8987		"nxp/uartuart8987_bt.bin"
-> -#define FIRMWARE_W8997		"nxp/uartuart8997_bt_v4.bin"
-> -#define FIRMWARE_W9098		"nxp/uartuart9098_bt_v1.bin"
-> -#define FIRMWARE_IW416		"nxp/uartiw416_bt_v0.bin"
-> -#define FIRMWARE_IW612		"nxp/uartspi_n61x_v1.bin.se"
-> -#define FIRMWARE_IW624		"nxp/uartiw624_bt.bin"
-> -#define FIRMWARE_SECURE_IW624	"nxp/uartiw624_bt.bin.se"
-> -#define FIRMWARE_AW693		"nxp/uartaw693_bt.bin"
-> -#define FIRMWARE_SECURE_AW693	"nxp/uartaw693_bt.bin.se"
-> -#define FIRMWARE_HELPER		"nxp/helper_uart_3000000.bin"
-> +#define FIRMWARE_W8987		"uart8987_bt_v0.bin"
-> +#define FIRMWARE_W8997		"uart8997_bt_v4.bin"
-> +#define FIRMWARE_W9098		"uart9098_bt_v1.bin"
-> +#define FIRMWARE_IW416		"uartiw416_bt_v0.bin"
-> +#define FIRMWARE_IW612		"uartspi_n61x_v1.bin.se"
-> +#define FIRMWARE_IW624		"uartiw624_bt.bin"
-> +#define FIRMWARE_SECURE_IW624	"uartiw624_bt.bin.se"
-> +#define FIRMWARE_AW693		"uartaw693_bt.bin"
-> +#define FIRMWARE_SECURE_AW693	"uartaw693_bt.bin.se"
-> +#define FIRMWARE_HELPER		"helper_uart_3000000.bin"
->   
->   #define CHIP_ID_W9098		0x5c03
->   #define CHIP_ID_IW416		0x7201
-> @@ -685,13 +685,19 @@ static bool process_boot_signature(struct btnxpuart_dev *nxpdev)
->   static int nxp_request_firmware(struct hci_dev *hdev, const char *fw_name)
->   {
->   	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
-> +	const char *fw_name_dt;
->   	int err = 0;
->   
->   	if (!fw_name)
->   		return -ENOENT;
->   
->   	if (!strlen(nxpdev->fw_name)) {
-> -		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "%s", fw_name);
-> +		if (strcmp(fw_name, FIRMWARE_HELPER) &&
-> +		    !device_property_read_string(&nxpdev->serdev->dev,
-> +						 "firmware-name",
-> +						 &fw_name_dt))
-> +			fw_name = fw_name_dt;
-> +		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "nxp/%s", fw_name);
->   
->   		bt_dev_dbg(hdev, "Request Firmware: %s", nxpdev->fw_name);
->   		err = request_firmware(&nxpdev->fw, nxpdev->fw_name, &hdev->dev);
+> 
 
+Applied to
 
-Kind regards,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Paul
+Thanks!
+
+[1/1] MAINTAINERS: Remove James Schulman from Cirrus audio maintainers
+      commit: d5d2a5dacbc8ea4386071ce243c43ea0dac23cb8
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
