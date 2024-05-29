@@ -1,96 +1,104 @@
-Received: from mail.kaechele.ca (mail.kaechele.ca [54.39.219.105])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B3928F3;
-	Wed, 29 May 2024 23:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.39.219.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EE26AB8;
+	Wed, 29 May 2024 23:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717024577; cv=none; b=qAvNgY6AJQ4mtRUfFQnCRzYrAf2d6h4ZTjYoIpf/bPkvG8/d+jKXFWMrAWxP72vfO+3f2ZlNFeT7dJ0TfORTk0fBgfDP7SctehonbvYbtoiutdKY7AIS7PrFodqs8+iAI1LWvvbRN9sqEaWW4P+I0AcE1y5WvPSoiPWEXsafvz0=
+	t=1717025525; cv=none; b=ct/eCGhM6l9BEZ2oHeaIY9tWJa8rT4eidk02xhD1rWwbLvfEUWyvwqhMUiJCXKMwfFjnhDACmz5f4724/wFZqvmuWm5n+gSKpyWU4caJev0SLtrP9Iv/VXVHYu4918PifOKzLBvNE8uw/K9erraphFSzG1M9hTdRMsbVfXck0UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717024577; c=relaxed/simple;
-	bh=0mxyy6nmrKWMs62jGYfJK+jI1mtrNo02vUVORzUuSmM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NF4N7R3+c5UT1/2kBDsq5oYU0g/1Ztrpri+1VnbjKdhy5bOjSrzY60VGa59btLs4OMZUlilw4HUlVD4l3jUIGRnPnoutJfbTrp4H14bjZFxvBY5L0lNvtNeuPrM3+23LzZB0s9kXdKOsuZ1OvkCfZ5xC4/s41+5upVTQo0EocgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca; spf=pass smtp.mailfrom=kaechele.ca; dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b=dA3Qf+Bx; arc=none smtp.client-ip=54.39.219.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaechele.ca
+	s=arc-20240116; t=1717025525; c=relaxed/simple;
+	bh=4mKxqehj52IvxkEGVqhXNt6WptidXy0S3B7dAFZnIZM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Ijm3miXJF47uAV01T9vPOWRyOkuf55nUom0RC+Zf59aEb4Qo6RfNj6EzSoeTpRM/0l+/yY687o6s8eleptyrtjzKHq0JxSzi3s1zKLfZ7QWs/kFxDtddCmwO1qLRgLAllSXih3znw3TfZBgyD65tAOVD2z/tM7jKxX+OccpHWtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k//smB2i; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b="dA3Qf+Bx"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 89CD9C005F;
-	Wed, 29 May 2024 19:08:26 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaechele.ca; s=201907;
-	t=1717024109; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=PDLpjtD8+3OyvFRYxZd0ZhadxMjnIfuZmLlbltpqaZ4=;
-	b=dA3Qf+BxPAIQ7NCoICy7S3OpYAGFkO3PKWXmv7LQ/YiG5E4Uim1T12jk0pqy3ACnzqhXUL
-	gpjQl8704UWBpWOD3J19fZeuEHSUSEapfZwLi2HVq3Mtbq2uwEK7RuVekibABdryz6MLGL
-	oOLl+hux41Zz5Vc3h5rFyZi+N7mntDc=
-Message-ID: <b065e243-58dc-4ebe-8dbc-8b23c0b46cd1@kaechele.ca>
-Date: Wed, 29 May 2024 19:07:23 -0400
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k//smB2i"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44TJne5M000498;
+	Wed, 29 May 2024 23:32:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=aocjmcSyEYUc6gNKmBCW7k
+	6+aHjWPJTQ7E+fx5JOMfU=; b=k//smB2irEnyq1uh/Vh2dSBzHQf6XsrQlsj+s/
+	IdWAVdb3lTecyIabZEw0DKLEhpv0kav3+UBopSa5OnjPL+EsSLgJNV6PRX8HME/t
+	srePae8xDlkVMfYIjzTxp6gPuabcLr7i1VaZs63K6WLzmxBbmOPhNPY/Iz9y7rup
+	QPoSWyfyDk3DMFHF+CoCcDfKuzLBG4tchFL0NIyftRruU6KS8nXA8wgKteXZLGOb
+	OY/llB1F4jn0yrcz8Ez5M57miSU31LRkLhcViVLyYRHdXdegjnxrVPUja/xyH6gh
+	Sqgkii2qN4wcAZ5ClRqocGZdv638gA7gYJXdnL4k3iTmoTSA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2ptmtr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 23:32:00 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TNVx3u015767
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 23:31:59 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 May
+ 2024 16:31:59 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Wed, 29 May 2024 16:31:58 -0700
+Subject: [PATCH] resource: Add missing MODULE_DESCRIPTION()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] input: himax_hx83112b: implement MCU register
- reading
-From: Felix Kaechele <felix@kaechele.ca>
-To: Mark Brown <broonie@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Job Noorman <job@noorman.info>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240511121245.109644-1-felix@kaechele.ca>
- <20240511121245.109644-4-felix@kaechele.ca> <ZkKb5_SRNwG1pRou@google.com>
- <44570cd2-9540-47f8-a409-26220b0812fb@sirena.org.uk>
- <afab9026-e843-4cc4-8733-f45e9ab34276@kaechele.ca>
-Content-Language: en-US
-In-Reply-To: <afab9026-e843-4cc4-8733-f45e9ab34276@kaechele.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240529-md-kernel-resource_kunit-v1-1-bb719784b714@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAO26V2YC/x3M0QqDMAxA0V+RPC8QiyLbr4wxapvNoNaRWBHEf
+ 1+3x/Nw7wHGKmxwqw5Q3sRkSQX1pYIw+PRmlFgMjlxDrbviHHFkTTyhsi1ZAz/HnGRFatouEtX
+ UdwQl/yi/ZP+v74/i3htjrz6F4TecJOUdZ28rK5znF7Kwn2uJAAAA
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>,
+        Andrew Morton
+	<akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+CC: <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: dU00OP-p4wFyV_IWma38yQB1RHgS-fCk
+X-Proofpoint-ORIG-GUID: dU00OP-p4wFyV_IWma38yQB1RHgS-fCk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-29_16,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 spamscore=0 adultscore=0 clxscore=1011 bulkscore=0
+ mlxscore=0 suspectscore=0 priorityscore=1501 phishscore=0 mlxlogscore=904
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405290169
 
-On 2024-05-14 10:01, Felix Kaechele wrote:
-> On 2024-05-14 05:46, Mark Brown wrote:
->> On Mon, May 13, 2024 at 04:01:59PM -0700, Dmitry Torokhov wrote:
->>> On Sat, May 11, 2024 at 08:12:24AM -0400, Felix Kaechele wrote:
->>>> Implement reading from the MCU in a more universal fashion. This allows
->>>> properly handling reads of more than 4 bytes using the AHB FIFO
->>>> implemented in the chip.
->>
->>> Mark, do we have anything in regmap to support this better or having a
->>> wrapper is the best solution here?
->>
->> No, I've not seen something that explicitly requires toggling a burst
->> mode on and off to do a bulk operation.  Off the top of my head I'd
->> suggest just always leaving the burst mode enabled but I assume there's
->> some downside to doing that.  We could add something but I'm not sure if
->> it's worth it without having seen any other devices with the same need.
-> 
-> I can experiment some more with just leaving burst mode enabled.
+Fix the 'make W=1' warning:
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/resource_kunit.o
 
-I've done some testing now and can confirm that, unfortunately, not 
-enabling burst mode for every read of the FIFO register results in 
-unreliable touchscreen operation.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ kernel/resource_kunit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-For testing purposes I only enabled burst mode once at both probe and 
-resume.
-The touchscreen will stop working both randomly in normal operation and 
-reproducibly after returning from screen blanking.
-My wild guess is that DSI commands (e.g. for re-initializing the panel) 
-alter the state of the IC such that the burst mode on the I2C interface 
-ends up disabled again.
+diff --git a/kernel/resource_kunit.c b/kernel/resource_kunit.c
+index 58ab9f914602..0e509985a44a 100644
+--- a/kernel/resource_kunit.c
++++ b/kernel/resource_kunit.c
+@@ -149,4 +149,5 @@ static struct kunit_suite resource_test_suite = {
+ };
+ kunit_test_suite(resource_test_suite);
+ 
++MODULE_DESCRIPTION("I/O Port & Memory Resource manager unit tests");
+ MODULE_LICENSE("GPL");
 
-That means the bus read function from this current v2 series could be 
-used as-is.
-I have a v3 in the pipeline to address the comments Conor made on 
-another patch in the series.
-So far those are the only changes compared to this v2. If you have any 
-other ideas for what I could test in regards to this, please let me 
-know. Otherwise I'll be sending v3 in the next few days.
+---
+base-commit: 4a4be1ad3a6efea16c56615f31117590fd881358
+change-id: 20240529-md-kernel-resource_kunit-0457d0010b70
 
-Regards,
-Felix
