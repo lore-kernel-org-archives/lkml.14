@@ -1,52 +1,55 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C2133CFC;
-	Wed, 29 May 2024 09:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from mecka.net (mecka.net [159.69.159.214])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B42E33CFC;
+	Wed, 29 May 2024 09:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.159.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716975357; cv=none; b=S8N87pzervtCDyTZjzlk3XSt3ZZnvOZNEMSW9KYRJVycANT7mIoCg9O8iqVKLJD/+sRG4xKu3L50wMHSlA+uyiB+Vd2Wt0mQ90azQ8Ds90FowNLjXuVO6dy7cSrqLETBDKbctGiHFIJZ53qB+kBaYq7+O5smEeyvkyd8P3s5+Kc=
+	t=1716975497; cv=none; b=ibWB22FqfxNAvyUhe4PlqfONHkt5Ogmv9u1A5Eg1e6AusZnkqSt2EtS87D0/KLEl/zIZnLNY4LhvWiIJjOdGUkVZtXkh1XRnDbSyNF3UG6YNIQ0gM+71yoAMB3d99E+sx6v7SR4T5g2Ei8b68HMIMUXyIjub1rjbwjd+ZPeNNiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716975357; c=relaxed/simple;
-	bh=hfsNSVa4Iha07dFb1XFlGFqEe5SlCuyXxb6CXKx53OE=;
+	s=arc-20240116; t=1716975497; c=relaxed/simple;
+	bh=t+NQR7JOcisqSyTIuHhXwptMXLRRcGVKKGvUmnuaQ3Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gzpGMX3WRZhMVJqQ0LXpy57HY/wzPz04Nna82i9oc1HlWk3Puc4iq/a1ydo09JT8nJrYMA6ylSdPGXnLfoWN4OuwvlyF3PMFceuwQfu6To3wff/OHxkpK4IOUQaRqz3tMzGdvDq8fl7VJ1BKwW1Ddpb9WIDATxsD6mh2Kb8gBlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=O3z2qT01; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7ANcDfFImX1Sa5FKs13GJMzfxDssDGrpUlrbv1ILr/KCMd2DPqEfJIXnBoMuc9XcRJRjmnOiEJv8+yj0mDTTAGARKZQdkIJiiQyySih6bkMStFL9kIBZnLxuyDtPeQRFkq/cFlCrp4QHScqSZF7OqYXxwv8UTk7Y8bH3rXqFBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mecka.net; spf=none smtp.mailfrom=manut.de; dkim=fail (0-bit key) header.d=mecka.net header.i=@mecka.net header.b=nnHXk6+4 reason="key not found in DNS"; arc=none smtp.client-ip=159.69.159.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mecka.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=manut.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="O3z2qT01"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 016149CA;
-	Wed, 29 May 2024 11:35:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716975350;
-	bh=hfsNSVa4Iha07dFb1XFlGFqEe5SlCuyXxb6CXKx53OE=;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mecka.net header.i=@mecka.net header.b="nnHXk6+4"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mecka.net; s=2016.11;
+	t=1716975486; bh=t+NQR7JOcisqSyTIuHhXwptMXLRRcGVKKGvUmnuaQ3Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O3z2qT01srHW4mUC/aH8rNQbe9GWy68p5BGB6AcEs5orkZFIpgTZbIvltaqoOoylv
-	 V0Ch0Ujm3iOYwR6PQLk3rdCSA8wDC994rL2weam4FcDtGQwwMyFie+BqQloKiAXG+Z
-	 CcwoLkRenJQeauMHmfqSRdRxg1NZc79X1fJC2im4=
-Date: Wed, 29 May 2024 12:35:41 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
+	b=nnHXk6+4jIfPypE13CpuQyuw5ZPGU7X9fw4pi7s3T40N3XMIHGCTSzseD2yT0pXyc
+	 l54m3gG9GGIDTttXaFKWomH1jCFkfE3N1L1p93+HJPPdZcHP/vLv8lOvfXVikt9iUi
+	 KDX/VMZ0uhvICNpm+Dq5pAkmwG3PwRdTitFF9aIEKKFJoShxLbsDw8tIarY+Bxp2m6
+	 vtW1fc53KZlGnhOGH2GbSszYAb1tgNGVocGsy/Qrula++sTb1rBWe8HXPyIiFjCwTK
+	 +iLMMn/S7RH7nnmJmWB3vNDo0gvYKOaG6ZVTiAwN6Vq+uCGJmeiZLxxlluac+O0Dq5
+	 c2ArOze6Nr+Qw==
+Received: by mecka.net (Postfix, from userid 1000)
+	id B31E250B258; Wed, 29 May 2024 11:38:06 +0200 (CEST)
+Date: Wed, 29 May 2024 11:38:06 +0200
+From: Manuel Traut <manut@mecka.net>
+To: Mikko Rapeli <mikko.rapeli@linaro.org>
+Cc: Sumit Garg <sumit.garg@linaro.org>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Jerome Forissier <jerome.forissier@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+	op-tee@lists.trustedfirmware.org,
+	Shyam Saini <shyamsaini@linux.microsoft.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v2 2/4] mfd: adp5585: Add Analog Devices ADP5585 core
- support
-Message-ID: <20240529093541.GL1436@pendragon.ideasonboard.com>
-References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
- <20240528190315.3865-3-laurent.pinchart@ideasonboard.com>
- <ZlYwJryxeZ2LAKYG@surfacebook.localdomain>
- <20240528201326.GA8500@pendragon.ideasonboard.com>
- <CAHp75VeHA8qH_S=KJjAMv24vGP=hmeN9wSt1_NPsRhBZfEYXXw@mail.gmail.com>
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v7 4/4] optee: probe RPMB device using RPMB subsystem
+Message-ID: <Zlb3fuqvQIO9ghQX@manut.de>
+References: <20240527121340.3931987-1-jens.wiklander@linaro.org>
+ <20240527121340.3931987-5-jens.wiklander@linaro.org>
+ <fc3bfebb-78b7-428e-8da5-5221f4921faa@linaro.org>
+ <CAHUa44G0bcK55RxNrN5sXiicBZ-BJtA46KpedfBdUSKsN8eUOA@mail.gmail.com>
+ <ZlWkSCCjJ2fbE2ML@nuoska>
+ <CAFA6WYOT52fdqgGvDYE91DQ_4MUbAv_1Gnn2fTyMNhrj_Agu=w@mail.gmail.com>
+ <ZlbUwI0G3HGvioNm@nuoska>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,173 +59,54 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeHA8qH_S=KJjAMv24vGP=hmeN9wSt1_NPsRhBZfEYXXw@mail.gmail.com>
+In-Reply-To: <ZlbUwI0G3HGvioNm@nuoska>
 
-Hi Andy,
+Hi Mikko,
 
-On Wed, May 29, 2024 at 08:44:26AM +0300, Andy Shevchenko wrote:
-> On Tue, May 28, 2024 at 11:13 PM Laurent Pinchart wrote:
-> > On Tue, May 28, 2024 at 10:27:34PM +0300, Andy Shevchenko wrote:
-> > > Tue, May 28, 2024 at 10:03:12PM +0300, Laurent Pinchart kirjoitti:
+On 10:09 Wed 29 May     , Mikko Rapeli wrote:
+> On Wed, May 29, 2024 at 10:56:04AM +0530, Sumit Garg wrote:
+> > On Tue, 28 May 2024 at 15:00, Mikko Rapeli <mikko.rapeli@linaro.org> wrote:
+> > > On Mon, May 27, 2024 at 03:24:01PM +0200, Jens Wiklander wrote:
+> > > > On Mon, May 27, 2024 at 3:00 PM Jerome Forissier
+> > > > <jerome.forissier@linaro.org> wrote:
+> > > > > On 5/27/24 14:13, Jens Wiklander wrote:
+> > > Outside of these patches, I think the optee RPC setup with fTPM TA is one area which
+> > > currently requires tee-supplicant to be started. Detecting the existence of TPM before
+> > > kernel drivers are loaded is possible via the exported EFI logs from firmware to kernel
+> > > or ACPI TPM2 table entry, and detecting optee and thus starting tee-supplicant in userspace too.
+> > 
+> > One thing I am trying to find an answer about is why do we need to
+> > defer tee-supplicant launch if it's bundled into initrd? Once you
+> > detect OP-TEE then tee-supplicant should be launched unconditionally.
+> > As per your example below, the motivation here seems to be the TPM2
+> > device dependent on RPMB backend but what if other future systemd
+> > services come up and depend on other services offered by
+> > tee-supplicant?
 > 
-> ...
+> There is an annoying depedency between firmware side optee and TAs, and kernel optee driver,
+> tee-supplicant in userspace and kernel TA drivers like fTPM.
 > 
-> > > > +   depends on I2C && OF
-> > >
-> > > Why OF?
-> >
-> > Because the driver works on OF systems only.
-> >
-> > > No COMPILE_TEST?
-> >
-> > The driver won't compile without CONFIG_I2C, so I can use
-> >
-> >         depends on I2C
-> >         depends on OF || COMPILE_TEST
-> >
-> > Do you think that's better ?
+> Kernel fTPM driver and fTPM TA require tee-supplicant in userspace for RPMB, RPC etc.
 > 
-> I think that dropping OF completely is the best.
-> OF || COMPILE_TEST would work as well, but I still don't know why we need this.
-
-For the same reason that many drivers depend on specific CONFIG_$ARCH.
-They can't run on other platforms, the dependency hides the symbol for
-users who can't use the driver. This driver works on OF platforms only.
-
-> ...
+> This patch series is adding kernel side support for RPMB handling so that the dependency to
+> tee-supplicant in userspace can be removed. For fTPM use case, there is still the optee RPC
+> buffer setup which currently requires tee-supplicant in userspace or fTPM TA will panic.
 > 
-> > > + array_size.h
-> > > + device.h // e.g., devm_kzalloc()
-> > >
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/moduleparam.h>
-> > > > +#include <linux/init.h>
-> > > > +#include <linux/slab.h>
-> >
-> > I'll drop those 3 headers, there's not needed anymore.
-> >
-> > > > +#include <linux/i2c.h>
-> > >
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/of_device.h>
-> > >
-> > > You don't need them, instead of proxying...
-> >
-> > of.h for of_device_get_match_data() and of_match_ptr(). I'll drop the
-> > former, but I need the latter, so I'll keep of.h
-> 
-> Why do you need of_match_ptr()? What for?
+> So yes, currently, tee-supplicant must be started. But it would be great if kernel drivers
+> and firmware optee trusted applications would not depend on tee-supplicant running in userspace.
+> The startup sequence is really tricky to get right. My fTPM use case is using the TPM device
+> to encrypt rootfs and thus all SW components including tee-supplicant need to run early in
+> initramfs. Currently also switch from initramfs to main rootfs requires unloading
+> fTPM kernel driver and stopping tee-supplicant in initrd, and then starting tee-supplicant
+> and loading fTPM kernel driver from main rootfs. udev and automatic module loading for
+> fTPM can not be used due to the tee-supplicant userspace dependency.
 
-That's actually not needed, I'll drop it.
+I decided to build fTPM as buildin-TA into OP-TEE. RPMB routing is already
+implemented in u-boot so it can already write PCR registers.
 
-> > of_device.h for historical reasons probably, I'll drop it.
-> >
-> > > > +#include <linux/mfd/core.h>
-> > > > +#include <linux/mfd/adp5585.h>
-> > >
-> > > m is earlier than 'o', but with above drop no more issue :-)
-> > >
-> > > ...just include mod_devicetable.h.
-> > >
-> > > > +#include <linux/regmap.h>
-> > >
-> > > + types.h // e.g., u8
-> 
-> I assume that all marked with + in my previous reply you agree on?
+With this series and the required changes in OP-TEE and a compiled in fTPM
+kernel driver and systemd v256 it is possible to use the fTPM in the initrd
+without tee-supplicant.
 
-If I don't reply to a particular comment it means I agree with it and
-will address it, yes.
-
-> ...
-> 
-> > > > +#define            ADP5585_MAN_ID(v)               (((v) & 0xf0) >> 4)
-> > >
-> > > GENMASK()
-> >
-> > This is not a mask. Or do you mean
-> >
-> >         (((v) & GENMASK(7, 4)) >> 4)
-> >
-> > ?
-> 
-> Yes.
-> 
-> > I think that's overkill.
-> 
-> Why? You have a mask, use it for less error prone code.
-
-I'll change this to
-
-diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-index fa4092a5c97f..924758b8a3cd 100644
---- a/drivers/mfd/adp5585.c
-+++ b/drivers/mfd/adp5585.c
-@@ -125,7 +125,7 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
- 		return dev_err_probe(&i2c->dev, ret,
- 				     "Failed to read device ID\n");
- 
--	if (ADP5585_MAN_ID(id) != ADP5585_MAN_ID_VALUE)
-+	if (id & ADP5585_MAN_ID_MASK != ADP5585_MAN_ID_VALUE)
- 		return dev_err_probe(&i2c->dev, -ENODEV,
- 				     "Invalid device ID 0x%02x\n", id);
- 
-diff --git a/include/linux/mfd/adp5585.h b/include/linux/mfd/adp5585.h
-index f06a574afedf..f5776ee844dc 100644
---- a/include/linux/mfd/adp5585.h
-+++ b/include/linux/mfd/adp5585.h
-@@ -12,8 +12,8 @@
- #include <linux/bits.h>
- 
- #define ADP5585_ID			0x00
--#define		ADP5585_MAN_ID(v)		(((v) & 0xf0) >> 4)
--#define		ADP5585_MAN_ID_VALUE		0x02
-+#define		ADP5585_MAN_ID_VALUE		0x20
-+#define		ADP5585_MAN_ID_MASK		GENMASK(7, 4)
- #define ADP5585_INT_STATUS		0x01
- #define ADP5585_STATUS			0x02
- #define ADP5585_FIFO_1			0x03
-
-> ...
-> 
-> > > > +#define            ADP5585_Rx_PULL_CFG_MASK        (3)
-> > >
-> > > GENMASK()
-> >
-> > Not here, as this value is meant to be passed to ADP5585_Rx_PULL_CFG().
-> 
-> Why is it marked as a mask? Rename it to _ALL or alike.
-
-It's a mask, but used as
-
-	ADP5585_Rx_PULL_CFG(ADP5585_Rx_PULL_CFG_MASK)
-
-We're reaching a level of bike-shedding that even I find impressive :-)
-As with a few other of your review comments that I think are related to
-personal taste more than anything else, I'll defer to the subsystem
-maintainer and follow their preference on this one.
-
-> ...
-> 
-> > > > +#define            ADP5585_C4_EXTEND_CFG_MASK      (1U << 6)
-> > >
-> > > > +#define            ADP5585_R4_EXTEND_CFG_MASK      (1U << 5)
-> > >
-> > > > +#define            ADP5585_R3_EXTEND_CFG_MASK      (3U << 2)
-> > >
-> > > > +#define            ADP5585_R0_EXTEND_CFG_MASK      (1U << 0)
-> > >
-> > > > +#define            ADP5585_OSC_FREQ_MASK           (3U << 5)
-> > >
-> > > BIT() / GENMASK()
-> >
-> > I'll use GENMASK for the masks.
-> 
-> For a single bit the BIT() is okay, and TBH I don't remember if
-> GENMASK() supports h == l cases.
-
-I've tested it and it works.
-
--- 
-Regards,
-
-Laurent Pinchart
+Maybe this information is helpful to you, regards
+Manuel
