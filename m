@@ -1,67 +1,104 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C716715D5A0;
-	Wed, 29 May 2024 23:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8C7178360
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 23:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717023771; cv=none; b=TMGNG2vVeBDgPphewE01Ssu2bfBxGNfL1HouchnBw1iyuRHkmxQgKyMNE4D3m8CDKaUxMDDEPXDe88At6LTD8xa/GJI2qe6kXVyHwwcwlz5eFy4ds3DtcJ+wFTwr9BbX4XdDiVVk9j9aH8iGxYKfY6/KYnVv4AHsnpMHPqY1Plg=
+	t=1717024082; cv=none; b=Y1xXCvsNXy2LBcWUhYzaajHnbNNeGOytQ28mVnv4+FnxCqPyu4C6aw6JohS1gyBp9v3sq8mXEVaosZ3Tr7eZFqYZOjRZh7AgdrXX4D1qqHk3RFfgbTZ4FH0Of92soJLm0RPPBoYHtafsNL019KjINZmPQYHh/YInwKTKgj93idc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717023771; c=relaxed/simple;
-	bh=Ki6OB4kf0d+GQ3AEcaw1nNvdeZ0HvyOOaDOYtve29L8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QJby1JRCpApU/Knm6VTDz2sPkT3Yhgn25C4/acCC9Ao/2FxLwAdX5FycUo4SdQqZhTMtqPCysVh64fr+qv1cb2nhSz1bCIrcqnCoA3cIMuNLtQIovWdxwoCU4LUfYAO6jmv/qVxbbvk1S/sGp00aSDy5nJvjCUwSi5Zts6iJIY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=VOWffBz4; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1717024082; c=relaxed/simple;
+	bh=OpPHbam7unYZXqqkfE/FktxoqKH6VNOldq0Y2i/6B78=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uSrm540JrhYNVUmY/WYzDjdQ1IFB/AxUSgMLyX8g1CD8Dk5+/1gMKCIbmSZotQ2grb/ReLw1vYc4wRqQjx+OiDZiCTyfrgNFmThwR14O2VUPdcGBM3V461GmypyZXTfHaZ6DxlYC9z66oo3IPTYHc6Qa2mio/x1oYl3flPWcXK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xPacc/f/; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VOWffBz4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=NaqPsF+YNHjwUDf2w9rBdP367AFBYc/O3af88711Nu4=; b=VOWffBz4rAP4fZi7xgoTgXlzwV
-	RYdScfYw3LtW64Vt2ZRc6z7jvmHxM0Ed9C8p+BAqiiCwboGFLT8Kpf/KhJtVSIE5MQC9lxjcjL4nY
-	37FQfzRc76zBcltN0Pk2q3srKsS9F1Yojw5SaNSJwWlvC19ZE4ot83Rw89980UOh96r0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sCSJZ-00GIaB-AM; Thu, 30 May 2024 01:02:37 +0200
-Date: Thu, 30 May 2024 01:02:37 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 1/8] net: pse-pd: Use EOPNOTSUPP error code instead of
- ENOTSUPP
-Message-ID: <1e80a2aa-fa3a-4f90-ae43-d4e91e4fa80f@lunn.ch>
-References: <20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com>
- <20240529-feature_poe_power_cap-v1-1-0c4b1d5953b8@bootlin.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xPacc/f/"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2bde806870aso222789a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717024080; x=1717628880; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6gWPVta/qCJJyLq/hJc6KaVJRsxcvZE7MgWw+KyNFoc=;
+        b=xPacc/f//f9tkpdyrHqfVR7xJVl7wbXGJFXSOJnwG1XpYDCwtgNTMgL6/f2696LdW5
+         t5hmGhdCImuLtnkz4clIiR9JjrWZoL3PDGv9E+CRS4SaubFQj3A9UvQPggv4mn0nEfAQ
+         +vqVmTZM+hyG5XCxb6CiKqLAd8g+9zwDdWjY0GeZjaaiRiZzv9SHSCW+RBMzECP3F8K3
+         VHGZ0iKWyaah7PpwZP2xwGU+ZBe+PAAyVzdYIfZwf/PLjelXUlIVI6sJjxFpw2dZW0zg
+         yJJGh1gy2atrdAoAjbVjodm6frOpzY67wGFv+Q0dBJOowYbDOcwjIw+veFH+ap+f3Gkc
+         v6QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717024080; x=1717628880;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6gWPVta/qCJJyLq/hJc6KaVJRsxcvZE7MgWw+KyNFoc=;
+        b=n8rjvcm0dAIu3EiCw5LC+srD4HkI2CISyjyPzzJHEm9nQtZRtpMoDz72NmWzFIyDqJ
+         9MBNMpboVewEf/dLp9L+50WHnUXO8nJddlLNXrNB7fWEO5lTB2oPOE7A17yWxOK29wdF
+         dRMjZM5d7TD1akIz2mZ3aPcBwK9xpfbYvm9tm0vWBdzNVLvNk5N26pUpLTNWpWpEYjQC
+         b+4YLibdxVs9Oc41qxJhynOvtanyPmg3UT5o6E/2vKeeLTrdW3TUGJcYVHoTp+RuPsNw
+         0g0sypI3OeTetytnmmPlqKsmTD1eJSFAzd5vC6zuyfSVcdSQc+nxoRNu7oDu6zJg2y59
+         qotw==
+X-Forwarded-Encrypted: i=1; AJvYcCWliQVHCA1vynVgb7uQBUgF1f/3rQA9hvQ3D/0uARhGDrxeKIcgweVxSdFCt/B0vZSFRHZem38HT7s6fcilwEljQfTpCDmVnQ0/ruaE
+X-Gm-Message-State: AOJu0YzfJqroVGoOrM0FeDRa4kaxsbHY3fZV4SB8g5ArJT7M9SchXFlo
+	BuFJ1+Y1nwGo1grEHIIJEhzmojsMdQP1y3Z3AcQqxWvfmAcns36H4/goAUJI1Q3BVBf3nbxKyHE
+	yZQ==
+X-Google-Smtp-Source: AGHT+IGchevfh8WkGOCMlZBu0D1kH8hxThW1k7kjpH5AD9E5N22nag/B1pMMOy5N4Qk+BxA1kDgs6Z0fhg8=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:4b0e:b0:2bf:bcde:d204 with SMTP id
+ 98e67ed59e1d1-2c1ab9e2544mr1547a91.1.1717024079994; Wed, 29 May 2024 16:07:59
+ -0700 (PDT)
+Date: Wed, 29 May 2024 16:07:58 -0700
+In-Reply-To: <291ecb3e791606c3437fc415343eb4a25e531cc3.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529-feature_poe_power_cap-v1-1-0c4b1d5953b8@bootlin.com>
+Mime-Version: 1.0
+References: <20240522022827.1690416-1-seanjc@google.com> <20240522022827.1690416-4-seanjc@google.com>
+ <8b344a16-b28a-4f75-9c1a-a4edf2aa4a11@intel.com> <Zk7Eu0WS0j6/mmZT@chao-email>
+ <c4fa17ca-d361-4cb7-a897-9812571aa75f@intel.com> <Zk/9xMepBqAXEItK@chao-email>
+ <e39b652c-ba0e-4c54-971e-8df9a2a5d0be@intel.com> <ZldDUUf_47T7HsAr@google.com>
+ <291ecb3e791606c3437fc415343eb4a25e531cc3.camel@intel.com>
+Message-ID: <Zle1TrfeJDeXLtLk@google.com>
+Subject: Re: [PATCH v2 3/6] KVM: Add a module param to allow enabling
+ virtualization when KVM is loaded
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chao Gao <chao.gao@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, May 29, 2024 at 04:09:28PM +0200, Kory Maincent wrote:
-> From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
+On Wed, May 29, 2024, Kai Huang wrote:
+> On Wed, 2024-05-29 at 08:01 -0700, Sean Christopherson wrote:
+> > Enabling virtualization should be entirely transparent to userspace,
+> > at least from a functional perspective; if changing how KVM enables virtualization
+> > breaks userspace then we likely have bigger problems.
 > 
-> ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP as reported by
-> checkpatch script.
+> I am not sure how should I interpret this?
 > 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> "having a module param" doesn't necessarily mean "entirely transparent to
+> userspace", right? :-)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Ah, sorry, that was unclear.  By "transparent to userspace" I meant the
+functionality of userspace VMMs wouldn't be affected if we add (or delete) a
+module param.  E.g. QEMU should work exactly the same regardless of when KVM
+enables virtualization.
 
-    Andrew
+> > Performance is secondary for me, the primary motivation is simplifying the overall
+> > KVM code base.  Yes, we _could_ use on_each_cpu() and enable virtualization
+> > on-demand for TDX, but as above, it's extra complexity without any meaningful
+> > benefit, at least AFAICT.
+> 
+> Either way works for me.
+> 
+> I just think using a module param to resolve some problem while there can
+> be solution completely in the kernel seems overkill :-)
+
+The module param doesn't solve the problem, e.g. we could solve this entirely
+in-kernel simply by having KVM unconditionally enable virtualization during
+initialization.  The module param is mostly there to continue playing nice with
+out-of-tree hypervisors, and to a lesser extent to give us a "break in case of
+fire" knob.
