@@ -1,167 +1,149 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821DA15B0EE;
-	Wed, 29 May 2024 01:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425F815AAD9;
+	Wed, 29 May 2024 01:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716946128; cv=none; b=KfDqJcJZR9lIKWaVL/yVC1xaxnKAJ1T/7jxfqQSxUVbwwGcWcgrEgoEzS8uGhmDC6jegLnNwArvCtS+ld7VqMZII9jSKlirSbB9LG7ASwNuH27yv/AmDFB6laqBhmJijzszJ5y1QyiZlXsOP9KkderJ8da+KFy/EJWQBGPLkbxc=
+	t=1716946139; cv=none; b=OiIwqPKYq4ogMiVR5lwzAHOJj5pXNb59L9lVQUX85Lo8lMT0RuAaJ6jI4/ZvoC33XPTBDyhtkvK3lC+Vi/MxK+KzXMNPMni6ip7MSJESHzeWM4g5y9nN/NKBRaZF6jt6cOaYNoIC0JF33Imnv5hXaAoRkE8jZoHU1XFGRlMgXjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716946128; c=relaxed/simple;
-	bh=LDZLCHZzuZFdB9MB2gzeXB2ldjxyM30EyBUTBHEphxw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YEKT+3+leIFDzeuBhREe9efka5+IYVS2f2pc5+7xlsX/+YLVOcxCGuZLUYyoN34CmHlgSchS0mBklIRmrWSiwsSpmLRm8GjqcCd1E3dVMvBp+kvQ3SuQ9ErXZGZwkseXFGzi+4VqjXbwDrEaCo/KBlTDJ9cbLCqpToMN/fDY5wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=iBEF5K+l; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KxqS8xZ+; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1716946139; c=relaxed/simple;
+	bh=+6UmtZ3tFAh1ncQEqGpFhys5EuukV5ETxWLZaIAEsrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GS2CbJ4218sm8l61Ph1BKoL2S4XFdMCIJe1hplJ7ATZCnGXm45uNl04TeYiOVtnhUQ0qbW55YUfJRomEymdgr+jC9fhtRgt85HWuAL8dlocWa0J4Nb029QA0pTPup7TGguFYOLpXdP9Jd1O5o1JowmjZZPnasYlHh+jKuETNAcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=q3E7oWEj; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="iBEF5K+l";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KxqS8xZ+"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfout.west.internal (Postfix) with ESMTP id 3CD511C000F6;
-	Tue, 28 May 2024 21:28:46 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 28 May 2024 21:28:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1716946125; x=
-	1717032525; bh=LNipYAkSRLIdv0+aK0KD7aPesVOUo+kH+La70D2FdvE=; b=i
-	BEF5K+lImWFXNvL3XvfT8sdACcTIfn67z9Rrh5LJgkOdTmEKXDXWZS2jZ2dVWybg
-	NYU9rvIrW+LYKmzd1OOEizR2xY+jwpBjXHw5oCCzWoGwggY1c83heADkPppOgrjX
-	rxKIwkNvY99+9CvX6YvmlL1dG1e4Fq+xCW7WOnxXKCihtpavQeABrc5UNzoiqF0/
-	DCiXfQy5d1nyIJ06gl//IUZHLU0X5m6vHzMVxvBFN7q3N7pd0c6UdTLe3fjlfuBf
-	XlgqeCq8+kt/VfvHC1tBx4Wm37Ll9hzmTzKEBjuqERShjvfu0QD9TkzdjEN+uo43
-	X6yWxZLrgwTzOJ6XFhONw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716946125; x=
-	1717032525; bh=LNipYAkSRLIdv0+aK0KD7aPesVOUo+kH+La70D2FdvE=; b=K
-	xqS8xZ+x6kb8uQlUJzSWcceRFdI/8pD/sxM61py/i74w3eaGnC3ajekCQVGRN0Cm
-	OVF00g9xvv7uVYWSw4u1D0uG2MXzPqJ3kA0jpdsnFV+Ae7q/cqJGyD4u9UX4rX4+
-	eArOLYoAnKaYTIKHxJMNCEeBx+DFTOYZ4C2urMKeOfeNHZkMbw2TW6iJrTJ1Jomx
-	WzB2zScTng4XK/mI2mnT4t5CmYQUWCPEpYtlb5aNdnSpC+Q+fK13K/TNoFeS1dY+
-	fFxQUdNOeqimWkvQ40Hfnw6vd7APxHbQF0fLG+rxl7n6KbZ0fNFxX3RVQIjQiSAe
-	21UCFI1rFEn3h+ediL7hg==
-X-ME-Sender: <xms:zYRWZm-dKTvbhgh15Lw9szovBr7y3vznXULVD_2jbJyZvhK3eKza-g>
-    <xme:zYRWZmvec0CWuUZu66L4ZvlnqOcURDhpptp5DJSzzCZg4XWozFS6mB9usRsz0GTwN
-    2J5p4eYIsjIA-PgaiI>
-X-ME-Received: <xmr:zYRWZsAtLleBeIH1ydKgxxBgqT8SEkLkKxlsH7H7OuP__cKl00a9RMeOImIv>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejledggeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
-    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
-    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:zYRWZudmp43GWpHBBr5xezzvyNfKMXZUqmAknmtnXHN6weCAiSfSJA>
-    <xmx:zYRWZrMe8iHsGS3qxukmrpA164Vo60o6T__5h8B874j8-dWq0TXokw>
-    <xmx:zYRWZomAlgPF0Z3z8ZOQ6O2UzbO1VztHWmZt_MhXBaJGaUZer4MYUg>
-    <xmx:zYRWZttheX0b2xCU5SuZW-OHhfiG9Bt7wp-RqCfBn5Fsg9jBNSluaw>
-    <xmx:zYRWZkgGxHHuEz06kHeEkah4ZaHVPnd94Oe_d6q08LGmtlPfN_kR8EIt>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 28 May 2024 21:28:42 -0400 (EDT)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: jikos@kernel.org
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	corentin.chary@gmail.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	bentiss@kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v1 2/2] hid-asus: change the report_id used for HID LED control
-Date: Wed, 29 May 2024 13:28:27 +1200
-Message-ID: <20240529012827.146005-3-luke@ljones.dev>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240529012827.146005-1-luke@ljones.dev>
-References: <20240529012827.146005-1-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="q3E7oWEj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1716946132;
+	bh=DFxujHLqbwNMNPEh3VXzYbit5PH4X95MhhNNu8Ap+rU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=q3E7oWEjrobCB9GpdSByUSL2XUJDTpGecwOkeuqmmRNXEBtSU1r0xp+cSu8qQX9EU
+	 m5BsXDWR3/LdJJ1fz21sHe4lRznZ4GAJCrl+J9p3iqeaq8wrqK/eW6Vq4f+DYAqG1+
+	 wW94O/8ycTMugrBx49YzxvF0WeZn+KN0Y/jgHexjhtU4sVXGoCIqsJg5dI5h1RwDrN
+	 iP+k5daQccZr04dPeEcOCk27S3lUJ8jRufm/umyQkD+MXqFVJd15jXdvMoOv1M3HAF
+	 22u7K7TmF3gc9Xkpahhwhz/XA2OBE3nFUTggBbmOB37PssRV1DOIbM8vhs5LMYNdO+
+	 Z1nUiPzi7rWDQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VpsGr0n2hz4wyY;
+	Wed, 29 May 2024 11:28:51 +1000 (AEST)
+Date: Wed, 29 May 2024 11:28:49 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Ogness
+ <john.ogness@linutronix.de>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Shimoyashiki Taichi
+ <taichi.shimoyashiki@sony.com>, Sreenath Vijayan
+ <sreenath.vijayan@sony.com>
+Subject: linux-next: manual merge of the printk tree with Linus' tree
+Message-ID: <20240529112849.74718b45@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/Oprw9qRIHmPcaH3yQtnnJx7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On some laptops the report_id used for LED brightness control must be
-0x5D instead of 0x5A.
+--Sig_/Oprw9qRIHmPcaH3yQtnnJx7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/hid/hid-asus.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+Hi all,
 
-diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 4cba8e143031..ec3556cc4eef 100644
---- a/drivers/hid/hid-asus.c
-+++ b/drivers/hid/hid-asus.c
-@@ -94,6 +94,8 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
- 
- #define TRKID_SGN       ((TRKID_MAX + 1) >> 1)
- 
-+static const char * const use_alt_led_report_id[] = { "GU605", "GA403" };
-+
- struct asus_kbd_leds {
- 	struct led_classdev cdev;
- 	struct hid_device *hdev;
-@@ -101,6 +103,7 @@ struct asus_kbd_leds {
- 	unsigned int brightness;
- 	spinlock_t lock;
- 	bool removed;
-+	int report_id;
- };
- 
- struct asus_touchpad_info {
-@@ -473,7 +476,7 @@ static enum led_brightness asus_kbd_backlight_get(struct led_classdev *led_cdev)
- static void asus_kbd_backlight_work(struct work_struct *work)
- {
- 	struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds, work);
--	u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, 0x00 };
-+	u8 buf[] = { led->report_id, 0xba, 0xc5, 0xc4, 0x00 };
- 	int ret;
- 	unsigned long flags;
- 
-@@ -513,6 +516,23 @@ static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
- 	return !!(value & ASUS_WMI_DSTS_PRESENCE_BIT);
- }
- 
-+static bool asus_kbd_is_input_led(void)
-+{
-+	const char *product;
-+	int i;
-+
-+	product = dmi_get_system_info(DMI_PRODUCT_NAME);
-+	if (!product)
-+		return false;
-+
-+	for (i = 0; i < ARRAY_SIZE(use_alt_led_report_id); i++) {
-+		if (strstr(product, use_alt_led_report_id[i]))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static int asus_kbd_register_leds(struct hid_device *hdev)
- {
- 	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-@@ -555,6 +575,10 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
- 	if (!drvdata->kbd_backlight)
- 		return -ENOMEM;
- 
-+	drvdata->kbd_backlight->report_id = FEATURE_KBD_REPORT_ID;
-+	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_kbd_is_input_led())
-+		drvdata->kbd_backlight->report_id = FEATURE_KBD_LED_REPORT_ID1;
-+
- 	drvdata->kbd_backlight->removed = false;
- 	drvdata->kbd_backlight->brightness = 0;
- 	drvdata->kbd_backlight->hdev = hdev;
--- 
-2.45.1
+Today's linux-next merge of the printk tree got a conflict in:
 
+  include/linux/printk.h
+
+between commit:
+
+  693f75b91a91 ("printk: Add function to replay kernel log on consoles")
+
+from Linus' tree and commits:
+
+  7e4289a0c15f ("nbcon: Add API to acquire context for non-printing operati=
+ons")
+  8a192e951d8a ("printk: nbcon: Add unsafe flushing on panic")
+  dc0f096fb7aa ("printk: Coordinate direct printing in panic")
+
+from the printk tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/printk.h
+index 40afab23881a,69f40a71c438..000000000000
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@@ -195,7 -195,10 +198,11 @@@ void show_regs_print_info(const char *l
+  extern asmlinkage void dump_stack_lvl(const char *log_lvl) __cold;
+  extern asmlinkage void dump_stack(void) __cold;
+  void printk_trigger_flush(void);
+ +void console_replay_all(void);
++ void printk_legacy_allow_panic_sync(void);
++ extern bool nbcon_device_try_acquire(struct console *con);
++ extern void nbcon_device_release(struct console *con);
++ void nbcon_atomic_flush_unsafe(void);
+  #else
+  static inline __printf(1, 0)
+  int vprintk(const char *s, va_list args)
+@@@ -275,9 -278,24 +282,27 @@@ static inline void dump_stack(void
+  static inline void printk_trigger_flush(void)
+  {
+  }
+ +static inline void console_replay_all(void)
+ +{
+ +}
++=20
++ static inline void printk_legacy_allow_panic_sync(void)
++ {
++ }
++=20
++ static inline bool nbcon_device_try_acquire(struct console *con)
++ {
++ 	return false;
++ }
++=20
++ static inline void nbcon_device_release(struct console *con)
++ {
++ }
++=20
++ static inline void nbcon_atomic_flush_unsafe(void)
++ {
++ }
++=20
+  #endif
+ =20
+  bool this_cpu_in_panic(void);
+
+--Sig_/Oprw9qRIHmPcaH3yQtnnJx7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZWhNEACgkQAVBC80lX
+0GwrEggAni6VJycneGbV6/QWilOWSI8ZvINicDqu7d00tfwtWBw1lzurDbhv1qNP
+kWOV9DIWrzTD33FbpeG5btKM+K5OuB+eArOBTLFRFHD6ReQwLDQrLB43+5ClGmuB
+GtzI25HMjN5V5mLLwYWBOKsMkAPNwKGwlAklF6AAX8eG7N5pgrSulKuSJBvTMGaC
+yxzG16DO+ON21TXdFWPDJHdkgl0t0DuT7D/MYsKCPs5Ulmgj5r+xlDLyZW1pqf6v
+KXXR/Tt7yage+UTz5OpJoV6ug2JARwIVdILK1KPHzwQqNw0/46NpjA0+mRz0EC+e
+3BqiU53fpxtII8DDLMMgAVPxv1BYlg==
+=QklN
+-----END PGP SIGNATURE-----
+
+--Sig_/Oprw9qRIHmPcaH3yQtnnJx7--
