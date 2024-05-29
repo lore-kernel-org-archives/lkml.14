@@ -1,165 +1,86 @@
-Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E591836F0
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C9417DE14;
+	Wed, 29 May 2024 16:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998746; cv=none; b=glxK/riIrpWWq8ClyE0k5DZkQ3l3SoEYqAjIpR25WWRDYJatsKxtZuXgoEJoMAAnli10WRHerhh6IB3CdNUcKALogDthdteQcxWSc/KWnlx0y3J9TptP8OcpOPNX/HgT4LtewquZPrLaY/oBngt09e2SyJiLkl0hFM7fc9/f1C8=
+	t=1716998765; cv=none; b=hCf5BRdB+VZfJbqeElApTHhZdUQBv6KPlhvKL+OmmXD29Uy53/PZlIMiwzkckhWYu+xxSDzeHLAeD/ZjUuGrjKstl0jgn6f9Aoc57uHkTkYZNEnsa2nXS32r7ysEtSPmWP/S6Z0FQJPSahuw924o+L9wG5gDTjsz8hbL/5DluEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998746; c=relaxed/simple;
-	bh=3oNbe7+kl949vpSxjYDcQs/lpiG/Vv5Of/GL7kFfQV4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F/3bE6z9mmuTkjA1MkSr6lF1AJP3jhWmcxAtCpvfGRQYRb82BytuwdKVcks7BX899fSFhHDZW5qGDbMiNiI18ruDRlfOBo70X8lFBijqIfQQlPcz0wyFTNvmpYnL+jXZrIYnqqDkP2Ry/nCIrq1RdKpyJrkpO7bWRRFq7HW/4fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=jYAPhQ+s; arc=none smtp.client-ip=185.136.64.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1716998765; c=relaxed/simple;
+	bh=CK8OAPbBbXSoOWPUjOyns04q5VfwYNuBKWySKS482EI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TsyGa+U7oIRuQ3/oSY8hvrlZy2k6LiZqsFpLHQfyeaOnbL9xIkgMsiTw85+1lZKvyEwP9U0/6DdASwgflVvKqmgGKtYPU5KUQolXDuxlPrClTukM5DHldASN3dCLZOGakx5jMeqaTY1RNBjsdIHzQCjkcDbnzpVbPAoKHWXGViE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nOkzWmVk; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="jYAPhQ+s"
-Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20240529160534e55d11188f8cb7e837
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 29 May 2024 18:05:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=diogo.ivo@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=t0N1v6lGOWmbUT2zPk1pBlnpA8KnITb1ou0m2UPQizo=;
- b=jYAPhQ+sPK401ZFkELi4ZYu1n6CQmj8eOgGVaGjv+JIi8P2Z3kVAr7ylkgSdejxVQ/o8Yd
- RyvwOg8ge+rV2/CETuM5SGkDJfhOhOJadRzU/Sq2CGDkoh87zXaN5T/2uXneCKGYebwksX/l
- 8qtPPfKJ0wYdUup8TPrw5NJ/Q9Nj4=;
-From: Diogo Ivo <diogo.ivo@siemens.com>
-Date: Wed, 29 May 2024 17:05:10 +0100
-Subject: [PATCH 1/3] net: ti: icssg-prueth: Enable PTP timestamping support
- for SR1.0 devices
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nOkzWmVk"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 84BBB60005;
+	Wed, 29 May 2024 16:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716998759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=seDn1vi/ugGwlftgDNRlK7URLt36H1AKmJnfJmt6SmQ=;
+	b=nOkzWmVkHiv5suXZbHQNJKWlM24kofPWPIRmyjduQrM9+ukK4C/yJY9l0/nTT0dAU1ZrSl
+	OCcAcu3TnwA2iohmkJfkHAHcrVGPo97acCokRvBoUlVyhPBcFnwaZsOxfex4pbuXyEMEO1
+	Pz27VosTUyOwdWuC3djd10lUeGrLSJl5NwKpV7aweNF3QdS3ciYHigwbFo02TRw8TuXV0P
+	Bebp65AInAGdRbwoECQOrz8yMmd+11GkyShRCaY8Q3BsgJMBmWAvGZ1vLlhO3YKyM5uwxa
+	ongV+jkwxhSJUEJesYbgzFLhN5aC+IedJBJIK+hf54hqHAncfw3qGyubDfgm7g==
+Date: Wed, 29 May 2024 18:05:56 +0200
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Florian Fainelli
+ <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Richard
+ Cochran <richardcochran@gmail.com>, Radu Pirea
+ <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
+ Gospodarek <andy@greyhouse.net>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
+ Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Subject: Re: [PATCH net-next v13 09/14] net: Add the possibility to support
+ a selected hwtstamp in netdevice
+Message-ID: <20240529180556.0e500675@windsurf>
+In-Reply-To: <20240529175032.54070c60@kmaincent-XPS-13-7390>
+References: <20240529-feature_ptp_netnext-v13-0-6eda4d40fa4f@bootlin.com>
+	<20240529-feature_ptp_netnext-v13-9-6eda4d40fa4f@bootlin.com>
+	<20240529082111.1a1cbf1e@kernel.org>
+	<20240529175032.54070c60@kmaincent-XPS-13-7390>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-iep-v1-1-7273c07592d3@siemens.com>
-References: <20240529-iep-v1-0-7273c07592d3@siemens.com>
-In-Reply-To: <20240529-iep-v1-0-7273c07592d3@siemens.com>
-To: MD Danish Anwar <danishanwar@ti.com>, Roger Quadros <rogerq@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Richard Cochran <richardcochran@gmail.com>, Nishanth Menon <nm@ti.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Diogo Ivo <diogo.ivo@siemens.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716998732; l=3011;
- i=diogo.ivo@siemens.com; s=20240529; h=from:subject:message-id;
- bh=3oNbe7+kl949vpSxjYDcQs/lpiG/Vv5Of/GL7kFfQV4=;
- b=8GNTjGB2viq7HJxCXsyDfzcZ62uwz78d5Ex2SZIOKIvNum45Vl7fAHZKU017hReeDpGJV1/p7
- YiKGMWTfgv6DTLFGOTd+HryoVUFc6foZcvKzicEhmWjzF1H+gIuKwF9
-X-Developer-Key: i=diogo.ivo@siemens.com; a=ed25519;
- pk=BRGXhMh1q5KDlZ9y2B8SodFFY8FGupal+NMtJPwRpUQ=
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1320519:519-21489:flowmailer
+X-GND-Sasl: thomas.petazzoni@bootlin.com
 
-Enable PTP support for AM65x SR1.0 devices by registering with the IEP
-infrastructure in order to expose a PTP clock to userspace.
+On Wed, 29 May 2024 17:50:32 +0200
+Kory Maincent <kory.maincent@bootlin.com> wrote:
 
-Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
----
- drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c | 49 +++++++++++++++++++++++-
- 1 file changed, 48 insertions(+), 1 deletion(-)
+> > ERROR: modpost: "ptp_clock_phydev" [drivers/net/phy/libphy.ko] undefined!  
+> 
+> Thanks for the report.
+> Weird, it should be in builtin code.
 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c b/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
-index 7b3304bbd7fc..01cad01965dc 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
-@@ -1011,16 +1011,42 @@ static int prueth_probe(struct platform_device *pdev)
- 	dev_dbg(dev, "sram: pa %llx va %p size %zx\n", prueth->msmcram.pa,
- 		prueth->msmcram.va, prueth->msmcram.size);
- 
-+	prueth->iep0 = icss_iep_get_idx(np, 0);
-+	if (IS_ERR(prueth->iep0)) {
-+		ret = dev_err_probe(dev, PTR_ERR(prueth->iep0), "iep0 get failed\n");
-+		goto free_pool;
-+	}
-+
-+	prueth->iep1 = icss_iep_get_idx(np, 1);
-+	if (IS_ERR(prueth->iep1)) {
-+		ret = dev_err_probe(dev, PTR_ERR(prueth->iep1), "iep1 get failed\n");
-+		goto put_iep0;
-+	}
-+
-+	ret = icss_iep_init(prueth->iep0, NULL, NULL, 0);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to init iep0\n");
-+		goto put_iep;
-+	}
-+
-+	ret = icss_iep_init(prueth->iep1, NULL, NULL, 0);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to init iep1\n");
-+		goto exit_iep0;
-+	}
-+
- 	if (eth0_node) {
- 		ret = prueth_netdev_init(prueth, eth0_node);
- 		if (ret) {
- 			dev_err_probe(dev, ret, "netdev init %s failed\n",
- 				      eth0_node->name);
--			goto free_pool;
-+			goto exit_iep;
- 		}
- 
- 		if (of_find_property(eth0_node, "ti,half-duplex-capable", NULL))
- 			prueth->emac[PRUETH_MAC0]->half_duplex = 1;
-+
-+		prueth->emac[PRUETH_MAC0]->iep = prueth->iep0;
- 	}
- 
- 	if (eth1_node) {
-@@ -1033,6 +1059,8 @@ static int prueth_probe(struct platform_device *pdev)
- 
- 		if (of_find_property(eth1_node, "ti,half-duplex-capable", NULL))
- 			prueth->emac[PRUETH_MAC1]->half_duplex = 1;
-+
-+		prueth->emac[PRUETH_MAC1]->iep = prueth->iep1;
- 	}
- 
- 	/* register the network devices */
-@@ -1091,6 +1119,19 @@ static int prueth_probe(struct platform_device *pdev)
- 		prueth_netdev_exit(prueth, eth_node);
- 	}
- 
-+exit_iep:
-+	icss_iep_exit(prueth->iep1);
-+exit_iep0:
-+	icss_iep_exit(prueth->iep0);
-+
-+put_iep:
-+	icss_iep_put(prueth->iep1);
-+
-+put_iep0:
-+	icss_iep_put(prueth->iep0);
-+	prueth->iep0 = NULL;
-+	prueth->iep1 = NULL;
-+
- free_pool:
- 	gen_pool_free(prueth->sram_pool,
- 		      (unsigned long)prueth->msmcram.va, msmc_ram_size);
-@@ -1138,6 +1179,12 @@ static void prueth_remove(struct platform_device *pdev)
- 		prueth_netdev_exit(prueth, eth_node);
- 	}
- 
-+	icss_iep_exit(prueth->iep1);
-+	icss_iep_exit(prueth->iep0);
-+
-+	icss_iep_put(prueth->iep1);
-+	icss_iep_put(prueth->iep0);
-+
- 	gen_pool_free(prueth->sram_pool,
- 		      (unsigned long)prueth->msmcram.va,
- 		      MSMC_RAM_SIZE_SR1);
+Right, but you don't have an EXPORT_SYMBOL() for it, as far as I can see.
 
+Thomas
 -- 
-2.45.1
-
+Thomas Petazzoni, co-owner and CEO, Bootlin
+Embedded Linux and Kernel engineering and training
+https://bootlin.com
