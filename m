@@ -1,236 +1,176 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3082415F403;
-	Wed, 29 May 2024 06:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD1C15EFB9
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716963526; cv=none; b=Qu5r3l8cmBz5AHgeVUPmLDuZmfgmSZTyKSjhQ0Bxnj5OPpdJabopqBbR4ffsPaIpYZXTHYn2MUd7nKDItGgXoWI3eZczKjMLNIBDoqTfUeJt9NjIO+zY9h63x6USQP+6Qx1OgNTut3uxQG8Bd0iSC6bUWCvpSDSiurlvMaB/hCw=
+	t=1716963526; cv=none; b=GpbujSTsDiJi+5PGxq3RBq2QE8badGG3rXRCa4sm2VPx+qCvLggDQs3A5Sc6gY7VQYfaTculx5PoLYP6spwPC0KvWjwpJ8eb3ioAeRKNydH2YARpzWm1Ynt131nlHx6SC7Q0sTiQ2796hSHactdN6zCHVZg8cL3ETthUgMFsPQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716963526; c=relaxed/simple;
-	bh=Oawm5VsMDX5Q/shtm5IIpqGKOBJ57pu5FT1YaKQD7fM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=GEEANfTPp60TriuoxMRfp/2odN6c/uGsuImmg2ZC44SQwFUzcFqMaK4JpIk0VviV5Te2ZBK1rzpsiNL2kMA1fDP3GpihfG5PmTPdiMra3q2OWPvFd/Nl5MRTKYPd1VgW3Qr8PFj0S86F3/WMYNJ3+aAlm8NHyTCDRDH7/HxPPWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AA2F820151F;
-	Wed, 29 May 2024 08:18:36 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 22DFC201529;
-	Wed, 29 May 2024 08:18:36 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 2974B181D0E3;
-	Wed, 29 May 2024 14:18:34 +0800 (+08)
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: conor@kernel.org,
-	vkoul@kernel.org,
-	kishon@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	frank.li@nxp.com,
-	conor+dt@kernel.org
-Cc: hongxing.zhu@nxp.com,
-	linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de,
-	imx@lists.linux.dev
-Subject: [PATCH v7 1/2] dt-bindings: phy: Add i.MX8Q HSIO SerDes PHY binding
-Date: Wed, 29 May 2024 14:02:44 +0800
-Message-Id: <1716962565-2084-2-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1716962565-2084-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1716962565-2084-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	bh=td+A5mMkrhdvg9ElSzQdaHWmnHQqfG3xEYFSntb3ivs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=php6A9X+//RDHp6MKpmZYEONFyzxShgZqxD5fzULN2xTnAFEog3mUTRWHlI2xpiq5v1Bawft6thdzB6ByAL1NU4cisRcgKmhQStNvvrmiNLk68VFQCtDHlMEOjLnENA+MPJ92/WQidyrmsqG4RwI6ZC3SMXqevOvMcZc7T3zS1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=wvgLXS7p; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="wvgLXS7p"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59cc765c29so84238966b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 23:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1716963522; x=1717568322; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b5o98irvL1PvcmMP2g/CoSXINiWvruSSImbYO4qwby8=;
+        b=wvgLXS7pAUfty21u7wWUO6QH5bSCBphX1OAVLcg+LHw3oEYmkTRWUcvpTOKvv/6Ha5
+         /Wdko+S9m3RL8dNKlZZdZc06Q6gaCoUr4YgRzvaNvMNQNUaXM6CxRqHJGKZe4H3Si9QK
+         LZvoSYoMhFMXAWxS4p8N+rpzhkLJqTHwG98ZQ21YFlnkehyYrgl2uXbtahhtULWrDz8J
+         msByiEUcM/14L1BN1zTyHvgNiPZgAvUY+TJfevs5rBLXPqIO/w8tyaGqNf5CK96kqfdH
+         lZpVn7tcDIcCTLampjsiahaw+ctxVdKotrcCjKki5Qt6OiRjGAXlzxM7rmYgY5NG+S8C
+         NayQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716963522; x=1717568322;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=b5o98irvL1PvcmMP2g/CoSXINiWvruSSImbYO4qwby8=;
+        b=GJQvG+79lX6528lmXUpFe+yVaVRmdmlAxBTJT5R0asBdQL6n2rxU0ef+PCl4pr+yQN
+         UOXmvmYuPn7LiD6n4+MgDe6oC+PKdBL4zALxsAbMS7/5vuJP/yIPdObuqbjBjKxHnd75
+         7oUBnV2l9mOEJ75gH144cKS45Hxf3gypWqRXraRe4UtwXhdNyRsUNbDXBTTIsz/dvfBQ
+         vNfK7xiQ5G9WKfJU3zPRr6wmMlzsi1LacpazvXNl3MY0T/33vt5IHisUJzdKNOKacnsY
+         xxCGXcvXGMwFjI+ytaQSmSR384M4P1b17hw7UU7Xn4txOI/GvOE1vdw52DR9MWf/uK03
+         UWyw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmdyJ4U4Hd3YiSZ07P449KQZEZatoWvosxqfuKURjL1Gzb1VaJFr+Si0vhS6BiR88iEy7p5CZgRDHDrsLNYhSJIuT8neAHfs/rUZ3V
+X-Gm-Message-State: AOJu0Yzxj6JzFakgjP+pWcT3mWu8lVz2X/hKao4fLEuSna65PmNuPcg/
+	20ptg1vw00Q+aQc+petsGS7TfLaME4XA1loRaThawzK29LqGyL0y0WQKWMYyE7I=
+X-Google-Smtp-Source: AGHT+IG1oXccLJqlT99AbIl0tXdj+h1O8dL6G8y8/9eKbxzPQr8rGYbOgwG7VHPYBxA5kpGfbl/kHg==
+X-Received: by 2002:a17:906:314e:b0:a59:c319:f1dc with SMTP id a640c23a62f3a-a62642daa92mr969475866b.4.1716963522482;
+        Tue, 28 May 2024 23:18:42 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6555bc091asm7799266b.138.2024.05.28.23.18.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 23:18:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 29 May 2024 08:18:41 +0200
+Message-Id: <D1LWRSO8RFAI.1PQ450TISFN2D@fairphone.com>
+To: "Bjorn Andersson" <andersson@kernel.org>
+Cc: <cros-qcom-dts-watchers@chromium.org>, "Konrad Dybcio"
+ <konrad.dybcio@linaro.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Srinivasa Rao Mandadapu" <quic_srivasam@quicinc.com>, "Mohammad Rafi
+ Shaik" <quic_mohs@quicinc.com>, <~postmarketos/upstreaming@lists.sr.ht>,
+ <phone-devel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH DNM 2/2] arm64: dts: qcom: qcm6490-fairphone-fp5: Add
+ DisplayPort sound support
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+X-Mailer: aerc 0.17.0
+References: <20240510-sc7280-apr-v1-0-e9eabda05f85@fairphone.com>
+ <20240510-sc7280-apr-v1-2-e9eabda05f85@fairphone.com>
+ <hqwrfe2tcb6vlxybmn52k3j2xrxbt3vw5rqwudindbhj3s3nez@obkr3ayos6gm>
+In-Reply-To: <hqwrfe2tcb6vlxybmn52k3j2xrxbt3vw5rqwudindbhj3s3nez@obkr3ayos6gm>
 
-Add i.MX8QM and i.MX8QXP HSIO SerDes PHY binding.
-Introduce one HSIO configuration 'fsl,hsio-cfg', which need be set at
-initialization according to board design.
+On Tue May 28, 2024 at 11:35 PM CEST, Bjorn Andersson wrote:
+> On Fri, May 10, 2024 at 02:27:09PM GMT, Luca Weiss wrote:
+> > Add the required nodes for sound playback via a connected external
+> > display (DisplayPort over USB-C).
+> >=20
+> > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> > ---
+> > Depends on a bunch of patches upstream doing bringup of Display (DSI),
+> > DisplayPort, GPU, and then finally audio could land. But we're blocked
+> > on DPU 1:1:1 topology for all of that unfortunately.
+> >=20
+> > And also machine driver for sound just exists a bit hackily.
+>
+> Thanks for sharing this, Luca. Can you please resubmit this once it's
+> ready to be merged, so that I don't need to keep track of it?
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
- .../bindings/phy/fsl,imx8qm-hsio.yaml         | 164 ++++++++++++++++++
- 1 file changed, 164 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml
+Definitely, though I don't expect it to be soon unfortunately, maybe you
+can ask your colleagues though to fix that DPU 1:1:1 topology ;)
 
-diff --git a/Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml b/Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml
-new file mode 100644
-index 000000000000..147bbfd2cd5f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml
-@@ -0,0 +1,164 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/fsl,imx8qm-hsio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX8QM SoC series High Speed IO(HSIO) SERDES PHY
-+
-+maintainers:
-+  - Richard Zhu <hongxing.zhu@nxp.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx8qm-hsio
-+      - fsl,imx8qxp-hsio
-+  reg:
-+    items:
-+      - description: Base address and length of the PHY block
-+      - description: HSIO control and status registers(CSR) of the PHY
-+      - description: HSIO CSR of the controller bound to the PHY
-+      - description: HSIO CSR for MISC
-+
-+  reg-names:
-+    items:
-+      - const: reg
-+      - const: phy
-+      - const: ctrl
-+      - const: misc
-+
-+  "#phy-cells":
-+    const: 3
-+    description:
-+      The first defines lane index.
-+      The second defines the type of the PHY refer to the include phy.h.
-+      The third defines the controller index, indicated which controller
-+      is bound to the lane.
-+
-+  clocks:
-+    minItems: 5
-+    maxItems: 14
-+
-+  clock-names:
-+    minItems: 5
-+    maxItems: 14
-+
-+  fsl,hsio-cfg:
-+    description: |
-+      Specifies the use case of the HSIO module in the hardware design.
-+      Regarding the design of i.MX8QM HSIO subsystem, HSIO module can be
-+      confiured as following three use cases.
-+      +---------------------------------------+
-+      |                  | i.MX8QM            |
-+      |------------------|--------------------|
-+      |                  | Lane0| Lane1| Lane2|
-+      |------------------|------|------|------|
-+      | pciea-x2-sata    | PCIEA| PCIEA| SATA |
-+      |------------------|------|------|------|
-+      | pciea-x2-pcieb   | PCIEA| PCIEA| PCIEB|
-+      |------------------|------|------|------|
-+      | pciea-pcieb-sata | PCIEA| PCIEB| SATA |
-+      +---------------------------------------+
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: [ pciea-x2-sata, pciea-x2-pcieb, pciea-pcieb-sata]
-+    default: pciea-pcieb-sata
-+
-+  fsl,refclk-pad-mode:
-+    description:
-+      Specifies the mode of the refclk pad used. INPUT(PHY refclock is
-+      provided externally via the refclk pad) or OUTPUT(PHY refclock is
-+      derived from SoC internal source and provided on the refclk pad).
-+      This property not exists means unused(PHY refclock is derived from
-+      SoC internal source).
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: [ input, output, unused ]
-+    default: unused
-+
-+  power-domains:
-+    minItems: 1
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - fsl,hsio-cfg
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - fsl,imx8qxp-hsio
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pclk0
-+            - const: apb_pclk0
-+            - const: phy0_crr
-+            - const: ctl0_crr
-+            - const: misc_crr
-+        power-domains:
-+          maxItems: 1
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - fsl,imx8qm-hsio
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pclk0
-+            - const: pclk1
-+            - const: apb_pclk0
-+            - const: apb_pclk1
-+            - const: pclk2
-+            - const: epcs_tx
-+            - const: epcs_rx
-+            - const: apb_pclk2
-+            - const: phy0_crr
-+            - const: phy1_crr
-+            - const: ctl0_crr
-+            - const: ctl1_crr
-+            - const: ctl2_crr
-+            - const: misc_crr
-+        power-domains:
-+          minItems: 2
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx8-clock.h>
-+    #include <dt-bindings/clock/imx8-lpcg.h>
-+    #include <dt-bindings/firmware/imx/rsrc.h>
-+    #include <dt-bindings/phy/phy-imx8-pcie.h>
-+
-+    phy@5f1a0000 {
-+        compatible = "fsl,imx8qxp-hsio";
-+        reg = <0x5f1a0000 0x10000>,
-+              <0x5f120000 0x10000>,
-+              <0x5f140000 0x10000>,
-+              <0x5f160000 0x10000>;
-+        reg-names = "reg", "phy", "ctrl", "misc";
-+        clocks = <&phyx1_lpcg IMX_LPCG_CLK_0>,
-+                 <&phyx1_lpcg IMX_LPCG_CLK_4>,
-+                 <&phyx1_crr1_lpcg IMX_LPCG_CLK_4>,
-+                 <&pcieb_crr3_lpcg IMX_LPCG_CLK_4>,
-+                 <&misc_crr5_lpcg IMX_LPCG_CLK_4>;
-+        clock-names = "pclk0", "apb_pclk0", "phy0_crr", "ctl0_crr", "misc_crr";
-+        power-domains = <&pd IMX_SC_R_SERDES_1>;
-+        #phy-cells = <3>;
-+        fsl,hsio-cfg = "pciea-pcieb-sata";
-+        fsl,refclk-pad-mode = "input";
-+    };
-+...
--- 
-2.37.1
+>
+> Regards,
+> Bjorn
+>
+> > ---
+> >  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 36 ++++++++++++++=
+++++++++
+> >  1 file changed, 36 insertions(+)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts b/arch/=
+arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> > index 05bbf1da5cb8..2bbbcaeff95e 100644
+> > --- a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> > +++ b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> > @@ -14,6 +14,8 @@
+> >  #include <dt-bindings/leds/common.h>
+> >  #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+> >  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> > +#include <dt-bindings/sound/qcom,q6afe.h>
+> > +#include <dt-bindings/sound/qcom,q6asm.h>
+> >  #include "sc7280.dtsi"
+> >  #include "pm7250b.dtsi"
+> >  #include "pm7325.dtsi"
+> > @@ -774,6 +776,12 @@ &pon_resin {
+> >  	status =3D "okay";
+> >  };
+> > =20
+> > +&q6afedai {
+> > +	dai@104 {
+> > +		reg =3D <DISPLAY_PORT_RX>;
+> > +	};
+> > +};
+> > +
+> >  &qup_spi13_cs {
+> >  	drive-strength =3D <6>;
+> >  	bias-disable;
+> > @@ -847,6 +855,34 @@ &sdhc_2 {
+> >  	status =3D "okay";
+> >  };
+> > =20
+> > +&sound {
+> > +	compatible =3D "fairphone,fp5-sndcard";
+> > +	model =3D "Fairphone 5";
+> > +
+> > +	mm1-dai-link {
+> > +		link-name =3D "MultiMedia1";
+> > +		cpu {
+> > +			sound-dai =3D <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA1>;
+> > +		};
+> > +	};
+> > +
+> > +	displayport-rx-dai-link {
+> > +		link-name =3D "DisplayPort Playback";
+> > +
+> > +		cpu {
+> > +			sound-dai =3D <&q6afedai DISPLAY_PORT_RX>;
+> > +		};
+> > +
+> > +		platform {
+> > +			sound-dai =3D <&q6routing>;
+> > +		};
+> > +
+> > +		codec {
+> > +			sound-dai =3D <&mdss_dp>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> >  &spi13 {
+> >  	status =3D "okay";
+> > =20
+> >=20
+> > --=20
+> > 2.45.0
+> >=20
 
