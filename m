@@ -1,129 +1,122 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF7822324;
-	Wed, 29 May 2024 02:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA0415B0F2
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 02:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716948025; cv=none; b=SkCQfImEihzqJNSLCkTi0s9uzQnk6MTSFIv6aBCQ/5fki0nqcXkM7/k6eC++z7xpN896TeSvSArxY+8l/Za1zAFFks+eWT0d9g9O/RaNO+3LcfnXP7scZKDR1yPArVkI92J5cnZB6HtmVQrxq3m4sNtlbu+kI9soRBH3xH69f64=
+	t=1716948029; cv=none; b=a7YL9q1mlBToSrXlITOGvteigKU+9fiHJqCNfq/xYHlm+DqmRWUTJm+OdErhkJ5PbRKLk9Uvy8GKCuohjKExnxjl/QSMRR2cGwiH4cLG+Im1F2Ry7cGfP0nE1XuaO7ZG/q1YIbmbCeI1hhUuKLRqnZvIEHMC7En6lwdj3kNVSDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716948025; c=relaxed/simple;
-	bh=MLY6d+dey32u/YtCdHWv2+v7aHSlG95uLNl6Wt1dpk4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R2nFfjqu30tSIvDhrDaSO9YDARq/wAPapAdZQCsJdHw6fnXtCeO0b1626FzPSxG88gk8BLlpmj49gu9ACeppG3ko5UUBVsSH8rrb3OJyHp2rlO6xw+042RiUfxaDvXKt5IlDuCG4AwxbviMXtToGfNHejAOnnf1Dl/m+N8H35Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vpsyz12mZz4f3jcv;
-	Wed, 29 May 2024 10:00:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 6E2C01A01B9;
-	Wed, 29 May 2024 10:00:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBEzjFZm5ofbNw--.62628S4;
-	Wed, 29 May 2024 10:00:20 +0800 (CST)
-From: linan666@huaweicloud.com
-To: ming.lei@redhat.com,
-	axboe@kernel.dk,
-	ZiyangZhang@linux.alibaba.com
-Cc: czhong@redhat.com,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH] ublk_drv: fix NULL pointer dereference in ublk_ctrl_start_recovery()
-Date: Wed, 29 May 2024 17:53:13 +0800
-Message-Id: <20240529095313.2568595-1-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1716948029; c=relaxed/simple;
+	bh=1q1tCShYiNmiz3QmxyaKlUD5m6tjnboeasn8VoDi/6k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hxs9Ov6AnK8gvL6jqmmDQgBVe4pXdvqTyYFFeTpdcYusAlbA+vs11RP8gIqwtTSxmT0lfh+DW1HjlcyF4gpMiEdsqXy33DvTwYUbTcdryGxEpgfcMzNAN6CSQymJPSp/ibZW6TQky3ppERG1+5FhnXnKhX1LIQ673QYg0pU1hMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d0SjqMna; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d0SjqMna"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716948026;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7IJ2FBrWGqchGLvqswCTBuy+BPhnPSfu4z6uyGfELVY=;
+	b=d0SjqMna73qxI6W/wIEyy8VO6+248neSJHHGwWZwOb9Hp/tS+WROxQy92uYpORFTe5dPSR
+	FxAcWoZwPhu0VE2LAmO4uYEjqsFXaZMmigDRvF3F8b9yr8l+BnLQ2j9JikWiH5REPAXg5s
+	Hg9RGpnhE2g2HKcdLFVB1+fn2kpba5Q=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-558-zTqJrIKCMbmq1h-Pp3vzoA-1; Tue, 28 May 2024 22:00:24 -0400
+X-MC-Unique: zTqJrIKCMbmq1h-Pp3vzoA-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6ab84e71724so18626756d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 19:00:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716948024; x=1717552824;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7IJ2FBrWGqchGLvqswCTBuy+BPhnPSfu4z6uyGfELVY=;
+        b=dpRs4XFF84AejFdAlXdhw2vwtHNggl795GDEvNo8KuLDtQ4weo05IKNdqBzvglOMbd
+         xOPOZe9E3SMqSCN45ZfrH/EVih2+kgXn0L/5SIIgDc0Oo4GO7G5TLhqvyRylLpbQIy13
+         rwB0E7ClzosHJVFHAt7Uz3V5o+9TAavk5bKLchecItLIU/xfwIlE5UreMRrdGABXv+1f
+         vRkAHMoSa6ZBXXJP3ndT/MVxnyMT3foAXja0HRklmiQhL0UR6g4auiTHoIXeY52LnyLH
+         X04YuMLtJiqCfaVxoVJQjgwycJRYxasNEBlnbPhw/O4TkCDkrp85Y86BmDeHEPM/yhjL
+         v+Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAJRPH9qJUT50iL5jhpPa/ah/CReob7WiHNUbXSVZ1CvndzYGEpkvQ0RG062QuyRlYUq2PKsonKdTwcma5Rvpj3hZn+xpFfHFF2xgY
+X-Gm-Message-State: AOJu0YwAMQvHg2ErUALvuJHHd/dQ8itXc3BJar75jnUz8iodc0SumixQ
+	MM/+UWEE5D86zhDChiAV2EwVrKyeafTabJcI4UWX7TARJbn3ujz832ev1GoIim5rryWB73xQqfP
+	vanTwPDURC0E9nrjQRsK5ERhSswkon/l3wkHMyeFh/HDa0KHe2gCaHOmS/xY8KQ==
+X-Received: by 2002:a05:6214:5988:b0:6ab:1b6b:c8ba with SMTP id 6a1803df08f44-6abc7a9f3famr154298216d6.1.1716948024232;
+        Tue, 28 May 2024 19:00:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIqWMtUS4LMCQMI46PFt7oF6eIakE+BnJJ45NfXiWEsWFHSAaiN+W3QyLy0HZkGaVGZVH0tw==
+X-Received: by 2002:a05:6214:5988:b0:6ab:1b6b:c8ba with SMTP id 6a1803df08f44-6abc7a9f3famr154297036d6.1.1716948022387;
+        Tue, 28 May 2024 19:00:22 -0700 (PDT)
+Received: from [192.168.1.175] ([70.22.187.239])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ac162ef448sm49771756d6.97.2024.05.28.19.00.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 19:00:21 -0700 (PDT)
+Message-ID: <a1ceff08-164f-d0b4-36b6-41a7798b82be@redhat.com>
+Date: Tue, 28 May 2024 22:00:21 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBEzjFZm5ofbNw--.62628S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFy3JF47uFyUKw18Kr4rZrb_yoW8tFyUpF
-	W5Gw1Ykrs5tF4rZF4kA3srJryrJ3WrKry7WrZ3ZF1Fva98ArZxZ3y7Ca1YvFZ7GFyfWFyU
-	AF4q934Ikw1UCF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
-	xvwVC2z280aVCY1x0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE
-	52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAV
-	WUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAK
-	I48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07
-	xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRy
-	89tUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] dm vdo indexer: Use swap() instead of open coding it
+Content-Language: en-US
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Abaci Robot <abaci@linux.alibaba.com>, Mike Snitzer <snitzer@kernel.org>
+References: <20240524074109.13433-1-jiapeng.chong@linux.alibaba.com>
+From: Matthew Sakai <msakai@redhat.com>
+In-Reply-To: <20240524074109.13433-1-jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Li Nan <linan122@huawei.com>
+On 5/24/24 03:41, Jiapeng Chong wrote:
+> Swap is a function interface that provides exchange function. To avoid
+> code duplication, we can use swap function.
+> 
+> ./drivers/md/dm-vdo/indexer/index.c:207:43-44: WARNING opportunity for swap().
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9173
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-When two UBLK_CMD_START_USER_RECOVERY commands are submitted, the
-first one sets 'ubq->ubq_daemon' to NULL, and the second one triggers
-WARN in ublk_queue_reinit() and subsequently a NULL pointer dereference
-issue.
+Reviewed-by: Matthew Sakai <msakai@redhat.com>
 
-Continuing execution after WARN is incorrect, as 'ubq->ubq_daemon' is
-known to be NULL. Fix it by return directly if the WARN is triggered.
+Mike, can you make sure this gets applied with the rest of the pending 
+dm patches?
 
-Note that WARN will still be triggered after the fix if anyone tries to
-start recovery twice.
-
-  BUG: kernel NULL pointer dereference, address: 0000000000000028
-  RIP: 0010:ublk_ctrl_start_recovery.constprop.0+0x82/0x180
-  Call Trace:
-   <TASK>
-   ? __die+0x20/0x70
-   ? page_fault_oops+0x75/0x170
-   ? exc_page_fault+0x64/0x140
-   ? asm_exc_page_fault+0x22/0x30
-   ? ublk_ctrl_start_recovery.constprop.0+0x82/0x180
-   ublk_ctrl_uring_cmd+0x4f7/0x6c0
-   ? pick_next_task_idle+0x26/0x40
-   io_uring_cmd+0x9a/0x1b0
-   io_issue_sqe+0x193/0x3f0
-   io_wq_submit_work+0x9b/0x390
-   io_worker_handle_work+0x165/0x360
-   io_wq_worker+0xcb/0x2f0
-   ? finish_task_switch.isra.0+0x203/0x290
-   ? finish_task_switch.isra.0+0x203/0x290
-   ? __pfx_io_wq_worker+0x10/0x10
-   ret_from_fork+0x2d/0x50
-   ? __pfx_io_wq_worker+0x10/0x10
-   ret_from_fork_asm+0x1a/0x30
-   </TASK>
-
-Fixes: c732a852b419 ("ublk_drv: add START_USER_RECOVERY and END_USER_RECOVERY support")
-Reported-and-tested-by: Changhui Zhong <czhong@redhat.com>
-Closes: https://lore.kernel.org/all/CAGVVp+UvLiS+bhNXV-h2icwX1dyybbYHeQUuH7RYqUvMQf6N3w@mail.gmail.com
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/block/ublk_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 4e159948c912..99b621b2d40f 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -2630,7 +2630,8 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
- {
- 	int i;
- 
--	WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq)));
-+	if (WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq))))
-+		return;
- 
- 	/* All old ioucmds have to be completed */
- 	ubq->nr_io_ready = 0;
--- 
-2.39.2
+> ---
+>   drivers/md/dm-vdo/indexer/index.c | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/md/dm-vdo/indexer/index.c b/drivers/md/dm-vdo/indexer/index.c
+> index 1ba767144426..df4934846244 100644
+> --- a/drivers/md/dm-vdo/indexer/index.c
+> +++ b/drivers/md/dm-vdo/indexer/index.c
+> @@ -197,15 +197,12 @@ static int finish_previous_chapter(struct uds_index *index, u64 current_chapter_
+>   static int swap_open_chapter(struct index_zone *zone)
+>   {
+>   	int result;
+> -	struct open_chapter_zone *temporary_chapter;
+>   
+>   	result = finish_previous_chapter(zone->index, zone->newest_virtual_chapter);
+>   	if (result != UDS_SUCCESS)
+>   		return result;
+>   
+> -	temporary_chapter = zone->open_chapter;
+> -	zone->open_chapter = zone->writing_chapter;
+> -	zone->writing_chapter = temporary_chapter;
+> +	swap(zone->open_chapter, zone->writing_chapter);
+>   	return UDS_SUCCESS;
+>   }
+>   
 
