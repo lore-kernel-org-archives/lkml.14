@@ -1,108 +1,781 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88201C68AE;
-	Wed, 29 May 2024 21:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A934D15CD6E
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 21:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717016426; cv=none; b=EQxsn2a3JfX6Q6qhCEjFc0pzpmQbZJjkc1ABiX67pKhleEFPwb3R4J8CZPXoc3oDJG5id/1lDsoJ40FYAAcSD9N72h/ZdOHtpGp0olPhe5ztzXZUHEjojEDeu/JFz5kamhJkLsAva64Xxul6ElqKjmWkN+Znr5myn/lN1G1t6A4=
+	t=1717016446; cv=none; b=ZuNWrSKuGOyIj5qNCQL4PAVo3YK0VbaFhh8qxNzB84ywdOh32fOvq7OWBeqRdyC6ng+0MtMeF74fyxBPsZZ+hG5kPqmMA63oogHWY09yH9a6+io2PGCEMQi2qf/8DoVMxqRyDDDpea8vF/aDdKUla7j/o/gC5z9KYg1Fgm53NaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717016426; c=relaxed/simple;
-	bh=hhUIEFW6clsqHfXWPi43BFltxUFJorc+dCRnW5g87yI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VkvwLF4FRjaW+WtBxS5mWHkhss+PoBy/mM369EOBbxWmg8ifMcC4yaK90h/uqtGmtq0UFctVQJhontExnPKZuztT6z/qfb8SC7VjN19v8Rp8mdicoctlv5rC9UJiKqBnbsYIKqAEaa5d5+0iDyr+3Vhc47zMllpmcOitWaLL5ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=MvKoFnd5; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MvKoFnd5"
-Received: from [IPV6:2601:646:8002:4641:eb14:ad94:2806:1c1a] ([IPv6:2601:646:8002:4641:eb14:ad94:2806:1c1a])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 44TKxuet3698639
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 29 May 2024 13:59:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 44TKxuet3698639
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024051501; t=1717016399;
-	bh=dCTZ0kTcw9gD6nzityX2P8p7to8LRjQC6Tvw6Gljs0I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MvKoFnd5IATi0F+TV49dchN/2fatIVl9nWMkBtN15640BXlfO8q2YWF+9NMfGkuy3
-	 3rls21dVKglZXKLPpoeL3RXa3fCc/LqTju1wEWU0I799xkxnbs5idrte6CH9IZ34TW
-	 1XkAtlVsu/syoEnR+n1vsUiXvWP1ro7QlowrvenTwQ9cD+oglqbxT9n/+mpSSKoHpV
-	 GUqq0oWlZzrGUx1cF6+OVhuriA7U3/7z0q8IZDAt2m6yVmbpl037bLr3/os1St3qGC
-	 c/6/0wFM2woWDfBLS4d/9vabx/HdyO7Np9Jac+IxpaogeuLPCqJCfQ64YlEpFHh60w
-	 uiEgnY25fzkeQ==
-Message-ID: <746fecd5-4c79-42f9-919e-912ec415e73f@zytor.com>
-Date: Wed, 29 May 2024 13:59:51 -0700
+	s=arc-20240116; t=1717016446; c=relaxed/simple;
+	bh=O8Ahk0wXb6gkuLSSopcEywFTrHvPk1/FUlRKiJClcAI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f/3dUersQ/zVpIRGGFTamd8zbIXwTpBl5B2Q6d2oMeDYynSEwp6dY6ll4mGmoGMUu3aeC5EFMwLqEn48eRwXHdxUxQjHb7YiF+Hvu/Ni8EIc6IsCvxQwcJhN8cwH+zdn6RQJ5eRWyNHXWNqfi+n8IgWu4lQU0HipX6GRGPHS57U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 7ed9edfc-1dfe-11ef-80c4-005056bdfda7;
+	Thu, 30 May 2024 00:00:36 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 30 May 2024 00:00:35 +0300
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v7] gpio: virtuser: new virtual driver
+Message-ID: <ZleXc6tLbiWQ59i-@surfacebook.localdomain>
+References: <20240527144054.155503-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] x86/irq: Extend NMI handler registration interface to
- include source
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>
-References: <20240529203325.3039243-1-jacob.jun.pan@linux.intel.com>
- <20240529203325.3039243-3-jacob.jun.pan@linux.intel.com>
-Content-Language: en-US
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <20240529203325.3039243-3-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527144054.155503-1-brgl@bgdev.pl>
 
-On 5/29/24 13:33, Jacob Pan wrote:
-> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-> index 13aea8fc3d45..b8388bc00cde 100644
-> --- a/arch/x86/include/asm/irq_vectors.h
-> +++ b/arch/x86/include/asm/irq_vectors.h
-> @@ -105,6 +105,27 @@
->   
->   #define NR_VECTORS			 256
->   
+Mon, May 27, 2024 at 04:40:54PM +0200, Bartosz Golaszewski kirjoitti:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> The GPIO subsystem used to have a serious problem with undefined behavior
+> and use-after-free bugs on hot-unplug of GPIO chips. This can be
+> considered a corner-case by some as most GPIO controllers are enabled
+> early in the boot process and live until the system goes down but most
+> GPIO drivers do allow unbind over sysfs, many are loadable modules that
+> can be (force) unloaded and there are also GPIO devices that can be
+> dynamically detached, for instance CP2112 which is a USB GPIO expender.
+> 
+> Bugs can be triggered both from user-space as well as by in-kernel users.
+> We have the means of testing it from user-space via the character device
+> but the issues manifest themselves differently in the kernel.
+> 
+> This is a proposition of adding a new virtual driver - a configurable
+> GPIO consumer that can be configured over configfs (similarly to
+> gpio-sim) or described on the device-tree.
+> 
+> This driver is aimed as a helper in spotting any regressions in
+> hot-unplug handling in GPIOLIB.
+
+...
+
+> User must pass exactly the number of values that the array contains
+
+Can't we assume non-active values for the rest if less than needed were
+provided? For more than that, why do we care?
+
+...
+
+> +#include <linux/atomic.h>
+> +#include <linux/bitmap.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/completion.h>
+> +#include <linux/configfs.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/machine.h>
+
+> +#include <linux/idr.h>
+
+> +#include <linux/interrupt.h>
+> +#include <linux/irq_work.h>
+
+> +#include <linux/kernel.h>
+
+Do you need this?
+
+> +#include <linux/limits.h>
+> +#include <linux/list.h>
+> +#include <linux/lockdep.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/notifier.h>
+> +#include <linux/of.h>
+> +#include <linux/overflow.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/printk.h>
+> +#include <linux/property.h>
+> +#include <linux/slab.h>
+
+> +#include <linux/string.h>
+
+Implied by string_helpers.h
+
+> +#include <linux/string_helpers.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/types.h>
+
+...
+
+> +struct gpio_virtuser_line_array_data {
+> +	struct gpio_descs *descs;
+> +	struct kobject *kobj;
+> +	struct attribute_group *attr_group;
+> +};
+> +
+> +struct gpio_virtuser_line_data {
+> +	struct gpio_desc *desc;
+> +	struct kobject *kobj;
+> +	struct attribute_group *attr_group;
+> +	char consumer[GPIO_CONSUMER_NAME_MAX_LEN];
+> +	struct mutex consumer_lock;
+> +	unsigned int debounce;
+> +	atomic_t irq;
+> +	atomic_t irq_count;
+> +};
+
+Maybe
+
+struct gpio_virtuser_sysfs_data {
+	union {
+		struct gpio_desc *desc;
+		struct gpio_descs *descs;
+	};
+	struct kobject *kobj;
+	struct attribute_group *attr_group;
+};
+
+struct gpio_virtuser_line_array_data {
+	struct gpio_virtuser_sysfs_data sd;
+};
+
+struct gpio_virtuser_line_data {
+	struct gpio_virtuser_sysfs_data sd;
+	char consumer[GPIO_CONSUMER_NAME_MAX_LEN];
+	struct mutex consumer_lock;
+	unsigned int debounce;
+	atomic_t irq;
+	atomic_t irq_count;
+};
+
+?
+
+...
+
+> +struct gpio_virtuser_attr_ctx {
+> +	struct device_attribute dev_attr;
+> +	void *data;
+> +};
+
+struct dev_ext_attribute ?
+
+...
+
+> +struct gpio_virtuser_attr_descr {
+> +	const char *name;
+> +	ssize_t (*show)(struct device *, struct device_attribute *, char *);
+> +	ssize_t (*store)(struct device *, struct device_attribute *,
+> +			 const char *, size_t);
+> +};
+
+struct device_attribute ? (Yes, I know that that one is a bit bigger but
+benefit is that we have some code that you may reuse)
+
+...
+
+> +static ssize_t gpio_virtuser_sysfs_emit_value_array(char *buf,
+> +						    unsigned long *values,
+> +						    size_t num_values)
+> +{
+> +	ssize_t len = 0;
+> +	size_t i;
+> +
+> +	for (i = 0; i < num_values; i++)
+> +		len += sysfs_emit_at(buf, len, "%d",
+> +				     test_bit(i, values) ? 1 : 0);
+> +	return len + sysfs_emit_at(buf, len, "\n");
+
+Why not use %pb?
+
+> +}
+
+...
+
+> +static int gpio_virtuser_sysfs_parse_value_array(const char *buf, size_t len,
+> +						 unsigned long *values)
+> +{
+> +	size_t i;
+> +
+> +	for (i = 0; i < len; i++) {
+
+Perhaps
+
+		bool val;
+		int ret;
+
+		ret = kstrtobool(...);
+		if (ret)
+			return ret;
+
+		assign_bit(...); // btw, why atomic?
+
+> +		if (buf[i] == '0')
+> +			clear_bit(i, values);
+> +		else if (buf[i] == '1')
+> +			set_bit(i, values);
+> +		else
+> +			return -EINVAL;
+
+> +	}
+
+BUT, why not bitmap_parse()?
+
+> +	return 0;
+> +}
+
+...
+
+> +	unsigned long *values __free(bitmap) = bitmap_alloc(descs->ndescs,
+> +							    GFP_KERNEL);
+
+Perhaps
+
+	unsigned long *values __free(bitmap) =
+		 bitmap_alloc(descs->ndescs, GFP_KERNEL);
+
+...
+
+> +	unsigned long *values __free(bitmap) = bitmap_zalloc(descs->ndescs,
+> +							     GFP_KERNEL);
+
+In the similar way?
+
+...
+
+> +	unsigned long *values __free(bitmap) = bitmap_zalloc(descs->ndescs,
+> +							     GFP_KERNEL);
+
+Ditto.
+
+...
+
+> +{
+> +	return sysfs_emit(buf, "%s\n",
+> +			  dir == GPIO_LINE_DIRECTION_IN ? "input" : "output");
+
+I think this maybe transformed to something like str_input_output() in
+string_choices.h (and you don't even need to include that as it's implied by
+string_helpers.h)
+
+> +}
+
+...
+
+> +static int gpio_virtuser_parse_direction(const char *buf, int *dir, int *val)
+> +{
+> +	if (sysfs_streq(buf, "input")) {
+> +		*dir = GPIO_LINE_DIRECTION_IN;
+> +		return 0;
+> +	}
+> +
+> +	if (sysfs_streq(buf, "output-high"))
+> +		*val = 1;
+> +	else if (sysfs_streq(buf, "output-low"))
+> +		*val = 0;
+> +	else
+> +		return -EINVAL;
+> +
+> +	*dir = GPIO_LINE_DIRECTION_OUT;
+
+This can be transformed to use sysfs_match_string() with
+
+static const char * const dirs[] = { "output-low", "output-high", "input" };
+
+	int ret;
+
+	ret = sysfs_match_string(...);
+	if (ret < 0)
+		return ret;
+
+	*val = ret;
+	*dir = ret == 2 ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
+
+And with this approach it even not clear why do you need dir and val to be
+separated here (esp. if we add a enum like
+
+	GPIO_VIRTUSER_OUT_LOW,
+	GPIO_VIRTUSER_OUT_HIGH,
+	GPIO_VIRTUSER_IN,
+
+(with it the string array can also be indexed).
+
+> +	return 0;
+> +}
+
+...
+
+> +static int gpio_virtuser_parse_value(const char *buf)
+> +{
+> +	int value, ret;
+> +
+> +	value = sysfs_match_string(gpio_virtuser_sysfs_value_strings, buf);
+> +	if (value < 0) {
+> +		/* Can be 0 or 1 too. */
+> +		ret = kstrtoint(buf, 0, &value);
+> +		if (ret)
+> +			return ret;
+
+> +		if (value != 0 && value != 1)
+> +			return -EINVAL;
+
+Why not kstrtobool()?
+
+> +	}
+> +
+> +	return value;
+> +}
+
+...
+
+> +	ret = kstrtouint(buf, 10, &debounce);
+
+Why restrict to decimal?
+
+> +	if (ret)
+> +		return ret;
+
+...
+
+> +static ssize_t
+> +gpio_virtuser_sysfs_consumer_store(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t len)
+> +{
+> +	struct gpio_virtuser_line_data *data = to_gpio_virtuser_data(attr);
+> +	int ret;
+
+> +	if (strlen(buf) > GPIO_CONSUMER_NAME_MAX_LEN)
+> +		return -EINVAL;
+
+You don't need this if you use strscpy() below and check its returned value.
+
+> +	guard(mutex)(&data->consumer_lock);
+> +
+> +	ret = gpiod_set_consumer_name(data->desc, buf);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sprintf(data->consumer, buf);
+> +
+> +	return len;
+> +}
+
+...
+
+> +	data->attr_group->name = devm_kasprintf(dev, GFP_KERNEL,
+> +						"gpiod:%s", id);
+
+Why two lines?
+
+> +	if (!data->attr_group->name)
+> +		return -ENOMEM;
+
+...
+
+> +	ret = devm_add_action_or_reset(dev, gpio_virtuser_mutex_destroy,
+> +				       &data->consumer_lock);
+
+Don't we have devm_mutex_init() (`git tag --contains` shows v6.10-rc1 to me)
+
+> +		return ret;
+
+...
+
+> +static int gpio_virtuser_prop_is_gpio(struct property *prop)
+> +{
+> +	char *dash = strpbrk(prop->name, "-");
+
+Why not strrchr() ?
+
+> +	return dash && strcmp(dash, "-gpios") == 0;
+
+Can't we reuse the suffix from the array from the gpiolib internal header?
+Also I don't like the form of '-' in the line. "gpios" is good and chance
+that linker deduplicates the same string if it occurs somewhere else in the
+binary (in case this goes with =y in .config).
+
+> +}
+
+...
+
 > +/*
-> + * The NMI senders specify the NMI source vector as an 8bit integer in their
-> + * vector field with NMI delivery mode. A local APIC receiving an NMI will
-> + * set the corresponding bit in a 16bit bitmask, which is accumulated until
-> + * the NMI is delivered.
-> + * When a sender didn't specify an NMI source vector the source vector will
-> + * be 0, which will result in bit 0 of the bitmask being set. For out of
-> + * bounds vectors >= 16 bit 0 will also be set.
-> + * When bit 0 is set, system software must invoke all registered NMI handlers
-> + * as if NMI source feature is not enabled.
+> + * If this is an OF-based system, then we iterate over properties and consider
+> + * all whose names end in "-gpios". For configfs we expect an additional string
+> + * array property - "gpio-virtuser,ids" - containing the list of all GPIO IDs
+> + * to request.
+
+Why not any other system? What's wrong for having this available for ACPI, for
+example? Okay, I see that this is probably due to absence of API.
+
+OTOH the last call in the function assumes non-OF cases. Why can't we have the
+same approach in both?
+
 > + */
-> +#define NMI_SOURCE_VEC_UNKNOWN		0
-> +#define NMI_SOURCE_VEC_PMI		1	/* PerfMon counters */
-> +#define NMI_SOURCE_VEC_IPI_BT		2	/* CPU backtrace */
-> +#define NMI_SOURCE_VEC_IPI_MCE		3	/* MCE injection */
-> +#define NMI_SOURCE_VEC_IPI_KGDB		4
-> +#define NMI_SOURCE_VEC_IPI_REBOOT	5	/* Crash reboot */
-> +#define NMI_SOURCE_VEC_IPI_SMP_STOP	6	/* Panic stop CPU */
-> +#define NMI_SOURCE_VEC_IPI_TEST		7	/* For remote and local IPIs*/
-> +#define NR_NMI_SOURCE_VECTORS		8
+> +static int gpio_virtuser_count_ids(struct device *dev)
+> +{
+> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+
+Why? This function is mostly OF one, make it simpler.
+
+	struct device_node *np = dev_of_node(dev);
+
+> +	struct property *prop;
+> +	int ret = 0;
+
+> +	if (is_of_node(fwnode)) {
+
+Instead of this check...
+
+	if (np) {
+
+...can be used.
+
+
+> +		for_each_property_of_node(to_of_node(fwnode), prop) {
+
+	for_each_property_of_node(np, prop) {
+
+> +			if (gpio_virtuser_prop_is_gpio(prop))
+> +				++ret;
+
+Why pre-increment?
+
+> +		}
+
+> +		return ret;
+> +	}
+
+> +	return device_property_string_array_count(dev, "gpio-virtuser,ids");
+> +}
+
+...
+
+> +static int gpio_virtuser_get_ids(struct device *dev, const char **ids,
+> +				 int num_ids)
+> +{
+> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> +	struct property *prop;
+> +	size_t pos = 0, diff;
+> +	char *dash, *tmp;
+> +
+> +	if (is_of_node(fwnode)) {
+> +		for_each_property_of_node(to_of_node(fwnode), prop) {
+
+As per above function.
+
+> +			if (!gpio_virtuser_prop_is_gpio(prop))
+> +				continue;
+> +
+> +			dash = strpbrk(prop->name, "-");
+> +			diff = dash - prop->name;
+> +
+> +			tmp = devm_kmemdup(dev, prop->name, diff + 1,
+> +					   GFP_KERNEL);
+
+devm_kstrndup() is not okay? Okay, we don't have it (yet?), but at least I
+would rather expect wrapped kstrndup() than this.
+
+> +			if (!tmp)
+> +				return -ENOMEM;
+> +
+> +			tmp[diff] = '\0';
+> +			ids[pos++] = tmp;
+> +		}
+> +
+> +		return 0;
+> +	}
+> +
+> +	return device_property_read_string_array(dev, "gpio-virtuser,ids",
+> +						 ids, num_ids);
+> +}
+
+...
+
+> +static int gpio_virtuser_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct gpio_descs *descs;
+> +	int ret, num_ids = 0, i;
+> +	const char **ids;
+> +	unsigned int j;
+> +
+> +	num_ids = gpio_virtuser_count_ids(dev);
+> +	if (num_ids < 0)
+> +		return dev_err_probe(dev, num_ids,
+> +				     "Failed to get the number of GPIOs to request\n");
+> +
+> +	if (num_ids == 0) {
+> +		dev_err(dev, "No GPIO IDs specified\n");
+> +		return -EINVAL;
+
+It's okay to
+
+		return dev_err_probe(...);
+
+with know error code.
+
+> +	}
+> +
+> +	ids = devm_kcalloc(dev, num_ids, sizeof(*ids), GFP_KERNEL);
+> +	if (!ids)
+> +		return -ENOMEM;
+> +
+> +	ret = gpio_virtuser_get_ids(dev, ids, num_ids);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to get the IDs of GPIOs to request\n");
+> +
+> +	for (i = 0; i < num_ids; i++) {
+> +		descs = devm_gpiod_get_array(dev, ids[i], GPIOD_ASIS);
+> +		if (IS_ERR(descs))
+> +			return dev_err_probe(dev, PTR_ERR(descs),
+> +					     "Failed to request the '%s' GPIOs\n",
+> +					     ids[i]);
+> +
+> +		ret = gpio_virtuser_sysfs_init_line_array_attrs(dev, descs,
+> +								ids[i]);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to setup the sysfs array interface for the '%s' GPIOs\n",
+> +					     ids[i]);
+> +
+> +		for (j = 0; j < descs->ndescs; j++) {
+> +			ret = gpio_virtuser_sysfs_init_line_attrs(dev,
+> +							descs->desc[j],
+> +							ids[i], j);
+> +			if (ret)
+> +				return dev_err_probe(dev, ret,
+> +						     "Failed to setup the sysfs line interface for the '%s' GPIOs\n",
+> +						     ids[i]);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int gpio_virtuser_bus_notifier_call(struct notifier_block *nb,
+> +					   unsigned long action, void *data)
+> +{
+> +	struct gpio_virtuser_device *vdev;
+> +	struct device *dev = data;
+> +	char devname[32];
+> +
+> +	vdev = container_of(nb, struct gpio_virtuser_device, bus_notifier);
+> +	snprintf(devname, sizeof(devname), "gpio-virtuser.%d", vdev->id);
+> +
+> +	if (strcmp(dev_name(dev), devname))
+
+	if (!device_match_name(...))
+
+> +		return NOTIFY_DONE;
+> +
+> +	switch (action) {
+> +	case BUS_NOTIFY_BOUND_DRIVER:
+> +		vdev->driver_bound = true;
+> +		break;
+> +	case BUS_NOTIFY_DRIVER_NOT_BOUND:
+> +		vdev->driver_bound = false;
+> +		break;
+> +	default:
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	complete(&vdev->probe_completion);
+> +	return NOTIFY_OK;
+> +}
+
+...
+
+> +static ssize_t
+> +gpio_virtuser_lookup_entry_config_key_store(struct config_item *item,
+> +					    const char *page, size_t count)
+> +{
+> +	struct gpio_virtuser_lookup_entry *entry =
+> +					to_gpio_virtuser_lookup_entry(item);
+> +	struct gpio_virtuser_device *dev = entry->parent->parent;
+> +
+> +	char *key = kstrndup(skip_spaces(page), count, GFP_KERNEL);
+
+Missing __free() ?
+
+> +	if (!key)
+> +		return -ENOMEM;
+
+> +	strim(key);
+
+> +	guard(mutex)(&dev->lock);
+> +
+> +	if (gpio_virtuser_device_is_live(dev))
+> +		return -EBUSY;
+> +
+> +	kfree(entry->key);
+> +	entry->key = no_free_ptr(key);
+> +
+> +	return count;
+> +}
+
+...
+
+> +	if (sysfs_streq(page, "pull-up")) {
+> +		entry->flags &= ~(GPIO_PULL_DOWN | GPIO_PULL_DISABLE);
+> +		entry->flags |= GPIO_PULL_UP;
+> +	} else if (sysfs_streq(page, "pull-down")) {
+> +		entry->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DISABLE);
+> +		entry->flags |= GPIO_PULL_DOWN;
+> +	} else if (sysfs_streq(page, "pull-disabled")) {
+> +		entry->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DOWN);
+> +		entry->flags |= GPIO_PULL_DISABLE;
+> +	} else if (sysfs_streq(page, "as-is")) {
+> +		entry->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DOWN |
+> +				  GPIO_PULL_DISABLE);
+> +	} else {
+> +		count = -EINVAL;
+
+		return -EINVAL won't (ab)use count semantics.
+> +	}
+> +
+> +	return count;
+
+...
+
+> +	return sprintf(page, "%s\n", flags & GPIO_ACTIVE_LOW ? "1" : "0");
+
+Somewhere above you used %d for very similar situation, why %s here?
+Or why "5d" there?
+
+...
+
+> +	return sprintf(page, "%s\n", flags & GPIO_TRANSITORY ? "1" : "0");
+
+Ditto.
+
+...
+
+> +	return sprintf(page, "%c\n", live ? '1' : '0');
+
+Wow! Third type of the same.
+
+...
+
+> +	struct gpiod_lookup_table *table __free(kfree) =
+> +		kzalloc(struct_size(table, table, num_entries + 1), GFP_KERNEL);
+> +	if (!table)
+> +		return -ENOMEM;
+
+> +	table->dev_id = kasprintf(GFP_KERNEL, "gpio-virtuser.%d",
+> +				  dev->id);
+
+Perfectly one line in comparison with the few lines above).
+
+> +	if (!table->dev_id)
+> +		return -ENOMEM;
+
+...
+
+> +			curr->chip_hwnum = entry->offset < 0
+> +						? U16_MAX : entry->offset;
+
+Can we leave ? on the previous line?
+
+...
+
+> +			++i;
+
+Why pre-increment?
+
+...
+
+> +static struct fwnode_handle *
+> +gpio_virtuser_make_device_swnode(struct gpio_virtuser_device *dev)
+> +{
+> +	struct property_entry properties[2];
+> +	struct gpio_virtuser_lookup *lookup;
+> +	size_t num_ids;
+> +	int i = 0;
+
+Why signed? And in all this kind of case, I would split assignment...
+
+> +	memset(properties, 0, sizeof(properties));
+> +
+> +	num_ids = list_count_nodes(&dev->lookup_list);
+> +	char **ids __free(kfree) = kcalloc(num_ids + 1, sizeof(*ids),
+> +					   GFP_KERNEL);
+> +	if (!ids)
+> +		return ERR_PTR(-ENOMEM);
 > +
 
-I would avoid using vector 2; it is at least remotely possible that some 
-third-party chipset sends NMI messages with a hardcoded vector of 2. As 
-long as you don't actively need that slot, it is better to avoid it.
+To be here, that the reader will see immediately (close enough) what is the
+initial values. Moreover this code will be robuse against changes in between
+(if i become reusable).
 
-Even better is to set the LINT1 (= external NMI) vector to 2 and treat 
-bit 2 as "other"; use vector 2 for anything that you don't have an 
-explicit vector for. You can treat a received bit 2 the same as bit 0, 
-except that you can explicitly trust that any event assigned an explicit 
-vector number is *NOT* triggered and so do not need to be polled.
+> +	list_for_each_entry(lookup, &dev->lookup_list, siblings)
+> +		ids[i++] = lookup->con_id;
+> +
+> +	properties[0] = PROPERTY_ENTRY_STRING_ARRAY_LEN("gpio-virtuser,ids",
+> +							ids, num_ids);
+> +
+> +	return fwnode_create_software_node(properties, NULL);
+> +}
 
-I would also recommend sorting these in order of decreasing importance 
-(other than 0 and 2). Although the current intent is there to be 16 
-vectors indefinitely, defensive design would be to consider that number 
-to be potentially variable (up to 64, obviously). Since any out-of-range 
-vector will set bit 0, the code will still Just Work[TM].
+...
 
-	-hpa
+> +	guard(mutex)(&dev->lock);
+> +
+> +	if (live == gpio_virtuser_device_is_live(dev))
+> +		ret = -EPERM;
+
+With guard in place, just return directly, ...
+
+> +	else if (live)
+
+...drop 'else'...
+
+> +		ret = gpio_virtuser_device_activate(dev);
+> +	else
+
+...ditto...
+
+> +		gpio_virtuser_device_deactivate(dev);
+> +
+> +	return ret ?: count;
+
+...and simply return count here.
+
+
+...
+
+> +	struct gpio_virtuser_device *dev __free(kfree) = kzalloc(sizeof(*dev),
+> +								 GFP_KERNEL);
+
+	struct gpio_virtuser_device *dev __free(kfree) =
+		kzalloc(sizeof(*dev), GFP_KERNEL);
+
+> +	if (!dev)
+> +		return ERR_PTR(-ENOMEM);
+
+...
+
+> +	ret = platform_driver_register(&gpio_virtuser_driver);
+> +	if (ret) {
+
+> +		pr_err("Failed to register the platform driver: %d\n",
+> +		       ret);
+
+I would keep one line.
+
+> +		return ret;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
