@@ -1,211 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.kaechele.ca (mail.kaechele.ca [54.39.219.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845C729A0;
-	Wed, 29 May 2024 23:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B3928F3;
+	Wed, 29 May 2024 23:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.39.219.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717024522; cv=none; b=gX6zQ596nUTRegTyPf8uIagGEszOJ3sY3Djjbflw+4ayjGhS9Wf2PbRln9OQlaGjRZLvI+L0MoyUvvyI2xwsNQCWlTq9Gr9D48ydRL4gKTZ6a+QwKShL6t6syM4w9gHNxVL/UL4ISm3s9gcDh77DSYKT6ATBy0l2OOWJAcpms20=
+	t=1717024577; cv=none; b=qAvNgY6AJQ4mtRUfFQnCRzYrAf2d6h4ZTjYoIpf/bPkvG8/d+jKXFWMrAWxP72vfO+3f2ZlNFeT7dJ0TfORTk0fBgfDP7SctehonbvYbtoiutdKY7AIS7PrFodqs8+iAI1LWvvbRN9sqEaWW4P+I0AcE1y5WvPSoiPWEXsafvz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717024522; c=relaxed/simple;
-	bh=7HtHIBMnOSfXwlIN2FN4JThv0qqYOxoaXPTbFn/okcY=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=MFro4ks6n/KhLMlthy+Dh4FXMl2dtxt1qYkJa+RnrjEMR9S/cJl/UY5/1JCew3nJd9hCSEdL5vIfBOjad8KigGKBhNLxi5rMxtHww19v/aiohLdNNxyyBReU9L9AWLf8Q0Tdp3AtsufrktPoFjZAhFayg8tBE45zhZhDIctX9uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OabscRPI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717024577; c=relaxed/simple;
+	bh=0mxyy6nmrKWMs62jGYfJK+jI1mtrNo02vUVORzUuSmM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NF4N7R3+c5UT1/2kBDsq5oYU0g/1Ztrpri+1VnbjKdhy5bOjSrzY60VGa59btLs4OMZUlilw4HUlVD4l3jUIGRnPnoutJfbTrp4H14bjZFxvBY5L0lNvtNeuPrM3+23LzZB0s9kXdKOsuZ1OvkCfZ5xC4/s41+5upVTQo0EocgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca; spf=pass smtp.mailfrom=kaechele.ca; dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b=dA3Qf+Bx; arc=none smtp.client-ip=54.39.219.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaechele.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OabscRPI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDF6DC32781;
-	Wed, 29 May 2024 23:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717024522;
-	bh=7HtHIBMnOSfXwlIN2FN4JThv0qqYOxoaXPTbFn/okcY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=OabscRPIEp57y8+0XlGk2MoMOeUdg3DFch7rE9IX08FLlS4oK8rykJtvab3sIEtiA
-	 bRKPiWK35XtvcazFBhiVQFUOddAQgdYj+QVCvdrPBzcU9X3d/30Gviua7TUav5HcVH
-	 ifDThHZQalm9753WBOnV8YV5lSp4qJgxmXRDfyTMrk2+eTjTsr1Tx0gsrPMLu8yfMp
-	 f4K/Uum4draifjed4IA71oYuDtsQwdkKU4U3aojjuTNeYziub9jTJi54QezxYVXe7/
-	 K4QJdoFY4b00+gH/sYrGVsHbk4NdQ+Hv/vn/al2ck+PIe7Q0n1ndrOSIs8/MUlVFzB
-	 UmKhhc3IAcIoA==
-Message-ID: <3280d9e3c7ba19f86b85a7fa89f5be25.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b="dA3Qf+Bx"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 89CD9C005F;
+	Wed, 29 May 2024 19:08:26 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaechele.ca; s=201907;
+	t=1717024109; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=PDLpjtD8+3OyvFRYxZd0ZhadxMjnIfuZmLlbltpqaZ4=;
+	b=dA3Qf+BxPAIQ7NCoICy7S3OpYAGFkO3PKWXmv7LQ/YiG5E4Uim1T12jk0pqy3ACnzqhXUL
+	gpjQl8704UWBpWOD3J19fZeuEHSUSEapfZwLi2HVq3Mtbq2uwEK7RuVekibABdryz6MLGL
+	oOLl+hux41Zz5Vc3h5rFyZi+N7mntDc=
+Message-ID: <b065e243-58dc-4ebe-8dbc-8b23c0b46cd1@kaechele.ca>
+Date: Wed, 29 May 2024 19:07:23 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <a3bed3c2940edc238afbc191d595a727944892f3.1716965617.git.ysato@users.sourceforge.jp>
-References: <cover.1716965617.git.ysato@users.sourceforge.jp> <a3bed3c2940edc238afbc191d595a727944892f3.1716965617.git.ysato@users.sourceforge.jp>
-Subject: Re: [DO NOT MERGE v8 14/36] clk: Compatible with narrow registers
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?q?Wilczy=C5=84ski?= <kw@linux.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko.stuebner@cherry.de>, Neil Armstrong <neil.armstrong@linaro.org>, Chris Morgan <macromorgan@hotmail.com>, Sebastian Reichel <sre@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren <guoren@kernel.org>, Max Filippov <jcmvbkbc@gmail.com>, Jernej Skrabec <jernej.skrabec@gmail.com>, Herve Codina <herve.codina@bootlin.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Anup Patel <apatel@ventanamicro.com>, Jacky Huang <ychuang3@nuvoton.com>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, Jonathan Corbet <corbet@lwn.net>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Sam Ravnborg <sam@ravnborg.org>, Javier Martinez Canillas <javierm@redhat.com>, Sergey Shtylyov <s.shtylyov@omp.ru>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org
-Date: Wed, 29 May 2024 16:15:19 -0700
-User-Agent: alot/0.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] input: himax_hx83112b: implement MCU register
+ reading
+From: Felix Kaechele <felix@kaechele.ca>
+To: Mark Brown <broonie@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Job Noorman <job@noorman.info>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240511121245.109644-1-felix@kaechele.ca>
+ <20240511121245.109644-4-felix@kaechele.ca> <ZkKb5_SRNwG1pRou@google.com>
+ <44570cd2-9540-47f8-a409-26220b0812fb@sirena.org.uk>
+ <afab9026-e843-4cc4-8733-f45e9ab34276@kaechele.ca>
+Content-Language: en-US
+In-Reply-To: <afab9026-e843-4cc4-8733-f45e9ab34276@kaechele.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Quoting Yoshinori Sato (2024-05-29 01:01:00)
-> divider and gate only support 32-bit registers.
-> Older hardware uses narrower registers, so I want to be able to handle
-> 8-bit and 16-bit wide registers.
->=20
-> Seven clk_divider flags are used, and if I add flags for 8bit access and
-> 16bit access, 8bit will not be enough, so I expanded it to u16.
->=20
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  drivers/clk/clk-divider.c    | 41 +++++++++++++++++++++---------
->  drivers/clk/clk-gate.c       | 49 ++++++++++++++++++++++++++++++++----
->  include/linux/clk-provider.h | 20 ++++++++++++---
->  3 files changed, 89 insertions(+), 21 deletions(-)
->=20
-> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-> index a2c2b5203b0a..abafcbbb6578 100644
-> --- a/drivers/clk/clk-divider.c
-> +++ b/drivers/clk/clk-divider.c
-> @@ -26,17 +26,34 @@
->   * parent - fixed parent.  No clk_set_parent support
->   */
-> =20
-> -static inline u32 clk_div_readl(struct clk_divider *divider)
-> -{
-> +static inline u32 clk_div_read(struct clk_divider *divider)
+On 2024-05-14 10:01, Felix Kaechele wrote:
+> On 2024-05-14 05:46, Mark Brown wrote:
+>> On Mon, May 13, 2024 at 04:01:59PM -0700, Dmitry Torokhov wrote:
+>>> On Sat, May 11, 2024 at 08:12:24AM -0400, Felix Kaechele wrote:
+>>>> Implement reading from the MCU in a more universal fashion. This allows
+>>>> properly handling reads of more than 4 bytes using the AHB FIFO
+>>>> implemented in the chip.
+>>
+>>> Mark, do we have anything in regmap to support this better or having a
+>>> wrapper is the best solution here?
+>>
+>> No, I've not seen something that explicitly requires toggling a burst
+>> mode on and off to do a bulk operation.  Off the top of my head I'd
+>> suggest just always leaving the burst mode enabled but I assume there's
+>> some downside to doing that.  We could add something but I'm not sure if
+>> it's worth it without having seen any other devices with the same need.
+> 
+> I can experiment some more with just leaving burst mode enabled.
 
-Please don't change the name. The 'l' is for the return type, u32, which
-is not changed.
+I've done some testing now and can confirm that, unfortunately, not 
+enabling burst mode for every read of the FIFO register results in 
+unreliable touchscreen operation.
 
-> +{
-> +       if (divider->flags & CLK_DIVIDER_REG_8BIT)
-> +               return readb(divider->reg);
-> +       if (divider->flags & CLK_DIVIDER_REG_16BIT) {
-> +               if (divider->flags & CLK_DIVIDER_BIG_ENDIAN) {
-> +                       return ioread16be(divider->reg);
-> +               } else {
-> +                       return readw(divider->reg);
-> +               }
-> +       }
->         if (divider->flags & CLK_DIVIDER_BIG_ENDIAN)
->                 return ioread32be(divider->reg);
-> =20
->         return readl(divider->reg);
->  }
-> =20
-> -static inline void clk_div_writel(struct clk_divider *divider, u32 val)
-> +static inline void clk_div_write(struct clk_divider *divider, u32 val)
+For testing purposes I only enabled burst mode once at both probe and 
+resume.
+The touchscreen will stop working both randomly in normal operation and 
+reproducibly after returning from screen blanking.
+My wild guess is that DSI commands (e.g. for re-initializing the panel) 
+alter the state of the IC such that the burst mode on the I2C interface 
+ends up disabled again.
 
-Same comment.
+That means the bus read function from this current v2 series could be 
+used as-is.
+I have a v3 in the pipeline to address the comments Conor made on 
+another patch in the series.
+So far those are the only changes compared to this v2. If you have any 
+other ideas for what I could test in regards to this, please let me 
+know. Otherwise I'll be sending v3 in the next few days.
 
->  {
-> -       if (divider->flags & CLK_DIVIDER_BIG_ENDIAN)
-> +       if (divider->flags & CLK_DIVIDER_REG_8BIT)
-> +               writeb(val, divider->reg);
-> +       else if (divider->flags & CLK_DIVIDER_REG_16BIT) {
-> +               if (divider->flags & CLK_DIVIDER_BIG_ENDIAN) {
-> +                       iowrite16be(val, divider->reg);
-> +               } else {
-> +                       writew(val, divider->reg);
-> +               }
-> +       } else if (divider->flags & CLK_DIVIDER_BIG_ENDIAN)
->                 iowrite32be(val, divider->reg);
->         else
->                 writel(val, divider->reg);
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 4a537260f655..25f61bd5b952 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -508,6 +508,10 @@ void of_fixed_clk_setup(struct device_node *np);
->   * CLK_GATE_BIG_ENDIAN - by default little endian register accesses are =
-used for
->   *     the gate register.  Setting this flag makes the register accesses=
- big
->   *     endian.
-> + * CLK_GATE_REG_8BIT - by default 32bit register accesses are used for
-> + *     the gate register.  Setting this flag makes the register accesses=
- 8bit.
-> + * CLK_GATE_REG_16BIT - by default 32bit register accesses are used for
-> + *     the gate register.  Setting this flag makes the register accesses=
- 16bit.
->   */
->  struct clk_gate {
->         struct clk_hw hw;
-> @@ -522,6 +526,8 @@ struct clk_gate {
->  #define CLK_GATE_SET_TO_DISABLE                BIT(0)
->  #define CLK_GATE_HIWORD_MASK           BIT(1)
->  #define CLK_GATE_BIG_ENDIAN            BIT(2)
-> +#define CLK_GATE_REG_8BIT              BIT(3)
-> +#define CLK_GATE_REG_16BIT             BIT(4)
-
-Please add kunit tests for the gate at least.
-
-> =20
->  extern const struct clk_ops clk_gate_ops;
->  struct clk_hw *__clk_hw_register_gate(struct device *dev,
-> @@ -675,13 +681,17 @@ struct clk_div_table {
->   * CLK_DIVIDER_BIG_ENDIAN - By default little endian register accesses a=
-re used
->   *     for the divider register.  Setting this flag makes the register a=
-ccesses
->   *     big endian.
-> + * CLK_DIVIDER_REG_8BIT - by default 32bit register accesses are used for
-> + *     the gate register.  Setting this flag makes the register accesses=
- 8bit.
-> + * CLK_DIVIDER_REG_16BIT - by default 32bit register accesses are used f=
-or
-> + *     the gate register.  Setting this flag makes the register accesses=
- 16bit.
->   */
->  struct clk_divider {
->         struct clk_hw   hw;
->         void __iomem    *reg;
->         u8              shift;
->         u8              width;
-> -       u8              flags;
-> +       u16             flags;
->         const struct clk_div_table      *table;
->         spinlock_t      *lock;
->  };
-> @@ -697,6 +707,8 @@ struct clk_divider {
->  #define CLK_DIVIDER_READ_ONLY          BIT(5)
->  #define CLK_DIVIDER_MAX_AT_ZERO                BIT(6)
->  #define CLK_DIVIDER_BIG_ENDIAN         BIT(7)
-> +#define CLK_DIVIDER_REG_8BIT           BIT(8)
-> +#define CLK_DIVIDER_REG_16BIT          BIT(9)
-> =20
->  extern const struct clk_ops clk_divider_ops;
->  extern const struct clk_ops clk_divider_ro_ops;
-> @@ -726,18 +738,18 @@ struct clk_hw *__clk_hw_register_divider(struct dev=
-ice *dev,
->                 struct device_node *np, const char *name,
->                 const char *parent_name, const struct clk_hw *parent_hw,
->                 const struct clk_parent_data *parent_data, unsigned long =
-flags,
-> -               void __iomem *reg, u8 shift, u8 width, u8 clk_divider_fla=
-gs,
-> +               void __iomem *reg, u8 shift, u8 width, u16 clk_divider_fl=
-ags,
-
-Let's just make this unsigned long for the flags. We don't need to
-specify a strict size like this for the callers.
-
->                 const struct clk_div_table *table, spinlock_t *lock);
->  struct clk_hw *__devm_clk_hw_register_divider(struct device *dev,
->                 struct device_node *np, const char *name,
->                 const char *parent_name, const struct clk_hw *parent_hw,
->                 const struct clk_parent_data *parent_data, unsigned long =
-flags,
-> -               void __iomem *reg, u8 shift, u8 width, u8 clk_divider_fla=
-gs,
-> +               void __iomem *reg, u8 shift, u8 width, u16 clk_divider_fl=
-ags,
-
-Same here.
-
->                 const struct clk_div_table *table, spinlock_t *lock);
->  struct clk *clk_register_divider_table(struct device *dev, const char *n=
-ame,
->                 const char *parent_name, unsigned long flags,
->                 void __iomem *reg, u8 shift, u8 width,
-> -               u8 clk_divider_flags, const struct clk_div_table *table,
-> +               u16 clk_divider_flags, const struct clk_div_table *table,
-
-Same here. Preferably do that in another patch too.
+Regards,
+Felix
