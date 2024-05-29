@@ -1,71 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6CA16F29E;
-	Wed, 29 May 2024 20:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8DB184125
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 20:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717016012; cv=none; b=pIHaEe514cO8W6/8cCOUvzW9HWeHnmifWQ2FbyeiRMlsTAeM78e5zOtR4Dh7LA0E/OsTb7qVKGU+IS+9Unp44wm26alkobmWC3OZq1Jbaz7rwciPLzNTAJWL5ZVlYBwiUn5swZTMfdte++LCo/EyLpLIUgEXpOAMfjYxSkQZAJ0=
+	t=1717016398; cv=none; b=p2LXf07DghRxA/RSRhIJLV9/ZQuJZc3HNgNmS5ZnlIw4BXzeygvdNHxBpHTph09GguQEgILPTbzmPfBCnNu8WoTfDRG3itLQChvpkvre4t7qNmn7CK17i5sgHrGdKQ8GBG++rDbedu6/Q1Nc8iZnuR3NPBKAnlwupOg05OJdl4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717016012; c=relaxed/simple;
-	bh=JSXXu4JpE/7VNAkn8ScfasSuOVWoKy4YeGw3atPcUQ4=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=VeUv84vUUsyknC22FGbzUhkGzKPlN6TbB7t1Y5iY1FWm7yrYZb/eSVOBMXyQBLgigyy7z2JrbIhchJFSIU+w2kctMyIDZ70609S3SxlYXkl7IIBcKcqtrPH/VPLZdiaHjvnWsPiE9vn3IazDJC8O29pViog7kDwe103ic8flfyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QF2THXyF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717016398; c=relaxed/simple;
+	bh=0JIEoFJ3JrSuAxA+52iofxCdH9Ed8ss6mxR9tqmYJzI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZwkYQVUaHyrnWdZcEkpd2bwtfxvn8jk7U+wCf3Ug0hbSltcR5i2vuMZWhCnKrAvCy3kt6Uw81qb45FQm8cWyN9X+7cQez7hOy92i1+D8awkSqCLwLqX/EWIfB9FsbAbQZwELEdoD9K7xkGodDs3j1R/iIAChJtfVssfXm+cx+7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ajLQpywN; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QF2THXyF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC39AC113CC;
-	Wed, 29 May 2024 20:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717016012;
-	bh=JSXXu4JpE/7VNAkn8ScfasSuOVWoKy4YeGw3atPcUQ4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=QF2THXyFYPfs9hzEyvzTQSP1sgf7zsaon8ypZGmgCMAUn1hhK7qNlafnngZqEJES3
-	 FgR+dPqb/Jw9RHDPWGjNcXTveERP/uX403wHibUIvKcu8aC02yVCfpg9L/yNC4Hq3v
-	 MPODVCPDr91yTbNSeaKY7z2qPG9ogTY0symVJmKrKQ/xrQYle99CTR1yLTMjxKIVWi
-	 VB3rFtGeQ5JDv9cB/aKfbKLX0rOmYfa0Jj2+T2eoyV01KoW5bE9sD0KzL87uLP0Iz3
-	 PTwvJdGkDkjIASyTPQk6kmpJWv+t1OdFtHPCnfRXippGKQI1BFGyQWb+OxkaSaNdKD
-	 UOEtd3gj+Xxig==
-Message-ID: <a8754e9c4c01d808f3774bc0dd71e3f6.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ajLQpywN"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6f8ef894ecdso138824a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717016396; x=1717621196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xcrwlkn4PrmA7KBIZPAmKm202+tU7DhEeT3No0NEPIQ=;
+        b=ajLQpywNx4mBdSL/A2qg8MNLiT2shdinHllQOOjGtOJqmhnfgrfMO2ypF8Ux7HklyU
+         9kVUyp5tSCYssmT2JWSl0GxXMfZT5T6c1jHFIM1ucyhydbbalnnA+/NWSOtN9bkK7pEu
+         Qd7Z3dgVMbm2SURteI1Oxm7U03kGOB5hZxSqV1MAu0G+QFcvWyFVmCJ7ZzoRX9totJwu
+         07AhoYSGV15yG7D+kHvdhOuF5vAXhvKjZtmw/lnv22qIUHWJSRbhpJ0LcP1GTnFzhVFs
+         ZUaYb5FiNyErwL1buBbetavGZ1e0RywVxlJZJ8+6WHxFFOI1EUQL0Fs9tDq6ysg/kmDV
+         8cfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717016396; x=1717621196;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xcrwlkn4PrmA7KBIZPAmKm202+tU7DhEeT3No0NEPIQ=;
+        b=Bgk5iWTqQtWq6lPLIGx4FCRg8bYRSkmAoWvLt8ws0D4Y07k9UMP7krnl8X4KDBzoy+
+         JshgtkNC4f22RtW5jylJy+yCBjZp68eOlL5JalWacKyLRqWRXcnbdrA4eShbgLt3gjOD
+         R9Oz0uL0v/UqhlWSw1glqJ4HNjtgVL9dsv5JNsMb5hGHEb8+7mfePTop+TDpr2rvbUYl
+         eGcOdjOoTV/wVNYcHu5q48lo0mYyPQ5kPlTn91yBHjCpt7ibLotgUGs5dVb9JPIVLwcr
+         odBIjd2wZqhHTam3d8hPd92WtTwXYFElIAB9y1VHPMfJKK0QbRl5kGFALiaKJ+/U27E0
+         MZ8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXjn9WFijU75OJ7ua0HrxJyUg8U8g3DKduHYzEZ3iMQyUnCP0nrKpWvR8iT3DPYiCC5p3317WfG+k2csTbqnVNYnG9ndFZoTf8bsR84
+X-Gm-Message-State: AOJu0YyVkWJvqAq4yjOI7zV0B+5K0OPzi1qfQPOgjIVDTd3bmUWr5XSS
+	h+psDppSacrcAFbNXc3yEWDe8q/WdATa0ixoTQUiUohodg9hc/Sg+FZRxxql9MM=
+X-Google-Smtp-Source: AGHT+IFBe7dCkzsKuMo5AAfMZUrEPkQh+gWfbh9oGlUyCfIVM90LaPstgFxX6kYR1L/UseeB6AGkLg==
+X-Received: by 2002:a05:6830:4490:b0:6f0:47a2:c1ab with SMTP id 46e09a7af769-6f90aeaf329mr354404a34.16.1717016395753;
+        Wed, 29 May 2024 13:59:55 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f8d11ea076sm2413525a34.58.2024.05.29.13.59.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 13:59:55 -0700 (PDT)
+Message-ID: <30192c2a-5275-41ac-bc20-aa5f436846a3@baylibre.com>
+Date: Wed, 29 May 2024 15:59:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240528001432.1200403-1-samuel.holland@sifive.com>
-References: <20240528001432.1200403-1-samuel.holland@sifive.com>
-Subject: Re: [PATCH] clk: sifive: Do not register clkdevs for PRCI clocks
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Samuel Holland <samuel.holland@sifive.com>, Guenter Roeck <linux@roeck-us.net>, Russell King <linux@armlinux.org.uk>, AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Dinh Nguyen <dinguyen@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh@kernel.org>, Russell King (Oracle) <rmk+kernel@armlinux.org.uk>, Yang Li <yang.lee@linux.alibaba.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-To: Samuel Holland <samuel.holland@sifive.com>
-Date: Wed, 29 May 2024 13:53:29 -0700
-User-Agent: alot/0.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/6] iio: adc: ad7173: Add support for AD411x devices
+To: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>, dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240527-ad4111-v3-0-7e9eddbbd3eb@analog.com>
+ <20240527-ad4111-v3-5-7e9eddbbd3eb@analog.com>
+ <6f18184de4a37993baedc15b44ecf0a6834a24d1.camel@gmail.com>
+ <917bc1d9-fbdc-4ca2-a156-813b57c8201e@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <917bc1d9-fbdc-4ca2-a156-813b57c8201e@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Quoting Samuel Holland (2024-05-27 17:14:12)
-> These clkdevs were unnecessary, because systems using this driver always
-> look up clocks using the devicetree. And as Russell King points out[1],
-> since the provided device name was truncated, lookups via clkdev would
-> never match.
->=20
-> Recently, commit 8d532528ff6a ("clkdev: report over-sized strings when
-> creating clkdev entries") caused clkdev registration to fail due to the
-> truncation, and this now prevents the driver from probing. Fix the
-> driver by removing the clkdev registration.
->=20
-> Link: https://lore.kernel.org/linux-clk/ZkfYqj+OcAxd9O2t@shell.armlinux.o=
-rg.uk/ [1]
-> Fixes: 30b8e27e3b58 ("clk: sifive: add a driver for the SiFive FU540 PRCI=
- IP block")
-> Fixes: 8d532528ff6a ("clkdev: report over-sized strings when creating clk=
-dev entries")
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Closes: https://lore.kernel.org/linux-clk/7eda7621-0dde-4153-89e4-172e4c0=
-95d01@roeck-us.net/
-> Suggested-by: Russell King <linux@armlinux.org.uk>
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
+On 5/29/24 9:03 AM, Ceclan, Dumitru wrote:
+> On 29/05/2024 15:46, Nuno Sá wrote:
+>> On Mon, 2024-05-27 at 20:02 +0300, Dumitru Ceclan via B4 Relay wrote:
+>>> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+> 
+> ...
+> 
+>>>  static const struct ad7173_device_info ad7173_device_info[] = {
+>>> +	[ID_AD4111] = {
+>>> +		.name = "ad4111",
+>>> +		.id = AD7173_AD4111_AD4112_AD4114_ID,
+>>> +		.num_voltage_inputs_with_divider = 8,
+>>> +		.num_channels = 16,
+>>> +		.num_configs = 8,
+>>> +		.num_voltage_inputs = 8,
+>>> +		.num_gpios = 2,
+>>> +		.higher_gpio_bits = true,
+>>> +		.has_temp = true,
+>>> +		.has_vcom_input = true,
+>>> +		.has_input_buf = true,
+>>> +		.has_current_inputs = true,
+>>> +		.has_int_ref = true,
+>>> +		.clock = 2 * HZ_PER_MHZ,
+>>> +		.sinc5_data_rates = ad7173_sinc5_data_rates,
+>>> +		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
+>>> +	},
+>>
+>> At some point it would be nice to drop the ad7173_device_info array...
+>>
+> What are good alternatives to this?
 
-Applied to clk-fixes
+Drivers like ad7091r8 have individual static struct ad7091r_init_info
+instead of putting them all in an array. I like doing it that
+way because it makes less code to read compared to having the
+array.
+
+It would let us get rid of enum ad7173_ids, have one level less
+indent on each static const struct ad7173_device_info and 
+
+{ .compatible = "adi,ad7172-2", .data = &ad7173_device_info },
+
+would now fit on one line since we no longer need the array
+index.
+
