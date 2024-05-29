@@ -1,41 +1,48 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F36169ADC;
-	Wed, 29 May 2024 22:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99C5177991;
+	Wed, 29 May 2024 22:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717022335; cv=none; b=GqueN9IgUxYXvt/XoNLncgKiaf3+wA4oqge0w5BSeGqERGtpqYpBFrA6rBmvqJ51x6qRj1ug69GS8/VHPXhrGEB77zk4KR0DAIEiUq2y/M07qoV9rUKe7TQSENItExuAcO7TBCa5/fF5lykV66j3JeWpZRYBvQihU7YwgcxiB0g=
+	t=1717022540; cv=none; b=WcHKCL8ZfcVTz0bYP969GrXuMpXGJ3eT39srrnhk7bRmsC/r447OF3Qh8GrlFLSQCy2686kPxi/sBBq/jd3NoMyHkXo6crq1TyBjHFfY2zKy5+SXPuLdBa8Gq6bCGP4c86QSGXX+3fyNYMOVihyrQq5Y5Gut9jsDnBVcVqFfFPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717022335; c=relaxed/simple;
-	bh=JFiZ/vr1rm7cLa4a2ftkIuJ6oF1Zj3SgMk+NCrYSJq4=;
+	s=arc-20240116; t=1717022540; c=relaxed/simple;
+	bh=OVpH2Iy+UNqNaSBm+18bef9LK4uwfGTVFbqySkhuG4U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iTThiWiRbxY3AS0rXbvLw6FEk90OuqyCIBbXYFuYkF/GdX2U7AaOkSYYe57B3ecdil8KNdkkd/dcU0IP8OD2kGnR7Ybkv8R2ybnPVhv0A9s5wYqANv4N9av8ekPk8S6C4T4ewEcjKi9HofzlfKHlHLg/NGto2q5XiT32Ka6d3yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=oQShsQ+r; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	 In-Reply-To:Content-Type; b=AfVTBBlJvWsrRwNI7KsE7Kb0p8CiwIx49MogYA2aAj0fOPoaRZrBCu3pPW0L2+UhYleA70b7o33LgBxnyPjjvZQnXyQBhzRjyrYxFt6GZTeDe5eG8STEHrdCzJU33bKUwVSEYyLl45YDzYtJjwBLNzWAf7BMFzL+FaOk+PhGqT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=PJ33HDfE; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="oQShsQ+r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1717022247; x=1717627047; i=quwenruo.btrfs@gmx.com;
-	bh=sh0xK1DLoCdr3LhWiQ/YVo7atV5IjlZ+EcoRVqczCOQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=oQShsQ+rj5nwkhzsmzkqMVSX+TW2yeqrdGhYH1mnHMhpaMZx7vdPUJx5ZrIL9EYW
-	 zMX7adwELr2XI84L0MIcVWw/U6uuxWm1I2sB41oxmHtOnAp8PTgMnPRE/iDKmLiVH
-	 WIukUj0rEvLmbOYO5lzGRNd+StpvjMGheQ2hNbND76vMdDTR98eimMcLTZiKHr+gI
-	 qRgY5t9XDEDxbJTJtdnrPAihkJGDQhVtbi2rZUnwLzC0m3U1r+Fvno+Gh7BrWbX7k
-	 FrHH60urumA4Bdo+r+hYrjcnyN6lAcc396LsyEpncX3q9+Y+hGpwSGkFoNi390nr9
-	 CSlmhL6Z3djUqvPzjA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.219] ([159.196.52.54]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1N7zBb-1sXXL33ect-0152kW; Thu, 30
- May 2024 00:37:27 +0200
-Message-ID: <d67dde35-0c14-4da2-8628-f4a27c32417a@gmx.com>
-Date: Thu, 30 May 2024 08:07:19 +0930
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="PJ33HDfE"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VqPXB0kc4z6Cnk97;
+	Wed, 29 May 2024 22:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1717022525; x=1719614526; bh=wmqAutlJJibPd6rU+UVnuwTK
+	NEx0bdku7UkT7t6UWI8=; b=PJ33HDfElBr6B2EjMPAfwGu7bE9RZoyBwrnjF5kb
+	ldVDQ25YGiOYb3pvO+o2X4KwZcFOl2ybOFgIkCOc0Ovy3mSs/Qkku5fBtZSpDMAH
+	mo9zWgWAO/CJ+wjKd7BKsK3R35ll6PbtNTvvc0E3qu33t6NW2oxmMmYoqJ0SyYV/
+	CkMts1Kxkn0f77eR5bgC4+EQtVRK5DWNELILtuJUAh/9D3uk14Q74GoSmyK2dSs8
+	ZCbwXv16vYl8xhRpUrE/FHWvAtX/lSM95PUP8DM2HTM46/7eMAE0O6yZP9PjEk+T
+	mNqQ5EKt9zBW3jpgOkylLeHIVqfmpQAEVzpoWX4wuRTsHg==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id b0OFq5KM274R; Wed, 29 May 2024 22:42:05 +0000 (UTC)
+Received: from [192.168.3.219] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VqPWk5M18z6Cnk94;
+	Wed, 29 May 2024 22:41:54 +0000 (UTC)
+Message-ID: <a866d5b5-5b01-44a2-9ccb-63bf30aa8a51@acm.org>
+Date: Wed, 29 May 2024 15:41:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,147 +50,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: 6.9/BUG: Bad page state in process kswapd0 pfn:d6e840
-To: David Hildenbrand <david@redhat.com>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Matthew Wilcox <willy@infradead.org>,
- linux-btrfs <linux-btrfs@vger.kernel.org>
-References: <CABXGCsPktcHQOvKTbPaTwegMExije=Gpgci5NW=hqORo-s7diA@mail.gmail.com>
- <CABXGCsOC2Ji7y5Qfsa33QXQ37T3vzdNPsivGoMHcVnCGFi5vKg@mail.gmail.com>
- <0672f0b7-36f5-4322-80e6-2da0f24c101b@redhat.com>
- <CABXGCsN7LBynNk_XzaFm2eVkryVQ26BSzFkrxC2Zb5GEwTvc1g@mail.gmail.com>
- <6b42ad9a-1f15-439a-8a42-34052fec017e@redhat.com>
- <CABXGCsP46xvu3C3Ntd=k5ARrYScAea1gj+YmKYqO+Yj7u3xu1Q@mail.gmail.com>
- <CABXGCsP3Yf2g6e7pSi71pbKpm+r1LdGyF5V7KaXbQjNyR9C_Rw@mail.gmail.com>
- <162cb2a8-1b53-4e86-8d49-f4e09b3255a4@redhat.com>
- <209ff705-fe6e-4d6d-9d08-201afba7d74b@redhat.com>
- <ff29f723-32de-421b-a65e-7b7d2e03162d@redhat.com>
+Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
+ and request layer.
+To: Damien Le Moal <dlemoal@kernel.org>, Nitesh Shetty <nj.shetty@samsung.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+ Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+ Mikulas Patocka <mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>, martin.petersen@oracle.com, david@fromorbit.com,
+ hare@suse.de, damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com,
+ joshi.k@samsung.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
+References: <20240520102033.9361-1-nj.shetty@samsung.com>
+ <CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
+ <20240520102033.9361-3-nj.shetty@samsung.com>
+ <eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org>
+ <20240529061736.rubnzwkkavgsgmie@nj.shetty@samsung.com>
+ <9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
 Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00iVQUJDToH
- pgAKCRDCPZHzoSX+qNKACACkjDLzCvcFuDlgqCiS4ajHAo6twGra3uGgY2klo3S4JespWifr
- BLPPak74oOShqNZ8yWzB1Bkz1u93Ifx3c3H0r2vLWrImoP5eQdymVqMWmDAq+sV1Koyt8gXQ
- XPD2jQCrfR9nUuV1F3Z4Lgo+6I5LjuXBVEayFdz/VYK63+YLEAlSowCF72Lkz06TmaI0XMyj
- jgRNGM2MRgfxbprCcsgUypaDfmhY2nrhIzPUICURfp9t/65+/PLlV4nYs+DtSwPyNjkPX72+
- LdyIdY+BqS8cZbPG5spCyJIlZonADojLDYQq4QnufARU51zyVjzTXMg5gAttDZwTH+8LbNI4
- mm2YzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00ibgUJDToHvwAK
- CRDCPZHzoSX+qK6vB/9yyZlsS+ijtsvwYDjGA2WhVhN07Xa5SBBvGCAycyGGzSMkOJcOtUUf
- tD+ADyrLbLuVSfRN1ke738UojphwkSFj4t9scG5A+U8GgOZtrlYOsY2+cG3R5vjoXUgXMP37
- INfWh0KbJodf0G48xouesn08cbfUdlphSMXujCA8y5TcNyRuNv2q5Nizl8sKhUZzh4BascoK
- DChBuznBsucCTAGrwPgG4/ul6HnWE8DipMKvkV9ob1xJS2W4WJRPp6QdVrBWJ9cCdtpR6GbL
- iQi22uZXoSPv/0oUrGU+U5X4IvdnvT+8viPzszL5wXswJZfqfy8tmHM85yjObVdIG6AlnrrD
-In-Reply-To: <ff29f723-32de-421b-a65e-7b7d2e03162d@redhat.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:A7Nm64HO8281pK1tOLI4ApY7qFkfLtxwwHP6+vDGV/auwm1+t8Z
- mLbds0rwyq+7KKzpJVNjO84EclwUhiJg/PnjSJ8J/n7F+smIlOCxWvBnAgu+E3n375O1GIM
- ecARfq5mq74F/VusyYP7p7OwW8Mxz/tPYjAWGH1jgGmQ8EW6ZTdu+fmjocQbfcvsLh7rrob
- f9HrdkgJZm7sEgDQQOINg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:XPtvCe11CWI=;5zcsxHF7mU3S4ErU4fNM26tBw8h
- MrZ0XCLn80CzuNHBiJ8AMAOdNQ71dgvhY2GtdG9yfgeCk1N9tTSRvQl8IsFb3OwnzxK1UUQEI
- PPYg+wv4hXcJfVuXRZakWjDBo7RbbZLAfOjROV1imwLRYyqQtHlaMvkd4PcG+9ggRH4GTeHwh
- ceIclglt8vOhkh1k/KwbEbrNdlYFGYQhNqgrq6x0udfngTzVhDpL72Qaw1bxkoz2nXYDBODZc
- 55FU8aw2PWCTGsakTxQfRvShq/oQYg7Hs3QWjyow1HZb2BZOCi4UNVghYNPpOdoDRcoqWx9NE
- jLHwDVx7NHqrhUsEpa6K6zxDCsNnMLllePbqZPn5144czxO4jKbeC6PD0/LyQ9P+5m6maWJKP
- vJaO3oPobs7xTF3zA7zNRRVKYXztalay75lMsw5Q4zyIX0CBJ/c9bBHZJ4B3+q7a0jS3QDv98
- ThYC0+BNKYg0azuJpudst670HpZO3oNWIAr+CY46erNZy14g5agvvnqZnb8moPnGfVX59CYzm
- godMFRUufaaipaBDBKSXRm67jxT8U+JEijiUsw2l399P37pOO08niwCW1b5W3M0fhWvT5aFma
- NBBLHGffuLDgN93p8vIf8Hz0qcEvY/U54xsd6oX8kfTKLgc7XKX14aOZOAKUQiVwxYdDNUTJP
- 6v9G3lpQEno5Ac/WaCQ2eyD4tCViCe0GeQG/pi2upmH3ATlNw9OAYg02Mck/cma7icV3HelKF
- MlaTS8HOufokb+QD62h45EQekY1/WAkR9ULtvestrgOyW3x2UiCRdfr78k8OxzkzDI3dwwWXZ
- ZuR+7kbdvSH+Pc0oXGEyd7Faym+X9N3TPdDWFxpbymcq8=
+Content-Transfer-Encoding: 7bit
 
+On 5/29/24 12:48 AM, Damien Le Moal wrote:
+> On 5/29/24 15:17, Nitesh Shetty wrote:
+>> On 24/05/24 01:33PM, Bart Van Assche wrote:
+>>> On 5/20/24 03:20, Nitesh Shetty wrote:
+>>>> We add two new opcode REQ_OP_COPY_DST, REQ_OP_COPY_SRC.
+>>>> Since copy is a composite operation involving src and dst sectors/lba,
+>>>> each needs to be represented by a separate bio to make it compatible
+>>>> with device mapper.
+>>>> We expect caller to take a plug and send bio with destination information,
+>>>> followed by bio with source information.
+>>>> Once the dst bio arrives we form a request and wait for source
+>>>> bio. Upon arrival of source bio we merge these two bio's and send
+>>>> corresponding request down to device driver.
+>>>> Merging non copy offload bio is avoided by checking for copy specific
+>>>> opcodes in merge function.
+>>>
+>>> In this patch I don't see any changes for blk_attempt_bio_merge(). Does
+>>> this mean that combining REQ_OP_COPY_DST and REQ_OP_COPY_SRC will never
+>>> happen if the QUEUE_FLAG_NOMERGES request queue flag has been set?
+>>>
+>> Yes, in this case copy won't work, as both src and dst bio reach driver
+>> as part of separate requests.
+>> We will add this as part of documentation.
+> 
+> So that means that 2 major SAS HBAs which set this flag (megaraid and mpt3sas)
+> will not get support for copy offload ? Not ideal, by far.
 
-
-=E5=9C=A8 2024/5/29 16:27, David Hildenbrand =E5=86=99=E9=81=93:
-> On 28.05.24 16:24, David Hildenbrand wrote:
-[...]
->> Hmm, your original report mentions kswapd, so I'm getting the feeling
->> someone
->> does one folio_put() too much and we are freeing a pageache folio that
->> is still
->> in the pageache and, therefore, has folio->mapping set ... bisecting
->> would
->> really help.
->>
->
-> A little bird just told me that I missed an important piece in the dmesg
-> output: "aops:btree_aops ino:1" from dump_mapping():
->
-> This is btrfs, i_ino is 1, and we don't have a dentry. Is that
-> BTRFS_BTREE_INODE_OBJECTID?
->
-> Summarizing what we know so far:
-> (1) Freeing an order-0 btrfs folio where folio->mapping
->  =C2=A0=C2=A0=C2=A0 is still set
-> (2) Triggered by kswapd and kcompactd; not triggered by other means of
->  =C2=A0=C2=A0=C2=A0 page freeing so far
-
- From the implementation of filemap_migrate_folio() (and previous
-migrate_page_moving_mapping()), it looks like the migration only involves:
-
-- Migrate the mapping
-- Copy the page private value
-- Copy the contents (if needed)
-- Copy all the page flags
-
-The most recent touch on migration is from v6.0, which I do not believe
-is the cause at all.
-
->
-> Possible theories:
-> (A) folio->mapping not cleared when freeing the folio. But shouldn't
->  =C2=A0=C2=A0=C2=A0 this also happen on other freeing paths? Or are we s=
-imply lucky to
->  =C2=A0=C2=A0=C2=A0 never trigger that for that folio?
-
-Yeah, in fact we never manually clean folio->mapping inside btrfs, thus
-I'm not sure if it's the case.
-
-> (B) Messed-up refcounting: freeing a folio that is still in use (and
->  =C2=A0=C2=A0=C2=A0 therefore has folio-> mapping still set)
->
-> I was briefly wondering if large folio splitting could be involved.
-
-Although we have all the metadata support for larger folios, we do not
-yet enable it.
-
-My current guess is, could it be some race with this commit?
-
-09e6cef19c9f ("btrfs: refactor alloc_extent_buffer() to
-allocate-then-attach method")
-
-For example, when we're allocating an extent buffer (btrfs' metadata
-structure), and one page is already attached to the page cache, then the
-page is being migrated meanwhile the remaining pages are not yet attached?
-
-It's first introduced in v6.8, matching the earliest report.
-But that patch is not easy to revert.
-
-
-Do you have any extra reproducibility or extra way to debug the lifespan
-of that specific patch?
-
-Or is there any way to temporarily disable migration?
+QUEUE_FLAG_NOMERGES can also be set through sysfs (see also
+queue_nomerges_store()). This is one of the reasons why using the merge
+infrastructure for combining REQ_OP_COPY_DST and REQ_OP_COPY_SRC is
+unacceptable.
 
 Thanks,
-Qu
->
-> CCing btrfs maintainers.
->
+
+Bart.
