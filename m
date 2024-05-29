@@ -1,166 +1,159 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18DADDA6;
-	Wed, 29 May 2024 12:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DF71FB2
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 12:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716986956; cv=none; b=V/lZ17FZcu5vlvge5RYtDdUwrIvW3hsySNriSu9aEIlvR9v+cVxKTehlyQr01HlN8SsmQ5RL3pMcA9jUq8wG4By3Vhkd5+Yzz0Ooa2xJzsZOmeAnge59hOmIP6TXHHE8KzQ0xc8H0i8kWIExypGxy+J7oOPVAZQx96DUuPJ7XoU=
+	t=1716986974; cv=none; b=Dwv+bLHwXQcHH4FzBF1VSZmeHlnNsL9YJzJcOPGj5hTvcwkApzsW9MeVGMd3v3B/GEkr++dhxIVRF6bv//Rdt/X0bWWccF/yXEYPd9hPPq00gSB9A5E0xS9zVg/bdhytK9gQhNHiXy8yXsUOD9ritObemgi4eOFsl6ywlXJubQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716986956; c=relaxed/simple;
-	bh=DcKxVZZV+EgA4m/SNpu5gXfJDOpxyV8oN+5zhuZvvR4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ua+q1OCfzmsORxAAxy3nfR3abIvBGCCVtq150gkJRMqiOVBpX01+vU9NAWzbbXBT0iF43yXzLkZd2Amy/E9+gFyk/XRgDB+3xUNT53+FFt2rmbKA5l1nFKqe6mgMdhaR+5q86UKuJk3Yc7gsEVRAcDHyHLwdeWeDxz09L/JhYlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URZmtme1; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716986974; c=relaxed/simple;
+	bh=r0Pq5fP5ChGD0VXrx6H9K4l6usFaKHdaNPsWxRJGArY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UEtM2uwOCL/zy+xUmSEpAozSzjTE2E73cGcDqQ1iFlmaxcoPUJ2AhOFNnJaJBio1eTvwKSE6sPMmeLclKB7o/9pqxCtp6iAAxCdg5NFm+Ob3A4rsEsw68tZyXCnUdUhtLZfZ6rYWG9eUf/l2t2sPJsfzpUQ/KevEw27BqINDp70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=epMsBE1J; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URZmtme1"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6519c6ec7bso73724166b.1;
-        Wed, 29 May 2024 05:49:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="epMsBE1J"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52b03d66861so663624e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:49:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716986953; x=1717591753; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hxm5RCkT6Z8eOTgdAgsYs+Y3bbauIPRrHzupKWf9eIw=;
-        b=URZmtme1Zos//ogIf7XYzHXfOjFqfAxBOeMW4kvd8txWHzuA5g1lGxKvQ6TFJYSFps
-         K2IZEpqcE+CYqz5HeKKXHd1+KPO6XJKk+kRKN3eDYulaKHumxdJo/zq5HcSatRYM4FEd
-         1asPYGZh+vnsVodMtOOsIwCrCZbc7E6tGj9pX4ntDJdf/bcNXjyaR6DgngTnT4/HqSLd
-         F05+loohR63YRXvIcqViRAa2+Dr+pCGU8EyS+p/niSuYgGI3Pkf2PwJrjhD/B6sxB5Ls
-         DA32wKF9y+jxt0DTetbnOa1lE7YhmYSQoF86tc/qvSNe32EOXE4UjVt52fEIZpCuhMgt
-         SQjQ==
+        d=linaro.org; s=google; t=1716986971; x=1717591771; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JcBNNw6YVMaeyzAYrpq687yoU+RCT5XmtSS3cqzJJe8=;
+        b=epMsBE1JboccxuWsLtnzE0+KKkH1gkz/ebMKzWEYVW0ro+eSNWKCNGlQ1pLS4rVScD
+         7OSd+xK9yYglDm+2cC8XrRDD58DO56VZCA63Rgq9JthdG2Pa/GGLYFRiNjQQUSozUKhG
+         iZGp9vBlBdg5CQVOjV8IZGJKTM4RIC8/HWPZnQYlAdd9c0Z2LiI+EJQ5p6N4l2CsybUc
+         3j2nQl+6TCJ2ymQq4ZHSi+HDPggxlwZGI8b7zTJB/AYTxwb9eIVic2p3UNfx/EkTA/wk
+         32kom1uZYMMD3JlC1Ah/l/282PiMkNwX7RKmExEv1bnShRpLZkhA4ap2mTh+MzNLgqxr
+         Ni1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716986953; x=1717591753;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hxm5RCkT6Z8eOTgdAgsYs+Y3bbauIPRrHzupKWf9eIw=;
-        b=BOhmv/pIeGs+JKP4kxCqpMQaevir11fT04LTZvShC9SRdX/hy7OpYy+vRfgEf7+VHR
-         OnLuN46YUKVOsn3i+0OEdDscr9JVm2Q9cJ0nygVH6/s3DecmbJrAzZMVXsHgYBvmMcao
-         0fFAWgPadLgWpZ9sZQBuj+mcrKBTl/3hnAiy+fQKhcuYzSKXIPrCGA/zh7oGlicONka6
-         pX5UW/rMfK8IA1W2L+h7itOVATxS3nKidFUXpKFsiI8K5NvTs5jS7JdgpBpbz2fG8cZT
-         9Y/IuUrdjnmrVCzdJfcQVpa+5NGn+y9B6jSgE7tUbZwjg+VqBGUsmjo/qC4KondUUVTR
-         SRWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnupsFz8DBCspPkHd9ZN/ziOtgNbM3Ov1bCAGhUwaCdngZBd1sotvxhwNMTL3Tn1+oStQuvdbXAeEoJgvY/szQmEbRqXMD/jxMdDg5X6EpbphY3IYXC2XGbbwoz0EXTkn6zTakn4nnXZVxIiKGhiKjyWUsyQOl7I8i/QvAGjp/XK+mVg==
-X-Gm-Message-State: AOJu0YyXxu8G4KzlyTNJpmZPKfdFsymn6dSkvX+35REtsFjr9Efy0gt+
-	/D9aG6MPYfrzMq/ZHvUUgsLlle7ZgaCenht0Bvtq7xLuyi3VHhAi
-X-Google-Smtp-Source: AGHT+IHFwpbqkz/8c/KOKh2nJyonvUdwIFcztAvT82b2LrqXwJx/RqdJ2bmL5xtZSfqETojujYeOyw==
-X-Received: by 2002:a17:906:6a24:b0:a63:3e99:6565 with SMTP id a640c23a62f3a-a633e996aacmr661119566b.23.1716986952948;
-        Wed, 29 May 2024 05:49:12 -0700 (PDT)
-Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c987cf8sm716081666b.94.2024.05.29.05.49.12
+        d=1e100.net; s=20230601; t=1716986971; x=1717591771;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JcBNNw6YVMaeyzAYrpq687yoU+RCT5XmtSS3cqzJJe8=;
+        b=B92oMvdNcYdPgbU8LTv+1jF17s9qwaixeaiMweDgA7ZLOBTQWsacAK1hDWVv5Ss7B6
+         J8c6YcFqB7J6etwZn9vBJusTdEwuRyeesrEq7VkaZi6e+krgNo8vOWOzCuATZq6tBrql
+         dCmmdP0FQKLdawRCOQANNY0XV3t98ILgEBz6lcFE4wCzcB7CzPVCP+aHplI1SVUXQecF
+         xmZ8dWfORJ0aL198FBHMnrX5edU+s4P5unOEotbbzSXs7ht9jkfgRuimJkKpovpK+Rcq
+         iLtr8VO0fCTkiD25ULgQJpUtK2iwzSvo15rWS4c9qLzzE42waQ3yKNyCyt78fhfFhfFT
+         05tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpj2QxBuPxNYPcOSFnmnvbDUZAC/xqlj3pt6gH2/n6xV0vF/wni81xsxCW5Wx75denwNqKB8QIPU3QVkE5zQmtQY66c79gFDNAaRah
+X-Gm-Message-State: AOJu0YwPWZ2vwXqNHyTVDOee1siesNV2zNa+kgEYEnONXTXNqZ9JQv6p
+	fxmY8wI0bxioYjUwqst/xlig6tCunTnkDuRY+HbJk/kovvArfcsC+3RoudXPz+w=
+X-Google-Smtp-Source: AGHT+IEmSJ95XNsWxEpcuhqQdRHnYkYrE51oI2Yl5qvse/oihOaPj+r6nYwjde2Tje0gdpwrZKiInA==
+X-Received: by 2002:a05:6512:4010:b0:52a:d38f:b4f0 with SMTP id 2adb3069b0e04-52ad38fb583mr1355311e87.62.1716986970701;
+        Wed, 29 May 2024 05:49:30 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529712f1f6esm1264939e87.277.2024.05.29.05.49.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 05:49:12 -0700 (PDT)
-Message-ID: <4b704b553282c0689dfef714c49ba97a33198898.camel@gmail.com>
-Subject: Re: [PATCH v3 3/6] iio: adc: ad7173: refactor ain and vref selection
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: dumitru.ceclan@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
- <mitrutzceclan@gmail.com>
-Date: Wed, 29 May 2024 14:49:12 +0200
-In-Reply-To: <71452f6882efe6a181d477914488617d28a38e2f.camel@gmail.com>
-References: <20240527-ad4111-v3-0-7e9eddbbd3eb@analog.com>
-	 <20240527-ad4111-v3-3-7e9eddbbd3eb@analog.com>
-	 <71452f6882efe6a181d477914488617d28a38e2f.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
+        Wed, 29 May 2024 05:49:30 -0700 (PDT)
+Date: Wed, 29 May 2024 15:49:28 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@quicinc.com
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm8550: Remove usb default
+ dr_mode
+Message-ID: <ugrhu62zhh5u6bdhnik3sphwvnwrttyin3kd2ae7i7g5mahcsj@hiimi2uorauh>
+References: <20240529100256.3158447-1-quic_tengfan@quicinc.com>
+ <20240529100256.3158447-3-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529100256.3158447-3-quic_tengfan@quicinc.com>
 
-On Wed, 2024-05-29 at 14:27 +0200, Nuno S=C3=A1 wrote:
-> On Mon, 2024-05-27 at 20:02 +0300, Dumitru Ceclan via B4 Relay wrote:
-> > From: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> >=20
-> > Move validation of analog inputs and reference voltage selection to
-> > separate functions to reduce the size of the channel config parsing
-> > function and improve readability.
-> >=20
-> > Reviewed-by: David Lechner <dlechner@baylibre.com>
-> > Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> > ---
-> > =C2=A0drivers/iio/adc/ad7173.c | 62 ++++++++++++++++++++++++++++++++++-=
--------------
-> > =C2=A01 file changed, 44 insertions(+), 18 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> > index 9e507e2c66f0..8a53821c8e58 100644
-> > --- a/drivers/iio/adc/ad7173.c
-> > +++ b/drivers/iio/adc/ad7173.c
-> > @@ -906,6 +906,44 @@ static int ad7173_register_clk_provider(struct iio=
-_dev
-> > *indio_dev)
-> > =C2=A0					=C2=A0=C2=A0 &st->int_clk_hw);
-> > =C2=A0}
-> > =C2=A0
-> > +static int ad7173_validate_voltage_ain_inputs(struct ad7173_state *st,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int ain[2])
+On Wed, May 29, 2024 at 06:02:56PM +0800, Tengfei Fan wrote:
+> Otg is default usb dr_mode, so this property can be removed.
 
-Pass the pointer and size of it... Also, it should be made 'const'
+OTG, not Otg.
 
-> > +{
-> > +	struct device *dev =3D &st->sd.spi->dev;
-> > +
-> > +	for (int i =3D 0; i < 2; i++) {
+With that fixed:
 
-Use the size in here... At the very least, ARRAY_SIZE() if you keep it like=
- this.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-> > +		if (ain[i] < st->info->num_inputs)
-> > +			continue;
-> > +
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +			"Input pin number out of range for pair (%d %d).\n",
-> > +			ain[0], ain[1]);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int ad7173_validate_reference(struct ad7173_state *st, int ref_=
-sel)
-> > +{
-> > +	struct device *dev =3D &st->sd.spi->dev;
-> > +	int ret;
-> > +
-> > +	if (ref_sel =3D=3D AD7173_SETUP_REF_SEL_INT_REF && !st->info->has_int=
-_ref)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +			"Internal reference is not available on current
-> > model.\n");
-> > +
-> > +	if (ref_sel =3D=3D AD7173_SETUP_REF_SEL_EXT_REF2 && !st->info->has_re=
-f2)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +			"External reference 2 is not available on current
-> > model.\n");
-> > +
-> > +	ret =3D ad7173_get_ref_voltage_milli(st, ref_sel);
-> > +	if (ret < 0)
-> > +		return dev_err_probe(dev, ret, "Cannot use reference %u\n",
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 ref_sel);
-> > +
-> > +	return 0;
->=20
-> If you need a v4, I would just 'return ad7173_get_ref_voltage_milli(...)'=
-. Any
-> error
-> log needed should be done inside ad7173_get_ref_voltage_milli(). Anyways:
->=20
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
->=20
+> 
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8550-hdk.dts                     | 4 ----
+>  arch/arm64/boot/dts/qcom/sm8550-mtp.dts                     | 4 ----
+>  arch/arm64/boot/dts/qcom/sm8550-qrd.dts                     | 4 ----
+>  arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts | 4 ----
+>  4 files changed, 16 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> index 411de3451db8..e0dc03a97771 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> @@ -1253,10 +1253,6 @@ &usb_1 {
+>  	status = "okay";
+>  };
+>  
+> -&usb_1_dwc3 {
+> -	dr_mode = "otg";
+> -};
+> -
+>  &usb_1_dwc3_hs {
+>  	remote-endpoint = <&pmic_glink_hs_in>;
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> index 84d16227ef80..26dfca0c3e05 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> @@ -946,10 +946,6 @@ &usb_1 {
+>  	status = "okay";
+>  };
+>  
+> -&usb_1_dwc3 {
+> -	dr_mode = "otg";
+> -};
+> -
+>  &usb_1_dwc3_hs {
+>  	remote-endpoint = <&pmic_glink_hs_in>;
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> index e20c6240f76d..d27820fb5fc0 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> @@ -1115,10 +1115,6 @@ &usb_1 {
+>  	status = "okay";
+>  };
+>  
+> -&usb_1_dwc3 {
+> -	dr_mode = "otg";
+> -};
+> -
+>  &usb_1_dwc3_hs {
+>  	remote-endpoint = <&pmic_glink_hs_in>;
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> index 6dd5232da9f9..85d487ef80a0 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> @@ -737,10 +737,6 @@ &usb_1 {
+>  	status = "okay";
+>  };
+>  
+> -&usb_1_dwc3 {
+> -	dr_mode = "otg";
+> -};
+> -
+>  &usb_1_dwc3_hs {
+>  	remote-endpoint = <&pmic_glink_hs_in>;
+>  };
+> -- 
+> 2.25.1
+> 
 
-In fact, no tag :). Just realized the above in another patch..
-
-- Nuno S=C3=A1
-
+-- 
+With best wishes
+Dmitry
