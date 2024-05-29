@@ -1,269 +1,332 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from SINPR02CU002.outbound.protection.outlook.com (mail-southeastasiaazon11011005.outbound.protection.outlook.com [52.101.133.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AD7273DC
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716965876; cv=none; b=hPH5ItnuT7YSGaVOvEwYfMJT3AyTiolhtHcz05MVxuRzyRO5cRa48g1gE87I0aROqmNBPcN+X9P1FH6t1xXGtY4phiYcagFINmnXQKOz7EVC5AXpMG5V9n373fHzlSQSKXFv2pFNeJ/ssD2lbmzWeo7MXYx4cHecYsaI5sUgMJ8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716965876; c=relaxed/simple;
-	bh=l/V05A/Kr9pMR3eklw9K8MKRqnjCwDmp2OTE5UqpVjQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SymLWDacP95Z3tkPC2UUFEXfxyOcZswwc/OP4b34mOrDeK+Aq9RDgUQCvmeC2smVIqG4du1SppKCgu0Brwp4slJEavZZs1mmFx4aYVMhsBvKCvjFnVCLSLGu6pKYiH19dlC/EtC1RHy7RJjkeQSVNwutooyMIA2QEpfi7U0ZBmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MdaFL/tM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961D8273DC;
+	Wed, 29 May 2024 06:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.133.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716965946; cv=fail; b=du93m4lBGIwMwjf2nxQXAUf7LNGcnO+tS7O8m1bSZBT3bu1ShpSZJQZhIsarkARJiJa7ywi+07EY+P5SsoVZBCas/QrIZbkiOhwfnKN7VGHvMI9JjDfu0HcZidn4OReO//8kZMfIyRcAaS7qHK7+2Zz0OtEyztujd74XBd5cBw8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716965946; c=relaxed/simple;
+	bh=p2ti3bERSaxq1+DBZOYqaY3QZDMNENTVjBjm1pR9/34=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=D1KW94hkdIPt7CZw+IBfSHCdIpZGky8Rg7QBbmCDkeW62nXwZGFmGFZTOYA6dgk5GqF8U0u9y9KuIX5lrpxjPcrZPLJjXwrzkjbxw0+e3utgsY4NdV2iDUrBg30jDSs5bEDNfs/0pDNE+ldXzSleEH3epVk2LawOezlS4iVL23Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=YOebDCXm; arc=fail smtp.client-ip=52.101.133.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MdaFL/tM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716965873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=X1jNL5AKCTqKVJJWMUcLi/+HsxHmghC2E1+CScAu2FQ=;
-	b=MdaFL/tMe3OnpC8azQuftqv0/BBVMx4UOvkjcnwIgLH31T3SaIeJVSBPsbMOZe4nL4x0Kg
-	IU5gGTRs2OUkNF6VSKSu0opQGymnnTclt2ACXz2BxOCXOV27Yka3Urz/Y6kKITAwjRjYsD
-	Zc21FLpjpNL7cfNBSWN2cLV7U8BdnFw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-688-Z08P9OPLPj6nje3jOlgPtA-1; Wed, 29 May 2024 02:57:52 -0400
-X-MC-Unique: Z08P9OPLPj6nje3jOlgPtA-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4210f81af43so12962425e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 23:57:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716965871; x=1717570671;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=X1jNL5AKCTqKVJJWMUcLi/+HsxHmghC2E1+CScAu2FQ=;
-        b=cDPZMrPJNQPJmx08AszsL7YVH4JLstfEdTa9yNqiw43VbFc8gH/LqrDk8k1a4Mab8V
-         BVKXGjkllIFM2YIB/7bxqo9a/wxq06kizgZMp2rBYneloUxtqyn+wUNxneWe8aPpUt3l
-         7Jl9rLUYfmHNO8QETlLG5yMyoRceUwYk4KmMzrf5ILSMXqhH5d8bP3ObgUam1s1KnH5e
-         GfUeVuHvM3HXHL+g3pkySTcIrE5VDNWKpIYjO4VNRb/ox7g+V+Y5pk4dgYYPMwo+vqSV
-         0Rk0i2jm6toA2+oIvMwsC/sRcx04X9Cjt2WTS258FPry93V1Yab23moZAwzn4bSlNFmL
-         HwiQ==
-X-Gm-Message-State: AOJu0YwlnG5Lv6tRJcD2xQWO60TPa8hWhDrg0Ws35GgV8jnLgDv+OB4Y
-	zGxW6QnBmrhCsPFrPXAAzxGXIhTQjqCp8wwnUq/eqWg11LRPOLMfer+aQcTYiP4pZNtqb2TgOZp
-	+uwyAQo5dlI26EWIaND2at/0HtvpYMIUkB8ZN8DCNzKLcu4NgH8k074IgVAyDlw==
-X-Received: by 2002:a05:600c:198e:b0:420:fe60:c387 with SMTP id 5b1f17b1804b1-42108a12ab4mr117555425e9.38.1716965870801;
-        Tue, 28 May 2024 23:57:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0CejlWqPuXFqZN2EXRjw1Ccc4Nzq8rTsvDWbC57PrZ0GsEmBQvVcERgWRL1Bwkx7iEvBtug==
-X-Received: by 2002:a05:600c:198e:b0:420:fe60:c387 with SMTP id 5b1f17b1804b1-42108a12ab4mr117555135e9.38.1716965870249;
-        Tue, 28 May 2024 23:57:50 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70c:3c00:686e:317c:3ed4:d7b8? (p200300cbc70c3c00686e317c3ed4d7b8.dip0.t-ipconnect.de. [2003:cb:c70c:3c00:686e:317c:3ed4:d7b8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100ee7f1dsm201788225e9.7.2024.05.28.23.57.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 May 2024 23:57:49 -0700 (PDT)
-Message-ID: <ff29f723-32de-421b-a65e-7b7d2e03162d@redhat.com>
-Date: Wed, 29 May 2024 08:57:48 +0200
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="YOebDCXm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZGioeFBRoz/iCVUwR4HRwoo9PzOV/7g/hvOz7wnM1gjV4eoi7pxuT0QDfNeD4E9QKZHci2OorTV+Ef1P1Y3uABzCv9e4FZqUY0XbAIN8xUjanUax3ccMHn1OSO81LNm0FyKRrMZVprP6fnVGvu59BK0RoznmyCj7CWqeq3tpGLtFAL+/z1kv2lDWDVPXyZBfIVszZi//QSGI+EX125y+hp3qk/YVsVQ4Nz+pB7o9MtpF/tQN0LDwIY8xJ3O0zEP5Y05N6LydT7NbBoTHKSBJeNYsxP8rfqVLEQA27lNbdadvNrXslMc8M8rPptijOEahowXnRupt3EdPuldsXTAOqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Kd73hugEHrkwRgo0STaQ7W+q/VZq4iM79NDNP/Ezukg=;
+ b=MBzCabIcZ3DZFGhlpJAgTIxoW7rszPlpHztoy10wQ9cNeWtE8fPFQDnVwvRENg1AbaQK/5NzlCmtd8+I7BdLvIwtAPc/3Iwiozp+qDtgj14Etsw0BGORtttU7ehk1Cyvy3/YiTZdyrpuMJ6ZODJl5pW6FY60x6NN6mMdhlF6lEsBwN75MP1Fenc3NiQeZbehT7QzCKl1c9q8YS/HdSA6+aeUPIOIO+4MNkVGyhPhGGy+gP+HF5gSFnAfhlrMLAnI1cET+k7C59HbqmDM5j4GHON6Y7GILzTctuMgxoxvPEdjLzVUR8/gu9b6cdSO6I28xfn4ggWRqh8UMsG5H37kNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
+ (p=quarantine sp=quarantine pct=100) action=quarantine
+ header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kd73hugEHrkwRgo0STaQ7W+q/VZq4iM79NDNP/Ezukg=;
+ b=YOebDCXmL5LA83EFkYw4LB8b8gYLycC35b5XOZZd1K3sNkVPohZmEGQ+svbjxwk8m6qFGHtT/ytGdpri9cPvqwOb5+OUyMOOCt7aAIDhwrWEUO70BtK+OQEqEStPQqugpCTHWwlou9F0FnkwB9PJyiwbNMCtiYlX6hjVBYvRrlTFcJqMLZjaVyi1ifPZAiE0p+cgxE/iyloGeWxz0BdteQJwhs1txhCMJBodMeuIhNouFLSajioF3/my4wCRZNcu5LW5W3yXwsZz3z3QFwoErA6Tur+jFASr2dMN3oLx8M3XnZ4PWTwgiesoknoV8VDClNLsQL4SMGNGwM2zHE8qKg==
+Received: from PS2PR02CA0020.apcprd02.prod.outlook.com (2603:1096:300:41::32)
+ by KL1PR04MB7417.apcprd04.prod.outlook.com (2603:1096:820:115::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Wed, 29 May
+ 2024 06:59:00 +0000
+Received: from HK2PEPF00006FAF.apcprd02.prod.outlook.com
+ (2603:1096:300:41:cafe::97) by PS2PR02CA0020.outlook.office365.com
+ (2603:1096:300:41::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.18 via Frontend
+ Transport; Wed, 29 May 2024 06:59:00 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
+ smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
+Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
+ designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
+ client-ip=211.20.1.79; helo=localhost.localdomain;
+Received: from localhost.localdomain (211.20.1.79) by
+ HK2PEPF00006FAF.mail.protection.outlook.com (10.167.8.5) with Microsoft SMTP
+ Server id 15.20.7633.15 via Frontend Transport; Wed, 29 May 2024 06:58:59
+ +0000
+From: DelphineCCChiu <delphine_cc_chiu@wiwynn.com>
+To: patrick@stwcx.xyz,
+	Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Joel Stanley <joel@jms.id.au>,
+	Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: DelphineCCChiu <delphine_cc_chiu@wiwynn.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 net] net/ncsi: Fix the multi thread manner of NCSI driver
+Date: Wed, 29 May 2024 14:58:55 +0800
+Message-Id: <20240529065856.825241-1-delphine_cc_chiu@wiwynn.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.9/BUG: Bad page state in process kswapd0 pfn:d6e840
-From: David Hildenbrand <david@redhat.com>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, Chris Mason
- <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Matthew Wilcox <willy@infradead.org>,
- linux-btrfs <linux-btrfs@vger.kernel.org>
-References: <CABXGCsPktcHQOvKTbPaTwegMExije=Gpgci5NW=hqORo-s7diA@mail.gmail.com>
- <CABXGCsOC2Ji7y5Qfsa33QXQ37T3vzdNPsivGoMHcVnCGFi5vKg@mail.gmail.com>
- <0672f0b7-36f5-4322-80e6-2da0f24c101b@redhat.com>
- <CABXGCsN7LBynNk_XzaFm2eVkryVQ26BSzFkrxC2Zb5GEwTvc1g@mail.gmail.com>
- <6b42ad9a-1f15-439a-8a42-34052fec017e@redhat.com>
- <CABXGCsP46xvu3C3Ntd=k5ARrYScAea1gj+YmKYqO+Yj7u3xu1Q@mail.gmail.com>
- <CABXGCsP3Yf2g6e7pSi71pbKpm+r1LdGyF5V7KaXbQjNyR9C_Rw@mail.gmail.com>
- <162cb2a8-1b53-4e86-8d49-f4e09b3255a4@redhat.com>
- <209ff705-fe6e-4d6d-9d08-201afba7d74b@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <209ff705-fe6e-4d6d-9d08-201afba7d74b@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK2PEPF00006FAF:EE_|KL1PR04MB7417:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 7da1b5ec-cedc-48b2-aada-08dc7facd0f2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|82310400017|1800799015|7416005|36860700004|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?w275JfBSY6PE5NbHsmD9sFdb5G6D9BfU4qhbleyfPnAC3akIRTYkduR2vgIK?=
+ =?us-ascii?Q?a8b20K58taLecFxQb+pS1Og0zp16hXH+CrEbEluUGO37cLkEvdyKZni7L2Sm?=
+ =?us-ascii?Q?FgIAksUmZRF4gxcm9D8WVHEW4d+w+zjnils5wgmLvcRGDLvoQ0CbaVDzTUu2?=
+ =?us-ascii?Q?IMPUbUoXJJ9Vfu7CWi2hb7G7/8Z+3CqkvmkLol596rBVSOnm6IKzhISYhl/Q?=
+ =?us-ascii?Q?kkhS8TjG+h1K3I2OHkLb0KX6yWj3i+PwBI6WkU3fsQFegRPt/hnf0KhAdP0y?=
+ =?us-ascii?Q?Jd093Ju6HStbnFmlhXp5C4z5CPGEbQoOK4XvP5n2POj8nDn6ClduArYM8Uaw?=
+ =?us-ascii?Q?dFPLb2ozFBGsCXGiyRaH7PmkYsh5viFfmeID5FMDBQo15DBc5+FuzeBzBQHi?=
+ =?us-ascii?Q?NylLuTeDKt45H2WNIDZh6VHApI/HaThfIpjuP/erPReYOgfgo/lBbFZhL/XP?=
+ =?us-ascii?Q?9uc4XRfnbHvygKdFkmGMMcOu4eEzxcrLntjTo1uYHyiZvsTEHFhJlJ8DDjDT?=
+ =?us-ascii?Q?taq1Xl/bjLdm25LRvzb2nVnbZafMUq37iusCtIrfk7ByYwyLjfgxCRnjlTau?=
+ =?us-ascii?Q?wjC7SYajuFRLbfSm42krZinGMhABgPnD55b/0dJ7Szw2IF+40k2jZoz7JPYp?=
+ =?us-ascii?Q?+m/s5pyM8rWS7fkPQJxvBBvFYRmA9cu23R+lqN41TRW7MpRjIdgiPnsATDIW?=
+ =?us-ascii?Q?NwDc6ijSVoHbrOtxtpFkPNdkCZZDQTsRtrAohjwj1iQEdkMWBmJyLAggQAdB?=
+ =?us-ascii?Q?yLXTjgVjxChbUNP3II7reI2SvLWJSJg4CzE6uNUHtuk89hPGSG0Jsnagr5hi?=
+ =?us-ascii?Q?aQ/AfGr6ST+fuKDkA4dHDsUjmDcfKLgU399DR81T2UvTVvdyF2EfUuzivpmI?=
+ =?us-ascii?Q?v4uWly9gfED2YQao3qo3E/g8v2SDsA6X3sdaVvJTab3uDnnAfQqs5RvwdkGC?=
+ =?us-ascii?Q?5zd+OpBcvKMMTrjmwOgOJoX4aGR8gGZl05MTSCIJSusodSgpeRGThjOnpmrm?=
+ =?us-ascii?Q?Gx7lVBy/O5BC6hd1yuiqh21+cYind2rn0jY6ewGuPXaC6tHdVpQMkVBroFqD?=
+ =?us-ascii?Q?Bfx/StRm5UCCjpzaR1gzM8PtycBvJDsTbiufnWSva5k+91cbhmmaUextkqcz?=
+ =?us-ascii?Q?3+WHDRFIpk/A2WD7XZJ+wMzkfl/HaNZCUuQoWewZ2Uejl+aHyG+LMM5OwTDe?=
+ =?us-ascii?Q?UUWKHCgro0WcFJcKi0KkJ9KLDDjtVont3gzRyGG5+C8VDJk22yHyMsOWlM6s?=
+ =?us-ascii?Q?pZGwmWUpqsS8kKKyC+yhmbOU9/xeHUUiO5Nayt+y2KRQSXMZRrSHuMGlorUa?=
+ =?us-ascii?Q?3Ey/UmI/rQdHGPeF5sErlH9yAh26rIBZD7gbc1mQIKP5Sg7pStY3AryeecPf?=
+ =?us-ascii?Q?s4q3OLE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(82310400017)(1800799015)(7416005)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: wiwynn.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 06:58:59.4090
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7da1b5ec-cedc-48b2-aada-08dc7facd0f2
+X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK2PEPF00006FAF.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR04MB7417
 
-On 28.05.24 16:24, David Hildenbrand wrote:
-> Am 28.05.24 um 15:57 schrieb David Hildenbrand:
->> Am 28.05.24 um 08:05 schrieb Mikhail Gavrilov:
->>> On Thu, May 23, 2024 at 12:05 PM Mikhail Gavrilov
->>> <mikhail.v.gavrilov@gmail.com> wrote:
->>>>
->>>> On Thu, May 9, 2024 at 10:50 PM David Hildenbrand <david@redhat.com> wrote:
->>>>
->>>> The only known workload that causes this is updating a large
->>>> container. Unfortunately, not every container update reproduces the
->>>> problem.
->>>
->>> Is it possible to add more debugging information to make it clearer
->>> what's going on?
->>
->> If we knew who originally allocated that problematic page, that might help.
->> Maybe page_owner could give some hints?
->>
->>>
->>> BUG: Bad page state in process kcompactd0  pfn:605811
->>> page: refcount:0 mapcount:0 mapping:0000000082d91e3e index:0x1045efc4f
->>> pfn:0x605811
->>> aops:btree_aops ino:1
->>> flags:
->>> 0x17ffffc600020c(referenced|uptodate|workingset|node=0|zone=2|lastcpupid=0x1fffff)
->>> raw: 0017ffffc600020c dead000000000100 dead000000000122 ffff888159075220
->>> raw: 00000001045efc4f 0000000000000000 00000000ffffffff 0000000000000000
->>> page dumped because: non-NULL mapping
->>
->> Seems to be an order-0 page, otherwise we would have another "head: ..." report.
->>
->> It's not an anon/ksm/non-lru migration folio, because we clear the page->mapping
->> field for them manually on the page freeing path. Likely it's a pagecache folio.
->>
->> So one option is that something seems to not properly set folio->mapping to
->> NULL. But that problem would then also show up without page migration? Hmm.
->>
->>> Hardware name: ASUS System Product Name/ROG STRIX B650E-I GAMING WIFI,
->>> BIOS 2611 04/07/2024
->>> Call Trace:
->>>    <TASK>
->>>    dump_stack_lvl+0x84/0xd0
->>>    bad_page.cold+0xbe/0xe0
->>>    ? __pfx_bad_page+0x10/0x10
->>>    ? page_bad_reason+0x9d/0x1f0
->>>    free_unref_page+0x838/0x10e0
->>>    __folio_put+0x1ba/0x2b0
->>>    ? __pfx___folio_put+0x10/0x10
->>>    ? __pfx___might_resched+0x10/0x10
->>
->> I suspect we come via
->>       migrate_pages_batch()->migrate_folio_unmap()->migrate_folio_done().
->>
->> Maybe this is the "Folio was freed from under us. So we are done." path
->> when "folio_ref_count(src) == 1".
->>
->> Alternatively, we might come via
->>       migrate_pages_batch()->migrate_folio_move()->migrate_folio_done().
->>
->> For ordinary migration, move_to_new_folio() will clear src->mapping if
->> the folio was migrated successfully. That's the very first thing that
->> migrate_folio_move() does, so I doubt that is the problem.
->>
->> So I suspect we are in the migrate_folio_unmap() path. But for
->> a !anon folio, who should be freeing the folio concurrently (and not clearing
->> folio->mapping?)? After all, we have to hold the folio lock while migrating.
->>
->> In khugepaged:collapse_file() we manually set folio->mapping = NULL, before
->> dropping the reference.
->>
->> Something to try might be (to see if the problem goes away).
->>
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index dd04f578c19c..45e92e14c904 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -1124,6 +1124,13 @@ static int migrate_folio_unmap(new_folio_t get_new_folio,
->>                   /* Folio was freed from under us. So we are done. */
->>                   folio_clear_active(src);
->>                   folio_clear_unevictable(src);
->> +               /*
->> +                * Anonymous and movable src->mapping will be cleared by
->> +                * free_pages_prepare so don't reset it here for keeping
->> +                * the type to work PageAnon, for example.
->> +                */
->> +               if (!folio_mapping_flags(src))
->> +                       src->mapping = NULL;
->>                   /* free_pages_prepare() will clear PG_isolated. */
->>                   list_del(&src->lru);
->>                   migrate_folio_done(src, reason);
->>
->> But it does feel weird: who freed the page concurrently and didn't clear
->> folio->mapping ...
->>
->> We don't hold the folio lock of src, though, but have the only reference. So
->> another possible thing might be folio refcount mis-counting: folio_ref_count()
->> == 1 but there are other references (e.g., from the pagecache).
-> 
-> Hmm, your original report mentions kswapd, so I'm getting the feeling someone
-> does one folio_put() too much and we are freeing a pageache folio that is still
-> in the pageache and, therefore, has folio->mapping set ... bisecting would
-> really help.
-> 
+Currently NCSI driver will send several NCSI commands back to back without
+waiting the response of previous NCSI command or timeout in some state
+when NIC have multi channel. This operation against the single thread
+manner defined by NCSI SPEC(section 6.3.2.3 in DSP0222_1.1.1)
 
-A little bird just told me that I missed an important piece in the dmesg 
-output: "aops:btree_aops ino:1" from dump_mapping():
+According to NCSI SPEC(section 6.2.13.1 in DSP0222_1.1.1), we should probe
+one channel at a time by sending NCSI commands (Clear initial state, Get
+version ID, Get capabilities...), than repeat this steps until the max
+number of channels which we got from NCSI command (Get capabilities) has
+been probed.
 
-This is btrfs, i_ino is 1, and we don't have a dentry. Is that 
-BTRFS_BTREE_INODE_OBJECTID?
+Fixes: e6f44ed6d04d ("net/ncsi: Package and channel management")
+Signed-off-by: DelphineCCChiu <delphine_cc_chiu@wiwynn.com>
+---
+ net/ncsi/internal.h    |  2 ++
+ net/ncsi/ncsi-manage.c | 73 +++++++++++++++++++++---------------------
+ net/ncsi/ncsi-rsp.c    |  4 ++-
+ 3 files changed, 41 insertions(+), 38 deletions(-)
 
-Summarizing what we know so far:
-(1) Freeing an order-0 btrfs folio where folio->mapping
-     is still set
-(2) Triggered by kswapd and kcompactd; not triggered by other means of
-     page freeing so far
-
-Possible theories:
-(A) folio->mapping not cleared when freeing the folio. But shouldn't
-     this also happen on other freeing paths? Or are we simply lucky to
-     never trigger that for that folio?
-(B) Messed-up refcounting: freeing a folio that is still in use (and
-     therefore has folio-> mapping still set)
-
-I was briefly wondering if large folio splitting could be involved.
-
-CCing btrfs maintainers.
-
+diff --git a/net/ncsi/internal.h b/net/ncsi/internal.h
+index 374412ed780b..ef0f8f73826f 100644
+--- a/net/ncsi/internal.h
++++ b/net/ncsi/internal.h
+@@ -325,6 +325,7 @@ struct ncsi_dev_priv {
+ 	spinlock_t          lock;            /* Protect the NCSI device    */
+ 	unsigned int        package_probe_id;/* Current ID during probe    */
+ 	unsigned int        package_num;     /* Number of packages         */
++	unsigned int        channel_probe_id;/* Current cahnnel ID during probe */
+ 	struct list_head    packages;        /* List of packages           */
+ 	struct ncsi_channel *hot_channel;    /* Channel was ever active    */
+ 	struct ncsi_request requests[256];   /* Request table              */
+@@ -343,6 +344,7 @@ struct ncsi_dev_priv {
+ 	bool                multi_package;   /* Enable multiple packages   */
+ 	bool                mlx_multi_host;  /* Enable multi host Mellanox */
+ 	u32                 package_whitelist; /* Packages to configure    */
++	unsigned char       channel_count;     /* Num of channels to probe   */
+ };
+ 
+ struct ncsi_cmd_arg {
+diff --git a/net/ncsi/ncsi-manage.c b/net/ncsi/ncsi-manage.c
+index 745c788f1d1d..5ecf611c8820 100644
+--- a/net/ncsi/ncsi-manage.c
++++ b/net/ncsi/ncsi-manage.c
+@@ -510,17 +510,19 @@ static void ncsi_suspend_channel(struct ncsi_dev_priv *ndp)
+ 
+ 		break;
+ 	case ncsi_dev_state_suspend_gls:
+-		ndp->pending_req_num = np->channel_num;
++		ndp->pending_req_num = 1;
+ 
+ 		nca.type = NCSI_PKT_CMD_GLS;
+ 		nca.package = np->id;
++		nca.channel = ndp->channel_probe_id;
++		ret = ncsi_xmit_cmd(&nca);
++		if (ret)
++			goto error;
++		ndp->channel_probe_id++;
+ 
+-		nd->state = ncsi_dev_state_suspend_dcnt;
+-		NCSI_FOR_EACH_CHANNEL(np, nc) {
+-			nca.channel = nc->id;
+-			ret = ncsi_xmit_cmd(&nca);
+-			if (ret)
+-				goto error;
++		if (ndp->channel_probe_id == ndp->channel_count) {
++			ndp->channel_probe_id = 0;
++			nd->state = ncsi_dev_state_suspend_dcnt;
+ 		}
+ 
+ 		break;
+@@ -1345,7 +1347,6 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
+ {
+ 	struct ncsi_dev *nd = &ndp->ndev;
+ 	struct ncsi_package *np;
+-	struct ncsi_channel *nc;
+ 	struct ncsi_cmd_arg nca;
+ 	unsigned char index;
+ 	int ret;
+@@ -1423,23 +1424,6 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
+ 
+ 		nd->state = ncsi_dev_state_probe_cis;
+ 		break;
+-	case ncsi_dev_state_probe_cis:
+-		ndp->pending_req_num = NCSI_RESERVED_CHANNEL;
+-
+-		/* Clear initial state */
+-		nca.type = NCSI_PKT_CMD_CIS;
+-		nca.package = ndp->active_package->id;
+-		for (index = 0; index < NCSI_RESERVED_CHANNEL; index++) {
+-			nca.channel = index;
+-			ret = ncsi_xmit_cmd(&nca);
+-			if (ret)
+-				goto error;
+-		}
+-
+-		nd->state = ncsi_dev_state_probe_gvi;
+-		if (IS_ENABLED(CONFIG_NCSI_OEM_CMD_KEEP_PHY))
+-			nd->state = ncsi_dev_state_probe_keep_phy;
+-		break;
+ 	case ncsi_dev_state_probe_keep_phy:
+ 		ndp->pending_req_num = 1;
+ 
+@@ -1452,14 +1436,17 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
+ 
+ 		nd->state = ncsi_dev_state_probe_gvi;
+ 		break;
++	case ncsi_dev_state_probe_cis:
+ 	case ncsi_dev_state_probe_gvi:
+ 	case ncsi_dev_state_probe_gc:
+ 	case ncsi_dev_state_probe_gls:
+ 		np = ndp->active_package;
+-		ndp->pending_req_num = np->channel_num;
++		ndp->pending_req_num = 1;
+ 
+-		/* Retrieve version, capability or link status */
+-		if (nd->state == ncsi_dev_state_probe_gvi)
++		/* Clear initial state Retrieve version, capability or link status */
++		if (nd->state == ncsi_dev_state_probe_cis)
++			nca.type = NCSI_PKT_CMD_CIS;
++		else if (nd->state == ncsi_dev_state_probe_gvi)
+ 			nca.type = NCSI_PKT_CMD_GVI;
+ 		else if (nd->state == ncsi_dev_state_probe_gc)
+ 			nca.type = NCSI_PKT_CMD_GC;
+@@ -1467,19 +1454,29 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
+ 			nca.type = NCSI_PKT_CMD_GLS;
+ 
+ 		nca.package = np->id;
+-		NCSI_FOR_EACH_CHANNEL(np, nc) {
+-			nca.channel = nc->id;
+-			ret = ncsi_xmit_cmd(&nca);
+-			if (ret)
+-				goto error;
+-		}
++		nca.channel = ndp->channel_probe_id;
+ 
+-		if (nd->state == ncsi_dev_state_probe_gvi)
++		ret = ncsi_xmit_cmd(&nca);
++		if (ret)
++			goto error;
++
++		if (nd->state == ncsi_dev_state_probe_cis) {
++			nd->state = ncsi_dev_state_probe_gvi;
++			if (IS_ENABLED(CONFIG_NCSI_OEM_CMD_KEEP_PHY) && ndp->channel_probe_id == 0)
++				nd->state = ncsi_dev_state_probe_keep_phy;
++		} else if (nd->state == ncsi_dev_state_probe_gvi) {
+ 			nd->state = ncsi_dev_state_probe_gc;
+-		else if (nd->state == ncsi_dev_state_probe_gc)
++		} else if (nd->state == ncsi_dev_state_probe_gc) {
+ 			nd->state = ncsi_dev_state_probe_gls;
+-		else
++		} else {
++			nd->state = ncsi_dev_state_probe_cis;
++			ndp->channel_probe_id++;
++		}
++
++		if (ndp->channel_probe_id == ndp->channel_count) {
++			ndp->channel_probe_id = 0;
+ 			nd->state = ncsi_dev_state_probe_dp;
++		}
+ 		break;
+ 	case ncsi_dev_state_probe_dp:
+ 		ndp->pending_req_num = 1;
+@@ -1780,6 +1777,7 @@ struct ncsi_dev *ncsi_register_dev(struct net_device *dev,
+ 		ndp->requests[i].ndp = ndp;
+ 		timer_setup(&ndp->requests[i].timer, ncsi_request_timeout, 0);
+ 	}
++	ndp->channel_count = NCSI_RESERVED_CHANNEL;
+ 
+ 	spin_lock_irqsave(&ncsi_dev_lock, flags);
+ 	list_add_tail_rcu(&ndp->node, &ncsi_dev_list);
+@@ -1813,6 +1811,7 @@ int ncsi_start_dev(struct ncsi_dev *nd)
+ 
+ 	if (!(ndp->flags & NCSI_DEV_PROBED)) {
+ 		ndp->package_probe_id = 0;
++		ndp->channel_probe_id = 0;
+ 		nd->state = ncsi_dev_state_probe;
+ 		schedule_work(&ndp->work);
+ 		return 0;
+diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
+index bee290d0f48b..e28be33bdf2c 100644
+--- a/net/ncsi/ncsi-rsp.c
++++ b/net/ncsi/ncsi-rsp.c
+@@ -795,12 +795,13 @@ static int ncsi_rsp_handler_gc(struct ncsi_request *nr)
+ 	struct ncsi_rsp_gc_pkt *rsp;
+ 	struct ncsi_dev_priv *ndp = nr->ndp;
+ 	struct ncsi_channel *nc;
++	struct ncsi_package *np;
+ 	size_t size;
+ 
+ 	/* Find the channel */
+ 	rsp = (struct ncsi_rsp_gc_pkt *)skb_network_header(nr->rsp);
+ 	ncsi_find_package_and_channel(ndp, rsp->rsp.common.channel,
+-				      NULL, &nc);
++				      &np, &nc);
+ 	if (!nc)
+ 		return -ENODEV;
+ 
+@@ -835,6 +836,7 @@ static int ncsi_rsp_handler_gc(struct ncsi_request *nr)
+ 	 */
+ 	nc->vlan_filter.bitmap = U64_MAX;
+ 	nc->vlan_filter.n_vids = rsp->vlan_cnt;
++	np->ndp->channel_count = rsp->channel_cnt;
+ 
+ 	return 0;
+ }
 -- 
-Cheers,
-
-David / dhildenb
+2.25.1
 
