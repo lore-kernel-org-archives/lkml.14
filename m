@@ -1,237 +1,185 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE4122087;
-	Wed, 29 May 2024 02:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95C415AAD7;
+	Wed, 29 May 2024 02:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716949013; cv=none; b=Q7Zd4xL1YWhHbhFXcOkO5h86OqW7jty4kjp2aVlFFSzfEpRrU0yEESQgqPG4ulpbPZRM2QgyIbLa8DqI5bwhzyzBVAsxc26aE1YtIGB+TRLHz6GrycheH6TAPuR0Z6UBD0VKuhG7GyC6mbN4ra+kP3pU4dEb512D+pZUVxTEpik=
+	t=1716949039; cv=none; b=u1JkI20gH6NoLxLNpMb1MihkkQESMxLOHDrNdootNMuh8ib/wNdw/4Ld7JZqyB3+I9VGG5XPaOqNnjxgzOr3ZDWr6WtmCJT+9hCGuX2YVGlB4psCAR4SZ7eSqvIRtmsKf9L366dUWrmGPs8IuHy5NkJ6E3Y5MQFlFMdifgL8V/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716949013; c=relaxed/simple;
-	bh=S7pdCtuHOjf6BWe21GOAciI8kH6q4Yyr42jEVQi5dZ4=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=ZJjQP9XvtW430HqI7RUaGSqFfjrxTrVvJEIlzm14F3ADRaOrJTJMTVLVHHLJfNJOMELCfsHCzpykjdYamgYzhZkrN5ggG+dmq9GRHbfYd6Ur3/xrtCo3JSRNQJdpjNoMp0XP3QTuO4CIRuNmeKEMKHIh7MXVlp/lkUaxwQKimuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=nxh/8fo8; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1716949039; c=relaxed/simple;
+	bh=34eSlQKHCn8By2FSveem/MuMJRk0WabJBZDj10rsQgY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=brahBvQJbOEoTueIYesNfutiExdrBMhD7FNuc8zhk0RFO2D++v45YylryeiQBeGpOiNmq1U4mELY/8PWKLtDJ0ViHnfwbcReRkSK6p/51qNAxa+K7lsTnTBW8RgIKp3gCr4ZoX8T4IFuIBlWXLtlNOhxIUoCDhbn6p0kYrCID7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=t7s9lkad; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="nxh/8fo8"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="t7s9lkad"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1716949036; x=1748485036;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=34eSlQKHCn8By2FSveem/MuMJRk0WabJBZDj10rsQgY=;
+  b=t7s9lkadrYZUQ+j3XNjAkIMPwXcY+yS9VsszgSfRNdaHVVLNq8Jazesf
+   ctx2DT9XL3mssokFv41Sz1s51NoqsdOSPg4VovAgq0mVzxxWMre6J4GfT
+   1QeWFViXO1/HdyC8Fg+4HeHEGJDmB4UCwY/mYh1iv1fBj+nrUcm40P8w7
+   KWH/iczysin0C/HYJhdsd5AvGGliiYe1gOYuFvf8rIkwnN0rZf+GYGcT7
+   +Slw+lzswebSd86EPm//A7Ida6Y+Ie1qkJkFrSAaAh+Q+2CmSwrcl4vRz
+   efNntNUU01oVKWJz19FHxBf5y850QEDTOo3PfRhK6yeRAGdlYW7MRFWAY
+   g==;
+X-CSE-ConnectionGUID: OFQuk28LRuK+2e1hiRiHpA==
+X-CSE-MsgGUID: 402bAtDKRfqgld3jqBP74Q==
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="26661639"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 May 2024 19:17:15 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 28 May 2024 19:17:01 -0700
+Received: from hat-linux.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 28 May 2024 19:17:01 -0700
+From: <Tristram.Ha@microchip.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, Robert Hancock
+	<robert.hancock@calian.com>
+CC: Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli
+	<f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Tristram Ha <tristram.ha@microchip.com>
+Subject: [PATCH v1 net] net: phy: micrel: fix KSZ9477 PHY issues after suspend/resume
+Date: Tue, 28 May 2024 19:20:23 -0700
+Message-ID: <1716949223-4250-1-git-send-email-Tristram.Ha@microchip.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1716949009;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4JFLurwnOLvIBCNTM500Idl7vSQefC7CtF5bl+YuMyQ=;
-	b=nxh/8fo85My8hC8k0l47rmqyLY5E0iCg7kqDnKfox56MABozQPwSiiCv/DDd4ojO86msqf
-	AsO0o864fLyhYCXg1YLQ8xYg0m4ihevbdre0kNJWtEyCpmcbSFNL3r7xtMgTycEHR/uDLX
-	ZldVmRSGnsbi976v7ZbFga8LQOLZt3Y6Ev4D+p8Kx+lTVVl0+fQO26oa0V9+P+u4WVOXBS
-	hEmS1T+DgEa8B8pLuU6ywqYqDl1lfPZfYWuB5UWzHSz15yRd4DfDIqJFwdbAwhGMvKIr2T
-	0r6amFMg5XADO2tzeHuwmGFBGYu2cZIGuTgUHjF1TPhDT4X94F6rXEAjv4FBTQ==
-Date: Wed, 29 May 2024 04:16:49 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Quentin Schulz <quentin.schulz@cherry.de>, Heiko Stuebner
- <heiko@sntech.de>, Chen-Yu Tsai <wens@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Diederik
- de Haas <didi.debian@cknow.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 0/6] RK3588 and Rock 5B dts additions: thermal, OPP and
- fan
-In-Reply-To: <035a274be262528012173d463e25b55f@manjaro.org>
-References: <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
- <5122636.irdbgypaU6@phil> <8727e1c29bd6f562a7fc3de0ddac62cf@manjaro.org>
- <6230150.aeNJFYEL58@phil>
- <CABjd4YyRJS0AGehuBTDn8ys9uRRkGc0Usme3GX1POq3AQiWTBA@mail.gmail.com>
- <646a33e0-5c1b-471c-8183-2c0df40ea51a@cherry.de>
- <CABjd4Yxi=+3gkNnH3BysUzzYsji-=-yROtzEc8jM_g0roKB0-w@mail.gmail.com>
- <035a274be262528012173d463e25b55f@manjaro.org>
-Message-ID: <c547d6165ae80d4008966021eb0d1ef2@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain
 
-On 2024-05-29 02:35, Dragan Simic wrote:
-> On 2024-05-28 21:26, Alexey Charkov wrote:
->> On Tue, May 28, 2024 at 8:08 PM Quentin Schulz 
->> <quentin.schulz@cherry.de> wrote:
->>> On 5/28/24 5:42 PM, Alexey Charkov wrote:
->>> > On Tue, 28 May 2024 at 19:16, Heiko Stuebner <heiko@sntech.de> wrote:
->>> >> Am Dienstag, 28. Mai 2024, 17:01:48 CEST schrieb Dragan Simic:
->>> >>> On 2024-05-28 16:34, Heiko Stuebner wrote:
->>> >>>> Am Dienstag, 28. Mai 2024, 16:05:04 CEST schrieb Dragan Simic:
->>> >>>>> On 2024-05-28 11:49, Alexey Charkov wrote:
->>> >>>>>> Hi Heiko,
->>> >>>>>>
->>> >>>>>> Do you think this can be merged for 6.11? Looks like there hasn't
->>> >> been
->>> >>>>>> any new feedback in a while, and it would be good to have frequency
->>> >>>>>> scaling in place for RK3588.
->>> >>>>>>
->>> >>>>>> Please let me know if you have any reservations or if we need any
->>> >>>>>> broader discussion.
->>> >>>>
->>> >>>> not really reservations, more like there was still discussion going on
->>> >>>> around the OPPs. Meanwhile we had more discussions regarding the whole
->>> >>>> speed binning Rockchip seems to do for rk3588 variants.
->>> >>>>
->>> >>>> And waiting for the testing Dragan wanted to do ;-) .
->>> >>>
->>> >>> I'm sorry for the delays.
->>> >>
->>> >> Was definitly _not_ meant as blame ;-) .
->>> >>
->>> >> The series has just too many discussions threads to unravel on half
->>> >> an afternoon.
->>> >
->>> >
->>> > FWIW, I think the latest exchange we had with Quentin regarding the OPPs
->>> > concluded in “false alarm”, given that this version of the series only
->>> > introduces a subset of them which should apply to all RK3588(s)
->>> 
->>> Correct.
->>> 
->>> However... I'm wondering if we shouldn't somehow follow the same 
->>> pattern
->>> we have used for the rk3399 OPPs? We have a file for the "true" 
->>> RK3399
->>> OPPs, then the OP1 variant and the RK3399T.
->>> 
->>> We already know there are a few variants of RK3588 with different 
->>> OPPs:
->>> RK3588(S/S2?), RK3588J and RK3588M. I wouldn't be surprised if the
->>> RK3582 (though this one has already one big cluster (or two big 
->>> cores)
->>> fewer than RK3588) has different OPPs as well?
->>> 
->>> So. We have already discussed that the OPPs in that patch are valid 
->>> for
->>> RK3588(S) but they aren't for the other variants.
->> 
->> Hmm. Looking at Rockchip sources [1] more closely as opposed to the
->> Radxa tree I've been using as the basis, it does indeed show that
->> RK3588J and RK3588M use a different OPP table altogether (frequencies
->> are similar, but voltages differ).
->> 
->> We currently have an RK3588J based board in the mainline tree
->> (rk3588-edgeble-neu6b-io.dts), so it can't be ignored. However, given
->> that Rockchip sources only differentiate those OPPs by SoC revision,
->> and that is (currently?) known for each board at dtb compile time, it
->> seems easier to just include two different OPP tables for RK3588(S)
->> vs. RK3588J - thus avoiding all the headache with opp-supported-hw.
->> Similar to RK3399, yes.
->> 
->> Will split those out and send a separate version.
-> 
-> Ah, you already answered my question about the existence of supported
-> boards with the RK3588J and RK3588M variants. :) [2]  I totally agree
-> about splitting the OPPs into the separate .dtsi files, i.e. following
-> the approach already established by the RK3399.
-> 
-> Perhaps the new files should be named rk3588-opp.dtsi and 
-> rk3588j-opp.dtsi,
-> to (almost fully) follow the already established naming scheme.  Maybe
-> the OPP data could instead be added to the already existing 
-> rk3588.dtsi,
-> rk3588s.dtsi and rk3588j.dtsi files, which would actually make more 
-> sense
-> because those .dtsi files already address the specific SoC variants, 
-> but
-> the approach with the separate new rk3588*-opp.dtsi files seems cleaner
-> from the implementation point of view, and is a bit safer.
-> 
-> If you see a clean way for stuffing the OPP data into the already 
-> existing
-> rk3588.dtsi, rk3588s.dtsi and rk3588j.dtsi files, instead of 
-> introducing
-> new rk3588*-opp.dtsi files, I'd be happy to support it.
-> 
-> [2] 
-> https://lore.kernel.org/linux-rockchip/7b09e18e850ff0832bd7236810b83e64@manjaro.org/
+From: Tristram Ha <tristram.ha@microchip.com>
 
-On second thought, it makes more sense to rename and shuffle the RK3588
-dtsi files a bit, to make it possible to have the OPPs already specified
-when a board dts file includes the dtsi file for a RK3588 variant.  
-Thus,
-I went ahead and prepared an RFC patch that does exactly that. [3]
+When the PHY is powered up after powered down most of the registers are
+reset, so the PHY setup code needs to be done again.  In addition the
+interrupt register will need to be setup again so that link status
+indication works again.
 
-Please, have a look at that RFC patch.  To quote its description:
+Fixes: 26dd2974c5b5 ("net: phy: micrel: Move KSZ9477 errata fixes to PHY driver")
+Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
+---
+v1
+ - put back genphy_restart_ange() in ksz9477_phy_errata()
+ - do not change MMD 0x1c reg 0x8 value
 
----------------------------------------------------------------------------
-Rename and modify the RK3588 dtsi files a bit, to make preparations for
-the ability to specify different CPU and GPU OPPs for each of the 
-supported
-RK3588 SoC variants, including the RK3588J.
+ drivers/net/phy/micrel.c | 62 ++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 56 insertions(+), 6 deletions(-)
 
-As already discussed, some of the different RK3588 SoC variants
-require different OPPs, and it makes more sense to have the OPPs already
-defined when a board dts includes one of the SoC dtsi files 
-(rk3588.dtsi,
-rk3588j.dtsi or rk3588s.dtsi), rather than requiring the board dts file 
-to
-also include a separate rk3588*-opp.dtsi file.  The choice of the SoC 
-variant
-is already made by the inclusion of the SoC dtsi file, and it doesn't 
-make
-much sense to, effectively, allow the board dts file to include and use 
-an
-incompatible set of OPPs for the already selected SoC variant.
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 2b8f8b7f1517..8c20cf937530 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -1939,7 +1939,7 @@ static const struct ksz9477_errata_write ksz9477_errata_writes[] = {
+ 	{0x1c, 0x20, 0xeeee},
+ };
+ 
+-static int ksz9477_config_init(struct phy_device *phydev)
++static int ksz9477_phy_errata(struct phy_device *phydev)
+ {
+ 	int err;
+ 	int i;
+@@ -1967,16 +1967,30 @@ static int ksz9477_config_init(struct phy_device *phydev)
+ 			return err;
+ 	}
+ 
++	err = genphy_restart_aneg(phydev);
++	if (err)
++		return err;
++
++	return err;
++}
++
++static int ksz9477_config_init(struct phy_device *phydev)
++{
++	int err;
++
++	/* Only KSZ9897 family of switches needs this fix. */
++	if ((phydev->phy_id & 0xf) == 1) {
++		err = ksz9477_phy_errata(phydev);
++		if (err)
++			return err;
++	}
++
+ 	/* According to KSZ9477 Errata DS80000754C (Module 4) all EEE modes
+ 	 * in this switch shall be regarded as broken.
+ 	 */
+ 	if (phydev->dev_flags & MICREL_NO_EEE)
+ 		phydev->eee_broken_modes = -1;
+ 
+-	err = genphy_restart_aneg(phydev);
+-	if (err)
+-		return err;
+-
+ 	return kszphy_config_init(phydev);
+ }
+ 
+@@ -2085,6 +2099,42 @@ static int kszphy_resume(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static int ksz9477_resume(struct phy_device *phydev)
++{
++	int ret;
++
++	/* No need to initialize registers if not powered down. */
++	ret = phy_read(phydev, MII_BMCR);
++	if (ret < 0)
++		return ret;
++	if (!(ret & BMCR_PDOWN))
++		return 0;
++
++	genphy_resume(phydev);
++
++	/* After switching from power-down to normal mode, an internal global
++	 * reset is automatically generated. Wait a minimum of 1 ms before
++	 * read/write access to the PHY registers.
++	 */
++	usleep_range(1000, 2000);
++
++	/* Only KSZ9897 family of switches needs this fix. */
++	if ((phydev->phy_id & 0xf) == 1) {
++		ret = ksz9477_phy_errata(phydev);
++		if (ret)
++			return ret;
++	}
++
++	/* Enable PHY Interrupts */
++	if (phy_interrupt_is_valid(phydev)) {
++		phydev->interrupts = PHY_INTERRUPT_ENABLED;
++		if (phydev->drv->config_intr)
++			phydev->drv->config_intr(phydev);
++	}
++
++	return 0;
++}
++
+ static int kszphy_probe(struct phy_device *phydev)
+ {
+ 	const struct kszphy_type *type = phydev->drv->driver_data;
+@@ -5493,7 +5543,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	.config_intr	= kszphy_config_intr,
+ 	.handle_interrupt = kszphy_handle_interrupt,
+ 	.suspend	= genphy_suspend,
+-	.resume		= genphy_resume,
++	.resume		= ksz9477_resume,
+ 	.get_features	= ksz9477_get_features,
+ } };
+ 
+-- 
+2.34.1
 
-No intended functional changes are introduced.  (Still to be 
-additionally
-verified if the patch moves forward from the RFC state.)
----------------------------------------------------------------------------
-
-[3] 
-https://lore.kernel.org/linux-rockchip/673dcf47596e7bc8ba065034e339bb1bbf9cdcb0.1716948159.git.dsimic@manjaro.org/
-
->>> In the downstream kernel, any OPP whose opp-supported-hw has a first
->>> value masked by BIT(1) return non-0 is supported by RK3588M. In the
->>> downstream kernel, any OPP whose opp-supported-hw has a first value
->>> masked by BIT(2) return non-0 is supported by RK3588J.
->>> 
->>> This means that, for LITTLE clusters:
->>> - opp-1608000000 not supported on RK3588J
->>> - opp-1704000000 only supported on RK3588M (but already absent in 
->>> this
->>> patch series)
->>> - opp-1800000000 only supported on RK3588(S), not RK3588J nor RK3588M
->>> 
->>> For big clusters:
->>> - opp-1800000000 not supported on RK3588J
->>> - opp-2016000000 not supported on RK3588J
->>> - opp-2208000000 only supported on RK3588(S), not RK3588J nor RK3588M
->>> - opp-2256000000 only supported on RK3588(S), not RK3588J nor RK3588M
->>> - opp-2304000000 only supported on RK3588(S), not RK3588J nor RK3588M
->>> - opp-2352000000 only supported on RK3588(S), not RK3588J nor RK3588M
->>> - opp-2400000000 only supported on RK3588(S), not RK3588J nor RK3588M
->>> 
->>> This is somehow also enforced in downstream kernel by removing the 
->>> OPP
->>> nodes directly (hence, not even requiring the check of 
->>> opp-supported-hw
->>> value), c.f.:
->>> https://git.theobroma-systems.com/tiger-linux.git/tree/arch/arm64/boot/dts/rockchip/rk3588j.dtsi
->>> https://git.theobroma-systems.com/tiger-linux.git/tree/arch/arm64/boot/dts/rockchip/rk3588m.dtsi
->>> 
->>> You'll not that the RK3588J also has less OPPs for the GPU and NPU 
->>> (but
->>> those should also be masked by the opp-supported-hw value).
->> 
->> Same with DMC, but we don't currently have either DMC or NPU in the
->> mainline tree, so it sounds like something to be dealt with later :)
->> 
->> [1] 
->> https://github.com/rockchip-linux/kernel/blob/develop-5.10/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
