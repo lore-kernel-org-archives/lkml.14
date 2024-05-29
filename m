@@ -1,98 +1,232 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B142315A861;
-	Wed, 29 May 2024 15:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FC315A861
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 15:14:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716995608; cv=none; b=h6BlP/qYcpQFas3ZbE2wIU2JQ3nC6Whd5r/U2QyKCj6EHUwv5bj6j7uzZtSpOG4XL+WKkzVcxQZ6aC3IyrKBiQJGEnT7HM4wqxqM8T+kVgv4TVtCpRDN8+SU9oJdQ5USzlA3gnE/fQSKdD4Y5J7rRX2tGeXKmoIP1SEfKn2FICc=
+	t=1716995695; cv=none; b=PmtI/i7cNTxgdPIVcv/4MhaykSF5ttsRpeqLmDlbAVVbNuB8+DNdHaNDBLk/JZ30QT3964o25f7XxMRAbb35zC4uSXbGdwB6fGOaeAgIcXfBvO5CP118Dr7pL20g97S1IO4t2L+O8sbxx28qIgLiRTRPk+6KzISxz6vWYEKcrS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716995608; c=relaxed/simple;
-	bh=LfO2VE1DcbHJJI4IuLnOrkKQoeKXpZuhsxgvIST8Fas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kMbJtVTlTm/kxKZP2vI5uNI8lC8HJBGcvn1s8EXBGAyqcJqNqz4qT8Q5xUFdLS13c+JCXLlHr63s3vwOP57Z7mfQqra4hI1I0QRq0U31ckbtnvoS29bs8fiBIj9DFPTWcrE8J4lsiK/sUVQFY/8gduZNNRt5Gu6RW3BuZC778+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TvSFcX9I; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1716995695; c=relaxed/simple;
+	bh=+5PvPZmLOmnshPNPKSLTEOoqrHNii4uujhjt1IhjMqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fnRBKBdObQj4q+bSRkfTIatRfT+wmEBkHj1I2gUoEnxzIay0B/gEIFFsM0tbIa+x+VLFUiX3y1dPw7PlAIiEX8bCa1WE/S9WaQR0OrNQoYAiMbAsSEb6qtZ4h9FS293eX7lOJI9rLSVEuE/A6t3xgTyf4/SLHgY9piMha3KBKtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b81h5WXS; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TvSFcX9I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b81h5WXS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716995608; x=1748531608;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LfO2VE1DcbHJJI4IuLnOrkKQoeKXpZuhsxgvIST8Fas=;
-  b=TvSFcX9IvQhYMk8Hg3W7CXkMRv+o+dl4ISXafQvgSDJizlmsP9OqkEk5
-   CRXcKG70g6eOQGbft5w7/GvJf7UavniG9/2MEmq8auPKNIpLjXcK9WA0E
-   A8dUxxQ+X2lZy7/Z2pCDHIIjr3mGGjMEmkooATxPJ2+9qtTdRfNbtRFvg
-   gRRROGNBR0nYAVTs3RY8TMUysjrEwsfn+mVDhzhRnN1k1MBmGi3D2Gnl2
-   BBtpHEm/coi11KQzx+wCypXgcklFrEzXtWEVZoL6Ki6NkmZMYG+tZlodo
-   XfNkSGPT/0bSASWcjLY2zCFJ4HH7N8f4ZP9m2pwrtaj7vi7hN2QSxvBXP
-   A==;
-X-CSE-ConnectionGUID: yuTTVzAxQDSCoDYASQw2+A==
-X-CSE-MsgGUID: 6jocMX0SQ06WqP+aY72wZg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13355932"
+  t=1716995695; x=1748531695;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+5PvPZmLOmnshPNPKSLTEOoqrHNii4uujhjt1IhjMqQ=;
+  b=b81h5WXSyFUvDj7Jd80kuPIKOF2u1In2ceVWLafuVwtbRvaBk88wvXBC
+   x54jvntbRFx2zobxwJRXcQhxj5let3Mx3GEuwLd2rc+19knax8l4lGG3l
+   Q8tPit8JeLi0DiHlAFRMMGI0V44QpKFjMIHYAoMQZ4Frj2Vz5kBZ4rOzD
+   tcuknPRRstf381Fs4DkpWee0glGrTToEQGaDyA3X40fnQS+Xktr13om8Y
+   iVvjKdnRYt2Qx/uogx3DB5Sx92ZgD7sYjZGklq1pKOjcIJ9UGGmgOs+od
+   W618hk9s7531lqAzZqX6KI31WIyO3Qdsax6uSJaQzson7NVG4ZVLdCDQg
+   g==;
+X-CSE-ConnectionGUID: AgEe4vKhRvOVgQn1vsj0kQ==
+X-CSE-MsgGUID: nA7IggyjTk6QiEYsG853Tw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13356147"
 X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="13355932"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 08:13:27 -0700
-X-CSE-ConnectionGUID: 18xmAMLaTPKIo+Bce4uC9g==
-X-CSE-MsgGUID: 6JcBvRBUS/CZL1GteHtHCg==
+   d="scan'208";a="13356147"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 08:14:55 -0700
+X-CSE-ConnectionGUID: pVfW9CPiQYG+ybnwT0wnIA==
+X-CSE-MsgGUID: J8vlnD7eSByTEwjwOndNIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="35432799"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 08:13:22 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sCKzP-0000000BqDZ-1suc;
-	Wed, 29 May 2024 18:13:19 +0300
-Date: Wed, 29 May 2024 18:13:19 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: ranechita <ramona.nechita@analog.com>
-Cc: linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	Marius Cristea <marius.cristea@microchip.com>,
-	Maksim Kiselev <bigunclemax@gmail.com>,
-	Marcus Folkesson <marcus.folkesson@gmail.com>,
-	Okan Sahin <okan.sahin@analog.com>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Liam Beguin <liambeguin@gmail.com>,
-	Ivan Mikhaylov <fr0st61te@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drivers: iio: adc: add support for ad777x family
-Message-ID: <ZldGD4ByS_QCEFuS@smile.fi.intel.com>
-References: <20240529150322.28018-1-ramona.nechita@analog.com>
+   d="scan'208";a="39892434"
+Received: from unknown (HELO [10.125.111.89]) ([10.125.111.89])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 08:14:52 -0700
+Message-ID: <de2d3908-e424-4449-9ee5-c1b783d73a9d@linux.intel.com>
+Date: Wed, 29 May 2024 09:23:26 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529150322.28018-1-ramona.nechita@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-
-On Wed, May 29, 2024 at 06:03:09PM +0300, ranechita wrote:
-> Added support for ad7770,ad7771,ad7779 ADCs. The
-> data is streamed only on the spi-mode, without
-> using the data lines.
-
-Do not send new version if we have not settled down everything in the previous
-review round, hence I even won't bother to look into the code. Will wait your
-replies in v1 and, when we got into agreement, v3 after that.
-
-> Signed-off-by: ranechita <ramona.nechita@analog.com>
-> ---
-
-This misses a lot of information I asked about in the v1 round of review.
-
--- 
-With Best Regards,
-Andy Shevchenko
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] ASoc: tas2781: Enable RCA-based playback without DSP
+ firmware download
+To: Shenghao Ding <shenghao-ding@ti.com>, broonie@kernel.org
+Cc: andriy.shevchenko@linux.intel.com, lgirdwood@gmail.com, perex@perex.cz,
+ 13916275206@139.com, alsa-devel@alsa-project.org, i-salazar@ti.com,
+ linux-kernel@vger.kernel.org, j-chadha@ti.com, liam.r.girdwood@intel.com,
+ jaden-yue@ti.com, yung-chuan.liao@linux.intel.com, dipa@ti.com,
+ kevin-lu@ti.com, yuhsuan@google.com, tiwai@suse.de, baojun.xu@ti.com,
+ soyer@irl.hu, Baojun.Xu@fpt.com, judyhsiao@google.com, navada@ti.com,
+ cujomalainey@google.com, aanya@ti.com, nayeem.mahmud@ti.com,
+ savyasanchi.shukla@netradyne.com, flaviopr@microsoft.com
+References: <20240529103543.2089-1-shenghao-ding@ti.com>
+Content-Language: en-US
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20240529103543.2089-1-shenghao-ding@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
+
+
+> In only RCA(Reconfigurable Architecture) binary case, no DSP program will
+> be working inside tas2563/tas2781, that is dsp-bypass mode, do not support
+> speaker protection, and audio acoustic algorithms in this mode.
+
+The commit title and body are much better, thank you!
+
+
+> -enum tasdevice_dsp_fw_state {
+> +enum tasdevice_fw_state {
+>  	TASDEVICE_DSP_FW_NONE = 0,
+>  	TASDEVICE_DSP_FW_PENDING,
+>  	TASDEVICE_DSP_FW_FAIL,
+> +	TASDEVICE_RCA_FW_OK,
+>  	TASDEVICE_DSP_FW_ALL_OK,
+
+You should really add a description of what the state machine looks
+like, and why FW_PENDING/FAIL remain but are not used.
+
+>  };
+>  
+> diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
+> index 265a8ca25cbb..5db1a0ac6036 100644
+> --- a/sound/soc/codecs/tas2781-fmwlib.c
+> +++ b/sound/soc/codecs/tas2781-fmwlib.c
+> @@ -2324,14 +2324,19 @@ void tasdevice_tuning_switch(void *context, int state)
+>  	struct tasdevice_fw *tas_fmw = tas_priv->fmw;
+>  	int profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
+>  
+> -	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
+> -		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
+> +	/*
+> +	 * Only RCA-based Playback can still work with no dsp program running
+> +	 * inside the chip?
+> +	 */
+> +	if (!(tas_priv->fw_state == TASDEVICE_RCA_FW_OK ||
+> +		tas_priv->fw_state == TASDEVICE_DSP_FW_ALL_OK)) {
+> +		dev_err(tas_priv->dev, "No firmware loaded\n");
+>  		return;
+>  	}
+>  
+>  	if (state == 0) {
+> -		if (tas_priv->cur_prog < tas_fmw->nr_programs) {
+> -			/*dsp mode or tuning mode*/
+> +		if (tas_fmw && tas_priv->cur_prog < tas_fmw->nr_programs) {
+> +			/* dsp mode or tuning mode */
+>  			profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
+>  			tasdevice_select_tuningprm_cfg(tas_priv,
+>  				tas_priv->cur_prog, tas_priv->cur_conf,
+> @@ -2340,9 +2345,10 @@ void tasdevice_tuning_switch(void *context, int state)
+>  
+>  		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
+>  			TASDEVICE_BIN_BLK_PRE_POWER_UP);
+> -	} else
+> +	} else {
+>  		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
+>  			TASDEVICE_BIN_BLK_PRE_SHUTDOWN);
+> +	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(tasdevice_tuning_switch,
+>  	SND_SOC_TAS2781_FMWLIB);
+> diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
+> index 9350972dfefe..9b85a44511c2 100644
+> --- a/sound/soc/codecs/tas2781-i2c.c
+> +++ b/sound/soc/codecs/tas2781-i2c.c
+> @@ -380,23 +380,33 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
+>  	mutex_lock(&tas_priv->codec_lock);
+>  
+>  	ret = tasdevice_rca_parser(tas_priv, fmw);
+> -	if (ret)
+> +	if (ret) {
+> +		tasdevice_config_info_remove(tas_priv);
+>  		goto out;
+> +	}
+>  	tasdevice_create_control(tas_priv);
+>  
+>  	tasdevice_dsp_remove(tas_priv);
+>  	tasdevice_calbin_remove(tas_priv);
+> -	tas_priv->fw_state = TASDEVICE_DSP_FW_PENDING;
+> +	tas_priv->fw_state = TASDEVICE_RCA_FW_OK;
+>  	scnprintf(tas_priv->coef_binaryname, 64, "%s_coef.bin",
+>  		tas_priv->dev_name);
+> +
+>  	ret = tasdevice_dsp_parser(tas_priv);
+>  	if (ret) {
+>  		dev_err(tas_priv->dev, "dspfw load %s error\n",
+>  			tas_priv->coef_binaryname);
+> -		tas_priv->fw_state = TASDEVICE_DSP_FW_FAIL;
+>  		goto out;
+>  	}
+> -	tasdevice_dsp_create_ctrls(tas_priv);
+> +
+> +	/*
+> +	 * If no dsp-related kcontrol created, the dsp resource will be freed.
+> +	 */
+> +	ret = tasdevice_dsp_create_ctrls(tas_priv);
+> +	if (ret) {
+> +		dev_err(tas_priv->dev, "dsp controls error\n");
+> +		goto out;
+> +	}
+>  
+>  	tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
+>  
+> @@ -417,9 +427,8 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
+>  	tasdevice_prmg_load(tas_priv, 0);
+>  	tas_priv->cur_prog = 0;
+>  out:
+> -	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
+> -		/*If DSP FW fail, kcontrol won't be created */
+> -		tasdevice_config_info_remove(tas_priv);
+> +	if (tas_priv->fw_state == TASDEVICE_RCA_FW_OK) {
+> +		/*If DSP FW fail, DSP kcontrol won't be created */
+
+please add spaces on each side of a comment.
+
+>  		tasdevice_dsp_remove(tas_priv);
+
+So the state "FW_OK" means a fail now? It's not clear if this branch
+will work in all cases, including the original configuration where RCA
+was NOT used.
+
+Your previous explanation on the states is very hard to follow
+
+>> It looks like you're no longer using PENDING and FAIL states?
+> The state machine is becoming really hard to follow.
+PENDING and FAIL states have been used in HDA-based tas2563/tas2781 driver
+
+Not following why the DSP boot state would depend on what interface is
+used to load firmware?
+
+If this is because the definition is included in two separate drivers,
+is this ok to add an intermediate state on one side but not the other?
+Is there any merit to a shared definition if the states are completely
+different?
+
+
+>  	}
+>  	mutex_unlock(&tas_priv->codec_lock);
+> @@ -466,14 +475,14 @@ static int tasdevice_startup(struct snd_pcm_substream *substream,
+>  {
+>  	struct snd_soc_component *codec = dai->component;
+>  	struct tasdevice_priv *tas_priv = snd_soc_component_get_drvdata(codec);
+> -	int ret = 0;
+>  
+> -	if (tas_priv->fw_state != TASDEVICE_DSP_FW_ALL_OK) {
+> -		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
+> -		ret = -EINVAL;
+> +	if (!(tas_priv->fw_state == TASDEVICE_DSP_FW_ALL_OK ||
+> +		tas_priv->fw_state == TASDEVICE_RCA_FW_OK)) {
+> +		dev_err(tas_priv->dev, "Bin file not loaded\n");
+> +		return -EINVAL;
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int tasdevice_hw_params(struct snd_pcm_substream *substream,
