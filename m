@@ -1,35 +1,35 @@
-Received: from mta-65-226.siemens.flowmailer.net (mta-65-226.siemens.flowmailer.net [185.136.65.226])
+Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B41184105
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E591836F0
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998746; cv=none; b=q9PLh/DK5c3odH7g5W5pGRVJ4+QyTjrfZ9fXf0pphzrV9vhZCcAVBlpMNOvLB9ao7wQvhxB2m1slp4a8iO+6WXtAN/QmHVojWUU6zco6bJgblKg2N4Q+0tYU5ANwpDrVWsfujDWkdsBZpW3fSWEqb7aEvNTGS5ghCxkEFz0hcGQ=
+	t=1716998746; cv=none; b=glxK/riIrpWWq8ClyE0k5DZkQ3l3SoEYqAjIpR25WWRDYJatsKxtZuXgoEJoMAAnli10WRHerhh6IB3CdNUcKALogDthdteQcxWSc/KWnlx0y3J9TptP8OcpOPNX/HgT4LtewquZPrLaY/oBngt09e2SyJiLkl0hFM7fc9/f1C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716998746; c=relaxed/simple;
-	bh=g50rqN+Tm9GE6hG8Rzf5OPuU0+TursRCfv71e/S09L4=;
+	bh=3oNbe7+kl949vpSxjYDcQs/lpiG/Vv5Of/GL7kFfQV4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HpIlZp3f1GWL+Ab17CnfA8oypmBMF/fte5/3vUZry0vTkKFGo4Mq+HWFsM4TcsVuYc8WC5sbiiluX64fks/WAFFNethtTfwALOnpVJrFqHRS1QcTYDPbOYfOb1k+RFkCS6xpfQSZGL8znA7Zbiq/iGvE4M61ZFRLAI1W7Oaz8O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=V4InFzGM; arc=none smtp.client-ip=185.136.65.226
+	 In-Reply-To:To:Cc; b=F/3bE6z9mmuTkjA1MkSr6lF1AJP3jhWmcxAtCpvfGRQYRb82BytuwdKVcks7BX899fSFhHDZW5qGDbMiNiI18ruDRlfOBo70X8lFBijqIfQQlPcz0wyFTNvmpYnL+jXZrIYnqqDkP2Ry/nCIrq1RdKpyJrkpO7bWRRFq7HW/4fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=jYAPhQ+s; arc=none smtp.client-ip=185.136.64.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="V4InFzGM"
-Received: by mta-65-226.siemens.flowmailer.net with ESMTPSA id 202405291605371e687b97d79cf40292
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="jYAPhQ+s"
+Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20240529160534e55d11188f8cb7e837
         for <linux-kernel@vger.kernel.org>;
-        Wed, 29 May 2024 18:05:37 +0200
+        Wed, 29 May 2024 18:05:35 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
  d=siemens.com; i=diogo.ivo@siemens.com;
  h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=TfT54JdgHXhlK7CXHcRDEC9PIR72E7rEaipmJkiIs44=;
- b=V4InFzGM6fHhEJITpqcpNZGvhk9K3K7gs7ZRbL5vIuMhrPl1qMqwDPZEkf3s1cSNoAokoE
- P47WRciE+iHMbzCPxhpwRY169po2/TCQEqBN2lcZnSfJbqzVWPFNuFh42RmnVfh9UIfn1wTt
- bYtCaEpUx31XTjjZfvRZQRHf4eLgA=;
+ bh=t0N1v6lGOWmbUT2zPk1pBlnpA8KnITb1ou0m2UPQizo=;
+ b=jYAPhQ+sPK401ZFkELi4ZYu1n6CQmj8eOgGVaGjv+JIi8P2Z3kVAr7ylkgSdejxVQ/o8Yd
+ RyvwOg8ge+rV2/CETuM5SGkDJfhOhOJadRzU/Sq2CGDkoh87zXaN5T/2uXneCKGYebwksX/l
+ 8qtPPfKJ0wYdUup8TPrw5NJ/Q9Nj4=;
 From: Diogo Ivo <diogo.ivo@siemens.com>
-Date: Wed, 29 May 2024 17:05:12 +0100
-Subject: [PATCH 3/3] arm64: dts: ti: iot2050: Add IEP interrupts for SR1.0
- devices
+Date: Wed, 29 May 2024 17:05:10 +0100
+Subject: [PATCH 1/3] net: ti: icssg-prueth: Enable PTP timestamping support
+ for SR1.0 devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-iep-v1-3-7273c07592d3@siemens.com>
+Message-Id: <20240529-iep-v1-1-7273c07592d3@siemens.com>
 References: <20240529-iep-v1-0-7273c07592d3@siemens.com>
 In-Reply-To: <20240529-iep-v1-0-7273c07592d3@siemens.com>
 To: MD Danish Anwar <danishanwar@ti.com>, Roger Quadros <rogerq@kernel.org>, 
@@ -51,44 +51,114 @@ To: MD Danish Anwar <danishanwar@ti.com>, Roger Quadros <rogerq@kernel.org>,
 Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Diogo Ivo <diogo.ivo@siemens.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716998732; l=898;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716998732; l=3011;
  i=diogo.ivo@siemens.com; s=20240529; h=from:subject:message-id;
- bh=g50rqN+Tm9GE6hG8Rzf5OPuU0+TursRCfv71e/S09L4=;
- b=ez+4KvjIglEVGUOcGVJpiCU75C2K3vojXCXuTE5agPXOB+rX2WZPnCQbyEwHMu3xw/SpOgjYH
- gC6UVyDC2BTDubP2XHfryyKEg9o11nCbYkvJkFd1fr3Ks3GpVU8XWB2
+ bh=3oNbe7+kl949vpSxjYDcQs/lpiG/Vv5Of/GL7kFfQV4=;
+ b=8GNTjGB2viq7HJxCXsyDfzcZ62uwz78d5Ex2SZIOKIvNum45Vl7fAHZKU017hReeDpGJV1/p7
+ YiKGMWTfgv6DTLFGOTd+HryoVUFc6foZcvKzicEhmWjzF1H+gIuKwF9
 X-Developer-Key: i=diogo.ivo@siemens.com; a=ed25519;
  pk=BRGXhMh1q5KDlZ9y2B8SodFFY8FGupal+NMtJPwRpUQ=
 X-Flowmailer-Platform: Siemens
 Feedback-ID: 519:519-1320519:519-21489:flowmailer
 
-Add the interrupts needed for PTP Hardware Clock support via IEP
-in SR1.0 devices.
+Enable PTP support for AM65x SR1.0 devices by registering with the IEP
+infrastructure in order to expose a PTP clock to userspace.
 
 Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c | 49 +++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi b/arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi
-index ef7897763ef8..0a29ed172215 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi
-@@ -73,3 +73,15 @@ &icssg0_eth {
- 		    "rx0", "rx1",
- 		    "rxmgm0", "rxmgm1";
- };
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c b/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
+index 7b3304bbd7fc..01cad01965dc 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
+@@ -1011,16 +1011,42 @@ static int prueth_probe(struct platform_device *pdev)
+ 	dev_dbg(dev, "sram: pa %llx va %p size %zx\n", prueth->msmcram.pa,
+ 		prueth->msmcram.va, prueth->msmcram.size);
+ 
++	prueth->iep0 = icss_iep_get_idx(np, 0);
++	if (IS_ERR(prueth->iep0)) {
++		ret = dev_err_probe(dev, PTR_ERR(prueth->iep0), "iep0 get failed\n");
++		goto free_pool;
++	}
 +
-+&icssg0_iep0 {
-+	interrupt-parent = <&icssg0_intc>;
-+	interrupts = <7 7 7>;
-+	interrupt-names = "iep_cap_cmp";
-+};
++	prueth->iep1 = icss_iep_get_idx(np, 1);
++	if (IS_ERR(prueth->iep1)) {
++		ret = dev_err_probe(dev, PTR_ERR(prueth->iep1), "iep1 get failed\n");
++		goto put_iep0;
++	}
 +
-+&icssg0_iep1 {
-+	interrupt-parent = <&icssg0_intc>;
-+	interrupts = <56 8 8>;
-+	interrupt-names = "iep_cap_cmp";
-+};
++	ret = icss_iep_init(prueth->iep0, NULL, NULL, 0);
++	if (ret) {
++		dev_err_probe(dev, ret, "failed to init iep0\n");
++		goto put_iep;
++	}
++
++	ret = icss_iep_init(prueth->iep1, NULL, NULL, 0);
++	if (ret) {
++		dev_err_probe(dev, ret, "failed to init iep1\n");
++		goto exit_iep0;
++	}
++
+ 	if (eth0_node) {
+ 		ret = prueth_netdev_init(prueth, eth0_node);
+ 		if (ret) {
+ 			dev_err_probe(dev, ret, "netdev init %s failed\n",
+ 				      eth0_node->name);
+-			goto free_pool;
++			goto exit_iep;
+ 		}
+ 
+ 		if (of_find_property(eth0_node, "ti,half-duplex-capable", NULL))
+ 			prueth->emac[PRUETH_MAC0]->half_duplex = 1;
++
++		prueth->emac[PRUETH_MAC0]->iep = prueth->iep0;
+ 	}
+ 
+ 	if (eth1_node) {
+@@ -1033,6 +1059,8 @@ static int prueth_probe(struct platform_device *pdev)
+ 
+ 		if (of_find_property(eth1_node, "ti,half-duplex-capable", NULL))
+ 			prueth->emac[PRUETH_MAC1]->half_duplex = 1;
++
++		prueth->emac[PRUETH_MAC1]->iep = prueth->iep1;
+ 	}
+ 
+ 	/* register the network devices */
+@@ -1091,6 +1119,19 @@ static int prueth_probe(struct platform_device *pdev)
+ 		prueth_netdev_exit(prueth, eth_node);
+ 	}
+ 
++exit_iep:
++	icss_iep_exit(prueth->iep1);
++exit_iep0:
++	icss_iep_exit(prueth->iep0);
++
++put_iep:
++	icss_iep_put(prueth->iep1);
++
++put_iep0:
++	icss_iep_put(prueth->iep0);
++	prueth->iep0 = NULL;
++	prueth->iep1 = NULL;
++
+ free_pool:
+ 	gen_pool_free(prueth->sram_pool,
+ 		      (unsigned long)prueth->msmcram.va, msmc_ram_size);
+@@ -1138,6 +1179,12 @@ static void prueth_remove(struct platform_device *pdev)
+ 		prueth_netdev_exit(prueth, eth_node);
+ 	}
+ 
++	icss_iep_exit(prueth->iep1);
++	icss_iep_exit(prueth->iep0);
++
++	icss_iep_put(prueth->iep1);
++	icss_iep_put(prueth->iep0);
++
+ 	gen_pool_free(prueth->sram_pool,
+ 		      (unsigned long)prueth->msmcram.va,
+ 		      MSMC_RAM_SIZE_SR1);
 
 -- 
 2.45.1
