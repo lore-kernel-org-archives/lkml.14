@@ -1,140 +1,196 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2097.outbound.protection.outlook.com [40.107.6.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7683159912
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716993783; cv=none; b=uNIkXtKD6xHzBdQZbm6DdWnvPKvr2sQL5hzWrD3YsjLV4nZc3FK3qcJMNpYy7B/jQ7qbPt+cL7/SulbX7tIJYOi/g5FF2VkA6i1x3uwwDZXa1xgG3Cj9DArHkhmu6PATIJ5rO89b+NOFITyiurjUUp0MyIbxQCNa6KZ6j0nD8D4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716993783; c=relaxed/simple;
-	bh=DYNP86csXlVe1mEXFQLBRJdCoowpQyBb1vDWFXaPUSE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lsRZ02i0/2W4PmxcoMFp8QvrvCDTo0zTIeviHvHuq5n4KvoidTFcr2cSBrlDpc5ccaeOm4HGr1KsZSgbm9LkMwG1KqIY5bQRoDjBTJX1VFPKiA74oGU+3whYT8frVSvKgR6Y+82TVENvP+NnWRtoSiJ8TWsu+bUWNq3ijGN8OH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=O32m8Npt; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3709D159565
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716993785; cv=fail; b=Cl7gkXJvyMvbJZ56C6zBqNw8KytIhalGT0UkENvFyS7OsUFzjo1owFWmcq4vroEnH8Gf72n1NX00UXn482lLOuzhog9EWXByVuiORYpNDx/CXW9DHlfxrWVLGJv3KofoxeFK9NlUzZ7FZ10ZZTGAWBUBI8fadr4hR+QGrJPOh0Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716993785; c=relaxed/simple;
+	bh=+vp7jYPOn419f5sX4IyKhrUsXHxL0vAwwU3qvL3RJTI=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=sk9SOW4ll707DNa3JEtlpPZaHSgJuazd59Gjq/wd//lZFkeDT6ETp2CFCIvD44RI+0ISqZR04ozQxMBub/XrHfRyx3tXSjoBzIXoYPsNQoGLl1YXOYalnMUYzlEOSpbF1jURhk6/GNNsvvbbhYHakqsDVRUGDa2+vC84atbf8ro=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=EjSjJYCu; arc=fail smtp.client-ip=40.107.6.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="O32m8Npt"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a61b70394c0so252515566b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716993780; x=1717598580; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fftQnVeDno68x9iBUrR4R3cYGCa/SUe5rcprLn8zMNE=;
-        b=O32m8Nptt83No2H09HJCtf3TSobcontBxIYoXtXd07Ay0DcTzev2Wp4J2b9A/zmMcw
-         X2JXvW6UBWmaU33CPMDeZ2HRMXpIFk4JBwn7HcnXdnyFhnTR6Ycb3/HX6ZFMgI6X0/os
-         WXD3uimLzpKUohNBHON1k8Jyfj+meZLDJLoFfKghSVSKdK8aUJa78NJI/uCc7VHokwfP
-         zaEqBuB++d2rLM+Yr2+gE/GYK5byKi1k5PGYDiJlE+caijd6qnSJLD3ELfi0e0XIqhUV
-         77QO4oNfiW/A0klMknBBuiraaEs+YN+gmq8FHEfQ+RtgIoOjFBR7Ld6Yy63aCBsIBo/L
-         1H1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716993780; x=1717598580;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fftQnVeDno68x9iBUrR4R3cYGCa/SUe5rcprLn8zMNE=;
-        b=f67CZ00Wj+ofOyHxwbbhg2179eERUVlKvJICMNDFsz59gtAppaSWK2CiTviQM25AHP
-         GZIjrD4kDokReiZvdaOBJQrsrqmbW+xZKTvylfIUPogWquEnGPUiwMGHYJZJDdvCizRY
-         HI4flhRcNJN+RPmDSGyrBU/NcSoE30HgRPkpwO9NrqQcMP36lWju9rGXtvvXPhP7Z8hd
-         rkD2to6cH2vxRVsL/NZOU57Wxzatf1/IzgMEA9+cCBWUE2TeHprMjjgYfk46jA7AKzEC
-         7mK3nioCQI2frI3Te8ncr/Uwhuna2g7vdX3NvmVrPKWWOQPdmh5e0Na3KNBor9OjuK9O
-         anIg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3aHvAliBBLLi5U7kcO4MXlh+S84jSvG4sER+yRhKWsPneUFMKWFRh9Whreh8iA3hf8S/Hmn4wD26MsMH2UjEQCzBRv6XSnwdjyXHT
-X-Gm-Message-State: AOJu0Yx6WaxS1sZolZyN2zDaaZBV6gu4jivdXb05Xj8qgbkDAXWuIbTG
-	535V+8GBQ4U2NtfFMqD/N/2U+AgjvwIuPTJbJfl6nysKzMginUgfOKcDH9QQTqE=
-X-Google-Smtp-Source: AGHT+IGs+6p/AwUfHoW7Gr/BlZoD5lAEX4gy83IcLlvRpoJh+8M7OUqis8V1yDYCyOK+GQIIT4AhrQ==
-X-Received: by 2002:a17:906:f748:b0:a61:4224:c998 with SMTP id a640c23a62f3a-a6264f12995mr966600466b.54.1716993779804;
-        Wed, 29 May 2024 07:42:59 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cda48e6sm719337466b.203.2024.05.29.07.42.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 07:42:59 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Nicolas Pitre <nico@fluxnic.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [RESEND PATCH net-next v3] net: smc91x: Fix pointer types
-Date: Wed, 29 May 2024 16:39:02 +0200
-Message-ID: <20240529143859.108201-4-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="EjSjJYCu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bjk8lKKpYYSqxW5xJYdddCN6SrFr8PFecgLDho3xEs3rW/+uFdQSdv7nJ4gDxSQvgNeWGKg0ZGQrQVKYbYwcj7J7f/ZbDKfjFUhU9y0Pmv3Ogjtk24kVJrw5PW8RG6e7+xVFHMujqbCr7x4BLNRZud6a6Nra9Hz9h6vChmD2yXPzba4isAIQiPaypBrYBNHRl37Ovk15SCvEYmVdj4biXSNOhxIlf9/i4sAF9bLGD0LnhtZK7w/WJWDds2sMHBxbfs3snG7vIGxa0abptyDLd2PdjXFK8r4gUz7EvIub7tqKb74SgJ+ST9Pbn3RZN3xdVOF4ngs6gMmW+eMzOl2BWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zYRpFQOn/htXhY8dY3RSsWGVQU9zMYIUhKEOtFkj8us=;
+ b=SjBWrlFlSBMV7DPg/HRn9ODeROUY5kLr4IKghKFvxhwc0YmOSjvzAVuWycQSAMipVW6xNiom85QwmAe3oJlYZuVKu3ehE3pU5DkbpBnRj4dykQm+Hv7fBStH7kFCairKeC3VYA+IYjxh2tHlR52XUbufCvilG5gz1yK20Gc5P1S3kyUQLkY8e2Jk/qilVijlD9fxzoag5PBGLAUn5kW8XvH7tu1HEowwJdmd0iYqyBbEXbI+IxJ7bpvzrokOIMwUAEqFZn2LEbqqKWSeXrl+ulX0fXs9wTg3ez78e8fvVZ5yIslI0wnn8zx/CIICyiTE/UdfHsoc5Dp8p0gQU6UQgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wolfvision.net; dmarc=pass action=none
+ header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zYRpFQOn/htXhY8dY3RSsWGVQU9zMYIUhKEOtFkj8us=;
+ b=EjSjJYCulE9ciqXKsyelLlg0k/QB8ovvY3MG1RhgfTwvS91A0xhWgILYM8HGYBKFkLWd/Z+BHdRUaqo7XMICTL5P/sirmzXNp7hAqTwfMunlN2hOe2ZcJArt1PNZwd6XjHD6q4u0/g3+qIxV1+FK3dGbz/GhlSsHcRi2QCPre9Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wolfvision.net;
+Received: from DBBPR08MB4539.eurprd08.prod.outlook.com (2603:10a6:10:cf::22)
+ by PAWPR08MB9032.eurprd08.prod.outlook.com (2603:10a6:102:335::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Wed, 29 May
+ 2024 14:43:01 +0000
+Received: from DBBPR08MB4539.eurprd08.prod.outlook.com
+ ([fe80::87a9:a8d0:96fa:19e1]) by DBBPR08MB4539.eurprd08.prod.outlook.com
+ ([fe80::87a9:a8d0:96fa:19e1%6]) with mapi id 15.20.7611.030; Wed, 29 May 2024
+ 14:43:01 +0000
+From: Gerald Loacker <gerald.loacker@wolfvision.net>
+Date: Wed, 29 May 2024 16:42:47 +0200
+Subject: [PATCH v2 3/3] drm/panel: sitronix-st7789v: fix display size for
+ jt240mhqs_hwt_ek_e3 panel
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-3-e4821802443d@wolfvision.net>
+References: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-0-e4821802443d@wolfvision.net>
+In-Reply-To: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-0-e4821802443d@wolfvision.net>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Gerald Loacker <gerald.loacker@wolfvision.net>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716993775; l=936;
+ i=gerald.loacker@wolfvision.net; s=20230502; h=from:subject:message-id;
+ bh=+vp7jYPOn419f5sX4IyKhrUsXHxL0vAwwU3qvL3RJTI=;
+ b=oG2HVBAvIUfU+jdpqN0tQhRQx9/J9A+OHD4bj9NYJ396Kw3tMAG+wBJtfYloGcvRL2BVYm0xf
+ GnTpp7nWyhdCACoDFl45DqH/fTEkknfzIC4WOEzhuDa+2mHxj28SX6S
+X-Developer-Key: i=gerald.loacker@wolfvision.net; a=ed25519;
+ pk=UXhp+obGMUOjknszonesnb29P6a2Kk/K5eBuz62ggVE=
+X-ClientProxiedBy: VI1P190CA0041.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:800:1bb::8) To DBBPR08MB4539.eurprd08.prod.outlook.com
+ (2603:10a6:10:cf::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBBPR08MB4539:EE_|PAWPR08MB9032:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7fe7d029-0b81-4b4b-a9c7-08dc7feda207
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|366007|1800799015|52116005|376005|7416005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cUY3SkFVWTF3dXVQOTVsMHZFcjlxc0t4SVpkeDNrSUd3MXBtclhzWGJmRkJY?=
+ =?utf-8?B?Z0Nyb2NSV2o3ejdxckhJNUlvSXNuVnpzcW1EZUV2NW1BTllKVEk4RUZ0djhG?=
+ =?utf-8?B?UHFMUzcramhNdllNYVA3c2I1bHJIR1g2MVVEUExKOW1OUEkveWlPQy9uMURu?=
+ =?utf-8?B?dEpHVUpRdnNWT3RUUFhIOVVMR0NDK1lYckFGMnlkSTFZaW42bXRGaGlpVHBz?=
+ =?utf-8?B?NnFacnlkUk9ZaThYZC9rV0VZR0JtaFpWVTE3YTVtejFEanJrREd0dHRQLzF3?=
+ =?utf-8?B?Z0F3NmN6cW5GYjdYb3pMdTVSeC9BMUVKRjJRNGRYRC91ancyejE4QzRkYk83?=
+ =?utf-8?B?MFEwaGRkOGhZNGZVdy9nUWplMGw1RGVVbmhWNUVBQW9jcDhRY1NDOUNkRUFk?=
+ =?utf-8?B?VXd1VkRYUG95UGpMZG5OeEJldmVlKzdOMlovZnFlaEVHUG40d0liWGZiakI1?=
+ =?utf-8?B?d3VPS1pQTmdEZTdkYnJtci82RlRnYjFkMTJxV3hlc0FhM0FBdFV6em9uU3lW?=
+ =?utf-8?B?YXNxNjJQRGRtNlgwMnhKT3M1NVJzdStPOE9VeW03M2xzM3RJTkpHU2owY1lB?=
+ =?utf-8?B?Vzl2UStnWTdmMEZmcHJheGJsdEJnM2tsUEZlT0VqSXZpcllnTTYwVXdYMjl6?=
+ =?utf-8?B?NGZCbkJtWndEc3dqamM3NHg0UWZwNWdCZHc5ZlVQMWtnV0VucEhRMDEwMTlI?=
+ =?utf-8?B?R29ySGd0dWlLZFFSSDUrWENsblpGL2R1WHZqRGF0UlVrQ1ppTFVVS0JnV3BI?=
+ =?utf-8?B?bnE3bGpiekRPNU4yVHpYc2xhTGJ4YWtVUDlYMS85Z0kzR1dock9VMnMyVUFV?=
+ =?utf-8?B?N1dVTHo0SStNd1pRUThqWjRuM2dmWEJnWFlnUHcrb0JvbGdXTjNydVZVN2ox?=
+ =?utf-8?B?cEpPNTRva1ZMaXpVTTRkZllCaDRvMCtacFlYVHdrdjBZaFExK240dnkyaGI4?=
+ =?utf-8?B?V2IwZ0VjdTA4dmhqSlVVM0NuUmxySXBKeDZha0VsaEM5NmFJSmRiczRjSGZC?=
+ =?utf-8?B?dlZnUWU5ZmVXQUFhYjBGZVMzM0JaWW5lTDR0a3RRRC9iNDRiMGNvTjRlTlVz?=
+ =?utf-8?B?MnZDNWxtb3I0MkNBZEJtTE9pWGlEQjVzSzVIOGtwcVBTcWl6b0VvRFhlR05C?=
+ =?utf-8?B?WCtZTkJyVmJBdTF1Rnc3WllLT2s4eWcwUzdtQ0NEMUhEMnlUTzU1UGJiT0d6?=
+ =?utf-8?B?R1F3R1dkMm5pOXZqbGJkQktzbjdJLzhJOEMwNWZHQ09LRlNXbGZ3U1dyYkcw?=
+ =?utf-8?B?R1FUZ0ZEcUxBemVkQzlmcWM5UzlKT0Q2dUlhSWpuNmNBL3UxeWJvc21LaFV2?=
+ =?utf-8?B?WllSZTBLc2x3K1FhakV5MDZsay9pWUNGTjlkRTE1MG9sdkVSSTFtSlR2Y0NW?=
+ =?utf-8?B?dS9XVSttSUkrUkFmbzNSbkhoN0pPSkw1SWU5L0JXSEhqZ0w5aENqdUVyL1lB?=
+ =?utf-8?B?bi9pU1JISnVHcExZTFhodGl0d3MvV1REQ1BZRVBkemhGbnJ4bXFOMW5ta1ow?=
+ =?utf-8?B?eURFaUpxVGZKZ01oVWxqS0NKalNIbGsxRnVWUFZUNk1ocEFJNEdEVnNDTDFv?=
+ =?utf-8?B?dHQxVlZrM2hBOFFrdFhaQ1cyREUyeXZIMEJ6NjNkMjlVN0tFdWtHcXRBU29W?=
+ =?utf-8?B?U2QrYXJQbHlLYm4wT2pwSHAyUXE3WDMrbmRLYUo4YkJ6ZjhqcWpieUpiNGhO?=
+ =?utf-8?B?bDlGY0dCdC9hQ0R6Y1ZVYXNoazh0VUxYRG9VNGpKYXR5Vk1nWTh6OTVvMDE4?=
+ =?utf-8?B?czJlUGhGOWYxc3hqWWpZdjJvN3RnOFI2N1pZd2FSS01VTlFaR1pYS1hZbS9r?=
+ =?utf-8?B?VElrRmhzOC9pYnl2akt6UT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4539.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(52116005)(376005)(7416005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?REc5Yy84b0wzTUVGOFMwWW10aEMvd2Via1BJQWJNOEJvZ0VWUVJpR0NnRkRL?=
+ =?utf-8?B?T0g1d0EwWitJcUEzUi9Kcm9qYW9rR3lBOWtNUit6RmhzbFgrekdydXZneXVG?=
+ =?utf-8?B?dFhYa0RVMVBkMS9oY2lRUzM3ZGNOa1EzcFA0ZHcwMlM3eHpYbEhSSDk3WmJm?=
+ =?utf-8?B?SWNTenkwRHNuN3NmamdqT0kxTDl2QlZzSldxeU5Sajl3M0VWdjZDcm1CRGVs?=
+ =?utf-8?B?cnMwWlFXT2xNdVlNcGJOcGpNakhneEtRMGJVOUlKeVhPNGRuRU54OGhFZFJO?=
+ =?utf-8?B?VEtESjVRaDRLVTdlcnZteis2dlBNWG1IUm5sREZmT2pFbWQvZDQzU0t4Z3RP?=
+ =?utf-8?B?Vzc4OWNucFVOTjdnMWMveTNveHRuc3k2ckFnMXI4N3RRZWw1RUJZRXRSTEQ5?=
+ =?utf-8?B?djRYTnVwZlZnMGs5am1tZzVjajZQTHpSczl2cGxTazg0cERoRW1PM3BodW1E?=
+ =?utf-8?B?T3VrZXdLUFloV3VMVnBSK2ZOQUlrN0xWaUtkanNGYTNpcEJFcGd6bTZabldF?=
+ =?utf-8?B?aDdHRjdRekhxWHc2bnpmbEFMYVRIWEZQcGp5Wk1IaGNVWU0vb2x5YmFKNk00?=
+ =?utf-8?B?L21jYTE5NWZBR04xSHBTZFhhd3BteDVvSVBxWWlBOFRORjgvZlo3L0ZYdUV3?=
+ =?utf-8?B?VzRBZVk3VE1lMUhjU1NHWjdZNTBtQ0tRWlNPTE1hdmNKZjdmbjR0eW9aK1E3?=
+ =?utf-8?B?QmNPSUhhc1o0emRlWDhMMG14aUt6Ky9vaVZYa0xvU0JGdGdOaWkrY3VzMk04?=
+ =?utf-8?B?OGcyRVhWT3Yvb25GSVFpNU9zMWYvQ1FYUll5WGZqQldRMVBQSXpKZGNqeHhq?=
+ =?utf-8?B?cEoyWm0xejAwWldUZDZ2MXRPbFhiTmlxNzhtckYzVWp4bnlxWWN6d3ZzR3Aw?=
+ =?utf-8?B?NCs1c3h4ZjJjZFVLL0ZzSGhVQll3Ri91eWtYMjZXVnJUUVFtbkt5cmppODJq?=
+ =?utf-8?B?UXBsQ2xOTHRyZFlOVlRVQjdxL0FGN0c3QWp6QUV0Mm54cUUvU1BISUZPSlpJ?=
+ =?utf-8?B?UllKL2pzb0hXTGVLMllrdVl2MjBKQk55RzRuQTJBTGdoOTdXT3pyeXd1bU5m?=
+ =?utf-8?B?N1M2a28rREFXNFhhL1labjhOYnVNYjRIbzZUajBkMzR4bmZMQkRSVG5CZ2xQ?=
+ =?utf-8?B?ejNaczZjTDNWRThMTjJSblowVDR2b2ZZZEZZeUhneitReHVmaE4yaUF2SEhl?=
+ =?utf-8?B?Z1kweWxJT0xRMWJadWhZWHNNK2JFRjFpMVZxa2wrelRFQmtSRktmSis4TWNQ?=
+ =?utf-8?B?MW1qSkNmS3VQMFhvVkdWWVk2dndtalAxUGhNNkhSeHVDejVWSml2cmhGalp0?=
+ =?utf-8?B?RW5FeHVEQlJONTJNRXh3YmxFcFhWUU92a00wc3ZydENoU0pBcDRaYkdpQndn?=
+ =?utf-8?B?Z3Z3enhPL3RuS0xwWWh4TGN1M3VMbCtEYlhFZmt0eldDd0ExUHVLaDJ0dUpD?=
+ =?utf-8?B?Y01zb2ltTDd3SFFSeVpBV09IY0ZrNmdTMzR2WndqWXlYdS9GN2ZPdWJCNThm?=
+ =?utf-8?B?a1pMWG14QkxBZklHVGsrVU0xdXB4SDVrQWJsRiswNUxuV0hndjExT1NqUTN2?=
+ =?utf-8?B?bGQ5cUlkbXZraFRkbkhjVUlYaGxZTDFiL0I5TG1DQkFDVVVxMVV1NnVaT3Vn?=
+ =?utf-8?B?K2NyY0wwZUlRb0kyQlpDaGRGYmwvdy94WmsxM0VkdzlCVVF1SUVkeW9Cbno4?=
+ =?utf-8?B?QkxxbXR1OFdLS1FtRjNtU3NCbmV4MkFDSzMvK2ZpOFRxb0R4Nkp2Q2FoN3dP?=
+ =?utf-8?B?dlVGVjIyRmxzVXUyTEFpNzdtVmdNVEFTL2d5NTROTkkzdUl1RDU0UkpGUVJX?=
+ =?utf-8?B?Qlp6eHVVNHdBUnQ0WWtSTXgyK3NxOHhRZVNtSGZ4dWhxVFp1N05GUUVacmp2?=
+ =?utf-8?B?dXlTcEx1UDR1alpzcU85SGwvUlI1REE0bjE0aVFMQ01oTjY4eVpucE5ZWGF6?=
+ =?utf-8?B?WC8zc3lLSDc4YThWMHRiVytWWDVVRHBuakNRUnhydkg1VWcvNnF1ck1QeVFY?=
+ =?utf-8?B?NnV5em1mMmxpa1ZmUmdBTEhiM3J3REh0ZjdyQ2tONHdkTi9EeDFvU0phZ0dt?=
+ =?utf-8?B?QlViVCt1dFhxT0ZsVDQ4NnpvSFpLVkNEczZuTWFDRkVHRGhhbGRZajZLTHRJ?=
+ =?utf-8?B?ZWVLTmZmcEVINlMzZWlodTV0K09xRzYzLzZqaE9aK3pJSGxFOHJ4R2UwMUM2?=
+ =?utf-8?B?RWc9PQ==?=
+X-OriginatorOrg: wolfvision.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fe7d029-0b81-4b4b-a9c7-08dc7feda207
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR08MB4539.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 14:42:58.2999
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VrcSL8xS1nLPBBdR1DPj2jZgPJKaG+l90p2CrWJ1xOtxXaVhR2yne1yWbYi9y+gKW27i4UZQz/rtkPgNvyn3JeFCUV1e/dmYk5hRJApW91s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9032
 
-Use void __iomem pointers as parameters for mcf_insw() and mcf_outsw()
-to align with the parameter types of readw() and writew() to fix the
-following warnings reported by kernel test robot:
+This is a portrait mode display. Change the dimensions accordingly.
 
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse: warning: incorrect type in argument 1 (different address spaces)
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    expected void *a
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    got void [noderef] __iomem *
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse: warning: incorrect type in argument 1 (different address spaces)
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    expected void *a
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    got void [noderef] __iomem *
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse: warning: incorrect type in argument 1 (different address spaces)
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    expected void *a
-drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    got void [noderef] __iomem *
-drivers/net/ethernet/smsc/smc91x.c:483:17: sparse: warning: incorrect type in argument 1 (different address spaces)
-drivers/net/ethernet/smsc/smc91x.c:483:17: sparse:    expected void *a
-drivers/net/ethernet/smsc/smc91x.c:483:17: sparse:    got void [noderef] __iomem *
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202405160853.3qyaSj8w-lkp@intel.com/
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Fixes: 0fbbe96bfa08 ("drm/panel: sitronix-st7789v: add jasonic jt240mhqs-hwt-ek-e3 support")
+Signed-off-by: Gerald Loacker <gerald.loacker@wolfvision.net>
 ---
-Changes in v2:
-- Use lp->base instead of __ioaddr as suggested by Andrew Lunn. They are
- essentially the same, but using lp->base results in a smaller diff
-- Remove whitespace only changes as suggested by Andrew Lunn
-- Preserve Acked-by: Nicolas Pitre tag
-- Link to v1: https://lore.kernel.org/linux-kernel/20240516121142.181934-3-thorsten.blum@toblux.com/
-
-Changes in v3:
-- Revert changing the macros as this is unnecessary. Neither the types
-  nor the __iomem attributes get lost across macro boundaries
-- Preserve Reviewed-by: Andrew Lunn tag
-- Link to v2: https://lore.kernel.org/linux-kernel/20240516155610.191612-3-thorsten.blum@toblux.com/
----
- drivers/net/ethernet/smsc/smc91x.h | 4 ++--
+ drivers/gpu/drm/panel/panel-sitronix-st7789v.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/smsc/smc91x.h b/drivers/net/ethernet/smsc/smc91x.h
-index 45ef5ac0788a..38aa4374e813 100644
---- a/drivers/net/ethernet/smsc/smc91x.h
-+++ b/drivers/net/ethernet/smsc/smc91x.h
-@@ -142,14 +142,14 @@ static inline void _SMC_outw_align4(u16 val, void __iomem *ioaddr, int reg,
- #define SMC_CAN_USE_32BIT	0
- #define SMC_NOWAIT		1
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+index c7e3f1280404..e8f385b9c618 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+@@ -289,8 +289,8 @@ static const struct drm_display_mode jt240mhqs_hwt_ek_e3_mode = {
+ 	.vsync_start = 280 + 48,
+ 	.vsync_end = 280 + 48 + 4,
+ 	.vtotal = 280 + 48 + 4 + 4,
+-	.width_mm = 43,
+-	.height_mm = 37,
++	.width_mm = 37,
++	.height_mm = 43,
+ 	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+ };
  
--static inline void mcf_insw(void *a, unsigned char *p, int l)
-+static inline void mcf_insw(void __iomem *a, unsigned char *p, int l)
- {
- 	u16 *wp = (u16 *) p;
- 	while (l-- > 0)
- 		*wp++ = readw(a);
- }
- 
--static inline void mcf_outsw(void *a, unsigned char *p, int l)
-+static inline void mcf_outsw(void __iomem *a, unsigned char *p, int l)
- {
- 	u16 *wp = (u16 *) p;
- 	while (l-- > 0)
+
 -- 
-2.45.1
+2.37.2
 
