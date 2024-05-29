@@ -1,189 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE5F4C83;
-	Wed, 29 May 2024 13:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5851CA8D
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990684; cv=none; b=Cn8qGvMLPDr7yk1/cVXZfKQCuOnkSxqc6RmKuowkUl4rXldBj4HzwmkHPSj5xTkgAIfMAd/wHgGd1pmVyBIgYpGzK7WU9X+ljFkSt1qY+OxWDHI8ThPt5tnsfu/8aR1cCcH0tmHhainDc9e0JQDh7qvg0YkSL6vQAfA4SDMftpw=
+	t=1716990693; cv=none; b=LbI57MERxMg38ROIUpBkv6q+D2yivTCDHwxGZbLigW733jOGKUWqVq466hEqPRg2Q420OnlxnHregy6QidC5tzkFR2+o85PBM1lRV1LDjKVzQfBlTbiLMk0DNwCNBegnoBLIbWvM7bDUnGSvR+iD6b82J4nuXHBcJEkgKnZFTtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990684; c=relaxed/simple;
-	bh=BJ0TXx2vfnEC4Z+RIBMvi1k52uSQxAJ881y+TAk76Xc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TnF774dSzHLby+guh8V/XaI7SdVDgj/QBeCLNwh6/wil/Wgc1L8eP8cuGSc8Z6PYgYMhYM4iBZlFVIW94b2hQ9pbsbIDBPvjy3vm3gVdgOWz4d7THgq9D0M1QwPX+YzVYaUBUz9FtW9sQ6jBcOBhS5G4am0wbFN4SP2zFYFZcSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glTvyKE1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716990693; c=relaxed/simple;
+	bh=4qG4dad29dPTvZyqQLXRikddg2y7NmdD+VTC9hKpIPE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=TcfqV2Tvh2ccf8TtzNGY/sRcFIecSm01LHWH8LzsdobOt6dlzmouTbj7IGdBG2zvMM9aJmqJOJieseGPIevlGjuUCXC5u7CwW9160xmICMQxBx91PJYq/nJMePzrEa77+T3nDymwJYYZlgA/0EqPfZkNh2+W3+HlXWsK02ggYa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYLSbycw; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glTvyKE1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87935C113CC;
-	Wed, 29 May 2024 13:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716990682;
-	bh=BJ0TXx2vfnEC4Z+RIBMvi1k52uSQxAJ881y+TAk76Xc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=glTvyKE1BDLaoKay4Is2RxK9ZLP7otBzDadCkbihj7j5fOfCzNhbrdsF7E72O5zZs
-	 R49BngIslnkt9pCOyfhIGCkbEt+q0aus9GUwZB1UaGjGPcKeFNThjZu+Qts0VEMgIr
-	 aIuIy162D3mvj9p9cCjSmpBMVnlXC2iQARHZ478J+Nm5BuiSsXr6NbuA4nf4UPTPMZ
-	 J+Jj6aXUKrkyMRHFDu5g8dO05w3oSZjHkQ29W8plGuwR1stJSQLh5GRHaAYPHXOaSa
-	 hFsE/Ri7V/orrGaZ8nLeQEw7wXGrRd1oIZhIhmo3asqFECyCaoKF71oTxKhhJPKwJR
-	 JczYkWElMSGIw==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52b79447c58so438320e87.1;
-        Wed, 29 May 2024 06:51:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXezOK60I/UKylTL+jQfbB2BBlH6pkptGNIfgjKABmOoIJeOo9CbiocoPshDHOca7HjvQMp5BqXheJsp/mVL9SORd0MZgOkKLDjzSW8X+KaEY2qJoc2uSW8bOpTC0oG0EITR++FgQO/Zw==
-X-Gm-Message-State: AOJu0YwAa+OvHxGKiksE5LvwftOiAoliOXOTtJIdR3XdwZLyqskdMYdD
-	e//N3kIPpC5d5xMk1Ysv9yBQrqFJjzGE5mea4H3XAPlf4knRQFXEQfMzMJgh63s7m8lBMrwOdLR
-	CxmoLPTQJh5uhhIDkwwQ7ph5fuA==
-X-Google-Smtp-Source: AGHT+IFw3h5FJYkh/BLuUPGGhDkU0QPpEgcY8mopX/t1NYjI2PH+epPkMD4dMuQuIVTrx+ZhnDlOady59nQVDczYcsA=
-X-Received: by 2002:ac2:5dc1:0:b0:522:8352:ff29 with SMTP id
- 2adb3069b0e04-5296736bb86mr12249215e87.42.1716990680924; Wed, 29 May 2024
- 06:51:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYLSbycw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716990692; x=1748526692;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=4qG4dad29dPTvZyqQLXRikddg2y7NmdD+VTC9hKpIPE=;
+  b=BYLSbycwjVncgClmsRzXsnhBInZ9R/CQlc4+YDZIZp6b9Jarw3RrCiwj
+   Ayn25G+v4Jobl2bGMxkjAKAnJTN3P9Sq1u276Mf37n8IE6eKwfRqDdoey
+   F38I+lLLxDBUluOBk6jaxjy9uSelSwQsFekkrzTv1TA634ZLRJTS7W+Ne
+   K4nlRfBgjYPsO8GAgSi6fKNy+S2sa+cookUT3JZ8W+EGDvGJTUkaYFqdI
+   +k4JcXUzDT2+83KodN8xhnYCanT1JqSZIdZDrT7zEmBDV00WMAhdJOWHs
+   Uk8tY5uNhKjl4yTQir2E8JdZhVCrX0hip9EF1jx0CAN7D6GmQRC3ObuM6
+   A==;
+X-CSE-ConnectionGUID: q/mM9txnTUmMc2ca8jVhKA==
+X-CSE-MsgGUID: T6nw3AB7Szyum471s5FFqQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13558545"
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="13558545"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 06:51:31 -0700
+X-CSE-ConnectionGUID: aFSTnD87RZ2C1kyGZFNVww==
+X-CSE-MsgGUID: QENQtQuSRL+hs1haaaXu0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="35390243"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.86])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 06:51:26 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Alex Deucher <alexdeucher@gmail.com>, Mario Limonciello
+ <mario.limonciello@amd.com>
+Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ linux-kernel@vger.kernel.org, Chris Bainbridge
+ <chris.bainbridge@gmail.com>, hughsient@gmail.com
+Subject: Re: [PATCH v2] drm/client: Detect when ACPI lid is closed during
+ initialization
+In-Reply-To: <CADnq5_OzPT1MVnsqXs2vjr1L2_6jeM6x7jgs4ZtYpNzdDHM6uA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240528210319.1242-1-mario.limonciello@amd.com>
+ <CADnq5_OzPT1MVnsqXs2vjr1L2_6jeM6x7jgs4ZtYpNzdDHM6uA@mail.gmail.com>
+Date: Wed, 29 May 2024 16:51:35 +0300
+Message-ID: <87r0dkiv4o.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528164132.2451685-1-maz@kernel.org> <CAK9=C2XNPJP0X=pg5TSrQbsuouDD3jP-gy2Sm4BXNJp0ZiWp+A@mail.gmail.com>
- <86bk4pm8j1.wl-maz@kernel.org> <CAK9=C2XRx==OTPoGW_AHmjq4Th0bv4okwcq6-3L5JYwHwQp97A@mail.gmail.com>
- <86a5k8nbh1.wl-maz@kernel.org> <CAK9=C2Ugq=0y8M86CD75mQccBo=TBLBomb4rqC4i1naKy2LyWQ@mail.gmail.com>
-In-Reply-To: <CAK9=C2Ugq=0y8M86CD75mQccBo=TBLBomb4rqC4i1naKy2LyWQ@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 29 May 2024 08:51:08 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJE15D-xXxmELsmuD+JQHZzxGzdXvikChn6KFWqk6NzPw@mail.gmail.com>
-Message-ID: <CAL_JsqJE15D-xXxmELsmuD+JQHZzxGzdXvikChn6KFWqk6NzPw@mail.gmail.com>
-Subject: Re: [PATCH] of: property: Fix fw_devlink handling of interrupt-map
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 6:28=E2=80=AFAM Anup Patel <apatel@ventanamicro.com=
-> wrote:
+On Wed, 29 May 2024, Alex Deucher <alexdeucher@gmail.com> wrote:
+> On Tue, May 28, 2024 at 5:03=E2=80=AFPM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
+>>
+>> If the lid on a laptop is closed when eDP connectors are populated
+>> then it remains enabled when the initial framebuffer configuration
+>> is built.
+>>
+>> When creating the initial framebuffer configuration detect the ACPI
+>> lid status and if it's closed disable any eDP connectors.
+>>
+>> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3349
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 >
-> On Wed, May 29, 2024 at 4:15=E2=80=AFPM Marc Zyngier <maz@kernel.org> wro=
-te:
-> >
-> > On Wed, 29 May 2024 11:16:30 +0100,
-> > Anup Patel <apatel@ventanamicro.com> wrote:
-> > >
-> > > On Wed, May 29, 2024 at 12:03=E2=80=AFPM Marc Zyngier <maz@kernel.org=
-> wrote:
-> > > >
-> > > > On Wed, 29 May 2024 06:15:52 +0100,
-> > > > Anup Patel <apatel@ventanamicro.com> wrote:
-> > > > >
-> > > > > On Tue, May 28, 2024 at 10:11=E2=80=AFPM Marc Zyngier <maz@kernel=
-.org> wrote:
-> > > > > >
-> > > > > > Commit d976c6f4b32c ("of: property: Add fw_devlink support for
-> > > > > > interrupt-map property") tried to do what it says on the tin,
-> > > > > > but failed on a couple of points:
-> > > > > >
-> > > > > > - it confuses bytes and cells. Not a huge deal, except when it
-> > > > > >   comes to pointer arithmetic
-> > > > > >
-> > > > > > - it doesn't really handle anything but interrupt-maps that hav=
-e
-> > > > > >   their parent #address-cells set to 0
-> > > > > >
-> > > > > > The combinations of the two leads to some serious fun on my M1
-> > > > > > box, with plenty of WARN-ON() firing all over the shop, and
-> > > > > > amusing values being generated for interrupt specifiers.
-> > > > > >
-> > > > > > Address both issues so that I can boot my machines again.
-> > > > > >
-> > > > > > Fixes: d976c6f4b32c ("of: property: Add fw_devlink support for =
-interrupt-map property")
-> > > > > > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > > > > > Cc: Anup Patel <apatel@ventanamicro.com>
-> > > > > > Cc: Saravana Kannan <saravanak@google.com>
-> > > > > > Cc: Rob Herring (Arm) <robh@kernel.org>
-> > > > >
-> > > > > Thanks for the fix patch but unfortunately it breaks for RISC-V.
-> > > > >
-> > > > > > ---
-> > > > > >  drivers/of/property.c | 16 ++++++++++++++--
-> > > > > >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > > > > > index 1c83e68f805b..9adebc63bea9 100644
-> > > > > > --- a/drivers/of/property.c
-> > > > > > +++ b/drivers/of/property.c
-> > > > > > @@ -1322,7 +1322,13 @@ static struct device_node *parse_interru=
-pt_map(struct device_node *np,
-> > > > > >         addrcells =3D of_bus_n_addr_cells(np);
-> > > > > >
-> > > > > >         imap =3D of_get_property(np, "interrupt-map", &imaplen)=
-;
-> > > > > > -       if (!imap || imaplen <=3D (addrcells + intcells))
-> > > > > > +       imaplen /=3D sizeof(*imap);
-> > > > > > +
-> > > > > > +       /*
-> > > > > > +        * Check that we have enough runway for the child unit =
-interrupt
-> > > > > > +        * specifier and a phandle. That's the bare minimum we =
-can expect.
-> > > > > > +        */
-> > > > > > +       if (!imap || imaplen <=3D (addrcells + intcells + 1))
-> > > > > >                 return NULL;
-> > > > > >         imap_end =3D imap + imaplen;
-> > > > > >
-> > > > > > @@ -1346,8 +1352,14 @@ static struct device_node *parse_interru=
-pt_map(struct device_node *np,
-> > > > > >                 if (!index)
-> > > > > >                         return sup_args.np;
-> > > > > >
-> > > > > > -               of_node_put(sup_args.np);
-> > > > > > +               /*
-> > > > > > +                * Account for the full parent unit interrupt s=
-pecifier
-> > > > > > +                * (address cells, interrupt cells, and phandle=
-).
-> > > > > > +                */
-> > > > > > +               imap +=3D of_bus_n_addr_cells(sup_args.np);
-> > > > >
-> > > > > This breaks for RISC-V because we don't have "#address-cells"
-> > > > > property in interrupt controller DT node and of_bus_n_addr_cells(=
-)
-> > > > > retrieves "#address-cells" from the parent of interrupt controlle=
-r.
-> > > >
-> > > > That's a feature, not a bug. #address-cells, AFAICT, applies to all
-> > > > child nodes until you set it otherwise.
-> > > >
-> > > > >
-> > > > > The of_irq_parse_raw() looks for "#address-cells" property
-> > > > > in the interrupt controller DT node only so we should do a
-> > > > > similar thing here as well.
-> > > >
-> > > > This looks more like a of_irq_parse_raw() bug than anything else.
-> > >
-> > > If we change of_irq_parse_raw() to use of_bus_n_addr_cells()
-> > > then it would still break for RISC-V.
-> >
-> > I'm not trying to "fix" riscv. I'm merely outlining that you are
-> > relying on both broken DTs and a buggy OS.
-> >
-> > >
-> > > Using of_bus_n_addr_cells() over here forces interrupt controller
-> > > DT nodes to have a "#address-cells" DT property. There are many
-> > > interrupt controller (e.g. RISC-V PLIC or RISC-V APLIC) where the
-> > > DT bindings don't require "#address-cells" DT property and existing
-> > > DTS files with such interrupt controllers don't have it either.
-> >
-> > It forces you to set #address-cells *if you rely on a different
-> > value in a child node*. It's not like the semantics are new.
+> Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
 >
-> We don't have child nodes under the interrupt controller DT node
-> (for both RISC-V PLIC and APLIC) so we certainly don't require the
-> "#address-cells" property in the interrupt controller DT node.
+> Do you have drm-misc access or do you need someone to apply this for you?
 
-interrupt controller nodes which are referred to by interrupt-map
-require #address-cells. Period. Child nodes or not.
+I've bounced this to intel-gfx and intel-xe lists to get CI testing. I'd
+appreciate holding off on merging until we have results.
 
-Really, it should be just interrupt-controller nodes require
-#address-cells, but that spewed too many warnings so it's limited to
-where it is really needed.
+Thanks,
+Jani.
 
-Rob
+>
+> Alex
+>
+>> ---
+>> Cc: hughsient@gmail.com
+>> v1->v2:
+>>  * Match LVDS as well
+>> ---
+>>  drivers/gpu/drm/drm_client_modeset.c | 30 ++++++++++++++++++++++++++++
+>>  1 file changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_=
+client_modeset.c
+>> index 31af5cf37a09..0b0411086e76 100644
+>> --- a/drivers/gpu/drm/drm_client_modeset.c
+>> +++ b/drivers/gpu/drm/drm_client_modeset.c
+>> @@ -8,6 +8,7 @@
+>>   */
+>>
+>>  #include "drm/drm_modeset_lock.h"
+>> +#include <acpi/button.h>
+>>  #include <linux/module.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/slab.h>
+>> @@ -257,6 +258,34 @@ static void drm_client_connectors_enabled(struct dr=
+m_connector **connectors,
+>>                 enabled[i] =3D drm_connector_enabled(connectors[i], fals=
+e);
+>>  }
+>>
+>> +static void drm_client_match_edp_lid(struct drm_device *dev,
+>> +                                    struct drm_connector **connectors,
+>> +                                    unsigned int connector_count,
+>> +                                    bool *enabled)
+>> +{
+>> +       int i;
+>> +
+>> +       for (i =3D 0; i < connector_count; i++) {
+>> +               struct drm_connector *connector =3D connectors[i];
+>> +
+>> +               switch (connector->connector_type) {
+>> +               case DRM_MODE_CONNECTOR_LVDS:
+>> +               case DRM_MODE_CONNECTOR_eDP:
+>> +                       if (!enabled[i])
+>> +                               continue;
+>> +                       break;
+>> +               default:
+>> +                       continue;
+>> +               }
+>> +
+>> +               if (!acpi_lid_open()) {
+>> +                       drm_dbg_kms(dev, "[CONNECTOR:%d:%s] lid is close=
+d, disabling\n",
+>> +                                   connector->base.id, connector->name);
+>> +                       enabled[i] =3D false;
+>> +               }
+>> +       }
+>> +}
+>> +
+>>  static bool drm_client_target_cloned(struct drm_device *dev,
+>>                                      struct drm_connector **connectors,
+>>                                      unsigned int connector_count,
+>> @@ -844,6 +873,7 @@ int drm_client_modeset_probe(struct drm_client_dev *=
+client, unsigned int width,
+>>                 memset(crtcs, 0, connector_count * sizeof(*crtcs));
+>>                 memset(offsets, 0, connector_count * sizeof(*offsets));
+>>
+>> +               drm_client_match_edp_lid(dev, connectors, connector_coun=
+t, enabled);
+>>                 if (!drm_client_target_cloned(dev, connectors, connector=
+_count, modes,
+>>                                               offsets, enabled, width, h=
+eight) &&
+>>                     !drm_client_target_preferred(dev, connectors, connec=
+tor_count, modes,
+>> --
+>> 2.43.0
+>>
+
+--=20
+Jani Nikula, Intel
