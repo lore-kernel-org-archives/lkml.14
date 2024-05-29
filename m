@@ -1,103 +1,166 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5DC15D5A1;
-	Wed, 29 May 2024 18:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C895D139588;
+	Wed, 29 May 2024 18:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717007250; cv=none; b=pyn1Mf5ok6OPqm+q5rCvJNauM4ZH1o5Qdsz+ekTy303EJBGPovAPaHl8vYsFEx4JrBkt00bzEbdmen6iABcjBnsISyX+jo6D/AhhTzZEQzp3FpYR9szVdJfqM1dLR6izFqHUkTQhovHzVPpJwyVkdVbUB2Oa9PzA3uT3LSKHpOM=
+	t=1717007341; cv=none; b=OqoovyEAHloB/PA01q1vSTNYByb2GcrlGKFRzGd+nVWGTDFXvqxdnNr826vU26wNIdJnMm1H+GIzrXJ9PaKmG9AO7PLM7PpEiozYfInLJUW2fbWo1EUi6MrkFJWWCVdgwwc/hofs71eJFIpsue58+5lNijXDG2JoWdM6aqQqswQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717007250; c=relaxed/simple;
-	bh=k7g7GDca72KtY7wZrsm0Zqr6CCkZXZ3ooFMOR2lk5QQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ea0DHOnoikSHZPEzsLFDbnLmKva2Y28gAvlji14CR81NHwoCm+wGoV4m6zhfsXn9oE/4aSSRsVOqX/Vbio5lpRYjn4glBJeoJYywSDl4BpvgZYVcyyVgbUfwzHoahEoQusyRCaqHA5G0g2DcySzOuuGQEi2BwReuPFhoiRoi3BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2c1a5913777so1097a91.2;
-        Wed, 29 May 2024 11:27:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717007248; x=1717612048;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WD9+m2uRH+Hg4qe+386Ai932VFm1j7AF3HmzviPsoPg=;
-        b=oeituTrkKZNFdbJdV+6foIvzRNzdu0yJoQtGbQUQD2EvN73M2y4Xwg0JBDkvNufSTW
-         LjTolhuyM8W2FTKiD540+IwpRM/dQc2/7i07/eYeq4/SY30n/3Fh+kkCR3UxRpJf4RuJ
-         eKOWj2QeT4NTp9V0sFfIN2vRgqbdq0k+mBqMRZmUsfOs+tethfSMLjwbYwFrlD1zxbus
-         Z8zJkps+FGkGFzllbFarmSNqtnBdcLl7BwNlheU/B9ZjFDtokNneMnAlsi3+o+2Q00eD
-         cmmneFfOsWc6y2Nu90TOn3I3CptL1zrKq2Bm/Uc6aavWmwCJVaVtwCxs8qQsqKs4ZUQF
-         HmyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYOpvNojZ3NzSO7SPWUNZfJJ4FxwTCyiZOKIgfESxzozIhQc12oZf0VIFpn40lh6i2VwfWbhNHhzJPq+bWGeLkNIKbETsiGS/iaJQcyxDCAktxXY86G3RSRf4JK3AqyZWs
-X-Gm-Message-State: AOJu0Ywbw/qDKD4j/lRKbyXMHPfmpclZkXgFb+SEqbd1O97rDfU3UZ/o
-	Kd925h/VxB/g9d1vcHubhKX19q+yn9Nhrgy+hhrIVPPJRD2qR2QN9cSp6yqGKS06z6jFUA1KTnR
-	uHl02YhudkrYSCr0ggmNCklkHIS4=
-X-Google-Smtp-Source: AGHT+IGCkhpw1ET2HQ8G/tRKNoHqVOGe682S5VSxTyrmki/emXC2yFlqKU9n/kS0HLtjaMkupAFyOepx6HYv8dX62Q4=
-X-Received: by 2002:a17:90b:33d2:b0:2bf:ebf5:c9d4 with SMTP id
- 98e67ed59e1d1-2bfebf5cb71mr8364249a91.42.1717007248347; Wed, 29 May 2024
- 11:27:28 -0700 (PDT)
+	s=arc-20240116; t=1717007341; c=relaxed/simple;
+	bh=F+taAuGNZhYoMVVTU7lLtx1SfJK0lEHssiup5OjbRwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=poWNIdkMcU/yUyadDcvrE4H72IWejS6PuNAyviFT87LO28DogZyb5QquVTFeb4h4SqnIBZB56W04BOCn38cZBTI6fr2LRG60NKw9rC5yawMxjYbrzkD+WfDAezdbpnQRXoz5HeoxjO62bzNaU67aFz8lrlyI+99GgnCc1zWNCBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJXnETLB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJXnETLB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E98A3C113CC;
+	Wed, 29 May 2024 18:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717007341;
+	bh=F+taAuGNZhYoMVVTU7lLtx1SfJK0lEHssiup5OjbRwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OJXnETLB0f223e8W2RsjVYjIMqr7bToNJyCmyAB7OTW0Iicuh+rYG+KqGLCO7ayAa
+	 5Zjo3ibnNU2XwEc8OSrrpR+1TAEW1ZAKLXmVnd7TwUVt+pkO/C7yQit4ADtk1by60H
+	 18N9HLeNgZt14M20HKEBHZXu0bPKDdCnhjCZWpkCqd+Ag4TPBIn7/Mv5/bwJC5PQCh
+	 VBT/OnOdiSVlRL7tTRDbSpnUUoY0jGfrW3YsMZPt1mmZKjBvj+ukeeS4wMX0qXYyEc
+	 v9Zo2t6/fE7gXSOVGqjADcEXaVQ08aKhfDUg/zief3WxpW+mv7LHka2D7m4VfgEWE9
+	 lc2xnfVCwm4dg==
+Date: Wed, 29 May 2024 11:28:59 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 3/4] LoongArch: Fix entry point in image header
+Message-ID: <20240529182859.GA3994034@thelio-3990X>
+References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
+ <20240522-loongarch-booting-fixes-v3-3-25e77a8fc86e@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529065311.1218230-1-namhyung@kernel.org> <Zlbn3DOGrzHlw95h@krava>
- <CAM9d7ci0g+ObA7w-tXU9cyjzRUFgXjZ4b9Atx2+oV4Anhraeyg@mail.gmail.com> <CAADnVQ+qqx8=WjpMjZyqzCb+02zpw9=wVAwWfyHL_O4Xpadukw@mail.gmail.com>
-In-Reply-To: <CAADnVQ+qqx8=WjpMjZyqzCb+02zpw9=wVAwWfyHL_O4Xpadukw@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 May 2024 11:27:17 -0700
-Message-ID: <CAM9d7cgDcczbo9s+J9TpoQhfHCTeJws=L5bpV458rbo4WTi-aQ@mail.gmail.com>
-Subject: Re: [PATCH v2] bpf: Allocate bpf_event_entry with node info
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Aleksei Shchekotikhin <alekseis@google.com>, Nilay Vaish <nilayvaish@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522-loongarch-booting-fixes-v3-3-25e77a8fc86e@flygoat.com>
 
-Hi Alexei,
+Hi Jiaxun,
 
-On Wed, May 29, 2024 at 10:23=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Wed, May 29, 2024 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > Hi Jiri,
-> >
-> > On Wed, May 29, 2024 at 1:31=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> =
-wrote:
-> > >
-> > > On Tue, May 28, 2024 at 11:53:11PM -0700, Namhyung Kim wrote:
-> > > > It was reported that accessing perf_event map entry caused pretty h=
-igh
-> > > > LLC misses in get_map_perf_counter().  As reading perf_event is all=
-owed
-> > > > for the local CPU only, I think we can use the target CPU of the ev=
-ent
-> > > > as hint for the allocation like in perf_event_alloc() so that the e=
-vent
-> > > > and the entry can be in the same node at least.
-> > >
-> > > looks good, is there any profile to prove the gain?
-> >
-> > No, at this point.  I'm not sure if it'd help LLC hit ratio but
-> > I think it should improve the memory latency.
->
-> I have the same concern as Jiri.
-> Without numbers this is just a code churn.
-> Does this patch really make a difference?
-> Without numbers maintainers would have to believe the "just trust me" par=
-t.
-> So..
-> pw-bot: cr
+On Wed, May 22, 2024 at 11:02:19PM +0100, Jiaxun Yang wrote:
+> Currently kernel entry in head.S is in DMW address range,
+> firmware is instructed to jump to this address after loading
+> the image.
+> 
+> However kernel should not make any assumption on firmware's
+> DMW setting, thus the entry point should be a physical address
+> falls into direct translation region.
+> 
+> Fix by converting entry address to physical and amend entry
+> calculation logic in libstub accordingly.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> v2: Fix efistub
+> v3: Move calculation to linker script
+> ---
+>  arch/loongarch/kernel/head.S             | 2 +-
+>  arch/loongarch/kernel/vmlinux.lds.S      | 2 ++
+>  drivers/firmware/efi/libstub/loongarch.c | 2 +-
+>  3 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index c4f7de2e2805..2cdc1ea808d9 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -22,7 +22,7 @@
+>  _head:
+>  	.word	MZ_MAGIC		/* "MZ", MS-DOS header */
+>  	.org	0x8
+> -	.dword	kernel_entry		/* Kernel entry point */
+> +	.dword	_kernel_entry_phys	/* Kernel entry point (physical address) */
+>  	.dword	_kernel_asize		/* Kernel image effective size */
+>  	.quad	PHYS_LINK_KADDR		/* Kernel image load offset from start of RAM */
+>  	.org	0x38			/* 0x20 ~ 0x37 reserved */
+> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+> index e8e97dbf9ca4..c6f89e51257a 100644
+> --- a/arch/loongarch/kernel/vmlinux.lds.S
+> +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> @@ -6,6 +6,7 @@
+>  
+>  #define PAGE_SIZE _PAGE_SIZE
+>  #define RO_EXCEPTION_TABLE_ALIGN	4
+> +#define TO_PHYS_MASK			0x000fffffffffffff /* 48-bit */
+>  
+>  /*
+>   * Put .bss..swapper_pg_dir as the first thing in .bss. This will
+> @@ -142,6 +143,7 @@ SECTIONS
+>  
+>  #ifdef CONFIG_EFI_STUB
+>  	/* header symbols */
+> +	_kernel_entry_phys = kernel_entry & TO_PHYS_MASK;
+>  	_kernel_asize = _end - _text;
+>  	_kernel_fsize = _edata - _text;
+>  	_kernel_vsize = _end - __initdata_begin;
+> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
+> index 684c9354637c..60c145121393 100644
+> --- a/drivers/firmware/efi/libstub/loongarch.c
+> +++ b/drivers/firmware/efi/libstub/loongarch.c
+> @@ -41,7 +41,7 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
+>  unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
+>  		efi_loaded_image_t *image)
+>  {
+> -	return *(unsigned long *)(kernel_addr + 8) - VMLINUX_LOAD_ADDRESS + kernel_addr;
+> +	return *(unsigned long *)(kernel_addr + 8) - TO_PHYS(VMLINUX_LOAD_ADDRESS) + kernel_addr;
+>  }
+>  
+>  efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
+> 
+> -- 
+> 2.43.0
+> 
 
-Ok, then I'll come back with numbers later.
+This patch is now in -next as commit 75461304ee4e ("LoongArch: Fix entry
+point in kernel image header"). I just bisected a build failure that I
+see when building with LLVM (either 18 or 19) to this change.
 
-Thanks,
-Namhyung
+$ make -skj"$(nproc)" ARCH=loongarch LLVM=1 defconfig vmlinux
+...
+kallsyms failure: relative symbol value 0x9000000000200000 out of range in relative mode
+make[4]: *** [scripts/Makefile.vmlinux:34: vmlinux] Error 1
+...
+
+Does kallsyms need some adjustment for this?
+
+Cheers,
+Nathan
+
+# bad: [9d99040b1bc8dbf385a8aa535e9efcdf94466e19] Add linux-next specific files for 20240529
+# good: [e0cce98fe279b64f4a7d81b7f5c3a23d80b92fbc] Merge tag 'tpmdd-next-6.10-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd
+git bisect start '9d99040b1bc8dbf385a8aa535e9efcdf94466e19' 'e0cce98fe279b64f4a7d81b7f5c3a23d80b92fbc'
+# bad: [270c6bb9d5e8448b74950f23ff2a192faaf10428] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git
+git bisect bad 270c6bb9d5e8448b74950f23ff2a192faaf10428
+# good: [c38b067bf2ab58d93590a50cbc06c992fe00447e] Merge branch 'ti-next' of git://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+git bisect good c38b067bf2ab58d93590a50cbc06c992fe00447e
+# bad: [6bcfb2dcf8b00c0b4cef68ac026c71dae3c25070] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git
+git bisect bad 6bcfb2dcf8b00c0b4cef68ac026c71dae3c25070
+# good: [2ca0cd490407a728a9aa57b9538f3ca8b287a089] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
+git bisect good 2ca0cd490407a728a9aa57b9538f3ca8b287a089
+# good: [f3760c80d06a838495185c0fe341c043e6495142] Merge branch 'rework/write-atomic' into for-next
+git bisect good f3760c80d06a838495185c0fe341c043e6495142
+# good: [b9fc9904efcaea8470f0d4cd0691f1295add9381] Merge branch 'vfs.module.description' into vfs.all
+git bisect good b9fc9904efcaea8470f0d4cd0691f1295add9381
+# good: [88dbb5f3c068ba8944e97235ccfdc5fbd6c7d577] Merge branch '9p-next' of git://github.com/martinetd/linux
+git bisect good 88dbb5f3c068ba8944e97235ccfdc5fbd6c7d577
+# bad: [b4660cd50cb1e5821532e34dbc7f47cb155ba57b] Merge branch 'next' of git://git.monstr.eu/linux-2.6-microblaze.git
+git bisect bad b4660cd50cb1e5821532e34dbc7f47cb155ba57b
+# bad: [c768fc96978cd0f74dd297d58720cb984a7f6341] LoongArch: Override higher address bits in JUMP_VIRT_ADDR
+git bisect bad c768fc96978cd0f74dd297d58720cb984a7f6341
+# good: [2624e739c2e9abe5f6cc9acc37f9752f0055fb5f] LoongArch: Add all CPUs enabled by fdt to NUMA node 0
+git bisect good 2624e739c2e9abe5f6cc9acc37f9752f0055fb5f
+# bad: [75461304ee4e7e2cb282265a6a89c35b81282d19] LoongArch: Fix entry point in kernel image header
+git bisect bad 75461304ee4e7e2cb282265a6a89c35b81282d19
+# first bad commit: [75461304ee4e7e2cb282265a6a89c35b81282d19] LoongArch: Fix entry point in kernel image header
