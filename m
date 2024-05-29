@@ -1,101 +1,54 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD14DDA1;
-	Wed, 29 May 2024 20:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178C51C2331;
+	Wed, 29 May 2024 20:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717012943; cv=none; b=Vz0E4M6/L3xKhPvjDZXZY/q9/L+qNd0qH14jpvkfUisiTRrm0VKFJTB90qJq7Tlmeb2BzAbPyVm35OtZ9eqJmF0jV/v3LAWqBx5FhGdSdxcanI4NZslUpkYJkGV8aTQ29tiJrubcBgfYRlqC45jvqLZJVqSGT2p5UDwLhQo4kv4=
+	t=1717012968; cv=none; b=PsGCpHwYXOte8iX5v5vg0Zxb4s5QuQ23kljN/wvfppFReGYCylNhT6MRNctuQJ9LMYrj/yn2m/874mjEOGgne5JX1ifeaR5Y/t5usYjFydTQO/L1DmwMgxCq2zgta2+KWabLmWd6MInXPgpTKLCxoalvzo873Qom1RaQPRABKcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717012943; c=relaxed/simple;
-	bh=uoeP/ZwWetQAmYm+NWLIZq1WWa6NvZlKRvH5A7Q7LnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NMDuZe73dj+0r2O9Ci5qEv3GEiApnKsKDRX88grWCTtpw4bYqlEJnX8nYEmo8DRh62/c3UtVqPYjG9Wj8d9ZzgFOvp6VNHa+20NsfKDDri3Ur+VxwLfKhUeyoOEEgIkaS4coZHso7L+GMgSmiXnp48hofM9yQu5PZnXQJiPqEJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=lWKJhAAF; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1717012968; c=relaxed/simple;
+	bh=Y/ESTVVAkjsvmXaBdtby+Vc8As3H/qHnNZC8K6XqLsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rQ7CkfNUgmCEjxsLXocJis6qx4hduxTwAKORCCw7x2agp8brVDkd+KSEj3rygQS1rcRa30+RR+UyfW3TzPZPdAjyZPDiFf8IZKWE4K43yHXBd4Ouus3iQu1KuObz8y8bDUevfgxvinrfZvfvqJtizY1Tqg5WpGCd65divKwgDPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ow0UF7WK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="lWKJhAAF"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VqKzW3g9Bz6Cnk98;
-	Wed, 29 May 2024 20:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1717012933; x=1719604934; bh=BsBWx6rt7XKTmBO9OqYrip5a
-	lx7g+yyYVBrkP5DYA/c=; b=lWKJhAAFnD4regaOzBo2CMF3nCGaj6EdqB7E9ApF
-	2gc01eXOjhGjZyl97mxzl2+ym7amJo87E7tN0XhzSX6n13fwuF1DCfOBvd+X0aMY
-	t5f3GYJsTYnHBEI1m5N6DU2opnKZ4/Nw+cuxZe3+nzbr0POj3Ob8eEEDe/EtWLtB
-	314xdPe0iOKLbSk0sWQiWbZkccn8Db33m5CmKclAG8iyvE4LN9OSLjVHb6JaN9wF
-	fI7FkQjOAxta3uwEvhcIon5awyek5ZLnijvO+hYatg6FB2IhnQyuOgNSf2YsD1SP
-	oscToafrbu0ME58DjBJRjEIqfZlsFjYjil8mRb/W41LWyw==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 2k_xyZiv_lwt; Wed, 29 May 2024 20:02:13 +0000 (UTC)
-Received: from [100.96.154.26] (unknown [104.132.0.90])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VqKzR4Tl5z6Cnk97;
-	Wed, 29 May 2024 20:02:11 +0000 (UTC)
-Message-ID: <4251566e-0a1a-48f1-b170-d5987bbabd90@acm.org>
-Date: Wed, 29 May 2024 13:02:09 -0700
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ow0UF7WK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 712B2C113CC;
+	Wed, 29 May 2024 20:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1717012967;
+	bh=Y/ESTVVAkjsvmXaBdtby+Vc8As3H/qHnNZC8K6XqLsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ow0UF7WK4apR7AobaMK1aEi/PLo42imdWF/MIv2+GtRMN3MhZqFtBQdf66X0QE9u4
+	 lhy2W3jwiLmp+AartzW5UmN97ZX2YkSHaBeT5jC8eRzyGiKdzG1lS+p3TWwyG7trzv
+	 nw3B6oEYvhm0nsoE8EdDTHtWzkz1FPaVOzulKL/0=
+Date: Wed, 29 May 2024 16:02:46 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: John Garry <john.g.garry@oracle.com>, viro@zeniv.linux.org.uk, 
+	jack@suse.cz, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, adilger@dilger.ca, ebiggers@kernel.org
+Subject: Re: [PATCH] statx: Update offset commentary for struct statx
+Message-ID: <20240529-meaty-bulky-kagu-e0a422@lemur>
+References: <20240529081725.3769290-1-john.g.garry@oracle.com>
+ <20240529-ballkontakt-vergibt-b7f8c960eed5@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/3] scsi: ufs: sysfs: Make max_number_of_rtt
- read-write
-To: Avri Altman <avri.altman@wdc.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Bean Huo <beanhuo@micron.com>, Peter Wang <peter.wang@mediatek.com>,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240526081636.2064-1-avri.altman@wdc.com>
- <20240526081636.2064-4-avri.altman@wdc.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240526081636.2064-4-avri.altman@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240529-ballkontakt-vergibt-b7f8c960eed5@brauner>
 
-On 5/26/24 01:16, Avri Altman wrote:
-> +static inline void ufshcd_freez_hw_queues(struct ufs_hba *hba)
-> +{
-> +	struct scsi_device *sdev;
-> +
-> +	shost_for_each_device(sdev, hba->host) {
-> +		if (sdev == hba->ufs_device_wlun)
-> +			continue;
-> +		blk_mq_freeze_queue(sdev->request_queue);
-> +		blk_mq_quiesce_queue(sdev->request_queue);
-> +	}
-> +}
-> +
-> +static inline void ufshcd_unfreez_hw_queues(struct ufs_hba *hba)
-> +{
-> +	struct scsi_device *sdev;
-> +
-> +	shost_for_each_device(sdev, hba->host) {
-> +		if (sdev == hba->ufs_device_wlun)
-> +			continue;
-> +		blk_mq_unquiesce_queue(sdev->request_queue);
-> +		blk_mq_unfreeze_queue(sdev->request_queue);
-> +	}
-> +}
+On Wed, May 29, 2024 at 10:42:48AM GMT, Christian Brauner wrote:
+> But note that your patch format seems to have tripped b4. I had to apply
+> it manually.
 
-Why have these functions been declared inline? blk_mq_freeze_queue()
-may sleep and hence performance is not an argument to inline these
-functions. Additionally, the WLUN should not be skipped when freezing
-or unfreezing request queues. The blk_mq_quiesce_queue() and
-blk_mq_unquiesce_queue() calls are not necessary in the above code.
-Please remove these.
+Looks like it was some mail relay that QP-encoded DKIM headers.
+I've committed a fix for it.
 
-Thanks,
-
-Bart.
+Cheers,
+-K
