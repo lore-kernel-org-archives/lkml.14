@@ -1,115 +1,162 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e3i84.smtp2go.com (e3i84.smtp2go.com [158.120.84.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640C1273DC
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E3A273DC
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716965772; cv=none; b=XTHVKoD7VQPdhTddeLfr27VSDG+bM9HYdi+R+sSrWUsNytImc1blKr29Vjhi/UOsNszhrq5Glhkt8H7DFLrAJ7GlUjDaptImngwluPb5U93HEEIhvAzUpqaKeAEGqbktrKwXqGE2L/QZTojQX3DuZ5IeLicom+cuYNp6pK1pQto=
+	t=1716965829; cv=none; b=OQRTm+car6j3DTZ3J+9nrrn6QK/6DrnRxMEGonXKBazEx4kkXFmcjUIYqkGYrobHTtzZ7lDosU0SCS8kcQXIweJ55+FA+cnzXmMyAtSfn/1hzYpSf7cPylYakVt0pdRuYFTIy2ccFdMG3wqd0/+jZ2muMPAcvb6zfje6BSnhkCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716965772; c=relaxed/simple;
-	bh=VN1Kq0JprgKgiY84Fl4GWOkl9GMDYn0hDtl9lNW63Ow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EFKNugPEoOZGMB4okPQ/FZZ7l4Zae58elUyD2FCXoZs9yRyYf26puztDBSh2/LvxBs5ocnCIgt5y/VRWlKKwrpJh4jpuq5Njhygr8H3qoPRqXS4WxtofHga/+2f0HbHluCKpUTFAmppz7Exx/lbzKN8vCzOOiLi5WaHJ/qhVyAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r3ROgSR3; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716965829; c=relaxed/simple;
+	bh=bOeSZdmBwsNitFB+etEOBIX7vNxYqj75SIjFwIErgSg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fxctJ4cHTllPPz5Yjh2iNSYlNOvey+0o9oxcPrclJ19+CwO3EMd8cwb/ioXGmQLToIcSEwMMWkM0iN257Ay2h9Cenw73nsj/VzxZt+Pb8wT1sQGgme3PcwF6Blsvmf2jQB1d08rJC3AEx6Z01XZvTTPJQfi8+4GTD/AtAt8gjE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt; spf=pass smtp.mailfrom=em510616.triplefau.lt; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=GVJnqVnI; dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b=UN7acJL1; arc=none smtp.client-ip=158.120.84.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em510616.triplefau.lt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r3ROgSR3"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-529b79609cbso2633830e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 23:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716965767; x=1717570567; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l8XM/FgEx6d8NuTgtXrGUs5+LoMJwxG6LNXhNDqRvo0=;
-        b=r3ROgSR3qYgtnDATBsLE7jiYgXoure9c8tC5+PCxUTHf5emzH9WMgQ9MQQlEIKI4FQ
-         tbJQNcI0SSkk+ZEuM0tj+dl2hj+A3C6QbKAZaRJf6qAYr5SaWcQOm9PboR+1XfiJtLf/
-         Z9R1hV0KWnj74p9Ki4jD7fA4TqdYjLITgONjbxX5q2E7GprD21V3L2MHPkcQH27uGpbT
-         ASYmfuGL5jlaLcZp1qXI9+0t8OSDrBF23oGR3hHfnxu+xF9UA/jXNXmN8SCky6lo+5A3
-         KsqmYjTYuLTpssi0AssvRP/dBUEhe1NluCQvaSByixdppreGk9xuI6Pl6rn0JsWWx8X3
-         tFfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716965767; x=1717570567;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l8XM/FgEx6d8NuTgtXrGUs5+LoMJwxG6LNXhNDqRvo0=;
-        b=MN10X32NOILqaf066ssnZ6yf2Pvv2AOIxPyzvz1xrRepCNgivw2cBKE2FUbQPZSWXb
-         9WUCPQ+jBfZ1cRj0RPtWUp+a9hWOE9C5pWBVcx0wp4E+Fz7/4vocZ4E5QifuSNEVrYhI
-         DPC9jEA6i8n6Smu9GqzNvaa8tQI0FSReRQgpmW/GLSmtF7HrDrZUScSukkp3i67G6O9H
-         tdtNGc/6RUvm5PRoE4qyX4hiQKp5sj/QepeXuqwQr1yfqmwPeouwbldWE+TX5jmStXRM
-         rIKhrRaP6mZwPFK3OUSX/gq1l1eHNx3imgqnMtGlI5HTVpLYGdQo8fBbaN910O45/1b8
-         /jVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTdWYntdfUS+PrSsOhYzPLwcQ9PGxdYvSqHsQWKzcMCdN41xbVPLLlj5xSLB2yjj8OYALYLjU4S483s6z3ofBIT6zeSnTY3JiRuNjY
-X-Gm-Message-State: AOJu0YzTuM4gAD9Gz5WKfEScF/kM0mZ/xYRxuwje8m1t9pNsUoMeCdeY
-	NrzjprBCQiS9dgnEdYJ57FOo/44dw14+ziNEQgLEolaByym66m2WIqsjTz4m9Qw=
-X-Google-Smtp-Source: AGHT+IE8Vr6rfevCpWjYYJnFoMwyjAbgft8519qmMf8AdXmrOTwD8aPPvmWsyWzNiVDX4RqJ44Re8w==
-X-Received: by 2002:a05:6512:902:b0:51d:4af6:bb86 with SMTP id 2adb3069b0e04-529612c529amr9109860e87.0.1716965767480;
-        Tue, 28 May 2024 23:56:07 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52aff3f65d8sm88039e87.181.2024.05.28.23.56.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 23:56:07 -0700 (PDT)
-Date: Wed, 29 May 2024 09:56:05 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
-	helen.koike@collabora.com, airlied@gmail.com, daniel@ffwll.ch, robdclark@gmail.com, 
-	david.heidelberg@collabora.com, guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, 
-	mcanal@igalia.com, linux-mediatek@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	amd-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] drm/ci: uprev mesa version
-Message-ID: <jzb7oa2qtbavelujxwzk5vmcchazvva4aynxo2ceoigthgth2f@j3kjkj6okmwz>
-References: <20240529024049.356327-1-vignesh.raman@collabora.com>
- <20240529024049.356327-2-vignesh.raman@collabora.com>
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="GVJnqVnI";
+	dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b="UN7acJL1"
+Received: from [10.12.239.196] (helo=localhost)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97-S2G)
+	(envelope-from <repk@triplefau.lt>)
+	id 1sCDEk-4o5NDgrmVFt-pPXg;
+	Wed, 29 May 2024 06:56:38 +0000
+From: Remi Pommarel <repk@triplefau.lt>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH] wifi: mac80211: Fix deadlock in ieee80211_sta_ps_deliver_wakeup()
+Date: Wed, 29 May 2024 08:57:53 +0200
+Message-Id: <8e36fe07d0fbc146f89196cd47a53c8a0afe84aa.1716910344.git.repk@triplefau.lt>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529024049.356327-2-vignesh.raman@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 510616m:510616apGKSTK:510616s_HaTRL7zn
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+X-smtpcorp-track: kL16-ZDVMfQj.1iUigA7plmv5.d199tAAR2gi
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
+ i=@smtpservice.net; q=dns/txt; s=a1-4; t=1716965816; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe : list-unsubscribe-post;
+ bh=UbyaOHOiUST4mImhXXu+03xsYYW4FuYClhsIqgPQ0Bw=;
+ b=GVJnqVnIKvDo6ThvFb3o9opW37w/RM4znqT4FNT1I8wnNfRD6yKr/D4S4yQtPvmGANF+a
+ GpsWX8pONzAfxtDh5Jigry8rth44bTxQl/tM4cBHP1PkRTifcqbSLloorfVPUNxiDpPNqfW
+ 0PtrPrZpEzeMX8S8+wUQnc6b3MTcQ/4MgMZe14+02Q+MGXap5zhrlma4uoloU06BrvQfv6t
+ /2MpkB/9TLSxwxOfxq2Tjga6g/JDfDpNK8Z64TC3ll6TO9D+i2iiBF2pjI9MXRtf6te/G73
+ Cgb69IrN+r6MNRZD0dyVnz6p/ENKCNlTTyMx6iB273q6ik258OdBqlVn0qvw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=triplefau.lt;
+ i=@triplefau.lt; q=dns/txt; s=s510616; t=1716965816; h=from : subject
+ : to : message-id : date;
+ bh=UbyaOHOiUST4mImhXXu+03xsYYW4FuYClhsIqgPQ0Bw=;
+ b=UN7acJL1QS4N+D8VFsFod3lHOY2OSWU5lXQf7oVcZBlqT0rcst4wu8/g/ZPfMDs9L+a/E
+ 5HZ4oybQTRyy35GuyOzQisAuE4SAAnBJedkHWNk6AvAgUEzrCwQe793f+WIVQkWggvUvjve
+ CTzOrapydbyIKkTusoohEyHjOLtOVZ+60lLEflMWj6bm+B/NQzxKtuPBF22NLcGZ5snznad
+ 4geTsPPNo09z+M3ItkltTH+9mvXzBQI/ExXaPU+FoIjq9Dq/y6S6Tms5z5gvyBks7GFv061
+ 1OxLPh7T/logNlfiYSMRyKDWdjz/rzqYib/bb47mUCBRfx7QoHcU+MuoxmqQ==
 
-On Wed, May 29, 2024 at 08:10:44AM +0530, Vignesh Raman wrote:
-> zlib.net is not allowing tarball download anymore and results
-> in below error in kernel+rootfs_arm32 container build,
-> urllib.error.HTTPError: HTTP Error 403: Forbidden
-> urllib.error.HTTPError: HTTP Error 415: Unsupported Media Type
-> 
-> Uprev mesa to latest version which includes a fix for this issue.
-> https://gitlab.freedesktop.org/mesa/mesa/-/commit/908f444e
-> 
-> Use id_tokens for JWT authentication. Since s3 bucket is migrated to
-> mesa-rootfs, update the variables accordingly. Also copy helper scripts
-> to install, so that the ci jobs can use these scripts for logging.
-> 
-> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
-> ---
-> 
-> v2:
->   - Uprev to recent version and use id_tokens for JWT authentication
-> 
-> v3:
->   - Move adding farm variable and updating device type variable to seperate commit
-> 
-> ---
->  drivers/gpu/drm/ci/build-igt.sh   |  2 +-
->  drivers/gpu/drm/ci/build.sh       |  6 +++--
->  drivers/gpu/drm/ci/container.yml  | 12 +++------
->  drivers/gpu/drm/ci/gitlab-ci.yml  | 44 +++++++++++++++++++++----------
->  drivers/gpu/drm/ci/image-tags.yml |  2 +-
->  drivers/gpu/drm/ci/lava-submit.sh |  4 +--
->  6 files changed, 42 insertions(+), 28 deletions(-)
-> 
+The ieee80211_sta_ps_deliver_wakeup() function takes sta->ps_lock to
+synchronizes with ieee80211_tx_h_unicast_ps_buf() which is called from
+softirq context. However using only spin_lock() to get sta->ps_lock in
+ieee80211_sta_ps_deliver_wakeup() does not prevent softirq to execute
+on this same CPU, to run ieee80211_tx_h_unicast_ps_buf() and try to
+take this same lock ending in deadlock. Below is an example of rcu stall
+that arises in such situation.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+ rcu: INFO: rcu_sched self-detected stall on CPU
+ rcu:    2-....: (42413413 ticks this GP) idle=b154/1/0x4000000000000000 softirq=1763/1765 fqs=21206996
+ rcu:    (t=42586894 jiffies g=2057 q=362405 ncpus=4)
+ CPU: 2 PID: 719 Comm: wpa_supplicant Tainted: G        W          6.4.0-02158-g1b062f552873 #742
+ Hardware name: RPT (r1) (DT)
+ pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+ pc : queued_spin_lock_slowpath+0x58/0x2d0
+ lr : invoke_tx_handlers_early+0x5b4/0x5c0
+ sp : ffff00001ef64660
+ x29: ffff00001ef64660 x28: ffff000009bc1070 x27: ffff000009bc0ad8
+ x26: ffff000009bc0900 x25: ffff00001ef647a8 x24: 0000000000000000
+ x23: ffff000009bc0900 x22: ffff000009bc0900 x21: ffff00000ac0e000
+ x20: ffff00000a279e00 x19: ffff00001ef646e8 x18: 0000000000000000
+ x17: ffff800016468000 x16: ffff00001ef608c0 x15: 0010533c93f64f80
+ x14: 0010395c9faa3946 x13: 0000000000000000 x12: 00000000fa83b2da
+ x11: 000000012edeceea x10: ffff0000010fbe00 x9 : 0000000000895440
+ x8 : 000000000010533c x7 : ffff00000ad8b740 x6 : ffff00000c350880
+ x5 : 0000000000000007 x4 : 0000000000000001 x3 : 0000000000000000
+ x2 : 0000000000000000 x1 : 0000000000000001 x0 : ffff00000ac0e0e8
+ Call trace:
+  queued_spin_lock_slowpath+0x58/0x2d0
+  ieee80211_tx+0x80/0x12c
+  ieee80211_tx_pending+0x110/0x278
+  tasklet_action_common.constprop.0+0x10c/0x144
+  tasklet_action+0x20/0x28
+  _stext+0x11c/0x284
+  ____do_softirq+0xc/0x14
+  call_on_irq_stack+0x24/0x34
+  do_softirq_own_stack+0x18/0x20
+  do_softirq+0x74/0x7c
+  __local_bh_enable_ip+0xa0/0xa4
+  _ieee80211_wake_txqs+0x3b0/0x4b8
+  __ieee80211_wake_queue+0x12c/0x168
+  ieee80211_add_pending_skbs+0xec/0x138
+  ieee80211_sta_ps_deliver_wakeup+0x2a4/0x480
+  ieee80211_mps_sta_status_update.part.0+0xd8/0x11c
+  ieee80211_mps_sta_status_update+0x18/0x24
+  sta_apply_parameters+0x3bc/0x4c0
+  ieee80211_change_station+0x1b8/0x2dc
+  nl80211_set_station+0x444/0x49c
+  genl_family_rcv_msg_doit.isra.0+0xa4/0xfc
+  genl_rcv_msg+0x1b0/0x244
+  netlink_rcv_skb+0x38/0x10c
+  genl_rcv+0x34/0x48
+  netlink_unicast+0x254/0x2bc
+  netlink_sendmsg+0x190/0x3b4
+  ____sys_sendmsg+0x1e8/0x218
+  ___sys_sendmsg+0x68/0x8c
+  __sys_sendmsg+0x44/0x84
+  __arm64_sys_sendmsg+0x20/0x28
+  do_el0_svc+0x6c/0xe8
+  el0_svc+0x14/0x48
+  el0t_64_sync_handler+0xb0/0xb4
+  el0t_64_sync+0x14c/0x150
 
+Using spin_lock_bh()/spin_unlock_bh() instead prevents softirq to raise
+on the same CPU that is holding the lock.
 
+Fixes: 1d147bfa6429 ("mac80211: fix AP powersave TX vs. wakeup race")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ net/mac80211/sta_info.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/mac80211/sta_info.c b/net/mac80211/sta_info.c
+index da5fdd6f5c85..aa22f09e6d14 100644
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -1724,7 +1724,7 @@ void ieee80211_sta_ps_deliver_wakeup(struct sta_info *sta)
+ 	skb_queue_head_init(&pending);
+ 
+ 	/* sync with ieee80211_tx_h_unicast_ps_buf */
+-	spin_lock(&sta->ps_lock);
++	spin_lock_bh(&sta->ps_lock);
+ 	/* Send all buffered frames to the station */
+ 	for (ac = 0; ac < IEEE80211_NUM_ACS; ac++) {
+ 		int count = skb_queue_len(&pending), tmp;
+@@ -1753,7 +1753,7 @@ void ieee80211_sta_ps_deliver_wakeup(struct sta_info *sta)
+ 	 */
+ 	clear_sta_flag(sta, WLAN_STA_PSPOLL);
+ 	clear_sta_flag(sta, WLAN_STA_UAPSD);
+-	spin_unlock(&sta->ps_lock);
++	spin_unlock_bh(&sta->ps_lock);
+ 
+ 	atomic_dec(&ps->num_sta_ps);
+ 
 -- 
-With best wishes
-Dmitry
+2.40.0
+
