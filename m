@@ -1,84 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FC7167288
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 19:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14AA1C2329;
+	Wed, 29 May 2024 19:48:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717012081; cv=none; b=XfN5JaGmza0w7vCCj1QnJspgaLNX4MzoyY/wx/b/I+ZsjmEV5lsTzP1MnMcC1wFY4dlsJcYi9lEDC2hA5APQksCoYIzIED/+JF2a/a/e4waE4wjFj1RbFz5FhXqHbn2ga3qBG1y0D6s9omshvPgP27wmDHscCSshNIqSLJVuuaI=
+	t=1717012096; cv=none; b=LsTTSLmxEuGnDZ4SwiHn0BkYZ6wfLIGAxc5Dn2TQg14IXUDlx+8UDijISPSnfJ9wN+t+oILWxTNl9QqbWU8s7rwtIduaNov2XpPekcdp7uZpozFT+nYRYJW1XIo3p+J5qiqLzz/DV9NC1Vcp909WU5TMiquk3R6YvIi9bNp8u8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717012081; c=relaxed/simple;
-	bh=AtpbuT9ocfyuCImB7FopcXXI7a9HUm1xc1vYTywkOQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kgrcODcTMgirnbnWPdY8b+ysu9+NKFZsiqW9aTfzz2BmJAAi3EHTf+VUf/pQMRnhmZ1Gxwv2WUdczaxDHRYzQCJE6EGvvwkIV/q5p7Dh3ToA/yM4i8ifDmPWcMdz+42/25V2W9riuMZfVzu2YdrRotZmTKgDvJz8pF02sVTGTI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MnYs/3Ob; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717012096; c=relaxed/simple;
+	bh=qWhEwAr6AYrSEXs8Gky9nRQSfZTamh+Ys9gijsMJcIk=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=ar3waaQHaUx+uIGPk9XtGNK4SbrrDhPG4nml+b/Qiosrk8nTTSOmaBLrKYjB8Qb/NywBG0+8+6z31nMVw6Crqax1CERl+GArDWLAvOwE7ITCJmL2ADe9Cz6VpkKzlWbhuxVWZWRumJ0T8UmqX93bmAGoP8Gg5uReh+iZrWrWlLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLIfSfyz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MnYs/3Ob"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95B90C113CC;
-	Wed, 29 May 2024 19:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1717012080;
-	bh=AtpbuT9ocfyuCImB7FopcXXI7a9HUm1xc1vYTywkOQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MnYs/3Ob/A0wKPM6dYRhnBelFPdHZW6ShY1zWopmG0iOSxXMEiG4+9KDD1YZocUdA
-	 KR3vjc4Z1VBgcLALDQzs+r8F8pEkQ6vpEe8OvgZndO1x9oXwUw7gcl8DSugFLInksQ
-	 lzmQ4mfckmcFuyvNXa9rMtbSfqxnRssDqsRmkMp0=
-Date: Wed, 29 May 2024 21:48:06 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Suzuki Poulouse <suzuki.poulose@arm.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH] coresight: Fix ref leak when
- of_coresight_parse_endpoint() fails
-Message-ID: <2024052957-overload-darkroom-8c4d@gregkh>
-References: <20240529133626.90080-1-james.clark@arm.com>
- <ce2530fd-d91b-4629-944f-9d7c6826aaa9@web.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLIfSfyz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD0BC32781;
+	Wed, 29 May 2024 19:48:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717012096;
+	bh=qWhEwAr6AYrSEXs8Gky9nRQSfZTamh+Ys9gijsMJcIk=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=TLIfSfyzl/LE6/dXyGaWYNyxHPf99UPq9vGHjqcf4Xz+vTTQgX7DnBaKkN4hF7pb0
+	 VXrW8fvC6x5GHZGpAkeyktSF2Zyxpdi5GTrwFIFFucAj8Ay1uOnMKVRoJgzi0S7bNL
+	 1gQYp+E4Ee5ggdsvZcRzle1QikxlECZ+OZW/eXhZOQk1L91uSZhvYFeLpHz9Q21jYE
+	 wPa5ms2oLOz2eEF9e5diQhElr3D8ll0tEU22hCZvH+RcmU4cP6WW8eb95zLZ47XVWj
+	 /0BSsvItSDZ4Bbtm3Uc/d4YL0QIi8Hx/k0yZx7aIqNJmqxxIph0E5Qb6i3qZEeoshL
+	 AeJET7CYsl9Xw==
+Message-ID: <63d35ddacc113598f1822486b882552a.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce2530fd-d91b-4629-944f-9d7c6826aaa9@web.de>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ssnyujhgz64mbxawb43okjkdidd3tbxwjob36ikgbogy64xuqv@ckvir5vfqo63>
+References: <20240528114254.3147988-1-quic_ajipan@quicinc.com> <20240528114254.3147988-8-quic_ajipan@quicinc.com> <ssnyujhgz64mbxawb43okjkdidd3tbxwjob36ikgbogy64xuqv@ckvir5vfqo63>
+Subject: Re: [PATCH V3 7/8] clk: qcom: Add GPUCC driver support for SM4450
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Vinod Koul <vkoul@kernel.org>, Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+To: Ajit Pandey <quic_ajipan@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 29 May 2024 12:48:14 -0700
+User-Agent: alot/0.10
 
-On Wed, May 29, 2024 at 09:30:11PM +0200, Markus Elfring wrote:
-> …
-> > Fix it by dropping the refcount in the exit condition.
-> 
->                          reference counter?
-> 
-> How do you think about to use the summary phrase
-> “Fix reference counting leak in of_get_coresight_platform_data()”?
-> 
-> Regards,
-> Markus
+Quoting Dmitry Baryshkov (2024-05-28 06:23:27)
+> On Tue, May 28, 2024 at 05:12:53PM +0530, Ajit Pandey wrote:
+> > Add Graphics Clock Controller (GPUCC) support for SM4450 platform.
+> >=20
+> > Signed-off-by: Ajit Pandey <quic_ajipan@quicinc.com>
+> > ---
+> >  drivers/clk/qcom/Kconfig        |   9 +
+> >  drivers/clk/qcom/Makefile       |   1 +
+> >  drivers/clk/qcom/gpucc-sm4450.c | 805 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 815 insertions(+)
+> >  create mode 100644 drivers/clk/qcom/gpucc-sm4450.c
+>=20
+> [trimmed]
+>=20
+> > +
+> > +     /* Keep some clocks always enabled */
+> > +     qcom_branch_set_clk_en(regmap, 0x93a4); /* GPU_CC_CB_CLK */
+> > +     qcom_branch_set_clk_en(regmap, 0x9004); /* GPU_CC_CXO_AON_CLK */
+> > +     qcom_branch_set_clk_en(regmap, 0x900c); /* GPU_CC_DEMET_CLK */
+>=20
+> I pinged Stephen regarding these clocks. LGTM otherwise.
+>=20
 
-Hi,
-
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
-
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
-
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
-
-thanks,
-
-greg k-h's patch email bot
+Looks OK to me. I assume that these clks don't get turned off when the
+GPU power domain is turned off. If that's the case then presumably we
+would need to turn these on and off during power transitions.
