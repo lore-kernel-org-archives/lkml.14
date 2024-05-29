@@ -1,84 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B26615A850;
-	Wed, 29 May 2024 01:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E36C632;
+	Wed, 29 May 2024 01:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716945305; cv=none; b=MZHg0un97r2vHJnYulmOqEOqvnzfD878ZoQDtChqWykJfa5klDrHmB4+AuRXH15fpPbXKdUrBvWqKPuR2oGH85mt7+V7H8pYMjkKfGXr6I/6SdUvTx+40Y/1Cl7K5W9IHFCWgprJPCgaXI2+tttYSZyv1bLQhNfm6XABdScNuXw=
+	t=1716945357; cv=none; b=QoGJCmKXoSPVUL06lSV1pjGyY1HikuPkg3DjMnd5MLfDmHwqEi7i7DDA3/Egr2XgKWEMUItxUVZZZhKdIspRi5Gx/aBTmvHE7CWHzXPYPyyROFTeV40ZBaMk99sFVre0WKFhzh3UbTtjpJITdk8abywCPNyg2HxttiBWdW9Yu8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716945305; c=relaxed/simple;
-	bh=/GfoeoRReOIcuGfxqsKcE/ssX+1CbriDPv2XiapiR74=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=qENrCbMT04/mrMf2REBnQ0QKJ++W7zANR800aH2euPcxuCpRt0du9KN4fSdd5JD4E8wqTTbpzQBw7/iu2MYns0GG8zgfsp3hRhfPIlLtpUAJuPcB2QSwlVaanwQLdV5EwbEJPNTpiaX92wgIYf2ZybfPuV1m4NaPFgDaHkikez0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGpROf/I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716945357; c=relaxed/simple;
+	bh=fu5h1VLTePpmxGzHtWBWm8qsfXfU3OcS0nx2N9r/Z20=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cwFFKRE0YHWb5YBj5PnI1nqtH6PiIuu0sDoQrtrmfkwHszl2mUtMJk8oNyKqC9ckJA1DMlt+bJYfW/bdsQH4U4P1cmzfgIsVsBqaNWwIHQHfs3IWNe4AIEuBJGlwyOFFHEcSpbuWX+mXrxmJ7oxYSw3/jHIVx8CJ+wLQRhdTdmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DqWK6XrZ; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGpROf/I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E412EC3277B;
-	Wed, 29 May 2024 01:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716945304;
-	bh=/GfoeoRReOIcuGfxqsKcE/ssX+1CbriDPv2XiapiR74=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=kGpROf/I0sN3dx/iNmVuHImgJXfDfwZBIR422JA711ML9z8bQffVQXre2gwdwVhne
-	 ZTaO0t0IJPgbG+JH1ylOornajxZYDZv1o3x7eHmHZye4dYNMhEspCsnIU38YoQfJ3c
-	 3EiDqEAMry/ziID4lUCX/2IEH9vk6f7ApybGt7i58uoXK4PeCcdVSrC9nI8vLltVwB
-	 KFswRC1P7gWiKQnV99yMIdKjB9uhm+qrBJMAMzWP4LlO6LHhsCFoJnkZLvM3Wmmu+G
-	 NzvjOjXbb5HQgRDhD5t7VlftKbs4fbA97YKmaGlKx+S2cLNo2rcFnkNQGmIpKf+U6L
-	 8G6VYRd40/FLw==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqWK6XrZ"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5785e443cf4so1491128a12.3;
+        Tue, 28 May 2024 18:15:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716945354; x=1717550154; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dkttBqYur5VmeYZbcuQ4bNxlcQKOfUsclUNLqJlUw/0=;
+        b=DqWK6XrZNDKSX1BURG61tvVg3bDsW/Qp2YczHv1uuEZoHbZSJWpOXgG5G8K4fy+OFK
+         KBGMpAQrkF0vo+oCXsNE2iLM90yaHvH0lRt2yX19wOiG1l5RG0bqTJV68qjSWe3R3xoS
+         aYg+4g96rvFzB8mKjuI77vJw6tKpSKQzrwGHzHFZIi3OYIBAVbQ0C7GRFpOrtjHw5FzT
+         Zvu8NwRJdCPXeJP4sumnS3kPJO5R/B7YwR8VIfTCjqQAhe87k1UL1CYBY0FlZ9qOI7jS
+         Fa801gOHmJpxJFCpORLZRyxNqlNSSeEtGt8wNRbQ/QHPFpT0mCm23xZREJeFQfiq6fHo
+         zbDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716945354; x=1717550154;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dkttBqYur5VmeYZbcuQ4bNxlcQKOfUsclUNLqJlUw/0=;
+        b=fvG6yujCOaue4hGev0Lx5MxHeIvQ8nneMkpMIhwWV67RAPQjtqvKfnElBXgxfWUYmR
+         ezhQoMsDUbmUigtk1PyK7QNJpUyGII4FsReRYAUjOmEFTdDs8DUAiZOO0xdClL7k5HHS
+         7a6q/XPsCFPKrpr6QGaFIVy/n6jaQNVUeLdIVvVETWnOg+UKNBjlIs8pCOTemGNLdJ2n
+         zyd1uhf3t4DmxCM8xv2W66TqJO2lQF9ip5OC7CPSLSQTyhvT7/bib1B2RdFBiWcWcYFz
+         utCTpFs0f6TAidLN8hMpXFv4AWnwufdk6YqlnRk+21fHFZSY+U4Sm6Wa/oOFsBHC9CRl
+         4+/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVG8O/cWpSxlRyFPlVqgtonR5Yw158zmOuS+BA6mxNqu7/U1yVVwA7byDV2TGTIgPBTNeONy6Bcm3OFZrCfSHnPriO28Vr8EiGaqx8MLh2ARZVdTUFD3PUQFGKvz7uUwQSUjPdWR4GKJHfcIx511QRNspVvSbZ0pLLHC1MBwNj6JGKrDsg=
+X-Gm-Message-State: AOJu0YzepHV6jfN1pA2gEUgHV0irzLAjgCalOaBzXjE4MxGNPcG3pwjY
+	2rv6jXqTnFuWt8gr9WnO/7b6bAT+kjKRCD6py4tmMu2Yp/kF7aRLfhy0/MONZfu5tFZYp0EOB+c
+	RYdPWNB8+0LkcbZ0P6za0GpADPWZAng==
+X-Google-Smtp-Source: AGHT+IHyxyhKthaWgMwE6kMyfK+bLZ11R28UBPmFZV6BzjKc6hhsxMuv7nztpRo3OH+U9Y+ASwIkM7c0M+DokgYcKJg=
+X-Received: by 2002:a50:cd4d:0:b0:578:5245:3296 with SMTP id
+ 4fb4d7f45d1cf-57852453300mr9164565a12.28.1716945353450; Tue, 28 May 2024
+ 18:15:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240527022036.31985-1-user@blabla> <CACRpkdY99LACAUsg_S4ww4U7-KU_EtkLZ+c8dsa0M85i9eJZbA@mail.gmail.com>
+ <CAMhs-H-3yM3sLvgtOn1KWPF-Ch52hqZZXbFPe2YP=xgFjZLDug@mail.gmail.com>
+In-Reply-To: <CAMhs-H-3yM3sLvgtOn1KWPF-Ch52hqZZXbFPe2YP=xgFjZLDug@mail.gmail.com>
+From: =?UTF-8?B?5p2O57u06LGq?= <cn.liweihao@gmail.com>
+Date: Wed, 29 May 2024 09:15:41 +0800
+Message-ID: <CAPEOAkSH7hRJQ2duHDcUZY-0jRjcwRDks+u6KzzJ6wesgo8UCw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ralink: mt76x8: fix pinmux function
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, arinc.unal@arinc9.com, sean.wang@kernel.org, 
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
+	linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 29 May 2024 04:14:58 +0300
-Message-Id: <D1LQB9HGZ7JK.1VDGJVT6IPHDB@kernel.org>
-Cc: <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
- <Andreas.Fuchs@infineon.com>, "James Prestwood" <prestwoj@gmail.com>,
- "David Woodhouse" <dwmw2@infradead.org>, "Eric Biggers"
- <ebiggers@kernel.org>, "James Bottomley"
- <James.Bottomley@hansenpartnership.com>, <linux-crypto@vger.kernel.org>,
- "Lennart Poettering" <lennart@poettering.net>, "David S. Miller"
- <davem@davemloft.net>, "open list" <linux-kernel@vger.kernel.org>, "David
- Howells" <dhowells@redhat.com>, "Peter Huewe" <peterhuewe@gmx.de>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, "Ard Biesheuvel" <ardb@kernel.org>, "Mario
- Limonciello" <mario.limonciello@amd.com>
-Subject: Re: [PATCH v7 5/5] keys: asymmetric: Add tpm2_key_ecdsa
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, "Herbert Xu"
- <herbert@gondor.apana.org.au>
-X-Mailer: aerc 0.17.0
-References: <20240528210823.28798-1-jarkko@kernel.org>
- <20240528210823.28798-6-jarkko@kernel.org>
- <ce1d3188-046d-42c1-b8a7-17325d791ec5@linux.ibm.com>
-In-Reply-To: <ce1d3188-046d-42c1-b8a7-17325d791ec5@linux.ibm.com>
 
-On Wed May 29, 2024 at 2:15 AM EEST, Stefan Berger wrote:
-> > +	ptr[TPM2_KEY_ECDSA_SIG_R_TAG] =3D 0x02; /* INTEGER */
-> > +	ptr[TPM2_KEY_ECDSA_SIG_R_SIZE] =3D SHA256_DIGEST_SIZE + r_0;
+Sergio Paracuellos <sergio.paracuellos@gmail.com> =E4=BA=8E2024=E5=B9=B45=
+=E6=9C=8828=E6=97=A5=E5=91=A8=E4=BA=8C 22:20=E5=86=99=E9=81=93=EF=BC=9A
 >
-> The size of the signature has nothing to do with the size of the hash.=20
-> SHA256_DIGEST_SIZE (32) happens to match the number of bytes of a=20
-> coordinate of prime256v1 / NIST p256 but should fail when you use=20
-> secp521r1 / NIST p521 since then r or s may then be 66 or 67 bytes (if=20
-> most sign. bit is set) long.
+> On Tue, May 28, 2024 at 3:54=E2=80=AFPM Linus Walleij <linus.walleij@lina=
+ro.org> wrote:
+> >
+> > On Mon, May 27, 2024 at 4:21=E2=80=AFAM liweihao <cn.liweihao@gmail.com=
+> wrote:
+> >
+> > > From: Weihao Li <cn.liweihao@gmail.com>
+> > >
+> > > The current version of the pinctrl driver has some issues:
+> > >
+> > > 1. Duplicated "gpio" pmx function
+> > >
+> > > The common code will add a "gpio" pmx functon to every pin group, so
+> > > it's not necessary to define a separate "gpio" pmx function in pin
+> > > groups.
+> > >
+> > > 2. Duplicated pmx function name
+> > >
+> > > There are some same function name in different pin groups, which will
+> > > cause some problems. For example, when we want to use PAD_GPIO0 as
+> > > refclk output function, the common clk framework code will search the
+> > > entire pin function lists, then return the first one matched, in this
+> > > case the matched function list only include the PAD_CO_CLKO pin group
+> > > because there are three "refclk" pin function, which is added by
+> > > refclk_grp, spi_cs1_grp and gpio_grp.
+> > >
+> > > To solve this problem, a simple way is just add a pingrp refix to
+> > > function name like mt7620 pinctrl driver does.
+> > >
+> > > 3. Useless "-" or "rsvd" functon
+> > >
+> > > It's really unnecessary to add a reserved pin mux function to the
+> > > function lists, because we never use it.
+> > >
+> > > Signed-off-by: Weihao Li <cn.liweihao@gmail.com>
+> >
+> > The patch looks good to me and Sergio: patch applied so
+> > it gets some testing in linux-next.
+> >
+> > If Arinc has issues with it or something else occurs I can
+> > always drop it again.
+>
+> Thanks, Linus :)
+>
+> Best regards,
+>     Sergio Paracuellos
 
-First remark did not go unnoticed, so thanks for both. There was not
-just much to comment on it :-)
+Thanks for reviewing the code.
 
-I could just replace the constant with a (range checked) variable
-read from the response and overall structure woud be the same.
-
-This will also mean that in the case of P521 also prefix byte (0x81) is
-required but just for the sequence I think, not for the integers.
-
-Finally, I need to implement p521 smoke test for testing this patch set.
-
-One big letdown that I only now have consciously realized, is that TCG
-does not have p256k1 in their algorithm repository. It is the basis for
-quite a few blockchain technologies. I wonder why...
-
-BR, Jarkko
+Best regards,
+Weihao Li
