@@ -1,103 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDFD157E9D
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8708A1586C6;
+	Wed, 29 May 2024 14:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716992680; cv=none; b=B2SMiJiqxNf8Oy/u9fsq04qo4zqOGM958U9xF8P5Tgy5scaqEZD5APQTSP8pQ5SNO1kONWD13r2Qa/pbMruHHT2VpCFqp2IPLJZcFT4P97+N5WPTUjkXtFXSrsLFFdVn3CWXTleZUQH7uBhsCEShYSSfW721WOisJB1LCBFarNA=
+	t=1716992683; cv=none; b=TKwm485mKhDhCcUVhN5CwQ/gdldR5pLSmmeSVjo7u9sBjMnVdVF1LNHjKuu+skT5ZeCMnBRtfqhZk2/rsF4UiyhC1WPrubGt5VWbX0c4vJOOulT/Ob48BEMYJgSxZlw+leFAK8ZTNHnXcnPjfF3bYZPJ/d5f/9L5IRxLektzht4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716992680; c=relaxed/simple;
-	bh=JAxbuHoQBZ49w41Mn9Exw5TKZvwkktDZUEKmSaoKOFo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Lr/eq6iRnEXIs/Wz9tn5Ay9YNvkO8K7EFO3wt9EdrFIqi2nS7r41N2u2A1cQoPuH+rihoK8xT7+lRjy1DHSTUmQ1VFw5gMQ1y2Q7Bekk/JbAAhL/nDDAiLuS4mXutuUR2X2KXOki2xftQ/TO0p5lZbILiL+ibjBsv0NTFhX322k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FzEFmOaG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716992683; c=relaxed/simple;
+	bh=mNgUYEnubcG8x6sqIvwYtUSCoKzzcOYzQhUu7gFNBSg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NuqtO01X19K2/Mj1OIf6x+sIIYY7I/9WhoQV3rtGvCM+lvFHYrSmRSkINxs4yZI3SNHLpIXTB60beYMHbahM5EOtxdrOoRrZ2NKRO35je6VlqY6anssc5BYYataAuOo+9eiHw8OqZM56wdpx2ZX7c3fQzTI/8ICjrdR5qkTevq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgWnHcp2; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FzEFmOaG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716992677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CaOh1l0Lu41LPYOrXz2nXavJQHgEuj8sHreCoqbxNhY=;
-	b=FzEFmOaGCXkqxhm7fCBba5UnkYALl43qLXF+V8HJ2UrDth5YQTYjXuQolAMSVYHjjTTHaT
-	w3yvTxaAVCZ0LoaeH5SrWYNou439nfpg+/O8y+GsWa1CmeFvXmyMx/mYD6nNL+ZxhMTGpe
-	tTr7q1bivPAkSYBEaoU4aUHX4P1a7PI=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-451-rThtDyCGNAuuVKpeH9PlFQ-1; Wed, 29 May 2024 10:24:36 -0400
-X-MC-Unique: rThtDyCGNAuuVKpeH9PlFQ-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a659c998bc9so25459466b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:24:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgWnHcp2"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a630ff4ac84so244017266b.1;
+        Wed, 29 May 2024 07:24:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716992680; x=1717597480; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RXUaCkB6tMzvL4LfnqvowAZkzoZ/9h0tRmEhy+jXdZA=;
+        b=UgWnHcp2nMy92Z71MaWa1rFD8SbWvyOsiINSOheSyQL/6CjxGQ+CX/BQuX2xaoyf+C
+         szANyfWicq/zjhreAoWuoKefLDtRy5O9Ctc5C9+XDnIYgI0j7pBQtUwONJCYfdSiDSGC
+         OcZGNlyTqcjGEmxv9NQ3JzUrGSu5JtdDzOwwvhl8OOaQZddH88/rw3/kFhJzqsMtAe28
+         vOHwTJCtZs3Ow5tyQE5PTT8ysdHAGw8c5HlrIGZkamB8Bi6qAb27Uzx7q0UrxT8mANTQ
+         4fznhDazqnhnFmclBrpQ5Q8UJKjOpV/QLRZu6HODIzulLFbjjlyKlm+ycLSbXD0JpJ6t
+         R7bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716992675; x=1717597475;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716992680; x=1717597480;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CaOh1l0Lu41LPYOrXz2nXavJQHgEuj8sHreCoqbxNhY=;
-        b=v34gNlij+lvcjNBCMVK3E8f16grVjfGN/gAiLAfs0Q7Pu7hgXZE8CxYe5x9eJuoCNE
-         DFU8ewh7gzkgwzQPpDmaxAIEowHpBeBfRFSeVZgwXVUPh664x2YfTJmgjrZKQvfKGDd7
-         k0RdSzuyyZoQV+2m0X6mudRRoRGehe1D1PwuIXdbi6zR4Bwdln0c4tZ0TbI3XEUkCtOV
-         EEdYjJnNAPxUHXPax1ajh30M+qaC8NGdqt4XlRwVubn3wNumMRdOoj7nc4p3h41/V+fI
-         tN7+gDaCxZg9vdjLRmX7IHfaRE0epe6QnQfRNqEK3Rbd3SS8ViadkOQOAb5bpc4l4j3G
-         GmRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVHjiy8fSO7M4YeMtTgm9fxlpLpnhEuOl6qODGN4FYqIkfsRhHEmcbjOGqyUVF/ZEFKda1DLgR4muLFGWi+EGmCPmGsKIBwJDRDRyR
-X-Gm-Message-State: AOJu0Yzdlq6yriio9gWTLor0bzYoTGjq26+mAknJ4/yj2tAoF9KV2Rrx
-	WIo+3YwhwppvagA5YI9PVEu0ixrmSLmo5wdMlOJsA9pKc27fK+UZlq9bfaY5EhVBTxWCO9Tum0E
-	4ry7FvABGW/rianz45bsltdkr31YqyAziWQZ7ZnCmL6ocWptLYD8GK9wTe1mF6g==
-X-Received: by 2002:a17:906:413:b0:a63:4e95:5639 with SMTP id a640c23a62f3a-a634e95579dmr280209066b.47.1716992675171;
-        Wed, 29 May 2024 07:24:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEoMcMMypUJzk39vMbEP225084t98GDv20PFArbG9E2Gd05mxwJZaA+E/zvafN6DVb5r8Z9aA==
-X-Received: by 2002:a17:906:413:b0:a63:4e95:5639 with SMTP id a640c23a62f3a-a634e95579dmr280206566b.47.1716992674677;
-        Wed, 29 May 2024 07:24:34 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c8176e1sm715455666b.8.2024.05.29.07.24.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 07:24:34 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id EFBDF12F7EDE; Wed, 29 May 2024 16:24:33 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Thorsten Blum <thorsten.blum@toblux.com>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, "David S.
- Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Jesper
- Dangaard Brouer <hawk@kernel.org>, John Fastabend
- <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
- KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thorsten Blum <thorsten.blum@toblux.com>
-Subject: Re: [PATCH] bpf, devmap: Remove unnecessary if check in for loop
-In-Reply-To: <20240529101900.103913-2-thorsten.blum@toblux.com>
-References: <20240529101900.103913-2-thorsten.blum@toblux.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Wed, 29 May 2024 16:24:33 +0200
-Message-ID: <874jaghf1a.fsf@toke.dk>
+        bh=RXUaCkB6tMzvL4LfnqvowAZkzoZ/9h0tRmEhy+jXdZA=;
+        b=pJ4whqEASyPzNQ/UmcYvI5Q0YxvbBMlt8LlcC1aqcwWi5ZxxLqL+NdZU+qw92WJnJE
+         9ROXCuhPIyn6JGdV7OGOslfrK8jTCMTK+CjK59ZU7DFtjoYisE33WsRJcrsW8hxU/ZOP
+         9gDSpczJLmAvl8fvSX930xkIe6+t+SY0lK8uBeJJMeEKuSu+5uxUmzFoWghGgntEZdAx
+         eRwIB/UyQuc15BniCfedV6zo8Lz8BdO21R7x1Hr1qOtpTAkANUTl17Zpa96XAMpxSidG
+         JW1YQxTZvPhRuusvAWR5BiLRCRpBCrcvWEU623+kADG04XqjWv267IYzZwfp8/YC4FhU
+         XL3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUrCoNX1IxK0UQgnx2fICkn36hJCXdWxNlLJCGTghZ3EMlf2KdUoQnawsce3GS03pXXNXl2gpkRpfssJb34QFtrgcFba8id5n0QgDYpoyYnMQOGquYYpPbBFTuQvGcrvQhjF0fKdGqSO07dAi836hVnUFQZ32ujiAK/bocPkV+9klI=
+X-Gm-Message-State: AOJu0Yzk646NzqspK6IgrlVnVuyt3SRqttb/fSWbhYejhWRYbUdPyxY8
+	Hz6VYXW+0uniiOyI2toKmik72mDr4qMIu98hLbxwOVWA2fkNKxmeHrr9l3XnGk+tEJbqfAruMKV
+	G5n6Oy0SvWyx7zhw5Wo8LCXPNibY=
+X-Google-Smtp-Source: AGHT+IHyZuAkokx73kdGAbIZ/CLYololxUsLncCUOjD0KN1JH9pe4IZRwVZJaedOC5UYnHuNWa89YDIMQfY5VzWtOtc=
+X-Received: by 2002:a17:906:384:b0:a62:2ef9:131 with SMTP id
+ a640c23a62f3a-a62641a2aecmr975337266b.6.1716992679816; Wed, 29 May 2024
+ 07:24:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
+ <20240528190315.3865-4-laurent.pinchart@ideasonboard.com> <ZlYyJpLeDLD_T5V6@surfacebook.localdomain>
+ <20240528202044.GB8500@pendragon.ideasonboard.com> <CAHp75Vc2-jOMybL7vwJHgrvb_434p094tgdLo1SyK4i_RXYiDw@mail.gmail.com>
+ <20240529094748.GM1436@pendragon.ideasonboard.com>
+In-Reply-To: <20240529094748.GM1436@pendragon.ideasonboard.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 29 May 2024 17:24:03 +0300
+Message-ID: <CAHp75Vf1uBTKHGazcuLCRvEo9k01t3+6oJnfZgpPZQ_dVCOeDg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Haibo Chen <haibo.chen@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Thorsten Blum <thorsten.blum@toblux.com> writes:
+On Wed, May 29, 2024 at 12:48=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wed, May 29, 2024 at 09:16:43AM +0300, Andy Shevchenko wrote:
+> > On Tue, May 28, 2024 at 11:20=E2=80=AFPM Laurent Pinchart wrote:
+> > > On Tue, May 28, 2024 at 10:36:06PM +0300, Andy Shevchenko wrote:
 
-> The iterator variable dst cannot be NULL and the if check can be
-> removed.
->
-> Remove it and fix the following Coccinelle/coccicheck warning reported
-> by itnull.cocci:
->
-> 	ERROR: iterator variable bound on line 762 cannot be NULL
->
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+...
 
-Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> > > > > +   device_set_of_node_from_dev(dev, dev->parent);
+> > > >
+> > > > Why not device_set_node()?
+> > >
+> > > Because device_set_of_node_from_dev() is meant for this exact use cas=
+e,
+> > > where the same node is used for multiple devices. It also puts any
+> > > previous dev->of_node, ensuring proper refcounting when devices are
+> > > unbound and rebound, without being deleted.
+> >
+> > When will the refcount be dropped (in case of removal of this device)?
+> > Or you mean it shouldn't?
+>
+> Any refcount taken on the OF node needs to be dropped. The device core
+> only drops the refcount when the device is being deleted, not when
+> there's an unbind-rebind cycle without deletion of the device (as
+> happens for instance when the module is unloaded and reloaded).
 
+Under "device" you meant the real hardware, as Linux device (instance
+of the struct device object) is being rebuilt AFAIK)?
+
+> This has
+> to be handled by the driver. device_set_of_node_from_dev() handles it.
+
+But why do you need to keep a parent node reference bumped?
+Only very few drivers in the kernel use this API and I believe either
+nobody knows what they are doing and you are right, or you are doing
+something which is not needed.
+
+--
+With Best Regards,
+Andy Shevchenko
