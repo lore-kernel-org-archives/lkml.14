@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F21715AAD3;
-	Wed, 29 May 2024 01:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9DF15AAD9;
+	Wed, 29 May 2024 01:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716947963; cv=none; b=oM6G1pfP3iSuyDc2xbEmJ4fUx0Qs04Hfhh/GJzp0X2vCnjobOsMcqACPRBdrMwlnfRLnT6FC/eRYusHCj4HbsbBRDyxl46IpYEmSjDvLyrkOfAxPmQL+GwF57+dyuDZ3Piiq69c7cNs7+HVNLTi3CY9qvQGK797Nc4nr8vN2Uo4=
+	t=1716947964; cv=none; b=hhEiKWUh/M7uFewHHWkVXBO8Fb/lEWTFGYv7vETkxU7ag5ig+7r7RjA3SmoLUuHuW2nbd/ZrOBGraSSBE+plFvS5z3/dsBhutuDZgBRnTXbiSgy2lCSei0Lvvtp68xBs12MKP66Y8eYLtAEp1AdN+8CKL2zi5K1Aa0SHmJ5Ll8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716947963; c=relaxed/simple;
-	bh=ZPd2UeBEpFRgj9By0wN9CnpgHq7DsoertVp62L+G5Cg=;
+	s=arc-20240116; t=1716947964; c=relaxed/simple;
+	bh=25KBZBHt/e9frPug4/2IwbXcYndgkcYnsmEzSEbR1rE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q0KG0qT3zNogdpX7ZQ49+MXgnU7QJlE7lHnpn6pZvUZTaZKjfJ1vxPM17zEP4NpWo+VJ00+QW+1DnUZy42WksEgksgpe8GHP3gekJ/Nv+8M3zjmJ7fRJdImou8cu37WWR7O75bFe/lJHTmuNuKIjUGhUA3EbCSNYI+7J4lTI8Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=qJAq9Fl01GIeeVOO7DoQ+XNiVbSh8eLyshCt9xzz+gYVeyySz83EN4pKQn+84vkhoHrWF9EXVvm8aHfSJqE1sloG25ElASZpiMM0PRRLumikdSjGvedSJXAUw5qTxcpDO+VqJ0djswn4nB6AjqU7buV5JOqIjxtgDL5c9l82KTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vpsxq3LgKz4f3m8m;
-	Wed, 29 May 2024 09:59:11 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vpsxp5d6Lz4f3jJ2;
+	Wed, 29 May 2024 09:59:10 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 7DC4E1A0187;
-	Wed, 29 May 2024 09:59:17 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 150341A0572;
+	Wed, 29 May 2024 09:59:20 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g7wi1Zmr3XbNw--.12147S5;
-	Wed, 29 May 2024 09:59:17 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g7wi1Zmr3XbNw--.12147S10;
+	Wed, 29 May 2024 09:59:19 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yi.zhang@huaweicloud.com,
 	chengzhihao1@huawei.com,
 	yukuai3@huawei.com
-Subject: [RFC PATCH v4 1/8] iomap: zeroing needs to be pagecache aware
-Date: Wed, 29 May 2024 17:51:59 +0800
-Message-Id: <20240529095206.2568162-2-yi.zhang@huaweicloud.com>
+Subject: [RFC PATCH v4 6/8] xfs: correct the truncate blocksize of realtime inode
+Date: Wed, 29 May 2024 17:52:04 +0800
+Message-Id: <20240529095206.2568162-7-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
 References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
@@ -51,238 +51,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g7wi1Zmr3XbNw--.12147S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxtw4xGF48KrW7tw17Jr1rtFb_yoWxZry8pr
-	y3KFsrCr4xJ3W7JFn3AFyjvr1Fk3s5AF47Cw13G3sav3Z5AF1rKF18Ga109rWUGFWrJr1a
-	yr40y34j9rykAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK
-	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-	x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
-	z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6I
-	AqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E
-	4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
-	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
-	JbIYCTnIWIevJa73UjIFyTuYvjTRLmi_UUUUU
+X-CM-TRANSID:cCh0CgAn9g7wi1Zmr3XbNw--.12147S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw1rJr47CF1kAw4kWrWDXFb_yoW5GFW3pF
+	Z2k3WUGrWDG340k3WxJFn0qw1UKa4kAr47Ary5Wrn7X3WDJr1fXrn2qryYgw43trs7XFn0
+	gFn8C3y7Z345AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2048vs2IY02
+	0E87I2jVAFwI0_JF0E3s1l82xGYIkIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0
+	rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6x
+	IIjxv20xvEc7CjxVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK
+	6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
+	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8
+	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20V
+	AGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4U
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
+	daVFxhVjvjDU0xZFpf9x0pRHa0PUUUUU=
 X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Zhang Yi <yi.zhang@huawei.com>
 
-Unwritten extents can have page cache data over the range being
-zeroed so we can't just skip them entirely. Fix this by checking for
-an existing dirty folio over the unwritten range we are zeroing
-and only performing zeroing if the folio is already dirty.
+When unaligned truncating down a realtime file which sb_rextsize is
+bigger than one block, xfs_truncate_page() only zeros out the tail EOF
+block, this could expose stale data since commit '943bc0882ceb ("iomap:
+don't increase i_size if it's not a write operation")'.
 
-XXX: how do we detect a iomap containing a cow mapping over a hole
-in iomap_zero_iter()? The XFS code implies this case also needs to
-zero the page cache if there is data present, so trigger for page
-cache lookup only in iomap_zero_iter() needs to handle this case as
-well.
+If we truncate file that contains a large enough written extent:
 
-Before:
+     |<    rxext    >|<    rtext    >|
+  ...WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+        ^ (new EOF)      ^ old EOF
 
-$ time sudo ./pwrite-trunc /mnt/scratch/foo 50000
-path /mnt/scratch/foo, 50000 iters
+Since we only zeros out the tail of the EOF block, and
+xfs_itruncate_extents() unmap the whole ailgned extents, it becomes
+this state:
 
-real    0m14.103s
-user    0m0.015s
-sys     0m0.020s
+     |<    rxext    >|
+  ...WWWzWWWWWWWWWWWWW
+        ^ new EOF
 
-$ sudo strace -c ./pwrite-trunc /mnt/scratch/foo 50000
-path /mnt/scratch/foo, 50000 iters
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ----------------
- 85.90    0.847616          16     50000           ftruncate
- 14.01    0.138229           2     50000           pwrite64
-....
+Then if we do an extending write like this, the blocks in the previous
+tail extent becomes stale:
 
-After:
+     |<    rxext    >|
+  ...WWWzSSSSSSSSSSSSS..........WWWWWWWWWWWWWWWWW
+        ^ old EOF               ^ append start  ^ new EOF
 
-$ time sudo ./pwrite-trunc /mnt/scratch/foo 50000
-path /mnt/scratch/foo, 50000 iters
+Fix this by zeroing out the tail allocation uint and also make sure
+xfs_itruncate_extents() unmap rtextsize aligned extents.
 
-real    0m0.144s
-user    0m0.021s
-sys     0m0.012s
-
-$ sudo strace -c ./pwrite-trunc /mnt/scratch/foo 50000
-path /mnt/scratch/foo, 50000 iters
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ----------------
- 53.86    0.505964          10     50000           ftruncate
- 46.12    0.433251           8     50000           pwrite64
-....
-
-Yup, we get back all the performance.
-
-As for the "mmap write beyond EOF" data exposure aspect
-documented here:
-
-https://lore.kernel.org/linux-xfs/20221104182358.2007475-1-bfoster@redhat.com/
-
-With this command:
-
-$ sudo xfs_io -tfc "falloc 0 1k" -c "pwrite 0 1k" \
-  -c "mmap 0 4k" -c "mwrite 3k 1k" -c "pwrite 32k 4k" \
-  -c fsync -c "pread -v 3k 32" /mnt/scratch/foo
-
-Before:
-
-wrote 1024/1024 bytes at offset 0
-1 KiB, 1 ops; 0.0000 sec (34.877 MiB/sec and 35714.2857 ops/sec)
-wrote 4096/4096 bytes at offset 32768
-4 KiB, 1 ops; 0.0000 sec (229.779 MiB/sec and 58823.5294 ops/sec)
-00000c00:  58 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58
-XXXXXXXXXXXXXXXX
-00000c10:  58 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58
-XXXXXXXXXXXXXXXX
-read 32/32 bytes at offset 3072
-32.000000 bytes, 1 ops; 0.0000 sec (568.182 KiB/sec and 18181.8182
-   ops/sec
-
-After:
-
-wrote 1024/1024 bytes at offset 0
-1 KiB, 1 ops; 0.0000 sec (40.690 MiB/sec and 41666.6667 ops/sec)
-wrote 4096/4096 bytes at offset 32768
-4 KiB, 1 ops; 0.0000 sec (150.240 MiB/sec and 38461.5385 ops/sec)
-00000c00:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-................
-00000c10:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-................
-read 32/32 bytes at offset 3072
-32.000000 bytes, 1 ops; 0.0000 sec (558.036 KiB/sec and 17857.1429
-   ops/sec)
-
-We see that this post-eof unwritten extent dirty page zeroing is
-working correctly.
-
-This has passed through most of fstests on a couple of test VMs
-without issues at the moment, so I think this approach to fixing the
-issue is going to be solid once we've worked out how to detect the
-COW-hole mapping case.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Fixes: 943bc0882ceb ("iomap: don't increase i_size if it's not a write operation")
+Reported-by: Chandan Babu R <chandanbabu@kernel.org>
+Link: https://lore.kernel.org/linux-xfs/0b92a215-9d9b-3788-4504-a520778953c2@huaweicloud.com
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/iomap/buffered-io.c | 42 ++++++++++++++++++++++++++++++++++++++++--
- fs/xfs/xfs_iops.c      | 12 +-----------
- 2 files changed, 41 insertions(+), 13 deletions(-)
+ fs/xfs/xfs_inode.c | 3 +++
+ fs/xfs/xfs_iops.c  | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 41c8f0c68ef5..a3a5d4eb7289 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -583,11 +583,23 @@ EXPORT_SYMBOL_GPL(iomap_is_partially_uptodate);
-  *
-  * Returns a locked reference to the folio at @pos, or an error pointer if the
-  * folio could not be obtained.
-+ *
-+ * Note: when zeroing unwritten extents, we might have data in the page cache
-+ * over an unwritten extent. In this case, we want to do a pure lookup on the
-+ * page cache and not create a new folio as we don't need to perform zeroing on
-+ * unwritten extents if there is no cached data over the given range.
-  */
- struct folio *iomap_get_folio(struct iomap_iter *iter, loff_t pos, size_t len)
- {
- 	fgf_t fgp = FGP_WRITEBEGIN | FGP_NOFS;
- 
-+	if (iter->flags & IOMAP_ZERO) {
-+		const struct iomap *srcmap = iomap_iter_srcmap(iter);
-+
-+		if (srcmap->type == IOMAP_UNWRITTEN)
-+			fgp &= ~FGP_CREAT;
-+	}
-+
- 	if (iter->flags & IOMAP_NOWAIT)
- 		fgp |= FGP_NOWAIT;
- 	fgp |= fgf_set_order(len);
-@@ -1388,7 +1400,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 	loff_t written = 0;
- 
- 	/* already zeroed?  we're done. */
--	if (srcmap->type == IOMAP_HOLE || srcmap->type == IOMAP_UNWRITTEN)
-+	if (srcmap->type == IOMAP_HOLE)
- 		return length;
- 
- 	do {
-@@ -1399,8 +1411,22 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 		bool ret;
- 
- 		status = iomap_write_begin(iter, pos, bytes, &folio);
--		if (status)
-+		if (status) {
-+			if (status == -ENOENT) {
-+				/*
-+				 * Unwritten extents need to have page cache
-+				 * lookups done to determine if they have data
-+				 * over them that needs zeroing. If there is no
-+				 * data, we'll get -ENOENT returned here, so we
-+				 * can just skip over this index.
-+				 */
-+				WARN_ON_ONCE(srcmap->type != IOMAP_UNWRITTEN);
-+				if (bytes > PAGE_SIZE - offset_in_page(pos))
-+					bytes = PAGE_SIZE - offset_in_page(pos);
-+				goto loop_continue;
-+			}
- 			return status;
-+		}
- 		if (iter->iomap.flags & IOMAP_F_STALE)
- 			break;
- 
-@@ -1408,6 +1434,17 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 		if (bytes > folio_size(folio) - offset)
- 			bytes = folio_size(folio) - offset;
- 
-+		/*
-+		 * If the folio over an unwritten extent is clean (i.e. because
-+		 * it has been read from), then it already contains zeros. Hence
-+		 * we can just skip it.
-+		 */
-+		if (srcmap->type == IOMAP_UNWRITTEN &&
-+		    !folio_test_dirty(folio)) {
-+			folio_unlock(folio);
-+			goto loop_continue;
-+		}
-+
- 		folio_zero_range(folio, offset, bytes);
- 		folio_mark_accessed(folio);
- 
-@@ -1416,6 +1453,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 		if (WARN_ON_ONCE(!ret))
- 			return -EIO;
- 
-+loop_continue:
- 		pos += bytes;
- 		length -= bytes;
- 		written += bytes;
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 58fb7a5062e1..db35167acef6 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -35,6 +35,7 @@
+ #include "xfs_trans_priv.h"
+ #include "xfs_log.h"
+ #include "xfs_bmap_btree.h"
++#include "xfs_rtbitmap.h"
+ #include "xfs_reflink.h"
+ #include "xfs_ag.h"
+ #include "xfs_log_priv.h"
+@@ -1512,6 +1513,8 @@ xfs_itruncate_extents_flags(
+ 	 * the page cache can't scale that far.
+ 	 */
+ 	first_unmap_block = XFS_B_TO_FSB(mp, (xfs_ufsize_t)new_size);
++	if (xfs_inode_has_bigrtalloc(ip))
++		first_unmap_block = xfs_rtb_roundup_rtx(mp, first_unmap_block);
+ 	if (!xfs_verify_fileoff(mp, first_unmap_block)) {
+ 		WARN_ON_ONCE(first_unmap_block > XFS_MAX_FILEOFF);
+ 		return 0;
 diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index ff222827e550..d44508930b67 100644
+index d24927075022..ec7b7bdf8825 100644
 --- a/fs/xfs/xfs_iops.c
 +++ b/fs/xfs/xfs_iops.c
-@@ -861,17 +861,7 @@ xfs_setattr_size(
- 		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
- 		error = xfs_zero_range(ip, oldsize, newsize - oldsize,
- 				&did_zeroing);
--	} else {
--		/*
--		 * iomap won't detect a dirty page over an unwritten block (or a
--		 * cow block over a hole) and subsequently skips zeroing the
--		 * newly post-EOF portion of the page. Flush the new EOF to
--		 * convert the block before the pagecache truncate.
--		 */
--		error = filemap_write_and_wait_range(inode->i_mapping, newsize,
--						     newsize);
--		if (error)
--			return error;
-+	} else if (newsize != oldsize) {
- 		error = xfs_truncate_page(ip, newsize, &did_zeroing);
- 	}
+@@ -865,7 +865,7 @@ xfs_setattr_size(
+ 	 */
+ 	write_back = newsize > ip->i_disk_size && oldsize != ip->i_disk_size;
+ 	if (newsize < oldsize) {
+-		unsigned int blocksize = i_blocksize(inode);
++		unsigned int blocksize = xfs_inode_alloc_unitsize(ip);
  
+ 		/*
+ 		 * Zeroing out the partial EOF block and the rest of the extra
 -- 
 2.39.2
 
