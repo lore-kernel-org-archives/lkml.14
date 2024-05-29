@@ -1,46 +1,45 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEA116DED5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900A7168C3D;
 	Wed, 29 May 2024 08:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716971006; cv=none; b=hODGOXHL2lwjbetGCRQFhND0PdQbS2JHhP75a97Qs4NRg5BVgs2VsTsUnpfUKnhMi/c/yQJuYsA+p5H3bCRKcAm4ac/RDu+d4Y5GK/9FtupXguyxEkxdKMi3ZtLhhhYFg/YOzDpFeyNUvz/EC4vZ63peOlM/E8uTE3ddVcdCNqI=
+	t=1716971006; cv=none; b=qdgm2IgEe6wFyq7Oz4QcdxSyAcuZXXrMK6MTtf00UPIoyOOphY4jypgebDSL3+xUpegOyspCtPIx13V9axqDSUI23NVCtm5fkd7KCKgymdSkJ/qha/b5MqNecARCwjrh1n5SlC7YF77yKfwxWShU4IuvSeY84dPjeI1QPHa+7/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716971006; c=relaxed/simple;
-	bh=VnVBIeiO8J5Og0O5hAYi41IbHAakSkvSUNs+FoobE7c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u2BJJJ4TVPm/HWQHNdn+72t7eYDEZHKGofJhr9zymZ/8QnXSwfgnqBjKmjYHAKnOHTmR2CUsPD9242kNV0ibpQvutG3D+426w5XaTs1VV8lL24g2YuCoVzEUVixZo399ow3hfhEisgiawo2zjwCitIK6f6FVu4zdDxRQ5Vvgn8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XtKwjEiI; arc=none smtp.client-ip=198.47.23.248
+	bh=mawRK5aA/EMwju15c9CJjjLslMegigQKs81Kuy+CIzg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uv+i2gUQ6GmWpRMnhR7d7PmOgxHyJnrNp8WHVt3a0P2ExX4ZH4gTIwxvLZp4YFR7qrqwJIphlKzjKO8Fj9j/CEsxKHkEqIl7PqVPDtceLbFRyQJxZeHBd5plPa+ZfjJqcSkUkcqEQzD0THWF1PwqkOEXS53A9jmYm/SD6NAdaHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wf5DmHRW; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XtKwjEiI"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44T8NEr1056641;
-	Wed, 29 May 2024 03:23:14 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wf5DmHRW"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44T8N5jP028176;
+	Wed, 29 May 2024 03:23:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716970994;
-	bh=ejZRiHRsr4ih1uE2oZpoLmUZbqu9MwySwj0E6XJhQ90=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=XtKwjEiIdORVt1+ZUwdJ190FA3xDMB6W2rW2YRulMFth9mFyJF/+DMrPN23N07uxp
-	 EW0wVciUVqEPw3WAs+2wiHRj7PNouqdFM5ZGhsadylxHGoJGsUMSIVF5DrinLLIrLO
-	 4UB3uvpdi8FsOMWptomR9N+8IfC3f6r5ShiXFRMo=
+	s=ti-com-17Q1; t=1716970985;
+	bh=GA84cJ8nNnm/xjeHKTyGRus4Kr3hXRBkbAwrEXa69NI=;
+	h=From:To:CC:Subject:Date;
+	b=wf5DmHRWdAUIVyzyR3VzxbjbUXqYbnyu5p5it8WEZaNoZjbhR/txYWd4abn8aD6OF
+	 /DJb6ncZpbD2OR1OQt/+qOCH0Q+Fban0n4+LE3ba0qNLCXPIlLwqBLC5+BEa1Fie/7
+	 ha6ZHxGXzmMKqS6MbJrRvVOPc/jblFuJyyLeDFoQ=
 Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44T8NE0H068085
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44T8N5r9048695
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 29 May 2024 03:23:14 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE102.ent.ti.com
+	Wed, 29 May 2024 03:23:05 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE102.ent.ti.com
  (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 29
- May 2024 03:23:13 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 03:23:04 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 29 May 2024 03:23:13 -0500
+ Frontend Transport; Wed, 29 May 2024 03:23:04 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44T8N0d8084708;
-	Wed, 29 May 2024 03:23:09 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44T8N0d6084708;
+	Wed, 29 May 2024 03:23:00 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <francesco@dolcini.it>
@@ -48,12 +47,10 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <sabiya.d@ti.com>,
         <u-kumar1@ti.com>, <danishanwar@ti.com>, <srk@ti.com>,
         <s-vadapalli@ti.com>
-Subject: [PATCH v4 2/4] arm64: dts: ti: k3-j784s4-evm: Enable PCIe0 and PCIe1 in RC Mode
-Date: Wed, 29 May 2024 13:52:57 +0530
-Message-ID: <20240529082259.1619695-3-s-vadapalli@ti.com>
+Subject: [PATCH v4 0/4] Add PCIe DT support for TI's J784S4-EVM and AM69-SK
+Date: Wed, 29 May 2024 13:52:55 +0530
+Message-ID: <20240529082259.1619695-1-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240529082259.1619695-1-s-vadapalli@ti.com>
-References: <20240529082259.1619695-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,77 +61,76 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Enable PCIe0 and PCIe1 instances of PCIe in Root Complex mode of
-operation on J784S4 EVM. The lanes of PCIe0 are connected to Serdes1
-instance of Serdes while the lanes of PCIe1 are connected to Serdes0
-instance of Serdes in J784S4 SoC. Despite both PCIe instances supporting
-up to 4 Lanes, since the physical connections to the PCIe connector
-corresponding to the PCIe1 instance of PCIe are limited to 2 Lanes on
-the J784S4 EVM, update the "num-lanes" property of PCIe1 accordingly.
+TI's J784S4 SoC has two x4 Lane and two x2 Lane Gen3 PCIe Controllers.
+This series adds the device-tree nodes for all 4 PCIe instances in the
+SoC file (k3-j784s4-main.dtsi). The J784S4-EVM board has only PCIe0 and
+PCIe1 instances of PCIe brought out while the AM69-SK board has PCIe0,
+PCIe1 and PCIe3 instances of PCIe brought out. The device-tree overlay
+to enable PCIe0 and PCIe1 in Endpoint mode of operation on J784S4-EVM is
+also included in this series.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
 v3:
-https://lore.kernel.org/r/20240523111008.4057988-3-s-vadapalli@ti.com/
-No changes since v3.
+https://lore.kernel.org/r/20240523111008.4057988-1-s-vadapalli@ti.com/
+Changes since v3:
+- Rebased on linux-next tagged next-20240528.
+- Added ranges for PCIe2 and PCIe3 in k3-j784s4.dtsi which was missed in
+  v3 series.
+- Added new patch in this series for enabling PCIe on AM69-SK board.
 
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 46 ++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+v2:
+https://lore.kernel.org/r/20240520101149.3243151-1-s-vadapalli@ti.com/
+Changes since v2:
+- Rebased on linux-next tagged next-20240523.
+- Based on feedback from Francesco Dolcini <francesco@dolcini.it> at:
+  https://lore.kernel.org/r/20240521200909.GA3707@francesco-nb/
+  the device-tree nodes for PCIe2 and PCIe3 instances of PCIe have been
+  added.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-index d511b25d62e3..31e88a6445f4 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-@@ -1105,3 +1105,49 @@ dp0_out: endpoint {
- 		};
- 	};
- };
-+
-+&serdes0 {
-+	status = "okay";
-+	serdes0_pcie1_link: phy@0 {
-+		reg = <0>;
-+		cdns,num-lanes = <4>;
-+		#phy-cells = <0>;
-+		cdns,phy-type = <PHY_TYPE_PCIE>;
-+		resets = <&serdes_wiz0 1>, <&serdes_wiz0 2>,
-+			 <&serdes_wiz0 3>, <&serdes_wiz0 4>;
-+	};
-+};
-+
-+&serdes_wiz0 {
-+	status = "okay";
-+};
-+
-+&pcie1_rc {
-+	status = "okay";
-+	num-lanes = <2>;
-+	reset-gpios = <&exp1 2 GPIO_ACTIVE_HIGH>;
-+	phys = <&serdes0_pcie1_link>;
-+	phy-names = "pcie-phy";
-+};
-+
-+&serdes1 {
-+	status = "okay";
-+	serdes1_pcie0_link: phy@0 {
-+		reg = <0>;
-+		cdns,num-lanes = <2>;
-+		#phy-cells = <0>;
-+		cdns,phy-type = <PHY_TYPE_PCIE>;
-+		resets = <&serdes_wiz1 1>, <&serdes_wiz1 2>;
-+	};
-+};
-+
-+&serdes_wiz1 {
-+	status = "okay";
-+};
-+
-+&pcie0_rc {
-+	status = "okay";
-+	reset-gpios = <&exp1 6 GPIO_ACTIVE_HIGH>;
-+	phys = <&serdes1_pcie0_link>;
-+	phy-names = "pcie-phy";
-+};
+v1:
+https://lore.kernel.org/r/20240129114749.1197579-1-s-vadapalli@ti.com
+Changes since v1:
+- Rebased series on linux-next tagged next-20240520.
+- All dependencies mentioned in v1 series have been met. This series has
+  no further dependencies for functionality.
+- Added "pcie0_ctrl" and "pcie1_ctrl" nodes within the System Controller
+  node (scm_conf). This enables reusing the existing
+  "ti,syscon-pcie-ctrl" property without having to map the entire System
+  Controller region for configuring the PCIe specific registers within
+  "scm_conf". This change is also done in the "overlay" file in patch
+  3/3 w.r.t. providing the phandle to the pcie0_ctrl and pcie1_ctrl
+  nodes to the "ti,syscon-pcie-ctrl" property in the overlay.
+
+Test Logs:
+1. J784S4-EVM PCIe0 and PCIe1 in RC Mode with NVMe SSD connected to PCIe0:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/af94b2da5dd0613de8a238e37f70eb7e
+2. J784S4-EVM PCIe0 as Endpoint and AM69-SK PCIe0 acting as RC:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/1d305c5145bdc34975615e15fe0f433c
+3. J784S4-EVM PCIe1 as Endpoint and AM69-SK PCIe0 acting as RC:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/3129da32c9984f4f02351ca03105e49e
+4. AM69-SK PCIe0, PCIe1 and PCIe3 in RC Mode with NVMe SSD connected to
+PCIe0:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/5571eb0a0273501fcc214519beab6713
+
+Regards,
+Siddharth.
+
+Dasnavis Sabiya (1):
+  arm64: dts: ti: k3-am69-sk: Add PCIe support
+
+Siddharth Vadapalli (3):
+  arm64: dts: ti: k3-j784s4-main: Add PCIe nodes
+  arm64: dts: ti: k3-j784s4-evm: Enable PCIe0 and PCIe1 in RC Mode
+  arm64: dts: ti: k3-j784s4-evm: Add overlay for PCIe0 and PCIe1 EP Mode
+
+ arch/arm64/boot/dts/ti/Makefile               |   7 +-
+ arch/arm64/boot/dts/ti/k3-am69-sk.dts         |  60 ++++++++
+ .../dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso  |  79 ++++++++++
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      |  46 ++++++
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 136 ++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j784s4.dtsi         |  10 +-
+ 6 files changed, 336 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso
+
 -- 
 2.40.1
 
