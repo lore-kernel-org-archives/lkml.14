@@ -1,212 +1,192 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830CA15B99A
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB15F1649D9
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716966986; cv=none; b=QIixpKod5AJl2WiSiKgeyM+4iVmIHM9JdqIlDp9f4154YCpn2oIKaOFyW+ozc2r5Ey7OaNv48IX9v+zvPx2V4pzX+ta100qhxkuv5Tq9WYEZX9T9ybiKW2acK+dJt/XIeTOJte7muNs8ARZ715kWK7QGW1DSEr9ri7yi7gjnI2I=
+	t=1716967238; cv=none; b=GTc7auhTf9Zg+fVCnpaGSEX2StWAk4UsqAWQ0FavjgHycHH/mx+nxoZfZKks7EtgYyxSGqhJh6ZBJldDsqUAkUK6iBtLRutEjJ36fvyVvGnm6OoNVzSc6Bep479L4mEah/reGbusz9A/ZIXRTFcCxj4yanhzfVQr9iRkaQxJOFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716966986; c=relaxed/simple;
-	bh=nq9OPjriJWIJ5BFeLbgNqrTQm3GhcP0bGpwBiZ8qkO8=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=pOv8vdq2tKrJZJQ3bQ18EkFDfaInUyM09MGCoilcwAZIF57sslFuWyeLlhwBB+pVct03xiwFnDxsY3OaAT/naqNxiZ2SNWb93/7KbZ8oC0en+I/wk7SWnv6fHU8dtrUpIWdLCBcVUfnE/6kgRObYsISiYf7Nezy4H9hm+6FNtKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=K8SUtCHJ; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1716967238; c=relaxed/simple;
+	bh=RseO8Fq4ilRgMFHbMdVd3HicF/tAkkoL/zOtKS7kuxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OLV0+7Nbrxh8R5Xz60xHi5uTccvkrH3H8g1yy0Wnb0/wgcpcs9nfoz4vuZ0sNPREfdAIGYLSW3oyB36N5qEIy3ebu6Uif5ub+Bt1ehUmZCJH/v8u/hmd8YXgijEu4SxI8ceo6qdIUa+0Iv0S06ucTjo8e9sDtcLB2iRvaWm7t4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Dtfsht42; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="K8SUtCHJ"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240529071621epoutp011a779517e95757c96dcd5cd321f04799~T5F96VNtU0122101221epoutp01b
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:16:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240529071621epoutp011a779517e95757c96dcd5cd321f04799~T5F96VNtU0122101221epoutp01b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716966981;
-	bh=SiGNd/X062sCjbQ3KNasPq9AXI1T7vTAaXy64r0sd5g=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=K8SUtCHJ3n7H9BRfgnOdXRSJ4bj6GCNBIYh/TSsQwm9Q8TdJFdCAR2XL8AjoAfmJZ
-	 FOWcDMi6oBOgu6MUQjNIYeSN7YzznUJPH7GodW3Lpj2NqhCH+dmwzjq/HpGLAn0OMS
-	 gel+perT/43YNxOED0fGFp4R/zLc8w7RBfFSQCJk=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240529071621epcas5p23fe659a7ce88c64dab6ca24ccaec2ec2~T5F9cD9pv3114431144epcas5p25;
-	Wed, 29 May 2024 07:16:21 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Vq0zm0Y7cz4x9Pr; Wed, 29 May
-	2024 07:16:20 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	53.60.08853.246D6566; Wed, 29 May 2024 16:16:18 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240529070220epcas5p140580a28b93ce5cb256ef825c778c649~T45urcH3o2715427154epcas5p1B;
-	Wed, 29 May 2024 07:02:20 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240529070220epsmtrp2922cc095f16316937ad6715823142c6d~T45uqpiv91136511365epsmtrp2l;
-	Wed, 29 May 2024 07:02:20 +0000 (GMT)
-X-AuditID: b6c32a44-5fcaba8000002295-e2-6656d642360e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	41.36.08622.CF2D6566; Wed, 29 May 2024 16:02:20 +0900 (KST)
-Received: from cheetah.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240529070219epsmtip17ef35fc42e2bd39fbdedfa6f12c23d0a~T45tOTlm01300713007epsmtip1H;
-	Wed, 29 May 2024 07:02:19 +0000 (GMT)
-From: Vishnu Reddy <vishnu.reddy@samsung.com>
-To: krzk@kernel.org, s.nawrocki@samsung.com, alim.akhtar@samsung.com,
-	linus.walleij@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	pankaj.dubey@samsung.com, ravi.patel@samsung.com
-Subject: [PATCH] pinctrl: samsung: Add support for pull-up and pull-down
-Date: Wed, 29 May 2024 12:29:39 +0530
-Message-Id: <20240529065939.36369-1-vishnu.reddy@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAKsWRmVeSWpSXmKPExsWy7bCmpq7TtbA0gz8rVS0ezNvGZnH+/AZ2
-	iyl/ljNZbHp8jdVi8/w/jBaXd81hs5hxfh+TxaKtX9gtHn7Yw25x+E07qwOXx6ZVnWwed67t
-	YfPYvKTeo2/LKkaPz5vkAlijsm0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTy
-	EnNTbZVcfAJ03TJzgI5SUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BSYFOgVJ+YW
-	l+al6+WlllgZGhgYmQIVJmRnXNq6gb1gu1TF959rGRsYJ4t1MXJwSAiYSJx4F9PFyMUhJLCb
-	UWL3n5uMEM4nRon+vhlsEM43Rok1yz4BZTjBOj78aWOHSOxllGjonQLltDJJvOs4AlbFJqAr
-	8XnJWRYQW0QgQeLlh5Ngo5hBlkyefIgNJCEs4CGxbNd6MJtFQFVi5ZFbbCBH8QrYSny9Hg2x
-	TV5i9YYDzCC9EgKH2CWuTfnKDpFwkfi0eznUScISr45vgYpLSXx+t5cNwk6WWP/7FDvEozkS
-	PdMUIML2EgeuzGEBCTMLaEqs36UPEZaVmHpqHROIzSzAJ9H7+wkTRJxXYsc8GFtN4tik6awQ
-	toxE54obUBd4SMzY0glmCwnESrSe2MA4gVF2FsKGBYyMqxglUwuKc9NTk00LDPNSy+HxlJyf
-	u4kRnNS0XHYw3pj/T+8QIxMH4yFGCQ5mJRHeM5NC04R4UxIrq1KL8uOLSnNSiw8xmgJDbCKz
-	lGhyPjCt5pXEG5pYGpiYmZmZWBqbGSqJ875unZsiJJCeWJKanZpakFoE08fEwSnVwGQgv4FL
-	iXPhzaW3X57fMrvgnn9/zcszP4z/HLhx/Mt/vWP+txfNajDYtOjUdHvPZO4EpZtttlwT137X
-	VwvwMr/7SViQ9+jHCzzHZhfOPbAhxO2/KMucp8mq+bO3zlMRiHzz+3vtzwyWV6dYhdzM77fe
-	E4+czpqoaHzb7aUR+9mAVQuyZkzUlbE7yrv1ejn/zs/p/zd8e3tF2Wli6psZHotfv2Mo3NnQ
-	4vJ/pVpVeof7q/zAffYzdT+ftrxz6kVvDsed3Mc7WVdeaRapmu12eVPlXIe2BzryoUvLXVQN
-	TNPYOj0n2cT+dBA4aijeLjUvYX/O/Hb5LVc1BQ7WlLAxtXV1nZvxbvc2y0eL/9XmvzqjxFKc
-	kWioxVxUnAgAXGOByvMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplluLIzCtJLcpLzFFi42LZdlhJTvfPpbA0gwU/VSwezNvGZnH+/AZ2
-	iyl/ljNZbHp8jdVi8/w/jBaXd81hs5hxfh+TxaKtX9gtHn7Yw25x+E07qwOXx6ZVnWwed67t
-	YfPYvKTeo2/LKkaPz5vkAlijuGxSUnMyy1KL9O0SuDIubd3AXrBdquL7z7WMDYyTxboYOTkk
-	BEwkPvxpY+9i5OIQEtjNKHFo2hR2iISMxIc7W5ghbGGJlf+eQxU1M0ksOfWBFSTBJqAr8XnJ
-	WRYQW0QgReL1pVtgRcwCBxkl5n1sBysSFvCQWLZrPRuIzSKgKrHyyC0gm4ODV8BW4uv1aIgF
-	8hKrNxxgnsDIs4CRYRWjZGpBcW56brFhgVFearlecWJucWleul5yfu4mRnCIaWntYNyz6oPe
-	IUYmDsZDjBIczEoivGcmhaYJ8aYkVlalFuXHF5XmpBYfYpTmYFES5/32ujdFSCA9sSQ1OzW1
-	ILUIJsvEwSnVwHRGTltXdOv8/98EmU+q/U1inMstfnN6z/wlvD+6Wt01e54dSZhVaH23+/nX
-	RIuPy9jYP98PZvj9h3GeYqLQlEOL1W//jn2kPmnqsofSNXfkD/627l3qoa2+4ffxG/MOdwQ9
-	vXRCPGci2xlO5UM8bTHvqgM6y2+fn8bDHax8LLRjC8uSRyqPDUrFTsgantyiH+9u6+rSwM61
-	e3ps+XbVeU4q0ZEzjStb1+RNcWRbrb75+/eDrRbeS+0KFr8W6/yveTQ26pd17+qZrMKnCyJC
-	PgTWz+J6utrp/JKpO4p9Sv+k7nAJOm8Rnb8h4OGnbRqN2tOi6g3Djt8rCxBS8RWRuami4vjr
-	f7RL2xt+gaQZlUosxRmJhlrMRcWJAINOWoKgAgAA
-X-CMS-MailID: 20240529070220epcas5p140580a28b93ce5cb256ef825c778c649
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240529070220epcas5p140580a28b93ce5cb256ef825c778c649
-References: <CGME20240529070220epcas5p140580a28b93ce5cb256ef825c778c649@epcas5p1.samsung.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dtfsht42"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f480624d10so14032145ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 00:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716967235; x=1717572035; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GrP0lC+ylsDVtkh+78zMfS99ubIeprL0D+84GsbfptA=;
+        b=Dtfsht42+0udI/c9bT8nl+pfcSt4Uhc/xctDzjVSD6Ksb58OAyCeRp553/4psGThuU
+         2UHLBJ5PHQrnIT1qnXVCUkHVtvS8uErLNrXjECXY9loQUlGCsVnJcG+DBD279W1PAB5U
+         ZYhixfruySzK3YCZReF8CPD2Y8+MynVit5TO8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716967235; x=1717572035;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GrP0lC+ylsDVtkh+78zMfS99ubIeprL0D+84GsbfptA=;
+        b=ppRi9x9n7S6JADAHHaRtIJbBywm+wJpG0H5kkA2ZHB+xEED78fyrYCXXxqD0YuxvCP
+         7uIAyhoCVD/Ay8NbKbkqrPSssiRV7wIBj38/XOyOA6aFq4291Mav478FKonEbt2PVdiw
+         3Xz2yd8bnaMN8Xcokc1he8k7T7XGN9xHN6E/AI2BzoFTYDfrXpKuVReZz6UDAmM7Vk5T
+         D21ApTek8gh4lCMpy5gnQeyXxZmwS8ObkhoeEyo+NqjVQV7Ra782Mxf0LpL77oYRmVpY
+         fEy7TdTDJ1eJ1hSB6cKIuyHazWA7SohF8s4afeY1Cq5ErvjW4BuXIhj0Hgc4yi8kk27Q
+         E8Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCXDO9L3EyAdFmtEAZxPupn5ILSWwRsVLrCwrVGtx6IWeKlEzcCyWQ4A4ExGU0ZwJd+wzkYWE18NqzhWtuRpuLqk2Yx1jluKmOfkKi5s
+X-Gm-Message-State: AOJu0Yz44e+b00ZEQtwk87PoJ3LCL8YALWUNXSh4jJOUy0Q5yStZBvzO
+	1XcrgRFauvfFa2Qdfwd5xJeqXWzJ0c/BrYMZyc4TT+nsUWtyqehdcqX+uM+O/g==
+X-Google-Smtp-Source: AGHT+IG0kGGFbfI2cecpO9ImlWQuyySlRGlMDeXY1V6VTJYeY6FsZiH4GA2/DyDB3fWtApC7L6O71Q==
+X-Received: by 2002:a17:902:f54b:b0:1f4:b7ff:ac4f with SMTP id d9443c01a7336-1f4b7ffb0camr59885205ad.50.1716967235146;
+        Wed, 29 May 2024 00:20:35 -0700 (PDT)
+Received: from chromium.org (174.71.80.34.bc.googleusercontent.com. [34.80.71.174])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f471f127c2sm72761645ad.13.2024.05.29.00.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 00:20:34 -0700 (PDT)
+Date: Wed, 29 May 2024 16:20:31 +0900
+From: Tomasz Figa <tfiga@chromium.org>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"hn.chen" <hn.chen@sunplusit.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v10 3/6] media: uvcvideo: Quirk for invalid dev_sof in
+ Logitech C922
+Message-ID: <sb4gvafzk7fb2ohyeksegvyvnjccbyml7oj7nw6g5mvprk4brt@3mhm7we2eqwa>
+References: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
+ <20240323-resend-hwtimestamp-v10-3-b08e590d97c7@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240323-resend-hwtimestamp-v10-3-b08e590d97c7@chromium.org>
 
-gpiolib framework has the implementation of setting up the
-PUD configuration for GPIO pins but there is no driver support.
+On Sat, Mar 23, 2024 at 10:48:04AM +0000, Ricardo Ribalda wrote:
+> Logitech C922 internal SOF does not increases at a stable rate of 1kHz.
+> This causes that the device_sof and the host_sof run at different rates,
+> breaking the clock domain conversion algorithm. Eg:
+> 
+> 30 (6) [-] none 30 614400 B 21.245557 21.395214 34.133 fps ts mono/SoE
+> 31 (7) [-] none 31 614400 B 21.275327 21.427246 33.591 fps ts mono/SoE
+> 32 (0) [-] none 32 614400 B 21.304739 21.459256 34.000 fps ts mono/SoE
+> 33 (1) [-] none 33 614400 B 21.334324 21.495274 33.801 fps ts mono/SoE
+> * 34 (2) [-] none 34 614400 B 21.529237 21.527297 5.130 fps ts mono/SoE
+> * 35 (3) [-] none 35 614400 B 21.649416 21.559306 8.321 fps ts mono/SoE
+> 36 (4) [-] none 36 614400 B 21.678789 21.595320 34.045 fps ts mono/SoE
+> ...
+> 99 (3) [-] none 99 614400 B 23.542226 23.696352 33.541 fps ts mono/SoE
+> 100 (4) [-] none 100 614400 B 23.571578 23.728404 34.069 fps ts mono/SoE
+> 101 (5) [-] none 101 614400 B 23.601425 23.760420 33.504 fps ts mono/SoE
+> * 102 (6) [-] none 102 614400 B 23.798324 23.796428 5.079 fps ts mono/SoE
+> * 103 (7) [-] none 103 614400 B 23.916271 23.828450 8.478 fps ts mono/SoE
+> 104 (0) [-] none 104 614400 B 23.945720 23.860479 33.957 fps ts mono/SoE
+> 
+> Instead of disabling completely the hardware timestamping for such
+> hardware we take the assumption that the packet handling jitter is
+> under 2ms and use the host_sof as dev_sof.
+> 
+> We can think of the UVC hardware clock as a system with a coarse clock
+> (the SOF) and a fine clock (the PTS). The coarse clock can be replaced
+> with a clock on the same frequency, if the jitter of such clock is
+> smaller than its sampling rate. That way we can save some of the
+> precision of the fine clock.
+> 
+> To probe this point we have run three experiments on the Logitech C922.
+> On that experiment we run the camera at 33fps and we analyse the
+> difference in msec between a frame and its predecessor. If we display
+> the histogram of that value, a thinner histogram will mean a better
+> meassurement. The results for:
+> - original hw timestamp: https://ibb.co/D1HJJ4x
+> - pure software timestamp: https://ibb.co/QC9MgVK
+> - modified hw timestamp: https://ibb.co/8s9dBdk
+> 
+> This bug in the camera firmware has been confirmed by the vendor.
+> 
+> lsusb -v
+> 
+> Bus 001 Device 044: ID 046d:085c Logitech, Inc. C922 Pro Stream Webcam
+> Device Descriptor:
+>   bLength                18
+>   bDescriptorType         1
+>   bcdUSB               2.00
+>   bDeviceClass          239 Miscellaneous Device
+>   bDeviceSubClass         2
+>   bDeviceProtocol         1 Interface Association
+>   bMaxPacketSize0        64
+>   idVendor           0x046d Logitech, Inc.
+>   idProduct          0x085c C922 Pro Stream Webcam
+>   bcdDevice            0.16
+>   iManufacturer           0
+>   iProduct                2 C922 Pro Stream Webcam
+>   iSerial                 1 80B912DF
+>   bNumConfigurations      1
+> 
+> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/uvc/uvc_driver.c |  9 +++++++++
+>  drivers/media/usb/uvc/uvc_video.c  | 11 +++++++++++
+>  drivers/media/usb/uvc/uvcvideo.h   |  1 +
+>  3 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index bbd90123a4e76..723e6d5680c2e 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -2574,6 +2574,15 @@ static const struct usb_device_id uvc_ids[] = {
+>  	  .bInterfaceSubClass	= 1,
+>  	  .bInterfaceProtocol	= 0,
+>  	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT) },
+> +	/* Logitech HD Pro Webcam C922 */
+> +	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> +				| USB_DEVICE_ID_MATCH_INT_INFO,
+> +	  .idVendor		= 0x046d,
+> +	  .idProduct		= 0x085c,
+> +	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> +	  .bInterfaceSubClass	= 1,
+> +	  .bInterfaceProtocol	= 0,
+> +	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_INVALID_DEVICE_SOF) },
+>  	/* Chicony CNF7129 (Asus EEE 100HE) */
+>  	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+>  				| USB_DEVICE_ID_MATCH_INT_INFO,
+> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> index b2e70fcf4eb4c..d6ca383f643e3 100644
+> --- a/drivers/media/usb/uvc/uvc_video.c
+> +++ b/drivers/media/usb/uvc/uvc_video.c
+> @@ -558,6 +558,17 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
+>  	stream->clock.last_sof = dev_sof;
+>  
+>  	host_sof = usb_get_current_frame_number(stream->dev->udev);
+> +
+> +	/*
+> +	 * On some devices, like the Logitech C922, the device SOF does not run
+> +	 * at a stable rate of 1kHz. For those devices use the host SOF instead.
+> +	 * In the tests performed so far, this improves the timestamp precision.
+> +	 * This is probably explained by a small packet handling jitter from the
+> +	 * host, but the exact reason hasn't been fully determined.
 
-Add support to handle the PUD configuration request from the
-userspace in samsung pinctrl driver.
+Given that the counter increases at a low frequency (1 kHz), we have a
+millisecond from when the frame is received to go into
+uvc_video_clock_decode() and read it, which should be quite realistic in
+normal conditions.
 
-Signed-off-by: Vishnu Reddy <vishnu.reddy@samsung.com>
----
- drivers/pinctrl/samsung/pinctrl-samsung.c | 51 +++++++++++++++++++++++
- drivers/pinctrl/samsung/pinctrl-samsung.h |  7 ++++
- 2 files changed, 58 insertions(+)
+I suspect that under a relatively high interrupt load, with interrupts
+of higher priority than USB host, we could end up with more jitter, but
+it should be still better compared to the broken hw timestamp behavior
+and not worse than sw timestamp, because that would be subjected to many
+more factors introducing jitter.
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index ed07e23e0912..a4b6eea5e168 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -939,6 +939,56 @@ static int samsung_pinctrl_unregister(struct platform_device *pdev,
- 	return 0;
- }
- 
-+/*
-+ * samsung_gpio_set_pud will enable or disable the pull-down and
-+ * pull-up for the gpio pins in the PUD register.
-+ */
-+static void samsung_gpio_set_pud(struct gpio_chip *gc, unsigned int offset,
-+				 unsigned int value)
-+{
-+	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
-+	const struct samsung_pin_bank_type *type = bank->type;
-+	void __iomem *reg;
-+	unsigned int data;
-+
-+	reg = bank->pctl_base + bank->pctl_offset;
-+	data = readl(reg + type->reg_offset[PINCFG_TYPE_PUD]);
-+	data &= ~(0xf << (offset * 4));
-+	data |= value << (offset * 4);
-+	writel(data, reg + type->reg_offset[PINCFG_TYPE_PUD]);
-+}
-+
-+/*
-+ * samsung_gpio_set_config will identify the type of PUD config based
-+ * on the gpiolib request to enable or disable the PUD configuration.
-+ */
-+static int samsung_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-+				   unsigned long config)
-+{
-+	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
-+	unsigned long flags;
-+	unsigned int value = 0;
-+
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		value = DISABLE_PIN_PULL_UP_DOWN;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		value = ENABLE_PIN_PULL_DOWN;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		value = ENABLE_PIN_PULL_UP;
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	raw_spin_lock_irqsave(&bank->slock, flags);
-+	samsung_gpio_set_pud(gc, offset, value);
-+	raw_spin_unlock_irqrestore(&bank->slock, flags);
-+	return 0;
-+}
-+
- static const struct gpio_chip samsung_gpiolib_chip = {
- 	.request = gpiochip_generic_request,
- 	.free = gpiochip_generic_free,
-@@ -948,6 +998,7 @@ static const struct gpio_chip samsung_gpiolib_chip = {
- 	.direction_output = samsung_gpio_direction_output,
- 	.to_irq = samsung_gpio_to_irq,
- 	.add_pin_ranges = samsung_add_pin_ranges,
-+	.set_config = samsung_gpio_set_config,
- 	.owner = THIS_MODULE,
- };
- 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index ab791afaabf5..23b70ddcaccc 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -61,6 +61,13 @@ enum pincfg_type {
- #define PIN_CON_FUNC_INPUT		0x0
- #define PIN_CON_FUNC_OUTPUT		0x1
- 
-+/*
-+ * Values for the pin PUD register.
-+ */
-+#define DISABLE_PIN_PULL_UP_DOWN	0x0
-+#define ENABLE_PIN_PULL_DOWN		0x1
-+#define ENABLE_PIN_PULL_UP		0x3
-+
- /**
-  * enum eint_type - possible external interrupt types.
-  * @EINT_TYPE_NONE: bank does not support external interrupts
--- 
-2.17.1
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
+Best regards,
+Tomasz
