@@ -1,159 +1,249 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4997018EA8;
-	Wed, 29 May 2024 13:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB5B1AAC4;
+	Wed, 29 May 2024 13:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990263; cv=none; b=aNs8WGrg5DLfd9UfyXWggLVwymFWUXCnBXBoZMDDRW2eRvTjyAt9ZC++1D5Mty51Irs8gvAmKMdeQv4fv4tjj4gbBXmYJgf3t6LRf2+A2h5ZoViRFSZBBPTGr0LS45RSHO2jKMQm5Ue1DoIwkT3pcSj38GuEuiAJs6lZ2OQqfqQ=
+	t=1716990279; cv=none; b=WTkevjaQmatKMQjwIo7iBK4oLNJw4jaeqSe+aW66Wj3vGzup3yt2R50vt8A+LZ3Rpn0z7AQD+2DjxKwpnv7Kg7pUVNvAU9lBdYfJYiPb6UcVrJz4CLHghbOf3z+pDTX6xTtRLMWEVj55dAFIKm61FQQB1+jm4fVryFOEI/Kb358=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990263; c=relaxed/simple;
-	bh=VQgHFgqP/4XpqkYAK/f5SZ2pHbIQPnlx3L/xfDABSkk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K6yu8XpyX9i5SWL3Cx3N9UyEYad5ybpw+zin4+qgyslcoxSnm0sY+YQ0g9bde85RLIRBHnliRD56J77CXdipLZqgeoE7E47jfI3Qr72B+R2gX6Kvql8sNtSCKdAS3g8FunMapSA+LfMD8PoxZM3WVlVJl5qIJIKafjdoqHiuTdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ldh1lFQN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ldh1lFQN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7183C2BD10;
-	Wed, 29 May 2024 13:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716990262;
-	bh=VQgHFgqP/4XpqkYAK/f5SZ2pHbIQPnlx3L/xfDABSkk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ldh1lFQNlkJoGyhqSYbTknan/c+BczYYSyD6Dl3BgcEUWCOZ87MwiAWLKR4tUy+N4
-	 jUA6HeGMzjStli3t6Q5eBVfzUrSLfn/xpRvEfHXb4JRxbnSwbTYCrRU1ZRauZzLNkF
-	 bWJrRc2F3r3bpb5TDf2V5A5jQaZKYH9JxWdqGMghLxaDhX0qM1APNyXASJO3LMaRWa
-	 /dVznUDRS7a9lQvvbB93Zg92qPDAOlHv8prYAoxsWbDCdKffDpimglaSF/sDYZzhPI
-	 aJrwp/+tL0PgjuOU6tY+ISPVNZv6Pvikg5s+C2tEdihX61SC5626QlZD0vHLZWIEz2
-	 /USnH1kCu+D4Q==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5295dada905so721262e87.1;
-        Wed, 29 May 2024 06:44:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXOQpy82QVKJPd9qU0UyyS2dYRS0oq/HwyJLMyWbeqsJujXLXIr9k/pi4oEMnn4L4uEQ8txxgOkh9udVBWNkyEPLCFVOrdjd7IZa4+HG8GHgUql6BYJxTG6oSm22XXLBETw7ag2qvLBig==
-X-Gm-Message-State: AOJu0YxZXMxkdW08ezpwFz2ecOZIJuBptqDXKOZeXGe9euZ3Is9B9CHj
-	7dpiKVYpbeMvvBjp9Bdpu79SWAbZ5j/eOWsUrgvHSqdREhbbbbqKTrglpPe7bPNghCR+2gw4DbQ
-	eScOcZAsaisE4MXhltNFx9c5Uog==
-X-Google-Smtp-Source: AGHT+IG0Twsuzy3G15biXOtdBIc6ZH3RX7c1OUW5xcm5mEL/8kjZupd/YmgZJOtQEJePvqdfFd0WJ/312vXzKdPlv50=
-X-Received: by 2002:a05:6512:2148:b0:52b:7a62:7600 with SMTP id
- 2adb3069b0e04-52b7a627762mr1520e87.16.1716990261135; Wed, 29 May 2024
- 06:44:21 -0700 (PDT)
+	s=arc-20240116; t=1716990279; c=relaxed/simple;
+	bh=tpOZebi5gYFEPnOKS6P6ZzB6ILaLUkjqHU1zmyOyxWo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ltqjPjMFYidFp8L5yY/sUq05EJDb8PNMovaw35x2CZ91QHciY2K/rvqNPP47FOjkqvJid18m0xPr4SE1kHRcrjMNp6bQuQqcCQrcORjiodf1AO7C2VQYweq6cr8E6Fv5hWMZ+Vg7D+n2Mlj5LOUyv5g21n9DXa/w5+Q+Xh7VLYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vq9W749fgz6JBH1;
+	Wed, 29 May 2024 21:40:35 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B719A140B3C;
+	Wed, 29 May 2024 21:44:34 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 29 May 2024 14:44:34 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, <loongarch@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin
+ Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v10 19/19] cpumask: Add enabled cpumask for present CPUs that can be brought online
+Date: Wed, 29 May 2024 14:34:46 +0100
+Message-ID: <20240529133446.28446-20-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528164132.2451685-1-maz@kernel.org> <CAK9=C2XNPJP0X=pg5TSrQbsuouDD3jP-gy2Sm4BXNJp0ZiWp+A@mail.gmail.com>
- <86bk4pm8j1.wl-maz@kernel.org>
-In-Reply-To: <86bk4pm8j1.wl-maz@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 29 May 2024 08:44:07 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKOxYeNh026wmYH2JDYbR-FGjc=9gv-taB09pC4fyXKCA@mail.gmail.com>
-Message-ID: <CAL_JsqKOxYeNh026wmYH2JDYbR-FGjc=9gv-taB09pC4fyXKCA@mail.gmail.com>
-Subject: Re: [PATCH] of: property: Fix fw_devlink handling of interrupt-map
-To: Marc Zyngier <maz@kernel.org>
-Cc: Anup Patel <apatel@ventanamicro.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, May 29, 2024 at 1:33=E2=80=AFAM Marc Zyngier <maz@kernel.org> wrote=
-:
->
-> On Wed, 29 May 2024 06:15:52 +0100,
-> Anup Patel <apatel@ventanamicro.com> wrote:
-> >
-> > On Tue, May 28, 2024 at 10:11=E2=80=AFPM Marc Zyngier <maz@kernel.org> =
-wrote:
-> > >
-> > > Commit d976c6f4b32c ("of: property: Add fw_devlink support for
-> > > interrupt-map property") tried to do what it says on the tin,
-> > > but failed on a couple of points:
-> > >
-> > > - it confuses bytes and cells. Not a huge deal, except when it
-> > >   comes to pointer arithmetic
-> > >
-> > > - it doesn't really handle anything but interrupt-maps that have
-> > >   their parent #address-cells set to 0
-> > >
-> > > The combinations of the two leads to some serious fun on my M1
-> > > box, with plenty of WARN-ON() firing all over the shop, and
-> > > amusing values being generated for interrupt specifiers.
-> > >
-> > > Address both issues so that I can boot my machines again.
-> > >
-> > > Fixes: d976c6f4b32c ("of: property: Add fw_devlink support for interr=
-upt-map property")
-> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > > Cc: Anup Patel <apatel@ventanamicro.com>
-> > > Cc: Saravana Kannan <saravanak@google.com>
-> > > Cc: Rob Herring (Arm) <robh@kernel.org>
-> >
-> > Thanks for the fix patch but unfortunately it breaks for RISC-V.
-> >
-> > > ---
-> > >  drivers/of/property.c | 16 ++++++++++++++--
-> > >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > > index 1c83e68f805b..9adebc63bea9 100644
-> > > --- a/drivers/of/property.c
-> > > +++ b/drivers/of/property.c
-> > > @@ -1322,7 +1322,13 @@ static struct device_node *parse_interrupt_map=
-(struct device_node *np,
-> > >         addrcells =3D of_bus_n_addr_cells(np);
-> > >
-> > >         imap =3D of_get_property(np, "interrupt-map", &imaplen);
-> > > -       if (!imap || imaplen <=3D (addrcells + intcells))
-> > > +       imaplen /=3D sizeof(*imap);
-> > > +
-> > > +       /*
-> > > +        * Check that we have enough runway for the child unit interr=
-upt
-> > > +        * specifier and a phandle. That's the bare minimum we can ex=
-pect.
-> > > +        */
-> > > +       if (!imap || imaplen <=3D (addrcells + intcells + 1))
-> > >                 return NULL;
-> > >         imap_end =3D imap + imaplen;
-> > >
-> > > @@ -1346,8 +1352,14 @@ static struct device_node *parse_interrupt_map=
-(struct device_node *np,
-> > >                 if (!index)
-> > >                         return sup_args.np;
-> > >
-> > > -               of_node_put(sup_args.np);
-> > > +               /*
-> > > +                * Account for the full parent unit interrupt specifi=
-er
-> > > +                * (address cells, interrupt cells, and phandle).
-> > > +                */
-> > > +               imap +=3D of_bus_n_addr_cells(sup_args.np);
-> >
-> > This breaks for RISC-V because we don't have "#address-cells"
-> > property in interrupt controller DT node and of_bus_n_addr_cells()
-> > retrieves "#address-cells" from the parent of interrupt controller.
->
-> That's a feature, not a bug. #address-cells, AFAICT, applies to all
-> child nodes until you set it otherwise.
+From: James Morse <james.morse@arm.com>
 
-That may be supported in some places, but only because of buggy DTs
-(we're talking 2000 era). Current dtc should warn if an interrupt
-controller node doesn't have #address-cells AND is referred to by
-interrupt-map.
+The 'offline' file in sysfs shows all offline CPUs, including those
+that aren't present. User-space is expected to remove not-present CPUs
+from this list to learn which CPUs could be brought online.
 
-There's also the notion of default root values, but that's broken as
-well. dtc and the kernel don't even agree on the default for some
-arches. Fortunately, that's been a dtc warning longer than I've worked
-on DT.
+CPUs can be present but not-enabled. These CPUs can't be brought online
+until the firmware policy changes, which comes with an ACPI notification
+that will register the CPUs.
 
+With only the offline and present files, user-space is unable to
+determine which CPUs it can try to bring online. Add a new CPU mask
+that shows this based on all the registered CPUs.
 
-> > The of_irq_parse_raw() looks for "#address-cells" property
-> > in the interrupt controller DT node only so we should do a
-> > similar thing here as well.
->
-> This looks more like a of_irq_parse_raw() bug than anything else.
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ .../ABI/testing/sysfs-devices-system-cpu      |  6 +++++
+ drivers/base/cpu.c                            | 10 ++++++++
+ include/linux/cpumask.h                       | 25 +++++++++++++++++++
+ kernel/cpu.c                                  |  3 +++
+ 4 files changed, 44 insertions(+)
 
-Nope.
+diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+index e7e160954e79..53ed1a803422 100644
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -694,3 +694,9 @@ Description:
+ 		(RO) indicates whether or not the kernel directly supports
+ 		modifying the crash elfcorehdr for CPU hot un/plug and/or
+ 		on/offline changes.
++
++What:		/sys/devices/system/cpu/enabled
++Date:		Nov 2022
++Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
++Description:
++		(RO) the list of CPUs that can be brought online.
+diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+index 1487cd9761a4..b57326fd48d4 100644
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -95,6 +95,7 @@ void unregister_cpu(struct cpu *cpu)
+ {
+ 	int logical_cpu = cpu->dev.id;
+ 
++	set_cpu_enabled(logical_cpu, false);
+ 	unregister_cpu_under_node(logical_cpu, cpu_to_node(logical_cpu));
+ 
+ 	device_unregister(&cpu->dev);
+@@ -273,6 +274,13 @@ static ssize_t print_cpus_offline(struct device *dev,
+ }
+ static DEVICE_ATTR(offline, 0444, print_cpus_offline, NULL);
+ 
++static ssize_t print_cpus_enabled(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpu_enabled_mask));
++}
++static DEVICE_ATTR(enabled, 0444, print_cpus_enabled, NULL);
++
+ static ssize_t print_cpus_isolated(struct device *dev,
+ 				  struct device_attribute *attr, char *buf)
+ {
+@@ -413,6 +421,7 @@ int register_cpu(struct cpu *cpu, int num)
+ 	register_cpu_under_node(num, cpu_to_node(num));
+ 	dev_pm_qos_expose_latency_limit(&cpu->dev,
+ 					PM_QOS_RESUME_LATENCY_NO_CONSTRAINT);
++	set_cpu_enabled(num, true);
+ 
+ 	return 0;
+ }
+@@ -494,6 +503,7 @@ static struct attribute *cpu_root_attrs[] = {
+ 	&cpu_attrs[2].attr.attr,
+ 	&dev_attr_kernel_max.attr,
+ 	&dev_attr_offline.attr,
++	&dev_attr_enabled.attr,
+ 	&dev_attr_isolated.attr,
+ #ifdef CONFIG_NO_HZ_FULL
+ 	&dev_attr_nohz_full.attr,
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 23686bed441d..954d4adc8f81 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -93,6 +93,7 @@ static inline void set_nr_cpu_ids(unsigned int nr)
+  *
+  *     cpu_possible_mask- has bit 'cpu' set iff cpu is populatable
+  *     cpu_present_mask - has bit 'cpu' set iff cpu is populated
++ *     cpu_enabled_mask  - has bit 'cpu' set iff cpu can be brought online
+  *     cpu_online_mask  - has bit 'cpu' set iff cpu available to scheduler
+  *     cpu_active_mask  - has bit 'cpu' set iff cpu available to migration
+  *
+@@ -125,11 +126,13 @@ static inline void set_nr_cpu_ids(unsigned int nr)
+ 
+ extern struct cpumask __cpu_possible_mask;
+ extern struct cpumask __cpu_online_mask;
++extern struct cpumask __cpu_enabled_mask;
+ extern struct cpumask __cpu_present_mask;
+ extern struct cpumask __cpu_active_mask;
+ extern struct cpumask __cpu_dying_mask;
+ #define cpu_possible_mask ((const struct cpumask *)&__cpu_possible_mask)
+ #define cpu_online_mask   ((const struct cpumask *)&__cpu_online_mask)
++#define cpu_enabled_mask   ((const struct cpumask *)&__cpu_enabled_mask)
+ #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
+ #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
+ #define cpu_dying_mask    ((const struct cpumask *)&__cpu_dying_mask)
+@@ -1075,6 +1078,7 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
+ #else
+ #define for_each_possible_cpu(cpu) for_each_cpu((cpu), cpu_possible_mask)
+ #define for_each_online_cpu(cpu)   for_each_cpu((cpu), cpu_online_mask)
++#define for_each_enabled_cpu(cpu)   for_each_cpu((cpu), cpu_enabled_mask)
+ #define for_each_present_cpu(cpu)  for_each_cpu((cpu), cpu_present_mask)
+ #endif
+ 
+@@ -1092,6 +1096,15 @@ set_cpu_possible(unsigned int cpu, bool possible)
+ 		cpumask_clear_cpu(cpu, &__cpu_possible_mask);
+ }
+ 
++static inline void
++set_cpu_enabled(unsigned int cpu, bool can_be_onlined)
++{
++	if (can_be_onlined)
++		cpumask_set_cpu(cpu, &__cpu_enabled_mask);
++	else
++		cpumask_clear_cpu(cpu, &__cpu_enabled_mask);
++}
++
+ static inline void
+ set_cpu_present(unsigned int cpu, bool present)
+ {
+@@ -1173,6 +1186,7 @@ static __always_inline unsigned int num_online_cpus(void)
+ 	return raw_atomic_read(&__num_online_cpus);
+ }
+ #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
++#define num_enabled_cpus()	cpumask_weight(cpu_enabled_mask)
+ #define num_present_cpus()	cpumask_weight(cpu_present_mask)
+ #define num_active_cpus()	cpumask_weight(cpu_active_mask)
+ 
+@@ -1181,6 +1195,11 @@ static inline bool cpu_online(unsigned int cpu)
+ 	return cpumask_test_cpu(cpu, cpu_online_mask);
+ }
+ 
++static inline bool cpu_enabled(unsigned int cpu)
++{
++	return cpumask_test_cpu(cpu, cpu_enabled_mask);
++}
++
+ static inline bool cpu_possible(unsigned int cpu)
+ {
+ 	return cpumask_test_cpu(cpu, cpu_possible_mask);
+@@ -1205,6 +1224,7 @@ static inline bool cpu_dying(unsigned int cpu)
+ 
+ #define num_online_cpus()	1U
+ #define num_possible_cpus()	1U
++#define num_enabled_cpus()	1U
+ #define num_present_cpus()	1U
+ #define num_active_cpus()	1U
+ 
+@@ -1218,6 +1238,11 @@ static inline bool cpu_possible(unsigned int cpu)
+ 	return cpu == 0;
+ }
+ 
++static inline bool cpu_enabled(unsigned int cpu)
++{
++	return cpu == 0;
++}
++
+ static inline bool cpu_present(unsigned int cpu)
+ {
+ 	return cpu == 0;
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 563877d6c28b..a2f3ad276814 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -3069,6 +3069,9 @@ EXPORT_SYMBOL(__cpu_possible_mask);
+ struct cpumask __cpu_online_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_online_mask);
+ 
++struct cpumask __cpu_enabled_mask __read_mostly;
++EXPORT_SYMBOL(__cpu_enabled_mask);
++
+ struct cpumask __cpu_present_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_present_mask);
+ 
+-- 
+2.39.2
 
-Rob
