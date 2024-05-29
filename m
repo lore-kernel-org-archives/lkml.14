@@ -1,108 +1,78 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A5D15B115
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 15:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E6B15ADAA;
+	Wed, 29 May 2024 15:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716997627; cv=none; b=o8p4phMrmtgYd6CmvdlWHccc9GcJOCxQb8d+Wfh6QwSmjzVJkGxOQ1paHIM4tJBwQ1CB3PjeKjrNCQ3XU/H6pPGwuGDK7MRh7qGIz0TdTYr2h+RMHi49KFssHvCo7rQ2xIVqMBZljCdTBnxMPs22PRuPMdQSoro4RP7/2kaCcUY=
+	t=1716997770; cv=none; b=UPYv9f1ho+3FjF2haPbYjeI2RP7RwjaXsvaU+MZF0B2dp8fHZsWyjogOnJRxb8F9EzHp3ypmkFHDDljcsIOZSvwllYQ2xot3KpFQB9QMFGTEHObyIptvZyEZZe7Wf83i4bvBm0P1B7esiyptE+ETi2NWpl8nHOxRuMbbhTdJ6+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716997627; c=relaxed/simple;
-	bh=PBFURNvgqdG3HFj6VU1DZDCOa1PrJn7g3K6VyJFq/Zs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kyzwoqbzWWxfE6Tkxem8ZvxdORC8h7esw0EpEr+inya56tJyo6KsHTriGQVa+/SFBIf74Sbsk2ucRep9gDl6LU7cGrM4zyfg6ydAQYQWUkSsoeIrROpkPCDZdS35YPJIfu58FktUhIENqIiuuKTUp0u+zkfDcBTHQswIMvjAFow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HUnAPCZx; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1716997770; c=relaxed/simple;
+	bh=YgD513uW9g5gyKhmtZwQOQgCVkLNn4F0KZ+yX20ND5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Y8YAJl766Ju3Dn2gmeX8Klon32LynA3G2owXaeXYToRt21DOr+MAbNH0RR2l80VkTVxXz7S0ctsOLVNvUUPtw3TqWp8dFjTu2YrF4KoZWoaNYIPTc6UrDh0hC0h6jV+X04r0regyKctbXHSeDXm3RbRGLTqcFFQhMDpMoSKhxZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDY5ndPa; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUnAPCZx"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f47f07acd3so19336685ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:47:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDY5ndPa"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52b59f77670so818965e87.2;
+        Wed, 29 May 2024 08:49:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716997626; x=1717602426; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zql6ooItQ72w2cXFny5Ss77uqHp1EjByj2FmbV0T398=;
-        b=HUnAPCZx6Oy18WJgSt9NjklV9cFf3P4WA4E5nEt2Z4WxrBnD14tYn/lzgUh5t0pu9V
-         w7HTIeL7cCdhkwU6G85TQcPx/fsxYBBMSw2v1reU9C4H2MHu0i3qY0R4IASxTa7GpNgK
-         ZM8cOlecD9CfTnJPTyIF2D0ALQIqK5lkZdVXx3R50oE1g0lEx9xfXIEo3D5Fee1dtlBV
-         MAmU8MamXiQcjFU1cbZ7KGlYrNv0NshIa6QyyMcdFNA88CIsyVFJNncfjH+QlO/mJ3JP
-         Kry7aypf2C+tccxid5Dn8sQLx5hHgV5Fk4WpuVRNVhyZzBLvDPQyoDSDVawJNNGdu4p8
-         aOOw==
+        d=gmail.com; s=20230601; t=1716997767; x=1717602567; darn=vger.kernel.org;
+        h=content-transfer-encoding:tested-by:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YgD513uW9g5gyKhmtZwQOQgCVkLNn4F0KZ+yX20ND5w=;
+        b=CDY5ndPavxtl/NIVZi+9htvJetk8Xqg0oyoIlCj2Z7GLstlz7eGyM0DMZBSqYPa165
+         6y/S/Varbu8lWetkXbVDjRCyw/z5YatkoSOJk3wIzo95slXB/GBIpnb1Bxkibja0L++Q
+         DFy2u1x9tJbVf2NkGuGipfHu9ACEhM71rueDYlS5GMk+EN+6PqMUv6lvoTMRq9ggDSJj
+         tDWWXP2mlNCllPfSZDVMMvl59Q8MtVShPWu0Im8dxNWR0Ze814ji08LfhtoZI60JoYDt
+         ZdLXA4KnKs/VQdITvFEuut2zH6P3kjJBHQ4kA5IE+kbkDWBAPLrMuEHFYubHo1ZRJ5II
+         I06g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716997626; x=1717602426;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Zql6ooItQ72w2cXFny5Ss77uqHp1EjByj2FmbV0T398=;
-        b=CBRtAdsvdodWLB6qZRdFgRzj65l8Q5H+n5wRQGVd66MwjMHMsg1MW8osK0clRNLGdW
-         mxLRqNG/mN0pZB+w7bKVw3bVC/dsZjmbucjciQwZVsC+NnG+TwXuLBmXqaPSolXEbn8m
-         Bg/qu/qv7svZBGkpIkxc8yqFjPhKJz3eHvwE6yITdSEzsxu+yw6j0XeFXkWopWJ4fgCZ
-         d7VrkZC+apXftHuTKK50gIcmFIOcb8yfGGYL/FCyIOe+5zAAkTMfthfzAsbiRyk2aQEu
-         /SgVpIZMMy10zeyPKrmtCDjCMxsO3ypiJ5fvH19xEcEcwyqWS7S7xLhlJ6HhfOMAsarV
-         Uq3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUI8Hnl0DyOVQGKMQ48H3BdwPCn3K4Ej4tBUqFAjsjnih3IMF9JgjGSXfuCsMlVmE1KQwS+z/GQza8XYkjhnFuzfFd9Sy1rfKRX8dRQ
-X-Gm-Message-State: AOJu0YyvZPkHPmrZZWeAlKOBW9ZfNtCih6mMgswqKP6izVkhH+i4YPGJ
-	I4/tAH1ot2JU7ENNj2QDGf0c4a0kwJPudZ4RNL5wSm7tPljgwHxQXnGRNv0/
-X-Google-Smtp-Source: AGHT+IGNQzIXJ6QNfGMf36WvrUgi5CkoFRL3hKyPiny3FhISdwU02s3kZ8fHbl+awbcbzkfR9IIq9w==
-X-Received: by 2002:a17:903:2a86:b0:1f3:4d8f:e5f3 with SMTP id d9443c01a7336-1f4486d606dmr172701615ad.15.1716997625764;
-        Wed, 29 May 2024 08:47:05 -0700 (PDT)
-Received: from AHUANG12-3ZHH9X.lenovo.com (220-143-220-62.dynamic-ip.hinet.net. [220.143.220.62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c7b53bcsm100771725ad.90.2024.05.29.08.47.03
+        d=1e100.net; s=20230601; t=1716997767; x=1717602567;
+        h=content-transfer-encoding:tested-by:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YgD513uW9g5gyKhmtZwQOQgCVkLNn4F0KZ+yX20ND5w=;
+        b=Vscys7psr62OTqvrscgg7wDR/wM0VOmBKvPqPBCkEroHCGTPyeYyAuP7W+CGnRQIxh
+         fxaqYOEh7vYyEYqe/lgi0muqBDg3gwGq12HYvFcWZE97g5fEqUrQOX5mBdknDzjkHj9p
+         LoorrXt9eOwThOFeygMvCglLTRE25vA1ECZRFmj9Mbk57TOXvigXvXWyVrYRnzDMu8is
+         sOsOI66Pfoj8FYgehB67MBygrMMllwlvsCDzlrWEth0RZxLFlvawFQiEsjaxYa/G6DsF
+         SR18/1NqVzcvqFzKKZ9uJpHCe3SY0XBZhRepsquMNct0SakHascqMVoj2i85zH8y+sAz
+         yrJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfh27CFDuKfOdH5/UFiJEQJHwnUF5a74J3Ud0hXg8KpAm4m+433riYGqIAdbfb+bOhWTomUy6sF1goQp6JxtMmlhk836sP1J6+5MJ33qWhRI8N7nh0na56Rn+G875lhGEH16KSCskd/84pCOX7MqWuzHCrGnD1E9sq5kgaEC3iFSt0y/Rt7Ek=
+X-Gm-Message-State: AOJu0YyTK78H0EtufHQqAy65JeZLc3NVQQ4Cv5PXt6/S+ngow7lTuP2n
+	WpmmFdrJtCvXy9RnBop/bmuhsCK+hptBPsciPFZ/cRwQC0abnbcN
+X-Google-Smtp-Source: AGHT+IFW79OSamdw/XK/8vhe8hHK9amSGndta1cSuOjiNUAIf5VvMhVDXfV0WLFvZeruXCBTBCr2fg==
+X-Received: by 2002:ac2:5a5e:0:b0:52a:f478:a3fb with SMTP id 2adb3069b0e04-52af478a4e3mr1906096e87.61.1716997767216;
+        Wed, 29 May 2024 08:49:27 -0700 (PDT)
+Received: from michal-Latitude-5420.. ([88.220.73.114])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c8176c6sm743302366b.18.2024.05.29.08.49.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 08:47:05 -0700 (PDT)
-From: Adrian Huang <adrianhuang0701@gmail.com>
-X-Google-Original-From: Adrian Huang <ahuang12@lenovo.com>
-To: Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>,
+        Wed, 29 May 2024 08:49:26 -0700 (PDT)
+From: =?UTF-8?q?Sebastian=20=C5=BB=C3=B3=C5=82tek?= <sebek.zoltek@gmail.com>
+To: syzbot+9a3a26ce3bf119f0190b@syzkaller.appspotmail.com
+Cc: jack@suse.com,
+	linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Adrian Huang <ahuang12@lenovo.com>
-Subject: [PATCH 1/1] kbuild: Fix 'import module' error
-Date: Wed, 29 May 2024 23:46:21 +0800
-Message-Id: <20240529154621.21354-1-ahuang12@lenovo.com>
-X-Mailer: git-send-email 2.25.1
+	syzkaller-bugs@googlegroups.com,
+	tytso@mit.edu
+Subject: Testing if issue still reproduces
+Date: Wed, 29 May 2024 17:49:14 +0200
+Message-ID: <20240529154914.2008561-1-sebek.zoltek@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000007010c50616e169f4@google.com>
+References: <0000000000007010c50616e169f4@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Tested-by: Sebastian Zoltek sebek.zoltek@gmail.com
 Content-Transfer-Encoding: 8bit
 
-From: Adrian Huang <ahuang12@lenovo.com>
-
-Commit b1992c3772e6 ("kbuild: use $(src) instead of $(srctree)/$(src)
-for source directory") only changes 'symlinks'. However, 'cmd_symlink'
-is not changed accordingly. This leads to the following error:
-
-Traceback (most recent call last):
-  File "/your_kernel_obj/linux/vmlinux-gdb.py",
- line 29, in <module>
-    import linux.utils
-ModuleNotFoundError: No module named 'linux.utils'
-
-Fix the issue by using $(src) instead of $(srctree)/$(src).
-
-Fixes: b1992c3772e6 ("kbuild: use $(src) instead of $(srctree)/$(src) for source directory")
-Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
----
- scripts/gdb/linux/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/gdb/linux/Makefile b/scripts/gdb/linux/Makefile
-index d77ad9079d0f..fcd32fcf3ae0 100644
---- a/scripts/gdb/linux/Makefile
-+++ b/scripts/gdb/linux/Makefile
-@@ -5,7 +5,7 @@ ifdef building_out_of_srctree
- symlinks := $(patsubst $(src)/%,%,$(wildcard $(src)/*.py))
- 
- quiet_cmd_symlink = SYMLINK $@
--      cmd_symlink = ln -fsn $(patsubst $(obj)/%,$(abspath $(srctree))/$(src)/%,$@) $@
-+      cmd_symlink = ln -fsn $(patsubst $(obj)/%,$(abspath $(src))/%,$@) $@
- 
- always-y += $(symlinks)
- $(addprefix $(obj)/, $(symlinks)): FORCE
--- 
-2.25.1
-
+#syzbot test
