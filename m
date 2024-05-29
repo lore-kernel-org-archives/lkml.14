@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C549D15A4BC;
-	Wed, 29 May 2024 01:59:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D850415B133;
+	Wed, 29 May 2024 01:59:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716947964; cv=none; b=GSgUEMDBzwggw+FSBkgXJsArFauNoCyhxspDY4hWsE0uTe2Nehdc11/tD+AOvEgLkkia8nuOCxXtCk5jEwXMEnOuI2BsZQz82ncCqJPq2zP3Ov8m0xqwQ9riPo7aRy0E3v3jOfksZo66AIgnUGfT61+9Mx+y9W6SSveAlo9VJQQ=
+	t=1716947966; cv=none; b=erMads7Ne+vnuT437dKvz5x6SCa3cWcP2KK6hcpklOv0CrELLCvyiElMVt7K9RitpJK4k29fjtLIimvrREXb9LsS4uYodxOlRt8CeuR893kWak2OjpRhKKmtl6rmk5yEfFE5KtqtoMinRdWUEyt8moUXo2LajgCSzB5V71xMZKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716947964; c=relaxed/simple;
-	bh=EUEzZy0qO2Yaih+zbbYXFiy2BA0aBiE0VQ67Tmmy2jQ=;
+	s=arc-20240116; t=1716947966; c=relaxed/simple;
+	bh=VGPSucUzbA/c3S9u7oVAQpYgV06MZBi1HmmrATX/mE8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Dt6WZRDx1XqWBKRku7RtofIF+a2lyhKc89GuR6oHC+MJMeG2BtbLDQgW5I77WRSwiwuN5XYCBgKcpDralqEg3FWRN3/NprWBtHDRSrSJONDEFlFGEexguXPcKrR0W0Yfg0Q3rdr1yXl8sptSRTVd/aRkGgYlIj1pCr45ttbs0+A=
+	 MIME-Version; b=n3MUwbIq0txjRfrOqisLSEW8/9vF3E+qrZ/RKrL6vm/YO0Dj4qq/77C3w/hic2gfGuVWqcx539wMM3ud7fVmLur6/3BBzOf7jhcCnMXPYrVkTR7ReJMWdHSFEcdLwA2sK1MoZ1M/hrrL04aC5vGJINiLY8HQoduesKye5ZF8xg4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vpsxm5VCTz4f3nb0;
-	Wed, 29 May 2024 09:59:08 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vpsxv0V0Jz4f3m8h;
+	Wed, 29 May 2024 09:59:15 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 8BA9B1A01A7;
-	Wed, 29 May 2024 09:59:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 1EE1B1A01B9;
+	Wed, 29 May 2024 09:59:21 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g7wi1Zmr3XbNw--.12147S9;
-	Wed, 29 May 2024 09:59:19 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g7wi1Zmr3XbNw--.12147S12;
+	Wed, 29 May 2024 09:59:20 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yi.zhang@huaweicloud.com,
 	chengzhihao1@huawei.com,
 	yukuai3@huawei.com
-Subject: [RFC PATCH v4 5/8] xfs: refactor the truncating order
-Date: Wed, 29 May 2024 17:52:03 +0800
-Message-Id: <20240529095206.2568162-6-yi.zhang@huaweicloud.com>
+Subject: [RFC PATCH v4 8/8] xfs: improve truncate on a realtime inode with huge extsize
+Date: Wed, 29 May 2024 17:52:06 +0800
+Message-Id: <20240529095206.2568162-9-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
 References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
@@ -51,11 +51,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g7wi1Zmr3XbNw--.12147S9
-X-Coremail-Antispam: 1UD129KBjvJXoW3Ar4fZw1DGr1kAFyUCF48Zwb_yoW3GrWxpF
-	93GasxGrs7GryUZr1kZr1jqw1rK3Z5JFW0yFyIgF97ZayDJr1IyF97tFy8trWUKrs3Ww4F
-	gFs8GayfWwn5AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:cCh0CgAn9g7wi1Zmr3XbNw--.12147S12
+X-Coremail-Antispam: 1UD129KBjvJXoWxAFy8AryDtw43JF47urW5trb_yoW5Zr4DpF
+	Z7J3WrGr4kG342kayvvF4jqw1akas2kr4UCFWrXr17Zwn8Jr1ftrn7t34rWw4Utr40ga90
+	gFn8C3y7Z3W3AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmv14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2048vs2IY02
 	0E87I2jVAFwI0_JF0E3s1l82xGYIkIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0
 	rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6x
@@ -66,207 +66,102 @@ X-Coremail-Antispam: 1UD129KBjvJXoW3Ar4fZw1DGr1kAFyUCF48Zwb_yoW3GrWxpF
 	AGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
 	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
 	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4U
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x0pRHa0PUUUUU=
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUv
+	cSsGvfC2KfnxnUUI43ZEXa7sRilksDUUUUU==
 X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-When truncating down an inode, we call xfs_truncate_page() to zero out
-the tail partial block that beyond new EOF, which prevents exposing
-stale data. But xfs_truncate_page() always assumes the blocksize is
-i_blocksize(inode), it's not always true if we have a large allocation
-unit for a file and we should aligned to this unitsize, e.g. realtime
-inode should aligned to the rtextsize.
+If we truncate down a realtime inode which extsize is too large, zeroing
+out the entire aligned EOF extent could be very slow. Fortunately,
+__xfs_bunmapi() would align the unmapped range to rtextsize, split and
+convert the extra blocks to unwritten state. So, adjust the blocksize to
+the filesystem blocksize if the rtextsize is large enough, let
+__xfs_bunmapi() to convert the tail blocks to unwritten, this could
+improve the truncate performance significantly.
 
-Current xfs_setattr_size() can't support zeroing out a large alignment
-size on trucate down since the process order is wrong. We first do zero
-out through xfs_truncate_page(), and then update inode size through
-truncate_setsize() immediately. If the zeroed range is larger than a
-folio, the write back path would not write back zeroed pagecache beyond
-the EOF folio, so it doesn't write zeroes to the entire tail extent and
-could expose stale data after an appending write into the next aligned
-extent.
+ # mkfs.xfs -f -rrtdev=/dev/pmem1s -f -m reflink=0,rmapbt=0, \
+            -d rtinherit=1 -r extsize=1G /dev/pmem2s
+ # for i in {1..5}; \
+   do dd if=/dev/zero of=/mnt/scratch/$i bs=1M count=1024; done
+ # sync
+ # time for i in {1..5}; \
+   do xfs_io -c "truncate 4k" /mnt/scratch/$i; done
 
-We need to adjust the order to zero out tail aligned blocks, write back
-zeroed or cached data, update i_size and drop cache beyond aligned EOF
-block, preparing for the fix of realtime inode and supporting the
-upcoming forced alignment feature.
+Before:
+ real    0m16.762s
+ user    0m0.008s
+ sys     0m16.750s
+
+After:
+ real    0m0.076s
+ user    0m0.010s
+ sys     0m0.069s
 
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/xfs/xfs_iomap.c |   2 +-
- fs/xfs/xfs_iomap.h |   3 +-
- fs/xfs/xfs_iops.c  | 107 ++++++++++++++++++++++++++++-----------------
- 3 files changed, 69 insertions(+), 43 deletions(-)
+ fs/xfs/xfs_inode.c |  2 +-
+ fs/xfs/xfs_inode.h | 12 ++++++++++++
+ fs/xfs/xfs_iops.c  |  9 +++++++++
+ 3 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 8cdfcbb5baa7..0369b64cc3f4 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1468,10 +1468,10 @@ int
- xfs_truncate_page(
- 	struct xfs_inode	*ip,
- 	loff_t			pos,
-+	unsigned int		blocksize,
- 	bool			*did_zero)
- {
- 	struct inode		*inode = VFS_I(ip);
--	unsigned int		blocksize = i_blocksize(inode);
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index db35167acef6..c0c1ab310aae 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1513,7 +1513,7 @@ xfs_itruncate_extents_flags(
+ 	 * the page cache can't scale that far.
+ 	 */
+ 	first_unmap_block = XFS_B_TO_FSB(mp, (xfs_ufsize_t)new_size);
+-	if (xfs_inode_has_bigrtalloc(ip))
++	if (xfs_inode_has_bigrtalloc(ip) && !xfs_inode_has_hugertalloc(ip))
+ 		first_unmap_block = xfs_rtb_roundup_rtx(mp, first_unmap_block);
+ 	if (!xfs_verify_fileoff(mp, first_unmap_block)) {
+ 		WARN_ON_ONCE(first_unmap_block > XFS_MAX_FILEOFF);
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index 292b90b5f2ac..4eed5b0c57c0 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -320,6 +320,18 @@ static inline bool xfs_inode_has_bigrtalloc(struct xfs_inode *ip)
+ 	return XFS_IS_REALTIME_INODE(ip) && ip->i_mount->m_sb.sb_rextsize > 1;
+ }
  
- 	if (IS_DAX(inode))
- 		return dax_truncate_page(inode, pos, blocksize, did_zero,
-diff --git a/fs/xfs/xfs_iomap.h b/fs/xfs/xfs_iomap.h
-index 4da13440bae9..feb1610cb645 100644
---- a/fs/xfs/xfs_iomap.h
-+++ b/fs/xfs/xfs_iomap.h
-@@ -25,7 +25,8 @@ int xfs_bmbt_to_iomap(struct xfs_inode *ip, struct iomap *iomap,
- 
- int xfs_zero_range(struct xfs_inode *ip, loff_t pos, loff_t len,
- 		bool *did_zero);
--int xfs_truncate_page(struct xfs_inode *ip, loff_t pos, bool *did_zero);
-+int xfs_truncate_page(struct xfs_inode *ip, loff_t pos,
-+		unsigned int blocksize, bool *did_zero);
- 
- static inline xfs_filblks_t
- xfs_aligned_fsb_count(
++/*
++ * Decide if this file is a realtime file whose data allocation unit is larger
++ * than default.
++ */
++static inline bool xfs_inode_has_hugertalloc(struct xfs_inode *ip)
++{
++	struct xfs_mount *mp = ip->i_mount;
++
++	return XFS_IS_REALTIME_INODE(ip) &&
++	       mp->m_sb.sb_rextsize > XFS_B_TO_FSB(mp, XFS_DFL_RTEXTSIZE);
++}
++
+ /*
+  * Return the buftarg used for data allocations on a given inode.
+  */
 diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index d44508930b67..d24927075022 100644
+index c53de5e6ef66..d5fc84e5a37c 100644
 --- a/fs/xfs/xfs_iops.c
 +++ b/fs/xfs/xfs_iops.c
-@@ -812,6 +812,7 @@ xfs_setattr_size(
- 	int			error;
- 	uint			lock_flags = 0;
- 	bool			did_zeroing = false;
-+	bool			write_back = false;
+@@ -870,6 +870,15 @@ xfs_setattr_size(
+ 	if (newsize < oldsize) {
+ 		unsigned int blocksize = xfs_inode_alloc_unitsize(ip);
  
- 	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL);
- 	ASSERT(S_ISREG(inode->i_mode));
-@@ -853,30 +854,7 @@ xfs_setattr_size(
- 	 * the transaction because the inode cannot be unlocked once it is a
- 	 * part of the transaction.
- 	 *
--	 * Start with zeroing any data beyond EOF that we may expose on file
--	 * extension, or zeroing out the rest of the block on a downward
--	 * truncate.
--	 */
--	if (newsize > oldsize) {
--		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
--		error = xfs_zero_range(ip, oldsize, newsize - oldsize,
--				&did_zeroing);
--	} else if (newsize != oldsize) {
--		error = xfs_truncate_page(ip, newsize, &did_zeroing);
--	}
--
--	if (error)
--		return error;
--
--	/*
--	 * We've already locked out new page faults, so now we can safely remove
--	 * pages from the page cache knowing they won't get refaulted until we
--	 * drop the XFS_MMAP_EXCL lock after the extent manipulations are
--	 * complete. The truncate_setsize() call also cleans partial EOF page
--	 * PTEs on extending truncates and hence ensures sub-page block size
--	 * filesystems are correctly handled, too.
--	 *
--	 * We have to do all the page cache truncate work outside the
-+	 * And we have to do all the page cache truncate work outside the
- 	 * transaction context as the "lock" order is page lock->log space
- 	 * reservation as defined by extent allocation in the writeback path.
- 	 * Hence a truncate can fail with ENOMEM from xfs_trans_alloc(), but
-@@ -884,27 +862,74 @@ xfs_setattr_size(
- 	 * user visible changes). There's not much we can do about this, except
- 	 * to hope that the caller sees ENOMEM and retries the truncate
- 	 * operation.
--	 *
--	 * And we update in-core i_size and truncate page cache beyond newsize
--	 * before writeback the [i_disk_size, newsize] range, so we're
--	 * guaranteed not to write stale data past the new EOF on truncate down.
- 	 */
--	truncate_setsize(inode, newsize);
-+	write_back = newsize > ip->i_disk_size && oldsize != ip->i_disk_size;
-+	if (newsize < oldsize) {
-+		unsigned int blocksize = i_blocksize(inode);
- 
--	/*
--	 * We are going to log the inode size change in this transaction so
--	 * any previous writes that are beyond the on disk EOF and the new
--	 * EOF that have not been written out need to be written here.  If we
--	 * do not write the data out, we expose ourselves to the null files
--	 * problem. Note that this includes any block zeroing we did above;
--	 * otherwise those blocks may not be zeroed after a crash.
--	 */
--	if (did_zeroing ||
--	    (newsize > ip->i_disk_size && oldsize != ip->i_disk_size)) {
--		error = filemap_write_and_wait_range(VFS_I(ip)->i_mapping,
--						ip->i_disk_size, newsize - 1);
 +		/*
-+		 * Zeroing out the partial EOF block and the rest of the extra
-+		 * aligned blocks on a downward truncate.
++		 * If the extsize is too large on a realtime inode, zeroing
++		 * out the entire aligned EOF extent could be slow, adjust the
++		 * blocksize to the filesystem blocksize, let __xfs_bunmapi()
++		 * to convert the tail blocks to unwritten.
 +		 */
-+		error = xfs_truncate_page(ip, newsize, blocksize, &did_zeroing);
- 		if (error)
- 			return error;
++		if (xfs_inode_has_hugertalloc(ip))
++			blocksize = i_blocksize(inode);
 +
-+		/*
-+		 * We are going to log the inode size change in this transaction
-+		 * so any previous writes that are beyond the on disk EOF and
-+		 * the new EOF that have not been written out need to be written
-+		 * here.  If we do not write the data out, we expose ourselves
-+		 * to the null files problem. Note that this includes any block
-+		 * zeroing we did above; otherwise those blocks may not be
-+		 * zeroed after a crash.
-+		 */
-+		if (did_zeroing || write_back) {
-+			error = filemap_write_and_wait_range(inode->i_mapping,
-+					min_t(loff_t, ip->i_disk_size, newsize),
-+					roundup_64(newsize, blocksize) - 1);
-+			if (error)
-+				return error;
-+		}
-+
-+		/*
-+		 * Updating i_size after writing back to make sure the zeroed
-+		 * blocks could been written out, and drop all the page cache
-+		 * range that beyond blocksize aligned new EOF block.
-+		 *
-+		 * We've already locked out new page faults, so now we can
-+		 * safely remove pages from the page cache knowing they won't
-+		 * get refaulted until we drop the XFS_MMAP_EXCL lock after the
-+		 * extent manipulations are complete.
-+		 */
-+		i_size_write(inode, newsize);
-+		truncate_pagecache(inode, roundup_64(newsize, blocksize));
-+	} else {
-+		/*
-+		 * Start with zeroing any data beyond EOF that we may expose on
-+		 * file extension.
-+		 */
-+		if (newsize > oldsize) {
-+			trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
-+			error = xfs_zero_range(ip, oldsize, newsize - oldsize,
-+					       &did_zeroing);
-+			if (error)
-+				return error;
-+		}
-+
-+		/*
-+		 * The truncate_setsize() call also cleans partial EOF page
-+		 * PTEs on extending truncates and hence ensures sub-page block
-+		 * size filesystems are correctly handled, too.
-+		 */
-+		truncate_setsize(inode, newsize);
-+
-+		if (did_zeroing || write_back) {
-+			error = filemap_write_and_wait_range(inode->i_mapping,
-+					ip->i_disk_size, newsize - 1);
-+			if (error)
-+				return error;
-+		}
- 	}
- 
- 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
+ 		/*
+ 		 * Zeroing out the partial EOF block and the rest of the extra
+ 		 * aligned blocks on a downward truncate.
 -- 
 2.39.2
 
