@@ -1,104 +1,136 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8C7178360
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 23:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB07316E876;
+	Wed, 29 May 2024 23:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717024082; cv=none; b=Y1xXCvsNXy2LBcWUhYzaajHnbNNeGOytQ28mVnv4+FnxCqPyu4C6aw6JohS1gyBp9v3sq8mXEVaosZ3Tr7eZFqYZOjRZh7AgdrXX4D1qqHk3RFfgbTZ4FH0Of92soJLm0RPPBoYHtafsNL019KjINZmPQYHh/YInwKTKgj93idc=
+	t=1717024125; cv=none; b=USAigTo8om9KsUDQB4GI+xTf9h7ytH/SWiT5Td5IXdBMWmpixm6vWcrusP+U/SJaMf9yZt3nkJ39yFgFFEX/49mHiqKw9C/CuP8HkzOjE6zTdIImAnHuxFEpuptRSJLv+Y/iSfaKgVvSnO1nYUq/HlHbzLRDF4RhoPS1B2M+DTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717024082; c=relaxed/simple;
-	bh=OpPHbam7unYZXqqkfE/FktxoqKH6VNOldq0Y2i/6B78=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uSrm540JrhYNVUmY/WYzDjdQ1IFB/AxUSgMLyX8g1CD8Dk5+/1gMKCIbmSZotQ2grb/ReLw1vYc4wRqQjx+OiDZiCTyfrgNFmThwR14O2VUPdcGBM3V461GmypyZXTfHaZ6DxlYC9z66oo3IPTYHc6Qa2mio/x1oYl3flPWcXK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xPacc/f/; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1717024125; c=relaxed/simple;
+	bh=b1hTvvq30ns4ZUPHAmOSRIl12tXuTOVrGFTxmU1vRg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dH+UhkaaWVkh5qsd2+cRtJ0q2yam4PgZKRXoY1OFwr7wM+vAgaMH09AhDf0kzsX5C5xUGZ/Lr/n4BMVye7VPn4KxzVHx85o86nre9G8rt+hxxucbE20GQtLkJTqE/znycN2ynK9i1tXFeI4ZoJ5cvIoGJoMf7mOo3BxvI9/bzJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qnCqM9oj; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xPacc/f/"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2bde806870aso222789a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717024080; x=1717628880; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6gWPVta/qCJJyLq/hJc6KaVJRsxcvZE7MgWw+KyNFoc=;
-        b=xPacc/f//f9tkpdyrHqfVR7xJVl7wbXGJFXSOJnwG1XpYDCwtgNTMgL6/f2696LdW5
-         t5hmGhdCImuLtnkz4clIiR9JjrWZoL3PDGv9E+CRS4SaubFQj3A9UvQPggv4mn0nEfAQ
-         +vqVmTZM+hyG5XCxb6CiKqLAd8g+9zwDdWjY0GeZjaaiRiZzv9SHSCW+RBMzECP3F8K3
-         VHGZ0iKWyaah7PpwZP2xwGU+ZBe+PAAyVzdYIfZwf/PLjelXUlIVI6sJjxFpw2dZW0zg
-         yJJGh1gy2atrdAoAjbVjodm6frOpzY67wGFv+Q0dBJOowYbDOcwjIw+veFH+ap+f3Gkc
-         v6QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717024080; x=1717628880;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6gWPVta/qCJJyLq/hJc6KaVJRsxcvZE7MgWw+KyNFoc=;
-        b=n8rjvcm0dAIu3EiCw5LC+srD4HkI2CISyjyPzzJHEm9nQtZRtpMoDz72NmWzFIyDqJ
-         9MBNMpboVewEf/dLp9L+50WHnUXO8nJddlLNXrNB7fWEO5lTB2oPOE7A17yWxOK29wdF
-         dRMjZM5d7TD1akIz2mZ3aPcBwK9xpfbYvm9tm0vWBdzNVLvNk5N26pUpLTNWpWpEYjQC
-         b+4YLibdxVs9Oc41qxJhynOvtanyPmg3UT5o6E/2vKeeLTrdW3TUGJcYVHoTp+RuPsNw
-         0g0sypI3OeTetytnmmPlqKsmTD1eJSFAzd5vC6zuyfSVcdSQc+nxoRNu7oDu6zJg2y59
-         qotw==
-X-Forwarded-Encrypted: i=1; AJvYcCWliQVHCA1vynVgb7uQBUgF1f/3rQA9hvQ3D/0uARhGDrxeKIcgweVxSdFCt/B0vZSFRHZem38HT7s6fcilwEljQfTpCDmVnQ0/ruaE
-X-Gm-Message-State: AOJu0YzfJqroVGoOrM0FeDRa4kaxsbHY3fZV4SB8g5ArJT7M9SchXFlo
-	BuFJ1+Y1nwGo1grEHIIJEhzmojsMdQP1y3Z3AcQqxWvfmAcns36H4/goAUJI1Q3BVBf3nbxKyHE
-	yZQ==
-X-Google-Smtp-Source: AGHT+IGchevfh8WkGOCMlZBu0D1kH8hxThW1k7kjpH5AD9E5N22nag/B1pMMOy5N4Qk+BxA1kDgs6Z0fhg8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90b:4b0e:b0:2bf:bcde:d204 with SMTP id
- 98e67ed59e1d1-2c1ab9e2544mr1547a91.1.1717024079994; Wed, 29 May 2024 16:07:59
- -0700 (PDT)
-Date: Wed, 29 May 2024 16:07:58 -0700
-In-Reply-To: <291ecb3e791606c3437fc415343eb4a25e531cc3.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qnCqM9oj"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44TMvm5k003471;
+	Wed, 29 May 2024 23:08:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : date : from : in-reply-to : message-id :
+ mime-version : references : subject : to; s=pp1;
+ bh=ka+yz/thzSzS2ZYYfuMF8iCDDb8pRJrRqOgeCYPW4Bo=;
+ b=qnCqM9oj9wOFqeW3Y5osoIHnFoJDiQmKK+gjMdItIV0D/hs7l0E+crV97Kvpb97VwF6A
+ bSlG3LATFS4ulv9sAhrdHJq6RZ7JZX4VbiveorFRlaiuEPRRk4vAwRTfppZEpqEft/bE
+ 37fl7VgMaC9lxskScAvzqfg6oVQJJhljy2Xu+ppAkxIka9ZmtcehsdlrGlXmw0N3oXxq
+ 9PZlYokouIn1yoSxUsC7UO5m65O5XipB4c82DRpBpwFQgsMx1A1SbiiiI18bfhKjLCBz
+ j+LD5dTUFLnfFGsvYZi0tFHAVwnbsxp8ygmXu1IHBH1PRNz6zcGBbGbCK/TLxHLi/hpK 1g== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yedkw00k1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 23:08:36 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44TLgRcr026789;
+	Wed, 29 May 2024 23:08:35 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ydpd2pkmy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 23:08:35 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44TN8WDK17236570
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 May 2024 23:08:34 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B6D2258062;
+	Wed, 29 May 2024 23:08:32 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0477758054;
+	Wed, 29 May 2024 23:08:32 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 29 May 2024 23:08:31 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, lukas@wunner.de, jarkko@kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH 1/2] crypto: ecdsa - Use ecc_digits_from_bytes to create hash digits array
+Date: Wed, 29 May 2024 19:08:26 -0400
+Message-ID: <20240529230827.379111-2-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240529230827.379111-1-stefanb@linux.ibm.com>
+References: <20240529230827.379111-1-stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240522022827.1690416-1-seanjc@google.com> <20240522022827.1690416-4-seanjc@google.com>
- <8b344a16-b28a-4f75-9c1a-a4edf2aa4a11@intel.com> <Zk7Eu0WS0j6/mmZT@chao-email>
- <c4fa17ca-d361-4cb7-a897-9812571aa75f@intel.com> <Zk/9xMepBqAXEItK@chao-email>
- <e39b652c-ba0e-4c54-971e-8df9a2a5d0be@intel.com> <ZldDUUf_47T7HsAr@google.com>
- <291ecb3e791606c3437fc415343eb4a25e531cc3.camel@intel.com>
-Message-ID: <Zle1TrfeJDeXLtLk@google.com>
-Subject: Re: [PATCH v2 3/6] KVM: Add a module param to allow enabling
- virtualization when KVM is loaded
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chao Gao <chao.gao@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: VoTUgXBe_DTnL3fLKbyxvJ_WnSgy9X2p
+X-Proofpoint-GUID: VoTUgXBe_DTnL3fLKbyxvJ_WnSgy9X2p
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-29_16,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ priorityscore=1501 spamscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2405010000 definitions=main-2405290166
 
-On Wed, May 29, 2024, Kai Huang wrote:
-> On Wed, 2024-05-29 at 08:01 -0700, Sean Christopherson wrote:
-> > Enabling virtualization should be entirely transparent to userspace,
-> > at least from a functional perspective; if changing how KVM enables virtualization
-> > breaks userspace then we likely have bigger problems.
-> 
-> I am not sure how should I interpret this?
-> 
-> "having a module param" doesn't necessarily mean "entirely transparent to
-> userspace", right? :-)
+Since ecc_digits_from_bytes will provide zeros when an insufficient number
+of bytes are passed in the input byte array, use it to create the hash
+digits directly from the input byte array. This avoids going through an
+intermediate byte array (rawhash) that has the first few bytes filled with
+zeros.
 
-Ah, sorry, that was unclear.  By "transparent to userspace" I meant the
-functionality of userspace VMMs wouldn't be affected if we add (or delete) a
-module param.  E.g. QEMU should work exactly the same regardless of when KVM
-enables virtualization.
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+---
+ crypto/ecdsa.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-> > Performance is secondary for me, the primary motivation is simplifying the overall
-> > KVM code base.  Yes, we _could_ use on_each_cpu() and enable virtualization
-> > on-demand for TDX, but as above, it's extra complexity without any meaningful
-> > benefit, at least AFAICT.
-> 
-> Either way works for me.
-> 
-> I just think using a module param to resolve some problem while there can
-> be solution completely in the kernel seems overkill :-)
+diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
+index 258fffbf623d..fa029f36110b 100644
+--- a/crypto/ecdsa.c
++++ b/crypto/ecdsa.c
+@@ -142,10 +142,8 @@ static int ecdsa_verify(struct akcipher_request *req)
+ 	struct ecdsa_signature_ctx sig_ctx = {
+ 		.curve = ctx->curve,
+ 	};
+-	u8 rawhash[ECC_MAX_BYTES];
+ 	u64 hash[ECC_MAX_DIGITS];
+ 	unsigned char *buffer;
+-	ssize_t diff;
+ 	int ret;
+ 
+ 	if (unlikely(!ctx->pub_key_set))
+@@ -164,18 +162,11 @@ static int ecdsa_verify(struct akcipher_request *req)
+ 	if (ret < 0)
+ 		goto error;
+ 
+-	/* if the hash is shorter then we will add leading zeros to fit to ndigits */
+-	diff = bufsize - req->dst_len;
+-	if (diff >= 0) {
+-		if (diff)
+-			memset(rawhash, 0, diff);
+-		memcpy(&rawhash[diff], buffer + req->src_len, req->dst_len);
+-	} else if (diff < 0) {
+-		/* given hash is longer, we take the left-most bytes */
+-		memcpy(&rawhash, buffer + req->src_len, bufsize);
+-	}
++	if (bufsize > req->dst_len)
++		bufsize = req->dst_len;
+ 
+-	ecc_swap_digits((u64 *)rawhash, hash, ctx->curve->g.ndigits);
++	ecc_digits_from_bytes(buffer + req->src_len, bufsize,
++			      hash, ctx->curve->g.ndigits);
+ 
+ 	ret = _ecdsa_verify(ctx, hash, sig_ctx.r, sig_ctx.s);
+ 
+-- 
+2.43.0
 
-The module param doesn't solve the problem, e.g. we could solve this entirely
-in-kernel simply by having KVM unconditionally enable virtualization during
-initialization.  The module param is mostly there to continue playing nice with
-out-of-tree hypervisors, and to a lesser extent to give us a "break in case of
-fire" knob.
