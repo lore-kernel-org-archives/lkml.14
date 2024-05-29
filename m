@@ -1,187 +1,146 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FE116729A;
-	Wed, 29 May 2024 07:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386AA167D8C
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716967559; cv=none; b=r2mGddqD109xXA+uvsBdVNSLZ5dc5rIeCDM8vqWtDnxiNakEG59mVzSiRt3UWT+P+f9PgFZcmkPhkCpkYbDIVV/Y+VWnt34br92s98Zxo0qCoifH3Xn4+6UhL0uGznj4epfbTZLY0//PeHe3txWhGU3TgNM7KEHO1AO6I73larY=
+	t=1716967562; cv=none; b=BCwVfy5ILGWTSjJTUxnfLAfgejSv9IBD39RmA2BFTIo9LjHgPX5iAO23EG3tNIk0UnBzj6u9N2myekjZRp1slFB+Njvbc/MaaI94bm4mNdmsrjIXhsctxHdLgXmvbfIIqt66Ep8OJA+Jm4T1PY65TL/NHajvUVbkmrz3roWL9r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716967559; c=relaxed/simple;
-	bh=Vw18zT8fK+zC+4bVifRZS0YUxoq9gpaiVYxnOu+WInc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ugglxAEgFZE33JgZVxF6rthiHTSf8YY6C8PWahbiXLG6c/tjKRPzooXCerQk74JnHZxuG/jAkW9LypCylY2pTABvkTdgQuS0M+jDHtbYabKwSTp4KNOITAtZGz/iOQ3oBc8pLVTPk3nxUmn5pvBC5bv+jhdq3rvZLCo95ta+2pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BEgUJJQO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716967562; c=relaxed/simple;
+	bh=ZEVr1l/zLyARsxNs4P1butY5hWf3rmFo/maylE+sV1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AgugjIHpaqCKDzO65MEcIBcfdhCGeM/lC1wDvWWya5myTIPlYw8Rqj1uJ+FauSnDjjIOqpbjUUbySXQ5ffXtroys3aZpxx6KiQVmZAsHfrEtYABnNkSvu3Q3X+GkE3UKWouD4sZ1yA2YeArEKZuvcSFwYnlHbPeLFg5zf6MUZvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LuB82S6W; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BEgUJJQO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716967555;
-	bh=Vw18zT8fK+zC+4bVifRZS0YUxoq9gpaiVYxnOu+WInc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BEgUJJQOXNXVI8Is5f9/TdSu3v6yWkmXyHKBcPe+iSN1iw/UIESCMCtW6vKMxjDnt
-	 0t/KcxYACJ+JyWf2r/T4krrsfU50HnmmlDRWzXD+NkzdW6+c3PLyZqLxN9Up2Ve5Ed
-	 PY/pMypexQ000D3xhPpKYtJQXpQMFktWrn6sMbX/KzMh6N1stJmDETUwA3Q56dw6M9
-	 yzwfuxIwtnGyNw93B4h8yDUjWYTtg6D7mWX9KnPa3hFT6CCOrevS+mnHiJrz7I/6AB
-	 lRzb3cPEXIji1+7wYthMyHZk76u2E8SDFpRNv0iLvF09r21t1XgS5r9Lovxo6dJZ7Z
-	 SCGkuxGmtLdVA==
-Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 862923782162;
-	Wed, 29 May 2024 07:25:50 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel@collabora.com
-Subject: [PATCH 1/4] kselftests: vdso: vdso_test_clock_getres: conform test to TAP output
-Date: Wed, 29 May 2024 12:24:51 +0500
-Message-Id: <20240529072454.2522495-2-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240529072454.2522495-1-usama.anjum@collabora.com>
-References: <20240529072454.2522495-1-usama.anjum@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LuB82S6W"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-804e3292412so517162241.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 00:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716967560; x=1717572360; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWzvmzN7ijIbCBaVTu7XEGtPfeKO3l3ACHDt/WVaHXI=;
+        b=LuB82S6WQmX44POw5vy077+mYh3OFYpuPrUd48BRtutR+Fv41w1B1iTjjWm9ifBLGE
+         BkNWDaRBxaRY9uvPcMACM7CB8wvcmenkrHVkP+PB/UrfvfvcGynn43/w3IEqLYV4ZTPE
+         GFpnPRcjiddqBbZtS01emkha/YOZUK6IkdxWwcxwMR39sRqNILsndHEjqyzyYvYmfvxA
+         XqD3+mZzQGUAdt3ezRk9IOsQbYIc0eStARi2FOGIARCsWlhT8yqbDz+7V6hyLPFmMY3I
+         F7SE0FTzjEqmum0pL9TYnTw0nU8LE7sl0IgStUgHmzdaXSlxpuow4ZxIHIjdSigsE3UJ
+         NJYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716967560; x=1717572360;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nWzvmzN7ijIbCBaVTu7XEGtPfeKO3l3ACHDt/WVaHXI=;
+        b=o21K/gjLmVLYJs1Lo8PSM3PM2OmsV2J2dai/y1y+xeqigMeL4E3qQli0s0Y6msOpjW
+         WrD0mSWIH9SIiq/3Zs21gyh0Cy/EwlNFK6LV64EYNGrEt7ydjG4Uhfy6c9rtt3qCC/NL
+         hh1ImSGtNGtUbhVGVfOI2JJdkeciszY0P7eGJ5jJYwtk3ivrkl4uHOv28jig5RH6K96T
+         zeLQbKyluE3kQGup6BHx3l/hNeEpeMyNCOwYIfoki6ppBXaHfiQiqz47uGfN1tlwcSx0
+         +HFgXjK9+0YsYM4dPuy/GTVF/VaiXTJofK+tPhFGXAZg3+Sr2lWLj0GuXPDpvrjfm8Y1
+         /anA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPCiMx15q1d2vRYkUpVMJBfIqhS5NAxSUzPnwnrkETCwW4NlXZGTwR8s15TYJMHoUxavbyG6ih4xkeaE5d+A9NaB4rhj0vy1E4mOio
+X-Gm-Message-State: AOJu0Yy9tuUNekrjj8izsYFBlXhcxjYbiclJ4jx9YfZn0C7WnoN7xNHm
+	L3OnnZ/7q3TPcGt3mUEibG+IDOWgYZ8FURVxCKfT6fe1RRPatO3JN5CoS9FtUKD0lTgZCeVwBjw
+	PgMZOuTRJ0kaUWSziqVtTC6FrQ7oaBZwTC/67
+X-Google-Smtp-Source: AGHT+IFkhX+U8E/UmnrduSNww5O5l+Jhyabcq43rO3oLokyOCkCQOrAis9BA94QiL3EC3pI8usLyYmJe1k/GKdnaMP4=
+X-Received: by 2002:a67:f4c7:0:b0:47c:2c84:4321 with SMTP id
+ ada2fe7eead31-48a38575d3cmr13715697137.16.1716967560033; Wed, 29 May 2024
+ 00:26:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240529022043.3661757-1-gatlin.newhouse@gmail.com>
+In-Reply-To: <20240529022043.3661757-1-gatlin.newhouse@gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Wed, 29 May 2024 09:25:21 +0200
+Message-ID: <CANpmjNM2S2whk31nfNGSBO5MFPPUHX7FPuHBJn1nN9zdP63xTw@mail.gmail.com>
+Subject: Re: [PATCH] x86/traps: Enable UBSAN traps on x86
+To: Gatlin Newhouse <gatlin.newhouse@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Changbin Du <changbin.du@huawei.com>, 
+	Pengfei Xu <pengfei.xu@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Xin Li <xin3.li@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Conform the layout, informational and status messages to TAP. No
-functional change is intended other than the layout of output messages.
+On Wed, 29 May 2024 at 04:20, Gatlin Newhouse <gatlin.newhouse@gmail.com> wrote:
+[...]
+>         if (regs->flags & X86_EFLAGS_IF)
+>                 raw_local_irq_enable();
+> -       if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> -           handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> -               regs->ip += LEN_UD2;
+> -               handled = true;
+> +
+> +       if (insn == INSN_UD2) {
+> +               if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> +               handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> +                       regs->ip += LEN_UD2;
+> +                       handled = true;
+> +               }
+> +       } else {
+> +               if (handle_ubsan_failure(regs, insn) == BUG_TRAP_TYPE_WARN) {
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- .../selftests/vDSO/vdso_test_clock_getres.c   | 68 +++++++++----------
- 1 file changed, 33 insertions(+), 35 deletions(-)
+handle_ubsan_failure currently only returns BUG_TRAP_TYPE_NONE?
 
-diff --git a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c b/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
-index 38d46a8bf7cba..c1ede40521f05 100644
---- a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
-+++ b/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
-@@ -25,7 +25,7 @@
- #include <unistd.h>
- #include <sys/syscall.h>
- 
--#include "../kselftest.h"
-+#include "../kselftest_harness.h"
- 
- static long syscall_clock_getres(clockid_t _clkid, struct timespec *_ts)
- {
-@@ -54,18 +54,8 @@ const char *vdso_clock_name[12] = {
- /*
-  * This function calls clock_getres in vdso and by system call
-  * with different values for clock_id.
-- *
-- * Example of output:
-- *
-- * clock_id: CLOCK_REALTIME [PASS]
-- * clock_id: CLOCK_BOOTTIME [PASS]
-- * clock_id: CLOCK_TAI [PASS]
-- * clock_id: CLOCK_REALTIME_COARSE [PASS]
-- * clock_id: CLOCK_MONOTONIC [PASS]
-- * clock_id: CLOCK_MONOTONIC_RAW [PASS]
-- * clock_id: CLOCK_MONOTONIC_COARSE [PASS]
-  */
--static inline int vdso_test_clock(unsigned int clock_id)
-+static inline void vdso_test_clock(struct __test_metadata *_metadata, unsigned int clock_id)
- {
- 	struct timespec x, y;
- 
-@@ -73,52 +63,60 @@ static inline int vdso_test_clock(unsigned int clock_id)
- 	clock_getres(clock_id, &x);
- 	syscall_clock_getres(clock_id, &y);
- 
--	if ((x.tv_sec != y.tv_sec) || (x.tv_nsec != y.tv_nsec)) {
--		printf(" [FAIL]\n");
--		return KSFT_FAIL;
--	}
--
--	printf(" [PASS]\n");
--	return KSFT_PASS;
-+	ASSERT_EQ(0, ((x.tv_sec != y.tv_sec) || (x.tv_nsec != y.tv_nsec)));
- }
- 
--int main(int argc, char **argv)
--{
--	int ret = 0;
--
- #if _POSIX_TIMERS > 0
- 
- #ifdef CLOCK_REALTIME
--	ret += vdso_test_clock(CLOCK_REALTIME);
-+TEST(clock_realtime)
-+{
-+	vdso_test_clock(_metadata, CLOCK_REALTIME);
-+}
- #endif
- 
- #ifdef CLOCK_BOOTTIME
--	ret += vdso_test_clock(CLOCK_BOOTTIME);
-+TEST(clock_boottime)
-+{
-+	vdso_test_clock(_metadata, CLOCK_BOOTTIME);
-+}
- #endif
- 
- #ifdef CLOCK_TAI
--	ret += vdso_test_clock(CLOCK_TAI);
-+TEST(clock_tai)
-+{
-+	vdso_test_clock(_metadata, CLOCK_TAI);
-+}
- #endif
- 
- #ifdef CLOCK_REALTIME_COARSE
--	ret += vdso_test_clock(CLOCK_REALTIME_COARSE);
-+TEST(clock_realtime_coarse)
-+{
-+	vdso_test_clock(_metadata, CLOCK_REALTIME_COARSE);
-+}
- #endif
- 
- #ifdef CLOCK_MONOTONIC
--	ret += vdso_test_clock(CLOCK_MONOTONIC);
-+TEST(clock_monotonic)
-+{
-+	vdso_test_clock(_metadata, CLOCK_MONOTONIC);
-+}
- #endif
- 
- #ifdef CLOCK_MONOTONIC_RAW
--	ret += vdso_test_clock(CLOCK_MONOTONIC_RAW);
-+TEST(clock_monotonic_raw)
-+{
-+	vdso_test_clock(_metadata, CLOCK_MONOTONIC_RAW);
-+}
- #endif
- 
- #ifdef CLOCK_MONOTONIC_COARSE
--	ret += vdso_test_clock(CLOCK_MONOTONIC_COARSE);
-+TEST(clock_monotonic_coarse)
-+{
-+	vdso_test_clock(_metadata, CLOCK_MONOTONIC_COARSE);
-+}
- #endif
- 
--#endif
--	if (ret > 0)
--		return KSFT_FAIL;
-+#endif /* _POSIX_TIMERS > 0 */
- 
--	return KSFT_PASS;
--}
-+TEST_HARNESS_MAIN
--- 
-2.39.2
+> +                       if (insn == INSN_REX)
+> +                               regs->ip += LEN_REX;
+> +                       regs->ip += LEN_UD1;
+> +                       handled = true;
+> +               }
+>         }
+>         if (regs->flags & X86_EFLAGS_IF)
+>                 raw_local_irq_disable();
+> diff --git a/arch/x86/kernel/ubsan.c b/arch/x86/kernel/ubsan.c
+> new file mode 100644
+> index 000000000000..6cae11f4fe23
+> --- /dev/null
+> +++ b/arch/x86/kernel/ubsan.c
+> @@ -0,0 +1,32 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Clang Undefined Behavior Sanitizer trap mode support.
+> + */
+> +#include <linux/bug.h>
+> +#include <linux/string.h>
+> +#include <linux/printk.h>
+> +#include <linux/ubsan.h>
+> +#include <asm/ptrace.h>
+> +#include <asm/ubsan.h>
+> +
+> +/*
+> + * Checks for the information embedded in the UD1 trap instruction
+> + * for the UB Sanitizer in order to pass along debugging output.
+> + */
+> +enum bug_trap_type handle_ubsan_failure(struct pt_regs *regs, int insn)
+> +{
+> +       u32 type = 0;
+> +
+> +       if (insn == INSN_REX) {
+> +               type = (*(u16 *)(regs->ip + LEN_REX + LEN_UD1));
+> +               if ((type & 0xFF) == 0x40)
+> +                       type = (type >> 8) & 0xFF;
+> +       } else {
+> +               type = (*(u16 *)(regs->ip + LEN_UD1));
+> +               if ((type & 0xFF) == 0x40)
+> +                       type = (type >> 8) & 0xFF;
+> +       }
+> +       pr_crit("%s at %pS\n", report_ubsan_failure(regs, type), (void *)regs->ip);
+> +
+> +       return BUG_TRAP_TYPE_NONE;
+> +}
 
+Shouldn't this return BUG_TRAP_TYPE_WARN?
