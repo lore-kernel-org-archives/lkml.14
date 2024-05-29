@@ -1,101 +1,127 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0443B295
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 12:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9FD3B295;
+	Wed, 29 May 2024 12:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716985413; cv=none; b=iEIzyoi8GwcfyB2u9LZjabqAKaPJLdEIuc+XuL+pOGVESPIBEWObjNAJbTmZlBNJ+t3kA0nMYPjXWky+jEuFQkQ46U7UIIAgq9yApMWLsjzKgbZcwgZqRS4o06m99l9Rttx5zAfIXZda1Llw+6rAlsWRSdm8y8qbqPoGxZKGlrE=
+	t=1716985429; cv=none; b=ECeMWLzXxhmVxljkb3+Y+3dLHIsfUmbwWzERRiUK/DP80bc/DTPHxqZj6AhAKVyxgfqEux4VKyfEqT0LuPyScml5g8mdhFSct9uIbWs/p2bEiPCEr/OMly+HemeD0bfziTyWCUWKQuJNuMJce9wIxHn1hBkwo3Q1Qf8jm6Jn4LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716985413; c=relaxed/simple;
-	bh=SFsdFGM1tKYQjt5FyT4kYb2Qr9hSQyKl3hmka6u3AM4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UwjkTisj1IeurcMPd/9ICJkEx5Zhl1PkSvt2IM8OC3pGLJs7SB9CVClkZTJmuJeNLrxMjs57cNHLakZXiphsr917nBHuQ6K0CW61GumpuRkLbodbw20ZOWaihLbX0x3JTeqEMRWZGL+E1RzQY1TZkHEzSoZimAl8iS2YMElHhqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nUl12+jB; arc=none smtp.client-ip=209.85.215.182
+	s=arc-20240116; t=1716985429; c=relaxed/simple;
+	bh=RkP5D3saaeTMlN+z8GdHuQotsEvMZSjBhTLRBaZ4Za0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uUlgsUQRorumqWc3z5yqohPK4O7uGzduEqU3/ifvwrWuFppRog9zwIPXFSS6PvcOVLl+Wc6D1gzxevJzx9b7rS3BeBoC1WMI37jWDl+mRryHsuoLk/ez1EYOUJBADX6nXAOhv6nvz4jYhydvlGxxYwejYO/XoNrvN8zz6WChCg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PNeGMl3m; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUl12+jB"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-65894e58b8aso1456746a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:23:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNeGMl3m"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6303e13ffeso226427666b.3;
+        Wed, 29 May 2024 05:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716985411; x=1717590211; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bu8X2LCUalqzu3Ya3NkSgnwgrwDIZEosx1eIzHQjc28=;
-        b=nUl12+jBNxcKbDgzGtFZNYSQJFjwct7hD+x07oprx3hG30phMwzGbFiHg73VbyyoP7
-         udbdlLPgjlkQHWdrh7hKJNOQoEhma+Fz6pDg2f30O4GJGPgoV2tJXg80U7kjbQ918nAQ
-         0JExZ4qcFjew3KQewfiSp6M7HO57N5WaYmz2bqbkdJ14DqMWMP015Tjz/SFZQSPVwBQW
-         TwNozyHdpK/iLh6SZazQMyxINCP8RRnFCnvyvyPBEEL0Plgt7ac0TSNQ981zXYqlCNqF
-         l0zkr3ONjsHcFSXbcDVr7hDv214/f59nZa7U5ye/oIU/kmccEVxDamGuTAFCn8I74VDA
-         YnNw==
+        d=gmail.com; s=20230601; t=1716985426; x=1717590226; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=agBA9ROkL6zGoPVLQLVhzR6Klzg/5dR73YkaHBsvPu8=;
+        b=PNeGMl3mJ4yMrWxEWuRLkI8vwya7GJ95WDXj9eaKX1IQn6JSH+Dt7lAdTfwdtdTntl
+         K7A/eHoF50am+ecoH2O3ZC6NW81uQ5gRCTOUQGA5Qn3KhWKaQaZ1DEd8DsGJHtQwfiUS
+         TfZxXQBUgkcYk6QvLKItU631OqDFLBEQHYoM7c5N6agTqXhRz9M3ak3KqvtfB6JuCZOq
+         kUSSCuYknLXiVuuZbF4KiQcaWa9nZZd+vArW9bvUQXfnlmv8XSPpxSmSAkMZw/yR17rE
+         XxCvENqZXskkblOENUa1vqQwbUrZNanbgRD+zHwHBhG18nEyzScVWMRXZAS5UIG1KvLq
+         U+cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716985411; x=1717590211;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Bu8X2LCUalqzu3Ya3NkSgnwgrwDIZEosx1eIzHQjc28=;
-        b=LjELYBzY58mysHb2F7gju+PFbS/mvFZd1x2UTHe2gXTlU+CU65GQkuO8v91NAfIcGl
-         kngxnlxJfV9sPRmLrGHTVZ1ret6R/qQqpbOkXm4u3RyDsmZvyAjCWe/YegL/6C762cdO
-         /goQTgzNwLOVZjsppzI/epXT9R26A8ybv+QiCWieukWTKMpOtqm9/kKuVBX1A1GTrgrI
-         T10zF5RtN97cPyh//bgcy3koVKyl3W/u3fnUlP+knybKOz2KE74SlwLXzpUDRTXpBUM+
-         fRpXvQPgpeoh8eGxtoGCF2p8lnSxmTRKiO3yitSCgQDjR53iZKFiIGSlSirID1vpP+VP
-         +zsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbgKyGeDKn+rCzHkBHh2rr0wiRUneSwpA7kUXvOqo2E4v970ATI/Ykfwkik4w1jOK0Ad1IPgn4TlIneEfXEY59Ktnu75UldDvg68i0
-X-Gm-Message-State: AOJu0YyJsNo/klkN7mA4XKx8XKc9TgjXaFOu4gkvTVf8Y7ECbO9BkWvQ
-	3Q68qjXFEHU/osnMHcilP30TbB/B06EFnazOrfIS5lOgYdDTfyn2
-X-Google-Smtp-Source: AGHT+IGpop5Rh0Gl6NPGn+yzSeNeXcyhhaZwMs48bAu4Ha451DIdYSt4ISyatz1BTqz9iqNA8XPlsg==
-X-Received: by 2002:a17:90b:46d3:b0:2ae:7f27:82cd with SMTP id 98e67ed59e1d1-2bf5e171f8amr12877376a91.7.1716985411004;
-        Wed, 29 May 2024 05:23:31 -0700 (PDT)
-Received: from paran-QEMU-Virtual-Machine.. ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bf5f987248sm9399359a91.44.2024.05.29.05.23.27
+        d=1e100.net; s=20230601; t=1716985426; x=1717590226;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=agBA9ROkL6zGoPVLQLVhzR6Klzg/5dR73YkaHBsvPu8=;
+        b=qEChPhgdIf62uSqHuiBxje1yBmlDBFz9pYi/fAsDBz4f9zQKF8pAo+aHeuiDokenLb
+         omamP6/sRiBNEq455xGWEhHl+QrX5B7n+fT+dnwe3iqPFvcmeCmq095eKsQz7p2kUYeO
+         yjmW99NKRN5PnJdyPOvZXt7FiUiRuQigkZTv4LcnbNhvDkvKLipq6axq2JUDyh4mMWpM
+         TYA1HrXBW5wkB8gAD2SBjsJehmw2b29vamXL39SBXS2oEvdSV8jl+uH6JaTbISeOAOqN
+         yYDygJGYP1wL6Z9NIgXdb6/RGG+kPeKq0QWTI2qqC/aznWDq6doRA0Q36xL9WV5iRf/4
+         7Y2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUYh8uQjUWkP9o79Pka021cXjCukFdYWSi1Z3qCFhYvQXAOcdJ8PM9EepnRnA4Xa2SPSJ8fZiQcFBSLGt9d6xIJXEINE48StXNeseL3w+Sx7qqiQm92Z6+g2RIxbr+zTRk/gzmDZ1S8i67AsLMnxKHx4muzrjueKxWObuBghpNoLVsm3g==
+X-Gm-Message-State: AOJu0Yzizrx6sqHtlcVXep9WuQ5DeL8b+RnbBJAmvH8beemvZUEw/qG1
+	PAyBCAts8vyXQjGl3hQpf/VusIsME0nhF7S9kMGHrXldTOYj0XCI1npR/CHsfAM=
+X-Google-Smtp-Source: AGHT+IH6i/ExeFqOf09tk7YEtXA14MubFGVMVCX2GfSnwPuaHFIipkhddoTWKrl6gWbBIYXdqicv0g==
+X-Received: by 2002:a17:906:68d4:b0:a65:9c88:b738 with SMTP id a640c23a62f3a-a659c88b7a6mr53492866b.12.1716985425679;
+        Wed, 29 May 2024 05:23:45 -0700 (PDT)
+Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cc51ab2sm709129466b.133.2024.05.29.05.23.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 05:23:30 -0700 (PDT)
-From: yskelg@gmail.com
-To: Stefano Stabellini <sstabellini@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: skhan@linuxfoundation.org,
-	sj@kernel.org,
-	Austin Kim <austindh.kim@gmail.com>,
-	shjy180909@gmail.com,
-	linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Yunseong Kim <yskelg@gmail.com>
-Subject: [PATCH] xen/xenbus: handle potential dangling pointer issue in xen_pcibk_xenbus_probe
-Date: Wed, 29 May 2024 21:22:33 +0900
-Message-Id: <20240529122232.25360-1-yskelg@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 29 May 2024 05:23:45 -0700 (PDT)
+Message-ID: <2f26b72970be841279ca00c1b5eb91dcfffabdea.camel@gmail.com>
+Subject: Re: [PATCH v3 6/6] iio: adc: ad7173: Reduce device info struct size
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
+ <mitrutzceclan@gmail.com>
+Date: Wed, 29 May 2024 14:23:44 +0200
+In-Reply-To: <20240527-ad4111-v3-6-7e9eddbbd3eb@analog.com>
+References: <20240527-ad4111-v3-0-7e9eddbbd3eb@analog.com>
+	 <20240527-ad4111-v3-6-7e9eddbbd3eb@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Yunseong Kim <yskelg@gmail.com>
+On Mon, 2024-05-27 at 20:02 +0300, Dumitru Ceclan via B4 Relay wrote:
+> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>=20
+> Reduce the size used by the device info struct by packing the bool
+> =C2=A0fields within the same byte. This reduces the struct size from 52 b=
+ytes
+> =C2=A0to 44 bytes.
+>=20
+> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+> ---
+> =C2=A0drivers/iio/adc/ad7173.c | 16 ++++++++--------
+> =C2=A01 file changed, 8 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+> index 328685ce25e0..e8357a21d513 100644
+> --- a/drivers/iio/adc/ad7173.c
+> +++ b/drivers/iio/adc/ad7173.c
+> @@ -179,15 +179,15 @@ struct ad7173_device_info {
+> =C2=A0	unsigned int clock;
+> =C2=A0	unsigned int id;
+> =C2=A0	char *name;
+> -	bool has_current_inputs;
+> -	bool has_vcom_input;
+> -	bool has_temp;
+> +	bool has_current_inputs		:1;
+> +	bool has_vcom_input		:1;
+> +	bool has_temp			:1;
+> =C2=A0	/* ((AVDD1 =E2=88=92 AVSS)/5) */
+> -	bool has_common_input;
+> -	bool has_input_buf;
+> -	bool has_int_ref;
+> -	bool has_ref2;
+> -	bool higher_gpio_bits;
+> +	bool has_common_input		:1;
+> +	bool has_input_buf		:1;
+> +	bool has_int_ref		:1;
+> +	bool has_ref2			:1;
+> +	bool higher_gpio_bits		:1;
+> =C2=A0	u8 num_gpios;
+> =C2=A0};
+> =C2=A0
+>=20
 
-If 'xen_pcibk_init_devices()' fails. This ensures that 'pdev->xdev' does
-not point to 'xdev' when 'pdev' is freed.
+This is really a very micro optimization... I would drop it tbh but no stro=
+ng
+feelings about it.
 
-Signed-off-by: Yunseong Kim <yskelg@gmail.com>
----
- drivers/xen/xen-pciback/xenbus.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/xen/xen-pciback/xenbus.c b/drivers/xen/xen-pciback/xenbus.c
-index b11e401f1b1e..348d6803b8c0 100644
---- a/drivers/xen/xen-pciback/xenbus.c
-+++ b/drivers/xen/xen-pciback/xenbus.c
-@@ -54,6 +54,7 @@ static struct xen_pcibk_device *alloc_pdev(struct xenbus_device *xdev)
- 	INIT_WORK(&pdev->op_work, xen_pcibk_do_op);
- 
- 	if (xen_pcibk_init_devices(pdev)) {
-+		pdev->xdev = NULL;
- 		kfree(pdev);
- 		pdev = NULL;
- 	}
--- 
-2.34.1
-
+- Nuno S=C3=A1
