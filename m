@@ -1,102 +1,76 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AF014285;
-	Wed, 29 May 2024 13:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE2711CAB
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716988531; cv=none; b=nR7U3zsAp+V6Z2g3envbUKsZoqeRiFP7ehiBG3OusChpYQ5ZF9z08rVnqGsIOYRxVhdstShu5b8IVufjXd/7pxcwNbFEyJDvrRghm2IIl7dgn/eM0M8xWhplfFVsO8fvFcpjErKauAkzSOYPlrCTklU3mLyVLKxyi+L1ZSKWsQQ=
+	t=1716988626; cv=none; b=kr2zJ2QKf7yIFnMU/ogz57s6HVHoAquKoF4s86KmBG13852pOZ+B4ycsOqqKRXUdxN5+KJN0xey+zAXoD4mtIm8+SuguqzMC4BBfYTvHDBN0qSm7HEWO/QlMp2Cuq2NLly49cFI9O3JCdm26Ogf45B1SmH/c1VbuNU8VrxAQs5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716988531; c=relaxed/simple;
-	bh=OmM5PAMFbN4dfmCw525+OX5fDy1sVOYxPtyU5Ru9uAo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=o0o7vaLZLGxbE8hDPjl2R+r45k4r9wuYGGaRPUNrLy9iaTQOt2oxMrA/0YOGCvJhUwWMEllUqEI6G1ddJZ8wdwONizZL/wVazJUBOySUf8t5ckj5dlccozDoLMKGInVP4EcOXQ6GJs4q6IHHEIgrksJBHGV0l8K/Hqmj78AxSRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=D15IPLoT; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D15IPLoT"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44TDFFRq127926;
-	Wed, 29 May 2024 08:15:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716988515;
-	bh=SGXEU/HXs2xZG2V9QTv7x2JhjWA83Vf2BvYxteRQpkU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=D15IPLoTypsUVfAq5iNhZrhWsUCKh0AF7+uShdkTIG36aZfOnTrkDPZ+xfKyzLFEL
-	 ppygFvpRKcjOXg99cmZL8s9xPkiIyYF4CpdmatwL0byu8qHD6lSyihZD8hQEHYVNKq
-	 z8WTMv9sAorzvdGZgxcSzwLLMXPc7IRGbH8mTIH8=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44TDFFPB062731
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 29 May 2024 08:15:15 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 29
- May 2024 08:15:15 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 29 May 2024 08:15:15 -0500
-Received: from [137.167.6.219] (lt5cg1094w5k.dhcp.ti.com [137.167.6.219])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44TDFDUW119086;
-	Wed, 29 May 2024 08:15:14 -0500
-Message-ID: <abbb5c02-6cda-41c6-9900-06e7f4920541@ti.com>
-Date: Wed, 29 May 2024 16:15:13 +0300
+	s=arc-20240116; t=1716988626; c=relaxed/simple;
+	bh=mHkHq3jMKH06n9vgAf2jzhRfI22gJrW6gclhd19+eaU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WA85KxhzXDEa7j6jHbc9y4Z5wQ5TRypa4eFdGDAP3iRelKkwf30FLVW2IoPeiBuX2G8NhtIbbtBavtQPkq1kd58Ue6WyovnDNM7DbNa0Zpqz8YU5luQRxuYJfTDpEAMvBIuiFSbsNwVwHQl3o0vzn48DltE1sGweZYUZFfbRevM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-37450b16f7cso19927345ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:17:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716988624; x=1717593424;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qfO/SB2UFfHt97a87aSQyblLMjrNQ0YH7sS6OSZhUIE=;
+        b=kMruUF/lCih3RmNVEADz881nDvLi+DJIllSPCpI5d2D7KZ99hFEQ7epxxMJeqozNKK
+         lC7uRBE0AHtwEOZoLfqE8VmTaaCXZQCJ4LfyyVHQpr3j0O9aOOXX7tez+kQclt0pY6UG
+         hKuK1aabJ6g8RnYfJLFTnbpALp6YuZ2aqedHcm82yy0A+DOIbmzvAn5DX4lJEyL2BsjX
+         lqkwVtOm6NwYgzbxMVPDDgVGOImDEPWfQ/pFoZgEwsPnI6bY7FFpa74RMHdIzsRyqTch
+         La3B/zn05966DXptrFLBHsHfZZzpblktgSzrvZR38GmAIzELxsecvQDatarSJnsbEBkr
+         xaHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVliElK/y1zQIv6G7b9gwmBG4SsAhIMXG0RRZhFqU5hmA5L/5NuqCRH8u3zQDIems76z95krgibwHxPeBvX4aamsmeF31hoPab3ySNJ
+X-Gm-Message-State: AOJu0YxeS70PxPGYQDZw2mmmZplokYRGENwqtgxdbRMXwXbDKlxS7gL0
+	lqCBlv5jing7FOHqDyDjOzBQSdLIYbCHzzQ+M/fLGU6lzXd1czqf8s4lhOTJIHc6LM/V5+WPc5R
+	sM7RLvVkA9zpp0WG9/15Qur0QCvvSmvMGKCmPB+40JFY654xqZ2qAHvY=
+X-Google-Smtp-Source: AGHT+IH69uuYJoSGUbkjmQu3luLjcHAK2G1MSD5e3SByJKKkardLk9TaBJEgPDSfC7inxTgZ8mfcbypAYmshT3hu8NG6Y+ek5OgY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH wireless-next 4/8] wifi: wlcore: pass "status" to
- wlcore_hw_convert_fw_status()
-To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Kalle Valo
-	<kvalo@kernel.org>
-CC: Johannes Berg <johannes.berg@intel.com>, <linux-kernel@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>
-References: <ZlWhH4HleGILuUtN@shell.armlinux.org.uk>
- <E1sBsxx-00E8vi-Gf@rmk-PC.armlinux.org.uk>
-Content-Language: en-US
-From: "Nemanov, Michael" <michael.nemanov@ti.com>
-In-Reply-To: <E1sBsxx-00E8vi-Gf@rmk-PC.armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Received: by 2002:a92:cda6:0:b0:374:5d81:9136 with SMTP id
+ e9e14a558f8ab-3745d8193d4mr4771605ab.0.1716988624612; Wed, 29 May 2024
+ 06:17:04 -0700 (PDT)
+Date: Wed, 29 May 2024 06:17:04 -0700
+In-Reply-To: <000000000000849b0606179c33b7@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000dc0d10619979126@google.com>
+Subject: Re: [syzbot] [bcachefs?] WARNING in bchfs_truncate
+From: syzbot <syzbot+247ac87eabcb1f8fa990@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+syzbot has bisected this issue to:
 
-On 5/28/2024 12:17 PM, Russell King (Oracle) wrote:
-> wlcore_fw_status() is passed a pointer to the struct wl_fw_status to
-> decode the status into, which is always wl->fw_status. Rather than
-> referencing wl->fw_status within wlcore_fw_status(), use the supplied
-> argument so that we access this member in a consistent manner.
->
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
->    drivers/net/wireless/ti/wlcore/main.c | 2 +-
->    1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-> index a98b26dc3cb8..3defe49c5120 100644
-> --- a/drivers/net/wireless/ti/wlcore/main.c
-> +++ b/drivers/net/wireless/ti/wlcore/main.c
-> @@ -392,7 +392,7 @@ static int wlcore_fw_status(struct wl1271 *wl, struct wl_fw_status *status)
->    	if (ret < 0)
->    		return ret;
->    
-> -	wlcore_hw_convert_fw_status(wl, wl->raw_fw_status, wl->fw_status);
-> +	wlcore_hw_convert_fw_status(wl, wl->raw_fw_status, status);
->    
->    	wl1271_debug(DEBUG_IRQ, "intr: 0x%x (fw_rx_counter = %d, "
->    		     "drv_rx_counter = %d, tx_results_counter = %d)",
-> -- 
-> 2.30.2
+commit 03ef80b469d5d83530ce1ce15be78a40e5300f9b
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Sat Sep 23 22:41:51 2023 +0000
 
-Agree this is more consistent. Maybe *status shouldn't be an argument to 
-wlcore_fw_status at all? It's called only in one place with 
-wl->fw_status anyway.
+    bcachefs: Ignore unknown mount options
 
-Michael.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1077cf8a980000
+start commit:   b6394d6f7159 Merge tag 'pull-misc' of git://git.kernel.org..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1277cf8a980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1477cf8a980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=713476114e57eef3
+dashboard link: https://syzkaller.appspot.com/bug?extid=247ac87eabcb1f8fa990
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15c61a0c980000
 
+Reported-by: syzbot+247ac87eabcb1f8fa990@syzkaller.appspotmail.com
+Fixes: 03ef80b469d5 ("bcachefs: Ignore unknown mount options")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
