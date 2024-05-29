@@ -1,158 +1,125 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DAA1836E0;
-	Wed, 29 May 2024 16:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AD91836DF;
+	Wed, 29 May 2024 16:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716999760; cv=none; b=EA3ixII6998BKZwem/TUTGtNZ+CAol77Ww8LYD+C7DJgFIzlzd7uSaBsVJronYkBQwXHlcrI/Cx/Y6Hu+mjT/H1E3stdd8un5nvw/iKQoJMyBk4Bu4vKxYoO0rY2X5rq12hvKTJC4umFHgS/owERZydOnV8paAg7+drPpJ+pHLE=
+	t=1716999787; cv=none; b=MgO7XDz6Rz8jyX02mMPWorh9r46m3aYv9eszVRbSwopxVRGWHgDXTaVn/N0DzNdkyaoNajWbSkIJGlFdZSeDqaRCAt5gDKWGJbbXeGye3UP5fxKKbQ2HAzMgYoKGdolKQvkyGgryDuSOtaNJvG9iYUc441RaNbJnb9rqH/tyX1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716999760; c=relaxed/simple;
-	bh=0N8WwniUWLzXIUhUFVHN1Xwhqc4YYBcv14U5W5AqVOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKDuvtARsIUx0OyCF79kHgwSYF47xnUWBlA/lQyPLuzszjtsnuM0QTSCTj3M/OfYLgpzPG5oe+ENrNZoLeN2dkomLMLnNotVSb/zyc+ORdIiaPzZcdWTzeRXkzkDy5Cve9xg2Y8DBlV+QFJVTMzUYbM0YA6JG0pZJ10F0I0R1VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=C+jo/LF8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fxPU1Bmg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=C+jo/LF8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fxPU1Bmg; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1716999787; c=relaxed/simple;
+	bh=XGj/g7iOHJl/Awga7F8/WFGN8LmsmDCvK9/ziiAot/U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o2HcYgSKdgXxOMIl1eFB9+rsI1WFs+h/Lonml5vrNGoWaa/GStdr8a7hfVcClgNhQzpoGWN9UpjGe83Bkuz9AHl52CRw8Bi0QNe1d6pL2nbn/uNUeBoQRAevL15ADMIFiVniu10p8+jPBV0fmGJ/mwjrhPqfqz+w+tD7uz226ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=v40g8Krd; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="C+jo/LF8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fxPU1Bmg";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="C+jo/LF8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fxPU1Bmg"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="v40g8Krd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716999783;
+	bh=XGj/g7iOHJl/Awga7F8/WFGN8LmsmDCvK9/ziiAot/U=;
+	h=From:Subject:Date:To:Cc:From;
+	b=v40g8KrdmQ491KZ7Xniy4WCqzGAxw9T3cF3NCy5TyA/YFiq0ApiiJmAaHbJo42c1S
+	 2MMm7IYCrdeG3j8LRlredviXxwbIYQePrkXqUeWHxo+E2fg76zSVLgdLX5uDh3rYvT
+	 BCuwM/drC50hHxkiwp92ErcANu6IIl6AAgyclL4nxCWxU8QzQ43H8j1b72rGO78Xe5
+	 DWHhseSHE6QQEQaIMSbMmag1xWGtfy3OyDZWamhD5EyLB47ew4eN/DPogcVCNxJ5hS
+	 ez71p52gprzbnu9srVk9iJhZkcZbxPv6YhqgpXWo0i9RLrIGfk+UMKgbx74Rv3rRW/
+	 Lha7bPZKX/DsA==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 19D8E205B9;
-	Wed, 29 May 2024 16:22:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1716999756; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCZu6jdsDJqbFUOxgklErOVfk3nUsdlFfJQML2sSSgA=;
-	b=C+jo/LF8K39lhbdaZ1p2WiJgAHG3wgS6vuKBsAsAhgae7r30juMxBVDBZ/Yv0R+zYyIR9A
-	ei4L9SF6ACtq8DghCUEOMyCEUsQv5RvaLisqeaZEM/bTvcBp+zJ2e770bvSK1TZnCmU5kd
-	TdwuOhqs+gxG/Awylxe9CkCJggdDS8c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1716999756;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCZu6jdsDJqbFUOxgklErOVfk3nUsdlFfJQML2sSSgA=;
-	b=fxPU1BmgKhi9azuUhIPM5e1vvALlG1xJsHEBOphIoINivX8k5AWjZZKoPQTv79aF195+r6
-	wzbRYW7fVSp9SzDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1716999756; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCZu6jdsDJqbFUOxgklErOVfk3nUsdlFfJQML2sSSgA=;
-	b=C+jo/LF8K39lhbdaZ1p2WiJgAHG3wgS6vuKBsAsAhgae7r30juMxBVDBZ/Yv0R+zYyIR9A
-	ei4L9SF6ACtq8DghCUEOMyCEUsQv5RvaLisqeaZEM/bTvcBp+zJ2e770bvSK1TZnCmU5kd
-	TdwuOhqs+gxG/Awylxe9CkCJggdDS8c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1716999756;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCZu6jdsDJqbFUOxgklErOVfk3nUsdlFfJQML2sSSgA=;
-	b=fxPU1BmgKhi9azuUhIPM5e1vvALlG1xJsHEBOphIoINivX8k5AWjZZKoPQTv79aF195+r6
-	wzbRYW7fVSp9SzDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0B55B1372E;
-	Wed, 29 May 2024 16:22:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RxQ+AkxWV2ZOBgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 29 May 2024 16:22:36 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 9BA1AA082D; Wed, 29 May 2024 18:22:35 +0200 (CEST)
-Date: Wed, 29 May 2024 18:22:35 +0200
-From: Jan Kara <jack@suse.cz>
-To: Yuntao Wang <yuntao.wang@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] fs/file: fix the check in find_next_fd()
-Message-ID: <20240529162235.b76ywqisawmcm22o@quack3>
-References: <20240529160656.209352-1-yuntao.wang@linux.dev>
+	(Authenticated sender: sebastianfricke)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4D2053782109;
+	Wed, 29 May 2024 16:23:03 +0000 (UTC)
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+Subject: [PATCH RFC 0/2] Documentation: Debugging guide
+Date: Wed, 29 May 2024 18:22:56 +0200
+Message-Id: <20240529-b4-media_docs_improve-v1-0-9ddb111c4433@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529160656.209352-1-yuntao.wang@linux.dev>
-X-Spam-Flag: NO
-X-Spam-Score: -3.72
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.72 / 50.00];
-	BAYES_HAM(-2.92)[99.67%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.com:email,imap1.dmz-prg2.suse.org:helo,suse.cz:email]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGBWV2YC/x2NywrCMBAAf6Xs2YUYI7ZehX6AV5GSx2oX2qTsY
+ hFK/93gcQaG2UBJmBSuzQZCKyuXXOF4aCCOPr8JOVUGa6wzZ9thcDhTYj+kEnXgeZGyEl468ja5
+ 1rj2BLUNXgmD+BzHWufPNFW5CL34+5894N7f4LnvP0DSKiOBAAAA
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, laurent.pinchart@ideasonboard.com,
+ hverkuil-cisco@xs4all.nl, mauro.chehab@linux.intel.com, kernel@collabora.com,
+ Sebastian Fricke <sebastian.fricke@collabora.com>
+X-Mailer: b4 0.11.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716999782; l=2682;
+ i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
+ bh=XGj/g7iOHJl/Awga7F8/WFGN8LmsmDCvK9/ziiAot/U=;
+ b=mC9XGCbAiXfVgn8zVFK7wfffxkYQJr/2N7cXGV68S0Sw/E5DRXgmbg5ZBxCdxaFA58W+YgFgFc29
+ 4bDMTIztBb68Jg/lNfE/rwpDNS6s5riFlxWLAcSU4EkqmTRlA48W
+X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
+ pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
 
-On Thu 30-05-24 00:06:56, Yuntao Wang wrote:
-> The maximum possible return value of find_next_zero_bit(fdt->full_fds_bits,
-> maxbit, bitbit) is maxbit. This return value, multiplied by BITS_PER_LONG,
-> gives the value of bitbit, which can never be greater than maxfd, it can
-> only be equal to maxfd at most, so the following check 'if (bitbit > maxfd)'
-> will never be true.
-> 
-> Moreover, when bitbit equals maxfd, it indicates that there are no unused
-> fds, and the function can directly return.
-> 
-> Fix this check.
-> 
-> Signed-off-by: Yuntao Wang <yuntao.wang@linux.dev>
+The RFC contains a new summary page for all media related documentation. This
+is inspired by other subsystems, which first of all allows a user to find the
+subsystem under the subsystems page and secondly eases general navigation
+through the documentation that is sprinkled onto multiple places.
 
-Good point. Feel free to add:
+Additionally, it provides a guide on how to debug code in the media subsystem.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+WHY do we need this?
+--------------------
 
-								Honza
+For anyone without years of experience in the Linux kernel, knowing which tool
+to use or even which tools are available is not as straightforward as some
+senior developers might perceive.
+We realized that there is a general need for a kind of "start page", that
+allows especially beginners to get up-to-speed with the codebase and the
+documentation. The documentation in particular is currently quite hard to navigate
+as you mostly have to know what you are searching for to find it.
 
-> ---
->  fs/file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/file.c b/fs/file.c
-> index 8076aef9c210..7058901a2154 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -491,7 +491,7 @@ static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
->  	unsigned int bitbit = start / BITS_PER_LONG;
->  
->  	bitbit = find_next_zero_bit(fdt->full_fds_bits, maxbit, bitbit) * BITS_PER_LONG;
-> -	if (bitbit > maxfd)
-> +	if (bitbit >= maxfd)
->  		return maxfd;
->  	if (bitbit > start)
->  		start = bitbit;
-> -- 
-> 2.45.1
-> 
+WHAT do we cover?
+-----------------
+
+The document is structured into two sections:
+
+1. A problem-focused approach: This means, a developer facing an issue matching
+one of the given examples, will find suggestions for how to approach that
+problem (e.g. which tool to use) in this section
+2. A tool-focused approach: This sections highlights the available tools, with
+comparisions between the tools if sensible. The goal of this work is
+**duplicate as little as possible** from the existing documentation and
+instead provide a rough overview that provides:
+    - A link to the actual documentation
+    - A minimal example for how it can be used (from a media perspective,
+      if the usage isn't absolutely trivial like printk)
+    - A rational for why it should be used
+
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: laurent.pinchart@ideasonboard.com
+Cc: hverkuil-cisco@xs4all.nl
+Cc: mauro.chehab@linux.intel.com
+Cc: kernel@collabora.com
+Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
+
+---
+Sebastian Fricke (2):
+      docs: media: Create separate documentation folder for media
+      docs: media: Debugging guide for the media subsystem
+
+ Documentation/media/guides/debugging_issues.rst | 477 ++++++++++++++++++++++++
+ Documentation/media/guides/index.rst            |  11 +
+ Documentation/media/index.rst                   |  20 +
+ Documentation/subsystem-apis.rst                |   1 +
+ 4 files changed, 509 insertions(+)
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240529-b4-media_docs_improve-79ea2d480483
+
+Best regards,
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Sebastian Fricke <sebastian.fricke@collabora.com>
