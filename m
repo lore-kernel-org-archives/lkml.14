@@ -1,463 +1,209 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C0B17F389;
-	Wed, 29 May 2024 10:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA9917B409
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 10:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716977414; cv=none; b=MqmHOSr8z0kgUlV7fXJIULIk+ZWbbzkTbE55tCp5oUHQ1noI6GwmW6IVMVVYPQPzX+v4c/iRBjIkZ18UwFJQ9juI6nD8lkEtWAkEcD9QyIC38E3Q7dP0GULGEE3zFAlGngBqgg/XlxslQqmbh0VdCWr3s8piYO1CPBmv6pIJlNw=
+	t=1716977453; cv=none; b=IKGb20a1r3Qtu6WFvxmSDphuvbtfHYgt8Nb34bAy3h+Dg4JbuD8JAcKEt7u1PheideI7kaiBMfEgKCJjvNx/I25hIfRsvnJb7VyxdsXVdNajKuOWF6TBLb3EPOFYJRmd83RRKBSktm9+/fg3VDm5pMc75AP23pPx5g1B6xYlsAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716977414; c=relaxed/simple;
-	bh=5OWuifB/Hk7lCp0LYGkPz20RxzyeA/mHCzJH8/EweMM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R2lLbLBydoO6zVY8ncmSPP2Km/oJlcUClqygjEtaaTi9hV44v/kcM8k1WrpxWHQJxuLjNuz7iGJ62Ob75uNOKQMpjm+UuEt1r6t4F+hbe5aU3RkBKOciORujaSKCna0Xpt07AbR2YbkC31H3ZdLezRwlu7CW0QarvoMvDUSsFCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nW5gkL9L; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716977453; c=relaxed/simple;
+	bh=zygsDcne8CRDzO76sDobH5aabsfZxMHdf9IAs1HAIE4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=JeFK6D35BtetAvAy87NlVD64jVL+ZUSeFBfco/Shpux+yVRXPjjW1RIOdlhhHFk0q11FUdMHqAJCQsO5rTHvFqDjLyY5WvVBbXqnWbzhJ7IgVmGtdHnWKxuweDiNKxjxjltvOob+VnE4LLdxhdPtohmnz0BDA/Awgr4fGNKUiPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=QW4RfmeK; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nW5gkL9L"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44T0j4XS018130;
-	Wed, 29 May 2024 10:10:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2HEd3s7k+CpiiqPGmtipkG7oLSYIGUSLC0boPeqm4/8=; b=nW5gkL9LvAduhxMo
-	mYFc1eR05bcWW51HgExM3mhGMpVPBZQlKWlWwbG7LOd6HbfMoZWrTRl79c6r1Jh7
-	lEt8elPF2AW032ox5uvoVXwAzatOGOItp8CC4x64yvmv7pPKq94JTcwSmxc26L1J
-	5xgQoN0YnbRpSj312+iSHHPa0yjjBjpKQPFPANgbZu9Zy+TlGVHglY9Yu7/xVajN
-	AfGEY3eiUmeNg1UDpqhZ1Il2fhLO8Um3z5M5C5gJfH+ClV2Zy9+MFNdXHO17ytpU
-	o2RVSRTcpXFBC2/1q+maesiGaMEWsyTPULidlzz382CLzJP2NUlKmcKTUo2XMxYH
-	1RDa5w==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0qgmf7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 10:10:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TAA8Fi017654
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 10:10:08 GMT
-Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 29 May 2024 03:10:02 -0700
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
-        Tengfei Fan
-	<quic_tengfan@quicinc.com>,
-        Qiang Yu <quic_qianyu@quicinc.com>,
-        Ziyue Zhang
-	<quic_ziyuzhan@quicinc.com>
-Subject: [PATCH v9 4/4] arm64: dts: qcom: aim300: add AIM300 AIoT
-Date: Wed, 29 May 2024 18:09:26 +0800
-Message-ID: <20240529100926.3166325-5-quic_tengfan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240529100926.3166325-1-quic_tengfan@quicinc.com>
-References: <20240529100926.3166325-1-quic_tengfan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="QW4RfmeK"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52449b7aa2bso2233023e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 03:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1716977450; x=1717582250; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZSoVp4DQNbCfZosuSUspIzbLhAdqRfk3MzM3YcjAKVw=;
+        b=QW4RfmeKoXspQ7dP1ha77yS5lt+nWYno17iBBzIEX6dLv3g+MBk7zzCSBjw03DHC4U
+         y4Zj8X3UIBg2ziApeYb7hWy7q3AVLn/jTgtwlFlJrU49aUJBE4SfaGNjWXwvphMP4Qas
+         k7XrhRAYYRfOYiHoEyggWJoK7api2TNj6WA09tjFW0zAfnz5BG2JUPB+MKWlm4wIwG9Q
+         r/GIqNVNzGReHZNlWjQBFtPG5NBMw4gua1+8+8v6HadRah1WsS6qxwhKF2WPr4JnDL9R
+         qgIHUGsFcWX+jvPGCsxqFsVT32pBH0NONWixl+QN+KTL8nw0MYOks+oqkGMKn4NUSD/m
+         1Rig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716977450; x=1717582250;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZSoVp4DQNbCfZosuSUspIzbLhAdqRfk3MzM3YcjAKVw=;
+        b=qawBLir2pHGeaMDF5sBp3CNxHOHEwW2vFGjVteja3buV8N4/iH8BWXjUCqUK2OkrjA
+         UMpCyaligfGo5eXF62FLYG5iAIWJiAp6w6BB+bMjmDrErhuSCN2rcG/D9AYo0P8akcCe
+         /zce4EjQhEmFloxM/3lJc++7FXZddMPuN3VuSyv8BcnGhUElvraaPN971tFEfZp1xn3v
+         9mE0zC0fXg8Q781z0axZT5B9L4UvBnigdEN5JOdiPhY6F0/n9dRxkuZab/nTPhv1phHI
+         9VnwpECLKkrCNLp7+UKwHOX1sl/U8kiVgu0TaI3SlovthKb4Dh3iq4zS2lDLAH2aqBtc
+         mOiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0du0MSnrmw2XcEZsGeXHDJ5BByrGiWg60xjlhiQSw+IyhdveBufCba7jxr4CZShlM356pMC8bl1BEtLiVI6TZuprfBUa4WZzKF2z5
+X-Gm-Message-State: AOJu0YyElBMoG0NHU5qH8ZV0tUZLgxyMhT/s/Y+HjUmXzMy62am9bDs8
+	PnvJeUnV+yT4cevgZubSVtxXZc+n4jRUomo9D0KdHxPtB1oXBcYkhAy8y/Vzl2LvLLZG9NukOw/
+	frMMjSQtHECnq/kHuHiRsQr+tSUp7LgeZvvq0bA==
+X-Google-Smtp-Source: AGHT+IHYJZBsJdRJR+ZSwpHCzyuGph7Zavse2q6Cc2Nu04AACOr9/ojv1MOTePUCWn/12FmemAN3H/3cVYdAZT8fQX0=
+X-Received: by 2002:ac2:4c25:0:b0:515:9abe:6c46 with SMTP id
+ 2adb3069b0e04-52965199a87mr8479219e87.34.1716977445168; Wed, 29 May 2024
+ 03:10:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: mVNa9BO9HMyalQi0TwG8FNyiB1DCPTAy
-X-Proofpoint-ORIG-GUID: mVNa9BO9HMyalQi0TwG8FNyiB1DCPTAy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-29_06,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 adultscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405290068
+From: Zhitao Li <zhitao.li@smartx.com>
+Date: Wed, 29 May 2024 18:10:29 +0800
+Message-ID: <CAPKjjnoeLkkvSZwpWw_bTCOCTfWYgjCyvjpoa95E4yroQR5zyA@mail.gmail.com>
+Subject: Question: How to customize retransmission timeout of unacknowledged
+ NFS v3 TCP packet?
+To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ping Huang <huangping@smartx.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add AIM300 AIoT Carrier board DTS support, including usb, UART, PCIe,
-I2C functions support.
-Here is a diagram of AIM300 AIoT Carrie Board and SoM
- +--------------------------------------------------+
- |             AIM300 AIOT Carrier Board            |
- |                                                  |
- |           +-----------------+                    |
- |power----->| Fixed regulator |---------+          |
- |           +-----------------+         |          |
- |                                       |          |
- |                                       v VPH_PWR  |
- | +----------------------------------------------+ |
- | |                          AIM300 SOM |        | |
- | |                                     |VPH_PWR | |
- | |                                     v        | |
- | |   +-------+       +--------+     +------+    | |
- | |   | UFS   |       | QCS8550|     |PMIC  |    | |
- | |   +-------+       +--------+     +------+    | |
- | |                                              | |
- | +----------------------------------------------+ |
- |                                                  |
- |                    +----+          +------+      |
- |                    |USB |          | UART |      |
- |                    +----+          +------+      |
- +--------------------------------------------------+
+Hi, dear community,
 
-Co-developed-by: Qiang Yu <quic_qianyu@quicinc.com>
-Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-Co-developed-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 322 ++++++++++++++++++
- 2 files changed, 323 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+In our NFS environment, NFS client mounts remote NFS export with its
+VIP. The VIP can be assigned to another server node for failover.
+However, the NFS client sends the unacknowledged packet 50s+ after the
+VIP is ready on the new node, which is because of the exponential
+backoff retransmission algorithm.  I tried to set this parameter
+"tcp_retries2" smaller so that the NFS client can reconnect with the
+new node more quickly, but this parameter didn't take effect. From
+tcpdump entries as follows,
+  1. At "2024-05-29 11:47:00",  ARP is updated.
+  2. At "2024-05-29 11:47:52" ,  the NFS client retried to send the packet.
+  3. Then the connection is reset and a new connection starts.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 99d606a15449..db093c8e4c1e 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -101,6 +101,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcm6490-idp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qdu1000-idp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qrb2210-rb1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qrb4210-rb2.dtb
-diff --git a/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts b/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
-new file mode 100644
-index 000000000000..49759274fb4a
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
-@@ -0,0 +1,322 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/leds/common.h>
-+#include "qcs8550-aim300.dtsi"
-+#include "pm8010.dtsi"
-+#include "pmr735d_a.dtsi"
-+#include "pmr735d_b.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. QCS8550 AIM300 AIOT";
-+	compatible = "qcom,qcs8550-aim300-aiot", "qcom,qcs8550-aim300", "qcom,qcs8550",
-+		     "qcom,sm8550";
-+
-+	aliases {
-+		serial0 = &uart7;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&volume_up_n>;
-+		pinctrl-names = "default";
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			debounce-interval = <15>;
-+			gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			linux,can-disable;
-+			wakeup-source;
-+		};
-+	};
-+
-+	pmic-glink {
-+		compatible = "qcom,sm8550-pmic-glink", "qcom,pmic-glink";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		orientation-gpios = <&tlmm 11 GPIO_ACTIVE_HIGH>;
-+
-+		connector@0 {
-+			compatible = "usb-c-connector";
-+			reg = <0>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					pmic_glink_hs_in: endpoint {
-+						remote-endpoint = <&usb_1_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					pmic_glink_ss_in: endpoint {
-+						remote-endpoint = <&redriver_ss_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					pmic_glink_sbu: endpoint {
-+						remote-endpoint = <&fsa4480_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
-+	vph_pwr: regulator-vph-pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&apps_rsc {
-+	regulators-0 {
-+		vdd-bob1-supply = <&vph_pwr>;
-+		vdd-bob2-supply = <&vph_pwr>;
-+	};
-+
-+	regulators-3 {
-+		vdd-s4-supply = <&vph_pwr>;
-+		vdd-s5-supply = <&vph_pwr>;
-+	};
-+
-+	regulators-4 {
-+		vdd-s4-supply = <&vph_pwr>;
-+	};
-+
-+	regulators-5 {
-+		vdd-s1-supply = <&vph_pwr>;
-+		vdd-s2-supply = <&vph_pwr>;
-+		vdd-s3-supply = <&vph_pwr>;
-+		vdd-s4-supply = <&vph_pwr>;
-+		vdd-s5-supply = <&vph_pwr>;
-+		vdd-s6-supply = <&vph_pwr>;
-+	};
-+};
-+
-+&i2c_hub_2 {
-+	status = "okay";
-+
-+	typec-mux@42 {
-+		compatible = "fcs,fsa4480";
-+		reg = <0x42>;
-+
-+		vcc-supply = <&vreg_bob1>;
-+
-+		mode-switch;
-+		orientation-switch;
-+
-+		port {
-+			fsa4480_sbu_mux: endpoint {
-+				remote-endpoint = <&pmic_glink_sbu>;
-+			};
-+		};
-+	};
-+
-+	typec-retimer@1c {
-+		compatible = "onnn,nb7vpq904m";
-+		reg = <0x1c>;
-+
-+		vcc-supply = <&vreg_l15b_1p8>;
-+
-+		orientation-switch;
-+		retimer-switch;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				redriver_ss_out: endpoint {
-+					remote-endpoint = <&pmic_glink_ss_in>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				redriver_ss_in: endpoint {
-+					data-lanes = <3 2 1 0>;
-+					remote-endpoint = <&usb_dp_qmpphy_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&mdss_dsi0 {
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "visionox,vtdr6130";
-+		reg = <0>;
-+
-+		pinctrl-0 = <&dsi_active>, <&te_active>;
-+		pinctrl-1 = <&dsi_suspend>, <&te_suspend>;
-+		pinctrl-names = "default", "sleep";
-+
-+		reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
-+
-+		vci-supply = <&vreg_l13b_3p0>;
-+		vdd-supply = <&vreg_l11b_1p2>;
-+		vddio-supply = <&vreg_l12b_1p8>;
-+
-+		port {
-+			panel0_in: endpoint {
-+				remote-endpoint = <&mdss_dsi0_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&mdss_dsi0_out {
-+	remote-endpoint = <&panel0_in>;
-+	data-lanes = <0 1 2 3>;
-+};
-+
-+&mdss_dsi0_phy {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	status = "okay";
-+};
-+
-+&pcie0_phy {
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	status = "okay";
-+};
-+
-+&pcie1_phy {
-+	status = "okay";
-+};
-+
-+&pm8550_gpios {
-+	volume_up_n: volume-up-n-state {
-+		pins = "gpio6";
-+		function = "normal";
-+		power-source = <1>;
-+		bias-pull-up;
-+		input-enable;
-+	};
-+};
-+
-+&pon_pwrkey {
-+	status = "okay";
-+};
-+
-+&pon_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+
-+	status = "okay";
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&remoteproc_adsp {
-+	firmware-name = "qcom/qcs8550/adsp.mbn",
-+			"qcom/qcs8550/adsp_dtbs.elf";
-+	status = "okay";
-+};
-+
-+&remoteproc_cdsp {
-+	firmware-name = "qcom/qcs8550/cdsp.mbn",
-+			"qcom/qcs8550/cdsp_dtbs.elf";
-+	status = "okay";
-+};
-+
-+&swr1 {
-+	status = "okay";
-+};
-+
-+&swr2 {
-+	status = "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <32 8>;
-+
-+	dsi_active: dsi-active-state {
-+		pins = "gpio133";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-disable;
-+	};
-+
-+	dsi_suspend: dsi-suspend-state {
-+		pins = "gpio133";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+
-+	te_active: te-active-state {
-+		pins = "gpio86";
-+		function = "mdp_vsync";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+
-+	te_suspend: te-suspend-state {
-+		pins = "gpio86";
-+		function = "mdp_vsync";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+};
-+
-+&uart7 {
-+	status = "okay";
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3_hs {
-+	remote-endpoint = <&pmic_glink_hs_in>;
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+};
-+
-+&usb_dp_qmpphy {
-+	status = "okay";
-+};
-+
-+&usb_dp_qmpphy_out {
-+	remote-endpoint = <&redriver_ss_in>;
-+};
--- 
-2.25.1
+I guess the parameter just takes effect for applications and doesn't
+take effect for kernel modules like the NFS client. Could anyone give
+some advice to customize  retransmission timeout of unacknowledged NFS
+v3 TCP packet?
 
+
+OS: Linux kernel v6.7.0
+NFS mount options:
+vers=3,nolock,proto=tcp,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport
+
+tcp_retries2:
+[root@vm-play zhitaoli]# sysctl -w net.ipv4.tcp_retries2=5
+net.ipv4.tcp_retries2 = 5
+[root@vm-play zhitaoli]# cat /proc/sys/net/ipv4/tcp_retries2
+5
+
+tcpdump entries:
+
+2024-05-29 11:46:02.331891 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973659245 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:02.542836 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973659456 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:02.751013 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973659664 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:03.166958 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973660080 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:04.046882 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973660960 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:05.710910 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973662624 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:09.039310 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973665952 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:16.017889 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973672930 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:29.326891 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973686240 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:46:55.950915 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973712864 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:47:00.379844 52:54:00:13:1f:34 > Broadcast, ethertype
+ARP (0x0806), length 60: Reply 10.125.1.85 is-at 52:54:00:13:1f:34,
+length 46
+
+2024-05-29 11:47:52.271192 52:54:00:1d:a4:24 > 52:54:00:13:1f:34,
+ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
+options [nop,nop,TS val 1973769184 ecr 28456
+58566], length 124: NFS request xid 1954624602 120 access fh
+Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
+NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS_ACCESS_DELETE
+
+2024-05-29 11:47:52.272041 52:54:00:13:1f:34 > 52:54:00:1d:a4:24,
+ethertype IPv4 (0x0800), length 54: 10.125.1.85.nfs >
+10.125.1.214.58428: Flags [R], seq 1148562527, win 0, length 0
+
+2024-05-29 11:47:52.272909 52:54:00:1d:a4:24 > 52:54:00:13:1f:34,
+ethertype IPv4 (0x0800), length 74: 10.125.1.214.58428 >
+10.125.1.85.nfs: Flags [S], seq 1734997801, win 32120, options [mss
+1460,sackOK,TS val 1973769186 ecr 0,nop,wscale 7], length 0
+
+2024-05-29 11:47:52.273503 52:54:00:13:1f:34 > 52:54:00:1d:a4:24,
+ethertype IPv4 (0x0800), length 74: 10.125.1.85.nfs >
+10.125.1.214.58428: Flags [S.], seq 1078843840, ack 1734997802, win
+28960, options [mss 1460,sackOK,TS val 2235915769 ecr
+1973769186,nop,wscale 7], length 0
+
+
+Best regards,
+Zhitao Li
