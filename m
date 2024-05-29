@@ -1,110 +1,146 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7553F181BB3
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 15:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C0D181CF7;
+	Wed, 29 May 2024 15:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998307; cv=none; b=hQuC7yLCXBeIvWKvUD0XGj0xFbiFhKlyQIFaS9eaqkFb43T/Vmk3mrXemtBcw8beAr12iyOdHI8IW4wisT2JdLkLeiSPhHrMczWV2NsoThCtPjlU7b7/ftTPt3e70RhKlRarQTQTA+wYL65w32xTDF7AwTx/04D+d8A0X0g/zn4=
+	t=1716998320; cv=none; b=WsQ/FwUJWRKfLkle5hI4hCuX73+MTNeA2CajvJc7QG2KUIrkfZRunlUTHsYT4QV28NKQ4f9dpM7cznV3svUZ8qR7SVSKnx2PDRMpHDkF8CvgtP8ZtFxhxm1rsSsEZ2m8/9+o74Pc5A2mSVUTHCGzt+Yte42qSBwFpJsM6z0K5zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998307; c=relaxed/simple;
-	bh=F6cyAmkItPJMHlzbT5ed2RaRwc0dmuF+iURbDkk2joo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ge9AaptzzE62h615Hv+sWukMcd+1XX2948Ii50UhXrKhKmU8YEF9f0Mw9gzui9oTRqxmuIrBbMW3qmcd5hV3RI5PbZu+Vpd8XAGn6b49Nj/NrT8INsvqV+AHcAStIWr7JNwi1v0gQArcBnaKBdmyb3hAw3xxJpx79IrAGdnCjrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Bfx7xSsO; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1716998320; c=relaxed/simple;
+	bh=ufyQbqT93SwSt4s4JqmoiAB/zHJa/FMuOgckZ/BR4TU=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=MhjhyaykSajl2weD08GXzNLCxiOdA8RKpPQp+u8ovxDM41x2IUGxk95raVEsjVqF+Ya9mxi+ThT3+4gq4ykOfT0yBtSSlVeOl0VcKbhnlF4GIgXdXl8CtdR8kqBWTsZJZUJQgVcfwCB+DwRz9PD3bt2BC75933uwlDVNbni/kF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fypTA+JW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bfx7xSsO"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44TFvQiL092772;
-	Wed, 29 May 2024 10:57:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716998246;
-	bh=VtlZBCIrXk7KWkQBoJWGM8oCenwDZWgPBkeKsS0cLy0=;
-	h=From:To:CC:Subject:Date;
-	b=Bfx7xSsOlRFaxh858qh8x9RRHbVRqngv2ZLfpVerQI7m2JI6dpJ+dAvj3Z6j/nUbD
-	 gjpwBmcEM1MAz9ZGa4wS1hmbvDWr0dct7PFdIPnuIGiNvBavS3kEcA2WCy1DpVYfUi
-	 f99qS9Lu9mMDQr/j8vMAZQYKLM2gy0tT+8IaARNc=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44TFvQVi032095
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 29 May 2024 10:57:26 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 29
- May 2024 10:57:26 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 29 May 2024 10:57:26 -0500
-Received: from lelvsmtp5.itg.ti.com ([10.250.165.138])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44TFvHYp029748;
-	Wed, 29 May 2024 10:57:18 -0500
-From: Baojun Xu <baojun.xu@ti.com>
-To: <tiwai@suse.de>
-CC: <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>,
-        <pierre-louis.bossart@linux.intel.com>, <kevin-lu@ti.com>,
-        <shenghao-ding@ti.com>, <navada@ti.com>, <13916275206@139.com>,
-        <v-hampiholi@ti.com>, <v-po@ti.com>, <niranjan.hy@ti.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <liam.r.girdwood@intel.com>, <yung-chuan.liao@linux.intel.com>,
-        <baojun.xu@ti.com>, <broonie@kernel.org>, <soyer@irl.hu>
-Subject: [PATCH v6 0/1] Add tas2781 driver for SPI.
-Date: Wed, 29 May 2024 23:56:52 +0800
-Message-ID: <20240529155653.3037-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fypTA+JW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491BCC113CC;
+	Wed, 29 May 2024 15:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716998319;
+	bh=ufyQbqT93SwSt4s4JqmoiAB/zHJa/FMuOgckZ/BR4TU=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=fypTA+JW2IV7pVP1qSfV1ol4Ja9TfGeBVVJx8MRhuBAJGIEN1e8OFOne5tbK7RN2a
+	 D0LvLXsB5H5+Gy+2++biOK246LPXm1vkQzR9dwUErgCpKivRZRfiAf8HPNiTGKX9pU
+	 oWErLgw+ObFGOiZhKOKrIKTl3UdfBp0zLwwvyhBPfMijoZcJ4GqJGbGRVpxLiXLuK3
+	 rlD365rHM/V9afV0i+oKhcXyHY2VXEmAZKWOS9YOv4s3qcmAjzDtAySsurpBtSy2FR
+	 KYwVbp/sbn1MbK0yr5b9F++Zx1/dfnPzTxAlo4T5Gd8s0DbfhjRb+ud079yR5zNYSX
+	 CxazeMz/4IGdw==
+From: Kalle Valo <kvalo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org,  ath11k@lists.infradead.org,
+  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+References: <87v82y6wvi.fsf@kernel.org>
+Date: Wed, 29 May 2024 18:58:36 +0300
+In-Reply-To: <87v82y6wvi.fsf@kernel.org> (Kalle Valo's message of "Tue, 28 May
+	2024 13:42:25 +0300")
+Message-ID: <87wmncwqxf.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This patch was used to add TAS2781 devices on SPI support in sound/pci/hda.
-It use ACPI node descript about parameters of TAS2781 on SPI, it like:
-    Scope (_SB.PC00.SPI0)
-    {
-        Device (GSPK)
-        {
-            Name (_HID, "TXNW2781")  // _HID: Hardware ID
-            Method (_CRS, 0, NotSerialized)
-            {
-                Name (RBUF, ResourceTemplate ()
-                {
-                    SpiSerialBusV2 (...)
-                    SpiSerialBusV2 (...)
-                }
-            }
-        }
-    }
+Kalle Valo <kvalo@kernel.org> writes:
 
-And in platform/x86/serial-multi-instantiate.c, those spi devices will be
-added into system as a single SPI device, so TAS2781 SPI driver will
-probe twice for every single SPI device. And driver will also parser
-mono DSP firmware binary and RCA binary for itself.
+> Yesterday I run our ath11k regression tests with v6.10-rc1 and our
+> simple ath11k module reload stress started failing reliably with various
+> KASAN errors. The test removes and inserts ath11k and other wireless
+> modules in a loop. Usually I run it at least 100 times, some times even
+> more, and no issues until yesterday.
+>
+> I have verified that the last wireless-next pull request (tag
+> wireless-next-2024-05-08) works without issues and v6.10-rc1 fails
+> always, usually within 50 module reload loops. From this I'm _guessing_
+> that we have a regression outside wireless, most probably introduced
+> between v6.9 and v6.10-rc1. But of course I cannot be sure of anything
+> yet.
+>
+> I see different KASAN warnings and lockdep seems to be always visible in
+> the stack traces. I think I can reproduce the issue within 15 minutes or
+> so. Before I start bisecting has anyone else seen anything similar? Or
+> any suggestions how to debug this further?
+>
+> I have included some crash logs below, they are retrieved using
+> netconsole. Here's a summary of the errors:
+>
+> [ 159.970765] KASAN: maybe wild-memory-access in range
+> [0xbbbbbbbbbbbbbbb8-0xbbbbbbbbbbbbbbbf]
+> [  700.017632] BUG: KASAN: use-after-free in lockdep_register_key+0x755/0x8f0
+> [  224.695821] BUG: KASAN: slab-out-of-bounds in lockdep_register_key+0x755/0x8f0
+> [  259.666542] BUG: KASAN: slab-use-after-free in lockdep_register_key+0x755/0x8f0
 
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+I did a bisect and got this:
 
-Baojun Xu (1):
-  ALSA: hda/tas2781: Add tas2781 hda driver based on SPI
+cf29111d3e4a9ebe1cbe2b431274718506d69f10 is the first bad commit
+commit cf29111d3e4a9ebe1cbe2b431274718506d69f10
+Merge: ed11a28cb709 e6f7d27df5d2
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Thu May 16 18:14:11 2024 -0500
 
- drivers/acpi/scan.c                           |    1 +
- .../platform/x86/serial-multi-instantiate.c   |   12 +
- sound/pci/hda/Kconfig                         |   14 +
- sound/pci/hda/Makefile                        |    2 +
- sound/pci/hda/patch_realtek.c                 |   13 +
- sound/pci/hda/tas2781-spi.h                   |  148 ++
- sound/pci/hda/tas2781_hda_spi.c               | 1266 ++++++++++
- sound/pci/hda/tas2781_spi_fwlib.c             | 2101 +++++++++++++++++
- 8 files changed, 3557 insertions(+)
- create mode 100644 sound/pci/hda/tas2781-spi.h
- create mode 100644 sound/pci/hda/tas2781_hda_spi.c
- create mode 100644 sound/pci/hda/tas2781_spi_fwlib.c
+    Merge branch 'pci/of'
+    
+    - Check for kcalloc() failure and handle it gracefully (Duoming Zhou)
+    
+    * pci/of:
+      PCI: of_property: Return error for int_map allocation failure
+
+ drivers/pci/of_property.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+But that doesn't make any sense to me, I don't even have
+CONFIG_PCI_DYNAMIC_OF_NODES enabled in my .config. I guess I did a
+mistake during bisect, I'm now testing the parents (e6f7d27df5d2 and
+ed11a28cb709) and trying to pinpoint where I did it wrong.
+
+Adding Bjorn in case he has any ideas. This might be something PCI
+related based on my bisect log (but just guessing at this point):
+
+git bisect start
+# status: waiting for both good and bad commits
+# good: [a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6] Linux 6.9
+git bisect good a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+# status: waiting for bad commit, 1 good commit known
+# good: [1d60eabb82694e58543e2b6366dae3e7465892a5] wifi: mwl8k: initialize cmd->addr[] properly
+git bisect good 1d60eabb82694e58543e2b6366dae3e7465892a5
+# status: waiting for bad commit, 2 good commits known
+# bad: [1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0] Linux 6.10-rc1
+git bisect bad 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+# good: [d34672777da3ea919e8adb0670ab91ddadf7dea0] Merge tag 'fbdev-for-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
+git bisect good d34672777da3ea919e8adb0670ab91ddadf7dea0
+# good: [a90f1cd105c6c5c246f07ca371d873d35b78c7d9] Merge tag 'turbostat-for-Linux-6.10-merge-window' of git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux
+git bisect good a90f1cd105c6c5c246f07ca371d873d35b78c7d9
+# bad: [29c73fc794c83505066ee6db893b2a83ac5fac63] Merge tag 'perf-tools-for-v6.10-1-2024-05-21' of git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools
+git bisect bad 29c73fc794c83505066ee6db893b2a83ac5fac63
+# good: [30aec6e1bb617e1349d7fa5498898d7d4351d71e] Merge tag 'vfio-v6.10-rc1' of https://github.com/awilliam/linux-vfio
+git bisect good 30aec6e1bb617e1349d7fa5498898d7d4351d71e
+# bad: [8053d2ffc4502bbb50a78c805d964e65a6de1803] Merge tag 'phy-for-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy
+git bisect bad 8053d2ffc4502bbb50a78c805d964e65a6de1803
+# bad: [f0bae243b2bcf2b160ae547463bf542762beef8f] Merge tag 'pci-v6.10-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci
+git bisect bad f0bae243b2bcf2b160ae547463bf542762beef8f
+# good: [38da32ee70b876f5b8bea7c4135eff46339c18f2] Merge tag 'pull-bd_inode-1' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
+git bisect good 38da32ee70b876f5b8bea7c4135eff46339c18f2
+# good: [ed11a28cb709a9ab69c4cd4e0669079a455f9a8d] Merge branch 'pci/msi'
+git bisect good ed11a28cb709a9ab69c4cd4e0669079a455f9a8d
+# bad: [102c69699b5b5d4aebfe8d15d5f91bde68dababd] Merge branch 'pci/controller/mt7621'
+git bisect bad 102c69699b5b5d4aebfe8d15d5f91bde68dababd
+# bad: [14680b252788675e2007fffde371e76a3a7a9b21] Merge branch 'pci/dt-bindings'
+git bisect bad 14680b252788675e2007fffde371e76a3a7a9b21
+# bad: [12ff1ef539c23cb7563bc3d894de9edd9469ea98] Merge branch 'pci/pm'
+git bisect bad 12ff1ef539c23cb7563bc3d894de9edd9469ea98
+# bad: [cf29111d3e4a9ebe1cbe2b431274718506d69f10] Merge branch 'pci/of'
+git bisect bad cf29111d3e4a9ebe1cbe2b431274718506d69f10
+# good: [e6f7d27df5d208b50cae817a91d128fb434bb12c] PCI: of_property: Return error for int_map allocation failure
+git bisect good e6f7d27df5d208b50cae817a91d128fb434bb12c
+# first bad commit: [cf29111d3e4a9ebe1cbe2b431274718506d69f10] Merge branch 'pci/of'
 
 -- 
-2.40.1
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
