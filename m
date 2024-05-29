@@ -1,155 +1,124 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81642181BA5
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962B016938C;
+	Wed, 29 May 2024 08:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716970147; cv=none; b=RBVyfX8g2UV7RRda02BuajMUIenDMIgJTJWmqjqDKGQE63zqUMaq68xBH33VYu2p4eXx6rlTcx8nxOIDdCAgqz8Z97xAviNsM/UayAAZ9DliePK4yoLWsULlYqYdV/38jzW9456lrPhRHfILYhuFA1hm6XGolSht5CdmcIOMSo4=
+	t=1716970173; cv=none; b=D5Y/TPQ6s+uNzIX2YaYOlw/qHeoxQ6FPM+PoddITd8zRwCR+firggaZrm1F0xmeC/VPo5EiNaAQaoX9JESyAKUWIOmE8XR5vPFymva7N7F0xK0g7IdIJFQ8QNT96R6mWeWDZtz+X3Tx5ywJ+vZutaH+nMqwoHJ/oI59qGr2BTHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716970147; c=relaxed/simple;
-	bh=96iFbUwojxwBoxA+H0JTEulerW3QRm1exN8DOQ8GsGs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tYRQf8nlWXonTB6mEbL3wHE5a3QsWgKWPnPkCuuiDi396U5+8r4QIIAsED11RCVJhcP3cAQRHca+4vtrFIbe0dByYatDDiLU727BQ4j4URDmPS5WIzb867KHGnMZtGTu9IM2AaOU/QPGaLFZsM2kQUUPV0uu0XeH/+09cgGt6uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1sCEMW-0002i8-0F; Wed, 29 May 2024 10:08:44 +0200
-Received: from [2a0a:edc0:0:1101:1d::54] (helo=dude05.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1sCEMQ-003RAe-SQ; Wed, 29 May 2024 10:08:38 +0200
-Received: from localhost ([::1] helo=dude05.red.stw.pengutronix.de)
-	by dude05.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1sCEMQ-00EJoV-2e;
-	Wed, 29 May 2024 10:08:38 +0200
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Date: Wed, 29 May 2024 10:08:29 +0200
-Subject: [PATCH v2] docs: crypto: async-tx-api: fix broken code example
+	s=arc-20240116; t=1716970173; c=relaxed/simple;
+	bh=i8tU8Ic/k4UuZKzBZDNg1YpkDmhPR4yS0jCvgdiGZq4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iIMgBMcGMj/0+TyDzT9CUp1ARej+EW1JIeQj/3u73mtgikh+oS7DVzVXIDPnIqMNGOuQA2W/eRfZuEKEnOc2F/vulxa94O3uzi4v+nnpShdKxPZ08ekdeCT0gQZe/IPTQ5aTj8GO5dE731b6kaRCA4thJosEKU9ygMBkEhShDU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MDgymBkU; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MDgymBkU"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57857e0f465so2223257a12.1;
+        Wed, 29 May 2024 01:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716970169; x=1717574969; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=i8tU8Ic/k4UuZKzBZDNg1YpkDmhPR4yS0jCvgdiGZq4=;
+        b=MDgymBkUgKtSqi+yQH3Bxo7SNFhIAzlHIlPzgyvkfXUCGB/yFGsqJ6Cq7EEvBcNlSl
+         zhxgDDhLkzLnDveeRUnq0sY2QxepV755pIeBnnas1xONFELQPLEJverJN+E9ukdf6m85
+         au1bGK9zKRRwflnSu2xuvWnbGPPJgTJF0fqKs/i1WfLo55LVt80Z55ulOevQAUF3WsAc
+         2QkxuLwwqDKvFe6wPaXgIABFLs95gz23uw4HCSKmeNXIc2D0r7Wn1K/QmL+QrL4QL1J5
+         zX3jU2UVNNF+3tD3jtDJ2u6cDbJZez/xH0AraJhMwCXS4p0jABbjZvimAC+oWi+Lm+44
+         qLAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716970169; x=1717574969;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i8tU8Ic/k4UuZKzBZDNg1YpkDmhPR4yS0jCvgdiGZq4=;
+        b=YSs8tONvqN+7xXIiozjhTm+sRwpeTgIzyEtZlcMfzHkMeLqUaoaJDiL+yeRshFnlJP
+         8tEjXlkCteliDiJgFURaSDVkKeSGLtqIXO58ZoShikuXITY/faC8qcI41P7kWR3gPisS
+         vylFAsOX60+9GjzUV+HKnzzlysifARxWbZe133BYZ6HAF8KMKFXp5PhvdVe4B/wccGF4
+         UZvsAT+kxwsCgmjeAChOFeKM6k1I5moS6BwCbHqBnp1k6nUSB4VVsOs4FF7ttABdQU8d
+         OLDvv42LDjcfqRAlBxuCW3Yn/NGZVx5WdRmM36vl+TrRyqhGocaUM+Un2mBRqyYNOhI7
+         PCLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzMYxZ8TXzKKhCsXwZwBd63GMnVV+lZLbP0vp0PbQrIvd6Cj8ojMWDYi8dUSVXYpIJsxBswZmvsCO99E0o7DpHug6zCP1KJlzM3G31OrGC3aWcQscFGP9b3d46vz5KOwSEndSIx8N0
+X-Gm-Message-State: AOJu0YzK3rhl+6cN982zFwYJs1JD9mTNbFodudgvfHuzgiXkoR70vD1V
+	pR//8AZ6eTWA31JijEDsw62DZNnQjbupSU2pUQvlWFUXXyOhKZx+
+X-Google-Smtp-Source: AGHT+IEq6l34HhXrnlWLRvGM2v0fq27OL/+bpjCQdVA04/gtddmggIC7N+1G0ngNMVw4U02/TUo3ZA==
+X-Received: by 2002:a50:d7cc:0:b0:578:33f1:dafb with SMTP id 4fb4d7f45d1cf-578518ec3e4mr9976662a12.4.1716970168941;
+        Wed, 29 May 2024 01:09:28 -0700 (PDT)
+Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579ced17435sm4346473a12.53.2024.05.29.01.09.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 01:09:28 -0700 (PDT)
+Message-ID: <73d7ba0e54a93696aa2c8cab3e6599038bddf533.camel@gmail.com>
+Subject: Re: [PATCH] iio: dac: ad9739a: drop COMPILE_TEST option
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>, Jonathan
+ Cameron <jic23@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Nuno =?ISO-8859-1?Q?S=E1?=
+ <nuno.sa@analog.com>, Dragos Bogdan <dragos.bogdan@analog.com>, Anshul
+ Dalal <anshulusr@gmail.com>, Andrea Collamati <andrea.collamati@gmail.com>,
+  linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 29 May 2024 10:09:28 +0200
+In-Reply-To: <81ec1d1a-d8de-47e4-a5d4-eeaaf1e806a2@app.fastmail.com>
+References: <20240528121304.3695252-1-arnd@kernel.org>
+	 <539a815398a3c991c1bc1a53967fbcba282dfe3b.camel@gmail.com>
+	 <81ec1d1a-d8de-47e4-a5d4-eeaaf1e806a2@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-async-dma-docs-v2-1-8faf87e72e6d@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIAHziVmYC/3XMQQ6CMBCF4auQWTtmpmKCrryHYVHaEWZhS1okE
- MLdrexd/i953wZZkkqGe7VBklmzxlDCnCpwgw29oPrSYMjUdDUXtHkNDv3boo8uI5F03NhaiB2
- U05jkpcsBPtvSg+YppvXwZ/6tf6mZkbG7FZEaqoX5MUroP1OKQZezF2j3ff8Cf58CxLEAAAA=
-To: Dan Williams <dan.j.williams@intel.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- "David S. Miller" <davem@davemloft.net>, Jonathan Corbet <corbet@lwn.net>, 
- Andre Noll <maan@systemlinux.org>
-Cc: linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel@pengutronix.de, 
- Ahmad Fatoum <a.fatoum@pengutronix.de>
-X-Mailer: b4 0.13-dev
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The code example fails to compile:
+On Wed, 2024-05-29 at 09:23 +0200, Arnd Bergmann wrote:
+> On Wed, May 29, 2024, at 09:20, Nuno S=C3=A1 wrote:
+> > On Tue, 2024-05-28 at 14:12 +0200, Arnd Bergmann wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > >=20
+> > > Build testing without SPI results in a warning:
+> > >=20
+> > > WARNING: unmet direct dependencies detected for REGMAP_SPI
+> > > =C2=A0 Depends on [n]: SPI [=3Dn]
+> > > =C2=A0 Selected by [m]:
+> > > =C2=A0 - AD9739A [=3Dm] && IIO [=3Dm] && (SPI [=3Dn] || COMPILE_TEST =
+[=3Dy])
+> > >=20
+> > > There is no need for this particular COMPILE_TEST option, as allmodco=
+nfig
+> > > and randconfig testing can just assume that SPI is enabled separately=
+.
+> > >=20
+> > > Drop it to avoid the warning.
+> > >=20
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > ---
+> >=20
+> > Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> >=20
+> > Only for my understanding. When does COMPILE_TEST makes sense to add?
+>=20
+> The most common use is to enable building a driver
+> that is platform specific on x86 allmodconfig
+> or on randconfig, e.g.
+>=20
+> config LPC18XX_DAC
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tristate "NXP LPC18xx DAC driv=
+er"
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 depends on ARCH_LPC18XX || COM=
+PILE_TEST
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 depends on HAS_IOMEM
+>=20
+> Since ARCH_LPC18XX is only visible on arch/arm, the
+> driver would never be build tested on anything else
+> without the ||COMPILE_TEST.
 
-  1) addr_conv is defined twice, once as a VLA, which have been phased out
+Makes sense... Thanks!
 
-  2) submit is not a pointer, but is still dereferenced with ->
-
-  3) The first call to async_xor() lacked the trailing semicolon
-
-Fix these issues and while at it, fix some code style nitpicks as well:
-
-  1) make the functions static as users are unlikely to export them
-
-  2) include the relevant header
-
-  3) Shorten the example a bit by removing a redundant variable
-     definition
-
-Fixes: 04ce9ab385dc ("async_xor: permit callers to pass in a 'dma/page scribble' region")
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
-Changes in v2:
-- commit message: fix addr_conv typo (Andre)
-- commit message: note addition of missing semicolon (Andre)
-- add header include (Andre)
-- shorten code by removing redundant variable definition (Andre)
-- Link to v1: https://lore.kernel.org/r/20240523-async-dma-docs-v1-1-b900e0804e11@pengutronix.de
----
- Documentation/crypto/async-tx-api.rst | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/crypto/async-tx-api.rst b/Documentation/crypto/async-tx-api.rst
-index 27c146b54d71..f88a7809385e 100644
---- a/Documentation/crypto/async-tx-api.rst
-+++ b/Documentation/crypto/async-tx-api.rst
-@@ -150,38 +150,38 @@ of an operation.
- Perform a xor->copy->xor operation where each operation depends on the
- result from the previous operation::
- 
--    void callback(void *param)
--    {
--	    struct completion *cmp = param;
-+    #include <linux/async_tx.h>
- 
--	    complete(cmp);
-+    static void callback(void *param)
-+    {
-+	    complete(param);
-     }
- 
--    void run_xor_copy_xor(struct page **xor_srcs,
--			int xor_src_cnt,
--			struct page *xor_dest,
--			size_t xor_len,
--			struct page *copy_src,
--			struct page *copy_dest,
--			size_t copy_len)
-+    #define NDISKS  2
-+
-+    static void run_xor_copy_xor(struct page **xor_srcs,
-+				 struct page *xor_dest,
-+				 size_t xor_len,
-+				 struct page *copy_src,
-+				 struct page *copy_dest,
-+				 size_t copy_len)
-     {
- 	    struct dma_async_tx_descriptor *tx;
--	    addr_conv_t addr_conv[xor_src_cnt];
- 	    struct async_submit_ctl submit;
- 	    addr_conv_t addr_conv[NDISKS];
- 	    struct completion cmp;
- 
- 	    init_async_submit(&submit, ASYNC_TX_XOR_DROP_DST, NULL, NULL, NULL,
- 			    addr_conv);
--	    tx = async_xor(xor_dest, xor_srcs, 0, xor_src_cnt, xor_len, &submit)
-+	    tx = async_xor(xor_dest, xor_srcs, 0, NDISKS, xor_len, &submit);
- 
--	    submit->depend_tx = tx;
-+	    submit.depend_tx = tx;
- 	    tx = async_memcpy(copy_dest, copy_src, 0, 0, copy_len, &submit);
- 
- 	    init_completion(&cmp);
- 	    init_async_submit(&submit, ASYNC_TX_XOR_DROP_DST | ASYNC_TX_ACK, tx,
- 			    callback, &cmp, addr_conv);
--	    tx = async_xor(xor_dest, xor_srcs, 0, xor_src_cnt, xor_len, &submit);
-+	    tx = async_xor(xor_dest, xor_srcs, 0, NDISKS, xor_len, &submit);
- 
- 	    async_tx_issue_pending_all();
- 
-
----
-base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-change-id: 20240523-async-dma-docs-00eb18a4e01c
-
-Best regards,
--- 
-Ahmad Fatoum <a.fatoum@pengutronix.de>
+- Nuno S=C3=A1
 
