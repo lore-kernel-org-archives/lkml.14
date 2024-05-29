@@ -1,137 +1,78 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135812F37;
-	Wed, 29 May 2024 04:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A379A55;
+	Wed, 29 May 2024 04:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716956705; cv=none; b=r0gf6SkEFr6IxVh2YF2+0BWhyMSvBBivgn7jzt7Pr6qxPlYvt7PDedp94wuxO7K0jmypCNZmGcUp6mb14lDRsHxVcKrEhDGfPCkJ8Ef4nowT7kPSdz+mohoiN3k5TRe02tBrqsfR6c2KUzoi2qON08eRUOk1vaRkzgK/sYsCE5w=
+	t=1716957269; cv=none; b=mFQIYaao+Wsqb5UcTCZqURtgjGZzjuQz65RkXvfN0y/Y5L45qZysTQ4CHQKJfiVPO92zLkaJd/VZ4rIqdEbiohvY0yEhmztz59kLzHyCz5spsMX+R0kaTJ/DIsQXaoeKjWwiZHYn9yAM2q3RArjmCUO6HTwzfLc2ujMEMSfgUcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716956705; c=relaxed/simple;
-	bh=t/wyqOZCUtaJj94OWxcggJOyzt1ZBavPfMbI2zcPKiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=M59FZpXft87LKz9BxXPm/B8q6qlXD7ZqjZtxWEB6+1K0MDOrZPtKoHf4+BY/srMrYxR9uZHJrYlXy7ha6jLVq76TyALF+v+XjX3mSZqYtws3rJx35PBz2j3qjvKf3aqALFaXcjZBoL46EVtYOE/cOxTREae4cGI3m5St3NJ5TSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cVI8tKmv; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cVI8tKmv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1716956698;
-	bh=QS9UC6q6IV1lekvIOBY7aqCAICP+q66LAbGf/Ww1y9g=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cVI8tKmv8tr7WpEwlbt1Dw8sUdgt/numMfkLFBJcwMkojqffPhDPAYrOo//zNHFop
-	 OIdrA1sVsvjvbxGAj7GIcwstCYjJVNYBCAlkUIbgQSWGMjxYYLErQsGX9KLU4kjvJm
-	 l2JUImvNkc+GIvuPhpRmmmfWPXGQYmnryCcbjY9tVSiRSeL/bM0ZWmOD+rwHfJhR5X
-	 wmb6Z1YE2GKkUkk8dQp5g7zIBzWmSP7jtjePkSlfhzCPdeM2JIUTFdHtAzws62tBNW
-	 S+/eLio11EcB+iOge1O5wPtdI/aQ00FhsQJfCuyk9g/w24+zVDqYM/WzIzOjq4MKH1
-	 qwGex9zCmm/1g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VpxB22tcrz4wqK;
-	Wed, 29 May 2024 14:24:58 +1000 (AEST)
-Date: Wed, 29 May 2024 14:24:55 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Steven Whitehouse <swhiteho@redhat.com>, Bob Peterson
- <rpeterso@redhat.com>
-Cc: Andreas Gruenbacher <agruenba@redhat.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warnings after merge of the gfs2 tree
-Message-ID: <20240529142455.1c68e65a@canb.auug.org.au>
+	s=arc-20240116; t=1716957269; c=relaxed/simple;
+	bh=uULQ3FTkF4PJbu/IpU5tIpNPZ6qr38dEXqA/v1696pc=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S24/m24JoiZay6/SikADenPW1ssWD5zN5duCpXXnNXRC3sS36kMKLKx6l+ZyWidevlJBiOoDytjQmRF1jBln6CPFK29PKU05ajyjage6mEOh2xPrw9+ZyWuKCLdyd0bLU3OPdkytjd4lhtyoQkj7njL5Q4LcJCrJk+DekUVS6UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1sCAl6-003FLH-1p;
+	Wed, 29 May 2024 12:17:53 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 29 May 2024 12:17:54 +0800
+Date: Wed, 29 May 2024 12:17:54 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 6.10
+Message-ID: <ZlascqIex2rE2nO_@gondor.apana.org.au>
+References: <Y5mGGrBJaDL6mnQJ@gondor.apana.org.au>
+ <Y/MDmL02XYfSz8XX@gondor.apana.org.au>
+ <ZEYLC6QsKnqlEQzW@gondor.apana.org.au>
+ <ZJ0RSuWLwzikFr9r@gondor.apana.org.au>
+ <ZOxnTFhchkTvKpZV@gondor.apana.org.au>
+ <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
+ <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
+ <ZbstBewmaIfrFocE@gondor.apana.org.au>
+ <ZgFIP3x1w294DIxQ@gondor.apana.org.au>
+ <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fy_UqbgbTx50A8B2YiQfi8t";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
 
---Sig_/fy_UqbgbTx50A8B2YiQfi8t
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Linus:
 
-Hi all,
+The following changes since commit c6ab5c915da460c0397960af3c308386c3f3247b:
 
-After merging the gfs2 tree, today's linux-next build (htmldocs) produced
-these warnings:
+  crypto: ecc - Prevent ecc_digits_from_bytes from reading too many bytes (2024-05-17 18:55:07 +0800)
 
-Documentation/filesystems/gfs2-glocks.rst:64: ERROR: Malformed table.
-Text in column margin in table line 7.
+are available in the Git repository at:
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-Field              Purpose
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-go_sync            Called before remote state change (e.g. to sync dirty da=
-ta)
-go_xmote_bh        Called after remote state change (e.g. to refill cache)
-go_inval           Called if remote state change requires invalidating the =
-cache
-go_instantiate     Called when a glock has been acquired
-go_held            Called every time a glock holder is acquired
-go_dump            Called to print content of object for debugfs file, or on
-                   error to dump glock to the log.
-go_callback        Called if the DLM sends a callback to drop this lock
-go_unlocked        Called when a glock is unlocked (dlm_unlock())
-go_type            The type of the glock, ``LM_TYPE_*``
-go_flags           GLOF_ASPACE is set, if the glock has an address space
-                   associated with it
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-Documentation/filesystems/gfs2-glocks.rst:96: ERROR: Malformed table.
-Text in column margin in table line 7.
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git v6.10-p3 
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Operation        GLF_LOCK bit lock held    gl_lockref.lock spinlock held
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-go_sync               Yes                       No
-go_xmote_bh           Yes                       No
-go_inval              Yes                       No
-go_instantiate        No                        No
-go_held               No                        No
-go_dump               Sometimes                 Yes
-go_callback           Sometimes (N/A)           Yes
-go_unlocked           Yes                       No
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+for you to fetch changes up to 67ec8cdf29971677b2fb4b6d92871eb5d5e95597:
 
-Introduced by commit
+  hwrng: core - Remove add_early_randomness (2024-05-26 18:32:16 +0800)
 
-  ded323aef6d5 ("gfs2: Update glocks documentation")
+----------------------------------------------------------------
+This push fixes a new run-time warning triggered by tpm.
+----------------------------------------------------------------
 
---=20
-Cheers,
-Stephen Rothwell
+Herbert Xu (1):
+      hwrng: core - Remove add_early_randomness
 
---Sig_/fy_UqbgbTx50A8B2YiQfi8t
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ drivers/char/hw_random/core.c | 47 ++++---------------------------------------
+ 1 file changed, 4 insertions(+), 43 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZWrhcACgkQAVBC80lX
-0Gw4/gf/cx3o8BXTNavjVPnJteNrPjDc61CCUC9RoN4jpaC1mbzIu6+IKm9pEV5G
-SvdT/9PSwrzurw72lnc7E/fL6cgDxw91sS9W6JR+MzfxRV+B5k3tN7OEY4wuGgH1
-+Qy/6+/Qh5M/YuFBsZ70/LDHTm7sRi+2Djxxp3dqlX4CBSuIOV/0UVwf4QsVSJCF
-lpjHeoW78Tmla6ycYsosAjKlyeLkd/qJFGUsLAH68TCWqvsvt36SGmhC+XN5WGpq
-uzMk6AGlAAejXW9WFOOnegaP8nKoKGp9lKdJN0cvDiQ/9hNQaXjnhA78QjlCwIzk
-W1lrUKSVDC3MUaWXnjFt9JoLIkw1gg==
-=J5PD
------END PGP SIGNATURE-----
-
---Sig_/fy_UqbgbTx50A8B2YiQfi8t--
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
