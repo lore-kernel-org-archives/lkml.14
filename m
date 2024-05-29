@@ -1,158 +1,108 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621EE38DE8;
-	Wed, 29 May 2024 06:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22FF15FA86;
+	Wed, 29 May 2024 06:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716964142; cv=none; b=J/GoORF3q3AZEIiNJGWVmGgUhxwKV0lbgLZSyCpUm+temXnxaG8OLlzPIpWNFU7LzsUPheV0iJEUcTnWIELyMGnYqsIizEFDy063FLIphLDrANvEABKVlSWT/GKXkn1vBWsME+XrE4VDVyaUnBtvb0KDsGVXzdVUHewihU32Apc=
+	t=1716964199; cv=none; b=n7/F+KtVuhorcFH4MP9tZ4pVyydEKtwDA9IcxgSSrKXEpzyMMx/668F2n0PDo2oXXEq+XznwyHhVrGM9W54z6f1nfZdym+ee4AnfwW73z8LIbfYhiZqJIMP6k2pkVLDFtPVBhWwyQQn/C3qeeqRpJqoBAcm2b8BS/ZqtzIr6lqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716964142; c=relaxed/simple;
-	bh=2U01+NFqFmrhtuNONy9Qrrl2l/GFk/qpKDy1wRf2jLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rROmn+r+OEDud8tYILmfqzXdIQIS2vqk/CO0zvc47dNWAwLm0fpucXBiQV2dOmA2tVwmqvoSAvtM7AL2lBrL72V5emHxtkRkKVeQarreCb+CLlr0qjtdUNpO5+KpUe1ZopxEmP+kGZmQbjdpKInl2kXp77XJemeeoDX8+Fh9DRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SQ09H8HL; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1716964199; c=relaxed/simple;
+	bh=npoc+tLCgORcX3+Xd3WFDMV1tlPhhBwlx6soQQcSPEs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jrRnGsnfkIWx8Ki88Zj/FdtNemfuUec7Zq2wYLgbLjI3lwsXcgX2ZVdmd/fEzF1yDGjxgjw/dpGt+YFghXllKeZRNwv+66POh9R41/Zi8JvSht1Yh9KTEoJee4RiNshFA3XApt0qDOo8cbkkKOt4/XFfthnGt18QkVm3ku168p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=h1AacdxM; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SQ09H8HL"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44T6FdfC013776;
-	Wed, 29 May 2024 06:28:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc : content-type : date
- : from : in-reply-to : message-id : mime-version : references : subject :
- to; s=pp1; bh=+9ciCvK01Z1vwRn+uCkI0yr1rl0idUx0MxgT/mBTRp8=;
- b=SQ09H8HLx9M78yQKlYrmKQm3yRxz1UsM0yOx61dlY2w+9sF8O+xHQhR9iABxbxsT+7gO
- s+LrGy67cIxS6LjHK+sxpjTOW44tKZOwE9W6+seZUgjQMkYIC7bY1V8EjBKDSPa24dv0
- sywA3JHM33X3ibL7DgFJvo/y2rAqjlzx2svhLtZlHBoTORB7o3QoVEcDBDTRTtt3WL3j
- cjv37MFKCUJWtJsSriNhlIOOkKRDRDRZLlY2Wz1eBmpDGlBoH2WY1WxeLf8tQrFMJU1S
- gzUrI6MwKduWFKEOQjpuQd4HUxfYJe9d8up06QTVJHvmHLfgAfjhfVZpypusiYyJsGfq rw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ydxr601rc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 06:28:26 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44T6SQbX000843;
-	Wed, 29 May 2024 06:28:26 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ydxr601ra-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 06:28:26 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44T4AE7O009841;
-	Wed, 29 May 2024 06:28:25 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ydpbbj886-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 06:28:25 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44T6SLGc52166990
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 May 2024 06:28:23 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2C67C20040;
-	Wed, 29 May 2024 06:28:21 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 028962004B;
-	Wed, 29 May 2024 06:28:20 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.179.17.188])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 29 May 2024 06:28:19 +0000 (GMT)
-Date: Wed, 29 May 2024 08:28:18 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Eric Chanudet <echanude@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, Nick Piggin <npiggin@gmail.com>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3] mm/mm_init: use node's number of cpus in
- deferred_page_init_max_threads
-Message-ID: <ZlbLAg94/2SC24Qz@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240528185455.643227-4-echanude@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528185455.643227-4-echanude@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: z22Gsl5oLmrdkoQNWXaaSgLxF8vW1NJ4
-X-Proofpoint-ORIG-GUID: TLy3r68G42Y8NzR4SwGlMiiYEiCLM0KP
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="h1AacdxM"
+X-UUID: daa3756a1d8411efbfff99f2466cf0b4-20240529
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=mTQrmF36jYllv3mP9Yybi+HEjaafjrlWHqq19OeW1oU=;
+	b=h1AacdxMHCUdJ+yaBTqcl4qRSCE6ihj4jJNMUgE6iLOIJb+pYqNdrAZ/gnlMUBFEjFCYbRoIQuVtWJ+KkCUxhT+H3mSewqLsjIaou/E1y6YoP+45Lf1+/vbZLF9hLARR+UCtClEp+qJbqpqOMTmYMakz4SRqX5p9wC9BZKdKWN0=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:e9f28a1a-cf0e-4c26-a4b1-a060fa37f751,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:393d96e,CLOUDID:842c5a93-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: daa3756a1d8411efbfff99f2466cf0b4-20240529
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
+	(envelope-from <chris.lu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1551494241; Wed, 29 May 2024 14:29:51 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 29 May 2024 14:29:49 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 29 May 2024 14:29:49 +0800
+From: Chris Lu <chris.lu@mediatek.com>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
+CC: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
+	Aaron Hou <aaron.hou@mediatek.com>, Steve Lee <steve.lee@mediatek.com>,
+	linux-bluetooth <linux-bluetooth@vger.kernel.org>, linux-kernel
+	<linux-kernel@vger.kernel.org>, linux-mediatek
+	<linux-mediatek@lists.infradead.org>, Chris Lu <chris.lu@mediatek.com>
+Subject: [PATCH v2 1/3] Bluetooth: net: add hci_iso_hdr function for iso data
+Date: Wed, 29 May 2024 14:29:44 +0800
+Message-ID: <20240529062946.5655-2-chris.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240529062946.5655-1-chris.lu@mediatek.com>
+References: <20240529062946.5655-1-chris.lu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_14,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 impostorscore=0 clxscore=1011 adultscore=0 spamscore=0
- bulkscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405290040
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--4.944900-8.000000
+X-TMASE-MatchedRID: 6pbNFWS8cDs1vivz3L6ga7RtO1RC1Ep0Kx5ICGp/WtEXdhT0BAdFzpRr
+	ve7l/C2qxiqnR+5LS88BtjkcfRMmqUDn8NFEhJAcngIgpj8eDcAZ1CdBJOsoY9mzcdRxL+xwKra
+	uXd3MZDUal568aygjlwDNqFcrZhl00Q8h4POAWkHpYlKIIVMLV+2bU2tbIu66CcFQOTtUNa/abj
+	DdQJjxYd51oESEPyiSjDor2nsFTtxMDUBOSIYddRdGg+ZY7eN6THB2Q+oKru8MTI34nyF36MJL1
+	aANdU8KftwZ3X11IV0=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.944900-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	4F8063B7F206A5CC95ABE2625B562BDA2DA588139621891BC003A9B3D77E63312000:8
 
-On Tue, May 28, 2024 at 02:54:58PM -0400, Eric Chanudet wrote:
-> When DEFERRED_STRUCT_PAGE_INIT=y, use a node's cpu count as maximum
-> thread count for the deferred initialization of struct pages via padata.
-> This should result in shorter boot times for these configurations by
-> going through page_alloc_init_late() faster as systems tend not to be
-> under heavy load that early in the bootstrap.
-> 
-> Only x86_64 does that now. Make it archs agnostic when
-> DEFERRED_STRUCT_PAGE_INIT is set. With the default defconfigs, that
-> includes powerpc and s390.
-> 
-> It used to be so before offering archs to override the function for
-> tuning with commit ecd096506922 ("mm: make deferred init's max threads
-> arch-specific").
-> 
-> Setting DEFERRED_STRUCT_PAGE_INIT and testing on a few arm64 platforms
-> shows faster deferred_init_memmap completions:
-> |         | x13s        | SA8775p-ride | Ampere R137-P31 | Ampere HR330 |
-> |         | Metal, 32GB | VM, 36GB     | VM, 58GB        | Metal, 128GB |
-> |         | 8cpus       | 8cpus        | 8cpus           | 32cpus       |
-> |---------|-------------|--------------|-----------------|--------------|
-> | threads |  ms     (%) | ms       (%) |  ms         (%) |  ms      (%) |
-> |---------|-------------|--------------|-----------------|--------------|
-> | 1       | 108    (0%) | 72      (0%) | 224        (0%) | 324     (0%) |
-> | cpus    |  24  (-77%) | 36    (-50%) |  40      (-82%) |  56   (-82%) |
-> 
-> Michael Ellerman on a powerpc machine (1TB, 40 cores, 4KB pages) reports
-> faster deferred_init_memmap from 210-240ms to 90-110ms between nodes.
-> 
-> Signed-off-by: Eric Chanudet <echanude@redhat.com>
-> Tested-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-> 
-> ---
-> - v1: https://lore.kernel.org/linux-arm-kernel/20240520231555.395979-5-echanude@redhat.com
-> - Changes since v1:
->  - Make the generic function return the number of cpus of the node as
->    max threads limit instead overriding it for arm64.
->  - Drop Baoquan He's R-b on v1 since the logic changed.
->  - Add CCs according to patch changes (ppc and s390 set
->    DEFERRED_STRUCT_PAGE_INIT by default).
-> 
-> - v2: https://lore.kernel.org/linux-arm-kernel/20240522203758.626932-4-echanude@redhat.com/
-> - Changes since v2:
->  - deferred_page_init_max_threads returns unsigned and use max instead
->    of max_t.
->  - Make deferred_page_init_max_threads static since there are no more
->    override.
->  - Rephrase description.
->  - Add T-b and report from Michael Ellerman.
-> 
->  arch/x86/mm/init_64.c    | 12 ------------
->  include/linux/memblock.h |  2 --
->  mm/mm_init.c             |  5 ++---
->  3 files changed, 2 insertions(+), 17 deletions(-)
+Add function hci_iso_hdr to get skb->data when packet type is ISO
+which is similar to other packet type.
 
-It does speed up. For s390:
+Signed-off-by: Chris Lu <chris.lu@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ include/net/bluetooth/hci.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index e372a88e8c3f..b9f8f91f6c7f 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -2898,6 +2898,11 @@ static inline struct hci_sco_hdr *hci_sco_hdr(const struct sk_buff *skb)
+ 	return (struct hci_sco_hdr *) skb->data;
+ }
+ 
++static inline struct hci_iso_hdr *hci_iso_hdr(const struct sk_buff *skb)
++{
++	return (struct hci_iso_hdr *) skb->data;
++}
++
+ /* Command opcode pack/unpack */
+ #define hci_opcode_pack(ogf, ocf)	((__u16) ((ocf & 0x03ff)|(ogf << 10)))
+ #define hci_opcode_ogf(op)		(op >> 10)
+-- 
+2.18.0
+
