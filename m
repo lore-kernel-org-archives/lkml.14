@@ -1,205 +1,162 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94115819;
-	Wed, 29 May 2024 12:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DB97317C;
+	Wed, 29 May 2024 12:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716984311; cv=none; b=EuvzwAa4mjTKJ812SITZERDNhke3K3tRd61Ln8ehLiVA6iP9iqwKc98090Wq4SB+FXKHWCabTTkf7Ct2XdkDWTrNFvjKoF7jecG//YYtoiAy55o7EZ/XcyN4dJKKC2fm/SazAndxrtkjKDuTNAPMYKUye1BHaVVCYjQ1hh/K9Nk=
+	t=1716984377; cv=none; b=RP9E/14aCt3EjpRD8wyK+4aEZmdHcWt/ffhRJboHLlGdBiw4Ft+1MWY7jazKXc8TKgzFMC6CkbkjhukYygmydbLBAbuvQlyfjA7BiT3APFgxz/M4cSPOjLhP9/YmXKwEOViiE75x8Gj/GoyCqODwlTbXy5QNvqyT+NM6ppVY9sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716984311; c=relaxed/simple;
-	bh=tCvk79juIz9wzKGNptMN3HtzZn7h814QPCNAXxRLxw8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N8ZmCJEaF+sxvsM/XtJw3WKNsSBjGRZae689FD0C3zKemgh/5IT+/jZRjmtb3Ea2bjgGsFVuwZrFjFdx+9a+nRA/b2GfPjXHkklUopW8sOw2dZmWallFUgvetZU13QpunzG/xSO46aOsIKbBcLV3uOzl7Sf3gJTrF1R/zxTMGuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vq7Hy3LVSz6K7B1;
-	Wed, 29 May 2024 20:00:46 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id F401F1400E7;
-	Wed, 29 May 2024 20:04:59 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 29 May
- 2024 13:04:59 +0100
-Date: Wed, 29 May 2024 13:04:58 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Julien Stephan <jstephan@baylibre.com>
-CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Nuno Sa
-	<nuno.sa@analog.com>
-Subject: Re: [PATCH v2] driver: iio: add missing checks on iio_info's
- callback access
-Message-ID: <20240529130458.000049e6@Huawei.com>
-In-Reply-To: <20240529-iio-core-fix-segfault-v2-1-7b5a5fa6853f@baylibre.com>
-References: <20240529-iio-core-fix-segfault-v2-1-7b5a5fa6853f@baylibre.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1716984377; c=relaxed/simple;
+	bh=Kam7GlrgaXVFK23XrEQCDs7nyWMWsFNSiXp7twV37rk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wlt3prJ1YVURHP8zKMfmOlJnhwOC7YXciWSDsf03bJWYpiXlCPeAxpRogs0iTwq8DIwhhldqSZVuFz69uoqT6wLwZKyIiC79sS6+Gj0qPpxmJuw4n6luklc+p0PKv53sFNPbYJ6WV0x2kjRCdPfL7TVljltI5nR9+siH50Wt2lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YZhTN61t; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YZhTN61t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716984373;
+	bh=Kam7GlrgaXVFK23XrEQCDs7nyWMWsFNSiXp7twV37rk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YZhTN61tKJzQX2QRKsKJdg0qMXjNOgIKplP84ePEYUqM/Vzyo+YLquJ3+JKPqGczB
+	 HoulKRjZSwvmt5Rz3qazylvOEk+kXQns6p/icwwKZuURhfchSdXTFW/PcayaDFCI17
+	 EBj0vvpfOFsZz/g6VIB9d4otAOk1mJ3396Q+lpP+IIA8Mf4XawXWH08ozY9fT1VJRI
+	 jGiPhijsyo0ij+lC9ZnVS886LAYZz5XScl1pVAYGZYjt7tl5FXycHU0S/DXlJ3OIhe
+	 GmFCVOShbR4r5lIwoiRrV1wKkYRWmKVEebiTtNsGaXTGt9Uj0HFuf4dugAZGkEGYa2
+	 a8ReS6O0g27Bw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E2C45378216D;
+	Wed, 29 May 2024 12:06:12 +0000 (UTC)
+Message-ID: <ad047631-16b8-42ce-8a8d-1429e6af4517@collabora.com>
+Date: Wed, 29 May 2024 14:06:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/6] arm64: dts: mediatek: mt8186: add default thermal
+ zones
+To: Julien Panis <jpanis@baylibre.com>, Chen-Yu Tsai <wenst@chromium.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Nicolas Pitre <npitre@baylibre.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+ Krzysztof Kozlowski <krzk@kernel.org>
+References: <20240529-mtk-thermal-mt818x-dtsi-v6-0-0c71478a9c37@baylibre.com>
+ <20240529-mtk-thermal-mt818x-dtsi-v6-4-0c71478a9c37@baylibre.com>
+ <75826085-fd59-466a-b1de-b4c323c801c1@collabora.com>
+ <CAGXv+5FPG4ob3mTU0Utm8Wgk0_ZLw=NLPbfFerWh4OUeAz7UHw@mail.gmail.com>
+ <808db317-4cee-426b-a840-013a5e03098d@baylibre.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <808db317-4cee-426b-a840-013a5e03098d@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 29 May 2024 13:55:52 +0200
-Julien Stephan <jstephan@baylibre.com> wrote:
-
-> Some callbacks from iio_info structure are accessed without any check, so
-> if a driver doesn't implement them trying to access the corresponding
-> sysfs entries produce a kernel oops such as:
+Il 29/05/24 11:12, Julien Panis ha scritto:
+> On 5/29/24 10:33, Chen-Yu Tsai wrote:
+>> On Wed, May 29, 2024 at 4:17 PM AngeloGioacchino Del Regno
+>> <angelogioacchino.delregno@collabora.com> wrote:
+>>> Il 29/05/24 07:57, Julien Panis ha scritto:
+>>>> From: Nicolas Pitre <npitre@baylibre.com>
+>>>>
+>>>> Inspired by the vendor kernel but adapted to the upstream thermal
+>>>> driver version.
+>>>>
+>>>> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+>>>> Signed-off-by: Julien Panis <jpanis@baylibre.com>
+>>> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> I'm getting some crazy readings which would cause the machine to
+>> immediately shutdown during boot. Anyone else see this? Or maybe
+>> my device has bad calibration data?
+>>
+>> gpu_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:       +229.7 C
+>>
+>> nna_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:       +229.7 C
+>>
+>> cpu_big0_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:         -7.2 C
+>>
+>> cpu_little2_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:       +157.2 C
+>>
+>> cpu_little0_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:       -277.1 C
+>>
+>> adsp_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:       +229.7 C
+>>
+>> cpu_big1_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:       +229.7 C
+>>
+>> cam_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:        +45.4 C
+>>
+>> cpu_little1_thermal-virtual-0
+>> Adapter: Virtual device
+>> temp1:       -241.8 C
 > 
-> [ 2203.527791] Unable to handle kernel NULL pointer dereference at virtual address 00000000 when execute
-> [...]
-> [ 2203.783416] Call trace:
-> [ 2203.783429]  iio_read_channel_info_avail from dev_attr_show+0x18/0x48
-> [ 2203.789807]  dev_attr_show from sysfs_kf_seq_show+0x90/0x120
-> [ 2203.794181]  sysfs_kf_seq_show from seq_read_iter+0xd0/0x4e4
-> [ 2203.798555]  seq_read_iter from vfs_read+0x238/0x2a0
-> [ 2203.802236]  vfs_read from ksys_read+0xa4/0xd4
-> [ 2203.805385]  ksys_read from ret_fast_syscall+0x0/0x54
-> [ 2203.809135] Exception stack(0xe0badfa8 to 0xe0badff0)
-> [ 2203.812880] dfa0:                   00000003 b6f10f80 00000003 b6eab000 00020000 00000000
-> [ 2203.819746] dfc0: 00000003 b6f10f80 7ff00000 00000003 00000003 00000000 00020000 00000000
-> [ 2203.826619] dfe0: b6e1bc88 bed80958 b6e1bc94 b6e1bcb0
-> [ 2203.830363] Code: bad PC value
-> [ 2203.832695] ---[ end trace 0000000000000000 ]---
+> It's likely that your device has bad calibration data indeed. We observed the same
+> behavior on the mt8186 device we used (a Corsola) and finally realized that the
+> golden temperature was 0 (device not properly calibrated).
 > 
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-> Signed-off-by: Julien Stephan <jstephan@baylibre.com>
-
-How bad would a registration time check look?
-I'd rather catch this early than have drivers with missing hooks
-that we don't notice because no one pokes the file.
-
-The inkern ones are good though.
-
-Jonathan
-
-> ---
-> Changes in v2:
-> - crop dmesg log to show only pertinent info and reduce commit message
-> - Link to v1: https://lore.kernel.org/r/20240529-iio-core-fix-segfault-v1-1-7ff1ba881d38@baylibre.com
-> ---
->  drivers/iio/industrialio-core.c  |  7 ++++++-
->  drivers/iio/industrialio-event.c |  9 +++++++++
->  drivers/iio/inkern.c             | 16 +++++++++++-----
->  3 files changed, 26 insertions(+), 6 deletions(-)
+> To make a comparison, we run chromiumos v5.15 and dmesg output was:
+> 'This sample is not calibrated, fake !!'
+> Additional debugging revealed that the golden temp was actually 0. As a result,
+> chromiumos v5.15 does not use the calibration data. It uses some default values
+> instead. That's why you can observe good temperatures with chromiumos v5.15
+> even with a device that is not calibrated.
 > 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index fa7cc051b4c4..2f185b386949 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -758,9 +758,11 @@ static ssize_t iio_read_channel_info(struct device *dev,
->  							INDIO_MAX_RAW_ELEMENTS,
->  							vals, &val_len,
->  							this_attr->address);
-> -	else
-> +	else if (indio_dev->info->read_raw)
->  		ret = indio_dev->info->read_raw(indio_dev, this_attr->c,
->  				    &vals[0], &vals[1], this_attr->address);
-> +	else
-> +		return -EINVAL;
->  
->  	if (ret < 0)
->  		return ret;
-> @@ -842,6 +844,9 @@ static ssize_t iio_read_channel_info_avail(struct device *dev,
->  	int length;
->  	int type;
->  
-> +	if (!indio_dev->info->read_avail)
-> +		return -EINVAL;
-> +
->  	ret = indio_dev->info->read_avail(indio_dev, this_attr->c,
->  					  &vals, &type, &length,
->  					  this_attr->address);
-> diff --git a/drivers/iio/industrialio-event.c b/drivers/iio/industrialio-event.c
-> index 910c1f14abd5..a64f8fbac597 100644
-> --- a/drivers/iio/industrialio-event.c
-> +++ b/drivers/iio/industrialio-event.c
-> @@ -285,6 +285,9 @@ static ssize_t iio_ev_state_store(struct device *dev,
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (!indio_dev->info->write_event_config)
-> +		return -EINVAL;
-> +
->  	ret = indio_dev->info->write_event_config(indio_dev,
->  		this_attr->c, iio_ev_attr_type(this_attr),
->  		iio_ev_attr_dir(this_attr), val);
-> @@ -300,6 +303,9 @@ static ssize_t iio_ev_state_show(struct device *dev,
->  	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
->  	int val;
->  
-> +	if (!indio_dev->info->read_event_config)
-> +		return -EINVAL;
-> +
->  	val = indio_dev->info->read_event_config(indio_dev,
->  		this_attr->c, iio_ev_attr_type(this_attr),
->  		iio_ev_attr_dir(this_attr));
-> @@ -318,6 +324,9 @@ static ssize_t iio_ev_value_show(struct device *dev,
->  	int val, val2, val_arr[2];
->  	int ret;
->  
-> +	if (!indio_dev->info->read_event_value)
-> +		return -EINVAL;
-> +
->  	ret = indio_dev->info->read_event_value(indio_dev,
->  		this_attr->c, iio_ev_attr_type(this_attr),
->  		iio_ev_attr_dir(this_attr), iio_ev_attr_info(this_attr),
-> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> index 52d773261828..74f87f6ac390 100644
-> --- a/drivers/iio/inkern.c
-> +++ b/drivers/iio/inkern.c
-> @@ -560,9 +560,11 @@ static int iio_channel_read(struct iio_channel *chan, int *val, int *val2,
->  					vals, &val_len, info);
->  		*val = vals[0];
->  		*val2 = vals[1];
-> -	} else {
-> +	} else if (chan->indio_dev->info->read_raw) {
->  		ret = chan->indio_dev->info->read_raw(chan->indio_dev,
->  					chan->channel, val, val2, info);
-> +	} else {
-> +		return -EINVAL;
->  	}
->  
->  	return ret;
-> @@ -753,8 +755,10 @@ static int iio_channel_read_avail(struct iio_channel *chan,
->  	if (!iio_channel_has_available(chan->channel, info))
->  		return -EINVAL;
->  
-> -	return chan->indio_dev->info->read_avail(chan->indio_dev, chan->channel,
-> -						 vals, type, length, info);
-> +	if (chan->indio_dev->info->read_avail)
-> +		return chan->indio_dev->info->read_avail(chan->indio_dev, chan->channel,
-> +							 vals, type, length, info);
-> +	return -EINVAL;
->  }
->  
->  int iio_read_avail_channel_attribute(struct iio_channel *chan,
-> @@ -917,8 +921,10 @@ EXPORT_SYMBOL_GPL(iio_get_channel_type);
->  static int iio_channel_write(struct iio_channel *chan, int val, int val2,
->  			     enum iio_chan_info_enum info)
->  {
-> -	return chan->indio_dev->info->write_raw(chan->indio_dev,
-> -						chan->channel, val, val2, info);
-> +	if (chan->indio_dev->info->write_raw)
-> +		return chan->indio_dev->info->write_raw(chan->indio_dev,
-> +							chan->channel, val, val2, info);
-> +	return -EINVAL;
->  }
->  
->  int iio_write_channel_attribute(struct iio_channel *chan, int val, int val2,
+> This feature is not implemented in the driver upstream, so you need a device
+> properly calibrated to get good temperatures with it. When we forced this
+> driver using the default values used by chromiumos v5.15 instead of real calib
+> data (temporarily, just for testing), the temperatures were good.
 > 
-> ---
-> base-commit: 409b6d632f5078f3ae1018b6e43c32f2e12f6736
-> change-id: 20240528-iio-core-fix-segfault-aa74be7eee4a
+> Please make sure your device is properly calibrated: 0 < golden temp < 62.
 > 
-> Best regards,
 
+Wait wait wait wait.
+
+What's up with that calibration data stuff?
+
+If there's any device that cannot use the calibration data, we need a way to
+recognize whether the provided data (read from efuse, of course) is valid,
+otherwise we're creating an important regression here.
+
+"This device is unlucky" is not a good reason to have this kind of regression.
+
+Since - as far as I understand - downstream can recognize that, upstream should
+do the same.
+I'd be okay with refusing to even probe this driver on such devices for the
+moment being, as those are things that could be eventually handled on a second
+part series, even though I would prefer a kind of on-the-fly calibration or
+anyway something that would still make the unlucky ones to actually have good
+readings *right now*.
+
+Though, the fact that you assert that you observed this behavior on one of your
+devices and *still decided to send that upstream* is, in my opinion, unacceptable.
+
+Regards,
+Angelo
