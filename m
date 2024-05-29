@@ -1,115 +1,126 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D22C31A60
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 10:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B9D17B427;
+	Wed, 29 May 2024 10:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716977402; cv=none; b=XVI3rhkwpC5mEKCa5RCSPVI9mVNas01mu1X/UyR6Ubav7b5L+KpyXvxQAjYpuGnfvb68oUQw6mPBkDaDzKjO2T6AEgOlU+FvruGR+pgE0xRKhjO0fgWmDfGd/GSzRVzKG5l5UJMXQDngrZ7+HjTRK64wS75koAYGtv3oBD8G6aw=
+	t=1716977406; cv=none; b=GSAKkPl1R6bpyr2jKa/2UHMo698XntaalnUTMq7R2/pRNh7W8+Hrj5EQRLHBhoQNJRuWLX+x4u5N1icHQnojD8NCKfLZ3TFtMwbEg+9cr6AeodBuRCiBsKRWL0+1rT4wTV2Pj6y+Ztr3un91tDHG6CUHIfN4rkLMjntpY/WdAkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716977402; c=relaxed/simple;
-	bh=D4DxX2Xvz9Ek7Q2MsbuAmRNYh9AIsuYdbjeHdEbVh0s=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ITY80ilgZEPRdLZilix7jqanGYuV3F7shAEQCK6TDBvRzge6q9a+j3n0Z7135TGcq9rBmQRgdbXjx0ORmoVqP2i1b7ISdfqBDt0re8SwNLSo0hobYf0zkZIxbDWxss+qjxtWaahpIN4GKkPgki2ToKwsRDYuhN4059pGILsZWbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dBtKORgY; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1716977406; c=relaxed/simple;
+	bh=cZ5CiFsjDpnCZqidawYQ8gAlclq6bD97VpxmQASitTc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nZY2cV2s040mDN8N08I5o7DY/PWB/0thhXCv3bzknwm5dKObwe8AzSNYzmC/B0zbbSm6+znhcFAxB1yZ6F/yjqux30tuxZgdJJLAjleXa/pgu5nxsrhdDG1fZ17Ns5wJcEYiw6yx59iqhQQqLi1/k1vtJK/JErlWww9Od385rZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KxxR9ypI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dBtKORgY"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so3514505e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 03:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1716977398; x=1717582198; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1FTKNsuia3RWpQHnWn/8QDl0FBPSRwXXETwGl7wxFKo=;
-        b=dBtKORgYbGqdlmKFu/1a3LKvnBzwqk068BNTKq4DCLWqxUcKFhY7MvIMsU/NlIH8Rz
-         cz4k4Myjg6E/T1+nvFCS4gd3DZKcF3QWCMmE2BfRw4f77KFeyzWbc1g+UReMv2nwBoaZ
-         2asmuNOuNCulo4n9mOaKYxqhhFE0yfzwoBafyVqsPaEWj2qHZMrsy833iwN0HxRjofXs
-         NDRq1RirQ9iJqB8TnarO40BHVpyz5w24w2xDEIOGdTdYyiIQ8b2OqtnQJwtklE5D6tJT
-         OdclknmW1oRkhtRoQS6wurtHaJRRR7kD0P9e6mufy8RibPef1vy8Nq6P4Ii7VI5EZ6Sc
-         S6Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716977398; x=1717582198;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1FTKNsuia3RWpQHnWn/8QDl0FBPSRwXXETwGl7wxFKo=;
-        b=bmk7yzUVsqYjraSrcr4d1cz57KxEBPMgt1g5BOZgVjIaFrTYIHBqHM5x6vNWtJEzud
-         O3xtN5NJIMf1DZI/WLN8FzWMcTRO6r+Zet8/7xBkpkBbcqWKvw0BLpm+bqV/Xj01cf8Y
-         IEFfNPL2ZPbltOg8IuKvUprqO9xMwJUGoBLWzWD6h2QKmRo2VYAT4ew6Q6II0pPyCgit
-         DM/VZYirMQq9X9neuiySsVyGRCWTUzoNjoQlns3oNx0+8kT9iSBsVTyFOsfJbeT7bUVn
-         ig1YTPNGndsK76zgfJmPAhkjPXgo9QMuw+pEtfViRFEWIQJAZ7uIVYCDabtqliUHFzau
-         FSTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUa9UpxGIfF9ZwO1Ue/RcFtdEhIAYO6SqhcjKy5SUtBnO0IPDh9tyX8coEEUoCeCWFpJtcI60+73OFBZ9+YaszUTURkb4/38/LQySWm
-X-Gm-Message-State: AOJu0Yzu9lNeynAQ+zsxJ0F+AvOtRG/tHoBBEb27s3qPBzOj8TO4B4iA
-	K63XW4TLwxwjjP7VOJ0m1prnlscobk4PI/n3uq938ytR7YSJ7e4nrrb+00iB4Kc=
-X-Google-Smtp-Source: AGHT+IH9bfmSIStk/91xm8BYd9HX9NO21rvFMlN/xg/x0L9tsKc+sRpjBrjeX+ypNPkNr6P9URfuKg==
-X-Received: by 2002:a05:600c:4fd1:b0:41b:d6ca:eefa with SMTP id 5b1f17b1804b1-42122b01e91mr13915835e9.16.1716977398527;
-        Wed, 29 May 2024 03:09:58 -0700 (PDT)
-Received: from localhost.localdomain (62.83.84.125.dyn.user.ono.com. [62.83.84.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42122299300sm26362175e9.42.2024.05.29.03.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 03:09:58 -0700 (PDT)
-From: Oscar Salvador <osalvador@suse.com>
-X-Google-Original-From: Oscar Salvador <osalvador@suse.de>
-Date: Wed, 29 May 2024 12:09:56 +0200
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Oscar Salvador <osalvador@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [RFC PATCH v4 12/16] powerpc/e500: Encode hugepage size in PTE
- bits
-Message-ID: <Zlb-9DNmRzIYRdJO@localhost.localdomain>
-References: <cover.1716815901.git.christophe.leroy@csgroup.eu>
- <10eae3c6815e3aba5f624af92321948e4684c95a.1716815901.git.christophe.leroy@csgroup.eu>
- <Zlbh5Bwsx7WqEEWr@localhost.localdomain>
- <3cf95f5e-cc8b-4417-a3fa-80dc3b24ac63@csgroup.eu>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KxxR9ypI"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SLR8um005351;
+	Wed, 29 May 2024 10:09:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FagWJFK1h6KpX2a4vz8qNfUhHmvpdh4ryhbTJVVP+4Q=; b=KxxR9ypIHwG3LvMf
+	30DfoH7frbV6h/GCB7JyM1HzKPOtOu/Re8ynRtpD4BWUnqce6R0RTdsNoBGc6F6E
+	sZ+ksH/sf1ra0aGvYRDDVmanBmRJDNcQdui91sj/wPlXIa6MQKVMGzGka+/knfuO
+	jCqwPSXt2oPFfNk3xK/9z9fJLO50O35gadpVkD7L9TJ3t5magP4JC5JBrxi24JEm
+	Icf78HpBbHEe+63t7Ug0XqtyKxfWoF9lej/FNoX3mbvfmSM+8bbs2VUYS66SoVRn
+	YARoQqV7oluSk0STsG128fAF6+dWxO1OLJy2524RicV9SjP2qGTmphzsRhyY+zQC
+	R/UVkA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2ngnnj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 10:09:59 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TA9wTF018263
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 10:09:58 GMT
+Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 29 May 2024 03:09:53 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
+        Tengfei Fan
+	<quic_tengfan@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v9 1/4] dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
+Date: Wed, 29 May 2024 18:09:23 +0800
+Message-ID: <20240529100926.3166325-2-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240529100926.3166325-1-quic_tengfan@quicinc.com>
+References: <20240529100926.3166325-1-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3cf95f5e-cc8b-4417-a3fa-80dc3b24ac63@csgroup.eu>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ury632hQlBr-ES8j8eYQA5je-Mtt8Zpx
+X-Proofpoint-GUID: ury632hQlBr-ES8j8eYQA5je-Mtt8Zpx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-29_06,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2405290068
 
-On Wed, May 29, 2024 at 09:49:48AM +0000, Christophe Leroy wrote:
-> Doesn't really matter if it's PUD or PMD at this point. On a 32 bits 
-> kernel it will be all PMD while on a 64 bits kernel it is both PMD and PUD.
-> 
-> At the time being (as implemented with hugepd), Linux support 4M, 16M, 
-> 64M, 256M and 1G (Shifts 22, 24, 26, 28, 30)
-> 
-> The hardware supports the following page sizes, and encodes them on 4 
-> bits allthough it is not directly a shift. Maybe it would be better to 
-> use that encoding after all:
+Document QCS8550 SoC and the AIM300 AIoT board bindings.
+QCS8550 is derived from SM8550. The difference between SM8550 and
+QCS8550 is QCS8550 doesn't have modem RF system. QCS8550 is mainly used
+in IoT scenarios.
+AIM300 Series is a highly optimized family of modules designed to
+support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC chip
+etc.
+AIM stands for Artificial Intelligence Module. AIoT stands for AI IoT.
 
-I think so.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> 
-> 0001 4 Kbytes (Shift 12)
-> 0010 16 Kbytes (Shift 14)
-> 0011 64 Kbytes (Shift 16)
-> 0100 256 Kbytes (Shift 18)
-> 0101 1 Mbyte (Shift 20)
-> 0110 4 Mbytes (Shift 22)
-> 0111 16 Mbytes (Shift 24)
-> 1000 64 Mbytes (Shift 26)
-> 1001 256 Mbytes (Shift 28)
-> 1010 1 Gbyte (e500v2 only) (Shift 30)
-> 1011 4 Gbytes (e500v2 only) (Shift 32)
-
-You say hugehages start at 2MB (shift 21), but you say that the smallest hugepage
-Linux support is 4MB (shift 22).?
-
-
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 10ac297b3c2e..3cc129f266f0 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -42,6 +42,7 @@ description: |
+         msm8996
+         msm8998
+         qcs404
++        qcs8550
+         qcm2290
+         qcm6490
+         qdu1000
+@@ -1015,6 +1016,13 @@ properties:
+               - sony,pdx234
+           - const: qcom,sm8550
+ 
++      - items:
++          - enum:
++              - qcom,qcs8550-aim300-aiot
++          - const: qcom,qcs8550-aim300
++          - const: qcom,qcs8550
++          - const: qcom,sm8550
++
+       - items:
+           - enum:
+               - qcom,sm8650-hdk
 -- 
-Oscar Salvador
-SUSE Labs
+2.25.1
+
