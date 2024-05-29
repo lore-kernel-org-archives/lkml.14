@@ -1,78 +1,244 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A379A55;
-	Wed, 29 May 2024 04:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F5828E8
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 04:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716957269; cv=none; b=mFQIYaao+Wsqb5UcTCZqURtgjGZzjuQz65RkXvfN0y/Y5L45qZysTQ4CHQKJfiVPO92zLkaJd/VZ4rIqdEbiohvY0yEhmztz59kLzHyCz5spsMX+R0kaTJ/DIsQXaoeKjWwiZHYn9yAM2q3RArjmCUO6HTwzfLc2ujMEMSfgUcs=
+	t=1716957567; cv=none; b=Efm19qF+FlOpMM7EYq3eQ92hsQoYYiEpO/Gw+DK87AfmtNCdWWotFp45+QJkOqJvdrLGREJpveCUjId6EKvv3BqzXCUEI833XOVAuadlbTRQGMPx3g3acWJsNkX8SfiMx34CDPaNufqmmrc11RF1NUcwlgct+0/iNkgjo1ypzw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716957269; c=relaxed/simple;
-	bh=uULQ3FTkF4PJbu/IpU5tIpNPZ6qr38dEXqA/v1696pc=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S24/m24JoiZay6/SikADenPW1ssWD5zN5duCpXXnNXRC3sS36kMKLKx6l+ZyWidevlJBiOoDytjQmRF1jBln6CPFK29PKU05ajyjage6mEOh2xPrw9+ZyWuKCLdyd0bLU3OPdkytjd4lhtyoQkj7njL5Q4LcJCrJk+DekUVS6UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sCAl6-003FLH-1p;
-	Wed, 29 May 2024 12:17:53 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 29 May 2024 12:17:54 +0800
-Date: Wed, 29 May 2024 12:17:54 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 6.10
-Message-ID: <ZlascqIex2rE2nO_@gondor.apana.org.au>
-References: <Y5mGGrBJaDL6mnQJ@gondor.apana.org.au>
- <Y/MDmL02XYfSz8XX@gondor.apana.org.au>
- <ZEYLC6QsKnqlEQzW@gondor.apana.org.au>
- <ZJ0RSuWLwzikFr9r@gondor.apana.org.au>
- <ZOxnTFhchkTvKpZV@gondor.apana.org.au>
- <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
- <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
- <ZbstBewmaIfrFocE@gondor.apana.org.au>
- <ZgFIP3x1w294DIxQ@gondor.apana.org.au>
- <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
+	s=arc-20240116; t=1716957567; c=relaxed/simple;
+	bh=w+SMDGzTJFQuqdvJfu1aC+qtLD5AS6Lz4nehZdCVabs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Lmvzwm9rqnSlLC2zpXhyAafP6JKX4lDhlISGODD8bGRAZRaabI0tVpYnpYdG/0qRv+rOlgpxmoIYALLhAClcYHXefFDeZoCsOCNQWDyWLRjELEeAsmraTL/ErH35vsWrsTStXExvEiGmsDdM5N+9I1cu2+p8a9g7jIBHeCFZ7s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1716957556-1eb14e15780f850001-xx1T2L
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx2.zhaoxin.com with ESMTP id 0VsrEwHzzn7pxCgS (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 29 May 2024 12:39:16 +0800 (CST)
+X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 29 May
+ 2024 12:39:16 +0800
+Received: from [10.32.65.162] (10.32.65.162) by ZXBJMBX03.zhaoxin.com
+ (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.27; Wed, 29 May
+ 2024 12:39:14 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Message-ID: <2553dd17-f763-4894-89b7-5f76c03d3a37@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.32.65.162
+Date: Wed, 29 May 2024 12:39:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
+To: Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <keescook@chromium.org>,
+	<tony.luck@intel.com>, <gpiccoli@igalia.com>, <mat.jonczyk@o2.pl>,
+	<rdunlap@infradead.org>, <alexandre.belloni@bootlin.com>,
+	<mario.limonciello@amd.com>, <yaolu@kylinos.cn>, <bhelgaas@google.com>,
+	<justinstitt@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+X-ASG-Orig-Subj: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
+CC: <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
+ <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com> <87wmnda8mc.ffs@tglx>
+Content-Language: en-US
+From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+In-Reply-To: <87wmnda8mc.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1716957556
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 6655
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.125490
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-Hi Linus:
 
-The following changes since commit c6ab5c915da460c0397960af3c308386c3f3247b:
 
-  crypto: ecc - Prevent ecc_digits_from_bytes from reading too many bytes (2024-05-17 18:55:07 +0800)
+On 2024/5/29 06:12, Thomas Gleixner wrote:
+> 
+> 
+> [这封邮件来自外部发件人 谨防风险]
+> 
+> On Tue, May 28 2024 at 07:18, Dave Hansen wrote:
+>> On 5/27/24 23:38, Tony W Wang-oc wrote:
+>> ...> diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+>>> index c96ae8fee95e..ecadd0698d6a 100644
+>>> --- a/arch/x86/kernel/hpet.c
+>>> +++ b/arch/x86/kernel/hpet.c
+>>> @@ -804,6 +804,12 @@ static u64 read_hpet(struct clocksource *cs)
+>>>       if (in_nmi())
+>>>               return (u64)hpet_readl(HPET_COUNTER);
+>>>
+>>> +    /*
+>>> +     * Read HPET directly if panic in progress.
+>>> +     */
+>>> +    if (unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID))
+>>> +            return (u64)hpet_readl(HPET_COUNTER);
+>>> +
+>>
+>> There is literally one other piece of the code in the kernel doing
+>> something similar: the printk() implementation.  There's no other
+>> clocksource or timekeeping code that does this on any architecture.
+>>
+>> Why doesn't this problem apply to any other clock sources?
+> 
+> I principle it applies to any clocksource which needs a spinlock to
+> serialize access. HPET is not the only insanity here.
+> 
+> Think about i8253 :)
+> 
+> Most real clocksources, like TSC and the majority of the preferred clock
+> sources on other architectures are perfectly fine. They just read and be
+> done.
+> 
+>> Why should the problem be fixed in the clock sources themselves?  Why
+>> doesn't printk() deadlock on systems using the HPET?
+> 
+> Because regular printk()s are deferred to irq work when in NMI and
+> similar contexts, but that obviously does not apply to panic
+> situations. Also NMI is treated special even in the HPET code. See
+> below.
+> 
+>> In other words, I think we should fix pstore to be more like printk
+>> rather than hacking around this in each clock source.
+> 
+> pstore is perfectly fine. It uses a NMI safe time accessor function
+> which is then tripping over the HPET lock. That's really a HPET specific
+> problem.
+> 
+> Though what I read out of the changelog is that the MCE hits the same
+> CPU 'x' which holds the lock. But that's fairy tale material as you can
+> see in the patch above:
+> 
+>          if (in_nmi())
+>                  return (u64)hpet_readl(HPET_COUNTER);
+> 
+> For that particular case the dead lock, which would actually be a live
+> lock, cannot happen because in kernel MCEs are NMI class exceptions and
+> therefore in_nmi() evaluates to true and that new voodoo can't be
+> reached at all.
+> 
+> Now there are two other scenarios which really can make that happen:
+> 
+>   1) A non-NMI class exception within the lock held region
+> 
+>      CPU A
+>      acquire(hpet_lock);
+>      ...                 <- #PF, #GP, #DE, ... -> panic()
+> 
+>      If any of that happens within that lock held section then the live
+>      lock on the hpet_lock is the least of your worries. Seriously, I
+>      don't care about this at all.
+> 
+>   2) The actual scenario is:
+> 
+>      CPU A                       CPU B
+>      lock(hpet_lock)
+>                                  MCE hits user space
+>                                  ...
+>                                  exc_machine_check_user()
+>                                    irqentry_enter_from_user_mode(regs);
+> 
+>      irqentry_enter_from_user_mode() obviously does not mark the
+>      exception as NMI class, so in_nmi() evaluates to false. That would
+>      actually dead lock if CPU A is not making progress and releases
+>      hpet_lock.
+> 
+>      Sounds unlikely to happen, right? But in reality it can because of
+>      MCE broadcast. Assume that both CPUs go into MCE:
+> 
+>      CPU A                       CPU B
+>      lock(hpet_lock)
+>                                  exc_machine_check_user()
+>                                    irqentry_enter_from_user_mode();
+>      exc_machine_check_kernel()    do_machine_check()
+>        irqentry_nmi_enter();         mce_panic()
+>        do_machine_check()            if (atomic_inc_return(&mce_panicked) > 1)
+>          mce_panic()                     wait_for_panic(); <- Not taken
+> 
+>          if (atomic_inc_return(&mce_panicked) > 1)
+>              wait_for_panic(); <- Taken
+> 
+>                                      ....
+>                                      hpet_read()
+> 
+>      -> Dead lock because in_nmi() evaluates to false on CPU B and CPU A
+>         obviously can't release the lock.
+> 
 
-are available in the Git repository at:
+Because MCE handler will call printk() before call the panic, so 
+printk() deadlock may happen in this scenario:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git v6.10-p3 
+CPU A                            CPU B
+printk()
+   lock(console_owner_lock)
+                                  exc_machine_check_user()
+                                    irqentry_enter_from_user_mode()
+exc_machine_check_kernel()         do_machine_check()
+   irqentry_nmi_enter()               mce_panic()
+   do_machine_check()                 printk_mce()  #A
+     mce_panic()                      ...
+       wait_for_panic()               panic()
 
-for you to fetch changes up to 67ec8cdf29971677b2fb4b6d92871eb5d5e95597:
+printk deadlock will happened at #A because in_nmi() evaluates to false 
+on CPU B and CPU B do not enter the panic() AT #A.
 
-  hwrng: core - Remove add_early_randomness (2024-05-26 18:32:16 +0800)
+Update user space MCE handler to NMI class context is preferred?
 
-----------------------------------------------------------------
-This push fixes a new run-time warning triggered by tpm.
-----------------------------------------------------------------
+Sincerely
+TonyWWang-oc
 
-Herbert Xu (1):
-      hwrng: core - Remove add_early_randomness
-
- drivers/char/hw_random/core.c | 47 ++++---------------------------------------
- 1 file changed, 4 insertions(+), 43 deletions(-)
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> So the proposed patch makes sense to some extent. But it only cures the
+> symptom. The real underlying questions are:
+> 
+>    1) Should we provide a panic mode read callback for clocksources which
+>       are affected by this?
+> 
+>    2) Is it correct to claim that a MCE which hits user space and ends up in
+>       mce_panic() is still just a regular exception or should we upgrade to
+>       NMI class context when we enter mce_panic() or even go as far to
+>       upgrade to NMI class context for any panic() invocation?
+> 
+> #1 Solves it at the clocksource level. It still needs HPET specific
+>     changes.
+> 
+> #2 Solves a whole class of issues
+> 
+>     ... while potentially introducing new ones :)
+> 
+>     To me upgrading any panic() invocation to NMI class context makes a
+>     lot of sense because in that case all bets are off.
+> 
+>     in_nmi() is used in quite some places to avoid such problems. IOW,
+>     that would kill a whole class of issues instead of "curing" the HPET
+>     problem locally for the price of an extra conditional. Not that the
+>     extra conditional matters much if HPET is the clocksource as that's
+>     awfully slow anyway and I really don't care about that.
+> 
+>     But I very much care about avoiding to sprinkle panic_cpu checks all
+>     over the place.
+> 
+> Thanks,
+> 
+>          tglx
