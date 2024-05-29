@@ -1,81 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC7D13DDAE
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B5A1802DE;
+	Wed, 29 May 2024 11:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716983325; cv=none; b=I5Rvq18TK2Nzj793Uvr5ZIqgomw/HC9GKEIXtT50s3KEzWhrceGlaybIQzeBAezBbaj6OMQqixlIcV5/TJoBB3yiq9bVWlERUVTdSgjlMlJ/y5Cah94yX8WtpAbi8OtPdBtQ6JuVLWDCgSWxBqvr856QRNsyaioSZUu2fnD+dzs=
+	t=1716983518; cv=none; b=YhTJiPCuR6qvK+3hz/AJsQW7GT0WMsKrgGXGilNOZbvSFUbeB0eeXC03e5D+m4ClnDzYa2zDIMQkg7g784ao2lsjjnNqk3iw9D2oWV0h5cGIuZEfG9Qio7zOZ2MKSiKYX1pMhtUMYkKz/ixBbhG7l60KLg/IGYyM1ceDTp2X7iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716983325; c=relaxed/simple;
-	bh=2mDZUXMSLDBIPCh16+epzZP8Y3IzRgJRHYxvEmw+Z8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K6iJMx3NN2jnSWuTKOezn5YWOl41oINmevIRpiAPjIsrKXobZiqfxEKYHUWxoYidG3gBA6xiSYraCLalZyfVhqDAwWgTaMeWW+zkGUsNOJT/Lpja3paILqMe6nsHLGiUzYZcGzYCGrv7395R4pLEyJ7WfJCGOK+jskETXJJjFck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52932339;
-	Wed, 29 May 2024 04:49:06 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A81B23F792;
-	Wed, 29 May 2024 04:48:40 -0700 (PDT)
-Date: Wed, 29 May 2024 12:48:37 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mailbox: ARM_MHU_V3 should depend on ARM64
-Message-ID: <ZlcWFRftNHFOjYlr@pluto>
-References: <e00498fccf6dcbcf63bd24a137bfc7abd1b98345.1716967720.git.geert+renesas@glider.be>
- <Zlb_txl4CqCfxWZz@pluto>
- <CAMuHMdUyW_RxfUaxnyWVzPsdXQWqCQbgZ+avHskinXkrSFqhtw@mail.gmail.com>
+	s=arc-20240116; t=1716983518; c=relaxed/simple;
+	bh=xIwg1qqzs0kY43s0qXigUIBlgh3WObwY03gKkYlKbio=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J08CYAEJYVI9Sczeo9kL6KUl7QFpRTfOfzP389iV77OttGYsYjyyy66/6LxbLIXj3I78OhtWDuEVWphvVg0JKb/iYuaYMvbVMGc+Gu80pN0axyhvF65VUV8LA0RH11TrPJ+VX12RiQvB0WNQBv1SyqbPDUTbgMznRle3vpeXpVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pnDzIFap; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pnDzIFap"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44TBprZT078778;
+	Wed, 29 May 2024 06:51:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716983513;
+	bh=Mg/AWyHtv9LVUEi96xCOIi4DqSntbZDmVYBl7E9icqE=;
+	h=From:To:CC:Subject:Date;
+	b=pnDzIFapdXxLVDbd3AOmgCAkW8S0qNwCT3WHUvDMyq8VHJY6TpoUIrEE8iD8PJYJC
+	 vC0U1EjbLsWqIpPIGVvrs6VknC08FPdvEKPyEjguHxF/7xLd3MNq30BlzW5ZliBCB5
+	 HfRL699hli4UN48UqoVsVjRMAezYDzOwQsoJ/zsg=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44TBprKw007683
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 29 May 2024 06:51:53 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 29
+ May 2024 06:51:52 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 29 May 2024 06:51:52 -0500
+Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44TBpqLo009965;
+	Wed, 29 May 2024 06:51:52 -0500
+Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 44TBppJf008838;
+	Wed, 29 May 2024 06:51:52 -0500
+From: MD Danish Anwar <danishanwar@ti.com>
+To: Suman Anna <s-anna@ti.com>, MD Danish Anwar <danishanwar@ti.com>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob
+ Herring <robh@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, <srk@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <r-gunasekaran@ti.com>,
+        Roger Quadros <rogerq@kernel.org>
+Subject: [PATCH v2] dt-bindings: soc: ti: pruss: Add documentation for PA_STATS support
+Date: Wed, 29 May 2024 17:21:49 +0530
+Message-ID: <20240529115149.630273-1-danishanwar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdUyW_RxfUaxnyWVzPsdXQWqCQbgZ+avHskinXkrSFqhtw@mail.gmail.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed, May 29, 2024 at 01:36:42PM +0200, Geert Uytterhoeven wrote:
-> Hi Cristian,
-> 
-> On Wed, May 29, 2024 at 12:13 PM Cristian Marussi
-> <cristian.marussi@arm.com> wrote:
-> > On Wed, May 29, 2024 at 09:30:45AM +0200, Geert Uytterhoeven wrote:
-> > > The ARM MHUv3 controller is only present on ARM64 SoCs.  Hence add a
-> > > dependency on ARM64, to prevent asking the user about this driver when
-> > > configuring a kernel for a different architecture than ARM64.
-> >
-> > the ARM64 dependency was dropped on purpose after a few iterations of
-> > this series since, despite this being an ARM IP, it has really no technical
-> > dependency on ARM arch, not even the usual one on ARM AMBA bus, being this a
-> > platform driver, so it seemed an uneeded artificial restriction to impose...
-> > ...having said that, surely my live testing were performed only on arm64 models
-> > as of now.
-> 
-> For that, we have COMPILE_TEST=y.
-> 
-> > So, I am not saying that I am against this proposed fix but what is the
-> > issue that is trying to solve, have you seen any compilation error ? or
-> > is it just to avoid the user-prompting ?
-> 
-> I did not see a compile error (I didn't enable it on any non-ARM
-> platform).
-> 
-> But it is rather futile to ask the user about (thousands of) drivers
-> for hardware that cannot possibly be present on the system he is
-> configuring a kernel for.
+Add documentation for pa-stats node which is syscon regmap for
+PA_STATS registers. This will be used to dump statistics maintained by
+ICSSG firmware.
 
-Understood, as of now it is certainly high-unlikely to find such an ARM
-IP on a non-ARM SoC and I suppose that we can anyway drop this if ever the
-day will come that such a system will appear.
+Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+---
+Changes from v1 to v2:
+*) Added ^ in pa-stats as suggested by Krzysztof Kozlowski
+   <krzk@kernel.org>
+*) Moved additionalProperties: false to right after after type:object as
+   suggested by Krzysztof Kozlowski <krzk@kernel.org>
+*) Updated description of pa-stats to explain the purpose of PA_STATS
+   module in context of ICSSG.
 
-Fine for me.
+v1 https://lore.kernel.org/all/20240430121915.1561359-1-danishanwar@ti.com/
 
-Thanks,
-Cristian
+ .../devicetree/bindings/soc/ti/ti,pruss.yaml  | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+index c402cb2928e8..3cb1471cc6b6 100644
+--- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
++++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+@@ -278,6 +278,26 @@ patternProperties:
+ 
+     additionalProperties: false
+ 
++  ^pa-stats@[a-f0-9]+$:
++    description: |
++      PA-STATS sub-module represented as a SysCon. PA_STATS is a set of
++      registers where different statistics related to ICSSG, are dumped by
++      ICSSG firmware. This syscon sub-module will help the device to
++      access/read/write those statistics.
++
++    type: object
++
++    additionalProperties: false
++
++    properties:
++      compatible:
++        items:
++          - const: ti,pruss-pa-st
++          - const: syscon
++
++      reg:
++        maxItems: 1
++
+   interrupt-controller@[a-f0-9]+$:
+     description: |
+       PRUSS INTC Node. Each PRUSS has a single interrupt controller instance
+-- 
+2.34.1
 
