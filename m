@@ -1,199 +1,243 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B106D17B433
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 10:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9442C17B50B
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 10:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716979039; cv=none; b=CiyreJef3C2jZ/NP6fmWb+JyAzExn3DOLVIiE94nFtJzgUwRuasRc0TOnpZRjVpKH+kwT6Vsf5K+128PGrqEEuRTYhsKPtk3SowrMiKeIQ3o+MPx9fXi0Fp05Lt71+oaq03KlohOtIzVf/YNQDH+vZkODDlkvDBkK6DbPRtcSIY=
+	t=1716979048; cv=none; b=duoMfEwW2Db/CTym3UzxnupWjSbZ/WmjFbZ4c/DZI31WT4HUaUKEKd/6jH0LspcHu8H8d6qlZ2m1fSERfZ/pd0NiiLa6KBDtnKkx/4PhL/j1/W7FGzVFXyRw+c9UNDyK9yfUHEQrUXFmuB0F9XzyIKuSJopy4VZBjmDJ9uPQ0tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716979039; c=relaxed/simple;
-	bh=G9uzJP0+BNyAfuTtqcPbs7l5tUhV7jwdCvIKvRovtQY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XdxMnp8uHn1Ax1rEb8SQRlpCBbuRifdY7pQu+9jlVNeKimvSBObT25SAhjok9pvTq6n9BkBassqXlcTsDTpXpy3js09GJeamKQB+11UuVAHM0S5IlqgSKLhwCyd2d0UMQrknzUyPvZLsFtcUzXojqkUA7eoa310CIqxtUWq7sVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K/uYNjMa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716979048; c=relaxed/simple;
+	bh=RRhep4tQqxUgLf/+iYgoXbZOV9YBI9NwCmFOsL9sl5w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EBXROvRbtoy+tgELfzhKprBbaA5r8rS2nFWrnm4VzziqQ9KG0EjDfEWh5wJPihumVLtCQr8/NRa1ftYqD4Eh2rGZV1c8EWHlSDV712F48EthCYkh4FPhbHH8iuN+XHJpX6jYuA3Bf9OC5m0gXrTseO+g2PkjqS4hd9j+gAZFd3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=u3kqZZY0; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K/uYNjMa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716979036;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gM9wng/1sMXgGbMzP4INZ6olAst1tcVj0Y6oUxN7AxM=;
-	b=K/uYNjMaf4Sh4lkpU4P1CoEeAxetu2MUbx2NjgBlnTW6rRG768cvIVAbQ4hphbSyICiydC
-	PSHIjrArNJ2vS0DhS+6cc1mHH5n4zr+TJNCMC7jKYVhiw+F0bs7mJkfnKN7WkTLOtOmHM8
-	8DUh+hj4Tu2m6tU4y9IEMlvyoeqy348=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-613-zOXQOpRnMyugOA3NDlAhhg-1; Wed, 29 May 2024 06:37:15 -0400
-X-MC-Unique: zOXQOpRnMyugOA3NDlAhhg-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-523ea081507so1780450e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 03:37:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716979034; x=1717583834;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gM9wng/1sMXgGbMzP4INZ6olAst1tcVj0Y6oUxN7AxM=;
-        b=XOV8vZ4N+brHINYWYL2IX2k9+z74bIpIBBo7AaJfkRkK8xat8Yj/Nirvrq1YC/Nu6K
-         Ec870LfE0Z+jXEfZPXo5gtI5oFa1g6PriLlzeyqNG//Emuyeu5bIqgX3X318/qbokOrA
-         ZXvuI0s+vNwRxFiKV0pQvQdoAqpUsdsYqg07XwLFOJZ2S+O77k4pvwGKKMGIBfRS1O/u
-         r4/HTApcoXyr0qEVV5GBvYjBxyZGhgt0j8ShKL4WUyJk+yiDomhu2Oge13URorfbjYsk
-         y++0TZOj8d+BlBCHAg0nlSNY6UDJezLNYgq0HfOE3JmQJJj5xtkWoSmll5EWqh3MW1WZ
-         mWFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNLou9DhFLMr8Sl8TrfKljonWRh7d4Lkap12BX0gQjZiX3TkSxSJXjZrCpp34lF9icB8HF4vKDuGcV2ibfPhLoikr0fpY1F7LxOLiA
-X-Gm-Message-State: AOJu0YwrIhzZby7Cy+Pskb/6CX3E5t3yxkK2EhtTWvlDw3/F0zTUVi0F
-	UpNSUTjjBZTbO8456t5UMLNc08NhWDWrb4/3Xqx1afGCPzM8jcI9Pa5JEcIIlYMtwL2dMmEC609
-	Rs5ZdpdzS4O9ku2tgEH7//mbT7m849dZGa73gfyd+CRQY0Vs0FzwsokGL/E+MIA==
-X-Received: by 2002:a19:7717:0:b0:51d:8ff3:d156 with SMTP id 2adb3069b0e04-529645e3335mr8946309e87.19.1716979033599;
-        Wed, 29 May 2024 03:37:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0Ppw3rOSaH5DcJRG2imKCS9nShnbeCFbWgHF9/dS1wQ/oFyQU618kFxtdr8FU7t8V05R4Gw==
-X-Received: by 2002:a19:7717:0:b0:51d:8ff3:d156 with SMTP id 2adb3069b0e04-529645e3335mr8946283e87.19.1716979033207;
-        Wed, 29 May 2024 03:37:13 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100ee954bsm207676175e9.4.2024.05.29.03.37.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 03:37:12 -0700 (PDT)
-Message-ID: <edbe3039-ed42-432e-8309-5a0a46cc2d5c@redhat.com>
-Date: Wed, 29 May 2024 12:37:12 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u3kqZZY0"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44TAZwoX127872;
+	Wed, 29 May 2024 05:35:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716978958;
+	bh=gbTce+LVcO4bL3KUBnZa++UMz5RC5JOaMX/CYP78Ezc=;
+	h=From:To:CC:Subject:Date;
+	b=u3kqZZY0LKmxp/QLo4TJ+YtAhr0OITDfEP2MApf36JkCSKJEobaIvbbp1MI+ppbqw
+	 sSdo3rNPASlSRk42NuUfTWBHg0iMT4F1kHYGS77UWUW0mqw9rAvSOLLnuHqisIVn5R
+	 UEWTo6KVpYuGZ7zLFAXW4TpPlupQngso0B+JxvbA=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44TAZw4h091218
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 29 May 2024 05:35:58 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 29
+ May 2024 05:35:57 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 29 May 2024 05:35:57 -0500
+Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.171])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44TAZlsL034133;
+	Wed, 29 May 2024 05:35:48 -0500
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <broonie@kernel.org>
+CC: <andriy.shevchenko@linux.intel.com>, <lgirdwood@gmail.com>,
+        <perex@perex.cz>, <pierre-louis.bossart@linux.intel.com>,
+        <13916275206@139.com>, <alsa-devel@alsa-project.org>,
+        <i-salazar@ti.com>, <linux-kernel@vger.kernel.org>, <j-chadha@ti.com>,
+        <liam.r.girdwood@intel.com>, <jaden-yue@ti.com>,
+        <yung-chuan.liao@linux.intel.com>, <dipa@ti.com>, <kevin-lu@ti.com>,
+        <yuhsuan@google.com>, <tiwai@suse.de>, <baojun.xu@ti.com>,
+        <soyer@irl.hu>, <Baojun.Xu@fpt.com>, <judyhsiao@google.com>,
+        <navada@ti.com>, <cujomalainey@google.com>, <aanya@ti.com>,
+        <nayeem.mahmud@ti.com>, <savyasanchi.shukla@netradyne.com>,
+        <flaviopr@microsoft.com>, Shenghao Ding
+	<shenghao-ding@ti.com>
+Subject: [PATCH v3] ASoc: tas2781: Enable RCA-based playback without DSP firmware download
+Date: Wed, 29 May 2024 18:35:41 +0800
+Message-ID: <20240529103543.2089-1-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] KVM: arm64: maintain per VM value for CTR_EL0
-Content-Language: en-US
-To: Sebastian Ott <sebott@redhat.com>, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-References: <20240514072252.5657-1-sebott@redhat.com>
- <20240514072252.5657-3-sebott@redhat.com>
-From: Eric Auger <eauger@redhat.com>
-In-Reply-To: <20240514072252.5657-3-sebott@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Sebastian,
+In only RCA(Reconfigurable Architecture) binary case, no DSP program will
+be working inside tas2563/tas2781, that is dsp-bypass mode, do not support
+speaker protection, and audio acoustic algorithms in this mode.
 
-On 5/14/24 09:22, Sebastian Ott wrote:
-> In preparation for CTR_EL0 emulation maintain a per VM for this
-s/a per VM for this register/a per VM shadow register for this latter?
-> register and use it where appropriate.
-> 
-> Signed-off-by: Sebastian Ott <sebott@redhat.com>
-> ---
->  arch/arm64/include/asm/kvm_host.h |  2 ++
->  arch/arm64/kvm/sys_regs.c         | 21 ++++++++++++++-------
->  2 files changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 212ae77eefaf..1259be5e2f3e 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -331,6 +331,8 @@ struct kvm_arch {
->  #define KVM_ARM_ID_REG_NUM	(IDREG_IDX(sys_reg(3, 0, 0, 7, 7)) + 1)
->  	u64 id_regs[KVM_ARM_ID_REG_NUM];
->  
-> +	u64 ctr_el0;
-> +
->  	/* Masks for VNCR-baked sysregs */
->  	struct kvm_sysreg_masks	*sysreg_masks;
->  
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 41741bf4d2b2..0213c96f73f2 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -219,9 +219,9 @@ void vcpu_write_sys_reg(struct kvm_vcpu *vcpu, u64 val, int reg)
->   * Returns the minimum line size for the selected cache, expressed as
->   * Log2(bytes).
->   */
-> -static u8 get_min_cache_line_size(bool icache)
-> +static u8 get_min_cache_line_size(struct kvm *kvm, bool icache)
->  {
-> -	u64 ctr = read_sanitised_ftr_reg(SYS_CTR_EL0);
-> +	u64 ctr = kvm->arch.ctr_el0;
->  	u8 field;
->  
->  	if (icache)
-> @@ -248,7 +248,7 @@ static u32 get_ccsidr(struct kvm_vcpu *vcpu, u32 csselr)
->  	if (vcpu->arch.ccsidr)
->  		return vcpu->arch.ccsidr[csselr];
->  
-> -	line_size = get_min_cache_line_size(csselr & CSSELR_EL1_InD);
-> +	line_size = get_min_cache_line_size(vcpu->kvm, csselr & CSSELR_EL1_InD);
->  
->  	/*
->  	 * Fabricate a CCSIDR value as the overriding value does not exist.
-> @@ -283,7 +283,7 @@ static int set_ccsidr(struct kvm_vcpu *vcpu, u32 csselr, u32 val)
->  	u32 i;
->  
->  	if ((val & CCSIDR_EL1_RES0) ||
-> -	    line_size < get_min_cache_line_size(csselr & CSSELR_EL1_InD))
-> +	    line_size < get_min_cache_line_size(vcpu->kvm, csselr & CSSELR_EL1_InD))
->  		return -EINVAL;
->  
->  	if (!ccsidr) {
-> @@ -1886,7 +1886,7 @@ static bool access_ctr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->  	if (p->is_write)
->  		return write_to_read_only(vcpu, p, r);
->  
-> -	p->regval = read_sanitised_ftr_reg(SYS_CTR_EL0);
-> +	p->regval = vcpu->kvm->arch.ctr_el0;
->  	return true;
->  }
->  
-> @@ -1906,7 +1906,7 @@ static bool access_clidr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->   */
->  static u64 reset_clidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
->  {
-> -	u64 ctr_el0 = read_sanitised_ftr_reg(SYS_CTR_EL0);
-> +	u64 ctr_el0 = vcpu->kvm->arch.ctr_el0;
->  	u64 clidr;
->  	u8 loc;
->  
-> @@ -1959,8 +1959,8 @@ static u64 reset_clidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
->  static int set_clidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
->  		      u64 val)
->  {
-> -	u64 ctr_el0 = read_sanitised_ftr_reg(SYS_CTR_EL0);
->  	u64 idc = !CLIDR_LOC(val) || (!CLIDR_LOUIS(val) && !CLIDR_LOUU(val));
-> +	u64 ctr_el0 = vcpu->kvm->arch.ctr_el0;
->  
->  	if ((val & CLIDR_EL1_RES0) || (!(ctr_el0 & CTR_EL0_IDC) && idc))
->  		return -EINVAL;
-nit: you may update the function doc comment which the extra handling of
-CTR_EL0.
-> @@ -3557,6 +3557,13 @@ void kvm_reset_sys_regs(struct kvm_vcpu *vcpu)
->  	struct kvm *kvm = vcpu->kvm;
->  	unsigned long i;
->  
-> +	if (!kvm_vcpu_initialized(vcpu))
-at this stage of the reading, why is the above check needed?
-> +		/*
-> +		 * Make sure CTR_EL0 is initialized before registers
-> +		 * that depend on it are reset.
-> +		 */
-nit: the above comment explains why you need to set the shadow ctr_el0
-reg  before resetting other id_regs and is not associated to the case
-where (!kvm_vcpu_initialized(vcpu)) is true - at least that's my
-understanding -. So I would put the comment before the check and while
-at it also explain why the check is needed.
-> +		kvm->arch.ctr_el0 = read_sanitised_ftr_reg(SYS_CTR_EL0);
-> +
->  	for (i = 0; i < ARRAY_SIZE(sys_reg_descs); i++) {
->  		const struct sys_reg_desc *r = &sys_reg_descs[i];
->  
+Fixes: ef3bcde75d06 ("ASoC: tas2781: Add tas2781 driver")
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-Thanks
+---
+v3:
+ - Add description on RCA is Reconfigurable Architecture.
+ - Add the description on enabling
+ - Reword the commit
+ - Remove question mark in the comments.
+ - Add spaces in comments.
+v2:
+ - Correct comment.
+ - Add Fixes.
+ - Move header file to the first.
+v1:
+ - Split out the different logical changes into different patches.
+ - rename tasdevice_dsp_fw_state -> tasdevice_fw_state, the fw are not
+   only DSP fw, but also RCA(Reconfigurable data, such as acoustic data
+   and register setting, etc).
+ - Add TASDEVICE_RCA_FW_OK in tasdevice_fw_state to identify the state
+   that only RCA binary file has been download successfully, but DSP fw
+   is not loaded or loading failure.
+ - Add the this strategy into tasdevice_tuning_switch.
+ - If one side of the if/else has a braces both should in
+   tasdevice_tuning_switch.
+ - Identify whehter both RCA and DSP have been loaded or only RCA has
+   been loaded in tasdevice_fw_ready.
+ - Add check fw load status in tasdevice_startup.
+ - remove ret in tasdevice_startup to make the code neater.
+---
+ include/sound/tas2781-dsp.h       |  3 ++-
+ sound/soc/codecs/tas2781-fmwlib.c | 16 ++++++++++-----
+ sound/soc/codecs/tas2781-i2c.c    | 33 ++++++++++++++++++++-----------
+ 3 files changed, 34 insertions(+), 18 deletions(-)
 
-Eric
+diff --git a/include/sound/tas2781-dsp.h b/include/sound/tas2781-dsp.h
+index 7fba7ea26a4b..92d68ca5eafb 100644
+--- a/include/sound/tas2781-dsp.h
++++ b/include/sound/tas2781-dsp.h
+@@ -117,10 +117,11 @@ struct tasdevice_fw {
+ 	struct device *dev;
+ };
+ 
+-enum tasdevice_dsp_fw_state {
++enum tasdevice_fw_state {
+ 	TASDEVICE_DSP_FW_NONE = 0,
+ 	TASDEVICE_DSP_FW_PENDING,
+ 	TASDEVICE_DSP_FW_FAIL,
++	TASDEVICE_RCA_FW_OK,
+ 	TASDEVICE_DSP_FW_ALL_OK,
+ };
+ 
+diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
+index 265a8ca25cbb..5db1a0ac6036 100644
+--- a/sound/soc/codecs/tas2781-fmwlib.c
++++ b/sound/soc/codecs/tas2781-fmwlib.c
+@@ -2324,14 +2324,19 @@ void tasdevice_tuning_switch(void *context, int state)
+ 	struct tasdevice_fw *tas_fmw = tas_priv->fmw;
+ 	int profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
+ 
+-	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
+-		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
++	/*
++	 * Only RCA-based Playback can still work with no dsp program running
++	 * inside the chip?
++	 */
++	if (!(tas_priv->fw_state == TASDEVICE_RCA_FW_OK ||
++		tas_priv->fw_state == TASDEVICE_DSP_FW_ALL_OK)) {
++		dev_err(tas_priv->dev, "No firmware loaded\n");
+ 		return;
+ 	}
+ 
+ 	if (state == 0) {
+-		if (tas_priv->cur_prog < tas_fmw->nr_programs) {
+-			/*dsp mode or tuning mode*/
++		if (tas_fmw && tas_priv->cur_prog < tas_fmw->nr_programs) {
++			/* dsp mode or tuning mode */
+ 			profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
+ 			tasdevice_select_tuningprm_cfg(tas_priv,
+ 				tas_priv->cur_prog, tas_priv->cur_conf,
+@@ -2340,9 +2345,10 @@ void tasdevice_tuning_switch(void *context, int state)
+ 
+ 		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
+ 			TASDEVICE_BIN_BLK_PRE_POWER_UP);
+-	} else
++	} else {
+ 		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
+ 			TASDEVICE_BIN_BLK_PRE_SHUTDOWN);
++	}
+ }
+ EXPORT_SYMBOL_NS_GPL(tasdevice_tuning_switch,
+ 	SND_SOC_TAS2781_FMWLIB);
+diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
+index 9350972dfefe..9b85a44511c2 100644
+--- a/sound/soc/codecs/tas2781-i2c.c
++++ b/sound/soc/codecs/tas2781-i2c.c
+@@ -380,23 +380,33 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
+ 	mutex_lock(&tas_priv->codec_lock);
+ 
+ 	ret = tasdevice_rca_parser(tas_priv, fmw);
+-	if (ret)
++	if (ret) {
++		tasdevice_config_info_remove(tas_priv);
+ 		goto out;
++	}
+ 	tasdevice_create_control(tas_priv);
+ 
+ 	tasdevice_dsp_remove(tas_priv);
+ 	tasdevice_calbin_remove(tas_priv);
+-	tas_priv->fw_state = TASDEVICE_DSP_FW_PENDING;
++	tas_priv->fw_state = TASDEVICE_RCA_FW_OK;
+ 	scnprintf(tas_priv->coef_binaryname, 64, "%s_coef.bin",
+ 		tas_priv->dev_name);
++
+ 	ret = tasdevice_dsp_parser(tas_priv);
+ 	if (ret) {
+ 		dev_err(tas_priv->dev, "dspfw load %s error\n",
+ 			tas_priv->coef_binaryname);
+-		tas_priv->fw_state = TASDEVICE_DSP_FW_FAIL;
+ 		goto out;
+ 	}
+-	tasdevice_dsp_create_ctrls(tas_priv);
++
++	/*
++	 * If no dsp-related kcontrol created, the dsp resource will be freed.
++	 */
++	ret = tasdevice_dsp_create_ctrls(tas_priv);
++	if (ret) {
++		dev_err(tas_priv->dev, "dsp controls error\n");
++		goto out;
++	}
+ 
+ 	tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
+ 
+@@ -417,9 +427,8 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
+ 	tasdevice_prmg_load(tas_priv, 0);
+ 	tas_priv->cur_prog = 0;
+ out:
+-	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
+-		/*If DSP FW fail, kcontrol won't be created */
+-		tasdevice_config_info_remove(tas_priv);
++	if (tas_priv->fw_state == TASDEVICE_RCA_FW_OK) {
++		/*If DSP FW fail, DSP kcontrol won't be created */
+ 		tasdevice_dsp_remove(tas_priv);
+ 	}
+ 	mutex_unlock(&tas_priv->codec_lock);
+@@ -466,14 +475,14 @@ static int tasdevice_startup(struct snd_pcm_substream *substream,
+ {
+ 	struct snd_soc_component *codec = dai->component;
+ 	struct tasdevice_priv *tas_priv = snd_soc_component_get_drvdata(codec);
+-	int ret = 0;
+ 
+-	if (tas_priv->fw_state != TASDEVICE_DSP_FW_ALL_OK) {
+-		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
+-		ret = -EINVAL;
++	if (!(tas_priv->fw_state == TASDEVICE_DSP_FW_ALL_OK ||
++		tas_priv->fw_state == TASDEVICE_RCA_FW_OK)) {
++		dev_err(tas_priv->dev, "Bin file not loaded\n");
++		return -EINVAL;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int tasdevice_hw_params(struct snd_pcm_substream *substream,
+-- 
+2.34.1
 
