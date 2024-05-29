@@ -1,40 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8438F16A360
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 09:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A3E167DAB;
+	Wed, 29 May 2024 09:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976342; cv=none; b=eMXzsRtKgPKklGOEYNAOtIPc9q/BK6UWkeEqU0xCz4q9Md+4chFE8efbakwIQqPi9GzaTCJvbLQ48EOXCWnKcGG65K1J2JNR1H+OAHzsnBOVPWkNWSTCc4CJkKiDAEdy7mpNuk7pqk9oAK2KCr91ezhlnJpf4vt4rOPxmzt9Hu4=
+	t=1716976365; cv=none; b=pMOaWYHGbFzVTUMT2/8ue5jTpylUbX5wZF8VVuSyM1htKs3dy/pXuQJOsm8XbCx5KzOT05jQ9n4ssyAeuqN5XzJ6P0rMkaK++53u106qGjDwdmnyfXg0YbxDdJPsZwBctk/fyhYC+3kzZZNnmK3U17mkIhkY/NdKawbHSNRI2Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976342; c=relaxed/simple;
-	bh=JrVzi9t9nN2k3gm4A1Sjc6C5/DP/aCCwcBk5RcZ7FEA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hpBMTN2G5B4JgCCzSEMOf2/7mwIA5jkuCf9Cwib7Fd9DGrWBcpKPltWt7bcgwl6rIQx3V4ZcVXDn/Rgc0DYc/8FWuXVPOPLqSpUVSplGHhIvKqCDpA/v9BuLIgCafdwJwXEF5aZXJ2OymIiHm3A7qbmWCaPxYEQMpnBvPVlSlxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1COFIhq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1COFIhq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 499C8C2BD10;
-	Wed, 29 May 2024 09:52:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716976342;
-	bh=JrVzi9t9nN2k3gm4A1Sjc6C5/DP/aCCwcBk5RcZ7FEA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=p1COFIhqjJ4asDHG21pfERVJ9zWJwfenyf40Noe+DGze98xkg5OORjd2/E+jtXf4Z
-	 7GxLU6+GAn7fceD1m+HPG9HkIQCjAnaOesYB8BHYHNgdiynaNOPDxKM9ndBmo6OSUc
-	 w6MKxG/Ti1ZPLgf+UQGwH/QWRjEwdM1LtN9A63wwVwFEQNufp0VNnUAm/Iz2eZLedf
-	 YYlEMe+2ayZ4ze4aSwSbyfpj1Jsi5OGDQju0yPscYoKawH0zfrhiCk7KTEI6cTCXAh
-	 kQOdF8jkGGQnKVFhGRwOicWSUHG9hMOuw1WbRNsPKxnMCaYdpc+pdeMJ0b2pVfAOHb
-	 Vl0M7bGNBa4OA==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com
-Subject: [PATCH] f2fs: fix to cover read extent cache access with lock
-Date: Wed, 29 May 2024 17:52:11 +0800
-Message-Id: <20240529095211.323808-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1716976365; c=relaxed/simple;
+	bh=DIW2Z5bfGmlHm1iu3bJA4B6td7X95z9Shz8Ueh5bupk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AE91oBf6SW5njqK5MCUJxhal8QBa9Qhh4eejfoymxA/pC5MvrHJJuBC0+JBUeZdSNPFMG7XmgTqd2JeHqJD/LtDJc60jGZr2E3aonmrstPKjBN11QmeowpzlVkIB1Vv1rXz+vOAcaFfH8mEfsaWrns/TeFCxJ0YMiUEcgEuraT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Vq4NV3r77zPnbK;
+	Wed, 29 May 2024 17:49:30 +0800 (CST)
+Received: from canpemm500007.china.huawei.com (unknown [7.192.104.62])
+	by mail.maildlp.com (Postfix) with ESMTPS id 41CF518007E;
+	Wed, 29 May 2024 17:52:40 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by canpemm500007.china.huawei.com
+ (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 29 May
+ 2024 17:52:39 +0800
+From: Yue Haibing <yuehaibing@huawei.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <maheshb@google.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yuehaibing@huawei.com>
+Subject: [PATCH net v2] ipvlan: Dont Use skb->sk in ipvlan_process_v{4,6}_outbound
+Date: Wed, 29 May 2024 17:56:33 +0800
+Message-ID: <20240529095633.613103-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,195 +39,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500007.china.huawei.com (7.192.104.62)
 
-syzbot reports a f2fs bug as below:
+Raw packet from PF_PACKET socket ontop of an IPv6-backed ipvlan device will
+hit WARN_ON_ONCE() in sk_mc_loop() through sch_direct_xmit() path.
 
-BUG: KASAN: slab-use-after-free in sanity_check_extent_cache+0x370/0x410 fs/f2fs/extent_cache.c:46
-Read of size 4 at addr ffff8880739ab220 by task syz-executor200/5097
-
-CPU: 0 PID: 5097 Comm: syz-executor200 Not tainted 6.9.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+WARNING: CPU: 2 PID: 0 at net/core/sock.c:775 sk_mc_loop+0x2d/0x70
+Modules linked in: sch_netem ipvlan rfkill cirrus drm_shmem_helper sg drm_kms_helper
+CPU: 2 PID: 0 Comm: swapper/2 Kdump: loaded Not tainted 6.9.0+ #279
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:sk_mc_loop+0x2d/0x70
+Code: fa 0f 1f 44 00 00 65 0f b7 15 f7 96 a3 4f 31 c0 66 85 d2 75 26 48 85 ff 74 1c
+RSP: 0018:ffffa9584015cd78 EFLAGS: 00010212
+RAX: 0000000000000011 RBX: ffff91e585793e00 RCX: 0000000002c6a001
+RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff91e589c0f000
+RBP: ffff91e5855bd100 R08: 0000000000000000 R09: 3d00545216f43d00
+R10: ffff91e584fdcc50 R11: 00000060dd8616f4 R12: ffff91e58132d000
+R13: ffff91e584fdcc68 R14: ffff91e5869ce800 R15: ffff91e589c0f000
+FS:  0000000000000000(0000) GS:ffff91e898100000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f788f7c44c0 CR3: 0000000008e1a000 CR4: 00000000000006f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- sanity_check_extent_cache+0x370/0x410 fs/f2fs/extent_cache.c:46
- do_read_inode fs/f2fs/inode.c:509 [inline]
- f2fs_iget+0x33e1/0x46e0 fs/f2fs/inode.c:560
- f2fs_nfs_get_inode+0x74/0x100 fs/f2fs/super.c:3237
- generic_fh_to_dentry+0x9f/0xf0 fs/libfs.c:1413
- exportfs_decode_fh_raw+0x152/0x5f0 fs/exportfs/expfs.c:444
- exportfs_decode_fh+0x3c/0x80 fs/exportfs/expfs.c:584
- do_handle_to_path fs/fhandle.c:155 [inline]
- handle_to_path fs/fhandle.c:210 [inline]
- do_handle_open+0x495/0x650 fs/fhandle.c:226
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+<IRQ>
+ ? __warn (kernel/panic.c:693)
+ ? sk_mc_loop (net/core/sock.c:760)
+ ? report_bug (lib/bug.c:201 lib/bug.c:219)
+ ? handle_bug (arch/x86/kernel/traps.c:239)
+ ? exc_invalid_op (arch/x86/kernel/traps.c:260 (discriminator 1))
+ ? asm_exc_invalid_op (./arch/x86/include/asm/idtentry.h:621)
+ ? sk_mc_loop (net/core/sock.c:760)
+ ip6_finish_output2 (net/ipv6/ip6_output.c:83 (discriminator 1))
+ ? nf_hook_slow (net/netfilter/core.c:626)
+ ip6_finish_output (net/ipv6/ip6_output.c:222)
+ ? __pfx_ip6_finish_output (net/ipv6/ip6_output.c:215)
+ ipvlan_xmit_mode_l3 (drivers/net/ipvlan/ipvlan_core.c:602) ipvlan
+ ipvlan_start_xmit (drivers/net/ipvlan/ipvlan_main.c:226) ipvlan
+ dev_hard_start_xmit (net/core/dev.c:3594)
+ sch_direct_xmit (net/sched/sch_generic.c:343)
+ __qdisc_run (net/sched/sch_generic.c:416)
+ net_tx_action (net/core/dev.c:5286)
+ handle_softirqs (kernel/softirq.c:555)
+ __irq_exit_rcu (kernel/softirq.c:589)
+ sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1043)
 
-We missed to cover sanity_check_extent_cache() w/ extent cache lock,
-so, below race case may happen, result in use after free issue.
+The warning triggers as this:
+packet_sendmsg
+   packet_snd //skb->sk is packet sk
+      __dev_queue_xmit
+         __dev_xmit_skb //q->enqueue is not NULL
+             __qdisc_run
+               sch_direct_xmit
+                 dev_hard_start_xmit
+                   ipvlan_start_xmit
+                      ipvlan_xmit_mode_l3 //l3 mode
+                        ipvlan_process_outbound //vepa flag
+                          ipvlan_process_v6_outbound
+                            ip6_local_out
+                                __ip6_finish_output
+                                  ip6_finish_output2 //multicast packet
+                                    sk_mc_loop //sk->sk_family is AF_PACKET
 
-- f2fs_iget
- - do_read_inode
-  - f2fs_init_read_extent_tree
-  : add largest extent entry in to cache
-					- shrink
-					 - f2fs_shrink_read_extent_tree
-					  - __shrink_extent_tree
-					   - __detach_extent_node
-					   : drop largest extent entry
-  - sanity_check_extent_cache
-  : access et->largest w/ lock
+Call ip{6}_local_out() with NULL sk in ipvlan as other tunnels to fix this.
 
-let's refactor sanity_check_extent_cache() to avoid extent cache access
-and call it before f2fs_init_read_extent_tree() to fix this issue.
-
-Reported-by: syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-f2fs-devel/00000000000009beea061740a531@google.com
-Signed-off-by: Chao Yu <chao@kernel.org>
+Fixes: 2ad7bf363841 ("ipvlan: Initial check-in of the IPVLAN driver.")
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
 ---
- fs/f2fs/extent_cache.c | 48 +++++++++++++++++-------------------------
- fs/f2fs/f2fs.h         |  2 +-
- fs/f2fs/inode.c        | 10 ++++-----
- 3 files changed, 25 insertions(+), 35 deletions(-)
+v2: relocate Fixes tag
+---
+ drivers/net/ipvlan/ipvlan_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
-index 48048fa36427..fd1fc06359ee 100644
---- a/fs/f2fs/extent_cache.c
-+++ b/fs/f2fs/extent_cache.c
-@@ -19,33 +19,23 @@
- #include "node.h"
- #include <trace/events/f2fs.h>
+diff --git a/drivers/net/ipvlan/ipvlan_core.c b/drivers/net/ipvlan/ipvlan_core.c
+index 2d5b021b4ea6..fef4eff7753a 100644
+--- a/drivers/net/ipvlan/ipvlan_core.c
++++ b/drivers/net/ipvlan/ipvlan_core.c
+@@ -439,7 +439,7 @@ static noinline_for_stack int ipvlan_process_v4_outbound(struct sk_buff *skb)
  
--bool sanity_check_extent_cache(struct inode *inode)
-+bool sanity_check_extent_cache(struct inode *inode, struct page *ipage)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
--	struct f2fs_inode_info *fi = F2FS_I(inode);
--	struct extent_tree *et = fi->extent_tree[EX_READ];
--	struct extent_info *ei;
--
--	if (!et)
--		return true;
-+	struct f2fs_extent *i_ext = &F2FS_INODE(ipage)->i_ext;
-+	struct extent_info ei;
+ 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
  
--	ei = &et->largest;
--	if (!ei->len)
--		return true;
-+	get_read_extent_info(&ei, i_ext);
+-	err = ip_local_out(net, skb->sk, skb);
++	err = ip_local_out(net, NULL, skb);
+ 	if (unlikely(net_xmit_eval(err)))
+ 		DEV_STATS_INC(dev, tx_errors);
+ 	else
+@@ -494,7 +494,7 @@ static int ipvlan_process_v6_outbound(struct sk_buff *skb)
  
--	/* Let's drop, if checkpoint got corrupted. */
--	if (is_set_ckpt_flags(sbi, CP_ERROR_FLAG)) {
--		ei->len = 0;
--		et->largest_updated = true;
-+	if (!ei.len)
- 		return true;
--	}
+ 	memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
  
--	if (!f2fs_is_valid_blkaddr(sbi, ei->blk, DATA_GENERIC_ENHANCE) ||
--	    !f2fs_is_valid_blkaddr(sbi, ei->blk + ei->len - 1,
-+	if (!f2fs_is_valid_blkaddr(sbi, ei.blk, DATA_GENERIC_ENHANCE) ||
-+	    !f2fs_is_valid_blkaddr(sbi, ei.blk + ei.len - 1,
- 					DATA_GENERIC_ENHANCE)) {
- 		f2fs_warn(sbi, "%s: inode (ino=%lx) extent info [%u, %u, %u] is incorrect, run fsck to fix",
- 			  __func__, inode->i_ino,
--			  ei->blk, ei->fofs, ei->len);
-+			  ei.blk, ei.fofs, ei.len);
- 		return false;
- 	}
- 	return true;
-@@ -394,24 +384,22 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct page *ipage)
- 
- 	if (!__may_extent_tree(inode, EX_READ)) {
- 		/* drop largest read extent */
--		if (i_ext && i_ext->len) {
-+		if (i_ext->len) {
- 			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
- 			i_ext->len = 0;
- 			set_page_dirty(ipage);
- 		}
--		goto out;
-+		set_inode_flag(inode, FI_NO_EXTENT);
-+		return;
- 	}
- 
- 	et = __grab_extent_tree(inode, EX_READ);
- 
--	if (!i_ext || !i_ext->len)
--		goto out;
--
- 	get_read_extent_info(&ei, i_ext);
- 
- 	write_lock(&et->lock);
--	if (atomic_read(&et->node_cnt))
--		goto unlock_out;
-+	if (atomic_read(&et->node_cnt) || !ei.len)
-+		goto skip;
- 
- 	en = __attach_extent_node(sbi, et, &ei, NULL,
- 				&et->root.rb_root.rb_node, true);
-@@ -423,11 +411,13 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct page *ipage)
- 		list_add_tail(&en->list, &eti->extent_list);
- 		spin_unlock(&eti->extent_lock);
- 	}
--unlock_out:
-+skip:
-+	/* Let's drop, if checkpoint got corrupted. */
-+	if (f2fs_cp_error(sbi)) {
-+		et->largest.len = 0;
-+		et->largest_updated = true;
-+	}
- 	write_unlock(&et->lock);
--out:
--	if (!F2FS_I(inode)->extent_tree[EX_READ])
--		set_inode_flag(inode, FI_NO_EXTENT);
- }
- 
- void f2fs_init_age_extent_tree(struct inode *inode)
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9118a4e2db6d..9688df332147 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -4191,7 +4191,7 @@ void f2fs_leave_shrinker(struct f2fs_sb_info *sbi);
- /*
-  * extent_cache.c
-  */
--bool sanity_check_extent_cache(struct inode *inode);
-+bool sanity_check_extent_cache(struct inode *inode, struct page *ipage);
- void f2fs_init_extent_tree(struct inode *inode);
- void f2fs_drop_extent_tree(struct inode *inode);
- void f2fs_destroy_extent_node(struct inode *inode);
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 4b39aebd3c70..3a13f32b43a2 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -508,16 +508,16 @@ static int do_read_inode(struct inode *inode)
- 
- 	init_idisk_time(inode);
- 
--	/* Need all the flag bits */
--	f2fs_init_read_extent_tree(inode, node_page);
--	f2fs_init_age_extent_tree(inode);
--
--	if (!sanity_check_extent_cache(inode)) {
-+	if (!sanity_check_extent_cache(inode, node_page)) {
- 		f2fs_put_page(node_page, 1);
- 		f2fs_handle_error(sbi, ERROR_CORRUPTED_INODE);
- 		return -EFSCORRUPTED;
- 	}
- 
-+	/* Need all the flag bits */
-+	f2fs_init_read_extent_tree(inode, node_page);
-+	f2fs_init_age_extent_tree(inode);
-+
- 	f2fs_put_page(node_page, 1);
- 
- 	stat_inc_inline_xattr(inode);
+-	err = ip6_local_out(dev_net(dev), skb->sk, skb);
++	err = ip6_local_out(dev_net(dev), NULL, skb);
+ 	if (unlikely(net_xmit_eval(err)))
+ 		DEV_STATS_INC(dev, tx_errors);
+ 	else
 -- 
-2.40.1
+2.34.1
 
