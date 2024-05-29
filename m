@@ -1,71 +1,92 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F0D374F6
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABBF374F6;
+	Wed, 29 May 2024 08:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969693; cv=none; b=ehrFDv6U6bcLOa6Ht/yMqMkJYiJjf4rH3AtX6zGgV0eSxK0xDEpkIY1NZomoK8UG5cEVqTZEM89uE8xgyPgkL66DAII11dWF2D+CPsgseDrHPE6NQFgvZhPzAQ1zZsoGSRldhDoHPe5vizyLioAynoOK6nNmBLWCoyrmOrZvKKc=
+	t=1716969701; cv=none; b=nnyVuGIDE9LNde5NqknEGwX3kGujWiAUTN+3OcQsb6scS9YkqEPxL3yL3OCDfcYzNgvSt6Cejjg814JBDHeQg1likKpzx94QFZCdGIYd0+7Lhuh27Eg9/JsL75oedwf/eWUvUTrez8b6gYXQl9xw8KB1GOWZ6mdPQ579ZTKU9Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969693; c=relaxed/simple;
-	bh=zym3tUwtiYR8zYQgibS2+Y150IoTCHY5DOSeSq7T3eI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ee3/6CiBYdJchnRcL35pqog1SoBfqUSMi1VCQbCDnrBiOdzbzXIFMRIIo/8AWbb/3S5jX49NPO18pKgtPceOPLTmvgBdr2M8v4xE9ZsJTDFZ1Q2oqug5WIvAOWnK3yMe5Sq+Qw2omf/1q0PGuOd867+AYjOAFKN39y6UCdZUhDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gCW7ykqr; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gCW7ykqr"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2bf5bd50afcso1444888a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 01:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716969691; x=1717574491; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IVq2KJ9dea8wW5boM9m8tHQKn0zHGu+v5LBWfvftWo4=;
-        b=gCW7ykqrmBCaqxlE5FhEJUR2CPudlMfs2P++YuTBLw68Lm40PtdlYMGazahdhYHFyN
-         WSJ83FMaZpgq3nUfI6uSLRqz7/bRA5GBC65dVChXKS4prLZ5FCnwMuerVfv0yQqRocpy
-         ddhVmVU6q57X/KSZ4MuxzSzPXpCNwf1mGEIGY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716969691; x=1717574491;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IVq2KJ9dea8wW5boM9m8tHQKn0zHGu+v5LBWfvftWo4=;
-        b=YfFSDRoDihyR12G3TweVDF9wYNhOiDKALDuoHVT+s299HaqtO3gzpBHU4J4CFG9yrm
-         PST6fMeDpjmsMNSq+z7HyN9x40fLex1tsw1e4gjgRtRdMG9kvZg6NJA3ALAph41KfWSa
-         bOa+VRPFR+fuFZ9nlNTXt7X3Tu++bAfR/jYc9vMo3PiKI/r11J4hkAw2HllSjhhshW1n
-         qTebvLvnDRp0Hc6hUNooY3RRnToqN/AVkhWfmNEAv6vwkaAmhZpjzwNAFokUqDo5P0OL
-         p4XRFZSQ62z2lnHBuEagxRBU+7tY/tmdzTioez9iyt1qFjuIoW8vFrvyxAks79450vDu
-         XLOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvvdmu1uPQD8n7HV3F0qxbMyS3Sj8jRHlyk3MktzLhzJmfZ6U+yHWgesIWmzeZ/E1iTVq0Vrxim3iLlFTTYOE88iseokuharCRMpoO
-X-Gm-Message-State: AOJu0YzKi6hwf75D05ypUENNTFheTUtLE/tUi5pIwFJnIqsOrRHWjalb
-	DD3BgGsZQxrqW/dVPk5qmgvwdo89eceEJx/RefjRzq/Uz/t4CDw8FqBR4EpimQ==
-X-Google-Smtp-Source: AGHT+IFJIBHO9vbLZGX06VSoaM42TaXLOL5RDP14AaDs4hAwKfUErS+OgMbuv7sPgrV09hcryjaVfw==
-X-Received: by 2002:a17:90b:182:b0:2c1:424c:1721 with SMTP id 98e67ed59e1d1-2c1424c1a3emr327872a91.3.1716969690812;
-        Wed, 29 May 2024 01:01:30 -0700 (PDT)
-Received: from localhost (60.252.199.104.bc.googleusercontent.com. [104.199.252.60])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2bfa0222b3fsm6658020a91.30.2024.05.29.01.01.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 01:01:30 -0700 (PDT)
-From: Ying Hsu <yinghsu@chromium.org>
-To: linux-bluetooth@vger.kernel.org,
-	luiz.dentz@gmail.com,
-	pmenzel@molgen.mpg.de,
-	horms@kernel.org
-Cc: chromeos-bluetooth-upstreaming@chromium.org,
-	Ying Hsu <yinghsu@chromium.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+	s=arc-20240116; t=1716969701; c=relaxed/simple;
+	bh=2Ln8/beSX9+5TT32ruO4321U5//ekhXDgwV6jyytobg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Iei59jqm7V6rhSxh0TT/MQd8/w0ZRxhxFb5jEhsqAMnadWCZJdVymprPKhbKrCeOEwfw8Efxa0QNcSDLChxxhAej6LtokPfvJNC3wIjO7ETvPkTcGbGd0z7QAo/BZzmvDrFg6o2vPWLzXIpeP0PsU+L74M0SsnPlGLcdoZVAcMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
+Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
+	by sakura.ysato.name (Postfix) with ESMTPSA id EC6C11C0594;
+	Wed, 29 May 2024 17:01:36 +0900 (JST)
+From: Yoshinori Sato <ysato@users.sourceforge.jp>
+To: linux-sh@vger.kernel.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lee Jones <lee@kernel.org>,
+	Helge Deller <deller@gmx.de>,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Baoquan He <bhe@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Guo Ren <guoren@kernel.org>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	linux-ide@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v4] Bluetooth: Add vendor-specific packet classification for ISO data
-Date: Wed, 29 May 2024 08:00:00 +0000
-Message-ID: <20240529080123.2146946-1-yinghsu@chromium.org>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-pci@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: [DO NOT MERGE v8 05/36] sh: GENERIC_IRQ_CHIP support for CONFIG_OF=y
+Date: Wed, 29 May 2024 17:00:51 +0900
+Message-Id: <adbcde9034d752dcdbf90e995aaa14f85c33c9c3.1716965617.git.ysato@users.sourceforge.jp>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
+References: <cover.1716965617.git.ysato@users.sourceforge.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,129 +95,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When HCI raw sockets are opened, the Bluetooth kernel module doesn't
-track CIS/BIS connections. User-space applications have to identify
-ISO data by maintaining connection information and look up the mapping
-for each ACL data packet received. Besides, btsnoop log captured in
-kernel couldn't tell ISO data from ACL data in this case.
+Remove unused function prototype.
+Add helper update_sr_imask. use for SH7751 irq driver.
+Add stub intc_finalize.
 
-To avoid additional lookups, this patch introduces vendor-specific
-packet classification for Intel BT controllers to distinguish
-ISO data packets from ACL data packets.
-
-Signed-off-by: Ying Hsu <yinghsu@chromium.org>
+Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
-Tested LE audio unicast recording on a ChromeOS device with Intel AX211
+ arch/sh/include/asm/io.h       |  2 ++
+ arch/sh/include/asm/irq.h      | 10 ++++++++--
+ arch/sh/kernel/cpu/Makefile    |  5 +----
+ arch/sh/kernel/cpu/irq/imask.c | 17 +++++++++++++++++
+ include/linux/sh_intc.h        |  7 ++++++-
+ 5 files changed, 34 insertions(+), 7 deletions(-)
 
-Changes in v4:
-- Only register classify_pkt_type on AX211 (GfP2) and BE200 (GaP).
-
-Changes in v3:
-- Move Intel's classify_pkt_type implementation from btusb.c to btintel.c.
-
-Changes in v2:
-- Adds vendor-specific packet classificaton in hci_dev.
-- Keeps reclassification in hci_recv_frame.
-
- drivers/bluetooth/btintel.c      | 25 +++++++++++++++++++++++--
- include/net/bluetooth/hci_core.h |  1 +
- net/bluetooth/hci_core.c         | 16 ++++++++++++++++
- 3 files changed, 40 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
-index 27e03951e68b..ff33e1aa2929 100644
---- a/drivers/bluetooth/btintel.c
-+++ b/drivers/bluetooth/btintel.c
-@@ -2549,6 +2549,24 @@ static void btintel_set_dsm_reset_method(struct hci_dev *hdev,
- 	data->acpi_reset_method = btintel_acpi_reset_method;
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index cf5eab840d57..5c544cf5201b 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -121,7 +121,9 @@ __BUILD_MEMORY_STRING(__raw_, q, u64)
+ 
+ #define ioport_map ioport_map
+ #define ioport_unmap ioport_unmap
++#ifndef CONFIG_SH_DEVICE_TREE
+ #define pci_iounmap pci_iounmap
++#endif
+ 
+ #define ioread8 ioread8
+ #define ioread16 ioread16
+diff --git a/arch/sh/include/asm/irq.h b/arch/sh/include/asm/irq.h
+index 0f384b1f45ca..3d897229dcc4 100644
+--- a/arch/sh/include/asm/irq.h
++++ b/arch/sh/include/asm/irq.h
+@@ -16,8 +16,8 @@
+ /*
+  * Simple Mask Register Support
+  */
+-extern void make_maskreg_irq(unsigned int irq);
+-extern unsigned short *irq_mask_register;
++
++void update_sr_imask(unsigned int irq, bool enable);
+ 
+ /*
+  * PINT IRQs
+@@ -54,4 +54,10 @@ extern void irq_finish(unsigned int irq);
+ 
+ #include <asm-generic/irq.h>
+ 
++/* SH3/4 INTC stuff */
++/* IRL level 0 - 15 */
++#define NR_IRL 15
++/* IRL0 -> IRQ16 */
++#define IRL_BASE_IRQ	16
++
+ #endif /* __ASM_SH_IRQ_H */
+diff --git a/arch/sh/kernel/cpu/Makefile b/arch/sh/kernel/cpu/Makefile
+index e00ebf134985..ad12807fae9c 100644
+--- a/arch/sh/kernel/cpu/Makefile
++++ b/arch/sh/kernel/cpu/Makefile
+@@ -20,7 +20,4 @@ ifndef CONFIG_COMMON_CLK
+ obj-y += clock.o
+ obj-$(CONFIG_SH_CLK_CPG_LEGACY)	+= clock-cpg.o
+ endif
+-ifndef CONFIG_GENERIC_IRQ_CHIP
+-obj-y	+= irq/
+-endif
+-obj-y	+= init.o fpu.o pfc.o proc.o
++obj-y	+= init.o fpu.o pfc.o proc.o irq/
+diff --git a/arch/sh/kernel/cpu/irq/imask.c b/arch/sh/kernel/cpu/irq/imask.c
+index 572585c3f2fd..7589ca7c506c 100644
+--- a/arch/sh/kernel/cpu/irq/imask.c
++++ b/arch/sh/kernel/cpu/irq/imask.c
+@@ -51,6 +51,7 @@ static inline void set_interrupt_registers(int ip)
+ 		     : "t");
  }
  
-+#define BTINTEL_ISODATA_HANDLE_BASE 0x900
-+
-+static u8 btintel_classify_pkt_type(struct hci_dev *hdev, struct sk_buff *skb)
-+{
-+	/*
-+	 * Distinguish ISO data packets form ACL data packets
-+	 * based on their connection handle value range.
-+	 */
-+	if (hci_skb_pkt_type(skb) == HCI_ACLDATA_PKT) {
-+		__u16 handle = __le16_to_cpu(hci_acl_hdr(skb)->handle);
-+
-+		if (hci_handle(handle) >= BTINTEL_ISODATA_HANDLE_BASE)
-+			return HCI_ISODATA_PKT;
-+	}
-+
-+	return hci_skb_pkt_type(skb);
-+}
-+
- int btintel_bootloader_setup_tlv(struct hci_dev *hdev,
- 				 struct intel_version_tlv *ver)
++#ifndef CONFIG_GENERIC_IRQ_CHIP
+ static void mask_imask_irq(struct irq_data *data)
  {
-@@ -2989,11 +3007,14 @@ static int btintel_setup_combined(struct hci_dev *hdev)
- 		err = btintel_bootloader_setup(hdev, &ver);
- 		btintel_register_devcoredump_support(hdev);
- 		break;
-+	case 0x18: /* GfP2 */
-+	case 0x1c: /* GaP */
-+		/* Re-classify packet type for controllers with LE audio */
-+		hdev->classify_pkt_type = btintel_classify_pkt_type;
-+		fallthrough;
- 	case 0x17:
--	case 0x18:
- 	case 0x19:
- 	case 0x1b:
--	case 0x1c:
- 	case 0x1e:
- 		/* Display version information of TLV type */
- 		btintel_version_info_tlv(hdev, &ver_tlv);
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 9231396fe96f..7b7068a84ff7 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -649,6 +649,7 @@ struct hci_dev {
- 	int (*get_codec_config_data)(struct hci_dev *hdev, __u8 type,
- 				     struct bt_codec *codec, __u8 *vnd_len,
- 				     __u8 **vnd_data);
-+	u8 (*classify_pkt_type)(struct hci_dev *hdev, struct sk_buff *skb);
- };
- 
- #define HCI_PHY_HANDLE(handle)	(handle & 0xff)
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index b3ee9ff17624..8b817a99cefd 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -2941,15 +2941,31 @@ int hci_reset_dev(struct hci_dev *hdev)
+ 	unsigned int irq = data->irq;
+@@ -83,3 +84,19 @@ void make_imask_irq(unsigned int irq)
+ 	irq_set_chip_and_handler_name(irq, &imask_irq_chip, handle_level_irq,
+ 				      "level");
  }
- EXPORT_SYMBOL(hci_reset_dev);
- 
-+static u8 hci_dev_classify_pkt_type(struct hci_dev *hdev, struct sk_buff *skb)
++#else
++void update_sr_imask(unsigned int irq, bool enable)
 +{
-+	if (hdev->classify_pkt_type)
-+		return hdev->classify_pkt_type(hdev, skb);
-+
-+	return hci_skb_pkt_type(skb);
-+}
-+
- /* Receive frame from HCI drivers */
- int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
- {
-+	u8 dev_pkt_type;
-+
- 	if (!hdev || (!test_bit(HCI_UP, &hdev->flags)
- 		      && !test_bit(HCI_INIT, &hdev->flags))) {
- 		kfree_skb(skb);
- 		return -ENXIO;
- 	}
- 
-+	/* Check if the driver agree with packet type classification */
-+	dev_pkt_type = hci_dev_classify_pkt_type(hdev, skb);
-+	if (hci_skb_pkt_type(skb) != dev_pkt_type) {
-+		hci_skb_pkt_type(skb) = dev_pkt_type;
++	if (enable) {
++		set_bit(irq, imask_mask);
++		interrupt_priority = IMASK_PRIORITY -
++		  find_first_bit(imask_mask, IMASK_PRIORITY);
++	} else {
++		clear_bit(irq, imask_mask);
++		if (interrupt_priority < IMASK_PRIORITY - irq)
++			interrupt_priority = IMASK_PRIORITY - irq;
 +	}
-+
- 	switch (hci_skb_pkt_type(skb)) {
- 	case HCI_EVENT_PKT:
- 		break;
++	set_interrupt_registers(interrupt_priority);
++}
++EXPORT_SYMBOL(update_sr_imask);
++#endif
+diff --git a/include/linux/sh_intc.h b/include/linux/sh_intc.h
+index 27ae79191bdc..994b5b05a0d7 100644
+--- a/include/linux/sh_intc.h
++++ b/include/linux/sh_intc.h
+@@ -139,8 +139,13 @@ struct intc_desc symbol __initdata = {					\
+ int register_intc_controller(struct intc_desc *desc);
+ int intc_set_priority(unsigned int irq, unsigned int prio);
+ int intc_irq_lookup(const char *chipname, intc_enum enum_id);
++#ifndef CONFIG_SH_DEVICE_TREE
+ void intc_finalize(void);
+-
++#else
++static inline void intc_finalize(void)
++{
++}
++#endif
+ #ifdef CONFIG_INTC_USERIMASK
+ int register_intc_userimask(unsigned long addr);
+ #else
 -- 
-2.45.1.288.g0e0cd299f1-goog
+2.39.2
 
