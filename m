@@ -1,228 +1,305 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8C21F5F6;
-	Wed, 29 May 2024 14:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEC61CF9C;
+	Wed, 29 May 2024 14:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716991544; cv=none; b=s9R0k7CwJAP4XBnFGD3hZkaVD1/hOTMJ3ifz9GRmwufJfNLL6Vhg6VBKYD91qI5ZOq6lgRkIi4lu+7BgIOQFc9xhnijNSewm4TBnhyZ0ZznGr6uB4H7pEivl+IfdTxpr7E+PLpnBm9u5f3ePju9OA4E58qy0Tniu4n16SpvEp2U=
+	t=1716991573; cv=none; b=cqhJ31I/kjU8vJPlS+PdQX48vHph9w7Z9/2JJ74JnH9piPe4EH9YtWtkT+1fqCEx3zF6gYimigkTNo9cv92dHo1ff9p5miP1Ec/7yvJRcpTfZQS/RcfQ08/uhr9COlcZXdnMtWFzmG4OPvdstw16SJMjn8OsuU7R2kjI5K5bc+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716991544; c=relaxed/simple;
-	bh=44DuED9EFhJ0GFgSWxyzBEOtcMqHHs3WgFTDn4hoJ6g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BO7DnLmqw69DBnGgzTGzacpMVacXfcQ27/EDjLc88b4Evnsw7wHqJ1noXa2rAVC1v7u71ZzAKReMuVYNPx3wrh01qFXkJ9BeuCqwBbijeQ7cTUzVJjdvaeKgP0oo+lpd9AdN9rrUI4+MEeafPpkUloF4Zc1ygQUwDzs+VdAdctE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nVsGN4H5; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nVsGN4H5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1716991573; c=relaxed/simple;
+	bh=D0lKbhKuVUmH0yMXwfFVZdRazFxdRecCFFs+6t9BndI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NssXhHS7QkmnbGPadvUrV+QZIpBy6nsHQJ1tH+hdM7tZiSGnssSnarRgVGa3AT11uxZzys5NR+g47b5q2N6G9KgRb+JkRhqFwr4Zh6uNf0+52iJ87pLVurhBGyg2imc7v6ajBl8a5+TN4wSl0oFkUJVsMiBRTe7XI2E/kDk7ODM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3G6vjwL; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nVsGN4H5";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nVsGN4H5"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7B608336AF;
-	Wed, 29 May 2024 14:05:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1716991540; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S7+lTfIl4GO+Abh7YhdGsCv7gLWnQXpzMH8I4JBF3MI=;
-	b=nVsGN4H5ifPGKbfG0TTRltiQ3UENeJocDNI/xhYt33Uu8/PJKORDtd83+Mf8aYNLt5Ofgv
-	9gU0ijoLi2bReJfhmQNb7FPdW2sbikbss8DJ/kVYPuukFUlAtTDtwBGhdzpNLAwsHCDDqi
-	N8P+JGhW3ePbzRpwd7LvmPBZNAr21xc=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1716991540; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S7+lTfIl4GO+Abh7YhdGsCv7gLWnQXpzMH8I4JBF3MI=;
-	b=nVsGN4H5ifPGKbfG0TTRltiQ3UENeJocDNI/xhYt33Uu8/PJKORDtd83+Mf8aYNLt5Ofgv
-	9gU0ijoLi2bReJfhmQNb7FPdW2sbikbss8DJ/kVYPuukFUlAtTDtwBGhdzpNLAwsHCDDqi
-	N8P+JGhW3ePbzRpwd7LvmPBZNAr21xc=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 161041372E;
-	Wed, 29 May 2024 14:05:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CtCHNTM2V2aRWAAAD6G6ig
-	(envelope-from <mpdesouza@suse.com>); Wed, 29 May 2024 14:05:39 +0000
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-To: Lukas Hruska <lhruska@suse.cz>
-Cc: mpdesouza@suse.com,
-	pmladek@suse.com,
-	mbenes@suse.cz,
-	jpoimboe@kernel.org,
-	joe.lawrence@redhat.com,
-	live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] livepatch: klp-convert tool - Minimal version
-Date: Wed, 29 May 2024 11:05:27 -0300
-Message-ID: <20240529140536.18137-1-mpdesouza@suse.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240516133009.20224-1-lhruska@suse.cz>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3G6vjwL"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59a609dd3fso1020566b.0;
+        Wed, 29 May 2024 07:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716991570; x=1717596370; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o+M/1yUI1paNZie6p8I3ru5M/VcdpO9GSdVmTNBzjRw=;
+        b=D3G6vjwLuSuI55dKtPqpas40KJCJ0ITS6OhiQBJdYeXe/7STQD8rDvu9E4NBv5nchB
+         beGPVYiHLLuKkhKQ75BeJ4hCZvh9tJkZBL1bbrGqglYy22inN4WYc8hI4MHXpNtLQeo5
+         Auw1GRO2TmuzH3AOj3Hogo3SdkZHdkgftFDdBo91GOj3Oqq9QqgKwLbgPL69pfcff5rc
+         6Ue7oEucOidOJQs+Jw7s3t62hOQWik4GDO+puSjvHkpW6L5b/UvKbWBbDSmi8zeQqAcq
+         e8f/RkTh8N/7EynJeTbIjyj6Ecvz5t44QdKUx8+JxpgSMeqd+YUcDoSIGDyhozFwbYRs
+         2QTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716991570; x=1717596370;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o+M/1yUI1paNZie6p8I3ru5M/VcdpO9GSdVmTNBzjRw=;
+        b=dbtxvmNCcTFJUNl5PfMdnkGfe4V5dQco/sUpFMXL1MeNylyy/bTyCphM/8CmdOGBF5
+         VnPl+LRJ0T9isOyqEKzuQQHveZ6ignp3eQIbEA7ycS2CNPn2GE4xAoG7dQPShT0ezcoL
+         x4+Qyiq7iKBmdLP1Y7v7NQL/qRFh27CZ0jaSekl9uoI71XR9yNszFg97Zr1QlYqwDxmb
+         Gm1ylYGCwUkIArdLR5EnfiRzmqjwfUXLvg1awBVbJy0DApfVHH8fbeTXOWkOjjHEVG7Z
+         pMasoLNW/JZky/cn9dDaGIFnw+K/2WmhRphTF+ukSoUZg+crDh5mdnbEDC1AFS6dKyOr
+         ho4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW6SOVwIUslmUeZv17QbhKayn6dqrtwHkZf6ikG0FbLrNIRwf9cdJqkrn36axuqzrYeotiCYN0hkGvYZ2Tvp+C6+DFU/hSp7B4zhkbHLHIKTZpZm/KoAuAuwnEHBjBXFEWieUgQUUPBmA==
+X-Gm-Message-State: AOJu0YwA4C6FfIC2qD63lBAqM4vS8QEEo+NTDwUDvi/Gm5dw/whB6IQ/
+	ZopVTD7nAJsSnT9oGK5sWBK+M6hxq+inlAVv21YQRD29g2wx1T54NWrHiEHbREBD4sGJ1oheNSt
+	pg5ELbK4EFr5ZNBfQvePkFavvN6Dp349vgBPbKXw0
+X-Google-Smtp-Source: AGHT+IHvn89sjSDXO4+mGl5RdI7DhHSLiXo+PsaMWuDAxskAA27o7d2dZXgUKXuozUH+wj6e4fC5jE08LKCrtkf7DPc=
+X-Received: by 2002:a17:906:578a:b0:a61:7f85:e31c with SMTP id
+ a640c23a62f3a-a642d5806f8mr180319166b.12.1716991569898; Wed, 29 May 2024
+ 07:06:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
+References: <673dcf47596e7bc8ba065034e339bb1bbf9cdcb0.1716948159.git.dsimic@manjaro.org>
+ <CABjd4YxD41DEkBCZfkznLboEY9ZVOfTCLcj4S_kkcsVswbANyQ@mail.gmail.com>
+ <8f8623e29a479c4108141302e708dc3b@manjaro.org> <CABjd4Yy4RMg+6-4ygV0MSwJj5LReY-ymbctq4PPfVZ6L+c1tsw@mail.gmail.com>
+ <166cc4e46f31644a50306625b2ab18a6@manjaro.org>
+In-Reply-To: <166cc4e46f31644a50306625b2ab18a6@manjaro.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Wed, 29 May 2024 18:05:58 +0400
+Message-ID: <CABjd4YzDNQa45=KC_t0xnTDrH+g-oUrcpgP55oOj7JcAuu7uFw@mail.gmail.com>
+Subject: Re: [RFC PATCH] arm64: dts: rockchip: Make preparations for
+ per-RK3588-variant OPPs
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: linux-rockchip@lists.infradead.org, heiko@sntech.de, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-kernel@vger.kernel.org, quentin.schulz@cherry.de, wens@kernel.org, 
+	daniel.lezcano@linaro.org, didi.debian@cknow.org, 
+	krzysztof.kozlowski+dt@linaro.org, viresh.kumar@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: mpdesouza@suse.com
+On Wed, May 29, 2024 at 4:22=E2=80=AFPM Dragan Simic <dsimic@manjaro.org> w=
+rote:
+>
+> On 2024-05-29 14:04, Alexey Charkov wrote:
+> > On Wed, May 29, 2024 at 2:45=E2=80=AFPM Dragan Simic <dsimic@manjaro.or=
+g>
+> > wrote:
+> >> On 2024-05-29 11:57, Alexey Charkov wrote:
+> >> > On Wed, May 29, 2024 at 6:14=E2=80=AFAM Dragan Simic <dsimic@manjaro=
+.org>
+> >> > wrote:
+> >> >>
+> >> >> Rename and modify the RK3588 dtsi files a bit, to make preparations
+> >> >> for
+> >> >> the ability to specify different CPU and GPU OPPs for each of the
+> >> >> supported
+> >> >> RK3588 SoC variants, including the RK3588J.
+> >> >>
+> >> >> As already discussed, [1][2][3] some of the different RK3588 SoC
+> >> >> variants
+> >> >> require different OPPs, and it makes more sense to have the OPPs
+> >> >> already
+> >> >> defined when a board dts includes one of the SoC dtsi files
+> >> >> (rk3588.dtsi,
+> >> >> rk3588j.dtsi or rk3588s.dtsi), rather than requiring the board dts
+> >> >> file to
+> >> >> also include a separate rk3588*-opp.dtsi file.  The choice of the S=
+oC
+> >> >> variant
+> >> >> is already made by the inclusion of the SoC dtsi file, and it doesn=
+'t
+> >> >> make
+> >> >> much sense to, effectively, allow the board dts file to include and
+> >> >> use an
+> >> >> incompatible set of OPPs for the already selected SoC variant.
+> >> >
+> >> > Indeed, including just one .dtsi for the correct SoC variant and not
+> >> > having to bother about what other bits and pieces are required to us=
+e
+> >> > the full SoC functionality sounds great! Thanks for putting this
+> >> > together so promptly!
+> >>
+> >> You're welcome. :)
+> >>
+> >> > Some considerations below.
+> >> >
+> >> >> No intended functional changes are introduced.  (Still to be
+> >> >> additionally
+> >> >> verified if the patch moves forward from the RFC state.)
+> >> >>
+> >> >> [1]
+> >> >> https://lore.kernel.org/linux-rockchip/646a33e0-5c1b-471c-8183-2c0d=
+f40ea51a@cherry.de/
+> >> >> [2]
+> >> >> https://lore.kernel.org/linux-rockchip/CABjd4Yxi=3D+3gkNnH3BysUzzYs=
+ji-=3D-yROtzEc8jM_g0roKB0-w@mail.gmail.com/
+> >> >> [3]
+> >> >> https://lore.kernel.org/linux-rockchip/035a274be262528012173d463e25=
+b55f@manjaro.org/
+> >> >>
+> >> >> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+> >> >> ---
+> >> >>  ...inctrl.dtsi =3D> rk3588-common-pinctrl.dtsi} |    0
+> >> >
+> >> > Renaming the pinctrl includes seems superfluous - maybe keep them as
+> >> > they were to minimize churn?
+> >>
+> >> Believe it or not, the same thoughts crossed my mind.  However,
+> >> after thinking a bit about it, I concluded that renaming the pinctrl
+> >> .dtsi files as well makes the overall naming of the reworked RK3588
+> >> .dtsi files more consistent.
+> >>
+> >> It's also rather neat to have the "common" and "fullfat" file pairs
+> >> together in the arch/arm64/boot/dts/rockchip directory listing, when
+> >> it's sorted by the file name, which is the default in most (if not
+> >> all) environments.
+> >>
+> >> >>  .../{rk3588s.dtsi =3D> rk3588-common.dtsi}      |    2 +-
+> >> >>  ...nctrl.dtsi =3D> rk3588-fullfat-pinctrl.dtsi} |    0
+> >> >>  .../{rk3588.dtsi =3D> rk3588-fullfat.dtsi}      |    4 +-
+> >> >
+> >> > To me, "fullfat" doesn't look super descriptive, albeit fun :)
+> >>
+> >> Yeah, I resorted to "fullfat" as some kind of a funny option. :)
+> >> That's for the "beefy" SoC variants, so it kind of fits well. :)
+> >>
+> >> > How about we rename the existing rk3588.dtsi and rk3588s.dtsi to
+> >> > something like rk3588-devices.dtsi and rk3588s-devices.dtsi
+> >> > (preserving the inheritance between them), and then I add
+> >> > rk3588s-opp.dtsi and rk3588j-opp.dtsi in a follow-up patch?
+> >>
+> >> The trouble with including "devices" into the filenames is, well,
+> >> the fact that those files isn't about any devices, but about the
+> >> SoC variants.  Thus, "devices" simply wouldn't fit there.
+> >
+> > My thinking was along the lines of "here is the file that contains all
+> > DT nodes for built-in _devices_ (as in on-chip IP blocks) on RK3588 -
+> > thus it's called rk3588-devices.dtsi", and "here's the file that
+> > contains operating parameters that distinguish RK3588 and RK3588s from
+> > RK3588j - it's called rk3588s-opp.dtsi"
+>
+> Hmm...  I see, but a device is usually though of as some standalone
+> computer, at least in this context.  Surely, an SoC is also some kind
+> of a device, for example, but I'm pretty sure we'll very rarely call
+> an SoC a device.  It's always good to adhere to the usual meaning of
+> the words in a particular lingo.
 
-On Thu, 16 May 2024 15:30:03 +0200 Lukas Hruska <lhruska@suse.cz> wrote:
+Agreed, and calling the SoC itself a device is not what I implied by
+the suggested naming.
 
-> Summary
-> -------
-> 
-> This is a significantly simplified version of the original klp-convert tool.
-> The klp-convert code has never got a proper review and also clean ups
-> were not easy. The last version was v7, see
-> https://lore.kernel.org/r/20230306140824.3858543-1-joe.lawrence@redhat.com
-> 
-> The main change is that the tool does not longer search for the
-> symbols which would need the livepatch specific relocation entry.
-> Also klp.symbols file is not longer needed.
-> 
-> Instead, the needed information is appended to the symbol declaration
-> via a new macro KLP_RELOC_SYMBOL(). It creates symbol with all needed
-> metadata. For example:
-> 
->   extern char *saved_command_line \
->                  KLP_RELOC_SYMBOL(vmlinux, vmlinux, saved_command_line, 0);
-> 
-> would create symbol
-> 
-> $>readelf -r -W <compiled livepatch module>:
-> Relocation section '.rela.text' at offset 0x32e60 contains 10 entries:
->     Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
-> [...]
-> 0000000000000068  0000003c00000002 R_X86_64_PC32          0000000000000000 .klp.sym.rela.vmlinux.vmlinux.saved_command_line,0 - 4
-> [...]
-> 
-> 
-> The simplified klp-convert tool just transforms symbols
-> created by KLP_RELOC_SYMBOL() to object specific rela sections
-> and rela entries which would later be proceed when the livepatch
-> or the livepatched object is loaded.
-> 
-> For example, klp-convert would replace the above symbols with:
-> 
-> $> readelf -r -W <livepatch_module_proceed_by_klp_convert>
-> Relocation section '.klp.rela.vmlinux.text' at offset 0x5cb60 contains 1 entry:
->     Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
-> 0000000000000068  0000003c00000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.saved_command_line,0 - 4
-> 
-> 
-> Note that similar macro was needed also in the original version
-> to handle more symbols of the same name (sympos).
-> 
-> Given the above, add klp-convert tool; integrate klp-convert tool into
-> kbuild; add data-structure and macros to enable users to annotate
-> livepatch source code; make modpost stage compatible with livepatches;
-> update livepatch-sample and update documentation.
-> 
-> 
-> Testing
-> -------
-> 
-> The patchset selftests build and execute on x86_64, s390x, and ppc64le
-> for both default config (with added livepatch dependencies) and a larger
-> SLE-15-ish config.
-> 
-> 
-> Summary of changes in this minimal version v2
-> ------------------------
-> 
-> - rebase for v6.9
-> - cleaned-up SoB chains (suggested by pmladek)
-> - klp-convert: remove the symbol map auto-resolving solution
-> - klp-convert: add macro for flagging variables inside a LP src to be resolved by this tool
-> - klp-convert: code simplification
-> - selftests: add selftest livepatching function using an external symbol
+> When it comes to rk3588s-opp.dtsi, it would be more of a file that
+> completes the rk3588s.dtsi by adding the OPPs, but we can in fact
+> add the OPPs directly into rk3588s.dtsi, because in the new layout
+> rk3588s.dtsi isn't a parent to any other file.
+>
+> >> Moreover, in the envisioned scheme there should be no separate
+> >> OPP .dtsi files;  the OPP data should go directly into the new
+> >> rk3588.dtsi, rk3588s.dtsi and rk3588j.dtsi files, where it actually
+> >> belongs.  That's why those .dtsi files exist and are mostly empty,
+> >> at least the way I see it.  I'll get back to this below.
+> >>
+> >> > Then we keep "thin" versions of rk3588.dtsi, rk3588s.dtsi and
+> >> > rk3588j.dtsi for board files to include. The mix-and-match of
+> >> > different on-chip devices and different OPPs then gets transparently
+> >> > represented within those "thin" .dtsi, something like this:
+> >> >
+> >> > rk3588.dtsi:
+> >> > #include "rk3588-devices.dtsi"
+> >> > #include "rk3588s-opp.dtsi"
+> >> >
+> >> > rk3588s.dtsi:
+> >> > #include "rk3588s-devices.dtsi"
+> >> > #include "rk3588s-opp.dtsi"
+> >> >
+> >> > rk3588j.dtsi:
+> >> > #include "rk3588-devices.dtsi"
+> >> > #include "rk3588j-opp.dtsi"
+> >>
+> >> Such a layout, in general, has also crossed my mind, but my conclusion
+> >> was that having the per-SoC-variant OPP data specified directly in the
+> >> reworked rk3588.dtsi, rk3588s.dtsi and rk3588j.dtsi files is a better
+> >> option in the long term, even if we end up that way with rk3588.dtsi
+> >> and
+> >> rk3588s.dtsi repeating most (if not all) of the same OPP data.
+> >
+> > From all the info we have available so far, RK3588 and RK3588s share
+> > identical OPPs, so having one file with OPPs that both variants refer
+> > to should be more maintainable (and fewer lines of DT code).
+>
+> Hmm.  Perhaps we can have rk3588-opp.dtsi as a separate file with the
+> OPPs shared between the RK3588 and the RK3588S, which would be included
+> from rk3588.dtsi and rk3588s.dtsi.
+>
+> Though, the OPPs for the RK3588J should go directly into rk3588j.dtsi;
+> if we ever split the OPPs for the RK3588 and the RK3588S, the new OPPs
+> should also go directly into rk3588.dtsi and rk3588s.dtsi.
 
-Thanks for sending this new version Lukas! It currently fails to apply on
-current Linux master, but the conflict is very simple to address (attached
-patch).
+Sounds good to me!
 
-Joe, Josh, other people, can you also take a look in the patchset? It would be
-good we can move this forward.
+> > All in all, it appears that RK3588 and RK3588j have an identical set
+> > of built-in devices, but different OPPs due to RK3588j being spec'd
+> > for industrial use which apparently has different requirements. At the
+> > same time, RK3588s uses an identical set of OPPs as RK3588 but a
+> > reduced set of built-in devices. The combination of includes I
+> > proposed above makes this explicit.
+>
+> Again, calling IP blocks devices is, AFAIK, very uncommon.
 
-Thanks,
-  Marcos
+Perhaps. Shall we settle on something like "-devicenodes.dtsi" or
+"-hwblocks.dtsi"? :) This will delineate what goes to which .dtsi:
+things that describe the hardware composition go to "-hwblocks.dtsi",
+things that describe performance parameters for that hardware go to
+"-opp.dtsi" (or directly to the SoC .dtsi if there is only one SoC
+variant that uses a particular OPP table).
 
-commit 1a1cf8b0967c26857b17e8ceb02f6a1bd854667d
-Author: Marcos Paulo de Souza <mpdesouza@suse.com>
-Date:   Wed May 29 10:18:38 2024 -0300
+The problem I have with -common is that there are several layers of
+"common" even among just the three of these chip revisions, and a
+clear inheritance hierarchy between them (i.e. RK3588j and RK3588 also
+have a sizeable chunk of their IP blocks that is "common" between
+these two variants, in addition to those shared among all three
+variants)
 
-    Solve merge problem
-    
-    Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> > As for RK3588m, it seems to include all the same devices as RK3588 and
+> > RK3588j, but a slightly modified set of OPPs compared to RK3588j. We
+> > don't have any boards using that variant in the mainline tree right
+> > now, but it would be easy, when the need arises, to add something
+> > along the lines of:
+> >
+> > rk3588m.dtsi:
+> > #include "rk3588-devices.dtsi"
+> > #include "rk3588m-opp.dtsi"
+> >
+> > rk3588m-opp.dtsi:
+> > #include "rk3588j-opp.dtsi"
+> > &cluster0_opp_table {
+> >         /delete-node/ opp-1296000000;
+> > };
+>
+> I don't think that deleting nodes that way is a good option.  It's
+> rather error-prone and hard to track, so it would be better to have
+> the OPPs for RK3588M specified directly (and fully) in the future
+> rk3588m.dtsi file, just like in rk3588j.dtsi.
 
-diff --git a/Makefile b/Makefile
-index f975b6396328..579dfb46e691 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1491,7 +1491,7 @@ endif # CONFIG_MODULES
- # Directories & files removed with 'make clean'
- CLEAN_FILES += vmlinux.symvers modules-only.symvers \
- 	       modules.builtin modules.builtin.modinfo modules.nsdeps \
--	       compile_commands.json rust/test \
-+	       compile_commands.json .thinlto-cache rust/test \
- 	       rust-project.json .vmlinux.objs .vmlinux.export.c
- 
- # Directories & files removed with 'make mrproper'
+You're right, that does indeed look fishy upon further thought.
 
-> 
-> Previous versions
-> -----------------
-> 
-> RFC:
->   https://lore.kernel.org/r/cover.1477578530.git.jpoimboe@redhat.com/
-> v2:
->   https://lore.kernel.org/r/f52d29f7-7d1b-ad3d-050b-a9fa8878faf2@redhat.com/
-> v3:
->   https://lore.kernel.org/r/20190410155058.9437-1-joe.lawrence@redhat.com/
-> v4:
->   https://lore.kernel.org/r/20190509143859.9050-1-joe.lawrence@redhat.com/
-> v5:
->   (not posted)
->   https://github.com/joe-lawrence/klp-convert-tree/tree/klp-convert-v5-devel
-> v6:
->   https://lore.kernel.org/r/20220216163940.228309-1-joe.lawrence@redhat.com/
-> v7:
->   https://lore.kernel.org/r/20230306140824.3858543-1-joe.lawrence@redhat.com/
-> v1 minimal:
->   https://lore.kernel.org/r/20231106162513.17556-1-lhruska@suse.cz/
+> >> That way we'll have no roadblocks if, at some point, we end up with
+> >> having
+> >> different OPPs defined for the RK3588 and the RK3588S variants.  Or
+> >> maybe
+> >> even for the RK3582, which we don't know much about yet.
+> >
+> > Guess we'll deal with that one once we stumble upon an actual RK3582
+> > board out in the wild and heading to the mainline kernel tree :)
+>
+> Of course, that was just an example for the future use.
+
+In fact, I've just discovered that Radxa has recently released Rock 5C
+Lite which is based on RK3582, and starts at just $29 for the 1GB
+version, making it interesting for tinkering. Especially given that
+its GPU, one of the big-core clusters and one of the VPU cores seem to
+be disabled in software (u-boot) rather than in hardware, which means
+there is some chance that a particular SoC specimen would actually
+have them in a working condition and possible to re-enable at no cost.
+Ordered myself one to investigate :)
+
+Best regards,
+Alexey
