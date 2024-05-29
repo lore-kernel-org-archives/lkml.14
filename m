@@ -1,128 +1,94 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF9417BB4;
-	Wed, 29 May 2024 13:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F403179BF
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990032; cv=none; b=eeD/dQa8TVhjCAcErtRvlCmnxhPBXVndqbmGnZu/CaF5k+v/RA7A/FvuCUsu8QYU1X5a/HoV0AeSiN31MdjMYPbFvIFuAmCBciFejJ2jb4OkxzzfWdx8i0GYQ1OzEsIldqc8XKeFDPoZNBmu2EOvi9jv12muc/sg8l0k/QW01zg=
+	t=1716990031; cv=none; b=C8RKWhsmLzRgBzTeKhrOIPWxwTjOUY1cDyK/mltTLIMhrZ1xoTGUgI2+IiptldFgqqyWOHa/h994IQaOKupMThCs/oAi94cuJdcZnXS/DaBAEnHDcn9IekFs1R6lo9IFm0anf8eO81Zwy9q4zCWy06At32h5ldntH6dN8Pet65g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990032; c=relaxed/simple;
-	bh=JllpABJeZauT2Ev5CZQeaaQQ5/N45QSKqaKtc8ieJa8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gJSxezvqkv1AH8Pn3SLE3Xbmp5cJZtFDPSBfD74zt/ygmi1G5dTU5DIj/vOSLMpqWEImr070nIGBquMVnZ3xSn2dgNUIBuZs7soQyKQtS2x0L6TlGv9HwRXp/o5xWiyxkEngWfnlhlz4YlkmHRXPKJgIUtWVJyoQdhe2x+8MRc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vq9QN5mxRz6JBFg;
-	Wed, 29 May 2024 21:36:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id EC02514065B;
-	Wed, 29 May 2024 21:40:27 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 29 May 2024 14:40:27 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, Catalin
- Marinas <catalin.marinas@arm.com>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>, <loongarch@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin
- Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v10 11/19] arm64: acpi: Move get_cpu_for_acpi_id() to a header
-Date: Wed, 29 May 2024 14:34:38 +0100
-Message-ID: <20240529133446.28446-12-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
-References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1716990031; c=relaxed/simple;
+	bh=5Ez9jZH2PKtFGaFDWpF1OwKNiwRKcCs7djlHUD3uXEk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Orw0Jg6ieqYA9PKSFECm/jK4BUVIKaN3fV8eXwUyiDKYj85Y0dOCoWaeh1eZn6OHNpmBtJEaBaGOY7R5YsPQJxSVWwxok2qL0C1RJ9+0Rf1Y0rgBluetOyIYHRAD+YgVT1tuZoFWGayQzREge5Z3pvVv+Dvq0aV755rn1L3Oq/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IrnBRPJr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IrnBRPJr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716990028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Ez9jZH2PKtFGaFDWpF1OwKNiwRKcCs7djlHUD3uXEk=;
+	b=IrnBRPJrOM0XttJLrSlD16OTf8WXZWlguuaty5ST01oWTWZXdnAXah7SB6gcpeeOh9kswG
+	L+UzlbFtggKgdvKRJP5d3xl1xCKvEUDyRZi0sH1MswViGdHpBPH+1RI0hxiCa1qpXUNrEA
+	m3vQyY3yIytMMxmr1qLkMyO0n/OgTCk=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-642-Kh8HCMPBNhWikcNs1Wkdnw-1; Wed, 29 May 2024 09:40:26 -0400
+X-MC-Unique: Kh8HCMPBNhWikcNs1Wkdnw-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1f4547311cbso16886885ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:40:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716990026; x=1717594826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Ez9jZH2PKtFGaFDWpF1OwKNiwRKcCs7djlHUD3uXEk=;
+        b=m2SYqfjC/I/ELNQo3KftrSjCUnIkIJvDvHjOl3fA5mkJfzaTDfaMCBdyW8ynj/yn4J
+         rNbwswNI9cKwwG6Ekoc7mghdbNEWV/bJgHvOiW63tNdmgfSfB+F0tl3nV//He1kNKkhG
+         IRtwe5GApD0wk8jJTVkQmv5hLBfVnoESGyk2Kng761tQPq8PV5iNmv9pgzBWDwMAbtbg
+         3+2WIhtE/SgChpVRiaSbbu4T+zZhZMbmFYXMQJ5iGXt24+YtXqQN4xxTT9Cd6SXAZBP2
+         EUhaM4TnS6elZjEcye3vtID5nUjtI5gSN/A6p3dXyvC3Grda/lDW8gCF1eWArWdSY6Uu
+         qjkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ65VhMKwgghyVPueE4I7OrnXlNd0aVHTK7Aa3WKDI+azi2EGFWGkbs/pjQ7JTUL9UKEBm3s/MntpVyQZDDSa31UhbkiRL/3P8G1Cq
+X-Gm-Message-State: AOJu0YxY4ze38K9AsoJ3s/x/wi4QsqsUfH+Zs80i6Pe7tETbZ7Eoc2hC
+	FpAUvSBH40mzxzH9Jq1hcp9oI5glWu6u8fmwJ8WJdXjIZKcLwei0sMeH5Up95LKdf5pz5Mox61M
+	VKrzRUfUIQXXLRJYbmm6S4iKXFJkQrDc/LE4PZJ8liUClqRaMMX6ChpMAqEi62CW2LXYJbAY535
+	jtQxWkQ4Fe+mMHtz9SZp2crxNXPduov1CS1CfI
+X-Received: by 2002:a17:903:2348:b0:1f5:e635:21ec with SMTP id d9443c01a7336-1f5e6352748mr9142175ad.2.1716990025516;
+        Wed, 29 May 2024 06:40:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG0S5gXrV/GBghoh/ixew2azTNCZXBrjfD35PnRbeWfkCRz+K91GQKZf43KZEZzD7tyiTl1iRGus5zWGxQSZ2k=
+X-Received: by 2002:a17:903:2348:b0:1f5:e635:21ec with SMTP id
+ d9443c01a7336-1f5e6352748mr9142035ad.2.1716990025144; Wed, 29 May 2024
+ 06:40:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <20240529142455.1c68e65a@canb.auug.org.au>
+In-Reply-To: <20240529142455.1c68e65a@canb.auug.org.au>
+From: Andreas Gruenbacher <agruenba@redhat.com>
+Date: Wed, 29 May 2024 15:40:13 +0200
+Message-ID: <CAHc6FU7MrnksU9vDvdAvc_tv5knukGpnxXEpqidvdfWqDf1p5Q@mail.gmail.com>
+Subject: Re: linux-next: build warnings after merge of the gfs2 tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Steven Whitehouse <swhiteho@redhat.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: James Morse <james.morse@arm.com>
+On Wed, May 29, 2024 at 6:34=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+> Hi all,
+>
+> After merging the gfs2 tree, today's linux-next build (htmldocs) produced
+> these warnings:
+>
+> Documentation/filesystems/gfs2-glocks.rst:64: ERROR: Malformed table.
 
-ACPI identifies CPUs by UID. get_cpu_for_acpi_id() maps the ACPI UID
-to the Linux CPU number.
+Fixed, thanks.
 
-The helper to retrieve this mapping is only available in arm64's NUMA
-code.
+Could you please remove Bob Peterson <rpeterso@redhat.com> from the
+recipients of these notifications as that address no longer exists?
 
-Move it to live next to get_acpi_id_for_cpu().
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- arch/arm64/include/asm/acpi.h | 11 +++++++++++
- arch/arm64/kernel/acpi_numa.c | 11 -----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-index 6792a1f83f2a..bc9a6656fc0c 100644
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -119,6 +119,17 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
- 	return	acpi_cpu_get_madt_gicc(cpu)->uid;
- }
- 
-+static inline int get_cpu_for_acpi_id(u32 uid)
-+{
-+	int cpu;
-+
-+	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-+		if (uid == get_acpi_id_for_cpu(cpu))
-+			return cpu;
-+
-+	return -EINVAL;
-+}
-+
- static inline void arch_fix_phys_package_id(int num, u32 slot) { }
- void __init acpi_init_cpus(void);
- int apei_claim_sea(struct pt_regs *regs);
-diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
-index e51535a5f939..0c036a9a3c33 100644
---- a/arch/arm64/kernel/acpi_numa.c
-+++ b/arch/arm64/kernel/acpi_numa.c
-@@ -34,17 +34,6 @@ int __init acpi_numa_get_nid(unsigned int cpu)
- 	return acpi_early_node_map[cpu];
- }
- 
--static inline int get_cpu_for_acpi_id(u32 uid)
--{
--	int cpu;
--
--	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
--		if (uid == get_acpi_id_for_cpu(cpu))
--			return cpu;
--
--	return -EINVAL;
--}
--
- static int __init acpi_parse_gicc_pxm(union acpi_subtable_headers *header,
- 				      const unsigned long end)
- {
--- 
-2.39.2
+Thanks,
+Andreas
 
