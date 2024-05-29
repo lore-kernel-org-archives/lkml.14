@@ -1,85 +1,172 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88193181D10
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 15:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2F8181CEF;
+	Wed, 29 May 2024 15:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716997778; cv=none; b=X94iZkgXG7yhJPC2ZzAZN2a3UW+A56HOI9fSEYvm8FDvSm7XfAFnII4HJg2zbKkT4Dq355b67i3oj7tJfIrjMnGiFkDNuU/aQuq/LvEQA4bFKQHVlEzZpCbQlnDgzAUrtnQTInOlPJCJxTDn4jHWha/wylcdAPeAPfpEAuMA98Y=
+	t=1716997795; cv=none; b=t5zlgHRJhwLdkyIov6oLYu38jnJt2NXt2rl67NTlO2ssx5q8Lwn/WsLwRIaOMWan0AlZXbpU6Q/4Kh01gYdgi6rDPqtzyw52+UeaT875k+Zh+NIVUEkpDxP5cecpOgK5KlLi3cfJUIlHgKFxLOu59/wSYnO+N95YjzBCnKgj9Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716997778; c=relaxed/simple;
-	bh=nCxOvU30J+3cwE9+wgCZqqift3Fn4rGZbaIndjfgVV4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P9ygv29EBq8YtmVgn90GNcoYVlzZmgFHDl9t5YmSdj2oAOEGimy0XeXqWqnlh9Fe98s1VLHBl4/aDdyC+ojDJy8ehO7A9JbrpFoUXYWcRWkQfZU45WlIcpBv78miT5G1aqKBtFM5lwY4UJi89g6v9bsL4izStfrvAlBKHKEFwzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vUDJgssi; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716997795; c=relaxed/simple;
+	bh=PGuq1nWW6Ce4ZkBk0TnI9bG4PCIDGFwjqQ9Xsaj+oGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AFfdwB/NbtlIoBN3vpzGN8o0Mt+bqrkqcEC08okuGZSRMrsue+bYXvxBAOgFHePS3/phAPqH+s4PJD4rdbH+J/ED+EuEeJfTPf3vWEAZV2VFJSiKmS9t8xgF/6p/XojemTZbXWzU8f5+Zt+Q1qkXOiJWqMU1MngFv97UEi8fV04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K+awFn/4; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vUDJgssi"
-X-Envelope-To: akpm@linux-foundation.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716997770;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iT76y12aHL4ImtbcXTa98+kFBHSfVFYyCaRgIBXgWd8=;
-	b=vUDJgssiVKzM3a+MnBGnLQwbXjVcO7oKlRNifePZPj2q6omSHZw1mErz5A9VJc19ewx1rl
-	51MNKrjdb8eAhb19hXOPGjChWLjJ4iV5cQ9qT1Mr9UiuVXYMp3BY9D1TbI1zdrQgcaBxwd
-	x2hfIAyah1AKSghtNZLjn+43mbq5d4Y=
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: riel@surriel.com
-X-Envelope-To: roman.gushchin@linux.dev
-X-Envelope-To: mhocko@kernel.org
-X-Envelope-To: kernel-team@fb.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: syzbot+17416257cb95200cba44@syzkaller.appspotmail.com
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>
-Cc: Rik van Riel <riel@surriel.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Michal Hocko <mhocko@kernel.org>,
-	Facebook Kernel Team <kernel-team@fb.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+17416257cb95200cba44@syzkaller.appspotmail.com
-Subject: [PATCH] mm: vmscan: reset sc->priority on retry
-Date: Wed, 29 May 2024 08:49:11 -0700
-Message-ID: <20240529154911.3008025-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K+awFn/4"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44TAWqTs027031;
+	Wed, 29 May 2024 15:49:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	92CTHz0UFZuCUoY3V9kybNrLWakvxNbVMDycuT/J+40=; b=K+awFn/4PE5IyE7D
+	369jN0z2sc+kw7TX6tn8RFKIXRlt/NXFaSfifhQjaWgJ4nON7fA8R+ZuMdyQxjFA
+	Nhytn9cYIYRy3fVUebcuBjvApsACqBlEjrpScKCqhWY5J0qCh0wNkRVF/WY/firo
+	vK2rlYISRA5ixkzeu9rrm4RMitkYJNIsV21CfBOXSlKH6lg4wM4KzFJ2kuDSBLpK
+	ZHPorL+w6PAHnKjrAYLLtjn+F7kVE7/5EimsXSIhYQ9Atit+UMt/IKida9BLKSN2
+	eV8/grz6wkoKBgTFPl04HfJr/adFwOpMdM2/VIvwAT5Q0cVG8j56bj8nrP2R6wcI
+	ZqzpWQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2h9b3v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 15:49:27 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TFnQKN005363
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 15:49:26 GMT
+Received: from [10.110.47.143] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 May
+ 2024 08:49:22 -0700
+Message-ID: <3d04ff60-c01b-4718-ae3d-70d19ee2019a@quicinc.com>
+Date: Wed, 29 May 2024 08:49:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net: validate SO_TXTIME clockid coming from userspace
+Content-Language: en-US
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Andrew Halaney <ahalaney@redhat.com>,
+        "Martin
+ KaFai Lau" <martin.lau@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
+CC: <kernel@quicinc.com>,
+        <syzbot+d7b227731ec589e7f4f0@syzkaller.appspotmail.com>,
+        <syzbot+30a35a2e9c5067cc43fa@syzkaller.appspotmail.com>
+References: <20240528224935.1020828-1-quic_abchauha@quicinc.com>
+ <665734886e2a9_31b2672946e@willemb.c.googlers.com.notmuch>
+From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
+In-Reply-To: <665734886e2a9_31b2672946e@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: TPqcgTNlT5VIe9IKLmb3sa-dxGAbunfC
+X-Proofpoint-ORIG-GUID: TPqcgTNlT5VIe9IKLmb3sa-dxGAbunfC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-29_12,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=0
+ phishscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405290109
 
-The commit 6be5e186fd65 ("mm: vmscan: restore incremental cgroup
-iteration") added a retry reclaim heuristic to iterate all the cgroups
-before returning an unsuccessful reclaim but missed to reset the
-sc->priority. Let's fix it.
 
-Reported-and-tested-by: syzbot+17416257cb95200cba44@syzkaller.appspotmail.com
-Fixes: 6be5e186fd65 ("mm: vmscan: restore incremental cgroup iteration")
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- mm/vmscan.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index b9170f767353..731b009a142b 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -6317,6 +6317,7 @@ static unsigned long do_try_to_free_pages(struct zonelist *zonelist,
- 	 * meaningful forward progress. Avoid false OOMs in this case.
- 	 */
- 	if (!sc->memcg_full_walk) {
-+		sc->priority = initial_priority;
- 		sc->memcg_full_walk = 1;
- 		goto retry;
- 	}
--- 
-2.43.0
+On 5/29/2024 6:58 AM, Willem de Bruijn wrote:
+> minor: double space before userspace
+> 
+> Abhishek Chauhan wrote:
+>> Currently there are no strict checks while setting SO_TXTIME
+>> from userspace. With the recent development in skb->tstamp_type
+>> clockid with unsupported clocks results in warn_on_once, which causes
+>> unnecessary aborts in some systems which enables panic on warns.
+>>
+>> Add validation in setsockopt to support only CLOCK_REALTIME,
+>> CLOCK_MONOTONIC and CLOCK_TAI to be set from userspace.
+>>
+>> Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
+>> Link: https://lore.kernel.org/lkml/20240509211834.3235191-1-quic_abchauha@quicinc.com/
+> 
+> These discussions can be found directly from the referenced commit?
+> If any, I'd like to the conversation we had that arrived at this
+> approach.
+> 
+Not Directly but from the patch series. 
+1. First link is for why we introduced skb->tstamp_type 
+2. Second link points to the series were we discussed on two approach to solve the problem 
+one being limit the skclockid to just TAI,MONO and REALTIME. 
 
+
+
+>> Fixes: 1693c5db6ab8 ("net: Add additional bit to support clockid_t timestamp type")
+>> Reported-by: syzbot+d7b227731ec589e7f4f0@syzkaller.appspotmail.com
+>> Closes: https://syzkaller.appspot.com/bug?extid=d7b227731ec589e7f4f0
+>> Reported-by: syzbot+30a35a2e9c5067cc43fa@syzkaller.appspotmail.com
+>> Closes: https://syzkaller.appspot.com/bug?extid=30a35a2e9c5067cc43fa
+>> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
+>> ---
+>>  net/core/sock.c | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/net/core/sock.c b/net/core/sock.c
+>> index 8629f9aecf91..f8374be9d8c9 100644
+>> --- a/net/core/sock.c
+>> +++ b/net/core/sock.c
+>> @@ -1083,6 +1083,17 @@ bool sockopt_capable(int cap)
+>>  }
+>>  EXPORT_SYMBOL(sockopt_capable);
+>>  
+>> +static int sockopt_validate_clockid(int value)
+> 
+> sock_txtime.clockid has type __kernel_clockid_t.
+> 
+
+ __kernel_clockid_t is typedef of int.  
+
+>> +{
+>> +	switch (value) {
+>> +	case CLOCK_REALTIME:
+>> +	case CLOCK_MONOTONIC:
+>> +	case CLOCK_TAI:
+>> +		return 0;
+>> +	}
+>> +	return -EINVAL;
+>> +}
+>> +
+>>  /*
+>>   *	This is meant for all protocols to use and covers goings on
+>>   *	at the socket level. Everything here is generic.
+>> @@ -1497,6 +1508,11 @@ int sk_setsockopt(struct sock *sk, int level, int optname,
+>>  			ret = -EPERM;
+>>  			break;
+>>  		}
+>> +
+>> +		ret = sockopt_validate_clockid(sk_txtime.clockid);
+>> +		if (ret)
+>> +			break;
+>> +
+>>  		sock_valbool_flag(sk, SOCK_TXTIME, true);
+>>  		sk->sk_clockid = sk_txtime.clockid;
+>>  		sk->sk_txtime_deadline_mode =
+>> -- 
+>> 2.25.1
+>>
+> 
+> 
