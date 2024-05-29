@@ -1,60 +1,60 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333001802A8
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABABC17BB2A
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716994032; cv=none; b=msxDSW7BG6UVbywwq8VCriQwkHOurlZAfsJF2mjvl13b7kV+jXd+k8gk2IdVGqpIsc3paO77IBl1aE4pfl0CuOvqFLvVqDBRRIqHDKG4pVanRJ9C7I+hC3npYQa4/5giCmIqRwtq3U6D/L0rNBkl/wX9zHp7xainLPFnrFwxZSI=
+	t=1716994033; cv=none; b=fIXopqTvbvCH1/GYYMaiXlVNaLCIfrpUD1P0t/rdSv55bPczhJEBHD/A1o3d27dnFz5Z6TiOO6vsi+98UrEGfVX2WjhmaDwopiZ3ykHxtBBNu75NxIvvWKyoFnnqaiWPbwwfpYVjyf2uPC3JbErsLkL/fK64kfanru7kFB9wBt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716994032; c=relaxed/simple;
-	bh=uKNrIp4viLGzK6BkL6K9w5oOIHrhcRnBTuSiYbEFQRc=;
+	s=arc-20240116; t=1716994033; c=relaxed/simple;
+	bh=HJLaCV8kZeQsHgpVRROJnMjh9Abjsmo5qtkKQDyGFFM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t39vOncJ7WTImL9+7dkayOATQobNkYhXNr6cy5yEI6whzpk4eSAK+J/1RSRZVqedowHQ5gOubh6WvEIAz9eh/xw1wEXK2Uo3lV0DDepczBjKclGxbS3QpZIsGnTZgRbslSLDwG5zAGUgiMQvi3Rzom1Fo9toqmYMwgeAv9iqNM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=avUE+xIU; arc=none smtp.client-ip=209.85.208.171
+	 In-Reply-To:To:Cc; b=gNImClgbv6QDrhmGB1K/2iDsX0yPhYGEKIxZZWVYP0lJMGt6cFOv2MK+ktUgM7FPd/dN959nJezE9m9K51pq+OTlbO3TdKEjY0wk8vOxoHa238fs0l8a1twIY4nopVhzpoGwrzRVXw7RabSnYlaTXn03WcZfJOdPxwSkC4bS+9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U55L1swb; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="avUE+xIU"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e78fe9fc2bso28894791fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:47:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U55L1swb"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e95a60454fso23918291fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716994028; x=1717598828; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1716994030; x=1717598830; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=khgPt+BmFpi1I3oCVHG3Ty2yeVPqhHvdpCjaMeXRd0g=;
-        b=avUE+xIUwUJ9oB+26G/bCV/qMXHJ/rNe9wJ5KlQ3S6cWmY1fJt96qu6ri5QEPNplM6
-         VGGt5Sod3DGdMZEyJtS5nAAGUtV19dBPyLmCwh+0nnivBGFm2TsUYp4Wwp4YVLh1vWaT
-         M/gVAadH2B0qtyzO05pSPFbOsPrOvdZ+rCu1s8lBsC6aQ/9brQOCWBHQDsrx8HqnOnqQ
-         wZvK4XSx1jNvuR2P1zawcguPgNyVVkrytS7NfR0LrkfknkSHgZr4Omhq2Af2vHuTb6IY
-         mW42uUIPjOtSho30/BbpmZcP89+VWbthYgFf+rbroq/maxP1/Uu13f+2rDeK2PPOyeeF
-         OKFw==
+        bh=535MyUxB8spFHdswlkTuyB9uo/nAHtaSMiVAH5TZ5lI=;
+        b=U55L1swbTTwN47ToLbLSWu/wvfVfzpzpmmOkq0eiQKHh1vgGHnXsKzeaDnsFUws+Hq
+         uOywkk0RVdlwhXR3fTj1dxxUP24BGenxidoN0Z558YuZ3zR5U3PdUdRwQlOaPKAm+m7K
+         22gar4jIr/aidfvajjA10uQD90tICjd4gsbJrIr+dWMXWsJAsCsHxOhHrFIcfltAtjU0
+         USOSKMZ+vYVqvcwAAiO9IwYOpBrMYXgXUd42VLzq81gpxlp8vgYg5Y3fCOB+Fk0Z0ww4
+         nObFdGpL7741g19FDz6gZ6Q3CeEKRzDL1NspyOCgVKNyM28999e06mJ1Xr21xXxIwhxm
+         h+EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716994028; x=1717598828;
+        d=1e100.net; s=20230601; t=1716994030; x=1717598830;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=khgPt+BmFpi1I3oCVHG3Ty2yeVPqhHvdpCjaMeXRd0g=;
-        b=ksA6Dv9flRmgaiv+I/BwWmg87EHvy731RFvNZS2IGfhZvc+oWhNeQXrHeqe27+K0lJ
-         X68auGxNaV5LQaTAVhv0IE5ZptUglNLzgGuBDaXIBGTyErnAi0LpRyQUHW+W7ICY74sE
-         S0OpxywMwn7V3jHiat0jP/aB9yQHumvcCYDo/tKqU79yChCfbTxy50au8Z33EsqwLhmh
-         O6cnFs225vgQrJd7n1PMVU6WF0t+/dJeYPsAsoIJwaQ5QAF8dM3NYD2bcMgu5AEVZfLV
-         gKZeD1YzgBW4eLbAS6boZBt1MCdUStYHjHy3MoWl8uGvVgG45tHWl7GvfoGlUec60qCO
-         I3og==
-X-Forwarded-Encrypted: i=1; AJvYcCWnIb4ud9skNPUeDc1ioEl8irdm6gABK3KFWKmU2apWC0myXsnUSF75jc+hRSEKwNbc6UcXQhcWkJlF+494+dJWpDmNLKPIjSw/MbO8
-X-Gm-Message-State: AOJu0YwjiIMcvlZriyNuyhRONyVeYIt7vVWaXm0jbKEwY/tD36Mq4Vwu
-	mzjalsYSCQfUWIAhgfnAOi7Hv4dGZbZn6CNgg3poll9VAHgE+48xvCbaJScQxrA=
-X-Google-Smtp-Source: AGHT+IF9cMxPbvCtxM3jqZMV8WH2CGbopeYVJcAeJYXk1F03jFsPFSdJIyXYUYaKGDBVl+vJj+fPEw==
-X-Received: by 2002:a2e:9b0e:0:b0:2e0:c81c:25da with SMTP id 38308e7fff4ca-2e95b229936mr94499081fa.30.1716994028551;
-        Wed, 29 May 2024 07:47:08 -0700 (PDT)
+        bh=535MyUxB8spFHdswlkTuyB9uo/nAHtaSMiVAH5TZ5lI=;
+        b=bzelDs9n74BeUTqc/X7ZjCK8exhQQEMfmHYzHRqSWKuyJlNo30l1o4RMh34h5mScic
+         perqvZFJYy2DkufwqHWJoXX1m/IBW17FkVyM2iPhipzrqc2TKsZXSBCloMaXrzNA88BW
+         tATZV669157MoTvROTpP1IFohUa7ZCjwY9/HdG23BnBauDrhzpk+5j0kXhg4ETW7vxnX
+         TSfOPK+EPL91JKAdkTn1PUSgoJoKj5AJ3LdbDBhzhIuxXprPU/AdrJ72OalFvdTKOFab
+         cbZ8LtFEI3K9x5THpWhwIkUdzI90BGNn5aKSxo5uK5MhVFKDQ5uvwe1sPRoXsnNnryzS
+         rxWA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9LnFL3CNDNWWAPnmXuMCZ+NsUYgq4tbPz1B0jZCT8Foq9n0v3Yi1nUkSfeHDkuwyU5AfL/imsmQC2RN0MtWv29SV6w2YgYcMrqTAz
+X-Gm-Message-State: AOJu0Yx1ek8/m93ttEZ8+q5ZDnGGZMDFo3TWeLDdTa3CHTFEiKsieFlH
+	MtnGcqhcxCmwD+lu0droOKDV5FtVrmK0Oy1tStU7YHdrL+ZEc+r/pDjLz10KNDg=
+X-Google-Smtp-Source: AGHT+IHAInG/3QKFqcat237EvBd/lUztoEzjSsJjdmPqUd95JEW0srXcBB7A6LHULPcDLAEMyNBDNA==
+X-Received: by 2002:a05:651c:554:b0:2d7:1a30:e881 with SMTP id 38308e7fff4ca-2e95b0c2338mr115629481fa.12.1716994029945;
+        Wed, 29 May 2024 07:47:09 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e98c45df0csm3791951fa.68.2024.05.29.07.47.07
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e98c45df0csm3791951fa.68.2024.05.29.07.47.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 07:47:07 -0700 (PDT)
+        Wed, 29 May 2024 07:47:09 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 29 May 2024 17:47:05 +0300
-Subject: [PATCH v2 07/14] ARM: dts: qcom: ipq4019: drop #power-domain-cells
+Date: Wed, 29 May 2024 17:47:07 +0300
+Subject: [PATCH v2 09/14] ARM: dts: qcom: mdm9615: drop #power-domain-cells
  property of GCC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-qcom-gdscs-v2-7-69c63d0ae1e7@linaro.org>
+Message-Id: <20240529-qcom-gdscs-v2-9-69c63d0ae1e7@linaro.org>
 References: <20240529-qcom-gdscs-v2-0-69c63d0ae1e7@linaro.org>
 In-Reply-To: <20240529-qcom-gdscs-v2-0-69c63d0ae1e7@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -77,40 +77,40 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=834;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=813;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=uKNrIp4viLGzK6BkL6K9w5oOIHrhcRnBTuSiYbEFQRc=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmVz/lGa0oUyHGlTplYCLm8gyadkAUiHdWEMPk1
- UoB9ApWpc2JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZlc/5QAKCRCLPIo+Aiko
- 1X66B/4lbabGfq1tYTyadR39KhgQ0Sla22IOZcqOtwy+h1zftMjW7qJSJbAmuhTZIPlmDM2AMZX
- /BBthChJXZMQUNZ5ZvYRBlRcgVN1q6UjWW9iwfNDus9L3IdDIlXWBFl1SN4Uv04C78Bozwb0rUH
- f/548fFhxLwK7KhpLZK6Kmn3SK3WhndkvWhlf4Qf1zMIdqg9MA+TOdYimb4Tesk/4p2vzkj7bPY
- Nbm4oeEbaDBn9L8rKxJurFjSxPdZ4hJVb2FU8liSmoAoXBrT4mTXhNwIn5bsZsMU9bp+mT3C79N
- OVn72Uk5DdYmoEqYJr6inDaU0O82kKl1I3C5EDj4M/uCNjhi
+ bh=HJLaCV8kZeQsHgpVRROJnMjh9Abjsmo5qtkKQDyGFFM=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmVz/lhJHnhkiyUTgo58PJib3j9FrnjcDsRw0gK
+ FMocrWoojeJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZlc/5QAKCRCLPIo+Aiko
+ 1Tw+CACySY0s7eo0HUEnEvAm6Z/5r9Q7AgJw4mHiTRxx2GamFY6GDsMN2/azZG01/W+BfXW4jCi
+ wjm2yMMn2OAtRx5bzj8YO7QwL116DmGOCTsTajiiLhGJZRcDd+Qp5wMgjcO0ER/YuhFo5kZrmS2
+ hTLue3bt2kVL4gUAfXk8EHej6g1tlQN3mM6uY0bHc1wQnbMWG2sCb8j7tvKPMK9WjbNnhpNR/Rt
+ 3FEfZJPEc4IcvcCGVAH1dNZs60PoNGySckuXuSJEs5CDqN0oo1jHnWhENz8idpYH+R8XWTMk/X2
+ QxpdCEMN230/Z0vK9M3NMeE+yQfu4JBmwAJ67r04w+jbcV+E
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On IPQ4019 the Global Clock Controller (GCC) doesn't provide power
+On MDM9615 the Global Clock Controller (GCC) doesn't provide power
 domains. Drop the #power-domain-cells property from the controller
 device node.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi | 1 -
+ arch/arm/boot/dts/qcom/qcom-mdm9615.dtsi | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
-index 0fb65f2bbcdf..56415ab34083 100644
---- a/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
-@@ -187,7 +187,6 @@ intc: interrupt-controller@b000000 {
- 		gcc: clock-controller@1800000 {
- 			compatible = "qcom,gcc-ipq4019";
+diff --git a/arch/arm/boot/dts/qcom/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom/qcom-mdm9615.dtsi
+index 34c60994d026..573feb3218c3 100644
+--- a/arch/arm/boot/dts/qcom/qcom-mdm9615.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-mdm9615.dtsi
+@@ -102,7 +102,6 @@ msmgpio: pinctrl@800000 {
+ 		gcc: clock-controller@900000 {
+ 			compatible = "qcom,gcc-mdm9615";
  			#clock-cells = <1>;
 -			#power-domain-cells = <1>;
  			#reset-cells = <1>;
- 			reg = <0x1800000 0x60000>;
- 			clocks = <&xo>, <&sleep_clk>;
+ 			reg = <0x900000 0x4000>;
+ 			clocks = <&cxo_board>,
 
 -- 
 2.39.2
