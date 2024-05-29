@@ -1,108 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F4D1C0DF2
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 19:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C981C6880;
+	Wed, 29 May 2024 19:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717012103; cv=none; b=lmLkDorWF5k3optYnDwKxtL07BR7iNgXs3T58/F0OtONdelgUvmG2I94I8zb6i2vjJOXax4TTC7LU0zq92HEGgEdvX9fVBOXcYRTCVIoeGL7Hl85H2Ijm/Ql8lgEzxZlYSJrBMg9gITyZd0jr+QPUzMItLVSWXSwKo+jfu4bgjY=
+	t=1717012110; cv=none; b=ZqSxaVfLwnrq//5y8NnCnAqmU19SdWWJsZyjRjifEErivTSagX2ixZVxeexxnxhnaDsvCCJmaFSIPv1XzhpRIaBsaCWjJC4hE1ze6ozhBPNnhpfHM8tpukR5FLiR1TuVnT1gViq+I1mZ5OLYtFi3atyM0EPAp/xckDdIOBFn6+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717012103; c=relaxed/simple;
-	bh=TSNUIaMF3kpXKqglBYc37Xm+HyAvY4aeML8pg247L1M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YN16R8+CGiqMDvaq0APRG7PVXGz3bbentgHzo4YPj6otWQWCwyXPqc+0LQZRsfu1G/t0pfJCku+UZWQS6q2Tg8onO/gi/HdELD23fspYm0h+R/DF+mxa3EdmAakQNG4gbcm89Hbg9CYsX7VckBxz3LZ3ZdGoTZib4ecEweRocBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u4SHCxMy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4SHCxMy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CBDBC113CC;
-	Wed, 29 May 2024 19:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717012103;
-	bh=TSNUIaMF3kpXKqglBYc37Xm+HyAvY4aeML8pg247L1M=;
-	h=From:Date:Subject:To:Cc:From;
-	b=u4SHCxMyZu/nbNoHUIZ9X9SolX1ensSBOVtAhPSy+/JWnl3Iujd2VaKKhWvjErehf
-	 uQM1zB/8N9OFrGCajBHUzYB5LAm3Srj22LbMYbqMfmKb/ntQ2bFaYoIj50OefTCy7r
-	 eBC8KV2XCjGHC5qXjfcOGrNgWyJ7XlpBVaysrpYOclyOF4lQy/+52Nu/ctEJvtqhXq
-	 iDJorpIzhm7SEkxq6jxzIeyL49g+5ifS6qfCiB8P8aVQuI1iUuP5iBx90wX5mjlnZP
-	 gfHlARDkd56hu8ZrQf46lj/yDueT8Yo3jhLlBXHl02Aedpbkr6hjPj4eJXJYzqp9V+
-	 +pJO/b7tJdBRg==
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, 29 May 2024 20:48:14 +0100
-Subject: [PATCH v2] clocksource: sp804: Make user selectable
+	s=arc-20240116; t=1717012110; c=relaxed/simple;
+	bh=mBYHB0w2lJlfGEgtklPsCNe/hCVdcPJEF9Af5j6pvzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lMPXY6zbgZ0TPHnRBL0iPz0Uv8Bdzzr0qBDd8E23dUCCp5mNCeIemQwwvUj70GnG9HuqC3OCcLv10yR8pyeB1sPdM8q8TyCKNnla21ayL/wxra46Sb2k1piIs71h5UCpXv2+WO9Ps55nccWG2film5cq39nMirBlE/8roPMPAAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D7FC113CC;
+	Wed, 29 May 2024 19:48:28 +0000 (UTC)
+Date: Wed, 29 May 2024 15:48:24 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
+Cc: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
+ Shutdown/Reboot
+Message-ID: <20240529154824.2db8133a@rorschach.local.home>
+In-Reply-To: <20240529144757.79d09eeb@rorschach.local.home>
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+	<20240527183139.42b6123c@rorschach.local.home>
+	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+	<20240528144743.149e351b@rorschach.local.home>
+	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
+	<20240529144757.79d09eeb@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-arm64-vexpress-sp804-v2-1-c542a80af33a@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAH2GV2YC/4WNQQ6CMBBFr0Jm7ZhSCkVW3sOwADpCowKZMQ2G9
- O5WLuDy/Z///g5C7EmgyXZgCl78MifQpwyGqZtHQu8Sg1baqFJr7PhVGQy0rUwiKGutDBZV6ap
- LUffKDpCmqbv77dDe2sSTl/fCn+Ml5L/0jzDkmKMqjBmc0dRbe30Qz/Q8LzxCG2P8Av5UU5C5A
- AAA
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- David Abdurachmanov <david.abdurachmanov@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Ross Burton <ross.burton@arm.com>, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-2ee9f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1926; i=broonie@kernel.org;
- h=from:subject:message-id; bh=TSNUIaMF3kpXKqglBYc37Xm+HyAvY4aeML8pg247L1M=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmV4aEWf26AfwBkWBp0X95MoX+Epah6ddUKq5agg+2
- 812d5BCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZleGhAAKCRAk1otyXVSH0LlFCA
- CGlCHUjhuUGyWIONwdnesEQYaouzvq7EmI1OVMS3BVrm5gpyEx/l48SH+VcFzMwjv8Kc3Ak3mmx1f/
- hfzMOsIw+1nD/pYc9H85XwecpRCGllzHZIvuB2v7ry553jKMkPE7udQFBnwH8XpS78YJdDugz7sr7D
- mUzcwrOaSYzNBM4z7rkL2OBlgyZmQoY0oWoGwpMYApdVBT7XMGXwkgtOzvxgCwis+QsKsIz0fNARVu
- nqYq+ymlFpmMbVceH4jCczsRLHqNU7Cm2q7WBnP7z1rNiUDxPfdB1c0Jt9R4DGLWYgdcHS/CL+d6hW
- HpucJvXdkO/B6URpfSAlKUbPdyZnfW
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-The sp804 is currently only user selectable if COMPILE_TEST, this was
-done by commit dfc82faad725 ("clocksource/drivers/sp804: Add
-COMPILE_TEST to CONFIG_ARM_TIMER_SP804") in order to avoid it being
-spuriously offered on platforms that won't have the hardware since it's
-generally only seen on Arm based platforms.  This config is overly
-restrictive, while platforms that rely on the SP804 do select it in
-their Kconfig there are others such as the Arm fast models which have a
-SP804 available but currently unused by Linux.  Relax the dependency to
-allow it to be user selectable on arm and arm64 to avoid surprises and
-in case someone comes up with a use for extra timer hardware.
+On Wed, 29 May 2024 14:47:57 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Fixes: dfc82faad725 ("clocksource/drivers/sp804: Add COMPILE_TEST to CONFIG_ARM_TIMER_SP804")
-Reported-by: Ross Burton <ross.burton@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
-Changes in v2:
-- Rebase onto v6.10-rc1.
-- Link to v1: https://lore.kernel.org/r/20240522-arm64-vexpress-sp804-v1-1-0344cd42eb77@kernel.org
----
- drivers/clocksource/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> Let me make a debug patch (that crashes on this issue) for that kernel,
+> and perhaps you could bisect it?
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 34faa0320ece..ca6045f90000 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -390,7 +390,8 @@ config ARM_GT_INITIAL_PRESCALER_VAL
- 	  This affects CPU_FREQ max delta from the initial frequency.
+Can you try this on 6.6-rc1 and see if it gives you any other splats?
+
+Hmm, you can switch it to WARN_ON and that way it may not crash the
+machine, and you can use dmesg to get the output.
+
+Thanks,
+
+-- Steve
+
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index de5b72216b1a..a090495e78c9 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+ 		return NULL;
  
- config ARM_TIMER_SP804
--	bool "Support for Dual Timer SP804 module" if COMPILE_TEST
-+	bool "Support for Dual Timer SP804 module"
-+	depends on ARM || ARM64 || COMPILE_TEST
- 	depends on GENERIC_SCHED_CLOCK && HAVE_CLK
- 	select CLKSRC_MMIO
- 	select TIMER_OF if OF
-
----
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-change-id: 20240522-arm64-vexpress-sp804-365d6938b07c
-
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+ 	ti->flags = 0;
++	ti->magic = 20240823;
+ 
+ 	return &ti->vfs_inode;
+ }
+ 
+ static void tracefs_free_inode(struct inode *inode)
+ {
+-	kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
++	struct tracefs_inode *ti = get_tracefs(inode);
++
++	BUG_ON(ti->magic != 20240823);
++	kmem_cache_free(tracefs_inode_cachep, ti);
+ }
+ 
+ static ssize_t default_read_file(struct file *file, char __user *buf,
+@@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_inode_operations = {
+ 	.rmdir		= tracefs_syscall_rmdir,
+ };
+ 
+-struct inode *tracefs_get_inode(struct super_block *sb)
+-{
+-	struct inode *inode = new_inode(sb);
+-	if (inode) {
+-		inode->i_ino = get_next_ino();
+-		inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
+-	}
+-	return inode;
+-}
+-
+ struct tracefs_mount_opts {
+ 	kuid_t uid;
+ 	kgid_t gid;
+@@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
+ 		return;
+ 
+ 	ti = get_tracefs(inode);
++	BUG_ON(ti->magic != 20240823);
+ 	if (ti && ti->flags & TRACEFS_EVENT_INODE)
+ 		eventfs_set_ef_status_free(dentry);
+ 	iput(inode);
+@@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry *dentry)
+ 	return dentry;
+ }
+ 
++struct inode *tracefs_get_inode(struct super_block *sb)
++{
++	struct inode *inode = new_inode(sb);
++
++	BUG_ON(sb->s_op != &tracefs_super_operations);
++	if (inode) {
++		inode->i_ino = get_next_ino();
++		inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
++	}
++	return inode;
++}
++
+ /**
+  * tracefs_create_file - create a file in the tracefs filesystem
+  * @name: a pointer to a string containing the name of the file to create.
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 69c2b1d87c46..9f6f303a9e58 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -9,6 +9,7 @@ enum {
+ struct tracefs_inode {
+ 	unsigned long           flags;
+ 	void                    *private;
++	unsigned long		magic;
+ 	struct inode            vfs_inode;
+ };
+ 
