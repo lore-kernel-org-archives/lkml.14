@@ -1,273 +1,190 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2051.outbound.protection.outlook.com [40.107.236.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A8115B54F
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 03:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716952853; cv=none; b=slLS4ubDWmyxydXb2y7ljEWaciHif9795Lf5tlZvl3F2T4eS32sowBztQ3Lqzm5pBZHik0HDnnviALCSef9kKYtOfNOwVP7l5QZFBqpYfcReewGMRRNGBSqHm45GbU9QRernLtE6QejOeqEdXFOSlW0/WlCDptah46H5PKC/8YY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716952853; c=relaxed/simple;
-	bh=ngrgWoSn3dkOnzAYRsmf183bsxtu9OpYrpfalp4oSyM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Wt9yCX5hB71cG78zdCX8GxRfomjLNuXmehdup+yYjX/otcv9A38di3KarSPicwENOif0mzG6W4XwnEh1UHB5hkAIY1XSVlpHL7H6xRV4i29Drzy5dp6Ni2SWygd5J+rFeF3sxFgjeLQnEh6vRQWKhPUmJL/0Adw49Jya7dPgN1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=jQWVaHQq; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8A22F2A;
+	Wed, 29 May 2024 03:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716952872; cv=fail; b=p1u4GHZpGwv7iUXE0AofVgZwekLTZoPj37ZQLa3hPUcPCho8dCdchWOQyvxlskR3e+A9V3PplNzya41/Y11GP639Uxn3T6uIkaOMHDyZTuCXJ0+75i6po/DmKVX4v93IYU+k36bDRLjl5Cvxg4mCex6sx8NUK+Hjj/cZ2F9Wso4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716952872; c=relaxed/simple;
+	bh=SOMm15IT+JkhWYZa++LFvmzrrNSLuy1gh4Z/HKUcfwQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=afKsyhri6v00oTgfLF6biXu8EGi5T4R88XzdvSRBoq4s8WZrrNnFm/7+DNOXITFGq75fBCaOCzCgJkt4itiOeyG6sDhwkrfBfyI2gLXJ5JVq2mXWwZndGEhmHOT74oh8fBqnSLt6fvSY9E3hNhPBinFF2QdBx770hENEE9794X8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SCZLt4Tk; arc=fail smtp.client-ip=40.107.236.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="jQWVaHQq"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3c9cc681ee0so748802b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 20:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1716952850; x=1717557650; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J0LUNrAmj3v5i6Z8gYuVk/e8D51N4ShDxOcIG47i78U=;
-        b=jQWVaHQqLdGjoo50QZA81JQ8bG0AF3OxBR8OmY4JnLZiWRELbhNRwILISsUIV/T+/C
-         E/n7DZ/+1EJSGpCZVLvzXm7JLWjdHNwOperqlNyMdOuTvbguvbMRi+PZzRhN8tHBVIoC
-         ycpScZk2O5JRdzpwqmMq91KTTwYcHRH6AT+PI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716952850; x=1717557650;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J0LUNrAmj3v5i6Z8gYuVk/e8D51N4ShDxOcIG47i78U=;
-        b=gnpAUPCCERsF2rdNr07x7PNaQ/kL/u1w+W5mrDKFqkceAOJnbHehKNo6hAPKAxsVxx
-         tm/is0j6rFaWLXrOlBlPS6sTUPXFMNf7KvfhIlH2JtUmlC43dxXvWdpebBfaNGeOmoPu
-         kkmr/CwY/tgjKOE68m6vYtwjEax0MxyQVo01QW7pm0Y2UrPLqYzuawrcJ5IUbBwIlKZg
-         fRvHq5EDowAoIWpd3LUBarYsMsSN/WYhlWhnMaZeNUNc/ExvjoiZqr8thnHqwdkEgHDc
-         XT8FoNQ/KhFEAX4g1cBDYtRlybZDHBvwHU/acQDBvHVC4WD/ThSqziyFw1Ivczygzf3O
-         ALbQ==
-X-Gm-Message-State: AOJu0YwXiRdgLOIzlYrGRrnwlLord4FjNXjinma23FmnIUEVBHl6YoNX
-	a1BkAuGysK3mkkiZiTDFpHjyIhsU+tBgXENZsccsz9l9GGjJFKvYWOpRfX+HQA3uMRKKBye3rpe
-	hrKKS5kHqV1o79o3UJM3KYeJbCzFSHmnSrzRMajFa282+TPEmp1wV4bdADvn/82IdjqhHA0pJ1w
-	eLX41b8nC6BuM0e41uCpKfeMpLz8RNRVXxWUApNvOp4Ac=
-X-Google-Smtp-Source: AGHT+IF75C9u7f1pbiCwVZLhWlBLJ3alIuJgKnuDVZBCwa68S0caQmXZ+PKHwtGllBRjmWhuiFSbRg==
-X-Received: by 2002:a05:6808:205:b0:3c8:6543:584b with SMTP id 5614622812f47-3d1a7d27b10mr15151160b6e.54.1716952849895;
-        Tue, 28 May 2024 20:20:49 -0700 (PDT)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fbd3ea03sm7156766b3a.39.2024.05.28.20.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 20:20:49 -0700 (PDT)
-From: Joe Damato <jdamato@fastly.com>
-To: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: nalramli@fastly.com,
-	Joe Damato <jdamato@fastly.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	linux-rdma@vger.kernel.org (open list:MELLANOX MLX5 core VPI driver)
-Subject: [RFC net-next v3 2/2] net/mlx5e: Add per queue netdev-genl stats
-Date: Wed, 29 May 2024 03:16:27 +0000
-Message-Id: <20240529031628.324117-3-jdamato@fastly.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240529031628.324117-1-jdamato@fastly.com>
-References: <20240529031628.324117-1-jdamato@fastly.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SCZLt4Tk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hjA7xYFm49K6WMTqznCCVgtUTaw9dJM+TjspRNwMA1di6uLE1SYeuE0FUPER34E1dFyhj6gjmQuUBWfI0AFH5tt+SwsyHaFceKxZ4TWdQ/finC0KBfiILy1Bg3fN1kB42y2IyEYjdtbQOev/kbrZPHGE+vMueHbzY1FutCLpz99MilKd+4EBh11u11anF2h1WnVLMnKVnkMue/FGKPjZcSwaw2EcBuinCaHEU5KeDI4BmAR1JrrtxG/OBzDAJlHIrounuZxJ0r+SHhDukytuh4oL2yYm5ringNiK0HFgTg1e1vcq3ecIb584LnuCGGczWxWrXFRCJiSuBUMJOLD5yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WTTunXqXtujk54sWHoY347iA3cWxu+VHyjCJ2mW72eQ=;
+ b=hyTBwlbJ5oNvdTPmdr674q8YkTfkY8lyo9hgzobsrViaaxmqsrkoCF7+ygKGtUZChK7e6nWUrBXP6pLnjGXIX+kgofAIMDqfvuUYXOwf9n/Z+r6yWOB4EF8I8TUf94AphqBuWNRKeTYpGm7umX3neWbvoWRjy2f+J7bysv2ziAaa5pfVrT0fX5HVsycr3ubK632TQKgksODRfqjypmyJhlnZBp2qh+hZUKvN28oDwm5BNS4MpHk2AfLfLbelnGTqwAp5fE7Wq2F/EUdL/p4RCZTNzt6AvwlRdEbKAxqcw3vkENO+BHNcRdqI7SmG4ddkbvDz6MFLcKEbPAc2n702eQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WTTunXqXtujk54sWHoY347iA3cWxu+VHyjCJ2mW72eQ=;
+ b=SCZLt4TkrLDNOtMZhF5FtZYVwSA5WnauYy/aS00jYvEE8Zcchk+uC6teniWEh/MUKGZkup/qnObMPy3sIzDv96sl42LZD5md4eqNErpWL8b1216lObtY7DtyFpWPPcjdyRDCXD5U+zG3wTYGSIEIXex1gW7UN+7Kbquxp0+Za6/ELAI5Wb5+JgHokc0zc8t8u1r199CwGAzcXmHDCPEwQ2P7qOXH0pPcKLjwDaiV3tZu5yFehWMbcYbKQ5dhUtW4l0cRgW4BI95MR23ESpxAL4hsmqpnQsXRTP6Ynhe1aHayk/b8kcmcPdon9kdSADvM3CkexpbAMkAqQQc5G739sw==
+Received: from MN2PR16CA0036.namprd16.prod.outlook.com (2603:10b6:208:134::49)
+ by CH3PR12MB9121.namprd12.prod.outlook.com (2603:10b6:610:1a1::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.30; Wed, 29 May
+ 2024 03:21:08 +0000
+Received: from BL6PEPF0001AB53.namprd02.prod.outlook.com
+ (2603:10b6:208:134:cafe::71) by MN2PR16CA0036.outlook.office365.com
+ (2603:10b6:208:134::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.30 via Frontend
+ Transport; Wed, 29 May 2024 03:21:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BL6PEPF0001AB53.mail.protection.outlook.com (10.167.241.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7633.15 via Frontend Transport; Wed, 29 May 2024 03:21:07 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 28 May
+ 2024 20:20:54 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 28 May
+ 2024 20:20:53 -0700
+Received: from Asurada-Nvidia (10.127.8.10) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4 via Frontend
+ Transport; Tue, 28 May 2024 20:20:52 -0700
+Date: Tue, 28 May 2024 20:20:50 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: Jason Gunthorpe <jgg@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"eric.auger@redhat.com" <eric.auger@redhat.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "jon.grimm@amd.com" <jon.grimm@amd.com>,
+	"santosh.shukla@amd.com" <santosh.shukla@amd.com>, "Dhaval.Giani@amd.com"
+	<Dhaval.Giani@amd.com>, "shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH RFCv1 08/14] iommufd: Add IOMMU_VIOMMU_SET_DEV_ID ioctl
+Message-ID: <ZlafEktUu5znDsNt@Asurada-Nvidia>
+References: <cover.1712978212.git.nicolinc@nvidia.com>
+ <c97a98a72ee3498c587e5898d6b899553ccd9b27.1712978212.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276A897A5386DFAC9A35F9D8CF42@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZlAoN3s96HL7ROth@nvidia.com>
+ <BN9PR11MB52762A0BC67B64D4171480C78CF52@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20240524131912.GT20229@nvidia.com>
+ <BN9PR11MB5276BBD592021507C3A0EBB38CF02@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZlY886FT3HHLC8Cf@nvidia.com>
+ <BN9PR11MB52762EA9B444DA71F551C3868CF22@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB52762EA9B444DA71F551C3868CF22@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB53:EE_|CH3PR12MB9121:EE_
+X-MS-Office365-Filtering-Correlation-Id: ea5b4631-7ccb-46c5-e081-08dc7f8e61ad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|82310400017|7416005|376005|1800799015|36860700004;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?1ggiU19qpYBnYc7Ac6b+p+e33zMPo5jzqGr3xoDFvvKT/FckeHcp0EBLIEPk?=
+ =?us-ascii?Q?gzqJ5Jn7umursg3I4KaD5xUNkYDdCJQ10GKOueMPYPw8SIM1NXLtxT7I7Q6W?=
+ =?us-ascii?Q?/AakyH7u2vOQH2zl38IN8mBWD6b2hobTI1BjEs9k4Ogh3IYd73HLHIBP7m3B?=
+ =?us-ascii?Q?co5VFi2WvrT7iq7uQgNB19Djpfx46T4js5LGbQtYtyXT5r45/UBES0y0MB+l?=
+ =?us-ascii?Q?EFvX8ZGh64P0KLuMEWxb02gT6IDsJ3frrsK2or2cP1xnzf4leL2mQWQmaEHH?=
+ =?us-ascii?Q?MKtUdx+U2otZIRN+x2X28OBz6uqg94KsNJ7Z0nUE0WL85Gd/DR7uJcSTUU9v?=
+ =?us-ascii?Q?r+MheXCbztEl4KzkGKWFcertF2doM+8rvFvUUU+4KWBuiPgNMTNHNE8UfQCx?=
+ =?us-ascii?Q?7bUFtENV3V+irTUgOWKsCX40/nfTL1MnFE0668Tf+feYOMVZjOKEAsqU4WFA?=
+ =?us-ascii?Q?Qe16I6bRL3g3dSM0QToO+klz13eTftUIw0FXyF4Lmrm0ixO81bOKzZhA75MT?=
+ =?us-ascii?Q?jknyx4UxSC+3v85gS8wA7pYAwuQnAHFGOs7n2UmwI9VKLPLa2Rd9GCej4dQb?=
+ =?us-ascii?Q?fLjqrywGIVIpu9qWpTbQbvk59s0yQGxyAEN90rr2LhHufp2aaafLX/+3p2IV?=
+ =?us-ascii?Q?Q+I6buW8Wgb3d/VACbd2OyXwA3VR+U0U8ocyg5ofIeHLqvydNxsJnFGuH98i?=
+ =?us-ascii?Q?mtDPWYzt2EESUWE+qvMDf/ZfuH4+1jYStNg7pqBIivEh2ocdxAxeHnSHmC1K?=
+ =?us-ascii?Q?SxFFDhucMxR6mkn3U70dHGyBg9AzAgNU/GnwEzVCbIiD9HMuGHiUsHTMxY04?=
+ =?us-ascii?Q?pcJ30bNhNTrMf9xOHEcngxI1V9CkZ38+AuIQ/h3ygMQkOCgB6JgYb1/iBZvn?=
+ =?us-ascii?Q?koDxw9Og8Mavj3aQhQfiJoAlaIGaoHNn+r4FiYGw0Js7w4LmWO9n2oDVcQH5?=
+ =?us-ascii?Q?FBHtLhNLY/7TFXgjp+T9kgA2feICeFd0PRZo1yGcVU6OEJ9sKJo3qK8B4gOE?=
+ =?us-ascii?Q?F9U2NIbR4GE5nhlzMOe0+6lgKicZIpr/7GPL2evscROajrUbL2ou398vxdKq?=
+ =?us-ascii?Q?6NUuv+l7uB/GoNkgI7mpsP3xNxvQFghnZks4DfVfvqOf/siXuB7KRJ8T2Ebw?=
+ =?us-ascii?Q?uO2phZH5+aY0Eya4AXsCYYCPIjGM+UeR4xYoqOsL+cBoVgaFA/o8rSdduhZ4?=
+ =?us-ascii?Q?xFXcR7OgGoqQeY0mh6WsfqbKR7I6zGnN2My+8ylWnMYNavhRo25lPD/i8rGI?=
+ =?us-ascii?Q?xONZuXdLn1WtGV/sdKebLHzzXR0lQjZAiddTVtaVFw//advwf+eiFIVVmLww?=
+ =?us-ascii?Q?//tZSk2FquG1fxBi/4mgaP2gwJv9I+mGneTN383IOkR9tq4nlC0nlm139yVy?=
+ =?us-ascii?Q?7zUasbU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(82310400017)(7416005)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 03:21:07.8449
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea5b4631-7ccb-46c5-e081-08dc7f8e61ad
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB53.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9121
 
-Add functions to support the netdev-genl per queue stats API.
+On Wed, May 29, 2024 at 02:58:11AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Wednesday, May 29, 2024 4:23 AM
 
-./cli.py --spec netlink/specs/netdev.yaml \
-         --dump qstats-get --json '{"scope": "queue"}'
+> > What I mean is for regular vSMMU. Without VCMDQ, a regular vSMMU
+> > on a multi-pSMMU setup will look like (e.g. three devices behind
+> > different SMMUs):
+> > |<------ VMM ------->|<------ kernel ------>|
+> >        |-- viommu0 --|-- pSMMU0 --|
+> > vSMMU--|-- viommu1 --|-- pSMMU1 --|--s2_hwpt
+> >        |-- viommu2 --|-- pSMMU2 --|
+> >
+> > And device would attach to:
+> > |<---- guest ---->|<--- VMM --->|<- kernel ->|
+> >        |-- dev0 --|-- viommu0 --|-- pSMMU0 --|
+> > vSMMU--|-- dev1 --|-- viommu1 --|-- pSMMU1 --|
+> >        |-- dev2 --|-- viommu2 --|-- pSMMU2 --|
+> >
+> > When trapping a device cache invalidation: it is straightforward
+> > by deciphering the virtual device ID to pick the viommu that the
+> > device is attached to.
+> 
+> I understand how above works.
+> 
+> My question is why that option is chosen instead of going with 1:1
+> mapping between vSMMU and viommu i.e. letting the kernel to
+> figure out which pSMMU should be sent an invalidation cmd to, as
+> how VT-d is virtualized.
+> 
+> I want to know whether doing so is simply to be compatible with
+> what VCMDQ requires, or due to another untold reason.
 
-...snip
+Because we use viommu as a VMID holder for SMMU. So a pSMMU must
+have its own viommu to store its VMID for a shared s2_hwpt:
+        |-- viommu0 (VMIDx) --|-- pSMMU0 --|
+ vSMMU--|-- viommu1 (VMIDy) --|-- pSMMU1 --|--s2_hwpt
+        |-- viommu2 (VMIDz) --|-- pSMMU2 --|
 
- {'ifindex': 7,
-  'queue-id': 62,
-  'queue-type': 'rx',
-  'rx-alloc-fail': 0,
-  'rx-bytes': 105965251,
-  'rx-packets': 179790},
- {'ifindex': 7,
-  'queue-id': 0,
-  'queue-type': 'tx',
-  'tx-bytes': 9402665,
-  'tx-packets': 17551},
-
-...snip
-
-Also tested with the script tools/testing/selftests/drivers/net/stats.py
-in several scenarios to ensure stats tallying was correct:
-
-- on boot (default queue counts)
-- adjusting queue count up or down (ethtool -L eth0 combined ...)
-- adding mqprio TCs
-
-Signed-off-by: Joe Damato <jdamato@fastly.com>
----
- .../net/ethernet/mellanox/mlx5/core/en_main.c | 132 ++++++++++++++++++
- 1 file changed, 132 insertions(+)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index ce15805ad55a..515c16a88a6c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -39,6 +39,7 @@
- #include <linux/debugfs.h>
- #include <linux/if_bridge.h>
- #include <linux/filter.h>
-+#include <net/netdev_queues.h>
- #include <net/page_pool/types.h>
- #include <net/pkt_sched.h>
- #include <net/xdp_sock_drv.h>
-@@ -5293,6 +5294,136 @@ static bool mlx5e_tunnel_any_tx_proto_supported(struct mlx5_core_dev *mdev)
- 	return (mlx5_vxlan_allowed(mdev->vxlan) || mlx5_geneve_tx_allowed(mdev));
- }
- 
-+static void mlx5e_get_queue_stats_rx(struct net_device *dev, int i,
-+				     struct netdev_queue_stats_rx *stats)
-+{
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+	struct mlx5e_channel_stats *channel_stats;
-+	struct mlx5e_rq_stats *xskrq_stats;
-+	struct mlx5e_rq_stats *rq_stats;
-+
-+	if (mlx5e_is_uplink_rep(priv))
-+		return;
-+
-+	channel_stats = priv->channel_stats[i];
-+	xskrq_stats = &channel_stats->xskrq;
-+	rq_stats = &channel_stats->rq;
-+
-+	stats->packets = rq_stats->packets + xskrq_stats->packets;
-+	stats->bytes = rq_stats->bytes + xskrq_stats->bytes;
-+	stats->alloc_fail = rq_stats->buff_alloc_err +
-+			    xskrq_stats->buff_alloc_err;
-+}
-+
-+static void mlx5e_get_queue_stats_tx(struct net_device *dev, int i,
-+				     struct netdev_queue_stats_tx *stats)
-+{
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+	struct mlx5e_channel_stats *channel_stats;
-+	struct mlx5e_sq_stats *sq_stats;
-+	int ch_ix, tc_ix;
-+
-+	mutex_lock(&priv->state_lock);
-+	txq_ix_to_chtc_ix(&priv->channels.params, i, &ch_ix, &tc_ix);
-+	mutex_unlock(&priv->state_lock);
-+
-+	channel_stats = priv->channel_stats[ch_ix];
-+	sq_stats = &channel_stats->sq[tc_ix];
-+
-+	stats->packets = sq_stats->packets;
-+	stats->bytes = sq_stats->bytes;
-+}
-+
-+static void mlx5e_get_base_stats(struct net_device *dev,
-+				 struct netdev_queue_stats_rx *rx,
-+				 struct netdev_queue_stats_tx *tx)
-+{
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+	int i, j;
-+
-+	if (!mlx5e_is_uplink_rep(priv)) {
-+		rx->packets = 0;
-+		rx->bytes = 0;
-+		rx->alloc_fail = 0;
-+
-+		/* compute stats for deactivated RX queues
-+		 *
-+		 * if priv->channels.num == 0 the device is down, so compute
-+		 * stats for every queue.
-+		 *
-+		 * otherwise, compute only the queues which have been deactivated.
-+		 */
-+		mutex_lock(&priv->state_lock);
-+		if (priv->channels.num == 0)
-+			i = 0;
-+		else
-+			i = priv->channels.params.num_channels;
-+		mutex_unlock(&priv->state_lock);
-+
-+		for (; i < priv->stats_nch; i++) {
-+			struct netdev_queue_stats_rx rx_i = {0};
-+
-+			mlx5e_get_queue_stats_rx(dev, i, &rx_i);
-+
-+			rx->packets += rx_i.packets;
-+			rx->bytes += rx_i.bytes;
-+			rx->alloc_fail += rx_i.alloc_fail;
-+		}
-+
-+		if (priv->rx_ptp_opened) {
-+			struct mlx5e_rq_stats *rq_stats = &priv->ptp_stats.rq;
-+
-+			rx->packets += rq_stats->packets;
-+			rx->bytes += rq_stats->bytes;
-+		}
-+	}
-+
-+	tx->packets = 0;
-+	tx->bytes = 0;
-+
-+	mutex_lock(&priv->state_lock);
-+	for (i = 0; i < priv->stats_nch; i++) {
-+		struct mlx5e_channel_stats *channel_stats = priv->channel_stats[i];
-+
-+		/* while iterating through all channels [0, stats_nch], there
-+		 * are two cases to handle:
-+		 *
-+		 *  1. the channel is available, so sum only the unavailable TCs
-+		 *     [mlx5e_get_dcb_num_tc, max_opened_tc).
-+		 *
-+		 *  2. the channel is unavailable, so sum all TCs [0, max_opened_tc).
-+		 */
-+		if (i < priv->channels.params.num_channels) {
-+			j = mlx5e_get_dcb_num_tc(&priv->channels.params);
-+		} else {
-+			j = 0;
-+		}
-+
-+		for (; j < priv->max_opened_tc; j++) {
-+			struct mlx5e_sq_stats *sq_stats = &channel_stats->sq[j];
-+
-+			tx->packets += sq_stats->packets;
-+			tx->bytes += sq_stats->bytes;
-+		}
-+	}
-+	mutex_unlock(&priv->state_lock);
-+
-+	if (priv->tx_ptp_opened) {
-+		for (j = 0; j < priv->max_opened_tc; j++) {
-+			struct mlx5e_sq_stats *sq_stats = &priv->ptp_stats.sq[j];
-+
-+			tx->packets    += sq_stats->packets;
-+			tx->bytes      += sq_stats->bytes;
-+		}
-+	}
-+}
-+
-+static const struct netdev_stat_ops mlx5e_stat_ops = {
-+	.get_queue_stats_rx     = mlx5e_get_queue_stats_rx,
-+	.get_queue_stats_tx     = mlx5e_get_queue_stats_tx,
-+	.get_base_stats         = mlx5e_get_base_stats,
-+};
-+
- static void mlx5e_build_nic_netdev(struct net_device *netdev)
- {
- 	struct mlx5e_priv *priv = netdev_priv(netdev);
-@@ -5310,6 +5441,7 @@ static void mlx5e_build_nic_netdev(struct net_device *netdev)
- 
- 	netdev->watchdog_timeo    = 15 * HZ;
- 
-+	netdev->stat_ops          = &mlx5e_stat_ops;
- 	netdev->ethtool_ops	  = &mlx5e_ethtool_ops;
- 
- 	netdev->vlan_features    |= NETIF_F_SG;
--- 
-2.25.1
-
+Thanks
+Nicolin
