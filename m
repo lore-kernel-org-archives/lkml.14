@@ -1,119 +1,129 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E575158201
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9D715920F
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716993521; cv=none; b=TWAfQTMvDQXSc8zBTdIxZHEjqqSeUyVbZOlQqXUt0XXigmW8mVgnjfaTkhNfzjo6SgUE3ImE2l/Na4Cf2OSn/kWDjBlvCiQas3cZywDLv6Yoh2ox0UsDzbtOQSemI5xYgpSChCWt8CaIQFcS9+64TSJyVI7AgcllVDPgyXqm1pk=
+	t=1716993584; cv=none; b=bZEgggPDcNvsMkBEiybm0x1JtUR9omucAUXqD3U8rzuA2gt/FUY60oiSVciKSXvj0o1nE2JNB2fmkAxQNQ5O7f4iwSgpK7jRsg33YoVC4vvt4ISDEYPegFzOO6xEMhJWpkIhkRiUbL2IBJKNcj1KVTPWgXtJzkLgkInnMLU317U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716993521; c=relaxed/simple;
-	bh=qtx7heFq23Ik7RP0+IKkj4MhAFl1SLLrhfCCxu4Y/iw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eTHN5BHQzGOOA3PVbqdYodcwKpvaesO9A0lja6pjWWcnMNl6THe2XBftBQlKYx7Az+PqEBXoxuYSU85+YzfT5lQMIZ/ETc0k9jzb8UnB8QO8ZzpjEX/76T2CTGmFXCGqadKxEnMEAqUWDHzv+Ht6M+KKRfSitAqYsdSMboWzG2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KPVZsj8k; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716993584; c=relaxed/simple;
+	bh=CYWIPjtAFfyJHn7MNTSA22LWGuuvpTO1d03GME6cg9o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oCbj8BhoSleZKj9NR1UhxZlVkKPcGPcmCZ3zCIupmZ6VlXM6psdh7+Ug3E35XCQD80xgDlruMSaNOscud+F46JTXqcEwy8FncxsQpENx4z9/7ZNVtg0AIZywpCUUe4bf76E3RaewbpoH/jzriZI7T8RAH3ITPDxjt3eaoy1jxRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BaIT6r0n; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KPVZsj8k"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42011507a54so128345e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:38:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BaIT6r0n"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2e9819a6327so25565681fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:39:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716993517; x=1717598317; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NXlxBJgQstiSb1iHCBoySUt4Dr8xVwSho9/4h77j9/Y=;
-        b=KPVZsj8kfvrlqGxbyhrgjG3IDqnkkY39IVuhBMIuXI/rqVNwir2Gd1dRiYCTpLb0GM
-         IRDzbSgYs00UqAJ9L/CpJIuonpFKvjUjwsWBv7K6egTLd+EJkGuGNQQQomsNipW22dZ9
-         9bs1Z7YbIlwQIaiAslEtb/NQd7XXmBrrOmppCeJ4M5sJeLkAtvkZZWMdOM8hQ1G9LB2s
-         z06vIg6p3Ip0BBe5zGvs02AFcmoUIaD4LwpyDa4NpRI4ZFSMErGgFC1xQtS17PYzaXf4
-         6g5k6ek3FUHM4D5ZTH03zvygR1cBnTJLXNOvbZu08v4dIvBbtEFuueA9AnG0XX1J9dVx
-         WvZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716993517; x=1717598317;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716993579; x=1717598379; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NXlxBJgQstiSb1iHCBoySUt4Dr8xVwSho9/4h77j9/Y=;
-        b=Wdf5ecgA2fLK8+WmSdWe7xcWFGcOmxuB87fRm3gHd+WEimcvvI6ixs3a0gi0FVYBM3
-         ikyayXZt/TRJNQykPY60Szw4h3T8OdUQz+DYNuF2BdpZNN2encj3fzK73/GwBqU4hMWK
-         yqOntgdzLRhlVrdQMd9Zjv7p5NthU80KxjUktFec0vFc/xPiG7+CBwQZETfQRiQynXKz
-         pqJTPl/EAnnU4e3uW4Z73F9b9EFhlmCEwxYQ4GDcTXLz0sOjaFZOfYe4W6sKfwfxthUl
-         rpuvSzmDq0xT9w6E8o/nbS9TSSAyZ1ILxPqQd1hzNqpslw5KfkayptiVes8wrQdc+0hW
-         O9/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVZsgE4Gsh4a1Y62Y6T91FBFdDIctsEyDIMknd07Kv5gUKKxtB8PJs1p4bvY1zLtrm1cq+sw769J/HrhexgFvGtLLFKqG6GilBRqTbY
-X-Gm-Message-State: AOJu0YxiRotm26bYJRIRyGVNVs+g/IKAyMdZaqebIE1V8ZQpfZf39r6C
-	rx1uLZ7eXpJ2m0MfFodNDkVtAtIRRCvn+j1hl6xy/Z8JPtpisTE+UhweVIuLukU=
-X-Google-Smtp-Source: AGHT+IH716sSlQ0shXbTlDViazn4mQcqRoOCpRWv8t8XYiQ1HLYo/wxnu2ygHpUNyh3b8AdjgrqGIg==
-X-Received: by 2002:a05:600c:4450:b0:41c:73d:63b3 with SMTP id 5b1f17b1804b1-42122adb00amr20059995e9.3.1716993516434;
-        Wed, 29 May 2024 07:38:36 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089cc4e2sm183157625e9.39.2024.05.29.07.38.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 07:38:35 -0700 (PDT)
-Date: Wed, 29 May 2024 17:38:31 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Gregor Herburger <gregor.herburger@tq-group.com>,
-	linux@ew.tq-group.com
-Subject: Re: [PATCH 8/8] gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH
- interrupt type
-Message-ID: <8689fbcd-3fa3-410b-8fc9-7a699bf163b8@moroto.mountain>
-References: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
- <2c265b6bcfcde7d2327b94c4f6e3ad6d4f1e2de7.1716967982.git.matthias.schiffer@ew.tq-group.com>
+        bh=wUUeqx06PD9RnDkd7RHtSPB5pC0CFZUjyvWsXQJbRlo=;
+        b=BaIT6r0nyxRajfpn612La/kkuWYgdNN5ZzORraJmZNTIO8OD8eOBMokq1BJkpBNRM0
+         cY1ezjaWI8qoqw+z7VMumumGIbJvPU+0rNAFRbkxKtH1PXij0VC53L698++1aoLgchcL
+         nYnGxkB73MegrKt3XO5dqAVUfBD8vfVGAmy4AkpjvbebkOO1l5gj+b+hyy3t//iQEaB+
+         TOVT8+oIWV0CcV2xi1CKOAgFlrB+mI9pj8kQAUT2G01xdRHv0sKPyV9FTr6TUKxBjD1I
+         TpNOj1eFWtBlUh+k0TO671pocn7MnMcIqoVU9TfNzEJbS5KP5VSyvfRhnIXWzz5dhI7Z
+         PZew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716993579; x=1717598379;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wUUeqx06PD9RnDkd7RHtSPB5pC0CFZUjyvWsXQJbRlo=;
+        b=nn1ZYLt7QKUcR6RvVDQvBLofSEe45XE6Fl3IHbGM+tTYcoeeORWTaSr/F8lNkaAbs5
+         ZrL/XCPUsv9LEZECVH1SH6VptPFf7Q3Ll9bPp0qTMM/y7hD+BcmX2qnQrqZdZmh8EoY0
+         +eG3/oPkkZ/PwIvS/7lqnHribAs4uCWP1JZCblmF9zj+KNu/xQARhDTf/MMGHgvkJSm5
+         4nHKQv8HHeESdF6BcSzsy8sZBtXRFJ376+axwcEYcu/0Yuv4xuuWg1APJcQWUkGbzb+k
+         woZMyzjlBiis35pzE7qps/ClKXA8VCd8mVaHi9BaW3zORUy5iZpW3dUDP1DJPo4fRVkK
+         +0mA==
+X-Forwarded-Encrypted: i=1; AJvYcCWE8nVR6/OMAs3edw/R8+D0CUu9o9fTGUSPMERwNEc0HnuZyuiMisHDI+afuXV3c0H30s84fxqb755QdgiV4M6ya4C51yEt1koC3lLj
+X-Gm-Message-State: AOJu0Yyi1UV05XJt9bBK1swWARDAGIVcevVL84qeswUgb0xjX1rJcgQf
+	b/EOpHBsEwpmcYWzd+k536OA1hHxPJOIWBMTO/AR7rI5ywWYgcJ2Wd83mz5U9TAdJG723tJ/ZyD
+	o97IPu8GliPzXMH3zFDvztXduDf2l60bmgtz8gh1BWOQu1sPu
+X-Google-Smtp-Source: AGHT+IEjlZVDnQ24lkUWp0Sdko93n3669vjAybgG59+MWyamnsin29/ulOH8X8tip6Fh2q5pwCTpEwMYKKFP17ZfiIA=
+X-Received: by 2002:a2e:9599:0:b0:2e9:5e2d:2e8c with SMTP id
+ 38308e7fff4ca-2e95e2d33acmr91830111fa.41.1716993579444; Wed, 29 May 2024
+ 07:39:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2c265b6bcfcde7d2327b94c4f6e3ad6d4f1e2de7.1716967982.git.matthias.schiffer@ew.tq-group.com>
+References: <20240527-shm-bridge-v10-0-ce7afaa58d3a@linaro.org>
+ <20240527-shm-bridge-v10-15-ce7afaa58d3a@linaro.org> <8f3f1e88-426d-4254-a31c-afcb88fc08f3@linaro.org>
+In-Reply-To: <8f3f1e88-426d-4254-a31c-afcb88fc08f3@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 29 May 2024 16:39:28 +0200
+Message-ID: <CAMRc=MdxP5MWPhbq6u8WHRpm04F0iijeTpG0q3D9q52e7xfcsw@mail.gmail.com>
+Subject: Re: [PATCH v10 15/15] arm64: dts: qcom: sa8775p: add a dedicated
+ memory carveout for TZ
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Robert Marko <robimarko@gmail.com>, Das Srinagesh <quic_gurus@quicinc.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Elliot Berman <quic_eberman@quicinc.com>, Alex Elder <elder@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kernel@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 09:45:20AM +0200, Matthias Schiffer wrote:
-> diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
-> index c957be3341774..400415676ad5d 100644
-> --- a/drivers/gpio/gpio-tqmx86.c
-> +++ b/drivers/gpio/gpio-tqmx86.c
-> @@ -126,9 +126,15 @@ static void _tqmx86_gpio_irq_config(struct tqmx86_gpio_data *gpio, int hwirq)
->  	unsigned int offset = hwirq - TQMX86_NGPO;
->  	u8 type = TQMX86_INT_TRIG_NONE, mask, val;
->  
-> -	if (gpio->irq_type[hwirq] & TQMX86_INT_UNMASKED)
-> +	if (gpio->irq_type[hwirq] & TQMX86_INT_UNMASKED) {
->  		type = gpio->irq_type[hwirq] & TQMX86_INT_TRIG_MASK;
->  
-> +		if (type == TQMX86_INT_TRIG_BOTH)
-> +			type = tqmx86_gpio_get(&gpio->chip, hwirq)
-                                                            ^^^^^
+On Wed, May 29, 2024 at 4:26=E2=80=AFPM Konrad Dybcio <konrad.dybcio@linaro=
+.org> wrote:
+>
+> On 27.05.2024 2:55 PM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Add a 20MB reserved memory region for use by SCM calls.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dt=
+s/qcom/sa8775p.dtsi
+> > index 31de73594839..c183527452d7 100644
+> > --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> > @@ -208,6 +208,7 @@ core3 {
+> >       firmware {
+> >               scm {
+> >                       compatible =3D "qcom,scm-sa8775p", "qcom,scm";
+> > +                     memory-region =3D <&tz_ffi_mem>;
+> >               };
+> >       };
+> >
+> > @@ -418,6 +419,12 @@ cdt_data_backup_mem: cdt-data-backup@91ba0000 {
+> >                       no-map;
+> >               };
+> >
+> > +             tz_ffi_mem: tz-ffi@91c00000 {
+> > +                     compatible =3D "shared-dma-pool";
+> > +                     reg =3D <0x0 0x91c00000 0x0 0x1400000>;
+>
+> How does that size relate to
+>
+> +       pool_config.max_size =3D SZ_256K;
+>
+> in patch 3?
+>
+> Konrad
 
-> +				? TQMX86_INT_TRIG_FALLING
-> +				: TQMX86_INT_TRIG_RISING;
-> +	}
-> +
->  	mask = TQMX86_GPII_MASK(offset);
-                                ^^^^^^
->  	val = TQMX86_GPII_CONFIG(offset, type);
-                                 ^^^^^^
->  	_tqmx86_gpio_update_bits(gpio, TQMX86_GPIIC, mask, val);
+Short answer: it doesn't.
 
-The offset stuff wasn't beautiful and I'm glad you are deleting it.  My
-understanding is that a hwirq is 0-3 for output or 4-7 input.  An offset
-is "hwirq % 4"?
+Slightly less short answer: this is the limit of *this* specific TZMem
+pool which in turn gets its memory from the shared DMA pool. We can
+have multiple TZMem pools and they all share this DMA pool.
 
-There are a bunch of places which are still marked as taking an offset
-but they all actually take a hwirq.  For example, tqmx86_gpio_get()
-above.  The only things which still actually take an offset are the
-TQMX86_GPII_MASK() and TQMX86_GPII_CONFIG() macros.
-
-Could you:
-1) Modify TQMX86_GPII_MASK() and TQMX86_GPII_CONFIG() to take a hwirq?
-2) Rename all the "offset" variables to "hwirq"?
-
-regards,
-dan carpenter
-
+Bartosz
