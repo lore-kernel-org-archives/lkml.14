@@ -1,107 +1,116 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE6EFBF6;
-	Wed, 29 May 2024 13:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5711D17BBA;
+	Wed, 29 May 2024 13:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990133; cv=none; b=oPQkyCzirAH9vHep0iJ6rqFq/gB36V+aVeKPldltUfNZyX+jWsJ/4NDVr09Tr71J4+K7lXVp9HBaswdIDgFK8Ti5vK/++wQOKumruGDlWmdrlK9wRam+LsJ6cxD83hMEhczOxVyj9c7LNy0wX8jG6QK5mfELEAGjACx35h0zuBE=
+	t=1716990156; cv=none; b=gUtirKho2yfth2lO5JL+BmlmNoehx8FJXGmuL14/rXL7NG7Vn+aGnpQHVZECO5JcHtHG7/KhjHXejwYbwyB/7p+GofCNJzg6QOWZZrE/QWIOUTBDj18JA+zjT0UTi+UO4Rb0aMyibYJctzZjYYcUWGOsdmMDoJSD5nIyYuLx8zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990133; c=relaxed/simple;
-	bh=CS76i+zGV1UVewLcKzHnXIl9od9YiR4aRukKmEAMMdA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nBjy8x+5detHALVWNpqpsNzIO7jI9NhblvmTK3yGMERCU0TEcu2cqDAcIBpxnC087cb9CpfxUqcHp3mKzq7oTbVwSqPWpQ1081VkVNe8PKXoCxFJkCCTFykFUiLyQhdIBw4r9+tl7D9el2x39rxSbZoTeMmy1uiv5HzAMqu110M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZdsZ50HZ; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdsZ50HZ"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a653972487fso58237466b.1;
-        Wed, 29 May 2024 06:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716990130; x=1717594930; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FmwaHNB5h7Bb1aKSr3REWrUKJJZAZf4lqZlbFLDlq0w=;
-        b=ZdsZ50HZVKQzSqzCw+bJTgglxoyZjpFvJtT5iSIuFOTbnDJRaWYwsfNv7s7kiIi8n2
-         2sSQkv8UyicUA32Q3P0aUhBoj0DZGVGbN99ALjlXCEQGgvTBgi1ofJmTTrVqkiaZ6QqB
-         njN2y84M9kdEKXcbpGH0Q54QTf7tDMtTqxuyiv8Y5aKf3hoVnHTI1rTBunjsLGE8+nPY
-         YayovVMPlhI4etE1jvPmn2PbPuzCmGP17F6ZoscNOXqf9WNOgx4FnJyEk16JzSmeH13U
-         qg8JH+e2Fj6c7KhwpwKFbFMxixZXw6WbhhwFiKlFz4gEac7v45ITdOP89FburfX9Z+za
-         qWqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716990130; x=1717594930;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FmwaHNB5h7Bb1aKSr3REWrUKJJZAZf4lqZlbFLDlq0w=;
-        b=F/UnIxGYkY6ES0eS8FgGstxf6L8ZN6d/FoHL9ZLr+F+TkSwfWGOPW9AzV58ns0hVFb
-         1pa3BJF1HvgyAxLyZqzlcTXUDuh4UY7zY+DcvFNZrDzrx7gPMgQiqD8fLoAKJN80i+uz
-         NcfNp5VtXhz5fwSmtSG1MGqXKB+ufhoFGP3n7vW77IvIeNkLnqOJhCmvIj8HjSKy6631
-         b+oiJtAJTcFyWV70CgQmn7ij//2fUc389m/XdK1zxZ2FYvbSU8hQXYnhAVah3ta+VvP7
-         Yn/7zdvnXHEKGl+qWdI9zN5nqoMWqqBxHKulHGk1HdqWK53Tt06ENPPvokC9V/wwg72i
-         huWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnCaXfKj2MR+nm/WvlkyBEyhI7UXaux317AQDnb1qHoqyMPSUXCsFv9Eto/ZIWssE/VkaosAdThOADQKUnv+j2TtzqhN63foHhWy1rZjzbFll3PDnIaKInVHwrOjK9GNB8B0mmAKmYPZBMmPTI4tAjEw==
-X-Gm-Message-State: AOJu0YzIS+gVMaLC1qHhWn3Gulhu4xTTZHBl/QqbCI/djkPbeS5tppAh
-	5hoT40gGeObYnNT0CwvLyWGTP6/EfJ28s9Nc8kTdDytd1g+jkF35Bpx5Ab/2C2NC1wtDhpRHT/a
-	aooa0kW3xtXNZQpveaVWgkPd5SWc=
-X-Google-Smtp-Source: AGHT+IGyT1xiDyONKn4viXOJrmtwX33X8kyHCmc0QVNUQaLs3+KaZjHo/Ev1t4Pz/wx/IaDLqacKsYQe9XD5XiEgZ1Y=
-X-Received: by 2002:a17:906:3d72:b0:a62:e4d:8666 with SMTP id
- a640c23a62f3a-a62642ec2f3mr1008888966b.28.1716990130304; Wed, 29 May 2024
- 06:42:10 -0700 (PDT)
+	s=arc-20240116; t=1716990156; c=relaxed/simple;
+	bh=0LPxpDknx3zfZcyGuH1mlTgiwezfEYHQZxzUf6U1jp8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PBikrlwy4dHuyqo/O3Ng3WqBwAyE+WZ73Ni2NHpUaY/YYyyPqwfrP4et8vGyxwDl+fzBrjWl4tJTc0WrTc4Xl93huWpIzqt+C9syevFU8DhbDqGejsVSut6rZiMCIgBck363O+Va43fyn2Oo6hYXlOGc0g/IjeanSVXRgXlfqks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vq9SV135bz6J6nV;
+	Wed, 29 May 2024 21:38:18 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id EA9B9140A30;
+	Wed, 29 May 2024 21:42:31 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 29 May 2024 14:42:31 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, <loongarch@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin
+ Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v10 15/19] arm64: psci: Ignore DENIED CPUs
+Date: Wed, 29 May 2024 14:34:42 +0100
+Message-ID: <20240529133446.28446-16-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529095009.1895618-1-arnd@kernel.org>
-In-Reply-To: <20240529095009.1895618-1-arnd@kernel.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 29 May 2024 16:41:34 +0300
-Message-ID: <CAHp75VdRuK_sOF=25xP0azp8sOJ8DY_SRpLq9mUSaNEmWj5EAg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: int3472: make common part a separate module
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Daniel Scally <djrscally@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, May 29, 2024 at 12:50=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wr=
-ote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> Linking an object file into multiple modules is not supported
-> and causes a W=3D1 warning:
->
-> scripts/Makefile.build:236: drivers/platform/x86/intel/int3472/Makefile: =
-common.o is added to multiple modules: intel_skl_int3472_discrete intel_skl=
-_int3472_tps68470
->
-> Split out the common part here into a separate module to make it
-> more reliable.
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-...
+When a CPU is marked as disabled, but online capable in the MADT, PSCI
+applies some firmware policy to control when it can be brought online.
+PSCI returns DENIED to a CPU_ON request if this is not currently
+permitted. The OS can learn the current policy from the _STA enabled bit.
 
->  obj-$(CONFIG_INTEL_SKL_INT3472)                +=3D intel_skl_int3472_di=
-screte.o \
-> -                                          intel_skl_int3472_tps68470.o
+Handle the PSCI DENIED return code gracefully instead of printing an
+error.
 
-> +                                          intel_skl_int3472_tps68470.o \
-> +                                          intel_skl_int3472_common.o
+Note the alternatives to the PSCI cpu_boot() callback do not
+return -EPERM so the change in smp.c has no affect.
 
-A nit: Can this be put above instead?
+See https://developer.arm.com/documentation/den0022/f/?lang=en page 58.
 
-...
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+[ morse: Rewrote commit message ]
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ arch/arm64/kernel/psci.c | 2 +-
+ arch/arm64/kernel/smp.c  | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-> +EXPORT_SYMBOL_GPL(skl_int3472_get_sensor_adev_and_name);
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index 29a8e444db83..fabd732d0a2d 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -40,7 +40,7 @@ static int cpu_psci_cpu_boot(unsigned int cpu)
+ {
+ 	phys_addr_t pa_secondary_entry = __pa_symbol(secondary_entry);
+ 	int err = psci_ops.cpu_on(cpu_logical_map(cpu), pa_secondary_entry);
+-	if (err)
++	if (err && err != -EPERM)
+ 		pr_err("failed to boot CPU%d (%d)\n", cpu, err);
+ 
+ 	return err;
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 6b0572daa9da..a755b9f902fa 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -132,7 +132,8 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	/* Now bring the CPU into our world */
+ 	ret = boot_secondary(cpu, idle);
+ 	if (ret) {
+-		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
++		if (ret != -EPERM)
++			pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
+ 		return ret;
+ 	}
+ 
+-- 
+2.39.2
 
-Are these namespaced?
-
---=20
-With Best Regards,
-Andy Shevchenko
