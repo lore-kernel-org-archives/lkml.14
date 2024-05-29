@@ -1,161 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9803416F271
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB0615CD54
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716961004; cv=none; b=aKz4USnpl4th/yieE8L7M7AGziec28ucowcm6zaz/hby/apC/YVY4cWEnRGTcO+eKdoNiv/qiGtnOnFrXhGAdf48LGd3y+JMfanvYRzUFHg9dck3YIwy9D/hUdBxmLWK7r1Je2t5r+GX1c/GsGgMehXIijB1QxTZyaI2KXPK73o=
+	t=1716961017; cv=none; b=uDmRzbCmE0CGbvT9c4rX6Z/Zq+/JI9GlIMe7xy1cz+0onQMx0wfiBiXFyLoSG/joYZBBc29jvuVPThmyJtrxrLIa5Ophq+DUR6asLqRmVRXFeUXki+oQGoqaZM6Lv7IzjiUaxUUPPTDK93I+QlWCcllNnhndQG5kcbKCZLPfPjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716961004; c=relaxed/simple;
-	bh=uZ18e0DpTIgHLOpzfBuHcXvVKSj+fUz+S5osI7EsSTY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u9P6HrPEuGBCsUDtwvqNgAhlQqaNzmxEgbaPFxqBy+yPTNg19vR7B7Mdr/ePkNJrZyDKWHubZE8Pk+FpbHvlRlrHOipzXcBi4PefwIdBJp0AJv6l+THFcuajuzj7DIkliOU8UjRY7QTGWgCBHr1zzaV5FqMECQfqWm18BFN/Ui8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gaZT/mxp; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716961017; c=relaxed/simple;
+	bh=Qw+SVdZU7dl3Iz5CgVUnpb/7nEuRRMGVLU936J0+5g0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rhxv2nJMNiAfNUR14A61Rk+/SfIj0l3saFA6w2MvQ8sjGQFLvAxNdX7TigRvqfur9z7kkjUbM1nAtfn3qPRa9O/Gwv/vOaavaFfW5lP2qy0rCY9pOWyXwnx4ca45lr0qNAFyjiT0nbX/+7kiqn1KMrPhKdD7evyLauh9Tgqk+KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kBAHI0HI; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gaZT/mxp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716961004; x=1748497004;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uZ18e0DpTIgHLOpzfBuHcXvVKSj+fUz+S5osI7EsSTY=;
-  b=gaZT/mxpLDIP2gP2yr2JZam0yRyejPM5ASQJzfEpJ3Ukat7/5DYG/XKY
-   2MEvXKQNL56+IVwyENHHdIEaPX9A8NrLsRSDYXGxlxGFNVqz3MCwgL8Am
-   eXCycmTq9JAghEfqGYiDTA1dQg4opKQWqovTedHahmFxgFqG3fpquv95L
-   T1gROj+Dsl26KxbIpe6PrwTy8x6vmgZWDaAtlWEP3tZKEJJ58Q0+BD1Sx
-   8u9YZjLN4dN8vz9YStHPG1942TaJ/JMAHolaiW7xRvSpxN5pwM1O3sHkE
-   GTTmBteZplAY2AFU7HKA0LAMAif3DUUALxYsJuKv4WE7oC9GsAHYMa1Kj
-   Q==;
-X-CSE-ConnectionGUID: iOaC2/LxRx+vv5XAL7+glw==
-X-CSE-MsgGUID: AWN1noWfTreCYbIPriOLcg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13569132"
-X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
-   d="scan'208";a="13569132"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 22:36:37 -0700
-X-CSE-ConnectionGUID: X+RiNsarRtKW3lpRtSJ0IA==
-X-CSE-MsgGUID: nvefUVcKRTqj8DSSs+S92A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
-   d="scan'208";a="35257811"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by fmviesa007.fm.intel.com with ESMTP; 28 May 2024 22:36:32 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>
-Cc: Yi Liu <yi.l.liu@intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	mst@redhat.com,
-	Jason Wang <jasowang@redhat.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	iommu@lists.linux.dev,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 20/20] iommu/vt-d: Remove domain_update_iommu_superpage()
-Date: Wed, 29 May 2024 13:32:50 +0800
-Message-Id: <20240529053250.91284-21-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240529053250.91284-1-baolu.lu@linux.intel.com>
-References: <20240529053250.91284-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kBAHI0HI"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-652fd0bb5e6so1351820a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 22:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716961015; x=1717565815; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fXHYZjRxRfJOZA8/qFOHUh7lsjZxW3P4imwmiPFM/Y8=;
+        b=kBAHI0HIR5NR8OupfakOwYCA1vmfA8oj0v1Bis5FuXemDoeAa6PNUvol5nadxSAoAK
+         S+TFS1jTGb950ilFO19U8YcajhZrGuhwAYsg7SBjLHhgMpVMV7oYqXuYdCiWMN6qhJNl
+         yDxY7FMU2cpzDpEN3ok3TAb4ao1+Tr8wHNNCJwSXamxkLJIpDIW4fSHqQ0WjTMicWR4Z
+         9pgawkAJsmluKZ8ZCfmzcWdQEHJsL4q0pGLQadMVuuilFOw3M+VDLxicbjx9/AnPn9Mk
+         M5rlQ8enKnJqcCYSh+olNMezH+6upIvXPyG2IJrEqs4imay8+SlHMpLdp5R4R33IdY5c
+         DYUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716961015; x=1717565815;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fXHYZjRxRfJOZA8/qFOHUh7lsjZxW3P4imwmiPFM/Y8=;
+        b=bVjqq+kbKlE7OpSYAn0C0zXQiV63nfBt2Qk6YnKr1wr4zUkEe5WE95/d+q3Hwu5IUa
+         eDJHZkxOvfq4dbKMLV7l0Mx5zHfvMLsV9rJvmwUKCzk1URkKd1rrQGBHtz8zF10XcJEN
+         qrvgAn0A2pdBdBMMccdtIXMq/wWvpZ7/o2MAweAJQZVGI94myZpC3JyB6AyuQ/1qyBYX
+         liTk9JdiLsyFmiG2uUWWdbAl8Fb3N0tmB0lM5JwT5K5PewrctXBRjICrxJPD8Jf1sBi9
+         r3a+SBb+adix7mqIyOtLEDGMKfyL8huePZ1uv/ohANibp/dTG0Kq3tQjNdbcWbTVLsRR
+         2i5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXoOC4A8kDxUpStnbrDmutdSdQEVVCnSzfeUkq5uyGVQ4j5GUmW82wncB54zZ7rrU+hIFmegSu7HIt1VLdJ/eFyVpSS+8bjCU66h0Oo
+X-Gm-Message-State: AOJu0Yz4X9le42TlxIiJ+hd9tjtaLalc0l9haaYGX080Hqx+TJeZDY0q
+	u9egdnZfV84h9OiJPB3Fkyy7xveiqkdFw1ZQkbgo71/cjJUEYNQUPJuZgHdctvPQxAjAp+gvcS0
+	E
+X-Google-Smtp-Source: AGHT+IHJqMoOKjFMIcm+63tMtrDnjBUXXM2u7Q0ZFL9TyjONITAZjYU60TASkrzu36aGe8Wi/11wuw==
+X-Received: by 2002:a05:6a20:9188:b0:1af:b1c0:c9eb with SMTP id adf61e73a8af0-1b212e02f4bmr18803674637.45.1716961014999;
+        Tue, 28 May 2024 22:36:54 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bf5f989871sm8618473a91.40.2024.05.28.22.36.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 22:36:54 -0700 (PDT)
+Date: Wed, 29 May 2024 11:06:52 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Riwen Lu <luriwen@hotmail.com>
+Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Riwen Lu <luriwen@kylinos.cn>
+Subject: Re: [PATCH v2] cpufreq/cppc: Take policy->cur into judge when set
+ target
+Message-ID: <20240529053652.pzcjoyor7i23qc4i@vireshk-i7>
+References: <TYCP286MB24861BA890594C119892FB3DB1F22@TYCP286MB2486.JPNP286.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYCP286MB24861BA890594C119892FB3DB1F22@TYCP286MB2486.JPNP286.PROD.OUTLOOK.COM>
 
-The requirement for consistent super page support across all the IOMMU
-hardware in the system has been removed. In the past, if a new IOMMU
-was hot-added and lacked consistent super page capability, the hot-add
-process would be aborted. However, with the updated attachment semantics,
-it is now permissible for the super page capability to vary among
-different IOMMU hardware units.
+On 29-05-24, 11:22, Riwen Lu wrote:
+> From: Riwen Lu <luriwen@kylinos.cn>
+> 
+> There is a case that desired_perf is exactly the same with the old perf,
+> but the actual current freq is not. Add a judgment condition to return
+> only when the three values are exactly the same.
+> 
+> This happened in S3 while the cpufreq governor is set to powersave.
+> During resume process, the CPU frequency is adjusted to the highest
+> perf. For the booting CPU, there's a warning that "CPU frequency out of
+> sync:", because the policy->cur is the lowest_perf while the actual
+> current frequency is the highest_perf that obtained via
+> cppc_cpufreq_get_rate(), then set policy->cur to highest_perf. The
+> governor->limits() intent to configure the CPU frequency to lowest_perf
+> and the governor->target() returned because the desired_perf is equal to
+> cpu->perf_ctrls.desired_perf leaving the actual current frequency and
+> policy->cur are remain the highest_perf. Add a judgement that if
+> policy->cur is the same with desired_perf to decide whther to return.
+> 
+> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+> 
+> ---
+> v1 -> v2:
+>  - Update commit message and email.
+> ---
+>  drivers/cpufreq/cppc_cpufreq.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index 15f1d41920a3..802f7c7c0ad8 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -296,7 +296,8 @@ static int cppc_cpufreq_set_target(struct cpufreq_policy *policy,
+>  
+>  	desired_perf = cppc_khz_to_perf(&cpu_data->perf_caps, target_freq);
+>  	/* Return if it is exactly the same perf */
+> -	if (desired_perf == cpu_data->perf_ctrls.desired_perf)
+> +	if (desired_perf == cpu_data->perf_ctrls.desired_perf &&
+> +	    desired_perf == policy->cur)
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel/iommu.c | 39 +------------------------------------
- 1 file changed, 1 insertion(+), 38 deletions(-)
+From my earlier understanding, desired_perf is a derived interpretation of the
+frequency and isn't an actual frequency value which can be compared with
+policy->cur.
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 74e005b1c4b4..660d2b6c531b 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -366,36 +366,6 @@ static bool iommu_paging_structure_coherency(struct intel_iommu *iommu)
- 			ecap_smpwc(iommu->ecap) : ecap_coherent(iommu->ecap);
- }
- 
--static int domain_update_iommu_superpage(struct dmar_domain *domain,
--					 struct intel_iommu *skip)
--{
--	struct dmar_drhd_unit *drhd;
--	struct intel_iommu *iommu;
--	int mask = 0x3;
--
--	if (!intel_iommu_superpage)
--		return 0;
--
--	/* set iommu_superpage to the smallest common denominator */
--	rcu_read_lock();
--	for_each_active_iommu(iommu, drhd) {
--		if (iommu != skip) {
--			if (domain && domain->use_first_level) {
--				if (!cap_fl1gp_support(iommu->cap))
--					mask = 0x1;
--			} else {
--				mask &= cap_super_page_val(iommu->cap);
--			}
--
--			if (!mask)
--				break;
--		}
--	}
--	rcu_read_unlock();
--
--	return fls(mask);
--}
--
- /* Return the super pagesize bitmap if supported. */
- static unsigned long domain_super_pgsize_bitmap(struct dmar_domain *domain)
- {
-@@ -2845,8 +2815,8 @@ int dmar_parse_one_satc(struct acpi_dmar_header *hdr, void *arg)
- 
- static int intel_iommu_add(struct dmar_drhd_unit *dmaru)
- {
--	int sp, ret;
- 	struct intel_iommu *iommu = dmaru->iommu;
-+	int ret;
- 
- 	ret = intel_cap_audit(CAP_AUDIT_HOTPLUG_DMAR, iommu);
- 	if (ret)
-@@ -2858,13 +2828,6 @@ static int intel_iommu_add(struct dmar_drhd_unit *dmaru)
- 		return -ENXIO;
- 	}
- 
--	sp = domain_update_iommu_superpage(NULL, iommu) - 1;
--	if (sp >= 0 && !(cap_super_page_val(iommu->cap) & (1 << sp))) {
--		pr_warn("%s: Doesn't support large page.\n",
--			iommu->name);
--		return -ENXIO;
--	}
--
- 	/*
- 	 * Disable translation if already enabled prior to OS handover.
- 	 */
+Shouldn't we compare policy->cur with target_freq instead ? If yes, than the
+core must already be doing that somewhere I guess.
+
 -- 
-2.34.1
-
+viresh
