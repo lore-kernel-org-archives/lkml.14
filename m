@@ -1,332 +1,220 @@
-Received: from SINPR02CU002.outbound.protection.outlook.com (mail-southeastasiaazon11011005.outbound.protection.outlook.com [52.101.133.5])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2126.outbound.protection.outlook.com [40.107.22.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961D8273DC;
-	Wed, 29 May 2024 06:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.133.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE9115B14B
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.126
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716965946; cv=fail; b=du93m4lBGIwMwjf2nxQXAUf7LNGcnO+tS7O8m1bSZBT3bu1ShpSZJQZhIsarkARJiJa7ywi+07EY+P5SsoVZBCas/QrIZbkiOhwfnKN7VGHvMI9JjDfu0HcZidn4OReO//8kZMfIyRcAaS7qHK7+2Zz0OtEyztujd74XBd5cBw8=
+	t=1716966113; cv=fail; b=O56apttBV6z5xSgi7s4+3w1HXFkeE4R8fK2pc4BxGpCQk8JM0ALt2m1CmNbnEOyfqp7K0Bcs5SMqiom9x2lUQCvZLr+JxodenYeY3V6GWG7Zz95RgMtWRhr8aYPKvkOOF4QG4PZmn/9gvQhNAa7BWbqbFXj8v4AolC0d1qrWum8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716965946; c=relaxed/simple;
-	bh=p2ti3bERSaxq1+DBZOYqaY3QZDMNENTVjBjm1pR9/34=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=D1KW94hkdIPt7CZw+IBfSHCdIpZGky8Rg7QBbmCDkeW62nXwZGFmGFZTOYA6dgk5GqF8U0u9y9KuIX5lrpxjPcrZPLJjXwrzkjbxw0+e3utgsY4NdV2iDUrBg30jDSs5bEDNfs/0pDNE+ldXzSleEH3epVk2LawOezlS4iVL23Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=YOebDCXm; arc=fail smtp.client-ip=52.101.133.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	s=arc-20240116; t=1716966113; c=relaxed/simple;
+	bh=kXfo67MmjfX2FKEkRJJ+0XQAnwuV7QgzPiXOY4WoneA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RJjAAx2Baj6Nkles7tNC1yN+bZ8dvXwKlxt772+ZOPfldXV/68Xn5y8M5dlPFtkDQlVz//Ho1j9U+maRteme5NA/b9TelnClmE+1rStDGVz7QJMMHVqohwgLVy3PIxliULmZOeqdv6q72vua0VSBckRm9+XJUJloMYGyPX7x428=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=pgDMHp14; arc=fail smtp.client-ip=40.107.22.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="YOebDCXm"
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="pgDMHp14"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZGioeFBRoz/iCVUwR4HRwoo9PzOV/7g/hvOz7wnM1gjV4eoi7pxuT0QDfNeD4E9QKZHci2OorTV+Ef1P1Y3uABzCv9e4FZqUY0XbAIN8xUjanUax3ccMHn1OSO81LNm0FyKRrMZVprP6fnVGvu59BK0RoznmyCj7CWqeq3tpGLtFAL+/z1kv2lDWDVPXyZBfIVszZi//QSGI+EX125y+hp3qk/YVsVQ4Nz+pB7o9MtpF/tQN0LDwIY8xJ3O0zEP5Y05N6LydT7NbBoTHKSBJeNYsxP8rfqVLEQA27lNbdadvNrXslMc8M8rPptijOEahowXnRupt3EdPuldsXTAOqw==
+ b=OHjcKIAbkeiloH7nhQuae5uk18MoLuzolH54qdtLaYBKEC4f9CW1kf43uU/Fbx//gX28/8oL95CUQHeoY+/u/3L8WpJ0BohHRNJk4QQPt8eJjyjdnbhJuQ9CgQ1+3L8OGmfdMUheQ+JdYiSz3pZ73JliShsulARkIeVxsLHUY4wBRi/x1o4U5tBGn9dLIsN34hG/WTxUF/gcv6K19yE+Ht+OKAnHVjjRq+MS5zFZLHgYdcDQ63zFEJ6zUCPeoJ+LYACzoJC2NuIdswhHCvpvk0BB/TEvQJxJzisI6dXInXfM6ClHLgfDFVZ5/X+Tgc7lTnvWWVOmXO08xLBEKvhufw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Kd73hugEHrkwRgo0STaQ7W+q/VZq4iM79NDNP/Ezukg=;
- b=MBzCabIcZ3DZFGhlpJAgTIxoW7rszPlpHztoy10wQ9cNeWtE8fPFQDnVwvRENg1AbaQK/5NzlCmtd8+I7BdLvIwtAPc/3Iwiozp+qDtgj14Etsw0BGORtttU7ehk1Cyvy3/YiTZdyrpuMJ6ZODJl5pW6FY60x6NN6mMdhlF6lEsBwN75MP1Fenc3NiQeZbehT7QzCKl1c9q8YS/HdSA6+aeUPIOIO+4MNkVGyhPhGGy+gP+HF5gSFnAfhlrMLAnI1cET+k7C59HbqmDM5j4GHON6Y7GILzTctuMgxoxvPEdjLzVUR8/gu9b6cdSO6I28xfn4ggWRqh8UMsG5H37kNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
+ bh=/cKpq/o8dvTtQJ8EncQ/cvB16TM+BNx0WzTRZOg227k=;
+ b=k1sAOKpIX5xIqCOQ5LzOIjx/sZW6AVOAGIrYKU/U7qlRyHipboZCr9ra7XYMqr2BPRP8UmCBAPmklyHFNrhtqIgew8R9vkIbpqQu7RQMOBjWFvuohNSRcwx1DCQYcGuKZ9Ua+CUyeHnQ0qRzr5MYdkf9XhH3SGD4Eug22rnQqm1yUc7bYqTQQo3CnB8oaeNip8SxP/EQwDNXfwYZ+Cyeq/LUrWe51h5J/rCIThUITNhraV5XBBC1NTH3xIvKiiux9hyliGoQa4jAUSSt8EKwGQCZwcyTAyJWZraepu5EO/VX7C6AGp4tXbjSEzOhblK0THSq1gvgKOPFVLAYWGoODw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wolfvision.net; dmarc=pass action=none
+ header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kd73hugEHrkwRgo0STaQ7W+q/VZq4iM79NDNP/Ezukg=;
- b=YOebDCXmL5LA83EFkYw4LB8b8gYLycC35b5XOZZd1K3sNkVPohZmEGQ+svbjxwk8m6qFGHtT/ytGdpri9cPvqwOb5+OUyMOOCt7aAIDhwrWEUO70BtK+OQEqEStPQqugpCTHWwlou9F0FnkwB9PJyiwbNMCtiYlX6hjVBYvRrlTFcJqMLZjaVyi1ifPZAiE0p+cgxE/iyloGeWxz0BdteQJwhs1txhCMJBodMeuIhNouFLSajioF3/my4wCRZNcu5LW5W3yXwsZz3z3QFwoErA6Tur+jFASr2dMN3oLx8M3XnZ4PWTwgiesoknoV8VDClNLsQL4SMGNGwM2zHE8qKg==
-Received: from PS2PR02CA0020.apcprd02.prod.outlook.com (2603:1096:300:41::32)
- by KL1PR04MB7417.apcprd04.prod.outlook.com (2603:1096:820:115::8) with
+ bh=/cKpq/o8dvTtQJ8EncQ/cvB16TM+BNx0WzTRZOg227k=;
+ b=pgDMHp14yUdTC6D+I61EFqx19Sfxe0dlGSr1BcyjEZPZeASPErjdTHpH79ZVNeDfxNQ5C+SxAQqeephpszpvNb/dtv7wvdQZP0xUSJoop5Rs5W5Sl2jAfu2Gn1J1R685XXMKKf/h1lYfrzDF46nu1dwlTNme1rI0tlOWbqKEDSE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wolfvision.net;
+Received: from DBBPR08MB4539.eurprd08.prod.outlook.com (2603:10a6:10:cf::22)
+ by AS8PR08MB6422.eurprd08.prod.outlook.com (2603:10a6:20b:33b::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Wed, 29 May
- 2024 06:59:00 +0000
-Received: from HK2PEPF00006FAF.apcprd02.prod.outlook.com
- (2603:1096:300:41:cafe::97) by PS2PR02CA0020.outlook.office365.com
- (2603:1096:300:41::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.18 via Frontend
- Transport; Wed, 29 May 2024 06:59:00 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK2PEPF00006FAF.mail.protection.outlook.com (10.167.8.5) with Microsoft SMTP
- Server id 15.20.7633.15 via Frontend Transport; Wed, 29 May 2024 06:58:59
- +0000
-From: DelphineCCChiu <delphine_cc_chiu@wiwynn.com>
-To: patrick@stwcx.xyz,
-	Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Joel Stanley <joel@jms.id.au>,
-	Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: DelphineCCChiu <delphine_cc_chiu@wiwynn.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 net] net/ncsi: Fix the multi thread manner of NCSI driver
-Date: Wed, 29 May 2024 14:58:55 +0800
-Message-Id: <20240529065856.825241-1-delphine_cc_chiu@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.19; Wed, 29 May
+ 2024 07:01:48 +0000
+Received: from DBBPR08MB4539.eurprd08.prod.outlook.com
+ ([fe80::87a9:a8d0:96fa:19e1]) by DBBPR08MB4539.eurprd08.prod.outlook.com
+ ([fe80::87a9:a8d0:96fa:19e1%6]) with mapi id 15.20.7611.030; Wed, 29 May 2024
+ 07:01:48 +0000
+Message-ID: <820889e8-f004-46a8-9d03-b098ffcdade3@wolfvision.net>
+Date: Wed, 29 May 2024 09:01:45 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND 1/3] drm/panel: sitronix-st7789v: fix timing for
+ jt240mhqs_hwt_ek_e3 panel
+To: Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v1-0-f8351d4a8d4b@wolfvision.net>
+ <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v1-1-f8351d4a8d4b@wolfvision.net>
+ <d10e14ce-b65f-4dbd-8686-bf8c1796ba06@quicinc.com>
+From: Gerald Loacker <gerald.loacker@wolfvision.net>
+Organization: WolfVision GmbH
+In-Reply-To: <d10e14ce-b65f-4dbd-8686-bf8c1796ba06@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: VI1P190CA0039.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:800:1bb::20) To DBBPR08MB4539.eurprd08.prod.outlook.com
+ (2603:10a6:10:cf::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FAF:EE_|KL1PR04MB7417:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 7da1b5ec-cedc-48b2-aada-08dc7facd0f2
+X-MS-TrafficTypeDiagnostic: DBBPR08MB4539:EE_|AS8PR08MB6422:EE_
+X-MS-Office365-Filtering-Correlation-Id: f7841815-729e-4f82-62f7-08dc7fad356c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|1800799015|7416005|36860700004|376005;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|7416005|376005|366007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?w275JfBSY6PE5NbHsmD9sFdb5G6D9BfU4qhbleyfPnAC3akIRTYkduR2vgIK?=
- =?us-ascii?Q?a8b20K58taLecFxQb+pS1Og0zp16hXH+CrEbEluUGO37cLkEvdyKZni7L2Sm?=
- =?us-ascii?Q?FgIAksUmZRF4gxcm9D8WVHEW4d+w+zjnils5wgmLvcRGDLvoQ0CbaVDzTUu2?=
- =?us-ascii?Q?IMPUbUoXJJ9Vfu7CWi2hb7G7/8Z+3CqkvmkLol596rBVSOnm6IKzhISYhl/Q?=
- =?us-ascii?Q?kkhS8TjG+h1K3I2OHkLb0KX6yWj3i+PwBI6WkU3fsQFegRPt/hnf0KhAdP0y?=
- =?us-ascii?Q?Jd093Ju6HStbnFmlhXp5C4z5CPGEbQoOK4XvP5n2POj8nDn6ClduArYM8Uaw?=
- =?us-ascii?Q?dFPLb2ozFBGsCXGiyRaH7PmkYsh5viFfmeID5FMDBQo15DBc5+FuzeBzBQHi?=
- =?us-ascii?Q?NylLuTeDKt45H2WNIDZh6VHApI/HaThfIpjuP/erPReYOgfgo/lBbFZhL/XP?=
- =?us-ascii?Q?9uc4XRfnbHvygKdFkmGMMcOu4eEzxcrLntjTo1uYHyiZvsTEHFhJlJ8DDjDT?=
- =?us-ascii?Q?taq1Xl/bjLdm25LRvzb2nVnbZafMUq37iusCtIrfk7ByYwyLjfgxCRnjlTau?=
- =?us-ascii?Q?wjC7SYajuFRLbfSm42krZinGMhABgPnD55b/0dJ7Szw2IF+40k2jZoz7JPYp?=
- =?us-ascii?Q?+m/s5pyM8rWS7fkPQJxvBBvFYRmA9cu23R+lqN41TRW7MpRjIdgiPnsATDIW?=
- =?us-ascii?Q?NwDc6ijSVoHbrOtxtpFkPNdkCZZDQTsRtrAohjwj1iQEdkMWBmJyLAggQAdB?=
- =?us-ascii?Q?yLXTjgVjxChbUNP3II7reI2SvLWJSJg4CzE6uNUHtuk89hPGSG0Jsnagr5hi?=
- =?us-ascii?Q?aQ/AfGr6ST+fuKDkA4dHDsUjmDcfKLgU399DR81T2UvTVvdyF2EfUuzivpmI?=
- =?us-ascii?Q?v4uWly9gfED2YQao3qo3E/g8v2SDsA6X3sdaVvJTab3uDnnAfQqs5RvwdkGC?=
- =?us-ascii?Q?5zd+OpBcvKMMTrjmwOgOJoX4aGR8gGZl05MTSCIJSusodSgpeRGThjOnpmrm?=
- =?us-ascii?Q?Gx7lVBy/O5BC6hd1yuiqh21+cYind2rn0jY6ewGuPXaC6tHdVpQMkVBroFqD?=
- =?us-ascii?Q?Bfx/StRm5UCCjpzaR1gzM8PtycBvJDsTbiufnWSva5k+91cbhmmaUextkqcz?=
- =?us-ascii?Q?3+WHDRFIpk/A2WD7XZJ+wMzkfl/HaNZCUuQoWewZ2Uejl+aHyG+LMM5OwTDe?=
- =?us-ascii?Q?UUWKHCgro0WcFJcKi0KkJ9KLDDjtVont3gzRyGG5+C8VDJk22yHyMsOWlM6s?=
- =?us-ascii?Q?pZGwmWUpqsS8kKKyC+yhmbOU9/xeHUUiO5Nayt+y2KRQSXMZRrSHuMGlorUa?=
- =?us-ascii?Q?3Ey/UmI/rQdHGPeF5sErlH9yAh26rIBZD7gbc1mQIKP5Sg7pStY3AryeecPf?=
- =?us-ascii?Q?s4q3OLE=3D?=
+	=?utf-8?B?TWswYUk0S0hiaUhndjRtOXFiTXZOOVArQ3ZOLzFTUjlGcXk0WHI3bTJXUEVW?=
+ =?utf-8?B?TldTNmVmK2NYdFEvV0srVE0xSzV5SWhjN3ZjRENnYzFVQXp6VHZhOTFXTTRm?=
+ =?utf-8?B?bUVBSmZMRyt4SXUzTHJielJPd0MzbjczZWxVRnoyUzRLY0hwKy9mQTlKRkYw?=
+ =?utf-8?B?TXJ0dVZqN3E2cjF6Ym9jc3BxZWtrZ2RFcTg5UHR5UU1HQ0V0ZGdPRjM3TGpi?=
+ =?utf-8?B?VVFFbnR1Wk5MK2FGY0ZBb0lsOUduaDUyd0Y3WVBZcXl2bk5lYmlta2lIOGVo?=
+ =?utf-8?B?Y1BHVHhWeUp5dzFFTXV6QkpFRnB2NitmT3dHNmlBdmoxc1VVTk9DWG5tNEhU?=
+ =?utf-8?B?ZjI5RHZqZ05wOS9paFlmN09CTGs2NGxtVWE1VDdNYTdFa0FUQVNXdUIwS1lm?=
+ =?utf-8?B?aEZMdXpOZnJZbHovbndwYU1ITDh6QTVaeHdoaWlxdmU0dVZUZzdMY1E1RWVx?=
+ =?utf-8?B?WEtxNVNnUHZBTWs2eG9jZ09jbFBrL1lTd2lzZ3RkQ1VNaHBHTit0UDM3V1VM?=
+ =?utf-8?B?SzhiS1JZYnRRSytHTG5mTjRQUmdUVko0UEkrdGsvUUV0c2U3NVJubUkyazNO?=
+ =?utf-8?B?NWsvTC9KQUFENm0vVjluM3JpbkxiQmJlNmFFdTZidDAycHl5RTB1aEx6UEM4?=
+ =?utf-8?B?bjN1RDFkbHp3MEJQTWtjMDgwVXMzaHZIS1pCZm5ROWMzc0xBZ1R1S1ltbXE5?=
+ =?utf-8?B?MXlBRjl3TWNwR3NONldQZTc4eEIvekRubGNGQ2J5VmJGekgvUi8wbTZTMVo1?=
+ =?utf-8?B?eGF6STlZcGtmSENVbUNYb0RJbGU4aUVDTVZ0VlZVOG9ETUl4Q2liakZmWDRP?=
+ =?utf-8?B?ZjAwSnoveUR1N3hSQy9hbERoWTdoQUNwMFZzQkpCYVRMS1ltSkluaGRPV1cz?=
+ =?utf-8?B?MHNRMmJQOW91bytBNDhGZGhnQ1pzcmFuZWluNjZGNWJVNmtqbEpUNkZ3Q0Vt?=
+ =?utf-8?B?WDlKeER6VGJPWWJLQmpMSmR3MWhlYmFEK2JZeUFGdVhSOXV1UC96K25DRi9D?=
+ =?utf-8?B?OEx6SDNxMGJIR1puRVVDQloxdlRiVHdaYXZJNzJXdDR0OTRHUVFwaXNVMWRx?=
+ =?utf-8?B?Z2R4cWRaMm81aEZLbDVpbnNzK2ptTVNXOTB5Y0NNczRSNGRCMjJoTDlMTEll?=
+ =?utf-8?B?MktoRFBkM0taV2NIUDZyYkRFclVHT09Fc2NrVWhiRGY3bEI1MCtOWUFOSlB5?=
+ =?utf-8?B?WTdVWXIvUkREZmdOM29Dd05PUDZSdnRMa0hGQVpoRDA2OFZxV0ZzUE9OVC9k?=
+ =?utf-8?B?b3d4R3dYR2RBQ1pPYlhvQmluYklNQy9aV2g4TUkzWEFIQTBxZjlUZlM5amNx?=
+ =?utf-8?B?NTlreG1yQWN2UFl3eHNiK3VCWXdjb1F3cm8rV08zMkRIOWVtS2k5QUNLbzNF?=
+ =?utf-8?B?NlVTSE5VMlVPT2IwWDJ2SWpURjlyNCtZYmNxTnBFVFNlUFBQMHh6b3NpazVU?=
+ =?utf-8?B?MFd1bUJoQXBwNTEwWnFNcHEyVFE0bmVlT0p0RXdrQlZLNytqeVh6VUFGYXNN?=
+ =?utf-8?B?YXRVL0tRWVNoZUV1TVNSclR5RGV1YUZiYTlTZXNKL2prc09KdnFxOEN6RFRp?=
+ =?utf-8?B?Nm15Rm0vT001TTNveW5kSmVSZHZvNHNkTVR1VzNaYVg5RHorY0FpcmsxMHNq?=
+ =?utf-8?B?QUppNzRpV2Nhd3dSZnh4TkYzcjJlOGRvdWxVcjdBTVlVdSt6cmMyNEEzNWFT?=
+ =?utf-8?B?YVMzT3kyQlN1QW1xaU5VVndUT3JMdUd6RG5YQVBlUFRaVG8wWlRuVU93PT0=?=
 X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(82310400017)(1800799015)(7416005)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 06:58:59.4090
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4539.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cVpFbGErMlNDVzFvYUpkZ1ZPKzd6S1RhS25xODQyV09LamlYRGtkUEZRd1NR?=
+ =?utf-8?B?bmFibTh3RW5UcVZIUTFBWXBiZkVRbFRVano0b1FKTlRhVFBxQk11NzNrNzI4?=
+ =?utf-8?B?U2RWdmtWQUNVbGJSb0xLQVEyMVdNRkZORDdJU3BHakl5ODV3bktrUzJnSzFF?=
+ =?utf-8?B?UHdTa0FzeG9OK3ZBM0pyNzNwb3V1VUVxWkFHRFEwekt2WStyMXFMSXU4aEl4?=
+ =?utf-8?B?Y0JlNmVyRFJVeUR6d2FJeHN3TWYyeWpOaHBRNlJDcjc5Mnd6MUlTaEtXTWtp?=
+ =?utf-8?B?STl1WG41M3dBQlpzUHNDb3JwOTNpbTBSNWczZDBnbEJVYXhrOW1wTmNKZXRt?=
+ =?utf-8?B?RmZ4bDVOdi9SN1RsNis1azNJTHJYT2hlSG45YW83QllzSXk5RGxoa0ExWSt3?=
+ =?utf-8?B?UllPMGRGSWphazhwZ2p3UkhKRTd1WHY5VXpQQ1VaTFV0Um5xdmJ0dDduZHN4?=
+ =?utf-8?B?VTJSb3NLYWFvS3VNUjJmRnVtV0hTQ1crbWptLzkycE1RMWkyM1pwNStrWEd4?=
+ =?utf-8?B?dGxKanIwcmJQaUhxQjcrWVRMaTZncW52MGRGbDNmZnEzNk5oQnh4VDYzWC9O?=
+ =?utf-8?B?OW1GZWJOUnhRVVhkREhzb291U09Xck1XMkwvZW9IaCtIR3V6YXdQMWZ1QWh5?=
+ =?utf-8?B?bFFzMFJvazJDYU1HM2tMTG9EMHYwUkduTWRmaEQ1Nk00Rk9HOVNrSm50QTF6?=
+ =?utf-8?B?WnFGQlJyaFh4UnJSbkliMzUwWEVSaTR1bk9hZDZpdk5rcDh5MXN2UGFWQWdI?=
+ =?utf-8?B?dm9Cd1loMGJMdFZSdHp3UTFiZ3ArRVM3bzdKZ05RYi82UkcwUm5tNXhGbm90?=
+ =?utf-8?B?b0JFYXNac1NvSEZUUkRiZHNqc2ptQ0lmYkwySUV1elduMWs0K2ovbmZMVjhG?=
+ =?utf-8?B?OUk5cEd2WFlsZFJETWV2SFJmWEJFaXFIUnVnRnpDQS9XUnd2NmlXNmN0ZEJr?=
+ =?utf-8?B?cVRycUNZLzc0NFhBbFQrQnFIQ09peGw4Q3MvVC83dElVYk41NzlSQlFBMS91?=
+ =?utf-8?B?NFRzRGVPTVAvMytxODAzTnVCbEVKR3NWYmpkc2NHS2dDZkdPckdXOTZ2T1ZE?=
+ =?utf-8?B?Qm5uQ05FSG9WbDZUbnNsNjR4WEFXejBVc29zbEZITFpDZWIvQ2hydnl2OWxr?=
+ =?utf-8?B?V0NKQ1ZOZjFkdG9sOTRxdE5rZHFzajhyaUxFQ2t6T3lTaklQMHpnbDdUQ3k5?=
+ =?utf-8?B?dXRDckQwTm9JR1F1UTRVNktHMjFnakttQm1UcERXUWhCcDRST1Z1US9pa2U5?=
+ =?utf-8?B?MUtaeUZ0ZUZZRmRPVFp0cGVEWCtQbURJRS9VYXBtTnM3c0VMc0lUY0VHNFYv?=
+ =?utf-8?B?MFlOSE4xdm1XeVpOOFl0eTVUMis0MXpZNTVjVTBEbWhtNzZ4UlBNZTlpL0x3?=
+ =?utf-8?B?Wk5YZkt1Ly9YLzhyR2p1N1dhV0UrWnFzcGIzTXNxRXZRbXlkTHMyYkFkVFY4?=
+ =?utf-8?B?YUpScm85OUhuKzA1Z1dFbW4rQUhHb2V5VXdmcDZwbFdEeHl6akVGTXJqVlBz?=
+ =?utf-8?B?OGNYdzJMdjkxdHlsWjB6bmMxYjVYWVpJVnRQT0J6aVNkUHdKVEJ5eHplOU91?=
+ =?utf-8?B?SzB1ZW40M1ladHRuQUFLUllqTEU3enBadzlaeGxEV1czTGhWTVZhVDNHdExS?=
+ =?utf-8?B?Yys1NHhsaGxZdFFjYXhxVGs2UlRzV1JTVm9oblJUcExGY1greHdMc3BNU0Zv?=
+ =?utf-8?B?Q0ZlVTExN3RPWHlBMVBuUHZSVnMxNVZIT2lOdmYvS2grcEZaWUZWbWdzdWJK?=
+ =?utf-8?B?UjF6RmRPalVFRUF3TWNRZDZKSG4xYnozS0RhZitkZTl4NDZkMHh2dnlFdnBG?=
+ =?utf-8?B?NFBKKzNNNjAvQ0tFYmdmNk42RlZmcnpHSE9GajR1Rm9iemdOMUtKM1Y5UVVU?=
+ =?utf-8?B?bVZKTlExdVdvN0w2ZnNFK2FWTXhqOEpHZlJHaXlPandQVEQ5VGVKVDlXdHhl?=
+ =?utf-8?B?UXRCVXc3TnNLdFdMTWZiR1E3R1Q4RjI4UVVaY1ppdElyaldHME1pTFZYam1K?=
+ =?utf-8?B?TjhYd25JVncvQm1LRHZTN1h2VnAvRTRFRmtuYXAwNFlvK1AzcHZrWWpQVU9Z?=
+ =?utf-8?B?Zmw2a1VaUHUwcXcyRlZPYzE1UWYyY2M5S0NDbkM2UDU5YW53NWNQbkxIYVZi?=
+ =?utf-8?B?b3pwdlFXNzM0VUxhN09zcE9EYml6V2FVOWhEd1ZBSVdwUVM5b2NIN1B4NU5x?=
+ =?utf-8?B?a3c9PQ==?=
+X-OriginatorOrg: wolfvision.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7841815-729e-4f82-62f7-08dc7fad356c
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR08MB4539.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 07:01:48.4224
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7da1b5ec-cedc-48b2-aada-08dc7facd0f2
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK2PEPF00006FAF.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR04MB7417
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2I+6oQt2WGLunLksLbzzXI2cfkY8xx7I8IJU+qkTG+ERB/xU+soZjCBCkzNFXPtlU2fVeVmvDocxzwwXi33I3NAQfAcRR8YX04xpLzt1hoM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6422
 
-Currently NCSI driver will send several NCSI commands back to back without
-waiting the response of previous NCSI command or timeout in some state
-when NIC have multi channel. This operation against the single thread
-manner defined by NCSI SPEC(section 6.3.2.3 in DSP0222_1.1.1)
+Hi Jessica,
 
-According to NCSI SPEC(section 6.2.13.1 in DSP0222_1.1.1), we should probe
-one channel at a time by sending NCSI commands (Clear initial state, Get
-version ID, Get capabilities...), than repeat this steps until the max
-number of channels which we got from NCSI command (Get capabilities) has
-been probed.
+Am 28.05.2024 um 19:36 schrieb Jessica Zhang:
+> 
+> 
+> On 5/28/2024 1:32 AM, Gerald Loacker wrote:
+>> Flickering was observed when using partial mode. Moving the vsync to the
+>> same position as used by the default sitronix-st7789v timing resolves
+>> this
+>> issue.
+>>
+>> Signed-off-by: Gerald Loacker <gerald.loacker@wolfvision.net>
+> 
+> Hi Gerald,
+> 
+> Just wondering, are these new timing values taken from the panel specs?
+> If the timing in the original patch was wrong, maybe we need a fixes tag.
+> 
 
-Fixes: e6f44ed6d04d ("net/ncsi: Package and channel management")
-Signed-off-by: DelphineCCChiu <delphine_cc_chiu@wiwynn.com>
----
- net/ncsi/internal.h    |  2 ++
- net/ncsi/ncsi-manage.c | 73 +++++++++++++++++++++---------------------
- net/ncsi/ncsi-rsp.c    |  4 ++-
- 3 files changed, 41 insertions(+), 38 deletions(-)
+Both, the old and the new timing specs, are within the specified range
+defined in the data sheet. But as the new values achieve a better result
+adding a fixes tag is a good point.
 
-diff --git a/net/ncsi/internal.h b/net/ncsi/internal.h
-index 374412ed780b..ef0f8f73826f 100644
---- a/net/ncsi/internal.h
-+++ b/net/ncsi/internal.h
-@@ -325,6 +325,7 @@ struct ncsi_dev_priv {
- 	spinlock_t          lock;            /* Protect the NCSI device    */
- 	unsigned int        package_probe_id;/* Current ID during probe    */
- 	unsigned int        package_num;     /* Number of packages         */
-+	unsigned int        channel_probe_id;/* Current cahnnel ID during probe */
- 	struct list_head    packages;        /* List of packages           */
- 	struct ncsi_channel *hot_channel;    /* Channel was ever active    */
- 	struct ncsi_request requests[256];   /* Request table              */
-@@ -343,6 +344,7 @@ struct ncsi_dev_priv {
- 	bool                multi_package;   /* Enable multiple packages   */
- 	bool                mlx_multi_host;  /* Enable multi host Mellanox */
- 	u32                 package_whitelist; /* Packages to configure    */
-+	unsigned char       channel_count;     /* Num of channels to probe   */
- };
- 
- struct ncsi_cmd_arg {
-diff --git a/net/ncsi/ncsi-manage.c b/net/ncsi/ncsi-manage.c
-index 745c788f1d1d..5ecf611c8820 100644
---- a/net/ncsi/ncsi-manage.c
-+++ b/net/ncsi/ncsi-manage.c
-@@ -510,17 +510,19 @@ static void ncsi_suspend_channel(struct ncsi_dev_priv *ndp)
- 
- 		break;
- 	case ncsi_dev_state_suspend_gls:
--		ndp->pending_req_num = np->channel_num;
-+		ndp->pending_req_num = 1;
- 
- 		nca.type = NCSI_PKT_CMD_GLS;
- 		nca.package = np->id;
-+		nca.channel = ndp->channel_probe_id;
-+		ret = ncsi_xmit_cmd(&nca);
-+		if (ret)
-+			goto error;
-+		ndp->channel_probe_id++;
- 
--		nd->state = ncsi_dev_state_suspend_dcnt;
--		NCSI_FOR_EACH_CHANNEL(np, nc) {
--			nca.channel = nc->id;
--			ret = ncsi_xmit_cmd(&nca);
--			if (ret)
--				goto error;
-+		if (ndp->channel_probe_id == ndp->channel_count) {
-+			ndp->channel_probe_id = 0;
-+			nd->state = ncsi_dev_state_suspend_dcnt;
- 		}
- 
- 		break;
-@@ -1345,7 +1347,6 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
- {
- 	struct ncsi_dev *nd = &ndp->ndev;
- 	struct ncsi_package *np;
--	struct ncsi_channel *nc;
- 	struct ncsi_cmd_arg nca;
- 	unsigned char index;
- 	int ret;
-@@ -1423,23 +1424,6 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
- 
- 		nd->state = ncsi_dev_state_probe_cis;
- 		break;
--	case ncsi_dev_state_probe_cis:
--		ndp->pending_req_num = NCSI_RESERVED_CHANNEL;
--
--		/* Clear initial state */
--		nca.type = NCSI_PKT_CMD_CIS;
--		nca.package = ndp->active_package->id;
--		for (index = 0; index < NCSI_RESERVED_CHANNEL; index++) {
--			nca.channel = index;
--			ret = ncsi_xmit_cmd(&nca);
--			if (ret)
--				goto error;
--		}
--
--		nd->state = ncsi_dev_state_probe_gvi;
--		if (IS_ENABLED(CONFIG_NCSI_OEM_CMD_KEEP_PHY))
--			nd->state = ncsi_dev_state_probe_keep_phy;
--		break;
- 	case ncsi_dev_state_probe_keep_phy:
- 		ndp->pending_req_num = 1;
- 
-@@ -1452,14 +1436,17 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
- 
- 		nd->state = ncsi_dev_state_probe_gvi;
- 		break;
-+	case ncsi_dev_state_probe_cis:
- 	case ncsi_dev_state_probe_gvi:
- 	case ncsi_dev_state_probe_gc:
- 	case ncsi_dev_state_probe_gls:
- 		np = ndp->active_package;
--		ndp->pending_req_num = np->channel_num;
-+		ndp->pending_req_num = 1;
- 
--		/* Retrieve version, capability or link status */
--		if (nd->state == ncsi_dev_state_probe_gvi)
-+		/* Clear initial state Retrieve version, capability or link status */
-+		if (nd->state == ncsi_dev_state_probe_cis)
-+			nca.type = NCSI_PKT_CMD_CIS;
-+		else if (nd->state == ncsi_dev_state_probe_gvi)
- 			nca.type = NCSI_PKT_CMD_GVI;
- 		else if (nd->state == ncsi_dev_state_probe_gc)
- 			nca.type = NCSI_PKT_CMD_GC;
-@@ -1467,19 +1454,29 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
- 			nca.type = NCSI_PKT_CMD_GLS;
- 
- 		nca.package = np->id;
--		NCSI_FOR_EACH_CHANNEL(np, nc) {
--			nca.channel = nc->id;
--			ret = ncsi_xmit_cmd(&nca);
--			if (ret)
--				goto error;
--		}
-+		nca.channel = ndp->channel_probe_id;
- 
--		if (nd->state == ncsi_dev_state_probe_gvi)
-+		ret = ncsi_xmit_cmd(&nca);
-+		if (ret)
-+			goto error;
-+
-+		if (nd->state == ncsi_dev_state_probe_cis) {
-+			nd->state = ncsi_dev_state_probe_gvi;
-+			if (IS_ENABLED(CONFIG_NCSI_OEM_CMD_KEEP_PHY) && ndp->channel_probe_id == 0)
-+				nd->state = ncsi_dev_state_probe_keep_phy;
-+		} else if (nd->state == ncsi_dev_state_probe_gvi) {
- 			nd->state = ncsi_dev_state_probe_gc;
--		else if (nd->state == ncsi_dev_state_probe_gc)
-+		} else if (nd->state == ncsi_dev_state_probe_gc) {
- 			nd->state = ncsi_dev_state_probe_gls;
--		else
-+		} else {
-+			nd->state = ncsi_dev_state_probe_cis;
-+			ndp->channel_probe_id++;
-+		}
-+
-+		if (ndp->channel_probe_id == ndp->channel_count) {
-+			ndp->channel_probe_id = 0;
- 			nd->state = ncsi_dev_state_probe_dp;
-+		}
- 		break;
- 	case ncsi_dev_state_probe_dp:
- 		ndp->pending_req_num = 1;
-@@ -1780,6 +1777,7 @@ struct ncsi_dev *ncsi_register_dev(struct net_device *dev,
- 		ndp->requests[i].ndp = ndp;
- 		timer_setup(&ndp->requests[i].timer, ncsi_request_timeout, 0);
- 	}
-+	ndp->channel_count = NCSI_RESERVED_CHANNEL;
- 
- 	spin_lock_irqsave(&ncsi_dev_lock, flags);
- 	list_add_tail_rcu(&ndp->node, &ncsi_dev_list);
-@@ -1813,6 +1811,7 @@ int ncsi_start_dev(struct ncsi_dev *nd)
- 
- 	if (!(ndp->flags & NCSI_DEV_PROBED)) {
- 		ndp->package_probe_id = 0;
-+		ndp->channel_probe_id = 0;
- 		nd->state = ncsi_dev_state_probe;
- 		schedule_work(&ndp->work);
- 		return 0;
-diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
-index bee290d0f48b..e28be33bdf2c 100644
---- a/net/ncsi/ncsi-rsp.c
-+++ b/net/ncsi/ncsi-rsp.c
-@@ -795,12 +795,13 @@ static int ncsi_rsp_handler_gc(struct ncsi_request *nr)
- 	struct ncsi_rsp_gc_pkt *rsp;
- 	struct ncsi_dev_priv *ndp = nr->ndp;
- 	struct ncsi_channel *nc;
-+	struct ncsi_package *np;
- 	size_t size;
- 
- 	/* Find the channel */
- 	rsp = (struct ncsi_rsp_gc_pkt *)skb_network_header(nr->rsp);
- 	ncsi_find_package_and_channel(ndp, rsp->rsp.common.channel,
--				      NULL, &nc);
-+				      &np, &nc);
- 	if (!nc)
- 		return -ENODEV;
- 
-@@ -835,6 +836,7 @@ static int ncsi_rsp_handler_gc(struct ncsi_request *nr)
- 	 */
- 	nc->vlan_filter.bitmap = U64_MAX;
- 	nc->vlan_filter.n_vids = rsp->vlan_cnt;
-+	np->ndp->channel_count = rsp->channel_cnt;
- 
- 	return 0;
- }
--- 
-2.25.1
+Regards,
+Gerald
 
+> Acked-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+> 
+> Thanks,
+> 
+> Jessica Zhang
+> 
+>> ---
+>>   drivers/gpu/drm/panel/panel-sitronix-st7789v.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+>> b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+>> index 88e80fe98112..32e5c0348038 100644
+>> --- a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+>> +++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+>> @@ -286,9 +286,9 @@ static const struct drm_display_mode
+>> jt240mhqs_hwt_ek_e3_mode = {
+>>       .hsync_end = 240 + 28 + 10,
+>>       .htotal = 240 + 28 + 10 + 10,
+>>       .vdisplay = 280,
+>> -    .vsync_start = 280 + 8,
+>> -    .vsync_end = 280 + 8 + 4,
+>> -    .vtotal = 280 + 8 + 4 + 4,
+>> +    .vsync_start = 280 + 48,
+>> +    .vsync_end = 280 + 48 + 4,
+>> +    .vtotal = 280 + 48 + 4 + 4,
+>>       .width_mm = 43,
+>>       .height_mm = 37,
+>>       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+>>
+>> -- 
+>> 2.37.2
+>>
