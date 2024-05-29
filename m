@@ -1,96 +1,174 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B715618C3B;
-	Wed, 29 May 2024 13:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE7B1CA85;
+	Wed, 29 May 2024 13:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990238; cv=none; b=mkdkctLUi+tx7SA/Lt+LT4q86CXs26m/MTHqkcyKX0jpNQO6THqZnNzp7vUP0TBqdyoY1dT75fHYs8aMG0l7LmoqwWB8Owbj+Y9N5JdxPJ5C3b460+xLCW7jPSbsV8sXdHM4UD/tGY+1TaBkLLkmtQtXHlGp6YgijTkXsOp+72Y=
+	t=1716990248; cv=none; b=V6l03J52CD+XCFlUFufv9Ya8Q3o8Bj3NFGtsHpuOGu/Qh0qcmrV+ccqBf430mKfDS0MfRTTZbsKUBnAmAKmAHvR42AEmsxyY1amwt7oiqOQA0RKpGeHP5XGny8nXFBcgyI+scBltv1iIbau1OLzFgJ+Wvz/jM9Tx+oCw4OsApFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990238; c=relaxed/simple;
-	bh=y50eHDPiA4eeToZUPT7UI1q4a00OqcEP+3LIS8fbqjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QXqXYmovVlWzRlTMATaCc1JwEC99CC2PhoOb0OG76BM0Fcg9kUX15d5tgmKPgZV3nRSgg/nfgCzbLUVjcdXxJvHpwtVA1dlsZrmQ8JxrtAsm3DZFDWpcPqYcs6VhIaleTZuGHL5s9KplwOlX0g6DezMwSWVIGVZXoQ2bF8PrB1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TVdaWgyi; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVdaWgyi"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5238b5c07efso2396961e87.3;
-        Wed, 29 May 2024 06:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716990235; x=1717595035; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2bvKZ0Q+dcX07pGDQ1nprRulDtyjlxAHp+d8hq2FaD4=;
-        b=TVdaWgyidYXeSahSTdYKfodnXJrrw9gZDwVdX3gd2OsiD8d7vBnr4Cs8Od9260PzvV
-         SsHhLDo1M4Mn+GLx6/Shxm8ljykgMAF2ZAB18GDkctTWAVPIGwoWVhqZOUTLedi1WGVy
-         pgizwG77m31WTnQ8ix0bet0PWLJFkM7exNToMLGFsmriOsHVYgGGbh6ejRip8cqwkMxa
-         VINYsfHWWn5vKDZA25T6+nSAq3oscGLgI8/c09nEVqakoYhKsneNTGys9vi7Evbxua9d
-         i26cik5mmDsK2Cp+g9OwyDnzjoKMoJQhyrbStrPpnkC+RkMUVZfSGlcWcdOJpFXUR6Id
-         p8VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716990235; x=1717595035;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2bvKZ0Q+dcX07pGDQ1nprRulDtyjlxAHp+d8hq2FaD4=;
-        b=Alju82Vz7kCAoOvjsBXhiJYSQeLEGFLfAs0SA121XexqNhlnOQ6ldvJm3200AFnZqw
-         AI6o7PPELFY/pr/5wkDQjzhhFRXTP+tQ5WimHCt6KHjOWBu3yI87KBQR8UPUsGLi6GwN
-         F6B3UtVK8MboKvvnDhybYoSjeP/1EAUIPT6AZUpORR+/7/aN2lUNTcM7HxXbiFPcZbop
-         M3R9MtaX+9q530ZPCj4LB6+xj6UGRn+x3dIKIwhuUmq/sO88n7TOeU3w/yVGO6e3u+Yx
-         82waYigogzC7bTDefN+lVH20tPnHEFbrkQS/aS+snb92a+qV453dx3aHQ2PXBERLuaH/
-         /KCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXY5GtpJxcGT4G8Hlpb7Gw72JaufIRfbSIrPjPK4Zbx9XCxDPThSTQNMRPbAcLbthwXK+EXIYB/TJ0OUOTdg6tJRNjmFuVnoanIKUFJWnOGEta+zRNkouihcI+AwuSldu4AjEtr
-X-Gm-Message-State: AOJu0YybfBVP+9KKiGSa7jLD5VLmtN5QMeHa5I6j8LI/URqtj2+wfxZ9
-	u0mdgtUfM/a3KkPtXzHaozQ4esaLn/Vms5TTJcL401uuXD+OTIoB
-X-Google-Smtp-Source: AGHT+IGbv2Vs3UjE2x/aN+to4TibYxCXBjvUtrV4/fvbBMzcjrcvlJIhQyUvGX39ZrqiKfkBlg+wyQ==
-X-Received: by 2002:a19:7717:0:b0:51d:8ff3:d156 with SMTP id 2adb3069b0e04-529645e3335mr9250528e87.19.1716990234485;
-        Wed, 29 May 2024 06:43:54 -0700 (PDT)
-Received: from skbuf ([188.25.55.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089ccfacsm177780455e9.45.2024.05.29.06.43.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 06:43:53 -0700 (PDT)
-Date: Wed, 29 May 2024 16:43:51 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Radoslaw Zielonek <radoslaw.zielonek@gmail.com>
-Cc: vladimir.oltean@nxp.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, pabeni@redhat.com,
-	syzbot+a7d2b1d5d1af83035567@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com, vinicius.gomes@intel.com,
-	willemdebruijn.kernel@gmail.com
-Subject: Re: [syzbot] [net?] INFO: rcu detected stall in packet_release
-Message-ID: <20240529134351.vtrh4oohb7g274ej@skbuf>
-References: <20240528125526.qwskv756uya3zaqb@skbuf>
- <20240528130331.21904-2-radoslaw.zielonek@gmail.com>
+	s=arc-20240116; t=1716990248; c=relaxed/simple;
+	bh=Ungk2MTzXqsgKbQ1bn1Ua84urpmlBui+Hp+rdtFMfpM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lo8VF04ypolLftHXMT7sNr/kkVckPTJN0BcYXwq+0DMrzxsn4i5jxD3BHrElkUDK25pyAefDKViceazs1hGozx3d9eA3tJSKoxdYoBFIcSGoMP7kYJWoxzu85VlUHEp0Ts+BVRLlk22XvGeBqD0CVMC9wlHUAUbotEaDgHpU36I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vq9VG2TsQz6J6mf;
+	Wed, 29 May 2024 21:39:50 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 21F2B140CF4;
+	Wed, 29 May 2024 21:44:04 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 29 May 2024 14:44:03 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, <loongarch@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin
+ Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v10 18/19] arm64: document virtual CPU hotplug's expectations
+Date: Wed, 29 May 2024 14:34:45 +0100
+Message-ID: <20240529133446.28446-19-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240528130331.21904-2-radoslaw.zielonek@gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, May 28, 2024 at 03:03:25PM +0200, Radoslaw Zielonek wrote:
-> Hello,
-> 
-> Ah, sorry. I didn't notice that.
-> The PoC has been tested by syzbot
-> 	[https://syzkaller.appspot.com/bug?extid=c4c6c3dc10cc96bcf723]
-> 	
-> The full link:
-> 	[https://lore.kernel.org/all/00000000000089427c0614c18cf4@google.com/T/]
-> 
-> Radosław.
-> 
-> 
+From: James Morse <james.morse@arm.com>
 
-The patch, in the form you are presenting, obviously derails the phase
-alignment of the new schedule when the core struggles to keep up with
-the hrtimer. I am not in favor of adding any logic to taprio that
-instructs it to behave out of spec.
+Add a description of physical and virtual CPU hotplug, explain the
+differences and elaborate on what is required in ACPI for a working
+virtual hotplug system.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ Documentation/arch/arm64/cpu-hotplug.rst | 79 ++++++++++++++++++++++++
+ Documentation/arch/arm64/index.rst       |  1 +
+ 2 files changed, 80 insertions(+)
+
+diff --git a/Documentation/arch/arm64/cpu-hotplug.rst b/Documentation/arch/arm64/cpu-hotplug.rst
+new file mode 100644
+index 000000000000..76ba8d932c72
+--- /dev/null
++++ b/Documentation/arch/arm64/cpu-hotplug.rst
+@@ -0,0 +1,79 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. _cpuhp_index:
++
++====================
++CPU Hotplug and ACPI
++====================
++
++CPU hotplug in the arm64 world is commonly used to describe the kernel taking
++CPUs online/offline using PSCI. This document is about ACPI firmware allowing
++CPUs that were not available during boot to be added to the system later.
++
++``possible`` and ``present`` refer to the state of the CPU as seen by linux.
++
++
++CPU Hotplug on physical systems - CPUs not present at boot
++----------------------------------------------------------
++
++Physical systems need to mark a CPU that is ``possible`` but not ``present`` as
++being ``present``. An example would be a dual socket machine, where the package
++in one of the sockets can be replaced while the system is running.
++
++This is not supported.
++
++In the arm64 world CPUs are not a single device but a slice of the system.
++There are no systems that support the physical addition (or removal) of CPUs
++while the system is running, and ACPI is not able to sufficiently describe
++them.
++
++e.g. New CPUs come with new caches, but the platform's cache toplogy is
++described in a static table, the PPTT. How caches are shared between CPUs is
++not discoverable, and must be described by firmware.
++
++e.g. The GIC redistributor for each CPU must be accessed by the driver during
++boot to discover the system wide supported features. ACPI's MADT GICC
++structures can describe a redistributor associated with a disabled CPU, but
++can't describe whether the redistributor is accessible, only that it is not
++'always on'.
++
++arm64's ACPI tables assume that everything described is ``present``.
++
++
++CPU Hotplug on virtual systems - CPUs not enabled at boot
++---------------------------------------------------------
++
++Virtual systems have the advantage that all the properties the system will
++ever have can be described at boot. There are no power-domain considerations
++as such devices are emulated.
++
++CPU Hotplug on virtual systems is supported. It is distinct from physical
++CPU Hotplug as all resources are described as ``present``, but CPUs may be
++marked as disabled by firmware. Only the CPU's online/offline behaviour is
++influenced by firmware. An example is where a virtual machine boots with a
++single CPU, and additional CPUs are added once a cloud orchestrator deploys
++the workload.
++
++For a virtual machine, the VMM (e.g. Qemu) plays the part of firmware.
++
++Virtual hotplug is implemented as a firmware policy affecting which CPUs can be
++brought online. Firmware can enforce its policy via PSCI's return codes. e.g.
++``DENIED``.
++
++The ACPI tables must describe all the resources of the virtual machine. CPUs
++that firmware wishes to disable either from boot (or later) should not be
++``enabled`` in the MADT GICC structures, but should have the ``online capable``
++bit set, to indicate they can be enabled later. The boot CPU must be marked as
++``enabled``.  The 'always on' GICR structure must be used to describe the
++redistributors.
++
++CPUs described as ``online capable`` but not ``enabled`` can be set to enabled
++by the DSDT's Processor object's _STA method. On virtual systems the _STA method
++must always report the CPU as ``present``. Changes to the firmware policy can
++be notified to the OS via device-check or eject-request.
++
++CPUs described as ``enabled`` in the static table, should not have their _STA
++modified dynamically by firmware. Soft-restart features such as kexec will
++re-read the static properties of the system from these static tables, and
++may malfunction if these no longer describe the running system. Linux will
++re-discover the dynamic properties of the system from the _STA method later
++during boot.
+diff --git a/Documentation/arch/arm64/index.rst b/Documentation/arch/arm64/index.rst
+index d08e924204bf..78544de0a8a9 100644
+--- a/Documentation/arch/arm64/index.rst
++++ b/Documentation/arch/arm64/index.rst
+@@ -13,6 +13,7 @@ ARM64 Architecture
+     asymmetric-32bit
+     booting
+     cpu-feature-registers
++    cpu-hotplug
+     elf_hwcaps
+     hugetlbpage
+     kdump
+-- 
+2.39.2
+
