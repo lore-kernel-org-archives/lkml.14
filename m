@@ -1,217 +1,196 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F11C79DC
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3663415A861
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716994001; cv=none; b=AVLhIBXn1ts1wGbtXCzcj6DtvzuedJM6Clw1CT0SeV1ir7zrbt+SL1i0yoocfKvqHhQ/W8I1pq6a0cwZFJXGvPAftd04PiSIfxroXulVVDyU4S3JabGa/sqpbYYEAVW6Zj09/x+L0fzfWnP1o5jLrBzDwMoC0H+vdWlGy6gPN6Q=
+	t=1716994027; cv=none; b=RiLOUmIGJ5PNmSoNGx/aGrZfOg6AaBanP3OKc0AG7rzBnOqYNRyDQs2wPWpeowKfIOQFf9I5svbEiAtZ756/nHR/0sZuY/viGyKGLOL23N1oFBulXBvgkqSMLpxRMW7tCVVYKdmNmeuTjhQbKRLKcrvdtShePosg0SLCktmmJd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716994001; c=relaxed/simple;
-	bh=S2XYz5b0N/Y9h2Cc2CdEvH/yAKGdPfLmjj5e1nJ2VWE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fDBrbwy2WTbEv0X+iJ6MRBY5Nlt3mXBuiXSuox2W7/3QFF8Q3oV2q2/Qyssv7NHNjIkkr29fGItFGnnFnQd3n6bnWyTng6nJjrZt2QFAA856dEjnoroQsmQet8EfGGsdv71Sd1l4QhlFlS2TbO7onLfz9As5W4BmSJ42ync4LTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d35mEair; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716994027; c=relaxed/simple;
+	bh=NhsA12mNc2gFhhoKWAPojouXLLZWTiByUv2dC3557Ew=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NYC8kvFM+OZNpgkQ2SB61DpWwYb+yBx0ilK9BWBiOeMViKDv7x39gGS2YBnNRKnjJ3f3lLE5LNA07RUUjIK1tCrQU9Km8fLon00/AA3CrBJNNgu0prcPA5FWT/KSMZK5R3+l8VdcCDRq+4/XZsSGXuyluJEQKZcOEbhOZhhA+vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Oo/A+dzx; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d35mEair"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-6bec8c86b48so73618a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:46:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oo/A+dzx"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e95abc7259so23387391fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:47:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716993999; x=1717598799; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CvVzHd5AxSKnApKESDyHK3nerTyOYWeW+tQfkc76wG0=;
-        b=d35mEairzd2mVHclJARm0I7KYGnvonv6GLsraMJC9ovgiYtDzzIQk318m/19Y0wZT8
-         Bh+YViBg1j+QJAk6tSCVKePkvDgpV0Yk+c3gsDaiFbOYwImS7aY5FcZHMuvI1+es9NVr
-         QTv/ivPYWm7yS3lM8jIADkOK4iX/00Wmn/R/uzLuYWEU5wvdsuzBYV6FmBCFz7G28iXw
-         YzHvtqI8AO5iuUsh1pHQqwZNhDLHB17KYYbTSNtcBv4OfkuArGcK47p0ngloMEbdteWy
-         OWftXaP167GlQFAGucqcVDjntcXBZoBGCbjvl1QjA3OizhsSdvXyv1QymrwEbOwtBfOg
-         FTNg==
+        d=linaro.org; s=google; t=1716994023; x=1717598823; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZqG8Y1q7bjBKJ+/8NRu/7TrrwGlZoB2oPzQw2nY5nfM=;
+        b=Oo/A+dzxSrrvgCA66h8r1aSAyOIXbfg1+Uw1LQ62yYOfNOy2e6xdg7MLb0bpQ9+QOz
+         o+nA//3ITXdlOyCbwQF0K8yGtgphxXs9LOJ5HzqSPxC1dDhAs7oSGRaJw6xM5diZOzLM
+         NPkPlbqlG9E2QXii79yakaBTn0gI4Oeq4G+QshLXF0GVcICFWWCUmpecuht2yGWqnaWc
+         G+vdNafxiXJyybUuvKB8A/7wk3z148LkQuyXiQvD6rZY49SBxskm6Sy2ecEn7avDaDHR
+         6KipFwu0HJaFVYjrWl2Q4iTymdyag6wTV/xFoK4Pebj8VZUlCh0JyIDtia1cghISVJzM
+         oQ6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716993999; x=1717598799;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CvVzHd5AxSKnApKESDyHK3nerTyOYWeW+tQfkc76wG0=;
-        b=b9lna5augEjMP0g3udMjI8gB2vj5hQJ0YfcdpStLCTTe2KCwsmWTvbjLB//iSJFBLn
-         Mz/TyKqbVSm61hf968GsC84M+bnVH2LjL0IZWAkEegGL/IQe7bC1b33C50MOg5iKlFM1
-         YAa9eAoblmy9VYXC9fsL2WMQLPAr+PwjD+Ut1CRAR0ZLVTIX5JRuY8YrvFFBwxK8HUlx
-         /dYwIqMxVcDIP7Q1KBKA1rMEWRoFrU/akSajjZUNgBcZocA0tLIeaCM3Lw47MiB7zGhu
-         rFaRXmWt+iU7GLv+/iq8cdF8AzXdTfFP4yTdttf/UtP72qJUOArXeKYazku4KrbDv6Is
-         0xuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ72GmH/4ZqLtxIqtujEO7A4T2C8YbeDE3+IEjqAmbHAQ6JAG5dL39VROeAti4QKDgWRv/aNjC59QjXqHb5BwlQ0qRy+lCEIP0C01R
-X-Gm-Message-State: AOJu0YxnFqHeIim2os/iUMKSKT+0xHNklNO5Bu/slcDuKXDblHJ2BlVT
-	/CP5KcYHDOBlYM5JTdZzo8b238FLeOeEHJWiMOF9CefuXN4YOFWpKj9XuZaLFaD6LLS+wZbrrs8
-	pEqwG9DoRp+pgtBEAD2WUpnYplR0=
-X-Google-Smtp-Source: AGHT+IHB40gqF5o5YJJk218HRfK46Q5oKExKxc9X5bl9vAXS05a8NVPXgx8Ecwt6Mp58v7Qb3PXOwkGnAsNDaWJCJz8=
-X-Received: by 2002:a17:90b:400a:b0:2bd:5c9c:b080 with SMTP id
- 98e67ed59e1d1-2bf5ed1e3b6mr16295128a91.12.1716993998803; Wed, 29 May 2024
- 07:46:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716994023; x=1717598823;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZqG8Y1q7bjBKJ+/8NRu/7TrrwGlZoB2oPzQw2nY5nfM=;
+        b=fNbddu2aCBuHaulDgCSWuwkUdh6avbIHemTHEc4QR3gDA8o0zcQHjEgQR+8RMt1HZ+
+         oJ6to4AzNOL5GHJvG5q4jg5X2MnFKjMm1R+z5uGwieUS77ruOSEVfXY1bba5fCXxKi0d
+         l1EVsI9heV/nsGD0U/W1brOiyDYNmstYzFBxXJfSHpfpwl0xzXG56FvhEsnnktKqC4M5
+         yMUowcSlwAGLoJVWLCfoDt2lKMbVC7EFpy7ZKX6L53MTo2c/Y/xfRqdyGVOkSEx70rD5
+         rBI5ERgY+ZXVId7DF72mqYovRRnXJlNEeKLFU1VqmpJLWHbBANnik2SyRUbjmjDkN1VM
+         xfNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVk86jbRApTYZ05skJHbJZCvXan2OoAYg4Wgd4JNYuaMUGniGoB2Wq+3Jc3xKqLmvKLN7rD6LfyGjYGOou9oFbC0SkH1spuisqhhcT3
+X-Gm-Message-State: AOJu0YzhrFYQVyOupwO8WcVV++SAM4YGrB7s3fVMDfkzcLXFQ4w+IxEq
+	MFCbpOWoVojFNIWeQY95cJbqn0+8cHrSwxgo5UJPqyPCFd5MgwlmHxd5POP6vmU=
+X-Google-Smtp-Source: AGHT+IHclhS3LUw7IkUqpHSstY4ZACPOcpTxuufOPR4UW3CJ8otFC7p/n1zDFwNPfaZiA7JHvCQkjg==
+X-Received: by 2002:a2e:9c86:0:b0:2e6:ccfd:fae5 with SMTP id 38308e7fff4ca-2e95b094550mr92920121fa.4.1716994023309;
+        Wed, 29 May 2024 07:47:03 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e98c45df0csm3791951fa.68.2024.05.29.07.47.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 07:47:02 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v2 00/14] dt-bindings: clock: qcom,gcc: handle the
+ controllers without power domains
+Date: Wed, 29 May 2024 17:46:58 +0300
+Message-Id: <20240529-qcom-gdscs-v2-0-69c63d0ae1e7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528115146.2870032-1-arnd@kernel.org>
-In-Reply-To: <20240528115146.2870032-1-arnd@kernel.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 29 May 2024 10:46:27 -0400
-Message-ID: <CADnq5_OtL0D+mE8bsoWmPz0e7USC=UrpFjcZZ2LTeaHePToBxQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] [RESEND] drm/amd/display: dynamically allocate
- dml2_configuration_options structures
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Wenjing Liu <wenjing.liu@amd.com>, Alvin Lee <alvin.lee2@amd.com>, Jun Lei <jun.lei@amd.com>, 
-	Hamza Mahfooz <hamza.mahfooz@amd.com>, Aurabindo Pillai <aurabindo.pillai@amd.com>, 
-	Dillon Varone <dillon.varone@amd.com>, Qingqing Zhuo <Qingqing.Zhuo@amd.com>, 
-	Roman Li <roman.li@amd.com>, Aric Cyr <aric.cyr@amd.com>, 
-	Joshua Aberback <joshua.aberback@amd.com>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOI/V2YC/23MywrCMBCF4Vcps3Ykia2oK99Dushlkg5oUxMJS
+ sm7G7t2+R843wqZElOGS7dCosKZ49xC7Tqwk54DIbvWoITqxaBO+LTxgcFlm9EMdLTaO23ODtp
+ hSeT5vWG3sfXE+RXTZ7OL/K1/mSJRoDhYL40USvf+eudZp7iPKcBYa/0C0+ZswqUAAAA=
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
+ Robert Marko <robimarko@gmail.com>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5649;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=NhsA12mNc2gFhhoKWAPojouXLLZWTiByUv2dC3557Ew=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmVz/kgfr508qHanfxEaMuLTnrePyImmxwJf49H
+ 1M7Poy8SISJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZlc/5AAKCRCLPIo+Aiko
+ 1d7pB/9kNqbfqeceiwOn3z4zcNDkKRYmqZOaHHIcv+wc6r0OVdHAsIsHHB4Me6ji2Qy8cPtg8Tp
+ trDtzOvvdWytOA+fIzwxSmGIMNRdUTCnXWZZXDhYatDtCKR02N2lDMTokUZ9/joZimn/fhfe5LO
+ 5WR0geE7lnSSMrcy/RGL660hlK3TW2wwWSIMxUrcKo9xVlLc+kMEFE8adlfTRz8ESGKkuGfCj8q
+ 0uPT8XbFhZUV/4aC1BQ4ZdOvZBr2tWB6VvUEtTrl+eVxrqzEZrfNE5jdkfM3mqA1spckDLfYBNm
+ YTLefLrvEBJRuTbOL4ZNk9jM6bMrNA8jBaXWeiN5OufHZMsC
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Applied the series.  Thanks!
+On some of the Qualcomm platforms the Global Clock Controller doesn't
+provide power domains to the platform. However the existing
+qcom,gcc.yaml common schema requires the '#power-domain-cells' property.
+This results either in a platforms having incorrect property or in DT
+validation errors. Fix this by splitting the qcom,gcc-nopd.yaml schema,
+which doesn't define the offensive property and use it for such
+platforms.
 
-Alex
+Also, while we are at it, fix GCC node name for two platforms and
+enforce node name in the DT schema.
 
-On Tue, May 28, 2024 at 7:52=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> This structure is too large to fit on a stack, as shown by the
-> newly introduced warnings from a recent code change:
->
-> drivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn32/dcn32_resource.c:=
- In function 'dcn32_update_bw_bounding_box':
-> drivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn32/dcn32_resource.c:=
-2019:1: error: the frame size of 1180 bytes is larger than 1024 bytes [-Wer=
-ror=3Dframe-larger-than=3D]
-> drivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn321/dcn321_resource.=
-c: In function 'dcn321_update_bw_bounding_box':
-> drivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn321/dcn321_resource.=
-c:1597:1: error: the frame size of 1180 bytes is larger than 1024 bytes [-W=
-error=3Dframe-larger-than=3D]
-> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_state.c: In function 'dc=
-_state_create':
-> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_state.c:219:1: error: th=
-e frame size of 1184 bytes is larger than 1024 bytes [-Werror=3Dframe-large=
-r-than=3D]
->
-> Instead of open-coding the assignment of a large structure to a stack
-> variable, use an explicit kmemdup() in each case to move it off the stack=
-.
->
-> Fixes: e779f4587f61 ("drm/amd/display: Add handling for DC power mode")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Originally sent as https://lore.kernel.org/all/20240418083421.3956461-1-a=
-rnd@kernel.org/
-> ---
->  .../display/dc/resource/dcn32/dcn32_resource.c   | 16 +++++++++++-----
->  .../display/dc/resource/dcn321/dcn321_resource.c | 16 +++++++++++-----
->  2 files changed, 22 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource=
-.c b/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-> index 022d320be1d5..0f11d7c8791c 100644
-> --- a/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-> @@ -2007,21 +2007,27 @@ void dcn32_calculate_wm_and_dlg(struct dc *dc, st=
-ruct dc_state *context,
->
->  static void dcn32_update_bw_bounding_box(struct dc *dc, struct clk_bw_pa=
-rams *bw_params)
->  {
-> -       struct dml2_configuration_options dml2_opt =3D dc->dml2_options;
-> +       struct dml2_configuration_options *dml2_opt;
-> +
-> +       dml2_opt =3D kmemdup(&dc->dml2_options, sizeof(dc->dml2_options),=
- GFP_KERNEL);
-> +       if (!dml2_opt)
-> +               return;
->
->         DC_FP_START();
->
->         dcn32_update_bw_bounding_box_fpu(dc, bw_params);
->
-> -       dml2_opt.use_clock_dc_limits =3D false;
-> +       dml2_opt->use_clock_dc_limits =3D false;
->         if (dc->debug.using_dml2 && dc->current_state && dc->current_stat=
-e->bw_ctx.dml2)
-> -               dml2_reinit(dc, &dml2_opt, &dc->current_state->bw_ctx.dml=
-2);
-> +               dml2_reinit(dc, dml2_opt, &dc->current_state->bw_ctx.dml2=
-);
->
-> -       dml2_opt.use_clock_dc_limits =3D true;
-> +       dml2_opt->use_clock_dc_limits =3D true;
->         if (dc->debug.using_dml2 && dc->current_state && dc->current_stat=
-e->bw_ctx.dml2_dc_power_source)
-> -               dml2_reinit(dc, &dml2_opt, &dc->current_state->bw_ctx.dml=
-2_dc_power_source);
-> +               dml2_reinit(dc, dml2_opt, &dc->current_state->bw_ctx.dml2=
-_dc_power_source);
->
->         DC_FP_END();
-> +
-> +       kfree(dml2_opt);
->  }
->
->  static struct resource_funcs dcn32_res_pool_funcs =3D {
-> diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn321/dcn321_resour=
-ce.c b/drivers/gpu/drm/amd/display/dc/resource/dcn321/dcn321_resource.c
-> index e4b360d89b3b..07ca6f58447d 100644
-> --- a/drivers/gpu/drm/amd/display/dc/resource/dcn321/dcn321_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/resource/dcn321/dcn321_resource.c
-> @@ -1581,21 +1581,27 @@ static struct dc_cap_funcs cap_funcs =3D {
->
->  static void dcn321_update_bw_bounding_box(struct dc *dc, struct clk_bw_p=
-arams *bw_params)
->  {
-> -       struct dml2_configuration_options dml2_opt =3D dc->dml2_options;
-> +       struct dml2_configuration_options *dml2_opt;
-> +
-> +       dml2_opt =3D kmemdup(&dc->dml2_options, sizeof(dc->dml2_options),=
- GFP_KERNEL);
-> +       if (!dml2_opt)
-> +               return;
->
->         DC_FP_START();
->
->         dcn321_update_bw_bounding_box_fpu(dc, bw_params);
->
-> -       dml2_opt.use_clock_dc_limits =3D false;
-> +       dml2_opt->use_clock_dc_limits =3D false;
->         if (dc->debug.using_dml2 && dc->current_state && dc->current_stat=
-e->bw_ctx.dml2)
-> -               dml2_reinit(dc, &dml2_opt, &dc->current_state->bw_ctx.dml=
-2);
-> +               dml2_reinit(dc, dml2_opt, &dc->current_state->bw_ctx.dml2=
-);
->
-> -       dml2_opt.use_clock_dc_limits =3D true;
-> +       dml2_opt->use_clock_dc_limits =3D true;
->         if (dc->debug.using_dml2 && dc->current_state && dc->current_stat=
-e->bw_ctx.dml2_dc_power_source)
-> -               dml2_reinit(dc, &dml2_opt, &dc->current_state->bw_ctx.dml=
-2_dc_power_source);
-> +               dml2_reinit(dc, dml2_opt, &dc->current_state->bw_ctx.dml2=
-_dc_power_source);
->
->         DC_FP_END();
-> +
-> +       kfree(dml2_opt);
->  }
->
->  static struct resource_funcs dcn321_res_pool_funcs =3D {
-> --
-> 2.39.2
->
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+Changes in v2:
+- Rework schema solution, by moving required / false to individual
+  schema files (Krzysztof),
+- Add even more platforms, which don't have power domains,
+- Sort out MDM9607 and MDM9615 GCC schema.
+- Link to v1: https://lore.kernel.org/r/20240528-qcom-gdscs-v1-0-03cf1b102a4f@linaro.org
+
+---
+Dmitry Baryshkov (14):
+      dt-bindings: clock: qcom,gcc-other: rename to qcom,mdm-mdm9607
+      dt-bindings: clock: qcom,gcc: sort out power-domains support
+      dt-bindings: clock: add schema for qcom,gcc-mdm9615
+      ARM: dts: qcom: apq8064: drop #power-domain-cells property of GCC
+      ARM: dts: qcom: msm8660: drop #power-domain-cells property of GCC
+      ARM: dts: qcom: msm8960: drop #power-domain-cells property of GCC
+      ARM: dts: qcom: ipq4019: drop #power-domain-cells property of GCC
+      ARM: dts: qcom: ipq8064: drop #power-domain-cells property of GCC
+      ARM: dts: qcom: mdm9615: drop #power-domain-cells property of GCC
+      arm64: dts: qcom: ipq5018: drop #power-domain-cells property of GCC
+      arm64: dts: qcom: ipq5332: drop #power-domain-cells property of GCC
+      arm64: dts: qcom: ipq9574: drop #power-domain-cells property of GCC
+      arm64: dts: qcom: ipq6018: fix GCC node name
+      arm64: dts: qcom: ipq8074: fix GCC node name
+
+ .../bindings/clock/qcom,gcc-apq8064.yaml           |  3 +-
+ .../bindings/clock/qcom,gcc-apq8084.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-ipq4019.yaml           |  3 +-
+ .../bindings/clock/qcom,gcc-ipq6018.yaml           |  3 +-
+ .../bindings/clock/qcom,gcc-ipq8064.yaml           |  3 +-
+ .../bindings/clock/qcom,gcc-ipq8074.yaml           |  1 +
+ .../{qcom,gcc-other.yaml => qcom,gcc-mdm9607.yaml} |  4 +-
+ .../bindings/clock/qcom,gcc-mdm9615.yaml           | 50 ++++++++++++++++++++++
+ .../bindings/clock/qcom,gcc-msm8660.yaml           |  3 +-
+ .../bindings/clock/qcom,gcc-msm8909.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-msm8916.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-msm8953.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-msm8974.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-msm8976.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-msm8994.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-msm8996.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-msm8998.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-qcm2290.yaml           |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-qcs404.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sc7180.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sc7280.yaml |  1 +
+ .../bindings/clock/qcom,gcc-sc8180x.yaml           |  1 +
+ .../bindings/clock/qcom,gcc-sc8280xp.yaml          |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sdm660.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sdm845.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sdx55.yaml  |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sdx65.yaml  |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sm6115.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sm6125.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sm6350.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sm8150.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sm8250.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sm8350.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc-sm8450.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |  1 -
+ .../bindings/clock/qcom,ipq5018-gcc.yaml           |  3 +-
+ .../bindings/clock/qcom,ipq5332-gcc.yaml           |  3 +-
+ .../bindings/clock/qcom,ipq9574-gcc.yaml           |  3 +-
+ .../bindings/clock/qcom,qdu1000-gcc.yaml           |  1 +
+ .../bindings/clock/qcom,sa8775p-gcc.yaml           |  1 +
+ .../devicetree/bindings/clock/qcom,sdx75-gcc.yaml  |  1 +
+ .../devicetree/bindings/clock/qcom,sm4450-gcc.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,sm6375-gcc.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,sm7150-gcc.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,sm8550-gcc.yaml |  1 +
+ .../devicetree/bindings/clock/qcom,sm8650-gcc.yaml |  1 +
+ .../bindings/clock/qcom,x1e80100-gcc.yaml          |  1 +
+ arch/arm/boot/dts/qcom/qcom-apq8064.dtsi           |  1 -
+ arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi           |  1 -
+ arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi           |  1 -
+ arch/arm/boot/dts/qcom/qcom-mdm9615.dtsi           |  1 -
+ arch/arm/boot/dts/qcom/qcom-msm8660.dtsi           |  1 -
+ arch/arm/boot/dts/qcom/qcom-msm8960.dtsi           |  1 -
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi              |  1 -
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi              |  1 -
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  2 +-
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              |  2 +-
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi              |  1 -
+ 58 files changed, 106 insertions(+), 22 deletions(-)
+---
+base-commit: 5274c645b48141dd4e6f60ec7ff24ef143ec9952
+change-id: 20240528-qcom-gdscs-b5e6cafdab9d
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
