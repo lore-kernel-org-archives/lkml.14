@@ -1,122 +1,117 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7EF1C286;
-	Wed, 29 May 2024 07:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AF11C286
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969485; cv=none; b=AlTp6452bFOf5hUA0x/rjQMfA4LwA7OFBmHBga2uRtFE2i1v0zvDwSL+EakxI7f7J+r1mQ+fYbB6Ggs1HgK05la6fM1x9P8xVvOsFE26MxZKQVcEugj8+fJXgUoRp2cx636dyOTZHQ3XU1nSad5cTiIIljAMBBaGMJhBDVhIqj8=
+	t=1716969537; cv=none; b=WNFZNrlK5RwP1+lxSq1iIbf3dXBlgyy+s4MtZZhqGOY0VktTGpfkNcJlOWekmGn6iApu99wHr+7hdZkSaOQe8p7hzbSATDuc+tihvtECrNH1NqRrghwDkfzgblhqP61NAdIkugsIlnnzh3yLGx2dJ5xKO87soil1kEaZH71af8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969485; c=relaxed/simple;
-	bh=RoabwHq66vizFMxPVCyGLA0hhXFCEADFoMq2+sxGbg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=itqD74iHoonQ9TKjzI+iOmrhL9Yv4Fqml8H5sUC6XR/5nyuzmhTK8agtf3Lad9ALFGufqlYhz3X+H+9VZ9M6MFWKMK6izuijtS5z/LsAWOP0TpSX+c9ao9S1ENbaTaOtutOKeAC3GPEK+Vp8RdkGcopk4iHqWHi7YryLkp+2qjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e86193d.versanet.de ([94.134.25.61] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sCEBr-0002F8-B5; Wed, 29 May 2024 09:57:43 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Jonas Karlman <jonas@kwiboo.se>, Sebastian Kropatsch <seb-dev@web.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add CM3588 NAS board
-Date: Wed, 29 May 2024 09:57:42 +0200
-Message-ID: <2693701.q0ZmV6gNhb@diego>
-In-Reply-To: <ac376b42-a52f-4fef-8543-b961becd5f4d@web.de>
-References:
- <20240526214340.8459-1-seb-dev@web.de> <3609340.LM0AJKV5NW@diego>
- <ac376b42-a52f-4fef-8543-b961becd5f4d@web.de>
+	s=arc-20240116; t=1716969537; c=relaxed/simple;
+	bh=eV+TNUFOPSfrYTI5o/AT0Xf0B/1eVTyXgi/p7HYzCZ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qVftvm5mMfu3ajlz24aCEScAo+Tu3A+J54g8H8WietFRWL4ktCHhs3JTWmyh6+eQHrfdxDPbimr70E7xserzWSCyVnUI8BpV0Y5ps7EtElJicrqGZlsTGe669L7WA0aG0cYG97CEN55A00OB/KbGgeFeGn8ICJLkTd3e6PoCRtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CSapUuEn; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CSapUuEn"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-df78acd5bb6so1870396276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 00:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716969534; x=1717574334; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GT8+P4efjvmYbXaUJmIzbqIMG2b455xekjxbQfC1iiU=;
+        b=CSapUuEnkLxIDRYPzlmgDUYCQXwHj2EoNWRp1wPZAbEy0F5LkQI8tdc/SR7QYki8lU
+         ObCs8C/QzR2abZNeSKwTI6+NO2SdG737RlGFE2QeHvsbIV41NG4q1zfk3xMRNqHQdHf6
+         mh8+nRNe7vuA8Ii9gO61N57Tpkj9uxyKanNdu3TEITaIJJ6AE1Wt41uIG9Osn6relYT/
+         E5dkzFT6mBZK83bO0Hp5ugYyghBcY7XJgZQ/DEc9KWNbSvxbmNrhZwrFZ8xK7tqnQ4pw
+         MdcZuefHH0YBgMFYnlNwRwoC2G04SNhf8yvjjFnvco5lPEojQt6Wfio2EPllMOljeGxz
+         NrCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716969534; x=1717574334;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GT8+P4efjvmYbXaUJmIzbqIMG2b455xekjxbQfC1iiU=;
+        b=efrflDDIT1h7jZMe2b2mgWuMVLO7OV6R0Oaui6hNjRqXysOE+6tV/rKk9aOPjYV719
+         nVkaqVr7c2QhfBUquhQF/10V+IbWlvjcQnmgC7PxmzwLeYEPC1zdgLQ13Mm0hfSVdz74
+         moW4W65Y0tCHb1naFPnUQa9Bvkq4018myPp+4ZaNOuR0u/jYY7PbhMEw/a0hYRs412d1
+         vuQteYRlgDQTV+3L1frsrb6TdJKnoWUMReMxHaiiw+zPXbkq2L847T5CdQR5bA8+JQ54
+         v4h47ZcZF0uXOyRLOd+lNvwKfEnHCBLJFulJtGSkWLeAYmG1sik4Q66TxhrswjFOXrHs
+         QKBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXB8P/W2KNx1m4xOSCySWrC1TvWA3/msAw/xKeKdR5vUCM1UP+rsLFaSgmfU6nzoYEX/db4p+XHhKX7G0PG/KFLLAdqr4M7JbUiCRoJ
+X-Gm-Message-State: AOJu0YywgXl7eZLmo+mcPClCK2JOHduZFukR+0XdCykJgzCM86jLxiLj
+	5vek0MAzTHljn7ZzNKcOA6SyX/f+NIQ/njSwA5mN/On8dDtvNwBqJVK42GIIr5nSM5ka41lf4zZ
+	KQ6xBMnTLyNzLGBU2FZZBw0vI1VjVOyOXh/KfKg==
+X-Google-Smtp-Source: AGHT+IFr9iaSo3OLjDZIJEEcFIuIAb4qCzBlRghHqswxxDMpC2NQvQSUVQp1F/1cySEOwsza82fXospyKoYSnOhYZHA=
+X-Received: by 2002:a25:ab26:0:b0:ddd:7456:d203 with SMTP id
+ 3f1490d57ef6-df7722176bcmr13800190276.41.1716969534655; Wed, 29 May 2024
+ 00:58:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+References: <20240528-qcom-gdscs-v1-0-03cf1b102a4f@linaro.org>
+ <20240528-qcom-gdscs-v1-1-03cf1b102a4f@linaro.org> <9a1bbcbd-7f46-4266-8f08-5650a42234d4@kernel.org>
+In-Reply-To: <9a1bbcbd-7f46-4266-8f08-5650a42234d4@kernel.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 29 May 2024 10:58:43 +0300
+Message-ID: <CAA8EJppu8kKC_zXRBAK9XAaPZ7SYShiZwpfQGYpC10Aj28Lxjw@mail.gmail.com>
+Subject: Re: [PATCH 01/10] dt-bindings: clock: qcom: split the non-PD schema
+ for GCC
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Taniya Das <quic_tdas@quicinc.com>, Robert Marko <robimarko@gmail.com>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Sebastian,
-
-Am Dienstag, 28. Mai 2024, 17:55:55 CEST schrieb Sebastian Kropatsch:
-> Am 27.05.2024 um 22:54 schrieb Heiko St=FCbner:
-> > Am Montag, 27. Mai 2024, 21:02:02 CEST schrieb Jonas Karlman:
-> >> On 2024-05-26 23:48, Sebastian Kropatsch wrote:
-> >>> The CM3588 NAS by FriendlyElec pairs the CM3588 compute module, based=
- on
-> >>> the Rockchip RK3588 SoC, with the CM3588 NAS Kit carrier board.
-> >>>
-> >>> Hardware features:
-> >>>      - Rockchip RK3588 SoC
-> >>>      - 4GB/8GB/16GB LPDDR4x RAM
-> >>>      - 64GB eMMC
-> >>>      - MicroSD card slot
-> >>>      - 1x RTL8125B 2.5G Ethernet
-> >>>      - 4x M.2 M-Key with PCIe 3.0 x1 (via bifurcation) for NVMe SSDs
-> >>>      - 2x USB 3.0 (USB 3.1 Gen1) Type-A, 1x USB 2.0 Type-A
-> >>>      - 1x USB 3.0 Type-C with DP AltMode support
-> >>>      - 2x HDMI 2.1 out, 1x HDMI in
-> >>>      - MIPI-CSI Connector, MIPI-DSI Connector
-> >>>      - 40-pin GPIO header
-> >>>      - 4 buttons: power, reset, recovery, MASK, user button
-> >>>      - 3.5mm Headphone out, 2.0mm PH-2A Mic in
-> >>>      - 5V Fan connector, PWM buzzer, IR receiver, RTC battery connect=
-or
-> >>>
-> >>> PCIe bifurcation is used to handle all four M.2 sockets at PCIe 3.0 x1
-> >>> speed. Data lane mapping in the DT is done like described in commit
-> >>> f8020dfb311d ("phy: rockchip-snps-pcie3: fix bifurcation on rk3588").
-> >>>
-> >>> This device tree includes support for eMMC, SD card, ethernet, all US=
-B2
-> >>> and USB3 ports, all four M.2 slots, GPU, RTC, buzzer, UART debugging =
-as
-> >>> well as the buttons and LEDs.
-> >>> The GPIOs are labeled according to the schematics.
-> >>>
-> >>> Signed-off-by: Sebastian Kropatsch <seb-dev@web.de>
-> >>> ---
-> >>>   arch/arm64/boot/dts/rockchip/Makefile         |    1 +
-> >>>   .../boot/dts/rockchip/rk3588-cm3588-nas.dts   | 1269 ++++++++++++++=
-+++
-> >>>   2 files changed, 1270 insertions(+)
-> >>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-cm3588-nas.d=
-ts
-> >>
-> >> Because the CM3588 is a SoM and the NAS is a carrier board this should
-> >> probably be split in two, cm3588.dtsi and cm3588-nas.dts.
+On Wed, 29 May 2024 at 10:34, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On 28/05/2024 22:43, Dmitry Baryshkov wrote:
+> > On some of Qualcomm platforms the Global Clock Controller (GCC) doesn't
+> > provide power domains. Split no-PD version from the common qcom,gcc schema.
 > >
-> > also, because of that way too generic name "cm", please incorporate the
-> > company name in the filename as well. For the same reason we named
-> > the rk3568-wolfvision-pf5.dts that way ;-) [Wolfvision being the compan=
-y]
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+>
+>
+> > diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> > index 788825105f24..e7ec15b1780d 100644
+> > --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> > +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> > @@ -14,27 +14,14 @@ description: |
+> >    Common bindings for Qualcomm global clock control module providing the
+> >    clocks, resets and power domains.
 > >
-> > So maybe:
-> > rk3588-friendlyelec-cm3588.dtsi and rk3588-friendlyelec-cm3588-nas.dts
+> > -properties:
+> > -  '#clock-cells':
+> > -    const: 1
+> > -
+> > -  '#reset-cells':
+> > -    const: 1
+> > +allOf:
+> > +  - $ref: qcom,gcc-nopd.yaml
 > >
->=20
-> Yes, I agree that the name is very generic. I struggled with this as
-> well, but your suggestion sounds good!
->=20
-> In this case, is it also preferred to change the commit message to
-> include the company name event though the commit message subject exceeds
-> 50 characters this way?
-> ("arm64: dts: rockchip: Add FriendlyElec CM3588 NAS board")
+> > +properties:
+> >    '#power-domain-cells':
+> >      const: 1
+>
+> So what's left here? One property? Not much benefit. Triple-schema
+> (include something to include something) does not make it readable. Just
+> do not require power-domain-cells in qcom,gcc.yaml.
 
-Were does a 50 character limit even come from?
-In other words, the subject should be meaningful and with the needed
-prefixes adhering to a 50 chars maxlen would cause pretty unreadable
-subject in a lot of cases.
-
-So the proposed subject is absolutely fine :-) .
+And add it to the required list on all relevant platforms? Ack, sounds
+fine to me.
 
 
-Heiko
-
-
+-- 
+With best wishes
+Dmitry
