@@ -1,395 +1,250 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2066.outbound.protection.outlook.com [40.107.92.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7622169ACE;
-	Wed, 29 May 2024 14:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716993885; cv=none; b=rudh84h+RNNeeZDNd07aL4Fysp2/nrMTDH8nQ8Qomt6RsOUEUh9aDO5fNg1Z3aNigN8c+VGUJZB2sViVJnHWe6yGFJay47Y8tU8mGxIMV0Q2ZW+Jpkq20fC2Ue0dL3kMKoxXT9fXbV1eWePuerZaORfxLNg5RDWLj4URmOsPFog=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716993885; c=relaxed/simple;
-	bh=L1pB5sM833F91QYZtZD5zyIFpixH8efzKyB/vGQgB+s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dV7N5KJ7J6wwUv/1QC/36r97pimnBf1TPecHgCce+eF/78TetsaTowbUZb+OmsDuftMN868oqVB83lERnyKT1gWchBQDBapsdULvd6aubeJBcKKsm7REqQx9WpWVAwKv+G3pza4h/2nq3fhfDfwoGfqOcu7W7uSD0iEH2dRtAYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EAZaUg8u; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FB479DC
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716993966; cv=fail; b=KVTEWOLk1nIqwvkzMbkJuebkX4AgZnIbjaADMQGIvoCU4KtkvNlGhXTLWAQSqCc8NdhbpTGwn6M/mJ3/lZXkNZirn3iUBNr1dwzisoGXLGGDgyUrNqkZM8Zp8a0PrGM0DZknUjwxvU5GK9wFo9j5ojnpPgtJEOpmBrIFA+KSxV8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716993966; c=relaxed/simple;
+	bh=blu5sb/oUKLvmRtKVVsIEkECNpmqxwR2TjUp73G6tfw=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=B98nrnEIM824ia3QtY9KfB/KK+PPSnPGhJgO8sQpVECXB6Rrqq//sQQRTSiKHwj0TSodAOz69sf6W5YY007hnJidoiU7+wMa848WDBhkDSrMLwflFdBtVMCDdycL+mSql0ZAcMIiRaziEBARlzieM4BuYk7d9KT2QxthhEF96Qk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=I5dr4BWc; arc=fail smtp.client-ip=40.107.92.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAZaUg8u"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52b78ef397bso52879e87.0;
-        Wed, 29 May 2024 07:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716993882; x=1717598682; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fgB23vKcow7QnQ1mmlyRwIrojERGh2ECUWAs0egDdog=;
-        b=EAZaUg8usik5dtGnk8fveOUrrmFg+xUm+N+UaWLg7t/5yrwCVEiHQjwyxqW/INOGag
-         apHSb2aHkWayfTGpPdvD9t3cmwMCz4WwPcc0lY/blLb5uBCTvPDGEg3/jl9sjI/VuuAs
-         8f0iyzDfT2+qxcyMdSO7/6xZDWHsDOQ98gSLkE2yoFtyLfvfbjz8CSTeJjKs5j5JpS4D
-         D0HAGEbFSvZjLMASqxBImpZ7FXjDCh6LlDeAj/RZ06CxLg85yg+zd6V33oKCtIriiZom
-         NWuwMFka15g/XfPolXUCFQy6evx4b3jr8prFjoUWRGbwOiBoupAPenoizQk4d8vqVwMJ
-         tKHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716993882; x=1717598682;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fgB23vKcow7QnQ1mmlyRwIrojERGh2ECUWAs0egDdog=;
-        b=YDcdKi79x7EilEySnX/fA9LC3bdxIkeFhUrjRzqqoxxMh9X9syCuEPR4VFQJ2sMhK+
-         bIW6iXS/Dm6ssUgNl5nJHpTLWvGtJoB8/Y/2aLhFjXeGQymkLBoYdBPoy0WYAOEVuHW2
-         CSTp92xi7KGg7sH98CLpuNmRAXci5cCsRQJXRyhN/6P3b2vxq+CKcc1lXJbOQhvLysaL
-         Iflq+nEo+/xVjif99VJoD0UJuiVyTt4opAT3ipthtLCeNHosCqhx+IAUWp1fjMUy5zbF
-         vmtQ2FN0g4XSi3UTevrFjzhB5LJEcMMROSuff1nu7nmaOBLgaTMPjure3reK9rJuzinp
-         UidQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUx0IpvA6HWrQiMhDa8mkLA2SlwxMgxRVA0T3z/x/nnDRspUjbYG2H3bq//eMlDoj6Y5J56wY1psotzHStnRQW+GzJvFyaVfiuxglqTlQzNFYrb5LnyhKcx5zIwx5fkGBiZCMUtzmKsaUupHR5Bf3Oys0VXb5WnXZLDI8nwd03wmNSUf1M=
-X-Gm-Message-State: AOJu0YwjlmzqLIr/iXZPBwpdr47zb36iViApjVKIp6wsWuthk+Ek/Mp8
-	fdpEULNkeTsTJe57y3N4n8DXS4Dj6nGrrJKq13rCeU55Fsz+S6cK
-X-Google-Smtp-Source: AGHT+IGq0angoA+k/9hNkfevqbRCbrHyt1FB3mZ0p8maQzNbTG1/SbqWABuQ8jwgmDQpwNS5qunqcQ==
-X-Received: by 2002:a05:6512:4010:b0:523:88a9:86bf with SMTP id 2adb3069b0e04-52a84127ba6mr876206e87.31.1716993881763;
-        Wed, 29 May 2024 07:44:41 -0700 (PDT)
-Received: from yoga-710.tas.nnz-ipc.net ([178.218.200.115])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529ac903bd9sm928915e87.236.2024.05.29.07.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 07:44:41 -0700 (PDT)
-From: Dmitry Yashin <dmt.yashin@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Jianqun Xu <jay.xu@rock-chips.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Yashin <dmt.yashin@gmail.com>
-Subject: [PATCH v2 2/2] pinctrl: rockchip: add rk3308b SoC support
-Date: Wed, 29 May 2024 19:35:34 +0500
-Message-ID: <20240529143534.32402-3-dmt.yashin@gmail.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240529143534.32402-1-dmt.yashin@gmail.com>
-References: <20240529143534.32402-1-dmt.yashin@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I5dr4BWc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lDxddvTPGhn41msssMtWeoPDjTzkk1LB2AZiJVNFXWpjxE/zwoOwT2Cqr6ieiATRy/Z2wLrztjOkPKkP6kIwmjIVc7acxQzYIp+W4Jm6PXiA1r2FVvAjmnalaj7MM+r0LTMWDYee/yoHjtOeI0yK3LfxLtv768FMrn73Lw/CTrHNei1masf6w98ZLPo7xZhXLCmiZDEklueGpyYOI+zAExoBJ44IsauAVmCHD1Nr7HGElMQd094KkWB/U7ua3SLFFx2szZAonYSEc02Whz7j4RLgMBDgNkGHIB27DB/cdEVWJ/yU7TMT1hXFTAdCeTHFkWpLGCynE71Qr3KjwQie8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fcOi31UY4GZC28UNCXKl0viT0RzuAyEwF37iLciwK0I=;
+ b=TJXTPQTMKeJPwq5IlpsXWbT3DgmNzpfAmC2boMp8l1S8iVfYI8t2TMnP9zTG1OGZqLKVvSRVX+gGzhZxk/J6DqQTz5E5ujUFfKki6CrvlGc6IpQVh8hnd6YpDd3CnUP8XQbXZY1NauEP+pQj9kaRDf8j4nvW5vMBnaPd+Zr1Q1hLwet6sMSkhrIn5AL3ZUvcPpCUmjZs1TaROoVvxzzJrLi/dVHbLaMjKG06QiVjjwI2q6nvx0h1xx15uyb5ecof1uV8y+xqb0INgGi6EKEz/SRyvYcbgfDLj8dBWNRbU+aaG6V9BOxT0Ip+gjmUJF8DeF+gNrHMAfzdTU+qYwNHOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fcOi31UY4GZC28UNCXKl0viT0RzuAyEwF37iLciwK0I=;
+ b=I5dr4BWc+IIJq6i+7lFRlwzUNFnNurlsjbuUKz5urTsWEiyUy/ak9pwsTKZ3UcOjCymloar8+pssnGT4EbVxkQ7g3BZgf+MSadCUshauWrvA3I6IOWTP9Iy9LR8v/K9eIhdEG4fTd6zX5FlZYZ0H1jEji8qxVjFEbxMds4HpDec=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM3PR12MB9349.namprd12.prod.outlook.com (2603:10b6:0:49::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.17; Wed, 29 May
+ 2024 14:46:01 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7611.030; Wed, 29 May 2024
+ 14:46:00 +0000
+Message-ID: <197d195f-9206-41dd-8ff1-f4bb4988fb9b@amd.com>
+Date: Wed, 29 May 2024 09:45:55 -0500
+User-Agent: Mozilla Thunderbird
+From: Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2] drm/client: Detect when ACPI lid is closed during
+ initialization
+To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ linux-kernel@vger.kernel.org, Chris Bainbridge <chris.bainbridge@gmail.com>,
+ hughsient@gmail.com
+References: <20240528210319.1242-1-mario.limonciello@amd.com>
+ <Zlc4V1goFvU2antl@intel.com>
+Content-Language: en-US
+In-Reply-To: <Zlc4V1goFvU2antl@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BN9PR03CA0709.namprd03.prod.outlook.com
+ (2603:10b6:408:ef::24) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM3PR12MB9349:EE_
+X-MS-Office365-Filtering-Correlation-Id: f621f36c-e6b6-487c-8c3a-08dc7fee0ede
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|7416005|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dzhYbllHWWdlRm96N2dxeHRjQmh3N1BCSjFXMjV6bm1veGsvZDVacmx2R0JB?=
+ =?utf-8?B?MFZkNHlBNU1qRGpDdVBRMDZ2OWNXTS9JZUVPdm15NDlOWmpvWXUybTduWlFs?=
+ =?utf-8?B?N2tnRzRTbU5UK3hxb0JYc0RpQUhnc1pzbFF4Q3czZGtkbkdVem53K1pWcjlO?=
+ =?utf-8?B?ZlR4d2FtSW4vMGFoUThCQ3ppb2xNOCsydlN3N0tpNFRRb0lSUXdBOHZ0QzFJ?=
+ =?utf-8?B?K29WR2VqSHdwMW4zVFFaSTA4bDRNcDUyNEZOSzZ1aFlucXk2aThYTlZSQWE2?=
+ =?utf-8?B?QWZZQzlyOVhUMGJVeTlNc1dUMUk2NzNRQkNpSGJTS3B3Zk1PaXNBa2xjb1Mz?=
+ =?utf-8?B?TmU1bUEzZE1YUmRVY25PMm9jM29EYXZDSW9jVnN6LzhEWTZYakJ4K0YwOWdj?=
+ =?utf-8?B?aWwzR1NhTUFFTSszWVFaaFRNb056WFY5RjUxamVEZEZuNEVxWVdSd0NDSkpq?=
+ =?utf-8?B?NVFYSFlZUDlKNG9TM1RxVENRQ3RSTjhTOHcrTTdPbEduNTRNc0lWWUduVzVk?=
+ =?utf-8?B?eHpzenhqeDZTemcwSUYxMXNiZGU3YW5OTm5rMndaWGVsZFV5VkRYM2NLcFBI?=
+ =?utf-8?B?MVV4ekFUZU9PYm90dXc4aVhxc0lObHBoc21mSlJOajlKWFFEbTF5V0k3YWRJ?=
+ =?utf-8?B?YjVQMUQ2T2VYVHBxRzhuZ3ZqSUhoV09ib2wrRUVra1VJMmR2WGZhWS9EcUpt?=
+ =?utf-8?B?SUZ1UHg4T2p5Z2tUZVlkYzUwZ01FVDVraWp1cndTVzRGMks1d2VDblRla3Bi?=
+ =?utf-8?B?SnJoR3JCM0lXNjV6ZUtMYlY3ajJtK0lhYXFDK2VHeEQxWlUySTRyRHptbUJz?=
+ =?utf-8?B?cUc5VFkwSWlzUC9CV3J2WFFMdkRtR2o4MnNuSmhKZFpKaWphWEhqLzk2SFFS?=
+ =?utf-8?B?THVVVDJTVEJFeERmZnMvY2liM0dzaCt6NHFkK3V5bVNrb2RXYXdBQ0c2bkZp?=
+ =?utf-8?B?LzBQRWxJS2tHUVFZbndqVU1XdWdIRHV0WWR2Z0pIaEEwa200VkZNREY4QUJy?=
+ =?utf-8?B?UHlpd1JSUjk0UDNvamNZcmd5Z0xPN2JvdUFZZXl1NFNpTFd4V3FzU0c0TDN5?=
+ =?utf-8?B?cFc3UnVIbzRRenI5SU5kaTUvZVpOSENnd0FOdytZcWE4VlVDZzhPUjJDN1l5?=
+ =?utf-8?B?R29ZdGZWaHVTdE1ielE5bmpMVFpxaXlZOUhtQ0xlejRwb1h6Mm9yYUl0NmNY?=
+ =?utf-8?B?Z2VEUjVDL2FvM1RTU3ZJdUpuRFU2bHpud2tlbmF2VFAxbm4yUHQwMXFWZzgx?=
+ =?utf-8?B?R2Nsd3V0UzM0N0JqNUpSRjV4MWRyVTA4VVplZGJIejd1WVFGZUltVlVWcmRX?=
+ =?utf-8?B?YWZwRWZGV1V1LzJ3OUUrMWlkMEJrbjkxcnFCWTljUytjYlVsbWdNSSsrMnBw?=
+ =?utf-8?B?L004VzNTeC9WdXMwMFI4ZWF0K3MxQ29MUnhZVXhhQkxVZFFZOVR0S2Q1Z2xz?=
+ =?utf-8?B?cHY2ZkZ4cDBhY0RoN29OWkNFa3orZEM5bGFnYlpwYU9LdDhYaHp6S0JrNkxO?=
+ =?utf-8?B?L0dTeUJlWnUwdVJIZ2xsdEZxNHVqUUhSakNGRmo0c0l0RzlHaE1vMjd4ZEFB?=
+ =?utf-8?B?MUNnQ1VSM25GeGsrRHdtMUhYcUZjZmRZYXFQQjR2a2RtOW4yYWxTVFAwbktv?=
+ =?utf-8?B?SlNtbzU1T2twTUpYSklFbTlNYklYMmc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TlhydWVGZkoyazZzYkh6b1BqNTBjTWwwNG5iMHArN1NYWkRYcjhvTzZMSXBl?=
+ =?utf-8?B?QlY2YmhpeVNiaEE2ZmZBL2ZjV0pHai9DdTFFUzQ0QitXMW1VN1F3R0tsM1o0?=
+ =?utf-8?B?UUQwckRmTEZneWNwS0NOWkN3ZnJzdlVkckJ3eW9VS0JPRTk5TjRFamZIOUU5?=
+ =?utf-8?B?ZnF6Y3NGRWxZd2FONEwwdHVPWVNFem9BaWNQckxWYmdZbnE3KzFKalB4eEdn?=
+ =?utf-8?B?YytwRGpEdTdxbHgwOUpzZ2lUQllTWEhCenV4THlqQWY1V01wNXdjUkpHSGla?=
+ =?utf-8?B?alB6UlplVlpLSFAzRXN6eWl1bXE1UmZkMGNDbHpTVXZKVWJYNTMvdTZORWVX?=
+ =?utf-8?B?elpjTDRqZFg5Wk1OMDIrcmNkOVNHNzYzenV1T0Fjc09sbWh5ZmZKcXNiV1VP?=
+ =?utf-8?B?M3c5YTRTazZWN3ZmeVBrcjVZZ0NpVnJIMXl5eHEwQnJFVzVpd2gyYjhoTVV2?=
+ =?utf-8?B?NWZxbGtMbXlhS09NckwxNjRjTDZuQTgvR0ZQTjBqSDRqVDIrc25DTlVWOXA4?=
+ =?utf-8?B?QUdlY1d6SFVBdHEvRWpxZ2JOZzBsV0daMEVFVU11Tzl5YmViSzU0clFCV1N5?=
+ =?utf-8?B?dExDNlBOTlNNQUJXRmF0UGxGdnJXT0NXWFdJdGtmTUlnNzdsKzhzSDhDK3dU?=
+ =?utf-8?B?U01Mb0d0NjdNUmkrTDhhV3dJcXlqaE5wRTByeEdyUVc1dXJyeUVMVi9sTml5?=
+ =?utf-8?B?ZHlyaGNCRGszOEpUV2pRT3dCcW4wUGxaNW45b3NmWm9tdW85MnRFMkZnMWRv?=
+ =?utf-8?B?NWFISXBpRW0ra0RuT1N1QThHZzVRUjh4aDJvVEhqYVVhVlBsTFFNdm05cDh3?=
+ =?utf-8?B?Y3gyMGFVMzJCQzlQZTEzM2ljV1hjUWNsMzB0T1A3UkZBanNuR2xkbXdXRFI3?=
+ =?utf-8?B?VDFhVVdGa3RhWG93NDl6aEtLTTB6dVBsUFVxOTh6ei94VnU0VHNpNVpuNUov?=
+ =?utf-8?B?OU9WNnVrRDZSUlY3NWpJaDhSWC8wWDlyaERQN2NsazlNUEI0QXYrSlBBRVR1?=
+ =?utf-8?B?TmFrdGtmQ2VDMS9xTHZObzNEK0ErU2V2WldHTWJsMDNJa2UyUVAxNStKVG43?=
+ =?utf-8?B?bVp1emFaRjF4VURrb0JyMUdiQkxCVXJxbnNGelAwc1haNDErL2Y4L2plcXVE?=
+ =?utf-8?B?ZWM4SElQTVNtYjZBN0paUnRYYy9ObHVHQ1BLNllRSmYrQ0VYUjljOXRqelFO?=
+ =?utf-8?B?WWNETDdlcWx1RWVQc0dGUFVHL1lzOThPek55Z2JGMGNUYkl4M0k0K2hKZjho?=
+ =?utf-8?B?b2c5QVpONXJuSUxOMXp2bk91Z3BGKy9TYTR6azZiNEtmRWVhVFczUE52QmFY?=
+ =?utf-8?B?akpTTXJKY1JWSmtpSndEZmZmNEwzWjJXRVp5QVI2Qm9pOWtrSGhmcDV3OFY0?=
+ =?utf-8?B?OGVSbVpVcEYxQUU2TnN5ZVBJajJLV3JRdzd3L200QklwQ3pjR3JMeVRpT0hN?=
+ =?utf-8?B?bU9OUSs2QSt3bkZ4RE9scDRCQ3BwV0d6NTg2a05GRm1IQmtwSkZKa3NDdFRW?=
+ =?utf-8?B?RDExV2dGWHFyWmJSV0l0R3Z2OEZ1dm96c0xTVXcvZXVoVk1wVk1abGN3RUlS?=
+ =?utf-8?B?Vll2T0ZXVHRidHpXUE1oRWl4cmU1VXpObWUyTTFxdFp1akVaTHRxRTNzeU1r?=
+ =?utf-8?B?SWh2UG5TaXM3SkJ3UTgvVmtjT2lydFpxdGNFdDRvNU5Zd3pMbTN4bnFMTlBB?=
+ =?utf-8?B?TVN6K1dib2VTKzIxRVFwRUt0cHkwbFNhdmxYS0R5VG5YV2J0a2dKUDZycVV1?=
+ =?utf-8?B?V1dhQnZqNHEwV3hLMkVISUtScmtadVptd0JMZCtvbUVXeEdRV1lMMVdFTWFC?=
+ =?utf-8?B?dXZiUmZlNDkrelFBa29udU4zeHd2ZmoxVGRqQVFYZEMwNWNkWnB5NDBmTE5F?=
+ =?utf-8?B?Uk1yMmdBekxlRmhTL1FlRXBmZUxsb2pBZDJYR3k0UVNPeGxnM2ZjamxaMGtS?=
+ =?utf-8?B?V01TK3RnR2xRMGdyaHZDdXVYRTJaN2xYQkdyWTNpNWhyR1QwV1JIRUMydHJP?=
+ =?utf-8?B?ZjczZlNFV05KTWs5S2w0Wk8xeWsrY3djMjB6YUF6OHpzRGdTaVJkOGxKdXlN?=
+ =?utf-8?B?OWI1T0xCOGtwNmE5S3QyODgyNXY1SGdGbXRZdUNwVUhodms1eUVmZWRwSEk5?=
+ =?utf-8?Q?7lumjl1xmSYxNUGIQnS59D3Bi?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f621f36c-e6b6-487c-8c3a-08dc7fee0ede
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 14:46:00.9150
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UuVa5hPkb7HzWwT8qnlHUe6X+8hiIXX/L7bf1NjKN8xIQDKtg26shwsluKKQkSLt9ya4dIyGogEVB3gvSzoqsg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9349
 
-Add pinctrl support for rk3308b. This pin controller much the same as
-rk3308's, but with additional iomux routes and 3bit iomuxes selected
-via gpio##_sel_src_ctrl registers. Set them up in the function
-rk3308b_soc_sel_src_init to use new 3bit iomuxes over some 2bit old
-ones and update iomux_recalced and iomux_routes for the new SoC's.
+On 5/29/2024 09:14, Ville Syrjälä wrote:
+> On Tue, May 28, 2024 at 04:03:19PM -0500, Mario Limonciello wrote:
+>> If the lid on a laptop is closed when eDP connectors are populated
+>> then it remains enabled when the initial framebuffer configuration
+>> is built.
+>>
+>> When creating the initial framebuffer configuration detect the ACPI
+>> lid status and if it's closed disable any eDP connectors.
+>>
+>> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3349
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> Cc: hughsient@gmail.com
+>> v1->v2:
+>>   * Match LVDS as well
+>> ---
+>>   drivers/gpu/drm/drm_client_modeset.c | 30 ++++++++++++++++++++++++++++
+>>   1 file changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+>> index 31af5cf37a09..0b0411086e76 100644
+>> --- a/drivers/gpu/drm/drm_client_modeset.c
+>> +++ b/drivers/gpu/drm/drm_client_modeset.c
+>> @@ -8,6 +8,7 @@
+>>    */
+>>   
+>>   #include "drm/drm_modeset_lock.h"
+>> +#include <acpi/button.h>
+>>   #include <linux/module.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/slab.h>
+>> @@ -257,6 +258,34 @@ static void drm_client_connectors_enabled(struct drm_connector **connectors,
+>>   		enabled[i] = drm_connector_enabled(connectors[i], false);
+>>   }
+>>   
+>> +static void drm_client_match_edp_lid(struct drm_device *dev,
+>> +				     struct drm_connector **connectors,
+>> +				     unsigned int connector_count,
+>> +				     bool *enabled)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < connector_count; i++) {
+>> +		struct drm_connector *connector = connectors[i];
+>> +
+>> +		switch (connector->connector_type) {
+>> +		case DRM_MODE_CONNECTOR_LVDS:
+>> +		case DRM_MODE_CONNECTOR_eDP:
+>> +			if (!enabled[i])
+>> +				continue;
+>> +			break;
+>> +		default:
+>> +			continue;
+>> +		}
+>> +
+>> +		if (!acpi_lid_open()) {
+>> +			drm_dbg_kms(dev, "[CONNECTOR:%d:%s] lid is closed, disabling\n",
+>> +				    connector->base.id, connector->name);
+>> +			enabled[i] = false;
+>> +		}
+>> +	}
+>> +}
+> 
+> If you don't hook into some lid notify event how is one supposed to get
+> the display back to life after opening the lid?
 
-Fixes: 1f3e25a06883 ("pinctrl: rockchip: fix RK3308 pinmux bits")
-Signed-off-by: Dmitry Yashin <dmt.yashin@gmail.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 234 +++++++++++++++++++++++++++++
- drivers/pinctrl/pinctrl-rockchip.h |   1 +
- 2 files changed, 235 insertions(+)
+I guess in my mind it's a tangential to the "initial modeset".  The DRM 
+master can issue a modeset to enable the combination as desired.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index c290c755b4fb..e3b6e22c5dce 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -632,6 +632,115 @@ static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_recalced_data rk3308b_mux_recalced_data[] = {
-+	{
-+		/* gpio1b6_sel */
-+		.num = 1,
-+		.pin = 14,
-+		.reg = 0x28,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		/* gpio1b7_sel */
-+		.num = 1,
-+		.pin = 15,
-+		.reg = 0x2c,
-+		.bit = 0,
-+		.mask = 0x3
-+	}, {
-+		/* gpio1c2_sel */
-+		.num = 1,
-+		.pin = 18,
-+		.reg = 0x30,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		/* gpio1c3_sel */
-+		.num = 1,
-+		.pin = 19,
-+		.reg = 0x30,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		/* gpio1c4_sel */
-+		.num = 1,
-+		.pin = 20,
-+		.reg = 0x30,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		/* gpio1c5_sel */
-+		.num = 1,
-+		.pin = 21,
-+		.reg = 0x34,
-+		.bit = 0,
-+		.mask = 0xf
-+	}, {
-+		/* gpio1c6_sel */
-+		.num = 1,
-+		.pin = 22,
-+		.reg = 0x34,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		/* gpio1c7_sel */
-+		.num = 1,
-+		.pin = 23,
-+		.reg = 0x34,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		/* gpio2a2_sel_plus */
-+		.num = 2,
-+		.pin = 2,
-+		.reg = 0x608,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		/* gpio2a3_sel_plus */
-+		.num = 2,
-+		.pin = 3,
-+		.reg = 0x608,
-+		.bit = 4,
-+		.mask = 0x7
-+	}, {
-+		/* gpio2c0_sel_plus */
-+		.num = 2,
-+		.pin = 16,
-+		.reg = 0x610,
-+		.bit = 8,
-+		.mask = 0x7
-+	}, {
-+		/* gpio3b2_sel_plus */
-+		.num = 3,
-+		.pin = 10,
-+		.reg = 0x610,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		/* gpio3b3_sel_plus */
-+		.num = 3,
-+		.pin = 11,
-+		.reg = 0x610,
-+		.bit = 4,
-+		.mask = 0x7
-+	}, {
-+		/* gpio3b4_sel */
-+		.num = 3,
-+		.pin = 12,
-+		.reg = 0x68,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		/* gpio3b5_sel */
-+		.num = 3,
-+		.pin = 13,
-+		.reg = 0x68,
-+		.bit = 12,
-+		.mask = 0xf
-+	},
-+};
-+
- static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
- 	{
- 		.num = 2,
-@@ -882,6 +991,35 @@ static struct rockchip_mux_route_data rk3308_mux_route_data[] = {
- 	RK_MUXROUTE_SAME(2, RK_PA4, 3, 0x600, BIT(16 + 2) | BIT(2)), /* pdm-clkm-m2 */
- };
- 
-+static struct rockchip_mux_route_data rk3308b_mux_route_data[] = {
-+	RK_MUXROUTE_SAME(0, RK_PC3, 1, 0x314, BIT(16 + 0) | BIT(0)), /* rtc_clk */
-+	RK_MUXROUTE_SAME(1, RK_PC6, 2, 0x314, BIT(16 + 2) | BIT(16 + 3)), /* uart2_rxm0 */
-+	RK_MUXROUTE_SAME(4, RK_PD2, 2, 0x314, BIT(16 + 2) | BIT(16 + 3) | BIT(2)), /* uart2_rxm1 */
-+	RK_MUXROUTE_SAME(0, RK_PB7, 2, 0x608, BIT(16 + 8) | BIT(16 + 9)), /* i2c3_sdam0 */
-+	RK_MUXROUTE_SAME(3, RK_PB4, 2, 0x608, BIT(16 + 8) | BIT(16 + 9) | BIT(8)), /* i2c3_sdam1 */
-+	RK_MUXROUTE_SAME(2, RK_PA0, 3, 0x608, BIT(16 + 8) | BIT(16 + 9) | BIT(9)), /* i2c3_sdam2 */
-+	RK_MUXROUTE_SAME(1, RK_PA3, 2, 0x308, BIT(16 + 3)), /* i2s-8ch-1-sclktxm0 */
-+	RK_MUXROUTE_SAME(1, RK_PA4, 2, 0x308, BIT(16 + 3)), /* i2s-8ch-1-sclkrxm0 */
-+	RK_MUXROUTE_SAME(1, RK_PB5, 2, 0x308, BIT(16 + 3) | BIT(3)), /* i2s-8ch-1-sclktxm1 */
-+	RK_MUXROUTE_SAME(1, RK_PB6, 2, 0x308, BIT(16 + 3) | BIT(3)), /* i2s-8ch-1-sclkrxm1 */
-+	RK_MUXROUTE_SAME(1, RK_PA4, 3, 0x308, BIT(16 + 12) | BIT(16 + 13)), /* pdm-clkm0 */
-+	RK_MUXROUTE_SAME(1, RK_PB6, 4, 0x308, BIT(16 + 12) | BIT(16 + 13) | BIT(12)), /* pdm-clkm1 */
-+	RK_MUXROUTE_SAME(2, RK_PA6, 2, 0x308, BIT(16 + 12) | BIT(16 + 13) | BIT(13)), /* pdm-clkm2 */
-+	RK_MUXROUTE_SAME(2, RK_PA4, 3, 0x600, BIT(16 + 2) | BIT(2)), /* pdm-clkm-m2 */
-+	RK_MUXROUTE_SAME(3, RK_PB2, 3, 0x314, BIT(16 + 9)), /* spi1_miso */
-+	RK_MUXROUTE_SAME(2, RK_PA4, 2, 0x314, BIT(16 + 9) | BIT(9)), /* spi1_miso_m1 */
-+	RK_MUXROUTE_SAME(0, RK_PB3, 3, 0x314, BIT(16 + 10) | BIT(16 + 11)), /* owire_m0 */
-+	RK_MUXROUTE_SAME(1, RK_PC6, 7, 0x314, BIT(16 + 10) | BIT(16 + 11) | BIT(10)), /* owire_m1 */
-+	RK_MUXROUTE_SAME(2, RK_PA2, 5, 0x314, BIT(16 + 10) | BIT(16 + 11) | BIT(11)), /* owire_m2 */
-+	RK_MUXROUTE_SAME(0, RK_PB3, 2, 0x314, BIT(16 + 12) | BIT(16 + 13)), /* can_rxd_m0 */
-+	RK_MUXROUTE_SAME(1, RK_PC6, 5, 0x314, BIT(16 + 12) | BIT(16 + 13) | BIT(12)), /* can_rxd_m1 */
-+	RK_MUXROUTE_SAME(2, RK_PA2, 4, 0x314, BIT(16 + 12) | BIT(16 + 13) | BIT(13)), /* can_rxd_m2 */
-+	RK_MUXROUTE_SAME(1, RK_PC4, 3, 0x314, BIT(16 + 14)), /* mac_rxd0_m0 */
-+	RK_MUXROUTE_SAME(4, RK_PA2, 2, 0x314, BIT(16 + 14) | BIT(14)), /* mac_rxd0_m1 */
-+	RK_MUXROUTE_SAME(3, RK_PB4, 4, 0x314, BIT(16 + 15)), /* uart3_rx */
-+	RK_MUXROUTE_SAME(0, RK_PC1, 3, 0x314, BIT(16 + 15) | BIT(15)), /* uart3_rx_m1 */
-+};
-+
- static struct rockchip_mux_route_data rk3328_mux_route_data[] = {
- 	RK_MUXROUTE_SAME(1, RK_PA1, 2, 0x50, BIT(16) | BIT(16 + 1)), /* uart2dbg_rxm0 */
- 	RK_MUXROUTE_SAME(2, RK_PA1, 1, 0x50, BIT(16) | BIT(16 + 1) | BIT(0)), /* uart2dbg_rxm1 */
-@@ -2420,6 +2558,7 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
- 	case RK3188:
- 	case RK3288:
- 	case RK3308:
-+	case RK3308B:
- 	case RK3368:
- 	case RK3399:
- 	case RK3568:
-@@ -2478,6 +2617,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
- 	case RK3188:
- 	case RK3288:
- 	case RK3308:
-+	case RK3308B:
- 	case RK3368:
- 	case RK3399:
- 	case RK3568:
-@@ -2740,6 +2880,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
- 	case RK3188:
- 	case RK3288:
- 	case RK3308:
-+	case RK3308B:
- 	case RK3368:
- 	case RK3399:
- 	case RK3568:
-@@ -3348,6 +3489,93 @@ static int __maybe_unused rockchip_pinctrl_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops, rockchip_pinctrl_suspend,
- 			 rockchip_pinctrl_resume);
- 
-+#define RK3308B_GRF_SOC_CON13			0x608
-+#define RK3308B_GRF_SOC_CON15			0x610
-+
-+/* RK3308B_GRF_SOC_CON13 */
-+#define RK3308B_GRF_I2C3_IOFUNC_SRC_CTRL	(BIT(16 + 10) | BIT(10))
-+#define RK3308B_GRF_GPIO2A3_SEL_SRC_CTRL	(BIT(16 + 7)  | BIT(7))
-+#define RK3308B_GRF_GPIO2A2_SEL_SRC_CTRL	(BIT(16 + 3)  | BIT(3))
-+
-+/* RK3308B_GRF_SOC_CON15 */
-+#define RK3308B_GRF_GPIO2C0_SEL_SRC_CTRL	(BIT(16 + 11) | BIT(11))
-+#define RK3308B_GRF_GPIO3B3_SEL_SRC_CTRL	(BIT(16 + 7)  | BIT(7))
-+#define RK3308B_GRF_GPIO3B2_SEL_SRC_CTRL	(BIT(16 + 3)  | BIT(3))
-+
-+/*
-+ * RK3308B has 3bit gpio##_sel_plus iomuxes over some 2bit old ones.
-+ * Put them in use by initializing gpio##_sel_src_ctrl registers.
-+ */
-+static int rk3308b_soc_sel_src_init(struct rockchip_pinctrl *info)
-+{
-+	int ret;
-+
-+	ret = regmap_write(info->regmap_base, RK3308B_GRF_SOC_CON13,
-+			   RK3308B_GRF_I2C3_IOFUNC_SRC_CTRL |
-+			   RK3308B_GRF_GPIO2A3_SEL_SRC_CTRL |
-+			   RK3308B_GRF_GPIO2A2_SEL_SRC_CTRL);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(info->regmap_base, RK3308B_GRF_SOC_CON15,
-+			   RK3308B_GRF_GPIO2C0_SEL_SRC_CTRL |
-+			   RK3308B_GRF_GPIO3B3_SEL_SRC_CTRL |
-+			   RK3308B_GRF_GPIO3B2_SEL_SRC_CTRL);
-+
-+	return ret;
-+};
-+
-+#define RK3308_GRF_CHIP_ID			0x800
-+
-+static int rk3308_soc_update_type(struct rockchip_pinctrl *info)
-+{
-+	struct rockchip_pin_ctrl *ctrl = info->ctrl;
-+	unsigned int chip_id;
-+	int ret;
-+
-+	ret = regmap_read(info->regmap_base, RK3308_GRF_CHIP_ID, &chip_id);
-+	if (ret)
-+		return ret;
-+
-+	switch (chip_id) {
-+	/* From RK3308 TRM: "Errata: The read only chip id value is 32'h0cea(32'd3306)" */
-+	case 0xcea:
-+		break;
-+	case 0x3308:
-+	case 0x3308c:
-+		ctrl->type = RK3308B;
-+		break;
-+	default:
-+		return dev_err_probe(info->dev, -EINVAL, "Unknown chip_id: 0x%x\n", chip_id);
-+	}
-+
-+	return 0;
-+}
-+
-+static int rk3308_soc_data_update(struct rockchip_pinctrl *info)
-+{
-+	struct rockchip_pin_ctrl *ctrl = info->ctrl;
-+	int ret;
-+
-+	ret = rk3308_soc_update_type(info);
-+	if (ret)
-+		return ret;
-+
-+	if (ctrl->type == RK3308B) {
-+		/* Replace iomux data for RK3308B and RK3308BS */
-+		ctrl->iomux_recalced	= rk3308b_mux_recalced_data;
-+		ctrl->niomux_recalced	= ARRAY_SIZE(rk3308b_mux_recalced_data);
-+		ctrl->iomux_routes	= rk3308b_mux_route_data;
-+		ctrl->niomux_routes	= ARRAY_SIZE(rk3308b_mux_route_data);
-+		
-+		ret = rk3308b_soc_sel_src_init(info);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int rockchip_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct rockchip_pinctrl *info;
-@@ -3413,6 +3641,12 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 			return PTR_ERR(info->regmap_pmu);
- 	}
- 
-+	if (ctrl->type == RK3308) {
-+		ret = rk3308_soc_data_update(info);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	iomux_recalced_routes_init(info);
- 
- 	ret = rockchip_pinctrl_register(pdev, info);
-diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
-index 4759f336941e..3af5b1bd626b 100644
---- a/drivers/pinctrl/pinctrl-rockchip.h
-+++ b/drivers/pinctrl/pinctrl-rockchip.h
-@@ -193,6 +193,7 @@ enum rockchip_pinctrl_type {
- 	RK3188,
- 	RK3288,
- 	RK3308,
-+	RK3308B,
- 	RK3368,
- 	RK3399,
- 	RK3568,
--- 
-2.39.2
+When I tested I did confirm that with mutter such an event is received 
+and it does the modeset to enable the eDP when lid is opened.
+
+Let me ask this - what happens if no DRM master running and you hotplug 
+a DP cable?  Does a "new" clone configuration get done?
+> 
+>> +
+>>   static bool drm_client_target_cloned(struct drm_device *dev,
+>>   				     struct drm_connector **connectors,
+>>   				     unsigned int connector_count,
+>> @@ -844,6 +873,7 @@ int drm_client_modeset_probe(struct drm_client_dev *client, unsigned int width,
+>>   		memset(crtcs, 0, connector_count * sizeof(*crtcs));
+>>   		memset(offsets, 0, connector_count * sizeof(*offsets));
+>>   
+>> +		drm_client_match_edp_lid(dev, connectors, connector_count, enabled);
+>>   		if (!drm_client_target_cloned(dev, connectors, connector_count, modes,
+>>   					      offsets, enabled, width, height) &&
+>>   		    !drm_client_target_preferred(dev, connectors, connector_count, modes,
+>> -- 
+>> 2.43.0
+> 
 
