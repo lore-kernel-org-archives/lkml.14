@@ -1,206 +1,139 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58FB15B12B
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6813E15DBC0
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716981008; cv=none; b=XafXonrvCkrsuMK8+8h05szp0AYY4BYZratV2PT9dd8pt0A5YwfnmnTHAXdxUx0QYPGFuYninmkO5I9ZHQ0YdXjIyr3z+4ebEaqOl+GAELH2BugvNrEPgsFi0uYDpwlxtXPI7ErRPKzVti7LYMQtIj29rvpLfLnLAtLX/EezQgc=
+	t=1716981062; cv=none; b=hbqysiTwuAOrz/djCLb0XHVULzIKoFA7yFifTHudmw9IfHD4MWgIJK6A2rYvD/KWtlCQoPqMUZwoAthSALNb0f7K5GX1apAgTHOIealsmp8rCzVyTchTj8Z6ld6/np6W74eCporSJL3KLh/RXdM1eLVDssmjj+TZzXKcnC4EzgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716981008; c=relaxed/simple;
-	bh=m3KF/WLdBKhQ9VooNViA+tD4vHkhi5ZDK5uBZpZrtvk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y4NDbnXcxVa7BrWPm7Yf9QlgRROo7UWpuVORE7vO9iLYBEzxAtgqvt7LaQ9fxDehgzRvOshSmnirHM9lt8oB8GJXfYrMyl1ivDER3geL3mUyZ+o+EHD4Dt6+vErzJjoT3s1Zk9Ja+F/bTv/NRAy2OH9YAQq00I30mkX4ZZcyQzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=eEj8yEUL; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1716981062; c=relaxed/simple;
+	bh=3yIJpPlvkjyq3/FtJLF1WTVZouvdCIpwG04Fk96eSnU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cqo1Zeb2LUzej/k2E48WwY/iSpkUvAo3y2zb8DuZucNvU+3ugFg7d+PMNYwpShKdhXst9KjYcx7Q0Bv9W8EU4vpn1d7YnHHigyOlks8/g26d0xC6i4cGmYV4+qHh2qVRs4j8mngyLrssp0wStW9cJ79qh4MShe4MCT+lJCbHrMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C57d/kFL; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="eEj8yEUL"
-X-Envelope-To: dsimic@manjaro.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1716981003;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X3K8AAihjo5jehCWYCuxmJ8F87mjFG1Pk15yaC7Oslk=;
-	b=eEj8yEUL/kZ04N94F2Lxv+qcPhuIeQjqXc9M1gpAU7gJkjZONeiRZAr7gf+sUm1okG0O4n
-	3VCQI3W/7RvSxcGZ45fzNi+wpeyYZnWeU5g3lgxkMIZ88kp/SYnx229DqSSCsK16W/nHDn
-	V82dnEnl0ugY7yX9Oy2aKCNddTvf16s1xyvDCzUZKmTKCH/PMGa9MZl38YiEulVbqPszSU
-	P5+7Yy10L9famzqAWQdfAo4PezWKKYOGDIQb+Bt988IZMyhGSseumJFO2Ts1Bt+Ds1LgIp
-	KVMEi0G3ks4sxPQLVbTN/nozYeKkpAMXQlprSPl1E7gm0E1I8OgB75l+qrVb5w==
-X-Envelope-To: alchark@gmail.com
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: robh+dt@kernel.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: quentin.schulz@cherry.de
-X-Envelope-To: wens@kernel.org
-X-Envelope-To: daniel.lezcano@linaro.org
-X-Envelope-To: krzysztof.kozlowski+dt@linaro.org
-X-Envelope-To: viresh.kumar@linaro.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Dragan Simic <dsimic@manjaro.org>, Alexey Charkov <alchark@gmail.com>
-Cc: linux-rockchip@lists.infradead.org, heiko@sntech.de,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-kernel@vger.kernel.org, quentin.schulz@cherry.de, wens@kernel.org,
- daniel.lezcano@linaro.org, krzysztof.kozlowski+dt@linaro.org,
- viresh.kumar@linaro.org
-Subject:
- Re: [RFC PATCH] arm64: dts: rockchip: Make preparations for
- per-RK3588-variant OPPs
-Date: Wed, 29 May 2024 13:09:50 +0200
-Message-ID: <9996796.SDjBYy7pSV@bagend>
-Organization: Connecting Knowledge
-In-Reply-To:
- <CABjd4YxD41DEkBCZfkznLboEY9ZVOfTCLcj4S_kkcsVswbANyQ@mail.gmail.com>
-References:
- <673dcf47596e7bc8ba065034e339bb1bbf9cdcb0.1716948159.git.dsimic@manjaro.org>
- <CABjd4YxD41DEkBCZfkznLboEY9ZVOfTCLcj4S_kkcsVswbANyQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C57d/kFL"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e72b8931caso19767061fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 04:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716981059; x=1717585859; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2fvApDdk28tUZoHdX8JPSGTmaJiObUPDbeROKw3HflI=;
+        b=C57d/kFLZbQC/5XkxJoBtLtLLS0GO/vRVPM2ZnxK0Bj6kPpVeNb7CTOLPALJjK2YBZ
+         JaBwv/kq7A52+73/BDZbHscei6hXcECwpLrFE1hGDrAYVCE0UROSDXYypvlhCZqZHZ4h
+         9/6ZmplIwyGYYM9b1FfKVIuHcMPesBW6wvBXqMXqvTBjzcvwjqN4cc53rJFzbANu0aEr
+         Ak2tw5tIO/kvv5T0MhBSPj0XQvQbbwWS+zislFSkBZXPmvOrQWoPlbVzygG3lXemeasb
+         5qgEobs7rdcEtDH3o6Iuj/UCy5sKK90N2l+N3NWJ/WfPr67K130uSUnhzjjjf1laIB5k
+         8y1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716981059; x=1717585859;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2fvApDdk28tUZoHdX8JPSGTmaJiObUPDbeROKw3HflI=;
+        b=tQaEdWquEcia0uEaJMS54zcr/lOtbB4aNgeahOBKT2KhwjNfph9dvNWcSMpc/OAH98
+         rlwTndFC4d4ml//jHVzKPFqhxR6vN4Tuh5JgiCLH7bUZI0NyZ1VwIvHuHZ2skDdpmh8S
+         y6EV0QtVW1Z4CSHDiMYbSUAyZliQ80CWblETEe/eh7djdPZHCS6ezluXsdWCdx31ZXBv
+         iEDbpSD9jT9vDWHW5qqwLBPt3G6INTWcnT7XsU9RBVfcds98yuWjm+GBcpoUPmHUrDmK
+         ze+Fd18MsbuS7s6OFuhtR/L7BZGE/ozManFhrTLHHPgefKRCj53gRoq5rd5lnGInDTR3
+         RGmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkIpwrXEzrKRpO98XLQUt6RrfSG/PnS9VF+pM8bhvnxAhLQmIWaXVxl/gUp564lJ2lZroUC6H8pKqPsKIzWQ5xV8bw8SzHinTUss8Z
+X-Gm-Message-State: AOJu0YxsbU6zvEosvWLW9kjENNK9NugghB1O4SUXi2bWzBywWmveBUw3
+	4zNn+GKlwwYhxZlGH0bzrGgbpK7TvHd/OjiGIi1BZJ/vZrEnUJZBUYq4oPuBoxYHvvOw6SvWlro
+	y
+X-Google-Smtp-Source: AGHT+IGc5pejmvOnA5di4LKePUQYwqKNiFpJ2q9YxPmwoeYkYF6iUjEe6SBHea00dmUDmcnUPCp8FQ==
+X-Received: by 2002:a2e:7006:0:b0:2e6:a0b3:24a3 with SMTP id 38308e7fff4ca-2e95b03fbbfmr90290351fa.4.1716981058627;
+        Wed, 29 May 2024 04:10:58 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.206.169])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557dcf0871sm14852984f8f.110.2024.05.29.04.10.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 04:10:57 -0700 (PDT)
+Message-ID: <ae1ab011-2ec2-459c-85ae-8c3be49aace9@linaro.org>
+Date: Wed, 29 May 2024 13:10:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4603407.K66ItMQtme";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/5] spi: dt-bindings: cadence: Add Marvell overlay
+ bindings documentation for Cadence XSPI
+To: Witold Sadowski <wsadowski@marvell.com>, linux-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: broonie@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, pthombar@cadence.com
+References: <20240529074037.1345882-1-wsadowski@marvell.com>
+ <20240529074037.1345882-3-wsadowski@marvell.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240529074037.1345882-3-wsadowski@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---nextPart4603407.K66ItMQtme
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
-From: Diederik de Haas <didi.debian@cknow.org>
-Date: Wed, 29 May 2024 13:09:50 +0200
-Message-ID: <9996796.SDjBYy7pSV@bagend>
-Organization: Connecting Knowledge
-MIME-Version: 1.0
+On 29/05/2024 09:40, Witold Sadowski wrote:
+> Add new bindings for the v2 Marvell xSPI overlay: marvell,cn10-xspi-nor
+> compatible string. This new compatible string distinguishes between the
+> original and modified xSPI block.
+> 
+> Also add an optional base for the xfer register set with an additional
+> reg field to allocate the xSPI Marvell overlay XFER block.
+> 
+> Signed-off-by: Witold Sadowski <wsadowski@marvell.com>
+> ---
 
-Hi Dragan,
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I think the idea is very good.
-I do have some remarks about its implementation though.
-
-title: s/Make preparations/Prepare/
-
-On Wednesday, 29 May 2024 11:57:45 CEST Alexey Charkov wrote:
-> On Wed, May 29, 2024 at 6:14=E2=80=AFAM Dragan Simic <dsimic@manjaro.org>=
- wrote:
-> > Rename and modify the RK3588 dtsi files a bit, to make preparations for
-> > the ability to specify different CPU and GPU OPPs for each of the
-> > supported RK3588 SoC variants, including the RK3588J.
-
-"Rename the RK3588 dtsi files in preparation of the ability to specify diff=
-erent=20
-CPU and GPU OPPs combinations for all the supported RK3588 SoC variants."?
-
-There's no partial renaming of things. That you then also change the includ=
-e=20
-files to match, is implied.
-The "modify ... a bit" implies you'll do something else (too), which should=
- be=20
-in its own separate patch (if that were actually the case).
-
-If you mention one variant but not (any) others, makes people like me wonde=
-r:
-why is RK3588J treated differently then f.e. RK3588M?
-In this case I don't see a reason to single out one variant.
-
-> > As already discussed, [1][2][3] some of the different RK3588 SoC varian=
-ts
-> > require different OPPs, and it makes more sense to have the OPPs already
-> > defined when a board dts includes one of the SoC dtsi files (rk3588.dts=
-i,
-> > rk3588j.dtsi or rk3588s.dtsi), rather than requiring the board dts file=
- to
-> > also include a separate rk3588*-opp.dtsi file.
->=20
-> Indeed, including just one .dtsi for the correct SoC variant and not
-> having to bother about what other bits and pieces are required to use
-> the full SoC functionality sounds great! Thanks for putting this
-> together so promptly!
-
-Indeed :)
-
-> > No intended functional changes are introduced.
-
-=2E..
-
-> >  ...inctrl.dtsi =3D> rk3588-common-pinctrl.dtsi} |    0
->=20
-> Renaming the pinctrl includes seems superfluous - maybe keep them as
-> they were to minimize churn?
-
-The reason for that wasn't clear to me either. If there is a good reason fo=
-r=20
-it, then a (git commit) message specify *why* is appreciated.
-
-> >  .../{rk3588s.dtsi =3D> rk3588-common.dtsi}      |    2 +-
-> >  ...nctrl.dtsi =3D> rk3588-fullfat-pinctrl.dtsi} |    0
-> >  .../{rk3588.dtsi =3D> rk3588-fullfat.dtsi}      |    4 +-
->=20
-> To me, "fullfat" doesn't look super descriptive, albeit fun :)
-
-Agreed with the non-descriptive part. Please choose a different name.
-
-And document in the git commit message why it was renamed and what is expec=
-ted=20
-to be in the new dtsi file, but would be incorrect for the old dtsi file.
-
-That you went from rk3588s.dtsi to rk3588-common.dtsi (I miss the 's') shou=
-ld=20
-be described (assuming that was intentional and not a typo).
-
-IOW: let this commit (message) describe what should and should not go in th=
-e=20
-respective dtsi files, which can then be used as reference for future rk358=
-8=20
-board additions.
-
-> How about we rename the existing rk3588.dtsi and rk3588s.dtsi to
-> something like rk3588-devices.dtsi and rk3588s-devices.dtsi
-
-Whether it's '-devices' or '-common', I think it's impossible for a (short)=
-=20
-name to be fully self-descriptive.
-Thus document what you mean by it in the commit message.
-
-Then we can use those 'rules' to consistently apply them.
-
-> >  arch/arm64/boot/dts/rockchip/rk3588.dtsi      |  414 +--
-> >  arch/arm64/boot/dts/rockchip/rk3588j.dtsi     |    6 +-
-> >  arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 2671 +----------------
->=20
-> Rename detection didn't do a particularly great job here - wonder if
-> we can do anything about it to minimize the patch size and ensure that
-> the change history is preserved for git blame...
-
-+1
-The diff does look awfully big for a rename operation, which was supposed t=
-o=20
-(also only) "modify ... a bit".
-
-Cheers,
-  Diederik
---nextPart4603407.K66ItMQtme
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZlcM/gAKCRDXblvOeH7b
-boXFAQCgLAgi+jdfrwcmNIdE+b3uLByJRWSeiM+fn8Il8DjzDAEAqe1l050CNF9Z
-Zwn/WxpqmanDODRRGRh7CrMypeZ4Vwg=
-=79tX
------END PGP SIGNATURE-----
-
---nextPart4603407.K66ItMQtme--
-
-
+Best regards,
+Krzysztof
 
