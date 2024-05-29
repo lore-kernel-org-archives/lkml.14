@@ -1,110 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DAB178360;
-	Wed, 29 May 2024 23:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA8C1CB328
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 23:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717024227; cv=none; b=L2RNNvaiLsxpJUGl1H7DQA+xIef370nHFXuCzGhYLe3Fm9vnY80Y4ezO/wN+VBtpX0BfEXUwQ/3SplwmweaHGYw/U5IJsYazyUXps2rPH9we/3WuZg/tr6oMQZABOtTaJPEIik4wlg0XdWdqbfflP9ZQ45Y76hljaI6Bn/g1RiI=
+	t=1717024352; cv=none; b=mektOCiJzNgFjQi+we66BOBjxkAs5j1w7EaA1mpIsop09Yg7GWaaouDKgmSq1KBf9hEzd1RcBSSLJOhNtMRqu4vGHSUtK4MknlCUCIzgznUiqdDaytthz8QYAFrN8vz1y9uk9juVfU10DmsZ5JE/PpPHTN6sxyqyeohbvxbOVNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717024227; c=relaxed/simple;
-	bh=vzWcn7Aw091UVdTPFhmX1lM4t/jWNKg7Zc+z6URoDl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eH1IMWtIQ4izK3Cj5xf8j9W5GKbbgSgT+P95ud0+TDEuacAmpFl1zDf25aIBC6KO6IxdLi52viEPgdKmFV8GAAwQasxtZtAMyUc8QZYPq21t5hLQTA+T90l2kdpGI4mt0W3rwEy06OfN0efQQWbMts8wloOnS4YEblyHR2J5sLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pi0fHrBX; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717024352; c=relaxed/simple;
+	bh=AXQkgT8bLCi+J4VLmDhYURPEkLAsLkNbwsYyTx65pa0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mvhZX3jl46NECLQ1VdpEIGEhqvc0vmFiIqlYtJLSdW6AL2CjDUCBiwDusCPElMe6Cqb5UOGfkL5UQbfDeNTb85CHQWT4kNeZw96nSv6JjlPk2Hmw0eCnXvn6HaMY2o1R+g15Ft6osr9oLe4H6WC+9o9OS6sFmsyO7AfsI2WAtG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eTLttC16; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pi0fHrBX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717024226; x=1748560226;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vzWcn7Aw091UVdTPFhmX1lM4t/jWNKg7Zc+z6URoDl4=;
-  b=Pi0fHrBX7+aPAMNZBWhQNeLSCvW+0PdGI5KNX3zdYBz01Bvey6RCMqnt
-   sHvOTCQBSe3+fM7wu11d/JMGw1CNE/xTS6qCbFz48T0C4h1avEq+wsL+R
-   JWWvb6Sd+CZgbVaMB+qVcT1DR3zCs33JiRdzHPQRNRFMPEeaYMBngC3je
-   DFMLgbS02KudVSi/cITN6bicnvggX9NWSMVZDe8BxNFYALRcnw0T966fF
-   1quIPhRisD7JX0vpj+IxdiZqlciAA2qX7JNi4iktGWYvK4gGg4IPJtTUv
-   +Pj1B1MPObS+2bVdJPXkt53aiEyOsVMdc8g6oWMaNfbH4/AIgGjHB3gXw
-   Q==;
-X-CSE-ConnectionGUID: ZGrwzyeaTlSKkAgVyJSWhg==
-X-CSE-MsgGUID: wJXMxxlvQxO0TY3f8c2b7Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="11763896"
-X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
-   d="scan'208";a="11763896"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 16:10:26 -0700
-X-CSE-ConnectionGUID: FT9yY/amRni9wzGldubA2g==
-X-CSE-MsgGUID: dsspOyF2TfK9+7eXjWqogA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
-   d="scan'208";a="35663200"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 29 May 2024 16:10:21 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCSR1-000EJ3-0U;
-	Wed, 29 May 2024 23:10:19 +0000
-Date: Thu, 30 May 2024 07:09:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chris Lu <chris.lu@mediatek.com>, Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Von Dentz <luiz.dentz@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Sean Wang <sean.wang@mediatek.com>,
-	Deren Wu <deren.Wu@mediatek.com>,
-	Aaron Hou <aaron.hou@mediatek.com>,
-	Steve Lee <steve.lee@mediatek.com>,
-	linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-mediatek <linux-mediatek@lists.infradead.org>,
-	Chris Lu <chris.lu@mediatek.com>
-Subject: Re: [PATCH v2 3/3] Bluetooth: btusb: mediatek: add MediaTek ISO data
- transmission function
-Message-ID: <202405300602.AUh9Yu96-lkp@intel.com>
-References: <20240529062946.5655-4-chris.lu@mediatek.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTLttC16"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52b7b4812f3so238486e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717024349; x=1717629149; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xsWyvZJ7smsYEwcJt3QXuB4RboSifhUzN4Y/+3fVgYs=;
+        b=eTLttC16EBJNdIPG8cKd8aFAxJ9jmVxdKclGbafYQDAaSoMg0NVCqX2mfh44boeNZF
+         QUG14PaoC4iiqZh/2IzzdqXvAeQAgHHH8HtZFcuDIhbPwGsUCbQkSXSuvdC66CrL+iiA
+         kREjxD8MFngJtK7YLjWmbirZOc0R7XUtwfxoh8utRE1yfFBDnnlWsdN7RsabXg+uN5Xt
+         ywjjTj4PG04UQOkUEtgJQ2l90beZRr4L6fK6qIvg22BLK2KmV8rLJ3mOZXDuBS/TxVxx
+         80JvYGn5kZIUlIY1jApa4Zj5ee6vJJ9sGKqvcTLfriIphaUmfecIVt+tlKT8kcdsS121
+         ABrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717024349; x=1717629149;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xsWyvZJ7smsYEwcJt3QXuB4RboSifhUzN4Y/+3fVgYs=;
+        b=nZipzdjMNsD8e3nG7mDtJdQ5XMh8Vl/MNwe0wI4tIV4OYWrvZEq0bFqrXv6RzOYleU
+         f0Va9e9FVEUH2ZDpj/jG9yWJGSH10PW2FT40C1MCui/e/SPEVsFG2wWpravIP4iEa59d
+         C1D/Fbb6BIpMJTKsYE9Xvt9Jk6vs5cjSntuGuYog/Et21x/dA8GGAr2jYTuvMAvB54Qr
+         u5DkpDZi6CEQHysIE5EnJrz/cg0f6gGjwgYNrh+9/brtt2db5QEHJVYSSmIoIEhQUW66
+         9ZfiVHIQpmshI7Xjky+XdOwvJ0C7YJwYKwiXkn8yCRDwrfDNKhTCYdsFU1/91rjLpZ+S
+         ftSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAynsy5Uejn29FXhGLgQUw6rkMXiB/Er1ftg6QbrhKSUwehi1xl+WPOtSZrzQRr81/vvJ8nM86Au1QxrkNjE9QMgV5pvP9tOGX0WHr
+X-Gm-Message-State: AOJu0YzCRn8cOcC+SJkvqUQwGeNhPy2XqF/vcic3bGOEqtUaY0d06A7Y
+	NdiEXplvm9nrGuOh5AECv9q8vLMx1W/k8lZZM/f0OQ6LN+rEJtPNfBNsLGl/z4g=
+X-Google-Smtp-Source: AGHT+IGR2g9tEjUHRz3sWSg0237KZd0prRiZw5CS2OF0JFp0DTVGONPL8fJFqcllAiRPCR5tE1g7iQ==
+X-Received: by 2002:ac2:41cb:0:b0:51e:e5cf:9940 with SMTP id 2adb3069b0e04-52b7e0ee8b0mr63089e87.4.1717024348995;
+        Wed, 29 May 2024 16:12:28 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529acea1ea8sm1015998e87.276.2024.05.29.16.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 16:12:28 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 30 May 2024 02:12:24 +0300
+Subject: [PATCH v3 1/7] drm/connector: hdmi: accept NULL for Audio
+ Infoframe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529062946.5655-4-chris.lu@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240530-bridge-hdmi-connector-v3-1-a1d184d68fe3@linaro.org>
+References: <20240530-bridge-hdmi-connector-v3-0-a1d184d68fe3@linaro.org>
+In-Reply-To: <20240530-bridge-hdmi-connector-v3-0-a1d184d68fe3@linaro.org>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1693;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=AXQkgT8bLCi+J4VLmDhYURPEkLAsLkNbwsYyTx65pa0=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmV7ZadQQ/u477cay7r64S0rsMMdpYg2c8F9bsk
+ HP74y9RpWGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZle2WgAKCRCLPIo+Aiko
+ 1Xz/CACBG8J88iFv44gK5ywM44/nLwAiT0D+h+PopLWugWuGXC0yuvOQ7sSZ/TiE8fpiOzXNghn
+ LqQShLj2piBG17rpD08ku2ULumRjKSuGcbAMUkWy7Vr2hEKxIrHv48HEWd4jkWGWw2JtHE1QZR0
+ q9ai2atyG3KlWWGVlIEgBSayjXD83ULC38kztI/L6E3YaG7aIITrdW9NfyoSKb0mRuJzLOIwdcj
+ K2Q5n8BtQ0jKRJYqInW7Kx4EXVbYwOy160ewSLGEwZBTd0ka7ZcG4UBpIKZt51O2Aq6cpxhN4R7
+ U8bkuwdlyNpvpdu4AunLtBCfChGuVdAAJb0UFFgN6lErZjPS
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Hi Chris,
+Allow passing NULL as audio infoframe as a way to disable Audio
+Infoframe generation.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/gpu/drm/display/drm_hdmi_state_helper.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-[auto build test ERROR on bluetooth-next/master]
-[also build test ERROR on next-20240529]
-[cannot apply to bluetooth/master linus/master v6.10-rc1]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Lu/Bluetooth-net-add-hci_iso_hdr-function-for-iso-data/20240529-143216
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git master
-patch link:    https://lore.kernel.org/r/20240529062946.5655-4-chris.lu%40mediatek.com
-patch subject: [PATCH v2 3/3] Bluetooth: btusb: mediatek: add MediaTek ISO data transmission function
-config: i386-randconfig-014-20240530 (https://download.01.org/0day-ci/archive/20240530/202405300602.AUh9Yu96-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240530/202405300602.AUh9Yu96-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405300602.AUh9Yu96-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: btmtk_isopkt_pad
-   >>> referenced by btusb.c:2267 (drivers/bluetooth/btusb.c:2267)
-   >>>               drivers/bluetooth/btusb.o:(btusb_send_frame) in archive vmlinux.a
+diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+index ce96837eea65..5356723d21f5 100644
+--- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
++++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+@@ -681,7 +681,7 @@ EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_update_infoframes);
+ /**
+  * drm_atomic_helper_connector_hdmi_update_audio_infoframe - Update the Audio Infoframe
+  * @connector: A pointer to the HDMI connector
+- * @frame: A pointer to the audio infoframe to write
++ * @frame: A pointer to the audio infoframe to write or NULL to disable sending the frame
+  *
+  * This function is meant for HDMI connector drivers to update their
+  * audio infoframe. It will typically be used in one of the ALSA hooks
+@@ -704,10 +704,16 @@ drm_atomic_helper_connector_hdmi_update_audio_infoframe(struct drm_connector *co
+ 
+ 	mutex_lock(&connector->hdmi.infoframes.lock);
+ 
+-	memcpy(&infoframe->data, frame, sizeof(infoframe->data));
+-	infoframe->set = true;
++	if (frame) {
++		memcpy(&infoframe->data, frame, sizeof(infoframe->data));
++		infoframe->set = true;
++
++		ret = write_infoframe(connector, infoframe);
++	} else {
++		infoframe->set = false;
+ 
+-	ret = write_infoframe(connector, infoframe);
++		ret = clear_infoframe(connector, infoframe);
++	}
+ 
+ 	mutex_unlock(&connector->hdmi.infoframes.lock);
+ 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
