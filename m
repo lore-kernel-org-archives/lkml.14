@@ -1,86 +1,81 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C9417DE14;
-	Wed, 29 May 2024 16:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5D61836CC;
+	Wed, 29 May 2024 16:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998765; cv=none; b=hCf5BRdB+VZfJbqeElApTHhZdUQBv6KPlhvKL+OmmXD29Uy53/PZlIMiwzkckhWYu+xxSDzeHLAeD/ZjUuGrjKstl0jgn6f9Aoc57uHkTkYZNEnsa2nXS32r7ysEtSPmWP/S6Z0FQJPSahuw924o+L9wG5gDTjsz8hbL/5DluEc=
+	t=1716998852; cv=none; b=dMzEu24ls2iNEyGoAQret8nsQeZUL2LG10O+QluQRbtdWHwZ+38I1LhQg/2Uew9JDCxm8pfrBQCxAeQ7JktWUbNGdDHYdF8CQCP1MXdzBHd0SP0FwDQKbuWgrQC/0aNCG+x8XRXJJ6fpscYhAYEpCCJ5PK5c69B8GKvcxolGYbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998765; c=relaxed/simple;
-	bh=CK8OAPbBbXSoOWPUjOyns04q5VfwYNuBKWySKS482EI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TsyGa+U7oIRuQ3/oSY8hvrlZy2k6LiZqsFpLHQfyeaOnbL9xIkgMsiTw85+1lZKvyEwP9U0/6DdASwgflVvKqmgGKtYPU5KUQolXDuxlPrClTukM5DHldASN3dCLZOGakx5jMeqaTY1RNBjsdIHzQCjkcDbnzpVbPAoKHWXGViE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nOkzWmVk; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1716998852; c=relaxed/simple;
+	bh=BqJYQUD414oUHDTKcg4GFQrry8JqQEJqLasmiA4XQgI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=iJFlcAjH3U/xImClg15b9TDmE9lKdRVDcbP2cqpIP/aVB085m+dpt/gLPvaG3ZkUy1IxEt3kZCUKuBS6d3zsLfgFaL4DWqEl1tWPgf7ShU491BJ7P8HEFHi19UTA4cdNNMMdoSFyAgwOiL+J+/3ChyYIsrmoWoXG4ltoyUIBIDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SukM/c9v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nOkzWmVk"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 84BBB60005;
-	Wed, 29 May 2024 16:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716998759;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=seDn1vi/ugGwlftgDNRlK7URLt36H1AKmJnfJmt6SmQ=;
-	b=nOkzWmVkHiv5suXZbHQNJKWlM24kofPWPIRmyjduQrM9+ukK4C/yJY9l0/nTT0dAU1ZrSl
-	OCcAcu3TnwA2iohmkJfkHAHcrVGPo97acCokRvBoUlVyhPBcFnwaZsOxfex4pbuXyEMEO1
-	Pz27VosTUyOwdWuC3djd10lUeGrLSJl5NwKpV7aweNF3QdS3ciYHigwbFo02TRw8TuXV0P
-	Bebp65AInAGdRbwoECQOrz8yMmd+11GkyShRCaY8Q3BsgJMBmWAvGZ1vLlhO3YKyM5uwxa
-	ongV+jkwxhSJUEJesYbgzFLhN5aC+IedJBJIK+hf54hqHAncfw3qGyubDfgm7g==
-Date: Wed, 29 May 2024 18:05:56 +0200
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Richard
- Cochran <richardcochran@gmail.com>, Radu Pirea
- <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
- Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
- Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Subject: Re: [PATCH net-next v13 09/14] net: Add the possibility to support
- a selected hwtstamp in netdevice
-Message-ID: <20240529180556.0e500675@windsurf>
-In-Reply-To: <20240529175032.54070c60@kmaincent-XPS-13-7390>
-References: <20240529-feature_ptp_netnext-v13-0-6eda4d40fa4f@bootlin.com>
-	<20240529-feature_ptp_netnext-v13-9-6eda4d40fa4f@bootlin.com>
-	<20240529082111.1a1cbf1e@kernel.org>
-	<20240529175032.54070c60@kmaincent-XPS-13-7390>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SukM/c9v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42B99C113CC;
+	Wed, 29 May 2024 16:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716998851;
+	bh=BqJYQUD414oUHDTKcg4GFQrry8JqQEJqLasmiA4XQgI=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=SukM/c9vDlVvEL/70LCGicsuIODMhF2QAZ9JNGxVMaXQ61GZ1MF+g18g3G1NBXloA
+	 7r7b3kfJsT1kxUCbBOo+IS3s2OZKY+l7vmi9b0KDb2Ccq0KMgwluDxQdQh8fNBpLJZ
+	 J9N45xwLd8Srd7XY2kTEUJUm2B96HdKGxpt1vMxKOXBt00u6sCNkLbOb+G3W57e4Vg
+	 8bz3x34XiM4ddZkInfds4MgFsvEwd3084x2LD+4j2tJdSjR5htlPyL2R8Q6so/EUMc
+	 KcBg/X7D7115mMKfwDwXNbqd5jlisLasa2fvz5SUmJr4fz5pcXvBosRQPaG6jyfzf7
+	 lCVisuyUk/aFA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.petazzoni@bootlin.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 29 May 2024 19:07:26 +0300
+Message-Id: <D1M9AKX8TO34.1EMXQ88L3T58C@kernel.org>
+Cc: <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
+ <Andreas.Fuchs@infineon.com>, "James Prestwood" <prestwoj@gmail.com>,
+ "David Woodhouse" <dwmw2@infradead.org>, "Eric Biggers"
+ <ebiggers@kernel.org>, "James Bottomley"
+ <James.Bottomley@hansenpartnership.com>, <linux-crypto@vger.kernel.org>,
+ "Stefan Berger" <stefanb@linux.ibm.com>, "Lennart Poettering"
+ <lennart@poettering.net>, "David S. Miller" <davem@davemloft.net>, "open
+ list" <linux-kernel@vger.kernel.org>, "David Howells"
+ <dhowells@redhat.com>, "James Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Ard Biesheuvel"
+ <ardb@kernel.org>, "Mario Limonciello" <mario.limonciello@amd.com>, "Dan
+ Carpenter" <dan.carpenter@linaro.org>
+Subject: Re: [PATCH v7 4/5] keys: asymmetric: Add tpm2_key_rsa
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Herbert Xu"
+ <herbert@gondor.apana.org.au>
+X-Mailer: aerc 0.17.0
+References: <20240528210823.28798-1-jarkko@kernel.org>
+ <20240528210823.28798-5-jarkko@kernel.org>
+In-Reply-To: <20240528210823.28798-5-jarkko@kernel.org>
 
-On Wed, 29 May 2024 17:50:32 +0200
-Kory Maincent <kory.maincent@bootlin.com> wrote:
+On Wed May 29, 2024 at 12:08 AM EEST, Jarkko Sakkinen wrote:
+> * Asymmetric TPM2 RSA key with signing and verification.
+> * Encryption and decryption when pcks1 encoding is used.
+> * Enabled with CONFIG_ASYMMETRIC_TPM2_KEY_ECDSA_SUBTYPE.
+>
+> Signed-off-by: James Prestwood <prestwoj@gmail.com>
+> Co-developed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-> > ERROR: modpost: "ptp_clock_phydev" [drivers/net/phy/libphy.ko] undefined!  
-> 
-> Thanks for the report.
-> Weird, it should be in builtin code.
+To be addressed in v8:
 
-Right, but you don't have an EXPORT_SYMBOL() for it, as far as I can see.
+"
+4970b8d723c3af Jarkko Sakkinen 2024-05-26  634  	key =3D tpm2_key_decode(pr=
+ep->data, prep->datalen);
+4970b8d723c3af Jarkko Sakkinen 2024-05-26  635  	if (IS_ERR(key))
+4970b8d723c3af Jarkko Sakkinen 2024-05-26 @636  		return ret;
+                                                                ^^^^^^^^^^
+Same.  return PTR_ERR(key);
+" - https://lore.kernel.org/all/cbae0ed0-e0a6-41ba-9671-a9f48e8f07f3@moroto=
+.mountain/
 
-Thomas
--- 
-Thomas Petazzoni, co-owner and CEO, Bootlin
-Embedded Linux and Kernel engineering and training
-https://bootlin.com
+BR, Jarkko
