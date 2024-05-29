@@ -1,221 +1,185 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33331836EF;
-	Wed, 29 May 2024 16:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03FA42069;
+	Wed, 29 May 2024 16:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998496; cv=none; b=TVO0UwhFeh4juFniLZTUi6+MPKFLDQUHdlI3j4RFiapXB2waFsqys25HIyS0koCPVMYFv7Kyhk3h1gmUdgLgoFodrkddtSfOT0FK9DLCyogkzWZiofVf2FLk/7swsEkrncEavguWaKigbw7WyUV4VrxUGv2X8aqK9OfYfl1plVg=
+	t=1716998507; cv=none; b=e61DfiiPENmVfqk6EbDeCgixYV78xKdpKpNp+H6BUdHmUnkSrZYEhdK6KX/jqPxvEGQrS5pXoN2NL094rXlB52RJyFcglto5VNUN1amxVcOxuCvH+OmtytNdmvFg0sIprbHJrEaVpvTSamxR1kSD8SWUfD8JamwjMvgJ+FTIbZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998496; c=relaxed/simple;
-	bh=eZ5GVaGIQa005WoB8AKmDURWmwScw3watWUx4myIdZA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qZVlh5gIsNH/+Pft0q0zEalb7/LL73z7tqKjnKKow86xaIG+/PC7uMGBuU2gIFQH4o0DV9mgwEHGVMeUnctSLHOcS6pMTOFlaSjlURvuEKqUvPCH/0qmk9C9gW9D2y4Hm5CnyfIAkUYx4IvkL6bbhGIAcewsRxN41RerpXUy8Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=yS3TiWC8; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1716998507; c=relaxed/simple;
+	bh=B0tHJXr521Nz5ptgu8zXMxt0ClW1L6gfaaq+puzVGvM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NxwfuSbGm1Dh0KTEvTWetBY1ZNs+Pqqgh6dmg3eJ716YkZLJGqBMh8uCWhys6yGvN/AgzmlUBwoW+KiEJLmMpcfmhJJa40GDveM8Kkn57yKonNc65GNIUCYzrmpc2BM6BKLSyiiadkVeYL0T9hnEg8T6XKEmgXSk2avjkwZiXmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kwDMf22p; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="yS3TiWC8"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44TEUbn1029547;
-	Wed, 29 May 2024 12:01:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=DlQ54r1DZlxmCkjgOJYKS3DxLfX
-	8GXbbjNWGFcTHLTQ=; b=yS3TiWC8Jvk5aTSySeyBgvbJzYtj1r8hBOAJp5O28yo
-	LWBoCTo1CQ1OK2X9yTQ53GppPVoIUdR5t668WKs3wVSghBGJJRRGSei9wRxkuFtm
-	k1B2ud94Qg69DbhPVllrdw5xzIOuHyLQAEu7PLqFU6acmbvze45FDhlppfs7Qp5d
-	15KxL9KXJb25ijCsjfrGkQcZPbiQxAYyO/V/844uKTgyG6HPBlCnaL5LIGR5DScL
-	ehuEr9G9zp8seO4RX8Id0X2+zzv6JzTLcBS/83IFypW1Xbaq+nmwfxOErqzZENWB
-	foeSXZZnhf4cPKQ0DNWJ2yaTNpdSNLH5XegQow7K+hw==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3ye66jgc2c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 12:01:19 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 44TG1ILV028467
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 29 May 2024 12:01:18 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Wed, 29 May
- 2024 12:01:17 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 29 May 2024 12:01:17 -0400
-Received: from HYB-hYN1yfF7zRm.ad.analog.com ([10.32.223.167])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 44TG14tY011783;
-	Wed, 29 May 2024 12:01:06 -0400
-From: ranechita <ramona.nechita@analog.com>
-To: <linux-iio@vger.kernel.org>
-CC: ranechita <ramona.nechita@analog.com>,
-        Jonathan Cameron
-	<jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH v2] dt-bindings: iio: adc: add a7779 doc
-Date: Wed, 29 May 2024 19:00:52 +0300
-Message-ID: <20240529160057.6327-1-ramona.nechita@analog.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kwDMf22p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716998506; x=1748534506;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=B0tHJXr521Nz5ptgu8zXMxt0ClW1L6gfaaq+puzVGvM=;
+  b=kwDMf22pWMxTrhB7WkQDVgE2M45cObhef+27rRR7/en0zZLoQxAD6cTH
+   ThfhS8jDkDsS+Fm5GWBoFQ4IZYvtaZic8VS80SvDmiIWBhUJE1PK3g69y
+   5J/iMU7XJzDf6BzQXDuZXhlf+uJCKGWgyVUgVBx3ywNQ+4s2UQQdVugFI
+   R6vTXfp2qLHUbGqL5O2BmpcH3eY3CoUX0bxbHhWPBXz5z4GzVaftkI1W/
+   StpQcAQJH7LFboPxBDFgRPtj7fMJ8XHhroDCAt10dJIHmLoNfe2DiuaLF
+   ZJipWSJqlmUZ28/tNx018u4dw+H8BKJ9WAnUBo6SRIxy0Qnyc03J6B2vS
+   A==;
+X-CSE-ConnectionGUID: +so+T2vcSpKmshgJXo1iPg==
+X-CSE-MsgGUID: 9JgoOJD6Tdu13dDWuiqW5g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13595386"
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="13595386"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 09:01:45 -0700
+X-CSE-ConnectionGUID: ZNxxFe1dT3GWUsmX+Tvi0g==
+X-CSE-MsgGUID: E8vuwEGmSLOGZthWHfIPhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="40339011"
+Received: from mdutta1-mobl1.amr.corp.intel.com ([10.213.167.110])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 09:01:44 -0700
+Message-ID: <3a7e679712fb47b6c75af84163b5d3ea252f4da9.camel@linux.intel.com>
+Subject: Re: [PATCH 0/3] tracing: Fix some selftest issues
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,  Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Date: Wed, 29 May 2024 11:01:43 -0500
+In-Reply-To: <20240529083818.b7835de167191d4567405ce6@kernel.org>
+References: <171671825710.39694.6859036369216249956.stgit@devnote2>
+	 <20240527192907.49c9220f@rorschach.local.home>
+	 <20240529014640.3a04f7301f12eb44738f9f2d@kernel.org>
+	 <20240529083818.b7835de167191d4567405ce6@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: SWpqXr40D1YI1E6Xyg87ToKtnuyz5EVL
-X-Proofpoint-ORIG-GUID: SWpqXr40D1YI1E6Xyg87ToKtnuyz5EVL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-29_12,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 mlxscore=0 clxscore=1015
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405290110
 
-Add dt bindings for adc ad7779.
+Hi Masami,
 
-Signed-off-by: ranechita <ramona.nechita@analog.com>
----
- .../ABI/testing/sysfs-bus-iio-adc-ad777x      | 23 +++++
- .../bindings/iio/adc/adi,ad7779.yaml          | 89 +++++++++++++++++++
- 2 files changed, 112 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
+On Wed, 2024-05-29 at 08:38 +0900, Masami Hiramatsu wrote:
+> On Wed, 29 May 2024 01:46:40 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+>=20
+> > On Mon, 27 May 2024 19:29:07 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >=20
+> > > On Sun, 26 May 2024 19:10:57 +0900
+> > > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > >=20
+> > > > Hi,
+> > > >=20
+> > > > Here is a series of some fixes/improvements for the test
+> > > > modules and boot
+> > > > time selftest of kprobe events. I found a WARNING message with
+> > > > some boot=20
+> > > > time selftest configuration, which came from the combination of
+> > > > embedded
+> > > > kprobe generate API tests module and ftrace boot-time selftest.
+> > > > So the main
+> > > > problem is that the test module should not be built-in. But I
+> > > > also think
+> > > > this WARNING message is useless (because there are warning
+> > > > messages already)
+> > > > and the cleanup code is redundant. This series fixes those
+> > > > issues.
+> > >=20
+> > > Note, when I enable trace tests as builtin instead of modules, I
+> > > just
+> > > disable the bootup self tests when it detects this. This helps
+> > > with
+> > > doing tests via config options than having to add user space code
+> > > that
+> > > loads modules.
+> > >=20
+> > > Could you do something similar?
+> >=20
+> > OK, in that case, I would like to move the test cleanup code in
+> > module_exit function into the end of module_init function.=20
+> > It looks there is no reason to split those into 2 parts.
+>=20
+> Wait, I would like to hear Tom's opinion. I found following usage
+> comments
+> in the code.
+>=20
+> =C2=A0* Following that are a few examples using the created events to tes=
+t
+> =C2=A0* various ways of tracing a synthetic event.
+> =C2=A0*
+> =C2=A0* To test, select CONFIG_SYNTH_EVENT_GEN_TEST and build the module.
+> =C2=A0* Then:
+> =C2=A0*
+> =C2=A0* # insmod kernel/trace/synth_event_gen_test.ko
+> =C2=A0* # cat /sys/kernel/tracing/trace
+> =C2=A0*
+> =C2=A0* You should see several events in the trace buffer -
+> =C2=A0* "create_synth_test", "empty_synth_test", and several instances of
+> =C2=A0* "gen_synth_test".
+> =C2=A0*
+> =C2=A0* To remove the events, remove the module:
+> =C2=A0*
+> =C2=A0* # rmmod synth_event_gen_test
+>=20
+> Tom, is that intended behavior ? and are you expected to reuse these
+> events outside of the module? e.g. load the test module and run some
+> test script in user space which uses those events?
+>=20
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x
-new file mode 100644
-index 000000000000..0a57fda598e6
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x
-@@ -0,0 +1,23 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/filter_type_available
-+KernelVersion:  6.1
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Reading returns a list with the possible filter modes. Only supported by
-+		AD7771.
-+
-+		  * "sinc3"	- The digital sinc3 filter implements three main notches, one at
-+				the maximum ODR (128 kHz or 32 kHz, depending on the
-+				power mode) and another two at the ODR frequency selected to
-+				stop noise aliasing into the pass band.
-+
-+		  * "sinc5"	- The sinc5 filter implements five notches, one at
-+				the maximum ODR (128 kHz or 32 kHz, depending on the
-+				power mode) and another four at the ODR frequency
-+				selected to stop noise aliasing into the pass band.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/filter_type
-+KernelVersion:  6.1
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Set the filter mode of the differential channel. The current sampling_frequency
-+		is set according to the filter range. Only supported by AD7771.
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
-new file mode 100644
-index 000000000000..190070ed80b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7779.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD777X family 8-Channel, 24-Bit, Simultaneous Sampling ADCs
-+
-+maintainers:
-+  - Ramona Nechita <ramona.nechita@analog.com>
-+
-+description: |
-+  The AD777X family consist of 8-channel, simultaneous sampling analog-to-
-+  digital converter (ADC). Eight full Σ-Δ ADCs are on-chip. The
-+  AD7771 provides an ultralow input current to allow direct sensor
-+  connection. Each input channel has a programmable gain stage
-+  allowing gains of 1, 2, 4, and 8 to map lower amplitude sensor
-+  outputs into the full-scale ADC input range, maximizing the
-+  dynamic range of the signal chain.
-+
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7770.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7771.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7779.pdf
-+
-+$ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7770
-+      - adi,ad7771
-+      - adi,ad7779
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  spi-max-frequency: true
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vref-supply:
-+    description:
-+      ADC reference voltage supply
-+
-+  start-gpios:
-+    description:
-+      Pin that controls start synchronization pulse.
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adc@0 {
-+          compatible = "adi,ad7779";
-+          reg = <0>;
-+          spi-max-frequency = <20000000>;
-+          vref-supply = <&vref>;
-+          start-gpios = <&gpio0 87 GPIO_ACTIVE_LOW>;
-+          reset-gpios = <&gpio0 93 GPIO_ACTIVE_LOW>;
-+          clocks = <&adc_clk>;
-+          clock-names = "adc-clk";
-+        };
-+    };
-+...
--- 
-2.43.0
+Yeah, this module was meant as a sample module showing how to create
+and generate synthetic events in-kernel.
+
+So the interested user insmods the module, looks at the trace stream
+and sees, ok the events are there as expected, so it does work, great,
+let's remove the module to get rid of them and go write our own.
+
+Having both the creation and cleanup in module_init() wouldn't allow
+the user the opportunity to do that i.e. verify the results by reading
+the trace file.
+
+Tom=20
+
+> As far as I can see, those tests are not intended to be embedded in
+> the
+> kernel because those are expected to be removed.
+>=20
+> Thank you,
+>=20
+> >=20
+> > Thank you,
+> >=20
+> > >=20
+> > > -- Steve
+> > >=20
+> > >=20
+> > > >=20
+> > > > Thank you,
+> > > >=20
+> > > > ---
+> > > >=20
+> > > > Masami Hiramatsu (Google) (3):
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tracing: Build event generation test=
+s only as modules
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tracing/kprobe: Remove unneeded WARN=
+_ON_ONCE() in
+> > > > selftests
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tracing/kprobe: Remove cleanup code =
+unrelated to selftest
+> > > >=20
+> >=20
+> >=20
+> > --=20
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>=20
+>=20
 
