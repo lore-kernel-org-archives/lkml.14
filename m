@@ -1,177 +1,160 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C599A8BE0
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 03:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D62F433B1
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 03:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716952691; cv=none; b=Gc6v6jDY7FiOz9qiZ/Ze4Pzslnv9SavULEtAE71LWnSDOfv1YmJoM3sCqV93hgMylT1NaNnhFk2QtA/yDW/F1TKR72JG9i/b7nTat4FqfcqDgIyu2JYeKamwvgvRkzVPlfVWjzueV6NQ29PcObD2KNNtW9K1wCgnXy8iH2TgzNY=
+	t=1716952848; cv=none; b=SJbzJ18+eGu8smxL8OXlRXsL3Crf22cqmAkpWJeKx7XDgHv5D/UR64GXeaP5d/7hYnN/USER3sKjyZgE8r/JKgoosjdZiLiKGQsZG2LlR3GhileNjIp55A2F2LyJkqTlU9wv0lIwksuLSBsfcYEWPcmh0/5Ad6YppTqKKgDlAJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716952691; c=relaxed/simple;
-	bh=jbfmJS2BdmG5oxbEaUOnRzLbKYW8OnaBkBN1o+oKM5I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jm4SKyV9Dmxd2raj5Mez3LagZTCAFjRCHmsxQBUQ+b7Pfl8hN+X3F+PlvBi18csQipvKsunhqO0NaxtiNhX7MVGt7vN4KyLmplW5NjCweXN5lsGZLBcTQZ80ZfGMCKMh2cVoWtvsB63bCl24RhB0yKpihaa6ALjtlqDa1aCj4vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=t+Dv74Qj; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1716952848; c=relaxed/simple;
+	bh=6VEjzVq5nrmfkHoJWASudCixHFmzlAa4gIuIxJ0VuRY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NKKlv+j+YRtmvAGdhaRP0EXR77XglAIrXO5m4pGoVJpXsjyMlmss33Ry3Pm2QKAZCXbYFKvrMzb5hY5V06oCl7p3NcXMFBJbhvEbL+Ad8M9LJbYhfIaAL4xfZ4EugRj1XdfJodXMRraNaihw90iRKdG85B4UjXsFZLph4XbCy/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=COijAqrr; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="t+Dv74Qj"
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id CA5023FE69
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 03:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1716952681;
-	bh=wzuecrJ0JFchccEBCmxLIDXRwMQkEzpCJKJ1c3kKpP4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=t+Dv74QjPBGB3y6rduoyaeebj2bggcd/YFdZKtrr0hf84X9Ch0PPOOr2BqRtOiDF2
-	 cmClN8xl4kB0eG9SYieYppNrcMvi0scG0zGBt2dJFPyeurgtYRlgbYjXuk1xI97U9O
-	 sjWdqaXYlJgkKFLaeuZSbeFinYCx3nxdmDSyIO/Bi9ljK5EcYE6yhJL/SOTugrPX/x
-	 we0iB4h/b6sY+nGpZV3sVvseCz4P5HKZBkPkMh0lCV6Wt7eKWV+XL9OffDKOX+3LPk
-	 L2SI94OmH/0SRbl/WVH/a7np68r7p1uajOmg84oWySpwnnfnwbXpmuD+CMzhAwFg+z
-	 FLTaniWLfq1jw==
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-357ad1f7b08so812289f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 20:18:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="COijAqrr"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f8ea3e9543so1173902b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 20:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1716952846; x=1717557646; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BS6iHbBIsatoVGzFhXDQJ9Pi9ja6uQG7muHBmiB17xY=;
+        b=COijAqrrIcoNb4M1HsEvUJGvG/G3QCs7XHuVp2LCAzlcJcYSIUUwILLfonMZCMkTHr
+         dTzdYJqkYoSuTRt/erXDzmuU8sKlXScMQzd4MyWaf39OAHY17umA2QvoB15/PTgNfyQ2
+         9mZnILDjobV6PNW33GDACWZ9ExLFUrJKPNvLk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716952681; x=1717557481;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wzuecrJ0JFchccEBCmxLIDXRwMQkEzpCJKJ1c3kKpP4=;
-        b=JScFZoV+XWTqiYPJ1j/RxnlemXAvXc8k7iIonWqaVUqoX00GlxzsVYPi6GArPu6UFV
-         dxp79vCTQ6Vmm8SPpnqKsAOtWEK2XIKjtK0g/kHu4+OhXXUbNJtufzTUvSVKuU27xJOs
-         /h8v6iHZNMiT95TLpHdLZGEI5++81jDD9K2INjbqgYblL7I7kWXI8uqrizLDBGVtKrjH
-         zjd4Jc/90wti6xUko2cKSelgYpB8YqWC57mtDjnucYIVG51wU9CXbGNb+oerKHEgQnF7
-         HFZaULbbiV5JS/OzZYOqUO7wCUUbOTxu8i5ABa6rvvMAYnc2dg/GMaR0drdFeShr3Hv7
-         0Mcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrdZFRv1toUQGxcPDniPHVJvGMaLixBGEYyR5PJxwxYlkMOdMLDJugHIws74D9tp2qAimIQUn5PcN+oPjLXeGdrUP4oziABSt0r0fw
-X-Gm-Message-State: AOJu0YzlpsnmlCONPbpk4zzwtMVErn+c2a8ADx6nXsBFJrMPHHxpYx2M
-	L+fjHn746ubmNmOiSpuRCsmFUdUgEqY1I8kzHCnAlXkbL+/zQnyypY7OPpf00KcbY5/Ab+Sgq4l
-	xeqQnTRNi/Lm4tKrt0edOwxYuoCjm7JL4EoKm0oPKWwPhZsXS+nDUHpZwg0Y62nayB1o4ZhJH+5
-	Zg0r5mhFe5+jYlRXv5UA2VbD0bU+QkNqTf6fvQWT4eGa+jbvlVlUb5QtySmjLwrhY=
-X-Received: by 2002:adf:fa44:0:b0:354:fa0d:1427 with SMTP id ffacd0b85a97d-35526c25695mr13910661f8f.15.1716952681276;
-        Tue, 28 May 2024 20:18:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEpCJ+0J4feg5DWmCamoCmdHKV9NdQcsZdg5GrTQwmVV6HKgfUo06EW5RnIGllF7jaxWmj3OWvP61y/5+LdyDY=
-X-Received: by 2002:adf:fa44:0:b0:354:fa0d:1427 with SMTP id
- ffacd0b85a97d-35526c25695mr13910642f8f.15.1716952680890; Tue, 28 May 2024
- 20:18:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716952846; x=1717557646;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BS6iHbBIsatoVGzFhXDQJ9Pi9ja6uQG7muHBmiB17xY=;
+        b=XvQcq2aOgxfgFlyMBnlolxvsMrzFB6EjqyzqBWdVzGC6UGbAwdL9kfhPFtk7z42qmr
+         fjCRu8m+R50Fx/ZfJedZSB9pMorIGKnyAKAhHhh8P4uwDTUtFHm3ehUdwt2/TjNpez6N
+         /o9poVIAXjNyEEaMSD0rs+Qxk6J+b5vSSovl3+2N1EEY6d9coWx3+uNnT8DuenVT8PTP
+         WzI7MSqMjSHoPgQVvKc9lCivGPrXbpeqtfLCHWZDhSvime1MyIC7oaufuL/JH524W0xn
+         b41h74s8DYv0IEbuOuDcmuhqCQjTAZbZlkbno7DRNRsgVK7MATE84lWoh+IO56V1f5a/
+         PETQ==
+X-Gm-Message-State: AOJu0Yzr30J0WjzHOgUmaWDm2IhFe9f45qplI4LQPX48uiJgzcAJ4S3S
+	j39b9/+zCVwmcQ7wYUhIHVZXR+as6v26COhe2Mp4VBLzVOqGxWK5FFtl9iU/WXPiTnU2SbwnwHS
+	LDiCEuJDVrKNWT/qMADMMiJJHBxWyXoAIkRIRzZA/aTQ4N++wID07MVuVqzaopC6IPYDoSUJQcu
+	/JDPOYWbkicARezfXM8wqljloeHB5sw1ViARFrbNXi39U=
+X-Google-Smtp-Source: AGHT+IHK0odMwl88fs80oLL00dG99YZ4irO3GqOx026WsTxm2kQRal9aBjH+zm0v6XLilUzBDoueLA==
+X-Received: by 2002:a05:6a20:dd82:b0:1a7:5e8f:8707 with SMTP id adf61e73a8af0-1b212d46534mr13913852637.26.1716952846230;
+        Tue, 28 May 2024 20:20:46 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fbd3ea03sm7156766b3a.39.2024.05.28.20.20.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 20:20:45 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: nalramli@fastly.com,
+	Joe Damato <jdamato@fastly.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org (open list:MELLANOX MLX5 core VPI driver),
+	Paolo Abeni <pabeni@redhat.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>
+Subject: [RFC net-next v3 0/2] mlx5: Add netdev-genl queue stats
+Date: Wed, 29 May 2024 03:16:25 +0000
+Message-Id: <20240529031628.324117-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528100315.24290-1-en-wei.wu@canonical.com> <88c6a5ee-1872-4c15-bef2-dcf3bc0b39fb@molgen.mpg.de>
-In-Reply-To: <88c6a5ee-1872-4c15-bef2-dcf3bc0b39fb@molgen.mpg.de>
-From: En-Wei WU <en-wei.wu@canonical.com>
-Date: Wed, 29 May 2024 11:17:50 +0800
-Message-ID: <CAMqyJG0uUgjN90BqjXSfgq7HD3ACdLwOM8P2B+wjiP1Zn1gjAQ@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH] ice: irdma hardware init failed after suspend/resume
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: jesse.brandeburg@intel.com, intel-wired-lan@lists.osuosl.org, 
-	rickywu0421@gmail.com, linux-kernel@vger.kernel.org, edumazet@google.com, 
-	anthony.l.nguyen@intel.com, netdev@vger.kernel.org, kuba@kernel.org, 
-	pabeni@redhat.com, davem@davemloft.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Thanks for your kind and quick reply.
+Greetings:
 
-> I think this should be called later in the reset path IMO.
-> You should call ice_deinit_rdma in ice_prepare_for_reset (replace ice_unp=
-lug_aux_dev),
-I'm afraid this would break the existing code because in
-ice_deinit_rdma(), it will remove some entries in
-pf->irq_tracker.entries. And in ice_reinit_interrupt_scheme() (which
-is called before ice_prepare_for_reset), some entries have been
-allocated for other irq usage.
+Switching to an RFC instead of a PATCH because even though Tariq
+patiently explained the code to me, I'm sure I probably still missed
+something ;)
 
-> What effect does this have on resume time?
-When we call ice_init_rdma() at resume time, it will allocate entries
-at pf->irq_tracker.entries and update pf->msix_entries for later use
-(request_irq) by irdma.
+If this turns out to be right and Tariq agrees, I can send a PATCH
+net-next v4.
 
-On Tue, 28 May 2024 at 19:12, Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Dear Ricky,
->
->
-> Thank you for your patch. Some minor nits. It=E2=80=99d be great if you m=
-ade the
-> summary about the action and not an issue description. Maybe:
->
-> Avoid IRQ collision to fix init failure on ACPI S3 resume
->
-> Am 28.05.24 um 12:03 schrieb Ricky Wu:
-> > A bug in https://bugzilla.kernel.org/show_bug.cgi?id=3D218906 describes
-> > that irdma would break and report hardware initialization failed after
-> > suspend/resume with Intel E810 NIC (tested on 6.9.0-rc5).
-> >
-> > The problem is caused due to the collision between the irq numbers
-> > requested in irdma and the irq numbers requested in other drivers
-> > after suspend/resume.
-> >
-> > The irq numbers used by irdma are derived from ice's ice_pf->msix_entri=
-es
-> > which stores mappings between MSI-X index and Linux interrupt number.
-> > It's supposed to be cleaned up when suspend and rebuilt in resume but
-> > it's not, causing irdma using the old irq numbers stored in the old
-> > ice_pf->msix_entries to request_irq() when resume. And eventually
-> > collide with other drivers.
-> >
-> > This patch fixes this problem. On suspend, we call ice_deinit_rdma() to
-> > clean up the ice_pf->msix_entries (and free the MSI-X vectors used by
-> > irdma if we've dynamically allocated them). On Resume, we call
->
-> resume
->
-> > ice_init_rdma() to rebuild the ice_pf->msix_entries (and allocate the
-> > MSI-X vectors if we would like to dynamically allocate them).
-> >
-> > Signed-off-by: Ricky Wu <en-wei.wu@canonical.com>
->
-> Please add a Link: tag.
->
-> If this was tested by somebody else, please also add a Tested-by: line.
->
-> > ---
-> >   drivers/net/ethernet/intel/ice/ice_main.c | 6 +++++-
-> >   1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/et=
-hernet/intel/ice/ice_main.c
-> > index f60c022f7960..ec3cbadaa162 100644
-> > --- a/drivers/net/ethernet/intel/ice/ice_main.c
-> > +++ b/drivers/net/ethernet/intel/ice/ice_main.c
-> > @@ -5544,7 +5544,7 @@ static int ice_suspend(struct device *dev)
-> >        */
-> >       disabled =3D ice_service_task_stop(pf);
-> >
-> > -     ice_unplug_aux_dev(pf);
-> > +     ice_deinit_rdma(pf);
-> >
-> >       /* Already suspended?, then there is nothing to do */
-> >       if (test_and_set_bit(ICE_SUSPENDED, pf->state)) {
-> > @@ -5624,6 +5624,10 @@ static int ice_resume(struct device *dev)
-> >       if (ret)
-> >               dev_err(dev, "Cannot restore interrupt scheme: %d\n", ret=
-);
-> >
-> > +     ret =3D ice_init_rdma(pf);
-> > +     if (ret)
-> > +             dev_err(dev, "Reinitialize RDMA during resume failed: %d\=
-n", ret);
-> > +
-> >       clear_bit(ICE_DOWN, pf->state);
-> >       /* Now perform PF reset and rebuild */
-> >       reset_type =3D ICE_RESET_PFR;
->
-> What effect does this have on resume time?
->
->
-> Kind regards,
->
-> Paul
+This change adds support for the per queue netdev-genl API to mlx5,
+which seems to output stats:
+
+./cli.py --spec ../../../Documentation/netlink/specs/netdev.yaml \
+         --dump qstats-get --json '{"scope": "queue"}'
+
+...snip
+ {'ifindex': 7,
+  'queue-id': 28,
+  'queue-type': 'tx',
+  'tx-bytes': 399462,
+  'tx-packets': 3311},
+...snip
+
+I've used the suggested tooling to verify the per queue stats match
+rtnl by doing this:
+
+  NETIF=eth0 tools/testing/selftests/drivers/net/stats.py
+
+I've tested the following scenarios:
+  - The machine at boot (default queue configuration)
+  - Adjusting the queue configuration to various amounts via ethtool
+  - Add mqprio TCs
+  - Removing the mqprio TCs
+
+and in each scenario the stats script above reports that the stats match
+rtnl.
+
+Worth noting that Tariq suggested I also export HTB/QOS stats in
+mlx5e_get_base_stats.
+
+I am open to doing this, but I think if I were to do that, HTB/QOS queue
+stats should also be exported by rtnl so that the script above will
+continue to show that the output is correct.
+
+I'd like to propose: adding HTB/QOS to both rtnl *and* the netdev-genl
+code together at the same time, but a later time, separate from this
+change.
+
+Thanks,
+Joe
+
+v2 -> rfcv3:
+ - Added patch 1/2 which creates some helpers for computing the txq_ix
+   and ch_ix/tc_ix.
+
+ - Patch 2/2 modified in several ways:
+   - Fixed variable declarations in mlx5e_get_queue_stats_rx to be at
+     the start of the function.
+   - mlx5e_get_queue_stats_tx rewritten to access sq stats directly by
+     using the helpers added in the previous patch.
+   - mlx5e_get_base_stats modified in several ways:
+     - Took the state_lock when accessing priv->channels.
+     - For the base RX stats, code was simplified to call
+       mlx5e_get_queue_stats_rx instead of repeating the same code.
+     - For the base TX stats, I attempted to implement what I think
+       Tariq suggested in the previous thread:
+         - for available channels, only unavailable TC stats are summed
+	 - for unavailable channels, all stats for TCs up to
+	   max_opened_tc are summed.
+
+v1 - > v2:
+  - Essentially a full rewrite after comments from Jakub, Tariq, and
+    Zhu.
+
+Joe Damato (2):
+  net/mlx5e: Add helpers to calculate txq and ch idx
+  net/mlx5e: Add per queue netdev-genl stats
+
+ .../net/ethernet/mellanox/mlx5/core/en_main.c | 150 +++++++++++++++++-
+ 1 file changed, 149 insertions(+), 1 deletion(-)
+
+-- 
+2.25.1
+
