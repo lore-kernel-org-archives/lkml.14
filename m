@@ -1,134 +1,322 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70A9DDAD
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E521172C;
+	Wed, 29 May 2024 13:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716988244; cv=none; b=UUm+l2nep5EwDK7ys6Rz5h/pX3PRllj4TZrr8PpFXUUFV8oY7ArKn5BNZyEBJfTdBR8r25m9MXZOCy1xIRlWLXEEpfk9XoSpu7l99nJ2r97SmSUVYcav+6YAEV5Lwyu9EYzKDIc9OWRqghRnA9uCLrcor/teWwEbnciACLgpkDE=
+	t=1716988255; cv=none; b=nF9+WWPcPnfw6ISavDnA051Ky8EoIU9wBcxhrMqiE9yiIwJuS75H96D/UYXPJOFQd4Tdt7+a/gjKaSv6xojb6+1hHubkOcvkBjAgUoO7q+XBjiP2IXA846elHkUihK71hXqfsmqUFk0TcQndNhA3rpkB0hjx3QG140JD0HbdIg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716988244; c=relaxed/simple;
-	bh=cLMWqTZ4eP4dETUfafvDYBzH6ujk3BWpl5aJZcG0BWc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pEF+ZXBn23+fpYhNb/sIBwbMZFQu8ttSP6TDgeqhDidlOd5aLphK9ksA5kI2ckiyjzea0xTclywPZwWumjQ8LpqqKBd2i7brBS50BhwFvj+TQdmspPxanD/lmgWsjjjHWpP9u3WXoAWSP53hQ2tjIZQvEW+Mf6xbbYn5u9ekZ94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMwr4x20; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716988255; c=relaxed/simple;
+	bh=6dp6CQ5w1DQD8AWtQDmEivwojx2VYh+mOmjEdNJDH+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iwb0R0+9lxPSOBnpYPjT9oaY1MXLdvvWMu8Y9kqDUwtvk6UbmzkPM/ctFKTXI/nanALAly4GGXFGd3tjp2lqaZaAqzracZkqNbXrpoouZnkLygBCl/pfwGf08hikeriYwQZRh2nnQE0V64y9e0dzLwhxEPpaXAPEY4dxlQnYDpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gdkFYL8S; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMwr4x20"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4211fb904a8so2843985e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716988241; x=1717593041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9dyAFBwewJ+RHjYJS8brY7i+iKSDpb+pqY0B3wakOdQ=;
-        b=SMwr4x20r+cpyxpq22s/pXt0e1geWqQsR9cVjS1DatdlIl8BRx+fANBywZVbQkIE1S
-         aQZz7GM6sq4Gj7u24OydHLUa7v73yOo7+waNeVTTgp3r4R1OIECF0GNFGIDpuTElJxuN
-         E2vzgLhQ6NH3qOnXGvmN1G4jGRpiiaq3Y0v3ZTGCQiUkfCQ7Wf7lYSsDb5FjlpEe82uq
-         YjGjJO9nQ+7sVLR44zUC7DkAQsK3hBbYekuqjZYcb48KXHHz+ISniLkrcO9bRppMG7jS
-         O98+WoTuDeuZKsHVKJ025Kd/Aj+OLbwG7NJjNZPYHHIth0Pygj0Vtlx/Guo7LBJxSqZf
-         d6pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716988241; x=1717593041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9dyAFBwewJ+RHjYJS8brY7i+iKSDpb+pqY0B3wakOdQ=;
-        b=HNHoN7f46WitOk9PTz9CwanwatPRSdjeR5mY1fZrMJgFIhyraz3w/+Fc2YlyJ4JWgn
-         xnkakMgRTb/uWa7RDEpDWPyB2jR5/d/1/LsrnZkGnc7J5rR+ydN+WyPksVBhcdBthkJX
-         siSyyhcV43qOdMgvVvlozcCFnvxhavYRoOFyyWPjchLM+lrCZ/loDnjMxpce087YcFQt
-         8wJ+N6fbznTZcV19lrbsEprfh294VEE4BQci1RmT0dQ9rTpapfWGrB4luz6FSn+hYyeH
-         y9rHDtKvzFEoIRyZ+vN6jzCPaGql2aOcHIlUe1TnxMSeLDp5WSv0WcXETH6CUw8sfUGR
-         52tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXf3QmMvONXEUCMURjnT3z9TCJcASGiBSgdobyn/ObTiAlN5D/Tq5gU12wkA3r/8XhdkBf5noBZGMtFWHD/ooZgmkDczZOkaPCxgQkd
-X-Gm-Message-State: AOJu0Yxy8WhBs0OZ8GtKpT11L8DunrMs0Trc+f7vCNBkst7sJ26dz8vg
-	vf+ddTTYCFSScWDZ3hwipGzSVkk9RXAI/Ma5J+pFkNxkMDiwmSHSjhTPj6i/QSBpVB6VAkJhgoc
-	oQjZWB0vxKBUo8p3xEsxUvlKpmqc=
-X-Google-Smtp-Source: AGHT+IGA/M/hJXwlEOyt6h3DY7L4fXZNrF3jZ9FvZ6aVVsxzgoo9H8gw3knpd8eHwKo0UObNN/izdY73yxFYV9PdCyE=
-X-Received: by 2002:a5d:5309:0:b0:34d:b5d6:fe4b with SMTP id
- ffacd0b85a97d-3552fe02ee8mr10973005f8f.4.1716988241174; Wed, 29 May 2024
- 06:10:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gdkFYL8S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716988253; x=1748524253;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6dp6CQ5w1DQD8AWtQDmEivwojx2VYh+mOmjEdNJDH+M=;
+  b=gdkFYL8SPyBm3B5K30yTXobL9zXWZFcDnLmpuWtW9YHppOmnnVq9GbEF
+   XGYTFJcvjyxMpgG6SaCudg4hqSyz9uYDPkyXXZx48dHKgJYF8fO1IP8nP
+   Mlq4lV/0nHiSV/VdzzLrJeDTtgRIUvcZiqLjb4bw0mf5+FW+JI2NuGUvS
+   O/jrDX19d3KSkhL0xVG530O5NY9gmfr8jKHoctYHqdRf2BfFm76LwM4Dp
+   9/doNuZHW4eYDbxvl22up4OOB/NH/ileAhtO6HhbQycaYeLbc+7vxxchZ
+   SI2g7GWJMqnyoJtBFOUnLY5qBKHhyDy4ebHJw1aBMjIMUlZ4TGL3/G1th
+   w==;
+X-CSE-ConnectionGUID: xWsqYQkbSKSpowcVCD0J/A==
+X-CSE-MsgGUID: vvqv+lNeQh2sANVijzqzcA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="24522858"
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="24522858"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 06:10:52 -0700
+X-CSE-ConnectionGUID: sGEiGrnPTEqtDajvKYi4OA==
+X-CSE-MsgGUID: zs2YaZVKSBaQFfA4NYLDuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="35966264"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 29 May 2024 06:10:49 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sCJ4o-000Dgd-0W;
+	Wed, 29 May 2024 13:10:46 +0000
+Date: Wed, 29 May 2024 21:10:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: admiyo@os.amperecomputing.com, Jeremy Kerr <jk@codeconstruct.com.au>,
+	Matt Johnston <matt@codeconstruct.com.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Adam Young <admiyo@os.amperecomputing.com>
+Subject: Re: [PATCH 1/3] mctp pcc: Implement MCTP over PCC Transport
+Message-ID: <202405292029.IXat0564-lkp@intel.com>
+References: <20240513173546.679061-2-admiyo@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZlM_Ndng_JstAee3@kernel.org> <Zk9UCsZdizqC1_36@kernel.org>
- <ZkxN0yQ7Fb0X26hT@kernel.org> <20240521023957.2587005-1-jaewon31.kim@samsung.com>
- <20240521025329epcms1p6ce11064c0f0608a0156d82fda7ef285c@epcms1p6>
- <20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1@epcms1p5>
- <20240524090715epcms1p274939a1d5954be3423f6ce14a3df6f92@epcms1p2>
- <20240527013504epcms1p22bec7b83f2a42e76877b97ed0d769009@epcms1p2>
- <CGME20240521024009epcas1p10ed9f9b929203183a29f79508e79bb76@epcms1p7>
- <20240529095119epcms1p73f0e9ff756bcb2ee6a14db459128a644@epcms1p7> <20240529113519.jupuazcf754zjxzy@master>
-In-Reply-To: <20240529113519.jupuazcf754zjxzy@master>
-From: Jaewon Kim <jaewon31.kim@gmail.com>
-Date: Wed, 29 May 2024 22:10:29 +0900
-Message-ID: <CAJrd-UuiDq-o=r7tK=CG6Q3yeARQBEAtaov2yqO6e6tBwJZoqQ@mail.gmail.com>
-Subject: Re: (2) [RESEND PATCH 00/10] memblock: introduce memsize showing
- reserved memory
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: Jaewon Kim <jaewon31.kim@samsung.com>, Mike Rapoport <rppt@kernel.org>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tkjos@google.com" <tkjos@google.com>, 
-	Pintu Agarwal <pintu.ping@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240513173546.679061-2-admiyo@os.amperecomputing.com>
 
-(Sorry I might forget to change to be plain text)
+Hi,
 
-Oh good thing, I did not know this patch. Thanks.
+kernel test robot noticed the following build errors:
 
-By the way, I've tried to get memblock/memory and kernel log from a
-device based on
-v6.6.17 kernel device, to see upstream patches above.
-memblok/memory does not show region for
-0x00000000_80000000..0x0x00000000_8195ffff.
+[auto build test ERROR on rafael-pm/linux-next]
+[also build test ERROR on rafael-pm/bleeding-edge linus/master v6.10-rc1 next-20240529]
+[cannot apply to horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-   0: 0x0000000081960000..0x00000000819fffff    0 NONE
+url:    https://github.com/intel-lab-lkp/linux/commits/admiyo-os-amperecomputing-com/mctp-pcc-Implement-MCTP-over-PCC-Transport/20240529-072115
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20240513173546.679061-2-admiyo%40os.amperecomputing.com
+patch subject: [PATCH 1/3] mctp pcc: Implement MCTP over PCC Transport
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240529/202405292029.IXat0564-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240529/202405292029.IXat0564-lkp@intel.com/reproduce)
 
-The kernel log shows information for 0x0000000080000000..0x00000000813fffff=
-, but
-we don't see information for 0x0000000081400000..0x000000008195ffff
-from kernel log.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405292029.IXat0564-lkp@intel.com/
 
-(I removed the name.)
-<6>[    0.000000][    T0] OF: reserved mem:
-0x0000000080000000..0x0000000080dfffff (14336 KiB) nomap non-reusable
-AAA
-<6>[    0.000000][    T0] OF: reserved mem:
-0x0000000080e00000..0x00000000811fffff (4096 KiB) nomap non-reusable
-BBB
-<6>[    0.000000][    T0] OF: reserved mem:
-0x0000000081200000..0x00000000813fffff (2048 KiB) nomap non-reusable
-CCC
-<6>[    0.000000][    T0] OF: reserved mem:
-0x0000000081a00000..0x0000000081a3ffff (256 KiB) nomap non-reusable DD
+All errors (new ones prefixed by >>):
 
-A smart parser should gather these kernel log and memblock/memory log
-and should show
-log like my memsize logic shows below.
-0x0000000081400000-0x0000000081960000 0x00560000 (    5504 KB ) nomap
-unusable unknown
+   In file included from drivers/net/mctp/mctp-pcc.c:17:
+   include/acpi/acpi_drivers.h:72:43: warning: 'struct acpi_pci_root' declared inside parameter list will not be visible outside of this definition or declaration
+      72 | struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root);
+         |                                           ^~~~~~~~~~~~~
+   drivers/net/mctp/mctp-pcc.c: In function 'mctp_pcc_client_rx_callback':
+   drivers/net/mctp/mctp-pcc.c:96:23: warning: variable 'buf_ptr_val' set but not used [-Wunused-but-set-variable]
+      96 |         unsigned long buf_ptr_val;
+         |                       ^~~~~~~~~~~
+   drivers/net/mctp/mctp-pcc.c: In function 'mctp_pcc_tx':
+   drivers/net/mctp/mctp-pcc.c:122:24: warning: variable 'buffer' set but not used [-Wunused-but-set-variable]
+     122 |         unsigned char *buffer;
+         |                        ^~~~~~
+   In file included from include/linux/device.h:15,
+                    from include/linux/acpi.h:14,
+                    from drivers/net/mctp/mctp-pcc.c:7:
+   drivers/net/mctp/mctp-pcc.c: In function 'mctp_pcc_driver_add':
+>> drivers/net/mctp/mctp-pcc.c:287:23: error: invalid use of undefined type 'struct acpi_device'
+     287 |         dev_info(&adev->dev, "Adding mctp_pcc device for HID  %s\n", acpi_device_hid(adev));
+         |                       ^~
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/net/mctp/mctp-pcc.c:287:9: note: in expansion of macro 'dev_info'
+     287 |         dev_info(&adev->dev, "Adding mctp_pcc device for HID  %s\n", acpi_device_hid(adev));
+         |         ^~~~~~~~
+>> drivers/net/mctp/mctp-pcc.c:287:70: error: implicit declaration of function 'acpi_device_hid'; did you mean 'acpi_device_dep'? [-Werror=implicit-function-declaration]
+     287 |         dev_info(&adev->dev, "Adding mctp_pcc device for HID  %s\n", acpi_device_hid(adev));
+         |                                                                      ^~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                                     ^~~~~~~~~~~
+   drivers/net/mctp/mctp-pcc.c:287:9: note: in expansion of macro 'dev_info'
+     287 |         dev_info(&adev->dev, "Adding mctp_pcc device for HID  %s\n", acpi_device_hid(adev));
+         |         ^~~~~~~~
+>> drivers/net/mctp/mctp-pcc.c:288:22: error: implicit declaration of function 'acpi_device_handle'; did you mean 'acpi_device_dep'? [-Werror=implicit-function-declaration]
+     288 |         dev_handle = acpi_device_handle(adev);
+         |                      ^~~~~~~~~~~~~~~~~~
+         |                      acpi_device_dep
+   drivers/net/mctp/mctp-pcc.c:288:20: warning: assignment to 'acpi_handle' {aka 'void *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     288 |         dev_handle = acpi_device_handle(adev);
+         |                    ^
+   drivers/net/mctp/mctp-pcc.c:293:58: error: invalid use of undefined type 'struct acpi_device'
+     293 |                 return create_mctp_pcc_netdev(adev, &adev->dev, inbox_index, outbox_index);
+         |                                                          ^~
+   drivers/net/mctp/mctp-pcc.c:295:22: error: invalid use of undefined type 'struct acpi_device'
+     295 |         dev_err(&adev->dev, "FAILURE to lookup PCC indexes from CRS");
+         |                      ^~
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/net/mctp/mctp-pcc.c:295:9: note: in expansion of macro 'dev_err'
+     295 |         dev_err(&adev->dev, "FAILURE to lookup PCC indexes from CRS");
+         |         ^~~~~~~
+   drivers/net/mctp/mctp-pcc.c: At top level:
+>> drivers/net/mctp/mctp-pcc.c:329:15: error: variable 'mctp_pcc_driver' has initializer but incomplete type
+     329 | static struct acpi_driver mctp_pcc_driver = {
+         |               ^~~~~~~~~~~
+>> drivers/net/mctp/mctp-pcc.c:330:10: error: 'struct acpi_driver' has no member named 'name'
+     330 |         .name = "mctp_pcc",
+         |          ^~~~
+   drivers/net/mctp/mctp-pcc.c:330:17: warning: excess elements in struct initializer
+     330 |         .name = "mctp_pcc",
+         |                 ^~~~~~~~~~
+   drivers/net/mctp/mctp-pcc.c:330:17: note: (near initialization for 'mctp_pcc_driver')
+>> drivers/net/mctp/mctp-pcc.c:331:10: error: 'struct acpi_driver' has no member named 'class'
+     331 |         .class = "Unknown",
+         |          ^~~~~
+   drivers/net/mctp/mctp-pcc.c:331:18: warning: excess elements in struct initializer
+     331 |         .class = "Unknown",
+         |                  ^~~~~~~~~
+   drivers/net/mctp/mctp-pcc.c:331:18: note: (near initialization for 'mctp_pcc_driver')
+>> drivers/net/mctp/mctp-pcc.c:332:10: error: 'struct acpi_driver' has no member named 'ids'
+     332 |         .ids = mctp_pcc_device_ids,
+         |          ^~~
+   drivers/net/mctp/mctp-pcc.c:332:16: warning: excess elements in struct initializer
+     332 |         .ids = mctp_pcc_device_ids,
+         |                ^~~~~~~~~~~~~~~~~~~
+   drivers/net/mctp/mctp-pcc.c:332:16: note: (near initialization for 'mctp_pcc_driver')
+>> drivers/net/mctp/mctp-pcc.c:333:10: error: 'struct acpi_driver' has no member named 'ops'
+     333 |         .ops = {
+         |          ^~~
+>> drivers/net/mctp/mctp-pcc.c:333:16: error: extra brace group at end of initializer
+     333 |         .ops = {
+         |                ^
+   drivers/net/mctp/mctp-pcc.c:333:16: note: (near initialization for 'mctp_pcc_driver')
+   drivers/net/mctp/mctp-pcc.c:333:16: warning: excess elements in struct initializer
+   drivers/net/mctp/mctp-pcc.c:333:16: note: (near initialization for 'mctp_pcc_driver')
+>> drivers/net/mctp/mctp-pcc.c:338:10: error: 'struct acpi_driver' has no member named 'owner'
+     338 |         .owner = THIS_MODULE,
+         |          ^~~~~
+   In file included from include/linux/printk.h:6,
+                    from include/asm-generic/bug.h:22,
+                    from arch/alpha/include/asm/bug.h:23,
+                    from include/linux/bug.h:5,
+                    from include/linux/thread_info.h:13,
+                    from include/asm-generic/preempt.h:5,
+                    from ./arch/alpha/include/generated/asm/preempt.h:1,
+                    from include/linux/preempt.h:79,
+                    from include/linux/spinlock.h:56,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/slab.h:16,
+                    from include/linux/resource_ext.h:11,
+                    from include/linux/acpi.h:13:
+   include/linux/init.h:182:21: warning: excess elements in struct initializer
+     182 | #define THIS_MODULE ((struct module *)0)
+         |                     ^
+   drivers/net/mctp/mctp-pcc.c:338:18: note: in expansion of macro 'THIS_MODULE'
+     338 |         .owner = THIS_MODULE,
+         |                  ^~~~~~~~~~~
+   include/linux/init.h:182:21: note: (near initialization for 'mctp_pcc_driver')
+     182 | #define THIS_MODULE ((struct module *)0)
+         |                     ^
+   drivers/net/mctp/mctp-pcc.c:338:18: note: in expansion of macro 'THIS_MODULE'
+     338 |         .owner = THIS_MODULE,
+         |                  ^~~~~~~~~~~
+   drivers/net/mctp/mctp-pcc.c: In function 'mctp_pcc_mod_init':
+>> drivers/net/mctp/mctp-pcc.c:348:14: error: implicit declaration of function 'acpi_bus_register_driver' [-Werror=implicit-function-declaration]
+     348 |         rc = acpi_bus_register_driver(&mctp_pcc_driver);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/mctp/mctp-pcc.c:350:80: warning: suggest braces around empty body in an 'if' statement [-Wempty-body]
+     350 |                 ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "Error registering driver\n"));
+         |                                                                                ^
+   drivers/net/mctp/mctp-pcc.c: In function 'mctp_pcc_mod_exit':
+>> drivers/net/mctp/mctp-pcc.c:358:9: error: implicit declaration of function 'acpi_bus_unregister_driver'; did you mean 'platform_unregister_drivers'? [-Werror=implicit-function-declaration]
+     358 |         acpi_bus_unregister_driver(&mctp_pcc_driver);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+         |         platform_unregister_drivers
+   drivers/net/mctp/mctp-pcc.c: At top level:
+>> drivers/net/mctp/mctp-pcc.c:329:27: error: storage size of 'mctp_pcc_driver' isn't known
+     329 | static struct acpi_driver mctp_pcc_driver = {
+         |                           ^~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-Thank you
-Jaewon
 
-On Wed, May 29, 2024 at 8:35=E2=80=AFPM Wei Yang <richard.weiyang@gmail.com=
-> wrote:
->
-> On Wed, May 29, 2024 at 06:51:19PM +0900, Jaewon Kim wrote:
-> ><!DOCTYPE html>
-> ><html>
-> ><head>
-> ...
->
-> Would you mind sending it in pure text again?
->
-> --
-> Wei Yang
-> Help you, Help me
+vim +287 drivers/net/mctp/mctp-pcc.c
+
+   278	
+   279	static int mctp_pcc_driver_add(struct acpi_device *adev)
+   280	{
+   281		int inbox_index;
+   282		int outbox_index;
+   283		acpi_handle dev_handle;
+   284		acpi_status status;
+   285		struct lookup_context context = {0, 0, 0};
+   286	
+ > 287		dev_info(&adev->dev, "Adding mctp_pcc device for HID  %s\n", acpi_device_hid(adev));
+ > 288		dev_handle = acpi_device_handle(adev);
+   289		status = acpi_walk_resources(dev_handle, "_CRS", lookup_pcct_indices, &context);
+   290		if (ACPI_SUCCESS(status)) {
+   291			inbox_index = context.inbox_index;
+   292			outbox_index = context.outbox_index;
+   293			return create_mctp_pcc_netdev(adev, &adev->dev, inbox_index, outbox_index);
+   294		}
+   295		dev_err(&adev->dev, "FAILURE to lookup PCC indexes from CRS");
+   296		return -EINVAL;
+   297	};
+   298	
+   299	/* pass in adev=NULL to remove all devices
+   300	 */
+   301	static void mctp_pcc_driver_remove(struct acpi_device *adev)
+   302	{
+   303		struct mctp_pcc_ndev *mctp_pcc_dev = NULL;
+   304		struct list_head *ptr;
+   305		struct list_head *tmp;
+   306	
+   307		list_for_each_safe(ptr, tmp, &mctp_pcc_ndevs) {
+   308			mctp_pcc_dev = list_entry(ptr, struct mctp_pcc_ndev, head);
+   309			if (!adev || mctp_pcc_dev->acpi_device == adev) {
+   310				struct net_device *ndev;
+   311	
+   312				mctp_pcc_dev->cleanup_channel(mctp_pcc_dev->out_chan);
+   313				mctp_pcc_dev->cleanup_channel(mctp_pcc_dev->in_chan);
+   314				ndev = mctp_pcc_dev->mdev.dev;
+   315				if (ndev)
+   316					mctp_unregister_netdev(ndev);
+   317				list_del(ptr);
+   318				if (adev)
+   319					break;
+   320			}
+   321		}
+   322	};
+   323	
+   324	static const struct acpi_device_id mctp_pcc_device_ids[] = {
+   325		{ "DMT0001", 0},
+   326		{ "", 0},
+   327	};
+   328	
+ > 329	static struct acpi_driver mctp_pcc_driver = {
+ > 330		.name = "mctp_pcc",
+ > 331		.class = "Unknown",
+ > 332		.ids = mctp_pcc_device_ids,
+ > 333		.ops = {
+   334			.add = mctp_pcc_driver_add,
+   335			.remove = mctp_pcc_driver_remove,
+   336			.notify = NULL,
+   337		},
+ > 338		.owner = THIS_MODULE,
+   339	
+   340	};
+   341	
+   342	static int __init mctp_pcc_mod_init(void)
+   343	{
+   344		int rc;
+   345	
+   346		pr_info("initializing MCTP over PCC\n");
+   347		INIT_LIST_HEAD(&mctp_pcc_ndevs);
+ > 348		rc = acpi_bus_register_driver(&mctp_pcc_driver);
+   349		if (rc < 0)
+   350			ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "Error registering driver\n"));
+   351		return rc;
+   352	}
+   353	
+   354	static __exit void mctp_pcc_mod_exit(void)
+   355	{
+   356		pr_info("Removing MCTP over PCC transport driver\n");
+   357		mctp_pcc_driver_remove(NULL);
+ > 358		acpi_bus_unregister_driver(&mctp_pcc_driver);
+   359	}
+   360	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
