@@ -1,137 +1,114 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E9716A381
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A743615DBAD
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969794; cv=none; b=DJrSxe/JT4HsBuBRiq8HCqzQdft8qAnLxi9ZQrr5U+iMa2C3IRpAPU3O2/zF+8EbRprfOSPskjqVdEO7C+jtn10DmbEJIj9CEJA2leVl2G174QyUIbQ/y1oQg16yMxJJv1kAJJQFkoOcfTmB8lXcGMjkxB2pTrOKOrVkNI12wwM=
+	t=1716969869; cv=none; b=oUez1zU86yrY+mU0RU+dlfXeocV0VVz55cZEFI88VVu0605xqcxq3mJFSBE9N6BYIFdJAqZltVhT2gnhEgiLTT8WJfAkD1cR6Jw3D5W5Q/OGM4F3P//r79rUbHpiUq5Op5mnyuzd521BGsB5T1paBh+eZfPuvJgSFaYomgk1Wvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969794; c=relaxed/simple;
-	bh=yyzwBwMrHhyzP+KoX7+xVQUPiv1GRQhCclALjtWRz8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crU9ZLfRJrxlliuW7SzcJeAId0ewIfnCYEWCsNTtvmW8uUWfuTIUfFx4obH9Pn5oTFjLNKF7fTXrAnGiSUvqW5N5b6Rlxj2hx27MOPk9aGLyFo4R97kVptiL1DD34HB0VgOeBNlD2O/oSENxz5Ir2xZCrP/IS4ddbIbDTavaHZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ygf4SeWD; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1716969869; c=relaxed/simple;
+	bh=pft0aWV0nsM4NfbvHg75f+OMYeiKUeGHKGBBrvtxlgU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SjLp0JWUZfF59ng5gF3JqgNyZZjvwQqX97HsKoAfu+JxJUNidy/dIJSaiFz/xfJjGYXXUX2rFfZg8HC2YMFy2oBg0iIk77AMwvdY5pTszooSHTjJL0LwDUP3N27hIGc1X5uHCowCu+8PFbnU8+ukVGQoybqZpk4j8jHmiR0k6k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gDaCxHnY; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ygf4SeWD"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3737b3c56d7so5872915ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 01:03:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gDaCxHnY"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a626919d19dso109471666b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 01:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716969792; x=1717574592; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ogaI7Gpfs636qO5hyNT7bNNQENqOhw8naK259iAtrjo=;
-        b=Ygf4SeWD7mAFcv0rp79qvcE6+GEX/2QtjVtg8teXVLUVK3r2CRsH8cJ/RzO+Th25+c
-         RsgW4bG5nKDkdLiT9HQ9FQp2G9kkLUTrYFaQe0VDldhEcqViMrnOl8rXzLn8TEoK2evp
-         MVR/QVVfYxWalCCU1wIsB6caDYRSiqINM5eUc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716969792; x=1717574592;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716969866; x=1717574666; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ogaI7Gpfs636qO5hyNT7bNNQENqOhw8naK259iAtrjo=;
-        b=BE6HuSET3hZIoZssa1yQ+AO7zx5Kd63zNBdw7TWgpfYDUvKh3Sodsv8pmXuPdmSHjc
-         g+rlXPbl068i5r5g9eDXLnpM0uGD5+6Io3JKPDbezEZokaWpMzkWr5KghgeSPGmohYmH
-         tid3SK6TTb83a1mGG1+FiNY3HbiO43KsC57OhxHBWI+tdp3eOa8FrYBKQbP+qZQ6PDHk
-         uSPyVd/Yn64LjhaGWyZZAhkCX8SxjNLE4lVL7b42XmEf67SA3FhpOPqlBl6S/Ogw+/ia
-         u4HGAiToG5aivCoCHf1KyFy/rDYRs5kfP7lAh1pLoEwW9VzlQcl81jvIj27saenHJLE4
-         4GOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNmnEWpjNdWrzZWeVmCXWvzM4vIzD48DUx/uCvzuDXuWSizOCn7dIcQzK61UHZ54BrXCmA1KKznAy7JlS5SmmKMEvD2t+vWnFiBIrw
-X-Gm-Message-State: AOJu0Yx5njKYdVYCA/buZx7uywn2h1TiPhL1BLyKK808yinkRrElEidU
-	Z1DbuoQUI+mSjE/WiS54j2G86lOewDbFNL273wrwG8ah8rI2pmfkW/ar54FAfw==
-X-Google-Smtp-Source: AGHT+IGdbowjE3p9FsKUQs1U+S3A4H33kvzBquL28Ht/5QUfhl6pM3qzARUiGZqakco6aEOBwwMFCw==
-X-Received: by 2002:a05:6e02:12c1:b0:36d:b381:4852 with SMTP id e9e14a558f8ab-3737b31e049mr175673375ab.15.1716969791822;
-        Wed, 29 May 2024 01:03:11 -0700 (PDT)
-Received: from chromium.org (174.71.80.34.bc.googleusercontent.com. [34.80.71.174])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6822189197asm8553266a12.20.2024.05.29.01.03.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 01:03:11 -0700 (PDT)
-Date: Wed, 29 May 2024 17:03:08 +0900
-From: Tomasz Figa <tfiga@chromium.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"hn.chen" <hn.chen@sunplusit.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v10 4/6] media: uvcvideo: Allow hw clock updates with
- buffers not full
-Message-ID: <4kck7oedsnj6kfiv7ykwsjg35qodg5bdktu5t5w3xtg2xuscto@2yh6kfdqwimc>
-References: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
- <20240323-resend-hwtimestamp-v10-4-b08e590d97c7@chromium.org>
+        bh=iugICvJDzmJo7xGBPHogMYo6Gg3CJ7ooLOOivaduvyI=;
+        b=gDaCxHnYmZS0tm8Ol8dqXsV9KxY5zbTD/Y2jCSfQ7lMLjC94uBPmMMa6rVKfwn53iD
+         Cgs4wuotuXpq6DfuEljDV94CsuMBHsmP76PXqu+iPnHhN/Nbw6yEsfeLCt+ibrouGb/0
+         pbRFNeTTD+gJ6NpChHHUhYX5JlTkOKKOe/p83Dl9xlKBYTTf2/BVZY1q8ZTRBSBDeXUP
+         EOtUHt3o8uyiWWuX3cYv+DCKOK6dxZFidarv1f9RNa5HsUJXKPxlbyX/nR140bkcOhgm
+         XArzyOY7YFwN67BfjMo+kXzwmzmZzsIID8PVhWug278JWScwQn0IhjuqWWNKdQTPhfIe
+         9HbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716969866; x=1717574666;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iugICvJDzmJo7xGBPHogMYo6Gg3CJ7ooLOOivaduvyI=;
+        b=SCTSfTRNlhQQL9VPoDSVpIWeiA8J0cpXw92Dg0UN3W4wv9qI7xONuUtdiYwo/Cwokd
+         LkG/hBEMDki2Vo3seVwmFG5Zgu6/pO1lxYTwNCvU4BC5gc9jis1WG+Ote4EE/j0gGaND
+         M7qkCTFE7UkZvxC36l5tDQCQJX8Q2rahmGUYi7QcWCJlgZv4CbqBCHg/sBI8TFOiTWSC
+         rX0v8yNYSkZjhjI0XyIYUNAJUvBMv8v3MK1AtDeHfzpIXWtSTz/s0iCmv5SeU1H2no9e
+         2sqdp7QD4fO3xCCigc8OXKH1pv5ChgPvmgfNZgGzrn9tIRQTtY+8mJ7/hqXpz1uqZyBz
+         +aEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEbtfRFLbXvQdB/xFwkYhUW6HhLf8rUu06iy8S/ESMLPlRC38GRRzAy1f2GPzbIoEJ//MStnX1A4/+jSzuWCkZ1XIdtYioa2UUscva
+X-Gm-Message-State: AOJu0YwURbh/mFJgy4CsxB1vvgkKEJI4T8UyyGyjAYSS3+23S4dhsF3S
+	WDwSGhsR3YiOikRqEuq/Py3HJMctJucfFyl2arqsdCOwb0cHTGwQVF/nJaEB7fMAVyuuD2SiJLY
+	Hm2aIuZ/CVv1ZTsYTs/pL4Y/txeLVsQk49Ek6yA==
+X-Google-Smtp-Source: AGHT+IG6iwinAXXk+z85s+DZ7rCxbual1zF0BnW9/urFx8Jq0vjUfxC8W1lP9e0VTumF0FrEVCZkoP1D8o+mWg7nLg0=
+X-Received: by 2002:a17:906:3e4f:b0:a5c:d4b2:6a44 with SMTP id
+ a640c23a62f3a-a642d3846f7mr95336266b.16.1716969865779; Wed, 29 May 2024
+ 01:04:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240323-resend-hwtimestamp-v10-4-b08e590d97c7@chromium.org>
+References: <20240528151052.313031-1-alexghiti@rivosinc.com>
+ <20240528151052.313031-5-alexghiti@rivosinc.com> <ZlYbupL5XgzgA0MX@andrea>
+In-Reply-To: <ZlYbupL5XgzgA0MX@andrea>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Wed, 29 May 2024 10:04:14 +0200
+Message-ID: <CAHVXubgBDxyow3-CFwBrkJ7xoAXCv8Tq7nNTAcvbzbA=TAaf5A@mail.gmail.com>
+Subject: Re: [PATCH 4/7] riscv: Implement xchg8/16() using Zabha
+To: Andrea Parri <parri.andrea@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Leonardo Bras <leobras@redhat.com>, Guo Ren <guoren@kernel.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 23, 2024 at 10:48:05AM +0000, Ricardo Ribalda wrote:
-> With UVC 1.5 we get as little as one clock sample per frame. Which means
-> that it takes 32 frames to move from the software timestamp to the
-> hardware timestamp method.
-> 
-> This results in abrupt changes in the timestamping after 32 frames (~1
-> second), resulting in noticeable artifacts when used for encoding.
-> 
-> With this patch we modify the update algorithm to work with whatever
-> amount of values are available.
-> 
-> Tested-by: HungNien Chen <hn.chen@sunplusit.com>
-> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_video.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-> index d6ca383f643e3..af25b9f1b53fe 100644
-> --- a/drivers/media/usb/uvc/uvc_video.c
-> +++ b/drivers/media/usb/uvc/uvc_video.c
-> @@ -768,10 +768,10 @@ void uvc_video_clock_update(struct uvc_streaming *stream,
->  
->  	spin_lock_irqsave(&clock->lock, flags);
->  
-> -	if (clock->count < clock->size)
-> +	if (clock->count < 2)
->  		goto done;
->  
-> -	first = &clock->samples[clock->head];
-> +	first = &clock->samples[(clock->head - clock->count + clock->size) % clock->size];
->  	last = &clock->samples[(clock->head - 1 + clock->size) % clock->size];
->  
->  	/* First step, PTS to SOF conversion. */
-> @@ -786,6 +786,18 @@ void uvc_video_clock_update(struct uvc_streaming *stream,
->  	if (y2 < y1)
->  		y2 += 2048 << 16;
->  
-> +	/*
-> +	 * Have at least 1/4 of a second of timestamps before we
-> +	 * try to do any calculation. Otherwise we do not have enough
-> +	 * precision. This value was determined by running Android CTS
-> +	 * on different devices.
-> +	 *
-> +	 * dev_sof runs at 1KHz, and we have a fixed point precision of
-> +	 * 16 bits.
-> +	 */
-> +	if ((y2 - y1) < ((1000 / 4) << 16))
-> +		goto done;
+Hi Andrea,
 
-Not a comment for this patch directly, but...
+On Tue, May 28, 2024 at 8:00=E2=80=AFPM Andrea Parri <parri.andrea@gmail.co=
+m> wrote:
+>
+> > -#define __arch_xchg_masked(prepend, append, r, p, n)                 \
+> > +#define __arch_xchg_masked(swap_sfx, prepend, append, r, p, n)        =
+       \
+>
+> This actually indicates a problem in the current (aka, no Zabha)
+> implementation: without your series, xchg16() gets mapped to
+>
+>   lr.w     a2,(a3)
+>   and      a1,a2,a5
+>   or       a1,a1,a4
+>   sc.w     a1,a1,(a3)
+>   bnez     a1,43c <.L0^B1>
+>
+> which is clearly wrong... (other "fully-ordered LR/SC sequences"
+> instead follow the mapping
+>
+>   lr.w     a2,(a3)
+>   and      a1,a2,a5
+>   or       a1,a1,a4
+>   sc.w.rl  a1,a1,(a3)
+>   bnez     a1,43c <.L0^B1>
+>   fence    rw,rw  )
+>
+> A similar consideration for xchg8().
 
-This kind of makes me wonder if we don't want to have some documentation
-that specifies what the userspace can expect from the timestamps, so
-that this isn't changed randomly in the future breaking what was fixed
-by this patch.
+Ok, I will fix that separately and make it merged in -rc2.
 
-Anyway:
+Thanks,
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Akex
 
-Best regards,
-Tomasz
+>
+>   Andrea
