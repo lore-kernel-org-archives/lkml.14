@@ -1,140 +1,105 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993201CD2D;
-	Wed, 29 May 2024 13:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C6E18EA8
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990699; cv=none; b=Zh6TiFEPZeHaHjqJJGeFrGClMLGfnfqJcnw4Ow+EG7SQQMM77x/lWHORSI+qd752jtpmQW+YuJAnGbfTDnbAO8YjnCxy35HtNevYSVNXnoNx8GKcBwLDAd6S9PqbZCBr4QelyQJsp2IYwckv9HPXT1yfWGtOAWp/V/B9cvogwj4=
+	t=1716990740; cv=none; b=sDsLeE/G9iGsQR41D4fD/2ExePEPHpdUsfNozSvKkqMUoKrWDCqaAkQze9L9SDmL15uIxXH+HPD8arUYd4aQxPFFGxDIzI8FkU9AzP2t7PgrxoSLY5Z6tgFFcnHBodUg3HNimS4vvvL2fkinqEVeDXLY8PzxbeL6/UkMuXgweHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990699; c=relaxed/simple;
-	bh=FlJgSMl3UTJvdZrHju59jcvP+4p0emxzVuYQnLdPvgY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FHqwFgPbJXZRVlZRJ+fWyysDRMF4TASVFxAyN3G+ZdmH2R8Aa0QZhZOOdm1uVEcIYKVM33DQ/nxlWq+1Kd1TfWBKVqAsns2gKwdYXIZikkHWSNGsuVYLjNrM7VArP5f6V38mI2h/ndPk2R5bPis+J8nGUcyzxGjoz+6E36SeRXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=GiSTHJ1C; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=GiSTHJ1C; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1716990740; c=relaxed/simple;
+	bh=scmYIIWiBUtvQ1/aYgr+xepSrRZem2K/QRx8v/oipBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bFR4liR02oZhoYtyjwMMnzVKedU+KhE3p0SZUls++DY6StB1jcx5vPQ6gPmARz9wdRlUp/vowJqdnWKf73N4QnuGpGeAXMZJOF5TI0KosUEpovgpMECAc6RnLsffVtAkfwUfLJxhCSr5cSjOma5z/CrdvnfQSMA+lHbSpLh7l6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZyeIVmHW; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="GiSTHJ1C";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="GiSTHJ1C"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8D045336AE;
-	Wed, 29 May 2024 13:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1716990694; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LNLWJbrRk7hFI6ZyyeUlyaH1ly9aS3REFE1/nnGspLg=;
-	b=GiSTHJ1C0KKUB3CncI1zXYl8Nco/8G/uYbnBtR3TrK7RTLTy1HlI3Ecih7h8ozmkVViWB7
-	o7JDGu5p7v0scVztXmPbn8V+PcOEAJsAim6RsJ5f8iUCkEcnms/C/fj1hX7DTi/Zd5mW2h
-	NGFnSXogTKR+eWEUntSfjuSjQ6FfXP0=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1716990694; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LNLWJbrRk7hFI6ZyyeUlyaH1ly9aS3REFE1/nnGspLg=;
-	b=GiSTHJ1C0KKUB3CncI1zXYl8Nco/8G/uYbnBtR3TrK7RTLTy1HlI3Ecih7h8ozmkVViWB7
-	o7JDGu5p7v0scVztXmPbn8V+PcOEAJsAim6RsJ5f8iUCkEcnms/C/fj1hX7DTi/Zd5mW2h
-	NGFnSXogTKR+eWEUntSfjuSjQ6FfXP0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 291FF13A6B;
-	Wed, 29 May 2024 13:51:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NA0jOuUyV2Z8UwAAD6G6ig
-	(envelope-from <mpdesouza@suse.com>); Wed, 29 May 2024 13:51:33 +0000
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-To: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: mpdesouza@suse.com,
-	live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] samples/livepatch: Add README.rst disclaimer
-Date: Wed, 29 May 2024 10:51:27 -0300
-Message-ID: <20240529135129.16373-1-mpdesouza@suse.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20200721161407.26806-3-joe.lawrence@redhat.com>
-References: 
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZyeIVmHW"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BFDDDB53;
+	Wed, 29 May 2024 15:52:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1716990734;
+	bh=scmYIIWiBUtvQ1/aYgr+xepSrRZem2K/QRx8v/oipBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZyeIVmHW8cSGunAdNU9/7blJ1ax6ZQ72xxzu4qjvu5VNVSKL0uFGxNSKF5QKo7U1H
+	 7IBrqODJ/X55S+azimJKWoBY3/gPLzIiTTdaRnsSWfapQ4OBfgxb200/zi9m7FhhIb
+	 b6LsWkydmckd8ik6kv0IKMYxH0pZ5z8POjYZT48I=
+Date: Wed, 29 May 2024 16:52:05 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: James Clark <james.clark@arm.com>
+Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com,
+	Mike Leach <mike.leach@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] coresight: Fix ref leak when
+ of_coresight_parse_endpoint() fails
+Message-ID: <20240529135205.GP1436@pendragon.ideasonboard.com>
+References: <20240529133626.90080-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240529133626.90080-1-james.clark@arm.com>
 
-From: mpdesouza@suse.com
+Hi James,
 
-On   Tue, 21 Jul 2020 12:14:07 -0400   Joe Lawrence <joe.lawrence@redhat.com> wrote:
+Thank you for the patch.
 
-> The livepatch samples aren't very careful with respect to compiler
-> IPA-optimization of target kernel functions.
+On Wed, May 29, 2024 at 02:36:26PM +0100, James Clark wrote:
+> of_graph_get_next_endpoint() releases the reference to the previous
+> endpoint on each iteration, but when parsing fails the loop exits
+> early meaning the last reference is never dropped.
 > 
-> Add a quick disclaimer and pointer to the compiler-considerations.rst
-> file to warn readers.
-> 
-> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> Fix it by dropping the refcount in the exit condition.
+
+You can add
+
+Reported-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+> Fixes: d375b356e687 ("coresight: Fix support for sparsely populated ports")
+> Signed-off-by: James Clark <james.clark@arm.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+One a side note, maybe it would be nice to add a new version of the
+for_each_endpoint_of_node() macro that would declare the iterator as a
+local variable scoped to the loop, making sure the reference always gets
+released when we exit the loop.
+
+And now that I've written that, it sounds we could as well have a
+version of the macro that doesn't take a new reference to the iterator.
+That may be simpler and less error-prone in the end.
+
 > ---
->  samples/livepatch/README.rst | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 samples/livepatch/README.rst
-
-Acked-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-
+>  drivers/hwtracing/coresight/coresight-platform.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/samples/livepatch/README.rst b/samples/livepatch/README.rst
-> new file mode 100644
-> index 000000000000..2f8ef945f2ac
-> --- /dev/null
-> +++ b/samples/livepatch/README.rst
-> @@ -0,0 +1,15 @@
-> +.. SPDX-License-Identifier: GPL-2.0+
-> +
-> +==========
-> +Disclaimer
-> +==========
-> +
-> +The livepatch sample programs were written with idealized compiler
-> +output in mind. That is to say that they do not consider ways in which
-> +optimization may transform target kernel functions.
-> +
-> +The samples present only a simple API demonstration and should not be
-> +considered completely safe.
-> +
-> +See the Documentation/livepatching/compiler-considerations.rst file for
-> +more details on compiler optimizations and how they affect livepatching.
-> -- 
-> 2.21.3
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 9d550f5697fa..57a009552cc5 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -297,8 +297,10 @@ static int of_get_coresight_platform_data(struct device *dev,
+>  			continue;
+>  
+>  		ret = of_coresight_parse_endpoint(dev, ep, pdata);
+> -		if (ret)
+> +		if (ret) {
+> +			of_node_put(ep);
+>  			return ret;
+> +		}
+>  	}
+>  
+>  	return 0;
+
+-- 
+Regards,
+
+Laurent Pinchart
