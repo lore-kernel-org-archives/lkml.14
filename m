@@ -1,70 +1,46 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB03E167D98
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84391D68F
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716968688; cv=none; b=Uy0+931qHsbMltAW/0v+VCTzZ5xsKq0QtxEVTCegyntl1lYWYJ5VxRoKHBUnOmGdLwKgT2XFgn7B/XOoqIo0iZ0IGjSo2OxbMbOFDzW8B6pnoo29NBvkoN+n32oJLm3ptl5EeDAc8EtWPMYCWiLaCi/TdPblp8ToPZSMDTRaIes=
+	t=1716968717; cv=none; b=ihKbBAMUP7rhn4BDFJcJuz35p5WnPzCS4IMazpIa7g2xZGBCZV6sKzX0pYs/rCGjz0km4kQIBv9qrCzGxf2yJc9LNqaIRVCqJQOm/5vB6U3kvTZCkee93Ri5bI6vABID1pJlDZorPkEWa6+FVqGbdTZgvD4KuX2mb4gtzwkGB0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716968688; c=relaxed/simple;
-	bh=V2Tay+cwE/xAfntGJvfIlOvq+Bb4o/mzQBalXXWGSTI=;
+	s=arc-20240116; t=1716968717; c=relaxed/simple;
+	bh=kNbYr8Szl5xh7JpaC8VsHuI6Og2jZTvKIc/4wjAEWnM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GzVtdlmVu1f3C5KWmJeKuub/ZWgI04cSxeTNnPSa+PHqAyGse4fCEwjM+Es8bLKlRpRLZXE+aDmAcF+b830lzt68RQ6QsoeFdgiLVeu6iCVesN5y55g+c9vT+DyPPrHZ5cNg7YU+8WIAeNykEC/bTNUrJfDQkYok3Z5+dbEeL90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aIgkC4Vh; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aIgkC4Vh"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2e716e3030aso15809961fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 00:44:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716968685; x=1717573485; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S1XyMvug7w7dhtxZdl8ZlGvff2YgfxxUHgfNNPJEirc=;
-        b=aIgkC4VhDFkGSlpcz3NPbMDKwR97q6csBvbafWQYVWhsMpCcZBRfq2SQ9IV8apsnf7
-         OntV39Lu4gbqPpTyRROPtd5fMcrOl96/fBfzh8r3kt2nvzrp7k4KI/zED/TD95Ms0FIa
-         9fOAaSENVgebAqO7G5PwZyvANl5jAZKvaQuBiz5MNdZdBMKW30gvDtySmihO48Y/spb1
-         RiuYxG/GXf1krAtxIsVQ3ZaI9PG0BZVZWlGWK3RDuBRAuwLiEYi3L0vU//fUyMqiZpgL
-         hm8uj6wYf46abh4lGNfM8HY1ONxKO3dwlOgfZVw5bdRzPDBqNuLO04g9tJoaooQ64GPG
-         lJNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716968685; x=1717573485;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S1XyMvug7w7dhtxZdl8ZlGvff2YgfxxUHgfNNPJEirc=;
-        b=ZcqXSOVJM2oadgUB13Nks48BRco2SJCsnX/QoBajjplvov6DqyJyal7YcyKHtBzn0D
-         DC8eJF+/Z1BDozXBK9QctrWP/Q8fPRaF2Rtm4Ibwpj6Co6kqkrFyEqxVHTrf5xEuZmuC
-         QwePz739Hr/YWayTvLalaE2IU1NKNLQQ03cWeS5NvPNGX0N1doU+xfXljnpiC0GS2/uU
-         VDJknC9X8+wyQ1r5BpjnR0yPkLblThHq4DsPuRqG1lFPw03+ukTpwWG3hmNcgIgbjWD4
-         sm8vl9vm71wlnxKAXAR2FA3jrZhOgeOaUKxxN9QR6R2HocbTJ8RXIWNuxtBHlShM09LL
-         lxmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjAfcIpQaODwWi5rkyfbqc7kz5cDxaR9gMICIU0bBOrSVE92uIk9XQlrjrfXtYM5ykng+NQs8ZRlP89+xKWcoCLsSuJX03q9tC9bZt
-X-Gm-Message-State: AOJu0YyJip7OZgUitGlkXaV/RifhODPLntvH0Iztx6BQ8cIJENdjR10K
-	/L+GfjSjGHzq4Ri1CAmuy7neRvx0Iko4jiV58UCzaKMFg1arUwDP5fQypcMezws=
-X-Google-Smtp-Source: AGHT+IHWA2lvLG0B0kntbUD/V5owakoa3EW0tQI6tq3UwCSFqELYaCxoJok/0cawUBov1/1KRXreEw==
-X-Received: by 2002:a2e:b05a:0:b0:2e7:c29:dadc with SMTP id 38308e7fff4ca-2e95b24e06amr72686241fa.34.1716968684582;
-        Wed, 29 May 2024 00:44:44 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e9816943d2sm6297271fa.61.2024.05.29.00.44.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 00:44:44 -0700 (PDT)
-Date: Wed, 29 May 2024 10:44:42 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
-	helen.koike@collabora.com, airlied@gmail.com, daniel@ffwll.ch, robdclark@gmail.com, 
-	david.heidelberg@collabora.com, guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, 
-	mcanal@igalia.com, linux-mediatek@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	amd-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] drm/ci: generate testlist from build
-Message-ID: <nsamdoevg6fhop3otikwsmu4ga6ysyrg2ogxbqhw3sqg2nbqq2@n5xbqid7ltiw>
-References: <20240529024049.356327-1-vignesh.raman@collabora.com>
- <20240529024049.356327-4-vignesh.raman@collabora.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tb4q1KZrM4taqduiG1Z92OTmha+uWC5LEBG+8tNaMVGgvzbkiFPEuE/qx65rq3op9pYMPPMG136Yj6C0KtQEqr1q8oD9yGg7TVrhRY2BcbHGrRRd0NJZ27Mt2RSzGYhNhNCf2R2aDlN6LVG1ep32/qGK+ISa4xnkJTB6TVwH7OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (2a02-a420-77-cc79-164f-8aff-fee4-5930.mobile6.kpn.net [IPv6:2a02:a420:77:cc79:164f:8aff:fee4:5930])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 04CB91F899;
+	Wed, 29 May 2024 09:26:59 +0200 (CEST)
+Date: Wed, 29 May 2024 09:26:58 +0200
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Caleb Connolly <caleb.connolly@linaro.org>, Alex Deucher <alexander.deucher@amd.com>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, Vinod Koul <vkoul@kernel.org>, 
+	Caleb Connolly <caleb@connolly.tech>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v4 1/3] drm/panel/lg-sw43408: select
+ CONFIG_DRM_DISPLAY_DP_HELPER
+Message-ID: <livf7gwhypjxncqhw73nibavga4b4xeqe3pqgoidvnk5653yzw@dssrwsfruajv>
+References: <20240528-panel-sw43408-fix-v4-0-330b42445bcc@linaro.org>
+ <20240528-panel-sw43408-fix-v4-1-330b42445bcc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,33 +49,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240529024049.356327-4-vignesh.raman@collabora.com>
+In-Reply-To: <20240528-panel-sw43408-fix-v4-1-330b42445bcc@linaro.org>
 
-On Wed, May 29, 2024 at 08:10:46AM +0530, Vignesh Raman wrote:
-> Stop vendoring the testlist into the kernel. Instead, use the
-> testlist from the IGT build to ensure we do not miss renamed
-> or newly added tests.
+On 2024-05-28 22:39:18, Dmitry Baryshkov wrote:
+> This panel driver uses DSC PPS functions and as such depends on the
+> DRM_DISPLAY_DP_HELPER. Select this symbol to make required functions
+> available to the driver.
 > 
-> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202404200800.kYsRYyli-lkp@intel.com/
+> Fixes: 069a6c0e94f9 ("drm: panel: Add LG sw43408 panel driver")
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
+Maybe good context to mention that the DSC<->DP discrepancy will be resolved in
+the future, otherwise this patch is slightly unclear for anyone who isn't aware
+of the current patch series and its context.  Other than that, for the change
+itself:
+
+Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+
 > ---
+>  drivers/gpu/drm/panel/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> v2:
->   - Fix testlist generation for arm and arm64 builds.
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index 982324ef5a41..2ae0eb0638f3 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -340,6 +340,8 @@ config DRM_PANEL_LG_SW43408
+>  	depends on OF
+>  	depends on DRM_MIPI_DSI
+>  	depends on BACKLIGHT_CLASS_DEVICE
+> +	select DRM_DISPLAY_DP_HELPER
+> +	select DRM_DISPLAY_HELPER
+>  	help
+>  	  Say Y here if you want to enable support for LG sw43408 panel.
+>  	  The panel has a 1080x2160@60Hz resolution and uses 24 bit RGB per
 > 
-> v3:
->   - Rename generated testlist file to ci-testlist.
+> -- 
+> 2.39.2
 > 
-> ---
->  drivers/gpu/drm/ci/build-igt.sh  |   35 +
->  drivers/gpu/drm/ci/igt_runner.sh |    9 +-
->  drivers/gpu/drm/ci/testlist.txt  | 2761 ------------------------------
->  3 files changed, 40 insertions(+), 2765 deletions(-)
->  delete mode 100644 drivers/gpu/drm/ci/testlist.txt
-> 
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
-
--- 
-With best wishes
-Dmitry
