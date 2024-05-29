@@ -1,91 +1,118 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A571386C6
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E516156F38;
+	Wed, 29 May 2024 14:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716992877; cv=none; b=f7lH5yh5TmFllyKgBmOfdkgIvF8xiVnHKsASxbDroHt+2c/ePGRS0dIkSeSWayKdi+4DF/jKzJoEopX31iRNTA+zwfolLLbksrradsCZyFMfTc1uZZlKpsmK8vz0elSQoLIqQiZyjKwIUC40eN9O+zZ9etT6+xHSkWAP4RuOBbA=
+	t=1716992924; cv=none; b=a+C+SIxbfjAqS4LCgnTwjFWZQAuPsYyOJitE8B5Qm9l/ciYlG6hm2qdRD+AS7RsTlmkLy5boYrpAgkLLYbzXUNDESQUKk6oNQ3fm2ceW0OjwoSmV+P7w0B43V1EuQrmyXNhVW3XSf/o1kIg33rFMnrahOAXBHLoLqakBZ+MV3xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716992877; c=relaxed/simple;
-	bh=wllaugfLH4XOoxwomJKK6MPaqTtVsABW1UD4EEKk+4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k5sIsSihP6hOFxeIauoXQ3NxHtiRzbbAHDedZp9k7wfyBA3qyDMmRPS875bcVTbXfrrTcYj4wA7wghwU0c2UWvTucZwmAPDkGlXEzgW65UdfEmDrtUBatWiQVKAD+W5WEERHc5VS8ynyf7Zz0MzaD+/stMwIr87+zmwuxNdwcM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=JWOEY5Fe; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1716992924; c=relaxed/simple;
+	bh=YMQyhhaP6Gg3VRgatRDCJBiv0lWaUNKjwv78w6uHqZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nmhMu8ikKxP4FwSntfSupSf8/xpxz8NWqAQl/mjgeJ4+TOg9TfZsVz1iiuNWZQaYUup5A+WW6DCR3FGz7yvWpKN83+OqKCCAnxn4EnuS7PSVqKSRHcaNech3Uu9Ur58ZGr6uFmxFNBxFRTBU+xSHtLA2LHXbPhi4u3F/CCDt+eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=mw8j/CgV; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="JWOEY5Fe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=wlla
-	ugfLH4XOoxwomJKK6MPaqTtVsABW1UD4EEKk+4c=; b=JWOEY5FeWD44RFriaKFC
-	Y/mqXRSe3P2VUVAqOZnYS6e541cu40MbqDwXjAH10ViFZ8+8N2fkUDvp2u5R8fTH
-	mOHeklMKaUvylxN5MBwvmw58lfi5+uyB96Ob8MwCNTxDYlihvcc2ZMSj0UO2sV2/
-	TY6QcNeRPZm8YsA/wMK6SNgTfxN3OpxLRbvUIWpKr/fCb3M2ErnWvMcEba0V5KXv
-	6jKZN09LMxmpWrwBVpwfBukjQ491dnuJJobNdngrsKdzLMAsAmxr21QXL86oVXCI
-	eILZfrm3aqIBneI1K7VlfYdlZwSU3OfsuCnteWLXxqcjACdSWEdeFrmV2zMESLsa
-	8Q==
-Received: (qmail 601684 invoked from network); 29 May 2024 16:27:46 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 May 2024 16:27:46 +0200
-X-UD-Smtp-Session: l3s3148p1@+AbhjZgZFLNehhYM
-Date: Wed, 29 May 2024 16:27:45 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"Feng, Kenneth" <Kenneth.Feng@amd.com>, "Ma, Jun" <Jun.Ma2@amd.com>, Evan Quan <quanliangl@hotmail.com>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH] MAINTAINERS: update email for Evan Quan
-Message-ID: <fhhtkw24ntbf7ahdtmt67stvuevi2sa7gg6sxyxezrrn3p3nn7@2ryodpxsm5ed>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	"Deucher, Alexander" <Alexander.Deucher@amd.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"Feng, Kenneth" <Kenneth.Feng@amd.com>, "Ma, Jun" <Jun.Ma2@amd.com>, Evan Quan <quanliangl@hotmail.com>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-References: <20240529114621.11795-2-wsa+renesas@sang-engineering.com>
- <BL1PR12MB51449A1977FA06BACE4FF306F7F22@BL1PR12MB5144.namprd12.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="mw8j/CgV"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1716992918; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Oje62Ov6FUBQ4DHAsaEy7GE8Yt2ouQ/knXBYAIm0bWE=;
+	b=mw8j/CgV/4aYJxy1mQgVGQg1YxAhvc0mxSSeSAgQkpRRCd8NaV8RXY7cZHl2bek/h80eaKAK/EREjWe/QcnSstPxHjDX2dqcXNIJM37g8RyFhapq4YpEzqu1IzVW140eEcv6y/OjkaAcJDdiiAYnt+0JiiJ+rh0L30NDQ4zl7Mo=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W7U1T.u_1716992916;
+Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7U1T.u_1716992916)
+          by smtp.aliyun-inc.com;
+          Wed, 29 May 2024 22:28:37 +0800
+Message-ID: <2dc48e89-cd3f-4736-8847-4d23bcad27e5@linux.alibaba.com>
+Date: Wed, 29 May 2024 22:28:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="j2otqm2jcsamjrln"
-Content-Disposition: inline
-In-Reply-To: <BL1PR12MB51449A1977FA06BACE4FF306F7F22@BL1PR12MB5144.namprd12.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/12] cachefiles: some bugfixes and cleanups for
+ ondemand requests
+To: Christian Brauner <brauner@kernel.org>, netfs@lists.linux.dev,
+ dhowells@redhat.com, jlayton@kernel.org, libaokun@huaweicloud.com
+Cc: jefflexu@linux.alibaba.com, zhujia.zj@bytedance.com,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com,
+ yukuai3@huawei.com, wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>,
+ Gao Xiang <xiang@kernel.org>
+References: <20240522114308.2402121-1-libaokun@huaweicloud.com>
+ <20240529-lehrling-verordnen-e5040aa65017@brauner>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240529-lehrling-verordnen-e5040aa65017@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi Christian,
 
---j2otqm2jcsamjrln
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2024/5/29 19:07, Christian Brauner wrote:
+> On Wed, 22 May 2024 19:42:56 +0800, libaokun@huaweicloud.com wrote:
+>> From: Baokun Li <libaokun1@huawei.com>
+>>
+>> Hi all!
+>>
+>> This is the third version of this patch series. The new version has no
+>> functional changes compared to the previous one, so I've kept the previous
+>> Acked-by and Reviewed-by, so please let me know if you have any objections.
+>>
+>> [...]
+> 
+> So I've taken that as a fixes series which should probably make it upstream
+> rather sooner than later. Correct?
 
+Yeah, many thanks for picking these up!  AFAIK, they've already been
+landed downstream for a while so it'd be much better to address
+these upstream. :-)
 
-> Evan no longer maintains the SWSMU code, it should be changed to Kenneth and Jun (CCed).
+Thanks,
+Gao Xiang
 
-Thanks for the heads up! Kenneth, Jun, will you send a patch or shall I?
-If you send one, please add:
-
-Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
---j2otqm2jcsamjrln
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZXO10ACgkQFA3kzBSg
-KbZHlg/9F+2c1F9o7iMtBCsbFoqlmiMCPU1elLljAwccCfdgR+XSvuE7E7E/yRy9
-EZhJ8IeaE8WmHWLNKoQkjwpLoCV6RtFeIaL+sHL3sDOwGPrN78zVTDAdbPC/09v3
-KsYmxGdftAPxiebSQ30Fqysp9lPt3P8f5BRAP1CFKj4j39p1mK/XiXliErVDgfw1
-hTOm/hA1xRa1w/7bxFiHz+kXXxW8K7sznyZUQvJKIisLbfYB4cgIc+VuWtlTlL9F
-/cvmmn03BpBHhd5Y5RzhjYBmmjurpxEFMnAUqadpLOSoQdhL4XnCs9d7LwYYNQJV
-MG+ccCYUNPZoYPUZ0whEx0booaXdK+o3eMmUvA1AAVnRSMWValopfRfFnnNSpO58
-vcrXUVe2yac/pphd86CAfgnL9iFkTsGCfoDfbPTOjBYYS/xXujbWzCLrpJlnSFwY
-sxJ7ZSf4iHewBB4ZafRQFQrplZL93l0fdMYou/wCtQU6QGDk2gKAurtuFLzTkJZ7
-salS1TNdA1vA9CJi69qQe4nOyR97FVcw10yn+ylBBtlZkYgE3m/fERMhM2Eht9z1
-1KGNUP7+heXTY9zd3db9jnhZaoXg+1Xv2H49PIKO2NT3i8yEq96QhkKUgnU72+ub
-m+QuzLTAaaQD93S4jwB4iWuBS5cNlXsggG1XMTQ0y4ZTz9mvd20=
-=VtWZ
------END PGP SIGNATURE-----
-
---j2otqm2jcsamjrln--
+> 
+> ---
+> 
+> Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+> Patches in the vfs.fixes branch should appear in linux-next soon.
+> 
+> Please report any outstanding bugs that were missed during review in a
+> new review to the original patch series allowing us to drop it.
+> 
+> It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> patch has now been applied. If possible patch trailers will be updated.
+> 
+> Note that commit hashes shown below are subject to change due to rebase,
+> trailer updates or similar. If in doubt, please check the listed branch.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> branch: vfs.fixes
+> 
+> [01/12] cachefiles: add output string to cachefiles_obj_[get|put]_ondemand_fd
+>          https://git.kernel.org/vfs/vfs/c/cc5ac966f261
+> [02/12] cachefiles: remove requests from xarray during flushing requests
+>          https://git.kernel.org/vfs/vfs/c/0fc75c5940fa
+> [03/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_get_fd()
+>          https://git.kernel.org/vfs/vfs/c/de3e26f9e5b7
+> [04/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_daemon_read()
+>          https://git.kernel.org/vfs/vfs/c/da4a82741606
+> [05/12] cachefiles: remove err_put_fd label in cachefiles_ondemand_daemon_read()
+>          https://git.kernel.org/vfs/vfs/c/3e6d704f02aa
+> [06/12] cachefiles: add consistency check for copen/cread
+>          https://git.kernel.org/vfs/vfs/c/a26dc49df37e
+> [07/12] cachefiles: add spin_lock for cachefiles_ondemand_info
+>          https://git.kernel.org/vfs/vfs/c/0a790040838c
+> [08/12] cachefiles: never get a new anonymous fd if ondemand_id is valid
+>          https://git.kernel.org/vfs/vfs/c/4988e35e95fc
+> [09/12] cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
+>          https://git.kernel.org/vfs/vfs/c/4b4391e77a6b
+> [10/12] cachefiles: Set object to close if ondemand_id < 0 in copen
+>          https://git.kernel.org/vfs/vfs/c/4f8703fb3482
+> [11/12] cachefiles: flush all requests after setting CACHEFILES_DEAD
+>          https://git.kernel.org/vfs/vfs/c/85e833cd7243
+> [12/12] cachefiles: make on-demand read killable
+>          https://git.kernel.org/vfs/vfs/c/bc9dde615546
