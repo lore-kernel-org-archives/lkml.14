@@ -1,57 +1,57 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3D515CD42;
-	Wed, 29 May 2024 20:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9645B1C9EB2;
+	Wed, 29 May 2024 20:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717015932; cv=none; b=O7rz9RlqUOyd9qkbJB1e8gGGaAdRa+eLemdPxo+ke6XkrAxQL2iZQHTNdG+y2gNAft9huxBUtqcRvbnEaOyOxqCPpz7JPu0KS956gQX4U4IIwrXUsb6KTiUrZCUEdfy5j/pQCNEv7UDQtXg0CsOXzyfsowRyN4/frHnnjEVSano=
+	t=1717015936; cv=none; b=Fg8oDR5Pk+mIJuiHmGV06tQsvuV96LCPJoS8T1WTURI3o7iIszTeAwgCgNRlru/3C4bBFX20MoXa9Ba2nOmBJddIaN8JidjelooN9hchZ9vZ0BCbKv97xBycxsduBiiWsIBl7ZTz/RVAoM/+CidjsBQDt6yncCIxgf41mIcKcjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717015932; c=relaxed/simple;
-	bh=bUSOfyZ1RS/JFlmZr8edz4J/gVf0uNdA3Hhjv4Qs/0w=;
+	s=arc-20240116; t=1717015936; c=relaxed/simple;
+	bh=u0Z77xfMGXhs2XExzinZRsH5K/fdyJeqGlVMGm0jhRA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X5COJe8Pq0RKiZwLTfg7nOgcT8E4SW8TjdLSI29r5rwX1xvuQMji4wyjFD8zmN9Hqz4iwCEaeg1iuhmCuU7r32sMxw75BkYkfA2EolyCgtoMf1A8FryBwuJZca47VuMrEgej7ExdPsgigiJWXMkjCbsAdrvEV9xzDgJBCjKneeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kE7p/ULs; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=QELU5an/fkZHMjbFFwR2Cvfy25jhTi8fmOhJsfuDMPGmdPIbv7WoDNu6IhsGFEFJYuReZfBP+Mu8xeNgSz6eBft/jpYLA1HQJOvWQVu8e/MBvjmJruCM4Sy9crDNKoF9flH+aoMFlgURPf8wwEPCiHGHq9PWSDsR5dupEqgz9d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MtGLHg4Y; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kE7p/ULs"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f4a52d2688so1596665ad.3;
-        Wed, 29 May 2024 13:52:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MtGLHg4Y"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7022c8418d9so200134b3a.1;
+        Wed, 29 May 2024 13:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717015930; x=1717620730; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717015933; x=1717620733; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DTb5O4K64K41d0IyPGOBYfXW5RgD3BIXwCmpDCC81V4=;
-        b=kE7p/ULse+7+EOHOFMZ4/llWalkAE12lZevK23fAy1put7Njz8EY3kIett5aWcz48f
-         id2/r/cIZ2lWq6C4QdkMbruEDMknfoE7SvykLPnJPSZt47tm50Cs8kt4hOotaScvijhz
-         fS6cviA0mPUfCh89RYfdX4Fc7nS+cwby2GQBToEi4T5Y8Qw5jm6/7LQmRTAZtPWWan++
-         Uwrn2Fy3b6QgPYVpkB/ETUO8/+9h33VvJQHrqZ8QYaRjBwlI7LwBdhZnyAX6GfyS27Kc
-         cQjdM6utKpm8NcWWeaL7AgZt3rgXRq+RV+uLqljkGXjpDN49JzCvAkROb+JBU9EKT86w
-         Ctbw==
+        bh=muFhBvZKYg7NYQtZst6SGV6fQcMf41edf97IkKuvcJY=;
+        b=MtGLHg4YhGDqDpPsooxcVoMyx/C9w3m4AM6BOjjfk0apjKMrSomwxqcn7e5wNYheV8
+         6uUwPxkIMhtrIROtK7uociVMuMaoGWwsiIkMi3F+IzO6z5AULxHdxSGRd8pqNyxjmDvq
+         c2ij5GUM0kc3PjbAP+fksggm95tbq9Fc92A7jjNXc6Eg7jc0/jk51WakbEUKoqqefgq1
+         /CPPHba/sAEDCk2DHMtHIR4l1UqrfvW1WudqWs7i2//SEgSnr5Py42fAiGlV5mPG+fQv
+         kHzfTNRpjvCN7+/26NNKikkFZloCnaM2l1YHvKQu+EntrcgBJY+m0sTqQrGtz3zGbRbN
+         l0Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717015930; x=1717620730;
+        d=1e100.net; s=20230601; t=1717015933; x=1717620733;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=DTb5O4K64K41d0IyPGOBYfXW5RgD3BIXwCmpDCC81V4=;
-        b=VzFxS8zlIwT5CY2Q4rlAxgUEFv42mQ57VPnP1z9yqJ7jxbItwbCnNwM2JnLtRc+atZ
-         c6Png/hCvaY209YMCH7x8p0FYS8LUpa0HHbU/x8JBex/B/BRR2LdE5v2bMpH8L/0HKcc
-         vwTEm8RaWeS4EogNhoqWi0IUJ7Z7T+BfPgB6hyjFGBXApjfDAg7InU7jTjFVqWssb2K1
-         8g4Mp2s2bFunErdZs7pR7I8/RfRg8aB1EOC7m0Q0nndbsGeZUlCsdwEywfzXPCD4VACm
-         901NQ9/qs9W1CG51M0ofvEGbcxhPnEv4w4ahbe7z4gWt6UhPfPSE/YOlp2vHfqygSJPU
-         F18A==
-X-Forwarded-Encrypted: i=1; AJvYcCVC9yXuEcBqA1pNRbmQgiFlwDuQ8XBoDrXsR56/zUo7Y1T90UkGlyTqTx8zjRCgzztkEqESzl9y+y73B8V06phHHv+1ojK2HDRoC5KFD5tly2p7fooN0dSb/4hqeftQQ/m6EqRSVigrug==
-X-Gm-Message-State: AOJu0Yzz1OrvzXdqVGuPfOajbs+3QtSnAx/zUW707VomRi/G9p0NzX2N
-	J76IEfeWP4RGjxMChjWD1NThPpT9nEtXBRnanZ93yY1KO4LuH1xeIFyWJA==
-X-Google-Smtp-Source: AGHT+IF5WVT7A9L0jfAUQQkVxbQvTT/DWCF74Mtgf+FDPnpSah8a7TgliWV/e+E++4X64a6BXdJz+A==
-X-Received: by 2002:a17:903:2b0e:b0:1f4:8bb7:6862 with SMTP id d9443c01a7336-1f61960240amr2634235ad.5.1717015929934;
-        Wed, 29 May 2024 13:52:09 -0700 (PDT)
+        bh=muFhBvZKYg7NYQtZst6SGV6fQcMf41edf97IkKuvcJY=;
+        b=UhA+c5CgjI6nfb0DNf4GmJWGHQzKhsNN7ySSEuC0zRBUqNUn4tESw4yQqwyNr2Mbj/
+         mZ9TvayTyaZKicyxU0sRPlAuyQhF76xBilz4ORdH78chByricJaVbTpcTpPLArpmpGv8
+         M2/CtqBU3lniQM7lphsxLOzZeebJEW1FuzUWMQTVn8eLkZjeAu0ZrCKiOp5U3zgD3Gxf
+         BVhP5lzdc5ZrwkbZC2fni3EoHbGR3ICcv08P5dVUND2k6HJtC8hU8DK2eMCFdMNBrwZI
+         ziD8I+6pcxg5x7qUcXJZH3LhNU1HjZX7R7e2Wuq3jWuWYW+0FAGrs6OiBTqhrS8Pn13H
+         I3sw==
+X-Forwarded-Encrypted: i=1; AJvYcCUw0rHmaPHn+Qdm6llljg9371EeOmTjIR+J3UFmitE3E60rWcCDNBwkYQqgZbhQ8LjxFZjkayA5WVnaKBJpNyXVaG+uSd60BTt5EmIurAK0iSkR1wq/XvWjBQhL9CaSN6gocEmLoEEpww==
+X-Gm-Message-State: AOJu0YwVwhSVEO2pkew83se1DiqZ4XhwLcvlDj42ykMc0jXLL261hKc4
+	P+LpT5VDuT9+GsmSXC5YU5aQoPNwMdsscORmAJTwpL6S9C8vu0TOhnZqIQ==
+X-Google-Smtp-Source: AGHT+IEGw7SKmVfRKHHfGkPtZqhcVJCau2k3RAJwV9pre0e0lLMkTjLvp9o+37saOzteGSRdroXc5w==
+X-Received: by 2002:a05:6a00:301b:b0:702:2f9d:ee84 with SMTP id d2e1a72fcca58-702311dc653mr172234b3a.25.1717015933385;
+        Wed, 29 May 2024 13:52:13 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f476f665b0sm79285365ad.250.2024.05.29.13.52.09
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70227b3007dsm851859b3a.106.2024.05.29.13.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 13:52:09 -0700 (PDT)
+        Wed, 29 May 2024 13:52:12 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
 From: Guenter Roeck <linux@roeck-us.net>
 To: linux-hwmon@vger.kernel.org
@@ -64,9 +64,9 @@ Cc: Hristo Venev <hristo@venev.name>,
 	linux-kernel@vger.kernel.org,
 	Radu Sabau <radu.sabau@analog.com>,
 	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 1/3] dt-bindings: hwmon: jedec,spd5118: Add bindings
-Date: Wed, 29 May 2024 13:52:02 -0700
-Message-Id: <20240529205204.81208-2-linux@roeck-us.net>
+Subject: [RFT PATCH 3/3] hwmon: (spd5118) Add PEC support
+Date: Wed, 29 May 2024 13:52:04 -0700
+Message-Id: <20240529205204.81208-4-linux@roeck-us.net>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240529205204.81208-1-linux@roeck-us.net>
 References: <20240529205204.81208-1-linux@roeck-us.net>
@@ -78,79 +78,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add device tree bindings for the SPD hub present in DDR5 modules.
+Add support for configuring PEC (Packet Error Checking).
 
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
-I am not sure about the "pec-enable" property since it is not really
-a chip property but a SMBus property. It is also not chip specific;
-there are other chips with the capability to enable or disable PEC
-support. There are no generic SMBus bindings, though, so I don't know
-a better place (or name - maybe it should be 'smbus,pec-enable', but
-there are no other similar bindings, or at least I didn't find any).
+This patch depends on the patch series at
+https://patchwork.kernel.org/project/linux-hwmon/list/?series=857097
 
- .../bindings/hwmon/jedec,spd5118.yaml         | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/jedec,spd5118.yaml
+ drivers/hwmon/spd5118.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/jedec,spd5118.yaml b/Documentation/devicetree/bindings/hwmon/jedec,spd5118.yaml
-new file mode 100644
-index 000000000000..1717f75129da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/jedec,spd5118.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/jedec,spd5118.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
+index 440503d09d13..eb21bf3dffd7 100644
+--- a/drivers/hwmon/spd5118.c
++++ b/drivers/hwmon/spd5118.c
+@@ -33,6 +33,7 @@ static const unsigned short normal_i2c[] = {
+ #define SPD5118_REG_VENDOR		0x03	/* MR3:MR4 */
+ #define SPD5118_REG_CAPABILITY		0x05	/* MR5 */
+ #define SPD5118_REG_I2C_LEGACY_MODE	0x0B	/* MR11 */
++#define SPD5118_REG_DEV_CONFIG		0x12	/* MR18 */
+ #define SPD5118_REG_TEMP_CLR		0x13	/* MR19 */
+ #define SPD5118_REG_ERROR_CLR		0x14	/* MR20 */
+ #define SPD5118_REG_TEMP_CONFIG		0x1A	/* MR26 */
+@@ -50,6 +51,8 @@ static const unsigned short normal_i2c[] = {
+ 
+ #define SPD5118_CAP_TS_SUPPORT		BIT(1)	/* temperature sensor support */
+ 
++#define SPD5118_PEC_ENABLE		BIT(7)	/* PEC enable */
 +
-+title: JEDEC JESD300-5B (SPD5118) compatible DDR5 SPD hub
+ #define SPD5118_TS_DISABLE		BIT(0)	/* temperature sensor disable */
+ 
+ /* Temperature unit in millicelsius */
+@@ -217,6 +220,18 @@ static int spd5118_write_enable(struct regmap *regmap, u32 attr, long val)
+ 				  val ? 0 : SPD5118_TS_DISABLE);
+ }
+ 
++static int spd5118_chip_write(struct regmap *regmap, u32 attr, long val)
++{
++	switch (attr) {
++	case hwmon_chip_pec:
++		return regmap_update_bits(regmap, SPD5118_REG_DEV_CONFIG,
++					  SPD5118_PEC_ENABLE,
++					  val ? SPD5118_PEC_ENABLE : 0);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
 +
-+maintainers:
-+  - Guenter Roeck <linux@roeck-us.net>
-+
-+description: |
-+  JEDEC JESD300-5B.01 SPD5118 Hub and Serial Presence Detect
-+  https://www.jedec.org/standards-documents/docs/jesd300-5b01
-+
-+select:
-+  properties:
-+    compatible:
-+      const: jedec,spd5118
-+
-+  required:
-+    - compatible
-+    - reg
-+
-+properties:
-+  compatible:
-+    const: jedec,spd5118
-+
-+  reg:
-+    maxItems: 1
-+
-+  pec-enable:
-+    description: Set to enable PEC (Packet Error Checking).
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        temp-sensor@51 {
-+            compatible = "jedec,spd5118";
-+            reg = <0x51>;
-+        };
-+    };
+ static int spd5118_temp_write(struct regmap *regmap, u32 attr, long val)
+ {
+ 	switch (attr) {
+@@ -238,6 +253,8 @@ static int spd5118_write(struct device *dev, enum hwmon_sensor_types type,
+ 	struct regmap *regmap = dev_get_drvdata(dev);
+ 
+ 	switch (type) {
++	case hwmon_chip:
++		return spd5118_chip_write(regmap, attr, val);
+ 	case hwmon_temp:
+ 		return spd5118_temp_write(regmap, attr, val);
+ 	default:
+@@ -338,7 +355,7 @@ static int spd5118_detect(struct i2c_client *client, struct i2c_board_info *info
+ 
+ static const struct hwmon_channel_info *spd5118_info[] = {
+ 	HWMON_CHANNEL_INFO(chip,
+-			   HWMON_C_REGISTER_TZ),
++			   HWMON_C_REGISTER_TZ | HWMON_C_PEC),
+ 	HWMON_CHANNEL_INFO(temp,
+ 			   HWMON_T_INPUT |
+ 			   HWMON_T_LCRIT | HWMON_T_LCRIT_ALARM |
 -- 
 2.39.2
 
