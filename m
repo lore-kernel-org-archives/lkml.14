@@ -1,108 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1F017A902;
-	Wed, 29 May 2024 10:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A18017A902
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 10:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976848; cv=none; b=cwbpd+JjaZgkDw+f/KSknAfAQIJRr1lmB6GWDuuiHe91moVRKseGw1vioEPWqnMe4xQtRjovCu12DAWIEvkuhobaDNsGj8ISg7fR9wqygkM9vJpAek5flgTWqT9WpIRCP1UxY7ES755yNdKVzgtW81C2SMCgxXu5Q7P73UQOtNY=
+	t=1716976850; cv=none; b=pAY4oelo3zff/nyvrcznsWGJ0uI7DoQTeyU+9Mt2WoG6+J2R1I1VFMqLsbHNaOps6y5q9ACW5fnzgapPRJtVwKyyeh+5UdDDKL1WqLJl5WUsN/J1azadw/x+18yobc9BnQKB6liShBKTrtDgKGVcWzd3K6AC3od66VNocfHQv3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976848; c=relaxed/simple;
-	bh=6+6AnpQgR3pDE8mI5akLFxEbAHbXPqAvUTnwheuwBVE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bk9iyBenKmTM0mahu5w5Kt++6IeyzkUbtbs7hOXzOOo8Zn1jjT9D1QH++fvJLQ28MV7PVdJhRJHWe5iyTFqVMaHdUf2LtOrtlNSfXhh01wIlFEC/QLuALTDNZ/XznWxaVAVnCW8AAvrX+6vjpR2J0r5ojLD1yCSQgEmUfnnNiUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80677C2BD10;
-	Wed, 29 May 2024 10:00:45 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Fix GMAC's phy-mode definitions in dts
-Date: Wed, 29 May 2024 18:00:25 +0800
-Message-ID: <20240529100025.2865868-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1716976850; c=relaxed/simple;
+	bh=JkIX8xKo+lNY07uEq9QS69wNHFvrTozc/et+eiZHLE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FxaIyhhj4gLnnfTCddqQphZp3bGnvh5K42rFDNDeWLl4ttu7sFmAAQduwQJxXJUi3/yyNlgnJPbZVVIIY26kkbfd+1AmqGw0CwQpQZd3BvqKoxOEeSDJoR23xvRDiwzs3TJcgxDzZgzcSq+YXxtuPtGH7l8Yjr+Dr48HOKd5EDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Z032jTVm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Z032jTVm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12ECAC4AF08;
+	Wed, 29 May 2024 10:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716976849;
+	bh=JkIX8xKo+lNY07uEq9QS69wNHFvrTozc/et+eiZHLE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z032jTVmh53cyY1k9uthsBXu6CX9bXQIlZj3fBscYA0lGqhqfILLHqI86PXjP5vRp
+	 2QgJRBewVMKiqOJs4Ouf+3StxL9/NpQFQNHpK/q1M3UwhOOeBAMQ69IsLSPVciU5tR
+	 rruJLA4t68ssP5VhkymRvzHKVzWiFmjrrRpzt9wY=
+Date: Wed, 29 May 2024 12:00:54 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Soumya Khasnis <soumya.khasnis@sony.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org,
+	daniel.lezcano@linaro.org, festevam@denx.de, lee@kernel.org,
+	benjamin.bara@skidata.com, dmitry.osipenko@collabora.com,
+	ldmldm05@gmail.com, srinavasa.nagaraju@sony.com,
+	Madhusudan.Bobbili@sony.com, shingo.takeuchi@sony.com,
+	keita.aihara@sony.com, masaya.takahashi@sony.com
+Subject: Re: [PATCH] reboot: Add timeout for device shutdown
+Message-ID: <2024052935-think-gaffe-80d4@gregkh>
+References: <20240529083224.GA71473@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529083224.GA71473@sony.com>
 
-The GMAC of Loongson chips cannot insert the correct 1.5-2ns delay. So
-we need the PHY to insert internal delays for both transmit and receive
-data lines from/to the PHY device. Fix this by changing the "phy-mode"
-from "rgmii" to "rgmii-id" in dts.
+On Wed, May 29, 2024 at 08:32:24AM +0000, Soumya Khasnis wrote:
+> The device shutdown callbacks invoked during shutdown/reboot
+> are prone to errors depending on the device state or mishandling
+> by one or more driver. In order to prevent a device hang in such
+> scenarios, we bail out after a timeout while dumping a meaningful
+> call trace of the shutdown callback which blocks the shutdown or
+> reboot process.
+> 
+> Change-Id: Ibfc63ca8f8aa45866cbe6b90401d438d95eca742
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/boot/dts/loongson-2k0500-ref.dts | 4 ++--
- arch/loongarch/boot/dts/loongson-2k1000-ref.dts | 4 ++--
- arch/loongarch/boot/dts/loongson-2k2000-ref.dts | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+Any reason you didn't run this through checkpatch.pl first?
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-index 8aefb0c12672..a34734a6c3ce 100644
---- a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-@@ -44,14 +44,14 @@ linux,cma {
- &gmac0 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	bus_id = <0x0>;
- };
- 
- &gmac1 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	bus_id = <0x1>;
- };
- 
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-index 8463fe035386..23cf26cc3e5f 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-@@ -43,7 +43,7 @@ linux,cma {
- &gmac0 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy0>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
-@@ -58,7 +58,7 @@ phy0: ethernet-phy@0 {
- &gmac1 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy1>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-index 74b99bd234cc..ea9e6985d0e9 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-@@ -92,7 +92,7 @@ phy1: ethernet-phy@1 {
- &gmac2 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy2>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
--- 
-2.43.0
+:(
 
