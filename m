@@ -1,128 +1,120 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD8D168C3A
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1BF168C3B
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969962; cv=none; b=kCXZ/g06MpgiENjrPizRemN3TEQ2v7ZQf8LkFaZiQ99HfaiG+kDa/G0rTmqbdXWLtx8vfK97VStWBZPIVzxHLvMYhggdQE1rtCmc0urWamCKOdbHXDa9+dnoQIRPW/xKYK4GLvPi3B8bcGo0fM8dhkEFpK+eLhEMIpzgONARZGY=
+	t=1716970001; cv=none; b=Wz4cR1owuJQEhVSxYplKfCVHWhstQdp98jJJJYOY43BnIItzhvP96f9skQsr46NGG/URa+nxI7/0xq+gSjPRJrv89JR4EOo19HuMj1wH9FtRpBDrZz8dVziKuDAFOsePbpUVa3ImfI7UyJ0ZaK5BSQxH0RPsmhKXfyuHmfTcE8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969962; c=relaxed/simple;
-	bh=e7seYhpXUI67eJGOAuOpL9ZC55dxEPiWops66jBMc6I=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7YOjQOx74jMu8AgXVqVCa+AkNojMAAYoMNSMI0B1BTNrTWkxLJowipaK8D/hkuwXTepbGMPQ2km70cjmYciZQKk4pp4YfMSxCeX0NSNkL3N/C1jDGa0vi+RBadkCtMtjeG3GgVzPms3nzNKimnpAtkGoycIWZDTRtcLemRlC4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AWxjrAvN; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1716970001; c=relaxed/simple;
+	bh=KMlPyALNcmol9ih45kPl4G8oK06PC8+I1ZcxbqQgksk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SMXoXk0QhVfSbAuiO+6dA7anv7xGCevPeMWuRvbv72mMpuoLCqKgkIqvZ6whj7U+qkXgZwAsps1NGH8p1e+77zbTqSdJAUnBhr8prJ8oy7i6XFY9sfMMToeA9GtgRCM84K2prDiuEqKj7wggT+i/2ZLGs3ZptIAWFT7yX4DlyOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jyqzYE5g; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AWxjrAvN"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-354c5b7fafaso1466314f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 01:05:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jyqzYE5g"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5295e488248so2125120e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 01:06:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1716969958; x=1717574758; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=N5XpAlzs8/5dy/UfJxZhXqs4EkV35bosYx2T12GiUv4=;
-        b=AWxjrAvN/aF+FHqn6/PygoTmC/we3guRzLHEfggqkJ2ohI7w4pXnGf1zmrsDykifuh
-         s/OhW8HBrENpfjSSviqW6CLCzU/HHjBSwTQlDeAV9AuEm+KFH+AauC+0QYqfhdMlT2QH
-         YC7VqeWiy3JCJN9URaVjNs+mkW7wR/7OGh77S5PU9c5oQ1g8efEwhwP/Ibw4wzgV47e9
-         hHJplN7kk6yx3jZH7mCv9CrRMf1f/UQE38ZE8+IuMGjPipmqSE1Hbmigz+HLsv2otACp
-         YwgMxrOJJXkFgujHTPrq/Gd0DFRWCmGrOhhJB+7N3npGUNUT0e6w2AWUQOH4WvW94Ksr
-         kNFw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716969996; x=1717574796; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RTSiUFlqkmvNoNz/S7kke8O9CZuW/PMI0ZvnUNNmSrw=;
+        b=jyqzYE5gww42Yz4DxhZPJGl9ge2GiCEkrWohgCYApBgnPglM7282o2xeQsQ3ETTgiP
+         RxNSfBIRNZg9kZfuUqNYtV02NMYHgSX0J4gmIn9ig9nx3Z3kbdYZ6deSQvzzTVj48fr1
+         Vl2XqmmBdOed1i5PlgHZX4/JUWIvKd7RTuObUgSgv+4e1ekCgChWMKptOcpQSF98ufeI
+         8DYYAzAj7vBBkr5WEqTtMK/f64NYz+eaU8wIHXQhr1CLmzW3UxfKjue2YtbAZYIxen70
+         wUfGjMZrqa1FVY/9myHsapCFM2SILae/VV/ly38QspFmZjX0y6VAY0f37oheortT1SFd
+         kXWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716969958; x=1717574758;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N5XpAlzs8/5dy/UfJxZhXqs4EkV35bosYx2T12GiUv4=;
-        b=cKJtLWD2eMcAkNhCndHmc3zFlhVej8XyKzWZXtKwPDeRem9Nb637JIZ3N/LAx8ydes
-         4iAOOAmJO7J+fVUMONDcPgtagKp3sBoFUNCJVU0ELYT0FhviAJ0QyBidSoIXU9T19h3g
-         230lQhROIVUkXze/H/hzIYpUOHI/7O1daLyvjlh+s5kgJNyGcvzjAtRvJtT/juyXZme8
-         cfrN6idHcvadNGTf1fqC822i/MLouuN9xYl+253Rs1Lx8yuJHDU0dZ/n5P3/BgArEU2T
-         8Jc6c4HTVbOIcofabvY0y+VoPefmaq4Of+nKDthhbrQFfjCtuhyOw2BhhM+r4VpfcrR/
-         zOnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZtqa8O5+w44zBRaq99EafsbCsSejF7x5pJkdLpYPLpTApntnMMppluzxEvHRq0MGTngu0Y7Dl5T6dPHqEHYG0HeNn84Rf77BD+rCh
-X-Gm-Message-State: AOJu0YzQi/Y68Wz+LDypvIGjm3FYfnko9I+jxaBbdBtpa0EMBWjcAzG0
-	6x79W/32LHL3/MQPKE962w5rn/tZd+ibf1BqKf8jpIsm3GRDD5kjvsQ1COIkbpo=
-X-Google-Smtp-Source: AGHT+IEWL+ZvoWTTto3nvB8MwaNuX1ufrqSVnU1SJZSJmLczqxuu5qf+e7ikQWSXZHaCbOMhNsFeCQ==
-X-Received: by 2002:adf:f1c9:0:b0:351:c934:e9e6 with SMTP id ffacd0b85a97d-3552fdfa7a8mr9781890f8f.64.1716969958385;
-        Wed, 29 May 2024 01:05:58 -0700 (PDT)
-Received: from localhost.localdomain (62.83.84.125.dyn.user.ono.com. [62.83.84.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a0908e4sm14132958f8f.63.2024.05.29.01.05.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 01:05:58 -0700 (PDT)
-From: Oscar Salvador <osalvador@suse.com>
-X-Google-Original-From: Oscar Salvador <osalvador@suse.de>
-Date: Wed, 29 May 2024 10:05:56 +0200
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH v4 12/16] powerpc/e500: Encode hugepage size in PTE
- bits
-Message-ID: <Zlbh5Bwsx7WqEEWr@localhost.localdomain>
-References: <cover.1716815901.git.christophe.leroy@csgroup.eu>
- <10eae3c6815e3aba5f624af92321948e4684c95a.1716815901.git.christophe.leroy@csgroup.eu>
+        d=1e100.net; s=20230601; t=1716969996; x=1717574796;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RTSiUFlqkmvNoNz/S7kke8O9CZuW/PMI0ZvnUNNmSrw=;
+        b=bPjGRxno+nh8oPkB5f+27qnaHIsyRBIOmMdBPnog0n0Xl+F9w4SAf1FSt/iF/Pa4tI
+         E76rk2JqUZefXdNjxQEY0jx51fi/JV/WOvmHb4RRfJeMJBTl5vX9OZaZ2HWGuBq4zjUk
+         lQsVeOJW7/H55nwpzQQZOuovtuP7drj3kdiqa2aglqyYvWPrrRR862xx3Nrmtz81dUtb
+         XUfYLImXZZWK66kkZBolbuRX+zHpqDie8dWiA2xHJBFS/YrrcvtB/vyItWdhtPW8u3sK
+         ozol/TVfejKTryGKy6PxBxjOaaDESJRSRBQnERb0J/6tpG3dY3CaGRrjycECHocgyoVl
+         C3Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCFLJ5hghPq/RNCJ4WIJwaubWUx0PoXMPM+3zSKCzqkyuko711DlganWebHH8n0dzTHzVqd/xhGZwHzlcZMLx5mTsMc30ohdNqzHed
+X-Gm-Message-State: AOJu0YzFfAEf8IqS4eb8W8u8rlzActDXDYudmqHZeCV16WwaE1XR3gob
+	npjxxhHsOFNJHMs5mlQsXr68QsRwi9RcXYjjxjh+j9kjsfrvpC2mcvClLIstf5c=
+X-Google-Smtp-Source: AGHT+IH/SwMX52gxKBB8D0lQdRpnYx4BvSNc36lN8ZNxmso71kU/Y0Tqv6DyKinhb/feekEPcZl6QQ==
+X-Received: by 2002:ac2:4206:0:b0:528:5301:bae4 with SMTP id 2adb3069b0e04-52964ca7358mr9020474e87.35.1716969996000;
+        Wed, 29 May 2024 01:06:36 -0700 (PDT)
+Received: from [10.1.5.19] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100f163a8sm201920345e9.13.2024.05.29.01.06.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 01:06:35 -0700 (PDT)
+Message-ID: <0b737c86-25bd-4bc6-b1c1-1011e15bccfa@baylibre.com>
+Date: Wed, 29 May 2024 10:06:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10eae3c6815e3aba5f624af92321948e4684c95a.1716815901.git.christophe.leroy@csgroup.eu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/6] dt-bindings: thermal: Add a property to select the
+ aggregation type
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, rafael@kernel.org,
+ daniel.lezcano@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: rui.zhang@intel.com, lukasz.luba@arm.com, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240524143150.610949-1-abailon@baylibre.com>
+ <20240524143150.610949-5-abailon@baylibre.com>
+ <824a9871-1fd4-4b92-a3b5-e57a126dac53@linaro.org>
+Content-Language: en-US
+From: Alexandre Bailon <abailon@baylibre.com>
+In-Reply-To: <824a9871-1fd4-4b92-a3b5-e57a126dac53@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 27, 2024 at 03:30:10PM +0200, Christophe Leroy wrote:
-> Use U0-U3 bits to encode hugepage size, more exactly page shift.
+
+
+On 5/27/24 08:55, Krzysztof Kozlowski wrote:
+> On 24/05/2024 16:31, Alexandre Bailon wrote:
+>> This adds a new property named "aggregation" that could be used to
+>> select the aggregation type when there are multiple sensors assigned
+>> to a thermal zone.
+>>
+>> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+>> ---
+>>   .../devicetree/bindings/thermal/thermal-zones.yaml        | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+>> index fa7a72e2ba44..e6e4b46773e3 100644
+>> --- a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+>> +++ b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+>> @@ -111,6 +111,14 @@ patternProperties:
+>>             coefficients are ordered and are matched with sensors by means of the
+>>             sensor ID. Additional coefficients are interpreted as constant offset.
+>>   
+>> +      aggregation:
+>> +        $ref: /schemas/types.yaml#/definitions/string
+>> +        enum:
+>> +          - avg
+>> +          - max
+>> +        description:
+>> +          Aggregation type to use compute a temperature from multiple sensors.
 > 
-> As we start using hugepages at shift 21 (2Mbytes), substract 20
-> so that it fits into 4 bits. That may change in the future if
-> we want to use smaller hugepages.
+> Hm, why exactly this is a property of hardware? Why on one board you
+> would like to average and on other use max? I can only think of a case
+> that some sensors give inaccurate data. Otherwise it is OS policyIn the case of Mediatek SoC, we only need max temperature.
+I am not really sure if there is really an use case for the average.
+Maybe I should drop average if no-one has a use case for it.
 
-What other shifts we can have here on e500? PUD_SHIFT?
-Could you please spell them out here?
-Or even better,
-
+Best Regards,
+Alexandre
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  arch/powerpc/include/asm/nohash/hugetlb-e500.h | 6 ++++++
->  arch/powerpc/include/asm/nohash/pte-e500.h     | 3 +++
->  2 files changed, 9 insertions(+)
+> Best regards,
+> Krzysztof
 > 
-> diff --git a/arch/powerpc/include/asm/nohash/hugetlb-e500.h b/arch/powerpc/include/asm/nohash/hugetlb-e500.h
-> index 8f04ad20e040..d8e51a3f8557 100644
-> --- a/arch/powerpc/include/asm/nohash/hugetlb-e500.h
-> +++ b/arch/powerpc/include/asm/nohash/hugetlb-e500.h
-> @@ -42,4 +42,10 @@ static inline int check_and_get_huge_psize(int shift)
->  	return shift_to_mmu_psize(shift);
->  }
->  
-> +static inline pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
-> +{
-> +	return __pte(pte_val(entry) | (_PAGE_U3 * (shift - 20)));
-> +}
-> +#define arch_make_huge_pte arch_make_huge_pte
-> +
->  #endif /* _ASM_POWERPC_NOHASH_HUGETLB_E500_H */
-> diff --git a/arch/powerpc/include/asm/nohash/pte-e500.h b/arch/powerpc/include/asm/nohash/pte-e500.h
-> index 975facc7e38e..091e4bff1fba 100644
-> --- a/arch/powerpc/include/asm/nohash/pte-e500.h
-> +++ b/arch/powerpc/include/asm/nohash/pte-e500.h
-> @@ -46,6 +46,9 @@
->  #define _PAGE_NO_CACHE	0x400000 /* I: cache inhibit */
->  #define _PAGE_WRITETHRU	0x800000 /* W: cache write-through */
-> +#define _PAGE_HSIZE_MSK (_PAGE_U0 | _PAGE_U1 | _PAGE_U2 | _PAGE_U3)
-> +#define _PAGE_HSIZE_SHIFT	14
-
-Add a comment in above explaining which P*_SHIFT we need cover with these
-4bits.
-
- 
-
--- 
-Oscar Salvador
-SUSE Labs
