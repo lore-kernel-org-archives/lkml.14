@@ -1,93 +1,84 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312223B295;
-	Wed, 29 May 2024 12:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275CA13699A;
+	Wed, 29 May 2024 12:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716985194; cv=none; b=U9gX6WTT6OhzYvYwlj6OzANuIWPY2TlONb+j3jnbyH1V147wmpEnvlWTN7gZZ0ieytyUekx1U5N7J8BpgTEjOT2quh9nV11rLO6G36aI34IgEurAEZD0ZNC7cPV4VIJ+FlxPrsDJ4BiOWXLbbAhXek7IGxQKWa2FlaFG1W27dTo=
+	t=1716985231; cv=none; b=Rv3CED12J0AS7mQoU8ceZQxjjT3tN5zB2a7Ae/iVlD7RjP1uYDmoxi8Xs6+MZHF62ypkhsLYq4UIpTbw32zlmz4wJUn2Xulx4hEd/CGrvR103i9q9lXmOOzSoesen0Yw8tR42kRvqrGV54zGT9syRsPfGZKHclDRSWl6jMTxU58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716985194; c=relaxed/simple;
-	bh=CWPz6Xw+R/6hqHTBZXF/4XxF7/FtqLA8AQ+Cyvx4n0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YdOcJrQ2xB+0swOQKdK99Wfr137tvAq97ADZRoyraoboUaWXwoE6OOHuIh2uHHPcZdls3um3kILXHekKxsZqk4B2O6soNPR/5HJBtS/jJFQn7OK4JkvkTHtpcq5jFyoQ8mtaL7HdRSP/3PqAdSa+lCp+eDx80q2n9eiDTRn564g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=OPj8tQBm; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1716985231; c=relaxed/simple;
+	bh=zjr/Vpc8ZTFCMrq5QTgDG0SNTzCLyB69RToX1iQy6pI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=RPxLLhBFN8bDWiN2JoH68kag+kUWDYAwotdSFQJySrQWkDar5JsDEXLWZz+8BmMejtDuf0aWfUK6r6ZWTjWXBGw/UzucShThpkWx5oIPyDOImNKtWoxRM5VsXyVeXv0Q6uUja0MWYe1hGjG0sMhu4YbebcB04cDJEuWVzked/74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arF9ebZd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OPj8tQBm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=1IwE9ubjZa/q19rvpgXW9y7s5lQvLukWHXDIBxOU368=; b=OPj8tQBmUH5AeKQ3CUKS/wsN66
-	iWYd3VoXT8Rr4lGvQBeWxpWNYsIdOi28+FbOLVdpU8xFgj9DUiwIpmm9sragrc9wAeQZ+MFfCYy61
-	4Ykjbbf9SwZBgPAzuwzjUYnLqQn/1Qy/ZdxLbggeJAgArZFoVUAruyY++es7b8GndOfc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sCIHT-00GFh0-EL; Wed, 29 May 2024 14:19:47 +0200
-Date: Wed, 29 May 2024 14:19:47 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Gregor Herburger <gregor.herburger@tq-group.com>,
-	linux@ew.tq-group.com
-Subject: Re: [PATCH 4/8] gpio: tqmx86: introduce _tqmx86_gpio_update_bits()
- helper
-Message-ID: <28f4d8aa-917d-4666-b59d-bed3ebfab2e2@lunn.ch>
-References: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
- <0a21e3f14742e9adcf29361f7f2867199cd0dd4a.1716967982.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arF9ebZd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A0BC6C32789;
+	Wed, 29 May 2024 12:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716985230;
+	bh=zjr/Vpc8ZTFCMrq5QTgDG0SNTzCLyB69RToX1iQy6pI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=arF9ebZdTVp5LM2K8ZRf22mDTCKyhPoQ++0dmHnGOzjRvDFSClVkx705QFLFK/+9t
+	 VlJK0w1aMwE8MOHhC9vOn+cR1T/JacYA7j8EJ/mrDqGVQWVDAaqnFD8u+x5dz9mjdC
+	 5/R8dVfHpKewpqd7ea5KCBz/UL16vnZUt754Pc+aofUcWcVOCF7Md+tHXiz9y06M1M
+	 +PAzZfm+n089A/DfSe1ck6Wq1hq9YO0K7S+8yorG7UYBNYh+iy4SDgVuIr8d+8uxno
+	 //HfExEXUMIu82YUwfOU/PZsOq4TnQxWOj2Urn8VtJPS6X0EysmXPLfF/NpPr9KpAR
+	 9XlAkKhKl4OKg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8FBB1CF21E0;
+	Wed, 29 May 2024 12:20:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a21e3f14742e9adcf29361f7f2867199cd0dd4a.1716967982.git.matthias.schiffer@ew.tq-group.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3 0/2] net: xilinx_gmii2rgmii: Add clock support 
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171698523058.1887.13954040665462825862.git-patchwork-notify@kernel.org>
+Date: Wed, 29 May 2024 12:20:30 +0000
+References: <20240528062008.1594657-1-vineeth.karumanchi@amd.com>
+In-Reply-To: <20240528062008.1594657-1-vineeth.karumanchi@amd.com>
+To: Vineeth Karumanchi <vineeth.karumanchi@amd.com>
+Cc: git@amd.com, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ harini.katakam@amd.com, andrew@lunn.ch, hkallweit1@gmail.com,
+ linux@armlinux.org.uk, michal.simek@amd.com, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
 
-On Wed, May 29, 2024 at 09:45:16AM +0200, Matthias Schiffer wrote:
-> Simplify a lot of code in the driver by introducing helpers for the
-> common RMW pattern. No tqmx86_gpio_update_bits() function with builtin
-> locking is added, as it would become redundant with the following fixes,
-> which further consolidate interrupt configuration register setup.
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Tue, 28 May 2024 11:50:06 +0530 you wrote:
+> Add input clock support to gmii_to_rgmii IP.
+> Add "clocks" bindings for the input clock.
 > 
-> No functional change intended.
+> Changes in v3:
+> - Added items constraints.
 > 
-> Fixes: b868db94a6a7 ("gpio: tqmx86: Add GPIO from for this IO controller")
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  drivers/gpio/gpio-tqmx86.c | 40 ++++++++++++++++++++++----------------
->  1 file changed, 23 insertions(+), 17 deletions(-)
+> Changes in v2:
+> - removed "clkin" clock name property.
+> v2 link : https://lore.kernel.org/netdev/20240517054745.4111922-1-vineeth.karumanchi@amd.com/
 > 
-> diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
-> index 613ab9ef2e744..7a851e1730dd1 100644
-> --- a/drivers/gpio/gpio-tqmx86.c
-> +++ b/drivers/gpio/gpio-tqmx86.c
-> @@ -54,6 +54,17 @@ static void tqmx86_gpio_write(struct tqmx86_gpio_data *gd, unsigned int reg,
->  	iowrite8(val, gd->io_base + reg);
->  }
->  
-> +static void _tqmx86_gpio_update_bits(struct tqmx86_gpio_data *gd,
-> +				     unsigned int reg, u8 mask, u8 val)
+> [...]
 
-Why the _ prefix? This is a local function, it is static, so you don't
-have name space issues. Functions starting with _ are those you should
-not call without a good reason, there is generally a version without
-the _ prefix which is the real function to use. So i would drop the _.
+Here is the summary with links:
+  - [net-next,v3,1/2] dt-bindings: net: xilinx_gmii2rgmii: Add clock support
+    https://git.kernel.org/netdev/net-next/c/c1d96671088f
+  - [net-next,v3,2/2] net: phy: xilinx-gmii2rgmii: Adopt clock support
+    https://git.kernel.org/netdev/net-next/c/daab0ac53e77
 
-This is also not a fix. Please read:
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
 
-and stick to the rules described there.
-
-I don't know how the GPIO tree works, but for netdev, about a week
-after fixes are merged, they appear in net-next. So you can then build
-on top of them for development work.
-
-	Andrew
