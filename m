@@ -1,96 +1,121 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9501F95E;
-	Wed, 29 May 2024 14:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57241BF3B;
+	Wed, 29 May 2024 14:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716991522; cv=none; b=dN9kyEviuD8Z5MN/KMUarrdyjKjDAHRUfokN38RQDsHyTRJDOvqU5db+CmvHC9w4f5XUC5OBFYadDRryAzg8qnKXYHouTV2dGvjmFJleY+mDLnF52G1VDl84Ev8pgLL8AviROEC52JBqqi4pcgJgRwwwkEouxuPluxPITqJr8so=
+	t=1716991539; cv=none; b=Kn0HQXrFbhFOHEPcmiT86pDh/HFUPmxK8hmqXAyQxBIN5OHWLtw0Y+aVygfDKIEk64s6kECCgnqTMwpFpAU4C0cI3JNQDLzZpcx7Mgo+UObNS+sdyMwlP8bq/mLqqtt6JZ1C+xYcBvqDO5V9AcajOaotEjNEJasuEbgl3ixBMSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716991522; c=relaxed/simple;
-	bh=xLXQdWfnM+lZS5GVhD6SBArCWokhO6jmgrkUuYBlHAs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CI4jKBlTfKt2ng8ypeTcAqRvMUpDUXQWDZwF2+2+5GLqdl2wDqGIa3/oO9SeNBlmQhGV4Ogaj0v1PHYI1zTWaRER45vMaTRwk2t3LA2B8XGZYJhCpgVldKI7watPUPeW+j0ify1RqkKEK/Q1FJrE9g48aQswfRXHO19LB0mw3xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=hdtXU6nG; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1716991539; c=relaxed/simple;
+	bh=EXhy7Y0Mf45o5EJir2NiWLb5gdZ7rsjUh8NPftXsJow=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PB1m1ZqUpg3yzFH8a1ilOUXhmlw/eDqE7S1bIMUC43irQgD0ijyXHRq5kPLnuZbvHzUsKyJwPRO9/viHkcQCI0wwPU08VSgPmmxXamfup2yWxHr/9jOaClhFRpKr1a54+eUCC/BNe9vG4sg4fXpJXLSMjTaasrn6S/Q3dwDDU3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=gxQnBgQh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jg6JtFYa; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=gxQnBgQh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jg6JtFYa; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hdtXU6nG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1716991521; x=1748527521;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xLXQdWfnM+lZS5GVhD6SBArCWokhO6jmgrkUuYBlHAs=;
-  b=hdtXU6nGWER6Yo2w4X3tpixF6XDWZssWqfFvAitcE+iIxh5pmg5uYOT1
-   lFJx59tuZO26jGXFV0kb5D4qmFUBBPfPEyPihC2MlzanvfiIBWNK6ojJ+
-   n9GtXpHLNRQbP0AD5rPDtozpAeNGwArou68Qy9f78ddCZK9JRTfksr6SG
-   8Edm/vlN05VGhU7v3Nij+xzUkOmoFPm4beIPAER0TGzYIIog06ZydxqoG
-   h7gGRUeec6LOVvaQrqY0Im8sZyp2ZWphlyhVKQoUHZzFMoF1xckUBbCep
-   IizBaMRqCe7PUtyzunm7nA2KFpqPhYEVz0k9urQHtL3Y6FKGqKN2QNUkR
-   A==;
-X-CSE-ConnectionGUID: J4E1/ZSyRQW1wK6IW2PL8w==
-X-CSE-MsgGUID: fhosNk4gT+OOU4eVFz4BXw==
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="257537345"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 May 2024 07:05:20 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 29 May 2024 07:04:41 -0700
-Received: from che-ld-unglab06.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 29 May 2024 07:04:38 -0700
-From: Rengarajan S <rengarajan.s@microchip.com>
-To: <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <netdev@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <rengarajan.s@microchip.com>
-Subject: [PATCH net-next v3 2/2] lan78xx: Enable Auto Speed and Auto Duplex configuration for LAN7801 if NO EEPROM is detected
-Date: Wed, 29 May 2024 19:32:56 +0530
-Message-ID: <20240529140256.1849764-3-rengarajan.s@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240529140256.1849764-1-rengarajan.s@microchip.com>
-References: <20240529140256.1849764-1-rengarajan.s@microchip.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="gxQnBgQh";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jg6JtFYa";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="gxQnBgQh";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jg6JtFYa"
+Received: from pobox.suse.cz (unknown [10.100.2.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0A615336AF;
+	Wed, 29 May 2024 14:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716991536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g08lDbPcwFQ8xueoQtCrEiFoHfACj1CSYR+KNNv+rMU=;
+	b=gxQnBgQhL4HkNjTak2bPFeBqDyKa6HKwDD64Hb/vi8YwyJn4yE4LnDJgWLjVyMmJEko6zD
+	U9s9wzyG3ZbcejYjL6cHY9lZQijApHmEtfC+ROU5kSK0oDBDMn04zvpGe3ry3bYC1o1HCN
+	1HBSqpxHQNkgJPlZoyIfZN0r0cMwUKI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716991536;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g08lDbPcwFQ8xueoQtCrEiFoHfACj1CSYR+KNNv+rMU=;
+	b=jg6JtFYabPnoubKactJdtDdpnEmpjWiYk1QHerLv9exgjvH6ECp0gQRVF08SYZrI5wMlZU
+	yevDfrkVJQ/YXvCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716991536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g08lDbPcwFQ8xueoQtCrEiFoHfACj1CSYR+KNNv+rMU=;
+	b=gxQnBgQhL4HkNjTak2bPFeBqDyKa6HKwDD64Hb/vi8YwyJn4yE4LnDJgWLjVyMmJEko6zD
+	U9s9wzyG3ZbcejYjL6cHY9lZQijApHmEtfC+ROU5kSK0oDBDMn04zvpGe3ry3bYC1o1HCN
+	1HBSqpxHQNkgJPlZoyIfZN0r0cMwUKI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716991536;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g08lDbPcwFQ8xueoQtCrEiFoHfACj1CSYR+KNNv+rMU=;
+	b=jg6JtFYabPnoubKactJdtDdpnEmpjWiYk1QHerLv9exgjvH6ECp0gQRVF08SYZrI5wMlZU
+	yevDfrkVJQ/YXvCA==
+Date: Wed, 29 May 2024 16:05:35 +0200 (CEST)
+From: Miroslav Benes <mbenes@suse.cz>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+    Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, 
+    Shuah Khan <shuah@kernel.org>, live-patching@vger.kernel.org, 
+    linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests: livepatch: Test atomic replace against
+ multiple modules
+In-Reply-To: <20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com>
+Message-ID: <alpine.LSU.2.21.2405291601040.9680@pobox.suse.cz>
+References: <20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ZERO(0.00)[0];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-Enabled ASD/ADD configuration for LAN7801 in the absence of EEPROM.
-After the lite reset these contents go back to defaults where ASD/
-ADD is disabled. The check is already available for LAN7800.
+On Sat, 25 May 2024, Marcos Paulo de Souza wrote:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
----
- drivers/net/usb/lan78xx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> diff --git a/tools/testing/selftests/livepatch/test-livepatch.sh b/tools/testing/selftests/livepatch/test-livepatch.sh
+> index e3455a6b1158..d85405d18e54 100755
+> --- a/tools/testing/selftests/livepatch/test-livepatch.sh
+> +++ b/tools/testing/selftests/livepatch/test-livepatch.sh
+> @@ -107,9 +107,12 @@ livepatch: '$MOD_LIVEPATCH': unpatching complete
+>  
+>  # - load a livepatch that modifies the output from /proc/cmdline and
+>  #   verify correct behavior
+> -# - load an atomic replace livepatch and verify that only the second is active
+> -# - remove the first livepatch and verify that the atomic replace livepatch
+> -#   is still active
+> +# - load two addtional livepatches and check the number of livepatch modules
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 7ac540cc3686..62dbfff8dad4 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3034,8 +3034,11 @@ static int lan78xx_reset(struct lan78xx_net *dev)
- 		return ret;
- 
- 	/* LAN7801 only has RGMII mode */
--	if (dev->chipid == ID_REV_CHIP_ID_7801_)
-+	if (dev->chipid == ID_REV_CHIP_ID_7801_) {
- 		buf &= ~MAC_CR_GMII_EN_;
-+		/* Enable Auto Duplex and Auto speed */
-+		buf |= MAC_CR_AUTO_DUPLEX_ | MAC_CR_AUTO_SPEED_;
-+	}
- 
- 	if (dev->chipid == ID_REV_CHIP_ID_7800_ ||
- 	    dev->chipid == ID_REV_CHIP_ID_7850_) {
--- 
-2.25.1
+s/addtional/additional/
 
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+
+M
