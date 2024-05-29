@@ -1,102 +1,113 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB4E181D14
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304AD1836E9
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998737; cv=none; b=PusoiLyLOBlsGX4oaTt35L6RckHL8T6nUMR7vywP4Khpt2eH9IPFi5IawnwPH2t1vpDONAPXJFQMfITMe0DHSPks0Lfp7nrZmvG48OjRW4By/pxnpwrxyInC/tphdxieZKCyhMMypIhtTxzws+nmsVvZMO9W0VsCxyvvAGDkEao=
+	t=1716998744; cv=none; b=ayCHpOzfbSiKo1fQjyJu3NpYrnTO7WNwEdy1lr2BQ8Te7VKTjQe93z2Cp+8zv5n+3KQx7ihLMPzyKWuLyMst4HYxpwvAkjFjzFQi7CpdgjgTkR5uOAo9ngBl4UsAAsVT6sm46Pe6pQVIS4iOXCEXKDbkUQv0md4ZezLu/Wd90z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998737; c=relaxed/simple;
-	bh=5EqQiL0r6nrlB8yB3smf+mNsb51Fy6uJGMh8nFFXn3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zas7OngMZoHUzWuPuv40CPcN7x15dCkRVuHdgmFDHzOP/W3ZpdaSnvD20maJlRg4Mmrt2/yh3iqCSulkPbFcf/0EpsyRCQWnKs0n94dc3hZYky4rTlkTUoC8xkEcfuquxNlMl99bTJ4a1WVloafakK+aBeL5DGZXJM/nHCvt2cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zz3xb9b+; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716998744; c=relaxed/simple;
+	bh=gwX2kkdkZRLairWU2xTI1d16ODW2DyEZw3WNUACnlWk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=m8bO8LtcDcMfnQMSvrKhCHvnwKC5jCkYVqBTNLVC46lDyawj2fDNDsvn6Nfz0sqd4VTrpNbSrzcdsTuS89POGWeht/je7CtuR/x9b9MAyczbC8+VQkUlhkTTz15e/8X+asnoMHPryUAFNeuaJjNCdxxJD+d8UPJqWNbfDml46Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=ASnKYqZX; arc=none smtp.client-ip=185.136.65.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zz3xb9b+"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4211a86f124so19063295e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 09:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716998733; x=1717603533; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qzg/EUp61JlYQ5Fn3RoqiX5YzTeWEt7sibQ+Ig9ys7c=;
-        b=zz3xb9b+8hH7dFFsUJuhdXgxwesTvJgzyqx6yn84U6iWHcaJtdB3WDxuPMZojS5UZO
-         upI6/oQMfBEi7R/K/c1eCmsQ29GYcswvzB164F6tTOjbtcCCFSNIkPgOrwciuWn7Ays1
-         qRThpvEo6KnTrAlt5Jsz9fm8R94VPwkJNfBr97EypnL6nvKZ63s+wFO2NVsElrZ4qFW6
-         Mp+K9Ef28LkRJz1lFoNuWvOvY+7i+TMpfCnIMzQFND0obzGVmpdkKckBRWKgPkcLcfG5
-         rAubOIc5FIMv9x6DEVf3AfwE0CptqkAmt2VZmQX32LzPcOxehxko/2srlVTR9iVuXviS
-         VDBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716998733; x=1717603533;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qzg/EUp61JlYQ5Fn3RoqiX5YzTeWEt7sibQ+Ig9ys7c=;
-        b=aMHxiLv9eoadpfj8PCyuTRveaOdjdnjJmCZBUz6lZi0O3SiU+iP2ZT5gOMa2S1YVx0
-         KktO08tZerjXuBeSPMnFHWmiDQ9fTuVouQLFPGvJaStM0MZNoS6NpKZvmwtHdnpnyf8Z
-         9yJq6k8MRMFunHfsrpocWMEtBOXZjyQAMREpyobqmyJiHfWrey0zmBkxiFjh4oELLpdD
-         TJUJSY2d5T5nGppARzr9AoVOOoRGANgbuA/wEmQ8CVrUdBtfqP0dFdcA7cvsYDyjjJ0/
-         khH7ZXhRJMmNnRvQEvpyuH6JuS6Vb7hnh6G30X4Ff5JstU6wT/XQQcOyiYU4qs++8U/m
-         lc8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWNdY223QP0pbGBOuBS8foYGn+4zwCLW/1MGF/jFCP3e4z3/7SjYZmxSvs/uevNFT0JwQl4vBIQnfVqb5s2N3Q11EqeNSUv1OI3b2lM
-X-Gm-Message-State: AOJu0YyNC5KmFCcz/ViszM81LiILZMJ+w9zSZRAYr2FLnhot6jygS6BF
-	e6UOHBLc3EKFFH8MBKNY5kW/RglYTqaAFdfqdLj2NwpFOxxhxXQuWMRyU6/tZUQ=
-X-Google-Smtp-Source: AGHT+IFn5yfhHaTTN+Su9cNWOuzz33Y8aCh2kF8VjN3dvPJFe21uC4x828bSQeCJe0tkWLUWOBFKRA==
-X-Received: by 2002:a05:600c:3145:b0:419:f9ae:e50 with SMTP id 5b1f17b1804b1-42108a2145bmr119611935e9.37.1716998732678;
-        Wed, 29 May 2024 09:05:32 -0700 (PDT)
-Received: from [192.168.0.3] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089ccfacsm181684255e9.45.2024.05.29.09.05.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 09:05:31 -0700 (PDT)
-Message-ID: <6326960a-ba5a-430c-a423-571a0a4a8502@linaro.org>
-Date: Wed, 29 May 2024 17:05:30 +0100
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="ASnKYqZX"
+Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 20240529160533eeadbdd3344c175fd8
+        for <linux-kernel@vger.kernel.org>;
+        Wed, 29 May 2024 18:05:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=diogo.ivo@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=0Y8mqvn+ASO0qgqEBYkV7o/QyQw+Qg4BOBuSdQRySBU=;
+ b=ASnKYqZXzj31Ew5QmPDwoTZ2XUPiW8iQq1pA7F+DQoOViQJ6Gje+tA1/PTnJYeCSut2YVM
+ qxiHD1L+r8D24Lu06fGqQSwL80xB/eT8Vpe9PX87fbSVGlOJoFsFzJXKFB37bH4HtVCX46iF
+ WpqlFu0u0FN2CH8Uzw8HQLVWLWns8=;
+From: Diogo Ivo <diogo.ivo@siemens.com>
+Subject: [PATCH 0/3] Enable PTP timestamping/PPS for AM65x SR1.0 devices
+Date: Wed, 29 May 2024 17:05:09 +0100
+Message-Id: <20240529-iep-v1-0-7273c07592d3@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/6] arm64: dts: qcom: sdm845: describe connections of
- USB/DP port
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- Nikita Travkin <nikita@trvn.ru>
-References: <20240528-yoga-ec-driver-v4-0-4fa8dfaae7b6@linaro.org>
- <20240528-yoga-ec-driver-v4-5-4fa8dfaae7b6@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240528-yoga-ec-driver-v4-5-4fa8dfaae7b6@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADVSV2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDUyNL3czUAl2LpCSTROPkJEsDMwsloMqCotS0zAqwKdGxtbUAvyR4M1U
+ AAAA=
+To: MD Danish Anwar <danishanwar@ti.com>, Roger Quadros <rogerq@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, Nishanth Menon <nm@ti.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Diogo Ivo <diogo.ivo@siemens.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716998732; l=2334;
+ i=diogo.ivo@siemens.com; s=20240529; h=from:subject:message-id;
+ bh=gwX2kkdkZRLairWU2xTI1d16ODW2DyEZw3WNUACnlWk=;
+ b=p8e2carzdqE3em6oz7uTTHcMm8aNDjPGFGRJ3Bo2Zb2h9cFywKIi20rkffqeBDCUVtOF9/xPQ
+ Gc/l9HZbxmFBp2EKuJyuwknWSs6/LHkP8W2f0PQAhwd3Jkw34/pX/rx
+X-Developer-Key: i=diogo.ivo@siemens.com; a=ed25519;
+ pk=BRGXhMh1q5KDlZ9y2B8SodFFY8FGupal+NMtJPwRpUQ=
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1320519:519-21489:flowmailer
 
-On 28/05/2024 21:44, Dmitry Baryshkov wrote:
-> Describe links between the first USB3 host and the DisplayPort that is
-> routed to the same pins.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   arch/arm64/boot/dts/qcom/sdm845.dtsi | 53 +++++++++++++++++++++++++++++++++++-
->   1 file changed, 52 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 26b1638c76f9..5276ab0433b6 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+This patch series enables support for PTP in AM65x SR1.0 devices.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+This feature relies heavily on the Industrial Ethernet Peripheral
+(IEP) hardware module, which implements a hardware counter through
+which time is kept. This hardware block is the basis for exposing
+a PTP hardware clock to userspace and for issuing timestamps for
+incoming/outgoing packets, allowing for time synchronization.
+
+The IEP also has compare registers that fire an interrupt when the
+counter reaches the value stored in a compare register. This feature
+allows us to support PPS events in the kernel.
+
+The changes are separated into three patches:
+ - PATCH 01/03: Register SR1.0 devices with the IEP infrastructure to
+		expose a PHC clock to userspace, allowing time to be
+		adjusted using standard PTP tools. The code for issuing/
+		collecting packet timestamps is already present in the
+		current state of the driver, so only this needs to be
+		done.
+ - PATCH 02/03: Add support for IEP compare event/interrupt handling
+		to enable PPS events.
+ - PATCH 03/03: Add the interrupts to the IOT2050 device tree.
+
+Currently every compare event generates two interrupts, the first
+corresponding to the actual event and the second being a spurious
+but otherwise harmless interrupt. The root cause of this has been
+identified and has been solved in the platform's SDK. A forward port
+of the SDK's patches also fixes the problem in upstream but is not
+included here since it's upstreaming is out of the scope of this
+series. If someone from TI would be willing to chime in and help
+get the interrupt changes upstream that would be great!
+
+Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
+---
+Diogo Ivo (3):
+      net: ti: icssg-prueth: Enable PTP timestamping support for SR1.0 devices
+      net: ti: icss-iep: Enable compare events
+      arm64: dts: ti: iot2050: Add IEP interrupts for SR1.0 devices
+
+ .../boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi    | 12 ++++
+ drivers/net/ethernet/ti/icssg/icss_iep.c           | 71 ++++++++++++++++++++++
+ drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c   | 49 ++++++++++++++-
+ 3 files changed, 131 insertions(+), 1 deletion(-)
+---
+base-commit: 2f0e3f6a6824dfda2759225326d9c69203c06bc8
+change-id: 20240529-iep-8bb4a3cb9068
+
+Best regards,
+-- 
+Diogo Ivo <diogo.ivo@siemens.com>
 
