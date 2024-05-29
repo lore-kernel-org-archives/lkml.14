@@ -1,68 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369A316A375;
-	Wed, 29 May 2024 09:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9205316A37A;
+	Wed, 29 May 2024 09:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716975693; cv=none; b=p5RyNoHoAJeDGr0cr246+NgiU3lOZDbDU8lAVTbyTviOkUElO3YJmZjCef6MwTR6adIipZ3SxJisGEn569HmYWEn0wBhPCJThGAzgEig7QiJLHgzv4kTa0R4sAncrKE5YGNMwMnIY7zx87da3CNTLE7QYKjf9/e/EVSMOUVOeoY=
+	t=1716975705; cv=none; b=PjObq8t6oJ//yqAkFo/sdONrameLUAs+72RfixHW4QOmfDDEGM1vz6muO24DQ9faIzVcLzJ/SegmIyaxAQW5YAPWafGM7otfSE9VAs6QTedEXh50Qf5da5+Pug7cr1s/UfcZoAxpBP/OrABZVPM2HnY7o+iAqO3ocVkrguIT7y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716975693; c=relaxed/simple;
-	bh=uir9LFW50J4kp4Duy6Ppyxb5DdxOsTxyGiQdBZqAzR8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FE/obeTHbqLzUWx+7kPqLxSoRhc4AlGEm0Kjn9aQ1IZXeCj+ZwZfGNncfl6f1D/CLu2tcT7VkjSNV2Vg0u5nLadu8GVXcpgya/6e0zKXNfo1lvx6VUOW0zVo3fLMT//iP/Dn8GVUVnZjWJ+l4Cq6Zd/JXXws2YJepNMtJGzDIqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NghQR9Gc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716975705; c=relaxed/simple;
+	bh=gnOJv3IJnG4MxVBS3Rs8JRq/t9ZNB4Rqjtb6Bc5CGuo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OujwfP3/4m24R7DVjyJQKgFW+BwhKOCGHBNnDkZ2cL/11z1FGdQtlbmlp6dxtzJXymk/zu0jIx2S54kk12OSIHG67TISQp+NPma96bE+NBv809UGFqegp/PInJ/pAKFIHJRplvKm/evJDzEgs2ZH2jhT2iNYn3ul1VnClRVWSTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PHxHKtPh; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NghQR9Gc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E69BC2BD10;
-	Wed, 29 May 2024 09:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716975692;
-	bh=uir9LFW50J4kp4Duy6Ppyxb5DdxOsTxyGiQdBZqAzR8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=NghQR9GcPFym7Ye0xUvNEdcm2BliFOBrPccsChz71UUsd5/+PmDIrPK1jexIdphWz
-	 k3eqy8NYXh82zI6F6JX7saXnx+mABFVAyxRfD1R+cCtP2wsOufnfA/HCitcrFF3zPC
-	 4AkVP4mMFiD13IsEhcfJLGRawnKfDh27Ym1WgSPudsJuSXmseDhAbphoyMqncllW9q
-	 YhqXJSRGVoCBtS3sZFBBP+T8wrlZ9H6LNypRj1pp7gnyT56ur5gynRW9ESXPklSri/
-	 9l9E0a9L58NS1AwI53DoaOBc4icUAk3Z2tnP+4JO+cEEdQyevffKOj7AbpND/geAnA
-	 WudziyTLhiUAw==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Xiao Wang <xiao.w.wang@intel.com>, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, luke.r.nels@gmail.com,
- xi.wang@gmail.com, daniel@iogearbox.net
-Cc: ast@kernel.org, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
- haoluo@google.com, jolsa@kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, pulehui@huawei.com,
- puranjay@kernel.org, haicheng.li@intel.com, Xiao Wang
- <xiao.w.wang@intel.com>
-Subject: Re: [PATCH bpf-next v4 2/2] riscv, bpf: Introduce shift add helper
- with Zba optimization
-In-Reply-To: <20240524075543.4050464-3-xiao.w.wang@intel.com>
-References: <20240524075543.4050464-1-xiao.w.wang@intel.com>
- <20240524075543.4050464-3-xiao.w.wang@intel.com>
-Date: Wed, 29 May 2024 11:41:28 +0200
-Message-ID: <87ikyx2bw7.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PHxHKtPh"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B87FA6000B;
+	Wed, 29 May 2024 09:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716975701;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KUn20jBzGgQX3nN2BNPFK9rn+KLdbsza5Fx8uyTOtm8=;
+	b=PHxHKtPhvyFheEhGJqYy80zSeICNjjbrij222ku3aAvpg30KFtiSlk3o6WlMR3U3vUWhi/
+	vmhfXFTzGxgTNFD4xe81LaRH4nL3yP5//gSjqvQoHhoLwyWHd3b/GKwbrx2+qKX1153J5R
+	66qJwHFRDZVALEF3+N+o4E+DySD5VvH4aP7lkAl+0jqdQH7BKcvIshMzZgfUich2D5EFtp
+	N3flxV8BKOtIXRZKJGf7nySBIAreG8U69KqKTdKhGL9qF7RL3bzMwhMAiagpe0fDOxQSkN
+	M5ay6V0Tx5vzqvo3nWfnqt3rCUrW4CChGBenYC6DXf/ZF0mjN/KD/S8H7PbMpA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Wed, 29 May 2024 11:39:36 +0200
+Subject: [PATCH net-next v13 04/14] net: Make net_hwtstamp_validate
+ accessible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240529-feature_ptp_netnext-v13-4-6eda4d40fa4f@bootlin.com>
+References: <20240529-feature_ptp_netnext-v13-0-6eda4d40fa4f@bootlin.com>
+In-Reply-To: <20240529-feature_ptp_netnext-v13-0-6eda4d40fa4f@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Xiao,
+Make the net_hwtstamp_validate function accessible in prevision to use
+it from ethtool to validate the hwtstamp configuration before setting it.
 
-Xiao Wang <xiao.w.wang@intel.com> writes:
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
 
-> Zba extension is very useful for generating addresses that index into arr=
-ay
-> of basic data types. This patch introduces sh2add and sh3add helpers for
-> RV32 and RV64 respectively, to accelerate addressing for array of unsigned
-> long data.
+Change in v8:
+- New patch
 
-This patched slipped! Apologies for the slow reply.
+Change in v10:
+- Remove export symbol as ethtool can't be built as a module.
+- Move the declaration to net/core/dev.h instead of netdevice.h
+---
+ net/core/dev.h       | 1 +
+ net/core/dev_ioctl.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org>
+diff --git a/net/core/dev.h b/net/core/dev.h
+index 75094405b569..7e2425326170 100644
+--- a/net/core/dev.h
++++ b/net/core/dev.h
+@@ -171,5 +171,6 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
+ 			    struct netlink_ext_ack *extack);
+ int dev_get_hwtstamp_phylib(struct net_device *dev,
+ 			    struct kernel_hwtstamp_config *cfg);
++int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg);
+ 
+ #endif
+diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+index b8cf8c55fa2d..6aaa8326bf8f 100644
+--- a/net/core/dev_ioctl.c
++++ b/net/core/dev_ioctl.c
+@@ -184,7 +184,7 @@ static int dev_ifsioc_locked(struct net *net, struct ifreq *ifr, unsigned int cm
+ 	return err;
+ }
+ 
+-static int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg)
++int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg)
+ {
+ 	enum hwtstamp_tx_types tx_type;
+ 	enum hwtstamp_rx_filters rx_filter;
+
+-- 
+2.34.1
+
