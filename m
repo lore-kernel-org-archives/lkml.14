@@ -1,195 +1,124 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5249A1C290
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E8B1BC3F;
+	Wed, 29 May 2024 13:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990915; cv=none; b=cE8fa5OEpV+rcrytUdMTHXG5iuTgW2hTVJ9caSAPVVF+GBAWYYZW1lVwEulrFx5sS7wwi9QLcrt2U3FH0tSGHnyXh9mj4zSkmcTFe1xcGNgb3RXgMHXixrxGOuXxZJbHMevyUEjgJR4CMPyJlo18wSzDFT5RNyultwIt6x7zSmI=
+	t=1716990934; cv=none; b=maViRtqBbS3H2WrQwBn/3VI2iEX2aYtdG68ZqhWlBLOsSvW8zUug2TjgP+Il6eNMveVsf9P8NLFitEeP05UdyCwZ0lJZ3f4oD5LReBafXdRJFZIuR6nFY3B7jgzK4m2AOmcBRArKzIkk3zqcwUJNn6DfdW7aVGOJv4HzMtfF1r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990915; c=relaxed/simple;
-	bh=7pwxJwgIqNkEt9XQ+aY/jS7KUidtBt2N/WzmYBUYsp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o+FVcCkuvZfGeUP+o6pUbQ8K9FhUo4y9wdcZR7hyB3gZZTRZ9WU666DDZXQT7K2dOuittxmsqXZFOl1EI2iGFBFZXuCwKWJuaTkJZa6v8MYF3YGpAzzQkkpYrfjusmPV3bkMLAJMAoL0EUxgDdfSi/3X+AF3op+/Ksxrn+fn9x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHaHFGy9; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716990934; c=relaxed/simple;
+	bh=6jcQNsCvY+JpvW9FVjrFNk/SKoKnw/YncD30kThmSWA=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=a9v8MB1Ibu/5AZyqjXjZDDJ+7tAuFjrtKLOuYmFxr1V/0b5egvPrH8/0O5PzUmKW9rXYiB0qY2tUbKKe/7CNSyzmDuAkMpKB4RG99LAOcdZpGaxP1tr5Yy4WTdigugi4Xyc7ewuaS08XJrIJRzbDyy4qwJhRLUTt5iGTxF955D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lCKDd6q+; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHaHFGy9"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f44b5b9de6so16480285ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716990913; x=1717595713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sGlIeA8hMcr9Fm/VlCdK2KdthFpKjfRPf//jK9Gb9e8=;
-        b=IHaHFGy9c5OqE4xNKb4XCL3vP4xhHCM7G6aGNkV/CWW3yi4C3fqzcoa3ZgSJblFI9a
-         Y8yHj7j3AhxAhnTaATBvfgr1y7t3qr5yrtEiemuiylAUauUUiXW92wTF3JRmwMwMWrLt
-         nF0tWLjnCjeT4HuwewA7hanV8zblX21LVEExt/eivxV804+VcLwh9roN0CZQ45eSNECv
-         EEPhW0MK5Dn9GmeGioLVF4YJ2sUDzPC4d2ECqNty394999/8Tl1tU6x3wprT+a0mSL3J
-         o1JnpPDo3XWRVXgDKJztNfGnYoXOmfgGxw4IYtNKbBi/VcmOGCkB0NNJE20oc+7+7L1j
-         baLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716990913; x=1717595713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sGlIeA8hMcr9Fm/VlCdK2KdthFpKjfRPf//jK9Gb9e8=;
-        b=Muro07e4PZrt4LzQrm4a+NWOPgAExese5eRJTpBsD/0xVYiw/QflGgbXyUh/XsNkfT
-         IgJ2KCgXQMPbgKYoKGOqtBG274FAO4QeZNC5JCNUhwHJNn77/Ox+fKBOe+/ITKoSoINZ
-         5O8uaX+Zg/oD2TZ6ruHTKGLWr31Igadbs/RlHdf6sfmGWmSzvwLkZrgsN7LI9C6rTktP
-         4bB6iktV0afRGGE6t+QpvZE8zh+xmMQEQIyqNRWhBdwQc/I9RVu1lHAtgA1mciBY/E1M
-         9CC7QwFLbUwd1dQiK2A9s4aCslM9u8uN+vMUrkGQ+g3WRHID2z/ssU+9pZbGQ9LDv4bH
-         80Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCWUUuvz7DVQ4j/HxuOcVm/++saf5H9shO+tivxi/K29BGQ6cY4GNz+QuHnWxhmcO3IRMwDFl/O8tvXVPL1WFXJwF5cVz/jzAs2DmtSK
-X-Gm-Message-State: AOJu0YyM7vSeyJ6zN03MLLoOGda/HEzn6SLv4cMIoUyR3OdX2AmMRax7
-	QfNRwqh+EyJM/5Y9k87wUSVc++hNg78O8sRyQIUIw9kc9YadyhR5rqY+esf+c3VoJEqo2m6TDAz
-	L1HbS2zLAatHm3usT128O8gpKZmg=
-X-Google-Smtp-Source: AGHT+IHm0zRTpU3i/A0JVmM25LoggLAhFbg2a1hrsXcUm7MHJr4WHud5PBcWgghHM0zxa3+8cHQc/tmkKlFrhHf/w18=
-X-Received: by 2002:a17:903:188:b0:1f4:ee68:3bc5 with SMTP id
- d9443c01a7336-1f4ee683c53mr18900995ad.57.1716990913482; Wed, 29 May 2024
- 06:55:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lCKDd6q+"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44T6IE8V011830;
+	Wed, 29 May 2024 13:54:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
+ h=cc:date:from:message-id:subject:to; s=corp-2023-11-20;
+ bh=vTFAiKTF41qcxLLU9YlRgqd6sEZTYzENFGNRbzhew58=;
+ b=lCKDd6q+h1yU5xXiw0rRGezFigyNyYTIFWezAJbAVuCKCUDjo47H9c+oIW+fhTyN0BQ3
+ ReoBCMdv9OETbAbjmfYq5ZWMcmweiH7P/E1jD6y21BGsyBz630SaHHvEGWw+855jgGeE
+ eVVYILo6W3dHjmArYKO3uwvbnXMwv/qRoj1cyJoA34ZTTMsJiintLuYeSKa8/005zYRs
+ AQFiq9o7ZiXBlm/w99zlMGzIlSlKJqFyO6SLcN4j/c7ycFBqH/eJJOP9C/CCZO0cg+yc
+ wIIpZUAwrnNJnMO1tBYBGml0PN4NeR6lGNKmomk88tHm5uY3vA8Y8qAbCSPlau6y6kwx Ng== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8fcer4h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 May 2024 13:54:57 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44TDRE4U014920;
+	Wed, 29 May 2024 13:54:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yc536sx6m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 May 2024 13:54:56 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44TDq573016635;
+	Wed, 29 May 2024 13:54:52 GMT
+Received: from gkennedy-linux.us.oracle.com (gkennedy-linux.us.oracle.com [10.152.170.45])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3yc536swjj-1;
+	Wed, 29 May 2024 13:54:52 +0000
+From: George Kennedy <george.kennedy@oracle.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: george.kennedy@oracle.com, harshit.m.mogalapalli@oracle.com
+Subject: [PATCH] perf/x86/amd: check event before enable to avoid GPF
+Date: Wed, 29 May 2024 08:50:59 -0500
+Message-Id: <1716990659-2427-1-git-send-email-george.kennedy@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-29_10,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405290095
+X-Proofpoint-GUID: nMcBeBaGM9W4L_m2-VslMQ1wen67bpr4
+X-Proofpoint-ORIG-GUID: nMcBeBaGM9W4L_m2-VslMQ1wen67bpr4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240528210319.1242-1-mario.limonciello@amd.com>
- <CADnq5_OzPT1MVnsqXs2vjr1L2_6jeM6x7jgs4ZtYpNzdDHM6uA@mail.gmail.com> <87r0dkiv4o.fsf@intel.com>
-In-Reply-To: <87r0dkiv4o.fsf@intel.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 29 May 2024 09:55:01 -0400
-Message-ID: <CADnq5_NiJ9a7uYPGj9iuePTRBFKGhhFA6G982bxO2kHe-_5ASA@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/client: Detect when ACPI lid is closed during initialization
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, dri-devel@lists.freedesktop.org, 
-	amd-gfx@lists.freedesktop.org, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	linux-kernel@vger.kernel.org, Chris Bainbridge <chris.bainbridge@gmail.com>, 
-	hughsient@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 9:51=E2=80=AFAM Jani Nikula <jani.nikula@linux.inte=
-l.com> wrote:
->
-> On Wed, 29 May 2024, Alex Deucher <alexdeucher@gmail.com> wrote:
-> > On Tue, May 28, 2024 at 5:03=E2=80=AFPM Mario Limonciello
-> > <mario.limonciello@amd.com> wrote:
-> >>
-> >> If the lid on a laptop is closed when eDP connectors are populated
-> >> then it remains enabled when the initial framebuffer configuration
-> >> is built.
-> >>
-> >> When creating the initial framebuffer configuration detect the ACPI
-> >> lid status and if it's closed disable any eDP connectors.
-> >>
-> >> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-> >> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3349
-> >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> >
-> > Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-> >
-> > Do you have drm-misc access or do you need someone to apply this for yo=
-u?
->
-> I've bounced this to intel-gfx and intel-xe lists to get CI testing. I'd
-> appreciate holding off on merging until we have results.
+Events can be deleted and the entry can be NULL.
+Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
+This appears to be an AMD only issue.
 
-Sure.
+Syzkaller reported a GPF in amd_pmu_enable_all.
 
-Alex
+INFO: NMI handler (perf_event_nmi_handler) took too long to run: 13.170
+    msecs
+perf: interrupt took too long (191950 > 156435), lowering
+    kernel.perf_event_max_sample_rate to 1000
+Oops: general protection fault, probably for non-canonical address
+    0xdffffc0000000034: 0000 [#1] PREEMPT SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x00000000000001a0-0x00000000000001a7]
 
->
-> Thanks,
-> Jani.
->
-> >
-> > Alex
-> >
-> >> ---
-> >> Cc: hughsient@gmail.com
-> >> v1->v2:
-> >>  * Match LVDS as well
-> >> ---
-> >>  drivers/gpu/drm/drm_client_modeset.c | 30 +++++++++++++++++++++++++++=
-+
-> >>  1 file changed, 30 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/dr=
-m_client_modeset.c
-> >> index 31af5cf37a09..0b0411086e76 100644
-> >> --- a/drivers/gpu/drm/drm_client_modeset.c
-> >> +++ b/drivers/gpu/drm/drm_client_modeset.c
-> >> @@ -8,6 +8,7 @@
-> >>   */
-> >>
-> >>  #include "drm/drm_modeset_lock.h"
-> >> +#include <acpi/button.h>
-> >>  #include <linux/module.h>
-> >>  #include <linux/mutex.h>
-> >>  #include <linux/slab.h>
-> >> @@ -257,6 +258,34 @@ static void drm_client_connectors_enabled(struct =
-drm_connector **connectors,
-> >>                 enabled[i] =3D drm_connector_enabled(connectors[i], fa=
-lse);
-> >>  }
-> >>
-> >> +static void drm_client_match_edp_lid(struct drm_device *dev,
-> >> +                                    struct drm_connector **connectors=
-,
-> >> +                                    unsigned int connector_count,
-> >> +                                    bool *enabled)
-> >> +{
-> >> +       int i;
-> >> +
-> >> +       for (i =3D 0; i < connector_count; i++) {
-> >> +               struct drm_connector *connector =3D connectors[i];
-> >> +
-> >> +               switch (connector->connector_type) {
-> >> +               case DRM_MODE_CONNECTOR_LVDS:
-> >> +               case DRM_MODE_CONNECTOR_eDP:
-> >> +                       if (!enabled[i])
-> >> +                               continue;
-> >> +                       break;
-> >> +               default:
-> >> +                       continue;
-> >> +               }
-> >> +
-> >> +               if (!acpi_lid_open()) {
-> >> +                       drm_dbg_kms(dev, "[CONNECTOR:%d:%s] lid is clo=
-sed, disabling\n",
-> >> +                                   connector->base.id, connector->nam=
-e);
-> >> +                       enabled[i] =3D false;
-> >> +               }
-> >> +       }
-> >> +}
-> >> +
-> >>  static bool drm_client_target_cloned(struct drm_device *dev,
-> >>                                      struct drm_connector **connectors=
-,
-> >>                                      unsigned int connector_count,
-> >> @@ -844,6 +873,7 @@ int drm_client_modeset_probe(struct drm_client_dev=
- *client, unsigned int width,
-> >>                 memset(crtcs, 0, connector_count * sizeof(*crtcs));
-> >>                 memset(offsets, 0, connector_count * sizeof(*offsets))=
-;
-> >>
-> >> +               drm_client_match_edp_lid(dev, connectors, connector_co=
-unt, enabled);
-> >>                 if (!drm_client_target_cloned(dev, connectors, connect=
-or_count, modes,
-> >>                                               offsets, enabled, width,=
- height) &&
-> >>                     !drm_client_target_preferred(dev, connectors, conn=
-ector_count, modes,
-> >> --
-> >> 2.43.0
-> >>
->
-> --
-> Jani Nikula, Intel
+Call Trace:
+ <IRQ>
+amd_pmu_enable_all (arch/x86/events/amd/core.c:1341)
+x86_pmu_enable (arch/x86/events/core.c:1276 arch/x86/events/core.c:1335)
+__pmu_ctx_sched_out (kernel/events/core.c:8314 (discriminator 1))
+ctx_sched_out (kernel/events/core.c:8328)
+__perf_install_in_context (kernel/events/core.c:6235)
+remote_function (./arch/x86/include/asm/atomic64_64.h:20)
+__flush_smp_call_function_queue (kernel/smp.c:189 (discriminator 20)
+    kernel/smp.c:197 (discriminator 20) kernel/smp.c:540 (discriminator 20))
+__sysvec_call_function_single (arch/x86/kernel/smp.c:193 (discriminator 1))
+sysvec_call_function_single (lib/maple_tree.c:3155 (discriminator 2))
+asm_sysvec_call_function_single (./arch/x86/include/asm/idtentry.h:709)
+
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+---
+ arch/x86/events/amd/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 1fc4ce44e743..0ead72d3e206 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -760,7 +760,8 @@ static void amd_pmu_enable_all(int added)
+ 		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
+ 
+-		amd_pmu_enable_event(cpuc->events[idx]);
++		if (cpuc->events[idx])
++			amd_pmu_enable_event(cpuc->events[idx]);
+ 	}
+ }
+ 
+-- 
+2.39.3
+
