@@ -1,141 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A07C1BC43
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE5F4C83;
+	Wed, 29 May 2024 13:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990577; cv=none; b=rpoUNELFc0COT3D9LO3LhrVTlvt3mewSdNk1165vv2r+dAFjnxXKx153OEbPa5Y0svBUECGDUFM2Hjx10ZZtvWPnQ/kEUPNTc6Kkpv/UOV2XRf0q0dGxF8dkDYAPhfAcBd5Vk/v/+bhnT55h/pVdxWkqm0obC9fkdIPw72D3avo=
+	t=1716990684; cv=none; b=Cn8qGvMLPDr7yk1/cVXZfKQCuOnkSxqc6RmKuowkUl4rXldBj4HzwmkHPSj5xTkgAIfMAd/wHgGd1pmVyBIgYpGzK7WU9X+ljFkSt1qY+OxWDHI8ThPt5tnsfu/8aR1cCcH0tmHhainDc9e0JQDh7qvg0YkSL6vQAfA4SDMftpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990577; c=relaxed/simple;
-	bh=99FqLTNYvbbq89Ah4H9OpzmZV2JtCTkw7gxfM/d8V44=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gqCBCDje7XM/jpgudS7HKfxZ1mpA+swfQGCuAt0b/cTnx2WPn5hvdAJjB0LzdVVo3CLBASh6+Y7oadzWXcHWY1anCD7V9GXc8xl+muj/mUS0XfsG+zUbgmkUbzv5TSHbXCAoiVN5a+Sk2MEOQ9ECZJBRDiXrwHo3fBca4GPQNK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UXiBfzT8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716990684; c=relaxed/simple;
+	bh=BJ0TXx2vfnEC4Z+RIBMvi1k52uSQxAJ881y+TAk76Xc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TnF774dSzHLby+guh8V/XaI7SdVDgj/QBeCLNwh6/wil/Wgc1L8eP8cuGSc8Z6PYgYMhYM4iBZlFVIW94b2hQ9pbsbIDBPvjy3vm3gVdgOWz4d7THgq9D0M1QwPX+YzVYaUBUz9FtW9sQ6jBcOBhS5G4am0wbFN4SP2zFYFZcSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glTvyKE1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UXiBfzT8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716990574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QRV3+tH1wAxqOXSuvjuNmBXhPCtgpPsBKQx4qXuEunY=;
-	b=UXiBfzT8ZDnvwXNFg1aJnhv8gY+pYE8vtukmkg505NUet7cleSG0g1v0LJLhSxp8uB4gSU
-	CCfnisxWaUuilOd3iaPn4ZA02w9rNywSAyDQ6xv+neDb2obe9cL23lMOfJ6VQrD4ZDarB+
-	iuW0wv5IwzXu42XdV9wMDBdXfXtIH4M=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-84-pB2gTeHMOPqSWARtDWcetg-1; Wed, 29 May 2024 09:49:32 -0400
-X-MC-Unique: pB2gTeHMOPqSWARtDWcetg-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6ada58d2d50so6041956d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:49:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716990572; x=1717595372;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QRV3+tH1wAxqOXSuvjuNmBXhPCtgpPsBKQx4qXuEunY=;
-        b=TA87peYP00IYYCp0/hWLDng3piOd55nkr9EgWtzy0KL5wCZeJLNxAU/QjOKW+go1OD
-         TJy0V8VKfbktBO8MeHJVJtChT7SYAG/1fUusHvkT46sZ75Nbs0AujsO2HPhboXKfFHfo
-         HuoWKEV7BH4uiIjMzCzmNcwjapjc48c6+R9maGZOmZRkSFxBpuRUKaaoi9cycY422xOe
-         PgOiI9ip4bZiXQkDB7MNGE4iYYvzQqQFTDyQt/c6nTYkyIv8mLUr10ULJKJTGuu3C79D
-         VfRA/00byaC9UkILE2u8OzLnEqUKglelAlQFfnoIL7WXndBwKBymB241xNa61UII+vBg
-         fH8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUtgXAYNDFqzhljA2fzRQZFYrMYxz0NuoCXicgtgihFWXGOeTQFV3ewZNfLipPWQnbIhHTRDXN5w9+g5UTB3BtADhZWLFuOH7gM3z/D
-X-Gm-Message-State: AOJu0Yzl52CyFynTEHO8url8h9FvGD+lmNOGFXSf9m03aNpVAf7GcYuk
-	4/0qUHUg21wEHQm+o8+7KsnegPmbjt/okpljNbsZhhrlAk6IXHoPEQsfIFSf1QWN0et1rzsz7If
-	y0ixFrGFfw28QVtjkH/1581D3vOUQ6sTFdvn9qeygwGuRIJMbfPL0Vxs+FGSMAw==
-X-Received: by 2002:a05:6214:4a86:b0:6aa:1e22:6c7b with SMTP id 6a1803df08f44-6abcd0b49d7mr196373226d6.25.1716990572350;
-        Wed, 29 May 2024 06:49:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEk4VCNntSzG+qoXnos2+vChx4ufljIX3WREdFxolPCgJlMDh4sRm/2lcc7Y7hfqXDE+Zek8w==
-X-Received: by 2002:a05:6214:4a86:b0:6aa:1e22:6c7b with SMTP id 6a1803df08f44-6abcd0b49d7mr196372986d6.25.1716990571952;
-        Wed, 29 May 2024 06:49:31 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ad742b3663sm38929456d6.60.2024.05.29.06.49.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 06:49:31 -0700 (PDT)
-Message-ID: <6b452b94-e03a-4d99-b196-65d775c1e5ce@redhat.com>
-Date: Wed, 29 May 2024 15:49:28 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glTvyKE1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87935C113CC;
+	Wed, 29 May 2024 13:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716990682;
+	bh=BJ0TXx2vfnEC4Z+RIBMvi1k52uSQxAJ881y+TAk76Xc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=glTvyKE1BDLaoKay4Is2RxK9ZLP7otBzDadCkbihj7j5fOfCzNhbrdsF7E72O5zZs
+	 R49BngIslnkt9pCOyfhIGCkbEt+q0aus9GUwZB1UaGjGPcKeFNThjZu+Qts0VEMgIr
+	 aIuIy162D3mvj9p9cCjSmpBMVnlXC2iQARHZ478J+Nm5BuiSsXr6NbuA4nf4UPTPMZ
+	 J+Jj6aXUKrkyMRHFDu5g8dO05w3oSZjHkQ29W8plGuwR1stJSQLh5GRHaAYPHXOaSa
+	 hFsE/Ri7V/orrGaZ8nLeQEw7wXGrRd1oIZhIhmo3asqFECyCaoKF71oTxKhhJPKwJR
+	 JczYkWElMSGIw==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52b79447c58so438320e87.1;
+        Wed, 29 May 2024 06:51:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXezOK60I/UKylTL+jQfbB2BBlH6pkptGNIfgjKABmOoIJeOo9CbiocoPshDHOca7HjvQMp5BqXheJsp/mVL9SORd0MZgOkKLDjzSW8X+KaEY2qJoc2uSW8bOpTC0oG0EITR++FgQO/Zw==
+X-Gm-Message-State: AOJu0YwAa+OvHxGKiksE5LvwftOiAoliOXOTtJIdR3XdwZLyqskdMYdD
+	e//N3kIPpC5d5xMk1Ysv9yBQrqFJjzGE5mea4H3XAPlf4knRQFXEQfMzMJgh63s7m8lBMrwOdLR
+	CxmoLPTQJh5uhhIDkwwQ7ph5fuA==
+X-Google-Smtp-Source: AGHT+IFw3h5FJYkh/BLuUPGGhDkU0QPpEgcY8mopX/t1NYjI2PH+epPkMD4dMuQuIVTrx+ZhnDlOady59nQVDczYcsA=
+X-Received: by 2002:ac2:5dc1:0:b0:522:8352:ff29 with SMTP id
+ 2adb3069b0e04-5296736bb86mr12249215e87.42.1716990680924; Wed, 29 May 2024
+ 06:51:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/6] KVM: arm64: show writable masks for feature
- registers
-Content-Language: en-US
-To: Sebastian Ott <sebott@redhat.com>, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-References: <20240514072252.5657-1-sebott@redhat.com>
- <20240514072252.5657-5-sebott@redhat.com>
-From: Eric Auger <eauger@redhat.com>
-In-Reply-To: <20240514072252.5657-5-sebott@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240528164132.2451685-1-maz@kernel.org> <CAK9=C2XNPJP0X=pg5TSrQbsuouDD3jP-gy2Sm4BXNJp0ZiWp+A@mail.gmail.com>
+ <86bk4pm8j1.wl-maz@kernel.org> <CAK9=C2XRx==OTPoGW_AHmjq4Th0bv4okwcq6-3L5JYwHwQp97A@mail.gmail.com>
+ <86a5k8nbh1.wl-maz@kernel.org> <CAK9=C2Ugq=0y8M86CD75mQccBo=TBLBomb4rqC4i1naKy2LyWQ@mail.gmail.com>
+In-Reply-To: <CAK9=C2Ugq=0y8M86CD75mQccBo=TBLBomb4rqC4i1naKy2LyWQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 29 May 2024 08:51:08 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJE15D-xXxmELsmuD+JQHZzxGzdXvikChn6KFWqk6NzPw@mail.gmail.com>
+Message-ID: <CAL_JsqJE15D-xXxmELsmuD+JQHZzxGzdXvikChn6KFWqk6NzPw@mail.gmail.com>
+Subject: Re: [PATCH] of: property: Fix fw_devlink handling of interrupt-map
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sebastian,
+On Wed, May 29, 2024 at 6:28=E2=80=AFAM Anup Patel <apatel@ventanamicro.com=
+> wrote:
+>
+> On Wed, May 29, 2024 at 4:15=E2=80=AFPM Marc Zyngier <maz@kernel.org> wro=
+te:
+> >
+> > On Wed, 29 May 2024 11:16:30 +0100,
+> > Anup Patel <apatel@ventanamicro.com> wrote:
+> > >
+> > > On Wed, May 29, 2024 at 12:03=E2=80=AFPM Marc Zyngier <maz@kernel.org=
+> wrote:
+> > > >
+> > > > On Wed, 29 May 2024 06:15:52 +0100,
+> > > > Anup Patel <apatel@ventanamicro.com> wrote:
+> > > > >
+> > > > > On Tue, May 28, 2024 at 10:11=E2=80=AFPM Marc Zyngier <maz@kernel=
+.org> wrote:
+> > > > > >
+> > > > > > Commit d976c6f4b32c ("of: property: Add fw_devlink support for
+> > > > > > interrupt-map property") tried to do what it says on the tin,
+> > > > > > but failed on a couple of points:
+> > > > > >
+> > > > > > - it confuses bytes and cells. Not a huge deal, except when it
+> > > > > >   comes to pointer arithmetic
+> > > > > >
+> > > > > > - it doesn't really handle anything but interrupt-maps that hav=
+e
+> > > > > >   their parent #address-cells set to 0
+> > > > > >
+> > > > > > The combinations of the two leads to some serious fun on my M1
+> > > > > > box, with plenty of WARN-ON() firing all over the shop, and
+> > > > > > amusing values being generated for interrupt specifiers.
+> > > > > >
+> > > > > > Address both issues so that I can boot my machines again.
+> > > > > >
+> > > > > > Fixes: d976c6f4b32c ("of: property: Add fw_devlink support for =
+interrupt-map property")
+> > > > > > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > > > > > Cc: Anup Patel <apatel@ventanamicro.com>
+> > > > > > Cc: Saravana Kannan <saravanak@google.com>
+> > > > > > Cc: Rob Herring (Arm) <robh@kernel.org>
+> > > > >
+> > > > > Thanks for the fix patch but unfortunately it breaks for RISC-V.
+> > > > >
+> > > > > > ---
+> > > > > >  drivers/of/property.c | 16 ++++++++++++++--
+> > > > > >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > > > > > index 1c83e68f805b..9adebc63bea9 100644
+> > > > > > --- a/drivers/of/property.c
+> > > > > > +++ b/drivers/of/property.c
+> > > > > > @@ -1322,7 +1322,13 @@ static struct device_node *parse_interru=
+pt_map(struct device_node *np,
+> > > > > >         addrcells =3D of_bus_n_addr_cells(np);
+> > > > > >
+> > > > > >         imap =3D of_get_property(np, "interrupt-map", &imaplen)=
+;
+> > > > > > -       if (!imap || imaplen <=3D (addrcells + intcells))
+> > > > > > +       imaplen /=3D sizeof(*imap);
+> > > > > > +
+> > > > > > +       /*
+> > > > > > +        * Check that we have enough runway for the child unit =
+interrupt
+> > > > > > +        * specifier and a phandle. That's the bare minimum we =
+can expect.
+> > > > > > +        */
+> > > > > > +       if (!imap || imaplen <=3D (addrcells + intcells + 1))
+> > > > > >                 return NULL;
+> > > > > >         imap_end =3D imap + imaplen;
+> > > > > >
+> > > > > > @@ -1346,8 +1352,14 @@ static struct device_node *parse_interru=
+pt_map(struct device_node *np,
+> > > > > >                 if (!index)
+> > > > > >                         return sup_args.np;
+> > > > > >
+> > > > > > -               of_node_put(sup_args.np);
+> > > > > > +               /*
+> > > > > > +                * Account for the full parent unit interrupt s=
+pecifier
+> > > > > > +                * (address cells, interrupt cells, and phandle=
+).
+> > > > > > +                */
+> > > > > > +               imap +=3D of_bus_n_addr_cells(sup_args.np);
+> > > > >
+> > > > > This breaks for RISC-V because we don't have "#address-cells"
+> > > > > property in interrupt controller DT node and of_bus_n_addr_cells(=
+)
+> > > > > retrieves "#address-cells" from the parent of interrupt controlle=
+r.
+> > > >
+> > > > That's a feature, not a bug. #address-cells, AFAICT, applies to all
+> > > > child nodes until you set it otherwise.
+> > > >
+> > > > >
+> > > > > The of_irq_parse_raw() looks for "#address-cells" property
+> > > > > in the interrupt controller DT node only so we should do a
+> > > > > similar thing here as well.
+> > > >
+> > > > This looks more like a of_irq_parse_raw() bug than anything else.
+> > >
+> > > If we change of_irq_parse_raw() to use of_bus_n_addr_cells()
+> > > then it would still break for RISC-V.
+> >
+> > I'm not trying to "fix" riscv. I'm merely outlining that you are
+> > relying on both broken DTs and a buggy OS.
+> >
+> > >
+> > > Using of_bus_n_addr_cells() over here forces interrupt controller
+> > > DT nodes to have a "#address-cells" DT property. There are many
+> > > interrupt controller (e.g. RISC-V PLIC or RISC-V APLIC) where the
+> > > DT bindings don't require "#address-cells" DT property and existing
+> > > DTS files with such interrupt controllers don't have it either.
+> >
+> > It forces you to set #address-cells *if you rely on a different
+> > value in a child node*. It's not like the semantics are new.
+>
+> We don't have child nodes under the interrupt controller DT node
+> (for both RISC-V PLIC and APLIC) so we certainly don't require the
+> "#address-cells" property in the interrupt controller DT node.
 
-On 5/14/24 09:22, Sebastian Ott wrote:
-> Instead of using ~0UL provide the actual writable mask for
-> non-id feature registers in the output of the
-> KVM_ARM_GET_REG_WRITABLE_MASKS ioctl.
-> 
-> This changes the mask for the CTR_EL0 and CLIDR_EL1 registers.
-> 
-> Signed-off-by: Sebastian Ott <sebott@redhat.com>
-> ---
->  arch/arm64/kvm/sys_regs.c | 19 +++++--------------
->  1 file changed, 5 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 8e8acf3dd9bd..1b6ab483e21e 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -2562,7 +2562,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  
->  	{ SYS_DESC(SYS_CCSIDR_EL1), access_ccsidr },
->  	{ SYS_DESC(SYS_CLIDR_EL1), access_clidr, reset_clidr, CLIDR_EL1,
-> -	  .set_user = set_clidr },
-> +	  .set_user = set_clidr, .val = ~CLIDR_EL1_RES0 },
->  	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
->  	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
->  	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
-> @@ -4121,20 +4121,11 @@ int kvm_vm_ioctl_get_reg_writable_masks(struct kvm *kvm, struct reg_mask_range *
->  		if (!is_feature_id_reg(encoding) || !reg->set_user)
->  			continue;
->  
-> -		/*
-> -		 * For ID registers, we return the writable mask. Other feature
-> -		 * registers return a full 64bit mask. That's not necessary
-> -		 * compliant with a given revision of the architecture, but the
-> -		 * RES0/RES1 definitions allow us to do that.
-> -		 */
-> -		if (is_vm_ftr_id_reg(encoding)) {
-> -			if (!reg->val ||
-> -			    (is_aa32_id_reg(encoding) && !kvm_supports_32bit_el0()))
-> -				continue;
-> -			val = reg->val;
-> -		} else {
-> -			val = ~0UL;
-> +		if (!reg->val ||
-> +		    (is_aa32_id_reg(encoding) && !kvm_supports_32bit_el0())) {
-> +			continue;
->  		}
-> +		val = reg->val;
->  
->  		if (put_user(val, (masks + KVM_ARM_FEATURE_ID_RANGE_INDEX(encoding))))
->  			return -EFAULT;
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+interrupt controller nodes which are referred to by interrupt-map
+require #address-cells. Period. Child nodes or not.
 
-Eric
+Really, it should be just interrupt-controller nodes require
+#address-cells, but that spewed too many warnings so it's limited to
+where it is really needed.
 
+Rob
