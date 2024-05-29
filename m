@@ -1,168 +1,183 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F90417BB17;
-	Wed, 29 May 2024 15:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5519D7D3FB
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 15:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716995849; cv=none; b=LE0t3aAnuiyza8SGyt19Q3mu7Vow9vd5TULXGOD23nTfn2ByrC933vAsZ5LGh2U7lsInbxnlhSyGqgT60hwNGeWij2KT67Ojgg8pc/SEET/MuKFV0T3i/vA3pB1geBPQBAng8z1VKdJufXix8aNZWlXigsa414ekdgdOKMQMd7A=
+	t=1716995938; cv=none; b=hGuFp/ysdBBHVCu7l7UOYRPLL7cc1FHqjNrpmQaERhQ0UXtQiJ9CzXWOJWNe1B5gXp66AmNZnWd7Lm8wxttAO96fnX5r0qH3cmgeTnJgEgoWplcoppXkHvd/4vQx6843vgZFj7wL0F40+szTh4DLu24uccFup8Sckmlg65vVSr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716995849; c=relaxed/simple;
-	bh=bIoj1gt/76OXi9ltSEQLk37IOmdkLDQg29Qc3G4ia1w=;
+	s=arc-20240116; t=1716995938; c=relaxed/simple;
+	bh=9VXHCZS9cqUCoC5ewb27XhCR2osQeQAKC4wReWyepDM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RjHMv3A1sQHGWUeWfSAARVyJr+PJByw6DOv3VvNs50RBzBwwA5845Y7qXGmxja+Z3JnhqeDljheaCiZBduUthchmEkLlU62ToQxa6EAX9+aWAGVuvqCcbWgv+n9AsAGZ9p1TFd4J1I1TIsyqeJaC1//rLV6rll8SJ916ZMtS8f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=P644GBvN; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HxWpjTMFt8HIogmzp5cX2M1EntSmvggVoWU2Damnkj+o2ro9ku0B4oqfMcv8mBl+D/WOpYqwDKp8F5yExvJ99avKTbcgRi7Nw0CnTPiEm3JbdU2PkgHUQlX7vGqZ9lEpT+Xg38V6EIBj/bvhZDLEr6goBynBizRYaS1mIQLbn4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WKebw4MF; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="P644GBvN"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0D948149B;
-	Wed, 29 May 2024 17:17:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716995843;
-	bh=bIoj1gt/76OXi9ltSEQLk37IOmdkLDQg29Qc3G4ia1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P644GBvNF57A3SEZttURwrZLx+vZ8hohyD+dBurxQ0u7GbHDQ2MXl/LEP80dEqK76
-	 6AeQ1XgAI/P+LynMcHKE6CC/3MAme+gmcU2bKErjLVX/+YMC+Fyd02MwXRNVQOeFsj
-	 PjNMnkIJzt1h/ayrSQiYXMqGUDxDOdO9671LXj1E=
-Date: Wed, 29 May 2024 18:17:14 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v2 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <20240529151714.GA8388@pendragon.ideasonboard.com>
-References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
- <20240528190315.3865-4-laurent.pinchart@ideasonboard.com>
- <ZlYyJpLeDLD_T5V6@surfacebook.localdomain>
- <20240528202044.GB8500@pendragon.ideasonboard.com>
- <CAHp75Vc2-jOMybL7vwJHgrvb_434p094tgdLo1SyK4i_RXYiDw@mail.gmail.com>
- <20240529094748.GM1436@pendragon.ideasonboard.com>
- <CAHp75Vf1uBTKHGazcuLCRvEo9k01t3+6oJnfZgpPZQ_dVCOeDg@mail.gmail.com>
- <20240529143506.GD19014@pendragon.ideasonboard.com>
- <CAHp75Vd9kPBZJAod9auvE3W7Wn=0dZ8QSqUARk-aUgxkLHbpaA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WKebw4MF"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e95a1f9c53so26906191fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716995935; x=1717600735; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QR0POjqF20pzHAWBvG1eRnT0PhhhCZ/L07fIsqZvh5c=;
+        b=WKebw4MFbdaXhkZ02HFRRAPHQ/Zj68VVNQsnsx8bL3tV0+xXP0Z4pAXQjVtfw9RCON
+         glYT3BlRqbiCcTqQDKv1brE6LgIZz/HN/oZGnlTAVrx71Hjf38IGmNOffINcPzVgpC0Q
+         TCQrwcZ7GRG3IiqI3eiQ+zeVnNLvlMOTUfD31sGHsD7MttFQjOV9vMDNcimdAfYYp2je
+         u+ClmS0Fr9tR0PnmyM9uZtU75KQ7APjgZ3cAdoKa4NYE7Kvi7mCpTiKJKlCooxhe8MOz
+         zexAe+cjtPCrjP4u1w62Y1qvbwniRlKifkURi7Z6Nwx1L0iI5tMGrIw3QkDxOi6e0vjS
+         4oRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716995935; x=1717600735;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QR0POjqF20pzHAWBvG1eRnT0PhhhCZ/L07fIsqZvh5c=;
+        b=hlnfmpOojd72Fcwaels8VksP0TiqOQa5qyR6ZNr4KcabGsDdPbkdLr48iawDKV28cs
+         LDlWbsHkngeHBLz/EKDFMK0mheTVT3XMSThHSPEb3/4/+rJKGE31q3XRLhMdWaGxqhQt
+         nbCzrlig67SO0kBG7BbYxK0ehrX6hI7tTDJCWikW3UVNlJHTZn7KlmzYRF4vFJ/FAUye
+         93/gS18yaQEBrt//HreWJHgKDYCFqLfTudvhjb1THnz6jKGF2Sb3MVTB7zcbljVM9rNk
+         0X8TvTDANwdeBb9/7NGW1k/RlLhz6rEKhfY0BZ5E0dgQS//wyKKArY9VkkIVS6/xbtRZ
+         QN5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXRTO2b8sIEKzR2OWuVFKJ2LA5G/Xy53QZ0Sk45gFYv3xMVXTmSbnVjoJzCFd5/GkR6JPss6twnt/HSpfefH35brd6U3KnAmhNCaPe2
+X-Gm-Message-State: AOJu0YzXF6mY22cfzdZZNJWBBEA5u40DmzaU65PofeF5SqYfF+D8ADRd
+	fIoQ/s4NV1WpFC0BDeWGqYp8gGZT0o+8UQR3f6wfkk3GPWo7UOd68XLl3zi9ZaQ=
+X-Google-Smtp-Source: AGHT+IGt8PT5CAFahkrxvC3bec9sEni1+YGaWaqI0Puf/7L2iygCtbpF68kQbbhUhDxRBWHWD62qVQ==
+X-Received: by 2002:a05:651c:1055:b0:2e9:8386:5f88 with SMTP id 38308e7fff4ca-2e983866e92mr37859321fa.41.1716995935469;
+        Wed, 29 May 2024 08:18:55 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95bdd21f6sm25824491fa.88.2024.05.29.08.18.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 08:18:55 -0700 (PDT)
+Date: Wed, 29 May 2024 18:18:53 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@quicinc.com, 
+	Qiang Yu <quic_qianyu@quicinc.com>, Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: Re: [PATCH v9 4/4] arm64: dts: qcom: aim300: add AIM300 AIoT
+Message-ID: <s5gt3p6zsd5ebrkop4dhd33tykln33f6ahu3pibymecxsmakyd@lg5wfgec6dat>
+References: <20240529100926.3166325-1-quic_tengfan@quicinc.com>
+ <20240529100926.3166325-5-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vd9kPBZJAod9auvE3W7Wn=0dZ8QSqUARk-aUgxkLHbpaA@mail.gmail.com>
+In-Reply-To: <20240529100926.3166325-5-quic_tengfan@quicinc.com>
 
-On Wed, May 29, 2024 at 06:00:19PM +0300, Andy Shevchenko wrote:
-> On Wed, May 29, 2024 at 5:35 PM Laurent Pinchart wrote:
-> > On Wed, May 29, 2024 at 05:24:03PM +0300, Andy Shevchenko wrote:
-> > > On Wed, May 29, 2024 at 12:48 PM Laurent Pinchart wrote:
-> > > > On Wed, May 29, 2024 at 09:16:43AM +0300, Andy Shevchenko wrote:
-> > > > > On Tue, May 28, 2024 at 11:20 PM Laurent Pinchart wrote:
-> > > > > > On Tue, May 28, 2024 at 10:36:06PM +0300, Andy Shevchenko wrote:
+On Wed, May 29, 2024 at 06:09:26PM +0800, Tengfei Fan wrote:
+> Add AIM300 AIoT Carrier board DTS support, including usb, UART, PCIe,
+> I2C functions support.
+> Here is a diagram of AIM300 AIoT Carrie Board and SoM
+>  +--------------------------------------------------+
+>  |             AIM300 AIOT Carrier Board            |
+>  |                                                  |
+>  |           +-----------------+                    |
+>  |power----->| Fixed regulator |---------+          |
+>  |           +-----------------+         |          |
+>  |                                       |          |
+>  |                                       v VPH_PWR  |
+>  | +----------------------------------------------+ |
+>  | |                          AIM300 SOM |        | |
+>  | |                                     |VPH_PWR | |
+>  | |                                     v        | |
+>  | |   +-------+       +--------+     +------+    | |
+>  | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+>  | |   +-------+       +--------+     +------+    | |
+>  | |                                              | |
+>  | +----------------------------------------------+ |
+>  |                                                  |
+>  |                    +----+          +------+      |
+>  |                    |USB |          | UART |      |
+>  |                    +----+          +------+      |
+>  +--------------------------------------------------+
 > 
-> ...
-> 
-> > > > > > > > +   device_set_of_node_from_dev(dev, dev->parent);
-> > > > > > >
-> > > > > > > Why not device_set_node()?
-> > > > > >
-> > > > > > Because device_set_of_node_from_dev() is meant for this exact use case,
-> > > > > > where the same node is used for multiple devices. It also puts any
-> > > > > > previous dev->of_node, ensuring proper refcounting when devices are
-> > > > > > unbound and rebound, without being deleted.
-> > > > >
-> > > > > When will the refcount be dropped (in case of removal of this device)?
-> > > > > Or you mean it shouldn't?
-> > > >
-> > > > Any refcount taken on the OF node needs to be dropped. The device core
-> > > > only drops the refcount when the device is being deleted, not when
-> > > > there's an unbind-rebind cycle without deletion of the device (as
-> > > > happens for instance when the module is unloaded and reloaded).
-> > >
-> > > Under "device" you meant the real hardware, as Linux device (instance
-> > > of the struct device object) is being rebuilt AFAIK)?
-> >
-> > I mean struct device. The driver core will drop the reference in
-> > platform_device_release(), called when the last reference to the
-> > platform device is released, just before freeing the platform_device
-> > instance. This happens after the device is removed from the system (e.g.
-> > hot-unplug), but not when a device is unbound from a driver and rebound
-> > (e.g. module unload and reload).
-> 
-> This is something I need to refresh in my memory. Any pointers (the
-> links to the exact code lines are also okay) where I can find the
-> proof of what you are saying. (It's not that I untrust you, it's just
-> that I take my time on studying it.)
+> Co-developed-by: Qiang Yu <quic_qianyu@quicinc.com>
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> Co-developed-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 322 ++++++++++++++++++
+>  2 files changed, 323 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
 
-I wish this was documented, I could then point you to a nice text that
-explains it all :-) My understanding comes from reading
-platform_device_release(), and from failing to find other of_node_put()
-calls that would be relevant to this.
+[trimmed]
 
-> > > > This has
-> > > > to be handled by the driver. device_set_of_node_from_dev() handles it.
-> > >
-> > > But why do you need to keep a parent node reference bumped?
-> > > Only very few drivers in the kernel use this API and I believe either
-> 
-> s/very/a/ (sorry for the confusion)
-> 
-> > > nobody knows what they are doing and you are right, or you are doing
-> > > something which is not needed.
-> >
-> > I need to set the of_node and fwnode fields of struct device to enable
-> > OF-based lookups of GPIOs and PWMs. The of_node field is meant to be
-> > populated by the driver core when the device is created, with a
-> > reference to the OF node. When populated directly by driver, this needs
-> > to be taken into account, and drivers need to ensure the reference will
-> > be released correctly. device_set_of_node_from_dev() is meant for that.
-> 
-> What you are doing is sharing the parent node with the child, but at
-> the same time you bump the parent's reference count. As this is a
-> child of MFD I don't think you need this as MFD already takes care of
-> it via parent -> child natural dependencies. Is it incorrect
-> understanding?
+> +&remoteproc_adsp {
+> +	firmware-name = "qcom/qcs8550/adsp.mbn",
+> +			"qcom/qcs8550/adsp_dtbs.elf";
 
-It is true that the parent device will not be destroyed as long as the
-child device exists. The parent device's of_node will thus be kept
-around by the reference that the parent device holds on it. However, if
-I set dev.of_node for the child device without acquiring a reference, we
-will have dev.of_node pointing to the same device_node, with a single
-reference to it. This means that when the child device is destroyed and
-platform_device_release() is called for it, of_node_put() will release
-that reference, and the parent dev.of_node will point to a device_node
-without holding a reference. Then, when the parent device, which is an
-i2c_client, is unregistered, the call to i2c_unregister_device() will
-call of_node_put(), releasing a reference we don't have.
+Please excuse me, I think I missed those on the previous run.
 
-The order of i2c_unregister_device() and platform_device_release() may
-be swapped in practice, I haven't double-checked, but the reasoning
-still holds. We have two functions that expect dev.of_node to hold a
-reference, so both dev.of_node need to hold a reference.
+adsp_dtb.mbn
 
-Another way to handle the problem would be to borrow the parent's
-reference in the probe function of the child, and set dev.of_node to
-NULL manually in the child .remove() function. This will ensure that
-platform_device_release(), which is called after .remove() (not
-necessarily directly after, but certainly not before), will not attempt
-to incorrectly release a reference on dev.of_node. This will however not
-be safe if i2c_unregister_device() is called before the child .remove(),
-as the child dev.of_node would then for some amount of time point to a
-device_node without a reference.
+> +	status = "okay";
+> +};
+> +
+> +&remoteproc_cdsp {
+> +	firmware-name = "qcom/qcs8550/cdsp.mbn",
+> +			"qcom/qcs8550/cdsp_dtbs.elf";
 
-TL;DR: Using device_set_of_node_from_dev() seems the safest option,
-especially given that it was designed for this purpose.
+cdsp_dtb.mbn
+
+> +	status = "okay";
+> +};
+> +
+> +&swr1 {
+> +	status = "okay";
+> +};
+> +
+> +&swr2 {
+> +	status = "okay";
+> +};
+> +
+> +&tlmm {
+> +	gpio-reserved-ranges = <32 8>;
+> +
+> +	dsi_active: dsi-active-state {
+> +		pins = "gpio133";
+> +		function = "gpio";
+> +		drive-strength = <8>;
+> +		bias-disable;
+> +	};
+
+s/dsi/panel[-_]reset/
+
+> +
+> +	dsi_suspend: dsi-suspend-state {
+> +		pins = "gpio133";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-pull-down;
+> +	};
+> +
+> +	te_active: te-active-state {
+> +		pins = "gpio86";
+> +		function = "mdp_vsync";
+> +		drive-strength = <2>;
+> +		bias-pull-down;
+> +	};
+> +
+> +	te_suspend: te-suspend-state {
+> +		pins = "gpio86";
+> +		function = "mdp_vsync";
+> +		drive-strength = <2>;
+> +		bias-pull-down;
+> +	};
+
+What is the difference between these two?
+
+> +};
 
 -- 
-Regards,
-
-Laurent Pinchart
+With best wishes
+Dmitry
