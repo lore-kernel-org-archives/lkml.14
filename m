@@ -1,46 +1,46 @@
 Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28F616E896;
-	Wed, 29 May 2024 08:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1B416EC02;
+	Wed, 29 May 2024 08:23:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716971008; cv=none; b=hFL7EZJ6DG0VdiY1pOtP6pNvbeEQ9wcRjv5TlscD/4T30RjkaxYU7x0LXAE/qEtSW93U1RWQUlKfI6P8bzF0P9+AROt6mlcj1Gnkr6BmJ1n8GpIFfCGFQTy2mr4L2tB6Fhqg5+mPGK2iYXd+Rjp+gmQDRDf3GhILI99XCOTz/fg=
+	t=1716971009; cv=none; b=pVhLMGnBKvwzrY28hvbjYNFxND3+srVRm0snoU2pwb+EOJJe1pweaSQQ0Xt40LLzzJHVM4lSVF7N3fNruOiAzI+tBDKbdaKdI+RNUxK+aUEYlo8pdC0yyvV3kdT7Nc6f1NXcbzzImH2VWMZGxIwsk8iCeGsgB8hZVKspoF5tc88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716971008; c=relaxed/simple;
-	bh=WNW0zZk5rHXnwxxR5BfxZbWHgUtzyaX7P640I3WX5bc=;
+	s=arc-20240116; t=1716971009; c=relaxed/simple;
+	bh=v7ytzzpMiNZyLvYd4leMD5hwz74atXlbcrdNbDoLdDE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r6UnDkXxutTjqK2QAR9DXvieuvBNq1cnb7oTCKNHNyLzHyESmAct0lU3yt6C5x0Uv5DxwPT8IeRQr8TTqqF6PXAomgCyV7miwYIeIclEx121QrSWqwG0ziA0Ri/OT7TvTnEMqfCyjHlDFWOIXlJDC8OjuU5uCJ6ZVlbz5xiLq1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dORxQD5c; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=DxdsYtnBPsWvoUyTRLKYGyw1z/cZezmSXoeDyfLNOVoKGUiFCSutJ/JSr7aW2DN0G75BmaSIxbMPAEUf7gRxM9T0FMVnpHdgsAjlG2SBtqgAbEafZHNnxrpt7sqJHGUc5YuX5BnKO+92HAD3eY/Uf3Xu1Kl+qJToVPdf2A9oy7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=O6NHnKr9; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dORxQD5c"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44T8N9Rc098569;
-	Wed, 29 May 2024 03:23:09 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O6NHnKr9"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44T8NICK098588;
+	Wed, 29 May 2024 03:23:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716970989;
-	bh=iQiml4Nmsvc9o6LE63TNChQyg7cpSwsjXKi5J9+9AY8=;
+	s=ti-com-17Q1; t=1716970998;
+	bh=KfS3LCXDTgKQpv70xynXIdI0nuifvuA99DxqTipXS94=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=dORxQD5cr7wMXCGP9ueqRwU9zEsHFtF4LEUUmvLvatFB7Zy/HkAkinZlspIbe8AI+
-	 6DoODcKtovanU1LDk1HRTsKOruEQQ4bIIUKY9aqfL3ozVDZxzKKC4KgWnm59dAJy/c
-	 ++tBYUXN3yqSz9kNaCA1wMN4WUaYMdT1fLw/OF3o=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44T8N9pH021676
+	b=O6NHnKr9YHy2pqBSAwi+8o6e88fGQJdM5eV7KcCYxn10lT+cNajvL/Om8WxqMS023
+	 En5WuFsTl5CjGhbL5wcwS52r/BbkYqKBY/IQjwqAYowTuxaUymrgfCQFaB+OuFbTvl
+	 vfk88UjD0iJSaLxkfURS2i/1zvcz0qbA5v4753sI=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44T8NI4g068144
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 29 May 2024 03:23:09 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 29 May 2024 03:23:18 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 29
- May 2024 03:23:09 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 03:23:17 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 29 May 2024 03:23:09 -0500
+ Frontend Transport; Wed, 29 May 2024 03:23:18 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44T8N0d7084708;
-	Wed, 29 May 2024 03:23:05 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44T8N0d9084708;
+	Wed, 29 May 2024 03:23:14 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <francesco@dolcini.it>
@@ -48,9 +48,9 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <sabiya.d@ti.com>,
         <u-kumar1@ti.com>, <danishanwar@ti.com>, <srk@ti.com>,
         <s-vadapalli@ti.com>
-Subject: [PATCH v4 1/4] arm64: dts: ti: k3-j784s4-main: Add PCIe nodes
-Date: Wed, 29 May 2024 13:52:56 +0530
-Message-ID: <20240529082259.1619695-2-s-vadapalli@ti.com>
+Subject: [PATCH v4 3/4] arm64: dts: ti: k3-j784s4-evm: Add overlay for PCIe0 and PCIe1 EP Mode
+Date: Wed, 29 May 2024 13:52:58 +0530
+Message-ID: <20240529082259.1619695-4-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240529082259.1619695-1-s-vadapalli@ti.com>
 References: <20240529082259.1619695-1-s-vadapalli@ti.com>
@@ -64,207 +64,141 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-TI's J784S4 SoC has four instances of Gen3 PCIe Controllers namely
-PCIe0, PCIe1, PCIe2 and PCIe3. PCIe0 and PCIe1 are 4-Lane controllers
-while PCIe2 and PCIe3 are 2-Lane controllers.
-
-Add support for the Root Complex Mode of operation of these PCIe instances.
+Add overlay to enable the PCIe0 and PCIe1 instances of PCIe on J784S4-EVM
+in Endpoint mode of operation.
 
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
 v3:
-https://lore.kernel.org/r/20240523111008.4057988-2-s-vadapalli@ti.com/
-Changes since v3:
-- Added ranges for PCIe2 and PCIe3 in k3-j784s4.dtsi which was missed in
-  v3 series.
+https://lore.kernel.org/r/20240523111008.4057988-4-s-vadapalli@ti.com/
+No changes since v3.
 
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 136 +++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j784s4.dtsi      |  10 +-
- 2 files changed, 145 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/ti/Makefile               |  7 +-
+ .../dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso  | 79 +++++++++++++++++++
+ 2 files changed, 85 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-index 6a4554c6c9c1..7f89f8dc24df 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-@@ -48,6 +48,26 @@ scm_conf: bus@100000 {
- 		#size-cells = <1>;
- 		ranges = <0x00 0x00 0x00100000 0x1c000>;
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+index 2c327cc320cf..8673685e7528 100644
+--- a/arch/arm64/boot/dts/ti/Makefile
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -101,6 +101,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
+ # Boards with J784s4 SoC
+ dtb-$(CONFIG_ARCH_K3) += k3-am69-sk.dtb
+ dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
++dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-pcie0-pcie1-ep.dtbo
  
-+		pcie0_ctrl: pcie0-ctrl@4070 {
-+			compatible = "ti,j784s4-pcie-ctrl", "syscon";
-+			reg = <0x4070 0x4>;
-+		};
-+
-+		pcie1_ctrl: pcie1-ctrl@4074 {
-+			compatible = "ti,j784s4-pcie-ctrl", "syscon";
-+			reg = <0x4074 0x4>;
-+		};
-+
-+		pcie2_ctrl: pcie2-ctrl@4078 {
-+			compatible = "ti,j784s4-pcie-ctrl", "syscon";
-+			reg = <0x4078 0x4>;
-+		};
-+
-+		pcie3_ctrl: pcie3-ctrl@407c {
-+			compatible = "ti,j784s4-pcie-ctrl", "syscon";
-+			reg = <0x407c 0x4>;
-+		};
-+
- 		serdes_ln_ctrl: mux-controller@4080 {
- 			compatible = "reg-mux";
- 			reg = <0x00004080 0x30>;
-@@ -907,6 +927,122 @@ main_sdhci1: mmc@4fb0000 {
- 		status = "disabled";
- 	};
+ # Build time test only, enabled by CONFIG_OF_ALL_DTBS
+ k3-am625-beagleplay-csi2-ov5640-dtbs := k3-am625-beagleplay.dtb \
+@@ -148,6 +149,8 @@ k3-j721e-sk-csi2-dual-imx219-dtbs := k3-j721e-sk.dtb \
+ 	k3-j721e-sk-csi2-dual-imx219.dtbo
+ k3-j721s2-evm-pcie1-ep-dtbs := k3-j721s2-common-proc-board.dtb \
+ 	k3-j721s2-evm-pcie1-ep.dtbo
++k3-j784s4-evm-pcie0-pcie1-ep-dtbs := k3-j784s4-evm.dtb \
++	k3-j784s4-evm-pcie0-pcie1-ep.dtbo
+ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
+ 	k3-am625-beagleplay-csi2-tevi-ov5640.dtb \
+ 	k3-am625-sk-csi2-imx219.dtb \
+@@ -168,7 +171,8 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
+ 	k3-am69-sk-csi2-dual-imx219.dtb \
+ 	k3-j721e-evm-pcie0-ep.dtb \
+ 	k3-j721e-sk-csi2-dual-imx219.dtb \
+-	k3-j721s2-evm-pcie1-ep.dtb
++	k3-j721s2-evm-pcie1-ep.dtb \
++	k3-j784s4-evm-pcie0-pcie1-ep.dtb
  
-+	pcie0_rc: pcie@2900000 {
-+		compatible = "ti,j784s4-pcie-host";
+ # Enable support for device-tree overlays
+ DTC_FLAGS_k3-am625-beagleplay += -@
+@@ -186,3 +190,4 @@ DTC_FLAGS_k3-am69-sk += -@
+ DTC_FLAGS_k3-j721e-common-proc-board += -@
+ DTC_FLAGS_k3-j721e-sk += -@
+ DTC_FLAGS_k3-j721s2-common-proc-board += -@
++DTC_FLAGS_k3-j784s4-evm += -@
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso b/arch/arm64/boot/dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso
+new file mode 100644
+index 000000000000..685305092bd8
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso
+@@ -0,0 +1,79 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/**
++ * DT Overlay for enabling PCIE0 and PCIE1 instances in Endpoint Configuration
++ * on J784S4 EVM.
++ *
++ * J784S4 EVM Product Link: https://www.ti.com/tool/J784S4XEVM
++ *
++ * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
++ */
++
++/dts-v1/;
++/plugin/;
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/soc/ti,sci_pm_domain.h>
++
++#include "k3-pinctrl.h"
++
++/*
++ * Since Root Complex and Endpoint modes are mutually exclusive
++ * disable Root Complex mode.
++ */
++&pcie0_rc {
++	status = "disabled";
++};
++
++&pcie1_rc {
++	status = "disabled";
++};
++
++&cbass_main {
++	#address-cells = <2>;
++	#size-cells = <2>;
++	interrupt-parent = <&gic500>;
++
++	pcie0_ep: pcie-ep@2900000 {
++		compatible = "ti,j784s4-pcie-ep";
 +		reg = <0x00 0x02900000 0x00 0x1000>,
 +		      <0x00 0x02907000 0x00 0x400>,
 +		      <0x00 0x0d000000 0x00 0x00800000>,
-+		      <0x00 0x10000000 0x00 0x00001000>;
-+		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
++		      <0x00 0x10000000 0x00 0x08000000>;
++		reg-names = "intd_cfg", "user_cfg", "reg", "mem";
 +		interrupt-names = "link_state";
 +		interrupts = <GIC_SPI 318 IRQ_TYPE_EDGE_RISING>;
-+		device_type = "pci";
 +		ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
 +		max-link-speed = <3>;
 +		num-lanes = <4>;
 +		power-domains = <&k3_pds 332 TI_SCI_PD_EXCLUSIVE>;
 +		clocks = <&k3_clks 332 0>;
 +		clock-names = "fck";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x0 0xff>;
-+		vendor-id = <0x104c>;
-+		device-id = <0xb012>;
-+		msi-map = <0x0 &gic_its 0x0 0x10000>;
++		max-functions = /bits/ 8 <6>;
++		max-virtual-functions = /bits/ 8 <4 4 4 4 0 0>;
 +		dma-coherent;
-+		ranges = <0x01000000 0x0 0x10001000 0x0 0x10001000 0x0 0x0010000>,
-+			 <0x02000000 0x0 0x10011000 0x0 0x10011000 0x0 0x7fef000>;
-+		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
-+		status = "disabled";
++		phys = <&serdes1_pcie0_link>;
++		phy-names = "pcie-phy";
 +	};
 +
-+	pcie1_rc: pcie@2910000 {
-+		compatible = "ti,j784s4-pcie-host";
++	pcie1_ep: pcie-ep@2910000 {
++		compatible = "ti,j784s4-pcie-ep";
 +		reg = <0x00 0x02910000 0x00 0x1000>,
 +		      <0x00 0x02917000 0x00 0x400>,
 +		      <0x00 0x0d800000 0x00 0x00800000>,
-+		      <0x00 0x18000000 0x00 0x00001000>;
-+		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
++		      <0x00 0x18000000 0x00 0x08000000>;
++		reg-names = "intd_cfg", "user_cfg", "reg", "mem";
 +		interrupt-names = "link_state";
 +		interrupts = <GIC_SPI 330 IRQ_TYPE_EDGE_RISING>;
-+		device_type = "pci";
 +		ti,syscon-pcie-ctrl = <&pcie1_ctrl 0x0>;
 +		max-link-speed = <3>;
-+		num-lanes = <4>;
++		num-lanes = <2>;
 +		power-domains = <&k3_pds 333 TI_SCI_PD_EXCLUSIVE>;
 +		clocks = <&k3_clks 333 0>;
 +		clock-names = "fck";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x0 0xff>;
-+		vendor-id = <0x104c>;
-+		device-id = <0xb012>;
-+		msi-map = <0x0 &gic_its 0x10000 0x10000>;
++		max-functions = /bits/ 8 <6>;
++		max-virtual-functions = /bits/ 8 <4 4 4 4 0 0>;
 +		dma-coherent;
-+		ranges = <0x01000000 0x0 0x18001000  0x00 0x18001000  0x0 0x0010000>,
-+			 <0x02000000 0x0 0x18011000  0x00 0x18011000  0x0 0x7fef000>;
-+		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
-+		status = "disabled";
++		phys = <&serdes0_pcie1_link>;
++		phy-names = "pcie-phy";
 +	};
-+
-+	pcie2_rc: pcie@2920000 {
-+		compatible = "ti,j784s4-pcie-host";
-+		reg = <0x00 0x02920000 0x00 0x1000>,
-+		      <0x00 0x02927000 0x00 0x400>,
-+		      <0x00 0x0e000000 0x00 0x00800000>,
-+		      <0x44 0x00000000 0x00 0x00001000>;
-+		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
-+		interrupt-names = "link_state";
-+		interrupts = <GIC_SPI 342 IRQ_TYPE_EDGE_RISING>;
-+		device_type = "pci";
-+		ti,syscon-pcie-ctrl = <&pcie2_ctrl 0x0>;
-+		max-link-speed = <3>;
-+		num-lanes = <2>;
-+		power-domains = <&k3_pds 334 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 334 0>;
-+		clock-names = "fck";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x0 0xff>;
-+		vendor-id = <0x104c>;
-+		device-id = <0xb012>;
-+		msi-map = <0x0 &gic_its 0x20000 0x10000>;
-+		dma-coherent;
-+		ranges = <0x01000000 0x0 0x00001000 0x44 0x00001000 0x0 0x0010000>,
-+			 <0x02000000 0x0 0x00011000 0x44 0x00011000 0x0 0x7fef000>;
-+		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
-+		status = "disabled";
-+	};
-+
-+	pcie3_rc: pcie@2930000 {
-+		compatible = "ti,j784s4-pcie-host";
-+		reg = <0x00 0x02930000 0x00 0x1000>,
-+		      <0x00 0x02937000 0x00 0x400>,
-+		      <0x00 0x0e800000 0x00 0x00800000>,
-+		      <0x44 0x10000000 0x00 0x00001000>;
-+		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
-+		interrupt-names = "link_state";
-+		interrupts = <GIC_SPI 354 IRQ_TYPE_EDGE_RISING>;
-+		device_type = "pci";
-+		ti,syscon-pcie-ctrl = <&pcie3_ctrl 0x0>;
-+		max-link-speed = <3>;
-+		num-lanes = <2>;
-+		power-domains = <&k3_pds 335 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 335 0>;
-+		clock-names = "fck";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x0 0xff>;
-+		vendor-id = <0x104c>;
-+		device-id = <0xb012>;
-+		msi-map = <0x0 &gic_its 0x30000 0x10000>;
-+		dma-coherent;
-+		ranges = <0x01000000 0x0 0x00001000 0x44 0x10001000 0x0 0x0010000>,
-+			 <0x02000000 0x0 0x00011000 0x44 0x10011000 0x0 0x7fef000>;
-+		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
-+		status = "disabled";
-+	};
-+
- 	serdes_wiz0: wiz@5060000 {
- 		compatible = "ti,j784s4-wiz-10g";
- 		#address-cells = <1>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4.dtsi
-index da7368ed6b52..73cc3c1fec08 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4.dtsi
-@@ -238,7 +238,10 @@ cbass_main: bus@100000 {
- 			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0d000000>, /* Most peripherals */
- 			 <0x00 0x04210000 0x00 0x04210000 0x00 0x00010000>, /* VPU0 */
- 			 <0x00 0x04220000 0x00 0x04220000 0x00 0x00010000>, /* VPU1 */
--			 <0x00 0x0d000000 0x00 0x0d000000 0x00 0x01000000>, /* PCIe Core*/
-+			 <0x00 0x0d000000 0x00 0x0d000000 0x00 0x00800000>, /* PCIe0 Core*/
-+			 <0x00 0x0d800000 0x00 0x0d800000 0x00 0x00800000>, /* PCIe1 Core*/
-+			 <0x00 0x0e000000 0x00 0x0e000000 0x00 0x00800000>, /* PCIe2 Core*/
-+			 <0x00 0x0e800000 0x00 0x0e800000 0x00 0x00800000>, /* PCIe3 Core*/
- 			 <0x00 0x10000000 0x00 0x10000000 0x00 0x08000000>, /* PCIe0 DAT0 */
- 			 <0x00 0x18000000 0x00 0x18000000 0x00 0x08000000>, /* PCIe1 DAT0 */
- 			 <0x00 0x64800000 0x00 0x64800000 0x00 0x0070c000>, /* C71_1 */
-@@ -248,7 +251,12 @@ cbass_main: bus@100000 {
- 			 <0x00 0x6f000000 0x00 0x6f000000 0x00 0x00310000>, /* A72 PERIPHBASE */
- 			 <0x00 0x70000000 0x00 0x70000000 0x00 0x00400000>, /* MSMC RAM */
- 			 <0x00 0x30000000 0x00 0x30000000 0x00 0x0c400000>, /* MAIN NAVSS */
-+			 <0x40 0x00000000 0x40 0x00000000 0x01 0x00000000>, /* PCIe0 DAT1 */
- 			 <0x41 0x00000000 0x41 0x00000000 0x01 0x00000000>, /* PCIe1 DAT1 */
-+			 <0x42 0x00000000 0x42 0x00000000 0x01 0x00000000>, /* PCIe2 DAT1 */
-+			 <0x43 0x00000000 0x43 0x00000000 0x01 0x00000000>, /* PCIe3 DAT1 */
-+			 <0x44 0x00000000 0x44 0x00000000 0x00 0x08000000>, /* PCIe2 DAT0 */
-+			 <0x44 0x10000000 0x44 0x10000000 0x00 0x08000000>, /* PCIe3 DAT0 */
- 			 <0x4e 0x20000000 0x4e 0x20000000 0x00 0x00080000>, /* GPU */
- 
- 			 /* MCUSS_WKUP Range */
++};
 -- 
 2.40.1
 
