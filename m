@@ -1,56 +1,35 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDFD16A375;
-	Wed, 29 May 2024 09:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D800169AC1
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 09:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716974275; cv=none; b=jzDvHMKmJwQDatC+GOCUmzYzlcCr3P0IbcdugnXv4Vm2bT9RYetYz2YCoIqzeEB/4N9n7BSyA0aiD6h9IT5fPmz3IfjQ74k9Ft7oDgwNbKcVXJdAegXnar4/Y5YLQC0J2kTzfC/dWVGUTEP/vzKYAyWv6yK6ZC+FrPoLB2+ybdg=
+	t=1716974304; cv=none; b=LBZOs3EueFZNapgpxMeZBZOKkdgIwnRnxON+ZsIHjR1Rp7UKYD8UOeZSDwCweHeMpeXqjrCQBEiKrlIBYNNrKGFSHRVuHxQ6rXvTaVgabRShcD1Yz5ud82pRSB9B84UMsAKo6eC/gP9vflQiINKM0kjMkNO2IPYwpA/G1jaEPpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716974275; c=relaxed/simple;
-	bh=rAquyJjGl8AvRSJGDILkpKhh6ptv3dUO3G5M0U8rfq4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z5+maAOZGZl46JWZclXq75OTkL10LVPByac2XVAMsSatWBDxKGdxdoGIzthf2p8S2O1gZldLTVyyoNezoDXB4Ey6rjFeipXLfj1/N4g/drqM2OuAJakRVz/hdL+KHqYQ0GYA6L8rQvVbJtjQlpN5C0MKrPUlDd1EPlrVkky3rtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H0r7cZOl; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H0r7cZOl"
-Received: by mail.gandi.net (Postfix) with ESMTPA id C6BE740009;
-	Wed, 29 May 2024 09:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716974266;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=avFH+TZR+wV/3lFdLJG11Lahbf9QsDr/KQUzB649vpc=;
-	b=H0r7cZOlg4xUHgNF6KRBu97q0RWPV3zMDpjmjiulr6EXDEx6COUcc3lg9xIFuVgh2VSavM
-	gmc8kRdvwLGhIuv2r3BIjci74MoiNRvmyaHCT4Vb3thdGVp8ZxfjJMJaAFEPMmAVa87/3q
-	e2icDhz1jZ/B+C1kUeJZk+C1SMksPhIIs5ZcRJvLoCs2jJsNqX9eSLZi77E1ZhBNfNekhR
-	G9wmNVj5Onn+u6wxN/yx+mdNd64sPFiAKkwmkE9gsFBhZ/nAJzOCfGcMkTJ7vHqZgAjYz0
-	ucQHGCC1flZTO6ft8JxV3hgffAu4ruTLIIy0uwLJ47b2crTb6QfquWIywBlyfw==
-From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-To: Peter Rosin <peda@axentia.se>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Peter Korsgaard <peter.korsgaard@barco.com>,
-	Wolfram Sang <wsa@kernel.org>
-Cc: linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Christopher Cordahi <christophercordahi@nanometrics.ca>,
-	Bastien Curutchet <bastien.curutchet@bootlin.com>
-Subject: [PATCH v2 3/3] i2c: mux: gpio: Add support for the 'transition-delay-us' property
-Date: Wed, 29 May 2024 11:17:39 +0200
-Message-ID: <20240529091739.10808-4-bastien.curutchet@bootlin.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240529091739.10808-1-bastien.curutchet@bootlin.com>
-References: <20240529091739.10808-1-bastien.curutchet@bootlin.com>
+	s=arc-20240116; t=1716974304; c=relaxed/simple;
+	bh=4UvE+W2qXpROE5X6XFz+QG42/9AFBAKcQoKrPQeLIbI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zn/volo6AwRMv2HpeXhyfQWR2Td/1tbiZ55nyuR1RfohneUStunbi/FdKjygAA3NdfqqNQOvX5Qziik9tL8S1wASo4rTH0PSs2N5oFQd1thsxkPUpTHOQX6UVD6XlgEuUnZK5KnZd7y1yAsXKcaK/ZOLN3f4amB8OPjlFhTO8cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Vq3fR4l3hz1HCtt
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 17:16:31 +0800 (CST)
+Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C37914037F
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 17:18:11 +0800 (CST)
+Received: from huawei.com (10.67.174.55) by kwepemi500008.china.huawei.com
+ (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 29 May
+ 2024 17:18:10 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v2] genirq/debugfs: Print irqdomain flags as human-readable strings
+Date: Wed, 29 May 2024 09:16:28 +0000
+Message-ID: <20240529091628.3666379-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,73 +37,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: bastien.curutchet@bootlin.com
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500008.china.huawei.com (7.221.188.139)
 
-Some hardware need some time to switch from a bus to another. This can
-cause the first transfers following the selection of a bus to fail.
-There is no way to configure this kind of waiting time in the driver.
+Improve the readability of irqdomain debugging information in debugfs by
+printing the flags field of domain files as human-readable strings instead
+of a raw bitmask, which aligned with the existing style used for irqchip
+flags in the irq debug files.
 
-Add support for the 'transition-delay-us' device-tree property. When set,
-the i2c_mux_gpio_select() applies a delay before returning, leaving
-enough time to the hardware to switch to the new bus.
+Before:
+	#cat :cpus:cpu@0:interrupt-controller
+	name:   :cpus:cpu@0:interrupt-controller
+	 size:   0
+	 mapped: 2
+	 flags:  0x00000003
 
-Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
+After:
+	#cat :cpus:cpu@0:interrupt-controller
+	name:   :cpus:cpu@0:interrupt-controller
+	 size:   0
+	 mapped: 3
+	 flags:  0x00000003
+	            IRQ_DOMAIN_FLAG_HIERARCHY
+	            IRQ_DOMAIN_NAME_ALLOCATED
+
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- drivers/i2c/muxes/i2c-mux-gpio.c           | 6 ++++++
- include/linux/platform_data/i2c-mux-gpio.h | 2 ++
- 2 files changed, 8 insertions(+)
+v2:
+- Put irq_debug_show_bits() in debugfs.c and remove the static, and add its
+  function prototype declaration in internals.h for irqdomain.
+- Update the commit message.
+---
+ kernel/irq/debugfs.c   | 10 ++--------
+ kernel/irq/internals.h | 10 ++++++++++
+ kernel/irq/irqdomain.c | 15 +++++++++++++++
+ 3 files changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/i2c/muxes/i2c-mux-gpio.c b/drivers/i2c/muxes/i2c-mux-gpio.c
-index c61e9d9ea695..b9cfc80660e2 100644
---- a/drivers/i2c/muxes/i2c-mux-gpio.c
-+++ b/drivers/i2c/muxes/i2c-mux-gpio.c
-@@ -6,6 +6,7 @@
-  */
+diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
+index aae0402507ed..c6ffb97966be 100644
+--- a/kernel/irq/debugfs.c
++++ b/kernel/irq/debugfs.c
+@@ -9,14 +9,8 @@
  
- #include <linux/bits.h>
-+#include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
- #include <linux/i2c.h>
-@@ -37,6 +38,9 @@ static int i2c_mux_gpio_select(struct i2c_mux_core *muxc, u32 chan)
+ static struct dentry *irq_dir;
  
- 	i2c_mux_gpio_set(mux, chan);
+-struct irq_bit_descr {
+-	unsigned int	mask;
+-	char		*name;
+-};
+-#define BIT_MASK_DESCR(m)	{ .mask = m, .name = #m }
+-
+-static void irq_debug_show_bits(struct seq_file *m, int ind, unsigned int state,
+-				const struct irq_bit_descr *sd, int size)
++void irq_debug_show_bits(struct seq_file *m, int ind, unsigned int state,
++			 const struct irq_bit_descr *sd, int size)
+ {
+ 	int i;
  
-+	if (mux->data.transition_delay)
-+		udelay(mux->data.transition_delay);
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index ed28059e9849..fe0272cd84a5 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -501,6 +501,16 @@ static inline struct irq_data *irqd_get_parent_data(struct irq_data *irqd)
+ #ifdef CONFIG_GENERIC_IRQ_DEBUGFS
+ #include <linux/debugfs.h>
+ 
++struct irq_bit_descr {
++	unsigned int	mask;
++	char		*name;
++};
 +
- 	return 0;
- }
- 
-@@ -116,6 +120,8 @@ static int i2c_mux_gpio_probe_fw(struct gpiomux *mux,
- 	if (device_property_read_u32(dev, "idle-state", &mux->data.idle))
- 		mux->data.idle = I2C_MUX_GPIO_NO_IDLE;
- 
-+	device_property_read_u32(dev, "transition-delay-us", &mux->data.transition_delay);
++#define BIT_MASK_DESCR(m)	{ .mask = m, .name = #m }
 +
- 	return 0;
- }
++void irq_debug_show_bits(struct seq_file *m, int ind, unsigned int state,
++			 const struct irq_bit_descr *sd, int size);
++
+ void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc);
+ static inline void irq_remove_debugfs_entry(struct irq_desc *desc)
+ {
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index c5832caf24cd..ba5c5cc90c3d 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1927,6 +1927,19 @@ static void irq_domain_free_one_irq(struct irq_domain *domain, unsigned int virq
  
-diff --git a/include/linux/platform_data/i2c-mux-gpio.h b/include/linux/platform_data/i2c-mux-gpio.h
-index 816a4cd3ccb5..c449f714d32b 100644
---- a/include/linux/platform_data/i2c-mux-gpio.h
-+++ b/include/linux/platform_data/i2c-mux-gpio.h
-@@ -19,6 +19,7 @@
-  *	position
-  * @n_values: Number of multiplexer positions (busses to instantiate)
-  * @idle: Bitmask to write to MUX when idle or GPIO_I2CMUX_NO_IDLE if not used
-+ * @transition_delay: Delay to wait when a new bus is selected
-  */
- struct i2c_mux_gpio_platform_data {
- 	int parent;
-@@ -26,6 +27,7 @@ struct i2c_mux_gpio_platform_data {
- 	const unsigned *values;
- 	int n_values;
- 	unsigned idle;
-+	int transition_delay;
- };
+ static struct dentry *domain_dir;
  
- #endif /* _LINUX_I2C_MUX_GPIO_H */
++static const struct irq_bit_descr irqdomain_flags[] = {
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_HIERARCHY),
++	BIT_MASK_DESCR(IRQ_DOMAIN_NAME_ALLOCATED),
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_IPI_PER_CPU),
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_IPI_SINGLE),
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI),
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_ISOLATED_MSI),
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_NO_MAP),
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI_PARENT),
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI_DEVICE),
++	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_NONCORE),
++};
++
+ static void
+ irq_domain_debug_show_one(struct seq_file *m, struct irq_domain *d, int ind)
+ {
+@@ -1934,6 +1947,8 @@ irq_domain_debug_show_one(struct seq_file *m, struct irq_domain *d, int ind)
+ 	seq_printf(m, "%*ssize:   %u\n", ind + 1, "", d->revmap_size);
+ 	seq_printf(m, "%*smapped: %u\n", ind + 1, "", d->mapcount);
+ 	seq_printf(m, "%*sflags:  0x%08x\n", ind +1 , "", d->flags);
++	irq_debug_show_bits(m, ind, d->flags, irqdomain_flags,
++			    ARRAY_SIZE(irqdomain_flags));
+ 	if (d->ops && d->ops->debug_show)
+ 		d->ops->debug_show(m, d, NULL, ind + 1);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
 -- 
-2.44.0
+2.34.1
 
