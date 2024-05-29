@@ -1,185 +1,99 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95C415AAD7;
-	Wed, 29 May 2024 02:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48434DA08
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 02:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716949039; cv=none; b=u1JkI20gH6NoLxLNpMb1MihkkQESMxLOHDrNdootNMuh8ib/wNdw/4Ld7JZqyB3+I9VGG5XPaOqNnjxgzOr3ZDWr6WtmCJT+9hCGuX2YVGlB4psCAR4SZ7eSqvIRtmsKf9L366dUWrmGPs8IuHy5NkJ6E3Y5MQFlFMdifgL8V/o=
+	t=1716949104; cv=none; b=cuPGE1EVQ+KwNjLDCqee6JaOnzHueAly2FzVyeoCLXurNX6jBzpPGgefibeMFBhkzPsrsSVK/aXZ42T4ZlfQEisL3F0NDOIqWVkkszQRpCEr9YAY0d6vtSvtTrtn/7o+kvKGcKH3bHlgO57COJpUhGMZzwqUjzf+pAyXsWJBPzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716949039; c=relaxed/simple;
-	bh=34eSlQKHCn8By2FSveem/MuMJRk0WabJBZDj10rsQgY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=brahBvQJbOEoTueIYesNfutiExdrBMhD7FNuc8zhk0RFO2D++v45YylryeiQBeGpOiNmq1U4mELY/8PWKLtDJ0ViHnfwbcReRkSK6p/51qNAxa+K7lsTnTBW8RgIKp3gCr4ZoX8T4IFuIBlWXLtlNOhxIUoCDhbn6p0kYrCID7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=t7s9lkad; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1716949104; c=relaxed/simple;
+	bh=Dp0w0esPZHFbxFaEukOyeyuxS35gYViPUk4+1XQqDMo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AgIKl/HakHwjaqzITo5KplT/Qkfe0ZGDdYoCcQRRXx4f/4Jtgq9OmNCzky5HIC/CczbFMdgTUBehV74pYmXJJTJw59MZ3GZXwMzuMQY7X5uRc5aTaSm2P0pGizlS70xbSAIYBN1ttiHG/A2WkjLdtdn/r4xJpYYBO4OrlHBcNzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FgIP3xwK; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="t7s9lkad"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FgIP3xwK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1716949036; x=1748485036;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=34eSlQKHCn8By2FSveem/MuMJRk0WabJBZDj10rsQgY=;
-  b=t7s9lkadrYZUQ+j3XNjAkIMPwXcY+yS9VsszgSfRNdaHVVLNq8Jazesf
-   ctx2DT9XL3mssokFv41Sz1s51NoqsdOSPg4VovAgq0mVzxxWMre6J4GfT
-   1QeWFViXO1/HdyC8Fg+4HeHEGJDmB4UCwY/mYh1iv1fBj+nrUcm40P8w7
-   KWH/iczysin0C/HYJhdsd5AvGGliiYe1gOYuFvf8rIkwnN0rZf+GYGcT7
-   +Slw+lzswebSd86EPm//A7Ida6Y+Ie1qkJkFrSAaAh+Q+2CmSwrcl4vRz
-   efNntNUU01oVKWJz19FHxBf5y850QEDTOo3PfRhK6yeRAGdlYW7MRFWAY
-   g==;
-X-CSE-ConnectionGUID: OFQuk28LRuK+2e1hiRiHpA==
-X-CSE-MsgGUID: 402bAtDKRfqgld3jqBP74Q==
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716949103; x=1748485103;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Dp0w0esPZHFbxFaEukOyeyuxS35gYViPUk4+1XQqDMo=;
+  b=FgIP3xwKPNbJN4JeatVXOXlBtdRkucFkHWKJDC1B5SQjn6wM+dc/WiM0
+   FbWdR3IOAAlZF2QDKTHsDTSLaaOIK5Vpen3Fs2kPGFaKPhCIJjUhTXVje
+   zCFyGZDEI67IsLO9pgynOrmTd63XHYplAtYwyJj0rMA+EAPgfPS2cks2r
+   IGCdbyzvLpxMeEqbhRKCyClGPY4NY/T3tG5hQgJak80PI8LmieM8/Ktky
+   XTFNnnfC4HBai/NBdWio/EGqI93CFUvoUQJC5lWAnAyvDIrAvNqYFq0qC
+   ZaX981xAqpUov74kSD+4hC0iOoxjtQ4xJA7Eb7y+hTRn9MM6juIWJvlWA
+   w==;
+X-CSE-ConnectionGUID: ujVdAnwZT8mRHyeKtNYzFA==
+X-CSE-MsgGUID: Aop9WeVvRg23rEuXFHBoBA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="30830777"
 X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
-   d="scan'208";a="26661639"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 May 2024 19:17:15 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 28 May 2024 19:17:01 -0700
-Received: from hat-linux.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 28 May 2024 19:17:01 -0700
-From: <Tristram.Ha@microchip.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, Robert Hancock
-	<robert.hancock@calian.com>
-CC: Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli
-	<f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Tristram Ha <tristram.ha@microchip.com>
-Subject: [PATCH v1 net] net: phy: micrel: fix KSZ9477 PHY issues after suspend/resume
-Date: Tue, 28 May 2024 19:20:23 -0700
-Message-ID: <1716949223-4250-1-git-send-email-Tristram.Ha@microchip.com>
-X-Mailer: git-send-email 1.9.1
+   d="scan'208";a="30830777"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 19:18:22 -0700
+X-CSE-ConnectionGUID: JIG75TKJSjer5iNdObqoqQ==
+X-CSE-MsgGUID: HjV1AhmCTkWHJYrEayPf+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="35740713"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 19:18:18 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Byungchul Park <byungchul@sk.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,  <linux-kernel@vger.kernel.org>,
+  <linux-mm@kvack.org>,  <kernel_team@skhynix.com>,
+  <akpm@linux-foundation.org>,  <vernhao@tencent.com>,
+  <mgorman@techsingularity.net>,  <hughd@google.com>,
+  <willy@infradead.org>,  <david@redhat.com>,  <peterz@infradead.org>,
+  <luto@kernel.org>,  <tglx@linutronix.de>,  <mingo@redhat.com>,
+  <bp@alien8.de>,  <dave.hansen@linux.intel.com>,  <rjgolo@gmail.com>
+Subject: Re: [PATCH v10 00/12] LUF(Lazy Unmap Flush) reducing tlb numbers
+ over 90%
+In-Reply-To: <20240527225843.GA50818@system.software.com> (Byungchul Park's
+	message of "Tue, 28 May 2024 07:58:43 +0900")
+References: <20240510065206.76078-1-byungchul@sk.com>
+	<982317c0-7faa-45f0-82a1-29978c3c9f4d@intel.com>
+	<20240527015732.GA61604@system.software.com>
+	<a28df276-069c-4d4d-abaf-efc24983211e@intel.com>
+	<20240527225843.GA50818@system.software.com>
+Date: Wed, 29 May 2024 10:16:26 +0800
+Message-ID: <87le3t5pmt.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ascii
 
-From: Tristram Ha <tristram.ha@microchip.com>
+Byungchul Park <byungchul@sk.com> writes:
 
-When the PHY is powered up after powered down most of the registers are
-reset, so the PHY setup code needs to be done again.  In addition the
-interrupt register will need to be setup again so that link status
-indication works again.
+> On Sun, May 26, 2024 at 07:43:10PM -0700, Dave Hansen wrote:
+>> It has absolutely not been tested nor reviewed enough.  <fud>I hope the
+>
+> It has been tested enough on my side, and it should be reviewed enough
+> for sure.
 
-Fixes: 26dd2974c5b5 ("net: phy: micrel: Move KSZ9477 errata fixes to PHY driver")
-Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
----
-v1
- - put back genphy_restart_ange() in ksz9477_phy_errata()
- - do not change MMD 0x1c reg 0x8 value
+I believe that you have tested and reviewed the patchset by yourself.
+But there are some other cases that you haven't thought about enough
+before, as Dave pointed out.
 
- drivers/net/phy/micrel.c | 62 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 56 insertions(+), 6 deletions(-)
+So, I suggest you to try to find out more possible weakness of your
+patchset.  Begin with what Dave and David pointed out.
 
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 2b8f8b7f1517..8c20cf937530 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -1939,7 +1939,7 @@ static const struct ksz9477_errata_write ksz9477_errata_writes[] = {
- 	{0x1c, 0x20, 0xeeee},
- };
- 
--static int ksz9477_config_init(struct phy_device *phydev)
-+static int ksz9477_phy_errata(struct phy_device *phydev)
- {
- 	int err;
- 	int i;
-@@ -1967,16 +1967,30 @@ static int ksz9477_config_init(struct phy_device *phydev)
- 			return err;
- 	}
- 
-+	err = genphy_restart_aneg(phydev);
-+	if (err)
-+		return err;
-+
-+	return err;
-+}
-+
-+static int ksz9477_config_init(struct phy_device *phydev)
-+{
-+	int err;
-+
-+	/* Only KSZ9897 family of switches needs this fix. */
-+	if ((phydev->phy_id & 0xf) == 1) {
-+		err = ksz9477_phy_errata(phydev);
-+		if (err)
-+			return err;
-+	}
-+
- 	/* According to KSZ9477 Errata DS80000754C (Module 4) all EEE modes
- 	 * in this switch shall be regarded as broken.
- 	 */
- 	if (phydev->dev_flags & MICREL_NO_EEE)
- 		phydev->eee_broken_modes = -1;
- 
--	err = genphy_restart_aneg(phydev);
--	if (err)
--		return err;
--
- 	return kszphy_config_init(phydev);
- }
- 
-@@ -2085,6 +2099,42 @@ static int kszphy_resume(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int ksz9477_resume(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* No need to initialize registers if not powered down. */
-+	ret = phy_read(phydev, MII_BMCR);
-+	if (ret < 0)
-+		return ret;
-+	if (!(ret & BMCR_PDOWN))
-+		return 0;
-+
-+	genphy_resume(phydev);
-+
-+	/* After switching from power-down to normal mode, an internal global
-+	 * reset is automatically generated. Wait a minimum of 1 ms before
-+	 * read/write access to the PHY registers.
-+	 */
-+	usleep_range(1000, 2000);
-+
-+	/* Only KSZ9897 family of switches needs this fix. */
-+	if ((phydev->phy_id & 0xf) == 1) {
-+		ret = ksz9477_phy_errata(phydev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Enable PHY Interrupts */
-+	if (phy_interrupt_is_valid(phydev)) {
-+		phydev->interrupts = PHY_INTERRUPT_ENABLED;
-+		if (phydev->drv->config_intr)
-+			phydev->drv->config_intr(phydev);
-+	}
-+
-+	return 0;
-+}
-+
- static int kszphy_probe(struct phy_device *phydev)
- {
- 	const struct kszphy_type *type = phydev->drv->driver_data;
-@@ -5493,7 +5543,7 @@ static struct phy_driver ksphy_driver[] = {
- 	.config_intr	= kszphy_config_intr,
- 	.handle_interrupt = kszphy_handle_interrupt,
- 	.suspend	= genphy_suspend,
--	.resume		= genphy_resume,
-+	.resume		= ksz9477_resume,
- 	.get_features	= ksz9477_get_features,
- } };
- 
--- 
-2.34.1
+> I will respin after rebasing the current mm-unstble and
+> working on vfs shortly.
+>
+> 	Byungchul
+>
+>> performance gains stick around once more of the bugs are gone.</fud>
 
+--
+Best Regards,
+Huang, Ying
