@@ -1,707 +1,290 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8CB1C8FC4;
-	Wed, 29 May 2024 20:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D6C1C8FC3;
+	Wed, 29 May 2024 20:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717015935; cv=none; b=oA6/7HDwBzDCpjxduj8nxUWk/s2S8v5QGVQ9Yy3+VkTzlpSgcVResLab4xX4syRdVFdNXhwHIg3jQgF9c7exoObCoUD5gcg7ucPby016aP3PGISqFzjXdE6hjaZrigQDO0U7E27b2rDSAVtnxM7dk+y9w54JyauUqbD/9fKL9RY=
+	t=1717015965; cv=none; b=H3e6HtjzSYZ2QjujaLDDzw+Q1wBNhB8RdHW+q+xpLIJ6QyWxn5+1FqxHCY1euva6FhUhVfvdLcd/H4UHvnlD6pykJaBIeM3vcOFqTb6vZxBofOSf9oEyMghR7vmrQiTCJBkuQEbocDECAEcJ9MGQSfIZNd3h2SGpHiEMJoGnLgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717015935; c=relaxed/simple;
-	bh=dL7pHEn9S4eWhuWfF+clYoSRFyaOTZRYzPy6UJ2KAxM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oWfxyQvVD4Ny1ahk6Ezm0rDLhQivsQXOzgZDKiNKKTV9wnBMeroVM858ulC4Kz0O6x/XhJnOrL2Q9z1PmNFlfDYMXtuNAZ2vWEcqjkFW6AgTousgJVxRBfOFDPQMGVy+3mpCPZ4hUQFbPvdsOShzPNJwC+dMys+MqhPhOQ8ylG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l5tlOOg/; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5tlOOg/"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1f44b5b9de6so1579175ad.3;
-        Wed, 29 May 2024 13:52:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717015932; x=1717620732; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2u+Ax6de+UJXyMIvZDgx1oZsHAvf+AzdXxEDtwiE02g=;
-        b=l5tlOOg/m3nAkKeN247amDbXbL0rV8P0vxNUTsjKHWi7YQPQUb3TXQ0zXXBUK6aqk9
-         WDqiplnmBfhZ36vqBrF/f8AICakkS5aQqRBjzAcjK1k9agXcZbqXO5zTR9xztb3pidcs
-         /lGw4uX57h3GFnCleJ+N2CXQryXlsev4Ke8VCoO7DH1Qtv7CP66+C62OBYdYIj5E9imU
-         58FS/wtiOG0ZF1TZk0SJWccYwEKEaTPVs1CLKl/pV3Mj1XAPYdJuFg7z7KxduCwrLitH
-         5sK5YzrKyVOFC0tjvRVrT0H8FwxV+JghkgUV9UP7Mf/KYiNPm1GxHpYt5CEzOYFxrAFr
-         e80w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717015932; x=1717620732;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2u+Ax6de+UJXyMIvZDgx1oZsHAvf+AzdXxEDtwiE02g=;
-        b=MoFUaP2eRKDVRuoV0lnV6Jzf0KbzmjlPeb+MSA0Jt54897j+qwYxwts6L28qkjomkS
-         V1wb5Ex+zriFKJwRyq7WNM7XK+MIbgpf2CHAaUPrDlVd0oJsSyDP7jvEsL+1sr4K6NPb
-         55qJTJzQdRTrCc5+jzDOalxtusGwkmFCk0At+7HLuvKN7QAshaCZjIXnUe7r8J28/QZ1
-         Sk56HGwNx6W+GAzpwt5lrPKE+knrT8uUbooK0ueVJykYHFVY9bnl+onczETCjesn03py
-         qYN0rqfDhrCAqW+fwO8R623K8x8Q+ac9u9hDZuT4wopXdAUYrv41aOFF1KGxi+k0uoBm
-         L9jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdWSiwTkHvyA8QVEUr8kEymxBwHY6ytXunVE1y9EC7a+u9TwH7G8Z7dFe7ZSXATbWvkEUS3QqRarCM8CVPrwIMUW24+fdsQknUdoS0aKDKhOkxcKt9vUbFfLXJI/cfNal+BUacdG21IQ==
-X-Gm-Message-State: AOJu0Yxy1Uc0ZYI3LphiyjeXcXN9QP6HBXBX6MOPEC7F0lSb81wpfpKW
-	R5JaCqRKmyNmHw+YWx/+jK42FDc2YowNQAnUvVq2GMua3Te4LttL22h9ew==
-X-Google-Smtp-Source: AGHT+IGGjVTbGj3Y8Gd7CtkWNrTHqQbPcYHL5kxeVf5zf9v7gBRGqtoHZkl96DUAQclCTjjhaTvNFQ==
-X-Received: by 2002:a17:902:ec91:b0:1f4:8738:6510 with SMTP id d9443c01a7336-1f619830b78mr1640145ad.44.1717015931623;
-        Wed, 29 May 2024 13:52:11 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f60f227705sm5606905ad.126.2024.05.29.13.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 13:52:11 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: linux-hwmon@vger.kernel.org
-Cc: Hristo Venev <hristo@venev.name>,
-	=?UTF-8?q?Ren=C3=A9=20Rebe?= <rene@exactcode.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Radu Sabau <radu.sabau@analog.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 2/3] hwmon: Add support for SPD5118 compliant temperature sensors
-Date: Wed, 29 May 2024 13:52:03 -0700
-Message-Id: <20240529205204.81208-3-linux@roeck-us.net>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240529205204.81208-1-linux@roeck-us.net>
-References: <20240529205204.81208-1-linux@roeck-us.net>
+	s=arc-20240116; t=1717015965; c=relaxed/simple;
+	bh=XrL17gMzC899ukvGXP1nNVuCb5iGiNqOEboHSMDscGw=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Eqjankd5cqMOdXMgH0zLgPoSbMbzKeUtmAya4TdnLyU0RRyU6HrR+N/p6tsHzNVME0+rOOGoefMYzzZdSrSWau04dqPDYQUl6Gmp85DdMMMugbgt6hw9sMp54eUbf5omH1CgkV2ON2wW+eMoF+QfU1q57LJ+qBHm2sTMnAWrHj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.72.107) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 29 May
+ 2024 23:52:31 +0300
+Subject: Re: [net-next PATCH v4 7/7] net: ravb: Allocate RX buffers via page
+ pool
+To: Paul Barker <paul.barker.ct@bp.renesas.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	=?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+CC: Biju Das <biju.das.jz@bp.renesas.com>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>, Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>, <netdev@vger.kernel.org>,
+	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240528150339.6791-1-paul.barker.ct@bp.renesas.com>
+ <20240528150339.6791-8-paul.barker.ct@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <eefce0af-2771-a56c-753d-85fe991fdf31@omp.ru>
+Date: Wed, 29 May 2024 23:52:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240528150339.6791-8-paul.barker.ct@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 05/29/2024 20:36:54
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 185600 [May 29 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 20 0.3.20
+ 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.72.107 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.72.107
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 05/29/2024 20:41:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 5/29/2024 5:02:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Add support for SPD5118 (Jedec JESD300-5B.01) compliant temperature
-sensors. Such sensors are typically found on DDR5 memory modules.
+On 5/28/24 6:03 PM, Paul Barker wrote:
 
-Cc: René Rebe <rene@exactcode.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-Tested on MAG B650 TOMAHAWK WIFI with CMH32GX5M2B6000Z30
-(Corsair Venegance DDR5).
+> This patch makes multiple changes that can't be separated:
+> 
+>   1) Allocate plain RX buffers via a page pool instead of allocating
+>      SKBs, then use build_skb() when a packet is received.
+>   2) For GbEth IP, reduce the RX buffer size to 2kB.
+>   3) For GbEth IP, merge packets which span more than one RX descriptor
+>      as SKB fragments instead of copying data.
+> 
+> Implementing (1) without (2) would require the use of an order-1 page
+> pool (instead of an order-0 page pool split into page fragments) for
+> GbEth.
+> 
+> Implementing (2) without (3) would leave us no space to re-assemble
+> packets which span more than one RX descriptor.
+> 
+> Implementing (3) without (1) would not be possible as the network stack
+> expects to use put_page() or page_pool_put_page() to free SKB fragments
+> after an SKB is consumed.
+> 
+> RX checksum offload support is adjusted to handle both linear and
+> nonlinear (fragmented) packets.
+> 
+> This patch gives the following improvements during testing with iperf3.
+> 
+>   * RZ/G2L:
+>     * TCP RX: same bandwidth at -43% CPU load (70% -> 40%)
+>     * UDP RX: same bandwidth at -17% CPU load (88% -> 74%)
+> 
+>   * RZ/G2UL:
+>     * TCP RX: +30% bandwidth (726Mbps -> 941Mbps)
+>     * UDP RX: +417% bandwidth (108Mbps -> 558Mbps)
+> 
+>   * RZ/G3S:
+>     * TCP RX: +64% bandwidth (562Mbps -> 920Mbps)
+>     * UDP RX: +420% bandwidth (90Mbps -> 468Mbps)
+> 
+>   * RZ/Five:
+>     * TCP RX: +217% bandwidth (145Mbps -> 459Mbps)
+>     * UDP RX: +470% bandwidth (20Mbps -> 114Mbps)
+> 
+> There is no significant impact on bandwidth or CPU load in testing on
+> RZ/G2H or R-Car M3N.
+> 
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> ---
+> Changes v3->v4:
+>   * Used a separate page pool for each RX queue.
+>   * Passed struct ravb_rx_desc to ravb_alloc_rx_buffer() so that we can
+>     simplify the calling function.
+>   * Explained the calculation of rx_desc->ds_cc.
+>   * Added handling of nonlinear SKBs in ravb_rx_csum_gbeth().
+> 
+>  drivers/net/ethernet/renesas/ravb.h      |  10 +-
+>  drivers/net/ethernet/renesas/ravb_main.c | 230 ++++++++++++++---------
+>  2 files changed, 146 insertions(+), 94 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
+> index 6a7aa7dd17e6..f2091a17fcf7 100644
+> --- a/drivers/net/ethernet/renesas/ravb.h
+> +++ b/drivers/net/ethernet/renesas/ravb.h
+[...]> @@ -1094,7 +1099,8 @@ struct ravb_private {
+>  	struct ravb_tx_desc *tx_ring[NUM_TX_QUEUE];
+>  	void *tx_align[NUM_TX_QUEUE];
+>  	struct sk_buff *rx_1st_skb;
+> -	struct sk_buff **rx_skb[NUM_RX_QUEUE];
+> +	struct page_pool *rx_pool[NUM_RX_QUEUE];
 
-René: I included you as MODULE_AUTHOR since the patch is derived from
-      your driver. Please let me know if you prefer not to be listed as
-      author.
+   Don't we need #include <net/page_pool/types.h>
 
- Documentation/hwmon/index.rst   |   1 +
- Documentation/hwmon/spd5118.rst |  60 ++++
- drivers/hwmon/Kconfig           |  12 +
- drivers/hwmon/Makefile          |   1 +
- drivers/hwmon/spd5118.c         | 482 ++++++++++++++++++++++++++++++++
- 5 files changed, 556 insertions(+)
- create mode 100644 Documentation/hwmon/spd5118.rst
- create mode 100644 drivers/hwmon/spd5118.c
+[...]
+> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+> index dd92f074881a..bb7f7d44be6e 100644
+> --- a/drivers/net/ethernet/renesas/ravb_main.c
+> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+[...]
+> @@ -317,35 +289,56 @@ static void ravb_ring_free(struct net_device *ndev, int q)
+>  	priv->tx_skb[q] = NULL;
+>  }
+>  
+> +static int
+> +ravb_alloc_rx_buffer(struct net_device *ndev, int q, u32 entry, gfp_t gfp_mask,
+> +		     struct ravb_rx_desc *rx_desc)
+> +{
+> +	struct ravb_private *priv = netdev_priv(ndev);
+> +	const struct ravb_hw_info *info = priv->info;
+> +	struct ravb_rx_buffer *rx_buff = &priv->rx_buffers[q][entry];
+> +	dma_addr_t dma_addr;
+> +	unsigned int size;
+> +
+> +	size = info->rx_buffer_size;
+> +	rx_buff->page = page_pool_alloc(priv->rx_pool[q], &rx_buff->offset, &size,
+> +					gfp_mask);
+> +	if (unlikely(!rx_buff->page)) {
+> +		/* We just set the data size to 0 for a failed mapping
+> +		 * which should prevent DMA from happening...
+> +		 */
+> +		rx_desc->ds_cc = cpu_to_le16(0);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	dma_addr = page_pool_get_dma_addr(rx_buff->page) + rx_buff->offset;
+> +	dma_sync_single_for_device(ndev->dev.parent, dma_addr,
+> +				   info->rx_buffer_size, DMA_FROM_DEVICE);
 
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index 03d313af469a..6e7b8726b60c 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -215,6 +215,7 @@ Hardware Monitoring Kernel Drivers
-    smsc47m192
-    smsc47m1
-    sparx5-temp
-+   spd5118
-    stpddc60
-    surface_fan
-    sy7636a-hwmon
-diff --git a/Documentation/hwmon/spd5118.rst b/Documentation/hwmon/spd5118.rst
-new file mode 100644
-index 000000000000..67e990551a8a
---- /dev/null
-+++ b/Documentation/hwmon/spd5118.rst
-@@ -0,0 +1,60 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+Kernel driver spd5118
-+=====================
-+
-+Supported chips:
-+
-+  * SPD5118 (JEDEC JESD300-5B.01) compliant temperature sensor chips
-+
-+    JEDEC standard download:
-+	https://www.jedec.org/standards-documents/docs/jesd300-5b01
-+	(account required)
-+
-+
-+    Prefix: 'spd5118'
-+
-+    Addresses scanned: I2C 0x50 - 0x57
-+
-+Author:
-+	Guenter Roeck <linux@roeck-us.net>
-+
-+
-+Description
-+-----------
-+
-+This driver implements support for SPD5118 (JEDEC JESD300-5B.01) compliant
-+temperature sensors, which are used on many DDR5 memory modules. Some systems
-+use the sensor to prevent memory overheating by automatically throttling
-+the memory controller.
-+
-+The driver auto-detects SPD5118 compliant chips, but can also be instantiated
-+using devicetree/firmware nodes.
-+
-+A SPD5118 compliant chip supports a single temperature sensor. Critical minimum,
-+minimum, maximum, and critical temperature can be configured. There are alarms
-+for low critical, low, high, and critical thresholds.
-+
-+
-+PEC configuration
-+-----------------
-+
-+If the I2C/SMBus controller supports PEC, it can be enabled or disabled using
-+the 'pec' sysfs attribute attached to the i2c device.
-+
-+
-+Hardware monitoring sysfs entries
-+---------------------------------
-+
-+======================= ==================================
-+temp1_input		Temperature (RO)
-+temp1_lcrit		Low critical high temperature (RW)
-+temp1_min		Minimum temperature (RW)
-+temp1_max		Maximum temperature (RW)
-+temp1_crit		Critical high temperature (RW)
-+
-+temp1_lcrit_alarm	Temperature low critical alarm
-+temp1_min_alarm		Temperature low alarm
-+temp1_max_alarm		Temperature high alarm
-+temp1_crit_alarm	Temperature critical alarm
-+======================= ===========================================
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 7f384a2494c9..111d05718b89 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -2182,6 +2182,18 @@ config SENSORS_INA3221
- 	  This driver can also be built as a module. If so, the module
- 	  will be called ina3221.
- 
-+config SENSORS_SPD5118
-+	tristate "SPD5118 Compliant Temperature Sensors"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  If you say yes here you get support for SPD5118 (JEDEC JESD300-5B)
-+	  compliant temperature sensors. Such sensors are found on DDR5 memory
-+	  modules.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called spd5118.
-+
- config SENSORS_TC74
- 	tristate "Microchip TC74"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index e3f25475d1f0..07c593fae9a3 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -207,6 +207,7 @@ obj-$(CONFIG_SENSORS_SMSC47B397)+= smsc47b397.o
- obj-$(CONFIG_SENSORS_SMSC47M1)	+= smsc47m1.o
- obj-$(CONFIG_SENSORS_SMSC47M192)+= smsc47m192.o
- obj-$(CONFIG_SENSORS_SPARX5)	+= sparx5-temp.o
-+obj-$(CONFIG_SENSORS_SPD51118)	+= spd5118.o
- obj-$(CONFIG_SENSORS_STTS751)	+= stts751.o
- obj-$(CONFIG_SENSORS_SURFACE_FAN)+= surface_fan.o
- obj-$(CONFIG_SENSORS_SY7636A)	+= sy7636a-hwmon.o
-diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
-new file mode 100644
-index 000000000000..440503d09d13
---- /dev/null
-+++ b/drivers/hwmon/spd5118.c
-@@ -0,0 +1,482 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Driver for Jedec 5118 compliant temperature sensors
-+ *
-+ * Derived from https://github.com/Steve-Tech/SPD5118-DKMS
-+ * Originally from T/2 driver at https://t2sde.org/packages/linux
-+ *	Copyright (c) 2023 René Rebe, ExactCODE GmbH; Germany.
-+ *
-+ * Copyright (c) 2024 Guenter Roeck
-+ *
-+ * Inspired by ee1004.c and jc42.c.
-+ *
-+ * SPD5118 compliant temperature sensors are typically used on DDR5
-+ * memory modules.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/bits.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/hwmon.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/units.h>
-+
-+/* Addresses to scan */
-+static const unsigned short normal_i2c[] = {
-+	0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, I2C_CLIENT_END };
-+
-+/* SPD5118 registers. */
-+#define SPD5118_REG_TYPE		0x00	/* MR0:MR1 */
-+#define SPD5118_REG_REVISION		0x02	/* MR2 */
-+#define SPD5118_REG_VENDOR		0x03	/* MR3:MR4 */
-+#define SPD5118_REG_CAPABILITY		0x05	/* MR5 */
-+#define SPD5118_REG_I2C_LEGACY_MODE	0x0B	/* MR11 */
-+#define SPD5118_REG_TEMP_CLR		0x13	/* MR19 */
-+#define SPD5118_REG_ERROR_CLR		0x14	/* MR20 */
-+#define SPD5118_REG_TEMP_CONFIG		0x1A	/* MR26 */
-+#define SPD5118_REG_TEMP_MAX		0x1c	/* MR28:MR29 */
-+#define SPD5118_REG_TEMP_MIN		0x1e	/* MR30:MR31 */
-+#define SPD5118_REG_TEMP_CRIT		0x20	/* MR32:MR33 */
-+#define SPD5118_REG_TEMP_LCRIT		0x22	/* MR34:MR35 */
-+#define SPD5118_REG_TEMP		0x31	/* MR49:MR50 */
-+#define SPD5118_REG_TEMP_STATUS		0x33	/* MR51 */
-+
-+#define SPD5118_TEMP_STATUS_HIGH	BIT(0)
-+#define SPD5118_TEMP_STATUS_LOW		BIT(1)
-+#define SPD5118_TEMP_STATUS_CRIT	BIT(2)
-+#define SPD5118_TEMP_STATUS_LCRIT	BIT(3)
-+
-+#define SPD5118_CAP_TS_SUPPORT		BIT(1)	/* temperature sensor support */
-+
-+#define SPD5118_TS_DISABLE		BIT(0)	/* temperature sensor disable */
-+
-+/* Temperature unit in millicelsius */
-+#define SPD5118_TEMP_UNIT		(MILLIDEGREE_PER_DEGREE / 4)
-+/* Representable temperature range in millicelsius */
-+#define SPD5118_TEMP_RANGE_MIN		-256000
-+#define SPD5118_TEMP_RANGE_MAX		255750
-+
-+static int spd5118_temp_from_reg(u16 reg)
-+{
-+	int temp = sign_extend32(reg >> 2, 10);
-+
-+	return temp * SPD5118_TEMP_UNIT;
-+}
-+
-+static u16 spd5118_temp_to_reg(long temp)
-+{
-+	temp = clamp_val(temp, SPD5118_TEMP_RANGE_MIN, SPD5118_TEMP_RANGE_MAX);
-+	return (DIV_ROUND_CLOSEST(temp, SPD5118_TEMP_UNIT) & 0x7ff) << 2;
-+}
-+
-+static int spd5118_read_temp(struct regmap *regmap, u32 attr, long *val)
-+{
-+	int reg, err;
-+	u8 regval[2];
-+	u16 temp;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		reg = SPD5118_REG_TEMP;
-+		break;
-+	case hwmon_temp_max:
-+		reg = SPD5118_REG_TEMP_MAX;
-+		break;
-+	case hwmon_temp_min:
-+		reg = SPD5118_REG_TEMP_MIN;
-+		break;
-+	case hwmon_temp_crit:
-+		reg = SPD5118_REG_TEMP_CRIT;
-+		break;
-+	case hwmon_temp_lcrit:
-+		reg = SPD5118_REG_TEMP_LCRIT;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	err = regmap_bulk_read(regmap, reg, regval, 2);
-+	if (err)
-+		return err;
-+
-+	temp = (regval[1] << 8) | regval[0];
-+
-+	*val = spd5118_temp_from_reg(temp);
-+	return 0;
-+}
-+
-+static int spd5118_read_alarm(struct regmap *regmap, u32 attr, long *val)
-+{
-+	unsigned int mask, regval;
-+	int err;
-+
-+	switch (attr) {
-+	case hwmon_temp_max_alarm:
-+		mask = SPD5118_TEMP_STATUS_HIGH;
-+		break;
-+	case hwmon_temp_min_alarm:
-+		mask = SPD5118_TEMP_STATUS_LOW;
-+		break;
-+	case hwmon_temp_crit_alarm:
-+		mask = SPD5118_TEMP_STATUS_CRIT;
-+		break;
-+	case hwmon_temp_lcrit_alarm:
-+		mask = SPD5118_TEMP_STATUS_LCRIT;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	err = regmap_read(regmap, SPD5118_REG_TEMP_STATUS, &regval);
-+	if (err < 0)
-+		return err;
-+	*val = !!(regval & mask);
-+	if (*val)
-+		return regmap_write(regmap, SPD5118_REG_TEMP_CLR, mask);
-+	return 0;
-+}
-+
-+static int spd5118_read_enable(struct regmap *regmap, u32 attr, long *val)
-+{
-+	u32 regval;
-+	int err;
-+
-+	err = regmap_read(regmap, SPD5118_REG_TEMP_CONFIG, &regval);
-+	if (err < 0)
-+		return err;
-+	*val = !(regval & SPD5118_TS_DISABLE);
-+	return 0;
-+}
-+
-+static int spd5118_read(struct device *dev, enum hwmon_sensor_types type,
-+			u32 attr, int channel, long *val)
-+{
-+	struct regmap *regmap = dev_get_drvdata(dev);
-+
-+	if (type != hwmon_temp)
-+		return -EOPNOTSUPP;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+	case hwmon_temp_max:
-+	case hwmon_temp_min:
-+	case hwmon_temp_crit:
-+	case hwmon_temp_lcrit:
-+		return spd5118_read_temp(regmap, attr, val);
-+	case hwmon_temp_max_alarm:
-+	case hwmon_temp_min_alarm:
-+	case hwmon_temp_crit_alarm:
-+	case hwmon_temp_lcrit_alarm:
-+		return spd5118_read_alarm(regmap, attr, val);
-+	case hwmon_temp_enable:
-+		return spd5118_read_enable(regmap, attr, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int spd5118_write_temp(struct regmap *regmap, u32 attr, long val)
-+{
-+	u8 regval[2];
-+	u16 temp;
-+	int reg;
-+
-+	switch (attr) {
-+	case hwmon_temp_max:
-+		reg = SPD5118_REG_TEMP_MAX;
-+		break;
-+	case hwmon_temp_min:
-+		reg = SPD5118_REG_TEMP_MIN;
-+		break;
-+	case hwmon_temp_crit:
-+		reg = SPD5118_REG_TEMP_CRIT;
-+		break;
-+	case hwmon_temp_lcrit:
-+		reg = SPD5118_REG_TEMP_LCRIT;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	temp = spd5118_temp_to_reg(val);
-+	regval[0] = temp & 0xff;
-+	regval[1] = temp >> 8;
-+
-+	return regmap_bulk_write(regmap, reg, regval, 2);
-+}
-+
-+static int spd5118_write_enable(struct regmap *regmap, u32 attr, long val)
-+{
-+	if (val && val != 1)
-+		return -EINVAL;
-+
-+	return regmap_update_bits(regmap, SPD5118_REG_TEMP_CONFIG,
-+				  SPD5118_TS_DISABLE,
-+				  val ? 0 : SPD5118_TS_DISABLE);
-+}
-+
-+static int spd5118_temp_write(struct regmap *regmap, u32 attr, long val)
-+{
-+	switch (attr) {
-+	case hwmon_temp_max:
-+	case hwmon_temp_min:
-+	case hwmon_temp_crit:
-+	case hwmon_temp_lcrit:
-+		return spd5118_write_temp(regmap, attr, val);
-+	case hwmon_temp_enable:
-+		return spd5118_write_enable(regmap, attr, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int spd5118_write(struct device *dev, enum hwmon_sensor_types type,
-+			 u32 attr, int channel, long val)
-+{
-+	struct regmap *regmap = dev_get_drvdata(dev);
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		return spd5118_temp_write(regmap, attr, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static umode_t spd5118_is_visible(const void *_data, enum hwmon_sensor_types type,
-+				  u32 attr, int channel)
-+{
-+	if (type != hwmon_temp)
-+		return 0;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		return 0444;
-+	case hwmon_temp_min:
-+	case hwmon_temp_max:
-+	case hwmon_temp_lcrit:
-+	case hwmon_temp_crit:
-+	case hwmon_temp_enable:
-+		return 0644;
-+	case hwmon_temp_min_alarm:
-+	case hwmon_temp_max_alarm:
-+	case hwmon_temp_crit_alarm:
-+	case hwmon_temp_lcrit_alarm:
-+		return 0444;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static inline bool spd5118_parity8(u8 w)
-+{
-+	w ^= w >> 4;
-+	return (0x6996 >> (w & 0xf)) & 1;
-+}
-+
-+/*
-+ * Bank and vendor id are 8-bit fields with seven data bits and odd parity.
-+ * Vendor IDs 0 and 0x7f are invalid.
-+ * See Jedec standard JEP106BJ for details and a list of assigned vendor IDs.
-+ */
-+static bool spd5118_vendor_valid(u8 bank, u8 id)
-+{
-+	if (!spd5118_parity8(bank) || !spd5118_parity8(id))
-+		return false;
-+
-+	id &= 0x7f;
-+	return id && id != 0x7f;
-+}
-+
-+/* Return 0 if detection is successful, -ENODEV otherwise */
-+static int spd5118_detect(struct i2c_client *client, struct i2c_board_info *info)
-+{
-+	struct i2c_adapter *adapter = client->adapter;
-+	int regval;
-+
-+	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
-+				     I2C_FUNC_SMBUS_WORD_DATA))
-+		return -ENODEV;
-+
-+	regval = i2c_smbus_read_word_swapped(client, SPD5118_REG_TYPE);
-+	if (regval != 0x5118)
-+		return -ENODEV;
-+
-+	regval = i2c_smbus_read_word_data(client, SPD5118_REG_VENDOR);
-+	if (regval < 0 || !spd5118_vendor_valid(regval & 0xff, regval >> 8))
-+		return -ENODEV;
-+
-+	regval = i2c_smbus_read_byte_data(client, SPD5118_REG_CAPABILITY);
-+	if (regval < 0)
-+		return -ENODEV;
-+
-+	regval = i2c_smbus_read_byte_data(client, SPD5118_REG_TEMP_CLR);
-+	if (regval)
-+		return -ENODEV;
-+	regval = i2c_smbus_read_byte_data(client, SPD5118_REG_ERROR_CLR);
-+	if (regval)
-+		return -ENODEV;
-+
-+	if (!(regval & SPD5118_CAP_TS_SUPPORT) || (regval & 0xfc))
-+		return -ENODEV;
-+
-+	regval = i2c_smbus_read_byte_data(client, SPD5118_REG_REVISION);
-+	if (regval < 0 || (regval & 0xc1))
-+		return -ENODEV;
-+
-+	regval = i2c_smbus_read_byte_data(client, SPD5118_REG_TEMP_CONFIG);
-+	if (regval < 0)
-+		return -ENODEV;
-+	if (regval & ~SPD5118_TS_DISABLE)
-+		return -ENODEV;
-+
-+	strscpy(info->type, "spd5118", I2C_NAME_SIZE);
-+	return 0;
-+}
-+
-+static const struct hwmon_channel_info *spd5118_info[] = {
-+	HWMON_CHANNEL_INFO(chip,
-+			   HWMON_C_REGISTER_TZ),
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT |
-+			   HWMON_T_LCRIT | HWMON_T_LCRIT_ALARM |
-+			   HWMON_T_MIN | HWMON_T_MIN_ALARM |
-+			   HWMON_T_MAX | HWMON_T_MAX_ALARM |
-+			   HWMON_T_CRIT | HWMON_T_CRIT_ALARM |
-+			   HWMON_T_ENABLE),
-+	NULL
-+};
-+
-+static const struct hwmon_ops spd5118_hwmon_ops = {
-+	.is_visible = spd5118_is_visible,
-+	.read = spd5118_read,
-+	.write = spd5118_write,
-+};
-+
-+static const struct hwmon_chip_info spd5118_chip_info = {
-+	.ops = &spd5118_hwmon_ops,
-+	.info = spd5118_info,
-+};
-+
-+static bool spd5118_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SPD5118_REG_TEMP_CLR:
-+	case SPD5118_REG_TEMP_CONFIG:
-+	case SPD5118_REG_TEMP_MAX:
-+	case SPD5118_REG_TEMP_MAX + 1:
-+	case SPD5118_REG_TEMP_MIN:
-+	case SPD5118_REG_TEMP_MIN + 1:
-+	case SPD5118_REG_TEMP_CRIT:
-+	case SPD5118_REG_TEMP_CRIT + 1:
-+	case SPD5118_REG_TEMP_LCRIT:
-+	case SPD5118_REG_TEMP_LCRIT + 1:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool spd5118_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SPD5118_REG_TEMP_CLR:
-+	case SPD5118_REG_ERROR_CLR:
-+	case SPD5118_REG_TEMP:
-+	case SPD5118_REG_TEMP + 1:
-+	case SPD5118_REG_TEMP_STATUS:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config spd5118_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = SPD5118_REG_TEMP_STATUS,
-+	.writeable_reg = spd5118_writeable_reg,
-+	.volatile_reg = spd5118_volatile_reg,
-+	.cache_type = REGCACHE_MAPLE,
-+};
-+
-+static int spd5118_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	unsigned int regval, revision, vendor, bank;
-+	struct device *hwmon_dev;
-+	struct regmap *regmap;
-+	int err;
-+
-+	regmap = devm_regmap_init_i2c(client, &spd5118_regmap_config);
-+	if (IS_ERR(regmap))
-+		return dev_err_probe(dev, PTR_ERR(regmap), "regmap init failed\n");
-+
-+	err = regmap_read(regmap, SPD5118_REG_CAPABILITY, &regval);
-+	if (err)
-+		return err;
-+	if (!(regval & SPD5118_CAP_TS_SUPPORT))
-+		return -ENODEV;
-+
-+	err = regmap_read(regmap, SPD5118_REG_REVISION, &revision);
-+	if (err)
-+		return err;
-+
-+	err = regmap_read(regmap, SPD5118_REG_VENDOR, &bank);
-+	if (err)
-+		return err;
-+	err = regmap_read(regmap, SPD5118_REG_VENDOR + 1, &vendor);
-+	if (err)
-+		return err;
-+	if (!spd5118_vendor_valid(bank, vendor))
-+		return -ENODEV;
-+
-+	hwmon_dev = devm_hwmon_device_register_with_info(dev, "spd5118",
-+							 regmap, &spd5118_chip_info,
-+							 NULL);
-+	if (IS_ERR(hwmon_dev))
-+		return PTR_ERR(hwmon_dev);
-+
-+	/*
-+	 * From JESD300-5B
-+	 *   MR2 bits [5:4]: Major revision, 1..4
-+	 *   MR2 bits [3:1]: Minor revision, 0..8? Probably a typo, assume 1..8
-+	 */
-+	dev_info(dev, "DDR5 temperature sensor: vendor 0x%02x:0x%02x revision %d.%d\n",
-+		 bank & 0x7f, vendor, ((revision >> 4) & 0x03) + 1, ((revision >> 1) & 0x07) + 1);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id spd5118_id[] = {
-+	{ "spd5118", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, spd5118_id);
-+
-+static const struct of_device_id spd5118_of_ids[] = {
-+	{ .compatible = "jedec,spd5118", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, spd5118_of_ids);
-+
-+static struct i2c_driver spd5118_driver = {
-+	.class		= I2C_CLASS_HWMON,
-+	.driver = {
-+		.name	= "spd5118",
-+		.of_match_table = spd5118_of_ids,
-+	},
-+	.probe		= spd5118_probe,
-+	.id_table	= spd5118_id,
-+	.detect		= spd5118_detect,
-+	.address_list	= normal_i2c,
-+};
-+
-+module_i2c_driver(spd5118_driver);
-+
-+MODULE_AUTHOR("René Rebe <rene@exactcode.de>");
-+MODULE_AUTHOR("Guenter Roeck <linux@roeck-us.net>");
-+MODULE_DESCRIPTION("SPD 5118 driver");
-+MODULE_LICENSE("GPL");
--- 
-2.39.2
+   Do we really need this call?
 
+> +	rx_desc->dptr = cpu_to_le32(dma_addr);
+> +
+> +	/* The end of the RX buffer is used to store skb shared data, so we need
+> +	 * to ensure that the hardware leaves enough space for this.
+> +	 */
+> +	rx_desc->ds_cc = cpu_to_le16(info->rx_buffer_size
+> +				     - SKB_DATA_ALIGN(sizeof(struct skb_shared_info))
+
+   Please leave the - operator on the previous line...
+
+> +				     - ETH_FCS_LEN + sizeof(__sum16));
+
+   Here as well...
+
+> +	return 0;
+> +}
+> +
+>  static u32
+>  ravb_rx_ring_refill(struct net_device *ndev, int q, u32 count, gfp_t gfp_mask)
+>  {
+>  	struct ravb_private *priv = netdev_priv(ndev);
+> -	const struct ravb_hw_info *info = priv->info;
+>  	struct ravb_rx_desc *rx_desc;
+> -	dma_addr_t dma_addr;
+>  	u32 i, entry;
+>  
+>  	for (i = 0; i < count; i++) {
+>  		entry = (priv->dirty_rx[q] + i) % priv->num_rx_ring[q];
+>  		rx_desc = ravb_rx_get_desc(priv, q, entry);
+> -		rx_desc->ds_cc = cpu_to_le16(info->rx_max_desc_use);
+>  
+> -		if (!priv->rx_skb[q][entry]) {
+> -			priv->rx_skb[q][entry] = ravb_alloc_skb(ndev, info, gfp_mask);
+> -			if (!priv->rx_skb[q][entry])
+> +		if (!priv->rx_buffers[q][entry].page) {
+> +			if (unlikely(ravb_alloc_rx_buffer(ndev, q, entry,
+
+   Well, IIRC Greg KH is against using unlikely() unless you have actually
+instrumented the code and this gives an improvement... have you? :-)
+
+[...]
+> @@ -727,12 +739,22 @@ static void ravb_rx_csum_gbeth(struct sk_buff *skb)
+>  	if (unlikely(skb->len < sizeof(__sum16) * 2))
+>  		return;
+>  
+> -	hw_csum = skb_tail_pointer(skb) - sizeof(__sum16);
+> +	if (skb_is_nonlinear(skb)) {
+> +		last_frag = &shinfo->frags[shinfo->nr_frags - 1];
+> +		hw_csum = skb_frag_address(last_frag) + skb_frag_size(last_frag) - sizeof(__sum16);
+> +	} else {
+> +		hw_csum = skb_tail_pointer(skb) - sizeof(__sum16);
+> +	}
+
+   We can do the subtraction only once here...
+
+[...]
+> @@ -816,14 +824,26 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
+>  			if (desc_status & MSC_CEEF)
+>  				stats->rx_missed_errors++;
+>  		} else {
+> +			struct ravb_rx_buffer *rx_buff = &priv->rx_buffers[q][entry];
+> +			void *rx_addr = page_address(rx_buff->page) + rx_buff->offset;
+
+   Need an empty line here...
+
+>  			die_dt = desc->die_dt & 0xF0;
+> -			skb = ravb_get_skb_gbeth(ndev, entry, desc);
+> +			dma_sync_single_for_cpu(ndev->dev.parent, le32_to_cpu(desc->dptr),
+> +						desc_len, DMA_FROM_DEVICE);
+> +
+>  			switch (die_dt) {
+>  			case DT_FSINGLE:
+>  			case DT_FSTART:
+>  				/* Start of packet:
+> -				 * Set initial data length.
+> +				 * Prepare an SKB and add initial data.
+
+   I'd prefer calling it skb in the comments...
+
+[...]
+> @@ -865,7 +894,16 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
+>  				stats->rx_bytes += skb->len;
+>  				napi_gro_receive(&priv->napi[q], skb);
+>  				rx_packets++;
+> +
+> +				/* Clear rx_1st_skb so that it will only be
+> +				 * non-NULL when valid.
+> +				 */
+> +				if (die_dt == DT_FEND)
+> +					priv->rx_1st_skb = NULL;
+
+   Hm, can't we do this under *case* DT_FEND above?
+
+[...]
+
+MBR, Sergey
