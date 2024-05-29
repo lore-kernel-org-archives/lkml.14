@@ -1,106 +1,157 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55D216D9BE
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9947933CFC
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716970459; cv=none; b=N7ckfsLbdxK12huJfXreLjangSr3KGfs5km7XGX0PgsCnNC+03KMZTdI9zQ8pjuw1Oc+8CEo7LQxL99NwIb5ppV3y2Qem6vFRnMQeDxmlsEnMTDtqZP63u+sD6F35NrV5z6NshLm7Fq4TPGFABLxe47TVjE1Zzz3A/pH7tVC7f0=
+	t=1716970531; cv=none; b=UzJwQKfSHw318RQPkg3QVpKLKvmJtLsE8slNQFLNToHk5dWo17WitrYXfEwYwyvGvspdaKAiD3H1kphTjF/VIv6qf52dSd3BkWRfxsNWY6HWku/XPpSB47cKBY/G1zGb5Ibj2KmSdz/o4ikiAuFwKEb5emaR32m1WCAcz8kbwbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716970459; c=relaxed/simple;
-	bh=8oG+ebmceilmIBqaQs2tVtIByd4rhD1pcJkEmxIya24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pjeyyFsqI767es9na/wuqyMxDcV9+8D/uvVj5Ke5Wmq0zg5gp0t7qZPlBOUtlhlcMKA1ID1XAkA99ytcMRFYsHE++jYuYXqudOlmnlG5NVrfPfkWLmMwN9sm7Z/S3yYi94a3VdqTVLEAmBp9gXpE/Pl9oQAfluwWEaoee+BTiIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qPLQi19C; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1716970531; c=relaxed/simple;
+	bh=UzQmf9tjN3LeNjX/lVtrlreMZNXUsY8QbXs8KUectg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FJPiNvTWF/aGqyYp8evscOBE0fuRKrNQ4xu7DG1XZwrq4e2Wf9gWFbYZ9CHoUMdA31VqQui85t/nhLXWaw886b8PhsBhHm4Dc+XQS8HCuoeclRJ6RVXAjjV2bByBfdBurkO11BhYEe2RoMT5AzJrihBK6lj8YjDHjIfg9Guq5M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=QZHNzQzw; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=X0yjbkyS reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qPLQi19C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=patzQVXRASfi38qVj0cUhUjqqyVmf9/+BCwLPiPV1GI=; b=qPLQi19C+wAn8GpEMZh/j38woN
-	7J+Cl4k+j6fNeZgZxDTUdFwPj7uY2RmEutmPJHdUmRSjx2nvWk0HV02WviwKdajaER+5VlE6mG8Nu
-	3Zj9G/QHpKRjP/kSY+058cT4PCYkhnuBE0OI5D8vN2PL5Q9V2HDll62+WUcCzA1C+Wmu/fdbS1P5C
-	st96wFwDTVLSvNtm0l4EJ/+8o4/S7tEZpe72ecCwS40lpBIAI5nGqD+xZxPncI2aMV7aAemoPaPta
-	h//OZ0OhY3ijRukyjUbUiGb4LRx7tJGmVJljn5QhcgbqVA62neQLHtIsdAWoEC9AuS/mP3vInZaJE
-	JfW8+HHg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCERg-0000000DSTZ-3HXB;
-	Wed, 29 May 2024 08:14:05 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 611CC30073F; Wed, 29 May 2024 10:14:04 +0200 (CEST)
-Date: Wed, 29 May 2024 10:14:04 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de,
-	torvalds@linux-foundation.org, paulmck@kernel.org,
-	rostedt@goodmis.org, mark.rutland@arm.com, juri.lelli@redhat.com,
-	joel@joelfernandes.org, raghavendra.kt@amd.com,
-	sshegde@linux.ibm.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v2 16/35] preempt,rcu: warn on PREEMPT_RCU=n, preempt=full
-Message-ID: <20240529081404.GI26599@noisy.programming.kicks-ass.net>
-References: <20240528003521.979836-1-ankur.a.arora@oracle.com>
- <20240528003521.979836-17-ankur.a.arora@oracle.com>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="QZHNzQzw";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="X0yjbkyS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1716970528; x=1748506528;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=qPzqmbhWrWgXeytPFFr8ZnaAVt6ESUekqElZje8ecik=;
+  b=QZHNzQzwm0qFrgoOLEhkcQQQnO3iq43VNmwZPxRobkA+yNMCi+Md0Azp
+   PIumymSHTTYCkDSOVvK8iA21E2GcCqh7Q2R2UqdM5mJs07BBKcOFZUYHd
+   Z254ZiloN8tUMLS/k+JVdbMx3yeYCBmteUnLkR9Tm/99St8P94i/bVctq
+   sKTNCr3bNnl8t/jODl66dZYiHdkm4yfzbuZfiSsaAcr0pATl55tOWiMWu
+   wBltK/Dbzzagp7yoA/gm48i54s+4/vT1xavXxByM5BP8VfgaG7HTxsPfI
+   FUHjMAhCYNGXlIpU7JZVy9y+B4yikt3y6Nxli+x70clvnrBe7IE/aYDW+
+   Q==;
+X-CSE-ConnectionGUID: peETRQxgQGeJmBnaAiv4Qw==
+X-CSE-MsgGUID: BGCkLORMQzqJRAr6qC55Sg==
+X-IronPort-AV: E=Sophos;i="6.08,197,1712613600"; 
+   d="scan'208";a="37120964"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 29 May 2024 10:15:26 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 428F516564F;
+	Wed, 29 May 2024 10:15:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1716970522;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=qPzqmbhWrWgXeytPFFr8ZnaAVt6ESUekqElZje8ecik=;
+	b=X0yjbkySyuGTbdlhNBO93Jh68pO3BA/mg1Zd40iUSbpOU95OxQ52P5PGEqzn1uViTP7tbV
+	iI62wxWbD0xc/OKGyawp1b6dojDbnY8akxQlxY9e9l8JkWzE3k8w9yJmXsbEuVLi3mJy1Z
+	JWLzPP+GEyTf1xbuixIphwW1jshgmDGJbhsM26wmH70SZ73nvIg5vrj5VBP1ZF6LGgAhaq
+	k1Z+w27V+CgqhxshxYlgoiDkKrmpmW0XUdSUFjJhKyEs0PHT1Ko4d+UnBTvf5+kOrl05eD
+	LiJ5XSthmZoI6noWYj4kLdu/pdMTUiWfawdrHwOFq4NddGxNyi62if1v7I6qCA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Liu Ying <victor.liu@nxp.com>
+Cc: dri-devel@lists.freedesktop.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] drm/bridge: imx93-mipi-dsi: Use dev_err_probe
+Date: Wed, 29 May 2024 10:15:18 +0200
+Message-ID: <6130653.lOV4Wx5bFT@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <091f1d5c-0bff-4dcb-b823-b82989eac628@nxp.com>
+References: <20240529065400.461633-1-alexander.stein@ew.tq-group.com> <091f1d5c-0bff-4dcb-b823-b82989eac628@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528003521.979836-17-ankur.a.arora@oracle.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, May 27, 2024 at 05:35:02PM -0700, Ankur Arora wrote:
-> The combination of PREEMPT_RCU=n and (PREEMPT_AUTO=y, preempt=full)
-> works at cross purposes: the RCU read side critical sections disable
-> preemption, while preempt=full schedules eagerly to minimize
-> latency.
-> 
-> Warn if the user is switching to full preemption with PREEMPT_RCU=n.
-> 
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Link: https://lore.kernel.org/lkml/842f589e-5ea3-4c2b-9376-d718c14fabf5@paulmck-laptop/
-> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
-> ---
->  kernel/sched/core.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index d7804e29182d..df8e333f2d8b 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -8943,6 +8943,10 @@ static void __sched_dynamic_update(int mode)
->  		break;
->  
->  	case preempt_dynamic_full:
-> +		if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
-> +			pr_warn("%s: preempt=full is not recommended with CONFIG_PREEMPT_RCU=n",
-> +				PREEMPT_MODE);
-> +
+Hi,
 
-Yeah, so I don't believe this is a viable strategy.
+Am Mittwoch, 29. Mai 2024, 09:50:24 CEST schrieb Liu Ying:
+> On 05/29/2024, Alexander Stein wrote:
+> > Although very unlike to occur (media_blk_ctrl needs 'syscon' compatible
+> > removed), it lines up with the other error paths in probe function.
+>=20
+> Why media_blk_ctrl needs 'syscon' compatible removed?
 
-Firstly, none of these RCU patches are actually about the whole LAZY
-preempt scheme, they apply equally well (arguably better) to the
-existing PREEMPT_DYNAMIC thing.
+No, it does not. As media_blk_ctrl is also used as power-domain the device
+will not even be probed if media_blk_ctrl is not available.
+I just mentioned it under which conditions this error path could happen.
 
-Secondly, esp. with the LAZY thing, you are effectively running FULL at
-all times. It's just that some of the preemptions, typically those of
-the normal scheduling class are somewhat delayed. However RT/DL classes
-are still insta preempt.
+Best regards,
+Alexander
 
-Meaning that if you run anything in the realtime classes you're running
-a fully preemptible kernel. As such, RCU had better be able to deal with
-it.
+> device_node_get_regmap may return error pointer other than
+> ERR_PTR(-EPROBE_DEFER), like ERR_PTR(-ENOMEM).
+>=20
+> struct regmap *syscon_node_to_regmap(struct device_node *np)             =
+       =20
+> {                                                                        =
+       =20
+>         if (!of_device_is_compatible(np, "syscon"))                      =
+       =20
+>                 return ERR_PTR(-EINVAL);                                 =
+       =20
+>                                                                          =
+       =20
+>         return device_node_get_regmap(np, true);                         =
+       =20
+> }                                                                        =
+       =20
+> EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
+>=20
+> Regard,
+> Liu Ying
+>=20
+> >=20
+> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> > ---
+> > Changes in v2:
+> > * Removed unused variable
+> > * Added missing \n at end of string
+> >=20
+> >  drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c | 9 +++------
+> >  1 file changed, 3 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c b/drivers/gpu/=
+drm/bridge/imx/imx93-mipi-dsi.c
+> > index 2347f8dd632f9..13025f47f3902 100644
+> > --- a/drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c
+> > +++ b/drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c
+> > @@ -834,18 +834,15 @@ static int imx93_dsi_probe(struct platform_device=
+ *pdev)
+> >  	struct device *dev =3D &pdev->dev;
+> >  	struct device_node *np =3D dev->of_node;
+> >  	struct imx93_dsi *dsi;
+> > -	int ret;
+> > =20
+> >  	dsi =3D devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
+> >  	if (!dsi)
+> >  		return -ENOMEM;
+> > =20
+> >  	dsi->regmap =3D syscon_regmap_lookup_by_phandle(np, "fsl,media-blk-ct=
+rl");
+> > -	if (IS_ERR(dsi->regmap)) {
+> > -		ret =3D PTR_ERR(dsi->regmap);
+> > -		dev_err(dev, "failed to get block ctrl regmap: %d\n", ret);
+> > -		return ret;
+> > -	}
+> > +	if (IS_ERR(dsi->regmap))
+> > +		return dev_err_probe(dev, PTR_ERR(dsi->regmap),
+> > +				     "failed to get block ctrl regmap\n");
+> > =20
+> >  	dsi->clk_pixel =3D devm_clk_get(dev, "pix");
+> >  	if (IS_ERR(dsi->clk_pixel))
+>=20
+>=20
 
-So no, I don't believe this is right.
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
+
