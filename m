@@ -1,123 +1,97 @@
-Received: from forward502b.mail.yandex.net (forward502b.mail.yandex.net [178.154.239.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C21C169AD1;
-	Wed, 29 May 2024 09:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686F143AA0;
+	Wed, 29 May 2024 09:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716975586; cv=none; b=i94RddPA1Fl/rieEj2Yhb/Y7e4RUSsJ04xNO+k/PKmiTwGtmW+Kpu6VE7Wdk6u0Z9k0bXvEpGnGcG0yOV8OYAC7Kczk7cKflB8gQN0nMy8kg0eqYe51uwOhFj2KDCfnGTrh10ZoYy3DDFPh4T8cgoTMx9UZf4lbB2L4CbKKZswM=
+	t=1716975677; cv=none; b=l/2Qqfsg6ZqjB9ctFlGjYkIWaRxoYpdaJxD4TiVPt/mu55IIvueKdJX9aS3ysLDXncO3mjOqeAssI6PNPoiquzkqldVzQKu80BDRX8HhD+oitbxHzetZDQ/m/zAs/TKTzUIrXGAbnk1GzMeJnj2rzHDV65WuWxCSu87HtlfqypY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716975586; c=relaxed/simple;
-	bh=l7mhXePXHTFDyJUwQC4y7lNYr3qtq/le3v+/Gidrbl0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ClkeP+irobvaamsgZrF5nW/8EbZJkbhZcXikhu6Fhh3oGg7nk1R3i3aB2HZ8YdAB17thww8z7kdVQwhLtL2XvkAlyUzSkFcqXMjW7RfTb4cPP7et3G6Bm0ntSz489yDFFxYaFkINsdt6+1r/PX/4cjEz9kfr5jLpXcoR4l5K5LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=Cz6a153t; arc=none smtp.client-ip=178.154.239.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+	s=arc-20240116; t=1716975677; c=relaxed/simple;
+	bh=i9hu7Hv1eiqS5bROpHlphFtj2gxQ51GFXxiEA/KHrYc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tFRK6uf8U2ecNBUZAhr7GlqIr6ysL5QZCMAuXJ/ygaK/uzCmWHdIYPp4DtLm9QGLgUGmC+9u7RMD4oJwtgqH/otN8KKxXlZoNzMC+YggRI7U//Tj0p4PBO5eW4Z+zDSSmTAYN3nmlFoyrK7X6DhSGQdyybSkzBMZvRxtTQB4wsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYXxracD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="Cz6a153t"
-Received: from mail-nwsmtp-smtp-production-main-92.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-92.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:20a3:0:640:7ed3:0])
-	by forward502b.mail.yandex.net (Yandex) with ESMTPS id CCD715F368;
-	Wed, 29 May 2024 12:34:03 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-92.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 1YNEP8GXnKo0-fskH20Jg;
-	Wed, 29 May 2024 12:34:02 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1716975242; bh=l7mhXePXHTFDyJUwQC4y7lNYr3qtq/le3v+/Gidrbl0=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=Cz6a153tsNlUNXCWJA+xj20FfesTujtqIfabhWuo/O35m+IyHW61ET45zp6Xby87C
-	 1VYv/PrXJwOE+b1Tp/R2PV/qgU+XFF4ONVWXk2ha5dVz2W1s29lsVxxeXPMNP3PHAe
-	 LnLrrq9mgp7iFNjP+qd7/iU+vExcRSDOMHzUbAN8=
-Authentication-Results: mail-nwsmtp-smtp-production-main-92.myt.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <5757d0ff5754f537b16ae36f9e7b5c2399c2cb5e.camel@maquefel.me>
-Subject: Re: [PATCH v2 0/3] dmaengine: ioatdma: Fix mem leakage series
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Dave Jiang <dave.jiang@intel.com>, n.shubin@yadro.com, Vinod Koul
-	 <vkoul@kernel.org>, Logan Gunthorpe <logang@deltatee.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux@yadro.com
-Date: Wed, 29 May 2024 12:34:02 +0300
-In-Reply-To: <e3ec5070-abb7-4adc-9cd1-c459ca27b531@intel.com>
-References: <20240528-ioatdma-fixes-v2-0-a9f2fbe26ab1@yadro.com>
-	 <e3ec5070-abb7-4adc-9cd1-c459ca27b531@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYXxracD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA7E1C4AF08;
+	Wed, 29 May 2024 09:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716975677;
+	bh=i9hu7Hv1eiqS5bROpHlphFtj2gxQ51GFXxiEA/KHrYc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SYXxracDVUDcyOtr5O8gufjVG3F06rNcztATkfkm713qsYaPcVc9xOrQzuTB+2bJf
+	 qPOlYJaulDjNxSN/pm/p71KygY9qU2YzL+ZO2CaXM5sgA1RCVO3JrzbI6N2oiUATT9
+	 n6Wmn1cwkhvQhzKadajoSX4qbRYV97gFegjySkZbSNZvZRTuCmnAVRmIjpho+FLFy9
+	 YKF2S8iATpnrgaC8h/EJ2w0ZFPShjQlHaiCUlqLykjYr6e07E1l/FONL0yu1J36vHF
+	 ph5VHNjYakigLqL8ApudUNsunX89JyGnlG29NfVcNspznqy+G058d3JfIavKDTBt4X
+	 jTfbWtM+K/w9A==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e968e77515so22666051fa.0;
+        Wed, 29 May 2024 02:41:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV5CMvLwuqXiFJqx3MJfY+TrYiWA/y5aXVf7pvqSCvFPRa+ky/H3X9gtFBk/pd1b6ofKawDxnNciICRIPg3kfIPZYTUb/e2zkAg3KdMcty/OT/fX8d5tm8emy6nwD5B3+S4aYt/fPiETWLx
+X-Gm-Message-State: AOJu0Yz3m1JqXBvc+IrkMqBEWPLixPSpaHpObigsknISW7rCWICzGQrg
+	MTX24HKs/9tkdTrtlJVq4D1VNNNSxdTez/wHnIpxjJTWCfBXVWskoknYmOEwSVTBAINvQ9Kfym0
+	16sV0pbE0WTE1uwfiFqBvNQS11Lg=
+X-Google-Smtp-Source: AGHT+IFjU7Ggfjm7KDn9oFJHZN0cfR6CEPeugupJZ6TFLzITgGJzMldlWNONRgPQPLK6ib7G5KOac72kZtBV/ym0J+Y=
+X-Received: by 2002:a2e:9a90:0:b0:2e1:d94a:773f with SMTP id
+ 38308e7fff4ca-2e95b096d84mr93484931fa.11.1716975675602; Wed, 29 May 2024
+ 02:41:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240528085221.2989315-1-wenst@chromium.org>
+In-Reply-To: <20240528085221.2989315-1-wenst@chromium.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 29 May 2024 18:40:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASPJH_eMg8_Pck9WyMJnPZPrtRa+Bg5sfj8U4RxhMP26A@mail.gmail.com>
+Message-ID: <CAK7LNASPJH_eMg8_Pck9WyMJnPZPrtRa+Bg5sfj8U4RxhMP26A@mail.gmail.com>
+Subject: Re: [PATCH v2] scripts/make_fit: Drop fdt image entry compatible string
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Simon Glass <sjg@chromium.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Dave!
+On Tue, May 28, 2024 at 5:52=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> w=
+rote:
+>
+> According to the FIT image source file format document found in U-boot [1=
+]
+> and the split-out FIT image specification [2], under "'/images' node" ->
+> "Conditionally mandatory property", the "compatible" property is describe=
+d
+> as "compatible method for loading image", i.e., not the compatible string
+> embedded in the FDT or used for matching.
+>
+> Drop the compatible string from the fdt image entry node.
+>
+> While at it also fix up a typo in the document section of output_dtb.
+>
+> [1] U-boot source "doc/usage/fit/source_file_format.rst", or on the websi=
+te:
+>     https://docs.u-boot.org/en/latest/usage/fit/source_file_format.html
+> [2] https://github.com/open-source-firmware/flat-image-tree/blob/main/sou=
+rce/chapter2-source-file-format.rst
+>
+> Fixes: 7a23b027ec17 ("arm64: boot: Support Flat Image Tree")
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> ---
+> Changes since v1:
+> - Add clear reference to U-boot docs along with excerpt
+> - Send separately from "disable compression for DTBs" patch
+>
 
-On Tue, 2024-05-28 at 09:08 -0700, Dave Jiang wrote:
->=20
->=20
-> On 5/27/24 11:09 PM, Nikita Shubin via B4 Relay wrote:
-> > Started with observing leakage in patch 3, investigating revealed
-> > much
-> > more problems in probing error path.
-> >=20
-> > Andy you are always welcome to review if you have a spare time.
-> >=20
-> > Thank you Andy and Markus for your comments.
-> >=20
-> > Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
-> > ---
-> > Changes in v2:
-> > - dmaengine: ioatdma: Fix error path in ioat3_dma_probe():
-> > =C2=A0 Markus:
-> > =C2=A0=C2=A0=C2=A0 - fix typo
-> >=20
-> > - dmaengine: ioatdma: Fix kmemleak in ioat_pci_probe()
-> > =C2=A0 Andy:
-> > =C2=A0=C2=A0=C2=A0 - s/int/unsigned int/
-> > =C2=A0=C2=A0=C2=A0 - fix spelling errors
-> > =C2=A0=C2=A0=C2=A0 - trimmed kmemleak reports
-> >=20
-> > - Link to v1:
-> > https://lore.kernel.org/r/20240524-ioatdma-fixes-v1-0-b785f1f7accc@yadr=
-o.com
-> >=20
-> > ---
-> > Nikita Shubin (3):
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dmaengine: ioatdma: Fix leaking on versi=
-on mismatch
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dmaengine: ioatdma: Fix error path in io=
-at3_dma_probe()
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dmaengine: ioatdma: Fix kmemleak in ioat=
-_pci_probe()
-> >=20
-> > =C2=A0drivers/dma/ioat/init.c | 54 ++++++++++++++++++++++++++----------=
--
-> > ------------
-> > =C2=A01 file changed, 29 insertions(+), 25 deletions(-)
-> > ---
-> > base-commit: 6d69b6c12fce479fde7bc06f686212451688a102
-> > change-id: 20240524-ioatdma-fixes-a8fccda9bd79
->=20
-> Thanks for the fixes.=20
 
-Glad i could help.
+Applied to linux-kbuild.
+Thanks!
 
-You might find this one useful:
 
-https://patchwork.ozlabs.org/project/qemu-devel/patch/20240524114547.28801-=
-1-nikita.shubin@maquefel.me/
 
-I think sometimes it's much more faster to test something with QEMU
-than tinkering with real hardware.
 
->=20
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com> for the series
->=20
-> Would be nice if someone wants to move everything to the devm_*
-> management APIs. Would make this a lot less messy. Probably not worth
-> the effort though given how old the driver is and no more devices are
-> being created to use this driver.=20
->=20
-> >=20
-> > Best regards,
-
+--
+Best Regards
+Masahiro Yamada
