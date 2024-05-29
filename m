@@ -1,309 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499FB17B43A;
-	Wed, 29 May 2024 10:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CE231A60;
+	Wed, 29 May 2024 10:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976878; cv=none; b=OqarpbaoQYArpYBerCVe395kpyBAcVL/lDXY39sDmvFzOu+AqjM12h6laWAkyV0Nv/lLfuwoFzhRN0GIKm+M+7U47LWdNiBJ+v69vG7B2c5qgfCwW0QiXnEDwM5Io+3zBBWHZWuf+xgwHVYpCfUUfcmnOtK+/8ERCosEGvz+A8c=
+	t=1716977033; cv=none; b=H6/gfdHu1bQ275ScdjpoN9K9B0MnHb6saeWsOt0Ha5jgZK1NEle0LUmGkPTc569gOuarNVKF+LtCu+RlslNjuW8gqf0RLX4HzM1DswpEy2hfWwQW32NRUWTZBoU6clfRlj674M+Y4Cu4s7FWLX4b/6a0oa7wGq14HKMQ2jUmGUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976878; c=relaxed/simple;
-	bh=DbSfj2AuXO8/xPseQuTpefTqS6ELr7H0u4EGEdY+1/0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZHPITukGfUVrUG641S+eUEm/51gc6X4xcdsEcQrtzR5udmc3VWZKvjd5d8nS5rD6UV/jb3JOdecWNL0V4tfXpdSJY2e4lU5hQlFXb6CPFHSW4x/LOexjMv0eMl8q2tWu1w8afnrs86L0E+4ZtGP5sxBlpvHBlVZQaOEtdHyUfDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sv3Jkq8O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716977033; c=relaxed/simple;
+	bh=NJpAF6QFUxlk0MavKXR0ryC/gmNuSQVWCAV1AOyOdDc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ve/OQjYkzkrwWvZGqfWUt4UqyOTmUmY/EMevd1dYvpm6bTga17IT+YAKpdbPg7XwuF819G+WlA5RkL/O1VKy1zY2ewnfjgsD2SqzB1r4ZPw6tlf8dIiAxHlPkSNJsSE4sVWRAAdIqjIOtD0Pl0onopD6xswyIVbrODDO7wNEL9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hrw8qRLH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sv3Jkq8O"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C42C7C32789;
-	Wed, 29 May 2024 10:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716976877;
-	bh=DbSfj2AuXO8/xPseQuTpefTqS6ELr7H0u4EGEdY+1/0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=sv3Jkq8O00gyXz9uLFyWjk/Ffg/b41NgyiWZFrXywChhNFGqqqkYN8oBCagBMUcDZ
-	 yjCpFIk5C9hqlHxQTwAdRRnoktZsuWx1GgzRiQ8yEC7LYeNO9viim7s3z7fJGvntFf
-	 4OqfDM+tB+PUGaWkLpR1pKFQNAMJiZ+A+Jp8bduKhYbcRnxwNgkHhlz46viRqq3l9w
-	 poKDgytGvIT9ngCOqLc8EAmZs+zVXw4YTlvNZvCY30CK6BadcjTA3ZD0SnFLdIPF/a
-	 OhLW5virLbLvot/GynXj8YH+fSFXL4bpU7K8lCgy3/UGsWx8EhMTArgMjv13A/beie
-	 +UcZe5Yq2+Atw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B071AC25B75;
-	Wed, 29 May 2024 10:01:17 +0000 (UTC)
-From: Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>
-Date: Wed, 29 May 2024 18:00:57 +0800
-Subject: [PATCH v6 2/2] arm64: dts: amlogic: Add Amlogic S4 PWM
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hrw8qRLH"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44T7MING015684;
+	Wed, 29 May 2024 10:03:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=90voEcY5RKzH2Ai3yNSH8J
+	R9TUrfx1YU3v2z/zT5j58=; b=Hrw8qRLH8CNkh8ecZM90yORb1IXclZnxP8EkD9
+	xlacHCYhdb67mnEZBTd/ruyiYb/00oGEBQyZzb4bhP61YfCFDSzzKPOZKrNp6Gy9
+	xqQc8CI1djZbZCAkbjla8jT5Kpvmf2LrmMd6WQkcoeo+qxg9d/auvmSoegwNzkRh
+	Kc/6v80oN7okYuxVaJgRkSUvDqrMIQiWiKiKgQV9VA9PGGYg3gdaZtpAxtITsmUV
+	h6V7roYcD/LLSAxR/qgvxnmTafzOQZLzKi9NxQrlgG3XHzcstSoC6BFznn+0+G9J
+	FlCCClW3REA4QS5oOBrGZNsaPAp07jZwpZcYfv6lIlqpy7hA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ydyws0a8u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 10:03:47 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TA3keY009633
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 May 2024 10:03:46 GMT
+Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 29 May 2024 03:03:40 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
+        Tengfei Fan
+	<quic_tengfan@quicinc.com>
+Subject: [PATCH v2 0/2] arm64: dts: qcom: sm8550: Update some
+Date: Wed, 29 May 2024 18:02:54 +0800
+Message-ID: <20240529100256.3158447-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-s4-pwm-v6-2-270f63049f20@amlogic.com>
-References: <20240529-s4-pwm-v6-0-270f63049f20@amlogic.com>
-In-Reply-To: <20240529-s4-pwm-v6-0-270f63049f20@amlogic.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Kelvin Zhang <kelvin.zhang@amlogic.com>, 
- Junyi Zhao <junyi.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716976876; l=5081;
- i=kelvin.zhang@amlogic.com; s=20240329; h=from:subject:message-id;
- bh=RZgRRkkZrEuNbz37RVEud8NVXA4UvtxkJIzerJ/86lo=;
- b=xA9Jcfkz9OaK0o7FzoBlFuR9bh3RN4pR/Q7QCDMFd+LQG5R6Di11LrtXUIh6+alLiioBi3N5M
- u1/h7PU97Z/BJvN2un2gzkOJuTMbb+eEkOLl5G+UZEmMKJbqQYsUfOD
-X-Developer-Key: i=kelvin.zhang@amlogic.com; a=ed25519;
- pk=pgnle7HTNvnNTcOoGejvtTC7BJT30HUNXfMHRRXSylI=
-X-Endpoint-Received: by B4 Relay for kelvin.zhang@amlogic.com/20240329 with
- auth_id=148
-X-Original-From: Kelvin Zhang <kelvin.zhang@amlogic.com>
-Reply-To: kelvin.zhang@amlogic.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: VnTHfA7z6y2s3YwHoRzvvs7eXjBhgq1N
+X-Proofpoint-GUID: VnTHfA7z6y2s3YwHoRzvvs7eXjBhgq1N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-29_06,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 suspectscore=0 mlxscore=0 mlxlogscore=285
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405290067
 
-From: Junyi Zhao <junyi.zhao@amlogic.com>
+Move usb-role-switch to SoC dtsi, and remove usb default dr_mode.
 
-Add device nodes for PWM_AB, PWM_CD, PWM_EF, PWM_GH and PWM_IJ
-along with GPIO PIN configs of each channel.
-
-Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
-Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-s4.dtsi | 207 ++++++++++++++++++++++++++++++
- 1 file changed, 207 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-s4.dtsi b/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
-index 10896f9df682..98f554577bae 100644
---- a/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
-@@ -312,6 +312,168 @@ mux {
- 					};
- 				};
- 
-+				pwm_a_pins1: pwm-a-pins1 {
-+					mux {
-+						groups = "pwm_a_d";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins2: pwm-a-pins2 {
-+					mux {
-+						groups = "pwm_a_x";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins: pwm-a-pins {
-+					mux {
-+						groups = "pwm_a_d";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_b_pins1: pwm-b-pins1 {
-+					mux {
-+						groups = "pwm_b_d";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_b_pins2: pwm-b-pins2 {
-+					mux {
-+						groups = "pwm_b_x";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_c_pins1: pwm-c-pins1 {
-+					mux {
-+						groups = "pwm_c_d";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_c_pins2: pwm-c-pins2 {
-+					mux {
-+						groups = "pwm_c_x";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_d_pins1: pwm-d-pins1 {
-+					mux {
-+						groups = "pwm_d_d";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_d_pins2: pwm-d-pins2 {
-+					mux {
-+						groups = "pwm_d_h";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_e_pins1: pwm-e-pins1 {
-+					mux {
-+						groups = "pwm_e_x";
-+						function = "pwm_e";
-+						drive-strength-microamp = <500>;
-+					};
-+				};
-+
-+				pwm_e_pins2: pwm-e-pins2 {
-+					mux {
-+						groups = "pwm_e_z";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_f_pins1: pwm-f-pins1 {
-+					mux {
-+						groups = "pwm_f_x";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_f_pins2: pwm-f-pins2 {
-+					mux {
-+						groups = "pwm_f_z";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_g_pins1: pwm-g-pins1 {
-+					mux {
-+						groups = "pwm_g_d";
-+						function = "pwm_g";
-+					};
-+				};
-+
-+				pwm_g_pins2: pwm-g-pins2 {
-+					mux {
-+						groups = "pwm_g_z";
-+						function = "pwm_g";
-+					};
-+				};
-+
-+				pwm_h_pins: pwm-h-pins {
-+					mux {
-+						groups = "pwm_h";
-+						function = "pwm_h";
-+					};
-+				};
-+
-+				pwm_i_pins1: pwm-i-pins1 {
-+					mux {
-+						groups = "pwm_i_d";
-+						function = "pwm_i";
-+					};
-+				};
-+
-+				pwm_i_pins2: pwm-i-pins2 {
-+					mux {
-+						groups = "pwm_i_h";
-+						function = "pwm_i";
-+					};
-+				};
-+
-+				pwm_j_pins: pwm-j-pins {
-+					mux {
-+						groups = "pwm_j";
-+						function = "pwm_j";
-+					};
-+				};
-+
-+				pwm_a_hiz_pins: pwm-a-hiz-pins {
-+					mux {
-+						groups = "pwm_a_hiz";
-+						function = "pwm_a_hiz";
-+					};
-+				};
-+
-+				pwm_b_hiz_pins: pwm-b-hiz-pins {
-+					mux {
-+						groups = "pwm_b_hiz";
-+						function = "pwm_b_hiz";
-+					};
-+				};
-+
-+				pwm_c_hiz_pins: pwm-c-hiz-pins {
-+					mux {
-+						groups = "pwm_c_hiz";
-+						function = "pwm_b_hiz";
-+					};
-+				};
-+
-+				pwm_g_hiz_pins: pwm-g-hiz-pins {
-+					mux {
-+						groups = "pwm_g_hiz";
-+						function = "pwm_g_hiz";
-+					};
-+				};
-+
- 				spicc0_pins_x: spicc0-pins_x {
- 					mux {
- 						groups = "spi_a_mosi_x",
-@@ -399,6 +561,51 @@ spicc0: spi@50000 {
- 				status = "disabled";
- 			};
- 
-+			pwm_ab: pwm@58000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x58000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_A>,
-+						<&clkc_periphs CLKID_PWM_B>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_cd: pwm@5a000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x5a000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_C>,
-+						<&clkc_periphs CLKID_PWM_D>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_ef: pwm@5c000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x5c000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_E>,
-+						<&clkc_periphs CLKID_PWM_F>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_gh: pwm@5e000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x5e000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_G>,
-+						<&clkc_periphs CLKID_PWM_H>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_ij: pwm@60000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x60000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_I>,
-+						<&clkc_periphs CLKID_PWM_J>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
- 			i2c0: i2c@66000 {
- 				compatible = "amlogic,meson-axg-i2c";
- 				reg = <0x0 0x66000 0x0 0x20>;
+v1 -> v2:
+  - Splitting a patch into two patches based on functionality
+  - Remove some changes that have already been mainlined
+  - Update patch commit message
 
+previous discussion here:
+[1] v1: https://lore.kernel.org/linux-arm-msm/20240513084701.1658826-1-quic_tengfan@quicinc.com
+
+Tengfei Fan (2):
+  arm64: dts: qcom: sm8550: Move usb-role-switch to SoC dtsi
+  arm64: dts: qcom: sm8550: Remove usb default dr_mode
+
+ arch/arm64/boot/dts/qcom/sm8550-hdk.dts                     | 5 -----
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts                     | 5 -----
+ arch/arm64/boot/dts/qcom/sm8550-qrd.dts                     | 5 -----
+ arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts | 5 -----
+ arch/arm64/boot/dts/qcom/sm8550.dtsi                        | 1 +
+ 5 files changed, 1 insertion(+), 20 deletions(-)
+
+
+base-commit: 9d99040b1bc8dbf385a8aa535e9efcdf94466e19
 -- 
-2.37.1
-
+2.25.1
 
