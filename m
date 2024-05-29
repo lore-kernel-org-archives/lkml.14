@@ -1,91 +1,90 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FCD1C2334
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 19:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4173242045;
+	Wed, 29 May 2024 19:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717011042; cv=none; b=BHZGLq160HUzW6HA+L02G8wVP1B/infBZdAQIsuD3h3g+aawJ+cL1w0TLlPtyla7qh88SAmpOi/2n/E4zuFru/KlAcgNgjea2xibGy0S+T0PFF+guhPY8nFyMMDijW8AjtOaslhPdHt+ARgO03EVMwQXkcXlCoL3VLfSyN3u5Tg=
+	t=1717011121; cv=none; b=A01Zt9cFv3w4ja9+J1GKysX/irw440cY2SxLKlL9ZAyKnmo0281VJchr/vxiKNDpfVe+EJAnW6tUgL2C0mo+CMZ7Wq8jckhq9WvmkuEMuJs1iG2UVYxZeadcJLyDOeRo4s0mczztd71D+UIjsVENVviRYW7Nttyw4/vC4d77ms4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717011042; c=relaxed/simple;
-	bh=0hEWMpNxOOb9mPZgiAwdAjipoVqzznaIJ89tGawa4RU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=FImc9h1mCcWWI4ZDqwbi8PDuzjIxsAdKASo/J/rcQqViBlZL02NEvX/ojWty9lsru60jtPG73yzWCHLvdBLhLdSSN8Yoo4TcpHjBf3RvHgsr2gzmAUrYP0shWdEQM1ZsO3vE/n76mH3Xyk0iWhOwdI4qi7JGHAeBaOep1kiGpKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Kf5vGIBc; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1717011121; c=relaxed/simple;
+	bh=XknLD++ZbyOxVWUbX5ZNfhHP323YHHho4U/eXqTv2Yk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BJsbXwtIOWqoog/N27UoDYgvXcJHXl5FYE69U2HWNvITgBc/tp2iRNqvWytXNWb+K8zyxzp+BWirg5MgrPB9xjgRHsk02HqNoctZ2pTjz7XmnQZlizvRdScRef7ajlhpcDmyu9RQFxtFTe5mibHb2+15A+77mxrOGY1/7uZA7xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YWMyRygA; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Kf5vGIBc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717011015; x=1717615815; i=markus.elfring@web.de;
-	bh=bbzX1MxWjpxxbJ+sOkPy+gRbuUmxAhLOgZU4L9ad+/s=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Kf5vGIBctDLSQ7Mpc+xcmnT/N8EA7+wFvcpqQqIimTRlxKpKed/n4iggPOmo2QNA
-	 Qe824PD4p6NjZda/qi5akUk+Oa4V7FgMmbj6DZf1SM4p/vHaPbldpJ8BV1K+QL9dq
-	 FdLxJ+O9QY6Dp2PZRS19BmGaa500/ZHt+8hib9Ys/e6tYQiJzwcG5dU4jtSQVK7zm
-	 kFz7wDJu28ZxWwaA87LflBOCTXjd3JR7xkLwC3t7VtNK7wrnvlI+i7a2XDx36c8y8
-	 nqffnTx/FO3tTgsCglHQphTmqT7NpylRxlaDTIyolfUd/jMhA0u6VQVAE5l2S/3H8
-	 n0eLMAlsp3dIsZYARg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M3m5B-1sBZmm1Iup-000qHH; Wed, 29
- May 2024 21:30:15 +0200
-Message-ID: <ce2530fd-d91b-4629-944f-9d7c6826aaa9@web.de>
-Date: Wed, 29 May 2024 21:30:11 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YWMyRygA"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 87CA040E01A3;
+	Wed, 29 May 2024 19:31:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id dyeE9Nzyk0oM; Wed, 29 May 2024 19:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717011110; bh=EeR0075bxj700aFxHDQNh71batfPlf0fp9sZmjOxiGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YWMyRygATvPVO4cnKAN5/M61kp9pxWyVX+W0d92nuI4x6WIUCAFgbY/9enuj42Fbt
+	 2lYlrjpTLo+qCOsveJgoRQ1nnu2OgZvWV2MvjyRefGbVAehUNsGHJNZ4oOpi9ptn8Z
+	 CbcKT9xiN9AdeDExDp+DddMtThO6y99cADhcbRF9iCHbiAhARinQYOFQ/icxIVxhFo
+	 sJA9ZJwzcnZjyumP5iPaI3pA3B/Hzh96mtwITmDeK4AJdNqgEQ3KFdNX1aBYsDUJ3N
+	 S6JonM83sFImN3cvJ3oOfmzMH4cIMheKKNPfMXFjB6UTcjwHhSh6QocZMpHU1Zjjrf
+	 tcQLLZhpmT6S6zqSOEOdxzD25rFpF9XJ82HgpV9PY48bJBYDgOuF3vTuoAWPzIPgHB
+	 1c9gNFdUBm48wPxpYqCuRzz3ONq6f3jLTptpG1va6vtko9hb5ZuaVauz/sGfd9c1WT
+	 ilA7CQoCZ5MNZQ0WYZvHCCFqLZMVluOi9JgrC03zKUok332WClWXHC2XBXRPJSZwBW
+	 QC3qGt+7a022AJVTvcNR0DjodpnU+p0EK2zTeHP4KgAxAOyc9xGNG22PrE2YQdWo42
+	 5fcs5kGkS5Y6IrlKcmwsqBYntN7unUxc92HSuwPrhiyGsotDRncO80pe8n96YuUZiw
+	 kP2EfD6nReWwal8oTrAIlriQ=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5246F40E0177;
+	Wed, 29 May 2024 19:31:38 +0000 (UTC)
+Date: Wed, 29 May 2024 21:31:27 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, Marvin Lin <milkfafa@gmail.com>,
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] EDAC, i10nm: make skx_common.o a separate module
+Message-ID: <20240529193127.GEZleCjwyUtnDv_Nc0@fat_crate.local>
+References: <20240529095132.1929397-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Mike Leach <mike.leach@linaro.org>
-References: <20240529133626.90080-1-james.clark@arm.com>
-Subject: Re: [PATCH] coresight: Fix ref leak when
- of_coresight_parse_endpoint() fails
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240529133626.90080-1-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TlCo3Nipf1nsBBvuDJcjM5JNj1as0ULcgEX82rLAWNdp/JUjfi8
- HtcSHnEB1eUBRgAfonooeBoTAuFUCkozPWrwGtVa7c0+K10jrG+sonWtwadANClCDJxn/nI
- BfrRQ2gNjSP9lBLcWjzsoqVvSqZ8Rzc7B8Rv9mcKn2Y0yv/1GaXk2ZR2teZ+60FWxKi1tqT
- WkAMF+xc0bj1biOH9aj4g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RRdKGRk+uH0=;Y7BP0pnVlWt4PQIkw44SvmbFAE1
- PNVGEFdO+sadg22ru2yPRSGgr4j5coRnCrjX80hnzWsSRMJj0lT2P2AILP5qyqHpeOO2AjFkA
- 5QYmj7HiKPLgR82BFDx5t5zKq8qlLo0XuZUO3JUF6xOJww/qIqVw7sbQE4+f6KhURtglImh4c
- AOOKF88TiCvO2wyI/PGJpspu2enK29mZUNClI9HnjUuKCPHPzP6d7B1j19smEMU+hB13iZYfL
- CxDrYq8iJeOD6+Aw0ZWZFUxdp9dRjlFv7tRaz7t0vDLll7rjKqiSKkc7JWVOF8CKUj268Hy72
- NzpI62WT+lFhi3ll7sViIfpINnF+DbmH+PIFH7Kr6Xp+UXDBX0CDX2NQh6ZVo6di4EPmQXsuo
- yKVbCYFTYukxkSu9Y10V6y1ERzvR6EzXqQNLwi18nl5goSydgphSp7Lcu/KGKP3XKAzGh2/6N
- Cba2SRLzTDBFgMvpngwTiYgwjHRTP/7zNBO1Nph7bst6OBxIJcb0hzrFD7fFPehcONWIx1rzk
- 8b50ueW/sJNAGUYERQupbwjQS5o9993awnoUqMCteCJJPJwJv7VUzZeXwsKvct0P4JLzK7Pu3
- z6UvtkHwJik/9kzlyCi/MXZl1/+wy/mNScq9HV8VnsqRCikuV850hmNjLRX5OzekfQMFOCtNy
- 5wCMFErRmCa2V8eXBLqFhwX8Z6qkszvJNPOjZVmPeNwN6L8Tm9ERaVwn0MdH2Xxktk8VY9whb
- 6Qc3iN++U9AgQ8b7N12eugwSqbHcrxsnwvZKU+4sQLDbgRNCnZFLIRWzjw+afbWCLGt69ayM8
- MYtIgSIMOsSpHTdESjE414IigUdm4RoSxXlmuAS1uFa/k=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240529095132.1929397-1-arnd@kernel.org>
 
-=E2=80=A6
-> Fix it by dropping the refcount in the exit condition.
+On Wed, May 29, 2024 at 11:51:11AM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Linking an object file into multiple modules causes a warning:
+> 
+> scripts/Makefile.build:236: drivers/edac/Makefile: skx_common.o is added to multiple modules: i10nm_edac skx_edac
 
-                         reference counter?
+What changed?
 
-How do you think about to use the summary phrase
-=E2=80=9CFix reference counting leak in of_get_coresight_platform_data()=
-=E2=80=9D?
+This wasn't an issue until now-ish...
 
-Regards,
-Markus
+> Make this a separate module instead.
+
+...and I'm not crazy about the exported functions either.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
