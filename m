@@ -1,676 +1,186 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639F41C6896
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 18:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD131C0DEE;
+	Wed, 29 May 2024 18:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717008879; cv=none; b=k1M4wdZkH+7TrgX4mDohHE/pIy8TXlH8d/B9CiqbFMdIxJ4PvJEfW54djmt3/+BIw4g3IJvcsxqf3Fs4fGrC9bpyCMTPlxjfrfveUhOtodIwuKvoHpe6DfWQBGy200EIouMQV9idWnhscyr3C8M3TSCo042c+QBMASD8sbvHVTM=
+	t=1717008934; cv=none; b=U+XXSOK3eb8EnLV0BF+kEoDH1RjoqSsyBRkpW4gNAeEYYJKczMfi6Ra/iTX1lD534zPI4k6w7h+PwUT7QqmGG11Y0PX5frISrMWRqLi8cv8br8X+7zvQfB++evMf19LjhV+V8UMK7JaProfdpJvqK+/mI5HBzd/UxRGpHThcPrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717008879; c=relaxed/simple;
-	bh=acsH4CXflg8MWwftRGHOCAfjnNVksPUpC1VI99j84PE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s2L+vliVUBMYgpWbA2Rf9ES0gbd7yTHT5Qr6Ecosw16nekhDKxNMgnkHprO5VF6yKxvKuPaQfDDSXOAMhkg34SsAaRqwSBB7tJhWzvI4RlHEiZQNUiSL9PH2XMckZl29tm2CuZ6sB10/ezjgxMHd5z9EloMJHKHkbvrIEZyMYM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=z33m9uzE; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1717008934; c=relaxed/simple;
+	bh=U4Rsy2pPhz/359g6Rk4fJeQdhXCIaeRtqzSU/shOa0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pWUCb7za2ys2xQb8HhCxCZKOw0yEl+YPX1LnSrhQAaAejeeLqiC80L8qyibFzI0Pghyv6T0E+vv5OfSYBBdR/Y0+fygG5IDSuz5lj9Nk8xnFX7hUfHqTX2059qzP2UIDfnBr6r5bMz4hfHoJ8Hh7iPJhUvf/+FPJRuvvjrtqw+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nWmzA2l1; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="z33m9uzE"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42017f8de7aso502495e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 11:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717008875; x=1717613675; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0o+B1b3b9otKzfoRya637jHIfmbAgjTIaV6zgoFCmBw=;
-        b=z33m9uzEBrrPztugdjncliVvPsAxS0TbDE1qOsWerMogqKoEfTEF/iCSqEUoLpHFVs
-         H6Oexj4ngz1X39VkgcSn2TmM4roKdLurkiseYNVRFEDoYkmMlj3Gwtwncb7SLigytkR7
-         vxK+MCad4qJMcyJNWH4hk2TDULB8gDD9sPNTYQsPXxNJ6T1/ropOoDksJn4voLKAGVzr
-         YUIescN6e2NedpST2v6IF8akoID2o00b+L5gZlVjOvyOyiHUrJ7MZ1HsI0bgN8hnhgBQ
-         A3SnJYOlfbCTjM266aiR3eSEerZnFJUsV5wm9WCZCwvQ07Ral4/xDZdeEXyqo0m2n2/Z
-         AUQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717008875; x=1717613675;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0o+B1b3b9otKzfoRya637jHIfmbAgjTIaV6zgoFCmBw=;
-        b=kYTUsFyF8o6s/XwGwqA9ssdp6eO+Q7Sx9IGhmnz7SNHI2AmA4fl36L3e36Aa7lb8i0
-         Ry6MFWRoiubymp+SUi/xjiYXORRoqw4k6XGO8DVv5EyVe/G4hPVNItwQIsD07iS6ftbd
-         5IhX/sph94za0dz02rpWxkLgSwiktTjpL8O2zbs0pZZPsAjGgAnEyWI/L/sSuyzcAkkP
-         utKBJzOi236v7mDUCDKULi+8RahPcKo+DjNBdkhnKOQd7xToqRmhcW5umHxpgm6Xqk85
-         Pat+NUU0Y/sn4SMRveMArFMHFYhHPZU8WJ5375HjJAxmwUGbYN93UoOV97eOX/5Xvk36
-         rcuA==
-X-Gm-Message-State: AOJu0YxGdeGGbvxHkmUndOxjhMC126a+uvTPqsOLl4bxI+ZL1CSiqAWK
-	ENUVCWldUryVHEHRp36Ui+v2uvp6auAy/k3SDIynoRaY/Bv/M1RjniJiVvzBueIe7HkfbN9rlsS
-	v
-X-Google-Smtp-Source: AGHT+IErFHVKwDzA+pRnaE1cowj8Cur30CsYYW0yRqy5Cyv1C3pRbjxr/J2rzgCC4GvWtUmPlzLsaw==
-X-Received: by 2002:a05:600c:a03:b0:416:2471:e102 with SMTP id 5b1f17b1804b1-4212792c381mr196775e9.37.1717008875165;
-        Wed, 29 May 2024 11:54:35 -0700 (PDT)
-Received: from rkanwal-XPS-15-9520.Home ([2a02:c7c:7527:ee00:7446:71c1:a41a:da9b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212706a23csm2787885e9.27.2024.05.29.11.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 11:54:34 -0700 (PDT)
-From: Rajnesh Kanwal <rkanwal@rivosinc.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	ajones@ventanamicro.com,
-	anup@brainfault.org,
-	acme@kernel.org,
-	atishp@rivosinc.com,
-	beeman@rivosinc.com,
-	brauner@kernel.org,
-	conor@kernel.org,
-	heiko@sntech.de,
-	irogers@google.com,
-	mingo@redhat.com,
-	james.clark@arm.com,
-	renyu.zj@linux.alibaba.com,
-	jolsa@kernel.org,
-	jisheng.teoh@starfivetech.com,
-	palmer@dabbelt.com,
-	tech-control-transfer-records@lists.riscv.org,
-	will@kernel.org,
-	kaiwenxue1@gmail.com,
-	Rajnesh Kanwal <rkanwal@rivosinc.com>
-Subject: [PATCH RFC 5/6] riscv: perf: Add driver for Control Transfer Records Ext.
-Date: Wed, 29 May 2024 19:53:36 +0100
-Message-Id: <20240529185337.182722-6-rkanwal@rivosinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240529185337.182722-1-rkanwal@rivosinc.com>
-References: <20240529185337.182722-1-rkanwal@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nWmzA2l1"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44TIsZuq101155;
+	Wed, 29 May 2024 13:54:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717008875;
+	bh=9EEbQ1P0bS7o94PZeSQIGVykCCKi5H729feXlk6MNGI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=nWmzA2l1edBES7eoreuhEJ0nVh+lzRPIJrE9aeQ63a4Ero/cIcjJ2rtRZaU/0MBAy
+	 41HrlIVyqkzB30zAqQ2Znee1eYUuKh0Dn/L8Lgrij/5BZGoCZahHzs7UrmjOubVPUd
+	 5YULvNhERV0fBGYaMADcCoJMa/vj3gx1i3WMYa6M=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44TIsY3j019806
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 29 May 2024 13:54:34 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 29
+ May 2024 13:54:34 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 29 May 2024 13:54:34 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44TIsYDc007851;
+	Wed, 29 May 2024 13:54:34 -0500
+Message-ID: <10c57c70-5e12-4baf-b986-d060858949ce@ti.com>
+Date: Wed, 29 May 2024 13:54:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/8] dt-bindings: counter: Add new ti,am62-eqep
+ compatible
+To: David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Nishanth Menon
+	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+References: <20240523231516.545085-1-jm@ti.com>
+ <20240523231516.545085-3-jm@ti.com>
+ <2956d10b-d2cf-4019-adc8-d8053e435767@lechnology.com>
+ <e6a03921-532c-4aa7-92b6-812cd9a356d6@lechnology.com>
+ <2339db0d-db21-4372-808d-8648500e971a@ti.com>
+ <55a21233-918f-4cf4-800c-3e0eee0cd467@lechnology.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <55a21233-918f-4cf4-800c-3e0eee0cd467@lechnology.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This adds support for CTR Ext defined in [0]. The extension
-allows to records a maximum for 256 last branch records.
+Hi David,
 
-CTR extension depends on s[m|s]csrind and Sscofpmf extensions.
+On 5/25/24 12:49 PM, David Lechner wrote:
+> On 5/24/24 4:44 PM, Judith Mendez wrote:
+>> On 5/24/24 3:57 PM, David Lechner wrote:
+>>> On 5/24/24 3:50 PM, David Lechner wrote:
+>>>> On 5/23/24 6:15 PM, Judith Mendez wrote:
+>>>>> Add new compatible ti,am62-eqep for TI K3 devices. If a device
+>>>>> uses this compatible, require power-domains property.
+>>>>>
+>>>>> Since there is only one functional and interface clock for eqep,
+>>>>> clock-names is not really required. The clock-name also changed
+>>>>> for TI K3 SoCs so make clock-names optional for the new compatible
+>>>>> since there is only one clock that is routed to the IP.
+>>>>>
+>>>>> While we are here, add an example using ti,am62-eqep compatible.
+>>>>>
+>>>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>>>> ---
+>>>>> Changes since v1:
+>>>>> - Fix eqep binding for new compatible, require
+>>>>>    power-domains for new compatible
+>>>>> ---
+>>>>>    .../devicetree/bindings/counter/ti-eqep.yaml  | 53 +++++++++++++++++--
+>>>>>    1 file changed, 48 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/counter/ti-eqep.yaml b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
+>>>>> index 85f1ff83afe72..c4bb0231f166a 100644
+>>>>> --- a/Documentation/devicetree/bindings/counter/ti-eqep.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
+>>>>> @@ -11,7 +11,9 @@ maintainers:
+>>>>>      properties:
+>>>>>      compatible:
+>>>>> -    const: ti,am3352-eqep
+>>>>> +    enum:
+>>>>> +      - ti,am3352-eqep
+>>>>> +      - ti,am62-eqep
+>>>>>        reg:
+>>>>>        maxItems: 1
+>>>>> @@ -21,19 +23,43 @@ properties:
+>>>>>        maxItems: 1
+>>>>>        clocks:
+>>>>> -    description: The clock that determines the SYSCLKOUT rate for the eQEP
+>>>>> -      peripheral.
+>>>>> +    description: The functional and interface clock that determines the clock
+>>>>> +      rate for the eQEP peripheral.
+>>>>>        maxItems: 1
+>>>>>        clock-names:
+>>>>> -    const: sysclkout
+>>>>> +    enum:
+>>>>> +      - sysclkout
+>>>>> +      - fck
+>>>>> +
+>>>>
+>>>> If we are making this optional for ti,am62-eqep, why add a new name?
+>>>>
+>>>> Also, we could change the description to say that sysclockout is not a
+>>>> great name but is required for backwards compatibility.
+>>>>
+>>>>> +  power-domains:
+>>>>> +    maxItems: 1
+>>>>> +
+>>>>> +allOf:
+>>>>> +  - if:
+>>>>> +      properties:
+>>>>> +        compatible:
+>>>>> +          contains:
+>>>>> +            enum:
+>>>>> +              - ti,am3352-eqep
+>>>>> +    then:
+>>>>> +      required:
+>>>>> +        - clock-names
+>>>
+>>> I just looked at the Linux driver for this and the clock name is
+>>> not used in the driver. So we could probably just deprecate the
+>>> clock-names property here and not make it required for
+>>> ti,am3352-eqep (and not allowed for any new compatibles as
+>>> suggested below).
+>>
+>> We could do this, although I was under the impression that we should
+>> not drop DT properties just because the linux driver isn't using it,
+>> that is why I went with keeping clock-names around for am335x compatible
+>> and making it optional for am62x compatible.
+>>
+>> But if it is all the same, we could drop the the DT property.
+>>
+>> ~ Judith
+>>
+> 
+> I wasn't suggesting to remove clock-names from the bindings, just
+> deprecate that property in this binding and not use it with any
+> new compatibles.
+> 
+> In the AM62x technical reference manual, it looks like it calls
+> the functional and interface clock FICLK rather than FCK. So
+> I'm just suggesting maybe it just easier to not give it a name
+> rather than try to get the right name? No name will work with
+> any future SoCs as well. :-)
 
-Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
----
- MAINTAINERS                    |   1 +
- drivers/perf/Kconfig           |  11 +
- drivers/perf/Makefile          |   1 +
- drivers/perf/riscv_ctr.c       | 469 +++++++++++++++++++++++++++++++++
- include/linux/perf/riscv_pmu.h |  33 +++
- 5 files changed, 515 insertions(+)
- create mode 100644 drivers/perf/riscv_ctr.c
+Understood, so I will make clock-names optional for ti,am3352-eqep
+compatible and not allowed for ti,am62-eqep compatible.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6b42d5f62da..868e4b0808ab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19056,6 +19056,7 @@ M:	Atish Patra <atishp@atishpatra.org>
- R:	Anup Patel <anup@brainfault.org>
- L:	linux-riscv@lists.infradead.org
- S:	Supported
-+F:	drivers/perf/riscv_ctr.c
- F:	drivers/perf/riscv_pmu_common.c
- F:	drivers/perf/riscv_pmu_dev.c
- F:	drivers/perf/riscv_pmu_legacy.c
-diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index 3c37577b25f7..cca6598be739 100644
---- a/drivers/perf/Kconfig
-+++ b/drivers/perf/Kconfig
-@@ -110,6 +110,17 @@ config ANDES_CUSTOM_PMU
- 
- 	  If you don't know what to do here, say "Y".
- 
-+config RISCV_CTR
-+       bool "Enable support for Control Transfer Records (CTR)"
-+       depends on PERF_EVENTS && RISCV_PMU
-+       default y
-+       help
-+         Enable support for Control Transfer Records (CTR) which
-+         allows recording branches, Jumps, Calls, returns etc taken in an
-+         execution path. This also supports privilege based filtering. It
-+         captures additional relevant information such as cycle count,
-+         branch misprediction etc.
-+
- config ARM_PMU_ACPI
- 	depends on ARM_PMU && ACPI
- 	def_bool y
-diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-index ba809cc069d5..364b1f66f410 100644
---- a/drivers/perf/Makefile
-+++ b/drivers/perf/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_RISCV_PMU_COMMON) += riscv_pmu_common.o
- obj-$(CONFIG_RISCV_PMU_LEGACY) += riscv_pmu_legacy.o
- obj-$(CONFIG_RISCV_PMU) += riscv_pmu_dev.o
- obj-$(CONFIG_STARFIVE_STARLINK_PMU) += starfive_starlink_pmu.o
-+obj-$(CONFIG_RISCV_CTR) += riscv_ctr.o
- obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
- obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
- obj-$(CONFIG_ARM_SPE_PMU) += arm_spe_pmu.o
-diff --git a/drivers/perf/riscv_ctr.c b/drivers/perf/riscv_ctr.c
-new file mode 100644
-index 000000000000..95fda1edda4f
---- /dev/null
-+++ b/drivers/perf/riscv_ctr.c
-@@ -0,0 +1,469 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Control transfer records extension Helpers.
-+ *
-+ * Copyright (C) 2024 Rivos Inc.
-+ *
-+ * Author: Rajnesh Kanwal <rkanwal@rivosinc.com>
-+ */
-+
-+#define pr_fmt(fmt) "CTR: " fmt
-+
-+#include <linux/bitfield.h>
-+#include <linux/printk.h>
-+#include <linux/types.h>
-+#include <linux/perf_event.h>
-+#include <linux/perf/riscv_pmu.h>
-+#include <linux/cpufeature.h>
-+#include <asm/hwcap.h>
-+#include <asm/csr_ind.h>
-+#include <asm/csr.h>
-+
-+#define CTR_BRANCH_FILTERS_INH  (CTRCTL_EXCINH       | \
-+				 CTRCTL_INTRINH      | \
-+				 CTRCTL_TRETINH      | \
-+				 CTRCTL_TKBRINH      | \
-+				 CTRCTL_INDCALL_INH  | \
-+				 CTRCTL_DIRCALL_INH  | \
-+				 CTRCTL_INDJUMP_INH  | \
-+				 CTRCTL_DIRJUMP_INH  | \
-+				 CTRCTL_CORSWAP_INH  | \
-+				 CTRCTL_RET_INH      | \
-+				 CTRCTL_INDOJUMP_INH | \
-+				 CTRCTL_DIROJUMP_INH)
-+
-+#define CTR_BRANCH_ENABLE_BITS (CTRCTL_KERNEL_ENABLE | CTRCTL_U_ENABLE)
-+
-+/* Branch filters not-supported by CTR extension. */
-+#define CTR_EXCLUDE_BRANCH_FILTERS (PERF_SAMPLE_BRANCH_ABORT_TX	        | \
-+				    PERF_SAMPLE_BRANCH_IN_TX		| \
-+				    PERF_SAMPLE_BRANCH_PRIV_SAVE        | \
-+				    PERF_SAMPLE_BRANCH_NO_TX            | \
-+				    PERF_SAMPLE_BRANCH_COUNTERS)
-+
-+/* Branch filters supported by CTR extension. */
-+#define CTR_ALLOWED_BRANCH_FILTERS (PERF_SAMPLE_BRANCH_USER		| \
-+				    PERF_SAMPLE_BRANCH_KERNEL		| \
-+				    PERF_SAMPLE_BRANCH_HV		| \
-+				    PERF_SAMPLE_BRANCH_ANY		| \
-+				    PERF_SAMPLE_BRANCH_ANY_CALL	        | \
-+				    PERF_SAMPLE_BRANCH_ANY_RETURN	| \
-+				    PERF_SAMPLE_BRANCH_IND_CALL	        | \
-+				    PERF_SAMPLE_BRANCH_COND		| \
-+				    PERF_SAMPLE_BRANCH_IND_JUMP	        | \
-+				    PERF_SAMPLE_BRANCH_HW_INDEX	        | \
-+				    PERF_SAMPLE_BRANCH_NO_FLAGS	        | \
-+				    PERF_SAMPLE_BRANCH_NO_CYCLES	| \
-+				    PERF_SAMPLE_BRANCH_CALL_STACK       | \
-+				    PERF_SAMPLE_BRANCH_CALL		| \
-+				    PERF_SAMPLE_BRANCH_TYPE_SAVE)
-+
-+#define CTR_PERF_BRANCH_FILTERS    (CTR_ALLOWED_BRANCH_FILTERS	        | \
-+				    CTR_EXCLUDE_BRANCH_FILTERS)
-+
-+static u64 allowed_filters __read_mostly;
-+
-+struct ctr_regset {
-+	unsigned long src;
-+	unsigned long target;
-+	unsigned long ctr_data;
-+};
-+
-+static inline u64 get_ctr_src_reg(unsigned int ctr_idx)
-+{
-+	return csr_ind_read(CSR_IREG, CTR_ENTRIES_FIRST, ctr_idx);
-+}
-+
-+static inline u64 get_ctr_tgt_reg(unsigned int ctr_idx)
-+{
-+	return csr_ind_read(CSR_IREG2, CTR_ENTRIES_FIRST, ctr_idx);
-+}
-+
-+static inline u64 get_ctr_data_reg(unsigned int ctr_idx)
-+{
-+	return csr_ind_read(CSR_IREG3, CTR_ENTRIES_FIRST, ctr_idx);
-+}
-+
-+static inline bool ctr_record_valid(u64 ctr_src)
-+{
-+	return !!FIELD_GET(CTRSOURCE_VALID, ctr_src);
-+}
-+
-+static inline int ctr_get_mispredict(u64 ctr_target)
-+{
-+	return FIELD_GET(CTRTARGET_MISP, ctr_target);
-+}
-+
-+static inline unsigned int ctr_get_cycles(u64 ctr_data)
-+{
-+	const unsigned int cce = FIELD_GET(CTRDATA_CCE_MASK, ctr_data);
-+	const unsigned int ccm = FIELD_GET(CTRDATA_CCM_MASK, ctr_data);
-+
-+	if (ctr_data & CTRDATA_CCV)
-+		return 0;
-+
-+	/* Formula to calculate cycles from spec: (2^12 + CCM) << CCE-1 */
-+	if (cce > 0)
-+		return (4096 + ccm) << (cce - 1);
-+
-+	return FIELD_GET(CTRDATA_CCM_MASK, ctr_data);
-+}
-+
-+static inline unsigned int ctr_get_type(u64 ctr_data)
-+{
-+	return FIELD_GET(CTRDATA_TYPE_MASK, ctr_data);
-+}
-+
-+static inline unsigned int ctr_get_depth(u64 ctr_depth)
-+{
-+	/* Depth table from CTR Spec: 2.4 sctrdepth.
-+	 *
-+	 * sctrdepth.depth       Depth
-+	 * 000			- 16
-+	 * 001			- 32
-+	 * 010			- 64
-+	 * 011			- 128
-+	 * 100			- 256
-+	 *
-+	 * Depth = 16 * 2 ^ (ctrdepth.depth)
-+	 * or
-+	 * Depth = 16 << ctrdepth.depth.
-+	 */
-+	return 16 << FIELD_GET(SCTRDEPTH_MASK, ctr_depth);
-+}
-+
-+/* Reads CTR entry at idx and stores it in entry struct. */
-+static bool capture_ctr_regset(struct ctr_regset *entry, unsigned int idx)
-+{
-+	entry->src = get_ctr_src_reg(idx);
-+
-+	if (!ctr_record_valid(entry->src))
-+		return false;
-+
-+	entry->src = entry->src & (~CTRSOURCE_VALID);
-+	entry->target = get_ctr_tgt_reg(idx);
-+	entry->ctr_data = get_ctr_data_reg(idx);
-+
-+	return true;
-+}
-+
-+static u64 branch_type_to_ctr(int branch_type)
-+{
-+	u64 config = CTR_BRANCH_FILTERS_INH | CTRCTL_LCOFIFRZ;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_USER)
-+		config |= CTRCTL_U_ENABLE;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
-+		config |= CTRCTL_KERNEL_ENABLE;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_HV) {
-+		if (riscv_isa_extension_available(NULL, h))
-+			config |= CTRCTL_KERNEL_ENABLE;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
-+		config &= ~CTR_BRANCH_FILTERS_INH;
-+		return config;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL) {
-+		config &= ~CTRCTL_INDCALL_INH;
-+		config &= ~CTRCTL_DIRCALL_INH;
-+		config &= ~CTRCTL_EXCINH;
-+		config &= ~CTRCTL_INTRINH;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
-+		config &= ~(CTRCTL_RET_INH | CTRCTL_TRETINH);
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_IND_CALL)
-+		config &= ~CTRCTL_INDCALL_INH;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_COND)
-+		config &= ~CTRCTL_TKBRINH;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_CALL_STACK) {
-+		config &= ~(CTRCTL_INDCALL_INH | CTRCTL_DIRCALL_INH |
-+			    CTRCTL_RET_INH);
-+		config |= CTRCTL_RASEMU;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_IND_JUMP) {
-+		config &= ~CTRCTL_INDJUMP_INH;
-+		config &= ~CTRCTL_INDOJUMP_INH;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_CALL)
-+		config &= ~CTRCTL_DIRCALL_INH;
-+
-+	return config;
-+}
-+
-+static const int ctr_perf_map[] = {
-+	[CTRDATA_TYPE_NONE]			= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_EXCEPTION]		= PERF_BR_SYSCALL,
-+	[CTRDATA_TYPE_INTERRUPT]		= PERF_BR_IRQ,
-+	[CTRDATA_TYPE_TRAP_RET]			= PERF_BR_ERET,
-+	[CTRDATA_TYPE_NONTAKEN_BRANCH]		= PERF_BR_COND,
-+	[CTRDATA_TYPE_TAKEN_BRANCH]		= PERF_BR_COND,
-+	[CTRDATA_TYPE_RESERVED_6]		= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_RESERVED_7]		= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_INDIRECT_CALL]		= PERF_BR_IND_CALL,
-+	[CTRDATA_TYPE_DIRECT_CALL]		= PERF_BR_CALL,
-+	[CTRDATA_TYPE_INDIRECT_JUMP]		= PERF_BR_UNCOND,
-+	[CTRDATA_TYPE_DIRECT_JUMP]		= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_CO_ROUTINE_SWAP]		= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_RETURN]			= PERF_BR_RET,
-+	[CTRDATA_TYPE_OTHER_INDIRECT_JUMP]	= PERF_BR_IND,
-+	[CTRDATA_TYPE_OTHER_DIRECT_JUMP]	= PERF_BR_UNKNOWN,
-+};
-+
-+static void ctr_set_perf_entry_type(struct perf_branch_entry *entry,
-+				    u64 ctr_data)
-+{
-+	int ctr_type = ctr_get_type(ctr_data);
-+
-+	entry->type = ctr_perf_map[ctr_type];
-+	if (entry->type == PERF_BR_UNKNOWN)
-+		pr_warn("%d - unknown branch type captured\n", ctr_type);
-+}
-+
-+static void capture_ctr_flags(struct perf_branch_entry *entry,
-+			      struct perf_event *event, u64 ctr_data,
-+			      u64 ctr_target)
-+{
-+	if (branch_sample_type(event))
-+		ctr_set_perf_entry_type(entry, ctr_data);
-+
-+	if (!branch_sample_no_cycles(event))
-+		entry->cycles = ctr_get_cycles(ctr_data);
-+
-+	if (!branch_sample_no_flags(event)) {
-+		entry->abort = 0;
-+		entry->mispred = ctr_get_mispredict(ctr_target);
-+		entry->predicted = !entry->mispred;
-+	}
-+
-+	if (branch_sample_priv(event))
-+		entry->priv = PERF_BR_PRIV_UNKNOWN;
-+}
-+
-+
-+static void ctr_regset_to_branch_entry(struct cpu_hw_events *cpuc,
-+				       struct perf_event *event,
-+				       struct ctr_regset *regset,
-+				       unsigned int idx)
-+{
-+	struct perf_branch_entry *entry = &cpuc->branches->branch_entries[idx];
-+
-+	perf_clear_branch_entry_bitfields(entry);
-+	entry->from = regset->src;
-+	entry->to = regset->target & (~CTRTARGET_MISP);
-+	capture_ctr_flags(entry, event, regset->ctr_data, regset->target);
-+}
-+
-+static void ctr_read_entries(struct cpu_hw_events *cpuc,
-+			     struct perf_event *event,
-+			     unsigned int depth)
-+{
-+	struct ctr_regset entry = {};
-+	u64 ctr_ctl;
-+	int i;
-+
-+	ctr_ctl = csr_read_clear(CSR_CTRCTL, CTR_BRANCH_ENABLE_BITS);
-+
-+	for (i = 0; i < depth; i++) {
-+		if (!capture_ctr_regset(&entry, i))
-+			break;
-+
-+		ctr_regset_to_branch_entry(cpuc, event, &entry, i);
-+	}
-+
-+	csr_set(CSR_CTRCTL, ctr_ctl & CTR_BRANCH_ENABLE_BITS);
-+
-+	cpuc->branches->branch_stack.nr = i;
-+	cpuc->branches->branch_stack.hw_idx = 0;
-+}
-+
-+bool riscv_pmu_ctr_valid(struct perf_event *event)
-+{
-+	u64 branch_type = event->attr.branch_sample_type;
-+
-+	if (branch_type & ~allowed_filters) {
-+		pr_debug_once("Requested branch filters not supported 0x%llx\n",
-+				branch_type & ~allowed_filters);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+void riscv_pmu_ctr_consume(struct cpu_hw_events *cpuc, struct perf_event *event)
-+{
-+	unsigned int depth = to_riscv_pmu(event->pmu)->ctr_depth;
-+
-+	ctr_read_entries(cpuc, event, depth);
-+
-+	/* Clear frozen bit. */
-+	csr_clear(CSR_SCTRSTATUS, SCTRSTATUS_FROZEN);
-+}
-+
-+static void riscv_pmu_ctr_clear(void)
-+{
-+	/* FIXME: Replace with sctrclr instruction once support is merged
-+	 * into toolchain.
-+	 */
-+	asm volatile(".4byte 0x10400073\n" ::: "memory");
-+	csr_write(CSR_SCTRSTATUS, 0);
-+}
-+
-+/*
-+ * On context switch in, we need to make sure no samples from previous user
-+ * are left in the CTR.
-+ *
-+ * On ctxswin, sched_in = true, called after the PMU has started
-+ * On ctxswout, sched_in = false, called before the PMU is stopped
-+ */
-+void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *pmu_ctx,
-+			      bool sched_in)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(pmu_ctx->pmu);
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
-+
-+	if (cpuc->ctr_users && sched_in)
-+		riscv_pmu_ctr_clear();
-+}
-+
-+void riscv_pmu_ctr_enable(struct perf_event *event)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
-+	u64 branch_type = event->attr.branch_sample_type;
-+	u64 ctr;
-+
-+	if (!cpuc->ctr_users++ && !event->total_time_running)
-+		riscv_pmu_ctr_clear();
-+
-+	ctr = branch_type_to_ctr(branch_type);
-+	csr_write(CSR_CTRCTL, ctr);
-+
-+	perf_sched_cb_inc(event->pmu);
-+}
-+
-+void riscv_pmu_ctr_disable(struct perf_event *event)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
-+
-+	/* Clear CTRCTL to disable the recording. */
-+	csr_write(CSR_CTRCTL, 0);
-+
-+	cpuc->ctr_users--;
-+	WARN_ON_ONCE(cpuc->ctr_users < 0);
-+
-+	perf_sched_cb_dec(event->pmu);
-+}
-+
-+/*
-+ * Check for hardware supported perf filters here. To avoid missing
-+ * any new added filter in perf, we do a BUILD_BUG_ON check, so make sure
-+ * to update CTR_ALLOWED_BRANCH_FILTERS or CTR_EXCLUDE_BRANCH_FILTERS
-+ * defines when adding support for it in below function.
-+ */
-+static void __init check_available_filters(void)
-+{
-+	u64 ctr_ctl;
-+
-+	/*
-+	 * Ensure both perf branch filter allowed and exclude
-+	 * masks are always in sync with the generic perf ABI.
-+	 */
-+	BUILD_BUG_ON(CTR_PERF_BRANCH_FILTERS != (PERF_SAMPLE_BRANCH_MAX - 1));
-+
-+	allowed_filters = PERF_SAMPLE_BRANCH_USER      |
-+			  PERF_SAMPLE_BRANCH_KERNEL    |
-+			  PERF_SAMPLE_BRANCH_ANY       |
-+			  PERF_SAMPLE_BRANCH_HW_INDEX  |
-+			  PERF_SAMPLE_BRANCH_NO_FLAGS  |
-+			  PERF_SAMPLE_BRANCH_NO_CYCLES |
-+			  PERF_SAMPLE_BRANCH_TYPE_SAVE;
-+
-+	csr_write(CSR_CTRCTL, ~0);
-+	ctr_ctl = csr_read(CSR_CTRCTL);
-+
-+	if (riscv_isa_extension_available(NULL, h))
-+		allowed_filters |= PERF_SAMPLE_BRANCH_HV;
-+
-+	if (ctr_ctl & (CTRCTL_INDCALL_INH | CTRCTL_DIRCALL_INH))
-+		allowed_filters |= PERF_SAMPLE_BRANCH_ANY_CALL;
-+
-+	if (ctr_ctl & (CTRCTL_RET_INH | CTRCTL_TRETINH))
-+		allowed_filters |= PERF_SAMPLE_BRANCH_ANY_RETURN;
-+
-+	if (ctr_ctl & CTRCTL_INDCALL_INH)
-+		allowed_filters |= PERF_SAMPLE_BRANCH_IND_CALL;
-+
-+	if (ctr_ctl & CTRCTL_TKBRINH)
-+		allowed_filters |= PERF_SAMPLE_BRANCH_COND;
-+
-+	if (ctr_ctl & CTRCTL_RASEMU)
-+		allowed_filters |= PERF_SAMPLE_BRANCH_CALL_STACK;
-+
-+	if (ctr_ctl & (CTRCTL_INDOJUMP_INH | CTRCTL_INDJUMP_INH))
-+		allowed_filters |= PERF_SAMPLE_BRANCH_IND_JUMP;
-+
-+	if (ctr_ctl & CTRCTL_DIRCALL_INH)
-+		allowed_filters |= PERF_SAMPLE_BRANCH_CALL;
-+}
-+
-+void riscv_pmu_ctr_starting_cpu(void)
-+{
-+	if (!riscv_isa_extension_available(NULL, SxCTR) ||
-+	    !riscv_isa_extension_available(NULL, SSCOFPMF) ||
-+	    !riscv_isa_extension_available(NULL, SxCSRIND))
-+		return;
-+
-+	/* Set depth to maximum. */
-+	csr_write(CSR_SCTRDEPTH, SCTRDEPTH_MASK);
-+}
-+
-+void riscv_pmu_ctr_dying_cpu(void)
-+{
-+	if (!riscv_isa_extension_available(NULL, SxCTR) ||
-+	    !riscv_isa_extension_available(NULL, SSCOFPMF) ||
-+	    !riscv_isa_extension_available(NULL, SxCSRIND))
-+		return;
-+
-+	/* Clear and reset CTR CSRs. */
-+	csr_write(CSR_SCTRDEPTH, 0);
-+	csr_write(CSR_CTRCTL, 0);
-+	riscv_pmu_ctr_clear();
-+}
-+
-+void __init riscv_pmu_ctr_init(struct riscv_pmu *riscv_pmu)
-+{
-+	if (!riscv_isa_extension_available(NULL, SxCTR) ||
-+	    !riscv_isa_extension_available(NULL, SSCOFPMF) ||
-+	    !riscv_isa_extension_available(NULL, SxCSRIND))
-+		return;
-+
-+	check_available_filters();
-+
-+	/* Set depth to maximum. */
-+	csr_write(CSR_SCTRDEPTH, SCTRDEPTH_MASK);
-+	riscv_pmu->ctr_depth = ctr_get_depth(csr_read(CSR_SCTRDEPTH));
-+
-+	pr_info("Perf CTR available, with %d depth\n", riscv_pmu->ctr_depth);
-+}
-+
-+void __init riscv_pmu_ctr_finish(struct riscv_pmu *riscv_pmu)
-+{
-+	if (!riscv_pmu_ctr_supported(riscv_pmu))
-+		return;
-+
-+	csr_write(CSR_SCTRDEPTH, 0);
-+	csr_write(CSR_CTRCTL, 0);
-+	riscv_pmu_ctr_clear();
-+	riscv_pmu->ctr_depth = 0;
-+}
-diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
-index 5a6b840018bd..455d2386936f 100644
---- a/include/linux/perf/riscv_pmu.h
-+++ b/include/linux/perf/riscv_pmu.h
-@@ -104,6 +104,39 @@ struct riscv_pmu *riscv_pmu_alloc(void);
- int riscv_pmu_get_hpm_info(u32 *hw_ctr_width, u32 *num_hw_ctr);
- #endif
- 
-+static inline bool riscv_pmu_ctr_supported(struct riscv_pmu *pmu)
-+{
-+	return !!pmu->ctr_depth;
-+}
-+
- #endif /* CONFIG_RISCV_PMU_COMMON */
- 
-+#ifdef CONFIG_RISCV_CTR
-+
-+bool riscv_pmu_ctr_valid(struct perf_event *event);
-+void riscv_pmu_ctr_consume(struct cpu_hw_events *cpuc, struct perf_event *event);
-+void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
-+void riscv_pmu_ctr_enable(struct perf_event *event);
-+void riscv_pmu_ctr_disable(struct perf_event *event);
-+void riscv_pmu_ctr_dying_cpu(void);
-+void riscv_pmu_ctr_starting_cpu(void);
-+void riscv_pmu_ctr_init(struct riscv_pmu *riscv_pmu);
-+void riscv_pmu_ctr_finish(struct riscv_pmu *riscv_pmu);
-+
-+#else
-+
-+static inline bool riscv_pmu_ctr_valid(struct perf_event *event) { return false; }
-+static inline void riscv_pmu_ctr_consume(struct cpu_hw_events *cpuc,
-+				      struct perf_event *event) { }
-+static inline void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *,
-+					    bool sched_in) { }
-+static inline void riscv_pmu_ctr_enable(struct perf_event *event) { }
-+static inline void riscv_pmu_ctr_disable(struct perf_event *event) { }
-+static inline void riscv_pmu_ctr_dying_cpu(void) { }
-+static inline void riscv_pmu_ctr_starting_cpu(void) { }
-+static inline void riscv_pmu_ctr_init(struct riscv_pmu *riscv_pmu) { }
-+static inline void riscv_pmu_ctr_finish(struct riscv_pmu *riscv_pmu) { }
-+
-+#endif /* CONFIG_RISCV_CTR */
-+
- #endif /* _RISCV_PMU_H */
--- 
-2.34.1
+Thanks for your feedback (:
+
+~ Judith
+> 
 
