@@ -1,85 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122ED157A7D;
-	Wed, 29 May 2024 14:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id C5351157E84
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716992593; cv=none; b=Bco76btzh/ZmuMgnCxFOBRzQa2ymIqf+PqaOQEh7X/WiGhzMvkBJlWotfZel1rmI//K7AbYrOqL4Ikojqj6WuW1B6OdeA3KUl5lDgW9yDWmBO6vZWxPw+Rb05QbtY3Kg8yR1cL9cgKaqV0ZoZeZHNrRpkrXclXK3I0vhQeEBsh0=
+	t=1716992669; cv=none; b=ZiXFsbe5XneaAyFm8Frt8+tGrbO9fsSebk7SdBCEhzVLPEys8EEDHcNcUzfrRbnBoHA6Gk5dNWU2IuPMi+k2dGGaqRbNY8xg3B1iNUfRoraDviTfIHDWuEOT97oyG86MKCXx827crl0FGwTVrOpedBF8EG+gEBod4+p5mCV84I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716992593; c=relaxed/simple;
-	bh=bhCG4kplqmrZggYyow0NngpMzA6V+smGjmtFA4lsZrY=;
+	s=arc-20240116; t=1716992669; c=relaxed/simple;
+	bh=gehAJrBCj0tUPfdTW7IgQRwjU9msG11mfhKKvOrwlj4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iofI8FvuaiQ+KcBpGGYFbBMBmeoN8dS2+nkscXn3FuTRTrWKLvAvFriYnLWlOa7tLwVCDzQEqlBZQCocISI4XgkzW8p6sXAc25lmh+YhF2hKmKjU4b+3HyF+wqH6FreOzNJpYi8noK4JJodlj45t7xBZ1ccL2FwmBrm6PyhcHaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pAT4Mtv8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pAT4Mtv8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E66C113CC;
-	Wed, 29 May 2024 14:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716992592;
-	bh=bhCG4kplqmrZggYyow0NngpMzA6V+smGjmtFA4lsZrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pAT4Mtv8GPIvyCcYfK1Aalw8Cb/DS3AIFrZzn1djhuXr8tqy97h50w2f+Yi9ecorg
-	 FHLDesY7g+kk782SCHj6dMYBMxFOMlRHYIs6PB/MXH66FKZOEQzyHni48Wjomaku4O
-	 OAhyK9KBHbFleyVnYGWVfeKSatYucXF+PraPUSVaAtaQE1IzfZvkZ9rJjcQoXDCbiK
-	 MmBwzNlyMtkpdfJN94S3XjI/sAzwKYRh+y6Y3YMWbVsWrW0AUsuQggO8Ebl0wq5r22
-	 WsWbW5Yai37XptWeqB/wuNhNTlSipZF+eAH9b2Ap8Cv5veDihpfK6w+mkZOREx4FdC
-	 ZuWwFwnIUyDCw==
-Date: Wed, 29 May 2024 15:23:07 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Matteo Martelli <matteomartelli3@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Marcus Cooper <codekipper@gmail.com>,
-	=?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] ASoC: sunxi: sun4i-i2s: fix LRCLK polarity in i2s
- mode
-Message-ID: <d02e981b-da33-45c4-9d9e-f47a890e0e79@sirena.org.uk>
-References: <20240529140658.180966-2-matteomartelli3@gmail.com>
- <a003dac1-de47-4a15-8959-25f7d5f1c129@sirena.org.uk>
- <665739895996a_26e4f3704a@njaxe.notmuch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=obAXXEjtu9OQspCe4Ym4UBLhwUYXTfolR6+/X4MJqSRtT6yd0y6EdHocHZrHnbHYDUWFAA43u+5MXR2FdmCW7VDi7TVJzHT2z5BjdXl9QUVlO6cZXRfnpZiWMIigfn8iTkeueebchf40TSeDmHgeqqkAFS5DOXe4ZAV5jwqxYvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 724843 invoked by uid 1000); 29 May 2024 10:24:26 -0400
+Date: Wed, 29 May 2024 10:24:26 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Andrea Parri <parri.andrea@gmail.com>,
+  Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>, will@kernel.org,
+  peterz@infradead.org, npiggin@gmail.com, dhowells@redhat.com,
+  j.alglave@ucl.ac.uk, luc.maranget@inria.fr, paulmck@kernel.org,
+  akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
+  linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH] tools/memory-model: Document herd7 (internal)
+ representation
+Message-ID: <2e34674c-2443-4345-8bc7-8c950a47f621@rowland.harvard.edu>
+References: <20240524151356.236071-1-parri.andrea@gmail.com>
+ <1a3c892c-903e-8fd3-24a6-2454c2a55302@huaweicloud.com>
+ <ZlSKYA/Y/daiXzfy@andrea>
+ <41bc01fa-ce02-4005-a3c2-abfabe1c6927@huaweicloud.com>
+ <ZlYbXZSLPmjTKtaE@boqun-archlinux>
+ <7e2963a3-d471-4593-9170-7f59aa1ce038@huaweicloud.com>
+ <b54575b9-ab29-4bcd-ae7a-6132d1e36195@rowland.harvard.edu>
+ <8c6174c7-a26c-416e-b9b1-2aff2d43dea1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Q0vjnQJ659h0qWMK"
-Content-Disposition: inline
-In-Reply-To: <665739895996a_26e4f3704a@njaxe.notmuch>
-X-Cookie: Everybody gets free BORSCHT!
-
-
---Q0vjnQJ659h0qWMK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <8c6174c7-a26c-416e-b9b1-2aff2d43dea1@huaweicloud.com>
 
-On Wed, May 29, 2024 at 04:19:53PM +0200, Matteo Martelli wrote:
+On Wed, May 29, 2024 at 04:17:36PM +0200, Jonas Oberhauser wrote:
+> 
+> 
+> Am 5/29/2024 um 4:07 PM schrieb Alan Stern:
+> > On Wed, May 29, 2024 at 02:37:30PM +0200, Jonas Oberhauser wrote:
+> > > Given herd's other syntactic limitations, perhaps the best way would be to
+> > > introduce these macros as
+> > > 
+> > > 	x = cmpxchg(...) {
+> > > 		__fence{mb-successful-rmw};
+> > >   		x = __cmpxchg{once}(...);
+> > >   		__fence{mb-successful-rmw};
+> > > 	}
+> > > 
+> > > since I think x = M(...) is the only way we are allowed to use these macros
+> > > anyways.
+> > 
+> > If we did this, how would the .cat file know to ignore the fence events
+> > when the cmpxchg() fails?  It doesn't look like there's anything to
+> > connect the two of them.
+> > 
+> > Adding the MB tag to the cmpxchg itself seems like the only way forward.
+> > 
+> > Alan
+> 
+> Something along these lines:
+> 
+>   Mb = Mb | Mb-successful-rmw & (domain((po\(po;po));rmw) |
+> range(rmw;(po\(po;po)))
+> 
+> i.e., using the fact that these mb-successful-rmw fences must appear
+> directly next to a possibly failing rmw, and looking for successful rmw
+> directly around them.
+> 
+> I suppose we have to distinguish between the before- and after- fences
+> though to make it work for cases like
+> 
+> xchg_release();
+> cmpxchg(); // fails
+> 
+> 
+>                 __xchg_release(...); // is an rmw
+>  		__fence{mb-successful-rmw}; // wrong takes mb semantics
+>    		x = __cmpxchg{once}(...); // fails
+>    		__fence{mb-successful-rmw};
+> 
+> 
+> So that would leave us with
+> 
+>  	x = cmpxchg(...) {
+>  		__fence{mb-before-successful-rmw};
+>    		x = __cmpxchg{once}(...);
+>    		__fence{mb-after-successful-rmw};
+>  	}
+> 
+> and in .cat/.bell:
+> 
+>   Mb = Mb | Mb-before-successful-rmw & domain((po\(po;po));rmw) |
+> Mb-after-successful-rmw & range(rmw;(po\(po;po)))
 
-> All right, sorry for that. Should I resend this patch without cover letter?
+It's messy.  Associating the fences directly with the RMW event(s) by 
+adding the MB tags is much cleaner, IMO.
 
-No.
+Also, does the syntax you are proposing require changes to herd7?  I'm 
+not aware that it is currently able to parse that kind of definition.
 
---Q0vjnQJ659h0qWMK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZXOkoACgkQJNaLcl1U
-h9AGhgf8Db0kv+/TVscfXv8n4MsdBaq44VCh1YU+cMMdVJoaaDIvm5/0mIXc1it7
-kHp+1xm35g38cgoFTP8VTcHdeBpb7BNtSCDAkSodtnHrI/fUvxbjnbFue3EEAN2+
-Ni+tJ3X/j2EuXIBuLdj6bacgJ5WajhmEHIeHjFudYSSJr9ZBM9mTS8pzVrbiqOkK
-pXr+ckX+pgH55DZVyQaiREWUN+ajiRJdbZyOtzgxYntJQI4sI2KbjihclEJ+0BYj
-Rq5DAvwlhGRevlPih81PsoB+Z88E5VYQExJrNpEQKaEc6xZshI1N8v/qwm0/OImM
-wu7ZWqoof/PEuEx3TEGdjzzbRsIVIQ==
-=CFCV
------END PGP SIGNATURE-----
-
---Q0vjnQJ659h0qWMK--
+Alan
