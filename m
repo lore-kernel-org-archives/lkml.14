@@ -1,105 +1,84 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BDB184132;
-	Wed, 29 May 2024 16:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA77181CF8
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 16:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998856; cv=none; b=ZxMkuSdc+IgidJwKHt5v5yGL0Iw0Hns/IutkT9FGFq/Ga4oHi0zFE7cWuRdd2KuP9el6STYvAm62cmjkxKgYxc8QC/SvzJNdICPX+zYs8cHGutsXyZymXC5DFMvV6wBPAFbnZk9el4XjOjSYid8pMUlL4h/jffyqjO4xmA/ZQKY=
+	t=1716998872; cv=none; b=NZuxwWgFlP1GyAyhy9RwrsznYnmziCAkvp0KILzmBPXsKDgPcrXHnxk5ZqjyTEb6MrVm0aJJ120b4vn0NlLGfeKcoimYATTQjOSkhOHGcPfMN1mZ0Kk4Shc7+WksM+H43P+cIThX4EQgAUKMs6AnDRT1FuFTIyM2AzzntQRbTqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998856; c=relaxed/simple;
-	bh=vUdByjXl2zg+uUnpkmlVAihlQDf9yJ+YyNK0BBAvWvE=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=GH2y7hVHFkVnSx6epCoKby0UxzId0A3nTvdDJF9GThcYB6ecxX38haq9UNs7kIrl+n50cJRFGnOHqqtbrS3xPSdZJH4ZaPxdlR+ZI/rNA7U5XhFZJoZSIy27eYKSf6tiOEKWUgLjxGN63OOLhcXrsORV2r6QJzqedlaqMJNdvkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m7LIY1sE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BVIzFoiS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716998872; c=relaxed/simple;
+	bh=E9DNaoOmfthVbSQNM5zSx1ewbDVsnzuDLD8hcnb2gp0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nbhSrlEjKg+V4HN7eN5fMGscim0ujPiCBpjbSHGd8/G0zFzg31PEEb0mjZU19HOCR8ZmJFaBb4H96rSIO4N/sPepLwnBDj3+eU6GDVeEMcOx66UoJJm4Rvt8QwvB2KJdJZQNmWnZQ1Y/3DabY2jdJ7f2PtOqAjrXr3laUNHSAIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xcMnwLhA; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m7LIY1sE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BVIzFoiS"
-Date: Wed, 29 May 2024 16:07:32 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716998852;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=IZ5KrLuQPjQcfxHwIY9kyaClanAHjDrIe9KVBwV9SRg=;
-	b=m7LIY1sERjaxG9VqA+hjyq94Td1CnS6+Oqu/TuvBsrFQivooX4G5u3Pz2GdyFC6EB95fNA
-	POTCW9b50iamafKKtCiPUQRx0fFoBB9c2xmz44lPNPtydXBUZ5Vp6yxq89Hl6dlkKainuC
-	/Vc70oZj+b3kjIM0a0A0egh3juJ234ruDRmPYDfKBeja33ehwyLMIitQI1o3kLhp0MXjNq
-	l4qWrgr3TpjZL1QrWSRJsjy0zInIkyarQbeGGd9p0fa1Hg/uJuzNHljMPBHKJq8H1fmwLP
-	s6HKrPUcQT0455kVUVUU7o9SvAlbCIMGT2aP5cKxf5CgrGsWK929N/S85qOQGA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716998852;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=IZ5KrLuQPjQcfxHwIY9kyaClanAHjDrIe9KVBwV9SRg=;
-	b=BVIzFoiSEvrPssplanhIs4bXyN9L4NFkQ0RF4PyvU+quQ4j4PWziLRQ0DWs7dkKg3Ldqm5
-	rVB2Xj1MBWPp7rDw==
-From: "tip-bot2 for Nikolay Borisov" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cc] x86/kexec: Remove spurious unconditional JMP from from
- identity_mapped()
-Cc: Nikolay Borisov <nik.borisov@suse.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xcMnwLhA"
+X-Envelope-To: linux-kernel@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716998869;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KIXA4id9G2CaRpAXjkEzIwnBt0h+Tpbe5UdX8oSDWlk=;
+	b=xcMnwLhAI1ZaHjJfQJolPSG3SR6XQd5C+R63Vp+xElxibh3Jp5gUTavEAijzqbJawBAxWZ
+	ifKwmchh4xU5kIzkREMVlLbqTMhkifQjsjDRDBX88ANAGAU6hu7FXId4j+OW7tzq24zA6S
+	R/SljvB3b5svAHQf2QSid15P3EHsTeo=
+X-Envelope-To: linux-fsdevel@vger.kernel.org
+X-Envelope-To: viro@zeniv.linux.org.uk
+X-Envelope-To: brauner@kernel.org
+X-Envelope-To: jack@suse.cz
+X-Envelope-To: yuntao.wang@linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yuntao Wang <yuntao.wang@linux.dev>
+To: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Yuntao Wang <yuntao.wang@linux.dev>
+Subject: [PATCH] fs/file: fix the check in find_next_fd()
+Date: Thu, 30 May 2024 00:06:56 +0800
+Message-ID: <20240529160656.209352-1-yuntao.wang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171699885209.10875.2411538078061299720.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The following commit has been merged into the x86/cc branch of tip:
+The maximum possible return value of find_next_zero_bit(fdt->full_fds_bits,
+maxbit, bitbit) is maxbit. This return value, multiplied by BITS_PER_LONG,
+gives the value of bitbit, which can never be greater than maxfd, it can
+only be equal to maxfd at most, so the following check 'if (bitbit > maxfd)'
+will never be true.
 
-Commit-ID:     3f3d80f505f3d7273f374935558db5188acdd162
-Gitweb:        https://git.kernel.org/tip/3f3d80f505f3d7273f374935558db5188acdd162
-Author:        Nikolay Borisov <nik.borisov@suse.com>
-AuthorDate:    Wed, 29 May 2024 18:28:50 +03:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 29 May 2024 17:53:57 +02:00
+Moreover, when bitbit equals maxfd, it indicates that there are no unused
+fds, and the function can directly return.
 
-x86/kexec: Remove spurious unconditional JMP from from identity_mapped()
+Fix this check.
 
-This seemingly straightforward JMP was introduced in the initial version
-of the the 64bit kexec code without any explanation.
-
-It turns out (check accompanying Link) it's likely a copy/paste artefact
-from 32-bit code, where such a JMP could be used as a serializing
-instruction for the 486's prefetch queue. On x86_64 that's not needed
-because there's already a preceding write to cr4 which itself is
-a serializing operation.
-
-  [ bp: Typos. Let's try this and see what cries out. If it does,
-    reverting it is trivial. ]
-
-Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/all/55bc0649-c017-49ab-905d-212f140a403f@citrix.com/
+Signed-off-by: Yuntao Wang <yuntao.wang@linux.dev>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 3 ---
- 1 file changed, 3 deletions(-)
+ fs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 56cab1b..54e6200 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -153,9 +153,6 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 1:
- 	movq	%rax, %cr4
+diff --git a/fs/file.c b/fs/file.c
+index 8076aef9c210..7058901a2154 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -491,7 +491,7 @@ static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
+ 	unsigned int bitbit = start / BITS_PER_LONG;
  
--	jmp 1f
--1:
--
- 	/* Flush the TLB (needed?) */
- 	movq	%r9, %cr3
- 
+ 	bitbit = find_next_zero_bit(fdt->full_fds_bits, maxbit, bitbit) * BITS_PER_LONG;
+-	if (bitbit > maxfd)
++	if (bitbit >= maxfd)
+ 		return maxfd;
+ 	if (bitbit > start)
+ 		start = bitbit;
+-- 
+2.45.1
+
