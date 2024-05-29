@@ -1,104 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FA413B783
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 04:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135812F37;
+	Wed, 29 May 2024 04:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716956234; cv=none; b=GKUm1Wdf1KWZmDOXC9ZQV0Df5K/vUqQZ6BilH2uEbcC/NZfgFgnGHRXXE5kPqpYT+taMClxFSLwn5fE8wWaGxo04nwcMGTf+W+RqryTH7zJdjdjDiadSYjUK/JdJbIQparN7UeA1cjsFreBoNCgd3Gmx+OdauBPNKsin5lVLb8E=
+	t=1716956705; cv=none; b=r0gf6SkEFr6IxVh2YF2+0BWhyMSvBBivgn7jzt7Pr6qxPlYvt7PDedp94wuxO7K0jmypCNZmGcUp6mb14lDRsHxVcKrEhDGfPCkJ8Ef4nowT7kPSdz+mohoiN3k5TRe02tBrqsfR6c2KUzoi2qON08eRUOk1vaRkzgK/sYsCE5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716956234; c=relaxed/simple;
-	bh=Xic0N21kMSiu+SRUsA58mU3USYRQuD0NHOJa3KcEL7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OHxrMSj7vRV3PpY7GWEjAaw2bJPV75vq61yU+ygEf6KVDUci5CGbfvXdAbHNU7K6JJ6QiyMbsAYe4hGeLTycTCrsbgpYFOn3tMnSFWSH10MvvBIsLf81jva4m5xhPxMP+K4U4CykRJFcQsC0oBYqIvO95xiJ9URatyePWRMEiEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YDoXqvuk; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716956705; c=relaxed/simple;
+	bh=t/wyqOZCUtaJj94OWxcggJOyzt1ZBavPfMbI2zcPKiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=M59FZpXft87LKz9BxXPm/B8q6qlXD7ZqjZtxWEB6+1K0MDOrZPtKoHf4+BY/srMrYxR9uZHJrYlXy7ha6jLVq76TyALF+v+XjX3mSZqYtws3rJx35PBz2j3qjvKf3aqALFaXcjZBoL46EVtYOE/cOxTREae4cGI3m5St3NJ5TSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cVI8tKmv; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YDoXqvuk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716956234; x=1748492234;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Xic0N21kMSiu+SRUsA58mU3USYRQuD0NHOJa3KcEL7Q=;
-  b=YDoXqvuk4TQI4eg6epBcp9SHdy9ob8XiAvP/1A46Dgrxw+2DN2FzjQz2
-   q77uoulTkiIOfg/grcu0qL1qoi8dxpW294iWLz436TO7NcozLUZ+7zQBD
-   LcaC3GsPHd0BVJG5bPmlZxt9S0JaOBZXW+xHVo4eVuOkBkAkjvYJ4N9a0
-   SIAh5fqr6Er7Oy1AY2OJC1uFKdTQ1P31hDFVWppEttU2M0NHXmEIM3G2D
-   ywRsi57crngMebprevYd/4JnKNvw66jRyRuiKJojaad2Vy+GnNMWQsgvl
-   gTgiRVsOPw9HrP7uvy5/W8+3fENpHTDNPGuyguKVbYxS4a3OiaDYCF6cW
-   w==;
-X-CSE-ConnectionGUID: SytLc6pyRAOmTkKLh7exaA==
-X-CSE-MsgGUID: T3ijXcN0R+CJYaNsinaabQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="30838519"
-X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
-   d="scan'208";a="30838519"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 21:17:13 -0700
-X-CSE-ConnectionGUID: K3wlXKejQkGEoqzrW6j3cg==
-X-CSE-MsgGUID: qWEff19oRlaWY1csXCQSiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
-   d="scan'208";a="58474490"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 28 May 2024 21:17:00 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCAk9-000D6T-1p;
-	Wed, 29 May 2024 04:16:55 +0000
-Date: Wed, 29 May 2024 12:15:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: [tip:sched/core 1/2] powerpc-linux-ld: warning: orphan section
- `.bss..Lubsan_data1032' from `kernel/sched/build_policy.o' being placed in
- section `.bss..Lubsan_data1032'
-Message-ID: <202405291235.9o2DCsjw-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cVI8tKmv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1716956698;
+	bh=QS9UC6q6IV1lekvIOBY7aqCAICP+q66LAbGf/Ww1y9g=;
+	h=Date:From:To:Cc:Subject:From;
+	b=cVI8tKmv8tr7WpEwlbt1Dw8sUdgt/numMfkLFBJcwMkojqffPhDPAYrOo//zNHFop
+	 OIdrA1sVsvjvbxGAj7GIcwstCYjJVNYBCAlkUIbgQSWGMjxYYLErQsGX9KLU4kjvJm
+	 l2JUImvNkc+GIvuPhpRmmmfWPXGQYmnryCcbjY9tVSiRSeL/bM0ZWmOD+rwHfJhR5X
+	 wmb6Z1YE2GKkUkk8dQp5g7zIBzWmSP7jtjePkSlfhzCPdeM2JIUTFdHtAzws62tBNW
+	 S+/eLio11EcB+iOge1O5wPtdI/aQ00FhsQJfCuyk9g/w24+zVDqYM/WzIzOjq4MKH1
+	 qwGex9zCmm/1g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VpxB22tcrz4wqK;
+	Wed, 29 May 2024 14:24:58 +1000 (AEST)
+Date: Wed, 29 May 2024 14:24:55 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Steven Whitehouse <swhiteho@redhat.com>, Bob Peterson
+ <rpeterso@redhat.com>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warnings after merge of the gfs2 tree
+Message-ID: <20240529142455.1c68e65a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_/fy_UqbgbTx50A8B2YiQfi8t";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
-head:   402de7fc880fef055bc984957454b532987e9ad0
-commit: 04746ed80bcf3130951ed4d5c1bc5b0bcabdde22 [1/2] sched/syscalls: Split out kernel/sched/syscalls.c from kernel/sched/core.c
-config: powerpc-buildonly-randconfig-r001-20211222 (https://download.01.org/0day-ci/archive/20240529/202405291235.9o2DCsjw-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240529/202405291235.9o2DCsjw-lkp@intel.com/reproduce)
+--Sig_/fy_UqbgbTx50A8B2YiQfi8t
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405291235.9o2DCsjw-lkp@intel.com/
+Hi all,
 
-All warnings (new ones prefixed by >>):
+After merging the gfs2 tree, today's linux-next build (htmldocs) produced
+these warnings:
 
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data852' from `kernel/ptrace.o' being placed in section `.bss..Lubsan_data852'
->> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data1032' from `kernel/sched/build_policy.o' being placed in section `.bss..Lubsan_data1032'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data861' from `drivers/cxl/core/port.o' being placed in section `.bss..Lubsan_data861'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data845' from `drivers/cxl/core/mbox.o' being placed in section `.bss..Lubsan_data845'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data844' from `drivers/cxl/core/mbox.o' being placed in section `.bss..Lubsan_data844'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data852' from `kernel/ptrace.o' being placed in section `.bss..Lubsan_data852'
->> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data1032' from `kernel/sched/build_policy.o' being placed in section `.bss..Lubsan_data1032'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data861' from `drivers/cxl/core/port.o' being placed in section `.bss..Lubsan_data861'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data845' from `drivers/cxl/core/mbox.o' being placed in section `.bss..Lubsan_data845'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data844' from `drivers/cxl/core/mbox.o' being placed in section `.bss..Lubsan_data844'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data852' from `kernel/ptrace.o' being placed in section `.bss..Lubsan_data852'
->> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data1032' from `kernel/sched/build_policy.o' being placed in section `.bss..Lubsan_data1032'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data861' from `drivers/cxl/core/port.o' being placed in section `.bss..Lubsan_data861'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data845' from `drivers/cxl/core/mbox.o' being placed in section `.bss..Lubsan_data845'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data844' from `drivers/cxl/core/mbox.o' being placed in section `.bss..Lubsan_data844'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data852' from `kernel/ptrace.o' being placed in section `.bss..Lubsan_data852'
->> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data1032' from `kernel/sched/build_policy.o' being placed in section `.bss..Lubsan_data1032'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data861' from `drivers/cxl/core/port.o' being placed in section `.bss..Lubsan_data861'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data845' from `drivers/cxl/core/mbox.o' being placed in section `.bss..Lubsan_data845'
-   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data844' from `drivers/cxl/core/mbox.o' being placed in section `.bss..Lubsan_data844'
+Documentation/filesystems/gfs2-glocks.rst:64: ERROR: Malformed table.
+Text in column margin in table line 7.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+Field              Purpose
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+go_sync            Called before remote state change (e.g. to sync dirty da=
+ta)
+go_xmote_bh        Called after remote state change (e.g. to refill cache)
+go_inval           Called if remote state change requires invalidating the =
+cache
+go_instantiate     Called when a glock has been acquired
+go_held            Called every time a glock holder is acquired
+go_dump            Called to print content of object for debugfs file, or on
+                   error to dump glock to the log.
+go_callback        Called if the DLM sends a callback to drop this lock
+go_unlocked        Called when a glock is unlocked (dlm_unlock())
+go_type            The type of the glock, ``LM_TYPE_*``
+go_flags           GLOF_ASPACE is set, if the glock has an address space
+                   associated with it
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+Documentation/filesystems/gfs2-glocks.rst:96: ERROR: Malformed table.
+Text in column margin in table line 7.
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Operation        GLF_LOCK bit lock held    gl_lockref.lock spinlock held
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+go_sync               Yes                       No
+go_xmote_bh           Yes                       No
+go_inval              Yes                       No
+go_instantiate        No                        No
+go_held               No                        No
+go_dump               Sometimes                 Yes
+go_callback           Sometimes (N/A)           Yes
+go_unlocked           Yes                       No
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Introduced by commit
+
+  ded323aef6d5 ("gfs2: Update glocks documentation")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fy_UqbgbTx50A8B2YiQfi8t
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZWrhcACgkQAVBC80lX
+0Gw4/gf/cx3o8BXTNavjVPnJteNrPjDc61CCUC9RoN4jpaC1mbzIu6+IKm9pEV5G
+SvdT/9PSwrzurw72lnc7E/fL6cgDxw91sS9W6JR+MzfxRV+B5k3tN7OEY4wuGgH1
++Qy/6+/Qh5M/YuFBsZ70/LDHTm7sRi+2Djxxp3dqlX4CBSuIOV/0UVwf4QsVSJCF
+lpjHeoW78Tmla6ycYsosAjKlyeLkd/qJFGUsLAH68TCWqvsvt36SGmhC+XN5WGpq
+uzMk6AGlAAejXW9WFOOnegaP8nKoKGp9lKdJN0cvDiQ/9hNQaXjnhA78QjlCwIzk
+W1lrUKSVDC3MUaWXnjFt9JoLIkw1gg==
+=J5PD
+-----END PGP SIGNATURE-----
+
+--Sig_/fy_UqbgbTx50A8B2YiQfi8t--
