@@ -1,177 +1,120 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B1014AA9;
-	Wed, 29 May 2024 13:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9811BC43;
+	Wed, 29 May 2024 13:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716989960; cv=none; b=qiRfQcFLPN/RWXQGyCaJBbVWZLJbZDfde86jJzO9JLPmzZpDxL5kIg+BpRD1QdXulFHR1LP/LPJ/nGUIltPbeOnbdRHwSwJwjODzWKfqQvAAdAOjJd9XKSmvPbiNOjuuXLOmoRjD/R1EI1yYFs4iKZUA0v3sNkcE5MCxjrSpZWc=
+	t=1716989969; cv=none; b=q/qZyhcUpWtaHRFUuiD+r6vy/LLFLDBhgWIbRTX9erdFqzzR7ymQzapDPP9mFrHlQ8ttHFmZMqQoWHsASS6dqARCfAa0rRKfWsnxOhZz7Ds0UZLBoYpsylxmxiA/hV9Fy+/w2wx2MsXH32d9f2csmPAs//BVBRnga4A47u+3lns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716989960; c=relaxed/simple;
-	bh=R3h5tSBPfEHGlt3Qf5kTWfRHMfookplRqGhxVq0OW2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dnVAOPq0ELV01zqga3EvSPGzWGdWuOJGGCALYiJcsPPLYaNAn6D+u3elK4c45J7aYKsFEvLqRcydFaNRh86cM05MNo4jtwL03tWbduIUzslRr0FzWx1cxeGIPR48fO0NrtqC1N3DOgasdP1v1bKy1NWzU49PzI/l7qCXzZC4uos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRU53TuQ; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRU53TuQ"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-529614b8c29so3362328e87.2;
-        Wed, 29 May 2024 06:39:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716989957; x=1717594757; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/OSOPo7Lbda7dPzDxelwiNRlHm/oYGM0dTgvUx1nRbg=;
-        b=VRU53TuQHJIY840hcXzPUGBWV5XKo5psl+MfCFGMiubddH3c+W6lmzQgbFJx9GN39N
-         cBCMX3C5wX/rW8Wg7od8WRfBRyccxhC1ERJB3RlElph6UcShO8CwXBBF2lPzACHtI87u
-         yYOn9jh2UYK5bliR9wM/O8qT3gtVaFJlKjCwtI0M2a46Cew3VBztgPUmJxnCWqGmaeob
-         EKeuphOMzSh5jx/B4jfBTceA6sCyIEg8rIpyOZWUJ1iXUTmWengessqxdnSJp7czKGKm
-         17MnZj4OwMKNEDWr8fI06nt3IynIZPBJN40jhzgOEhOV+eGJC5zPXv53MdXl3MMRQQtn
-         +y7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716989957; x=1717594757;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/OSOPo7Lbda7dPzDxelwiNRlHm/oYGM0dTgvUx1nRbg=;
-        b=pouTgx0qkl5VqxIclebWLZlxFq+yXncBg3CNBfxZjDHW/n56ClnfYgare7zBLm9Eqm
-         V+EvDBBO1v8y0ttuy0rb9G/ddgsJJNSleJHJv8zm8SNjDcFvXa+yqga5Msh+p0kfkUG7
-         FkfHDGWXMBSD21aSEsQEzicQyMcn0LEpsTkBJc3oWQcMizvtXetu20slGI/KHRQX3e1t
-         BzlYVpmzEXsHkEEn8uultsak5N6k7TWlQL4aG/oBjvrDcA3QJGQXhnGDbXjv+IHL/LBR
-         TN5m/LWUH/wCwEn7A/LANcDEnkJWDGuilD2JxBpWJ6gyW7yX3ONcQPQ2czn7+2ZT/KTT
-         lRPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdzE4kezQct5F7/4rIup1Jw8J7P4vfmo212lHj3ic753dyJN/JreYfQEs+7vIoAghPLaq1aAJkfN1U4omE2uL1IjDt0tf4BN8C0Ay3D9RUk5FbBuDL7GyoDwpvzJWrylR4e2/cZ3uGQPNY/5iUqrGiwmoluWb7LQoc20bll4ooDHQ=
-X-Gm-Message-State: AOJu0YxhIVekDoLoVjF45/XqgIop2lzKpOoEBfndn/TkXC/ycNc3a71w
-	j5snbZ65ePeO3uLIx0lUT4oRJkR4WY3AoXoFyM1GF/vXx1XU4Mc7ck6GSkLqN28scaTxPJyWa7L
-	jfag4iGW9Jya6qOHgYFv5D/pou2iAj/XX
-X-Google-Smtp-Source: AGHT+IF/Mx+aeQaDKWNtONCluGWzcUX4rpkMKxmKVHQ27MIk0ibKAqPWIDbQ7NzwC9rfk9DG3bxn038hq6LXNmgObN8=
-X-Received: by 2002:a19:ca01:0:b0:51a:df97:cc8d with SMTP id
- 2adb3069b0e04-52965a421acmr10862970e87.26.1716989956613; Wed, 29 May 2024
- 06:39:16 -0700 (PDT)
+	s=arc-20240116; t=1716989969; c=relaxed/simple;
+	bh=3q61VG1Ik4rX8YqbN6++r4IfLmipSRRTHufrzeAz2Uc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sh4tU4wADScDdl/lrP/k8Xylpesx8PAv+0teUlZH4UX+U/09f4QPdUYVI3otedV5kXCvq6gWdQTM9CAZAZRqlsmpd8Ww57/gHvk2dmZLQ4SHLrFKBcq6nzx0kdVx3F7ahb0hor3kCwr2enLuVP1hREvI5vKjHh4AIDT5uwWeSTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vq9Nv6hqCz6J6nh;
+	Wed, 29 May 2024 21:35:11 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B4BCE140B55;
+	Wed, 29 May 2024 21:39:25 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 29 May 2024 14:39:25 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, <loongarch@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin
+ Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v10 09/19] ACPI: scan: switch to flags for acpi_scan_check_and_detach()
+Date: Wed, 29 May 2024 14:34:36 +0100
+Message-ID: <20240529133446.28446-10-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
- <20240528190315.3865-3-laurent.pinchart@ideasonboard.com> <ZlYwJryxeZ2LAKYG@surfacebook.localdomain>
- <20240528201326.GA8500@pendragon.ideasonboard.com> <CAHp75VeHA8qH_S=KJjAMv24vGP=hmeN9wSt1_NPsRhBZfEYXXw@mail.gmail.com>
- <20240529093541.GL1436@pendragon.ideasonboard.com>
-In-Reply-To: <20240529093541.GL1436@pendragon.ideasonboard.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 29 May 2024 16:38:40 +0300
-Message-ID: <CAHp75Vf1EgHOs2jBZPWtX7PdaNcEX_J4wX_aXDehNgxhDf39dw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] mfd: adp5585: Add Analog Devices ADP5585 core support
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Haibo Chen <haibo.chen@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, May 29, 2024 at 12:35=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Wed, May 29, 2024 at 08:44:26AM +0300, Andy Shevchenko wrote:
-> > On Tue, May 28, 2024 at 11:13=E2=80=AFPM Laurent Pinchart wrote:
-> > > On Tue, May 28, 2024 at 10:27:34PM +0300, Andy Shevchenko wrote:
-> > > > Tue, May 28, 2024 at 10:03:12PM +0300, Laurent Pinchart kirjoitti:
+Precursor patch adds the ability to pass a uintptr_t of flags into
+acpi_scan_check_and detach() so that additional flags can be
+added to indicate whether to defer portions of the eject flow.
+The new flag follows in the next patch.
 
-...
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/acpi/scan.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-> > > > > +   depends on I2C && OF
-> > > >
-> > > > Why OF?
-> > >
-> > > Because the driver works on OF systems only.
-> > >
-> > > > No COMPILE_TEST?
-> > >
-> > > The driver won't compile without CONFIG_I2C, so I can use
-> > >
-> > >         depends on I2C
-> > >         depends on OF || COMPILE_TEST
-> > >
-> > > Do you think that's better ?
-> >
-> > I think that dropping OF completely is the best.
-> > OF || COMPILE_TEST would work as well, but I still don't know why we ne=
-ed this.
->
-> For the same reason that many drivers depend on specific CONFIG_$ARCH.
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 503773707e01..4d649ce5876f 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -243,13 +243,16 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
+ 	return 0;
+ }
+ 
+-static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
++#define ACPI_SCAN_CHECK_FLAG_STATUS	BIT(0)
++
++static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ {
+ 	struct acpi_scan_handler *handler = adev->handler;
++	uintptr_t flags = (uintptr_t)p;
+ 
+-	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, check);
++	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, p);
+ 
+-	if (check) {
++	if (flags & ACPI_SCAN_CHECK_FLAG_STATUS) {
+ 		acpi_bus_get_status(adev);
+ 		/*
+ 		 * Skip devices that are still there and take the enabled
+@@ -287,7 +290,9 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
+ 
+ static void acpi_scan_check_subtree(struct acpi_device *adev)
+ {
+-	acpi_scan_check_and_detach(adev, (void *)true);
++	uintptr_t flags = ACPI_SCAN_CHECK_FLAG_STATUS;
++
++	acpi_scan_check_and_detach(adev, (void *)flags);
+ }
+ 
+ static int acpi_scan_hot_remove(struct acpi_device *device)
+@@ -2596,7 +2601,9 @@ EXPORT_SYMBOL(acpi_bus_scan);
+  */
+ void acpi_bus_trim(struct acpi_device *adev)
+ {
+-	acpi_scan_check_and_detach(adev, NULL);
++	uintptr_t flags = 0;
++
++	acpi_scan_check_and_detach(adev, (void *)flags);
+ }
+ EXPORT_SYMBOL_GPL(acpi_bus_trim);
+ 
+-- 
+2.39.2
 
-It's different. You may not do in many cases the $ARCH ||
-COMPILE_TEST, while OF || COMPILE_TEST should just work in 100% cases.
-
-> They can't run on other platforms, the dependency hides the symbol for
-> users who can't use the driver. This driver works on OF platforms only.
-
-What you are talking about is functional dependency, what I'm talking
-about is the compilation one.
-So, it's a pity that Kbuild doesn't distinguish these two basic
-concepts in dependencies and
-FOO || COMPILE_TEST is basically an artificial hack to tell "hey, FOO
-is _functional_ dependency, I do not care if I can compile without
-it".
-
-...
-
-> > > > > +#define            ADP5585_MAN_ID(v)               (((v) & 0xf0)=
- >> 4)
-> > > >
-> > > > GENMASK()
-> > >
-> > > This is not a mask. Or do you mean
-> > >
-> > >         (((v) & GENMASK(7, 4)) >> 4)
-> > >
-> > > ?
-> >
-> > Yes.
-> >
-> > > I think that's overkill.
-> >
-> > Why? You have a mask, use it for less error prone code.
->
-> I'll change this to
-
-...
-
-> -       if (ADP5585_MAN_ID(id) !=3D ADP5585_MAN_ID_VALUE)
-> +       if (id & ADP5585_MAN_ID_MASK !=3D ADP5585_MAN_ID_VALUE)
-
-(Don't forget inner parentheses)
-
-...
-
-> > > > > +#define            ADP5585_Rx_PULL_CFG_MASK        (3)
-> > > >
-> > > > GENMASK()
-> > >
-> > > Not here, as this value is meant to be passed to ADP5585_Rx_PULL_CFG(=
-).
-> >
-> > Why is it marked as a mask? Rename it to _ALL or alike.
->
-> It's a mask, but used as
->
->         ADP5585_Rx_PULL_CFG(ADP5585_Rx_PULL_CFG_MASK)
->
-> We're reaching a level of bike-shedding that even I find impressive :-)
-> As with a few other of your review comments that I think are related to
-> personal taste more than anything else, I'll defer to the subsystem
-> maintainer and follow their preference on this one.
-
-I would name it _ALL and use (BIT(2) - 1) notation to show that you
-want all of them to be set. But okay, let's leave this to the
-maintainer.
-
---=20
-With Best Regards,
-Andy Shevchenko
