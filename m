@@ -1,175 +1,143 @@
-Received: from out198-11.us.a.mail.aliyun.com (out198-11.us.a.mail.aliyun.com [47.90.198.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BC9DDAB;
-	Wed, 29 May 2024 13:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0C014AA9;
+	Wed, 29 May 2024 13:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716988010; cv=none; b=C+s8QAig3jT5HRbXKho2/KBz2F6I4Xm123p5Gsf/tebzWcflwCNVzVPP+1DycP+Xh3ZxDp5IXtB2F+Osb8bShOsq1SSJO+8IN79wKnA9L2t6eyfgwQ9tiDYH2V1DPkDrA0TqYxBXF7S5rkZvn4TdilAHy9ev6gTPhh23t7fEHt8=
+	t=1716988014; cv=none; b=lt9WJjYIPNF8ZNu4S5I3VpsDLL0ho7oO473IkLAsF/N9LBJbTK0u77lkKQ8WIe2HNbKg/1Z16Rp2TF7v4LdTvhyh/VTiH3Lqb6+ugSuSeyqe8GrLAf3VUqyKJMB/a9LTMUOmN2VfIEltWQ7A2ZgerN+M879H6zAMncKtdBbUAUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716988010; c=relaxed/simple;
-	bh=UNYgwRsC/DcJD432DmuGTrbp3zABC/67odF/gbKNxzY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cWeI1qHT7xofOqRcEZZOTWuZhEkhLTRNw56CqXK9Y+8BbVgfADxjR1vTgUbuRePwjzmW6Vv3IBQWpa2eCw4V2ItXA8CEkHm8LoYdh6jCI1GyLydZL8Q7GvobQS3xiRqS+GKpCZVnPUcsC+1ydcNaDfOZGMPzAEACyvHJh0E2b8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=47.90.198.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07436429|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.435426-0.000639855-0.563934;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033045002061;MF=wangshuaijie@awinic.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.XqPpuA1_1716987984;
-Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.XqPpuA1_1716987984)
-          by smtp.aliyun-inc.com;
-          Wed, 29 May 2024 21:06:31 +0800
-From: wangshuaijie@awinic.com
-To: dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	jeff@labundy.com,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: wangshuaijie@awinic.com,
-	liweilei@awinic.com,
-	kangjiajun@awinic.com
-Subject: [PATCH V1 1/5] dt-bindings: input: Add YAML to Awinic sar sensor.
-Date: Wed, 29 May 2024 13:06:04 +0000
-Message-ID: <20240529130608.783624-2-wangshuaijie@awinic.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240529130608.783624-1-wangshuaijie@awinic.com>
-References: <20240529130608.783624-1-wangshuaijie@awinic.com>
+	s=arc-20240116; t=1716988014; c=relaxed/simple;
+	bh=Gydwrm8d+mV9pgzpyR75u2RXMfJN81LViSApnAgE098=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QjGxEjre8HAncQY/BwRI0kKXb2uujyQbrQItyA2UFw9l7w3zNRgAvlURB22L9opvbwL+Llj5Zx4b76xt4kaxNclX+VnghEITybnCjixU6yL1bG/apLAcf7mqqWijVT40Uxiiz97/LNclHpZF3DJyirU3BVt5pJLvslo8aKYNo1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62a2424ecdaso21226727b3.1;
+        Wed, 29 May 2024 06:06:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716988011; x=1717592811;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xVFbPQ9StvkoNrq/0lKZWIQ4ZOA4XJTj64cZbKmwivY=;
+        b=JGGSK+QdZF1tXfN7HWaizV9lCegpQN2zxXCF1VmtX/yvXJnhDhAWWlwVsXnZlokmji
+         SSNp1XJQuV0+2JGyU2yoV5HswGN33ydHIdYb6sLGGdql3wSQDunxUHaLIrz/ZPqtFsaA
+         KNuRRh0gzXaxlBIVUiUwFMJ5lzoYvRZTXFZHCh0H1zSX4M3STo07gydHB3jwWxSsCpID
+         Z9VCrEwAz2oaTdUo6wZQJGH0tAHWorvoqksik8aO/KUgmhCByWi5375pcfA38IsWESLX
+         P3RKSoDOI4o8ibqk8lyu05pZEUzoy4F//w3c7NUsKZa/SzR7VhrEFfZoEP8KNULFi3ld
+         JIkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVuOsYbYY50fLN+9TGuZlsLc2uiXKJTJMl0rg2saFwkp+94Xvt/Mw9+pUVmU5CbDXfEbWRe0+qjPbqZDHak0qmZE+rldpFKDw2CKQ1lqLedKFGdGkA3drftjqHD77qfQH+CrKYGWIRR+ovzMtzDrSQXR9+59utqs1HPafJvOE+i/stTrGGuGo+SacM0FvwblIWuQsHpcW0cfUPjLaN0rQj9DwS/C2eZnZi9Mgv+duBmQLx2Czctupy4SrbDzu8gh+hB83yNIZ0FfYqclUwiXVLDjECq0PQ/tfu4ccRBl8EY0z7KM+CLOczAg2m/Vwj/TOsEgLy+UlCJUQAmWSQ8eUpzRjzRHzHtPdOVHvQVl7ywwP9D5iRSxEI=
+X-Gm-Message-State: AOJu0YyxSbWgAjFpzVnuqi8DYbxfz6Lap6OhBhZ1e9KfYqVyw+sG2Wm1
+	KmVeOq2kdWbB+HgpJGDC7vUUjtFvJVNLarQbGHCWO6CJkUddaclVT9T+0PshNRE=
+X-Google-Smtp-Source: AGHT+IFZbNxrq1Y2GcpogkFIJxEEueLh2Pk3k4cqJqns+GErJM+NsuI+yxGgvad9/NZwUzuAxwqHqg==
+X-Received: by 2002:a81:6d01:0:b0:61b:1e81:4eb8 with SMTP id 00721157ae682-62a08d74106mr138719307b3.9.1716988010153;
+        Wed, 29 May 2024 06:06:50 -0700 (PDT)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a56c166sm23852597b3.142.2024.05.29.06.06.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 06:06:49 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dfa4ad7f6dfso587358276.1;
+        Wed, 29 May 2024 06:06:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3pDuDzRbDY+9yUA5NOXzVQwOp/xs7J2mlpVeZogS4DlAaO2iiIpdUmTxE1NVcHGdjY2rDo/eAmjNhn7Op1n/HTwJJc/xVBQkmofGgkMGQZWYbzA61vikHK5vopMzpJcJtYJsQNIgHvfzB/tIjWQeWGjI35ZW4fOFdNs0LzQfyJtzz++aolL7Tn4Ot+L96du9DQ1iKzxkU9pU40MjMg13tcbrakZBCKqZWVpAN3c3gafErgRWyHt0REkoYPEMoB1uukMkZgm4zkJaZx6ZK4ZO4xG+P4wD+/eZOKqeqyKYnt6OT2BgIx4Y8t/5TQ+ILeAU4+gNAeHdETDL1xzvzZPq6RP+yH8tyOUcv/u9noPa8EmE4B24/U/U=
+X-Received: by 2002:a25:a565:0:b0:dfa:48ec:c4b2 with SMTP id
+ 3f1490d57ef6-dfa48ecc64cmr1707039276.22.1716988008813; Wed, 29 May 2024
+ 06:06:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1716965617.git.ysato@users.sourceforge.jp> <b1fc49269919c7d6c2e5c607ae29d1a6f2ab40d2.1716965617.git.ysato@users.sourceforge.jp>
+In-Reply-To: <b1fc49269919c7d6c2e5c607ae29d1a6f2ab40d2.1716965617.git.ysato@users.sourceforge.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 29 May 2024 15:06:36 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWdR=SfNBFdABXRqdng8b=68mP_BnnXfpQcUvjCmvOmVA@mail.gmail.com>
+Message-ID: <CAMuHMdWdR=SfNBFdABXRqdng8b=68mP_BnnXfpQcUvjCmvOmVA@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v8 13/36] dt-bindings: clock: sh7750-cpg: Add
+ renesas,sh7750-cpg header.
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, 
+	Heiko Stuebner <heiko.stuebner@cherry.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Chris Morgan <macromorgan@hotmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren <guoren@kernel.org>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Herve Codina <herve.codina@bootlin.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Anup Patel <apatel@ventanamicro.com>, 
+	Jacky Huang <ychuang3@nuvoton.com>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Sam Ravnborg <sam@ravnborg.org>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: shuaijie wang <wangshuaijie@awinic.com>
+Hi Sato-san,
 
-Add the awinic,aw_sar.yaml file to adapt to the awinic sar sensor driver.
+Thanks for the update!
 
-Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>
----
- .../bindings/input/awinic,aw_sar.yaml         | 110 ++++++++++++++++++
- 1 file changed, 110 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
+On Wed, May 29, 2024 at 10:01=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> SH7750 CPG Clock output define.
 
-diff --git a/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml b/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
-new file mode 100644
-index 000000000000..ed4ec29c9b4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
-@@ -0,0 +1,110 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/awinic,aw_sar.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Awinic sar sensor driver family
-+
-+maintainers:
-+  - Shuaijie Wang <wangshuaijie@awinic.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - awinic,aw_aw96103
-+      - awinic,aw_aw96105
-+      - awinic,aw_aw96303
-+      - awinic,aw_aw96305
-+      - awinic,aw_aw96308
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  sar-num:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      set the index of the sar sensor.
-+
-+  vcc0-supply:
-+    description:
-+      Optional regulator for chip, 1.7V-3.6V.
-+
-+  channel_use_flag:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The flag of channels used.
-+      Configure according to the specific chip channel used.
-+      Bit[31:0] Each bit represents a channel.
-+      If the customer uses ch0 and ch2, then channel_use_flag=<0x05>
-+
-+  aw_sar,update_fw:
-+    type: boolean
-+    description:
-+      Choose if you want to update the firmware.
-+
-+  aw_sar,monitor_esd:
-+    type: boolean
-+    description:
-+      Choose if you want to monitor ESD.
-+
-+  aw_sar,pin_set_inter_pull-up:
-+    type: boolean
-+    description:
-+      Choose if you want to set the interrupt pin to internal pull-up.
-+
-+  aw_sar,using_pm_ops:
-+    type: boolean
-+    description:
-+      Choose if you want to use suspend and resume related function.
-+
-+  aw_sar,use_plug_cail:
-+    type: boolean
-+    description:
-+      Choose If you want to perform calibration when plugging and unplugging the charger.
-+
-+  start-mode:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      When connecting to aw963xx, select the location where the firmware starts.
-+      set 0 if start in rom.
-+      set 1 if start in ram
-+
-+  irq-mux:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      set csx as irq pin. config this field when connect to aw96308/aw96305BFOR
-+
-+required:
-+  - compatible
-+  - reg
-+  - sar-num
-+  - interrupts
-+  - channel_use_flag
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        awinic_sar@12 {
-+            compatible = "awinic,aw_sar";
-+            reg = <0x12>;
-+            sar-num = < 0 >;
-+            interrupt-parent = < &tlmm >;
-+            interrupts = <72 0>;
-+            //vcc0-supply = <&pm660l_l4>;
-+            channel_use_flag = <0xff>;
-+            aw_sar,update_fw;
-+            //aw_sar,monitor_esd;
-+            start-mode = < 1 >;
-+            irq-mux = < 2 >;
-+        };
-+    };
--- 
-2.45.1
+(from my comments on v6 and v7) Please improve the patch description.
 
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,sh7750-cpg.yaml
+> @@ -0,0 +1,107 @@
+
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/sh7750-cpg.h>
+> +    cpg: clock-controller@ffc00000 {
+> +        compatible =3D "renesas,sh7751r-cpg";
+> +        reg =3D <0xffc00000 20>, <0xfe0a0000 16>;
+> +        reg-names =3D "FRQCR", "CLKSTP00";
+> +        clocks =3D <&extal>;
+> +        clock-names =3D "extal";
+> +        renesas,mode =3D <0>;
+
+Nit: please move "renesas,mode" last.
+
+> +        #clock-cells =3D <1>;
+> +        #power-domain-cells =3D <0>;
+> +    };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
