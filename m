@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7563E194C76;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8D6194C68;
 	Wed, 29 May 2024 16:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717000236; cv=none; b=kNAL+jy/dXhlKzGZ8pz2sx11/cQLbn9kskgsNcUk8P0wfGfZ0zWpu4TVqlPrDEjFgh8RXAmRUlEl++SSW4u1s5dQRIb5xEcla/e1/+6yqKPlymfDN/hXyT4MjenS2epxx11ZgFrnrcQ5p8qyxi9ysRp3/RGp58fvb9iK65w7Yng=
+	t=1717000236; cv=none; b=NR8J/HnX7mcf0YfGYGzSnyx5monT6KSLxx413TPLTuN0mrUiXx6W37JwVT7UypyDaQS0E2X7FmCaUB71vO9NeF6xLOjZs82cYK3GAVCKSpN3bQ9Uzc/BVcQu5ABfc1obek1CWZUXN0xtU+8B6zhBgiyZrJSfYwc0YNJPLOA0N5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717000236; c=relaxed/simple;
-	bh=6qyl2l/7GJ36hxg+alBAoZ3ixQ8wp+igH5vBpgh6QLM=;
+	bh=2q8uKA69UrATuj6FRt0GVVqnEyADsM00txP6nQDM2tk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hMQ6giGslfC77S5dwJCyujbEQAnCPmA7QFP20CiBLznnGagPGgKyD8steiVh8EOIcbihvmLRhKUIOvB6YwhUq61vJih1LVdn3P48K/7VI5pEFxl+p1gkwbA4ziYwVzG2HlIE8UdQuqUGxsnICNZ0kONyMoGSUn5cqypLyzuX+gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpo4OJu2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=S4Rd2VWnyU3NLbjdAakt37M2Mbg0HT/7NMTKew8JgkHuSLMzRx67krgOLRifW4leoqB39wsLjCXuiRNuuQPASs8wzMEZTxSN+5GABaUVqm0x4ogyJwwJ68IwKuSsJq1VJDPh5YWeWCI8hhWiKl9HhQq2Sm4WOy0E3zlJQiMTh2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTc+cHhp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpo4OJu2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F1DC4AF10;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTc+cHhp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D944C4AF07;
 	Wed, 29 May 2024 16:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717000236;
-	bh=6qyl2l/7GJ36hxg+alBAoZ3ixQ8wp+igH5vBpgh6QLM=;
+	s=k20201202; t=1717000235;
+	bh=2q8uKA69UrATuj6FRt0GVVqnEyADsM00txP6nQDM2tk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cpo4OJu25woQCRXyS1H4K7mvjp2+w2dkahdVBQqpNXz9v3XFkcfU33gK0uWPGrM+5
-	 z9phuPkp+PRH4cnfUtXYtO4Ih8RG9RSfZkkMtF2Q8kZYFmC2xCOzmmHOl7LAPMe2Oc
-	 sWe2exDkYZ428k7YI/GwdL27w825EbI7SO/qONkIxGU74Qy6lqab3YzLO8EoPTTH7h
-	 LrTP0BPcfkWZhJP/Kk/Kw2hUyYPQWEG1eDC18Y9QbPKw0Ts9Dl36If4F/KA3rmc0qS
-	 fSgl3QdGYRoFW9oLp7My90wB1+sbZgqKv86xvVVu0bv238j8NE8QMgdBnJalkRR8qg
-	 jwS225+m5Gq0A==
+	b=QTc+cHhp+mlJVys6+DmmcCUMfF9Df7Mso5WBnbpCap491+vYMb3f6IajcUpgBJL6R
+	 uuEXVYRLCKERUUGkNF2lQPPkPYznWTpvdjOdIIqMcrv6VYLityd2Iar8pjz++aODpZ
+	 ZmH34eCXi/5VATN2wmBloBwMPsbKnqN7ENOimqQxLgRe1DiNdbfHhEFkQEMA5L0/Ww
+	 1dSC2qATQwsMCp4YUn33MS6QSqCH4gga6Zyt8rWj5kP6s+NVt68pK4lSOfHj2VbVee
+	 ShwR9hNzz8cagYuCMrWTG09RTfE33b+nhj9WYwliejk5N/1+B1E+EoC5jUaHoRyDpL
+	 VViTL+bQKKlVA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1sCMCB-000000004iy-3oEp;
+	id 1sCMCB-000000004ik-1oZd;
 	Wed, 29 May 2024 18:30:35 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Lee Jones <lee@kernel.org>,
@@ -49,11 +49,10 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 08/14] pinctrl: qcom: spmi-gpio: drop broken pm8008 support
-Date: Wed, 29 May 2024 18:29:52 +0200
-Message-ID: <20240529162958.18081-9-johan+linaro@kernel.org>
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v2 02/14] mfd: pm8008: fix regmap irq chip initialisation
+Date: Wed, 29 May 2024 18:29:46 +0200
+Message-ID: <20240529162958.18081-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.44.1
 In-Reply-To: <20240529162958.18081-1-johan+linaro@kernel.org>
 References: <20240529162958.18081-1-johan+linaro@kernel.org>
@@ -65,42 +64,110 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SPMI GPIO driver assumes that the parent device is an SPMI device
-and accesses random data when backcasting the parent struct device
-pointer for non-SPMI devices.
+The regmap irq array is potentially shared between multiple PMICs and
+should only contain static data.
 
-Fortunately this does not seem to cause any issues currently when the
-parent device is an I2C client like the PM8008, but this could change if
-the structures are reorganised (e.g. using structure randomisation).
+Use a custom macro to initialise also the type fields and drop the
+unnecessary updates on each probe.
 
-Notably the interrupt implementation is also broken for non-SPMI devices.
-
-Also note that the two GPIO pins on PM8008 are used for interrupts and
-reset so their practical use should be limited.
-
-Drop the broken GPIO support for PM8008 for now.
-
-Fixes: ea119e5a482a ("pinctrl: qcom-pmic-gpio: Add support for pm8008")
-Cc: stable@vger.kernel.org	# 5.13
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Fixes: 6b149f3310a4 ("mfd: pm8008: Add driver for QCOM PM8008 PMIC")
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/mfd/qcom-pm8008.c | 64 ++++++++++++++-------------------------
+ 1 file changed, 23 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f4e2c88a7c82..e61be7d05494 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1206,7 +1206,6 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm7325-gpio", .data = (void *) 10 },
- 	{ .compatible = "qcom,pm7550ba-gpio", .data = (void *) 8},
- 	{ .compatible = "qcom,pm8005-gpio", .data = (void *) 4 },
--	{ .compatible = "qcom,pm8008-gpio", .data = (void *) 2 },
- 	{ .compatible = "qcom,pm8019-gpio", .data = (void *) 6 },
- 	/* pm8150 has 10 GPIOs with holes on 2, 5, 7 and 8 */
- 	{ .compatible = "qcom,pm8150-gpio", .data = (void *) 10 },
+diff --git a/drivers/mfd/qcom-pm8008.c b/drivers/mfd/qcom-pm8008.c
+index 3ac3742f438b..f71c490f25c8 100644
+--- a/drivers/mfd/qcom-pm8008.c
++++ b/drivers/mfd/qcom-pm8008.c
+@@ -56,15 +56,25 @@ static unsigned int pm8008_config_regs[] = {
+ 	INT_POL_LOW_OFFSET,
+ };
+ 
+-static struct regmap_irq pm8008_irqs[] = {
+-	REGMAP_IRQ_REG(PM8008_IRQ_MISC_UVLO,	PM8008_MISC,	BIT(0)),
+-	REGMAP_IRQ_REG(PM8008_IRQ_MISC_OVLO,	PM8008_MISC,	BIT(1)),
+-	REGMAP_IRQ_REG(PM8008_IRQ_MISC_OTST2,	PM8008_MISC,	BIT(2)),
+-	REGMAP_IRQ_REG(PM8008_IRQ_MISC_OTST3,	PM8008_MISC,	BIT(3)),
+-	REGMAP_IRQ_REG(PM8008_IRQ_MISC_LDO_OCP,	PM8008_MISC,	BIT(4)),
+-	REGMAP_IRQ_REG(PM8008_IRQ_TEMP_ALARM,	PM8008_TEMP_ALARM, BIT(0)),
+-	REGMAP_IRQ_REG(PM8008_IRQ_GPIO1,	PM8008_GPIO1,	BIT(0)),
+-	REGMAP_IRQ_REG(PM8008_IRQ_GPIO2,	PM8008_GPIO2,	BIT(0)),
++#define _IRQ(_irq, _off, _mask, _types)			\
++	[_irq] = {					\
++		.reg_offset = (_off),			\
++		.mask = (_mask),			\
++		.type = {				\
++			.type_reg_offset = (_off),	\
++			.types_supported = (_types),	\
++		},					\
++	}
++
++static const struct regmap_irq pm8008_irqs[] = {
++	_IRQ(PM8008_IRQ_MISC_UVLO,    PM8008_MISC,	BIT(0), IRQ_TYPE_EDGE_RISING),
++	_IRQ(PM8008_IRQ_MISC_OVLO,    PM8008_MISC,	BIT(1), IRQ_TYPE_EDGE_RISING),
++	_IRQ(PM8008_IRQ_MISC_OTST2,   PM8008_MISC,	BIT(2), IRQ_TYPE_EDGE_RISING),
++	_IRQ(PM8008_IRQ_MISC_OTST3,   PM8008_MISC,	BIT(3), IRQ_TYPE_EDGE_RISING),
++	_IRQ(PM8008_IRQ_MISC_LDO_OCP, PM8008_MISC,	BIT(4), IRQ_TYPE_EDGE_RISING),
++	_IRQ(PM8008_IRQ_TEMP_ALARM,   PM8008_TEMP_ALARM,BIT(0), IRQ_TYPE_SENSE_MASK),
++	_IRQ(PM8008_IRQ_GPIO1,	      PM8008_GPIO1,	BIT(0), IRQ_TYPE_SENSE_MASK),
++	_IRQ(PM8008_IRQ_GPIO2,	      PM8008_GPIO2,	BIT(0), IRQ_TYPE_SENSE_MASK),
+ };
+ 
+ static const unsigned int pm8008_periph_base[] = {
+@@ -143,38 +153,9 @@ static struct regmap_config qcom_mfd_regmap_cfg = {
+ 	.max_register	= 0xFFFF,
+ };
+ 
+-static int pm8008_probe_irq_peripherals(struct device *dev,
+-					struct regmap *regmap,
+-					int client_irq)
+-{
+-	int rc, i;
+-	struct regmap_irq_type *type;
+-	struct regmap_irq_chip_data *irq_data;
+-
+-	for (i = 0; i < ARRAY_SIZE(pm8008_irqs); i++) {
+-		type = &pm8008_irqs[i].type;
+-
+-		type->type_reg_offset = pm8008_irqs[i].reg_offset;
+-
+-		if (type->type_reg_offset == PM8008_MISC)
+-			type->types_supported = IRQ_TYPE_EDGE_RISING;
+-		else
+-			type->types_supported = (IRQ_TYPE_EDGE_BOTH |
+-				IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW);
+-	}
+-
+-	rc = devm_regmap_add_irq_chip(dev, regmap, client_irq,
+-			IRQF_SHARED, 0, &pm8008_irq_chip, &irq_data);
+-	if (rc) {
+-		dev_err(dev, "Failed to add IRQ chip: %d\n", rc);
+-		return rc;
+-	}
+-
+-	return 0;
+-}
+-
+ static int pm8008_probe(struct i2c_client *client)
+ {
++	struct regmap_irq_chip_data *irq_data;
+ 	int rc;
+ 	struct device *dev;
+ 	struct regmap *regmap;
+@@ -187,9 +168,10 @@ static int pm8008_probe(struct i2c_client *client)
+ 	i2c_set_clientdata(client, regmap);
+ 
+ 	if (of_property_read_bool(dev->of_node, "interrupt-controller")) {
+-		rc = pm8008_probe_irq_peripherals(dev, regmap, client->irq);
++		rc = devm_regmap_add_irq_chip(dev, regmap, client->irq,
++				IRQF_SHARED, 0, &pm8008_irq_chip, &irq_data);
+ 		if (rc)
+-			dev_err(dev, "Failed to probe irq periphs: %d\n", rc);
++			dev_err(dev, "failed to add IRQ chip: %d\n", rc);
+ 	}
+ 
+ 	return devm_of_platform_populate(dev);
 -- 
 2.44.1
 
