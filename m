@@ -1,92 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD52617BBA;
-	Wed, 29 May 2024 13:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711BE14292;
+	Wed, 29 May 2024 13:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716989825; cv=none; b=iWwgknAvt9YUf00KdqnZFYzRH9x2UEyk2wCbdD3CD7OFNuronFu5OSy7pA2hzwEo6j7pO8g/qh0eqS/Z8iiQP+wyrkinWDCwPaA/weHwhhF69SU4RNzXlPY98tOmoOPB+syvBH7wYlx2IaxVCAw9d07nmc10KBxUcqqcRlmn0TU=
+	t=1716989846; cv=none; b=D283yE3VPKMUzO9gnrs6zkyqxYSA3X6h774mQPJIynGSnIB6nwfAKozwgJdjKfEoe63zUH7Ft3O0FkCrDET+GlMJcH/Qag76R+Qp/ixGAmAFWBHWEek9GEI1pyFeXLR78PEjkYq7TpJqq1TcORMy2IUHf/pByJexjwf2h1tY0G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716989825; c=relaxed/simple;
-	bh=dzIZHm9PzT8tYi7Nd3b12wMJJCAtjWMs/bdPGPhCaSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pSEo5VOK9kuZ/11XjHYS1wLZZ/xiNa2BNWlbRoOs1ETREjeDdUZ+6Osqsj4UHkrplIyghjL2jAXhqIo9sgEK40kVlKvmWiuIUnYaHIJ9WWjEiGtcN3d4t8gHQ+2zIVSuqLJ9dt1bxtlPyHAhPGY5xRgOc2kKnr6DHDQMCTLzFjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ll+E8dbi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ll+E8dbi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C2ABC32789;
-	Wed, 29 May 2024 13:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716989825;
-	bh=dzIZHm9PzT8tYi7Nd3b12wMJJCAtjWMs/bdPGPhCaSw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ll+E8dbiRurohdsSONFsRGL7JoEPt8sVnvcyEU4CjNhQvhbVjPFZwKPCRBvWa+cMh
-	 +E4rFIX6m84zgCzpNbqKBnRXR49sEEZki0SEKl+tOCivhgexC5uIT3YW6i3BibzKXA
-	 u31xJzBCHikT/QAPjpyHAgHmgsMMI8BPyU+FKnmT0JqiQHJUVfORfddWXoji5cGFJF
-	 1i9Zu4lM9fhDg7up7BfME8uUrmZxNkSEeANN0YopLAbAWLxmqxcdsu3GzTYASyrb8i
-	 +LytvpDy8hrpohfOCribNrHwXgYi+Xb59n8QQ89IwZlRQOkvORETTm21YiKR0tCByA
-	 YMMxo/p0cewzw==
-Date: Wed, 29 May 2024 14:37:00 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] regulator: gpio: Correct default GPIO state to LOW
-Message-ID: <4e641ee2-1170-436e-967b-a1809d0f3b06@sirena.org.uk>
-References: <b80d65600641e6dcf00da53ae797f4a40a80e2d0.1716976062.git.geert+renesas@glider.be>
- <ee5798e5-bcc4-4715-9c93-913094160b97@sirena.org.uk>
- <CAMuHMdUud7=6dK3rUHXKC+qJPJr-vt-AjtxiOBe5ghQYp1viHg@mail.gmail.com>
+	s=arc-20240116; t=1716989846; c=relaxed/simple;
+	bh=z0Da+7oBgSj+MoexvSz2tuXmeO6MGtpZpInCdx9MGPs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aUN5AxVgDJCd7M5v8k/5/7yZ5T61S8nQONtFB30yzxY26At1nJV5HUO7uWhPivqhTno8lRgrCfAnZZZNhkC2tRkxtJI4vd3ae4r7PuSdXCUPIpSXxgqGuZpKGzkBhS2akUJhJGrIs55t84E+BfNv1xV6k3Qvptb0lTqtE473Gt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vq9Lp4dsqz6JBFj;
+	Wed, 29 May 2024 21:33:22 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id C2956140A78;
+	Wed, 29 May 2024 21:37:21 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 29 May 2024 14:37:21 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, <loongarch@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin
+ Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v10 05/19] ACPI: processor: Fix memory leaks in error paths of processor_add()
+Date: Wed, 29 May 2024 14:34:32 +0100
+Message-ID: <20240529133446.28446-6-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YpbkI0Z+0esEeWR0"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUud7=6dK3rUHXKC+qJPJr-vt-AjtxiOBe5ghQYp1viHg@mail.gmail.com>
-X-Cookie: Everybody gets free BORSCHT!
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+If acpi_processor_get_info() returned an error, pr and the associated
+pr->throttling.shared_cpu_map were leaked.
 
---YpbkI0Z+0esEeWR0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The unwind code was in the wrong order wrt to setup, relying on
+some unwind actions having no affect (clearing variables that were
+never set etc).  That makes it harder to reason about so reorder
+and add appropriate labels to only undo what was actually set up
+in the first place.
 
-On Wed, May 29, 2024 at 03:19:04PM +0200, Geert Uytterhoeven wrote:
-> On Wed, May 29, 2024 at 3:15=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
-rote:
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/acpi/acpi_processor.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-> > The risk here is that we start glitching the power where previously we
-> > didn't.  This does make me nervous.
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 5f062806ca40..16e36e55a560 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -393,7 +393,7 @@ static int acpi_processor_add(struct acpi_device *device,
+ 
+ 	result = acpi_processor_get_info(device);
+ 	if (result) /* Processor is not physically present or unavailable */
+-		return result;
++		goto err_clear_driver_data;
+ 
+ 	BUG_ON(pr->id >= nr_cpu_ids);
+ 
+@@ -408,7 +408,7 @@ static int acpi_processor_add(struct acpi_device *device,
+ 			"BIOS reported wrong ACPI id %d for the processor\n",
+ 			pr->id);
+ 		/* Give up, but do not abort the namespace scan. */
+-		goto err;
++		goto err_clear_driver_data;
+ 	}
+ 	/*
+ 	 * processor_device_array is not cleared on errors to allow buggy BIOS
+@@ -420,12 +420,12 @@ static int acpi_processor_add(struct acpi_device *device,
+ 	dev = get_cpu_device(pr->id);
+ 	if (!dev) {
+ 		result = -ENODEV;
+-		goto err;
++		goto err_clear_per_cpu;
+ 	}
+ 
+ 	result = acpi_bind_one(dev, device);
+ 	if (result)
+-		goto err;
++		goto err_clear_per_cpu;
+ 
+ 	pr->dev = dev;
+ 
+@@ -436,10 +436,11 @@ static int acpi_processor_add(struct acpi_device *device,
+ 	dev_err(dev, "Processor driver could not be attached\n");
+ 	acpi_unbind_one(dev);
+ 
+- err:
+-	free_cpumask_var(pr->throttling.shared_cpu_map);
+-	device->driver_data = NULL;
++ err_clear_per_cpu:
+ 	per_cpu(processors, pr->id) = NULL;
++ err_clear_driver_data:
++	device->driver_data = NULL;
++	free_cpumask_var(pr->throttling.shared_cpu_map);
+  err_free_pr:
+ 	kfree(pr);
+ 	return result;
+-- 
+2.39.2
 
-> /me too
-
-> The alternative is to change the GPIO regulator DT bindings document
-> to match the code...
-
-Yup, that makes me feel a lot safer than changing the code.
-
---YpbkI0Z+0esEeWR0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZXL3sACgkQJNaLcl1U
-h9BnSgf/exwN+0/ss08gAfNBZ4sevQ4DuOiqvKh6Z8hPJr98Zg68xpVU6dO/X/dq
-zucnX0ep9w4rsCX6e4eGaHBRuUJhdUrEuFKV5DHGqxiK47EYwKO1HahSKb3tAanQ
-JwkXKZuZ9NIANUXXVG7t1YAugkkroVCjsjpXbnMTNYi02KB3a3M5ooSsINN2sXae
-QLoSiVic+hhyuDMt1ya5GlHI6MDHBNbRoI6qb5XJQVu6IKwFmjEzsfCgZeawn1dm
-PO8V2rC7RyF9ivzoN40sKo3iM1LtW2Dmdr4/5s4Lt4H95pH0tnK0ktRywM4gh6r6
-pZ5TX65JQCcVqP/N9DxKWcCounzHOA==
-=oOAc
------END PGP SIGNATURE-----
-
---YpbkI0Z+0esEeWR0--
