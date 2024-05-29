@@ -1,86 +1,90 @@
-Received: from m-r1.th.seeweb.it (m-r1.th.seeweb.it [5.144.164.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C6E16728E
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC1415CD6A
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716968118; cv=none; b=Q0Zu8g9Qk1i3qT/P5JZFbM/ehZEsOVWAUZsxrW9S3bS8HoUCCUWgcXppq3PtvMsuwnadzJar5lVjy5KUFT/dpj4JGb1R45WsXrQ564JCY7d9SqIe3OloxO7iw4eUoJllFyxdzby/0sKSNfaDDBROr4HhnoBBBjOIz8EWskIpysc=
+	t=1716968178; cv=none; b=eYTlffOPR3bv5gVp58x/NlGskE/U9+WZh9I6FUgCuweHEUNfyeARDM8dC3RyxdxkshjQD+/9klH2q3LuEqj0JbKHCDcDh3icdvojG1WKC9k4OLiX4mwXKK1x7Wz4z/HgUhmtkqKWInj/4RzgNbbert0S01PUxkKjPwTbNY4J0qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716968118; c=relaxed/simple;
-	bh=WIrKkfWB9mUTmEf6z4WjJTAXw9ftK94d7qWGvNCTcno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6tBhzW14kQIuUDjnDlXOIOfM7TQy8O6/DwXILRSLAdCZdFP7p+9RpODc7FpfDfbuTn6X+iaFbaz258stEh25ZHaaS+nCqP9/dNCQ0alH5SIHNcG45/enquE8SBUMCSf4ZQOeDRQe9KYR3kCCFNWT6TbhwpFd0BusfZTbXRY/xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (2a02-a420-77-cc79-164f-8aff-fee4-5930.mobile6.kpn.net [IPv6:2a02:a420:77:cc79:164f:8aff:fee4:5930])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 8C5771FE87;
-	Wed, 29 May 2024 09:27:36 +0200 (CEST)
-Date: Wed, 29 May 2024 09:27:35 +0200
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, Vinod Koul <vkoul@kernel.org>, 
-	Caleb Connolly <caleb@connolly.tech>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 2/3] drm/panel/lg-sw43408: mark sw43408_backlight_ops
- as static
-Message-ID: <anspa5kgrmfvv2c23mjlukc7vrsctyk34yzud7cffjiljccisz@v7mazfwaxhu6>
-References: <20240528-panel-sw43408-fix-v4-0-330b42445bcc@linaro.org>
- <20240528-panel-sw43408-fix-v4-2-330b42445bcc@linaro.org>
+	s=arc-20240116; t=1716968178; c=relaxed/simple;
+	bh=Q/nLvZ9ebMbKWDAfuBKkm9DIkm0SWKJ80JMb41SoLPI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BMlAsTcI5/8F8hFR8I20YUsgTvRvHHXdZQxDcd62xD933vG0lJXYY+NGzh+21yw7aImvaiSgIe3M9Y0vSf/YDds5VIyJLSUin5NpA5ZsalHnkEfeLbj6IlLDhQ2eDtfEiBITGzn8+b0/0Me5e38G/TsJbD3cKkmftTIjNshKOv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eXm8Rrb2; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eXm8Rrb2"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-df4e1366da6so1652178276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 00:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716968176; x=1717572976; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q/nLvZ9ebMbKWDAfuBKkm9DIkm0SWKJ80JMb41SoLPI=;
+        b=eXm8Rrb24Zqthic8ztxHVQWmSOGnrOUgcg3lSdJXsNtag7kMVCAIN6GJA4nHNZkYKl
+         xRNIocG+GS0Nx/M7qYDv5XQB5QpAQ7ecUY31K4GWhaV0f+46po2Vz2WYlp8n7CYMo/1L
+         KPUqjG3F6En/zOshpPuv6S/Fe625tUIio0lNfAmuyEG5KGX5eg6naYCfSUGOLo7GYFYz
+         7bc8b0JZ3A7lSab0JlxBeRKHR1QlfGAnU/4o+ARiiKjOns1sDWUJFr6ooawzM0SnMbxj
+         O00bHcn4/2JAnK+A1TW6SU2PJMBg7fNi4Zm5wJoZzxJuvQxKAkkqefx9NY0yHVICOMpX
+         0Eug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716968176; x=1717572976;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q/nLvZ9ebMbKWDAfuBKkm9DIkm0SWKJ80JMb41SoLPI=;
+        b=uNJLjZ5N8ebVI1QscNWGervihWWcoc2M109PMse9ZlqxbX9rVm8jz7LEMQ80r02gz4
+         eyW6A5QU3w9Q6BFi8P+ybobRTqZjIeqdv+jK53ff1xNJOaMa0mw7yCt8wsHYrfnoTP9d
+         Mz+ncNz5CZrg8vvny8yifWVh3cxavrinXt66uL5xnuA61TvBl2egXM7mbk9Iu7VvuYCz
+         BiVhdmLsk8iZUy39169P0Rqt7J8BTHkbJi/p2quf0kKrDmAft9mLYRT7iZJyrNGt2inD
+         W/GyYbObWumJsa5qY6R6Ve3dLsYiFyyJvvXPkbK+XKPOMsAM+5S/qYQqNNP3Dok97Nvn
+         6zFQ==
+X-Gm-Message-State: AOJu0YwrSGqH74DN/dRgQ6bxCi+aNLoGo7jOiAxSrdy/AeaOogwF0ln5
+	+WNBekfAfRh57Fu0QIRRVpsJuPE3s23d/kczqw7p58xowg7LxRQ2Za/ZTQjX5TvO0uGiuMone3M
+	/ImljPgbYXFHseQfWyXVSGFgar/xskifxSKbfAw==
+X-Google-Smtp-Source: AGHT+IFlX+rjINhP6rj5KImP86n2ckidVC+rBC7U7ObxqdZfbojFCSZHlagJ/LaoPf753xBgaalezz/mT4lgUB82gz0=
+X-Received: by 2002:a25:ce8b:0:b0:df4:978c:3794 with SMTP id
+ 3f1490d57ef6-df772167874mr17998282276.1.1716968176161; Wed, 29 May 2024
+ 00:36:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528-panel-sw43408-fix-v4-2-330b42445bcc@linaro.org>
+References: <2413a1f99278d70313960f13daecda9ef54172d8.1716807432.git.michal.simek@amd.com>
+In-Reply-To: <2413a1f99278d70313960f13daecda9ef54172d8.1716807432.git.michal.simek@amd.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 29 May 2024 09:36:04 +0200
+Message-ID: <CACRpkdYsWjCmK82P=fqxSJX9WstF7HEYUBR2fUYJEDzfGrV11A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-zynqmp: Use pin numbers stored in pin descriptor
+To: Michal Simek <michal.simek@amd.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com, 
+	git@xilinx.com, Swati Agarwal <swati.agarwal@amd.com>, 
+	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-05-28 22:39:19, Dmitry Baryshkov wrote:
-> Fix sparse warning regarding symbol 'sw43408_backlight_ops' not being
-> declared.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404200739.hbWZvOhR-lkp@intel.com/
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Fixes: 069a6c0e94f9 ("drm: panel: Add LG sw43408 panel driver")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Mon, May 27, 2024 at 12:57=E2=80=AFPM Michal Simek <michal.simek@amd.com=
+> wrote:
 
-Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+> From: Swati Agarwal <swati.agarwal@amd.com>
+>
+> Use pin numbers stored in the pin descriptors instead of index value whil=
+e
+> creating the pin groups. Pin Id's are not same as Index values for Xilinx
+> Versal platform, so use the pin values from descriptor which works for bo=
+th
+> ZynqMP and Versal platforms.
+>
+> Signed-off-by: Swati Agarwal <swati.agarwal@amd.com>
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
 
-> ---
->  drivers/gpu/drm/panel/panel-lg-sw43408.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-lg-sw43408.c b/drivers/gpu/drm/panel/panel-lg-sw43408.c
-> index 115f4702d59f..2b3a73696dce 100644
-> --- a/drivers/gpu/drm/panel/panel-lg-sw43408.c
-> +++ b/drivers/gpu/drm/panel/panel-lg-sw43408.c
-> @@ -182,7 +182,7 @@ static int sw43408_backlight_update_status(struct backlight_device *bl)
->  	return mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
->  }
->  
-> -const struct backlight_ops sw43408_backlight_ops = {
-> +static const struct backlight_ops sw43408_backlight_ops = {
->  	.update_status = sw43408_backlight_update_status,
->  };
->  
-> 
-> -- 
-> 2.39.2
-> 
+Patch applied!
+
+Yours,
+Linus Walleij
