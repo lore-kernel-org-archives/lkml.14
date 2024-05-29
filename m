@@ -1,379 +1,445 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5A7181B83;
-	Wed, 29 May 2024 12:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF1B181311
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 12:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716986558; cv=none; b=aafpO1LQyd7tYnDbgR/jQQXQkX7y+ZpGt4KlfR2e9+KhCu3nUFRJzSWeMVK2piq5eA/TKAH/AE/ZP5O1dyDd7/GR4BCoq9QR+xk6zLp4GqGmA0P1UsyaLArsi96FX6DJAXA9FtysXl1E9P7/ifhJjG+/HKuGEQbxCWX3QAD+TWM=
+	t=1716986604; cv=none; b=CTc2hNrYXGYB9+eYZ5cXAfjRDc+kOIVxf2e4w3INMEcimA2Aiqdvyg1BhrmxuEJg5qhDywI7FXSV9QP4qB5bUHSY7ueOlZF4kXdhFjSHezP8EOJaxlqCllyzFVrouPVIkqXOIEAsliDZ5lJCYegrmCNebwHo6ag/pn8KmUHNY70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716986558; c=relaxed/simple;
-	bh=rMOG4bFrDA+KX8+4P7QFD49tVIsWAJw+cw+RGJ5Z8p4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VwPWLngjAJXru34EC+pxOC1TsTS5lEJqnGs1Ox13XNKxayzwEYsm9NSFNwbQfHMuOUtw5XphM5gMg/+EcLGTT5AKoWyTgwgPgIukJRUr+goFFNXX5YQ5jr28pruVbPhu03TRVv7hdBQiZGI509pHYvO3LP8n8skBRzKc9XFUVRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2HMRmVb; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716986604; c=relaxed/simple;
+	bh=RI/KHPMoNUrQf8ygGfydOURq3V3LjYl0gBVOaErJZv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bvxozV+sVPIeoYlrA5TYtKkKiVaYdrSdaosMdAOKf9tvfU1rAUoHaqK8eYsIooHya3D+sI42tS2stziA1NFgqnXAcf62XYyxJyx3N4g1iDXItvId+o6eY6pzBb23eYzdMW/TTXWfCQP/hnx0HWa06u5c2dzbaGoGhPbzmhwZHdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PkmqmOEa; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2HMRmVb"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-627ebbefd85so21580327b3.3;
-        Wed, 29 May 2024 05:42:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PkmqmOEa"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e95a60454fso22161171fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:43:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716986555; x=1717591355; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FcVvsj5wuI35cIO8lkBusWD2C94l8ZGuanLrynn79Jo=;
-        b=R2HMRmVbdoEG3zbWuM3sl2RK2SizD/U0NWazopvPIgsiCTFstskJYdGngN998TyU73
-         XlPuyW51l9HcuCBB56B2vJQNDL03D/ylIcfEl6Gr9xKS1nQZ6tmc7SkVBasnyNPyqW+A
-         Sf7WMZWTEfN4rSlpk/oy71R608ISRMslJ1ujOi3SkemLDP2KQDNGka7pihB4AxgoO6YR
-         vCYxqpgd90MglQrV19J1d6ty7fJhDJxFLu4xYrTRfxfi+9VtKnmybXt0msbSE7ZRlDgJ
-         kV0COwlz8M1TON56YXS9BFgCVS2ZSZWysZebaaknK8ehn0GLlFIopWWxvdECSdDI1NUI
-         TLBA==
+        d=linaro.org; s=google; t=1716986599; x=1717591399; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xRaF42bp/ars4L7DH1F1o4MdsEox9mNdyC9JhweFwSc=;
+        b=PkmqmOEam66tAWzmiMD0RI3xnc548PzbJEs65mwu3ilvY5mGs5SN1Y3LeT+z//klI3
+         9vR1B1PohSasG59EIWNoCkembPhYjSS8FDPhaBSJCdUWn8COrvQufa2fJcI291OEYknI
+         6TF6D9DD/rDga/MM35LMJbyjrgEijPxdXE8JYpk8hVmTHt+hOalzd/xjE3y4BhxW4g2c
+         JUy5AzxFB1f1twVb/PyBuUQ7xl/nTNxKVFJJ1GzpBbQsGVfXCxm9KgV/qEAJu6K8jNOl
+         VmeAdarUp7EW0Xa73JOUYREFFSaVrQAdYsP4nPuA+tLHInPcuvxdtBvlo4MazmduJlLI
+         /hZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716986555; x=1717591355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FcVvsj5wuI35cIO8lkBusWD2C94l8ZGuanLrynn79Jo=;
-        b=p9Dcpvv8eXe8L9KOZ/lnNMc8MKtQrBYrTh2O/XtUp8NoQ4YCwModhrRaRzcVH0Wkck
-         sBTCHxpsyUbbBCY2XuVv+PNSLzS6be5FTwElNLwur63LS96IO5lwTW1Zo7iLZx2zT8mt
-         WOuFQsL/N8LwflzCt6yrMI4nzMgz0DpJHwmAbY22k/hkcScFwR/kbTMzwN9kMYxYrxjg
-         bquTSBMmsPi+d0kvWq3mP+/9kvCSXmkcRWKYINxAbeqea0BQ3cKLXj/EFlLGaJYIyiPA
-         VYhe4jgrjBoXYu9m0we9QLI5GSlPoQpOc6pg2+JV0hVgGyLL8PiF+OhwNeD960ldSWFL
-         LrkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeJ/YQN6JfSCM/APqkVg61awUc2dRUHkUPxz/PD4h0kiA42ML00MiLi8TUqNmYEKT+c32bxy1R223gw5L0nwJNWS6Wan1YPE1IW8T6rZhA3hahfGoCGnOW4xtvoj7YUNNLv0fTPvtv
-X-Gm-Message-State: AOJu0YyMKCWsOVJTQ9UwcsK8jj3LCQ0EE7gHH3soSRlOes3G1gXL44vU
-	z1L5T+SbpMfbk+lau66scOZh6EMBE3FgAKmwdNBmTbLmcrs1h4w+/s3SdWkjWfGq8hvqXMPyNXt
-	CKJEEpDKVRlTLdRnNhQ7qs2nMt8s=
-X-Google-Smtp-Source: AGHT+IGfJmkyfeAoH1PK8nD22RQ2FCOmEIRbm+9A28GZ3t1z0wsyghvBwgyVlcJpY99RjuLJaYocEx6k+23hfEkbx3M=
-X-Received: by 2002:a81:9182:0:b0:617:cb98:f9b2 with SMTP id
- 00721157ae682-62a08f2cae4mr149086817b3.43.1716986555273; Wed, 29 May 2024
- 05:42:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716986599; x=1717591399;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xRaF42bp/ars4L7DH1F1o4MdsEox9mNdyC9JhweFwSc=;
+        b=FGlZ4LlNV+IyEfwX/80HOrPwEAkcLrtF56tuFQNznXB7X3Qgknl3jmHhM5EjtKeToJ
+         z0pVtYU6Z/OcLIS1XkYKtx+bZjOy+MNdQ707NnGoVty53m+6tqrczWz1w0+lUVNNMuN+
+         1OyblkYAvdBtRF5UGCfBVd5P6HH5APWD4EvOCeza+4+0ni1S/7H+Ab1S0MIjiwNc49Y/
+         quhpEV+IINs6HYxQ/RwxC0cdmCQAzKn6Vv9BK15nXVQDpOC0CrC+OnR4ozr67xq8JjT/
+         jyDtI651fJPI+nuoK27TtbZmnnL/3K+zS58z3m2J9GBswLmsMBJ7bRjz1nTrerCVZuOC
+         kpgA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0ei9R6wjgjqOUquyCK7KksA9rGM3DLTH3UTITbqygH/SCIIL1FmfARrA3t4Pu/T8D7aqysaq+Ihh6JgCVFQqizNSaAVNHMxSUAsZR
+X-Gm-Message-State: AOJu0YwcNXY0xdbHKDUfp1WbKOS5m5WEI6icxKyhGXz5zcVdtn0nK436
+	d+S8tLYvAjQzSUnz3ew1V7Tfa3MCl1THq9UpH2fmL1+R53doAyaLYOjA8A/rmj0=
+X-Google-Smtp-Source: AGHT+IECCJJE2HqL0X+/vjqAWoUZYO/ModSWoesop1MKD+vGhezQ/8LnAllv2sz5JiF0ICvlEjzjpw==
+X-Received: by 2002:a2e:97cc:0:b0:2dc:f188:a073 with SMTP id 38308e7fff4ca-2e95b2871a3mr111308941fa.35.1716986598951;
+        Wed, 29 May 2024 05:43:18 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ea53ab0bfdsm2198141fa.23.2024.05.29.05.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 05:43:18 -0700 (PDT)
+Date: Wed, 29 May 2024 15:43:17 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>
+Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
+	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
+	quic_chennak@quicinc.com
+Subject: Re: [PATCH v2 4/8] misc: fastrpc: Add static PD restart support
+Message-ID: <f5dq3boqfbs4zl7d27j26sqj63jharn6ux7vbgsfgz5i75g4v5@nmela43ftlfq>
+References: <20240528112956.5979-1-quic_ekangupt@quicinc.com>
+ <20240528112956.5979-5-quic_ekangupt@quicinc.com>
+ <wovshpnle7jvl7yc7spxixb46o7p4l3y4hmehjjpcjwh4jma74@k6kjzjx5di6m>
+ <51facf80-2490-4533-8ba1-584769e1ca79@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528043404.39327-2-flintglass@gmail.com> <20240528043404.39327-3-flintglass@gmail.com>
- <CAKEwX=MwrRc43iM2050v5u-TPUK4Yn+a4G7+h6ieKhpQ7WtQ=A@mail.gmail.com>
-In-Reply-To: <CAKEwX=MwrRc43iM2050v5u-TPUK4Yn+a4G7+h6ieKhpQ7WtQ=A@mail.gmail.com>
-From: Takero Funaki <flintglass@gmail.com>
-Date: Wed, 29 May 2024 21:42:23 +0900
-Message-ID: <CAPpoddfv-c4RJUU_QyVON8A7GfAPvty2xnHB1oqPHS_9pnQfGA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] mm: zswap: fix global shrinker memcg iteration
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Domenico Cerasuolo <cerasuolodomenico@gmail.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51facf80-2490-4533-8ba1-584769e1ca79@quicinc.com>
 
-2024=E5=B9=B45=E6=9C=8829=E6=97=A5(=E6=B0=B4) 0:10 Nhat Pham <nphamcs@gmail=
-.com>:
->
-> On Mon, May 27, 2024 at 9:34=E2=80=AFPM Takero Funaki <flintglass@gmail.c=
-om> wrote:
-> >
-> > This patch fixes an issue where the zswap global shrinker stopped
-> > iterating through the memcg tree.
->
-> Did you observe this problem in practice?
+On Wed, May 29, 2024 at 04:41:51PM +0530, Ekansh Gupta wrote:
+> 
+> On 5/28/2024 6:03 PM, Dmitry Baryshkov wrote:
+> > On Tue, May 28, 2024 at 04:59:50PM +0530, Ekansh Gupta wrote:
+> > > Static PDs on the audio and sensor domains are expected to support
+> > > PD restart. The kernel resource handling for the PDs are expected
+> > > to be handled by fastrpc driver. For this, there is a requirement
+> > > of PD service locator to get the event notifications for static PD
+> > > services. Also when events are received, the driver needs to handle
+> > > based on PD states. Added changes to add service locator for audio
+> > > and sensor domain static PDs and handle the PD restart sequence.
+> > > 
+> > > Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+> > > ---
+> > >   drivers/misc/Kconfig   |   2 +
+> > >   drivers/misc/fastrpc.c | 205 ++++++++++++++++++++++++++++++++++++++---
+> > >   2 files changed, 195 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> > > index faf983680040..e2d83cd085b5 100644
+> > > --- a/drivers/misc/Kconfig
+> > > +++ b/drivers/misc/Kconfig
+> > > @@ -280,8 +280,10 @@ config QCOM_FASTRPC
+> > >   	tristate "Qualcomm FastRPC"
+> > >   	depends on ARCH_QCOM || COMPILE_TEST
+> > >   	depends on RPMSG
+> > > +	depends on NET
+> > >   	select DMA_SHARED_BUFFER
+> > >   	select QCOM_SCM
+> > > +	select QCOM_PDR_HELPERS
+> > >   	help
+> > >   	  Provides a communication mechanism that allows for clients to
+> > >   	  make remote method invocations across processor boundary to
+> > > diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> > > index 6556c63c4ad7..7796b743cc45 100644
+> > > --- a/drivers/misc/fastrpc.c
+> > > +++ b/drivers/misc/fastrpc.c
+> > > @@ -22,6 +22,7 @@
+> > >   #include <linux/firmware/qcom/qcom_scm.h>
+> > >   #include <uapi/misc/fastrpc.h>
+> > >   #include <linux/of_reserved_mem.h>
+> > > +#include <linux/soc/qcom/pdr.h>
+> > >   #define ADSP_DOMAIN_ID (0)
+> > >   #define MDSP_DOMAIN_ID (1)
+> > > @@ -29,6 +30,7 @@
+> > >   #define CDSP_DOMAIN_ID (3)
+> > >   #define FASTRPC_DEV_MAX		4 /* adsp, mdsp, slpi, cdsp*/
+> > >   #define FASTRPC_MAX_SESSIONS	14
+> > > +#define FASTRPC_MAX_SPD		4
+> > >   #define FASTRPC_MAX_VMIDS	16
+> > >   #define FASTRPC_ALIGN		128
+> > >   #define FASTRPC_MAX_FDLIST	16
+> > > @@ -105,6 +107,18 @@
+> > >   #define miscdev_to_fdevice(d) container_of(d, struct fastrpc_device, miscdev)
+> > > +#define AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME   "audio_pdr_adsp"
+> > > +#define AUDIO_PDR_ADSP_SERVICE_NAME              "avs/audio"
+> > > +#define ADSP_AUDIOPD_NAME                        "msm/adsp/audio_pd"
+> > > +
+> > > +#define SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME   "sensors_pdr_adsp"
+> > > +#define SENSORS_PDR_ADSP_SERVICE_NAME              "tms/servreg"
+> > > +#define ADSP_SENSORPD_NAME                       "msm/adsp/sensor_pd"
+> > > +
+> > > +#define SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME "sensors_pdr_slpi"
+> > > +#define SENSORS_PDR_SLPI_SERVICE_NAME            SENSORS_PDR_ADSP_SERVICE_NAME
+> > > +#define SLPI_SENSORPD_NAME                       "msm/slpi/sensor_pd"
+> > > +
+> > >   static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
+> > >   						"sdsp", "cdsp"};
+> > >   struct fastrpc_phy_page {
+> > > @@ -258,6 +272,15 @@ struct fastrpc_session_ctx {
+> > >   	bool valid;
+> > >   };
+> > > +struct fastrpc_static_pd {
+> > > +	char *servloc_name;
+> > > +	char *spdname;
+> > > +	void *pdrhandle;
+> > > +	struct fastrpc_channel_ctx *cctx;
+> > > +	struct fastrpc_user *fl;
+> > > +	bool ispdup;
+> > > +};
+> > > +
+> > >   struct fastrpc_channel_ctx {
+> > >   	int domain_id;
+> > >   	int sesscount;
+> > > @@ -265,6 +288,7 @@ struct fastrpc_channel_ctx {
+> > >   	struct qcom_scm_vmperm vmperms[FASTRPC_MAX_VMIDS];
+> > >   	struct rpmsg_device *rpdev;
+> > >   	struct fastrpc_session_ctx session[FASTRPC_MAX_SESSIONS];
+> > > +	struct fastrpc_static_pd spd[FASTRPC_MAX_SPD];
+> > >   	spinlock_t lock;
+> > >   	struct idr ctx_idr;
+> > >   	struct list_head users;
+> > > @@ -296,10 +320,12 @@ struct fastrpc_user {
+> > >   	struct fastrpc_channel_ctx *cctx;
+> > >   	struct fastrpc_session_ctx *sctx;
+> > >   	struct fastrpc_buf *init_mem;
+> > > +	struct fastrpc_static_pd *spd;
+> > >   	int tgid;
+> > >   	int pd;
+> > >   	bool is_secure_dev;
+> > > +	char *servloc_name;
+> > >   	/* Lock for lists */
+> > >   	spinlock_t lock;
+> > >   	/* lock for allocations */
+> > > @@ -1257,12 +1283,33 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
+> > >   	return false;
+> > >   }
+> > > +static struct fastrpc_static_pd *fastrpc_get_spd_session(
+> > > +				struct fastrpc_user *fl)
+> > > +{
+> > > +	int i;
+> > > +	struct fastrpc_static_pd *spd = NULL;
+> > > +	struct fastrpc_channel_ctx *cctx = fl->cctx;
+> > > +
+> > > +	for (i = 0; i < FASTRPC_MAX_SPD ; i++) {
+> > > +		if (!cctx->spd[i].servloc_name)
+> > > +			continue;
+> > > +		if (!strcmp(fl->servloc_name, cctx->spd[i].servloc_name)) {
+> > > +			spd = &cctx->spd[i];
+> > > +			spd->fl = fl;
+> > > +			break;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	return spd;
+> > > +}
+> > > +
+> > >   static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+> > >   					      char __user *argp)
+> > >   {
+> > >   	struct fastrpc_init_create_static init;
+> > >   	struct fastrpc_invoke_args *args;
+> > >   	struct fastrpc_phy_page pages[1];
+> > > +	struct fastrpc_static_pd *spd = NULL;
+> > >   	char *name;
+> > >   	int err;
+> > >   	struct {
+> > > @@ -1297,6 +1344,19 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+> > >   		goto err_name;
+> > >   	}
+> > > +	fl->servloc_name = AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME;
+> > Why are the audio and sensors sessions handled at different places?
+> > What about the MDSP or CDSP restarts?
+> 
+> Thanks for reviewing the patches, Dmitry. The remote methods for audio and
+> sensors PD attach are different and that is why both are handled in
+> different places.
 
-Thank you for your comments.
+In which way are they different?
 
-I think this situation is rare, but I need to address this to ensure
-patch 2 will not stop at the offline memcg.
-The main issue I am seeing in version 6.9.0 to 6.10.0rc1 is that the
-shrinker did not shrink until accept_thr_percent, and the
-written_back_pages is smaller than max_limit_hit.
-This can be explained by the shrinker stopping too early or looping
-over only part of the tree.
+> As for MDSP and CDSP, no static PDs are supported, hence,
 
-> >
-> > The problem was that `shrink_worker()` would stop iterating when a memc=
-g
-> > was being offlined and restart from the tree root.  Now, it properly
-> > handles the offlining memcg and continues shrinking with the next memcg=
-.
-> >
-> > Fixes: a65b0e7607cc ("zswap: make shrinking memcg-aware")
-> > Signed-off-by: Takero Funaki <flintglass@gmail.com>
-> > ---
-> >  mm/zswap.c | 76 ++++++++++++++++++++++++++++++++++++++++--------------
-> >  1 file changed, 56 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/mm/zswap.c b/mm/zswap.c
-> > index a50e2986cd2f..0b1052cee36c 100644
-> > --- a/mm/zswap.c
-> > +++ b/mm/zswap.c
-> > @@ -775,12 +775,27 @@ void zswap_folio_swapin(struct folio *folio)
-> >         }
-> >  }
-> >
-> > +/*
-> > + * This function should be called when a memcg is being offlined.
-> > + *
-> > + * Since the global shrinker shrink_worker() may hold a reference
-> > + * of the memcg, we must check and release the reference in
-> > + * zswap_next_shrink.
-> > + *
-> > + * shrink_worker() must handle the case where this function releases
-> > + * the reference of memcg being shrunk.
-> > + */
-> >  void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg)
-> >  {
-> >         /* lock out zswap shrinker walking memcg tree */
-> >         spin_lock(&zswap_shrink_lock);
-> > -       if (zswap_next_shrink =3D=3D memcg)
-> > -               zswap_next_shrink =3D mem_cgroup_iter(NULL, zswap_next_=
-shrink, NULL);
-> > +
-> > +       if (READ_ONCE(zswap_next_shrink) =3D=3D memcg) {
-> > +               /* put back reference and advance the cursor */
-> > +               memcg =3D mem_cgroup_iter(NULL, memcg, NULL);
-> > +               WRITE_ONCE(zswap_next_shrink, memcg);
-> > +       }
->
-> Hmm could you expand on how your version differs from what's existing?
-> What's the point of all these extra steps? The whole thing is done
-> under a big spin lock anyway.
+Should we still notify userspace if we get a PDR message for
+msm/cdsp/root_pd? Or for msm/modem/root_pd?
 
-I agree that the code is not necessary. These ONCE are for clarifying
-what is expected and to align with shrink_worker(), where READ_ONCE is
-required to reload the shared variable.
-It can be a safeguard for me, sometimes forgetting that we must not
-read zswap_next_shrink before acquiring the lock.
+> there is no requirement to handle static PD restarts there. Please let me
+> know if you have any other queries. --Ekansh
+> 
+> > 
+> > > +
+> > > +	spd = fastrpc_get_spd_session(fl);
+> > > +	if (!spd) {
+> > > +		err = -EUSERS;
+> > > +		goto err_name;
+> > > +	}
+> > > +
+> > > +	if (!spd->ispdup) {
+> > > +		err = -ENOTCONN;
+> > > +		goto err_name;
+> > > +	}
+> > > +	fl->spd = spd;
+> > >   	if (!fl->cctx->remote_heap) {
+> > >   		err = fastrpc_remote_heap_alloc(fl, fl->sctx->dev, init.memlen,
+> > >   						&fl->cctx->remote_heap);
+> > > @@ -1688,6 +1748,7 @@ static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char __user *argp)
+> > >   static int fastrpc_init_attach(struct fastrpc_user *fl, int pd)
+> > >   {
+> > >   	struct fastrpc_invoke_args args[1];
+> > > +	struct fastrpc_static_pd *spd = NULL;
+> > >   	int tgid = fl->tgid;
+> > >   	u32 sc;
+> > > @@ -1697,6 +1758,22 @@ static int fastrpc_init_attach(struct fastrpc_user *fl, int pd)
+> > >   	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_ATTACH, 1, 0);
+> > >   	fl->pd = pd;
+> > > +	if (pd == SENSORS_PD) {
+> > > +		if (fl->cctx->domain_id == ADSP_DOMAIN_ID)
+> > > +			fl->servloc_name = SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME;
+> > > +		else if (fl->cctx->domain_id == SDSP_DOMAIN_ID)
+> > > +			fl->servloc_name = SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME;
+> > > +
+> > > +		spd = fastrpc_get_spd_session(fl);
+> > > +		if (!spd)
+> > > +			return -EUSERS;
+> > > +
+> > > +		if (!spd->ispdup)
+> > > +			return -ENOTCONN;
+> > > +
+> > > +		fl->spd = spd;
+> > > +	}
+> > > +
+> > >   	return fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE,
+> > >   				       sc, &args[0]);
+> > >   }
+> > > @@ -2172,6 +2249,64 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
+> > >   	return err;
+> > >   }
+> > > +static void fastrpc_notify_users(struct fastrpc_user *user)
+> > > +{
+> > > +	struct fastrpc_invoke_ctx *ctx;
+> > > +
+> > > +	spin_lock(&user->lock);
+> > > +	list_for_each_entry(ctx, &user->pending, node) {
+> > > +		ctx->retval = -EPIPE;
+> > > +		complete(&ctx->work);
+> > > +	}
+> > > +	spin_unlock(&user->lock);
+> > > +}
+> > > +
+> > > +static void fastrpc_notify_pdr_drivers(struct fastrpc_channel_ctx *cctx,
+> > > +		char *servloc_name)
+> > > +{
+> > > +	struct fastrpc_user *fl;
+> > > +	unsigned long flags;
+> > > +
+> > > +	spin_lock_irqsave(&cctx->lock, flags);
+> > > +	list_for_each_entry(fl, &cctx->users, user) {
+> > > +		if (fl->servloc_name && !strcmp(servloc_name, fl->servloc_name))
+> > > +			fastrpc_notify_users(fl);
+> > > +	}
+> > > +	spin_unlock_irqrestore(&cctx->lock, flags);
+> > > +}
+> > > +
+> > > +static void fastrpc_pdr_cb(int state, char *service_path, void *priv)
+> > > +{
+> > > +	struct fastrpc_static_pd *spd = (struct fastrpc_static_pd *)priv;
+> > > +	struct fastrpc_channel_ctx *cctx;
+> > > +
+> > > +	if (!spd)
+> > > +		return;
+> > > +
+> > > +	cctx = spd->cctx;
+> > > +	switch (state) {
+> > > +	case SERVREG_SERVICE_STATE_DOWN:
+> > > +		dev_info(&cctx->rpdev->dev,
+> > > +			"%s: %s (%s) is down for PDR on %s\n",
+> > > +			__func__, spd->spdname,
+> > > +			spd->servloc_name,
+> > > +			domains[cctx->domain_id]);
+> > > +		spd->ispdup = false;
+> > > +		fastrpc_notify_pdr_drivers(cctx, spd->servloc_name);
+> > > +		break;
+> > > +	case SERVREG_SERVICE_STATE_UP:
+> > > +		dev_info(&cctx->rpdev->dev,
+> > > +			"%s: %s (%s) is up for PDR on %s\n",
+> > > +			__func__, spd->spdname,
+> > > +			spd->servloc_name,
+> > > +			domains[cctx->domain_id]);
+> > > +		spd->ispdup = true;
+> > > +		break;
+> > > +	default:
+> > > +		break;
+> > > +	}
+> > > +}
+> > > +
+> > >   static const struct file_operations fastrpc_fops = {
+> > >   	.open = fastrpc_device_open,
+> > >   	.release = fastrpc_device_release,
+> > > @@ -2291,6 +2426,39 @@ static int fastrpc_device_register(struct device *dev, struct fastrpc_channel_ct
+> > >   	return err;
+> > >   }
+> > > +static int fastrpc_setup_service_locator(struct fastrpc_channel_ctx *cctx, char *client_name,
+> > > +			char *service_name, char *service_path, int domain, int spd_session)
+> > > +{
+> > > +	int err = 0;
+> > > +	struct pdr_handle *handle = NULL;
+> > > +	struct pdr_service *service = NULL;
+> > > +
+> > > +	/* Register the service locator's callback function */
+> > > +	handle = pdr_handle_alloc(fastrpc_pdr_cb, &cctx->spd[spd_session]);
+> > > +	if (IS_ERR(handle)) {
+> > > +		err = PTR_ERR(handle);
+> > > +		goto bail;
+> > > +	}
+> > > +	cctx->spd[spd_session].pdrhandle = handle;
+> > > +	cctx->spd[spd_session].servloc_name = client_name;
+> > > +	cctx->spd[spd_session].spdname = service_path;
+> > > +	cctx->spd[spd_session].cctx = cctx;
+> > > +	service = pdr_add_lookup(handle, service_name, service_path);
+> > > +	if (IS_ERR(service)) {
+> > > +		err = PTR_ERR(service);
+> > > +		goto bail;
+> > > +	}
+> > > +	pr_info("fastrpc: %s: pdr_add_lookup enabled for %s (%s, %s)\n",
+> > > +		__func__, service_name, client_name, service_path);
+> > > +
+> > > +bail:
+> > > +	if (err) {
+> > > +		pr_warn("fastrpc: %s: failed for %s (%s, %s)with err %d\n",
+> > > +				__func__, service_name, client_name, service_path, err);
+> > > +	}
+> > > +	return err;
+> > > +}
+> > > +
+> > >   static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+> > >   {
+> > >   	struct device *rdev = &rpdev->dev;
+> > > @@ -2369,6 +2537,25 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+> > >   		goto fdev_error;
+> > >   	}
+> > > +	if (domain_id == ADSP_DOMAIN_ID) {
+> > > +		err = fastrpc_setup_service_locator(data, AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME,
+> > > +			AUDIO_PDR_ADSP_SERVICE_NAME, ADSP_AUDIOPD_NAME, domain_id, 0);
+> > > +		if (err)
+> > > +			goto populate_error;
+> > > +
+> > > +		err = fastrpc_setup_service_locator(data,
+> > > +			SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME,
+> > > +			SENSORS_PDR_ADSP_SERVICE_NAME, ADSP_SENSORPD_NAME, domain_id, 1);
+> > > +		if (err)
+> > > +			goto populate_error;
+> > > +	} else if (domain_id == SDSP_DOMAIN_ID) {
+> > > +		err = fastrpc_setup_service_locator(data,
+> > > +			SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME,
+> > > +			SENSORS_PDR_SLPI_SERVICE_NAME, SLPI_SENSORPD_NAME, domain_id, 0);
+> > > +		if (err)
+> > > +			goto populate_error;
+> > > +	}
+> > > +
+> > >   	kref_init(&data->refcount);
+> > >   	dev_set_drvdata(&rpdev->dev, data);
+> > > @@ -2397,23 +2584,12 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+> > >   	return err;
+> > >   }
+> > > -static void fastrpc_notify_users(struct fastrpc_user *user)
+> > > -{
+> > > -	struct fastrpc_invoke_ctx *ctx;
+> > > -
+> > > -	spin_lock(&user->lock);
+> > > -	list_for_each_entry(ctx, &user->pending, node) {
+> > > -		ctx->retval = -EPIPE;
+> > > -		complete(&ctx->work);
+> > > -	}
+> > > -	spin_unlock(&user->lock);
+> > > -}
+> > > -
+> > >   static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+> > >   {
+> > >   	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
+> > >   	struct fastrpc_user *user;
+> > >   	unsigned long flags;
+> > > +	int i;
+> > >   	/* No invocations past this point */
+> > >   	spin_lock_irqsave(&cctx->lock, flags);
+> > > @@ -2431,6 +2607,11 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+> > >   	if (cctx->remote_heap)
+> > >   		fastrpc_buf_free(cctx->remote_heap);
+> > > +	for (i = 0; i < FASTRPC_MAX_SPD; i++) {
+> > > +		if (cctx->spd[i].pdrhandle)
+> > > +			pdr_handle_release(cctx->spd[i].pdrhandle);
+> > > +	}
+> > > +
+> > >   	of_platform_depopulate(&rpdev->dev);
+> > >   	fastrpc_channel_ctx_put(cctx);
+> > > -- 
+> > > 2.43.0
+> > > 
 
-> > +
-> >         spin_unlock(&zswap_shrink_lock);
-> >  }
-> >
-> > @@ -1312,25 +1327,38 @@ static int shrink_memcg(struct mem_cgroup *memc=
-g)
-> >
-> >  static void shrink_worker(struct work_struct *w)
-> >  {
-> > -       struct mem_cgroup *memcg;
-> > +       struct mem_cgroup *memcg =3D NULL;
-> > +       struct mem_cgroup *next_memcg;
-> >         int ret, failures =3D 0;
-> >         unsigned long thr;
-> >
-> >         /* Reclaim down to the accept threshold */
-> >         thr =3D zswap_accept_thr_pages();
-> >
-> > -       /* global reclaim will select cgroup in a round-robin fashion. =
-*/
-> > +       /* global reclaim will select cgroup in a round-robin fashion.
-> > +        *
-> > +        * We save iteration cursor memcg into zswap_next_shrink,
-> > +        * which can be modified by the offline memcg cleaner
-> > +        * zswap_memcg_offline_cleanup().
-> > +        */
->
-> I feel like the only difference between this loop and the old loop, is
-> that if we fail to get an online reference to memcg, we're trying from
-> the next one (given by mem_cgroup_iter()) rather than from the top
-> (NULL).
->
-> For instance, consider the first two steps:
->
-> 1. First, we check if memcg is the same as zswap_next_shrink. if not,
-> then reset it to zswap_next_shrink.
-> 2. Advance memcg, then store the result at zswap_next_shrink.
->
-> Under the big zswap_shrink_lock, this is the same as:
->
-> 1. Advance zswap_next_shrink.
-> 2. Look up zswap_next_shrink, then store it under the local memcg variabl=
-e.
->
-> which is what we were previously doing.
->
-> The next step is shared - check for null memcg (which again, is the
-> same as zswap_next_shrink now), and attempt to get an online
-> reference.
-> The only difference is when we fail to get the online reference -
-> instead of starting from the top, we advance memcg again.
->
-> Can't we just drop the lock, then add a continue statement? That will
-> reacquire the lock, advance zswap_next_shrink, look up the result and
-> store it at memcg, which is what you're trying to achieve?
->
-
-If I understand correctly, in this offlining pattern, we are not
-allowed to leave an offline memcg in zswap_next_shrink more than once.
-While offline memcg can appear in memcg_iter_next repeatedly, the
-cleaner is called only once per an offline memcg. (or is there some
-retry logic?)
-
-If the shrink_worker finds an offline memcg in iteration AFTER the
-cleaner was called, we must put back the offline memcg reference
-inside shrink_worker() BEFORE going to return/sleep.
-Otherwise, the offline memcg reference will be kept in
-zswap_next_shrink until the next shrink_worker() is requeued. There is
-no rescue chance from the cleaner again.
-
-This means the shrink_worker has to check:
-1. We get a lock. Check if the memcg is online while locked.
-2a. If online, it can be offlined while we have the lock. But the lock
-assures us that the cleaner is waiting for the lock just behind us. We
-can rely on this.
-2b. If offline, we cannot determine if the cleaner has already been
-called or is being called. We have to put back the offline memcg
-reference, assuming no cleaner is available.
-
-If we get offline memcg AND abort the shrinker by the max failure
-limit, that breaks condition 2b. Thus we need to unconditionally
-restart from the beginning of the do block.
-I will add these expected situations to the comments.
-
-For unlocking, should we rewrite,
-
-goto iternext;
-
-to
-
-spin_unlock();
-goto before_spin_lock; /* just after do{ */
-
-I think that will minimize the critical section and satisfy the condition 2=
-b.
-
-For the memcg iteration,
-> 2. Advance memcg, then store the result at zswap_next_shrink.
-should be done only if `(memcg =3D=3D zswap_next_shrink)`.
-
-Say iterating A -> B -> C and A is being offlined.
-While we have memcg=3DA and drop the lock, the cleaner may advance
-zswap_next_shrink=3DA to B.
-If we do not check `memcg !=3D next_memcg`, we advance
-zswap_next_shrink=3DB to C again, forgetting B.
-
-That is the reason I added  `(memcg !=3D next_memcg)` check.
-Although It can be negligible as it only ignores one memcg per one
-cleaner callback.
-
-This is my understanding. Am I missing any crucial points? Any
-comments or advice would be greatly appreciated.
-
-> >         do {
-> >                 spin_lock(&zswap_shrink_lock);
-> > -               zswap_next_shrink =3D mem_cgroup_iter(NULL, zswap_next_=
-shrink, NULL);
-> > -               memcg =3D zswap_next_shrink;
-> > +               next_memcg =3D READ_ONCE(zswap_next_shrink);
-> > +
-> > +               if (memcg !=3D next_memcg) {
-> > +                       /*
-> > +                        * Ours was released by offlining.
-> > +                        * Use the saved memcg reference.
-> > +                        */
-> > +                       memcg =3D next_memcg;
-> > +               } else {
-> > +iternext:
-> > +                       /* advance cursor */
-> > +                       memcg =3D mem_cgroup_iter(NULL, memcg, NULL);
-> > +                       WRITE_ONCE(zswap_next_shrink, memcg);
-> > +               }
-> >
-> >                 /*
-> > -                * We need to retry if we have gone through a full roun=
-d trip, or if we
-> > -                * got an offline memcg (or else we risk undoing the ef=
-fect of the
-> > -                * zswap memcg offlining cleanup callback). This is not=
- catastrophic
-> > -                * per se, but it will keep the now offlined memcg host=
-age for a while.
-> > -                *
->
-> Why are we removing this comment?
-
-The existing comment about aborting the loop on the offlining memcg,
-is not valid on  this patch. The offline memcg will just be skipped.
-I think the new behavior is commented at the beginning of the loop and
-in the !mem_cgroup_tryget_online branch. Please let me know if you
-have any suggestions.
-
-
-> >                  * Note that if we got an online memcg, we will keep th=
-e extra
-> >                  * reference in case the original reference obtained by=
- mem_cgroup_iter
-> >                  * is dropped by the zswap memcg offlining callback, en=
-suring that the
-> > @@ -1345,16 +1373,18 @@ static void shrink_worker(struct work_struct *w=
-)
-> >                 }
-> >
-> >                 if (!mem_cgroup_tryget_online(memcg)) {
-> > -                       /* drop the reference from mem_cgroup_iter() */
-> > -                       mem_cgroup_iter_break(NULL, memcg);
-> > -                       zswap_next_shrink =3D NULL;
-> > -                       spin_unlock(&zswap_shrink_lock);
-> > -
-> > -                       if (++failures =3D=3D MAX_RECLAIM_RETRIES)
-> > -                               break;
-> > -
-> > -                       goto resched;
->
-> I think we should still increment the failure counter, to guard
-> against long running/infinite loops.
-
-Since we skip the offline memcg instead of restarting from the root,
-the new iteration will be terminated when it reaches tree root in
-finite steps.  I am afraid that counting this as a failure will
-terminate the shrinker too easily.
-
-I think shrinker_worker() running longer is not an issue because the
-amount of work per the while loop is limited by rescheduling. As it
-has a dedicated WQ_MEM_RECLAIM workqueue, returning from the function
-is not necessary. cond_resched() should allow the other workqueue to
-run.
-The next patch also adds a progress check per walking.
-
-
-> > +                       /*
-> > +                        * It is an offline memcg which we cannot shrin=
-k
-> > +                        * until its pages are reparented.
-> > +                        * Put back the memcg reference before cleanup
-> > +                        * function reads it from zswap_next_shrink.
-> > +                        */
-> > +                       goto iternext;
-> >                 }
-> > +               /*
-> > +                * We got an extra memcg reference before unlocking.
-> > +                * The cleaner cannot free it using zswap_next_shrink.
-> > +                */
-> >                 spin_unlock(&zswap_shrink_lock);
-> >
-> >                 ret =3D shrink_memcg(memcg);
-> > @@ -1368,6 +1398,12 @@ static void shrink_worker(struct work_struct *w)
-> >  resched:
-> >                 cond_resched();
-> >         } while (zswap_total_pages() > thr);
-> > +
-> > +       /*
-> > +        * We can still hold the original memcg reference.
-> > +        * The reference is stored in zswap_next_shrink, and then reuse=
-d
-> > +        * by the next shrink_worker().
-> > +        */
-> >  }
-> >
-> >  /*********************************
-> > --
-> > 2.43.0
-> >
-
-
-
---
-
-<flintglass@gmail.com>
+-- 
+With best wishes
+Dmitry
