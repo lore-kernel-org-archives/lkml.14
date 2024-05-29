@@ -1,129 +1,191 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B2012B95;
-	Wed, 29 May 2024 14:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFFC12B95;
+	Wed, 29 May 2024 14:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716991414; cv=none; b=C2bdksmd61A7hSbiMIfOm8KLNngSzg5qsOknt8qq4WnzRSRXidXcx4L5DurvyV41cL6KqXfG02B6vV1rnYC49k7DZr5/QSOBEm8vp5zf4+mnQ2qf+J74iZBj9bYA0LxgCvUuZSsbQjlcYcsKDBhXc8a5bRdwgVrgx3+nvJ8lj08=
+	t=1716991449; cv=none; b=qTbblvjWsqFFAsF2XJKZhL4Vk6lQjDXtxbzM3rcBroDU88DvSWsJ7obWWXV9sQGiNBv/NIkQ7S1VeOaQtYlK/Y6OxmFCHVU7W9VTjLYH8Je0zuGrx5uhC0ZvO/sfTPA0wYQb8pI16PK6zbdVaDf4Altfe1Ojl8K+/yenWrq7fm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716991414; c=relaxed/simple;
-	bh=WjdW1FP762sEgNbUJdyYCjRIv0VEhWJXADENEQ+EJdM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FnCbXCveLNRTvbSDgOcysVjhIoY8zMgIknlk2JdIGxlQVxYPmiKm+CbLZz24CR8vHoIq42ufg0nCkHbAWTCXylzvaXG29B2cWRUujXm/H0C0j5Gv/P8TTonObp04oBuk/QQUPv/0EsX5Yt2NMIHVlb31hImBO2LYqcPyBzFcras=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VxNOqsOR; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1716991449; c=relaxed/simple;
+	bh=iJYrtpX9ka5VFZ07GiTH2MWKv9spjWrvU0W38Q3AYDo=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=qClsjk8fxNp378nzHhEpnr9JfAJ36fYVLva0LG7+2zmlVGyB8JrIwjVhOMxekQEtYSuiDYjXWbXpqEZXMABqseDXfhuoDKqymNbJIJpOefwtYsJ5FHJBuUBNRYfV0cPBWbuEx9JtprBnMfOCvpN+rwzeR4nZA+onhRCtlV9crhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TDw5Xi7h; arc=none smtp.client-ip=209.85.219.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxNOqsOR"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5785c1e7448so2121717a12.2;
-        Wed, 29 May 2024 07:03:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDw5Xi7h"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6ad654913a0so11564986d6.1;
+        Wed, 29 May 2024 07:04:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716991410; x=1717596210; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F1ujdDEYUIIkAJTFHWvU9CFPTnOkFnbvdnN/RkQMKsY=;
-        b=VxNOqsOR2+Wv2aPaUyuqALu/rEiZG0u8IlrrZMZGJ3DouUVUE0AKugwiMNhtRwLq3d
-         1EbB6CP4riSiOZ7Ynvd/t/IAHEQYHrOiCO3cHnd3BpjfprgeziDHZVLvQTzhPskfCjPY
-         ZItaqq5OIPkSYvoAqp6/R303W1C7i3TzW0VGWivH+TiK96pJbHAahfV4+u5mjAsAfs7E
-         NRKhxthsQGkaz3CLkCQjWhe0IgE00ktWg2Qrb6MhhRSU4CntP9X9MvdZEm0EXvBoEyK5
-         4LUoAE6fLVDxPVdu4nWJawuBjo6n/o9m2rAruguLWukP15TCNOP8Zq0/FOoaW91gYba8
-         lfow==
+        d=gmail.com; s=20230601; t=1716991447; x=1717596247; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4TXrxAfDrmeaY9/60Ysmq8ztm0OX/wGOddNeWUJZZdY=;
+        b=TDw5Xi7hnjxXw03kEHQ0ROpsSNjktX0CogAF95tolSeqef4F9ZmvaGbWEkGDiLCStE
+         TkJOM/NucMN5M5e8sD8rJt8WMXCetD1gmPBq23MYlYXUQYgKW+QC360LSHoEi80F8cbP
+         5LRvSH6rgqliSsPMz347xDP+7+n8lHxB4ejfncLHUaYzaErvCap2mHr8DUhi9KCjYXfd
+         Yx1nGqhD7cMXbD48abuP3sUKVD0Thf3tEaS0UqVV8ZmG2V8Qq8dO6P8+bKeBtR88wWbf
+         W73KE+aiVH8xCcB6v6pCo/cth/Di5wkBWmhYftFVRCSh7/c4+Ae9B73ciJXKvCTGMKWr
+         W7Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716991410; x=1717596210;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F1ujdDEYUIIkAJTFHWvU9CFPTnOkFnbvdnN/RkQMKsY=;
-        b=kFzeu3R3Vyjtd8xFovHRS7i+IVHxVX3To0VmO7PWVVpgDsD9q89XC0LegMOrQYlytg
-         JlzxjWrBnmOHYRGucJcGexyz7pKKZurWv/NefwNM9o5dYc41tIz4RUh80UK+fGX+fQIm
-         ljluXI1s7s4g6Xgv3Rks2FYSKU354q3p6+1N83IZQGEh/Cn1NyHOYwKb+WXDEM2txHhZ
-         P4Ucu+EWMdrZc5Gpfc2JXBnRpLn673MQ2TedTubT4FGHIMouE1ZggS+v8TAGnziCPi+1
-         WykS2HfNJzu3SdmEdI75KcsMmw60YgEwkJsIz/vE5adyQrcf6/aE43F5jd4V9Gr0K4aS
-         HlQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVwxyzngXBcajkaJaCixg/IM+9FKTgvyKZ9ftvJvRgUoPyeLQRW6Njh2M/072KMiT5NfhxMBfk979q9tv2JxZhxV+qYy6SUnS6ZPQ7er1FgF3HW9po9hQt9nWew957j8NA9VWkX+zdl8K+Hy2hLkw5VdOqlq4yCPy9UiXczvPb2wdywQ==
-X-Gm-Message-State: AOJu0YyVpofDRxmj4Gq2wgwlsDKCiuOKZrwK4R7q0cgS1n46m7U0O7Xo
-	iL6JCK+TAS2bNsMbvLHr2Cxi6I5xt/oOToH3qapPqJAD6Op6IZO8
-X-Google-Smtp-Source: AGHT+IECePkYinauu8AtBL+pjHmC4fTu+y/z0FujBAwpBmBYBYATXLR/JUybGKJN+92ubFWQWLGFjw==
-X-Received: by 2002:a50:c359:0:b0:578:5ee4:921f with SMTP id 4fb4d7f45d1cf-5785ee495f6mr9808278a12.13.1716991409673;
-        Wed, 29 May 2024 07:03:29 -0700 (PDT)
-Received: from [192.168.0.137] ([188.24.75.156])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5785234a7efsm8555915a12.4.2024.05.29.07.03.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 07:03:29 -0700 (PDT)
-Message-ID: <917bc1d9-fbdc-4ca2-a156-813b57c8201e@gmail.com>
-Date: Wed, 29 May 2024 17:03:27 +0300
+        d=1e100.net; s=20230601; t=1716991447; x=1717596247;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4TXrxAfDrmeaY9/60Ysmq8ztm0OX/wGOddNeWUJZZdY=;
+        b=d2kfRyMwD/kZ4SoPZvkscYLVUOSfULRVaYn21BKh3jCgQwHTxqEH0HHvF6AEqBBLPp
+         UJOn8Ab0X/zPfCVLPCDqJ2XGr4EKdQnSFFtljdJbjXpzFGGqpuuSxezdzsK9pnKKlgJo
+         +koRc9n+Is32ESsLxw/3pfhuiHIfEptLHpKRzusEruM0D6d8x3M3IsgtUyQ6wCJd+n1d
+         JPJ/eV366cZLeTjnXQcQHPx1nMNl2seIF+6/V/NFKHJIn13TWt7RyhN8j9mkZQFsOdOu
+         oA38uf5eJCrPVcfEBRx9sE86BeTY4TilrbrUFyVNCeIY9Z9eBtYgLLUofUrMr1su3zV9
+         vxXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkur9L94bh8btjNnN50soK/LnNeANGdSjqC1pLWpcwmf9+vK70BK9wizpKP/VTtQ+/jQia3R1bceroYlPkDskdg7Bz7Irn
+X-Gm-Message-State: AOJu0Yww4spSjlAyj2Js2+8tTv2skZ5W1gKOHK70EEg5Mkep+U00tarT
+	btsWlSbgCgI/+U14wxB5dCumudd4kTQ/xHft7aIBmlpH3h6/SqULum7sAw==
+X-Google-Smtp-Source: AGHT+IFyxiFH4DS8xQoBF1ntUHwzAoeS4Sg/lci/+9tzGl7pl40gu6YoOozl2OmmggDo64waBE1EHQ==
+X-Received: by 2002:a05:6214:459a:b0:6ad:69b1:6577 with SMTP id 6a1803df08f44-6ad69b16652mr154614656d6.28.1716991445263;
+        Wed, 29 May 2024 07:04:05 -0700 (PDT)
+Received: from localhost (112.49.199.35.bc.googleusercontent.com. [35.199.49.112])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ad6f17d7d6sm41111816d6.11.2024.05.29.07.04.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 07:04:04 -0700 (PDT)
+Date: Wed, 29 May 2024 10:04:02 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: =?UTF-8?B?TGVuYSBXYW5nICjnjovlqJwp?= <Lena.Wang@mediatek.com>, 
+ "kuba@kernel.org" <kuba@kernel.org>, 
+ "willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+ =?UTF-8?B?U2hpbWluZyBDaGVuZyAo5oiQ6K+X5piOKQ==?= <Shiming.Cheng@mediatek.com>, 
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, 
+ "pabeni@redhat.com" <pabeni@redhat.com>, 
+ "edumazet@google.com" <edumazet@google.com>, 
+ "davem@davemloft.net" <davem@davemloft.net>
+Message-ID: <665735d273a1c_31b267294ce@willemb.c.googlers.com.notmuch>
+In-Reply-To: <782b9eb64af66eba132ac6382305d407e33dd604.camel@mediatek.com>
+References: <20240428142913.18666-1-shiming.cheng@mediatek.com>
+ <20240429064209.5ce59350@kernel.org>
+ <bc69f8cc4aed8b16daba17c0ca0199fe6d7d24a8.camel@mediatek.com>
+ <20240516081110.362cbb51@kernel.org>
+ <15675c6e0facd64b1cdc2ec0ded32b84a4e5744b.camel@mediatek.com>
+ <664f3aa1847cc_1a64412944f@willemb.c.googlers.com.notmuch>
+ <664f59eedbee7_1b5d24294ef@willemb.c.googlers.com.notmuch>
+ <782b9eb64af66eba132ac6382305d407e33dd604.camel@mediatek.com>
+Subject: Re: [PATCH net] net: prevent pulling SKB_GSO_FRAGLIST skb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] iio: adc: ad7173: Add support for AD411x devices
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- dumitru.ceclan@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240527-ad4111-v3-0-7e9eddbbd3eb@analog.com>
- <20240527-ad4111-v3-5-7e9eddbbd3eb@analog.com>
- <6f18184de4a37993baedc15b44ecf0a6834a24d1.camel@gmail.com>
-Content-Language: en-US
-From: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
-In-Reply-To: <6f18184de4a37993baedc15b44ecf0a6834a24d1.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 29/05/2024 15:46, Nuno Sá wrote:
-> On Mon, 2024-05-27 at 20:02 +0300, Dumitru Ceclan via B4 Relay wrote:
->> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+Lena Wang (=E7=8E=8B=E5=A8=9C) wrote:
+> On Thu, 2024-05-23 at 10:59 -0400, Willem de Bruijn wrote:
+> >  	 =
 
-...
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> >  Willem de Bruijn wrote:
+> > > > The problem now is the ethtool in ubuntu can't support "rx-gro-
+> > list"
+> > > > and "rx-udp-gro-forwarding" although it is updated to version 6.7=
 
->>  static const struct ad7173_device_info ad7173_device_info[] = {
->> +	[ID_AD4111] = {
->> +		.name = "ad4111",
->> +		.id = AD7173_AD4111_AD4112_AD4114_ID,
->> +		.num_voltage_inputs_with_divider = 8,
->> +		.num_channels = 16,
->> +		.num_configs = 8,
->> +		.num_voltage_inputs = 8,
->> +		.num_gpios = 2,
->> +		.higher_gpio_bits = true,
->> +		.has_temp = true,
->> +		.has_vcom_input = true,
->> +		.has_input_buf = true,
->> +		.has_current_inputs = true,
->> +		.has_int_ref = true,
->> +		.clock = 2 * HZ_PER_MHZ,
->> +		.sinc5_data_rates = ad7173_sinc5_data_rates,
->> +		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
->> +	},
-> 
-> At some point it would be nice to drop the ad7173_device_info array...
-> 
-What are good alternatives to this?
-...
+> > from =
 
->> +		ret = fwnode_property_match_property_string(child,
->> +							    "adi,channel-type",
->> +							    ad7173_channel_types,
->> +							   
->> ARRAY_SIZE(ad7173_channel_types));
->> +		chan->differential = (ret < 0 || ret == AD7173_CHAN_DIFFERENTIAL)
->> +					? 1 : 0;
-> 
-> I don't think we should treat 'ret < 0' has a differential channel. Any reason for
-> it? For me, it's just an invalid property value given by the user...
-> 
-Yes, as that would be the default value if it's missing or invalid
+> > > > https://mirrors.edge.kernel.org/pub/software/network/ethtool. =
 
-> - Nuno Sá
-> 
+> > > > =
 
+> > > > There is another verison in =
+
+> > > > =
+
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/net/ethtool
+> > .
+> > > >  We download the sourcecode but don't know how to compile for
+> > ubuntu as
+> > > > no ./configure there.
+> > > > =
+
+> > > > Is it the one we should use?  If yes, could you please show me
+> > how to
+> > > > compile and install this ethtool?
+> > > =
+
+> > > https://git.kernel.org/pub/scm/network/ethtool/ethtool.git is the
+> > > upstream ethtool repo.
+> > > =
+
+> > > Since you are testing a custom built kernel, there are other hacky
+> > > ways to configure a feature if you lack a userspace component:
+> > > =
+
+> > > - just hardcode on or off and reboot
+> > > - use YNL ethtool (but features is not implemented yet?)
+> > > - write your own netlink helper
+> > > - abuse some existing kernel API to toggle it, like a rarely uses
+> > systl
+> > =
+
+> > And as shared off-line, virtme-ng (vng) can be a good option for
+> > working on tools/testing/selftests too.
+> > =
+
+> > Ideally
+> > =
+
+> > ```
+> > vng -v -b -f tools/testing/selftests/net
+> > make headers
+> > make -C tools/testing/selftests/net
+> > =
+
+> > vng -v -r arch/x86/boot/bzImage --user root
+> > # inside the VM
+> > make -C tools/testing/selftests TARGETS=3Dnet run_tests
+> > ```
+> > =
+
+> > Though last time I tried I had to use a slightly more roundabout
+> > =
+
+> > ```
+> > make defconfig; make kvm_guest.config
+> > ./scripts/kconfig/merge_config.sh -m .config
+> > tools/testing/selftests/net/config
+> > make olddefconfig
+> > make -j $(nproc) bzImage
+> > make headers
+> > make -C tools/testing/selftests/net
+> > =
+
+> > vng -v -r arch/x86/boot/bzImage --user root
+> > ```
+> > =
+
+> > =
+
+> > =
+
+> https://lpc.events/event/17/contributions/1506/attachments/1143/2441/vi=
+rtme-ng.pdf
+> =
+
+> Dear Willem,
+> In https://github.com/arighi/virtme-ng it needs kernel 6.5 to setup.
+> Current our enviroument doesn't support and we prepare to install a PC
+> with a new ubuntu22.04.
+> =
+
+> Do you know any request for ubuntu version to run vng, Which version is=
+
+> more fit for?
+
+Let's take these configuration questions offline. I've responded.=
