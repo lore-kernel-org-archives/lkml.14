@@ -1,190 +1,355 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCB0179957;
-	Wed, 29 May 2024 08:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716970694; cv=fail; b=OUnpYlwgeE8LhvaQeNrX/XPjV25zed+z/DDADUUl5J2Px0i1YIMsPMdKL++cWcj7ckzCnFskA2uXvEZcih1C7bVxxWuw+mpIFFfF+8UHn/8AVMrqLIIBFipiifDCwCxl7LTC8HudrZM829LDYGc6g3S2X8AeZ5lWMa9Fmnc8HWM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716970694; c=relaxed/simple;
-	bh=6vk/GWQ8LsjKaJM+ShPsWl9qXxCYAliTbF3kmJnnfCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Acc4HN/a3S5gHjP4XMWPWk1uF+eMIH0CZaihifLRSpoX/g4QR8T051qsd0CFz607ZGZabkf+Aqfy6oOm1ZQgWJXUHze1zbI9z4YVOoicAGxhFDztgBqJ2qNZOzUtxqj7LO2EvAG9M6FL8Q/6JlNcPbx1HhDE+0surIhtUj/szuo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44T6II5x019463;
-	Wed, 29 May 2024 08:17:55 GMT
-DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:message-?=
- =?UTF-8?Q?id:mime-version:subject:to;_s=3Dcorp-2023-11-20;_bh=3DYM1BX7K1+?=
- =?UTF-8?Q?PsYEEPjAFDbAm+LTBv+i4h+u5vU3Jip4jQ=3D;_b=3DUPKvsJoJ4WF7NJoXyWoh?=
- =?UTF-8?Q?nP9jpw6uwN7vysrfDTmLGzWdiE+Pr6ywxn9hzykDSF4UAudv_RCofGpuoVTQaSi?=
- =?UTF-8?Q?BP6gB2JAI5i9JUrtIrU4lZIqM+xnysK8f9ESvAg70uy91lic45TsGt_NGbYVcKb?=
- =?UTF-8?Q?sasIv0FkkJ1ZuYrxfWwVUbFdby1zQBfayZHiYfGsFmgeTE2k+pdwmVJUsrPs_PU?=
- =?UTF-8?Q?oaZKd6gT8VIOt435j8JRFFICCiHV7tbNQkC0FjGjqEok/SCJXwPq73FEaNflf/x?=
- =?UTF-8?Q?Q/X_xSENveQbk+wssyEN6CYXEzCkxjdxSyFFex1wvtGApbnb6M0rR8jy+1d1r9n?=
- =?UTF-8?Q?5/rrH2dbi_Bg=3D=3D_?=
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8g464x9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 May 2024 08:17:54 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44T7HYXN024004;
-	Wed, 29 May 2024 08:17:53 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2173.outbound.protection.outlook.com [104.47.58.173])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yc52c6rqy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 May 2024 08:17:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hpSKHZ9VUjFLIUjVJQhe0VTAWfVe9zmDXd/lDtvlEm+rVdamCF0DRnshfxVoxdDRCi4WpWRK1+M78ObLB7v+iUVi+ltHbnVeMBiP5/feYsMpUNXqW/yuKckJE3mQjR/kIMF3VMdKMicqOgQhpCTAXNGgPwMYOPOeRnVVa3tNfhgvAZ2hR9YSjEN53y2s+7oBBm7MLYD5jFQ0621QvWQtk4HgWtyhsExgpY+s/XpVL0LtrpQnq6naGTtHFy/1E2sb7SaZbRLcRuVyKJ/vfIAFTegXlLDewuQI74jdd5Ce4Do0RNFjM3W8V7fpfylJb6lbchNkp0PzTwb2rG4dQHRmMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YM1BX7K1+PsYEEPjAFDbAm+LTBv+i4h+u5vU3Jip4jQ=;
- b=jMkuWutrjkflZksrEMpb2MCovhstx2ktB6lIngKSX5U+Lcir5B3CWlRe6Avo2fppAO0V91Bn7ppf82zxf5lYenucC93uWlNZXIMZ2qCboyxweJQwO0PhZBrrjX+63MHIHg3jc41VEtLHMQ5lbDx/2lEFu82MkaOZUnYfV4mJ8ZH1ReG9ws66NA0F2mbAHQ6u9f7WGKdwTpJKaOq4WaZmPXSVeGMP1acVr+4uipQYVu9bnA4riB2RRA6lgE0MocMD+VT9ZGWm8hFCUonotkQPa+MuTYpdkWmsiVtWHjrGc8qz19qBhx8ZgYybpPvPVwoNmqsUomj0Jwf30lGMvKFR9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903DB169394
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716970728; cv=none; b=oQ2s//eNTenQQXJmpPIci1zgN4Zm+79TNQxF9tUwMIb/bkB75UvQT6FbQEL3dCkb4kE8oOwphiMbJhDrTb00pOU+EmxropfQBTOtp2sl8im31wS+CDn/5v9w88iN9t6429bd+FgM5jBJwxtIlqlH5f0NB867HR+rsFwtGbDTKQs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716970728; c=relaxed/simple;
+	bh=VpkZ9d+Zc2avkwHeplX5gXZyUDYAVIyVVvyeY08HzO0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iNOWJREYhT5VAarB+VuDMnp/CRgvJQHAsuIzhWv/kkbJKtqxABlogWr2L7C9ec//6yVZuUXLil+KVnMroGPOfr2Ujfewt24G1CMCWdDFT+a1Zu6OqqK7qst7nhk0mxsoLzeK51xmw1Re+lL8zYl5/bnnHE3QDbinDoqLV5GrppE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T0Dl6z1d; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T0Dl6z1d"
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-48a39d4b0f1so477454137.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 01:18:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YM1BX7K1+PsYEEPjAFDbAm+LTBv+i4h+u5vU3Jip4jQ=;
- b=rpNF374VFQDefsgc+QZdyx+GyUqvGVxcnIC5KUoz7+LVQoM1r9WmRW0io2od3CJlP7ut6ep4yLdiB1mXbtTnaPWelCTVVwS+dMP8TNM3zZre3Q8FdAZi/3+3qRghNGkrzVgXE1fwfpfjwdFrxVnlv6WttuWZelN8TXL534/Hn3I=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by PH7PR10MB5815.namprd10.prod.outlook.com (2603:10b6:510:126::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.17; Wed, 29 May
- 2024 08:17:50 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.7611.030; Wed, 29 May 2024
- 08:17:49 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz
-Cc: kent.overstreet@linux.dev, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, adilger@dilger.ca, ebiggers@kernel.org,
-        John Garry <john.g.garry@oracle.com>
-Subject: [PATCH] statx: Update offset commentary for struct statx
-Date: Wed, 29 May 2024 08:17:25 +0000
-Message-Id: <20240529081725.3769290-1-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0102.namprd13.prod.outlook.com
- (2603:10b6:208:2b9::17) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=linaro.org; s=google; t=1716970725; x=1717575525; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9f3U10PPUgvbykvjyd6DPSMXhzlJ3Ya3OIzEIHPAWBQ=;
+        b=T0Dl6z1d75J1TA1g7DYAdeXNObMYC22kJ/mn+D/IpVyc0mJjiPfVMOlybI1AGu8SRM
+         cy0tpURD9ShJBicgdOwOvCtngTznL5DPnzG2I0YwIk7/j02XZpVPdCa8GwQXYh53X5aG
+         Kxol6hECOwlJABxavZQjJRYdW9n8ql2iOGBEkBhHtDfXcMGsjlX2OoPFyKtU8hiNz8MV
+         yM/trXC7FvJ8csLOMlKiiNl0BIPUHqT0E7yZtkD34mX4NtLsxhuF/vsH2R9dUJ+TArOI
+         5gONaCgaHdZgv41FmvkuQ7hO5BuT9dVp5qgL6Q+7dmrJ5S0oxXIfNViiML8IDuc2qtRP
+         w/KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716970725; x=1717575525;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9f3U10PPUgvbykvjyd6DPSMXhzlJ3Ya3OIzEIHPAWBQ=;
+        b=E7V9iC3fxVHJQ9TwBaRCuuBne4LS1V065Sg2bzw2sqEj494JL/PKTMzJ3RjAzJH/uh
+         c0IBgW1UILNBopkEzzc2qT8hoEaUddQnVqd+dKB7dc+H66yApc30IxfPwyIAC8ydDbos
+         QArZ9NlVVYEpQSX5oZPqTsHUA0W9mBsYoQsLcSLbuobSeeAMUvbE1ToLkviI8S+Ss5w6
+         PEArIZOWAdhUhc55gkdU9uDkI5MO1+BCzAzjEcz/7g2YomN5IlE1OwRHFUrn9DEfwKW0
+         URdccd3nJjpVgY0SdcBLM6LL+dYlw1v2UA4WR5qcUI5pp3+bTsff5j0YKBWBvTxRnAS9
+         Zo5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUNCpVoGPmq6rr1DznFyxSBrZ7UEfvWdTCSAS4xo5XZF5k+92V8GQhlOWAtjwYYDyWktRxU2ORff7IKnYQHkOmqaBe/ZcKjhRPz2azM
+X-Gm-Message-State: AOJu0YzJBYBmIeJX+0dy5gNNLuHlwblUVA2woQ9o9a4rjtcOC60dSi3I
+	FHFRbyLmcdl+TnDI5Nv2QH7iCXiuPNPuBm67ayh6I8F1bhFgi7Fv4sQ8+KYJD1nDLAHlNrDVkCE
+	j6JWA7ma7+4gWe0ItC7YY7bXE1WW7FUjkNMfBlQ==
+X-Google-Smtp-Source: AGHT+IG/dn7+tdOnu8ZtYM7orfHlswFmSsTQ41Y2J17VPeLtsITInXNgLq5j7XHxt5sOONwtBPKPtG5xGFng4YzByhY=
+X-Received: by 2002:a05:6102:301b:b0:48b:a7ef:97da with SMTP id
+ ada2fe7eead31-48ba7ef988bmr228185137.13.1716970725268; Wed, 29 May 2024
+ 01:18:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH7PR10MB5815:EE_
-X-MS-Office365-Filtering-Correlation-Id: d14a95e2-5845-42e7-64fe-08dc7fb7d454
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?vxmvsxXlcxufKrwWmDv6sV2D2ZvL9usFpk+x/4w5qWMtebMxWR7NQUGorprf?=
- =?us-ascii?Q?UBT1M7VAFgeDBru7gQdn0P3hH6jDVvMFNXkYryPvsRyH+XtTfW2dtI8FRq2T?=
- =?us-ascii?Q?GqODfp7mAdfRReN7eNCRn2e9H98bjH6cDLT0gzcjKLFupwZt5xoTp7X6XXAD?=
- =?us-ascii?Q?IpDTTYozlJt3XOTdnpUPL8TywSWl7NnDHTO+mYG0deWdcfIHrMuBWPfF9sKz?=
- =?us-ascii?Q?NTkfHQ8jQbf7b7YCVIV9mS1VsY+ww4ZYi0+2YpFhIPImBcMM/+WU4P2h91Vm?=
- =?us-ascii?Q?aO8cwzO/1bn1Rkvv5wsJiZMHlk7N+ypMHqmbMuogq+G148/piS/KxgZgJbLV?=
- =?us-ascii?Q?K1nDAxB44rn9WGhLg4JN2Yu0WmDYGvqTP/L4pK43BC/7m/rhS1EiDqWtHTvv?=
- =?us-ascii?Q?GsocKA5PBD4Bh0D55zBkUs5dFqxbvKEqInqjkf9BR3XwUeCOGNUmjs1zQQkY?=
- =?us-ascii?Q?FiBzhhKwO+kV2TWd7qtFMOZFm8IytE6PdreFvcaplcfn0gGhSBahIFq2Mk6F?=
- =?us-ascii?Q?HrH4kwzQK56TW1tZ8xekKOHlU/Bmw/dnBdU1ZiqqKx6ygtNi2r+8mX5MTq80?=
- =?us-ascii?Q?Z8y8uibDRbBBjA6vOENos4HQSKlW6lQRVZ4F8ifq1RmSliyfWVHcmshTQjx8?=
- =?us-ascii?Q?Y6ZT9PC4e7O7UZyEP2+Y3qyds07An1jh+Btyd87qkR5Wir/RNaI21ZJ9FtLs?=
- =?us-ascii?Q?AYcQ7cZpNZB76MryRei7eD4M+4QGVBfCk8+ZaLNC9mmd2CRCf18mh4mUZ3FJ?=
- =?us-ascii?Q?MhbRA/V+mZsfakwAuVDUeugxEGkPbExndUZxlUnoAJe6BbgNhYEQODyDOxaV?=
- =?us-ascii?Q?Tc93FEB3N2U7cLv4Ds+OdzPHIsUQm3/ACymfMYa3oOaZHW3oA3wvy8c8NsRC?=
- =?us-ascii?Q?P0uNQjCYAmN6nykgIgAO4RUbMYqHBpyAZ7TDiR+s4R6pFSN9fv5x359DVitW?=
- =?us-ascii?Q?VjaXKzH6eR7IVqky2kfidc9yvJuJnjjSxiKVaclw6Vy9096tKPBuzaum/BzS?=
- =?us-ascii?Q?AKh/VO2eHD4yRYQO7Lx4uGWtovlJQuxERDzDEX5pj8KbGC4jdUSI7VLc2Fzu?=
- =?us-ascii?Q?Vq9WqnC69Lg0mjqdLZ/v7NUvUuw8+1Jt4WvKaWYi+O2WGjmM04jgZ231OArD?=
- =?us-ascii?Q?pNpzvh1PaDOoyixLzSw18TR/BLV5dGODZpHQ8vDuCJfVqpRjWWgnyXbt/EJM?=
- =?us-ascii?Q?ZbnjGjGQTGlcZEY2+p4VYC2YDbZciAvyspl2DI08RnmCfHAUJpNH1Z0g1Jfh?=
- =?us-ascii?Q?qRo48OE83UDlekWeqwDsea9DD+5WCr6vOpc9SICrWg=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?IitaEeW6fjplh9UzwTbcwSPwYujSL9KIldMriH9uAWdR+oSdnWNH8LgAJrOS?=
- =?us-ascii?Q?C7IBZ+QmJx3N9Mf/pt04b2d7/Z501x5xUpDrhpHBZh6xeqXLGBinKsDr0wTw?=
- =?us-ascii?Q?o8RjgORys5Q184fepRH86QE6weHBzWsIBwp9p85rcDZ+Gvphyk5yuYYPzzS8?=
- =?us-ascii?Q?P9QQ1zkiVgz6YCTAma+RAq6MzcGWpc7JMUxVLL6vUiqe6tBwSqQhT01eGWz/?=
- =?us-ascii?Q?FThRY2WWhy2tVdotXV1XgLtWyg0zb4fc6YhoX6ChsfSqhgJQ5lJ0gUjfLAep?=
- =?us-ascii?Q?RYDnnJ0Bn5X0j+WIM97uc/JYoP7Q/0PY8Vx6+bGyLKpIU8XcuF20EZgwsFOZ?=
- =?us-ascii?Q?3t5mkqRjnIad1PfPSuvIRBhapqTnl6MSuhR5n+BWyIsUWUHGQLRfAxAPwLSb?=
- =?us-ascii?Q?I1t7tkf4ZZ7PQrCsg8aCDpDy8oMWVJUzy4RKCLSy9PcnshzOjyLeWBr+eOuD?=
- =?us-ascii?Q?7bBQ+V1CwxkVaZ+Jaz+9ER1HpEgE7qOzB+7b9cd7tGBi05DEfH3ciGQZ8IqA?=
- =?us-ascii?Q?kvBr2no4RtQLghXXiUSRn4PwoBXMbxlMgcc9GGL/43fH7Dr3iHqxtK3N1sY6?=
- =?us-ascii?Q?nzQ5QhjlP+5WoiYYPf1wEm6eeIWU2gyB/VtIp1xx3BG0d7NY0hdI8dxtQuvC?=
- =?us-ascii?Q?nYJ5poR/arFsRdg6zwBcPBQ5libE6qSGD9cohKlPdF0aYcSX4uUt4ki49gUo?=
- =?us-ascii?Q?kZ/v/sTTSapJiS2BEKXz+Jg6vTS7rvzPppNsf+ZQZFOLJQ/GCqKAmiBthppf?=
- =?us-ascii?Q?etzXqlmN9qfWXVKfJir0+3jhoVAkSO9FY2zcfdX91GIKwCjPpyb3vxY6XimG?=
- =?us-ascii?Q?cFdOqaVUMCvuJ5tvjF8526inlxrxBHVHc2wq+xggvTRe8KdJmG7tqkZ4muxX?=
- =?us-ascii?Q?z6Gr8DmbkPSa70MtYJ3Or8a9qucTV82A7KFLXnvdIR6tWUErQ4hL+JY2jlZ4?=
- =?us-ascii?Q?T9ppjSH/llBZBojDLoAs4X8f3GDVDsln9scYBSJGNrzlJQy4jwtKROnIlAFF?=
- =?us-ascii?Q?Mr7AkW48vBs7VFlXXTQWUf99zSK+T5W4ntf5LuU4Y+uESdf7IvkNaKk3GcSf?=
- =?us-ascii?Q?f+wuwCAJ2yo0LXcUpyaAaSsxyqnRlCbSAQkw7hR5Jt/DScirHwasm93wauyB?=
- =?us-ascii?Q?mH1Us4LRyGh4jyX02h6ZNYXiMUMxulBJAfANsX69Hkmn0gPXisHqjuRvOPNj?=
- =?us-ascii?Q?HcxU0Hxx/7VxKYQgjgBu/BnHNigXu3L7OofjpCtN5mT9bG6g4Vwqd6OrWJmE?=
- =?us-ascii?Q?rZyyhkX3Y7WkN1BUXKeljKLube/Qoq6fyGTLonU26Odoue2zS3qcYtvH/Kxv?=
- =?us-ascii?Q?rJn+xVMFGK//bRJJW0y0C6cFjP+VCWrROYvkpAO3QrKbBpFOdzA2CuYYS2MN?=
- =?us-ascii?Q?AIngC8iQ51xpn08BoOXyOdH48FeVWSvo30s1RaLzhRT/t9XHu57+CYdzEogo?=
- =?us-ascii?Q?o8yW5CUPqdmzjK+HURfYL9+XYw1uaAqfUnKNPd1G2GNbxnYqTYH3JtJ9tbLI?=
- =?us-ascii?Q?VzSFiJudFsMZOjBScVTwXXMhQ1tf17PeUA+DWrXrkRlJvEX5hRL/8FjDYVuQ?=
- =?us-ascii?Q?f3zXeG568AqBSHpRlYk6PRsm/1vjj9/rcC0krrYcH6xm81KPg3LFtDGtMGqJ?=
- =?us-ascii?Q?+g=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	iVUzNRfWqm8fGlr6zKNp9U0Y02jQ7bRyofAOFCMdlxvIRhPuDWPVlVM6vJ1D+LeBwut2j9Ai54+cOyt9dh5gLrEHF/23UzCEyCzUhiaELMf4dR/JckVT6Wn569J3ZWfZG0kS6x6IoD6iFNMZDiPs9TCKf+c7poeJinEoXxVuBz4C6J6Xod90ALxhclFGqIA5U42Kx6rzS1uj/PYzkZc79hrxdCJ8jt1Jl/WOONcm78E0Uo0zh0omxfKxp09FqJ9XKoj1wWXT+U+eUmRq28KrV3TOgqyTjoEnI9VJGOCeqDpyHIgIhLnzzSH3NZ3K+nXccUtg0NByyb86pHZOWaWKvGsTafvLKyaxdfgVPu1o99fo+l1tEWotRCL6svLO2zCUyWCyHu6Am0p1kPk5JKbDj89b7JWY7/GyZdXKWq4j++52kV2zx9P10dN5sa5Nd1VatCHEPOFsx1ijcEYrY2pe7ZAmWRSSMFPTmRDFsE2nwcdQmGSn7ISAa9I46BYvVuINsytuwO1At6SGQuZhgAJGKZnw8/tXDXRsfZU058F+GDJAdtPONX/8wh6Xb1KmQkPjP6YvXn5JCV6XPGqgO50wwOeYm0qz9F1IVmUsmCiCy4Y=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d14a95e2-5845-42e7-64fe-08dc7fb7d454
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 08:17:49.8605
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UC+uTY/7Aqh59H+4iXBA5LgChyf+Xdt3o6iUIDREU3/xL3k6ggiBwazT8VCwySlTx7pPwvTz7CTYJ8Z8ccE+/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB5815
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-28_14,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405290052
-X-Proofpoint-GUID: i3VZD2tNWf67WMOP20hvoGxUhjalIsek
-X-Proofpoint-ORIG-GUID: i3VZD2tNWf67WMOP20hvoGxUhjalIsek
+References: <20240527121340.3931987-1-jens.wiklander@linaro.org>
+ <20240527121340.3931987-5-jens.wiklander@linaro.org> <fc3bfebb-78b7-428e-8da5-5221f4921faa@linaro.org>
+ <CAHUa44G0bcK55RxNrN5sXiicBZ-BJtA46KpedfBdUSKsN8eUOA@mail.gmail.com>
+ <ZlWkSCCjJ2fbE2ML@nuoska> <CAFA6WYOT52fdqgGvDYE91DQ_4MUbAv_1Gnn2fTyMNhrj_Agu=w@mail.gmail.com>
+ <ZlbUwI0G3HGvioNm@nuoska> <CAFA6WYOny9RVPLbGCsTwUqOo+doi6k+F-RgCorNdyC+w7u63mw@mail.gmail.com>
+In-Reply-To: <CAFA6WYOny9RVPLbGCsTwUqOo+doi6k+F-RgCorNdyC+w7u63mw@mail.gmail.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Wed, 29 May 2024 13:48:34 +0530
+Message-ID: <CAFA6WYP-cA4ChV8M-7z0JX1uHLzbAQk-s0mMFDKOgqFxZSK9Ow@mail.gmail.com>
+Subject: Re: [PATCH v7 4/4] optee: probe RPMB device using RPMB subsystem
+To: Mikko Rapeli <mikko.rapeli@linaro.org>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, 
+	Jerome Forissier <jerome.forissier@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, op-tee@lists.trustedfirmware.org, 
+	Shyam Saini <shyamsaini@linux.microsoft.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Bart Van Assche <bvanassche@acm.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Manuel Traut <manut@mecka.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In commit 2a82bb02941f ("statx: stx_subvol"), a new member was added to
-struct statx, but the offset comment was not correct. Update it.
+On Wed, 29 May 2024 at 13:36, Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> On Wed, 29 May 2024 at 12:39, Mikko Rapeli <mikko.rapeli@linaro.org> wrot=
+e:
+> >
+> > Hi,
+> >
+> > On Wed, May 29, 2024 at 10:56:04AM +0530, Sumit Garg wrote:
+> > > Hi Mikko,
+> > >
+> > > On Tue, 28 May 2024 at 15:00, Mikko Rapeli <mikko.rapeli@linaro.org> =
+wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Mon, May 27, 2024 at 03:24:01PM +0200, Jens Wiklander wrote:
+> > > > > On Mon, May 27, 2024 at 3:00=E2=80=AFPM Jerome Forissier
+> > > > > <jerome.forissier@linaro.org> wrote:
+> > > > > >
+> > > > > > On 5/27/24 14:13, Jens Wiklander wrote:
+> > > > > > > Adds support in the OP-TEE drivers (both SMC and FF-A ABIs) t=
+o probe and
+> > > > > > > use an RPMB device via the RPMB subsystem instead of passing =
+the RPMB
+> > > > > > > frames via tee-supplicant in user space. A fallback mechanism=
+ is kept to
+> > > > > > > route RPMB frames via tee-supplicant if the RPMB subsystem is=
+n't
+> > > > > > > available.
+> > > > > > >
+> > > > > > > The OP-TEE RPC ABI is extended to support iterating over all =
+RPMB
+> > > > > > > devices until one is found with the expected RPMB key already
+> > > > > > > programmed.
+> > > > > > >
+> > > > > > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > > > > > > Tested-by: Manuel Traut <manut@mecka.net>
+> > > > > > > ---
+> > > > > > >  Documentation/ABI/testing/sysfs-class-tee |  15 ++
+> > > > > > >  MAINTAINERS                               |   1 +
+> > > > > > >  drivers/tee/optee/core.c                  |  96 +++++++++++-
+> > > > > > >  drivers/tee/optee/device.c                |   7 +
+> > > > > > >  drivers/tee/optee/ffa_abi.c               |  14 ++
+> > > > > > >  drivers/tee/optee/optee_ffa.h             |   2 +
+> > > > > > >  drivers/tee/optee/optee_private.h         |  26 +++-
+> > > > > > >  drivers/tee/optee/optee_rpc_cmd.h         |  35 +++++
+> > > > > > >  drivers/tee/optee/optee_smc.h             |   2 +
+> > > > > > >  drivers/tee/optee/rpc.c                   | 177 ++++++++++++=
+++++++++++
+> > > > > > >  drivers/tee/optee/smc_abi.c               |  14 ++
+> > > > > > >  11 files changed, 387 insertions(+), 2 deletions(-)
+> > > > > > >  create mode 100644 Documentation/ABI/testing/sysfs-class-tee
+> > > > > > >
+> > > > > > > diff --git a/Documentation/ABI/testing/sysfs-class-tee b/Docu=
+mentation/ABI/testing/sysfs-class-tee
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..c9144d16003e
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/ABI/testing/sysfs-class-tee
+> > > > > > > @@ -0,0 +1,15 @@
+> > > > > > > +What:                /sys/class/tee/tee{,priv}X/rpmb_routing=
+_model
+> > > > > >
+> > > > > > Wouldn't /sys/class/tee/teeX/rpmb_routing_model be good enough?
+> > > > >
+> > > > > Doesn't the routing model concern tee-supplicant more than a TEE
+> > > > > client? Then it might make more sense to have
+> > > > > /sys/class/tee/teeprivX/rpmb_routing_model only. Keeping it for b=
+oth
+> > > > > devices representing the same internal struct optee makes it easi=
+er to
+> > > > > find. Anyway, I don't mind removing one. Mikko, what do you prefe=
+r?
+> > > >
+> > > > As simple as possible. A single sysfs file is enough. Even the exis=
+tence of the sysfs file
+> > > > could be the needed indicator for userspace to queue tee-supplicant=
+ startup.
+> > > >
+> > > > Outside of these patches, I think the optee RPC setup with fTPM TA =
+is one area which
+> > > > currently requires tee-supplicant to be started. Detecting the exis=
+tence of TPM before
+> > > > kernel drivers are loaded is possible via the exported EFI logs fro=
+m firmware to kernel
+> > > > or ACPI TPM2 table entry, and detecting optee and thus starting tee=
+-supplicant in userspace too.
+> > >
+> > > One thing I am trying to find an answer about is why do we need to
+> > > defer tee-supplicant launch if it's bundled into initrd? Once you
+> > > detect OP-TEE then tee-supplicant should be launched unconditionally.
+> > > As per your example below, the motivation here seems to be the TPM2
+> > > device dependent on RPMB backend but what if other future systemd
+> > > services come up and depend on other services offered by
+> > > tee-supplicant?
+> >
+> > There is an annoying depedency between firmware side optee and TAs, and=
+ kernel optee driver,
+> > tee-supplicant in userspace and kernel TA drivers like fTPM.
+> >
+> > Kernel fTPM driver and fTPM TA require tee-supplicant in userspace for =
+RPMB, RPC etc.
+> >
+> > This patch series is adding kernel side support for RPMB handling so th=
+at the dependency to
+> > tee-supplicant in userspace can be removed. For fTPM use case, there is=
+ still the optee RPC
+> > buffer setup which currently requires tee-supplicant in userspace or fT=
+PM TA will panic.
+> >
+> > So yes, currently, tee-supplicant must be started. But it would be grea=
+t if kernel drivers
+> > and firmware optee trusted applications would not depend on tee-supplic=
+ant running in userspace.
+>
+> Agree, we are aligned here. With this patch-set we aim to achieve
+> that, the user-space dependency for kernel drivers is hard to manage
+> and it's better to get rid of it. However, backwards compatibility for
+> distros will still require starting tee-supplicant.
+>
+> > The startup sequence is really tricky to get right. My fTPM use case is=
+ using the TPM device
+> > to encrypt rootfs and thus all SW components including tee-supplicant n=
+eed to run early in
+> > initramfs. Currently also switch from initramfs to main rootfs requires=
+ unloading
+> > fTPM kernel driver and stopping tee-supplicant in initrd, and then star=
+ting tee-supplicant
+> > and loading fTPM kernel driver from main rootfs. udev and automatic mod=
+ule loading for
+> > fTPM can not be used due to the tee-supplicant userspace dependency.
+>
+> This is one of the reasons for gating tee-supplicant loading which I
+> was looking for. What happens if we want to keep tee-supplicant alive
+> when we migrate from initramfs to real rootfs? Does it work?
+>
+> >
+> > As an example, here is v6 of this series on rockpi4b using fTPM TA with=
+ systemd based initrd
+> > without tee-supplicant and fTPM TA panics because the RPC setup is miss=
+ing:
+>
+> I think this is due to RPC allocation requested from tee-supplicant
+> during RPMB operations. Can you try following untested optee-os diff
+> and see if it resolves the problem for you?
 
-Signed-off-by: John Garry <john.g.garry@oracle.com>
+Scratch that as I can see Jens has already reworked that code here [1]
+and I suppose you are running on top of that. Can you rather add
+further RPC debugging prints to see which RPC gets invoked when
+running fTPM TA?
 
-diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-index 67626d535316..95770941ee2c 100644
---- a/include/uapi/linux/stat.h
-+++ b/include/uapi/linux/stat.h
-@@ -126,8 +126,8 @@ struct statx {
- 	__u64	stx_mnt_id;
- 	__u32	stx_dio_mem_align;	/* Memory buffer alignment for direct I/O */
- 	__u32	stx_dio_offset_align;	/* File offset alignment for direct I/O */
--	__u64	stx_subvol;	/* Subvolume identifier */
- 	/* 0xa0 */
-+	__u64	stx_subvol;	/* Subvolume identifier */
- 	__u64	__spare3[11];	/* Spare space for future expansion */
- 	/* 0x100 */
- };
--- 
-2.31.1
+[1] https://github.com/jenswi-linaro/optee_os/commits/rpmb_probe_v7/
 
+-Sumit
+
+>
+> diff --git a/core/tee/tee_rpmb_fs.c b/core/tee/tee_rpmb_fs.c
+> index 0ed30933b..b3d4d077a 100644
+> --- a/core/tee/tee_rpmb_fs.c
+> +++ b/core/tee/tee_rpmb_fs.c
+> @@ -418,11 +418,11 @@ static void tee_rpmb_free(struct tee_rpmb_mem *mem)
+>                 return;
+>
+>         if (mem->phreq_mobj) {
+> -               thread_rpc_free_payload(mem->phreq_mobj);
+> +               thread_rpc_free_kernel_payload(mem->phreq_mobj);
+>                 mem->phreq_mobj =3D NULL;
+>         }
+>         if (mem->phresp_mobj) {
+> -               thread_rpc_free_payload(mem->phresp_mobj);
+> +               thread_rpc_free_kernel_payload(mem->phresp_mobj);
+>                 mem->phresp_mobj =3D NULL;
+>         }
+>  }
+> @@ -440,8 +440,8 @@ static TEE_Result tee_rpmb_alloc(size_t req_size,
+> size_t resp_size,
+>
+>         memset(mem, 0, sizeof(*mem));
+>
+> -       mem->phreq_mobj =3D thread_rpc_alloc_payload(req_s);
+> -       mem->phresp_mobj =3D thread_rpc_alloc_payload(resp_s);
+> +       mem->phreq_mobj =3D thread_rpc_alloc_kernel_payload(req_s);
+> +       mem->phresp_mobj =3D thread_rpc_alloc_kernel_payload(resp_s);
+>
+>         if (!mem->phreq_mobj || !mem->phresp_mobj) {
+>                 res =3D TEE_ERROR_OUT_OF_MEMORY;
+>
+> >
+> > https://ledge.validation.linaro.org/scheduler/job/87488
+> >
+> > [[0;32m  OK  [0m] Finished [0;1;39mFile System Check on /dev/mapper/usr=
+[0m.
+> > E/TC:? 0 get_rpc_alloc_res:645 RPC allocation failed. Non-secure world =
+result: ret=3D0xffff000c ret_origin=3D0x2
+> > E/TC:? 0
+> > E/TC:? 0 TA panicked with code 0xffff000c
+> > E/LD:  Status of TA bc50d971-d4c9-42c4-82cb-343fb7f37896
+> > E/LD:   arch: aarch64
+> > E/LD:  region  0: va 0x40005000 pa 0x3061b000 size 0x002000 flags rw-s =
+(ldelf)
+> > E/LD:  region  1: va 0x40007000 pa 0x3061d000 size 0x008000 flags r-xs =
+(ldelf)
+> > E/LD:  region  2: va 0x4000f000 pa 0x30625000 size 0x001000 flags rw-s =
+(ldelf)
+> > E/LD:  region  3: va 0x40010000 pa 0x30626000 size 0x004000 flags rw-s =
+(ldelf)
+> > E/LD:  region  4: va 0x40014000 pa 0x3062a000 size 0x001000 flags r--s
+> > E/LD:  region  5: va 0x40015000 pa 0x306b2000 size 0x011000 flags rw-s =
+(stack)
+> > E/LD:  region  6: va 0x40026000 pa 0xe50ce000 size 0x002000 flags rw-- =
+(param)
+> > E/LD:  region  7: va 0x40062000 pa 0x00001000 size 0x068000 flags r-xs =
+[0]
+> > E/LD:  region  8: va 0x400ca000 pa 0x00069000 size 0x01f000 flags rw-s =
+[0]
+> > E/LD:   [0] bc50d971-d4c9-42c4-82cb-343fb7f37896 @ 0x40062000
+> > E/LD:  Call stack:
+> > E/LD:   0x400a00c0
+> > E/LD:   0x40062b40
+> > E/LD:   0x400631b8
+> > E/LD:   0x40081f44
+> > E/LD:   0x4009b060
+> > E/LD:   0x40063a2c
+> > E/LD:   0x400a6298
+> > E/LD:   0x4009b214
+> > [    7.212584] tpm tpm0: ftpm_tee_tpm_op_send: SUBMIT_COMMAND invoke er=
+ror: 0xffff3024
+> > [    7.213281] tpm tpm0: tpm_try_transmit: send(): error -53212
+> > [    7.213820] tpm tpm0: ftpm_tee_tpm_op_send: SUBMIT_COMMAND invoke er=
+ror: 0xffff3024
+> > [    7.214493] tpm tpm0: tpm_try_transmit: send(): error -53212
+> > [    7.214996] optee-ftpm optee-ta-bc50d971-d4c9-42c4-82cb-343fb7f37896=
+: ftpm_tee_probe: tpm_chip_register failed with rc=3D-53212
+> >          Mounting [0;1;39m/sysusr/usr[0m...
+> >
+> > This series adds the RPMB support in kernel, if HW supports it, but som=
+e HW doesn't and the
+> > tee-supplicant is emulating it as fall back.
+>
+> That's just for testing purposes, right? It won't be used to implement
+> disk encryption for that HW.
+>
+> > Userspace needs to know if tee-supplicant start
+> > is needed. Thus to me, exporting the RPMB routing details is useful for=
+ userspace.
+> >
+> > It's one thing to have a full control of HW and SW and force a policy, =
+like always
+> > waiting for a specific TPM device to appear, but then again distros sho=
+uld be able
+> > to have automatic detection of TPM devices if firmware used them too an=
+d then
+> > start the needed bits in userspace, which depend on the firmware and HW=
+ configuration,
+> > like which SW components are needed for RPMB storage, kernel or tee-sup=
+plicant in userspace.
+> >
+> > These could possibly be just bugs in fTPM kernel driver and fTPM TA in =
+optee world,
+> > which should be able to handle missing RPC and RPMB too and retry later=
+ on. Right now
+> > without tee-supplicant they panic early in boot and become unusable for=
+ the rest of the
+> > power cycle.
+>
+> I very much would like to see fTPM working without dependency on
+> tee-supplicant. If there are any further problems you see then please
+> feel free to report.
+>
+> -Sumit
+>
+> >
+> > Cheers,
+> >
+> > -Mikko
