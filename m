@@ -1,85 +1,104 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B3415AD99;
-	Wed, 29 May 2024 02:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353A815ADA5;
+	Wed, 29 May 2024 02:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716948183; cv=none; b=VUoZipdTgPnzQQUlZUR8eNCTlugPf9BhqAVNiw8W/5zrhC09m1LlCpg7esd7HWa2ioSjOQTRRKyLwTzrF5EJb/ZFNiCUQ5+EqrkNtoSE0cE+dFdMlp09K7bJA4Wk2vt3GnnO05l1QPAC9p/GpziqkgyOXxyHnKrYMUkj8HQ150g=
+	t=1716948239; cv=none; b=h8bFYmSujbVsZL0kT8I6v+0nfuUE/EfFwINmB7/SyhL43fMkBK/q2UHrG1oeT3DhJ+GfKE8YH2irp8l6nZVtErZ02gqSZxP/Im7JxQuC4Q792St2s3kpT0DQIrInMQrKH+8wUc/6foT5WWxx3Wmv+ZxxhReiPjqzMjx5yJExZ+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716948183; c=relaxed/simple;
-	bh=O79keix28rmAHBpO1tmH+HkKuIfiwhKx1JCWllxFRxc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Yc7XJOLvUOQTmU7Olr096choVx449y1mgS1yxVk3b4PAE+gDfxtd9zZlExoVuBEIXMNsnJa8QR43fN8mqUENwyvpaYSfK7tIXUmJq3KrwgKNTsMHMwzGj15r77anYuIdnxhft078sS32Upvlvuw4pXhSksm3YsRpiygmPD4i4cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sW/ywED9; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1716948239; c=relaxed/simple;
+	bh=Amd0ZaKiTq3QW1olkeBFmUIFypfq2JePdZVnQMLo0YE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MbSmldZhzrk8A2nRSzEYKKtOwXOwolGzNChNuFpxDoFRtxEP3LPHfnqfC/VrMnxN/ik36Gbwl01Hhr7cgQlFPg1cbmxQyaC6E2M9ABY1ktDaH1aGMgcBSMLgRqjgA2BSe304x8pqAEhF8JhKi19whMMzQ06Nd6lRAxCSiRHwkz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKmBo7Vo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sW/ywED9"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716948178; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=wlYFxgSPBB8GHLCmZnRucL7d7MzOWuLmNUc70TG55TY=;
-	b=sW/ywED9AgTrF9CCg554+e14AypJHxFo9AJ2rIcMhd3M4pZbXBXS2L20qIk7xesKiwyQMlVkpnFYDuwEcIbW5a3o8oaazaPfMeOJLUZWa97Ki+0cUdu9CieF1K3MIv5Yh0NxK7W9bObD+ZqvEcg+1K35SxU56sXVKBQrxKyLGBY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R431e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W7R4YvH_1716948165;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W7R4YvH_1716948165)
-          by smtp.aliyun-inc.com;
-          Wed, 29 May 2024 10:02:58 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: pkshih@realtek.com
-Cc: kvalo@kernel.org,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH v2] wifi: rtw89: chan: Use swap() in rtw89_swap_sub_entity()
-Date: Wed, 29 May 2024 10:02:44 +0800
-Message-Id: <20240529020244.129027-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKmBo7Vo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6818C3277B;
+	Wed, 29 May 2024 02:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716948239;
+	bh=Amd0ZaKiTq3QW1olkeBFmUIFypfq2JePdZVnQMLo0YE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RKmBo7VoZo0QWHBlk6gDCjIU+Vi6tqjPRDaI/jj5fyDXqB0+JXlv1ucllDQUfvT0y
+	 XnptGk/6BmZOa3t/7xOGuE/uO2PuMDPrI6PellP01zajSilbyRhcXG3Y9G8OiZYnXh
+	 MyizDzWOBq3+TW0H/vCARzQrQQyIz8FUf3M02U0tOqz19MQgwLTfeSKPikAXrDfLeN
+	 uAYEOYb92zyDlHN05tUy9VcNPVOdS+Rsa7QN0+6iSVSS9qb6V8OfwBqLxXvFeu8Tl0
+	 2Wu++IvFiQ/nPtgdgXqKGPbjoxBD7+Ma0zq1Ql/AoIa9NwO3d99MhOdRPLwUP+ivrV
+	 sW8yjTrb0CSOA==
+Date: Tue, 28 May 2024 19:08:41 -0700
+From: Bjorn Andersson <andersson@kernel.org>
+To: Chris Lew <quic_clew@quicinc.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: Re: [PATCH v2 3/4] soc: qcom: smem: Add
+ qcom_smem_bust_hwspin_lock_by_host()
+Message-ID: <qkdw5artkb7vz2tnjkdxivvfkwchna7fxkyo4go6nwb4kc3gv3@t7xt3rrvyvja>
+References: <20240524-hwspinlock-bust-v2-0-fb88fd17ca0b@quicinc.com>
+ <20240524-hwspinlock-bust-v2-3-fb88fd17ca0b@quicinc.com>
+ <nwoeg22jg5yd4amgqqegplygy6aickehvfc6eanmody74h6nss@cmixbwx6vpx4>
+ <f0881f3b-036b-462a-9e0c-42ca81807b86@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f0881f3b-036b-462a-9e0c-42ca81807b86@quicinc.com>
 
-Use existing swap() function instead of keeping duplicate source code.
+On Tue, May 28, 2024 at 03:50:25PM -0700, Chris Lew wrote:
+> 
+> 
+> On 5/28/2024 2:55 PM, Bjorn Andersson wrote:
+> > On Fri, May 24, 2024 at 06:26:42PM GMT, Chris Lew wrote:
+> > > Add qcom_smem_bust_hwspin_lock_by_host to enable remoteproc to bust the
+> > > hwspin_lock owned by smem. In the event the remoteproc crashes
+> > > unexpectedly, the remoteproc driver can invoke this API to try and bust
+> > > the hwspin_lock and release the lock if still held by the remoteproc
+> > > device.
+> > > 
+> > > Signed-off-by: Chris Lew <quic_clew@quicinc.com>
+> > > ---
+> > >   drivers/soc/qcom/smem.c       | 28 ++++++++++++++++++++++++++++
+> > >   include/linux/soc/qcom/smem.h |  2 ++
+> > >   2 files changed, 30 insertions(+)
+> > > 
+> > > diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
+> > > index 7191fa0c087f..683599990387 100644
+> > > --- a/drivers/soc/qcom/smem.c
+> > > +++ b/drivers/soc/qcom/smem.c
+> ...
+> > > + *
+> > > + * Context: Process context.
+> > > + *
+> > > + * Returns: 0 on success, otherwise negative errno.
+> > > + */
+> > > +int qcom_smem_bust_hwspin_lock_by_host(unsigned host)
+> > > +{
+> > > +	if (!__smem)
+> > > +		return -EPROBE_DEFER;
+> > 
+> > This would be called at a time where -EPROBE_DEFER isn't appropriate,
+> > the client should invoke qcom_smem_is_available() at probe time to guard
+> > against this.
+> > 
+> 
+> Should we keep the null pointer check to prevent null pointer dereference
+> and return 0? Or would it be better to allow the null pointer deference to
+> go through so we can catch misuse of the API and ask clients to use
+> qcom_smem_is_available()?
+> 
 
-./drivers/net/wireless/realtek/rtw89/chan.c:2336:32-33: WARNING opportunity for swap().
+I like the helpful callstack you get from the NULL pointer
+dereference...
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9174
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
-Changes in v2:
-  -Amend commit message to make it more clearer.
-
- drivers/net/wireless/realtek/rtw89/chan.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtw89/chan.c b/drivers/net/wireless/realtek/rtw89/chan.c
-index 051a3cad6101..3b1997223cc5 100644
---- a/drivers/net/wireless/realtek/rtw89/chan.c
-+++ b/drivers/net/wireless/realtek/rtw89/chan.c
-@@ -2322,7 +2322,6 @@ static void rtw89_swap_sub_entity(struct rtw89_dev *rtwdev,
- 				  enum rtw89_sub_entity_idx idx2)
- {
- 	struct rtw89_hal *hal = &rtwdev->hal;
--	struct rtw89_sub_entity tmp;
- 	struct rtw89_vif *rtwvif;
- 	u8 cur;
- 
-@@ -2332,9 +2331,7 @@ static void rtw89_swap_sub_entity(struct rtw89_dev *rtwdev,
- 	hal->sub[idx1].cfg->idx = idx2;
- 	hal->sub[idx2].cfg->idx = idx1;
- 
--	tmp = hal->sub[idx1];
--	hal->sub[idx1] = hal->sub[idx2];
--	hal->sub[idx2] = tmp;
-+	swap(hal->sub[idx1], hal->sub[idx2]);
- 
- 	rtw89_for_each_rtwvif(rtwdev, rtwvif) {
- 		if (!rtwvif->chanctx_assigned)
--- 
-2.20.1.7.g153144c
-
+Regards,
+Bjorn
