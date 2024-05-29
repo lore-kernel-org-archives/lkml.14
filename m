@@ -1,87 +1,113 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990791386C6;
-	Wed, 29 May 2024 14:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C551158210
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 14:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716992932; cv=none; b=uAN+guZvqJLfXgRH5MTsklZWRczV+6N+qf7lqyc/aDJ678jvCyMkfh/xbP0e5ZkUcDNUA8mhp1tHYeZqfmw1FEoWncU+NezX5ANaqAYgpRcyny2QRzGohjllYDqi2HfSVJPoXBosuOG1P/QtjlOv1YJpm5Pli/OW0lJj2ptS+2w=
+	t=1716992962; cv=none; b=KzNCsHqjmCOSnXTdcGmSO2BfaxAV2XLaCLVVdgiFGYyDOxHk6DrYbL3VfxFpfLDTW5T5pXZGRKWbPCCUyvVLqTkp0Emd4j7BMTS2d4QtIDzJRvtz7Z8IreV6m/RVgKo1dq4pywmY4c8tCAfJoxd+KJ4GJStolKAgJRmRNKzfnU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716992932; c=relaxed/simple;
-	bh=94w/1FYOY49gVJVMW1Je3xGavCevd8pni3hcKGMgcU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FZyVyTn9a9OtPAMUcEGDY41gshTjBea8brYdL+DOP3c8i7oh9QpPMSxzU3RqO2PSezdkM8TnCpZvoa3CEeHfVv1Y77w5RYprnR24Gp1Ci0JU+IFfcbKm5M8qT80tiHOkJeVsJXIhE6GjP1bo4sXIlU1XgsCCAdrimp8phXX1Mew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=h7e/Hk65; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1716992962; c=relaxed/simple;
+	bh=//0ii/zNBOQKKNaDNP3w/g1gM1CezyuYoz6Y2NAEkac=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=RlgiX8fTqIUjoMoNNyjEnUcEjAwnqUi42ZAnN/xwyGDyKC4QxKkanDum6lbLAFzppz8VafREDNMtJhw7yX/BYuxbh/qMRAdtzs/BL0/x/yh4mitBfK5WIoIj9X5160vD0ROX5wtCDBGEd4D88/i+FvOs1hs0QZBv+ccUjzIo2ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IgWRqzwU; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="h7e/Hk65"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=A0djHwkTm9IMDtUZ9E1EkFk0NBl4OKR695dw9cvK5k4=; b=h7e/Hk65uFLg0eujXc54qb2QCT
-	en2K+w/W6N1KiOMFBDKWSbFfUcPW4RG9rhZjrfQui7wQzESKkGovHrfP58wSF5/MPeKBeyHGKsy5F
-	pj3+VNpkPfETsP5kxq2X/i+DQ2JXSCTvL73CAgo9Sa1qyixhXRNdRw6p4F6wvdOrLSbE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sCKHo-00GGQZ-Fq; Wed, 29 May 2024 16:28:16 +0200
-Date: Wed, 29 May 2024 16:28:16 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sneh Shah <quic_snehshah@quicinc.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Andrew Halaney <ahalaney@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-	Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@quicinc.com
-Subject: Re: [PATCH net-next] net: stmmac: dwmac-qcom-ethqos: Add support for
- 2.5G SGMII
-Message-ID: <67553944-5d3f-4641-a719-da84554c0a9f@lunn.ch>
-References: <20231218071118.21879-1-quic_snehshah@quicinc.com>
- <4zbf5fmijxnajk7kygcjrcusf6tdnuzsqqboh23nr6f3rb3c4g@qkfofhq7jmv6>
- <8b80ab09-8444-4c3d-83b0-c7dbf5e58658@quicinc.com>
- <wvzhz4fmtheculsiag4t2pn2kaggyle2mzhvawbs4m5isvqjto@lmaonvq3c3e7>
- <8f94489d-5f0e-4166-a14e-4959098a5c80@quicinc.com>
- <ZlNi11AsdDpKM6AM@shell.armlinux.org.uk>
- <d246bd64-18b3-4002-bc71-eccd67bbd61f@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IgWRqzwU"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-629f8a92145so35011787b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716992959; x=1717597759; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UpzkxiZJ+JsVTYQLiVluvU7gtIP+cGyMlWZAn8HOBvc=;
+        b=IgWRqzwUAUE/aQEi4/xVaVivYgj7kYV1vdqPIC7g7km8uYLcpdSAlsw/Z/b4Jmkm9K
+         zs31IhnlalrHF85rPT5sSwJ2uTDG3e079mgDKbeWE7xYQiW3d0YMsQu5hDb6oMKIaRne
+         T3sF2VDD63pRD0nh8bv/lBAz9StTcnndb1IIcHWOCNItaKxHPl7bIGojMw3Fjb2/M7b9
+         vMe4dkBZxcb0kBrkuptQYzXi8vPP5PUBWbNqJTUQvDhVQHaJvBV8xDdOgsuvjF3eDXSG
+         59qmHJlUPOfVvWSnaFzVxDVhvBK7AM7j0usZEmH8mte37YIQni1bGh0nmeY0oa0PH5QK
+         bhUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716992959; x=1717597759;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UpzkxiZJ+JsVTYQLiVluvU7gtIP+cGyMlWZAn8HOBvc=;
+        b=MTtNcJZmMUD9vuuPC1SiszU9vZFI4Xfzsz9mNYMsLrJdrGfeXS4XeqneyudOEWNSWe
+         fP1YDbTmWOtxEz6OvsvombRHa6sIGGBfegOc2kbwvhlhKUR7TqWPuGrt+/9YGWaZTbk0
+         j4vDhFnyY0m+6ODfPBTtuHhulwL0zq8veZOkrcGDIaiLfV/MYRFC5fRn+0A8xn2Ks+69
+         7faXt4bxMyYFGxexE4B8YqFYOKRcmXfMozRl9NTzWBInSM1Q3hZR+6rN3VOe0P0rBygU
+         v7ZSScOPGaxM9SFepamMM2bYqRHICbRaCYhqQ1Do9hCMkDz6Hm2rihYhLDOOO0pW/A8F
+         KuEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWendbSNEM6YBwrwe3gTYpzBypO+3cCslOHa4gfzCGGXu6VxngXxAhKBr+pQb1B/S/NHKsL6na9IKI6y8a+KTp0b2wp5VsNfagV+J3Q
+X-Gm-Message-State: AOJu0YyUej2KqzPCdy6UeOhgEBnt6+gge3pPoeEbw1TTqDE2Nr2CZPz6
+	BAinmFybEv4TrYzs+ZwI+HeIJWVWjxOPoobgV7R4TSPG2Fq1m7tewnk68Xz7DhJjl+NZKmdFRnU
+	azA==
+X-Google-Smtp-Source: AGHT+IEGZoW9p/45uvlpuAhiUqCesSBDBs0K+xmgAn7zLw0SiaXYS/WuIvmvG5ZvjK25/ioNuhWd5tsISM4=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:d8f:b0:62a:4932:68de with SMTP id
+ 00721157ae682-62a49326f54mr16363447b3.8.1716992959692; Wed, 29 May 2024
+ 07:29:19 -0700 (PDT)
+Date: Wed, 29 May 2024 07:29:18 -0700
+In-Reply-To: <Zk2MRRkS6c5cGYSV@chao-email>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d246bd64-18b3-4002-bc71-eccd67bbd61f@quicinc.com>
+Mime-Version: 1.0
+References: <20240522022827.1690416-1-seanjc@google.com> <20240522022827.1690416-2-seanjc@google.com>
+ <Zk2MRRkS6c5cGYSV@chao-email>
+Message-ID: <Zlc7vtp4HaPHqZ2K@google.com>
+Subject: Re: [PATCH v2 1/6] KVM: Register cpuhp and syscore callbacks when
+ enabling hardware
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Kai Huang <kai.huang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-> Qualcomm ethernet HW supports 2.5G speed in overclocked SGMII mode.
-> we internally term it as OCSGMII.
+On Wed, May 22, 2024, Chao Gao wrote:
+> On Tue, May 21, 2024 at 07:28:22PM -0700, Sean Christopherson wrote:
+> >Register KVM's cpuhp and syscore callback when enabling virtualization
+> >in hardware instead of registering the callbacks during initialization,
+> >and let the CPU up/down framework invoke the inner enable/disable
+> >functions.  Registering the callbacks during initialization makes things
+> >more complex than they need to be, as KVM needs to be very careful about
+> >handling races between enabling CPUs being onlined/offlined and hardware
+> >being enabled/disabled.
+> >
+> >Intel TDX support will require KVM to enable virtualization during KVM
+> >initialization, i.e. will add another wrinkle to things, at which point
+> >sorting out the potential races with kvm_usage_count would become even
+> >more complex.
+> >
+> 
+> >Use a dedicated mutex to guard kvm_usage_count, as taking kvm_lock outside
+> >cpu_hotplug_lock is disallowed.  Ideally, KVM would *always* take kvm_lock
+> >outside cpu_hotplug_lock, but KVM x86 takes kvm_lock in several notifiers
+> >that may be called under cpus_read_lock().  kvmclock_cpufreq_notifier() in
+> >particular has callchains that are infeasible to guarantee will never be
+> >called with cpu_hotplug_lock held.  And practically speaking, using a
+> >dedicated mutex is a non-issue as the cost is a few bytes for all of KVM.
+> 
+> Shouldn't this part go to a separate patch?
+> 
+> I think so because you post a lockdep splat which indicates the existing
+> locking order is problematic. So, using a dedicated mutex actually fixes
+> some bug and needs a "Fixes:" tag, so that it can be backported separately.
 
-So it still does SGMII inband signalling? Not 2500BaseX signalling? It
-is not actually compatible with 2500BaseX?
+Oooh, good point.  I'll try to re-decipher the lockdep splat, and go this route
+if using a dedicated lock does is indeed fix a real issue.
 
-> End goal of these patches is to enable SGMII with 2.5G speed support.
-> The patch in these series enabled up SGMII with 2.5 for cases where we
-> don't have external phy. ( mac-to-mac connectivity)
+> And Documentation/virt/kvm/locking.rst needs to be updated accordingly.
+> 
+> Actually, you are doing a partial revert to the commit:
+> 
+>   0bf50497f03b ("KVM: Drop kvm_count_lock and instead protect kvm_usage_count with kvm_lock")
+> 
+> Perhaps you can handle this as a revert. After that, change the lock from
+> a raw_spinlock_t to a mutex.
 
-So the other end needs to be an over clocked SGMII MAC, not 2500BaseX?
-
-> The new patch posted extends this for the case when the MAC has an
-> external phy connected. ( hence we are advertising fr 2.5G speed by adding
-> 2500BASEX as supported interface in phylink)
-
-And i assume it does not actually work against a true 2500BaseX
-device, because it is doing SGMII inband signalling?
- 
-Hence Russell frustration with the whole 2.5G mess....
-
-      Andrew
+Hmm, I'd prefer to not revert to a spinlock, even temporarily.
