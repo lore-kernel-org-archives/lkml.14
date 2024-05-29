@@ -1,135 +1,74 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A7F1C8FA3;
-	Wed, 29 May 2024 21:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870D81C68B0;
+	Wed, 29 May 2024 21:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717017036; cv=none; b=urSPS9qMNfQXsC4A8kEDoDw9gVxyXqln9oVTPvWY4SYo9H/mcBuDegojDOM5L+pyDvBVQPiWOGOcqq4oF5PuTWY08FneT9wRnc8+FgSn38VyMolWklI6F6iCLuHD6rMKX/fxml1zb7c77wSfZIbo88u7US1GiqNPh+YLUmR5dvo=
+	t=1717017175; cv=none; b=fcWWyKnxqnjhrqNvaSEw1Rpv45RrAp039MfQJUtFfkYJGJNpl2f7AnQ0Rd4+ip2TgqnNatNfmp7ys2cVCCSgMTW5k6IQlxYLp8pdv0RkJlX6k077cGYjTzNYmF1csoewS8NBjDrjh3jyexx9xtYTPfiI7MyoniAwEfQKo8FmaQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717017036; c=relaxed/simple;
-	bh=TExKMv+4EbRU2xpWl+6GrHNg8ZxwE5ZYEj2H6DGcaR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jDvEu1ORy93dcq+IDWzyRztDjX+TMoOq8ZleBNu+6+uf5tnEhYe8VgTH86InREFO6CS00nLMpUCiXqLO4GjZDX+hxncs0oFC8o/Hz9/BMv0BQXQk1mK9aG6iaNhdpUE8Iywzbdy2oTrszDwl39jlfmbyP1VBtDr6oyejlVYOt8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QWSteaDg; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717017175; c=relaxed/simple;
+	bh=WyvJEaiV7vktTeJBx3VE7SviCdnt2j0L8vmtJoH9v9M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XYBbsndIDXJAgmy10P75sXalXB41br4uVSjPq96SBXYpnBXK0xY9O5nZe35UVY29m03zLcPJfwEvz9q7+ShE/sBGTb/802xyet3zBv5DYzw3n0Vk3oHKexlcOnZUQNXcu7F5cIY4xQkgnhTwTcCA3v7pPmR/4UrCb8uFKWww3Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=V94eJpoK; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWSteaDg"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4eaef863a08so65167e0c.1;
-        Wed, 29 May 2024 14:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717017033; x=1717621833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TeBhPfv3doSS7LHW7mFEHvT4SBZTyVzMD92UNoRgcAQ=;
-        b=QWSteaDge+gQWr85WPnZw+lNF+JMkGp2Xrcna3hgpxMpew8UHwirLj+AH+jNsW3P6g
-         A0KY+wDV9UihhCknFduXtF4ACo67Sga4zS3GfnQLVvsV2b/SaBjuCv5YcUxJsuUalI6s
-         EXKEr8FJKnr/SWzvXsZPlk/GvIcp40+895F4HOfR9StJg9lJ+SOV4ZBUllaPP7gnOQi/
-         70WWFAaiHr8hD8JkT67/atSaec+jdTSQmqcOPK1fK9ozUVJKAEg1ZmKepLP8m6NBMyGW
-         sQP8To7sVJwJmupQFlMG3h4jgSjQHOERssovu9jZENY9VNIEE1qKwJ3dtiU7VfqIhne+
-         TqPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717017033; x=1717621833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TeBhPfv3doSS7LHW7mFEHvT4SBZTyVzMD92UNoRgcAQ=;
-        b=T7RmyzB0WgCijf2OCl3SPKH3ndwr7g9WzwrdW3LKGbWg3ubwHjFPIlhRrTnIRWkGax
-         sfuNT99EdVKiwZiIZvI+C3yCTF+zBRLqbp6KCVbWwpjaavYW4/QxKYkDgYCe/Q8rFqq+
-         dn/U5AOxHZ0MkNPvFu2MxwEWBsYj+8jYUAKBJQwhdo1FlW6ats/5WhnOsUm+HrC+69nU
-         Tf/BOWfLmQukcQffYqzDt2Y4NuFwHwWl6+w4v86q5Zc42L0UVUcrqF/fztk3iQblocMr
-         6Ikd3RKSs8eNiKowrMgOFpeWH2Q+DhQGKtIjTByS3FV/aYp/c/NkKIrg9n6httO51fvN
-         6avg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqhbwyy9cAu9B4OFibVoKDpYG5239kSlAPxgwipI4xOyOV6ScNQov8G7ZOTKZauZ/m1zrRAmdBTJKB4wd8XhLCWH2TE9qPcaf2z3cS0l/YVFU08Weta9vTuoTYKjnGH1SH3k2Nn/rch/jMstnYwwGSwD7fat4xc6CFjv7YwF4HlEKyXTbL0rpVihkFfqRfP4zgIhqO5e24m6EkCQA2BbAOFwmbsm2M
-X-Gm-Message-State: AOJu0YzWHBdWSoPcZFc9mTtwhTIY7cgW06jbsAwx+4u4fpk3Pg1DDlfu
-	zwjwazZ4I2hBTO4MpmWHLlCjHhFLqG6sLVxcERBtGuOg4Q5VjTrn/hSVsYoEUNWoXieB+SZUKjY
-	v/hnYg64KY7tCbymJlwU/I9GhxRqJ+LzYOiY=
-X-Google-Smtp-Source: AGHT+IG3W0S3Z2Qe9a0+buJwHRoZAUEH7EgzRGQidkKafkzDX/o4tZaGyxUyz+m2abkLCU1Mb4Kwbf8Ewf5XjrfBUVY=
-X-Received: by 2002:a05:6122:91a:b0:4e4:e98a:7b02 with SMTP id
- 71dfb90a1353d-4eaf2186157mr318895e0c.4.1717017033385; Wed, 29 May 2024
- 14:10:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="V94eJpoK"
+Received: from [IPV6:2601:646:8002:4641:eb14:ad94:2806:1c1a] ([IPv6:2601:646:8002:4641:eb14:ad94:2806:1c1a])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 44TLCPAl3724046
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 29 May 2024 14:12:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 44TLCPAl3724046
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024051501; t=1717017146;
+	bh=dXiIrmdSV6YGWgsb6HsVTYKu3Nn4eD0Hhuc5MMdf2M0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=V94eJpoK7Pauzv0PihWtJ9ZIjlxhYhPW3LzJ4ZdUYEZ5x2JJpvu2AER8MjThSsV+5
+	 aWZkE6hqhCjBlYbJNlpCblhjdAGnNNmSuDYDimD6KZpsqo2jBglOso0H1ViDKxYJFQ
+	 pOwWgWCnA1nEY88n8C85KfBqvFfOSiW5a2jgc+yinW0WkEPWAmE4VXLcS44dil/OyY
+	 XwwdyFTQP2uzrlGYqwd5/YTkLOPgXLAaqrcQyAFzlQyQCN8mSTpdKdTOfcgXJRgxC6
+	 B149MVWVAK2wZqsTEaQbZyAJCCDM1oxloJ8lXqT3DeDoG6NMDHGX93Y5IilCdg/34V
+	 B8FUZ3CKwM94Q==
+Message-ID: <ae870a38-e7ee-4334-ba4d-ca3e4e17a53d@zytor.com>
+Date: Wed, 29 May 2024 14:12:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240524082800.333991-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWzZP2d6kRw1oTkMYgzS46J68gR_bg14==HCvVpkp0sJA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWzZP2d6kRw1oTkMYgzS46J68gR_bg14==HCvVpkp0sJA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 29 May 2024 22:09:14 +0100
-Message-ID: <CA+V-a8uxwiof-hLPRpYCnDkVs8tj+-+v8GQLSSkMFUP13cuoXQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: clock: Add R9A09G057 CPG Clock and Reset Definitions
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] x86/irq: Process nmi sources in NMI handler
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>
+References: <20240529203325.3039243-1-jacob.jun.pan@linux.intel.com>
+ <20240529203325.3039243-5-jacob.jun.pan@linux.intel.com>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20240529203325.3039243-5-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Geert,
+On 5/29/24 13:33, Jacob Pan wrote:
+> +
+> +	rcu_read_lock();
+> +	/* Bit 0 is for unknown NMI sources, skip it. */
+> +	for_each_set_bit_from(vec, &source_bitmask, NR_NMI_SOURCE_VECTORS) {
+> +		a = rcu_dereference(nmiaction_src_table[vec]);
+> +		if (!a) {
+> +			pr_warn_ratelimited("NMI received %d no handler", vec);
+> +			continue;
+> +		}
 
-Thank you for the review.
+In this case, you should assume some chipset hardware or VMM is giving 
+you garbage in the event bitmask, and treat it as if bit 0 were set.
 
-On Mon, May 27, 2024 at 10:18=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Fri, May 24, 2024 at 10:29=E2=80=AFAM Prabhakar <prabhakar.csengg@gmai=
-l.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Define RZ/V2H(P) (R9A09G057) Clock Pulse Generator module clock outputs
-> > (CPG_CLK_ON* registers), and reset definitions (CPG_RST_* registers)
-> > in Section 4.4.2 and 4.4.3 ("List of Clock/Reset Signals") of the RZ/V2=
-H(P)
-> > Hardware User's Manual (Rev.1.01, Feb. 2024).
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- /dev/null
-> > +++ b/include/dt-bindings/clock/r9a09g057-cpg.h
-> > @@ -0,0 +1,644 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > + *
-> > + * Copyright (C) 2024 Renesas Electronics Corp.
-> > + */
-> > +#ifndef __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
-> > +#define __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
-> > +
-> > +#include <dt-bindings/clock/renesas-cpg-mssr.h>
-> > +
-> > +/* Clock list */
->
-> No distinction between Core and Module clocks?
->
-I was in two minds here. Would you prefer clocks with no CGC support
-to be listed as core clocks?
-
-> > +#define R9A09G057_SYS_0_PCLK                           0
-> > +#define R9A09G057_DMAC_0_ACLK                          1
-> > +#define R9A09G057_DMAC_1_ACLK                          2
-> > +#define R9A09G057_DMAC_2_ACLK                          3
->
-> [...]
->
-> > +/* Resets list */
->
-> [...]
->
-> No power domain specifiers, as mentioned in PATCH 1/4?
->
-OK, I'll add the power domains in this patch.
-
-Cheers,
-Prabhakar
+	-hpa
