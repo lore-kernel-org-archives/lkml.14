@@ -1,35 +1,52 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D800169AC1
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 09:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F94169AF0
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 09:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716974304; cv=none; b=LBZOs3EueFZNapgpxMeZBZOKkdgIwnRnxON+ZsIHjR1Rp7UKYD8UOeZSDwCweHeMpeXqjrCQBEiKrlIBYNNrKGFSHRVuHxQ6rXvTaVgabRShcD1Yz5ud82pRSB9B84UMsAKo6eC/gP9vflQiINKM0kjMkNO2IPYwpA/G1jaEPpE=
+	t=1716974438; cv=none; b=at54Z03kcq7/godd7brr1LzfjP/GcvEIt16xkpTM8offfzkVB386cGwLER3zTFt50rongy76x+zazdFzhkg3skBMqNxlTltCmx84xKmi7lfkOnzhsTrVGMqZL2u9Roab8slyX64WPNmq6WRLH8LmT/xHm6JHRQ7VNlis+ki+x7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716974304; c=relaxed/simple;
-	bh=4UvE+W2qXpROE5X6XFz+QG42/9AFBAKcQoKrPQeLIbI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zn/volo6AwRMv2HpeXhyfQWR2Td/1tbiZ55nyuR1RfohneUStunbi/FdKjygAA3NdfqqNQOvX5Qziik9tL8S1wASo4rTH0PSs2N5oFQd1thsxkPUpTHOQX6UVD6XlgEuUnZK5KnZd7y1yAsXKcaK/ZOLN3f4amB8OPjlFhTO8cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Vq3fR4l3hz1HCtt
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 17:16:31 +0800 (CST)
-Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4C37914037F
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 17:18:11 +0800 (CST)
-Received: from huawei.com (10.67.174.55) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 29 May
- 2024 17:18:10 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v2] genirq/debugfs: Print irqdomain flags as human-readable strings
-Date: Wed, 29 May 2024 09:16:28 +0000
-Message-ID: <20240529091628.3666379-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1716974438; c=relaxed/simple;
+	bh=mRgqrVV+g3RFcPQAIieiLKcKV0KvYVsDDyfVTzietbs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qLI/JqTLkSeDLK6oE1JY6cu7oZzAA2hS/mPlA5+dZ/c0vVxjfaBtrU+P/9xn5lo7F4Zm1vXTyaG2LrqWtQQZpshJFiXXgqfSYLs7cij1wO+zuYWf9PysWxhoFrHLDPxh9k79jN5FBhRL3nhoG2BRxABcNYGQ9DNCTGY92kxMyXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lahw4Chd; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lahw4Chd"
+X-Envelope-To: adilger@dilger.ca
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716974434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0/oRQ9r3IxZKTM7rfHJfMbi3eQrNuT4jysuESWyn5dE=;
+	b=lahw4ChdjfdeXzVOf5FlqhplAIZCPNNFUFyJNeMMai9YY5GJKP3l7cmCMrDv/Zk3BGlL8X
+	lhM3kxU/PuxQJ8BxqZ13vjBy15UMOv6SJh8awQd31Z+H5GkmmkwwyMWruqvrc2dFWjPNWp
+	4zkr1Pkt9UeS+bZTjtYhvSJXzIUFcCY=
+X-Envelope-To: linux-ext4@vger.kernel.org
+X-Envelope-To: jack@suse.cz
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: harshadshirwadkar@gmail.com
+X-Envelope-To: luis.henriques@linux.dev
+X-Envelope-To: tytso@mit.edu
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Luis Henriques (SUSE)" <luis.henriques@linux.dev>
+To: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger@dilger.ca>,
+	Jan Kara <jack@suse.cz>,
+	Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luis Henriques (SUSE)" <luis.henriques@linux.dev>
+Subject: [PATCH v3 1/2] ext4: fix fast commit inode enqueueing during a full journal commit
+Date: Wed, 29 May 2024 10:20:29 +0100
+Message-ID: <20240529092030.9557-2-luis.henriques@linux.dev>
+In-Reply-To: <20240529092030.9557-1-luis.henriques@linux.dev>
+References: <20240529092030.9557-1-luis.henriques@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,118 +54,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500008.china.huawei.com (7.221.188.139)
+X-Migadu-Flow: FLOW_OUT
 
-Improve the readability of irqdomain debugging information in debugfs by
-printing the flags field of domain files as human-readable strings instead
-of a raw bitmask, which aligned with the existing style used for irqchip
-flags in the irq debug files.
+When a full journal commit is on-going, any fast commit has to be enqueued
+into a different queue: FC_Q_STAGING instead of FC_Q_MAIN.  This enqueueing
+is done only once, i.e. if an inode is already queued in a previous fast
+commit entry it won't be enqueued again.  However, if a full commit starts
+_after_ the inode is enqueued into FC_Q_MAIN, the next fast commit needs to
+be done into FC_Q_STAGING.  And this is not being done in function
+ext4_fc_track_template().
 
-Before:
-	#cat :cpus:cpu@0:interrupt-controller
-	name:   :cpus:cpu@0:interrupt-controller
-	 size:   0
-	 mapped: 2
-	 flags:  0x00000003
+This patch fixes the issue by re-enqueuing an inode into the STAGING queue
+during the fast commit clean-up callback if it has a tid (i_sync_tid)
+greater than the one being handled.  The STAGING queue will then be spliced
+back into MAIN.
 
-After:
-	#cat :cpus:cpu@0:interrupt-controller
-	name:   :cpus:cpu@0:interrupt-controller
-	 size:   0
-	 mapped: 3
-	 flags:  0x00000003
-	            IRQ_DOMAIN_FLAG_HIERARCHY
-	            IRQ_DOMAIN_NAME_ALLOCATED
+This bug was found using fstest generic/047.  This test creates several 32k
+bytes files, sync'ing each of them after it's creation, and then shutting
+down the filesystem.  Some data may be loss in this operation; for example a
+file may have it's size truncated to zero.
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Signed-off-by: Luis Henriques (SUSE) <luis.henriques@linux.dev>
 ---
-v2:
-- Put irq_debug_show_bits() in debugfs.c and remove the static, and add its
-  function prototype declaration in internals.h for irqdomain.
-- Update the commit message.
----
- kernel/irq/debugfs.c   | 10 ++--------
- kernel/irq/internals.h | 10 ++++++++++
- kernel/irq/irqdomain.c | 15 +++++++++++++++
- 3 files changed, 27 insertions(+), 8 deletions(-)
+ fs/ext4/fast_commit.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
-index aae0402507ed..c6ffb97966be 100644
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -9,14 +9,8 @@
- 
- static struct dentry *irq_dir;
- 
--struct irq_bit_descr {
--	unsigned int	mask;
--	char		*name;
--};
--#define BIT_MASK_DESCR(m)	{ .mask = m, .name = #m }
--
--static void irq_debug_show_bits(struct seq_file *m, int ind, unsigned int state,
--				const struct irq_bit_descr *sd, int size)
-+void irq_debug_show_bits(struct seq_file *m, int ind, unsigned int state,
-+			 const struct irq_bit_descr *sd, int size)
- {
- 	int i;
- 
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index ed28059e9849..fe0272cd84a5 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -501,6 +501,16 @@ static inline struct irq_data *irqd_get_parent_data(struct irq_data *irqd)
- #ifdef CONFIG_GENERIC_IRQ_DEBUGFS
- #include <linux/debugfs.h>
- 
-+struct irq_bit_descr {
-+	unsigned int	mask;
-+	char		*name;
-+};
+diff --git a/fs/ext4/fast_commit.c b/fs/ext4/fast_commit.c
+index 87c009e0c59a..088bd509b116 100644
+--- a/fs/ext4/fast_commit.c
++++ b/fs/ext4/fast_commit.c
+@@ -1282,8 +1282,17 @@ static void ext4_fc_cleanup(journal_t *journal, int full, tid_t tid)
+ 		list_del_init(&iter->i_fc_list);
+ 		ext4_clear_inode_state(&iter->vfs_inode,
+ 				       EXT4_STATE_FC_COMMITTING);
+-		if (iter->i_sync_tid <= tid)
++		if (iter->i_sync_tid <= tid) {
+ 			ext4_fc_reset_inode(&iter->vfs_inode);
++		} else {
++			/*
++			 * re-enqueue inode into STAGING, which later will be
++			 * splice back into MAIN
++			 */
++			list_add_tail(&EXT4_I(&iter->vfs_inode)->i_fc_list,
++				      &sbi->s_fc_q[FC_Q_STAGING]);
++		}
 +
-+#define BIT_MASK_DESCR(m)	{ .mask = m, .name = #m }
-+
-+void irq_debug_show_bits(struct seq_file *m, int ind, unsigned int state,
-+			 const struct irq_bit_descr *sd, int size);
-+
- void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc);
- static inline void irq_remove_debugfs_entry(struct irq_desc *desc)
- {
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index c5832caf24cd..ba5c5cc90c3d 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1927,6 +1927,19 @@ static void irq_domain_free_one_irq(struct irq_domain *domain, unsigned int virq
- 
- static struct dentry *domain_dir;
- 
-+static const struct irq_bit_descr irqdomain_flags[] = {
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_HIERARCHY),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_NAME_ALLOCATED),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_IPI_PER_CPU),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_IPI_SINGLE),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_ISOLATED_MSI),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_NO_MAP),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI_PARENT),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_MSI_DEVICE),
-+	BIT_MASK_DESCR(IRQ_DOMAIN_FLAG_NONCORE),
-+};
-+
- static void
- irq_domain_debug_show_one(struct seq_file *m, struct irq_domain *d, int ind)
- {
-@@ -1934,6 +1947,8 @@ irq_domain_debug_show_one(struct seq_file *m, struct irq_domain *d, int ind)
- 	seq_printf(m, "%*ssize:   %u\n", ind + 1, "", d->revmap_size);
- 	seq_printf(m, "%*smapped: %u\n", ind + 1, "", d->mapcount);
- 	seq_printf(m, "%*sflags:  0x%08x\n", ind +1 , "", d->flags);
-+	irq_debug_show_bits(m, ind, d->flags, irqdomain_flags,
-+			    ARRAY_SIZE(irqdomain_flags));
- 	if (d->ops && d->ops->debug_show)
- 		d->ops->debug_show(m, d, NULL, ind + 1);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
--- 
-2.34.1
-
+ 		/* Make sure EXT4_STATE_FC_COMMITTING bit is clear */
+ 		smp_mb();
+ #if (BITS_PER_LONG < 64)
