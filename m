@@ -1,130 +1,120 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CA22180A92
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 15:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE9D180A92;
+	Wed, 29 May 2024 15:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998174; cv=none; b=McxJ6ApfdOsESGBrokp2uAsOogFE1n1WIUsvHMhwF548Rngnw7dyR2b2Qpl/ssZS7eBNU/HzXddMDEppUlf5N4raGGYWQFcE3/QEEF60xXFJP5IPLk0EM+yZ32oTL5i2jw7VJv7kdjve8RL8jkk0LMD5euWemaQlwzC01pNkEKk=
+	t=1716998272; cv=none; b=lb3nT1rB32hvcXskbA30Tea/7ieYoQ5tRqQA2aoO+9s3IaM1GpiVCPz0c4FFp4dXqfkkYC+OrMDZ9OKD+mVX+ImodoGOdjpPtX3YLY98+BiTz5B+V6iitdUArLuXtvha8fTUzNXIyd33AesrqsijLz0j/55m/kNUuAGhpPWGA+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998174; c=relaxed/simple;
-	bh=IqLFaT5xdUsd0QyQOBxl0ct08tWkuwCuK9WyVJVmEkk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gEgkYdadRI7byPWjVeL/51N9RryOWVjExTP+FCYZ6l17YgyT9CJsWqxe2BULtiJv/z1RBwUi+ClS8SPoErbJCXlMVHlHLAUq9D3P2tCsbSdxvTVc8/osxq7GwrSVFK9VWvRFFyTlk9ksS6VyEpr0kjXZbJlxOpTFWbiz7DstA+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YP0UQpve; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1716998272; c=relaxed/simple;
+	bh=OYSSBejeV+h0PVcSSif4AfjAaQ8JCT/Hva0H2R4ia90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wrc0FlSU3ULbK8a7Vzm5JdiR8fHN3Qck0ANh95CPypT7uP8vd3c2A7vj1EiMonCBhewQQ/36RUPXPPYP37SGXq8jTsJsI3cQTJVu0/rMD0FmBuVP/dEOkZZqIeEkH08n7/NVuFAIusgH8IPOBRjYMBFMkdGtgIzstCvmeAw6yjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSkDCEhl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YP0UQpve"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=3dMOK
-	+h64umb2Ww2HIMnnwaYpG06QZyWi58gxbbVwQ8=; b=YP0UQpvejOS+fsNjhCsDJ
-	EfWBnufGbRRoqt+o3djgzVYMPcjguMs/Yj+6czMCOHfQlU8M2LTQtAoMZYlYfZuq
-	hjdXd2dKFcLYYcRai5xBucL4/Nhbm90ZXHCrJRoJohRhGGZnLdySBaLJdhnOYIoT
-	Cxf9q2jzix1xa6B36BxMBg=
-Received: from localhost.localdomain (unknown [124.90.108.240])
-	by gzga-smtp-mta-g3-4 (Coremail) with SMTP id _____wD33xXqT1dmLAKCBw--.56428S2;
-	Wed, 29 May 2024 23:55:23 +0800 (CST)
-From: wang wei <a929244872@163.com>
-To: david@redhat.com
-Cc: 42.hyeyoo@gmail.com,
-	akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	minchan@kernel.org,
-	rppt@kernel.org,
-	senozhatsky@chromium.org,
-	willy@infradead.org,
-	wang wei <a929244872@163.com>
-Subject: Re: [PATCH v1 26] mm allow reuse of the lower 16 bit of the page type with an actual type
-Date: Wed, 29 May 2024 23:55:20 +0800
-Message-Id: <20240529155520.33161-1-a929244872@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240527141454.113132-3-david@redhat.com>
-References: <20240527141454.113132-3-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSkDCEhl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D28C113CC;
+	Wed, 29 May 2024 15:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716998272;
+	bh=OYSSBejeV+h0PVcSSif4AfjAaQ8JCT/Hva0H2R4ia90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gSkDCEhlOxLXGm6lJ/xoOCrEOygETBWQSbf75n62dS1s2Znq+1O1leoHDMz2n2aZk
+	 agVKmRJJ+TdsUTHtlgUe8urgEhUmDs6OE3FwnBJViKwQOVA6VRXdXqYVBVDd+aoRiR
+	 ie2zuSz4gC2mFjUrRRir6eXQlSJlDv1CPcD0yB3FbF8bKgGbc/JrSLzyNwvyYL6al9
+	 FGXEPjua7QhBRIwnCkWXHvAfxZs6hnORKrEEk87UtZP+a/Jr90ZSkmsmMrCYIiAJok
+	 TxLpSBzzFbrm0nDz6dPk4rj6tG/y7kf+Gr/uEVJHKj37mtRjYpShMY1t02dDLGCcwJ
+	 x0v3CQgkSBqjA==
+Date: Wed, 29 May 2024 08:57:49 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 2/7] riscv: Implement cmpxchg8/16() using Zabha
+Message-ID: <20240529155749.GA1339768@thelio-3990X>
+References: <20240528151052.313031-1-alexghiti@rivosinc.com>
+ <20240528151052.313031-3-alexghiti@rivosinc.com>
+ <20240528193110.GA2196855@thelio-3990X>
+ <CAHVXubjYVjOH8RKaF1h=iogO3xBM6k+xrGwkPnc-md2oRxbxrQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD33xXqT1dmLAKCBw--.56428S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCw43ZF4xKw4UCw4DtrW5ZFb_yoW5GFWrpF
-	4qkFyYkr48t3y2kw4fKwnxAr17WrsYkFWUC343WrW0yF98Kw1vgF1DKr45X34kurWkAFyY
-	qFZrWw1q934DJw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUVGQDUUUUU=
-X-CM-SenderInfo: jdzsmjiuuylji6rwjhhfrp/1tbiLgDtpmV4JOd7rgABsv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHVXubjYVjOH8RKaF1h=iogO3xBM6k+xrGwkPnc-md2oRxbxrQ@mail.gmail.com>
 
----
-> As long as the owner sets a page type first, we can allow reuse of the
-> lower 18 bit: sufficient to store an offset into a 64 KiB page, which
-> is the maximum base page size in *common* configurations (ignoring the
-> 256 KiB variant). Restrict it to the head page.
+On Wed, May 29, 2024 at 02:49:58PM +0200, Alexandre Ghiti wrote:
+> Then I missed that, I should have checked the generated code. Is the
+> extension version "1p0" in '-march=' only required for experimental
+> extensions?
+
+I think so, if my understanding of the message is correct.
+
+> But from Conor comment here [1], we should not enable extensions that
+> are only experimental. In that case, we should be good with this.
 > 
-> We'll use that for zsmalloc next, to set a proper type while still
-> reusing that field to store information (offset into a base page) that
-> cannot go elsewhere for now.
+> [1] https://lore.kernel.org/linux-riscv/20240528151052.313031-1-alexghiti@rivosinc.com/T/#mefb283477bce852f3713cbbb4ff002252281c9d5
+
+Yeah, I tend to agree with Conor on that front. I had not noticed that
+part of the message when I was looking at other parts of this thread. I
+could see an argument for allowing experimental extensions for
+qualification purposes but I think it does create a bit of a support
+nightmare, especially when there are breaking changes across revisions.
+
+> > config EXPERIMENTAL_EXTENSIONS
+> >     bool
+> >
+> > config TOOLCHAIN_HAS_ZABHA
+> >     def_bool y
+> >     select EXPERIMENTAL_EXETNSIONS if CC_IS_CLANG
+> >     ...
+> >
+> > config TOOLCHAIN_HAS_ZACAS
+> >     def_bool_y
+> >     # ZACAS was experimental until Clang 19: https://github.com/llvm/llvm-project/commit/95aab69c109adf29e183090c25dc95c773215746
+> >     select EXPERIMENTAL_EXETNSIONS if CC_IS_CLANG && CLANG_VERSION < 190000
+> >     ...
+> >
+> > Then in the Makefile:
+> >
+> > ifdef CONFIG_EXPERIMENTAL_EXTENSIONS
+> > KBUILD_AFLAGS += -menable-experimental-extensions
+> > KBUILD_CFLAGS += -menable-experimental-extensions
+> > endif
+
+Perhaps with that in mind, maybe EXPERIMENTAL_EXTENSIONS (or whatever)
+should be a user selectable option and the TOOLCHAIN values depend on it
+when the user has a clang version that does not support the ratified
+version.
+
+> That's a good idea to me, let's see what Conor thinks [2]
 > 
-> Fear of running out of bits for storing the actual type? Actually, we
-> don't need one bit per type, we could store a single value instead.
-> Further, we could likely limit PAGE_TYPE_BASE to a single (highest) bit.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  include/linux/mm_types.h   |  5 +++++
->  include/linux/page-flags.h | 20 ++++++++++++--------
->  2 files changed, 17 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 6b2aeba792c4..598cfedbbfa0 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -157,6 +157,11 @@ struct page {
->  		 *
->  		 * See page-flags.h for a list of page types which are currently
->  		 * stored here.
-> +		 *
-> +		 * Owners of typed folios may reuse the lower 16 bit of the
-> +		 * head page page_type field after setting the page type,
-> +		 * but must reset these 16 bit to -1 before clearing the
-> +		 * page type.
->  		 */
->  		unsigned int page_type;
->  
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 104078afe0b1..b43e380ffa0b 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -945,14 +945,18 @@ PAGEFLAG_FALSE(HasHWPoisoned, has_hwpoisoned)
->   */
->  
->  #define PAGE_TYPE_BASE	0xf0000000
-> -/* Reserve		0x0000007f to catch underflows of _mapcount */
-> -#define PAGE_MAPCOUNT_RESERVE	-128
-> -#define PG_buddy	0x00000080
-> -#define PG_offline	0x00000100
-> -#define PG_table	0x00000200
-> -#define PG_guard	0x00000400
-> -#define PG_hugetlb	0x00000800
-> -#define PG_slab		0x00001000
-> +/*
-> + * Reserve		0x0000ffff to catch underflows of _mapcount and
-> + * allow owners that set a type to reuse the lower 16 bit for their own
-> + * purposes.
-> + */
-> +#define PAGE_MAPCOUNT_RESERVE	-65536
-> +#define PG_buddy	0x00010000
-> +#define PG_offline	0x00020000
-> +#define PG_table	0x00040000
-> +#define PG_guard	0x00080000
-> +#define PG_hugetlb	0x00100800
+> [2] https://lore.kernel.org/linux-riscv/20240528151052.313031-1-alexghiti@rivosinc.com/T/#m1d798dfc4c27e5b6d9e14117d81b577ace123322
 
-Every PG_XX occupies one bit in my understanding.   But why PG_hugetlb occupies two bits?
+FWIW, I think your plan of removing support for the experimental version
+of the extension and pushing to remove the experimental status in LLVM
+(especially since it seems like it is ratified like zacas?
+https://jira.riscv.org/browse/RVS-1685) is probably the best thing going
+forward. If the LLVM folks are made aware soon, it should be easy to get
+that change into clang-19, which is branching at the end of July I
+believe.
 
-> +#define PG_slab		0x00200000
->  
->  #define PageType(page, flag)						\
->  	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+> Thanks for your thorough review!
 
--- 
-2.25.1
+Thanks for taking LLVM support into consideration :)
 
+Cheers,
+Nathan
