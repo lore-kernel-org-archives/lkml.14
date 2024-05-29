@@ -1,118 +1,152 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAF5167275;
-	Wed, 29 May 2024 07:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83257167275;
+	Wed, 29 May 2024 07:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716967581; cv=none; b=ZT/GgQUxsjvsQGLgY1i+9qFAzUW/kB668UqqiGtQURwvJPZwekOLd9wPJlqwCiCnxJ3+EYA+sDsn9xGHNdtsqqgQ7V9iER4A8rbjqDoRIN+MpXGKzpp+EnmhiHGAzar4svVYoFYEpY6KaHzmhlc+V4SHm5GVDE361AXyQ2cuF1c=
+	t=1716967618; cv=none; b=p66cBGYZQq+U3qi6RGMBRtuqwRwjjeHftIyfzmnB9EzxRsxlEE8jbQWnlYO2MJxA7LBtEIqkAk4vVqrLDr3lzbQNQTe7UJWpIieqjGX+4hY1tHAyTFpAsZJVWQ2eJpGGIfRI4xPyEnfTtBsp7LsKCxvTIX9zUZvGI7TGveiNhXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716967581; c=relaxed/simple;
-	bh=ipCczr7QYa5QI1mKS580Ngx2AkBjsXEeRuQtWBoAi+0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AqzXgFl0BDgavc3gNUmZv4zk9bpWlsisrJ68GlT4kgPZJnOUoxEqsY32uQTXA9WHTBf5flq4UxZQS+tBRq4LoP4VpAjHo1GdK1rjShBblLoThlEhtYTOY+VWwfYiK/nbkF7iC1XaLZ4eF93MxHWnuIyNng6lMJeFiEaPHtsoSRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RDECX0O5; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716967618; c=relaxed/simple;
+	bh=7rrG1rJKUVNczGau5dyk9TuLGcfgsrCcrXb8cFo1LMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LIpSGjY8R7wLGJ8irDH5K6w18XyvqlXWIb2Jgv5LFjgwtLs7LSXaADiinUjVX38ZwFFLeosSnCCbHYGWA2bEliVpL4POdlgV7y1J240jPBth+0o+0SdLdEqA+2OLHOcBYvANMsSMrHihNLDwboyEm8m2fkupckySU3OTHWisnpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=je673Etj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RDECX0O5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716967578;
-	bh=ipCczr7QYa5QI1mKS580Ngx2AkBjsXEeRuQtWBoAi+0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RDECX0O58siFle7LkoL209kMCVijbPKqGvWaKxXoOBV1PmGG97MQmlCV9esT0gX7u
-	 tG37/YzNryU+7kDgrFY6ZZiGEF6s7ih1RKltpxfJl36/UtKo1lS8JDT6ebMWU7wuVX
-	 YVe4/zPXzYpK/9keiT4rU2Euj5P7WL+JWYIve/qUE2EL7dzlh59LVR8X8LDwSrfFAJ
-	 xwIK4N/xFqGnh0XXfsjBF1JxvBG8a1QzCV29m1vn2DCgSMvYPSC6voTnPYldYz6qVD
-	 fV7NNxciXCF+nrBkp1WdTNzMPf9qge9TYyxljXyoA+bFSe/jMAqfRd69RAsEXUFymH
-	 pQODu9XtDjtsw==
-Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3F78B3782162;
-	Wed, 29 May 2024 07:26:07 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel@collabora.com
-Subject: [PATCH 4/4] kselftests: vdso: vdso_test_gettimeofday: conform test to TAP output
-Date: Wed, 29 May 2024 12:24:54 +0500
-Message-Id: <20240529072454.2522495-5-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240529072454.2522495-1-usama.anjum@collabora.com>
-References: <20240529072454.2522495-1-usama.anjum@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="je673Etj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88078C2BD10;
+	Wed, 29 May 2024 07:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716967618;
+	bh=7rrG1rJKUVNczGau5dyk9TuLGcfgsrCcrXb8cFo1LMQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=je673Etj8yHcqijlAvaeRB3ePWC7uvP0tlrCApZ2shO0+StOhoS8ROJFHPtQ4f1x3
+	 KR7R34NXamjUDvD/6/PqxYw6oSv2iOO3XJrX1aRYX2x9gJimfAp5G0trzQifZ9TemA
+	 0uPkoejD9u/2C+lsw1vHlkKdYCtZ2mAHdec3M8QWUuRXaPbtxjYuw5imB0WyZkiONb
+	 aiaVu18Weh0mgkYfnYpYqb3n7IVlp4lyW4B68+L2+nj4bL68moH8Yr8zo0J2xF9sgT
+	 PI/TuPjnKAAp4d+P/x9DVV55f1yACnsBDOzzH4AW4ZgFQCepwWQxf99ktgbaykDhKa
+	 bKCwTOGY3fDNg==
+Message-ID: <080c4c05-e795-49d8-a547-d39d10ed8333@kernel.org>
+Date: Wed, 29 May 2024 09:26:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: gpio: aspeed,sgpio: Order properties by
+ DTS style
+To: Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-0-91c42976833b@codeconstruct.com.au>
+ <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-1-91c42976833b@codeconstruct.com.au>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-1-91c42976833b@codeconstruct.com.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Conform the layout, informational and status messages to TAP. No
-functional change is intended other than the layout of output messages.
+On 29/05/2024 07:13, Andrew Jeffery wrote:
+> Tidy up the list of required properties and the example node by ordering
+> the properties in terms of the DTS coding style.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+>  Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
+> index 46bb121360dc..6b15a3a3fb66 100644
+> --- a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
+> @@ -51,12 +51,12 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - gpio-controller
+> -  - '#gpio-cells'
+> +  - clocks
+>    - interrupts
+>    - interrupt-controller
+> +  - gpio-controller
+> +  - '#gpio-cells'
+>    - ngpios
+> -  - clocks
+>    - bus-frequency
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- .../selftests/vDSO/vdso_test_gettimeofday.c   | 23 ++++++++++---------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+No, this should have the same order as properties are listed.
 
-diff --git a/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c b/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
-index ee4f1ca56a71a..2f42277b29ffe 100644
---- a/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
-+++ b/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
-@@ -24,10 +24,13 @@ int main(int argc, char **argv)
- {
- 	const char *version = versions[VDSO_VERSION];
- 	const char **name = (const char **)&names[VDSO_NAMES];
--
- 	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
-+
-+	ksft_print_header();
-+	ksft_set_plan(1);
-+
- 	if (!sysinfo_ehdr) {
--		printf("AT_SYSINFO_EHDR is not present!\n");
-+		ksft_print_msg("AT_SYSINFO_EHDR is not present!\n");
- 		return KSFT_SKIP;
- 	}
- 
-@@ -38,20 +41,18 @@ int main(int argc, char **argv)
- 	gtod_t gtod = (gtod_t)vdso_sym(version, name[0]);
- 
- 	if (!gtod) {
--		printf("Could not find %s\n", name[0]);
-+		ksft_print_msg("Could not find %s\n", name[0]);
- 		return KSFT_SKIP;
- 	}
- 
- 	struct timeval tv;
- 	long ret = gtod(&tv, 0);
- 
--	if (ret == 0) {
--		printf("The time is %lld.%06lld\n",
--		       (long long)tv.tv_sec, (long long)tv.tv_usec);
--	} else {
--		printf("%s failed\n", name[0]);
--		return KSFT_FAIL;
--	}
-+	if (ret == 0)
-+		ksft_test_result_pass("The time is %lld.%06lld\n",
-+				      (long long)tv.tv_sec, (long long)tv.tv_usec);
-+	else
-+		ksft_test_result_fail("%s failed\n", name[0]);
- 
--	return 0;
-+	ksft_finished();
- }
--- 
-2.39.2
+Don't change it.
+
+>  
+>  additionalProperties: false
+> @@ -65,13 +65,13 @@ examples:
+>    - |
+>      #include <dt-bindings/clock/aspeed-clock.h>
+>      sgpio: sgpio@1e780200 {
+> -        #gpio-cells = <2>;
+>          compatible = "aspeed,ast2500-sgpio";
+> -        gpio-controller;
+> -        interrupts = <40>;
+>          reg = <0x1e780200 0x0100>;
+>          clocks = <&syscon ASPEED_CLK_APB>;
+> +        interrupts = <40>;
+>          interrupt-controller;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+
+That's just example. I don't find this change useful but churn.
+
+Best regards,
+Krzysztof
 
