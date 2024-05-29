@@ -1,193 +1,109 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56453180A92;
-	Wed, 29 May 2024 15:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6650181BB3;
+	Wed, 29 May 2024 15:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998062; cv=none; b=TgWH2cZbu7oUA8QnUksX1U1GxBsRDXBOsJ3auj+V3ITEZ/7/1qS7TDcf3EM1q9i4JEI6EjZlyMyNkL7QC7SJ3wOZEc6Jhnrtg58NQy1ZAkwdHBpRFccRtTaRYn5eY99mzpkJc5+J/no7+22bHuOHxzcz6IA/Cz/EAysBRv/hRzM=
+	t=1716998116; cv=none; b=ij5u8Q4Wgtoze/z0M1p1LDZ7aeXVT9U7tTiEdpDPnT0fGfApBg1/0tfQZBilI8lt5j6H0Avx766RH90XPeDmF97v1Aar/pXElnnAw1pUc9jW8QhA+J0gyTg04jUoN8mJ2eKEbiEEo17GIIG1cXAFwChK5NQoSBBaPheIEuUgLWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998062; c=relaxed/simple;
-	bh=BwQ6jFYFSm5YXR9F4jT81ILzJR+Bob5bCKyl95jkkwc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E5VHQPVNfDrJj44TdV23ipAbJlBKV3q4LAocfU99N4TspKEfBiv/yXsSXmSbwLAkJkgwLlDFSgrXmTpkOZiFiMbLoWBOkZLRF/BCoRODlkU93DyOLvLtia8qCV73HTfxxwbYoKetS8jxR1QvAG2gcE9BxNd5rp0/CSsczFVTnL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=seb-dev@web.de header.b=sujywOMX; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716998116; c=relaxed/simple;
+	bh=cvCI74XULFLsUOYSrpSQ5aAd1HGoaFATJaZrDy1RBK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UBOavMln/ZRfgK9DmWPjVcvS5YZeWcy52UoQZitKviT2i++HU3NflKidbK/na3yI5vVUrL+cWtRuxEYal6MZE3WYe7Q7tOxiTyZoo7u8L9/VZPXvcz1znHG48B8o5FhvkmAv/LR1pjCTSgiJ8a0/WmS1zQI8JBFmWkjXSTIJoW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmXp/s9v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=seb-dev@web.de header.b="sujywOMX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716998026; x=1717602826; i=seb-dev@web.de;
-	bh=NdpXoN7gd6gckT3kE2kPt3f4pPV+FQNiHt6ex8F98aM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=sujywOMX+mDCs2u8SNIGcI4oqWbUoH6AbosQw93PF/O8Su4hULl0jNcsKdkW+CKK
-	 7Tl4poWXi+o5wI7D7bGDwGoW6n/1VKncGZLyG1Iu8a9NQKz8pDyTkQbpNdlPDYDCR
-	 GfL3S+oRyg/wfFuXcRWSrk1JG/2fHzaUhfHWmWcOF9T84U15LUa0jqemGpoUCXcrB
-	 Cpm+CSd3bxv66DMQ+8iRwBl2cEkzYb22aswq57sAoI8UdEC7VzEg6+BtFIVd2rqBl
-	 XVIkrSVJDhf3r2q0HRoDHK3Ykw6qMGtKS0qetLPn2cbg0amm4FD/vAFX+uw2u/9ok
-	 9aSAfHMxT8owxfi4lg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.24] ([84.155.184.248]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MeUbo-1skZuY312S-00aKOb; Wed, 29
- May 2024 17:53:46 +0200
-Message-ID: <806767aa-8fa5-4ece-9d6d-5976d6da2624@web.de>
-Date: Wed, 29 May 2024 17:53:45 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmXp/s9v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B30FC113CC;
+	Wed, 29 May 2024 15:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716998116;
+	bh=cvCI74XULFLsUOYSrpSQ5aAd1HGoaFATJaZrDy1RBK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WmXp/s9vHFC0BXI3VHUObfGwuQj1zxrYLOB2NH1CaxvAcKrnnmPbBpHqtmBaUIvmO
+	 7OrKLE0HbBrxG9SObqzJVZTEUPG/49lSTHcWRAx6eQMz/CWbsqWhjE0DyfIqS9e1Z2
+	 gKhlZzo3158eL4rQlpNGpBVvfOeL+DRbOCbaCcs3hiRNd8jpj8MIJdeAwj/T+dja+8
+	 M0sHpT3wWbHEhzVpJzyvzpKPbWrzN5C3J+pA56Dew8ffLEk9zjHJLEqsVeBZWspcol
+	 rpW0Q5iOxnzsbvj6xFLHkjQ4h0e3px1WIoyVOf6b1ntkimc+DWUImO5SMuZXkkFxKI
+	 jnc9o0VQW92WA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sCLdz-000000004DT-1fTP;
+	Wed, 29 May 2024 17:55:15 +0200
+Date: Wed, 29 May 2024 17:55:15 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya <quic_c_skakit@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
+Message-ID: <ZldP4zODYZzCoHW3@hovoldconsulting.com>
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-13-johan+linaro@kernel.org>
+ <CAE-0n52KTZ8G2VuvrDgJ9kAE61YULXY4u6nPP3CYWpg1CBjbXA@mail.gmail.com>
+ <ZjyTEVLp8VAhQfT5@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add CM3588 NAS board
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- Jonas Karlman <jonas@kwiboo.se>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240526214340.8459-1-seb-dev@web.de> <3609340.LM0AJKV5NW@diego>
- <ac376b42-a52f-4fef-8543-b961becd5f4d@web.de> <2693701.q0ZmV6gNhb@diego>
-From: Sebastian Kropatsch <seb-dev@web.de>
-In-Reply-To: <2693701.q0ZmV6gNhb@diego>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VGFwx3IBU2Xxk9L1STIyxZTGGpMljm5iE3oDEp8Rhb86OcNr9zw
- K5NvlB3JOaOByqaILevJuFpkB+Z7OjRY4yxUI0i3Uf3jN+sFhOtGcvd1aphShSUjw4S4G2S
- DDGcwnK1AAvEDlCmS79XqLhEKn7DL7g7tH7J7GQHHMGCEbJvnVlW+xC2LWv63JhoAGtuzzV
- 9hns2WEZ0vMcBaCzLK+Gw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/Jlz+TETw+8=;t7PnjlXPTRAA24lAiPrMp2Iwo8o
- N+q5sSTuv1GuNKIVGDbsuGk2YFS1xgr2T76GQ+1ZB173DklTiWiI4+Jj5jNTrGoA2vz+eOzEj
- 9ES+xyJtU0ObuMHwmxOjCki4D/31hB7CnHM58kY711oLo1ixWcKjx/Zs4Q3CVlHwm3jJUjUhr
- 1T70TJ8tzH3aXRaRUON7Y+rleMrOLC3CCQiZpBoS5CH/WsPG3hqKkVdDoem0QCbwG1pJmULRL
- 0MvjYTQ9cBSzXo0oqZqgQvz3bsD+3/ZIZ3vN+ipMmSf9sLOyCL35zPLTZw/FTieLYxnkg9DR/
- V9Ht0xzo4kwSbIKgSjslpq3zMo6d0QvCb0phdLZLsIfyzLeCH90CNuasVcU4tV32nUgSF0Fc8
- aaD067c+MGF253d24KZCRmQUsib2+SBud+jo2Li3o0qb0IyaFZD0P1yVT11GITTA7Qaimbg1P
- lSI068wyXgAT77HAgZ6YnHsjjIfZJUtC20niRLBPVk4lT0zhxonfkwlwJK5nugDi2liUh8tgi
- UTQ5869HvJUmQWETBuvsZXevn1q49MPsoPpWHDKLOaRPuO4kWZArkB7nnOhDj8pDaLErBkyy6
- ltlvRfD8auPQm4HObd2dGk24LvPoAfGe9fM0oGlJiTpgnVfsecdaoo0THXHGZ74FP1oLQwrj/
- jpblUMtrjtm67DDRytFByUrhJxSIzwWMUMdhMblKkudI5QgNsiuajzEJCoe/49XR8PtDZraCd
- wjDgVagEIDUUk13XUs1vMicg3eDVz/eFXAa++q7gm/68WiQ/aczSYXKxIKqkGlr+D3YnUmXKJ
- O5ArMWrZTfFBSLdniZHH/QfrkRFG33c7zESHB5jnLcvis=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjyTEVLp8VAhQfT5@hovoldconsulting.com>
 
-Hello Heiko,
+On Thu, May 09, 2024 at 11:10:41AM +0200, Johan Hovold wrote:
+> On Wed, May 08, 2024 at 10:37:50PM +0000, Stephen Boyd wrote:
+> > Quoting Johan Hovold (2024-05-06 08:08:29)
 
-Am 29.05.2024 um 09:57 schrieb Heiko St=C3=BCbner:
-> Hi Sebastian,
->
-> Am Dienstag, 28. Mai 2024, 17:55:55 CEST schrieb Sebastian Kropatsch:
->> Am 27.05.2024 um 22:54 schrieb Heiko St=C3=BCbner:
->>> Am Montag, 27. Mai 2024, 21:02:02 CEST schrieb Jonas Karlman:
->>>> On 2024-05-26 23:48, Sebastian Kropatsch wrote:
->>>>> The CM3588 NAS by FriendlyElec pairs the CM3588 compute module, base=
-d on
->>>>> the Rockchip RK3588 SoC, with the CM3588 NAS Kit carrier board.
->>>>>
->>>>> Hardware features:
->>>>>       - Rockchip RK3588 SoC
->>>>>       - 4GB/8GB/16GB LPDDR4x RAM
->>>>>       - 64GB eMMC
->>>>>       - MicroSD card slot
->>>>>       - 1x RTL8125B 2.5G Ethernet
->>>>>       - 4x M.2 M-Key with PCIe 3.0 x1 (via bifurcation) for NVMe SSD=
-s
->>>>>       - 2x USB 3.0 (USB 3.1 Gen1) Type-A, 1x USB 2.0 Type-A
->>>>>       - 1x USB 3.0 Type-C with DP AltMode support
->>>>>       - 2x HDMI 2.1 out, 1x HDMI in
->>>>>       - MIPI-CSI Connector, MIPI-DSI Connector
->>>>>       - 40-pin GPIO header
->>>>>       - 4 buttons: power, reset, recovery, MASK, user button
->>>>>       - 3.5mm Headphone out, 2.0mm PH-2A Mic in
->>>>>       - 5V Fan connector, PWM buzzer, IR receiver, RTC battery conne=
-ctor
->>>>>
->>>>> PCIe bifurcation is used to handle all four M.2 sockets at PCIe 3.0 =
-x1
->>>>> speed. Data lane mapping in the DT is done like described in commit
->>>>> f8020dfb311d ("phy: rockchip-snps-pcie3: fix bifurcation on rk3588")=
-.
->>>>>
->>>>> This device tree includes support for eMMC, SD card, ethernet, all U=
-SB2
->>>>> and USB3 ports, all four M.2 slots, GPU, RTC, buzzer, UART debugging=
- as
->>>>> well as the buttons and LEDs.
->>>>> The GPIOs are labeled according to the schematics.
->>>>>
->>>>> Signed-off-by: Sebastian Kropatsch <seb-dev@web.de>
->>>>> ---
->>>>>    arch/arm64/boot/dts/rockchip/Makefile         |    1 +
->>>>>    .../boot/dts/rockchip/rk3588-cm3588-nas.dts   | 1269 ++++++++++++=
-+++++
->>>>>    2 files changed, 1270 insertions(+)
->>>>>    create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-cm3588-nas=
-.dts
->>>>
->>>> Because the CM3588 is a SoM and the NAS is a carrier board this shoul=
-d
->>>> probably be split in two, cm3588.dtsi and cm3588-nas.dts.
->>>
->>> also, because of that way too generic name "cm", please incorporate th=
-e
->>> company name in the filename as well. For the same reason we named
->>> the rk3568-wolfvision-pf5.dts that way ;-) [Wolfvision being the compa=
-ny]
->>>
->>> So maybe:
->>> rk3588-friendlyelec-cm3588.dtsi and rk3588-friendlyelec-cm3588-nas.dts
->>>
->>
->> Yes, I agree that the name is very generic. I struggled with this as
->> well, but your suggestion sounds good!
->>
->> In this case, is it also preferred to change the commit message to
->> include the company name event though the commit message subject exceed=
-s
->> 50 characters this way?
->> ("arm64: dts: rockchip: Add FriendlyElec CM3588 NAS board")
->
-> Were does a 50 character limit even come from?
-> In other words, the subject should be meaningful and with the needed
-> prefixes adhering to a 50 chars maxlen would cause pretty unreadable
-> subject in a lot of cases.
->
-> So the proposed subject is absolutely fine :-) .
->
-The 50 character limit is actually recommended in the Git docs:
-   "Though not required, it=E2=80=99s a good idea to begin the commit mess=
-age
-   with a single short (no more than 50 characters) line summarizing
-   the change, followed by a blank line and then a more thorough
-   description." [1]
+> > > +struct pm8008_regulator {
+> > > +       struct regmap           *regmap;
+> > > +       struct regulator_desc   rdesc;
+> > > +       u16                     base;
+> > > +       int                     step_rate;
+> > 
+> > Is struct regulator_desc::vsel_step usable for this? If not, can it be
+> > unsigned?
+> 
+> Not sure, I'll take a look when respinning.
 
-VS Code also has vertical lines in the commit editor indicating if your
-line has more than 50 (first line) or 72 (other lines) chars.
-And other outlets have mentioned the "50/72 rule" [2,3] as well. The
-rule of word-wrapping at 72 characters was even mentioned by Linus,
-albeit in 2012:
-   "[...] the rule is simple: we use 72-character columns for word
-   wrapping, except for quoted material that has a specific line
-   format." [4]
+No, vsel_step is unrelated to this, which is really a slew rate.
 
-But yeah as you're saying, while a subject should be short but
-meaningful, such a limit probbaly doesn't make a lot of sense in this
-current age.
-I likely read too much into those rules trying to learn about all the
-things on how to make a good contribution to the kernel, with mailing
-lists, formatting and so on.
-I won't try to stay on 50 chars too rigorously in the future :)
+I've reworked the driver and dropped this field in favour of
+regulator_desc::ramp_delay.
 
-Thanks,
-Sebastian
+> > > +};
+ 
+> > > +static int pm8008_regulator_get_voltage(struct regulator_dev *rdev)
+> > > +{
+> > > +       struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
+> > > +       __le16 mV;
+> > > +       int uV;
 
-[1] https://git-scm.com/docs/git-commit#_discussion
-[2] https://www.baeldung.com/ops/git-commit-messages#3-the-5072-rule
-[3] https://preslav.me/2015/02/21/what-s-with-the-50-72-rule/
-[4] https://github.com/torvalds/linux/pull/17#issuecomment-5661185
+> > > +
+> > > +       regmap_bulk_read(pm8008_reg->regmap,
+> > > +                       LDO_VSET_LB_REG(pm8008_reg->base), (void *)&mV, 2);
+> > 
+> > Is struct regulator_desc::vsel_reg usable for this?
+> 
+> Will look into that.
 
+I don't think vsel_reg can be used here as the voltage is set using two
+registers (LSB and MSB).
+  
+> > > +
+> > > +       uV = le16_to_cpu(mV) * 1000;
+> > > +       return (uV - pm8008_reg->rdesc.min_uV) / pm8008_reg->rdesc.uV_step;
+> > > +}
+
+Johan
