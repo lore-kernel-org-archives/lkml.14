@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897F91836FD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1070184118;
 	Wed, 29 May 2024 16:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717000177; cv=none; b=D0qJyc+tqbMP7FII+FlVN5Qlsj9H+csX39XvWaIvEM0Acp+q9Ai/zB/jp+RdShyTgzSYilDHiSBkpHayBtwsvAaBpp73hCJiM9/dhcV+wkDn8ixeOt5SoHhszYqseyCxgmZ8bI14PLtV72xeDXfEr1XgAaWmtRlehDUXTP0RlIA=
+	t=1717000177; cv=none; b=q8WVrqvaZumwJiTEvvNoCzgGs3+A2ttYhjTBxcJdJS9y6XLtdLCj228qVZl7g0KgPPCBQIRefw+MK80nZW5PBrt165p+QAfKjRW5qpspNoQ6pDzNipGfxhlPjTRkKbhjGk+Tu4lr/QVGUHXGGeSwIKLV1SV5+8v1xapIQtb/avg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717000177; c=relaxed/simple;
-	bh=CpjnF7NQ8ik/bsSLPjV6QCgLsAnODb+JFk1ApHKH3xY=;
+	bh=zNMqpxBAGQiw9OcL50vy3QVIxWZ4GXc8Kaab9zYXR04=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ssgo602WwabkJRJONTuznaxsOCdmxsVG2/7TJ0++0ZQM76FLQla8NMr7ifWAdZ5X3R0QvaOxb5Gphuq6mMEE+A4s4p51IcxbGeMlAcTBl3UUtN8ZAz+8XF4T2lsAj26+s11BGgKtN5Vn9vFwrDCPQ4lfoGMlbeLY7a3AGU6R7Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ECAKNOGW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H1llMsPN; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=ZV1oIC6y0RDLmfjlaCwcXyLdQ0Ri746KScTr7nSvUppUD/vK3gwe4FnKQ5tOieMclCouwId0xp+YoZfiqr6i3ZZ+NMQWXWqSyLQs+/qXuquANIWtm0x/Dpkd91LCl++VHeDSKwUNQZVRVpqE+GUBN1JEWfcoCgFuarXTyjrcgbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AWA0jw6h; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QEiQ7ZrZ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ECAKNOGW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H1llMsPN"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AWA0jw6h";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QEiQ7ZrZ"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717000173;
+	s=2020; t=1717000174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xKeHb6yb6kbztXYTRHNbaIQnvhpfvhLJP9xjIPFBDgI=;
-	b=ECAKNOGWzRxlU2VAIzFvv5NQczAwkugXa8I4J9SotvyIafyci7YHLQQvuNjB2FXJ8T1Raa
-	fqroVg4kt0i82EaxZT7BEwB1/0VAblg9XuTYODYcMqsbwqRBE6szdeK6EE/TS28V5+47nr
-	lYP9nHWKbW2+Slv2jRTOEO+b8Uw3zA1hgGniulfE8rletZAjvWa9Wn6iV8XxnivxO+eRqe
-	fZBDVRh1STH3ScLcLPv8/auKK7tRqXu4QUZrlwrDpPQU6ah+oZbf/gSO/NBN1ef8wP70Wc
-	CqLvhT/z+9S+76+6klDRazXegWe5+yIu55G9q0azQgM7CsNWDgDhRl+c/ykIcQ==
+	bh=Z1G2V1ldZthL2oayfOZavDOAUvExZwG7aIqHHf24zyo=;
+	b=AWA0jw6hawcnAaXO2VmdzyVirF6lxRwzG2Pyp+n3sdB4Zw+J/OWQlgj7b+E6lWC4gGVeE5
+	xzGa6vVYBsmtw5fdY/ErG1kQIQfV2W8W2TSVjXeXO367BWTfNT5p6GeOCeo69JSfL0UXsk
+	aMcjbsBKvNzLYSmw/b/I04xLCEv5VzfUce55gA1GGJ8ZJqd7GV6MWfltfPehnCnm0gkO4d
+	rflwldxs5Z2DdenTZ7S829K/ksCMLato+mdWocjfPCB3Kk2bshCWu6Vh0l1R8UCsJcHpxn
+	b0/0r/Ls9l8IMPnizCpfB89OXNf0HYPiPkftIIX2H4G7hDznWkQbVhALxU/kVA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717000173;
+	s=2020e; t=1717000174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xKeHb6yb6kbztXYTRHNbaIQnvhpfvhLJP9xjIPFBDgI=;
-	b=H1llMsPN+HEBWjRY4UDV3XetYWz2Ge/80Y/WHdWbChqPbdmKrQ51K+2CeER3LLEiKRtnQm
-	e3JUELoYXhMm2ACA==
+	bh=Z1G2V1ldZthL2oayfOZavDOAUvExZwG7aIqHHf24zyo=;
+	b=QEiQ7ZrZLRUyR4unTdi6ewS+GqCBw9zfAvk0Ja6J2U14eyL8tI7R8H1IaO9vlbQ0LjlyaK
+	dBOiUL8pWVvkGQBA==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -54,9 +54,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v3 net-next 02/15] locking/local_lock: Add local nested BH locking infrastructure.
-Date: Wed, 29 May 2024 18:02:25 +0200
-Message-ID: <20240529162927.403425-3-bigeasy@linutronix.de>
+Subject: [PATCH v3 net-next 04/15] net: Use nested-BH locking for napi_alloc_cache.
+Date: Wed, 29 May 2024 18:02:27 +0200
+Message-ID: <20240529162927.403425-5-bigeasy@linutronix.de>
 In-Reply-To: <20240529162927.403425-1-bigeasy@linutronix.de>
 References: <20240529162927.403425-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -67,149 +67,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add local_lock_nested_bh() locking. It is based on local_lock_t and the
-naming follows the preempt_disable_nested() example.
+napi_alloc_cache is a per-CPU variable and relies on disabled BH for its
+locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
+this data structure requires explicit locking.
 
-For !PREEMPT_RT + !LOCKDEP it is a per-CPU annotation for locking
-assumptions based on local_bh_disable(). The macro is optimized away
-during compilation.
-For !PREEMPT_RT + LOCKDEP the local_lock_nested_bh() is reduced to
-the usual lock-acquire plus lockdep_assert_in_softirq() - ensuring that
-BH is disabled.
-
-For PREEMPT_RT local_lock_nested_bh() acquires the specified per-CPU
-lock. It does not disable CPU migration because it relies on
-local_bh_disable() disabling CPU migration.
-With LOCKDEP it performans the usual lockdep checks as with !PREEMPT_RT.
-Due to include hell the softirq check has been moved spinlock.c.
-
-The intention is to use this locking in places where locking of a per-CPU
-variable relies on BH being disabled. Instead of treating disabled
-bottom halves as a big per-CPU lock, PREEMPT_RT can use this to reduce
-the locking scope to what actually needs protecting.
-A side effect is that it also documents the protection scope of the
-per-CPU variables.
+Add a local_lock_t to the data structure and use local_lock_nested_bh()
+for locking. This change adds only lockdep coverage and does not alter
+the functional behaviour for !PREEMPT_RT.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/local_lock.h          | 10 ++++++++++
- include/linux/local_lock_internal.h | 31 +++++++++++++++++++++++++++++
- include/linux/lockdep.h             |  3 +++
- kernel/locking/spinlock.c           |  8 ++++++++
- 4 files changed, 52 insertions(+)
+ net/core/skbuff.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index 82366a37f4474..091dc0b6bdfb9 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -62,4 +62,14 @@ DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __p=
-ercpu,
- 		    local_unlock_irqrestore(_T->lock, _T->flags),
- 		    unsigned long flags)
-=20
-+#define local_lock_nested_bh(_lock)				\
-+	__local_lock_nested_bh(_lock)
-+
-+#define local_unlock_nested_bh(_lock)				\
-+	__local_unlock_nested_bh(_lock)
-+
-+DEFINE_GUARD(local_lock_nested_bh, local_lock_t __percpu*,
-+	     local_lock_nested_bh(_T),
-+	     local_unlock_nested_bh(_T))
-+
- #endif
-diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock=
-_internal.h
-index 975e33b793a77..8dd71fbbb6d2b 100644
---- a/include/linux/local_lock_internal.h
-+++ b/include/linux/local_lock_internal.h
-@@ -62,6 +62,17 @@ do {								\
- 	local_lock_debug_init(lock);				\
- } while (0)
-=20
-+#define __spinlock_nested_bh_init(lock)				\
-+do {								\
-+	static struct lock_class_key __key;			\
-+								\
-+	debug_check_no_locks_freed((void *)lock, sizeof(*lock));\
-+	lockdep_init_map_type(&(lock)->dep_map, #lock, &__key,  \
-+			      0, LD_WAIT_CONFIG, LD_WAIT_INV,	\
-+			      LD_LOCK_NORMAL);			\
-+	local_lock_debug_init(lock);				\
-+} while (0)
-+
- #define __local_lock(lock)					\
- 	do {							\
- 		preempt_disable();				\
-@@ -98,6 +109,15 @@ do {								\
- 		local_irq_restore(flags);			\
- 	} while (0)
-=20
-+#define __local_lock_nested_bh(lock)				\
-+	do {							\
-+		lockdep_assert_in_softirq();			\
-+		local_lock_acquire(this_cpu_ptr(lock));	\
-+	} while (0)
-+
-+#define __local_unlock_nested_bh(lock)				\
-+	local_lock_release(this_cpu_ptr(lock))
-+
- #else /* !CONFIG_PREEMPT_RT */
-=20
- /*
-@@ -138,4 +158,15 @@ typedef spinlock_t local_lock_t;
-=20
- #define __local_unlock_irqrestore(lock, flags)	__local_unlock(lock)
-=20
-+#define __local_lock_nested_bh(lock)				\
-+do {								\
-+	lockdep_assert_in_softirq_func();			\
-+	spin_lock(this_cpu_ptr(lock));				\
-+} while (0)
-+
-+#define __local_unlock_nested_bh(lock)				\
-+do {								\
-+	spin_unlock(this_cpu_ptr((lock)));			\
-+} while (0)
-+
- #endif /* CONFIG_PREEMPT_RT */
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 5e51b0de4c4b5..fcc02812bf31e 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -605,6 +605,8 @@ do {									\
- 		     (!in_softirq() || in_irq() || in_nmi()));		\
- } while (0)
-=20
-+extern void lockdep_assert_in_softirq_func(void);
-+
- #else
- # define might_lock(lock) do { } while (0)
- # define might_lock_read(lock) do { } while (0)
-@@ -618,6 +620,7 @@ do {									\
- # define lockdep_assert_preemption_enabled() do { } while (0)
- # define lockdep_assert_preemption_disabled() do { } while (0)
- # define lockdep_assert_in_softirq() do { } while (0)
-+# define lockdep_assert_in_softirq_func() do { } while (0)
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index dda13fdffb697..b33bae4ba78b6 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -277,6 +277,7 @@ static void *page_frag_alloc_1k(struct page_frag_1k *nc=
+, gfp_t gfp_mask)
  #endif
 =20
- #ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-diff --git a/kernel/locking/spinlock.c b/kernel/locking/spinlock.c
-index 8475a0794f8c5..438c6086d540e 100644
---- a/kernel/locking/spinlock.c
-+++ b/kernel/locking/spinlock.c
-@@ -413,3 +413,11 @@ notrace int in_lock_functions(unsigned long addr)
- 	&& addr < (unsigned long)__lock_text_end;
- }
- EXPORT_SYMBOL(in_lock_functions);
+ struct napi_alloc_cache {
++	local_lock_t bh_lock;
+ 	struct page_frag_cache page;
+ 	struct page_frag_1k page_small;
+ 	unsigned int skb_count;
+@@ -284,7 +285,9 @@ struct napi_alloc_cache {
+ };
+=20
+ static DEFINE_PER_CPU(struct page_frag_cache, netdev_alloc_cache);
+-static DEFINE_PER_CPU(struct napi_alloc_cache, napi_alloc_cache);
++static DEFINE_PER_CPU(struct napi_alloc_cache, napi_alloc_cache) =3D {
++	.bh_lock =3D INIT_LOCAL_LOCK(bh_lock),
++};
+=20
+ /* Double check that napi_get_frags() allocates skbs with
+  * skb->head being backed by slab, not a page fragment.
+@@ -308,6 +311,7 @@ void *__napi_alloc_frag_align(unsigned int fragsz, unsi=
+gned int align_mask)
+ 	struct napi_alloc_cache *nc =3D this_cpu_ptr(&napi_alloc_cache);
+=20
+ 	fragsz =3D SKB_DATA_ALIGN(fragsz);
++	guard(local_lock_nested_bh)(&napi_alloc_cache.bh_lock);
+=20
+ 	return __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC,
+ 				       align_mask);
+@@ -338,6 +342,7 @@ static struct sk_buff *napi_skb_cache_get(void)
+ 	struct napi_alloc_cache *nc =3D this_cpu_ptr(&napi_alloc_cache);
+ 	struct sk_buff *skb;
+=20
++	guard(local_lock_nested_bh)(&napi_alloc_cache.bh_lock);
+ 	if (unlikely(!nc->skb_count)) {
+ 		nc->skb_count =3D kmem_cache_alloc_bulk(net_hotdata.skbuff_cache,
+ 						      GFP_ATOMIC,
+@@ -740,9 +745,13 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *=
+dev, unsigned int len,
+ 		pfmemalloc =3D nc->pfmemalloc;
+ 	} else {
+ 		local_bh_disable();
++		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
 +
-+#if defined(CONFIG_PROVE_LOCKING) && defined(CONFIG_PREEMPT_RT)
-+void notrace lockdep_assert_in_softirq_func(void)
-+{
-+	lockdep_assert_in_softirq();
-+}
-+EXPORT_SYMBOL(lockdep_assert_in_softirq_func);
-+#endif
+ 		nc =3D this_cpu_ptr(&napi_alloc_cache.page);
+ 		data =3D page_frag_alloc(nc, len, gfp_mask);
+ 		pfmemalloc =3D nc->pfmemalloc;
++
++		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
+ 		local_bh_enable();
+ 	}
+=20
+@@ -806,11 +815,11 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *na=
+pi, unsigned int len)
+ 		goto skb_success;
+ 	}
+=20
+-	nc =3D this_cpu_ptr(&napi_alloc_cache);
+-
+ 	if (sk_memalloc_socks())
+ 		gfp_mask |=3D __GFP_MEMALLOC;
+=20
++	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
++	nc =3D this_cpu_ptr(&napi_alloc_cache);
+ 	if (NAPI_HAS_SMALL_PAGE_FRAG && len <=3D SKB_WITH_OVERHEAD(1024)) {
+ 		/* we are artificially inflating the allocation size, but
+ 		 * that is not as bad as it may look like, as:
+@@ -832,6 +841,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi=
+, unsigned int len)
+ 		data =3D page_frag_alloc(&nc->page, len, gfp_mask);
+ 		pfmemalloc =3D nc->page.pfmemalloc;
+ 	}
++	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
+=20
+ 	if (unlikely(!data))
+ 		return NULL;
+@@ -1429,6 +1439,7 @@ static void napi_skb_cache_put(struct sk_buff *skb)
+ 	if (!kasan_mempool_poison_object(skb))
+ 		return;
+=20
++	guard(local_lock_nested_bh)(&napi_alloc_cache.bh_lock);
+ 	nc->skb_cache[nc->skb_count++] =3D skb;
+=20
+ 	if (unlikely(nc->skb_count =3D=3D NAPI_SKB_CACHE_SIZE)) {
 --=20
 2.45.1
 
