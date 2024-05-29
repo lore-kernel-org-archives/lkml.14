@@ -1,60 +1,60 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A75D160796
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8EB1667C7
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 05:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716962294; cv=none; b=iNOmCxEaZRjWfhTr7go8+3ebvZPkGTTvxcpSrO6SSSbzpc/PdmpZNbCICvYgdscHymq1bvSNxgAlH2Lh/qUYppHRAtr9pqGDrsjs5VAA+/w+Qhgzn+CrR/5lCnjVcCcsKGI1N5w8lboh0ZFbt1XmO7sNbxpfEGeEE5aocNqaXus=
+	t=1716962298; cv=none; b=C1TaEsNpVQOhU8GIqOBNaoZtYzFcJ5tzMF0z+EuuGyYlDua3WQ6XpTXDMwviFiZoiC0nGyh5baK2Ug7Tt9funfgd92wRoF1u5YremfmPRUMsqrtWPvD0IWvGv2P/umO71EUMbrVrP+dL4Zbhr/QyxvhzlFV8hznAKbAVh5KJx8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716962294; c=relaxed/simple;
-	bh=a3KSQk0QjrMowRJps3c/VMw7Rsw51+L1udfOQ253okM=;
+	s=arc-20240116; t=1716962298; c=relaxed/simple;
+	bh=rAp1oHC6l5CHnvtARLTvReiqm9I9qaOy5vQ1YZf5q9A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fmbr92u69G572wFw7mF02JET0+1jKLQ6jDkHjNrWmE9oCH/pqN+1B5eLkTat4/bjZvpL1c5J2dVruFPDLbjZrYwXj5dqFgtP0SKOhuJ5mWLSE0qTBF2a+rfc53Zr1R/KgEWaoLRnzncw7FnbSim0Zkj8CJBZza3rhlgVBAcgTQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=WPUbosEu; arc=none smtp.client-ip=209.85.128.54
+	 In-Reply-To:To:Cc; b=jW9iTHaN8miqKFPEfRgr4wYeye90/2JNDiq8/MKnGfUQI4232nnmzPW9I46mXQH6p9JCcO1UsfCCmqgrPkHttU1gPxc26E1uE67jol5xRX9ua9IMALIilpnkCZ7rWH/3jlsOJLU2EzRS+vBCQWZlSl3e31ONJ2YVWXwA2Ey+fAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Xy6uXpt1; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="WPUbosEu"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4211a86f124so14281385e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 22:58:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Xy6uXpt1"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-420180b5897so14261695e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2024 22:58:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716962290; x=1717567090; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716962294; x=1717567094; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kQYjDJKjiuUGN1IdrBorFo2itihiB9FUhURZkClhppI=;
-        b=WPUbosEuINUDBl3rVkt/nGEnWAhtx2VY+fHcbfNp1XQOG+7t3Sc+832dHrW5LJSDwe
-         tcoo1idvHhEyFkl33wZV7uoBbQqV2ZVx8WHWnrVCu5UNFHI/WAvkNSNJXhbmMjM38D6z
-         ffJoImkdvQhQJti0RJAbpHIyQmeb6BYpekkjE5gB9B+UlG8wQCEu+soK+1GRn43KNdeD
-         jG84Z09KIdXO5u1FnBFz5cCbEctQYov+ymCD2pqT9d4g02Z5hMETGIqqNetTgClr4gpz
-         cuiTS8FPa2eZgJsyacDF7GFDrHoXmqll2vfkWz2BIajOPvMMH/XUM7njM4LQAWv+fF8V
-         eHLw==
+        bh=LavDOYWBGYfpww4RDDUlyMd6cUxBIrRNj68m4ClU2/E=;
+        b=Xy6uXpt1MYRJo2TJVpzmT2dykGWtsOJveqTKNofASKMqMEiSLKS/Sb1R0bQCYhbMaX
+         e7awGZcwSgMsdNeRIB/NHM5RAoMZZvek7BFDP+tfK/CzxmfsVvQk8OGpbUuXj0xb7KJa
+         kIOhVw65sdVJ7FVIZ3F4jJuNDTsXrSwrc/a6XLbg+uYrLQFvjUbsuBhcxP8UJ3hntLye
+         uXb2q+2x0OGBor+pREY0IdYpLi/Td30kS+FlGErU6UrQXv8rj4VrXqbDbpYr+Y8TfBmd
+         TngxRY9k/vq2Ub3kT+Ll6goKdABMv8CXVKdChIFylZ5hsccVh6jrZcYDtbsrq0noZVDj
+         XrgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716962290; x=1717567090;
+        d=1e100.net; s=20230601; t=1716962294; x=1717567094;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kQYjDJKjiuUGN1IdrBorFo2itihiB9FUhURZkClhppI=;
-        b=DmIukxPvdF5jzNB9RPJAYCBCnmKx06AaiNbTXNAxBH8KR6pRz13pq2EENbRc/Y1JSC
-         IMQH2aqwnt4On7ihN4kANYPrzitXKKtb19xo7yZ42eqew98S7mFJnbLGT7toSANVirDe
-         VUMFQLi4aVxXnVd3Dhn7qa42meYNf66fgJjKSgmDyFQ1tlWfVYBgKqEJ8k1E/oxD1a1Y
-         5RUOVzUSdxS05fTKzIpi8vXlnNL8L5ALo2ZNpNDUCn7Rn1KD6fLrEkE/5xz+1ivNeO9B
-         2+qI4C/mkBLGTbxIxMYCXAotvYjawqSK9/9ylQyEA97Pf0DZifR6TUJxAFnbphjLXYkr
-         rGdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Gj1Rtv1P68yJphUiz0jpM6PTiZaHKvyOor49W4xKQphH388AOJlwr/bGH0Q4v0XjeaK16PDVUu8bt9YStgN3Rn3cytqr+1Gnnxzr
-X-Gm-Message-State: AOJu0Yx/6NxSG1SLigdCA1d8kFbWXAEwxdXcMMdJz5PsQNmC+T/mX3OD
-	4CQ+VYmKmdLXDhMVVzLQrQCnmfeWm27Rt8RjSPZxtDolQWL0QH6Q7kOQjrqWvcc=
-X-Google-Smtp-Source: AGHT+IEjKcWC8j65Qa4iu3hgjuBfnHXwDmNvqgeJYYoLOah3bC1halpC3GpvR6NNFUNx4Dba6IiX9g==
-X-Received: by 2002:a05:600c:2205:b0:420:1fd2:e611 with SMTP id 5b1f17b1804b1-42108a1c508mr107000355e9.27.1716962290056;
-        Tue, 28 May 2024 22:58:10 -0700 (PDT)
+        bh=LavDOYWBGYfpww4RDDUlyMd6cUxBIrRNj68m4ClU2/E=;
+        b=DEg6YjrdocZ7aN3tXk3bFmr5oxuFGILQZHjFtBLrORlOrDY6Die6HTjveMFiNQ1DzY
+         UbbwDNZjNRH50BTevAOwFe3Xo1XbaO5DwWrOrj5Shj9mJC8h1l8nMMBg52HlzFymrJEy
+         VnxTYZqSL9j+kDg9e4ByscnC0Tcy8sL7u31KYo4h99UyQ3yueWRk+F0inkjzbkwAp4ei
+         E7Wp5UQCGrlSabp2uWrKMYnF3cx+ji6KCRD0740h3fEHuKOYRgR/CnqsgKMi6JseFNQ6
+         iwe1o8vKYaM+a9V0WgQtC8HBgTaf3pF5Q+wd3nl2/iasjGb4g/Rh5EYwqHgaDxXTgHl8
+         6irw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJCLxDL3B1ZuqWVtciuOQPycVMi75/C9hIEV5FG2Xn7kTuBLjA8xEN6ldtDidFm2nJQzVcfNxezWM8tkH/ilMpg+ckT0llS04KKo8n
+X-Gm-Message-State: AOJu0YxjJaR8foxMe5a1xNRnRiuJRPlWpON5+cXDJ3sUZWmWZgv7959i
+	82TebPAmd4eWyboaBdY30EmSjkPKrN+VNFjwOgLYZfK546GO+db2V8VmvTSRt9c=
+X-Google-Smtp-Source: AGHT+IHZIfWohQ6uIpAxspL5iEeAtgBFpqQ7jWd1q9AEXPsxCa6NOaculobfj9SZhiYUVhggmiBOKg==
+X-Received: by 2002:a05:600c:5806:b0:41b:e84d:67a3 with SMTP id 5b1f17b1804b1-42108962e2emr98466085e9.0.1716962294034;
+        Tue, 28 May 2024 22:58:14 -0700 (PDT)
 Received: from [127.0.1.1] ([84.102.31.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4210896676bsm169075435e9.4.2024.05.28.22.58.08
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4210896676bsm169075435e9.4.2024.05.28.22.58.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 22:58:09 -0700 (PDT)
+        Tue, 28 May 2024 22:58:13 -0700 (PDT)
 From: Julien Panis <jpanis@baylibre.com>
-Date: Wed, 29 May 2024 07:57:59 +0200
-Subject: [PATCH v6 4/6] arm64: dts: mediatek: mt8186: add default thermal
+Date: Wed, 29 May 2024 07:58:01 +0200
+Subject: [PATCH v6 6/6] arm64: dts: mediatek: mt8188: add default thermal
  zones
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-mtk-thermal-mt818x-dtsi-v6-4-0c71478a9c37@baylibre.com>
+Message-Id: <20240529-mtk-thermal-mt818x-dtsi-v6-6-0c71478a9c37@baylibre.com>
 References: <20240529-mtk-thermal-mt818x-dtsi-v6-0-0c71478a9c37@baylibre.com>
 In-Reply-To: <20240529-mtk-thermal-mt818x-dtsi-v6-0-0c71478a9c37@baylibre.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -80,11 +80,11 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pm@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
  Julien Panis <jpanis@baylibre.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716962279; l=7777;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716962279; l=11449;
  i=jpanis@baylibre.com; s=20230526; h=from:subject:message-id;
- bh=sG5Ze//7RlqRD8XfjGttbCgM09mHkLhEkzGoVC5Po1o=;
- b=wVQnyGHe1Ma8jwdKe2e2HxTlRKjrpLCLCtxc0O/kxW+HBvskAOmmztbqtkorg9PPckRQrLWRI
- JbVGuQhbKDCA97bWkDQSka5YMLTbrTCZM+ukjWJrvCmHZJXubKU0q0u
+ bh=6HvcJw/GiUMGA5QgSQkB+3ZEuSp1mJLMjRQtbGjzMsU=;
+ b=mvxaIs4kZQBuy1OCGzgeNIRqej7H1QiOg2k9FUBBJsIaH1ixK53E4fYwlMxmoXPZSJNl6SAki
+ 47bOhw5Ha/rCCBztqz5Wq6GHU8UZJ+49wBPJOVNqFcaGM+kJ3iHnuFt
 X-Developer-Key: i=jpanis@baylibre.com; a=ed25519;
  pk=8eSM4/xkiHWz2M1Cw1U3m2/YfPbsUdEJPCWY3Mh9ekQ=
 
@@ -96,32 +96,31 @@ driver version.
 Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
 Signed-off-by: Julien Panis <jpanis@baylibre.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8186.dtsi | 297 +++++++++++++++++++++++++++++++
- 1 file changed, 297 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8188.dtsi | 447 +++++++++++++++++++++++++++++++
+ 1 file changed, 447 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8186.dtsi b/arch/arm64/boot/dts/mediatek/mt8186.dtsi
-index caec83f5eece..95fe5a05f0d7 100644
---- a/arch/arm64/boot/dts/mediatek/mt8186.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8186.dtsi
+diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
+index 02786fe9891b..cd27966d2e3c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
 @@ -13,6 +13,8 @@
- #include <dt-bindings/power/mt8186-power.h>
- #include <dt-bindings/phy/phy.h>
- #include <dt-bindings/reset/mt8186-resets.h>
+ #include <dt-bindings/pinctrl/mediatek,mt8188-pinfunc.h>
+ #include <dt-bindings/power/mediatek,mt8188-power.h>
+ #include <dt-bindings/reset/mt8188-resets.h>
 +#include <dt-bindings/thermal/thermal.h>
 +#include <dt-bindings/thermal/mediatek,lvts-thermal.h>
  
  / {
- 	compatible = "mediatek,mt8186";
-@@ -2197,4 +2199,299 @@ larb19: smi@1c10f000 {
- 			power-domains = <&spm MT8186_POWER_DOMAIN_IPE>;
- 		};
+ 	compatible = "mediatek,mt8188";
+@@ -418,6 +420,450 @@ psci {
+ 		method = "smc";
  	};
-+
+ 
 +	thermal_zones: thermal-zones {
 +		cpu-little0-thermal {
 +			polling-delay = <1000>;
 +			polling-delay-passive = <150>;
-+			thermal-sensors = <&lvts MT8186_LITTLE_CPU0>;
++			thermal-sensors = <&lvts_mcu MT8188_MCU_LITTLE_CPU0>;
 +
 +			trips {
 +				cpu_little0_alert0: trip-alert0 {
@@ -159,7 +158,7 @@ index caec83f5eece..95fe5a05f0d7 100644
 +		cpu-little1-thermal {
 +			polling-delay = <1000>;
 +			polling-delay-passive = <150>;
-+			thermal-sensors = <&lvts MT8186_LITTLE_CPU1>;
++			thermal-sensors = <&lvts_mcu MT8188_MCU_LITTLE_CPU1>;
 +
 +			trips {
 +				cpu_little1_alert0: trip-alert0 {
@@ -197,7 +196,7 @@ index caec83f5eece..95fe5a05f0d7 100644
 +		cpu-little2-thermal {
 +			polling-delay = <1000>;
 +			polling-delay-passive = <150>;
-+			thermal-sensors = <&lvts MT8186_LITTLE_CPU2>;
++			thermal-sensors = <&lvts_mcu MT8188_MCU_LITTLE_CPU2>;
 +
 +			trips {
 +				cpu_little2_alert0: trip-alert0 {
@@ -232,103 +231,25 @@ index caec83f5eece..95fe5a05f0d7 100644
 +			};
 +		};
 +
-+		cam-thermal {
++		cpu-little3-thermal {
 +			polling-delay = <1000>;
-+			polling-delay-passive = <250>;
-+			thermal-sensors = <&lvts MT8186_CAM>;
++			polling-delay-passive = <150>;
++			thermal-sensors = <&lvts_mcu MT8188_MCU_LITTLE_CPU3>;
 +
 +			trips {
-+				cam_alert0: trip-alert0 {
++				cpu_little3_alert0: trip-alert0 {
 +					temperature = <85000>;
 +					hysteresis = <2000>;
 +					type = "passive";
 +				};
 +
-+				cam_alert1: trip-alert1 {
++				cpu_little3_alert1: trip-alert1 {
 +					temperature = <95000>;
 +					hysteresis = <2000>;
 +					type = "hot";
 +				};
 +
-+				cam_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		nna-thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <250>;
-+			thermal-sensors = <&lvts MT8186_NNA>;
-+
-+			trips {
-+				nna_alert0: trip-alert0 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				nna_alert1: trip-alert1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				nna_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		adsp-thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <250>;
-+			thermal-sensors = <&lvts MT8186_ADSP>;
-+
-+			trips {
-+				adsp_alert0: trip-alert0 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				adsp_alert1: trip-alert1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				adsp_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gpu-thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <250>;
-+			thermal-sensors = <&lvts MT8186_GPU>;
-+
-+			trips {
-+				gpu_alert0: trip-alert0 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				gpu_alert1: trip-alert1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				gpu_crit: trip-crit {
++				cpu_little3_crit: trip-crit {
 +					temperature = <100000>;
 +					hysteresis = <0>;
 +					type = "critical";
@@ -337,8 +258,13 @@ index caec83f5eece..95fe5a05f0d7 100644
 +
 +			cooling-maps {
 +				map0 {
-+					trip = <&gpu_alert0>;
-+					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					trip = <&cpu_little3_alert0>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +				};
 +			};
 +		};
@@ -346,7 +272,7 @@ index caec83f5eece..95fe5a05f0d7 100644
 +		cpu-big0-thermal {
 +			polling-delay = <1000>;
 +			polling-delay-passive = <100>;
-+			thermal-sensors = <&lvts MT8186_BIG_CPU0>;
++			thermal-sensors = <&lvts_mcu MT8188_MCU_BIG_CPU0>;
 +
 +			trips {
 +				cpu_big0_alert0: trip-alert0 {
@@ -380,7 +306,7 @@ index caec83f5eece..95fe5a05f0d7 100644
 +		cpu-big1-thermal {
 +			polling-delay = <1000>;
 +			polling-delay-passive = <100>;
-+			thermal-sensors = <&lvts MT8186_BIG_CPU1>;
++			thermal-sensors = <&lvts_mcu MT8188_MCU_BIG_CPU1>;
 +
 +			trips {
 +				cpu_big1_alert0: trip-alert0 {
@@ -410,8 +336,241 @@ index caec83f5eece..95fe5a05f0d7 100644
 +				};
 +			};
 +		};
++
++		apu-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++			thermal-sensors = <&lvts_ap MT8188_AP_APU>;
++
++			trips {
++				apu_alert0: trip-alert0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				apu_alert1: trip-alert1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				apu_crit: trip-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++
++		gpu-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++			thermal-sensors = <&lvts_ap MT8188_AP_GPU0>;
++
++			trips {
++				gpu_alert0: trip-alert0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				gpu_alert1: trip-alert1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				gpu_crit: trip-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&gpu_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		gpu1-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++			thermal-sensors = <&lvts_ap MT8188_AP_GPU1>;
++
++			trips {
++				gpu1_alert0: trip-alert0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				gpu1_alert1: trip-alert1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				gpu1_crit: trip-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&gpu1_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		adsp-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++			thermal-sensors = <&lvts_ap MT8188_AP_ADSP>;
++
++			trips {
++				soc_alert0: trip-alert0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				soc_alert1: trip-alert1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				soc_crit: trip-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++
++		vdo-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++			thermal-sensors = <&lvts_ap MT8188_AP_VDO>;
++
++			trips {
++				soc1_alert0: trip-alert0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				soc1_alert1: trip-alert1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				soc1_crit: trip-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++
++		infra-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++			thermal-sensors = <&lvts_ap MT8188_AP_INFRA>;
++
++			trips {
++				soc2_alert0: trip-alert0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				soc2_alert1: trip-alert1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				soc2_crit: trip-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++
++		cam1-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++			thermal-sensors = <&lvts_ap MT8188_AP_CAM1>;
++
++			trips {
++				cam1_alert0: trip-alert0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cam1_alert1: trip-alert1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				cam1_crit: trip-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++
++		cam2-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++			thermal-sensors = <&lvts_ap MT8188_AP_CAM2>;
++
++			trips {
++				cam2_alert0: trip-alert0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cam2_alert1: trip-alert1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				cam2_crit: trip-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
 +	};
- };
++
+ 	timer: timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupt-parent = <&gic>;
+@@ -1322,6 +1768,7 @@ gpu: gpu@13000000 {
+ 					<&spm MT8188_POWER_DOMAIN_MFG3>,
+ 					<&spm MT8188_POWER_DOMAIN_MFG4>;
+ 			power-domain-names = "core0", "core1", "core2";
++			#cooling-cells = <2>;
+ 			status = "disabled";
+ 		};
+ 
 
 -- 
 2.37.3
