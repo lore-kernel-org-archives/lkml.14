@@ -1,162 +1,172 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EBE169361;
-	Wed, 29 May 2024 07:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D958315FCE6
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 07:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716968828; cv=none; b=fy98l+0fyviINDIa82LpnMCM8poMAVQi9oW5OIH7rc4OAAlKXxSrDob/W9UJc1J8YVDxOXYhkLc9FrTb4SluNtSNQJ+2w0ouLcDrtrfJZLByQgNcLBRuRMXxJSd7HKbw8YFguy7etss3v6XZ3IrGlbFzCbpTqmJLHUwNSmDR4sQ=
+	t=1716968868; cv=none; b=NdrSdrdepRuigG1gi5VRUXeEZlueFTaUFFHDpFJJCvRf7vpCtbDPy+WzJudU0YHa5xjBAJjqC1gMF5/yAfyca3wiwEpUBgjp2xZaCteUwE+N8wYy0sMWp1mYORxZEjOqd4UINMryfIpiJm6xlF/4nZE3B3FRHjm2VFsHM6Ci22A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716968828; c=relaxed/simple;
-	bh=ye0+AjR4xMDKiF5PJH1197PGAb/qUvHf1ZXJ3sOWkFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j8jwnNWyBfqMsM52WeZ/r97R4M4KUnSvLsaqNAq7k81QpRg3LCepf/aZv2d5ZDw+98nYYAvmvZyKrzyccOMB8E7t7Odn6U2v4KpnqkVuTeVMB/J6yLdRpKMoimQsZ57g49FuFouRt7L5x4e+7rfajwql/1EDcgJLHiW8hmX8svM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=PnQzSDY+; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ZJT8jAYg reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1716968868; c=relaxed/simple;
+	bh=HUU8OJHy+T5E9msAr/ClwIsTk/9KwT3s/ADzOgrW/yk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=JAP3OGBb+1Va7V7FuZDmi8AgEN84OjWItOGpIOam464iP7+t/zhOV00eiT3sCHDUEhN5QXUODVeMEl5AcGR8LLmi/Wu0ANHnCUAF9azICSTRR9V6LlSKdkuCvImyWeABP66RVpJZRcp/+JaZUc1WgEyWgRRhRgNreK7C1f3gmAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdKuwTOW; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="PnQzSDY+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ZJT8jAYg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1716968826; x=1748504826;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jr7fCGaDvK5T7b6qLgLPpM6rhJVmlldtFLw2mTSr8uw=;
-  b=PnQzSDY+eAjLbSBkd+iGcCQejpclTbywUcpshXCvBhkGLz0MA6OoNj5K
-   dylc0zIaiiSRDzGg6EL/EoMN0uE9t4+Cs1xzDrSfvXhdCtfqI3fRNXKBg
-   91DRhn3DJQYQ1hSuGckJKQMTw3WnHjBH2WAshGRdClJQMDuV/gAwwE1Uu
-   DHR1T8a6ECAQAMfgAvCZioSqWFpDiZI8kV8fiB2VSsOm2DaKaAQY9o5wg
-   xfCYTn/bsVjr49lU/8o0vMawMqobPUwqwElZEsl0DcUfrQI1PYpqj8Wne
-   ZYCZscw8m4FUS2SzNHfzuCM9EFMdHXXX+e9kF07XyxnJtpin3Lx0azL+q
-   A==;
-X-CSE-ConnectionGUID: EaU7X7mNTratvwXWAZb0Zg==
-X-CSE-MsgGUID: qdE9Eec3SjmEOzh16s/Hzg==
-X-IronPort-AV: E=Sophos;i="6.08,197,1712613600"; 
-   d="scan'208";a="37119692"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 29 May 2024 09:47:05 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A57421653AB;
-	Wed, 29 May 2024 09:47:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1716968821;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=jr7fCGaDvK5T7b6qLgLPpM6rhJVmlldtFLw2mTSr8uw=;
-	b=ZJT8jAYgmnnSI475P0T/ckUTC6jaFyiPh64UJh1ZT9s64k+6C0ONUO1/Abtyo7oEYqe7DG
-	wgO6hr8Nmt/4TKH0U2ao19npBheotBq8XzfOHjoLWB74K05l9h9qdsptvMVle/096Sw6cG
-	czQP3n4S4X7dY2qiIJM7CzZg3dWNfxvWJjsZ2MbYsxoIYXnQkyLkplZfQ032phth0cb4ls
-	e7WXKbmBWo36qosA/6K2abBpg1jc0rFrn/b5+2xfUGUAFg4X1cDnIdFkpxVRwpHDI3Ex0t
-	ltteaWNrrqMBzGGyv6pyHs4ExEs8u5VupCZzSuhvpN8oMHni4gv7Onslh5FVpQ==
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Gregor Herburger <gregor.herburger@tq-group.com>,
-	linux@ew.tq-group.com,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH 8/8] gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH interrupt type
-Date: Wed, 29 May 2024 09:45:20 +0200
-Message-ID: <2c265b6bcfcde7d2327b94c4f6e3ad6d4f1e2de7.1716967982.git.matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
-References: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdKuwTOW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716968867; x=1748504867;
+  h=date:from:to:cc:subject:message-id;
+  bh=HUU8OJHy+T5E9msAr/ClwIsTk/9KwT3s/ADzOgrW/yk=;
+  b=FdKuwTOW+1tb5dlmXqKc8DltU2cU/gdJY/Cxl6c/opJuFHxSDM4tQl8B
+   eYIcynDRiEY6vInwEojkJPctwdXkwlldZjEJrUGfV4cb4OS6acsjQlnAd
+   +vbUwW4XN7wQevRwqI6n0vaUgDVNBh2ifrcSnlpmE5Xj9vDkC97Rl+3Ey
+   aSygS31l81FgrNmTiCzKlnZur/GHfOmDeV4thVwzWlMhesWc7Vt//+05V
+   pDe7DKKcQs/KTsQUuxB6HnnnR+SzxAkw7EaOoc0wp0uPal8ZgDJx0UJ5Z
+   BtMs+A1xytncUcuH3zD4+tdFodIHkj5/YN0h+NBNTebcWdaeU9kSveKcL
+   g==;
+X-CSE-ConnectionGUID: N72hK8enROCLpkMXqfZm+g==
+X-CSE-MsgGUID: c9nd/dkuT+KzzF453xMFkA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13197130"
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="13197130"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 00:47:46 -0700
+X-CSE-ConnectionGUID: z1SeQbRATKWX78whQC4f7Q==
+X-CSE-MsgGUID: rseD7sIwQNqfj97kJLaP4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="35301755"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 29 May 2024 00:47:45 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sCE29-000DHf-2I;
+	Wed, 29 May 2024 07:47:42 +0000
+Date: Wed, 29 May 2024 15:47:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:non-rcu/next] BUILD SUCCESS
+ 6b59ef87fa0bab0ba976f221d34308b6edc7ee07
+Message-ID: <202405291528.ybyaKpPZ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-The TQMx86 GPIO controller only supports falling and rising edge
-triggers, but not both. Fix this by implementing a software both-edge
-mode that toggles the edge type after every interrupt.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git non-rcu/next
+branch HEAD: 6b59ef87fa0bab0ba976f221d34308b6edc7ee07  tsc: Check for sockets instead of CPUs to make code match comment
 
-Fixes: b868db94a6a7 ("gpio: tqmx86: Add GPIO from for this IO controller")
-Co-developed-by: Gregor Herburger <gregor.herburger@tq-group.com>
-Signed-off-by: Gregor Herburger <gregor.herburger@tq-group.com>
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- drivers/gpio/gpio-tqmx86.c | 42 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 3 deletions(-)
+elapsed time: 815m
 
-diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
-index c957be3341774..400415676ad5d 100644
---- a/drivers/gpio/gpio-tqmx86.c
-+++ b/drivers/gpio/gpio-tqmx86.c
-@@ -126,9 +126,15 @@ static void _tqmx86_gpio_irq_config(struct tqmx86_gpio_data *gpio, int hwirq)
- 	unsigned int offset = hwirq - TQMX86_NGPO;
- 	u8 type = TQMX86_INT_TRIG_NONE, mask, val;
- 
--	if (gpio->irq_type[hwirq] & TQMX86_INT_UNMASKED)
-+	if (gpio->irq_type[hwirq] & TQMX86_INT_UNMASKED) {
- 		type = gpio->irq_type[hwirq] & TQMX86_INT_TRIG_MASK;
- 
-+		if (type == TQMX86_INT_TRIG_BOTH)
-+			type = tqmx86_gpio_get(&gpio->chip, hwirq)
-+				? TQMX86_INT_TRIG_FALLING
-+				: TQMX86_INT_TRIG_RISING;
-+	}
-+
- 	mask = TQMX86_GPII_MASK(offset);
- 	val = TQMX86_GPII_CONFIG(offset, type);
- 	_tqmx86_gpio_update_bits(gpio, TQMX86_GPIIC, mask, val);
-@@ -200,8 +206,8 @@ static void tqmx86_gpio_irq_handler(struct irq_desc *desc)
- 	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
- 	struct tqmx86_gpio_data *gpio = gpiochip_get_data(chip);
- 	struct irq_chip *irq_chip = irq_desc_get_chip(desc);
--	unsigned long irq_bits;
--	int i = 0;
-+	unsigned long irq_bits, flags;
-+	int i, hwirq;
- 	u8 irq_status;
- 
- 	chained_irq_enter(irq_chip, desc);
-@@ -210,6 +216,36 @@ static void tqmx86_gpio_irq_handler(struct irq_desc *desc)
- 	tqmx86_gpio_write(gpio, TQMX86_GPIIS, irq_status);
- 
- 	irq_bits = irq_status;
-+
-+	raw_spin_lock_irqsave(&gpio->spinlock, flags);
-+	for_each_set_bit(i, &irq_bits, TQMX86_NGPI) {
-+		hwirq = i + TQMX86_NGPO;
-+
-+		/*
-+		 * Edge-both triggers are implemented by flipping the edge
-+		 * trigger after each interrupt, as the controller only supports
-+		 * either rising or falling edge triggers, but not both.
-+		 *
-+		 * Internally, the TQMx86 GPIO controller has separate status
-+		 * registers for rising and falling edge interrupts. GPIIC
-+		 * configures which bits from which register are visible in the
-+		 * interrupt status register GPIIS and defines what triggers the
-+		 * parent IRQ line. Writing to GPIIS always clears both rising
-+		 * and falling interrupt flags internally, regardless of the
-+		 * currently configured trigger.
-+		 *
-+		 * In consequence, we can cleanly implement the edge-both
-+		 * trigger in software by first clearing the interrupt and then
-+		 * setting the new trigger based on the current GPIO input in
-+		 * _tqmx86_gpio_irq_config() - even if an edge arrives between
-+		 * reading the input and setting the trigger, we will have a new
-+		 * interrupt pending.
-+		 */
-+		if ((gpio->irq_type[hwirq] & TQMX86_INT_TRIG_MASK) == TQMX86_INT_TRIG_BOTH)
-+			_tqmx86_gpio_irq_config(gpio, hwirq);
-+	}
-+	raw_spin_unlock_irqrestore(&gpio->spinlock, flags);
-+
- 	for_each_set_bit(i, &irq_bits, TQMX86_NGPI)
- 		generic_handle_domain_irq(gpio->chip.irq.domain,
- 					  i + TQMX86_NGPO);
+configs tested: 95
+configs skipped: 134
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                                 defconfig   gcc  
+arm                        clps711x_defconfig   clang
+arm                             mxs_defconfig   clang
+arm                           sama7_defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-002-20240529   gcc  
+i386         buildonly-randconfig-003-20240529   gcc  
+i386         buildonly-randconfig-005-20240529   gcc  
+i386                                defconfig   clang
+i386                  randconfig-002-20240529   gcc  
+i386                  randconfig-003-20240529   gcc  
+i386                  randconfig-004-20240529   gcc  
+i386                  randconfig-014-20240529   gcc  
+i386                  randconfig-016-20240529   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      katmai_defconfig   clang
+powerpc                 linkstation_defconfig   clang
+powerpc                       ppc64_defconfig   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                    nommu_k210_defconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               alldefconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-002-20240529   clang
+x86_64       buildonly-randconfig-003-20240529   clang
+x86_64       buildonly-randconfig-005-20240529   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-002-20240529   clang
+x86_64                randconfig-003-20240529   clang
+x86_64                randconfig-004-20240529   clang
+x86_64                randconfig-013-20240529   clang
+x86_64                randconfig-016-20240529   clang
+x86_64                randconfig-071-20240529   clang
+x86_64                randconfig-074-20240529   clang
+x86_64                randconfig-075-20240529   clang
+x86_64                randconfig-076-20240529   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+
 -- 
-TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht München, HRB 105018
-Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-https://www.tq-group.com/
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
