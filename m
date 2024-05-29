@@ -1,144 +1,111 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088F216191E
-	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75733168C27
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 08:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716970984; cv=none; b=Ys8EWeVe0vARXBw++9JvGWu9udLFn+36t7alsA6YSx2tIZF9DM2I7Hl1LA89tfj5QXUnTf70f+AhJJKkPAq/2ec++qroFo+NYsyurkui7XnUCx+BMEC0mXlPx0XfW9kuasCe7Tec6Jtdu9V13nfDibn7VejD9NtRZpDM31ie/4E=
+	t=1716970985; cv=none; b=cXADnuYawm/J9ipuBrplCx9SSti6RzKL1MtQ6eE6dI9gz7zEfXAezDCzyTYBG5xqFtVruhQeukM78v6PElTsfWOuOPYusAotfphTerSdXd/RGwRLcplWovcAffRx65floidX8n1EbpY6M5Ht2zPCtGj2TGJw1uAqkk0GJKlhnlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716970984; c=relaxed/simple;
-	bh=6f8ItstMlch3RcPgy7vlb027QgO046tCJUhTEb1z/0Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pSO8GSxv5pZGOi0LRrxEwMfMtqCc7LnvNLz8OV3r2APFQrsJYiwBH1zf9Oofe1zoyBv39UP1nT1TuqU1IV5qXUAkF5wHQAi3XJ+kSbRGVyzgVUCWSq7XcrD09KTtZv26twjCRlk5JXs9o3cgQ1Th1324W4Uw38nWlOR8/TnH2Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 44T8MCFq075923;
-	Wed, 29 May 2024 16:22:12 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Vq2MQ1J15z2QjGgT;
-	Wed, 29 May 2024 16:18:26 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 29 May 2024 16:22:10 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
-        <Hao_hao.Wang@unisoc.com>
-Subject: [PATCH] f2fs: fix to avoid use SSR allocate when do defragment
-Date: Wed, 29 May 2024 16:19:39 +0800
-Message-ID: <1716970779-27896-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	s=arc-20240116; t=1716970985; c=relaxed/simple;
+	bh=v1feN2NUrI9P5EUMAciZLEbJjEX1j1A38in4ikzn1wk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nYapz7Nk1oVqFHwykNGHDfy5/XNtCobp8oIUDMy7lwdMrjF4kNB+uLPMiJ29yEV994+e1sCwUMmbB0U5KmnUgdq96bcYOOxGtBIKjspIcEC1EI0+oTxhU3pj1S4V5qArwIY44SfttGTJqGAM5hpVu4x3j2EqbgblJMdmBcJ5Qt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yMEtW+84; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yMEtW+84"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-421124a04d6so15334615e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 01:23:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716970982; x=1717575782; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Cyv9PovJHSSHJvMucpyIOkl77eWjr0heW5XICt5+8X4=;
+        b=yMEtW+84oVmUaG2flLfTP6tMxeq92w9NNWMWzXdcsTo3boft9KnTjJLGGBehofyIVH
+         iDsH5jdVccdpz3WE14xGFcR6GYZCRutEckW4YUjTCSaNAiDtWKB/utXN4Rg3WXDJeeNP
+         mCa0cPB4skWZV4YCTVNR2GmUNHwT6Qidv0E/sQkkjTO0WgCSKQbo+jmKaerx7z6a5Cac
+         wN8j4h/yF/3dOAM88hwLoAQZo3a1KigQv3vdrRqpIEJd7PfT1pWuVn3NdpJeh3cVDxuW
+         ONW/kejCX0nkzRl3MAwWPVEC61lY6M8/y2PNl3t83SfCDWM/CmXO1zR8HHZeM9n/V8NR
+         cJeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716970982; x=1717575782;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cyv9PovJHSSHJvMucpyIOkl77eWjr0heW5XICt5+8X4=;
+        b=rhwYWlgEu7UkHJvONCQ0INGUZv/hahjqBY+WsFR3B9hgBFqySXpUk/04N22TPHZmL8
+         D1d3rEYpaTADWGjJ8eO0UiFPtoCsa804hNx3aoDQVntlkPBOiGjQ8y4ac04wlJ4ldrrc
+         YxwU2Q9oHOZ77aevqBD2wDle3iUHESqTehDL9Z9/eeb3xnMdmwTjxfNRu/k4R1MOwVH2
+         sx2d0yTEaAZMvWDIxTD+HCXFYi9OkGiAPGYeqHVwquEQk7OVlJxeHTfnuNTPOj3Zry4E
+         A40We0V4Lxquc+cRmmyx3tFWu4+lJXByguKc3+WlW39v7AEoXb4QSozBRe/URvi+W6oz
+         CnBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ/tJAt5ObjkhlsSlPf6HdLd5YE1I2UvQmY8kxtSEHgkDPqtt2o1l8J/mRaeM2PFp1HcOPbDsIfS4B7GDrcilgMJFBcGcCS2cCVhWF
+X-Gm-Message-State: AOJu0YzUStDDB145HviKMMFjSqyJpytMaCcS2RPVeq+3qYBgNnYyPlnG
+	n6NHeXhQ8ASFB1xmMTgX+EVeUng33tmwPMUcEIlz6CJSE0gZn2Ep3ewIOl79Ehw=
+X-Google-Smtp-Source: AGHT+IH+woaE6GlA+cs5xDP5OfdceRBKfbkhD/cWJbIr1gI4V+CXAq4EQPV6Kc26S2O+apzzp1XHog==
+X-Received: by 2002:a05:600c:474f:b0:421:10e4:7f6b with SMTP id 5b1f17b1804b1-42110e47fd9mr78062025e9.27.1716970981790;
+        Wed, 29 May 2024 01:23:01 -0700 (PDT)
+Received: from [10.1.5.19] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3582917b222sm9606959f8f.93.2024.05.29.01.23.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 01:23:00 -0700 (PDT)
+Message-ID: <1c83bd93-92b3-4986-a154-69ae792e57ba@baylibre.com>
+Date: Wed, 29 May 2024 10:23:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 44T8MCFq075923
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/6] thermal: Add support of multi sensors to
+ thermal_core
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, rafael@kernel.org,
+ daniel.lezcano@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: rui.zhang@intel.com, lukasz.luba@arm.com, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240524143150.610949-1-abailon@baylibre.com>
+ <20240524143150.610949-3-abailon@baylibre.com>
+ <834e18c7-21b6-400e-aa61-a4f591027620@linaro.org>
+Content-Language: en-US
+From: Alexandre Bailon <abailon@baylibre.com>
+In-Reply-To: <834e18c7-21b6-400e-aa61-a4f591027620@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-SSR allocate mode will be used when doing file defragment
-if ATGC is working at the same time, that is because
-set_page_private_gcing may make CURSEG_ALL_DATA_ATGC segment
-type got in f2fs_allocate_data_block when defragment page
-is writeback, which may cause file fragmentation is worse.
 
-A file with 2 fragmentations is changed as following after defragment:
 
-----------------file info-------------------
-sensorsdata :
---------------------------------------------
-dev       [254:48]
-ino       [0x    3029 : 12329]
-mode      [0x    81b0 : 33200]
-nlink     [0x       1 : 1]
-uid       [0x    27e6 : 10214]
-gid       [0x    27e6 : 10214]
-size      [0x  242000 : 2367488]
-blksize   [0x    1000 : 4096]
-blocks    [0x    1210 : 4624]
---------------------------------------------
+On 5/27/24 09:00, Krzysztof Kozlowski wrote:
+> On 24/05/2024 16:31, Alexandre Bailon wrote:
+>> This adds support of multi sensors to thermal.
+>> Currently, this only support the get_temp operation.
+>> This returns an average temperature of all the sensors.
+>> If defined, a coefficient is applied to the value read from the sensor
+>> before computing the average.
+>>
+>> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+>> ---
+>>   drivers/thermal/Makefile        |   1 +
+>>   drivers/thermal/thermal_core.h  |  15 ++
+>>   drivers/thermal/thermal_multi.c | 332 ++++++++++++++++++++++++++++++++
+>>   include/uapi/linux/thermal.h    |   5 +
+>>   4 files changed, 353 insertions(+)
+>>   create mode 100644 drivers/thermal/thermal_multi.c
+> 
+> This does not really build...
+Sorry for that. I have not rebased and tested my patches on the latest 
+master commit. I will be more careful for the V4.
 
-file_pos   start_blk     end_blk        blks
-       0    11361121    11361207          87
-  356352    11361215    11361216           2
-  364544    11361218    11361218           1
-  368640    11361220    11361221           2
-  376832    11361224    11361225           2
-  385024    11361227    11361238          12
-  434176    11361240    11361252          13
-  487424    11361254    11361254           1
-  491520    11361271    11361279           9
-  528384     3681794     3681795           2
-  536576     3681797     3681797           1
-  540672     3681799     3681799           1
-  544768     3681803     3681803           1
-  548864     3681805     3681805           1
-  552960     3681807     3681807           1
-  557056     3681809     3681809           1
-
-A new FI flag FI_DEFRAG_IN_PROGRESS is introduced to avoid
-this scenarios.
-
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
----
- fs/f2fs/f2fs.h    | 1 +
- fs/f2fs/file.c    | 2 ++
- fs/f2fs/segment.c | 3 ++-
- 3 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 4044e67..9281c5e 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -803,6 +803,7 @@ enum {
- 	FI_COW_FILE,		/* indicate COW file */
- 	FI_ATOMIC_COMMITTED,	/* indicate atomic commit completed except disk sync */
- 	FI_ATOMIC_REPLACE,	/* indicate atomic replace */
-+	FI_DEFRAG_IN_PROGRESS,	/* indicate file was defragmenting */
- 	FI_MAX,			/* max flag, never be used */
- };
- 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 5c0b281..93d2767 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2717,6 +2717,7 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
- 		goto out;
- 	}
- 
-+	set_inode_flag(inode, FI_DEFRAG_IN_PROGRESS);
- 	map.m_lblk = pg_start;
- 	map.m_len = pg_end - pg_start;
- 	total = 0;
-@@ -2772,6 +2773,7 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
- clear_out:
- 	clear_inode_flag(inode, FI_SKIP_WRITES);
- out:
-+	clear_inode_flag(inode, FI_DEFRAG_IN_PROGRESS);
- 	clear_inode_flag(inode, FI_OPU_WRITE);
- unlock_out:
- 	inode_unlock(inode);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 7caf20a..dd6f8ac 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3482,7 +3482,8 @@ static int __get_segment_type_6(struct f2fs_io_info *fio)
- 		if (page_private_gcing(fio->page)) {
- 			if (fio->sbi->am.atgc_enabled &&
- 				(fio->io_type == FS_DATA_IO) &&
--				(fio->sbi->gc_mode != GC_URGENT_HIGH))
-+				(fio->sbi->gc_mode != GC_URGENT_HIGH) &&
-+				!is_inode_flag_set(inode, FI_DEFRAG_IN_PROGRESS))
- 				return CURSEG_ALL_DATA_ATGC;
- 			else
- 				return CURSEG_COLD_DATA;
--- 
-1.9.1
-
+Best regards,
+Alexandre
+> 
+> 
+> ../drivers/thermal/thermal_multi.c:249:38: error: initialization of ‘struct thermal_trip *’ from incompatible pointer type ‘struct thermal_trip_desc *’ [-Werror=incompatible-pointer-types]
+> 
+> Best regards,
+> Krzysztof
+> 
