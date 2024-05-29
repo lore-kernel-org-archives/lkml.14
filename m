@@ -1,132 +1,74 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F482209D;
-	Wed, 29 May 2024 07:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02066167260;
+	Wed, 29 May 2024 07:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716967451; cv=none; b=iVp1ELe8rTYyPoytBLyp60DsUTwJdBlWeKy5GURkKvDDHSyuptlJNeSCUNJUHbaj5kPZ2/iFGwJFs1gANk6tCQZOAcHNTsTmY0Cj/QZin0rZFgyBZRMcM0mfNwECuiUAXnGALtj8zvpL2kh4c5CDb675QrxcgLrOUOZYgTuc+iU=
+	t=1716967553; cv=none; b=V9l7DqRy00Ix02M1i/An6mTCXgbR0Pqd7xhBMle9lefN8WLnPrfKxyXhHENmyknfDg+EWZlBoDjAELd2ABoWcEVSWryjmDzaVNYd7l0NbjgDGpclbcAZ3PNQAKlVSm/DSucmrVLYpTgQZ+Z38t3ywiHpqZad0gNPKm+N6XmsRkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716967451; c=relaxed/simple;
-	bh=BiLRi+Tm9dHBabsoQiYKbpEETDYvhOr2pvI35tWBrHI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Tn+uZ45PeTFpstoQHp8fueEpdW7dg1xEFdTrtMe4fxSuDEYDvYINl5AyET4kyTCStKk7jQEry2feIDwscFY/pV83KbCIZ16pkemHudk9fwkc5LnG+UygtaojMkfnw86Olhgx1ANNsnxbCjgDLF26Fxdp7vOsuhGTzbz6NtjGTbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=h4x4CSEt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RUzHnTTF; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1716967553; c=relaxed/simple;
+	bh=Rddsd8MhlvXyzWsz0mlMxYZ4iXWCAYvdf+LHczGrxWg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rWFmPCs/hU9erKFEKUr+Tc2D8lSCa5lw/ptD0cDnS1Lro5OMBB+dvPvpS81tILEqdh+htJ1rPZDIxpnPwmcpshGyLMrdtK2AhOv4+FDBOTmI/68Wd4Lymgsi83yjdd8h+uhdIO5YALrl1GbzvkhJvt/+MQbsG4TfOMuhBl3SX50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NPedPWJc; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="h4x4CSEt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RUzHnTTF"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 4CDF413800A9;
-	Wed, 29 May 2024 03:24:09 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 29 May 2024 03:24:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1716967449;
-	 x=1717053849; bh=Gf0qo7ee/AEBpbdOcGj06T/gtZe+ynU8fDYYUQNiucM=; b=
-	h4x4CSEtTHwuht1dS/NJgvp65UnTU41dpZW4e9sLOU8xqutZITW+d+RxXo76OzuD
-	ChMjh0GFEzyVlosguBditusdEipRU71hIsyXVbYmbR5niPhsdD7QRRm8Po1tlQFJ
-	ErZkhR4dY/uWkL2ONPkARrIeRdhTO9FCSA6jXog8sby4JvuPNVcTKZ9Yelxdlzgv
-	Vd+HZYCj0bSF/I6NiZZd0yIYZgl/yAdY5+lhH24UDDwqsw38hfrXt2bi4EAZttSJ
-	IcfJAJ08vi4FObI4fjbV/wlfiJ4GFN7U+NY2x7ZDdVMZSfI6k9Y/OvQ6wi0IWnjF
-	mX55VNS3jPEHpQ3HaDZBqw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716967449; x=
-	1717053849; bh=Gf0qo7ee/AEBpbdOcGj06T/gtZe+ynU8fDYYUQNiucM=; b=R
-	UzHnTTFdk3oWiRf9YxJEMrpM7NmWEpEQorOLXKOP1+MH0EFg0AuZDM0INP2I+YIi
-	kexZXQfu7rXWFpV8hclGsy+CKG/aelT8BYNhCzwfHM1U3qsdDQPIJIciUtt+nMMx
-	4wDKDoiGZXrnGyDGauzW8JY87iqccW5jGVOz4n3D8NFg0pnCUkY2UqL449iAobdk
-	Zw1sfgqDnkczVnrA3UHPcLwfFz7lsm07e13nH+64Hg8tvXZe7i5tF8OpRjK5M0ME
-	RJAtNvB5rezU8QOnUCSw7F3q8SnXp94tH+NKlB1tU7lzLbX3rybW6OxinYszTv4M
-	0SRvUcfW/ZIr+TLsMW9cw==
-X-ME-Sender: <xms:GNhWZupp2ySFefzGEQi7Mz223B4lYgMtQlReU1C0bNUS3uTMRVuL3g>
-    <xme:GNhWZspwQqoKL1ODI5vwLP08p_iyEllD159sdd1i2xewrmuuIhNDbgDTG8Yz24f-0
-    2qNR7qdDdBLQMzpepg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdektddgudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:GNhWZjPaN01USRLJH2GN7MSCqQXRMmKwYxGm14gM5E7wN8KPPmUBIA>
-    <xmx:GNhWZt4lubTFMPwxPAMw8etb0OR-hH_d2FqnII8OceZrtfaOjQ-4dA>
-    <xmx:GNhWZt5XxvPjGFegJQ7C-RbtbJa1yYcO8JXSqupTxotoaKgijXbC2w>
-    <xmx:GNhWZth58wPWGgCPthdDvIGW8LtY-ku1wHr3BTabRMQMgagCPt7-XQ>
-    <xmx:GdhWZiF6-9rsoR2QapE_JSgmTlxz0pnmbAdcwpp2rXbZkymtvM_k2ex1>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D889BB6008D; Wed, 29 May 2024 03:24:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NPedPWJc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716967549;
+	bh=Rddsd8MhlvXyzWsz0mlMxYZ4iXWCAYvdf+LHczGrxWg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NPedPWJcv+8ONEP6Fo0xmQRUklb/ltD3jRtAZyR+krWk6iAXC1up9LaxJ6Ehx+lLz
+	 ffmLzB/r9B1ILro0gPmxCwomb3sse3hTtqwp3iHxZgIH4s3Bf0LFi5Ht6hQFq39ana
+	 S0SN9QX/jmiBZzzaMU2bZyHQp+itWvCf3nVkHA6KMbH4GEcXjpr4SKo0IrtnaxQXuB
+	 VBbx2M73L6HcX72Y8B1s9pPCMabAMW1vGuiReemnBHGoKsCP22ubR4pMCZUbMCFcoG
+	 eA/YtLZA8IKpMPgaqavNEY0vnMt51C94ZQ3DFbfucr2JRyIYrcoRsZPcv4vxC+Q0Rb
+	 jUmMFJid/S09w==
+Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C10EE3780627;
+	Wed, 29 May 2024 07:25:36 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Shuah Khan <shuah@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: kernel@collabora.com
+Subject: [PATCH 0/4] kselftests: vdso: conform tests to TAP output
+Date: Wed, 29 May 2024 12:24:50 +0500
+Message-Id: <20240529072454.2522495-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <81ec1d1a-d8de-47e4-a5d4-eeaaf1e806a2@app.fastmail.com>
-In-Reply-To: <539a815398a3c991c1bc1a53967fbcba282dfe3b.camel@gmail.com>
-References: <20240528121304.3695252-1-arnd@kernel.org>
- <539a815398a3c991c1bc1a53967fbcba282dfe3b.camel@gmail.com>
-Date: Wed, 29 May 2024 09:23:11 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- "Arnd Bergmann" <arnd@kernel.org>, "Jonathan Cameron" <jic23@kernel.org>
-Cc: "Lars-Peter Clausen" <lars@metafoo.de>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- "Dragos Bogdan" <dragos.bogdan@analog.com>,
- "Anshul Dalal" <anshulusr@gmail.com>,
- "Andrea Collamati" <andrea.collamati@gmail.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: dac: ad9739a: drop COMPILE_TEST option
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 29, 2024, at 09:20, Nuno S=C3=A1 wrote:
-> On Tue, 2024-05-28 at 14:12 +0200, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->>=20
->> Build testing without SPI results in a warning:
->>=20
->> WARNING: unmet direct dependencies detected for REGMAP_SPI
->> =C2=A0 Depends on [n]: SPI [=3Dn]
->> =C2=A0 Selected by [m]:
->> =C2=A0 - AD9739A [=3Dm] && IIO [=3Dm] && (SPI [=3Dn] || COMPILE_TEST =
-[=3Dy])
->>=20
->> There is no need for this particular COMPILE_TEST option, as allmodco=
-nfig
->> and randconfig testing can just assume that SPI is enabled separately.
->>=20
->> Drop it to avoid the warning.
->>=20
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
->
-> Only for my understanding. When does COMPILE_TEST makes sense to add?
+Conform individual tests to TAP output. One patch conform one test. With
+this series, all vDSO tests become TAP conformant.
 
-The most common use is to enable building a driver
-that is platform specific on x86 allmodconfig
-or on randconfig, e.g.
+Muhammad Usama Anjum (4):
+  kselftests: vdso: vdso_test_clock_getres: conform test to TAP output
+  kselftests: vdso: vdso_test_correctness: conform test to TAP output
+  kselftests: vdso: vdso_test_getcpu: conform test to TAP output
+  kselftests: vdso: vdso_test_gettimeofday: conform test to TAP output
 
-config LPC18XX_DAC
-        tristate "NXP LPC18xx DAC driver"
-        depends on ARCH_LPC18XX || COMPILE_TEST
-        depends on HAS_IOMEM
+ .../selftests/vDSO/vdso_test_clock_getres.c   |  68 ++++----
+ .../selftests/vDSO/vdso_test_correctness.c    | 146 +++++++++---------
+ .../testing/selftests/vDSO/vdso_test_getcpu.c |  16 +-
+ .../selftests/vDSO/vdso_test_gettimeofday.c   |  23 +--
+ 4 files changed, 126 insertions(+), 127 deletions(-)
 
-Since ARCH_LPC18XX is only visible on arch/arm, the
-driver would never be build tested on anything else
-without the ||COMPILE_TEST.
+-- 
+2.39.2
 
-      Arnd
