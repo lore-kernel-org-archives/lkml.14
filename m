@@ -1,106 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7954511185;
-	Wed, 29 May 2024 13:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFEA17BA0
+	for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 13:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716988916; cv=none; b=Iv0wwbrgWpMqCy3QFszHnptB1LozhjnlqV1N5O7pd1CCTiBhgmjOecnuFKNh9DUL+CoqD/9n7eQS+dc2AKlOVNsNnpnm5NJfjKEKvK69rpRIGzaVSKSjjdBRhazbkWo5ElriQLivlB8WEfmzHX0QfS1F699aPC9qJiEjjTF0KXY=
+	t=1716988929; cv=none; b=RJXulkyIktRK8j6JWZU6dsZGjZzAuf65rTYH4jWf7gTJOJV17MFwgJul5JRQkBzCk6cuV19WEm2aINMwyl07NDmTUWIBivHfmu97MdKz1xgMnRL5sJh57xfCiDaSJEE/8G+Jvi7aMqUwR7CQrcgxD4teHpJn+gNlIpTAl5eubJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716988916; c=relaxed/simple;
-	bh=FpxFPRp8yPNn8Ngd8ZdEt2mCiE8f6earyUQln/Rb0CQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sqRw8bhkppB2c/ch5PbsfozzTN8FIU3EMaAKiAJnWfDlaeRU56QXDgpRH7qtrFsK1qu9G/amWr4b9RlSDH/sh/ySeyz8mQ0lVhAcIfrns12NMWWflxDrHkQZDHw96FTR4QfP2h1NiLIF+DttVhcYDFJhbJiNg2c0kHAPmMyt69s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4pgNeyF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716988929; c=relaxed/simple;
+	bh=LmG0Zbh1S2hp91Sn/hvYhhZTKcmSBk443WWO2UHQ6UA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Re6i07Dq5VuOoIcOF4jEotmUbzckux9UiUCV02xV5reLZdb9QiFt5kZq9tGREiFOzt7gLGq5AWIg1k/ONnNx2gZoyE6rsybvSHYoUTkvCw3IN+mESJ1rso4n7P2aSkB27qrS36VTB48NPm+sLArjLbAV9/ofTUEEMnSKqPmGA2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fzSHFS/0; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4pgNeyF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC540C4AF07;
-	Wed, 29 May 2024 13:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716988916;
-	bh=FpxFPRp8yPNn8Ngd8ZdEt2mCiE8f6earyUQln/Rb0CQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=d4pgNeyFsGB4iz2l3njE2pOO7qGlrpWslG/r5XGYgR0PRJ+j4KcCUQrwp42svs31L
-	 1x3GLi/3TRsOvbQ7x9mUsymo4fCGSPIGwXlc4/jMuJVKMn/kRLDKbMlepWQSeHMyfE
-	 6LO89YRhipVTja1OWylOM8Afr8DKBGU0tpftjwsQPyAJmmCzgkE+J+OfXJPiA5DNH2
-	 5cd/umDDJGZ+5OR+x/4/R+EeCmGSdkYo9nfqRyl35nrEbMg5rnEDzGDCvc2L9fKPlG
-	 LbQxdxb3AJG0RyvWSMUUHzMlE/EMQ4BUurn1beU+gq1PBOGIq2z0bTSkt1sNG5sn3R
-	 8goRC61yOmNow==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52b27afe214so441438e87.1;
-        Wed, 29 May 2024 06:21:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXSjwvdCc0ojFUNcQc/xeAXLTWPhcWZt7VIjpSSt3WDDUq6OfsFG9HrqWN1BZZYM+rA+/icgMkK8CLzG+wWQSaM9uwMDiGC396AjuFqJwZYTO2OkrEcZNWmn6OG6HcxatZxqokoYYSZ9vHQMitBwizXVpoGdO4XQgJvhI0qxd8CH05Gns4zLQ==
-X-Gm-Message-State: AOJu0YyXZFs7gQ5WR/cPaX7HbD3ZqALXoBKRqAmCsdDFC02XLqK5fS+T
-	FyVE1P7fO+7p4yrMqj8HYS+CLAxQmr7VhEYegDXLX08qThIJLaSk5pUHRsEeP/AHJs5ObMqPNgp
-	2Ew1sKlrgi2c2KyQ+aVnpXK4yPg==
-X-Google-Smtp-Source: AGHT+IFXplSoT1DLFl4NUQ8zWQRRW0XvDiFw3ANw9v8lRwpP9IFYRS4Np3FBbmgVr02QNkKdArXMy50Lw+QujeV+Gr0=
-X-Received: by 2002:ac2:5181:0:b0:51f:9a88:be2a with SMTP id
- 2adb3069b0e04-52a829140ccmr708255e87.23.1716988914331; Wed, 29 May 2024
- 06:21:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzSHFS/0"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f4a52b94c3so18163505ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 06:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716988928; x=1717593728; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Kur8IddoyK7auUB0DpsJfjxMjtBncw932qUbr08xEk=;
+        b=fzSHFS/03V9O8i8d5AwbAsBVfHmg3EWS2p6P8+/E4jK50I1uNue0PvcFBeSplWRvqJ
+         +sixaJI8XCHcT9W4P+hnHZ1Y7VzdMMbpagWLGa7IaZ6UrGrWylum3qAzFbYx1Ej6QOgM
+         43OQqg+uLIwDj0ZF1f9xXqQ0d8B4RTzw7LntQtaubmp44yf28M3V70vRXipdktrDp5fb
+         PAaEC5CQNbNmnUQRa3OIWp6P/SCVzF7oJ6ZWO2E/m6gD/uhimmOZ15Ocu6UEArBIbpPf
+         ho5Y9Ys8O/94IU6yDNB7Y2pp2p0fcbAb2z4H72ZfrfDOKbpfys4+tMNvya5ucYvBHmyo
+         /hXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716988928; x=1717593728;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0Kur8IddoyK7auUB0DpsJfjxMjtBncw932qUbr08xEk=;
+        b=pjcPLZ1eNPrbwvgi2U2bqJMZESJ1gxevPWrThQTxgxfuuR+0z6j0pT/Ze0v9+5w1yl
+         E/YdO0/HHwe6nMbk9p5BqjOa1KIq9tyuLFWuz00K1pLNJWa1T7EHUR2UeEZZeybWW0JP
+         LKeI2ouIZNfzBwDpM89rcCVQ3veXDN0wxig3DlZHwY1DrAn3d+CyDTd8bOTYcjIHDPlq
+         lQhBNT4pJWYv+KQu/HbZwHwBo6D/ZpT9bCUpDrYKtx6WYX+PWM+xZ3EfUo4TC/3aQu6V
+         EA4typyxdjjNggD7j3HJ+OkudLFXZJFj57Df1xVaxbqVGWwLAdJ6tzo5Jy/Qy5HHCcUB
+         uqdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQh6NUXbRZZ9vOCeUq4gVbOgZzfZA3FSdgX5f+EWIA13NglL62DU2Md3Fh/CbPiB/l5/Xn3nMJbjJoVhYuzvH18rQvtzBnnFwj23LG
+X-Gm-Message-State: AOJu0YwF9KMoL4fvrR6KHqrTaJ1pCnRC9vx8ys8k2kEApQdGYkIpy6Xz
+	gGqygWfGLEmhu6+9Kw5IxlWKpn8pgVnsgAVb1djcgJcDswYjiTAT
+X-Google-Smtp-Source: AGHT+IEsBv5bIxgTY/q47JQPTYogoxqv6LI2GlfX+nm0L8UY7lG45NwaKZRAtWholBUpgq2B4dfkIg==
+X-Received: by 2002:a17:902:e84f:b0:1f4:990c:5ef1 with SMTP id d9443c01a7336-1f4990c5fecmr96953905ad.31.1716988927615;
+        Wed, 29 May 2024 06:22:07 -0700 (PDT)
+Received: from paran-QEMU-Virtual-Machine.. ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c760a21sm99183205ad.4.2024.05.29.06.22.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 06:22:07 -0700 (PDT)
+From: yskelg@gmail.com
+To: Stefano Stabellini <sstabellini@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: skhan@linuxfoundation.org,
+	sj@kernel.org,
+	Austin Kim <austindh.kim@gmail.com>,
+	shjy180909@gmail.com,
+	linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	Yunseong Kim <yskelg@gmail.com>
+Subject: [PATCH] xen/xenbus: handle pointer to NULL in alloc/free_pdev
+Date: Wed, 29 May 2024 22:19:28 +0900
+Message-Id: <20240529131926.29590-1-yskelg@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527-dtbo-check-schema-v1-1-ee1094f88f74@linaro.org>
- <CAL_Jsq+cmNmm4we6B6OdeS_Qty44FxKmtZHDjLBi9f=DaBw4GA@mail.gmail.com>
- <CAA8EJpoeGTitM1vYg712Q2fFPenJJvvA7HS7GBA9pqY87zbOjw@mail.gmail.com> <CAK7LNARXLirGk-rdOUofC9bpKKNiNiiWt9CR8KwyDQgp1X7dAg@mail.gmail.com>
-In-Reply-To: <CAK7LNARXLirGk-rdOUofC9bpKKNiNiiWt9CR8KwyDQgp1X7dAg@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 29 May 2024 08:21:40 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+CS1wHV9L+QUDGOiSck=nS_kObhrQN07=JjWX80KQrHQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+CS1wHV9L+QUDGOiSck=nS_kObhrQN07=JjWX80KQrHQ@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: verify dtoverlay files against schema
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 29, 2024 at 6:31=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
-> On Tue, May 28, 2024 at 10:16=E2=80=AFPM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > On Tue, 28 May 2024 at 16:15, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Mon, May 27, 2024 at 6:34=E2=80=AFAM Dmitry Baryshkov
-> > > <dmitry.baryshkov@linaro.org> wrote:
-> > > >
-> > > > Currently only the single part device trees are validated against D=
-T
-> > > > schema. For the multipart schema files only the first file is valid=
-ated.
-> > >
-> > > What do you mean by multipart schema files? Did you mean multipart DT=
-s
-> > > (i.e. base plus overlays)?
-> >
-> > Yes, multipart DT files, dts + dtso =3D> dtb + dtbo =3D> final dtb
-> >
-> > >
-> > > Looks good otherwise and I can fix that up.
-> >
-> > Awesome, thanks!
->
->
->
->
-> This looks equivalent to the former patch rejected by Rob Herring:
->
-> https://lore.kernel.org/lkml/20240225151209.343160-1-alexander.stein@mail=
-box.org/
->
->
->
-> Did he change his mind since then?
+From: Yunseong Kim <yskelg@gmail.com>
 
-I think I misinterpreted the prior one to be checking just overlays
-rather than base+overlay seeing the 'dtbo' in it.
+Modify 'alloc_pdev()' to set 'pdev->xdev' to NULL
+if 'xen_pcibk_init_devices()' fails. This ensures that 'pdev->xdev' does
+not point to 'xdev' when 'pdev' is freed.
+And modify 'free_pdev()' to set 'pdev' to NULL.
 
-Of the 2, this patch seems a bit cleaner.
+Signed-off-by: Yunseong Kim <yskelg@gmail.com>
+---
+ drivers/xen/xen-pciback/xenbus.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Rob
+diff --git a/drivers/xen/xen-pciback/xenbus.c b/drivers/xen/xen-pciback/xenbus.c
+index b11e401f1b1e..f1709b8e284a 100644
+--- a/drivers/xen/xen-pciback/xenbus.c
++++ b/drivers/xen/xen-pciback/xenbus.c
+@@ -54,6 +54,7 @@ static struct xen_pcibk_device *alloc_pdev(struct xenbus_device *xdev)
+ 	INIT_WORK(&pdev->op_work, xen_pcibk_do_op);
+ 
+ 	if (xen_pcibk_init_devices(pdev)) {
++		pdev->xdev = NULL;
+ 		kfree(pdev);
+ 		pdev = NULL;
+ 	}
+@@ -102,6 +103,7 @@ static void free_pdev(struct xen_pcibk_device *pdev)
+ 	pdev->xdev = NULL;
+ 
+ 	kfree(pdev);
++	pdev = NULL;
+ }
+ 
+ static int xen_pcibk_do_attach(struct xen_pcibk_device *pdev, int gnt_ref,
+-- 
+2.34.1
+
