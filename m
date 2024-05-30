@@ -1,46 +1,46 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C54F17C7DF
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DE1155335
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717061822; cv=none; b=K0yYdkAzLtAF9Uurbp6cKPxDjAd34ZC75+ZcvIk2nALhm8AhHw7cOrJ7tSf3Z8aYmIFOOXuXJzWRFtKfCtmqbO7q7T04wpnx13szcHkmkIEE2Q/aCB3WVvIaXhSlrWoquIKz8CWceuDdCLNbkSW/O7ljjL1lCgXZMhQrFac2OKs=
+	t=1717061829; cv=none; b=YEXeSq3614Dv5bl0Int7edjRrLvAN5/Sk4MAkIcTx3rfULP1xT4FY1ArFk2/L6lq10qSEoBNzYVs3vgny/aYIp8yaYO6JeNTdB1B8xGZEDOXgljz1jLrzEUuQTFkoTsvf8U+rWlqsvZMv6EkG+qFxVuNBY432SYWb2SrzHQ6O/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717061822; c=relaxed/simple;
-	bh=JPSOsn2EYV5RNFFIpM3gJLv9MgcwRCZwWqf1i5rPHhw=;
+	s=arc-20240116; t=1717061829; c=relaxed/simple;
+	bh=ssOuzRZz0zhXC/m8+8KE9BJFHCMlcpA1tyE1pbyJusE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NZhFOOkheoI/MAOhtttC8khyjVJlKDZyNqdL6117fzvHwmmLnTaKsx67rjtVH+CZTVBUzfA3dhyApbcBWhE6jaIAXoOpkqOd5JOQ0eSX4clqqA9PiC5Q664Z8m6LJLZyAqW7qLqDXHE1jgLj21IXpQoFH2efQFEE0MDBwYPve+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WOGRVM/8; arc=none smtp.client-ip=198.47.19.141
+	 MIME-Version:Content-Type; b=uBQbgBRFB7GXFilXlZUUGiIl2YyU8jvojKa30RVtISE7Irv1ybyS5G50Whv582NGK32K91kqgS0Sd0WGbS7l1+8JtheBGtlL/F/AD+sOMeocRGO+NFLZNOzuzumK5mmAl/iuEUkakkNM7MZMLpKGIfeP3txBqyY52loa4S9cgds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Oha8PQjl; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WOGRVM/8"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44U9aZ7I128557;
-	Thu, 30 May 2024 04:36:35 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Oha8PQjl"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44U9adaM055589;
+	Thu, 30 May 2024 04:36:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717061795;
-	bh=o7FPsMUosCJlq8x5azKA7fpUh+z4uIS9lv2AcdMHgGY=;
+	s=ti-com-17Q1; t=1717061799;
+	bh=YGuptUSUi6PCUNFepUagbXGzpwxcwb18R5SXcLEni7Y=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=WOGRVM/8krM24LO/DjAU/KQ4QdT7nnQleRGuydKgs7Jr4wk7x3rAHfvARLEuNL82e
-	 Djm2kgBKpb/VKHA2G3n4w9A7wBLhtVGWm2xOFYav2UmnVUNROYwFCo+NKBz7pWOrGG
-	 5k3OYG2wn0f4OtxL3O6jVSlDOS5y/AHHkoBi67+0=
+	b=Oha8PQjlfEDV/DcneNe98XC/EWOPzqWzol/JGg+cqwkLCyNmrBVKVF6rRTLq8pcRF
+	 XKnroqcEFsZxEg2l2+xbJaqD7QFTiBLd0xj7xe6rztoIURjMIDTwICXhZthI8L8B2R
+	 4aBtO1yQPS6vomNMdolKStA5bNMuwHRG0wvM2wUw=
 Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44U9aZ5F055322
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44U9ad0Y104087
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 30 May 2024 04:36:35 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
+	Thu, 30 May 2024 04:36:39 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
  (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
- May 2024 04:36:35 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 04:36:38 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 30 May 2024 04:36:35 -0500
+ Frontend Transport; Thu, 30 May 2024 04:36:38 -0500
 Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44U9aYpP000634;
-	Thu, 30 May 2024 04:36:34 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44U9abTP086477;
+	Thu, 30 May 2024 04:36:38 -0500
 From: Aradhya Bhatia <a-bhatia1@ti.com>
 To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
         Andrzej Hajda
@@ -74,9 +74,9 @@ CC: DRI Development List <dri-devel@lists.freedesktop.org>,
  Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>,
         Aradhya Bhatia
 	<a-bhatia1@ti.com>
-Subject: [PATCH v2 7/9] drm/bridge: cdns-dsi: Support atomic bridge APIs
-Date: Thu, 30 May 2024 15:06:19 +0530
-Message-ID: <20240530093621.1925863-8-a-bhatia1@ti.com>
+Subject: [PATCH v2 9/9] drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
+Date: Thu, 30 May 2024 15:06:21 +0530
+Message-ID: <20240530093621.1925863-10-a-bhatia1@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240530093621.1925863-1-a-bhatia1@ti.com>
 References: <20240530093621.1925863-1-a-bhatia1@ti.com>
@@ -90,138 +90,103 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Change the existing (and deprecated) bridge hooks, to the bridge
-atomic APIs.
+The cdns-dsi controller requires that it be turned on completely before
+the input DPI's source has begun streaming[0]. Not having that, allows
+for a small window before cdns-dsi enable and after cdns-dsi disable
+where the previous entity (in this case tidss's videoport) to continue
+streaming DPI video signals. This small window where cdns-dsi is
+disabled but is still receiving signals causes the input FIFO of
+cdns-dsi to get corrupted. This causes the colors to shift on the output
+display. The colors can either shift by one color component (R->G, G->B,
+B->R), or by two color components (R->B, G->R, B->G).
 
-Add drm helpers for duplicate_state, destroy_state, and bridge_reset
-bridge hooks.
+Since tidss's videoport starts streaming via crtc enable hooks, we need
+cdns-dsi to be up and running before that. Now that the bridges are
+pre_enabled before crtc is enabled, and post_disabled after crtc is
+disabled, use the pre_enable and post_disable hooks to get cdns-dsi
+ready and running before the tidss videoport to get pass the color shift
+issues.
 
-Further add support for the input format negotiation hook.
+[0]: See section 12.6.5.7.3 "Start-up Procedure" in J721E SoC TRM
+     TRM Link: http://www.ti.com/lit/pdf/spruil1
 
 Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
 ---
- .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 70 ++++++++++++++++---
- 1 file changed, 62 insertions(+), 8 deletions(-)
+ .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 32 +++----------------
+ 1 file changed, 4 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index 87fdd07ca0bc..6a2223ecff7d 100644
+index 6a2223ecff7d..1eedc7053ef8 100644
 --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
 +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -13,6 +13,7 @@
- #include <linux/clk.h>
- #include <linux/interrupt.h>
- #include <linux/iopoll.h>
-+#include <linux/media-bus-format.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_graph.h>
-@@ -655,7 +656,8 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
+@@ -656,8 +656,8 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
  	return MODE_OK;
  }
  
--static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
-+static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
-+					   struct drm_bridge_state *old_bridge_state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -675,7 +677,8 @@ static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
- 	pm_runtime_put(dsi->base.dev);
- }
- 
--static void cdns_dsi_bridge_post_disable(struct drm_bridge *bridge)
+-static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
+-					   struct drm_bridge_state *old_bridge_state)
 +static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
 +						struct drm_bridge_state *old_bridge_state)
  {
  	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
  	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -752,7 +755,8 @@ static void cdns_dsi_init_link(struct cdns_dsi *dsi)
+@@ -677,15 +677,6 @@ static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
+ 	pm_runtime_put(dsi->base.dev);
+ }
+ 
+-static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
+-						struct drm_bridge_state *old_bridge_state)
+-{
+-	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+-	struct cdns_dsi *dsi = input_to_dsi(input);
+-
+-	pm_runtime_put(dsi->base.dev);
+-}
+-
+ static void cdns_dsi_hs_init(struct cdns_dsi *dsi)
+ {
+ 	struct cdns_dsi_output *output = &dsi->output;
+@@ -755,8 +746,8 @@ static void cdns_dsi_init_link(struct cdns_dsi *dsi)
  	dsi->link_initialized = true;
  }
  
--static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
-+static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
-+					  struct drm_bridge_state *old_bridge_state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -903,7 +907,8 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
- 	writel(tmp, dsi->regs + MCTL_MAIN_EN);
- }
- 
--static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
+-static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
+-					  struct drm_bridge_state *old_bridge_state)
 +static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
 +					      struct drm_bridge_state *old_bridge_state)
  {
  	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
  	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -915,13 +920,62 @@ static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
- 	cdns_dsi_hs_init(dsi);
+@@ -907,19 +898,6 @@ static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
+ 	writel(tmp, dsi->regs + MCTL_MAIN_EN);
  }
  
-+static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
-+					       struct drm_bridge_state *bridge_state,
-+					       struct drm_crtc_state *crtc_state,
-+					       struct drm_connector_state *conn_state,
-+					       u32 output_fmt,
-+					       unsigned int *num_input_fmts)
-+{
-+	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
-+	struct cdns_dsi *dsi = input_to_dsi(input);
-+	struct cdns_dsi_output *output = &dsi->output;
-+	u32 *input_fmts;
-+
-+	*num_input_fmts = 0;
-+
-+	input_fmts = kzalloc(sizeof(*input_fmts), GFP_KERNEL);
-+	if (!input_fmts)
-+		return NULL;
-+
-+	switch (output->dev->format) {
-+	case MIPI_DSI_FMT_RGB888:
-+		input_fmts[0] = MEDIA_BUS_FMT_RGB888_1X24;
-+		break;
-+
-+	case MIPI_DSI_FMT_RGB666:
-+		input_fmts[0] = MEDIA_BUS_FMT_RGB666_1X24_CPADHI;
-+		break;
-+
-+	case MIPI_DSI_FMT_RGB666_PACKED:
-+		input_fmts[0] = MEDIA_BUS_FMT_RGB666_1X18;
-+		break;
-+
-+	case MIPI_DSI_FMT_RGB565:
-+		input_fmts[0] = MEDIA_BUS_FMT_RGB565_1X16;
-+		break;
-+
-+	default:
-+		/* Unsupported DSI Format */
-+		return NULL;
-+	}
-+
-+	*num_input_fmts = 1;
-+
-+	return input_fmts;
-+}
-+
+-static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+-					      struct drm_bridge_state *old_bridge_state)
+-{
+-	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+-	struct cdns_dsi *dsi = input_to_dsi(input);
+-
+-	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
+-		return;
+-
+-	cdns_dsi_init_link(dsi);
+-	cdns_dsi_hs_init(dsi);
+-}
+-
+ static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
+ 					       struct drm_bridge_state *bridge_state,
+ 					       struct drm_crtc_state *crtc_state,
+@@ -968,9 +946,7 @@ static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
  static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
  	.attach = cdns_dsi_bridge_attach,
  	.mode_valid = cdns_dsi_bridge_mode_valid,
--	.disable = cdns_dsi_bridge_disable,
--	.pre_enable = cdns_dsi_bridge_pre_enable,
--	.enable = cdns_dsi_bridge_enable,
--	.post_disable = cdns_dsi_bridge_post_disable,
-+	.atomic_disable = cdns_dsi_bridge_atomic_disable,
-+	.atomic_pre_enable = cdns_dsi_bridge_atomic_pre_enable,
-+	.atomic_enable = cdns_dsi_bridge_atomic_enable,
-+	.atomic_post_disable = cdns_dsi_bridge_atomic_post_disable,
-+	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-+	.atomic_reset = drm_atomic_helper_bridge_reset,
-+	.atomic_get_input_bus_fmts = cdns_dsi_bridge_get_input_bus_fmts,
- };
- 
- static int cdns_dsi_attach(struct mipi_dsi_host *host,
+-	.atomic_disable = cdns_dsi_bridge_atomic_disable,
+ 	.atomic_pre_enable = cdns_dsi_bridge_atomic_pre_enable,
+-	.atomic_enable = cdns_dsi_bridge_atomic_enable,
+ 	.atomic_post_disable = cdns_dsi_bridge_atomic_post_disable,
+ 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+ 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
 -- 
 2.34.1
 
