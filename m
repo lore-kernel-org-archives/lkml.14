@@ -1,53 +1,53 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8258E634
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 05:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C581E25763
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 05:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717045290; cv=none; b=GIrw71qJrD6QyDhcFu9ZWc/psMm9jLg5nF0dWSc24g1rq22+aquxuJRXOKijfSz/11aJ3B42rOSuU5beD1oeJ76Ynu1987Wj9Ua/kmpjX10E1AxjKy0aAVnTYZkShPfYWA7Y/LUN9f+Sjdln04w06ZdiiT6A71wWUv2WKkFdGYE=
+	t=1717045350; cv=none; b=mXmlIN7PCUsgXHJe6b52yWfEUTJOlVQKA7PXD/UZDK9fY4esnUsPSOTtR06ANDeyNC3DT6KxPTeZexjAD82PLHowuf+FJ/FDdYlBdvvS9vRdNyE31bd8WNemSx/NPGXINtMTY9GVlyREmsOuNO/U/p5ATKeECtcbt/sbWc5cRFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717045290; c=relaxed/simple;
-	bh=vRYRVj2yHwGKHI9c0vlZTFqbZmmt5CpYXco37xWR11U=;
+	s=arc-20240116; t=1717045350; c=relaxed/simple;
+	bh=wV4gpbB6zW0xSYYObobATH8bdGUR62w3eMnW/D5wleQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPb94w4pwhuE4OffrhwGUm48QwkpPfzd5J36jYo3rzY6t5oX0WOG8DAbSpaVdIy3QpPIMfNw6tGMRNfptbjITiAQac3vmhzJVZtCzdaDKuQnGGGn9+gWUG/VoSvjpDhB0WRprotXAEmoqfERAswWHIjDTpUZZJ3PrDh+R+iYI/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eI4FrrA6; arc=none smtp.client-ip=209.85.214.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=eVW2aHdor3BKiHpSsG6T7E4Oj3jeVve2nTzXIMEXqA+oEbdxqbbkzqwDq6ZkRw3fnZpSzAB2qMkgMsUtdOEahYECyd6OL42uEcmVtG7u9jtxHOrURCNKyM5kUoVHScY4E0Kq6vSfnotxclWgwzX0R5eCOchEp2dLVm0Kgni5Mq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BsMVim/Q; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eI4FrrA6"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f4a52b9413so4175585ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 22:01:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BsMVim/Q"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f6911d16b4so474711b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 22:02:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717045289; x=1717650089; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1717045348; x=1717650148; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dRdNEjxzIM5Rgcd8TIZIbz07ixws27VOZGX4oVc8Qwk=;
-        b=eI4FrrA6ZBnZ4qSJNpM4PajYoOJIMH6VpW3dx5U948jnBCXmJ2jma96LZhpEPh72Cr
-         RoqspLk6ooN0IHw+OMSKoS+u1sVWOUU8p9T+qJU42ju3CbP4wp2kFwL9KNLMeZIwsg0K
-         lt6TrkpehXPGsGofTMzeK3LBq8JHsR+HKmFCM=
+        bh=E2rzSDb215bjTuDO8BCbneyrOEpC1jpSqJofLgkhMlo=;
+        b=BsMVim/QNlGNIa45eyV+cV+1qkw2Q2X6EfNaud00Pr2e9QMBi5S23XI0JbmYLxxRtr
+         T8sdhRGx+TI+mhEvDOjg71QR26ewmcNtx2ku22ZMC2Jbe7l2QVkGWupTnKeVFDvZemoQ
+         0Zeqdi/+eINop8ne+iZGUo10W+pvwk4pQYGlg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717045289; x=1717650089;
+        d=1e100.net; s=20230601; t=1717045348; x=1717650148;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dRdNEjxzIM5Rgcd8TIZIbz07ixws27VOZGX4oVc8Qwk=;
-        b=rssGiDKqyNbLncf20nWpnmoVCIYCyS2am1TBW/wBHT/Gq+Fesf/2j5qS6x81qQQ9J2
-         IgMDJmJAv6S8nNKC+eHrquetUhWSvOIMxr/jCEmIrSVPf0pythfI71iGwTB91MRef/S3
-         N2aUnlkdtldF7oLoMbeaoXfjGuF9UxhX1Ts0IB6LJJnRZrwYbSDmqs2T+pLxO1govk/e
-         YWvAsgBIhRrJ014jUVowWeQb/ZyFSrhGXQgjm8vDgfhukRTcvvnJ+/EXiloWJcKon35q
-         sHnSGSI3O6ZnnMEXPds4JrUtsQtKcNjR2kmqKDcIF7D29RbxAmzsGWRpUh3WY7MIH23S
-         vnsg==
-X-Gm-Message-State: AOJu0YwHfQ4oFxwCORivmRtjBbQsWbGre3aNh5hKq4UeWbR6jC8vuK39
-	eqBZ8VKvKULlPDDg/gxkdGxesPiCmlHxKh/HqqgJ7uaob7PcQgyYJu/01p6iyg==
-X-Google-Smtp-Source: AGHT+IGBR7/UV6FYMP+J1U4nmRVzd9ysxLjhJ4Lsndbi40JaRdq5hR2YnRps4qFoDo8mocVy6VgchA==
-X-Received: by 2002:a17:902:ecc6:b0:1f6:226f:cc42 with SMTP id d9443c01a7336-1f6226fd024mr1831595ad.43.1717045288628;
-        Wed, 29 May 2024 22:01:28 -0700 (PDT)
+        bh=E2rzSDb215bjTuDO8BCbneyrOEpC1jpSqJofLgkhMlo=;
+        b=QfbiO2t26CjwaXvv3T9lua/Fbla9+ySFRAB/WCahJtA4+JyoRQx0Boau1s6TLGfZIJ
+         Qnv0tO8No7VF3wNFwGt/zl3E6G4MTtr05gDpyRZU2vUpzirrrnQs9Fvc0zFduoDCCHvb
+         TeZZy7hhRxj79P7t0p/XCMIkaX+1gJhNcEUdOj1yPVPVoSh5nuQZv3wTHKB7XS979x++
+         le7RLlF5xTGH+c338wXLgelrwqImg3AeM3M80Ud86hkBSqhxW8R4Nedf7OhVN/R+1xas
+         WgDFi4PvcLh6S1EtPZltW+P+fFA6lM543uWdMau3cVly/yHhEgY7Sej/aE8duW5pSvOZ
+         IQTA==
+X-Gm-Message-State: AOJu0YysmA+lJ0dF0YIWkfoCaUJm8rvMmgFA/HYFTC7cfr89Ux29A27R
+	y5JapeBU5sIbAfuYOPWy6j8XIWQxBi0pQ14v2QqL6wKNdfgWwGPJhsxuWd4gkQ==
+X-Google-Smtp-Source: AGHT+IHN8ur5W5Ju5M/+GYL/UfE5kg+ae0967SpV28BilHbdephBhNKqKAOeEMhgmvM9yQIP5TZxRw==
+X-Received: by 2002:a05:6a20:a120:b0:1ad:7e4d:5b81 with SMTP id adf61e73a8af0-1b26452b4b2mr1287569637.5.1717045348180;
+        Wed, 29 May 2024 22:02:28 -0700 (PDT)
 Received: from google.com ([2401:fa00:8f:203:52e7:354b:db96:c366])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c97063asm108726795ad.150.2024.05.29.22.01.25
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-701b7cacca4sm3875395b3a.37.2024.05.29.22.02.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 22:01:27 -0700 (PDT)
-Date: Thu, 30 May 2024 14:01:23 +0900
+        Wed, 29 May 2024 22:02:27 -0700 (PDT)
+Date: Thu, 30 May 2024 14:02:23 +0900
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: David Hildenbrand <david@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
@@ -56,10 +56,9 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	Mike Rapoport <rppt@kernel.org>, Minchan Kim <minchan@kernel.org>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Subject: Re: [PATCH v2 3/6] mm/zsmalloc: use a proper page type
-Message-ID: <20240530050123.GA8400@google.com>
+Subject: Re: [PATCH v2 0/6] mm: page_type, zsmalloc and page_mapcount_reset()
+Message-ID: <20240530050223.GB8400@google.com>
 References: <20240529111904.2069608-1-david@redhat.com>
- <20240529111904.2069608-4-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,18 +67,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240529111904.2069608-4-david@redhat.com>
+In-Reply-To: <20240529111904.2069608-1-david@redhat.com>
 
-On (24/05/29 13:19), David Hildenbrand wrote:
-> We won't be able to support 256 KiB base pages, which is acceptable.
-[..]
-> +config HAVE_ZSMALLOC
-> +	def_bool y
-> +	depends on MMU
-> +	depends on PAGE_SIZE_LESS_THAN_256KB # we want <= 64 KiB
+On (24/05/29 13:18), David Hildenbrand wrote:
+> Wanting to remove the remaining abuser of _mapcount/page_type along with
+> page_mapcount_reset(), I stumbled over zsmalloc, which is yet to be
+> converted away from "struct page" [1].
+> 
+> Unfortunately, we cannot stop using the page_type field in zsmalloc code
+> completely for its own purposes. All other fields in "struct page" are
+> used one way or the other. Could we simply store a 2-byte offset value
+> at the beginning of each page? Likely, but that will require a bit more
+> work; and once we have memdesc we might want to move the offset in there
+> (struct zsalloc?) again.
+> 
+> ... but we can limit the abuse to 16 bit, glue it to a page type that
+> must be set, and document it. page_has_type() will always successfully
+> indicate such zsmalloc pages, and such zsmalloc pages only.
+> 
+> We lose zsmalloc support for PAGE_SIZE > 64KB, which should be tolerable.
+> We could use more bits from the page type, but 16 bit sounds like a good
+> idea for now.
+> 
+> So clarify the _mapcount/page_type documentation, use a proper page_type
+> for zsmalloc, and remove page_mapcount_reset().
+> 
+> Briefly tested with zram on x86-64.
+> 
+> [1] https://lore.kernel.org/all/20231130101242.2590384-1-42.hyeyoo@gmail.com/
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
-Can't really say that I'm happy with this, but if mm-folks are
-fine then okay.
-
-FWIW
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Tested-by: Sergey Senozhatsky <senozhatsky@chromium.org> # zram/zsmalloc workloads
