@@ -1,108 +1,84 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C8A7F;
-	Thu, 30 May 2024 06:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6C5DDA0;
+	Thu, 30 May 2024 06:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717049050; cv=none; b=SKluSDmg4M2I6xJqfmlIW5IgqxQyF0mS0+hENK/5KZxlamwNWQB8JlrG1GnDWp/SKCoTLqczFoAZgpL6lSjZ6sEMsmxPahBzHEzGxCa4VTbGe7Um1tHaVlDEkhwzq3ihzJqgnkhpESFucYTf112b55hyNfBIzS/b3wNlUNFUyyk=
+	t=1717049255; cv=none; b=EsN6BWTlBM1+RiFBoFtLWBLfVs5WXDHLsK4BjVHGL1CWOyXMjyH4MUPgQbrCKtUKsn8SS/LGU6NB5vf6bh1BGJrlGZwC1xXp7r7wCWtE2f6u7n0c6tLZZasYGaUXU1K4JvmPRFbQOCNFw9r7vlXsZQQDejBusscL+ox7Xk8tWQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717049050; c=relaxed/simple;
-	bh=URxu/tsa8bKNnf2t3ZCrJR7OioSdMvg9SOTtIE8dyKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GQzvHlh9Qh6txY2B+Qk+CnE0B/6UQ9ODbGBDLIxuHGIWZz0hv/lm9cS060Qc94/FVvs1P9q9VaO6VsAU/gbAlzJ2pR4a9e4D71K9vnYp052fVauFsdfNr8KocPUEemvz4PKS8oYXAWe+iBWLWnmBZn3H/dqtnMfhd4oafL4r7Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-681ad26f277so437357a12.3;
-        Wed, 29 May 2024 23:04:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717049048; x=1717653848;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ThHnNR/9j74Rarkk9nUgCXBgAgDJGiDv+klBudZG31w=;
-        b=mCJrrsk51ik5y17Ul+z8hx7iE0O2cOH8rlDonYfHwSUa7N7P3RdE6bc/VV4r2qOOba
-         G/lo+JyMV7xhwvXOIX22LtXe5SzqGKGzeiHjCRsFHbBzRTFWRAUPjM80JafDgrkTBmnP
-         HGGTcrwPhTiw2dqle/S7Pg1iF9MaOFPerOzXqSP3ZS9VOYCCnB55Jtted/G3bayqVA7K
-         FF8VBXVCfHxCDb8fupTjnN33jJUdzVeNklf9JsH3+GrRJzQbb6RyAYRGd1aQ04J80MEn
-         VEIcyr+Oo2PNk9BZ4ma/IFITv4QFWDAoqwNQE5kjfp1UjRsfs/XpjPISgPopdvX7QAFR
-         qRnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV03O3NztfQFoaOGWkqcntZATCnR13XNg9Tyqp51GlnAo9nUtMNx9BgxOVnSVPnDfk0Hkd9izEYm3mGyc4YkejXZxIJnS8JO3NOhsTjRLzEHIkyzB/Xx6aYqTwvjKJ4t/a3M8pJ/CUUqdJ/P0wmIX1025k9IcZirLk0kteiT5YGX60VkA==
-X-Gm-Message-State: AOJu0YwtZm3ms3f7pDdoPVBOkxVim6S6SXM3FO2VALTNfCTVqTEsGLr9
-	Jw7YZEEqxCD/CWDjUl6dPy9OEHTYm3PCkURAi+2z4sNOeAraag+uE5PwQu8bJSJEuWhgkgcmhzH
-	CfyLgMtVrruUzlCowjdzJ22SC3ph/jA==
-X-Google-Smtp-Source: AGHT+IFEIKu+ZoHL9gVO5CzC3c4Exr/ziXJi6rz2+DV0/AXVi19jEH2BUtVzDKswl0ykBodshY7JVpUaOP4dLYeb9G0=
-X-Received: by 2002:a17:90a:f490:b0:2b1:782:8827 with SMTP id
- 98e67ed59e1d1-2c1ab9f6d69mr1272467a91.20.1717049047939; Wed, 29 May 2024
- 23:04:07 -0700 (PDT)
+	s=arc-20240116; t=1717049255; c=relaxed/simple;
+	bh=HaYt2U+ot0lKNo1rF40NupQyMsZE36x8bEub+oPge68=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=YkZDzgewZvFaMSWBw1JkmDnpSjiJEEBT/csUtkXc1h0qssRlp28LSCcaxzQdCOZc0S0JKwzhBIa/DBhJPCg1AzNB4ztek238s8ihFN/xd13JQOUwxMCZDw2ncMUfuCC8lOIoSfwZ4+OL8gYWMyq+sjYQ1P6ipjNwUgkXPsJDDbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4GcpmJv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4GcpmJv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13DA5C2BBFC;
+	Thu, 30 May 2024 06:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717049254;
+	bh=HaYt2U+ot0lKNo1rF40NupQyMsZE36x8bEub+oPge68=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=X4GcpmJvZMxWDq6XgjQ+3KSTg09v76vgBVwMhHmZP4Nt66NUtlSyl3oHkCN+hw06W
+	 b4itoI0WYrjUXTKQiemhkWpnGsgW8X0Q6pG9lgN55PVktBGlQwzZFGjbWM379Ios7i
+	 rCw9NjP260KHm1E8qo8ucC1JdZQgRS5fc7FRCg4RHMDwwrpOIFFZUUFwjn8H3U4lvZ
+	 nEm5BRe67LkkPwku7fd5GgDeFSlkhd9niY9AyXd0muMdgKwJitk23OALnKQV2/zZKT
+	 2995hxrL5vWBkdAlNGEGAOIK1/VDVv4dxjSrzqE5k6RUe7TKc+mAzfnrPmQtDkKnu3
+	 7zjcAmr+cMtWQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240524205227.244375-1-irogers@google.com>
-In-Reply-To: <20240524205227.244375-1-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 May 2024 23:03:56 -0700
-Message-ID: <CAM9d7ciL7G7YR4bFVO18sC4CRCm30G0WUdgp+txRnsG7CAYPHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Use BPF filters for a "perf top -u" workaround
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Changbin Du <changbin.du@huawei.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 30 May 2024 09:07:23 +0300
+Message-Id: <D1MR5P0W2DSW.MI93JIMHBXKI@kernel.org>
+Cc: "Paul Moore" <paul@paul-moore.com>, "Fan Wu"
+ <wufan@linux.microsoft.com>, <corbet@lwn.net>, <zohar@linux.ibm.com>,
+ <jmorris@namei.org>, <serge@hallyn.com>, <tytso@mit.edu>,
+ <axboe@kernel.dk>, <agk@redhat.com>, <snitzer@kernel.org>,
+ <mpatocka@redhat.com>, <eparis@redhat.com>, <linux-doc@vger.kernel.org>,
+ <linux-integrity@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+ <fsverity@lists.linux.dev>, <linux-block@vger.kernel.org>,
+ <dm-devel@lists.linux.dev>, <audit@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Deven Bowers"
+ <deven.desai@linux.microsoft.com>
+Subject: Re: [PATCH v19 15/20] fsverity: expose verified fsverity built-in
+ signatures to LSMs
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Eric Biggers" <ebiggers@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <1716583609-21790-16-git-send-email-wufan@linux.microsoft.com>
+ <06bb61dc838eeff63bb5f11cea6d4b53@paul-moore.com>
+ <D1MQTEW77RY8.36THC7YDK7CZO@kernel.org>
+ <20240530060120.GB29189@sol.localdomain>
+In-Reply-To: <20240530060120.GB29189@sol.localdomain>
 
-On Fri, May 24, 2024 at 1:52=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Thu May 30, 2024 at 9:01 AM EEST, Eric Biggers wrote:
+> On Thu, May 30, 2024 at 08:51:21AM +0300, Jarkko Sakkinen wrote:
+> > On Thu May 30, 2024 at 4:44 AM EEST, Paul Moore wrote:
+> > > > +	err =3D security_inode_setintegrity(inode,
+> > > > +					  LSM_INT_FSVERITY_BUILTINSIG_VALID,
+> > > > +					  signature,
+> > > > +					  le32_to_cpu(sig_size));
+> > >
+> > > I like this much better without the explicit inode cast :)
+> >=20
+> > Would be nice btw if that was 'ret' or 'rc' because err is such
+> > a common name for exception handler alike goto-labels... Looks
+> > confusing just because of that :-)
+> >=20
 >
-> Allow uid and gid to be terms in BPF filters by first breaking the
-> connection between filter terms and PERF_SAMPLE_xx values. Calculate
-> the uid and gid using the bpf_get_current_uid_gid helper, rather than
-> from a value in the sample. Allow filters to be passed to perf top, this =
-allows:
->
-> $ perf top -e cycles:P --filter "uid =3D=3D $(id -u)"
->
-> to work as a "perf top -u" workaround, as "perf top -u" usually fails
-> due to processes/threads terminating between the /proc scan and the
-> perf_event_open.
->
-> v3. Move PERF_SAMPLE_xx asserts to sample_filter.bpf.c to avoid
->     conflicting definitions between vmlinux.h and perf_event.h as
->     reported by Namhyung.
-> v2. Allow PERF_SAMPLE_xx to be computed from the PBF_TERM_xx value
->     using a shift as requested by Namhyung.
->
-> Ian Rogers (3):
->   perf bpf filter: Give terms their own enum
->   perf bpf filter: Add uid and gid terms
->   perf top: Allow filters on events
+> A lot of kernel code, including the rest of fs/verity/, uses the conventi=
+on that
+> "0 or negative errno" return values are named 'err' (and return values th=
+at
+> aren't necessarily an errno are named something else).  So it's fine as-i=
+s.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Right, just hadn't seen such naming convention before.
 
-Thanks,
-Namhyung
-
->
->  tools/perf/Documentation/perf-record.txt     |  2 +-
->  tools/perf/Documentation/perf-top.txt        |  4 ++
->  tools/perf/builtin-top.c                     |  9 +++
->  tools/perf/util/bpf-filter.c                 | 33 +++++----
->  tools/perf/util/bpf-filter.h                 |  5 +-
->  tools/perf/util/bpf-filter.l                 | 66 +++++++++---------
->  tools/perf/util/bpf-filter.y                 |  7 +-
->  tools/perf/util/bpf_skel/sample-filter.h     | 40 ++++++++++-
->  tools/perf/util/bpf_skel/sample_filter.bpf.c | 73 +++++++++++++++-----
->  9 files changed, 169 insertions(+), 70 deletions(-)
->
-> --
-> 2.45.1.288.g0e0cd299f1-goog
->
+BR, Jarkko
