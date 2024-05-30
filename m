@@ -1,626 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C6F1CB306;
-	Thu, 30 May 2024 15:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089C318755D;
+	Thu, 30 May 2024 15:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717081890; cv=none; b=gT9e6X6tmuvBZJv9qoJE35dMSAd+VNOOhaSdkoSd65mB5be/6yXcNMTEhDbL4nhBV8dLaNVJd8+bas4N9beyphf4eScqJknXwOW5pS8EpvwI+3O7mYizTl2ZbbINEw9drJW/gMZ50Y3PeRiUsIV1+oirKynpCkPisuZ1nI883nM=
+	t=1717082056; cv=none; b=A+pYBfImtomNG+qod+f4ggHOR/8EhLFM7EWhVUBCuTGXSHiHm96Dofkzq+8PB5YYID4J6AIOxvhWdU+Ww366+C42T+CZ4yiYl/m3syZfUPGu8zoVxvP8WOHpez84LdDEJHuOSnpXMBuaGaGItQ1VwIdyKduwy4FS1tQYFl+Jvsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717081890; c=relaxed/simple;
-	bh=HYlrU3UBrVhjvXqz3+lbjc1NAwS2xeDgiIYUu3mQpXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ga7cXBg2lxFFOgypDKHW8P12KNqg86CwHRyX4IaDDucpz73FjkDDM2qUUGtSq06GCtUr6p5K476QjEKcRnmKQW0vrK8GbaVIIo4UEUcMMjE8BLrYtYpuc1Oaw1wuDtGOUvpUfZWoIV3moGDeg8S9kBfFGbGWMFJqAxhFSDgu9Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Knbwssup; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717082056; c=relaxed/simple;
+	bh=WIbbh2QIEse26jjLM2QZGcRptTEmJwSZHC3dc6xVXTI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=PXzITOVziOh43Dv2zM3ygVcrTBgNXIoXDMelGv4tmbyF8PwVNkuy7RHVNAeJkFdqZI+ZtTE128EyZS5AP6HOfbCq1L0wRA9FooHJwVaqilPydm+7gVpK9JS/7cAoMmJsJzUAXF7eEpPkgPHQvXsEvfM/C3tXSYJNiiKhRJJLNns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=my013GmM; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Knbwssup"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717081888; x=1748617888;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HYlrU3UBrVhjvXqz3+lbjc1NAwS2xeDgiIYUu3mQpXA=;
-  b=KnbwssupSB+Ia7j6j6qhzCoCQg94Z3i0XZjLa7kUs7iWawvBL6M4PIvH
-   w0XGOzs+UB+dvoeF4wo7j6QBFAkfRvU2wwZrtQdK3roxlSxJgeWW/Lw9k
-   lSrq1+2ULzBaoYrejbekJ7ktImDv2cJI/uS6wmNGiq4YldMe4E7+Szm6O
-   HCi/mAsc7W04fGaWeYqdAk5t2YgKe9Yx3angYQLDDkbd1jzqi22PYjy/I
-   Js1TQV6yQ63svold9O/1vMLqEafsoQaGAPBflFRUfKqaH/oNsnOZv1Zh/
-   putGL+Bk8FnHCLH/1tqWgf1VtnPp05dsOrGt0RrQeEeC43Ndk6e2Yn5XT
-   A==;
-X-CSE-ConnectionGUID: x49ng7RJSoi905XDkAAEvg==
-X-CSE-MsgGUID: hxLyUNShQ+2LpbDiSiR6ew==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="31067974"
-X-IronPort-AV: E=Sophos;i="6.08,201,1712646000"; 
-   d="scan'208";a="31067974"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 08:11:26 -0700
-X-CSE-ConnectionGUID: GLCTZRnDTYmRXgBP/9I+5A==
-X-CSE-MsgGUID: VOD612wUSKSb/EIN8wlzzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,201,1712646000"; 
-   d="scan'208";a="73329440"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 30 May 2024 08:11:24 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 82AB072B; Thu, 30 May 2024 18:11:19 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="my013GmM"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-70231ac9093so743276b3a.3;
+        Thu, 30 May 2024 08:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717082054; x=1717686854; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=POWEYsGteFBsH2FZNkJsEWH+VNGD5DA1v64fZi4BMrU=;
+        b=my013GmM7FWATseWx6v6ZmgH4OZZAsT9IztuiSkjPRmr8mtjqIBzUL0NJK68YHcyZF
+         mzmJLT5io1neE+MLPiqBHTIkFxY093L2XPaIICTmUHso1Vbqu0PyPriENO4tM09id7No
+         Sr3S95yk3A0D5JvaoWxD2MIq/BK18gCEn5Spg2iKjxFajcNuHzd64wb2DZem8dlQNIYI
+         P3ssaNd2TYeh2RTFZ4EnR46H/Mrt2Sve2jCO32WTgczDQf8NMVGMvvrdYxG9A5c37Kml
+         wRbe/8tLdaTodctr2vAxYeKZrw6yXKfOzGVgRGdo7yq7VYMSo9nDUME7OYr6963X8vVv
+         /YmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717082054; x=1717686854;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=POWEYsGteFBsH2FZNkJsEWH+VNGD5DA1v64fZi4BMrU=;
+        b=WXzPRtsaAfE8PwHx1m5LAa5gosND8vOh97qeAHSA9coN9hN6nDyEpXFL+52l/6jwCx
+         XG9vbfXsO2HAAJ4hBI2tFT4JF9xQztD5dPX+eZMvaMhBpzU9BOvjHU4M1xRhJRGxnOQy
+         NutqU/Phkb2lB29DkyUpEjwC5Q/yZnza4A7Q3bRYOVaA0EAyjkYl3QSmANuK0x1Gf8jg
+         OVyRMJ0RqQOpGQOQnUBY5rORf6bYYyxFsE17SK0r+lRA/hTZ9dnBw11aA3GpAAeaN+2p
+         6mubsYyhVHAySsNRIeRMFI3pK7SSk3wPAslUHpwnaxw/ZocakY+ue74gm2Vbgq76OQlD
+         uNxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUI6qbZnqzAhK9P8DeBmVfJv5NVquVklfNK7CIDKBm2s5pDGiU1KzsPK9mywJvRSOwvqP4zVV1fkPs3Q7MgdUhdmlJA9E5gFB0eWglMW8D5IPmRHIclr1CCKjDunjCqALTeM7Qu8kYi
+X-Gm-Message-State: AOJu0YzYqgHBSaYX1tkwTWsi+NEr4PiZqcB2sH7HrrP+4p3eYCROoxcG
+	gYZU/uC8QYUq0dw+Y2CNp6xCjtZMhZCBmQ5ONIz7v7KOke04Adtu
+X-Google-Smtp-Source: AGHT+IGICTP5sklLFqbs/ZwVa6ppaEurwlGt53+Midop+1P6fL/wAwqHWhlksi7i6tSOKUtz3E7Y8Q==
+X-Received: by 2002:a05:6a20:104c:b0:1a7:7ac1:a3ba with SMTP id adf61e73a8af0-1b26460b783mr1963623637.53.1717082054022;
+        Thu, 30 May 2024 08:14:14 -0700 (PDT)
+Received: from localhost ([36.40.187.183])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-68226a133d0sm10738538a12.62.2024.05.30.08.14.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2024 08:14:13 -0700 (PDT)
+From: joswang <joswang1221@gmail.com>
+To: Thinh.Nguyen@synopsys.com
+Cc: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 10/11] spi: pxa2xx: Move platform driver to a separate file
-Date: Thu, 30 May 2024 18:10:06 +0300
-Message-ID: <20240530151117.1130792-11-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240530151117.1130792-1-andriy.shevchenko@linux.intel.com>
-References: <20240530151117.1130792-1-andriy.shevchenko@linux.intel.com>
+	joswang <joswang@lenovo.com>
+Subject: [PATCH] usb: dwc3: core: workaround for hibernation D3 entry timeout
+Date: Thu, 30 May 2024 23:13:39 +0800
+Message-Id: <20240530151339.45572-1-joswang1221@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The spi-pxa2xx.c is bloated with a platform driver code while
-pretending to provide a core functionality. Make it real core
-library by splitting out the platform driver to a separate file.
+From: joswang <joswang@lenovo.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+In the case of enable hibernation, there is an issue with
+the DWC31 2.00a and earlier versions where the controller
+link power state transition from P3/P3CPM/P4 to P2 may take
+longer than expected, ultimately resulting in the hibernation
+D3 entering time exceeding the expected 10ms.
+
+Synopsys workaround:
+If the PHY supports direct P3 to P2 transition, program
+GUSB3PIPECTL.P3P2Tran0K=1. However, note that as per PIPE4
+Specification, direct transition from P3 to P2 is illegal.
+
+Therefore, adding p3p2tranok quirk for workaround hibernation
+D3 exceeded the expected entry time.
+
+Signed-off-by: joswang <joswang@lenovo.com>
 ---
- drivers/spi/Makefile              |   3 +-
- drivers/spi/spi-pxa2xx-platform.c | 214 +++++++++++++++++++++++++++++
- drivers/spi/spi-pxa2xx.c          | 215 ++----------------------------
- drivers/spi/spi-pxa2xx.h          |   6 +
- 4 files changed, 230 insertions(+), 208 deletions(-)
- create mode 100644 drivers/spi/spi-pxa2xx-platform.c
+ drivers/usb/dwc3/core.c | 5 +++++
+ drivers/usb/dwc3/core.h | 4 ++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index e694254dec04..bcfb6efd88e0 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -107,7 +107,8 @@ obj-$(CONFIG_SPI_PIC32)			+= spi-pic32.o
- obj-$(CONFIG_SPI_PIC32_SQI)		+= spi-pic32-sqi.o
- obj-$(CONFIG_SPI_PL022)			+= spi-pl022.o
- obj-$(CONFIG_SPI_PPC4xx)		+= spi-ppc4xx.o
--spi-pxa2xx-platform-objs		:= spi-pxa2xx.o spi-pxa2xx-dma.o
-+obj-$(CONFIG_SPI_PXA2XX)		+= spi-pxa2xx-core.o
-+spi-pxa2xx-core-y			:= spi-pxa2xx.o spi-pxa2xx-dma.o
- obj-$(CONFIG_SPI_PXA2XX)		+= spi-pxa2xx-platform.o
- obj-$(CONFIG_SPI_PXA2XX_PCI)		+= spi-pxa2xx-pci.o
- obj-$(CONFIG_SPI_QCOM_GENI)		+= spi-geni-qcom.o
-diff --git a/drivers/spi/spi-pxa2xx-platform.c b/drivers/spi/spi-pxa2xx-platform.c
-new file mode 100644
-index 000000000000..98a8ceb7db6f
---- /dev/null
-+++ b/drivers/spi/spi-pxa2xx-platform.c
-@@ -0,0 +1,214 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/acpi.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/types.h>
-+
-+#include "spi-pxa2xx.h"
-+
-+static bool pxa2xx_spi_idma_filter(struct dma_chan *chan, void *param)
-+{
-+	return param == chan->device->dev;
-+}
-+
-+static int
-+pxa2xx_spi_init_ssp(struct platform_device *pdev, struct ssp_device *ssp, enum pxa_ssp_type type)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	int status;
-+	u64 uid;
-+
-+	ssp->mmio_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-+	if (IS_ERR(ssp->mmio_base))
-+		return PTR_ERR(ssp->mmio_base);
-+
-+	ssp->phys_base = res->start;
-+
-+	ssp->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(ssp->clk))
-+		return PTR_ERR(ssp->clk);
-+
-+	ssp->irq = platform_get_irq(pdev, 0);
-+	if (ssp->irq < 0)
-+		return ssp->irq;
-+
-+	ssp->type = type;
-+	ssp->dev = dev;
-+
-+	status = acpi_dev_uid_to_integer(ACPI_COMPANION(dev), &uid);
-+	if (status)
-+		ssp->port_id = -1;
-+	else
-+		ssp->port_id = uid;
-+
-+	return 0;
-+}
-+
-+static void pxa2xx_spi_ssp_release(void *ssp)
-+{
-+	pxa_ssp_free(ssp);
-+}
-+
-+static struct ssp_device *pxa2xx_spi_ssp_request(struct platform_device *pdev)
-+{
-+	struct ssp_device *ssp;
-+	int status;
-+
-+	ssp = pxa_ssp_request(pdev->id, pdev->name);
-+	if (!ssp)
-+		return ssp;
-+
-+	status = devm_add_action_or_reset(&pdev->dev, pxa2xx_spi_ssp_release, ssp);
-+	if (status)
-+		return ERR_PTR(status);
-+
-+	return ssp;
-+}
-+
-+static struct pxa2xx_spi_controller *
-+pxa2xx_spi_init_pdata(struct platform_device *pdev)
-+{
-+	struct pxa2xx_spi_controller *pdata;
-+	struct device *dev = &pdev->dev;
-+	struct device *parent = dev->parent;
-+	const void *match = device_get_match_data(dev);
-+	enum pxa_ssp_type type = SSP_UNDEFINED;
-+	struct ssp_device *ssp;
-+	bool is_lpss_priv;
-+	u32 num_cs = 1;
-+	int status;
-+
-+	ssp = pxa2xx_spi_ssp_request(pdev);
-+	if (IS_ERR(ssp))
-+		return ERR_CAST(ssp);
-+	if (ssp) {
-+		type = ssp->type;
-+	} else if (match) {
-+		type = (enum pxa_ssp_type)(uintptr_t)match;
-+	} else {
-+		u32 value;
-+
-+		status = device_property_read_u32(dev, "intel,spi-pxa2xx-type", &value);
-+		if (status)
-+			return ERR_PTR(status);
-+
-+		type = (enum pxa_ssp_type)value;
-+	}
-+
-+	/* Validate the SSP type correctness */
-+	if (!(type > SSP_UNDEFINED && type < SSP_MAX))
-+		return ERR_PTR(-EINVAL);
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/* Platforms with iDMA 64-bit */
-+	is_lpss_priv = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpss_priv");
-+	if (is_lpss_priv) {
-+		pdata->tx_param = parent;
-+		pdata->rx_param = parent;
-+		pdata->dma_filter = pxa2xx_spi_idma_filter;
-+	}
-+
-+	/* Read number of chip select pins, if provided */
-+	device_property_read_u32(dev, "num-cs", &num_cs);
-+
-+	pdata->num_chipselect = num_cs;
-+	pdata->is_target = device_property_read_bool(dev, "spi-slave");
-+	pdata->enable_dma = true;
-+	pdata->dma_burst_size = 1;
-+
-+	/* If SSP has been already enumerated, use it */
-+	if (ssp)
-+		return pdata;
-+
-+	status = pxa2xx_spi_init_ssp(pdev, &pdata->ssp, type);
-+	if (status)
-+		return ERR_PTR(status);
-+
-+	return pdata;
-+}
-+
-+static int pxa2xx_spi_platform_probe(struct platform_device *pdev)
-+{
-+	struct pxa2xx_spi_controller *platform_info;
-+	struct device *dev = &pdev->dev;
-+	struct ssp_device *ssp;
-+
-+	platform_info = dev_get_platdata(dev);
-+	if (!platform_info) {
-+		platform_info = pxa2xx_spi_init_pdata(pdev);
-+		if (IS_ERR(platform_info))
-+			return dev_err_probe(dev, PTR_ERR(platform_info), "missing platform data\n");
-+
-+		dev->platform_data = platform_info;
-+	}
-+
-+	ssp = pxa2xx_spi_ssp_request(pdev);
-+	if (IS_ERR(ssp))
-+		return PTR_ERR(ssp);
-+	if (!ssp)
-+		ssp = &platform_info->ssp;
-+
-+	return pxa2xx_spi_probe(dev, ssp);
-+}
-+
-+static void pxa2xx_spi_platform_remove(struct platform_device *pdev)
-+{
-+	pxa2xx_spi_remove(&pdev->dev);
-+}
-+
-+static const struct acpi_device_id pxa2xx_spi_acpi_match[] = {
-+	{ "80860F0E" },
-+	{ "8086228E" },
-+	{ "INT33C0" },
-+	{ "INT33C1" },
-+	{ "INT3430" },
-+	{ "INT3431" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, pxa2xx_spi_acpi_match);
-+
-+static const struct of_device_id pxa2xx_spi_of_match[] = {
-+	{ .compatible = "marvell,mmp2-ssp", .data = (void *)MMP2_SSP },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, pxa2xx_spi_of_match);
-+
-+static struct platform_driver driver = {
-+	.driver = {
-+		.name	= "pxa2xx-spi",
-+		.pm	= pm_ptr(&pxa2xx_spi_pm_ops),
-+		.acpi_match_table = pxa2xx_spi_acpi_match,
-+		.of_match_table = pxa2xx_spi_of_match,
-+	},
-+	.probe = pxa2xx_spi_platform_probe,
-+	.remove_new = pxa2xx_spi_platform_remove,
-+};
-+
-+static int __init pxa2xx_spi_init(void)
-+{
-+	return platform_driver_register(&driver);
-+}
-+subsys_initcall(pxa2xx_spi_init);
-+
-+static void __exit pxa2xx_spi_exit(void)
-+{
-+	platform_driver_unregister(&driver);
-+}
-+module_exit(pxa2xx_spi_exit);
-+
-+MODULE_AUTHOR("Stephen Street");
-+MODULE_DESCRIPTION("PXA2xx SSP SPI Controller platform driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(SPI_PXA2xx);
-+MODULE_ALIAS("platform:pxa2xx-spi");
-+MODULE_SOFTDEP("pre: dw_dmac");
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 74f242e652df..1fb30201459f 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -4,7 +4,6 @@
-  * Copyright (C) 2013, 2021 Intel Corporation
-  */
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 7ee61a89520b..3a8fbc2d6b99 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -666,6 +666,9 @@ static int dwc3_ss_phy_setup(struct dwc3 *dwc, int index)
+ 	if (dwc->dis_del_phy_power_chg_quirk)
+ 		reg &= ~DWC3_GUSB3PIPECTL_DEPOCHANGE;
  
--#include <linux/acpi.h>
- #include <linux/atomic.h>
- #include <linux/bitops.h>
- #include <linux/bug.h>
-@@ -14,15 +13,12 @@
- #include <linux/dmaengine.h>
- #include <linux/err.h>
- #include <linux/gpio/consumer.h>
--#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/math64.h>
- #include <linux/minmax.h>
--#include <linux/mod_devicetable.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-@@ -32,11 +28,6 @@
- 
- #include "spi-pxa2xx.h"
- 
--MODULE_AUTHOR("Stephen Street");
--MODULE_DESCRIPTION("PXA2xx SSP SPI Controller");
--MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:pxa2xx-spi");
--
- #define TIMOUT_DFLT		1000
- 
- /*
-@@ -1263,131 +1254,6 @@ static void cleanup(struct spi_device *spi)
- 	kfree(chip);
- }
- 
--static bool pxa2xx_spi_idma_filter(struct dma_chan *chan, void *param)
--{
--	return param == chan->device->dev;
--}
--
--static int
--pxa2xx_spi_init_ssp(struct platform_device *pdev, struct ssp_device *ssp, enum pxa_ssp_type type)
--{
--	struct device *dev = &pdev->dev;
--	struct resource *res;
--	int status;
--	u64 uid;
--
--	ssp->mmio_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
--	if (IS_ERR(ssp->mmio_base))
--		return PTR_ERR(ssp->mmio_base);
--
--	ssp->phys_base = res->start;
--
--	ssp->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(ssp->clk))
--		return PTR_ERR(ssp->clk);
--
--	ssp->irq = platform_get_irq(pdev, 0);
--	if (ssp->irq < 0)
--		return ssp->irq;
--
--	ssp->type = type;
--	ssp->dev = dev;
--
--	status = acpi_dev_uid_to_integer(ACPI_COMPANION(dev), &uid);
--	if (status)
--		ssp->port_id = -1;
--	else
--		ssp->port_id = uid;
--
--	return 0;
--}
--
--static void pxa2xx_spi_ssp_release(void *ssp)
--{
--	pxa_ssp_free(ssp);
--}
--
--static struct ssp_device *pxa2xx_spi_ssp_request(struct platform_device *pdev)
--{
--	struct ssp_device *ssp;
--	int status;
--
--	ssp = pxa_ssp_request(pdev->id, pdev->name);
--	if (!ssp)
--		return ssp;
--
--	status = devm_add_action_or_reset(&pdev->dev, pxa2xx_spi_ssp_release, ssp);
--	if (status)
--		return ERR_PTR(status);
--
--	return ssp;
--}
--
--static struct pxa2xx_spi_controller *
--pxa2xx_spi_init_pdata(struct platform_device *pdev)
--{
--	struct pxa2xx_spi_controller *pdata;
--	struct device *dev = &pdev->dev;
--	struct device *parent = dev->parent;
--	const void *match = device_get_match_data(dev);
--	enum pxa_ssp_type type = SSP_UNDEFINED;
--	struct ssp_device *ssp;
--	bool is_lpss_priv;
--	u32 num_cs = 1;
--	int status;
--
--	ssp = pxa2xx_spi_ssp_request(pdev);
--	if (IS_ERR(ssp))
--		return ERR_CAST(ssp);
--	if (ssp) {
--		type = ssp->type;
--	} else if (match) {
--		type = (enum pxa_ssp_type)(uintptr_t)match;
--	} else {
--		u32 value;
--
--		status = device_property_read_u32(dev, "intel,spi-pxa2xx-type", &value);
--		if (status)
--			return ERR_PTR(status);
--
--		type = (enum pxa_ssp_type)value;
--	}
--
--	/* Validate the SSP type correctness */
--	if (!(type > SSP_UNDEFINED && type < SSP_MAX))
--		return ERR_PTR(-EINVAL);
--
--	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
--	if (!pdata)
--		return ERR_PTR(-ENOMEM);
--
--	/* Platforms with iDMA 64-bit */
--	is_lpss_priv = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpss_priv");
--	if (is_lpss_priv) {
--		pdata->tx_param = parent;
--		pdata->rx_param = parent;
--		pdata->dma_filter = pxa2xx_spi_idma_filter;
--	}
--
--	/* Read number of chip select pins, if provided */
--	device_property_read_u32(dev, "num-cs", &num_cs);
--
--	pdata->num_chipselect = num_cs;
--	pdata->is_target = device_property_read_bool(dev, "spi-slave");
--	pdata->enable_dma = true;
--	pdata->dma_burst_size = 1;
--
--	/* If SSP has been already enumerated, use it */
--	if (ssp)
--		return pdata;
--
--	status = pxa2xx_spi_init_ssp(pdev, &pdata->ssp, type);
--	if (status)
--		return ERR_PTR(status);
--
--	return pdata;
--}
--
- static int pxa2xx_spi_fw_translate_cs(struct spi_controller *controller,
- 				      unsigned int cs)
- {
-@@ -1413,7 +1279,7 @@ static size_t pxa2xx_spi_max_dma_transfer_size(struct spi_device *spi)
- 	return MAX_DMA_LEN;
- }
- 
--static int pxa2xx_spi_probe(struct device *dev, struct ssp_device *ssp)
-+int pxa2xx_spi_probe(struct device *dev, struct ssp_device *ssp)
- {
- 	struct pxa2xx_spi_controller *platform_info;
- 	struct spi_controller *controller;
-@@ -1613,8 +1479,9 @@ static int pxa2xx_spi_probe(struct device *dev, struct ssp_device *ssp)
- 
- 	return status;
- }
-+EXPORT_SYMBOL_NS_GPL(pxa2xx_spi_probe, SPI_PXA2xx);
- 
--static void pxa2xx_spi_remove(struct device *dev)
-+void pxa2xx_spi_remove(struct device *dev)
- {
- 	struct driver_data *drv_data = dev_get_drvdata(dev);
- 	struct ssp_device *ssp = drv_data->ssp;
-@@ -1637,6 +1504,7 @@ static void pxa2xx_spi_remove(struct device *dev)
- 	/* Release IRQ */
- 	free_irq(ssp->irq, drv_data);
- }
-+EXPORT_SYMBOL_NS_GPL(pxa2xx_spi_remove, SPI_PXA2xx);
- 
- static int pxa2xx_spi_suspend(struct device *dev)
- {
-@@ -1688,78 +1556,11 @@ static int pxa2xx_spi_runtime_resume(struct device *dev)
- 	return clk_prepare_enable(drv_data->ssp->clk);
- }
- 
--static const struct dev_pm_ops pxa2xx_spi_pm_ops = {
-+EXPORT_NS_GPL_DEV_PM_OPS(pxa2xx_spi_pm_ops, SPI_PXA2xx) = {
- 	SYSTEM_SLEEP_PM_OPS(pxa2xx_spi_suspend, pxa2xx_spi_resume)
- 	RUNTIME_PM_OPS(pxa2xx_spi_runtime_suspend, pxa2xx_spi_runtime_resume, NULL)
- };
- 
--static int pxa2xx_spi_platform_probe(struct platform_device *pdev)
--{
--	struct pxa2xx_spi_controller *platform_info;
--	struct device *dev = &pdev->dev;
--	struct ssp_device *ssp;
--
--	platform_info = dev_get_platdata(dev);
--	if (!platform_info) {
--		platform_info = pxa2xx_spi_init_pdata(pdev);
--		if (IS_ERR(platform_info))
--			return dev_err_probe(dev, PTR_ERR(platform_info), "missing platform data\n");
--
--		dev->platform_data = platform_info;
--	}
--
--	ssp = pxa2xx_spi_ssp_request(pdev);
--	if (IS_ERR(ssp))
--		return PTR_ERR(ssp);
--	if (!ssp)
--		ssp = &platform_info->ssp;
--
--	return pxa2xx_spi_probe(dev, ssp);
--}
--
--static void pxa2xx_spi_platform_remove(struct platform_device *pdev)
--{
--	pxa2xx_spi_remove(&pdev->dev);
--}
--
--static const struct acpi_device_id pxa2xx_spi_acpi_match[] = {
--	{ "80860F0E" },
--	{ "8086228E" },
--	{ "INT33C0" },
--	{ "INT33C1" },
--	{ "INT3430" },
--	{ "INT3431" },
--	{}
--};
--MODULE_DEVICE_TABLE(acpi, pxa2xx_spi_acpi_match);
--
--static const struct of_device_id pxa2xx_spi_of_match[] = {
--	{ .compatible = "marvell,mmp2-ssp", .data = (void *)MMP2_SSP },
--	{}
--};
--MODULE_DEVICE_TABLE(of, pxa2xx_spi_of_match);
--
--static struct platform_driver driver = {
--	.driver = {
--		.name	= "pxa2xx-spi",
--		.pm	= pm_ptr(&pxa2xx_spi_pm_ops),
--		.acpi_match_table = pxa2xx_spi_acpi_match,
--		.of_match_table = pxa2xx_spi_of_match,
--	},
--	.probe = pxa2xx_spi_platform_probe,
--	.remove_new = pxa2xx_spi_platform_remove,
--};
--
--static int __init pxa2xx_spi_init(void)
--{
--	return platform_driver_register(&driver);
--}
--subsys_initcall(pxa2xx_spi_init);
--
--static void __exit pxa2xx_spi_exit(void)
--{
--	platform_driver_unregister(&driver);
--}
--module_exit(pxa2xx_spi_exit);
--
--MODULE_SOFTDEP("pre: dw_dmac");
-+MODULE_AUTHOR("Stephen Street");
-+MODULE_DESCRIPTION("PXA2xx SSP SPI Controller core driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/spi/spi-pxa2xx.h b/drivers/spi/spi-pxa2xx.h
-index 93e1e471e1c6..a470d3d634d3 100644
---- a/drivers/spi/spi-pxa2xx.h
-+++ b/drivers/spi/spi-pxa2xx.h
-@@ -14,6 +14,7 @@
- 
- #include <linux/pxa2xx_ssp.h>
- 
-+struct device;
- struct gpio_desc;
- 
- /*
-@@ -131,4 +132,9 @@ extern void pxa2xx_spi_dma_stop(struct driver_data *drv_data);
- extern int pxa2xx_spi_dma_setup(struct driver_data *drv_data);
- extern void pxa2xx_spi_dma_release(struct driver_data *drv_data);
- 
-+int pxa2xx_spi_probe(struct device *dev, struct ssp_device *ssp);
-+void pxa2xx_spi_remove(struct device *dev);
++	if (dwc->p2p3tranok_quirk)
++		reg |= DWC3_GUSB3PIPECTL_P3P2TRANOK;
 +
-+extern const struct dev_pm_ops pxa2xx_spi_pm_ops;
-+
- #endif /* SPI_PXA2XX_H */
+ 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(index), reg);
+ 
+ 	return 0;
+@@ -1715,6 +1718,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 
+ 	dwc->dis_split_quirk = device_property_read_bool(dev,
+ 				"snps,dis-split-quirk");
++	dwc->p2p3tranok_quirk = device_property_read_bool(dev,
++				"snps,p2p3tranok-quirk");
+ 
+ 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
+ 	dwc->tx_de_emphasis = tx_de_emphasis;
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 3781c736c1a1..2810dce8b42e 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -327,6 +327,7 @@
+ #define DWC3_GUSB3PIPECTL_DEP1P2P3_EN	DWC3_GUSB3PIPECTL_DEP1P2P3(1)
+ #define DWC3_GUSB3PIPECTL_DEPOCHANGE	BIT(18)
+ #define DWC3_GUSB3PIPECTL_SUSPHY	BIT(17)
++#define DWC3_GUSB3PIPECTL_P3P2TRANOK	BIT(11)
+ #define DWC3_GUSB3PIPECTL_LFPSFILT	BIT(9)
+ #define DWC3_GUSB3PIPECTL_RX_DETOPOLL	BIT(8)
+ #define DWC3_GUSB3PIPECTL_TX_DEEPH_MASK	DWC3_GUSB3PIPECTL_TX_DEEPH(3)
+@@ -1132,6 +1133,8 @@ struct dwc3_scratchpad_array {
+  *			instances in park mode.
+  * @parkmode_disable_hs_quirk: set if we need to disable all HishSpeed
+  *			instances in park mode.
++ * @p2p3tranok_quirk: set if Controller transitions directly from phy
++ *			power state P2 to P3 or from state P3 to P2.
+  * @gfladj_refclk_lpm_sel: set if we need to enable SOF/ITP counter
+  *                          running based on ref_clk
+  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+@@ -1361,6 +1364,7 @@ struct dwc3 {
+ 	unsigned		ulpi_ext_vbus_drv:1;
+ 	unsigned		parkmode_disable_ss_quirk:1;
+ 	unsigned		parkmode_disable_hs_quirk:1;
++	unsigned		p2p3tranok_quirk:1;
+ 	unsigned		gfladj_refclk_lpm_sel:1;
+ 
+ 	unsigned		tx_de_emphasis_quirk:1;
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.17.1
 
