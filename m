@@ -1,304 +1,198 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EAB18396D;
-	Thu, 30 May 2024 09:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED78118396D
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717062468; cv=none; b=NbdtDx0BkTh9P3IVYDiWymR9FieEzHJU+C4JukAvi3qULl+VNvhu5x0KGRZz4Cw4D8BT6prtWEoTKNVoT5Cr9yFb6vPab6v3PMyBdK5GmbzdhInkdRWzzhDTHI04PNSFZT5z4IiMuoW03H+q1LDWe/8qWTxY2oNOa+1WroSMNlU=
+	t=1717062585; cv=none; b=gP5isqUXvFdYfegKNdbdAWmN/eVCg1/Q1JhXZydyRlShTkxZvYyACIzTDtC7R4UnmOlqzhyheMgitcsOSx4NLIS/nMyhGPjpDZ4rjQf8o0z+fyYTYQEJKZ8HU7N9mPY2hgaNjfH12q00NaaQcoRGDYdt7FN7E74VD7GbZyDz65A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717062468; c=relaxed/simple;
-	bh=V5+yoBSzIP4N9nztoHDw9zEkT0VjA12EgOUkjZSYjQo=;
+	s=arc-20240116; t=1717062585; c=relaxed/simple;
+	bh=fQ+3phoyGWnxDQWBqX2maaRMs6DQ1OVnd2iqqX09eDU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OZtvVRf1RjAsZ6s4iKEknYMca2EsBqjltRL+O7HBwxIBVtkxlH5nAxq4+NTfvK5KUijO7fOnHLKmbMWmMny+7y7h3F8yI27dvi0byrUj58uj91EZ8FHZE/BO/kkS5eT9FvQgoLfe/a82vtPHDuvUOvbe+XmsrAvMm0XtVv5JrM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b2+nXj8l; arc=none smtp.client-ip=209.85.218.51
+	 To:Cc:Content-Type; b=ogsc1qPM02571hTa8D6HuFn3ga0JwS+8xCgcGS8GTy6BkeCa3vu45IILv0J9Se2veArdbYeIQ8ixjyk6UUFbOaG9JoDW8LyV6DCSzHBqgpaFuBdbX4V1NdnB5Kqw/OZ/jC3+DISkpmq86KGZlXZmMS3qHvlqBtUXqdkl0f68Vbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRnA1RZ+; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2+nXj8l"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6302bdb54aso66089166b.0;
-        Thu, 30 May 2024 02:47:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRnA1RZ+"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-35dc984b3d2so296104f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717062465; x=1717667265; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717062582; x=1717667382; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V5+yoBSzIP4N9nztoHDw9zEkT0VjA12EgOUkjZSYjQo=;
-        b=b2+nXj8ltBw7eokFNLcSW+96QRKGVrnZizG/BZUmqqTAGDw/DbfZdc3Sw49CTNhImz
-         y+6g7YTR6yjbfAV2Pojqk4NK4PKORrnpm8psNlzSW+CBBFxm7Na2o7E69+TyFCwsqfa/
-         Al6Gk7Nd5Wp1fs1/G8Fa0XqjvcrhDX1lwp0jNLq2WwRZVJZsxZC6hJBU1RODvwiGnv4w
-         uyf8F04RUoXjB6/B9y+TWSZ6ELMrqG2JF4hjqjvVfI/4KTpaiUSkxjU0vw1GoT9TeTlh
-         dIMnH2i+E4UnBpccnZxLKVCHmjSXApk/KiFtE94z6+mkQyBa32E9VRaIRP4B+yOqtKRu
-         8YLw==
+        bh=Ou7/re3lRwcgcNyKTGkXvwqkQT9+iebWGeN2EOTv3AM=;
+        b=mRnA1RZ+c11sYwFSjqBimqQB23CG1fIgHRhBEvmTqxKi8sQ9PGwTrobvN+gINl2rDS
+         dwO2JV1qN2h5Q6U+CUPxA6vFsz75phLMZqYi9PTHGeKTcZoHfuXcOz6EI+mGIP5HWIFl
+         ungsNwX4rcz35sjWI6d4ZTZyOLCnDD59pzIqd8X/zSd6/G/OAjOO16EBpXWGmooEszVR
+         qWBWw5xNJJe4x0qJ9SDWB5SV8FOG9HvHcYjp7ThFu6mfPEyU9Xq/sKZb/kSX100StN5l
+         5z0MB8PXJOKeoguPQY+NJRw8YO0ueH39IuWBFBepW2ZAn1fh1/9GW/3SyR1eYBwNcDAm
+         Yh9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717062465; x=1717667265;
+        d=1e100.net; s=20230601; t=1717062582; x=1717667382;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V5+yoBSzIP4N9nztoHDw9zEkT0VjA12EgOUkjZSYjQo=;
-        b=mjkkOadnksFUYjz1J0BKrxgUiCad7URpCyB69baFlIcqpKHdF4MTNGr+VI3T5xxS2r
-         CLrcbEJ/IsQDBeALzTFGTTeC4oj/uTf2o9WY+F+NyIjdJRhRkI32GBUGFkRynK754kf9
-         0NxGXJMfia023EX7SDJpgkP4lQ16HRkD7d60I+9HW3f7Kma+rjp1UO0GVAKDwkH37g5v
-         1jWb4Hq3ssl+AW3uJAaEmccABa27veps0gcfD4jbehtOWE84WQHtDN2+TaKVRx6aInXE
-         D9Bg7n+C1WQSxKa8g4wQBl0bgAy/JlCwaOEAA44H9UirtDPAyPnyJCd8Au1HxVpdizuO
-         Fy3w==
-X-Forwarded-Encrypted: i=1; AJvYcCV4qHsn9xy0neu/UBbRqgLL80sFMB+uQU9PCWD6SFImT4wQxwlJbqvIhEOvhQ04Up2ZB/Umk6cWf/qAylPLAXH6P9hxXQkK5YOSAVJY+V3IgfNoA4oBi/VE3jEwhSXUzeLCyp1G2a1Ec0Q8jnnr5JWXzMUP
-X-Gm-Message-State: AOJu0YzbPxaOSSwRQ/AX5HXTEs6pNY/UyFQto97P4As5c6K9jdHbL08m
-	OSOleeVF3IRFtISD5qRi3Dn5N/N8z5hwLroQFNhzA9/iGvZJ+pNhKQaCJ/Smf1EyEfq+6EZAOc+
-	gHK7MqF5n+9vDDfyEOPobUYlcdwU=
-X-Google-Smtp-Source: AGHT+IH50Rwm13AYK+wbRGw5mTFhtbcwPasoIeircptZi3T9RODgZKqlef74HGPeaeVaOrO9C81gfjUWVC/VzvTuIwc=
-X-Received: by 2002:a17:906:2bca:b0:a59:a977:a154 with SMTP id
- a640c23a62f3a-a65e937f21amr104485066b.64.1717062464510; Thu, 30 May 2024
- 02:47:44 -0700 (PDT)
+        bh=Ou7/re3lRwcgcNyKTGkXvwqkQT9+iebWGeN2EOTv3AM=;
+        b=PjjlwDkjh6EGNX1X9TSkjXoZG+drA+AaAyujuRghK78xgdN0oAPriPds0H8wLp2VmB
+         ns9bTwg10dPUcS5L0ZvQCbORBYoz7TwZHhsVajlzPzxDPjTst+8RbWZvgXfmg7uKJ6Be
+         L8Xcz7IsYaj03sM9daMhnwwkZxsfUVR0yoOoOT6AtAw4QlcEiHpdKSIMXTeHTzlWKByM
+         1My/JU8RjCa0xyYA4A1zmcW6AiVIRB2+GRiNYI+5WFBWWqyUxzxsqEgFL5/mcm86wfqU
+         v12yuN2AYoB9uSRZGbW+hNAmTmUQbmwWLa6OunOes4c/d3ewODyKUtSsHUJlrEXiz1gE
+         p7uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXE2yaKd5M2ZOhVU7IFB7F+DgNwOx/mkayYvKNbhRkmkh/bLCMX7RzrDjgw7vZT/Us/CCFj/WR8IIicT0C0Gl8jQeSyR/aE/n+KwmOo
+X-Gm-Message-State: AOJu0Yz0HTqdfceJ4Wik/0i200EXg7JmFua7CTvOmFhwN5waYu17K971
+	kzFRpMAdB9R0Y1nQMwvTbYBUTIuEu0XlSjA2NlVOs+81cT4TGDvEy6KSS00fru5Bnh83qmfxMkj
+	LSFWN/YdCg1GpXf1xgqqjCmWzJii5qFTaycs=
+X-Google-Smtp-Source: AGHT+IEjQDQ6uEg4JbtAD/ivMW1amNAemiInuIQiVjoRJK+OE1744Qu9ueJxqowtj9ltrNYo8iCENN3zD8l/lz9+hsY=
+X-Received: by 2002:a05:6000:1188:b0:354:fa5b:62ab with SMTP id
+ ffacd0b85a97d-35dc00924e7mr1913281f8f.18.1717062581967; Thu, 30 May 2024
+ 02:49:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f184a2d6-7892-4e43-a0cd-cab638c3d5c2@amd.com> <096178c9-91de-4752-bdc4-6a31bcdcbaf8@amd.com>
- <4871a305-5d45-47d2-85f2-d718c423db80@canonical.com> <CAGudoHFkDmGuPQDLf6rfiJxUdqFxjeeM-_9rFCApSrBYzfyRmA@mail.gmail.com>
- <3b880c7c-0d19-4bb6-9f0f-fb69047f41cd@canonical.com> <CAGudoHEycK3iTO2Rrsqr56_Lm69rCzMRaYz11NLrOcn5gKB3RA@mail.gmail.com>
- <5c94947b-1f1f-44a7-8b9c-b701c78350b4@canonical.com> <CAGudoHFxma+H_iHPV8+gfEkHc0uwFD8=rJtFy7ZE3TH+7tGiwQ@mail.gmail.com>
- <78cfe966-33ec-4858-b114-57697e478109@canonical.com> <82556a16-3390-4867-89b6-23e5ff168b89@amd.com>
- <f9215243-5610-4838-a31c-5894b75905e6@canonical.com>
-In-Reply-To: <f9215243-5610-4838-a31c-5894b75905e6@canonical.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 30 May 2024 11:47:32 +0200
-Message-ID: <CAGudoHH44-StgWJ_A8nLRT0g8p+-E0Ajen7Ns5-QRe17cohY0A@mail.gmail.com>
-Subject: Re: [RFC 0/9] Nginx refcount scalability issue with Apparmor enabled
- and potential solutions
-To: John Johansen <john.johansen@canonical.com>
-Cc: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, paul@paul-moore.com, jmorris@namei.org, 
-	serge@hallyn.com, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	"Shukla, Santosh" <Santosh.Shukla@amd.com>, "Narayan, Ananth" <Ananth.Narayan@amd.com>, 
-	raghavendra.kodsarathimmappa@amd.com, koverstreet@google.com, 
-	paulmck@kernel.org, boqun.feng@gmail.com, vinicius.gomes@intel.com
+References: <1716204978-29455-1-git-send-email-zhiguo.niu@unisoc.com>
+ <1d67715b-5f88-4940-969d-e098fd80ae2a@kernel.org> <CAHJ8P3LXYWQ+bLZHPn_5FLu3oi83ei8C9ZCzAXwa9oBdEKVDNA@mail.gmail.com>
+In-Reply-To: <CAHJ8P3LXYWQ+bLZHPn_5FLu3oi83ei8C9ZCzAXwa9oBdEKVDNA@mail.gmail.com>
+From: Zhiguo Niu <niuzhiguo84@gmail.com>
+Date: Thu, 30 May 2024 17:49:30 +0800
+Message-ID: <CAHJ8P3+ro9YsU7jZWeAfiUh9uNFEj_=Wiaf2YRLVLBD5_9fM0g@mail.gmail.com>
+Subject: Re: [PATCH] f2fs: enable atgc if atgc_age_threshold from user is less
+ than elapsed_time
+To: Chao Yu <chao@kernel.org>
+Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	ke.wang@unisoc.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2024 at 7:59=E2=80=AFAM John Johansen
-<john.johansen@canonical.com> wrote:
+On Mon, May 27, 2024 at 12:07=E2=80=AFPM Zhiguo Niu <niuzhiguo84@gmail.com>=
+ wrote:
 >
-> On 5/29/24 21:19, Neeraj Upadhyay wrote:
-> > Hi John,
+> On Mon, May 27, 2024 at 11:49=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
 > >
-> > Thanks for taking a look at the series!
+> > On 2024/5/20 19:36, Zhiguo Niu wrote:
+> > > Now atgc can be enabled based on the following conditions:
+> > > -ATGC mount option is set
+> > > -elapsed_time is more than atgc_age_threshold already
+> > > but these conditions are check when umounted->mounted device again.
+> > > If the device has not be umounted->mounted for a long time, atgc can
+> > > not work even the above conditions met.
 > >
-> > On 5/29/2024 6:07 AM, John Johansen wrote:
-> >> On 5/28/24 06:29, Mateusz Guzik wrote:
-> >>> On Fri, May 24, 2024 at 11:52=E2=80=AFPM John Johansen
-> >>> <john.johansen@canonical.com> wrote:
-> >>>>
-> >>>> On 5/24/24 14:10, Mateusz Guzik wrote:
-> >>>>> On Fri, Mar 8, 2024 at 9:09=E2=80=AFPM John Johansen
-> >>>>> <john.johansen@canonical.com> wrote:
-> >>>>>>
-> >>>>>> On 3/2/24 02:23, Mateusz Guzik wrote:
-> >>>>>>> On 2/9/24, John Johansen <john.johansen@canonical.com> wrote:
-> >>>>>>>> On 2/6/24 20:40, Neeraj Upadhyay wrote:
-> >>>>>>>>> Gentle ping.
-> >>>>>>>>>
-> >>>>>>>>> John,
-> >>>>>>>>>
-> >>>>>>>>> Could you please confirm that:
-> >>>>>>>>>
-> >>>>>>>>> a. The AppArmor refcount usage described in the RFC is correct?
-> >>>>>>>>> b. Approach taken to fix the scalability issue is valid/correct=
-?
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>> Hi Neeraj,
-> >>>>>>>>
-> >>>>>>>> I know your patchset has been waiting on review for a long time.
-> >>>>>>>> Unfortunately I have been very, very busy lately. I will try to
-> >>>>>>>> get to it this weekend, but I can't promise that I will be able
-> >>>>>>>> to get the review fully done.
-> >>>>>>>>
-> >>>>>>>
-> >>>>>>> Gentle prod.
-> >>>>>>>
-> >>>>>>> Any chances of this getting reviewed in the foreseeable future? W=
-ould
-> >>>>>>> be a real bummer if the patchset fell through the cracks.
-> >>>>>>>
-> >>>>>>
-> >>>>>> yes, sorry I have been unavailable for the last couple of weeks. I=
- am
-> >>>>>> now back, I have a rather large backlog to try catching up on but =
-this
-> >>>>>> is has an entry on the list.
-> >>>>>>
-> >>>>>
-> >>>>> So where do we stand here?
-> >>>>>
-> >>>> sorry I am still trying to dig out of my backlog, I will look at thi=
-s,
-> >>>> this weekend.
-> >>>>
-> >>>
-> >>> How was the weekend? ;)
-> >>>
-> >>
-> >> lets say it was busy. Have I looked at this, yes. I am still digesting=
- it.
-> >> I don't have objections to moving towards percpu refcounts, but the ov=
-erhead
-> >> of a percpu stuct per label is a problem when we have thousands of lab=
-els
-> >> on the system. That is to say, this would have to be a config option. =
-We
-> >> moved buffers from kmalloc to percpu to reduce memory overhead to redu=
-ce
-> >> contention. The to percpu, to a global pool because the percpu overhea=
-d was
-> >> too high for some machines, and then from a global pool to a hybrid sc=
-heme
-> >> because of global lock contention. I don't see a way of doing that wit=
-h the
-> >> label, which means a config would be the next best thing.
-> >>
+> > Zhiguo, I didn't get it, can you please explain more about this issue?
 > >
-> > For the buffers, what was the percpu overhead roughly? For
-> > thousands of labels, I think, the extra memory overhead roughly would
-> > be in the range of few MBs (need to be profiled though). This extra
-> > label overhead would be considered high for the machines where percpu
-> > buffer overhead was considered high?
-> >
+> > Thanks,
+> Hi Chao,
 >
-> It of course varies. It was fixed at 2-8K per cpu core depending on the b=
-uffer
-> size. So on a 192 cpu machine you we are talking a couple MBs. Obviously =
-more
-> on bigger machines. The problem here is say the percpu refcount while sma=
-ller
-> per label, will be more in situations with lots of cpus. Which is fine if=
- that
-> is what it needs to be, but for other use cases tuning it to be smaller w=
-ould
-> be nice.
+> At present, the point of atgc enale is checked during the mount
+> process. What I mean is that if a device has not been rebooted
+> (re-mounted) for a long time, even if the above two conditions are
+> met(ATGC mount option is set, and the device has been powered on long
+> enough=EF=BC=8C more than atgc default threshold ), atgc cannot be dynami=
+cally
+> enabled.
 >
->
-> > Please correct me here, so you are proposing that we use a kconfig to
-> > use either 'struct percpu_ref' or a 'struct kref' (using a union maybe)
-> > inside the 'struct aa_label' and update the refcount operations accordi=
-ngly?
-> > If yes, I will work on a patch with this kconfig based selection of
-> > refcounting mode to see how it pans out.
+> If the user is used to not restarting the phone after turning it on,
+> it will be difficult to use atgc.
+> thanks!
+Hi Chao,
+Do you have any suggestions or comments on this?
+thanks=EF=BC=81
+
 > >
-> possibly, I am still mulling over how we want to approach this
->
-> > @Mateusz can you share the dynamic switching counter mode patch series =
-please?
-> >
-> yes I am interested in looking at this as well.
->
-
-https://lore.kernel.org/lkml/1356573611-18590-26-git-send-email-koverstreet=
-@google.com/
-
-> > In addition, for long term, there is an ongoing work (by Paul, Boqun an=
-d myself)
-> > on implementing hazard pointers as a scalable refcounting scheme [1] in=
- kernel,
-> > which would not have memory usage overhead as in percpu refcount. At th=
-is point the
-> > API design/implementation is in early prototype stage.
-> >
-> >
-> > [1] https://docs.google.com/document/d/113WFjGlAW4m72xNbZWHUSE-yU2HIJnW=
-piXp91ShtgeE/edit?usp=3Dsharing
->
-> okay, I will take a look
->
-> >
-> >> Not part of your patch but something to be considered is that the labe=
-l tree
-> >> needs a rework, its locking needs to move to read side a read side loc=
-k less
-> >> scheme, and the plan was to make it also use a linked list such that n=
-ew
-> >> labels are always queued at the end, allowing dynamically created labe=
-ls to
-> >> be lazily added to the tree.
-> >>
-> >
-> > Read side would be rcu read lock protected in this scheme?
-> > The linked list would store the dynamically created compound labels?
-> > What is the advantage of using this lazy addition to the tree? We optim=
-ize
-> > on the label search, addition/deletion for dynamic labels? The lazy add=
-ition
-> > to the tree is done when a label find operation on the list succeeds?
-> >
-> there are contexts where we are creating labels, and do not want to wait =
-on
-> some of the longer tree walk profile updates/replacements. If a replaceme=
-nt is
-> on going the idea is to just add the label to the end of a list and let t=
-he
-> process that is doing the tree update take the hit of inserting and rebal=
-ancing
-> the tree.
->
->
-> >> I see the use of the kworker as problematic as well, especially if we =
-are
-> >> talking using kconfig to switch reference counting modes. I am futzing=
- with
-> >> some ideas, on how to deal with this.
-> >>
-> >
-> > We can disable queuing of label reclaim work for non-percpu case?
-> >
-> maybe, I am pondering ways we can deal with this. I have been pondering t=
-he
-> if we might be able to leverage a seqlock here, but I will also take a lo=
-ok
-> at hazard pointers.
->
-
-Since there is some elaborate talk going about this, let me throw in
-my own $0,03 -- I may happen to have a simple solution which will sort
-it out and it boils down to storing local ref updates in task_struct.
-
-Here is the context: creds are always refed and unrefed when creating
-and destroying a file object. Should you have one instance of
-credentials for a given user across different processes they would
-serialize on updating the ref. Linux mostly dodges the problem by
-always creating a copy on fork, thus only serializing within threads
-of a given process. Even then that induces avoidable overhead if only
-from single-threaded standpoint -- that's 2 atomics slapped for every
-open/close cycle.
-
-$elsewhere I devised an idea where cred ref updates to creds matching
-current->cred only modify a local counter. They get rolled up when
-current->creds is changed. That is to say there is 0 atomics or
-modifying memory seen by other cpus as long as the process does not
-change creds, which almost never happens compared to how often refing
-and unrefing is implemented.
-
-In struct cred apart from regular refs you would have "user" counter
-and "distributed" counter. switching user to > 0 grabs a normal ref on
-creds, the value of the "distributed" counter is arbitrary as long as
-user > 0. users going back to 0 means we can release the special ref
-held for that purpose.
-
-I was considering implementing this for Linux. In my original code all
-cred handling is augmented like this, but for Linux one could add a
-dedicated get_cred_localref or similar machinery.
-
-Skimming through apparmor suggests the bit which does cause
-performance problems can be sorted out in the same manner.
-
-Maybe i'll hack it up as a demo just for apparmor.
-
-This would come with some extra space usage in task_struct which on
-the surface may sounds like a non-starter. However, should you take a
-look at the struct with pahole you will find it is riddles with
-padding. If I wanted to I could add all fields I need to the struct
-and not grow it on LP64.
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
+> > >
+> > > It is better to enable atgc dynamiclly when user change atgc_age_thre=
+shold
+> > > meanwhile this vale is less than elapsed_time and ATGC mount option i=
+s on.
+> > >
+> > > Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> > > ---
+> > >   fs/f2fs/f2fs.h    |  1 +
+> > >   fs/f2fs/segment.c |  9 ++++-----
+> > >   fs/f2fs/sysfs.c   | 16 ++++++++++++++++
+> > >   3 files changed, 21 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > > index 1974b6a..e441d2d 100644
+> > > --- a/fs/f2fs/f2fs.h
+> > > +++ b/fs/f2fs/f2fs.h
+> > > @@ -3694,6 +3694,7 @@ void f2fs_clear_prefree_segments(struct f2fs_sb=
+_info *sbi,
+> > >   int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi);
+> > >   void f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi);
+> > >   void f2fs_restore_inmem_curseg(struct f2fs_sb_info *sbi);
+> > > +int f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi);
+> > >   int f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, int =
+type,
+> > >                                       unsigned int start, unsigned in=
+t end);
+> > >   int f2fs_allocate_new_section(struct f2fs_sb_info *sbi, int type, b=
+ool force);
+> > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > > index 71dc8042..44923d4 100644
+> > > --- a/fs/f2fs/segment.c
+> > > +++ b/fs/f2fs/segment.c
+> > > @@ -2931,14 +2931,11 @@ static int get_atssr_segment(struct f2fs_sb_i=
+nfo *sbi, int type,
+> > >       return ret;
+> > >   }
+> > >
+> > > -static int __f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
+> > > +int f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
+> > >   {
+> > >       struct curseg_info *curseg =3D CURSEG_I(sbi, CURSEG_ALL_DATA_AT=
+GC);
+> > >       int ret =3D 0;
+> > >
+> > > -     if (!sbi->am.atgc_enabled)
+> > > -             return 0;
+> > > -
+> > >       f2fs_down_read(&SM_I(sbi)->curseg_lock);
+> > >
+> > >       mutex_lock(&curseg->curseg_mutex);
+> > > @@ -2955,7 +2952,9 @@ static int __f2fs_init_atgc_curseg(struct f2fs_=
+sb_info *sbi)
+> > >   }
+> > >   int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi)
+> > >   {
+> > > -     return __f2fs_init_atgc_curseg(sbi);
+> > > +     if (!sbi->am.atgc_enabled)
+> > > +             return 0;
+> > > +     return f2fs_init_atgc_curseg(sbi);
+> > >   }
+> > >
+> > >   static void __f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi, int =
+type)
+> > > diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> > > index 09d3ecf..72676c5 100644
+> > > --- a/fs/f2fs/sysfs.c
+> > > +++ b/fs/f2fs/sysfs.c
+> > > @@ -673,6 +673,22 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+> > >               return count;
+> > >       }
+> > >
+> > > +     if (!strcmp(a->attr.name, "atgc_age_threshold")) {
+> > > +             if (t < 0)
+> > > +                     return -EINVAL;
+> > > +             sbi->am.age_threshold =3D t;
+> > > +             if (sbi->am.atgc_enabled)
+> > > +                     return count;
+> > > +
+> > > +             if (test_opt(sbi, ATGC) &&
+> > > +                     le64_to_cpu(sbi->ckpt->elapsed_time) >=3D t) {
+> > > +                     if (f2fs_init_atgc_curseg(sbi))
+> > > +                             return -EINVAL;
+> > > +                     sbi->am.atgc_enabled =3D true;
+> > > +             }
+> > > +             return count;
+> > > +     }
+> > > +
+> > >       if (!strcmp(a->attr.name, "gc_segment_mode")) {
+> > >               if (t < MAX_GC_MODE)
+> > >                       sbi->gc_segment_mode =3D t;
