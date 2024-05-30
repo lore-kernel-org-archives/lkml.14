@@ -1,206 +1,128 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FCA17C7B6;
-	Thu, 30 May 2024 10:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A17817D375;
+	Thu, 30 May 2024 10:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717064453; cv=none; b=Owj9d1bsuj2anAVHKjmt7c3hjqIqkt/VYzt7nLWQtqW4hew9RmL1NT9RPA9CuRcHF0JDwE0jJOV4CBmWcvWV50onW5J4Hi7ygSiO7DgurUk5XF4nsGekhwGkBT1ZDZTLwAuH3E9wOHWnL2Se6a8CU3fVseGNx/Ifxkx5UlwBVSQ=
+	t=1717064455; cv=none; b=YPCXzLzFy+wpr2D0CHFhrquOllRDacF6ze8o67zceEaGsZsG3k5YPwCFsn26pBWp1JcI72CS3DQLIhqrouuLqmgn04y8H8LDT3dtWaugYAZEfNeG9GwSMoPFsUxCaZcip4WYTu8lgepHBUtTODOJKMB+IX8Huy2ZTQm5J4Z4stc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717064453; c=relaxed/simple;
-	bh=5eLebbaV0zyj+qyJX+UH7BnQi/ioKPhf5f4rEpWKx7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QCql/R0/2dwFJXPeHUOxYfJ3S4ycskUQDau9JayzQQ9A2J7L2W1EIBKvpDyyeWYdUiB4MbEjjGlqs6jK01kb8mrxjQzJChRREyBGO24BxRsm/9H3gDKcxlc3IRwqkkyEFl2eLkObIIwaZqak+iOQjD0RsxZv5JtfEs4d7b0cn98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=R7p4UVRd; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=jYMg6BBa reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1717064455; c=relaxed/simple;
+	bh=Dyhr7keEUVVzyyNY+TREEUaFWBf8yRwzboMKiSGpBA4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WlyG2GredEM6B3aL4QOgvQ771GhoXcb7CIMPONn8HUFeJXp2nYjFKSLcekpUaWB84eFA0KMne8uVBl0vvRu41KHYJrO3Kbk/iKTequGlM/nHu0PDdgGY6bx0Iyria4DcbShO3zzT0Ol9gAg60ajYMsM5uHMw44WwFoTgEGeUWEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j3BHo8W1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="R7p4UVRd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="jYMg6BBa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1717064451; x=1748600451;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZyafMC3/3WL47KpxCKY/Ub/1F+zp4lv5M5Px5fItPpA=;
-  b=R7p4UVRdO7dBR1tT8z7rOWEeXypDxEuVWyOy++qUiCoT9/Re9gAlJmo+
-   smzuudKCrN+17V5Z25n/zzzoSTVdyBqsKP7mwkJR7zLXUbVa5GnSBLkq4
-   MK1tIPxKeTOwpxTdKjJdBZcTrUIKNaPsWFU6vyBMLkdxBNrjeM9Fpsojy
-   VRK3TG0byy54e9B1esNTiBUMYpM1kiV/aWIt+xbbE7RJKTRWm7+Hot2Jd
-   VP094Irt7GAzbbv3ZicoAYMkJyWWjsg7fZ5tqCY4AOce8L+PieveHo6dD
-   ne7jQYuMeV+JgiVFUAzBy+he64sSKd/Ikm9p9Ut9TDGRRU146AQjfdlNJ
-   g==;
-X-CSE-ConnectionGUID: V6YNQxmyRnaIyGO5gT3bJw==
-X-CSE-MsgGUID: JcMIrmFYTqCfvcE4DHiErw==
-X-IronPort-AV: E=Sophos;i="6.08,201,1712613600"; 
-   d="scan'208";a="37143002"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 30 May 2024 12:20:50 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0064A166210;
-	Thu, 30 May 2024 12:20:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1717064446;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=ZyafMC3/3WL47KpxCKY/Ub/1F+zp4lv5M5Px5fItPpA=;
-	b=jYMg6BBa3wzyC+2lziogLD8ZkYWBe4yQl1jU4NsdKo4oAbHaFZKyi2gfCEVy+GKHUwehhE
-	gkJvAk9twZL541pexY9Sh277Ct6U1cyg23JRuv5LBWMkgNt/1VWXUBU3IKcSwqmbWmYuc2
-	N01xTDF68uyAH78wZuDvJxlZhJW1J0HO0SahDSB8AixYUxNPwiE+3HVq7ZBplclkz6gLOV
-	w3YVwz8G4wCCEf7bAaXANmXpNzNqOotWFxR/LB+8vDr6whoO8HGg3iCz7bdUyxaKeIHxnD
-	hvXTZY65sQYM0Zfyk/E4GfpSdlcop6O7yfik95/aRkamCrHn+kwDVjC2TYMMVg==
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Gregor Herburger <gregor.herburger@tq-group.com>,
-	linux@ew.tq-group.com,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH v2 3/4] gpio: tqmx86: store IRQ trigger type and unmask status separately
-Date: Thu, 30 May 2024 12:20:01 +0200
-Message-ID: <6aa4f207f77cb58ef64ffb947e91949b0f753ccd.1717063994.git.matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <e0e38c9944ad6d281d9a662a45d289b88edc808e.1717063994.git.matthias.schiffer@ew.tq-group.com>
-References: <e0e38c9944ad6d281d9a662a45d289b88edc808e.1717063994.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j3BHo8W1"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44UA9Q9r005808;
+	Thu, 30 May 2024 10:20:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	l9AMveJ+dSan5ebZIRz9hxO5CEtlvoPrrlO06yvWKGY=; b=j3BHo8W1umWUOCEU
+	+898ELvpyOrz07gaNZeIp6ACsfj2C+bh/dRVih5e62DnQoxagjylYAKzT7PuuJjL
+	1VGaR8fDgKOx97ARiRcALszi+wRwVbDGxXOXk4TeJTtRE1bGVrvCDZGfNEuXhvXI
+	9tu6Mztu9Le4Wt5a0V3Vp9WHbOhYCg0vbxQHFvMe6yALrl6mCXhPXkADEk2vHGPA
+	krXMKT5MsNsQEBZ+BJGX/2UPYV4vjQbZkZZWCJ4E6jIPsYuMAvKKhkhLkBXj2YZm
+	lx3WRtxFHJo6dNmUsTjG+1zGou4wR9At/ve1+x46t7nn6xzfTjR7XvEarPRPyFmn
+	Oo3osQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0pufpu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 May 2024 10:20:49 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44UAKmo6012736
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 May 2024 10:20:48 GMT
+Received: from hu-ekangupt-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 30 May 2024 03:20:46 -0700
+From: Ekansh Gupta <quic_ekangupt@quicinc.com>
+To: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>
+CC: <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
+        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
+        stable
+	<stable@kernel.org>
+Subject: [PATCH v3 2/9] misc: fastrpc: Fix DSP capabilities request
+Date: Thu, 30 May 2024 15:50:20 +0530
+Message-ID: <20240530102032.27179-3-quic_ekangupt@quicinc.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240530102032.27179-1-quic_ekangupt@quicinc.com>
+References: <20240530102032.27179-1-quic_ekangupt@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: rIsDX0Jz9gijY2q3q5JZJAXgr5MCoL7o
+X-Proofpoint-GUID: rIsDX0Jz9gijY2q3q5JZJAXgr5MCoL7o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-30_07,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 spamscore=0 adultscore=0 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405300078
 
-irq_set_type() should not implicitly unmask the IRQ.
+Incorrect remote arguments are getting passed when requesting for
+capabilities from DSP. Also there is no requirement to update the
+PD type as it might cause problems for any PD other than user PD.
+In addition to this, the collected capability information is not
+getting copied properly to user. Add changes to address these
+problems and get correct DSP capabilities.
 
-All accesses to the interrupt configuration register are moved to a new
-helper tqmx86_gpio_irq_config(). We also introduce the new rule that
-accessing irq_type must happen while locked, which will become
-significant for fixing EDGE_BOTH handling.
-
-Fixes: b868db94a6a7 ("gpio: tqmx86: Add GPIO from for this IO controller")
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Fixes: 6c16fd8bdd40 ("misc: fastrpc: Add support to get DSP capabilities")
+Cc: stable <stable@kernel.org>
+Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
 ---
+ drivers/misc/fastrpc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-v2: Rebased to remove dependency on refactoring patches
-
- drivers/gpio/gpio-tqmx86.c | 48 ++++++++++++++++++++++----------------
- 1 file changed, 28 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
-index b7e2dbbdc4ebe..7e428c872a257 100644
---- a/drivers/gpio/gpio-tqmx86.c
-+++ b/drivers/gpio/gpio-tqmx86.c
-@@ -29,15 +29,19 @@
- #define TQMX86_GPIIC	3	/* GPI Interrupt Configuration Register */
- #define TQMX86_GPIIS	4	/* GPI Interrupt Status Register */
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 4028cb96bcf2..61389795f498 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -1700,9 +1700,8 @@ static int fastrpc_get_info_from_dsp(struct fastrpc_user *fl, uint32_t *dsp_attr
+ 	args[0].length = sizeof(dsp_attr_buf_len);
+ 	args[0].fd = -1;
+ 	args[1].ptr = (u64)(uintptr_t)&dsp_attr_buf[1];
+-	args[1].length = dsp_attr_buf_len;
++	args[1].length = dsp_attr_buf_len * sizeof(uint32_t);
+ 	args[1].fd = -1;
+-	fl->pd = USER_PD;
  
-+#define TQMX86_GPII_NONE	0
- #define TQMX86_GPII_FALLING	BIT(0)
- #define TQMX86_GPII_RISING	BIT(1)
- #define TQMX86_GPII_MASK	(BIT(0) | BIT(1))
- #define TQMX86_GPII_BITS	2
-+/* Stored in irq_type with GPII bits */
-+#define TQMX86_INT_UNMASKED	BIT(2)
+ 	return fastrpc_internal_invoke(fl, true, FASTRPC_DSP_UTILITIES_HANDLE,
+ 				       FASTRPC_SCALARS(0, 1, 1), args);
+@@ -1730,7 +1729,7 @@ static int fastrpc_get_info_from_kernel(struct fastrpc_ioctl_capability *cap,
+ 	if (!dsp_attributes)
+ 		return -ENOMEM;
  
- struct tqmx86_gpio_data {
- 	struct gpio_chip	chip;
- 	void __iomem		*io_base;
- 	int			irq;
-+	/* Lock must be held for accessing output and irq_type fields */
- 	raw_spinlock_t		spinlock;
- 	DECLARE_BITMAP(output, TQMX86_NGPIO);
- 	u8			irq_type[TQMX86_NGPI];
-@@ -104,21 +108,32 @@ static int tqmx86_gpio_get_direction(struct gpio_chip *chip,
- 	return GPIO_LINE_DIRECTION_OUT;
- }
+-	err = fastrpc_get_info_from_dsp(fl, dsp_attributes, FASTRPC_MAX_DSP_ATTRIBUTES_LEN);
++	err = fastrpc_get_info_from_dsp(fl, dsp_attributes, FASTRPC_MAX_DSP_ATTRIBUTES);
+ 	if (err == DSP_UNSUPPORTED_API) {
+ 		dev_info(&cctx->rpdev->dev,
+ 			 "Warning: DSP capabilities not supported on domain: %d\n", domain);
+@@ -1783,7 +1782,7 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
+ 	if (err)
+ 		return err;
  
-+static void tqmx86_gpio_irq_config(struct tqmx86_gpio_data *gpio, int offset)
-+	__must_hold(&gpio->spinlock)
-+{
-+	u8 type = TQMX86_GPII_NONE, gpiic;
-+
-+	if (gpio->irq_type[offset] & TQMX86_INT_UNMASKED)
-+		type = gpio->irq_type[offset] & TQMX86_GPII_MASK;
-+
-+	gpiic = tqmx86_gpio_read(gpio, TQMX86_GPIIC);
-+	gpiic &= ~(TQMX86_GPII_MASK << (offset * TQMX86_GPII_BITS));
-+	gpiic |= type << (offset * TQMX86_GPII_BITS);
-+	tqmx86_gpio_write(gpio, gpiic, TQMX86_GPIIC);
-+}
-+
- static void tqmx86_gpio_irq_mask(struct irq_data *data)
- {
- 	unsigned int offset = (data->hwirq - TQMX86_NGPO);
- 	struct tqmx86_gpio_data *gpio = gpiochip_get_data(
- 		irq_data_get_irq_chip_data(data));
- 	unsigned long flags;
--	u8 gpiic, mask;
--
--	mask = TQMX86_GPII_MASK << (offset * TQMX86_GPII_BITS);
- 
- 	raw_spin_lock_irqsave(&gpio->spinlock, flags);
--	gpiic = tqmx86_gpio_read(gpio, TQMX86_GPIIC);
--	gpiic &= ~mask;
--	tqmx86_gpio_write(gpio, gpiic, TQMX86_GPIIC);
-+	gpio->irq_type[offset] &= ~TQMX86_INT_UNMASKED;
-+	tqmx86_gpio_irq_config(gpio, offset);
- 	raw_spin_unlock_irqrestore(&gpio->spinlock, flags);
-+
- 	gpiochip_disable_irq(&gpio->chip, irqd_to_hwirq(data));
- }
- 
-@@ -128,16 +143,12 @@ static void tqmx86_gpio_irq_unmask(struct irq_data *data)
- 	struct tqmx86_gpio_data *gpio = gpiochip_get_data(
- 		irq_data_get_irq_chip_data(data));
- 	unsigned long flags;
--	u8 gpiic, mask;
--
--	mask = TQMX86_GPII_MASK << (offset * TQMX86_GPII_BITS);
- 
- 	gpiochip_enable_irq(&gpio->chip, irqd_to_hwirq(data));
-+
- 	raw_spin_lock_irqsave(&gpio->spinlock, flags);
--	gpiic = tqmx86_gpio_read(gpio, TQMX86_GPIIC);
--	gpiic &= ~mask;
--	gpiic |= gpio->irq_type[offset] << (offset * TQMX86_GPII_BITS);
--	tqmx86_gpio_write(gpio, gpiic, TQMX86_GPIIC);
-+	gpio->irq_type[offset] |= TQMX86_INT_UNMASKED;
-+	tqmx86_gpio_irq_config(gpio, offset);
- 	raw_spin_unlock_irqrestore(&gpio->spinlock, flags);
- }
- 
-@@ -148,7 +159,7 @@ static int tqmx86_gpio_irq_set_type(struct irq_data *data, unsigned int type)
- 	unsigned int offset = (data->hwirq - TQMX86_NGPO);
- 	unsigned int edge_type = type & IRQF_TRIGGER_MASK;
- 	unsigned long flags;
--	u8 new_type, gpiic;
-+	u8 new_type;
- 
- 	switch (edge_type) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -164,13 +175,10 @@ static int tqmx86_gpio_irq_set_type(struct irq_data *data, unsigned int type)
- 		return -EINVAL; /* not supported */
- 	}
- 
--	gpio->irq_type[offset] = new_type;
--
- 	raw_spin_lock_irqsave(&gpio->spinlock, flags);
--	gpiic = tqmx86_gpio_read(gpio, TQMX86_GPIIC);
--	gpiic &= ~((TQMX86_GPII_MASK) << (offset * TQMX86_GPII_BITS));
--	gpiic |= new_type << (offset * TQMX86_GPII_BITS);
--	tqmx86_gpio_write(gpio, gpiic, TQMX86_GPIIC);
-+	gpio->irq_type[offset] &= ~TQMX86_GPII_MASK;
-+	gpio->irq_type[offset] |= new_type;
-+	tqmx86_gpio_irq_config(gpio, offset);
- 	raw_spin_unlock_irqrestore(&gpio->spinlock, flags);
+-	if (copy_to_user(argp, &cap.capability, sizeof(cap.capability)))
++	if (copy_to_user(argp, &cap, sizeof(cap)))
+ 		return -EFAULT;
  
  	return 0;
 -- 
-TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht München, HRB 105018
-Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-https://www.tq-group.com/
+2.43.0
 
