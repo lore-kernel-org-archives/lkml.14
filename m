@@ -1,157 +1,199 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60464176AB8
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981FA152787
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717057922; cv=none; b=oGgLlCfTS3ERjgEUX//qf7EAdQy/B90b5xZxkNog65YU8SyYA8NRFFFerxXlwXDukzl3pg4WQKoS2LC1KK06JJeL85GU7TsHFOmmoby/tn4rlJUn0fxVfj7gTtXbRDQ9f4dM0EfGt52CSTA8i/QVkN+beQJlN7oQWOO13L5NmhM=
+	t=1717058126; cv=none; b=LEcWTOerrg/xaOoQjAjVrEXE1+shzvtrCLfBAba6V8I/lLeQTRtTLCDYq75xixPUx1vyD/9NGTDbS89h3/bJldVn2aoa+Kww6rRj2s30bzCCyBx9JhgUmwxLq6IL5whzRL4Q+ayXnHwJqsppz6SRx3YBuh7B6qfaTACAeHu/CCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717057922; c=relaxed/simple;
-	bh=zx0h85PqHrjH54orh/R1otbPITvp+AT6gJ83ZcfIsFs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=llQZ8mPAnqBd3P0aj7omSdosiPWENotWEhggTejI4LmBvZOfNqERX6WZkvmakkfdOgICF0n+42I+nUoCy50bwmSuoARH42ir15GJyi0xbE0Pry6ms5mRE4BJEOa4H/xXz6cluwUufx7mNmuBiA0WVos1abdhemct/dupd96pWSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GWadpy/A; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717058126; c=relaxed/simple;
+	bh=x5EytMBOecORfel70Q1gecPB643ydiviHuoTOcu4sX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YCxAM0kjFLp6CjXq5lSLFAzQpU4Vyk75+pS/YD7RBMisf8jFJOWQRQW+/omnxKXetBEDEgXRu0oCKQc+w+s6H9p886gTSJsgZsvFySoFCXW+PBE8csT8bKMqasKzH9I8BZPxoODSRVDU1gjtrNnstnQA7Yn1Kw6/JIuktehaQfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eCjv9PPz; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GWadpy/A"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52b7a3c19b0so601300e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 01:31:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eCjv9PPz"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f44b594deeso4625145ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 01:35:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717057917; x=1717662717; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yIcxVFAiZUnKpA9brQ93nCR4QvMzGm/NAKU+gCXBoX4=;
-        b=GWadpy/AIfmMcx0ErltSHFwy9XqBZmwll5e7YlTzGaqakUHFJQl2wyVF5WENr9+xp6
-         vcc/mYCLv2AYW+of5AwTYHuKecr1qX3QjvBS78iDR8vZYAAFOzY1si/Ybx4B+vOfKh4K
-         fRdTZvAnN90dIF7SolGfRdi2mwTcZZNx4BRqGJu+92JQqzKbbnpC4BnFibGK/UVNVy5L
-         xwQn/BQwgRyZTkp9P/nF/3f5fqIy9mDLAw26QerSgvT/xw74JQ57u6apIeWJmwkWsceC
-         GFz7slMGLNrHJ72mPpaHDtZFnarifjWgV/dDoyWXTEmykTfAfz9TWqYz73Vps8zxpIma
-         w7Hw==
+        d=chromium.org; s=google; t=1717058124; x=1717662924; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ojWQ0b2MWifneyP6SWllMlL0oJitBi3xbuigAJTyN5g=;
+        b=eCjv9PPzuc4vWCcuzMq3CQ07RXwp7jDT4Nj2+g3Fh36uUINnFRuZ43LLd5EUR9LS2Q
+         RbMARwcDSktA5lOVcl9WvJmMBBGJSZ/fegP3vzfXWIXAUK4CODEHR6t80DU5786kpE36
+         KXqGOrOmX2b4pkNIw06IeeSbzsTQ5pvnr/sUo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717057917; x=1717662717;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yIcxVFAiZUnKpA9brQ93nCR4QvMzGm/NAKU+gCXBoX4=;
-        b=qKJWeKytSkbfsvONCZPM+FlJV8vysMfcqNhoiuhE+R+UGIDfD/RTXo4L+hogDQCPaY
-         HJ5gkwyA3y6zpKdqGGLLIisImv3FSSuurG5+03TWwz/euC6yi0IS+N+CDAa3NeAqNMiq
-         NgZ8lQiyl3OwCwYOb6i1Q1LZ54m31/sP4JuQgnt10OlF5/zAB5+7WGRiTk41/3/NaVxQ
-         d8xQwR/oS7pGp1NWHP1+2u9TPH8gwimHHd2nHQVUwj9BmtLxo9og6w5MZgq/am5qXcxW
-         sWhJjMrsjxrzoEZypfqLDJhrD+f7Wk7RiTYe1R9WxCYf2j7/+xA2N9xQh8tNuWTyM3BJ
-         ZyEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXw3IUVOJrFuY5cU+G5/b2gR0JzO28/trvXTbhc1XQ5VDhuFoxcg5MIjNtW8etYIShI/xgVL5MxNqGK/Qs3QHJB4tAhrmVRcsnbH/7H
-X-Gm-Message-State: AOJu0YwhGhxoDrhFiKG6VIrqrJ3qjUjC/HmU5MLf8MxaG57Px6OJVI0F
-	bbAnJ8OWwft7V+x99xQBzS9Z0g98ypzs836y5cM4PJfh798SiCI5LFhVB+phsmI=
-X-Google-Smtp-Source: AGHT+IHUxlXefm468NXPEedHeDnm6rlUtKYG/Jjlyow52jwYk9UYPeQkShIK/HH5OUbf7fgKZJi/ng==
-X-Received: by 2002:ac2:43d3:0:b0:52b:5131:5986 with SMTP id 2adb3069b0e04-52b7d428401mr883724e87.25.1717057917563;
-        Thu, 30 May 2024 01:31:57 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5296e887a6csm1486594e87.24.2024.05.30.01.31.57
+        d=1e100.net; s=20230601; t=1717058124; x=1717662924;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ojWQ0b2MWifneyP6SWllMlL0oJitBi3xbuigAJTyN5g=;
+        b=ueN/73G9bmmBhms4/39iK7T0uaKh0iVpbmji7OtRoTOatmGegIrNaHaDO0tv3+WkXA
+         tzLcV+3jcqa13SqBMQZcT2y4734ByBY3H8Ym1nG6c87iprZNKDvOd1Lk/kEEzJRce73d
+         f0uhgDr/fpS8iO+o9vw+7y+YDCMnO4v6ltJF4gr+6cQDlEwBQoZxKKDhOx1V4Z+I/iwO
+         w6GEZPUWOs2SgPfTyIeOwpB959oTrjrsSwNWIgA3sfl2zfCGb/30jvOUvBGCnVrg33ab
+         8Ow8xi9130AZ2wc+8TImXjtW0fY3FSX84/8XS6MC1qnAq1NEF+4VhOWNWFXSIntDcASz
+         3D/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUJI1ySJKkgUHL2pofqJVJQC71Iw4s+44P2Bk0SAtTiZLh9ntXYrweEn1tVf5pU33cfpl7jpOWxotdIffYzMfOZumxwK+6IHPFJ2c2B
+X-Gm-Message-State: AOJu0Yypt9/qWfXFG0rNE7r6gTpbhzidHXfmbyGUtxWjV5ZLCbZaYh7e
+	AwyW/uA+uCYWo30G6nThtYmDdr5dvi4nZIw+Ln2MRGLyFq5N2MjDKDTzG6BSpw==
+X-Google-Smtp-Source: AGHT+IGtD/EP0lwVmYxNyzuz01IBLVY6csgHPTcXqWU5CemCG3sK1VS5I0qtjDvBKandh/VKDc1VCA==
+X-Received: by 2002:a17:902:e810:b0:1e4:9c2f:d343 with SMTP id d9443c01a7336-1f6193fad6fmr15805455ad.7.1717058123772;
+        Thu, 30 May 2024 01:35:23 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:65f0:63a9:90bb:50b8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f617390fe7sm10950635ad.146.2024.05.30.01.35.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 01:31:57 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 30 May 2024 11:31:56 +0300
-Subject: [PATCH] arm64: dts: qcom: sm8650-hdk: remove redundant properties
+        Thu, 30 May 2024 01:35:23 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] dt-bindings: clock: mediatek: Add mt8173 mfgtop
+Date: Thu, 30 May 2024 16:35:00 +0800
+Message-ID: <20240530083513.4135052-2-wenst@chromium.org>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+In-Reply-To: <20240530083513.4135052-1-wenst@chromium.org>
+References: <20240530083513.4135052-1-wenst@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240530-sm8650-hdk-redundant-v1-1-c39c2ae65f3b@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAHs5WGYC/x3MTQ5AMBBA4avIrE0yaP1dRSxEBxNR0iKSxt01l
- t/ivQCenbCHNgng+BYvu43I0gTGZbAzo5hoyClXpAtCv9WlJlzMio7NZc1gTyRSdcOK9TRWENP
- D8STPv+369/0AXxZ8zGYAAAA=
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1837;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=zx0h85PqHrjH54orh/R1otbPITvp+AT6gJ83ZcfIsFs=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmWDl8cLKINaBgPU3cSzz6zjfDmudmkgcPRLtU2
- hI7O7eoQNKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZlg5fAAKCRCLPIo+Aiko
- 1f/YB/9zK2IzTdPUroic0hW+8I1SgL/u4ScZn7NZT2oJhGUWWLYmuCPQ9gU0qd+u8IzAMZlWpw/
- quJzgzmHZTU96NBI1OToMXMCC1lMP26AGzL/b0EMY9wajTQSg9RlRtWjwyoB9CKy+W5qyZkbfDt
- sxdJsUYukgzJf5XLoAfd0+3doDwRv72t02HGjFPiaF2HNnfZ0+glbdSw93d094g8pkff0ETqB/N
- 4bEHTnFWz1yaYZhe9e9oQQh8YvLMUshd1gC5TwAR8V9L6b46M03+lRK6q5+3Mx1aud1ZP9XU6TP
- OxYN00wOx5OpcFi/8BcEeaYCU4b9bP3CvDyJor8Wib9CiqJM
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Transfer-Encoding: 8bit
 
-The coomits 65931e59e039 ("arm64: dts: qcom: sm8650: move USB graph to
-the SoC dtsi") and fbb22a182267 ("arm64: dts: qcom: sm8650: move PHY's
-orientation-switch to SoC dtsi") have moved some of the properties from
-the board DT files to the sm8650.dtsi. As the patch for sm8650 HDK
-predates those commits, it still had those properties inside.
+The MFG (GPU) block on the MT8173 has a small glue layer, named MFG_TOP
+in the datasheet, that contains clock gates, some power sequence signal
+delays, and other unknown registers that get toggled when the GPU is
+powered on.
 
-Drop these duplicate proerties from the sm8650-hdk.dts.
+The clock gates are exposed as clocks provided by a clock controller,
+while the power sequencing bits are exposed as one singular power domain.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/sm8650-hdk.dts | 15 ---------------
- 1 file changed, 15 deletions(-)
+ .../clock/mediatek,mt8173-mfgtop.yaml         | 71 +++++++++++++++++++
+ include/dt-bindings/clock/mt8173-clk.h        |  7 ++
+ 2 files changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8173-mfgtop.yaml
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-index 7f2dbada63b5..182864a3b6bd 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-@@ -881,7 +881,6 @@ &mdss_dp0 {
+diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt8173-mfgtop.yaml b/Documentation/devicetree/bindings/clock/mediatek,mt8173-mfgtop.yaml
+new file mode 100644
+index 000000000000..03c3c1f8cf75
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mediatek,mt8173-mfgtop.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++
++$id: http://devicetree.org/schemas/clock/mediatek,mt8173-mfgtop.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek MT8173 MFG TOP controller
++
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++
++description:
++  The MFG TOP glue layer controls various signals going to the MFG (GPU)
++  block on the MT8173.
++
++properties:
++  compatible:
++    const: mediatek,mt8173-mfgtop
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 4
++    maxItems: 4
++
++  clock-names:
++    items:
++      - const: sys
++      - const: mem
++      - const: core
++      - const: clk26m
++
++  power-domains:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - power-domains
++  - '#clock-cells'
++  - '#power-domain-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/clock/mt8173-clk.h>
++        #include <dt-bindings/power/mt8173-power.h>
++
++        mfgtop: clock-controller@13fff000 {
++            compatible = "mediatek,mt8173-mfgtop";
++            reg = <0x13fff000 0x1000>;
++            clocks = <&topckgen CLK_TOP_AXI_MFG_IN_SEL>,
++                     <&topckgen CLK_TOP_MEM_MFG_IN_SEL>,
++                     <&topckgen CLK_TOP_MFG_SEL>,
++                     <&clk26m>;
++            clock-names = "sys", "mem", "core", "clk26m";
++            power-domains = <&spm MT8173_POWER_DOMAIN_MFG>;
++            #clock-cells = <1>;
++            #power-domain-cells = <0>;
++        };
+diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+index 3d00c98b9654..89e982f771db 100644
+--- a/include/dt-bindings/clock/mt8173-clk.h
++++ b/include/dt-bindings/clock/mt8173-clk.h
+@@ -243,6 +243,13 @@
+ #define CLK_IMG_FD			7
+ #define CLK_IMG_NR_CLK			8
  
- &mdss_dp0_out {
- 	data-lanes = <0 1>;
--	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
- };
++/* MFG_SYS */
++
++#define CLK_MFG_AXI			0
++#define CLK_MFG_MEM			1
++#define CLK_MFG_G3D			2
++#define CLK_MFG_26M			3
++
+ /* MM_SYS */
  
- &pcie0 {
-@@ -1220,10 +1219,6 @@ &usb_1_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_hs_in>;
- };
- 
--&usb_1_dwc3_ss {
--	remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
--};
--
- &usb_1_hsphy {
- 	vdd-supply = <&vreg_l1i_0p88>;
- 	vdda12-supply = <&vreg_l3i_1p2>;
-@@ -1237,23 +1232,13 @@ &usb_dp_qmpphy {
- 	vdda-phy-supply = <&vreg_l3i_1p2>;
- 	vdda-pll-supply = <&vreg_l3g_0p91>;
- 
--	orientation-switch;
--
- 	status = "okay";
- };
- 
--&usb_dp_qmpphy_dp_in {
--	remote-endpoint = <&mdss_dp0_out>;
--};
--
- &usb_dp_qmpphy_out {
- 	remote-endpoint = <&pmic_glink_ss_in>;
- };
- 
--&usb_dp_qmpphy_usb_ss_in {
--	remote-endpoint = <&usb_1_dwc3_ss>;
--};
--
- &xo_board {
- 	clock-frequency = <76800000>;
- };
-
----
-base-commit: efd5091e445509a76b0cdece7b189121ed6df673
-change-id: 20240530-sm8650-hdk-redundant-00489e4e5fc7
-
-Best regards,
+ #define CLK_MM_SMI_COMMON		1
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.45.1.288.g0e0cd299f1-goog
 
