@@ -1,95 +1,136 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408F417623D
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D876A176245;
+	Thu, 30 May 2024 14:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717079039; cv=none; b=pLThpSBKq3rGuTqonircTpfVchP2p0xsyWZU3pP6t2aYOz6gEO5iCER8P7wV4uh1yuXzG3J2XKdEXIRFS7HcJX0WtdMQ2FyHU6upWw92h9BBU1STMa4xD+cvzwuS0ZqLszvamsNjne2z2WL2ADs9e2rS1wxlmxVwEZ7HRYscZAY=
+	t=1717079042; cv=none; b=PdctRi9BUxBL25m6yy4zVsl+wPAibNLwDS71pMj8UA2DAWDqUTvPgFg2l8GUBpLEBjCwNAl+W3w1dhFFoREGc2ZoporlGu9zUnvAASSPlyzSSIMPeg3uBum1i2bvn5NhvW7zzDPOhnHI67/L9UwkY38WLulmgYHJLDC7iYdRRD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717079039; c=relaxed/simple;
-	bh=EX4ilp/gM6DnOi7FVKsFEfXk42z10f/YXvWX2qP7jMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jPmdpuZTitvsyuhKDQC6tXnn5ZBRYn5L2wBozdnDRzLPammD0e0YYXlNMjlChAvGTvR8Yl68wtNXADa0GlBkeur/HMSFVpqVEACOsWauaVCsVU+muN5qzQGhGCsvRyE2ZxVqHyb/FGJYF5vTjiQNi67qd9aokuv3pYXKl5zin50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BzurcPT3; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BzurcPT3"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7e3b1981fe5so4664939f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 07:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1717079037; x=1717683837; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TxJbPKzJ8dtx+UyxZICekfPff+1WnbN4JSU+63JMz6g=;
-        b=BzurcPT3ekWnph72caB2YzditLtg0jKp9nQHSRQPaUHvS4fGbtx5sAYupzuAGTve22
-         vPdxus1LO1ydT84eTqTDxwubncj9AWhqeFaDyMrbSJ0ipkaOqW0GFNo5A8GMQXJ34h8w
-         xQO5K8/y8CX9cIQ6wDi6523F4I7x2AlxDpDyE=
+	s=arc-20240116; t=1717079042; c=relaxed/simple;
+	bh=Xyc2rNGQkBIoytoNx9NltNfdasu9Z7LNs9pIWdvTaII=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dZwo9LnklZYNBoYY3beUu8C7yUV4gVs4WIUUFg77200vnkDLSBAix5Kdc04IVxn/HTpbjoCd7+iZ4W0SoLmszI077plDufTBYR8qQ1I42Q1wuV9E3j9cFBqebXeIPNRCT+HIfLY9TzMElX0QS+GvruuE6JK+MtQO8yJlM4jbgXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6303e13ffeso104341366b.3;
+        Thu, 30 May 2024 07:24:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717079037; x=1717683837;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TxJbPKzJ8dtx+UyxZICekfPff+1WnbN4JSU+63JMz6g=;
-        b=DZ0v3PqtV64pM9Kad6e3r4VNvvF316qegQNoE0B4CHVtiFi/Ru/fSOoxitfXHRVDlR
-         8GndvQm5TuW5rfqLelV1K5ruaANf581EOOusByMB9DtliXlECE0fiwnWKnJvev0mpATn
-         /1SqOBxToQwKEl9PRw8sSDWoUvMXqO0485Sb8ad7yLGubs7k1S0HfdsULexA9q0Jfyur
-         cTXX0dopivyVt25CUsLqu6uKJpK8M0xxad6z24eR1brn0NaAe4efCIaWYHOu/5yc9Oj4
-         0H6/FLIwdihuVb4QVZmJYJMEqjBqNdwZNOPPLQmPh9L+B1TEo5cf/d/kxxnxPdbGuIi0
-         gcLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWhxPU0xEhqkYwgtfPErPDIj6R82smdYubxwUh6EWRNfdIl/2OK2+7EyXs88HyDDtHq3x5+AnePr2lJms/KyG9aFurSRdkGgKZfzhx
-X-Gm-Message-State: AOJu0YyoeL8NHWoA5lgVAkIUji2acx7ZuyXyQHhPWHDGOVKJiEUwJOKi
-	NfeBS0sGKKDPbLneduYCQF0WWiPXpmMaAA2kkGuqAEACy8zoE0UJ6ucBqgZs+Nc=
-X-Google-Smtp-Source: AGHT+IHZ3n61TibbNscl+7LwOckJECnDnFvgbdHvo1dPkikcdKjJueyYvW7lVGFFvXphOjiJ9ENBNQ==
-X-Received: by 2002:a05:6602:4287:b0:7e1:b4c8:774d with SMTP id ca18e2360f4ac-7eaf5b719b3mr252361339f.0.1717079037225;
-        Thu, 30 May 2024 07:23:57 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b03e94d4bfsm4068830173.63.2024.05.30.07.23.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 07:23:56 -0700 (PDT)
-Message-ID: <b6641940-f10a-4ed4-a672-69c6d51125a7@linuxfoundation.org>
-Date: Thu, 30 May 2024 08:23:54 -0600
+        d=1e100.net; s=20230601; t=1717079039; x=1717683839;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=shat5omApnTzBZPJY3cC2DRYw1h9HRTYA0PI/kmlTfI=;
+        b=Gvnp4dIIC9pfr9mF4dhxD1iFLu3kV2xv/2Rh2EG2p0IoosU1yYJvkJkuwUavvLRKYk
+         IPcxbxGzDkcb71bfg9QSBPadJOxnsCIQ2x+Lg7s8+FcQmkqGvnTt9hqNaPxCtJYMTfPW
+         PpLZJO7rBE5wHxLKFi5JL8mDHRNoRddmQ9oyxsDNyEqKav1lBsIAoqA3D8Qw8sjISYo9
+         uP8o+TmxSaBekmr2nDkxsQDiKsfPCWKo0O9fQo+dpMemwA2hqxBHQlaBQRzNx+91rEc8
+         Kk3shrLzVg8MOXFlGsdy/Cb5ii5eROq/M1PIVWdVuJMD9XXawRcSQEzyHD/rOl1IFgdG
+         PI2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWdh/Z1iEaI+YrpT8Y9vAyLkvm3PfCB0CXQb4zw7o2ABG0k1zA55cGgO3hbocGKA3K7Ho6DS2RBrT7rk2dFCCMO+lNvzjLGQ6IyEBiXgpfEQsO/cGxfBzrL8lulvF4zjUGPB4hXTd0=
+X-Gm-Message-State: AOJu0YwYMtSBIh2A18Fz+dMJJxja6KF+lTau3Ng0S2IPpTWoJbdL+ISX
+	AbrJr2IrmsvG+/7jjMvv5e+XrM0WENhX1oEiFKquWH+yEhph9BNG
+X-Google-Smtp-Source: AGHT+IHOkFnlaA12dhEmT4K29ll4g3MGkOHbHoD/CJXHhaz5/8cLtCJKS2IxAs3HNrpK5QaVRhCugw==
+X-Received: by 2002:a17:906:9e15:b0:a59:8786:3850 with SMTP id a640c23a62f3a-a65e923ee72mr119650366b.72.1717079038899;
+        Thu, 30 May 2024 07:23:58 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a647b827400sm176500666b.69.2024.05.30.07.23.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 07:23:58 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>
+Cc: leit@meta.com,
+	io-uring@vger.kernel.org (open list:IO_URING),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] io_uring/rw: Free iovec before cleaning async data
+Date: Thu, 30 May 2024 07:23:39 -0700
+Message-ID: <20240530142340.1248216-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] selftests/futex: clang-inspired fixes
-To: John Hubbard <jhubbard@nvidia.com>, Shuah Khan <shuah@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, Edward Liaw <edliaw@google.com>,
- =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
- "Nysal Jan K . A" <nysal@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
- Valentin Obst <kernel@valentinobst.de>, linux-kselftest@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240529022938.129624-1-jhubbard@nvidia.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240529022938.129624-1-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/28/24 20:29, John Hubbard wrote:
-> Hi,
-> 
-> Here's a few fixes that are part of my effort to get all selftests
-> building cleanly under clang. Plus one that I noticed by inspection.
-> 
-> Changes since the first version:
-> 
-> 1) Rebased onto Linux 6.10-rc1
-> 2) Added Reviewed-by's.
-> 
-> ...and it turns out that all three patches are still required, on -rc1,
-> in order to get a clean clang build.
+kmemleak shows that there is a memory leak in io_uring read operation,
+where a buffer is allocated at iovec import, but never de-allocated.
 
-Thank you. I will apply these for the next rc.
+The memory is allocated at io_async_rw->free_iovec, but, then
+io_async_rw is kfreed, taking the allocated memory with it. I saw this
+happening when the read operation fails with -11 (EAGAIN).
 
-thanks,
--- Shuah
+This is the kmemleak splat.
+
+    unreferenced object 0xffff8881da591c00 (size 256):
+...
+      backtrace (crc 7a15bdee):
+	[<00000000256f2de4>] __kmalloc+0x2d6/0x410
+	[<000000007a9f5fc7>] iovec_from_user.part.0+0xc6/0x160
+	[<00000000cecdf83a>] __import_iovec+0x50/0x220
+	[<00000000d1d586a2>] __io_import_iovec+0x13d/0x220
+	[<0000000054ee9bd2>] io_prep_rw+0x186/0x340
+	[<00000000a9c0372d>] io_prep_rwv+0x31/0x120
+	[<000000001d1170b9>] io_prep_readv+0xe/0x30
+	[<0000000070b8eb67>] io_submit_sqes+0x1bd/0x780
+	[<00000000812496d4>] __do_sys_io_uring_enter+0x3ed/0x5b0
+	[<0000000081499602>] do_syscall_64+0x5d/0x170
+	[<00000000de1c5a4d>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+This occurs because the async data cleanup functions are not set for
+read/write operations. As a result, the potentially allocated iovec in
+the rw async data is not freed before the async data is released,
+leading to a memory leak.
+
+With this following patch, kmemleak does not show the leaked memory
+anymore, and all liburing tests pass.
+
+Fixes: a9165b83c193 ("io_uring/rw: always setup io_async_rw for read/write requests")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ io_uring/opdef.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/io_uring/opdef.c b/io_uring/opdef.c
+index 2de5cca9504e..2e3b7b16effb 100644
+--- a/io_uring/opdef.c
++++ b/io_uring/opdef.c
+@@ -516,10 +516,12 @@ const struct io_cold_def io_cold_defs[] = {
+ 	},
+ 	[IORING_OP_READ_FIXED] = {
+ 		.name			= "READ_FIXED",
++		.cleanup		= io_readv_writev_cleanup,
+ 		.fail			= io_rw_fail,
+ 	},
+ 	[IORING_OP_WRITE_FIXED] = {
+ 		.name			= "WRITE_FIXED",
++		.cleanup		= io_readv_writev_cleanup,
+ 		.fail			= io_rw_fail,
+ 	},
+ 	[IORING_OP_POLL_ADD] = {
+@@ -582,10 +584,12 @@ const struct io_cold_def io_cold_defs[] = {
+ 	},
+ 	[IORING_OP_READ] = {
+ 		.name			= "READ",
++		.cleanup		= io_readv_writev_cleanup,
+ 		.fail			= io_rw_fail,
+ 	},
+ 	[IORING_OP_WRITE] = {
+ 		.name			= "WRITE",
++		.cleanup		= io_readv_writev_cleanup,
+ 		.fail			= io_rw_fail,
+ 	},
+ 	[IORING_OP_FADVISE] = {
+@@ -692,6 +696,7 @@ const struct io_cold_def io_cold_defs[] = {
+ 	},
+ 	[IORING_OP_READ_MULTISHOT] = {
+ 		.name			= "READ_MULTISHOT",
++		.cleanup		= io_readv_writev_cleanup,
+ 	},
+ 	[IORING_OP_WAITID] = {
+ 		.name			= "WAITID",
+-- 
+2.43.0
+
