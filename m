@@ -1,180 +1,275 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CD418396C
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F902B9A6
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717062035; cv=none; b=jlWR2N15hi0XGDz/tcXSapYcodp3tPrH7CltoBheGN1o88tjXCBb9QdNZFzZ0CbWtuxDqRgDYvGnUiWCx3BxkfR82HeaWyxk1Bb2SKcogpW/Mp2QJDP4T8lmzvDniRfz0KfZ/UKGyC7wnH1xltHWpXoR2YnHoAR8X362GsAiowI=
+	t=1717062088; cv=none; b=O2zpvutLe3DEqNuXbmig0DPX0lVq22h+qY4ldF2GkawCxO+P6UFe2oJfQ+QzY38FtoT5bs7hlDk9oLRNsk0Yx5e2YSXVJQC3MuUDj2aaJQU9w4H547Pp7MZuBvDrS/P3lb8lf8qEPMFkyRhpNA2gkzCRltXQwrr3ZkoQxPDFZ3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717062035; c=relaxed/simple;
-	bh=u0YKPUnLFVDOQYLIYRiTFVUATH5P/PqjieWnNLiJrA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pz7es6Jgup1CFs6/X1FEPJX720r8ONXdaeYGeNt6CcJYFuRPH8Z2Azfe7yvs/oZxdgHhEij9rMmV7BQb7fc+Jug63rgMad9v9Xddq3/AnCBU1PKBAXVbA9jr8eP/Fb4c2EaR2KHmaQqasudWEH2r4gI9aw3aK/gYeeYFR4QlNvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KUMpS0DR; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717062088; c=relaxed/simple;
+	bh=0Iqsq+M00t2+tehyQ70ELjWVv+y/7Jo4pD85rhygNH4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WOLMOX3YS15FGH+EkncIbl+2VVXr8wMxDYuH0vyy57WtL4g4ozHoJ53GLAYqK9rsdWNacbeU0UrVrZHoIBruaqeXSX8FikEw8zptOmVQfi7vhalnF8yTpY5ZMuTi6gsHPGI47crKdjDDRcENIfsdRTeXX87fFXhQqNM6XVWWjYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=YTf+OeRz; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KUMpS0DR"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44U9do6C056008;
-	Thu, 30 May 2024 04:39:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717061990;
-	bh=lnFMblmb1eA3dL1Hq9rIjS5XMCLMapKZP4XOTfarCDg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=KUMpS0DRb4w4KLBNeCHIDld2VUr8xGTNdrzrT1lg2gYv7oHgRwJNJ496GP7niR9JO
-	 2rzknj1+QByJJ2FRqa5LQf9V8yl24H2HmpswMuA7Ut+8WS5nSZC99bsMULwO4A0ToK
-	 Nc75iJaZ+SRCfoaCsrNtU7+mu3t6Wit+8XmeLRRg=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44U9dodp056797
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 30 May 2024 04:39:50 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
- May 2024 04:39:50 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 30 May 2024 04:39:50 -0500
-Received: from [172.24.227.31] (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44U9dgkv004387;
-	Thu, 30 May 2024 04:39:43 -0500
-Message-ID: <ce332f8d-3a4f-4046-bde0-6e12c99ebb09@ti.com>
-Date: Thu, 30 May 2024 15:09:42 +0530
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YTf+OeRz"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5b970e90ab8so371090eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1717062086; x=1717666886; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Ap2dugGmP5WE2E5FcASCxui6sxizua7AcbrO2mdh8Y=;
+        b=YTf+OeRzs0eo7M1pCgIZZzIb6bNZmi/m1uj7L95xMRqVyvNLm59JcHb1vZ0T7EeF1p
+         CWeuQU+BC7HvBBoMeQV/XEnTBg8TWmIJiD6E2dxPRNi+mOUlaBzKfigEEorxZuwGaxx4
+         ya2x+BkCDBTXySqratze/nmpoAOcVDLfEpeFfz1kHBItN9JBYjEwaVrkWqEPfp+00iio
+         AnhQXApiPsKaKDpfijbxQf8yoU4+SzzXy5br2Ls5tRDGTSFy70WLJEuZBwO+s2ZvnYB1
+         rifldwi+uZ4wyyDeZ6/tGK0Hyp3ddueH4If2n8PimV1eV2L3UzMIbEiwn5P9lM3FMcqq
+         LCoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717062086; x=1717666886;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Ap2dugGmP5WE2E5FcASCxui6sxizua7AcbrO2mdh8Y=;
+        b=NzYu10zLOekrbOHXhBiBdtQUsFfIspgofAlNYI8cmqn0HEtizSGxPlQE9hIDNYj3LK
+         eWKzrxJ2AW7grroDaHCYbtBLK+rY/aElK+KPujr8FAeXvEpcIRLdTcYms3JYVGpJBIVr
+         9CjdH2jzJ2Ow6bNtoiXr7Dxn9S8jo5rJ8zctYPZyiU2R6yvJZNbwVoCmyDCizoZH9btW
+         T7aCwauhO04x+tt2sfF65ANimsWV6DGbWORta8qxOzBo8S6tI9pN43zmeA/XJscJW1TD
+         AbE65WGN8AzzjWKosSUMrGr2lnfZyXiZLBN7xhPFjI8pxdFf3ANjbYdbjj1VCmU4riSk
+         MRxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUx6FtJfTESvW8X1C3UnnlPzg1uNUMekJr723Ww7XWTRF83aNo7Ql9uhCjMaf2KMTYp11Ddi673ZNPW5kVlXWc1MM0WcHFOsKaFmLI
+X-Gm-Message-State: AOJu0YxjPh4DEjp2utMnIQgy7Em0Y9pHwIiqIeJvB3Mp+aIwO+mvr9TZ
+	OKlQAUkAzIAcRz27rGG8WJiu7pWp4Snzhx073eQ6lGhZysuW7EttRmBYyiVgvE3PygCEeS7zVuW
+	gKZkeVf8/SVJTbs8A7w8Hf3u15EBRM0hDsDloRA==
+X-Google-Smtp-Source: AGHT+IGs8c+j/SX1TKRu2grSTFbKjYgLZf2leGT/SdcfsZ4CQqrfPAwFqljLFAvGYqp/iOrNutq7K/dJ1Cm5fQG1ADA=
+X-Received: by 2002:a05:6820:2216:b0:5b9:8a06:4e84 with SMTP id
+ 006d021491bc7-5b9ec554fd3mr2313780eaf.2.1717062085690; Thu, 30 May 2024
+ 02:41:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] drm/tidss: Add CRTC mode_fixup
-To: Maxime Ripard <mripard@kernel.org>
-CC: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Jyri Sarha <jyri.sarha@iki.fi>,
-        Thomas
- Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>,
-        DRI Development List
-	<dri-devel@lists.freedesktop.org>,
-        Linux Kernel List
-	<linux-kernel@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Thierry
- Reding <treding@nvidia.com>,
-        Kieran Bingham
-	<kieran.bingham+renesas@ideasonboard.com>,
-        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
-        Devarsh Thakkar <devarsht@ti.com>,
-        Jayesh
- Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>
-References: <20240511153051.1355825-1-a-bhatia1@ti.com>
- <20240511153051.1355825-2-a-bhatia1@ti.com>
- <20240516-tuscan-mamba-of-debate-c4cddf@penduick>
- <1c4f5862-b1a2-4812-a109-987338ec3a72@ti.com>
- <20240521-lean-dragon-of-perfection-043fad@houat>
-Content-Language: en-US
-From: Aradhya Bhatia <a-bhatia1@ti.com>
-In-Reply-To: <20240521-lean-dragon-of-perfection-043fad@houat>
+References: <20240524103307.2684-1-yongxuan.wang@sifive.com>
+ <20240524103307.2684-2-yongxuan.wang@sifive.com> <20240527-41b376a2bfedb3b9cf7e9c7b@orel>
+ <ec110587-d557-439b-ae50-f3472535ef3a@ghiti.fr>
+In-Reply-To: <ec110587-d557-439b-ae50-f3472535ef3a@ghiti.fr>
+From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Date: Thu, 30 May 2024 17:41:14 +0800
+Message-ID: <CAMWQL2g7sgt9-_4YTbRg3SRrUJE_4HEsqEUO44oA4=vHZA4L9A@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 1/5] RISC-V: Detect and Enable Svadu Extension Support
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org, 
+	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, greentime.hu@sifive.com, 
+	vincent.chen@sifive.com, cleger@rivosinc.com, Jinyu Tang <tjytimi@163.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Mayuresh Chitale <mchitale@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Samuel Ortiz <sameo@rivosinc.com>, 
+	Evan Green <evan@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Leonardo Bras <leobras@redhat.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
 
-Hi Maxime,
+Hi Alexandre,
 
-On 21/05/24 18:48, Maxime Ripard wrote:
-> On Thu, May 16, 2024 at 04:33:40PM GMT, Aradhya Bhatia wrote:
->> Hi Maxime,
->>
->> Thank you for reviewing the patches.
->>
->> On 16/05/24 13:40, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Sat, May 11, 2024 at 09:00:45PM +0530, Aradhya Bhatia wrote:
->>>> Add support for mode_fixup for the tidss CRTC.
->>>>
->>>> Some bridges like the cdns-dsi consume the crtc_* timing parameters for
->>>> programming the blanking values. Allow for the normal timing parameters
->>>> to get copied to crtc_* timing params.
->>>>
->>>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
->>>> ---
->>>>  drivers/gpu/drm/tidss/tidss_crtc.c | 11 +++++++++++
->>>>  1 file changed, 11 insertions(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
->>>> index 94f8e3178df5..797ef53d9ad2 100644
->>>> --- a/drivers/gpu/drm/tidss/tidss_crtc.c
->>>> +++ b/drivers/gpu/drm/tidss/tidss_crtc.c
->>>> @@ -309,12 +309,23 @@ enum drm_mode_status tidss_crtc_mode_valid(struct drm_crtc *crtc,
->>>>  	return dispc_vp_mode_valid(tidss->dispc, tcrtc->hw_videoport, mode);
->>>>  }
->>>>  
->>>> +static
->>>> +bool tidss_crtc_mode_fixup(struct drm_crtc *crtc,
->>>> +			   const struct drm_display_mode *mode,
->>>> +			   struct drm_display_mode *adjusted_mode)
->>>> +{
->>>> +	drm_mode_set_crtcinfo(adjusted_mode, 0);
->>>> +
->>>> +	return true;
->>>> +}
->>>> +
->>>>  static const struct drm_crtc_helper_funcs tidss_crtc_helper_funcs = {
->>>>  	.atomic_check = tidss_crtc_atomic_check,
->>>>  	.atomic_flush = tidss_crtc_atomic_flush,
->>>>  	.atomic_enable = tidss_crtc_atomic_enable,
->>>>  	.atomic_disable = tidss_crtc_atomic_disable,
->>>>  
->>>> +	.mode_fixup = tidss_crtc_mode_fixup,
->>>>  	.mode_valid = tidss_crtc_mode_valid,
->>>>  };
->>>
->>> mode_fixup is deprecated for atomic drivers, so the solution must be
->>> different there.
->>>
->>> It's also not clear to me how it could change anything there:
->>> drm_mode_set_crtcinfo with no flags will make crtc_* field exactly
->>> identical to their !crtc counterparts.
->>>
->>
->> I checked the flag options. There isn't any flag required. The only
->> reason to add this call is because cdns-dsi strictly requires the crtc_*
->> fields to be populated during the bridge enable.
->>
->> Secondly, if mode_fixup is deprecated, I think the crtc_atomic_check
->> would be the next best place to add this call.
-> 
-> That would be better, yes, but we shouldn't even have to do that in the
-> first place. AFAIK all the path that create a drm_display_mode will call
-> drm_mode_set_crtcinfo on it to fill those fields. So if they are missing
-> somewhere, that's what the actual bug is, not something we should work
-> around of at the driver level.
-> 
+On Thu, May 30, 2024 at 4:19=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> wro=
+te:
+>
+> Hi Yong-Xuan,
+>
+> On 27/05/2024 18:25, Andrew Jones wrote:
+> > On Fri, May 24, 2024 at 06:33:01PM GMT, Yong-Xuan Wang wrote:
+> >> Svadu is a RISC-V extension for hardware updating of PTE A/D bits.
+> >>
+> >> In this patch we detect Svadu extension support from DTB and enable it
+> >> with SBI FWFT extension. Also we add arch_has_hw_pte_young() to enable
+> >> optimization in MGLRU and __wp_page_copy_user() if Svadu extension is
+> >> available.
+>
+>
+> So we talked about this yesterday during the linux-riscv patchwork
+> meeting. We came to the conclusion that we should not wait for the SBI
+> FWFT extension to enable Svadu but instead, it should be enabled by
+> default by openSBI if the extension is present in the device tree. This
+> is because we did not find any backward compatibility issues, meaning
+> that enabling Svadu should not break any S-mode software. This is what
+> you did in your previous versions of this patchset so the changes should
+> be easy. This behaviour must be added to the dtbinding description of
+> the Svadu extension.
+>
+> Another thing that we discussed yesterday. There exist 2 schemes to
+> manage the A/D bits updates, Svade and Svadu. If a platform supports
+> both extensions and both are present in the device tree, it is M-mode
+> firmware's responsibility to provide a "sane" device tree to the S-mode
+> software, meaning the device tree can not contain both extensions. And
+> because on such platforms, Svadu is more performant than Svade, Svadu
+> should be enabled by the M-mode firmware and only Svadu should be
+> present in the device tree.
+>
+> I hope that clearly explains what we discussed yesterday, let me know if
+> you (or anyone else) need more explanations. If no one is opposed to
+> this solution, do you think you can implement this behaviour? If not, I
+> can deal with it, just let me know.
+>
+> Thanks
+>
+>
 
-You are right. This patch isn't required at all. The fix around the
-mode->crtc_clock usage in one place in the cdns-dsi driver makes this
-patch unnecessary. The DRM core does duplicate the timing parameters at
-a later stage for the cdns-dsi bridge_enable to consume.
+Sure, I can do it. Just to confirm, which extension should be removed
+when both Svade and Svadu are present in the DT?
 
-Dropped this patch in v2. Thanks!
+Regards,
+Yong-Xuan
 
-Regards
-Aradhya
-
+> >>
+> >> Co-developed-by: Jinyu Tang <tjytimi@163.com>
+> >> Signed-off-by: Jinyu Tang <tjytimi@163.com>
+> >> Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+> >> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> >> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> > I think this patch changed too much to keep r-b's. We didn't have the
+> > FWFT part before.
+> >
+> >> ---
+> >>   arch/riscv/Kconfig               |  1 +
+> >>   arch/riscv/include/asm/csr.h     |  1 +
+> >>   arch/riscv/include/asm/hwcap.h   |  1 +
+> >>   arch/riscv/include/asm/pgtable.h |  8 +++++++-
+> >>   arch/riscv/kernel/cpufeature.c   | 11 +++++++++++
+> >>   5 files changed, 21 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> >> index be09c8836d56..30fa558ee284 100644
+> >> --- a/arch/riscv/Kconfig
+> >> +++ b/arch/riscv/Kconfig
+> >> @@ -34,6 +34,7 @@ config RISCV
+> >>      select ARCH_HAS_PMEM_API
+> >>      select ARCH_HAS_PREPARE_SYNC_CORE_CMD
+> >>      select ARCH_HAS_PTE_SPECIAL
+> >> +    select ARCH_HAS_HW_PTE_YOUNG
+> >>      select ARCH_HAS_SET_DIRECT_MAP if MMU
+> >>      select ARCH_HAS_SET_MEMORY if MMU
+> >>      select ARCH_HAS_STRICT_KERNEL_RWX if MMU && !XIP_KERNEL
+> >> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr=
+.h
+> >> index 2468c55933cd..2ac270ad4acd 100644
+> >> --- a/arch/riscv/include/asm/csr.h
+> >> +++ b/arch/riscv/include/asm/csr.h
+> >> @@ -194,6 +194,7 @@
+> >>   /* xENVCFG flags */
+> >>   #define ENVCFG_STCE                        (_AC(1, ULL) << 63)
+> >>   #define ENVCFG_PBMTE                       (_AC(1, ULL) << 62)
+> >> +#define ENVCFG_ADUE                 (_AC(1, ULL) << 61)
+> >>   #define ENVCFG_CBZE                        (_AC(1, UL) << 7)
+> >>   #define ENVCFG_CBCFE                       (_AC(1, UL) << 6)
+> >>   #define ENVCFG_CBIE_SHIFT          4
+> >> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/h=
+wcap.h
+> >> index e17d0078a651..8d539e3f4e11 100644
+> >> --- a/arch/riscv/include/asm/hwcap.h
+> >> +++ b/arch/riscv/include/asm/hwcap.h
+> >> @@ -81,6 +81,7 @@
+> >>   #define RISCV_ISA_EXT_ZTSO         72
+> >>   #define RISCV_ISA_EXT_ZACAS                73
+> >>   #define RISCV_ISA_EXT_XANDESPMU            74
+> >> +#define RISCV_ISA_EXT_SVADU         75
+> >>
+> >>   #define RISCV_ISA_EXT_XLINUXENVCFG 127
+> >>
+> >> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm=
+/pgtable.h
+> >> index 9f8ea0e33eb1..1f1b326ccf63 100644
+> >> --- a/arch/riscv/include/asm/pgtable.h
+> >> +++ b/arch/riscv/include/asm/pgtable.h
+> >> @@ -117,6 +117,7 @@
+> >>   #include <asm/tlbflush.h>
+> >>   #include <linux/mm_types.h>
+> >>   #include <asm/compat.h>
+> >> +#include <asm/cpufeature.h>
+> >>
+> >>   #define __page_val_to_pfn(_val)  (((_val) & _PAGE_PFN_MASK) >> _PAGE=
+_PFN_SHIFT)
+> >>
+> >> @@ -285,7 +286,6 @@ static inline pte_t pud_pte(pud_t pud)
+> >>   }
+> >>
+> >>   #ifdef CONFIG_RISCV_ISA_SVNAPOT
+> >> -#include <asm/cpufeature.h>
+> >>
+> >>   static __always_inline bool has_svnapot(void)
+> >>   {
+> >> @@ -621,6 +621,12 @@ static inline pgprot_t pgprot_writecombine(pgprot=
+_t _prot)
+> >>      return __pgprot(prot);
+> >>   }
+> >>
+> >> +#define arch_has_hw_pte_young arch_has_hw_pte_young
+> >> +static inline bool arch_has_hw_pte_young(void)
+> >> +{
+> >> +    return riscv_has_extension_unlikely(RISCV_ISA_EXT_SVADU);
+> >> +}
+> >> +
+> >>   /*
+> >>    * THP functions
+> >>    */
+> >> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufea=
+ture.c
+> >> index 3ed2359eae35..b023908c5932 100644
+> >> --- a/arch/riscv/kernel/cpufeature.c
+> >> +++ b/arch/riscv/kernel/cpufeature.c
+> >> @@ -93,6 +93,16 @@ static bool riscv_isa_extension_check(int id)
+> >>                      return false;
+> >>              }
+> >>              return true;
+> >> +    case RISCV_ISA_EXT_SVADU:
+> >> +            if (sbi_probe_extension(SBI_EXT_FWFT) > 0) {
+> > I think we've decided the appropriate way to prove for SBI extensions i=
+s
+> > to first ensure the SBI version and then do the probe, like we do for S=
+TA
+> > in has_pv_steal_clock()
+> >
+> >> +                    struct sbiret ret;
+> >> +
+> >> +                    ret =3D sbi_ecall(SBI_EXT_FWFT, SBI_EXT_FWFT_SET,=
+ SBI_FWFT_PTE_AD_HW_UPDATING,
+> >> +                                    1, 0, 0, 0, 0);
+> >> +
+> >> +                    return ret.error =3D=3D SBI_SUCCESS;
+> >> +            }
+> >> +            return false;
+> >>      case RISCV_ISA_EXT_INVALID:
+> >>              return false;
+> >>      }
+> >> @@ -301,6 +311,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =
+=3D {
+> >>      __RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
+> >>      __RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
+> >>      __RISCV_ISA_EXT_DATA(sstc, RISCV_ISA_EXT_SSTC),
+> >> +    __RISCV_ISA_EXT_SUPERSET(svadu, RISCV_ISA_EXT_SVADU, riscv_xlinux=
+envcfg_exts),
+> > We do we need XLINUXENVCFG?
+> >
+> > Thanks,
+> > drew
+> >
+> >>      __RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
+> >>      __RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+> >>      __RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+> >> --
+> >> 2.17.1
+> >>
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
