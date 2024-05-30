@@ -1,382 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D206F2F1
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 13:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D295B1667DC
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 13:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717075903; cv=none; b=lxbHeiG3OJZAzV6r2cgrFw8wxII3ewoERCewj8cnkCd3GRCze7g/LitrixjQwpqHxmJKxMLJRKkCEa5U/5jtsZSlLEt4en5Z3BvPEELreX6BEkIRKTunHAcUoJrzdEXpJKiu+qKM7b8a79UW7SOsrrdw/l1E/Jp7ioQa+pEbZAk=
+	t=1717076084; cv=none; b=pMQ0w2kE3DSgQZv+LhjUx6CEGF6MxWD4DSgviS5XTjwkIX6fm8syBPvbRlhiv8FCFYHugVzz4D7DAzgDR8aH9zUiKiXeM+5polR8SYuXZnmhlW+cYFYK1jxh5Qb4kecQdeIUr8fzYMR09C2rloHgI6tUDKbHS8D0Jc7mqPAWztQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717075903; c=relaxed/simple;
-	bh=UrpnvgI3C9+2Nc+o/iBsxRoJDuQOoIqxWi6cVO/SOEs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CY8ki1iSawOtUCs4tTbFeQdTpJSpqSYhtQ9Bo5EiXpi7QcvOjAIFVB4DUMW7mCwQxEdojfHEySUowUMDtmQ34l7GDwclTYn+e1FaAe39e42rB8W1+pdw+DF+M84Dcc8S4SKYnEBP8WuRb3LyDzLu3X4Bnfik1SfR3MJQT2DaQRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HFjiyXSF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717076084; c=relaxed/simple;
+	bh=iEY3TKMBR3VjMOO18gro7lwUoFToxzJsoKmK2rYmRAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SFAK9MuL2DdWZvWC2EQGKi3ChNZ82itYW5NyW8W05mHPDawINiBapAaW/8B8en4qZFLkHF3JY3fn2iHM2W1ZavRUrmivQIJXPn7lMn1MXMyiGwidYqCQrwmc9xWpgmRhuohrJssMoK9rSml4CzK/hhiwQR9KrFznBWsxGsvJTvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aBKbPCxq; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HFjiyXSF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717075899;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8eke+j10vBOO1ZHgd+OBfRb2RnEzeYVDjJaOkUj9TKU=;
-	b=HFjiyXSFB5MLyo0YnQeRJgHeKtsOz8ksJ+TftcF3c9fgcRcuqt6i1IhYvyL4TY46dllQac
-	yLONuAKKvE91tSMa9P3Jiatj3OEaijyActO3rLXGBqvNqloy/9WZ0CTuLpM9zQ0GsadTod
-	bBwMUZvtWjLjF/ugwgJ/9AEYYuFst/4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-299-2kqMDMVKMCedEgY7rXBIyQ-1; Thu, 30 May 2024 09:31:36 -0400
-X-MC-Unique: 2kqMDMVKMCedEgY7rXBIyQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CF37181227E;
-	Thu, 30 May 2024 13:31:35 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.62])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7EC962818;
-	Thu, 30 May 2024 13:31:34 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Networking for v6.10-rc2
-Date: Thu, 30 May 2024 15:29:44 +0200
-Message-ID: <20240530132944.37714-1-pabeni@redhat.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aBKbPCxq"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5b9817a135aso466314eaf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 06:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1717076081; x=1717680881; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ekpEHUCDsezH1RNk3+5n/lewOHNyOHOYkS0J9gidF8=;
+        b=aBKbPCxqHwC2dYJcMPzqWL1Xa+xBizSMYD/GHdED2k8s9cnnuUZr4J+NmrwYiey/gY
+         ZE+1TXM0SjfRckd3YiHio0inL2s5vr8BaOm0euzdHcJkfFeIyd71eEnW8h0UrVhrpbSO
+         gOS6x11fHogddAcXuJr9AdjmlNtpE4oR8prVk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717076081; x=1717680881;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3ekpEHUCDsezH1RNk3+5n/lewOHNyOHOYkS0J9gidF8=;
+        b=mtCb0OvvCf6cWtDGK4RDj9Z3GPm+Q+++VpNjg8SAoyP9P4RYaUVVgtYCokERm14y70
+         crYU/fxkc0oYwF1N3ZzLmTvm8ChOsZolUdpPkTDBdkIt2YsahABCntnhe6PHzURqVt9m
+         5W23Wm3bwGmEAE8VetriwB5Zyy8Ks+x7cVVaZ9w/doFbLiQJ63kKwC8444uE0H3erCNE
+         ivlSp6aGuwxsGEAoMFBPrFGlSBpgNliDK+75aqEqGwz/jeN6AyNdDFq12uqlXO5YFnj1
+         YzxwEk8toaQ3RQD0oOs+1CUOxbdpqM12H3EMQWKfAQA/I0CkrZmvZ24HbdNOEamJYcLM
+         OeGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfNoL0+agLI5L8wj01Nk9xoM+XLjb/2Ko05lglgwggaOFsi84rCk2I4ARa8wDMVDS7FbbpT+WtP8Zysjqwlc6Yk025x3lDvo8Qa/np
+X-Gm-Message-State: AOJu0Yx31hioC/qWdGUN9GPUz4R1oNW4vf7krFIdJIgWL4/jj+AK5LqT
+	3Md0gqxeXrN9fOLWONQ1VWvNzCxhXrswts+SzMzSNzhdWn61aqN0i4KCPTzw5hfCMg0cysi+erM
+	=
+X-Google-Smtp-Source: AGHT+IE9rrE+bCakY8NOUyslRw7XQfER07KnNZww1RwkG7CCqb+rnGZQdrj8K09olHfcVLFTJaAnkQ==
+X-Received: by 2002:a05:6358:138f:b0:197:3d6f:ccf6 with SMTP id e5c5f4694b2df-199b938ff39mr269425455d.1.1717076081204;
+        Thu, 30 May 2024 06:34:41 -0700 (PDT)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com. [209.85.160.170])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae127b343esm4285686d6.116.2024.05.30.06.34.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 06:34:40 -0700 (PDT)
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-43f87dd6866so363021cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 06:34:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVOQZZ3ImIRm/7BolcYufJxbnJahdL2yo5ejX17SbCKI6gsttrTQGSvI28tZQgbn8OUUhc9c1qlV4qFyQptS2WKZpJYQPr72tpcE3rB
+X-Received: by 2002:a05:622a:410c:b0:437:b4d9:ddc6 with SMTP id
+ d75a77b69052e-43feb50e3a2mr2651001cf.27.1717076079721; Thu, 30 May 2024
+ 06:34:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
-
-Hi Linus!
-
-The following changes since commit 66ad4829ddd0b5540dc0b076ef2818e89c8f720e:
-
-  Merge tag 'net-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2024-05-23 12:49:37 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.10-rc2
-
-for you to fetch changes up to 13c7c941e72908b8cce5a84b45a7b5e485ca12ed:
-
-  netdev: add qstat for csum complete (2024-05-30 12:15:56 +0200)
-
-----------------------------------------------------------------
-Including fixes from bpf and netfilter.
-
-Current release - regressions:
-
-  - gro: initialize network_offset in network layer
-
-  - tcp: reduce accepted window in NEW_SYN_RECV state
-
-Current release - new code bugs:
-
-  - eth: mlx5e: do not use ptp structure for tx ts stats when not initialized
-
-  - eth: ice: check for unregistering correct number of devlink params
-
-Previous releases - regressions:
-
-  - bpf: Allow delete from sockmap/sockhash only if update is allowed
-
-  - sched: taprio: extend minimum interval restriction to entire cycle too
-
-  - netfilter: ipset: add list flush to cancel_gc
-
-  - ipv4: fix address dump when IPv4 is disabled on an interface
-
-  - sock_map: avoid race between sock_map_close and sk_psock_put
-
-  - eth: mlx5: use mlx5_ipsec_rx_status_destroy to correctly delete status rules
-
-Previous releases - always broken:
-
-  - core: fix __dst_negative_advice() race
-
-  - bpf:
-    - fix multi-uprobe PID filtering logic
-    - fix pkt_type override upon netkit pass verdict
-
-  - netfilter: tproxy: bail out if IP has been disabled on the device
-
-  - af_unix: annotate data-race around unix_sk(sk)->addr
-
-  - eth: mlx5e: fix UDP GSO for encapsulated packets
-
-  - eth: idpf: don't enable NAPI and interrupts prior to allocating Rx buffers
-
-  - eth: i40e: fully suspend and resume IO operations in EEH case
-
-  - eth: octeontx2-pf: free send queue buffers incase of leaf to inner
-
-  - eth: ipvlan: dont Use skb->sk in ipvlan_process_v{4,6}_outbound
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-----------------------------------------------------------------
-Alexander Lobakin (2):
-      page_pool: fix &page_pool_params kdoc issues
-      idpf: don't enable NAPI and interrupts prior to allocating Rx buffers
-
-Alexander Maltsev (1):
-      netfilter: ipset: Add list flush to cancel_gc
-
-Alexander Mikhalitsyn (1):
-      ipv4: correctly iterate over the target netns in inet_dump_ifaddr()
-
-Alexei Starovoitov (1):
-      Merge branch 'fix-bpf-multi-uprobe-pid-filtering-logic'
-
-Andrii Nakryiko (5):
-      bpf: fix multi-uprobe PID filtering logic
-      bpf: remove unnecessary rcu_read_{lock,unlock}() in multi-uprobe attach logic
-      libbpf: detect broken PID filtering logic for multi-uprobe
-      selftests/bpf: extend multi-uprobe tests with child thread case
-      selftests/bpf: extend multi-uprobe tests with USDTs
-
-Carolina Jubran (1):
-      net/mlx5e: Use rx_missed_errors instead of rx_dropped for reporting buffer exhaustion
-
-Daniel Borkmann (4):
-      netkit: Fix setting mac address in l2 mode
-      netkit: Fix pkt_type override upon netkit pass verdict
-      selftests/bpf: Add netkit tests for mac address
-      selftests/bpf: Add netkit test for pkt_type
-
-Dave Ertman (1):
-      ice: check for unregistering correct number of devlink params
-
-David S. Miller (1):
-      Merge branch 'mlx5-fixes'
-
-Edward Adam Davis (1):
-      nfc/nci: Add the inconsistency check between the input data length and count
-
-Eric Dumazet (3):
-      netfilter: nfnetlink_queue: acquire rcu_read_lock() in instance_destroy_rcu()
-      tcp: reduce accepted window in NEW_SYN_RECV state
-      net: fix __dst_negative_advice() race
-
-Eric Garver (1):
-      netfilter: nft_fib: allow from forward/input without iif selector
-
-Florian Westphal (1):
-      netfilter: tproxy: bail out if IP has been disabled on the device
-
-Friedrich Vock (1):
-      bpf: Fix potential integer overflow in resolve_btfids
-
-Gal Pressman (2):
-      net/mlx5: Fix MTMP register capability offset in MCAM register
-      net/mlx5e: Fix UDP GSO for encapsulated packets
-
-Geliang Tang (1):
-      selftests: hsr: Fix "File exists" errors for hsr_ping
-
-Hariprasad Kelam (1):
-      Octeontx2-pf: Free send queue buffers incase of leaf to inner
-
-Horatiu Vultur (1):
-      net: micrel: Fix lan8841_config_intr after getting out of sleep mode
-
-Hui Wang (1):
-      e1000e: move force SMBUS near the end of enable_ulp function
-
-Ido Schimmel (1):
-      ipv4: Fix address dump when IPv4 is disabled on an interface
-
-Jacob Keller (1):
-      ice: fix accounting if a VLAN already exists
-
-Jakub Kicinski (5):
-      Merge tag 'for-netdev' of https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf
-      Merge branch 'intel-wired-lan-driver-updates-2024-05-23-ice-idpf'
-      Merge branch 'selftests-mptcp-mark-unstable-subtests-as-flaky'
-      Merge branch 'intel-wired-lan-driver-updates-2024-05-28-e1000e-i40e-ice'
-      netdev: add qstat for csum complete
-
-Jakub Sitnicki (3):
-      bpf: Allow delete from sockmap/sockhash only if update is allowed
-      Revert "bpf, sockmap: Prevent lock inversion deadlock in map delete elem"
-      selftests/bpf: Cover verifier checks for mutating sockmap/sockhash
-
-Kuniyuki Iwashima (2):
-      af_unix: Annotate data-race around unix_sk(sk)->addr.
-      af_unix: Read sk->sk_hash under bindlock during bind().
-
-MD Danish Anwar (1):
-      net: ti: icssg-prueth: Fix start counter for ft1 filter
-
-Maher Sanalla (1):
-      net/mlx5: Lag, do bond only if slaves agree on roce state
-
-Mathieu Othacehe (1):
-      net: phy: micrel: set soft_reset callback to genphy_soft_reset for KSZ8061
-
-Matt Jan (1):
-      connector: Fix invalid conversion in cn_proc.h
-
-Matthieu Baerts (NGI0) (4):
-      selftests: mptcp: lib: support flaky subtests
-      selftests: mptcp: simult flows: mark 'unbalanced' tests as flaky
-      selftests: mptcp: join: mark 'fastclose' tests as flaky
-      selftests: mptcp: join: mark 'fail' tests as flaky
-
-Minda Chen (1):
-      MAINTAINERS: dwmac: starfive: update Maintainer
-
-Pablo Neira Ayuso (2):
-      netfilter: nft_payload: restore vlan q-in-q match support
-      netfilter: nft_payload: skbuff vlan metadata mangle support
-
-Paolo Abeni (1):
-      Merge tag 'nf-24-05-29' of git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf
-
-Parthiban Veerasooran (1):
-      net: usb: smsc95xx: fix changing LED_SEL bit value updated from EEPROM
-
-Paul Greenwalt (1):
-      ice: fix 200G PHY types to link speed mapping
-
-Rahul Rameshbabu (3):
-      net/mlx5: Use mlx5_ipsec_rx_status_destroy to correctly delete status rules
-      net/mlx5e: Fix IPsec tunnel mode offload feature check
-      net/mlx5e: Do not use ptp structure for tx ts stats when not initialized
-
-Rob Herring (Arm) (2):
-      dt-bindings: net: pse-pd: microchip,pd692x0: Fix missing "additionalProperties" constraints
-      dt-bindings: net: pse-pd: ti,tps23881: Fix missing "additionalProperties" constraints
-
-Roded Zats (1):
-      enic: Validate length of nl attributes in enic_set_vf_port
-
-Shahab Vahedi (1):
-      ARC, bpf: Fix issues reported by the static analyzers
-
-Shay Agroskin (1):
-      net: ena: Fix redundant device NUMA node override
-
-Tariq Toukan (1):
-      net/mlx5: Do not query MPIR on embedded CPU function
-
-Thadeu Lima de Souza Cascardo (1):
-      sock_map: avoid race between sock_map_close and sk_psock_put
-
-Thinh Tran (2):
-      i40e: factoring out i40e_suspend/i40e_resume
-      i40e: Fully suspend and resume IO operations in EEH case
-
-Thorsten Blum (1):
-      docs: netdev: Fix typo in Signed-off-by tag
-
-Tristram Ha (1):
-      net: dsa: microchip: fix RGMII error in KSZ DSA driver
-
-Vladimir Oltean (2):
-      net/sched: taprio: make q->picos_per_byte available to fill_sched_entry()
-      net/sched: taprio: extend minimum interval restriction to entire cycle too
-
-Willem de Bruijn (1):
-      net: gro: initialize network_offset in network layer
-
-Xiaolei Wang (1):
-      net:fec: Add fec_enet_deinit()
-
-Xu Kuohai (1):
-      MAINTAINERS: Add myself as reviewer of ARM64 BPF JIT
-
-Yue Haibing (1):
-      ipvlan: Dont Use skb->sk in ipvlan_process_v{4,6}_outbound
-
- .../bindings/net/pse-pd/microchip,pd692x0.yaml     |  11 +-
- .../bindings/net/pse-pd/ti,tps23881.yaml           |  18 ++
- Documentation/netlink/specs/netdev.yaml            |   4 +
- Documentation/process/maintainer-netdev.rst        |   2 +-
- MAINTAINERS                                        |   3 +-
- arch/arc/net/bpf_jit.h                             |   2 +-
- arch/arc/net/bpf_jit_arcv2.c                       |  10 +-
- arch/arc/net/bpf_jit_core.c                        |  22 +-
- drivers/net/dsa/microchip/ksz_common.c             |   2 +-
- drivers/net/ethernet/amazon/ena/ena_com.c          |  11 -
- drivers/net/ethernet/cisco/enic/enic_main.c        |  12 +
- drivers/net/ethernet/freescale/fec_main.c          |  10 +
- drivers/net/ethernet/intel/e1000e/ich8lan.c        |  22 ++
- drivers/net/ethernet/intel/e1000e/netdev.c         |  18 --
- drivers/net/ethernet/intel/i40e/i40e_main.c        | 258 +++++++++++----------
- drivers/net/ethernet/intel/ice/devlink/devlink.c   |  31 ++-
- drivers/net/ethernet/intel/ice/ice_common.c        |  10 +
- drivers/net/ethernet/intel/ice/ice_vsi_vlan_lib.c  |  11 +-
- drivers/net/ethernet/intel/idpf/idpf_lib.c         |   1 +
- drivers/net/ethernet/intel/idpf/idpf_txrx.c        |  12 +-
- drivers/net/ethernet/intel/idpf/idpf_txrx.h        |   1 +
- drivers/net/ethernet/marvell/octeontx2/nic/qos.c   |   4 +
- .../mellanox/mlx5/core/en_accel/en_accel.h         |   8 +-
- .../mellanox/mlx5/core/en_accel/ipsec_fs.c         |   3 +-
- .../mellanox/mlx5/core/en_accel/ipsec_rxtx.h       |  17 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |   2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.c |   4 +
- drivers/net/ethernet/mellanox/mlx5/core/en_tx.c    |   6 +-
- drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c  |  12 +-
- drivers/net/ethernet/mellanox/mlx5/core/lib/sd.c   |  12 +-
- drivers/net/ethernet/ti/icssg/icssg_classifier.c   |   2 +-
- drivers/net/ipvlan/ipvlan_core.c                   |   4 +-
- drivers/net/netkit.c                               |  30 ++-
- drivers/net/phy/micrel.c                           |  11 +-
- drivers/net/usb/smsc95xx.c                         |  11 +-
- drivers/nfc/virtual_ncidev.c                       |   4 +
- include/linux/etherdevice.h                        |   8 +
- include/linux/mlx5/mlx5_ifc.h                      |   4 +-
- include/net/dst_ops.h                              |   2 +-
- include/net/page_pool/types.h                      |   5 +-
- include/net/request_sock.h                         |  12 +
- include/net/sock.h                                 |  13 +-
- include/uapi/linux/cn_proc.h                       |   3 +-
- include/uapi/linux/netdev.h                        |   1 +
- kernel/bpf/verifier.c                              |  10 +-
- kernel/trace/bpf_trace.c                           |  10 +-
- net/core/sock_map.c                                |  22 +-
- net/ethernet/eth.c                                 |   4 +-
- net/ipv4/af_inet.c                                 |   2 +-
- net/ipv4/devinet.c                                 |   7 +-
- net/ipv4/netfilter/nf_tproxy_ipv4.c                |   2 +
- net/ipv4/route.c                                   |  22 +-
- net/ipv4/tcp_ipv4.c                                |   7 +-
- net/ipv4/tcp_minisocks.c                           |   7 +-
- net/ipv6/ip6_offload.c                             |   2 +-
- net/ipv6/route.c                                   |  29 +--
- net/ipv6/tcp_ipv6.c                                |   7 +-
- net/netfilter/ipset/ip_set_list_set.c              |   3 +
- net/netfilter/nfnetlink_queue.c                    |   2 +
- net/netfilter/nft_fib.c                            |   8 +-
- net/netfilter/nft_payload.c                        |  95 ++++++--
- net/sched/sch_taprio.c                             |  14 +-
- net/unix/af_unix.c                                 |  19 +-
- net/xfrm/xfrm_policy.c                             |  11 +-
- tools/bpf/resolve_btfids/main.c                    |   2 +-
- tools/include/uapi/linux/netdev.h                  |   1 +
- tools/lib/bpf/features.c                           |  31 ++-
- tools/testing/selftests/bpf/prog_tests/tc_netkit.c |  94 ++++++++
- .../selftests/bpf/prog_tests/uprobe_multi_test.c   | 134 ++++++++++-
- tools/testing/selftests/bpf/prog_tests/verifier.c  |   2 +
- tools/testing/selftests/bpf/progs/test_tc_link.c   |  35 ++-
- tools/testing/selftests/bpf/progs/uprobe_multi.c   |  50 +++-
- .../selftests/bpf/progs/verifier_sockmap_mutate.c  | 187 +++++++++++++++
- tools/testing/selftests/net/hsr/hsr_ping.sh        |   2 +
- tools/testing/selftests/net/mptcp/mptcp_join.sh    |  10 +-
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     |  30 ++-
- tools/testing/selftests/net/mptcp/simult_flows.sh  |   6 +-
- .../tc-testing/tc-tests/qdiscs/taprio.json         |  44 ++++
- 78 files changed, 1179 insertions(+), 381 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/verifier_sockmap_mutate.c
-
+References: <20240530082556.2960148-1-quic_kriskura@quicinc.com>
+In-Reply-To: <20240530082556.2960148-1-quic_kriskura@quicinc.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Thu, 30 May 2024 06:34:28 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UhrCKCv5R-LAAugrLXFp=cDcj2=Pp9-N3qk5pk2=sGEg@mail.gmail.com>
+Message-ID: <CAD=FV=UhrCKCv5R-LAAugrLXFp=cDcj2=Pp9-N3qk5pk2=sGEg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Disable SS instances in park mode for SC7180/ SC7280
+To: Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: cros-qcom-dts-watchers@chromium.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <swboyd@chromium.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Kaehlcke <mka@chromium.org>, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, quic_ppratap@quicinc.com, quic_jackp@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, May 30, 2024 at 1:26=E2=80=AFAM Krishna Kurapati
+<quic_kriskura@quicinc.com> wrote:
+>
+> When working in host mode, in certain conditions, when the USB
+> host controller is stressed, there is a HC died warning that comes up.
+> Fix this up by disabling SS instances in park mode for SC7280 and SC7180.
+>
+> Krishna Kurapati (2):
+>   arm64: dts: qcom: sc7180: Disable SS instances in park mode
+>   arm64: dts: qcom: sc7280: Disable SS instances in park mode
+>
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 1 +
+>  2 files changed, 2 insertions(+)
+
+FWIW, the test case I used to reproduce this:
+
+1. Plug in a USB dock w/ Ethernet
+2. Plug a USB 3 SD card reader into the dock.
+3. Use lsusb -t to confirm both Ethernet and card reader are on USB3.
+4. From a shell, run for i in $(seq 5); do dd if=3D/dev/sdb of=3D/dev/null
+bs=3D4M; done to read from the card reader.
+5. At the same time, stress the Internet. If you've got a very fast
+Internet connection then running Google's "Internet speed test" did
+it, but I could also reproduce by just running this from a PC
+connected to the same network as my DUT: ssh ${DUT} "dd of=3D/dev/null"
+< /dev/zero
+
+I would also note that, though I personally reproduced this on sc7180
+and sc7280 boards and thus Krishna posted the patch for those boards,
+there's no reason to believe that this problem doesn't affect all of
+Qualcomm's SoCs. It would be nice if someone at Qualcomm could post a
+followup patch fixing this everywhere.
+
+-Doug
