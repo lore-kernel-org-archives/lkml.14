@@ -1,340 +1,139 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5FB2C6AE
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 16:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8136F21345
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 16:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717085679; cv=none; b=nfRMame2ZhziDUwHmGK5iO3Jj6ipIclae7Ro1nCMZ3MxM3E2zSYPHHaHIIypph588Fq/wOOaXoD61jwA8qYf8EPOQueqthkztvX88uKb0IZTj27hh0Akr3Z45LMWiqKUnHMfzJKPfrW38au+cQdwHguApSLXALYlsjqUMSdN0SY=
+	t=1717085861; cv=none; b=YfHmTLgwGtzg8TJVh16FMveB++2Je4rNFKSVaEcZN/DnnMwRDa0y9HDGbwvjsx0iv+X/Ooag61ajHD8ReC7CwfkekwpbVrMjIAeiauw1t3C89WVrnS71dg34BYxiTm0LL0Rc9/+Af/sLutuHVkZrH7Tqa5vsFB5LEF59dw1z3V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717085679; c=relaxed/simple;
-	bh=OUowyC/BuT+oRhlybANuYOVPkHlLyq2cSzoK/fwEVhM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u+H/MSK7/Xv/jwrK0FgHKf6noxA5NS6X2mYXeeyKZnwWPOcROJ/NmHHvFa8bPWNM2DM2LVv7IF82goUU0wLGKys8sGvqAKLhHuaEHDv1TEdTHyeZ89yLu45z9SMvlwzEgMBYMH9cG/NpUIF9NIKcP/g12/pRFiru6pSIcU4r5bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DDPZPcRE; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717085861; c=relaxed/simple;
+	bh=puGpVZOnVut9xgpkq2SDv7F7R0DYc9nfwmObP4idcdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UehLh5Le+Tv516pgtJ1xo9UsrKm1NGupN91TUbiVy+zxjECSW88Q74vi8LB2f1oWnk8+xzuQz9fgjbkiCDaYeu8Y+GNEzteYgenIo9pndOWOn0oCmCAShB3k2yLRO1VIv8pf1GoKmWE5agOA4gwbjwmMTaMlqMVQCIeaAAtiLAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=MRB2dxsU; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DDPZPcRE"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f61bbb1dfcso174915ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717085677; x=1717690477; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G9y2UktDm2Wf8VD1pUGGsxJOBNyj+qo8KLue+rmkggE=;
-        b=DDPZPcRE3kIOgalnxE3Ys7+GnADKlyRHO+n1+PToMFK8heH1qZOpsmvvjxtmDc6dfj
-         TmRA6wUiwZbBxVrOcASSluy5UlpOjbMTViTep1LWa36kLAjLLPvp5tXO0Vtmvr2cpouS
-         Hg7B4+yWamJxEoAPhTyOLaePXWbHOAV5WNlPfGEM2BB8bBJhhrhTAdghWv6sSc571Cun
-         017xDT3rLBht69E1C9pL0wRFWRRn/vOywJycHupvO4SPdIJtk/mQ22SeibDgpjOlwVLf
-         0/14i3ceOPz9kwCZvDVhrkqhl0Ap5RqwluIAnvJgiEmKmchqSGxXRqVqRIC4yJ8cnQtl
-         kk7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717085677; x=1717690477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G9y2UktDm2Wf8VD1pUGGsxJOBNyj+qo8KLue+rmkggE=;
-        b=S8ZWuFM1rhg/1E3+Coq0S2W02HfO9nooj4oBmUxKdeb6J0Qq4QQkczW9R/cNmjvOod
-         EFECt47FMjdjbzZ7cSAgYG3Q1wYdW0zY7dbGcvGR9vnUWpOqZiwioIUXN/pzjQADQnvN
-         61BfhetDmMMv0dHm9yQOaztCjpUVICC/Zv7ve3MqsFzM73hHihcGOLxat2n97xnwjUfC
-         QIftsh8k/vrt8lXje+TQTOUd/IvFAj81ZNNI7KqqoHxKksGyLuU4uhO3UZLJzA0shGky
-         6rAFR7inq7RT3gDKzpFNgA10MDKjj1DOIJjW7shiY+PXlCe0WHpetow9fiREle603T37
-         ifbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMmvfaBSmvStbOnirGaG0eglJiXlPJryEfP6czuuvJ6Pbq8F2Y5Dk8vRQcahMnS4aUjeDplX6Le/94mgUTxLMGBYIMyoIO1qVLbTvD
-X-Gm-Message-State: AOJu0YwqSZVU/87enrHk7hyUUrj0PIic3X9U2HSFVjnQMYQYnPs42cO0
-	Y5rGpsg9HqZ5TVPIZIc7d5vyPJ1enG5P1tAATL4R64x2avsKlIWGlp3MwKbuRUGYccLXC6KJIvq
-	SrNHXGrsQtq7BgCwCCc63RwwoPf5VsCQCJjZx
-X-Google-Smtp-Source: AGHT+IENsByswKhreNE6pmbNMCSnJRJAYsQ0cPqasNX9uk4ZawLfH+q9UEiS1kJaf/p5e40IJ8fSmYYP1XGXPGGzVGQ=
-X-Received: by 2002:a17:902:7289:b0:1ea:963e:2e2d with SMTP id
- d9443c01a7336-1f617382877mr2710595ad.24.1717085676926; Thu, 30 May 2024
- 09:14:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="MRB2dxsU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
+	s=ds202307; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:
+	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=I+VnTm4AmfXXiuL7ZilP6BXPkFwuXclGizPn9CLK9c8=; b=MRB2dxsU14DJGHKq9tcDTr5kA7
+	l7s0HzxwtBEM/uDTJATPKIAjW+pKPZkWYJswy1Zcre8u6C4gEHoauTxTga9zfkjmxQdVmUogGc0Ya
+	ith839c3iIiyj7t4ZelQ68LQPT4QzLpWCoIYhRveLTCZAcc6SN9GvZge/PxKk7eBPP1o7OWp7K2uG
+	sFwedRbSWbh1BlK6/toEJvTcSe3e4pO74djIhMvn0MXxXYZmO/bgRrChWMaGXeBn0aoBm6woXW8r6
+	cZ9AKLQw1tYA0iykq4jIkbs6jzUlwNGvhPsiSUAw/FPG+CRPUnAxy8CtcmDBFIrTBJM5bMfiZuOe5
+	HHMe4gWg==;
+Received: from [2001:9e8:9df:3501:d236:c226:c7b1:7d83] (port=59208 helo=bergen.fritz.box)
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <nicolas@fjasle.eu>)
+	id 1sCiT3-00AmQo-EL;
+	Thu, 30 May 2024 18:17:29 +0200
+Date: Thu, 30 May 2024 18:17:24 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Adrian Huang <adrianhuang0701@gmail.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org, Adrian Huang <ahuang12@lenovo.com>
+Subject: Re: [PATCH 1/1] kbuild: Fix 'import module' error
+Message-ID: <ZlimlGhgULcpCQlO@bergen.fritz.box>
+References: <20240529154621.21354-1-ahuang12@lenovo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525152927.665498-1-irogers@google.com> <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
- <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
- <20240527105842.GB33806@debian-dev> <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
- <ZlY0F_lmB37g10OK@x1> <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
- <d79b18d7-6930-41fd-8157-eaa55b52df86@arm.com> <CAP-5=fV7AGJLCKv0yhcCNSTywBSOiPV8j8aHi5eniXHaRZWA0Q@mail.gmail.com>
- <3d4edff4-0052-4996-b8e8-61764988f4dd@arm.com>
-In-Reply-To: <3d4edff4-0052-4996-b8e8-61764988f4dd@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 30 May 2024 09:14:24 -0700
-Message-ID: <CAP-5=fVi7kGV6PqWpszoUtS9QuKtDweBt7OOVuFCSVD=Z=_q8w@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
-To: James Clark <james.clark@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DrFMLf5VWQ4FI3T/"
+Content-Disposition: inline
+In-Reply-To: <20240529154621.21354-1-ahuang12@lenovo.com>
+X-Operating-System: Debian GNU/Linux 12.5
+Jabber-ID: nicolas@jabber.no
+
+
+--DrFMLf5VWQ4FI3T/
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2024 at 8:37=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
->
->
-> On 29/05/2024 18:33, Ian Rogers wrote:
-> > On Wed, May 29, 2024 at 7:50=E2=80=AFAM James Clark <james.clark@arm.co=
-m> wrote:
-> >>
-> >> On 28/05/2024 20:51, Ian Rogers wrote:
-> >>> On Tue, May 28, 2024 at 12:44=E2=80=AFPM Arnaldo Carvalho de Melo
-> >>> <acme@kernel.org> wrote:
-> >>>>
-> >>>> On Mon, May 27, 2024 at 10:36:45PM -0700, Ian Rogers wrote:
-> >>>>> On Mon, May 27, 2024 at 3:58=E2=80=AFAM Leo Yan <leo.yan@linux.dev>=
- wrote:
-> >>>>>> On Sat, May 25, 2024 at 02:14:26PM -0700, Linus Torvalds wrote:
-> >>>>>>> On Sat, 25 May 2024 at 09:43, Linus Torvalds <torvalds@linux-foun=
-dation.org> wrote:
-> >>>>
-> >>>>>>>> This makes 'perf record' work for me again.
-> >>>>
-> >>>>>>> Oh, wait, no it doesn't.
-> >>>>
-> >>>>>>> It makes just the plain "perf record" without any arguments work,
-> >>>>>>> which was what I was testing because I was lazy.
-> >>>>
-> >>>>>>> So now
-> >>>>
-> >>>>>>>     $ perf record sleep 1
-> >>>>
-> >>>>>>> works fine. But
-> >>>>
-> >>>>>>>     $ perf record -e cycles:pp sleep 1
-> >>>>
-> >>>>>>> is still completely broken (with or without ":p" and ":pp").
-> >>>>
-> >>>>>> Seems to me that this patch fails to check if a PMU is a core-atta=
-ched
-> >>>>>> PMU that can support common hardware events. Therefore, we should
-> >>>>>> consider adding the following check.
-> >>>>
-> >>>>>> +++ b/tools/perf/util/parse-events.c
-> >>>>>> @@ -1594,6 +1594,9 @@ int parse_events_multi_pmu_add(struct parse_=
-events_state *parse_state,
-> >>>>>>         while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
-> >>>>>>                 bool auto_merge_stats;
-> >>>>>>
-> >>>>>> +               if (hw_config !=3D PERF_COUNT_HW_MAX && !pmu->is_c=
-ore)
-> >>>>>> +                       continue;
-> >>>>>> +
-> >>>>>>                 if (parse_events__filter_pmu(parse_state, pmu))
-> >>>>>>                         continue;
-> >>>>
-> >>>>>> To be clear, I only compiled this change but I have no chance to t=
-est
-> >>>>>> it. @Ian, could you confirm this?
-> >>>>
-> >>>>> Hi Leo,
-> >>>>
-> >>>>> so the code is working as intended. I believe it also agrees with w=
-hat
-> >>>>> Arnaldo thinks.
-> >>>>
-> >>>>> If you do:
-> >>>>
-> >>>>> $ perf stat -e cycles ...
-> >>>>
-> >>>>> and you have
-> >>>>
-> >>>>> /sys/devices/pmu1/events/cycles
-> >>>>> /sys/devices/pmu2/events/cycles
-> >>>>
-> >>>>> The output of perf stat should contain counts for pmu1 and pmu2. We=
-re
-> >>>>> the event 'data_read' or 'inst_retired.any' we wouldn't be having t=
-he
-> >>>>
-> >>>> Sure, what is being asked is to count events and if those two events=
- in
-> >>>> those two PMUs can count, then do what the user asked.
-> >>>>
-> >>>> For 'perf record' we're asking for sampling, if the event has the na=
-me
-> >>>> specified and can't be sampled, skip it, warn the user and even so
-> >>>> only if verbose mode is asked, something like:
-> >>>>
-> >>>>   root@x1:~# perf record -e cycles -a sleep 1
-> >>>>   [ perf record: Woken up 1 times to write data ]
-> >>>>   [ perf record: Captured and wrote 1.998 MB perf.data (4472 samples=
-) ]
-> >>>>   root@x1:~# perf evlist
-> >>>>   cpu_atom/cycles/
-> >>>>   cpu_core/cycles/
-> >>>>   dummy:u
-> >>>>   root@x1:~#
-> >>>>
-> >>>> Cool, there are two 'cycles' events, one in a PMU named 'cpu_atom',
-> >>>> another in a 'cpu_core' one, both can be sampled, my workload may
-> >>>> run/use resources on then, I'm interested, sample both.
-> >>>>
-> >>>> But if we had some other PMU, to use a name Jiri uses in tests/fake
-> >>>> PMUs, the 'krava' PMU and it has a 'cycles' event, so 'krava/cycles/=
-'
-> >>>> and for some reason it doesn't support sampling, skip it, then the
-> >>>> result should be the same as above.
-> >>>>
-> >>>> If the user finds it strange after looking at sysfs that 'krava/cycl=
-es/'
-> >>>> isn't being sampled, the usual workflow is to ask perf for more
-> >>>> verbosity, using -v (or multiple 'v' letters to get increasing level=
-s of
-> >>>> verbosity), in which case the user would see:
-> >>>>
-> >>>>   root@x1:~# perf record -v -e cycles -a sleep 1
-> >>>>   WARNING: skipping 'krava/cycles/' event, it doesn't support sampli=
-ng.
-> >>>>   [ perf record: Woken up 1 times to write data ]
-> >>>>   [ perf record: Captured and wrote 1.998 MB perf.data (4472 samples=
-) ]
-> >>>>   root@x1:~# perf evlist
-> >>
-> >> This makes sense to me. I like keeping the old apparent behavior unles=
-s
-> >> -v is used and it will feel like the tool "just works".
-> >>
-> >> In the context of the commit summary "perf parse-events: Prefer
-> >> sysfs/JSON hardware events over legacy":
-> >>
-> >> I don't follow why that should be "Prefer, even if it's an event that
-> >> can't be opened, sysfs/JSON...".
-> >>
-> >> Surely it should be "Prefer sysfs/JSON, unless it can't be opened, the=
-n
-> >> use legacy". If all events can be opened, sure go and open them all. I=
-f
-> >> only core events can be opened, do that too. If only uncore events can
-> >> be opened... etc.
-> >
->
-> [...]
->
-> > So great, ignoring the revert, that fixed everything? Well no. The
-> > tool in places was hard coding 'struct perf_event_attr' which is of
-> > course broken were things to be hybrid or BIG.little. So the fix for
-> > that was to not hard code things. We need a set of 'struct
-> > perf_event_attr', ah I know a way to get that let's just use our event
-> > parsing logic. So a 'struct perf_event_attr' hard coding type to
-> > PERF_TYPE_HARDWARE, the config to PERF_COUNT_HW_CPU_CYCLES and also
-> > setting the precision to maximum was changed into parsing the string
-> > "cycles:P". Sounds good, no? Well no. Somebody decided to create an
-> > ARM event called cycles (Intel's name to avoid conflicts is
-> > clockticks) and now that event was getting added to our set. Although
-> > the patch sat for weeks (months?) on linux-next nobody had discovered
-> > a fairly obvious breakage.
-> >
->
-> We did see the test failure on our Ampere test machine 7 days ago, but
-> for some reason only on mainline (I was also on holiday at the same
-> time). I'm checking if that machine is running all the branches and will
-> make sure it does from now on.
->
-> We are running perf-tools-next on other machines and I try to look at
-> all the test failures. Just this one had a bit of an obscure combination
-> of needing the DSU PMU.
+On Wed 29 May 2024 23:46:21 GMT, Adrian Huang wrote:
+> From: Adrian Huang <ahuang12@lenovo.com>
+>=20
+> Commit b1992c3772e6 ("kbuild: use $(src) instead of $(srctree)/$(src)
+> for source directory") only changes 'symlinks'. However, 'cmd_symlink'
+> is not changed accordingly. This leads to the following error:
+>=20
+> Traceback (most recent call last):
+>   File "/your_kernel_obj/linux/vmlinux-gdb.py",
+>  line 29, in <module>
+>     import linux.utils
+> ModuleNotFoundError: No module named 'linux.utils'
+>=20
+> Fix the issue by using $(src) instead of $(srctree)/$(src).
+>=20
+> Fixes: b1992c3772e6 ("kbuild: use $(src) instead of $(srctree)/$(src) for=
+ source directory")
+> Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+> ---
+>  scripts/gdb/linux/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/scripts/gdb/linux/Makefile b/scripts/gdb/linux/Makefile
+> index d77ad9079d0f..fcd32fcf3ae0 100644
+> --- a/scripts/gdb/linux/Makefile
+> +++ b/scripts/gdb/linux/Makefile
+> @@ -5,7 +5,7 @@ ifdef building_out_of_srctree
+>  symlinks :=3D $(patsubst $(src)/%,%,$(wildcard $(src)/*.py))
+> =20
+>  quiet_cmd_symlink =3D SYMLINK $@
+> -      cmd_symlink =3D ln -fsn $(patsubst $(obj)/%,$(abspath $(srctree))/=
+$(src)/%,$@) $@
+> +      cmd_symlink =3D ln -fsn $(patsubst $(obj)/%,$(abspath $(src))/%,$@=
+) $@
+> =20
+>  always-y +=3D $(symlinks)
+>  $(addprefix $(obj)/, $(symlinks)): FORCE
+> --=20
+> 2.25.1
 
-Thanks, I'm truly appreciative of greater testing and I appreciate it
-doesn't happen for free. It also has ongoing costs. Thank you!
+Hi Adrian,
 
-> One thing we don't have in CI is any Apple M hardware. I can look into
-> it but I wouldn't have high hopes for anything soon.
+this is already fixed in kbuild/for-next.  Unfortunately the patch is=20
+not available at lore.kernel.org (did not not pass any usual mailing=20
+list?), but you can find the pre-applied patch in [1].
 
-As mentioned in these threads it is also knowingly broken - what the
-reverted patch was trying to address. Perhaps one could be captured on
-the way to e-waste if the screen,... don't work. We don't need much.
-Apple M is the root cause of much special behavior in the perf tool
-and the testing situation on it is sad. Maybe the Linux Foundation
-could get one?
+Kind regards,
+Nicolas
 
-> [...]
->
-> > It isn't new behavior for perf to scan all PMUs, it always has, the
-> > new behavior is around legacy events. We want multiple PMU scanning
-> > for hybrid, we want all PMU scanning for uncore. The legacy changes
-> > happened because of the Apple M? PMU with me being complained at by
-> > folks at ARM who have now created this mess by their arm_dsu event
-> > name. Shouldn't it be a 1 liner fix to change "DSU_EVENT_ATTR(cycles,
-> > 0x11)," to "DSU_EVENT_ATTR(clockticks, 0x11),":
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/perf/arm_dsu_pmu.c#n177
-> > that's up to ARM but it would make sense to me.
-> >
->
-> Not sure about that one, that would break anyone's scripts or tools that
-> are looking at DSU cycles. And it wouldn't fix the issue in the future
-> if there were other reasons the event doesn't open (like non sampling
-> core events, or someone's brand new uncore PMU that also has a cycles
-> event).
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild=
+=2Egit/commit/?h=3Dfor-next&id=3D659bbf7e1b08267b8e1dd900b316edcb6f6d9e2e
 
-Right, but should the resolution there be to specify which PMU you
-want to resolve the ambiguity. The tool telling you a PMU doesn't
-support sampling is signal. We'd expect the tool to fail if it didn't
-support an event, is it really unreasonable to fail on a mode of an
-event?
+--DrFMLf5VWQ4FI3T/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I'm further confused by the DSU driver. The names:
+-----BEGIN PGP SIGNATURE-----
 
-DSU_EVENT_ATTR(cycles, 0x11),
-DSU_EVENT_ATTR(bus_access, 0x19),
-DSU_EVENT_ATTR(memory_error, 0x1a),
-DSU_EVENT_ATTR(bus_cycles, 0x1d),
+iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmZYpo8ACgkQB1IKcBYm
+EmlAAg/9GS6DEQmsHsHymikvcG8dlQZWOpOVucbl6wVol/jWyoxkvR29i2U9FH1X
+Exb/yUbnzaUjeWFHo4wW6BJQ8N8MrPydh4C3JOcF910Gt+yXeHIWpfzhnHKs9RHx
+u+f7XQ0tVTFjtGWl+qozWGtAgph+7Jl50ApJamNkXkezQDvsx4V0PHUXottQLYts
+Tx3hcDOOkcku5k0yNcQ2qwTauBgsvOwbfSLNW92Dj2Z8wvrNzOwLImD/5quDMoMW
+i50NSIa18mwKWTVUUt09AQWKdUAEewzsyXdRIzgD9FylStGQZFHDOrYBqbXD8lIk
+HAGsujlnlc5ayZq1YphclMH4X/KgnE0405glanS41Gl2UWdvH8xo0DIp/8EFKzgi
+AU7vPzwKF+m5oeUcY2OCeTwCE05AJJOCDkuHz74SPph40f5atXEMGQUkN8LcsqCv
+pTgTI+jdojgrh2PCl1a1jKZXR1OPn/wVpajMYQAYibX2bQPijMz2HhcnePohc6D7
+5D0bd/dE4XYXyHWxdRpC/ncR9TMFhFADdXWdT2messLYFYP/BDFO4AYJlY4qzxiv
+0jGfVwHu2o9B7RydH4JdoXpnkEfqARfGnNC5Wogx7E426ZcIRVvtrl3tB0C48iDv
+hx5tv0eavrMvWz0CI/8Jk0Zxtcme8ARjG5wDEqfLCrM98cXoK6s=
+=jWpY
+-----END PGP SIGNATURE-----
 
-The last 3 seem unambiguous, but cycles, couldn't it be read as also
-possibly meaning bus_cycles? Wouldn't cpu_cycles be in keeping with
-ARM's other names and an objectively better name? Getting that 1 liner
-in v6.10 would resolve a lot of problems. I also think llc or l3 may
-be more "intention revealing" names for the device than dsu, but hey I
-don't want to start a naming war.
-
-> It seems like we're converging one something that works though in the
-> other threads, but I'm still digesting the problems a bit.
-
-I think the major blocker is that some people, although I can only
-name 1 and they've stopped listening, think event names should somehow
-carry special meaning and in that special case it implies use only
-core PMUs. The only known example of a special event is cycles, but if
-you look for equivalent event names in perf's code there are things as
-banal as branches and instructions, and as wild as
-dTLB-speculative-read-misses. I'd really like not to carry around
-notions of special event names but if we merge patches that ignore
-that and then they get reverted, justified through hand written tests
-looking to poke at things like the dsu PMU,  I don't know where we
-are. It has also been threatened that the perf code could be removed
-from the kernel tree, so there's really no fun in poking a bear.
-
-Thanks,
-Ian
-
-> >> Because the user could always use the defaults (no argument) or -e
-> >> cycles and historically Perf correctly picked the one that could be
-> >> opened. Or if they want the DSU one they could specify it. That can al=
-l
-> >> still work _and_ we can support "prefer sysfs/JSON" as long as we don'=
-t
-> >> prefer it when opening the event doesn't work.
-> >
-> > Hopefully this is all explained above.
-> >
-> > Thanks,
-> > Ian
-> >
-> >> Thanks
-> >> James
-> >>
-> >>> Thanks,
-> >>> Ian
-> >>>
-> >>>> - Arnaldo
+--DrFMLf5VWQ4FI3T/--
