@@ -1,48 +1,58 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE16F155381
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CD418396C
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717061830; cv=none; b=BzbU7uHd7s+Ko3dZupaCLy9FHddUxmTI7kJn2ANajTjGMZ4C8MbNbcSdjx+zrGv0iM1JX9q0LyI3Kg0TRGLCXjt61Tv3QqeunjmoJzJlEO6nGX2PKnY2wqOfgonxhFQEn50pj7+jcmH8SjaqxZSc0elMXKy0ugapndCOIEr76II=
+	t=1717062035; cv=none; b=jlWR2N15hi0XGDz/tcXSapYcodp3tPrH7CltoBheGN1o88tjXCBb9QdNZFzZ0CbWtuxDqRgDYvGnUiWCx3BxkfR82HeaWyxk1Bb2SKcogpW/Mp2QJDP4T8lmzvDniRfz0KfZ/UKGyC7wnH1xltHWpXoR2YnHoAR8X362GsAiowI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717061830; c=relaxed/simple;
-	bh=Co3NApN5PH0RwrxV3ma4J3plO3ITMnzTINS3wtyhh5U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u+XJ0T6j0Fg3ZOw4brOhTqSapHTMwvRoLvw8sL9JlDkR8xrBsWnxFDN1lj9RaabyEJhAnvtUHbxWxF9QwwiJuzyyO6xZGCkNxGpha5Czy4XQvZiyUWY6LBSZG7KC4hcvMI50O/sbXNIFPjEvN+pVTeA8NausjmjoCiFo0VQtzPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jwIKfK2i; arc=none smtp.client-ip=198.47.19.142
+	s=arc-20240116; t=1717062035; c=relaxed/simple;
+	bh=u0YKPUnLFVDOQYLIYRiTFVUATH5P/PqjieWnNLiJrA0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pz7es6Jgup1CFs6/X1FEPJX720r8ONXdaeYGeNt6CcJYFuRPH8Z2Azfe7yvs/oZxdgHhEij9rMmV7BQb7fc+Jug63rgMad9v9Xddq3/AnCBU1PKBAXVbA9jr8eP/Fb4c2EaR2KHmaQqasudWEH2r4gI9aw3aK/gYeeYFR4QlNvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KUMpS0DR; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jwIKfK2i"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44U9ab0t030998;
-	Thu, 30 May 2024 04:36:37 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KUMpS0DR"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44U9do6C056008;
+	Thu, 30 May 2024 04:39:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717061797;
-	bh=BF4OeQ8AnLvIg0Vy2/wLlvEDPShVZWkGdXBbmVkNmes=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=jwIKfK2igZooIYzC3x851LvNhg1dgoxaQO7dAT1uWWhCCFtUzicsAlHhd+Opg56Fb
-	 5b5uSL0JZuhZjMQIN0de3x4ZqTRfOQ27UJNpTmkP3uESHHoo/IwBEs9iL1cCtco+5B
-	 XbCkLrcuZx/PQMWZXpv844HL3th05Ag5gghze4+s=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44U9abGo020248
+	s=ti-com-17Q1; t=1717061990;
+	bh=lnFMblmb1eA3dL1Hq9rIjS5XMCLMapKZP4XOTfarCDg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=KUMpS0DRb4w4KLBNeCHIDld2VUr8xGTNdrzrT1lg2gYv7oHgRwJNJ496GP7niR9JO
+	 2rzknj1+QByJJ2FRqa5LQf9V8yl24H2HmpswMuA7Ut+8WS5nSZC99bsMULwO4A0ToK
+	 Nc75iJaZ+SRCfoaCsrNtU7+mu3t6Wit+8XmeLRRg=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44U9dodp056797
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 30 May 2024 04:36:37 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 30 May 2024 04:39:50 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
- May 2024 04:36:36 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 04:39:50 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 30 May 2024 04:36:36 -0500
-Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44U9aaJH000663;
-	Thu, 30 May 2024 04:36:36 -0500
-From: Aradhya Bhatia <a-bhatia1@ti.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Frontend Transport; Thu, 30 May 2024 04:39:50 -0500
+Received: from [172.24.227.31] (uda0496377.dhcp.ti.com [172.24.227.31])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44U9dgkv004387;
+	Thu, 30 May 2024 04:39:43 -0500
+Message-ID: <ce332f8d-3a4f-4046-bde0-6e12c99ebb09@ti.com>
+Date: Thu, 30 May 2024 15:09:42 +0530
+Precedence: bulk
+X-Mailing-List: linux-kernel@vger.kernel.org
+List-Id: <linux-kernel.vger.kernel.org>
+List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] drm/tidss: Add CRTC mode_fixup
+To: Maxime Ripard <mripard@kernel.org>
+CC: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
         Andrzej Hajda
 	<andrzej.hajda@intel.com>,
         Neil Armstrong <neil.armstrong@linaro.org>,
@@ -55,12 +65,13 @@ To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
  Skrabec <jernej.skrabec@gmail.com>,
         Maarten Lankhorst
 	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Jyri
- Sarha <jyri.sarha@iki.fi>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-CC: DRI Development List <dri-devel@lists.freedesktop.org>,
+        Jyri Sarha <jyri.sarha@iki.fi>,
+        Thomas
+ Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel
+ Vetter <daniel@ffwll.ch>,
+        DRI Development List
+	<dri-devel@lists.freedesktop.org>,
         Linux Kernel List
 	<linux-kernel@vger.kernel.org>,
         Sam Ravnborg <sam@ravnborg.org>, Thierry
@@ -71,158 +82,99 @@ CC: DRI Development List <dri-devel@lists.freedesktop.org>,
         Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
         Devarsh Thakkar <devarsht@ti.com>,
         Jayesh
- Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>,
-        Aradhya Bhatia
-	<a-bhatia1@ti.com>
-Subject: [PATCH v2 8/9] drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
-Date: Thu, 30 May 2024 15:06:20 +0530
-Message-ID: <20240530093621.1925863-9-a-bhatia1@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240530093621.1925863-1-a-bhatia1@ti.com>
-References: <20240530093621.1925863-1-a-bhatia1@ti.com>
-Precedence: bulk
-X-Mailing-List: linux-kernel@vger.kernel.org
-List-Id: <linux-kernel.vger.kernel.org>
-List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+ Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>
+References: <20240511153051.1355825-1-a-bhatia1@ti.com>
+ <20240511153051.1355825-2-a-bhatia1@ti.com>
+ <20240516-tuscan-mamba-of-debate-c4cddf@penduick>
+ <1c4f5862-b1a2-4812-a109-987338ec3a72@ti.com>
+ <20240521-lean-dragon-of-perfection-043fad@houat>
+Content-Language: en-US
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+In-Reply-To: <20240521-lean-dragon-of-perfection-043fad@houat>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Move the bridge pre_enable call before crtc enable, and the bridge
-post_disable call after the crtc disable.
+Hi Maxime,
 
-The sequence of enable after this patch will look like:
+On 21/05/24 18:48, Maxime Ripard wrote:
+> On Thu, May 16, 2024 at 04:33:40PM GMT, Aradhya Bhatia wrote:
+>> Hi Maxime,
+>>
+>> Thank you for reviewing the patches.
+>>
+>> On 16/05/24 13:40, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Sat, May 11, 2024 at 09:00:45PM +0530, Aradhya Bhatia wrote:
+>>>> Add support for mode_fixup for the tidss CRTC.
+>>>>
+>>>> Some bridges like the cdns-dsi consume the crtc_* timing parameters for
+>>>> programming the blanking values. Allow for the normal timing parameters
+>>>> to get copied to crtc_* timing params.
+>>>>
+>>>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+>>>> ---
+>>>>  drivers/gpu/drm/tidss/tidss_crtc.c | 11 +++++++++++
+>>>>  1 file changed, 11 insertions(+)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
+>>>> index 94f8e3178df5..797ef53d9ad2 100644
+>>>> --- a/drivers/gpu/drm/tidss/tidss_crtc.c
+>>>> +++ b/drivers/gpu/drm/tidss/tidss_crtc.c
+>>>> @@ -309,12 +309,23 @@ enum drm_mode_status tidss_crtc_mode_valid(struct drm_crtc *crtc,
+>>>>  	return dispc_vp_mode_valid(tidss->dispc, tcrtc->hw_videoport, mode);
+>>>>  }
+>>>>  
+>>>> +static
+>>>> +bool tidss_crtc_mode_fixup(struct drm_crtc *crtc,
+>>>> +			   const struct drm_display_mode *mode,
+>>>> +			   struct drm_display_mode *adjusted_mode)
+>>>> +{
+>>>> +	drm_mode_set_crtcinfo(adjusted_mode, 0);
+>>>> +
+>>>> +	return true;
+>>>> +}
+>>>> +
+>>>>  static const struct drm_crtc_helper_funcs tidss_crtc_helper_funcs = {
+>>>>  	.atomic_check = tidss_crtc_atomic_check,
+>>>>  	.atomic_flush = tidss_crtc_atomic_flush,
+>>>>  	.atomic_enable = tidss_crtc_atomic_enable,
+>>>>  	.atomic_disable = tidss_crtc_atomic_disable,
+>>>>  
+>>>> +	.mode_fixup = tidss_crtc_mode_fixup,
+>>>>  	.mode_valid = tidss_crtc_mode_valid,
+>>>>  };
+>>>
+>>> mode_fixup is deprecated for atomic drivers, so the solution must be
+>>> different there.
+>>>
+>>> It's also not clear to me how it could change anything there:
+>>> drm_mode_set_crtcinfo with no flags will make crtc_* field exactly
+>>> identical to their !crtc counterparts.
+>>>
+>>
+>> I checked the flag options. There isn't any flag required. The only
+>> reason to add this call is because cdns-dsi strictly requires the crtc_*
+>> fields to be populated during the bridge enable.
+>>
+>> Secondly, if mode_fixup is deprecated, I think the crtc_atomic_check
+>> would be the next best place to add this call.
+> 
+> That would be better, yes, but we shouldn't even have to do that in the
+> first place. AFAIK all the path that create a drm_display_mode will call
+> drm_mode_set_crtcinfo on it to fill those fields. So if they are missing
+> somewhere, that's what the actual bug is, not something we should work
+> around of at the driver level.
+> 
 
-	bridge[n]_pre_enable
-	...
-	bridge[1]_pre_enable
+You are right. This patch isn't required at all. The fix around the
+mode->crtc_clock usage in one place in the cdns-dsi driver makes this
+patch unnecessary. The DRM core does duplicate the timing parameters at
+a later stage for the cdns-dsi bridge_enable to consume.
 
-	crtc_enable
-	encoder_enable
+Dropped this patch in v2. Thanks!
 
-	bridge[1]_enable
-	...
-	bridge[n]__enable
-
-and vice-versa for the bridge chain disable sequence.
-
-The definition of bridge pre_enable hook says that,
-"The display pipe (i.e. clocks and timing signals) feeding this bridge
-will not yet be running when this callback is called".
-
-Since CRTC is also a source feeding the bridge, it should not be enabled
-before the bridges in the pipeline are pre_enabled. Fix that by
-re-ordering the sequence of bridge pre_enable and bridge post_disable.
-
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
----
- drivers/gpu/drm/drm_atomic_helper.c | 70 +++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index fb97b51b38f1..02e093950218 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1186,8 +1186,6 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 			else if (funcs->dpms)
- 				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
- 		}
--
--		drm_atomic_bridge_chain_post_disable(bridge, old_state);
- 	}
- 
- 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
-@@ -1234,6 +1232,49 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 		if (ret == 0)
- 			drm_crtc_vblank_put(crtc);
- 	}
-+
-+	for_each_oldnew_connector_in_state(old_state, connector, old_conn_state,
-+					   new_conn_state, i) {
-+		struct drm_encoder *encoder;
-+		struct drm_bridge *bridge;
-+
-+		/*
-+		 * Shut down everything that's in the changeset and currently
-+		 * still on. So need to check the old, saved state.
-+		 */
-+		if (!old_conn_state->crtc)
-+			continue;
-+
-+		old_crtc_state = drm_atomic_get_old_crtc_state(old_state, old_conn_state->crtc);
-+
-+		if (new_conn_state->crtc)
-+			new_crtc_state = drm_atomic_get_new_crtc_state(old_state,
-+								       new_conn_state->crtc);
-+		else
-+			new_crtc_state = NULL;
-+
-+		if (!crtc_needs_disable(old_crtc_state, new_crtc_state) ||
-+		    !drm_atomic_crtc_needs_modeset(old_conn_state->crtc->state))
-+			continue;
-+
-+		encoder = old_conn_state->best_encoder;
-+
-+		/* We shouldn't get this far if we didn't previously have
-+		 * an encoder.. but WARN_ON() rather than explode.
-+		 */
-+		if (WARN_ON(!encoder))
-+			continue;
-+
-+		drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
-+			       encoder->base.id, encoder->name);
-+
-+		/*
-+		 * Each encoder has at most one connector (since we always steal
-+		 * it away), so we won't call disable hooks twice.
-+		 */
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		drm_atomic_bridge_chain_post_disable(bridge, old_state);
-+	}
- }
- 
- /**
-@@ -1469,6 +1510,30 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 	struct drm_connector_state *new_conn_state;
- 	int i;
- 
-+	for_each_new_connector_in_state(old_state, connector, new_conn_state, i) {
-+		struct drm_encoder *encoder;
-+		struct drm_bridge *bridge;
-+
-+		if (!new_conn_state->best_encoder)
-+			continue;
-+
-+		if (!new_conn_state->crtc->state->active ||
-+		    !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
-+			continue;
-+
-+		encoder = new_conn_state->best_encoder;
-+
-+		drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
-+			       encoder->base.id, encoder->name);
-+
-+		/*
-+		 * Each encoder has at most one connector (since we always steal
-+		 * it away), so we won't call enable hooks twice.
-+		 */
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
-+	}
-+
- 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
- 		const struct drm_crtc_helper_funcs *funcs;
- 
-@@ -1514,7 +1579,6 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 		 * it away), so we won't call enable hooks twice.
- 		 */
- 		bridge = drm_bridge_chain_get_first_bridge(encoder);
--		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
- 
- 		if (funcs) {
- 			if (funcs->atomic_enable)
--- 
-2.34.1
+Regards
+Aradhya
 
