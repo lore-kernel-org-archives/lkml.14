@@ -1,146 +1,108 @@
-Received: from mail-m2411.xmail.ntesmail.com (mail-m2411.xmail.ntesmail.com [45.195.24.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36FE4D595;
-	Thu, 30 May 2024 18:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5AC1CF9C;
+	Thu, 30 May 2024 18:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717094954; cv=none; b=bMeEfJWxs8LYMycjCMK/HP/dDuQhPtAogPa5OgfEdAD69GxpnFMM76XUNoumO/TrVuZHJ2Xv8ud5v5uHdIAVXjD2HJJZaGs6DijCFUoern4DI7CRS657P3x79Nc2AvTejEKReKnTI5trGzIQSwMahFoqxUWxSfCqUwq/VzicMEQ=
+	t=1717095061; cv=none; b=qY7Y2eXrbmFNKGiyLnA6Djgq/mRfCTfDMM9gj9PZ4+ljUrf5bO8dyQJ98l7Kf6u0QNE+ih4+7uwB6RwT1kKZQb2LKiCtCdzHHnVXhbnbiPse8hAFyzCuA1zEvTtHmSh0SSl/XJ2PxX7n+cOJOforkSbzNsx9YjN+/TtBFHtAXy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717094954; c=relaxed/simple;
-	bh=P2bO5JWCsGZMtS8zS4ZP9PbUQbMPfPvnLfoGhj5y2VA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rLKuO4GF0WaxwM621f0rwhq6hMIWLKQpiBNqeVkOlU6+3TWPYjTn0IlXLkOB0PCvNc/EFLEATmz9tIrcqVh8Q/cMLL7QdmyQ+uQy+XXObNhRBil+B9hcSOyvmS5ILFV9cBq8vrNjgdHGbI5ZEDO67xjhlW9yv/DwjdQudMZiKqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.24.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 3882D860313;
-	Thu, 30 May 2024 14:59:39 +0800 (CST)
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, John Groves
- <John@groves.net>, axboe@kernel.dk, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev
-References: <20240503105245.00003676@Huawei.com>
- <5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
- <20240508131125.00003d2b@Huawei.com>
- <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
- <20240508164417.00006c69@Huawei.com>
- <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
- <20240509132134.00000ae9@Huawei.com>
- <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
- <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
- <ZldIzp0ncsRX5BZE@memverge.com>
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Message-ID: <5db870de-ecb3-f127-f31c-b59443b4fbb4@easystack.cn>
-Date: Thu, 30 May 2024 14:59:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1717095061; c=relaxed/simple;
+	bh=8fVaAaz0nBL6sCELN6DFm76IC/rF/vDW/oIDjSMgjxE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HVNpji5Y1actyJZDQMnrNAsKTsNkDfraTbIwzazN9hRE6wICUJQBjjB/Vn5V4eyfbNuMGrBQcJCITKb0JA7mDX3hhWMxz9+YU3IwQlmv2vNiH/WprWW3Grp+lXM6tXp7ssVuUp0C0gqDAKoyf7HM9TWvQ+jBsWp7bVkTGlweSOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VM4ZTOZl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VM4ZTOZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43BC1C2BBFC;
+	Thu, 30 May 2024 18:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717095061;
+	bh=8fVaAaz0nBL6sCELN6DFm76IC/rF/vDW/oIDjSMgjxE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VM4ZTOZliO7rqBRbkRKSrNspz9A4brezzKYrjEbCmvv1rMH/PeMQrGAMpfz7YWJfQ
+	 hfwctQLSslWg6Cw1MKuLnqmsD6OJYKYPdnIGWhyu3+1ev83icN2mkcwsY6508O0bE8
+	 u/20l6gVqhMHC1Y+RNnifo3I+P+FX/qQ1W5YE3/EEu3qAcVCRZcXfmE+vuyEBepKYG
+	 BpVCt5AQgm5OJm5b8ia6D8nFlaenWeCyawPmPyi2yyEaZVY8XwERfyZF52SGrG/wkG
+	 oJUqA2Q6ERhMoHbQBIWkQLz8kxqLMNBZPXKv5+L1LBi4Iv0WLVLiQrYEj6W44k0XRo
+	 zhVmNgDe1TqwQ==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Andreas Larsson <andreas@gaisler.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	sparclinux@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] of: WARN on using default root node #address-cells/#size-cells
+Date: Thu, 30 May 2024 13:50:48 -0500
+Message-ID: <20240530185049.2851617-1-robh@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZldIzp0ncsRX5BZE@memverge.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaThpMVkxDTENJTR5NQkNCTVUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8fc84c11d1023ckunm3882d860313
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OjY6DBw6MDcZPi8fExwQNy4S
-	MQhPCx9VSlVKTEpMS05JSENLSEtLVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTUlDTDcG
 
+While OpenFirmware originally allowed default values of #address-cells
+and #size-cells, FDT has long required explicit values. It's been a
+warning in dtc for the root node since the beginning (2005) and for
+any parent node since 2007. Of course, not all FDT uses dtc, but that
+should be the majority by far. The various extracted OF devicetrees I
+have dating back to the 1990s (various PowerMac, OLPC, PASemi Nemo)
+all have explicit root node properties.
 
+I have no idea what exists for Sparc, so disabling the warning for it.
+If any other platforms hit the warning, then the warning can be
+disabled for them.
 
-在 2024/5/29 星期三 下午 11:25, Gregory Price 写道:
-> On Wed, May 22, 2024 at 02:17:38PM +0800, Dongsheng Yang wrote:
->>
->>
->> 在 2024/5/22 星期三 上午 2:41, Dan Williams 写道:
->>> Dongsheng Yang wrote:
->>>
->>> What guarantees this property? How does the reader know that its local
->>> cache invalidation is sufficient for reading data that has only reached
->>> global visibility on the remote peer? As far as I can see, there is
->>> nothing that guarantees that local global visibility translates to
->>> remote visibility. In fact, the GPF feature is counter-evidence of the
->>> fact that writes can be pending in buffers that are only flushed on a
->>> GPF event.
->>
->> Sounds correct. From what I learned from GPF, ADR, and eADR, there would
->> still be data in WPQ even though we perform a CPU cache line flush in the
->> OS.
->>
->> This means we don't have a explicit method to make data puncture all caches
->> and land in the media after writing. also it seems there isn't a explicit
->> method to invalidate all caches along the entire path.
->>
->>>
->>> I remain skeptical that a software managed inter-host cache-coherency
->>> scheme can be made reliable with current CXL defined mechanisms.
->>
->>
->> I got your point now, acorrding current CXL Spec, it seems software managed
->> cache-coherency for inter-host shared memory is not working. Will the next
->> version of CXL spec consider it?
->>>
-> 
-> Sorry for missing the conversation, have been out of office for a bit.
-> 
-> It's not just a CXL spec issue, though that is part of it. I think the
-> CXL spec would have to expose some form of puncturing flush, and this
-> makes the assumption that such a flush doesn't cause some kind of
-> race/deadlock issue.  Certainly this needs to be discussed.
-> 
-> However, consider that the upstream processor actually has to generate
-> this flush.  This means adding the flush to existing coherence protocols,
-> or at the very least a new instruction to generate the flush explicitly.
-> The latter seems more likely than the former.
-> 
-> This flush would need to ensure the data is forced out of the local WPQ
-> AND all WPQs south of the PCIE complex - because what you really want to
-> know is that the data has actually made it back to a place where remote
-> viewers are capable of percieving the change.
-> 
-> So this means:
-> 1) Spec revision with puncturing flush
-> 2) Buy-in from CPU vendors to generate such a flush
-> 3) A new instruction added to the architecture.
-> 
-> Call me in a decade or so.
-> 
-> 
-> But really, I think it likely we see hardware-coherence well before this.
-> For this reason, I have become skeptical of all but a few memory sharing
-> use cases that depend on software-controlled cache-coherency.
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Sparc folks, If anyone can dump DTs from some Sparc systems it would be
+helpful.
+---
+ drivers/of/base.c | 2 ++
+ drivers/of/fdt.c  | 2 ++
+ 2 files changed, 4 insertions(+)
 
-Hi Gregory,
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 61fff13bbee5..6930aa29fec1 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -96,6 +96,7 @@ int of_bus_n_addr_cells(struct device_node *np)
+ 			return cells;
+ 
+ 	/* No #address-cells property for the root node */
++	WARN_ONCE(!IS_ENABLED(CONFIG_SPARC), "Only listed platforms should rely on default '#address-cells'\n");
+ 	return OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
+ }
+ 
+@@ -116,6 +117,7 @@ int of_bus_n_size_cells(struct device_node *np)
+ 			return cells;
+ 
+ 	/* No #size-cells property for the root node */
++	WARN_ONCE(!IS_ENABLED(CONFIG_SPARC), "Only listed platforms should rely on default '#size-cells'\n");
+ 	return OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
+ }
+ 
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index a8a04f27915b..568a3fca4c27 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -961,11 +961,13 @@ int __init early_init_dt_scan_root(void)
+ 	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
+ 	if (prop)
+ 		dt_root_size_cells = be32_to_cpup(prop);
++	WARN(!prop, "No '#size-cells' in root node\n");
+ 	pr_debug("dt_root_size_cells = %x\n", dt_root_size_cells);
+ 
+ 	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
+ 	if (prop)
+ 		dt_root_addr_cells = be32_to_cpup(prop);
++	WARN(!prop, "No '#address-cells' in root node\n");
+ 	pr_debug("dt_root_addr_cells = %x\n", dt_root_addr_cells);
+ 
+ 	return 0;
+-- 
+2.43.0
 
-	From my understanding, we actually has the same idea here. What I am 
-saying is that we need SPEC to consider this issue, meaning we need to 
-describe how the entire software-coherency mechanism operates, which 
-includes the necessary hardware support. Additionally, I agree that if 
-software-coherency also requires hardware support, it seems that 
-hardware-coherency is the better path.
-> 
-> There are some (FAMFS, for example). The coherence state of these
-> systems tend to be less volatile (e.g. mappings are read-only), or
-> they have inherent design limitations (cacheline-sized message passing
-> via write-ahead logging only).
-
-Can you explain more about this? I understand that if the reader in the 
-writer-reader model is using a readonly mapping, the interaction will be 
-much simpler. However, after the writer writes data, if we don't have a 
-mechanism to flush and invalidate puncturing all caches, how can the 
-readonly reader access the new data?
-> 
-> ~Gregory
-> 
