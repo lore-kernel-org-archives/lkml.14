@@ -1,195 +1,316 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B7F4596F;
-	Thu, 30 May 2024 17:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38B84436C
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 17:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717088580; cv=none; b=hMbw6N8gvZluZn/9Ck9te1Va9xJ7Xq7JuQIiHyzpMYXdqblo3hmM0O7DVM1/St0lkSXEQVDPeIT+/ASVTBtYjv3B+XZmPOC0jhGDDMwHTP5cPXTDznUbOk85tvCaZcexacp70ZrFkDs7zqcbapLP9q4nryyZFnULn4i0jSH5yno=
+	t=1717088585; cv=none; b=scIz34K0NEnVaIHiB2/tunlNJoIAzwbd9jMyVgXey0uBE/8fzwDy6UN+W40LlR9uIqOLv4jQshiGaRi9XjLh7xJ3tq6L5AN7JV2Y4/IwTnb1IEsFoK/YPijIw4cjnzktaRGxS5FHxwkIIcJ+6UreUxF/qihZ7yOtGhMI1Ksp4Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717088580; c=relaxed/simple;
-	bh=GzKBrhX5Mrx9Fgc9D6BndebC2wOUB3k5OXpy4LjwLAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aQ16UypkJZAFviK+YMFV2atez0DKt0H9DrRCcsXXzXDVWX97J7NHhI8UOUr+p2hYhbTiawV2r+Z3yvEnnyBgsg5IU4dZDqPNi+tGEC3dLy4zybxcFql01TLO7QIA1hT8SXOOtH+/3EumDaqLDD2F4gLnv5KKU571sYuyt8i7pUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XizQfk3r; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717088585; c=relaxed/simple;
+	bh=QRQK97kctUv8Z36b3LCxSV/fHwTXyeRjgbeLYPW44sk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=rvZdVqsGBQMlwZ6nSVAr7iiI3T/0TLb3RXL9iedpHRXTV7GNihvvkQgIO885eFVfpoPb5X2BlxelIByrMNQJDte2JmuAM5aYmuKi9nuxj3LvlMryR67JsrTY9gIt5NE5zudqDAmBLHCtn+al+5qDsWR99PTgX/BfrTAv7cEJ1+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=DMCVF4Ja; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XizQfk3r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717088579; x=1748624579;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GzKBrhX5Mrx9Fgc9D6BndebC2wOUB3k5OXpy4LjwLAI=;
-  b=XizQfk3rwPdG7H1XhHzikjCqPO/SKI2xi5oIRL95CuOA7Gl11VEQpYnZ
-   dUkYhwY6ZXRzidEdL6BjwUR/qBXl7gMauULPxyiVAXjl359gKvggTQLGv
-   bd9LXXkeNR9RTGFZXPFHxPUMFcvzKJXIVOAqEwSWh4IRMVQezYDhsG3T2
-   N3+s1/j5fQSuL4Weg0xez5SQ7oZehA0DscG0bKD0+9LglS8UYFJ4d+I1A
-   2MEKi6S9D4KKuQ9EqcJstHH9s1Oha/e/vd27MVPGUBN5VxA0qikxvBE/Z
-   Xd56sDP/FnijvDqvjSOCLajt5fUB9CKSu7JrC/ALZdxEqR66cKQaTSpX1
-   g==;
-X-CSE-ConnectionGUID: y06dZQmlRXKFIjdIZaD2IQ==
-X-CSE-MsgGUID: 2UAwSuzGSPCfDJcabOji4w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13427037"
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="13427037"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 10:02:58 -0700
-X-CSE-ConnectionGUID: uT4hl57ESmGK08yFumAB6w==
-X-CSE-MsgGUID: kWjRMTdeSHSE/jmK1rO54Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="66746145"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 30 May 2024 10:02:55 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCjAn-000Fl7-1F;
-	Thu, 30 May 2024 17:02:51 +0000
-Date: Fri, 31 May 2024 00:59:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yasin Lee <yasin.lee.x@outlook.com>, jic23@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, andy.shevchenko@gmail.com,
-	lars@metafoo.de, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nuno.a@analog.com,
-	swboyd@chromium.org, u.kleine-koenig@pengutronix.de,
-	yasin.lee.x@gmail.com, yasin.lee.x@outlook.com
-Subject: Re: [PATCH v3 2/2] iio:proximity:hx9023s: Add TYHX HX9023S sensor
- driver
-Message-ID: <202405310010.dSPEpCuu-lkp@intel.com>
-References: <SN7PR12MB81019AB7F38806097F2C8A34A4F22@SN7PR12MB8101.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="DMCVF4Ja"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-43f87ba7d3eso5817481cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 10:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1717088583; x=1717693383; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GTLV5QmShTqCTYzxTlMofJsJKzIK7ET6QLwG+tAy4z0=;
+        b=DMCVF4JaynLaAe4/GUOG4V5hrRYYKj7MdrJlvnwz0qKPOg0obz0T7TVXInDjECYRTv
+         Td7PvlZsAlDMe8iJAZjp7GsAk0hfzsIuIW7tHBns1PFNtzt9eS/Gn0yj27yv0kmrYi5T
+         YGLXwezMvyDEv6sffy3+dIf7ngviLPCv3t7WeQMSF655htpfjnsRqtyfSBWp+YeFagdV
+         7SCxpwpt1fhEsxCFMltJf9otqMYin5kXy1WgCwJhnYfo79LDTuZ+C2tr4sINNIxUW65W
+         IinAhAaezfkNBme3PMr0ALBx/Li/98QkozvQ30NbLhaR6pRYUG4xY/atbOxMDTJjLOyb
+         Ii+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717088583; x=1717693383;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GTLV5QmShTqCTYzxTlMofJsJKzIK7ET6QLwG+tAy4z0=;
+        b=XQS8m0TNtC9bvyWSVAv56D/1LMwy2PimadW8nytgpRT+NfvaQQj6Ota0aPSOwIlwrY
+         AipFprN+c767p1ByplpEKRyeJyW6gHfjEjZ4SLeOW7fDGX/Lp8qF2ZgGQeQq6rvnRA0t
+         fa0vOjtRJvzzsIePcsJK+gk/WGDKLmLwN7HJBOIvIZaiQDM3uCCcaKfb8dkhOpzrYsok
+         FbfoX20w/VoL3arhFAI1Zs9HH3JPFg8JWsJD56d3TQ0+GkCtq2EtzfuCSJaxsTO7MGZ7
+         jFG0ILAloH6LiQI86oV7wHLQSNqy1tWvLXAUj/Kg/2QY8zmVuGrPBVIwEFRYfQxjLVRG
+         clvg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2G26gFfiyfaJFqDNzMbTUsjS9ecza/YZwL3vwIV5SCHqlmBKFMuKGJRrlVKUtsytK6b5exsaCukkFvhJ8Ab5YTWdPdHyY4M/cGIta
+X-Gm-Message-State: AOJu0YwEJtaDSSyQ39xEQO5p3wr4WzOcqtLOiDYnkxU8imQzRo/qSCgy
+	pm7LDf0K5du4G/G/q/oBhWAHSpLwfXNYGHExJDfxqfV2sEpxCC980FP808061po=
+X-Google-Smtp-Source: AGHT+IHPvnNez1b8QMr2tHO4qBHGqnytcfamCabGQnUX7Dc40fCrRQaqXIjmVXNfmAz1d6NjPQltCQ==
+X-Received: by 2002:a05:6214:a0f:b0:6ae:ff6:4d28 with SMTP id 6a1803df08f44-6ae0ff64ef4mr22210636d6.2.1717088582766;
+        Thu, 30 May 2024 10:03:02 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (128.174.85.34.bc.googleusercontent.com. [34.85.174.128])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4a73e425sm132406d6.24.2024.05.30.10.03.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 10:03:02 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: akpm@linux-foundation.org,
+	jpoimboe@kernel.org,
+	pasha.tatashin@soleen.com,
+	kent.overstreet@linux.dev,
+	peterz@infradead.org,
+	nphamcs@gmail.com,
+	cerasuolodomenico@gmail.com,
+	surenb@google.com,
+	lizhijian@fujitsu.com,
+	willy@infradead.org,
+	shakeel.butt@linux.dev,
+	vbabka@suse.cz,
+	ziy@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH v3] vmstat: Kernel stack usage histogram
+Date: Thu, 30 May 2024 17:02:59 +0000
+Message-ID: <20240530170259.852088-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN7PR12MB81019AB7F38806097F2C8A34A4F22@SN7PR12MB8101.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Yasin,
+Provide a kernel stack usage histogram to aid in optimizing kernel stack
+sizes and minimizing memory waste in large-scale environments. The
+histogram divides stack usage into power-of-two buckets and reports the
+results in /proc/vmstat. This information is especially valuable in
+environments with millions of machines, where even small optimizations
+can have a significant impact.
 
-kernel test robot noticed the following build errors:
+The histogram data is presented in /proc/vmstat with entries like
+"kstack_1k", "kstack_2k", and so on, indicating the number of threads
+that exited with stack usage falling within each respective bucket.
 
-[auto build test ERROR on jic23-iio/togreg]
-[also build test ERROR on robh/for-next linus/master v6.10-rc1 next-20240529]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Example outputs:
+Intel:
+$ grep kstack /proc/vmstat
+kstack_1k 3
+kstack_2k 188
+kstack_4k 11391
+kstack_8k 243
+kstack_16k 0
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yasin-Lee/iio-proximity-hx9023s-Add-TYHX-HX9023S-sensor-driver/20240529-170307
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/SN7PR12MB81019AB7F38806097F2C8A34A4F22%40SN7PR12MB8101.namprd12.prod.outlook.com
-patch subject: [PATCH v3 2/2] iio:proximity:hx9023s: Add TYHX HX9023S sensor driver
-config: hexagon-randconfig-r062-20240530 (https://download.01.org/0day-ci/archive/20240531/202405310010.dSPEpCuu-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240531/202405310010.dSPEpCuu-lkp@intel.com/reproduce)
+ARM with 64K page_size:
+$ grep kstack /proc/vmstat
+kstack_1k 1
+kstack_2k 340
+kstack_4k 25212
+kstack_8k 1659
+kstack_16k 0
+kstack_32k 0
+kstack_64k 0
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405310010.dSPEpCuu-lkp@intel.com/
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+Changelog:
+v3:
+- Changed from page counts to power-of-two buckets, this is helpful for
+builds with large base pages (i.e. arm64 with 64K pages) to evaluate
+kernel stack internal fragmentation.
 
-All errors (new ones prefixed by >>):
+ include/linux/sched/task_stack.h | 49 ++++++++++++++++++++++++++++++--
+ include/linux/vm_event_item.h    | 42 +++++++++++++++++++++++++++
+ include/linux/vmstat.h           | 16 -----------
+ mm/vmstat.c                      | 24 ++++++++++++++++
+ 4 files changed, 113 insertions(+), 18 deletions(-)
 
-   In file included from drivers/iio/proximity/hx9023s.c:10:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __raw_readb(PCI_IOBASE + addr);
-                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-   #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-                                                     ^
-   In file included from drivers/iio/proximity/hx9023s.c:10:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-   #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-                                                     ^
-   In file included from drivers/iio/proximity/hx9023s.c:10:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writeb(value, PCI_IOBASE + addr);
-                               ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
->> drivers/iio/proximity/hx9023s.c:556:9: error: implicit declaration of function 'FIELD_GET' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           *val = FIELD_GET(HX9023S_PROX_DEBOUNCE_MASK, *val);
-                  ^
-   drivers/iio/proximity/hx9023s.c:570:9: error: implicit declaration of function 'FIELD_GET' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           *val = FIELD_GET(HX9023S_PROX_DEBOUNCE_MASK, *val);
-                  ^
-   6 warnings and 2 errors generated.
-
-
-vim +/FIELD_GET +556 drivers/iio/proximity/hx9023s.c
-
-   545	
-   546	static int hx9023s_read_far_debounce(struct hx9023s_data *data, int *val)
-   547	{
-   548		int ret;
-   549	
-   550		ret = regmap_read(data->regmap, HX9023S_PROX_INT_LOW_CFG, val);
-   551		if (ret < 0) {
-   552			dev_err(&data->client->dev, "i2c read failed\n");
-   553			return ret;
-   554		}
-   555	
- > 556		*val = FIELD_GET(HX9023S_PROX_DEBOUNCE_MASK, *val);
-   557		return IIO_VAL_INT;
-   558	}
-   559	
-
+diff --git a/include/linux/sched/task_stack.h b/include/linux/sched/task_stack.h
+index ccd72b978e1f..65e8c9fb7f9b 100644
+--- a/include/linux/sched/task_stack.h
++++ b/include/linux/sched/task_stack.h
+@@ -95,9 +95,51 @@ static inline int object_is_on_stack(const void *obj)
+ extern void thread_stack_cache_init(void);
+ 
+ #ifdef CONFIG_DEBUG_STACK_USAGE
++#ifdef CONFIG_VM_EVENT_COUNTERS
++#include <linux/vm_event_item.h>
++
++/* Count the maximum pages reached in kernel stacks */
++static inline void kstack_histogram(unsigned long used_stack)
++{
++	if (used_stack <= 1024)
++		this_cpu_inc(vm_event_states.event[KSTACK_1K]);
++#if THREAD_SIZE > 1024
++	else if (used_stack <= 2048)
++		this_cpu_inc(vm_event_states.event[KSTACK_2K]);
++#endif
++#if THREAD_SIZE > 2048
++	else if (used_stack <= 4096)
++		this_cpu_inc(vm_event_states.event[KSTACK_4K]);
++#endif
++#if THREAD_SIZE > 4096
++	else if (used_stack <= 8192)
++		this_cpu_inc(vm_event_states.event[KSTACK_8K]);
++#endif
++#if THREAD_SIZE > 8192
++	else if (used_stack <= 16384)
++		this_cpu_inc(vm_event_states.event[KSTACK_16K]);
++#endif
++#if THREAD_SIZE > 16384
++	else if (used_stack <= 32768)
++		this_cpu_inc(vm_event_states.event[KSTACK_32K]);
++#endif
++#if THREAD_SIZE > 32768
++	else if (used_stack <= 65536)
++		this_cpu_inc(vm_event_states.event[KSTACK_64K]);
++#endif
++#if THREAD_SIZE > 65536
++	else
++		this_cpu_inc(vm_event_states.event[KSTACK_REST]);
++#endif
++}
++#else /* !CONFIG_VM_EVENT_COUNTERS */
++static inline void kstack_histogram(unsigned long used_stack) {}
++#endif /* CONFIG_VM_EVENT_COUNTERS */
++
+ static inline unsigned long stack_not_used(struct task_struct *p)
+ {
+ 	unsigned long *n = end_of_stack(p);
++	unsigned long unused_stack;
+ 
+ 	do { 	/* Skip over canary */
+ # ifdef CONFIG_STACK_GROWSUP
+@@ -108,10 +150,13 @@ static inline unsigned long stack_not_used(struct task_struct *p)
+ 	} while (!*n);
+ 
+ # ifdef CONFIG_STACK_GROWSUP
+-	return (unsigned long)end_of_stack(p) - (unsigned long)n;
++	unused_stack = (unsigned long)end_of_stack(p) - (unsigned long)n;
+ # else
+-	return (unsigned long)n - (unsigned long)end_of_stack(p);
++	unused_stack = (unsigned long)n - (unsigned long)end_of_stack(p);
+ # endif
++	kstack_histogram(THREAD_SIZE - unused_stack);
++
++	return unused_stack;
+ }
+ #endif
+ extern void set_task_stack_end_magic(struct task_struct *tsk);
+diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+index 747943bc8cc2..73fa5fbf33a3 100644
+--- a/include/linux/vm_event_item.h
++++ b/include/linux/vm_event_item.h
+@@ -154,9 +154,51 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+ 		VMA_LOCK_RETRY,
+ 		VMA_LOCK_MISS,
+ #endif
++#ifdef CONFIG_DEBUG_STACK_USAGE
++		KSTACK_1K,
++#if THREAD_SIZE > 1024
++		KSTACK_2K,
++#endif
++#if THREAD_SIZE > 2048
++		KSTACK_4K,
++#endif
++#if THREAD_SIZE > 4096
++		KSTACK_8K,
++#endif
++#if THREAD_SIZE > 8192
++		KSTACK_16K,
++#endif
++#if THREAD_SIZE > 16384
++		KSTACK_32K,
++#endif
++#if THREAD_SIZE > 32768
++		KSTACK_64K,
++#endif
++#if THREAD_SIZE > 65536
++		KSTACK_REST,
++#endif
++#endif /* CONFIG_DEBUG_STACK_USAGE */
+ 		NR_VM_EVENT_ITEMS
+ };
+ 
++#ifdef CONFIG_VM_EVENT_COUNTERS
++/*
++ * Light weight per cpu counter implementation.
++ *
++ * Counters should only be incremented and no critical kernel component
++ * should rely on the counter values.
++ *
++ * Counters are handled completely inline. On many platforms the code
++ * generated will simply be the increment of a global address.
++ */
++
++struct vm_event_state {
++	unsigned long event[NR_VM_EVENT_ITEMS];
++};
++
++DECLARE_PER_CPU(struct vm_event_state, vm_event_states);
++#endif
++
+ #ifndef CONFIG_TRANSPARENT_HUGEPAGE
+ #define THP_FILE_ALLOC ({ BUILD_BUG(); 0; })
+ #define THP_FILE_FALLBACK ({ BUILD_BUG(); 0; })
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index 343906a98d6e..18d4a97d3afd 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -41,22 +41,6 @@ enum writeback_stat_item {
+ };
+ 
+ #ifdef CONFIG_VM_EVENT_COUNTERS
+-/*
+- * Light weight per cpu counter implementation.
+- *
+- * Counters should only be incremented and no critical kernel component
+- * should rely on the counter values.
+- *
+- * Counters are handled completely inline. On many platforms the code
+- * generated will simply be the increment of a global address.
+- */
+-
+-struct vm_event_state {
+-	unsigned long event[NR_VM_EVENT_ITEMS];
+-};
+-
+-DECLARE_PER_CPU(struct vm_event_state, vm_event_states);
+-
+ /*
+  * vm counters are allowed to be racy. Use raw_cpu_ops to avoid the
+  * local_irq_disable overhead.
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index db79935e4a54..21932bd6a449 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1413,6 +1413,30 @@ const char * const vmstat_text[] = {
+ 	"vma_lock_retry",
+ 	"vma_lock_miss",
+ #endif
++#ifdef CONFIG_DEBUG_STACK_USAGE
++	"kstack_1k",
++#if THREAD_SIZE > 1024
++	"kstack_2k",
++#endif
++#if THREAD_SIZE > 2048
++	"kstack_4k",
++#endif
++#if THREAD_SIZE > 4096
++	"kstack_8k",
++#endif
++#if THREAD_SIZE > 8192
++	"kstack_16k",
++#endif
++#if THREAD_SIZE > 16384
++	"kstack_32k",
++#endif
++#if THREAD_SIZE > 32768
++	"kstack_64k",
++#endif
++#if THREAD_SIZE > 65536
++	"kstack_rest",
++#endif
++#endif
+ #endif /* CONFIG_VM_EVENT_COUNTERS || CONFIG_MEMCG */
+ };
+ #endif /* CONFIG_PROC_FS || CONFIG_SYSFS || CONFIG_NUMA || CONFIG_MEMCG */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.1.288.g0e0cd299f1-goog
+
