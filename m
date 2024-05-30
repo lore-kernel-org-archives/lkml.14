@@ -1,98 +1,132 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7222212E6D;
-	Thu, 30 May 2024 16:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5077A18755F
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 16:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717087625; cv=none; b=jm/bJB1pCRlTdx1gHboF/NdLptB2SqrtEvIoUbH65aADPpXsndflOAx8WXtaweOCJk4i5ISzwSRgz1kB+P9sgRAstU3pIkOeIdXEXj1ROdlVPDA96ZuLICCNI+fgGeaYPe9/fWjTtHaA9FVsYNTryXScgV8NFpxMP55AF9U5nN0=
+	t=1717087694; cv=none; b=Vp88h1XNU61IRrv+POmJXJ7Nn0LPf90kveyBe5Y4jblVacDM2Y+UaeB+y4svGkINccx2mp1OgZRskPLAwt4s0bkkn3QuT47wGJ9+HRDGR9/RzcfnBZ/yRtmGKfQI36IXNHLFD2gQEmlO13Up6CxaSKbB5HAi/TkhEy2j2TTMVIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717087625; c=relaxed/simple;
-	bh=tu5BfUUBc30BLBUzVrp9b6Xi5nxO17CyLvZGzIbmMGE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=g5nEq4Dh0aHGhs2l/k0PPELSqRNPw9eBp+qp3BMKjh+psn0ZXV6RSrxihS5XjuFad7dLGEBCA13ndMxJ/vmfoDut8grr7liCmRSbFyNsAbbL4Fn8gBeMevT+hXi2E5MTzbgJAQhI2wMEMKnrlGJvKYTggtqM0iMXTKdBBxfgd+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RhrC0ofV; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717087694; c=relaxed/simple;
+	bh=+iibMyBe6CkUG/bW0sWYlzZX47cbTNxCC4APHJZN4KU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjljJgpO0qGr8vI38XBTCrHduA8UnDz3i2ZWeWWKEa9YTjaFbyD3L1HJtMvCIsxnMFgM/vmj+dVr1O2dtj9mKn9XBZ7tPVPdecI4BdgRCPslNAsTdydqBzNROiwFi3q6pRBvodfLkvlEFFIYXQ1toGbKnFaBYlCnr7EcVLeEnf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kPMvi93u; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RhrC0ofV"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CFBA740E019B;
-	Thu, 30 May 2024 16:46:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TCuf2bHIsw_9; Thu, 30 May 2024 16:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717087614; bh=RIE8A6E1KgHX+2udCSMXQi2ZYnPIEXKt4Ri2S2VuaKs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=RhrC0ofV8YSQHAmGr8+Kguq/kJQmREmz9cnAz8rI6zbPBKte7Rc2SaCajqTqs9gQs
-	 M/0r62Eo1wuwHlYF5wP+177IrVUjGmdcx1mqaORrEtGRYGYVMcyVj8rz9TbyyRe3vA
-	 8Y/jtxA/+p8lE6BC0BTm4pL9JgUpStXvfjvdrHxYPfu/W7hChTpvc23FXXVexv/adq
-	 OLcXaSdZOctUssZ8GtLrGsVUkej/JQhgt55x32H+TMJRhYguqmE6BYMkiLgOWjlml1
-	 63Hnk+EECSu0XtDGcZNXFfn0/p2s/4XbO4xent8Pw9blFtssLk73qnl0n4q5vKR5Hr
-	 +tSzfwa8aQx1U8qMA46v3do309WRMCZKpTCMOO+vTlIo5mgQu2HMldlTh3SsPnwzDo
-	 dwgzexQ0oSysjBmik0Le4wIya03hvWJGvpiJAWBoZzasTQvt8DCqq1C96t3euB+SJg
-	 AWOP4hXu09lQ6Me+IGYOH9nf94JR0iFjE5MW92Of80P8bMg4ZmiN1wG6shDQdNlycT
-	 U2tvF4UmvTLDANQrvNPGvBZE7jS9IJx57NiU/5skcitq24M5JytlHOUeyrPMJYX0LE
-	 3ZcCfZd9yswza//T6TPEtipJBz+PallKxn2GMNNVjHq/Mq3xnCzD8LjL6B4gm0WABx
-	 554+NjvbdMUd05fFZ4kIqE94=
-Received: from [IPv6:::1] (unknown [IPv6:2a02:3038:20f:938d:41e9:261d:4ad2:487c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ADAE940E0177;
-	Thu, 30 May 2024 16:46:42 +0000 (UTC)
-Date: Thu, 30 May 2024 18:46:39 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
- Nikolay Borisov <nik.borisov@suse.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Kees Cook <keescook@chromium.org>,
- "H. Peter Anvin" <hpa@zytor.com>
-CC: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
-User-Agent: K-9 Mail for Android
-In-Reply-To: <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
-References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com> <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com> <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
-Message-ID: <5658B525-6642-43A2-B14C-BC4AA916FBCC@alien8.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPMvi93u"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-656d8b346d2so852485a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717087692; x=1717692492; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=44kjXC5ZdbVBGNfJAzWqyaTd7dhWd5azryjkTcby7nY=;
+        b=kPMvi93uukPjZ+MezFr3+G8ipQ5t1itS/fVt1y1diguN6dq+k76uxQ56n5GBad8kxt
+         9/apDcIHvx/4X7QXkac7PgMSr73dGfFadiVwrSrhXzCh45J5hnQSSBr+oN4SAoVSk8hU
+         W/RgLAGbKYKlx29xdiRooN7J+1SNXVKtkXhzKZtgp5xGcB3YRJYJyjotW7eu/Tk3IU/x
+         OU7PHYd1B0ocgcVqIjNYFSoBf6N7FhEtKP0qIHH5QvLyStV7zJoz4GcrUNOFu2ldHcNW
+         hqvAlQqTLBvfiW7bXrpym2WohP5mq5RYt6nTr4RJ2tbxGPCKDPnT5KJ1+MHlRsRQHHVS
+         mJwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717087692; x=1717692492;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=44kjXC5ZdbVBGNfJAzWqyaTd7dhWd5azryjkTcby7nY=;
+        b=gCPeMs1Ri6dw6qkKoFviioxRfqxZ9FA8jHJbvPbj2AJOK0ED84SZFcQ42yllaSTiSE
+         KsegU5RbjOUyCXWwUJQImkYSHwY+/LsAGh7ZD6wREorzcAGgxXevPeDw6K9FoT9ICSct
+         AUry0VJ3bHlHuZ1QqXGFsPxsGgnPjt/Gl7NDrreG4p5l6UElqpqUrTN7Cjy4GtYGBCEu
+         LTniG3qY+asWn2imfvwiCdEQe3CcGTVH6ynY5N6uIHdW725CrI/duhzj0n2nsYYekzS2
+         qED+bLziEJ9ZfmxDN4qcu0D76i3lGbJWwAJaHG5I530PzPZrmeKbg5MkR9H4bOOodRcp
+         v8oA==
+X-Gm-Message-State: AOJu0Yzyl77KdXVS1TIbQKzACyk4PxmeXlQjZlm/FudnLeWp3yap6z+Q
+	cA3sfH4KycT2iTaRo1gh61fbHadP9Y/kajQVvAJHKjmJUMbB9MaepZd2WA==
+X-Google-Smtp-Source: AGHT+IHIby0s6tirUbLWLYDO5H4P5p5ypbNhdZYQIBQtdi/dLFyr5oREZHgrftNscdiFXS3h2uA93g==
+X-Received: by 2002:a17:903:24c:b0:1f3:2a25:9361 with SMTP id d9443c01a7336-1f61a4daf21mr28561355ad.64.1717087692453;
+        Thu, 30 May 2024 09:48:12 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63232dd6bsm97555ad.54.2024.05.30.09.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 09:48:11 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 30 May 2024 09:48:09 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 6.10-rc1
+Message-ID: <475891b5-6bf7-4ecf-a647-9b9b554ed07c@roeck-us.net>
+References: <CAHk-=wjQv_CSPzhjOMoOjGO3FmuHe5hzm6Ds69zZSFPa4PeuCA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjQv_CSPzhjOMoOjGO3FmuHe5hzm6Ds69zZSFPa4PeuCA@mail.gmail.com>
 
-On May 30, 2024 6:23:36 PM GMT+02:00, Jeff Johnson <quic_jjohnson@quicinc=
-=2Ecom> wrote:
->On 5/30/2024 8:42 AM, Nikolay Borisov wrote:
->>=20
->>=20
->> On 29=2E05=2E24 =D0=B3=2E 21:09 =D1=87=2E, Jeff Johnson wrote:
->>> As discussed in [1] add a prototype for __fortify_panic() to fix the
->>> 'make W=3D1 C=3D1' warning:
->>>
->>> arch/x86/boot/compressed/misc=2Ec:535:6: warning: symbol '__fortify_pa=
-nic' was not declared=2E Should it be static?
->>=20
->> Actually doesn't it make sense to have this defined under =2E=2E/string=
-=2Eh ?=20
->> Actually given that we don't have any string fortification under the=20
->> boot/  why have the fortify _* functions at all ?
->
->I'll let Kees answer these questions since I just took guidance from him =
-:)
+On Sun, May 26, 2024 at 03:31:45PM -0700, Linus Torvalds wrote:
+> Ok, the merge window is over, and 6.10-rc1 is tagged and pushed out.
+> 
+> This seems to be a regular-sized release, maybe even slightly on the
+> smaller side. All the stats look fairly normal, but "normal" obviously
+> means "much too big to post the shortlog", so below is - as always -
+> just my "merge log" that gives an overview of who I've merged from
+> with just the barest of descriptions.
+> 
+> We don't have any new filesystems, and the xfs online repair work
+> means that the bcachefs fixes aren't even the biggest filesystem
+> change any more. But all of that is dwarfed by all the usual driver
+> updates (and, as is tradition, GPU drivers are in a massive lead, with
+> networking a distant second and everything else is relatively small).
+> 
+> But we do have all the usual architecture updates, core cleanups and
+> fixes, tooling and documentation updates.
+> 
+> Please - let the testing commence,
+> 
 
-The more important question is how does the decompressor build even know o=
-f this symbol? And then make it forget it again instead of adding silly pro=
-totypes=2E=2E=2E
+From [1]:
 
+Build results:
+	total: 158 pass: 149 fail: 9
+Failed builds:
+	arm:allmodconfig
+	csky:allmodconfig
+	i386:allyesconfig
+	i386:allmodconfig
+	mips:allmodconfig
+	openrisc:allmodconfig
+	parisc:allmodconfig
+	powerpc:ppc32_allmodconfig
+	xtensa:allmodconfig
+Qemu test results:
+	total: 470 pass: 466 fail: 4
+Failed tests:
+	m68k:mcf5208evb:m5208:m5208evb_defconfig:initrd
+	riscv:sifive_u:defconfig:net=default:initrd
+	riscv:sifive_u:defconfig:sd:net=default:rootfs
+	riscv:sifive_u:defconfig:mtd32:net=default:rootfs
+Unit test results:
+	pass: 228437 fail: 0
 
---=20
-Sent from a small device: formatting sucks and brevity is inevitable=2E 
+The problems seen in those tests are all fixed with the following patches.
+
+9ea60fe541a0 powerpc: Limit ARCH_HAS_KERNEL_FPU_SUPPORT to PPC64
+005cc05a58df clk: sifive: Do not register clkdevs for PRCI clocks
+71a1fd19a06c sysfs: Unbreak the build around sysfs_bin_attr_simple_read()
+d304cefdad3a drm/nouveau/nvif: Avoid build error due to potential integer overflows
+2afea78e811e scsi: mpi3mr: Use proper format specifier in mpi3mr_sas_port_add()
+
+For anyone in details, those patches are available in the 'fixes' branch
+of [2].
+
+Guenter
+
+---
+[1] https://kerneltests.org/builders
+[2] git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
